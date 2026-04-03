@@ -95,3 +95,13 @@ class TestIsingModel:
         x = jnp.array([1.0, 2.0, 3.0])
         e = compute_energy(model, x)
         assert jnp.isfinite(e)
+
+    def test_zeros_init(self) -> None:
+        """REQ-TIER-006: zeros initialization produces zero coupling."""
+        model = IsingModel(IsingConfig(input_dim=3, coupling_init="zeros"))
+        assert jnp.allclose(model.coupling, jnp.zeros((3, 3)))
+
+    def test_unknown_init_raises(self) -> None:
+        """SCENARIO-TIER-006: unknown initializer raises ValueError."""
+        with pytest.raises(ValueError, match="Unknown initializer"):
+            IsingModel(IsingConfig(input_dim=3, coupling_init="bad"))

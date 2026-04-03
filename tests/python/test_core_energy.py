@@ -66,3 +66,9 @@ class TestEnergyProtocol:
             x_m = x.at[i].add(-eps)
             fd = (model.energy(x_p) - model.energy(x_m)) / (2 * eps)
             assert jnp.abs(grad[i] - fd) < 1e-3, f"Gradient mismatch at index {i}"
+
+    def test_autograd_mixin_base_energy_raises(self) -> None:
+        """REQ-CORE-002: AutoGradMixin.energy raises NotImplementedError."""
+        mixin = AutoGradMixin()
+        with pytest.raises(NotImplementedError):
+            mixin.energy(jnp.array([1.0]))

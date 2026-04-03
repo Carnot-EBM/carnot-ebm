@@ -168,6 +168,34 @@ class TestRepair:
         assert float(repaired[1]) > 0.0
 
 
+class TestComposedEnergyMethods:
+    """Tests for ComposedEnergy utility methods."""
+
+    def test_input_dim(self) -> None:
+        """REQ-VERIFY-004: input_dim property works."""
+        composed = ComposedEnergy(input_dim=5)
+        assert composed.input_dim == 5
+
+    def test_grad_energy(self) -> None:
+        """REQ-VERIFY-001: grad_energy computes total gradient."""
+        composed = ComposedEnergy(input_dim=2)
+        composed.add_constraint(SumConstraint("sum", 0.0), 1.0)
+        x = jnp.array([1.0, 2.0])
+        grad = composed.grad_energy(x)
+        # d/dx [(sum(x))^2] = 2*sum(x)*[1,1] = 2*3*[1,1] = [6,6]
+        assert jnp.allclose(grad, jnp.array([6.0, 6.0]), atol=0.1)
+
+    def test_energy_batch(self) -> None:
+        """REQ-VERIFY-001: energy_batch via vmap."""
+        composed = ComposedEnergy(input_dim=2)
+        composed.add_constraint(SumConstraint("sum", 0.0), 1.0)
+        xs = jnp.array([[1.0, 2.0], [0.0, 0.0]])
+        energies = composed.energy_batch(xs)
+        assert energies.shape == (2,)
+        assert float(energies[0]) > 0.0  # sum=3, energy=9
+        assert float(energies[1]) < 1e-6  # sum=0, energy=0
+
+
 class TestDeterminism:
     """Tests for REQ-VERIFY-007."""
 

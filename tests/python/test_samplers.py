@@ -67,6 +67,31 @@ class TestHMCSampler:
         assert jnp.all(jnp.isfinite(sample))
 
 
+class TestDefaultKey:
+    """Tests for default key behavior."""
+
+    def test_langevin_sample_default_key(self) -> None:
+        """REQ-SAMPLE-001: sample works with default key."""
+        sampler = LangevinSampler(step_size=0.01)
+        model = QuadraticEnergy()
+        sample = sampler.sample(model, jnp.zeros(2), n_steps=10)
+        assert jnp.all(jnp.isfinite(sample))
+
+    def test_langevin_chain_default_key(self) -> None:
+        """REQ-SAMPLE-001: sample_chain works with default key."""
+        sampler = LangevinSampler(step_size=0.01)
+        model = QuadraticEnergy()
+        chain = sampler.sample_chain(model, jnp.zeros(2), n_steps=10)
+        assert chain.shape == (10, 2)
+
+    def test_hmc_sample_default_key(self) -> None:
+        """REQ-SAMPLE-002: HMC works with default key."""
+        sampler = HMCSampler(step_size=0.1, num_leapfrog_steps=5)
+        model = QuadraticEnergy()
+        sample = sampler.sample(model, jnp.zeros(2), n_steps=5)
+        assert jnp.all(jnp.isfinite(sample))
+
+
 class TestSamplerInterface:
     """Tests for REQ-SAMPLE-003: Sampler interface genericity."""
 
