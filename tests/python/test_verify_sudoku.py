@@ -75,11 +75,16 @@ class TestSudokuRepair:
     """Tests for SCENARIO-VERIFY-002."""
 
     def test_repair_reduces_energy(self) -> None:
-        """SCENARIO-VERIFY-002: repair reduces violations."""
+        """SCENARIO-VERIFY-002: repair reduces violations.
+
+        Note: we use only 5 repair steps (not 100) because each step requires
+        jax.grad calls on 50+ constraint terms, which is slow due to JAX
+        compilation overhead. 5 steps is enough to prove energy decreases.
+        """
         energy_fn = build_sudoku_energy(PUZZLE)
         x = jnp.full(81, 5.0)  # all 5s — very wrong
 
-        _, history = repair(energy_fn, x, step_size=0.01, max_steps=100)
+        _, history = repair(energy_fn, x, step_size=0.01, max_steps=5)
 
         initial_e = history[0].total_energy
         final_e = history[-1].total_energy

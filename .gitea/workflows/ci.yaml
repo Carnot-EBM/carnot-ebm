@@ -77,12 +77,12 @@ jobs:
         run: |
           uv venv .venv --python 3.12
           source .venv/bin/activate
-          uv pip install jax jaxlib pytest pytest-cov safetensors numpy ruff mypy
+          uv pip install jax jaxlib pytest pytest-cov pytest-xdist safetensors numpy ruff mypy
 
-      - name: Run tests with 100% coverage
+      - name: Run tests with 100% coverage (parallel)
         run: |
           source .venv/bin/activate
-          PYTHONPATH=python:$PYTHONPATH pytest tests/python -v \
+          PYTHONPATH=python:$PYTHONPATH pytest tests/python -v -n 4 \
             --cov=python/carnot \
             --cov-report=term-missing \
             --cov-fail-under=100
