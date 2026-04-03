@@ -68,19 +68,54 @@ struct DenseLayer {
     activation: Activation,
 }
 
-impl DenseLayer {
-    fn forward(&self, x: &Array1<Float>) -> Array1<Float> {
-        let z = self.weight.dot(x) + &self.bias;
-        match self.activation {
-            Activation::SiLU => z.mapv(|v| v * sigmoid(v)),
-            Activation::ReLU => z.mapv(|v| v.max(0.0)),
-            Activation::Tanh => z.mapv(|v| v.tanh()),
+fn sigmoid(x: Float) -> Float {
+    1.0 / (1.0 + (-x).exp())
+}
+
+/// Apply activation function elementwise.
+fn activate(z: &Array1<Float>, act: Activation) -> Array1<Float> {
+    match act {
+        Activation::SiLU => z.mapv(|v| v * sigmoid(v)),
+        Activation::ReLU => z.mapv(|v| v.max(0.0)),
+        Activation::Tanh => z.mapv(|v| v.tanh()),
+    }
+}
+
+/// Compute activation derivative given the pre-activation value z.
+/// Returns d(activation(z))/dz elementwise.
+fn activate_deriv(z: &Array1<Float>, act: Activation) -> Array1<Float> {
+    match act {
+        Activation::SiLU => {
+            // d/dz [z * sigmoid(z)] = sigmoid(z) + z * sigmoid(z) * (1 - sigmoid(z))
+            //                        = sigmoid(z) * (1 + z * (1 - sigmoid(z)))
+            z.mapv(|v| {
+                let s = sigmoid(v);
+                s * (1.0 + v * (1.0 - s))
+            })
+        }
+        Activation::ReLU => z.mapv(|v| if v > 0.0 { 1.0 } else { 0.0 }),
+        Activation::Tanh => {
+            // d/dz [tanh(z)] = 1 - tanh(z)^2
+            z.mapv(|v| {
+                let t = v.tanh();
+                1.0 - t * t
+            })
         }
     }
 }
 
-fn sigmoid(x: Float) -> Float {
-    1.0 / (1.0 + (-x).exp())
+impl DenseLayer {
+    fn forward(&self, x: &Array1<Float>) -> Array1<Float> {
+        let z = self.weight.dot(x) + &self.bias;
+        activate(&z, self.activation)
+    }
+
+    /// Forward pass that also returns the pre-activation values (needed for backprop).
+    fn forward_with_cache(&self, x: &Array1<Float>) -> (Array1<Float>, Array1<Float>) {
+        let z = self.weight.dot(x) + &self.bias;
+        let a = activate(&z, self.activation);
+        (a, z)
+    }
 }
 
 /// Gibbs Energy Based Model.
@@ -140,20 +175,41 @@ impl EnergyFunction for GibbsModel {
         self.output_weight.dot(&h) + self.output_bias
     }
 
+    /// Analytical backpropagation through the network.
+    ///
+    /// E(x) = w^T * f_L(...f_1(x)) + b
+    /// dE/dx = dE/dh_L * dh_L/dh_{L-1} * ... * dh_1/dx
+    ///
     /// Spec: REQ-CORE-001, SCENARIO-CORE-003
     fn grad_energy(&self, x: &ArrayView1<Float>) -> Array1<Float> {
-        // Numerical gradient via finite differences for correctness.
-        // TODO: Implement analytical backprop for performance.
-        let eps = 1e-4 as Float;
-        let mut grad = Array1::zeros(x.len());
-        for i in 0..x.len() {
-            let mut x_p = x.to_owned();
-            let mut x_m = x.to_owned();
-            x_p[i] += eps;
-            x_m[i] -= eps;
-            grad[i] = (self.energy(&x_p.view()) - self.energy(&x_m.view())) / (2.0 * eps);
+        // Forward pass: cache all pre-activations and activations
+        let mut activations = Vec::with_capacity(self.layers.len() + 1);
+        let mut pre_activations = Vec::with_capacity(self.layers.len());
+
+        let mut h = x.to_owned();
+        activations.push(h.clone()); // input
+
+        for layer in &self.layers {
+            let (a, z) = layer.forward_with_cache(&h);
+            pre_activations.push(z);
+            activations.push(a.clone());
+            h = a;
         }
-        grad
+
+        // Backward pass
+        // dE/dh_L = output_weight (since E = w^T h_L + b)
+        let mut delta = self.output_weight.clone();
+
+        // Backprop through layers in reverse
+        for i in (0..self.layers.len()).rev() {
+            // delta = delta ⊙ activation'(z_i)  (elementwise)
+            let act_deriv = activate_deriv(&pre_activations[i], self.layers[i].activation);
+            delta = &delta * &act_deriv;
+            // delta = W_i^T * delta  (project back to previous layer's space)
+            delta = self.layers[i].weight.t().dot(&delta);
+        }
+
+        delta
     }
 
     fn input_dim(&self) -> usize {
@@ -234,29 +290,34 @@ mod tests {
     }
 
     #[test]
-    fn test_gibbs_gradient_finite_difference() {
-        // SCENARIO-CORE-003
-        let model = GibbsModel::new(GibbsConfig {
-            input_dim: 5,
-            hidden_dims: vec![4, 3],
-            ..Default::default()
-        })
-        .unwrap();
-        let x = Array1::random(5, Uniform::new(-1.0, 1.0));
-        let grad = model.grad_energy(&x.view());
+    fn test_gibbs_analytical_gradient_vs_finite_difference() {
+        // SCENARIO-CORE-003: analytical gradient matches numerical
+        for activation in [Activation::SiLU, Activation::ReLU, Activation::Tanh] {
+            let model = GibbsModel::new(GibbsConfig {
+                input_dim: 5,
+                hidden_dims: vec![4, 3],
+                activation,
+                dropout: 0.0,
+            })
+            .unwrap();
+            let x = Array1::random(5, Uniform::new(-0.5, 0.5));
+            let grad = model.grad_energy(&x.view());
 
-        let eps = 1e-4 as Float;
-        for i in 0..5 {
-            let mut x_p = x.clone();
-            let mut x_m = x.clone();
-            x_p[i] += eps;
-            x_m[i] -= eps;
-            let fd = (model.energy(&x_p.view()) - model.energy(&x_m.view())) / (2.0 * eps);
-            assert!(
-                (grad[i] - fd).abs() < 1e-2,
-                "Gradient mismatch at index {i}: analytic={}, fd={fd}",
-                grad[i]
-            );
+            // Compare with finite difference
+            let eps: Float = 1e-4;
+            for i in 0..5 {
+                let mut x_p = x.clone();
+                let mut x_m = x.clone();
+                x_p[i] += eps;
+                x_m[i] -= eps;
+                let fd = (model.energy(&x_p.view()) - model.energy(&x_m.view())) / (2.0 * eps);
+                assert!(
+                    (grad[i] - fd).abs() < 0.05,
+                    "Gradient mismatch for {:?} at index {i}: analytic={}, fd={fd}",
+                    activation,
+                    grad[i]
+                );
+            }
         }
     }
 

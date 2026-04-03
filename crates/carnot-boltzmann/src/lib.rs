@@ -56,6 +56,21 @@ impl Default for BoltzmannConfig {
     }
 }
 
+fn sigmoid(x: Float) -> Float {
+    1.0 / (1.0 + (-x).exp())
+}
+
+/// SiLU activation: x * sigmoid(x)
+fn silu(x: Float) -> Float {
+    x * sigmoid(x)
+}
+
+/// SiLU derivative: sigmoid(x) * (1 + x * (1 - sigmoid(x)))
+fn silu_deriv(x: Float) -> Float {
+    let s = sigmoid(x);
+    s * (1.0 + x * (1.0 - s))
+}
+
 /// A residual block: y = x + SiLU(W2 * SiLU(W1 * x + b1) + b2)
 /// If dimensions don't match, a projection is applied to x.
 struct ResidualBlock {
@@ -67,12 +82,20 @@ struct ResidualBlock {
     use_residual: bool,
 }
 
+/// Cached intermediate values for backprop through a residual block.
+struct ResBlockCache {
+    input: Array1<Float>,
+    z1: Array1<Float>, // pre-activation of first SiLU
+    a1: Array1<Float>, // output of first SiLU
+    z2: Array1<Float>, // pre-activation of second SiLU
+}
+
 impl ResidualBlock {
     fn forward(&self, x: &Array1<Float>) -> Array1<Float> {
-        let h = self.w1.dot(x) + &self.b1;
-        let h = h.mapv(|v| v * sigmoid(v)); // SiLU
-        let out = self.w2.dot(&h) + &self.b2;
-        let out = out.mapv(|v| v * sigmoid(v)); // SiLU
+        let z1 = self.w1.dot(x) + &self.b1;
+        let a1 = z1.mapv(silu);
+        let z2 = self.w2.dot(&a1) + &self.b2;
+        let out = z2.mapv(silu);
 
         if self.use_residual {
             let skip = match &self.proj {
@@ -84,10 +107,66 @@ impl ResidualBlock {
             out
         }
     }
-}
 
-fn sigmoid(x: Float) -> Float {
-    1.0 / (1.0 + (-x).exp())
+    fn forward_with_cache(&self, x: &Array1<Float>) -> (Array1<Float>, ResBlockCache) {
+        let z1 = self.w1.dot(x) + &self.b1;
+        let a1 = z1.mapv(silu);
+        let z2 = self.w2.dot(&a1) + &self.b2;
+        let out = z2.mapv(silu);
+
+        let result = if self.use_residual {
+            let skip = match &self.proj {
+                Some(proj) => proj.dot(x),
+                None => x.clone(),
+            };
+            out + skip
+        } else {
+            out
+        };
+
+        let cache = ResBlockCache {
+            input: x.clone(),
+            z1,
+            a1,
+            z2,
+        };
+        (result, cache)
+    }
+
+    /// Backprop: given dE/d(output), compute dE/d(input).
+    fn backward(&self, d_out: &Array1<Float>, cache: &ResBlockCache) -> Array1<Float> {
+        // output = silu(z2) + skip  (if residual)
+        // d_out is dE/d(output)
+
+        // Gradient through the SiLU(z2) path
+        let d_silu2 = d_out * &cache.z2.mapv(silu_deriv);
+        // d_silu2 = dE/d(z2)
+
+        // z2 = W2 * a1 + b2  →  dE/d(a1) = W2^T * d_silu2
+        let d_a1 = self.w2.t().dot(&d_silu2);
+
+        // a1 = silu(z1)  →  dE/d(z1) = d_a1 ⊙ silu'(z1)
+        let d_silu1 = &d_a1 * &cache.z1.mapv(silu_deriv);
+
+        // z1 = W1 * x + b1  →  dE/d(x) via main path = W1^T * d_silu1
+        let mut d_input = self.w1.t().dot(&d_silu1);
+
+        // Gradient through the skip/residual path
+        if self.use_residual {
+            match &self.proj {
+                Some(proj) => {
+                    // skip = proj * x  →  d_input += proj^T * d_out
+                    d_input = d_input + proj.t().dot(d_out);
+                }
+                None => {
+                    // skip = x  →  d_input += d_out
+                    d_input = d_input + d_out;
+                }
+            }
+        }
+
+        d_input
+    }
 }
 
 /// Boltzmann Energy Based Model.
@@ -156,7 +235,7 @@ impl EnergyFunction for BoltzmannModel {
     /// Spec: REQ-CORE-001, SCENARIO-TIER-003
     fn energy(&self, x: &ArrayView1<Float>) -> Float {
         let mut h = self.input_proj.dot(x) + &self.input_bias;
-        h = h.mapv(|v| v * sigmoid(v)); // SiLU on input projection
+        h = h.mapv(silu);
 
         for block in &self.blocks {
             h = block.forward(&h);
@@ -165,18 +244,35 @@ impl EnergyFunction for BoltzmannModel {
         self.output_weight.dot(&h) + self.output_bias
     }
 
-    /// Numerical gradient (analytical backprop is a future optimization).
+    /// Analytical backpropagation through residual blocks.
+    ///
+    /// Spec: REQ-CORE-001, SCENARIO-CORE-003
     fn grad_energy(&self, x: &ArrayView1<Float>) -> Array1<Float> {
-        let eps = 1e-4 as Float;
-        let mut grad = Array1::zeros(x.len());
-        for i in 0..x.len() {
-            let mut x_p = x.to_owned();
-            let mut x_m = x.to_owned();
-            x_p[i] += eps;
-            x_m[i] -= eps;
-            grad[i] = (self.energy(&x_p.view()) - self.energy(&x_m.view())) / (2.0 * eps);
+        // Forward pass with caching
+        let z_input = self.input_proj.dot(x) + &self.input_bias;
+        let mut h = z_input.mapv(silu);
+
+        let mut block_caches = Vec::with_capacity(self.blocks.len());
+        for block in &self.blocks {
+            let (output, cache) = block.forward_with_cache(&h);
+            block_caches.push(cache);
+            h = output;
         }
-        grad
+
+        // Backward pass
+        // dE/dh_final = output_weight
+        let mut delta = self.output_weight.clone();
+
+        // Backprop through residual blocks in reverse
+        for i in (0..self.blocks.len()).rev() {
+            delta = self.blocks[i].backward(&delta, &block_caches[i]);
+        }
+
+        // Backprop through input SiLU: dE/d(z_input) = delta ⊙ silu'(z_input)
+        let d_z_input = &delta * &z_input.mapv(silu_deriv);
+
+        // Backprop through input projection: dE/dx = input_proj^T * d_z_input
+        self.input_proj.t().dot(&d_z_input)
     }
 
     fn input_dim(&self) -> usize {
@@ -241,8 +337,8 @@ mod tests {
     }
 
     #[test]
-    fn test_boltzmann_gradient() {
-        // SCENARIO-CORE-003
+    fn test_boltzmann_analytical_gradient_vs_finite_difference() {
+        // SCENARIO-CORE-003: analytical gradient matches numerical
         let model = BoltzmannModel::new(BoltzmannConfig {
             input_dim: 5,
             hidden_dims: vec![4, 3],
@@ -251,10 +347,51 @@ mod tests {
             layer_norm: false,
         })
         .unwrap();
-        let x = Array1::random(5, Uniform::new(-1.0, 1.0));
+        let x = Array1::random(5, Uniform::new(-0.5, 0.5));
         let grad = model.grad_energy(&x.view());
-        assert_eq!(grad.len(), 5);
-        assert!(grad.iter().all(|g| g.is_finite()));
+
+        let eps: Float = 1e-4;
+        for i in 0..5 {
+            let mut x_p = x.clone();
+            let mut x_m = x.clone();
+            x_p[i] += eps;
+            x_m[i] -= eps;
+            let fd = (model.energy(&x_p.view()) - model.energy(&x_m.view())) / (2.0 * eps);
+            assert!(
+                (grad[i] - fd).abs() < 0.05,
+                "Gradient mismatch at index {i}: analytic={}, fd={fd}",
+                grad[i]
+            );
+        }
+    }
+
+    #[test]
+    fn test_boltzmann_gradient_no_residual() {
+        // SCENARIO-CORE-003: gradient works without residual connections too
+        let model = BoltzmannModel::new(BoltzmannConfig {
+            input_dim: 5,
+            hidden_dims: vec![4, 3],
+            num_heads: 1,
+            residual: false,
+            layer_norm: false,
+        })
+        .unwrap();
+        let x = Array1::random(5, Uniform::new(-0.5, 0.5));
+        let grad = model.grad_energy(&x.view());
+
+        let eps: Float = 1e-4;
+        for i in 0..5 {
+            let mut x_p = x.clone();
+            let mut x_m = x.clone();
+            x_p[i] += eps;
+            x_m[i] -= eps;
+            let fd = (model.energy(&x_p.view()) - model.energy(&x_m.view())) / (2.0 * eps);
+            assert!(
+                (grad[i] - fd).abs() < 0.05,
+                "Gradient mismatch (no residual) at index {i}: analytic={}, fd={fd}",
+                grad[i]
+            );
+        }
     }
 
     #[test]
