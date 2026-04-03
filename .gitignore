@@ -36,3 +36,12 @@ htmlcov/
 .coverage
 coverage.xml
 tarpaulin-report.html
+
+# Secrets — only encrypted versions (*.enc.yaml, *.enc) should be committed
+.env
+.env.*
+!.env.enc
+secrets.*.yaml
+!secrets.*.enc.yaml
+*.key
+*.pem
