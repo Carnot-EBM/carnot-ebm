@@ -1,0 +1,29 @@
+# Claude Code API Bridge — Docker Compose
+#
+# Start:  docker compose up -d
+# Stop:   docker compose down
+# Logs:   docker compose logs -f
+# Test:   curl http://localhost:8080/v1/models
+
+services:
+  claude-api-bridge:
+    build: .
+    image: claude-api-bridge:latest
+    container_name: claude-api-bridge
+    ports:
+      - "${BRIDGE_PORT:-8080}:8080"
+    volumes:
+      # Mount Claude OAuth credentials from host
+      - ${CLAUDE_CONFIG_DIR:-~/.claude}:/root/.claude:ro
+    environment:
+      # Override the claude binary path if needed
+      - CLAUDE_BIN=${CLAUDE_BIN:-claude}
+      # Path to MCP config file (required for tool use in claude -p)
+      - MCP_CONFIG_PATH=${MCP_CONFIG_PATH:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s

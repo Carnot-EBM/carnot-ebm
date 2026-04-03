@@ -44,13 +44,13 @@ from __future__ import annotations
 
 import logging
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from typing import Any
 
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
-from carnot.autoresearch.evaluator import EvalResult, evaluate_hypothesis
+from carnot.autoresearch.evaluator import evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
-from carnot.autoresearch.sandbox import SandboxConfig, SandboxResult, run_in_sandbox
+from carnot.autoresearch.sandbox import SandboxConfig, run_in_sandbox
 
 logger = logging.getLogger(__name__)
 
@@ -222,7 +222,7 @@ def run(benchmark_data):
             break
 
         # --- Generate experiment ID ---
-        exp_id = f"auto-{datetime.now(timezone.utc).strftime('%Y%m%d-%H%M%S')}-{i:03d}"
+        exp_id = f"auto-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{i:03d}"
 
         # --- Skip if already rejected (REQ-AUTO-007) ---
         if exp_id in rejected_ids:
@@ -261,7 +261,7 @@ def run(benchmark_data):
         # --- Stage 4: Log experiment (REQ-AUTO-008) ---
         entry = ExperimentEntry(
             id=exp_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             hypothesis_code=code,
             hypothesis_description=description,
             sandbox_success=sandbox_result.success,
@@ -277,6 +277,157 @@ def run(benchmark_data):
         )
         experiment_log.append(entry)
         result.iterations += 1
+
+    return result
+
+
+def run_loop_with_generator(
+    generator: Any,
+    baselines: BaselineRecord,
+    benchmark_data: dict[str, Any],
+    config: AutoresearchConfig | None = None,
+    experiment_log: ExperimentLog | None = None,
+) -> LoopResult:
+    """Run the autoresearch loop with an LLM hypothesis generator.
+
+    **Researcher summary:**
+        Like ``run_loop`` but generates hypotheses on-demand from an LLM
+        instead of requiring a pre-built list. Each iteration: generate →
+        sandbox → evaluate → log → update → feed failures back to generator.
+
+    **Detailed explanation for engineers:**
+        This variant of the loop uses a callback to generate hypotheses
+        lazily. After each evaluation, the generator receives feedback
+        about what worked and what didn't, allowing it to adapt its
+        strategy over time.
+
+        The ``generator`` must be a callable with signature::
+
+            generator(baselines, recent_failures, iteration) -> list[tuple[str, str]]
+
+        Where:
+        - baselines: current BaselineRecord
+        - recent_failures: list of dicts with "description" and "reason"
+        - iteration: current iteration number
+
+        Returns a list of (description, code) pairs.
+
+    Args:
+        generator: Callable that produces hypothesis (description, code) pairs.
+        baselines: Initial baseline performance.
+        benchmark_data: Dict passed to each hypothesis's run() function.
+        config: Loop configuration. Uses defaults if None.
+        experiment_log: Existing experiment log to append to. Creates new if None.
+
+    Returns:
+        LoopResult with iteration counts, updated baselines, and experiment log.
+
+    Spec: FR-11, REQ-AUTO-003
+    """
+    if config is None:
+        config = AutoresearchConfig()
+    if experiment_log is None:
+        experiment_log = ExperimentLog()
+
+    result = LoopResult(
+        final_baselines=baselines,
+        experiment_log=experiment_log,
+    )
+
+    recent_failures: list[dict[str, Any]] = []
+    iteration = 0
+
+    while iteration < config.max_iterations:
+        # --- Circuit breaker (REQ-AUTO-009) ---
+        if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+            logger.warning(
+                "Circuit breaker: %d consecutive failures. Halting for human review.",
+                config.max_consecutive_failures,
+            )
+            result.circuit_breaker_tripped = True
+            break
+
+        # --- Generate hypotheses ---
+        logger.info("Generating hypotheses (iteration %d)...", iteration)
+        try:
+            hypotheses = generator(baselines, recent_failures, iteration)
+        except Exception:
+            logger.exception("Hypothesis generator failed")
+            recent_failures.append({
+                "description": "generator_error",
+                "reason": "Hypothesis generator raised an exception",
+            })
+            iteration += 1
+            continue
+
+        if not hypotheses:
+            logger.warning("Generator returned no hypotheses, stopping.")
+            break
+
+        # --- Evaluate each generated hypothesis ---
+        for desc, code in hypotheses:
+            if result.iterations >= config.max_iterations:
+                break
+            if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+                result.circuit_breaker_tripped = True
+                break
+
+            exp_id = f"llm-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{iteration:03d}"
+            logger.info("Evaluating hypothesis %s: %s", exp_id, desc)
+
+            # Sandbox execution
+            sandbox_result = run_in_sandbox(code, benchmark_data, config.sandbox_config)
+
+            # Evaluation
+            eval_result = evaluate_hypothesis(
+                sandbox_result,
+                baselines,
+                energy_regression_tolerance=config.energy_regression_tolerance,
+            )
+
+            # Determine outcome
+            if eval_result.verdict == "PASS" and config.auto_accept_pass:
+                outcome = "accepted"
+                result.accepted += 1
+                if sandbox_result.success:
+                    _update_baselines(baselines, sandbox_result.metrics)
+                logger.info("ACCEPTED: %s — %s", exp_id, eval_result.reason)
+                # Reset failure tracking on success
+                recent_failures.clear()
+            elif eval_result.verdict == "REVIEW":
+                outcome = "pending_review"
+                result.pending_review += 1
+                logger.info("REVIEW: %s — %s", exp_id, eval_result.reason)
+            else:
+                outcome = "rejected"
+                result.rejected += 1
+                logger.info("REJECTED: %s — %s", exp_id, eval_result.reason)
+                recent_failures.append({
+                    "description": desc,
+                    "reason": eval_result.reason,
+                })
+
+            # Log experiment
+            entry = ExperimentEntry(
+                id=exp_id,
+                timestamp=datetime.now(UTC).isoformat(),
+                hypothesis_code=code,
+                hypothesis_description=desc,
+                sandbox_success=sandbox_result.success,
+                sandbox_metrics=sandbox_result.metrics,
+                sandbox_error=sandbox_result.error,
+                sandbox_wall_clock=sandbox_result.wall_clock_seconds,
+                sandbox_timed_out=sandbox_result.timed_out,
+                eval_verdict=eval_result.verdict,
+                eval_reason=eval_result.reason,
+                eval_improvements=eval_result.improvements,
+                eval_regressions=eval_result.regressions,
+                outcome=outcome,
+            )
+            experiment_log.append(entry)
+            result.iterations += 1
+
+        iteration += 1
 
     return result
 

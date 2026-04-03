@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-03 — ALL REQUIREMENTS IMPLEMENTED
+**Last Updated:** 2026-04-03 — ALL REQUIREMENTS IMPLEMENTED + LLM AUTORESEARCH WORKING
 
 ## What's Working — Everything
 
@@ -40,8 +40,27 @@
 - Automatic rollback: git-based revert on production energy regression
 - End-to-end demo: `python scripts/demo_autoresearch.py`
 
+### Gibbs Python/JAX (NEW)
+- Full GibbsModel with SiLU/ReLU/Tanh activations in JAX
+- AutoGradMixin for automatic gradient computation
+- Completes cross-language parity for all 3 model tiers
+
+### PyO3 Integration Tests (NEW)
+- 24 tests validating Rust↔Python bridge for all tiers + samplers
+- Fixed module name mismatch (carnot_python → _rust)
+
+### Claude Code API Bridge (NEW)
+- `tools/claude-api-bridge/` — Docker container wrapping `claude -p` as OpenAI API
+- Streaming SSE + non-streaming JSON + MCP config support
+- Uses Max subscription OAuth credentials via volume mount
+
+### LLM-Powered Autoresearch (NEW)
+- Hypothesis generator using OpenAI-compatible API (Claude, Qwen, etc.)
+- Generator-based orchestrator loop with failure feedback
+- Successfully ran 3 iterations with Sonnet generating real Carnot sampler code
+
 ### Quality Infrastructure
-- 290 tests (100 Rust + 190 Python), 100% code coverage, 100% spec coverage
+- 394 tests (100 Rust + 270 Python + 24 PyO3 integration), 100% code coverage
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
 - Gitea CI: 5 parallel jobs
 - 7-agent team: security-auditor, test-runner, lint-checker, spec-validator, spec-reconciler, evaluator, docs-keeper
@@ -50,14 +69,16 @@
 
 ## What's Next
 
-All 39 requirements (REQ-CORE, REQ-TIER, REQ-TRAIN, REQ-SAMPLE, REQ-VERIFY, REQ-AUTO) are implemented. Future work:
+All 39 requirements implemented. Gibbs JAX, PyO3 tests, and LLM autoresearch now working. Remaining:
 
-- **Gibbs Python/JAX**: full-featured implementation with analytical backprop (currently partial)
-- **PyO3 integration tests**: end-to-end validation of Rust-from-Python workflow
-- **GitHub public mirror**: visibility for the open-source project
-- **Real autoresearch run**: connect an LLM agent as hypothesis generator
+- ~~**Gibbs Python/JAX**~~: DONE — full implementation with AutoGradMixin
+- ~~**PyO3 integration tests**~~: DONE — 24 tests, all tiers + samplers
+- ~~**Real autoresearch run**~~: DONE — Claude API bridge + LLM hypothesis generator
+- ~~**Benchmark energy functions**~~: DONE — All 5 benchmarks (DoubleWell, Rosenbrock, Ackley, Rastrigin, GaussianMixture) implemented as JAX EnergyFunction classes with known minima. Autoresearch now evaluates against real mathematical landscapes.
+- **Autoresearch tuning**: JIT compilation overhead makes first-call timing unfair; consider warm-up or more generous time budgets
 - **GPU benchmarking**: JAX CUDA performance vs Rust CPU
 - **Attention in Boltzmann tier**: multi-head attention (num_heads is reserved)
+- **GitHub public mirror**: visibility for the open-source project
 
 ## Known Constraints
 - Python 3.14 requires `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1`

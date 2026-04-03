@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-04-03: Gibbs JAX + PyO3 Tests + Claude API Bridge + LLM Autoresearch (user instruction: implement Gibbs JAX, PyO3 tests, real autoresearch with LLM)
+
+### Added
+- **Gibbs Python/JAX model** (`python/carnot/models/gibbs.py`): Full `GibbsConfig` + `GibbsModel` with SiLU/ReLU/Tanh activations, multi-layer dense energy network, AutoGradMixin for auto-differentiation. 20 tests in `test_models_gibbs.py`.
+- **PyO3 integration tests** (`tests/python/test_pyo3_integration.py`): 24 tests covering all 3 Rust model tiers + both samplers via `carnot._rust`. Validates end-to-end Rust↔Python bridge.
+- **Claude Code API bridge** (`tools/claude-api-bridge/`): FastAPI server + Dockerfile wrapping `claude -p` as OpenAI-compatible API. Supports streaming SSE, non-streaming JSON, `--mcp-config` for tool use, session management. Tested with Docker + OpenAI Python SDK.
+- **LLM hypothesis generator** (`python/carnot/autoresearch/hypothesis_generator.py`): `GeneratorConfig`, `generate_hypotheses()`, `generate_hypotheses_batch()` using OpenAI SDK against any compatible endpoint.
+- **Generator-based orchestrator** (`run_loop_with_generator()` in orchestrator.py): Lazy hypothesis generation with failure feedback loop. Backwards-compatible with existing `run_loop()`.
+- **LLM autoresearch demo** (`scripts/run_autoresearch_llm.py`): End-to-end script connecting LLM → sandbox → evaluator. Verified working with Claude Haiku and Sonnet via API bridge.
+- 27 new tests for hypothesis generator and generator-based loop.
+
+### Added (continued)
+- **Benchmark energy functions** (`python/carnot/benchmarks/`): All 5 analytical benchmarks (DoubleWell, Rosenbrock, Ackley, Rastrigin, GaussianMixture) as JAX EnergyFunction classes with AutoGradMixin. Known global minima for quantitative evaluation. 33 tests. Wired into autoresearch pipeline — baselines now computed from real mathematical landscapes.
+
+### Fixed
+- **PyO3 module name mismatch**: Renamed `#[pymodule] fn carnot_python` → `fn _rust` in `crates/carnot-python/src/lib.rs` to match `pyproject.toml`'s `module-name = "carnot._rust"`.
+- **Ackley gradient NaN at origin**: Added epsilon in sqrt to prevent jax.grad NaN from d/dx sqrt(0).
+
+### Updated
+- `python/carnot/models/__init__.py`: exports `GibbsConfig, GibbsModel`
+- `python/carnot/autoresearch/__init__.py`: exports `run_loop_with_generator`
+
+### Test Results
+- Python: 237 tests + 24 PyO3 integration tests, 100% code coverage
+- Rust: 100 tests, all pass
+- Real autoresearch run: 3 iterations with Sonnet, all 3 accepted, real Carnot sampler code executed in sandbox
+
+---
+
 ## 2026-04-03: Spec Reconciliation (user instruction: reconcile specs with reality)
 
 ### Updated

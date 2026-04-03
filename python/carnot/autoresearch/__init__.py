@@ -22,7 +22,12 @@ Spec: REQ-AUTO-001 through REQ-AUTO-010
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
 from carnot.autoresearch.evaluator import EvalResult, evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
-from carnot.autoresearch.orchestrator import AutoresearchConfig, LoopResult, run_loop
+from carnot.autoresearch.orchestrator import (
+    AutoresearchConfig,
+    LoopResult,
+    run_loop,
+    run_loop_with_generator,
+)
 from carnot.autoresearch.rollback import RollbackConfig, RollbackResult, monitor_and_rollback
 from carnot.autoresearch.sandbox import SandboxConfig, SandboxResult, run_in_sandbox
 from carnot.autoresearch.sandbox_docker import DockerSandboxConfig, run_in_docker
@@ -55,6 +60,7 @@ __all__ = [
     "run_in_docker",
     "run_in_sandbox",
     "run_loop",
+    "run_loop_with_generator",
     "validate_conformance",
     "validate_performance",
 ]

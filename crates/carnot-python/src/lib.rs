@@ -341,7 +341,7 @@ impl PyHmcSampler {
 
 /// Carnot EBM framework — Python bindings.
 #[pymodule]
-fn carnot_python(m: &Bound<'_, PyModule>) -> PyResult<()> {
+fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
 
     // Models

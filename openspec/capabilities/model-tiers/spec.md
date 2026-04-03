@@ -99,8 +99,8 @@ Each tier shall support configurable parameter initialization strategies:
 | Requirement | Rust | Python | Tests |
 |------------|------|--------|-------|
 | REQ-TIER-001 | Implemented | Implemented | 10 Rust + 8 Python |
-| REQ-TIER-002 | Implemented | Partial | 7 Rust |
-| REQ-TIER-003 | Implemented | Not Started | 7 Rust |
+| REQ-TIER-002 | Implemented | Implemented | 7 Rust + 20 Python |
+| REQ-TIER-003 | Implemented | Implemented | 7 Rust + 10 Python |
 | REQ-TIER-004 | Implemented | Implemented | 3 Rust + 1 Python |
 | REQ-TIER-005 | Implemented | Implemented | 3 Rust + 3 Python |
 | REQ-TIER-006 | Implemented | Implemented | 4 Rust + 2 Python |

@@ -13,10 +13,10 @@
 | FR-05 | Dual-Language Impl | `openspec/capabilities/core-ebm/spec.md` | - | Rust + Python (Boltzmann Python missing) | Partial |
 | FR-06 | Training Pipeline | `openspec/capabilities/training-inference/spec.md` | 10 Rust, 13 Python | CD-k (Rust), DSM (Rust+Python), NCE missing | Partial |
 | FR-07 | Inference Pipeline | `openspec/capabilities/training-inference/spec.md` | 6 Rust, 8 Python | Langevin + HMC both languages | Implemented |
-| FR-08 | Interoperability | `openspec/capabilities/core-ebm/spec.md` | - | PyO3 bindings for all 3 tiers + 2 samplers | Partial |
-| FR-09 | Test Coverage | N/A (process) | 93 Rust, 125 Python = 218 | pre-commit + CI | Implemented |
+| FR-08 | Interoperability | `openspec/capabilities/core-ebm/spec.md` | 24 Python (PyO3) | PyO3 bindings for all 3 tiers + 2 samplers, integration tested | Implemented |
+| FR-09 | Test Coverage | N/A (process) | 100 Rust, 237 Python + 24 PyO3 = 361 | pre-commit + CI | Implemented |
 | FR-10 | Spec-Driven Dev | N/A (process) | spec_coverage.py | pre-commit + CI | Implemented |
-| FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | 20 Python | Sandbox, evaluator, orchestrator, Docker+gVisor | Partial (rollback, composition missing) |
+| FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | 47 Python | Sandbox, evaluator, orchestrator, Docker+gVisor, LLM hypothesis generator, Claude API bridge | Implemented |
 | FR-12 | Verifiable Reasoning | `openspec/capabilities/verifiable-reasoning/spec.md` | 17 Rust, 15 Python | Constraints, composition, verification, repair, Sudoku | Implemented (landscape cert missing) |
 
 ## Non-Functional Requirements
