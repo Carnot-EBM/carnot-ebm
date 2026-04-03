@@ -1,0 +1,21 @@
+schema: spec-driven
+
+context: |
+  Tech stack: Rust (ndarray, rayon, PyO3) + Python 3.11+ (JAX, Flax, Optax)
+  Domain: Energy Based Models (EBMs) — generative models using unnormalized energy functions
+  Three model tiers: Boltzmann (large), Gibbs (medium), Ising (small)
+  Spec-driven development: all code traces to REQ-*/SCENARIO-* in OpenSpec specs
+  100% test coverage (code) + 100% spec coverage (every test traces to a requirement)
+  Pre-commit hooks enforce formatting, linting, and coverage on every commit
+  Architecture follows BMAD methodology from agentic-refactor-rules
+
+rules:
+  proposal:
+    - Proposals must identify which capability spec(s) they affect
+    - Include impact on both Rust and Python implementations
+  tasks:
+    - Each task must reference the REQ-* or SCENARIO-* it implements
+    - Tasks should be completable within a single context window
+  design:
+    - Designs must cover both Rust trait-based and Python protocol-based approaches
+    - Include serialization format for cross-language interop

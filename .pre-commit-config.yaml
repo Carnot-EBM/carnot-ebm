@@ -1,0 +1,63 @@
+repos:
+  # Rust formatting
+  - repo: https://github.com/doublify/pre-commit-rust
+    rev: v1.0
+    hooks:
+      - id: fmt
+        name: rustfmt
+        args: ["--", "--check"]
+      - id: cargo-check
+        name: cargo check
+        args: ["--workspace", "--exclude", "carnot-python"]
+
+  # Rust linting
+  - repo: local
+    hooks:
+      - id: clippy
+        name: clippy
+        entry: cargo clippy --workspace --exclude carnot-python -- -D warnings
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+      # Rust test coverage enforcement
+      - id: rust-test-coverage
+        name: rust tests
+        entry: cargo test --workspace --exclude carnot-python
+        language: system
+        types: [rust]
+        pass_filenames: false
+
+  # Python formatting and linting
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.8.6
+    hooks:
+      - id: ruff
+        args: ["--fix"]
+      - id: ruff-format
+
+  # Python type checking
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy python/carnot
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      # Python test coverage enforcement
+      - id: pytest-coverage
+        name: pytest (100% coverage)
+        entry: pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      # Spec coverage: every test must reference a REQ-* or SCENARIO-*
+      - id: spec-coverage
+        name: spec coverage check
+        entry: python scripts/check_spec_coverage.py
+        language: system
+        types_or: [python, rust]
+        pass_filenames: false

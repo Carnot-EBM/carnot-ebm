@@ -1,0 +1,20 @@
+[package]
+name = "carnot-python"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "PyO3 bindings for Carnot EBM framework"
+
+[lib]
+name = "carnot_python"
+crate-type = ["cdylib"]
+
+[dependencies]
+carnot-core = { path = "../carnot-core" }
+carnot-ising = { path = "../carnot-ising" }
+carnot-gibbs = { path = "../carnot-gibbs" }
+carnot-boltzmann = { path = "../carnot-boltzmann" }
+carnot-samplers = { path = "../carnot-samplers" }
+pyo3 = { version = "0.24", features = ["extension-module"] }
+numpy = "0.24"
+ndarray = { workspace = true }
