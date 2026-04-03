@@ -6,6 +6,7 @@
 use ndarray::{Array1, Array2, ArrayView1, ArrayView2};
 use std::collections::HashMap;
 
+pub mod benchmarks;
 pub mod error;
 pub mod init;
 pub mod serialize;
