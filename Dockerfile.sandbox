@@ -1,0 +1,49 @@
+# Dockerfile.sandbox — Minimal image for autoresearch hypothesis execution.
+#
+# This image contains Python + JAX + the Carnot Python package, pre-installed
+# so that hypothesis code can import and use them immediately. The image is
+# designed to be run with gVisor (runsc) for syscall-level isolation, and
+# with Docker's --network none, --read-only, and --memory flags for defense
+# in depth.
+#
+# Build:
+#   docker build -f Dockerfile.sandbox -t carnot-sandbox .
+#
+# Run a hypothesis:
+#   docker run --rm --runtime=runsc \
+#     --network none --read-only --tmpfs /tmp:size=100M \
+#     --memory 16g --cpus 4 \
+#     -v /path/to/hypothesis.py:/hypothesis.py:ro \
+#     -v /path/to/benchmark_data.json:/data.json:ro \
+#     carnot-sandbox python /runner.py
+#
+# The runner.py script (copied into the image) loads the hypothesis,
+# calls run(benchmark_data), and prints the metrics dict as JSON to stdout.
+
+FROM python:3.12-slim
+
+# Install JAX (CPU) and Carnot dependencies.
+# Using CPU-only JAX keeps the image small (~500MB vs ~4GB with CUDA).
+# For GPU hypotheses, use the carnot-sandbox:cuda tag instead.
+RUN pip install --no-cache-dir \
+    jax[cpu] \
+    jaxlib \
+    numpy \
+    safetensors
+
+# Copy the Carnot Python package into the image.
+# This allows hypothesis code to `from carnot.models.ising import IsingModel` etc.
+COPY python/carnot /opt/carnot/python/carnot
+
+# Set PYTHONPATH so hypothesis code can import carnot
+ENV PYTHONPATH=/opt/carnot/python
+
+# Copy the in-container runner script that executes hypotheses safely.
+COPY scripts/sandbox_runner.py /runner.py
+
+# Run as non-root for defense in depth.
+RUN useradd --create-home sandbox
+USER sandbox
+
+# Default entrypoint: execute the runner script.
+ENTRYPOINT ["python", "/runner.py"]
