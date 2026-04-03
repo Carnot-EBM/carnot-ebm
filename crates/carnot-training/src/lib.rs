@@ -3,6 +3,7 @@
 //! Spec: REQ-TRAIN-001, REQ-TRAIN-002, REQ-TRAIN-003, REQ-TRAIN-004
 
 pub mod cd;
+pub mod nce;
 pub mod optimizer;
 pub mod score_matching;
 
