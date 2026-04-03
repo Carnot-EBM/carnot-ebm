@@ -1,24 +1,119 @@
 # Carnot — Changelog
 
+## 2026-04-03: Spec Reconciliation (user instruction: reconcile specs with reality)
+
+### Updated
+- **All 5 OpenSpec Implementation Status tables** reconciled with actual code/test state
+- **Traceability matrix** (`_bmad/traceability.md`): FR-08 Not Started → Partial, FR-11 Spec'd → Partial, FR-12 Spec'd → Implemented, test counts updated, NFR statuses updated
+- **ops/status.md**: comprehensive update reflecting all implemented features and remaining gaps
+- Added **spec-reconciler agent** (`.claude/agents/spec-reconciler.md`) and `/reconcile-specs` command to prevent future spec drift
+
+### Key discrepancies found and fixed
+- 24 requirements were implemented but specs still claimed "Not Started"
+- FR-08 (PyO3 interoperability) had full bindings but traceability said "Not Started"
+- FR-11 (autoresearch) had sandbox, evaluator, orchestrator, Docker sandbox but traceability said "Spec'd"
+- FR-12 (verifiable reasoning) had 12 of 14 requirements implemented but traceability said "Spec'd"
+
+---
+
+## 2026-04-03: Docker+gVisor Sandbox (user instruction: use Docker+gVisor for sandbox)
+
+### Added
+- `Dockerfile.sandbox`: minimal Python+JAX+carnot image for isolated hypothesis execution
+- `scripts/sandbox_runner.py`: in-container harness for hypothesis execution
+- `python/carnot/autoresearch/sandbox_docker.py`: Docker+gVisor sandbox backend with 5 defense layers (gVisor, no network, read-only FS, memory/CPU limits, timeout)
+- 21 new Python tests for Docker sandbox
+
+---
+
+## 2026-04-03: Autoresearch Orchestrator (user instruction: implement autoresearch orchestrator)
+
+### Added
+- `python/carnot/autoresearch/orchestrator.py`: `run_loop()` — full propose → sandbox → evaluate → log → update pipeline
+- `python/carnot/autoresearch/experiment_log.py`: append-only experiment log with rejected registry and circuit breaker
+- `scripts/demo_autoresearch.py`: end-to-end demo showing 90% DoubleWell and 80% Rosenbrock improvement
+- 20 new Python tests
+
+---
+
+## 2026-04-03: Comprehensive Documentation (user instruction: add verbose layman docs)
+
+### Added
+- 4,475 lines of inline documentation across 18 files (Rust + Python)
+- Two-tier format: terse researcher summary + detailed engineer explanation
+- Every public type, trait, function documented with examples and analogies
+
+---
+
+## 2026-04-03: CI Fixes + Security Agent (user instruction: fix CI failures, add security agent)
+
+### Fixed
+- rustfmt: 10 files reformatted
+- clippy: 7 warnings fixed (unused imports, derives, assign patterns)
+- Flaky Langevin statistics test: increased samples and tolerance
+
+### Added
+- Security auditor agent + `/security-audit` command
+- SOPS configuration for encrypted secrets at rest
+- Gitea CI workflow (5 parallel jobs)
+
+---
+
+## 2026-04-03: Autoresearch Sandbox + Score Matching (user instruction: implement #2 and #4 in parallel)
+
+### Added
+- Process-level sandbox: import blocking, SIGALRM timeout, I/O capture
+- Three-gate evaluator: energy, time, memory gates
+- Baseline registry with JSON persistence
+- Denoising score matching training (Rust + Python/JAX)
+- 37 new Python tests
+
+---
+
+## 2026-04-03: PyO3 Bindings (user instruction: implement PyO3 bindings)
+
+### Added
+- RustIsingModel, RustGibbsModel, RustBoltzmannModel exposed via PyO3
+- RustLangevinSampler, RustHMCSampler with per-model sample methods
+- Zero-copy numpy array transfer via PyReadonlyArray
+
+---
+
+## 2026-04-03: Analytical Backprop (user instruction: implement analytical backprop)
+
+### Fixed
+- Gibbs tier: replaced finite-difference gradients with analytical backprop (SiLU, ReLU, Tanh)
+- Boltzmann tier: replaced finite-difference with backprop through residual blocks
+
+---
+
+## 2026-04-03: Python Tests + Benchmarks + Agent Team
+
+### Added
+- 48 Python tests achieving 100% coverage (from 0)
+- Benchmark suite: DoubleWell, Rosenbrock, Ackley, Rastrigin, GaussianMixture
+- Benchmark runner with baseline recording
+- 5 E2E integration tests (sampler + benchmark)
+- Agent team: test-runner, lint-checker, spec-validator, evaluator, docs-keeper
+
+---
+
+## 2026-04-03: Verifiable Reasoning + Specs (user instruction: spec and implement autoresearch/verify)
+
+### Added
+- OpenSpec specs: autoresearch (10 REQs), verifiable-reasoning (7 REQs)
+- ConstraintTerm trait, ComposedEnergy, VerificationResult, gradient-based repair
+- Sudoku constraint satisfaction example (Rust + Python)
+- 17 Rust + 12 Python verification tests
+
+---
+
 ## 2026-04-03: Project Bootstrap (user instruction: initial project setup)
 
 ### Added
-- **BMAD strategic documents**: `_bmad/prd.md`, `_bmad/architecture.md`, `_bmad/traceability.md`
-- **OpenSpec capability specs**: core-ebm, model-tiers, training-inference (spec.md + design.md each)
-- **Rust workspace** with 7 crates:
-  - `carnot-core`: EnergyFunction trait, ModelState, serialization, initialization
-  - `carnot-ising`: Ising (small) tier with pairwise interaction energy
-  - `carnot-gibbs`: Gibbs (medium) tier with multi-layer energy network
-  - `carnot-boltzmann`: Boltzmann (large) tier with residual blocks
-  - `carnot-samplers`: Langevin dynamics + HMC samplers with Sampler trait
-  - `carnot-training`: CD-k training + Adam optimizer
-  - `carnot-python`: PyO3 binding skeleton
-- **Python/JAX package**:
-  - Core energy function protocol and AutoGradMixin
-  - ModelState with safetensors serialization
-  - IsingModel in JAX
-  - Langevin and HMC samplers in JAX (using jax.lax.scan)
-- **Pre-commit hooks**: rustfmt, clippy, ruff, mypy, pytest coverage, spec coverage checker
-- **Ops documents**: status.md, changelog.md, known-issues.md, e2e-test-plan.md, test-results.md, metrics.md
-- **Spec coverage script**: `scripts/check_spec_coverage.py`
-- Context from deep research PDF on EBM ecosystem (EB-JEPA, THRML, TorchEBM, Kona, Extropic TSU)
+- BMAD strategic documents: PRD, architecture, traceability
+- OpenSpec capability specs: core-ebm, model-tiers, training-inference
+- Rust workspace with 7 crates
+- Python/JAX package with core abstractions, Ising model, samplers
+- Pre-commit hooks, spec coverage script
+- README with anti-hallucination framing and self-learning vision

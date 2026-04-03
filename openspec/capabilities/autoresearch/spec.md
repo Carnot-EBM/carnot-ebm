@@ -169,13 +169,13 @@ When multiple hypotheses independently pass evaluation, the system shall:
 
 | Requirement | Rust | Python | Tests |
 |------------|------|--------|-------|
-| REQ-AUTO-001 | Not Started | Not Started | Not Started |
-| REQ-AUTO-002 | Not Started | Not Started | Not Started |
-| REQ-AUTO-003 | Not Started | Not Started | Not Started |
-| REQ-AUTO-004 | Not Started | Not Started | Not Started |
-| REQ-AUTO-005 | Not Started | Not Started | Not Started |
+| REQ-AUTO-001 | Implemented | Partial | 14 Rust |
+| REQ-AUTO-002 | Partial | Implemented | 3 Python |
+| REQ-AUTO-003 | Not Started | Implemented | Integration |
+| REQ-AUTO-004 | Not Started | Implemented | 13 + 21 Python |
+| REQ-AUTO-005 | Not Started | Implemented | 7 Python |
 | REQ-AUTO-006 | Not Started | Not Started | Not Started |
 | REQ-AUTO-007 | Not Started | Not Started | Not Started |
-| REQ-AUTO-008 | Not Started | Not Started | Not Started |
-| REQ-AUTO-009 | Not Started | Not Started | Not Started |
+| REQ-AUTO-008 | Not Started | Implemented | 5 Python |
+| REQ-AUTO-009 | Not Started | Implemented | 4 Python |
 | REQ-AUTO-010 | Not Started | Not Started | Not Started |

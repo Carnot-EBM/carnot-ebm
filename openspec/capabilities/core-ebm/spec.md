@@ -84,9 +84,9 @@ The system shall default to f32 precision with configurable f64 support via a co
 
 | Requirement | Rust | Python | Tests |
 |------------|------|--------|-------|
-| REQ-CORE-001 | Not Started | N/A | Not Started |
-| REQ-CORE-002 | N/A | Not Started | Not Started |
-| REQ-CORE-003 | Not Started | Not Started | Not Started |
-| REQ-CORE-004 | Not Started | Not Started | Not Started |
-| REQ-CORE-005 | Not Started | Not Started | Not Started |
-| REQ-CORE-006 | Not Started | Not Started | Not Started |
+| REQ-CORE-001 | Implemented | N/A | 4 Rust |
+| REQ-CORE-002 | N/A | Implemented | 6 Python |
+| REQ-CORE-003 | Implemented | Implemented | 2 Python |
+| REQ-CORE-004 | Implemented | Implemented | 2 Rust + 1 Python |
+| REQ-CORE-005 | Implemented | Implemented | Integration |
+| REQ-CORE-006 | Implemented | Implemented | 1 Rust |

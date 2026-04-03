@@ -115,10 +115,10 @@ Given identical inputs, model parameters, and random seeds, the system shall pro
 
 | Requirement | Rust | Python | Tests |
 |------------|------|--------|-------|
-| REQ-VERIFY-001 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-002 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-003 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-004 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-005 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-001 | Implemented | Implemented | 3 Rust + 3 Python |
+| REQ-VERIFY-002 | Implemented | Implemented | 2 Rust + 1 Python |
+| REQ-VERIFY-003 | Implemented | Implemented | 2 Rust + 2 Python |
+| REQ-VERIFY-004 | Implemented | Implemented | 2 Rust + 2 Python |
+| REQ-VERIFY-005 | Implemented | Implemented | 2 Rust + 2 Python |
 | REQ-VERIFY-006 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-007 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-007 | Implemented | Implemented | 1 Rust + 2 Python |

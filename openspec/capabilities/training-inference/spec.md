@@ -104,10 +104,10 @@ The system shall define a `Sampler` trait/protocol:
 
 | Requirement | Rust | Python | Tests |
 |------------|------|--------|-------|
-| REQ-TRAIN-001 | Not Started | Not Started | Not Started |
-| REQ-TRAIN-002 | Not Started | Not Started | Not Started |
+| REQ-TRAIN-001 | Implemented | Not Started | 2 Rust |
+| REQ-TRAIN-002 | Implemented | Implemented | 5 Rust + 13 Python |
 | REQ-TRAIN-003 | Not Started | Not Started | Not Started |
-| REQ-TRAIN-004 | Not Started | Not Started | Not Started |
-| REQ-SAMPLE-001 | Not Started | Not Started | Not Started |
-| REQ-SAMPLE-002 | Not Started | Not Started | Not Started |
-| REQ-SAMPLE-003 | Not Started | Not Started | Not Started |
+| REQ-TRAIN-004 | Partial | Not Started | 5 Rust |
+| REQ-SAMPLE-001 | Implemented | Implemented | 6 Rust + 4 Python |
+| REQ-SAMPLE-002 | Implemented | Implemented | 6 Rust + 2 Python |
+| REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 1 Python |
