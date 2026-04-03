@@ -1,6 +1,7 @@
 //! carnot-core: Core EBM traits, types, and abstractions.
 //!
-//! Implements: REQ-CORE-001, REQ-CORE-003, REQ-CORE-004, REQ-CORE-006
+//! Implements: REQ-CORE-001, REQ-CORE-003, REQ-CORE-004, REQ-CORE-006,
+//!             REQ-VERIFY-001 through REQ-VERIFY-007
 
 use ndarray::{Array1, Array2, ArrayView1, ArrayView2};
 use std::collections::HashMap;
@@ -8,6 +9,7 @@ use std::collections::HashMap;
 pub mod error;
 pub mod init;
 pub mod serialize;
+pub mod verify;
 
 pub use error::CarnotError;
 
