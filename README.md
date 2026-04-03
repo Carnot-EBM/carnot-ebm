@@ -2,15 +2,33 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot provides production-grade Energy Based Model (EBM) implementations across three capability tiers, bridging the gap between research-oriented Python/JAX code and deployment-ready Rust. Named after the thermodynamic cycle, Carnot treats energy minimization as a first-class computational primitive.
+Carnot is an EBM framework built to move beyond the hallucination-prone paradigm of autoregressive large language models, and toward autonomous systems capable of directed self-learning.
+
+## The Problem with LLMs
+
+Large language models generate text by predicting the most probable next token. This produces fluent output, but it's fundamentally guessing — there is no mechanism to verify that the output is logically consistent, physically valid, or factually correct. When an early token is wrong, the error cascades irrecoverably. This is why LLMs hallucinate: they optimize for plausibility, not truth.
 
 ## Why Energy Based Models?
 
-EBMs assign a scalar energy to every configuration of variables. Low energy = likely/valid; high energy = unlikely/invalid. Unlike autoregressive models that predict tokens sequentially, EBMs evaluate entire configurations simultaneously, enabling:
+EBMs take a fundamentally different approach. Instead of generating outputs sequentially, they assign a scalar energy to every possible configuration of variables. Low energy = valid/consistent; high energy = invalid/contradictory. Inference is optimization: find the configuration that minimizes energy across all constraints simultaneously.
 
-- **Constraint satisfaction** — natively enforce logical consistency across all variables
-- **Gradient-based refinement** — fix broken parts of a solution without restarting
-- **Hardware acceleration** — energy landscapes map directly to thermodynamic sampling hardware (Extropic TSU)
+This enables capabilities that autoregressive models structurally cannot provide:
+
+- **Verifiable reasoning** — mathematically prove a solution satisfies all constraints by showing it sits at an energy minimum
+- **Surgical error correction** — when a constraint is violated, gradient descent fixes the broken part without discarding the rest
+- **Autonomous self-improvement** — the energy function is an objective ground truth that cannot be gamed, enabling closed-loop self-learning without human feedback
+- **Hardware acceleration** — energy landscapes map directly to thermodynamic sampling hardware (Extropic TSU), promising 10,000x efficiency gains
+
+## The Path to Self-Learning
+
+Carnot is designed from the ground up to support an autonomous self-improvement loop:
+
+1. **Propose** — candidate improvements to architecture, training, or hyperparameters are prototyped in Python/JAX
+2. **Evaluate** — the energy landscape on held-out data serves as the objective judge (did energy decrease? real improvement. did it not? rejected.)
+3. **Deploy** — proven improvements are transpiled to Rust for production performance
+4. **Repeat** — the loop runs without human supervision, with safety guardrails
+
+The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
 ## Model Tiers
 
