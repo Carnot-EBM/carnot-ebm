@@ -16,8 +16,8 @@
 | FR-08 | Interoperability | `openspec/capabilities/core-ebm/spec.md` | - | PyO3 skeleton | Not Started |
 | FR-09 | Test Coverage | N/A (process) | 44 Rust tests | pre-commit | In Progress |
 | FR-10 | Spec-Driven Dev | N/A (process) | spec_coverage.py | pre-commit | In Progress |
-| FR-11 | Autonomous Self-Learning | TBD | - | - | Spec'd |
-| FR-12 | Verifiable Reasoning | TBD | - | - | Spec'd |
+| FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | - | - | Spec'd |
+| FR-12 | Verifiable Reasoning | `openspec/capabilities/verifiable-reasoning/spec.md` | - | - | Spec'd |
 
 ## Non-Functional Requirements
 
