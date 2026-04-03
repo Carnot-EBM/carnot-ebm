@@ -4,6 +4,7 @@
 
 pub mod cd;
 pub mod optimizer;
+pub mod score_matching;
 
 use carnot_core::Float;
 
