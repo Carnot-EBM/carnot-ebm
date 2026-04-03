@@ -3,7 +3,7 @@
 //! Implements: REQ-CORE-001, REQ-CORE-003, REQ-CORE-004, REQ-CORE-006,
 //!             REQ-VERIFY-001 through REQ-VERIFY-007
 
-use ndarray::{Array1, Array2, ArrayView1, ArrayView2};
+use ndarray::{Array1, ArrayView1, ArrayView2};
 use std::collections::HashMap;
 
 pub mod benchmarks;
@@ -54,16 +54,11 @@ pub struct ModelConfig {
 /// Numeric precision selection.
 ///
 /// Spec: REQ-CORE-006
-#[derive(Debug, Clone, Copy, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
+#[derive(Debug, Clone, Copy, Default, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Precision {
+    #[default]
     F32,
     F64,
-}
-
-impl Default for Precision {
-    fn default() -> Self {
-        Precision::F32
-    }
 }
 
 /// Model training metadata.
@@ -150,7 +145,11 @@ mod tests {
             let e_plus = model.energy(&x_plus.view());
             let e_minus = model.energy(&x_minus.view());
             let fd = (e_plus - e_minus) / (2.0 * eps);
-            assert!((grad[i] - fd).abs() < 0.1, "Gradient mismatch at index {i}: analytic={}, fd={fd}", grad[i]);
+            assert!(
+                (grad[i] - fd).abs() < 0.1,
+                "Gradient mismatch at index {i}: analytic={}, fd={fd}",
+                grad[i]
+            );
         }
     }
 

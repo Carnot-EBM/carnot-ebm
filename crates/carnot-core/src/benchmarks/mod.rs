@@ -169,7 +169,9 @@ impl EnergyFunction for Ackley {
         let n = x.len() as Float;
         let sum_sq: Float = x.iter().map(|&xi| xi * xi).sum();
         let sum_cos: Float = x.iter().map(|&xi| (2.0 * PI * xi).cos()).sum();
-        -20.0 * (-0.2 * (sum_sq / n).sqrt()).exp() - (sum_cos / n).exp() + 20.0 + std::f32::consts::E
+        -20.0 * (-0.2 * (sum_sq / n).sqrt()).exp() - (sum_cos / n).exp()
+            + 20.0
+            + std::f32::consts::E
     }
 
     fn grad_energy(&self, x: &ArrayView1<Float>) -> Array1<Float> {
@@ -230,9 +232,10 @@ impl EnergyFunction for Rastrigin {
     }
 
     fn grad_energy(&self, x: &ArrayView1<Float>) -> Array1<Float> {
-        Array1::from_iter(x.iter().map(|&xi| {
-            2.0 * xi + 10.0 * 2.0 * PI * (2.0 * PI * xi).sin()
-        }))
+        Array1::from_iter(
+            x.iter()
+                .map(|&xi| 2.0 * xi + 10.0 * 2.0 * PI * (2.0 * PI * xi).sin()),
+        )
     }
 
     fn input_dim(&self) -> usize {
@@ -281,15 +284,15 @@ impl GaussianMixture {
 impl EnergyFunction for GaussianMixture {
     fn energy(&self, x: &ArrayView1<Float>) -> Float {
         let mut log_sum: Float = Float::NEG_INFINITY;
-        for (k, (mean, (&var, &w))) in self
+        for (mean, (&var, &w)) in self
             .means
             .iter()
             .zip(self.variances.iter().zip(self.weights.iter()))
-            .enumerate()
         {
             let diff = x.to_owned() - mean;
             let exponent = -0.5 * diff.dot(&diff) / var;
-            let log_component = w.ln() + exponent - 0.5 * (self.dim as Float) * (2.0 * PI * var).ln();
+            let log_component =
+                w.ln() + exponent - 0.5 * (self.dim as Float) * (2.0 * PI * var).ln();
             // log-sum-exp for numerical stability
             if log_sum == Float::NEG_INFINITY {
                 log_sum = log_component;
@@ -381,7 +384,8 @@ mod tests {
         let grad = rb.grad_energy(&x.view());
         assert!(
             grad.iter().all(|g| g.abs() < 1e-4),
-            "Gradient at minimum should be ~0, got {:?}", grad
+            "Gradient at minimum should be ~0, got {:?}",
+            grad
         );
     }
 
@@ -431,7 +435,8 @@ mod tests {
         let grad = ras.grad_energy(&x.view());
         assert!(
             grad.iter().all(|g| g.abs() < 1e-4),
-            "Gradient at minimum should be ~0, got {:?}", grad
+            "Gradient at minimum should be ~0, got {:?}",
+            grad
         );
     }
 
@@ -454,8 +459,14 @@ mod tests {
         let e_mode2 = gmm.energy(&array![2.0].view());
         let e_between = gmm.energy(&array![0.0].view());
         // Energy should be lower at modes than between them
-        assert!(e_mode1 < e_between, "Mode 1 energy {e_mode1} should be < between {e_between}");
-        assert!(e_mode2 < e_between, "Mode 2 energy {e_mode2} should be < between {e_between}");
+        assert!(
+            e_mode1 < e_between,
+            "Mode 1 energy {e_mode1} should be < between {e_between}"
+        );
+        assert!(
+            e_mode2 < e_between,
+            "Mode 2 energy {e_mode2} should be < between {e_between}"
+        );
         // Symmetric modes should have equal energy
         assert!((e_mode1 - e_mode2).abs() < 1e-4);
     }
@@ -474,7 +485,10 @@ mod tests {
         for (i, b) in benchmarks.iter().enumerate() {
             let x = Array1::zeros(b.input_dim());
             let e = b.energy(&x.view());
-            assert!(e.is_finite(), "Benchmark {i} energy should be finite, got {e}");
+            assert!(
+                e.is_finite(),
+                "Benchmark {i} energy should be finite, got {e}"
+            );
             let grad = b.grad_energy(&x.view());
             assert!(
                 grad.iter().all(|g| g.is_finite()),

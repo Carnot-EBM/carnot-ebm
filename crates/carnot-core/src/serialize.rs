@@ -47,13 +47,10 @@ pub fn save_parameters(
 /// Load parameters from a safetensors file.
 ///
 /// Spec: REQ-CORE-004
-pub fn load_parameters(
-    path: &Path,
-) -> Result<HashMap<String, Array1<Float>>, CarnotError> {
-    let data = std::fs::read(path)
-        .map_err(|e| CarnotError::Serialization(e.to_string()))?;
-    let tensors = SafeTensors::deserialize(&data)
-        .map_err(|e| CarnotError::Serialization(e.to_string()))?;
+pub fn load_parameters(path: &Path) -> Result<HashMap<String, Array1<Float>>, CarnotError> {
+    let data = std::fs::read(path).map_err(|e| CarnotError::Serialization(e.to_string()))?;
+    let tensors =
+        SafeTensors::deserialize(&data).map_err(|e| CarnotError::Serialization(e.to_string()))?;
 
     let mut parameters = HashMap::new();
     for (name, tensor) in tensors.tensors() {
@@ -68,17 +65,15 @@ pub fn load_parameters(
 pub fn save_metadata(path: &Path, metadata: &ModelMetadata) -> Result<(), CarnotError> {
     let json = serde_json::to_string_pretty(metadata)
         .map_err(|e| CarnotError::Serialization(e.to_string()))?;
-    std::fs::write(path, json)
-        .map_err(|e| CarnotError::Serialization(e.to_string()))?;
+    std::fs::write(path, json).map_err(|e| CarnotError::Serialization(e.to_string()))?;
     Ok(())
 }
 
 /// Load training metadata from JSON sidecar.
 pub fn load_metadata(path: &Path) -> Result<ModelMetadata, CarnotError> {
-    let json = std::fs::read_to_string(path)
-        .map_err(|e| CarnotError::Serialization(e.to_string()))?;
-    serde_json::from_str(&json)
-        .map_err(|e| CarnotError::Serialization(e.to_string()))
+    let json =
+        std::fs::read_to_string(path).map_err(|e| CarnotError::Serialization(e.to_string()))?;
+    serde_json::from_str(&json).map_err(|e| CarnotError::Serialization(e.to_string()))
 }
 
 #[cfg(test)]

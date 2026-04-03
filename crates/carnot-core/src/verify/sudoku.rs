@@ -156,14 +156,14 @@ pub fn build_sudoku_energy(clues: &[[u8; 9]; 9]) -> ComposedEnergy {
     }
 
     // Clue constraints
-    for row in 0..9 {
-        for col in 0..9 {
-            if clues[row][col] != 0 {
+    for (row, clue_row) in clues.iter().enumerate() {
+        for (col, &clue_val) in clue_row.iter().enumerate() {
+            if clue_val != 0 {
                 composed.add_constraint(
                     Box::new(ClueConstraint {
                         name: format!("clue_r{row}c{col}"),
                         index: row * 9 + col,
-                        value: clues[row][col] as Float,
+                        value: clue_val as Float,
                     }),
                     10.0, // high weight to strongly enforce clues
                 );
@@ -253,10 +253,7 @@ mod tests {
 
         // Should specifically identify the violated clue constraints
         let failing = result.failing_constraints();
-        assert!(
-            !failing.is_empty(),
-            "Should have failing constraints"
-        );
+        assert!(!failing.is_empty(), "Should have failing constraints");
     }
 
     #[test]
@@ -271,7 +268,10 @@ mod tests {
 
         // All row/col/box constraints should be satisfied
         for r in &reports {
-            if r.name.starts_with("row_") || r.name.starts_with("col_") || r.name.starts_with("box_") {
+            if r.name.starts_with("row_")
+                || r.name.starts_with("col_")
+                || r.name.starts_with("box_")
+            {
                 assert!(
                     r.satisfied,
                     "Constraint {} should be satisfied, energy={}",
@@ -286,7 +286,8 @@ mod tests {
         assert!(
             (total - decomposed_sum).abs() < 1e-4,
             "Decomposition sum {} != total {}",
-            decomposed_sum, total
+            decomposed_sum,
+            total
         );
     }
 
@@ -309,7 +310,8 @@ mod tests {
         assert!(
             final_energy < initial_energy,
             "Repair should reduce energy: {} -> {}",
-            initial_energy, final_energy
+            initial_energy,
+            final_energy
         );
 
         // Number of violations should decrease (or at least not increase)
@@ -318,7 +320,8 @@ mod tests {
         assert!(
             final_violations <= initial_violations,
             "Violations should not increase: {} -> {}",
-            initial_violations, final_violations
+            initial_violations,
+            final_violations
         );
     }
 

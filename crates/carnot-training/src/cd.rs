@@ -6,8 +6,6 @@ use carnot_core::{EnergyFunction, Float};
 use carnot_samplers::{LangevinSampler, Sampler};
 use ndarray::{Array1, Array2, ArrayView2};
 
-use crate::TrainStepResult;
-
 /// Configuration for CD-k training.
 #[derive(Debug, Clone)]
 pub struct CdConfig {

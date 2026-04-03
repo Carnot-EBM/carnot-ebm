@@ -169,6 +169,9 @@ mod tests {
         // Should move toward zero
         let norm = param.dot(&param).sqrt();
         let initial_norm: Float = (5.0 * 5.0 + 5.0 * 5.0 as Float).sqrt();
-        assert!(norm < initial_norm, "Optimizer should reduce parameter norm: initial={initial_norm}, final={norm}");
+        assert!(
+            norm < initial_norm,
+            "Optimizer should reduce parameter norm: initial={initial_norm}, final={norm}"
+        );
     }
 }

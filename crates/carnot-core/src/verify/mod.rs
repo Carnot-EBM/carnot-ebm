@@ -323,10 +323,7 @@ mod tests {
             }),
             1.0,
         );
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 3.0 }),
-            2.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 3.0 }), 2.0);
 
         let x = array![0.5, 1.0];
         let total = composed.energy(&x.view());
@@ -355,10 +352,7 @@ mod tests {
             }),
             1.5,
         );
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 6.0 }),
-            1.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 6.0 }), 1.0);
 
         let x = array![0.5, 1.0, 2.0];
         let reports = composed.decompose(&x.view());
@@ -384,10 +378,7 @@ mod tests {
             }),
             1.0,
         );
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 5.0 }),
-            1.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 5.0 }), 1.0);
 
         let x = array![2.0, 3.0]; // min satisfied (2>=1), sum satisfied (5==5)
         let result = composed.verify(&x.view());
@@ -407,10 +398,7 @@ mod tests {
             }),
             1.0,
         );
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 10.0 }),
-            1.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 10.0 }), 1.0);
 
         let x = array![1.0, 2.0]; // min violated (1<5), sum violated (3!=10)
         let result = composed.verify(&x.view());
@@ -436,10 +424,7 @@ mod tests {
         );
         assert_eq!(composed.num_constraints(), 1);
 
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 0.0 }),
-            2.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 0.0 }), 2.0);
         assert_eq!(composed.num_constraints(), 2);
     }
 
@@ -447,10 +432,7 @@ mod tests {
     fn test_composed_as_energy_function() {
         // REQ-VERIFY-004: ComposedEnergy implements EnergyFunction
         let mut composed = ComposedEnergy::new(2);
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 0.0 }),
-            1.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 0.0 }), 1.0);
 
         // Use through the EnergyFunction trait
         let ef: &dyn EnergyFunction = &composed;
@@ -474,10 +456,7 @@ mod tests {
         );
         // Constraint 2: sum = 10.0 (will also be violated at x=[1,2], sum=3)
         // But we use x=[1,9] so sum=10 is satisfied while min_value is violated
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 10.0 }),
-            1.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 10.0 }), 1.0);
 
         // x=[1,9]: min_value violated (1<5), sum satisfied (1+9=10)
         let x = array![1.0, 9.0];
@@ -496,11 +475,13 @@ mod tests {
         // min_value grad at x[0]=1, min=5: -2*(5-1) = -8 at index 0, 0 at index 1
         assert!(
             (grad_violated[0] - (-8.0)).abs() < 1e-4,
-            "Expected grad[0]=-8.0, got {}", grad_violated[0]
+            "Expected grad[0]=-8.0, got {}",
+            grad_violated[0]
         );
         assert!(
             grad_violated[1].abs() < 1e-6,
-            "Expected grad[1]=0, got {}", grad_violated[1]
+            "Expected grad[1]=0, got {}",
+            grad_violated[1]
         );
 
         // Now test a case where both are violated so the gradient includes both
@@ -510,11 +491,13 @@ mod tests {
         // total violated: [-22, -14]
         assert!(
             (grad_both[0] - (-22.0)).abs() < 1e-3,
-            "Expected grad[0]=-22, got {}", grad_both[0]
+            "Expected grad[0]=-22, got {}",
+            grad_both[0]
         );
         assert!(
             (grad_both[1] - (-14.0)).abs() < 1e-3,
-            "Expected grad[1]=-14, got {}", grad_both[1]
+            "Expected grad[1]=-14, got {}",
+            grad_both[1]
         );
     }
 
@@ -585,12 +568,14 @@ mod tests {
         // the gradient for x[0] is 0, so x[0] stays at 10.0
         assert!(
             repaired[0] >= 1.0,
-            "Satisfied constraint should be preserved: x[0]={}", repaired[0]
+            "Satisfied constraint should be preserved: x[0]={}",
+            repaired[0]
         );
         // x[1] should have moved toward 5.0
         assert!(
             repaired[1] > 0.0,
-            "Violated constraint should improve: x[1]={}", repaired[1]
+            "Violated constraint should improve: x[1]={}",
+            repaired[1]
         );
     }
 
@@ -598,10 +583,7 @@ mod tests {
     fn test_deterministic_reproducibility() {
         // SCENARIO-VERIFY-006: identical inputs produce identical results
         let mut composed = ComposedEnergy::new(2);
-        composed.add_constraint(
-            Box::new(SumConstraint { target: 5.0 }),
-            1.0,
-        );
+        composed.add_constraint(Box::new(SumConstraint { target: 5.0 }), 1.0);
 
         let x = array![1.0, 2.0];
         let e1 = composed.energy(&x.view());
@@ -610,6 +592,9 @@ mod tests {
         let r2 = composed.verify(&x.view());
 
         assert_eq!(e1, e2, "Energy must be deterministic");
-        assert_eq!(r1.total_energy, r2.total_energy, "Verification must be deterministic");
+        assert_eq!(
+            r1.total_energy, r2.total_energy,
+            "Verification must be deterministic"
+        );
     }
 }

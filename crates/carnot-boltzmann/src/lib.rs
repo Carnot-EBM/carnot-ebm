@@ -30,15 +30,13 @@ impl BoltzmannConfig {
                 "hidden_dims must have at least one layer".into(),
             ));
         }
-        if self.hidden_dims.iter().any(|&d| d == 0) {
+        if self.hidden_dims.contains(&0) {
             return Err(CarnotError::InvalidConfig(
                 "all hidden_dims must be > 0".into(),
             ));
         }
         if self.num_heads == 0 {
-            return Err(CarnotError::InvalidConfig(
-                "num_heads must be > 0".into(),
-            ));
+            return Err(CarnotError::InvalidConfig("num_heads must be > 0".into()));
         }
         Ok(())
     }
@@ -84,9 +82,7 @@ struct ResidualBlock {
 
 /// Cached intermediate values for backprop through a residual block.
 struct ResBlockCache {
-    input: Array1<Float>,
     z1: Array1<Float>, // pre-activation of first SiLU
-    a1: Array1<Float>, // output of first SiLU
     z2: Array1<Float>, // pre-activation of second SiLU
 }
 
@@ -124,12 +120,7 @@ impl ResidualBlock {
             out
         };
 
-        let cache = ResBlockCache {
-            input: x.clone(),
-            z1,
-            a1,
-            z2,
-        };
+        let cache = ResBlockCache { z1, z2 };
         (result, cache)
     }
 
@@ -156,11 +147,11 @@ impl ResidualBlock {
             match &self.proj {
                 Some(proj) => {
                     // skip = proj * x  →  d_input += proj^T * d_out
-                    d_input = d_input + proj.t().dot(d_out);
+                    d_input += &proj.t().dot(d_out);
                 }
                 None => {
                     // skip = x  →  d_input += d_out
-                    d_input = d_input + d_out;
+                    d_input += d_out;
                 }
             }
         }

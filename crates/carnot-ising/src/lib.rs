@@ -7,7 +7,7 @@
 
 use carnot_core::init::Initializer;
 use carnot_core::{CarnotError, EnergyFunction, Float};
-use ndarray::{Array1, Array2, ArrayView1, ArrayView2};
+use ndarray::{Array1, Array2, ArrayView1};
 
 /// Configuration for the Ising model.
 ///

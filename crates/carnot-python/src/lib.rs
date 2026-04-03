@@ -8,10 +8,10 @@
 use numpy::{PyArray1, PyReadonlyArray1, PyReadonlyArray2};
 use pyo3::prelude::*;
 
-use carnot_core::{EnergyFunction, Float};
-use carnot_ising::{IsingConfig, IsingModel};
-use carnot_gibbs::{Activation, GibbsConfig, GibbsModel};
 use carnot_boltzmann::{BoltzmannConfig, BoltzmannModel};
+use carnot_core::{EnergyFunction, Float};
+use carnot_gibbs::{Activation, GibbsConfig, GibbsModel};
+use carnot_ising::{IsingConfig, IsingModel};
 use carnot_samplers::{HmcSampler, LangevinSampler, Sampler};
 
 // ---------------------------------------------------------------------------
@@ -49,13 +49,21 @@ impl PyIsingModel {
     }
 
     /// Compute energy for a batch of inputs.
-    fn energy_batch<'py>(&self, py: Python<'py>, xs: PyReadonlyArray2<Float>) -> Bound<'py, PyArray1<Float>> {
+    fn energy_batch<'py>(
+        &self,
+        py: Python<'py>,
+        xs: PyReadonlyArray2<Float>,
+    ) -> Bound<'py, PyArray1<Float>> {
         let result = self.inner.energy_batch(&xs.as_array());
         PyArray1::from_owned_array(py, result)
     }
 
     /// Compute gradient of energy w.r.t. x.
-    fn grad_energy<'py>(&self, py: Python<'py>, x: PyReadonlyArray1<Float>) -> Bound<'py, PyArray1<Float>> {
+    fn grad_energy<'py>(
+        &self,
+        py: Python<'py>,
+        x: PyReadonlyArray1<Float>,
+    ) -> Bound<'py, PyArray1<Float>> {
         let result = self.inner.grad_energy(&x.as_array());
         PyArray1::from_owned_array(py, result)
     }
@@ -89,14 +97,21 @@ struct PyGibbsModel {
 impl PyGibbsModel {
     #[new]
     #[pyo3(signature = (input_dim=784, hidden_dims=vec![512, 256], activation="silu", dropout=0.0))]
-    fn new(input_dim: usize, hidden_dims: Vec<usize>, activation: &str, dropout: f64) -> PyResult<Self> {
+    fn new(
+        input_dim: usize,
+        hidden_dims: Vec<usize>,
+        activation: &str,
+        dropout: f64,
+    ) -> PyResult<Self> {
         let act = match activation {
             "silu" => Activation::SiLU,
             "relu" => Activation::ReLU,
             "tanh" => Activation::Tanh,
-            other => return Err(pyo3::exceptions::PyValueError::new_err(
-                format!("Unknown activation: {other}. Use 'silu', 'relu', or 'tanh'.")
-            )),
+            other => {
+                return Err(pyo3::exceptions::PyValueError::new_err(format!(
+                    "Unknown activation: {other}. Use 'silu', 'relu', or 'tanh'."
+                )))
+            }
         };
         let config = GibbsConfig {
             input_dim,
@@ -113,12 +128,20 @@ impl PyGibbsModel {
         self.inner.energy(&x.as_array())
     }
 
-    fn energy_batch<'py>(&self, py: Python<'py>, xs: PyReadonlyArray2<Float>) -> Bound<'py, PyArray1<Float>> {
+    fn energy_batch<'py>(
+        &self,
+        py: Python<'py>,
+        xs: PyReadonlyArray2<Float>,
+    ) -> Bound<'py, PyArray1<Float>> {
         let result = self.inner.energy_batch(&xs.as_array());
         PyArray1::from_owned_array(py, result)
     }
 
-    fn grad_energy<'py>(&self, py: Python<'py>, x: PyReadonlyArray1<Float>) -> Bound<'py, PyArray1<Float>> {
+    fn grad_energy<'py>(
+        &self,
+        py: Python<'py>,
+        x: PyReadonlyArray1<Float>,
+    ) -> Bound<'py, PyArray1<Float>> {
         let result = self.inner.grad_energy(&x.as_array());
         PyArray1::from_owned_array(py, result)
     }
@@ -146,7 +169,12 @@ struct PyBoltzmannModel {
 impl PyBoltzmannModel {
     #[new]
     #[pyo3(signature = (input_dim=784, hidden_dims=vec![1024, 512, 256, 128], num_heads=4, residual=true))]
-    fn new(input_dim: usize, hidden_dims: Vec<usize>, num_heads: usize, residual: bool) -> PyResult<Self> {
+    fn new(
+        input_dim: usize,
+        hidden_dims: Vec<usize>,
+        num_heads: usize,
+        residual: bool,
+    ) -> PyResult<Self> {
         let config = BoltzmannConfig {
             input_dim,
             hidden_dims,
@@ -163,12 +191,20 @@ impl PyBoltzmannModel {
         self.inner.energy(&x.as_array())
     }
 
-    fn energy_batch<'py>(&self, py: Python<'py>, xs: PyReadonlyArray2<Float>) -> Bound<'py, PyArray1<Float>> {
+    fn energy_batch<'py>(
+        &self,
+        py: Python<'py>,
+        xs: PyReadonlyArray2<Float>,
+    ) -> Bound<'py, PyArray1<Float>> {
         let result = self.inner.energy_batch(&xs.as_array());
         PyArray1::from_owned_array(py, result)
     }
 
-    fn grad_energy<'py>(&self, py: Python<'py>, x: PyReadonlyArray1<Float>) -> Bound<'py, PyArray1<Float>> {
+    fn grad_energy<'py>(
+        &self,
+        py: Python<'py>,
+        x: PyReadonlyArray1<Float>,
+    ) -> Bound<'py, PyArray1<Float>> {
         let result = self.inner.grad_energy(&x.as_array());
         PyArray1::from_owned_array(py, result)
     }
@@ -208,7 +244,9 @@ impl PyLangevinSampler {
         init: PyReadonlyArray1<Float>,
         n_steps: usize,
     ) -> Bound<'py, PyArray1<Float>> {
-        let result = self.inner.sample(&model.inner, &init.as_array().to_owned(), n_steps);
+        let result = self
+            .inner
+            .sample(&model.inner, &init.as_array().to_owned(), n_steps);
         PyArray1::from_owned_array(py, result)
     }
 
@@ -219,7 +257,9 @@ impl PyLangevinSampler {
         init: PyReadonlyArray1<Float>,
         n_steps: usize,
     ) -> Bound<'py, PyArray1<Float>> {
-        let result = self.inner.sample(&model.inner, &init.as_array().to_owned(), n_steps);
+        let result = self
+            .inner
+            .sample(&model.inner, &init.as_array().to_owned(), n_steps);
         PyArray1::from_owned_array(py, result)
     }
 
@@ -230,7 +270,9 @@ impl PyLangevinSampler {
         init: PyReadonlyArray1<Float>,
         n_steps: usize,
     ) -> Bound<'py, PyArray1<Float>> {
-        let result = self.inner.sample(&model.inner, &init.as_array().to_owned(), n_steps);
+        let result = self
+            .inner
+            .sample(&model.inner, &init.as_array().to_owned(), n_steps);
         PyArray1::from_owned_array(py, result)
     }
 }
@@ -260,7 +302,9 @@ impl PyHmcSampler {
         init: PyReadonlyArray1<Float>,
         n_steps: usize,
     ) -> Bound<'py, PyArray1<Float>> {
-        let result = self.inner.sample(&model.inner, &init.as_array().to_owned(), n_steps);
+        let result = self
+            .inner
+            .sample(&model.inner, &init.as_array().to_owned(), n_steps);
         PyArray1::from_owned_array(py, result)
     }
 
@@ -271,7 +315,9 @@ impl PyHmcSampler {
         init: PyReadonlyArray1<Float>,
         n_steps: usize,
     ) -> Bound<'py, PyArray1<Float>> {
-        let result = self.inner.sample(&model.inner, &init.as_array().to_owned(), n_steps);
+        let result = self
+            .inner
+            .sample(&model.inner, &init.as_array().to_owned(), n_steps);
         PyArray1::from_owned_array(py, result)
     }
 
@@ -282,7 +328,9 @@ impl PyHmcSampler {
         init: PyReadonlyArray1<Float>,
         n_steps: usize,
     ) -> Bound<'py, PyArray1<Float>> {
-        let result = self.inner.sample(&model.inner, &init.as_array().to_owned(), n_steps);
+        let result = self
+            .inner
+            .sample(&model.inner, &init.as_array().to_owned(), n_steps);
         PyArray1::from_owned_array(py, result)
     }
 }

@@ -36,13 +36,16 @@ fn test_langevin_on_double_well() {
     // x[1] mean should be near 0.
     assert!(
         mean[1].abs() < 1.0,
-        "x[1] mean should be near 0, got {}", mean[1]
+        "x[1] mean should be near 0, got {}",
+        mean[1]
     );
 
     // Check samples are finite
     let burn_in = chain.len() / 2;
     assert!(
-        chain[burn_in..].iter().all(|s| s.iter().all(|v| v.is_finite())),
+        chain[burn_in..]
+            .iter()
+            .all(|s| s.iter().all(|v| v.is_finite())),
         "All samples should be finite"
     );
 }
@@ -80,7 +83,8 @@ fn test_hmc_on_double_well() {
     for s in &chain[burn_in..] {
         assert!(
             s.iter().all(|v| v.is_finite() && v.abs() < 100.0),
-            "Sample should be finite and bounded: {:?}", s
+            "Sample should be finite and bounded: {:?}",
+            s
         );
     }
 }
@@ -98,10 +102,7 @@ fn test_langevin_on_gaussian_mixture() {
 
     // Samples should be concentrated near the modes (±2)
     // Most samples should have |x| > 0.5 (not stuck at origin)
-    let near_modes: usize = samples
-        .iter()
-        .filter(|s| s[0].abs() > 0.5)
-        .count();
+    let near_modes: usize = samples.iter().filter(|s| s[0].abs() > 0.5).count();
     let fraction = near_modes as Float / samples.len() as Float;
     assert!(
         fraction > 0.5,
@@ -128,7 +129,8 @@ fn test_benchmark_gradient_descent_convergence() {
     assert!(
         final_energy < initial_energy,
         "Energy should decrease: {} -> {}",
-        initial_energy, final_energy
+        initial_energy,
+        final_energy
     );
     assert!(
         final_energy < 0.01,
@@ -141,9 +143,5 @@ fn test_benchmark_gradient_descent_convergence() {
         "x[0] should be near ±1, got {}",
         x[0]
     );
-    assert!(
-        x[1].abs() < 0.1,
-        "x[1] should be near 0, got {}",
-        x[1]
-    );
+    assert!(x[1].abs() < 0.1, "x[1] should be near 0, got {}", x[1]);
 }

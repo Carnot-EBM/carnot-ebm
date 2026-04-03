@@ -36,7 +36,7 @@ impl GibbsConfig {
                 "hidden_dims must have at least one layer".into(),
             ));
         }
-        if self.hidden_dims.iter().any(|&d| d == 0) {
+        if self.hidden_dims.contains(&0) {
             return Err(CarnotError::InvalidConfig(
                 "all hidden_dims must be > 0".into(),
             ));

@@ -34,14 +34,20 @@ pub struct BaselineRecord {
     pub benchmarks: HashMap<String, BenchmarkMetrics>,
 }
 
-impl BaselineRecord {
-    pub fn new() -> Self {
+impl Default for BaselineRecord {
+    fn default() -> Self {
         Self {
             version: "0.1.0".to_string(),
             commit: String::new(),
             timestamp: String::new(),
             benchmarks: HashMap::new(),
         }
+    }
+}
+
+impl BaselineRecord {
+    pub fn new() -> Self {
+        Self::default()
     }
 
     /// Save baseline to JSON file.
@@ -111,7 +117,7 @@ pub fn run_benchmark(
 ///
 /// Spec: REQ-AUTO-001, REQ-AUTO-002
 pub fn run_standard_benchmarks() -> BaselineRecord {
-    use super::{Ackley, DoubleWell, GaussianMixture, Rastrigin, Rosenbrock};
+    use super::{Ackley, DoubleWell, Rastrigin, Rosenbrock};
 
     let mut record = BaselineRecord::new();
 
@@ -119,29 +125,65 @@ pub fn run_standard_benchmarks() -> BaselineRecord {
     let dw = DoubleWell::new(2);
     let info = dw.info();
     let init = Array1::from_vec(vec![0.5, 0.5]);
-    let metrics = run_benchmark("double_well_2d", &dw, &init, 0.01, 10000, info.global_min_energy);
-    record.benchmarks.insert(metrics.benchmark_name.clone(), metrics);
+    let metrics = run_benchmark(
+        "double_well_2d",
+        &dw,
+        &init,
+        0.01,
+        10000,
+        info.global_min_energy,
+    );
+    record
+        .benchmarks
+        .insert(metrics.benchmark_name.clone(), metrics);
 
     // Rosenbrock 2D
     let rb = Rosenbrock::new(2);
     let info = rb.info();
     let init = Array1::from_vec(vec![0.0, 0.0]);
-    let metrics = run_benchmark("rosenbrock_2d", &rb, &init, 0.001, 50000, info.global_min_energy);
-    record.benchmarks.insert(metrics.benchmark_name.clone(), metrics);
+    let metrics = run_benchmark(
+        "rosenbrock_2d",
+        &rb,
+        &init,
+        0.001,
+        50000,
+        info.global_min_energy,
+    );
+    record
+        .benchmarks
+        .insert(metrics.benchmark_name.clone(), metrics);
 
     // Rastrigin 2D
     let ras = Rastrigin::new(2);
     let info = ras.info();
     let init = Array1::from_vec(vec![0.1, 0.1]);
-    let metrics = run_benchmark("rastrigin_2d", &ras, &init, 0.001, 10000, info.global_min_energy);
-    record.benchmarks.insert(metrics.benchmark_name.clone(), metrics);
+    let metrics = run_benchmark(
+        "rastrigin_2d",
+        &ras,
+        &init,
+        0.001,
+        10000,
+        info.global_min_energy,
+    );
+    record
+        .benchmarks
+        .insert(metrics.benchmark_name.clone(), metrics);
 
     // Ackley 2D
     let ack = Ackley::new(2);
     let info = ack.info();
     let init = Array1::from_vec(vec![0.5, 0.5]);
-    let metrics = run_benchmark("ackley_2d", &ack, &init, 0.01, 10000, info.global_min_energy);
-    record.benchmarks.insert(metrics.benchmark_name.clone(), metrics);
+    let metrics = run_benchmark(
+        "ackley_2d",
+        &ack,
+        &init,
+        0.01,
+        10000,
+        info.global_min_energy,
+    );
+    record
+        .benchmarks
+        .insert(metrics.benchmark_name.clone(), metrics);
 
     record
 }
