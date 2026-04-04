@@ -25,7 +25,8 @@ h1 {{ color: #0f0; }}
 <div id="log"></div>
 
 <script>
-const WS_URL = "{gateway_ws_url}";
+// Auto-detect WebSocket URL from current page location so remote browsers work
+const WS_URL = (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/ws";
 let ws = null;
 let device = null;
 let workerId = "unknown";

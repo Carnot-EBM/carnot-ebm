@@ -1,0 +1,11 @@
+services:
+  webgpu-gateway:
+    build:
+      context: ../..
+      dockerfile: crates/carnot-webgpu-gateway/Dockerfile
+    ports:
+      - "${GATEWAY_PORT:-3000}:3000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+    restart: unless-stopped
