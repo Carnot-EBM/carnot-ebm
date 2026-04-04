@@ -75,8 +75,9 @@ def create_initial_baselines() -> tuple[BaselineRecord, dict]:
         "rosenbrock": Rosenbrock(dim=2),
     }
 
-    # Default sampler: Langevin with step_size=0.001 (small enough for Rosenbrock)
-    sampler = LangevinSampler(step_size=0.001)
+    # Default sampler: Langevin with step_size=0.01 + gradient clipping
+    # clip_norm=10.0 prevents Rosenbrock NaN divergence (REQ-SAMPLE-004)
+    sampler = LangevinSampler(step_size=0.01, clip_norm=10.0)
     key = jrandom.PRNGKey(0)
     n_steps = 5000
 

@@ -64,7 +64,8 @@ well a sampler finds low-energy states.
 - **double_well**: A 2D potential with two minima at approximately x=[-1,0] and x=[1,0]. \
   Global minimum energy ~ -1.0. Tests ability to find and settle into energy minima.
 - **rosenbrock**: A narrow curved valley in 2D. Global minimum at x=[1,1] with energy 0. \
-  Tests optimization in ill-conditioned landscapes.
+  Tests optimization in ill-conditioned landscapes. VERY steep gradients (~3200 at \
+  typical init points) — MUST use clip_norm to prevent NaN divergence.
 
 ## EXACT Carnot API (use these signatures precisely)
 
@@ -82,14 +83,18 @@ from carnot.models.boltzmann import BoltzmannModel, BoltzmannConfig
 # BoltzmannConfig(input_dim=784, hidden_dims=[1024,512,256,128], num_heads=4, residual=True)
 # BoltzmannModel(config: BoltzmannConfig, key: jax.Array | None = None)
 
-# Samplers — dataclass with step_size, then call .sample()
+# Samplers — dataclass with step_size and optional clip_norm, then call .sample()
 from carnot.samplers.langevin import LangevinSampler
-# LangevinSampler(step_size=0.01)
+# LangevinSampler(step_size=0.01, clip_norm=None)
+# clip_norm: if set (e.g., 10.0), rescales gradients so ||grad||_2 <= clip_norm
+#   CRITICAL for steep landscapes like Rosenbrock (grad norm ~3200 at typical inits)
+#   Without clip_norm, Langevin WILL diverge to NaN on Rosenbrock!
 # sampler.sample(energy_fn, init, n_steps, key=None) -> jax.Array (final state)
 # sampler.sample_chain(energy_fn, init, n_steps, key=None) -> jax.Array (all states)
 
 from carnot.samplers.hmc import HMCSampler
-# HMCSampler(step_size=0.1, num_leapfrog_steps=10)
+# HMCSampler(step_size=0.1, num_leapfrog_steps=10, clip_norm=None)
+# clip_norm: same as Langevin — prevents leapfrog divergence on steep surfaces
 # sampler.sample(energy_fn, init, n_steps, key=None) -> jax.Array
 # sampler.sample_chain(energy_fn, init, n_steps, key=None) -> jax.Array
 
@@ -133,8 +138,9 @@ def run(benchmark_data):
         "rosenbrock": Rosenbrock(dim=2),
     }
 
-    # Hypothesis: try a different step size
-    sampler = LangevinSampler(step_size=0.005)
+    # Hypothesis: try a different step size with gradient clipping
+    # clip_norm=10.0 prevents NaN on Rosenbrock's steep gradients
+    sampler = LangevinSampler(step_size=0.005, clip_norm=10.0)
 
     for bench_name, energy_fn in benchmarks.items():
         k1, key = jrandom.split(key)
@@ -152,8 +158,9 @@ def run(benchmark_data):
 ## IMPORTANT RULES
 
 1. Your code MUST actually call the Carnot API — do NOT return hardcoded energy values
-2. Use the EXACT constructor signatures shown above — no extra kwargs
+2. Use the constructor signatures shown above — you MAY use optional kwargs like clip_norm
 3. For 2D benchmarks (double_well, rosenbrock), use input_dim=2
+4. ALWAYS use clip_norm on Rosenbrock — without it, gradients (~3200) cause NaN divergence
 4. The sandbox blocks: os, subprocess, socket, shutil, etc.
 5. Allowed imports: jax, jax.numpy, jax.random, numpy, math, time, carnot.*
 
@@ -168,8 +175,12 @@ Your hypothesis PASSES if:
 
 - Propose ONE hypothesis at a time
 - Include a brief description of your rationale
-- Vary: step_size, n_steps, model tier (Ising/Gibbs/Boltzmann), sampler (Langevin/HMC)
-- Start with simple parameter sweeps, then try model changes
+- Vary: step_size, n_steps, clip_norm, sampler (Langevin/HMC), num_leapfrog_steps
+- Use clip_norm for Rosenbrock (steep gradients). Try clip_norm=1.0 to 100.0
+- Consider per-benchmark sampler configs (different step_size for each benchmark)
+- Try annealing schedules (decrease step_size over iterations)
+- Try HMC with different num_leapfrog_steps (5, 10, 20, 50)
+- Start with simple parameter sweeps, then try creative combinations
 
 ## Skill Playbook
 
