@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-04-04: Session handoff — autoresearch proven, all E2E debts cleared
+
+### Summary
+Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator, 5 benchmark energy functions, adversarial reviewer agent, E2E training+sampling tests, E2E serialization tests, JIT timing fix, 10-iteration autoresearch run with Sonnet. DoubleWell energy reduced 83% (0.95→0.16) via LLM-proposed improvements. Rosenbrock NaN identified as gradient clipping gap — next session priority.
+
+### Commits
+- `77e63d6` — Gibbs JAX, PyO3 tests, Claude API bridge, LLM autoresearch, benchmarks
+- `41b3123` — Adversarial reviewer agent + close all review gaps
+- `b8a0481` — E2E tests: training+sampling pipeline and serialization round-trip
+- `7b5ab9f` — JIT grace period + 10-iteration Sonnet autoresearch run
+
+---
+
 ## 2026-04-03: Gibbs JAX + PyO3 Tests + Claude API Bridge + LLM Autoresearch (user instruction: implement Gibbs JAX, PyO3 tests, real autoresearch with LLM)
 
 ### Added
