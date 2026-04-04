@@ -70,23 +70,36 @@
 - SOPS encrypted secrets
 - Comprehensive inline documentation (~8,000 lines of docs)
 
-## What's Next
+### Autoresearch Results (50-iteration run, 2026-04-04)
+- DoubleWell: **0.0001** (near global min 0.0) — 2 accepted hypotheses
+- Rosenbrock: **0.0092** (near global min 0.0) — first time producing finite results!
+- Circuit breaker tripped at iteration 18 (both benchmarks near-optimal, nowhere to improve)
+- Key fix: updated system prompt with `clip_norm` documentation so LLM uses gradient clipping
 
-### High Priority
-- ~~**Gradient clipping**~~: DONE — `clip_norm` parameter on LangevinSampler and HMCSampler. Rosenbrock no longer diverges.
-- **E2E-001: Rust training pipeline test**: Only remaining E2E test gap. Requires Rust-side integration test.
+## What's Next — Research-Informed Roadmap
 
-### Medium Priority
+See full plan: `openspec/change-proposals/research-informed-roadmap.md`
+
+### Phase 1: Quick Wins (1 session)
+- **P1: Semantic Energy** — hallucination detection from LLM logprobs (arxiv 2508.14496)
+- **P2: Multi-Start Repair** — run repair from N random perturbations, select best (arxiv 2507.02092)
+
+### Phase 2: Training Improvements (1 session)
+- **P3: SNL Training Loss** — self-normalised likelihood, tighter than NCE (arxiv 2503.07021)
+
+### Phase 3: Theoretical Unification (1-2 sessions)
+- **P4: ARM↔EBM Bijection** — extract per-token energy from LLM logits (arxiv 2512.15605)
+
+### Phase 4: Optimal Energy Landscapes (2-3 sessions)
+- **P5: Train Through Optimization** — backprop through repair steps via Hessian-vector products (arxiv 2507.02092)
+
+### Other
+- **E2E-001: Rust training pipeline test**: Only remaining E2E test gap
 - **GPU benchmarking**: JAX CUDA performance vs Rust CPU
-- **Attention in Boltzmann tier**: multi-head attention (num_heads is reserved)
-- **Longer autoresearch runs**: With gradient clipping, run 50+ iterations to test convergence
-
-### Low Priority
 - **GitHub public mirror**: open-source visibility
-- **Autoresearch CI**: automate the LLM autoresearch loop in CI (requires API bridge in pipeline)
 
 ## Known Constraints
 - Python 3.14 requires `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1`
 - gVisor not yet installed on dev machine (Docker sandbox falls back to runc)
-- Ackley Python/JAX uses epsilon=1e-10 in sqrt for gradient stability (documented in spec, differs from Rust numerical gradient approach)
-- Rosenbrock diverges with Langevin step_size > ~0.001 due to steep gradients (needs gradient clipping)
+- Ackley Python/JAX uses epsilon=1e-10 in sqrt for gradient stability (documented in spec)
+- ~~Rosenbrock diverges~~ FIXED: `clip_norm=10.0` on samplers
