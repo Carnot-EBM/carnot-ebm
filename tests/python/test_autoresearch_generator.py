@@ -45,14 +45,14 @@ class TestBuildUserPrompt:
     """Tests for prompt construction."""
 
     def test_basic_prompt(self) -> None:
-        """FR-11: prompt includes baseline info."""
+        """REQ-AUTO-003: prompt includes baseline info."""
         baselines = _make_baselines()
         prompt = _build_user_prompt(baselines)
         assert "double_well" in prompt
         assert "0.050000" in prompt
 
     def test_with_failures(self) -> None:
-        """FR-11: prompt includes failure context."""
+        """REQ-AUTO-003: prompt includes failure context."""
         baselines = _make_baselines()
         failures = [{"description": "bad idea", "reason": "energy regressed"}]
         prompt = _build_user_prompt(baselines, recent_failures=failures)
@@ -60,24 +60,24 @@ class TestBuildUserPrompt:
         assert "energy regressed" in prompt
 
     def test_iteration_zero(self) -> None:
-        """FR-11: first iteration has conservative guidance."""
+        """REQ-AUTO-003: first iteration has conservative guidance."""
         prompt = _build_user_prompt(_make_baselines(), iteration=0)
         assert "first iteration" in prompt.lower()
 
     def test_later_iteration(self) -> None:
-        """FR-11: later iterations encourage creativity."""
+        """REQ-AUTO-003: later iterations encourage creativity."""
         prompt = _build_user_prompt(_make_baselines(), iteration=10)
         assert "creative" in prompt.lower()
 
     def test_extra_context(self) -> None:
-        """FR-11: extra context is included."""
+        """REQ-AUTO-003: extra context is included."""
         prompt = _build_user_prompt(
             _make_baselines(), extra_context="Focus on HMC sampling."
         )
         assert "Focus on HMC sampling" in prompt
 
     def test_empty_baselines(self) -> None:
-        """FR-11: handles empty baselines."""
+        """REQ-AUTO-003: handles empty baselines."""
         baselines = BaselineRecord(version="test")
         prompt = _build_user_prompt(baselines)
         assert "No baselines" in prompt
@@ -161,7 +161,7 @@ class TestGenerateHypotheses:
     """Tests for the full generation pipeline."""
 
     def test_missing_openai(self) -> None:
-        """FR-11: graceful error when openai not installed."""
+        """REQ-AUTO-003: graceful error when openai not installed."""
         config = GeneratorConfig()
         with patch.dict("sys.modules", {"openai": None}):
             result = generate_hypotheses(config, _make_baselines())
@@ -169,7 +169,7 @@ class TestGenerateHypotheses:
             assert "openai" in result.error.lower()
 
     def test_successful_generation(self) -> None:
-        """FR-11: successful LLM call returns hypotheses."""
+        """REQ-AUTO-003: successful LLM call returns hypotheses."""
         config = GeneratorConfig()
 
         mock_response = MagicMock()
@@ -192,7 +192,7 @@ def run(benchmark_data):
             assert "def run(" in result.hypotheses[0][1]
 
     def test_no_valid_code(self) -> None:
-        """FR-11: error when LLM returns no valid code."""
+        """REQ-AUTO-003: error when LLM returns no valid code."""
         config = GeneratorConfig()
 
         mock_response = MagicMock()
@@ -208,7 +208,7 @@ def run(benchmark_data):
             assert "no valid" in result.error.lower()
 
     def test_api_error(self) -> None:
-        """FR-11: API error returns error result."""
+        """REQ-AUTO-003: API error returns error result."""
         config = GeneratorConfig()
 
         mock_client = MagicMock()
@@ -224,7 +224,7 @@ class TestGenerateHypothesesBatch:
     """Tests for batch generation."""
 
     def test_batch_collects_results(self) -> None:
-        """FR-11: batch returns multiple hypotheses."""
+        """REQ-AUTO-003: batch returns multiple hypotheses."""
         config = GeneratorConfig()
 
         mock_response = MagicMock()
@@ -245,7 +245,7 @@ def run(benchmark_data):
             assert len(hypotheses) == 2
 
     def test_batch_handles_failures(self) -> None:
-        """FR-11: batch continues on individual failures."""
+        """REQ-AUTO-003: batch continues on individual failures."""
         config = GeneratorConfig()
 
         call_count = 0
@@ -285,7 +285,7 @@ class TestRunLoopWithGenerator:
     """Tests for the generator-based orchestrator loop."""
 
     def test_accepts_good_hypothesis(self) -> None:
-        """FR-11: loop accepts hypothesis that improves energy."""
+        """REQ-AUTO-005: loop accepts hypothesis that improves energy."""
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
@@ -302,7 +302,7 @@ def run(benchmark_data):
         assert result.accepted == 1
 
     def test_rejects_bad_hypothesis(self) -> None:
-        """FR-11: loop rejects hypothesis that regresses energy."""
+        """REQ-AUTO-005: loop rejects hypothesis that regresses energy."""
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
@@ -319,7 +319,7 @@ def run(benchmark_data):
         assert result.rejected == 1
 
     def test_empty_generator_stops(self) -> None:
-        """FR-11: loop stops when generator returns no hypotheses."""
+        """REQ-AUTO-009: loop stops when generator returns no hypotheses."""
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
@@ -347,7 +347,7 @@ def run(benchmark_data):
         assert result.circuit_breaker_tripped
 
     def test_generator_exception(self) -> None:
-        """FR-11: loop handles generator exceptions gracefully."""
+        """REQ-AUTO-009: loop handles generator exceptions gracefully."""
         baselines = _make_baselines()
         call_count = 0
 
@@ -364,7 +364,7 @@ def run(benchmark_data):
         assert result.iterations == 0
 
     def test_default_config(self) -> None:
-        """FR-11: loop works with default config (None)."""
+        """REQ-AUTO-005: loop works with default config (None)."""
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
@@ -374,7 +374,7 @@ def run(benchmark_data):
         assert result.iterations == 0
 
     def test_max_iterations_inner_break(self) -> None:
-        """FR-11: loop stops mid-batch when max_iterations reached."""
+        """REQ-AUTO-009: loop stops mid-batch when max_iterations reached."""
         baselines = _make_baselines()
 
         def generator(bl, failures, iteration):
@@ -391,7 +391,7 @@ def run(benchmark_data):
         assert result.iterations == 2
 
     def test_review_verdict(self) -> None:
-        """FR-11: loop handles REVIEW verdict (mixed improvements/regressions)."""
+        """REQ-AUTO-005: loop handles REVIEW verdict (mixed improvements/regressions)."""
         baselines = _make_baselines()
         # Add a second benchmark so we can have mixed results
         baselines.benchmarks["rosenbrock"] = BenchmarkMetrics(
@@ -441,7 +441,7 @@ def run(benchmark_data):
         assert result.circuit_breaker_tripped
 
     def test_feedback_loop(self) -> None:
-        """FR-11: failures are fed back to generator."""
+        """REQ-AUTO-003: failures are fed back to generator."""
         baselines = _make_baselines()
         received_failures: list[list] = []
 

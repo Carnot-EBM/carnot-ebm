@@ -26,6 +26,8 @@ Each benchmark shall define:
 - Evaluation metrics (convergence speed, final energy, sample quality, wall-clock time)
 - Pass/fail thresholds
 
+**Cross-language note:** The Ackley benchmark in Python/JAX adds a small epsilon (1e-10) inside the sqrt to prevent NaN gradients from jax.grad at the origin (d/dx sqrt(0) is undefined). The Rust implementation uses numerical gradients instead. Energy values may differ by up to ~1e-5 near the origin. This is an intentional implementation divergence documented here rather than in the code alone.
+
 ### REQ-AUTO-002: Baseline Registry
 
 The system shall maintain a registry of baseline performance metrics for the current production models and algorithms, stored as versioned JSON files. Each entry records:

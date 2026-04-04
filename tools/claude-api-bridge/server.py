@@ -31,14 +31,41 @@ from typing import Any
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse, StreamingResponse
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.responses import Response
 
 logger = logging.getLogger(__name__)
+
+# Maximum request body size (10 MB). Prevents memory exhaustion from
+# oversized payloads sent by malicious or misconfigured clients.
+MAX_REQUEST_BODY_BYTES = int(os.environ.get("MAX_REQUEST_BODY_BYTES", 10 * 1024 * 1024))
+
+
+class RequestSizeLimitMiddleware(BaseHTTPMiddleware):
+    """Reject requests with bodies larger than MAX_REQUEST_BODY_BYTES."""
+
+    async def dispatch(self, request: Request, call_next):
+        content_length = request.headers.get("content-length")
+        if content_length and int(content_length) > MAX_REQUEST_BODY_BYTES:
+            return Response(
+                content=json.dumps({
+                    "error": {
+                        "message": f"Request body too large (max {MAX_REQUEST_BODY_BYTES} bytes)",
+                        "type": "invalid_request_error",
+                    }
+                }),
+                status_code=413,
+                media_type="application/json",
+            )
+        return await call_next(request)
+
 
 app = FastAPI(
     title="Claude Code API Bridge",
     description="OpenAI-compatible API wrapping Claude Code CLI",
     version="0.1.0",
 )
+app.add_middleware(RequestSizeLimitMiddleware)
 
 # Claude Code CLI binary — configurable via environment variable
 CLAUDE_BIN = os.environ.get("CLAUDE_BIN", "claude")
