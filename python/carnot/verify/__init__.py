@@ -23,6 +23,12 @@ from carnot.verify.convergence import (
     estimate_jacobian_bound,
 )
 from carnot.verify.landscape import LandscapeCertificate, certify_landscape
+from carnot.verify.property_test import (
+    PropertyTestConstraint,
+    PropertyTestResult,
+    format_violations_for_llm,
+    property_test,
+)
 from carnot.verify.python_types import (
     NoExceptionConstraint,
     ReturnTypeConstraint,
@@ -40,6 +46,8 @@ from carnot.verify.sat import (
 )
 
 __all__ = [
+    "PropertyTestConstraint",
+    "PropertyTestResult",
     "NoExceptionConstraint",
     "ReturnTypeConstraint",
     "TestPassConstraint",
@@ -58,12 +66,14 @@ __all__ = [
     "build_code_energy",
     "build_coloring_energy",
     "code_to_embedding",
+    "format_violations_for_llm",
     "build_sat_energy",
     "certify_landscape",
     "certify_repair_convergence",
     "compute_absorbing_radius",
     "estimate_jacobian_bound",
     "parse_dimacs",
+    "property_test",
     "repair",
     "safe_exec_function",
 ]
