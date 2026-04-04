@@ -16,6 +16,12 @@ from carnot.verify.graph_coloring import (
     ColorRangeConstraint,
     build_coloring_energy,
 )
+from carnot.verify.convergence import (
+    ConvergenceCertificate,
+    certify_repair_convergence,
+    compute_absorbing_radius,
+    estimate_jacobian_bound,
+)
 from carnot.verify.landscape import LandscapeCertificate, certify_landscape
 from carnot.verify.python_types import (
     NoExceptionConstraint,
@@ -37,6 +43,7 @@ __all__ = [
     "NoExceptionConstraint",
     "ReturnTypeConstraint",
     "TestPassConstraint",
+    "ConvergenceCertificate",
     "ColorDifferenceConstraint",
     "ColorRangeConstraint",
     "ComposedEnergy",
@@ -53,6 +60,9 @@ __all__ = [
     "code_to_embedding",
     "build_sat_energy",
     "certify_landscape",
+    "certify_repair_convergence",
+    "compute_absorbing_radius",
+    "estimate_jacobian_bound",
     "parse_dimacs",
     "repair",
     "safe_exec_function",
