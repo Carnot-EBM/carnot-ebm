@@ -1,0 +1,54 @@
+# Carnot Infrastructure Services
+#
+# Usage:
+#   make up       # start all services
+#   make down     # stop all services
+#   make logs     # tail logs
+#   make status   # check health
+#
+# Or directly:
+#   docker compose up -d
+#   docker compose down
+
+services:
+  # Claude Code API Bridge — OpenAI-compatible endpoint wrapping `claude -p`
+  # Used by autoresearch hypothesis generator and LLM solver
+  claude-api-bridge:
+    build: tools/claude-api-bridge
+    image: claude-api-bridge:latest
+    container_name: carnot-claude-bridge
+    ports:
+      - "${BRIDGE_PORT:-8080}:8080"
+    volumes:
+      - ${CLAUDE_CONFIG_DIR:-~/.claude}:/root/.claude:ro
+    environment:
+      - CLAUDE_BIN=${CLAUDE_BIN:-claude}
+      - MCP_CONFIG_PATH=${MCP_CONFIG_PATH:-}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # WebGPU Distributed Compute Gateway — browsers as GPU nodes
+  # Browsers visit http://<host>:3000 to contribute GPU compute
+  webgpu-gateway:
+    build:
+      context: .
+      dockerfile: crates/carnot-webgpu-gateway/Dockerfile
+    image: carnot-webgpu-gateway:latest
+    container_name: carnot-webgpu-gateway
+    ports:
+      - "${GATEWAY_PORT:-3000}:3000"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=3000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "sh", "-c", "wget -q -O- http://localhost:3000/health || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
