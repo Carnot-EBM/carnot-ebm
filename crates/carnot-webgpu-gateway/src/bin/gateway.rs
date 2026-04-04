@@ -21,9 +21,8 @@ async fn main() {
     let host = std::env::var("HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
     let addr = format!("{}:{}", host, port);
 
-    // Generate the worker HTML page
-    let ws_url = format!("ws://localhost:{}/ws", port);
-    let html = worker_html(&ws_url);
+    // Generate the worker HTML page (auto-detects WebSocket URL in browser)
+    let html = worker_html();
 
     // Write to static dir
     let static_dir = std::env::temp_dir().join("carnot-gateway-static");
