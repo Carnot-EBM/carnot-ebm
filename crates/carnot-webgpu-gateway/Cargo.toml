@@ -1,0 +1,22 @@
+[package]
+name = "carnot-webgpu-gateway"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "WebGPU distributed compute gateway — browsers as GPU compute nodes"
+
+[dependencies]
+carnot-core = { path = "../carnot-core" }
+tokio = { version = "1", features = ["full"] }
+tokio-tungstenite = "0.26"
+futures-util = "0.3"
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = "0.3"
+uuid = { version = "1", features = ["v4"] }
+axum = { version = "0.7", features = ["ws"] }
+tower-http = { version = "0.5", features = ["fs", "cors"] }
+
+[dev-dependencies]
+approx = { workspace = true }
