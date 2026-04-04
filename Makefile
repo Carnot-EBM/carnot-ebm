@@ -104,6 +104,20 @@ benchmark:
 autoresearch-code:
 	.venv/bin/python scripts/run_code_verification_autoresearch.py
 
+# ─── Research Conductor ───────────────────────────────────
+
+## Run one research step (pick task, implement, test, commit)
+research-step:
+	.venv/bin/python scripts/research_conductor.py
+
+## Run research conductor in continuous loop (every 30 min)
+research-loop:
+	.venv/bin/python scripts/research_conductor.py --loop --interval 30 --push
+
+## Dry run — show what conductor would do
+research-dry:
+	.venv/bin/python scripts/research_conductor.py --dry-run
+
 # ─── Clean ────────────────────────────────────────────────────────
 
 ## Clean build artifacts
@@ -135,3 +149,8 @@ help:
 	@echo "  make autoresearch     50-iteration LLM autoresearch"
 	@echo "  make benchmark        LLM-EBM SAT/coloring benchmark"
 	@echo "  make autoresearch-code   Code verification self-improvement"
+	@echo ""
+	@echo "Research Conductor:"
+	@echo "  make research-step    Run one research step"
+	@echo "  make research-loop    Continuous loop (tmux/screen)"
+	@echo "  make research-dry     Show what would be done"
