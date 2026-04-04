@@ -1,8 +1,10 @@
 //! Integration tests for GPU-accelerated Ising model.
+//! Spec: REQ-CORE-002
 
 use carnot_gpu::{GpuContext, IsingGpu};
 use ndarray::Array2;
 
+/// REQ-CORE-002: GPU context initialization
 #[test]
 fn test_gpu_context_creation() {
     let ctx = GpuContext::new();
@@ -17,6 +19,7 @@ fn test_gpu_context_creation() {
     }
 }
 
+/// REQ-CORE-002: GPU batch energy matches expected values
 #[test]
 fn test_ising_energy_batch() {
     let ctx = match GpuContext::new() {
@@ -59,6 +62,7 @@ fn test_ising_energy_batch() {
     assert!((energies[2] - 0.0).abs() < 0.01, "Expected 0.0, got {}", energies[2]);
 }
 
+/// REQ-CORE-002: GPU results match CPU ndarray computation
 #[test]
 fn test_ising_gpu_matches_cpu() {
     let ctx = match GpuContext::new() {

@@ -23,13 +23,13 @@
     The LLM import is lazy (same pattern as hypothesis_generator.py) so the
     module works without the openai package installed — it just returns errors.
 
-Spec: REQ-INFER-006
+Spec: REQ-INFER-006, REQ-INFER-013
 """
 
 from __future__ import annotations
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 import jax.numpy as jnp
@@ -267,3 +267,198 @@ def run_llm_coloring_experiment(
         max_repair_steps=repair_max_steps,
         round_fn=round_fn,
     )
+
+
+# ---------------------------------------------------------------------------
+# EBM-Guided Iterative Refinement
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class RefinementResult:
+    """Result of EBM-guided iterative refinement.
+
+    **Researcher summary:**
+        Tracks how the LLM improves its answer across iterations, guided
+        by EBM violation feedback. The key metric is how many iterations
+        it takes to reach energy=0 (all constraints satisfied).
+
+    **Detailed explanation for engineers:**
+        This changes the relationship from "LLM then EBM" to "LLM WITH EBM."
+        Instead of a single generate-then-check, the EBM feeds violation
+        details back to the LLM, which regenerates. This loop continues
+        until the EBM certifies correctness (energy=0) or max iterations.
+
+    Spec: REQ-INFER-013
+    """
+
+    iterations: int = 0
+    final_verified: bool = False
+    final_energy: float = 0.0
+    energy_trajectory: list[float] = field(default_factory=list)
+    violation_trajectory: list[int] = field(default_factory=list)
+    final_code: str = ""
+    final_response: str = ""
+
+
+def _build_code_violation_feedback(
+    test_results: list[dict[str, Any]],
+) -> str:
+    """Build feedback for code verification failures.
+
+    Spec: REQ-INFER-013
+    """
+    failures = [t for t in test_results if not t["passed"]]
+    if not failures:
+        return ""
+
+    parts = [f"Your code failed {len(failures)} test case(s):"]
+    for t in failures[:10]:
+        if t.get("error"):
+            parts.append(f"  - {t['input']}: raised {t['error']}")
+        else:
+            parts.append(f"  - {t['input']}: expected {t['expected']}, got {t['actual']}")
+
+    parts.append("")
+    parts.append("Fix the function and resubmit. Return ONLY the function definition.")
+    return "\n".join(parts)
+
+
+def iterative_refine_code(
+    config: LLMSolverConfig,
+    task_description: str,
+    func_name: str,
+    test_cases: list[tuple[tuple, Any]],
+    expected_type: type = int,
+    max_iterations: int = 5,
+) -> RefinementResult:
+    """EBM-guided iterative code refinement.
+
+    **Researcher summary:**
+        LLM generates code -> EBM verifies -> if violations, feed them back
+        to LLM -> LLM regenerates -> repeat until verified or max iterations.
+        This is the core "LLM WITH EBM" loop.
+
+    **Detailed explanation for engineers:**
+        The loop:
+        1. Ask LLM to implement the function
+        2. Execute the code on test cases (EBM verification)
+        3. If all tests pass (energy=0): done, return certified result
+        4. If tests fail: build a feedback prompt listing exactly which
+           tests failed and how, send it back to the LLM
+        5. The LLM sees its mistakes and generates a corrected version
+        6. Repeat until success or max_iterations
+
+        This is fundamentally different from generate-then-check because
+        the EBM actively GUIDES the LLM toward correctness. The LLM
+        gets specific, deterministic feedback that it cannot get from
+        its own self-evaluation.
+
+    Args:
+        config: LLM API configuration.
+        task_description: The function specification to implement.
+        func_name: Expected function name.
+        test_cases: List of (args_tuple, expected_output) pairs.
+        expected_type: Expected return type.
+        max_iterations: Maximum refinement attempts.
+
+    Returns:
+        RefinementResult with trajectory and final verification state.
+
+    Spec: REQ-INFER-013
+    """
+    import re
+
+    from carnot.verify.python_types import safe_exec_function
+
+    result = RefinementResult()
+    messages: list[dict[str, str]] = [
+        {
+            "role": "system",
+            "content": (
+                "You are a precise Python programmer. Write ONLY the function "
+                "definition — no explanation, no imports, no test code. "
+                "Just the def statement and its body. "
+                "If given feedback about test failures, fix the function."
+            ),
+        },
+        {"role": "user", "content": task_description},
+    ]
+
+    try:
+        from openai import OpenAI
+    except ImportError:
+        logger.warning("openai not installed")
+        return result
+
+    client = OpenAI(base_url=config.api_base, api_key=config.api_key)
+
+    for iteration in range(max_iterations):
+        result.iterations = iteration + 1
+
+        # Call LLM
+        try:
+            response = client.chat.completions.create(
+                model=config.model,
+                messages=messages,
+                temperature=config.temperature,
+            )
+            raw = response.choices[0].message.content or ""
+        except Exception:
+            logger.exception("LLM call failed at iteration %d", iteration)
+            break
+
+        # Extract code
+        match = re.search(r"```python\s*\n(.*?)```", raw, re.DOTALL)
+        if match:
+            code = match.group(1).strip()
+        else:
+            match = re.search(r"```\s*\n(.*?)```", raw, re.DOTALL)
+            code = match.group(1).strip() if match else raw.strip()
+
+        result.final_code = code
+        result.final_response = raw
+
+        # Run tests
+        test_results: list[dict[str, Any]] = []
+        for args, expected in test_cases:
+            actual, error = safe_exec_function(code, func_name, args)
+            passed = error is None and actual == expected
+            test_results.append(
+                {
+                    "input": args,
+                    "expected": expected,
+                    "actual": actual,
+                    "error": str(error) if error else None,
+                    "passed": passed,
+                }
+            )
+
+        n_passed = sum(1 for t in test_results if t["passed"])
+        n_failed = len(test_cases) - n_passed
+        energy = n_failed / max(len(test_cases), 1)
+
+        result.energy_trajectory.append(energy)
+        result.violation_trajectory.append(n_failed)
+        result.final_energy = energy
+        result.final_verified = n_failed == 0
+
+        logger.info(
+            "Iteration %d: %d/%d tests passed (energy=%.4f)",
+            iteration,
+            n_passed,
+            len(test_cases),
+            energy,
+        )
+
+        # If all tests pass, we're done
+        if n_failed == 0:
+            logger.info("All tests passed at iteration %d", iteration)
+            break
+
+        # Build feedback and add to conversation
+        feedback = _build_code_violation_feedback(test_results)
+        messages.append({"role": "assistant", "content": raw})
+        messages.append({"role": "user", "content": feedback})
+
+    return result

@@ -47,6 +47,8 @@ from carnot.inference.learned_verifier import (
 )
 from carnot.inference.llm_solver import (
     LLMSolverConfig,
+    RefinementResult,
+    iterative_refine_code,
     run_llm_coloring_experiment,
     run_llm_sat_experiment,
     solve_coloring_with_llm,
@@ -80,7 +82,9 @@ __all__ = [
     "ComparisonResult",
     "DiffusionConfig",
     "DiffusionResult",
+    "RefinementResult",
     "LLMSolverConfig",
+    "iterative_refine_code",
     "LearnedEnergyWrapper",
     "LearnedVerifierConfig",
     "MultiStartResult",
