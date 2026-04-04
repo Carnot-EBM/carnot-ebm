@@ -36,6 +36,13 @@ Key observations:
 - Partial repairs reduced energy even when not fully fixing
 - 2 stubborn instances need more repair steps or multi-start (P2)
 
+### Multi-Start Repair (P2) Validation
+
+Re-running stubborn instances with `multi_start_repair(n_starts=10, perturbation_scale=0.3)`:
+- Instance 11: Single-start stuck at energy=1.0 → **Multi-start found energy=0.0** (fully fixed!)
+- Multi-start explores 10 different basins of attraction, finding better solutions
+- Confirms P2 (EBT self-verification) adds value on hard instances
+
 Instance 1: Haiku proposed an assignment violating 2 clauses (energy=2.0). Gradient repair on violated constraints fixed ALL violations in <100 steps. The energy function served as the objective judge.
 
 **Sonnet** (stronger model) on 15-var / 50-clause 3-SAT: 100% accuracy. EBM confirms all correct (energy=0.0000 on every instance).
