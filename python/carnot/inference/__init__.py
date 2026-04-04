@@ -18,9 +18,17 @@
     graph_coloring.py). This package provides the glue and benchmark
     harness.
 
-Spec: REQ-INFER-003, REQ-INFER-004, REQ-INFER-005, REQ-INFER-006
+Spec: REQ-INFER-003, REQ-INFER-004, REQ-INFER-005, REQ-INFER-006, REQ-CODE-004
 """
 
+from carnot.inference.code_verifier import (
+    CodeVerificationResult,
+    CodeVerifierConfig,
+    compare_learned_vs_handcoded_code,
+    generate_code_training_data,
+    train_code_verifier,
+    verify_python_function,
+)
 from carnot.inference.learned_verifier import (
     ComparisonResult,
     LearnedEnergyWrapper,
@@ -44,6 +52,8 @@ from carnot.inference.verify_and_repair import (
 )
 
 __all__ = [
+    "CodeVerificationResult",
+    "CodeVerifierConfig",
     "ComparisonResult",
     "LLMSolverConfig",
     "LearnedEnergyWrapper",
@@ -51,12 +61,16 @@ __all__ = [
     "VerifyRepairResult",
     "build_learned_sat_energy",
     "compare_learned_vs_handcoded",
+    "compare_learned_vs_handcoded_code",
+    "generate_code_training_data",
     "parse_llm_coloring",
     "parse_llm_sat_assignment",
     "run_llm_coloring_experiment",
     "run_llm_sat_experiment",
     "solve_coloring_with_llm",
     "solve_sat_with_llm",
+    "train_code_verifier",
     "train_sat_verifier",
     "verify_and_repair",
+    "verify_python_function",
 ]

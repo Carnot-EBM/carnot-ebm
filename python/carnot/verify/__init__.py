@@ -1,6 +1,6 @@
 """Verifiable reasoning: constraints as energy terms + landscape certification.
 
-Spec: REQ-VERIFY-001 through REQ-VERIFY-007, REQ-INFER-001, REQ-INFER-002
+Spec: REQ-VERIFY-001 through REQ-VERIFY-007, REQ-INFER-001, REQ-INFER-002, REQ-CODE-001
 """
 
 from carnot.verify.constraint import (
@@ -17,6 +17,14 @@ from carnot.verify.graph_coloring import (
     build_coloring_energy,
 )
 from carnot.verify.landscape import LandscapeCertificate, certify_landscape
+from carnot.verify.python_types import (
+    NoExceptionConstraint,
+    ReturnTypeConstraint,
+    TestPassConstraint,
+    build_code_energy,
+    code_to_embedding,
+    safe_exec_function,
+)
 from carnot.verify.sat import (
     SATBinaryConstraint,
     SATClause,
@@ -26,6 +34,9 @@ from carnot.verify.sat import (
 )
 
 __all__ = [
+    "NoExceptionConstraint",
+    "ReturnTypeConstraint",
+    "TestPassConstraint",
     "ColorDifferenceConstraint",
     "ColorRangeConstraint",
     "ComposedEnergy",
@@ -37,9 +48,12 @@ __all__ = [
     "SATClauseConstraint",
     "Verdict",
     "VerificationResult",
+    "build_code_energy",
     "build_coloring_energy",
+    "code_to_embedding",
     "build_sat_energy",
     "certify_landscape",
     "parse_dimacs",
     "repair",
+    "safe_exec_function",
 ]

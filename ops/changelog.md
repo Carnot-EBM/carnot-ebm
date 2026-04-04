@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-04-04: Self-improving Python code verifier (capstone)
+
+### Added
+- **Code verification** (`verify/python_types.py`): `ReturnTypeConstraint`, `NoExceptionConstraint`, `TestPassConstraint`, `code_to_embedding()`, `safe_exec_function()`, `build_code_energy()`
+- **Learned code verifier** (`inference/code_verifier.py`): `train_code_verifier()` via NCE on code embeddings, `verify_python_function()` full pipeline, `generate_code_training_data()` with template mutations
+- **Self-improving loop** (`autoresearch/code_improvement.py`): `run_code_verification_autoresearch()` — autoresearch improving code verification accuracy via hypothesis generation
+- REQ-CODE-001 through REQ-CODE-005 in new code-verification spec
+- 53 new tests across 3 test files
+
+### Significance
+This is the capstone: EBM verifies Python code, and autoresearch improves the verifier. Proves the full thesis — energy-based verification + directed self-learning as the antidote to LLM hallucination.
+
+---
+
 ## 2026-04-04: Learned energy functions — train EBMs to verify from examples
 
 ### Added
