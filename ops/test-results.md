@@ -1,6 +1,36 @@
 # Carnot — Test Results
 
-**Last Updated:** 2026-04-03
+**Last Updated:** 2026-04-04
+
+## LLM-EBM Benchmark Results (2026-04-04)
+
+### First Real "LLM Hallucinates → EBM Repairs" Measurement
+
+**Haiku** (weaker model) on 12-var / 40-clause 3-SAT:
+
+| Instance | LLM Verified | LLM Energy | Repaired Verified | Repaired Energy |
+|----------|-------------|-----------|-------------------|-----------------|
+| 1 | **False** | **2.0000** | **True** | **0.0000** |
+| 2 | True | 0.0000 | True | 0.0000 |
+| 3 | True | 0.0000 | True | 0.0000 |
+| 4 | True | 0.0000 | True | 0.0000 |
+| 5 | True | 0.0000 | True | 0.0000 |
+
+**SAT: LLM 80% → Repaired 100% (+20% EBM improvement)**
+
+Instance 1: Haiku proposed an assignment violating 2 clauses (energy=2.0). Gradient repair on violated constraints fixed ALL violations in <100 steps. The energy function served as the objective judge.
+
+**Sonnet** (stronger model) on 15-var / 50-clause 3-SAT: 100% accuracy. EBM confirms all correct (energy=0.0000 on every instance).
+
+### Autoresearch Results (2026-04-04)
+
+**50-iteration run with gradient clipping (Sonnet)**:
+- DoubleWell: 0.0001 (near optimal 0.0)
+- Rosenbrock: 0.0092 (near optimal 0.0) — first time finite!
+- 2 hypotheses accepted before circuit breaker
+
+**Code verification autoresearch**:
+- 4/4 strategies accepted (wider, deeper, more_epochs, more_data)
 
 ## Latest Run (2026-04-03, post-adversarial-review)
 
