@@ -93,6 +93,7 @@ class AutoresearchConfig:
     sandbox_config: SandboxConfig = field(default_factory=SandboxConfig)
     auto_accept_pass: bool = True
     energy_regression_tolerance: float = 0.001
+    jit_grace_seconds: float = 1.0
 
 
 @dataclass
@@ -239,6 +240,7 @@ def run(benchmark_data):
             sandbox_result,
             baselines,
             energy_regression_tolerance=config.energy_regression_tolerance,
+            jit_grace_seconds=config.jit_grace_seconds,
         )
 
         # --- Stage 3: Determine outcome ---
@@ -383,6 +385,7 @@ def run_loop_with_generator(
                 sandbox_result,
                 baselines,
                 energy_regression_tolerance=config.energy_regression_tolerance,
+                jit_grace_seconds=config.jit_grace_seconds,
             )
 
             # Determine outcome

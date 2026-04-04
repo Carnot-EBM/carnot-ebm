@@ -105,6 +105,7 @@ def evaluate_hypothesis(
     energy_regression_tolerance: float = 0.001,
     time_budget_multiplier: float = 2.0,
     memory_budget_multiplier: float = 2.0,
+    jit_grace_seconds: float = 1.0,
 ) -> EvalResult:
     """Evaluate a sandbox result against baselines using three gates.
 
@@ -150,6 +151,10 @@ def evaluate_hypothesis(
             Default 2.0 (2x). A hypothesis taking 2.1x baseline time fails.
         memory_budget_multiplier: How much more memory than baseline is allowed.
             Default 2.0 (2x).
+        jit_grace_seconds: Extra seconds added to the time budget to account
+            for JIT compilation overhead. JAX compiles computation graphs on
+            first call, which adds ~0.2-1.0s of one-time cost that baselines
+            (which run with warm JIT) don't pay. Default 1.0s.
 
     Returns:
         EvalResult with verdict, gate outcomes, and improvement/regression lists.
@@ -222,8 +227,11 @@ def evaluate_hypothesis(
             continue
         bench_time = bench_metrics.get("wall_clock_seconds")
         if bench_time is not None and baseline.wall_clock_seconds > 0:
-            # Fail if hypothesis time > multiplier * baseline time
-            if bench_time > baseline.wall_clock_seconds * time_budget_multiplier:
+            # Time budget = multiplier * baseline + JIT grace period.
+            # The grace period accounts for JAX JIT compilation on first call,
+            # which hypotheses pay but warm baselines don't.
+            budget = baseline.wall_clock_seconds * time_budget_multiplier + jit_grace_seconds
+            if bench_time > budget:
                 secondary_pass = False
 
     # === Tertiary gate: memory budget ===
