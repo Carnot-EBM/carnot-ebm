@@ -117,14 +117,17 @@ def parse_llm_sat_assignment(text: str, n_vars: int) -> jax.Array:
         return jnp.array([bool_map[t] for t in lower_tokens])
 
     # Strategy 3: named format x1=True or x1=1
+    # Find ALL matches, then take the LAST n_vars (LLM may include reasoning before)
     named_pattern = re.findall(
         r"x?\d+\s*[=:]\s*(true|false|[01])",
         text,
         re.IGNORECASE,
     )
-    if len(named_pattern) == n_vars:
+    if len(named_pattern) >= n_vars:
+        # Take the last n_vars matches (skip reasoning preamble)
+        last_n = named_pattern[-n_vars:]
         values = []
-        for val in named_pattern:
+        for val in last_n:
             val_lower = val.lower()
             if val_lower in ("true", "1"):
                 values.append(1.0)
@@ -170,10 +173,11 @@ def parse_llm_coloring(text: str, n_nodes: int) -> jax.Array:
     except ValueError:
         pass
 
-    # Strategy 2: "node N: C" pattern
+    # Strategy 2: "node N: C" or "nodeN=C" pattern — take last n_nodes matches
     pattern = re.findall(r"node\s*\d+\s*[=:]\s*(\d+)", text, re.IGNORECASE)
-    if len(pattern) == n_nodes:
-        return jnp.array([float(int(v)) for v in pattern])
+    if len(pattern) >= n_nodes:
+        last_n = pattern[-n_nodes:]
+        return jnp.array([float(int(v)) for v in last_n])
 
     msg = f"Could not parse {n_nodes} node colors from: {text[:200]}"
     raise ValueError(msg)
