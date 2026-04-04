@@ -187,7 +187,7 @@ def _build_claude_cmd(
     mcp_config: str | None = None,
 ) -> list[str]:
     """Build the claude CLI command line."""
-    cmd = [CLAUDE_BIN, "-p"]
+    cmd = [CLAUDE_BIN, "-p", "--dangerously-skip-permissions"]
 
     # Model selection
     cmd.extend(["--model", model])
