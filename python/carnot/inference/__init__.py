@@ -18,9 +18,16 @@
     graph_coloring.py). This package provides the glue and benchmark
     harness.
 
-Spec: REQ-INFER-003, REQ-INFER-004, REQ-INFER-005
+Spec: REQ-INFER-003, REQ-INFER-004, REQ-INFER-005, REQ-INFER-006
 """
 
+from carnot.inference.llm_solver import (
+    LLMSolverConfig,
+    run_llm_coloring_experiment,
+    run_llm_sat_experiment,
+    solve_coloring_with_llm,
+    solve_sat_with_llm,
+)
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,
     parse_llm_coloring,
@@ -29,8 +36,13 @@ from carnot.inference.verify_and_repair import (
 )
 
 __all__ = [
+    "LLMSolverConfig",
     "VerifyRepairResult",
     "parse_llm_coloring",
     "parse_llm_sat_assignment",
+    "run_llm_coloring_experiment",
+    "run_llm_sat_experiment",
+    "solve_coloring_with_llm",
+    "solve_sat_with_llm",
     "verify_and_repair",
 ]

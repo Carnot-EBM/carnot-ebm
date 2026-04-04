@@ -114,6 +114,23 @@ The system shall provide a benchmark harness that:
 **Given** variables at x_i ∈ {0, 1}
 **Then** binary penalty energy is 0
 
+### REQ-INFER-006: LLM Solver Integration
+
+The system shall provide functions to send constraint problems to an LLM and parse the responses:
+- `solve_sat_with_llm()`: builds SAT prompt, calls OpenAI-compatible API, returns raw text
+- `solve_coloring_with_llm()`: builds coloring prompt, calls API
+- `run_llm_sat_experiment()`: full pipeline — LLM solve → parse → verify → repair → certify
+- `run_llm_coloring_experiment()`: full pipeline for coloring
+- Graceful degradation when openai package is not installed or API fails
+
+### SCENARIO-INFER-007: Full LLM Pipeline
+
+**Given** a SAT instance sent to an LLM via the solver
+**When** the LLM returns a (possibly incorrect) assignment
+**Then** the assignment is parsed and verified against the energy function
+**And** if violated, gradient repair improves the assignment
+**And** the full VerifyRepairResult contains initial, repaired, and rounded verifications
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -123,3 +140,4 @@ The system shall provide a benchmark harness that:
 | REQ-INFER-003 | Implemented | 8+ Python |
 | REQ-INFER-004 | Implemented | 6+ Python |
 | REQ-INFER-005 | Implemented | 7+ Python |
+| REQ-INFER-006 | Implemented | 14+ Python |

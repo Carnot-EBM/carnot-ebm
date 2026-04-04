@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-04-04: LLM solver integration for SAT/coloring pipeline
+
+### Added
+- `python/carnot/inference/llm_solver.py`: `LLMSolverConfig`, `solve_sat_with_llm()`, `solve_coloring_with_llm()`, `run_llm_sat_experiment()`, `run_llm_coloring_experiment()`
+- SAT/coloring prompt construction for LLM (`_build_sat_prompt`, `_build_coloring_prompt`)
+- Full end-to-end pipeline: LLM call → parse → verify → repair → certify
+- Graceful degradation (missing openai, API failure, parse failure)
+- REQ-INFER-006 + SCENARIO-INFER-007 in spec
+- 16 new tests with mocked LLM calls
+
+---
+
 ## 2026-04-04: Gradient clipping for samplers (fixes Rosenbrock NaN blocker)
 
 ### Added
