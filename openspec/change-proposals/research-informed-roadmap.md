@@ -373,17 +373,232 @@ After all five proposals are implemented:
 4. **P4**: Per-token energy from LLM logits correlates with per-token correctness
 5. **P5**: Optimization-trained verifier achieves higher repair success than NCE-trained on same instances
 
+---
+
+## P6: Langevin Noise During Repair (Stochastic Repair)
+
+**Source:** [Energy-Based Transformers](https://arxiv.org/abs/2507.02092) — ablation Table 2
+**Effort:** Very Low (< 1 hour)
+**Impact:** Medium — 17% improvement in EBT ablations
+
+### Key Idea
+
+Current `repair()` uses pure gradient descent: `x = x - α∇E(x)`. EBTs add Langevin noise: `x = x - α∇E(x) + √(2α)ε`. This prevents getting stuck in local minima during repair. The EBT ablations show removing Langevin noise degrades combined thinking performance by ~17%.
+
+### What to Build
+
+**Modify: `python/carnot/verify/constraint.py`**
+- Add `noise_scale: float = 0.0` parameter to `repair()`
+- When > 0: `x = x - step_size * grad + noise_scale * jrandom.normal(key, x.shape)`
+- Default 0.0 preserves backward compatibility (pure gradient descent)
+
+This is a one-line change to the repair loop plus a key parameter.
+
+### Test Strategy
+- Verify noisy repair escapes a local minimum that pure repair gets stuck in
+- ~3 tests
+
+---
+
+## P7: Replay Buffer for Learned Verifier Training
+
+**Source:** [Energy-Based Transformers](https://arxiv.org/abs/2507.02092) — Section on replay buffers
+**Effort:** Low (1 session)
+**Impact:** Low-Medium — better energy landscape shape far from solutions
+
+### Key Idea
+
+During NCE/SNL training, the energy landscape is only well-shaped near training data. A replay buffer stores optimization trajectories (the paths taken during repair) and uses them as additional negative examples. This shapes the energy landscape along the entire repair path, not just at the endpoints.
+
+### What to Build
+
+**Modify: `python/carnot/inference/learned_verifier.py`**
+- During `train_sat_verifier()`, periodically run repair on noise samples
+- Store the intermediate states as "hard negatives" in a replay buffer
+- Include replay buffer samples alongside fresh noise in NCE training
+- Trains the energy landscape to have good gradients along repair trajectories
+
+---
+
+## P8: EBM-CoT — Energy-Calibrated Chain-of-Thought
+
+**Source:** [Energy-Based Calibration for Implicit Chain-of-Thought](https://arxiv.org/abs/2511.07124) (Nov 2025)
+**Effort:** High (2-3 sessions)
+**Impact:** High — applies EBM verification to REASONING, not just final answers
+
+### Key Idea
+
+Instead of verifying the LLM's final answer, verify its REASONING PROCESS. EBM-CoT refines latent thought embeddings via Langevin dynamics:
+
+`l(s+1) = l(s) - η∇E(c, l(s)) + √(2η)ε`
+
+where l is the latent thought token, c is the context, and E is an energy function that assigns low energy to coherent reasoning and high energy to inconsistent reasoning.
+
+The energy function uses a hinge loss comparing correct vs incorrect reasoning chains: `ReLU(E(correct) - E(incorrect) + margin)`.
+
+Results: 72.5% → 76.9% accuracy on math reasoning (LLaMA-3.1-8B), approaching 95% consistency.
+
+### What to Build
+
+**New file: `python/carnot/inference/reasoning_energy.py`**
+
+```python
+class ReasoningEnergyModel:
+    """Energy function for reasoning chain consistency.
+    
+    Trained to assign low energy to coherent reasoning steps
+    and high energy to inconsistent ones.
+    """
+
+def refine_reasoning(
+    thought_embeddings: jax.Array,
+    energy_model: ReasoningEnergyModel,
+    n_langevin_steps: int = 3,
+    step_size: float = 0.01,
+) -> jax.Array:
+    """Refine latent thought tokens via Langevin dynamics on reasoning energy."""
+
+def train_reasoning_energy(
+    correct_chains: list[jax.Array],
+    incorrect_chains: list[jax.Array],
+    margin: float = 1.0,
+) -> ReasoningEnergyModel:
+    """Train reasoning energy via hinge loss + consistency regularization."""
+```
+
+### Why This Matters
+
+This moves verification from "check the answer" to "check the thinking." Catching bad reasoning early prevents hallucinations from propagating through a chain of thought.
+
+---
+
+## P9: Energy-Based Diffusion for Parallel Code Generation
+
+**Source:** [Energy-Based Diffusion Language Models](https://arxiv.org/abs/2410.21357) (Oct 2024)
+**Effort:** High (3+ sessions)
+**Impact:** High — fundamentally different generation paradigm
+
+### Key Idea
+
+Instead of generating code token-by-token (autoregressive, error-cascading), generate the ENTIRE code simultaneously via diffusion + energy scoring. EDLM operates at "the full sequence level for each diffusion step" and uses energy to score coherence across the complete context.
+
+This is the ultimate anti-hallucination approach: no sequential commitment, no error cascading. The energy function evaluates the complete code holistically.
+
+### What to Build
+
+This is a major architectural addition — a diffusion-based code generator that uses Carnot's energy functions for scoring. Would require:
+- Discrete diffusion framework (masking/unmasking tokens)
+- Bidirectional transformer for parallel scoring
+- Energy-based reranking of diffusion candidates
+- Integration with existing constraint verification
+
+### Depends On
+- P5 (training through optimization) for training the energy scorer
+- Significant model training infrastructure
+
+---
+
+## P10: Absorbing Invariant Sets for Repair Convergence Guarantees
+
+**Source:** [Hybrid EBMs for Physical AI](https://arxiv.org/abs/2604.00277) (2026)
+**Effort:** Medium (1-2 sessions)
+**Impact:** Medium — theoretical guarantee that repair converges
+
+### Key Idea
+
+Current `repair()` runs for `max_steps` and hopes for convergence. The Hybrid EBM paper proves that under certain conditions, there exists a computable "absorbing radius" r such that any trajectory starting within r converges to the minimum. The radius is computed from network parameters post-training.
+
+### What to Build
+
+**New file: `python/carnot/verify/convergence.py`**
+
+```python
+def compute_absorbing_radius(model: GibbsModel) -> float:
+    """Compute the absorbing radius from network Jacobians.
+    
+    If the initial repair state is within this radius of a minimum,
+    repair() is GUARANTEED to converge.
+    """
+
+def certify_repair_convergence(
+    energy: ComposedEnergy,
+    x_init: jax.Array,
+    x_min: jax.Array,
+) -> bool:
+    """True if x_init is within the absorbing radius of x_min.
+    
+    When True, repair(energy, x_init) is mathematically guaranteed
+    to converge to x_min (or a nearby minimum).
+    """
+```
+
+### Why This Matters
+
+Moves repair from "best effort" to "provably correct." When the certificate says repair will converge, it WILL converge. This is the kind of mathematical guarantee that LLMs structurally cannot provide.
+
+---
+
+## P11: Randomized Step Sizes for Robust Repair
+
+**Source:** [Energy-Based Transformers](https://arxiv.org/abs/2507.02092) — ablation
+**Effort:** Very Low (< 1 hour)
+**Impact:** Low-Medium — prevents overfitting to single optimization path
+
+### Key Idea
+
+EBT ablations show that randomizing the step size during training/inference prevents the model from memorizing single optimization paths. Removing random step size caused -1.47% performance drop.
+
+### What to Build
+
+**Modify: `python/carnot/verify/constraint.py`**
+- Add `randomize_step_size: bool = False` to `repair()`
+- When True: `step = step_size * (0.5 + jrandom.uniform(key))` each iteration
+- Prevents repair from getting stuck on a fixed trajectory
+
+One-line change to the repair loop.
+
+---
+
+## Updated Implementation Schedule
+
+| Phase | Proposals | Sessions | Priority |
+|-------|-----------|----------|----------|
+| **Phase 1** | P1 + P2 + P6 + P11 | 1 session | Quick wins |
+| **Phase 2** | P3 + P7 | 1 session | Training |
+| **Phase 3** | P4 | 1-2 sessions | Unification |
+| **Phase 4** | P5 + P10 | 2-3 sessions | Guarantees |
+| **Phase 5** | P8 | 2-3 sessions | Reasoning |
+| **Phase 6** | P9 | 3+ sessions | Generation |
+
+Total: ~10-14 sessions for the complete roadmap.
+
 ## Relationship to End Goal
 
 ```
-P1 (semantic energy)     → first-line LLM confidence check
-P2 (multi-start)         → more robust repair
-P3 (SNL training)        → better learned verifiers
-P4 (ARM↔EBM bijection)  → LLM IS the EBM (theoretical unification)
-P5 (train through opt)   → energy landscapes designed for repair
+DETECTION:
+  P1 (semantic energy)     → first-line LLM confidence check
+  P4 (ARM↔EBM bijection)  → per-token energy from LLM logits
+  P8 (EBM-CoT)            → verify reasoning process, not just answers
+
+REPAIR:
+  P2 (multi-start)         → more robust repair via parallel candidates
+  P6 (Langevin noise)      → escape local minima during repair
+  P10 (absorbing sets)     → mathematical guarantee repair converges
+  P11 (random step sizes)  → prevent overfitting to single repair path
+
+TRAINING:
+  P3 (SNL loss)            → tighter bound than NCE
+  P5 (train through opt)   → energy landscapes designed for repair
+  P7 (replay buffer)       → shape energy along repair trajectories
+
+GENERATION:
+  P9 (diffusion)           → parallel code generation, no error cascading
 
 Together: LLM generates → its own energy detects uncertainty (P1/P4)
-          → multi-start repair fixes it (P2)
-          → using an energy landscape trained to be repairable (P3/P5)
+          → reasoning is verified before output (P8)
+          → multi-start stochastic repair fixes violations (P2/P6/P11)
+          → repair is guaranteed to converge (P10)
+          → using energy landscapes trained to be repairable (P3/P5/P7)
+          → or skip autoregressive entirely: generate holistically (P9)
           → autoresearch improves everything autonomously
 ```
