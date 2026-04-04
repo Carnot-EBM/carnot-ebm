@@ -60,7 +60,7 @@
 - Successfully ran 3 iterations with Sonnet generating real Carnot sampler code
 
 ### Quality Infrastructure
-- 394 tests (100 Rust + 270 Python + 24 PyO3 integration), 100% code coverage
+- 408 tests (100 Rust + 284 Python + 24 PyO3 integration), 100% code coverage
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
 - 8-agent team: security-auditor, test-runner, lint-checker, spec-validator, spec-reconciler, evaluator, docs-keeper, **adversarial-reviewer** (red team)
 - Gitea CI: 5 parallel jobs
