@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-04 — ALL REQUIREMENTS IMPLEMENTED + LLM AUTORESEARCH PROVEN
+**Last Updated:** 2026-04-04 — LLM-EBM INFERENCE PIPELINE BUILT + ALL REQUIREMENTS IMPLEMENTED
 
 ## What's Working — Everything
 
@@ -27,7 +27,7 @@
 - Deterministic reproducibility
 - Sudoku example — full constraint satisfaction demo
 
-### Autoresearch Pipeline (REQ-AUTO-001–010)
+### Autoresearch Pipeline (REQ-AUTO-001–014)
 - Benchmark suite: DoubleWell, Rosenbrock, Ackley, Rastrigin, GaussianMixture (Rust + Python/JAX)
 - Benchmark runner with baseline recording (JSON)
 - Process-level sandbox (dev): import blocking, timeout, I/O capture
@@ -40,6 +40,12 @@
 - Circuit breaker: halts after N consecutive failures
 - Cross-language validation: test vector generation + conformance checking
 - Automatic rollback: git-based revert on production energy regression
+- **Trace2Skill learning layer** (REQ-AUTO-011–014):
+  - Trajectory analyst: parallel error/success sub-agents extract structured Lessons via LLM
+  - Skill directory: persistent optimization playbook (SKILL.md + lessons.json + scripts/ + references/)
+  - Hierarchical consolidation: tree-reduction merge deduplicates, resolves conflicts, filters low-confidence
+  - Cross-tier transfer: Ising lessons available when generating for Gibbs/Boltzmann
+  - `run_loop_with_skills()`: enhanced orchestrator loop integrating all of the above
 
 ### 10-Iteration Autoresearch Results (Sonnet, 2026-04-04)
 - DoubleWell: **0.9483 → 0.1604 (83% energy reduction)** via 3 accepted hypotheses
@@ -47,6 +53,14 @@
 - By iteration 9, identified per-benchmark sampler selection as the right approach
 - Rising baseline (from accepted improvements) made later iterations harder — by design
 - Rosenbrock remains NaN (gradient explosion from steep `100*(...)^2` — needs sampler API extension)
+
+### LLM-EBM Inference Pipeline (REQ-INFER-001–005)
+- SAT constraints: product relaxation, DIMACS parser, binary penalty
+- Graph coloring constraints: pairwise repulsion, range penalty
+- LLM output parsing: multiple format support (space-separated, named, T/F)
+- Verify-and-repair pipeline: parse → verify → gradient repair → round → certify
+- Benchmark harness: random SAT/coloring generation, aggregated statistics
+- **This is the first concrete anti-hallucination pipeline**: LLM proposes, EBM verifies and repairs
 
 ### Quality Infrastructure
 - 408 tests (100 Rust + 284 Python + 24 PyO3 integration), 100% code coverage, 100% spec coverage

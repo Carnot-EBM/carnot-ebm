@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-03 (reconciled with codebase)
+**Last Updated:** 2026-04-04 (reconciled with codebase)
 
 ## Functional Requirements → Implementation Status
 
@@ -16,8 +16,9 @@
 | FR-08 | Interoperability | `openspec/capabilities/core-ebm/spec.md` | 24 Python (PyO3) | PyO3 bindings for all 3 tiers + 2 samplers, integration tested | Implemented |
 | FR-09 | Test Coverage | N/A (process) | 100 Rust, 237 Python + 24 PyO3 = 361 | pre-commit + CI | Implemented |
 | FR-10 | Spec-Driven Dev | N/A (process) | spec_coverage.py | pre-commit + CI | Implemented |
-| FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | 47 Python | Sandbox, evaluator, orchestrator, Docker+gVisor, LLM hypothesis generator, Claude API bridge | Implemented |
+| FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | 85+ Python | Sandbox, evaluator, orchestrator, Docker+gVisor, LLM hypothesis generator, Claude API bridge, Trace2Skill (trajectory analyst, skill directory, consolidator) | Implemented |
 | FR-12 | Verifiable Reasoning | `openspec/capabilities/verifiable-reasoning/spec.md` | 17 Rust, 15 Python | Constraints, composition, verification, repair, Sudoku | Implemented (landscape cert missing) |
+| FR-13 | LLM-EBM Inference | `openspec/capabilities/llm-ebm-inference/spec.md` | 64 Python | SAT constraints, graph coloring, LLM output parsing, verify-and-repair pipeline, benchmark harness | Implemented |
 
 ## Non-Functional Requirements
 

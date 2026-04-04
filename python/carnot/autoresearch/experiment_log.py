@@ -33,9 +33,10 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
-from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 
 @dataclass
@@ -80,6 +81,7 @@ class ExperimentEntry:
     eval_improvements: list[str] = field(default_factory=list)
     eval_regressions: list[str] = field(default_factory=list)
     outcome: str = ""  # "accepted", "rejected", "pending_review"
+    lessons: list[dict[str, Any]] = field(default_factory=list)
 
 
 class ExperimentLog:

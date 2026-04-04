@@ -170,6 +170,14 @@ Your hypothesis PASSES if:
 - Include a brief description of your rationale
 - Vary: step_size, n_steps, model tier (Ising/Gibbs/Boltzmann), sampler (Langevin/HMC)
 - Start with simple parameter sweeps, then try model changes
+
+## Skill Playbook
+
+If an "Additional Context" section is provided below, it contains a curated \
+optimization playbook learned from previous experiments. Treat it as high-value \
+guidance — these are patterns that have been validated across multiple iterations. \
+Prioritize approaches consistent with these lessons. Avoid approaches that \
+contradict known failure patterns listed in the playbook.
 """
 
 
@@ -255,13 +263,11 @@ def _build_user_prompt(
     parts.append(f"## Iteration: {iteration}\n")
     if iteration == 0:
         parts.append(
-            "This is the first iteration. Start with a simple, "
-            "high-confidence improvement."
+            "This is the first iteration. Start with a simple, high-confidence improvement."
         )
     elif iteration < 5:
         parts.append(
-            "Early iterations. Try straightforward hyperparameter "
-            "tuning or known-good techniques."
+            "Early iterations. Try straightforward hyperparameter tuning or known-good techniques."
         )
     else:
         parts.append(
@@ -363,13 +369,9 @@ def generate_hypotheses(
         # Import openai lazily — not everyone will have it installed
         from openai import OpenAI
     except ImportError:
-        return GenerationResult(
-            error="openai package not installed. Run: pip install openai"
-        )
+        return GenerationResult(error="openai package not installed. Run: pip install openai")
 
-    user_prompt = _build_user_prompt(
-        baselines, recent_failures, iteration, config.extra_context
-    )
+    user_prompt = _build_user_prompt(baselines, recent_failures, iteration, config.extra_context)
 
     try:
         client = OpenAI(
@@ -427,16 +429,16 @@ def generate_hypotheses_batch(
     failures: list[dict[str, Any]] = list(recent_failures or [])
 
     for i in range(count):
-        result = generate_hypotheses(
-            config, baselines, failures, iteration + i
-        )
+        result = generate_hypotheses(config, baselines, failures, iteration + i)
 
         if result.error:
             logger.warning("Generation attempt %d failed: %s", i, result.error)
-            failures.append({
-                "description": f"generation_attempt_{i}",
-                "reason": result.error,
-            })
+            failures.append(
+                {
+                    "description": f"generation_attempt_{i}",
+                    "reason": result.error,
+                }
+            )
             continue
 
         all_hypotheses.extend(result.hypotheses)

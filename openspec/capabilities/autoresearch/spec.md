@@ -104,6 +104,41 @@ When multiple hypotheses independently pass evaluation, the system shall:
 - Apply the combination only if joint evaluation passes all gates
 - If conflicting, rank by primary gate improvement magnitude and apply the best
 
+### REQ-AUTO-011: Trajectory Analysis
+
+The system shall provide parallel analyst sub-agents that extract structured lessons from experiment outcomes:
+- **Error analysts** receive a failed experiment's full trajectory (hypothesis code, sandbox metrics, evaluation verdict, error messages) and diagnose the root cause via LLM reasoning (e.g., "gradient explosion due to Rosenbrock curvature exceeding step size")
+- **Success analysts** receive an accepted experiment's trajectory and extract the generalizable optimization pattern (e.g., "annealing schedules improve convergence on multi-basin landscapes")
+- Analysts run in parallel via thread pool and produce structured `Lesson` objects with: title, description, concrete examples, confidence score, applicable benchmarks, model tier, and lesson type
+- Analyst dispatch is configurable (can be disabled to save LLM cost)
+
+### REQ-AUTO-012: Skill Directory
+
+The system shall maintain a persistent, evolving optimization playbook (skill directory) that accumulates lessons across iterations:
+- **SKILL.md**: Natural-language optimization guide, periodically rewritten by LLM from accumulated lessons
+- **scripts/**: Proven sampler configurations and code snippets extracted from successful hypotheses
+- **references/**: Benchmark-specific edge cases and niche patterns (low-frequency lessons)
+- **lessons.json**: Structured lesson store with confidence scores and metadata
+- The skill directory shall be serialized as `to_prompt_context()` and injected into the hypothesis generator's prompt, replacing the shallow `recent_failures` list with structured knowledge
+- Maximum lesson count shall be configurable (default 200) to prevent unbounded growth
+
+### REQ-AUTO-013: Hierarchical Lesson Consolidation
+
+The system shall consolidate raw lessons into a conflict-free set via hierarchical tree-reduction:
+- Group lessons into batches of configurable size (default 32)
+- For each batch, use LLM to: deduplicate equivalent lessons (merging confidence scores), resolve contradictory lessons (keeping the better-supported one), and extract cross-cutting meta-patterns
+- Repeat reduction until a single batch remains (L = ceil(log_batch(N)) levels)
+- Filter lessons below a configurable minimum confidence threshold (default 0.3)
+- Consolidation runs periodically (configurable interval, default every 5 iterations)
+
+### REQ-AUTO-014: Cross-Tier Skill Transfer
+
+The system shall support transfer of optimization knowledge across model tiers:
+- Lessons learned on fast-to-evaluate tiers (Ising) shall be available when generating hypotheses for slower tiers (Gibbs, Boltzmann)
+- Each lesson is tagged with its originating model tier and applicable benchmarks
+- The `to_prompt_context()` method accepts a target model tier and includes relevant lessons from other tiers
+- Tier-specific edge cases are stored in the references subdirectory, not propagated as general lessons
+
 ## Scenarios
 
 ### SCENARIO-AUTO-001: Successful Self-Improvement Cycle
@@ -167,6 +202,44 @@ When multiple hypotheses independently pass evaluation, the system shall:
 **Then** the hypothesis is flagged for review (mixed results)
 **And** is not auto-merged (requires human decision on the tradeoff)
 
+### SCENARIO-AUTO-008: Error Analyst Diagnoses Gradient Explosion
+
+**Given** a hypothesis that attempted Langevin sampling on Rosenbrock with step_size=0.1
+**And** the sandbox produced NaN energies after 47 steps
+**When** the error analyst receives the full experiment trajectory
+**Then** it produces a Lesson with title "Gradient explosion on steep landscapes"
+**And** description identifies the `100*(x[i+1]-x[i]^2)^2` term curvature as the root cause
+**And** applicable_benchmarks includes "rosenbrock"
+**And** confidence is >= 0.7 (clear diagnosis from the execution trace)
+
+### SCENARIO-AUTO-009: Success Analyst Extracts Annealing Pattern
+
+**Given** a hypothesis that used step_size annealing from 0.1 to 0.001 over 5000 steps
+**And** it was accepted with 30% energy improvement on DoubleWell
+**When** the success analyst receives the full experiment trajectory
+**Then** it produces a Lesson with title "Step-size annealing for multi-basin landscapes"
+**And** the description generalizes beyond the specific parameters to the annealing principle
+**And** lesson_type is "success_pattern"
+
+### SCENARIO-AUTO-010: Lessons Consolidated Across 10 Iterations
+
+**Given** 15 raw lessons accumulated over 10 iterations (8 error, 7 success)
+**And** 3 pairs of near-duplicate lessons (e.g., both say "small step sizes prevent divergence")
+**When** hierarchical consolidation runs
+**Then** duplicates are merged (confidence increased)
+**And** the consolidated set has fewer lessons than the input
+**And** contradictory lessons (e.g., "use large step size" vs "use small step size") are resolved
+**And** lessons below min_confidence are filtered out
+
+### SCENARIO-AUTO-011: Ising Skill Transfers to Gibbs Model
+
+**Given** a skill directory with 5 lessons learned from Ising model experiments
+**And** one lesson is "HMC outperforms Langevin on narrow-valley landscapes" (model_tier="ising")
+**When** generating hypotheses for the Gibbs model tier
+**Then** `to_prompt_context(model_tier="gibbs")` includes the Ising HMC lesson
+**And** the generator's prompt contains this cross-tier knowledge
+**And** the generated hypothesis tries HMC on the Gibbs tier
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -181,3 +254,7 @@ When multiple hypotheses independently pass evaluation, the system shall:
 | REQ-AUTO-008 | Not Started | Implemented | 5 Python |
 | REQ-AUTO-009 | Not Started | Implemented | 4 Python |
 | REQ-AUTO-010 | Not Started | Not Started | Not Started |
+| REQ-AUTO-011 | N/A | Implemented | 10+ Python |
+| REQ-AUTO-012 | N/A | Implemented | 11+ Python |
+| REQ-AUTO-013 | N/A | Implemented | 9+ Python |
+| REQ-AUTO-014 | N/A | Implemented | Integration |

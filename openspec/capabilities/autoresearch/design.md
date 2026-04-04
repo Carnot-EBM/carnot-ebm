@@ -1,11 +1,11 @@
 # Autoresearch — Design Document
 
 **Capability:** autoresearch
-**Version:** 0.1.0
+**Version:** 0.2.0
 
 ## Architecture Overview
 
-The autoresearch loop has four stages, running as a continuous pipeline:
+The autoresearch loop has four stages plus a Trace2Skill learning layer:
 
 ```
 ┌─────────────┐     ┌──────────────┐     ┌────────────────┐     ┌──────────────┐
@@ -17,14 +17,24 @@ The autoresearch loop has four stages, running as a continuous pipeline:
 │  as JAX code │     │  against     │     │  with spec     │     │  with auto-  │
 │              │     │  benchmarks  │     │  conformance   │     │  rollback    │
 └─────────────┘     └──────────────┘     └────────────────┘     └──────────────┘
-       ↑                   │ fail                                       │
+       ↑                   │                                           │
        │                   ↓                                           │
        │            ┌──────────────┐                                   │
-       │            │  REJECTED    │                                   │
-       │            │  (logged)    │                                   │
-       │            └──────────────┘                                   │
-       │                                                               │
-       └───────────────── feedback (new baselines) ────────────────────┘
+       │            │  ANALYZE     │  ← Trace2Skill (Stage 1.5)       │
+       │            │  (Analysts)  │                                   │
+       │            └──────┬───────┘                                   │
+       │                   ↓                                           │
+       │            ┌──────────────┐                                   │
+       │            │ CONSOLIDATE  │                                   │
+       │            │  (Merge)     │                                   │
+       │            └──────┬───────┘                                   │
+       │                   ↓                                           │
+       │            ┌──────────────┐                                   │
+       │            │ SKILL DIR    │                                   │
+       │            │ (Playbook)   │                                   │
+       │            └──────┬───────┘                                   │
+       │                   │                                           │
+       └───────── skill context + baselines ───────────────────────────┘
 ```
 
 ## Stage 1: PROPOSE
@@ -309,3 +319,86 @@ fn monitor_and_rollback(
 - Run indefinitely (hard timeout enforced by sandbox)
 - Consume unlimited memory (hard limit enforced by sandbox)
 - Modify the autoresearch pipeline itself
+
+## Stage 1.5: ANALYZE (Trace2Skill)
+
+Based on the Trace2Skill framework (arxiv 2603.25158), the autoresearch loop
+includes a learning layer that replaces shallow failure feedback with deep
+trajectory analysis and persistent skill accumulation.
+
+### Trajectory Analysis
+
+After each hypothesis evaluation, parallel analyst sub-agents extract structured
+lessons:
+
+- **Error analysts**: Receive the full experiment trajectory (code, metrics,
+  errors, verdict) and diagnose the root cause via LLM reasoning
+- **Success analysts**: Receive accepted experiments and extract generalizable
+  optimization patterns
+- Both produce `Lesson` objects with title, description, confidence score,
+  applicable benchmarks, and model tier
+
+```python
+@dataclass
+class Lesson:
+    title: str              # "Gradient explosion on steep landscapes"
+    description: str        # Detailed explanation for future hypothesis generation
+    examples: list[str]     # Experiment IDs or code snippets
+    confidence: float       # 0.0-1.0, boosted on dedup during consolidation
+    applicable_benchmarks: list[str]  # ["rosenbrock"] or ["all"]
+    model_tier: str         # "ising", "gibbs", "boltzmann", or "all"
+    lesson_type: str        # "error_pattern" or "success_pattern"
+    source_experiment_id: str
+```
+
+### Hierarchical Consolidation
+
+Raw lessons are consolidated via tree-reduction merge:
+
+```
+Level 0: [L1, L2, ..., L64] → batch(32) + batch(32) → [M1, M2, ..., M_k]
+Level 1: [M1, M2, ..., M_k] → batch(32) → [F1, F2, ..., F_j]
+Final:   Filter by min_confidence → consolidated lessons
+```
+
+At each level, an LLM:
+1. Deduplicates equivalent lessons (merging confidence scores)
+2. Resolves contradictions (keeping better-supported lesson)
+3. Extracts cross-cutting meta-patterns
+
+### Skill Directory
+
+Accumulated lessons are stored in a persistent skill directory:
+
+```
+skill_directory/
+  SKILL.md          # Natural-language optimization playbook
+  lessons.json      # All Lesson objects with metadata
+  scripts/          # Proven sampler configurations
+  references/       # Benchmark-specific edge cases
+```
+
+The `to_prompt_context()` method serializes this into the hypothesis
+generator's prompt, replacing the old `recent_failures` list with
+structured knowledge.
+
+### Cross-Tier Transfer
+
+Lessons are tagged by model tier (Ising/Gibbs/Boltzmann). When generating
+hypotheses for a specific tier, `to_prompt_context(model_tier="gibbs")`
+includes high-confidence lessons from other tiers. This enables fast
+iteration on Ising (small, cheap) to inform Gibbs/Boltzmann experiments.
+
+### Data Flow
+
+```
+ExperimentEntry → analyze_error/analyze_success → Lesson
+                                                    ↓
+                                          consolidate_lessons
+                                                    ↓
+                                          SkillDirectory.evolve()
+                                                    ↓
+                                          SkillDirectory.to_prompt_context()
+                                                    ↓
+                                          hypothesis_generator prompt
+```

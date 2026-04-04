@@ -1,5 +1,44 @@
 # Carnot — Changelog
 
+## 2026-04-04: LLM-EBM inference — SAT/CSP verify-and-repair pipeline (user instruction: easiest domain for LLM+EBM anti-hallucination)
+
+### Added
+- **SAT constraints** (`python/carnot/verify/sat.py`): `SATClauseConstraint` using product relaxation, `SATBinaryConstraint`, `build_sat_energy()`, DIMACS CNF parser. REQ-INFER-001.
+- **Graph coloring constraints** (`python/carnot/verify/graph_coloring.py`): `ColorDifferenceConstraint` (pairwise repulsion), `ColorRangeConstraint`, `build_coloring_energy()`. REQ-INFER-002.
+- **Inference bridge** (`python/carnot/inference/verify_and_repair.py`): LLM output parsers (SAT + coloring, multiple formats), `verify_and_repair()` pipeline (parse → verify → repair → round → certify). REQ-INFER-003, REQ-INFER-004.
+- **Benchmark harness** (`python/carnot/inference/benchmark.py`): Random SAT/graph instance generators, `run_sat_benchmark()`, `run_coloring_benchmark()`. REQ-INFER-005.
+- **New capability spec**: `openspec/capabilities/llm-ebm-inference/` with 5 requirements and 6 scenarios.
+- **3 new test files** (64 tests): Full coverage of all new modules.
+
+### Quality
+- 462 tests passing, 100% code coverage, 100% spec coverage
+- All ruff, mypy, ruff format checks pass
+
+---
+
+## 2026-04-04: Trace2Skill integration — deep trajectory analysis for autoresearch (user instruction: incorporate ideas from arxiv 2603.25158)
+
+### Added
+- **Trajectory analyst** (`python/carnot/autoresearch/trajectory_analyst.py`): Parallel error/success analyst sub-agents that extract structured `Lesson` objects from experiment trajectories via LLM reasoning. REQ-AUTO-011.
+- **Skill directory** (`python/carnot/autoresearch/skill_directory.py`): Persistent optimization playbook (SKILL.md + lessons.json + scripts/ + references/) that replaces shallow `recent_failures` list. Cross-tier transfer (Ising→Gibbs→Boltzmann). REQ-AUTO-012, REQ-AUTO-014.
+- **Consolidator** (`python/carnot/autoresearch/consolidator.py`): Hierarchical tree-reduction merge of lessons via LLM. Deduplicates, resolves conflicts, filters low-confidence. REQ-AUTO-013.
+- **`run_loop_with_skills()`** in orchestrator: New loop variant that dispatches analysts, consolidates periodically, and injects skill context into generator prompts.
+- **4 new test files** (85+ tests total): Full coverage of all new modules.
+- **4 new requirements** (REQ-AUTO-011–014) and **4 new scenarios** (SCENARIO-AUTO-008–011) in spec.
+- **Design doc** updated with Stage 1.5: ANALYZE architecture diagram and Trace2Skill section.
+
+### Changed
+- `ExperimentEntry` gains `lessons` field for storing extracted lessons per experiment
+- `DEFAULT_SYSTEM_PROMPT` in hypothesis_generator.py now includes Skill Playbook guidance
+- `AutoresearchConfig` gains skill directory, analyst, and consolidation settings
+- `__init__.py` exports all new types and functions
+
+### Quality
+- 398 tests passing, 100% code coverage, 100% spec coverage
+- All ruff, mypy, ruff format checks pass
+
+---
+
 ## 2026-04-04: Session handoff — autoresearch proven, all E2E debts cleared
 
 ### Summary

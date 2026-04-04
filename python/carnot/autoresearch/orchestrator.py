@@ -45,12 +45,18 @@ from __future__ import annotations
 import logging
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
+from carnot.autoresearch.consolidator import ConsolidatorConfig, consolidate_lessons
 from carnot.autoresearch.evaluator import evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
 from carnot.autoresearch.sandbox import SandboxConfig, run_in_sandbox
+from carnot.autoresearch.skill_directory import SkillDirectory, SkillDirectoryConfig
+from carnot.autoresearch.trajectory_analyst import AnalystConfig, analyze_batch
 
 logger = logging.getLogger(__name__)
 
@@ -94,6 +100,11 @@ class AutoresearchConfig:
     auto_accept_pass: bool = True
     energy_regression_tolerance: float = 0.001
     jit_grace_seconds: float = 1.0
+    skill_directory_path: Path | None = None
+    enable_trajectory_analysis: bool = False
+    consolidation_batch_size: int = 32
+    consolidation_interval: int = 5
+    analyst_config: Any = None
 
 
 @dataclass
@@ -129,6 +140,7 @@ class LoopResult:
     circuit_breaker_tripped: bool = False
     final_baselines: BaselineRecord | None = None
     experiment_log: ExperimentLog = field(default_factory=ExperimentLog)
+    skill_directory: Any = None
 
 
 def run_loop(
@@ -140,59 +152,59 @@ def run_loop(
 ) -> LoopResult:
     """Run the autoresearch self-improvement loop.
 
-    **Researcher summary:**
-        Iterates over hypotheses: sandbox → evaluate → log → update baselines.
-        Halts on circuit breaker or iteration limit. Returns LoopResult with
-        full experiment log and updated baselines.
+        **Researcher summary:**
+            Iterates over hypotheses: sandbox → evaluate → log → update baselines.
+            Halts on circuit breaker or iteration limit. Returns LoopResult with
+            full experiment log and updated baselines.
 
-    **Detailed explanation for engineers:**
-        This is the main entry point for the autoresearch pipeline. It takes
-        a list of hypotheses (each a (description, code) pair), runs each
-        through the sandbox and evaluator, and tracks results.
+        **Detailed explanation for engineers:**
+            This is the main entry point for the autoresearch pipeline. It takes
+            a list of hypotheses (each a (description, code) pair), runs each
+            through the sandbox and evaluator, and tracks results.
 
-        The loop processes hypotheses in order and stops when:
-        1. All hypotheses have been evaluated
-        2. ``max_iterations`` is reached
-        3. The circuit breaker trips (too many consecutive failures)
+            The loop processes hypotheses in order and stops when:
+            1. All hypotheses have been evaluated
+            2. ``max_iterations`` is reached
+            3. The circuit breaker trips (too many consecutive failures)
 
-        For each hypothesis:
-        1. Check if it's in the rejected registry (skip if so)
-        2. Run it in the sandbox with the benchmark data
-        3. Evaluate the sandbox result against current baselines
-        4. Log the experiment
-        5. If PASS and auto_accept: update baselines
-        6. If FAIL: increment failure counter
-        7. If REVIEW: mark as pending (no auto-accept)
+            For each hypothesis:
+            1. Check if it's in the rejected registry (skip if so)
+            2. Run it in the sandbox with the benchmark data
+            3. Evaluate the sandbox result against current baselines
+            4. Log the experiment
+            5. If PASS and auto_accept: update baselines
+            6. If FAIL: increment failure counter
+            7. If REVIEW: mark as pending (no auto-accept)
 
-        **The key insight**: baselines are updated *during* the loop, so later
-        hypotheses are evaluated against the improved baselines. This means
-        the bar keeps rising as good hypotheses are accepted.
+            **The key insight**: baselines are updated *during* the loop, so later
+            hypotheses are evaluated against the improved baselines. This means
+            the bar keeps rising as good hypotheses are accepted.
 
-    Args:
-        hypotheses: List of (description, python_code) pairs. Each code string
-            must define a ``run(benchmark_data) -> dict`` function.
-        baselines: Current baseline performance metrics to evaluate against.
-        benchmark_data: Dict passed to each hypothesis's ``run()`` function.
-            Typically contains benchmark dimensions, configurations, etc.
-        config: Loop configuration. Uses defaults if None.
-        experiment_log: Existing experiment log to append to. Creates new if None.
+        Args:
+            hypotheses: List of (description, python_code) pairs. Each code string
+                must define a ``run(benchmark_data) -> dict`` function.
+            baselines: Current baseline performance metrics to evaluate against.
+            benchmark_data: Dict passed to each hypothesis's ``run()`` function.
+                Typically contains benchmark dimensions, configurations, etc.
+            config: Loop configuration. Uses defaults if None.
+            experiment_log: Existing experiment log to append to. Creates new if None.
 
-    Returns:
-        LoopResult with iteration counts, updated baselines, and experiment log.
+        Returns:
+            LoopResult with iteration counts, updated baselines, and experiment log.
 
-    For example::
+        For example::
 
-        hypotheses = [
-            ("try smaller step size", '''
-def run(benchmark_data):
-    # ... run sampler with step_size=0.005 ...
-    return {"double_well": {"final_energy": -5.5, "wall_clock_seconds": 1.0}}
-            '''),
-        ]
-        result = run_loop(hypotheses, baselines, {"dim": 2})
-        print(f"Accepted: {result.accepted}, Rejected: {result.rejected}")
+            hypotheses = [
+                ("try smaller step size", '''
+    def run(benchmark_data):
+        # ... run sampler with step_size=0.005 ...
+        return {"double_well": {"final_energy": -5.5, "wall_clock_seconds": 1.0}}
+                '''),
+            ]
+            result = run_loop(hypotheses, baselines, {"dim": 2})
+            print(f"Accepted: {result.accepted}, Rejected: {result.rejected}")
 
-    Spec: FR-11, REQ-AUTO-003 through REQ-AUTO-010
+        Spec: FR-11, REQ-AUTO-003 through REQ-AUTO-010
     """
     if config is None:
         config = AutoresearchConfig()
@@ -355,10 +367,12 @@ def run_loop_with_generator(
             hypotheses = generator(baselines, recent_failures, iteration)
         except Exception:
             logger.exception("Hypothesis generator failed")
-            recent_failures.append({
-                "description": "generator_error",
-                "reason": "Hypothesis generator raised an exception",
-            })
+            recent_failures.append(
+                {
+                    "description": "generator_error",
+                    "reason": "Hypothesis generator raised an exception",
+                }
+            )
             iteration += 1
             continue
 
@@ -405,10 +419,12 @@ def run_loop_with_generator(
                 outcome = "rejected"
                 result.rejected += 1
                 logger.info("REJECTED: %s — %s", exp_id, eval_result.reason)
-                recent_failures.append({
-                    "description": desc,
-                    "reason": eval_result.reason,
-                })
+                recent_failures.append(
+                    {
+                        "description": desc,
+                        "reason": eval_result.reason,
+                    }
+                )
 
             # Log experiment
             entry = ExperimentEntry(
@@ -431,6 +447,240 @@ def run_loop_with_generator(
             result.iterations += 1
 
         iteration += 1
+
+    return result
+
+
+def run_loop_with_skills(
+    generator: Any,
+    baselines: BaselineRecord,
+    benchmark_data: dict[str, Any],
+    config: AutoresearchConfig | None = None,
+    experiment_log: ExperimentLog | None = None,
+    skill_directory: Any = None,
+) -> LoopResult:
+    """Run the autoresearch loop with Trace2Skill learning.
+
+    **Researcher summary:**
+        Like ``run_loop_with_generator`` but adds deep trajectory analysis,
+        lesson consolidation, and a persistent skill directory. The hypothesis
+        generator receives structured knowledge instead of raw failure lists.
+
+    **Detailed explanation for engineers:**
+        This variant enhances the feedback loop with Trace2Skill concepts
+        (arxiv 2603.25158):
+
+        1. After each evaluation, if ``enable_trajectory_analysis`` is True,
+           dispatches an analyst sub-agent to extract a structured ``Lesson``
+        2. Every ``consolidation_interval`` iterations, consolidates
+           accumulated lessons via hierarchical merge
+        3. Passes the skill directory's ``to_prompt_context()`` as
+           ``extra_context`` to the generator instead of raw failure lists
+        4. Persists the skill directory to disk after each consolidation
+
+        The generator callback signature remains::
+
+            generator(baselines, recent_failures, iteration) -> list[(str, str)]
+
+        But ``recent_failures`` now contains the skill context as the first
+        entry, alongside any raw failures for backward compatibility.
+
+        If ``skill_directory`` is None and ``config.skill_directory_path`` is
+        set, a new SkillDirectory is created. If neither is set, the loop
+        runs without skill learning (identical to ``run_loop_with_generator``).
+
+    Args:
+        generator: Callable producing (description, code) pairs.
+        baselines: Initial baseline performance.
+        benchmark_data: Dict passed to each hypothesis's run() function.
+        config: Loop configuration. Uses defaults if None.
+        experiment_log: Existing experiment log. Creates new if None.
+        skill_directory: Existing SkillDirectory. Created from config if None.
+
+    Returns:
+        LoopResult with skill_directory field populated.
+
+    Spec: FR-11, REQ-AUTO-011, REQ-AUTO-012, REQ-AUTO-013, REQ-AUTO-014
+    """
+    if config is None:
+        config = AutoresearchConfig()
+    if experiment_log is None:
+        experiment_log = ExperimentLog()
+
+    # Initialize skill directory
+    if skill_directory is None and config.skill_directory_path is not None:
+        sd_config = SkillDirectoryConfig(path=config.skill_directory_path)
+        skill_directory = SkillDirectory.load(sd_config)
+    elif skill_directory is None:
+        skill_directory = SkillDirectory()
+
+    # Analyst config
+    analyst_cfg = config.analyst_config
+    if analyst_cfg is None:
+        analyst_cfg = AnalystConfig()
+
+    result = LoopResult(
+        final_baselines=baselines,
+        experiment_log=experiment_log,
+        skill_directory=skill_directory,
+    )
+
+    recent_failures: list[dict[str, Any]] = []
+    pending_entries: list[Any] = []  # ExperimentEntry objects awaiting analysis
+    iteration = 0
+
+    while iteration < config.max_iterations:
+        # --- Circuit breaker (REQ-AUTO-009) ---
+        if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+            logger.warning(
+                "Circuit breaker: %d consecutive failures. Halting.",
+                config.max_consecutive_failures,
+            )
+            result.circuit_breaker_tripped = True
+            break
+
+        # --- Build context from skill directory ---
+        skill_context = skill_directory.to_prompt_context()
+        if skill_context:
+            # Inject skill context as a "failure" entry so the generator
+            # sees it alongside any raw failures. This preserves backward
+            # compatibility with generator(baselines, recent_failures, iteration).
+            enriched_failures = [
+                {"description": "skill_playbook", "reason": skill_context},
+                *recent_failures,
+            ]
+        else:
+            enriched_failures = list(recent_failures)
+
+        # --- Generate hypotheses ---
+        logger.info("Generating hypotheses (iteration %d)...", iteration)
+        try:
+            hypotheses = generator(baselines, enriched_failures, iteration)
+        except Exception:
+            logger.exception("Hypothesis generator failed")
+            recent_failures.append(
+                {
+                    "description": "generator_error",
+                    "reason": "Hypothesis generator raised an exception",
+                }
+            )
+            iteration += 1
+            continue
+
+        if not hypotheses:
+            logger.warning("Generator returned no hypotheses, stopping.")
+            break
+
+        # --- Evaluate each hypothesis ---
+        for desc, code in hypotheses:
+            if result.iterations >= config.max_iterations:
+                break
+            if experiment_log.consecutive_failures() >= config.max_consecutive_failures:
+                result.circuit_breaker_tripped = True
+                break
+
+            exp_id = f"skill-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}-{iteration:03d}"
+            logger.info("Evaluating hypothesis %s: %s", exp_id, desc)
+
+            sandbox_result = run_in_sandbox(code, benchmark_data, config.sandbox_config)
+            eval_result = evaluate_hypothesis(
+                sandbox_result,
+                baselines,
+                energy_regression_tolerance=config.energy_regression_tolerance,
+                jit_grace_seconds=config.jit_grace_seconds,
+            )
+
+            if eval_result.verdict == "PASS" and config.auto_accept_pass:
+                outcome = "accepted"
+                result.accepted += 1
+                if sandbox_result.success:
+                    _update_baselines(baselines, sandbox_result.metrics)
+                logger.info("ACCEPTED: %s — %s", exp_id, eval_result.reason)
+                recent_failures.clear()
+            elif eval_result.verdict == "REVIEW":
+                outcome = "pending_review"
+                result.pending_review += 1
+                logger.info("REVIEW: %s — %s", exp_id, eval_result.reason)
+            else:
+                outcome = "rejected"
+                result.rejected += 1
+                logger.info("REJECTED: %s — %s", exp_id, eval_result.reason)
+                recent_failures.append(
+                    {
+                        "description": desc,
+                        "reason": eval_result.reason,
+                    }
+                )
+
+            entry = ExperimentEntry(
+                id=exp_id,
+                timestamp=datetime.now(UTC).isoformat(),
+                hypothesis_code=code,
+                hypothesis_description=desc,
+                sandbox_success=sandbox_result.success,
+                sandbox_metrics=sandbox_result.metrics,
+                sandbox_error=sandbox_result.error,
+                sandbox_wall_clock=sandbox_result.wall_clock_seconds,
+                sandbox_timed_out=sandbox_result.timed_out,
+                eval_verdict=eval_result.verdict,
+                eval_reason=eval_result.reason,
+                eval_improvements=eval_result.improvements,
+                eval_regressions=eval_result.regressions,
+                outcome=outcome,
+            )
+            experiment_log.append(entry)
+            result.iterations += 1
+
+            # --- Trajectory analysis (REQ-AUTO-011) ---
+            if config.enable_trajectory_analysis:
+                pending_entries.append(entry)
+
+        # --- Periodic consolidation (REQ-AUTO-013) ---
+        if (
+            config.enable_trajectory_analysis
+            and pending_entries
+            and (iteration + 1) % config.consolidation_interval == 0
+        ):
+            logger.info("Analyzing %d pending trajectories...", len(pending_entries))
+            lessons = analyze_batch(analyst_cfg, pending_entries, baselines)
+
+            if lessons:
+                logger.info("Consolidating %d lessons...", len(lessons))
+                consolidator_cfg = ConsolidatorConfig(
+                    api_base=analyst_cfg.api_base,
+                    model=analyst_cfg.model,
+                    api_key=analyst_cfg.api_key,
+                    batch_size=config.consolidation_batch_size,
+                )
+                consolidated = consolidate_lessons(consolidator_cfg, lessons)
+                skill_directory.evolve(consolidated)
+
+                if config.skill_directory_path is not None:
+                    skill_directory.save()
+
+                logger.info(
+                    "Skill directory updated: %d total lessons",
+                    len(skill_directory),
+                )
+
+            pending_entries.clear()
+
+        iteration += 1
+
+    # Final analysis of any remaining pending entries
+    if config.enable_trajectory_analysis and pending_entries:
+        lessons = analyze_batch(analyst_cfg, pending_entries, baselines)
+        if lessons:
+            consolidator_cfg = ConsolidatorConfig(
+                api_base=analyst_cfg.api_base,
+                model=analyst_cfg.model,
+                api_key=analyst_cfg.api_key,
+                batch_size=config.consolidation_batch_size,
+            )
+            consolidated = consolidate_lessons(consolidator_cfg, lessons)
+            skill_directory.evolve(consolidated)
+            if config.skill_directory_path is not None:
+                skill_directory.save()
 
     return result
 
