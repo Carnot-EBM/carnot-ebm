@@ -54,8 +54,9 @@ async function initWebGPU() {
     });
     if (!adapter) throw new Error("No WebGPU adapter found");
 
-    const info = await adapter.requestAdapterInfo();
-    log(`GPU: ${info.device || info.description || "unknown"} (${info.vendor})`);
+    // adapter.info is the modern API; requestAdapterInfo() is deprecated
+    const info = adapter.info || (adapter.requestAdapterInfo ? await adapter.requestAdapterInfo() : {});
+    log(`GPU: ${info.device || info.description || info.vendor || "unknown"}`);
 
     device = await adapter.requestDevice();
     return info;
