@@ -500,27 +500,39 @@ def repair(
     x: jax.Array,
     step_size: float,
     max_steps: int,
+    noise_scale: float = 0.0,
+    randomize_step_size: bool = False,
+    key: jax.Array | None = None,
 ) -> tuple[jax.Array, list[VerificationResult]]:
     """Gradient-based repair: iteratively descend on violated constraints.
 
     **Researcher summary:**
         Gradient descent using only violated-constraint gradients. Stops early
         if all constraints are satisfied. Returns repaired configuration and
-        verification history.
+        verification history. Optionally adds Langevin noise (P6) and/or
+        randomized step sizes (P11) to escape local minima.
 
     **Detailed explanation for engineers:**
         This function attempts to "fix" an invalid configuration by repeatedly:
         1. Checking which constraints are violated (via ``verify()``)
         2. Computing the gradient from only those violated constraints
         3. Taking a gradient descent step to reduce the violations
+        4. Optionally adding Langevin noise to explore (prevents local minima)
+        5. Optionally randomizing step size (prevents overfitting to path)
 
         It stops when either:
         - All constraints are satisfied (success!)
         - max_steps iterations are reached (may still have violations)
 
-        The verification history is returned so you can analyze convergence:
-        did the total energy decrease steadily? Did specific constraints get
-        stuck?
+        **Langevin noise (P6, from EBT paper):**
+        When ``noise_scale > 0``, Gaussian noise is added each step:
+        ``x = x - step * grad + noise_scale * N(0, I)``
+        The EBT paper ablations show 17% improvement from this exploration.
+
+        **Randomized step size (P11, from EBT paper):**
+        When ``randomize_step_size=True``, each step uses
+        ``step = step_size * (0.5 + uniform(0,1))`` — varies from 0.5x to 1.5x.
+        Prevents the optimizer from memorizing a single trajectory.
 
         **Why only violated constraints?**
         If we descended on ALL constraints (including satisfied ones), we might
@@ -533,6 +545,12 @@ def repair(
         step_size: Gradient descent step size. Larger = faster but may
             overshoot. Typical range: 0.01 to 1.0.
         max_steps: Maximum number of repair iterations.
+        noise_scale: Standard deviation of Langevin exploration noise.
+            Default 0.0 (no noise, pure gradient descent). Typical: 0.01-0.1.
+        randomize_step_size: If True, multiply step_size by a random factor
+            U(0.5, 1.5) each iteration. Default False.
+        key: JAX PRNG key for noise/randomization. Required if noise_scale > 0
+            or randomize_step_size is True. If None, uses PRNGKey(0).
 
     Returns:
         Tuple of (repaired_x, history) where history is a list of
@@ -551,7 +569,12 @@ def repair(
 
     Spec: REQ-VERIFY-005
     """
+    import jax.random as jrandom
+
     history: list[VerificationResult] = []
+    needs_key = noise_scale > 0 or randomize_step_size
+    if needs_key and key is None:
+        key = jrandom.PRNGKey(0)
 
     for _ in range(max_steps):
         # Check current state of all constraints
@@ -562,7 +585,19 @@ def repair(
             break
         # Compute gradient from only the violated constraints
         grad = composed.grad_violated_only(x)
+
+        # P11: Randomize step size to prevent single-trajectory overfitting
+        current_step = step_size
+        if randomize_step_size and key is not None:
+            key, subkey = jrandom.split(key)
+            current_step = step_size * (0.5 + float(jrandom.uniform(subkey)))
+
         # Gradient descent step (move against the gradient to reduce energy)
-        x = x - step_size * grad
+        x = x - current_step * grad
+
+        # P6: Langevin noise for exploration (escape local minima)
+        if noise_scale > 0 and key is not None:
+            key, subkey = jrandom.split(key)
+            x = x + noise_scale * jrandom.normal(subkey, x.shape)
 
     return x, history

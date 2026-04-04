@@ -168,6 +168,59 @@ class TestRepair:
         assert float(repaired[1]) > 0.0
 
 
+    def test_repair_with_langevin_noise(self) -> None:
+        """REQ-VERIFY-005: Langevin noise during repair (P6) explores landscape."""
+        composed = ComposedEnergy(input_dim=2)
+        composed.add_constraint(MinValueConstraint("a", 0, 3.0), 1.0)
+        composed.add_constraint(MinValueConstraint("b", 1, 3.0), 1.0)
+
+        x = jnp.array([0.0, 0.0])
+        repaired, history = repair(
+            composed, x, step_size=0.1, max_steps=20,
+            noise_scale=0.01, key=jax.random.PRNGKey(42),
+        )
+        # Should still reduce energy (noise is small)
+        assert history[-1].total_energy < history[0].total_energy
+
+    def test_repair_with_randomized_step_size(self) -> None:
+        """REQ-VERIFY-005: randomized step size (P11) varies trajectory."""
+        composed = ComposedEnergy(input_dim=2)
+        composed.add_constraint(MinValueConstraint("a", 0, 3.0), 1.0)
+
+        x = jnp.array([0.0, 0.0])
+        repaired, history = repair(
+            composed, x, step_size=0.1, max_steps=20,
+            randomize_step_size=True, key=jax.random.PRNGKey(42),
+        )
+        assert history[-1].total_energy < history[0].total_energy
+
+    def test_repair_noise_and_random_step_combined(self) -> None:
+        """REQ-VERIFY-005: both P6 and P11 together."""
+        composed = ComposedEnergy(input_dim=2)
+        composed.add_constraint(MinValueConstraint("a", 0, 3.0), 1.0)
+
+        x = jnp.array([0.0, 0.0])
+        repaired, history = repair(
+            composed, x, step_size=0.1, max_steps=20,
+            noise_scale=0.01, randomize_step_size=True,
+            key=jax.random.PRNGKey(42),
+        )
+        assert history[-1].total_energy < history[0].total_energy
+
+    def test_repair_default_key_when_needed(self) -> None:
+        """REQ-VERIFY-005: default key=PRNGKey(0) when noise requested without key."""
+        composed = ComposedEnergy(input_dim=2)
+        composed.add_constraint(MinValueConstraint("a", 0, 3.0), 1.0)
+
+        x = jnp.array([0.0, 0.0])
+        # noise_scale > 0 but no key provided — should use default
+        repaired, history = repair(
+            composed, x, step_size=0.1, max_steps=10,
+            noise_scale=0.01,
+        )
+        assert len(history) > 0
+
+
 class TestComposedEnergyMethods:
     """Tests for ComposedEnergy utility methods."""
 
