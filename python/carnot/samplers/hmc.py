@@ -52,12 +52,13 @@ from carnot.core.energy import EnergyFunction
 
 @dataclass
 class HMCSampler:
-    """Hamiltonian Monte Carlo sampler with leapfrog integration.
+    """Hamiltonian Monte Carlo sampler with leapfrog integration and optional gradient clipping.
 
     **Researcher summary:**
         Standard HMC with configurable step size and leapfrog steps.
         Uses ``jax.lax.fori_loop`` for the leapfrog and ``jax.lax.scan``
-        for the outer chain.
+        for the outer chain. Optional gradient clipping prevents leapfrog
+        divergence on steep energy landscapes.
 
     **Detailed explanation for engineers:**
         This sampler produces samples from p(x) ~ exp(-E(x)) using the
@@ -74,10 +75,21 @@ class HMCSampler:
         100%. In practice, discretization introduces some error, and the
         Metropolis step corrects for it.
 
+        **Gradient clipping (optional):**
+        When ``clip_norm`` is set, every gradient computed during leapfrog
+        integration is rescaled so its L2 norm does not exceed ``clip_norm``.
+        This prevents the leapfrog trajectory from "blowing up" on steep
+        energy surfaces (e.g., the Rosenbrock function). Note that clipping
+        breaks exact symplecticity, but this is acceptable since the
+        unclipped integrator would diverge to NaN anyway.
+
     Attributes:
         step_size: Leapfrog step size (epsilon). Typical range: 0.01 to 0.5.
         num_leapfrog_steps: Number of leapfrog steps per HMC iteration (L).
             The "trajectory length" is step_size * num_leapfrog_steps.
+        clip_norm: Maximum allowed L2 norm for gradients in leapfrog steps.
+            If None (default), no clipping is applied. Typical values for
+            steep landscapes: 1.0 to 100.0.
 
     For example::
 
@@ -85,16 +97,55 @@ class HMCSampler:
         import jax.numpy as jnp
 
         model = IsingModel(IsingConfig(input_dim=10))
-        sampler = HMCSampler(step_size=0.1, num_leapfrog_steps=10)
+        sampler = HMCSampler(step_size=0.1, num_leapfrog_steps=10, clip_norm=10.0)
 
         x0 = jnp.zeros(10)
         x_final = sampler.sample(model, x0, n_steps=100)
 
-    Spec: REQ-SAMPLE-002
+    Spec: REQ-SAMPLE-002, REQ-SAMPLE-004
     """
 
     step_size: float = 0.1
     num_leapfrog_steps: int = 10
+    clip_norm: float | None = None
+
+    def _clip_gradient(self, grad: jax.Array) -> jax.Array:
+        """Clip gradient to have at most ``clip_norm`` L2 norm.
+
+        **Researcher summary:**
+            Rescales grad so ||grad||_2 <= clip_norm, preserving direction.
+            No-op when clip_norm is None.
+
+        **Detailed explanation for engineers:**
+            Gradient clipping prevents the leapfrog integrator from diverging
+            on energy surfaces with very steep gradients. In HMC, large
+            gradients cause the leapfrog trajectory to "blow up" — the
+            position and momentum grow exponentially, leading to NaN values
+            and a Metropolis acceptance probability of 0.
+
+            By bounding the gradient norm, the leapfrog steps remain bounded,
+            and the integrator can navigate steep regions (like the walls of
+            the Rosenbrock banana valley) without diverging.
+
+            Note: Gradient clipping breaks the exact symplecticity of the
+            leapfrog integrator, which means the Metropolis correction is no
+            longer exactly valid. In practice, this is acceptable because:
+            (1) without clipping, the chain diverges entirely, and
+            (2) clipping only activates in extreme gradient regions where the
+            unclipped integrator would produce NaN anyway.
+
+        Args:
+            grad: The raw energy gradient, shape (input_dim,).
+
+        Returns:
+            The (possibly rescaled) gradient, same shape as input.
+
+        Spec: REQ-SAMPLE-004
+        """
+        if self.clip_norm is None:
+            return grad
+        norm = jnp.linalg.norm(grad)
+        return jnp.where(norm > self.clip_norm, grad * self.clip_norm / norm, grad)
 
     def _leapfrog(
         self,
@@ -140,6 +191,7 @@ class HMCSampler:
         """
         # Initial half-step in momentum
         grad = energy_fn.grad_energy(x)
+        grad = self._clip_gradient(grad)
         p = p - (self.step_size * 0.5) * grad
 
         def body(i: int, carry: tuple[jax.Array, jax.Array]) -> tuple[jax.Array, jax.Array]:
@@ -147,6 +199,8 @@ class HMCSampler:
             # Full position step: x moves in the direction of momentum
             x = x + self.step_size * p
             grad = energy_fn.grad_energy(x)
+            # Clip gradient if clip_norm is set (prevents leapfrog divergence)
+            grad = self._clip_gradient(grad)
             # Full momentum step for all iterations except the last,
             # which gets a half-step. We use jnp.where to handle this
             # without breaking JAX's tracing (no Python if/else on traced values).

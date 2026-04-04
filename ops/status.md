@@ -7,7 +7,7 @@
 ### Core Framework (REQ-CORE-001–006)
 - EnergyFunction trait (Rust) and protocol (Python/JAX)
 - Three model tiers: Ising (both), Gibbs (both), Boltzmann (both)
-- Samplers: Langevin + HMC in both languages
+- Samplers: Langevin + HMC in both languages, with optional gradient clipping (REQ-SAMPLE-004)
 - Serialization: safetensors cross-language persistence
 - PyO3 bindings: all 3 tiers + 2 samplers exposed to Python, integration tested
 - Configurable precision: f32 (default) / f64
@@ -73,7 +73,7 @@
 ## What's Next
 
 ### High Priority
-- **Gradient clipping / adaptive step size in samplers**: The Rosenbrock NaN problem is the #1 blocker for autoresearch progress. Rosenbrock's `100*(...)^2` term produces gradients ~3200 at typical init points, causing Langevin to diverge. Fix: add optional gradient clipping to LangevinSampler and HMCSampler (clip_norm parameter).
+- ~~**Gradient clipping**~~: DONE — `clip_norm` parameter on LangevinSampler and HMCSampler. Rosenbrock no longer diverges.
 - **E2E-001: Rust training pipeline test**: Only remaining E2E test gap. Requires Rust-side integration test.
 
 ### Medium Priority

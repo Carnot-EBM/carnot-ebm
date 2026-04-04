@@ -55,11 +55,13 @@ from carnot.core.energy import EnergyFunction
 
 @dataclass
 class LangevinSampler:
-    """Unadjusted Langevin Dynamics (ULA) sampler.
+    """Unadjusted Langevin Dynamics (ULA) sampler with optional gradient clipping.
 
     **Researcher summary:**
         Discretized overdamped Langevin diffusion. No Metropolis correction.
-        Returns either the final sample or the full chain.
+        Returns either the final sample or the full chain. Optional gradient
+        clipping prevents divergence on steep energy landscapes (e.g.,
+        Rosenbrock produces gradients ~3200 at typical init points).
 
     **Detailed explanation for engineers:**
         This sampler takes any ``EnergyFunction`` and generates samples from
@@ -71,10 +73,26 @@ class LangevinSampler:
         - ``sample_chain()``: Returns all intermediate states (useful for
           diagnostics, mixing analysis, or visualization).
 
+        **Gradient clipping (optional):**
+        When ``clip_norm`` is set, every gradient is rescaled so its L2 norm
+        does not exceed ``clip_norm``. This prevents the sampler from
+        "exploding" (producing NaN values) on energy surfaces with very steep
+        regions. The clipping is applied *before* the gradient is used in the
+        update step, so the noise term is unaffected.
+
+        The clipping formula is:
+            if ||grad|| > clip_norm:
+                grad = grad * clip_norm / ||grad||
+
+        This preserves the gradient *direction* while bounding its magnitude.
+
     Attributes:
         step_size: The discretization step size (epsilon). Controls the
             trade-off between speed and accuracy. Typical values: 0.001 to 0.1.
             Too large causes instability; too small causes slow mixing.
+        clip_norm: Maximum allowed L2 norm for gradients. If None (default),
+            no clipping is applied and behavior is identical to standard ULA.
+            Typical values for steep landscapes: 1.0 to 100.0.
 
     For example::
 
@@ -82,16 +100,51 @@ class LangevinSampler:
         import jax.numpy as jnp
 
         model = IsingModel(IsingConfig(input_dim=10))
-        sampler = LangevinSampler(step_size=0.01)
+        sampler = LangevinSampler(step_size=0.01, clip_norm=10.0)
 
         x0 = jnp.zeros(10)  # start from origin
         x_final = sampler.sample(model, x0, n_steps=1000)
         # x_final is a sample approximately from p(x) ~ exp(-E(x))
 
-    Spec: REQ-SAMPLE-001
+    Spec: REQ-SAMPLE-001, REQ-SAMPLE-004
     """
 
     step_size: float = 0.01
+    clip_norm: float | None = None
+
+    def _clip_gradient(self, grad: jax.Array) -> jax.Array:
+        """Clip gradient to have at most ``clip_norm`` L2 norm.
+
+        **Researcher summary:**
+            Rescales grad so ||grad||_2 <= clip_norm, preserving direction.
+            No-op when clip_norm is None.
+
+        **Detailed explanation for engineers:**
+            Gradient clipping is a standard technique from deep learning
+            (originally proposed by Pascanu et al., 2013 for RNNs) applied
+            here to MCMC sampling. On steep energy landscapes like the
+            Rosenbrock function, the gradient can be enormous (||grad|| ~ 3200)
+            at points far from the minimum. Without clipping, the Langevin
+            update takes a huge step, overshoots, lands in an even steeper
+            region, and diverges to NaN.
+
+            The clipping uses ``jnp.where`` (not Python ``if``) so it remains
+            compatible with JAX's JIT compilation and ``jax.lax.scan``. The
+            traced computation graph must not branch on runtime values.
+
+        Args:
+            grad: The raw energy gradient, shape (input_dim,).
+
+        Returns:
+            The (possibly rescaled) gradient, same shape as input.
+
+        Spec: REQ-SAMPLE-004
+        """
+        if self.clip_norm is None:
+            return grad
+        norm = jnp.linalg.norm(grad)
+        # Use jnp.where for JAX traceability — no Python if/else on traced values
+        return jnp.where(norm > self.clip_norm, grad * self.clip_norm / norm, grad)
 
     def sample(
         self,
@@ -144,6 +197,8 @@ class LangevinSampler:
             key, subkey = jrandom.split(key)
             # Compute gradient dE/dx at the current state
             grad = energy_fn.grad_energy(x)
+            # Clip gradient if clip_norm is set (prevents NaN on steep surfaces)
+            grad = self._clip_gradient(grad)
             # Sample isotropic Gaussian noise
             noise = jrandom.normal(subkey, x.shape)
             # Langevin update: move against gradient (toward lower energy)
@@ -200,6 +255,8 @@ class LangevinSampler:
             x, key = carry
             key, subkey = jrandom.split(key)
             grad = energy_fn.grad_energy(x)
+            # Clip gradient if clip_norm is set (prevents NaN on steep surfaces)
+            grad = self._clip_gradient(grad)
             noise = jrandom.normal(subkey, x.shape)
             x_new = x - (self.step_size * 0.5) * grad + noise_scale * noise
             # The second element of the tuple becomes one row of the output chain

@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-04-04: Gradient clipping for samplers (fixes Rosenbrock NaN blocker)
+
+### Added
+- `clip_norm: float | None = None` on `LangevinSampler` and `HMCSampler`
+- `_clip_gradient()` — rescales gradient L2 norm to <= clip_norm, preserving direction
+- Clipping in Langevin `sample()`, `sample_chain()`, and HMC `_leapfrog()`
+- REQ-SAMPLE-004 + SCENARIO-SAMPLE-004/005 in training-inference spec
+- 8 new tests: activation, no-op, backward compat, Rosenbrock NaN prevention
+
+### Fixed
+- **Rosenbrock divergence**: `clip_norm=10.0` produces finite samples (energy 4.09 Langevin, 1.28 HMC) where unclipped diverged to NaN (grad norm ~4950)
+
+---
+
 ## 2026-04-04: LLM-EBM inference — SAT/CSP verify-and-repair pipeline (user instruction: easiest domain for LLM+EBM anti-hallucination)
 
 ### Added

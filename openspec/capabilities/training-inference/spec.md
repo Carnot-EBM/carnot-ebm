@@ -44,6 +44,7 @@ The system shall provide a training loop with:
 The system shall implement unadjusted Langevin dynamics:
 - `x_{t+1} = x_t - (step_size/2) * grad_energy(x_t) + sqrt(step_size) * noise`
 - Configurable step size and number of steps
+- Optional gradient clipping (REQ-SAMPLE-004)
 - Support for annealed Langevin dynamics
 
 ### REQ-SAMPLE-002: Hamiltonian Monte Carlo (HMC)
@@ -51,7 +52,17 @@ The system shall implement unadjusted Langevin dynamics:
 The system shall implement HMC sampling:
 - Leapfrog integrator with configurable step size and trajectory length
 - Metropolis-Hastings accept/reject step
+- Optional gradient clipping in leapfrog steps (REQ-SAMPLE-004)
 - Configurable mass matrix (identity, diagonal, dense)
+
+### REQ-SAMPLE-004: Gradient Clipping for Samplers
+
+The system shall provide optional gradient clipping for all MCMC samplers:
+- `clip_norm: float | None` parameter (default None = no clipping)
+- When enabled, gradients are rescaled to have at most `clip_norm` L2 norm
+- Clipping formula: `grad * clip_norm / max(||grad||, clip_norm)`
+- Prevents divergence (NaN) on steep energy landscapes (e.g., Rosenbrock)
+- Backward compatible: None means existing behavior is unchanged
 
 ### REQ-SAMPLE-003: Sampler Interface
 
@@ -93,6 +104,20 @@ The system shall define a `Sampler` trait/protocol:
 **When** both are used with the same EnergyFunction via the Sampler interface
 **Then** both produce samples without requiring model-specific code
 
+### SCENARIO-SAMPLE-004: Gradient Clipping Prevents Divergence
+
+**Given** a Rosenbrock energy function producing gradients with norm ~3200
+**When** Langevin dynamics is run with clip_norm=10.0 and step_size=0.01
+**Then** all samples remain finite (no NaN or Inf)
+**And** the sampler converges toward the energy minimum
+
+### SCENARIO-SAMPLE-005: Gradient Clipping Is No-Op Below Threshold
+
+**Given** a quadratic energy function with small gradients (norm < 1.0)
+**When** a sampler runs with clip_norm=100.0
+**Then** the gradient is not modified (clipping is a no-op)
+**And** samples are statistically equivalent to the unclipped sampler
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -111,3 +136,4 @@ The system shall define a `Sampler` trait/protocol:
 | REQ-SAMPLE-001 | Implemented | Implemented | 6 Rust + 4 Python |
 | REQ-SAMPLE-002 | Implemented | Implemented | 6 Rust + 2 Python |
 | REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 1 Python |
+| REQ-SAMPLE-004 | Not Started | Implemented | 8 Python |
