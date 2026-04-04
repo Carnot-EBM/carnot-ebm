@@ -217,6 +217,10 @@ def main() -> int:
     parser.add_argument("--api-key", default="not-needed")
     parser.add_argument("--n-sat", type=int, default=10, help="Number of SAT instances")
     parser.add_argument("--n-coloring", type=int, default=10, help="Number of coloring instances")
+    parser.add_argument("--sat-vars", type=int, default=8, help="SAT variables")
+    parser.add_argument("--sat-clauses", type=int, default=20, help="SAT clauses")
+    parser.add_argument("--coloring-nodes", type=int, default=6, help="Coloring nodes")
+    parser.add_argument("--coloring-colors", type=int, default=3, help="Coloring colors")
     args = parser.parse_args()
 
     config = LLMSolverConfig(
@@ -234,8 +238,8 @@ def main() -> int:
 
     start = time.time()
 
-    sat_summary = run_sat_benchmark(config, n_instances=args.n_sat, n_vars=8, n_clauses=20)
-    coloring_summary = run_coloring_benchmark(config, n_instances=args.n_coloring, n_nodes=6, n_colors=3)
+    sat_summary = run_sat_benchmark(config, n_instances=args.n_sat, n_vars=args.sat_vars, n_clauses=args.sat_clauses)
+    coloring_summary = run_coloring_benchmark(config, n_instances=args.n_coloring, n_nodes=args.coloring_nodes, n_colors=args.coloring_colors)
 
     elapsed = time.time() - start
 
