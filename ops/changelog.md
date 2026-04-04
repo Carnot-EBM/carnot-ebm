@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-04-04: Learned energy functions — train EBMs to verify from examples
+
+### Added
+- `python/carnot/inference/learned_verifier.py`: `generate_sat_training_data()` (rejection sampling), `train_sat_verifier()` (NCE training loop), `LearnedEnergyWrapper` (BaseConstraint adapter), `build_learned_sat_energy()`, `compare_learned_vs_handcoded()`
+- REQ-INFER-007 + SCENARIO-INFER-008 in spec
+- 18 tests: data generation, training, wrapping, comparison, edge cases
+
+### Significance
+This is the strategic leap: instead of hand-coding constraints (SAT clauses), the EBM LEARNS what "correct" looks like from examples. Same pattern scales to code verification — replace SAT pairs with (correct_code, buggy_code) → learned code verifier.
+
+---
+
 ## 2026-04-04: LLM solver integration for SAT/coloring pipeline
 
 ### Added

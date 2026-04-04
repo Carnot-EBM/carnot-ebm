@@ -131,6 +131,23 @@ The system shall provide functions to send constraint problems to an LLM and par
 **And** if violated, gradient repair improves the assignment
 **And** the full VerifyRepairResult contains initial, repaired, and rounded verifications
 
+### REQ-INFER-007: Learned Energy Functions
+
+The system shall support training EBMs to learn verification criteria from (correct, incorrect) example pairs:
+- Generate training data via rejection sampling (satisfying assignments = data, random = noise)
+- Train using NCE loss from `carnot.training.nce`
+- Wrap the trained model as a `BaseConstraint` for use in the verify-and-repair pipeline
+- Provide comparison tools to measure learned verifier accuracy against hand-coded ground truth
+
+### SCENARIO-INFER-008: Learned SAT Verifier
+
+**Given** a random 3-SAT instance with 5 variables and 15 clauses
+**And** a Gibbs model trained on satisfying vs random assignments via NCE
+**When** the trained model scores a new satisfying assignment
+**Then** its energy is lower than for a violating assignment
+**And** the learned verifier classifies at least 70% of test assignments correctly
+**And** verify-and-repair using the learned energy improves random assignments
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -141,3 +158,4 @@ The system shall provide functions to send constraint problems to an LLM and par
 | REQ-INFER-004 | Implemented | 6+ Python |
 | REQ-INFER-005 | Implemented | 7+ Python |
 | REQ-INFER-006 | Implemented | 14+ Python |
+| REQ-INFER-007 | Implemented | 18+ Python |
