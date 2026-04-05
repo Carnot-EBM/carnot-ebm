@@ -286,7 +286,7 @@ CONCRETE STEPS:
    - Training reduces NCE loss
    - Correct pairs get lower energy than shuffled pairs
 6. Run full test suite, 100% coverage
-7. Do NOT push.""",
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p1-m1.3-embedding-repair",
@@ -312,7 +312,7 @@ CONCRETE STEPS:
    - Repair reduces energy
    - Nearest match finds the correct code from a small codebook
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     # ── Phase 1.5: LLM Activation Introspection ─────────────
     {
@@ -344,7 +344,7 @@ CONCRETE STEPS:
    - All tests reference REQ-INFER-014
 4. Update python/carnot/embeddings/__init__.py with exports
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p1.5-hallucination-direction",
@@ -380,7 +380,7 @@ CONCRETE STEPS:
    - Energy is higher for hallucinated than correct
    - Reference REQ-INFER-014
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p1.5-layer-targeted-ebm",
@@ -415,7 +415,7 @@ CONCRETE STEPS:
    - Critical layer identification works
    - Trained model discriminates correct vs hallucinated
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     # ── Phase 2: Energy-Based Transformer ──────────────────
     {
@@ -448,7 +448,7 @@ CONCRETE STEPS:
    - grad_energy() returns correct shape
    - Different inputs give different energies
 6. Run full test suite, 100% coverage
-7. Do NOT push.""",
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     # ── Infrastructure improvements (fill gaps between phases) ──
     {
@@ -471,7 +471,7 @@ STEPS:
 3. Add the new function
 4. Add tests referencing REQ-INFER-013
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "infra-arxiv-scan",
@@ -491,7 +491,7 @@ For each relevant paper found, write:
 3. What's actionable for Carnot
 
 Save to openspec/change-proposals/arxiv-scan-{date}.md
-Do NOT push.""",
+Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     # ── Phase 2.5: Productionize experiment findings ───────
     {
@@ -519,7 +519,7 @@ CONCRETE STEPS:
    - Test with n_candidates=1 (degrades to single generation)
    - Reference REQ-INFER-008
 4. Run full test suite, 100% coverage
-5. Do NOT push.""",
+5. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p2.5-composite-scorer",
@@ -549,7 +549,7 @@ CONCRETE STEPS:
    - Reference REQ-INFER-013
 4. Export from inference/__init__.py
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p2.5-rejection-via-api-bridge",
@@ -576,7 +576,7 @@ CONCRETE STEPS:
    - Mock responses without logprobs (fallback)
    - Reference REQ-INFER-008
 4. Run full test suite, 100% coverage
-5. Do NOT push.""",
+5. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p2.5-ebt-training-real-data",
@@ -603,7 +603,7 @@ CONCRETE STEPS:
    d. Evaluates: does the trained EBT rank correct > hallucinated?
 4. Save trained model via safetensors
 5. Report accuracy on held-out test set
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p2.5-experiment-dashboard",
@@ -627,7 +627,7 @@ CONCRETE STEPS:
    - Chart via simple SVG bars (no chart library needed)
 3. Add to Makefile: make dashboard
 4. Run it to generate the HTML
-5. Do NOT push.""",
+5. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     # ── Phase 3: In-Generation Activation Steering ─────────
     {
@@ -661,7 +661,7 @@ CONCRETE STEPS:
    - Test find_best_layers returns sorted layer indices
    - Reference REQ-INFER-015
 5. Run full test suite, 100% coverage
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p3-activation-steering",
@@ -696,7 +696,7 @@ CONCRETE STEPS:
    - Test alpha=0 gives same output as no steering
    - Reference REQ-INFER-015
 6. Run full test suite, 100% coverage
-7. Do NOT push.""",
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p3-steering-experiment",
@@ -727,7 +727,7 @@ CONCRETE STEPS:
    - All activation-based post-hoc approaches (experiments 9-12: all negative)
 5. This is THE critical experiment — if in-generation steering beats post-hoc
    scoring, it validates the entire Phase 1.5 architecture.
-6. Do NOT push.""",
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p3-contrastive-weight-steering",
@@ -760,7 +760,7 @@ CONCRETE STEPS:
    - Context manager cleans up on exit
    - Reference REQ-INFER-015
 6. Run full test suite, 100% coverage
-7. Do NOT push.""",
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     # ── Phase 3.5: Concept Vectors (from Anthropic emotion research) ──
     {
@@ -797,7 +797,7 @@ CONCRETE STEPS:
    - Per-concept energy returns finite values
    - Reference REQ-INFER-016
 6. Run full test suite, 100% coverage
-7. Do NOT push.""",
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
         "id": "p3.5-concept-steering-experiment",
@@ -826,7 +826,7 @@ CONCRETE STEPS:
    - Uncertainty-amplification steering
 6. Report which concept vector gives the best improvement
 7. Save results to ops/experiment-log.md
-8. Do NOT push.""",
+8. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
 ]
 
@@ -933,6 +933,12 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # Show what changed
     diff = git_status()
     logger.info("Changes:\n%s", diff[:500])
+
+    # Guard: never let Claude modify the conductor itself
+    _, conductor_diff, _ = run_cmd(["git", "diff", "--name-only", "--", "scripts/research_conductor.py"])
+    if conductor_diff.strip():
+        logger.warning("Claude modified research_conductor.py — reverting that file")
+        run_cmd(["git", "checkout", "--", "scripts/research_conductor.py"])
 
     # Run tests after changes
     tests_ok, test_summary = run_tests()
