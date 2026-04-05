@@ -112,7 +112,7 @@ research-step:
 
 ## Run research conductor in continuous loop (every 30 min)
 research-loop:
-	.venv/bin/python scripts/research_conductor.py --loop --interval 30
+	.venv/bin/python scripts/research_conductor.py --loop --interval 1
 
 ## Dry run — show what conductor would do
 research-dry:
