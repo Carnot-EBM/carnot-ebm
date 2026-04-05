@@ -493,6 +493,142 @@ For each relevant paper found, write:
 Save to openspec/change-proposals/arxiv-scan-{date}.md
 Do NOT push.""",
     },
+    # ── Phase 2.5: Productionize experiment findings ───────
+    {
+        "id": "p2.5-logprob-rejection-lib",
+        "title": "Productionize logprob rejection sampling",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Experiment 13 proved logprob rejection sampling improves QA accuracy
+by +10% (45% → 55%). This needs to be a reusable library function, not just
+an experiment script.
+
+TASK: Add logprob_rejection_sample() to python/carnot/inference/llm_solver.py
+
+CONCRETE STEPS:
+1. Read scripts/experiment_logprob_rejection.py for the working approach
+2. Add to llm_solver.py:
+   - logprob_rejection_sample(config, prompt, n_candidates=5, temperature=0.8)
+     → (best_response, mean_logprob, all_candidates)
+   - Uses the local model approach: generate N candidates with output_scores,
+     compute per-token logprobs, select highest mean logprob
+   - Falls back gracefully if transformers not installed
+3. Add tests with mock model (don't require real model):
+   - Test candidate selection picks highest logprob
+   - Test with n_candidates=1 (degrades to single generation)
+   - Reference REQ-INFER-008
+4. Run full test suite, 100% coverage
+5. Do NOT push.""",
+    },
+    {
+        "id": "p2.5-composite-scorer",
+        "title": "Productionize composite energy scorer",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Experiment 14 proved composite scoring (logprob + structural tests)
+is never worse than either alone. For code: 0% greedy → 30% with rejection.
+For QA: logprobs dominate. The composite handles both.
+
+TASK: Add CompositeEnergyScorer to python/carnot/inference/
+
+CONCRETE STEPS:
+1. Create python/carnot/inference/composite_scorer.py:
+   - CompositeEnergyConfig: logprob_weight, structural_weight, test_failure_penalty
+   - CompositeEnergyScorer:
+     - score_candidate(code, logprob, test_cases) → float (lower is better)
+     - score = -logprob_weight * mean_logprob + structural_weight * test_failure_penalty * n_failures
+   - select_best(candidates: list[tuple[str, float, int]]) → best candidate
+2. Wire into iterative_refine_code: use composite scoring to select among
+   N candidates at each refinement iteration
+3. Add tests:
+   - Candidate with 0 failures + high logprob beats candidate with failures
+   - Among equal-failure candidates, highest logprob wins
+   - Weights are configurable
+   - Reference REQ-INFER-013
+4. Export from inference/__init__.py
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
+    },
+    {
+        "id": "p2.5-rejection-via-api-bridge",
+        "title": "Logprob rejection sampling via Claude API bridge",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: The logprob experiments used a local Qwen3 model. We need this to
+work through the Claude API bridge too (for Sonnet/Haiku). The OpenAI API
+supports logprobs=True parameter.
+
+TASK: Add API-based logprob rejection sampling to llm_solver.py
+
+CONCRETE STEPS:
+1. Read the existing solve_sat_with_llm and iterative_refine_code
+2. Add api_rejection_sample(config, messages, n_candidates=5):
+   - Calls the LLM N times with temperature > 0
+   - Requests logprobs=True in the API call
+   - Extracts logprobs from the response
+   - If logprobs not available (API doesn't support), fall back to random selection
+   - Returns best candidate by mean logprob
+3. Add tests with mocked OpenAI client:
+   - Mock responses with logprobs field
+   - Mock responses without logprobs (fallback)
+   - Reference REQ-INFER-008
+4. Run full test suite, 100% coverage
+5. Do NOT push.""",
+    },
+    {
+        "id": "p2.5-ebt-training-real-data",
+        "title": "Train EBT on real QA activations",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We have a minimal EBT (python/carnot/models/ebt.py) and real QA
+activation data from experiments. Train the EBT to score (question_embedding,
+answer_embedding) pairs — low energy for correct, high for hallucinated.
+
+TASK: Create scripts/train_ebt_qa.py
+
+CONCRETE STEPS:
+1. Read python/carnot/models/ebt.py for the EBT architecture
+2. Read scripts/experiment_real_hallucination_detection.py for activation extraction
+3. Write a training script that:
+   a. Loads Qwen3-0.6B, generates answers for 100+ QA pairs
+   b. Extracts activations, labels as correct/hallucinated
+   c. Trains the EBT via optimization-through-training (P5):
+      - Start from random answer embedding
+      - Gradient descent on EBT energy for N steps
+      - Loss = MSE between optimized embedding and real correct embedding
+   d. Evaluates: does the trained EBT rank correct > hallucinated?
+4. Save trained model via safetensors
+5. Report accuracy on held-out test set
+6. Do NOT push.""",
+    },
+    {
+        "id": "p2.5-experiment-dashboard",
+        "title": "Create experiment results dashboard",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We have 14 experiments documented in ops/experiment-log.md but no
+easy way to visualize trends or compare approaches.
+
+TASK: Create a simple HTML dashboard for experiment results
+
+CONCRETE STEPS:
+1. Read ops/experiment-log.md for all experiment data
+2. Create scripts/generate_dashboard.py that:
+   - Parses the experiment log
+   - Generates a static HTML file at ops/dashboard.html
+   - Shows: experiment timeline, accuracy comparison bar chart,
+     approach comparison table
+   - Uses inline CSS/JS (no external dependencies)
+   - Chart via simple SVG bars (no chart library needed)
+3. Add to Makefile: make dashboard
+4. Run it to generate the HTML
+5. Do NOT push.""",
+    },
 ]
 
 
