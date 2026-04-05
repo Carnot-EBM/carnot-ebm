@@ -23,3 +23,4 @@
 | 2026-04-05 05:52 UTC | Find hallucination direction in activation space | OK | ====================== 851 passed, 12 warnings in 55.30s ======================= |
 | 2026-04-05 06:02 UTC | Train layer-targeted hallucination detector EBM | FAIL | Claude error: Error: Reached max turns (30) |
 | 2026-04-05 06:07 UTC | Train layer-targeted hallucination detector EBM | OK | ================= 889 passed, 12 warnings in 62.02s (0:01:02) ================== |
+| 2026-04-05 06:17 UTC | Implement minimal Energy-Based Transformer | OK | ================= 921 passed, 12 warnings in 66.79s (0:01:06) ================== |

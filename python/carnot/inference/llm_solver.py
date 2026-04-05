@@ -255,9 +255,7 @@ def run_llm_sat_experiment(
             result.rounded_verification = energy.verify(ms_result.best_x)
             result.repaired_verification = result.rounded_verification
             result.n_repair_steps = len(ms_result.best_history)
-            result.repair_trajectory = [
-                float(h.total_energy) for h in ms_result.best_history
-            ]
+            result.repair_trajectory = [float(h.total_energy) for h in ms_result.best_history]
 
         return result
 
@@ -502,5 +500,188 @@ def iterative_refine_code(
         feedback = _build_code_violation_feedback(test_results)
         messages.append({"role": "assistant", "content": raw})
         messages.append({"role": "user", "content": feedback})
+
+    return result
+
+
+def iterative_refine_with_properties(
+    config: LLMSolverConfig,
+    task_description: str,
+    func_name: str,
+    test_cases: list[tuple[tuple, Any]],
+    properties: list[dict[str, Any]],
+    expected_type: type = int,
+    max_iterations: int = 5,
+    property_samples: int = 100,
+    property_seed: int = 42,
+) -> RefinementResult:
+    """EBM-guided iterative refinement with BOTH test cases AND property tests.
+
+    **Researcher summary:**
+        Combines deterministic test cases (input/output pairs) with random
+        property-based tests (commutativity, idempotency, bounds, etc.).
+        After each LLM attempt, runs BOTH kinds of verification and feeds
+        ALL failures back to the LLM as a single unified feedback prompt.
+        Energy = combined failure rate across both test types.
+
+    **Detailed explanation for engineers:**
+        ``iterative_refine_code`` only checks specific input/output pairs —
+        the kind of tests that appear in every LLM training set. This function
+        adds property-based testing (random inputs checked against invariant
+        properties) so the LLM also gets feedback on edge cases, large inputs,
+        and structural properties it would never see from hand-written tests.
+
+        The loop per iteration:
+        1. Ask LLM to implement the function (or fix it based on feedback).
+        2. Run all deterministic test cases — collect pass/fail for each.
+        3. Run property-based tests — generate random inputs, check invariants.
+        4. Combine failures from both sources into a single feedback prompt.
+        5. If zero failures across both: done, certified correct.
+        6. Otherwise: feed combined feedback to LLM and repeat.
+
+        Energy is computed as total failures (test cases + property tests)
+        divided by total checks (len(test_cases) + n_property_tests). This
+        gives a single 0-to-1 score that captures both kinds of correctness.
+
+    Args:
+        config: LLM API configuration.
+        task_description: The function specification to implement.
+        func_name: Expected function name.
+        test_cases: List of (args_tuple, expected_output) pairs.
+        properties: List of property dicts for property_test(). Each dict has
+            ``name``, ``gen_args`` (callable(rng) -> tuple), ``check``
+            (callable(result, *args) -> bool), and optional ``description``.
+        expected_type: Expected return type.
+        max_iterations: Maximum refinement attempts.
+        property_samples: Number of random samples per property.
+        property_seed: Random seed for reproducible property tests.
+
+    Returns:
+        RefinementResult with trajectory and final verification state.
+        The violation_trajectory counts combined failures from both sources.
+
+    Spec: REQ-INFER-013
+    """
+    import re
+
+    from carnot.verify.property_test import format_violations_for_llm, property_test
+    from carnot.verify.python_types import safe_exec_function
+
+    result = RefinementResult()
+    messages: list[dict[str, str]] = [
+        {
+            "role": "system",
+            "content": (
+                "You are a precise Python programmer. Write ONLY the function "
+                "definition — no explanation, no imports, no test code. "
+                "Just the def statement and its body. "
+                "If given feedback about test failures, fix the function."
+            ),
+        },
+        {"role": "user", "content": task_description},
+    ]
+
+    try:
+        from openai import OpenAI
+    except ImportError:
+        logger.warning("openai not installed")
+        return result
+
+    client = OpenAI(base_url=config.api_base, api_key=config.api_key)
+
+    for iteration in range(max_iterations):
+        result.iterations = iteration + 1
+
+        # Call LLM
+        try:
+            response = client.chat.completions.create(
+                model=config.model,
+                messages=messages,
+                temperature=config.temperature,
+            )
+            raw = response.choices[0].message.content or ""
+        except Exception:
+            logger.exception("LLM call failed at iteration %d", iteration)
+            break
+
+        # Extract code from response (may be in markdown code blocks)
+        match = re.search(r"```python\s*\n(.*?)```", raw, re.DOTALL)
+        if match:
+            code = match.group(1).strip()
+        else:
+            match = re.search(r"```\s*\n(.*?)```", raw, re.DOTALL)
+            code = match.group(1).strip() if match else raw.strip()
+
+        result.final_code = code
+        result.final_response = raw
+
+        # --- Phase 1: Run deterministic test cases ---
+        test_results: list[dict[str, Any]] = []
+        for args, expected in test_cases:
+            actual, error = safe_exec_function(code, func_name, args)
+            passed = error is None and actual == expected
+            test_results.append(
+                {
+                    "input": args,
+                    "expected": expected,
+                    "actual": actual,
+                    "error": str(error) if error else None,
+                    "passed": passed,
+                }
+            )
+
+        n_test_passed = sum(1 for t in test_results if t["passed"])
+        n_test_failed = len(test_cases) - n_test_passed
+
+        # --- Phase 2: Run property-based tests ---
+        prop_result = property_test(
+            code,
+            func_name,
+            properties,
+            n_samples=property_samples,
+            seed=property_seed,
+        )
+
+        # --- Combine results ---
+        total_checks = len(test_cases) + prop_result.n_tests
+        total_failures = n_test_failed + prop_result.n_failed
+        energy = total_failures / max(total_checks, 1)
+
+        result.energy_trajectory.append(energy)
+        result.violation_trajectory.append(total_failures)
+        result.final_energy = energy
+        result.final_verified = total_failures == 0
+
+        logger.info(
+            "Iteration %d: test_cases %d/%d, properties %d/%d (energy=%.4f)",
+            iteration,
+            n_test_passed,
+            len(test_cases),
+            prop_result.n_passed,
+            prop_result.n_tests,
+            energy,
+        )
+
+        # If everything passes, we're done
+        if total_failures == 0:
+            logger.info("All checks passed at iteration %d", iteration)
+            break
+
+        # --- Build combined feedback ---
+        feedback_parts: list[str] = []
+
+        # Deterministic test failures
+        tc_feedback = _build_code_violation_feedback(test_results)
+        if tc_feedback:
+            feedback_parts.append(tc_feedback)
+
+        # Property-based test failures
+        prop_feedback = format_violations_for_llm(prop_result)
+        if prop_feedback:
+            feedback_parts.append(prop_feedback)
+
+        combined_feedback = "\n\n".join(feedback_parts)
+        messages.append({"role": "assistant", "content": raw})
+        messages.append({"role": "user", "content": combined_feedback})
 
     return result
