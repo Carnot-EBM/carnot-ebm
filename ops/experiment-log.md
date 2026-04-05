@@ -53,6 +53,8 @@ Documenting all experiments — what worked, what failed, and what we learned.
 **Result:** 45% → 55% (+10%), 4 fixes, 2 regressions, net +2
 **Learning:** The simplest approach works best. No calibration, no training, no PCA needed. The model's logprobs at each generated token ARE the right energy function. Higher total logprob = more confident = more likely correct. This validates the semantic energy paper (arxiv 2508.14496).
 
+| 14 | Composite: logprob + structural (code) | ✅ 0% → 30% | Structural tests dominate for code; logprobs dominate for QA |
+
 ## Key Principles Learned
 
 1. **Simpler is better for small-data regimes.** Linear projections > nonlinear models when you have <100 training examples.
@@ -64,3 +66,5 @@ Documenting all experiments — what worked, what failed, and what we learned.
 4. **Overfitting is the main enemy.** Every approach that trains on calibration data overfits when examples < dimensions.
 
 5. **Extract features from the RIGHT part of the computation.** Prompt activations ≠ answer activations. The signal is in the GENERATED tokens, not the input.
+
+6. **Different energy signals dominate in different domains.** Logprobs (LLM confidence) work best for QA/factual. Structural tests (EBM execution) work best for code. The composite combines both and is never worse than either alone.
