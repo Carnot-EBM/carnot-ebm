@@ -30,8 +30,10 @@ Spec: REQ-EMBED-001
 from carnot.embeddings.jepa_energy import (
     ContextPredictionEnergy,
     JEPAEnergyConfig,
+    embedding_repair,
     generate_jepa_training_data,
     nce_loss,
+    nearest_code_match,
     train_jepa_energy,
 )
 from carnot.embeddings.model_embeddings import (
@@ -43,8 +45,10 @@ __all__ = [
     "ContextPredictionEnergy",
     "JEPAEnergyConfig",
     "ModelEmbeddingConfig",
+    "embedding_repair",
     "extract_embedding",
     "generate_jepa_training_data",
     "nce_loss",
+    "nearest_code_match",
     "train_jepa_energy",
 ]

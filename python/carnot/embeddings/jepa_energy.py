@@ -569,3 +569,148 @@ def train_jepa_energy(
         loss_history.append(float(loss_val))
 
     return loss_history
+
+
+def embedding_repair(
+    context_emb: jax.Array,
+    prediction_emb: jax.Array,
+    energy_model: ContextPredictionEnergy,
+    steps: int = 50,
+    step_size: float = 0.01,
+) -> jax.Array:
+    """Repair a prediction embedding by gradient descent on the JEPA energy.
+
+    **Researcher summary:**
+        Given a (context, prediction) embedding pair with high energy (meaning
+        the prediction is incoherent with the context), descend on the energy
+        surface by adjusting only the prediction embedding. After ``steps``
+        iterations the repaired prediction should have lower energy — i.e., it
+        is a more coherent continuation of the context.
+
+    **Detailed explanation for engineers:**
+        This is the bridge between "scoring" and "fixing." The JEPA energy
+        function tells us *how bad* a prediction is (high energy = bad). But
+        scoring alone is passive. ``embedding_repair`` makes it active: it
+        takes a bad prediction embedding and *improves* it by walking downhill
+        on the energy landscape while keeping the context embedding fixed.
+
+        The algorithm is simple gradient descent:
+        1. Concatenate context_emb and prediction_emb into a joint vector.
+        2. Compute the energy E(ctx, pred).
+        3. Compute dE/d(pred_emb) — the gradient of energy with respect to
+           only the prediction half of the input.
+        4. Update: pred_emb = pred_emb - step_size * dE/d(pred_emb).
+        5. Repeat for ``steps`` iterations.
+
+        **Why only update the prediction?**
+        The context is the "ground truth" first half of the code. We don't want
+        to change it. We only want to nudge the prediction embedding toward
+        something that the energy model considers a coherent continuation.
+
+        **How we get the prediction-only gradient:**
+        We define a helper that takes pred_emb as input, concatenates it with
+        the fixed context_emb, and returns the energy. Then ``jax.grad`` of
+        this helper gives us dE/d(pred_emb) directly.
+
+    Args:
+        context_emb: 1-D JAX array of shape (embed_dim,) — the context
+            embedding (held fixed throughout repair).
+        prediction_emb: 1-D JAX array of shape (embed_dim,) — the initial
+            (possibly bad) prediction embedding to be repaired.
+        energy_model: A trained ContextPredictionEnergy model that scores
+            (context, prediction) coherence.
+        steps: Number of gradient descent iterations. More steps = more
+            repair but diminishing returns. Default 50.
+        step_size: Learning rate for gradient descent. Larger = faster
+            convergence but risk of overshooting. Default 0.01.
+
+    Returns:
+        The repaired prediction embedding, same shape as ``prediction_emb``.
+
+    Spec: REQ-JEPA-002, SCENARIO-JEPA-006
+    """
+
+    def _energy_of_pred(pred: jax.Array) -> jax.Array:
+        """Energy as a function of prediction embedding only (context is fixed).
+
+        **For engineers:**
+            This closure captures ``context_emb`` and ``energy_model`` from the
+            outer scope. JAX's grad will differentiate through the concatenation
+            and the energy network, giving us the gradient with respect to
+            ``pred`` only.
+        """
+        return energy_model.energy(jnp.concatenate([context_emb, pred]))
+
+    pred = prediction_emb
+    for _ in range(steps):
+        grad = jax.grad(_energy_of_pred)(pred)
+        pred = pred - step_size * grad
+
+    return pred
+
+
+def nearest_code_match(
+    repaired_emb: jax.Array,
+    codebook_embs: jax.Array,
+    codebook_texts: list[str],
+) -> str:
+    """Find the codebook entry whose embedding is closest to the repaired embedding.
+
+    **Researcher summary:**
+        Cosine similarity search over a codebook of (embedding, code_text) pairs.
+        Returns the code text whose embedding has the highest cosine similarity
+        to ``repaired_emb``.
+
+    **Detailed explanation for engineers:**
+        After ``embedding_repair`` produces a repaired prediction embedding, it
+        lives in continuous vector space — it doesn't correspond to any actual
+        code snippet. To get back to real code, we need to find the *nearest
+        neighbor* in a codebook of known embeddings.
+
+        **Why cosine similarity instead of Euclidean distance?**
+        Embeddings from neural networks often vary in magnitude depending on
+        input length or content. Cosine similarity measures the *angle* between
+        vectors, ignoring magnitude, which makes it more robust for comparing
+        embeddings of different-length code snippets. Two embeddings pointing
+        in the same direction (cosine ~ 1.0) represent similar code regardless
+        of their norms.
+
+        **The math:**
+        cosine_sim(a, b) = (a · b) / (||a|| * ||b||)
+
+        We compute this for every codebook entry and return the text associated
+        with the highest similarity score.
+
+        **Edge case — zero-norm vectors:**
+        If either the repaired embedding or a codebook entry has zero norm
+        (e.g., from an empty code snippet), the cosine similarity is undefined.
+        We add a small epsilon (1e-8) to the denominator to avoid division by
+        zero. Zero-norm entries will get near-zero similarity, which is the
+        correct behavior (they shouldn't match anything).
+
+    Args:
+        repaired_emb: 1-D JAX array of shape (embed_dim,) — the repaired
+            prediction embedding from ``embedding_repair``.
+        codebook_embs: 2-D JAX array of shape (n_entries, embed_dim) — the
+            embeddings of all known code snippets.
+        codebook_texts: List of ``n_entries`` code strings, one per codebook
+            embedding. Must be the same length as ``codebook_embs``.
+
+    Returns:
+        The code text string from ``codebook_texts`` whose embedding is most
+        similar to ``repaired_emb``.
+
+    Spec: REQ-JEPA-002, SCENARIO-JEPA-007
+    """
+    # Dot product of repaired_emb with every codebook entry
+    dots = codebook_embs @ repaired_emb  # shape (n_entries,)
+
+    # Norms for cosine similarity (epsilon prevents division by zero)
+    eps = 1e-8
+    repaired_norm = jnp.linalg.norm(repaired_emb) + eps
+    codebook_norms = jnp.linalg.norm(codebook_embs, axis=1) + eps
+
+    cosine_similarities = dots / (codebook_norms * repaired_norm)
+
+    best_idx = int(jnp.argmax(cosine_similarities))
+    return codebook_texts[best_idx]

@@ -14,8 +14,10 @@ import pytest
 from carnot.embeddings.jepa_energy import (
     ContextPredictionEnergy,
     JEPAEnergyConfig,
+    embedding_repair,
     generate_jepa_training_data,
     nce_loss,
+    nearest_code_match,
     train_jepa_energy,
 )
 
@@ -428,6 +430,156 @@ class TestTrainJEPAEnergy:
         assert not np.allclose(ow_before, ow_after), "Output weight should change"
 
 
+class TestEmbeddingRepair:
+    """Tests for REQ-JEPA-002, SCENARIO-JEPA-006: Embedding repair via gradient descent."""
+
+    def _trained_model(self) -> tuple[ContextPredictionEnergy, jax.Array, jax.Array]:
+        """Helper: train a small JEPA model and return (model, data_pairs, noise_pairs).
+
+        **For engineers:**
+            Builds a small model (embed_dim=16), trains it for 200 steps so it
+            assigns lower energy to correct pairs than noise pairs. Returns the
+            model and training data so tests can construct ctx/pred embeddings.
+        """
+        data_pairs, noise_pairs = generate_jepa_training_data(
+            SAMPLE_SNIPPETS, embed_dim=16
+        )
+        model = ContextPredictionEnergy(
+            JEPAEnergyConfig(embed_dim=16, hidden_dims=[16, 8]),
+            key=jrandom.PRNGKey(0),
+        )
+        train_jepa_energy(
+            model, data_pairs, noise_pairs,
+            learning_rate=0.05, n_steps=200,
+        )
+        return model, data_pairs, noise_pairs
+
+    def test_repair_reduces_energy(self) -> None:
+        """SCENARIO-JEPA-006: Repairing a bad prediction reduces the energy."""
+        model, data_pairs, noise_pairs = self._trained_model()
+        embed_dim = 16
+
+        # Take the first noise pair — a mismatched (context, prediction)
+        ctx_emb = noise_pairs[0, :embed_dim]
+        bad_pred = noise_pairs[0, embed_dim:]
+
+        energy_before = float(model.energy_pair(ctx_emb, bad_pred))
+
+        repaired = embedding_repair(
+            ctx_emb, bad_pred, model, steps=100, step_size=0.05
+        )
+
+        energy_after = float(model.energy_pair(ctx_emb, repaired))
+
+        assert energy_after < energy_before, (
+            f"Repair should reduce energy: {energy_before:.4f} -> {energy_after:.4f}"
+        )
+
+    def test_repair_preserves_shape(self) -> None:
+        """SCENARIO-JEPA-006: Repaired embedding has the same shape as the input."""
+        model = ContextPredictionEnergy(
+            JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]),
+            key=jrandom.PRNGKey(0),
+        )
+        ctx = jnp.ones(8)
+        pred = jnp.ones(8) * 3.0
+
+        repaired = embedding_repair(ctx, pred, model, steps=5, step_size=0.01)
+        assert repaired.shape == pred.shape
+
+    def test_repair_zero_steps_returns_original(self) -> None:
+        """SCENARIO-JEPA-006: With steps=0, the prediction is returned unchanged."""
+        model = ContextPredictionEnergy(
+            JEPAEnergyConfig(embed_dim=8, hidden_dims=[8]),
+            key=jrandom.PRNGKey(0),
+        )
+        ctx = jnp.ones(8)
+        pred = jnp.ones(8) * 2.0
+
+        repaired = embedding_repair(ctx, pred, model, steps=0, step_size=0.01)
+        np.testing.assert_array_equal(np.array(repaired), np.array(pred))
+
+    def test_repair_more_steps_lower_energy(self) -> None:
+        """SCENARIO-JEPA-006: More repair steps yield lower (or equal) energy."""
+        model, _data, noise_pairs = self._trained_model()
+        embed_dim = 16
+        ctx_emb = noise_pairs[0, :embed_dim]
+        bad_pred = noise_pairs[0, embed_dim:]
+
+        repaired_10 = embedding_repair(ctx_emb, bad_pred, model, steps=10, step_size=0.05)
+        repaired_100 = embedding_repair(ctx_emb, bad_pred, model, steps=100, step_size=0.05)
+
+        e10 = float(model.energy_pair(ctx_emb, repaired_10))
+        e100 = float(model.energy_pair(ctx_emb, repaired_100))
+
+        assert e100 <= e10, (
+            f"100 steps ({e100:.4f}) should be <= 10 steps ({e10:.4f})"
+        )
+
+
+class TestNearestCodeMatch:
+    """Tests for REQ-JEPA-002, SCENARIO-JEPA-007: Nearest codebook match."""
+
+    def test_exact_match(self) -> None:
+        """SCENARIO-JEPA-007: An embedding that matches a codebook entry exactly is found."""
+        codebook_embs = jnp.array([
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0],
+        ])
+        codebook_texts = ["code_x", "code_y", "code_z"]
+
+        # Query is exactly the second entry
+        result = nearest_code_match(jnp.array([0.0, 1.0, 0.0]), codebook_embs, codebook_texts)
+        assert result == "code_y"
+
+    def test_closest_by_cosine(self) -> None:
+        """SCENARIO-JEPA-007: Query closest to one entry by cosine similarity returns it."""
+        codebook_embs = jnp.array([
+            [1.0, 0.0, 0.0],
+            [0.0, 1.0, 0.0],
+            [0.0, 0.0, 1.0],
+        ])
+        codebook_texts = ["code_x", "code_y", "code_z"]
+
+        # Mostly in the z-direction, should match "code_z"
+        query = jnp.array([0.1, 0.1, 5.0])
+        result = nearest_code_match(query, codebook_embs, codebook_texts)
+        assert result == "code_z"
+
+    def test_magnitude_invariant(self) -> None:
+        """SCENARIO-JEPA-007: Cosine similarity is invariant to embedding magnitude."""
+        codebook_embs = jnp.array([
+            [1.0, 0.0],
+            [0.0, 1.0],
+        ])
+        codebook_texts = ["horizontal", "vertical"]
+
+        # Large-magnitude vector pointing in x-direction
+        result = nearest_code_match(jnp.array([100.0, 0.01]), codebook_embs, codebook_texts)
+        assert result == "horizontal"
+
+    def test_single_codebook_entry(self) -> None:
+        """SCENARIO-JEPA-007: Works with a single codebook entry."""
+        codebook_embs = jnp.array([[1.0, 2.0, 3.0]])
+        codebook_texts = ["only_one"]
+
+        result = nearest_code_match(jnp.array([0.5, 1.0, 1.5]), codebook_embs, codebook_texts)
+        assert result == "only_one"
+
+    def test_near_zero_embedding_handled(self) -> None:
+        """SCENARIO-JEPA-007: Near-zero query doesn't crash (epsilon prevents div-by-zero)."""
+        codebook_embs = jnp.array([
+            [1.0, 0.0],
+            [0.0, 1.0],
+        ])
+        codebook_texts = ["a", "b"]
+
+        # Near-zero query — should not raise, just return some result
+        result = nearest_code_match(jnp.array([1e-20, 1e-20]), codebook_embs, codebook_texts)
+        assert result in codebook_texts
+
+
 class TestPackageExports:
     """Tests for package-level imports."""
 
@@ -436,8 +588,10 @@ class TestPackageExports:
         from carnot.embeddings import (
             ContextPredictionEnergy as PkgModel,
             JEPAEnergyConfig as PkgConfig,
+            embedding_repair as pkg_repair,
             generate_jepa_training_data as pkg_gen,
             nce_loss as pkg_nce,
+            nearest_code_match as pkg_nearest,
             train_jepa_energy as pkg_train,
         )
 
@@ -446,3 +600,5 @@ class TestPackageExports:
         assert pkg_gen is generate_jepa_training_data
         assert pkg_nce is nce_loss
         assert pkg_train is train_jepa_energy
+        assert pkg_repair is embedding_repair
+        assert pkg_nearest is nearest_code_match
