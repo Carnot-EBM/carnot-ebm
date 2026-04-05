@@ -762,6 +762,72 @@ CONCRETE STEPS:
 6. Run full test suite, 100% coverage
 7. Do NOT push.""",
     },
+    # ── Phase 3.5: Concept Vectors (from Anthropic emotion research) ──
+    {
+        "id": "p3.5-concept-vectors",
+        "title": "Find hallucination concept vectors (multi-vector)",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Anthropic's emotion vector research (anthropic.com/research/emotion-concepts-function)
+found that LLMs have distinct activation vectors for different emotions, and steering with
+the RIGHT specific vector (e.g., "desperate") is more effective than a generic direction.
+Our single hallucination direction conflates uncertainty, confabulation, pattern-matching,
+and memorization — which is why experiments 9-12 showed mixed results.
+
+TASK: Create python/carnot/embeddings/concept_vectors.py
+
+CONCRETE STEPS:
+1. Read python/carnot/embeddings/hallucination_direction.py for the single-direction approach
+2. Implement find_concept_vectors() that discovers MULTIPLE hallucination-related vectors:
+   - Define concept prompts: generate text where the model is "certain about a fact",
+     "uncertain and guessing", "confabulating/making things up", "reasoning step by step",
+     "reciting memorized content"
+   - For each concept: generate characteristic activations via model forward pass
+   - Compute contrastive vectors between concept pairs
+   - Return a dict of named concept vectors
+3. Implement concept_energy(activation, concept_vectors) -> dict[str, float]:
+   - Returns per-concept energy scores
+   - "confabulation_energy", "uncertainty_energy", etc.
+4. Implement best_concept_for_detection(concept_vectors, correct_acts, hallucinated_acts):
+   - Test each concept vector's discriminative power
+   - Return the concept that best separates correct from hallucinated
+5. Add tests with synthetic data (no real model needed):
+   - Multiple concept vectors are orthogonal-ish
+   - Per-concept energy returns finite values
+   - Reference REQ-INFER-016
+6. Run full test suite, 100% coverage
+7. Do NOT push.""",
+    },
+    {
+        "id": "p3.5-concept-steering-experiment",
+        "title": "Steer with concept-specific vectors on real model",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We now have concept-specific vectors (confabulation, uncertainty, etc.)
+instead of a single hallucination direction. The Anthropic research showed that
+concept-specific steering beats generic steering.
+
+TASK: Create scripts/experiment_concept_steering.py
+
+CONCRETE STEPS:
+1. Load Qwen3-0.6B (already installed: transformers + torch)
+2. Generate concept vectors using find_concept_vectors() on the model
+3. Run baseline QA (same 25 questions from experiment 8)
+4. For each concept vector, try steering:
+   a. Suppress confabulation vector during generation
+   b. Amplify uncertainty vector (model should say "I don't know" more)
+   c. Measure accuracy change vs baseline
+5. Compare:
+   - Baseline greedy
+   - Generic hallucination direction steering
+   - Confabulation-specific steering
+   - Uncertainty-amplification steering
+6. Report which concept vector gives the best improvement
+7. Save results to ops/experiment-log.md
+8. Do NOT push.""",
+    },
 ]
 
 
