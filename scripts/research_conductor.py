@@ -281,6 +281,109 @@ CONCRETE STEPS:
 5. Run full test suite, 100% coverage
 6. Do NOT push.""",
     },
+    # ── Phase 1.5: LLM Activation Introspection ─────────────
+    {
+        "id": "p1.5-activation-extraction",
+        "title": "Extract per-layer activations from local model",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We want to monitor the LLM's internal state during generation to
+detect hallucination in real-time. First step: extract activations.
+
+TASK: Create python/carnot/embeddings/activation_extractor.py
+
+CONCRETE STEPS:
+1. Create the file with:
+   - ActivationConfig: model_name (default "Qwen/Qwen3-0.6B" or similar small model), device
+   - extract_layer_activations(text, config) -> dict[int, jax.Array]
+     Uses transformers library (lazy import) with register_forward_hook to
+     capture hidden states at each layer.
+     Returns layer_num -> activation_tensor mapping.
+   - compute_activation_stats(activations) -> dict with per-layer:
+     norm, direction_change (cosine distance from previous layer),
+     entropy of attention weights
+2. Handle missing transformers gracefully (return None)
+3. Add tests with mocks (don't require actual model download):
+   - Test config defaults
+   - Test graceful fallback
+   - Test compute_activation_stats with synthetic data
+   - All tests reference REQ-INFER-014
+4. Update python/carnot/embeddings/__init__.py with exports
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
+    },
+    {
+        "id": "p1.5-hallucination-direction",
+        "title": "Find hallucination direction in activation space",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Given per-layer activations from correct and hallucinated outputs,
+find the principal direction in activation space that distinguishes them.
+This direction becomes the EBM's energy function.
+
+TASK: Create python/carnot/embeddings/hallucination_direction.py
+
+CONCRETE STEPS:
+1. Implement find_hallucination_direction(
+       correct_activations: list[jax.Array],
+       hallucinated_activations: list[jax.Array],
+   ) -> jax.Array:
+   - Compute mean activation for correct and hallucinated sets
+   - Difference vector = mean_hallucinated - mean_correct
+   - Optionally: SVD to find top-k directions
+   - Return the hallucination direction vector
+
+2. Implement hallucination_energy(activation, direction) -> float:
+   - Energy = dot(activation, direction) / norm(direction)
+   - High projection = likely hallucination
+
+3. Implement HallucinationDirectionConstraint(BaseConstraint):
+   - Wraps hallucination_energy as a constraint for ComposedEnergy
+
+4. Add tests with synthetic activations (no model needed):
+   - Correct activations cluster away from hallucination direction
+   - Energy is higher for hallucinated than correct
+   - Reference REQ-INFER-014
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
+    },
+    {
+        "id": "p1.5-layer-targeted-ebm",
+        "title": "Train layer-targeted hallucination detector EBM",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We can extract activations and find hallucination directions. Now train
+a compact Gibbs model that monitors the 2-3 most informative layers (not all layers).
+
+TASK: Create python/carnot/embeddings/layer_ebm.py
+
+CONCRETE STEPS:
+1. Implement identify_critical_layers(
+       activations_correct: dict[int, list[jax.Array]],
+       activations_hallucinated: dict[int, list[jax.Array]],
+   ) -> list[int]:
+   - For each layer, compute discrimination power (e.g., Fisher criterion)
+   - Return top-3 layer indices
+
+2. Implement train_layer_ebm(
+       correct_activations: jax.Array,  # from critical layers only
+       hallucinated_activations: jax.Array,
+       config: LearnedVerifierConfig,
+   ) -> GibbsModel:
+   - Train via NCE on the concatenated critical-layer activations
+   - Same training loop as train_sat_verifier
+
+3. Implement LayerEBMVerifier combining extraction + direction + trained model
+
+4. Add tests (synthetic data, no real model):
+   - Critical layer identification works
+   - Trained model discriminates correct vs hallucinated
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
+    },
     # ── Phase 2: Energy-Based Transformer ──────────────────
     {
         "id": "p2-m2.1-minimal-ebt",
