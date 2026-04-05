@@ -27,9 +27,24 @@
 Spec: REQ-EMBED-001
 """
 
+from carnot.embeddings.jepa_energy import (
+    ContextPredictionEnergy,
+    JEPAEnergyConfig,
+    generate_jepa_training_data,
+    nce_loss,
+    train_jepa_energy,
+)
 from carnot.embeddings.model_embeddings import (
     ModelEmbeddingConfig,
     extract_embedding,
 )
 
-__all__ = ["ModelEmbeddingConfig", "extract_embedding"]
+__all__ = [
+    "ContextPredictionEnergy",
+    "JEPAEnergyConfig",
+    "ModelEmbeddingConfig",
+    "extract_embedding",
+    "generate_jepa_training_data",
+    "nce_loss",
+    "train_jepa_energy",
+]
