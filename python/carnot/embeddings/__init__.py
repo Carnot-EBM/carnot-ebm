@@ -27,6 +27,11 @@
 Spec: REQ-EMBED-001
 """
 
+from carnot.embeddings.activation_extractor import (
+    ActivationConfig,
+    compute_activation_stats,
+    extract_layer_activations,
+)
 from carnot.embeddings.jepa_energy import (
     ContextPredictionEnergy,
     JEPAEnergyConfig,
@@ -42,11 +47,14 @@ from carnot.embeddings.model_embeddings import (
 )
 
 __all__ = [
+    "ActivationConfig",
     "ContextPredictionEnergy",
     "JEPAEnergyConfig",
     "ModelEmbeddingConfig",
+    "compute_activation_stats",
     "embedding_repair",
     "extract_embedding",
+    "extract_layer_activations",
     "generate_jepa_training_data",
     "nce_loss",
     "nearest_code_match",

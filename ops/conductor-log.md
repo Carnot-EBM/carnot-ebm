@@ -16,3 +16,4 @@
 | 2026-04-05 04:48 UTC | Add local model embeddings via transformers | OK | ====================== 736 passed, 12 warnings in 54.11s ======================= |
 | 2026-04-05 04:57 UTC | JEPA-style context prediction energy | FAIL | Claude error:  |
 | 2026-04-05 05:02 UTC | JEPA-style context prediction energy | OK | ====================== 773 passed, 12 warnings in 58.75s ======================= |
+| 2026-04-05 05:07 UTC | Repair in embedding space | OK | ================= 782 passed, 12 warnings in 60.55s (0:01:00) ================== |
