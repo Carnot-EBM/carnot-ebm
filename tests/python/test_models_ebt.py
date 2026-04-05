@@ -80,16 +80,16 @@ class TestHelperFunctions:
     """Tests for helper functions used by EBT."""
 
     def test_gelu_zero(self) -> None:
-        """GELU(0) should be 0."""
+        """REQ-CORE-002: GELU(0) should be 0."""
         assert jnp.isclose(_gelu(jnp.float32(0.0)), 0.0, atol=1e-6)
 
     def test_gelu_positive(self) -> None:
-        """GELU of large positive is approximately identity."""
+        """REQ-CORE-002: GELU of large positive is approximately identity."""
         x = jnp.float32(3.0)
         assert jnp.isclose(_gelu(x), x, atol=0.01)
 
     def test_layer_norm_output_shape(self) -> None:
-        """Layer norm preserves shape."""
+        """REQ-CORE-002: Layer norm preserves shape."""
         x = jrandom.normal(jrandom.PRNGKey(0), (5, 8))
         gamma = jnp.ones(8)
         beta = jnp.zeros(8)
