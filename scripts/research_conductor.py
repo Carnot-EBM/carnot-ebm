@@ -160,139 +160,202 @@ def log_step(task: str, status: str, details: str = "") -> None:
 # Each task is a prompt that tells Claude Code what to do.
 # Claude has full file access and can edit code, run tests, etc.
 
+# ── Research Roadmap v2: Phase 1 tasks ─────────────────────
+# See openspec/change-proposals/research-roadmap-v2.md for full plan.
+# These are ordered: each builds on the previous.
+
 RESEARCH_TASKS = [
+    # ── Phase 1: Learned Energy in Latent Space ────────────
     {
-        "id": "improve-repair-success",
-        "title": "Improve SAT repair success rate",
+        "id": "p1-m1.1a-ast-embedding",
+        "title": "Add AST-based code embedding",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements (verbose docstrings, spec refs, 100% coverage).
 
-CONTEXT: The Haiku LLM benchmark shows 60% SAT accuracy → 80% after gradient repair.
-The remaining 20% fails because single-start repair gets stuck in local minima.
+CONTEXT: The current code_to_embedding() in python/carnot/verify/python_types.py
+uses a simple bag-of-tokens frequency vector (256-dim). This loses all structural
+information. We need richer embeddings as a stepping stone to real model embeddings.
 
-TASK: Modify scripts/run_llm_benchmark.py to use multi_start_repair (from
-carnot.inference.multi_start) with n_starts=5 instead of single-start repair.
-This should improve the repair success rate.
+TASK: Add ast_code_to_embedding() that uses Python's ast module to extract structural features.
 
-STEPS:
-1. Read the current run_llm_benchmark.py
-2. Read python/carnot/inference/multi_start.py to understand the API
-3. Modify the SAT experiment in run_llm_sat_experiment() to use multi_start_repair
-4. Run the full test suite: .venv/bin/pytest tests/python --cov=python/carnot --cov-fail-under=100
-5. If tests pass, update ops/status.md with the change
-6. Do NOT push to git (the conductor handles that)
-
-IMPORTANT: Maintain 100% test coverage. Add tests if needed.""",
+CONCRETE STEPS:
+1. Read python/carnot/verify/python_types.py (see code_to_embedding)
+2. Add a new function ast_code_to_embedding(code: str, feature_dim: int = 64) -> jax.Array
+   Features to extract:
+   - Number of: function defs, function calls, loops (for/while), conditionals (if/elif),
+     returns, assignments, imports, try/except blocks
+   - Nesting depth: max and mean
+   - Variable count: unique names
+   - Line count, AST node count
+   - Cyclomatic complexity approximation (branches + 1)
+   Normalize to [0,1] range, pad/truncate to feature_dim.
+3. Add tests in tests/python/test_verify_python_types.py:
+   - Correct shape, deterministic, different code → different embedding
+   - AST embedding distinguishes correct from buggy code better than bag-of-tokens
+   - Handle syntax errors gracefully (return zeros)
+   All tests must reference REQ-CODE-002
+4. Run: .venv/bin/pytest tests/python --cov=python/carnot --cov-fail-under=100
+5. Run: .venv/bin/python scripts/check_spec_coverage.py
+6. Do NOT push to git.""",
     },
     {
-        "id": "property-test-integration",
+        "id": "p1-m1.1b-local-model-embeddings",
+        "title": "Add local model embeddings via transformers",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We need real semantic embeddings for code, not bag-of-tokens.
+A small local model (like microsoft/codebert-base or Salesforce/codet5-small)
+can provide 768-dim embeddings that capture meaning.
+
+TASK: Create python/carnot/embeddings/__init__.py and python/carnot/embeddings/model_embeddings.py
+
+CONCRETE STEPS:
+1. Create the python/carnot/embeddings/ package
+2. In model_embeddings.py implement:
+   - ModelEmbeddingConfig: model_name, device, max_length
+   - extract_embedding(code: str, config: ModelEmbeddingConfig) -> jax.Array
+     Uses transformers library (lazy import) to get the [CLS] or mean-pooled
+     last hidden state. Returns a jax.Array.
+   - If transformers not installed, return None (graceful fallback)
+3. Add tests with mock (don't require transformers to be installed):
+   - Test config defaults
+   - Test graceful fallback when transformers missing
+   - Test with a mock model that returns a known tensor
+4. Run full test suite, maintain 100% coverage
+5. Do NOT push to git.""",
+    },
+    {
+        "id": "p1-m1.2-jepa-energy",
+        "title": "JEPA-style context prediction energy",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: EB-JEPA predicts missing context in embedding space, scored by energy.
+We need an energy function that takes (context_embedding, prediction_embedding)
+and returns a scalar: low if the prediction is a coherent continuation, high otherwise.
+
+TASK: Create python/carnot/embeddings/jepa_energy.py
+
+CONCRETE STEPS:
+1. Read python/carnot/models/gibbs.py for the GibbsModel pattern
+2. Implement ContextPredictionEnergy(AutoGradMixin):
+   - Takes concatenated (context_emb, prediction_emb) as input
+   - Uses a Gibbs-like network to output scalar energy
+   - energy(concat(ctx, pred)) → scalar
+3. Implement generate_jepa_training_data():
+   - Take real Python functions, split into (first_half, second_half)
+   - Embed each half (using ast_code_to_embedding for now)
+   - Correct pairs = real (first, second) halves
+   - Noise pairs = (first_half_of_A, second_half_of_B) shuffled
+4. Train with NCE: correct pairs are data, shuffled pairs are noise
+5. Add tests:
+   - Training reduces NCE loss
+   - Correct pairs get lower energy than shuffled pairs
+6. Run full test suite, 100% coverage
+7. Do NOT push.""",
+    },
+    {
+        "id": "p1-m1.3-embedding-repair",
+        "title": "Repair in embedding space",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We can now score (context, prediction) embedding pairs with energy.
+The next step: given a bad prediction embedding, use gradient descent on the
+energy to IMPROVE it, then find the nearest real code to the repaired embedding.
+
+TASK: Add embedding_repair() to python/carnot/embeddings/jepa_energy.py
+
+CONCRETE STEPS:
+1. Read the existing repair() in python/carnot/verify/constraint.py
+2. Add embedding_repair(ctx_emb, pred_emb, energy_model, steps, step_size):
+   - Runs gradient descent on pred_emb to minimize energy(ctx, pred)
+   - Returns the repaired prediction embedding
+3. Add nearest_code_match(repaired_emb, codebook_embs, codebook_texts):
+   - Finds the codebook entry closest to repaired_emb (cosine similarity)
+   - Returns the corresponding code text
+4. Add tests:
+   - Repair reduces energy
+   - Nearest match finds the correct code from a small codebook
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
+    },
+    # ── Phase 2: Energy-Based Transformer ──────────────────
+    {
+        "id": "p2-m2.1-minimal-ebt",
+        "title": "Implement minimal Energy-Based Transformer",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: The EBT paper (arxiv 2507.02092) shows transformers that output scalar
+energy and do inference via gradient descent. We need a minimal JAX implementation.
+
+TASK: Create python/carnot/models/ebt.py
+
+CONCRETE STEPS:
+1. Read python/carnot/models/gibbs.py and python/carnot/models/boltzmann.py for patterns
+2. Implement EBTConfig: n_layers, d_model, n_heads, d_ff, max_seq_len
+3. Implement EBTransformer(AutoGradMixin):
+   - Input: concatenated (input_tokens, candidate_output_tokens) as integer sequence
+   - Embedding layer: token embeddings + positional embeddings
+   - N transformer layers with self-attention + FFN
+   - Final: mean pool → linear → scalar energy
+   - energy(x) where x is a 1-D integer array of token IDs
+4. Use pure JAX (no flax/equinox) — manual attention:
+   - Q, K, V projections
+   - Scaled dot-product attention: softmax(QK^T / sqrt(d)) V
+   - Multi-head: split dims, attend, concat, project
+5. Add tests:
+   - Model creation with various configs
+   - energy() returns finite scalar
+   - grad_energy() returns correct shape
+   - Different inputs give different energies
+6. Run full test suite, 100% coverage
+7. Do NOT push.""",
+    },
+    # ── Infrastructure improvements (fill gaps between phases) ──
+    {
+        "id": "infra-property-refine",
         "title": "Integrate property testing into iterative refinement",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
 
 CONTEXT: We have property-based testing (carnot.verify.property_test) and iterative
 refinement (iterative_refine_code in carnot.inference.llm_solver), but they're
-not connected. The refinement loop uses simple test cases, missing edge cases.
+not connected.
 
-TASK: Create a new function iterative_refine_with_properties() that combines
-iterative_refine_code with property_test — after each LLM attempt, run both
-specific test cases AND random property tests, feeding ALL failures back to the LLM.
+TASK: Add iterative_refine_with_properties() to llm_solver.py that combines both:
+after each LLM attempt, run specific test cases AND random property tests,
+feeding ALL failures back to the LLM.
 
 STEPS:
 1. Read python/carnot/inference/llm_solver.py (iterative_refine_code)
 2. Read python/carnot/verify/property_test.py (property_test, format_violations_for_llm)
-3. Add iterative_refine_with_properties() to llm_solver.py
-4. Add tests in tests/python/test_inference_iterative_refine.py
-5. Run full test suite: .venv/bin/pytest tests/python --cov=python/carnot --cov-fail-under=100
-6. Maintain 100% coverage and spec coverage (every test references REQ-* or SCENARIO-*)""",
+3. Add the new function
+4. Add tests referencing REQ-INFER-013
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
     },
     {
-        "id": "harder-code-tasks",
-        "title": "Find coding tasks that make LLMs fail",
-        "prompt": """You are working on the Carnot EBM framework in {project_root}.
-
-CONTEXT: Current coding tasks (fibonacci, gcd, binary_search, etc.) are solved
-perfectly by both Sonnet and Haiku. We need tasks where LLMs actually make mistakes
-so the EBM verification adds value.
-
-TASK: Add 5 new coding tasks to scripts/demo_code_verification.py that are likely
-to trip up LLMs. Focus on:
-- Stateful/mutable operations (in-place list manipulation with tricky indices)
-- Off-by-one edge cases (ranges, boundaries, fencepost problems)
-- Numerical precision (floating point comparison, rounding)
-- Unusual specifications (non-standard sort orders, custom encodings)
-- Property-based test cases that check invariants, not just specific values
-
-STEPS:
-1. Read scripts/demo_code_verification.py
-2. Add 5 new tasks to TASKS_HARD with comprehensive test cases
-3. Include at least one property-based test case per task
-4. Run the demo with --model haiku to see if any tasks fail
-5. Document which tasks Haiku fails on (if any)""",
-    },
-    {
-        "id": "diffusion-vs-repair-benchmark",
-        "title": "Compare diffusion generation vs LLM+repair on SAT",
-        "prompt": """You are working on the Carnot EBM framework in {project_root}.
-
-CONTEXT: We have two ways to solve SAT:
-1. LLM generates → EBM repairs (run_llm_sat_experiment)
-2. Diffusion generates from noise (diffusion_generate_sat)
-Neither has been compared head-to-head.
-
-TASK: Write a benchmark script scripts/bench_diffusion_vs_llm.py that:
-1. Generates 10 random SAT instances (12 vars, 40 clauses)
-2. Solves each with diffusion (n_candidates=10, 100 steps)
-3. Measures: success rate, energy, wall clock time
-4. Compares against the known Haiku results (60% → 80%)
-5. Prints a comparison table
-
-STEPS:
-1. Read python/carnot/inference/diffusion.py
-2. Read python/carnot/inference/benchmark.py for instance generation
-3. Write the benchmark script
-4. Run it and report results""",
-    },
-    {
-        "id": "arxiv-scan",
+        "id": "infra-arxiv-scan",
         "title": "Scan arxiv for new EBM research",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 
-TASK: Search arxiv for papers from the last 3 months (2026) on:
-- Energy-based models for code verification
-- EBM + LLM integration
-- Self-improving AI systems
-- Hallucination detection via energy
+TASK: Search the web for recent arxiv papers (2025-2026) on:
+- Energy-based transformers
+- JEPA and joint embedding architectures
+- EBM for code generation or verification
+- Self-supervised energy training
+- Thermodynamic computing / analog EBM hardware
 
-For each relevant paper, write:
+For each relevant paper found, write:
 1. Title and arxiv ID
 2. One-sentence summary
-3. What's actionable for Carnot (specific module/function that could benefit)
+3. What's actionable for Carnot
 
 Save to openspec/change-proposals/arxiv-scan-{date}.md
-
-Use web search to find the papers.""",
-    },
-    {
-        "id": "improve-code-embedding",
-        "title": "Improve code embedding beyond bag-of-tokens",
-        "prompt": """You are working on the Carnot EBM framework in {project_root}.
-
-CONTEXT: The current code_to_embedding() in python/carnot/verify/python_types.py
-uses a simple bag-of-tokens frequency vector. This loses all structural information
-(indentation, nesting, control flow). The learned code verifier's accuracy is
-limited by this embedding quality.
-
-TASK: Add an AST-based embedding that captures structural features:
-- Number of function calls, loops, conditionals, returns
-- Nesting depth statistics
-- Variable count and reuse patterns
-- Cyclomatic complexity approximation
-
-STEPS:
-1. Read python/carnot/verify/python_types.py (current code_to_embedding)
-2. Add ast_code_to_embedding() using Python's ast module
-3. Add tests comparing bag-of-tokens vs AST embedding discriminability
-4. Run full test suite, maintain 100% coverage
-5. Update the code verifier to optionally use the AST embedding""",
+Do NOT push.""",
     },
 ]
 
