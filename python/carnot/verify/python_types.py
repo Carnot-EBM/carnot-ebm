@@ -51,6 +51,7 @@ Spec: REQ-CODE-001, REQ-CODE-002
 
 from __future__ import annotations
 
+import ast
 import io
 import tokenize
 from typing import Any
@@ -418,6 +419,207 @@ def code_to_embedding(code: str, vocab_size: int = 256) -> jax.Array:
         pass
 
     return jnp.array(counts, dtype=jnp.float32)
+
+
+def _compute_nesting_depth(node: ast.AST, current: int = 0) -> list[int]:
+    """Recursively collect nesting depths at each compound statement.
+
+    **Detailed explanation for engineers:**
+        Walks the AST tree and tracks nesting depth. Every compound statement
+        (function def, for, while, if, try, with) increments the depth counter
+        for its children. Returns a list of depths at each compound node,
+        which can be used to compute max and mean nesting depth.
+
+    Args:
+        node: Current AST node being visited.
+        current: Current nesting depth (0 at module level).
+
+    Returns:
+        List of integer depths at each compound statement encountered.
+
+    Spec: REQ-CODE-002
+    """
+    depths: list[int] = []
+    nesting_types = (
+        ast.FunctionDef, ast.AsyncFunctionDef,
+        ast.For, ast.AsyncFor,
+        ast.While, ast.If,
+        ast.Try, ast.With, ast.AsyncWith,
+    )
+    for child in ast.iter_child_nodes(node):
+        if isinstance(child, nesting_types):
+            depths.append(current + 1)
+            depths.extend(_compute_nesting_depth(child, current + 1))
+        else:
+            depths.extend(_compute_nesting_depth(child, current))
+    return depths
+
+
+def ast_code_to_embedding(code: str, feature_dim: int = 64) -> jax.Array:
+    """Convert Python source code to a structural feature embedding using AST analysis.
+
+    **Researcher summary:**
+        Parses the code into an Abstract Syntax Tree and extracts structural
+        features: counts of function defs, calls, loops, conditionals, returns,
+        assignments, imports, try/except blocks, nesting depth stats, variable
+        count, line count, AST node count, and cyclomatic complexity. Returns a
+        normalized float32 vector of shape (feature_dim,).
+
+    **Detailed explanation for engineers:**
+        Unlike ``code_to_embedding`` which uses a bag-of-tokens approach (losing
+        all structural information), this function parses the code into a Python
+        Abstract Syntax Tree (AST) and extracts features that capture the *structure*
+        of the code:
+
+        1. **Node type counts**: How many function definitions, function calls,
+           for/while loops, if/elif conditionals, return statements, assignments,
+           import statements, and try/except blocks appear in the code.
+
+        2. **Nesting depth**: The maximum and mean nesting depth of compound
+           statements (functions, loops, conditionals, try blocks). Deeply nested
+           code has different structural properties than flat code.
+
+        3. **Variable count**: Number of unique variable names used in the code,
+           counted via ``ast.Name`` nodes. This captures code complexity — a
+           function using 2 variables is structurally simpler than one using 10.
+
+        4. **Line count**: Number of non-empty lines in the source code.
+
+        5. **AST node count**: Total number of nodes in the AST tree. This is a
+           rough measure of code size/complexity at the structural level.
+
+        6. **Cyclomatic complexity**: Approximated as (number of branch points) + 1,
+           where branch points are if/elif/for/while/except/and/or. This measures
+           how many independent execution paths exist through the code.
+
+        **Normalization:** Raw counts are divided by (1 + max_value_in_vector) to
+        map all features to the [0, 1) range. This prevents large counts from
+        dominating the embedding.
+
+        **Padding/truncation:** The raw feature vector is either zero-padded (if
+        shorter than feature_dim) or truncated (if longer) to exactly feature_dim.
+
+        **Error handling:** If the code has syntax errors and cannot be parsed,
+        returns a zero vector of shape (feature_dim,). This is intentionally
+        different from valid code (which will have nonzero features), making
+        syntax errors detectable from the embedding alone.
+
+        **Why AST over bag-of-tokens?**
+        The bag-of-tokens embedding in ``code_to_embedding`` cannot distinguish
+        between ``a + b`` and ``b + a``, or between a function with a return
+        statement and one without (if the token counts happen to collide). AST
+        features capture the *structure* of the code: whether there IS a return
+        statement, how deeply nested the logic is, how many branches exist.
+        This makes it much better at distinguishing correct code from buggy code
+        that has been mutated (e.g., a missing return statement, an extra loop,
+        or a swapped conditional).
+
+    Args:
+        code: Python source code string.
+        feature_dim: Size of the output embedding vector. Default 64.
+
+    Returns:
+        JAX array of shape (feature_dim,) with float32 dtype, values in [0, 1).
+        Returns zeros for code with syntax errors.
+
+    Spec: REQ-CODE-002
+    """
+    try:
+        tree = ast.parse(code)
+    except SyntaxError:
+        return jnp.zeros(feature_dim, dtype=jnp.float32)
+
+    # --- Count structural features ---
+    n_func_defs = 0
+    n_func_calls = 0
+    n_for_loops = 0
+    n_while_loops = 0
+    n_if_stmts = 0
+    n_returns = 0
+    n_assignments = 0
+    n_imports = 0
+    n_try_blocks = 0
+    n_branches = 0  # for cyclomatic complexity
+    unique_names: set[str] = set()
+
+    for node in ast.walk(tree):
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            n_func_defs += 1
+        elif isinstance(node, ast.Call):
+            n_func_calls += 1
+        elif isinstance(node, (ast.For, ast.AsyncFor)):
+            n_for_loops += 1
+            n_branches += 1
+        elif isinstance(node, ast.While):
+            n_while_loops += 1
+            n_branches += 1
+        elif isinstance(node, ast.If):
+            n_if_stmts += 1
+            n_branches += 1
+        elif isinstance(node, ast.Return):
+            n_returns += 1
+        elif isinstance(node, (ast.Assign, ast.AugAssign, ast.AnnAssign)):
+            n_assignments += 1
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
+            n_imports += 1
+        elif isinstance(node, ast.Try):
+            n_try_blocks += 1
+        elif isinstance(node, (ast.And, ast.Or)):
+            n_branches += 1
+
+        # Count exception handlers as branches
+        if isinstance(node, ast.ExceptHandler):
+            n_branches += 1
+
+        # Collect unique variable names
+        if isinstance(node, ast.Name):
+            unique_names.add(node.id)
+
+    # --- Nesting depth ---
+    depths = _compute_nesting_depth(tree)
+    max_depth = float(max(depths)) if depths else 0.0
+    mean_depth = float(sum(depths) / len(depths)) if depths else 0.0
+
+    # --- Line count (non-empty lines) ---
+    line_count = sum(1 for line in code.splitlines() if line.strip())
+
+    # --- Total AST node count ---
+    ast_node_count = sum(1 for _ in ast.walk(tree))
+
+    # --- Cyclomatic complexity approximation: branches + 1 ---
+    cyclomatic = n_branches + 1
+
+    # --- Assemble raw feature vector ---
+    raw_features = [
+        float(n_func_defs),
+        float(n_func_calls),
+        float(n_for_loops),
+        float(n_while_loops),
+        float(n_if_stmts),
+        float(n_returns),
+        float(n_assignments),
+        float(n_imports),
+        float(n_try_blocks),
+        max_depth,
+        mean_depth,
+        float(len(unique_names)),
+        float(line_count),
+        float(ast_node_count),
+        float(cyclomatic),
+    ]
+
+    # --- Pad or truncate to feature_dim ---
+    if len(raw_features) < feature_dim:
+        raw_features.extend([0.0] * (feature_dim - len(raw_features)))
+    else:
+        raw_features = raw_features[:feature_dim]
+
+    # --- Normalize to [0, 1) range ---
+    feature_array = jnp.array(raw_features, dtype=jnp.float32)
+    max_val = jnp.max(feature_array)
+    feature_array = feature_array / (1.0 + max_val)
+
+    return feature_array
 
 
 def build_code_energy(

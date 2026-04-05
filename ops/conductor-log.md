@@ -10,3 +10,5 @@
 | 2026-04-05 01:50 UTC | Run 50-iteration autoresearch with latest improvem | OK |
 | 2026-04-05 02:13 UTC | Improve SAT repair success rate | OK | ====================== 713 passed, 12 warnings in 50.86s ======================= |
 | 2026-04-05 02:22 UTC | Run 50-iteration autoresearch with latest improvem | OK |
+| 2026-04-05 03:39 UTC | Add AST-based code embedding | FAIL | Claude error:  |
+| 2026-04-05 04:13 UTC | Add AST-based code embedding | FAIL | Claude error:  |
