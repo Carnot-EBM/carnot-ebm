@@ -20,3 +20,5 @@
 | 2026-04-05 05:16 UTC | Extract per-layer activations from local model | OK | ================= 816 passed, 12 warnings in 61.11s (0:01:01) ================== |
 | 2026-04-05 05:26 UTC | Find hallucination direction in activation space | FAIL | Claude error: Error: Reached max turns (30) |
 | 2026-04-05 05:46 UTC | Train layer-targeted hallucination detector EBM | REVERT | Post-tests failed: ================= 876 passed, 12 warnings in 68.68s (0:01:08) |
+| 2026-04-05 05:52 UTC | Find hallucination direction in activation space | OK | ====================== 851 passed, 12 warnings in 55.30s ======================= |
+| 2026-04-05 06:02 UTC | Train layer-targeted hallucination detector EBM | FAIL | Claude error: Error: Reached max turns (30) |

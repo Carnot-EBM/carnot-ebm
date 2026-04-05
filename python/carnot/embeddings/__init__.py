@@ -47,6 +47,13 @@ from carnot.embeddings.jepa_energy import (
     nearest_code_match,
     train_jepa_energy,
 )
+from carnot.embeddings.layer_ebm import (
+    LayerEBMConfig,
+    LayerEBMVerifier,
+    build_layer_ebm_verifier,
+    identify_critical_layers,
+    train_layer_ebm,
+)
 from carnot.embeddings.model_embeddings import (
     ModelEmbeddingConfig,
     extract_embedding,
@@ -58,7 +65,10 @@ __all__ = [
     "HallucinationDirectionConfig",
     "HallucinationDirectionConstraint",
     "JEPAEnergyConfig",
+    "LayerEBMConfig",
+    "LayerEBMVerifier",
     "ModelEmbeddingConfig",
+    "build_layer_ebm_verifier",
     "compute_activation_stats",
     "embedding_repair",
     "extract_embedding",
@@ -66,7 +76,9 @@ __all__ = [
     "find_hallucination_direction",
     "generate_jepa_training_data",
     "hallucination_energy",
+    "identify_critical_layers",
     "nce_loss",
     "nearest_code_match",
     "train_jepa_energy",
+    "train_layer_ebm",
 ]
