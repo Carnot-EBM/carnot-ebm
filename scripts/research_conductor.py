@@ -497,23 +497,24 @@ Do NOT push.""",
 
 
 def pick_next_task(completed_log: str) -> dict | None:
-    """Pick the next task that hasn't been completed recently."""
-    # Parse completed tasks from log
-    recent_completed = set()
+    """Pick the next task that hasn't been completed successfully."""
+    # Parse completed task IDs from log (match on task title prefix)
+    completed_titles = set()
     for line in completed_log.splitlines():
         if "| OK |" in line:
             parts = line.split("|")
             if len(parts) >= 3:
-                task_name = parts[2].strip()
-                recent_completed.add(task_name)
+                completed_titles.add(parts[2].strip())
 
-    # Find first task not recently completed
+    # Find first task not yet completed
     for task in RESEARCH_TASKS:
-        if task["title"][:50] not in recent_completed:
+        title_prefix = task["title"][:50]
+        if title_prefix not in completed_titles:
             return task
 
-    # All tasks completed — cycle back to first
-    return RESEARCH_TASKS[0]
+    # All tasks completed — return None (don't loop)
+    logger.info("All %d research tasks completed. Nothing to do.", len(RESEARCH_TASKS))
+    return None
 
 
 def research_step(push: bool = True, dry_run: bool = False) -> bool:
