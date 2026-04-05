@@ -17,7 +17,12 @@ Topics: energy-based transformers, JEPA, EBM for code/verification, self-supervi
 - **Summary:** Minimally modifies GPT to unify it with the EBM framework; inference becomes gradient descent on an energy landscape over token embeddings, with empirical evidence of improved overfitting resistance.
 - **Actionable for Carnot:** NRGPT's "minimal modification" approach is a concrete recipe for Carnot's Python Boltzmann tier. Their Shakespeare/ListOPS/OpenWebText benchmarks provide replicable evaluation targets. Their overfitting-resistance claim is worth validating with Carnot's Ising tier on small datasets.
 
-### 1.3 Energy Transformer (ET)
+### 1.3 Transformers as Intrinsic Optimizers: Forward Inference through the Energy Principle
+- **arXiv:** [2511.00907](https://arxiv.org/abs/2511.00907) (November 2025, updated January 2026)
+- **Summary:** Presents a unified energy-based framework for attention mechanisms; shows that unnormalized linear attention, gated linear attention, and softmax attention all emerge as special cases of energy minimization with different optimization recipes.
+- **Actionable for Carnot:** Provides a principled way to derive new attention variants by choosing different energy functions and optimizers. Carnot could use this framework to design custom attention layers in `carnot-boltzmann` where the energy function is physically meaningful rather than heuristic.
+
+### 1.4 Energy Transformer (ET)
 - **arXiv:** [2302.07253](https://arxiv.org/abs/2302.07253)
 - **Summary:** Attention layers redesigned to minimize a specifically engineered energy function over token relationships; earlier foundational work that EBT builds upon.
 - **Actionable for Carnot:** Reference architecture for Carnot's attention-as-energy-minimization design pattern.
@@ -79,7 +84,17 @@ Topics: energy-based transformers, JEPA, EBM for code/verification, self-supervi
 - **Summary:** Derives a generative JEPA from variational inference with a corresponding ELBO objective that naturally prevents representational collapse.
 - **Actionable for Carnot:** Var-JEPA's collapse-prevention via ELBO is directly relevant to Carnot's training stability. The variational formulation bridges JEPA and traditional EBM training, which is exactly Carnot's theoretical gap.
 
-### 4.5 Audio-JEPA
+### 4.5 LLM-JEPA: Large Language Models Meet Joint Embedding Predictive Architectures
+- **arXiv:** [2509.14252](https://arxiv.org/abs/2509.14252) (September 2025, by Yann LeCun et al.)
+- **Summary:** First JEPA-based training objective for LLMs; outperforms standard LLM training objectives by significant margin while being robust to overfitting; does not hinder next-token prediction and adds structure to the latent space.
+- **Actionable for Carnot:** Directly validates Carnot's thesis that embedding-space objectives (energy-based) can improve LLM training. LLM-JEPA's multi-view approach (git issues + code diffs) is a natural fit for Carnot's code-understanding use case. High priority — co-authored by LeCun, the JEPA originator.
+
+### 4.6 JEPA for RL: Joint-Embedding Predictive Architectures for Reinforcement Learning
+- **arXiv:** [2504.16591](https://arxiv.org/abs/2504.16591) (April 2025, ESANN 2025)
+- **Summary:** Adapts JEPA to RL from images using vision transformers; details model collapse scenarios and prevention strategies for the Cart Pole task.
+- **Actionable for Carnot:** Their model collapse analysis is directly useful for Carnot's energy-based training stability. The collapse prevention strategies complement Var-JEPA's ELBO approach.
+
+### 4.7 Audio-JEPA
 - **arXiv:** [2507.02915](https://arxiv.org/abs/2507.02915) (June 2025)
 - **Summary:** Applies JEPA to audio spectrograms using ViT backbone with masked-patch prediction in latent space.
 - **Actionable for Carnot:** Demonstrates JEPA generality across modalities; the masked-patch prediction in latent space pattern could be adapted for code-token masking in Carnot's training.
@@ -98,7 +113,12 @@ Topics: energy-based transformers, JEPA, EBM for code/verification, self-supervi
 - **Summary:** Theoretical analysis of adversarial training through the EBM lens, providing understanding of when and why adversarial EBM training succeeds.
 - **Actionable for Carnot:** Companion theory paper to 2510.13872; useful for understanding the conditions under which Carnot's energy training will be stable.
 
-### 5.3 Contrastive Self-Supervised Learning at the Edge: An Energy Perspective
+### 5.3 Scalable and Efficient Training of Diffusion Samplers
+- **arXiv:** [2505.19552](https://arxiv.org/abs/2505.19552) (May 2025)
+- **Summary:** Framework harmonizing classical MCMC with diffusion samplers for sampling from unnormalized energy distributions; identifies primacy bias as root cause of mode collapse and proposes periodic re-initialization fix.
+- **Actionable for Carnot:** Directly addresses Carnot's MCMC sampling scalability. The primacy bias diagnosis and re-initialization trick should be tested in Carnot's sampling pipeline. The novelty-based auxiliary energy for off-policy sample collection could improve Carnot's training data efficiency.
+
+### 5.4 Contrastive Self-Supervised Learning at the Edge: An Energy Perspective
 - **arXiv:** [2510.08374](https://arxiv.org/abs/2510.08374) (October 2025)
 - **Summary:** Benchmarks SimCLR, MoCo, SimSiam, and Barlow Twins for energy consumption on edge devices; SimCLR has lowest energy cost.
 - **Actionable for Carnot:** Practical guidance for Carnot's Ising tier (smallest model) deployment. SimCLR-style contrastive training may be the right default for resource-constrained inference.
@@ -127,7 +147,17 @@ Topics: energy-based transformers, JEPA, EBM for code/verification, self-supervi
 - **Summary:** Extends thermodynamic computing beyond linear equilibrium to nonlinear out-of-equilibrium Langevin dynamics, enabling nonlinear computations at specified times.
 - **Actionable for Carnot:** Nonlinear out-of-equilibrium dynamics are needed for Carnot's more complex energy landscapes. The Langevin computer formalism could inform Carnot's MCMC sampler design.
 
-### 6.5 An Efficient Probabilistic Hardware Architecture for Diffusion-like Models
+### 6.5 Thermodynamic Bounds on Energy Use in Quasi-Static Deep Neural Networks
+- **arXiv:** [2503.09980](https://arxiv.org/abs/2503.09980) (December 2025)
+- **Summary:** Proves that in ideal quasi-static analog implementations, training requires finite dissipation scaling with parameter count, but inference can proceed thermodynamically reversibly with zero energy cost — a radical distinction from digital hardware.
+- **Actionable for Carnot:** The zero-energy-cost inference result means Carnot's Boltzmann tier inference could theoretically be "free" on thermodynamic hardware. This motivates designing Carnot's energy functions to have unique global minima (the condition for reversible relaxation).
+
+### 6.6 Thermal Analog Computing: Matrix-vector Multiplication with Inverse-designed Metastructures
+- **arXiv:** [2503.22603](https://arxiv.org/abs/2503.22603) (January 2026)
+- **Summary:** Demonstrates matrix-vector multiplication using heat conduction as signal carrier through inverse-designed thermal metastructures.
+- **Actionable for Carnot:** A concrete physical substrate for EBM computation. If Carnot's linear algebra primitives (in `carnot-boltzmann`) can be decomposed into matrix-vector operations, this hardware could accelerate them.
+
+### 6.7 An Efficient Probabilistic Hardware Architecture for Diffusion-like Models
 - **arXiv:** [2510.23972](https://arxiv.org/abs/2510.23972) (October 2025)
 - **Summary:** Proposes specialized stochastic circuitry for sampling from Boltzmann distributions, exploiting sparsity and locality constraints of physical EBM implementations.
 - **Actionable for Carnot:** Hardware-aware sparsity constraints should influence Carnot's model design. If the Ising tier enforces locality and sparsity, it becomes a candidate for this class of hardware accelerators.
@@ -144,7 +174,10 @@ Topics: energy-based transformers, JEPA, EBM for code/verification, self-supervi
 | **P1** | NRGPT (2512.16762) | Concrete GPT-to-EBM recipe, ICLR 2026 |
 | **P1** | EDLM (2410.21357) | Sequence-level energy for diffusion, ICLR 2025 |
 | **P1** | EBFT (2603.12248) | Feature-matching fine-tuning alternative |
+| **P1** | LLM-JEPA (2509.14252) | JEPA for LLMs by LeCun; validates embedding-space LLM training |
 | **P1** | Var-JEPA (2603.20111) | Collapse prevention via ELBO, bridges JEPA and EBM |
+| **P1** | Diffusion Samplers (2505.19552) | Fixes MCMC mode collapse via primacy bias diagnosis |
+| **P2** | Transformers as Optimizers (2511.00907) | Unified energy framework for deriving attention variants |
 | **P2** | V-JEPA 2 (2506.09985) | World-model planning validates JEPA at scale |
 | **P2** | Generative Thermo Computing (2506.15121) | Hardware roadmap for Boltzmann tier |
 | **P2** | Digital-Thermo Init (2603.24183) | Hybrid digital-analog warm-starting |
