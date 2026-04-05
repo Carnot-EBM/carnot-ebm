@@ -831,24 +831,40 @@ CONCRETE STEPS:
 ]
 
 
-def pick_next_task(completed_log: str) -> dict | None:
-    """Pick the next task that hasn't been completed successfully."""
-    # Parse completed task IDs from log (match on task title prefix)
-    completed_titles = set()
-    for line in completed_log.splitlines():
-        if "| OK |" in line:
-            parts = line.split("|")
-            if len(parts) >= 3:
-                completed_titles.add(parts[2].strip())
+MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
 
-    # Find first task not yet completed
+
+def pick_next_task(completed_log: str) -> dict | None:
+    """Pick the next task that hasn't been completed or failed too many times."""
+    # Parse completed and failed task counts from log
+    completed_titles = set()
+    fail_counts: dict[str, int] = {}
+
+    for line in completed_log.splitlines():
+        parts = line.split("|")
+        if len(parts) < 4:
+            continue
+        title = parts[2].strip()
+        status = parts[3].strip()
+
+        if status == "OK":
+            completed_titles.add(title)
+            fail_counts[title] = 0  # Reset on success
+        elif status in ("FAIL", "REVERT"):
+            fail_counts[title] = fail_counts.get(title, 0) + 1
+
+    # Find first task not yet completed AND not failed too many times
     for task in RESEARCH_TASKS:
         title_prefix = task["title"][:50]
-        if title_prefix not in completed_titles:
-            return task
+        if title_prefix in completed_titles:
+            continue
+        if fail_counts.get(title_prefix, 0) >= MAX_FAILURES_PER_TASK:
+            logger.warning("Skipping '%s' — failed %d times", title_prefix, fail_counts[title_prefix])
+            continue
+        return task
 
-    # All tasks completed — return None (don't loop)
-    logger.info("All %d research tasks completed. Nothing to do.", len(RESEARCH_TASKS))
+    # All tasks completed or exhausted — return None
+    logger.info("All %d research tasks completed or exhausted. Nothing to do.", len(RESEARCH_TASKS))
     return None
 
 
@@ -878,6 +894,12 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             date=timestamp.strftime("%Y%m%d"),
         ))
         return True
+
+    # Clean any dirty state from previous interrupted runs
+    if git_has_changes():
+        logger.warning("Dirty working tree detected — reverting to clean state")
+        run_cmd(["git", "checkout", "."])
+        run_cmd(["git", "clean", "-fd"])
 
     # Run tests first — ensure clean state
     tests_ok, test_summary = run_tests()
