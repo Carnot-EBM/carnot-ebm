@@ -629,6 +629,139 @@ CONCRETE STEPS:
 4. Run it to generate the HTML
 5. Do NOT push.""",
     },
+    # ── Phase 3: In-Generation Activation Steering ─────────
+    {
+        "id": "p3-layer-navigator",
+        "title": "LayerNavigator: find most steerable layers",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We have activation extraction (python/carnot/embeddings/activation_extractor.py)
+and hallucination direction (hallucination_direction.py). Experiments showed that
+scoring AFTER generation doesn't beat logprobs. The next step: find which layers
+are most effective for STEERING during generation.
+
+TASK: Create python/carnot/embeddings/layer_navigator.py
+
+CONCRETE STEPS:
+1. Read python/carnot/embeddings/activation_extractor.py
+2. Implement LayerNavigator:
+   - score_layer_steerability(model, tokenizer, qa_pairs, layer_idx) -> float
+     For a given layer, measure how much adding/subtracting the hallucination
+     direction at that layer changes the output. Higher change = more steerable.
+     Method: run model on a question, hook into layer L, add alpha * direction
+     to the hidden state, measure how much the output logits change.
+   - find_best_layers(model, tokenizer, qa_pairs, n_layers=3) -> list[int]
+     Score all layers, return the top-N most steerable ones.
+3. Use register_forward_hook to inject activation modifications at specific layers.
+   The hook: hidden_state = hidden_state + alpha * direction_vector (broadcast across sequence).
+4. Add tests with a mock model (don't require real model download):
+   - Test hook registration/removal
+   - Test steerability scoring returns finite positive values
+   - Test find_best_layers returns sorted layer indices
+   - Reference REQ-INFER-015
+5. Run full test suite, 100% coverage
+6. Do NOT push.""",
+    },
+    {
+        "id": "p3-activation-steering",
+        "title": "In-generation activation steering",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: LayerNavigator identifies the most steerable layers. Now use that
+to STEER the model during generation: at each token step, hook into the
+critical layers and subtract the hallucination direction from the hidden state.
+This corrects hallucinations BEFORE the token is committed.
+
+TASK: Create python/carnot/embeddings/activation_steering.py
+
+CONCRETE STEPS:
+1. Read layer_navigator.py for the hook-based approach
+2. Implement SteeringConfig: layer_indices, direction, alpha (steering strength)
+3. Implement steered_generate(model, tokenizer, prompt, config) -> str:
+   - Register forward hooks on the critical layers
+   - Each hook: hidden_state = hidden_state - alpha * hallucination_direction
+   - This subtracts the hallucination direction at each forward pass
+   - Run model.generate() with hooks active
+   - Remove hooks after generation
+   - Return the generated text
+4. Implement calibrate_alpha(model, tokenizer, qa_pairs, layers, direction):
+   - Try different alpha values (0.1, 0.5, 1.0, 2.0, 5.0)
+   - For each: run steered generation on calibration QA
+   - Pick the alpha that maximizes accuracy
+5. Add tests with mock model:
+   - Test hooks are registered and removed properly
+   - Test steered output differs from unsteered output
+   - Test alpha=0 gives same output as no steering
+   - Reference REQ-INFER-015
+6. Run full test suite, 100% coverage
+7. Do NOT push.""",
+    },
+    {
+        "id": "p3-steering-experiment",
+        "title": "Run steering experiment on real model",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We now have LayerNavigator + activation steering. Time to test on
+the real Qwen3-0.6B model with the same QA pairs from experiments 8-14.
+
+TASK: Create scripts/experiment_activation_steering.py
+
+CONCRETE STEPS:
+1. Read scripts/experiment_real_hallucination_detection.py for the QA pairs
+2. Read python/carnot/embeddings/activation_steering.py
+3. Write the experiment script:
+   a. Load Qwen3-0.6B with output_hidden_states=True
+   b. Run greedy baseline on 25 QA pairs
+   c. Calibrate: find hallucination direction from correct vs wrong answers
+   d. Find best layers via LayerNavigator (top 3)
+   e. Calibrate alpha on a held-out set
+   f. Run steered generation on test set
+   g. Compare: greedy baseline vs steered accuracy
+   h. Print results table and save to ops/experiment-log.md
+4. The key metric: does steering DURING generation beat:
+   - Greedy (experiment baseline)
+   - Logprob rejection (experiment 13: +10%)
+   - All activation-based post-hoc approaches (experiments 9-12: all negative)
+5. This is THE critical experiment — if in-generation steering beats post-hoc
+   scoring, it validates the entire Phase 1.5 architecture.
+6. Do NOT push.""",
+    },
+    {
+        "id": "p3-contrastive-weight-steering",
+        "title": "Contrastive Weight Steering without retraining",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Activation steering modifies hidden states during generation.
+Contrastive Weight Steering (CWS) goes further: permanently modify the
+model's WEIGHTS to suppress the hallucination direction. No hooks needed
+during inference — the weights themselves are corrected.
+
+TASK: Create python/carnot/embeddings/weight_steering.py
+
+CONCRETE STEPS:
+1. Read activation_steering.py for the hook-based approach
+2. Implement apply_cws(model, layer_idx, direction, alpha):
+   - Modifies the layer's output projection weights in-place
+   - W_new = W_old - alpha * direction @ direction.T / ||direction||^2
+   - This projects out the hallucination direction from the weight matrix
+   - No hooks needed during generation — weights are permanently modified
+3. Implement revert_cws(model, layer_idx, original_weights):
+   - Restores original weights
+4. Implement steered_model(model, layers, direction, alpha) -> context manager:
+   - Applies CWS on entry, reverts on exit
+   - Usage: with steered_model(model, layers, dir, 1.0): model.generate(...)
+5. Add tests:
+   - CWS changes weights (not equal to original)
+   - Revert restores original weights exactly
+   - Context manager cleans up on exit
+   - Reference REQ-INFER-015
+6. Run full test suite, 100% coverage
+7. Do NOT push.""",
+    },
 ]
 
 
