@@ -118,6 +118,12 @@ research-loop:
 research-dry:
 	.venv/bin/python scripts/research_conductor.py --dry-run
 
+# ─── Dashboard ────────────────────────────────────────────────────
+
+## Generate experiment results dashboard (ops/dashboard.html)
+dashboard:
+	.venv/bin/python scripts/generate_dashboard.py
+
 # ─── Clean ────────────────────────────────────────────────────────
 
 ## Clean build artifacts
