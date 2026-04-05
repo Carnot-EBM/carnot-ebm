@@ -969,7 +969,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     )
 
     # Run Claude Code
-    success, output = run_claude(prompt, max_turns=30, timeout=900)
+    success, output = run_claude(prompt, max_turns=50, timeout=1200)
 
     if not success:
         logger.error("Claude failed: %s", output[:200])
