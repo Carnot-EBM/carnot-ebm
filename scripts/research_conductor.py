@@ -62,31 +62,64 @@ def run_cmd(
 
 
 def run_claude(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bool, str]:
-    """Run claude -p with a research prompt. Returns (success, output)."""
+    """Run claude -p with a research prompt. Returns (success, output).
+
+    Uses --verbose and streams output live to the terminal so you can
+    watch Claude working in real-time.
+    """
     cmd = [
         CLAUDE_BIN, "-p",
         "--dangerously-skip-permissions",
-        "--output-format", "json",
+        "--verbose",
         "--max-turns", str(max_turns),
     ]
 
     logger.info("Calling Claude Code (%d max turns)...", max_turns)
-    rc, stdout, stderr = run_cmd(cmd, timeout=timeout, input_text=prompt)
 
-    if rc != 0:
-        logger.error("Claude failed (exit %d): %s", rc, stderr[:500])
-        return False, stderr[:500]
-
-    # Parse JSON output
     try:
-        result = json.loads(stdout)
-        output = result.get("result", stdout)
-        cost = result.get("total_cost_usd", 0)
-        turns = result.get("num_turns", 0)
-        logger.info("Claude completed: %d turns, $%.4f", turns, cost)
-        return True, output
-    except json.JSONDecodeError:
-        return True, stdout[:2000]
+        proc = subprocess.Popen(
+            cmd,
+            stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,  # Merge stderr into stdout for live viewing
+            text=True,
+            cwd=str(PROJECT_ROOT),
+        )
+
+        # Send prompt and close stdin
+        if proc.stdin:
+            proc.stdin.write(prompt)
+            proc.stdin.close()
+
+        # Stream output live to terminal while capturing it
+        output_lines = []
+        while True:
+            if proc.stdout is None:
+                break
+            line = proc.stdout.readline()
+            if not line and proc.poll() is not None:
+                break
+            if line:
+                print(line, end="", flush=True)  # Live to terminal
+                output_lines.append(line)
+
+        proc.wait(timeout=timeout)
+        full_output = "".join(output_lines)
+
+        if proc.returncode != 0:
+            logger.error("Claude failed (exit %d)", proc.returncode)
+            return False, full_output[-500:]
+
+        logger.info("Claude completed (exit 0)")
+        return True, full_output[-2000:]
+
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        logger.error("Claude timed out after %ds", timeout)
+        return False, "Timed out"
+    except Exception as e:
+        logger.error("Claude error: %s", e)
+        return False, str(e)
 
 
 def run_tests() -> tuple[bool, str]:
