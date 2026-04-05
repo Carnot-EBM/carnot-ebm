@@ -30,3 +30,4 @@
 | 2026-04-05 17:55 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 67.96s (0:01:07) |
 | 2026-04-05 17:57 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 68.49s (0:01:08) |
 | 2026-04-05 17:59 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 68.06s (0:01:08) |
+| 2026-04-05 22:57 UTC | Productionize composite energy scorer | OK | 963 passed, 100% coverage (already built by conductor) |
