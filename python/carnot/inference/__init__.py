@@ -11,9 +11,13 @@
     This package implements the "anti-hallucination" pipeline plus research
     extensions from arxiv papers (P1-P9 in the roadmap).
 
-Spec: REQ-INFER-003 through REQ-INFER-012, REQ-CODE-004
+Spec: REQ-INFER-003 through REQ-INFER-013, REQ-CODE-004
 """
 
+from carnot.inference.composite_scorer import (
+    CompositeEnergyConfig,
+    CompositeEnergyScorer,
+)
 from carnot.inference.arm_ebm_bridge import (
     TokenEnergyAnalysis,
     analyze_token_energy,
@@ -83,6 +87,8 @@ __all__ = [
     "CodeVerificationResult",
     "CodeVerifierConfig",
     "ComparisonResult",
+    "CompositeEnergyConfig",
+    "CompositeEnergyScorer",
     "DiffusionConfig",
     "DiffusionResult",
     "RefinementResult",
