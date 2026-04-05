@@ -850,7 +850,7 @@ def pick_next_task(completed_log: str) -> dict | None:
         if status == "OK":
             completed_titles.add(title)
             fail_counts[title] = 0  # Reset on success
-        elif status in ("FAIL", "REVERT"):
+        elif status in ("FAIL", "REVERT", "SKIP", "NOOP"):
             fail_counts[title] = fail_counts.get(title, 0) + 1
 
     # Find first task not yet completed AND not failed too many times
@@ -927,7 +927,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # Check if Claude made any changes
     if not git_has_changes():
         logger.info("Claude made no file changes")
-        log_step(task["title"], "NOOP", "No file changes")
+        log_step(task["title"], "FAIL", "No file changes produced")
         return True
 
     # Show what changed
