@@ -148,6 +148,23 @@ The system shall support training EBMs to learn verification criteria from (corr
 **And** the learned verifier classifies at least 70% of test assignments correctly
 **And** verify-and-repair using the learned energy improves random assignments
 
+### REQ-INFER-014: Hallucination Direction Detection
+
+The system shall detect hallucination by finding the principal direction in activation space that separates correct from hallucinated LLM outputs:
+- Compute mean-difference direction between correct and hallucinated activation clusters
+- Optional SVD refinement for top-k distinguishing directions
+- Hallucination energy: projection of activation onto the direction (high = likely hallucination)
+- HallucinationDirectionConstraint wraps the energy for ComposedEnergy integration
+- One-sided (ReLU) penalty: only penalizes projections toward hallucination, not away
+
+### SCENARIO-INFER-014-001: Hallucination Direction Discovery
+
+**Given** per-layer activations from 50 correct and 50 hallucinated outputs
+**When** `find_hallucination_direction()` is called
+**Then** the discovered direction aligns (cosine similarity > 0.8) with the true separation axis
+**And** hallucinated activations get higher energy than correct ones
+**And** the direction is unit-normalized by default
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -159,3 +176,4 @@ The system shall support training EBMs to learn verification criteria from (corr
 | REQ-INFER-005 | Implemented | 7+ Python |
 | REQ-INFER-006 | Implemented | 14+ Python |
 | REQ-INFER-007 | Implemented | 18+ Python |
+| REQ-INFER-014 | Implemented | 35 Python |

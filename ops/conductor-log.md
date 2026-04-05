@@ -17,3 +17,5 @@
 | 2026-04-05 04:57 UTC | JEPA-style context prediction energy | FAIL | Claude error:  |
 | 2026-04-05 05:02 UTC | JEPA-style context prediction energy | OK | ====================== 773 passed, 12 warnings in 58.75s ======================= |
 | 2026-04-05 05:07 UTC | Repair in embedding space | OK | ================= 782 passed, 12 warnings in 60.55s (0:01:00) ================== |
+| 2026-04-05 05:16 UTC | Extract per-layer activations from local model | OK | ================= 816 passed, 12 warnings in 61.11s (0:01:01) ================== |
+| 2026-04-05 05:26 UTC | Find hallucination direction in activation space | FAIL | Claude error: Error: Reached max turns (30) |

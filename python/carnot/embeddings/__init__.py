@@ -27,6 +27,12 @@
 Spec: REQ-EMBED-001
 """
 
+from carnot.embeddings.hallucination_direction import (
+    HallucinationDirectionConfig,
+    HallucinationDirectionConstraint,
+    find_hallucination_direction,
+    hallucination_energy,
+)
 from carnot.embeddings.activation_extractor import (
     ActivationConfig,
     compute_activation_stats,
@@ -49,13 +55,17 @@ from carnot.embeddings.model_embeddings import (
 __all__ = [
     "ActivationConfig",
     "ContextPredictionEnergy",
+    "HallucinationDirectionConfig",
+    "HallucinationDirectionConstraint",
     "JEPAEnergyConfig",
     "ModelEmbeddingConfig",
     "compute_activation_stats",
     "embedding_repair",
     "extract_embedding",
     "extract_layer_activations",
+    "find_hallucination_direction",
     "generate_jepa_training_data",
+    "hallucination_energy",
     "nce_loss",
     "nearest_code_match",
     "train_jepa_energy",

@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-04 — LLM-EBM INFERENCE PIPELINE BUILT + ALL REQUIREMENTS IMPLEMENTED
+**Last Updated:** 2026-04-05 — HALLUCINATION DIRECTION DETECTION ADDED (REQ-INFER-014)
 
 ## What's Working — Everything
 

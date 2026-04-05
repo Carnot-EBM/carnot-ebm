@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-04-05: Hallucination direction detection via activation-space analysis
+
+### Added
+- `python/carnot/embeddings/hallucination_direction.py`: `find_hallucination_direction()` (mean-difference + SVD), `hallucination_energy()` (projection-based scalar energy), `HallucinationDirectionConstraint` (BaseConstraint for ComposedEnergy), `HallucinationDirectionConfig`
+- 35 tests in `tests/python/test_hallucination_direction.py` covering config validation, direction discovery, energy computation, constraint integration, and package exports
+- REQ-INFER-014 and SCENARIO-INFER-014-001 in llm-ebm-inference spec
+- Exported all new symbols from `carnot.embeddings`
+
+### Significance
+Given per-layer activations from correct vs hallucinated LLM outputs, discovers the principal direction separating them and turns it into a differentiable energy constraint. This direction becomes a real-time hallucination detector composable with other Carnot constraints.
+
+Triggered by: user instruction to implement hallucination direction detection.
+
+---
+
 ## 2026-04-04: Self-improving Python code verifier (capstone)
 
 ### Added
