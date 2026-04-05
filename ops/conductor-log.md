@@ -19,3 +19,4 @@
 | 2026-04-05 05:07 UTC | Repair in embedding space | OK | ================= 782 passed, 12 warnings in 60.55s (0:01:00) ================== |
 | 2026-04-05 05:16 UTC | Extract per-layer activations from local model | OK | ================= 816 passed, 12 warnings in 61.11s (0:01:01) ================== |
 | 2026-04-05 05:26 UTC | Find hallucination direction in activation space | FAIL | Claude error: Error: Reached max turns (30) |
+| 2026-04-05 05:46 UTC | Train layer-targeted hallucination detector EBM | REVERT | Post-tests failed: ================= 876 passed, 12 warnings in 68.68s (0:01:08) |
