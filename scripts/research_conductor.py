@@ -855,8 +855,28 @@ CONCRETE STEPS:
 MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
 
 
+def _deliverable_exists(task: dict) -> bool:
+    """Check if a task's deliverable file already exists in the repo.
+
+    If the task has a "deliverable" key (a file path), check if it exists.
+    This catches the case where the conductor built something but the log
+    didn't record it as OK (e.g., coverage failure at commit time, power loss).
+    """
+    deliverable = task.get("deliverable")
+    if not deliverable:
+        return False
+    path = PROJECT_ROOT / deliverable
+    return path.exists()
+
+
 def pick_next_task(completed_log: str) -> dict | None:
-    """Pick the next task that hasn't been completed or failed too many times."""
+    """Pick the next task that hasn't been completed or failed too many times.
+
+    Uses THREE signals to determine if a task is done:
+    1. Conductor log says OK (explicit completion)
+    2. Deliverable file exists (implicit completion — code was built)
+    3. Failure count >= MAX (exhausted — skip it)
+    """
     # Parse completed and failed task counts from log
     completed_titles = set()
     fail_counts: dict[str, int] = {}
@@ -877,11 +897,22 @@ def pick_next_task(completed_log: str) -> dict | None:
     # Find first task not yet completed AND not failed too many times
     for task in RESEARCH_TASKS:
         title_prefix = task["title"][:50]
+
+        # Signal 1: log says OK
         if title_prefix in completed_titles:
             continue
+
+        # Signal 2: deliverable already exists (built but not logged)
+        if _deliverable_exists(task):
+            logger.info("Task '%s' deliverable exists — marking complete", title_prefix)
+            log_step(title_prefix, "OK", "Deliverable already exists in repo")
+            continue
+
+        # Signal 3: too many failures
         if fail_counts.get(title_prefix, 0) >= MAX_FAILURES_PER_TASK:
             logger.warning("Skipping '%s' — failed %d times", title_prefix, fail_counts[title_prefix])
             continue
+
         return task
 
     # All tasks completed or exhausted — return None
