@@ -5,6 +5,11 @@
     parses the response, and feeds it through the verify-and-repair pipeline.
     This is the first concrete "LLM hallucinates -> EBM repairs" measurement.
 
+    Also provides logprob-based rejection sampling: generate N candidate
+    responses and select the one with highest mean per-token logprob
+    (= lowest semantic energy = most confident). Proven +10% QA accuracy
+    improvement in Experiment 13.
+
 **Detailed explanation for engineers:**
     This module connects the constraint satisfaction pipeline to a real LLM.
     The workflow is:
@@ -23,7 +28,15 @@
     The LLM import is lazy (same pattern as hypothesis_generator.py) so the
     module works without the openai package installed — it just returns errors.
 
-Spec: REQ-INFER-006, REQ-INFER-013
+    Additionally, ``logprob_rejection_sample()`` uses the HuggingFace
+    transformers library to generate N candidates locally, compute per-token
+    log-probabilities from the model's output scores, and select the candidate
+    with the highest mean logprob. This is a zero-cost accuracy improvement
+    that requires no calibration, training, or PCA — just the model's own
+    confidence signal. The transformers import is also lazy so the module
+    works without it installed.
+
+Spec: REQ-INFER-006, REQ-INFER-008, REQ-INFER-013
 """
 
 from __future__ import annotations
@@ -685,3 +698,213 @@ def iterative_refine_with_properties(
         messages.append({"role": "user", "content": combined_feedback})
 
     return result
+
+
+# ---------------------------------------------------------------------------
+# Logprob-Based Rejection Sampling
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class RejectionSampleResult:
+    """Result of logprob-based rejection sampling.
+
+    **Researcher summary:**
+        Contains the best candidate (highest mean logprob = lowest semantic
+        energy = most confident), its score, and all candidates considered.
+        This is the reusable output of Experiment 13's approach.
+
+    **Detailed explanation for engineers:**
+        When ``logprob_rejection_sample()`` generates N candidates from a
+        local HuggingFace model, it computes per-token log-probabilities
+        for each candidate by taking ``torch.log_softmax`` over the raw
+        logit scores at each generation step. The candidate with the
+        highest *mean* logprob (averaged over its generated tokens) is
+        selected as the winner.
+
+        ``all_candidates`` is a list of (response_text, mean_logprob) tuples
+        sorted descending by mean logprob, so index 0 is always the winner.
+
+        If only one candidate is requested (n_candidates=1), this degrades
+        gracefully to a single generation with its logprob score.
+
+    Spec: REQ-INFER-008
+    """
+
+    best_response: str = ""
+    mean_logprob: float = 0.0
+    all_candidates: list[tuple[str, float]] = field(default_factory=list)
+
+
+def _generate_with_logprobs(
+    model: Any,
+    tokenizer: Any,
+    prompt: str,
+    do_sample: bool = False,
+    temperature: float = 1.0,
+    max_new_tokens: int = 20,
+) -> tuple[str, float]:
+    """Generate one response and compute its mean per-token logprob.
+
+    **Researcher summary:**
+        Runs model.generate with output_scores=True, then walks the score
+        tensors to compute log_softmax and extract the logprob of each
+        actually-generated token. Returns the decoded text and the mean
+        logprob across all generated tokens.
+
+    **Detailed explanation for engineers:**
+        HuggingFace ``model.generate()`` with ``output_scores=True`` returns
+        a tuple of score tensors, one per generation step. Each score tensor
+        has shape (batch_size, vocab_size) containing raw logits. We convert
+        these to log-probabilities via ``torch.log_softmax``, then look up
+        the logprob of the token that was actually selected at each step.
+
+        The mean logprob normalizes for response length — without this,
+        shorter responses would always have higher total logprob, biasing
+        selection toward terse answers.
+
+    Args:
+        model: A HuggingFace AutoModelForCausalLM instance.
+        tokenizer: The corresponding AutoTokenizer.
+        prompt: The text prompt to generate from.
+        do_sample: Whether to sample (True) or use greedy decoding (False).
+        temperature: Sampling temperature. Only used when do_sample=True.
+        max_new_tokens: Maximum number of tokens to generate.
+
+    Returns:
+        Tuple of (decoded_response_text, mean_logprob_per_token).
+
+    Spec: REQ-INFER-008
+    """
+    import torch
+
+    inputs = tokenizer(prompt, return_tensors="pt")
+    prompt_len = inputs["input_ids"].shape[1]
+
+    gen_kwargs: dict[str, Any] = {"max_new_tokens": max_new_tokens}
+    if do_sample:
+        gen_kwargs.update(do_sample=True, temperature=temperature, top_p=0.95)
+
+    with torch.no_grad():
+        outputs = model.generate(
+            **inputs,
+            **gen_kwargs,
+            return_dict_in_generate=True,
+            output_scores=True,
+        )
+
+    generated_ids = outputs.sequences[0, prompt_len:]
+    response = tokenizer.decode(generated_ids, skip_special_tokens=True)
+
+    # Walk the per-step score tensors to compute mean logprob
+    total_logprob = 0.0
+    n_tokens = 0
+    if hasattr(outputs, "scores") and outputs.scores:
+        for step_idx, scores in enumerate(outputs.scores):
+            if step_idx >= len(generated_ids):
+                break
+            token_id = generated_ids[step_idx].item()
+            log_probs = torch.log_softmax(scores[0], dim=-1)
+            total_logprob += log_probs[token_id].item()
+            n_tokens += 1
+
+    mean_logprob = total_logprob / max(n_tokens, 1)
+    return response, mean_logprob
+
+
+def logprob_rejection_sample(
+    config: LLMSolverConfig,
+    prompt: str,
+    n_candidates: int = 5,
+    temperature: float = 0.8,
+    max_new_tokens: int = 20,
+    model: Any = None,
+    tokenizer: Any = None,
+) -> RejectionSampleResult:
+    """Generate N candidates and select the one with highest mean logprob.
+
+    **Researcher summary:**
+        This is the reusable version of Experiment 13's logprob rejection
+        sampling. Generate N responses with sampling, compute per-token
+        logprobs from the model's own scores, pick the most confident one.
+        No calibration, no training, no PCA — just the model's own
+        confidence as an energy signal. Proven +10% QA accuracy improvement.
+
+    **Detailed explanation for engineers:**
+        The algorithm:
+        1. Load (or reuse) a HuggingFace causal LM and tokenizer.
+        2. For each of N candidates, call ``_generate_with_logprobs()``
+           with sampling enabled at the given temperature.
+        3. Sort candidates by mean logprob descending (highest = most
+           confident = lowest semantic energy).
+        4. Return the best candidate, its score, and the full sorted list.
+
+        If ``model`` and ``tokenizer`` are provided, they are reused (useful
+        for batch processing or testing with mock objects). Otherwise, the
+        model is loaded from ``config.model`` using HuggingFace transformers.
+
+        Falls back gracefully with an ImportError if the ``transformers``
+        package is not installed.
+
+    Args:
+        config: LLM configuration. ``config.model`` is used as the
+            HuggingFace model name if no model/tokenizer provided.
+        prompt: The text prompt to generate responses for.
+        n_candidates: Number of candidate responses to generate. Higher N
+            gives better selection but costs more compute. Default 5.
+        temperature: Sampling temperature. Higher = more diverse candidates.
+            Default 0.8 (matches Experiment 13).
+        max_new_tokens: Maximum tokens per candidate response.
+        model: Optional pre-loaded HuggingFace model (for reuse or mocking).
+        tokenizer: Optional pre-loaded tokenizer (for reuse or mocking).
+
+    Returns:
+        RejectionSampleResult with the best response, its mean logprob,
+        and all candidates sorted by confidence descending.
+
+    Raises:
+        ImportError: If transformers is not installed and no model provided.
+
+    Spec: REQ-INFER-008
+    """
+    # Load model/tokenizer if not provided
+    if model is None or tokenizer is None:
+        try:
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+        except ImportError:
+            logger.warning(
+                "transformers not installed — cannot run logprob rejection sampling"
+            )
+            raise
+
+        model_name = config.model  # pragma: no cover
+        logger.info("Loading model %s for rejection sampling...", model_name)  # pragma: no cover
+        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)  # pragma: no cover
+        model = AutoModelForCausalLM.from_pretrained(  # pragma: no cover
+            model_name, trust_remote_code=True  # pragma: no cover
+        )  # pragma: no cover
+        model.eval()  # pragma: no cover
+
+    # Generate N candidates with sampling
+    candidates: list[tuple[str, float]] = []
+    use_sampling = n_candidates > 1
+    for _ in range(n_candidates):
+        response, mean_lp = _generate_with_logprobs(
+            model,
+            tokenizer,
+            prompt,
+            do_sample=use_sampling,
+            temperature=temperature,
+            max_new_tokens=max_new_tokens,
+        )
+        candidates.append((response, mean_lp))
+
+    # Sort by mean logprob descending (highest confidence first)
+    candidates.sort(key=lambda x: x[1], reverse=True)
+
+    best_response, best_logprob = candidates[0]
+    return RejectionSampleResult(
+        best_response=best_response,
+        mean_logprob=best_logprob,
+        all_candidates=candidates,
+    )

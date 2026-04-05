@@ -25,3 +25,8 @@
 | 2026-04-05 06:07 UTC | Train layer-targeted hallucination detector EBM | OK | ================= 889 passed, 12 warnings in 62.02s (0:01:02) ================== |
 | 2026-04-05 06:17 UTC | Implement minimal Energy-Based Transformer | OK | ================= 921 passed, 12 warnings in 66.79s (0:01:06) ================== |
 | 2026-04-05 06:26 UTC | Integrate property testing into iterative refineme | OK | ================= 931 passed, 12 warnings in 65.11s (0:01:05) ================== |
+| 2026-04-05 17:43 UTC | Scan arxiv for new EBM research | OK | ================= 931 passed, 12 warnings in 65.23s (0:01:05) ================== |
+| 2026-04-05 17:52 UTC | Productionize logprob rejection sampling | FAIL | Claude error: Error: Reached max turns (30) |
+| 2026-04-05 17:55 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 67.96s (0:01:07) |
+| 2026-04-05 17:57 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 68.49s (0:01:08) |
+| 2026-04-05 17:59 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 68.06s (0:01:08) |

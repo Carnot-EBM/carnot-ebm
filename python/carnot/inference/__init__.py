@@ -48,8 +48,10 @@ from carnot.inference.learned_verifier import (
 from carnot.inference.llm_solver import (
     LLMSolverConfig,
     RefinementResult,
+    RejectionSampleResult,
     iterative_refine_code,
     iterative_refine_with_properties,
+    logprob_rejection_sample,
     run_llm_coloring_experiment,
     run_llm_sat_experiment,
     solve_coloring_with_llm,
