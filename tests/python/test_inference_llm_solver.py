@@ -176,6 +176,46 @@ class TestRunLLMSATExperiment:
             assert result.initial_verification is None
             importlib.reload(mod)
 
+    @patch("openai.OpenAI")
+    def test_multi_start_repair_incorrect_assignment(self, mock_cls: MagicMock) -> None:
+        """REQ-INFER-009: multi-start repair runs when LLM assignment is wrong."""
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        # LLM returns an incorrect assignment (x1=False, x2=False fails x1 OR x2)
+        mock_client.chat.completions.create.return_value = MagicMock(
+            choices=[MagicMock(message=MagicMock(content="x1=False\nx2=False"))]
+        )
+
+        clauses = [
+            SATClause([(0, False), (1, False)]),  # x1 OR x2
+        ]
+        result = run_llm_sat_experiment(
+            _make_config(), clauses, n_vars=2, n_starts=3,
+        )
+        assert result.initial_verification is not None
+        # Multi-start should have attempted repair
+        assert result.rounded_verification is not None
+
+    @patch("openai.OpenAI")
+    def test_multi_start_correct_assignment_skips_repair(self, mock_cls: MagicMock) -> None:
+        """REQ-INFER-009: multi-start skips repair when LLM is already correct."""
+        mock_client = MagicMock()
+        mock_cls.return_value = mock_client
+        # LLM returns a correct assignment
+        mock_client.chat.completions.create.return_value = MagicMock(
+            choices=[MagicMock(message=MagicMock(content="x1=True\nx2=True"))]
+        )
+
+        clauses = [
+            SATClause([(0, False), (1, False)]),  # x1 OR x2
+        ]
+        result = run_llm_sat_experiment(
+            _make_config(), clauses, n_vars=2, n_starts=5,
+        )
+        assert result.initial_verification is not None
+        assert result.initial_verification.verdict.verified
+        assert result.n_repair_steps == 0
+
 
 class TestRunLLMColoringExperiment:
     """Tests for end-to-end LLM coloring experiment."""

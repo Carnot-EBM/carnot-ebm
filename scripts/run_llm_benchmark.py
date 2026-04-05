@@ -59,6 +59,7 @@ def run_sat_benchmark(
             vr = run_llm_sat_experiment(
                 config, clauses, n_vars,
                 repair_step_size=0.1, repair_max_steps=100,
+                n_starts=5,
             )
 
             if vr.initial_verification is None:

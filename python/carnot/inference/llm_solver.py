@@ -34,6 +34,7 @@ from typing import Any
 
 import jax.numpy as jnp
 
+from carnot.inference.multi_start import multi_start_repair
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,
     parse_llm_coloring,
@@ -191,13 +192,22 @@ def run_llm_sat_experiment(
     n_vars: int,
     repair_step_size: float = 0.1,
     repair_max_steps: int = 200,
+    n_starts: int = 1,
 ) -> VerifyRepairResult:
     """Full pipeline: LLM solves SAT -> parse -> verify -> repair -> certify.
 
     **Researcher summary:**
         End-to-end: send SAT to LLM, parse, verify, repair, certify.
+        When n_starts > 1, uses multi-start repair to escape local minima.
 
-    Spec: REQ-INFER-006, SCENARIO-INFER-007
+    **Detailed explanation for engineers:**
+        When n_starts=1 (default), uses single-start verify_and_repair as before.
+        When n_starts > 1, uses multi_start_repair which runs gradient repair
+        from N randomly perturbed starting points and selects the lowest-energy
+        result. This dramatically improves repair success on hard SAT instances
+        where single-start gets stuck in local minima.
+
+    Spec: REQ-INFER-006, REQ-INFER-009, SCENARIO-INFER-007
     """
     try:
         raw_response = solve_sat_with_llm(config, clauses, n_vars)
@@ -218,6 +228,38 @@ def run_llm_sat_experiment(
 
     def round_fn(x: Any) -> Any:
         return jnp.where(x >= 0.5, 1.0, 0.0)
+
+    if n_starts > 1:
+        # Multi-start repair: run from N perturbed starts, pick lowest energy
+        result = VerifyRepairResult(initial_assignment=assignment)
+        result.initial_verification = energy.verify(assignment)
+
+        if result.initial_verification.verdict.verified:
+            # Already correct, no repair needed
+            result.repaired_assignment = assignment
+            result.repaired_verification = result.initial_verification
+            result.rounded_assignment = assignment
+            result.rounded_verification = result.initial_verification
+            result.n_repair_steps = 0
+        else:
+            ms_result = multi_start_repair(
+                assignment,
+                energy,
+                n_starts=n_starts,
+                step_size=repair_step_size,
+                max_repair_steps=repair_max_steps,
+                round_fn=round_fn,
+            )
+            result.repaired_assignment = ms_result.best_x
+            result.rounded_assignment = ms_result.best_x
+            result.rounded_verification = energy.verify(ms_result.best_x)
+            result.repaired_verification = result.rounded_verification
+            result.n_repair_steps = len(ms_result.best_history)
+            result.repair_trajectory = [
+                float(h.total_energy) for h in ms_result.best_history
+            ]
+
+        return result
 
     return verify_and_repair(
         assignment,

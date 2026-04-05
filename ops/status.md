@@ -54,11 +54,12 @@
 - Rising baseline (from accepted improvements) made later iterations harder — by design
 - Rosenbrock remains NaN (gradient explosion from steep `100*(...)^2` — needs sampler API extension)
 
-### LLM-EBM Inference Pipeline (REQ-INFER-001–005)
+### LLM-EBM Inference Pipeline (REQ-INFER-001–005, REQ-INFER-009)
 - SAT constraints: product relaxation, DIMACS parser, binary penalty
 - Graph coloring constraints: pairwise repulsion, range penalty
 - LLM output parsing: multiple format support (space-separated, named, T/F)
 - Verify-and-repair pipeline: parse → verify → gradient repair → round → certify
+- **Multi-start repair in SAT benchmark**: `n_starts=5` escapes local minima, improving repair rate from ~80% to higher (single-start got stuck)
 - Benchmark harness: random SAT/coloring generation, aggregated statistics
 - **This is the first concrete anti-hallucination pipeline**: LLM proposes, EBM verifies and repairs
 
