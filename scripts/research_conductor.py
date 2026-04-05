@@ -201,6 +201,7 @@ RESEARCH_TASKS = [
     # ── Phase 1: Learned Energy in Latent Space ────────────
     {
         "id": "p1-m1.1a-ast-embedding",
+        "deliverable": "python/carnot/verify/python_types.py",
         "title": "Add AST-based code embedding",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements (verbose docstrings, spec refs, 100% coverage).
@@ -233,6 +234,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p1-m1.1b-local-model-embeddings",
+        "deliverable": "python/carnot/embeddings/model_embeddings.py",
         "title": "Add local model embeddings via transformers",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -260,6 +262,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p1-m1.2-jepa-energy",
+        "deliverable": "python/carnot/embeddings/jepa_energy.py",
         "title": "JEPA-style context prediction energy",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -290,6 +293,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p1-m1.3-embedding-repair",
+        "deliverable": "python/carnot/embeddings/jepa_energy.py",
         "title": "Repair in embedding space",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -317,6 +321,7 @@ CONCRETE STEPS:
     # ── Phase 1.5: LLM Activation Introspection ─────────────
     {
         "id": "p1.5-activation-extraction",
+        "deliverable": "python/carnot/embeddings/activation_extractor.py",
         "title": "Extract per-layer activations from local model",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -348,6 +353,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p1.5-hallucination-direction",
+        "deliverable": "python/carnot/embeddings/hallucination_direction.py",
         "title": "Find hallucination direction in activation space",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -384,6 +390,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p1.5-layer-targeted-ebm",
+        "deliverable": "python/carnot/embeddings/layer_ebm.py",
         "title": "Train layer-targeted hallucination detector EBM",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -420,6 +427,7 @@ CONCRETE STEPS:
     # ── Phase 2: Energy-Based Transformer ──────────────────
     {
         "id": "p2-m2.1-minimal-ebt",
+        "deliverable": "python/carnot/models/ebt.py",
         "title": "Implement minimal Energy-Based Transformer",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -453,6 +461,7 @@ CONCRETE STEPS:
     # ── Infrastructure improvements (fill gaps between phases) ──
     {
         "id": "infra-property-refine",
+        "deliverable": "tests/python/test_inference_iterative_refine_with_properties.py",
         "title": "Integrate property testing into iterative refinement",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -475,6 +484,7 @@ STEPS:
     },
     {
         "id": "infra-arxiv-scan",
+        "deliverable": "openspec/change-proposals/arxiv-scan-20260405.md",
         "title": "Scan arxiv for new EBM research",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 
@@ -496,6 +506,7 @@ Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     # ── Phase 2.5: Productionize experiment findings ───────
     {
         "id": "p2.5-logprob-rejection-lib",
+        "deliverable": "tests/python/test_inference_logprob_rejection.py",
         "title": "Productionize logprob rejection sampling",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -523,6 +534,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p2.5-composite-scorer",
+        "deliverable": "python/carnot/inference/composite_scorer.py",
         "title": "Productionize composite energy scorer",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -553,6 +565,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p2.5-rejection-via-api-bridge",
+        "deliverable": "tests/python/test_inference_llm_solver.py",
         "title": "Logprob rejection sampling via Claude API bridge",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -580,6 +593,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p2.5-ebt-training-real-data",
+        "deliverable": "scripts/train_ebt_qa.py",
         "title": "Train EBT on real QA activations",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -607,6 +621,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p2.5-experiment-dashboard",
+        "deliverable": "scripts/generate_dashboard.py",
         "title": "Create experiment results dashboard",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -632,6 +647,7 @@ CONCRETE STEPS:
     # ── Phase 3: In-Generation Activation Steering ─────────
     {
         "id": "p3-layer-navigator",
+        "deliverable": "python/carnot/embeddings/layer_navigator.py",
         "title": "LayerNavigator: find most steerable layers",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -665,6 +681,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p3-activation-steering",
+        "deliverable": "python/carnot/embeddings/activation_steering.py",
         "title": "In-generation activation steering",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -700,6 +717,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p3-steering-experiment",
+        "deliverable": "scripts/experiment_activation_steering.py",
         "title": "Run steering experiment on real model",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -731,6 +749,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p3-contrastive-weight-steering",
+        "deliverable": "python/carnot/embeddings/weight_steering.py",
         "title": "Contrastive Weight Steering without retraining",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -765,6 +784,7 @@ CONCRETE STEPS:
     # ── Phase 3.5: Concept Vectors (from Anthropic emotion research) ──
     {
         "id": "p3.5-concept-vectors",
+        "deliverable": "python/carnot/embeddings/concept_vectors.py",
         "title": "Find hallucination concept vectors (multi-vector)",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
@@ -801,6 +821,7 @@ CONCRETE STEPS:
     },
     {
         "id": "p3.5-concept-steering-experiment",
+        "deliverable": "scripts/experiment_concept_steering.py",
         "title": "Steer with concept-specific vectors on real model",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
