@@ -141,10 +141,11 @@ def main() -> int:
             def hook_fn(module, input, output):
                 if isinstance(output, tuple):
                     hidden = output[0]
-                    # Broadcast direction to match hidden state shape
-                    d = direction[:hidden.shape[-1]].to(device=hidden.device, dtype=hidden.dtype)
-                    return (hidden + alpha * d,) + output[1:]
-                return output + alpha * direction[:output.shape[-1]].to(output.device)
+                    orig_dtype = hidden.dtype
+                    d = direction[:hidden.shape[-1]].to(device=hidden.device).float()
+                    modified = (hidden.float() + alpha * d).to(orig_dtype)
+                    return (modified,) + output[1:]
+                return output
             return hook_fn
 
         if hasattr(model.model, 'layers'):

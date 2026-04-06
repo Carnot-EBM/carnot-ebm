@@ -64,8 +64,10 @@ def steer_and_evaluate(model, tokenizer, questions, direction_torch, layers, alp
                     def hook_fn(module, input, output):
                         if isinstance(output, tuple):
                             hidden = output[0]
-                            dv = d[:hidden.shape[-1]].to(device=hidden.device, dtype=hidden.dtype)
-                            return (hidden + a * dv,) + output[1:]
+                            orig_dtype = hidden.dtype
+                            dv = d[:hidden.shape[-1]].to(device=hidden.device).float()
+                            modified = (hidden.float() + a * dv).to(orig_dtype)
+                            return (modified,) + output[1:]
                         return output
                     return hook_fn
                 h = model.model.layers[layer_idx].register_forward_hook(
