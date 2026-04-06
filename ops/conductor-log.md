@@ -32,3 +32,13 @@
 | 2026-04-05 17:59 UTC | Productionize logprob rejection sampling | SKIP | Pre-tests failing: ================= 942 passed, 12 warnings in 68.06s (0:01:08) |
 | 2026-04-05 22:57 UTC | Productionize composite energy scorer | OK | 963 passed, 100% coverage (already built by conductor) |
 | 2026-04-06 01:30 UTC | Generate concept-specific vectors via targeted pro | SKIP | Pre-tests failing: ============ 1 failed, 1048 passed, 12 warnings in 64.53s (0: |
+| 2026-04-06 01:32 UTC | Productionize logprob rejection sampling | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Logprob rejection sampling via Claude API bridge | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Train EBT on real QA activations | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Create experiment results dashboard | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | LayerNavigator: find most steerable layers | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | In-generation activation steering | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Run steering experiment on real model | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Contrastive Weight Steering without retraining | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Find hallucination concept vectors (multi-vector) | OK | Deliverable already exists in repo |
+| 2026-04-06 01:32 UTC | Steer with concept-specific vectors on real model | OK | Deliverable already exists in repo |
