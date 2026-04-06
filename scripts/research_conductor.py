@@ -849,6 +849,188 @@ CONCRETE STEPS:
 7. Save results to ops/experiment-log.md
 8. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
+    # ── Track A: Concept-Specific Vectors (v3 roadmap) ─────
+    {
+        "id": "a1-concept-prompting",
+        "deliverable": "scripts/experiment_concept_specific_vectors.py",
+        "title": "Generate concept-specific vectors via targeted prompting",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Generic mean-difference hallucination direction (experiments 9-16) failed for
+steering and rejection sampling. Anthropic's emotion research showed concept-specific
+vectors via targeted prompting ARE causally effective. We need to prompt the model to
+generate text in specific cognitive modes, not just compare correct vs wrong answers.
+
+TASK: Create scripts/experiment_concept_specific_vectors.py
+
+STEPS:
+1. Load Qwen3-0.6B (already installed)
+2. For each concept, generate 20 responses using targeted prompts:
+   - "certain": "I am absolutely certain that [topic] is [fact]. This is well-established."
+   - "uncertain": "I'm not sure about this, but I think [topic] might be [guess]..."
+   - "confabulating": "Let me just make up a plausible-sounding answer about [topic]..."
+   - "reasoning": "Let me think step by step about [topic]. First..."
+   - "memorized": "As is commonly known, [topic] is [well-known fact]."
+   Use 20 different topics (countries, animals, science facts).
+3. Extract per-token activations from the LAST layer for each response
+4. Compute contrastive vectors between concept pairs:
+   - confabulation_dir = mean(confabulating) - mean(certain)
+   - uncertainty_dir = mean(uncertain) - mean(certain)
+5. Test each concept vector's ability to separate the 25 QA pairs from experiment 8
+   (correct vs hallucinated answers)
+6. Report: which concept direction best separates correct from hallucinated?
+7. Compare against the generic mean-difference direction (experiment 8: 64%)
+8. Handle bfloat16: cast to float32 for numpy/jax, cast back for model ops
+9. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    {
+        "id": "a2-concept-steering",
+        "deliverable": "scripts/experiment_concept_specific_steering.py",
+        "title": "Steer with confabulation-specific vector",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: experiment_concept_specific_vectors.py identified which concept direction
+best separates correct from hallucinated. Now test steering with THAT specific
+direction (not the generic mean-difference that failed in experiments 15-16).
+
+TASK: Create scripts/experiment_concept_specific_steering.py
+
+STEPS:
+1. Load the concept vectors from the previous experiment (or recompute)
+2. Use the BEST concept direction (likely confabulation)
+3. Hook into model layers during generation, subtract alpha * confabulation_direction
+4. IMPORTANT: cast direction to float32 for arithmetic, then back to bfloat16:
+   modified = (hidden.float() + alpha * direction.float()).to(hidden.dtype)
+5. Try alphas: [0.1, 0.5, 1.0, 2.0, 5.0] on the 25 QA pairs
+6. Compare against greedy baseline AND logprob rejection (+10%)
+7. Report results and save to ops/experiment-log.md
+8. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    # ── Track B: Per-Token Activation EBM ──────────────────
+    {
+        "id": "b1-token-activations",
+        "deliverable": "scripts/collect_token_activations.py",
+        "title": "Collect per-token activation dataset",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Mean-pooled activations destroyed the token-level signal (experiments 9-12).
+Logprobs work because they ARE per-token. We need per-token activation data to train
+an EBM that operates at the token level.
+
+TASK: Create scripts/collect_token_activations.py
+
+STEPS:
+1. Load Qwen3-0.6B
+2. Use the 93 QA pairs from experiment_scaled_rejection_sampling.py
+3. For each question: generate answer, get output_hidden_states=True
+4. For each GENERATED token: save (token_id, last_layer_activation, is_correct)
+   - A token is "correct" if the full answer is verified as correct
+   - Save as a dict with jax arrays
+5. Save to data/token_activations.npz (or .safetensors)
+6. Report: total tokens collected, dimension, correct/wrong ratio
+7. Target: 5000+ per-token examples
+8. Handle bfloat16 → float32 conversion for numpy
+9. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    {
+        "id": "b2-token-ebm",
+        "deliverable": "scripts/experiment_per_token_ebm.py",
+        "title": "Train Gibbs EBM on per-token activations",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: We have per-token activations from collect_token_activations.py.
+Train a Gibbs model on individual token activations (5000+ examples) instead
+of mean-pooled sequence activations (42 examples that overfit).
+
+TASK: Create scripts/experiment_per_token_ebm.py
+
+STEPS:
+1. Load token activations from data/token_activations.npz
+2. Split into train (80%) and test (20%)
+3. Train Gibbs model [1024→128→32→1] via NCE on per-token activations
+   (Use the training pattern from carnot.inference.learned_verifier)
+4. Evaluate: does the trained EBM separate correct from wrong tokens?
+5. Use the trained EBM for rejection sampling:
+   - For each candidate answer, compute mean per-token EBM energy
+   - Select candidate with lowest mean energy
+6. Compare against logprob rejection (+10% from experiment 13)
+7. Report: calibration accuracy, test accuracy, rejection sampling accuracy
+8. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    # ── Track C: Scale Up ──────────────────────────────────
+    {
+        "id": "c1-large-dataset",
+        "deliverable": "scripts/generate_qa_dataset.py",
+        "title": "Generate 1000+ QA pairs programmatically",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: All activation experiments used 25-93 examples. At 1000+, overfitting
+may not be a problem. We need a large QA dataset with known correct answers.
+
+TASK: Create scripts/generate_qa_dataset.py
+
+STEPS:
+1. Generate 1000+ factual QA pairs from these categories:
+   - Math: "What is A * B?" for random A, B (easy to verify)
+   - Geography: capitals, populations (from a hardcoded list of 200+ countries)
+   - Science: atomic numbers, chemical symbols (from periodic table)
+   - Dates: historical events (from a hardcoded list of 100+ events)
+   - General: "How many X does Y have?" (hardcoded facts)
+2. For each pair, store: (question, expected_answer_substring)
+3. Save to data/qa_dataset_1000.json
+4. Verify: load and check a few examples
+5. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    # ── Track D: Ship What Works ───────────────────────────
+    {
+        "id": "d1-mcp-server",
+        "deliverable": "tools/verify-mcp/server.py",
+        "title": "MCP server for code verification",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: The composite scorer (logprob + structural tests) works. Iterative
+refinement with property testing works. Package these as an MCP server that
+Claude Code can call automatically during code generation.
+
+TASK: Create tools/verify-mcp/server.py
+
+STEPS:
+1. Create an MCP server using the MCP Python SDK (pip install mcp)
+2. Expose two tools:
+   - verify_code(code: str, func_name: str, test_cases: list) -> dict
+     Runs structural tests, returns energy score and pass/fail details
+   - verify_with_properties(code: str, func_name: str, properties: list) -> dict
+     Runs property-based tests, returns violations
+3. The server should be startable via: python tools/verify-mcp/server.py
+4. Add an MCP config entry for .mcp.json
+5. Test manually: start server, call verify_code with a simple function
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    {
+        "id": "d2-cli-tool",
+        "deliverable": "scripts/carnot_cli.py",
+        "title": "CLI tool for code verification",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Package the verification pipeline as a simple CLI.
+
+TASK: Create scripts/carnot_cli.py
+
+STEPS:
+1. CLI: carnot verify <file.py> --func <name> --test "input:expected"
+2. Runs: structural tests + property-based tests
+3. Reports: energy score, test results, violations
+4. Exit code 0 = verified, 1 = violations found
+5. Use argparse, no external CLI library needed
+6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
 ]
 
 
