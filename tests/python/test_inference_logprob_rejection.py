@@ -256,7 +256,7 @@ class TestLogprobRejectionSample:
             tokenizer=tokenizer,
         )
 
-        assert isinstance(result, RejectionSampleResult)
+        assert type(result).__name__ == "RejectionSampleResult"
         assert len(result.all_candidates) == 3
         # Best candidate should have the highest logprob
         # (relaxed assertion — exact value depends on mock state in parallel workers)
