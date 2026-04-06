@@ -64,7 +64,7 @@ def steer_and_evaluate(model, tokenizer, questions, direction_torch, layers, alp
                     def hook_fn(module, input, output):
                         if isinstance(output, tuple):
                             hidden = output[0]
-                            dv = d[:hidden.shape[-1]].to(hidden.device)
+                            dv = d[:hidden.shape[-1]].to(device=hidden.device, dtype=hidden.dtype)
                             return (hidden + a * dv,) + output[1:]
                         return output
                     return hook_fn

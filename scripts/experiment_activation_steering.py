@@ -142,7 +142,7 @@ def main() -> int:
                 if isinstance(output, tuple):
                     hidden = output[0]
                     # Broadcast direction to match hidden state shape
-                    d = direction[:hidden.shape[-1]].to(hidden.device)
+                    d = direction[:hidden.shape[-1]].to(device=hidden.device, dtype=hidden.dtype)
                     return (hidden + alpha * d,) + output[1:]
                 return output + alpha * direction[:output.shape[-1]].to(output.device)
             return hook_fn
