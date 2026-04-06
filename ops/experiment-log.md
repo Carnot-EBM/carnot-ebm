@@ -54,6 +54,8 @@ Documenting all experiments — what worked, what failed, and what we learned.
 **Learning:** The simplest approach works best. No calibration, no training, no PCA needed. The model's logprobs at each generated token ARE the right energy function. Higher total logprob = more confident = more likely correct. This validates the semantic energy paper (arxiv 2508.14496).
 
 | 14 | Composite: logprob + structural (code) | ✅ 0% → 30% | Structural tests dominate for code; logprobs dominate for QA |
+| 15 | Activation steering (in-generation) | ⚠️ 76% → 76% | Zero effect — mean-difference direction doesn't causally drive token choices |
+| 16 | Concept steering (6 configs) | ⚠️ 75% → 75% | Zero effect across all layer/alpha combos — needs concept-specific prompting |
 
 ## Key Principles Learned
 
@@ -68,3 +70,5 @@ Documenting all experiments — what worked, what failed, and what we learned.
 5. **Extract features from the RIGHT part of the computation.** Prompt activations ≠ answer activations. The signal is in the GENERATED tokens, not the input.
 
 6. **Different energy signals dominate in different domains.** Logprobs (LLM confidence) work best for QA/factual. Structural tests (EBM execution) work best for code. The composite combines both and is never worse than either alone.
+
+7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations (experiment 8: 64% detection) does NOT necessarily steer the model when injected during generation (experiments 15-16: 0% effect). Effective steering requires concept-specific vectors found via targeted prompting (Anthropic's approach), not generic contrastive means.
