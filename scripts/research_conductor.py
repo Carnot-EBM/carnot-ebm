@@ -1174,10 +1174,32 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         logger.warning("Claude modified research_conductor.py — reverting that file")
         run_cmd(["git", "checkout", "--", "scripts/research_conductor.py"])
 
-    # Run tests after changes
+    # Run tests after changes — retry up to 2 times if tests fail
+    MAX_FIX_ATTEMPTS = 2
     tests_ok, test_summary = run_tests()
+
+    for fix_attempt in range(MAX_FIX_ATTEMPTS):
+        if tests_ok:
+            break
+        logger.warning("Tests FAILED (attempt %d/%d): %s", fix_attempt + 1, MAX_FIX_ATTEMPTS, test_summary[:200])
+
+        # Feed the test failure back to Claude to fix
+        fix_prompt = (
+            f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
+            f"Your previous changes caused test failures:\n{test_summary}\n\n"
+            f"Fix the failing tests. Do NOT revert your changes — fix the code "
+            f"so all tests pass with 100% coverage.\n"
+            f"Do NOT modify scripts/research_conductor.py."
+        )
+        logger.info("Asking Claude to fix test failures...")
+        fix_ok, fix_output = run_claude(fix_prompt, max_turns=30, timeout=600)
+        if not fix_ok:
+            logger.error("Claude failed to fix tests")
+            break
+        tests_ok, test_summary = run_tests()
+
     if not tests_ok:
-        logger.error("Tests FAILED after changes — reverting")
+        logger.error("Tests still failing after %d fix attempts — reverting", MAX_FIX_ATTEMPTS)
         run_cmd(["git", "checkout", "."])
         run_cmd(["git", "clean", "-fd"])
         log_step(task["title"], "REVERT", f"Post-tests failed: {test_summary}")
