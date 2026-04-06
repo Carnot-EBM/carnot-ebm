@@ -73,8 +73,8 @@ def main() -> int:
     device = "cuda" if torch.cuda.is_available() else "cpu"
     print(f"Device: {device}")
 
-    model_name = "Qwen/Qwen3-0.6B"
-    print(f"Loading {model_name}...")
+    model_name = "Qwen/Qwen3.5-0.8B"
+    print(f"Loading {model_name} (with thinking/chat template)...")
     tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
     model = AutoModelForCausalLM.from_pretrained(
         model_name, trust_remote_code=True,
@@ -100,18 +100,23 @@ def main() -> int:
         correct_answers = example["correct_answers"]
         incorrect_answers = example["incorrect_answers"]
 
-        prompt = f"Answer briefly and factually. {question}"
-        inputs = tokenizer(prompt, return_tensors="pt")
+        messages = [{"role": "user", "content": f"Answer briefly and factually in one sentence. {question}"}]
+        text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
+        inputs = tokenizer(text, return_tensors="pt")
         if device == "cuda":
             inputs = {k: v.cuda() for k, v in inputs.items()}
 
         prompt_len = inputs["input_ids"].shape[1]
 
         with torch.no_grad():
-            outputs = model.generate(**inputs, max_new_tokens=30, do_sample=False)
+            outputs = model.generate(**inputs, max_new_tokens=80, do_sample=False,
+                                     pad_token_id=tokenizer.eos_token_id)
 
         generated_ids = outputs[0, prompt_len:]
         response = tokenizer.decode(generated_ids, skip_special_tokens=True)
+        # Strip thinking tags
+        if "</think>" in response:
+            response = response.split("</think>")[-1].strip()
         best_answer = example.get("best_answer", "")
         is_correct = check_truthfulqa_answer(response, correct_answers, incorrect_answers, best_answer)
 
@@ -120,9 +125,9 @@ def main() -> int:
         else:
             n_wrong += 1
 
-        # Get hidden states
+        # Get hidden states (must pass output_hidden_states=True at forward time)
         with torch.no_grad():
-            hidden_out = model(outputs)
+            hidden_out = model(outputs, output_hidden_states=True)
             hs = hidden_out.hidden_states
 
         last_layer = hs[-1][0, prompt_len:, :].float().cpu().numpy()

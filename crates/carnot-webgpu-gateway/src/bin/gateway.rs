@@ -14,7 +14,7 @@ use carnot_webgpu_gateway::worker_page::worker_html;
 use std::sync::Arc;
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing_subscriber::fmt::init();
 
     let port = std::env::var("PORT").unwrap_or_else(|_| "3000".to_string());
@@ -26,11 +26,14 @@ async fn main() {
 
     // Write to static dir
     let static_dir = std::env::temp_dir().join("carnot-gateway-static");
-    std::fs::create_dir_all(&static_dir).unwrap();
-    std::fs::write(static_dir.join("index.html"), &html).unwrap();
+    std::fs::create_dir_all(&static_dir)?;
+    std::fs::write(static_dir.join("index.html"), &html)?;
 
     let state = Arc::new(GatewayState::new());
-    let app = build_router(state, static_dir.to_str().unwrap());
+    let static_dir_str = static_dir
+        .to_str()
+        .ok_or("static dir path contains invalid UTF-8")?;
+    let app = build_router(state, static_dir_str);
 
     println!("==============================================");
     println!("  Carnot WebGPU Distributed Compute Gateway");
@@ -46,7 +49,9 @@ async fn main() {
     println!("  (Chrome 113+, Firefox 130+, Edge 113+) to contribute GPU.");
     println!();
 
-    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    let listener = tokio::net::TcpListener::bind(&addr).await?;
     tracing::info!("Gateway listening on {}", addr);
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(listener, app).await?;
+
+    Ok(())
 }

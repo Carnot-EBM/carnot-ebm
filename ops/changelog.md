@@ -1,5 +1,45 @@
 # Carnot — Changelog
 
+## 2026-04-06: Documentation UI Modernization
+
+### Added
+- `openspec/capabilities/documentation-ui/spec.md`: Spec for Documentation UI
+- `epics/stories/UI-001.md`: Epic for modernizing the documentation aesthetic
+- `tests/python/test_docs.py`: Test asserting REQ-DOCUI-001 and REQ-DOCUI-002
+- `scripts/update_index.py`: Script to apply CSS and HTML updates to `docs/index.html`
+
+### Changed
+- `docs/index.html`: Upgraded to a premium aesthetic (glassmorphism, depth, soft borders, refined typography, and fade-in animations).
+- `_bmad/traceability.md`: Added FR-17 mapping to documentation UI capabilities.
+
+### Significance
+Elevates the open-source documentation page to reflect the sophisticated nature of Carnot's EBM tech, matching top-tier AI projects with fluid micro-interactions and depth.
+
+Triggered by: user instruction to improve the design aesthetic of the documentation website.
+
+---
+
+## 2026-04-06: TruthfulQA + Qwen3.5-0.8B activation experiments (experiments 21-22)
+
+### Added
+- `scripts/collect_truthfulqa_activations.py`: Collects per-token activations from Qwen3.5-0.8B on 817 TruthfulQA adversarial questions (53% accuracy, 29,058 tokens)
+- `scripts/collect_qa_activations_qwen35.py`: Re-collects QA dataset activations using Qwen3.5-0.8B (57% accuracy, 23,238 tokens)
+- `scripts/merge_activations_qwen35.py`: Merges QA + TruthfulQA from same model (52,296 tokens total)
+- `scripts/train_per_token_ebm_combined.py`: Training script with `--source` flag (qa/tqa/both/merged)
+- `data/token_activations_qwen35_merged.safetensors`: 52,296 tokens from Qwen3.5-0.8B
+
+### Key Results
+- Experiment 21: Qwen3-0.6B QA (26,800 tokens) → 84.5% test (confirmed)
+- Experiment 22: Qwen3.5-0.8B merged (52,296 tokens) → 67.2% test
+- **Principle 8 discovered**: Instruction tuning compresses the hallucination signal. Base models (84.5%) have larger activation gaps than instruction-tuned models (67.2%). RLHF makes models sound confident even when wrong.
+
+### Significance
+Demonstrates that the models most in need of hallucination detection are the hardest to detect on via activation analysis alone. Future work should combine activation features with logprobs, attention patterns, and logit lens approaches.
+
+Triggered by: user instruction to add TruthfulQA and use Qwen3.5-0.8B with thinking.
+
+---
+
 ## 2026-04-05: Hallucination direction detection via activation-space analysis
 
 ### Added

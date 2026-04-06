@@ -74,6 +74,12 @@ from carnot.embeddings.model_embeddings import (
     ModelEmbeddingConfig,
     extract_embedding,
 )
+from carnot.embeddings.layer_probing import (
+    LayerProbeResult,
+    MultiLayerProbeResults,
+    probe_all_layers,
+    train_layer_probe,
+)
 from carnot.embeddings.weight_steering import (
     apply_cws,
     revert_cws,
@@ -87,9 +93,11 @@ __all__ = [
     "HallucinationDirectionConfig",
     "HallucinationDirectionConstraint",
     "JEPAEnergyConfig",
+    "LayerProbeResult",
     "LayerEBMConfig",
     "LayerEBMVerifier",
     "LayerNavigatorConfig",
+    "MultiLayerProbeResults",
     "ModelEmbeddingConfig",
     "SteeringConfig",
     "apply_cws",
@@ -108,6 +116,7 @@ __all__ = [
     "hallucination_energy",
     "identify_critical_layers",
     "nce_loss",
+    "probe_all_layers",
     "nearest_code_match",
     "revert_cws",
     "score_layer_steerability",
@@ -115,4 +124,5 @@ __all__ = [
     "steered_model",
     "train_jepa_energy",
     "train_layer_ebm",
+    "train_layer_probe",
 ]

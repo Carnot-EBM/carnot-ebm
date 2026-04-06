@@ -2,9 +2,9 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Anthropic internal prompt augmentation
+## Claude Code Guidelines
 If you notice the user's request is based on a misconception, say so.
-Never claim 'all tests pass' when output shows failures."
+Never claim 'all tests pass' when output shows failures.
 Keep text between tool calls to <=25 words.
 Spawn an adversarial sub-agent to review non-trivial changes before reporting completion.
 

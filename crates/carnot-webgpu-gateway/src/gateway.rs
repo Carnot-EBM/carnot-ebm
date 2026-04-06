@@ -97,7 +97,7 @@ async fn handle_worker(socket: WebSocket, state: Arc<GatewayState>) {
         worker_id: worker_id.clone(),
     };
     if sender
-        .send(Message::Text(serde_json::to_string(&welcome).unwrap().into()))
+        .send(Message::Text(serde_json::to_string(&welcome).unwrap()))
         .await
         .is_err()
     {
@@ -129,7 +129,7 @@ async fn handle_worker(socket: WebSocket, state: Arc<GatewayState>) {
                         let mut queue = state.work_queue.lock().await;
                         if let Some(work) = queue.pop() {
                             if let Ok(json) = serde_json::to_string(&work.message) {
-                                let _ = sender.send(Message::Text(json.into())).await;
+                                let _ = sender.send(Message::Text(json)).await;
                                 // Store the sender for result delivery
                                 // (simplified — in production, use a proper work tracker)
                             }
@@ -137,7 +137,7 @@ async fn handle_worker(socket: WebSocket, state: Arc<GatewayState>) {
                             let idle = ServerMessage::Idle;
                             let _ = sender
                                 .send(Message::Text(
-                                    serde_json::to_string(&idle).unwrap().into(),
+                                    serde_json::to_string(&idle).unwrap(),
                                 ))
                                 .await;
                         }

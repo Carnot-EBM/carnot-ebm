@@ -22,6 +22,7 @@
 | FR-14 | Code Verification | `openspec/capabilities/code-verification/spec.md` | 50+ Python | Type/exception/test constraints, code embeddings (bag-of-tokens + AST), learned verifier, self-improving loop | Implemented |
 | FR-15 | Activation Analysis | `openspec/capabilities/llm-ebm-inference/spec.md` | 100+ Python | Activation extractor, hallucination direction, layer EBM, LayerNavigator, steering, weight steering, concept vectors | Implemented |
 | FR-16 | GPU Compute | N/A | 4 Rust | wgpu Vulkan backend, WebGPU gateway, ROCm 7.2 native gfx1150 | Implemented |
+| FR-17 | Documentation UI | `openspec/capabilities/documentation-ui/spec.md` | 1 Python | Premium aesthetic, glassmorphism, animations | Implemented |
 
 ## Non-Functional Requirements
 

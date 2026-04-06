@@ -634,7 +634,9 @@ impl BoltzmannModel {
 
         // Output layer: collapses the final hidden representation to a scalar.
         // Zero-initialized so the model starts with E(x) = 0 for all x.
-        let last_dim = *config.hidden_dims.last().unwrap();
+        let last_dim = *config.hidden_dims.last().ok_or_else(|| {
+            CarnotError::InvalidConfig("hidden_dims must have at least one layer".into())
+        })?;
         let output_weight = Array1::zeros(last_dim);
 
         Ok(Self {

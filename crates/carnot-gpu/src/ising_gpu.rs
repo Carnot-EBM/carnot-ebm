@@ -272,7 +272,7 @@ impl IsingGpu {
             pass.set_bind_group(0, &bind_group, &[]);
             // Dispatch enough workgroups to cover all samples
             // Workgroup size is 64 (defined in WGSL shader)
-            let workgroups = (batch_size as u32 + 63) / 64;
+            let workgroups = (batch_size as u32).div_ceil(64);
             pass.dispatch_workgroups(workgroups, 1, 1);
         }
 

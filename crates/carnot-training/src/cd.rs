@@ -49,7 +49,7 @@ pub fn cd_loss(
     }
     let neg_energies = energy_fn.energy_batch(&neg_samples.view());
 
-    let loss = pos_energies.mean().unwrap() - neg_energies.mean().unwrap();
+    let loss = pos_energies.mean().unwrap_or(0.0) - neg_energies.mean().unwrap_or(0.0);
 
     (loss, pos_energies, neg_samples)
 }

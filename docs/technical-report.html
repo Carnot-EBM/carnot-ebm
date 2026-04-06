@@ -111,6 +111,7 @@
 <nav>
   <div class="nav-inner">
     <a href="./" class="nav-logo"><span class="dot">C</span>arnot</a>
+    <a href="paper.html" class="nav-back" style="margin-right: 1rem;">Research Paper</a>
     <a href="./" class="nav-back">&larr; Back to home</a>
   </div>
 </nav>
@@ -119,9 +120,9 @@
   <h1>Carnot: Energy-Based Verification for LLM Output</h1>
   <div class="subtitle">A Technical Report on Combining Energy-Based Models with Large Language Models</div>
   <div class="meta">
-    <strong>Authors:</strong> Ian Blenke, Claude Opus 4.6 &nbsp;|&nbsp;
+    <strong>Author:</strong> Ian Blenke &nbsp;|&nbsp;
     <strong>Date:</strong> 2026-04-06 &nbsp;|&nbsp;
-    <a href="https://github.com/ianblenke/carnot">github.com/ianblenke/carnot</a>
+    <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
   </div>
 
   <div class="abstract">
@@ -225,7 +226,7 @@ class ComposedEnergy:
   <p><strong>Finding:</strong> Statistical separation in activation space does NOT imply causal influence on generation. The mean-difference direction captures a correlate of hallucination, not its cause.</p>
 
   <h2>4. Principles Learned</h2>
-  <p>From 16 experiments, we distilled 7 principles:</p>
+  <p>From 22 experiments, we distilled 8 principles:</p>
 
   <div class="principle"><strong>1. Simpler is better in small-data regimes.</strong> Linear projections outperform nonlinear models when you have &lt;100 training examples.</div>
   <div class="principle"><strong>2. Token-level features &gt; sequence-level.</strong> Mean-pooling activations across generated tokens destroys the signal. Per-token logprobs preserve it.</div>
@@ -234,6 +235,7 @@ class ComposedEnergy:
   <div class="principle"><strong>5. Extract features from generated tokens, not prompts.</strong> Prompt activations are identical across candidates. The signal is in the GENERATED tokens.</div>
   <div class="principle"><strong>6. Different energy signals dominate in different domains.</strong> Logprobs for QA/factual. Structural tests for code. Composite for both.</div>
   <div class="principle"><strong>7. Statistical difference &ne; causal influence.</strong> A direction that separates correct from hallucinated activations (64% detection) does NOT steer the model when injected during generation (0% effect).</div>
+  <div class="principle"><strong>8. Instruction tuning compresses the hallucination signal.</strong> Base models (84.5%) have larger activation gaps between truthful and hallucinated outputs than instruction-tuned models (67.2%). RLHF makes the model sound confident even when wrong. Target base models for EBM verification.</div>
 
   <h2>5. What Works: The Composite Verification Architecture</h2>
   <p>The practical architecture that works today:</p>
@@ -295,7 +297,7 @@ Repeat until verified or max iterations</code></pre>
 
   <h2>9. Reproduction</h2>
 <pre><code># Clone and setup
-git clone https://github.com/ianblenke/carnot
+git clone https://github.com/Carnot-EBM/carnot-ebm
 cd carnot
 pip install -e ".[dev]"
 
@@ -319,8 +321,8 @@ make research-loop</code></pre>
 
 <footer>
   <a href="./">Home</a> &nbsp;|&nbsp;
-  <a href="https://github.com/ianblenke/carnot">GitHub</a> &nbsp;|&nbsp;
-  <a href="https://github.com/ianblenke/carnot/blob/main/LICENSE">Apache 2.0</a>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a> &nbsp;|&nbsp;
+  <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/LICENSE">Apache 2.0</a>
   <p style="margin-top: 0.75rem;">Carnot is open-source software under the Apache 2.0 License.</p>
 </footer>
 

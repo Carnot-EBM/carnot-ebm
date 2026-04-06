@@ -27,6 +27,8 @@ Spec: REQ-INFER-011, SCENARIO-INFER-012
 
 from __future__ import annotations
 
+from typing import Any
+
 import hashlib
 import io
 import logging
@@ -205,19 +207,19 @@ def train_reasoning_energy(
     )
     model = GibbsModel(gibbs_config, key=model_key)
 
-    def get_params(m: GibbsModel) -> dict:  # type: ignore[type-arg]
+    def get_params(m: GibbsModel) -> dict[str, Any]:
         return {
             "layers": [(w, b) for w, b in m.layers],
             "output_weight": m.output_weight,
             "output_bias": m.output_bias,
         }
 
-    def set_params(m: GibbsModel, params: dict) -> None:  # type: ignore[type-arg]
+    def set_params(m: GibbsModel, params: dict[str, Any]) -> None:
         m.layers = list(params["layers"])
         m.output_weight = params["output_weight"]
         m.output_bias = params["output_bias"]
 
-    def loss_fn(params: dict) -> jax.Array:  # type: ignore[type-arg]
+    def loss_fn(params: dict[str, Any]) -> jax.Array:
         old = get_params(model)
         set_params(model, params)
         result = nce_loss(model, coherent_embeddings, incoherent_embeddings)

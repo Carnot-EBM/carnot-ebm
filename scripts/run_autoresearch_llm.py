@@ -16,9 +16,10 @@
     # 2. Run the autoresearch loop:
     python scripts/run_autoresearch_llm.py
 
-    # Or with custom settings:
+    # Or with custom settings (API base defaults to CARNOT_API_BASE env var):
+    export CARNOT_API_BASE=http://localhost:8080/v1
     python scripts/run_autoresearch_llm.py \\
-        --api-base http://localhost:8080/v1 \\
+        --api-base $CARNOT_API_BASE \\
         --model sonnet \\
         --max-iterations 10
 

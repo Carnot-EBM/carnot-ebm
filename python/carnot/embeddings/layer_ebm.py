@@ -55,7 +55,7 @@ Spec: REQ-INFER-015
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Any, Optional
 
 import jax
 import jax.numpy as jnp
@@ -327,19 +327,19 @@ def train_layer_ebm(
     model = GibbsModel(gibbs_config, key=model_key)
 
     # Pytree parameter extraction/injection — same pattern as train_sat_verifier.
-    def get_params(m: GibbsModel) -> dict:  # type: ignore[type-arg]
+    def get_params(m: GibbsModel) -> dict[str, Any]:
         return {
             "layers": [(w, b) for w, b in m.layers],
             "output_weight": m.output_weight,
             "output_bias": m.output_bias,
         }
 
-    def set_params(m: GibbsModel, params: dict) -> None:  # type: ignore[type-arg]
+    def set_params(m: GibbsModel, params: dict[str, Any]) -> None:
         m.layers = list(params["layers"])
         m.output_weight = params["output_weight"]
         m.output_bias = params["output_bias"]
 
-    def loss_fn(params: dict) -> jax.Array:  # type: ignore[type-arg]
+    def loss_fn(params: dict[str, Any]) -> jax.Array:
         old = get_params(model)
         set_params(model, params)
         result = nce_loss(model, correct_activations, hallucinated_activations)

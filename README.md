@@ -2,7 +2,7 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an EBM framework that combines energy-based verification with large language models to reduce hallucinations. Through 20 systematic experiments on a real 596M-parameter model, we established what works: logprob rejection sampling (+10% accuracy), composite scoring (0% → 30% for code), and per-token EBM training (71.8% generalization). See the [technical report](docs/technical-report.md) for full results.
+Carnot is an EBM framework that combines energy-based verification with large language models to reduce hallucinations. Through 22 systematic experiments on real models (Qwen3-0.6B and Qwen3.5-0.8B), we established what works: logprob rejection sampling (+10% accuracy), composite scoring (0% → 30% for code), and per-token EBM training (84.5% on base model). We also discovered that instruction-tuned models compress hallucination signals (84.5% → 67.2%), making detection harder on the models that need it most. See the [technical report](docs/technical-report.md) for full results.
 
 ## The Problem with LLMs
 
@@ -21,7 +21,7 @@ This enables capabilities that autoregressive models structurally cannot provide
 
 ## The Path to Self-Learning
 
-Carnot is designed from the ground up to support an autonomous self-improvement loop:
+Carnot is designed from the ground up to support an automated self-improvement loop (LLM proposes, energy function evaluates):
 
 1. **Propose** — candidate improvements to architecture, training, or hyperparameters are prototyped in Python/JAX
 2. **Evaluate** — the energy landscape on held-out data serves as the objective judge (did energy decrease? real improvement. did it not? rejected.)
@@ -30,19 +30,20 @@ Carnot is designed from the ground up to support an autonomous self-improvement 
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (20 experiments)
+## Key Results (22 experiments)
 
 | Approach | Domain | Result |
 |----------|--------|--------|
 | Logprob rejection sampling | QA/Factual | **+10% accuracy** (45% → 55%) |
 | Composite scoring (logprob + tests) | Code | **0% → 30% accuracy** |
 | SAT gradient repair | Constraint satisfaction | **60% → 80%** (Haiku benchmark) |
-| Per-token EBM | Activation analysis | **71.8% test accuracy** (first to generalize) |
+| Per-token EBM (base model) | Activation analysis | **84.5% test accuracy** (Qwen3-0.6B) |
+| Per-token EBM (tuned model) | Activation analysis | **67.2% test accuracy** (Qwen3.5-0.8B) |
 | Activation steering | In-generation | 0% effect (negative result) |
 
-**What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation — statistical separation ≠ causal influence.
+**What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation — statistical separation ≠ causal influence. **Key insight:** Instruction tuning compresses hallucination signals in activation space (Principle 8).
 
-See [docs/technical-report.md](docs/technical-report.md) for all 20 experiments and 7 principles learned.
+See the [research paper](docs/paper.md) for the full write-up, or the [technical report](docs/technical-report.md) for all 22 experiments and 8 principles learned.
 
 ## Model Tiers
 

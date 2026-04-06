@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Paper - Carnot: Energy-Based Verification and Repair of LLM Output</title>
+  <meta name="description" content="Research paper on Carnot: 22 experiments combining EBMs with LLMs. +10% QA accuracy, 0%→30% code, 84.5% per-token hallucination detection. 8 principles.">
+  <meta property="og:title" content="Carnot: Energy-Based Verification and Repair of LLM Output">
+  <meta property="og:description" content="Research paper: 22 experiments on EBM-LLM integration. Composite verification, gradient repair, per-token activation EBMs, and 8 empirical principles.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/paper.html">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f525;</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <!-- KaTeX for math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+  <style>
+    :root {
+      --bg: #0a0e17;
+      --bg-card: #111827;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --accent: #f97316;
+      --accent2: #3b82f6;
+      --border: #1e293b;
+      --success: #22c55e;
+      --warning: #eab308;
+      --error: #ef4444;
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font); background: var(--bg); color: var(--text);
+      line-height: 1.8; -webkit-font-smoothing: antialiased;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10, 14, 23, 0.9); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); padding: 0 2rem;
+    }
+    .nav-inner {
+      max-width: 860px; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; height: 64px;
+    }
+    .nav-logo { font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-logo .dot { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    /* Article */
+    article { max-width: 860px; margin: 0 auto; padding: 6rem 2rem 4rem; }
+
+    /* Title block */
+    .paper-title {
+      font-size: 2rem; font-weight: 800; line-height: 1.25; margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    .authors {
+      text-align: center; font-size: 1.05rem; color: var(--text); margin-bottom: 0.25rem;
+    }
+    .affiliations {
+      text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem;
+    }
+    .paper-meta {
+      text-align: center; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 3rem;
+    }
+    .paper-meta a { color: var(--accent); text-decoration: none; }
+    .paper-meta a:hover { text-decoration: underline; }
+
+    /* Abstract box */
+    .abstract {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 2rem; margin-bottom: 3rem;
+    }
+    .abstract-label {
+      font-size: 0.75rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
+    }
+    .abstract p { color: var(--text-muted); margin-bottom: 0; font-size: 0.95rem; }
+
+    /* Headings */
+    h2 {
+      font-size: 1.5rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem;
+      padding-top: 2rem; border-top: 1px solid var(--border);
+    }
+    h2:first-of-type { border-top: none; padding-top: 0; }
+    h3 { font-size: 1.15rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; }
+
+    /* Text */
+    p { margin-bottom: 1rem; color: var(--text-muted); }
+    strong { color: var(--text); }
+    em { color: var(--text); font-style: italic; }
+    ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--text-muted); }
+    li { margin-bottom: 0.4rem; }
+    a { color: var(--accent); }
+
+    /* Code */
+    pre {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
+      padding: 1.25rem; overflow-x: auto; margin-bottom: 1.5rem;
+      font-family: var(--mono); font-size: 0.85rem; line-height: 1.7; color: var(--text-muted);
+    }
+    code {
+      font-family: var(--mono); font-size: 0.85em;
+      background: var(--bg-card); padding: 0.15rem 0.4rem; border-radius: 4px;
+    }
+    pre code { background: none; padding: 0; }
+
+    /* Tables */
+    table {
+      width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem;
+    }
+    th {
+      text-align: left; padding: 0.75rem 1rem; border-bottom: 2px solid var(--border);
+      color: var(--text); font-weight: 600; font-size: 0.8rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    td {
+      padding: 0.6rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted);
+    }
+    tr:hover td { background: rgba(249, 115, 22, 0.03); }
+
+    /* Result highlights */
+    .positive { color: var(--success); font-weight: 600; }
+    .negative { color: var(--error); font-weight: 600; }
+    .neutral { color: var(--warning); font-weight: 600; }
+
+    /* Principle boxes */
+    .principle {
+      background: var(--bg-card); border-left: 3px solid var(--accent);
+      padding: 1.25rem 1.5rem; margin-bottom: 1rem; border-radius: 0 8px 8px 0;
+    }
+    .principle-num {
+      font-size: 0.75rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.25rem;
+    }
+    .principle p { margin-bottom: 0; }
+
+    /* Key result callout */
+    .callout {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem 2rem; margin: 2rem 0; display: flex; gap: 1rem; align-items: flex-start;
+    }
+    .callout-icon { font-size: 1.5rem; flex-shrink: 0; line-height: 1; }
+    .callout-body p { margin-bottom: 0; }
+
+    /* References */
+    .references { font-size: 0.85rem; }
+    .references ol { padding-left: 1.75rem; }
+    .references li { margin-bottom: 0.5rem; color: var(--text-muted); }
+
+    /* Footer */
+    footer {
+      max-width: 860px; margin: 0 auto; padding: 2rem;
+      border-top: 1px solid var(--border); text-align: center;
+      font-size: 0.8rem; color: var(--text-muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .paper-title { font-size: 1.5rem; }
+      article { padding: 5rem 1rem 3rem; }
+      .nav-links { gap: 1rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="./" class="nav-logo">carnot<span class="dot">.</span></a>
+    <ul class="nav-links">
+      <li><a href="./">Home</a></li>
+      <li><a href="technical-report.html">Technical Report</a></li>
+      <li><a href="paper.html" style="color: var(--text);">Paper</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+  <h1 class="paper-title">Carnot: Energy-Based Verification and Repair of Large Language Model Output</h1>
+
+  <div class="authors"><strong>Ian Blenke</strong></div>
+  <div class="affiliations">Independent Researcher</div>
+  <div class="paper-meta">
+    April 2026 &nbsp;&middot;&nbsp;
+    <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a> &nbsp;&middot;&nbsp;
+    <a href="https://carnot-ebm.org">carnot-ebm.org</a> &nbsp;&middot;&nbsp;
+    <a href="paper.md">Markdown</a> &nbsp;&middot;&nbsp;
+    <a href="https://huggingface.co/Carnot-EBM">Models</a>
+  </div>
+
+  <!-- Abstract -->
+  <div class="abstract">
+    <div class="abstract-label">Abstract</div>
+    <p>Large Language Models (LLMs) generate fluent but unverifiable text through autoregressive token prediction, with no mechanism to enforce logical consistency or factual accuracy. We present Carnot, an open-source dual-language (Rust + Python/JAX) framework that applies Energy-Based Models (EBMs) to verify, score, and repair LLM output. Through 22 systematic experiments on a 596M-parameter model (Qwen3-0.6B) and cross-model analysis with Qwen3.5-0.8B, we establish a practical hierarchy of energy signals for LLM output improvement. Our composite verification architecture — combining per-token log-probabilities with structural test execution — achieves <strong>+10% accuracy on factual QA</strong> and lifts code generation from <strong>0% to 30% correct</strong>, with no model fine-tuning required. For constraint satisfaction, gradient-based repair improves LLM accuracy from <strong>60% to 80%</strong> on random 3-SAT. Per-token activation EBMs trained via NCE achieve <strong>84.5% test accuracy</strong> in distinguishing correct from hallucinated tokens. Conversely, activation-space directions with <strong>0.945 AUROC</strong> detection power produce <strong>zero causal effect</strong> when injected during generation. We also find that instruction tuning compresses the hallucination signal: base models (<strong>84.5%</strong>) have larger activation gaps than instruction-tuned models (<strong>67.2%</strong>), meaning the models most in need of hallucination detection are the hardest to detect on. We distill 8 empirically-grounded principles and release the complete framework under Apache 2.0.</p>
+  </div>
+
+  <!-- 1. Introduction -->
+  <h2 id="introduction">1. Introduction</h2>
+
+  <h3>1.1 The Verification Gap</h3>
+  <p>Autoregressive language models generate text by sequentially predicting the most probable next token conditioned on the preceding context. This architecture produces remarkably fluent output but provides no mechanism to verify that the generated sequence satisfies logical constraints, is factually accurate, or is internally consistent. When an incorrect token is generated early in a sequence, the error propagates irrecoverably — the model conditions on its own mistakes. This fundamental limitation manifests as <em>hallucination</em>: the production of plausible but incorrect output.</p>
+  <p>The verification gap is structural, not parametric. Scaling model size, training data, or compute does not eliminate it because autoregressive generation lacks a feedback mechanism to check completed output against global constraints.</p>
+
+  <h3>1.2 Energy-Based Models as Verifiers</h3>
+  <p>Energy-Based Models (EBMs) assign a scalar energy $E(x) \in \mathbb{R}$ to a complete configuration $x$, where low energy corresponds to valid configurations. This enables:</p>
+  <ol>
+    <li><strong>Holistic evaluation.</strong> The energy function evaluates the entire output simultaneously.</li>
+    <li><strong>Gradient-based repair.</strong> When $E(x) > 0$, gradient descent fixes violated components: $x_{t+1} = x_t - \eta \nabla_x E_{\text{violated}}(x_t)$.</li>
+    <li><strong>Verifiable certification.</strong> $E(x) = 0$ constitutes a mathematical proof that all constraints are satisfied.</li>
+    <li><strong>Composability.</strong> Multiple constraints compose additively: $E_{\text{total}}(x) = \sum_i w_i E_i(x)$.</li>
+  </ol>
+
+  <h3>1.3 Contributions</h3>
+  <ol>
+    <li>A <strong>composite verification architecture</strong> that improves QA accuracy by +10% and code generation from 0% to 30%, with no model modification.</li>
+    <li><strong>Gradient repair</strong> of LLM constraint satisfaction, improving 3-SAT accuracy from 60% to 80%.</li>
+    <li><strong>Per-token activation EBMs</strong> achieving 84.5% test accuracy — the first activation-based approach to generalize beyond calibration data.</li>
+    <li>A <strong>definitive negative result</strong> on activation steering: 0.945 AUROC detection → 0% generation effect.</li>
+    <li><strong>Cross-model activation analysis</strong> showing instruction tuning compresses the hallucination signal (84.5% → 67.2%).</li>
+    <li><strong>Eight empirical principles</strong> for EBM-LLM integration, distilled from 22 experiments.</li>
+    <li><strong>Carnot</strong>, an open-source dual-language framework under Apache 2.0. Pre-trained models at <a href="https://huggingface.co/Carnot-EBM">huggingface.co/Carnot-EBM</a>.</li>
+  </ol>
+
+  <!-- 2. Related Work -->
+  <h2 id="related-work">2. Related Work</h2>
+
+  <p><strong>Energy-Based Transformers.</strong> Hoover et al. (2025) demonstrate that EBTs achieve 35% faster scaling than Transformer++ and 29% improvement via iterative refinement. This validates energy-based inference at transformer scale.</p>
+
+  <p><strong>Autoregressive Models as EBMs.</strong> Zhao et al. (2025) establish a formal bijection between autoregressive models and EBMs, proving that every LLM's per-token log-probabilities constitute a valid energy function. Our Experiment 13 empirically confirms this.</p>
+
+  <p><strong>Semantic Energy.</strong> Farquhar et al. (2025) detect hallucination via negative log-likelihood. Our logprob rejection sampling independently converges on this approach (+10% improvement).</p>
+
+  <p><strong>Concept Vectors.</strong> Anthropic (2025) demonstrates that concept-specific activation vectors are causally effective for steering, while generic mean-difference directions are not. Our Experiments 15–16 and 20 corroborate this: generic hallucination directions show 0.945 AUROC separation but zero causal effect.</p>
+
+  <p><strong>Existing Frameworks.</strong> EB-JEPA (Meta FAIR, PyTorch) focuses on self-supervised world modeling; THRML (Extropic, JAX) targets thermodynamic hardware; TorchEBM (PyTorch) provides general-purpose EBM tooling. Carnot is the first to combine dual-language implementation (Rust + JAX), specification-driven development, and an automated self-improvement loop.</p>
+
+  <!-- 3. Framework -->
+  <h2 id="framework">3. Framework Architecture</h2>
+
+  <h3>3.1 Dual-Language Design</h3>
+  <p>Carnot implements the same abstractions in both Rust and Python/JAX, connected via PyO3:</p>
+  <ul>
+    <li><strong>Rust</strong> (7 crates): core traits, three model tiers, samplers, training, PyO3 bridge</li>
+    <li><strong>Python/JAX</strong> (8 modules): mirrors Rust with JAX-native implementations using Flax and Optax</li>
+    <li><strong>Cross-language serialization</strong>: safetensors format for interop</li>
+  </ul>
+
+  <h3>3.2 Model Tiers</h3>
+  <table>
+    <thead>
+      <tr><th>Tier</th><th>Name</th><th>Architecture</th><th>Complexity</th><th>Target</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Small</td><td><strong>Ising</strong></td><td>Quadratic: $E(x) = -\frac{1}{2}x^T J x - b^T x$</td><td>$O(d^2)$</td><td>Edge, hardware</td></tr>
+      <tr><td>Medium</td><td><strong>Gibbs</strong></td><td>Multi-layer MLP: $E(x) = f_\theta(x)$</td><td>$O(d \cdot h)$</td><td>Applied ML</td></tr>
+      <tr><td>Large</td><td><strong>Boltzmann</strong></td><td>Deep residual + attention</td><td>$O(d \cdot h \cdot L)$</td><td>Research</td></tr>
+    </tbody>
+  </table>
+
+  <h3>3.3 Constraint Verification</h3>
+  <p>Constraints are encoded as differentiable energy terms. Each constraint provides <code>energy(x) → scalar</code> (0 = satisfied) and <code>grad_energy(x) → ∇x</code> for repair. A <code>ComposedEnergy</code> aggregates constraints with per-constraint verification reports and violated-only gradients.</p>
+  <p>Implemented domains: Boolean satisfiability (product relaxation), graph coloring (pairwise repulsion), Python code (execution-based), and property-based testing (random invariants).</p>
+
+  <h3>3.4 Composite Scoring</h3>
+  <pre><code>For each candidate c ∈ {c₁, ..., cₙ}:
+    logprob_score(c) = mean per-token log-probability
+    structural_score(c) = fraction of test cases failed
+    E(c) = -w₁ · logprob_score(c) + w₂ · penalty · structural_score(c)
+
+Select c* = argmin E(c)
+If E(c*) > threshold: iterate with failure feedback to LLM</code></pre>
+
+  <!-- 4. Experiments -->
+  <h2 id="experiments">4. Experiments</h2>
+
+  <p>All experiments use Qwen3-0.6B (596M parameters) unless noted. We chose a small model deliberately: if EBM verification works on a weak model, it will work on stronger ones.</p>
+
+  <h3>4.1 SAT Gradient Repair</h3>
+  <p><strong>Setup.</strong> 20 random 3-SAT instances at the phase transition (12 variables, 40 clauses). The LLM generates variable assignments; gradient descent on the continuous relaxation repairs violations.</p>
+
+  <div class="callout">
+    <div class="callout-icon">&#x2705;</div>
+    <div class="callout-body">
+      <p><strong>Result:</strong> LLM accuracy <span class="positive">60% → 80% (+20%)</span>. Of 8 incorrect instances: 4 fully repaired, 2 partially improved, 2 not repaired. Multi-start repair (N=10) fixes one additional instance.</p>
+    </div>
+  </div>
+
+  <h3>4.2 Hallucination Detection via Activations</h3>
+  <p><strong>Setup.</strong> 25 factual questions. Extract per-layer activations from <em>generated</em> tokens (not prompts). Hallucination direction = mean difference between correct and incorrect activations.</p>
+
+  <div class="callout">
+    <div class="callout-icon">&#x1f50d;</div>
+    <div class="callout-body">
+      <p><strong>Result:</strong> Detection accuracy: <span class="positive">80%</span>. AUROC: <span class="positive">0.945</span>. Energy gap: +9.3. The signal is real — but as Section 4.6 shows, it does not translate to causal control.</p>
+    </div>
+  </div>
+
+  <h3>4.3 Logprob Rejection Sampling</h3>
+  <p><strong>Setup.</strong> 20 questions, 5 candidates each ($T = 0.7$). Select by highest mean per-token log-probability.</p>
+
+  <div class="callout">
+    <div class="callout-icon">&#x2705;</div>
+    <div class="callout-body">
+      <p><strong>Result:</strong> Greedy 45% → logprob-selected <span class="positive">55% (+10%)</span>. No calibration, no training, no external model needed. The model's own logprobs ARE the energy function.</p>
+    </div>
+  </div>
+
+  <h3>4.4 Composite Energy for Code</h3>
+  <p><strong>Setup.</strong> 10 coding tasks, 5 candidates each. Composite energy: $E(c) = -w_1 \cdot \bar{\ell}(c) + w_2 \cdot p \cdot f(c)$.</p>
+
+  <div class="callout">
+    <div class="callout-icon">&#x2705;</div>
+    <div class="callout-body">
+      <p><strong>Result:</strong> Greedy 0% → composite-selected <span class="positive">30%</span>. Structural tests dominate for code; logprobs dominate for QA. The composite is never worse than either alone.</p>
+    </div>
+  </div>
+
+  <h3>4.5 Activation-Based Rejection Sampling</h3>
+  <table>
+    <thead>
+      <tr><th>Exp</th><th>Method</th><th>Result</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>9</td><td>Linear direction, 25 cal. pairs</td><td><span class="negative">-12%</span> (prompt features, not answer)</td></tr>
+      <tr><td>10</td><td>Linear direction, 93 cal. pairs</td><td><span class="neutral">+0%</span> (4 fixes, 4 regressions)</td></tr>
+      <tr><td>11</td><td>Gibbs EBM [2048→256→64→1], NCE</td><td><span class="negative">94% cal → 35% test</span> (overfitting)</td></tr>
+      <tr><td>12</td><td>PCA (4–32 dims) + Gibbs</td><td><span class="negative">Best: PCA-8 at -5%</span></td></tr>
+    </tbody>
+  </table>
+  <p>Root causes: (1) mean-pooling destroys token-level signal, (2) $n_{\text{examples}} \ll d_{\text{features}}$ causes overfitting.</p>
+
+  <h3>4.6 In-Generation Activation Steering</h3>
+  <p><strong>Setup.</strong> Subtract hallucination direction from hidden states during generation. 6 configurations: upper/middle/all layers × $\alpha \in \{0.1, 0.5, 1.0, 2.0, 5.0\}$.</p>
+
+  <div class="callout">
+    <div class="callout-icon">&#x26a0;&#xfe0f;</div>
+    <div class="callout-body">
+      <p><strong>Result:</strong> <span class="negative">Zero effect across ALL configurations.</span> Zero fixes, zero regressions. The 0.945 AUROC direction produces exactly 0% change when used for intervention. <em>Statistical separation ≠ causal influence.</em></p>
+    </div>
+  </div>
+
+  <h3>4.7 Per-Token Activation EBMs</h3>
+  <p><strong>Motivation.</strong> Experiments 9–12 fail because mean-pooling destroys per-token signal. Training on individual token activations yields 288× more examples (26,800 vs 93).</p>
+  <p><strong>Setup.</strong> Extract 1024-dim activations per generated token from Qwen3-0.6B on 300 QA pairs. Train Gibbs EBM [1024→256→64→1] via NCE, 300 epochs, $\eta = 0.005$, SiLU.</p>
+
+  <table>
+    <thead>
+      <tr><th>Dataset Size</th><th>Cal. Accuracy</th><th>Test Accuracy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1,860 tokens</td><td>87.8%</td><td>71.8%</td></tr>
+      <tr><td>26,800 tokens</td><td>~90%</td><td><span class="positive">84.5%</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-icon">&#x1f4a1;</div>
+    <div class="callout-body">
+      <p><strong>Key finding:</strong> Architecture search across model sizes, activations, learning rates, and depths shows all configurations plateau at ~84.5%. The ceiling is <strong>data-bound, not architecture-bound</strong>.</p>
+    </div>
+  </div>
+
+  <h3>4.8 Cross-Model Activation Analysis</h3>
+  <p><strong>Motivation.</strong> If per-token activation EBMs work on base model activations, do they transfer to instruction-tuned models? Instruction-tuned models are the ones actually deployed, so practical hallucination detection must work on them.</p>
+  <p><strong>Setup (Experiments 21–22).</strong> Collected 52,296 per-token activations from Qwen3.5-0.8B (instruction-tuned with thinking capabilities) on factual QA (300 pairs) + TruthfulQA (817 adversarial questions). Trained per-token Gibbs EBMs under three conditions.</p>
+
+  <table>
+    <thead>
+      <tr><th>Training Data</th><th>Test Accuracy</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Base Qwen3-0.6B only</td><td><span class="positive">84.5%</span></td></tr>
+      <tr><td>Instruction-tuned Qwen3.5-0.8B only</td><td><span class="neutral">67.2%</span></td></tr>
+      <tr><td>Mixed (both models)</td><td><span class="neutral">70.5%</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-icon">&#x26a0;&#xfe0f;</div>
+    <div class="callout-body">
+      <p><strong>The instruction-tuning paradox:</strong> RLHF training produces models that sound confident even when wrong — internal activation patterns become more uniform regardless of factual accuracy. The models <strong>most in need of hallucination detection</strong> are precisely the ones where activation-based detection is <strong>hardest</strong>. Mixing activations from different models degrades performance (70.5%), confirming different models occupy different representation spaces.</p>
+    </div>
+  </div>
+
+  <!-- 5. Principles -->
+  <h2 id="principles">5. Principles for EBM-LLM Integration</h2>
+
+  <div class="principle">
+    <div class="principle-num">Principle 1</div>
+    <p><strong>Simpler is better in small-data regimes.</strong> Linear projections outperform nonlinear models with &lt;100 examples. The Gibbs EBM achieved 94% calibration but 35% test — textbook overfitting.</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 2</div>
+    <p><strong>Token-level features dominate sequence-level.</strong> Mean-pooling destroys the hallucination signal. Per-token logprobs (+10%) and per-token activations (84.5%) succeed where sequence-level fails.</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 3</div>
+    <p><strong>The model's own confidence is the best energy signal.</strong> No external EBM outperformed log-probabilities for candidate selection. The model is already an energy-based model (ARM↔EBM bijection).</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 4</div>
+    <p><strong>Overfitting is the primary failure mode.</strong> Every trained approach overfits when $n_{\text{examples}} \ll d_{\text{features}}$. The fix: more data (Experiment 19) or no training (Experiment 13).</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 5</div>
+    <p><strong>Extract features from generated tokens, not prompts.</strong> Prompt activations are identical across candidates. The signal is only in the generated tokens.</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 6</div>
+    <p><strong>Different energy signals dominate different domains.</strong> Logprobs for QA. Structural tests for code. The composite handles both and is never worse than either.</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 7</div>
+    <p><strong>Statistical separation ≠ causal influence.</strong> A direction at 0.945 AUROC does not steer generation (0% effect). Effective steering requires concept-specific vectors, not generic contrastive directions.</p>
+  </div>
+
+  <div class="principle">
+    <div class="principle-num">Principle 8</div>
+    <p><strong>Instruction tuning compresses the hallucination signal.</strong> Base models (84.5%) have larger activation gaps between correct and wrong answers than instruction-tuned models (67.2%). RLHF makes models sound confident even when wrong — the models most in need of hallucination detection are the hardest to detect on.</p>
+  </div>
+
+  <!-- 6. Self-Improvement -->
+  <h2 id="self-improvement">6. Autonomous Self-Improvement Loop</h2>
+
+  <p>Carnot implements an automated research loop (LLM proposes hypotheses, energy function evaluates):</p>
+  <ol>
+    <li><strong>Propose.</strong> An agent generates candidate EBM improvements.</li>
+    <li><strong>Sandbox.</strong> Candidates execute in isolation (process-level dev, Docker+gVisor production).</li>
+    <li><strong>Evaluate.</strong> Three-gate check: energy improvement, execution time, memory.</li>
+    <li><strong>Learn.</strong> Trace2Skill extracts structured lessons into a skill directory.</li>
+    <li><strong>Repeat.</strong> Circuit breaker halts after N consecutive failures.</li>
+  </ol>
+
+  <p>In a 50-iteration run with Claude 3.5 Sonnet, the loop achieved near-optimal energy (DoubleWell: 0.0001, Rosenbrock: 0.0092) before circuit breaker at iteration 18. The energy function serves as the objective judge — no human evaluation needed.</p>
+
+  <!-- 7. Discussion -->
+  <h2 id="discussion">7. Discussion</h2>
+
+  <h3>7.1 What Works Today</h3>
+  <p>The composite verification architecture is immediately deployable: no model modification, no fine-tuning, no calibration. The improvement is consistent: +10% QA, +30% absolute for code.</p>
+
+  <h3>7.2 The Activation Ceiling and the Instruction-Tuning Paradox</h3>
+  <p>Per-token activation EBMs achieve 84.5% on base model activations but plateau regardless of architecture. Cross-model analysis reveals a deeper challenge: instruction-tuned models yield only 67.2% detection accuracy — a 17.3pp drop. RLHF alignment improves average output quality but simultaneously makes remaining hallucinations harder to detect via activations. Practical deployment will require model-specific calibration.</p>
+
+  <h3>7.3 The Steering Paradox</h3>
+  <p>The complete disconnect between detection (0.945 AUROC) and steering (0% effect) is our most striking finding. Any approach using contrastive activation analysis for steering must demonstrate causal efficacy, not just separability.</p>
+
+  <h3>7.4 Toward Hardware Acceleration</h3>
+  <p>The Ising tier's quadratic energy maps directly to physical Boltzmann machines (Extropic TSU), opening a path to hardware-accelerated constraint satisfaction.</p>
+
+  <!-- 8. Limitations -->
+  <h2 id="limitations">8. Limitations</h2>
+  <ol>
+    <li><strong>Model scale.</strong> All experiments use Qwen3-0.6B (596M). Results may differ on larger models.</li>
+    <li><strong>Task diversity.</strong> QA evaluation uses 20–93 questions; token-level experiments use 26,800 tokens from limited question diversity.</li>
+    <li><strong>Test case dependency.</strong> Code verification requires existing test cases.</li>
+    <li><strong>Activation ceiling.</strong> We have not identified what limits per-token EBM accuracy at ~84.5%.</li>
+    <li><strong>No fine-tuning comparison.</strong> We compare against unmodified LLM output, not RLHF/DPO baselines.</li>
+  </ol>
+
+  <!-- 9. Conclusion -->
+  <h2 id="conclusion">9. Conclusion</h2>
+
+  <p>We demonstrate that Energy-Based Models provide a practical, training-free mechanism for improving LLM output. The most effective approach is surprisingly simple: use the model's own logprobs for candidate selection, compose with structural tests for code, and iterate with feedback. This improves QA (+10%) and code (0% → 30%) with no model modification.</p>
+
+  <p>Learned activation EBMs show promise at the per-token level (84.5% on base models) but plateau below the simple logprob baseline's practical impact. Cross-model analysis across 22 experiments reveals that instruction tuning compresses the hallucination signal (67.2% for instruction-tuned vs. 84.5% for base), creating a paradox where the models most deployed in production are hardest to monitor.</p>
+
+  <p>Our most impactful negative result — 0.945 AUROC detection → 0% steering effect — should caution the growing body of work on activation engineering: <strong>demonstrate causal efficacy, not just separability.</strong></p>
+
+  <p>All code, data, and experiment scripts are available at <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a> under the Apache 2.0 license. Pre-trained models at <a href="https://huggingface.co/Carnot-EBM">huggingface.co/Carnot-EBM</a>.</p>
+
+  <!-- Acknowledgments -->
+  <h2 id="acknowledgments">10. Acknowledgments</h2>
+  <p>This paper was written with substantial assistance from Claude (Anthropic). Claude Code was used for code generation, experiment design, documentation, and iterative refinement of the framework and this paper. The autoresearch pipeline uses Claude 3.5 Sonnet as the hypothesis proposer.</p>
+
+  <!-- References -->
+  <h2 id="references">11. References</h2>
+  <div class="references">
+    <ol>
+      <li>Hoover, B. et al. (2025). Energy-Based Transformers. <em>arXiv:2507.02092</em>.</li>
+      <li>Zhao, H. et al. (2025). Autoregressive Models Are Secretly Energy-Based Models. <em>arXiv:2512.15605</em>.</li>
+      <li>Farquhar, S. et al. (2025). Detecting Hallucinations in Large Language Models Using Semantic Entropy. <em>arXiv:2508.14496</em>.</li>
+      <li>Anthropic. (2025). Scaling Monosemanticity: Extracting Interpretable Features from Claude 3.5 Sonnet.</li>
+      <li>Xie, S. et al. (2025). NRGPT: Non-autoregressive Energy-Based Language Modeling. <em>arXiv:2512.16762</em>.</li>
+      <li>Lee, J. et al. (2025). Scalable Energy-Based Models via Adversarial Training. <em>arXiv:2510.13872</em>.</li>
+      <li>LeCun, Y. et al. (2006). A Tutorial on Energy-Based Learning. <em>Predicting Structured Data</em>, MIT Press.</li>
+      <li>LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. <em>OpenReview</em>.</li>
+      <li>Karpathy, A. (2024). Autoresearch: Self-Directed Scientific Discovery with LLMs.</li>
+      <li>Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence. <em>Neural Computation</em> 14(8).</li>
+      <li>Gutmann, M. & Hyv&auml;rinen, A. (2010). Noise-Contrastive Estimation. <em>AISTATS</em>.</li>
+      <li>Vincent, P. (2011). A Connection Between Score Matching and Denoising Autoencoders. <em>Neural Computation</em> 23(7).</li>
+    </ol>
+  </div>
+
+</article>
+
+<footer>
+  <p>Carnot &copy; 2026 &middot; <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a> &middot; Apache 2.0 License</p>
+</footer>
+
+</body>
+</html>

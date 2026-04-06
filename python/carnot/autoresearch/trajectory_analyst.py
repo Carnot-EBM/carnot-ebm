@@ -43,6 +43,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import asdict, dataclass, field
@@ -139,7 +140,7 @@ class AnalystConfig:
     Spec: REQ-AUTO-011
     """
 
-    api_base: str = "http://localhost:8080/v1"
+    api_base: str = os.environ.get("CARNOT_API_BASE", "http://localhost:8080/v1")
     model: str = "sonnet"
     api_key: str = "not-needed"
     temperature: float = 0.3

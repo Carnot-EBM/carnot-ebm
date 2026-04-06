@@ -37,6 +37,7 @@ Spec: FR-11, REQ-AUTO-003
 from __future__ import annotations
 
 import logging
+import os
 import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -211,7 +212,7 @@ class GeneratorConfig:
           this is unused (OAuth handles auth). Default "not-needed".
     """
 
-    api_base: str = "http://localhost:8080/v1"
+    api_base: str = os.environ.get("CARNOT_API_BASE", "http://localhost:8080/v1")
     model: str = "sonnet"
     system_prompt: str = DEFAULT_SYSTEM_PROMPT
     max_hypotheses_per_call: int = 1

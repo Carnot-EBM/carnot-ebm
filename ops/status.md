@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-06 — ALL RESEARCH COMPLETE, 20 EXPERIMENTS, TECHNICAL REPORT PUBLISHED
+**Last Updated:** 2026-04-06 — 22 EXPERIMENTS, 8 PRINCIPLES, TECHNICAL REPORT PUBLISHED
 
 ## What's Working
 
@@ -39,14 +39,14 @@
 - Iterative refinement with feedback (LLM WITH EBM, not LLM then EBM)
 - Multi-start repair, semantic energy, ARM-EBM bijection
 - Diffusion generation (parallel solution from noise)
-- Per-token EBM (71.8% test accuracy, experiment 19)
+- Per-token EBM (84.5% test on Qwen3-0.6B, 67.2% on Qwen3.5-0.8B, experiments 19-22)
 
 ### Activation Analysis (Phase 3)
 - Activation extractor (per-layer transformer hooks)
 - Hallucination direction (80% detection, 0.945 AUROC)
 - Layer-targeted EBM, LayerNavigator, activation/weight steering
 - Concept vectors (targeted prompting)
-- Per-token activation dataset (1860 tokens)
+- Per-token activation dataset: 52,296 tokens (QA + TruthfulQA, Qwen3.5-0.8B)
 
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
@@ -92,8 +92,10 @@
 | 17 | Concept-specific vectors | All < 56% | ❌ Worse than generic |
 | 19 | **Per-token EBM** | **71.8% test** | **✅ First activation that generalizes** |
 | 20 | Concept steering | 0% change | ❌ Confirms #15-16 |
+| 21 | **Scaled per-token EBM (Qwen3-0.6B)** | **84.5% test** | **✅ More data helps** |
+| 22 | TruthfulQA + Qwen3.5-0.8B | 67.2% test | ⚠️ Better models = subtler signals |
 
-## 7 Principles Learned
+## 8 Principles Learned
 
 1. Simpler is better in small-data regimes
 2. Token-level features > sequence-level (mean-pooling kills signal)
@@ -102,12 +104,13 @@
 5. Extract features from generated tokens, not prompts
 6. Different energy signals dominate in different domains
 7. Statistical difference ≠ causal influence
+8. Instruction tuning compresses the hallucination signal (84.5% base → 67.2% tuned)
 
 ## What's Next
 
 ### High Priority
 - **Ship MCP server + CLI**: tools built (`tools/verify-mcp/server.py`, `scripts/carnot_cli.py`), need real-world testing
-- **Scale per-token EBM**: train on 1000+ QA dataset (`data/qa_dataset_1000.json` generated), test on harder tasks
+- **Scale per-token EBM**: ✅ DONE — 52,296 tokens from QA + TruthfulQA (Qwen3.5-0.8B), 67.2% test accuracy
 - **E2E-001: Rust training pipeline test**: Only remaining E2E test gap
 
 ### Medium Priority
@@ -116,11 +119,13 @@
 - **Larger local model**: test with Qwen3-4B or 8B (67GB unified memory available)
 
 ### Research Directions
-- **Per-token EBM rejection sampling**: use the 71.8%-accurate per-token EBM for candidate selection (not yet tested)
-- **Concept-specific vectors with MORE data**: current concept prompts underperformed generic direction, may need more diverse prompting
+- **Per-token EBM rejection sampling**: use per-token EBM for candidate selection (not yet tested)
+- **Tackle Principle 8**: instruction-tuned models compress hallucination signal — need methods beyond linear activation analysis (probing layers, attention patterns, logit lens)
 - **EBT training on real data**: minimal EBT exists (`python/carnot/models/ebt.py`), needs training on large dataset
+- **Add MMLU, HaluEval, SimpleQA datasets**: more diverse evaluation data
 
 ### Documentation
+- **UI Aesthetic**: Premium glassmorphism and animations applied to `docs/index.html`
 - **Technical report**: published at `docs/technical-report.md`
 - **Experiment log**: 20 experiments at `ops/experiment-log.md`
 - **Research roadmaps**: v1-v3 at `openspec/change-proposals/`

@@ -9,7 +9,7 @@ This is the first real "LLM hallucinates → EBM repairs" measurement.
 
 Usage:
     python scripts/run_llm_benchmark.py
-    python scripts/run_llm_benchmark.py --api-base http://localhost:8080/v1 --model sonnet
+    CARNOT_API_BASE=http://localhost:8080/v1 python scripts/run_llm_benchmark.py --api-base $CARNOT_API_BASE --model sonnet
 """
 
 from __future__ import annotations

@@ -9,7 +9,8 @@ This is the path from toy SAT domains to real code verification.
 
 Usage:
     python scripts/demo_code_verification.py
-    python scripts/demo_code_verification.py --api-base http://localhost:8080/v1
+    CARNOT_API_BASE=http://localhost:8080/v1 python scripts/demo_code_verification.py
+    python scripts/demo_code_verification.py --api-base $CARNOT_API_BASE
 """
 
 from __future__ import annotations

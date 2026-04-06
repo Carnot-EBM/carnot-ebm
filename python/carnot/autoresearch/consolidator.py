@@ -37,6 +37,7 @@ import contextlib
 import json
 import logging
 import math
+import os
 import re
 from dataclasses import dataclass
 from typing import Any
@@ -67,7 +68,7 @@ class ConsolidatorConfig:
     Spec: REQ-AUTO-013
     """
 
-    api_base: str = "http://localhost:8080/v1"
+    api_base: str = os.environ.get("CARNOT_API_BASE", "http://localhost:8080/v1")
     model: str = "sonnet"
     api_key: str = "not-needed"
     batch_size: int = 32

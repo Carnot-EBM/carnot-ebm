@@ -42,6 +42,7 @@ Spec: REQ-INFER-006, REQ-INFER-008, REQ-INFER-013
 from __future__ import annotations
 
 import logging
+import os
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -76,7 +77,7 @@ class LLMSolverConfig:
     Spec: REQ-INFER-006
     """
 
-    api_base: str = "http://localhost:8080/v1"
+    api_base: str = os.environ.get("CARNOT_API_BASE", "http://localhost:8080/v1")
     model: str = "sonnet"
     api_key: str = "not-needed"
     temperature: float = 0.3

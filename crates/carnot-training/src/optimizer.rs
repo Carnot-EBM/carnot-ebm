@@ -2,7 +2,7 @@
 //!
 //! Spec: REQ-TRAIN-004
 
-use carnot_core::Float;
+use carnot_core::{CarnotError, Float};
 use ndarray::Array1;
 use std::collections::HashMap;
 
@@ -57,7 +57,7 @@ impl AdamState {
         param: &mut Array1<Float>,
         grad: &Array1<Float>,
         grad_clip: Option<Float>,
-    ) -> Float {
+    ) -> Result<Float, CarnotError> {
         let (lr, beta1, beta2, epsilon) = match self.config {
             OptimizerConfig::Adam {
                 learning_rate,
@@ -65,7 +65,11 @@ impl AdamState {
                 beta2,
                 epsilon,
             } => (learning_rate, beta1, beta2, epsilon),
-            _ => panic!("AdamState used with non-Adam config"),
+            _ => {
+                return Err(CarnotError::InvalidConfig(
+                    "AdamState requires an Adam optimizer config".into(),
+                ))
+            }
         };
 
         // Gradient clipping
@@ -105,7 +109,7 @@ impl AdamState {
         // Update parameters
         *param = &*param - lr * &m_hat / &(v_hat.mapv(|x| x.sqrt()) + epsilon);
 
-        grad_norm
+        Ok(grad_norm)
     }
 }
 
@@ -128,7 +132,7 @@ mod tests {
         let grad = array![0.1, 0.2, 0.3];
 
         let original = param.clone();
-        opt.step("test", &mut param, &grad, None);
+        opt.step("test", &mut param, &grad, None).unwrap();
 
         // Parameters should have changed
         assert_ne!(param, original);
@@ -143,7 +147,7 @@ mod tests {
         let mut param = array![0.0, 0.0];
         let large_grad = array![100.0, 100.0];
 
-        let norm = opt.step("test", &mut param, &large_grad, Some(1.0));
+        let norm = opt.step("test", &mut param, &large_grad, Some(1.0)).unwrap();
         // Grad norm should have been clipped
         assert!(param.iter().all(|v| v.is_finite()));
     }
@@ -163,7 +167,7 @@ mod tests {
         // Minimize ||param||^2 — grad is 2*param
         for _ in 0..200 {
             let grad = 2.0 * &param;
-            opt.step("w", &mut param, &grad, None);
+            opt.step("w", &mut param, &grad, None).unwrap();
         }
 
         // Should move toward zero

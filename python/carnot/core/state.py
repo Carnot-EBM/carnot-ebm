@@ -135,9 +135,9 @@ class ModelState:
             parameters={"coupling": jnp.eye(10), "bias": jnp.zeros(10)},
             config=ModelConfig(input_dim=10),
         )
-        state.save(Path("/tmp/my_model"))
+        state.save(Path("./my_model"))
 
-        loaded = ModelState.load(Path("/tmp/my_model"))
+        loaded = ModelState.load(Path("./my_model"))
         assert loaded.config.input_dim == 10
 
     Spec: REQ-CORE-003, REQ-CORE-004

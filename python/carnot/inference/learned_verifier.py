@@ -35,6 +35,8 @@ Spec: REQ-INFER-007, SCENARIO-INFER-008
 
 from __future__ import annotations
 
+from typing import Any
+
 import logging
 from dataclasses import dataclass, field
 
@@ -215,19 +217,19 @@ def train_sat_verifier(
 
     # Extract parameters as a pytree for functional gradient computation.
     # GibbsModel stores: self.layers (list of (weight, bias)), self.output_weight, self.output_bias
-    def get_params(m: GibbsModel) -> dict:  # type: ignore[type-arg]
+    def get_params(m: GibbsModel) -> dict[str, Any]:
         return {
             "layers": [(w, b) for w, b in m.layers],
             "output_weight": m.output_weight,
             "output_bias": m.output_bias,
         }
 
-    def set_params(m: GibbsModel, params: dict) -> None:  # type: ignore[type-arg]
+    def set_params(m: GibbsModel, params: dict[str, Any]) -> None:
         m.layers = list(params["layers"])
         m.output_weight = params["output_weight"]
         m.output_bias = params["output_bias"]
 
-    def loss_fn(params: dict) -> jax.Array:  # type: ignore[type-arg]
+    def loss_fn(params: dict[str, Any]) -> jax.Array:
         # Temporarily set params, compute loss, restore
         old = get_params(model)
         set_params(model, params)

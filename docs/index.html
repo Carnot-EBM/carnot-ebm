@@ -13,15 +13,16 @@
   <style>
     :root {
       --bg: #0a0e17;
-      --bg-card: #111827;
-      --bg-card-hover: #1a2332;
-      --text: #e2e8f0;
+      --bg-card: rgba(17, 24, 39, 0.6);
+      --bg-card-hover: rgba(26, 35, 50, 0.8);
+      --text: #f1f5f9;
       --text-muted: #94a3b8;
       --accent: #f97316;
       --accent-glow: rgba(249, 115, 22, 0.15);
       --accent2: #3b82f6;
       --accent2-glow: rgba(59, 130, 246, 0.15);
-      --border: #1e293b;
+      --border: rgba(255, 255, 255, 0.05);
+      --border-hover: rgba(255, 255, 255, 0.1);
       --success: #22c55e;
       --warning: #eab308;
       --error: #ef4444;
@@ -31,282 +32,180 @@
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
-
     body {
-      font-family: var(--font);
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.7;
-      -webkit-font-smoothing: antialiased;
+      font-family: var(--font); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
     }
+
+    /* ANIMATIONS */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in-up {
+      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      opacity: 0;
+    }
+    
+    .delay-1 { animation-delay: 0.1s; }
+    .delay-2 { animation-delay: 0.2s; }
+    .delay-3 { animation-delay: 0.3s; }
 
     /* --- NAV --- */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(10, 14, 23, 0.85);
-      backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border);
-      padding: 0 2rem;
+      background: rgba(10, 14, 23, 0.7); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); padding: 0 2rem;
     }
     .nav-inner {
-      max-width: 1200px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      height: 64px;
+      max-width: 1200px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px;
     }
     .nav-logo {
-      font-size: 1.25rem; font-weight: 700; color: var(--text);
-      text-decoration: none; display: flex; align-items: center; gap: 0.5rem;
+      font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 0.5rem; letter-spacing: -0.02em;
     }
     .nav-logo .dot { color: var(--accent); }
     .nav-links { display: flex; gap: 2rem; list-style: none; }
     .nav-links a {
-      color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
-      font-weight: 500; transition: color 0.2s;
+      color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--text); }
     .nav-gh {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--bg-card); border: 1px solid var(--border);
-      color: var(--text); padding: 0.4rem 1rem; border-radius: 8px;
-      text-decoration: none; font-size: 0.85rem; font-weight: 500;
-      transition: border-color 0.2s, background 0.2s;
+      display: inline-flex; align-items: center; gap: 0.5rem; background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 0.4rem 1rem; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: all 0.2s ease; backdrop-filter: blur(8px);
     }
-    .nav-gh:hover { border-color: var(--accent); background: var(--bg-card-hover); }
+    .nav-gh:hover { 
+      border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
     .nav-gh svg { width: 18px; height: 18px; fill: currentColor; }
 
     /* --- HERO --- */
     .hero {
-      min-height: 100vh; display: flex; align-items: center; justify-content: center;
-      padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
+      min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 6rem 2rem 4rem; position: relative; overflow: hidden;
     }
     .hero::before {
-      content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%);
-      width: 800px; height: 800px; border-radius: 50%;
-      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
-      pointer-events: none;
+      content: ''; position: absolute; top: -40%; left: 50%; transform: translateX(-50%); width: 800px; height: 800px; border-radius: 50%; background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%); pointer-events: none;
     }
     .hero-content { max-width: 820px; text-align: center; position: relative; z-index: 1; }
     .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      background: var(--accent-glow); border: 1px solid rgba(249, 115, 22, 0.3);
-      border-radius: 999px; padding: 0.35rem 1rem; font-size: 0.8rem;
-      color: var(--accent); font-weight: 600; margin-bottom: 1.5rem;
-      letter-spacing: 0.03em;
+      display: inline-flex; align-items: center; gap: 0.5rem; background: var(--accent-glow); border: 1px solid rgba(249, 115, 22, 0.2); border-radius: 999px; padding: 0.35rem 1rem; font-size: 0.8rem; color: var(--accent); font-weight: 600; margin-bottom: 1.5rem; letter-spacing: 0.03em; backdrop-filter: blur(8px);
     }
     h1 {
-      font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800;
-      line-height: 1.1; margin-bottom: 1.5rem;
-      background: linear-gradient(135deg, var(--text) 0%, var(--text-muted) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.05; margin-bottom: 1.5rem; letter-spacing: -0.03em; color: var(--text);
     }
     h1 .highlight {
-      background: linear-gradient(135deg, var(--accent) 0%, #fb923c 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background: linear-gradient(135deg, #f97316 0%, #fb923c 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .hero-sub {
-      font-size: 1.2rem; color: var(--text-muted); max-width: 640px;
-      margin: 0 auto 2.5rem; line-height: 1.8;
+      font-size: 1.2rem; color: var(--text-muted); max-width: 640px; margin: 0 auto 2.5rem; line-height: 1.7; letter-spacing: -0.01em;
     }
     .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
     .btn {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.75rem; border-radius: 10px; font-size: 0.95rem;
-      font-weight: 600; text-decoration: none; transition: all 0.2s;
-      cursor: pointer; border: none;
+      display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.75rem; border-radius: 10px; font-size: 0.95rem; font-weight: 600; text-decoration: none; transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); cursor: pointer; border: none;
     }
     .btn-primary {
-      background: linear-gradient(135deg, var(--accent), #ea580c);
-      color: #fff; box-shadow: 0 4px 24px rgba(249, 115, 22, 0.3);
+      background: linear-gradient(135deg, var(--accent), #ea580c); color: #fff; box-shadow: 0 8px 24px rgba(249, 115, 22, 0.25);
     }
-    .btn-primary:hover { box-shadow: 0 4px 32px rgba(249, 115, 22, 0.5); transform: translateY(-1px); }
+    .btn-primary:hover { 
+      box-shadow: 0 12px 32px rgba(249, 115, 22, 0.4); transform: translateY(-2px); 
+    }
     .btn-secondary {
-      background: var(--bg-card); border: 1px solid var(--border); color: var(--text);
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--text); backdrop-filter: blur(8px);
     }
-    .btn-secondary:hover { border-color: var(--text-muted); background: var(--bg-card-hover); }
+    .btn-secondary:hover { 
+      border-color: var(--border-hover); background: var(--bg-card-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
 
     /* --- STATS BAR --- */
     .stats-bar {
-      display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap;
-      margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border);
+      display: flex; justify-content: center; gap: 3rem; flex-wrap: wrap; margin-top: 4rem; padding-top: 3rem; border-top: 1px solid var(--border);
     }
     .stat { text-align: center; }
-    .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); }
-    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.25rem; }
+    .stat-num { font-size: 2rem; font-weight: 800; color: var(--accent); letter-spacing: -0.02em; }
+    .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 0.25rem; font-weight: 600; }
 
     /* --- SECTIONS --- */
     section { padding: 6rem 2rem; }
     .container { max-width: 1200px; margin: 0 auto; }
     .section-label {
-      font-size: 0.75rem; font-weight: 700; color: var(--accent);
-      text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
+      font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 0.75rem;
     }
     .section-title {
-      font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800;
-      margin-bottom: 1rem; line-height: 1.2;
+      font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.15; letter-spacing: -0.02em;
     }
     .section-desc {
-      font-size: 1.05rem; color: var(--text-muted); max-width: 640px;
-      margin-bottom: 3rem; line-height: 1.8;
+      font-size: 1.1rem; color: var(--text-muted); max-width: 640px; margin-bottom: 3.5rem; line-height: 1.7;
     }
 
-    /* --- PROBLEM / SOLUTION --- */
-    .problem-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+    /* --- CARDS --- */
+    .problem-grid, .features-grid, .results-grid, .code-section { gap: 1.5rem; }
+    .problem-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+    .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+    .code-section { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+
+    .problem-card, .solution-card, .feature-card, .result-card, .arch-diagram, .code-block, .stack-item {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1); transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .problem-card, .solution-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 2rem; position: relative; overflow: hidden;
-    }
-    .problem-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--error), transparent);
-    }
-    .solution-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-      background: linear-gradient(90deg, var(--success), transparent);
-    }
+    
+    .problem-card { padding: 2rem; position: relative; overflow: hidden; }
+    .solution-card { padding: 2rem; position: relative; overflow: hidden; }
+    .problem-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--error), transparent); }
+    .solution-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--success), transparent); }
+    .problem-card:hover, .solution-card:hover, .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.2); }
+    .feature-card:hover { border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 12px 32px rgba(249, 115, 22, 0.1); }
+    
     .card-icon { font-size: 1.5rem; margin-bottom: 1rem; }
-    .card-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .card-text { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+    .card-title, .feature-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.01em; }
+    .card-text, .feature-text { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
-    /* --- FEATURES --- */
-    .features-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-    .feature-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 2rem;
-      transition: border-color 0.2s, transform 0.2s;
-    }
-    .feature-card:hover { border-color: rgba(249, 115, 22, 0.4); transform: translateY(-2px); }
+    .feature-card { padding: 2rem; }
     .feature-icon {
-      width: 44px; height: 44px; border-radius: 10px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.25rem; margin-bottom: 1rem;
-      background: var(--accent-glow); border: 1px solid rgba(249, 115, 22, 0.2);
+      width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; margin-bottom: 1rem; background: var(--accent-glow); border: 1px solid rgba(249, 115, 22, 0.15);
     }
-    .feature-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
-    .feature-text { font-size: 0.875rem; color: var(--text-muted); line-height: 1.7; }
 
-    /* --- RESULTS --- */
-    .results-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.5rem;
-    }
-    .result-card {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.75rem;
-    }
-    .result-method {
-      font-size: 0.75rem; font-weight: 600; color: var(--accent);
-      text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem;
-    }
-    .result-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.75rem; }
-    .result-bar-wrap {
-      background: rgba(255,255,255,0.05); border-radius: 6px; height: 8px;
-      margin-bottom: 0.5rem; overflow: hidden;
-    }
-    .result-bar {
-      height: 100%; border-radius: 6px;
-      background: linear-gradient(90deg, var(--accent), #fb923c);
-    }
-    .result-nums {
-      display: flex; justify-content: space-between; font-size: 0.8rem;
-    }
+    .result-card { padding: 1.75rem; }
+    .result-method { font-size: 0.75rem; font-weight: 700; color: var(--accent); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .result-title { font-size: 1rem; font-weight: 700; margin-bottom: 1rem; letter-spacing: -0.01em; }
+    .result-bar-wrap { background: rgba(255,255,255,0.05); border-radius: 6px; height: 6px; margin-bottom: 0.75rem; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); }
+    .result-bar { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--accent), #fb923c); box-shadow: 0 0 10px rgba(249, 115, 22, 0.5); }
+    .result-nums { display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 500; }
     .result-before { color: var(--text-muted); }
     .result-after { color: var(--success); font-weight: 600; }
 
-    /* --- ARCHITECTURE --- */
-    .arch-diagram {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 2.5rem; overflow-x: auto;
-    }
-    .arch-layers {
-      display: flex; gap: 1.5rem; align-items: stretch; min-width: 900px;
-    }
-    .arch-layer {
-      flex: 1; background: rgba(255,255,255,0.02); border: 1px solid var(--border);
-      border-radius: 10px; padding: 1.5rem; text-align: center;
-      position: relative;
-    }
-    .arch-layer-title {
-      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1rem;
-    }
-    .arch-item {
-      background: var(--bg); border: 1px solid var(--border);
-      border-radius: 8px; padding: 0.5rem 0.75rem; margin-bottom: 0.5rem;
-      font-size: 0.8rem; font-family: var(--mono); color: var(--text-muted);
-    }
-    .arch-arrow {
-      display: flex; align-items: center; justify-content: center;
-      color: var(--text-muted); font-size: 1.5rem; min-width: 30px;
-      flex-shrink: 0;
-    }
+    .arch-diagram { padding: 2.5rem; overflow-x: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.15); }
+    .arch-layers { display: flex; gap: 1.5rem; align-items: stretch; min-width: 900px; }
+    .arch-layer { flex: 1; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; text-align: center; position: relative; box-shadow: inset 0 2px 10px rgba(0,0,0,0.1); }
+    .arch-layer-title { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 1.25rem; }
+    .arch-item { background: rgba(10, 14, 23, 0.6); border: 1px solid var(--border); border-radius: 8px; padding: 0.6rem 0.75rem; margin-bottom: 0.5rem; font-size: 0.8rem; font-family: var(--mono); color: var(--text); transition: all 0.2s; }
+    .arch-item:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
+    .arch-arrow { display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 1.5rem; min-width: 30px; flex-shrink: 0; }
 
-    /* --- CODE BLOCK --- */
-    .code-section {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
-    }
-    .code-block {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); overflow: hidden;
-    }
-    .code-header {
-      display: flex; align-items: center; gap: 0.5rem;
-      padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border);
-      font-size: 0.8rem; font-weight: 600; color: var(--text-muted);
-    }
-    .code-lang {
-      background: var(--accent-glow); color: var(--accent);
-      padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem;
-      font-weight: 700; text-transform: uppercase;
-    }
+    .code-block { overflow: hidden; box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.05); }
+    .code-header { display: flex; align-items: center; gap: 0.75rem; padding: 0.75rem 1.25rem; border-bottom: 1px solid var(--border); font-size: 0.8rem; font-weight: 500; color: var(--text-muted); background: rgba(255,255,255,0.02); }
+    .code-lang { background: var(--accent-glow); color: var(--accent); padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
     .code-lang.python { background: var(--accent2-glow); color: var(--accent2); }
-    pre {
-      padding: 1.25rem; overflow-x: auto; font-size: 0.825rem;
-      line-height: 1.7; font-family: var(--mono); color: var(--text-muted);
-    }
-    pre .kw { color: #c084fc; }
-    pre .fn { color: #60a5fa; }
-    pre .str { color: #34d399; }
-    pre .cm { color: #475569; font-style: italic; }
-    pre .ty { color: #f97316; }
-    pre .num { color: #fbbf24; }
+    pre { padding: 1.25rem; overflow-x: auto; font-size: 0.85rem; line-height: 1.6; font-family: var(--mono); color: #cbd5e1; }
+    pre .kw { color: #c678dd; } pre .fn { color: #61afef; } pre .str { color: #98c379; } pre .cm { color: #5c6370; font-style: italic; } pre .ty { color: #e5c07b; } pre .num { color: #d19a66; }
 
-    /* --- TECH STACK --- */
-    .stack-grid {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-    }
-    .stack-item {
-      background: var(--bg-card); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.25rem; text-align: center;
-    }
-    .stack-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; }
-    .stack-desc { font-size: 0.8rem; color: var(--text-muted); }
+    .stack-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+    .stack-item { padding: 1.5rem; text-align: center; transition: transform 0.2s; }
+    .stack-item:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.1); }
+    .stack-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; color: var(--text); letter-spacing: -0.01em; }
+    .stack-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.5; }
 
-    /* --- CTA --- */
-    .cta {
-      text-align: center; padding: 6rem 2rem;
-      background: linear-gradient(180deg, var(--bg) 0%, rgba(249, 115, 22, 0.03) 50%, var(--bg) 100%);
-    }
-    .cta h2 { font-size: 2.25rem; font-weight: 800; margin-bottom: 1rem; }
-    .cta p { color: var(--text-muted); max-width: 500px; margin: 0 auto 2rem; font-size: 1.05rem; }
+    .cta { text-align: center; padding: 6rem 2rem; background: linear-gradient(180deg, var(--bg) 0%, rgba(249, 115, 22, 0.02) 50%, var(--bg) 100%); position: relative; }
+    .cta::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--border), transparent); }
+    .cta h2 { font-size: clamp(2rem, 4vw, 2.5rem); font-weight: 800; margin-bottom: 1rem; letter-spacing: -0.02em; }
+    .cta p { color: var(--text-muted); max-width: 500px; margin: 0 auto 2.5rem; font-size: 1.1rem; }
 
-    /* --- FOOTER --- */
-    footer {
-      border-top: 1px solid var(--border); padding: 3rem 2rem;
-      text-align: center; color: var(--text-muted); font-size: 0.85rem;
-    }
-    footer a { color: var(--text-muted); text-decoration: none; }
+    footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--text-muted); font-size: 0.9rem; background: rgba(10, 14, 23, 0.8); }
+    footer a { color: var(--text-muted); text-decoration: none; transition: color 0.2s; }
     footer a:hover { color: var(--text); }
-    .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1rem; }
+    .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1.5rem; }
 
-    /* --- RESPONSIVE --- */
     @media (max-width: 768px) {
       .problem-grid { grid-template-columns: 1fr; }
       .code-section { grid-template-columns: 1fr; }
@@ -316,8 +215,10 @@
       section { padding: 4rem 1.25rem; }
     }
     @media (max-width: 480px) {
-      .hero-actions { flex-direction: column; align-items: center; }
+      .hero-actions { flex-direction: column; align-items: stretch; }
+      .hero-actions .btn { justify-content: center; }
       .stats-bar { flex-direction: column; gap: 1rem; }
+      h1 { font-size: 2.25rem; }
     }
   </style>
 </head>
@@ -334,8 +235,9 @@
       <li><a href="#architecture">Architecture</a></li>
       <li><a href="#quickstart">Quick Start</a></li>
       <li><a href="technical-report.html">Technical Report</a></li>
+      <li><a href="paper.html">Research Paper</a></li>
     </ul>
-    <a href="https://github.com/ianblenke/carnot" class="nav-gh" target="_blank" rel="noopener">
+    <a href="https://github.com/Carnot-EBM/carnot-ebm" class="nav-gh" target="_blank" rel="noopener">
       <svg viewBox="0 0 16 16"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
       GitHub
     </a>
@@ -344,7 +246,7 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-content">
+  <div class="hero-content fade-in-up">
     <div class="hero-badge">Open Source &middot; Apache 2.0</div>
     <h1>Verify LLM output with <span class="highlight">energy-based reasoning</span></h1>
     <p class="hero-sub">
@@ -353,11 +255,11 @@
       and research flexibility.
     </p>
     <div class="hero-actions">
-      <a href="https://github.com/ianblenke/carnot" class="btn btn-primary" target="_blank" rel="noopener">
+      <a href="https://github.com/Carnot-EBM/carnot-ebm" class="btn btn-primary" target="_blank" rel="noopener">
         View on GitHub
       </a>
-      <a href="#quickstart" class="btn btn-secondary">Quick Start</a>
-      <a href="technical-report.html" class="btn btn-secondary">Read the Paper</a>
+      <a href="paper.html" class="btn btn-secondary">Read the Paper</a>
+      <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
       <div class="stat"><div class="stat-num">20</div><div class="stat-label">Experiments</div></div>
@@ -371,7 +273,7 @@
 
 <!-- PROBLEM / SOLUTION -->
 <section id="problem">
-  <div class="container">
+  <div class="container fade-in-up">
     <div class="section-label">The Problem</div>
     <div class="section-title">LLMs guess. They don't verify.</div>
     <div class="section-desc">
@@ -380,7 +282,7 @@
       Errors cascade irrecoverably.
     </div>
     <div class="problem-grid">
-      <div class="problem-card">
+      <div class="problem-card fade-in-up">
         <div class="card-icon">&#x26a0;&#xfe0f;</div>
         <div class="card-title">Token-by-Token Blindness</div>
         <div class="card-text">
@@ -388,7 +290,7 @@
           poisons the entire sequence with no way to go back.
         </div>
       </div>
-      <div class="solution-card">
+      <div class="solution-card fade-in-up delay-1">
         <div class="card-icon">&#x2705;</div>
         <div class="card-title">Holistic Energy Evaluation</div>
         <div class="card-text">
@@ -397,7 +299,7 @@
           <em>whole</em> output, then repair what's broken via gradient descent.
         </div>
       </div>
-      <div class="problem-card">
+      <div class="problem-card fade-in-up">
         <div class="card-icon">&#x26a0;&#xfe0f;</div>
         <div class="card-title">No Proof of Correctness</div>
         <div class="card-text">
@@ -405,7 +307,7 @@
           wrong. There's no built-in mechanism to certify correctness.
         </div>
       </div>
-      <div class="solution-card">
+      <div class="solution-card fade-in-up delay-1">
         <div class="card-icon">&#x2705;</div>
         <div class="card-title">Verification Certificates</div>
         <div class="card-text">
@@ -419,14 +321,14 @@
 
 <!-- FEATURES -->
 <section id="features" style="background: rgba(255,255,255,0.01);">
-  <div class="container">
+  <div class="container fade-in-up">
     <div class="section-label">Capabilities</div>
     <div class="section-title">Everything you need for energy-based verification</div>
     <div class="section-desc">
       From low-level EBM training to high-level LLM integration, autoresearch, and GPU compute.
     </div>
     <div class="features-grid">
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f9e9;</div>
         <div class="feature-title">Three Model Tiers</div>
         <div class="feature-text">
@@ -434,7 +336,7 @@
           <strong>Boltzmann</strong> (deep residual + attention). Each in Rust and Python/JAX.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f52c;</div>
         <div class="feature-title">Training Algorithms</div>
         <div class="feature-text">
@@ -442,7 +344,7 @@
           and Self-Normalised Likelihood. Adam with gradient clipping.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f50d;</div>
         <div class="feature-title">Verifiable Reasoning</div>
         <div class="feature-text">
@@ -450,7 +352,7 @@
           Verification certificates prove constraint satisfaction. SAT, graph coloring, code, Sudoku.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f916;</div>
         <div class="feature-title">LLM-EBM Integration</div>
         <div class="feature-text">
@@ -458,7 +360,7 @@
           iterative verify-and-repair loop for code generation.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f9e0;</div>
         <div class="feature-title">Activation Analysis</div>
         <div class="feature-text">
@@ -466,7 +368,7 @@
           layer-targeted EBM steering, concept vectors.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f52e;</div>
         <div class="feature-title">Autoresearch Pipeline</div>
         <div class="feature-text">
@@ -474,7 +376,7 @@
           three-gate evaluation (energy, time, memory), automatic skill extraction.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f3ae;</div>
         <div class="feature-title">GPU Compute</div>
         <div class="feature-text">
@@ -482,7 +384,7 @@
           via WebGPU gateway, ROCm support with 3.3x speedup.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x1f510;</div>
         <div class="feature-title">Cross-Language Serialization</div>
         <div class="feature-text">
@@ -490,7 +392,7 @@
           Zero-copy numpy array transfer via PyO3.
         </div>
       </div>
-      <div class="feature-card">
+      <div class="feature-card fade-in-up delay-1">
         <div class="feature-icon">&#x2699;&#xfe0f;</div>
         <div class="feature-title">Production Quality</div>
         <div class="feature-text">
@@ -504,14 +406,14 @@
 
 <!-- RESULTS -->
 <section id="results">
-  <div class="container">
+  <div class="container fade-in-up">
     <div class="section-label">Experiments</div>
     <div class="section-title">20 experiments. Real results on real models.</div>
     <div class="section-desc">
       Tested against Qwen3-0.6B (596M parameters). We report both what works and what doesn't.
     </div>
     <div class="results-grid">
-      <div class="result-card">
+      <div class="result-card fade-in-up delay-1">
         <div class="result-method">Rejection Sampling</div>
         <div class="result-title">Logprob-based candidate selection</div>
         <div class="result-bar-wrap"><div class="result-bar" style="width:76%"></div></div>
@@ -520,7 +422,7 @@
           <span class="result-after">+10% &rarr; 76%</span>
         </div>
       </div>
-      <div class="result-card">
+      <div class="result-card fade-in-up delay-1">
         <div class="result-method">Composite Scoring</div>
         <div class="result-title">Logprob + structural test execution</div>
         <div class="result-bar-wrap"><div class="result-bar" style="width:30%"></div></div>
@@ -529,7 +431,7 @@
           <span class="result-after">0% &rarr; 30% (code)</span>
         </div>
       </div>
-      <div class="result-card">
+      <div class="result-card fade-in-up delay-1">
         <div class="result-method">Gradient Repair</div>
         <div class="result-title">SAT constraint satisfaction</div>
         <div class="result-bar-wrap"><div class="result-bar" style="width:80%"></div></div>
@@ -538,16 +440,16 @@
           <span class="result-after">60% &rarr; 80%</span>
         </div>
       </div>
-      <div class="result-card">
+      <div class="result-card fade-in-up delay-1">
         <div class="result-method">Learned EBM</div>
         <div class="result-title">Per-token energy model</div>
         <div class="result-bar-wrap"><div class="result-bar" style="width:84%"></div></div>
         <div class="result-nums">
           <span class="result-before">Baseline: 71.8%</span>
-          <span class="result-after">71.8% &rarr; 84.1%</span>
+          <span class="result-after">71.8% &rarr; 84.5%</span>
         </div>
       </div>
-      <div class="result-card">
+      <div class="result-card fade-in-up delay-1">
         <div class="result-method">Hallucination Detection</div>
         <div class="result-title">Activation-space direction finding</div>
         <div class="result-bar-wrap"><div class="result-bar" style="width:80%"></div></div>
@@ -556,7 +458,7 @@
           <span class="result-after">0.945 AUROC, 80% acc</span>
         </div>
       </div>
-      <div class="result-card" style="border-color: rgba(234, 179, 8, 0.3);">
+      <div class="result-card fade-in-up delay-1" style="border-color: rgba(234, 179, 8, 0.3);">
         <div class="result-method" style="color: var(--warning);">Negative Result</div>
         <div class="result-title">Activation steering during generation</div>
         <div class="result-bar-wrap"><div class="result-bar" style="width:2%; background: var(--warning);"></div></div>
@@ -576,7 +478,7 @@
 
 <!-- ARCHITECTURE -->
 <section id="architecture" style="background: rgba(255,255,255,0.01);">
-  <div class="container">
+  <div class="container fade-in-up">
     <div class="section-label">Architecture</div>
     <div class="section-title">Dual-language, production-grade stack</div>
     <div class="section-desc">
@@ -624,7 +526,7 @@
 
 <!-- QUICK START -->
 <section id="quickstart">
-  <div class="container">
+  <div class="container fade-in-up">
     <div class="section-label">Quick Start</div>
     <div class="section-title">Up and running in minutes</div>
     <div class="section-desc">Choose your language. Both produce equivalent results.</div>
@@ -681,7 +583,7 @@ trained.<span class="fn">save_safetensors</span>(<span class="str">"model.safete
 
 <!-- TECH STACK -->
 <section style="background: rgba(255,255,255,0.01);">
-  <div class="container">
+  <div class="container fade-in-up">
     <div class="section-label">Tech Stack</div>
     <div class="section-title">Built with</div>
     <div class="stack-grid" style="margin-top: 2rem;">
@@ -715,11 +617,11 @@ trained.<span class="fn">save_safetensors</span>(<span class="str">"model.safete
 
 <!-- CTA -->
 <section class="cta">
-  <div class="container">
+  <div class="container fade-in-up">
     <h2>Start building with Carnot</h2>
     <p>Apache 2.0 licensed. Contributions welcome.</p>
     <div class="hero-actions">
-      <a href="https://github.com/ianblenke/carnot" class="btn btn-primary" target="_blank" rel="noopener">
+      <a href="https://github.com/Carnot-EBM/carnot-ebm" class="btn btn-primary" target="_blank" rel="noopener">
         View on GitHub
       </a>
       <a href="technical-report.html" class="btn btn-secondary">
@@ -732,10 +634,10 @@ trained.<span class="fn">save_safetensors</span>(<span class="str">"model.safete
 <!-- FOOTER -->
 <footer>
   <div class="footer-links">
-    <a href="https://github.com/ianblenke/carnot">GitHub</a>
-    <a href="https://github.com/ianblenke/carnot/issues">Issues</a>
+    <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a>
+    <a href="https://github.com/Carnot-EBM/carnot-ebm/issues">Issues</a>
     <a href="technical-report.html">Technical Report</a>
-    <a href="https://github.com/ianblenke/carnot/blob/main/LICENSE">License</a>
+    <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/LICENSE">License</a>
   </div>
   <p>Carnot is open-source software under the Apache 2.0 License.</p>
 </footer>

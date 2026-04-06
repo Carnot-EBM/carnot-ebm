@@ -128,7 +128,7 @@ class SkillDirectory:
 
     For example::
 
-        sd = SkillDirectory(SkillDirectoryConfig(path=Path("/tmp/skills")))
+        sd = SkillDirectory(SkillDirectoryConfig(path=Path("./skills")))
         sd.evolve([lesson1, lesson2])
         context = sd.to_prompt_context(model_tier="gibbs")
         sd.save()

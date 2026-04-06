@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-06 GEMINI.md Initialization
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-06T16:47:49Z | TBD | Initialize GEMINI.md based on CLAUDE.md; adapt project mandates | TBD |
+
+---
+
 ## Session: 2026-04-05 Hallucination Direction
 
 ### Turn Log

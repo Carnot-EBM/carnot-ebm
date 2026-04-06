@@ -165,6 +165,40 @@ The system shall detect hallucination by finding the principal direction in acti
 **And** hallucinated activations get higher energy than correct ones
 **And** the direction is unit-normalized by default
 
+### REQ-INFER-015: EBM-Guided Rejection Sampling
+
+The system shall combine per-token activation energy (from a trained Gibbs EBM) with logprob scores for candidate selection:
+- Generate N candidates with sampling
+- Extract per-token hidden states from a configurable transformer layer
+- Score each token through the trained EBM (low energy = likely correct)
+- Combine as composite: ebm_weight * mean_ebm_energy - logprob_weight * mean_logprob
+- Select candidate with lowest composite energy
+- Configurable weights allow pure EBM, pure logprob, or weighted combination
+
+### SCENARIO-INFER-015-001: EBM Scoring Correctness
+
+**Given** a Gibbs EBM trained on correct vs wrong activations
+**And** per-token activations from a generated response
+**When** `score_activations_with_ebm()` is called
+**Then** the mean energy is finite and reflects the EBM's learned distinction
+**And** activations from the trained distribution get lower energy than out-of-distribution
+
+### REQ-INFER-016: Multi-Layer Hallucination Probing
+
+The system shall probe each transformer layer independently to find where hallucination signal is strongest:
+- Train a small Gibbs EBM probe at each layer using NCE loss
+- Report per-layer train/test accuracy and energy gap
+- Identify the layer with highest test accuracy as the best probe layer
+- Support probing a subset of layers for efficiency
+
+### SCENARIO-INFER-016-001: Best Layer Identification
+
+**Given** per-layer activations from correct and wrong model outputs with varying separability
+**When** `probe_all_layers()` is called
+**Then** the layer with highest separation is identified as best_layer
+**And** the best layer's test accuracy exceeds layers with lower separation
+**And** results include per-layer accuracy, gap, and train/test counts
+
 ## Implementation Status
 
 | Requirement | Python | Tests |
@@ -177,3 +211,5 @@ The system shall detect hallucination by finding the principal direction in acti
 | REQ-INFER-006 | Implemented | 14+ Python |
 | REQ-INFER-007 | Implemented | 18+ Python |
 | REQ-INFER-014 | Implemented | 35 Python |
+| REQ-INFER-015 | Implemented | 14 Python |
+| REQ-INFER-016 | Implemented | 10 Python |
