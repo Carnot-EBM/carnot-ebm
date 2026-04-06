@@ -1133,7 +1133,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     if git_has_changes():
         logger.warning("Dirty working tree detected — reverting to clean state")
         run_cmd(["git", "checkout", "."])
-        run_cmd(["git", "clean", "-fd"])
+        run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
 
     # Run tests first — ensure clean state
     tests_ok, test_summary = run_tests()
@@ -1201,7 +1201,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     if not tests_ok:
         logger.error("Tests still failing after %d fix attempts — reverting", MAX_FIX_ATTEMPTS)
         run_cmd(["git", "checkout", "."])
-        run_cmd(["git", "clean", "-fd"])
+        run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
         log_step(task["title"], "REVERT", f"Post-tests failed: {test_summary}")
         return False
 
