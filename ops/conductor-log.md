@@ -45,3 +45,4 @@
 | 2026-04-06 01:33 UTC | Generate concept-specific vectors via targeted pro | SKIP | Pre-tests failing: ============ 1 failed, 1048 passed, 12 warnings in 69.15s (0: |
 | 2026-04-06 01:44 UTC | Generate concept-specific vectors via targeted pro | OK | ================= 1049 passed, 12 warnings in 70.90s (0:01:10) ================= |
 | 2026-04-06 01:53 UTC | Steer with confabulation-specific vector | OK | ================= 1049 passed, 12 warnings in 69.41s (0:01:09) ================= |
+| 2026-04-06 01:58 UTC | Collect per-token activation dataset | OK | ================= 1049 passed, 12 warnings in 66.16s (0:01:06) ================= |
