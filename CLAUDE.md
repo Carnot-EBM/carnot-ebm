@@ -25,6 +25,17 @@ This project uses **spec-anchored development** (BMAD + OpenSpec). Every code ch
 
 If `_bmad/architecture.md` "Last Reconciled" date is >30 days old, flag to user before starting new capability work.
 
+### Documentation Update Rules (MANDATORY)
+
+When updating `ops/status.md`, `_bmad/traceability.md`, or any ops/spec document:
+
+1. **NEVER remove existing content without explicit user approval.** Completed work, historical results, and infrastructure descriptions must be preserved.
+2. **ADD new sections** for new work. Do not replace existing sections with summaries that lose detail.
+3. **Move items to "Completed" sections** rather than deleting them. If something was "What's Next" and is now done, move it to "What's Working" — don't delete it.
+4. **Preserve historical results** (autoresearch runs, benchmark numbers, experiment data). These are the project's research record.
+5. **Items in "Known Constraints" or "What's Next"** stay until explicitly resolved. If a constraint is fixed, mark it with ~~strikethrough~~ and add the fix date — don't delete the line.
+6. **When rewriting a document**, first read the ENTIRE existing content and ensure every substantive item appears in the new version. If in doubt, keep it.
+
 ## E2E Testing (MANDATORY)
 
 **Every change derived from user instruction must be verified end-to-end.** This means:
