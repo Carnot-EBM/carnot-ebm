@@ -27,16 +27,27 @@
 Spec: REQ-EMBED-001
 """
 
+from carnot.embeddings.activation_extractor import (
+    ActivationConfig,
+    compute_activation_stats,
+    extract_layer_activations,
+)
+from carnot.embeddings.activation_steering import (
+    SteeringConfig,
+    calibrate_alpha,
+    steered_generate,
+)
+from carnot.embeddings.concept_vectors import (
+    CONCEPT_PROMPTS,
+    best_concept_for_detection,
+    concept_energy,
+    find_concept_vectors,
+)
 from carnot.embeddings.hallucination_direction import (
     HallucinationDirectionConfig,
     HallucinationDirectionConstraint,
     find_hallucination_direction,
     hallucination_energy,
-)
-from carnot.embeddings.activation_extractor import (
-    ActivationConfig,
-    compute_activation_stats,
-    extract_layer_activations,
 )
 from carnot.embeddings.jepa_energy import (
     ContextPredictionEnergy,
@@ -54,31 +65,54 @@ from carnot.embeddings.layer_ebm import (
     identify_critical_layers,
     train_layer_ebm,
 )
+from carnot.embeddings.layer_navigator import (
+    LayerNavigatorConfig,
+    find_best_layers,
+    score_layer_steerability,
+)
 from carnot.embeddings.model_embeddings import (
     ModelEmbeddingConfig,
     extract_embedding,
 )
+from carnot.embeddings.weight_steering import (
+    apply_cws,
+    revert_cws,
+    steered_model,
+)
 
 __all__ = [
     "ActivationConfig",
+    "CONCEPT_PROMPTS",
     "ContextPredictionEnergy",
     "HallucinationDirectionConfig",
     "HallucinationDirectionConstraint",
     "JEPAEnergyConfig",
     "LayerEBMConfig",
     "LayerEBMVerifier",
+    "LayerNavigatorConfig",
     "ModelEmbeddingConfig",
+    "SteeringConfig",
+    "apply_cws",
+    "best_concept_for_detection",
     "build_layer_ebm_verifier",
+    "calibrate_alpha",
     "compute_activation_stats",
+    "concept_energy",
     "embedding_repair",
     "extract_embedding",
     "extract_layer_activations",
+    "find_best_layers",
+    "find_concept_vectors",
     "find_hallucination_direction",
     "generate_jepa_training_data",
     "hallucination_energy",
     "identify_critical_layers",
     "nce_loss",
     "nearest_code_match",
+    "revert_cws",
+    "score_layer_steerability",
+    "steered_generate",
+    "steered_model",
     "train_jepa_energy",
     "train_layer_ebm",
 ]
