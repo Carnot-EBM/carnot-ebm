@@ -18,15 +18,18 @@
 - Self-Normalised Likelihood (Python/JAX)
 - Optimization-through-training / Hessian-vector products (Python/JAX)
 - Replay buffer for trajectory-aware training (Python/JAX)
+- Adam optimizer with gradient clipping (Rust)
 
 ### Verifiable Reasoning (REQ-VERIFY-001–008)
 - ConstraintTerm trait/protocol — constraints as energy terms
 - ComposedEnergy — weighted composition with decomposition
 - Verification certificates — VERIFIED/VIOLATED with per-constraint reports
 - Gradient-based repair — violated-only, with Langevin noise (P6) + random steps (P11)
-- Energy landscape certification — Hessian eigenvalue analysis
+- Energy landscape certification — Hessian eigenvalue analysis, basin estimation
 - Convergence guarantees — absorbing invariant sets (P10)
+- Deterministic reproducibility
 - Domains: SAT, graph coloring, Python code, property-based testing
+- Sudoku example — full constraint satisfaction demo
 
 ### LLM-EBM Inference Pipeline (REQ-INFER-001–016)
 - SAT/coloring constraint encoding + verify-and-repair
@@ -50,11 +53,26 @@
 - carnot-webgpu-gateway: distributed browser GPU compute
 - ROCm 7.2: PyTorch 2.11.0+rocm7.2, native gfx1150, 3.3x speedup on Qwen3
 
-### Autoresearch
-- LLM-powered self-improvement loop (50-iteration runs)
-- Trace2Skill learning layer (trajectory analyst, skill directory, consolidation)
+### Autoresearch Pipeline (REQ-AUTO-001–014)
+- Benchmark suite: DoubleWell, Rosenbrock, Ackley, Rastrigin, GaussianMixture (Rust + Python/JAX)
+- Benchmark runner with baseline recording (JSON)
+- Process-level sandbox (dev): import blocking, timeout, I/O capture
+- Docker+gVisor sandbox (production): 5-layer defense in depth
+- Three-gate evaluator: energy, time (with JIT grace period), memory
+- Experiment log: append-only audit trail with rejected registry
+- Orchestrator: full propose → sandbox → evaluate → log → update loop
+- Generator-based orchestrator: lazy LLM hypothesis generation with failure feedback
+- Claude Code API bridge: Docker container wrapping `claude -p` as OpenAI API
+- Circuit breaker: halts after N consecutive failures
+- Cross-language validation: test vector generation + conformance checking
+- Automatic rollback: git-based revert on production energy regression
+- Trace2Skill learning layer (REQ-AUTO-011–014): trajectory analyst, skill directory, hierarchical consolidation, cross-tier transfer
 - Self-improving code verifier
 - Research conductor (autonomous Claude Code agent loop)
+
+### Autoresearch Results
+- **10-iteration run (Sonnet)**: DoubleWell 0.9483 → 0.1604 (83% energy reduction), 3 accepted hypotheses (HMC, annealing)
+- **50-iteration run (Sonnet)**: DoubleWell 0.0001, Rosenbrock 0.0092 (both near optimal). Circuit breaker at iteration 18.
 
 ### Quality Infrastructure
 - 1049 Python tests + 104 Rust tests, 100% code coverage, 100% spec coverage
@@ -87,12 +105,28 @@
 
 ## What's Next
 
-- **Ship what works**: MCP server + CLI for composite code verification (tools built, need real-world testing)
-- **Scale per-token EBM**: train on 1000+ QA dataset (generated), test on harder tasks
-- **Technical report**: published at docs/technical-report.md
-- **GPU acceleration**: ROCm 7.2 native gfx1150 ready for all experiments (3.3x speedup)
+### High Priority
+- **Ship MCP server + CLI**: tools built (`tools/verify-mcp/server.py`, `scripts/carnot_cli.py`), need real-world testing
+- **Scale per-token EBM**: train on 1000+ QA dataset (`data/qa_dataset_1000.json` generated), test on harder tasks
+- **E2E-001: Rust training pipeline test**: Only remaining E2E test gap
+
+### Medium Priority
+- **GitHub public mirror**: open-source visibility
+- **GPU-accelerated experiments**: ROCm 7.2 native gfx1150 ready (3.3x speedup), update experiment scripts to use `.cuda()`
+- **Larger local model**: test with Qwen3-4B or 8B (67GB unified memory available)
+
+### Research Directions
+- **Per-token EBM rejection sampling**: use the 71.8%-accurate per-token EBM for candidate selection (not yet tested)
+- **Concept-specific vectors with MORE data**: current concept prompts underperformed generic direction, may need more diverse prompting
+- **EBT training on real data**: minimal EBT exists (`python/carnot/models/ebt.py`), needs training on large dataset
+
+### Documentation
+- **Technical report**: published at `docs/technical-report.md`
+- **Experiment log**: 20 experiments at `ops/experiment-log.md`
+- **Research roadmaps**: v1-v3 at `openspec/change-proposals/`
 
 ## Known Constraints
 - Python 3.14 requires `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1`
 - ROCm on integrated GPU is 3.3x (would be 10-100x on discrete AMD GPU)
 - Ackley Python/JAX uses epsilon=1e-10 in sqrt (documented in spec)
+- gVisor installed for production autoresearch sandbox
