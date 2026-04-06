@@ -148,8 +148,17 @@
   <p>The fundamental limitation of autoregressive generation is the <em>verification gap</em>: models lack a feedback mechanism to check completed output against global constraints. Carnot bridges this gap by treating the generated sequence as a configuration in an energy landscape.</p>
   <p>By assigning a scalar energy $E(x)$ to the output $x$, we enable holistic evaluation, gradient-based repair, and verifiable certification. This paper establishes the empirical principles for effective EBM-LLM integration.</p>
 
+  <h3>Introspection, Not Fine-Tuning</h3>
+  <p><strong>Carnot never modifies the target LLM's weights.</strong> The language model remains completely frozen throughout all experiments. Our approach works by introspecting the model's existing internal representations:</p>
+  <ul>
+    <li><strong>Logprob methods</strong> read the LLM's own per-token log-probabilities &mdash; energy the model already computes. Per the ARM&harr;EBM bijection, every autoregressive model is already an EBM.</li>
+    <li><strong>Activation methods</strong> extract hidden state activations from a frozen forward pass, then train a small separate EBM classifier on those features via Noise Contrastive Estimation.</li>
+    <li><strong>Structural verification</strong> executes generated output against domain constraints. No model weights involved.</li>
+  </ul>
+  <p>When we say &ldquo;EBM training,&rdquo; we mean training the small classifier on features from a frozen LLM &mdash; not gradient descent on the language model itself. This is closer to probing/introspection than to fine-tuning, RLHF, or DPO.</p>
+
   <h2>2. Related Work</h2>
-  <p>Hoover et al. (2025) recently demonstrated <strong>Energy-Based Transformers</strong> as a path toward System 2 thinking. Zhao et al. (2025) proved the formal bijection between autoregressive models and EBMs. Carnot builds on these theoretical foundations with a production-ready framework for post-hoc verification and repair.</p>
+  <p>Hoover et al. (2025) recently demonstrated <strong>Energy-Based Transformers</strong> as a path toward System 2 thinking. Zhao et al. (2025) proved the formal bijection between autoregressive models and EBMs. Carnot builds on these theoretical foundations with an open-source framework for post-hoc verification and repair.</p>
 
   <h2>3. Framework Architecture</h2>
   <h3>3.1 Model Tiers</h3>

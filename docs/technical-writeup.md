@@ -34,7 +34,17 @@ Energy-Based Models (EBMs) offer a complementary paradigm. An EBM assigns a scal
 3. **Verifiable certification.** $E(x) = 0$ constitutes a mathematical proof that all encoded constraints are satisfied — no probabilistic hedging.
 4. **Composability.** Multiple constraint terms compose additively: $E_{\text{total}}(x) = \sum_i w_i E_i(x)$, enabling domain-specific verification without retraining.
 
-### 1.3 Contributions
+### 1.3 Introspection, Not Fine-Tuning
+
+A critical distinction: **Carnot never modifies the target LLM's weights.** The language model remains completely frozen throughout all experiments. Our approach works by introspecting the model's existing internal representations:
+
+- **Logprob methods** (Sections 4.3–4.4) read the LLM's own per-token log-probabilities — energy the model already computes internally. Per the ARM↔EBM bijection (Zhao et al., 2025), every autoregressive model is already an energy-based model.
+- **Activation methods** (Sections 4.2, 4.5–4.8) extract hidden state activations from a frozen forward pass, then train a small separate EBM classifier (a lightweight Gibbs model [1024→256→64→1]) on those extracted features via Noise Contrastive Estimation.
+- **Structural verification** (Section 3.3) executes the LLM's generated output against domain constraints. No model weights are involved.
+
+When we refer to "EBM training" throughout this paper, we mean training the small classifier on features extracted from a frozen LLM — not gradient descent on the language model itself. This is fundamentally different from fine-tuning, RLHF, or DPO, which modify the language model's parameters. Our approach is closer to probing or introspection: observing what the model already represents internally and building a lightweight detector on top of it.
+
+### 1.4 Contributions
 
 We make the following contributions:
 

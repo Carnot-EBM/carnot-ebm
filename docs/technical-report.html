@@ -145,6 +145,9 @@
   <h2>1. Introduction</h2>
   <p>Large Language Models predict tokens based on local probability. Carnot introduces a <strong>holistic energy layer</strong> that evaluates entire outputs against global constraints. This enables holistic evaluation, gradient-based repair, and verifiable certification.</p>
 
+  <h3>Introspection, Not Fine-Tuning</h3>
+  <p><strong>Carnot never modifies the target LLM's weights.</strong> The language model remains frozen. We introspect its existing representations: reading log-probabilities as energy signals, extracting hidden state activations to train a small separate EBM classifier, and executing generated code against structural tests. &ldquo;EBM training&rdquo; means training a lightweight probe on features from a frozen LLM &mdash; not gradient descent on the LLM itself.</p>
+
   <h2>2. Framework Architecture</h2>
   <h3>2.1 Dual-Language Implementation</h3>
   <p>Carnot provides identical abstractions in <strong>Rust</strong> (for performance) and <strong>Python/JAX</strong> (for research). Safetensors enable zero-copy model sharing.</p>

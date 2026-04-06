@@ -27,7 +27,17 @@ Energy-Based Models assign a scalar energy E(x) to complete configurations. Low 
 - **Gradient-based repair**: when constraints are violated, gradient descent fixes the broken parts
 - **Verifiable certification**: energy = 0 mathematically proves all constraints are satisfied
 
-### 1.3 This Work
+### 1.3 Introspection, Not Fine-Tuning
+
+**Carnot never modifies the target LLM's weights.** The language model remains completely frozen. Our approach works by introspecting the model's existing internal representations:
+
+- **Logprob methods** read the LLM's own per-token log-probabilities — energy the model already computes. Per the ARM↔EBM bijection, every autoregressive model is already an EBM.
+- **Activation methods** extract hidden state activations from a frozen forward pass, then train a small separate EBM classifier (a lightweight Gibbs model [1024→256→64→1]) on those features via NCE.
+- **Structural verification** executes generated output against domain constraints. No model weights involved.
+
+When we say "EBM training," we mean training the small classifier on features from a frozen LLM — not gradient descent on the language model itself. This is closer to probing/introspection than to fine-tuning, RLHF, or DPO.
+
+### 1.4 This Work
 
 We investigate whether EBMs can practically improve LLM output through:
 1. Post-hoc verification and repair (verify after generation)
