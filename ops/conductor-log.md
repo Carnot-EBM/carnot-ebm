@@ -42,3 +42,4 @@
 | 2026-04-06 01:32 UTC | Contrastive Weight Steering without retraining | OK | Deliverable already exists in repo |
 | 2026-04-06 01:32 UTC | Find hallucination concept vectors (multi-vector) | OK | Deliverable already exists in repo |
 | 2026-04-06 01:32 UTC | Steer with concept-specific vectors on real model | OK | Deliverable already exists in repo |
+| 2026-04-06 01:33 UTC | Generate concept-specific vectors via targeted pro | SKIP | Pre-tests failing: ============ 1 failed, 1048 passed, 12 warnings in 69.15s (0: |
