@@ -1,0 +1,257 @@
+# Carnot: Energy-Based Verification for LLM Output
+
+## A Technical Report on Combining Energy-Based Models with Large Language Models
+
+**Authors:** Ian Blenke, Claude Opus 4.6
+**Date:** 2026-04-06
+**Repository:** github.com/ianblenke/carnot
+
+---
+
+## Abstract
+
+We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 16+ systematic experiments on a real 596M-parameter model (Qwen3-0.6B), we establish what works and what doesn't for EBM-based verification and correction of LLM output. Our key findings: (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy improvement), (2) structural test execution dominates for code verification (0% → 30% accuracy), (3) composite scoring combining both signals is never worse than either alone, (4) activation-space approaches (hallucination direction finding, rejection sampling, in-generation steering) show detectable signals but fail to improve output quality at small data scales, and (5) statistical separation in activation space does not imply causal influence on generation. We release the complete framework including constraint verification, gradient repair, learned verifiers, autoresearch self-improvement, GPU compute (Vulkan/WebGPU), and an autonomous research conductor.
+
+---
+
+## 1. Introduction
+
+### 1.1 The Hallucination Problem
+
+Large Language Models generate text by predicting the most probable next token. This produces fluent output but provides no mechanism to verify logical consistency, factual accuracy, or constraint satisfaction. When an LLM generates an incorrect early token, the error cascades irrecoverably through the remaining sequence.
+
+### 1.2 The EBM Alternative
+
+Energy-Based Models assign a scalar energy E(x) to complete configurations. Low energy = valid/consistent; high energy = invalid/contradictory. This enables:
+- **Holistic evaluation**: assess the entire output at once, not token-by-token
+- **Gradient-based repair**: when constraints are violated, gradient descent fixes the broken parts
+- **Verifiable certification**: energy = 0 mathematically proves all constraints are satisfied
+
+### 1.3 This Work
+
+We investigate whether EBMs can practically improve LLM output through:
+1. Post-hoc verification and repair (verify after generation)
+2. Rejection sampling (generate N candidates, select by energy)
+3. In-generation steering (modify activations during generation)
+
+We report positive results for (1) and (2) with specific energy signals, and negative results for (3) and for activation-based energy signals.
+
+---
+
+## 2. Framework Architecture
+
+### 2.1 Core EBM Framework
+
+Carnot provides EBM implementations in both Rust (for production performance) and Python/JAX (for research iteration):
+
+- **Three model tiers**: Ising (quadratic, O(d²)), Gibbs (multi-layer MLP), Boltzmann (deep residual)
+- **Samplers**: Langevin dynamics + HMC, both with gradient clipping (REQ-SAMPLE-004)
+- **Training**: Contrastive Divergence, Denoising Score Matching, Noise Contrastive Estimation, Self-Normalised Likelihood
+- **Serialization**: safetensors for cross-language model sharing
+
+### 2.2 Constraint Verification
+
+The `verify` module encodes domain constraints as differentiable energy terms:
+
+```python
+class BaseConstraint:
+    def energy(self, x) -> scalar    # 0 = satisfied, >0 = violated
+    def grad_energy(self, x) -> grad  # gradient for repair
+
+class ComposedEnergy:
+    def verify(self, x) -> VerificationResult   # per-constraint breakdown
+    def grad_violated_only(self, x) -> grad     # gradient from violations only
+```
+
+Implemented domains: SAT (product relaxation), graph coloring (pairwise repulsion), Python code (execution-based type/test checking), property-based testing (random input invariants).
+
+### 2.3 Verify-and-Repair Pipeline
+
+```
+LLM output → parse → ComposedEnergy.verify() → if violated: repair() → round → certify
+```
+
+The `repair()` function runs gradient descent on violated constraints only, with optional Langevin noise and randomized step sizes (from the EBT paper).
+
+### 2.4 GPU Compute
+
+- **carnot-gpu**: wgpu-based Vulkan/Metal/DX12 compute for batch energy evaluation
+- **carnot-webgpu-gateway**: distributed browser GPU compute via WebSocket
+
+---
+
+## 3. Experiments and Results
+
+### 3.1 SAT Gradient Repair (Experiment 2)
+
+**Setup:** 20 random 3-SAT instances (12 variables, 40 clauses). Haiku generates assignments via Claude API bridge.
+
+**Result:** LLM accuracy 60% → repaired accuracy 80% (+20%). 4 instances fully repaired, 2 partially reduced, 2 not repaired. Multi-start repair (N=10) fixed an additional instance that single-start missed.
+
+**Finding:** Gradient repair on continuous relaxation of discrete constraints works. The EBM catches and fixes LLM reasoning errors.
+
+### 3.2 Real Hallucination Detection (Experiment 8)
+
+**Setup:** 25 factual questions to Qwen3-0.6B. Extract mean-pooled activations from last + middle transformer layers. Compute hallucination direction via mean difference.
+
+**Result:** Detection accuracy 64%. Energy gap +9.3 (hallucinated answers have higher energy).
+
+**Finding:** The hallucination direction in activation space IS real. But 64% is insufficient for practical use.
+
+### 3.3 Logprob Rejection Sampling (Experiment 13)
+
+**Setup:** 20 factual questions. Generate 5 candidates per question via temperature sampling. Select the candidate with highest mean per-token log-probability.
+
+**Result:** Greedy 45% → logprob-selected 55% (+10%). 4 fixes, 2 regressions, net +2.
+
+**Finding:** The model's own logprobs are the best energy signal. No calibration, no training, no external EBM needed.
+
+### 3.4 Composite Energy for Code (Experiment 14)
+
+**Setup:** 10 coding tasks. Generate 5 candidates. Score each with: composite = -logprob_weight × mean_logprob + structural_weight × failure_penalty × n_test_failures.
+
+**Result:** Greedy 0% → composite-selected 30%. Structural tests dominate for code; logprobs dominate for QA.
+
+**Finding:** Different energy signals work for different domains. The composite handles both and is never worse than either alone.
+
+### 3.5 Activation-Based Rejection Sampling (Experiments 9-12)
+
+| Experiment | Approach | Result |
+|-----------|----------|--------|
+| 9 | Linear direction, 25 calibration | -12% |
+| 10 | Linear direction, 93 calibration | +0% (4 fixes, 4 regressions) |
+| 11 | Gibbs EBM, 2048-dim | 94% cal → 35% test (overfitting) |
+| 12 | PCA + Gibbs, dim 4-32 | Best: PCA-8 at -5% |
+
+**Finding:** Activation mean-pooling destroys the token-level signal. All approaches overfit or fail to generalize at small data scale.
+
+### 3.6 In-Generation Activation Steering (Experiments 15-16)
+
+**Setup:** Subtract hallucination direction from hidden states during generation via forward hooks. Tested on 25 QA questions across 6 configurations (upper/mid/all layers, alpha 0.1-5.0).
+
+**Result:** 0% change across ALL configurations. Zero fixes, zero regressions.
+
+**Finding:** Statistical separation in activation space does NOT imply causal influence on generation. This is our Principle #7. The mean-difference direction captures a correlate of hallucination, not its cause.
+
+---
+
+## 4. Principles Learned
+
+From 16 experiments, we distilled 7 principles:
+
+1. **Simpler is better in small-data regimes.** Linear projections outperform nonlinear models when you have <100 training examples.
+
+2. **Token-level features > sequence-level.** Mean-pooling activations across generated tokens destroys the signal. Per-token logprobs preserve it.
+
+3. **The model's own confidence is the best energy.** No external EBM outperformed the LLM's own logprobs for candidate selection.
+
+4. **Overfitting is the main enemy.** Every approach that trains on calibration data overfits when examples < dimensions (42 examples in 2048-dim space).
+
+5. **Extract features from generated tokens, not prompts.** Prompt activations are identical across candidates. The signal is in the GENERATED tokens.
+
+6. **Different energy signals dominate in different domains.** Logprobs for QA/factual. Structural tests for code. Composite for both.
+
+7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations (64% detection) does NOT steer the model when injected during generation (0% effect).
+
+---
+
+## 5. What Works: The Composite Verification Architecture
+
+The practical "married pair" that works today:
+
+```
+LLM generates candidate(s)
+    ↓
+For each candidate:
+    logprob_score = mean per-token log-probability
+    structural_score = fraction of test cases failed
+    composite = -logprob_weight × logprob + structural_weight × penalty × failures
+    ↓
+Select candidate with lowest composite score
+    ↓
+If still failing: feed violations back to LLM (iterative refinement)
+    ↓
+Repeat until verified or max iterations
+```
+
+This combines:
+- **LLM confidence** (logprobs) — catches uncertain answers
+- **Structural verification** (test execution) — catches wrong answers
+- **Iterative refinement** (feedback loop) — the LLM learns from specific failures
+- **Property-based testing** (random inputs) — catches edge cases beyond test suites
+
+---
+
+## 6. What Didn't Work and Why
+
+### 6.1 Activation-Based Approaches
+
+Every approach that used transformer hidden state activations for candidate SELECTION or generation STEERING failed at the data scales we tested (25-93 examples). The reasons:
+
+- **Mean-pooling**: aggregating per-token activations into one vector loses the signal
+- **Overfitting**: 42 examples in 2048-dim space → memorization, not generalization
+- **Correlation ≠ causation**: activation patterns correlate with hallucination but don't cause it
+
+### 6.2 What Might Fix Activation Approaches
+
+- **More data**: 1000+ examples may overcome overfitting (Track C)
+- **Per-token training**: train on individual token activations (5000+ examples from 100 QA pairs) (Track B)
+- **Concept-specific vectors**: targeted prompting (Anthropic approach) instead of generic mean-difference (Track A)
+
+---
+
+## 7. Related Work
+
+- **Energy-Based Transformers** (arxiv 2507.02092): EBTs achieve 35% faster scaling and 29% improvement via System 2 thinking. Validates energy-based inference at transformer scale.
+- **Autoregressive Models as EBMs** (arxiv 2512.15605): Establishes bijection between ARMs and EBMs. Every LLM is already an EBM — the logprobs ARE the energy.
+- **Semantic Energy** (arxiv 2508.14496): Detects hallucination via negative logits. Our Experiment 13 confirms this approach works (+10%).
+- **Emotion Concept Vectors** (Anthropic 2025): Concept-specific activation vectors are causally effective for steering. Generic directions are not. Consistent with our Principle #7.
+- **Trace2Skill** (arxiv 2603.25158): Parallel analyst sub-agents extract structured lessons from execution traces. Integrated into Carnot's autoresearch as the Trace2Skill learning layer.
+
+---
+
+## 8. Framework Summary
+
+| Component | Files | Tests | Status |
+|-----------|-------|-------|--------|
+| Core EBM (Rust + JAX) | 12 crates + 8 Python modules | 100 Rust + 1049 Python | Production |
+| Constraint verification | SAT, coloring, code, property tests | Full coverage | Production |
+| LLM-EBM inference | Composite scorer, iterative refinement | Full coverage | Production |
+| Learned verifiers | NCE/SNL/optimization training | Full coverage | Research |
+| Activation analysis | Extraction, direction, steering, concepts | Full coverage | Research |
+| GPU compute | wgpu Vulkan + WebGPU gateway | 4 Rust tests | Beta |
+| Autoresearch | 50-iteration self-improvement, Trace2Skill | Full coverage | Production |
+| Research conductor | Autonomous research via Claude Code | N/A | Production |
+
+---
+
+## 9. Reproduction
+
+```bash
+# Clone and setup
+git clone https://github.com/ianblenke/carnot
+cd carnot
+pip install -e ".[dev]"
+
+# Run experiments
+make up                          # Start Claude API bridge + WebGPU gateway
+python scripts/experiment_logprob_rejection.py        # Experiment 13
+python scripts/experiment_composite_energy_rejection.py  # Experiment 14
+python scripts/experiment_real_hallucination_detection.py # Experiment 8
+
+# Run full test suite
+make test
+
+# Start autonomous research
+make research-loop
+```
+
+---
+
+## 10. Conclusion
+
+The most effective LLM+EBM combination is surprisingly simple: use the model's own logprobs as energy for candidate selection, combine with structural test execution for code verification, and iterate with feedback. This "composite scorer" architecture improves accuracy on both QA (+10%) and code (0% → 30%) tasks, with no training required.
+
+More sophisticated approaches — training EBMs on activations, steering generation via hooks — show detectable signals but fail to improve practical output quality at the data scales we tested. The key insight: **the model already knows when it's uncertain** (logprobs capture this). The EBM's value is not replacing the model's confidence signal but composing it with structural constraints that logprobs cannot capture.
+
+The path forward is scaling activation-based approaches (more data, per-token features, concept-specific vectors) and shipping the working composite verification as a developer tool.

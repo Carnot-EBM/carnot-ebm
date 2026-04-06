@@ -22,6 +22,9 @@ Documenting all experiments — what worked, what failed, and what we learned.
 
 ## Detailed Experiment Notes
 
+| 17 | Concept-specific vectors (targeted prompting) | ❌ All < 56%, generic 80% | Targeted prompts produce WORSE directions; generic mean-diff with generated-token activations reaches 80%/0.945 AUROC |
+| 18 | Per-token activation dataset | ✅ 1860 tokens | Saved to safetensors; fewer than 5000 target but usable |
+
 ### Experiment 9: Linear Hallucination Direction — Wrong Features
 **Date:** 2026-04-05
 **Hypothesis:** Mean-pooled activations from correct vs hallucinated answers define a linear separation direction. Use it to rank rejection sampling candidates.
