@@ -2,7 +2,7 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an EBM framework built to move beyond the hallucination-prone paradigm of autoregressive large language models, and toward autonomous systems capable of directed self-learning.
+Carnot is an EBM framework that combines energy-based verification with large language models to reduce hallucinations. Through 20 systematic experiments on a real 596M-parameter model, we established what works: logprob rejection sampling (+10% accuracy), composite scoring (0% → 30% for code), and per-token EBM training (71.8% generalization). See the [technical report](docs/technical-report.md) for full results.
 
 ## The Problem with LLMs
 
@@ -29,6 +29,20 @@ Carnot is designed from the ground up to support an autonomous self-improvement 
 4. **Repeat** — the loop runs without human supervision, with safety guardrails
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
+
+## Key Results (20 experiments)
+
+| Approach | Domain | Result |
+|----------|--------|--------|
+| Logprob rejection sampling | QA/Factual | **+10% accuracy** (45% → 55%) |
+| Composite scoring (logprob + tests) | Code | **0% → 30% accuracy** |
+| SAT gradient repair | Constraint satisfaction | **60% → 80%** (Haiku benchmark) |
+| Per-token EBM | Activation analysis | **71.8% test accuracy** (first to generalize) |
+| Activation steering | In-generation | 0% effect (negative result) |
+
+**What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation — statistical separation ≠ causal influence.
+
+See [docs/technical-report.md](docs/technical-report.md) for all 20 experiments and 7 principles learned.
 
 ## Model Tiers
 

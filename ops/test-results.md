@@ -1,6 +1,15 @@
 # Carnot — Test Results
 
-**Last Updated:** 2026-04-04
+**Last Updated:** 2026-04-06
+
+## Current Test Suite (2026-04-06)
+
+| Suite | Status | Count | Coverage |
+|-------|--------|-------|----------|
+| Python unit tests | PASS | 1049 | 100% |
+| Rust unit tests | PASS | 104 | N/A |
+| Spec coverage | PASS | All tests reference REQ-*/SCENARIO-* |
+| GPU tests (wgpu) | PASS | 4 (Vulkan on AMD Radeon 890M) |
 
 ## LLM-EBM Benchmark Results (2026-04-04)
 
