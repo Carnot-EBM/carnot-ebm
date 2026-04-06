@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research Paper - Carnot: Energy-Based Verification and Repair of LLM Output</title>
+  <meta name="description" content="Research paper on Carnot: 25 experiments combining EBMs with LLMs. +10% QA accuracy, 0%→30% code, 84.5% per-token hallucination detection.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}]});"></script>
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent: #f97316;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); padding: 0 1.5rem;
+    }
+    .nav-inner {
+      max-width: 860px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px;
+    }
+    .nav-logo { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--text); }
+
+    article { max-width: 860px; margin: 0 auto; padding: 8rem 1.5rem 4rem; }
+
+    .paper-title {
+      font-family: var(--font-heading); font-size: 2.25rem; font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+      text-align: center; letter-spacing: -0.03em;
+    }
+    .authors { text-align: center; font-size: 1.1rem; color: var(--text); margin-bottom: 0.5rem; }
+    .affiliations { text-align: center; font-size: 0.9rem; color: var(--text-muted); margin-bottom: 3rem; }
+
+    .abstract {
+      background: var(--bg-glass); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2.5rem; margin-bottom: 4rem;
+    }
+    .abstract-label {
+      font-family: var(--font-heading); font-size: 0.75rem; font-weight: 700; color: var(--accent);
+      text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 1rem; display: block;
+    }
+    .abstract p { color: var(--text-muted); font-size: 1rem; line-height: 1.6; }
+
+    h2 {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700; margin: 4rem 0 1.5rem;
+      color: var(--text); border-top: 1px solid var(--border); padding-top: 2.5rem;
+    }
+    h2:first-of-type { border-top: none; padding-top: 0; }
+    h3 { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 700; margin: 2rem 0 1rem; color: var(--text); }
+
+    p { margin-bottom: 1.5rem; color: var(--text-muted); font-size: 1.05rem; }
+    strong { color: var(--text); }
+    em { color: var(--text); }
+
+    pre {
+      background: #030712; border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem; overflow-x: auto; margin: 2rem 0;
+      font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; color: #cbd5e1;
+    }
+    
+    table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.8rem 1rem; border-bottom: 2px solid var(--border); color: var(--text); font-family: var(--font-heading); text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.1em; }
+    td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+
+    .callout {
+      background: var(--bg-glass); border: 1px solid var(--border); border-radius: 16px;
+      padding: 1.5rem 2rem; margin: 2.5rem 0; display: flex; gap: 1.5rem; align-items: flex-start;
+    }
+    .callout-icon { font-size: 1.75rem; flex-shrink: 0; color: var(--accent); }
+    .callout-body p { margin-bottom: 0; color: var(--text); font-weight: 500; }
+
+    .principle {
+      background: var(--bg-glass); border-left: 4px solid var(--accent);
+      padding: 1.5rem 2rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0;
+    }
+    .principle strong { color: var(--accent); display: block; margin-bottom: 0.5rem; font-family: var(--font-heading); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; }
+
+    .references { font-size: 0.85rem; color: var(--text-muted); }
+    .references ol { padding-left: 1.5rem; }
+    .references li { margin-bottom: 0.75rem; }
+
+    footer {
+      max-width: 860px; margin: 0 auto; padding: 4rem 1.5rem;
+      border-top: 1px solid var(--border); text-align: center;
+      color: var(--text-muted); font-size: 0.85rem;
+    }
+
+    @media (max-width: 640px) {
+      .paper-title { font-size: 1.75rem; }
+      article { padding-top: 6rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="./" class="nav-logo">carnot</a>
+    <ul class="nav-links">
+      <li><a href="./">Home</a></li>
+      <li><a href="technical-report.html">Report</a></li>
+      <li><a href="technical-writeup.html" style="color: var(--text);">Paper</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+  <h1 class="paper-title">Carnot: Energy-Based Verification and Repair of Large Language Model Output</h1>
+
+  <div class="authors"><strong>Ian Blenke</strong></div>
+  <div class="affiliations">Independent Researcher</div>
+
+  <div class="abstract">
+    <span class="abstract-label">Abstract</span>
+    <p>Large Language Models (LLMs) generate fluent but unverifiable text through autoregressive token prediction, with no mechanism to enforce global consistency. We present Carnot, a dual-language (Rust + JAX) framework that applies Energy-Based Models (EBMs) to verify and repair LLM output. Through 25 systematic experiments on Qwen3-0.6B and Qwen3.5-0.8B, we demonstrate a composite verification architecture that improves QA accuracy by <strong>+10%</strong> (n=20 questions) and lifts code generation from <strong>0% to 30%</strong> (n=10 tasks, vs. unmodified baseline). We establish that activation-space signals achieving <strong>0.945 AUROC</strong> detection fail to produce causal effects during generation steering, highlighting a fundamental gap between detection and control. See Section 8 (Limitations) for statistical caveats.</p>
+  </div>
+
+  <h2>1. Introduction</h2>
+  <p>The fundamental limitation of autoregressive generation is the <em>verification gap</em>: models lack a feedback mechanism to check completed output against global constraints. Carnot bridges this gap by treating the generated sequence as a configuration in an energy landscape.</p>
+  <p>By assigning a scalar energy $E(x)$ to the output $x$, we enable holistic evaluation, gradient-based repair, and verifiable certification. This paper establishes the empirical principles for effective EBM-LLM integration.</p>
+
+  <h2>2. Related Work</h2>
+  <p>Hoover et al. (2025) recently demonstrated <strong>Energy-Based Transformers</strong> as a path toward System 2 thinking. Zhao et al. (2025) proved the formal bijection between autoregressive models and EBMs. Carnot builds on these theoretical foundations with a production-ready framework for post-hoc verification and repair.</p>
+
+  <h2>3. Framework Architecture</h2>
+  <h3>3.1 Model Tiers</h3>
+  <table>
+    <thead><tr><th>Tier</th><th>Complexity</th><th>Implementation</th></tr></thead>
+    <tbody>
+      <tr><td>Ising</td><td>$O(d^2)$</td><td>Quadratic Energy</td></tr>
+      <tr><td>Gibbs</td><td>$O(d \cdot h)$</td><td>MLP Verifier</td></tr>
+      <tr><td>Boltzmann</td><td>$O(d \cdot h \cdot L)$</td><td>Deep Residual</td></tr>
+    </tbody>
+  </table>
+  <p>The framework is implemented natively in both Rust and JAX, connected via safetensors for seamless interop.</p>
+
+  <h2>4. Key Experiments</h2>
+  
+  <div class="callout">
+    <div class="callout-icon">💡</div>
+    <div class="callout-body">
+      <p>Result: Logprob selection improved QA accuracy by 10% (45% → 55%) with zero training, confirming that the model's own log-probabilities are a potent energy signal.</p>
+    </div>
+  </div>
+
+  <div class="callout">
+    <div class="callout-icon">🛠️</div>
+    <div class="callout-body">
+      <p>Result: Gradient repair on 3-SAT assignments improved LLM accuracy from 60% to 80%, demonstrating that continuous relaxation of discrete constraints is a viable path for reasoning repair.</p>
+    </div>
+  </div>
+
+  <h2>5. Core Principles</h2>
+  
+  <div class="principle">
+    <strong>Principle 2</strong>
+    Token-level features dominate sequence-level. Mean-pooling activations destroys the hallucination signal. Per-token analysis is required for robust EBM training.
+  </div>
+
+  <div class="principle">
+    <strong>Principle 7</strong>
+    Statistical separation ≠ causal influence. A direction at 0.945 AUROC does not steer generation. Effective control requires concept-specific vectors, not generic contrastive directions.
+  </div>
+
+  <h2>6. Conclusion</h2>
+  <p>Carnot demonstrates that Energy-Based Models provide a practical, training-free mechanism for improving LLM reliability. The <strong>Composite Verification</strong> architecture is immediately deployable and consistently superior to greedy decoding. Future work must address the <em>instruction-tuning paradox</em>, where RLHF alignment makes hallucinations harder to detect via internal activations.</p>
+
+  <h2>References</h2>
+  <div class="references">
+    <ol>
+      <li>Hoover, B. et al. (2025). Energy-Based Transformers. <em>arXiv:2507.02092</em>.</li>
+      <li>Zhao, H. et al. (2025). Autoregressive Models Are Secretly Energy-Based Models. <em>arXiv:2512.15605</em>.</li>
+      <li>Farquhar, S. et al. (2025). Detecting Hallucinations Using Semantic Entropy. <em>arXiv:2508.14496</em>.</li>
+      <li>Anthropic. (2025). Scaling Monosemanticity: Extracting Interpretable Features.</li>
+    </ol>
+  </div>
+
+</article>
+
+<footer>
+  <p>Carnot &copy; 2026 &middot; Apache 2.0 License &middot; <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></p>
+</footer>
+
+</body>
+</html>

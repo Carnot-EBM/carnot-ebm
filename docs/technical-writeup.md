@@ -1,8 +1,8 @@
 # Carnot: Energy-Based Verification and Repair of Large Language Model Output
 
-**Ian Blenke**
+*Technical writeup — not a peer-reviewed publication*
 
-Independent Researcher
+**Ian Blenke**
 
 **Repository:** [github.com/Carnot-EBM/carnot-ebm](https://github.com/Carnot-EBM/carnot-ebm)  
 **Framework:** [carnot-ebm.org](https://carnot-ebm.org)  
@@ -13,7 +13,7 @@ Independent Researcher
 
 ## Abstract
 
-Large Language Models (LLMs) generate fluent but unverifiable text through autoregressive token prediction, with no mechanism to enforce logical consistency or factual accuracy. We present Carnot, an open-source dual-language (Rust + Python/JAX) framework that applies Energy-Based Models (EBMs) to verify, score, and repair LLM output. Through 22 systematic experiments on a 596M-parameter model (Qwen3-0.6B) and cross-model analysis with Qwen3.5-0.8B, we establish a practical hierarchy of energy signals for LLM output improvement. Our composite verification architecture — combining per-token log-probabilities with structural test execution — achieves +10% accuracy on factual QA and lifts code generation from 0% to 30% correct, with no model fine-tuning required. For constraint satisfaction tasks, gradient-based repair on continuous relaxations improves LLM accuracy from 60% to 80% on random 3-SAT instances. We further demonstrate that per-token activation EBMs trained via Noise Contrastive Estimation achieve 84.5% test accuracy in distinguishing correct from hallucinated tokens — the first activation-based approach in our experiments to generalize beyond calibration data. Conversely, we report a significant negative result: activation-space directions that statistically separate correct from hallucinated outputs (0.945 AUROC) produce zero causal effect when injected during generation, establishing that statistical separation in activation space does not imply controllability. We also find that instruction tuning compresses the hallucination signal: base models (84.5%) have larger activation gaps than instruction-tuned models (67.2%), meaning the models most in need of hallucination detection are the hardest to detect on. We distill our findings into 8 empirically-grounded principles for combining EBMs with LLMs and release the complete framework under Apache 2.0.
+Large Language Models (LLMs) generate fluent but unverifiable text through autoregressive token prediction, with no mechanism to enforce logical consistency or factual accuracy. We present Carnot, an open-source dual-language (Rust + Python/JAX) framework that applies Energy-Based Models (EBMs) to verify, score, and repair LLM output. Through 25 systematic experiments on a 596M-parameter model (Qwen3-0.6B) and cross-model analysis with Qwen3.5-0.8B, we establish a practical hierarchy of energy signals for LLM output improvement. Our composite verification architecture — combining per-token log-probabilities with structural test execution — achieves +10% accuracy on factual QA and lifts code generation from 0% to 30% correct, with no model fine-tuning required. For constraint satisfaction tasks, gradient-based repair on continuous relaxations improves LLM accuracy from 60% to 80% on random 3-SAT instances. We further demonstrate that per-token activation EBMs trained via Noise Contrastive Estimation achieve 84.5% test accuracy in distinguishing correct from hallucinated tokens — the first activation-based approach in our experiments to generalize beyond calibration data. Conversely, we report a significant negative result: activation-space directions that statistically separate correct from hallucinated outputs (0.945 AUROC) produce zero causal effect when injected during generation, establishing that statistical separation in activation space does not imply controllability. We also find that instruction tuning compresses the hallucination signal: base models (84.5%) have larger activation gaps than instruction-tuned models (67.2%), meaning the models most in need of hallucination detection are the hardest to detect on. We distill our findings into 10 empirically-grounded principles for combining EBMs with LLMs and release the complete framework under Apache 2.0.
 
 ---
 
@@ -48,7 +48,7 @@ We make the following contributions:
 
 5. **Cross-model activation analysis** showing that instruction tuning compresses the hallucination signal: base Qwen3-0.6B achieves 84.5% detection accuracy vs. 67.2% for instruction-tuned Qwen3.5-0.8B, establishing that RLHF makes hallucination detection harder.
 
-6. **Eight empirical principles** for EBM-LLM integration, distilled from 22 experiments.
+6. **Ten empirical principles** for EBM-LLM integration, distilled from 25 experiments.
 
 7. **Carnot**, an open-source dual-language framework (Rust + Python/JAX) implementing the full pipeline from constraint encoding to automated self-improvement. Pre-trained models are available at [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM).
 
@@ -232,7 +232,7 @@ Mixing activations from different models degrades performance (70.5% vs. 84.5% f
 
 ## 5. Principles for EBM-LLM Integration
 
-From 22 experiments, we distill 8 empirically-grounded principles:
+From 25 experiments, we distill 10 empirically-grounded principles:
 
 **Principle 1: Simpler is better in small-data regimes.** Linear projections outperform nonlinear models when training examples number fewer than 100. The Gibbs EBM in Experiment 11 achieved 94% on calibration but 35% on test — textbook overfitting.
 
@@ -249,6 +249,10 @@ From 22 experiments, we distill 8 empirically-grounded principles:
 **Principle 7: Statistical separation ≠ causal influence.** A direction that separates correct from hallucinated activations at 0.945 AUROC does *not* steer the model when injected during generation (0% effect across 6 configurations). Effective steering requires concept-specific vectors, not generic contrastive directions.
 
 **Principle 8: Instruction tuning compresses the hallucination signal.** Base models (84.5%) have larger activation gaps between correct and wrong answers than instruction-tuned models (67.2%). RLHF training produces models that sound confident even when wrong — the models most in need of hallucination detection are the hardest to detect on. This creates a fundamental tension for deployment: activation-based detection must be calibrated per-model, and instruction-tuned models require substantially more training data or alternative detection strategies.
+
+**Principle 9: Adversarial questions defeat post-hoc detection.** On TruthfulQA adversarial questions, neither logprob nor EBM rejection sampling improves over greedy decoding (Experiment 23: -3% to -6%). Questions designed to elicit confident wrong answers make correct and incorrect outputs indistinguishable to energy-based methods. Detection must move upstream of generation.
+
+**Principle 10: Chain-of-thought reasoning compresses the hallucination signal.** Disabling thinking improves EBM detection from 61.3% to 75.5% (+14.2%, Experiment 25). Chain-of-thought reasoning makes hidden states more uniform across correct and wrong answers, with a 5.8× reduction in energy gap. This creates a tension: thinking may improve answer quality but makes activation-based detection harder.
 
 ---
 
@@ -308,7 +312,7 @@ The Ising tier's quadratic energy function maps directly to the coupling matrice
 
 We demonstrate that Energy-Based Models provide a practical, training-free mechanism for improving LLM output quality. The most effective approach is surprisingly simple: use the model's own per-token log-probabilities as an energy signal for candidate selection, compose with structural test execution for code tasks, and iterate with failure feedback. This composite architecture improves accuracy on both QA (+10%) and code (0% → 30%) with no model modification.
 
-More sophisticated learned approaches — training EBMs on transformer activations — show genuine promise at the per-token level (84.5% test accuracy on base models) but plateau below the simple logprob baseline's practical impact. Cross-model analysis across 22 experiments reveals that instruction tuning compresses the hallucination signal (67.2% for instruction-tuned vs. 84.5% for base models), creating a paradox where the models most deployed in production are hardest to monitor. The path forward is scaling activation data, testing on diverse domains, developing model-specific calibration strategies, and exploring concept-specific rather than generic activation features.
+More sophisticated learned approaches — training EBMs on transformer activations — show genuine promise at the per-token level (84.5% test accuracy on base models) but plateau below the simple logprob baseline's practical impact. Cross-model analysis across 25 experiments reveals that instruction tuning compresses the hallucination signal (67.2% for instruction-tuned vs. 84.5% for base models), creating a paradox where the models most deployed in production are hardest to monitor. The path forward is scaling activation data, testing on diverse domains, developing model-specific calibration strategies, and exploring concept-specific rather than generic activation features.
 
 Our most impactful negative result — that 0.945 AUROC detection accuracy translates to 0% steering effect — should serve as a caution to the growing body of work on activation engineering: demonstrate causal efficacy, not just separability.
 
@@ -318,7 +322,7 @@ All code, data, and experiment scripts are available at [github.com/Carnot-EBM/c
 
 ## Acknowledgments
 
-This paper was written with substantial assistance from Claude (Anthropic). Claude Code was used for code generation, experiment design, documentation, and iterative refinement of the framework and this paper. The autoresearch pipeline uses Claude 3.5 Sonnet as the hypothesis proposer.
+This writeup was produced with substantial assistance from Claude (Anthropic). Claude Code was used for code generation, experiment design, documentation, and iterative refinement of the framework. The autoresearch pipeline uses Claude 3.5 Sonnet as the hypothesis proposer. This is an internal technical writeup, not a peer-reviewed publication.
 
 ---
 

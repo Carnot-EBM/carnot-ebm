@@ -2,7 +2,7 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an EBM framework that combines energy-based verification with large language models to reduce hallucinations. Through 22 systematic experiments on real models (Qwen3-0.6B and Qwen3.5-0.8B), we established what works: logprob rejection sampling (+10% accuracy), composite scoring (0% → 30% for code), and per-token EBM training (84.5% on base model). We also discovered that instruction-tuned models compress hallucination signals (84.5% → 67.2%), making detection harder on the models that need it most. See the [technical report](docs/technical-report.md) for full results.
+Carnot is an EBM framework that combines energy-based verification with large language models to reduce hallucinations. Through 25 systematic experiments on real models (Qwen3-0.6B and Qwen3.5-0.8B), we established what works: logprob rejection sampling (+10% accuracy on 20 questions; see [Limitations](docs/technical-writeup.md#8-limitations)), composite scoring (0% → 30% for code on 10 tasks vs. unmodified LLM baseline), and per-token EBM training (84.5% on base model). We discovered that instruction tuning compresses hallucination signals (84.5% → 67.2%) — meaning the models most deployed in production are hardest to monitor — and that chain-of-thought reasoning compresses them further (75.5% without thinking vs 61.3% with). Ships with an MCP server and CLI for Python code verification. See the [technical report](docs/technical-report.md) for full results.
 
 ## The Problem with LLMs
 
@@ -30,20 +30,52 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (22 experiments)
+## Key Results (25 experiments)
 
 | Approach | Domain | Result |
 |----------|--------|--------|
-| Logprob rejection sampling | QA/Factual | **+10% accuracy** (45% → 55%) |
-| Composite scoring (logprob + tests) | Code | **0% → 30% accuracy** |
+| Logprob rejection sampling | QA/Factual | **+10% accuracy** (45% → 55%, n=20 questions) |
+| Composite scoring (logprob + tests) | Code | **0% → 30% accuracy** (n=10 tasks, vs. unmodified baseline) |
 | SAT gradient repair | Constraint satisfaction | **60% → 80%** (Haiku benchmark) |
 | Per-token EBM (base model) | Activation analysis | **84.5% test accuracy** (Qwen3-0.6B) |
-| Per-token EBM (tuned model) | Activation analysis | **67.2% test accuracy** (Qwen3.5-0.8B) |
+| Per-token EBM (no thinking) | Activation analysis | **75.5% test accuracy** (Qwen3.5-0.8B, thinking disabled) |
+| Per-token EBM (with thinking) | Activation analysis | 61.3% test accuracy (Qwen3.5-0.8B, thinking enabled) |
 | Activation steering | In-generation | 0% effect (negative result) |
+| EBM rejection sampling | Adversarial QA | -3% to -6% (negative result) |
 
-**What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation — statistical separation ≠ causal influence. **Key insight:** Instruction tuning compresses hallucination signals in activation space (Principle 8).
+**What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation, and rejection sampling on adversarial questions. **Key insights:** (1) Instruction tuning compresses hallucination signals, making the most-deployed models hardest to monitor (Principle 8), (2) chain-of-thought compresses them further — disabling thinking improves detection by 14.2% (Principle 10), (3) adversarial questions defeat post-hoc detection entirely (Principle 9). **Caveat:** QA results are on small samples (20 questions) without statistical significance testing. Code results compare against unmodified LLM output, not against fine-tuning or RLHF. See [Limitations](docs/technical-writeup.md#8-limitations).
 
-See the [research paper](docs/paper.md) for the full write-up, or the [technical report](docs/technical-report.md) for all 22 experiments and 8 principles learned.
+See the [technical writeup](docs/technical-writeup.md) for the full write-up, or the [technical report](docs/technical-report.md) for a summary of all 25 experiments.
+
+## 10 Principles Learned
+
+Hard-won lessons from 25 experiments on real models:
+
+1. **Simpler is better in small-data regimes.** Linear projections outperform nonlinear models when you have fewer than 100 training examples.
+2. **Token-level features > sequence-level.** Mean-pooling across tokens destroys the signal. Per-token features preserve it.
+3. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function.
+4. **Overfitting is the main enemy.** Every approach that trains on calibration data overfits when examples < dimensions.
+5. **Extract features from generated tokens, not prompts.** The hallucination signal lives in the GENERATED tokens, not the input.
+6. **Different energy signals dominate in different domains.** Logprobs for QA, structural tests for code. The composite combines both.
+7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations does NOT steer the model when injected during generation.
+8. **Instruction tuning compresses the hallucination signal.** Base models: 84.5%. Instruction-tuned: 67.2%. RLHF makes models sound confident even when wrong. **This is a fundamental limitation:** the models most in need of hallucination detection (instruction-tuned models deployed in production) are precisely the ones where activation-based detection is hardest.
+9. **Adversarial questions defeat post-hoc detection.** On TruthfulQA, neither logprob nor EBM rejection improves over greedy. Detection must move upstream.
+10. **Chain-of-thought compresses the hallucination signal.** Disabling thinking improves detection from 61.3% → 75.5% (+14.2%). Thinking makes hidden states more uniform.
+
+## Tools
+
+### CLI
+
+```bash
+pip install -e .
+carnot verify examples/math_funcs.py --func gcd --test "(12,8):4" --test "(7,13):1"
+```
+
+### MCP Server
+
+Configure with `cp .mcp.json.example .mcp.json` for Claude Code integration. Exposes `verify_code`, `verify_with_properties`, and `score_candidates` tools via stdio JSON-RPC. These tools perform **Python code verification** (structural tests, property-based testing, candidate ranking) — they do not implement the activation-based EBM hallucination detection described in the research sections.
+
+See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage instructions.
 
 ## Model Tiers
 
@@ -172,6 +204,18 @@ Papers and resources that have informed Carnot's design and direction.
 ### Hardware
 
 - [Extropic TSU/XTR-0](https://extropic.ai/writing/inside-x0-and-xtr-0) — Thermodynamic Sampling Unit for native EBM inference in hardware
+
+## Pre-trained Models
+
+Pre-trained EBM models and activation datasets are available on HuggingFace at [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM):
+
+| Model | Accuracy | Source Model |
+|-------|----------|-------------|
+| `per-token-ebm-qwen3-06b` | 84.5% | Qwen3-0.6B (base) |
+| `per-token-ebm-qwen35-08b-nothink` | 75.5% | Qwen3.5-0.8B (no thinking) |
+| `per-token-ebm-qwen35-08b-think` | 61.3% | Qwen3.5-0.8B (with thinking) |
+
+See [docs/huggingface-plan.md](docs/huggingface-plan.md) for the full publishing plan.
 
 ## License
 

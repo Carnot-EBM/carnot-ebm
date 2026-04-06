@@ -10,7 +10,7 @@
 
 ## Abstract
 
-We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 22 systematic experiments on real models (Qwen3-0.6B 596M-parameter base and Qwen3.5-0.8B instruction-tuned), we establish what works and what doesn't for EBM-based verification and correction of LLM output. Our key findings: (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy improvement), (2) structural test execution dominates for code verification (0% → 30% accuracy), (3) composite scoring combining both signals is never worse than either alone, (4) activation-space approaches (hallucination direction finding, rejection sampling, in-generation steering) show detectable signals but fail to improve output quality at small data scales, (5) statistical separation in activation space does not imply causal influence on generation, (6) per-token EBM training on 26,800 tokens achieves 84.5% test accuracy with architecture search showing data-bound plateau, and (7) instruction tuning compresses the hallucination signal — base models (84.5%) have larger activation gaps than instruction-tuned models (67.2%), revealing that RLHF makes models sound confident even when wrong. Pre-trained models available at huggingface.co/Carnot-EBM. We release the complete framework including constraint verification, gradient repair, learned verifiers, autoresearch self-improvement, GPU compute (Vulkan/WebGPU), and an autonomous research conductor.
+We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 25 systematic experiments on real models (Qwen3-0.6B 596M-parameter base and Qwen3.5-0.8B instruction-tuned), we establish what works and what doesn't for EBM-based verification and correction of LLM output. Our key findings: (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy improvement), (2) structural test execution dominates for code verification (0% → 30% accuracy), (3) composite scoring combining both signals is never worse than either alone, (4) activation-space approaches show detectable signals but fail to improve output quality as a candidate filter on adversarial questions, (5) statistical separation in activation space does not imply causal influence on generation, (6) per-token EBM training on 52,296 tokens achieves 84.5% test accuracy on base models with architecture search showing data-bound plateau, (7) instruction tuning compresses the hallucination signal — base models (84.5%) have larger activation gaps than instruction-tuned models (67.2%), (8) adversarial questions defeat post-hoc detection entirely, (9) hallucination signal follows a U-curve across transformer layers, concentrating at the final layer, and (10) chain-of-thought reasoning further compresses hallucination signals — disabling thinking improves EBM detection from 61.3% to 75.5% (+14.2%). We release the complete framework including constraint verification, gradient repair, learned verifiers, autoresearch self-improvement, GPU compute (Vulkan/WebGPU), an MCP server, and a CLI tool.
 
 ---
 
@@ -153,7 +153,7 @@ The `repair()` function runs gradient descent on violated constraints only, with
 
 ## 4. Principles Learned
 
-From 22 experiments, we distilled 8 principles:
+From 25 experiments, we distilled 10 principles (Principles 9-10 from Experiments 23-25):
 
 1. **Simpler is better in small-data regimes.** Linear projections outperform nonlinear models when you have <100 training examples.
 
@@ -170,6 +170,10 @@ From 22 experiments, we distilled 8 principles:
 7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations (64% detection) does NOT steer the model when injected during generation (0% effect).
 
 8. **Instruction tuning compresses the hallucination signal.** Base models (84.5%) have larger activation gaps between truthful and hallucinated outputs than instruction-tuned models (67.2%). RLHF makes the model sound confident even when wrong, reducing the energy separation that EBMs rely on. Target base models for EBM verification.
+
+9. **Adversarial questions defeat post-hoc detection.** On TruthfulQA, neither logprob nor EBM rejection sampling improves over greedy (Experiment 23: -3% to -6%). Detection must move upstream of generation.
+
+10. **Chain-of-thought reasoning compresses the hallucination signal.** Disabling thinking improves detection from 61.3% → 75.5% (+14.2%, Experiment 25). Thinking makes hidden states more uniform, with a 5.8× reduction in energy gap.
 
 ---
 
@@ -232,14 +236,14 @@ Every approach that used transformer hidden state activations for candidate SELE
 
 | Component | Files | Tests | Status |
 |-----------|-------|-------|--------|
-| Core EBM (Rust + JAX) | 12 crates + 8 Python modules | 100 Rust + 1053 Python | Production |
-| Constraint verification | SAT, coloring, code, property tests | Full coverage | Production |
-| LLM-EBM inference | Composite scorer, iterative refinement | Full coverage | Production |
+| Core EBM (Rust + JAX) | 12 crates + 8 Python modules | 100 Rust + 1053 Python | Alpha |
+| Constraint verification | SAT, coloring, code, property tests | Full coverage | Alpha |
+| LLM-EBM inference | Composite scorer, iterative refinement | Full coverage | Alpha |
 | Learned verifiers | NCE/SNL/optimization training | Full coverage | Research |
 | Activation analysis | Extraction, direction, steering, concepts | Full coverage | Research |
-| GPU compute | wgpu Vulkan + WebGPU gateway | 4 Rust tests | Beta |
-| Autoresearch | 50-iteration self-improvement, Trace2Skill | Full coverage | Production |
-| Research conductor | Autonomous research via Claude Code | N/A | Production |
+| GPU compute | wgpu Vulkan + WebGPU gateway | 4 Rust tests | Experimental |
+| Autoresearch | 50-iteration self-improvement, Trace2Skill | Full coverage | Alpha |
+| Research conductor | Autonomous research via Claude Code | N/A | Experimental |
 
 ---
 
@@ -259,6 +263,12 @@ python scripts/experiment_real_hallucination_detection.py # Experiment 8
 python scripts/collect_truthfulqa_activations.py           # Experiment 21
 python scripts/collect_qa_activations_qwen35.py            # Experiment 22
 python scripts/train_per_token_ebm_combined.py             # Train per-token EBM
+python scripts/experiment_23_ebm_rejection.py              # Experiment 23
+python scripts/experiment_24_layer_probing.py              # Experiment 24
+python scripts/experiment_25_no_thinking.py                # Experiment 25
+
+# Verify code with CLI
+carnot verify examples/math_funcs.py --func gcd --test "(12,8):4"
 
 # Run full test suite
 make test
@@ -271,10 +281,29 @@ make research-loop
 
 ## 10. Conclusion
 
-Across 22 experiments on two model families (Qwen3-0.6B base and Qwen3.5-0.8B instruction-tuned), the most effective LLM+EBM combination is surprisingly simple: use the model's own logprobs as energy for candidate selection, combine with structural test execution for code verification, and iterate with feedback. This "composite scorer" architecture improves accuracy on both QA (+10%) and code (0% → 30%) tasks, with no training required.
+Across 25 experiments on two model families (Qwen3-0.6B base and Qwen3.5-0.8B instruction-tuned), the most effective LLM+EBM combination is surprisingly simple: use the model's own logprobs as energy for candidate selection, combine with structural test execution for code verification, and iterate with feedback. This "composite scorer" architecture improves accuracy on both QA (+10%) and code (0% → 30%) tasks, with no training required.
 
-More sophisticated approaches — training EBMs on activations, steering generation via hooks — show detectable signals but fail to improve practical output quality at the data scales we tested. The key insight: **the model already knows when it's uncertain** (logprobs capture this). The EBM's value is not replacing the model's confidence signal but composing it with structural constraints that logprobs cannot capture.
+More sophisticated approaches — training EBMs on activations, steering generation via hooks — show detectable signals but fail to improve practical output quality. EBM rejection sampling on adversarial questions (TruthfulQA) actually hurt accuracy by 3-6% (Experiment 23). Multi-layer probing (Experiment 24) confirmed the final transformer layer is optimal, with hallucination signal following a U-curve across layers.
 
-The instruction-tuning paradox (Experiment 22) is perhaps our most actionable finding: RLHF-trained models compress the very activation-space signals that EBMs need, dropping detection from 84.5% to 67.2%. This means EBM-based hallucination detection should target base models, not instruction-tuned ones — the opposite of how most practitioners deploy LLMs.
+Three compression effects compound against activation-based detection:
 
-The path forward is scaling activation-based approaches (more data, per-token features, concept-specific vectors), exploiting the base-model advantage for EBM training, and shipping the working composite verification as a developer tool. Pre-trained models are available at huggingface.co/Carnot-EBM.
+1. **Instruction tuning** compresses the signal (84.5% → 67.2%, Experiment 22)
+2. **Adversarial questions** make correct/wrong answers indistinguishable (Experiment 23)
+3. **Chain-of-thought reasoning** compresses it further — disabling thinking improves detection from 61.3% to 75.5% (+14.2%, Experiment 25)
+
+The thinking mode finding (Principle 10) is our most actionable discovery: for activation-based hallucination detection, **disable chain-of-thought**. The thinking process makes hidden states more uniform across correct and wrong answers, with a 5.8x reduction in energy gap. This creates a fundamental tension: thinking may improve answer quality but makes detection harder.
+
+The framework ships with an MCP server (3 Python code verification tools) and CLI (`carnot verify`) for structural code verification. The composite scorer (logprob + structural tests) is the most mature component and does not require activation analysis. Note: this is alpha-stage research software (v0.1.0), not production-hardened infrastructure.
+
+### 10 Principles Learned
+
+1. Simpler is better in small-data regimes
+2. Token-level features > sequence-level (mean-pooling kills signal)
+3. The model's own logprobs are the best energy
+4. Overfitting is the main enemy when examples < dimensions
+5. Extract features from generated tokens, not prompts
+6. Different energy signals dominate in different domains
+7. Statistical difference ≠ causal influence
+8. Instruction tuning compresses the hallucination signal
+9. Adversarial questions defeat post-hoc detection
+10. Chain-of-thought reasoning compresses the hallucination signal

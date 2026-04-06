@@ -24,8 +24,11 @@ python -m venv .venv
 source .venv/bin/activate
 pip install -e ".[dev]"
 
-# Pre-commit hooks
+# Pre-commit hooks (pre-commit is included in [dev] dependencies)
 pre-commit install
+
+# Claude Code MCP server (optional)
+cp .mcp.json.example .mcp.json
 ```
 
 ## Development Workflow

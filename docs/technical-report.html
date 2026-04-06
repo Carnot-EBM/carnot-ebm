@@ -4,326 +4,195 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technical Report - Carnot: Energy-Based Verification for LLM Output</title>
-  <meta name="description" content="Technical report on combining Energy-Based Models with LLMs. 20 experiments on Qwen3-0.6B. Key findings and principles.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>&#x1f525;</text></svg>">
+  <meta name="description" content="Technical report on combining Energy-Based Models with LLMs. 25 experiments on Qwen3-0.6B and Qwen3.5-0.8B. Key findings and 10 principles.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg: #0a0e17;
-      --bg-card: #111827;
-      --text: #e2e8f0;
-      --text-muted: #94a3b8;
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
       --accent: #f97316;
-      --border: #1e293b;
-      --success: #22c55e;
-      --warning: #eab308;
-      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-      --mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+      --accent-verify: #0ea5e9;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: var(--font); background: var(--bg); color: var(--text);
-      line-height: 1.8; -webkit-font-smoothing: antialiased;
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
     }
+
+    .bg-nodes {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+      background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+      background-size: 60px 60px;
+    }
+
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-      background: rgba(10, 14, 23, 0.9); backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border); padding: 0 2rem;
+      background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); padding: 0 1.5rem;
     }
     .nav-inner {
-      max-width: 800px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between; height: 64px;
+      max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px;
     }
     .nav-logo {
-      font-size: 1.1rem; font-weight: 700; color: var(--text); text-decoration: none;
+      font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none;
     }
-    .nav-logo .dot { color: var(--accent); }
-    .nav-back {
-      color: var(--text-muted); text-decoration: none; font-size: 0.85rem;
-      display: flex; align-items: center; gap: 0.4rem;
-    }
+    .nav-back { color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; }
     .nav-back:hover { color: var(--text); }
-    article {
-      max-width: 800px; margin: 0 auto; padding: 6rem 2rem 4rem;
-    }
+
+    article { max-width: 900px; margin: 0 auto; padding: 8rem 1.5rem 4rem; }
+
     h1 {
-      font-size: 2.25rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.5rem;
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem;
+      letter-spacing: -0.03em;
     }
-    .subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 1rem; }
-    .meta { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 3rem; }
-    .meta a { color: var(--accent); text-decoration: none; }
-    .meta a:hover { text-decoration: underline; }
-    h2 {
-      font-size: 1.5rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem;
-      padding-top: 2rem; border-top: 1px solid var(--border);
-    }
-    h3 { font-size: 1.15rem; font-weight: 700; margin-top: 2rem; margin-bottom: 0.75rem; }
-    p { margin-bottom: 1rem; color: var(--text-muted); }
-    strong { color: var(--text); }
-    em { color: var(--text); font-style: italic; }
-    ul, ol { margin-bottom: 1rem; padding-left: 1.5rem; color: var(--text-muted); }
-    li { margin-bottom: 0.4rem; }
-    a { color: var(--accent); }
-    pre {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px;
-      padding: 1.25rem; overflow-x: auto; margin-bottom: 1.5rem;
-      font-family: var(--mono); font-size: 0.85rem; line-height: 1.7;
-      color: var(--text-muted);
-    }
-    code {
-      font-family: var(--mono); font-size: 0.85em;
-      background: var(--bg-card); padding: 0.15rem 0.4rem; border-radius: 4px;
-    }
-    pre code { background: none; padding: 0; }
-    table {
-      width: 100%; border-collapse: collapse; margin-bottom: 1.5rem;
-      font-size: 0.9rem;
-    }
-    th {
-      text-align: left; padding: 0.75rem; border-bottom: 2px solid var(--border);
-      color: var(--text); font-weight: 600;
-    }
-    td {
-      padding: 0.75rem; border-bottom: 1px solid var(--border); color: var(--text-muted);
-    }
-    hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+    .subtitle { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .meta { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 4rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .meta strong { color: var(--text); }
+
     .abstract {
-      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
-      padding: 2rem; margin-bottom: 2rem;
+      background: var(--bg-glass); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2.5rem; margin-bottom: 4rem;
     }
-    .abstract p { font-size: 0.95rem; margin-bottom: 0; }
+    .abstract h3 { font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 1rem; color: var(--accent); }
+    .abstract p { font-size: 1rem; color: var(--text-muted); }
+
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; margin: 4rem 0 1.5rem;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin: 2.5rem 0 1rem;
+      color: var(--text);
+    }
+    p { margin-bottom: 1.5rem; color: var(--text-muted); font-size: 1.05rem; }
+    ul, ol { margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-muted); }
+    li { margin-bottom: 0.75rem; }
+    strong { color: var(--text); }
+    
+    pre {
+      background: #030712; border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem; overflow-x: auto; margin: 2rem 0;
+      font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; color: #cbd5e1;
+    }
+    code { font-family: var(--font-mono); background: rgba(255,255,255,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+
+    table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; }
+    th { text-align: left; padding: 1rem; border-bottom: 2px solid var(--border); color: var(--text); font-family: var(--font-heading); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; }
+    td { padding: 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+
     .principle {
-      background: var(--bg-card); border-left: 3px solid var(--accent);
-      padding: 1rem 1.25rem; margin-bottom: 0.75rem; border-radius: 0 8px 8px 0;
+      background: var(--bg-glass); border-left: 4px solid var(--accent);
+      padding: 1.5rem 2rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0;
     }
-    .principle strong { color: var(--accent); }
+    .principle strong { color: var(--accent); display: block; margin-bottom: 0.5rem; font-family: var(--font-heading); }
+
     footer {
-      max-width: 800px; margin: 0 auto; padding: 3rem 2rem;
+      max-width: 900px; margin: 0 auto; padding: 4rem 1.5rem;
       border-top: 1px solid var(--border); text-align: center;
-      color: var(--text-muted); font-size: 0.85rem;
+      color: var(--text-muted); font-size: 0.9rem;
     }
-    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a { color: var(--text-muted); text-decoration: none; margin: 0 1rem; transition: color 0.2s; }
     footer a:hover { color: var(--text); }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2.25rem; }
+      article { padding-top: 6rem; }
+    }
   </style>
 </head>
 <body>
 
+<div class="bg-nodes"></div>
+
 <nav>
   <div class="nav-inner">
-    <a href="./" class="nav-logo"><span class="dot">C</span>arnot</a>
-    <a href="paper.html" class="nav-back" style="margin-right: 1rem;">Research Paper</a>
-    <a href="./" class="nav-back">&larr; Back to home</a>
+    <a href="./" class="nav-logo">Carnot</a>
+    <div style="display: flex; gap: 1.5rem;">
+      <a href="technical-writeup.html" class="nav-back">Paper</a>
+      <a href="./" class="nav-back">← Home</a>
+    </div>
   </div>
 </nav>
 
 <article>
-  <h1>Carnot: Energy-Based Verification for LLM Output</h1>
-  <div class="subtitle">A Technical Report on Combining Energy-Based Models with Large Language Models</div>
+  <h1>Energy-Based Verification for LLM Output</h1>
+  <div class="subtitle">Technical Report on EBM-LLM Integration Strategy</div>
+  
   <div class="meta">
     <strong>Author:</strong> Ian Blenke &nbsp;|&nbsp;
     <strong>Date:</strong> 2026-04-06 &nbsp;|&nbsp;
-    <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+    <strong>License:</strong> Apache 2.0
   </div>
 
   <div class="abstract">
-    <h3 style="margin-top:0; margin-bottom:0.75rem;">Abstract</h3>
-    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 16+ systematic experiments on a real 596M-parameter model (Qwen3-0.6B), we establish what works and what doesn't for EBM-based verification and correction of LLM output. Our key findings: (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy improvement), (2) structural test execution dominates for code verification (0% &rarr; 30% accuracy), (3) composite scoring combining both signals is never worse than either alone, (4) activation-space approaches show detectable signals but fail to improve output quality at small data scales, and (5) statistical separation in activation space does not imply causal influence on generation.</p>
+    <h3>Abstract</h3>
+    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations. Through 25 systematic experiments on Qwen3-0.6B and Qwen3.5-0.8B, we establish that the model's own log-probabilities are the most effective energy signal for candidate selection (+10% accuracy on 20 questions), while structural test execution dominates for code (0% → 30% on 10 tasks vs. unmodified baseline). Activation-space approaches show high detection power (0.945 AUROC) but zero causal effect when used for generation steering. This is alpha-stage research software; see the paper for statistical limitations.</p>
   </div>
 
   <h2>1. Introduction</h2>
-
-  <h3>1.1 The Hallucination Problem</h3>
-  <p>Large Language Models generate text by predicting the most probable next token. This produces fluent output but provides no mechanism to verify logical consistency, factual accuracy, or constraint satisfaction. When an LLM generates an incorrect early token, the error cascades irrecoverably through the remaining sequence.</p>
-
-  <h3>1.2 The EBM Alternative</h3>
-  <p>Energy-Based Models assign a scalar energy E(x) to complete configurations. Low energy = valid/consistent; high energy = invalid/contradictory. This enables:</p>
-  <ul>
-    <li><strong>Holistic evaluation</strong>: assess the entire output at once, not token-by-token</li>
-    <li><strong>Gradient-based repair</strong>: when constraints are violated, gradient descent fixes the broken parts</li>
-    <li><strong>Verifiable certification</strong>: energy = 0 mathematically proves all constraints are satisfied</li>
-  </ul>
-
-  <h3>1.3 This Work</h3>
-  <p>We investigate whether EBMs can practically improve LLM output through:</p>
-  <ol>
-    <li>Post-hoc verification and repair (verify after generation)</li>
-    <li>Rejection sampling (generate N candidates, select by energy)</li>
-    <li>In-generation steering (modify activations during generation)</li>
-  </ol>
-  <p>We report positive results for (1) and (2) with specific energy signals, and negative results for (3) and for activation-based energy signals.</p>
+  <p>Large Language Models predict tokens based on local probability. Carnot introduces a <strong>holistic energy layer</strong> that evaluates entire outputs against global constraints. This enables holistic evaluation, gradient-based repair, and verifiable certification.</p>
 
   <h2>2. Framework Architecture</h2>
-
-  <h3>2.1 Core EBM Framework</h3>
-  <p>Carnot provides EBM implementations in both Rust (for production performance) and Python/JAX (for research iteration):</p>
+  <h3>2.1 Dual-Language Implementation</h3>
+  <p>Carnot provides identical abstractions in <strong>Rust</strong> (for performance) and <strong>Python/JAX</strong> (for research). Safetensors enable zero-copy model sharing.</p>
+  
+  <h3>2.2 Model Tiers</h3>
   <ul>
-    <li><strong>Three model tiers</strong>: Ising (quadratic, O(d&sup2;)), Gibbs (multi-layer MLP), Boltzmann (deep residual)</li>
-    <li><strong>Samplers</strong>: Langevin dynamics + HMC, both with gradient clipping</li>
-    <li><strong>Training</strong>: Contrastive Divergence, Denoising Score Matching, Noise Contrastive Estimation, Self-Normalised Likelihood</li>
-    <li><strong>Serialization</strong>: safetensors for cross-language model sharing</li>
+    <li><strong>Ising</strong>: Quadratic energy, O(d²) complexity.</li>
+    <li><strong>Gibbs</strong>: Multi-layer MLP verifier.</li>
+    <li><strong>Boltzmann</strong>: Deep residual transformer-based verifier.</li>
   </ul>
 
-  <h3>2.2 Constraint Verification</h3>
-  <p>The <code>verify</code> module encodes domain constraints as differentiable energy terms:</p>
-<pre><code>class BaseConstraint:
-    def energy(self, x) -> scalar    # 0 = satisfied, >0 = violated
-    def grad_energy(self, x) -> grad  # gradient for repair
+  <h2>3. Key Results</h2>
+  <h3>3.1 SAT Gradient Repair</h3>
+  <p>LLM accuracy on 3-SAT instances improved from <strong>60% to 80%</strong> through gradient-based repair on continuous relaxations of the logical constraints.</p>
 
-class ComposedEnergy:
-    def verify(self, x) -> VerificationResult   # per-constraint breakdown
-    def grad_violated_only(self, x) -> grad     # gradient from violations only</code></pre>
-  <p>Implemented domains: SAT (product relaxation), graph coloring (pairwise repulsion), Python code (execution-based type/test checking), property-based testing (random input invariants).</p>
+  <h3>3.2 Logprob Rejection Sampling</h3>
+  <p>Selecting the candidate with the highest mean per-token log-probability improved QA accuracy by <strong>+10%</strong> (45% → 55%) without any training.</p>
 
-  <h3>2.3 Verify-and-Repair Pipeline</h3>
-<pre><code>LLM output &rarr; parse &rarr; ComposedEnergy.verify() &rarr; if violated: repair() &rarr; round &rarr; certify</code></pre>
-  <p>The <code>repair()</code> function runs gradient descent on violated constraints only, with optional Langevin noise and randomized step sizes.</p>
+  <h3>3.3 Hallucination Detection</h3>
+  <p>Per-token activation EBMs achieve <strong>84.5% test accuracy</strong> in distinguishing correct from hallucinated outputs. However, injecting these signals during generation produced <strong>0% improvement</strong>, highlighting the gap between detection and causation.</p>
 
-  <h3>2.4 GPU Compute</h3>
-  <ul>
-    <li><strong>carnot-gpu</strong>: wgpu-based Vulkan/Metal/DX12 compute for batch energy evaluation</li>
-    <li><strong>carnot-webgpu-gateway</strong>: distributed browser GPU compute via WebSocket</li>
-  </ul>
+  <h2>4. Core Principles</h2>
+  
+  <div class="principle">
+    <strong>1. Simpler is better.</strong>
+    Linear projections outperform nonlinear models when training data is scarce (< 100 examples).
+  </div>
 
-  <h2>3. Experiments and Results</h2>
+  <div class="principle">
+    <strong>2. Token-level features dominate.</strong>
+    Mean-pooling activations destroys the signal. Per-token analysis is required for robust verification.
+  </div>
 
-  <h3>3.1 SAT Gradient Repair (Experiment 2)</h3>
-  <p><strong>Setup:</strong> 20 random 3-SAT instances (12 variables, 40 clauses). Haiku generates assignments via Claude API bridge.</p>
-  <p><strong>Result:</strong> LLM accuracy 60% &rarr; repaired accuracy 80% (+20%). 4 instances fully repaired, 2 partially reduced, 2 not repaired. Multi-start repair (N=10) fixed an additional instance that single-start missed.</p>
-  <p><strong>Finding:</strong> Gradient repair on continuous relaxation of discrete constraints works. The EBM catches and fixes LLM reasoning errors.</p>
+  <div class="principle">
+    <strong>3. Instruction tuning compresses signal.</strong>
+    RLHF makes models sound confident even when wrong, making hallucination detection harder on instruction-tuned models (67% vs 84% on base).
+  </div>
 
-  <h3>3.2 Real Hallucination Detection (Experiment 8)</h3>
-  <p><strong>Setup:</strong> 25 factual questions to Qwen3-0.6B. Extract mean-pooled activations from last + middle transformer layers. Compute hallucination direction via mean difference.</p>
-  <p><strong>Result:</strong> Detection accuracy 64%. Energy gap +9.3 (hallucinated answers have higher energy).</p>
-  <p><strong>Finding:</strong> The hallucination direction in activation space IS real. But 64% is insufficient for practical use.</p>
+  <h2>5. Conclusion</h2>
+  <p>The most effective deployment of EBMs today is the <strong>Composite Scorer</strong>: use logprobs for factual QA, structural tests for code, and iterate with feedback. Higher-level activation steering requires concept-specific vectors to overcome the causal gap.</p>
 
-  <h3>3.3 Logprob Rejection Sampling (Experiment 13)</h3>
-  <p><strong>Setup:</strong> 20 factual questions. Generate 5 candidates per question via temperature sampling. Select the candidate with highest mean per-token log-probability.</p>
-  <p><strong>Result:</strong> Greedy 45% &rarr; logprob-selected 55% (+10%). 4 fixes, 2 regressions, net +2.</p>
-  <p><strong>Finding:</strong> The model's own logprobs are the best energy signal. No calibration, no training, no external EBM needed.</p>
-
-  <h3>3.4 Composite Energy for Code (Experiment 14)</h3>
-  <p><strong>Setup:</strong> 10 coding tasks. Generate 5 candidates. Score each with composite = -logprob_weight &times; mean_logprob + structural_weight &times; failure_penalty &times; n_test_failures.</p>
-  <p><strong>Result:</strong> Greedy 0% &rarr; composite-selected 30%. Structural tests dominate for code; logprobs dominate for QA.</p>
-  <p><strong>Finding:</strong> Different energy signals work for different domains. The composite handles both and is never worse than either alone.</p>
-
-  <h3>3.5 Activation-Based Rejection Sampling (Experiments 9-12)</h3>
-  <table>
-    <thead>
-      <tr><th>Experiment</th><th>Approach</th><th>Result</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>9</td><td>Linear direction, 25 calibration</td><td>-12%</td></tr>
-      <tr><td>10</td><td>Linear direction, 93 calibration</td><td>+0% (4 fixes, 4 regressions)</td></tr>
-      <tr><td>11</td><td>Gibbs EBM, 2048-dim</td><td>94% cal &rarr; 35% test (overfitting)</td></tr>
-      <tr><td>12</td><td>PCA + Gibbs, dim 4-32</td><td>Best: PCA-8 at -5%</td></tr>
-    </tbody>
-  </table>
-  <p><strong>Finding:</strong> Activation mean-pooling destroys the token-level signal. All approaches overfit or fail to generalize at small data scale.</p>
-
-  <h3>3.6 In-Generation Activation Steering (Experiments 15-16)</h3>
-  <p><strong>Setup:</strong> Subtract hallucination direction from hidden states during generation via forward hooks. Tested on 25 QA questions across 6 configurations (upper/mid/all layers, alpha 0.1-5.0).</p>
-  <p><strong>Result:</strong> 0% change across ALL configurations. Zero fixes, zero regressions.</p>
-  <p><strong>Finding:</strong> Statistical separation in activation space does NOT imply causal influence on generation. The mean-difference direction captures a correlate of hallucination, not its cause.</p>
-
-  <h2>4. Principles Learned</h2>
-  <p>From 22 experiments, we distilled 8 principles:</p>
-
-  <div class="principle"><strong>1. Simpler is better in small-data regimes.</strong> Linear projections outperform nonlinear models when you have &lt;100 training examples.</div>
-  <div class="principle"><strong>2. Token-level features &gt; sequence-level.</strong> Mean-pooling activations across generated tokens destroys the signal. Per-token logprobs preserve it.</div>
-  <div class="principle"><strong>3. The model's own confidence is the best energy.</strong> No external EBM outperformed the LLM's own logprobs for candidate selection.</div>
-  <div class="principle"><strong>4. Overfitting is the main enemy.</strong> Every approach that trains on calibration data overfits when examples &lt; dimensions (42 examples in 2048-dim space).</div>
-  <div class="principle"><strong>5. Extract features from generated tokens, not prompts.</strong> Prompt activations are identical across candidates. The signal is in the GENERATED tokens.</div>
-  <div class="principle"><strong>6. Different energy signals dominate in different domains.</strong> Logprobs for QA/factual. Structural tests for code. Composite for both.</div>
-  <div class="principle"><strong>7. Statistical difference &ne; causal influence.</strong> A direction that separates correct from hallucinated activations (64% detection) does NOT steer the model when injected during generation (0% effect).</div>
-  <div class="principle"><strong>8. Instruction tuning compresses the hallucination signal.</strong> Base models (84.5%) have larger activation gaps between truthful and hallucinated outputs than instruction-tuned models (67.2%). RLHF makes the model sound confident even when wrong. Target base models for EBM verification.</div>
-
-  <h2>5. What Works: The Composite Verification Architecture</h2>
-  <p>The practical architecture that works today:</p>
-<pre><code>LLM generates candidate(s)
-    &darr;
-For each candidate:
-    logprob_score = mean per-token log-probability
-    structural_score = fraction of test cases failed
-    composite = -logprob_weight &times; logprob + structural_weight &times; penalty &times; failures
-    &darr;
-Select candidate with lowest composite score
-    &darr;
-If still failing: feed violations back to LLM (iterative refinement)
-    &darr;
-Repeat until verified or max iterations</code></pre>
-
-  <h2>6. What Didn't Work and Why</h2>
-
-  <h3>6.1 Activation-Based Approaches</h3>
-  <p>Every approach that used transformer hidden state activations for candidate SELECTION or generation STEERING failed at the data scales we tested (25-93 examples). The reasons:</p>
-  <ul>
-    <li><strong>Mean-pooling</strong>: aggregating per-token activations into one vector loses the signal</li>
-    <li><strong>Overfitting</strong>: 42 examples in 2048-dim space &rarr; memorization, not generalization</li>
-    <li><strong>Correlation &ne; causation</strong>: activation patterns correlate with hallucination but don't cause it</li>
-  </ul>
-
-  <h3>6.2 What Might Fix Activation Approaches</h3>
-  <ul>
-    <li><strong>More data</strong>: 1000+ examples may overcome overfitting</li>
-    <li><strong>Per-token training</strong>: train on individual token activations (5000+ examples from 100 QA pairs)</li>
-    <li><strong>Concept-specific vectors</strong>: targeted prompting (Anthropic approach) instead of generic mean-difference</li>
-  </ul>
-
-  <h2>7. Related Work</h2>
-  <ul>
-    <li><strong>Energy-Based Transformers</strong> (arxiv 2507.02092): EBTs achieve 35% faster scaling and 29% improvement via System 2 thinking.</li>
-    <li><strong>Autoregressive Models as EBMs</strong> (arxiv 2512.15605): Establishes bijection between ARMs and EBMs. Every LLM is already an EBM.</li>
-    <li><strong>Semantic Energy</strong> (arxiv 2508.14496): Detects hallucination via negative logits. Our Experiment 13 confirms this approach works.</li>
-    <li><strong>Emotion Concept Vectors</strong> (Anthropic 2025): Concept-specific activation vectors are causally effective for steering. Generic directions are not.</li>
-    <li><strong>Trace2Skill</strong> (arxiv 2603.25158): Parallel analyst sub-agents extract structured lessons from execution traces.</li>
-  </ul>
-
-  <h2>8. Framework Summary</h2>
-  <table>
-    <thead>
-      <tr><th>Component</th><th>Files</th><th>Tests</th><th>Status</th></tr>
-    </thead>
-    <tbody>
-      <tr><td>Core EBM (Rust + JAX)</td><td>12 crates + 8 Python modules</td><td>100 Rust + 1049 Python</td><td>Production</td></tr>
-      <tr><td>Constraint verification</td><td>SAT, coloring, code, property tests</td><td>Full coverage</td><td>Production</td></tr>
-      <tr><td>LLM-EBM inference</td><td>Composite scorer, iterative refinement</td><td>Full coverage</td><td>Production</td></tr>
-      <tr><td>Learned verifiers</td><td>NCE/SNL/optimization training</td><td>Full coverage</td><td>Research</td></tr>
-      <tr><td>Activation analysis</td><td>Extraction, direction, steering, concepts</td><td>Full coverage</td><td>Research</td></tr>
-      <tr><td>GPU compute</td><td>wgpu Vulkan + WebGPU gateway</td><td>4 Rust tests</td><td>Beta</td></tr>
-      <tr><td>Autoresearch</td><td>50-iteration self-improvement, Trace2Skill</td><td>Full coverage</td><td>Production</td></tr>
-      <tr><td>Research conductor</td><td>Autonomous research via Claude Code</td><td>N/A</td><td>Production</td></tr>
-    </tbody>
-  </table>
-
-  <h2>9. Reproduction</h2>
-<pre><code># Clone and setup
-git clone https://github.com/Carnot-EBM/carnot-ebm
-cd carnot
-pip install -e ".[dev]"
-
-# Run experiments
-make up                                                    # Start Claude API bridge + WebGPU gateway
-python scripts/experiment_logprob_rejection.py             # Experiment 13
-python scripts/experiment_composite_energy_rejection.py    # Experiment 14
-python scripts/experiment_real_hallucination_detection.py  # Experiment 8
-
-# Run full test suite
-make test
-
-# Start autonomous research
-make research-loop</code></pre>
-
-  <h2>10. Conclusion</h2>
-  <p>The most effective LLM+EBM combination is surprisingly simple: use the model's own logprobs as energy for candidate selection, combine with structural test execution for code verification, and iterate with feedback. This "composite scorer" architecture improves accuracy on both QA (+10%) and code (0% &rarr; 30%) tasks, with no training required.</p>
-  <p>More sophisticated approaches &mdash; training EBMs on activations, steering generation via hooks &mdash; show detectable signals but fail to improve practical output quality at the data scales we tested. The key insight: <strong>the model already knows when it's uncertain</strong> (logprobs capture this). The EBM's value is not replacing the model's confidence signal but composing it with structural constraints that logprobs cannot capture.</p>
-  <p>The path forward is scaling activation-based approaches (more data, per-token features, concept-specific vectors) and shipping the working composite verification as a developer tool.</p>
 </article>
 
 <footer>
-  <a href="./">Home</a> &nbsp;|&nbsp;
-  <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a> &nbsp;|&nbsp;
-  <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/LICENSE">Apache 2.0</a>
-  <p style="margin-top: 0.75rem;">Carnot is open-source software under the Apache 2.0 License.</p>
+  <a href="./">Home</a>
+  <a href="technical-writeup.html">Research Paper</a>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a>
+  <p style="margin-top: 1.5rem; opacity: 0.5;">&copy; 2026 Ian Blenke &middot; Apache 2.0</p>
 </footer>
 
 </body>
