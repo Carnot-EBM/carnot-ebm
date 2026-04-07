@@ -132,13 +132,47 @@
 - **GPU-accelerated experiments**: ROCm 7.2 native gfx1150 ready (3.3x speedup), update experiment scripts to use `.cuda()`
 - **Larger local model**: test with Qwen3-4B or 8B (67GB unified memory available)
 
-### Research Directions
-- ~~**Per-token EBM rejection sampling**~~: tested in experiment 23, no improvement on adversarial QA (-3% to -6%)
-- ~~**Multi-layer probing**~~: tested in experiment 24, final layer is already best (U-curve confirmed)
-- **Upstream detection**: Principle 9 suggests detecting adversarial questions BEFORE generation, not analyzing answers after
-- **Logit lens**: project intermediate representations through unembedding matrix to see what the model "thinks" at each layer
-- **EBT training on real data**: minimal EBT exists (`python/carnot/models/ebt.py`), needs training on large dataset
-- **Larger model experiments**: test with Qwen3-4B or 8B — larger models may have more separable representations
+### Research Directions (Roadmap v5 — Weight-First EBM)
+
+**See `openspec/change-proposals/research-roadmap-v5.md` for full details.**
+
+**Key paradigm shift:** Derive hallucination signal from frozen weight structure + unlabeled forward passes. Labeled data is for validation, not training. 10 of 11 new experiments need zero training labels.
+
+#### Completed (Experiments 1-31)
+- ~~Per-token EBM rejection~~: Exp 23, -3% to -6%
+- ~~Cross-model transfer~~: Exp 26, 49.8% = chance
+- ~~Temperature diversity~~: Exp 30, hurts
+- ~~Naive domain mixing~~: Exp 31, 70.8% < 75.5%
+- ✅ Multi-layer concat: Exp 28, +5.8%
+- ✅ 3-layer concat sweet spot: Exp 29
+
+#### Phase 1: Weight Anatomy (NOW — no labels for training)
+- **Exp 32: Weight structure profiling** — pure weight analysis, zero inference needed
+- **Exp 33: Channel magnitude introspection** — Nemotron-inspired, expert FC1/FC2 patterns
+- **Exp 34: MoE routing entropy as energy** — self-supervised, unlabeled forward pass only
+- **Exp 35: Activation normalization** — domain-invariant features via per-sequence normalization
+
+#### Phase 2: Self-Supervised Energy Composition (NEXT — minimal labels)
+- **Exp 36: Composite self-supervised energy** — combine all Phase 1 features, 100-500 labels for calibration
+- **Exp 37: MTP confidence** — multi-token prediction as temporal signal (Nemotron-inspired)
+- **Exp 38: Cross-architecture consensus** — dense + MoE + Mamba agreement, fully self-supervised
+- **Exp 39: Logit lens / unembedding geometry** — per-layer prediction trajectory
+
+#### Phase 3: Consensus Energy Landscape (THEN — no labels)
+- **Exp 40: Weight-space model similarity map** — pure weight analysis, zero inference
+- **Exp 41: Energy-guided decoding** — self-supervised energy for generation guidance
+- **Exp 42: KL distillation energy** — composable multi-model energy terms
+
+#### Phase 4: Standalone EBM (long-term)
+- 4a: Universal activation encoder (self-supervised contrastive)
+- 4b: Consensus energy landscape
+- 4c: LLM as language interface
+- 4d: Hardware compilation (Extropic TSU)
+
+#### Model Acquisition
+- ✅ **Mixtral-8x7B-v0.1** (Priority 1): downloading now (~93GB BF16 base). Unlocks Exp 32 (MoE weight profiling), 33 (channel magnitude), 34 (routing entropy), 38 (consensus)
+- **Mamba-2.8B or Jamba** (Priority 2): architectural diversity for consensus (Exp 38)
+- Nemotron 3 Super NVFP4: MTP heads + richest routing structure (Exp 37)
 
 ### Documentation
 - **UI Aesthetic**: Premium glassmorphism and animations applied to `docs/index.html`

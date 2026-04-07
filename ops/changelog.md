@@ -1,5 +1,38 @@
 # Carnot — Changelog
 
+## 2026-04-07: Research Roadmap v5 — Weight-First EBM
+
+### Paradigm Shift
+Restructured the entire research program around a weight-first philosophy: derive hallucination signal from frozen weight structure and unlabeled forward passes. Labeled hallucination data becomes a validation tool, not a training dependency. 10 of 11 new experiments need zero training labels.
+
+### Added
+- `openspec/change-proposals/research-roadmap-v5.md`: Weight-First EBM roadmap
+  - **Phase 1 (Weight Anatomy):** Exp 32-35 — pure weight analysis + unlabeled forward passes
+  - **Phase 2 (Self-Supervised Energy):** Exp 36-39 — composite label-free energy functions
+  - **Phase 3 (Consensus Landscape):** Exp 40-42 — multi-model weight geometry as energy
+  - **Phase 4 (Standalone EBM):** 4a-4d — universal encoder → consensus landscape → LLM as I/O → hardware
+  - Organized by label dependency, not tier difficulty
+  - New introspection tools: weight profiler, channel profiler, routing extractor, logit lens, knowledge map
+
+### Key Insights from Nemotron 3 Super Paper (NVIDIA, 2026-04-03)
+- LatentMoE latent projection validates Carnot's universal encoder concept
+- Expert routing patterns are a novel self-supervised feature source for hallucination detection
+- Channel magnitude patterns in trained weights reveal knowledge structure without inference
+- Multi-token prediction confidence is a temporal reasoning signal (no labels needed)
+- Architectural diversity (Mamba + MoE + dense) makes cross-model consensus more meaningful
+- The ARM↔EBM bijection means the weights already define the energy landscape — we don't need to train a second one
+
+### Strategic Insight
+The "everything" domain problem is solved by NOT requiring domain-specific labels. When features come from weight structure and model consensus rather than labeled examples, domain generalization is free — the features are inherently domain-agnostic.
+
+### Model Acquisition
+- Started download of `mistralai/Mixtral-8x7B-v0.1` (~93GB BF16 base model)
+- Priority 1 model: unlocks 4 experiments (32 MoE weight profiling, 33 channel magnitude, 34 routing entropy, 38 consensus)
+
+### Experiment Scripts
+- `scripts/experiment_32_weight_profiling.py`: Pure weight analysis — effective rank, condition number, neuron norms, spectral gap, MoE expert specialization/overlap, router analysis. Zero inference needed.
+- `scripts/experiment_33_channel_magnitude.py`: Nemotron-inspired FC1↔FC2 channel alignment analysis, dead channel detection, expert channel diversity. Zero inference needed.
+
 ## 2026-04-07: Multi-model EBM training, cross-model transfer (experiment 26)
 
 ### Added
