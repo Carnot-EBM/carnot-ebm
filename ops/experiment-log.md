@@ -28,6 +28,12 @@ Documenting all experiments — what worked, what failed, and what we learned.
 | 20 | Concept steering (expanded) | ❌ 0% change | Confirms #15-16: statistical ≠ causal |
 | 21 | Scaled per-token EBM (26,800 tokens, Qwen3-0.6B) | ✅ 84.5% test | More data helps — 71.8% → 84.5% |
 | 22 | TruthfulQA + Qwen3.5-0.8B | ⚠️ 67.2% test | Better models have subtler hallucination signatures |
+| 23 | EBM rejection sampling (TruthfulQA) | ❌ -3% to -6% | Neither logprob nor EBM rejection helps on adversarial QA with tuned models |
+| 24 | Multi-layer probing (Qwen3.5-0.8B) | ⚠️ Final layer best (64%) | Hallucination signal follows U-curve: appears early, compresses mid-network, reconcentrates at final layer |
+| 25 | **Thinking vs no-thinking** | **75.5% no-think vs 61.3% think** | **✅ Thinking compresses hallucination signal by 14.2%** |
+| 26 | Cross-model EBM transfer | ❌ 49.8% cross vs 86.2% self | Hallucination representations are model-specific; no universal detector |
+| 27 | Upstream detection (question-level) | ⚠️ 62.6% mean (72.1% best) | Weak signal — question reps partially predict hallucination but much weaker than per-token |
+| 28 | **Multi-layer concatenation** | **81.3% (3 layers) vs 75.5% (1 layer)** | **✅ Concatenating layers 4+12+24 improves by 5.8%** |
 
 ## Detailed Experiment Notes
 
@@ -90,6 +96,80 @@ Documenting all experiments — what worked, what failed, and what we learned.
 3. **TruthfulQA is genuinely harder.** Adversarial questions designed to elicit hallucination produce less distinguishable activations. The model's 53% accuracy on TruthfulQA (vs 57% on QA) means it's nearly guessing, so correct/wrong activations overlap more.
 4. **Principle 8: Instruction tuning compresses the hallucination signal.** Base models have bigger activation gaps between right/wrong because they're more "confused" when wrong. RLHF/instruction tuning makes the model sound confident even when wrong — this is literally what makes hallucination dangerous and what makes detection harder.
 
+### Experiment 23: EBM Rejection Sampling on TruthfulQA
+**Date:** 2026-04-06
+**Hypothesis:** Combining per-token EBM energy with logprob scores improves candidate selection on adversarial QA.
+**Results:**
+- Greedy: 50% (baseline)
+- Logprob-only: 49% (-1%)
+- EBM-only: 44% (-6%)
+- Composite: 47% (-3%)
+
+**Learning:** Rejection sampling that works on simple QA (+10% with Qwen3-0.6B) fails on adversarial QA with instruction-tuned models. TruthfulQA questions are designed so all answer options sound equally plausible. The model's logprobs and activation patterns don't distinguish correct from confident-but-wrong answers on adversarial inputs. This reinforces Principle 8.
+
+### Experiment 24: Multi-Layer Hallucination Probing
+**Date:** 2026-04-06
+**Hypothesis:** Intermediate transformer layers retain hallucination signal that gets compressed in the final layer.
+**Results (Qwen3.5-0.8B, 200 TruthfulQA questions, ~3.6K tokens/layer):**
+
+| Layer | Test Accuracy |
+|-------|--------------|
+| 0 | 52.7% (near chance) |
+| 4 | 60.0% |
+| 8 | 56.8% |
+| 12 | 57.8% |
+| 16 | 55.8% |
+| 20 | 53.0% |
+| 24 | 64.0% (best) |
+
+**Learning:**
+1. The final layer IS the best single layer — no intermediate layer rescues the signal.
+2. Hallucination signal follows a **U-curve**: appears in early layers (4: 60%), gets compressed in middle layers (16-20: ~54%), then reconcentrates at the final layer (24: 64%).
+3. This pattern suggests the model's residual stream accumulates hallucination-relevant features gradually, with the most meaningful representation at the output.
+4. **Principle 9: Adversarial questions defeat post-hoc detection.** When questions are designed to make LLMs hallucinate, the model's internal representations during correct and incorrect generation become indistinguishable. Detection must move upstream — to the question itself, not the answer.
+
+### Experiment 25: Thinking vs No-Thinking (Qwen3.5-0.8B)
+**Date:** 2026-04-06
+**Hypothesis:** Thinking mode (chain-of-thought before answering) compresses hallucination signal by making the model's hidden states more uniform.
+**Results (200 TruthfulQA questions):**
+
+| Mode | Model Accuracy | EBM Test Accuracy | Energy Gap |
+|------|---------------|-------------------|-----------|
+| With thinking | 54% | 61.3% | 0.4206 |
+| **Without thinking** | **54%** | **75.5%** | **2.4248** |
+
+**Key Learnings:**
+1. **Thinking compresses hallucination signal by 14.2%.** The chain-of-thought process makes hidden states more uniform, washing out the differences between correct and wrong answers.
+2. **Energy gap is 5.8x larger without thinking** (2.4248 vs 0.4206). The EBM has much more to work with.
+3. **Model accuracy is the same** (54% either way on TruthfulQA). Thinking doesn't help on adversarial questions — it just makes detection harder.
+4. **Principle 10: Chain-of-thought reasoning compresses the hallucination signal.** For activation-based detection, disable thinking. For answer quality, enable it. These goals are in tension.
+
+### Experiment 26: Cross-Model EBM Transfer
+**Date:** 2026-04-07
+**Hypothesis:** If the hallucination "direction" in activation space is universal, an EBM trained on one model should detect hallucinations in another model with the same hidden dimension.
+**Results:**
+
+| Dimension | Trained On | Tested On | Accuracy |
+|-----------|-----------|-----------|----------|
+| 1024 | LFM2.5-350M | Self | 90.4% |
+| 1024 | LFM2.5-350M | Qwen3.5-0.8B | 44.7% |
+| 1024 | Qwen3.5-0.8B | LFM2.5-350M | 50.4% |
+| 1536 | Gemma4-E2B | Self | 89.5% |
+| 1536 | Gemma4-E2B | Gemma4-E2B-it | 54.5% |
+| 1536 | Gemma4-E2B-it | Gemma4-E2B | 51.0% |
+| 2048 | Bonsai-1.7B | Self | 81.7% |
+| 2048 | Bonsai-1.7B | Qwen3.5-2B | 50.7% |
+| 2048 | Qwen3.5-2B | Self | 89.8% |
+| 2048 | Qwen3.5-2B | LFM2.5-1.2B | 47.8% |
+
+**Mean self-accuracy:** 86.2%. **Mean cross-accuracy:** 49.8%. **Transfer rate:** 57.8%.
+
+**Key Learnings:**
+1. **Cross-model transfer is at chance (~50%).** EBMs trained on one model are useless for another, even with identical hidden dimensions.
+2. **Even same-architecture pairs don't transfer.** Gemma4-E2B base → Gemma4-E2B-it is only 54.5%. Instruction tuning doesn't just compress the signal — it *rotates* the representation space.
+3. **Cross-family transfer is no worse than within-family.** Bonsai (Qwen3-based) → Qwen3.5-2B is 50.7%, same as random. Shared architecture heritage doesn't help.
+4. **Principle 11: Hallucination representations are model-specific.** Each model must have its own trained EBM. There is no universal hallucination detector via activation analysis. The good news: training takes only ~5 minutes per model.
+
 ## Key Principles Learned
 
 1. **Simpler is better for small-data regimes.** Linear projections > nonlinear models when you have <100 training examples.
@@ -107,3 +187,13 @@ Documenting all experiments — what worked, what failed, and what we learned.
 7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations (experiment 8: 64% detection) does NOT necessarily steer the model when injected during generation (experiments 15-16: 0% effect). Effective steering requires concept-specific vectors found via targeted prompting (Anthropic's approach), not generic contrastive means.
 
 8. **Instruction tuning compresses the hallucination signal.** Base models (Qwen3-0.6B: 84.5%) have larger activation gaps between correct/wrong answers than instruction-tuned models (Qwen3.5-0.8B: 67.2%). RLHF makes models sound confident even when wrong — exactly what makes hallucination dangerous and detection harder. This has profound implications: the models most in need of hallucination detection are the hardest to detect on.
+
+9. **Adversarial questions defeat post-hoc detection.** On TruthfulQA (designed to elicit hallucination), neither logprob rejection (-1%), EBM rejection (-6%), nor composite (-3%) improves over greedy. Multi-layer probing confirms: the final layer is already best (64%), no hidden layer rescues the signal. Detection must move upstream — to recognizing adversarial question patterns, not analyzing answer activations.
+
+10. **Chain-of-thought reasoning compresses the hallucination signal.** Disabling thinking in Qwen3.5-0.8B improves EBM detection from 61.3% → 75.5% (+14.2%) with a 5.8x larger energy gap. Thinking makes hidden states more uniform across correct/wrong answers. For activation-based detection, disable thinking. For answer quality, enable it. These goals are in tension — a key design constraint for production hallucination detection systems.
+
+11. **Hallucination representations are model-specific, not universal.** Cross-model EBM transfer is at chance (~50%) even between models with identical hidden dimensions and shared architecture heritage. Instruction tuning doesn't just compress the signal — it rotates the representation space. Each target model needs its own trained EBM. Training takes ~5 minutes per model.
+
+12. **Multi-layer concatenation improves detection by ~6%.** Concatenating activations from layers 4+12+24 (early + middle + late) achieves 81.3% vs 75.5% for the final layer alone. The sweet spot is 3 layers; adding all 7 sampled layers (80.0%) slightly underperforms due to noise. Early layers carry complementary hallucination signal that the final layer compresses.
+
+13. **Upstream (question-level) detection is weak but model-dependent.** The model's representation of the question partially predicts hallucination (62.6% mean, 72.1% best on Qwen3.5-0.8B) but is much weaker than per-token post-hoc detection (75-78%). Instruction-tuned models (Qwen: 72.1%) show more signal than base models (LFM: 55.9%), suggesting IT models develop internal "uncertainty representations" that base models lack.

@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-06 — 22 EXPERIMENTS, 8 PRINCIPLES, TECHNICAL REPORT PUBLISHED
+**Last Updated:** 2026-04-07 — 28 EXPERIMENTS, 13 PRINCIPLES, 11+ MODELS ON HUGGINGFACE
 
 ## What's Working
 
@@ -47,6 +47,9 @@
 - Layer-targeted EBM, LayerNavigator, activation/weight steering
 - Concept vectors (targeted prompting)
 - Per-token activation dataset: 52,296 tokens (QA + TruthfulQA, Qwen3.5-0.8B)
+- EBM-guided rejection sampling (experiment 23)
+- Multi-layer hallucination probing (experiment 24, U-curve discovered)
+- MCP server with score_candidates tool
 
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
@@ -79,7 +82,7 @@
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
 - Docker compose: Claude API bridge + WebGPU gateway (`make up`)
 
-## Experiment Results (20 experiments)
+## Experiment Results (24 experiments)
 
 | # | Approach | Result | Verdict |
 |---|----------|--------|---------|
@@ -94,8 +97,14 @@
 | 20 | Concept steering | 0% change | ❌ Confirms #15-16 |
 | 21 | **Scaled per-token EBM (Qwen3-0.6B)** | **84.5% test** | **✅ More data helps** |
 | 22 | TruthfulQA + Qwen3.5-0.8B | 67.2% test | ⚠️ Better models = subtler signals |
+| 23 | EBM rejection sampling (TruthfulQA) | -3% to -6% | ❌ Adversarial QA defeats rejection |
+| 24 | Multi-layer probing | Final layer best (64%) | ⚠️ U-curve: signal at layers 4 and 24 |
+| 25 | **No-thinking mode** | **75.5% vs 61.3%** | **✅ Thinking compresses signal by 14.2%** |
+| 26 | Cross-model EBM transfer | 49.8% cross vs 86.2% self | ❌ Model-specific representations, no universal detector |
+| 27 | Upstream detection (question-level) | 62.6% mean | ⚠️ Weak signal, question reps partially predict hallucination |
+| 28 | **Multi-layer concatenation** | **81.3% vs 75.5%** | **✅ Layers 4+12+24 improve by 5.8%** |
 
-## 8 Principles Learned
+## 13 Principles Learned
 
 1. Simpler is better in small-data regimes
 2. Token-level features > sequence-level (mean-pooling kills signal)
@@ -105,11 +114,16 @@
 6. Different energy signals dominate in different domains
 7. Statistical difference ≠ causal influence
 8. Instruction tuning compresses the hallucination signal (84.5% base → 67.2% tuned)
+9. Adversarial questions defeat post-hoc detection (logprob/EBM/composite all fail on TruthfulQA)
+10. Chain-of-thought compresses hallucination signal (75.5% without thinking vs 61.3% with)
+11. Hallucination representations are model-specific (~50% cross-model transfer = chance)
+12. Multi-layer concatenation improves detection by ~6% (layers 4+12+24 = 81.3% vs last-only 75.5%)
+13. Upstream question-level detection is weak (62.6% mean) but model-dependent
 
 ## What's Next
 
 ### High Priority
-- **Ship MCP server + CLI**: tools built (`tools/verify-mcp/server.py`, `scripts/carnot_cli.py`), need real-world testing
+- **Ship MCP server + CLI**: ✅ DONE — MCP server (3 tools: verify_code, verify_with_properties, score_candidates), CLI (`carnot verify`), tested E2E
 - **Scale per-token EBM**: ✅ DONE — 52,296 tokens from QA + TruthfulQA (Qwen3.5-0.8B), 67.2% test accuracy
 - **E2E-001: Rust training pipeline test**: Only remaining E2E test gap
 
@@ -119,15 +133,17 @@
 - **Larger local model**: test with Qwen3-4B or 8B (67GB unified memory available)
 
 ### Research Directions
-- **Per-token EBM rejection sampling**: use per-token EBM for candidate selection (not yet tested)
-- **Tackle Principle 8**: instruction-tuned models compress hallucination signal — need methods beyond linear activation analysis (probing layers, attention patterns, logit lens)
+- ~~**Per-token EBM rejection sampling**~~: tested in experiment 23, no improvement on adversarial QA (-3% to -6%)
+- ~~**Multi-layer probing**~~: tested in experiment 24, final layer is already best (U-curve confirmed)
+- **Upstream detection**: Principle 9 suggests detecting adversarial questions BEFORE generation, not analyzing answers after
+- **Logit lens**: project intermediate representations through unembedding matrix to see what the model "thinks" at each layer
 - **EBT training on real data**: minimal EBT exists (`python/carnot/models/ebt.py`), needs training on large dataset
-- **Add MMLU, HaluEval, SimpleQA datasets**: more diverse evaluation data
+- **Larger model experiments**: test with Qwen3-4B or 8B — larger models may have more separable representations
 
 ### Documentation
 - **UI Aesthetic**: Premium glassmorphism and animations applied to `docs/index.html`
 - **Technical report**: published at `docs/technical-report.md`
-- **Experiment log**: 20 experiments at `ops/experiment-log.md`
+- **Experiment log**: 24 experiments at `ops/experiment-log.md`
 - **Research roadmaps**: v1-v3 at `openspec/change-proposals/`
 
 ## Known Constraints

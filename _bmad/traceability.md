@@ -14,13 +14,14 @@
 | FR-06 | Training Pipeline | `openspec/capabilities/training-inference/spec.md` | 30+ Python | CD-k, DSM, NCE, SNL, optimization-training, replay buffer | Implemented |
 | FR-07 | Inference Pipeline | `openspec/capabilities/training-inference/spec.md` | 20+ Python | Langevin + HMC + gradient clipping | Implemented |
 | FR-08 | Interoperability | `openspec/capabilities/core-ebm/spec.md` | 24 PyO3 | PyO3 bindings all tiers + samplers | Implemented |
-| FR-09 | Test Coverage | N/A (process) | 104 Rust + 1049 Python | pre-commit + CI | Implemented |
+| FR-09 | Test Coverage | N/A (process) | 104 Rust + 1093 Python | pre-commit + CI | Implemented |
 | FR-10 | Spec-Driven Dev | N/A (process) | spec_coverage.py | pre-commit + CI | Implemented |
 | FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | 100+ Python | Sandbox, evaluator, orchestrator, Trace2Skill, conductor | Implemented |
 | FR-12 | Verifiable Reasoning | `openspec/capabilities/verifiable-reasoning/spec.md` | 40+ Python | Constraints, repair, SAT, coloring, code, property tests, convergence | Implemented |
-| FR-13 | LLM-EBM Inference | `openspec/capabilities/llm-ebm-inference/spec.md` | 150+ Python | Composite scorer, iterative refinement, logprob rejection, multi-start, semantic energy, ARM-EBM bridge, diffusion, reasoning energy | Implemented |
+| FR-13 | LLM-EBM Inference | `openspec/capabilities/llm-ebm-inference/spec.md` | 170+ Python | Composite scorer, iterative refinement, logprob rejection, EBM rejection, multi-start, semantic energy, ARM-EBM bridge, diffusion, reasoning energy | Implemented |
 | FR-14 | Code Verification | `openspec/capabilities/code-verification/spec.md` | 50+ Python | Type/exception/test constraints, code embeddings (bag-of-tokens + AST), learned verifier, self-improving loop | Implemented |
-| FR-15 | Activation Analysis | `openspec/capabilities/llm-ebm-inference/spec.md` | 100+ Python | Activation extractor, hallucination direction, layer EBM, LayerNavigator, steering, weight steering, concept vectors | Implemented |
+| FR-15 | Activation Analysis | `openspec/capabilities/llm-ebm-inference/spec.md` | 110+ Python | Activation extractor, hallucination direction, layer EBM, LayerNavigator, steering, weight steering, concept vectors, multi-layer probing | Implemented |
+| FR-18 | MCP Server + CLI | `openspec/capabilities/llm-ebm-inference/spec.md` | 19 Python | MCP verify_code, verify_with_properties, score_candidates; CLI carnot verify | Implemented |
 | FR-16 | GPU Compute | N/A | 4 Rust | wgpu Vulkan backend, WebGPU gateway, ROCm 7.2 native gfx1150 | Implemented |
 | FR-17 | Documentation UI | `openspec/capabilities/documentation-ui/spec.md` | 1 Python | Premium aesthetic, glassmorphism, animations | Implemented |
 
@@ -42,3 +43,8 @@
 | Per-token EBM (71.8%) | ✅ Novel | — |
 | Activation steering (0%) | ❌ Negative result | Emotion Concepts (Anthropic 2025) |
 | SAT gradient repair (60% → 80%) | ✅ Validated | — |
+| Per-token EBM scaled (84.5%) | ✅ Novel | — |
+| Instruction tuning compression (84.5% → 67.2%) | ✅ Novel (Principle 8) | — |
+| EBM rejection on adversarial QA (-3%) | ❌ Negative result (Principle 9) | — |
+| Multi-layer probing (U-curve) | ✅ Novel | — |
+| Thinking compression (75.5% vs 61.3%) | ✅ Novel (Principle 10) | — |

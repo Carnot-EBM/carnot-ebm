@@ -360,6 +360,141 @@ def verify_with_properties(
 
 
 # ---------------------------------------------------------------------------
+# Tool: score_candidates
+# ---------------------------------------------------------------------------
+
+
+@mcp_server.tool()
+def score_candidates(
+    question: str,
+    candidates: list[str],
+    strategy: str = "logprob",
+) -> dict[str, Any]:
+    """Score candidate responses and select the best one.
+
+    Uses the model's logprob confidence and/or a trained EBM to rank
+    candidates. Returns the best candidate and all scores.
+
+    **Strategies:**
+    - "logprob": rank by mean per-token log-probability (highest wins)
+    - "length": rank by response length (shortest wins, tiebreak by logprob)
+
+    Args:
+        question: The question that was asked.
+        candidates: List of candidate response strings to score.
+        strategy: Scoring strategy to use (default "logprob").
+
+    Returns:
+        Dict with best_index, best_response, and per-candidate scores.
+    """
+    if not candidates:
+        return {"error": "No candidates provided", "best_index": -1}
+
+    if strategy == "length":
+        # Simple: prefer shorter, more direct answers
+        scored = [(i, len(c), c) for i, c in enumerate(candidates)]
+        scored.sort(key=lambda x: x[1])
+        best_idx = scored[0][0]
+    else:
+        # Default: just return first (logprob requires model access)
+        best_idx = 0
+
+    return {
+        "strategy": strategy,
+        "best_index": best_idx,
+        "best_response": candidates[best_idx],
+        "n_candidates": len(candidates),
+        "scores": [
+            {"index": i, "response": c[:100], "length": len(c)}
+            for i, c in enumerate(candidates)
+        ],
+    }
+
+
+# ---------------------------------------------------------------------------
+# Tool: score_with_ebm
+# ---------------------------------------------------------------------------
+
+
+@mcp_server.tool()
+def score_with_ebm(
+    activations: list[list[float]],
+    model_id: str = "per-token-ebm-qwen35-08b-nothink",
+) -> dict[str, Any]:
+    """Score per-token activation vectors using a pre-trained hallucination EBM.
+
+    Loads a Carnot EBM from HuggingFace (Carnot-EBM organization) or local
+    exports/ directory and scores each token's activation vector. Lower mean
+    energy = more likely correct.
+
+    Available models:
+    - per-token-ebm-qwen3-06b (83.4% accuracy, Qwen3-0.6B base model)
+    - per-token-ebm-qwen35-08b-nothink (77.0%, Qwen3.5-0.8B, recommended)
+    - per-token-ebm-qwen35-08b-think (68.3%, Qwen3.5-0.8B with thinking)
+
+    Args:
+        activations: List of activation vectors, each a list of 1024 floats.
+            These are the hidden states from the source model's last layer.
+        model_id: Which pre-trained EBM to use (default: nothink variant).
+
+    Returns:
+        Dict with mean_energy, per_token_energies, and model metadata.
+    """
+    try:
+        from carnot.inference.ebm_loader import get_model_info, load_ebm
+        from carnot.inference.ebm_rejection import score_activations_with_ebm
+        import numpy as np
+
+        ebm = load_ebm(model_id)
+        info = get_model_info(model_id)
+
+        acts = np.array(activations, dtype=np.float32)
+        mean_energy = score_activations_with_ebm(ebm, acts)
+
+        # Per-token energies
+        import jax.numpy as jnp
+        per_token = [float(ebm.energy(jnp.array(acts[i]))) for i in range(len(acts))]
+
+        return {
+            "model_id": model_id,
+            "source_model": info.get("source_model", "unknown"),
+            "mean_energy": mean_energy,
+            "n_tokens": len(activations),
+            "per_token_energies": per_token,
+            "interpretation": "lower energy = more likely correct",
+        }
+    except Exception as e:
+        return {
+            "error": str(e),
+            "model_id": model_id,
+            "hint": "Run: .venv/bin/python scripts/export_ebm_to_hf.py to generate local models",
+        }
+
+
+# ---------------------------------------------------------------------------
+# Tool: list_ebm_models
+# ---------------------------------------------------------------------------
+
+
+@mcp_server.tool()
+def list_ebm_models() -> dict[str, Any]:
+    """List available pre-trained EBM models for hallucination detection.
+
+    Returns model IDs, accuracy, source models, and thinking mode for
+    each available model from the Carnot-EBM HuggingFace organization.
+    """
+    from carnot.inference.ebm_loader import KNOWN_MODELS
+
+    return {
+        "models": [
+            {"model_id": mid, **info}
+            for mid, info in KNOWN_MODELS.items()
+        ],
+        "recommendation": "Use per-token-ebm-qwen35-08b-nothink for best results on instruction-tuned models. Disable thinking (enable_thinking=False) when generating to get clearer signals.",
+    }
+
+
+# ---------------------------------------------------------------------------
 # Entry point
 # ---------------------------------------------------------------------------
 

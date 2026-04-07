@@ -40,26 +40,26 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (25 experiments)
+## Key Results (28 experiments, 11+ models)
 
 | Approach | Domain | Result |
 |----------|--------|--------|
 | Logprob rejection sampling | QA/Factual | **+10% accuracy** (45% → 55%, n=20 questions) |
 | Composite scoring (logprob + tests) | Code | **0% → 30% accuracy** (n=10 tasks, vs. unmodified baseline) |
 | SAT gradient repair | Constraint satisfaction | **60% → 80%** (Haiku benchmark) |
-| Per-token EBM (base model) | Activation analysis | **84.5% test accuracy** (Qwen3-0.6B) |
-| Per-token EBM (no thinking) | Activation analysis | **75.5% test accuracy** (Qwen3.5-0.8B, thinking disabled) |
-| Per-token EBM (with thinking) | Activation analysis | 61.3% test accuracy (Qwen3.5-0.8B, thinking enabled) |
+| Per-token EBM (best base) | Activation analysis | **86.8% test accuracy** (Gemma4-E2B base) |
+| Per-token EBM (best IT) | Activation analysis | **85.8% test accuracy** (Qwen3.5-9B, no thinking) |
+| Multi-layer concat (4+12+24) | Activation analysis | **81.3%** vs 75.5% single layer (+5.8%) |
+| Cross-model transfer | Activation analysis | ~50% (chance — model-specific, negative result) |
 | Activation steering | In-generation | 0% effect (negative result) |
-| EBM rejection sampling | Adversarial QA | -3% to -6% (negative result) |
 
 **What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation, and rejection sampling on adversarial questions. **Key insights:** (1) Instruction tuning compresses hallucination signals, making the most-deployed models hardest to monitor (Principle 8), (2) chain-of-thought compresses them further — disabling thinking improves detection by 14.2% (Principle 10), (3) adversarial questions defeat post-hoc detection entirely (Principle 9). **Caveat:** QA results are on small samples (20 questions) without statistical significance testing. Code results compare against unmodified LLM output, not against fine-tuning or RLHF. See [Limitations](docs/technical-writeup.md#8-limitations).
 
-See the [technical writeup](docs/technical-writeup.md) for the full write-up, or the [technical report](docs/technical-report.md) for a summary of all 25 experiments.
+See the [technical writeup](docs/technical-writeup.md) for the full write-up, or the [technical report](docs/technical-report.md) for a summary.
 
-## 10 Principles Learned
+## 13 Principles Learned
 
-Hard-won lessons from 25 experiments on real models:
+Hard-won lessons from 28 experiments across 11+ model families:
 
 1. **Simpler is better in small-data regimes.** Linear projections outperform nonlinear models when you have fewer than 100 training examples.
 2. **Token-level features > sequence-level.** Mean-pooling across tokens destroys the signal. Per-token features preserve it.
@@ -68,9 +68,12 @@ Hard-won lessons from 25 experiments on real models:
 5. **Extract features from generated tokens, not prompts.** The hallucination signal lives in the GENERATED tokens, not the input.
 6. **Different energy signals dominate in different domains.** Logprobs for QA, structural tests for code. The composite combines both.
 7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations does NOT steer the model when injected during generation.
-8. **Instruction tuning compresses the hallucination signal.** Base models: 84.5%. Instruction-tuned: 67.2%. RLHF makes models sound confident even when wrong. **This is a fundamental limitation:** the models most in need of hallucination detection (instruction-tuned models deployed in production) are precisely the ones where activation-based detection is hardest.
+8. **Instruction tuning compresses the hallucination signal.** Base models: 86.8%. Instruction-tuned: 75.0%. RLHF makes models sound confident even when wrong.
 9. **Adversarial questions defeat post-hoc detection.** On TruthfulQA, neither logprob nor EBM rejection improves over greedy. Detection must move upstream.
 10. **Chain-of-thought compresses the hallucination signal.** Disabling thinking improves detection from 61.3% → 75.5% (+14.2%). Thinking makes hidden states more uniform.
+11. **Hallucination representations are model-specific.** Cross-model EBM transfer is at chance (~50%), even between same-architecture models. Each target model needs its own trained EBM (~5 min to train).
+12. **Multi-layer concatenation improves detection by ~6%.** Concatenating activations from layers 4+12+24 achieves 81.3% vs 75.5% for the final layer alone.
+13. **Upstream question-level detection is weak.** The model's representation of the question partially predicts hallucination (62.6% mean) but is much weaker than per-token post-hoc detection.
 
 ## Tools
 
@@ -221,9 +224,18 @@ Pre-trained EBM models and activation datasets are available on HuggingFace at [
 
 | Model | Accuracy | Source Model |
 |-------|----------|-------------|
-| `per-token-ebm-qwen3-06b` | 84.5% | Qwen3-0.6B (base) |
-| `per-token-ebm-qwen35-08b-nothink` | 75.5% | Qwen3.5-0.8B (no thinking) |
-| `per-token-ebm-qwen35-08b-think` | 61.3% | Qwen3.5-0.8B (with thinking) |
+| `per-token-ebm-gemma4-e2b-nothink` | 86.8% | Gemma 4 E2B (base) |
+| `per-token-ebm-qwen35-9b-nothink` | 85.8% | Qwen3.5-9B |
+| `per-token-ebm-qwen3-06b` | 83.4% | Qwen3-0.6B (base) |
+| `per-token-ebm-qwen35-4b-nothink` | 81.8% | Qwen3.5-4B |
+| `per-token-ebm-lfm25-350m-nothink` | 80.4% | LFM 2.5 350M (base) |
+| `per-token-ebm-qwen35-2b-nothink` | 79.3% | Qwen3.5-2B |
+| `per-token-ebm-gemma4-e4b-nothink` | 79.3% | Gemma 4 E4B (base) |
+| `per-token-ebm-gemma4-e4b-it-nothink` | 78.3% | Gemma 4 E4B-it |
+| `per-token-ebm-lfm25-12b-nothink` | 76.7% | LFM 2.5 1.2B Instruct |
+| `per-token-ebm-qwen35-08b-nothink` | 75.5% | Qwen3.5-0.8B |
+| `per-token-ebm-bonsai-17b-nothink` | 75.0% | Bonsai 1.7B |
+| `per-token-ebm-gemma4-e2b-it-nothink` | 75.0% | Gemma 4 E2B-it |
 
 See [docs/huggingface-plan.md](docs/huggingface-plan.md) for the full publishing plan.
 
