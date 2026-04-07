@@ -36,6 +36,7 @@ Documenting all experiments — what worked, what failed, and what we learned.
 | 28 | **Multi-layer concatenation** | **81.3% (3 layers) vs 75.5% (1 layer)** | **✅ Concatenating layers 4+12+24 improves by 5.8%** |
 | 29 | Layer gating vs concat | All-concat 79.2%, 3-layer 78.3%, gating 62.8% | 3-layer concat is the sweet spot; learned gating fails with limited data |
 | 30 | Temperature diversity | 78.7% best single-temp, 70.2% combined | ❌ Mixing temperatures hurts; more questions > more temperatures |
+| 31 | Multi-dataset (TruthfulQA+MMLU+SimpleQA+HaluEval) | 70.8% combined vs 75.5% TruthfulQA-only | ❌ Mixing domains hurts; domain-specific training wins |
 
 ## Detailed Experiment Notes
 
@@ -198,4 +199,6 @@ Documenting all experiments — what worked, what failed, and what we learned.
 
 12. **Multi-layer concatenation improves detection by ~6%.** Concatenating activations from layers 4+12+24 (early + middle + late) achieves 81.3% vs 75.5% for the final layer alone. The sweet spot is 3 layers; adding all 7 sampled layers (80.0%) slightly underperforms due to noise. Early layers carry complementary hallucination signal that the final layer compresses.
 
-13. **Upstream (question-level) detection is weak but model-dependent.** The model's representation of the question partially predicts hallucination (62.6% mean, 72.1% best on Qwen3.5-0.8B) but is much weaker than per-token post-hoc detection (75-78%). Instruction-tuned models (Qwen: 72.1%) show more signal than base models (LFM: 55.9%), suggesting IT models develop internal "uncertainty representations" that base models lack.
+13. **EBM detection is domain-specific, not universal.** Mixing datasets (experiment 31) and mixing temperatures (experiment 30) both hurt accuracy. The EBM learns domain-specific correct/wrong activation patterns. Train on your target domain, not on "everything." Same-model cross-domain transfer is poor (57.2%).
+
+14. **Upstream (question-level) detection is weak but model-dependent.** The model's representation of the question partially predicts hallucination (62.6% mean, 72.1% best on Qwen3.5-0.8B) but is much weaker than per-token post-hoc detection (75-78%). Instruction-tuned models (Qwen: 72.1%) show more signal than base models (LFM: 55.9%), suggesting IT models develop internal "uncertainty representations" that base models lack.
