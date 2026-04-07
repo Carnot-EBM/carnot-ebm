@@ -35,6 +35,7 @@ Documenting all experiments — what worked, what failed, and what we learned.
 | 27 | Upstream detection (question-level) | ⚠️ 62.6% mean (72.1% best) | Weak signal — question reps partially predict hallucination but much weaker than per-token |
 | 28 | **Multi-layer concatenation** | **81.3% (3 layers) vs 75.5% (1 layer)** | **✅ Concatenating layers 4+12+24 improves by 5.8%** |
 | 29 | Layer gating vs concat | All-concat 79.2%, 3-layer 78.3%, gating 62.8% | 3-layer concat is the sweet spot; learned gating fails with limited data |
+| 30 | Temperature diversity | 78.7% best single-temp, 70.2% combined | ❌ Mixing temperatures hurts; more questions > more temperatures |
 
 ## Detailed Experiment Notes
 
