@@ -1,5 +1,27 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-07 Research Roadmap v5 + Nemotron Analysis
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-07T18:59:33Z | 2026-04-07T19:03:43Z | Analyze Nemotron 3 Super paper, fold findings into roadmap v5 | TBD |
+| 2 | 2026-04-07T19:08:49Z | 2026-04-07T19:15:52Z | Restructure roadmap v5 as weight-first (label-free) research program | TBD |
+| 3 | 2026-04-07T19:21:22Z | 2026-04-07T19:32:00Z | Download Mixtral-8x7B, write Exp 32+33 scripts, update ops docs | TBD |
+
+---
+
+## Session: 2026-04-06 Documentation UI Modernization
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-06T18:00:00Z | 2026-04-06T18:05:00Z | Elevate docs/index.html to a premium aesthetic (glassmorphism, animations) | TBD |
+
+---
+
 ## Session: 2026-04-06 GEMINI.md Initialization
 
 ### Turn Log
