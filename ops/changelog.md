@@ -1,5 +1,80 @@
 # Carnot — Changelog
 
+## 2026-04-07: Multi-model EBM training, cross-model transfer (experiment 26)
+
+### Added
+- `scripts/train_ebm_multi_model.py`: Generalized pipeline for training EBMs across any HuggingFace model (15 models registered, auto-upload)
+- `scripts/experiment_26_cross_model_transfer.py`: Cross-model transfer experiment
+- `python/carnot/inference/ebm_loader.py`: Updated with all new model entries
+- `exports/space-hallucination-detector/`: Gradio Space for interactive EBM scoring
+- `exports/org-card/README.md`: HuggingFace organization card
+
+### HuggingFace Published
+- **8 EBM models** uploaded to Carnot-EBM: LFM2.5-350M, LFM2.5-1.2B, Bonsai-1.7B, Qwen3.5-2B, Qwen3.5-4B, Gemma4-E2B, Gemma4-E2B-it (+ 5 more training)
+- **Activation datasets** uploaded to Carnot-EBM/token-activations
+- **Interactive Space** at Carnot-EBM/hallucination-detector
+
+### Key Results
+- Experiment 26: Cross-model transfer at chance (~50%) — hallucination representations are model-specific
+- **Principle 11**: No universal hallucination detector via activation analysis. Each model needs its own EBM.
+- Gemma4-E2B base achieves highest EBM accuracy at 86.8% (confirms base models detect best)
+
+Triggered by: user instruction to train EBMs for multiple models and investigate cross-model transfer.
+
+---
+
+## 2026-04-06: Ship MCP+CLI, thinking mode experiment (experiment 25)
+
+### Added
+- `python/carnot/cli.py`: Installable CLI module (`carnot verify` command)
+- `examples/math_funcs.py`: Example functions for CLI testing
+- `scripts/experiment_25_no_thinking.py`: Thinking vs no-thinking comparison
+- `tests/python/test_cli.py`: 19 tests for CLI (parsing, type resolution, E2E verify)
+- `pyproject.toml`: Added `[project.scripts]` entry point for `carnot` CLI command
+
+### Key Results
+- **Experiment 25**: Disabling thinking improves EBM detection from 61.3% → 75.5% (+14.2%)
+- Energy gap 5.8x larger without thinking (2.4248 vs 0.4206)
+- **Principle 10**: Chain-of-thought compresses hallucination signal. For detection, disable thinking.
+
+### MCP Server Shipped
+- 3 tools: `verify_code`, `verify_with_properties`, `score_candidates`
+- `.mcp.json` registered, stdio transport, tested E2E with JSON-RPC
+- CLI tested with correct and buggy functions, property-based testing
+
+Triggered by: user instruction to ship MCP+CLI and investigate thinking mode.
+
+---
+
+## 2026-04-06: EBM rejection sampling, multi-layer probing, MCP server (experiments 23-24)
+
+### Added
+- `python/carnot/inference/ebm_rejection.py`: EBM-guided rejection sampling (REQ-INFER-015)
+  - `EBMRejectionConfig`, `EBMCandidateScore`, `EBMRejectionResult`
+  - `score_activations_with_ebm()`: scores per-token activations through trained EBM
+  - `ebm_rejection_sample()`: generates N candidates, combines EBM + logprob, selects best
+- `python/carnot/embeddings/layer_probing.py`: Multi-layer hallucination probing (REQ-INFER-016)
+  - `train_layer_probe()`: trains a small Gibbs EBM probe at a single layer
+  - `probe_all_layers()`: probes all layers and finds best
+  - `extract_all_layer_activations()`: captures hidden states from all layers
+- `tools/verify-mcp/server.py`: Added `score_candidates` tool for MCP-based candidate selection
+- `scripts/experiment_23_ebm_rejection.py`: Experiment 23 (EBM rejection on TruthfulQA)
+- `scripts/experiment_24_layer_probing.py`: Experiment 24 (multi-layer probing)
+- 24 new tests in `test_ebm_rejection.py` and `test_layer_probing.py`
+- REQ-INFER-015 and REQ-INFER-016 in llm-ebm-inference spec
+
+### Key Results
+- Experiment 23: EBM rejection sampling shows no improvement on adversarial QA (-3% to -6%)
+- Experiment 24: Final layer IS the best probe layer (64%). U-curve: signal at layers 4 (60%) and 24 (64%), compressed mid-network.
+- **Principle 9 discovered**: Adversarial questions defeat post-hoc detection. Detection must move upstream.
+
+### Significance
+Closes the loop on activation-based hallucination detection: we've proven it works on base models (84.5%), confirmed it's weaker on instruction-tuned models (67.2%), and shown it fails completely as a candidate filter on adversarial questions. The next frontier is upstream detection (analyzing questions, not answers).
+
+Triggered by: user instruction to implement EBM rejection sampling, multi-layer probing, and ship MCP server.
+
+---
+
 ## 2026-04-06: Documentation UI Modernization
 
 ### Added

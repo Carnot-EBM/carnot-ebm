@@ -18,6 +18,11 @@ from carnot.inference.composite_scorer import (
     CompositeEnergyConfig,
     CompositeEnergyScorer,
 )
+from carnot.inference.ebm_loader import (
+    KNOWN_MODELS,
+    get_model_info,
+    load_ebm,
+)
 from carnot.inference.ebm_rejection import (
     EBMCandidateScore,
     EBMRejectionConfig,
@@ -99,6 +104,7 @@ __all__ = [
     "EBMCandidateScore",
     "EBMRejectionConfig",
     "EBMRejectionResult",
+    "KNOWN_MODELS",
     "DiffusionConfig",
     "DiffusionResult",
     "RefinementResult",
@@ -117,6 +123,7 @@ __all__ = [
     "build_learned_sat_energy",
     "classify_hallucination",
     "ebm_rejection_sample",
+    "get_model_info",
     "compare_learned_vs_handcoded",
     "compare_learned_vs_handcoded_code",
     "compute_semantic_energy",
@@ -133,6 +140,7 @@ __all__ = [
     "parse_llm_sat_assignment",
     "RejectionSampleResult",
     "run_llm_coloring_experiment",
+    "load_ebm",
     "score_activations_with_ebm",
     "run_llm_sat_experiment",
     "solve_coloring_with_llm",
