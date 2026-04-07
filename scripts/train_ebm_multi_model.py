@@ -96,7 +96,7 @@ def collect_activations(
     model = AutoModelForCausalLM.from_pretrained(
         model_name, trust_remote_code=True,
         output_hidden_states=True,
-        torch_dtype=torch.float16 if device == "cuda" else None,
+        torch_dtype="auto" if device == "cuda" else None,
     )
     if device == "cuda":
         model = model.cuda()

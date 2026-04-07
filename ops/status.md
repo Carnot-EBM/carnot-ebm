@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-07 — 28 EXPERIMENTS, 13 PRINCIPLES, 11+ MODELS ON HUGGINGFACE
+**Last Updated:** 2026-04-07 — 29 EXPERIMENTS, 13 PRINCIPLES, 12+ MODELS ON HUGGINGFACE
 
 ## What's Working
 

@@ -34,6 +34,7 @@ Documenting all experiments — what worked, what failed, and what we learned.
 | 26 | Cross-model EBM transfer | ❌ 49.8% cross vs 86.2% self | Hallucination representations are model-specific; no universal detector |
 | 27 | Upstream detection (question-level) | ⚠️ 62.6% mean (72.1% best) | Weak signal — question reps partially predict hallucination but much weaker than per-token |
 | 28 | **Multi-layer concatenation** | **81.3% (3 layers) vs 75.5% (1 layer)** | **✅ Concatenating layers 4+12+24 improves by 5.8%** |
+| 29 | Layer gating vs concat | All-concat 79.2%, 3-layer 78.3%, gating 62.8% | 3-layer concat is the sweet spot; learned gating fails with limited data |
 
 ## Detailed Experiment Notes
 
