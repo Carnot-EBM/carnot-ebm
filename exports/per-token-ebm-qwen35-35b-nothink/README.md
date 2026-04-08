@@ -7,6 +7,22 @@ tags:
 license: apache-2.0
 ---
 
+
+> **Important: Research Artifact, Not a Production Detector**
+>
+> This model achieves 84.5% on held-out TruthfulQA test sets, but in practical
+> deployment (8 real questions), activation-based EBMs agreed with ground truth only
+> 50% of the time. The EBM detects model **confidence**, not **correctness** —
+> confident hallucinations get low energy (look fine) while correct-but-hedging
+> answers get flagged.
+>
+> This model is a research artifact documenting activation-space structure.
+> It is NOT a reliable hallucination detector for production use.
+>
+> For practical verification, use structural constraints (test execution, SAT solving)
+> rather than activation analysis. See the [Carnot technical report](https://github.com/ianblenke/carnot/blob/main/docs/technical-report.md)
+> for 41 experiments and 14 principles learned.
+
 # per-token-ebm-qwen35-35b-nothink
 
 Per-token hallucination detection EBM for Qwen/Qwen3.5-35B-A3B.
