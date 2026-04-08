@@ -2,7 +2,13 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an EBM framework that combines energy-based verification with large language models to reduce hallucinations. Through 25 systematic experiments on real models (Qwen3-0.6B and Qwen3.5-0.8B), we established what works: logprob rejection sampling (+10% accuracy on 20 questions; see [Limitations](docs/technical-writeup.md#8-limitations)), composite scoring (0% → 30% for code on 10 tasks vs. unmodified LLM baseline), and per-token EBM training (84.5% on base model). We discovered that instruction tuning compresses hallucination signals (84.5% → 67.2%) — meaning the models most deployed in production are hardest to monitor — and that chain-of-thought reasoning compresses them further (75.5% without thinking vs 61.3% with). Ships with an MCP server and CLI for Python code verification. See the [technical report](docs/technical-report.md) for full results.
+Carnot is a research framework exploring whether Energy-Based Models can detect LLM hallucinations via activation analysis. Through 34 experiments across 15 models (350M to 27B), we established **what works and what doesn't** — and most activation-based approaches don't work for the cases that matter.
+
+**What works:** The model's own logprobs for rejection sampling (+10% accuracy), and structural test execution for code verification (0% → 30%). These require no activation analysis — they're simple and practical.
+
+**What doesn't work (and why):** Per-token activation EBMs achieve 75-88% on held-out test sets, but this is misleading. In practical deployment, the EBM detects **confidence, not correctness** — confident hallucinations get *lower* energy (look fine) while correct-but-hedging answers get flagged. The EBM rewards the exact behavior it should penalize. See [Limitations](docs/technical-writeup.md#8-limitations).
+
+**What's genuinely valuable:** The 14 principles learned from systematic negative results, the scaling data across 15 model architectures, and the infrastructure for activation-based research. Ships with an MCP server and CLI for code verification. See the [technical report](docs/technical-report.md) for full results.
 
 ## The Problem with LLMs
 
@@ -40,40 +46,53 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (28 experiments, 11+ models)
+## Key Results (34 experiments, 15 models)
 
-| Approach | Domain | Result |
-|----------|--------|--------|
-| Logprob rejection sampling | QA/Factual | **+10% accuracy** (45% → 55%, n=20 questions) |
-| Composite scoring (logprob + tests) | Code | **0% → 30% accuracy** (n=10 tasks, vs. unmodified baseline) |
-| SAT gradient repair | Constraint satisfaction | **60% → 80%** (Haiku benchmark) |
-| Per-token EBM (best base) | Activation analysis | **86.8% test accuracy** (Gemma4-E2B base) |
-| Per-token EBM (best IT) | Activation analysis | **85.8% test accuracy** (Qwen3.5-9B, no thinking) |
-| Multi-layer concat (4+12+24) | Activation analysis | **81.3%** vs 75.5% single layer (+5.8%) |
-| Cross-model transfer | Activation analysis | ~50% (chance — model-specific, negative result) |
-| Activation steering | In-generation | 0% effect (negative result) |
+### What actually works in practice
 
-**What works:** The model's own logprobs + structural test execution, combined as a composite energy score. **What doesn't:** Activation-based steering during generation, and rejection sampling on adversarial questions. **Key insights:** (1) Instruction tuning compresses hallucination signals, making the most-deployed models hardest to monitor (Principle 8), (2) chain-of-thought compresses them further — disabling thinking improves detection by 14.2% (Principle 10), (3) adversarial questions defeat post-hoc detection entirely (Principle 9). **Caveat:** QA results are on small samples (20 questions) without statistical significance testing. Code results compare against unmodified LLM output, not against fine-tuning or RLHF. See [Limitations](docs/technical-writeup.md#8-limitations).
+| Approach | Domain | Result | Practical? |
+|----------|--------|--------|-----------|
+| Logprob rejection sampling | QA | +10% accuracy | **Yes** — no training needed |
+| Composite scoring (logprob + tests) | Code | 0% → 30% | **Yes** — structural verification |
+| SAT gradient repair | Constraints | 60% → 80% | **Yes** — mathematical |
+
+### What works on test sets but fails in practice
+
+| Approach | Test Accuracy | Practical Result | Why It Fails |
+|----------|-------------|-----------------|-------------|
+| Per-token EBM (best) | 88.5% | 50% on real questions | Detects confidence, not correctness |
+| Multi-layer concat | 81.3% | Not tested in deployment | Same fundamental limitation |
+| Activation steering | 0% effect | N/A | Statistical ≠ causal |
+| Cross-model transfer | ~50% (chance) | N/A | Model-specific representations |
+| Cross-domain training | 70.8% (worse) | N/A | Domain-specific signals |
+
+**The core problem:** activation-based EBMs measure how confident the model is, not whether it's right. A model that confidently says "Neil Armstrong walked on Mars" produces activations indistinguishable from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.
 
 See the [technical writeup](docs/technical-writeup.md) for the full write-up, or the [technical report](docs/technical-report.md) for a summary.
 
-## 13 Principles Learned
+## 14 Principles Learned
 
-Hard-won lessons from 28 experiments across 11+ model families:
+Hard-won lessons from 34 experiments across 15 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
-1. **Simpler is better in small-data regimes.** Linear projections outperform nonlinear models when you have fewer than 100 training examples.
-2. **Token-level features > sequence-level.** Mean-pooling across tokens destroys the signal. Per-token features preserve it.
-3. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function.
-4. **Overfitting is the main enemy.** Every approach that trains on calibration data overfits when examples < dimensions.
-5. **Extract features from generated tokens, not prompts.** The hallucination signal lives in the GENERATED tokens, not the input.
-6. **Different energy signals dominate in different domains.** Logprobs for QA, structural tests for code. The composite combines both.
+### What works
+1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
+2. **Different energy signals dominate in different domains.** Logprobs for QA, structural tests for code. The composite combines both and is never worse than either alone.
+3. **Multi-layer concatenation improves test-set detection by ~6%.** Concatenating activations from layers 4+12+24 achieves 81.3% vs 75.5% for the final layer alone.
+
+### What doesn't work (and why)
+4. **Activation EBMs detect confidence, not correctness.** The fundamental limitation. Confident hallucinations produce activations indistinguishable from confident correct answers. Test-set accuracy (75-88%) does not translate to practical detection (50%).
+5. **Instruction tuning compresses the hallucination signal.** Base models: 86.8%. Instruction-tuned: 75.0%. RLHF makes models sound confident even when wrong.
+6. **Chain-of-thought compresses it further.** Disabling thinking improves detection from 61.3% → 75.5%. Thinking makes hidden states more uniform.
 7. **Statistical difference ≠ causal influence.** A direction that separates correct from hallucinated activations does NOT steer the model when injected during generation.
-8. **Instruction tuning compresses the hallucination signal.** Base models: 86.8%. Instruction-tuned: 75.0%. RLHF makes models sound confident even when wrong.
-9. **Adversarial questions defeat post-hoc detection.** On TruthfulQA, neither logprob nor EBM rejection improves over greedy. Detection must move upstream.
-10. **Chain-of-thought compresses the hallucination signal.** Disabling thinking improves detection from 61.3% → 75.5% (+14.2%). Thinking makes hidden states more uniform.
-11. **Hallucination representations are model-specific.** Cross-model EBM transfer is at chance (~50%), even between same-architecture models. Each target model needs its own trained EBM (~5 min to train).
-12. **Multi-layer concatenation improves detection by ~6%.** Concatenating activations from layers 4+12+24 achieves 81.3% vs 75.5% for the final layer alone.
-13. **Upstream question-level detection is weak.** The model's representation of the question partially predicts hallucination (62.6% mean) but is much weaker than per-token post-hoc detection.
+8. **Adversarial questions defeat post-hoc detection.** On TruthfulQA, neither logprob nor EBM rejection improves over greedy.
+9. **Hallucination representations are model-specific.** Cross-model transfer is at chance (~50%). Each model needs its own EBM.
+10. **EBM detection is domain-specific.** Mixing datasets hurts (70.8% < 75.5%). Mixing temperatures hurts. Train on your target domain only.
+11. **Normalization doesn't enable transfer.** Z-score, L2, and PCA whitening all destroy signal without improving cross-domain or cross-model transfer.
+12. **Upstream question-level detection is weak.** The model's representation of the question partially predicts hallucination (62.6%) but not usefully.
+
+### Scaling observations
+13. **EBM accuracy scales with model size** within a family. Qwen3.5: 75.5% (0.8B) → 88.5% (27B). But this is test-set accuracy — the confidence-vs-correctness problem applies at all scales.
+14. **MoE architectures vary wildly.** Qwen3.5-35B has 256 genuinely specialized experts (0.008 overlap). Mixtral has 8 near-identical experts (0.997 overlap). Fundamentally different knowledge organization.
 
 ## Tools
 
@@ -220,24 +239,17 @@ Papers and resources that have informed Carnot's design and direction.
 
 ## Pre-trained Models
 
-Pre-trained EBM models and activation datasets are available on HuggingFace at [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM):
+15 per-token EBM models are available on HuggingFace at [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM).
 
-| Model | Accuracy | Source Model |
-|-------|----------|-------------|
-| `per-token-ebm-gemma4-e2b-nothink` | 86.8% | Gemma 4 E2B (base) |
-| `per-token-ebm-qwen35-9b-nothink` | 85.8% | Qwen3.5-9B |
-| `per-token-ebm-qwen3-06b` | 83.4% | Qwen3-0.6B (base) |
-| `per-token-ebm-qwen35-4b-nothink` | 81.8% | Qwen3.5-4B |
-| `per-token-ebm-lfm25-350m-nothink` | 80.4% | LFM 2.5 350M (base) |
-| `per-token-ebm-qwen35-2b-nothink` | 79.3% | Qwen3.5-2B |
-| `per-token-ebm-gemma4-e4b-nothink` | 79.3% | Gemma 4 E4B (base) |
-| `per-token-ebm-gemma4-e4b-it-nothink` | 78.3% | Gemma 4 E4B-it |
-| `per-token-ebm-lfm25-12b-nothink` | 76.7% | LFM 2.5 1.2B Instruct |
-| `per-token-ebm-qwen35-08b-nothink` | 75.5% | Qwen3.5-0.8B |
-| `per-token-ebm-bonsai-17b-nothink` | 75.0% | Bonsai 1.7B |
-| `per-token-ebm-gemma4-e2b-it-nothink` | 75.0% | Gemma 4 E2B-it |
+**Important caveat:** These models achieve 75-88% accuracy on held-out TruthfulQA test sets, but this metric is misleading. In practical deployment (8 real questions), the EBM agreed with ground truth only 50% of the time. The EBMs detect model *confidence*, not *correctness* — they are research artifacts for studying activation-space structure, not production hallucination detectors. See the [practical test results](scripts/experiment_practical_mcp_test.py).
 
-See [docs/huggingface-plan.md](docs/huggingface-plan.md) for the full publishing plan.
+| Model | Test Set Accuracy | Source Model | Notes |
+|-------|----------|-------------|-------|
+| `per-token-ebm-qwen35-27b-nothink` | 88.5% | Qwen3.5-27B | Highest test accuracy |
+| `per-token-ebm-gemma4-e2b-nothink` | 86.8% | Gemma 4 E2B (base) | Best base model |
+| `per-token-ebm-qwen35-9b-nothink` | 85.8% | Qwen3.5-9B | |
+| `per-token-ebm-qwen35-35b-nothink` | 84.5% | Qwen3.5-35B-A3B | MoE, 256 experts |
+| ... | 73-84% | 11 more models | See HuggingFace |
 
 ## License
 
