@@ -36,6 +36,18 @@ from pathlib import Path
 import numpy as np
 import torch
 
+
+class NumpyEncoder(json.JSONEncoder):
+    """Handle numpy/torch types in JSON serialization."""
+    def default(self, obj):
+        if isinstance(obj, (np.integer,)):
+            return int(obj)
+        if isinstance(obj, (np.floating,)):
+            return float(obj)
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return super().default(obj)
+
 # Use GPU for all linear algebra if available
 DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
@@ -270,16 +282,18 @@ def profile_router(router_weight: np.ndarray) -> dict:
     result["effective_rank"] = compute_effective_rank(sv)
     result["condition_number"] = compute_condition_number(sv)
 
-    normed = rw / (rw.norm(dim=1, keepdim=True) + 1e-10)
-    sim_matrix = (normed @ normed.T).cpu().numpy()
-    triu_idx = np.triu_indices(n_experts, k=1)
-    sims = sim_matrix[triu_idx]
-    result["router_similarity"] = {
-        "mean": float(sims.mean()),
-        "std": float(sims.std()),
-        "min": float(sims.min()),
-        "max": float(sims.max()),
-    }
+    if n_experts > 1:
+        normed = rw / (rw.norm(dim=1, keepdim=True) + 1e-10)
+        sim_matrix = (normed @ normed.T).cpu().numpy()
+        triu_idx = np.triu_indices(n_experts, k=1)
+        sims = sim_matrix[triu_idx]
+        if len(sims) > 0:
+            result["router_similarity"] = {
+                "mean": float(sims.mean()),
+                "std": float(sims.std()),
+                "min": float(sims.min()),
+                "max": float(sims.max()),
+            }
 
     return result
 
@@ -333,14 +347,31 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
     }
 
     # Second pass: profile each weight matrix.
-    # We process one safetensors file at a time to control memory.
+    # Per-shard checkpointing: save after each shard so crashes don't lose progress.
     moe_expert_weights = {}  # layer_idx -> expert_idx -> {matrix_name -> np.array}
     router_profiles = {}
 
+    output_path = Path(output_dir)
+    output_path.mkdir(parents=True, exist_ok=True)
+    safe_model_name = model_name.replace("/", "_")
+    checkpoint_dir = output_path / f"_checkpoint_{safe_model_name}"
+    checkpoint_dir.mkdir(parents=True, exist_ok=True)
+
     print(f"Using device: {DEVICE}")
 
-    for sf in st_files:
-        print(f"  Processing {sf.name}...")
+    for shard_idx, sf in enumerate(st_files):
+        # Check if this shard is already profiled
+        shard_checkpoint = checkpoint_dir / f"shard_{shard_idx:03d}.json"
+        if shard_checkpoint.exists():
+            print(f"  [{shard_idx+1}/{len(st_files)}] {sf.name} — cached, loading...")
+            with open(shard_checkpoint) as cf:
+                shard_data = json.load(cf)
+            result["layer_profiles"].extend(shard_data.get("profiles", []))
+            # Restore MoE weights from checkpoint (stored as shapes only, re-load if needed)
+            continue
+
+        shard_profiles = []
+        print(f"  [{shard_idx+1}/{len(st_files)}] {sf.name}...")
         with safe_open(str(sf), framework="pt") as f:
             for key in f.keys():
                 tensor = f.get_tensor(key).float().to(DEVICE)
@@ -353,6 +384,7 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
                 # Profile this weight matrix on GPU.
                 profile = profile_weight_matrix(key, tensor)
                 result["layer_profiles"].append(profile)
+                shard_profiles.append(profile)
                 n_profiled = len(result["layer_profiles"])
                 if n_profiled % 20 == 0:
                     print(f"    {n_profiled} matrices profiled...")
@@ -391,6 +423,11 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
                 del tensor
                 if DEVICE.type == "cuda":
                     torch.cuda.empty_cache()
+
+        # Save shard checkpoint
+        with open(shard_checkpoint, "w") as cf:
+            json.dump({"profiles": shard_profiles}, cf, cls=NumpyEncoder)
+        print(f"    Checkpoint saved: {shard_checkpoint.name}")
 
     # MoE cross-expert analysis.
     if moe_expert_weights:
@@ -437,17 +474,6 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
     # Save results.
     output_path = Path(output_dir)
     output_path.mkdir(parents=True, exist_ok=True)
-
-    # Custom encoder to handle numpy/torch types
-    class NumpyEncoder(json.JSONEncoder):
-        def default(self, obj):
-            if isinstance(obj, (np.integer,)):
-                return int(obj)
-            if isinstance(obj, (np.floating,)):
-                return float(obj)
-            if isinstance(obj, np.ndarray):
-                return obj.tolist()
-            return super().default(obj)
 
     safe_model_name = model_name.replace("/", "_")
     json_path = output_path / f"weight_profile_{safe_model_name}.json"
