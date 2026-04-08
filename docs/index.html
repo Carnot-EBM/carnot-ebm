@@ -259,7 +259,7 @@
       <li><a href="#results">Results</a></li>
       <li><a href="#quickstart">Quick Start</a></li>
       <li><a href="technical-report.html">Report</a></li>
-      <li><a href="technical-writeup.html">Paper</a></li>
+      <li><a href="technical-writeup.html">Writeup</a></li>
     </ul>
     <a href="https://huggingface.co/Carnot-EBM" class="nav-gh" target="_blank" style="margin-right: 0.75rem;">
       HuggingFace
@@ -280,13 +280,13 @@
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm" class="btn btn-primary">Get Started</a>
-      <a href="technical-writeup.html" class="btn btn-secondary">Read Research Paper</a>
+      <a href="technical-writeup.html" class="btn btn-secondary">Technical Writeup</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">22</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">1,153</div><div class="stat-label">Tests</div></div>
-      <div class="stat"><div class="stat-num">100%</div><div class="stat-label">Coverage</div></div>
-      <div class="stat"><div class="stat-num">84.5%</div><div class="stat-label">Accuracy</div></div>
+      <div class="stat"><div class="stat-num">34</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Models</div></div>
+      <div class="stat"><div class="stat-num">14</div><div class="stat-label">Principles</div></div>
+      <div class="stat"><div class="stat-num">1,107</div><div class="stat-label">Tests</div></div>
     </div>
   </div>
 </section>
@@ -386,11 +386,11 @@
     <h2 class="section-title">Implement in Minutes</h2>
     
     <div class="qs-tabs">
-      <button class="tab active">Python / JAX</button>
-      <button class="tab">Rust</button>
+      <button class="tab active" onclick="showTab('python')">Python / JAX</button>
+      <button class="tab" onclick="showTab('rust')">Rust</button>
     </div>
-    
-    <div class="code-window">
+
+    <div id="tab-python" class="code-window">
       <div class="code-head"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
 <pre><code><span class="kw">from</span> carnot.models.ising <span class="kw">import</span> IsingModel
 <span class="kw">from</span> carnot.training <span class="kw">import</span> contrastive_divergence
@@ -403,6 +403,33 @@ model = <span class="fn">contrastive_divergence</span>(model, data, steps=<span 
 result = model.<span class="fn">verify</span>(activations)
 <span class="kw">print</span>(<span class="str">f"Energy: {result.energy}"</span>)</code></pre>
     </div>
+
+    <div id="tab-rust" class="code-window" style="display: none;">
+      <div class="code-head"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+<pre><code><span class="kw">use</span> carnot_ising::{IsingModel, IsingConfig};
+<span class="kw">use</span> carnot_samplers::langevin::{LangevinSampler, LangevinConfig};
+
+<span class="cm">// Initialize Ising model</span>
+<span class="kw">let</span> config = <span class="fn">IsingConfig::new</span>(<span class="num">1024</span>);
+<span class="kw">let</span> model = <span class="fn">IsingModel::new</span>(config);
+
+<span class="cm">// Compute energy</span>
+<span class="kw">let</span> energy = model.<span class="fn">energy</span>(&activations);
+<span class="fn">println!</span>(<span class="str">"Energy: {energy}"</span>);
+
+<span class="cm">// Sample via Langevin dynamics</span>
+<span class="kw">let</span> sampler = <span class="fn">LangevinSampler::new</span>(<span class="fn">LangevinConfig::default</span>());
+<span class="kw">let</span> samples = sampler.<span class="fn">sample</span>(&model, <span class="num">100</span>);</code></pre>
+    </div>
+
+    <script>
+    function showTab(lang) {
+      document.getElementById('tab-python').style.display = lang === 'python' ? 'block' : 'none';
+      document.getElementById('tab-rust').style.display = lang === 'rust' ? 'block' : 'none';
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+    }
+    </script>
   </div>
 </section>
 
@@ -410,7 +437,7 @@ result = model.<span class="fn">verify</span>(activations)
   <div class="container">
     <div class="f-links">
       <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a>
-      <a href="technical-writeup.html">Research Paper</a>
+      <a href="technical-writeup.html">Technical Writeup</a>
       <a href="technical-report.html">Technical Report</a>
       <a href="https://huggingface.co/Carnot-EBM">HuggingFace</a>
     </div>
