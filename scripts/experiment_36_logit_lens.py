@@ -129,36 +129,34 @@ def logit_lens_analysis(
         n_hs = len(hs)
         n_gen = len(gen_ids)
 
-        # For each generated token, compute logit lens features
-        for t_idx in range(n_gen):
-            pos = prompt_len + t_idx
-            actual_token = gen_ids[t_idx].item()
+        # Process one layer at a time to avoid GPU OOM on large vocab projections
+        # Pre-compute per-layer features for all generated tokens
+        all_layer_preds = []  # (n_hs,) lists of (n_gen,) top tokens
+        all_layer_ents = []   # (n_hs,) lists of (n_gen,) entropies
+        all_layer_ranks = []  # (n_hs,) lists of (n_gen,) ranks
 
-            # Project each layer's hidden state through unembedding
-            layer_predictions = []
-            layer_entropies = []
-            layer_ranks_of_actual = []
-
+        with torch.no_grad():
+            actual_ids = gen_ids[:n_gen].to(device)
             for layer_idx in range(n_hs):
-                h = hs[layer_idx][0, pos, :]  # (hidden_dim,)
-
-                # Project to vocabulary: logits = h @ unembed.T
-                logits = h.float() @ unembed.float().T  # (vocab_size,)
+                h = hs[layer_idx][0, prompt_len:prompt_len + n_gen, :]  # (n_gen, hidden_dim)
+                logits = h.float() @ unembed.float().T  # (n_gen, vocab_size)
                 probs = torch.softmax(logits, dim=-1)
+                all_layer_preds.append(logits.argmax(dim=-1).cpu().tolist())
+                ent = -(probs * (probs + 1e-10).log()).sum(dim=-1)
+                all_layer_ents.append(ent.cpu().tolist())
+                # Rank: count tokens with higher logits than the actual token
+                actual_logit = logits.gather(1, actual_ids.unsqueeze(-1)).squeeze(-1)
+                rank = (logits > actual_logit.unsqueeze(-1)).sum(dim=-1)
+                all_layer_ranks.append(rank.cpu().tolist())
+                del logits, probs, ent, rank
+            del actual_ids
+            if device == "cuda":
+                torch.cuda.empty_cache()
 
-                # What does this layer predict?
-                top_token = logits.argmax().item()
-                layer_predictions.append(top_token)
-
-                # Entropy of this layer's prediction distribution
-                ent = -(probs * (probs + 1e-10).log()).sum().item()
-                layer_entropies.append(ent)
-
-                # Rank of the actual token in this layer's prediction
-                sorted_indices = logits.argsort(descending=True)
-                rank = (sorted_indices == actual_token).nonzero(as_tuple=True)[0]
-                rank = rank[0].item() if len(rank) > 0 else len(logits)
-                layer_ranks_of_actual.append(rank)
+        for t_idx in range(n_gen):
+            layer_predictions = [all_layer_preds[l][t_idx] for l in range(n_hs)]
+            layer_entropies = [all_layer_ents[l][t_idx] for l in range(n_hs)]
+            layer_ranks_of_actual = [all_layer_ranks[l][t_idx] for l in range(n_hs)]
 
             # Compute features from the layer trajectories
             final_prediction = layer_predictions[-1]
