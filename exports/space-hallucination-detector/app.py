@@ -262,9 +262,9 @@ with gr.Blocks(
     9. Adversarial questions defeat post-hoc detection
     10. **Chain-of-thought compresses the signal further** (disable thinking for +14% detection)
 
-    [GitHub](https://github.com/ianblenke/carnot) |
-    [Technical Report](https://github.com/ianblenke/carnot/blob/main/docs/technical-report.md) |
-    [Usage Guide](https://github.com/ianblenke/carnot/blob/main/docs/usage-guide.md)
+    [GitHub](https://github.com/Carnot-EBM/carnot-ebm) |
+    [Technical Report](https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/technical-report.md) |
+    [Usage Guide](https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/usage-guide.md)
     """)
 
 if __name__ == "__main__":

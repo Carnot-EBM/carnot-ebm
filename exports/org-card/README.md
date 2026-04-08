@@ -71,9 +71,9 @@ From 25 experiments across multiple model families:
 
 ## Links
 
-- [GitHub Repository](https://github.com/ianblenke/carnot)
-- [Technical Report](https://github.com/ianblenke/carnot/blob/main/docs/technical-report.md)
-- [Usage Guide](https://github.com/ianblenke/carnot/blob/main/docs/usage-guide.md)
+- [GitHub Repository](https://github.com/Carnot-EBM/carnot-ebm)
+- [Technical Report](https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/technical-report.md)
+- [Usage Guide](https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/usage-guide.md)
 - [Interactive Demo](https://huggingface.co/spaces/Carnot-EBM/hallucination-detector) *(coming soon)*
 
 ## License
