@@ -366,7 +366,7 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
     # First pass: enumerate all parameter names and shapes without loading weights.
     all_params = {}
     for sf in st_files:
-        with safe_open(str(sf), framework="numpy") as f:
+        with safe_open(str(sf), framework="pt") as f:
             for key in f.keys():
                 all_params[key] = {"file": sf.name, "shape": list(f.get_tensor(key).shape)}
 
@@ -393,9 +393,9 @@ def load_and_profile(model_name: str, output_dir: str) -> dict:
 
     for sf in st_files:
         print(f"  Processing {sf.name}...")
-        with safe_open(str(sf), framework="numpy") as f:
+        with safe_open(str(sf), framework="pt") as f:
             for key in f.keys():
-                tensor = f.get_tensor(key)
+                tensor = f.get_tensor(key).float().numpy()
 
                 # Skip 1D tensors (biases, norms) — they're not informative for
                 # weight structure analysis.

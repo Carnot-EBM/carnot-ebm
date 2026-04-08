@@ -76,7 +76,7 @@ def extract_expert_channel_profiles(model_name: str) -> dict:
 
     for sf in st_files:
         print(f"  Scanning {sf.name}...")
-        with safe_open(str(sf), framework="numpy") as f:
+        with safe_open(str(sf), framework="pt") as f:
             for key in f.keys():
                 if "experts" not in key:
                     continue
@@ -94,7 +94,7 @@ def extract_expert_channel_profiles(model_name: str) -> dict:
                 if expert_idx not in experts[layer_key]:
                     experts[layer_key][expert_idx] = {}
 
-                tensor = f.get_tensor(key)
+                tensor = f.get_tensor(key).float().numpy()
 
                 # Mixtral naming: w1 = gate_proj (FC1), w2 = down_proj (FC2), w3 = up_proj
                 if "w1" in key or "gate_proj" in key:
