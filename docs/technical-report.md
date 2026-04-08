@@ -291,29 +291,46 @@ make research-loop
 
 ## 10. Conclusion
 
-Across 25 experiments on two model families (Qwen3-0.6B base and Qwen3.5-0.8B instruction-tuned), the most effective LLM+EBM combination is surprisingly simple: use the model's own logprobs as energy for candidate selection, combine with structural test execution for code verification, and iterate with feedback. This "composite scorer" architecture improves accuracy on both QA (+10%) and code (0% → 30%) tasks, with no training required.
+Across 34 experiments on 15 models spanning 350M to 27B parameters, four architecture families (Qwen, Gemma, LFM, GPT-OSS), and both dense and MoE configurations, we reached a clear conclusion: **activation-based EBMs detect model confidence, not factual correctness.**
 
-More sophisticated approaches — training EBMs on activations, steering generation via hooks — show detectable signals but fail to improve practical output quality. EBM rejection sampling on adversarial questions (TruthfulQA) actually hurt accuracy by 3-6% (Experiment 23). Multi-layer probing (Experiment 24) confirmed the final transformer layer is optimal, with hallucination signal following a U-curve across layers.
+The 75-88% test-set accuracy on held-out TruthfulQA data is statistically real but practically misleading. In a deployment test on 8 questions, the EBM agreed with ground truth only 50% of the time. The failure mode is precisely the one that matters: confident hallucinations ("Neil Armstrong walked on Mars") receive *lower* energy than correct hedging ("Atlantis population is not defined"). The EBM rewards the behavior it should penalize.
 
-Three compression effects compound against activation-based detection:
+### What works
 
-1. **Instruction tuning** compresses the signal (84.5% → 67.2%, Experiment 22)
-2. **Adversarial questions** make correct/wrong answers indistinguishable (Experiment 23)
-3. **Chain-of-thought reasoning** compresses it further — disabling thinking improves detection from 61.3% to 75.5% (+14.2%, Experiment 25)
+The simplest approaches remain the most effective:
 
-The thinking mode finding (Principle 10) is our most actionable discovery: for activation-based hallucination detection, **disable chain-of-thought**. The thinking process makes hidden states more uniform across correct and wrong answers, with a 5.8x reduction in energy gap. This creates a fundamental tension: thinking may improve answer quality but makes detection harder.
+- **Logprob rejection sampling** (+10% accuracy, Experiment 13): generate N candidates, pick the most confident. No training, no activation analysis.
+- **Structural test execution** (0% → 30% for code, Experiment 14): run the code, check the output. External verification, not internal model introspection.
+- **Composite scoring** combining both signals: never worse than either alone.
 
-The framework ships with an MCP server (3 Python code verification tools) and CLI (`carnot verify`) for structural code verification. The composite scorer (logprob + structural tests) is the most mature component and does not require activation analysis. Note: this is alpha-stage research software (v0.1.0), not production-hardened infrastructure.
+### What doesn't work (and why)
 
-### 10 Principles Learned
+Four compounding effects defeat activation-based detection:
 
-1. Simpler is better in small-data regimes
-2. Token-level features > sequence-level (mean-pooling kills signal)
-3. The model's own logprobs are the best energy
-4. Overfitting is the main enemy when examples < dimensions
-5. Extract features from generated tokens, not prompts
-6. Different energy signals dominate in different domains
+1. **Confidence ≠ correctness** — the EBM learns to detect confident vs uncertain activations, but confident hallucinations look identical to confident correct answers
+2. **Instruction tuning compresses the signal** (86.8% base → 75.0% IT) — the models most deployed in production are hardest to monitor
+3. **Chain-of-thought compresses it further** (75.5% → 61.3%) — thinking makes activations more uniform
+4. **Adversarial questions defeat post-hoc detection entirely** — rejection sampling hurts accuracy by 3-6%
+
+### What's genuinely valuable
+
+The primary contribution of this project is the **14 systematic negative results** documented across 34 experiments. These save other researchers months of dead ends by establishing what doesn't work and why. The scaling data across 15 models, the MoE structure analysis (Qwen3.5-35B's 256 specialized experts vs Mixtral's 8 near-identical experts), and the infrastructure for activation-based research are secondary but useful contributions.
+
+For practical hallucination detection, use external verification (retrieval, tool use, structural tests) rather than internal model introspection. The model's own logprobs plus executable constraints remain the most effective and simplest approach.
+
+### 14 Principles Learned
+
+1. The model's own logprobs are the best energy (no EBM needed)
+2. Different energy signals dominate in different domains
+3. Multi-layer concatenation improves test-set detection by ~6%
+4. **Activation EBMs detect confidence, not correctness**
+5. Instruction tuning compresses the hallucination signal
+6. Chain-of-thought compresses it further
 7. Statistical difference ≠ causal influence
-8. Instruction tuning compresses the hallucination signal
-9. Adversarial questions defeat post-hoc detection
-10. Chain-of-thought reasoning compresses the hallucination signal
+8. Adversarial questions defeat post-hoc detection
+9. Hallucination representations are model-specific (no universal detector)
+10. EBM detection is domain-specific (mixing hurts)
+11. Normalization doesn't enable transfer
+12. Upstream question-level detection is weak
+13. EBM accuracy scales with model size (but the core problem applies at all scales)
+14. MoE architectures vary wildly in expert specialization
