@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-08: Extropic thrml integration, LLM→Ising→repair pipeline (experiments 36-41)
+
+### The Pivot
+Proved activation-based hallucination detection doesn't work (confidence ≠ correctness).
+Pivoted to structural constraint verification via Extropic-compatible Ising models.
+
+### Key Experiments
+- **Exp 36**: Logit lens divergence → 50.6% (chance). Dynamics identical for correct/wrong.
+- **Exp 37**: EBT in sentence embeddings → 57.5%. Sentence encoders embed topic, not truth.
+- **Exp 38**: NLI-based EBM → 70.8% test, 50% practical. NLI detects consistency, not facts.
+- **Exp 39**: thrml Ising SAT solver → beats random at 50+ variables. First Extropic-compatible experiment.
+- **Exp 40**: Graph coloring → Ising → thrml finds perfect solutions on 3/6 problems.
+- **Exp 41**: **LLM → Ising verify → repair: 2/6 hallucinations caught and fixed (0%→100%).**
+
+### Infrastructure
+- Integrated Extropic's thrml library (IsingEBM, Block Gibbs sampling)
+- SAT and graph coloring → Ising encoding pipelines
+- Full LLM → constraint extraction → Ising → thrml → decoded solution pipeline
+- Updated all 16 HuggingFace model cards with honest "research artifact" disclaimer
+- Fixed all GitHub URLs (ianblenke/carnot → Carnot-EBM/carnot-ebm)
+
+### The Definitive Finding
+You cannot detect factual hallucination from model internals. You need external verification.
+The "LLM proposes, Ising repairs" architecture works and maps to Extropic TSU hardware.
+
+---
+
 ## 2026-04-07: Research Roadmap v5 — Weight-First EBM
 
 ### Paradigm Shift

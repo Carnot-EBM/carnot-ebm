@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-07 — 29 EXPERIMENTS, 13 PRINCIPLES, 12+ MODELS ON HUGGINGFACE
+**Last Updated:** 2026-04-08 — 41 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -103,34 +103,62 @@
 | 26 | Cross-model EBM transfer | 49.8% cross vs 86.2% self | ❌ Model-specific representations, no universal detector |
 | 27 | Upstream detection (question-level) | 62.6% mean | ⚠️ Weak signal, question reps partially predict hallucination |
 | 28 | **Multi-layer concatenation** | **81.3% vs 75.5%** | **✅ Layers 4+12+24 improve by 5.8%** |
+| 29 | Layer gating vs concat | All-concat 79.2%, gating 62.8% | 3-layer concat is sweet spot; learned gating fails |
+| 30 | Temperature diversity | 78.7% best single, 70.2% combined | ❌ Mixing temperatures hurts |
+| 31 | Multi-dataset training | 70.8% combined vs 75.5% single | ❌ Mixing domains hurts |
+| 32 | **Weight profiling (dense + MoE)** | Qwen3.5-35B expert overlap 0.008 | **✅ MoE experts genuinely specialized** |
+| 34 | MoE routing entropy | Router hooks didn't capture | ⚠️ Need model-specific hook parsing |
+| 35 | Activation normalization | Z-score/L2/PCA all hurt | ❌ Normalization destroys signal |
+| 36 | **Logit lens divergence** | **50.6% = chance** | **❌ Dynamics identical for correct/wrong** |
+| 37 | EBT in sentence embedding space | 57.5%, loss never decreased | ❌ Sentence encoders embed topic, not truth |
+| 38 | NLI-based EBM | 70.8% test, 50% practical | ⚠️ NLI detects consistency, not facts |
+| 39 | **thrml Ising SAT solver** | **Beats random at 50+ vars** | **✅ First Extropic-compatible experiment** |
+| 40 | thrml graph coloring | Perfect on 3/6 problems | ✅ Constraint satisfaction via sampling |
+| 41 | **LLM → Ising verify → repair** | **2/6 problems repaired 0%→100%** | **✅ "LLM proposes, Ising repairs" works** |
 
-## 13 Principles Learned
+## 14 Principles Learned
 
-1. Simpler is better in small-data regimes
-2. Token-level features > sequence-level (mean-pooling kills signal)
-3. Model's own logprobs are the best energy
-4. Overfitting is the main enemy when examples < dimensions
-5. Extract features from generated tokens, not prompts
-6. Different energy signals dominate in different domains
-7. Statistical difference ≠ causal influence
-8. Instruction tuning compresses the hallucination signal (84.5% base → 67.2% tuned)
-9. Adversarial questions defeat post-hoc detection (logprob/EBM/composite all fail on TruthfulQA)
-10. Chain-of-thought compresses hallucination signal (75.5% without thinking vs 61.3% with)
-11. Hallucination representations are model-specific (~50% cross-model transfer = chance)
-12. Multi-layer concatenation improves detection by ~6% (layers 4+12+24 = 81.3% vs last-only 75.5%)
-13. Upstream question-level detection is weak (62.6% mean) but model-dependent
+### What works
+1. Model's own logprobs are the best energy for rejection sampling (+10%)
+2. Different energy signals dominate in different domains (logprobs for QA, tests for code)
+3. Multi-layer concatenation improves test-set detection by ~6%
+
+### What doesn't work for hallucination detection
+4. **Activation EBMs detect confidence, not correctness** (50% practical)
+5. Instruction tuning compresses hallucination signal (86.8% base → 75.0% IT)
+6. Chain-of-thought compresses it further (75.5% → 61.3%)
+7. Statistical difference ≠ causal influence (steering: 0% effect)
+8. Adversarial questions defeat post-hoc detection
+9. Hallucination representations are model-specific (~50% cross-model transfer)
+10. EBM detection is domain-specific (mixing hurts)
+11. Normalization doesn't enable transfer
+12. Upstream question-level detection is weak (62.6%)
+13. Logit lens: dynamics identical for correct/wrong (50.6%)
+14. Sentence/NLI encoders embed topic/consistency, not factual truth
+
+### The definitive finding
+**You cannot detect factual hallucination without access to factual knowledge.** No internal signal — activations, logit lens, NLI, confidence — can distinguish "Neil Armstrong walked on Mars" from "Neil Armstrong walked on the Moon."
+
+### What DOES work: structural constraint verification
+- SAT → Ising → thrml sampling beats random at scale (exp 39)
+- Graph coloring → Ising → thrml finds perfect solutions (exp 40)
+- LLM proposes, Ising verifies and repairs — 2/6 hallucinations caught and fixed (exp 41)
+- This architecture maps directly to Extropic TSU hardware
 
 ## What's Next
 
 ### High Priority
-- **Ship MCP server + CLI**: ✅ DONE — MCP server (3 tools: verify_code, verify_with_properties, score_candidates), CLI (`carnot verify`), tested E2E
-- **Scale per-token EBM**: ✅ DONE — 52,296 tokens from QA + TruthfulQA (Qwen3.5-0.8B), 67.2% test accuracy
-- **E2E-001: Rust training pipeline test**: Only remaining E2E test gap
+- **Scale thrml constraint verification**: larger SAT/coloring problems, more constraint types
+- **LLM constraint extraction**: parse natural language into Ising-encodable constraints
+- **Extropic hardware testing**: when TSU is available, run thrml code natively
 
-### Medium Priority
-- **GitHub public mirror**: open-source visibility
-- **GPU-accelerated experiments**: ROCm 7.2 native gfx1150 ready (3.3x speedup), update experiment scripts to use `.cuda()`
-- **Larger local model**: test with Qwen3-4B or 8B (67GB unified memory available)
+### Completed
+- ~~Ship MCP server + CLI~~: ✅ DONE
+- ~~Scale per-token EBM~~: ✅ DONE (16 models on HuggingFace)
+- ~~Weight profiling~~: ✅ DONE (dense + MoE analyzed)
+- ~~Logit lens~~: ✅ DONE (negative result — 50.6%)
+- ~~NLI-based EBM~~: ✅ DONE (70.8% test, 50% practical)
+- ~~thrml integration~~: ✅ DONE (SAT + coloring + LLM verify/repair)
 
 ### Research Directions (Roadmap v5 — Weight-First EBM)
 
