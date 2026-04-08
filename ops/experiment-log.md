@@ -37,6 +37,10 @@ Documenting all experiments — what worked, what failed, and what we learned.
 | 29 | Layer gating vs concat | All-concat 79.2%, 3-layer 78.3%, gating 62.8% | 3-layer concat is the sweet spot; learned gating fails with limited data |
 | 30 | Temperature diversity | 78.7% best single-temp, 70.2% combined | ❌ Mixing temperatures hurts; more questions > more temperatures |
 | 31 | Multi-dataset (TruthfulQA+MMLU+SimpleQA+HaluEval) | 70.8% combined vs 75.5% TruthfulQA-only | ❌ Mixing domains hurts; domain-specific training wins |
+| 32 | Weight structure profiling (dense + MoE) | Qwen3.5-35B experts overlap 0.008 vs Mixtral 0.997 | ✅ MoE architectures differ fundamentally in expert specialization |
+| — | Scaling curve analysis | 75.5% → 88.5% (0.8B → 27B Qwen3.5) | ✅ EBM accuracy scales with model size; IT tax shrinks at larger scale |
+| 34 | MoE routing entropy as hallucination signal | Router hooks didn't capture routing decisions | ⚠️ Qwen3.5-35B router not accessible via standard forward hooks |
+| — | Practical deployment test | EBM agreement 50%, energy gap inverted | ❌ Confident hallucinations have LOW energy — indistinguishable from correct |
 
 ## Detailed Experiment Notes
 
