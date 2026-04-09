@@ -69,3 +69,4 @@
 | 2026-04-09 16:24 UTC | Exp 58: Multi-domain live benchmark (5 domains) | OK | ================ 1130 passed, 12 warnings in 136.29s (0:02:16) ================= |
 | 2026-04-09 17:27 UTC | Exp 69: Multi-model verification (Qwen3.5+Gemma4) | OK | ================ 1130 passed, 12 warnings in 175.66s (0:02:55) ================= |
 | 2026-04-09 17:36 UTC | Exp 71: Extropic TSU sampler abstraction layer | OK | ================ 1147 passed, 12 warnings in 134.80s (0:02:14) ================= |
+| 2026-04-09 17:48 UTC | Exp 73: Constraint coverage metric | OK | ================ 1147 passed, 12 warnings in 126.18s (0:02:06) ================= |
