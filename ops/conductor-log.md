@@ -54,3 +54,4 @@
 | 2026-04-09 02:39 UTC | Exp 48: Code → constraint extraction | OK | ================ 1130 passed, 12 warnings in 113.04s (0:01:53) ================= |
 | 2026-04-09 02:50 UTC | Exp 49: Natural language → constraint extraction | OK | ================ 1130 passed, 12 warnings in 115.46s (0:01:55) ================= |
 | 2026-04-09 03:00 UTC | Exp 51: Learn constraint structure from LLM output | OK | ================ 1130 passed, 12 warnings in 112.92s (0:01:52) ================= |
+| 2026-04-09 03:11 UTC | Exp 52: Transfer learned Ising across domains | OK | ================ 1130 passed, 12 warnings in 121.06s (0:02:01) ================= |
