@@ -88,4 +88,5 @@
 | Exp 84: Carnot verifies Carnot (dogfood) | ✅ Complete (`scripts/dogfood_carnot.py`: self-verification of pipeline against own source code via CodeExtractor, AutoExtractor, VerifyRepairPipeline; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002) | — |
 | Exp 85: Prepare beta release | ✅ Complete (`RELEASE_NOTES.md` for 0.1.0-beta1, `scripts/prepare_release.py` release readiness checker, `README.md` install + quick start) | — |
 | Exp 86: Learned energy composition weights | ✅ Complete (per-constraint-type weight learning via BCE gradient descent on ComposedEnergy; uniform 0.927 → learned 0.938 AUROC, bootstrap CI not significant; arithmetic weight dominant 1.19; 500 samples, 5 domains, 10 constraint types; REQ-VERIFY-001, REQ-VERIFY-003) | — |
+| Exp 87: Gradient-based repair in continuous space | ✅ Complete (gradient descent in embedding space + codebook decoding; 40% repair vs 28% simulated discrete; arithmetic/scheduling 100%, factual/code/logic 0%; energy 1.72→1.02; 90% convergence; builds on Exp 65+66; REQ-VERIFY-001, REQ-VERIFY-003) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |

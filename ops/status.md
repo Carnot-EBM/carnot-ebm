@@ -28,6 +28,7 @@
 - ComposedEnergy — weighted composition with decomposition
 - Verification certificates — VERIFIED/VIOLATED with per-constraint reports
 - Gradient-based repair — violated-only, with Langevin noise (P6) + random steps (P11)
+- Continuous-space gradient repair — embedding-space gradient descent + codebook decoding (Exp 87): 40% success on violated samples, 100% on arithmetic/scheduling
 - Energy landscape certification — Hessian eigenvalue analysis, basin estimation
 - Convergence guarantees — absorbing invariant sets (P10)
 - Deterministic reproducibility
@@ -218,6 +219,7 @@
 | 84 | **Carnot verifies Carnot (dogfood)** | Self-verification of pipeline against own source code | **✅ Dogfooding script** |
 | 85 | **Prepare beta release** | RELEASE_NOTES.md + prepare_release.py + README quick start | **✅ Beta release ready** |
 | 86 | **Learned energy composition weights** | Uniform 0.927 → learned 0.938 AUROC (+1.1%), not significant; arithmetic weight dominant (1.19) | **⚠️ Marginal improvement, not significant** |
+| 87 | **Gradient-based repair in continuous space** | 40% success vs 28% discrete; arithmetic/scheduling 100%, factual/code/logic 0%; energy 1.72→1.02 | **⚠️ Works for structured domains, not semantic** |
 
 ## 14 Principles Learned
 
