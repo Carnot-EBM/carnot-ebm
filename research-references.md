@@ -56,4 +56,15 @@ should read this file when designing new milestones.
 
 ## Papers & Concepts
 
-(Add papers, arxiv links, and theoretical ideas here as they come up)
+### Exp 66: End-to-End Differentiable Constraint Reasoning (PRIORITY)
+- **Source:** research-roadmap-v7.md Phase 8
+- **What:** Full Kona-like pipeline, differentiable end-to-end:
+  LLM generates logits → soft token probabilities → embedding →
+  continuous Ising constraints (Exp 64) → energy →
+  backpropagate energy gradient through constraints to logits →
+  adjust LLM sampling distribution toward constraint-satisfying tokens.
+- **Prerequisites:** Exp 64 (continuous relaxation ✅) + Exp 65 (embedding-space ✅) + live LLM (Exp 56 ✅)
+- **Why it matters:** Moves from post-hoc verification to real-time energy-guided decoding. Constraints steer generation, not just verify after the fact. This is the path to Kona parity.
+- **When:** Next research milestone after production shipping (2026.04.4 ✅)
+
+(Add more papers, arxiv links, and theoretical ideas here as they come up)
