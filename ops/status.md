@@ -78,6 +78,7 @@
 - Trace-learned constraints: discriminative Ising trained on correct/buggy execution traces catches semantic bugs invisible to static+dynamic analysis (Exp 55)
 - Multi-domain live benchmark: 500 questions across 5 domains (arithmetic, code, logic, factual, scheduling) in 3 modes (baseline/verify/verify-repair); first comprehensive pipeline evaluation (Exp 58)
 - Multi-model constraint transfer: validates constraint pipeline (arithmetic, logic, code AST, factual KB) on Qwen3.5-0.8B and Gemma4-E4B-it without retraining; tests model-agnostic verification (Exp 69)
+- End-to-end differentiable constraint reasoning: fully differentiable text → embedding → constraints → continuous Ising → MLP → score pipeline; joint model 1.0 test AUROC (vs 0.54 Ising-only, 0.98 embedding-only); validates Ising adds discriminative power beyond embeddings; stable gradients; 5 domains (Exp 66)
 
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
@@ -203,6 +204,7 @@
 | 68 | **HumanEval subset verification + fuzzing** | 50 HumanEval-style problems through full pipeline (extract→instrument→test→fuzz→repair); pass@1 + pass@1+repair metrics; bug detection breakdown (test/instrumentation/fuzzing) (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | **Results pending analysis** |
 | 70 | **Rust constraint extraction + verification** | `carnot-constraints` crate: BoundConstraint, EqualityConstraint, IsingConstraint + VerificationCertificate (REQ-VERIFY-001–005) | **✅ New Rust crate** |
 | 65 | **Embedding-space constraint verification** | Joint Gibbs EBM on [semantic embedding; constraint vector] (384+N dim); NCE training; AUROC: joint vs embedding-only vs constraint-only; gradient repair with NN decoding (REQ-EBT-001, REQ-VERIFY-001) | **Results pending analysis** |
+| 66 | **End-to-end differentiable constraint reasoning** | Fully differentiable text→embedding→constraints→continuous Ising→MLP→score; joint 1.0 test AUROC vs 0.54 Ising-only and 0.98 embedding-only; stable gradients; 5 domains (REQ-VERIFY-001, REQ-EBT-001) | **✅ Joint model outperforms components** |
 | 72 | **Autoresearch self-verification via Ising** | Fourth gate: claim extraction + ComposedEnergy + Ising sampling on autoresearch hypotheses (20 mock, 10 correct/10 bogus) | **Results pending analysis** |
 | 63 | **Hierarchical Ising (1000+ vars)** | Block-structured coupling (dense intra-block + sparse inter-block); two-level Gibbs + annealing; hierarchical vs flat-sparse vs flat-dense vs random at 200/500/1000 vars; ~10x param reduction | **Results pending analysis** |
 | 74 | **Unified ConstraintExtractor API** | Pluggable Protocol-based extractors (arithmetic, code, logic, NL) + AutoExtractor auto-detection; consolidates Exp 47/48/49 into `carnot.pipeline.extract` (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002) | **✅ New pipeline module** |
