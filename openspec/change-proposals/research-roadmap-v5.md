@@ -1,3 +1,5 @@
+> **SUPERSEDED** by research-roadmap-v6.md. Activation-based approaches proven insufficient by experiments 36-38.
+
 # Carnot Research Roadmap v5: Weight-First EBM — Reading Knowledge from Frozen Parameters
 
 **Created:** 2026-04-07

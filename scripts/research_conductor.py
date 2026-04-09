@@ -1,6 +1,11 @@
 #!/usr/bin/env python3
 """Carnot Research Conductor — autonomous research via Claude Code.
 
+NOTE: The RESEARCH_TASKS below are from the activation-detection era
+(roadmaps v2-v5) and are mostly completed. For current research direction,
+see scripts/autoresearch_v6.sh and openspec/change-proposals/research-roadmap-v6.md
+which focus on constraint-based reasoning via Ising/thrml.
+
 Uses `claude -p` to actually implement research improvements, not just
 run benchmarks. Each iteration: identify a gap → ask Claude to fix it →
 verify tests pass → commit → push.
