@@ -22,9 +22,15 @@ autonomous directed self-learning where the energy function is ground truth.
 3. **Scale constraint learning** — Move from hand-coded constraints to learned
    constraint structures. Domain-specific Ising models trained from data.
 
-4. **Bridge to continuous reasoning** — Continuous Ising relaxation (Exp 64)
-   → embedding-space constraints (Exp 65) → end-to-end differentiable (Exp 66).
-   This is the Kona direction.
+4. **Bridge to continuous reasoning (Kona direction)** — Continuous Ising
+   relaxation (Exp 64 ✅) → embedding-space constraints (Exp 65 ✅) →
+   **end-to-end differentiable constraint reasoning (Exp 66 — NEXT)**.
+   Exp 66 is the critical next research experiment: backpropagate energy
+   gradients through constraints to LLM logits, adjusting the sampling
+   distribution toward constraint-satisfying tokens in real-time. This is
+   the holy grail — energy-guided decoding where constraints steer
+   generation, not just verify it post-hoc. See research-roadmap-v7.md
+   Phase 8 for the full design.
 
 5. **Prepare for Extropic TSU** — SamplerBackend abstraction is built (Exp 71).
    When hardware ships, plug it in.
