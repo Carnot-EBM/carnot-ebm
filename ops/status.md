@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 49 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 50 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -69,6 +69,7 @@
 - Cross-domain transfer: structure-dependent transfer validated
 - Ising-guided fuzzing: energy landscape generates adversarial test inputs for differential testing of LLM code; 8 bug types covered (Exp 54)
 - Trace-learned constraints: discriminative Ising trained on correct/buggy execution traces catches semantic bugs invisible to static+dynamic analysis (Exp 55)
+- Multi-domain live benchmark: 500 questions across 5 domains (arithmetic, code, logic, factual, scheduling) in 3 modes (baseline/verify/verify-repair); first comprehensive pipeline evaluation (Exp 58)
 
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
@@ -103,7 +104,7 @@
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
 - Docker compose: Claude API bridge + WebGPU gateway (`make up`)
 
-## Experiment Results (25 experiments)
+## Experiment Results (26 experiments)
 
 | # | Approach | Result | Verdict |
 |---|----------|--------|---------|
@@ -144,6 +145,7 @@
 | 61 | **Sparse Ising at 500+ vars** | Clause-graph sparsity mask on CD gradients; ~20x parameter reduction vs dense; 200/500/1000 vars; dense vs sparse vs hand-coded | **Results pending analysis** |
 | 54 | **Ising-guided fuzzing** | Energy landscape generates adversarial test inputs for differential testing; 8 LLM bug types (REQ-VERIFY-001/002/003) | **Results pending analysis** |
 | 55 | **Trace-learned constraints** | Discriminative Ising trained on correct/buggy execution traces (200+ dim binary features); catches semantic bugs invisible to static+dynamic analysis (REQ-VERIFY-001/002/003) | **Results pending analysis** |
+| 58 | **Multi-domain live benchmark (5 domains)** | 500 questions (100/domain) across arithmetic, code, logic, factual, scheduling; 3 modes (baseline/verify-only/verify-repair); full pipeline benchmark (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | **Results pending analysis** |
 | 64 | **Continuous Ising relaxation** | Binary→continuous [0,1] relaxation with JAX grad descent; sigmoid annealing / penalty / straight-through rounding vs discrete Gibbs + random | **Results pending analysis** |
 
 ## 14 Principles Learned
