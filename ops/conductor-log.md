@@ -81,3 +81,4 @@
 | 2026-04-09 20:50 UTC | Exp 77: CLI overhaul with pipeline subcommand | OK | Deliverable already exists in repo |
 | 2026-04-09 21:37 UTC | Exp 82: Pipeline error handling and edge cases | OK | ================ 1351 passed, 12 warnings in 119.91s (0:01:59) ================= |
 | 2026-04-09 21:38 UTC | Exp 76: Production MCP server | OK | Deliverable already exists in repo |
+| 2026-04-09 21:59 UTC | Exp 78: PyPI-ready package | OK | ================ 1353 passed, 12 warnings in 127.66s (0:02:07) ================= |
