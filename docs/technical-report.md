@@ -88,7 +88,7 @@ Implemented domains: SAT (product relaxation), graph coloring (pairwise repulsio
 LLM output -> parse -> ComposedEnergy.verify() -> if violated: repair() -> round -> certify
 ```
 
-The `repair()` function runs gradient descent on violated constraints only, with optional Langevin noise and randomized step sizes (from the EBT paper).
+The `repair()` function runs gradient descent on violated constraints only, with optional Langevin noise and randomized step sizes (from the EBT work, Hoover et al. 2025).
 
 ### 2.4 GPU Compute
 
