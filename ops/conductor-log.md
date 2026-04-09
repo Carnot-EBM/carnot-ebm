@@ -91,3 +91,4 @@
 | 2026-04-09 22:58 UTC | Milestone 2026.04.4 activated | OK | 12 tasks queued |
 | 2026-04-09 23:18 UTC | Exp 66: End-to-end differentiable constraint reaso | OK | ================= 1353 passed, 12 warnings in 87.24s (0:01:27) ================= |
 | 2026-04-09 23:31 UTC | Exp 86: Learned energy composition weights | OK | ================= 1353 passed, 12 warnings in 89.90s (0:01:29) ================= |
+| 2026-04-09 23:44 UTC | Exp 87: Gradient-based repair in continuous constr | OK | ================ 1353 passed, 12 warnings in 120.34s (0:02:00) ================= |
