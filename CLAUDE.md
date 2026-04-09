@@ -124,6 +124,8 @@ Every user instruction must be captured and traceable to outcomes:
 - Rust: stable toolchain
 - Python: 3.11+ (3.14 requires `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1`)
 - JAX: CPU by default, CUDA 12 via `pip install carnot[cuda]`
+- JAX on ROCm: `JAX_PLATFORMS=cpu` to force CPU when ROCm plugin is loaded (thrml crashes on ROCm, see extropic-ai/thrml#41)
+- Research experiments: always prefix with `JAX_PLATFORMS=cpu` for reproducibility
 
 ## Key Paths
 
@@ -141,6 +143,9 @@ Every user instruction must be captured and traceable to outcomes:
 | Test results | `ops/test-results.md` |
 | Session metrics | `ops/metrics.md` |
 | Spec coverage script | `scripts/check_spec_coverage.py` |
+| Research roadmap | `research-roadmap.yaml` |
+| Research history | `research-complete.yaml` |
+| Research conductor | `scripts/research_conductor.py` |
 | Rust crates | `crates/carnot-*/` |
 | Python package | `python/carnot/` |
 

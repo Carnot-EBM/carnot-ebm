@@ -516,6 +516,38 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         f"Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
     )
     git_commit_and_push(commit_msg, push=push)
+
+    # Post-commit reconciliation: ask Claude to update docs for this experiment
+    logger.info("Running post-commit documentation reconciliation...")
+    reconcile_prompt = (
+        f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
+        f"A research experiment was just completed and committed:\n"
+        f"  Task: {task['title']}\n"
+        f"  ID: {task['id']}\n\n"
+        f"TASK: Update documentation to reflect this new work.\n"
+        f"1. Add an entry to ops/changelog.md for today ({timestamp.strftime('%Y-%m-%d')})\n"
+        f"2. Update ops/status.md if this adds new capabilities\n"
+        f"3. Update _bmad/traceability.md if new REQ-*/SCENARIO-* were added\n"
+        f"4. Do NOT remove existing content — only ADD\n"
+        f"5. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml\n"
+        f"6. Keep changes minimal — just the doc updates for this experiment.\n"
+    )
+    recon_ok, recon_output = run_claude(reconcile_prompt, max_turns=15, timeout=300)
+    if recon_ok and git_has_changes():
+        # Guard protected files
+        for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
+            _, gdiff, _ = run_cmd(["git", "diff", "--name-only", "--", guarded])
+            if gdiff.strip():
+                run_cmd(["git", "checkout", "--", guarded])
+        git_commit_and_push(
+            f"[conductor] Update docs for {task['title']}\n\n"
+            f"Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+            push=push,
+        )
+        logger.info("Documentation reconciliation committed")
+    else:
+        logger.info("No doc updates needed (or reconciliation skipped)")
+
     log_step(task["title"], "OK", test_summary)
     return True
 

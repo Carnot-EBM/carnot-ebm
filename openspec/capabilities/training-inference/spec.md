@@ -69,6 +69,7 @@ The system shall provide optional gradient clipping for all MCMC samplers:
 The system shall define a `Sampler` trait/protocol:
 - `sample(&self, energy_fn: &dyn EnergyFunction, init: Array, n_steps: usize) -> Array`
 - `sample_chain(&self, ...) -> Vec<Array>` — return full chain for diagnostics
+- Parallel Ising Gibbs sampler (`parallel_ising.py`): checkerboard updates, simulated annealing schedules, and thrml-compatible `parallel_sample_states` wrapper
 
 ## Scenarios
 
@@ -118,6 +119,27 @@ The system shall define a `Sampler` trait/protocol:
 **Then** the gradient is not modified (clipping is a no-op)
 **And** samples are statistically equivalent to the unclipped sampler
 
+### SCENARIO-SAMPLE-006: Annealing Schedule
+
+**Given** a linear or geometric annealing schedule with beta_init and beta_final
+**When** the schedule is evaluated at step 0, midpoint, and final step
+**Then** linear schedule returns beta_init at step 0 and beta_final at the last step
+**And** geometric schedule midpoint equals sqrt(beta_init * beta_final)
+
+### SCENARIO-SAMPLE-007: Parallel/Checkerboard Updates
+
+**Given** an Ising model with coupling matrix J and bias vector h
+**When** a checkerboard Gibbs update is applied at high inverse temperature
+**Then** even-indexed and odd-indexed spins are updated in two parallel sweeps
+**And** strong ferromagnetic coupling drives spins toward alignment
+
+### SCENARIO-SAMPLE-008: thrml-Compatible Interface
+
+**Given** a thrml IsingEBM instance with trained weights
+**When** `parallel_sample_states` is called with the model and sample count
+**Then** samples are returned as a list of (n_vars, 1) arrays matching thrml conventions
+**And** the sampler uses extracted coupling matrices and biases from the IsingEBM
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -135,5 +157,5 @@ The system shall define a `Sampler` trait/protocol:
 | REQ-TRAIN-004 | Partial | Not Started | 5 Rust |
 | REQ-SAMPLE-001 | Implemented | Implemented | 6 Rust + 4 Python |
 | REQ-SAMPLE-002 | Implemented | Implemented | 6 Rust + 2 Python |
-| REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 1 Python |
+| REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 30+ Python (incl. parallel Ising) |
 | REQ-SAMPLE-004 | Not Started | Implemented | 8 Python |

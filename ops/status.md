@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-08 — 41 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 41 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -8,6 +8,8 @@
 - EnergyFunction trait (Rust) and protocol (Python/JAX)
 - Three model tiers: Ising (both), Gibbs (both), Boltzmann (both)
 - Samplers: Langevin + HMC in both languages, with gradient clipping (REQ-SAMPLE-004)
+- Parallel Ising Gibbs sampler: 183x faster than thrml, checkerboard updates, simulated annealing (REQ-SAMPLE-003)
+- thrml-compatible interface: accepts IsingEBM models, returns thrml-format samples
 - Serialization: safetensors cross-language persistence
 - PyO3 bindings: all 3 tiers + 2 samplers exposed to Python
 
@@ -51,6 +53,17 @@
 - Multi-layer hallucination probing (experiment 24, U-curve discovered)
 - MCP server with score_candidates tool
 
+### Constraint-Based Reasoning (Phase 5-8)
+- Arithmetic verification: QUBO encoding (8/12) + deterministic carry propagation (16/16)
+- Logical consistency: 8/8 contradiction detection via Ising
+- SAT solving: 5000 vars in 0.7s, +5.5% vs random at scale
+- Code constraint extraction: AST → type/bound/return/init constraints
+- NL constraint extraction: pattern-based claim verification
+- LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
+- Scheduling constraints: time slot exclusion, ordering, capacity
+- Learned Ising via CD: 89/100 perfect, generalizes to unseen instances
+- Cross-domain transfer: structure-dependent transfer validated
+
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
 - carnot-webgpu-gateway: distributed browser GPU compute
@@ -72,6 +85,8 @@
 - Trace2Skill learning layer (REQ-AUTO-011–014): trajectory analyst, skill directory, hierarchical consolidation, cross-tier transfer
 - Self-improving code verifier
 - Research conductor (autonomous Claude Code agent loop)
+- Research conductor: YAML-driven (research-roadmap.yaml), CalVer milestones, self-healing
+- ROCm 7.2 JAX support validated (gfx1150 iGPU), thrml crash filed as extropic-ai/thrml#41
 
 ### Autoresearch Results
 - **10-iteration run (Sonnet)**: DoubleWell 0.9483 → 0.1604 (83% energy reduction), 3 accepted hypotheses (HMC, annealing)
@@ -151,6 +166,13 @@
 - **Scale thrml constraint verification**: larger SAT/coloring problems, more constraint types
 - **LLM constraint extraction**: parse natural language into Ising-encodable constraints
 - **Extropic hardware testing**: when TSU is available, run thrml code natively
+
+### Milestone 2026.04.2: Toward Kona
+- Milestone 2026.04.2: Toward Kona — live LLM + Ising end-to-end
+- Exp 53: Runtime constraint instrumentation
+- Exp 56-57: Live LLM verify-repair loop with Qwen3.5
+- Exp 60-61: Scale learned Ising to 500+ vars
+- Exp 64: Continuous relaxation (bridge to Kona latent space)
 
 ### Completed
 - ~~Ship MCP server + CLI~~: ✅ DONE
