@@ -1,0 +1,723 @@
+{
+  "experiment": "87_gradient_repair",
+  "description": "Continuous repair via gradient descent in embedding space. Replaces discrete LLM re-prompting with gradient-based optimization and nearest-neighbor codebook decoding.",
+  "prerequisites": [
+    "experiment_65_embedding_constraints",
+    "experiment_66_differentiable_constraints",
+    "experiment_57_verify_repair (concept)"
+  ],
+  "dataset": {
+    "n_total": 100,
+    "n_correct": 50,
+    "n_wrong": 50,
+    "n_per_domain": 20,
+    "domains": [
+      "arithmetic",
+      "code",
+      "logic",
+      "factual",
+      "scheduling"
+    ],
+    "codebook_size": 20
+  },
+  "hyperparameters": {
+    "embed_dim": 384,
+    "n_constraints": 8,
+    "default_step_size": 0.1,
+    "default_max_iterations": 50,
+    "convergence_threshold": 0.0001,
+    "manifold_weight": 0.1,
+    "noise_scale": 0.001
+  },
+  "comparison": {
+    "gradient_repair": {
+      "success_rate": 0.4,
+      "n_success": 20,
+      "n_total": 50,
+      "avg_iterations": 29.42,
+      "avg_wall_clock_seconds": 0.16102761745452882
+    },
+    "discrete_repair_simulated": {
+      "success_rate": 0.28,
+      "n_success": 14,
+      "n_total": 50,
+      "avg_iterations": 2.58,
+      "note": "Simulated without LLM \u2014 50% per-iteration success probability"
+    },
+    "combined": {
+      "success_rate": 0.4,
+      "n_success": 20,
+      "n_total": 50
+    }
+  },
+  "per_domain": {
+    "factual": {
+      "n_total": 10,
+      "n_success": 0,
+      "success_rate": 0.0
+    },
+    "arithmetic": {
+      "n_total": 10,
+      "n_success": 10,
+      "success_rate": 1.0
+    },
+    "code": {
+      "n_total": 10,
+      "n_success": 0,
+      "success_rate": 0.0
+    },
+    "scheduling": {
+      "n_total": 10,
+      "n_success": 10,
+      "success_rate": 1.0
+    },
+    "logic": {
+      "n_total": 10,
+      "n_success": 0,
+      "success_rate": 0.0
+    }
+  },
+  "ablation": {
+    "ss=0.01_mi=10": {
+      "step_size": 0.01,
+      "max_iterations": 10,
+      "n_samples": 20,
+      "success_rate": 0.2,
+      "avg_iterations": 10.0,
+      "avg_time_seconds": 0.046211087703704835
+    },
+    "ss=0.01_mi=50": {
+      "step_size": 0.01,
+      "max_iterations": 50,
+      "n_samples": 20,
+      "success_rate": 0.35,
+      "avg_iterations": 50.0,
+      "avg_time_seconds": 0.23650554418563843
+    },
+    "ss=0.01_mi=100": {
+      "step_size": 0.01,
+      "max_iterations": 100,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 100.0,
+      "avg_time_seconds": 0.46233348846435546
+    },
+    "ss=0.1_mi=10": {
+      "step_size": 0.1,
+      "max_iterations": 10,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 10.0,
+      "avg_time_seconds": 0.048018908500671385
+    },
+    "ss=0.1_mi=50": {
+      "step_size": 0.1,
+      "max_iterations": 50,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 27.8,
+      "avg_time_seconds": 0.12847561836242677
+    },
+    "ss=0.1_mi=100": {
+      "step_size": 0.1,
+      "max_iterations": 100,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 26.7,
+      "avg_time_seconds": 0.12222336530685425
+    },
+    "ss=1.0_mi=10": {
+      "step_size": 1.0,
+      "max_iterations": 10,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 8.6,
+      "avg_time_seconds": 0.04325822591781616
+    },
+    "ss=1.0_mi=50": {
+      "step_size": 1.0,
+      "max_iterations": 50,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 30.6,
+      "avg_time_seconds": 0.1368939161300659
+    },
+    "ss=1.0_mi=100": {
+      "step_size": 1.0,
+      "max_iterations": 100,
+      "n_samples": 20,
+      "success_rate": 0.45,
+      "avg_iterations": 58.05,
+      "avg_time_seconds": 0.27683658599853517
+    }
+  },
+  "best_ablation_config": {
+    "config": "ss=0.01_mi=100",
+    "step_size": 0.01,
+    "max_iterations": 100,
+    "n_samples": 20,
+    "success_rate": 0.45,
+    "avg_iterations": 100.0,
+    "avg_time_seconds": 0.46233348846435546
+  },
+  "energy_analysis": {
+    "energy_improved_rate": 0.44,
+    "avg_energy_drop": 0.7,
+    "mean_energy_before": 1.72,
+    "mean_energy_after": 1.02,
+    "convergence_rate": 0.9
+  },
+  "individual_repairs": [
+    {
+      "original_text": "The answer is CO2. This is what I recall.",
+      "repaired_text": "The answer is CO2. This is what I recall.",
+      "original_energy": 1.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 23,
+      "converged": true,
+      "wall_clock_seconds": 1.4024243354797363,
+      "codebook_similarity": 0.6625256538391113
+    },
+    {
+      "original_text": "The answer is Lyon. This is what I recall.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 31,
+      "converged": true,
+      "wall_clock_seconds": 0.2193293571472168,
+      "codebook_similarity": 0.5438716411590576
+    },
+    {
+      "original_text": "The answer is 319. Because the calculation gives this.",
+      "repaired_text": "The answer is 273. Because 13 * 21 equals 273.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 29,
+      "converged": true,
+      "wall_clock_seconds": 0.16147708892822266,
+      "codebook_similarity": 0.6651029586791992
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "def func(x): return x  # This does not reverse a string.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 25,
+      "converged": true,
+      "wall_clock_seconds": 0.11800122261047363,
+      "codebook_similarity": 0.642798125743866
+    },
+    {
+      "original_text": "The answer is 316. Because the calculation gives this.",
+      "repaired_text": "The answer is 308. Because 22 * 14 equals 308.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 31,
+      "converged": true,
+      "wall_clock_seconds": 0.14139890670776367,
+      "codebook_similarity": 0.6480385065078735
+    },
+    {
+      "original_text": "The answer is 303. Because the calculation gives this.",
+      "repaired_text": "The answer is 262. Because 362 - 100 equals 262.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 34,
+      "converged": true,
+      "wall_clock_seconds": 0.14499568939208984,
+      "codebook_similarity": 0.5697557926177979
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 11:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 11:00 and Meeting B starts at 12:00, so th",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 22,
+      "converged": true,
+      "wall_clock_seconds": 0.09488081932067871,
+      "codebook_similarity": 0.6748692989349365
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 13:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 13:00 and Meeting B starts at 15:00, so th",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 21,
+      "converged": true,
+      "wall_clock_seconds": 0.11299920082092285,
+      "codebook_similarity": 0.7086062431335449
+    },
+    {
+      "original_text": "The answer is 99. Because the calculation gives this.",
+      "repaired_text": "The answer is 56. Because 208 - 152 equals 56.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 35,
+      "converged": true,
+      "wall_clock_seconds": 0.14801287651062012,
+      "codebook_similarity": 0.5831267833709717
+    },
+    {
+      "original_text": "The answer is 272. Because the calculation gives this.",
+      "repaired_text": "The answer is 246. Because 221 + 25 equals 246.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 34,
+      "converged": true,
+      "wall_clock_seconds": 0.15451669692993164,
+      "codebook_similarity": 0.5855293869972229
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 12:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 12:00 and Meeting B starts at 13:00, so th",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 23,
+      "converged": true,
+      "wall_clock_seconds": 0.12439465522766113,
+      "codebook_similarity": 0.6662024259567261
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "def func(x): return x  # This does not find maximum.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 25,
+      "converged": true,
+      "wall_clock_seconds": 0.10443592071533203,
+      "codebook_similarity": 0.6333602070808411
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "The answer is approximately 3.14159.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 34,
+      "converged": true,
+      "wall_clock_seconds": 0.1469430923461914,
+      "codebook_similarity": 0.5692457556724548
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "def func(x): return x  # This does not sum of list.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 31,
+      "converged": true,
+      "wall_clock_seconds": 0.13338685035705566,
+      "codebook_similarity": 0.6707817316055298
+    },
+    {
+      "original_text": "The answer is Lyon. This is what I recall.",
+      "repaired_text": "The answer is Lyon. This is what I recall.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 21,
+      "converged": true,
+      "wall_clock_seconds": 0.08728861808776855,
+      "codebook_similarity": 0.5842987298965454
+    },
+    {
+      "original_text": "The answer is 5. This is what I recall.",
+      "repaired_text": "The result equals 7. Because the calculation confirms this result.",
+      "original_energy": 2.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 18,
+      "converged": true,
+      "wall_clock_seconds": 0.08574390411376953,
+      "codebook_similarity": 0.869346559047699
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "Here is the solution:\n```python\ndef is_palindrome(s):\n    return s == s[::-1].\n```\nThis works becaus",
+      "original_energy": 4.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 29,
+      "converged": true,
+      "wall_clock_seconds": 0.14558649063110352,
+      "codebook_similarity": 0.6493659019470215
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 27,
+      "converged": true,
+      "wall_clock_seconds": 0.11873674392700195,
+      "codebook_similarity": 0.5898967981338501
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 9:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 9:00 and Meeting B starts at 11:00, so the",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 20,
+      "converged": true,
+      "wall_clock_seconds": 0.08926749229431152,
+      "codebook_similarity": 0.7413896322250366
+    },
+    {
+      "original_text": "The answer is 5. This is what I recall.",
+      "repaired_text": "The result equals 7. Because the calculation confirms this result.",
+      "original_energy": 2.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 17,
+      "converged": true,
+      "wall_clock_seconds": 0.06976032257080078,
+      "codebook_similarity": 0.876930832862854
+    },
+    {
+      "original_text": "The answer is Venus. This is what I recall.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 33,
+      "converged": true,
+      "wall_clock_seconds": 0.1625359058380127,
+      "codebook_similarity": 0.56669020652771
+    },
+    {
+      "original_text": "The answer is 238. Because the calculation gives this.",
+      "repaired_text": "The answer is 200. Because 54 + 146 equals 200.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 35,
+      "converged": true,
+      "wall_clock_seconds": 0.15061712265014648,
+      "codebook_similarity": 0.5441253781318665
+    },
+    {
+      "original_text": "False. Because the premises do not support this.",
+      "repaired_text": "The answer is approximately 3.14159.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 50,
+      "converged": false,
+      "wall_clock_seconds": 0.21990513801574707,
+      "codebook_similarity": 0.7747598886489868
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 50,
+      "converged": false,
+      "wall_clock_seconds": 0.21936798095703125,
+      "codebook_similarity": 0.6299642324447632
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 9:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 9:00 and Meeting B starts at 10:00, so the",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 23,
+      "converged": true,
+      "wall_clock_seconds": 0.09697747230529785,
+      "codebook_similarity": 0.6893733739852905
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "Here is the solution:\n```python\ndef is_palindrome(s):\n    return s == s[::-1].\n```\nThis works becaus",
+      "original_energy": 4.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 28,
+      "converged": true,
+      "wall_clock_seconds": 0.12046170234680176,
+      "codebook_similarity": 0.6367878913879395
+    },
+    {
+      "original_text": "The answer is 131. Because the calculation gives this.",
+      "repaired_text": "The answer is 102. Because 64 + 38 equals 102.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 34,
+      "converged": true,
+      "wall_clock_seconds": 0.14803409576416016,
+      "codebook_similarity": 0.5162625312805176
+    },
+    {
+      "original_text": "The answer is 1939. This is what I recall.",
+      "repaired_text": "The answer is 1939. This is what I recall.",
+      "original_energy": 1.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 26,
+      "converged": true,
+      "wall_clock_seconds": 0.1113123893737793,
+      "codebook_similarity": 0.5984743237495422
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "def func(x): return x  # This does not compute factorial.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 50,
+      "converged": false,
+      "wall_clock_seconds": 0.2244102954864502,
+      "codebook_similarity": 0.6629115343093872
+    },
+    {
+      "original_text": "The answer is 426. Because the calculation gives this.",
+      "repaired_text": "The answer is 425. Because 311 + 114 equals 425.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 32,
+      "converged": true,
+      "wall_clock_seconds": 0.14787888526916504,
+      "codebook_similarity": 0.5842002034187317
+    },
+    {
+      "original_text": "The answer is 1939. This is what I recall.",
+      "repaired_text": "The answer is 1939. This is what I recall.",
+      "original_energy": 1.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 26,
+      "converged": true,
+      "wall_clock_seconds": 0.11081337928771973,
+      "codebook_similarity": 0.5739247798919678
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 17:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 17:00 and Meeting B starts at 18:00, so th",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 21,
+      "converged": true,
+      "wall_clock_seconds": 0.09481263160705566,
+      "codebook_similarity": 0.7331957221031189
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "The answer is approximately 3.14159.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 31,
+      "converged": true,
+      "wall_clock_seconds": 0.1540238857269287,
+      "codebook_similarity": 0.5625438690185547
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 28,
+      "converged": true,
+      "wall_clock_seconds": 0.12290668487548828,
+      "codebook_similarity": 0.536816418170929
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "Python is a programming language.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 34,
+      "converged": true,
+      "wall_clock_seconds": 0.1641979217529297,
+      "codebook_similarity": 0.5417493581771851
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "The answer is approximately 3.14159.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 32,
+      "converged": true,
+      "wall_clock_seconds": 0.14078927040100098,
+      "codebook_similarity": 0.5577002763748169
+    },
+    {
+      "original_text": "The answer is 91. Because the calculation gives this.",
+      "repaired_text": "The answer is 46. Because 48 - 2 equals 46.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 36,
+      "converged": true,
+      "wall_clock_seconds": 0.15443038940429688,
+      "codebook_similarity": 0.5345585346221924
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "Here is the solution:\n```python\ndef reverse_string(s):\n    return s[::-1].\n```\nThis works because it",
+      "original_energy": 4.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 30,
+      "converged": true,
+      "wall_clock_seconds": 0.13055086135864258,
+      "codebook_similarity": 0.5792468190193176
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 23,
+      "converged": true,
+      "wall_clock_seconds": 0.09634709358215332,
+      "codebook_similarity": 0.619945764541626
+    },
+    {
+      "original_text": "The answer is Venus. This is what I recall.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 33,
+      "converged": true,
+      "wall_clock_seconds": 0.14234399795532227,
+      "codebook_similarity": 0.5938302874565125
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "42 is the answer to everything.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 31,
+      "converged": true,
+      "wall_clock_seconds": 0.134613037109375,
+      "codebook_similarity": 0.5388656854629517
+    },
+    {
+      "original_text": "The answer is CO2. This is what I recall.",
+      "repaired_text": "The answer is CO2. This is what I recall.",
+      "original_energy": 1.0,
+      "decoded_energy": 1.0,
+      "repair_succeeded": false,
+      "iterations": 21,
+      "converged": true,
+      "wall_clock_seconds": 0.08686089515686035,
+      "codebook_similarity": 0.6615571975708008
+    },
+    {
+      "original_text": "The answer is 63. Because the calculation gives this.",
+      "repaired_text": "The answer is 28. Because 4 * 7 equals 28.",
+      "original_energy": 1.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 33,
+      "converged": true,
+      "wall_clock_seconds": 0.14274835586547852,
+      "codebook_similarity": 0.5676085948944092
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 16:00.",
+      "repaired_text": "This gives us correct. No conflict. Meeting A ends at 16:00 and Meeting B starts at 17:00, so they d",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 22,
+      "converged": true,
+      "wall_clock_seconds": 0.13099932670593262,
+      "codebook_similarity": 0.706499457359314
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 9:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 9:00 and Meeting B starts at 11:00, so the",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 21,
+      "converged": true,
+      "wall_clock_seconds": 0.11323356628417969,
+      "codebook_similarity": 0.7231741547584534
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 16:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 16:00 and Meeting B starts at 18:00, so th",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 22,
+      "converged": true,
+      "wall_clock_seconds": 0.0976111888885498,
+      "codebook_similarity": 0.6859593391418457
+    },
+    {
+      "original_text": "False. Because the premises do not support this.",
+      "repaired_text": "The answer is approximately 3.14159.",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 50,
+      "converged": false,
+      "wall_clock_seconds": 0.23368620872497559,
+      "codebook_similarity": 0.7099809646606445
+    },
+    {
+      "original_text": "No. Because the premises do not support this.",
+      "repaired_text": "We get correct. Based on the premises, yes. Because the logical chain of reasoning supports this con",
+      "original_energy": 2.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 13,
+      "converged": true,
+      "wall_clock_seconds": 0.05304384231567383,
+      "codebook_similarity": 0.9591972827911377
+    },
+    {
+      "original_text": "Yes, there is a conflict because both meetings overlap at 10:00.",
+      "repaired_text": "The result equals correct. No conflict. Meeting A ends at 10:00 and Meeting B starts at 12:00, so th",
+      "original_energy": 0.0,
+      "decoded_energy": 0.0,
+      "repair_succeeded": true,
+      "iterations": 23,
+      "converged": true,
+      "wall_clock_seconds": 0.12005853652954102,
+      "codebook_similarity": 0.6679379343986511
+    },
+    {
+      "original_text": "def func():\n    pass",
+      "repaired_text": "def func(x): return x  # This does not compute factorial.",
+      "original_energy": 4.0,
+      "decoded_energy": 2.0,
+      "repair_succeeded": false,
+      "iterations": 50,
+      "converged": false,
+      "wall_clock_seconds": 0.2222285270690918,
+      "codebook_similarity": 0.6583331823348999
+    }
+  ],
+  "wall_clock_seconds": 54.98446011543274
+}
