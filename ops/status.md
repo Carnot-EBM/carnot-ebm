@@ -160,11 +160,11 @@
 - ~~NLI-based EBM~~: ✅ DONE (70.8% test, 50% practical)
 - ~~thrml integration~~: ✅ DONE (SAT + coloring + LLM verify/repair)
 
-### Research Directions (Roadmap v5 — Weight-First EBM)
+### Research Directions (Roadmap v6 — Constraint-Based Reasoning)
 
-**See `openspec/change-proposals/research-roadmap-v5.md` for full details.**
+**See `openspec/change-proposals/research-roadmap-v6.md` for full details.**
 
-**Key paradigm shift:** Derive hallucination signal from frozen weight structure + unlabeled forward passes. Labeled data is for validation, not training. 10 of 11 new experiments need zero training labels.
+**Key paradigm shift:** Structural constraint verification via Ising/thrml, not activation-based detection. LLM handles language, Ising handles reasoning, Extropic TSU does sampling. Roadmaps v2-v5 are superseded (activation-based approaches proven insufficient by experiments 36-38).
 
 #### Completed (Experiments 1-31)
 - ~~Per-token EBM rejection~~: Exp 23, -3% to -6%

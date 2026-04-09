@@ -1,3 +1,5 @@
+> **SUPERSEDED** by research-roadmap-v6.md. Activation-based approaches proven insufficient by experiments 36-38.
+
 # Carnot Research Roadmap v4: From Detector to Reasoning Engine
 
 **Created:** 2026-04-06

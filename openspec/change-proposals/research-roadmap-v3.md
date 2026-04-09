@@ -1,3 +1,5 @@
+> **SUPERSEDED** by research-roadmap-v6.md. Activation-based approaches proven insufficient by experiments 36-38.
+
 # Carnot Research Roadmap v3: What Works, What Failed, What's Next
 
 **Created:** 2026-04-06
