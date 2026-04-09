@@ -71,3 +71,4 @@
 | 2026-04-09 17:36 UTC | Exp 71: Extropic TSU sampler abstraction layer | OK | ================ 1147 passed, 12 warnings in 134.80s (0:02:14) ================= |
 | 2026-04-09 17:48 UTC | Exp 73: Constraint coverage metric | OK | ================ 1147 passed, 12 warnings in 126.18s (0:02:06) ================= |
 | 2026-04-09 18:08 UTC | Exp 62: Domain-specific constraint learning (10K) | OK | ================ 1147 passed, 12 warnings in 135.06s (0:02:15) ================= |
+| 2026-04-09 18:26 UTC | Exp 63: Hierarchical Ising (1000+ vars) | OK | ================ 1147 passed, 12 warnings in 140.56s (0:02:20) ================= |
