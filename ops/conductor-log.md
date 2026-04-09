@@ -73,3 +73,4 @@
 | 2026-04-09 18:08 UTC | Exp 62: Domain-specific constraint learning (10K) | OK | ================ 1147 passed, 12 warnings in 135.06s (0:02:15) ================= |
 | 2026-04-09 18:26 UTC | Exp 63: Hierarchical Ising (1000+ vars) | OK | ================ 1147 passed, 12 warnings in 140.56s (0:02:20) ================= |
 | 2026-04-09 18:38 UTC | Exp 67: GSM8K subset verification | OK | ================ 1147 passed, 12 warnings in 126.01s (0:02:06) ================= |
+| 2026-04-09 18:54 UTC | Exp 68: HumanEval subset verification + fuzzing | OK | ================ 1147 passed, 12 warnings in 131.38s (0:02:11) ================= |
