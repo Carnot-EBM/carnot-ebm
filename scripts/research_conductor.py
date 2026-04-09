@@ -29,6 +29,7 @@ import argparse
 import json
 import logging
 import os
+import shutil
 import subprocess
 import sys
 import time
@@ -207,6 +208,7 @@ def log_step(task: str, status: str, details: str = "") -> None:
 
 ROADMAP_FILE = PROJECT_ROOT / "research-roadmap.yaml"
 COMPLETE_FILE = PROJECT_ROOT / "research-complete.yaml"
+NEXT_ROADMAP_FILE = PROJECT_ROOT / "research-roadmap-next.yaml"
 
 
 def load_research_tasks() -> list[dict]:
@@ -322,6 +324,264 @@ def pick_next_task(completed_log: str) -> dict | None:
     return None
 
 
+def _load_roadmap_metadata() -> dict:
+    """Load milestone metadata from the active roadmap YAML."""
+    if not ROADMAP_FILE.exists():
+        return {}
+    try:
+        with open(ROADMAP_FILE) as f:
+            data = yaml.safe_load(f)
+        return {
+            "milestone": data.get("milestone", "unknown"),
+            "milestone_title": data.get("milestone_title", ""),
+            "milestone_doc": data.get("milestone_doc", ""),
+        }
+    except Exception:
+        return {}
+
+
+def _archive_current_milestone(push: bool = True) -> bool:
+    """Archive the current milestone's tasks to research-complete.yaml.
+
+    Reads the current roadmap, appends its tasks to the completed file,
+    and clears the active roadmap. Returns True if successful.
+    """
+    if not ROADMAP_FILE.exists():
+        return False
+
+    try:
+        with open(ROADMAP_FILE) as f:
+            roadmap = yaml.safe_load(f)
+    except Exception as e:
+        logger.error("Failed to read roadmap for archival: %s", e)
+        return False
+
+    milestone = roadmap.get("milestone", "unknown")
+    title = roadmap.get("milestone_title", "")
+    tasks = roadmap.get("tasks", [])
+    if not tasks:
+        return False
+
+    logger.info("Archiving milestone %s (%s) — %d tasks", milestone, title, len(tasks))
+
+    # Build the completed milestone entry
+    completed_entry = {
+        "id": milestone,
+        "title": title,
+        "doc": roadmap.get("milestone_doc", ""),
+        "completed": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "finding": "See conductor log for per-experiment results.",
+        "tasks": [
+            {
+                "id": t["id"],
+                "title": t["title"],
+                "deliverable": t.get("deliverable", ""),
+                "result": "OK (conductor)",
+            }
+            for t in tasks
+        ],
+    }
+
+    # Append to research-complete.yaml
+    try:
+        if COMPLETE_FILE.exists():
+            with open(COMPLETE_FILE) as f:
+                complete_data = yaml.safe_load(f) or {}
+        else:
+            complete_data = {"milestones": []}
+
+        milestones = complete_data.get("milestones", [])
+        milestones.append(completed_entry)
+        complete_data["milestones"] = milestones
+
+        with open(COMPLETE_FILE, "w") as f:
+            f.write("# Carnot Research — Completed Experiments\n")
+            f.write("# Tasks moved here from research-roadmap.yaml after successful completion.\n")
+            f.write("# Ordered chronologically by completion date.\n\n")
+            yaml.dump(complete_data, f, default_flow_style=False, sort_keys=False, width=120)
+
+        logger.info("Archived %d tasks to research-complete.yaml", len(tasks))
+    except Exception as e:
+        logger.error("Failed to archive milestone: %s", e)
+        return False
+
+    return True
+
+
+def _activate_next_roadmap(push: bool = True) -> bool:
+    """Swap research-roadmap-next.yaml into research-roadmap.yaml.
+
+    If a next roadmap exists, it becomes the active roadmap. The old
+    roadmap should already be archived via _archive_current_milestone().
+    Returns True if a new roadmap was activated.
+    """
+    if not NEXT_ROADMAP_FILE.exists():
+        logger.info("No research-roadmap-next.yaml found — nothing to activate")
+        return False
+
+    try:
+        # Validate the next roadmap is well-formed
+        with open(NEXT_ROADMAP_FILE) as f:
+            next_data = yaml.safe_load(f)
+        next_tasks = next_data.get("tasks", [])
+        if not next_tasks:
+            logger.warning("research-roadmap-next.yaml has no tasks — skipping")
+            return False
+
+        next_milestone = next_data.get("milestone", "unknown")
+        logger.info(
+            "Activating next roadmap: milestone %s (%d tasks)",
+            next_milestone, len(next_tasks),
+        )
+
+        # Swap: next -> active, delete next
+        shutil.copy2(NEXT_ROADMAP_FILE, ROADMAP_FILE)
+        NEXT_ROADMAP_FILE.unlink()
+
+        # Reset task cache so next iteration loads the new tasks
+        global RESEARCH_TASKS, _tasks_loaded
+        RESEARCH_TASKS = []
+        _tasks_loaded = False
+
+        # Commit the milestone transition
+        run_cmd(["git", "add", "research-roadmap.yaml", "research-complete.yaml"])
+        run_cmd(["git", "add", "--force", "research-roadmap-next.yaml"])  # In case it's gitignored
+        msg = (
+            f"[conductor] Activate milestone {next_milestone}\n\n"
+            f"Archived previous milestone, activated {next_milestone}.\n\n"
+            "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+        )
+        run_cmd(["git", "commit", "-m", msg])
+        if push:
+            run_cmd(["git", "push", "origin", "main"], timeout=60)
+
+        log_step(f"Milestone {next_milestone} activated", "OK", f"{len(next_tasks)} tasks queued")
+        return True
+
+    except Exception as e:
+        logger.error("Failed to activate next roadmap: %s", e)
+        return False
+
+
+def _plan_next_milestone(push: bool = True) -> bool:
+    """Ask Claude to plan the next research milestone.
+
+    When all current tasks are done AND no research-roadmap-next.yaml exists,
+    this function asks Claude to analyze completed work, the PRD, and the
+    architecture to propose the next milestone with a full set of experiment
+    tasks in research-roadmap-next.yaml format.
+
+    Returns True if a next roadmap was successfully created.
+    """
+    if NEXT_ROADMAP_FILE.exists():
+        logger.info("research-roadmap-next.yaml already exists — skipping planning")
+        return False
+
+    current = _load_roadmap_metadata()
+    current_milestone = current.get("milestone", "unknown")
+
+    logger.info("=" * 60)
+    logger.info("PLANNING NEXT MILESTONE (current: %s)", current_milestone)
+    logger.info("=" * 60)
+
+    planning_prompt = f"""You are the research planning agent for the Carnot EBM framework in {PROJECT_ROOT}.
+Read CLAUDE.md for project context and code style requirements.
+
+ALL TASKS IN THE CURRENT MILESTONE ({current_milestone}) HAVE COMPLETED.
+Your job: plan the NEXT research milestone.
+
+READ THESE FILES FIRST (in order):
+1. _bmad/prd.md — long-term vision and requirements
+2. _bmad/architecture.md — current architecture
+3. ops/status.md — what's working, what's next
+4. ops/changelog.md — recent work
+5. research-complete.yaml — all completed experiments and findings
+6. research-roadmap.yaml — the milestone that just finished
+7. openspec/change-proposals/ — all previous roadmap docs (v2-v8+)
+8. ops/conductor-log.md — per-experiment results
+
+THEN:
+1. Identify the 3 biggest gaps between current state and PRD vision
+2. Determine the natural next experiments based on completed work
+3. Design 10-14 experiments across 3-4 phases
+4. Use Qwen3.5-0.8B and google/gemma-4-E4B-it as the target LLM models
+   (latest small SoTA — do NOT propose older models like Llama/Phi)
+
+CREATE TWO FILES:
+
+FILE 1: openspec/change-proposals/research-roadmap-v{{NEXT_VERSION}}.md
+- Full milestone design doc following the v7/v8 format
+- Include: what previous milestone proved, architecture diagram, phase descriptions,
+  dependency graph, hardware requirements, what's deferred
+
+FILE 2: research-roadmap-next.yaml
+- Full YAML with all experiment tasks in conductor execution order
+- Follow the EXACT format of research-roadmap.yaml:
+  milestone, milestone_title, milestone_doc, tasks (id, milestone, deliverable, title, prompt)
+- Each prompt must include: CONTEXT, EXISTING CODE TO READ FIRST, TASK, CONCRETE STEPS
+- End each prompt with: Run command, "Do NOT push. Do NOT modify scripts/research_conductor.py."
+- Use {{project_root}} and {{date}} as placeholders in prompts
+
+IMPORTANT:
+- Do NOT modify research-roadmap.yaml (the conductor manages this)
+- Do NOT modify scripts/research_conductor.py
+- Do NOT push
+- CalVer milestones: increment the seq number (e.g., 2026.04.3 -> 2026.04.4, or 2026.05.1 if month changes)
+- Each experiment must have a clear deliverable file path
+- Experiments should be ordered so dependencies are met (earlier experiments first)
+"""
+
+    success, output = run_claude(planning_prompt, max_turns=50, timeout=1200)
+
+    if not success:
+        logger.error("Planning agent failed: %s", output[:200])
+        log_step("Plan next milestone", "FAIL", f"Claude error: {output[:60]}")
+        return False
+
+    # Verify the planning agent created the next roadmap file
+    if not NEXT_ROADMAP_FILE.exists():
+        logger.warning("Planning agent ran but didn't create research-roadmap-next.yaml")
+        log_step("Plan next milestone", "FAIL", "No research-roadmap-next.yaml produced")
+        return False
+
+    # Validate the YAML is well-formed
+    try:
+        with open(NEXT_ROADMAP_FILE) as f:
+            next_data = yaml.safe_load(f)
+        next_tasks = next_data.get("tasks", [])
+        next_milestone = next_data.get("milestone", "unknown")
+        logger.info(
+            "Planning agent created milestone %s with %d tasks",
+            next_milestone, len(next_tasks),
+        )
+    except Exception as e:
+        logger.error("Planning agent produced invalid YAML: %s", e)
+        NEXT_ROADMAP_FILE.unlink(missing_ok=True)
+        log_step("Plan next milestone", "FAIL", f"Invalid YAML: {e}")
+        return False
+
+    # Commit the planned roadmap
+    if git_has_changes():
+        # Guard: don't let planning modify conductor or active roadmap
+        for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
+            _, gdiff, _ = run_cmd(["git", "diff", "--name-only", "--", guarded])
+            if gdiff.strip():
+                logger.warning("Planning agent modified %s — reverting", guarded)
+                run_cmd(["git", "checkout", "--", guarded])
+
+        run_cmd(["git", "add", "-A"])
+        msg = (
+            f"[conductor] Plan next milestone: {next_milestone}\n\n"
+            f"Planning agent proposed {len(next_tasks)} experiments.\n"
+            f"Stored in research-roadmap-next.yaml for activation.\n\n"
+            "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
+        )
+        git_commit_and_push(msg, push=push)
+
+    log_step(f"Plan milestone {next_milestone}", "OK", f"{len(next_tasks)} tasks proposed")
+    return True
+
+
 def research_step(push: bool = True, dry_run: bool = False) -> bool:
     """Execute one research step. Returns True if progress was made."""
     timestamp = datetime.now(timezone.utc)
@@ -334,8 +594,35 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # Pick task
     task = pick_next_task(log_content)
     if task is None:
-        logger.info("No tasks available")
-        return False
+        # All tasks in current milestone are done.
+        # Try to transition to the next milestone.
+        logger.info("All tasks in current milestone complete.")
+
+        if NEXT_ROADMAP_FILE.exists():
+            # A next roadmap is ready — archive current and activate it
+            logger.info("Found research-roadmap-next.yaml — transitioning milestones")
+            _archive_current_milestone(push=push)
+            activated = _activate_next_roadmap(push=push)
+            if activated:
+                logger.info("New milestone activated — will pick up tasks next iteration")
+                return True  # Progress was made (milestone transition)
+            else:
+                logger.error("Failed to activate next roadmap")
+                return False
+        else:
+            # No next roadmap — ask planning agent to create one
+            logger.info("No research-roadmap-next.yaml — launching planning agent")
+            if dry_run:
+                logger.info("[DRY RUN] Would launch planning agent for next milestone")
+                return False
+            planned = _plan_next_milestone(push=push)
+            if planned:
+                # Planning created the file; next iteration will activate it
+                logger.info("Planning complete — will activate next iteration")
+                return True
+            else:
+                logger.info("Planning did not produce a next roadmap")
+                return False
 
     logger.info("=" * 60)
     logger.info("RESEARCH STEP: %s", task["title"])

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-09 Exp 57 Verify-Repair Loop
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-09T14:08:06Z | 2026-04-09T14:12:40Z | Create Exp 57 verify-repair loop script, run E2E with live LLM | TBD |
+
+---
+
 ## Session: 2026-04-07 Research Roadmap v5 + Nemotron Analysis
 
 ### Turn Log
