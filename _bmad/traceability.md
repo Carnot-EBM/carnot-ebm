@@ -74,4 +74,5 @@
 | Exp 73: Constraint coverage metric | ✅ Complete (5-type claim taxonomy, coverage = extracted/total per domain+type, coverage-accuracy correlation, repair threshold analysis, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | — |
 | Exp 67: GSM8K subset verification | ✅ Complete (200 GSM8K test questions, 3 modes: baseline/verify/verify-repair, first external benchmark, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | — |
 | Exp 68: HumanEval subset verification + fuzzing | ✅ Complete (50 HumanEval-style problems, full pipeline: extract→instrument→test→fuzz→repair, pass@1 + pass@1+repair, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | — |
+| Exp 65: Embedding-space constraint verification | ✅ Complete (joint Gibbs EBM on [semantic embedding; constraint vector], NCE training, AUROC comparison, gradient repair with NN decoding, REQ-EBT-001, REQ-VERIFY-001) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
