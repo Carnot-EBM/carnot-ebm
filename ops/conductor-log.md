@@ -50,3 +50,4 @@
 | 2026-04-06 02:11 UTC | Generate 1000+ QA pairs programmatically | OK | ================= 1049 passed, 12 warnings in 66.87s (0:01:06) ================= |
 | 2026-04-06 02:19 UTC | MCP server for code verification | OK | ================= 1049 passed, 12 warnings in 66.39s (0:01:06) ================= |
 | 2026-04-06 02:25 UTC | CLI tool for code verification | OK | ================= 1049 passed, 12 warnings in 65.56s (0:01:05) ================= |
+| 2026-04-09 02:18 UTC | Exp 48: Code → constraint extraction | SKIP | Pre-tests failing: =========== 1 failed, 1107 passed, 12 warnings in 112.26s (0: |
