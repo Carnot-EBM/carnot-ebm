@@ -649,3 +649,61 @@ The LLM handles language. The Ising model handles logic. Each does what it's bes
 | `per-token-ebm-qwen35-9b-nothink` | 85.8% | Qwen3.5-9B | |
 | `per-token-ebm-qwen35-35b-nothink` | 84.5% | Qwen3.5-35B-A3B | MoE, 256 experts |
 | ... | 73-84% | 11 more models | See HuggingFace |
+
+---
+
+## 14. The Autonomous Self-Improvement Loop
+
+Beyond post-hoc verification, Carnot implements an automated research loop inspired by Karpathy's "autoresearch" concept, where an LLM proposes hypotheses and the energy function serves as the objective judge:
+
+1. **Propose.** An agent generates candidate improvements to EBM architecture, training, or hyperparameters.
+2. **Sandbox.** Candidates execute in an isolated environment (process-level for development, Docker+gVisor for production).
+3. **Evaluate.** A four-gate evaluator checks: (a) energy improvement on held-out data, (b) execution time within budget, (c) memory within limits, (d) Ising constraint satisfaction on hypothesis claims (Experiment 72).
+4. **Learn.** The Trace2Skill layer extracts structured lessons from execution trajectories and consolidates them into a skill directory.
+5. **Plan.** When all tasks in a milestone complete, a planning agent reads `research-program.md` (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.
+6. **Repeat.** The loop runs until a circuit breaker halts it after N consecutive failures.
+
+In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor has autonomously completed 4 milestones (85+ experiments) with automatic milestone archival and transition.
+
+The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.
+
+---
+
+## 15. Limitations
+
+1. **Model scale.** Live LLM experiments use Qwen3.5-0.8B and Gemma4-E4B (small models). Results may differ on larger models where hallucination rates are lower and constraint patterns differ.
+
+2. **Constraint coverage.** The pipeline can only verify claims for which constraints exist. Semantic claims ("the logic is sound") and factual claims without a knowledge base escape verification. Experiment 73 quantifies this gap.
+
+3. **Simulated fallbacks.** Some benchmark experiments (GSM8K, HumanEval) used simulated LLM outputs when model loading failed. Live results are available for Experiments 56-57 but not all benchmarks have been validated at full scale with live models.
+
+4. **Statistical power.** QA evaluations use 20-200 questions. The reported improvements lack formal significance testing; bootstrap confidence intervals would strengthen claims.
+
+5. **Composite scoring requires test cases.** The code verification pipeline assumes the existence of test cases. For open-ended generation without structural ground truth, only the logprob signal and NL constraint extraction are available.
+
+6. **No comparison to fine-tuning.** We compare EBM verification against unmodified LLM output. A comparison against RLHF, DPO, or other alignment methods on the same tasks would clarify the relative value proposition.
+
+7. **Activation ceiling.** Per-token EBM accuracy plateaus at ~84.5% on base models. We have not identified whether this is an irreducible noise floor, a feature representation limitation, or a data diversity issue.
+
+---
+
+## 16. Acknowledgments
+
+This report was produced with substantial assistance from Claude (Anthropic). Claude Code was used for code generation, experiment design, documentation, and iterative refinement of the framework. The autoresearch pipeline and research conductor use Claude as the hypothesis proposer and experiment implementer. This is a technical report, not a peer-reviewed publication.
+
+---
+
+## 17. References
+
+1. Hoover, B. et al. (2025). Energy-Based Transformers. *arXiv:2507.02092*.
+2. Zhao, H. et al. (2025). Autoregressive Models Are Secretly Energy-Based Models. *arXiv:2512.15605*.
+3. Farquhar, S. et al. (2025). Detecting Hallucinations in Large Language Models Using Semantic Entropy. *arXiv:2508.14496*.
+4. Anthropic. (2025). Scaling Monosemanticity: Extracting Interpretable Features from Claude 3.5 Sonnet.
+5. Xie, S. et al. (2025). NRGPT: Non-autoregressive Energy-Based Language Modeling. *arXiv:2512.16762*.
+6. Lee, J. et al. (2025). Scalable Energy-Based Models via Adversarial Training. *arXiv:2510.13872*.
+7. LeCun, Y. et al. (2006). A Tutorial on Energy-Based Learning. *Predicting Structured Data*, MIT Press.
+8. LeCun, Y. (2022). A Path Towards Autonomous Machine Intelligence. *OpenReview*.
+9. Karpathy, A. (2024). Autoresearch: Self-Directed Scientific Discovery with LLMs.
+10. Hinton, G. E. (2002). Training Products of Experts by Minimizing Contrastive Divergence. *Neural Computation* 14(8).
+11. Gutmann, M. & Hyvärinen, A. (2010). Noise-Contrastive Estimation: A New Estimation Principle for Unnormalized Statistical Models. *AISTATS*.
+12. Vincent, P. (2011). A Connection Between Score Matching and Denoising Autoencoders. *Neural Computation* 23(7).
