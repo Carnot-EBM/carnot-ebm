@@ -16,6 +16,12 @@ should read this file when designing new milestones.
 - **Tech:** Python + CUDA + Triton + Metal, targets llama.cpp
 - **When to revisit:** When scaling local LLM size becomes a bottleneck, or exploring efficient inference for production
 
+### HISA — Hierarchical Indexed Sparse Attention
+- **Paper:** arxiv.org/abs/2603.28458
+- **What:** Two-stage hierarchical sparse attention — block-level filtering then token-level refinement. Drop-in replacement for DeepSeek Sparse Attention, no retraining. Significant speedups at 64K+ context.
+- **Relevance:** Not useful for current short-context verify-repair calls (<500 tokens). Becomes relevant when Carnot handles long-context verification (full codebases, multi-turn repair with conversation history, batch-packed examples).
+- **When to revisit:** When adding long-document or codebase-level verification to the pipeline
+
 ## EBM Ecosystem
 
 ### Extropic / thrml
