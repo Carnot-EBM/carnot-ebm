@@ -43,9 +43,20 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004
 from __future__ import annotations
 
 import logging
+import signal
+import threading
+import time
 from dataclasses import dataclass, field
 from typing import Any
 
+from carnot.pipeline.errors import (
+    CarnotError,
+    ExtractionError,
+    ModelLoadError,
+    PipelineTimeoutError,
+    RepairError,
+    VerificationError,
+)
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
 
 logger = logging.getLogger(__name__)
@@ -186,6 +197,7 @@ class VerifyRepairPipeline:
         domains: list[str] | None = None,
         max_repairs: int = 3,
         extractor: ConstraintExtractor | None = None,
+        timeout_seconds: float = 30.0,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -193,24 +205,35 @@ class VerifyRepairPipeline:
             If ``model`` is a string, attempts to load it via HuggingFace
             transformers (AutoModelForCausalLM + AutoTokenizer). The model
             is loaded eagerly so errors surface at construction time rather
-            than mid-pipeline. If loading fails, raises ImportError or the
-            underlying transformers exception.
+            than mid-pipeline. If loading fails, raises ModelLoadError
+            wrapping the underlying exception.
 
             If ``model`` is None, the pipeline works in verify-only mode:
             ``verify()`` works normally, but ``verify_and_repair()`` cannot
             generate or repair responses (it will verify the provided
             response and return with ``repaired=False`` if violations exist).
 
+            The ``timeout_seconds`` parameter sets a wall-clock budget for
+            each call to ``verify()`` or ``verify_and_repair()``. If the
+            call exceeds this budget, PipelineTimeoutError is raised. Set
+            to 0 or None to disable the timeout.
+
         Args:
             model: HuggingFace model name/path, or None for verify-only.
             domains: Optional domain filter for constraint extraction.
             max_repairs: Max repair iterations (default 3).
             extractor: Custom extractor, or None for AutoExtractor.
+            timeout_seconds: Max wall-clock seconds per verify/repair call.
+                Default 30. Set to 0 or None to disable.
+
+        Raises:
+            ModelLoadError: If model is specified but cannot be loaded.
 
         Spec: REQ-VERIFY-001
         """
         self._domains = domains
         self._max_repairs = max_repairs
+        self._timeout_seconds = timeout_seconds or 0.0
 
         # Set up the constraint extractor.
         if extractor is not None:
@@ -240,30 +263,46 @@ class VerifyRepairPipeline:
             possible. Sets the model to eval mode (no dropout, no
             gradient tracking) since we only need inference.
 
+            Wraps all load-time failures in ModelLoadError so callers
+            get a single exception type regardless of whether the failure
+            is ImportError, OSError, or OOM.
+
         Args:
             model_name: HuggingFace model name or local path.
 
         Raises:
-            ImportError: If torch or transformers is not installed.
+            ModelLoadError: If torch/transformers missing or model load fails.
         """
-        import torch
-        from transformers import AutoModelForCausalLM, AutoTokenizer
+        try:
+            import torch
+            from transformers import AutoModelForCausalLM, AutoTokenizer
+        except ImportError as exc:
+            raise ModelLoadError(
+                f"Required packages not installed: {exc}",
+                details={"model_name": model_name},
+            ) from exc
 
-        self._device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info("Loading model %s on %s...", model_name, self._device)
+        try:
+            self._device = "cuda" if torch.cuda.is_available() else "cpu"
+            logger.info("Loading model %s on %s...", model_name, self._device)
 
-        self._tokenizer = AutoTokenizer.from_pretrained(
-            model_name, trust_remote_code=True
-        )
-        self._model = AutoModelForCausalLM.from_pretrained(
-            model_name,
-            trust_remote_code=True,
-            torch_dtype=torch.float16 if self._device == "cuda" else None,
-        )
-        if self._device == "cuda":
-            self._model = self._model.cuda()
-        self._model.eval()
-        logger.info("Model %s loaded successfully.", model_name)
+            self._tokenizer = AutoTokenizer.from_pretrained(
+                model_name, trust_remote_code=True
+            )
+            self._model = AutoModelForCausalLM.from_pretrained(
+                model_name,
+                trust_remote_code=True,
+                torch_dtype=torch.float16 if self._device == "cuda" else None,
+            )
+            if self._device == "cuda":
+                self._model = self._model.cuda()
+            self._model.eval()
+            logger.info("Model %s loaded successfully.", model_name)
+        except Exception as exc:
+            raise ModelLoadError(
+                f"Failed to load model '{model_name}': {exc}",
+                details={"model_name": model_name},
+            ) from exc
 
     def _generate(self, prompt: str, max_new_tokens: int = 256) -> str:
         """Generate a response from the loaded LLM.
@@ -340,7 +379,8 @@ class VerifyRepairPipeline:
         **Detailed explanation for engineers:**
             Convenience method that delegates to the underlying extractor.
             Applies the pipeline's domain filter if set and no explicit
-            domain is provided.
+            domain is provided. Wraps extractor failures in ExtractionError
+            so the caller gets a consistent exception type.
 
         Args:
             text: Input text to extract constraints from.
@@ -350,8 +390,25 @@ class VerifyRepairPipeline:
         Returns:
             List of extracted ConstraintResult objects.
 
+        Raises:
+            ExtractionError: If extraction fails unexpectedly.
+
         Spec: REQ-VERIFY-001
         """
+        try:
+            return self._extract_constraints_inner(text, domain)
+        except CarnotError:
+            raise
+        except Exception as exc:
+            raise ExtractionError(
+                f"Constraint extraction failed: {exc}",
+                details={"domain": domain, "input_length": len(text)},
+            ) from exc
+
+    def _extract_constraints_inner(
+        self, text: str, domain: str | None = None
+    ) -> list[ConstraintResult]:
+        """Core extraction logic, separated for error wrapping."""
         effective_domain = domain
         if effective_domain is None and self._domains and len(self._domains) == 1:
             effective_domain = self._domains[0]
@@ -389,9 +446,9 @@ class VerifyRepairPipeline:
             4. Return a VerificationResult with verified flag, energy,
                violations list, and full certificate.
 
-            The ``question`` parameter is included for context (some future
-            extractors may use it) but currently only the response text is
-            parsed for constraints.
+            Respects the configured timeout. If extraction or evaluation
+            fails, returns a VerificationResult with verified=False and
+            the error recorded in the certificate rather than crashing.
 
         Args:
             question: The original question (for context/logging).
@@ -401,10 +458,28 @@ class VerifyRepairPipeline:
         Returns:
             VerificationResult with constraint evaluation details.
 
+        Raises:
+            PipelineTimeoutError: If the call exceeds timeout_seconds.
+
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003
         """
-        constraints = self.extract_constraints(response, domain)
-        return self._evaluate_constraints(constraints)
+        deadline = self._make_deadline()
+        try:
+            self._check_deadline(deadline)
+            constraints = self.extract_constraints(response, domain)
+            self._check_deadline(deadline)
+            return self._evaluate_constraints(constraints)
+        except PipelineTimeoutError:
+            raise
+        except CarnotError as exc:
+            logger.warning("Verification degraded: %s", exc)
+            return VerificationResult(
+                verified=False,
+                constraints=[],
+                energy=0.0,
+                violations=[],
+                certificate={"error": str(exc), "error_type": type(exc).__name__},
+            )
 
     def verify_and_repair(
         self,
@@ -450,6 +525,8 @@ class VerifyRepairPipeline:
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004
         """
+        deadline = self._make_deadline()
+
         # Step 1: Get initial response.
         if response is None:
             if not self.has_model:
@@ -457,12 +534,21 @@ class VerifyRepairPipeline:
                     "No response provided and no model loaded. Either pass a "
                     "response string or initialize with model='...'."
                 )
-            response = self._generate(question)
+            try:
+                response = self._generate(question)
+            except (CarnotError, PipelineTimeoutError):
+                raise
+            except Exception as exc:
+                raise RepairError(
+                    f"Initial generation failed: {exc}",
+                    details={"question": question[:200]},
+                ) from exc
 
         initial_response = response
         history: list[VerificationResult] = []
 
         # Step 2: Verify the initial response.
+        self._check_deadline(deadline)
         vr = self.verify(question, response, domain)
         history.append(vr)
 
@@ -488,6 +574,8 @@ class VerifyRepairPipeline:
             )
 
         for i in range(self._max_repairs):
+            self._check_deadline(deadline)
+
             # Format violations as feedback for the LLM.
             feedback = self._format_violations(vr.violations)
             repair_prompt = (
@@ -498,7 +586,23 @@ class VerifyRepairPipeline:
             )
 
             # Generate a repaired response.
-            response = self._generate(repair_prompt)
+            try:
+                response = self._generate(repair_prompt)
+            except (CarnotError, PipelineTimeoutError):
+                raise
+            except Exception as exc:
+                logger.warning(
+                    "Repair iteration %d failed: %s", i + 1, exc
+                )
+                # Return best response so far rather than crashing.
+                return RepairResult(
+                    initial_response=initial_response,
+                    final_response=response,
+                    verified=False,
+                    repaired=False,
+                    iterations=i + 1,
+                    history=history,
+                )
             logger.info("Repair iteration %d: regenerated response.", i + 1)
 
             # Re-verify.
@@ -553,15 +657,28 @@ class VerifyRepairPipeline:
             The certificate dict provides the full decomposition for
             energy-backed constraints, useful for debugging and auditing.
 
+            If JAX computation fails (shape mismatch, NaN), raises
+            VerificationError so the caller (verify()) can degrade
+            gracefully.
+
         Args:
             constraints: List of ConstraintResult objects from extraction.
 
         Returns:
             VerificationResult with verified flag, energy, violations, etc.
-        """
-        import jax.numpy as jnp
 
-        from carnot.verify.constraint import ComposedEnergy
+        Raises:
+            VerificationError: If energy computation fails.
+        """
+        try:
+            import jax.numpy as jnp
+
+            from carnot.verify.constraint import ComposedEnergy
+        except ImportError as exc:
+            raise VerificationError(
+                f"JAX not available: {exc}",
+                details={"n_constraints": len(constraints)},
+            ) from exc
 
         violations: list[ConstraintResult] = []
         certificate_entries: list[dict] = []
@@ -575,26 +692,32 @@ class VerifyRepairPipeline:
 
         # If we have energy terms, build ComposedEnergy and verify.
         if energy_terms:
-            # Determine input dimension from the first term.
-            # Use a dummy input to probe; default to 1 if unknown.
-            input_dim = 1
-            composed = ComposedEnergy(input_dim=input_dim)
-            for cr, weight in energy_terms:
-                composed.add_constraint(cr.energy_term, weight)
+            try:
+                # Determine input dimension from the first term.
+                # Use a dummy input to probe; default to 1 if unknown.
+                input_dim = 1
+                composed = ComposedEnergy(input_dim=input_dim)
+                for cr, weight in energy_terms:
+                    composed.add_constraint(cr.energy_term, weight)
 
-            x = jnp.zeros(input_dim)
-            ce_result = composed.verify(x)
-            total_energy = ce_result.total_energy
+                x = jnp.zeros(input_dim)
+                ce_result = composed.verify(x)
+                total_energy = ce_result.total_energy
 
-            for report in ce_result.constraints:
-                certificate_entries.append(
-                    {
-                        "name": report.name,
-                        "energy": report.energy,
-                        "weighted_energy": report.weighted_energy,
-                        "satisfied": report.satisfied,
-                    }
-                )
+                for report in ce_result.constraints:
+                    certificate_entries.append(
+                        {
+                            "name": report.name,
+                            "energy": report.energy,
+                            "weighted_energy": report.weighted_energy,
+                            "satisfied": report.satisfied,
+                        }
+                    )
+            except Exception as exc:
+                raise VerificationError(
+                    f"Energy computation failed: {exc}",
+                    details={"n_energy_terms": len(energy_terms)},
+                ) from exc
 
         # Check all constraints for violations (metadata-based check).
         for cr in constraints:
@@ -624,6 +747,25 @@ class VerifyRepairPipeline:
             violations=violations,
             certificate=certificate,
         )
+
+    def _make_deadline(self) -> float:
+        """Return a monotonic-clock deadline, or 0 if timeout is disabled."""
+        if self._timeout_seconds > 0:
+            return time.monotonic() + self._timeout_seconds
+        return 0.0
+
+    @staticmethod
+    def _check_deadline(deadline: float) -> None:
+        """Raise PipelineTimeoutError if the deadline has passed.
+
+        Args:
+            deadline: Monotonic clock deadline. 0 means no timeout.
+        """
+        if deadline > 0 and time.monotonic() > deadline:
+            raise PipelineTimeoutError(
+                "Pipeline operation exceeded timeout",
+                details={"deadline": deadline, "now": time.monotonic()},
+            )
 
     @staticmethod
     def _format_violations(violations: list[ConstraintResult]) -> str:

@@ -6,6 +6,14 @@ then maps them to energy terms for Ising-model verification.
 Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003
 """
 
+from carnot.pipeline.errors import (
+    CarnotError,
+    ExtractionError,
+    ModelLoadError,
+    PipelineTimeoutError,
+    RepairError,
+    VerificationError,
+)
 from carnot.pipeline.extract import (
     ArithmeticExtractor,
     AutoExtractor,
@@ -24,12 +32,18 @@ from carnot.pipeline.verify_repair import (
 __all__ = [
     "ArithmeticExtractor",
     "AutoExtractor",
+    "CarnotError",
     "CodeExtractor",
     "ConstraintExtractor",
     "ConstraintResult",
+    "ExtractionError",
     "LogicExtractor",
+    "ModelLoadError",
     "NLExtractor",
+    "PipelineTimeoutError",
+    "RepairError",
     "RepairResult",
+    "VerificationError",
     "VerificationResult",
     "VerifyRepairPipeline",
 ]
