@@ -55,6 +55,7 @@
 - EBM-guided rejection sampling (experiment 23)
 - Multi-layer hallucination probing (experiment 24, U-curve discovered)
 - MCP server with score_candidates tool
+- Hardened MCP server package (`carnot.mcp`): 6 tools (verify_code, verify_with_properties, verify_llm_output, verify_and_repair, list_domains, health_check); 30s timeout, 10K char limit, structured errors; runnable as `python -m carnot.mcp`
 
 ### Constraint-Based Reasoning (Phase 5-8)
 - Arithmetic verification: QUBO encoding (8/12) + deterministic carry propagation (16/16)
