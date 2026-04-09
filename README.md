@@ -10,6 +10,36 @@ Carnot is a research framework exploring whether Energy-Based Models can detect 
 
 **What's genuinely valuable:** The 14 principles learned from systematic negative results, the scaling data across 15 model architectures, and the infrastructure for activation-based research. Ships with an MCP server and CLI for code verification. See the [technical report](docs/technical-report.md) for full results.
 
+## Install
+
+```bash
+# Python (3.11+)
+pip install -e ".[dev]"
+
+# Verify it works
+carnot verify examples/math_funcs.py --func gcd --test "(12,8):4" --test "(7,13):1"
+```
+
+> GPU: `pip install carnot[cuda]` for CUDA 12. On AMD/ROCm, use `JAX_PLATFORMS=cpu`.
+> Rust bindings (optional): `pip install carnot[rust]` with Rust toolchain installed.
+
+### Quick start (Python API)
+
+```python
+from carnot.pipeline import VerifyRepairPipeline
+
+pipeline = VerifyRepairPipeline()
+
+# Correct answer — passes verification
+result = pipeline.verify("What is 15 + 27?", "15 + 27 = 42")
+print(result.verified)    # True
+
+# Wrong answer — caught by constraint extraction
+result = pipeline.verify("What is 15 + 27?", "15 + 27 = 43")
+print(result.verified)    # False
+print(result.violations)  # [ConstraintResult: "15 + 27 = 43 (correct: 42)"]
+```
+
 ## The Problem with LLMs
 
 Large language models generate text by predicting the most probable next token. This produces fluent output, but it's fundamentally guessing — there is no mechanism to verify that the output is logically consistent, physically valid, or factually correct. When an early token is wrong, the error cascades irrecoverably. This is why LLMs hallucinate: they optimize for plausibility, not truth.
