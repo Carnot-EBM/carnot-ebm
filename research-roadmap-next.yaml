@@ -1,0 +1,651 @@
+# Carnot Research Roadmap — Milestone 2026.04.3
+# "Production Ising — Benchmark, Harden, Scale"
+#
+# Active experiment queue — processed in order by research_conductor.py
+# Swap this into research-roadmap.yaml when 2026.04.2 completes.
+#
+# Versioning: CalVer (YYYY.MM.seq) to show chronology
+# Completed tasks are moved to research-complete.yaml
+#
+# Each task has:
+#   id: unique identifier
+#   milestone: calver milestone this belongs to
+#   deliverable: file path — if it exists, task is auto-skipped
+#   title: short description (first 50 chars used for log matching)
+#   prompt: full prompt sent to Claude Code via `claude -p`
+#           Use {project_root} and {date} as placeholders
+
+milestone: "2026.04.3"
+milestone_title: "Production Ising — Benchmark, Harden, Scale"
+milestone_doc: "openspec/change-proposals/research-roadmap-v8.md"
+
+tasks:
+  # ── Phase 11a: Model Hardening (no 04.2 deps) ───────────────
+  - id: exp54-ising-fuzzing
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_54_ising_fuzzing.py
+    title: "Exp 54: Ising-guided fuzzing"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 53 (scripts/experiment_53_runtime_constraints.py) instruments
+      code to verify constraints dynamically. This experiment uses the Ising energy
+      landscape to GENERATE adversarial test inputs that are likely to expose bugs.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_53_runtime_constraints.py — runtime instrumentation
+      - scripts/experiment_48_code_constraints.py — static constraint extraction
+      - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler
+      - scripts/experiment_39_thrml_sat.py — sat_to_ising encoding
+
+      TASK: Create scripts/experiment_54_ising_fuzzing.py
+
+      CONCRETE STEPS:
+      1. Implement encode_input_space(func_signature, constraints) -> (biases, J):
+         - Map function input parameters to Ising spins
+         - Constraint violations become energy terms (high energy = likely bug trigger)
+         - Edge cases (0, -1, empty list, max int) get low bias (more likely sampled)
+
+      2. Implement ising_fuzz(func, reference_func, biases, J, n_samples=100):
+         - Use ParallelIsingSampler to generate low-energy test inputs
+         - Decode spins back to concrete function arguments
+         - Run both func and reference_func on each input
+         - Record disagreements (differential testing)
+
+      3. Test on 8 function pairs (LLM-generated vs correct reference):
+         - off-by-one in binary search
+         - missing empty-list check in max()
+         - integer overflow in factorial
+         - wrong comparison operator in sort
+         - missing base case in recursion
+         - type coercion bug (int vs float division)
+         - boundary error in substring
+         - sign error in absolute value
+
+      4. Compare: Ising-guided fuzzing vs random fuzzing (same number of inputs)
+      5. Print table: bugs found per method, unique bugs, time to first bug
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_54_ising_fuzzing.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 10a: Constraint Learning (no 04.2 deps) ───────────
+  - id: exp55-trace-learning
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_55_trace_learning.py
+    title: "Exp 55: Learn constraints from execution traces"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 53 instruments code for runtime constraint checks. Exp 51
+      (scripts/experiment_51_learn_from_llm.py) trains discriminative Ising from
+      correct/wrong pairs. This experiment combines both: learn constraints from
+      EXECUTION TRACES rather than hand-coding them.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_53_runtime_constraints.py — runtime instrumentation
+      - scripts/experiment_51_learn_from_llm.py — discriminative CD training
+      - scripts/experiment_50_learn_ising.py — CD training fundamentals
+      - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+      TASK: Create scripts/experiment_55_trace_learning.py
+
+      CONCRETE STEPS:
+      1. Generate trace data:
+         - Create 10 Python functions with known correct implementations
+         - Create 10 buggy variants (off-by-one, type errors, logic errors)
+         - Execute each with 100 random inputs, recording per-line traces:
+           variable types, values, branch decisions, return values
+
+      2. Extract trace features:
+         - Binary feature vector per execution (200+ features):
+           a. Did variable X have type T at line L? (type features)
+           b. Was branch B taken? (control flow features)
+           c. Was return value in range [lo, hi]? (output features)
+           d. Did loop iterate N times? (iteration features)
+
+      3. Train discriminative Ising on trace features:
+         - Correct traces as positive, buggy traces as negative
+         - CD training with L1 regularization (Exp 50 approach)
+         - 80/20 train/test split
+
+      4. Evaluate: does learned model detect bugs that static analysis misses?
+         Compare to Exp 53 static+dynamic detection rates
+      5. Print confusion matrix and per-bug-type detection rates
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_55_trace_learning.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 9: External Benchmark Validation ───────────────────
+  - id: exp58-multi-domain-benchmark
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_58_multi_domain_benchmark.py
+    title: "Exp 58: Multi-domain live benchmark (5 domains)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 57 (scripts/experiment_57_verify_repair_loop.py) implements the
+      verify-repair loop. This experiment benchmarks it across 5 domains with 100
+      questions each — the first comprehensive evaluation of the full pipeline.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop
+      - scripts/experiment_56_live_llm_pipeline.py — live LLM pipeline
+      - scripts/experiment_47_llm_self_constraints.py — constraint verification
+      - scripts/experiment_48_code_constraints.py — code constraint extraction
+      - scripts/experiment_49_nl_constraints.py — NL constraint extraction
+
+      TASK: Create scripts/experiment_58_multi_domain_benchmark.py
+
+      CONCRETE STEPS:
+      1. Create question sets (100 each, with ground truth):
+         a. Arithmetic: "What is 47+28?", multi-step word problems
+         b. Code: "Write a function to...", with test cases as ground truth
+         c. Logic: syllogisms, entailment, contradiction detection
+         d. Factual: capital cities, dates, physical constants (verifiable)
+         e. Scheduling: "Schedule 5 meetings with constraints..."
+
+      2. For each question, run three modes:
+         a. Baseline: LLM alone (Qwen3.5-0.8B)
+         b. Verify-only: LLM + Ising verification (no repair)
+         c. Verify-repair: LLM + Ising verification + repair loop (max 3 iters)
+
+      3. Metrics per domain and overall:
+         - Accuracy (vs ground truth)
+         - Hallucination rate
+         - Repair success rate (of those flagged, how many fixed?)
+         - Average Ising energy
+         - Average constraint count per answer
+         - Wall-clock time per mode
+
+      4. If model loading fails, fall back to simulated outputs with clear message
+      5. Print comprehensive results table (domain × mode × metric)
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_58_multi_domain_benchmark.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 11b: Multi-model ──────────────────────────────────
+  - id: exp69-multi-model
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_69_multi_model.py
+    title: "Exp 69: Multi-model verification (Qwen3.5+Gemma4)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: All live LLM experiments (56, 57) use Qwen3.5-0.8B only. This
+      experiment validates that the constraint pipeline transfers across model
+      families WITHOUT retraining the constraint extractors or Ising models.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_56_live_llm_pipeline.py — live LLM pipeline
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop
+      - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+      TASK: Create scripts/experiment_69_multi_model.py
+
+      CONCRETE STEPS:
+      1. Load two models via transformers:
+         a. Qwen/Qwen3.5-0.8B (or Qwen/Qwen3-0.6B as fallback)
+         b. google/gemma-4-E4B-it (Gemma4 small instruction-tuned)
+         - Device: CPU (JAX_PLATFORMS=cpu)
+         - Use trust_remote_code=True
+
+      2. Create 20 test questions (same as Exp 56 for comparability):
+         5 arithmetic, 5 logic, 5 code, 5 factual — all with ground truth
+
+      3. For each model × each question:
+         - Run the full verify-repair pipeline (reuse Exp 57 logic)
+         - Record: model, question, answer, constraints found, violations,
+           repair iterations, final answer, correctness
+
+      4. Analysis:
+         - Per-model accuracy (baseline vs +verify vs +verify-repair)
+         - Cross-model constraint transfer: same constraints catch errors in both?
+         - Model-specific hallucination patterns: do they hallucinate differently?
+         - Constraint satisfaction rates per model
+
+      5. Print comparison table: Qwen3.5 vs Gemma4 across all metrics
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_69_multi_model.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 12a: Hardware Prep (no 04.2 deps) ─────────────────
+  - id: exp71-tsu-abstraction
+    milestone: "2026.04.3"
+    deliverable: python/carnot/samplers/backend.py
+    title: "Exp 71: Extropic TSU sampler abstraction layer"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The ParallelIsingSampler (python/carnot/samplers/parallel_ising.py)
+      is the only sampling backend. Extropic's TSU hardware will provide native
+      thermodynamic sampling. This experiment creates an abstraction layer so
+      experiments can swap backends via config.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/parallel_ising.py — current sampler implementation
+      - python/carnot/samplers/__init__.py — sampler exports
+      - python/carnot/core/energy.py — energy function protocol
+
+      TASK: Create python/carnot/samplers/backend.py
+
+      CONCRETE STEPS:
+      1. Define SamplerBackend protocol (Python Protocol class):
+         - minimize_energy(biases: ndarray, couplings: ndarray,
+             n_samples: int, n_steps: int, beta: float) -> ndarray
+         - sample(biases: ndarray, couplings: ndarray,
+             n_samples: int, config: dict) -> ndarray
+         - backend_name: str property
+
+      2. Implement CpuBackend:
+         - Wraps ParallelIsingSampler with the SamplerBackend interface
+         - Passes through all parameters
+
+      3. Implement TsuBackend (stub):
+         - Logs all calls to a list (for testing)
+         - Returns random binary samples (simulates TSU)
+         - Raises NotImplementedError with helpful message on first real use
+
+      4. Implement get_backend(name: str = "cpu") -> SamplerBackend:
+         - Factory function: "cpu" -> CpuBackend, "tsu" -> TsuBackend
+         - Reads CARNOT_BACKEND env var as default
+
+      5. Write tests in tests/python/test_sampler_backend.py:
+         - CpuBackend produces valid samples
+         - TsuBackend stub returns correct shapes
+         - Factory function works with env var override
+         - All existing parallel_ising tests still pass
+
+      6. Update python/carnot/samplers/__init__.py to export new types
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python -m pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 10b: Constraint Coverage ──────────────────────────
+  - id: exp73-constraint-coverage
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_73_constraint_coverage.py
+    title: "Exp 73: Constraint coverage metric"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The constraint pipeline extracts and verifies constraints, but we
+      don't know what FRACTION of an LLM's claims are actually covered. This
+      experiment quantifies the gap — the "dark matter" that escapes verification.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_58_multi_domain_benchmark.py — benchmark results
+      - scripts/experiment_47_llm_self_constraints.py — constraint extraction
+      - scripts/experiment_48_code_constraints.py — code constraints
+      - scripts/experiment_49_nl_constraints.py — NL constraints
+
+      TASK: Create scripts/experiment_73_constraint_coverage.py
+
+      CONCRETE STEPS:
+      1. Define claim types taxonomy:
+         a. Arithmetic claims (numeric values, comparisons)
+         b. Logical claims (implications, contradictions)
+         c. Factual claims (named entities, dates, quantities)
+         d. Structural claims (code types, bounds, returns)
+         e. Semantic claims (meaning, intent, correctness of logic)
+
+      2. For 50 LLM answers (from Exp 58 or generate fresh):
+         - Manually annotate total verifiable claims per answer
+         - Run constraint extractor pipeline
+         - Count how many claims have corresponding constraints
+
+      3. Compute constraint coverage = extracted / total per domain:
+         - Arithmetic: expect high (types, bounds, carry chains)
+         - Code: expect medium (types/bounds but not logic)
+         - Logic: expect medium (entailment but not all cases)
+         - Factual: expect low (no KB lookup in pipeline)
+         - Semantic: expect near-zero (fundamental limitation)
+
+      4. Correlate coverage with accuracy:
+         - Do higher-coverage answers have higher accuracy after repair?
+         - Is there a coverage threshold below which repair doesn't help?
+
+      5. Print coverage breakdown table per domain and claim type
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_73_constraint_coverage.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 10c: Scale Learning ───────────────────────────────
+  - id: exp62-domain-constraint-learning
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_62_domain_constraint_learning.py
+    title: "Exp 62: Domain-specific constraint learning (10K)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 51 (scripts/experiment_51_learn_from_llm.py) learned from small
+      (correct, wrong) pairs. Exp 60 (scripts/experiment_60_scale_cd_training.py)
+      scaled CD to 100 vars. This experiment combines both: learn domain-specific
+      constraint structure from 10,000 (question, correct, wrong) triples.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_51_learn_from_llm.py — discriminative CD on LLM outputs
+      - scripts/experiment_60_scale_cd_training.py — CD at 100+ vars
+      - scripts/experiment_50_learn_ising.py — base CD training
+      - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+      TASK: Create scripts/experiment_62_domain_constraint_learning.py
+
+      CONCRETE STEPS:
+      1. Generate 10,000 (question, correct_answer, wrong_answer) triples:
+         - 3,333 arithmetic (programmatic generation with known answers)
+         - 3,333 logic (syllogisms with known validity)
+         - 3,334 code (functions with known test outcomes)
+         - Use templates + random parameters, NOT an LLM (reproducible)
+
+      2. Binary feature encoding (200+ features per answer):
+         - Numeric features: contains numbers, number count, digit sum
+         - Structural: sentence count, word count, has_code_block
+         - Domain-specific: has_equation, has_if_then, has_function_def
+         - Consistency: repeated numbers match, conclusion follows premises
+
+      3. Train discriminative Ising (200 vars, sparse) via CD:
+         - Correct answers as positive, wrong as negative
+         - L1 regularization for sparsity
+         - 80/20 train/test split
+         - Train per-domain and combined models
+
+      4. Evaluate:
+         - AUROC on held-out test set (per-domain and combined)
+         - Compare: learned Ising vs hand-coded constraints vs logprob baseline
+         - Feature importance: which features have strongest couplings?
+
+      5. Print AUROC table: per-domain × model-type
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_62_domain_constraint_learning.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp63-hierarchical-ising
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_63_hierarchical_ising.py
+    title: "Exp 63: Hierarchical Ising (1000+ vars)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 61 (scripts/experiment_61_sparse_ising.py) uses sparse Ising
+      at 500+ vars. This experiment adds HIERARCHICAL structure: group spins into
+      blocks and learn both intra-block and inter-block couplings separately.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_61_sparse_ising.py — sparse Ising at 500+ vars
+      - scripts/experiment_60_scale_cd_training.py — CD at 100+ vars
+      - scripts/experiment_46b_scale_sat_parallel.py — large SAT benchmarks
+      - scripts/experiment_39_thrml_sat.py — sat_to_ising, random_3sat
+      - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+      TASK: Create scripts/experiment_63_hierarchical_ising.py
+
+      CONCRETE STEPS:
+      1. Implement hierarchical_encode(clauses, n_vars, block_size=50):
+         - Group variables into blocks of block_size
+         - Intra-block: dense coupling matrix (block_size × block_size)
+         - Inter-block: sparse coupling (only edges crossing block boundaries)
+         - Return: list of (intra_J, inter_edges) per block
+
+      2. Implement hierarchical_sample(blocks, n_steps, beta):
+         - Outer loop: update inter-block couplings (coarse grain)
+         - Inner loop: parallel Gibbs within each block (fine grain)
+         - Anneal beta from low to high
+
+      3. Implement hierarchical_cd_train(blocks, data, epochs, lr):
+         - Train intra-block couplings first (fast, small matrices)
+         - Then train inter-block couplings (sparse, large but few)
+         - L1 regularization on inter-block connections
+
+      4. Benchmark on SAT at multiple scales:
+         - 200 vars (4 blocks of 50)
+         - 500 vars (10 blocks of 50)
+         - 1000 vars (20 blocks of 50)
+         Compare: hierarchical vs flat sparse vs flat dense vs random
+
+      5. Print scaling table: vars × method × (accuracy, time, memory)
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_63_hierarchical_ising.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 9b: Real Benchmarks ───────────────────────────────
+  - id: exp67-gsm8k-benchmark
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_67_gsm8k_benchmark.py
+    title: "Exp 67: GSM8K subset verification"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 58 benchmarks the verify-repair pipeline on synthetic questions.
+      This experiment runs it against GSM8K — a real published math reasoning
+      benchmark. This is the first credibility test against external evaluation.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_58_multi_domain_benchmark.py — multi-domain benchmark
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop
+      - scripts/experiment_42c_arithmetic_carry_fix.py — arithmetic verification
+
+      TASK: Create scripts/experiment_67_gsm8k_benchmark.py
+
+      CONCRETE STEPS:
+      1. Load GSM8K dataset:
+         - Try: from datasets import load_dataset; ds = load_dataset("gsm8k", "main")
+         - If datasets not available, create 200 GSM8K-style questions manually
+           (multi-step arithmetic word problems with known numeric answers)
+         - Extract question + final numeric answer as ground truth
+
+      2. For 200 questions, run three modes with Qwen3.5-0.8B:
+         a. Baseline: LLM generates answer, extract final number
+         b. Verify: LLM generates, extract arithmetic constraints, Ising verify
+         c. Verify-repair: full loop (max 3 iterations)
+
+      3. Arithmetic constraint extraction for GSM8K:
+         - Parse chain-of-thought for intermediate calculations
+         - Verify each step: does input × operation = stated result?
+         - Use deterministic carry-chain verification (Exp 42c approach)
+
+      4. Metrics:
+         - Accuracy per mode (exact match on final numeric answer)
+         - Error categorization: arithmetic error, logic error, reading error
+         - Repair success rate per error type
+         - Average repair iterations needed
+
+      5. If model loading fails, create simulated GSM8K outputs with known error rates
+      6. Print results table: mode × accuracy, with error breakdown
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_67_gsm8k_benchmark.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp68-humaneval-benchmark
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_68_humaneval_benchmark.py
+    title: "Exp 68: HumanEval subset verification + fuzzing"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 58 benchmarks on synthetic code questions. This experiment uses
+      HumanEval — the standard code generation benchmark. It combines constraint
+      extraction (Exp 48), runtime instrumentation (Exp 53), and Ising-guided
+      fuzzing (Exp 54) into a full code verification pipeline.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_58_multi_domain_benchmark.py — benchmark infrastructure
+      - scripts/experiment_54_ising_fuzzing.py — Ising-guided fuzzing
+      - scripts/experiment_53_runtime_constraints.py — runtime instrumentation
+      - scripts/experiment_48_code_constraints.py — code constraint extraction
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop
+
+      TASK: Create scripts/experiment_68_humaneval_benchmark.py
+
+      CONCRETE STEPS:
+      1. Load HumanEval problems:
+         - Try: from human_eval.data import read_problems
+         - If unavailable, create 50 HumanEval-style problems manually:
+           function signature + docstring + test cases
+
+      2. For 50 problems, run with Qwen3.5-0.8B:
+         a. Generate code solution
+         b. Extract constraints (types, bounds, returns via Exp 48)
+         c. Instrument code (Exp 53)
+         d. Run provided test cases
+         e. Run Ising-guided fuzz tests (Exp 54, 20 additional inputs)
+         f. If tests fail: feed failures to verify-repair loop
+
+      3. Metrics:
+         - pass@1: fraction that pass all tests on first generation
+         - pass@1+repair: fraction after verify-repair (max 3 iterations)
+         - Bugs caught by: test cases only, instrumentation only, fuzzing only
+         - Unique bugs found by fuzzing that test cases missed
+
+      4. If model or HumanEval loading fails, simulate with known-buggy code
+      5. Print results: pass@1 vs pass@1+repair, bug detection source breakdown
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_68_humaneval_benchmark.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 12b: Continuous Reasoning ─────────────────────────
+  - id: exp65-embedding-constraints
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_65_embedding_constraints.py
+    title: "Exp 65: Embedding-space constraint verification"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 64 (scripts/experiment_64_continuous_ising.py) relaxed Ising to
+      continuous space. This experiment bridges EMBEDDING space (semantic) with
+      CONSTRAINT space (structural) by training a joint EBM.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_64_continuous_ising.py — continuous relaxation
+      - python/carnot/embeddings/jepa_energy.py — JEPA energy in embedding space
+      - python/carnot/verify/constraint.py — ComposedEnergy system
+      - python/carnot/models/gibbs.py — Gibbs EBM (for training joint model)
+
+      TASK: Create scripts/experiment_65_embedding_constraints.py
+
+      CONCRETE STEPS:
+      1. Create joint feature vectors for 200 LLM answers:
+         - Semantic embedding: sentence-transformers all-MiniLM-L6-v2 (384-dim)
+           (pip install sentence-transformers if needed, or mock with random)
+         - Constraint vector: per-constraint pass/fail from Ising verifier (N-dim)
+         - Concatenate: [embedding; constraint_vector] (384+N dim)
+
+      2. Train small Gibbs EBM on joint space:
+         - Positive: correct answers (low energy target)
+         - Negative: wrong answers (high energy target)
+         - CD training with 50 epochs
+         - Hidden dimensions: 128
+
+      3. Evaluate:
+         - AUROC for correct/wrong on held-out test set
+         - Compare: joint EBM vs Ising-only vs embedding-only
+         - Does the joint model catch errors that neither alone does?
+
+      4. Gradient-based repair in joint space:
+         - Start from wrong answer's joint vector
+         - Gradient descent to minimize joint energy
+         - Decode: nearest-neighbor in embedding space to find improved answer
+         - Measure: does repaired embedding correspond to correct answer?
+
+      5. Print AUROC comparison table and repair success rates
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_65_embedding_constraints.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 11c: Rust Production Path ─────────────────────────
+  - id: exp70-rust-constraints
+    milestone: "2026.04.3"
+    deliverable: crates/carnot-constraints/src/lib.rs
+    title: "Exp 70: Rust constraint extraction + verification"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The constraint pipeline (extraction, verification, repair) is
+      entirely in Python. For production deployment, the core verification must
+      be in Rust. This experiment ports ComposedEnergy and Ising verification.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm
+      - python/carnot/samplers/parallel_ising.py — Ising sampling
+      - crates/carnot-core/src/lib.rs — Rust core traits (EnergyFunction)
+      - crates/carnot-ising/src/lib.rs — Rust Ising model
+      - Cargo.toml — workspace configuration
+
+      TASK: Create crates/carnot-constraints/ with Rust constraint verification
+
+      CONCRETE STEPS:
+      1. Create crate structure:
+         - crates/carnot-constraints/Cargo.toml (depends on carnot-core, carnot-ising)
+         - crates/carnot-constraints/src/lib.rs
+         - crates/carnot-constraints/src/constraint.rs — ConstraintTerm trait + ComposedEnergy
+         - crates/carnot-constraints/src/verify.rs — verification + certificate generation
+
+      2. Implement ConstraintTerm trait:
+         - energy(&self, state: &[f64]) -> f64
+         - satisfied(&self, state: &[f64]) -> bool
+         - name(&self) -> &str
+
+      3. Implement ComposedEnergy:
+         - Add/remove constraint terms with weights
+         - Total energy = sum(weight_i * term_i.energy(state))
+         - Decompose: return per-constraint energy breakdown
+         - Verify: return VerificationCertificate (VERIFIED/VIOLATED + per-constraint)
+
+      4. Implement built-in constraint types:
+         - BoundConstraint (value in [lo, hi])
+         - EqualityConstraint (value == target, with tolerance)
+         - IsingConstraint (wraps carnot-ising for SAT/logic)
+
+      5. Add to workspace Cargo.toml, ensure cargo build --workspace succeeds
+      6. Write Rust tests in crates/carnot-constraints/tests/
+      7. Run: cargo test -p carnot-constraints && cargo clippy -p carnot-constraints -- -D warnings
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 12c: Autoresearch Self-Verification ───────────────
+  - id: exp72-autoresearch-self-verify
+    milestone: "2026.04.3"
+    deliverable: scripts/experiment_72_autoresearch_self_verify.py
+    title: "Exp 72: Autoresearch self-verification via Ising"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The autoresearch pipeline (scripts/research_conductor.py) runs
+      experiments autonomously. Exp 57 implements verify-repair for LLM outputs.
+      This experiment dog-foods the constraint pipeline: use Ising verification
+      to check the autoresearch loop's OWN hypothesis outputs.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/research_conductor.py — autoresearch orchestrator
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop
+      - scripts/experiment_48_code_constraints.py — code constraint extraction
+      - scripts/experiment_49_nl_constraints.py — NL constraint extraction
+      - python/carnot/verify/constraint.py — ComposedEnergy system
+
+      TASK: Create scripts/experiment_72_autoresearch_self_verify.py
+
+      CONCRETE STEPS:
+      1. Implement extract_hypothesis_claims(code: str, output: str) -> list[dict]:
+         - Parse hypothesis code with Exp 48 AST extraction (types, bounds, returns)
+         - Parse output text with Exp 49 NL extraction (numeric claims, comparisons)
+         - Return list of {claim_type, claim_text, constraint} dicts
+
+      2. Implement verify_hypothesis(claims, ground_truth=None) -> dict:
+         - Build ComposedEnergy from extracted constraints
+         - Run Ising verification
+         - Return {verified: int, violated: int, uncovered: int, certificate}
+
+      3. Simulate autoresearch evaluation:
+         - Create 20 mock hypothesis outputs (10 correct improvements, 10 bogus)
+         - Bogus: energy decreased but via numerical hack, wrong metric, etc.
+         - Run verification pipeline on each
+
+      4. Evaluate the "fourth gate":
+         - Current three gates: energy, time, memory
+         - Fourth gate: constraint satisfaction from Ising
+         - Measure: false acceptance rate WITH vs WITHOUT Ising gate
+         - Does Ising catch bogus hypotheses the other gates miss?
+
+      5. Print confusion matrix: gate combination × (accept/reject) × (correct/bogus)
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_72_autoresearch_self_verify.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
