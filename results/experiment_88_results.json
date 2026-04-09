@@ -1,0 +1,82 @@
+{
+  "experiment": "88_failure_mining",
+  "description": "Analyze verify-repair pipeline false negatives to discover missing constraint extractors",
+  "total_questions": 200,
+  "total_wrong": 144,
+  "false_negative_count": 134,
+  "false_negative_rate": 0.9306,
+  "category_counts": {
+    "arithmetic_chain": 23,
+    "implicit_logic": 74,
+    "world_knowledge": 8,
+    "code_semantics": 0,
+    "comparison": 40,
+    "negation": 13
+  },
+  "domain_false_negatives": {
+    "arithmetic": 30,
+    "logic": 24,
+    "factual": 40,
+    "scheduling": 40
+  },
+  "domain_totals": {
+    "arithmetic": 40,
+    "code": 40,
+    "logic": 40,
+    "factual": 40,
+    "scheduling": 40
+  },
+  "suggested_patterns": [
+    {
+      "category": "arithmetic_chain",
+      "name": "intermediate_result",
+      "pattern": "(?:gives|makes|equals|results?\\s+in|is)\\s+(-?\\d+\\.?\\d*)",
+      "description": "Extract intermediate calculation results for chain verification",
+      "estimated_catch_count": 60,
+      "estimated_catch_rate": 0.4478
+    },
+    {
+      "category": "implicit_logic",
+      "name": "since_because",
+      "pattern": "(?:since|because)\\s+(.+?),\\s+(.+?)(?:\\.|$)",
+      "description": "Extract premise-conclusion pairs from 'since/because' sentences",
+      "estimated_catch_count": 52,
+      "estimated_catch_rate": 0.3881
+    },
+    {
+      "category": "implicit_logic",
+      "name": "causal_therefore",
+      "pattern": "(?:therefore|thus|hence|so)\\s+(.+?)(?:\\.|$)",
+      "description": "Extract conclusions from causal reasoning chains",
+      "estimated_catch_count": 32,
+      "estimated_catch_rate": 0.2388
+    },
+    {
+      "category": "comparison",
+      "name": "superlative_claim",
+      "pattern": "(\\w+(?:\\s+\\w+)?)\\s+is\\s+the\\s+(largest|smallest|biggest|best|worst|highest|lowest|most|least|fastest|slowest)\\b",
+      "description": "Extract superlative claims about entities",
+      "estimated_catch_count": 8,
+      "estimated_catch_rate": 0.0597
+    },
+    {
+      "category": "comparison",
+      "name": "numeric_comparison",
+      "pattern": "(-?\\d+\\.?\\d*)\\s*([<>]=?)\\s*(-?\\d+\\.?\\d*)",
+      "description": "Extract and verify numeric comparison claims",
+      "estimated_catch_count": 0,
+      "estimated_catch_rate": 0.0
+    },
+    {
+      "category": "arithmetic_chain",
+      "name": "implicit_multiplication",
+      "pattern": "(-?\\d+\\.?\\d*)\\s*[*/]\\s*(-?\\d+\\.?\\d*)",
+      "description": "Extract multiplication/division without explicit '=' result",
+      "estimated_catch_count": 0,
+      "estimated_catch_rate": 0.0
+    }
+  ],
+  "coverage_improvement_estimate": 74.63,
+  "elapsed_seconds": 0.03,
+  "spec": "REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-005"
+}

@@ -23,6 +23,11 @@ from carnot.pipeline.extract import (
     LogicExtractor,
     NLExtractor,
 )
+from carnot.pipeline.mining import (
+    FailureAnalyzer,
+    FailureReport,
+    FalseNegative,
+)
 from carnot.pipeline.verify_repair import (
     RepairResult,
     VerificationResult,
@@ -37,6 +42,9 @@ __all__ = [
     "ConstraintExtractor",
     "ConstraintResult",
     "ExtractionError",
+    "FailureAnalyzer",
+    "FailureReport",
+    "FalseNegative",
     "LogicExtractor",
     "ModelLoadError",
     "NLExtractor",
