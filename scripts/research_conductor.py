@@ -368,9 +368,80 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # Run tests first — ensure clean state
     tests_ok, test_summary = run_tests()
     if not tests_ok:
-        logger.error("Tests failing before research step — aborting")
-        log_step(task["title"], "SKIP", f"Pre-tests failing: {test_summary}")
-        return False
+        # Self-heal: ask Claude to fix the pre-existing test failures
+        # before attempting the research task. This prevents getting stuck
+        # in a loop where every iteration SKIPs because tests are broken.
+        logger.warning("Pre-flight tests failing — attempting self-heal")
+        logger.warning("Failure: %s", test_summary[:300])
+
+        heal_prompt = (
+            f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
+            f"The test suite is failing BEFORE any research work. This is a pre-existing "
+            f"issue that must be fixed before the research conductor can proceed.\n\n"
+            f"Test output:\n{test_summary}\n\n"
+            f"TASK: Fix the failing tests so the full suite passes with 100%% coverage.\n"
+            f"Common causes:\n"
+            f"- New code added without tests (coverage < 100%%)\n"
+            f"- A test assertion that no longer matches reality\n"
+            f"- A missing file or dependency\n"
+            f"- A CSS/HTML check that doesn't match the current docs\n\n"
+            f"STEPS:\n"
+            f"1. Read the test failure output above carefully\n"
+            f"2. Identify the root cause (not just the symptom)\n"
+            f"3. Fix it — add tests, fix assertions, update docs, etc.\n"
+            f"4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python --tb=short -q\n"
+            f"5. Verify 0 failures and 100%% coverage\n"
+            f"6. Do NOT push. Do NOT modify scripts/research_conductor.py or "
+            f"research-roadmap.yaml."
+        )
+
+        MAX_HEAL_ATTEMPTS = 2
+        healed = False
+        for heal_attempt in range(MAX_HEAL_ATTEMPTS):
+            logger.info("Self-heal attempt %d/%d", heal_attempt + 1, MAX_HEAL_ATTEMPTS)
+            heal_ok, heal_output = run_claude(heal_prompt, max_turns=30, timeout=600)
+            if not heal_ok:
+                logger.error("Claude failed during self-heal: %s", heal_output[:200])
+                break
+
+            # Guard: don't let heal modify conductor or roadmap
+            for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
+                _, gdiff, _ = run_cmd(["git", "diff", "--name-only", "--", guarded])
+                if gdiff.strip():
+                    logger.warning("Self-heal modified %s — reverting", guarded)
+                    run_cmd(["git", "checkout", "--", guarded])
+
+            tests_ok, test_summary = run_tests()
+            if tests_ok:
+                logger.info("Self-heal succeeded: %s", test_summary)
+                # Commit the fix
+                if git_has_changes():
+                    git_commit_and_push(
+                        "[conductor] Self-heal: fix pre-existing test failures\n\n"
+                        "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+                        push=push,
+                    )
+                healed = True
+                break
+            else:
+                logger.warning("Self-heal attempt %d failed: %s", heal_attempt + 1, test_summary[:200])
+                # Update the prompt with new failure info for next attempt
+                heal_prompt = (
+                    f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
+                    f"Previous self-heal attempt did not fully fix the tests.\n\n"
+                    f"Current test output:\n{test_summary}\n\n"
+                    f"Fix the remaining failures. 100%% coverage required.\n"
+                    f"Do NOT modify scripts/research_conductor.py or research-roadmap.yaml."
+                )
+
+        if not healed:
+            # Revert any partial self-heal changes and abort
+            if git_has_changes():
+                run_cmd(["git", "checkout", "."])
+                run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
+            logger.error("Self-heal failed after %d attempts — aborting", MAX_HEAL_ATTEMPTS)
+            log_step(task["title"], "SKIP", f"Pre-tests failing, self-heal failed: {test_summary}")
+            return False
 
     logger.info("Pre-check: %s", test_summary)
 
