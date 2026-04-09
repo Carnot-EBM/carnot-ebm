@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 58 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 59 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -65,6 +65,7 @@
 - Live LLM → constraint → Ising verification: Qwen3.5-0.8B end-to-end with 4-domain question set (Exp 56)
 - Verify-Repair Loop: constraint violations → NL feedback → LLM regeneration → re-verify (up to 3 iters); architecture works, constraint coverage is the bottleneck (Exp 57)
 - Constraint-Aware Prompting: preventive constraint injection into prompts vs post-hoc verification; 3 modes (baseline/constraint-aware/combined) on 15 questions across arithmetic, logic, factual domains (Exp 59)
+- Unified ConstraintExtractor API: pluggable Protocol-based extractors (arithmetic, code, logic, NL) with AutoExtractor auto-detection + merge; `carnot.pipeline.extract` (Exp 74)
 - NL constraint extraction: pattern-based claim verification
 - LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
 - Scheduling constraints: time slot exclusion, ordering, capacity
@@ -162,6 +163,7 @@
 | 65 | **Embedding-space constraint verification** | Joint Gibbs EBM on [semantic embedding; constraint vector] (384+N dim); NCE training; AUROC: joint vs embedding-only vs constraint-only; gradient repair with NN decoding (REQ-EBT-001, REQ-VERIFY-001) | **Results pending analysis** |
 | 72 | **Autoresearch self-verification via Ising** | Fourth gate: claim extraction + ComposedEnergy + Ising sampling on autoresearch hypotheses (20 mock, 10 correct/10 bogus) | **Results pending analysis** |
 | 63 | **Hierarchical Ising (1000+ vars)** | Block-structured coupling (dense intra-block + sparse inter-block); two-level Gibbs + annealing; hierarchical vs flat-sparse vs flat-dense vs random at 200/500/1000 vars; ~10x param reduction | **Results pending analysis** |
+| 74 | **Unified ConstraintExtractor API** | Pluggable Protocol-based extractors (arithmetic, code, logic, NL) + AutoExtractor auto-detection; consolidates Exp 47/48/49 into `carnot.pipeline.extract` (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002) | **✅ New pipeline module** |
 
 ## 14 Principles Learned
 
