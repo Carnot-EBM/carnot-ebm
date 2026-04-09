@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 48 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 49 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -68,6 +68,7 @@
 - Learned Ising via CD: 89/100 perfect, generalizes to unseen instances (Exp 50); scaled to 50/100/200 vars with L1 regularization and bootstrapped training data (Exp 60); sparse CD with clause-graph masking at 200/500/1000 vars, ~20x parameter reduction vs dense (Exp 61)
 - Cross-domain transfer: structure-dependent transfer validated
 - Ising-guided fuzzing: energy landscape generates adversarial test inputs for differential testing of LLM code; 8 bug types covered (Exp 54)
+- Trace-learned constraints: discriminative Ising trained on correct/buggy execution traces catches semantic bugs invisible to static+dynamic analysis (Exp 55)
 
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
@@ -142,6 +143,7 @@
 | 60 | **Scale CD training to 100+ vars** | Extends Exp 50 to 50/100/200 vars (40K params); bootstraps from hand-coded Ising + annealing; CD vs hand-coded vs random | **Results pending analysis** |
 | 61 | **Sparse Ising at 500+ vars** | Clause-graph sparsity mask on CD gradients; ~20x parameter reduction vs dense; 200/500/1000 vars; dense vs sparse vs hand-coded | **Results pending analysis** |
 | 54 | **Ising-guided fuzzing** | Energy landscape generates adversarial test inputs for differential testing; 8 LLM bug types (REQ-VERIFY-001/002/003) | **Results pending analysis** |
+| 55 | **Trace-learned constraints** | Discriminative Ising trained on correct/buggy execution traces (200+ dim binary features); catches semantic bugs invisible to static+dynamic analysis (REQ-VERIFY-001/002/003) | **Results pending analysis** |
 | 64 | **Continuous Ising relaxation** | Binary→continuous [0,1] relaxation with JAX grad descent; sigmoid annealing / penalty / straight-through rounding vs discrete Gibbs + random | **Results pending analysis** |
 
 ## 14 Principles Learned
