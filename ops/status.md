@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 45 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 46 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -65,7 +65,7 @@
 - NL constraint extraction: pattern-based claim verification
 - LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
 - Scheduling constraints: time slot exclusion, ordering, capacity
-- Learned Ising via CD: 89/100 perfect, generalizes to unseen instances
+- Learned Ising via CD: 89/100 perfect, generalizes to unseen instances (Exp 50); scaled to 50/100/200 vars with L1 regularization and bootstrapped training data (Exp 60)
 - Cross-domain transfer: structure-dependent transfer validated
 
 ### GPU Compute
@@ -138,6 +138,7 @@
 | 56 | **Live LLM → constraint → Ising** | End-to-end Qwen3.5-0.8B + constraint pipeline (4 domains) | **✅ Live LLM pipeline works** |
 | 57 | **Live LLM verify-repair loop** | 9/15 initial, repair architecture works, constraint coverage is bottleneck (1/6 triggered) | **✅ Loop works, need wider constraint extractors** |
 | 59 | **Constraint-aware prompting** | Preventive constraint injection into prompts; 3 modes (baseline/constraint-aware/combined) on 15 questions | **Results pending analysis** |
+| 60 | **Scale CD training to 100+ vars** | Extends Exp 50 to 50/100/200 vars (40K params); bootstraps from hand-coded Ising + annealing; CD vs hand-coded vs random | **Results pending analysis** |
 
 ## 14 Principles Learned
 
