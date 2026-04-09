@@ -23,7 +23,7 @@ All models share common core abstractions (EnergyFunction, ModelState, ModelConf
 and can be trained with the same set of loss functions (NCE, DSM, SNL).
 """
 
-__version__ = "0.1.0"
+from carnot._version import __version__
 
 # Core abstractions
 from carnot.core import AutoGradMixin, EnergyFunction, ModelConfig, ModelState
@@ -56,9 +56,14 @@ from carnot.training import (
     snl_loss_stochastic,
 )
 
+# Rust binding availability (optional — no Rust toolchain needed for pure-Python)
+from carnot._rust_compat import RUST_AVAILABLE
+
 __all__ = [
     # Version
     "__version__",
+    # Rust bindings
+    "RUST_AVAILABLE",
     # Core
     "AutoGradMixin",
     "EnergyFunction",

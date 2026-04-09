@@ -1,10 +1,10 @@
 [build-system]
-requires = ["maturin>=1.7,<2.0"]
-build-backend = "maturin"
+requires = ["setuptools>=68.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
 
 [project]
 name = "carnot"
-version = "0.1.0"
+dynamic = ["version"]
 description = "Open-source Energy Based Model framework — Rust + JAX"
 readme = "README.md"
 license = {text = "Apache-2.0"}
@@ -16,7 +16,6 @@ keywords = [
     "sampling",
     "verification",
     "jax",
-    "rust",
 ]
 requires-python = ">=3.11"
 classifiers = [
@@ -26,7 +25,6 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
-    "Programming Language :: Rust",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
@@ -60,11 +58,21 @@ cuda = [
 llm = [
     "openai>=1.0",
 ]
+mcp = [
+    "mcp>=1.0",
+]
+rust = [
+    "maturin>=1.7,<2.0",
+]
+all = [
+    "carnot[llm,mcp,rust]",
+]
 
-[tool.maturin]
-features = ["pyo3/extension-module"]
-module-name = "carnot._rust"
-python-source = "python"
+[tool.setuptools.packages.find]
+where = ["python"]
+
+[tool.setuptools.dynamic]
+version = {attr = "carnot._version.__version__"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests/python"]
@@ -88,3 +96,9 @@ python_version = "3.11"
 strict = true
 warn_return_any = true
 warn_unused_configs = true
+
+# Maturin config — only used when building Rust extension separately
+[tool.maturin]
+features = ["pyo3/extension-module"]
+module-name = "carnot._rust"
+python-source = "python"
