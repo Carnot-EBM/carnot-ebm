@@ -76,3 +76,4 @@
 | 2026-04-09 18:54 UTC | Exp 68: HumanEval subset verification + fuzzing | OK | ================ 1147 passed, 12 warnings in 131.38s (0:02:11) ================= |
 | 2026-04-09 19:10 UTC | Exp 65: Embedding-space constraint verification | OK | ================ 1147 passed, 12 warnings in 128.46s (0:02:08) ================= |
 | 2026-04-09 19:22 UTC | Exp 70: Rust constraint extraction + verification | OK | ================ 1147 passed, 12 warnings in 128.80s (0:02:08) ================= |
+| 2026-04-09 20:31 UTC | Exp 74: Unified ConstraintExtractor API | OK | ================ 1221 passed, 12 warnings in 201.95s (0:03:21) ================= |
