@@ -58,3 +58,4 @@
 | 2026-04-09 03:23 UTC | Exp 44: Scheduling constraints | OK | ================ 1130 passed, 12 warnings in 121.05s (0:02:01) ================= |
 | 2026-04-09 06:54 UTC | Exp 42c: Fix QUBO carry chain propagation | SKIP | Pre-tests failing: =========== 1 failed, 1129 passed, 12 warnings in 117.99s (0: |
 | 2026-04-09 13:54 UTC | Exp 53: Runtime constraint instrumentation | OK | ================ 1130 passed, 12 warnings in 129.64s (0:02:09) ================= |
+| 2026-04-09 14:05 UTC | Exp 56: Live LLM → constraint → Ising verification | OK | ================ 1130 passed, 12 warnings in 119.21s (0:01:59) ================= |
