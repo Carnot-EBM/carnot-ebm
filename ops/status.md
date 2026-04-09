@@ -155,6 +155,7 @@
 | 73 | **Constraint coverage metric** | 5-type claim taxonomy (arithmetic, logical, factual, structural, semantic); coverage = extracted/total per domain; coverage-accuracy correlation + repair threshold (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | **Results pending analysis** |
 | 67 | **GSM8K subset verification** | 200 GSM8K test questions, 3 modes (baseline/verify/verify-repair), first external benchmark of Ising-guided repair (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | **Results pending analysis** |
 | 68 | **HumanEval subset verification + fuzzing** | 50 HumanEval-style problems through full pipeline (extract→instrument→test→fuzz→repair); pass@1 + pass@1+repair metrics; bug detection breakdown (test/instrumentation/fuzzing) (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | **Results pending analysis** |
+| 65 | **Embedding-space constraint verification** | Joint Gibbs EBM on [semantic embedding; constraint vector] (384+N dim); NCE training; AUROC: joint vs embedding-only vs constraint-only; gradient repair with NN decoding (REQ-EBT-001, REQ-VERIFY-001) | **Results pending analysis** |
 | 63 | **Hierarchical Ising (1000+ vars)** | Block-structured coupling (dense intra-block + sparse inter-block); two-level Gibbs + annealing; hierarchical vs flat-sparse vs flat-dense vs random at 200/500/1000 vars; ~10x param reduction | **Results pending analysis** |
 
 ## 14 Principles Learned
