@@ -71,4 +71,5 @@
 | Exp 64: Continuous Ising relaxation | ✅ Complete (binary→continuous [0,1], sigmoid/penalty/straight-through rounding, bridges to Kona latent space) | — |
 | Exp 69: Multi-model constraint transfer (Qwen3.5+Gemma4) | ✅ Complete (same constraint pipeline on Qwen3.5-0.8B + Gemma4-E4B-it, tests model-agnostic verification, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-003) | — |
 | Exp 71: Extropic TSU sampler abstraction | ✅ Complete (SamplerBackend protocol, CpuBackend + TsuBackend stub, get_backend() factory, CARNOT_BACKEND env var, REQ-SAMPLE-003) | — |
+| Exp 73: Constraint coverage metric | ✅ Complete (5-type claim taxonomy, coverage = extracted/total per domain+type, coverage-accuracy correlation, repair threshold analysis, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
