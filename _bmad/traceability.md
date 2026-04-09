@@ -21,7 +21,7 @@
 | FR-13 | LLM-EBM Inference | `openspec/capabilities/llm-ebm-inference/spec.md` | 170+ Python | Composite scorer, iterative refinement, logprob rejection, EBM rejection, multi-start, semantic energy, ARM-EBM bridge, diffusion, reasoning energy | Implemented |
 | FR-14 | Code Verification | `openspec/capabilities/code-verification/spec.md` | 50+ Python | Type/exception/test constraints, code embeddings (bag-of-tokens + AST), learned verifier, self-improving loop | Implemented |
 | FR-15 | Activation Analysis | `openspec/capabilities/llm-ebm-inference/spec.md` | 110+ Python | Activation extractor, hallucination direction, layer EBM, LayerNavigator, steering, weight steering, concept vectors, multi-layer probing | Implemented |
-| FR-18 | MCP Server + CLI | `openspec/capabilities/llm-ebm-inference/spec.md` | 19 Python | MCP verify_code, verify_with_properties, score_candidates; CLI carnot verify | Implemented |
+| FR-18 | MCP Server + CLI | `openspec/capabilities/llm-ebm-inference/spec.md` | 49 Python | MCP verify_code, verify_with_properties, verify_llm_output, verify_and_repair, list_domains, health_check, score_candidates; CLI carnot verify | Implemented |
 | FR-16 | GPU Compute | N/A | 4 Rust | wgpu Vulkan backend, WebGPU gateway, ROCm 7.2 native gfx1150 | Implemented |
 | FR-17 | Documentation UI | `openspec/capabilities/documentation-ui/spec.md` | 1 Python | Premium aesthetic, glassmorphism, animations | Implemented |
 
@@ -79,4 +79,5 @@
 | Exp 72: Autoresearch self-verification via Ising | ✅ Complete (fourth gate: claim extraction + ComposedEnergy + Ising verification on autoresearch hypotheses, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002) | — |
 | Exp 74: Unified ConstraintExtractor API | ✅ Complete (pluggable Protocol-based extractors: arithmetic, code, logic, NL + AutoExtractor auto-detection; consolidates Exp 47/48/49 into `carnot.pipeline.extract`; REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002) | — |
 | Exp 75: VerifyRepairPipeline class | ✅ Complete (user-facing API consolidating Exp 56/57 into `carnot.pipeline.verify_repair`; verify-only + verify-and-repair modes; VerificationResult, RepairResult, VerifyRepairPipeline; REQ-VERIFY-001/002/003, SCENARIO-VERIFY-004) | — |
+| Exp 76: Production MCP server | ✅ Complete (hardened `carnot.mcp` package: 6 tools, 30s timeout, 10K char limit, structured errors, `python -m carnot.mcp`; REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
