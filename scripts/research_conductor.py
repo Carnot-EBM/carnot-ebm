@@ -1,10 +1,19 @@
 #!/usr/bin/env python3
 """Carnot Research Conductor — autonomous research via Claude Code.
 
-NOTE: The RESEARCH_TASKS below are from the activation-detection era
-(roadmaps v2-v5) and are mostly completed. For current research direction,
-see scripts/autoresearch_v6.sh and openspec/change-proposals/research-roadmap-v6.md
-which focus on constraint-based reasoning via Ising/thrml.
+RESEARCH_TASKS are organized by the v6 roadmap (constraint-based reasoning
+via Ising/thrml). See openspec/change-proposals/research-roadmap-v6.md.
+
+Current v6 task queue:
+  Exp 48 — Code → constraint extraction
+  Exp 49 — Natural language → constraint extraction
+  Exp 51 — Learn constraint structure from LLM outputs
+  Exp 52 — Transfer learned Ising across domains
+  Exp 44 — Scheduling constraints
+  Exp 42c — Fix QUBO carry chain propagation
+
+Legacy tasks from roadmaps v2-v5 (activation-detection era) are kept at the
+bottom of the list but will be skipped since their deliverables already exist.
 
 Uses `claude -p` to actually implement research improvements, not just
 run benchmarks. Each iteration: identify a gap → ask Claude to fix it →
@@ -209,159 +218,313 @@ def log_step(task: str, status: str, details: str = "") -> None:
 # These are ordered: each builds on the previous.
 
 RESEARCH_TASKS = [
-    # ── Phase 1: Learned Energy in Latent Space ────────────
+    # ══════════════════════════════════════════════════════════════════
+    # Roadmap v6: Constraint-Based Reasoning via Ising/thrml
+    # See: openspec/change-proposals/research-roadmap-v6.md
+    #
+    # Completed (not listed here):
+    #   Exp 42b — Arithmetic QUBO (8/12)
+    #   Exp 45  — Logical consistency (8/8)
+    #   Exp 46b — Scale SAT to 5000 vars
+    #   Exp 47  — LLM self-constraint extraction (10/10)
+    #   Exp 50  — Learn SAT couplings via CD (89/100 perfect)
+    # ══════════════════════════════════════════════════════════════════
+
+    # ── Phase 2: LLM Constraint Extraction (continued) ────────────
     {
-        "id": "p1-m1.1a-ast-embedding",
-        "deliverable": "python/carnot/verify/python_types.py",
-        "title": "Add AST-based code embedding",
+        "id": "v6-exp48-code-constraints",
+        "deliverable": "scripts/experiment_48_code_constraints.py",
+        "title": "Exp 48: Code → constraint extraction",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
-Read CLAUDE.md for code style requirements (verbose docstrings, spec refs, 100% coverage).
+Read CLAUDE.md for code style requirements (verbose docstrings, spec refs).
 
-CONTEXT: The current code_to_embedding() in python/carnot/verify/python_types.py
-uses a simple bag-of-tokens frequency vector (256-dim). This loses all structural
-information. We need richer embeddings as a stepping stone to real model embeddings.
+CONTEXT: Experiments 42b-47 validated constraint verification for arithmetic
+and logic. The next step: automatically extract verifiable constraints from
+LLM-generated CODE, not just natural language claims.
 
-TASK: Add ast_code_to_embedding() that uses Python's ast module to extract structural features.
+The idea: parse Python code into a constraint graph, then verify via Ising.
+- Variable types → type constraints (x should be int, not str)
+- Loop bounds → arithmetic constraints (i < len(arr))
+- Function contracts → logical constraints (pre/post conditions)
+- Return values → consistency constraints
+
+EXISTING CODE TO READ FIRST:
+- scripts/experiment_47_llm_self_constraints.py — the verification pipeline
+- scripts/experiment_42b_arithmetic_qubo.py — QUBO arithmetic verification
+- python/carnot/verify/constraint.py — ComposedEnergy constraint system
+- scripts/experiment_45_logical_consistency.py — encode_claims_as_ising
+
+TASK: Create scripts/experiment_48_code_constraints.py
 
 CONCRETE STEPS:
-1. Read python/carnot/verify/python_types.py (see code_to_embedding)
-2. Add a new function ast_code_to_embedding(code: str, feature_dim: int = 64) -> jax.Array
-   Features to extract:
-   - Number of: function defs, function calls, loops (for/while), conditionals (if/elif),
-     returns, assignments, imports, try/except blocks
-   - Nesting depth: max and mean
-   - Variable count: unique names
-   - Line count, AST node count
-   - Cyclomatic complexity approximation (branches + 1)
-   Normalize to [0,1] range, pad/truncate to feature_dim.
-3. Add tests in tests/python/test_verify_python_types.py:
-   - Correct shape, deterministic, different code → different embedding
-   - AST embedding distinguishes correct from buggy code better than bag-of-tokens
-   - Handle syntax errors gracefully (return zeros)
-   All tests must reference REQ-CODE-002
-4. Run: .venv/bin/pytest tests/python --cov=python/carnot --cov-fail-under=100
-5. Run: .venv/bin/python scripts/check_spec_coverage.py
-6. Do NOT push to git.""",
+1. Implement code_to_constraints(code: str) -> list[dict]:
+   - Use Python's ast module to parse the code
+   - Extract constraints:
+     a. Type assertions: if annotation says int, constraint is "var is int"
+     b. Arithmetic bounds: for i in range(n) → 0 <= i < n
+     c. Return consistency: if function promises return type, verify
+     d. Variable initialization: all used vars must be assigned
+   - Return list of constraint dicts (same format as Exp 47)
+
+2. Implement verify_code_constraints(code, constraints) -> dict:
+   - For arithmetic constraints, verify via direct computation
+   - For logical constraints, verify via Ising sampling using
+     carnot.samplers.parallel_ising.ParallelIsingSampler (NOT thrml)
+   - Return verdict with per-constraint details
+
+3. Test on 8-10 scenarios:
+   CORRECT code (should pass):
+   - Simple function with type hints that satisfy contracts
+   - Loop with correct bounds
+   - Function returning correct type
+   BUGGY code (should fail):
+   - Off-by-one loop bound
+   - Type mismatch (returns str when int expected)
+   - Uninitialized variable used
+   - Index out of bounds
+
+4. Print results table with verdict (like Exp 47)
+5. Use JAX_PLATFORMS=cpu compatible code (no thrml dependency)
+6. Run the script and verify it works:
+   JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_48_code_constraints.py
+7. Do NOT push to git. Do NOT modify scripts/research_conductor.py.""",
     },
     {
-        "id": "p1-m1.1b-local-model-embeddings",
-        "deliverable": "python/carnot/embeddings/model_embeddings.py",
-        "title": "Add local model embeddings via transformers",
+        "id": "v6-exp49-nl-constraints",
+        "deliverable": "scripts/experiment_49_nl_constraints.py",
+        "title": "Exp 49: Natural language → constraint extraction",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
 
-CONTEXT: We need real semantic embeddings for code, not bag-of-tokens.
-A small local model (like microsoft/codebert-base or Salesforce/codet5-small)
-can provide 768-dim embeddings that capture meaning.
+CONTEXT: Experiments 47-48 extract constraints from structured outputs (claims,
+code). The final extraction challenge: extract verifiable claims from FREE TEXT
+using natural language inference (NLI) patterns.
 
-TASK: Create python/carnot/embeddings/__init__.py and python/carnot/embeddings/model_embeddings.py
+"The capital of France is Paris" → lookup constraint
+"All mammals are warm-blooded" + "Whales are mammals" → "Whales are warm-blooded"
+
+EXISTING CODE TO READ:
+- scripts/experiment_47_llm_self_constraints.py — constraint verification pipeline
+- scripts/experiment_45_logical_consistency.py — encode_claims_as_ising, count_violations
+- carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+TASK: Create scripts/experiment_49_nl_constraints.py
 
 CONCRETE STEPS:
-1. Create the python/carnot/embeddings/ package
-2. In model_embeddings.py implement:
-   - ModelEmbeddingConfig: model_name, device, max_length
-   - extract_embedding(code: str, config: ModelEmbeddingConfig) -> jax.Array
-     Uses transformers library (lazy import) to get the [CLS] or mean-pooled
-     last hidden state. Returns a jax.Array.
-   - If transformers not installed, return None (graceful fallback)
-3. Add tests with mock (don't require transformers to be installed):
-   - Test config defaults
-   - Test graceful fallback when transformers missing
-   - Test with a mock model that returns a known tensor
-4. Run full test suite, maintain 100% coverage
-5. Do NOT push to git.""",
+1. Implement claim_patterns — a set of regex/template extractors for common claim types:
+   - "X is Y" → factual claim (X, is, Y)
+   - "X is the Y of Z" → factual claim with relation
+   - "If X then Y" → implication
+   - "X and Y" → conjunction
+   - "X or Y" → disjunction
+   - "X but not Y" → exclusion
+   - "All X are Y" + "Z is X" → entailment chain
+
+2. Implement text_to_constraints(text: str, knowledge_base: dict) -> list[dict]:
+   - Split text into sentences
+   - Extract claims using patterns
+   - Cross-reference factual claims against knowledge_base
+   - Convert implications/conjunctions to Ising logical constraints
+
+3. Implement verify_text_constraints(constraints) -> dict:
+   - Factual claims: check against knowledge_base (True/False/Unknown)
+   - Logical claims: verify consistency via Ising parallel sampler
+   - Return overall verdict
+
+4. Test on 10+ scenarios:
+   CONSISTENT text (should pass):
+   - "Paris is the capital of France. France is in Europe."
+   - "If it rains, the ground is wet. It rained. The ground is wet."
+   INCONSISTENT text (should fail):
+   - "Sydney is the capital of Australia." (factually wrong)
+   - "All birds fly. Penguins are birds. Penguins cannot fly."
+   - "The meeting is on Monday. The meeting is on Tuesday." (contradiction)
+
+5. Use parallel sampler (NOT thrml) for Ising verification
+6. Run and verify: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_49_nl_constraints.py
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
+    # ── Phase 3: thrml Training (continued) ──────────────────
     {
-        "id": "p1-m1.2-jepa-energy",
-        "deliverable": "python/carnot/embeddings/jepa_energy.py",
-        "title": "JEPA-style context prediction energy",
+        "id": "v6-exp51-learn-from-llm",
+        "deliverable": "scripts/experiment_51_learn_from_llm.py",
+        "title": "Exp 51: Learn constraint structure from LLM outputs",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
 
-CONTEXT: EB-JEPA predicts missing context in embedding space, scored by energy.
-We need an energy function that takes (context_embedding, prediction_embedding)
-and returns a scalar: low if the prediction is a coherent continuation, high otherwise.
+CONTEXT: Exp 50 showed we can learn Ising couplings from satisfying assignments
+via Contrastive Divergence. Now: learn couplings from (correct, wrong) LLM
+output pairs so the model learns WHAT MAKES AN ANSWER WRONG from data.
 
-TASK: Create python/carnot/embeddings/jepa_energy.py
+EXISTING CODE TO READ:
+- scripts/experiment_50_learn_ising.py — CD training pipeline (train_ising_cd)
+- scripts/experiment_47_llm_self_constraints.py — constraint types
+- carnot/samplers/parallel_ising.py — ParallelIsingSampler
+- scripts/experiment_45_logical_consistency.py — logical encoding
+
+TASK: Create scripts/experiment_51_learn_from_llm.py
 
 CONCRETE STEPS:
-1. Read python/carnot/models/gibbs.py for the GibbsModel pattern
-2. Implement ContextPredictionEnergy(AutoGradMixin):
-   - Takes concatenated (context_emb, prediction_emb) as input
-   - Uses a Gibbs-like network to output scalar energy
-   - energy(concat(ctx, pred)) → scalar
-3. Implement generate_jepa_training_data():
-   - Take real Python functions, split into (first_half, second_half)
-   - Embed each half (using ast_code_to_embedding for now)
-   - Correct pairs = real (first, second) halves
-   - Noise pairs = (first_half_of_A, second_half_of_B) shuffled
-4. Train with NCE: correct pairs are data, shuffled pairs are noise
-5. Add tests:
-   - Training reduces NCE loss
-   - Correct pairs get lower energy than shuffled pairs
-6. Run full test suite, 100% coverage
+1. Create a dataset of (correct, wrong) answer pairs for arithmetic:
+   - Correct: "3+4=7", "12+5=17", "100+23=123", etc.
+   - Wrong: "3+4=8", "12+5=16", "100+23=124", etc. (common LLM errors)
+   - Encode each as binary features: operand bits + result bits
+
+2. Train an Ising model using Contrastive Divergence:
+   - Positive phase: statistics from CORRECT answers
+   - Negative phase: statistics from WRONG answers (not model samples)
+   This is discriminative CD, not generative CD.
+   ΔJ = -β(⟨s_i s_j⟩_correct - ⟨s_i s_j⟩_wrong)
+   Δb = -β(⟨s_i⟩_correct - ⟨s_i⟩_wrong)
+
+3. Evaluate: does the trained model assign lower energy to correct answers
+   and higher energy to wrong answers? Test on HELD-OUT pairs not seen
+   during training.
+
+4. Compare to hand-coded QUBO from Exp 42b on the same test cases.
+
+5. Test on 20+ arithmetic pairs (10 train, 10 test)
+6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_51_learn_from_llm.py
 7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
     {
-        "id": "p1-m1.3-embedding-repair",
-        "deliverable": "python/carnot/embeddings/jepa_energy.py",
-        "title": "Repair in embedding space",
+        "id": "v6-exp52-transfer-ising",
+        "deliverable": "scripts/experiment_52_transfer_ising.py",
+        "title": "Exp 52: Transfer learned Ising across domains",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
 
-CONTEXT: We can now score (context, prediction) embedding pairs with energy.
-The next step: given a bad prediction embedding, use gradient descent on the
-energy to IMPROVE it, then find the nearest real code to the repaired embedding.
+CONTEXT: Exp 50 learned Ising couplings for SAT. Exp 51 learns from LLM outputs.
+Key question: do Ising models learned on one domain transfer to another?
+Unlike activation EBMs (which showed ~50%% transfer), Ising constraints encode
+STRUCTURAL rules that might generalize.
 
-TASK: Add embedding_repair() to python/carnot/embeddings/jepa_energy.py
+EXISTING CODE TO READ:
+- scripts/experiment_50_learn_ising.py — CD training on SAT data
+- scripts/experiment_51_learn_from_llm.py — discriminative CD
+- scripts/experiment_39_thrml_sat.py — random_3sat, check_assignment
+- carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+TASK: Create scripts/experiment_52_transfer_ising.py
 
 CONCRETE STEPS:
-1. Read the existing repair() in python/carnot/verify/constraint.py
-2. Add embedding_repair(ctx_emb, pred_emb, energy_model, steps, step_size):
-   - Runs gradient descent on pred_emb to minimize energy(ctx, pred)
-   - Returns the repaired prediction embedding
-3. Add nearest_code_match(repaired_emb, codebook_embs, codebook_texts):
-   - Finds the codebook entry closest to repaired_emb (cosine similarity)
-   - Returns the corresponding code text
-4. Add tests:
-   - Repair reduces energy
-   - Nearest match finds the correct code from a small codebook
-5. Run full test suite, 100% coverage
-6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+1. Train Ising models on THREE different SAT structures:
+   a. Random 3-SAT at ratio 4.26 (phase transition)
+   b. Random 3-SAT at ratio 3.0 (underconstrained, many solutions)
+   c. Structured SAT (e.g., graph coloring encoded as SAT)
+   Use n_vars=15 (small enough to find many satisfying assignments)
+
+2. Test each trained model on ALL THREE domains:
+   - Model trained on (a) tested on (a), (b), (c)
+   - Model trained on (b) tested on (a), (b), (c)
+   - Model trained on (c) tested on (a), (b), (c)
+   For each: report mean SAT%% and best SAT%% from 100 samples
+
+3. Compare to random baseline and to domain-specific models
+
+4. Print 3x3 transfer matrix: rows = training domain, cols = test domain
+
+5. Verdict: do models transfer? Is within-domain always best?
+6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_52_transfer_ising.py
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
-    # ── Phase 1.5: LLM Activation Introspection ─────────────
+
+    # ── Phase 1 continued: remaining experiments ──────────────
     {
-        "id": "p1.5-activation-extraction",
-        "deliverable": "python/carnot/embeddings/activation_extractor.py",
-        "title": "Extract per-layer activations from local model",
+        "id": "v6-exp44-scheduling",
+        "deliverable": "scripts/experiment_44_scheduling_constraints.py",
+        "title": "Exp 44: Scheduling constraints",
         "prompt": """You are working on the Carnot EBM framework in {project_root}.
 Read CLAUDE.md for code style requirements.
 
-CONTEXT: We want to monitor the LLM's internal state during generation to
-detect hallucination in real-time. First step: extract activations.
+CONTEXT: We've verified arithmetic (Exp 42b), logic (Exp 45), SAT (Exp 46b),
+and code (Exp 48). Scheduling is a practical constraint domain where LLMs
+often hallucinate: "Meeting A is at 2pm and Meeting B is at 2pm in the same
+room" → conflict.
 
-TASK: Create python/carnot/embeddings/activation_extractor.py
+EXISTING CODE TO READ:
+- scripts/experiment_45_logical_consistency.py — encode_claims_as_ising
+- carnot/samplers/parallel_ising.py — ParallelIsingSampler
+- scripts/experiment_39_thrml_sat.py — SAT encoding patterns
+
+TASK: Create scripts/experiment_44_scheduling_constraints.py
 
 CONCRETE STEPS:
-1. Create the file with:
-   - ActivationConfig: model_name (default "Qwen/Qwen3-0.6B" or similar small model), device
-   - extract_layer_activations(text, config) -> dict[int, jax.Array]
-     Uses transformers library (lazy import) with register_forward_hook to
-     capture hidden states at each layer.
-     Returns layer_num -> activation_tensor mapping.
-   - compute_activation_stats(activations) -> dict with per-layer:
-     norm, direction_change (cosine distance from previous layer),
-     entropy of attention weights
-2. Handle missing transformers gracefully (return None)
-3. Add tests with mocks (don't require actual model download):
-   - Test config defaults
-   - Test graceful fallback
-   - Test compute_activation_stats with synthetic data
-   - All tests reference REQ-INFER-014
-4. Update python/carnot/embeddings/__init__.py with exports
-5. Run full test suite, 100% coverage
+1. Define scheduling constraint types:
+   - Time slot exclusion: two events can't overlap in same resource
+   - Ordering: event A must happen before event B
+   - Duration: event takes N slots
+   - Resource capacity: max K events at same time
+
+2. Encode as Ising:
+   - Variables: event_i_at_time_t (binary: is event i at time t?)
+   - Exclusion: mutex coupling between event_i_at_t and event_j_at_t
+   - Ordering: implication coupling
+   - One-hot: each event must be at exactly one time (sum=1 constraint)
+
+3. Test on 8+ scenarios:
+   VALID schedules (should verify as consistent):
+   - 3 meetings, 3 rooms, no conflicts
+   - Sequential tasks with ordering constraints
+   INVALID schedules (LLM-style errors):
+   - Double-booked room
+   - Meeting before its prerequisite
+   - Same person in two places at once
+   - Event scheduled outside available hours
+
+4. Use ParallelIsingSampler for verification
+5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_44_scheduling_constraints.py
 6. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
     },
+    {
+        "id": "v6-exp42c-carry-chain-fix",
+        "deliverable": "scripts/experiment_42c_arithmetic_carry_fix.py",
+        "title": "Exp 42c: Fix QUBO carry chain propagation",
+        "prompt": """You are working on the Carnot EBM framework in {project_root}.
+Read CLAUDE.md for code style requirements.
+
+CONTEXT: Exp 42b achieved 8/12 correct arithmetic via QUBO encoding, but 4
+cases fail (E=4.0) due to carry chain propagation. The SA solver gets stuck
+in local minima where one carry bit is wrong. Cases: 12+5, 15+1, 15+9, 255+1.
+
+EXISTING CODE TO READ (CRITICAL):
+- scripts/experiment_42b_arithmetic_qubo.py — current QUBO encoding + SA solver
+  Focus on addition_to_qubo() and the sa_solve() function.
+
+TASK: Create scripts/experiment_42c_arithmetic_carry_fix.py
+
+The approach: instead of general SA on the full QUBO, exploit the STRUCTURE
+of addition. Carries propagate LEFT (from LSB to MSB). So solve bit-by-bit:
+
+CONCRETE STEPS:
+1. Implement propagation_solve(a, b, n_bits):
+   - For bit 0: s[0] = a[0] XOR b[0], c[0] = a[0] AND b[0]
+   - For bit i>0: s[i] = a[i] XOR b[i] XOR c[i-1], c[i] = MAJ(a[i],b[i],c[i-1])
+   - This is just... computing addition. Which is the point: the Ising model's
+     ground state IS the correct answer.
+
+2. But the interesting version: verify a CLAIMED result.
+   - Given a, b, claimed_r: check if claimed_r[i] matches the carry chain
+   - If not: report which bit position has the first error
+   - Use the QUBO energy per bit to identify exactly which constraints fail
+
+3. Implement hybrid_verify(a, b, claimed):
+   - Compute correct answer via propagation
+   - If claimed != correct: use QUBO energy decomposition to show exactly
+     which bit/carry is wrong (not just "wrong answer")
+   - Return: {correct, claimed, first_error_bit, per_bit_energy}
+
+4. Re-test ALL 12 cases from Exp 42b + add harder cases (up to 16-bit)
+5. Should achieve 12/12 correct verification
+6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_42c_arithmetic_carry_fix.py
+7. Do NOT push. Do NOT modify scripts/research_conductor.py.""",
+    },
+    # ══════════════════════════════════════════════════════════════════
+    # Legacy tasks below are from roadmaps v2-v5 (activation-detection era).
+    # They are SUPERSEDED by the Ising/thrml constraint-based reasoning
+    # direction above. Kept for reference but will be skipped by the
+    # conductor since their deliverables mostly already exist.
+    # ══════════════════════════════════════════════════════════════════
     {
         "id": "p1.5-hallucination-direction",
         "deliverable": "python/carnot/embeddings/hallucination_direction.py",
