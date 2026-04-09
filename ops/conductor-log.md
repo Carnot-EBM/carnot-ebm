@@ -52,3 +52,4 @@
 | 2026-04-06 02:25 UTC | CLI tool for code verification | OK | ================= 1049 passed, 12 warnings in 65.56s (0:01:05) ================= |
 | 2026-04-09 02:18 UTC | Exp 48: Code → constraint extraction | SKIP | Pre-tests failing: =========== 1 failed, 1107 passed, 12 warnings in 112.26s (0: |
 | 2026-04-09 02:39 UTC | Exp 48: Code → constraint extraction | OK | ================ 1130 passed, 12 warnings in 113.04s (0:01:53) ================= |
+| 2026-04-09 02:50 UTC | Exp 49: Natural language → constraint extraction | OK | ================ 1130 passed, 12 warnings in 115.46s (0:01:55) ================= |
