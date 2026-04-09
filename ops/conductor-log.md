@@ -87,3 +87,5 @@
 | 2026-04-09 22:29 UTC | Exp 81: Integration test suite | OK | ================ 1353 passed, 12 warnings in 118.65s (0:01:58) ================= |
 | 2026-04-09 22:36 UTC | Exp 83: Pipeline performance benchmarks | OK | ================ 1353 passed, 12 warnings in 117.63s (0:01:57) ================= |
 | 2026-04-09 22:46 UTC | Exp 84: Carnot verifies Carnot | OK | ================ 1353 passed, 12 warnings in 119.71s (0:01:59) ================= |
+| 2026-04-09 22:57 UTC | Exp 85: Prepare beta release | OK | ================ 1353 passed, 12 warnings in 121.53s (0:02:01) ================= |
+| 2026-04-09 22:58 UTC | Milestone 2026.04.4 activated | OK | 12 tasks queued |

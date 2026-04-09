@@ -1,437 +1,635 @@
-# Carnot Research Roadmap — Milestone 2026.04.4
-# "Ship It — Productionize the Constraint Pipeline"
+# Carnot Research Roadmap — Milestone 2026.04.5
+# "Learn to Verify — Self-Improving Constraints + Differentiable Reasoning"
 #
 # Active experiment queue — processed in order by research_conductor.py
-# This file is picked up automatically when 2026.04.3 completes.
+# This file is picked up automatically when 2026.04.4 completes.
 #
 # Versioning: CalVer (YYYY.MM.seq)
 # Completed tasks are moved to research-complete.yaml
 
-milestone: "2026.04.4"
-milestone_title: "Ship It — Productionize the Constraint Pipeline"
-milestone_doc: "openspec/change-proposals/research-roadmap-v9.md"
+milestone: "2026.04.5"
+milestone_title: "Learn to Verify — Self-Improving Constraints + Differentiable Reasoning"
+milestone_doc: "openspec/change-proposals/research-roadmap-v10.md"
 
 tasks:
-  # ── Phase 13: Extract Pipeline Library ───────────────────────
-  - id: exp74-constraint-extractor-api
-    milestone: "2026.04.4"
-    deliverable: python/carnot/pipeline/extract.py
-    title: "Exp 74: Unified ConstraintExtractor API"
+  # ── Phase 17: Differentiable Constraint Reasoning ──────────────
+  - id: exp66-differentiable-constraints
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_66_differentiable_constraints.py
+    title: "Exp 66: End-to-end differentiable constraint reasoning"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Constraint extraction logic is scattered across experiment scripts
-      (exp 47, 48, 49). This task extracts it into a clean, importable library
-      with a pluggable per-domain architecture. This is the FOUNDATION for the
-      production pipeline — everything else builds on this.
+      CONTEXT: This experiment has been deferred from v8 and v9. The prerequisites
+      are now met: Exp 64 proved continuous Ising relaxation works (sigmoid annealing,
+      penalty, straight-through), and Exp 65 proved embedding-space constraint
+      verification works (joint Gibbs EBM on semantic + constraint vectors). This
+      experiment combines them into a single end-to-end differentiable verification
+      forward pass. This is the foundation for Phase 17 — everything in experiments
+      86 and 87 builds on this.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_47_llm_self_constraints.py — LLM self-constraint extraction
-      - scripts/experiment_48_code_constraints.py — AST-based code constraint extraction
-      - scripts/experiment_49_nl_constraints.py — NL pattern-based constraint extraction
-      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm protocol
-      - python/carnot/verify/__init__.py — current exports
-
-      TASK: Create python/carnot/pipeline/ package with extract.py
-
-      CONCRETE STEPS:
-      1. Create python/carnot/pipeline/__init__.py (export key classes)
-
-      2. Create python/carnot/pipeline/extract.py with:
-         a. ConstraintExtractor Protocol:
-            - extract(text: str, domain: str | None = None) -> list[ConstraintResult]
-            - supported_domains: list[str] property
-
-         b. ConstraintResult dataclass:
-            - constraint_type: str (e.g., "arithmetic", "type_check", "bound")
-            - description: str (human-readable)
-            - energy_term: ConstraintTerm | None (for Ising verification)
-            - metadata: dict (domain-specific details)
-
-         c. ArithmeticExtractor:
-            - Parse "X + Y = Z" style claims from text
-            - Verify arithmetic correctness
-            - Return ConstraintResult with pass/fail
-
-         d. CodeExtractor:
-            - Parse Python code blocks from text
-            - Extract type annotations, bounds, returns via ast module
-            - Reuse logic from experiment_48 but as clean methods
-
-         e. LogicExtractor:
-            - Parse "If P then Q" style claims
-            - Check logical consistency (premises vs conclusion)
-            - Reuse logic from experiment_47
-
-         f. NLExtractor:
-            - Parse factual claims (named entities, quantities)
-            - Pattern-based extraction from experiment_49
-
-         g. AutoExtractor:
-            - Combines all extractors, auto-detects domain
-            - extract() tries each extractor, returns merged results
-
-      3. Create tests/python/test_pipeline_extract.py:
-         - Test each extractor independently
-         - Test AutoExtractor combines results
-         - Test with edge cases: empty text, no constraints found, malformed input
-         - Every test must reference REQ-VERIFY-* or SCENARIO-VERIFY-*
-
-      4. Update python/carnot/pipeline/__init__.py to export:
-         AutoExtractor, ArithmeticExtractor, CodeExtractor, LogicExtractor, NLExtractor
-
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp75-verify-repair-pipeline
-    milestone: "2026.04.4"
-    deliverable: python/carnot/pipeline/verify_repair.py
-    title: "Exp 75: VerifyRepairPipeline class"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: The verify-repair loop works (exp 57) but lives in a script.
-      This task creates the main user-facing API: a single class that wires
-      constraint extraction, Ising verification, and LLM repair into one call.
-      This is THE product — the class users will import and use.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/extract.py — ConstraintExtractor (created in exp 74)
-      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop logic
-      - scripts/experiment_56_live_llm_pipeline.py — LLM integration
-      - python/carnot/verify/constraint.py — ComposedEnergy, repair()
+      - scripts/experiment_64_continuous_ising.py — continuous relaxation (sigmoid annealing, penalty, STE)
+      - scripts/experiment_65_embedding_constraints.py — embedding-space joint EBM
+      - python/carnot/pipeline/extract.py — ConstraintExtractor, AutoExtractor
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm
       - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler
 
-      TASK: Create python/carnot/pipeline/verify_repair.py
+      TASK: Create scripts/experiment_66_differentiable_constraints.py
 
       CONCRETE STEPS:
-      1. Create VerificationResult dataclass:
-         - verified: bool
-         - constraints: list[ConstraintResult]
-         - energy: float
-         - violations: list[ConstraintResult] (subset that failed)
-         - certificate: dict (full energy decomposition)
+      1. Create a DifferentiableVerifier class in the experiment script:
+         a. Input: text response → sentence embedding (all-MiniLM-L6-v2, 384-dim)
+            + constraint features (N-dim from AutoExtractor)
+         b. Continuous Ising layer: relax binary spins to [0,1], compute energy
+            via JAX (fully differentiable — no discrete sampling)
+         c. Joint embedding-constraint energy: small 2-layer MLP on concatenated
+            [embedding; constraint_satisfaction; relaxed_spins] vector
+         d. Single forward pass: text → embedding → constraints → continuous Ising
+            → joint energy → verification score
 
-      2. Create RepairResult dataclass:
-         - initial_response: str
-         - final_response: str
-         - verified: bool
-         - repaired: bool (True if final != initial and now verified)
-         - iterations: int
-         - history: list[VerificationResult] (per-iteration)
+      2. Training loop:
+         a. Load Exp 58 multi-domain benchmark data (500 Q/A pairs from
+            scripts/experiment_58_multi_domain_benchmark.py output, or generate
+            synthetic if not available)
+         b. Labels: correct answer = low energy, wrong answer = high energy
+         c. Loss: binary cross-entropy on verification score
+         d. Optimizer: Adam with JAX, learning rate sweep [1e-4, 1e-3, 1e-2]
+         e. Train/val/test split: 60/20/20
 
-      3. Create VerifyRepairPipeline class:
-         - __init__(self, model: str | None = None, domains: list[str] | None = None,
-                    max_repairs: int = 3, extractor: ConstraintExtractor | None = None)
-         - If model is provided, load via transformers (AutoModelForCausalLM)
-         - If model is None, pipeline works in "verify-only" mode (user provides responses)
-         - Default extractor: AutoExtractor
+      3. Evaluation:
+         a. AUROC on test set (differentiable verifier vs discrete pipeline)
+         b. Gradient stability: track gradient norms across training
+         c. Ablation: continuous Ising only vs embedding only vs joint
+         d. Per-domain breakdown (arithmetic, code, logic, factual, scheduling)
 
-         Methods:
-         a. verify(question: str, response: str, domain: str | None = None) -> VerificationResult
-            - Extract constraints from response
-            - Build ComposedEnergy from constraint terms
-            - Return verification result
+      4. Save results to {project_root}/results/experiment_66_results.json
 
-         b. verify_and_repair(question: str, response: str | None = None,
-                              domain: str | None = None) -> RepairResult
-            - If response is None and model is loaded, generate response
-            - Verify response
-            - If violations found AND model is loaded: format violations as feedback,
-              regenerate, re-verify (up to max_repairs)
-            - If violations found but no model: return with repaired=False
-            - Return full repair history
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_66_differentiable_constraints.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-         c. extract_constraints(text: str, domain: str | None = None) -> list[ConstraintResult]
-            - Convenience method, delegates to extractor
-
-      4. Create tests/python/test_pipeline_verify_repair.py:
-         - Test verify() with correct and incorrect responses
-         - Test verify_and_repair() without model (verify-only mode)
-         - Test verify_and_repair() with mock model (patch transformers)
-         - Test pipeline with each domain
-         - Test edge cases: no constraints extracted, all constraints pass, empty response
-
-      5. Update python/carnot/pipeline/__init__.py to export VerifyRepairPipeline
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp77-cli-overhaul
-    milestone: "2026.04.4"
-    deliverable: python/carnot/cli.py
-    title: "Exp 77: CLI overhaul with pipeline subcommand"
+  - id: exp86-learned-energy-weights
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_86_learned_energy_weights.py
+    title: "Exp 86: Learned energy composition weights"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: The existing CLI has verify and score subcommands. This task adds
-      a 'pipeline' subcommand that exposes VerifyRepairPipeline, and ensures the
-      'carnot' entrypoint works after pip install.
+      CONTEXT: ComposedEnergy currently uses uniform weights (all 1.0) for each
+      constraint term. Different constraint types (arithmetic, type_check, bound,
+      logical) likely have different importance for verification accuracy. This
+      experiment auto-tunes the weights via gradient descent on validation accuracy,
+      using the differentiable pipeline from Exp 66.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/cli.py — current CLI implementation
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (exp 75)
-      - python/carnot/pipeline/extract.py — constraint extractors (exp 74)
-      - pyproject.toml — package configuration and entrypoints
+      - scripts/experiment_66_differentiable_constraints.py — differentiable verifier (Exp 66)
+      - python/carnot/verify/constraint.py — ComposedEnergy (weights attribute)
+      - python/carnot/pipeline/extract.py — constraint types (arithmetic, code, logic, NL)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
 
-      TASK: Update python/carnot/cli.py with new subcommands
+      TASK: Create scripts/experiment_86_learned_energy_weights.py
 
       CONCRETE STEPS:
-      1. Add 'pipeline' subcommand group:
-         a. carnot pipeline verify --question "..." --response "..." [--domain ...]
-         b. carnot pipeline repair --question "..." [--response "..."] [--model ...]
-         c. carnot pipeline extract --text "..." [--domain ...]
+      1. Create a LearnedComposedEnergy class:
+         a. Subclass or wrap ComposedEnergy
+         b. Weights are JAX parameters (trainable via grad)
+         c. Forward: weighted sum of constraint energies (differentiable)
 
-      2. Add 'serve' subcommand:
-         - carnot serve [--host 0.0.0.0] [--port 8080]
+      2. Training:
+         a. Generate 500 (question, response, correct/wrong) tuples across 5 domains
+            using simulated responses (no LLM needed — use benchmark data)
+         b. Extract constraints via AutoExtractor for each response
+         c. Build LearnedComposedEnergy with one weight per constraint TYPE
+            (not per instance)
+         d. Loss: binary cross-entropy (correct=low energy, wrong=high energy)
+         e. Optimizer: Adam, 100 epochs, lr=1e-3
+         f. Train/val split: 80/20
 
-      3. Add 'check' subcommand:
-         - carnot check — verifies JAX, samplers, extractors all load
+      3. Evaluation:
+         a. Compare uniform vs learned weights: verification AUROC on held-out set
+         b. Compare per-domain learned weights: train separate weights per domain
+         c. Print learned weight values — which constraint types matter most?
+         d. Statistical significance: bootstrap 95% CI on AUROC difference
 
-      4. Fix entrypoint in pyproject.toml if needed
-      5. Update tests/python/test_cli.py with new subcommand tests
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      4. Save results to {project_root}/results/experiment_86_results.json
 
-  - id: exp76-mcp-server-hardening
-    milestone: "2026.04.4"
-    deliverable: python/carnot/mcp/__init__.py
-    title: "Exp 76: Production MCP server"
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_86_learned_energy_weights.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp87-gradient-repair
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_87_gradient_repair.py
+    title: "Exp 87: Gradient-based repair in continuous constraint space"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: The MCP server works but lacks production safeguards. This task
-      moves it into the package, adds VerifyRepairPipeline tools, and hardens it.
+      CONTEXT: The current repair loop (Exp 57/75) is discrete: detect violation →
+      format feedback text → re-prompt LLM → re-verify. This is slow (requires LLM
+      inference per iteration) and limited (LLM may not fix the right thing). This
+      experiment tries continuous repair: embed the response, gradient-descend on
+      constraint energy in embedding space, then decode the repaired embedding back
+      to text via nearest-neighbor lookup. If this works, repair becomes instant
+      (no LLM call needed).
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - tools/verify-mcp/server.py — current MCP server
-      - python/carnot/mcp_server.py — alternate MCP server location
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (exp 75)
-      - .mcp.json — MCP configuration
+      - scripts/experiment_66_differentiable_constraints.py — differentiable verifier
+      - scripts/experiment_65_embedding_constraints.py — embedding-space verification
+      - python/carnot/verify/constraint.py — gradient_repair() function
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (discrete repair)
 
-      TASK: Create python/carnot/mcp/ package with hardened server
+      TASK: Create scripts/experiment_87_gradient_repair.py
 
       CONCRETE STEPS:
-      1. Create python/carnot/mcp/__init__.py and python/carnot/mcp/server.py
-      2. Keep existing tools: verify_code, verify_with_properties
-      3. Add: verify_llm_output, verify_and_repair, list_domains, health_check
-      4. Add: execution timeout (30s), input validation (10K char max), structured errors
-      5. Update .mcp.json to point to new location
-      6. Create tests/python/test_mcp_server.py
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      1. Build a GradientRepairer class:
+         a. Embed response text via sentence-transformers (all-MiniLM-L6-v2)
+         b. Extract constraint features via AutoExtractor
+         c. Concatenate [embedding; constraint_vector] as initial state
+         d. Gradient descent: minimize constraint energy w.r.t. embedding
+            (freeze constraint weights, only update the embedding)
+         e. Project repaired embedding back to text: build a codebook of 1000
+            candidate response embeddings, return nearest neighbor
+         f. Step size, max iterations, convergence threshold as hyperparameters
+
+      2. Evaluation:
+         a. Generate 100 incorrect responses across 5 domains
+         b. Compare: gradient repair vs discrete repair (Exp 57) vs combined
+         c. Metrics: repair success rate, iterations needed, wall-clock time
+         d. Ablation: different step sizes [0.01, 0.1, 1.0], max iters [10, 50, 100]
+
+      3. Codebook construction:
+         a. For each question, generate 20 candidate responses (paraphrases, variations)
+         b. Embed all candidates
+         c. After gradient repair, find nearest candidate in embedding space
+         d. Verify the decoded candidate — does it pass constraints?
+
+      4. Save results to {project_root}/results/experiment_87_results.json
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_87_gradient_repair.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 18: Self-Improving Constraint Pipeline ───────────────
+  - id: exp88-failure-mining
+    milestone: "2026.04.5"
+    deliverable: python/carnot/pipeline/mining.py
+    title: "Exp 88: Failure-driven constraint mining"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The verify-repair pipeline catches hallucinations only when constraint
+      extractors recognize the relevant claim type. Exp 57 found that constraint
+      COVERAGE is the bottleneck — only 1/6 wrong answers triggered violations. This
+      experiment analyzes pipeline failures to discover what types of claims we're
+      MISSING, and proposes new extraction patterns to cover them. This is the first
+      step toward FR-11 (autonomous self-improvement): the pipeline identifies its
+      own weaknesses.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — current extractors (Arithmetic, Code, Logic, NL)
+      - scripts/experiment_58_multi_domain_benchmark.py — multi-domain benchmark
+      - scripts/experiment_73_constraint_coverage.py — coverage metric
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair with failure cases
+
+      TASK: Create python/carnot/pipeline/mining.py + experiment script
+
+      CONCRETE STEPS:
+      1. Create python/carnot/pipeline/mining.py with FailureAnalyzer class:
+         a. analyze(questions, responses, ground_truth, pipeline) -> FailureReport
+         b. For each false negative (wrong answer that pipeline said was correct):
+            - What claims in the response were NOT extracted as constraints?
+            - Categorize uncovered claims: arithmetic_chain, implicit_logic,
+              world_knowledge, code_semantics, comparison, negation
+            - Score each category by frequency
+         c. FailureReport dataclass: false_negatives, category_counts,
+            suggested_patterns (regex/AST patterns for top 3 categories)
+
+      2. Create scripts/experiment_88_failure_mining.py:
+         a. Generate 200 questions across 5 domains with known-wrong responses
+         b. Run through VerifyRepairPipeline in verify-only mode
+         c. Identify false negatives (wrong but pipeline said verified)
+         d. Run FailureAnalyzer to categorize and suggest patterns
+         e. Test suggested patterns on the false negatives — what % would they catch?
+         f. Report: top failure categories, suggested patterns, coverage improvement
+
+      3. Create tests/python/test_pipeline_mining.py:
+         - Test FailureAnalyzer with known failure cases
+         - Test category classification
+         - Every test references REQ-VERIFY-* or SCENARIO-VERIFY-*
+
+      4. Update python/carnot/pipeline/__init__.py to export FailureAnalyzer
+
+      5. Save results to {project_root}/results/experiment_88_results.json
+
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_88_failure_mining.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp82-error-handling
-    milestone: "2026.04.4"
-    deliverable: python/carnot/pipeline/errors.py
-    title: "Exp 82: Pipeline error handling and edge cases"
+  - id: exp89-self-bootstrap
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_89_self_bootstrap.py
+    title: "Exp 89: Self-bootstrapped constraint training"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: The pipeline needs graceful error handling before shipping.
+      CONTEXT: The pipeline can verify LLM outputs. When it verifies many outputs,
+      it generates (question, response, verified, constraints) tuples — this is
+      LABELED DATA for free. This experiment uses the pipeline's own verified outputs
+      as training data to train BETTER Ising models. If it works, the pipeline
+      improves itself without human labeling. This is the core of FR-11: the energy
+      function IS the objective truth, and improvements either lower energy on
+      held-out data or they don't.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
+      - scripts/experiment_62_domain_constraint_learning.py — domain CD training (10K triples)
+      - scripts/experiment_50_learn_ising.py — basic CD training
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — constraint extractors
-      - python/carnot/verify/constraint.py — ComposedEnergy
+      - python/carnot/pipeline/extract.py — AutoExtractor
+      - python/carnot/training/contrastive_divergence.py — JAX CD implementation
 
-      TASK: Create python/carnot/pipeline/errors.py and harden the pipeline
+      TASK: Create scripts/experiment_89_self_bootstrap.py
 
       CONCRETE STEPS:
-      1. Create error hierarchy: CarnotError, ExtractionError, VerificationError,
-         RepairError, ModelLoadError, TimeoutError
-      2. Add error handling to VerifyRepairPipeline (degrade gracefully, don't crash)
-      3. Add configurable timeout (default 30s)
-      4. Test edge cases: empty input, very long input, unicode, no constraints,
-         malformed code, bad model name, concurrent calls
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      1. Data collection phase:
+         a. Generate 1000 questions (200 per domain: arithmetic, code, logic,
+            factual, scheduling) — use the benchmark generator from Exp 58
+         b. For each question, generate a correct and incorrect response
+            (use templates, not LLM — deterministic and fast)
+         c. Run each through VerifyRepairPipeline.verify() to get constraint features
+         d. Encode each response as a binary feature vector (200+ dims):
+            - Per-constraint pass/fail flags
+            - Constraint type indicators
+            - Energy quantization bins
+            - Domain indicators
+
+      2. Training phase:
+         a. Split: 70% train, 15% val, 15% test
+         b. Train discriminative Ising via CD (like Exp 62):
+            - Positive: verified-correct responses (low energy target)
+            - Negative: verified-wrong responses (high energy target)
+         c. Train per-domain and combined models
+         d. Hyperparameters: CD-k={1,5,10}, lr={0.01,0.001}, L1 reg={0.0,0.01}
+
+      3. Evaluation:
+         a. AUROC on test set: self-bootstrapped vs Exp 62 models vs random
+         b. Per-domain breakdown
+         c. Compare: does training on pipeline outputs match training on ground truth?
+         d. Ablation: how much training data is enough? (100, 300, 500, 1000 samples)
+
+      4. Save results to {project_root}/results/experiment_89_results.json
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_89_self_bootstrap.py
       6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp78-pypi-packaging
-    milestone: "2026.04.4"
-    deliverable: python/carnot/_version.py
-    title: "Exp 78: PyPI-ready package"
+  - id: exp91-gsm8k-live
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_91_gsm8k_live.py
+    title: "Exp 91: GSM8K live benchmark (Qwen3.5 + Gemma4)"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Carnot must be pip-installable without a Rust toolchain.
+      CONTEXT: Exp 67 ran GSM8K but used synthetic fallback data because the dataset
+      wasn't loaded. This experiment runs the REAL benchmark with REAL model inference.
+      Two target models: Qwen3.5-0.8B and google/gemma-4-E4B-it. This is the first
+      externally-credible number for the Carnot pipeline.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - pyproject.toml — current package configuration
-      - python/carnot/__init__.py — package root
-      - python/carnot/cli.py — CLI entrypoint
-      - Cargo.toml — Rust workspace
-
-      TASK: Make the package pip-installable without Rust
-
-      CONCRETE STEPS:
-      1. Create python/carnot/_version.py with __version__ = "0.1.0b1"
-      2. Update pyproject.toml: setuptools backend for pure-Python,
-         extras [llm], [mcp], [rust], [all]
-      3. Create Rust binding fallback (RUST_AVAILABLE flag)
-      4. Test: create temp venv, pip install -e ., verify import + CLI + pipeline
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp79-integration-examples
-    milestone: "2026.04.4"
-    deliverable: examples/verify_api_responses.py
-    title: "Exp 79: Integration examples"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Developers need copy-pasteable examples showing REAL use cases.
-
-      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_67_gsm8k_benchmark.py — previous GSM8K attempt (with fallback)
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — constraint extractors
-      - python/carnot/cli.py — CLI interface
+      - python/carnot/pipeline/extract.py — ArithmeticExtractor
+      - scripts/experiment_69_multi_model.py — multi-model setup (Qwen3.5 + Gemma4)
 
-      TASK: Create examples/ directory with 5 production examples
+      TASK: Create scripts/experiment_91_gsm8k_live.py
 
       CONCRETE STEPS:
-      1. examples/README.md explaining each example
-      2. examples/verify_api_responses.py — verify LLM API responses
-      3. examples/code_review_pipeline.py — verify LLM-generated code
-      4. examples/batch_verify.py — batch verify a JSON file of Q/A pairs
-      5. examples/custom_extractor.py — create a domain-specific extractor
-      6. examples/mcp_integration.py — configure MCP server for Claude Code
-      7. Each must be runnable standalone, handle missing deps gracefully
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python examples/verify_api_responses.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Load GSM8K test split:
+         a. Try: `from datasets import load_dataset; ds = load_dataset("openai/gsm8k", "main", split="test")`
+         b. If datasets library not available, create 200 synthetic GSM8K-style
+            arithmetic word problems with known answers as fallback
+         c. Select 200 questions (first 200 from test split)
 
-  - id: exp80-getting-started-docs
-    milestone: "2026.04.4"
-    deliverable: docs/getting-started.md
-    title: "Exp 80: Getting started documentation"
+      2. Model inference:
+         a. Load Qwen3.5-0.8B: `AutoModelForCausalLM.from_pretrained("Qwen/Qwen3.5-0.8B")`
+         b. Load Gemma4-E4B-it: `AutoModelForCausalLM.from_pretrained("google/gemma-4-E4B-it")`
+         c. If transformers not available, simulate with template-based responses
+         d. Generate answer for each question with greedy decoding, max_new_tokens=256
+         e. Parse final numerical answer from response
+
+      3. Verification pipeline:
+         a. Mode 1 — Baseline: raw model accuracy (parsed answer vs ground truth)
+         b. Mode 2 — Verify only: run VerifyRepairPipeline.verify() on each response,
+            flag verified=False as "uncertain" (abstain)
+         c. Mode 3 — Verify+repair: run verify_and_repair() with max_repairs=3
+         d. For Mode 3 without live LLM: use repair feedback as constraint-aware
+            re-prompting (if model loaded) or skip repair (if simulated)
+
+      4. Metrics:
+         a. Per-model: baseline accuracy, post-verify accuracy (with abstention),
+            post-repair accuracy
+         b. Improvement: Δ accuracy from Carnot verification
+         c. Constraint coverage: what fraction of arithmetic claims were extracted?
+         d. Wall-clock time per question (model inference + verification)
+         e. Error analysis: categorize remaining failures
+
+      5. Save results to {project_root}/results/experiment_91_results.json
+      6. Save summary to {project_root}/ops/gsm8k-live-results.md
+
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_91_gsm8k_live.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp92-math-benchmark
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_92_math_benchmark.py
+    title: "Exp 92: MATH benchmark subset with CoT constraint tracing"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Users need docs to start using Carnot in 5 minutes.
+      CONTEXT: GSM8K tests single-step arithmetic. MATH problems require multi-step
+      reasoning chains where errors compound. This experiment tests whether
+      step-by-step constraint verification catches intermediate errors that
+      final-answer-only verification misses. The key insight: verify EACH reasoning
+      step, not just the conclusion.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py — the main API
-      - python/carnot/cli.py — CLI interface
-      - examples/ — integration examples (exp 79)
-      - docs/ — existing docs
-
-      TASK: Create getting started and concepts documentation
-
-      CONCRETE STEPS:
-      1. docs/getting-started.md — install, quick start (5 lines), CLI, MCP setup
-      2. docs/concepts.md — what is constraint verification (plain English, no math)
-      3. docs/api-reference.md — all public classes and methods with examples
-      4. Update docs/index.html to link to new docs
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp81-integration-tests
-    milestone: "2026.04.4"
-    deliverable: tests/integration/test_full_pipeline.py
-    title: "Exp 81: Integration test suite"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Integration tests verify the full pipeline as a user experiences it.
-
-      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_91_gsm8k_live.py — GSM8K benchmark setup (Exp 91)
+      - python/carnot/pipeline/extract.py — ArithmeticExtractor
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/cli.py — CLI
-      - tests/python/ — existing test structure
+      - scripts/experiment_42c_arithmetic_carry_fix.py — carry chain verification
 
-      TASK: Create tests/integration/ with full pipeline tests
-
-      CONCRETE STEPS:
-      1. tests/integration/test_full_pipeline.py — verify, repair, extract end-to-end
-      2. tests/integration/test_cli_commands.py — subprocess calls to carnot CLI
-      3. tests/integration/test_install.py — import, version, entrypoint checks
-      4. Update pytest config to include tests/integration/
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/ -q
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp83-performance-benchmarks
-    milestone: "2026.04.4"
-    deliverable: scripts/benchmark_pipeline.py
-    title: "Exp 83: Pipeline performance benchmarks"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Establish baseline performance before shipping.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — constraint extractors
-      - python/carnot/samplers/parallel_ising.py — Ising sampler
-
-      TASK: Create scripts/benchmark_pipeline.py
+      TASK: Create scripts/experiment_92_math_benchmark.py
 
       CONCRETE STEPS:
-      1. Benchmark verify() latency: 100 calls per domain, report p50/p95/p99
-      2. Benchmark extract_constraints() vs input length (50-5000 chars)
-      3. Benchmark batch throughput: 1000 responses sequentially
-      4. Benchmark memory: peak RSS during init and during batch
-      5. Save results to ops/benchmark-results.md
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/benchmark_pipeline.py
+      1. Load MATH dataset:
+         a. Try: `from datasets import load_dataset; ds = load_dataset("lighteval/MATH", split="test")`
+         b. Filter to Level 1-3 (easier) and algebra/number_theory subjects
+         c. Select 100 problems
+         d. If not available, create 100 multi-step algebra problems with known solutions
+
+      2. Chain-of-thought generation:
+         a. Prompt each model with "Solve step by step: {problem}"
+         b. Parse response into reasoning steps (split on newlines, "Step N:", etc.)
+         c. Extract the final answer (boxed or last numerical value)
+
+      3. Step-level verification:
+         a. For EACH reasoning step, extract arithmetic constraints
+            (e.g., "3x + 5 = 20" → verify x = 5)
+         b. Verify step-by-step: does each intermediate claim hold?
+         c. Track: which step FIRST introduces an error?
+         d. Compare: step-level verification vs final-answer-only verification
+
+      4. Metrics:
+         a. End-to-end accuracy: final answer correct?
+         b. Step-level error detection: at which step did we first flag an error?
+         c. Error propagation: how many steps after first error before final answer?
+         d. Coverage: what fraction of reasoning steps had extractable constraints?
+         e. Per-model comparison: Qwen3.5 vs Gemma4
+
+      5. Save results to {project_root}/results/experiment_92_results.json
+
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_92_math_benchmark.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp84-dogfood-carnot
-    milestone: "2026.04.4"
-    deliverable: scripts/dogfood_carnot.py
-    title: "Exp 84: Carnot verifies Carnot"
+  - id: exp93-multi-model-comparison
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_93_multi_model_comparison.py
+    title: "Exp 93: Multi-model systematic comparison"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Dogfood the pipeline on our own project.
+      CONTEXT: We need a comprehensive head-to-head comparison of Qwen3.5-0.8B vs
+      google/gemma-4-E4B-it across all domains and modes. This produces the definitive
+      "does Carnot help?" table — the number we'd put in a paper abstract.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
+      - scripts/experiment_91_gsm8k_live.py — GSM8K live benchmark (Exp 91)
+      - scripts/experiment_92_math_benchmark.py — MATH benchmark (Exp 92)
+      - scripts/experiment_69_multi_model.py — previous multi-model setup
+      - scripts/experiment_58_multi_domain_benchmark.py — 5-domain benchmark
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — CodeExtractor
-      - tests/python/ — existing test files
 
-      TASK: Create scripts/dogfood_carnot.py
+      TASK: Create scripts/experiment_93_multi_model_comparison.py
 
       CONCRETE STEPS:
-      1. Verify Carnot's own .py files: extract constraints, report violations
-      2. Verify test outputs: correlate constraint violations with test failures
-      3. Verify docstrings: check claims against function signatures
-      4. Report: files analyzed, constraints found, violations, recommendations
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/dogfood_carnot.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Question generation:
+         a. 50 questions per domain × 5 domains = 250 questions
+         b. Domains: arithmetic, code, logic, factual, scheduling
+         c. Use benchmark generators from Exp 58 (or create deterministic generators)
+         d. Each question has a known correct answer for evaluation
 
-  - id: exp85-beta-release
-    milestone: "2026.04.4"
-    deliverable: scripts/prepare_release.py
-    title: "Exp 85: Prepare beta release"
+      2. Model inference matrix:
+         a. For each (question, model) pair:
+            - Generate response with model (or simulate if model unavailable)
+         b. For each (question, model, response) tuple, run 3 modes:
+            - Baseline: parse answer, check against ground truth
+            - Verify-only: VerifyRepairPipeline.verify(), use verified flag
+            - Verify-repair: VerifyRepairPipeline.verify_and_repair(), max_repairs=3
+         c. Total: 250 × 2 × 3 = 1,500 evaluations
+
+      3. Metrics per cell (model × domain × mode):
+         a. Accuracy (correct / total)
+         b. Hallucination rate (confident + wrong / total)
+         c. Repair success rate (repaired / attempted repairs)
+         d. Average constraint coverage
+         e. Average wall-clock time per evaluation
+         f. Average number of constraints extracted
+
+      4. Analysis:
+         a. Generate comparison table: rows = (model, domain), cols = (mode, metric)
+         b. Identify: which model benefits MORE from Carnot verification?
+         c. Identify: which domains see the biggest improvement?
+         d. Statistical significance: paired t-test on accuracy difference
+         e. Key finding summary: 1-paragraph "Carnot improves X by Y% on average"
+
+      5. Save results to {project_root}/results/experiment_93_results.json
+      6. Save summary table to {project_root}/ops/multi-model-comparison.md
+
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_93_multi_model_comparison.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp90-autoresearch-constraints
+    milestone: "2026.04.5"
+    deliverable: scripts/experiment_90_autoresearch_constraints.py
+    title: "Exp 90: Autoresearch constraint improvement loop"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: All pipeline components are built and tested. Prepare 0.1.0-beta1.
+      CONTEXT: This is the FR-11 autonomous self-learning loop applied to the
+      constraint pipeline itself. The autoresearch orchestrator (scripts/orchestrator.py)
+      proposes hypotheses, tests them in a sandbox, and accepts/rejects based on
+      evaluation gates. This experiment defines "constraint extractor improvement"
+      as a hypothesis type: propose a new regex pattern or AST rule, test it on
+      held-out failures (from Exp 88), accept if it improves verification accuracy.
+      20 iterations of the loop.
 
       EXISTING CODE TO READ FIRST:
-      - pyproject.toml — package configuration
-      - python/carnot/_version.py — version file
-      - ops/changelog.md — work log
-      - docs/getting-started.md — user docs
+      - scripts/orchestrator.py — autoresearch orchestrator
+      - python/carnot/pipeline/mining.py — FailureAnalyzer (Exp 88)
+      - python/carnot/pipeline/extract.py — current extractors
+      - scripts/experiment_89_self_bootstrap.py — self-bootstrapped training (Exp 89)
+      - python/carnot/autoresearch/evaluator.py — three-gate evaluator
 
-      TASK: Create release preparation script and artifacts
+      TASK: Create scripts/experiment_90_autoresearch_constraints.py
 
       CONCRETE STEPS:
-      1. Create scripts/prepare_release.py that verifies:
-         tests pass, clean install works, CLI works, examples run
-      2. Update python/carnot/_version.py to "0.1.0b1"
-      3. Create RELEASE_NOTES.md for 0.1.0-beta1
-      4. Update README.md: clear description, install instructions, quick start
-      5. Run the release script to verify everything passes
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/prepare_release.py
+      1. Define the improvement hypothesis space:
+         a. Type 1: New regex pattern for ArithmeticExtractor (e.g., "X times Y is Z")
+         b. Type 2: New AST rule for CodeExtractor (e.g., detect list comprehensions)
+         c. Type 3: New logic pattern for LogicExtractor (e.g., "unless" clauses)
+         d. Type 4: Ising feature addition (new binary feature for CD training)
+
+      2. Build a ConstraintImprovementOrchestrator:
+         a. propose(): generate a random improvement hypothesis
+            (select type, generate pattern/rule from templates)
+         b. test(): apply hypothesis to a held-out set of 100 failure cases
+            (from Exp 88's FailureAnalyzer output or synthetic failures)
+         c. evaluate(): compute AUROC improvement on validation set
+            (hypothesis improves pipeline → accept, else reject)
+         d. incorporate(): if accepted, add pattern to extractor's pattern list
+
+      3. Run loop:
+         a. 20 iterations
+         b. Track: proposals attempted, accepted, rejected, cumulative AUROC
+         c. Circuit breaker: halt after 5 consecutive rejections
+         d. Log each iteration: hypothesis description, test result, accept/reject
+
+      4. Evaluation:
+         a. Cumulative AUROC improvement over 20 iterations
+         b. Acceptance rate
+         c. Which hypothesis types were most effective?
+         d. Final extractor vs original extractor: side-by-side comparison
+
+      5. Save results to {project_root}/results/experiment_90_results.json
+
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_90_autoresearch_constraints.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 20: Rust Pipeline + Cross-Language ───────────────────
+  - id: exp94-rust-pipeline
+    milestone: "2026.04.5"
+    deliverable: crates/carnot-constraints/src/pipeline.rs
+    title: "Exp 94: Rust VerifyRepairPipeline"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The Python pipeline works (Exp 74-75) but NFR-01 requires 10x Rust
+      performance. The carnot-constraints crate (Exp 70) has basic constraint types.
+      This experiment ports the core verify pipeline to Rust: constraint extraction,
+      composed energy evaluation, and verification. Repair is NOT ported (it requires
+      LLM inference which stays in Python).
+
+      EXISTING CODE TO READ FIRST:
+      - crates/carnot-constraints/src/lib.rs — BoundConstraint, EqualityConstraint, IsingConstraint, VerificationCertificate
+      - crates/carnot-core/src/lib.rs — EnergyFunction, ConstraintTerm traits
+      - python/carnot/pipeline/extract.py — Python extractors (for reference)
+      - python/carnot/pipeline/verify_repair.py — Python pipeline (for reference)
+
+      TASK: Create crates/carnot-constraints/src/pipeline.rs
+
+      CONCRETE STEPS:
+      1. Create src/extract.rs with Rust constraint extractors:
+         a. ConstraintExtractor trait: extract(&self, text: &str) -> Vec<ConstraintResult>
+         b. ArithmeticExtractor: regex-based "X + Y = Z" pattern matching
+            (use regex crate, port patterns from Python ArithmeticExtractor)
+         c. LogicExtractor: "If P then Q" pattern matching
+         d. ConstraintResult struct: constraint_type, description, energy_term, verified
+
+      2. Create src/pipeline.rs with Rust verification pipeline:
+         a. VerifyPipeline struct:
+            - extractors: Vec<Box<dyn ConstraintExtractor>>
+            - verify(&self, question: &str, response: &str) -> VerificationResult
+         b. VerificationResult struct:
+            - verified: bool
+            - constraints: Vec<ConstraintResult>
+            - energy: f64
+            - violations: Vec<ConstraintResult>
+            - certificate: VerificationCertificate
+
+      3. Add regex dependency to crates/carnot-constraints/Cargo.toml
+
+      4. Create tests:
+         a. Unit tests in src/extract.rs (test each extractor)
+         b. Integration tests in tests/test_pipeline.rs
+         c. Cross-reference: same 20 inputs as Python pipeline tests,
+            verify identical results
+
+      5. Update src/lib.rs to export pipeline and extract modules
+
+      6. Run: cargo test -p carnot-constraints
+      7. Run: cargo clippy -p carnot-constraints -- -D warnings
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp95-pyo3-pipeline
+    milestone: "2026.04.5"
+    deliverable: crates/carnot-python/src/pipeline.rs
+    title: "Exp 95: PyO3 pipeline bridge"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 94 created the Rust VerifyPipeline. This experiment exposes it
+      to Python via PyO3, so users get 10x performance automatically when Rust
+      bindings are installed. The Python package already has a RUST_AVAILABLE flag
+      (Exp 78) for conditional import.
+
+      EXISTING CODE TO READ FIRST:
+      - crates/carnot-python/src/lib.rs — existing PyO3 bindings (3 tiers + 2 samplers)
+      - crates/carnot-constraints/src/pipeline.rs — Rust VerifyPipeline (Exp 94)
+      - crates/carnot-constraints/src/extract.rs — Rust extractors (Exp 94)
+      - python/carnot/_rust_compat.py — RUST_AVAILABLE flag
+      - python/carnot/pipeline/verify_repair.py — Python VerifyRepairPipeline
+
+      TASK: Create crates/carnot-python/src/pipeline.rs
+
+      CONCRETE STEPS:
+      1. Create src/pipeline.rs with PyO3 wrappers:
+         a. PyVerifyPipeline: wraps carnot_constraints::pipeline::VerifyPipeline
+            - __init__(extractors: list[str] = ["arithmetic", "logic"])
+            - verify(question: str, response: str) -> PyVerificationResult
+         b. PyVerificationResult: wraps VerificationResult
+            - verified: bool property
+            - constraints: list property
+            - energy: float property
+            - violations: list property
+
+      2. Register in src/lib.rs:
+         a. Add pipeline submodule to the carnot_rust Python module
+         b. Export PyVerifyPipeline, PyVerificationResult
+
+      3. Update Python integration:
+         a. In python/carnot/pipeline/verify_repair.py, add auto-detection:
+            if RUST_AVAILABLE, use RustVerifyPipeline for verify() calls
+            (repair still uses Python — requires LLM)
+         b. Benchmark flag: CARNOT_USE_RUST=1 to force Rust backend
+
+      4. Cross-language conformance test:
+         a. Create tests/python/test_rust_pipeline.py
+         b. Run 100 identical inputs through Python and Rust pipelines
+         c. Assert: identical verification results (verified, energy, violations)
+         d. Benchmark: measure latency difference (target: ≥10x)
+
+      5. Run: PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1 cargo build -p carnot-python
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_rust_pipeline.py -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
