@@ -126,6 +126,12 @@
 - `docs/api-reference.md`: full API reference for pipeline, extractors, MCP server, samplers, models
 - Updated `docs/index.html` navigation linking new documentation pages
 
+### Integration Test Suite (Exp 81)
+- `tests/integration/test_full_pipeline.py`: full verify-repair pipeline E2E with real extractors and JAX energy (no mocks)
+- `tests/integration/test_cli_commands.py`: CLI subprocess tests for `carnot verify` and `carnot score` subcommands
+- `tests/integration/test_install.py`: package importability, version exposure, console_scripts entrypoint, public module accessibility
+- Shared `conftest.py` with `JAX_PLATFORMS=cpu` fixture for reproducibility
+
 ### Quality Infrastructure
 - 1049 Python tests + 104 Rust tests, 100% code coverage, 100% spec coverage
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
