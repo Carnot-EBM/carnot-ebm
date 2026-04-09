@@ -512,7 +512,7 @@ CONCRETE STEPS:
    - Compute correct answer via propagation
    - If claimed != correct: use QUBO energy decomposition to show exactly
      which bit/carry is wrong (not just "wrong answer")
-   - Return: {correct, claimed, first_error_bit, per_bit_energy}
+   - Return: dict with keys: correct, claimed, first_error_bit, per_bit_energy
 
 4. Re-test ALL 12 cases from Exp 42b + add harder cases (up to 16-bit)
 5. Should achieve 12/12 correct verification
