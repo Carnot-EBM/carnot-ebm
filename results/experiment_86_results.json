@@ -1,0 +1,282 @@
+{
+  "experiment": "86_learned_energy_weights",
+  "description": "Auto-tune per-constraint-type weights for ComposedEnergy via gradient descent on BCE loss. Compares uniform vs learned weights on verification AUROC.",
+  "target_models": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "dataset": {
+    "n_samples": 500,
+    "n_train": 400,
+    "n_val": 100,
+    "domains": [
+      "arithmetic",
+      "code",
+      "logic",
+      "factual",
+      "scheduling"
+    ],
+    "n_per_domain": 100
+  },
+  "constraint_types": [
+    "arithmetic",
+    "type_check",
+    "return_type",
+    "bound",
+    "initialization",
+    "implication",
+    "exclusion",
+    "factual",
+    "quantity",
+    "heuristic"
+  ],
+  "global_results": {
+    "uniform_auroc": 0.9272,
+    "learned_auroc": 0.938,
+    "improvement": 0.01079999999999992,
+    "learned_weights": {
+      "arithmetic": 1.1937601566314697,
+      "type_check": 0.4489701986312866,
+      "return_type": 0.4429481029510498,
+      "bound": 0.42545047402381897,
+      "initialization": 0.41616225242614746,
+      "implication": 0.4274795949459076,
+      "exclusion": 0.37428927421569824,
+      "factual": 0.4840097427368164,
+      "quantity": 0.4345344305038452,
+      "heuristic": 0.6343600153923035
+    },
+    "bootstrap_ci": {
+      "mean_diff": 0.010755483187911424,
+      "ci_lower": -0.0021042023366723587,
+      "ci_upper": 0.02961774252970416,
+      "significant": false
+    },
+    "training_history": [
+      {
+        "epoch": 1,
+        "train_loss": 0.7240897417068481,
+        "val_loss": 0.7115065455436707,
+        "val_auroc": 0.9204
+      },
+      {
+        "epoch": 10,
+        "train_loss": 0.7049983143806458,
+        "val_loss": 0.6927300691604614,
+        "val_auroc": 0.9204
+      },
+      {
+        "epoch": 20,
+        "train_loss": 0.6867901682853699,
+        "val_loss": 0.6748512983322144,
+        "val_auroc": 0.9204
+      },
+      {
+        "epoch": 30,
+        "train_loss": 0.6717382669448853,
+        "val_loss": 0.6601044535636902,
+        "val_auroc": 0.9204
+      },
+      {
+        "epoch": 40,
+        "train_loss": 0.6595206260681152,
+        "val_loss": 0.6481668949127197,
+        "val_auroc": 0.9204
+      },
+      {
+        "epoch": 50,
+        "train_loss": 0.6495989561080933,
+        "val_loss": 0.6385000944137573,
+        "val_auroc": 0.9268
+      },
+      {
+        "epoch": 60,
+        "train_loss": 0.6413805484771729,
+        "val_loss": 0.6305124163627625,
+        "val_auroc": 0.9268
+      },
+      {
+        "epoch": 70,
+        "train_loss": 0.6343621015548706,
+        "val_loss": 0.6237016320228577,
+        "val_auroc": 0.9268
+      },
+      {
+        "epoch": 80,
+        "train_loss": 0.6281853318214417,
+        "val_loss": 0.617711067199707,
+        "val_auroc": 0.93
+      },
+      {
+        "epoch": 90,
+        "train_loss": 0.6226135492324829,
+        "val_loss": 0.6123064160346985,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 100,
+        "train_loss": 0.6174889206886292,
+        "val_loss": 0.6073322892189026,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 110,
+        "train_loss": 0.6127038598060608,
+        "val_loss": 0.6026832461357117,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 120,
+        "train_loss": 0.6081822514533997,
+        "val_loss": 0.5982851386070251,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 130,
+        "train_loss": 0.6038703322410583,
+        "val_loss": 0.5940861105918884,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 140,
+        "train_loss": 0.5997298955917358,
+        "val_loss": 0.5900489091873169,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 150,
+        "train_loss": 0.5957331657409668,
+        "val_loss": 0.5861476063728333,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 160,
+        "train_loss": 0.5918615460395813,
+        "val_loss": 0.5823640823364258,
+        "val_auroc": 0.9364
+      },
+      {
+        "epoch": 170,
+        "train_loss": 0.5881012678146362,
+        "val_loss": 0.5786857604980469,
+        "val_auroc": 0.938
+      },
+      {
+        "epoch": 180,
+        "train_loss": 0.584443986415863,
+        "val_loss": 0.5751044750213623,
+        "val_auroc": 0.938
+      },
+      {
+        "epoch": 190,
+        "train_loss": 0.5808830857276917,
+        "val_loss": 0.5716148018836975,
+        "val_auroc": 0.938
+      },
+      {
+        "epoch": 200,
+        "train_loss": 0.5774151086807251,
+        "val_loss": 0.5682134628295898,
+        "val_auroc": 0.938
+      }
+    ]
+  },
+  "per_domain_results": {
+    "arithmetic": {
+      "uniform_auroc": 1.0,
+      "learned_auroc": 1.0,
+      "improvement": 0.0,
+      "weights": {
+        "arithmetic": 1.4270989894866943,
+        "type_check": 0.41836604475975037,
+        "return_type": 0.4127034544944763,
+        "bound": 0.40805432200431824,
+        "initialization": 0.3990974426269531,
+        "implication": 0.4101216793060303,
+        "exclusion": 0.3587459623813629,
+        "factual": 0.4671257436275482,
+        "quantity": 0.4201717674732208,
+        "heuristic": 0.739690899848938
+      },
+      "n_train": 81,
+      "n_val": 19
+    },
+    "code": {
+      "uniform_auroc": 1.0,
+      "learned_auroc": 1.0,
+      "improvement": 0.0,
+      "weights": {
+        "arithmetic": 0.4207204282283783,
+        "type_check": 0.5447814464569092,
+        "return_type": 0.5376688838005066,
+        "bound": 0.4268444776535034,
+        "initialization": 0.41752490401268005,
+        "implication": 0.4289953410625458,
+        "exclusion": 0.37551090121269226,
+        "factual": 0.5013158321380615,
+        "quantity": 0.4394489824771881,
+        "heuristic": 1.1727194786071777
+      },
+      "n_train": 83,
+      "n_val": 17
+    },
+    "logic": {
+      "uniform_auroc": 0.9273504273504274,
+      "learned_auroc": 0.9273504273504274,
+      "improvement": 0.0,
+      "weights": {
+        "arithmetic": 0.4641771912574768,
+        "type_check": 0.48253732919692993,
+        "return_type": 0.476121723651886,
+        "bound": 0.47085195779800415,
+        "initialization": 0.4606933295726776,
+        "implication": 0.5443506240844727,
+        "exclusion": 0.41482722759246826,
+        "factual": 0.9347789287567139,
+        "quantity": 0.4845825433731079,
+        "heuristic": 0.5868783593177795
+      },
+      "n_train": 78,
+      "n_val": 22
+    },
+    "factual": {
+      "uniform_auroc": 0.585,
+      "learned_auroc": 0.585,
+      "improvement": 0.0,
+      "weights": {
+        "arithmetic": 0.45589882135391235,
+        "type_check": 0.4739881753921509,
+        "return_type": 0.4676666557788849,
+        "bound": 0.46247464418411255,
+        "initialization": 0.4524666965007782,
+        "implication": 0.4647837281227112,
+        "exclusion": 0.4072968661785126,
+        "factual": 0.4815948009490967,
+        "quantity": 0.46782833337783813,
+        "heuristic": 0.47015801072120667
+      },
+      "n_train": 80,
+      "n_val": 20
+    },
+    "scheduling": {
+      "uniform_auroc": 1.0,
+      "learned_auroc": 1.0,
+      "improvement": 0.0,
+      "weights": {
+        "arithmetic": 1.391885757446289,
+        "type_check": 0.4459408223628998,
+        "return_type": 0.43995392322540283,
+        "bound": 0.4350377023220062,
+        "initialization": 0.4255635142326355,
+        "implication": 0.4372240900993347,
+        "exclusion": 0.3828393816947937,
+        "factual": 0.4561688303947449,
+        "quantity": 0.44784969091415405,
+        "heuristic": 1.4595061540603638
+      },
+      "n_train": 78,
+      "n_val": 22
+    }
+  },
+  "elapsed_seconds": 16.050161838531494
+}
