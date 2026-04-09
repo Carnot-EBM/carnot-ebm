@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+- **2026-04-09 00:20 UTC** [orchestrator] Sprint complete for 'Epic: UI-001 - Modernize Documentation Aesthetic' (completed=2, failed=0)
+
+- **2026-04-09 00:20 UTC** [orchestrator] Story DOCUI-002 completed and passed evaluation
+
+- **2026-04-09 00:20 UTC** [orchestrator] Evaluator invoked for DOCUI-002 (initial attempt)
+
+- **2026-04-09 00:20 UTC** [orchestrator] Generator invoked for DOCUI-002 (initial attempt)
+
+- **2026-04-09 00:20 UTC** [orchestrator] Contract built for DOCUI-002
+
+- **2026-04-09 00:20 UTC** [orchestrator] Story DOCUI-001 completed and passed evaluation
+
+- **2026-04-09 00:20 UTC** [orchestrator] Evaluator invoked for DOCUI-001 (initial attempt)
+
+- **2026-04-09 00:20 UTC** [orchestrator] Generator invoked for DOCUI-001 (initial attempt)
+
+- **2026-04-09 00:20 UTC** [orchestrator] Contract built for DOCUI-001
+
+- **2026-04-09 00:20 UTC** [orchestrator] Sprint started for epic 'Epic: UI-001 - Modernize Documentation Aesthetic' (run_id=b6ec974e, stories=2)
+
 ## 2026-04-08: Extropic thrml integration, LLM→Ising→repair pipeline (experiments 36-41)
 
 ### The Pivot

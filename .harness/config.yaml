@@ -1,0 +1,166 @@
+# BMAD Multi-Agent Harness Configuration for Carnot EBM Framework
+# See _bmad/ for strategic docs, openspec/capabilities/ for specs
+
+harness:
+  max_retries_per_sprint: 3
+  max_total_iterations: 15
+  context_reset_strategy: "full"
+
+directories:
+  handoffs: ".harness/handoffs"
+  contracts: ".harness/contracts"
+  evaluations: ".harness/evaluations"
+  prompts: ".harness/prompts"
+  skills: ".harness/skills"
+  patches: ".harness/patches"
+
+agents:
+  discovery:
+    model: "sonnet"
+    reasoning_effort: "medium"
+    mode: "auto"
+    activation: "conditional"
+    max_turns: 20
+    budget_usd: 2.00
+    prompt: "prompts/discovery.md"
+    description: "Explores problem space, researches EBM techniques and competing frameworks"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "WebSearch"
+      - "WebFetch"
+    tool_policy: "read-only"
+
+  planner:
+    model: "sonnet"
+    reasoning_effort: "medium"
+    mode: "auto"
+    activation: "always"
+    max_turns: 30
+    budget_usd: 5.00
+    prompt: "prompts/planner.md"
+    description: "Produces epics, stories, change proposals with delta specs"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "Write"
+      - "Edit"
+    tool_policy: "read-write-docs"
+
+  architect:
+    model: "opus"
+    reasoning_effort: "high"
+    mode: "auto"
+    activation: "conditional"
+    max_turns: 25
+    budget_usd: 10.00
+    prompt: "prompts/architect.md"
+    description: "Reviews change proposals, produces design.md updates and ADRs"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "Write"
+      - "Edit"
+      - "Bash"
+    tool_policy: "read-write-docs"
+
+  design:
+    model: "sonnet"
+    reasoning_effort: "medium"
+    mode: "auto"
+    activation: "conditional"
+    max_turns: 20
+    budget_usd: 3.00
+    prompt: "prompts/design.md"
+    description: "UX/API design — rare for Carnot (library-first project)"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "Write"
+      - "Edit"
+    tool_policy: "read-write-docs"
+
+  generator:
+    model: "opus"
+    reasoning_effort: "high"
+    mode: "auto"
+    activation: "always"
+    max_turns: 100
+    budget_usd: 50.00
+    session_limit_hours: 2
+    prompt: "prompts/generator.md"
+    description: "TDD implementation — Rust + Python, 100% coverage, spec-traced tests"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "Write"
+      - "Edit"
+      - "Bash"
+    tool_policy: "full-dev"
+
+  evaluator:
+    model: "opus"
+    reasoning_effort: "high"
+    mode: "auto"
+    activation: "always"
+    skepticism: "high"
+    max_turns: 50
+    budget_usd: 20.00
+    prompt: "prompts/evaluator.md"
+    description: "Independent QA — never sees generator conversation, verifies everything"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "Bash"
+    tool_policy: "read-execute"
+
+  skill_evolver:
+    model: "sonnet"
+    reasoning_effort: "medium"
+    mode: "auto"
+    activation: "conditional"
+    max_turns: 30
+    budget_usd: 5.00
+    prompt: "prompts/skill-evolver.md"
+    description: "Analyzes execution traces, proposes and consolidates skill patches"
+    tools:
+      - "Read"
+      - "Glob"
+      - "Grep"
+      - "Write"
+      - "Edit"
+    tool_policy: "read-write-skills"
+
+evaluation:
+  criteria:
+    spec_fidelity:
+      weight: 0.30
+      description: "Every REQ-* and SCENARIO-* in the spec has a passing test"
+    functional_completeness:
+      weight: 0.30
+      description: "All acceptance criteria met, no partial implementations"
+    integration_correctness:
+      weight: 0.20
+      description: "Rust-Python bridge works, cross-language serialization correct"
+    code_quality:
+      weight: 0.10
+      description: "Passes clippy, ruff, mypy, fmt checks"
+    robustness:
+      weight: 0.10
+      description: "Edge cases handled, error messages useful, no panics on bad input"
+
+coverage:
+  line: 100
+  branch: 100
+  spec: 100
+  orphan_tests: false
+  tools:
+    rust: "cargo tarpaulin --workspace --exclude carnot-python --fail-under 100"
+    python: "pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100"
+    spec: "python scripts/check_spec_coverage.py"

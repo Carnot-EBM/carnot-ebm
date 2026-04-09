@@ -76,6 +76,11 @@ def run_claude(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bo
 
     logger.info("Calling Claude Code (%d max turns)...", max_turns)
 
+    # Set CARNOT_MODE=research so that .claude/settings.json hooks
+    # (phase gate, task completion) bypass their checks. The research
+    # conductor manages its own test/commit/revert cycle independently.
+    env = {**os.environ, "CARNOT_MODE": "research"}
+
     try:
         proc = subprocess.Popen(
             cmd,
@@ -84,6 +89,7 @@ def run_claude(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bo
             stderr=subprocess.STDOUT,  # Merge stderr into stdout for live viewing
             text=True,
             cwd=str(PROJECT_ROOT),
+            env=env,
         )
 
         # Send prompt and close stdin

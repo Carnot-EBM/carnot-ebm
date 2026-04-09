@@ -1,0 +1,13 @@
+---
+paths:
+  - "crates/**"
+---
+Before modifying Rust source code:
+1. Read the relevant openspec/capabilities/<cap>/spec.md
+2. Write or update tests FIRST — each test must reference REQ-* or SCENARIO-* in comments
+3. Implement code to make tests pass
+4. Run: cargo test --workspace --exclude carnot-python
+5. Run: cargo clippy --workspace --exclude carnot-python -- -D warnings
+6. Run: cargo fmt --all -- --check
+Think carefully about how this code satisfies the spec requirements.
+All code must include verbose layman explanations, not just terse research shorthand.

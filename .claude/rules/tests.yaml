@@ -1,0 +1,13 @@
+---
+paths:
+  - "tests/**"
+---
+Every test file MUST include a traceability header:
+# Tests for: openspec/capabilities/<cap>/spec.md
+# REQ-<CAP>-NNN: <description>
+# SCENARIO-<CAP>-NNN: <description>
+
+Every test function must reference at least one REQ-* or SCENARIO-*.
+Tests without spec references are orphans and must be linked or removed.
+Think harder about whether test assertions actually match what the spec requires.
+Run: python scripts/check_spec_coverage.py after adding tests.
