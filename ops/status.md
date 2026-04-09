@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 63 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 64 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -126,6 +126,11 @@
 - `docs/api-reference.md`: full API reference for pipeline, extractors, MCP server, samplers, models
 - Updated `docs/index.html` navigation linking new documentation pages
 
+### Pipeline Performance Benchmarks (Exp 83)
+- `scripts/benchmark_pipeline.py`: verify() latency, extraction scaling, batch throughput, memory profiling
+- Results in `ops/benchmark-results.md`: all domains sub-millisecond p99, 36,887 calls/s throughput, zero memory growth
+- Extraction scales linearly with input length (0.05ms at 50 chars → 2.41ms at 5000 chars)
+
 ### Integration Test Suite (Exp 81)
 - `tests/integration/test_full_pipeline.py`: full verify-repair pipeline E2E with real extractors and JAX energy (no mocks)
 - `tests/integration/test_cli_commands.py`: CLI subprocess tests for `carnot verify` and `carnot score` subcommands
@@ -197,6 +202,7 @@
 | 78 | **PyPI-ready package** | setuptools build backend, optional Rust bindings (`RUST_AVAILABLE`), single-source version, extras (`mcp`, `rust`, `all`) | **✅ Pure-Python installable** |
 | 79 | **Integration examples** | 5 production-ready examples: API verification, code review, batch verify, custom extractor, MCP integration | **✅ Examples shipped** |
 | 80 | **Getting started documentation** | 3 new docs (getting-started, concepts, API reference) + index navigation | **✅ Docs shipped** |
+| 83 | **Pipeline performance benchmarks** | All domains sub-ms p99, 36,887 calls/s throughput, zero memory growth | **✅ Benchmarks baselined** |
 
 ## 14 Principles Learned
 

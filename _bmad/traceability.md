@@ -83,4 +83,5 @@
 | Exp 78: PyPI-ready package | ✅ Complete (setuptools build backend, optional Rust bindings, single-source version, `carnot[mcp]`/`carnot[rust]`/`carnot[all]` extras) | — |
 | Exp 79: Integration examples | ✅ Complete (5 production-ready examples in `examples/`: API verification, code review pipeline, batch verify, custom extractor, MCP integration) | — |
 | Exp 80: Getting started documentation | ✅ Complete (`docs/getting-started.md`, `docs/concepts.md`, `docs/api-reference.md`; updated `docs/index.html` navigation) | — |
+| Exp 83: Pipeline performance benchmarks | ✅ Complete (verify latency sub-ms p99, 36,887 calls/s batch throughput, zero memory growth; `scripts/benchmark_pipeline.py` + `ops/benchmark-results.md`; REQ-VERIFY-001) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
