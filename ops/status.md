@@ -217,6 +217,7 @@
 | 83 | **Pipeline performance benchmarks** | All domains sub-ms p99, 36,887 calls/s throughput, zero memory growth | **✅ Benchmarks baselined** |
 | 84 | **Carnot verifies Carnot (dogfood)** | Self-verification of pipeline against own source code | **✅ Dogfooding script** |
 | 85 | **Prepare beta release** | RELEASE_NOTES.md + prepare_release.py + README quick start | **✅ Beta release ready** |
+| 86 | **Learned energy composition weights** | Uniform 0.927 → learned 0.938 AUROC (+1.1%), not significant; arithmetic weight dominant (1.19) | **⚠️ Marginal improvement, not significant** |
 
 ## 14 Principles Learned
 
