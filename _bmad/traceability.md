@@ -63,4 +63,5 @@
 | Exp 56: Live LLM → constraint → Ising verification | ✅ Complete | — |
 | Exp 57: Live LLM verify-repair loop | ✅ Complete (9/15 initial, loop works, constraint coverage bottleneck) | — |
 | Exp 59: Constraint-aware prompting | ✅ Complete (preventive constraint injection, SCENARIO-VERIFY-005) | — |
+| Exp 60: Scale CD training to 100+ vars | ✅ Complete (50/100/200 vars, up to 40K params, bootstrapped training) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
