@@ -1,0 +1,155 @@
+# Carnot Research — Completed Experiments
+# Tasks moved here from research-roadmap.yaml after successful completion.
+# Ordered chronologically by completion date.
+
+milestones:
+  # ── 2026.03.1: Activation-Based Detection (proved insufficient) ───
+  - id: "2026.03.1"
+    title: "Activation-Based Hallucination Detection"
+    doc: "openspec/change-proposals/research-roadmap-v2.md"
+    completed: "2026-04-05"
+    finding: "Detects confidence, not correctness (50% practical). Cross-model/domain transfer fails."
+    tasks:
+      - id: p1-m1.1a-ast-embedding
+        title: "Add AST-based code embedding"
+        deliverable: python/carnot/verify/python_types.py
+      - id: p1-m1.1b-local-model-embeddings
+        title: "Add local model embeddings via transformers"
+        deliverable: python/carnot/embeddings/model_embeddings.py
+      - id: p1-m1.2-jepa-energy
+        title: "JEPA-style context prediction energy"
+        deliverable: python/carnot/embeddings/jepa_energy.py
+      - id: p1-m1.3-embedding-repair
+        title: "Repair in embedding space"
+        deliverable: python/carnot/embeddings/jepa_energy.py
+      - id: p1.5-activation-extraction
+        title: "Extract per-layer activations from local model"
+        deliverable: python/carnot/embeddings/activation_extractor.py
+      - id: p1.5-hallucination-direction
+        title: "Find hallucination direction in activation space"
+        deliverable: python/carnot/embeddings/hallucination_direction.py
+      - id: p1.5-layer-targeted-ebm
+        title: "Train layer-targeted hallucination detector EBM"
+        deliverable: python/carnot/embeddings/layer_ebm.py
+      - id: p2-m2.1-minimal-ebt
+        title: "Minimal EBT reasoning pipeline"
+        deliverable: python/carnot/models/ebt.py
+      - id: infra-property-refine
+        title: "Property-based test refinement"
+        deliverable: python/carnot/verify/property_test.py
+      - id: infra-arxiv-scan
+        title: "arXiv research scanner"
+        deliverable: scripts/arxiv_scan.py
+      - id: p2.5-logprob-rejection-lib
+        title: "Productionize logprob rejection sampling"
+        deliverable: python/carnot/inference/ebm_rejection.py
+      - id: p2.5-composite-scorer
+        title: "Productionize composite energy scorer"
+        deliverable: python/carnot/inference/composite_scorer.py
+      - id: p2.5-rejection-via-api-bridge
+        title: "Logprob rejection sampling via Claude API bridge"
+        deliverable: scripts/experiment_rejection_via_bridge.py
+      - id: p2.5-ebt-training-real-data
+        title: "Train EBT on real QA activations"
+        deliverable: scripts/experiment_ebt_real_training.py
+      - id: p2.5-experiment-dashboard
+        title: "Create experiment results dashboard"
+        deliverable: scripts/generate_dashboard.py
+      - id: p3-layer-navigator
+        title: "LayerNavigator: find most steerable layers"
+        deliverable: python/carnot/embeddings/layer_navigator.py
+      - id: p3-activation-steering
+        title: "In-generation activation steering"
+        deliverable: python/carnot/embeddings/activation_steering.py
+      - id: p3-steering-experiment
+        title: "Run steering experiment on real model"
+        deliverable: scripts/experiment_steering.py
+      - id: p3-contrastive-weight-steering
+        title: "Contrastive Weight Steering without retraining"
+        deliverable: python/carnot/embeddings/weight_steering.py
+      - id: p3.5-concept-vectors
+        title: "Find hallucination concept vectors (multi-vector)"
+        deliverable: python/carnot/embeddings/concept_vectors.py
+      - id: p3.5-concept-steering-experiment
+        title: "Steer with concept-specific vectors on real model"
+        deliverable: scripts/experiment_concept_steering.py
+      - id: a1-concept-prompting
+        title: "Generate concept-specific vectors via targeted prompting"
+        deliverable: scripts/experiment_concept_specific_vectors.py
+      - id: a2-concept-steering
+        title: "Steer with confabulation-specific vector"
+        deliverable: scripts/experiment_confabulation_steering.py
+      - id: b1-token-activations
+        title: "Collect per-token activation dataset"
+        deliverable: scripts/collect_token_activations.py
+      - id: b2-token-ebm
+        title: "Train Gibbs EBM on per-token activations"
+        deliverable: scripts/experiment_token_ebm.py
+      - id: c1-large-dataset
+        title: "Generate 1000+ QA pairs programmatically"
+        deliverable: scripts/generate_qa_dataset.py
+      - id: d1-mcp-server
+        title: "MCP server for code verification"
+        deliverable: python/carnot/mcp_server.py
+      - id: d2-cli-tool
+        title: "CLI tool for code verification"
+        deliverable: scripts/carnot_verify_cli.py
+
+  # ── 2026.04.1: Constraint-Based Reasoning via Ising/thrml ─────────
+  - id: "2026.04.1"
+    title: "Constraint-Based Reasoning via Ising/thrml"
+    doc: "openspec/change-proposals/research-roadmap-v6.md"
+    completed: "2026-04-09"
+    finding: |
+      Ising constraint verification works: 10/10 hallucination detection,
+      5000-var SAT in 0.7s, CD training generalizes. Parallel sampler 183x faster
+      than thrml. Pipeline validated on arithmetic, logic, code, NL, scheduling.
+    tasks:
+      - id: exp42b-arithmetic-qubo
+        title: "Exp 42b: Arithmetic QUBO encoding"
+        deliverable: scripts/experiment_42b_arithmetic_qubo.py
+        result: "8/12 correct (carry chains fail)"
+      - id: exp42c-carry-chain-fix
+        title: "Exp 42c: Deterministic carry chain verification"
+        deliverable: scripts/experiment_42c_arithmetic_carry_fix.py
+        result: "16/16 perfect"
+      - id: exp44-scheduling
+        title: "Exp 44: Scheduling constraints"
+        deliverable: scripts/experiment_44_scheduling_constraints.py
+        result: "OK (conductor)"
+      - id: exp45-logical-consistency
+        title: "Exp 45: Logical consistency verification"
+        deliverable: scripts/experiment_45_logical_consistency.py
+        result: "8/8 perfect"
+      - id: exp46b-scale-sat
+        title: "Exp 46b: Scale SAT to 5000 vars"
+        deliverable: scripts/experiment_46b_scale_sat_parallel.py
+        result: "93.7% in 0.7s at 5000 vars (+5.5% vs random)"
+      - id: exp47-llm-self-constraints
+        title: "Exp 47: LLM self-constraint extraction"
+        deliverable: scripts/experiment_47_llm_self_constraints.py
+        result: "10/10 perfect"
+      - id: exp48-code-constraints
+        title: "Exp 48: Code → constraint extraction"
+        deliverable: scripts/experiment_48_code_constraints.py
+        result: "OK (conductor)"
+      - id: exp49-nl-constraints
+        title: "Exp 49: NL → constraint extraction"
+        deliverable: scripts/experiment_49_nl_constraints.py
+        result: "OK (conductor)"
+      - id: exp50-learn-ising
+        title: "Exp 50: Learn SAT couplings via CD"
+        deliverable: scripts/experiment_50_learn_ising.py
+        result: "89/100 perfect, generalizes"
+      - id: exp51-learn-from-llm
+        title: "Exp 51: Learn from LLM (correct/wrong) pairs"
+        deliverable: scripts/experiment_51_learn_from_llm.py
+        result: "OK (conductor)"
+      - id: exp52-transfer-ising
+        title: "Exp 52: Transfer Ising across domains"
+        deliverable: scripts/experiment_52_transfer_ising.py
+        result: "OK (conductor)"
+      - id: parallel-ising-sampler
+        title: "Parallel Ising Gibbs sampler"
+        deliverable: python/carnot/samplers/parallel_ising.py
+        result: "183x faster than thrml (572x at 500 vars)"
