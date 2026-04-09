@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 64 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 65 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -126,6 +126,11 @@
 - `docs/api-reference.md`: full API reference for pipeline, extractors, MCP server, samplers, models
 - Updated `docs/index.html` navigation linking new documentation pages
 
+### Self-Verification Dogfooding (Exp 84)
+- `scripts/dogfood_carnot.py`: exercises CodeExtractor, AutoExtractor, and VerifyRepairPipeline against Carnot's own Python source code
+- Surfaces constraint violations, docstring/signature mismatches, correlates findings with test failures
+- Self-verification: the verification pipeline verifies itself (REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002)
+
 ### Pipeline Performance Benchmarks (Exp 83)
 - `scripts/benchmark_pipeline.py`: verify() latency, extraction scaling, batch throughput, memory profiling
 - Results in `ops/benchmark-results.md`: all domains sub-millisecond p99, 36,887 calls/s throughput, zero memory growth
@@ -203,6 +208,7 @@
 | 79 | **Integration examples** | 5 production-ready examples: API verification, code review, batch verify, custom extractor, MCP integration | **✅ Examples shipped** |
 | 80 | **Getting started documentation** | 3 new docs (getting-started, concepts, API reference) + index navigation | **✅ Docs shipped** |
 | 83 | **Pipeline performance benchmarks** | All domains sub-ms p99, 36,887 calls/s throughput, zero memory growth | **✅ Benchmarks baselined** |
+| 84 | **Carnot verifies Carnot (dogfood)** | Self-verification of pipeline against own source code | **✅ Dogfooding script** |
 
 ## 14 Principles Learned
 
