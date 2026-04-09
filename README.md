@@ -101,7 +101,7 @@ The EBM itself is the evaluator. No LLM needed to judge quality — the math pro
 
 **The core problem:** activation-based EBMs measure how confident the model is, not whether it's right. A model that confidently says "Neil Armstrong walked on Mars" produces activations indistinguishable from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.
 
-See the [technical writeup](docs/technical-writeup.md) for the full write-up, or the [technical report](docs/technical-report.md) for a summary.
+See the [technical report](docs/technical-report.md) for the full 85+ experiment analysis.
 
 ## 14 Principles Learned
 
