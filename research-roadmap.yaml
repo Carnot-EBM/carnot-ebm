@@ -628,12 +628,12 @@ tasks:
       1. Implement extract_hypothesis_claims(code: str, output: str) -> list[dict]:
          - Parse hypothesis code with Exp 48 AST extraction (types, bounds, returns)
          - Parse output text with Exp 49 NL extraction (numeric claims, comparisons)
-         - Return list of {claim_type, claim_text, constraint} dicts
+         - Return list of dicts with keys: claim_type, claim_text, constraint
 
       2. Implement verify_hypothesis(claims, ground_truth=None) -> dict:
          - Build ComposedEnergy from extracted constraints
          - Run Ising verification
-         - Return {verified: int, violated: int, uncovered: int, certificate}
+         - Return dict with keys: verified (int), violated (int), uncovered (int), certificate
 
       3. Simulate autoresearch evaluation:
          - Create 20 mock hypothesis outputs (10 correct improvements, 10 bogus)
