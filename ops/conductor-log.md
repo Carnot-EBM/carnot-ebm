@@ -90,3 +90,4 @@
 | 2026-04-09 22:57 UTC | Exp 85: Prepare beta release | OK | ================ 1353 passed, 12 warnings in 121.53s (0:02:01) ================= |
 | 2026-04-09 22:58 UTC | Milestone 2026.04.4 activated | OK | 12 tasks queued |
 | 2026-04-09 23:18 UTC | Exp 66: End-to-end differentiable constraint reaso | OK | ================= 1353 passed, 12 warnings in 87.24s (0:01:27) ================= |
+| 2026-04-09 23:31 UTC | Exp 86: Learned energy composition weights | OK | ================= 1353 passed, 12 warnings in 89.90s (0:01:29) ================= |
