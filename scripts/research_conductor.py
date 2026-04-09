@@ -241,16 +241,24 @@ def load_research_tasks() -> list[dict]:
 
 
 # Task list loaded lazily from YAML on first access.
+# Re-reads if the file's mtime changes (no restart needed for YAML edits).
 RESEARCH_TASKS: list[dict] = []
 _tasks_loaded = False
+_roadmap_mtime: float = 0
 
 
 def _ensure_tasks_loaded():
-    """Load tasks from YAML if not already loaded."""
-    global RESEARCH_TASKS, _tasks_loaded
-    if not _tasks_loaded:
+    """Load tasks from YAML, re-reading if the file changed since last load."""
+    global RESEARCH_TASKS, _tasks_loaded, _roadmap_mtime
+    try:
+        current_mtime = ROADMAP_FILE.stat().st_mtime if ROADMAP_FILE.exists() else 0
+    except OSError:
+        current_mtime = 0
+
+    if not _tasks_loaded or current_mtime != _roadmap_mtime:
         RESEARCH_TASKS = load_research_tasks()
         _tasks_loaded = True
+        _roadmap_mtime = current_mtime
 
 
 MAX_FAILURES_PER_TASK = 3  # Skip task after this many consecutive failures
