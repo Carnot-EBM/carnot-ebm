@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 52 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 53 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -66,7 +66,7 @@
 - NL constraint extraction: pattern-based claim verification
 - LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
 - Scheduling constraints: time slot exclusion, ordering, capacity
-- Learned Ising via CD: 89/100 perfect, generalizes to unseen instances (Exp 50); scaled to 50/100/200 vars with L1 regularization and bootstrapped training data (Exp 60); sparse CD with clause-graph masking at 200/500/1000 vars, ~20x parameter reduction vs dense (Exp 61)
+- Learned Ising via CD: 89/100 perfect, generalizes to unseen instances (Exp 50); scaled to 50/100/200 vars with L1 regularization and bootstrapped training data (Exp 60); sparse CD with clause-graph masking at 200/500/1000 vars, ~20x parameter reduction vs dense (Exp 61); domain-specific constraint learning on 10K triples across arithmetic/logic/code with 200+ binary features (Exp 62)
 - Cross-domain transfer: structure-dependent transfer validated
 - Ising-guided fuzzing: energy landscape generates adversarial test inputs for differential testing of LLM code; 8 bug types covered (Exp 54)
 - Trace-learned constraints: discriminative Ising trained on correct/buggy execution traces catches semantic bugs invisible to static+dynamic analysis (Exp 55)
@@ -151,6 +151,7 @@
 | 64 | **Continuous Ising relaxation** | Binary→continuous [0,1] relaxation with JAX grad descent; sigmoid annealing / penalty / straight-through rounding vs discrete Gibbs + random | **Results pending analysis** |
 | 69 | **Multi-model constraint transfer (Qwen3.5+Gemma4)** | Same 20 Exp 56 questions + Exp 57 verify-repair loop on Qwen3.5-0.8B and Gemma4-E4B-it; tests model-agnostic constraint pipeline transfer (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-003) | **Results pending analysis** |
 | 71 | **Extropic TSU sampler abstraction** | SamplerBackend protocol: CpuBackend (ParallelIsingSampler) + TsuBackend (stub); `get_backend()` factory, `CARNOT_BACKEND` env var (REQ-SAMPLE-003) | **✅ Abstraction layer ready** |
+| 62 | **Domain-specific constraint learning (10K)** | Discriminative Ising on 10K triples across arithmetic/logic/code; per-domain + combined models; 200+ binary features; AUROC on held-out test | **Results pending analysis** |
 | 73 | **Constraint coverage metric** | 5-type claim taxonomy (arithmetic, logical, factual, structural, semantic); coverage = extracted/total per domain; coverage-accuracy correlation + repair threshold (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | **Results pending analysis** |
 
 ## 14 Principles Learned
