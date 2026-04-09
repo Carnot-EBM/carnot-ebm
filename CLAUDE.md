@@ -145,6 +145,7 @@ Every user instruction must be captured and traceable to outcomes:
 | Spec coverage script | `scripts/check_spec_coverage.py` |
 | Research roadmap | `research-roadmap.yaml` |
 | Research history | `research-complete.yaml` |
+| Research program | `research-program.md` |
 | Research references | `research-references.md` |
 | Research conductor | `scripts/research_conductor.py` |
 | Rust crates | `crates/carnot-*/` |

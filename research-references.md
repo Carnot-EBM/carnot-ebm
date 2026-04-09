@@ -46,6 +46,14 @@ should read this file when designing new milestones.
 - `JAX_PLATFORMS=cpu` is mandatory on this machine
 - PyTorch ROCm works (3.3x speedup on Qwen3 inference)
 
+## Autonomous Agent Frameworks
+
+### AutoAgent — Declarative Agent Engineering
+- **Repo:** github.com/kevinrgu/autoagent
+- **What:** Meta-agent reads `program.md` (human-written goals), autonomously modifies `agent.py`, benchmarks via Harbor, hill-climbs on score. Overnight autonomous refinement.
+- **Relevance:** Carnot's autoresearch is more sophisticated (three-gate + Ising, milestone planning, self-heal) but AutoAgent's `program.md` pattern is cleaner for expressing human intent. Borrowed this idea as `research-program.md`.
+- **Borrowed:** Declarative intent document pattern → `research-program.md`
+
 ## Papers & Concepts
 
 (Add papers, arxiv links, and theoretical ideas here as they come up)
