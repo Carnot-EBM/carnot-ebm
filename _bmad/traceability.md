@@ -80,4 +80,5 @@
 | Exp 74: Unified ConstraintExtractor API | ✅ Complete (pluggable Protocol-based extractors: arithmetic, code, logic, NL + AutoExtractor auto-detection; consolidates Exp 47/48/49 into `carnot.pipeline.extract`; REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002) | — |
 | Exp 75: VerifyRepairPipeline class | ✅ Complete (user-facing API consolidating Exp 56/57 into `carnot.pipeline.verify_repair`; verify-only + verify-and-repair modes; VerificationResult, RepairResult, VerifyRepairPipeline; REQ-VERIFY-001/002/003, SCENARIO-VERIFY-004) | — |
 | Exp 76: Production MCP server | ✅ Complete (hardened `carnot.mcp` package: 6 tools, 30s timeout, 10K char limit, structured errors, `python -m carnot.mcp`; REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | — |
+| Exp 78: PyPI-ready package | ✅ Complete (setuptools build backend, optional Rust bindings, single-source version, `carnot[mcp]`/`carnot[rust]`/`carnot[all]` extras) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
