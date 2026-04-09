@@ -79,3 +79,5 @@
 | 2026-04-09 20:31 UTC | Exp 74: Unified ConstraintExtractor API | OK | ================ 1221 passed, 12 warnings in 201.95s (0:03:21) ================= |
 | 2026-04-09 20:49 UTC | Exp 75: VerifyRepairPipeline class | OK | ================ 1263 passed, 12 warnings in 125.45s (0:02:05) ================= |
 | 2026-04-09 20:50 UTC | Exp 77: CLI overhaul with pipeline subcommand | OK | Deliverable already exists in repo |
+| 2026-04-09 21:37 UTC | Exp 82: Pipeline error handling and edge cases | OK | ================ 1351 passed, 12 warnings in 119.91s (0:01:59) ================= |
+| 2026-04-09 21:38 UTC | Exp 76: Production MCP server | OK | Deliverable already exists in repo |
