@@ -69,4 +69,5 @@
 | Exp 55: Learn constraints from execution traces | ✅ Complete (discriminative Ising on correct/buggy execution traces, catches semantic bugs, REQ-VERIFY-001/002/003) | — |
 | Exp 58: Multi-domain live benchmark (5 domains) | ✅ Complete (500 questions, 5 domains, 3 modes: baseline/verify-only/verify-repair, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | — |
 | Exp 64: Continuous Ising relaxation | ✅ Complete (binary→continuous [0,1], sigmoid/penalty/straight-through rounding, bridges to Kona latent space) | — |
+| Exp 69: Multi-model constraint transfer (Qwen3.5+Gemma4) | ✅ Complete (same constraint pipeline on Qwen3.5-0.8B + Gemma4-E4B-it, tests model-agnostic verification, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-003) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
