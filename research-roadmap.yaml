@@ -67,7 +67,7 @@ tasks:
          - Semantic bug (correct type, wrong logic)
 
       4. Print comparison table: static vs dynamic detection per bug type
-      5. Run: .venv/bin/python scripts/experiment_53_runtime_constraints.py
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_53_runtime_constraints.py
       6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # ── Phase 6: Live LLM End-to-End ─────────────────────────
@@ -112,7 +112,7 @@ tasks:
 
       4. Compare to ground truth to compute detection rates
       5. Print results table per domain and overall
-      6. Run: .venv/bin/python scripts/experiment_56_live_llm_pipeline.py
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_56_live_llm_pipeline.py
          (If model loading fails, fall back to simulated outputs with a clear message)
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -151,7 +151,7 @@ tasks:
       3. Test on 15 questions where LLM is likely to hallucinate
       4. Metrics: accuracy before/after repair, avg repairs needed
       5. Compare: LLM alone vs LLM + verify vs LLM + verify + repair
-      6. Run: .venv/bin/python scripts/experiment_57_verify_repair_loop.py
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_57_verify_repair_loop.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp59-constraint-prompting
@@ -176,7 +176,7 @@ tasks:
       1. Implement build_constraint_prompt(question, domain) -> str
       2. Test three modes on 15 questions: baseline, constraint-aware, combined
       3. Metrics per mode: accuracy, hallucination rate, constraint satisfaction
-      4. Run: .venv/bin/python scripts/experiment_59_constraint_prompting.py
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_59_constraint_prompting.py
       5. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # ── Phase 7: Scale Learned Ising Models ──────────────────
@@ -204,7 +204,7 @@ tasks:
       2. Train Ising model via CD: 100 vars, L1 regularization, 200 epochs
       3. Evaluate on held-out SAT instances, compare to hand-coded and random
       4. Test sizes: 50, 100, 200 vars (show scaling trend)
-      5. Run: .venv/bin/python scripts/experiment_60_scale_cd_training.py
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_60_scale_cd_training.py
       6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp61-sparse-ising-500
@@ -231,7 +231,7 @@ tasks:
       2. Train on 500-var SAT, compare dense vs sparse vs hand-coded
       3. Test generalization: train seed=42, test seed=99
       4. Scaling: test 200, 500, 1000 vars
-      5. Run: .venv/bin/python scripts/experiment_61_sparse_ising.py
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_61_sparse_ising.py
       6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   # ── Phase 8: Toward Continuous Latent Reasoning ──────────
@@ -271,5 +271,5 @@ tasks:
          b. Penalty: add ||s - round(s)||^2 term
          c. Straight-through rounding
 
-      4. Run: .venv/bin/python scripts/experiment_64_continuous_ising.py
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_64_continuous_ising.py
       5. Do NOT push. Do NOT modify scripts/research_conductor.py.

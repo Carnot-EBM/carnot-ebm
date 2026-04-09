@@ -125,7 +125,7 @@ Every user instruction must be captured and traceable to outcomes:
 - Python: 3.11+ (3.14 requires `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1`)
 - JAX: CPU by default, CUDA 12 via `pip install carnot[cuda]`
 - JAX on ROCm: `JAX_PLATFORMS=cpu` to force CPU when ROCm plugin is loaded (thrml crashes on ROCm, see extropic-ai/thrml#41)
-- Research experiments: JAX uses CPU by default; only set `JAX_PLATFORMS=cpu` if a ROCm/CUDA plugin is loaded and you need to force CPU
+- Research experiments: always prefix with `JAX_PLATFORMS=cpu` for reproducibility
 
 ## Key Paths
 
