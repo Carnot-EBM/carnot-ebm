@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 61 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 62 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -115,6 +115,11 @@
 - Extras: `carnot[mcp]`, `carnot[rust]`, `carnot[all]`, `carnot[cuda]`, `carnot[llm]`
 - Build backend: setuptools (maturin config preserved for Rust extension builds)
 
+### Integration Examples (Exp 79)
+- 5 production-ready examples in `examples/`: API response verification, code review pipeline, batch verification, custom domain-specific extractor, MCP server integration
+- Standalone scripts with `JAX_PLATFORMS=cpu` for reproducibility
+- JSON batch input format for bulk verification workflows
+
 ### Quality Infrastructure
 - 1049 Python tests + 104 Rust tests, 100% code coverage, 100% spec coverage
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
@@ -178,6 +183,7 @@
 | 82 | **Pipeline error handling and edge cases** | Structured error hierarchy (CarnotError + 5 subclasses), wall-clock timeout, graceful degradation for all pipeline stages (REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | **✅ Error handling hardened** |
 | 76 | **Production MCP server** | Hardened `carnot.mcp` package: 6 tools (verify_code, verify_with_properties, verify_llm_output, verify_and_repair, list_domains, health_check); 30s timeout, 10K char limit, structured errors; runnable as `python -m carnot.mcp` (REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | **✅ Production-grade MCP** |
 | 78 | **PyPI-ready package** | setuptools build backend, optional Rust bindings (`RUST_AVAILABLE`), single-source version, extras (`mcp`, `rust`, `all`) | **✅ Pure-Python installable** |
+| 79 | **Integration examples** | 5 production-ready examples: API verification, code review, batch verify, custom extractor, MCP integration | **✅ Examples shipped** |
 
 ## 14 Principles Learned
 
