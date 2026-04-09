@@ -15,6 +15,11 @@ from carnot.pipeline.extract import (
     LogicExtractor,
     NLExtractor,
 )
+from carnot.pipeline.verify_repair import (
+    RepairResult,
+    VerificationResult,
+    VerifyRepairPipeline,
+)
 
 __all__ = [
     "ArithmeticExtractor",
@@ -24,4 +29,7 @@ __all__ = [
     "ConstraintResult",
     "LogicExtractor",
     "NLExtractor",
+    "RepairResult",
+    "VerificationResult",
+    "VerifyRepairPipeline",
 ]
