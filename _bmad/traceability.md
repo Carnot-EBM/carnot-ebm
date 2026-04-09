@@ -85,4 +85,5 @@
 | Exp 80: Getting started documentation | ✅ Complete (`docs/getting-started.md`, `docs/concepts.md`, `docs/api-reference.md`; updated `docs/index.html` navigation) | — |
 | Exp 83: Pipeline performance benchmarks | ✅ Complete (verify latency sub-ms p99, 36,887 calls/s batch throughput, zero memory growth; `scripts/benchmark_pipeline.py` + `ops/benchmark-results.md`; REQ-VERIFY-001) | — |
 | Exp 84: Carnot verifies Carnot (dogfood) | ✅ Complete (`scripts/dogfood_carnot.py`: self-verification of pipeline against own source code via CodeExtractor, AutoExtractor, VerifyRepairPipeline; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002) | — |
+| Exp 85: Prepare beta release | ✅ Complete (`RELEASE_NOTES.md` for 0.1.0-beta1, `scripts/prepare_release.py` release readiness checker, `README.md` install + quick start) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |

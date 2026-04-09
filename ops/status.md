@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 65 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 66 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 RELEASE PREP
 
 ## What's Working
 
@@ -126,6 +126,11 @@
 - `docs/api-reference.md`: full API reference for pipeline, extractors, MCP server, samplers, models
 - Updated `docs/index.html` navigation linking new documentation pages
 
+### Beta Release Preparation (Exp 85)
+- `RELEASE_NOTES.md`: Carnot 0.1.0-beta1 release notes (highlights, included packages, known limitations)
+- `scripts/prepare_release.py`: automated release readiness checker (version consistency, unit tests, CLI, examples, docs)
+- `README.md`: install instructions + quick-start Python API example
+
 ### Self-Verification Dogfooding (Exp 84)
 - `scripts/dogfood_carnot.py`: exercises CodeExtractor, AutoExtractor, and VerifyRepairPipeline against Carnot's own Python source code
 - Surfaces constraint violations, docstring/signature mismatches, correlates findings with test failures
@@ -209,6 +214,7 @@
 | 80 | **Getting started documentation** | 3 new docs (getting-started, concepts, API reference) + index navigation | **✅ Docs shipped** |
 | 83 | **Pipeline performance benchmarks** | All domains sub-ms p99, 36,887 calls/s throughput, zero memory growth | **✅ Benchmarks baselined** |
 | 84 | **Carnot verifies Carnot (dogfood)** | Self-verification of pipeline against own source code | **✅ Dogfooding script** |
+| 85 | **Prepare beta release** | RELEASE_NOTES.md + prepare_release.py + README quick start | **✅ Beta release ready** |
 
 ## 14 Principles Learned
 
