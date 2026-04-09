@@ -108,6 +108,13 @@
 - **10-iteration run (Sonnet)**: DoubleWell 0.9483 → 0.1604 (83% energy reduction), 3 accepted hypotheses (HMC, annealing)
 - **50-iteration run (Sonnet)**: DoubleWell 0.0001, Rosenbrock 0.0092 (both near optimal). Circuit breaker at iteration 18.
 
+### PyPI Packaging (Exp 78)
+- Pure-Python install via `pip install carnot` (no Rust toolchain required)
+- Rust bindings optional: `RUST_AVAILABLE` flag in `carnot._rust_compat`
+- Single-source version: `carnot._version.__version__`
+- Extras: `carnot[mcp]`, `carnot[rust]`, `carnot[all]`, `carnot[cuda]`, `carnot[llm]`
+- Build backend: setuptools (maturin config preserved for Rust extension builds)
+
 ### Quality Infrastructure
 - 1049 Python tests + 104 Rust tests, 100% code coverage, 100% spec coverage
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
@@ -170,6 +177,7 @@
 | 75 | **VerifyRepairPipeline class** | User-facing API consolidating Exp 56/57 into `carnot.pipeline.verify_repair`; verify-only + verify-and-repair modes; VerificationResult, RepairResult, VerifyRepairPipeline (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-004) | **✅ New pipeline module** |
 | 82 | **Pipeline error handling and edge cases** | Structured error hierarchy (CarnotError + 5 subclasses), wall-clock timeout, graceful degradation for all pipeline stages (REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | **✅ Error handling hardened** |
 | 76 | **Production MCP server** | Hardened `carnot.mcp` package: 6 tools (verify_code, verify_with_properties, verify_llm_output, verify_and_repair, list_domains, health_check); 30s timeout, 10K char limit, structured errors; runnable as `python -m carnot.mcp` (REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | **✅ Production-grade MCP** |
+| 78 | **PyPI-ready package** | setuptools build backend, optional Rust bindings (`RUST_AVAILABLE`), single-source version, extras (`mcp`, `rust`, `all`) | **✅ Pure-Python installable** |
 
 ## 14 Principles Learned
 
