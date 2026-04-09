@@ -16,13 +16,21 @@ autonomous directed self-learning where the energy function is ground truth.
    the main API, MCP server for Claude Code integration. Users should be
    able to verify LLM outputs in 5 lines of Python.
 
-2. **Prove it on real benchmarks** — GSM8K, HumanEval, TruthfulQA.
-   Measurable accuracy improvements over baseline LLMs.
+2. **Real benchmark validation at scale** — GSM8K and HumanEval scripts exist
+   (Exp 67, 68) but used simulated fallbacks in some cases. Run them with
+   live models at full scale, publish real numbers, compare to baselines in
+   published papers. Also TruthfulQA. These are the credibility numbers.
 
-3. **Scale constraint learning** — Move from hand-coded constraints to learned
+3. **Multi-turn / agentic verification** — Verify not just single Q&A but
+   multi-step agent workflows. An agent that plans → acts → observes should
+   have each step constraint-verified. The verify-repair loop (Exp 57) works
+   for single turns; extend it to chains of reasoning where each step's
+   constraints propagate to the next. This is critical for autonomous agents.
+
+4. **Scale constraint learning** — Move from hand-coded constraints to learned
    constraint structures. Domain-specific Ising models trained from data.
 
-4. **Bridge to continuous reasoning (Kona direction)** — Continuous Ising
+5. **Bridge to continuous reasoning (Kona direction)** — Continuous Ising
    relaxation (Exp 64 ✅) → embedding-space constraints (Exp 65 ✅) →
    **end-to-end differentiable constraint reasoning (Exp 66 — NEXT)**.
    Exp 66 is the critical next research experiment: backpropagate energy
@@ -32,7 +40,7 @@ autonomous directed self-learning where the energy function is ground truth.
    generation, not just verify it post-hoc. See research-roadmap-v7.md
    Phase 8 for the full design.
 
-5. **Prepare for Extropic TSU** — SamplerBackend abstraction is built (Exp 71).
+6. **Prepare for Extropic TSU** — SamplerBackend abstraction is built (Exp 71).
    When hardware ships, plug it in.
 
 ## Model Choices
