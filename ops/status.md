@@ -135,6 +135,7 @@
 | 41 | **LLM → Ising verify → repair** | **2/6 problems repaired 0%→100%** | **✅ "LLM proposes, Ising repairs" works** |
 | 53 | **Runtime constraint instrumentation** | Dynamic AST rewriting complements static Exp 48 | **✅ Static+dynamic complementary** |
 | 56 | **Live LLM → constraint → Ising** | End-to-end Qwen3.5-0.8B + constraint pipeline (4 domains) | **✅ Live LLM pipeline works** |
+| 57 | **Live LLM verify-repair loop** | 9/15 initial, repair architecture works, constraint coverage is bottleneck (1/6 triggered) | **✅ Loop works, need wider constraint extractors** |
 
 ## 14 Principles Learned
 
@@ -176,7 +177,7 @@
 - Milestone 2026.04.2: Toward Kona — live LLM + Ising end-to-end
 - ~~Exp 53: Runtime constraint instrumentation~~: ✅ DONE (2026-04-09)
 - ~~Exp 56: Live LLM → constraint → Ising verification~~: ✅ DONE (2026-04-09)
-- Exp 57: Live LLM verify-repair loop with Qwen3.5
+- ~~Exp 57: Live LLM verify-repair loop with Qwen3.5~~: ✅ DONE (2026-04-09)
 - Exp 60-61: Scale learned Ising to 500+ vars
 - Exp 64: Continuous relaxation (bridge to Kona latent space)
 
