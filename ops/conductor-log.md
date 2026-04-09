@@ -77,3 +77,5 @@
 | 2026-04-09 19:10 UTC | Exp 65: Embedding-space constraint verification | OK | ================ 1147 passed, 12 warnings in 128.46s (0:02:08) ================= |
 | 2026-04-09 19:22 UTC | Exp 70: Rust constraint extraction + verification | OK | ================ 1147 passed, 12 warnings in 128.80s (0:02:08) ================= |
 | 2026-04-09 20:31 UTC | Exp 74: Unified ConstraintExtractor API | OK | ================ 1221 passed, 12 warnings in 201.95s (0:03:21) ================= |
+| 2026-04-09 20:49 UTC | Exp 75: VerifyRepairPipeline class | OK | ================ 1263 passed, 12 warnings in 125.45s (0:02:05) ================= |
+| 2026-04-09 20:50 UTC | Exp 77: CLI overhaul with pipeline subcommand | OK | Deliverable already exists in repo |
