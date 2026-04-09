@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 56 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 57 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -32,6 +32,8 @@
 - Convergence guarantees — absorbing invariant sets (P10)
 - Deterministic reproducibility
 - Domains: SAT, graph coloring, Python code, property-based testing
+- Rust built-in constraint primitives: BoundConstraint, EqualityConstraint, IsingConstraint (`carnot-constraints` crate, Exp 70)
+- Serializable VerificationCertificate with JSON export (`carnot-constraints`, Exp 70)
 - Sudoku example — full constraint satisfaction demo
 
 ### LLM-EBM Inference Pipeline (REQ-INFER-001–016)
@@ -155,6 +157,7 @@
 | 73 | **Constraint coverage metric** | 5-type claim taxonomy (arithmetic, logical, factual, structural, semantic); coverage = extracted/total per domain; coverage-accuracy correlation + repair threshold (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | **Results pending analysis** |
 | 67 | **GSM8K subset verification** | 200 GSM8K test questions, 3 modes (baseline/verify/verify-repair), first external benchmark of Ising-guided repair (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | **Results pending analysis** |
 | 68 | **HumanEval subset verification + fuzzing** | 50 HumanEval-style problems through full pipeline (extract→instrument→test→fuzz→repair); pass@1 + pass@1+repair metrics; bug detection breakdown (test/instrumentation/fuzzing) (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | **Results pending analysis** |
+| 70 | **Rust constraint extraction + verification** | `carnot-constraints` crate: BoundConstraint, EqualityConstraint, IsingConstraint + VerificationCertificate (REQ-VERIFY-001–005) | **✅ New Rust crate** |
 | 65 | **Embedding-space constraint verification** | Joint Gibbs EBM on [semantic embedding; constraint vector] (384+N dim); NCE training; AUROC: joint vs embedding-only vs constraint-only; gradient repair with NN decoding (REQ-EBT-001, REQ-VERIFY-001) | **Results pending analysis** |
 | 63 | **Hierarchical Ising (1000+ vars)** | Block-structured coupling (dense intra-block + sparse inter-block); two-level Gibbs + annealing; hierarchical vs flat-sparse vs flat-dense vs random at 200/500/1000 vars; ~10x param reduction | **Results pending analysis** |
 
