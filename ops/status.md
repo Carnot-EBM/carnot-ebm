@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 62 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 63 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -120,6 +120,12 @@
 - Standalone scripts with `JAX_PLATFORMS=cpu` for reproducibility
 - JSON batch input format for bulk verification workflows
 
+### Getting Started Documentation (Exp 80)
+- `docs/getting-started.md`: installation guide + first verification walkthrough
+- `docs/concepts.md`: EBM fundamentals, constraint verification, pipeline architecture
+- `docs/api-reference.md`: full API reference for pipeline, extractors, MCP server, samplers, models
+- Updated `docs/index.html` navigation linking new documentation pages
+
 ### Quality Infrastructure
 - 1049 Python tests + 104 Rust tests, 100% code coverage, 100% spec coverage
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
@@ -184,6 +190,7 @@
 | 76 | **Production MCP server** | Hardened `carnot.mcp` package: 6 tools (verify_code, verify_with_properties, verify_llm_output, verify_and_repair, list_domains, health_check); 30s timeout, 10K char limit, structured errors; runnable as `python -m carnot.mcp` (REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004) | **✅ Production-grade MCP** |
 | 78 | **PyPI-ready package** | setuptools build backend, optional Rust bindings (`RUST_AVAILABLE`), single-source version, extras (`mcp`, `rust`, `all`) | **✅ Pure-Python installable** |
 | 79 | **Integration examples** | 5 production-ready examples: API verification, code review, batch verify, custom extractor, MCP integration | **✅ Examples shipped** |
+| 80 | **Getting started documentation** | 3 new docs (getting-started, concepts, API reference) + index navigation | **✅ Docs shipped** |
 
 ## 14 Principles Learned
 
