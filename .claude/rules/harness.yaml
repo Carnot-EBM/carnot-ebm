@@ -1,0 +1,11 @@
+---
+paths:
+  - ".harness/**"
+---
+Harness artifacts (.harness/) are managed by the orchestrator and skill
+evolution pipeline. During generation sprints, do NOT modify:
+- .harness/prompts/ (evolved by Trace2Skill)
+- .harness/config.yaml (managed by orchestrator)
+- .harness/evaluations/ (written by evaluator only)
+You MAY write to:
+- .harness/handoffs/ (your handoff artifact)

@@ -1,0 +1,28 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "scripts/validate-phase-gate.sh \"$FILE_PATH\"",
+            "description": "Block code generation if spec file doesn't exist for the capability being modified"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "scripts/validate-test-run.sh",
+            "description": "After test execution, verify coverage thresholds are met"
+          }
+        ]
+      }
+    ]
+  }
+}

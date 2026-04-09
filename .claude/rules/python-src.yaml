@@ -1,0 +1,12 @@
+---
+paths:
+  - "python/**"
+---
+Before modifying Python source code:
+1. Read the relevant openspec/capabilities/<cap>/spec.md
+2. Write or update tests FIRST in tests/python/ — each test must reference REQ-* or SCENARIO-*
+3. Implement code to make tests pass
+4. Run: pytest tests/python --cov=python/carnot --cov-report=term-missing --cov-fail-under=100
+5. Run: mypy python/carnot && ruff check python/ tests/
+Think carefully about how this code satisfies the spec requirements.
+All code must include verbose layman explanations, not just terse research shorthand.
