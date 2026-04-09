@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 41 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 42 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -57,7 +57,8 @@
 - Arithmetic verification: QUBO encoding (8/12) + deterministic carry propagation (16/16)
 - Logical consistency: 8/8 contradiction detection via Ising
 - SAT solving: 5000 vars in 0.7s, +5.5% vs random at scale
-- Code constraint extraction: AST → type/bound/return/init constraints
+- Code constraint extraction: AST → type/bound/return/init constraints (static, Exp 48)
+- Runtime constraint instrumentation: dynamic AST rewriting with isinstance/bound/return assertions (Exp 53)
 - NL constraint extraction: pattern-based claim verification
 - LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
 - Scheduling constraints: time slot exclusion, ordering, capacity
@@ -97,7 +98,7 @@
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
 - Docker compose: Claude API bridge + WebGPU gateway (`make up`)
 
-## Experiment Results (24 experiments)
+## Experiment Results (25 experiments)
 
 | # | Approach | Result | Verdict |
 |---|----------|--------|---------|
@@ -130,6 +131,7 @@
 | 39 | **thrml Ising SAT solver** | **Beats random at 50+ vars** | **✅ First Extropic-compatible experiment** |
 | 40 | thrml graph coloring | Perfect on 3/6 problems | ✅ Constraint satisfaction via sampling |
 | 41 | **LLM → Ising verify → repair** | **2/6 problems repaired 0%→100%** | **✅ "LLM proposes, Ising repairs" works** |
+| 53 | **Runtime constraint instrumentation** | Dynamic AST rewriting complements static Exp 48 | **✅ Static+dynamic complementary** |
 
 ## 14 Principles Learned
 
@@ -169,7 +171,7 @@
 
 ### Milestone 2026.04.2: Toward Kona
 - Milestone 2026.04.2: Toward Kona — live LLM + Ising end-to-end
-- Exp 53: Runtime constraint instrumentation
+- ~~Exp 53: Runtime constraint instrumentation~~: ✅ DONE (2026-04-09)
 - Exp 56-57: Live LLM verify-repair loop with Qwen3.5
 - Exp 60-61: Scale learned Ising to 500+ vars
 - Exp 64: Continuous relaxation (bridge to Kona latent space)
