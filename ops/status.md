@@ -70,6 +70,7 @@
 - Ising-guided fuzzing: energy landscape generates adversarial test inputs for differential testing of LLM code; 8 bug types covered (Exp 54)
 - Trace-learned constraints: discriminative Ising trained on correct/buggy execution traces catches semantic bugs invisible to static+dynamic analysis (Exp 55)
 - Multi-domain live benchmark: 500 questions across 5 domains (arithmetic, code, logic, factual, scheduling) in 3 modes (baseline/verify/verify-repair); first comprehensive pipeline evaluation (Exp 58)
+- Multi-model constraint transfer: validates constraint pipeline (arithmetic, logic, code AST, factual KB) on Qwen3.5-0.8B and Gemma4-E4B-it without retraining; tests model-agnostic verification (Exp 69)
 
 ### GPU Compute
 - carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
@@ -147,6 +148,7 @@
 | 55 | **Trace-learned constraints** | Discriminative Ising trained on correct/buggy execution traces (200+ dim binary features); catches semantic bugs invisible to static+dynamic analysis (REQ-VERIFY-001/002/003) | **Results pending analysis** |
 | 58 | **Multi-domain live benchmark (5 domains)** | 500 questions (100/domain) across arithmetic, code, logic, factual, scheduling; 3 modes (baseline/verify-only/verify-repair); full pipeline benchmark (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | **Results pending analysis** |
 | 64 | **Continuous Ising relaxation** | Binary→continuous [0,1] relaxation with JAX grad descent; sigmoid annealing / penalty / straight-through rounding vs discrete Gibbs + random | **Results pending analysis** |
+| 69 | **Multi-model constraint transfer (Qwen3.5+Gemma4)** | Same 20 Exp 56 questions + Exp 57 verify-repair loop on Qwen3.5-0.8B and Gemma4-E4B-it; tests model-agnostic constraint pipeline transfer (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-003) | **Results pending analysis** |
 
 ## 14 Principles Learned
 
