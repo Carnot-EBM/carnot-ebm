@@ -59,4 +59,5 @@
 | Exp 50: Learn SAT couplings via CD | ✅ Complete | — |
 | Exp 51: Learn from LLM (correct/wrong) pairs | ✅ Complete | — |
 | Exp 52: Transfer Ising across domains | ✅ Complete | — |
+| Exp 53: Runtime constraint instrumentation | ✅ Complete | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |

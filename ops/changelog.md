@@ -2,6 +2,7 @@
 
 ## 2026-04-09
 
+- Exp 53: Runtime constraint instrumentation — dynamic AST rewriting with isinstance guards, bound checks, return-type assertions; complements Exp 48's static analysis (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002)
 - Exp 42c: Deterministic arithmetic verification via carry propagation (16/16 perfect)
 - Research conductor: YAML extraction (research-roadmap.yaml + research-complete.yaml)
 - Research conductor: CalVer milestones (2026.03.1, 2026.04.1, 2026.04.2)
