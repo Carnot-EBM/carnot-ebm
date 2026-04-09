@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 51 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 52 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -151,6 +151,7 @@
 | 64 | **Continuous Ising relaxation** | Binary→continuous [0,1] relaxation with JAX grad descent; sigmoid annealing / penalty / straight-through rounding vs discrete Gibbs + random | **Results pending analysis** |
 | 69 | **Multi-model constraint transfer (Qwen3.5+Gemma4)** | Same 20 Exp 56 questions + Exp 57 verify-repair loop on Qwen3.5-0.8B and Gemma4-E4B-it; tests model-agnostic constraint pipeline transfer (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-003) | **Results pending analysis** |
 | 71 | **Extropic TSU sampler abstraction** | SamplerBackend protocol: CpuBackend (ParallelIsingSampler) + TsuBackend (stub); `get_backend()` factory, `CARNOT_BACKEND` env var (REQ-SAMPLE-003) | **✅ Abstraction layer ready** |
+| 73 | **Constraint coverage metric** | 5-type claim taxonomy (arithmetic, logical, factual, structural, semantic); coverage = extracted/total per domain; coverage-accuracy correlation + repair threshold (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-005) | **Results pending analysis** |
 
 ## 14 Principles Learned
 
