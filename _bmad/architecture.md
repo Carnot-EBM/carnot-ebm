@@ -23,18 +23,32 @@ carnot/
 │       ├── core/              # JAX energy functions
 │       ├── models/            # Boltzmann, Gibbs, Ising in JAX
 │       ├── samplers/          # JAX MCMC samplers
-│       │   └── parallel_ising.py  # Parallel Ising Gibbs (checkerboard, annealing, thrml-compatible)
+│       │   ├── parallel_ising.py  # Parallel Ising Gibbs (checkerboard, annealing, thrml-compatible)
+│       │   └── backend.py     # SamplerBackend protocol (CPU, TSU stub)
 │       ├── training/          # JAX training loops
+│       ├── pipeline/          # Production verify-repair pipeline (Exp 74-75)
+│       │   ├── extract.py     # ConstraintExtractor: Arithmetic, Code, Logic, NL, Auto
+│       │   ├── verify_repair.py  # VerifyRepairPipeline — main user API
+│       │   └── errors.py      # CarnotError hierarchy, timeouts, degradation
+│       ├── mcp/               # Production MCP server (Exp 76)
+│       │   └── server.py      # verify_llm_output, verify_and_repair, health_check
+│       ├── verify/            # ComposedEnergy, ConstraintTerm, repair
+│       ├── inference/         # EBM loader, composite scorer, LLM solver
 │       └── bindings/          # PyO3 bridge to Rust
+├── crates/carnot-constraints/ # Rust constraint verification (Exp 70)
+├── examples/                  # 5 integration examples (Exp 79)
 ├── tests/
 │   ├── rust/                  # Rust integration tests
-│   └── python/                # Python/pytest tests
+│   ├── python/                # Python/pytest tests (1353 tests, 100% coverage)
+│   └── integration/           # Full pipeline integration tests (Exp 81)
 ├── openspec/                  # Capability specs
 ├── _bmad/                     # Strategic docs
 ├── ops/                       # Operational docs
 ├── epics/                     # Epics and stories
-├── research-roadmap.yaml      # Active research roadmap (v6+)
-└── research-complete.yaml     # Completed experiments and results (42b–52, parallel Ising)
+├── research-program.md        # Declarative research goals and priorities
+├── research-references.md     # Technologies and ideas for future milestones
+├── research-roadmap.yaml      # Active research roadmap
+└── research-complete.yaml     # Completed experiments (85+ across 4 milestones)
 ```
 
 ## Key Design Decisions

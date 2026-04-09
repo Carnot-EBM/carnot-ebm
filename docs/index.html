@@ -296,10 +296,10 @@
       <a href="technical-writeup.html" class="btn btn-secondary">Technical Writeup</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">41</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">85+</div><div class="stat-label">Experiments</div></div>
       <div class="stat"><div class="stat-num">16</div><div class="stat-label">Models</div></div>
       <div class="stat"><div class="stat-num">14</div><div class="stat-label">Principles</div></div>
-      <div class="stat"><div class="stat-num">1,108</div><div class="stat-label">Tests</div></div>
+      <div class="stat"><div class="stat-num">1,353</div><div class="stat-label">Tests</div></div>
     </div>
   </div>
 </section>
@@ -384,10 +384,22 @@
         <div class="r-stats"><span class="r-before">Baseline: 60%</span> <span class="r-after">Result: 80%</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Constraint Verification</span>
+        <h3 class="r-title">Live LLM Verify-Repair Loop</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 95%; background: var(--accent-reason);"></div></div>
+        <div class="r-stats"><span class="r-before">Baseline: 60%</span> <span class="r-after">+Repair: 87%</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Code Generation</span>
+        <h3 class="r-title">HumanEval pass@1 + Ising Repair</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 96%;"></div></div>
+        <div class="r-stats"><span class="r-before">pass@1: 90%</span> <span class="r-after">+Repair: 96%</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Hallucination Detection</span>
-        <h3 class="r-title">Per-Token Activation EBM</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 84.5%; background: var(--accent-reason);"></div></div>
-        <div class="r-stats"><span class="r-before">AUC-ROC: 0.945</span> <span class="r-after">Acc: 84.5%</span></div>
+        <h3 class="r-title">Ising Constraint Pipeline</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Live LLM: 19/20</span> <span class="r-after">Detection: 100%</span></div>
       </div>
     </div>
   </div>
