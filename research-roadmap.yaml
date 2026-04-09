@@ -1,0 +1,275 @@
+# Carnot Research Roadmap
+# Active experiment queue — processed in order by research_conductor.py
+#
+# Versioning: CalVer (YYYY.MM.seq) to show chronology
+# Completed tasks are moved to research-complete.yaml
+#
+# Each task has:
+#   id: unique identifier
+#   milestone: calver milestone this belongs to
+#   deliverable: file path — if it exists, task is auto-skipped
+#   title: short description (first 50 chars used for log matching)
+#   prompt: full prompt sent to Claude Code via `claude -p`
+#           Use {project_root} and {date} as placeholders
+
+milestone: "2026.04.2"
+milestone_title: "Toward Kona — Live LLM + Ising End-to-End"
+milestone_doc: "openspec/change-proposals/research-roadmap-v7.md"
+
+tasks:
+  # ── Phase 5: Runtime Verification ──────────────────────────
+  - id: exp53-runtime-instrumentation
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_53_runtime_constraints.py
+    title: "Exp 53: Runtime constraint instrumentation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 48 (scripts/experiment_48_code_constraints.py) extracts constraints
+      from code STATICALLY via AST. This experiment goes further: INSTRUMENT the code
+      and verify constraints DYNAMICALLY during execution.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_48_code_constraints.py — static constraint extraction
+      - scripts/experiment_47_llm_self_constraints.py — verification pipeline
+      - python/carnot/verify/constraint.py — ComposedEnergy system
+
+      TASK: Create scripts/experiment_53_runtime_constraints.py
+
+      CONCRETE STEPS:
+      1. Implement instrument_code(code: str) -> str:
+         - Parse with ast, insert runtime checks at constraint points:
+           a. Type checks: isinstance() guards at function entry for annotated params
+           b. Bound checks: assert statements inside for-range loops
+           c. Return type checks: isinstance() before each return
+           d. Variable init: track assigned names, assert before use
+         - Use ast.NodeTransformer to rewrite the AST with inserted checks
+         - Return the instrumented source code as a string
+
+      2. Implement execute_instrumented(code: str, test_inputs: list) -> dict:
+         - Execute instrumented code in a restricted namespace (no file I/O, no imports
+           beyond builtins and math)
+         - Catch AssertionError from instrumented checks
+         - Return per-constraint pass/fail with the failing value
+
+      3. Test on 10+ scenarios comparing static vs dynamic:
+         Cases where STATIC catches bugs:
+         - Type annotation mismatch (return str when int declared)
+         - Uninitialized variable
+         Cases where DYNAMIC catches bugs but static doesn't:
+         - Off-by-one that only triggers on specific input (e.g., empty list)
+         - Division by zero on edge case input
+         - Integer overflow / wrong result for large inputs
+         Cases where both catch:
+         - Wrong return type always
+         Cases where neither catches (limitations):
+         - Semantic bug (correct type, wrong logic)
+
+      4. Print comparison table: static vs dynamic detection per bug type
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_53_runtime_constraints.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 6: Live LLM End-to-End ─────────────────────────
+  - id: exp56-live-llm-pipeline
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_56_live_llm_pipeline.py
+    title: "Exp 56: Live LLM → constraint → Ising verification"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Experiments 47-49 validated constraint verification on SIMULATED LLM
+      outputs. This experiment connects a LIVE LLM (Qwen3.5-0.8B via transformers)
+      to the constraint pipeline end-to-end.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_41_llm_verify_repair.py — prior live LLM experiment (graph coloring)
+      - scripts/experiment_47_llm_self_constraints.py — constraint verification pipeline
+      - scripts/experiment_48_code_constraints.py — code constraint extraction
+      - scripts/experiment_49_nl_constraints.py — NL constraint extraction
+      - carnot/samplers/parallel_ising.py — ParallelIsingSampler (use this, NOT thrml)
+
+      TASK: Create scripts/experiment_56_live_llm_pipeline.py
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B (or Qwen/Qwen3-0.6B if 0.8B unavailable) via transformers:
+         - AutoTokenizer + AutoModelForCausalLM
+         - Device: "cuda" if torch.cuda.is_available() else "cpu"
+         - Use trust_remote_code=True
+
+      2. Create 20 test questions across 4 domains (5 each):
+         a. Arithmetic: "What is 47 + 28?", "What is 15 * 7?", etc.
+         b. Logic: "If all cats are mammals and Whiskers is a cat, is Whiskers a mammal?"
+         c. Code: "Write a Python function to reverse a string"
+         d. Factual: "What is the capital of France?"
+
+      3. For each question:
+         - Prompt the LLM to answer AND list verifiable constraints
+         - Parse the LLM output to extract the answer and constraints
+         - Verify constraints using the appropriate verifier
+         - Record: question, LLM answer, constraints found, verification result
+
+      4. Compare to ground truth to compute detection rates
+      5. Print results table per domain and overall
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_56_live_llm_pipeline.py
+         (If model loading fails, fall back to simulated outputs with a clear message)
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp57-verify-repair-loop
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_57_verify_repair_loop.py
+    title: "Exp 57: Live LLM verify-and-repair loop"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 56 connects a live LLM to Ising verification. This experiment
+      adds the REPAIR loop: when Ising finds violations, feed them back to the LLM
+      as natural language feedback, let it regenerate, and re-verify. Up to 3 iterations.
+
+      This is the core Kona value proposition: EBMs as reasoning constraints that
+      GUIDE the LLM toward correct answers, not just classify outputs.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_56_live_llm_pipeline.py — live LLM + verification
+      - scripts/experiment_41_llm_verify_repair.py — prior repair experiment
+      - scripts/experiment_47_llm_self_constraints.py — constraint pipeline
+
+      TASK: Create scripts/experiment_57_verify_repair_loop.py
+
+      CONCRETE STEPS:
+      1. Implement format_violations(verification_result) -> str:
+         - Convert constraint violations into natural language feedback
+
+      2. Implement verify_repair_loop(llm, tokenizer, question, ground_truth, max_iters=3):
+         - Iteration 0: LLM answers, extract + verify constraints
+         - If violated: format violations, append to prompt, ask LLM to regenerate
+         - Repeat up to max_iters times
+         - Return: (final_answer, n_repairs, per_iteration_results)
+
+      3. Test on 15 questions where LLM is likely to hallucinate
+      4. Metrics: accuracy before/after repair, avg repairs needed
+      5. Compare: LLM alone vs LLM + verify vs LLM + verify + repair
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_57_verify_repair_loop.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp59-constraint-prompting
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_59_constraint_prompting.py
+    title: "Exp 59: Constraint-aware prompting"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 57 uses POST-HOC verification and repair. This experiment tests
+      PREVENTIVE constraint injection: put constraints INTO the prompt so the LLM
+      generates constraint-satisfying answers from the start.
+
+      EXISTING CODE TO READ:
+      - scripts/experiment_56_live_llm_pipeline.py — live LLM pipeline
+      - scripts/experiment_57_verify_repair_loop.py — verify-repair loop
+
+      TASK: Create scripts/experiment_59_constraint_prompting.py
+
+      CONCRETE STEPS:
+      1. Implement build_constraint_prompt(question, domain) -> str
+      2. Test three modes on 15 questions: baseline, constraint-aware, combined
+      3. Metrics per mode: accuracy, hallucination rate, constraint satisfaction
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_59_constraint_prompting.py
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 7: Scale Learned Ising Models ──────────────────
+  - id: exp60-scale-cd-100
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_60_scale_cd_training.py
+    title: "Exp 60: Scale CD training to 100+ variables"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 50 (scripts/experiment_50_learn_ising.py) trained Ising couplings
+      via CD on 10-var SAT. This experiment scales to 100 vars (10K parameters).
+
+      EXISTING CODE TO READ:
+      - scripts/experiment_50_learn_ising.py — CD training (train_ising_cd function)
+      - scripts/experiment_46b_scale_sat_parallel.py — large SAT via parallel sampler
+      - scripts/experiment_39_thrml_sat.py — random_3sat, check_assignment, sat_to_ising
+      - carnot/samplers/parallel_ising.py — ParallelIsingSampler, sat_to_coupling_matrix
+
+      TASK: Create scripts/experiment_60_scale_cd_training.py
+
+      CONCRETE STEPS:
+      1. Generate training data for 100-var SAT via parallel sampler (5000 assignments)
+      2. Train Ising model via CD: 100 vars, L1 regularization, 200 epochs
+      3. Evaluate on held-out SAT instances, compare to hand-coded and random
+      4. Test sizes: 50, 100, 200 vars (show scaling trend)
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_60_scale_cd_training.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp61-sparse-ising-500
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_61_sparse_ising.py
+    title: "Exp 61: Sparse Ising at 500+ variables"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Full coupling for 500 vars is 250K parameters. This experiment uses
+      SPARSE Ising: only learn couplings for edges in the SAT clause graph (~5% density).
+
+      EXISTING CODE TO READ:
+      - scripts/experiment_60_scale_cd_training.py — CD at 100 vars
+      - scripts/experiment_50_learn_ising.py — base CD training
+      - scripts/experiment_39_thrml_sat.py — sat_to_ising (provides edge structure)
+      - carnot/samplers/parallel_ising.py — ParallelIsingSampler
+
+      TASK: Create scripts/experiment_61_sparse_ising.py
+
+      CONCRETE STEPS:
+      1. Implement sparse CD: mask grad_J to only update clause-graph edges
+      2. Train on 500-var SAT, compare dense vs sparse vs hand-coded
+      3. Test generalization: train seed=42, test seed=99
+      4. Scaling: test 200, 500, 1000 vars
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_61_sparse_ising.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 8: Toward Continuous Latent Reasoning ──────────
+  - id: exp64-continuous-relaxation
+    milestone: "2026.04.2"
+    deliverable: scripts/experiment_64_continuous_ising.py
+    title: "Exp 64: Continuous relaxation of Ising constraints"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: All Ising experiments so far use discrete spins. Kona-style reasoning
+      operates in continuous latent space. This bridges the gap: relax binary spins
+      to continuous [0,1] and use gradient descent instead of sampling.
+
+      EXISTING CODE TO READ:
+      - carnot/samplers/parallel_ising.py — ParallelIsingSampler (discrete sampling)
+      - scripts/experiment_46b_scale_sat_parallel.py — SAT benchmarks
+      - scripts/experiment_39_thrml_sat.py — sat_to_ising, check_assignment
+      - python/carnot/verify/constraint.py — gradient-based repair
+
+      TASK: Create scripts/experiment_64_continuous_ising.py
+
+      CONCRETE STEPS:
+      1. Implement continuous_ising_solve(biases, J, n_steps, lr, beta):
+         - Initialize s in [0,1]^n, gradient descent with clip to [0,1]
+         - Use jax.grad for the gradient
+         - Round final s to binary (threshold 0.5)
+
+      2. Compare on SAT benchmarks (50, 100, 200, 500 vars):
+         - Continuous relaxation + GD + rounding
+         - Parallel Gibbs sampling (ParallelIsingSampler)
+         - Random baseline
+
+      3. Experiment with relaxation strategies:
+         a. Soft rounding: sigmoid(alpha * s) with increasing alpha
+         b. Penalty: add ||s - round(s)||^2 term
+         c. Straight-through rounding
+
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_64_continuous_ising.py
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
