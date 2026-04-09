@@ -1,0 +1,129 @@
+{
+  "experiment": "66_differentiable_constraints",
+  "description": "End-to-end differentiable verification: text \u2192 embedding \u2192 constraints \u2192 continuous Ising \u2192 MLP \u2192 score",
+  "prerequisites": [
+    "experiment_64_continuous_ising",
+    "experiment_65_embedding_constraints"
+  ],
+  "dataset": {
+    "n_total": 500,
+    "n_per_domain": 100,
+    "domains": [
+      "arithmetic",
+      "code",
+      "logic",
+      "factual",
+      "scheduling"
+    ],
+    "n_train": 300,
+    "n_val": 100,
+    "n_test": 100
+  },
+  "hyperparameters": {
+    "embed_dim": 384,
+    "n_constraints": 8,
+    "hidden_dim": 64,
+    "alpha": 10.0,
+    "n_epochs": 200,
+    "best_lr": 0.001,
+    "optimizer": "Adam"
+  },
+  "lr_sweep": {
+    "0.0001": {
+      "val_auroc_joint": 0.9286005711954305,
+      "val_auroc_ising_only": 0.295593635250918,
+      "val_auroc_embedding_only": 0.9122807017543859,
+      "final_loss": 0.6056869029998779,
+      "final_grad_norm": 0.08930385857820511
+    },
+    "0.001": {
+      "val_auroc_joint": 1.0,
+      "val_auroc_ising_only": 0.719094247246022,
+      "val_auroc_embedding_only": 0.9579763361893106,
+      "final_loss": 0.02904266119003296,
+      "final_grad_norm": 0.03705361858010292
+    },
+    "0.01": {
+      "val_auroc_joint": 1.0,
+      "val_auroc_ising_only": 0.6889024887800898,
+      "val_auroc_embedding_only": 0.9783761729906161,
+      "final_loss": 0.0003033204120583832,
+      "final_grad_norm": 0.0006815939559601247
+    }
+  },
+  "test_results": {
+    "auroc_joint": 1.0,
+    "auroc_ising_only": 0.5402576489533011,
+    "auroc_embedding_only": 0.9782608695652174,
+    "per_domain": {
+      "arithmetic": {
+        "joint": 1.0,
+        "ising_only": 1.0,
+        "embedding_only": 0.746031746031746
+      },
+      "code": {
+        "joint": 1.0,
+        "ising_only": 1.0,
+        "embedding_only": 1.0
+      },
+      "logic": {
+        "joint": 1.0,
+        "ising_only": 0.5,
+        "embedding_only": 1.0
+      },
+      "factual": {
+        "joint": 1.0,
+        "ising_only": 0.5378787878787878,
+        "embedding_only": 1.0
+      },
+      "scheduling": {
+        "joint": 1.0,
+        "ising_only": 0.5,
+        "embedding_only": 1.0
+      }
+    }
+  },
+  "ablation_summary": {
+    "joint_vs_ising_delta": 0.4597423510466989,
+    "joint_vs_embed_delta": 0.021739130434782594,
+    "ising_adds_over_embed": true,
+    "embed_adds_over_ising": true
+  },
+  "gradient_stability": {
+    "mean_grad_norm": 0.09377055700868368,
+    "std_grad_norm": 0.03496068193387933,
+    "max_grad_norm": 0.1756328046321869,
+    "min_grad_norm": 0.03705361858010292,
+    "grad_norm_ratio_max_min": 4.7399636354679355,
+    "exploded": false,
+    "vanished": false
+  },
+  "training": {
+    "final_loss": 0.02904266119003296,
+    "loss_history_sample": [
+      0.6983236074447632,
+      0.6166332364082336,
+      0.5165954232215881,
+      0.3866731822490692,
+      0.2585446834564209,
+      0.1643386334180832,
+      0.10563944280147552,
+      0.07096171379089355,
+      0.05020712688565254,
+      0.03722931072115898
+    ],
+    "grad_norm_history_sample": [
+      0.1756328046321869,
+      0.0798187330365181,
+      0.11657583713531494,
+      0.14391717314720154,
+      0.14111098647117615,
+      0.11796396225690842,
+      0.09260553121566772,
+      0.0717521384358406,
+      0.05622175708413124,
+      0.04494960233569145
+    ]
+  },
+  "wall_time_seconds": 20.750178813934326
+}
