@@ -64,3 +64,4 @@
 | 2026-04-09 14:47 UTC | Exp 60: Scale CD training to 100+ variables | OK | ================ 1130 passed, 12 warnings in 121.40s (0:02:01) ================= |
 | 2026-04-09 15:21 UTC | Exp 61: Sparse Ising at 500+ variables | OK | ================ 1130 passed, 12 warnings in 130.85s (0:02:10) ================= |
 | 2026-04-09 15:31 UTC | Exp 64: Continuous relaxation of Ising constraints | OK | ================ 1130 passed, 12 warnings in 127.37s (0:02:07) ================= |
+| 2026-04-09 15:46 UTC | Exp 54: Ising-guided fuzzing | OK | ================ 1130 passed, 12 warnings in 126.64s (0:02:06) ================= |
