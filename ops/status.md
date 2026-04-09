@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 47 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 48 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -140,6 +140,7 @@
 | 59 | **Constraint-aware prompting** | Preventive constraint injection into prompts; 3 modes (baseline/constraint-aware/combined) on 15 questions | **Results pending analysis** |
 | 60 | **Scale CD training to 100+ vars** | Extends Exp 50 to 50/100/200 vars (40K params); bootstraps from hand-coded Ising + annealing; CD vs hand-coded vs random | **Results pending analysis** |
 | 61 | **Sparse Ising at 500+ vars** | Clause-graph sparsity mask on CD gradients; ~20x parameter reduction vs dense; 200/500/1000 vars; dense vs sparse vs hand-coded | **Results pending analysis** |
+| 64 | **Continuous Ising relaxation** | Binary→continuous [0,1] relaxation with JAX grad descent; sigmoid annealing / penalty / straight-through rounding vs discrete Gibbs + random | **Results pending analysis** |
 
 ## 14 Principles Learned
 
@@ -183,7 +184,7 @@
 - ~~Exp 56: Live LLM → constraint → Ising verification~~: ✅ DONE (2026-04-09)
 - ~~Exp 57: Live LLM verify-repair loop with Qwen3.5~~: ✅ DONE (2026-04-09)
 - ~~Exp 60-61: Scale learned Ising to 500+ vars~~: ✅ DONE (2026-04-09)
-- Exp 64: Continuous relaxation (bridge to Kona latent space)
+- ~~Exp 64: Continuous relaxation (bridge to Kona latent space)~~: ✅ DONE (2026-04-09) — 3 rounding strategies (sigmoid annealing, penalty, straight-through) vs discrete Gibbs + random baseline
 
 ### Completed
 - ~~Ship MCP server + CLI~~: ✅ DONE

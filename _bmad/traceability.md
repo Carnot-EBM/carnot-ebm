@@ -65,4 +65,5 @@
 | Exp 59: Constraint-aware prompting | ✅ Complete (preventive constraint injection, SCENARIO-VERIFY-005) | — |
 | Exp 60: Scale CD training to 100+ vars | ✅ Complete (50/100/200 vars, up to 40K params, bootstrapped training) | — |
 | Exp 61: Sparse Ising at 500+ vars | ✅ Complete (clause-graph sparsity mask, ~20x param reduction, 200/500/1000 vars) | — |
+| Exp 64: Continuous Ising relaxation | ✅ Complete (binary→continuous [0,1], sigmoid/penalty/straight-through rounding, bridges to Kona latent space) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
