@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 42 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 43 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -59,6 +59,7 @@
 - SAT solving: 5000 vars in 0.7s, +5.5% vs random at scale
 - Code constraint extraction: AST → type/bound/return/init constraints (static, Exp 48)
 - Runtime constraint instrumentation: dynamic AST rewriting with isinstance/bound/return assertions (Exp 53)
+- Live LLM → constraint → Ising verification: Qwen3.5-0.8B end-to-end with 4-domain question set (Exp 56)
 - NL constraint extraction: pattern-based claim verification
 - LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
 - Scheduling constraints: time slot exclusion, ordering, capacity
@@ -132,6 +133,7 @@
 | 40 | thrml graph coloring | Perfect on 3/6 problems | ✅ Constraint satisfaction via sampling |
 | 41 | **LLM → Ising verify → repair** | **2/6 problems repaired 0%→100%** | **✅ "LLM proposes, Ising repairs" works** |
 | 53 | **Runtime constraint instrumentation** | Dynamic AST rewriting complements static Exp 48 | **✅ Static+dynamic complementary** |
+| 56 | **Live LLM → constraint → Ising** | End-to-end Qwen3.5-0.8B + constraint pipeline (4 domains) | **✅ Live LLM pipeline works** |
 
 ## 14 Principles Learned
 
@@ -172,7 +174,8 @@
 ### Milestone 2026.04.2: Toward Kona
 - Milestone 2026.04.2: Toward Kona — live LLM + Ising end-to-end
 - ~~Exp 53: Runtime constraint instrumentation~~: ✅ DONE (2026-04-09)
-- Exp 56-57: Live LLM verify-repair loop with Qwen3.5
+- ~~Exp 56: Live LLM → constraint → Ising verification~~: ✅ DONE (2026-04-09)
+- Exp 57: Live LLM verify-repair loop with Qwen3.5
 - Exp 60-61: Scale learned Ising to 500+ vars
 - Exp 64: Continuous relaxation (bridge to Kona latent space)
 

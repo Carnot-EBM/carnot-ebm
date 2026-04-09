@@ -2,6 +2,7 @@
 
 ## 2026-04-09
 
+- Exp 56: Live LLM → constraint → Ising verification — full end-to-end pipeline connecting Qwen3.5-0.8B to constraint extraction (Exp 47-49) and verification; 20 questions across 4 domains (arithmetic, logic, code, factual); live LLM generates answers + constraints, Carnot pipeline verifies (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-003)
 - Exp 53: Runtime constraint instrumentation — dynamic AST rewriting with isinstance guards, bound checks, return-type assertions; complements Exp 48's static analysis (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002)
 - Exp 42c: Deterministic arithmetic verification via carry propagation (16/16 perfect)
 - Research conductor: YAML extraction (research-roadmap.yaml + research-complete.yaml)
