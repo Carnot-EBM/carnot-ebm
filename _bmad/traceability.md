@@ -76,4 +76,5 @@
 | Exp 68: HumanEval subset verification + fuzzing | ✅ Complete (50 HumanEval-style problems, full pipeline: extract→instrument→test→fuzz→repair, pass@1 + pass@1+repair, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | — |
 | Exp 65: Embedding-space constraint verification | ✅ Complete (joint Gibbs EBM on [semantic embedding; constraint vector], NCE training, AUROC comparison, gradient repair with NN decoding, REQ-EBT-001, REQ-VERIFY-001) | — |
 | Exp 70: Rust constraint extraction + verification | ✅ Complete (`carnot-constraints` crate: BoundConstraint, EqualityConstraint, IsingConstraint, VerificationCertificate; REQ-VERIFY-001/002/003/004/005) | — |
+| Exp 72: Autoresearch self-verification via Ising | ✅ Complete (fourth gate: claim extraction + ComposedEnergy + Ising verification on autoresearch hypotheses, REQ-VERIFY-001/002/003, SCENARIO-VERIFY-002) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |

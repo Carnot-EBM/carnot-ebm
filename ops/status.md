@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 57 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
+**Last Updated:** 2026-04-09 — 58 EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION
 
 ## What's Working
 
@@ -95,6 +95,7 @@
 - Automatic rollback: git-based revert on production energy regression
 - Trace2Skill learning layer (REQ-AUTO-011–014): trajectory analyst, skill directory, hierarchical consolidation, cross-tier transfer
 - Self-improving code verifier
+- Ising constraint-satisfaction "fourth gate": self-verification of autoresearch hypothesis outputs via claim extraction + ComposedEnergy + Ising sampling (Exp 72)
 - Research conductor (autonomous Claude Code agent loop)
 - Research conductor: YAML-driven (research-roadmap.yaml), CalVer milestones, self-healing
 - ROCm 7.2 JAX support validated (gfx1150 iGPU), thrml crash filed as extropic-ai/thrml#41
@@ -159,6 +160,7 @@
 | 68 | **HumanEval subset verification + fuzzing** | 50 HumanEval-style problems through full pipeline (extract→instrument→test→fuzz→repair); pass@1 + pass@1+repair metrics; bug detection breakdown (test/instrumentation/fuzzing) (REQ-VERIFY-001/002/003, SCENARIO-VERIFY-006) | **Results pending analysis** |
 | 70 | **Rust constraint extraction + verification** | `carnot-constraints` crate: BoundConstraint, EqualityConstraint, IsingConstraint + VerificationCertificate (REQ-VERIFY-001–005) | **✅ New Rust crate** |
 | 65 | **Embedding-space constraint verification** | Joint Gibbs EBM on [semantic embedding; constraint vector] (384+N dim); NCE training; AUROC: joint vs embedding-only vs constraint-only; gradient repair with NN decoding (REQ-EBT-001, REQ-VERIFY-001) | **Results pending analysis** |
+| 72 | **Autoresearch self-verification via Ising** | Fourth gate: claim extraction + ComposedEnergy + Ising sampling on autoresearch hypotheses (20 mock, 10 correct/10 bogus) | **Results pending analysis** |
 | 63 | **Hierarchical Ising (1000+ vars)** | Block-structured coupling (dense intra-block + sparse inter-block); two-level Gibbs + annealing; hierarchical vs flat-sparse vs flat-dense vs random at 200/500/1000 vars; ~10x param reduction | **Results pending analysis** |
 
 ## 14 Principles Learned
