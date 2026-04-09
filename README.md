@@ -2,13 +2,13 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is a research framework exploring whether Energy-Based Models can detect LLM hallucinations via activation analysis. Through 34 experiments across 15 models (350M to 27B), we established **what works and what doesn't** — and most activation-based approaches don't work for the cases that matter.
+Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. Through 85+ experiments across 4 milestones, we proved that structural constraint verification via Ising models catches hallucinations that activation-based approaches miss — and that a verify-repair loop can fix them automatically.
 
-**What works:** The model's own logprobs for rejection sampling (+10% accuracy), and structural test execution for code verification (0% → 30%). These require no activation analysis — they're simple and practical.
+**The breakthrough:** LLM proposes → Ising verifies → repair loop fixes. Live LLM pipeline achieves 19/20 accuracy with 100% hallucination detection. HumanEval pass@1 improves from 90% to 96% with Ising-guided repair. Verify-repair loop improves tricky questions from 60% to 87%.
 
-**What doesn't work (and why):** Per-token activation EBMs achieve 75-88% on held-out test sets, but this is misleading. In practical deployment, the EBM detects **confidence, not correctness** — confident hallucinations get *lower* energy (look fine) while correct-but-hedging answers get flagged. The EBM rewards the exact behavior it should penalize. See [Limitations](docs/technical-writeup.md#8-limitations).
+**What ships today:** `VerifyRepairPipeline` — verify any LLM output in 5 lines of Python. CLI (`carnot pipeline verify`), MCP server for Claude Code, 5 integration examples, full API docs. Constraint extraction across arithmetic, code, logic, and natural language domains.
 
-**What's genuinely valuable:** The 14 principles learned from systematic negative results, the scaling data across 15 model architectures, and the infrastructure for activation-based research. Ships with an MCP server and CLI for code verification. See the [technical report](docs/technical-report.md) for full results.
+**What we learned:** Activation-based EBMs detect confidence, not correctness (50% practical). The 14 principles from our systematic negative results save other researchers months of dead ends. Structural constraint verification is what actually works. See the [technical report](docs/technical-report.md) for full results.
 
 ## Install
 
@@ -76,12 +76,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (34 experiments, 15 models)
+## Key Results (85+ experiments, 16 models, 4 milestones)
 
 ### What actually works in practice
 
 | Approach | Domain | Result | Practical? |
 |----------|--------|--------|-----------|
+| **Verify-repair loop (Ising)** | QA | 60% → 87% | **Yes** — constraint-guided repair |
+| **HumanEval + Ising fuzzing** | Code | pass@1: 90% → 96% | **Yes** — instrumentation + repair |
+| **Live LLM constraint pipeline** | All | 19/20, 100% detection | **Yes** — end-to-end verified |
 | Logprob rejection sampling | QA | +10% accuracy | **Yes** — no training needed |
 | Composite scoring (logprob + tests) | Code | 0% → 30% | **Yes** — structural verification |
 | SAT gradient repair | Constraints | 60% → 80% | **Yes** — mathematical |
@@ -102,7 +105,7 @@ See the [technical writeup](docs/technical-writeup.md) for the full write-up, or
 
 ## 14 Principles Learned
 
-Hard-won lessons from 34 experiments across 15 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from 85+ experiments across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
@@ -164,8 +167,12 @@ carnot/
 ├── python/carnot/                 # Python/JAX package
 │   ├── core/                      # Energy function protocol, model state
 │   ├── models/                    # Ising, Gibbs, Boltzmann in JAX
-│   ├── samplers/                  # Langevin, HMC via jax.lax.scan
-│   └── training/                  # JAX training loops with Optax
+│   ├── samplers/                  # Langevin, HMC, ParallelIsingSampler
+│   ├── training/                  # JAX training loops with Optax
+│   ├── pipeline/                  # VerifyRepairPipeline, extractors, errors
+│   ├── mcp/                       # MCP server for Claude Code integration
+│   ├── verify/                    # ComposedEnergy, ConstraintTerm, repair
+│   └── inference/                 # EBM loader, composite scorer, LLM solver
 ├── openspec/capabilities/         # Specification-driven contracts
 │   ├── core-ebm/                  # REQ-CORE-*, SCENARIO-CORE-*
 │   ├── model-tiers/               # REQ-TIER-*, SCENARIO-TIER-*
@@ -269,7 +276,7 @@ Papers and resources that have informed Carnot's design and direction.
 
 ## Pre-trained Models
 
-15 per-token EBM models are available on HuggingFace at [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM).
+16 per-token EBM models are available on HuggingFace at [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM).
 
 **Important caveat:** These models achieve 75-88% accuracy on held-out TruthfulQA test sets, but this metric is misleading. In practical deployment (8 real questions), the EBM agreed with ground truth only 50% of the time. The EBMs detect model *confidence*, not *correctness* — they are research artifacts for studying activation-space structure, not production hallucination detectors. See the [practical test results](scripts/experiment_practical_mcp_test.py).
 
