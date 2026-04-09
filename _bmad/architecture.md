@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-04-03
+**Last Reconciled:** 2026-04-09
 
 ## Overview
 
@@ -23,6 +23,7 @@ carnot/
 │       ├── core/              # JAX energy functions
 │       ├── models/            # Boltzmann, Gibbs, Ising in JAX
 │       ├── samplers/          # JAX MCMC samplers
+│       │   └── parallel_ising.py  # Parallel Ising Gibbs (checkerboard, annealing, thrml-compatible)
 │       ├── training/          # JAX training loops
 │       └── bindings/          # PyO3 bridge to Rust
 ├── tests/
@@ -31,7 +32,9 @@ carnot/
 ├── openspec/                  # Capability specs
 ├── _bmad/                     # Strategic docs
 ├── ops/                       # Operational docs
-└── epics/                     # Epics and stories
+├── epics/                     # Epics and stories
+├── research-roadmap.yaml      # Active research roadmap (v6+)
+└── research-complete.yaml     # Completed experiments and results (42b–52, parallel Ising)
 ```
 
 ## Key Design Decisions
@@ -81,3 +84,7 @@ Inference:
 - **Serialization**: `serde` (Rust), `safetensors` (both)
 - **Numerics**: `f32` default, `f64` configurable
 - **Parallelism**: `rayon` (Rust), `jax.pmap` (Python)
+
+## thrml Integration
+
+The `parallel_ising.py` sampler provides a `parallel_sample_states` function that wraps thrml's `IsingEBM` interface. It extracts coupling matrices and biases from an `IsingEBM` instance and runs the parallel checkerboard Gibbs sampler (with optional simulated annealing) as a drop-in replacement for thrml's built-in sampling — achieving 183x speedup on CPU at 100 variables and 572x at 500 variables.

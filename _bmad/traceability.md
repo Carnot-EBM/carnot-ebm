@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-06 (reconciled with codebase)
+**Last Updated:** 2026-04-09 (reconciled with codebase)
 
 ## Functional Requirements → Implementation Status
 
@@ -48,3 +48,15 @@
 | EBM rejection on adversarial QA (-3%) | ❌ Negative result (Principle 9) | — |
 | Multi-layer probing (U-curve) | ✅ Novel | — |
 | Thinking compression (75.5% vs 61.3%) | ✅ Novel (Principle 10) | — |
+| Exp 42b: Arithmetic QUBO encoding | ✅ Complete | — |
+| Exp 42c: Deterministic carry chain verification | ✅ Complete | — |
+| Exp 44: Scheduling constraints | ✅ Complete | — |
+| Exp 45: Logical consistency verification | ✅ Complete | — |
+| Exp 46b: Scale SAT to 5000 vars | ✅ Complete | — |
+| Exp 47: LLM self-constraint extraction | ✅ Complete | — |
+| Exp 48: Code → constraint extraction | ✅ Complete | — |
+| Exp 49: NL → constraint extraction | ✅ Complete | — |
+| Exp 50: Learn SAT couplings via CD | ✅ Complete | — |
+| Exp 51: Learn from LLM (correct/wrong) pairs | ✅ Complete | — |
+| Exp 52: Transfer Ising across domains | ✅ Complete | — |
+| Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |

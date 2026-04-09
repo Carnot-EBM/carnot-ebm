@@ -1,5 +1,31 @@
 # Carnot — Changelog
 
+## 2026-04-09
+
+- Exp 42c: Deterministic arithmetic verification via carry propagation (16/16 perfect)
+- Research conductor: YAML extraction (research-roadmap.yaml + research-complete.yaml)
+- Research conductor: CalVer milestones (2026.03.1, 2026.04.1, 2026.04.2)
+- Research conductor: Self-healing for pre-flight test failures
+- Conductor overnight run completed: Exp 48, 49, 51, 52, 44
+- Roadmap v7: Toward Kona — live LLM + Ising end-to-end (phases 5-8)
+- Documentation reconciliation audit and fixes
+
+## 2026-04-08
+
+- Parallel Ising Gibbs sampler: 183x faster than thrml (572x at 500 vars)
+- thrml-compatible wrapper: parallel_sample_states() accepts IsingEBM
+- Exp 42b: Arithmetic QUBO encoding (8/12, carry chains fail)
+- Exp 46b: Scale SAT to 5000 vars (0.7s, +5.5% vs random)
+- Exp 47: LLM self-constraint extraction (10/10 perfect)
+- Exp 50: Learn Ising couplings via CD (89/100 perfect, generalizes)
+- ROCm GPU: jax-rocm7-pjrt installed, validated on gfx1150 (iGPU slower than CPU)
+- thrml ROCm bug filed: extropic-ai/thrml#41 (AQL packet crash)
+- Research conductor updated for v6 roadmap experiments
+- Test suite: 1130 passed, 100% coverage (added test_parallel_ising.py)
+- docs/index.html: added fadeInUp animation (REQ-DOCUI-002)
+
+---
+
 - **2026-04-09 00:20 UTC** [orchestrator] Sprint complete for 'Epic: UI-001 - Modernize Documentation Aesthetic' (completed=2, failed=0)
 
 - **2026-04-09 00:20 UTC** [orchestrator] Story DOCUI-002 completed and passed evaluation

@@ -1,0 +1,18 @@
+---
+paths:
+  - "ops/**"
+  - "_bmad/**"
+---
+You are modifying operational or strategic documentation.
+
+MANDATORY RECONCILIATION (from CLAUDE.md Development Workflow):
+After ANY code changes, you MUST update these documents:
+1. ops/changelog.md — add entry for what changed and why
+2. ops/status.md — update if capabilities changed
+3. _bmad/traceability.md — update if REQ-*/SCENARIO-* status changed
+4. _bmad/architecture.md — update "Last Reconciled" date if architecture touched
+
+Run: scripts/validate-reconciliation.sh to verify all checks pass.
+
+NEVER remove existing content. ADD new sections, move items to Completed.
+Preserve historical results, benchmark numbers, and experiment data.
