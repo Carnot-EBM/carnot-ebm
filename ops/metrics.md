@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 93 Multi-Model Comparison
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T01:59:33Z | 2026-04-10T02:07:00Z | Create Exp 93 multi-model comparison script, run benchmark, update ops | TBD |
+
+---
+
 ## Session: 2026-04-09 Exp 57 Verify-Repair Loop
 
 ### Turn Log
