@@ -1,0 +1,1849 @@
+{
+  "experiment": "101_agent_verification",
+  "description": "End-to-end agentic constraint propagation on realistic workflows",
+  "n_instances": 30,
+  "n_workflow_types": 3,
+  "workflow_types": [
+    "math_tutor",
+    "code_assistant",
+    "research_assistant"
+  ],
+  "metrics": {
+    "error_detection_rate": 0.6,
+    "detection_latency_mean": 0.3333333333333333,
+    "detection_latency_at_error_step": 6,
+    "detection_latency_counts": {
+      "at_error_step": 6,
+      "1_step_later": 3,
+      "2_steps_later": 0,
+      "3_steps_later": 0,
+      "not_detected": 6
+    },
+    "root_cause_accuracy": 0.4,
+    "repair_success_rate": 0.4,
+    "false_positive_rate": 0.3333333333333333,
+    "by_workflow_type": {
+      "math_tutor": {
+        "n_instances": 10,
+        "n_errors": 5,
+        "n_correct": 5,
+        "error_detection_rate": 0.8,
+        "false_positive_rate": 0.0,
+        "root_cause_accuracy": 0.8,
+        "repair_success_rate": 0.2,
+        "mean_detection_latency": 0.0
+      },
+      "code_assistant": {
+        "n_instances": 10,
+        "n_errors": 5,
+        "n_correct": 5,
+        "error_detection_rate": 1.0,
+        "false_positive_rate": 1.0,
+        "root_cause_accuracy": 0.4,
+        "repair_success_rate": 0.0,
+        "mean_detection_latency": 0.6
+      },
+      "research_assistant": {
+        "n_instances": 10,
+        "n_errors": 5,
+        "n_correct": 5,
+        "error_detection_rate": 0.0,
+        "false_positive_rate": 0.0,
+        "root_cause_accuracy": 0.0,
+        "repair_success_rate": 1.0,
+        "mean_detection_latency": null
+      }
+    },
+    "mean_constraint_coverage": 0.6166666666666667,
+    "agentic_catches_more_count": 10,
+    "agentic_catches_more_fraction": 0.6666666666666666,
+    "final_only_detection_rate": 0.26666666666666666
+  },
+  "per_instance": [
+    {
+      "name": "math_correct_1",
+      "workflow_type": "math_tutor",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 2.003761997912079,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 2,
+        "n_violations": 0,
+        "time_ms": 0.08932800847105682
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_correct_2",
+      "workflow_type": "math_tutor",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.6758289964636788,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 3,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 4,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 2,
+        "n_violations": 0,
+        "time_ms": 0.09083098848350346
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_correct_3",
+      "workflow_type": "math_tutor",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.6510320090455934,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 3,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 4,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 2,
+        "n_violations": 0,
+        "time_ms": 0.08379700011573732
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_correct_4",
+      "workflow_type": "math_tutor",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.6766699953004718,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 3,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 4,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 2,
+        "n_violations": 0,
+        "time_ms": 0.08557000546716154
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_correct_5",
+      "workflow_type": "math_tutor",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.6575940060429275,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 2,
+        "n_violations": 0,
+        "time_ms": 0.09042999590747058
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_error_1_wrong_op",
+      "workflow_type": "math_tutor",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Wrong computation: 47 + 28 claimed as 73 instead of 75",
+      "chain_verify_time_ms": 0.736624002456665,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 3,
+          "n_violations": 3,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 1,
+        "n_assumed": 0,
+        "n_violated": 3,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": true,
+      "first_violation_at_step": 2,
+      "detection_latency": 0,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 2,
+      "final_only": {
+        "verified": false,
+        "n_constraints": 2,
+        "n_violations": 1,
+        "time_ms": 0.09435799438506365
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_error_2_wrong_op",
+      "workflow_type": "math_tutor",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Wrong computation: 156 - 89 claimed as 77 instead of 67",
+      "chain_verify_time_ms": 0.667604006594047,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 3,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": true,
+      "first_violation_at_step": 2,
+      "detection_latency": 0,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": false,
+        "n_constraints": 2,
+        "n_violations": 1,
+        "time_ms": 0.08717300079297274
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_error_3_wrong_approach",
+      "workflow_type": "math_tutor",
+      "has_error": true,
+      "error_step_index": 1,
+      "error_description": "Wrong approach: used subtraction instead of addition",
+      "chain_verify_time_ms": 0.6950749957468361,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 3,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 4,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": false,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": true,
+      "repair_success": true,
+      "repair_remaining_violations": 0,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 2,
+        "n_violations": 0,
+        "time_ms": 0.09489800140727311
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_error_4_wrong_op",
+      "workflow_type": "math_tutor",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Wrong computation: 100 - 37 claimed as 73 instead of 63",
+      "chain_verify_time_ms": 0.6929509982001036,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 3,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": true,
+      "first_violation_at_step": 2,
+      "detection_latency": 0,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": false,
+        "n_constraints": 2,
+        "n_violations": 1,
+        "time_ms": 0.08838600479066372
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "math_error_5_wrong_op",
+      "workflow_type": "math_tutor",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Wrong computation: 55 + 33 claimed as 86 instead of 88",
+      "chain_verify_time_ms": 0.6761389959137887,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 3,
+          "n_violations": 2,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 2,
+        "n_assumed": 0,
+        "n_violated": 2,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": true,
+      "first_violation_at_step": 2,
+      "detection_latency": 0,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": false,
+        "n_constraints": 2,
+        "n_violations": 1,
+        "time_ms": 0.09401699935551733
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "code_correct_1",
+      "workflow_type": "code_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 2.4534370022593066,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.0745799916330725
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_correct_2",
+      "workflow_type": "code_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 1.5203439979813993,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.07624299905728549
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_correct_3",
+      "workflow_type": "code_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 1.5871999930823222,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.0826050090836361
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_correct_4",
+      "workflow_type": "code_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 1.840876997448504,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 3,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 5,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 6
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.07479000487364829
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_correct_5",
+      "workflow_type": "code_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 1.5324080013670027,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.07292701047845185
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_error_1_uninit",
+      "workflow_type": "code_assistant",
+      "has_error": true,
+      "error_step_index": 1,
+      "error_description": "Variable 'result' used before initialization in factorial loop",
+      "chain_verify_time_ms": 1.3262099964777008,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": false,
+      "first_violation_at_step": 2,
+      "detection_latency": 1,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.06697600474581122
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_error_2_return_type",
+      "workflow_type": "code_assistant",
+      "has_error": true,
+      "error_step_index": 1,
+      "error_description": "Returns string 'yes'/'no' instead of bool True/False",
+      "chain_verify_time_ms": 1.222125007188879,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": false,
+          "n_constraints": 4,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 5,
+        "n_assumed": 0,
+        "n_violated": 2,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": 1,
+      "root_cause_correct": true,
+      "first_violation_at_step": 1,
+      "detection_latency": 0,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.06895899423398077
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_error_3_uninit",
+      "workflow_type": "code_assistant",
+      "has_error": true,
+      "error_step_index": 1,
+      "error_description": "Variable 'accumulator' used before initialization",
+      "chain_verify_time_ms": 1.381233989377506,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": false,
+      "first_violation_at_step": 2,
+      "detection_latency": 1,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.06669599679298699
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_error_4_return_type",
+      "workflow_type": "code_assistant",
+      "has_error": true,
+      "error_step_index": 1,
+      "error_description": "Returns string concatenation instead of int",
+      "chain_verify_time_ms": 1.6105639952002093,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 6,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 7
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": false,
+      "first_violation_at_step": 2,
+      "detection_latency": 1,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.08147300104610622
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "code_error_5_wrong_test",
+      "workflow_type": "code_assistant",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Wrong expected value in test: expects 3 vowels in 'hello' but correct is 2",
+      "chain_verify_time_ms": 1.573814995936118,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 4,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_constraints": 2,
+          "n_violations": 1,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 7,
+        "n_assumed": 0,
+        "n_violated": 1,
+        "total_facts": 8
+      },
+      "constraint_coverage": 1.0,
+      "violation_detected": true,
+      "root_cause_step": 2,
+      "root_cause_correct": true,
+      "first_violation_at_step": 2,
+      "detection_latency": 0,
+      "repair_attempted": true,
+      "repair_success": false,
+      "repair_remaining_violations": 1,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.09976800356525928
+      },
+      "agentic_catches_more": true
+    },
+    {
+      "name": "research_correct_1",
+      "workflow_type": "research_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.7330860098591074,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 5,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 5
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.0843680027173832
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_correct_2",
+      "workflow_type": "research_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.6885829934617504,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 1,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 1
+      },
+      "constraint_coverage": 0.25,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.09301499812863767
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_correct_3",
+      "workflow_type": "research_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.6957669975236058,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 4,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.07236599049065262
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_correct_4",
+      "workflow_type": "research_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.7469230040442199,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.08903699927031994
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_correct_5",
+      "workflow_type": "research_assistant",
+      "has_error": false,
+      "error_step_index": null,
+      "error_description": "",
+      "chain_verify_time_ms": 0.7251009956235066,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": null,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": false,
+      "repair_success": false,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.09168199903797358
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_error_1_misattributed",
+      "workflow_type": "research_assistant",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Misattributed fact: says London is capital of France instead of Paris",
+      "chain_verify_time_ms": 0.6537070003105327,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 4,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 4
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": false,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": true,
+      "repair_success": true,
+      "repair_remaining_violations": 0,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.0900089944479987
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_error_2_misattributed",
+      "workflow_type": "research_assistant",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Misattributed fact: says water boils at 50C instead of 100C",
+      "chain_verify_time_ms": 0.5915609945077449,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 0,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 0
+      },
+      "constraint_coverage": 0.0,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": false,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": true,
+      "repair_success": true,
+      "repair_remaining_violations": 0,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 0,
+        "n_violations": 0,
+        "time_ms": 0.08471900946460664
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_error_3_misattributed",
+      "workflow_type": "research_assistant",
+      "has_error": true,
+      "error_step_index": 2,
+      "error_description": "Misattributed fact: says Saturn is largest planet instead of Jupiter",
+      "chain_verify_time_ms": 0.9060309967026114,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": false,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": true,
+      "repair_success": true,
+      "repair_remaining_violations": 0,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.07354799890890718
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_error_4_wrong_citation",
+      "workflow_type": "research_assistant",
+      "has_error": true,
+      "error_step_index": 3,
+      "error_description": "Wrong citation: contradicts synthesis by attributing rain to temperature inversions",
+      "chain_verify_time_ms": 0.7477939943782985,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 2,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.5,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": false,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": true,
+      "repair_success": true,
+      "repair_remaining_violations": 0,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.1045259996317327
+      },
+      "agentic_catches_more": false
+    },
+    {
+      "name": "research_error_5_wrong_citation",
+      "workflow_type": "research_assistant",
+      "has_error": true,
+      "error_step_index": 3,
+      "error_description": "Wrong citation: attributes Romeo and Juliet to Marlowe instead of Shakespeare",
+      "chain_verify_time_ms": 0.5917709931964055,
+      "per_step": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_constraints": 0,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_constraints": 1,
+          "n_violations": 0,
+          "energy": 0.0
+        }
+      ],
+      "final_state": {
+        "n_verified": 3,
+        "n_assumed": 0,
+        "n_violated": 0,
+        "total_facts": 3
+      },
+      "constraint_coverage": 0.75,
+      "violation_detected": false,
+      "root_cause_step": null,
+      "root_cause_correct": false,
+      "first_violation_at_step": null,
+      "detection_latency": null,
+      "repair_attempted": true,
+      "repair_success": true,
+      "repair_remaining_violations": 0,
+      "final_only": {
+        "verified": true,
+        "n_constraints": 1,
+        "n_violations": 0,
+        "time_ms": 0.08903699927031994
+      },
+      "agentic_catches_more": false
+    }
+  ]
+}
