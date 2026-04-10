@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 123 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 123), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), ROBUST MODEL LOADER (EXP 123)
+**Last Updated:** 2026-04-10 — 124 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 120, 123), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), LLM ADVERSARIAL BASELINE (EXP 120), ROBUST MODEL LOADER (EXP 123)
 
 ## What's Working
 
@@ -242,6 +242,7 @@
 | 102 | **Constraint check latency microbenchmark** | Full pipeline profiling: JIT forward 0.008ms (per-token viable), extraction 0.04–2.6ms linear scaling, MiniLM bottleneck 7.6ms; JAX JIT 55x faster than Python verify | **✅ Guided decoding confirmed viable** |
 | 108 | **KAN Energy Function Implementation** | KAN (Kolmogorov-Arnold Networks) energy tier with B-spline edge activations; BSpline + KANEnergyFunction + KANModel; 26 tests passed, Rust scaffold created; from_ising() warm-start from trained Ising | **✅ New energy tier between Ising and Gibbs** |
 | 119 | **Adversarial GSM8K variant generator (Apple 2410.05229)** | Reproduces Apple GSM-Symbolic methodology: 4 variants × 200 questions = 800 items; number swap (GSM-Symbolic), irrelevant injection (GSM-NoOp), combined; spot-check validation re-runs arithmetic to confirm correct answers; enables pipeline robustness evaluation against 65%-drop attack surface | **✅ Adversarial dataset for verify-repair robustness testing** |
+| 120 | **LLM baseline on adversarial GSM8K** | Measures accuracy on Exp 119 adversarial variants WITHOUT EBM repair (pre-repair baseline); Qwen3.5-0.8B: control 77%, number-swapped 46% (−31pp), irrelevant-injected 55% (−22pp), combined 38% (−39pp); Gemma4-E4B-it: control 70%, number-swapped 53% (−17pp), irrelevant-injected 67% (−3pp), combined 44% (−26pp); bootstrap 95% CIs; confirms Apple's ~65% drop attack surface; Exp 121 will apply Carnot repair | **✅ Pre-repair baseline established; Exp 121 recovery pending** |
 
 ## 14 Principles Learned
 
