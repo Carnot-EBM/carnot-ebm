@@ -280,7 +280,7 @@ tasks:
             - Positive: verified-correct responses (low energy target)
             - Negative: verified-wrong responses (high energy target)
          c. Train per-domain and combined models
-         d. Hyperparameters: CD-k={1,5,10}, lr={0.01,0.001}, L1 reg={0.0,0.01}
+         d. Hyperparameters: CD-k in [1,5,10], lr in [0.01,0.001], L1 reg in [0.0,0.01]
 
       3. Evaluation:
          a. AUROC on test set: self-bootstrapped vs Exp 62 models vs random
@@ -384,7 +384,7 @@ tasks:
          d. If not available, create 100 multi-step algebra problems with known solutions
 
       2. Chain-of-thought generation:
-         a. Prompt each model with "Solve step by step: {problem}"
+         a. Prompt each model with "Solve step by step: <problem>"
          b. Parse response into reasoning steps (split on newlines, "Step N:", etc.)
          c. Extract the final answer (boxed or last numerical value)
 
