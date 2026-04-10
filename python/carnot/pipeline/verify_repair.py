@@ -88,7 +88,9 @@ if _FORCE_RUST == "1":
 elif _FORCE_RUST == "0":
     _USE_RUST_PIPELINE = False
 else:
-    _USE_RUST_PIPELINE = RUST_AVAILABLE
+    # Default to Python pipeline until Rust certificate format is fully compatible.
+    # Set CARNOT_USE_RUST=1 to opt in to the Rust fast path.
+    _USE_RUST_PIPELINE = False
 
 if _USE_RUST_PIPELINE:
     logger.info("Rust verification pipeline enabled (10x faster verify).")
