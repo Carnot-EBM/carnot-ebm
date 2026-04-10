@@ -1,0 +1,453 @@
+# Carnot Research Roadmap — Milestone 2026.04.8
+# "Adversarial Proof — Break the Benchmarks, Then Fix Them"
+#
+# Active experiment queue — processed in order by research_conductor.py
+# This file is picked up automatically when 2026.04.7 completes.
+#
+# Versioning: CalVer (YYYY.MM.seq)
+# Completed tasks are moved to research-complete.yaml
+
+milestone: "2026.04.8"
+milestone_title: "Adversarial Proof — Break the Benchmarks, Then Fix Them"
+milestone_doc: "openspec/change-proposals/research-roadmap-v13.md"
+
+tasks:
+  # ── Phase 33: Apple Adversarial GSM8K ────────────────────────
+  - id: exp119-adversarial-gsm8k-generator
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_119_adversarial_gsm8k.py
+    title: "Exp 119: Apple adversarial GSM8K variant generator"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Apple (arxiv 2410.05229) proved LLMs pattern-match math instead
+      of reasoning. They took GSM8K problems and: (1) swapped the numbers (same
+      logic, different values), and (2) added one irrelevant sentence containing
+      a number (e.g., "five of them were a bit smaller than average"). Models
+      dropped up to 65%. This experiment recreates their methodology.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_91_gsm8k_live.py — GSM8K benchmark infrastructure
+      - scripts/experiment_67_gsm8k_benchmark.py — earlier GSM8K experiment
+      - python/carnot/pipeline/extract.py — ArithmeticExtractor
+
+      TASK: Create scripts/experiment_119_adversarial_gsm8k.py
+
+      CONCRETE STEPS:
+      1. Create adversarial variant generator:
+         a. number_swap(problem: str) -> str:
+            - Parse all numbers in the problem
+            - Replace with random different numbers (same magnitude range)
+            - Recompute the correct answer with new numbers
+            - Return (modified_problem, new_correct_answer)
+
+         b. irrelevant_injection(problem: str) -> str:
+            - Generate one irrelevant sentence containing a number, e.g.:
+              "Five of the items were slightly smaller than average."
+              "The store had been open for 12 years."
+              "She noticed 3 birds outside the window."
+            - Insert at a random position in the problem
+            - The correct answer is UNCHANGED (sentence is irrelevant)
+
+         c. combined_adversarial(problem: str) -> str:
+            - Apply both: swap numbers AND inject irrelevant sentence
+
+      2. Generate 4 datasets of 200 questions each:
+         a. Standard GSM8K (control)
+         b. Number-swapped only
+         c. Irrelevant-sentence only
+         d. Combined (both perturbations)
+         Save all as JSON with original problem, perturbed problem, correct answer.
+
+      3. Validate: spot-check 10 from each set, verify correct answers are right.
+
+      4. Save to results/adversarial_gsm8k_data.json
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_119_adversarial_gsm8k.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp120-adversarial-baseline
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_120_adversarial_baseline.py
+    title: "Exp 120: LLM baseline on adversarial GSM8K"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 119 generated adversarial GSM8K variants (number-swapped,
+      irrelevant-sentence, combined). This experiment measures baseline LLM
+      accuracy on each variant to quantify the degradation.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_119_adversarial_gsm8k.py — adversarial data generator
+      - results/adversarial_gsm8k_data.json — generated datasets
+      - scripts/experiment_91_gsm8k_live.py — GSM8K inference infrastructure
+
+      TASK: Create scripts/experiment_120_adversarial_baseline.py
+
+      CONCRETE STEPS:
+      1. Load adversarial data from results/adversarial_gsm8k_data.json
+         (or regenerate if not found, using Exp 119 logic)
+
+      2. For each model (Qwen3.5-0.8B, Gemma4-E4B-it):
+         Run inference on all 4 variants (200 questions each):
+         a. Standard GSM8K (control)
+         b. Number-swapped
+         c. Irrelevant-sentence
+         d. Combined adversarial
+         If model loading fails, use simulated outputs with realistic
+         error patterns (keyword-triggered errors per Apple findings)
+
+      3. Metrics per variant per model:
+         - Accuracy (exact match on final numeric answer)
+         - Accuracy drop vs control (percentage points)
+         - Error categorization: arithmetic error, irrelevant-number error,
+           logic error, reading comprehension error
+         - 95% bootstrap confidence intervals
+
+      4. Save results to results/experiment_120_results.json
+
+      5. Print comparison table: model x variant x accuracy
+
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_120_adversarial_baseline.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp123-fix-model-loading
+    milestone: "2026.04.8"
+    deliverable: python/carnot/inference/model_loader.py
+    title: "Exp 123: Robust model loading for experiments"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Many experiments fall back to simulated LLM outputs because model
+      loading fails in the conductor's claude -p subprocess. Qwen3.5-0.8B (752M
+      params, ~1.5GB) loads fine when run directly but fails inconsistently in
+      subprocesses. This must be fixed for benchmark credibility.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_56_live_llm_pipeline.py — model loading pattern
+      - scripts/experiment_91_gsm8k_live.py — model loading with fallback
+      - python/carnot/pipeline/verify_repair.py — _load_model method
+
+      TASK: Create python/carnot/inference/model_loader.py
+
+      CONCRETE STEPS:
+      1. Create a robust model loader module:
+         a. load_model(model_name, device="cpu", dtype=None, max_retries=3):
+            - Check available memory before loading (psutil.virtual_memory)
+            - Default dtype=torch.float32 on CPU (not float16 which can fail)
+            - Retry on OOM with gc.collect() + torch.cuda.empty_cache()
+            - Return (model, tokenizer) or raise ModelLoadError with details
+
+         b. generate(model, tokenizer, prompt, max_new_tokens=256):
+            - Handle chat template (with/without enable_thinking)
+            - Strip think tokens from Qwen output
+            - Return generated text
+
+         c. Environment variable: CARNOT_FORCE_LIVE=1
+            - When set, raise instead of falling back to simulated
+            - Default: allow fallback (backward compatible)
+
+      2. Update python/carnot/inference/__init__.py to export load_model, generate
+
+      3. Create tests/python/test_model_loader.py:
+         - Test load_model with mock (patch transformers)
+         - Test memory check logic
+         - Test retry on OOM
+         - Test CARNOT_FORCE_LIVE env var
+         - Test generate with chat template
+
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp121-adversarial-verify-repair
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_121_adversarial_verify_repair.py
+    title: "Exp 121: Carnot verify-repair on adversarial GSM8K"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: This is THE credibility experiment. Exp 120 showed that LLMs
+      drop accuracy on adversarial GSM8K variants. This experiment shows that
+      Carnot's verify-repair pipeline MAINTAINS accuracy because Ising constraint
+      verification catches arithmetic errors regardless of irrelevant context.
+
+      The hypothesis: Carnot's improvement is LARGER on adversarial variants
+      than standard GSM8K, because there are more arithmetic errors to catch
+      when the LLM is confused by irrelevant information.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_120_adversarial_baseline.py — baseline results
+      - results/adversarial_gsm8k_data.json — adversarial datasets
+      - results/experiment_120_results.json — baseline accuracy
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - scripts/experiment_91_gsm8k_live.py — verify-repair on GSM8K
+
+      TASK: Create scripts/experiment_121_adversarial_verify_repair.py
+
+      CONCRETE STEPS:
+      1. Load adversarial data and baseline results
+
+      2. For each model x each variant (4 x 200 = 800 questions):
+         Run 3 modes:
+         a. Baseline (from Exp 120, or re-run)
+         b. Verify-only: extract arithmetic constraints, check via Ising
+         c. Verify-repair: full loop (max 3 iterations)
+
+      3. Key metrics:
+         - Accuracy per mode per variant
+         - Improvement delta: (verify-repair - baseline) per variant
+         - Is delta LARGER on adversarial variants? (core hypothesis)
+         - Error type breakdown: which errors does Ising catch?
+         - Does Ising correctly ignore the irrelevant sentence?
+
+      4. Statistical analysis:
+         - 95% bootstrap confidence intervals on all accuracy numbers
+         - Paired test: is adversarial improvement significantly > standard?
+
+      5. Print comprehensive results table
+      6. Save to results/experiment_121_results.json
+
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_121_adversarial_verify_repair.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp124-full-gsm8k-live
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_124_full_gsm8k_live.py
+    title: "Exp 124: Full GSM8K (1319) with live inference"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 91 ran 200 GSM8K questions with simulated inference. Exp 123
+      fixed model loading. This experiment runs the FULL 1,319-question GSM8K
+      test set with live model inference — the publishable benchmark.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_91_gsm8k_live.py — 200-question GSM8K
+      - python/carnot/inference/model_loader.py — robust model loading (Exp 123)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+
+      TASK: Create scripts/experiment_124_full_gsm8k_live.py
+
+      CONCRETE STEPS:
+      1. Load full GSM8K test set (1,319 questions):
+         - Try: datasets library (load_dataset("gsm8k", "main", split="test"))
+         - Fallback: generate 1,319 GSM8K-style questions programmatically
+
+      2. Use robust model loader (Exp 123) with CARNOT_FORCE_LIVE=1
+
+      3. Run 3 modes on all 1,319 questions per model:
+         a. Baseline, b. Verify-only, c. Verify-repair
+
+      4. Report:
+         - Accuracy per mode with 95% confidence intervals
+         - Compare to published Qwen3.5-0.8B GSM8K baselines
+         - Per-difficulty breakdown if available
+         - Wall-clock time
+
+      5. Save to results/experiment_124_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_124_full_gsm8k_live.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp122-adversarial-analysis
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_122_adversarial_analysis.py
+    title: "Exp 122: Adversarial robustness deep analysis"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 121 showed Carnot's performance on adversarial GSM8K. This
+      experiment analyzes WHY Carnot succeeds — which error types are caught,
+      which are missed, and whether Ising energy predicts LLM failure.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_121_results.json — adversarial verify-repair results
+      - results/experiment_120_results.json — baseline results
+      - results/adversarial_gsm8k_data.json — adversarial datasets
+
+      TASK: Create scripts/experiment_122_adversarial_analysis.py
+
+      CONCRETE STEPS:
+      1. Error taxonomy: categorize every LLM error by type:
+         - Keyword-triggered (saw "smaller" → subtracted)
+         - Irrelevant-number (used the injected number in calculation)
+         - Arithmetic (correct logic, wrong computation)
+         - Logic (wrong approach to the problem)
+
+      2. Carnot detection analysis: for each error type:
+         - What fraction does Ising catch?
+         - What fraction does verify-repair fix?
+         - Which types are uncatchable by constraint verification?
+
+      3. Energy-prediction analysis:
+         - Does high Ising energy predict LLM will be wrong?
+         - ROC curve: energy as predictor of incorrect answer
+         - Can we use energy to triage which answers need human review?
+
+      4. Irrelevant sentence analysis:
+         - Does the ArithmeticExtractor ever extract the irrelevant number?
+         - How robust is constraint extraction to adversarial context?
+
+      5. Save analysis to results/experiment_122_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_122_adversarial_analysis.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 35: Multi-Turn Agentic Verification ───────────────
+  - id: exp125-constraint-state-machine
+    milestone: "2026.04.8"
+    deliverable: python/carnot/pipeline/state_machine.py
+    title: "Exp 125: Constraint state machine for agent workflows"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 99 built constraint state propagation. This experiment
+      creates a production-grade ConstraintStateMachine that agent frameworks
+      can integrate.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/agentic.py — ConstraintState, propagate()
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - python/carnot/pipeline/extract.py — AutoExtractor
+
+      TASK: Create python/carnot/pipeline/state_machine.py
+
+      CONCRETE STEPS:
+      1. ConstraintStateMachine class:
+         - step(input_text, output_text) -> StepResult
+         - Internally: extract constraints, verify against accumulated state,
+           flag contradictions with previous facts, update state
+         - rollback(to_step: int) -> restores state to after that step
+         - history() -> list of all steps with per-step verification results
+         - verified_facts() -> all facts currently marked VERIFIED
+         - pending_facts() -> all facts still ASSUMED
+
+      2. StepResult dataclass:
+         - step_index, verification, new_facts, contradictions, state_snapshot
+
+      3. Tests in tests/python/test_state_machine.py
+
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp126-agent-rollback
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_126_agent_rollback.py
+    title: "Exp 126: Agent rollback on constraint violation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 125 built the ConstraintStateMachine with rollback. This
+      experiment tests rollback on multi-step reasoning tasks.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine (Exp 125)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+
+      TASK: Create scripts/experiment_126_agent_rollback.py
+
+      CONCRETE STEPS:
+      1. Create 20 multi-step math problems (4 steps each):
+         Step 1: Extract given values
+         Step 2: Compute intermediate result
+         Step 3: Apply final operation
+         Step 4: State answer
+
+      2. Simulate agent with deliberate errors at step 2 or 3
+
+      3. Run with ConstraintStateMachine:
+         - Detect violation at step N
+         - Rollback to step N-1
+         - Re-run from rollback point with constraint feedback
+         - Measure: final accuracy with vs without rollback
+
+      4. Save results to results/experiment_126_results.json
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_126_agent_rollback.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp127-agent-workflow-benchmark
+    milestone: "2026.04.8"
+    deliverable: scripts/experiment_127_agent_workflow.py
+    title: "Exp 127: Agent workflow verification benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 125-126 built constraint state machine and rollback. This
+      experiment benchmarks agent workflow verification end-to-end.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine
+      - scripts/experiment_126_agent_rollback.py — rollback results
+
+      TASK: Create scripts/experiment_127_agent_workflow.py
+
+      CONCRETE STEPS:
+      1. Three workflow types (20 problems each):
+         a. 4-step math: extract → compute → verify → answer
+         b. 3-step code: design → implement → test
+         c. 5-step planning: goals → constraints → schedule → verify → output
+
+      2. Run each with and without ConstraintStateMachine
+
+      3. Metrics: final accuracy, steps to completion, rollbacks triggered,
+         constraint violations caught per step
+
+      4. Save to results/experiment_127_results.json
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_127_agent_workflow.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 36: LNN Adaptive Constraints ──────────────────────
+  - id: exp128-lnn-prototype
+    milestone: "2026.04.8"
+    deliverable: python/carnot/models/lnn.py
+    title: "Exp 128: LNN adaptive constraint model"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Liquid Neural Networks have parameters that adapt during inference
+      via differential equations. For Carnot, this means constraint coupling
+      strengths that evolve as new facts arrive in multi-turn agent workflows.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/ising.py — static Ising model (for comparison)
+      - python/carnot/models/kan.py — KAN model (Exp 108)
+      - python/carnot/pipeline/state_machine.py — agent state machine (Exp 125)
+
+      TASK: Create python/carnot/models/lnn.py
+
+      CONCRETE STEPS:
+      1. LiquidConstraintModel class:
+         - Coupling matrix that evolves via ODE: dJ/dt = f(J, observations)
+         - f parameterized as small MLP (learnable)
+         - step(observation) -> updates couplings based on new information
+         - energy(state) -> computed with current (adapted) couplings
+         - reset() -> return to initial couplings
+
+      2. Training: learn the ODE parameters from multi-step sequences
+         - Input: sequence of (observation, correct_label) pairs
+         - Loss: sum of energy-based classification losses across sequence
+         - The model should learn to ADAPT its couplings to be more accurate
+           as it sees more observations
+
+      3. Tests in tests/python/test_lnn.py
+
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
