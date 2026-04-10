@@ -153,3 +153,6 @@
 | 2026-04-10 06:47 UTC | Exp 106: TruthfulQA benchmark with factual extract | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
  |
 | 2026-04-10 06:48 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 06:50 UTC | Exp 106: TruthfulQA benchmark with factual extract | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 06:51 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
