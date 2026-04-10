@@ -106,6 +106,84 @@ autonomous directed self-learning where the energy function is ground truth.
    and gives real latency numbers for guided decoding feasibility.
    See research-references.md for prior art (Tohoku, Microsoft, Fujitsu).
 
+## Continuous Self-Learning (CORE ARCHITECTURAL GOAL)
+
+Carnot must get smarter over time. Every query, every verification, every
+repair should make the next one faster and more accurate. This is the path
+to autonomous directed self-learning (the PRD's FR-11).
+
+**The key constraint:** Every learning mechanism must have a hardware
+acceleration path. We're building for hybrid compute: CPU + system memory
+for orchestration, GPU/NPU/APU for batch training, FPGA/TSU for sampling.
+Avoid the classic LLM problem where training is 1000x slower than inference.
+Learning should happen AT inference speed, not as a separate offline phase.
+
+### Tier 1: Online Constraint Learning (NEAR-TERM, PRACTICAL)
+- Track which constraints fire and which errors they catch across queries
+- Upweight constraints that catch real errors, downweight noisy ones
+- Running average of per-constraint precision, updated after each cycle
+- **Hardware path:** Pure CPU — just counter updates, no matrix ops
+- **Implementation:** Add to VerifyRepairPipeline as opt-in mode
+- **Learning speed:** Instant (one counter update per verification)
+
+### Tier 2: Constraint Memory / Trace2Skill (MEDIUM-TERM, PAIRS WITH AGENTIC)
+- Cache verified facts across sessions, not just within a chain
+- Learn per-user and per-domain error patterns ("this codebase always has
+  off-by-one errors" → auto-add loop bound constraints)
+- ConstraintStateMachine (Exp 125) persists across agent sessions
+- Consolidate learned patterns into reusable constraint templates
+- **Hardware path:** CPU + system memory for storage, FPGA for fast
+  pattern matching against constraint template library
+- **Learning speed:** Minutes (accumulate across session, consolidate overnight)
+
+### Tier 3: JEPA-Style Predictive Verification (RESEARCH FRONTIER)
+- Train a model to predict constraint violations BEFORE the LLM finishes
+- Input: partial response (first N tokens) → predict which constraints
+  will be violated in the full response
+- Enables preemptive guided decoding: steer away from violations before
+  they happen, instead of checking after each token
+- Combines with guided decoding (Exp 110) — predict instead of check
+- **Hardware path:** Small predictor model on GPU/NPU (batch inference),
+  Ising sampling on FPGA/TSU for energy evaluation
+- **Learning speed:** CD training on accumulated (partial, violation) pairs.
+  With FPGA-accelerated sampling, training could run continuously in
+  background without blocking inference.
+
+### Tier 4: Adaptive Energy Landscapes (LONG-TERM, KONA)
+- Energy function itself evolves based on the distribution of queries
+- Not just adapting weights (that's Tier 1-2) but adapting the STRUCTURE
+  of the energy function — adding new constraint types, removing obsolete
+  ones, merging redundant constraints
+- KAN splines naturally support this: add knots where energy landscape
+  is complex, remove where it's smooth (adaptive mesh refinement)
+- **Hardware path:** FPGA reconfiguration for structural changes to the
+  Ising/KAN coupling graph. TSU hardware would need reprogramming for
+  new coupling topologies.
+- **Learning speed:** Hours (structural changes are expensive but rare).
+  The goal: one structural update per day based on accumulated statistics.
+
+### Hardware Acceleration Principle
+Every learning tier must answer: "How does this run 100x faster on
+hardware?" If the answer is "it can't," redesign it until it can.
+
+| Tier | Learning | Hardware | Speed Target |
+|------|----------|----------|-------------|
+| 1: Online weights | Counter updates | CPU | <1μs per update |
+| 2: Constraint memory | Pattern matching | CPU+FPGA | <1ms per lookup |
+| 3: Predictive verify | Small model inference | GPU/NPU | <10ms per prediction |
+| 4: Adaptive structure | Graph reconfiguration | FPGA/TSU | <1s per restructure |
+
+### What LNN Taught Us (Exp 116)
+LNN's continuous-time adaptation (dJ/dt = f(J, obs)) hurt performance
+(10% vs 100% for static Ising) because constraint structures don't change
+within a single reasoning chain. But the IDEA of adaptive couplings is
+right — it just needs to operate at the right timescale:
+- **Within a chain:** Static couplings (Ising/KAN) — proven effective
+- **Across chains:** Online weight updates (Tier 1) — fast and cheap
+- **Across sessions:** Constraint memory (Tier 2) — persistent learning
+- **Across domains:** Predictive verification (Tier 3) — transfer learning
+- **Across architectures:** Adaptive structure (Tier 4) — evolution
+
 ## Completed Goals
 
 - ~~**Ship a usable product**~~ — ✅ DONE (2026.04.4). pip install carnot,
