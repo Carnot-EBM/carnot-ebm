@@ -12,41 +12,68 @@ autonomous directed self-learning where the energy function is ground truth.
 
 ## Current Strategic Goals (in priority order)
 
-1. **Ship a usable product** — `pip install carnot`, VerifyRepairPipeline as
-   the main API, MCP server for Claude Code integration. Users should be
-   able to verify LLM outputs in 5 lines of Python.
+1. **Fix live model loading in experiments** — ENGINEERING, NOT RESEARCH.
+   Qwen3.5-0.8B loads fine when run directly (proved in Exp 56: 19/20 with
+   live inference). But the conductor's `claude -p` subprocess falls back to
+   simulated inference inconsistently. Fix: detect available memory, use
+   torch_dtype=float32 on CPU, retry on failure. Until this works reliably,
+   all benchmark numbers are synthetic. This unblocks goals #5 and #6.
 
-2. **Real benchmark validation at scale** — GSM8K and HumanEval scripts exist
-   (Exp 67, 68, 91) but used simulated LLM inference. Run them with LIVE
-   model inference at FULL scale to produce publishable numbers:
-   - GSM8K: full 1,319 test set (not 200 subset), live Qwen3.5 + Gemma4
-   - HumanEval: full 164 problems, live model generation
-   - Report confidence intervals, compare to published baselines
-   - Also TruthfulQA for factual domain
-   Exp 91 showed +14-15% improvement on 200 questions with simulated
-   inference — now prove it's real with live models on the full set.
+2. **Multi-turn / agentic verification** — BIGGEST UNTAPPED OPPORTUNITY.
+   Verify not just single Q&A but multi-step agent workflows. An agent that
+   plans → acts → observes should have each step constraint-verified. No one
+   else is doing this. Concrete research needed:
+   - Constraint propagation across steps (step 1's output constraints become
+     step 2's input constraints)
+   - State accumulation (track which facts have been verified vs assumed)
+   - Rollback semantics (when step 3 fails, which earlier step to repair?)
+   The verify-repair loop (Exp 57) works for single turns; extend it to
+   chains of reasoning. This is critical for autonomous agents and is the
+   most differentiating product feature Carnot could offer.
 
-3. **Multi-turn / agentic verification** — Verify not just single Q&A but
-   multi-step agent workflows. An agent that plans → acts → observes should
-   have each step constraint-verified. The verify-repair loop (Exp 57) works
-   for single turns; extend it to chains of reasoning where each step's
-   constraints propagate to the next. This is critical for autonomous agents.
+3. **Factual constraint extractor** — CLOSES BIGGEST COVERAGE GAP.
+   Exp 88 showed factual and scheduling domains have near-zero constraint
+   coverage (100% false negative rate). No amount of constraint learning
+   helps if we can't extract constraints from factual claims. Research
+   needed: knowledge-base-backed extractor that verifies claims against
+   Wikidata/Wikipedia. This is fundamentally different from arithmetic/code/
+   logic constraints and requires a new approach.
 
-4. **Scale constraint learning** — Move from hand-coded constraints to learned
-   constraint structures. Domain-specific Ising models trained from data.
+4. **Guided decoding latency benchmark** — QUICK EXPERIMENT, HIGH SIGNAL.
+   Exp 66 proved differentiable constraints work (1.0 AUROC). The remaining
+   question: can a single constraint check run fast enough during token
+   generation? If <1ms → viable for real-time guided decoding (Kona). If
+   >10ms → too slow, need approximations. One experiment answers this.
 
-5. **Bridge to continuous reasoning (Kona direction)** — Continuous Ising
-   relaxation (Exp 64 ✅) → embedding-space constraints (Exp 65 ✅) →
-   **end-to-end differentiable constraint reasoning (Exp 66 — NEXT)**.
-   Exp 66 is the critical next research experiment: backpropagate energy
-   gradients through constraints to LLM logits, adjusting the sampling
-   distribution toward constraint-satisfying tokens in real-time. This is
-   the holy grail — energy-guided decoding where constraints steer
-   generation, not just verify it post-hoc. See research-roadmap-v7.md
-   Phase 8 for the full design.
+5. **Real benchmark validation at scale** — NEEDS GOAL #1 FIRST.
+   GSM8K full 1,319 test set + HumanEval full 164 problems with LIVE model
+   inference. Exp 91 showed +14-15% on 200 questions with simulated
+   inference. Report confidence intervals, compare to published baselines.
+   Also TruthfulQA for factual domain. These are the credibility numbers
+   but are blocked until live model loading is reliable.
 
-6. **Prepare for Extropic TSU** — SamplerBackend abstraction is built (Exp 71).
-   When hardware ships, plug it in.
+6. **Scale constraint learning** — GOOD PROGRESS, CONTINUE.
+   Exp 55/62/63/88/89 built the foundation. Next: use failure mining results
+   (Exp 88) to build the `intermediate_result` extractor that would catch
+   44.8% of current false negatives. Then self-bootstrap on the expanded
+   constraint set.
+
+7. **Bridge to continuous reasoning (Kona direction)** — VALIDATED, DEPENDS ON #4.
+   Continuous Ising relaxation (Exp 64 ✅) → embedding-space constraints
+   (Exp 65 ✅) → end-to-end differentiable (Exp 66 ✅, 1.0 AUROC) →
+   gradient repair (Exp 87 ✅, 44% energy reduction). The math works.
+   Practicality depends on latency benchmark (#4). If fast enough, pursue
+   energy-guided decoding. If not, focus on post-hoc verify-repair which
+   is already proven effective.
+
+8. **Prepare for Extropic TSU** — WAITING ON HARDWARE.
+   SamplerBackend abstraction built (Exp 71). Nothing to do until hardware
+   ships.
+
+## Completed Goals
+
+- ~~**Ship a usable product**~~ — ✅ DONE (2026.04.4). pip install carnot,
+  VerifyRepairPipeline, CLI, MCP server, examples, docs, 0.1.0-beta1.
 
 ## Model Choices
 
