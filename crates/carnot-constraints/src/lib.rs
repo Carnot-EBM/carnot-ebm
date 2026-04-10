@@ -28,6 +28,8 @@
 //! Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-VERIFY-004
 
 pub mod constraint;
+pub mod extract;
+pub mod pipeline;
 pub mod verify;
 
 // Re-export core verification types so users don't need to depend on carnot-core directly.
@@ -36,4 +38,6 @@ pub use carnot_core::verify::{
 };
 
 pub use constraint::{BoundConstraint, EqualityConstraint, IsingConstraint};
+pub use extract::{ArithmeticExtractor, AutoExtractor, ConstraintExtractor, ConstraintResult, LogicExtractor};
+pub use pipeline::{PipelineResult, VerifyPipeline};
 pub use verify::VerificationCertificate;
