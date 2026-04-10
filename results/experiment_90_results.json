@@ -1,0 +1,692 @@
+{
+  "experiment": "90_autoresearch_constraints",
+  "description": "Autoresearch loop for constraint pipeline self-improvement. Proposes new regex/AST/logic/Ising feature hypotheses, tests them on held-out failures, accepts if they improve coverage without AUROC regression.",
+  "iterations_run": 20,
+  "max_iterations": 20,
+  "circuit_breaker_limit": 5,
+  "baseline_auroc": 0.5319444444444444,
+  "final_auroc": 0.5319444444444444,
+  "total_auroc_improvement": 0.0,
+  "accepted_count": 17,
+  "rejected_count": 3,
+  "acceptance_rate": 0.85,
+  "auroc_history": [
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444,
+    0.5319444444444444
+  ],
+  "per_type_stats": {
+    "ising_feature": {
+      "proposed": 4,
+      "accepted": 3,
+      "rejected": 1
+    },
+    "regex": {
+      "proposed": 8,
+      "accepted": 6,
+      "rejected": 2
+    },
+    "logic": {
+      "proposed": 5,
+      "accepted": 5,
+      "rejected": 0
+    },
+    "ast": {
+      "proposed": 3,
+      "accepted": 3,
+      "rejected": 0
+    }
+  },
+  "accepted_hypotheses": [
+    {
+      "type": "ising_feature",
+      "name": "has_numbers",
+      "description": "Binary feature: response contains numeric digits",
+      "pattern": "contains_numeric",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 53,
+        "test_match_rate": 0.53,
+        "matched_categories": {
+          "code_semantics": 13,
+          "arithmetic_chain": 29,
+          "comparison": 4,
+          "implicit_logic": 7
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "product_of",
+      "description": "Extract 'the product of X and Y is Z' claims",
+      "pattern": "(?:the\\s+)?product\\s+of\\s+(-?\\d+\\.?\\d*)\\s+and\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 7,
+        "test_match_rate": 0.07,
+        "matched_categories": {
+          "arithmetic_chain": 7
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "squared_is",
+      "description": "Extract 'X squared is Y' exponentiation claims",
+      "pattern": "(-?\\d+\\.?\\d*)\\s+squared\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 1,
+        "test_match_rate": 0.01,
+        "matched_categories": {
+          "arithmetic_chain": 1
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "ising_feature",
+      "name": "has_conditional",
+      "description": "Binary feature: response contains if/when/unless/provided",
+      "pattern": "contains_conditional",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 28,
+        "test_match_rate": 0.28,
+        "matched_categories": {
+          "implicit_logic": 22,
+          "code_semantics": 6
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "ising_feature",
+      "name": "high_punctuation",
+      "description": "Binary feature: punctuation-to-word ratio > 0.1",
+      "pattern": "punctuation_ratio_gt_0.1",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 97,
+        "test_match_rate": 0.97,
+        "matched_categories": {
+          "implicit_logic": 33,
+          "code_semantics": 23,
+          "arithmetic_chain": 29,
+          "comparison": 8,
+          "negation": 4
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "divided_by_equals",
+      "description": "Extract 'X divided by Y equals Z' division claims",
+      "pattern": "(-?\\d+\\.?\\d*)\\s+divided\\s+by\\s+(-?\\d+\\.?\\d*)\\s+(?:equals|is)\\s+(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 6,
+        "test_match_rate": 0.06,
+        "matched_categories": {
+          "arithmetic_chain": 6
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "logic",
+      "name": "as_long_as",
+      "description": "Extract 'X as long as Y' conditional constraints",
+      "pattern": "^(.+?)\\s+as\\s+long\\s+as\\s+(.+?)\\.?$",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 3,
+        "test_match_rate": 0.03,
+        "matched_categories": {
+          "implicit_logic": 3
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "sum_of",
+      "description": "Extract 'the sum of X and Y is Z' claims",
+      "pattern": "(?:the\\s+)?sum\\s+of\\s+(-?\\d+\\.?\\d*)\\s+and\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 3,
+        "test_match_rate": 0.03,
+        "matched_categories": {
+          "arithmetic_chain": 3
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "remainder_is",
+      "description": "Extract 'the remainder of X divided by Y is Z' modular arithmetic",
+      "pattern": "(?:the\\s+)?remainder\\s+(?:of|when)\\s+(-?\\d+\\.?\\d*)\\s+(?:divided\\s+by|mod|%)\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 4,
+        "test_match_rate": 0.04,
+        "matched_categories": {
+          "arithmetic_chain": 4
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "logic",
+      "name": "in_order_to",
+      "description": "Extract 'in order to X, Y' prerequisite constraints",
+      "pattern": "^in\\s+order\\s+(?:to|for)\\s+(.+?),\\s+(.+?)\\.?$",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 3,
+        "test_match_rate": 0.03,
+        "matched_categories": {
+          "implicit_logic": 3
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "ast",
+      "name": "list_comprehension",
+      "description": "Detect list comprehensions and verify iter/target types",
+      "pattern": "ListComp",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 3,
+        "test_match_rate": 0.03,
+        "matched_categories": {
+          "code_semantics": 3
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "logic",
+      "name": "assuming_that",
+      "description": "Extract 'assuming X, Y' conditional reasoning",
+      "pattern": "^assuming\\s+(?:that\\s+)?(.+?),\\s+(.+?)\\.?$",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 4,
+        "test_match_rate": 0.04,
+        "matched_categories": {
+          "implicit_logic": 4
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "ast",
+      "name": "lambda_function",
+      "description": "Detect lambda expressions and extract inline function constraints",
+      "pattern": "Lambda",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 3,
+        "test_match_rate": 0.03,
+        "matched_categories": {
+          "code_semantics": 3
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "logic",
+      "name": "provided_that",
+      "description": "Extract 'X provided that Y' as 'if Y then X' implications",
+      "pattern": "^(.+?)\\s+provided\\s+that\\s+(.+?)\\.?$",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 4,
+        "test_match_rate": 0.04,
+        "matched_categories": {
+          "implicit_logic": 4
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "logic",
+      "name": "whenever",
+      "description": "Extract 'whenever X, Y' as universal implication",
+      "pattern": "^whenever\\s+(.+?),\\s+(.+?)\\.?$",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 4,
+        "test_match_rate": 0.04,
+        "matched_categories": {
+          "implicit_logic": 4
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "times_is",
+      "description": "Extract 'X times Y is Z' multiplication claims",
+      "pattern": "(-?\\d+\\.?\\d*)\\s+times\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 7,
+        "test_match_rate": 0.07,
+        "matched_categories": {
+          "arithmetic_chain": 7
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "ast",
+      "name": "walrus_operator",
+      "description": "Detect walrus operator := assignments in expressions",
+      "pattern": "NamedExpr",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 3,
+        "test_match_rate": 0.03,
+        "matched_categories": {
+          "code_semantics": 3
+        },
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    }
+  ],
+  "rejected_hypotheses": [
+    {
+      "type": "ising_feature",
+      "name": "sentence_count_bucket",
+      "description": "Binary feature: response has > 3 sentences (multi-claim indicator)",
+      "pattern": "sentence_count_gt_3",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 0,
+        "test_match_rate": 0.0,
+        "matched_categories": {},
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "div_equals",
+      "description": "Extract 'X / Y = Z' or 'X \u00f7 Y = Z' division with explicit equals",
+      "pattern": "(-?\\d+\\.?\\d*)\\s*[/\u00f7]\\s*(-?\\d+\\.?\\d*)\\s*=\\s*(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 0,
+        "test_match_rate": 0.0,
+        "matched_categories": {},
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    },
+    {
+      "type": "regex",
+      "name": "mult_equals",
+      "description": "Extract 'X * Y = Z' or 'X \u00d7 Y = Z' multiplication with explicit equals",
+      "pattern": "(-?\\d+\\.?\\d*)\\s*[*\u00d7]\\s*(-?\\d+\\.?\\d*)\\s*=\\s*(-?\\d+\\.?\\d*)",
+      "auroc_delta": 0.0,
+      "metadata": {
+        "test_matches": 0,
+        "test_match_rate": 0.0,
+        "matched_categories": {},
+        "auroc_before": 0.5319444444444444,
+        "auroc_after": 0.5319444444444444
+      }
+    }
+  ],
+  "iteration_log": [
+    {
+      "iteration": 1,
+      "hypothesis_type": "ising_feature",
+      "hypothesis_name": "has_numbers",
+      "description": "Binary feature: response contains numeric digits",
+      "pattern": "contains_numeric",
+      "test_matches": 53,
+      "test_match_rate": 0.53,
+      "matched_categories": {
+        "code_semantics": 13,
+        "arithmetic_chain": 29,
+        "comparison": 4,
+        "implicit_logic": 7
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 2,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "product_of",
+      "description": "Extract 'the product of X and Y is Z' claims",
+      "pattern": "(?:the\\s+)?product\\s+of\\s+(-?\\d+\\.?\\d*)\\s+and\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "test_matches": 7,
+      "test_match_rate": 0.07,
+      "matched_categories": {
+        "arithmetic_chain": 7
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 3,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "squared_is",
+      "description": "Extract 'X squared is Y' exponentiation claims",
+      "pattern": "(-?\\d+\\.?\\d*)\\s+squared\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "test_matches": 1,
+      "test_match_rate": 0.01,
+      "matched_categories": {
+        "arithmetic_chain": 1
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 4,
+      "hypothesis_type": "ising_feature",
+      "hypothesis_name": "has_conditional",
+      "description": "Binary feature: response contains if/when/unless/provided",
+      "pattern": "contains_conditional",
+      "test_matches": 28,
+      "test_match_rate": 0.28,
+      "matched_categories": {
+        "implicit_logic": 22,
+        "code_semantics": 6
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 5,
+      "hypothesis_type": "ising_feature",
+      "hypothesis_name": "high_punctuation",
+      "description": "Binary feature: punctuation-to-word ratio > 0.1",
+      "pattern": "punctuation_ratio_gt_0.1",
+      "test_matches": 97,
+      "test_match_rate": 0.97,
+      "matched_categories": {
+        "implicit_logic": 33,
+        "code_semantics": 23,
+        "arithmetic_chain": 29,
+        "comparison": 8,
+        "negation": 4
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 6,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "divided_by_equals",
+      "description": "Extract 'X divided by Y equals Z' division claims",
+      "pattern": "(-?\\d+\\.?\\d*)\\s+divided\\s+by\\s+(-?\\d+\\.?\\d*)\\s+(?:equals|is)\\s+(-?\\d+\\.?\\d*)",
+      "test_matches": 6,
+      "test_match_rate": 0.06,
+      "matched_categories": {
+        "arithmetic_chain": 6
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 7,
+      "hypothesis_type": "logic",
+      "hypothesis_name": "as_long_as",
+      "description": "Extract 'X as long as Y' conditional constraints",
+      "pattern": "^(.+?)\\s+as\\s+long\\s+as\\s+(.+?)\\.?$",
+      "test_matches": 3,
+      "test_match_rate": 0.03,
+      "matched_categories": {
+        "implicit_logic": 3
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 8,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "sum_of",
+      "description": "Extract 'the sum of X and Y is Z' claims",
+      "pattern": "(?:the\\s+)?sum\\s+of\\s+(-?\\d+\\.?\\d*)\\s+and\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "test_matches": 3,
+      "test_match_rate": 0.03,
+      "matched_categories": {
+        "arithmetic_chain": 3
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 9,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "remainder_is",
+      "description": "Extract 'the remainder of X divided by Y is Z' modular arithmetic",
+      "pattern": "(?:the\\s+)?remainder\\s+(?:of|when)\\s+(-?\\d+\\.?\\d*)\\s+(?:divided\\s+by|mod|%)\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "test_matches": 4,
+      "test_match_rate": 0.04,
+      "matched_categories": {
+        "arithmetic_chain": 4
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 10,
+      "hypothesis_type": "logic",
+      "hypothesis_name": "in_order_to",
+      "description": "Extract 'in order to X, Y' prerequisite constraints",
+      "pattern": "^in\\s+order\\s+(?:to|for)\\s+(.+?),\\s+(.+?)\\.?$",
+      "test_matches": 3,
+      "test_match_rate": 0.03,
+      "matched_categories": {
+        "implicit_logic": 3
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 11,
+      "hypothesis_type": "ast",
+      "hypothesis_name": "list_comprehension",
+      "description": "Detect list comprehensions and verify iter/target types",
+      "pattern": "ListComp",
+      "test_matches": 3,
+      "test_match_rate": 0.03,
+      "matched_categories": {
+        "code_semantics": 3
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 12,
+      "hypothesis_type": "logic",
+      "hypothesis_name": "assuming_that",
+      "description": "Extract 'assuming X, Y' conditional reasoning",
+      "pattern": "^assuming\\s+(?:that\\s+)?(.+?),\\s+(.+?)\\.?$",
+      "test_matches": 4,
+      "test_match_rate": 0.04,
+      "matched_categories": {
+        "implicit_logic": 4
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 13,
+      "hypothesis_type": "ising_feature",
+      "hypothesis_name": "sentence_count_bucket",
+      "description": "Binary feature: response has > 3 sentences (multi-claim indicator)",
+      "pattern": "sentence_count_gt_3",
+      "test_matches": 0,
+      "test_match_rate": 0.0,
+      "matched_categories": {},
+      "auroc_delta": 0.0,
+      "accepted": false,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 14,
+      "hypothesis_type": "ast",
+      "hypothesis_name": "lambda_function",
+      "description": "Detect lambda expressions and extract inline function constraints",
+      "pattern": "Lambda",
+      "test_matches": 3,
+      "test_match_rate": 0.03,
+      "matched_categories": {
+        "code_semantics": 3
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 15,
+      "hypothesis_type": "logic",
+      "hypothesis_name": "provided_that",
+      "description": "Extract 'X provided that Y' as 'if Y then X' implications",
+      "pattern": "^(.+?)\\s+provided\\s+that\\s+(.+?)\\.?$",
+      "test_matches": 4,
+      "test_match_rate": 0.04,
+      "matched_categories": {
+        "implicit_logic": 4
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 16,
+      "hypothesis_type": "logic",
+      "hypothesis_name": "whenever",
+      "description": "Extract 'whenever X, Y' as universal implication",
+      "pattern": "^whenever\\s+(.+?),\\s+(.+?)\\.?$",
+      "test_matches": 4,
+      "test_match_rate": 0.04,
+      "matched_categories": {
+        "implicit_logic": 4
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 17,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "div_equals",
+      "description": "Extract 'X / Y = Z' or 'X \u00f7 Y = Z' division with explicit equals",
+      "pattern": "(-?\\d+\\.?\\d*)\\s*[/\u00f7]\\s*(-?\\d+\\.?\\d*)\\s*=\\s*(-?\\d+\\.?\\d*)",
+      "test_matches": 0,
+      "test_match_rate": 0.0,
+      "matched_categories": {},
+      "auroc_delta": 0.0,
+      "accepted": false,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 18,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "mult_equals",
+      "description": "Extract 'X * Y = Z' or 'X \u00d7 Y = Z' multiplication with explicit equals",
+      "pattern": "(-?\\d+\\.?\\d*)\\s*[*\u00d7]\\s*(-?\\d+\\.?\\d*)\\s*=\\s*(-?\\d+\\.?\\d*)",
+      "test_matches": 0,
+      "test_match_rate": 0.0,
+      "matched_categories": {},
+      "auroc_delta": 0.0,
+      "accepted": false,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 19,
+      "hypothesis_type": "regex",
+      "hypothesis_name": "times_is",
+      "description": "Extract 'X times Y is Z' multiplication claims",
+      "pattern": "(-?\\d+\\.?\\d*)\\s+times\\s+(-?\\d+\\.?\\d*)\\s+is\\s+(-?\\d+\\.?\\d*)",
+      "test_matches": 7,
+      "test_match_rate": 0.07,
+      "matched_categories": {
+        "arithmetic_chain": 7
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    },
+    {
+      "iteration": 20,
+      "hypothesis_type": "ast",
+      "hypothesis_name": "walrus_operator",
+      "description": "Detect walrus operator := assignments in expressions",
+      "pattern": "NamedExpr",
+      "test_matches": 3,
+      "test_match_rate": 0.03,
+      "matched_categories": {
+        "code_semantics": 3
+      },
+      "auroc_delta": 0.0,
+      "accepted": true,
+      "cumulative_auroc": 0.5319444444444444
+    }
+  ],
+  "failure_cases_count": 100,
+  "eval_pairs_count": 200,
+  "wall_clock_seconds": 0.37728238105773926,
+  "timestamp": "2026-04-10T02:17:50Z"
+}
