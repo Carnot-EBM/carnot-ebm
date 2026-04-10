@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 118 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118)
+**Last Updated:** 2026-04-10 — 119 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119)
 
 ## What's Working
 
@@ -240,6 +240,7 @@
 | 101 | **Agent workflow verification E2E** | 60% detection, 67% more than final-only, math 80%, code 100% | **⚠️ Agentic chain helps, but research domain undetected** |
 | 102 | **Constraint check latency microbenchmark** | Full pipeline profiling: JIT forward 0.008ms (per-token viable), extraction 0.04–2.6ms linear scaling, MiniLM bottleneck 7.6ms; JAX JIT 55x faster than Python verify | **✅ Guided decoding confirmed viable** |
 | 108 | **KAN Energy Function Implementation** | KAN (Kolmogorov-Arnold Networks) energy tier with B-spline edge activations; BSpline + KANEnergyFunction + KANModel; 26 tests passed, Rust scaffold created; from_ising() warm-start from trained Ising | **✅ New energy tier between Ising and Gibbs** |
+| 119 | **Adversarial GSM8K variant generator (Apple 2410.05229)** | Reproduces Apple GSM-Symbolic methodology: 4 variants × 200 questions = 800 items; number swap (GSM-Symbolic), irrelevant injection (GSM-NoOp), combined; spot-check validation re-runs arithmetic to confirm correct answers; enables pipeline robustness evaluation against 65%-drop attack surface | **✅ Adversarial dataset for verify-repair robustness testing** |
 
 ## 14 Principles Learned
 
