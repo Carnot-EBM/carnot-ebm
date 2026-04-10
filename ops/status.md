@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 125 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 120, 122, 123, 125), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), LLM ADVERSARIAL BASELINE (EXP 120), ADVERSARIAL ROBUSTNESS DEEP ANALYSIS (EXP 122), ROBUST MODEL LOADER (EXP 123), CONSTRAINT STATE MACHINE FOR AGENT WORKFLOWS (EXP 125)
+**Last Updated:** 2026-04-10 — 126 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 120, 122, 123, 125, 126), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), LLM ADVERSARIAL BASELINE (EXP 120), ADVERSARIAL ROBUSTNESS DEEP ANALYSIS (EXP 122), ROBUST MODEL LOADER (EXP 123), CONSTRAINT STATE MACHINE FOR AGENT WORKFLOWS (EXP 125), AGENT ROLLBACK ON CONSTRAINT VIOLATION (EXP 126)
 
 ## What's Working
 
@@ -79,6 +79,7 @@
 - VerifyRepairPipeline: user-facing API consolidating verify + repair into `carnot.pipeline.verify_repair`; verify-only and verify-and-repair modes (Exp 75)
 - Pipeline error handling: structured error hierarchy (`carnot.pipeline.errors`) with CarnotError base + 5 subclasses (ExtractionError, VerificationError, RepairError, ModelLoadError, PipelineTimeoutError); wall-clock timeout support in VerifyRepairPipeline (Exp 82)
 - Constraint state machine for agent workflows: `ConstraintStateMachine` in `carnot.pipeline.state_machine` wraps `VerifyRepairPipeline` for step-by-step agent framework integration; features: per-step StepResult audit records, deep-copy rollback to any prior step, contradiction detection (flags when new output violates a previously VERIFIED fact), `verified_facts()` + `pending_facts()` accessors; 662-line test suite at 100% coverage (Exp 125, REQ-VERIFY-001, SCENARIO-VERIFY-005)
+- Agent rollback on constraint violation: `scripts/experiment_126_agent_rollback.py` validates `ConstraintStateMachine.rollback()` on multi-step reasoning; 0%→50% accuracy recovery via rollback+repair on 20 structured 4-step math problems; ArithmeticExtractor catches addition/subtraction violations (100% detection) but not multiplication (0%); `_SingleArgCompatPipeline` shim bridges `agentic.propagate()` single-arg `verify()` to `VerifyRepairPipeline` two-arg signature (Exp 126, REQ-VERIFY-001, SCENARIO-VERIFY-005)
 - NL constraint extraction: pattern-based claim verification
 - LLM self-constraint pipeline: 10/10 perfect (all hallucinations caught)
 - Scheduling constraints: time slot exclusion, ordering, capacity
