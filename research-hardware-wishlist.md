@@ -1,0 +1,129 @@
+# Hardware Wishlist for Carnot Research
+
+This file tracks hardware that would accelerate Carnot's research and
+production goals. Updated as new needs emerge from experiments.
+
+## Priority 1: FPGA for Ising Sampling (Unblocks: Self-Learning Tiers 1-4, TSU path)
+
+### Small FPGA — Experiment Scale (1k-10k p-bits)
+- **AMD/Xilinx Kria KV260** (~$250)
+  - 256K LUTs, enough for ~4k p-bit Ising sampler
+  - Ubuntu-based, Python-accessible via PYNQ
+  - PCIe not needed (AXI accessible from ARM cores)
+  - Supplier: Xilinx.com, Mouser, Digikey, Amazon
+- **Terasic DE10-Nano** (~$130)
+  - Intel Cyclone V, ~40K ALMs
+  - Good for 1k-2k p-bit prototype
+  - Supplier: terasic.com, Mouser
+- **Lattice CrossLink-NX** (~$50 eval board)
+  - Small but ultra-low power — interesting for edge constraint verification
+  - Supplier: latticesemi.com
+
+### Large FPGA — Production Scale (100k-256k p-bits)
+- **AMD/Xilinx Alveo U250** (~$5,000-8,000)
+  - 1.3M LUTs, PCIe Gen3 x16
+  - Could implement full 256k p-bit Ising sampler
+  - Matches Extropic Z1 target scale
+  - Supplier: Xilinx.com, Avnet
+- **AMD/Xilinx Alveo U55C** (~$4,000-6,000)
+  - HBM memory — useful for large coupling matrices
+  - Supplier: Xilinx.com
+- **Intel Agilex 7 FPGA Dev Kit** (~$5,000-10,000)
+  - Latest Intel FPGA, competitive with Xilinx
+  - Supplier: intel.com/fpga
+
+### FPGA Justification
+- Exp 102: constraint check is 0.005ms on CPU. FPGA would be <1μs.
+- Exp 46b: 5000-var SAT in 0.7s on CPU. FPGA target: <1ms.
+- Self-Learning Tier 2: FPGA pattern matching for constraint memory
+- Self-Learning Tier 4: FPGA reconfiguration for adaptive energy landscapes
+- TSU path validation before Extropic hardware ships
+
+## Priority 2: Discrete GPU for Live Model Inference (Unblocks: Goals #1, #5, #6)
+
+### Why Current Setup Falls Short
+- Radeon 890M iGPU: ROCm crashes JAX, PyTorch works but only 3.3x speedup
+- CPU inference works but is slow for batch benchmarks (1,319 GSM8K questions)
+- Live model loading fails inconsistently in conductor subprocesses
+
+### Options
+- **AMD Radeon RX 7900 XTX** (~$800-900)
+  - 24GB VRAM, ROCm 6.x support, gfx1100 (well-supported)
+  - Could run Qwen3.5-0.8B + Gemma4-E4B simultaneously
+  - ROCm JAX should work on gfx1100 (unlike gfx1150 iGPU)
+  - Supplier: AMD.com, Newegg, Amazon
+- **AMD Radeon PRO W7900** (~$2,000-2,500)
+  - 48GB VRAM, ECC, validated ROCm
+  - Could run models up to 13B for benchmark comparison
+  - Supplier: AMD.com, CDW
+- **NVIDIA RTX 4090** (~$1,600-2,000)
+  - 24GB VRAM, CUDA (guaranteed JAX/PyTorch support)
+  - Most reliable option but locks us to NVIDIA ecosystem
+  - Supplier: NVIDIA.com, Newegg, Amazon, Best Buy
+- **NVIDIA RTX 5090** (~$2,000-2,500)
+  - 32GB VRAM, latest CUDA
+  - Supplier: NVIDIA.com (when in stock)
+
+### GPU Justification
+- Goal #1: Reliable live model inference for benchmarks
+- Goal #5: Apple adversarial GSM8K needs 1,319+ questions x 2 models
+- Goal #6: Full-scale benchmarks with confidence intervals
+- Self-Learning Tier 3: JEPA predictor model runs on GPU/NPU
+
+## Priority 3: NPU/APU for Edge Inference (Unblocks: Edge deployment, Tier 3)
+
+### Options
+- **AMD Ryzen AI 300 series** (current machine has Ryzen AI 9 HX 370)
+  - XDNA NPU is present but unused — need AMD's NPU SDK
+  - Potential for running small constraint models on NPU while LLM runs on CPU
+  - **Action needed:** Install AMD XDNA driver + SDK, test if constraint
+    check can run on NPU. No hardware purchase needed — just software.
+- **Intel Core Ultra (Lunar Lake/Arrow Lake)**
+  - Integrated NPU, well-documented SDK
+  - Could be a comparison platform for edge constraint verification
+  - Supplier: Intel, various laptop OEMs
+- **Qualcomm Snapdragon X Elite dev kit** (~$900)
+  - Hexagon NPU, good for mobile/embedded constraint verification
+  - Supplier: Qualcomm
+
+### NPU Justification
+- Self-Learning Tier 3: small predictor model (JEPA) on NPU
+- Edge deployment: constraint verification on device, not cloud
+- The current machine's XDNA NPU is FREE to experiment with
+
+## Priority 4: Extropic TSU (When Available)
+
+- **Extropic Z1** (not yet available, ~2026-2027?)
+  - 256k p-bits, native thermodynamic sampling
+  - Nanosecond-scale energy minimization
+  - SamplerBackend abstraction (Exp 71) ready for integration
+  - **Action:** Sign up for early access at extropic.ai
+  - **In the meantime:** FPGA simulation (Priority 1) validates the path
+
+## Priority 5: Memory (Unblocks: Larger models, batch processing)
+
+- **128GB DDR5 RAM upgrade** (~$200-400)
+  - Current: likely 32-64GB
+  - Would enable running 3B+ models comfortably on CPU
+  - Multiple models loaded simultaneously for comparison benchmarks
+  - Supplier: Crucial, Kingston, G.Skill via Amazon/Newegg
+
+## Current Hardware Inventory
+
+| Component | Model | Status | Carnot Use |
+|-----------|-------|--------|-----------|
+| CPU | AMD Ryzen AI 9 HX 370 | Working | All experiments, CPU inference |
+| iGPU | Radeon 890M (gfx1150) | Broken for JAX | PyTorch only (3.3x speedup) |
+| NPU | AMD XDNA | Unused | Needs driver/SDK setup |
+| RAM | DDR5 (TBD size) | Working | Constrains model size |
+
+## Shopping List (Priority Order)
+
+| Item | Est. Cost | Impact | Unblocks |
+|------|-----------|--------|----------|
+| AMD XDNA NPU SDK install | $0 | Medium | Tier 3 self-learning, edge deployment |
+| Kria KV260 FPGA | $250 | High | TSU path, FPGA sampling prototype |
+| 128GB DDR5 RAM | $300 | Medium | Larger models, batch benchmarks |
+| RX 7900 XTX GPU | $900 | Very High | Live inference, all benchmarks |
+| Alveo U250 FPGA | $6,000 | Very High | Production-scale Ising, 256k p-bits |
+| Extropic Z1 TSU | TBD | Transformative | Native thermodynamic sampling |
