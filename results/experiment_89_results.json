@@ -1,0 +1,151 @@
+{
+  "experiment": 89,
+  "description": "Self-bootstrapping Ising from pipeline verification outputs",
+  "n_total": 1000,
+  "n_train": 700,
+  "n_val": 150,
+  "n_test": 150,
+  "best_hp": "lr=0.01,L1=0",
+  "hp_sweep": [
+    {
+      "label": "lr=0.01,L1=0",
+      "val_auroc": 0.7611333333333333,
+      "val_acc": 0.6466666666666666
+    },
+    {
+      "label": "lr=0.01,L1=0.01",
+      "val_auroc": 0.7569111111111111,
+      "val_acc": 0.66
+    },
+    {
+      "label": "lr=0.001,L1=0",
+      "val_auroc": 0.7607777777777778,
+      "val_acc": 0.6466666666666666
+    },
+    {
+      "label": "lr=0.001,L1=0.01",
+      "val_auroc": 0.7569111111111111,
+      "val_acc": 0.66
+    },
+    {
+      "label": "lr=0.05,L1=0.001",
+      "val_auroc": 0.7602888888888889,
+      "val_acc": 0.6466666666666666
+    }
+  ],
+  "per_domain": {
+    "arithmetic": {
+      "n_test": 29,
+      "self_bootstrap_domain": {
+        "auroc": 1.0,
+        "accuracy": 1.0
+      },
+      "self_bootstrap_combined": {
+        "auroc": 0.9988,
+        "accuracy": 1.0
+      },
+      "random_baseline": {
+        "auroc": 0.5,
+        "accuracy": 0.5
+      }
+    },
+    "code": {
+      "n_test": 25,
+      "self_bootstrap_domain": {
+        "auroc": 0.9096,
+        "accuracy": 0.88
+      },
+      "self_bootstrap_combined": {
+        "auroc": 0.8584,
+        "accuracy": 0.88
+      },
+      "random_baseline": {
+        "auroc": 0.5,
+        "accuracy": 0.5
+      }
+    },
+    "logic": {
+      "n_test": 31,
+      "self_bootstrap_domain": {
+        "auroc": 1.0,
+        "accuracy": 1.0
+      },
+      "self_bootstrap_combined": {
+        "auroc": 1.0,
+        "accuracy": 1.0
+      },
+      "random_baseline": {
+        "auroc": 0.5,
+        "accuracy": 0.5
+      }
+    },
+    "factual": {
+      "n_test": 35,
+      "self_bootstrap_domain": {
+        "auroc": 0.5518,
+        "accuracy": 0.2857
+      },
+      "self_bootstrap_combined": {
+        "auroc": 0.5682,
+        "accuracy": 0.2857
+      },
+      "random_baseline": {
+        "auroc": 0.5,
+        "accuracy": 0.5
+      }
+    },
+    "scheduling": {
+      "n_test": 30,
+      "self_bootstrap_domain": {
+        "auroc": 0.5172,
+        "accuracy": 0.2
+      },
+      "self_bootstrap_combined": {
+        "auroc": 0.5139,
+        "accuracy": 0.1667
+      },
+      "random_baseline": {
+        "auroc": 0.5,
+        "accuracy": 0.5
+      }
+    }
+  },
+  "overall": {
+    "self_bootstrap_combined_auroc": 0.7881,
+    "self_bootstrap_combined_accuracy": 0.6467,
+    "random_baseline_auroc": 0.5
+  },
+  "data_efficiency_ablation": [
+    {
+      "n_train": 100,
+      "auroc": 0.7672,
+      "accuracy": 0.5467
+    },
+    {
+      "n_train": 300,
+      "auroc": 0.7712,
+      "accuracy": 0.5333
+    },
+    {
+      "n_train": 500,
+      "auroc": 0.7846,
+      "accuracy": 0.6267
+    },
+    {
+      "n_train": 700,
+      "auroc": 0.7881,
+      "accuracy": 0.6467
+    },
+    {
+      "n_train": 700,
+      "auroc": 0.7881,
+      "accuracy": 0.6467
+    }
+  ],
+  "pipeline_concordance": {
+    "n_checked": 150,
+    "n_agree": 145,
+    "concordance_rate": 0.9667
+  },
+  "elapsed_seconds": 216.2
+}
