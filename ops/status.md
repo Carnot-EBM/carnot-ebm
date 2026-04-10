@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 112 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112)
+**Last Updated:** 2026-04-10 — 118 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118)
 
 ## What's Working
 
@@ -288,6 +288,7 @@
 ### Completed
 - ~~Ship MCP server + CLI~~: ✅ DONE
 - ~~Scale per-token EBM~~: ✅ DONE (16 models on HuggingFace)
+- ~~Publish v12 artifacts~~: ✅ DONE — `constraint-verifier-v2` (KAN EBM + guided decoding adapter) published at `huggingface.co/Carnot-EBM/constraint-verifier-v2`; safetensors weights + config + model cards (Exp 118)
 - ~~Weight profiling~~: ✅ DONE (dense + MoE analyzed)
 - ~~Logit lens~~: ✅ DONE (negative result — 50.6%)
 - ~~NLI-based EBM~~: ✅ DONE (70.8% test, 50% practical)

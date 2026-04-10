@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 118 HuggingFace Publish v12 Artifacts
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T20:55:35Z | 2026-04-10T20:56:17Z | Update changelog/status docs for Exp 118 HuggingFace v12 artifact publish | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 117 Full v12 Benchmark
 
 ### Turn Log
