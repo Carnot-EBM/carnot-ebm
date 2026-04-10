@@ -99,3 +99,5 @@
 | 2026-04-10 01:57 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
 | 2026-04-10 02:10 UTC | Exp 93: Multi-model systematic comparison | OK | ================ 1376 passed, 12 warnings in 117.64s (0:01:57) ================= |
 | 2026-04-10 02:11 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
+| 2026-04-10 02:21 UTC | Exp 90: Autoresearch constraint improvement loop | OK | ================ 1376 passed, 12 warnings in 120.64s (0:02:00) ================= |
+| 2026-04-10 02:22 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
