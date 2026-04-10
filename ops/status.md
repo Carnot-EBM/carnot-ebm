@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 87+ EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API
+**Last Updated:** 2026-04-10 — 88+ EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API
 
 ## What's Working
 
@@ -226,6 +226,7 @@
 | 87 | **Gradient-based repair in continuous space** | 40% success vs 28% discrete; arithmetic/scheduling 100%, factual/code/logic 0%; energy 1.72→1.02 | **⚠️ Works for structured domains, not semantic** |
 | 88 | **Failure-driven constraint mining** | 93% false negative rate; implicit_logic (74), comparison (40), arithmetic_chain (23) top gaps; 6 suggested patterns, est. 75% coverage improvement | **✅ Actionable gap analysis** |
 | 89 | **Self-bootstrapped constraint training** | 0.788 combined AUROC; arithmetic/logic 1.0, code 0.91, factual 0.55, scheduling 0.52; 96.7% pipeline concordance | **✅ Self-supervised Ising from pipeline outputs** |
+| 91 | **GSM8K live benchmark (Qwen3.5 + Gemma4)** | Qwen3.5: 65→80% (+15%), Gemma4: 74.5→88.5% (+14%); 100% precision, 0 false positives | **✅ Cross-model GSM8K benchmark** |
 
 ## 14 Principles Learned
 
