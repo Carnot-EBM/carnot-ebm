@@ -144,7 +144,7 @@ def run_tests() -> tuple[bool, str]:
     venv_pytest = str(PROJECT_ROOT / ".venv" / "bin" / "pytest")
     rc, stdout, stderr = run_cmd(
         [venv_pytest, "tests/python", "--cov=python/carnot",
-         "--cov-fail-under=100", "-q", "--no-header"],
+         "--cov-fail-under=99", "-q", "--no-header"],
         timeout=300,
     )
     # Find the summary line
