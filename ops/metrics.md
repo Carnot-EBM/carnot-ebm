@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 120 Adversarial Baseline
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T21:59:18Z | 2026-04-10T22:13:37Z | Create Exp 120 adversarial baseline: LLM accuracy on 4 adversarial GSM8K variants, simulation mode (models too slow on CPU), results saved | TBD |
+
+---
+
 ## Session: 2026-04-10 Robust Model Loader
 
 ### Turn Log
