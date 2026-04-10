@@ -118,3 +118,6 @@
 | 2026-04-10 03:46 UTC | Exp 99: Constraint state propagation across agent  | SKIP | Pre-tests failing, self-heal failed: ====== 6 failed, 1478 passed, 1 skipped, 12 |
 | 2026-04-10 04:07 UTC | Exp 99: Constraint state propagation across agent  | SKIP | Pre-tests failing, self-heal failed: = 1384 passed, 1 skipped, 5 xfailed, 95 xpa |
 | 2026-04-10 04:17 UTC | Exp 99: Constraint state propagation across agent  | SKIP | Pre-tests failing, self-heal failed: =========== 1484 passed, 1 skipped, 12 warn |
+| 2026-04-10 05:04 UTC | Exp 102: Constraint check latency microbenchmark | OK | =========== 1519 passed, 1 skipped, 12 warnings in 120.35s (0:02:00) =========== |
+| 2026-04-10 05:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 05:05 UTC | Exp 100: Multi-step verification with rollback | OK | Deliverable already exists in repo |
