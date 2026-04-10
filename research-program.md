@@ -66,9 +66,14 @@ autonomous directed self-learning where the energy function is ground truth.
    energy-guided decoding. If not, focus on post-hoc verify-repair which
    is already proven effective.
 
-8. **Prepare for Extropic TSU** — WAITING ON HARDWARE.
-   SamplerBackend abstraction built (Exp 71). Nothing to do until hardware
-   ships.
+8. **FPGA Ising machine as TSU stand-in** — DON'T WAIT FOR HARDWARE.
+   SamplerBackend abstraction built (Exp 71). Instead of waiting for the
+   Z1, implement a parallel Ising sampler on FPGA (1k-10k p-bits on
+   Kria/DE10-Nano, up to 256k on large FPGAs). Create `FpgaBackend` that
+   sends couplings over PCIe/AXI and reads back spins. Benchmark vs CPU
+   ParallelIsingSampler on 5000-var SAT. This validates the hardware path
+   and gives real latency numbers for guided decoding feasibility.
+   See research-references.md for prior art (Tohoku, Microsoft, Fujitsu).
 
 ## Completed Goals
 

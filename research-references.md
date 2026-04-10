@@ -40,6 +40,25 @@ should read this file when designing new milestones.
 
 ## Hardware
 
+### FPGA Ising Machine — TSU Simulation Before Hardware
+- **What:** Implement parallel Ising sampling in RTL on FPGA as a hardware
+  stand-in for Extropic TSU. Each p-bit is a flip-flop with stochastic update
+  based on neighbors and couplings. LFSR-based random number generation.
+- **Why:** Test Carnot's hardware path before Z1 ships. FPGA gives true
+  parallelism, custom bit-width, low latency, 10-100x better power than GPU.
+- **Scale:** Small FPGA (Kria KV260, DE10-Nano) = 1k-10k p-bits (matches
+  current experiment scale). Large FPGA (VU13P, Agilex) = up to 256k p-bits.
+- **Integration:** Create `FpgaBackend` for SamplerBackend (Exp 71) that sends
+  couplings over PCIe/AXI/USB and reads back sampled spins. Rest of pipeline
+  stays in Python.
+- **Prior art:** Tohoku University FPGA Ising machines, Microsoft Azure Quantum
+  FPGA solver, Fujitsu Digital Annealer (commercial FPGA Ising machine).
+- **Benchmark:** Compare FPGA vs CPU ParallelIsingSampler on Exp 46b (5000-var SAT).
+- **What FPGA lacks vs TSU:** True thermal noise (FPGA uses pseudo-random LFSRs),
+  analog-speed sampling (TSU = nanoseconds, FPGA = microseconds).
+- **When to pursue:** When FPGA hardware is available for testing. Quickest path:
+  1k-4k spin Verilog sampler with AXI-Lite interface + Python FpgaBackend wrapper.
+
 ### AMD ROCm on gfx1150 (Radeon 890M iGPU)
 - JAX GPU backend crashes (HIP runtime assertion failure)
 - gfx1100 emulation works but is 96x slower than CPU for matmul
