@@ -58,7 +58,7 @@ class TestVerify:
         assert result.verified is False
         assert len(result.violations) == 1
         assert result.violations[0].constraint_type == "arithmetic"
-        assert result.violations[0].metadata["correct_result"] == 75
+        assert int(result.violations[0].metadata["correct_result"]) == 75
 
     def test_correct_subtraction(self) -> None:
         """REQ-VERIFY-001: Correct subtraction passes verification."""
