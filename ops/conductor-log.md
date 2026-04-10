@@ -103,3 +103,5 @@
 | 2026-04-10 02:22 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
 | 2026-04-10 02:33 UTC | Exp 94: Rust VerifyRepairPipeline | OK | ================ 1376 passed, 12 warnings in 115.40s (0:01:55) ================= |
 | 2026-04-10 02:34 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
+| 2026-04-10 02:53 UTC | Exp 95: PyO3 pipeline bridge | REVERT | Post-tests failed: ===== 10 failed, 1666 passed, 1 skipped, 12 warnings in 114.4 |
+| 2026-04-10 02:54 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
