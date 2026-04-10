@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Robust Model Loader
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T21:41:01Z | 2026-04-10T21:51:47Z | Create carnot.inference.model_loader — robust HF model loading with memory check, OOM retry, CARNOT_FORCE_LIVE; 35 tests, 100% coverage, 1787 full suite pass | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 119 Adversarial GSM8K
 
 ### Turn Log
