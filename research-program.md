@@ -58,15 +58,33 @@ autonomous directed self-learning where the energy function is ground truth.
    44.8% of current false negatives. Then self-bootstrap on the expanded
    constraint set.
 
-7. **Bridge to continuous reasoning (Kona direction)** — VALIDATED, DEPENDS ON #4.
+7. **KAN-based energy tier** — NEW ARCHITECTURE, HIGH IMPACT.
+   Kolmogorov-Arnold Networks as a new energy function tier between Ising
+   (quadratic, interpretable) and Gibbs (MLP, opaque). KAN edges have
+   learnable spline activations — strictly more expressive than Ising while
+   remaining interpretable. Addresses the constraint learning ceiling from
+   Exp 62/88 where linear Ising features can't capture nonlinear
+   relationships. Differentiable (slots into Exp 66 pipeline). Potentially
+   hardware-mappable (spline lookup tables in FPGA). Create `carnot-kan`
+   crate and `carnot.models.kan` Python module.
+
+8. **LNN-based adaptive constraints for agentic verification** — PAIRS WITH #2.
+   Liquid Neural Networks for constraint models that adapt during multi-turn
+   agent workflows. Static Ising can't update as new facts emerge during
+   agent execution. LNN coupling strengths evolve via differential equations
+   in response to observations. Also improves noise robustness for
+   constraint extraction from adversarial LLM outputs (Exp 88 failure mode).
+
+9. **Bridge to continuous reasoning (Kona direction)** — VALIDATED, DEPENDS ON #4.
    Continuous Ising relaxation (Exp 64 ✅) → embedding-space constraints
    (Exp 65 ✅) → end-to-end differentiable (Exp 66 ✅, 1.0 AUROC) →
    gradient repair (Exp 87 ✅, 44% energy reduction). The math works.
    Practicality depends on latency benchmark (#4). If fast enough, pursue
    energy-guided decoding. If not, focus on post-hoc verify-repair which
-   is already proven effective.
+   is already proven effective. KAN energy tier (#7) may improve the
+   differentiable pipeline's expressiveness.
 
-8. **FPGA Ising machine as TSU stand-in** — DON'T WAIT FOR HARDWARE.
+10. **FPGA Ising machine as TSU stand-in** — DON'T WAIT FOR HARDWARE.
    SamplerBackend abstraction built (Exp 71). Instead of waiting for the
    Z1, implement a parallel Ising sampler on FPGA (1k-10k p-bits on
    Kria/DE10-Nano, up to 256k on large FPGAs). Create `FpgaBackend` that
