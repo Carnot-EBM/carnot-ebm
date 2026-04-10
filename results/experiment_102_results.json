@@ -1,0 +1,491 @@
+{
+  "experiment": 102,
+  "title": "Latency Benchmark \u2014 Differentiable Constraint Pipeline",
+  "date": "2026-04-10T05:00:47Z",
+  "platform": "CPU (JAX_PLATFORMS=cpu)",
+  "warmup_iters": 100,
+  "measure_iters": 1000,
+  "components": [
+    {
+      "name": "simulated_embedding",
+      "n_iters": 1000,
+      "p50_ms": 0.0323,
+      "p95_ms": 0.0349,
+      "p99_ms": 0.0377,
+      "mean_ms": 0.0329,
+      "std_ms": 0.0088
+    },
+    {
+      "name": "real_embedding_MiniLM",
+      "n_iters": 100,
+      "p50_ms": 7.4683,
+      "p95_ms": 8.6456,
+      "p99_ms": 9.0965,
+      "mean_ms": 7.6022,
+      "std_ms": 0.5104
+    },
+    {
+      "name": "constraint_extraction",
+      "n_iters": 1000,
+      "p50_ms": 0.2752,
+      "p95_ms": 0.2854,
+      "p99_ms": 0.3365,
+      "mean_ms": 0.2761,
+      "std_ms": 0.0114
+    },
+    {
+      "name": "ising_energy_jit",
+      "n_iters": 1000,
+      "p50_ms": 0.0131,
+      "p95_ms": 0.0137,
+      "p99_ms": 0.0151,
+      "mean_ms": 0.0134,
+      "std_ms": 0.0052
+    },
+    {
+      "name": "mlp_scoring_jit",
+      "n_iters": 1000,
+      "p50_ms": 0.0045,
+      "p95_ms": 0.0059,
+      "p99_ms": 0.0122,
+      "mean_ms": 0.005,
+      "std_ms": 0.0037
+    },
+    {
+      "name": "full_differentiable_forward_jit",
+      "n_iters": 1000,
+      "p50_ms": 0.0063,
+      "p95_ms": 0.0191,
+      "p99_ms": 0.034,
+      "mean_ms": 0.008,
+      "std_ms": 0.0085
+    }
+  ],
+  "scale_sweep": {
+    "extraction_sweep": [
+      {
+        "input_tokens": 10,
+        "input_chars": 50,
+        "constraints_found": 3,
+        "name": "extract_10tok",
+        "n_iters": 500,
+        "p50_ms": 0.0426,
+        "p95_ms": 0.0446,
+        "p99_ms": 0.0632,
+        "mean_ms": 0.0434,
+        "std_ms": 0.0069
+      },
+      {
+        "input_tokens": 50,
+        "input_chars": 250,
+        "constraints_found": 11,
+        "name": "extract_50tok",
+        "n_iters": 500,
+        "p50_ms": 0.1437,
+        "p95_ms": 0.1461,
+        "p99_ms": 0.1476,
+        "mean_ms": 0.1427,
+        "std_ms": 0.0068
+      },
+      {
+        "input_tokens": 100,
+        "input_chars": 500,
+        "constraints_found": 9,
+        "name": "extract_100tok",
+        "n_iters": 500,
+        "p50_ms": 0.2679,
+        "p95_ms": 0.2719,
+        "p99_ms": 0.4893,
+        "mean_ms": 0.2727,
+        "std_ms": 0.0674
+      },
+      {
+        "input_tokens": 500,
+        "input_chars": 2500,
+        "constraints_found": 11,
+        "name": "extract_500tok",
+        "n_iters": 500,
+        "p50_ms": 1.277,
+        "p95_ms": 1.3056,
+        "p99_ms": 1.9378,
+        "mean_ms": 1.2885,
+        "std_ms": 0.0994
+      },
+      {
+        "input_tokens": 1000,
+        "input_chars": 5000,
+        "constraints_found": 10,
+        "name": "extract_1000tok",
+        "n_iters": 500,
+        "p50_ms": 2.537,
+        "p95_ms": 3.0515,
+        "p99_ms": 5.571,
+        "mean_ms": 2.634,
+        "std_ms": 0.522
+      }
+    ],
+    "forward_sweep": [
+      {
+        "n_constraints": 1,
+        "name": "forward_1c",
+        "n_iters": 500,
+        "p50_ms": 0.0049,
+        "p95_ms": 0.0089,
+        "p99_ms": 0.0145,
+        "mean_ms": 0.0063,
+        "std_ms": 0.007
+      },
+      {
+        "n_constraints": 5,
+        "name": "forward_5c",
+        "n_iters": 500,
+        "p50_ms": 0.0062,
+        "p95_ms": 0.0096,
+        "p99_ms": 0.0178,
+        "mean_ms": 0.0073,
+        "std_ms": 0.0073
+      },
+      {
+        "n_constraints": 10,
+        "name": "forward_10c",
+        "n_iters": 500,
+        "p50_ms": 0.006,
+        "p95_ms": 0.01,
+        "p99_ms": 0.025,
+        "mean_ms": 0.0072,
+        "std_ms": 0.007
+      },
+      {
+        "n_constraints": 50,
+        "name": "forward_50c",
+        "n_iters": 500,
+        "p50_ms": 0.0065,
+        "p95_ms": 0.0232,
+        "p99_ms": 0.0589,
+        "mean_ms": 0.0101,
+        "std_ms": 0.0136
+      }
+    ],
+    "matrix": [
+      {
+        "input_tokens": 10,
+        "n_constraints": 1,
+        "name": "combined_10t_1c",
+        "n_iters": 200,
+        "p50_ms": 0.0575,
+        "p95_ms": 0.0676,
+        "p99_ms": 0.1302,
+        "mean_ms": 0.0617,
+        "std_ms": 0.027
+      },
+      {
+        "input_tokens": 10,
+        "n_constraints": 5,
+        "name": "combined_10t_5c",
+        "n_iters": 200,
+        "p50_ms": 0.0594,
+        "p95_ms": 0.0693,
+        "p99_ms": 0.0931,
+        "mean_ms": 0.0639,
+        "std_ms": 0.0467
+      },
+      {
+        "input_tokens": 10,
+        "n_constraints": 10,
+        "name": "combined_10t_10c",
+        "n_iters": 200,
+        "p50_ms": 0.0597,
+        "p95_ms": 0.0672,
+        "p99_ms": 0.1314,
+        "mean_ms": 0.0661,
+        "std_ms": 0.0677
+      },
+      {
+        "input_tokens": 10,
+        "n_constraints": 50,
+        "name": "combined_10t_50c",
+        "n_iters": 200,
+        "p50_ms": 0.0608,
+        "p95_ms": 0.0675,
+        "p99_ms": 0.0923,
+        "mean_ms": 0.0654,
+        "std_ms": 0.0508
+      },
+      {
+        "input_tokens": 50,
+        "n_constraints": 1,
+        "name": "combined_50t_1c",
+        "n_iters": 200,
+        "p50_ms": 0.1651,
+        "p95_ms": 0.2181,
+        "p99_ms": 0.3583,
+        "mean_ms": 0.174,
+        "std_ms": 0.0441
+      },
+      {
+        "input_tokens": 50,
+        "n_constraints": 5,
+        "name": "combined_50t_5c",
+        "n_iters": 200,
+        "p50_ms": 0.1639,
+        "p95_ms": 0.1805,
+        "p99_ms": 0.3129,
+        "mean_ms": 0.1737,
+        "std_ms": 0.0702
+      },
+      {
+        "input_tokens": 50,
+        "n_constraints": 10,
+        "name": "combined_50t_10c",
+        "n_iters": 200,
+        "p50_ms": 0.1637,
+        "p95_ms": 0.1783,
+        "p99_ms": 0.2372,
+        "mean_ms": 0.1705,
+        "std_ms": 0.0476
+      },
+      {
+        "input_tokens": 50,
+        "n_constraints": 50,
+        "name": "combined_50t_50c",
+        "n_iters": 200,
+        "p50_ms": 0.1655,
+        "p95_ms": 0.2227,
+        "p99_ms": 0.3417,
+        "mean_ms": 0.1766,
+        "std_ms": 0.057
+      },
+      {
+        "input_tokens": 100,
+        "n_constraints": 1,
+        "name": "combined_100t_1c",
+        "n_iters": 200,
+        "p50_ms": 0.2933,
+        "p95_ms": 0.3241,
+        "p99_ms": 0.6209,
+        "mean_ms": 0.3015,
+        "std_ms": 0.0552
+      },
+      {
+        "input_tokens": 100,
+        "n_constraints": 5,
+        "name": "combined_100t_5c",
+        "n_iters": 200,
+        "p50_ms": 0.2884,
+        "p95_ms": 0.3471,
+        "p99_ms": 0.4544,
+        "mean_ms": 0.2952,
+        "std_ms": 0.0343
+      },
+      {
+        "input_tokens": 100,
+        "n_constraints": 10,
+        "name": "combined_100t_10c",
+        "n_iters": 200,
+        "p50_ms": 0.2933,
+        "p95_ms": 0.3055,
+        "p99_ms": 0.3132,
+        "mean_ms": 0.2942,
+        "std_ms": 0.0218
+      },
+      {
+        "input_tokens": 100,
+        "n_constraints": 50,
+        "name": "combined_100t_50c",
+        "n_iters": 200,
+        "p50_ms": 0.2955,
+        "p95_ms": 0.3072,
+        "p99_ms": 0.4094,
+        "mean_ms": 0.2975,
+        "std_ms": 0.0392
+      },
+      {
+        "input_tokens": 500,
+        "n_constraints": 1,
+        "name": "combined_500t_1c",
+        "n_iters": 200,
+        "p50_ms": 1.4146,
+        "p95_ms": 2.6379,
+        "p99_ms": 2.8501,
+        "mean_ms": 1.6372,
+        "std_ms": 0.4311
+      },
+      {
+        "input_tokens": 500,
+        "n_constraints": 5,
+        "name": "combined_500t_5c",
+        "n_iters": 200,
+        "p50_ms": 1.3752,
+        "p95_ms": 1.972,
+        "p99_ms": 2.0444,
+        "mean_ms": 1.4281,
+        "std_ms": 0.176
+      },
+      {
+        "input_tokens": 500,
+        "n_constraints": 10,
+        "name": "combined_500t_10c",
+        "n_iters": 200,
+        "p50_ms": 1.3475,
+        "p95_ms": 1.968,
+        "p99_ms": 2.5946,
+        "mean_ms": 1.3983,
+        "std_ms": 0.2691
+      },
+      {
+        "input_tokens": 500,
+        "n_constraints": 50,
+        "name": "combined_500t_50c",
+        "n_iters": 200,
+        "p50_ms": 1.3089,
+        "p95_ms": 1.6555,
+        "p99_ms": 2.0686,
+        "mean_ms": 1.3475,
+        "std_ms": 0.1544
+      },
+      {
+        "input_tokens": 1000,
+        "n_constraints": 1,
+        "name": "combined_1000t_1c",
+        "n_iters": 200,
+        "p50_ms": 2.6867,
+        "p95_ms": 5.2476,
+        "p99_ms": 5.6651,
+        "mean_ms": 3.0224,
+        "std_ms": 0.7913
+      },
+      {
+        "input_tokens": 1000,
+        "n_constraints": 5,
+        "name": "combined_1000t_5c",
+        "n_iters": 200,
+        "p50_ms": 2.7544,
+        "p95_ms": 3.3525,
+        "p99_ms": 4.096,
+        "mean_ms": 2.7971,
+        "std_ms": 0.3235
+      },
+      {
+        "input_tokens": 1000,
+        "n_constraints": 10,
+        "name": "combined_1000t_10c",
+        "n_iters": 200,
+        "p50_ms": 2.714,
+        "p95_ms": 3.6406,
+        "p99_ms": 3.9804,
+        "mean_ms": 2.7859,
+        "std_ms": 0.3122
+      },
+      {
+        "input_tokens": 1000,
+        "n_constraints": 50,
+        "name": "combined_1000t_50c",
+        "n_iters": 200,
+        "p50_ms": 2.7725,
+        "p95_ms": 4.5479,
+        "p99_ms": 5.9957,
+        "mean_ms": 3.1457,
+        "std_ms": 0.7487
+      }
+    ]
+  },
+  "backends": [
+    {
+      "name": "python_verify_100inputs",
+      "n_iters": 50,
+      "p50_ms": 36.9796,
+      "p95_ms": 58.8202,
+      "p99_ms": 62.0812,
+      "mean_ms": 41.4742,
+      "std_ms": 7.9644
+    },
+    {
+      "name": "jax_jit_forward_100inputs",
+      "n_iters": 50,
+      "p50_ms": 0.7339,
+      "p95_ms": 0.8729,
+      "p99_ms": 1.0906,
+      "mean_ms": 0.7565,
+      "std_ms": 0.0853
+    },
+    {
+      "name": "rust_verify_100inputs",
+      "n_iters": 50,
+      "p50_ms": 161.9115,
+      "p95_ms": 165.5052,
+      "p99_ms": 171.1325,
+      "mean_ms": 162.2256,
+      "std_ms": 2.8983
+    }
+  ],
+  "analysis": {
+    "differentiable_forward": {
+      "mean_ms": 0.008,
+      "classification": "VIABLE for per-token guided decoding",
+      "tier": "per-token"
+    },
+    "bottleneck": {
+      "component": "real_embedding_MiniLM",
+      "mean_ms": 7.6022,
+      "ranking": [
+        {
+          "name": "real_embedding_MiniLM",
+          "mean_ms": 7.6022
+        },
+        {
+          "name": "constraint_extraction",
+          "mean_ms": 0.2761
+        },
+        {
+          "name": "simulated_embedding",
+          "mean_ms": 0.0329
+        },
+        {
+          "name": "ising_energy_jit",
+          "mean_ms": 0.0134
+        },
+        {
+          "name": "full_differentiable_forward_jit",
+          "mean_ms": 0.008
+        },
+        {
+          "name": "mlp_scoring_jit",
+          "mean_ms": 0.005
+        }
+      ]
+    },
+    "fastest_backend": {
+      "name": "jax_jit_forward_100inputs",
+      "per_call_ms": 0.0076,
+      "all_backends": [
+        {
+          "name": "jax_jit_forward_100inputs",
+          "per_call_ms": 0.0076
+        },
+        {
+          "name": "python_verify_100inputs",
+          "per_call_ms": 0.4147
+        },
+        {
+          "name": "rust_verify_100inputs",
+          "per_call_ms": 1.6223
+        }
+      ]
+    },
+    "generation_budget": {
+      "target_tokens_per_second": 50,
+      "budget_per_token_ms": 20.0,
+      "constraint_check_ms": 0.008,
+      "budget_fraction": 0.0004,
+      "fits_in_budget": true,
+      "recommendation": "Guided decoding viable \u2014 constraint check uses 0.0% of per-token budget"
+    },
+    "extraction_scaling": {
+      "input_range": "50-5000 chars",
+      "latency_range": "0.043-2.634 ms",
+      "scaling_factor": 60.69,
+      "input_factor": 100.0,
+      "roughly_linear": true
+    }
+  }
+}
