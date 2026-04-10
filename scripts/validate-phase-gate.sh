@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# validate-phase-gate.sh — Claude Code PreToolUse hook for Write|Edit
+# validate-phase-gate.sh — repository write-validation hook
 #
 # Enforces spec-anchored development: before any source file can be written
 # or edited, the corresponding OpenSpec capability must exist and contain
@@ -15,7 +15,8 @@ FILE_PATH="${1:-}"
 
 # --------------------------------------------------------------------------
 # Autoresearch bypass: when running in research mode, skip all phase gates.
-# The research conductor sets CARNOT_MODE=research before spawning Claude.
+# The research conductor sets CARNOT_MODE=research before spawning the
+# configured agent CLI.
 # --------------------------------------------------------------------------
 if [[ "${CARNOT_MODE:-}" == "research" ]]; then
   exit 0

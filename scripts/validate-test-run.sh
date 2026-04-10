@@ -1,5 +1,5 @@
 #!/bin/bash
-# PostToolUse:Bash hook — validate after Bash commands.
+# Shell-command hook — validate after shell commands.
 #
 # Triggers:
 #   1. After git commit: run full reconciliation check (docs + specs + tests)
@@ -28,7 +28,7 @@ if echo "$COMMAND" | grep -qE "^git commit"; then
         if ! "$PROJECT_ROOT/scripts/validate-reconciliation.sh" 2>&1; then
             echo "" >&2
             echo "═══════════════════════════════════════════════════════" >&2
-            echo "RECONCILIATION NEEDED (per CLAUDE.md mandatory workflow)" >&2
+            echo "RECONCILIATION NEEDED (per repository workflow)" >&2
             echo "═══════════════════════════════════════════════════════" >&2
             echo "Before reporting work as done:" >&2
             echo "  1. Update ops/status.md and ops/changelog.md" >&2

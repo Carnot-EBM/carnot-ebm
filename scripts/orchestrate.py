@@ -5,15 +5,16 @@
     This script automates the BMAD multi-agent development workflow. It reads
     a backlog of stories from an epic file, then for each story it:
     1. Builds a "sprint contract" (a YAML file listing what must be done)
-    2. Launches a Generator agent (Claude CLI subprocess) to implement the story
-    3. Launches an Evaluator agent (Claude CLI subprocess) to independently verify
+    2. Launches a Generator agent (CLI subprocess) to implement the story
+    3. Launches an Evaluator agent (CLI subprocess) to independently verify
     4. If the evaluator says "pass", the story is done and traceability is updated
     5. If the evaluator says "fail", the generator retries with the critique
     6. After all retries exhaust, the story is escalated to ops/known-issues.md
 
 **Why this exists:**
     The orchestrator itself is NOT an LLM. It is a deterministic Python script
-    that reads files, writes YAML, and invokes `claude -p` as subprocesses.
+    that reads files, writes YAML, and invokes a configured agent CLI as
+    subprocesses.
     Each agent invocation gets a fresh context window (no shared memory between
     generator and evaluator). This ensures the evaluator is truly independent --
     it never sees the generator's reasoning, only the artifacts it produced.
@@ -21,7 +22,8 @@
 **How it differs from python/carnot/autoresearch/orchestrator.py:**
     That orchestrator runs the EBM hypothesis testing loop (propose -> sandbox ->
     evaluate -> log). THIS script orchestrates BMAD *software development* sprints
-    where Claude agents play generator and evaluator roles on story-level work items.
+    where provider-backed agents play generator and evaluator roles on
+    story-level work items.
 
 **Usage:**
     python3 scripts/orchestrate.py --epic epics/epic-1.md
@@ -94,6 +96,32 @@ def _find_project_root() -> Path:
 
 
 PROJECT_ROOT = _find_project_root()
+SUPPORTED_AGENT_TYPES = ("claude", "gemini", "codex", "opencode")
+AGENT_BIN_ENV_VARS = {
+    "claude": "CLAUDE_BIN",
+    "gemini": "GEMINI_BIN",
+    "codex": "CODEX_BIN",
+    "opencode": "OPENCODE_BIN",
+}
+AGENT_DISPLAY_NAMES = {
+    "claude": "Claude Code",
+    "gemini": "Gemini CLI",
+    "codex": "Codex CLI",
+    "opencode": "OpenCode CLI",
+}
+AGENT_INSTALL_HINTS = {
+    "claude": "Install it with: npm install -g @anthropic-ai/claude-code",
+    "gemini": "Install or expose the Gemini CLI on PATH.",
+    "codex": "Install or expose the Codex CLI on PATH.",
+    "opencode": "Install or expose the OpenCode CLI on PATH.",
+}
+DEFAULT_PROJECT_INSTRUCTION_FILES = {
+    "claude": "CLAUDE.md",
+    "gemini": "GEMINI.md",
+    "codex": "AGENTS.md",
+    "opencode": "OPENCODE.md",
+}
+INLINE_PROJECT_INSTRUCTIONS = {"opencode"}
 
 
 # ---------------------------------------------------------------------------
@@ -394,8 +422,191 @@ def build_contract(
 
 
 # ---------------------------------------------------------------------------
-# Agent invocation -- run `claude -p` as a subprocess.
+# Agent invocation -- run the configured agent CLI as a subprocess.
 # ---------------------------------------------------------------------------
+
+
+def resolve_agent_type(config: dict[str, Any]) -> str:
+    """Resolve the active agent provider from env or harness config."""
+    harness_config = config.get("harness", {})
+    raw_agent_type = (
+        os.environ.get("HARNESS_AGENT_TYPE")
+        or os.environ.get("AGENT_TYPE")
+        or harness_config.get("agent_type")
+        or "claude"
+    )
+    agent_type = str(raw_agent_type).lower()
+    if agent_type not in SUPPORTED_AGENT_TYPES:
+        supported = ", ".join(SUPPORTED_AGENT_TYPES)
+        log.error(
+            "Unsupported harness agent type '%s'. Supported values: %s",
+            agent_type,
+            supported,
+        )
+        sys.exit(1)
+    return agent_type
+
+
+def resolve_agent_bin(agent_type: str, config: dict[str, Any]) -> str:
+    """Resolve the CLI executable for the selected agent provider."""
+    harness_config = config.get("harness", {})
+    agent_bins = harness_config.get("agent_bins", {})
+    env_var = AGENT_BIN_ENV_VARS[agent_type]
+    return os.environ.get(env_var, agent_bins.get(agent_type, agent_type))
+
+
+def resolve_agent_model(
+    agent_type: str, agent_config: dict[str, Any]
+) -> Optional[str]:
+    """Resolve the model configured for this role and provider."""
+    provider_models = agent_config.get("models", {})
+    return provider_models.get(agent_type) or agent_config.get("model")
+
+
+def resolve_project_instruction_file(
+    agent_type: str, config: dict[str, Any]
+) -> Path:
+    """Resolve the provider-specific project instruction file path."""
+    harness_config = config.get("harness", {})
+    configured_files = harness_config.get("project_instruction_files", {})
+    instruction_files = dict(DEFAULT_PROJECT_INSTRUCTION_FILES)
+    instruction_files.update(configured_files)
+    return PROJECT_ROOT / instruction_files[agent_type]
+
+
+def resolve_role_prompt_file(
+    role: str,
+    agent_config: dict[str, Any],
+    config: dict[str, Any],
+) -> Path:
+    """Resolve the prompt file for a harness role."""
+    prompt_dir = Path(
+        config.get("directories", {}).get("prompts", ".harness/prompts")
+    )
+    agent_prompt_ref = Path(agent_config.get("prompt", f"prompts/{role}.md"))
+    candidates = [
+        PROJECT_ROOT / ".harness" / agent_prompt_ref,
+        PROJECT_ROOT / prompt_dir / agent_prompt_ref.name,
+        PROJECT_ROOT / prompt_dir / f"{role}.md",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return candidate
+    return candidates[0]
+
+
+def _read_optional_text(path: Path) -> Optional[str]:
+    """Read a UTF-8 text file if it exists, otherwise return None."""
+    if not path.exists():
+        return None
+    return path.read_text()
+
+
+def compose_prompt(*sections: tuple[str, Optional[str]]) -> str:
+    """Render named markdown sections into a single prompt payload."""
+    rendered: list[str] = []
+    for title, body in sections:
+        if body:
+            rendered.append(f"# {title}\n\n{body.strip()}")
+    return "\n\n".join(rendered).strip()
+
+
+def build_agent_invocation(
+    role: str,
+    prompt_text: str,
+    agent_config: dict[str, Any],
+    config: dict[str, Any],
+) -> dict[str, Any]:
+    """Build the command line and prompt payload for the selected provider."""
+    agent_type = resolve_agent_type(config)
+    agent_bin = resolve_agent_bin(agent_type, config)
+    agent_display = AGENT_DISPLAY_NAMES[agent_type]
+    model = resolve_agent_model(agent_type, agent_config)
+    max_turns = agent_config.get("max_turns")
+    reasoning_effort = agent_config.get("reasoning_effort")
+
+    role_prompt_file = resolve_role_prompt_file(role, agent_config, config)
+    role_prompt_text = _read_optional_text(role_prompt_file)
+    project_instruction_file = resolve_project_instruction_file(
+        agent_type, config
+    )
+    project_instruction_text = None
+    if agent_type in INLINE_PROJECT_INSTRUCTIONS:
+        project_instruction_text = _read_optional_text(project_instruction_file)
+
+    stdin_text: Optional[str] = prompt_text
+    inline_prompt = prompt_text
+
+    if agent_type != "claude":
+        inline_prompt = compose_prompt(
+            ("Project Workflow", project_instruction_text),
+            ("Harness Role Instructions", role_prompt_text),
+            ("Assignment", prompt_text),
+        )
+
+    if agent_type == "claude":
+        cmd = [agent_bin, "-p", "--dangerously-skip-permissions"]
+        if role_prompt_text:
+            cmd.extend(["--append-system-prompt", role_prompt_text])
+        if model:
+            cmd.extend(["--model", model])
+        if reasoning_effort:
+            cmd.extend(["--effort", reasoning_effort])
+        if max_turns:
+            cmd.extend(["--max-turns", str(max_turns)])
+    elif agent_type == "gemini":
+        cmd = [
+            agent_bin,
+            "--prompt",
+            "Follow the instructions from stdin exactly.",
+            "--yolo",
+        ]
+        if model:
+            cmd.extend(["--model", model])
+        stdin_text = inline_prompt
+    elif agent_type == "codex":
+        cmd = [
+            agent_bin,
+            "exec",
+            "--dangerously-bypass-approvals-and-sandbox",
+            "--color",
+            "never",
+            "--cd",
+            str(PROJECT_ROOT),
+        ]
+        if model:
+            cmd.extend(["--model", model])
+        cmd.append("-")
+        stdin_text = inline_prompt
+    else:
+        cmd = [
+            agent_bin,
+            "run",
+            "--dangerously-skip-permissions",
+            "--dir",
+            str(PROJECT_ROOT),
+        ]
+        if model:
+            cmd.extend(["--model", model])
+        if reasoning_effort:
+            cmd.extend(["--variant", reasoning_effort])
+        cmd.append(inline_prompt)
+        stdin_text = None
+
+    return {
+        "agent_type": agent_type,
+        "agent_bin": agent_bin,
+        "agent_display": agent_display,
+        "cmd": cmd,
+        "stdin_text": stdin_text,
+        "model": model,
+        "max_turns": max_turns,
+        "role_prompt_file": role_prompt_file,
+        "role_prompt_text": role_prompt_text,
+        "project_instruction_file": project_instruction_file,
+        "project_instruction_text": project_instruction_text,
+    }
+
 
 def invoke_agent(
     role: str,
@@ -404,82 +615,45 @@ def invoke_agent(
     config: dict[str, Any],
     dry_run: bool = False,
 ) -> dict[str, Any]:
-    """Invoke a Claude agent via `claude -p` subprocess.
+    """Invoke a configured agent CLI subprocess for a harness role."""
+    invocation = build_agent_invocation(role, prompt_text, agent_config, config)
+    cmd = invocation["cmd"]
+    stdin_text = invocation["stdin_text"]
+    model = invocation["model"]
+    max_turns = invocation["max_turns"]
+    agent_display = invocation["agent_display"]
+    agent_type = invocation["agent_type"]
 
-    This is the core mechanism: we construct a prompt string containing all
-    the context the agent needs, then pass it to `claude -p` with the role's
-    system prompt appended via --append-system-prompt.
-
-    Each invocation is a FRESH context window. The generator and evaluator
-    never share context -- this is by design, so the evaluator is truly
-    independent.
-
-    Args:
-        role: Agent role name (e.g., "generator", "evaluator") -- must match
-              a key in config["agents"].
-        prompt_text: The full user-facing prompt to send to the agent. This
-                     includes the story content, contract, and any prior
-                     evaluator critique (on retries).
-        agent_config: The agent's config dict from config["agents"][role].
-        config: The full harness config dict.
-        dry_run: If True, print what would be done without executing.
-
-    Returns:
-        A dict with:
-            stdout: str       -- the agent's full stdout output
-            stderr: str       -- stderr (usually empty unless errors)
-            returncode: int   -- process exit code (0 = success)
-            duration_s: float -- wall-clock seconds the agent ran
-            cost_usd: float   -- estimated cost (parsed from output if available)
-    """
-    # Resolve the system prompt file path.
-    # The config stores paths relative to .harness/ (e.g., "prompts/generator.md").
-    prompt_dir = config.get("directories", {}).get("prompts", ".harness/prompts")
-    system_prompt_file = PROJECT_ROOT / ".harness" / f"{role}.md"
-    # Check the prompts directory specified in the agent config
-    agent_prompt_ref = agent_config.get("prompt", f"prompts/{role}.md")
-    system_prompt_file = PROJECT_ROOT / ".harness" / agent_prompt_ref
-    if not system_prompt_file.exists():
-        # Fallback: check directly in the prompts directory
-        system_prompt_file = PROJECT_ROOT / prompt_dir / f"{role}.md"
-
-    # Build the claude CLI command.
-    # We use `claude -p` to pass the prompt on stdin, and --append-system-prompt
-    # to inject the role-specific instructions.
-    cmd = ["claude", "-p"]
-
-    # Add the system prompt if the file exists
-    if system_prompt_file.exists():
-        cmd.extend(["--append-system-prompt", system_prompt_file.read_text()])
+    if invocation["role_prompt_text"]:
         log.info(
-            "Using system prompt from %s (%d chars)",
-            system_prompt_file,
-            len(system_prompt_file.read_text()),
+            "Using %s role prompt from %s (%d chars)",
+            role,
+            invocation["role_prompt_file"],
+            len(invocation["role_prompt_text"]),
         )
     else:
         log.warning(
-            "No system prompt found at %s -- agent will run without "
+            "No role prompt found at %s -- %s will run without "
             "role-specific instructions",
-            system_prompt_file,
+            invocation["role_prompt_file"],
+            agent_display,
         )
 
-    # Add model override if specified in the agent config
-    model = agent_config.get("model")
-    if model:
-        cmd.extend(["--model", model])
-
-    # Add max turns if specified
-    max_turns = agent_config.get("max_turns")
-    if max_turns:
-        cmd.extend(["--max-turns", str(max_turns)])
+    if invocation["project_instruction_text"]:
+        log.info(
+            "Inlining project workflow from %s (%d chars)",
+            invocation["project_instruction_file"],
+            len(invocation["project_instruction_text"]),
+        )
 
     if dry_run:
         log.info(
-            "[DRY RUN] Would invoke %s agent with %d-char prompt",
+            "[DRY RUN] Would invoke %s agent via %s with %d-char prompt",
             role,
+            agent_display,
             len(prompt_text),
         )
-        log.info("[DRY RUN] Command: %s", " ".join(cmd[:6]) + " ...")
+        log.info("[DRY RUN] Command: %s", " ".join(cmd[:8]) + " ...")
         return {
             "stdout": "[DRY RUN] No output generated",
             "stderr": "",
@@ -489,15 +663,14 @@ def invoke_agent(
         }
 
     log.info(
-        "Invoking %s agent (model=%s, max_turns=%s)",
+        "Invoking %s agent via %s (provider=%s, model=%s, max_turns=%s)",
         role,
+        agent_display,
+        agent_type,
         model,
         max_turns,
     )
 
-    # Run the subprocess with the prompt piped to stdin.
-    # We set a generous timeout based on the agent's session_limit_hours
-    # config, defaulting to 2 hours.
     timeout_hours = agent_config.get("session_limit_hours", 2)
     timeout_seconds = int(timeout_hours * 3600)
 
@@ -505,7 +678,7 @@ def invoke_agent(
     try:
         result = subprocess.run(
             cmd,
-            input=prompt_text,
+            input=stdin_text,
             capture_output=True,
             text=True,
             timeout=timeout_seconds,
@@ -515,9 +688,7 @@ def invoke_agent(
         duration = (
             datetime.datetime.now(datetime.timezone.utc) - start_time
         ).total_seconds()
-        log.error(
-            "%s agent timed out after %.0f seconds", role, duration
-        )
+        log.error("%s agent timed out after %.0f seconds", role, duration)
         return {
             "stdout": "",
             "stderr": f"TIMEOUT after {duration:.0f}s",
@@ -527,11 +698,13 @@ def invoke_agent(
         }
     except FileNotFoundError:
         log.error(
-            "claude CLI not found. Install it with: npm install -g @anthropic-ai/claude-code"
+            "%s not found. %s",
+            invocation["agent_bin"],
+            AGENT_INSTALL_HINTS[agent_type],
         )
         return {
             "stdout": "",
-            "stderr": "claude CLI not found",
+            "stderr": f"{agent_display} CLI not found",
             "returncode": -1,
             "duration_s": 0.0,
             "cost_usd": 0.0,
@@ -540,10 +713,6 @@ def invoke_agent(
     duration = (
         datetime.datetime.now(datetime.timezone.utc) - start_time
     ).total_seconds()
-
-    # Attempt to parse cost information from the agent's output.
-    # Claude CLI sometimes reports token usage in its output. We look for
-    # patterns like "Total cost: $1.23" or token count lines.
     cost_usd = _parse_cost_from_output(result.stdout + result.stderr)
 
     log.info(
@@ -564,13 +733,7 @@ def invoke_agent(
 
 
 def _parse_cost_from_output(text: str) -> float:
-    """Try to extract cost information from Claude CLI output.
-
-    The Claude CLI may report costs in various formats. We look for common
-    patterns and return the first match. If nothing is found, return 0.0.
-    This is best-effort -- the orchestrator logs costs for tracking but
-    does not make routing decisions based on them.
-    """
+    """Try to extract cost information from agent CLI output."""
     # Pattern: "Total cost: $1.23" or "Cost: $0.45"
     cost_pattern = re.compile(r"[Cc]ost[:\s]+\$([0-9]+\.?[0-9]*)")
     match = cost_pattern.search(text)
@@ -922,8 +1085,8 @@ def update_status(
     """Update ops/status.md with current orchestration progress.
 
     This adds a section showing which stories completed, which failed,
-    and what the overall sprint status is. Per the CLAUDE.md rules, we
-    NEVER remove existing content -- only add new sections.
+    and what the overall sprint status is. Per the project workflow rules,
+    we NEVER remove existing content -- only add new sections.
     """
     status_path = PROJECT_ROOT / "ops" / "status.md"
     status_path.parent.mkdir(parents=True, exist_ok=True)
@@ -987,6 +1150,7 @@ def run_sprint(
     # -----------------------------------------------------------------------
     config = load_config()
     harness_config = config.get("harness", {})
+    log.info("Harness agent type: %s", resolve_agent_type(config))
 
     # Use config default for max_retries if not overridden on CLI
     if max_retries is None:
@@ -1346,8 +1510,14 @@ def main() -> None:
             The orchestrator persists state to .harness/state.yaml for crash
             recovery. Re-running the same command will resume where it left off.
 
-            Agent prompts are loaded from .harness/prompts/<role>.md and passed
-            via --append-system-prompt to `claude -p`.
+            Agent selection resolves in this order:
+              1. --agent-type
+              2. HARNESS_AGENT_TYPE
+              3. AGENT_TYPE
+              4. .harness/config.yaml
+
+            Claude receives role prompts via --append-system-prompt. Other
+            providers receive the role prompt inlined into the task payload.
         """),
     )
 
@@ -1384,12 +1554,25 @@ def main() -> None:
         ),
     )
     parser.add_argument(
+        "--agent-type",
+        choices=SUPPORTED_AGENT_TYPES,
+        default=None,
+        help=(
+            "Agent provider to use for harness roles. Overrides "
+            "HARNESS_AGENT_TYPE/AGENT_TYPE and the default in "
+            ".harness/config.yaml."
+        ),
+    )
+    parser.add_argument(
         "--verbose",
         action="store_true",
         help="Enable debug-level logging for more detailed output.",
     )
 
     args = parser.parse_args()
+
+    if args.agent_type:
+        os.environ["HARNESS_AGENT_TYPE"] = args.agent_type
 
     if args.verbose:
         logging.getLogger().setLevel(logging.DEBUG)
@@ -1402,6 +1585,8 @@ def main() -> None:
     log.info("BMAD Sprint Orchestrator starting")
     log.info("Project root: %s", PROJECT_ROOT)
     log.info("Epic: %s", epic_path)
+    if args.agent_type:
+        log.info("Agent type override: %s", args.agent_type)
     if args.story:
         log.info("Target story: %s", args.story)
     if args.dry_run:

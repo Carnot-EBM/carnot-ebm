@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Carnot Research Conductor — autonomous research via Claude Code.
+"""Carnot Research Conductor — autonomous research via a configurable CLI agent.
 
 Tasks are loaded from YAML files:
   research-roadmap.yaml   — pending experiments (processed in order)
@@ -8,9 +8,10 @@ Tasks are loaded from YAML files:
 Milestones use CalVer (YYYY.MM.seq) to show chronology.
 See openspec/change-proposals/ for roadmap design docs.
 
-Uses `claude -p` to actually implement research improvements, not just
-run benchmarks. Each iteration: identify a gap → ask Claude to fix it →
-verify tests pass → commit → push.
+Uses the configured agent CLI (`claude`, `gemini`, `opencode`, or `codex`)
+to actually implement research improvements, not just run benchmarks.
+Each iteration: identify a gap → ask the agent to fix it → verify tests
+pass → commit → push.
 
 Usage:
     # Single research step:
@@ -46,22 +47,38 @@ logger = logging.getLogger("conductor")
 
 PROJECT_ROOT = Path(__file__).parent.parent
 # Flexible agent configuration: AGENT_TYPE can be 'claude', 'gemini', 'opencode', or 'codex'
-AGENT_TYPE = os.environ.get("AGENT_TYPE", "claude").lower()
-if AGENT_TYPE == "gemini":
+RAW_AGENT_TYPE = os.environ.get("AGENT_TYPE", "claude").lower()
+if RAW_AGENT_TYPE == "gemini":
+    AGENT_TYPE = "gemini"
     AGENT_BIN = os.environ.get("GEMINI_BIN", "gemini")
     DEFAULT_MODEL = "gemini-3.1-pro-preview"
-elif AGENT_TYPE == "opencode":
+elif RAW_AGENT_TYPE == "opencode":
+    AGENT_TYPE = "opencode"
     AGENT_BIN = os.environ.get("OPENCODE_BIN", "opencode")
     DEFAULT_MODEL = "opencode/big-pickle"
-elif AGENT_TYPE == "codex":
+elif RAW_AGENT_TYPE == "codex":
+    AGENT_TYPE = "codex"
     AGENT_BIN = os.environ.get("CODEX_BIN", "codex")
     DEFAULT_MODEL = "gpt-5.4"
 else:
+    AGENT_TYPE = "claude"
     AGENT_BIN = os.environ.get("CLAUDE_BIN", "claude")
     DEFAULT_MODEL = "sonnet"
 
 AGENT_MODEL = os.environ.get("AGENT_MODEL", DEFAULT_MODEL)
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
+AGENT_DISPLAY = {
+    "claude": "Claude Code",
+    "gemini": "Gemini CLI",
+    "opencode": "OpenCode CLI",
+    "codex": "Codex CLI",
+}[AGENT_TYPE]
+AGENT_SIGNATURE = {
+    "claude": "\n\nCo-Authored-By: Claude Code <noreply@anthropic.com>",
+    "gemini": "\n\nCo-Authored-By: Gemini CLI <noreply@google.com>",
+    "opencode": "\n\nCo-Authored-By: OpenCode CLI <noreply@opencode.ai>",
+    "codex": "\n\nCo-Authored-By: Codex CLI <noreply@openai.com>",
+}[AGENT_TYPE]
 
 
 def run_cmd(
@@ -86,32 +103,78 @@ def run_cmd(
         return -1, "", str(e)
 
 
-def run_agent(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bool, str]:
-    """Run the configured agent (claude or gemini) with a research prompt.
+def with_agent_signature(message: str) -> str:
+    """Append the configured agent signature to a commit message."""
+    return message.strip() + AGENT_SIGNATURE
 
-    Streams output live to the terminal.
-    """
+
+def _build_agent_command(
+    prompt: str,
+    max_turns: int,
+) -> tuple[list[str], str | None, str]:
+    """Build the command, optional stdin payload, and log message."""
     if AGENT_TYPE == "gemini":
-        cmd = [
-            AGENT_BIN, "-p", prompt,
-            "--yolo",
-            "--model", AGENT_MODEL,
-        ]
-        msg = f"Calling Gemini CLI (model: {AGENT_MODEL})..."
-    else:
-        cmd = [
+        return (
+            [
+                AGENT_BIN, "-p", prompt,
+                "--yolo",
+                "--model", AGENT_MODEL,
+            ],
+            None,
+            f"Calling {AGENT_DISPLAY} (model: {AGENT_MODEL})...",
+        )
+
+    if AGENT_TYPE == "opencode":
+        return (
+            [
+                AGENT_BIN, "run",
+                "--dangerously-skip-permissions",
+                "--model", AGENT_MODEL,
+                "--dir", str(PROJECT_ROOT),
+                prompt,
+            ],
+            None,
+            f"Calling {AGENT_DISPLAY} (model: {AGENT_MODEL})...",
+        )
+
+    if AGENT_TYPE == "codex":
+        return (
+            [
+                AGENT_BIN, "exec",
+                "--dangerously-bypass-approvals-and-sandbox",
+                "--color", "never",
+                "--model", AGENT_MODEL,
+                "--cd", str(PROJECT_ROOT),
+                "-",
+            ],
+            prompt,
+            f"Calling {AGENT_DISPLAY} (model: {AGENT_MODEL})...",
+        )
+
+    return (
+        [
             AGENT_BIN, "-p",
             "--dangerously-skip-permissions",
             "--verbose",
             "--max-turns", str(max_turns),
             "--model", AGENT_MODEL,
-        ]
-        msg = f"Calling Claude Code ({max_turns} max turns, model: {AGENT_MODEL})..."
+        ],
+        prompt,
+        f"Calling {AGENT_DISPLAY} ({max_turns} max turns, model: {AGENT_MODEL})...",
+    )
+
+
+def run_agent(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bool, str]:
+    """Run the configured agent with a research prompt.
+
+    Streams output live to the terminal.
+    """
+    cmd, stdin_text, msg = _build_agent_command(prompt, max_turns)
 
     logger.info(msg)
 
-    # Set CARNOT_MODE=research so that .claude/settings.json hooks
-    # (phase gate, task completion) bypass their checks.
+    # Expose research mode so repo-local agent hooks can relax interactive
+    # gates when the configured CLI supports them.
     env = {**os.environ, "CARNOT_MODE": "research"}
 
     try:
@@ -125,12 +188,10 @@ def run_agent(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[boo
             env=env,
         )
 
-        # Send prompt and close stdin (for Claude; Gemini prompt is usually in args)
-        if AGENT_TYPE == "claude" and proc.stdin:
-            proc.stdin.write(prompt)
+        if stdin_text is not None and proc.stdin:
+            proc.stdin.write(stdin_text)
             proc.stdin.close()
-        elif AGENT_TYPE == "gemini" and proc.stdin:
-            # Gemini might read additional context from stdin if needed
+        elif proc.stdin:
             proc.stdin.close()
 
         # Stream output live to terminal while capturing it
@@ -149,18 +210,18 @@ def run_agent(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[boo
         full_output = "".join(output_lines)
 
         if proc.returncode != 0:
-            logger.error("%s failed (exit %d)", AGENT_TYPE.capitalize(), proc.returncode)
+            logger.error("%s failed (exit %d)", AGENT_DISPLAY, proc.returncode)
             return False, full_output[-500:]
 
-        logger.info("%s completed (exit 0)", AGENT_TYPE.capitalize())
+        logger.info("%s completed (exit 0)", AGENT_DISPLAY)
         return True, full_output[-2000:]
 
     except subprocess.TimeoutExpired:
         proc.kill()
-        logger.error("%s timed out after %ds", AGENT_TYPE.capitalize(), timeout)
+        logger.error("%s timed out after %ds", AGENT_DISPLAY, timeout)
         return False, "Timed out"
     except Exception as e:
-        logger.error("%s error: %s", AGENT_TYPE.capitalize(), e)
+        logger.error("%s error: %s", AGENT_DISPLAY, e)
         return False, str(e)
 
 
@@ -196,12 +257,14 @@ def git_has_changes() -> bool:
 
 def git_commit_and_push(message: str, push: bool = True) -> bool:
     """Stage, commit, and optionally push."""
+    full_message = with_agent_signature(message)
+
     run_cmd(["git", "add", "-A"])
-    rc, _, stderr = run_cmd(["git", "commit", "-m", message])
+    rc, _, stderr = run_cmd(["git", "commit", "-m", full_message])
     if rc != 0:
         logger.warning("Commit failed: %s", stderr[:200])
         return False
-    logger.info("Committed: %s", message[:80])
+    logger.info("Committed: %s", message.splitlines()[0][:80])
     if push:
         rc, _, stderr = run_cmd(["git", "push", "origin", "main"], timeout=60)
         if rc == 0:
@@ -484,9 +547,8 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         msg = (
             f"[conductor] Activate milestone {next_milestone}\n\n"
             f"Archived previous milestone, activated {next_milestone}.\n\n"
-            "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
         )
-        run_cmd(["git", "commit", "-m", msg])
+        run_cmd(["git", "commit", "-m", with_agent_signature(msg)])
         if push:
             run_cmd(["git", "push", "origin", "main"], timeout=60)
 
@@ -499,10 +561,10 @@ def _activate_next_roadmap(push: bool = True) -> bool:
 
 
 def _plan_next_milestone(push: bool = True) -> bool:
-    """Ask Claude to plan the next research milestone.
+    """Ask the configured agent to plan the next research milestone.
 
     When all current tasks are done AND no research-roadmap-next.yaml exists,
-    this function asks Claude to analyze completed work, the PRD, and the
+    this function asks the configured agent to analyze completed work, the PRD, and the
     architecture to propose the next milestone with a full set of experiment
     tasks in research-roadmap-next.yaml format.
 
@@ -570,7 +632,7 @@ IMPORTANT:
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
-        log_step("Plan next milestone", "FAIL", f"Claude error: {output[:60]}")
+        log_step("Plan next milestone", "FAIL", f"{AGENT_DISPLAY} error: {output[:60]}")
         return False
 
     # Verify the planning agent created the next roadmap file
@@ -609,7 +671,6 @@ IMPORTANT:
             f"[conductor] Plan next milestone: {next_milestone}\n\n"
             f"Planning agent proposed {len(next_tasks)} experiments.\n"
             f"Stored in research-roadmap-next.yaml for activation.\n\n"
-            "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
         )
         git_commit_and_push(msg, push=push)
 
@@ -736,9 +797,8 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         msg = (
             f"[conductor] Activate milestone {next_milestone}\n\n"
             f"Archived previous milestone, activated {next_milestone}.\n\n"
-            "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
         )
-        run_cmd(["git", "commit", "-m", msg])
+        run_cmd(["git", "commit", "-m", with_agent_signature(msg)])
         if push:
             run_cmd(["git", "push", "origin", "main"], timeout=60)
 
@@ -751,10 +811,10 @@ def _activate_next_roadmap(push: bool = True) -> bool:
 
 
 def _plan_next_milestone(push: bool = True) -> bool:
-    """Ask Claude to plan the next research milestone.
+    """Ask the configured agent to plan the next research milestone.
 
     When all current tasks are done AND no research-roadmap-next.yaml exists,
-    this function asks Claude to analyze completed work and propose the next
+    this function asks the configured agent to analyze completed work and propose the next
     milestone with a full set of experiment tasks.
 
     Returns True if a next roadmap was successfully created.
@@ -818,7 +878,7 @@ def _plan_next_milestone(push: bool = True) -> bool:
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
-        log_step("Plan next milestone", "FAIL", f"Claude error: {output[:60]}")
+        log_step("Plan next milestone", "FAIL", f"{AGENT_DISPLAY} error: {output[:60]}")
         return False
 
     if not NEXT_ROADMAP_FILE.exists():
@@ -853,7 +913,6 @@ def _plan_next_milestone(push: bool = True) -> bool:
             f"[conductor] Plan next milestone: {next_milestone}\n\n"
             f"Planning agent proposed {len(next_tasks)} experiments.\n"
             f"Stored in research-roadmap-next.yaml for activation.\n\n"
-            "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
         )
         git_commit_and_push(msg, push=push)
 
@@ -908,7 +967,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     logger.info("=" * 60)
 
     if dry_run:
-        logger.info("[DRY RUN] Would run Claude with prompt:")
+        logger.info("[DRY RUN] Would run %s with prompt:", AGENT_DISPLAY)
         logger.info("  %s", task["prompt"][:200].format(
             project_root=PROJECT_ROOT,
             date=timestamp.strftime("%Y%m%d"),
@@ -934,7 +993,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # Run tests first — ensure clean state
     tests_ok, test_summary = run_tests()
     if not tests_ok:
-        # Self-heal: ask Claude to fix the pre-existing test failures
+        # Self-heal: ask the configured agent to fix the pre-existing test failures
         # before attempting the research task. This prevents getting stuck
         # in a loop where every iteration SKIPs because tests are broken.
         logger.warning("Pre-flight tests failing — attempting self-heal")
@@ -967,7 +1026,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             logger.info("Self-heal attempt %d/%d", heal_attempt + 1, MAX_HEAL_ATTEMPTS)
             heal_ok, heal_output = run_agent(heal_prompt, max_turns=30, timeout=600)
             if not heal_ok:
-                logger.error("Claude failed during self-heal: %s", heal_output[:200])
+                logger.error("%s failed during self-heal: %s", AGENT_DISPLAY, heal_output[:200])
                 break
 
             # Guard: don't let heal modify conductor or roadmap
@@ -983,8 +1042,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
                 # Commit the fix
                 if git_has_changes():
                     git_commit_and_push(
-                        "[conductor] Self-heal: fix pre-existing test failures\n\n"
-                        "Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+                        "[conductor] Self-heal: fix pre-existing test failures\n\n",
                         push=push,
                     )
                 healed = True
@@ -1017,17 +1075,17 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         date=timestamp.strftime("%Y%m%d"),
     )
 
-    # Run Claude Code
+    # Run the configured agent
     success, output = run_agent(prompt, max_turns=50, timeout=1200)
 
     if not success:
-        logger.error("Claude failed: %s", output[:200])
-        log_step(task["title"], "FAIL", f"Claude error: {output[:60]}")
+        logger.error("%s failed: %s", AGENT_DISPLAY, output[:200])
+        log_step(task["title"], "FAIL", f"{AGENT_DISPLAY} error: {output[:60]}")
         return False
 
-    # Check if Claude made any changes
+    # Check if the agent made any changes
     if not git_has_changes():
-        logger.info("Claude made no file changes")
+        logger.info("%s made no file changes", AGENT_DISPLAY)
         log_step(task["title"], "FAIL", "No file changes produced")
         return True
 
@@ -1035,10 +1093,10 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     diff = git_status()
     logger.info("Changes:\n%s", diff[:500])
 
-    # Guard: never let Claude modify the conductor itself
+    # Guard: never let the agent modify the conductor itself
     _, conductor_diff, _ = run_cmd(["git", "diff", "--name-only", "--", "scripts/research_conductor.py"])
     if conductor_diff.strip():
-        logger.warning("Claude modified research_conductor.py — reverting that file")
+        logger.warning("%s modified research_conductor.py — reverting that file", AGENT_DISPLAY)
         run_cmd(["git", "checkout", "--", "scripts/research_conductor.py"])
 
     # Run tests after changes — retry up to 2 times if tests fail
@@ -1050,7 +1108,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             break
         logger.warning("Tests FAILED (attempt %d/%d): %s", fix_attempt + 1, MAX_FIX_ATTEMPTS, test_summary[:200])
 
-        # Feed the test failure back to Claude to fix
+        # Feed the test failure back to the configured agent to fix
         fix_prompt = (
             f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
             f"Your previous changes caused test failures:\n{test_summary}\n\n"
@@ -1058,10 +1116,10 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             f"so all tests pass with 100% coverage.\n"
             f"Do NOT modify scripts/research_conductor.py."
         )
-        logger.info("Asking Claude to fix test failures...")
+        logger.info("Asking %s to fix test failures...", AGENT_DISPLAY)
         fix_ok, fix_output = run_agent(fix_prompt, max_turns=30, timeout=600)
         if not fix_ok:
-            logger.error("Claude failed to fix tests")
+            logger.error("%s failed to fix tests", AGENT_DISPLAY)
             break
         tests_ok, test_summary = run_tests()
 
@@ -1079,11 +1137,10 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         f"[conductor] {task['title']}\n\n"
         f"Automated research step by research conductor.\n"
         f"Task ID: {task['id']}\n\n"
-        f"Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>"
     )
     git_commit_and_push(commit_msg, push=push)
 
-    # Post-commit reconciliation: ask Claude to update docs for this experiment
+    # Post-commit reconciliation: ask the configured agent to update docs
     logger.info("Running post-commit documentation reconciliation...")
     reconcile_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
@@ -1106,8 +1163,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             if gdiff.strip():
                 run_cmd(["git", "checkout", "--", guarded])
         git_commit_and_push(
-            f"[conductor] Update docs for {task['title']}\n\n"
-            f"Co-Authored-By: Claude Opus 4.6 (1M context) <noreply@anthropic.com>",
+            f"[conductor] Update docs for {task['title']}\n\n",
             push=push,
         )
         logger.info("Documentation reconciliation committed")
@@ -1133,7 +1189,7 @@ def main() -> int:
 
     print("=" * 60)
     print("  Carnot Research Conductor")
-    print(f"  Autonomous research via {AGENT_TYPE.capitalize()}")
+    print(f"  Autonomous research via {AGENT_DISPLAY}")
     print("=" * 60)
     print(f"  Agent: {AGENT_TYPE} ({AGENT_BIN})")
     print(f"  Model: {AGENT_MODEL}")
