@@ -45,20 +45,33 @@ autonomous directed self-learning where the energy function is ground truth.
    generation? If <1ms → viable for real-time guided decoding (Kona). If
    >10ms → too slow, need approximations. One experiment answers this.
 
-5. **Real benchmark validation at scale** — NEEDS GOAL #1 FIRST.
+5. **Apple GSM8K adversarial benchmark** — THE CREDIBILITY EXPERIMENT.
+   Apple (arxiv 2410.05229) proved LLMs can't do math — they pattern-match.
+   Swapping numbers or adding one irrelevant sentence drops accuracy up to
+   65%. Even o1-preview drops from 92.7% → 77.4%. 8-shot doesn't help.
+   RUN CARNOT ON THE ADVERSARIAL VARIANT. Show that:
+   - LLM accuracy drops (as Apple showed)
+   - Carnot verify-repair MAINTAINS accuracy (Ising catches arithmetic
+     errors regardless of irrelevant context)
+   - Improvement is LARGER on adversarial vs standard (more errors to catch)
+   This is the single most compelling experiment we can run. It directly
+   proves the value proposition: external constraint verification succeeds
+   where internal reasoning fails. See research-references.md for details.
+
+6. **Real benchmark validation at scale** — NEEDS GOAL #1 FIRST.
    GSM8K full 1,319 test set + HumanEval full 164 problems with LIVE model
    inference. Exp 91 showed +14-15% on 200 questions with simulated
    inference. Report confidence intervals, compare to published baselines.
    Also TruthfulQA for factual domain. These are the credibility numbers
    but are blocked until live model loading is reliable.
 
-6. **Scale constraint learning** — GOOD PROGRESS, CONTINUE.
+7. **Scale constraint learning** — GOOD PROGRESS, CONTINUE.
    Exp 55/62/63/88/89 built the foundation. Next: use failure mining results
    (Exp 88) to build the `intermediate_result` extractor that would catch
    44.8% of current false negatives. Then self-bootstrap on the expanded
    constraint set.
 
-7. **KAN-based energy tier** — NEW ARCHITECTURE, HIGH IMPACT.
+8. **KAN-based energy tier** — NEW ARCHITECTURE, HIGH IMPACT.
    Kolmogorov-Arnold Networks as a new energy function tier between Ising
    (quadratic, interpretable) and Gibbs (MLP, opaque). KAN edges have
    learnable spline activations — strictly more expressive than Ising while
@@ -68,14 +81,14 @@ autonomous directed self-learning where the energy function is ground truth.
    hardware-mappable (spline lookup tables in FPGA). Create `carnot-kan`
    crate and `carnot.models.kan` Python module.
 
-8. **LNN-based adaptive constraints for agentic verification** — PAIRS WITH #2.
+9. **LNN-based adaptive constraints for agentic verification** — PAIRS WITH #2.
    Liquid Neural Networks for constraint models that adapt during multi-turn
    agent workflows. Static Ising can't update as new facts emerge during
    agent execution. LNN coupling strengths evolve via differential equations
    in response to observations. Also improves noise robustness for
    constraint extraction from adversarial LLM outputs (Exp 88 failure mode).
 
-9. **Bridge to continuous reasoning (Kona direction)** — VALIDATED, DEPENDS ON #4.
+10. **Bridge to continuous reasoning (Kona direction)** — VALIDATED, DEPENDS ON #4.
    Continuous Ising relaxation (Exp 64 ✅) → embedding-space constraints
    (Exp 65 ✅) → end-to-end differentiable (Exp 66 ✅, 1.0 AUROC) →
    gradient repair (Exp 87 ✅, 44% energy reduction). The math works.
@@ -84,7 +97,7 @@ autonomous directed self-learning where the energy function is ground truth.
    is already proven effective. KAN energy tier (#7) may improve the
    differentiable pipeline's expressiveness.
 
-10. **FPGA Ising machine as TSU stand-in** — DON'T WAIT FOR HARDWARE.
+11. **FPGA Ising machine as TSU stand-in** — DON'T WAIT FOR HARDWARE.
    SamplerBackend abstraction built (Exp 71). Instead of waiting for the
    Z1, implement a parallel Ising sampler on FPGA (1k-10k p-bits on
    Kria/DE10-Nano, up to 256k on large FPGAs). Create `FpgaBackend` that

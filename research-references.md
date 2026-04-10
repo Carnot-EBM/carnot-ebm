@@ -135,6 +135,32 @@ should read this file when designing new milestones.
 
 ## Papers & Concepts
 
+### Apple GSM8K Adversarial Variant — LLMs Can't Do Math (HIGH PRIORITY)
+- **Paper:** arxiv.org/pdf/2410.05229
+- **What:** Apple researchers took GSM8K (grade-school math benchmark), made
+  two changes: (1) swapped the numbers (same logic, different values), and
+  (2) added one irrelevant sentence (e.g., "five of them were a bit smaller
+  than average"). Models dropped up to 65%. Even o1-preview dropped from
+  92.7% → 77.4%. 8-shot prompting didn't help.
+- **Root cause:** LLMs pattern-match, not reason. They see "discount" →
+  multiply, "smaller" → subtract, "inflation" → apply. Keyword scanning,
+  not arithmetic. Changing only numbers in identical problems varies scores
+  by 15 percentage points — benchmarks measure memory, not intelligence.
+- **Relevance to Carnot:** THIS IS OUR THESIS. Carnot's constraint
+  verification doesn't care about irrelevant sentences — it extracts the
+  arithmetic and verifies independently. The verify-repair loop uses
+  external verification (Ising energy), not more prompting.
+- **Experiment needed:** Run Carnot's verify-repair pipeline on the Apple
+  GSM8K adversarial variant. Show that:
+  1. LLM accuracy drops (as Apple showed)
+  2. Carnot's verify-repair maintains accuracy (because Ising catches the
+     arithmetic errors regardless of irrelevant context)
+  3. The improvement is LARGER on adversarial variants than standard GSM8K
+     (because there are more errors to catch)
+  This would be Carnot's most compelling result — maintaining accuracy on
+  problems that break ALL other approaches including reasoning models.
+- **When to pursue:** Next milestone. This is the credibility experiment.
+
 ### Exp 66: End-to-End Differentiable Constraint Reasoning (PRIORITY)
 - **Source:** research-roadmap-v7.md Phase 8
 - **What:** Full Kona-like pipeline, differentiable end-to-end:
