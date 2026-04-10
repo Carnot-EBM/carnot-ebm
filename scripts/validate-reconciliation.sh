@@ -80,7 +80,7 @@ if [[ -n "$CHANGED_FILES" ]]; then
     # Source changed but no docs → warning
     if $SRC_CHANGED && ! $DOC_CHANGED; then
         warn "Source files changed but no documentation updated"
-        info "Per CLAUDE.md: update ops/changelog.md and ops/status.md after changes"
+        info "Per the repository workflow: update ops/changelog.md and ops/status.md after changes"
     fi
 fi
 
@@ -119,7 +119,7 @@ if [[ "$ISSUES" -eq 0 ]]; then
 else
     echo "" >&2
     echo "Reconciliation: $ISSUES issue(s) found." >&2
-    echo "Fix these before reporting work as done (per CLAUDE.md workflow)." >&2
+    echo "Fix these before reporting work as done (per repository workflow)." >&2
 fi
 
 exit $( [[ "$ISSUES" -eq 0 ]] && echo 0 || echo 1 )

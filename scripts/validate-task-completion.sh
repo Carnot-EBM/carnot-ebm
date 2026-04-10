@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# validate-task-completion.sh — Claude Code PostToolUse / TaskCompleted hook
+# validate-task-completion.sh — repository task-completion validation hook
 #
 # Validates that the project is in a healthy state after changes:
 #   1. Python tests pass with 100% coverage

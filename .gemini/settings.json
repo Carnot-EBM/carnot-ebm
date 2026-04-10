@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "BeforeTool": [
+      {
+        "matcher": "write_file|replace",
+        "hooks": [
+          {
+            "command": "scripts/validate-phase-gate.sh \"$FILE_PATH\"",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "AfterTool": [
+      {
+        "matcher": "run_shell_command",
+        "hooks": [
+          {
+            "command": "scripts/validate-test-run.sh",
+            "type": "command"
+          }
+        ]
+      }
+    ],
+    "BeforeAgent": [],
+    "AfterAgent": [],
+    "Notification": [],
+    "SessionStart": [],
+    "SessionEnd": [],
+    "PreCompress": [],
+    "BeforeModel": [],
+    "AfterModel": [],
+    "BeforeToolSelection": []
+  }
+}
