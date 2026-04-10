@@ -6,6 +6,13 @@ then maps them to energy terms for Ising-model verification.
 Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003
 """
 
+from carnot.pipeline.agentic import (
+    AgentStep,
+    ConstraintState,
+    FactStatus,
+    TrackedFact,
+    propagate,
+)
 from carnot.pipeline.errors import (
     CarnotError,
     ExtractionError,
@@ -35,13 +42,16 @@ from carnot.pipeline.verify_repair import (
 )
 
 __all__ = [
+    "AgentStep",
     "ArithmeticExtractor",
     "AutoExtractor",
     "CarnotError",
+    "ConstraintState",
     "CodeExtractor",
     "ConstraintExtractor",
     "ConstraintResult",
     "ExtractionError",
+    "FactStatus",
     "FailureAnalyzer",
     "FailureReport",
     "FalseNegative",
@@ -51,7 +61,9 @@ __all__ = [
     "PipelineTimeoutError",
     "RepairError",
     "RepairResult",
+    "TrackedFact",
     "VerificationError",
     "VerificationResult",
     "VerifyRepairPipeline",
+    "propagate",
 ]
