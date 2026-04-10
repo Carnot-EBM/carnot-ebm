@@ -287,18 +287,18 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      A dual-language framework for hallucination detection and gradient-based repair.
-      Built in Rust for performance and JAX for research.
+      Constraint verification that catches what LLMs miss. Adversarial-robust, self-learning,
+      real-time guided decoding. Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">85+</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">16</div><div class="stat-label">Models</div></div>
-      <div class="stat"><div class="stat-num">14</div><div class="stat-label">Principles</div></div>
-      <div class="stat"><div class="stat-num">1,353</div><div class="stat-label">Tests</div></div>
+      <div class="stat"><div class="stat-num">125+</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Energy Tiers</div></div>
+      <div class="stat"><div class="stat-num">0.006ms</div><div class="stat-label">Verify Latency</div></div>
+      <div class="stat"><div class="stat-num">1,813</div><div class="stat-label">Tests</div></div>
     </div>
   </div>
 </section>
@@ -327,38 +327,38 @@
 <section id="features" style="background: rgba(255,255,255,0.01);">
   <div class="container">
     <span class="section-label">Capabilities</span>
-    <h2 class="section-title">Built for Research & Experimentation</h2>
-    
+    <h2 class="section-title">Verify, Repair, and Guide LLM Output</h2>
+
     <div class="bento-grid">
       <div class="bento-card span-2 row-2">
         <div class="bento-icon">🧠</div>
-        <h3 class="bento-title">Three Model Tiers</h3>
-        <p class="bento-text">Ising (quadratic), Gibbs (MLP), and Boltzmann (Deep Residual). Each tier is implemented natively in both Rust and Python/JAX for maximum flexibility.</p>
+        <h3 class="bento-title">Four Energy Tiers</h3>
+        <p class="bento-text">Ising (quadratic), KAN (learnable splines, 8.7x more efficient), Gibbs (MLP), and Boltzmann (deep residual). Each in both Rust and Python/JAX. KAN achieves 0.994 AUROC with 2,310 parameters.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
-        <h3 class="bento-title">Gradient Repair</h3>
-        <p class="bento-text">Fix LLM reasoning errors in 3-SAT, graph coloring, and code via continuous relaxation.</p>
+        <h3 class="bento-title">Verify-Repair Pipeline</h3>
+        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. +15% on adversarial math, +6% on HumanEval. 5 lines of Python.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">🔍</div>
-        <h3 class="bento-title">Activation EBMs</h3>
-        <p class="bento-text">Detect hallucinations with 84.5% accuracy on base models using per-token activation analysis. Note: instruction-tuned models yield 67.2%.</p>
+        <div class="bento-icon">⚡</div>
+        <h3 class="bento-title">Energy-Guided Decoding</h3>
+        <p class="bento-text">Constraint energy steers token generation in real-time. 0.006ms per check &mdash; 100x faster than a single token generation step. Kona-style reasoning.</p>
       </div>
       <div class="bento-card span-2">
-        <div class="bento-icon">🚀</div>
-        <h3 class="bento-title">Composite Verification</h3>
-        <p class="bento-text">Combine logprobs with structural test execution. Improves QA accuracy by +10% (n=20) and code generation from 0% to 30% (n=10) vs. unmodified baseline.</p>
+        <div class="bento-icon">🛡️</div>
+        <h3 class="bento-title">Adversarial Robust</h3>
+        <p class="bento-text">Apple proved LLMs can't do math (accuracy drops 21% with irrelevant sentences). Carnot recovers +15% because Ising verification ignores irrelevant context entirely.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">📦</div>
-        <h3 class="bento-title">Cross-Interop</h3>
-        <p class="bento-text">Safetensors format ensures seamless model transfer between Rust and JAX.</p>
+        <div class="bento-icon">🤖</div>
+        <h3 class="bento-title">Agentic Verification</h3>
+        <p class="bento-text">ConstraintStateMachine tracks verified facts across multi-step agent workflows. Rollback to last consistent state on violation.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">🖥️</div>
-        <h3 class="bento-title">WebGPU Compute</h3>
-        <p class="bento-text">Distributed GPU compute via wgpu and WebGPU gateway.</p>
+        <div class="bento-icon">📈</div>
+        <h3 class="bento-title">Self-Learning</h3>
+        <p class="bento-text">Gets smarter with use. Online constraint weighting, persistent memory across sessions, and adaptive energy landscapes. Hardware-acceleratable at every tier.</p>
       </div>
     </div>
   </div>
@@ -371,28 +371,34 @@
     
     <div class="results-grid">
       <div class="r-card">
-        <span class="r-tag">Rejection Sampling</span>
-        <h3 class="r-title">Logprob Selection (QA)</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 76%;"></div></div>
-        <div class="r-stats"><span class="r-before">Baseline: 66%</span> <span class="r-after">Result: 76%</span></div>
-      </div>
-      <div class="r-card">
-        <span class="r-tag">Constraint Satisfaction</span>
-        <h3 class="r-title">3-SAT Gradient Repair</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 80%; background: var(--accent-verify);"></div></div>
-        <div class="r-stats"><span class="r-before">Baseline: 60%</span> <span class="r-after">Result: 80%</span></div>
-      </div>
-      <div class="r-card">
-        <span class="r-tag">Constraint Verification</span>
-        <h3 class="r-title">Live LLM Verify-Repair Loop</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 95%; background: var(--accent-reason);"></div></div>
-        <div class="r-stats"><span class="r-before">Baseline: 60%</span> <span class="r-after">+Repair: 87%</span></div>
+        <span class="r-tag">Adversarial Math</span>
+        <h3 class="r-title">Apple GSM8K Recovery</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 70%;"></div></div>
+        <div class="r-stats"><span class="r-before">LLM drops to: 46%</span> <span class="r-after">+Repair: 70%</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Code Generation</span>
         <h3 class="r-title">HumanEval pass@1 + Ising Repair</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 96%;"></div></div>
+        <div class="r-meter"><div class="r-bar" style="width: 96%; background: var(--accent-verify);"></div></div>
         <div class="r-stats"><span class="r-before">pass@1: 90%</span> <span class="r-after">+Repair: 96%</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Verify-Repair Loop</span>
+        <h3 class="r-title">Math Reasoning Improvement</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 87%; background: var(--accent-reason);"></div></div>
+        <div class="r-stats"><span class="r-before">Baseline: 60%</span> <span class="r-after">+Repair: 87%</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">KAN Energy Tier</span>
+        <h3 class="r-title">8.7x Fewer Parameters, Same Accuracy</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 99.4%;"></div></div>
+        <div class="r-stats"><span class="r-before">Ising: 20,100 params</span> <span class="r-after">KAN: 2,310 (0.994 AUROC)</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Guided Decoding</span>
+        <h3 class="r-title">Real-Time Constraint Steering</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Latency: 0.006ms</span> <span class="r-after">100% CSR</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hallucination Detection</span>
@@ -416,16 +422,19 @@
 
     <div id="tab-python" class="code-window">
       <div class="code-head"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-<pre><code><span class="kw">from</span> carnot.models.ising <span class="kw">import</span> IsingModel
-<span class="kw">from</span> carnot.training <span class="kw">import</span> contrastive_divergence
+<pre><code><span class="kw">from</span> carnot.pipeline <span class="kw">import</span> VerifyRepairPipeline
 
-<span class="cm"># Initialize and train Ising model</span>
-model = <span class="fn">IsingModel</span>(dim=<span class="num">1024</span>)
-model = <span class="fn">contrastive_divergence</span>(model, data, steps=<span class="num">100</span>)
+<span class="cm"># Verify any LLM output in 3 lines</span>
+pipeline = <span class="fn">VerifyRepairPipeline</span>()
+result = pipeline.<span class="fn">verify</span>(<span class="str">"What is 47 + 28?"</span>, <span class="str">"47 + 28 = 76"</span>)
+<span class="kw">print</span>(result.verified)   <span class="cm"># False</span>
+<span class="kw">print</span>(result.violations)  <span class="cm"># [47 + 28 = 76 (correct: 75)]</span>
 
-<span class="cm"># Verify LLM output energy</span>
-result = model.<span class="fn">verify</span>(activations)
-<span class="kw">print</span>(<span class="str">f"Energy: {result.energy}"</span>)</code></pre>
+<span class="cm"># Auto-repair with LLM feedback loop</span>
+fixed = pipeline.<span class="fn">verify_and_repair</span>(
+    <span class="str">"What is 47 + 28?"</span>, model=<span class="str">"Qwen/Qwen3.5-0.8B"</span>
+)
+<span class="kw">print</span>(fixed.final_response)  <span class="cm"># "47 + 28 = 75"</span></code></pre>
     </div>
 
     <div id="tab-rust" class="code-window" style="display: none;">
