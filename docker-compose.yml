@@ -32,6 +32,25 @@ services:
       retries: 3
       start_period: 10s
 
+  # Gemini CLI API Bridge — OpenAI-compatible endpoint wrapping `gemini -p`
+  gemini-api-bridge:
+    build: tools/gemini-api-bridge
+    image: gemini-api-bridge:latest
+    container_name: carnot-gemini-bridge
+    ports:
+      - "${GEMINI_BRIDGE_PORT:-8081}:8081"
+    volumes:
+      - ${GEMINI_CONFIG_DIR:-~/.gemini}:/root/.gemini:ro
+    environment:
+      - GEMINI_BIN=${GEMINI_BIN:-gemini}
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8081/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
   # WebGPU Distributed Compute Gateway — browsers as GPU nodes
   # Browsers visit http://<host>:3000 to contribute GPU compute
   webgpu-gateway:
