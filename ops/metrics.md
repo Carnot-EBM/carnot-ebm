@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 117 Full v12 Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T20:29:53Z | 2026-04-10T20:37:00Z | Create Exp 117 full 4-mode v12 benchmark (2000 evaluations), run comparison vs v10, guided gen wins 10/10 cells | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 116 LNN Adaptive Constraint Model
 
 ### Turn Log
