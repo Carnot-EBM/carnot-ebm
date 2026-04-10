@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 119 Adversarial GSM8K
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T21:00:56Z | 2026-04-10T21:04:56Z | Create Exp 119 adversarial GSM8K (Apple 2410.05229 repro): 4 datasets × 200q, all 40 spot-checks pass | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 118 HuggingFace Publish v12 Artifacts
 
 ### Turn Log
