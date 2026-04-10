@@ -14,6 +14,10 @@
 Spec: REQ-INFER-003 through REQ-INFER-013, REQ-CODE-004
 """
 
+from carnot.inference.guided_decoding import (
+    EnergyGuidedSampler,
+    GuidedDecodingResult,
+)
 from carnot.inference.composite_scorer import (
     CompositeEnergyConfig,
     CompositeEnergyScorer,
@@ -96,6 +100,8 @@ from carnot.inference.verify_and_repair import (
 )
 
 __all__ = [
+    "EnergyGuidedSampler",
+    "GuidedDecodingResult",
     "CodeVerificationResult",
     "CodeVerifierConfig",
     "ComparisonResult",
