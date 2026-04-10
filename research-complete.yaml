@@ -507,3 +507,57 @@ milestones:
     title: 'Exp 107: HuggingFace model card + Exp 66 joint model publish'
     deliverable: scripts/publish_constraint_model.py
     result: OK (conductor)
+- id: 2026.04.6
+  title: "Agentic Verification \u2014 Multi-Turn Reasoning, Factual Grounding, Energy-Guided Decoding"
+  doc: openspec/change-proposals/research-roadmap-v11.md
+  completed: '2026-04-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp96-intermediate-result-extractor
+    title: 'Exp 96: Intermediate result constraint extractor'
+    deliverable: python/carnot/pipeline/extract.py
+    result: OK (conductor)
+  - id: exp97-comparison-extractor
+    title: 'Exp 97: Comparison constraint extractor'
+    deliverable: python/carnot/pipeline/extract.py
+    result: OK (conductor)
+  - id: exp98-factual-kb-extractor
+    title: 'Exp 98: Knowledge-base factual claim verifier'
+    deliverable: python/carnot/pipeline/knowledge_base.py
+    result: OK (conductor)
+  - id: exp99-constraint-state-propagation
+    title: 'Exp 99: Constraint state propagation across agent steps'
+    deliverable: python/carnot/pipeline/agentic.py
+    result: OK (conductor)
+  - id: exp100-multi-step-rollback
+    title: 'Exp 100: Multi-step verification with rollback'
+    deliverable: python/carnot/pipeline/agentic.py
+    result: OK (conductor)
+  - id: exp102-latency-benchmark
+    title: 'Exp 102: Constraint check latency microbenchmark'
+    deliverable: scripts/experiment_102_latency_benchmark.py
+    result: OK (conductor)
+  - id: exp103-kan-energy-tier
+    title: 'Exp 103: KAN energy tier prototype'
+    deliverable: python/carnot/models/kan.py
+    result: OK (conductor)
+  - id: exp101-agent-workflow-e2e
+    title: 'Exp 101: Agent workflow verification end-to-end'
+    deliverable: scripts/experiment_101_agent_verification.py
+    result: OK (conductor)
+  - id: exp104-energy-guided-sampling
+    title: 'Exp 104: Energy-guided token sampling prototype'
+    deliverable: python/carnot/inference/guided_decoding.py
+    result: OK (conductor)
+  - id: exp105-improved-benchmark
+    title: 'Exp 105: Full-scale benchmark with improved extractors'
+    deliverable: scripts/experiment_105_improved_benchmark.py
+    result: OK (conductor)
+  - id: exp106-truthfulqa
+    title: 'Exp 106: TruthfulQA benchmark with factual extractor'
+    deliverable: scripts/experiment_106_truthfulqa.py
+    result: OK (conductor)
+  - id: exp107-huggingface-publish
+    title: 'Exp 107: HuggingFace model card + Exp 66 joint model publish'
+    deliverable: scripts/publish_constraint_model.py
+    result: OK (conductor)

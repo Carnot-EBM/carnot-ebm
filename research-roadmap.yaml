@@ -1,487 +1,31 @@
-# Carnot Research Roadmap — Milestone 2026.04.6
-# "Agentic Verification — Multi-Turn Reasoning, Factual Grounding, Energy-Guided Decoding"
+# Carnot Research Roadmap — Milestone 2026.04.7
+# "Production Energy-Guided Reasoning + Factual Grounding"
 #
 # Active experiment queue — processed in order by research_conductor.py
-# This file is picked up automatically when 2026.04.5 completes.
+# This file is picked up automatically when 2026.04.6 completes.
 #
 # Versioning: CalVer (YYYY.MM.seq)
 # Completed tasks are moved to research-complete.yaml
 
-milestone: "2026.04.6"
-milestone_title: "Agentic Verification — Multi-Turn Reasoning, Factual Grounding, Energy-Guided Decoding"
-milestone_doc: "openspec/change-proposals/research-roadmap-v11.md"
+milestone: "2026.04.7"
+milestone_title: "Production Energy-Guided Reasoning + Factual Grounding"
+milestone_doc: "openspec/change-proposals/research-roadmap-v12.md"
 
 tasks:
-  # ── Phase 21: Expand Constraint Coverage ─────────────────────────
-  - id: exp96-intermediate-result-extractor
-    milestone: "2026.04.6"
-    deliverable: python/carnot/pipeline/extract.py
-    title: "Exp 96: Intermediate result constraint extractor"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 88 (failure-driven constraint mining) revealed a 93% false
-      negative rate on the verify-repair pipeline. The #1 gap category is
-      `intermediate_result` — arithmetic chains where the final answer depends on
-      intermediate computations (e.g., "first compute 3×5=15, then add 7 to get 22").
-      The existing ArithmeticExtractor only catches simple "X + Y = Z" patterns.
-      An intermediate result extractor would catch an estimated 44.8% of current
-      false negatives according to Exp 88's analysis.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/extract.py — ArithmeticExtractor, AutoExtractor, ConstraintExtractor Protocol
-      - python/carnot/pipeline/mining.py — FailureAnalyzer, gap categories from Exp 88
-      - scripts/experiment_88_failure_mining.py — the false negative analysis
-      - results/experiment_88_results.json — specific failure examples (if exists)
-      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm
-
-      TASK: Add IntermediateResultExtractor to python/carnot/pipeline/extract.py
-
-      CONCRETE STEPS:
-      1. Add IntermediateResultExtractor class implementing ConstraintExtractor Protocol:
-         a. Pattern detection for multi-step arithmetic chains:
-            - "first/then/next/so/therefore/thus/which gives/this means" + number
-            - "step 1: ... step 2: ..." patterns
-            - "X op Y = Z, then Z op W = V" sequential computation chains
-            - Numbered list items with arithmetic in each
-         b. For each detected chain, extract ALL intermediate results as separate
-            constraints (not just the final answer)
-         c. Chain verification: verify each intermediate step independently
-            AND verify that step K's result is used correctly in step K+1
-         d. Return list of ConstraintResult objects, one per intermediate step
-
-      2. Register IntermediateResultExtractor in AutoExtractor:
-         a. Add to the default extractor list
-         b. Auto-detect: trigger when response contains sequential computation
-            indicators ("first", "then", "step", numbered lists with math)
-
-      3. Create tests/python/test_intermediate_extractor.py:
-         a. Test simple chains: "3×5=15, then 15+7=22"
-         b. Test complex chains: 4+ step computations
-         c. Test incorrect intermediate: "3×5=16, then 16+7=23" (should catch 15≠16)
-         d. Test no false positives on non-chain text
-         e. Test integration with AutoExtractor
-         f. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-002
-
-      4. Run the extractor on Exp 88's false negative examples:
-         a. Load or recreate the 134 false negatives from Exp 88
-         b. Run IntermediateResultExtractor on each
-         c. Report: how many would now be caught? (target: 44.8% = ~60 of 134)
-
-      5. Save results to {project_root}/results/experiment_96_results.json
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_intermediate_extractor.py -q
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp97-comparison-extractor
-    milestone: "2026.04.6"
-    deliverable: python/carnot/pipeline/extract.py
-    title: "Exp 97: Comparison constraint extractor"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 88 identified `comparison` as the second-highest gap category
-      (40 instances). These are claims like "X is greater than Y", "A has more
-      than B", "temperature increased from X to Y". The current extractors don't
-      handle inequality/comparison relationships at all. This is a straightforward
-      pattern-matching addition.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/extract.py — existing extractors, ConstraintExtractor Protocol
-      - python/carnot/pipeline/mining.py — FailureAnalyzer gap categories
-      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm
-
-      TASK: Add ComparisonExtractor to python/carnot/pipeline/extract.py
-
-      CONCRETE STEPS:
-      1. Add ComparisonExtractor class implementing ConstraintExtractor Protocol:
-         a. Pattern detection for comparison claims:
-            - "X is greater/less/more/fewer/higher/lower/bigger/smaller than Y"
-            - "X > Y", "X < Y", "X >= Y", "X <= Y" (symbolic comparisons)
-            - "X increased/decreased from A to B" (implies A < B or A > B)
-            - "X is the largest/smallest/highest/lowest" (superlative claims)
-            - "X has more/fewer N than Y" (quantified comparisons)
-         b. Extract: left value, operator, right value
-         c. If both values are numeric: verify the comparison directly
-         d. If values are non-numeric: create constraint term but mark as
-            "structural" (comparison claimed but not numerically verifiable)
-         e. Encode verifiable comparisons as energy terms:
-            - Energy = 0 if comparison is satisfied
-            - Energy = |left - right| if comparison is violated
-            - Use a BoundConstraint wrapper from carnot.verify
-
-      2. Register ComparisonExtractor in AutoExtractor:
-         a. Add to the default extractor list
-         b. Auto-detect: trigger when response contains comparison language
-
-      3. Create tests/python/test_comparison_extractor.py:
-         a. Test numeric comparisons: "15 is greater than 10" → verified
-         b. Test violated comparisons: "5 is greater than 10" → violation
-         c. Test directional: "increased from 10 to 20" → verified
-         d. Test superlatives: "highest value is 42" (structural constraint)
-         e. Test no false positives on non-comparison text
-         f. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-002
-
-      4. Run on Exp 88 false negatives to measure catch rate
-
-      5. Save results to {project_root}/results/experiment_97_results.json
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_comparison_extractor.py -q
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp98-factual-kb-extractor
-    milestone: "2026.04.6"
-    deliverable: python/carnot/pipeline/knowledge_base.py
-    title: "Exp 98: Knowledge-base factual claim verifier"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: The "definitive finding" from 94 experiments is: you cannot detect
-      factual hallucination without access to factual knowledge. No internal signal
-      — activations, logit lens, NLI, confidence — can distinguish "Neil Armstrong
-      walked on Mars" from "Neil Armstrong walked on the Moon." This experiment
-      creates a knowledge-base-backed factual claim verifier that checks claims
-      against a curated set of common facts. Exp 88 showed `world_knowledge` as a
-      gap category (8 instances directly, but factual domain has ~0% coverage).
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/extract.py — NLExtractor (current pattern-based NL extractor)
-      - python/carnot/pipeline/mining.py — world_knowledge gap category
-      - python/carnot/verify/constraint.py — ConstraintTerm
-
-      TASK: Create python/carnot/pipeline/knowledge_base.py + FactualKBExtractor
-
-      CONCRETE STEPS:
-      1. Create python/carnot/pipeline/knowledge_base.py:
-         a. KnowledgeBase class:
-            - __init__(facts_path: str | None = None) — loads from JSON file
-            - lookup(entity: str, relation: str) -> str | None — returns value or None
-            - verify_claim(entity: str, relation: str, claimed_value: str) -> VerifyResult
-              where VerifyResult = "verified" | "contradicted" | "unknown"
-            - Built-in default: 1000 common facts as embedded dict (no external file needed):
-              * 200 country capitals ("France" → "capital" → "Paris")
-              * 100 populations (approximate, with tolerance range)
-              * 100 historical dates ("Moon landing" → "year" → "1969")
-              * 100 scientific constants ("speed of light" → "value" → "299792458 m/s")
-              * 100 geographic facts ("longest river" → "name" → "Nile")
-              * 200 person facts ("Albert Einstein" → "birth_year" → "1879")
-              * 200 miscellaneous (element symbols, planet order, etc.)
-
-      2. Add FactualKBExtractor to python/carnot/pipeline/extract.py:
-         a. Implements ConstraintExtractor Protocol
-         b. Claim extraction: detect entity-relation-value patterns in text:
-            - "X is the capital of Y" → (Y, capital, X)
-            - "X was born in Y" → (X, birth_year, Y)
-            - "The population of X is Y" → (X, population, Y)
-            - "X discovered/invented Y in Z" → (X, invention_year, Z)
-            - Simple subject-verb-object patterns with named entities
-         c. For each extracted claim, look up in KnowledgeBase:
-            - verified → energy = 0.0, constraint satisfied
-            - contradicted → energy = 1.0, constraint violated (include correct value)
-            - unknown → skip (do NOT hallucinate verification!)
-         d. Return ConstraintResult with claim text, lookup result, energy
-
-      3. Register FactualKBExtractor in AutoExtractor
-
-      4. Create tests/python/test_factual_kb.py:
-         a. Test KnowledgeBase lookup for known facts
-         b. Test claim extraction from various sentence patterns
-         c. Test verified claims: "Paris is the capital of France"
-         d. Test contradicted claims: "Berlin is the capital of France"
-         e. Test unknown claims: "Zorgon is the capital of Blargonia"
-         f. Test integration with AutoExtractor and VerifyRepairPipeline
-         g. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-002
-
-      5. Create scripts/experiment_98_factual_kb.py:
-         a. Generate 100 factual questions (50 with correct facts, 50 with false facts)
-         b. Run through VerifyRepairPipeline with FactualKBExtractor
-         c. Measure: precision, recall, false positive rate
-         d. Breakdown: which fact categories are best/worst covered?
-         e. Measure: KB hit rate (what fraction of claims match a KB entry?)
-
-      6. Save results to {project_root}/results/experiment_98_results.json
-
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_factual_kb.py -q
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      9. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_98_factual_kb.py
-      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 22: Multi-Turn Agentic Verification ───────────────────
-  - id: exp99-constraint-state-propagation
-    milestone: "2026.04.6"
-    deliverable: python/carnot/pipeline/agentic.py
-    title: "Exp 99: Constraint state propagation across agent steps"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Currently verification is single-turn: one question, one answer,
-      one verify call. Real AI agents execute multi-step workflows where each step's
-      output becomes the next step's input. A constraint violation in step 2 may
-      invalidate steps 3-5. This experiment builds the core primitive for multi-turn
-      agentic verification: a ConstraintState that accumulates verified facts across
-      turns and propagates constraints between steps.
-
-      This is research-program.md Goal #2 (BIGGEST UNTAPPED OPPORTUNITY) — no one
-      else is building constraint propagation across agent reasoning chains.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline, VerificationResult
-      - python/carnot/pipeline/extract.py — AutoExtractor, ConstraintResult
-      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm
-      - scripts/experiment_92_math_benchmark.py — step-level verification (precursor)
-
-      TASK: Create python/carnot/pipeline/agentic.py
-
-      CONCRETE STEPS:
-      1. Create python/carnot/pipeline/agentic.py with these classes:
-
-         a. FactStatus enum: VERIFIED, ASSUMED, VIOLATED
-
-         b. TrackedFact dataclass:
-            - fact: str (the claim text)
-            - status: FactStatus
-            - introduced_at_step: int
-            - verified_at_step: int | None
-            - energy: float
-            - constraint: ConstraintResult | None
-
-         c. ConstraintState class:
-            - facts: dict[str, TrackedFact] (keyed by normalized claim text)
-            - add_fact(fact, step_index, status) -> None
-            - verify_fact(fact_key, step_index, energy) -> None
-            - get_verified() -> list[TrackedFact]
-            - get_assumed() -> list[TrackedFact]
-            - get_violated() -> list[TrackedFact]
-            - get_all_constraints() -> list[ConstraintResult]
-            - snapshot() -> dict (serializable state for logging)
-
-         d. AgentStep dataclass:
-            - step_index: int
-            - input_text: str
-            - output_text: str
-            - constraints: list[ConstraintResult]
-            - verification: VerificationResult | None
-            - state_before: ConstraintState (snapshot)
-            - state_after: ConstraintState (snapshot)
-
-         e. propagate(state: ConstraintState, step: AgentStep,
-                      pipeline: VerifyRepairPipeline) -> ConstraintState:
-            - Extract constraints from step.output_text via pipeline
-            - Verify all constraints (both new and accumulated from prior steps)
-            - Update state: new facts as ASSUMED, verified facts as VERIFIED,
-              violated constraints as VIOLATED
-            - Return updated state
-
-      2. Create tests/python/test_agentic.py:
-         a. Test ConstraintState accumulation across 3 steps
-         b. Test fact status transitions: ASSUMED → VERIFIED, ASSUMED → VIOLATED
-         c. Test propagate() with mock pipeline results
-         d. Test that step N+1 inherits step N's verified facts
-         e. Test snapshot serialization
-         f. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-005
-
-      3. Create scripts/experiment_99_constraint_propagation.py:
-         a. Define 10 synthetic 5-step reasoning chains:
-            - 5 fully correct chains
-            - 5 with a planted error at varying steps (step 2, 3, or 4)
-         b. Example chain: "What is 3×4+5?"
-            Step 1: "First, multiply 3×4 = 12"
-            Step 2: "Then, add 5 to get 12+5 = 17"
-            Step 3: "The answer is 17"
-         c. Run each chain through propagate() step by step
-         d. Track: does the state correctly accumulate? Does a violation at
-            step K mark subsequent facts as suspect?
-         e. Report: state accumulation correctness, violation detection step
-
-      4. Update python/carnot/pipeline/__init__.py to export agentic classes
-
-      5. Save results to {project_root}/results/experiment_99_results.json
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_agentic.py -q
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_99_constraint_propagation.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp100-multi-step-rollback
-    milestone: "2026.04.6"
-    deliverable: python/carnot/pipeline/agentic.py
-    title: "Exp 100: Multi-step verification with rollback"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 99 built ConstraintState propagation across agent steps. This
-      experiment adds the rollback mechanism: when a constraint violation is detected
-      at step K, trace back through the dependency chain to find the ROOT CAUSE step
-      and repair from there instead of just repairing the current step.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/agentic.py — ConstraintState, AgentStep, propagate() (Exp 99)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (repair mechanism)
-      - python/carnot/pipeline/extract.py — AutoExtractor
-
-      TASK: Extend python/carnot/pipeline/agentic.py with rollback and AgentVerifier
-
-      CONCRETE STEPS:
-      1. Add dependency tracking to ConstraintState:
-         a. Each TrackedFact records which prior facts it depends on
-            (fact X at step 3 depends on fact Y from step 1)
-         b. depends_on: list[str] field in TrackedFact
-         c. When a fact is violated, trace depends_on chain backward to find
-            the earliest fact that is violated or incorrect
-
-      2. Add AgentVerifier class:
-         a. __init__(pipeline: VerifyRepairPipeline)
-         b. verify_chain(steps: list[AgentStep]) -> ChainVerificationResult:
-            - Run propagate() for each step in sequence
-            - Build full dependency graph
-            - Return: overall verified (bool), per-step results, violation trace
-         c. find_root_cause(chain_result: ChainVerificationResult) -> int:
-            - Given a violated step, trace back through dependency graph
-            - Return index of the earliest step that introduced the error
-            - Heuristic: the first step whose output constraint is violated
-         d. rollback_to(state: ConstraintState, step_index: int) -> ConstraintState:
-            - Remove all facts introduced at or after step_index
-            - Return clean state from just before the bad step
-         e. repair_chain(steps: list[AgentStep], from_step: int) -> list[AgentStep]:
-            - Rollback state to from_step
-            - Re-run verify_and_repair on from_step
-            - Re-propagate constraints through subsequent steps
-            - Return repaired chain
-
-      3. ChainVerificationResult dataclass:
-         - steps: list[AgentStep]
-         - overall_verified: bool
-         - first_violation_step: int | None
-         - root_cause_step: int | None
-         - dependency_graph: dict[str, list[str]]
-         - state_history: list[ConstraintState]
-
-      4. Update tests/python/test_agentic.py:
-         a. Test verify_chain on correct 5-step chain
-         b. Test verify_chain on chain with error at step 3
-         c. Test find_root_cause traces back from step 4 violation to step 2 error
-         d. Test rollback_to removes facts correctly
-         e. Test repair_chain re-runs from root cause
-         f. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-005
-
-      5. Create scripts/experiment_100_rollback.py:
-         a. Generate 20 synthetic 5-step reasoning chains:
-            - 10 correct
-            - 10 with planted errors at various steps (2, 3, or 4)
-            - Include dependency chains (step 3 uses step 2's result)
-         b. Run verify_chain on each
-         c. For chains with errors: test find_root_cause accuracy
-         d. Test repair_chain: does repairing from root cause fix downstream?
-         e. Compare: repair from detected step vs repair from root cause step
-         f. Report: root cause accuracy, repair success rate, false positives
-
-      6. Save results to {project_root}/results/experiment_100_results.json
-
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_agentic.py -q
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      9. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_100_rollback.py
-      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp102-latency-benchmark
-    milestone: "2026.04.6"
-    deliverable: scripts/experiment_102_latency_benchmark.py
-    title: "Exp 102: Constraint check latency microbenchmark"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: The differentiable constraint pipeline (Exp 66) achieves 1.0 test
-      AUROC. The critical question: is it fast enough for per-token use during LLM
-      generation? If a single constraint check takes <1ms, energy-guided decoding
-      is viable (the Kona path). If >10ms, we stick with post-hoc verify-repair.
-      This experiment measures the exact latency at various scales. Quick experiment,
-      high signal — answers research-program.md Goal #4.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_66_differentiable_constraints.py — differentiable pipeline
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.verify()
-      - python/carnot/pipeline/extract.py — AutoExtractor
-      - scripts/benchmark_pipeline.py — existing pipeline benchmarks (Exp 83)
-      - crates/carnot-constraints/src/pipeline.rs — Rust VerifyPipeline (Exp 94)
-
-      TASK: Create scripts/experiment_102_latency_benchmark.py
-
-      CONCRETE STEPS:
-      1. Benchmark the FULL differentiable pipeline forward pass:
-         a. Component-level timing (each measured independently):
-            - Sentence embedding computation (all-MiniLM-L6-v2 or simulated)
-            - Constraint extraction via AutoExtractor
-            - Continuous Ising energy computation via JAX
-            - Joint MLP scoring
-            - Total end-to-end forward pass
-         b. Warm up: run 100 iterations before timing (JIT compilation)
-         c. Measure: 1000 iterations, report p50/p95/p99/mean/std
-
-      2. Scale sweeps:
-         a. Input length: 10, 50, 100, 500, 1000 tokens (simulated text)
-         b. Constraint count: 1, 5, 10, 50 constraints (synthetic)
-         c. Matrix: input_length × constraint_count, measure latency per cell
-
-      3. Backend comparison (where available):
-         a. Python VerifyRepairPipeline.verify() — the production path
-         b. JAX JIT-compiled differentiable forward pass
-         c. Rust VerifyPipeline (if carnot-python bindings available)
-         d. For each: same 100 inputs, same timing methodology
-
-      4. Analysis:
-         a. Classify result:
-            - <1ms mean → "VIABLE for per-token guided decoding"
-            - 1-10ms mean → "VIABLE for per-sentence or batched verification"
-            - >10ms mean → "POST-HOC only, not viable for generation-time use"
-         b. Identify bottleneck component (embedding? extraction? energy? MLP?)
-         c. Project: what latency would we need at 50 tokens/second generation?
-            (20ms budget per token → constraint check must be <10ms)
-         d. Recommendation: guided decoding viable? What optimization needed?
-
-      5. Save results to {project_root}/results/experiment_102_results.json
-      6. Save summary to {project_root}/ops/latency-benchmark.md
-
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_102_latency_benchmark.py
-      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp103-kan-energy-tier
-    milestone: "2026.04.6"
+  # ── Phase 31: KAN Energy Tier Completion ──────────────────────────
+  - id: exp108-kan-energy-function
+    milestone: "2026.04.7"
     deliverable: python/carnot/models/kan.py
-    title: "Exp 103: KAN energy tier prototype"
+    title: "Exp 108: KAN Energy Function Implementation"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: The Ising model uses fixed quadratic energy E = -s^T J s + b^T s.
-      This is interpretable but has limited expressiveness — Exp 62/88 showed that
-      linear features can't capture nonlinear constraint relationships (e.g.,
-      "if X > 10 AND Y < 5 then Z must be positive" requires nonlinear interactions).
-      Kolmogorov-Arnold Networks (KANs) use learnable spline activations on edges
-      instead of fixed quadratic interactions. A KAN-based energy function has
-      E = sum of spline_ij(s_i, s_j) over edges — strictly more expressive than
-      Ising while remaining interpretable (you can plot the learned spline shapes).
-      This is research-program.md Goal #7.
-
-      Tier placement: Ising (quadratic) → KAN (spline) → Gibbs (MLP) → Boltzmann (deep)
+      CONTEXT: Exp 103 (KAN energy tier) failed due to rate limits. KAN
+      (Kolmogorov-Arnold Networks) addresses the constraint learning ceiling
+      where linear Ising features cannot capture nonlinear constraint relationships.
+      KAN edges have learnable B-spline activations — strictly more expressive
+      than Ising (quadratic) while remaining interpretable.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
@@ -491,9 +35,8 @@ tasks:
       - python/carnot/core/energy.py — EnergyFunction protocol
       - python/carnot/training/contrastive_divergence.py — CD training
       - scripts/experiment_62_domain_constraint_learning.py — domain CD data
-      - crates/carnot-core/src/lib.rs — Rust EnergyFunction trait
 
-      TASK: Create python/carnot/models/kan.py + crates/carnot-kan/ scaffold
+      TASK: Create python/carnot/models/kan.py with KAN energy function
 
       CONCRETE STEPS:
       1. Create python/carnot/models/kan.py:
@@ -502,22 +45,21 @@ tasks:
             - evaluate(x: jnp.ndarray) -> jnp.ndarray
             - num_knots, degree as hyperparameters (default: 10 knots, degree 3)
          b. KANEnergyFunction class implementing EnergyFunction protocol:
-            - edges: list of (i, j) pairs (like Ising's coupling matrix, but sparse)
+            - edges: list of (i, j) pairs (like Ising coupling matrix, but sparse)
             - splines: one BSpline per edge (learnable)
             - biases: one BSpline per node (learnable, replaces linear bias)
             - energy(state): sum of spline_ij(s_i * s_j) + sum of bias_i(s_i)
             - grad_energy(state): JAX autodiff through splines
             - n_params property: total learnable parameters
-            - interpret_edge(i, j): return the spline shape for visualization
-         c. KANModel class (wraps energy + training state):
             - from_ising(ising_model): initialize KAN splines from Ising couplings
               (each spline starts as linear function matching J_ij weight)
-            - train_cd(data, n_epochs, lr): CD training with spline parameter updates
-            - plot_splines(edge_indices): matplotlib visualization of learned shapes
+         c. KANModel class (wraps energy + training state):
+            - train_cd(data, n_epochs, lr): CD training with spline updates
+            - interpret_edge(i, j): return spline shape for visualization
 
       2. Create crates/carnot-kan/Cargo.toml and crates/carnot-kan/src/lib.rs:
          a. Minimal scaffold: KanEnergyFunction struct implementing EnergyFunction trait
-         b. BSpline struct with evaluate() using lookup table (for future FPGA path)
+         b. BSpline struct with evaluate() using lookup table (for FPGA path)
          c. energy(), gradient() methods
          d. Mark with TODO comments for full implementation later
          e. Add to workspace Cargo.toml members list
@@ -525,377 +67,582 @@ tasks:
       3. Create tests/python/test_kan.py:
          a. Test BSpline evaluation at knot points
          b. Test KANEnergyFunction produces finite energy
-         c. Test gradient computation (JAX grad) through splines
-         d. Test from_ising initialization: KAN initialized from Ising should produce
-            similar energy values on the same inputs
-         e. Test that KAN has MORE parameters than equivalent Ising but FEWER than Gibbs
+         c. Test gradient computation through splines
+         d. Test from_ising: KAN from Ising produces similar energy values
+         e. Test KAN has more params than Ising but fewer than Gibbs MLP
          f. Every test references REQ-CORE-001 or SCENARIO-CORE-001
 
-      4. Create scripts/experiment_103_kan_energy.py:
-         a. Load Exp 62's domain-specific constraint data (10K triples, 3 domains)
-         b. Train KAN energy model via CD (same setup as Exp 62)
-         c. Compare: KAN AUROC vs Ising AUROC vs Gibbs MLP AUROC
-         d. Per-domain breakdown: where does KAN help most?
-         e. Interpretability: plot top-5 most important edge splines
-         f. Parameter efficiency: KAN params vs Ising params vs Gibbs params
-         g. Initialize KAN from Ising (from_ising) and fine-tune — does it converge faster?
+      4. Save results to {project_root}/results/experiment_108_results.json
 
-      5. Save results to {project_root}/results/experiment_103_results.json
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_kan.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Run: cargo build -p carnot-kan
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_kan.py -q
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      8. Run: cargo build -p carnot-kan
-      9. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_103_kan_energy.py
-      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp101-agent-workflow-e2e
-    milestone: "2026.04.6"
-    deliverable: scripts/experiment_101_agent_verification.py
-    title: "Exp 101: Agent workflow verification end-to-end"
+  - id: exp109-kan-comparison
+    milestone: "2026.04.7"
+    deliverable: scripts/experiment_109_kan_comparison.py
+    title: "Exp 109: KAN vs Ising vs Gibbs Comparison"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 99 built ConstraintState propagation and Exp 100 added rollback.
-      This experiment puts them together in realistic agent workflow scenarios to
-      validate the full agentic verification pipeline end-to-end. Three workflow
-      templates test different reasoning patterns: sequential computation (math tutor),
-      code generation (code assistant), and information synthesis (research assistant).
+      CONTEXT: Exp 108 created the KAN energy function. This experiment trains
+      KAN on domain constraint data and compares against Ising and Gibbs MLP.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/agentic.py — ConstraintState, AgentStep, AgentVerifier,
-        verify_chain, find_root_cause, rollback_to, repair_chain (Exp 99-100)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — AutoExtractor (with new extractors from Phase 21)
+      - python/carnot/models/kan.py — KANModel (Exp 108)
+      - python/carnot/models/ising.py — IsingModel
+      - python/carnot/models/gibbs.py — GibbsModel
+      - scripts/experiment_62_domain_constraint_learning.py — training data format
+      - scripts/experiment_89_self_bootstrap.py — self-supervised training setup
 
-      TASK: Create scripts/experiment_101_agent_verification.py
+      TASK: Create scripts/experiment_109_kan_comparison.py
 
       CONCRETE STEPS:
-      1. Define 3 agent workflow templates, each with 10 instances (5 correct, 5 with errors):
+      1. Load Exp 62's domain constraint data (10K triples across arithmetic/logic/code)
+         or recreate with same format
 
-         a. Math Tutor workflow (4 steps):
-            Step 1: Read and understand the problem
-            Step 2: Identify the mathematical approach
-            Step 3: Execute computation step by step
-            Step 4: Verify and state final answer
-            Error types: wrong operation in step 3, incorrect approach in step 2
+      2. Train three energy models with identical data/splits (700 train/150 val/150 test):
+         a. Ising: discriminative CD on binary features
+         b. KAN: discriminative CD with spline edge activations
+         c. Gibbs MLP: discriminative CD with SiLU activations
 
-         b. Code Assistant workflow (4 steps):
-            Step 1: Parse the specification/requirements
-            Step 2: Write the function implementation
-            Step 3: Write test cases
-            Step 4: Run tests and report results
-            Error types: incorrect implementation in step 2, wrong test in step 3
+      3. Compare per-domain AUROC:
+         a. Arithmetic, logic, code (per-domain models)
+         b. Combined model (all domains together)
+         c. Bootstrap 95% confidence intervals
 
-         c. Research Assistant workflow (4 steps):
-            Step 1: Formulate search query from user question
-            Step 2: Gather relevant facts (simulated search results)
-            Step 3: Synthesize facts into coherent answer
-            Step 4: Cite sources and provide confidence
-            Error types: misattributed fact in step 3, wrong citation in step 4
+      4. Compare parameter counts:
+         a. Ising params = num_features^2 / 2 (sparse) or num_features^2 (dense)
+         b. KAN params = num_edges * spline_params + num_nodes * bias_params
+         c. Gibbs params = hidden_size * input_size + hidden_size + output_size
 
-      2. For each workflow instance:
-         a. Run AgentVerifier.verify_chain() with full constraint propagation
-         b. Record: per-step verification results, constraint state snapshots
-         c. For error cases: record find_root_cause result vs actual error step
-         d. Attempt repair_chain() and record success/failure
+      5. Interpretability analysis:
+         a. Train KAN on arithmetic domain
+         b. Plot top-5 most important edge splines
+         c. Compare spline shapes: learned nonlinear vs initialized linear
 
-      3. Analysis:
-         a. Error detection rate: what fraction of planted errors were detected?
-         b. Detection latency: how many steps after the error before detection?
-            (ideal: detect AT the error step, not 2 steps later)
-         c. Root cause accuracy: find_root_cause vs actual error step
-         d. Repair success: does repair_chain fix the error AND downstream steps?
-         e. False positive rate: how many correct chains flagged incorrectly?
-         f. Per-workflow-type comparison
-         g. Constraint coverage: what fraction of each step's claims were extractable?
+      6. Ablation: initialize KAN from Ising (via from_ising) and fine-tune
+         a. Does warm-starting from Ising converge faster?
+         b. Does it achieve higher final AUROC?
 
-      4. Compare: per-step agentic verification vs final-answer-only verification
-         a. Run same workflows with only final step verification
-         b. Which errors does agentic catch that final-only misses?
+      7. Save results to {project_root}/results/experiment_109_results.json
 
-      5. Save results to {project_root}/results/experiment_101_results.json
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_109_kan_comparison.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_101_agent_verification.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp104-energy-guided-sampling
-    milestone: "2026.04.6"
+  # ── Phase 32: Production Energy-Guided Decoding ──────────────────
+  - id: exp110-guided-decoding
+    milestone: "2026.04.7"
     deliverable: python/carnot/inference/guided_decoding.py
-    title: "Exp 104: Energy-guided token sampling prototype"
+    title: "Exp 110: Guided Decoding Prototype Completion"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 102 measured constraint check latency. This experiment builds
-      the first prototype of energy-guided LLM generation: constraint energy modifies
-      token probabilities during generation, steering the LLM away from constraint-
-      violating continuations. If Exp 102 showed latency is too high (>10ms per check),
-      this experiment still builds the prototype but uses batched checking (every K
-      tokens) instead of per-token checking.
-
-      This is the bridge from post-hoc verification to generation-time steering —
-      the path to Kona (research-program.md Goal #9).
+      CONTEXT: Exp 102 proved per-token constraint checking is viable (0.008ms JAX JIT).
+      Exp 104 (guided decoding prototype) failed due to rate limits. This experiment
+      completes the prototype: constraint energy modifies token probabilities during
+      generation, steering the LLM away from constraint-violating continuations.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_102_latency_benchmark.py — latency results (Exp 102)
-      - results/experiment_102_results.json — timing data
-      - scripts/experiment_66_differentiable_constraints.py — differentiable verifier
+      - scripts/experiment_102_latency_benchmark.py — latency results
+      - scripts/experiment_66_differentiable_constraints.py — differentiable pipeline
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
       - python/carnot/pipeline/extract.py — AutoExtractor
+      - python/carnot/models/kan.py — KANEnergyFunction (Exp 108, optional)
 
-      TASK: Create python/carnot/inference/guided_decoding.py + experiment script
+      TASK: Create python/carnot/inference/guided_decoding.py
 
       CONCRETE STEPS:
       1. Create python/carnot/inference/guided_decoding.py:
          a. EnergyGuidedSampler class:
-            - __init__(pipeline: VerifyRepairPipeline, alpha: float = 0.5,
-                       check_every_k: int = 1):
-              alpha = guidance strength (how much energy influences logits)
+            - __init__(pipeline, alpha=0.5, check_every_k=1):
+              alpha = guidance strength (energy influence on logits)
               check_every_k = frequency of constraint checks (1 = every token)
-            - compute_energy_penalty(text_so_far: str) -> float:
+            - compute_energy_penalty(text_so_far):
               Run AutoExtractor + energy computation on partial text
               Return constraint energy (higher = more violations)
-            - modify_logits(logits: jnp.ndarray, text_so_far: str) -> jnp.ndarray:
-              penalty = compute_energy_penalty(text_so_far)
-              If penalty > threshold: reduce probability of continuation tokens
-              that would increase energy (via energy gradient if differentiable
-              pipeline available, else uniform penalty on all tokens)
+            - modify_logits(logits, text_so_far):
+              If energy > threshold: reduce probability of high-energy continuations
+              Use energy gradient if KAN/Ising available, else uniform penalty
               Return modified logits
-            - generate(prompt: str, model, tokenizer, max_tokens: int = 256,
-                       temperature: float = 1.0) -> str:
+            - generate(prompt, model, tokenizer, max_tokens=256, temperature=1.0):
               Token-by-token generation with energy guidance:
-              For each token:
-                1. Get model logits for next token
-                2. If step % check_every_k == 0: modify logits via energy penalty
-                3. Sample from modified distribution
-                4. Append token to sequence
-              Return generated text
+              For each token: get logits → modify via energy penalty → sample → append
 
-      2. Create scripts/experiment_104_guided_decoding.py:
-         a. Test on 50 GSM8K-style arithmetic word problems:
-            - Use Qwen3.5-0.8B if available, else simulate token-by-token generation
-            - If model unavailable: simulate by generating correct/incorrect answers
-              and applying energy penalties to demonstrate the mechanism
-         b. Three modes:
-            - Greedy baseline (no energy guidance)
-            - Energy-guided with check_every_k=1 (per-token, if latency permits)
-            - Energy-guided with check_every_k=5 (batched, always feasible)
-            - Post-hoc verify-repair (for comparison)
-         c. Alpha sweep: [0.1, 0.3, 0.5, 1.0, 2.0]
-         d. Metrics per mode:
-            - Accuracy (correct final answer)
-            - Constraint satisfaction rate during generation
-            - Total wall-clock time per question
-            - Latency overhead vs unguided generation
-
-      3. Create tests/python/test_guided_decoding.py:
+      2. Create tests/python/test_guided_decoding.py:
          a. Test EnergyGuidedSampler initialization
          b. Test compute_energy_penalty with known inputs
          c. Test modify_logits reduces high-energy continuations
          d. Test generate with mock model (verify token-by-token flow)
          e. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-004
 
-      4. Save results to {project_root}/results/experiment_104_results.json
+      3. Create scripts/experiment_110_guided_decoding.py:
+         a. Test on 50 GSM8K-style arithmetic problems
+         b. Three modes: greedy baseline, guided (check_every_k=1), guided (check_every_k=5)
+         c. Alpha sweep: [0.1, 0.3, 0.5, 1.0, 2.0]
+         d. Metrics: accuracy, constraint satisfaction rate, latency overhead
+
+      4. Save results to {project_root}/results/experiment_110_results.json
 
       5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_guided_decoding.py -q
       6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_104_guided_decoding.py
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_110_guided_decoding.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 24: Scale Benchmarks + Integration ────────────────────
-  - id: exp105-improved-benchmark
-    milestone: "2026.04.6"
-    deliverable: scripts/experiment_105_improved_benchmark.py
-    title: "Exp 105: Full-scale benchmark with improved extractors"
+  - id: exp111-guided-production
+    milestone: "2026.04.7"
+    deliverable: python/carnot/pipeline/verify_repair.py
+    title: "Exp 111: Productionize Guided Decoding"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 93 showed +10.2% average improvement with the v10 extractors.
-      Phase 21 added three new extractors: IntermediateResultExtractor (Exp 96),
-      ComparisonExtractor (Exp 97), and FactualKBExtractor (Exp 98). This experiment
-      re-runs the full multi-model comparison with the expanded extractor set to
-      measure the actual false negative reduction.
+      CONTEXT: Exp 110 created the guided decoding prototype. This experiment
+      integrates energy-guided generation into the VerifyRepairPipeline API.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_93_multi_model_comparison.py — v10 benchmark setup
-      - python/carnot/pipeline/extract.py — ALL extractors (including new from Phase 21)
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - results/experiment_93_results.json — v10 baseline numbers
+      - python/carnot/inference/guided_decoding.py — EnergyGuidedSampler (Exp 110)
+      - python/carnot/pipeline/extract.py — AutoExtractor
 
-      TASK: Create scripts/experiment_105_improved_benchmark.py
+      TASK: Extend python/carnot/pipeline/verify_repair.py with guided generation
 
       CONCRETE STEPS:
-      1. Same setup as Exp 93:
-         a. 250 questions (50 per domain × 5 domains)
-         b. 2 models: Qwen3.5-0.8B, google/gemma-4-E4B-it (simulated)
-         c. 3 modes: baseline, verify-only, verify-repair
-         d. Total: 1500 evaluations
+      1. Add GuidedGenerationConfig to verify_repair.py:
+         a. mode: enum (guided_only, guided_then_verify, verify_then_guided)
+         b. alpha: guidance strength (default 0.5)
+         c. check_every_k: constraint check frequency (default 1)
+         d. max_tokens: max generation length (default 256)
+         e. temperature: sampling temperature (default 1.0)
 
-      2. Key difference: AutoExtractor now includes:
-         - ArithmeticExtractor (existing)
-         - CodeExtractor (existing)
-         - LogicExtractor (existing)
-         - NLExtractor (existing)
-         - IntermediateResultExtractor (Exp 96 — NEW)
-         - ComparisonExtractor (Exp 97 — NEW)
-         - FactualKBExtractor (Exp 98 — NEW)
+      2. Add verify_and_generate() method to VerifyRepairPipeline:
+         a. Input: question/prompt + GuidedGenerationConfig
+         b. Output: GeneratedAnswer with guided decoding
+         c. Integrates EnergyGuidedSampler with verify/repair mechanism
+         d. Options: guided_only (no verify), guided_then_verify, verify_then_guided
 
-      3. Metrics per cell (model × domain × mode):
-         a. Accuracy, hallucination rate, repair success rate
-         b. NEW: constraint coverage (total constraints extracted / total claims)
-         c. NEW: false negative rate (wrong answers that passed verification)
-         d. NEW: per-extractor contribution (which extractors triggered?)
+      3. Ensure backward compatibility:
+         a. Existing verify() and verify_and_repair() unchanged
+         b. Default GuidedGenerationConfig values match existing behavior
 
-      4. Comparison with v10 (Exp 93):
-         a. Side-by-side accuracy table: v10 extractors vs v11 extractors
-         b. False negative reduction: what % improvement from new extractors?
-         c. Per-domain: which domains improved most? (expect factual, scheduling)
-         d. Statistical significance: bootstrap 95% CI on accuracy difference
-         e. Extractor contribution analysis: for each newly-caught error, which
-            new extractor caught it?
+      4. Create tests/python/test_guided_generation.py:
+         a. Test all three modes
+         b. Test config validation
+         c. Test backward compatibility
+         d. Test with mock LLM (simulate token generation)
+         e. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-004
 
-      5. Save results to {project_root}/results/experiment_105_results.json
-      6. Save comparison to {project_root}/ops/v10-vs-v11-extractors.md
+      5. Create scripts/experiment_111_guided_production.py:
+         a. Compare: verify_and_repair (post-hoc) vs verify_and_generate (guided) vs combined
+         b. 100 GSM8K problems × 3 modes
+         c. Measure: accuracy, repair count, latency, constraint satisfaction
+         d. Answer: is guided generation better than post-hoc repair?
 
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_105_improved_benchmark.py
-      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      6. Save results to {project_root}/results/experiment_111_results.json
 
-  - id: exp106-truthfulqa
-    milestone: "2026.04.6"
-    deliverable: scripts/experiment_106_truthfulqa.py
-    title: "Exp 106: TruthfulQA benchmark with factual extractor"
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_guided_generation.py -q
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      9. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_111_guided_production.py
+      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp112-embedding-bottleneck
+    milestone: "2026.04.7"
+    deliverable: python/carnot/embeddings/fast_embedding.py
+    title: "Exp 112: Embedding Bottleneck Resolution"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Factual hallucination is the hardest domain for constraint verification
-      because it requires external knowledge. Exp 98 created the FactualKBExtractor
-      with a 1000-fact knowledge base. TruthfulQA is the standard benchmark for
-      testing whether models produce truthful answers. This experiment measures how
-      well the factual constraint pipeline performs on this challenging benchmark.
+      CONTEXT: Exp 102 showed MiniLM embedding is the bottleneck at 7.6ms while
+      JAX JIT energy computation is 0.008ms. This experiment explores faster
+      embedding alternatives to enable true per-token guided decoding.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/knowledge_base.py — KnowledgeBase, FactualKBExtractor (Exp 98)
+      - scripts/experiment_102_latency_benchmark.py — latency profile results
+      - results/experiment_102_results.json — timing breakdown
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — AutoExtractor (with FactualKBExtractor)
-      - scripts/experiment_98_factual_kb.py — factual KB experiment results
 
-      TASK: Create scripts/experiment_106_truthfulqa.py
+      TASK: Benchmark embedding options and integrate fastest into pipeline
+
+      CONCRETE STEPS:
+      1. Profile embedding options:
+         a. Current: sentence-transformers (MiniLM) — 7.6ms baseline
+         b. ONNX runtime with MiniLM-ONNX — expect 2-5x speedup
+         c. Quantized MiniLM (int8/fp16) — memory + speedup
+         d. LLM-native embeddings (Qwen/Gemma hidden states) — no extra model
+         e. Hash embedding (no neural net) — ultra-fast for exact-match constraints
+
+      2. For each option:
+         a. Measure: latency (p50/p95/p99), memory usage
+         b. Measure: accuracy impact (run through differentiable pipeline, check AUROC)
+         c. Compare to MiniLM baseline
+
+      3. Choose best option:
+         a. Criteria: latency <1ms at p99 AND no AUROC regression >5%
+         b. If no option meets criteria: recommend batched checking (every K tokens)
+
+      4. Integrate chosen embedding into guided decoding pipeline:
+         a. Replace current embedding in AutoExtractor or differentiable pipeline
+         b. Verify latency improvement in full pipeline benchmark
+
+      5. Create python/carnot/embeddings/fast_embedding.py:
+         a. FastEmbeddingProtocol with encode() method
+         b. Implementations for each embedding option
+         c. get_default_embedding() factory
+
+      6. Save results to {project_root}/results/experiment_112_results.json
+
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_112_embedding_benchmark.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 33: Factual Grounding + Knowledge Base Expansion ───────
+  - id: exp113-factual-kb-extractor
+    milestone: "2026.04.7"
+    deliverable: python/carnot/pipeline/knowledge_base.py
+    title: "Exp 113: Factual Knowledge Base Extractor v2"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 98 (FactualKBExtractor) was skipped multiple times due to
+      pre-test failures. Self-bootstrap showed factual at 0.55 AUROC and
+      scheduling at 0.52 AUROC — near zero. This creates a robust implementation.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — AutoExtractor, ConstraintExtractor Protocol
+      - python/carnot/pipeline/mining.py — world_knowledge gap category (Exp 88)
+      - python/carnot/verify/constraint.py — ConstraintTerm
+
+      TASK: Create python/carnot/pipeline/knowledge_base.py with robust implementation
+
+      CONCRETE STEPS:
+      1. Create python/carnot/pipeline/knowledge_base.py:
+         a. KnowledgeBase class:
+            - __init__(facts_path=None) — load from JSON or use embedded defaults
+            - lookup(entity, relation) -> value or None
+            - verify_claim(entity, relation, claimed_value) -> VerifyResult
+              where VerifyResult = "verified" | "contradicted" | "unknown"
+            - Built-in: 5000 facts as embedded dict:
+              * 1000 country capitals, populations (with tolerance ranges)
+              * 500 historical dates, scientific constants
+              * 500 geographic facts, element properties
+              * 500 person facts, company founders
+              * 500 movie/book/invention facts
+              * 1000 misc common knowledge
+
+         b. FactualKBExtractor implementing ConstraintExtractor Protocol:
+            - Entity-relation-value triple extraction via regex + spaCy patterns
+            - Pattern examples:
+              * "X is the capital of Y" → (Y, capital, X)
+              * "X was born in Y" → (X, birth_year, Y)
+              * "The population of X is Y" → (X, population, Y)
+            - KB lookup: verified/contradicted/unknown
+            - Energy encoding: verified=0.0, contradicted=1.0, unknown=skip
+
+         c. Entity linking: normalize "USA", "U.S.", "United States" → same entity
+         d. Coreference resolution: link pronouns to referenced entities
+
+      2. Register FactualKBExtractor in AutoExtractor
+
+      3. Create tests/python/test_factual_kb.py:
+         a. KB lookup for known/unknown facts
+         b. Claim extraction from various sentence patterns
+         c. Entity linking and coreference
+         d. Integration with AutoExtractor and VerifyRepairPipeline
+         e. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-002
+
+      4. Save results to {project_root}/results/experiment_113_results.json
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_factual_kb.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp114-websearch-fallback
+    milestone: "2026.04.7"
+    deliverable: python/carnot/pipeline/extract.py
+    title: "Exp 114: WebSearch Fallback for Uncovered Claims"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 113 created the FactualKBExtractor with 5000 facts. But many
+      factual claims won't be in any local KB. This adds WebSearch fallback.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/knowledge_base.py — KnowledgeBase, FactualKBExtractor (Exp 113)
+      - python/carnot/pipeline/extract.py — ConstraintExtractor Protocol
+
+      TASK: Add WebSearchExtractor to python/carnot/pipeline/extract.py
+
+      CONCRETE STEPS:
+      1. Add WebSearchExtractor to python/carnot/pipeline/extract.py:
+         a. Triggered when FactualKBExtractor returns "unknown"
+         b. Uses DuckDuckGo API (no key required) or simulated fallback
+         c. Extract factual claims from search snippets
+         d. Verify extracted claims against retrieved facts
+         e. Return confidence score based on source consistency
+         f. Graceful degradation: if search unavailable, fall back to KB-only
+
+      2. Integrate into AutoExtractor:
+         a. Add to default extractor list after FactualKBExtractor
+         b. Cascade: FactualKB → WebSearch → skip
+
+      3. Create tests/python/test_websearch_extractor.py:
+         a. Test search fallback with known/unknown facts
+         b. Test graceful degradation (no network)
+         c. Test confidence scoring
+         d. Every test references REQ-VERIFY-001 or SCENARIO-VERIFY-002
+
+      4. Create scripts/experiment_114_websearch_fallback.py:
+         a. 100 factual questions (50 correct, 50 false) not in local KB
+         b. Measure: KB hit rate, WebSearch fallback coverage
+         c. Compare: KB-only vs KB+WebSearch accuracy
+         d. Analyze: which fact categories benefit most?
+
+      5. Save results to {project_root}/results/experiment_114_results.json
+
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_websearch_extractor.py -q
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_114_websearch_fallback.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp115-truthfulqa-v12
+    milestone: "2026.04.7"
+    deliverable: scripts/experiment_115_truthfulqa.py
+    title: "Exp 115: TruthfulQA Benchmark with v12 Extractors"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: TruthfulQA is the standard benchmark for factual hallucination
+      detection. This runs it with all v11+v12 extractors.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/knowledge_base.py — KnowledgeBase, FactualKBExtractor (Exp 113)
+      - python/carnot/pipeline/extract.py — All extractors including WebSearchExtractor (Exp 114)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - scripts/experiment_93_multi_model_comparison.py — benchmark setup
+
+      TASK: Create scripts/experiment_115_truthfulqa.py
 
       CONCRETE STEPS:
       1. Load TruthfulQA dataset:
-         a. Try: `from datasets import load_dataset; ds = load_dataset("truthful_qa", "generation", split="validation")`
+         a. Try: from datasets import load_dataset; ds = load_dataset("truthful_qa", "generation", split="validation")
          b. If unavailable, create 100 synthetic TruthfulQA-style questions:
             - 25 factual (capitals, dates, scientific facts)
-            - 25 common misconceptions ("Is the Great Wall visible from space?")
-            - 25 tricky phrasing ("Who invented the lightbulb?" — multiple answers)
-            - 25 adversarial (questions designed to elicit plausible-sounding wrong answers)
-         c. Each question has best_answer and incorrect_answers fields
+            - 25 common misconceptions
+            - 25 tricky phrasing
+            - 25 adversarial
 
-      2. Model inference:
-         a. Generate answers with Qwen3.5-0.8B (or simulate)
-         b. Generate answers with Gemma4-E4B-it (or simulate)
+      2. Generate answers:
+         a. With Qwen3.5-0.8B (or simulate)
+         b. With Gemma4-E4B-it (or simulate)
          c. For simulation: mix of best_answer (70%) and incorrect_answers (30%)
 
-      3. Verification pipeline:
-         a. Baseline: model answer vs best_answer (exact/fuzzy match)
-         b. Verify-only: VerifyRepairPipeline.verify() with FactualKBExtractor
-         c. Verify-repair: verify_and_repair() with max_repairs=3
+      3. Run through VerifyRepairPipeline with all extractors (v11 + v12):
+         - ArithmeticExtractor, CodeExtractor, LogicExtractor, NLExtractor
+         - IntermediateResultExtractor (Exp 96), ComparisonExtractor (Exp 97)
+         - FactualKBExtractor (Exp 113), WebSearchExtractor (Exp 114)
+         - Three modes: baseline, verify-only, verify-repair
 
       4. Metrics:
-         a. Factual hallucination detection rate (true positives / total wrong answers)
-         b. False positive rate (correct answers flagged as violations)
-         c. Knowledge base hit rate (claims matched to KB entries / total claims extracted)
-         d. KB coverage by category (capitals, dates, science, people, geography)
-         e. Per-model comparison
-         f. Improvement from verify-repair: how many wrong answers were corrected?
+         a. Factual hallucination detection rate
+         b. False positive rate
+         c. Knowledge base hit rate by category
+         d. Per-model comparison
 
       5. Error analysis:
-         a. What types of factual claims does the KB catch best?
-         b. What types does it miss? (claims not in the KB)
-         c. Are there false verifications? (KB says correct but answer is wrong)
-         d. Recommendations: what KB expansion would help most?
+         a. Which fact categories does KB catch best/worst?
+         b. What types of factual claims still slip through?
+         c. Recommendations for KB expansion
 
-      6. Save results to {project_root}/results/experiment_106_results.json
-      7. Save summary to {project_root}/ops/truthfulqa-results.md
+      6. Save results to {project_root}/results/experiment_115_results.json
+      7. Save summary to {project_root}/ops/truthfulqa-v12-results.md
 
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_106_truthfulqa.py
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_115_truthfulqa.py
       9. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp107-huggingface-publish
-    milestone: "2026.04.6"
-    deliverable: scripts/publish_constraint_model.py
-    title: "Exp 107: HuggingFace model card + Exp 66 joint model publish"
+  # ── Phase 34: LNN Adaptive Constraints + Full-Scale Benchmark ─────
+  - id: exp116-lnn-adaptive
+    milestone: "2026.04.7"
+    deliverable: python/carnot/models/lnn_constraint.py
+    title: "Exp 116: LNN-Based Adaptive Constraint Model"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: The research-program.md HuggingFace Publishing Milestones section
-      calls for publishing the Exp 66 joint model (differentiable constraint model,
-      1.0 AUROC) as a proof-of-concept artifact. This is the first publishable
-      HuggingFace artifact from the constraint-verification era. The existing 16
-      per-token activation EBMs on huggingface.co/Carnot-EBM are Phase 1 artifacts
-      that detect confidence, not correctness — they need updated READMEs to clarify
-      this distinction.
+      CONTEXT: Static Ising cannot adapt as an agent acts over time — new facts
+      should change which constraints matter. LNN-based constraint models update
+      coupling strengths in response to new observations (Research-Program Goal #8).
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_66_differentiable_constraints.py — the joint model
-      - results/experiment_66_results.json — AUROC numbers and training details
-      - python/carnot/models/ising.py — IsingModel save/load with safetensors
-      - RELEASE_NOTES.md — beta release context
+      - python/carnot/models/ising.py — IsingModel (static energy)
+      - python/carnot/pipeline/agentic.py — ConstraintState, propagate() (Exp 99)
+      - python/carnot/core/energy.py — EnergyFunction protocol
+      - python/carnot/training/contrastive_divergence.py — CD training
 
-      TASK: Create scripts/publish_constraint_model.py + model card template
+      TASK: Create python/carnot/models/lnn_constraint.py
 
       CONCRETE STEPS:
-      1. Create scripts/publish_constraint_model.py:
-         a. Load or recreate the Exp 66 joint model:
-            - Embedding layer (all-MiniLM-L6-v2 projection, 384→64 dim)
-            - Constraint features (8-dim from AutoExtractor)
-            - Continuous Ising layer (relaxed spins)
-            - Joint MLP (concatenated → hidden → score)
-         b. Save model weights via safetensors format
-         c. Save model config as JSON (architecture, hyperparameters, training details)
-         d. Generate model card (README.md) with:
-            - Model description: what it does, how it works
-            - Performance: 1.0 test AUROC, per-domain breakdown
-            - Architecture diagram (text-based)
-            - Usage example: Python code to load and run inference
-            - Training details: data, epochs, optimizer, loss
-            - Limitations: proof-of-concept, not production quality
-            - Citation: Carnot project link
-         e. Create output directory structure matching HuggingFace repo format:
-            models/constraint-verifier-v1/
-            ├── README.md (model card)
+      1. Create python/carnot/models/lnn_constraint.py:
+         a. LNNConstraintModel implementing EnergyFunction protocol:
+            - Based on Liquid Time-Constant Networks (LTCN):
+              * Gate: input-dependent time constant τ(x) = τ_base / (1 + W_gx · x)
+              * Memory: hidden state h(t) evolves as dh/dt = (1/τ(x)) × (-h + W · x)
+              * Output: energy computed from evolved hidden state
+            - adapt(observation): update coupling strengths based on new observation
+            - reset(): reset to initial coupling strengths
+            - train_cd(data, n_epochs, lr): CD training with LTC forward pass
+
+      2. Create tests/python/test_lnn_constraint.py:
+         a. LNN forward pass produces finite energy
+         b. Adaptation changes energy values meaningfully (>10% change)
+         c. Reset returns to initial energy values
+         d. Training via CD converges
+         e. Every test references REQ-CORE-001 or SCENARIO-CORE-001
+
+      3. Create scripts/experiment_116_lnn_adaptive.py:
+         a. 20 synthetic 5-step reasoning chains (10 correct, 10 with errors at step 2-4)
+         b. Process full chain with both LNN and Ising models
+         c. LNN adapts between steps, Ising does not
+         d. Measure: which model detects errors faster/better?
+         e. Track: energy evolution across steps for LNN vs static for Ising
+
+      4. Save results to {project_root}/results/experiment_116_results.json
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_lnn_constraint.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_116_lnn_adaptive.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp117-full-benchmark-v12
+    milestone: "2026.04.7"
+    deliverable: scripts/experiment_117_full_benchmark.py
+    title: "Exp 117: Full-Scale Multi-Model Benchmark with v12 Extractors"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Re-run the full multi-model comparison with all v11+v12 extractors
+      plus the new guided generation mode.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_93_multi_model_comparison.py — benchmark setup
+      - python/carnot/pipeline/extract.py — ALL extractors (v11 + v12)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline with guided generation (Exp 111)
+      - python/carnot/pipeline/knowledge_base.py — FactualKBExtractor (Exp 113)
+      - results/experiment_93_results.json — v10 baseline numbers
+
+      TASK: Create scripts/experiment_117_full_benchmark.py
+
+      CONCRETE STEPS:
+      1. Same core setup as Exp 93:
+         a. 250 questions (50 per domain × 5 domains)
+         b. 2 models: Qwen3.5-0.8B, google/gemma-4-E4B-it (simulated)
+         c. Total: 1500 evaluations
+
+      2. Four modes (not three — add guided generation):
+         a. Baseline (LLM alone)
+         b. Verify-only (post-hoc constraint verification)
+         c. Verify-and-repair (post-hoc with regeneration)
+         d. Guided generation (energy-steered during generation, Exp 111)
+
+      3. Metrics per cell (model × domain × mode):
+         a. Accuracy, hallucination rate, repair success rate
+         b. Constraint coverage, false negative rate
+         c. Per-extractor contribution (which extractors triggered?)
+         d. Latency (total time per question)
+
+      4. Comparison with v10 (Exp 93) and v11:
+         a. Side-by-side accuracy table: v10 vs v11 vs v12 extractors
+         b. False negative reduction over time
+         c. Statistical significance: bootstrap 95% CI on accuracy difference
+         d. Per-domain: which domains improved most with each phase?
+
+      5. Save results to {project_root}/results/experiment_117_results.json
+      6. Save comparison to {project_root}/ops/full-benchmark-v12.md
+
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_117_full_benchmark.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp118-huggingface-publish
+    milestone: "2026.04.7"
+    deliverable: scripts/publish_v12_models.py
+    title: "Exp 118: HuggingFace Publish v12 Artifacts"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Publish the KAN model and guided decoding adapter to HuggingFace
+      as proof-of-concept artifacts. Update existing model cards.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan.py — KANModel (Exp 108)
+      - scripts/experiment_109_kan_comparison.py — AUROC comparison data
+      - python/carnot/inference/guided_decoding.py — EnergyGuidedSampler (Exp 110)
+      - scripts/experiment_66_differentiable_constraints.py — joint model (for reference)
+      - python/carnot/models/ising.py — IsingModel save/load with safetensors
+
+      TASK: Create scripts/publish_v12_models.py + model card templates
+
+      CONCRETE STEPS:
+      1. Create scripts/publish_v12_models.py:
+         a. Publish the KAN constraint model (Exp 108-109):
+            - Save weights via safetensors with config JSON
+            - Model card: approach description, AUROC comparison table, usage example
+            - Clear disclaimer: research prototype, not production quality
+         b. Publish the guided decoding adapter:
+            - Small module that wraps any HuggingFace LLM
+            - Attaches constraint verification during generation
+            - Model-agnostic, novel artifact
+         c. Update existing model cards:
+            - Clarify Phase 1 (activation EBMs) vs Phase 5+ (constraint EBMs)
+            - Point to pip install carnot for production use
+         d. Create output directory structure:
+            models/constraint-verifier-v2/
+            ├── README.md (KAN model card)
             ├── config.json
             ├── model.safetensors
-            └── tokenizer_config.json (reference to all-MiniLM-L6-v2)
-         f. Print instructions for `huggingface-cli upload` (do NOT actually upload)
+            ├── guided_decoding_adapter.py
+            └── README_guided.md (guided decoding card)
+         e. Print HuggingFace upload instructions (do NOT upload automatically)
 
-      2. Create a template for updating existing HuggingFace model READMEs:
-         a. Create docs/huggingface-phase1-update.md with:
-            - Clarification: "Phase 1 research artifact — detects confidence, not correctness"
-            - Pointer: "For actual hallucination detection, use `pip install carnot`"
-            - Link to Exp 66 joint model as the current best approach
-         b. List all 16 existing models that need this update
+      2. Create models/constraint-verifier-v2/README.md:
+         a. KAN energy tier documentation
+         b. Comparison: Ising vs KAN vs Gibbs
+         c. Usage example
+         d. Performance table
+         e. Limitations and disclaimer
 
-      3. Create tests/python/test_publish_model.py:
+      3. Create tests/python/test_publish_models.py:
          a. Test model save/load roundtrip via safetensors
          b. Test config JSON schema validity
-         c. Test model card contains required sections
+         c. Test model cards contain required sections
          d. Every test references REQ-CORE-001
 
-      4. Save model card to {project_root}/models/constraint-verifier-v1/README.md
+      4. Save model cards to {project_root}/models/constraint-verifier-v2/
 
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_publish_model.py -q
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/publish_constraint_model.py
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_publish_models.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/publish_v12_models.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.

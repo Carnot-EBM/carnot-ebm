@@ -45,11 +45,17 @@ logging.basicConfig(
 logger = logging.getLogger("conductor")
 
 PROJECT_ROOT = Path(__file__).parent.parent
-# Flexible agent configuration: AGENT_TYPE can be 'claude' or 'gemini'
+# Flexible agent configuration: AGENT_TYPE can be 'claude', 'gemini', 'opencode', or 'codex'
 AGENT_TYPE = os.environ.get("AGENT_TYPE", "claude").lower()
 if AGENT_TYPE == "gemini":
     AGENT_BIN = os.environ.get("GEMINI_BIN", "gemini")
-    DEFAULT_MODEL = "gemini-2.0-flash-exp"
+    DEFAULT_MODEL = "gemini-3.1-pro-preview"
+elif AGENT_TYPE == "opencode":
+    AGENT_BIN = os.environ.get("OPENCODE_BIN", "opencode")
+    DEFAULT_MODEL = "opencode/big-pickle"
+elif AGENT_TYPE == "codex":
+    AGENT_BIN = os.environ.get("CODEX_BIN", "codex")
+    DEFAULT_MODEL = "gpt-5.4"
 else:
     AGENT_BIN = os.environ.get("CLAUDE_BIN", "claude")
     DEFAULT_MODEL = "sonnet"
