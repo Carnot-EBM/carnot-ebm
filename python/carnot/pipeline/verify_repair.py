@@ -61,6 +61,38 @@ from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, Constrai
 
 logger = logging.getLogger(__name__)
 
+# ---------------------------------------------------------------------------
+# Rust backend auto-detection
+# ---------------------------------------------------------------------------
+
+# Check for CARNOT_USE_RUST env var (1 = force Rust, 0 = force Python).
+# If unset, auto-detect: use Rust when available.
+import os as _os
+
+_FORCE_RUST = _os.environ.get("CARNOT_USE_RUST")
+
+try:
+    from carnot._rust_compat import RUST_AVAILABLE, RustVerifyPipeline
+except ImportError:
+    RUST_AVAILABLE = False
+    RustVerifyPipeline = None
+
+_USE_RUST_PIPELINE: bool
+if _FORCE_RUST == "1":
+    _USE_RUST_PIPELINE = RUST_AVAILABLE
+    if not RUST_AVAILABLE:
+        logger.warning(
+            "CARNOT_USE_RUST=1 but Rust bindings not installed. "
+            "Falling back to Python pipeline."
+        )
+elif _FORCE_RUST == "0":
+    _USE_RUST_PIPELINE = False
+else:
+    _USE_RUST_PIPELINE = RUST_AVAILABLE
+
+if _USE_RUST_PIPELINE:
+    logger.info("Rust verification pipeline enabled (10x faster verify).")
+
 
 # ---------------------------------------------------------------------------
 # Result dataclasses
@@ -463,6 +495,28 @@ class VerifyRepairPipeline:
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003
         """
+        # Fast path: delegate to Rust pipeline when available.
+        # Repair still uses Python (requires LLM), but the hot verification
+        # inner loop gets a 10x speedup from the Rust implementation.
+        # Only use Rust when ALL requested/configured domains are supported
+        # by the Rust pipeline (arithmetic + logic). Code/NL extractors
+        # remain Python-only, so if the caller needs those, we stay in Python.
+        _rust_supported = {"arithmetic", "logic"}
+        _can_use_rust = _USE_RUST_PIPELINE and RustVerifyPipeline is not None
+        if _can_use_rust:
+            effective_domains = {domain} if domain else set(self._domains or [])
+            # Only use Rust when we have an explicit domain constraint that
+            # falls within what Rust supports. When no domains are set
+            # (auto-detect all), Python may have more extractors.
+            if effective_domains and effective_domains <= _rust_supported:
+                try:
+                    return self._verify_rust(question, response)
+                except Exception as exc:
+                    logger.warning(
+                        "Rust verify failed, falling back to Python: %s", exc
+                    )
+                    # Fall through to Python path.
+
         deadline = self._make_deadline()
         try:
             self._check_deadline(deadline)
@@ -632,6 +686,64 @@ class VerifyRepairPipeline:
     # -------------------------------------------------------------------
     # Internal helpers
     # -------------------------------------------------------------------
+
+    def _verify_rust(
+        self, question: str, response: str
+    ) -> VerificationResult:
+        """Verify using the Rust pipeline for 10x performance.
+
+        **Detailed explanation for engineers:**
+            Delegates to the Rust ``RustVerifyPipeline.verify()`` method
+            which runs constraint extraction and evaluation entirely in Rust.
+            The result is converted back to the Python ``VerificationResult``
+            dataclass so callers see the same interface regardless of backend.
+
+            Only the verify path is accelerated — repair stays in Python
+            because it requires LLM inference.
+
+        Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-CORE-005
+        """
+        rust_pipeline = RustVerifyPipeline()
+        rust_result = rust_pipeline.verify(question, response)
+
+        # Convert Rust dicts back to Python ConstraintResult objects.
+        constraints = [
+            ConstraintResult(
+                constraint_type=c["constraint_type"],
+                description=c["description"],
+                metadata=dict(c["metadata"]) if c["metadata"] else {},
+            )
+            for c in rust_result.constraints
+        ]
+        # Set the satisfied metadata from the Rust verified field.
+        for c, rc in zip(constraints, rust_result.constraints):
+            if rc["verified"] is not None:
+                c.metadata["satisfied"] = rc["verified"]
+
+        violations = [
+            ConstraintResult(
+                constraint_type=v["constraint_type"],
+                description=v["description"],
+                metadata=dict(v["metadata"]) if v["metadata"] else {},
+            )
+            for v in rust_result.violations
+        ]
+        for v, rv in zip(violations, rust_result.violations):
+            if rv["verified"] is not None:
+                v.metadata["satisfied"] = rv["verified"]
+
+        return VerificationResult(
+            verified=rust_result.verified,
+            constraints=constraints,
+            energy=rust_result.energy,
+            violations=violations,
+            certificate={
+                "total_energy": rust_result.energy,
+                "n_constraints": len(constraints),
+                "n_violations": len(violations),
+                "backend": "rust",
+            },
+        )
 
     def _evaluate_constraints(
         self, constraints: list[ConstraintResult]

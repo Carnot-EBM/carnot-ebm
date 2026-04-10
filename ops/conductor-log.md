@@ -105,3 +105,8 @@
 | 2026-04-10 02:34 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
 | 2026-04-10 02:53 UTC | Exp 95: PyO3 pipeline bridge | REVERT | Post-tests failed: ===== 10 failed, 1666 passed, 1 skipped, 12 warnings in 114.4 |
 | 2026-04-10 02:54 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
+| 2026-04-10 03:03 UTC | Exp 95: PyO3 pipeline bridge | FAIL | Claude error: Error: Reached max turns (50) |
+| 2026-04-10 03:04 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
+| 2026-04-10 03:04 UTC | Exp 95: PyO3 pipeline bridge | OK | Deliverable already exists in repo |
+| 2026-04-10 03:04 UTC | Milestone 2026.04.5 activated | OK | 11 tasks queued |
+| 2026-04-10 03:05 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
