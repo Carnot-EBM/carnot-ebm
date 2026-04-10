@@ -172,4 +172,41 @@ should read this file when designing new milestones.
 - **Why it matters:** Moves from post-hoc verification to real-time energy-guided decoding. Constraints steer generation, not just verify after the fact. This is the path to Kona parity.
 - **When:** Next research milestone after production shipping (2026.04.4 ✅)
 
+### Continuous Self-Learning Architecture
+- **Concept:** Carnot should get smarter with every query. Four tiers:
+  online constraint weighting → persistent constraint memory → JEPA-style
+  predictive verification → adaptive energy landscape structure.
+- **Key finding from Exp 116:** LNN adaptation within a single chain hurts
+  (10% vs 100% Ising). Adaptation must operate at the right timescale:
+  static within chains, online across chains, persistent across sessions.
+- **Hardware principle:** Every tier must have an acceleration path.
+  Tier 1: CPU counters. Tier 2: FPGA pattern matching. Tier 3: GPU/NPU
+  predictor. Tier 4: FPGA/TSU graph reconfiguration.
+- **See research-program.md** "Continuous Self-Learning" section for full design.
+
+### JEPA for Predictive Constraint Verification
+- **Concept:** Joint-Embedding Predictive Architecture applied to constraints.
+  Given partial LLM output (N tokens), predict constraint state of full output.
+- **Why:** Current pipeline checks constraints AFTER generation. JEPA-style
+  prediction enables checking BEFORE generation completes — steer in advance.
+- **Implementation path:** Train encoder that maps partial responses to
+  constraint energy space. The energy of the partial embedding predicts
+  violations in the full response. Small model, trainable via CD on
+  (partial_response, final_violation) pairs from accumulated verify-repair logs.
+- **Hardware:** Predictor runs on GPU/NPU. If prediction says "high energy
+  likely," trigger full Ising verification on FPGA/TSU. Otherwise skip.
+  This creates a fast-path/slow-path architecture.
+
+### KAN Adaptive Mesh Refinement for Energy Landscapes
+- **Concept:** KAN splines naturally support adaptive complexity — add knots
+  where the energy landscape is complex, remove where smooth. This is the
+  Tier 4 "adaptive structure" mechanism.
+- **Why:** Static KAN has fixed knot count per edge. Over time, some edges
+  need more resolution (complex nonlinear constraints) while others can be
+  simplified (nearly linear). Adaptive refinement learns WHERE to spend
+  representational capacity.
+- **Hardware:** Spline lookup tables in FPGA can be updated without full
+  reconfiguration — just rewrite the LUT contents. Mesh refinement (adding/
+  removing knots) requires partial FPGA reconfiguration.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
