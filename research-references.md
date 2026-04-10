@@ -73,6 +73,66 @@ should read this file when designing new milestones.
 - **Relevance:** Carnot's autoresearch is more sophisticated (three-gate + Ising, milestone planning, self-heal) but AutoAgent's `program.md` pattern is cleaner for expressing human intent. Borrowed this idea as `research-program.md`.
 - **Borrowed:** Declarative intent document pattern → `research-program.md`
 
+## Alternative Architectures for Constraint Verification
+
+### Kolmogorov-Arnold Networks (KANs) — New Energy Tier (HIGH PRIORITY)
+- **What:** Neural networks where edges have learnable nonlinear activation
+  functions (parameterized splines) instead of fixed activations on nodes.
+  Comparable accuracy to MLPs with a fraction of the parameters. Highly
+  interpretable.
+- **Relevance to Carnot:** The most natural next energy tier. Ising has fixed
+  quadratic energy E = -s^T J s. A KAN-based energy function has learnable
+  nonlinear energy E = sum of spline(s_i, s_j) over edges. Strictly more
+  expressive than Ising while remaining interpretable. Fewer parameters than
+  Gibbs MLP. Differentiable (splines have gradients) so slots directly into
+  the Exp 66 differentiable pipeline.
+- **Addresses:** The constraint learning ceiling from Exp 62/88 — linear Ising
+  features can't capture nonlinear constraint relationships. KANs could learn
+  what Ising misses with interpretable energy decomposition.
+- **Model tier placement:** Ising (quadratic) → **KAN (spline)** → Gibbs (MLP)
+  → Boltzmann (deep residual)
+- **Hardware path:** Spline lookup tables are efficient in FPGA — potentially
+  hardware-mappable like Ising.
+- **When to pursue:** Next research milestone. Create `carnot-kan` energy tier.
+
+### Liquid Neural Networks (LNNs) — Adaptive Constraints (HIGH PRIORITY)
+- **What:** Continuous-time recurrent networks from MIT. Parameters adapt
+  during inference via differential equations. Robust to noise and OOD data.
+- **Relevance to Carnot:** Solves multi-turn agentic verification (Goal #2).
+  A static Ising model can't adapt as an agent acts over time — new facts
+  should change which constraints matter. An LNN-based constraint model
+  updates its coupling strengths in response to new observations.
+- **Also useful for:** Autoresearch constraint evaluation (adapt to current
+  codebase state), noise-robust constraint extraction from adversarial or
+  unusual LLM outputs (the Exp 88 failure mode).
+- **When to pursue:** When agentic verification becomes the focus.
+
+### Mamba / State Space Models — Constraint State Propagation
+- **What:** Linear-complexity sequence models. Fixed-size state compression
+  enables practically infinite context without KV cache VRAM spikes.
+- **Relevance to Carnot:** Fixed-size constraint state for multi-step
+  reasoning chains (Goal #2). Compress all verified facts from previous
+  steps into a fixed vector. Also enables users to run larger LLMs locally
+  (memory efficiency), helping with live model loading (Goal #1).
+- **When to pursue:** When building multi-turn constraint propagation module.
+
+### RWKV — Lightweight Constraint Propagation
+- **What:** Trains like transformer, infers like RNN. Linear attention
+  approximation. No KV cache. Active open-source ecosystem.
+- **Relevance to Carnot:** Similar to Mamba but simpler and more
+  community-driven. Good for edge deployment of constraint verification.
+  Recursive inference (only needs previous hidden state) maps well to
+  step-by-step constraint propagation.
+- **When to pursue:** Alternative to Mamba for constraint state, especially
+  for edge/embedded deployment.
+
+### RetNet — Low Priority
+- **What:** Multi-scale retention mechanism replacing attention. Parallel
+  training + recurrent inference + chunkwise processing.
+- **Relevance to Carnot:** No unique advantage for constraint verification.
+  Training efficiency matters for foundation models, not small constraint
+  models. Skip unless a specific need emerges.
+
 ## Papers & Concepts
 
 ### Exp 66: End-to-End Differentiable Constraint Reasoning (PRIORITY)
