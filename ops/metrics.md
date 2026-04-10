@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 ConstraintStateMachine
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T23:31:09Z | 2026-04-10T23:34:18Z | Create python/carnot/pipeline/state_machine.py (ConstraintStateMachine, StepResult, rollback, history, verified_facts, pending_facts) + 26 tests, state_machine.py 100% coverage | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 122 Adversarial Error Analysis
 
 ### Turn Log
