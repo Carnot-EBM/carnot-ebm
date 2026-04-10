@@ -110,3 +110,6 @@
 | 2026-04-10 03:04 UTC | Exp 95: PyO3 pipeline bridge | OK | Deliverable already exists in repo |
 | 2026-04-10 03:04 UTC | Milestone 2026.04.5 activated | OK | 11 tasks queued |
 | 2026-04-10 03:05 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
+| 2026-04-10 03:21 UTC | Exp 98: Knowledge-base factual claim verifier | SKIP | Pre-tests failing, self-heal failed: ====== 7 failed, 1477 passed, 1 skipped, 12 |
+| 2026-04-10 03:22 UTC | Exp 96: Intermediate result constraint extractor | OK | Deliverable already exists in repo |
+| 2026-04-10 03:22 UTC | Exp 97: Comparison constraint extractor | OK | Deliverable already exists in repo |
