@@ -1,0 +1,235 @@
+{
+  "experiment": 120,
+  "description": "Adversarial GSM8K Baseline: LLM accuracy on adversarial variants",
+  "models": {
+    "Qwen3.5-0.8B": {
+      "model_config": {
+        "name": "Qwen3.5-0.8B",
+        "candidates": [
+          "Qwen/Qwen3.5-0.8B",
+          "Qwen/Qwen3-0.6B"
+        ]
+      },
+      "inference_mode": "simulated",
+      "variants": {
+        "control": {
+          "variant_label": "Control (standard)",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 154,
+            "accuracy": 0.77,
+            "accuracy_pct": 77.0,
+            "accuracy_drop_pp": null,
+            "ci_95_lo": 0.715,
+            "ci_95_hi": 0.825,
+            "error_counts": {
+              "arithmetic_error": 21,
+              "irrelevant_number_error": 0,
+              "logic_error": 22,
+              "reading_comprehension_error": 3
+            },
+            "error_pcts": {
+              "arithmetic_error": 10.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 11.0,
+              "reading_comprehension_error": 1.5
+            }
+          },
+          "inference_mode": "simulated"
+        },
+        "number_swapped": {
+          "variant_label": "Number-swapped",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 92,
+            "accuracy": 0.46,
+            "accuracy_pct": 46.0,
+            "accuracy_drop_pp": 31.0,
+            "ci_95_lo": 0.385,
+            "ci_95_hi": 0.525,
+            "error_counts": {
+              "arithmetic_error": 57,
+              "irrelevant_number_error": 0,
+              "logic_error": 43,
+              "reading_comprehension_error": 8
+            },
+            "error_pcts": {
+              "arithmetic_error": 28.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 21.5,
+              "reading_comprehension_error": 4.0
+            }
+          },
+          "inference_mode": "simulated"
+        },
+        "irrelevant_injected": {
+          "variant_label": "Irrelevant-injected",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 110,
+            "accuracy": 0.55,
+            "accuracy_pct": 55.0,
+            "accuracy_drop_pp": 22.0,
+            "ci_95_lo": 0.485,
+            "ci_95_hi": 0.62,
+            "error_counts": {
+              "arithmetic_error": 23,
+              "irrelevant_number_error": 1,
+              "logic_error": 61,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 11.5,
+              "irrelevant_number_error": 0.5,
+              "logic_error": 30.5,
+              "reading_comprehension_error": 2.5
+            }
+          },
+          "inference_mode": "simulated"
+        },
+        "combined": {
+          "variant_label": "Combined adversarial",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 76,
+            "accuracy": 0.38,
+            "accuracy_pct": 38.0,
+            "accuracy_drop_pp": 39.0,
+            "ci_95_lo": 0.315,
+            "ci_95_hi": 0.45,
+            "error_counts": {
+              "arithmetic_error": 22,
+              "irrelevant_number_error": 15,
+              "logic_error": 82,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 11.0,
+              "irrelevant_number_error": 7.5,
+              "logic_error": 41.0,
+              "reading_comprehension_error": 2.5
+            }
+          },
+          "inference_mode": "simulated"
+        }
+      }
+    },
+    "Gemma4-E4B-it": {
+      "model_config": {
+        "name": "Gemma4-E4B-it",
+        "candidates": [
+          "google/gemma-4-E4B-it"
+        ]
+      },
+      "inference_mode": "simulated",
+      "variants": {
+        "control": {
+          "variant_label": "Control (standard)",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 140,
+            "accuracy": 0.7,
+            "accuracy_pct": 70.0,
+            "accuracy_drop_pp": null,
+            "ci_95_lo": 0.635,
+            "ci_95_hi": 0.76,
+            "error_counts": {
+              "arithmetic_error": 26,
+              "irrelevant_number_error": 0,
+              "logic_error": 29,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 13.0,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 14.5,
+              "reading_comprehension_error": 2.5
+            }
+          },
+          "inference_mode": "simulated"
+        },
+        "number_swapped": {
+          "variant_label": "Number-swapped",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 106,
+            "accuracy": 0.53,
+            "accuracy_pct": 53.0,
+            "accuracy_drop_pp": 17.0,
+            "ci_95_lo": 0.4599,
+            "ci_95_hi": 0.595,
+            "error_counts": {
+              "arithmetic_error": 49,
+              "irrelevant_number_error": 0,
+              "logic_error": 42,
+              "reading_comprehension_error": 3
+            },
+            "error_pcts": {
+              "arithmetic_error": 24.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 21.0,
+              "reading_comprehension_error": 1.5
+            }
+          },
+          "inference_mode": "simulated"
+        },
+        "irrelevant_injected": {
+          "variant_label": "Irrelevant-injected",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 134,
+            "accuracy": 0.67,
+            "accuracy_pct": 67.0,
+            "accuracy_drop_pp": 3.0,
+            "ci_95_lo": 0.605,
+            "ci_95_hi": 0.7301,
+            "error_counts": {
+              "arithmetic_error": 15,
+              "irrelevant_number_error": 1,
+              "logic_error": 45,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 7.5,
+              "irrelevant_number_error": 0.5,
+              "logic_error": 22.5,
+              "reading_comprehension_error": 2.5
+            }
+          },
+          "inference_mode": "simulated"
+        },
+        "combined": {
+          "variant_label": "Combined adversarial",
+          "metrics": {
+            "n_questions": 200,
+            "n_correct": 88,
+            "accuracy": 0.44,
+            "accuracy_pct": 44.0,
+            "accuracy_drop_pp": 26.0,
+            "ci_95_lo": 0.37,
+            "ci_95_hi": 0.51,
+            "error_counts": {
+              "arithmetic_error": 21,
+              "irrelevant_number_error": 14,
+              "logic_error": 73,
+              "reading_comprehension_error": 4
+            },
+            "error_pcts": {
+              "arithmetic_error": 10.5,
+              "irrelevant_number_error": 7.0,
+              "logic_error": 36.5,
+              "reading_comprehension_error": 2.0
+            }
+          },
+          "inference_mode": "simulated"
+        }
+      }
+    }
+  },
+  "variant_keys": [
+    "control",
+    "number_swapped",
+    "irrelevant_injected",
+    "combined"
+  ]
+}
