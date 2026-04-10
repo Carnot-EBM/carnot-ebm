@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 116 LNN Adaptive Constraint Model
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T20:15:29Z | 2026-04-10T20:21:53Z | Create LNNConstraintModel (LTCN-based adaptive EBM), 22 tests (100% module cov), Exp 116 synthetic chain comparison vs Ising | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 113 FactualKBExtractor
 
 ### Turn Log
