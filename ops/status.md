@@ -1,12 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 103 EXPERIMENTS (incl. Exp 101, 102), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
+**Last Updated:** 2026-04-10 — 104 EXPERIMENTS (incl. Exp 101, 102, 108), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
 
 ## What's Working
 
 ### Core Framework (REQ-CORE-001–006)
 - EnergyFunction trait (Rust) and protocol (Python/JAX)
-- Three model tiers: Ising (both), Gibbs (both), Boltzmann (both)
+- Four model tiers: Ising (both), Gibbs (both), Boltzmann (both), KAN (Python/JAX with Rust scaffold)
 - Samplers: Langevin + HMC in both languages, with gradient clipping (REQ-SAMPLE-004)
 - Parallel Ising Gibbs sampler: 183x faster than thrml, checkerboard updates, simulated annealing (REQ-SAMPLE-003)
 - thrml-compatible interface: accepts IsingEBM models, returns thrml-format samples
@@ -233,6 +233,7 @@
 | 94 | **Rust VerifyRepairPipeline** | Rust port of verify() path in `carnot-constraints`; VerifyPipeline + AutoExtractor + PipelineResult; 1457 lines + 318-line test suite; 10x-faster verification for PyO3 hot loop (NFR-01) | **✅ Rust verification pipeline** |
 | 101 | **Agent workflow verification E2E** | 60% detection, 67% more than final-only, math 80%, code 100% | **⚠️ Agentic chain helps, but research domain undetected** |
 | 102 | **Constraint check latency microbenchmark** | Full pipeline profiling: JIT forward 0.008ms (per-token viable), extraction 0.04–2.6ms linear scaling, MiniLM bottleneck 7.6ms; JAX JIT 55x faster than Python verify | **✅ Guided decoding confirmed viable** |
+| 108 | **KAN Energy Function Implementation** | KAN (Kolmogorov-Arnold Networks) energy tier with B-spline edge activations; BSpline + KANEnergyFunction + KANModel; 26 tests passed, Rust scaffold created; from_ising() warm-start from trained Ising | **✅ New energy tier between Ising and Gibbs** |
 
 ## 14 Principles Learned
 

@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-09 (reconciled with codebase)
+**Last Updated:** 2026-04-10 (reconciled with codebase)
 
 ## Functional Requirements → Implementation Status
 
@@ -97,4 +97,5 @@
 | Exp 94: Rust VerifyRepairPipeline | ✅ Complete (Rust port of Python verify() path in `carnot-constraints` crate; `VerifyPipeline` struct + `AutoExtractor` trait + `PipelineResult`; `extract.rs` 764 lines, `pipeline.rs` 370 lines, 318-line test suite; 10x-faster verification for PyO3 hot loop; REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004, NFR-01) | — |
 | Exp 101: Agent workflow verification E2E | ✅ Complete (agentic multi-step constraint propagation on 30 workflow instances across math_tutor/code_assistant/research_assistant; 60% error detection, 67% more than final-only; per-step fact propagation + cross-step verification; REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004) | — |
 | Exp 102: Constraint check latency microbenchmark | ✅ Complete (full pipeline profiling: JIT forward 0.008ms mean, extraction linear 0.04–2.6ms, MiniLM bottleneck 7.6ms, guided decoding viable at 50 tok/s; REQ-EBT-001, REQ-VERIFY-001, REQ-CORE-005, SCENARIO-VERIFY-004) | — |
+| Exp 108: KAN Energy Function Implementation | ✅ Complete (KAN energy tier with B-spline edge activations; BSpline + KANEnergyFunction + KANModel in python/carnot/models/kan.py; crates/carnot-kan Rust scaffold; from_ising() warm-start; 26 tests passed (95% coverage), 1324 full Python tests passed, Rust builds clean; REQ-CORE-001, REQ-CORE-002, SCENARIO-CORE-001/002/003) | — |
 | Parallel Ising Gibbs sampler | ✅ 183x faster than thrml (572x at 500 vars) | — |
