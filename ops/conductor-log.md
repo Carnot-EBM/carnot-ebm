@@ -1143,3 +1143,4 @@
 | 2026-04-10 19:17 UTC | Exp 114: WebSearch Fallback for Uncovered Claims | OK | Deliverable already exists in repo |
 | 2026-04-10 19:17 UTC | Exp 115: TruthfulQA Benchmark with v12 Extractors | OK | Deliverable already exists in repo |
 | 2026-04-10 20:11 UTC | Exp 116: LNN-Based Adaptive Constraint Model | REVERT | Post-tests failed:  |
+| 2026-04-10 21:08 UTC | Exp 119: Apple adversarial GSM8K variant generator | OK | =========== 1752 passed, 1 skipped, 12 warnings in 133.77s (0:02:13) =========== |
