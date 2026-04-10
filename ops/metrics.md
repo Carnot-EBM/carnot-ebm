@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 112 Embedding Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T17:53:16Z | 2026-04-10T17:59:11Z | Create fast_embedding.py (5 strategies + protocol), experiment_112 script, run benchmark, update ops | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 110 Guided Decoding
 
 ### Turn Log

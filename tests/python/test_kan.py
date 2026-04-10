@@ -282,3 +282,87 @@ class TestKANParameterScaling:
         spline = kan.interpret_edge(0, 1)
         assert spline is not None
         assert isinstance(spline, BSpline)
+
+
+class TestBSplineValidation:
+    """Tests for REQ-CORE-001: BSpline constructor validation."""
+
+    def test_bspline_invalid_num_knots(self) -> None:
+        """REQ-CORE-001: num_knots < 2 raises ValueError in BSpline."""
+        with pytest.raises(ValueError, match="num_knots must be >= 2"):
+            BSpline(num_knots=1, degree=3)
+
+    def test_bspline_invalid_degree(self) -> None:
+        """REQ-CORE-001: negative degree raises ValueError in BSpline."""
+        with pytest.raises(ValueError, match="degree must be >= 0"):
+            BSpline(num_knots=5, degree=-1)
+
+
+class TestKANConfigValidationExtra:
+    """Tests for REQ-CORE-001: KANConfig.validate() edge cases."""
+
+    def test_validation_negative_degree(self) -> None:
+        """REQ-CORE-001: negative degree raises ValueError in KANConfig."""
+        config = KANConfig(degree=-1)
+        with pytest.raises(ValueError, match="degree must be >= 0"):
+            config.validate()
+
+    def test_validation_invalid_edge_density(self) -> None:
+        """REQ-CORE-001: edge_density out of (0,1] raises ValueError."""
+        config = KANConfig(edge_density=0.0)
+        with pytest.raises(ValueError, match="edge_density must be in"):
+            config.validate()
+
+
+class TestKANFromIsingWithEdges:
+    """Tests for KANEnergyFunction.from_ising when edges are pre-supplied."""
+
+    def test_from_ising_with_existing_edges(self) -> None:
+        """REQ-CORE-002: from_ising uses config.edges when already set."""
+        ising = IsingModel(IsingConfig(input_dim=4))
+        config = KANConfig(
+            input_dim=4,
+            edges=[(0, 1), (1, 2)],
+            sparse=True,
+        )
+        kan = KANEnergyFunction.from_ising(ising, config=config)
+        # Only the pre-specified edges should exist.
+        assert set(kan.edge_splines.keys()) == {(0, 1), (1, 2)}
+
+
+class TestKANModelExtra:
+    """Tests for KANModel methods not yet covered."""
+
+    def test_model_energy_batch(self) -> None:
+        """REQ-CORE-002: KANModel.energy_batch() delegates to energy function."""
+        config = KANConfig(input_dim=4, sparse=True, edge_density=0.5)
+        model = KANModel(config)
+        xs = jrandom.normal(jrandom.PRNGKey(0), (3, 4))
+        energies = model.energy_batch(xs)
+        assert energies.shape == (3,)
+        assert jnp.all(jnp.isfinite(energies))
+
+    def test_model_grad_energy(self) -> None:
+        """REQ-CORE-002: KANModel.grad_energy() returns finite gradient."""
+        config = KANConfig(input_dim=4, sparse=True, edge_density=0.5)
+        model = KANModel(config)
+        x = jnp.ones(4)
+        grad = model.grad_energy(x)
+        assert grad.shape == (4,)
+        assert jnp.all(jnp.isfinite(grad))
+
+    def test_model_train_cd_returns_list(self) -> None:
+        """REQ-CORE-002: KANModel.train_cd() returns a list."""
+        config = KANConfig(input_dim=4, sparse=True, edge_density=0.5)
+        model = KANModel(config)
+        data = jrandom.normal(jrandom.PRNGKey(0), (10, 4))
+        history = model.train_cd(data, n_epochs=5, lr=0.01)
+        assert isinstance(history, list)
+
+    def test_model_interpret_edge(self) -> None:
+        """REQ-CORE-002: KANModel.interpret_edge() delegates to energy function."""
+        config = KANConfig(input_dim=4, sparse=True, edge_density=1.0)
+        model = KANModel(config)
+        spline = model.interpret_edge(0, 1)
+        assert spline is not None
+        assert isinstance(spline, BSpline)

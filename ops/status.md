@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 104 EXPERIMENTS (incl. Exp 101, 102, 108), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
+**Last Updated:** 2026-04-10 — 112 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112)
 
 ## What's Working
 
@@ -47,6 +47,12 @@
 - Multi-start repair, semantic energy, ARM-EBM bijection
 - Diffusion generation (parallel solution from noise)
 - Per-token EBM (84.5% test on Qwen3-0.6B, 67.2% on Qwen3.5-0.8B, experiments 19-22)
+
+### Fast Embedding for Guided Decoding (Exp 112)
+- `FastEmbeddingProtocol` + 5 strategies: MiniLM (3.1ms GPU), TF-IDF+projection (0.115ms), CharNgram (1.0ms), HashEmbedding (0.097ms), RandomProjection (0.026ms p50 — winner)
+- `get_default_embedding(strategy)` factory in `carnot.embeddings.fast_embedding`
+- Key finding: RandomProjection (byte histogram) wins — p99=0.040ms (92x faster than MiniLM GPU), AUROC=0.507 vs MiniLM 0.452 — constraint satisfaction signal not well-captured by semantic similarity; all embeddings AUROC 0.38–0.51
+- Meets <1ms p99 guided decoding target with no AUROC regression vs MiniLM
 
 ### Activation Analysis (Phase 3)
 - Activation extractor (per-layer transformer hooks)

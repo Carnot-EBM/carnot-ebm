@@ -1,0 +1,126 @@
+{
+  "experiment": 112,
+  "title": "Embedding Benchmark \u2014 Fast Alternatives to MiniLM for Guided Decoding",
+  "date": "2026-04-10T17:57:55Z",
+  "context": {
+    "baseline_experiment": 102,
+    "minilm_baseline_ms": 7.6022,
+    "jax_jit_energy_ms": 0.008,
+    "per_token_budget_ms": 20.0,
+    "target_latency_p99_ms": 1.0,
+    "target_auroc_fraction": 0.95
+  },
+  "platform": "CPU (JAX_PLATFORMS=cpu)",
+  "warmup_iters": 20,
+  "measure_iters": 200,
+  "embed_dim": 384,
+  "eval_dataset_size": 48,
+  "embeddings": [
+    {
+      "key": "minilm",
+      "description": "MiniLM-L6-v2 (sentence-transformers baseline)",
+      "embed_dim": 384,
+      "latency": {
+        "n_iters": 50,
+        "p50_ms": 3.1408554932568222,
+        "p95_ms": 3.3953298523556437,
+        "p99_ms": 3.7090390865341756,
+        "mean_ms": 3.175084123504348,
+        "std_ms": 0.13073395402945326
+      },
+      "memory_peak_kb": 14.85,
+      "auroc": 0.452
+    },
+    {
+      "key": "tfidf",
+      "description": "TF-IDF + random projection (sklearn, domain corpus)",
+      "embed_dim": 384,
+      "latency": {
+        "n_iters": 200,
+        "p50_ms": 0.11464000272098929,
+        "p95_ms": 0.13135061744833362,
+        "p99_ms": 0.1716377769480456,
+        "mean_ms": 0.11788967050961219,
+        "std_ms": 0.013691601314196411
+      },
+      "memory_peak_kb": 692.2,
+      "auroc": 0.387,
+      "passes_latency": true,
+      "passes_auroc": false,
+      "meets_criteria": false,
+      "speedup_vs_minilm": 27.4
+    },
+    {
+      "key": "char_ngram",
+      "description": "Char n-gram hash + random projection (sklearn)",
+      "embed_dim": 384,
+      "latency": {
+        "n_iters": 200,
+        "p50_ms": 1.0314865066902712,
+        "p95_ms": 1.3097563656629063,
+        "p99_ms": 1.5332668475457463,
+        "mean_ms": 1.0642848591669463,
+        "std_ms": 0.11597675235015945
+      },
+      "memory_peak_kb": 24581.69,
+      "auroc": 0.459,
+      "passes_latency": false,
+      "passes_auroc": true,
+      "meets_criteria": false,
+      "speedup_vs_minilm": 3.0
+    },
+    {
+      "key": "hash",
+      "description": "Word token hash + random projection",
+      "embed_dim": 384,
+      "latency": {
+        "n_iters": 200,
+        "p50_ms": 0.09745299757923931,
+        "p95_ms": 3.4449553510057647,
+        "p99_ms": 4.041157684987411,
+        "mean_ms": 0.5665716691873968,
+        "std_ms": 1.067167925942405
+      },
+      "memory_peak_kb": 19.4,
+      "auroc": 0.426,
+      "passes_latency": false,
+      "passes_auroc": false,
+      "meets_criteria": false,
+      "speedup_vs_minilm": 32.2
+    },
+    {
+      "key": "random",
+      "description": "Byte histogram + random projection (ablation baseline)",
+      "embed_dim": 384,
+      "latency": {
+        "n_iters": 200,
+        "p50_ms": 0.025758490664884448,
+        "p95_ms": 0.03735099307959899,
+        "p99_ms": 0.039676910964772105,
+        "mean_ms": 0.02729622137849219,
+        "std_ms": 0.00507304871324524
+      },
+      "memory_peak_kb": 4.4,
+      "auroc": 0.507,
+      "passes_latency": true,
+      "passes_auroc": true,
+      "meets_criteria": true,
+      "speedup_vs_minilm": 121.9
+    }
+  ],
+  "selection": {
+    "criteria": {
+      "latency_threshold_p99_ms": 1.0,
+      "auroc_threshold": 0.4294,
+      "auroc_fraction_of_minilm": 0.95,
+      "minilm_auroc": 0.452
+    },
+    "candidates_meeting_criteria": [
+      "random"
+    ],
+    "winner": "random",
+    "batched_fallback_recommended": false,
+    "recommendation": "Use 'random' embedding: p99=0.040ms (vs MiniLM 3.7ms), AUROC=0.5070 (112.2% of MiniLM), speedup=121.9x. Meets per-token guided decoding target (<1ms p99, <5% AUROC regression)."
+  },
+  "total_runtime_seconds": 4.25
+}
