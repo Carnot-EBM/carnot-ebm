@@ -17,9 +17,14 @@ autonomous directed self-learning where the energy function is ground truth.
    able to verify LLM outputs in 5 lines of Python.
 
 2. **Real benchmark validation at scale** — GSM8K and HumanEval scripts exist
-   (Exp 67, 68) but used simulated fallbacks in some cases. Run them with
-   live models at full scale, publish real numbers, compare to baselines in
-   published papers. Also TruthfulQA. These are the credibility numbers.
+   (Exp 67, 68, 91) but used simulated LLM inference. Run them with LIVE
+   model inference at FULL scale to produce publishable numbers:
+   - GSM8K: full 1,319 test set (not 200 subset), live Qwen3.5 + Gemma4
+   - HumanEval: full 164 problems, live model generation
+   - Report confidence intervals, compare to published baselines
+   - Also TruthfulQA for factual domain
+   Exp 91 showed +14-15% improvement on 200 questions with simulated
+   inference — now prove it's real with live models on the full set.
 
 3. **Multi-turn / agentic verification** — Verify not just single Q&A but
    multi-step agent workflows. An agent that plans → acts → observes should
