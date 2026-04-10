@@ -207,6 +207,22 @@ right — it just needs to operate at the right timescale:
 - **Experiments must be self-contained** — each produces a deliverable file
 - **Dual language** — research in Python/JAX, production path in Rust
 
+## Planning Phase Requirements
+
+When designing new milestones, the planning agent MUST:
+1. **Do arxiv research first** — Search for recent papers (2025-2026) on
+   EBMs, constraint verification, Ising models, KANs, guided decoding,
+   hardware-accelerated sampling, and LLM hallucination mitigation.
+   Add promising findings to research-references.md BEFORE designing
+   experiments. This ensures we don't miss accelerating ideas.
+2. **Include at least one self-learning experiment** — Every milestone
+   should advance the continuous self-learning architecture (Tiers 1-4).
+3. **Check the hardware wishlist** — If an experiment would benefit from
+   hardware in research-hardware-wishlist.md, note it in the experiment's
+   description so we can prioritize acquisition.
+4. **Update research-references.md** — Any new papers or tools discovered
+   during planning must be filed for future reference.
+
 ## What Works (do more of this)
 
 - Ising constraint verification: 100% hallucination detection

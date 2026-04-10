@@ -588,21 +588,39 @@ ALL TASKS IN THE CURRENT MILESTONE ({current_milestone}) HAVE COMPLETED.
 Your job: plan the NEXT research milestone.
 
 READ THESE FILES FIRST (in order):
-1. _bmad/prd.md — long-term vision and requirements
-2. _bmad/architecture.md — current architecture
-3. ops/status.md — what's working, what's next
-4. ops/changelog.md — recent work
-5. research-complete.yaml — all completed experiments and findings
-6. research-roadmap.yaml — the milestone that just finished
-7. openspec/change-proposals/ — all previous roadmap docs (v2-v8+)
-8. ops/conductor-log.md — per-experiment results
+1. research-program.md — HIGH-LEVEL GOALS AND PRIORITIES (start here)
+2. _bmad/prd.md — long-term vision and requirements
+3. _bmad/architecture.md — current architecture
+4. ops/status.md — what's working, what's next
+5. ops/changelog.md — recent work
+6. research-complete.yaml — all completed experiments and findings
+7. research-roadmap.yaml — the milestone that just finished
+8. openspec/change-proposals/ — all previous roadmap docs
+9. ops/conductor-log.md — per-experiment results
+10. research-references.md — technologies and ideas to consider
+11. research-hardware-wishlist.md — available and desired hardware
 
-THEN:
+THEN DO ARXIV RESEARCH:
+Search arxiv.org for recent papers (2025-2026) relevant to:
+- Energy-Based Models for verification/reasoning
+- Constraint satisfaction with neural networks
+- Ising model applications in ML
+- LLM hallucination detection and mitigation
+- Kolmogorov-Arnold Networks
+- Energy-guided decoding / constrained generation
+- Hardware-accelerated sampling (FPGA, thermodynamic computing)
+Add any promising findings to research-references.md before designing experiments.
+This research phase ensures we stay current and don't miss accelerating ideas.
+
+THEN DESIGN THE MILESTONE:
 1. Identify the 3 biggest gaps between current state and PRD vision
-2. Determine the natural next experiments based on completed work
-3. Design 10-14 experiments across 3-4 phases
-4. Use Qwen3.5-0.8B and google/gemma-4-E4B-it as the target LLM models
+2. Incorporate any promising arxiv findings as experiments
+3. Determine the natural next experiments based on completed work
+4. Design 10-14 experiments across 3-4 phases
+5. Use Qwen3.5-0.8B and google/gemma-4-E4B-it as the target LLM models
    (latest small SoTA — do NOT propose older models like Llama/Phi)
+6. Ensure at least one experiment targets continuous self-learning
+   (see research-program.md "Continuous Self-Learning" section)
 
 CREATE TWO FILES:
 
@@ -845,13 +863,28 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"7. research-roadmap.yaml — the milestone that just finished\n"
         f"8. openspec/change-proposals/ — all previous roadmap docs\n"
         f"9. ops/conductor-log.md — per-experiment results\n"
-        f"10. research-references.md — technologies and ideas to consider\n\n"
-        f"THEN:\n"
+        f"10. research-references.md — technologies and ideas to consider\n"
+        f"11. research-hardware-wishlist.md — available and desired hardware\n\n"
+        f"THEN DO ARXIV RESEARCH:\n"
+        f"Search arxiv.org for recent papers (2025-2026) relevant to:\n"
+        f"- Energy-Based Models for verification/reasoning\n"
+        f"- Constraint satisfaction with neural networks\n"
+        f"- Ising model applications in ML\n"
+        f"- LLM hallucination detection and mitigation\n"
+        f"- Kolmogorov-Arnold Networks\n"
+        f"- Energy-guided decoding / constrained generation\n"
+        f"- Hardware-accelerated sampling (FPGA, thermodynamic computing)\n"
+        f"Add any promising findings to research-references.md before designing "
+        f"experiments. This ensures we stay current and don't miss ideas.\n\n"
+        f"THEN DESIGN THE MILESTONE:\n"
         f"1. Identify the 3 biggest gaps between current state and PRD vision\n"
-        f"2. Determine the natural next experiments based on completed work\n"
-        f"3. Design 10-14 experiments across 3-4 phases\n"
-        f"4. Use Qwen3.5-0.8B and google/gemma-4-E4B-it as the target LLM models\n"
-        f"   (latest small SoTA — do NOT propose older models)\n\n"
+        f"2. Incorporate any promising arxiv findings as experiments\n"
+        f"3. Determine the natural next experiments based on completed work\n"
+        f"4. Design 10-14 experiments across 3-4 phases\n"
+        f"5. Use Qwen3.5-0.8B and google/gemma-4-E4B-it as the target LLM models\n"
+        f"   (latest small SoTA — do NOT propose older models)\n"
+        f"6. Ensure at least one experiment targets continuous self-learning\n"
+        f"   (see research-program.md 'Continuous Self-Learning' section)\n\n"
         f"CREATE TWO FILES:\n\n"
         f"FILE 1: openspec/change-proposals/research-roadmap-vNEXT.md\n"
         f"- Full milestone design doc following the v7/v8 format\n"
