@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 110 Guided Decoding
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T17:10:32Z | 2026-04-10T17:19:14Z | Create EnergyGuidedSampler, 22 tests (100% cov), Exp 110 on 50 GSM8K problems, alpha sweep [0.1–2.0] | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 102 Latency Benchmark
 
 ### Turn Log
