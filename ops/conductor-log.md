@@ -159,3 +159,6 @@
 | 2026-04-10 06:53 UTC | Exp 106: TruthfulQA benchmark with factual extract | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
  |
 | 2026-04-10 06:54 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 06:56 UTC | Exp 107: HuggingFace model card + Exp 66 joint mod | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 06:57 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
