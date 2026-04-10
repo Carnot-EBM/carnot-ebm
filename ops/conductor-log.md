@@ -1151,3 +1151,4 @@
 | 2026-04-10 23:11 UTC | Exp 124: Full GSM8K (1319) with live inference | FAIL | Claude Code error:  |
 | 2026-04-10 23:12 UTC | Exp 124: Full GSM8K (1319) with live inference | OK | Deliverable already exists in repo |
 | 2026-04-10 23:27 UTC | Exp 122: Adversarial robustness deep analysis | OK | =========== 1787 passed, 1 skipped, 12 warnings in 133.16s (0:02:13) =========== |
+| 2026-04-10 23:38 UTC | Exp 125: Constraint state machine for agent workfl | OK | =========== 1813 passed, 1 skipped, 12 warnings in 135.39s (0:02:15) =========== |
