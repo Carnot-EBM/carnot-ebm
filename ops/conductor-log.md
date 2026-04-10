@@ -1134,3 +1134,6 @@
 | 2026-04-10 14:06 UTC | Milestone 2026.04.7 activated | OK | 11 tasks queued |
 | 2026-04-10 14:17 UTC | Exp 108: KAN Energy Function Implementation | OK | =========== 1545 passed, 1 skipped, 12 warnings in 122.25s (0:02:02) =========== |
 | 2026-04-10 17:08 UTC | Exp 109: KAN vs Ising vs Gibbs Comparison | OK | Deliverable already exists in repo |
+| 2026-04-10 17:49 UTC | Exp 112: Embedding Bottleneck Resolution | REVERT | Post-tests failed: =========== 1567 passed, 1 skipped, 12 warnings in 133.95s (0 |
+| 2026-04-10 17:50 UTC | Exp 110: Guided Decoding Prototype Completion | OK | Deliverable already exists in repo |
+| 2026-04-10 17:50 UTC | Exp 111: Productionize Guided Decoding | OK | Deliverable already exists in repo |
