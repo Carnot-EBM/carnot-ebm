@@ -1,0 +1,2337 @@
+{
+  "experiment": "Exp 126: Agent Rollback on Multi-Step Reasoning Tasks",
+  "spec": [
+    "REQ-VERIFY-001",
+    "SCENARIO-VERIFY-005"
+  ],
+  "n_problems": 20,
+  "metrics": {
+    "accuracy_no_rollback": 0.0,
+    "accuracy_with_rollback": 0.5,
+    "accuracy_improvement": 0.5,
+    "rollback_detected_count": 10,
+    "rollback_missed_count": 10,
+    "detection_rate": 0.5,
+    "accuracy_step2_no_rollback": 0.0,
+    "accuracy_step2_with_rollback": 0.0,
+    "accuracy_step2_detection_rate": 0.0,
+    "accuracy_step3_no_rollback": 0.0,
+    "accuracy_step3_with_rollback": 1.0,
+    "accuracy_step3_detection_rate": 1.0
+  },
+  "elapsed_seconds": 0.009780645370483398,
+  "no_rollback_results": [
+    {
+      "problem_id": 1,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 36,
+      "error_answer": 28,
+      "extracted_answer": 28,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 6 trays, 8 cookies per tray, 12 sold.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 6 * 8 = 40 total cookies.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 40 - 12 = 28 cookies remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The baker has 28 cookies left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 2,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 38,
+      "error_answer": 35,
+      "extracted_answer": 35,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 9 apples per box, 5 boxes, 7 eaten.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 9 * 5 = 42 total apples.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 42 - 7 = 35 remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 35 apples remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 3,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 23,
+      "error_answer": 19,
+      "extracted_answer": 19,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 7 books per shelf, 4 shelves, 5 removed.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 7 * 4 = 24 total books.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 24 - 5 = 19 remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 19 books left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 4,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 25,
+      "error_answer": 22,
+      "extracted_answer": 22,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: $3 per pencil, 11 sold, $8 cost.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 3 * 11 = 30 dollars revenue.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 30 - 8 = 22 dollars profit.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The profit is $22.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 5,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 38,
+      "error_answer": 36,
+      "extracted_answer": 36,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 8 rows, 6 plants per row, 10 die.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 8 * 6 = 46 total plants.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 46 - 10 = 36 remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 36 plants remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 6,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 30,
+      "error_answer": 25,
+      "extracted_answer": 25,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 5 eggs per hen, 9 hens, 15 used.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 5 * 9 = 40 total eggs.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 40 - 15 = 25 eggs remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The farmer has 25 eggs left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 7,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 40,
+      "error_answer": 36,
+      "extracted_answer": 36,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 12 units/hour, 4 hours, 8 defective.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 12 * 4 = 44 total units.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 44 - 8 = 36 good units.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 36 good units.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 8,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 22,
+      "error_answer": 19,
+      "extracted_answer": 19,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 7 tables, 4 seats each, 6 absent.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 7 * 4 = 25 total seats.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 25 - 6 = 19 students present.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 19 students present.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 9,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 32,
+      "error_answer": 29,
+      "extracted_answer": 29,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 3 points/game, 9 games, 5 bonus.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 3 * 9 = 24 base points.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 24 + 5 = 29 total points.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The team has 29 total points.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 10,
+      "mode": "no_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 195,
+      "error_answer": 185,
+      "extracted_answer": 185,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 60 mph, 3 hours, then 15 more miles.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 60 * 3 = 170 miles in first segment.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 170 + 15 = 185 total miles.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The driver travels 185 miles in total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 11,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 130,
+      "error_answer": 125,
+      "extracted_answer": 125,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 50 items, cost $2 each, profit $30.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 50 * 2 = 100 dollars cost.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 100 + 30 = 125 dollars revenue.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "100 + 30 = 125 (correct: 130)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The revenue is $125.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 12,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 100,
+      "error_answer": 95,
+      "extracted_answer": 95,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 15 laps/day, 6 days, 10 extra laps.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 15 * 6 = 90 laps base.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 90 + 10 = 95 total laps.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "90 + 10 = 95 (correct: 100)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The swimmer swims 95 laps in total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 13,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 72,
+      "error_answer": 68,
+      "extracted_answer": 68,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 8 pages/min, 7 minutes, 16 extra.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 8 * 7 = 56 pages initially.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 56 + 16 = 68 total pages.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "56 + 16 = 68 (correct: 72)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The printer outputs 68 pages total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 14,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 92,
+      "error_answer": 88,
+      "extracted_answer": 88,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: $14/hour, 8 hours, $20 tax.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 14 * 8 = 112 dollars gross.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 112 - 20 = 88 dollars take-home.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "112 - 20 = 88 (correct: 92)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: Take-home pay is $88.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 15,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 63,
+      "error_answer": 59,
+      "extracted_answer": 59,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 11 km/h, 5 hours, 8 more km.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 11 * 5 = 55 km first leg.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 55 + 8 = 59 km total.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "55 + 8 = 59 (correct: 63)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The cyclist travels 59 km in total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 16,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 19,
+      "error_answer": 21,
+      "extracted_answer": 21,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 4 cups/batch, 7 batches, 9 cups given away.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 4 * 7 = 28 cups total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 28 - 9 = 21 cups remaining.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "28 - 9 = 21 (correct: 19)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 21 cups remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 17,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 350,
+      "error_answer": 330,
+      "extracted_answer": 330,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 200 liters initial, 25 liters/hour, 6 hours.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 25 * 6 = 150 liters added.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 200 + 150 = 330 liters total.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "200 + 150 = 330 (correct: 350)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The pool contains 330 liters total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 18,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 52,
+      "error_answer": 56,
+      "extracted_answer": 56,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 100 marbles, 6 per turn, 8 turns.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 6 * 8 = 48 marbles taken.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 100 - 48 = 56 marbles left.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "100 - 48 = 56 (correct: 52)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 56 marbles remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 19,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 345,
+      "error_answer": 340,
+      "extracted_answer": 340,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 300 boxes initial, 9 added per shift, 5 shifts.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 9 * 5 = 45 boxes added.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 300 + 45 = 340 boxes total.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "300 + 45 = 340 (correct: 345)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 340 boxes in the warehouse.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    },
+    {
+      "problem_id": 20,
+      "mode": "no_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 437,
+      "error_answer": 430,
+      "extracted_answer": 430,
+      "is_correct": false,
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 500 books, 7 donated/week, 9 weeks.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 7 * 9 = 63 books donated.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 500 - 63 = 430 books remaining.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "500 - 63 = 430 (correct: 437)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": []
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The library has 430 books remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": []
+        }
+      ]
+    }
+  ],
+  "with_rollback_results": [
+    {
+      "problem_id": 1,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 36,
+      "error_answer": 28,
+      "extracted_answer": 28,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 6 trays, 8 cookies per tray, 12 sold.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 6 * 8 = 40 total cookies.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 40 - 12 = 28 cookies remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The baker has 28 cookies left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 2,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 38,
+      "error_answer": 35,
+      "extracted_answer": 35,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 9 apples per box, 5 boxes, 7 eaten.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 9 * 5 = 42 total apples.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 42 - 7 = 35 remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 35 apples remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 3,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 23,
+      "error_answer": 19,
+      "extracted_answer": 19,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 7 books per shelf, 4 shelves, 5 removed.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 7 * 4 = 24 total books.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 24 - 5 = 19 remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 19 books left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 4,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 25,
+      "error_answer": 22,
+      "extracted_answer": 22,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: $3 per pencil, 11 sold, $8 cost.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 3 * 11 = 30 dollars revenue.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 30 - 8 = 22 dollars profit.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The profit is $22.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 5,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 38,
+      "error_answer": 36,
+      "extracted_answer": 36,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 8 rows, 6 plants per row, 10 die.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 8 * 6 = 46 total plants.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 46 - 10 = 36 remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 36 plants remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 6,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 30,
+      "error_answer": 25,
+      "extracted_answer": 25,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 5 eggs per hen, 9 hens, 15 used.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 5 * 9 = 40 total eggs.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 40 - 15 = 25 eggs remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The farmer has 25 eggs left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 7,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 40,
+      "error_answer": 36,
+      "extracted_answer": 36,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 12 units/hour, 4 hours, 8 defective.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 12 * 4 = 44 total units.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 44 - 8 = 36 good units.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 36 good units.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 8,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 22,
+      "error_answer": 19,
+      "extracted_answer": 19,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 7 tables, 4 seats each, 6 absent.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 7 * 4 = 25 total seats.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 25 - 6 = 19 students present.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 19 students present.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 9,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 32,
+      "error_answer": 29,
+      "extracted_answer": 29,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 3 points/game, 9 games, 5 bonus.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 3 * 9 = 24 base points.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 24 + 5 = 29 total points.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The team has 29 total points.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 10,
+      "mode": "with_rollback",
+      "faulty_step_index": 2,
+      "correct_answer": 195,
+      "error_answer": 185,
+      "extracted_answer": 185,
+      "is_correct": false,
+      "rollback_detected": false,
+      "rollback_events": [],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 60 mph, 3 hours, then 15 more miles.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 60 * 3 = 170 miles in first segment.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 170 + 15 = 185 total miles.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The driver travels 185 miles in total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 11,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 130,
+      "error_answer": 125,
+      "extracted_answer": 130,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "100 + 30 = 125 (correct: 130)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 50 items, cost $2 each, profit $30.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 50 * 2 = 100 dollars cost.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 100 + 30 = 125 dollars revenue.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "100 + 30 = 125 (correct: 130)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 100 + 30 = 130 dollars revenue.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The revenue is $130.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 12,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 100,
+      "error_answer": 95,
+      "extracted_answer": 100,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "90 + 10 = 95 (correct: 100)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 15 laps/day, 6 days, 10 extra laps.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 15 * 6 = 90 laps base.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 90 + 10 = 95 total laps.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "90 + 10 = 95 (correct: 100)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 90 + 10 = 100 total laps.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The swimmer swims 100 laps in total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 13,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 72,
+      "error_answer": 68,
+      "extracted_answer": 72,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "56 + 16 = 68 (correct: 72)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 8 pages/min, 7 minutes, 16 extra.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 8 * 7 = 56 pages initially.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 56 + 16 = 68 total pages.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "56 + 16 = 68 (correct: 72)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 56 + 16 = 72 total pages.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The printer outputs 72 pages total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 14,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 92,
+      "error_answer": 88,
+      "extracted_answer": 92,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "112 - 20 = 88 (correct: 92)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: $14/hour, 8 hours, $20 tax.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 14 * 8 = 112 dollars gross.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 112 - 20 = 88 dollars take-home.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "112 - 20 = 88 (correct: 92)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 112 - 20 = 92 dollars take-home.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: Take-home pay is $92.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 15,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 63,
+      "error_answer": 59,
+      "extracted_answer": 63,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "55 + 8 = 59 (correct: 63)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 11 km/h, 5 hours, 8 more km.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 11 * 5 = 55 km first leg.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 55 + 8 = 59 km total.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "55 + 8 = 59 (correct: 63)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 55 + 8 = 63 km total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The cyclist travels 63 km in total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 16,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 19,
+      "error_answer": 21,
+      "extracted_answer": 19,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "28 - 9 = 21 (correct: 19)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 4 cups/batch, 7 batches, 9 cups given away.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 4 * 7 = 28 cups total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 28 - 9 = 21 cups remaining.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "28 - 9 = 21 (correct: 19)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 28 - 9 = 19 cups remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 19 cups remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 17,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 350,
+      "error_answer": 330,
+      "extracted_answer": 350,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "200 + 150 = 330 (correct: 350)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 200 liters initial, 25 liters/hour, 6 hours.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 25 * 6 = 150 liters added.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 200 + 150 = 330 liters total.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "200 + 150 = 330 (correct: 350)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 200 + 150 = 350 liters total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The pool contains 350 liters total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 18,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 52,
+      "error_answer": 56,
+      "extracted_answer": 52,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "100 - 48 = 56 (correct: 52)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 100 marbles, 6 per turn, 8 turns.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 6 * 8 = 48 marbles taken.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 100 - 48 = 56 marbles left.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "100 - 48 = 56 (correct: 52)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 100 - 48 = 52 marbles left.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 52 marbles remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 19,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 345,
+      "error_answer": 340,
+      "extracted_answer": 345,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "300 + 45 = 340 (correct: 345)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 300 boxes initial, 9 added per shift, 5 shifts.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 9 * 5 = 45 boxes added.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 300 + 45 = 340 boxes total.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "300 + 45 = 340 (correct: 345)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 300 + 45 = 345 boxes total.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: There are 345 boxes in the warehouse.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    },
+    {
+      "problem_id": 20,
+      "mode": "with_rollback",
+      "faulty_step_index": 3,
+      "correct_answer": 437,
+      "error_answer": 430,
+      "extracted_answer": 437,
+      "is_correct": true,
+      "rollback_detected": true,
+      "rollback_events": [
+        {
+          "at_step": 3,
+          "rolled_back_to": 2,
+          "violations": [
+            "500 - 63 = 430 (correct: 437)"
+          ]
+        }
+      ],
+      "steps": [
+        {
+          "step": 1,
+          "output_text": "Given: 500 books, 7 donated/week, 9 weeks.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 2,
+          "output_text": "Intermediate: 7 * 9 = 63 books donated.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 500 - 63 = 430 books remaining.",
+          "verified": false,
+          "n_violations": 1,
+          "violations": [
+            "500 - 63 = 430 (correct: 437)"
+          ],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": true,
+          "is_repair": false
+        },
+        {
+          "step": 3,
+          "output_text": "Final operation: 500 - 63 = 437 books remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 1,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": true
+        },
+        {
+          "step": 4,
+          "output_text": "Answer: The library has 437 books remaining.",
+          "verified": true,
+          "n_violations": 0,
+          "violations": [],
+          "n_new_facts": 0,
+          "contradictions": [],
+          "rolled_back": false,
+          "is_repair": false
+        }
+      ]
+    }
+  ]
+}

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 126 Agent Rollback
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T23:41:35Z | 2026-04-10T23:48:24Z | Create scripts/experiment_126_agent_rollback.py: 20 4-step math problems with error propagation, CSM rollback on violation detection; step-3 errors 100% detected, step-2 errors 0% detected; overall 50% improvement (0%→50% accuracy) | TBD |
+
+---
+
 ## Session: 2026-04-10 ConstraintStateMachine
 
 ### Turn Log
