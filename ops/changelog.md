@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-04-10
+
+- Exp 89: Self-bootstrapped constraint training — `scripts/experiment_89_self_bootstrap.py` (1311 lines) trains discriminative Ising models using pipeline verification outputs as supervision signal (no manual labels); 1000 samples across 5 domains (700 train/150 val/150 test); overall 0.788 AUROC (combined model) vs 0.5 random baseline; per-domain: arithmetic 1.0, logic 1.0, code 0.91, factual 0.55, scheduling 0.52; data efficiency ablation: 100→700 samples improves AUROC 0.767→0.788; pipeline concordance 96.7% (145/150 agree); hp sweep over lr×L1 (5 configs); 216s runtime (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, FR-11)
+- Exp 88: Failure-driven constraint mining — `scripts/experiment_88_failure_mining.py` (650 lines) + `python/carnot/pipeline/mining.py` (598 lines) analyzes verify-repair pipeline false negatives to discover missing constraint extractors; 200 questions, 93% false negative rate (134/144 wrong answers undetected); categorizes gaps: implicit_logic (74), comparison (40), arithmetic_chain (23), negation (13), world_knowledge (8); suggests 6 new regex patterns with estimated catch rates (intermediate_result 45%, since_because 39%, causal_therefore 24%); estimated 75% coverage improvement if patterns adopted; new `carnot.pipeline.mining` module with 330-line test suite (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-005)
+
 ## 2026-04-09
 
 - Exp 87: Gradient-based repair in continuous constraint space — `scripts/experiment_87_gradient_repair.py` (1475 lines) replaces discrete LLM re-prompting with gradient descent in embedding space + nearest-neighbor codebook decoding; 40% repair success rate vs 28% simulated discrete (on 50 violated samples, 5 domains); per-domain: arithmetic 100%, scheduling 100%, factual/code/logic 0%; energy drops from 1.72 → 1.02 (mean), 90% convergence rate; ablation over step_size × max_iterations (9 configs); builds on Exp 65 (embedding constraints) + Exp 66 (differentiable pipeline) (REQ-VERIFY-001, REQ-VERIFY-003)

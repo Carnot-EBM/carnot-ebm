@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-09 — 85+ EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API
+**Last Updated:** 2026-04-10 — 87+ EXPERIMENTS, 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API
 
 ## What's Working
 
@@ -154,6 +154,10 @@
 - Pre-commit hooks: rustfmt, clippy, ruff, mypy, pytest, spec coverage
 - Docker compose: Claude API bridge + WebGPU gateway (`make up`)
 
+### Constraint Mining & Self-Bootstrapping (Exp 88-89)
+- Failure-driven constraint mining: analyzes pipeline false negatives, categorizes 6 gap types (implicit_logic, comparison, arithmetic_chain, negation, world_knowledge, code_semantics), suggests new extraction patterns with estimated 75% coverage improvement (`carnot.pipeline.mining`)
+- Self-bootstrapped Ising training: trains discriminative Ising using pipeline verification outputs as supervision (no manual labels); 0.788 AUROC combined; arithmetic/logic perfect (1.0), code strong (0.91); 96.7% pipeline concordance; scales with data (100→700 samples)
+
 ## Experiment Results (26 experiments)
 
 | # | Approach | Result | Verdict |
@@ -220,6 +224,8 @@
 | 85 | **Prepare beta release** | RELEASE_NOTES.md + prepare_release.py + README quick start | **✅ Beta release ready** |
 | 86 | **Learned energy composition weights** | Uniform 0.927 → learned 0.938 AUROC (+1.1%), not significant; arithmetic weight dominant (1.19) | **⚠️ Marginal improvement, not significant** |
 | 87 | **Gradient-based repair in continuous space** | 40% success vs 28% discrete; arithmetic/scheduling 100%, factual/code/logic 0%; energy 1.72→1.02 | **⚠️ Works for structured domains, not semantic** |
+| 88 | **Failure-driven constraint mining** | 93% false negative rate; implicit_logic (74), comparison (40), arithmetic_chain (23) top gaps; 6 suggested patterns, est. 75% coverage improvement | **✅ Actionable gap analysis** |
+| 89 | **Self-bootstrapped constraint training** | 0.788 combined AUROC; arithmetic/logic 1.0, code 0.91, factual 0.55, scheduling 0.52; 96.7% pipeline concordance | **✅ Self-supervised Ising from pipeline outputs** |
 
 ## 14 Principles Learned
 
