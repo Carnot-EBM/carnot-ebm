@@ -95,3 +95,5 @@
 | 2026-04-10 00:02 UTC | Exp 88: Failure-driven constraint mining | OK | Deliverable already exists in repo |
 | 2026-04-10 00:21 UTC | Exp 89: Self-bootstrapped constraint training | OK | ================ 1376 passed, 12 warnings in 121.93s (0:02:01) ================= |
 | 2026-04-10 00:59 UTC | Exp 91: GSM8K live benchmark (Qwen3.5 + Gemma4) | OK | ================ 1376 passed, 12 warnings in 162.22s (0:02:42) ================= |
+| 2026-04-10 01:56 UTC | Exp 92: MATH benchmark subset with CoT constraint  | FAIL | Claude error: Another stale background check. All done — Experiment 92 ran |
+| 2026-04-10 01:57 UTC | Exp 92: MATH benchmark subset with CoT constraint  | OK | Deliverable already exists in repo |
