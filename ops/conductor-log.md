@@ -1137,3 +1137,8 @@
 | 2026-04-10 17:49 UTC | Exp 112: Embedding Bottleneck Resolution | REVERT | Post-tests failed: =========== 1567 passed, 1 skipped, 12 warnings in 133.95s (0 |
 | 2026-04-10 17:50 UTC | Exp 110: Guided Decoding Prototype Completion | OK | Deliverable already exists in repo |
 | 2026-04-10 17:50 UTC | Exp 111: Productionize Guided Decoding | OK | Deliverable already exists in repo |
+| 2026-04-10 19:16 UTC | Exp 115: TruthfulQA Benchmark with v12 Extractors | FAIL | Claude Code error:  |
+| 2026-04-10 19:17 UTC | Exp 112: Embedding Bottleneck Resolution | OK | Deliverable already exists in repo |
+| 2026-04-10 19:17 UTC | Exp 113: Factual Knowledge Base Extractor v2 | OK | Deliverable already exists in repo |
+| 2026-04-10 19:17 UTC | Exp 114: WebSearch Fallback for Uncovered Claims | OK | Deliverable already exists in repo |
+| 2026-04-10 19:17 UTC | Exp 115: TruthfulQA Benchmark with v12 Extractors | OK | Deliverable already exists in repo |
