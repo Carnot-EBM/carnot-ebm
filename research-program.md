@@ -119,6 +119,37 @@ autonomous directed self-learning where the energy function is ground truth.
 - Adversarial review for non-trivial changes
 - Never remove existing content from ops/spec docs
 
+## HuggingFace Publishing Milestones
+
+Artifacts to publish at huggingface.co/Carnot-EBM as research progresses:
+
+1. **NOW: Update existing model READMEs** — Clarify that the 16 per-token
+   activation EBMs are Phase 1 research artifacts (detect confidence, not
+   correctness). Point users to `pip install carnot` for the actual product.
+
+2. **NOW: Publish Exp 66 joint model** — The differentiable constraint
+   model (embedding + Ising → score, 1.0 AUROC). Small proof-of-concept
+   with clear README: "demonstrates the approach, not production quality."
+
+3. **AFTER Goal #4 (latency benchmark):** If guided decoding is viable,
+   publish the first **energy-guided decoding adapter** — a small module
+   that adjusts LLM token probabilities based on constraint energy. Novel
+   artifact, nothing like it exists on HuggingFace. Model-agnostic.
+
+4. **AFTER Goal #2 (agentic verification):** Publish **constraint
+   propagation models** — learned Ising models encoding how constraints
+   flow across multi-step reasoning chains. Domain-specific variants for
+   math, code, and planning.
+
+5. **AFTER Goal #3 (factual extractor):** Publish **knowledge-grounded
+   constraint models** — encode factual verification against knowledge
+   bases. Larger, more broadly useful.
+
+6. **KONA PARITY (6-12 months):** Publish the **differentiable reasoning
+   module** — attach to any HuggingFace LLM for constraint-verified
+   outputs. Like a LoRA but for reasoning verification. Model-agnostic,
+   small, solves hallucination. This is the artifact that gets attention.
+
 ## When to Propose New Research vs Production Work
 
 - If the pipeline has proven capabilities not yet shipped → production first
