@@ -116,3 +116,4 @@
 | 2026-04-10 03:29 UTC | Exp 98: Knowledge-base factual claim verifier | SKIP | Pre-tests failing, self-heal failed: ====== 7 failed, 1477 passed, 1 skipped, 12 |
 | 2026-04-10 03:36 UTC | Exp 98: Knowledge-base factual claim verifier | SKIP | Pre-tests failing, self-heal failed: ====== 7 failed, 1477 passed, 1 skipped, 12 |
 | 2026-04-10 03:46 UTC | Exp 99: Constraint state propagation across agent  | SKIP | Pre-tests failing, self-heal failed: ====== 6 failed, 1478 passed, 1 skipped, 12 |
+| 2026-04-10 04:07 UTC | Exp 99: Constraint state propagation across agent  | SKIP | Pre-tests failing, self-heal failed: = 1384 passed, 1 skipped, 5 xfailed, 95 xpa |
