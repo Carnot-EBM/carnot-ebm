@@ -353,3 +353,53 @@ milestones:
     title: 'Exp 85: Prepare beta release'
     deliverable: scripts/prepare_release.py
     result: OK (conductor)
+- id: 2026.04.5
+  title: "Learn to Verify \u2014 Self-Improving Constraints + Differentiable Reasoning"
+  doc: openspec/change-proposals/research-roadmap-v10.md
+  completed: '2026-04-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp66-differentiable-constraints
+    title: 'Exp 66: End-to-end differentiable constraint reasoning'
+    deliverable: scripts/experiment_66_differentiable_constraints.py
+    result: OK (conductor)
+  - id: exp86-learned-energy-weights
+    title: 'Exp 86: Learned energy composition weights'
+    deliverable: scripts/experiment_86_learned_energy_weights.py
+    result: OK (conductor)
+  - id: exp87-gradient-repair
+    title: 'Exp 87: Gradient-based repair in continuous constraint space'
+    deliverable: scripts/experiment_87_gradient_repair.py
+    result: OK (conductor)
+  - id: exp88-failure-mining
+    title: 'Exp 88: Failure-driven constraint mining'
+    deliverable: python/carnot/pipeline/mining.py
+    result: OK (conductor)
+  - id: exp89-self-bootstrap
+    title: 'Exp 89: Self-bootstrapped constraint training'
+    deliverable: scripts/experiment_89_self_bootstrap.py
+    result: OK (conductor)
+  - id: exp91-gsm8k-live
+    title: 'Exp 91: GSM8K live benchmark (Qwen3.5 + Gemma4)'
+    deliverable: scripts/experiment_91_gsm8k_live.py
+    result: OK (conductor)
+  - id: exp92-math-benchmark
+    title: 'Exp 92: MATH benchmark subset with CoT constraint tracing'
+    deliverable: scripts/experiment_92_math_benchmark.py
+    result: OK (conductor)
+  - id: exp93-multi-model-comparison
+    title: 'Exp 93: Multi-model systematic comparison'
+    deliverable: scripts/experiment_93_multi_model_comparison.py
+    result: OK (conductor)
+  - id: exp90-autoresearch-constraints
+    title: 'Exp 90: Autoresearch constraint improvement loop'
+    deliverable: scripts/experiment_90_autoresearch_constraints.py
+    result: OK (conductor)
+  - id: exp94-rust-pipeline
+    title: 'Exp 94: Rust VerifyRepairPipeline'
+    deliverable: crates/carnot-constraints/src/pipeline.rs
+    result: OK (conductor)
+  - id: exp95-pyo3-pipeline
+    title: 'Exp 95: PyO3 pipeline bridge'
+    deliverable: crates/carnot-python/src/pipeline.rs
+    result: OK (conductor)
