@@ -1142,3 +1142,4 @@
 | 2026-04-10 19:17 UTC | Exp 113: Factual Knowledge Base Extractor v2 | OK | Deliverable already exists in repo |
 | 2026-04-10 19:17 UTC | Exp 114: WebSearch Fallback for Uncovered Claims | OK | Deliverable already exists in repo |
 | 2026-04-10 19:17 UTC | Exp 115: TruthfulQA Benchmark with v12 Extractors | OK | Deliverable already exists in repo |
+| 2026-04-10 20:11 UTC | Exp 116: LNN-Based Adaptive Constraint Model | REVERT | Post-tests failed:  |
