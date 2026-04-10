@@ -98,6 +98,11 @@ from carnot.inference.verify_and_repair import (
     parse_llm_sat_assignment,
     verify_and_repair,
 )
+from carnot.inference.model_loader import (
+    ModelLoadError,
+    generate,
+    load_model,
+)
 
 __all__ = [
     "EnergyGuidedSampler",
@@ -124,11 +129,13 @@ __all__ = [
     "ReasoningVerifierConfig",
     "SemanticEnergyResult",
     "TokenEnergyAnalysis",
+    "ModelLoadError",
     "VerifyRepairResult",
     "analyze_token_energy",
     "build_learned_sat_energy",
     "classify_hallucination",
     "ebm_rejection_sample",
+    "generate",
     "get_model_info",
     "compare_learned_vs_handcoded",
     "compare_learned_vs_handcoded_code",
@@ -147,6 +154,7 @@ __all__ = [
     "RejectionSampleResult",
     "run_llm_coloring_experiment",
     "load_ebm",
+    "load_model",
     "score_activations_with_ebm",
     "run_llm_sat_experiment",
     "solve_coloring_with_llm",
