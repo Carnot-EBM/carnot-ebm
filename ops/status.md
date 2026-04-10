@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 119 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119)
+**Last Updated:** 2026-04-10 — 123 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 123), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), ROBUST MODEL LOADER (EXP 123)
 
 ## What's Working
 
@@ -47,6 +47,7 @@
 - Multi-start repair, semantic energy, ARM-EBM bijection
 - Diffusion generation (parallel solution from noise)
 - Per-token EBM (84.5% test on Qwen3-0.6B, 67.2% on Qwen3.5-0.8B, experiments 19-22)
+- Robust model loader (`carnot.inference.model_loader`, Exp 123): centralised `load_model()` + `generate()` API with RAM pre-check (psutil), float32-on-CPU default (avoids AVX2 crashes), OOM retry with gc.collect() + cuda.empty_cache(), Qwen3 enable_thinking fallback chain, `CARNOT_FORCE_LIVE` / `CARNOT_SKIP_LLM` / `CARNOT_FORCE_CPU` env vars; eliminates conductor subprocess fallback to simulated outputs (REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-003)
 
 ### Fast Embedding for Guided Decoding (Exp 112)
 - `FastEmbeddingProtocol` + 5 strategies: MiniLM (3.1ms GPU), TF-IDF+projection (0.115ms), CharNgram (1.0ms), HashEmbedding (0.097ms), RandomProjection (0.026ms p50 — winner)
