@@ -165,3 +165,957 @@
 | 2026-04-10 06:59 UTC | Exp 107: HuggingFace model card + Exp 66 joint mod | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
  |
 | 2026-04-10 07:00 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:02 UTC | Exp 107: HuggingFace model card + Exp 66 joint mod | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:03 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:03 UTC | Milestone 2026.04.6 activated | OK | 12 tasks queued |
+| 2026-04-10 07:04 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:04 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:05 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:06 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:06 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:07 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:07 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:08 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:08 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:09 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:09 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:10 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:10 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:11 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:11 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:12 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:12 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:13 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:13 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:14 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:15 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:15 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:16 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:17 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:18 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:18 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:19 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:19 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:20 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:20 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:21 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:22 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:22 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:23 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:23 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:24 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:24 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:25 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:25 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:26 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:26 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:27 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:27 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:28 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:28 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:29 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:29 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:30 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:30 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:31 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:31 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:32 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:32 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:33 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:33 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:34 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:34 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:35 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:35 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:36 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:36 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:37 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:37 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:38 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:38 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:39 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:39 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:40 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:40 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:41 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:41 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:43 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:44 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:44 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:45 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:45 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:46 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:46 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:47 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:47 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:48 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:48 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:49 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:49 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:50 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:50 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:51 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:51 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:52 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:52 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:53 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:53 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:54 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:54 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:55 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:55 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:56 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:56 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:57 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:57 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:58 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:58 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 07:59 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 07:59 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:00 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:00 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:01 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:01 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:02 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:02 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:03 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:03 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:04 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:04 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:05 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:06 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:06 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:07 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:08 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:09 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:09 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:10 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:10 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:11 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:11 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:12 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:12 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:13 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:13 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:14 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:15 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:15 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:16 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:16 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:17 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:17 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:18 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:18 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:19 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:19 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:20 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:20 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:21 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:22 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:22 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:23 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:23 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:24 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:24 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:25 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:25 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:26 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:26 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:27 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:27 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:28 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:28 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:29 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:29 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:30 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:30 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:31 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:32 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:33 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:33 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:34 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:34 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:35 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:35 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:36 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:36 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:37 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:37 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:38 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:38 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:39 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:39 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:40 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:40 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:41 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:41 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:42 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:43 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:43 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:44 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:44 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:45 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:45 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:46 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:46 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:47 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:47 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:48 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:48 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:49 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:49 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:50 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:50 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:51 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:51 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:52 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:52 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:53 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:53 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:54 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:54 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:55 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:55 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:56 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:56 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:57 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:58 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 08:59 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 08:59 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:00 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:00 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:01 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:01 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:02 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:02 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:03 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:03 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:04 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:04 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:05 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:06 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:06 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:07 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:07 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:08 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:08 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:09 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:09 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:10 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:10 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:11 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:11 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:12 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:12 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:13 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:13 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:14 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:15 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:15 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:16 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:16 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:17 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:17 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:18 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:18 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:19 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:19 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:20 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:20 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:22 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:23 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:23 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:24 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:24 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:25 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:25 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:26 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:26 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:27 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:27 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:28 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:28 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:29 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:29 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:30 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:30 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:31 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:31 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:32 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:32 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:33 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:33 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:34 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:34 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:35 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:35 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:36 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:36 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:37 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:37 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:38 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:38 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:39 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:39 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:40 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:40 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:41 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:41 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:42 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:43 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:43 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:44 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:44 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:45 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:46 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:47 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:47 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:48 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:48 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:49 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:49 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:50 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:50 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:51 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:51 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:52 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:52 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:53 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:53 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:54 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:54 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:55 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:55 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:56 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:56 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:57 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:57 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:58 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:58 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 09:59 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 09:59 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:00 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:00 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:01 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:01 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:02 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:02 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:03 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:03 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:04 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:04 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:05 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:06 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:06 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:07 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:07 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:08 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:08 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:09 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:09 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:10 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:11 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:12 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:12 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:13 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:13 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:14 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:15 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:15 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:16 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:16 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:17 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:17 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:18 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:18 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:19 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:19 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:20 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:20 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:21 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:22 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:22 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:23 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:23 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:24 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:24 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:25 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:25 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:26 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:26 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:27 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:27 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:28 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:28 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:29 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:29 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:30 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:30 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:31 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:31 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:32 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:32 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:33 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:33 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:34 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:34 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:35 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:36 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:37 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:37 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:38 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:38 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:39 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:39 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:40 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:40 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:41 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:41 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:42 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:43 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:43 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:44 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:44 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:45 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:45 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:46 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:46 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:47 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:47 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:48 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:48 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:49 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:49 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:50 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:50 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:51 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:51 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:52 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:52 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:53 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:53 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:54 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:54 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:55 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:55 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:56 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:56 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:57 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:57 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:58 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:58 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 10:59 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 10:59 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:00 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:01 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:02 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:02 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:03 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:03 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:04 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:04 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:05 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:06 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:06 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:07 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:07 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:08 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:08 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:09 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:09 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:10 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:10 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:11 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:11 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:12 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:12 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:13 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:13 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:14 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:15 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:15 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:16 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:16 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:17 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:17 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:18 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:18 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:19 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:19 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:20 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:20 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:21 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:22 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:22 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:23 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:23 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:24 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:25 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:26 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:26 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:27 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:27 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:28 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:28 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:29 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:29 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:30 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:30 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:31 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:31 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:32 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:32 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:33 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:33 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:34 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:34 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:35 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:36 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:37 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:37 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:38 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:38 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:39 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:39 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:40 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:40 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:41 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:41 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:43 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:44 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:44 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:45 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:45 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:46 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:46 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:47 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:47 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:48 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:48 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:49 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:49 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:50 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:50 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:51 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:51 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:52 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:52 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:53 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:54 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:55 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:55 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:56 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:56 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:57 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:57 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:58 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:58 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 11:59 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 11:59 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:00 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:00 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:01 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:01 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:02 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:03 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:04 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:04 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:05 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:05 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:06 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:06 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:07 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:07 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:08 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:09 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:10 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:10 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:11 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:11 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:12 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:12 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:13 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:13 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:14 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:15 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:15 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:16 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:16 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:17 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:17 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:18 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:19 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:20 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:20 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:21 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:22 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:22 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:23 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:24 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:25 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:25 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:26 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:26 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:27 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:27 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:28 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:28 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:29 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:29 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:30 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:31 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:32 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:33 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:34 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:34 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:35 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:36 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:37 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:37 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:38 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:38 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:39 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:39 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:40 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 12:41 UTC | Plan next milestone | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 12:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 13:14 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |

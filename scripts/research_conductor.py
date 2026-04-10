@@ -45,7 +45,16 @@ logging.basicConfig(
 logger = logging.getLogger("conductor")
 
 PROJECT_ROOT = Path(__file__).parent.parent
-CLAUDE_BIN = os.environ.get("CLAUDE_BIN", "claude")
+# Flexible agent configuration: AGENT_TYPE can be 'claude' or 'gemini'
+AGENT_TYPE = os.environ.get("AGENT_TYPE", "claude").lower()
+if AGENT_TYPE == "gemini":
+    AGENT_BIN = os.environ.get("GEMINI_BIN", "gemini")
+    DEFAULT_MODEL = "gemini-2.0-flash-exp"
+else:
+    AGENT_BIN = os.environ.get("CLAUDE_BIN", "claude")
+    DEFAULT_MODEL = "sonnet"
+
+AGENT_MODEL = os.environ.get("AGENT_MODEL", DEFAULT_MODEL)
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 
 
@@ -71,24 +80,32 @@ def run_cmd(
         return -1, "", str(e)
 
 
-def run_claude(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bool, str]:
-    """Run claude -p with a research prompt. Returns (success, output).
+def run_agent(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bool, str]:
+    """Run the configured agent (claude or gemini) with a research prompt.
 
-    Uses --verbose and streams output live to the terminal so you can
-    watch Claude working in real-time.
+    Streams output live to the terminal.
     """
-    cmd = [
-        CLAUDE_BIN, "-p",
-        "--dangerously-skip-permissions",
-        "--verbose",
-        "--max-turns", str(max_turns),
-    ]
+    if AGENT_TYPE == "gemini":
+        cmd = [
+            AGENT_BIN, "-p", prompt,
+            "--yolo",
+            "--model", AGENT_MODEL,
+        ]
+        msg = f"Calling Gemini CLI (model: {AGENT_MODEL})..."
+    else:
+        cmd = [
+            AGENT_BIN, "-p",
+            "--dangerously-skip-permissions",
+            "--verbose",
+            "--max-turns", str(max_turns),
+            "--model", AGENT_MODEL,
+        ]
+        msg = f"Calling Claude Code ({max_turns} max turns, model: {AGENT_MODEL})..."
 
-    logger.info("Calling Claude Code (%d max turns)...", max_turns)
+    logger.info(msg)
 
     # Set CARNOT_MODE=research so that .claude/settings.json hooks
-    # (phase gate, task completion) bypass their checks. The research
-    # conductor manages its own test/commit/revert cycle independently.
+    # (phase gate, task completion) bypass their checks.
     env = {**os.environ, "CARNOT_MODE": "research"}
 
     try:
@@ -102,9 +119,12 @@ def run_claude(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bo
             env=env,
         )
 
-        # Send prompt and close stdin
-        if proc.stdin:
+        # Send prompt and close stdin (for Claude; Gemini prompt is usually in args)
+        if AGENT_TYPE == "claude" and proc.stdin:
             proc.stdin.write(prompt)
+            proc.stdin.close()
+        elif AGENT_TYPE == "gemini" and proc.stdin:
+            # Gemini might read additional context from stdin if needed
             proc.stdin.close()
 
         # Stream output live to terminal while capturing it
@@ -123,18 +143,18 @@ def run_claude(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bo
         full_output = "".join(output_lines)
 
         if proc.returncode != 0:
-            logger.error("Claude failed (exit %d)", proc.returncode)
+            logger.error("%s failed (exit %d)", AGENT_TYPE.capitalize(), proc.returncode)
             return False, full_output[-500:]
 
-        logger.info("Claude completed (exit 0)")
+        logger.info("%s completed (exit 0)", AGENT_TYPE.capitalize())
         return True, full_output[-2000:]
 
     except subprocess.TimeoutExpired:
         proc.kill()
-        logger.error("Claude timed out after %ds", timeout)
+        logger.error("%s timed out after %ds", AGENT_TYPE.capitalize(), timeout)
         return False, "Timed out"
     except Exception as e:
-        logger.error("Claude error: %s", e)
+        logger.error("%s error: %s", AGENT_TYPE.capitalize(), e)
         return False, str(e)
 
 
@@ -540,7 +560,7 @@ IMPORTANT:
 - Experiments should be ordered so dependencies are met (earlier experiments first)
 """
 
-    success, output = run_claude(planning_prompt, max_turns=50, timeout=1200)
+    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200)
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
@@ -788,7 +808,7 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"- Each experiment must have a clear deliverable file path\n"
     )
 
-    success, output = run_claude(planning_prompt, max_turns=50, timeout=1200)
+    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200)
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
@@ -939,7 +959,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         healed = False
         for heal_attempt in range(MAX_HEAL_ATTEMPTS):
             logger.info("Self-heal attempt %d/%d", heal_attempt + 1, MAX_HEAL_ATTEMPTS)
-            heal_ok, heal_output = run_claude(heal_prompt, max_turns=30, timeout=600)
+            heal_ok, heal_output = run_agent(heal_prompt, max_turns=30, timeout=600)
             if not heal_ok:
                 logger.error("Claude failed during self-heal: %s", heal_output[:200])
                 break
@@ -992,7 +1012,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     )
 
     # Run Claude Code
-    success, output = run_claude(prompt, max_turns=50, timeout=1200)
+    success, output = run_agent(prompt, max_turns=50, timeout=1200)
 
     if not success:
         logger.error("Claude failed: %s", output[:200])
@@ -1033,7 +1053,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             f"Do NOT modify scripts/research_conductor.py."
         )
         logger.info("Asking Claude to fix test failures...")
-        fix_ok, fix_output = run_claude(fix_prompt, max_turns=30, timeout=600)
+        fix_ok, fix_output = run_agent(fix_prompt, max_turns=30, timeout=600)
         if not fix_ok:
             logger.error("Claude failed to fix tests")
             break
@@ -1072,7 +1092,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         f"5. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml\n"
         f"6. Keep changes minimal — just the doc updates for this experiment.\n"
     )
-    recon_ok, recon_output = run_claude(reconcile_prompt, max_turns=15, timeout=300)
+    recon_ok, recon_output = run_agent(reconcile_prompt, max_turns=15, timeout=300)
     if recon_ok and git_has_changes():
         # Guard protected files
         for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
@@ -1107,9 +1127,10 @@ def main() -> int:
 
     print("=" * 60)
     print("  Carnot Research Conductor")
-    print("  Autonomous research via Claude Code")
+    print(f"  Autonomous research via {AGENT_TYPE.capitalize()}")
     print("=" * 60)
-    print(f"  Claude: {CLAUDE_BIN}")
+    print(f"  Agent: {AGENT_TYPE} ({AGENT_BIN})")
+    print(f"  Model: {AGENT_MODEL}")
     print(f"  Project: {PROJECT_ROOT}")
     if args.loop:
         print(f"  Mode: continuous (every {args.interval} min)")

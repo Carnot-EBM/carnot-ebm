@@ -2,12 +2,13 @@
 
 # ─── Infrastructure ───────────────────────────────────────────────
 
-## Start all long-running services (Claude API bridge + WebGPU gateway)
+## Start all long-running services (Claude/Gemini API bridge + WebGPU gateway)
 up:
 	docker compose up -d
 	@echo ""
 	@echo "Services started:"
 	@echo "  Claude API Bridge:  http://localhost:$${BRIDGE_PORT:-8080}/v1/models"
+	@echo "  Gemini API Bridge:  http://localhost:$${GEMINI_BRIDGE_PORT:-8081}/v1/models"
 	@echo "  WebGPU Gateway:     http://localhost:$${GATEWAY_PORT:-3000}/"
 	@echo ""
 	@echo "Check status: make status"
@@ -24,6 +25,8 @@ logs:
 status:
 	@echo "=== Claude API Bridge ==="
 	@curl -sf http://localhost:$${BRIDGE_PORT:-8080}/health 2>/dev/null && echo " OK" || echo " DOWN"
+	@echo "=== Gemini API Bridge ==="
+	@curl -sf http://localhost:$${GEMINI_BRIDGE_PORT:-8081}/health 2>/dev/null && echo " OK" || echo " DOWN"
 	@echo "=== WebGPU Gateway ==="
 	@curl -sf http://localhost:$${GATEWAY_PORT:-3000}/health 2>/dev/null && echo " OK" || echo " DOWN"
 	@echo "=== Workers ==="
