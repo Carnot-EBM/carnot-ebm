@@ -147,6 +147,7 @@ Every user instruction must be captured and traceable to outcomes:
 | Research history | `research-complete.yaml` |
 | Research program | `research-program.md` |
 | Research references | `research-references.md` |
+| Hardware wishlist | `research-hardware-wishlist.md` |
 | Research conductor | `scripts/research_conductor.py` |
 | Rust crates | `crates/carnot-*/` |
 | Python package | `python/carnot/` |
