@@ -21,6 +21,8 @@ try:
         RustHMCSampler,
         RustIsingModel,
         RustLangevinSampler,
+        RustVerificationResult,
+        RustVerifyPipeline,
     )
 
     RUST_AVAILABLE = True
@@ -31,6 +33,8 @@ except ImportError:
     RustBoltzmannModel = None  # type: ignore[assignment,misc]
     RustLangevinSampler = None  # type: ignore[assignment,misc]
     RustHMCSampler = None  # type: ignore[assignment,misc]
+    RustVerifyPipeline = None  # type: ignore[assignment,misc]
+    RustVerificationResult = None  # type: ignore[assignment,misc]
 
 __all__ = [
     "RUST_AVAILABLE",
@@ -39,4 +43,6 @@ __all__ = [
     "RustHMCSampler",
     "RustIsingModel",
     "RustLangevinSampler",
+    "RustVerificationResult",
+    "RustVerifyPipeline",
 ]

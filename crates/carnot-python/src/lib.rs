@@ -8,6 +8,8 @@
 use numpy::{PyArray1, PyReadonlyArray1, PyReadonlyArray2};
 use pyo3::prelude::*;
 
+mod pipeline;
+
 use carnot_boltzmann::{BoltzmannConfig, BoltzmannModel};
 use carnot_core::{EnergyFunction, Float};
 use carnot_gibbs::{Activation, GibbsConfig, GibbsModel};
@@ -352,6 +354,9 @@ fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     // Samplers
     m.add_class::<PyLangevinSampler>()?;
     m.add_class::<PyHmcSampler>()?;
+
+    // Pipeline (verification)
+    pipeline::register_pipeline_module(m)?;
 
     Ok(())
 }
