@@ -126,3 +126,6 @@
 | 2026-04-10 06:20 UTC | Exp 104: Energy-guided token sampling prototype | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
  |
 | 2026-04-10 06:21 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 06:23 UTC | Exp 103: KAN energy tier prototype | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 06:24 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
