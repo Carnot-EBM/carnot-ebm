@@ -227,6 +227,7 @@
 | 88 | **Failure-driven constraint mining** | 93% false negative rate; implicit_logic (74), comparison (40), arithmetic_chain (23) top gaps; 6 suggested patterns, est. 75% coverage improvement | **✅ Actionable gap analysis** |
 | 89 | **Self-bootstrapped constraint training** | 0.788 combined AUROC; arithmetic/logic 1.0, code 0.91, factual 0.55, scheduling 0.52; 96.7% pipeline concordance | **✅ Self-supervised Ising from pipeline outputs** |
 | 91 | **GSM8K live benchmark (Qwen3.5 + Gemma4)** | Qwen3.5: 65→80% (+15%), Gemma4: 74.5→88.5% (+14%); 100% precision, 0 false positives | **✅ Cross-model GSM8K benchmark** |
+| 93 | **Multi-model systematic comparison** | 250 questions × 2 models × 3 modes = 1500 evals; +10.2% avg improvement (p<0.001); scheduling +30%, code +14%, arithmetic +7% | **✅ Definitive "does Carnot help?" benchmark** |
 
 ## 14 Principles Learned
 
