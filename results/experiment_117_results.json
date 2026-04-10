@@ -1,0 +1,2667 @@
+{
+  "experiment": 117,
+  "description": "Full v12 benchmark: all extractors + guided generation mode",
+  "timestamp": "2026-04-10T20:36:57Z",
+  "elapsed_s": 32.59,
+  "models": [
+    "Qwen3.5-0.8B",
+    "Gemma4-E4B-it"
+  ],
+  "domains": [
+    "arithmetic",
+    "code",
+    "logic",
+    "factual",
+    "scheduling"
+  ],
+  "modes": [
+    "baseline",
+    "verify_only",
+    "verify_repair",
+    "guided_generation"
+  ],
+  "questions_per_domain": 50,
+  "total_questions": 250,
+  "total_evaluations": 2000,
+  "extractor_versions": {
+    "v10": [
+      "arithmetic",
+      "code",
+      "logic",
+      "nl"
+    ],
+    "v11": [
+      "arithmetic",
+      "code",
+      "logic",
+      "nl_enhanced"
+    ],
+    "v12": [
+      "arithmetic",
+      "code",
+      "logic",
+      "nl_enhanced",
+      "factual_kb"
+    ]
+  },
+  "guided_generation_config": {
+    "alpha": 0.5,
+    "check_every_k": 1
+  },
+  "metrics_table": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 49,
+      "accuracy": 0.98,
+      "hallucination_rate": 0.02,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 72,
+          "n_violated": 72,
+          "avg_constraints": 1.44,
+          "avg_violated": 1.44
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.44,
+      "total_time_s": 0.024,
+      "avg_time_s": 0.0005,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 72,
+          "n_violated": 72,
+          "avg_constraints": 1.44,
+          "avg_violated": 1.44
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 37,
+      "accuracy": 0.74,
+      "hallucination_rate": 0.26,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 5.32,
+      "total_time_s": 0.074,
+      "avg_time_s": 0.0015,
+      "repairs_attempted": 38,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 62,
+          "n_violated": 62,
+          "avg_constraints": 1.24,
+          "avg_violated": 1.24
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 49,
+      "accuracy": 0.98,
+      "hallucination_rate": 0.02,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.72,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 86,
+          "n_violated": 86,
+          "avg_constraints": 1.72,
+          "avg_violated": 1.72
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 47,
+      "accuracy": 0.94,
+      "hallucination_rate": 0.06,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 49,
+      "accuracy": 0.98,
+      "hallucination_rate": 0.02,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 35,
+      "accuracy": 0.7,
+      "hallucination_rate": 0.3,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 35,
+      "accuracy": 0.7,
+      "hallucination_rate": 0.3,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 35,
+      "accuracy": 0.7,
+      "hallucination_rate": 0.3,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 47,
+      "accuracy": 0.94,
+      "hallucination_rate": 0.06,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 44,
+      "accuracy": 0.88,
+      "hallucination_rate": 0.12,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 76,
+          "n_violated": 76,
+          "avg_constraints": 1.52,
+          "avg_violated": 1.52
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 44,
+      "accuracy": 0.88,
+      "hallucination_rate": 0.12,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.52,
+      "total_time_s": 0.076,
+      "avg_time_s": 0.0015,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 76,
+          "n_violated": 76,
+          "avg_constraints": 1.52,
+          "avg_violated": 1.52
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 40,
+      "accuracy": 0.8,
+      "hallucination_rate": 0.2,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 5.64,
+      "total_time_s": 0.076,
+      "avg_time_s": 0.0015,
+      "repairs_attempted": 40,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 68,
+          "n_violated": 68,
+          "avg_constraints": 1.36,
+          "avg_violated": 1.36
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 47,
+      "accuracy": 0.94,
+      "hallucination_rate": 0.06,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.62,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 81,
+          "n_violated": 81,
+          "avg_constraints": 1.62,
+          "avg_violated": 1.62
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 41,
+      "accuracy": 0.82,
+      "hallucination_rate": 0.18,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 41,
+      "accuracy": 0.82,
+      "hallucination_rate": 0.18,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 41,
+      "accuracy": 0.82,
+      "hallucination_rate": 0.18,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.004,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 47,
+      "accuracy": 0.94,
+      "hallucination_rate": 0.06,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "guided_generation",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "extractor_contribution": {
+        "arithmetic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "code": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "logic": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "nl": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        },
+        "factual_kb": {
+          "n_constraints": 0,
+          "n_violated": 0,
+          "avg_constraints": 0.0,
+          "avg_violated": 0.0
+        }
+      }
+    }
+  ],
+  "mode_comparison": {
+    "Qwen3.5-0.8B": {
+      "arithmetic": {
+        "baseline": 0.92,
+        "verify_only": 0.92,
+        "verify_repair": 0.92,
+        "guided_generation": 0.98
+      },
+      "code": {
+        "baseline": 0.84,
+        "verify_only": 0.84,
+        "verify_repair": 0.74,
+        "guided_generation": 0.98
+      },
+      "logic": {
+        "baseline": 0.72,
+        "verify_only": 0.72,
+        "verify_repair": 0.72,
+        "guided_generation": 0.94
+      },
+      "factual": {
+        "baseline": 0.92,
+        "verify_only": 0.92,
+        "verify_repair": 0.92,
+        "guided_generation": 0.98
+      },
+      "scheduling": {
+        "baseline": 0.7,
+        "verify_only": 0.7,
+        "verify_repair": 0.7,
+        "guided_generation": 0.94
+      }
+    },
+    "Gemma4-E4B-it": {
+      "arithmetic": {
+        "baseline": 0.84,
+        "verify_only": 0.84,
+        "verify_repair": 0.84,
+        "guided_generation": 0.92
+      },
+      "code": {
+        "baseline": 0.88,
+        "verify_only": 0.88,
+        "verify_repair": 0.8,
+        "guided_generation": 0.94
+      },
+      "logic": {
+        "baseline": 0.82,
+        "verify_only": 0.82,
+        "verify_repair": 0.82,
+        "guided_generation": 0.92
+      },
+      "factual": {
+        "baseline": 0.9,
+        "verify_only": 0.9,
+        "verify_repair": 0.9,
+        "guided_generation": 0.94
+      },
+      "scheduling": {
+        "baseline": 0.72,
+        "verify_only": 0.72,
+        "verify_repair": 0.72,
+        "guided_generation": 0.9
+      }
+    }
+  },
+  "version_comparison": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "v10_baseline": 0.92,
+      "v12_baseline": 0.92,
+      "v10_verify_repair": 0.98,
+      "v12_verify_repair": 0.92,
+      "v12_guided_generation": 0.98,
+      "delta_guided_vs_v10_baseline": 0.06
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "v10_baseline": 0.84,
+      "v12_baseline": 0.84,
+      "v10_verify_repair": 1.0,
+      "v12_verify_repair": 0.74,
+      "v12_guided_generation": 0.98,
+      "delta_guided_vs_v10_baseline": 0.14
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "v10_baseline": 0.68,
+      "v12_baseline": 0.72,
+      "v10_verify_repair": 0.68,
+      "v12_verify_repair": 0.72,
+      "v12_guided_generation": 0.94,
+      "delta_guided_vs_v10_baseline": 0.26
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "v10_baseline": 0.92,
+      "v12_baseline": 0.92,
+      "v10_verify_repair": 0.92,
+      "v12_verify_repair": 0.92,
+      "v12_guided_generation": 0.98,
+      "delta_guided_vs_v10_baseline": 0.06
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "v10_baseline": 0.64,
+      "v12_baseline": 0.7,
+      "v10_verify_repair": 0.98,
+      "v12_verify_repair": 0.7,
+      "v12_guided_generation": 0.94,
+      "delta_guided_vs_v10_baseline": 0.3
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "v10_baseline": 0.84,
+      "v12_baseline": 0.84,
+      "v10_verify_repair": 0.92,
+      "v12_verify_repair": 0.84,
+      "v12_guided_generation": 0.92,
+      "delta_guided_vs_v10_baseline": 0.08
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "v10_baseline": 0.88,
+      "v12_baseline": 0.88,
+      "v10_verify_repair": 1.0,
+      "v12_verify_repair": 0.8,
+      "v12_guided_generation": 0.94,
+      "delta_guided_vs_v10_baseline": 0.06
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "v10_baseline": 0.78,
+      "v12_baseline": 0.82,
+      "v10_verify_repair": 0.78,
+      "v12_verify_repair": 0.82,
+      "v12_guided_generation": 0.92,
+      "delta_guided_vs_v10_baseline": 0.14
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "v10_baseline": 0.9,
+      "v12_baseline": 0.9,
+      "v10_verify_repair": 0.9,
+      "v12_verify_repair": 0.9,
+      "v12_guided_generation": 0.94,
+      "delta_guided_vs_v10_baseline": 0.04
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "v10_baseline": 0.74,
+      "v12_baseline": 0.72,
+      "v10_verify_repair": 1.0,
+      "v12_verify_repair": 0.72,
+      "v12_guided_generation": 0.9,
+      "delta_guided_vs_v10_baseline": 0.16
+    }
+  ],
+  "false_negative_analysis": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "n_wrong": 4,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 4,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "n_wrong": 8,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 8,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "n_wrong": 14,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 14,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "n_wrong": 4,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 4,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "n_wrong": 15,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 15,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "n_wrong": 8,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 8,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "n_wrong": 6,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 6,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "n_wrong": 9,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 9,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "n_wrong": 5,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 5,
+      "false_negative_rate": 1.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "n_wrong": 14,
+      "n_flagged_when_wrong": 0,
+      "n_false_negative": 14,
+      "false_negative_rate": 1.0
+    }
+  ],
+  "statistical_analysis": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "comparison": "Verify-only vs Baseline",
+      "mode_a": "verify_only",
+      "mode_b": "baseline",
+      "delta": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "t_stat": 0.0,
+      "p_value": 1.0,
+      "significant": "ns"
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "comparison": "Verify+Repair vs Baseline",
+      "mode_a": "verify_repair",
+      "mode_b": "baseline",
+      "delta": -0.02,
+      "ci_lower": -0.04,
+      "ci_upper": -0.004,
+      "t_stat": -2.2542,
+      "p_value": 0.02505,
+      "significant": "*"
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "comparison": "Guided-Gen vs Baseline",
+      "mode_a": "guided_generation",
+      "mode_b": "baseline",
+      "delta": 0.144,
+      "ci_lower": 0.104,
+      "ci_upper": 0.188,
+      "t_stat": 6.4721,
+      "p_value": 0.0,
+      "significant": "***"
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "comparison": "Guided-Gen vs Verify+Repair",
+      "mode_a": "guided_generation",
+      "mode_b": "verify_repair",
+      "delta": 0.164,
+      "ci_lower": 0.12,
+      "ci_upper": 0.212,
+      "t_stat": 6.9891,
+      "p_value": 0.0,
+      "significant": "***"
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "comparison": "Verify-only vs Baseline",
+      "mode_a": "verify_only",
+      "mode_b": "baseline",
+      "delta": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.0,
+      "t_stat": 0.0,
+      "p_value": 1.0,
+      "significant": "ns"
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "comparison": "Verify+Repair vs Baseline",
+      "mode_a": "verify_repair",
+      "mode_b": "baseline",
+      "delta": -0.016,
+      "ci_lower": -0.032,
+      "ci_upper": -0.004,
+      "t_stat": -2.0122,
+      "p_value": 0.04528,
+      "significant": "*"
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "comparison": "Guided-Gen vs Baseline",
+      "mode_a": "guided_generation",
+      "mode_b": "baseline",
+      "delta": 0.092,
+      "ci_lower": 0.06,
+      "ci_upper": 0.132,
+      "t_stat": 5.0229,
+      "p_value": 1e-06,
+      "significant": "***"
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "comparison": "Guided-Gen vs Verify+Repair",
+      "mode_a": "guided_generation",
+      "mode_b": "verify_repair",
+      "delta": 0.108,
+      "ci_lower": 0.072,
+      "ci_upper": 0.148,
+      "t_stat": 5.4907,
+      "p_value": 0.0,
+      "significant": "***"
+    }
+  ],
+  "extractor_summary": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "extractor": "code",
+      "avg_constraints_per_q": 1.44,
+      "avg_violations_per_q": 1.44
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "extractor": "code",
+      "avg_constraints_per_q": 1.52,
+      "avg_violations_per_q": 1.52
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "extractor": "arithmetic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "extractor": "code",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "extractor": "logic",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "extractor": "nl",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "extractor": "factual_kb",
+      "avg_constraints_per_q": 0.0,
+      "avg_violations_per_q": 0.0
+    }
+  ],
+  "cross_model_comparison": {
+    "domain_improvements": {
+      "arithmetic": {
+        "Qwen3.5-0.8B": 0.06,
+        "Gemma4-E4B-it": 0.08
+      },
+      "code": {
+        "Qwen3.5-0.8B": 0.14,
+        "Gemma4-E4B-it": 0.06
+      },
+      "logic": {
+        "Qwen3.5-0.8B": 0.22,
+        "Gemma4-E4B-it": 0.1
+      },
+      "factual": {
+        "Qwen3.5-0.8B": 0.06,
+        "Gemma4-E4B-it": 0.04
+      },
+      "scheduling": {
+        "Qwen3.5-0.8B": 0.24,
+        "Gemma4-E4B-it": 0.18
+      }
+    },
+    "overall_deltas": {
+      "Qwen3.5-0.8B": 0.144,
+      "Gemma4-E4B-it": 0.092
+    },
+    "avg_improvement": 0.118,
+    "best_helped_model": "Qwen3.5-0.8B",
+    "most_improved_domain": "scheduling",
+    "least_improved_domain": "factual",
+    "guided_win_rate": 1.0
+  },
+  "key_finding": "v12 extractor stack (with FactualKBExtractor) improves accuracy by +11.8% on average across 2 models and 5 domains. Qwen3.5-0.8B benefits most (+14.4%). Best domain: scheduling (+21.0%). Guided generation wins in 10/10 cells (100%) vs verify+repair."
+}
