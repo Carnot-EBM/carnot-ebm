@@ -114,8 +114,21 @@ production goals. Updated as new needs emerge from experiments.
 |-----------|-------|--------|-----------|
 | CPU | AMD Ryzen AI 9 HX 370 | Working | All experiments, CPU inference |
 | iGPU | Radeon 890M (gfx1150) | Broken for JAX | PyTorch only (3.3x speedup) |
+| **eGPU** | **Radeon RX 7900 XTX (24GB)** | **AVAILABLE** | **Needs Thunderbolt chassis connection** |
+| eGPU chassis | Thunderbolt external | **AVAILABLE** | Connect RX 7900 XTX to laptop |
 | NPU | AMD XDNA | Unused | Needs driver/SDK setup |
 | RAM | DDR5 (TBD size) | Working | Constrains model size |
+
+### ACTION: Connect RX 7900 XTX via Thunderbolt
+**Priority: IMMEDIATE — unblocks Goals #1, #5, #6 and all live benchmarks**
+1. Connect Thunderbolt chassis with RX 7900 XTX
+2. Verify ROCm detects gfx1100: `rocminfo | grep gfx`
+3. Test PyTorch: `python -c "import torch; print(torch.cuda.get_device_name(0))"`
+4. Test JAX on GPU: `python -c "import jax; print(jax.devices())"`
+   (gfx1100 should work — unlike gfx1150 which crashes)
+5. If JAX works: remove JAX_PLATFORMS=cpu requirement for experiments
+6. Benchmark: Qwen3.5-0.8B inference speed on eGPU vs CPU
+7. Update research-program.md constraints if GPU works
 
 ## Shopping List (Priority Order)
 
@@ -124,6 +137,6 @@ production goals. Updated as new needs emerge from experiments.
 | AMD XDNA NPU SDK install | $0 | Medium | Tier 3 self-learning, edge deployment |
 | Kria KV260 FPGA | $250 | High | TSU path, FPGA sampling prototype |
 | 128GB DDR5 RAM | $300 | Medium | Larger models, batch benchmarks |
-| RX 7900 XTX GPU | $900 | Very High | Live inference, all benchmarks |
+| ~~RX 7900 XTX GPU~~ | ~~$900~~ | ~~Very High~~ | **ALREADY OWNED — connect via Thunderbolt** |
 | Alveo U250 FPGA | $6,000 | Very High | Production-scale Ising, 256k p-bits |
 | Extropic Z1 TSU | TBD | Transformative | Native thermodynamic sampling |
