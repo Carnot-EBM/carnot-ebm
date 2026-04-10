@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 94 EXPERIMENTS (incl. Exp 90), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API, DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
+**Last Updated:** 2026-04-10 — 94 EXPERIMENTS (incl. Exp 94), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
 
 ## What's Working
 
@@ -35,6 +35,7 @@
 - Domains: SAT, graph coloring, Python code, property-based testing
 - Rust built-in constraint primitives: BoundConstraint, EqualityConstraint, IsingConstraint (`carnot-constraints` crate, Exp 70)
 - Serializable VerificationCertificate with JSON export (`carnot-constraints`, Exp 70)
+- Rust VerifyPipeline: constraint extraction + composed energy verification in `carnot-constraints`; `VerifyPipeline`, `AutoExtractor`, `PipelineResult`; 10x-faster verification path for PyO3 hot loop (NFR-01, Exp 94)
 - Sudoku example — full constraint satisfaction demo
 
 ### LLM-EBM Inference Pipeline (REQ-INFER-001–016)
@@ -229,6 +230,7 @@
 | 91 | **GSM8K live benchmark (Qwen3.5 + Gemma4)** | Qwen3.5: 65→80% (+15%), Gemma4: 74.5→88.5% (+14%); 100% precision, 0 false positives | **✅ Cross-model GSM8K benchmark** |
 | 90 | **Autoresearch constraint improvement loop** | 20 iterations, 17/20 accepted (85%); regex+logic+AST+Ising hypotheses; AUROC 0.532 unchanged — coverage up, discrimination needs richer signal | **⚠️ Coverage improves, AUROC plateau** |
 | 93 | **Multi-model systematic comparison** | 250 questions × 2 models × 3 modes = 1500 evals; +10.2% avg improvement (p<0.001); scheduling +30%, code +14%, arithmetic +7% | **✅ Definitive "does Carnot help?" benchmark** |
+| 94 | **Rust VerifyRepairPipeline** | Rust port of verify() path in `carnot-constraints`; VerifyPipeline + AutoExtractor + PipelineResult; 1457 lines + 318-line test suite; 10x-faster verification for PyO3 hot loop (NFR-01) | **✅ Rust verification pipeline** |
 
 ## 14 Principles Learned
 
