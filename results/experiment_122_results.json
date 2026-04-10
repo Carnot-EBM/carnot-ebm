@@ -1,0 +1,451 @@
+{
+  "experiment": 122,
+  "description": "Adversarial Error Analysis: WHY Carnot succeeds \u2014 error taxonomy, detection rates per error type, energy-prediction ROC curve, and irrelevant-sentence extraction robustness",
+  "n_models": 2,
+  "n_variants": 4,
+  "n_items_per_variant": 200,
+  "n_total_per_item_records": 1600,
+  "model_summary": {
+    "Qwen3.5-0.8B": {
+      "n_items": 800,
+      "n_correct": 436,
+      "n_repair_triggered": 132,
+      "n_repair_correct": 557
+    },
+    "Gemma4-E4B-it": {
+      "n_items": 800,
+      "n_correct": 455,
+      "n_repair_triggered": 119,
+      "n_repair_correct": 566
+    }
+  },
+  "analysis_1_error_taxonomy": {
+    "control": {
+      "variant_label": "Control (standard)",
+      "n_items": 400,
+      "n_correct": 294,
+      "n_errors": 106,
+      "accuracy": 0.735,
+      "accuracy_pct": 73.5,
+      "error_counts": {
+        "arithmetic_error": 47,
+        "irrelevant_number_error": 0,
+        "logic_error": 16,
+        "keyword_triggered": 35,
+        "reading_comprehension_error": 8
+      },
+      "error_fractions": {
+        "arithmetic_error": 0.4434,
+        "irrelevant_number_error": 0.0,
+        "logic_error": 0.1509,
+        "keyword_triggered": 0.3302,
+        "reading_comprehension_error": 0.0755
+      },
+      "arithmetic_fraction_of_errors": 0.4434,
+      "ising_uncatchable_fraction": 0.4811
+    },
+    "number_swapped": {
+      "variant_label": "Number-swapped",
+      "n_items": 400,
+      "n_correct": 198,
+      "n_errors": 202,
+      "accuracy": 0.495,
+      "accuracy_pct": 49.5,
+      "error_counts": {
+        "arithmetic_error": 106,
+        "irrelevant_number_error": 0,
+        "logic_error": 29,
+        "keyword_triggered": 56,
+        "reading_comprehension_error": 11
+      },
+      "error_fractions": {
+        "arithmetic_error": 0.5248,
+        "irrelevant_number_error": 0.0,
+        "logic_error": 0.1436,
+        "keyword_triggered": 0.2772,
+        "reading_comprehension_error": 0.0545
+      },
+      "arithmetic_fraction_of_errors": 0.5248,
+      "ising_uncatchable_fraction": 0.4208
+    },
+    "irrelevant_injected": {
+      "variant_label": "Irrelevant-injected",
+      "n_items": 400,
+      "n_correct": 235,
+      "n_errors": 165,
+      "accuracy": 0.5875,
+      "accuracy_pct": 58.75,
+      "error_counts": {
+        "arithmetic_error": 43,
+        "irrelevant_number_error": 6,
+        "logic_error": 34,
+        "keyword_triggered": 65,
+        "reading_comprehension_error": 17
+      },
+      "error_fractions": {
+        "arithmetic_error": 0.2606,
+        "irrelevant_number_error": 0.0364,
+        "logic_error": 0.2061,
+        "keyword_triggered": 0.3939,
+        "reading_comprehension_error": 0.103
+      },
+      "arithmetic_fraction_of_errors": 0.2606,
+      "ising_uncatchable_fraction": 0.6364
+    },
+    "combined": {
+      "variant_label": "Combined adversarial",
+      "n_items": 400,
+      "n_correct": 164,
+      "n_errors": 236,
+      "accuracy": 0.41,
+      "accuracy_pct": 41.0,
+      "error_counts": {
+        "arithmetic_error": 39,
+        "irrelevant_number_error": 36,
+        "logic_error": 36,
+        "keyword_triggered": 111,
+        "reading_comprehension_error": 14
+      },
+      "error_fractions": {
+        "arithmetic_error": 0.1653,
+        "irrelevant_number_error": 0.1525,
+        "logic_error": 0.1525,
+        "keyword_triggered": 0.4703,
+        "reading_comprehension_error": 0.0593
+      },
+      "arithmetic_fraction_of_errors": 0.1653,
+      "ising_uncatchable_fraction": 0.7753
+    }
+  },
+  "analysis_2_carnot_detection": {
+    "arithmetic_error": {
+      "n_instances": 235,
+      "n_detected_by_ising": 235,
+      "detection_rate": 1.0,
+      "detection_rate_pct": 100.0,
+      "n_repaired_after_detection": 232,
+      "repair_rate_given_detected": 0.9872,
+      "repair_rate_given_detected_pct": 98.72,
+      "overall_fix_rate": 0.9872,
+      "overall_fix_rate_pct": 98.72,
+      "avg_ising_energy": 0.0,
+      "avg_n_constraints_extracted": 1.0,
+      "is_catchable_by_ising": true,
+      "structural_ceiling": "catchable"
+    },
+    "irrelevant_number_error": {
+      "n_instances": 42,
+      "n_detected_by_ising": 16,
+      "detection_rate": 0.381,
+      "detection_rate_pct": 38.1,
+      "n_repaired_after_detection": 0,
+      "repair_rate_given_detected": 0.0,
+      "repair_rate_given_detected_pct": 0.0,
+      "overall_fix_rate": 0.0,
+      "overall_fix_rate_pct": 0.0,
+      "avg_ising_energy": 0.0,
+      "avg_n_constraints_extracted": 0.381,
+      "is_catchable_by_ising": false,
+      "structural_ceiling": "uncatchable \u2014 Ising correctly scoped to arithmetic only"
+    },
+    "logic_error": {
+      "n_instances": 115,
+      "n_detected_by_ising": 0,
+      "detection_rate": 0.0,
+      "detection_rate_pct": 0.0,
+      "n_repaired_after_detection": 0,
+      "repair_rate_given_detected": 0.0,
+      "repair_rate_given_detected_pct": 0.0,
+      "overall_fix_rate": 0.0,
+      "overall_fix_rate_pct": 0.0,
+      "avg_ising_energy": 0.0,
+      "avg_n_constraints_extracted": 0.0,
+      "is_catchable_by_ising": false,
+      "structural_ceiling": "uncatchable \u2014 Ising correctly scoped to arithmetic only"
+    },
+    "keyword_triggered": {
+      "n_instances": 267,
+      "n_detected_by_ising": 0,
+      "detection_rate": 0.0,
+      "detection_rate_pct": 0.0,
+      "n_repaired_after_detection": 0,
+      "repair_rate_given_detected": 0.0,
+      "repair_rate_given_detected_pct": 0.0,
+      "overall_fix_rate": 0.0,
+      "overall_fix_rate_pct": 0.0,
+      "avg_ising_energy": 0.0,
+      "avg_n_constraints_extracted": 0.0,
+      "is_catchable_by_ising": false,
+      "structural_ceiling": "uncatchable \u2014 Ising correctly scoped to arithmetic only"
+    },
+    "reading_comprehension_error": {
+      "n_instances": 50,
+      "n_detected_by_ising": 0,
+      "detection_rate": 0.0,
+      "detection_rate_pct": 0.0,
+      "n_repaired_after_detection": 0,
+      "repair_rate_given_detected": 0.0,
+      "repair_rate_given_detected_pct": 0.0,
+      "overall_fix_rate": 0.0,
+      "overall_fix_rate_pct": 0.0,
+      "avg_ising_energy": 0.0,
+      "avg_n_constraints_extracted": 0.0,
+      "is_catchable_by_ising": false,
+      "structural_ceiling": "uncatchable \u2014 Ising correctly scoped to arithmetic only"
+    },
+    "_summary": {
+      "n_total_errors": 709,
+      "n_structurally_catchable": 235,
+      "n_structurally_uncatchable": 474,
+      "catchable_fraction": 0.3315,
+      "uncatchable_fraction": 0.6685,
+      "interpretation": "66.9% of LLM errors are structurally uncatchable by arithmetic constraint verification. These require semantic understanding (e.g., which numbers are relevant) that is beyond Ising's scope."
+    }
+  },
+  "analysis_3_energy_prediction_roc": {
+    "overall": {
+      "roc_n_violations": {
+        "auc": 0.677,
+        "n_positive": 709,
+        "n_negative": 891,
+        "fpr_list": [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "tpr_list": [
+          1.0,
+          1.0,
+          0.354,
+          0.0
+        ],
+        "thresholds": [
+          0.0,
+          0.0,
+          1.0,
+          2.0
+        ],
+        "optimal_threshold": 1.0,
+        "optimal_tpr": 0.354,
+        "optimal_fpr": 0.0,
+        "optimal_precision": 1.0,
+        "optimal_recall": 0.354,
+        "youden_j": 0.354,
+        "interpretation": "AUC=0.677: energy is a moderate predictor of failure (useful but imperfect triage)",
+        "predictor": "n_violations (integer violation count)"
+      },
+      "roc_ising_energy": {
+        "auc": 0.5,
+        "n_positive": 709,
+        "n_negative": 891,
+        "fpr_list": [
+          1.0,
+          1.0,
+          0.0
+        ],
+        "tpr_list": [
+          1.0,
+          1.0,
+          0.0
+        ],
+        "thresholds": [
+          0.0,
+          0.0,
+          1.0
+        ],
+        "optimal_threshold": 0.0,
+        "optimal_tpr": 1.0,
+        "optimal_fpr": 1.0,
+        "optimal_precision": 0.4431,
+        "optimal_recall": 1.0,
+        "youden_j": 0.0,
+        "interpretation": "AUC=0.500: energy is a weak predictor \u2014 catches arithmetic errors but misses logic errors",
+        "predictor": "ising_energy (normalized Hamiltonian)"
+      },
+      "primary_auc": 0.677,
+      "energy_adds_information": false,
+      "interpretation": "n_violations AUC=0.677 | ising_energy AUC=0.500. Continuous energy does not add discriminative power beyond binary flag \u2014 the binary violated/not-violated signal is the key Ising output."
+    },
+    "per_variant": {
+      "control": {
+        "auc": 0.7217,
+        "n_positive": 106,
+        "n_negative": 294,
+        "fpr_list": [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "tpr_list": [
+          1.0,
+          1.0,
+          0.4434,
+          0.0
+        ],
+        "thresholds": [
+          0.0,
+          0.0,
+          1.0,
+          2.0
+        ],
+        "optimal_threshold": 1.0,
+        "optimal_tpr": 0.4434,
+        "optimal_fpr": 0.0,
+        "optimal_precision": 1.0,
+        "optimal_recall": 0.4434,
+        "youden_j": 0.4434,
+        "interpretation": "AUC=0.722: energy is a moderate predictor of failure (useful but imperfect triage)",
+        "variant_label": "Control (standard)",
+        "auc_ising_energy": 0.5
+      },
+      "number_swapped": {
+        "auc": 0.7624,
+        "n_positive": 202,
+        "n_negative": 198,
+        "fpr_list": [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "tpr_list": [
+          1.0,
+          1.0,
+          0.5248,
+          0.0
+        ],
+        "thresholds": [
+          0.0,
+          0.0,
+          1.0,
+          2.0
+        ],
+        "optimal_threshold": 1.0,
+        "optimal_tpr": 0.5248,
+        "optimal_fpr": 0.0,
+        "optimal_precision": 1.0,
+        "optimal_recall": 0.5248,
+        "youden_j": 0.5248,
+        "interpretation": "AUC=0.762: energy is a moderate predictor of failure (useful but imperfect triage)",
+        "variant_label": "Number-swapped",
+        "auc_ising_energy": 0.5
+      },
+      "irrelevant_injected": {
+        "auc": 0.6333,
+        "n_positive": 165,
+        "n_negative": 235,
+        "fpr_list": [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "tpr_list": [
+          1.0,
+          1.0,
+          0.2667,
+          0.0
+        ],
+        "thresholds": [
+          0.0,
+          0.0,
+          1.0,
+          2.0
+        ],
+        "optimal_threshold": 1.0,
+        "optimal_tpr": 0.2667,
+        "optimal_fpr": 0.0,
+        "optimal_precision": 1.0,
+        "optimal_recall": 0.2667,
+        "youden_j": 0.2667,
+        "interpretation": "AUC=0.633: energy is a weak predictor \u2014 catches arithmetic errors but misses logic errors",
+        "variant_label": "Irrelevant-injected",
+        "auc_ising_energy": 0.5
+      },
+      "combined": {
+        "auc": 0.6144,
+        "n_positive": 236,
+        "n_negative": 164,
+        "fpr_list": [
+          1.0,
+          1.0,
+          0.0,
+          0.0
+        ],
+        "tpr_list": [
+          1.0,
+          1.0,
+          0.2288,
+          0.0
+        ],
+        "thresholds": [
+          0.0,
+          0.0,
+          1.0,
+          2.0
+        ],
+        "optimal_threshold": 1.0,
+        "optimal_tpr": 0.2288,
+        "optimal_fpr": 0.0,
+        "optimal_precision": 1.0,
+        "optimal_recall": 0.2288,
+        "youden_j": 0.2288,
+        "interpretation": "AUC=0.614: energy is a weak predictor \u2014 catches arithmetic errors but misses logic errors",
+        "variant_label": "Combined adversarial",
+        "auc_ising_energy": 0.5
+      }
+    },
+    "triage_analysis": {
+      "signal": "repair_triggered (= n_violations >= 1 = not ising_verified)",
+      "n_total": 1600,
+      "n_all_wrong": 709,
+      "n_flagged": 251,
+      "flag_rate_pct": 15.69,
+      "n_flagged_wrong": 251,
+      "n_flagged_correct": 0,
+      "precision": 1.0,
+      "recall": 0.354,
+      "interpretation": "Flagging answers where Ising found violations catches 35.4% of wrong answers (recall=0.354) with precision=1.0. Total flag rate: 15.7% of all answers."
+    }
+  },
+  "analysis_4_irrelevant_extraction": {
+    "n_injected_variant_items": 800,
+    "n_correct": 399,
+    "n_wrong": 401,
+    "correct_with_injected_number_in_response": 18,
+    "wrong_with_injected_number_in_response": 7,
+    "n_irrelevant_number_errors": 42,
+    "n_irrelevant_errors_ising_silent": 26,
+    "n_irrelevant_errors_ising_flagged": 16,
+    "ising_silence_rate_on_irrelevant_errors": 0.619,
+    "n_any_constraint_extracted": 497,
+    "constraint_coverage_pct": 62.12,
+    "per_variant": {
+      "irrelevant_injected": {
+        "n_total": 400,
+        "n_correct": 235,
+        "n_injected_in_response": 3,
+        "n_irrelevant_number_errors": 6,
+        "n_irrelevant_errors_ising_silent": 5,
+        "avg_energy_on_irrelevant_errors": 0.0
+      },
+      "combined": {
+        "n_total": 400,
+        "n_correct": 164,
+        "n_injected_in_response": 22,
+        "n_irrelevant_number_errors": 36,
+        "n_irrelevant_errors_ising_silent": 21,
+        "avg_energy_on_irrelevant_errors": 0.0
+      }
+    },
+    "interpretation": "Ising correctly finds no violations for 61.9% of irrelevant-number errors. The ArithmeticExtractor is robust: valid arithmetic using wrong semantic inputs is correctly passed (not flagged). FALSE POSITIVES DETECTED: 16 irrelevant-number errors were flagged \u2014 investigate."
+  },
+  "variant_keys": [
+    "control",
+    "number_swapped",
+    "irrelevant_injected",
+    "combined"
+  ]
+}

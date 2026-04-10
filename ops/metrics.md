@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 122 Adversarial Error Analysis
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T23:14:56Z | 2026-04-10T23:23:33Z | Create Exp 122 adversarial error analysis: error taxonomy, Carnot detection rates per type, energy-prediction ROC (n_violations AUC=0.677), irrelevant-number extraction robustness; results saved | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 120 Adversarial Baseline
 
 ### Turn Log
