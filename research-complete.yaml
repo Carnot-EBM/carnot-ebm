@@ -561,3 +561,53 @@ milestones:
     title: 'Exp 107: HuggingFace model card + Exp 66 joint model publish'
     deliverable: scripts/publish_constraint_model.py
     result: OK (conductor)
+- id: 2026.04.7
+  title: Production Energy-Guided Reasoning + Factual Grounding
+  doc: openspec/change-proposals/research-roadmap-v12.md
+  completed: '2026-04-10'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp108-kan-energy-function
+    title: 'Exp 108: KAN Energy Function Implementation'
+    deliverable: python/carnot/models/kan.py
+    result: OK (conductor)
+  - id: exp109-kan-comparison
+    title: 'Exp 109: KAN vs Ising vs Gibbs Comparison'
+    deliverable: scripts/experiment_109_kan_comparison.py
+    result: OK (conductor)
+  - id: exp110-guided-decoding
+    title: 'Exp 110: Guided Decoding Prototype Completion'
+    deliverable: python/carnot/inference/guided_decoding.py
+    result: OK (conductor)
+  - id: exp111-guided-production
+    title: 'Exp 111: Productionize Guided Decoding'
+    deliverable: python/carnot/pipeline/verify_repair.py
+    result: OK (conductor)
+  - id: exp112-embedding-bottleneck
+    title: 'Exp 112: Embedding Bottleneck Resolution'
+    deliverable: python/carnot/embeddings/fast_embedding.py
+    result: OK (conductor)
+  - id: exp113-factual-kb-extractor
+    title: 'Exp 113: Factual Knowledge Base Extractor v2'
+    deliverable: python/carnot/pipeline/knowledge_base.py
+    result: OK (conductor)
+  - id: exp114-websearch-fallback
+    title: 'Exp 114: WebSearch Fallback for Uncovered Claims'
+    deliverable: python/carnot/pipeline/extract.py
+    result: OK (conductor)
+  - id: exp115-truthfulqa-v12
+    title: 'Exp 115: TruthfulQA Benchmark with v12 Extractors'
+    deliverable: scripts/experiment_115_truthfulqa.py
+    result: OK (conductor)
+  - id: exp116-lnn-adaptive
+    title: 'Exp 116: LNN-Based Adaptive Constraint Model'
+    deliverable: python/carnot/models/lnn_constraint.py
+    result: OK (conductor)
+  - id: exp117-full-benchmark-v12
+    title: 'Exp 117: Full-Scale Multi-Model Benchmark with v12 Extractors'
+    deliverable: scripts/experiment_117_full_benchmark.py
+    result: OK (conductor)
+  - id: exp118-huggingface-publish
+    title: 'Exp 118: HuggingFace Publish v12 Artifacts'
+    deliverable: scripts/publish_v12_models.py
+    result: OK (conductor)
