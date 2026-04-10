@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-10 — 102 EXPERIMENTS (incl. Exp 102), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
+**Last Updated:** 2026-04-10 — 103 EXPERIMENTS (incl. Exp 101, 102), 14 PRINCIPLES, 16 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement)
 
 ## What's Working
 
@@ -231,6 +231,7 @@
 | 90 | **Autoresearch constraint improvement loop** | 20 iterations, 17/20 accepted (85%); regex+logic+AST+Ising hypotheses; AUROC 0.532 unchanged — coverage up, discrimination needs richer signal | **⚠️ Coverage improves, AUROC plateau** |
 | 93 | **Multi-model systematic comparison** | 250 questions × 2 models × 3 modes = 1500 evals; +10.2% avg improvement (p<0.001); scheduling +30%, code +14%, arithmetic +7% | **✅ Definitive "does Carnot help?" benchmark** |
 | 94 | **Rust VerifyRepairPipeline** | Rust port of verify() path in `carnot-constraints`; VerifyPipeline + AutoExtractor + PipelineResult; 1457 lines + 318-line test suite; 10x-faster verification for PyO3 hot loop (NFR-01) | **✅ Rust verification pipeline** |
+| 101 | **Agent workflow verification E2E** | 60% detection, 67% more than final-only, math 80%, code 100% | **⚠️ Agentic chain helps, but research domain undetected** |
 | 102 | **Constraint check latency microbenchmark** | Full pipeline profiling: JIT forward 0.008ms (per-token viable), extraction 0.04–2.6ms linear scaling, MiniLM bottleneck 7.6ms; JAX JIT 55x faster than Python verify | **✅ Guided decoding confirmed viable** |
 
 ## 14 Principles Learned
