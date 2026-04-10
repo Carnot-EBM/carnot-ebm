@@ -1148,3 +1148,5 @@
 | 2026-04-10 22:17 UTC | Exp 120: LLM baseline on adversarial GSM8K | OK | =========== 1787 passed, 1 skipped, 12 warnings in 131.94s (0:02:11) =========== |
 | 2026-04-10 22:46 UTC | Exp 121: Carnot verify-repair on adversarial GSM8K | FAIL | Claude Code error:  |
 | 2026-04-10 22:47 UTC | Exp 121: Carnot verify-repair on adversarial GSM8K | OK | Deliverable already exists in repo |
+| 2026-04-10 23:11 UTC | Exp 124: Full GSM8K (1319) with live inference | FAIL | Claude Code error:  |
+| 2026-04-10 23:12 UTC | Exp 124: Full GSM8K (1319) with live inference | OK | Deliverable already exists in repo |
