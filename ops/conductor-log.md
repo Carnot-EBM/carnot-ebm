@@ -1145,3 +1145,4 @@
 | 2026-04-10 20:11 UTC | Exp 116: LNN-Based Adaptive Constraint Model | REVERT | Post-tests failed:  |
 | 2026-04-10 21:08 UTC | Exp 119: Apple adversarial GSM8K variant generator | OK | =========== 1752 passed, 1 skipped, 12 warnings in 133.77s (0:02:13) =========== |
 | 2026-04-10 21:55 UTC | Exp 123: Robust model loading for experiments | OK | =========== 1787 passed, 1 skipped, 12 warnings in 145.38s (0:02:25) =========== |
+| 2026-04-10 22:17 UTC | Exp 120: LLM baseline on adversarial GSM8K | OK | =========== 1787 passed, 1 skipped, 12 warnings in 131.94s (0:02:11) =========== |
