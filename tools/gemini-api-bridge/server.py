@@ -70,17 +70,17 @@ GEMINI_BIN = os.environ.get("GEMINI_BIN", "gemini")
 
 # Default model mapping: OpenAI model names → Gemini CLI --model values.
 MODEL_MAP = {
-    "gpt-4": "gemini-2.0-flash-exp",
-    "gpt-4o": "gemini-2.0-flash-exp",
-    "gpt-4-turbo": "gemini-2.0-flash-exp",
+    "gpt-4": "gemini-3.1-pro-preview",
+    "gpt-4o": "gemini-3.1-pro-preview",
+    "gpt-4-turbo": "gemini-3.1-pro-preview",
     "gpt-3.5-turbo": "gemini-1.5-flash",
-    "gemini-pro": "gemini-2.0-flash-exp",
+    "gemini-pro": "gemini-3.1-pro-preview",
     "gemini-flash": "gemini-1.5-flash",
 }
 
 # Available "models" to list
 AVAILABLE_MODELS = [
-    {"id": "gemini-2.0-flash-exp", "object": "model", "created": 1700000000, "owned_by": "google"},
+    {"id": "gemini-3.1-pro-preview", "object": "model", "created": 1700000000, "owned_by": "google"},
     {"id": "gemini-1.5-flash", "object": "model", "created": 1700000000, "owned_by": "google"},
     {"id": "gemini-1.5-pro", "object": "model", "created": 1700000000, "owned_by": "google"},
 ]
@@ -230,7 +230,7 @@ async def chat_completions(request: Request):
     """Handle chat completion requests (OpenAI-compatible)."""
     body = await request.json()
     messages = body.get("messages", [])
-    model_name = body.get("model", "gemini-2.0-flash-exp")
+    model_name = body.get("model", "gemini-3.1-pro-preview")
     stream = body.get("stream", False)
     mcp_config = body.get("mcp_config")
 
