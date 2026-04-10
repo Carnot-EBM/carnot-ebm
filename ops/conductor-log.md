@@ -147,3 +147,6 @@
 | 2026-04-10 06:41 UTC | Exp 105: Full-scale benchmark with improved extrac | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
  |
 | 2026-04-10 06:42 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
+| 2026-04-10 06:44 UTC | Exp 105: Full-scale benchmark with improved extrac | FAIL | Claude error: You've hit your limit · resets 12pm (America/New_York)
+ |
+| 2026-04-10 06:45 UTC | Exp 99: Constraint state propagation across agent  | OK | Deliverable already exists in repo |
