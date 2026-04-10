@@ -4,6 +4,13 @@ from carnot.models.boltzmann import BoltzmannConfig, BoltzmannModel
 from carnot.models.ebt import EBTConfig, EBTransformer
 from carnot.models.gibbs import GibbsConfig, GibbsModel
 from carnot.models.ising import IsingConfig, IsingModel
+from carnot.models.kan import (
+    BSpline,
+    BSplineParams,
+    KANConfig,
+    KANEnergyFunction,
+    KANModel,
+)
 
 __all__ = [
     "BoltzmannConfig",
@@ -14,4 +21,9 @@ __all__ = [
     "GibbsModel",
     "IsingConfig",
     "IsingModel",
+    "BSpline",
+    "BSplineParams",
+    "KANConfig",
+    "KANEnergyFunction",
+    "KANModel",
 ]

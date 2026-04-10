@@ -1,0 +1,105 @@
+{
+  "experiment": "experiment_108",
+  "title": "KAN Energy Tier Implementation",
+  "status": "success",
+  "description": "Created KAN (Kolmogorov-Arnold Networks) energy function implementation as a new tier in the Carnot EBM framework. KAN addresses the constraint learning ceiling where linear Ising features cannot capture nonlinear constraint relationships.",
+  "timestamp": "2026-04-10T00:00:00Z",
+  "target_models": ["Qwen3.5-0.8B", "google/gemma-4-E4B-it"],
+  "context": "Exp 103 (KAN energy tier) failed due to rate limits. This is a re-attempt with the KAN implementation completed.",
+  "artifacts": {
+    "python": {
+      "path": "python/carnot/models/kan.py",
+      "description": "Python KAN implementation with BSpline, KANEnergyFunction, KANModel",
+      "classes": [
+        "BSpline",
+        "BSplineParams", 
+        "KANConfig",
+        "KANEnergyFunction",
+        "KANModel"
+      ]
+    },
+    "rust": {
+      "path": "crates/carnot-kan",
+      "description": "Rust KAN scaffold with TODO comments for full implementation",
+      "structs": [
+        "BSpline",
+        "BSplineParams",
+        "KANConfig",
+        "KANEnergyFunction"
+      ]
+    },
+    "tests": {
+      "path": "tests/python/test_kan.py",
+      "description": "26 tests covering BSpline, KAN config, energy function, gradient, from_ising, parameter scaling",
+      "status": "passed"
+    }
+  },
+  "test_results": {
+    "python_kan_tests": {
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "coverage": "95%"
+    },
+    "full_python_tests": {
+      "passed": 1324,
+      "failed": 0,
+      "skipped": 2,
+      "status": "passed"
+    },
+    "rust_build": {
+      "status": "success",
+      "warnings": 0
+    }
+  },
+  "spec_coverage": [
+    "REQ-CORE-001",
+    "REQ-CORE-002",
+    "SCENARIO-CORE-001",
+    "SCENARIO-CORE-002",
+    "SCENARIO-CORE-003"
+  ],
+  "features": {
+    "bspline": {
+      "num_knots": "configurable (default 10)",
+      "degree": "configurable (default 3 cubic)",
+      "evaluate": "linear interpolation between knots",
+      "learnable": "control points are JAX parameters"
+    },
+    "kan_energy_function": {
+      "energy_formula": "E(x) = sum_ij f_ij(x_i * x_j) + sum_i g_i(x_i)",
+      "sparse_edges": "supported (edge_density parameter)",
+      "full_edges": "supported (sparse=False)",
+      "from_ising": "initializes KAN from Ising coupling matrix",
+      "interpret_edge": "returns spline for visualization"
+    },
+    "gradients": {
+      "method": "JAX autodiff through splines",
+      "verified": "finite difference gradient check passed"
+    }
+  },
+  "model_comparison": {
+    "ising": {
+      "energy_type": "quadratic",
+      "params_formula": "d^2/2 + d (symmetric coupling)",
+      "expressiveness": "pairwise only"
+    },
+    "kan": {
+      "energy_type": "nonlinear spline",
+      "params_formula": "num_edges * (num_knots + degree) + d * (num_knots + degree)",
+      "expressiveness": "nonlinear per-edge functions",
+      "interpretable": "yes - splines can be visualized"
+    },
+    "gibbs": {
+      "energy_type": "MLP hidden layers",
+      "params_formula": "sum of layer sizes",
+      "expressiveness": "universal (but black box)"
+    }
+  },
+  "next_steps": [
+    "Full Rust KAN implementation with proper B-spline evaluation",
+    "Contrastive divergence training for KANModel",
+    "Integration with existing samplers (Langevin, HMC)",
+    "E2E tests with target models (Qwen3.5-0.8B, google/gemma-4-E4B-it)"
+  ]
+}
