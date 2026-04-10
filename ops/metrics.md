@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 102 Latency Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T04:54:17Z | 2026-04-10T05:01:01Z | Create Exp 102 latency benchmark, run on CPU, save results + summary | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 93 Multi-Model Comparison
 
 ### Turn Log
