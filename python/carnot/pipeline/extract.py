@@ -835,18 +835,23 @@ class AutoExtractor:
         specified, only extractors that support that domain are invoked.
 
         The default constructor registers ArithmeticExtractor, CodeExtractor,
-        LogicExtractor, and NLExtractor. Additional extractors can be added
-        via ``add_extractor()``.
+        LogicExtractor, NLExtractor, and FactualKBExtractor (Exp 113).
+        Additional extractors can be added via ``add_extractor()``.
 
     Spec: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
     """
 
     def __init__(self) -> None:
+        # Import here to avoid circular imports (knowledge_base imports from
+        # extract, so we defer the import to instantiation time).
+        from carnot.pipeline.knowledge_base import FactualKBExtractor  # noqa: PLC0415
+
         self._extractors: list[ConstraintExtractor] = [
             ArithmeticExtractor(),
             CodeExtractor(),
             LogicExtractor(),
             NLExtractor(),
+            FactualKBExtractor(),
         ]
 
     @property

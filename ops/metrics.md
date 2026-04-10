@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-10 Exp 113 FactualKBExtractor
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-10T18:15:15Z | 2026-04-10T18:27:05Z | Create FactualKBExtractor with 5000-fact KB, 78 tests (100% cov), register in AutoExtractor | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 112 Embedding Benchmark
 
 ### Turn Log
