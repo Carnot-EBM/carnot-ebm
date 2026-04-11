@@ -1,0 +1,731 @@
+{
+  "experiment": 159,
+  "description": "Five-domain full-pipeline benchmark: FactualExtractor (Exp 158) + memory-augmented generation (Exp 141) \u2014 measures combined impact vs Exp 93 baseline (+10.2% avg)",
+  "timestamp": "2026-04-11T13:46:32Z",
+  "elapsed_s": 0.05,
+  "models": [
+    "Qwen3.5-0.8B",
+    "Gemma4-E4B-it"
+  ],
+  "domains": [
+    "arithmetic",
+    "code",
+    "logic",
+    "factual",
+    "scheduling"
+  ],
+  "modes": [
+    "baseline",
+    "verify_only",
+    "verify_repair"
+  ],
+  "questions_per_domain": 50,
+  "total_questions": 250,
+  "total_evaluations": 1500,
+  "memory_prewarming": {
+    "source": "Exp 141 baseline patterns + any persisted constraint_memory.json",
+    "memory_summary": {
+      "arithmetic": {
+        "total_patterns": 3,
+        "mature_patterns": 3,
+        "top_patterns": [
+          {
+            "error_type": "arithmetic_carry",
+            "frequency": 24
+          },
+          {
+            "error_type": "negation_scope",
+            "frequency": 10
+          },
+          {
+            "error_type": "comparison_boundary",
+            "frequency": 5
+          }
+        ]
+      },
+      "code": {
+        "total_patterns": 2,
+        "mature_patterns": 2,
+        "top_patterns": [
+          {
+            "error_type": "comparison_boundary",
+            "frequency": 4
+          },
+          {
+            "error_type": "negation_scope",
+            "frequency": 3
+          }
+        ]
+      },
+      "logic": {
+        "total_patterns": 2,
+        "mature_patterns": 2,
+        "top_patterns": [
+          {
+            "error_type": "negation_scope",
+            "frequency": 12
+          },
+          {
+            "error_type": "comparison_boundary",
+            "frequency": 6
+          }
+        ]
+      },
+      "scheduling": {
+        "total_patterns": 2,
+        "mature_patterns": 2,
+        "top_patterns": [
+          {
+            "error_type": "comparison_boundary",
+            "frequency": 8
+          },
+          {
+            "error_type": "arithmetic_carry",
+            "frequency": 3
+          }
+        ]
+      }
+    }
+  },
+  "factual_coverage_offline": {
+    "description": "extract_claims() run on correct answer text \u2014 no network",
+    "n_total": 50,
+    "n_covered": 50,
+    "coverage_pct": 100.0,
+    "exp93_coverage_pct": 0.0,
+    "exp158_coverage_pct": 96.0,
+    "coverage_target_30pct_met": true
+  },
+  "factual_coverage_by_model": {
+    "Qwen3.5-0.8B": {
+      "constraint_coverage_pct": 100.0,
+      "accuracy": 0.9
+    },
+    "Gemma4-E4B-it": {
+      "constraint_coverage_pct": 100.0,
+      "accuracy": 0.9
+    }
+  },
+  "metrics_table": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 46,
+      "accuracy": 0.92,
+      "hallucination_rate": 0.08,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.32,
+      "total_time_s": 0.002,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 14,
+      "constraint_coverage_pct": 28.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "arithmetic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 44,
+      "accuracy": 0.88,
+      "hallucination_rate": 0.12,
+      "repair_success_rate": 0.3333,
+      "avg_constraints": 0.32,
+      "total_time_s": 0.001,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 9,
+      "repairs_successful": 3,
+      "n_with_constraints": 14,
+      "constraint_coverage_pct": 28.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 44,
+      "accuracy": 0.88,
+      "hallucination_rate": 0.12,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 35,
+      "accuracy": 0.7,
+      "hallucination_rate": 0.3,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.58,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 29,
+      "constraint_coverage_pct": 58.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "code",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 41,
+      "accuracy": 0.82,
+      "hallucination_rate": 0.18,
+      "repair_success_rate": 0.1,
+      "avg_constraints": 0.66,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 10,
+      "repairs_successful": 1,
+      "n_with_constraints": 33,
+      "constraint_coverage_pct": 66.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 39,
+      "accuracy": 0.78,
+      "hallucination_rate": 0.22,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 32,
+      "accuracy": 0.64,
+      "hallucination_rate": 0.36,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.64,
+      "total_time_s": 0.002,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 32,
+      "constraint_coverage_pct": 64.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "logic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 33,
+      "accuracy": 0.66,
+      "hallucination_rate": 0.34,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.58,
+      "total_time_s": 0.001,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 17,
+      "repairs_successful": 0,
+      "n_with_constraints": 29,
+      "constraint_coverage_pct": 58.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 50,
+      "constraint_coverage_pct": 100.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "factual",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 43,
+      "accuracy": 0.86,
+      "hallucination_rate": 0.14,
+      "repair_success_rate": 0.125,
+      "avg_constraints": 1.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 8,
+      "repairs_successful": 1,
+      "n_with_constraints": 50,
+      "constraint_coverage_pct": 100.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 37,
+      "accuracy": 0.74,
+      "hallucination_rate": 0.26,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "domain": "scheduling",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 43,
+      "accuracy": 0.86,
+      "hallucination_rate": 0.14,
+      "repair_success_rate": 0.5,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 14,
+      "repairs_successful": 7,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.32,
+      "total_time_s": 0.001,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 14,
+      "constraint_coverage_pct": 28.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "arithmetic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 43,
+      "accuracy": 0.86,
+      "hallucination_rate": 0.14,
+      "repair_success_rate": 0.2222,
+      "avg_constraints": 0.32,
+      "total_time_s": 0.001,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 9,
+      "repairs_successful": 2,
+      "n_with_constraints": 14,
+      "constraint_coverage_pct": 28.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.64,
+      "total_time_s": 0.005,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 32,
+      "constraint_coverage_pct": 64.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "code",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 43,
+      "accuracy": 0.86,
+      "hallucination_rate": 0.14,
+      "repair_success_rate": 0.2222,
+      "avg_constraints": 0.68,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 9,
+      "repairs_successful": 2,
+      "n_with_constraints": 34,
+      "constraint_coverage_pct": 68.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 41,
+      "accuracy": 0.82,
+      "hallucination_rate": 0.18,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 37,
+      "accuracy": 0.74,
+      "hallucination_rate": 0.26,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.62,
+      "total_time_s": 0.001,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 31,
+      "constraint_coverage_pct": 62.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "logic",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 42,
+      "accuracy": 0.84,
+      "hallucination_rate": 0.16,
+      "repair_success_rate": 0.2,
+      "avg_constraints": 0.66,
+      "total_time_s": 0.001,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 10,
+      "repairs_successful": 2,
+      "n_with_constraints": 33,
+      "constraint_coverage_pct": 66.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 48,
+      "accuracy": 0.96,
+      "hallucination_rate": 0.04,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 50,
+      "constraint_coverage_pct": 100.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "factual",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 45,
+      "accuracy": 0.9,
+      "hallucination_rate": 0.1,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 1.0,
+      "total_time_s": 0.003,
+      "avg_time_s": 0.0001,
+      "repairs_attempted": 5,
+      "repairs_successful": 0,
+      "n_with_constraints": 50,
+      "constraint_coverage_pct": 100.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "baseline",
+      "n_total": 50,
+      "n_correct": 34,
+      "accuracy": 0.68,
+      "hallucination_rate": 0.32,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "verify_only",
+      "n_total": 50,
+      "n_correct": 36,
+      "accuracy": 0.72,
+      "hallucination_rate": 0.28,
+      "repair_success_rate": 0.0,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 0,
+      "repairs_successful": 0,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "domain": "scheduling",
+      "mode": "verify_repair",
+      "n_total": 50,
+      "n_correct": 40,
+      "accuracy": 0.8,
+      "hallucination_rate": 0.2,
+      "repair_success_rate": 0.2308,
+      "avg_constraints": 0.0,
+      "total_time_s": 0.0,
+      "avg_time_s": 0.0,
+      "repairs_attempted": 13,
+      "repairs_successful": 3,
+      "n_with_constraints": 0,
+      "constraint_coverage_pct": 0.0
+    }
+  ],
+  "cross_experiment_comparison": {
+    "exp93_avg_improvement": 0.102,
+    "exp159_avg_improvement": 0.01,
+    "delta_vs_exp93": -0.092,
+    "domain_improvements_exp159": {
+      "arithmetic": {
+        "Qwen3.5-0.8B": -0.04,
+        "Gemma4-E4B-it": 0.14
+      },
+      "code": {
+        "Qwen3.5-0.8B": -0.06,
+        "Gemma4-E4B-it": 0.02
+      },
+      "logic": {
+        "Qwen3.5-0.8B": -0.12,
+        "Gemma4-E4B-it": 0.02
+      },
+      "factual": {
+        "Qwen3.5-0.8B": -0.04,
+        "Gemma4-E4B-it": -0.06
+      },
+      "scheduling": {
+        "Qwen3.5-0.8B": 0.12,
+        "Gemma4-E4B-it": 0.12
+      }
+    },
+    "overall_deltas_exp159": {
+      "Qwen3.5-0.8B": -0.028,
+      "Gemma4-E4B-it": 0.048
+    },
+    "domain_improvements_exp93": {
+      "arithmetic": {
+        "Qwen3.5-0.8B": 0.06,
+        "Gemma4-E4B-it": 0.08
+      },
+      "code": {
+        "Qwen3.5-0.8B": 0.16,
+        "Gemma4-E4B-it": 0.12
+      },
+      "logic": {
+        "Qwen3.5-0.8B": 0.0,
+        "Gemma4-E4B-it": 0.0
+      },
+      "factual": {
+        "Qwen3.5-0.8B": 0.0,
+        "Gemma4-E4B-it": 0.0
+      },
+      "scheduling": {
+        "Qwen3.5-0.8B": 0.34,
+        "Gemma4-E4B-it": 0.26
+      }
+    }
+  },
+  "domain_summary": [
+    {
+      "domain": "arithmetic",
+      "exp93_accuracy_qwen": 0.98,
+      "exp159_accuracy_qwen": 0.88,
+      "exp93_accuracy_gemma": 0.92,
+      "exp159_accuracy_gemma": 0.86,
+      "exp93_factual_coverage": null,
+      "exp159_factual_coverage": null
+    },
+    {
+      "domain": "code",
+      "exp93_accuracy_qwen": 1.0,
+      "exp159_accuracy_qwen": 0.82,
+      "exp93_accuracy_gemma": 1.0,
+      "exp159_accuracy_gemma": 0.86,
+      "exp93_factual_coverage": null,
+      "exp159_factual_coverage": null
+    },
+    {
+      "domain": "logic",
+      "exp93_accuracy_qwen": 0.68,
+      "exp159_accuracy_qwen": 0.66,
+      "exp93_accuracy_gemma": 0.78,
+      "exp159_accuracy_gemma": 0.84,
+      "exp93_factual_coverage": null,
+      "exp159_factual_coverage": null
+    },
+    {
+      "domain": "factual",
+      "exp93_accuracy_qwen": 0.92,
+      "exp159_accuracy_qwen": 0.86,
+      "exp93_accuracy_gemma": 0.9,
+      "exp159_accuracy_gemma": 0.9,
+      "exp93_factual_coverage": 0.0,
+      "exp159_factual_coverage": 100.0
+    },
+    {
+      "domain": "scheduling",
+      "exp93_accuracy_qwen": 0.98,
+      "exp159_accuracy_qwen": 0.86,
+      "exp93_accuracy_gemma": 1.0,
+      "exp159_accuracy_gemma": 0.8,
+      "exp93_factual_coverage": null,
+      "exp159_factual_coverage": null
+    }
+  ],
+  "key_findings": {
+    "avg_improvement": "+1.0%",
+    "exp93_avg_improvement": "+10.2%",
+    "delta_vs_exp93": "-9.2%",
+    "factual_coverage_gain": "Factual coverage: ~0% (Exp 93) \u2192 100.0% (Exp 159 offline)",
+    "best_model": "Gemma4-E4B-it",
+    "most_improved_domain": "scheduling",
+    "least_improved_domain": "factual",
+    "memory_augmentation_impact": "Carry-chain, comparison-boundary, and negation-scope constraints now auto-generated for arithmetic, logic, scheduling domains from pre-warmed ConstraintMemory (Exp 141 Tier 2)"
+  }
+}
