@@ -357,6 +357,59 @@ Top 10 selected by relevance score.
 - **Description:** Extend the verify-repair loop (Exp 57) to a 3-step chain: plan → calculate → conclude.  Each step's verified facts become hard constraints on the next step.  Measure constraint retention rate (what fraction of step-1 constraints are still satisfied at step 3) and overall accuracy on a 50-problem multi-step arithmetic dataset.  Directly addresses Goal #2 (multi-turn agentic verification) and produces the first multi-step constraint propagation numbers for the project.
 
 
+## ArXiv Scan — Exp 165 (2026-04-11, Planning for Milestone 2026.04.12)
+
+Queries: ebm_constraint_verification, jepa_partial_prediction, kan_energy_2026,
+ising_constraint_neural, spilled_energy_llm, guided_decoding_energy, continual_constraint_learning,
+thermodynamic_fpga_2025, factual_verification_kb, autoregressive_ebm
+
+### Autoregressive Language Models are Secretly Energy-Based Models
+- **ArXiv:** [2512.15605](https://arxiv.org/abs/2512.15605) (2025-12)
+- **What:** Establishes an explicit bijection between autoregressive LLMs and EBMs in function
+  space. The key insight: next-token prediction naturally computes a "lookahead energy" — the
+  negative log-probability of a continuation under the model. This energy is computable without
+  fine-tuning. Shows that LLMs implicitly optimize an energy objective during inference.
+- **Relevance to Carnot:** Theoretical foundation for using LLM logits directly as EBM energy
+  signals without external KB. The "lookahead energy" from 2512.15605 is complementary to
+  "spilled energy" (2602.18671): spilled energy measures token-level uncertainty; lookahead
+  energy measures continuation-level constraint coherence. Together they form a richer signal.
+  Could enable Carnot to extract constraint-quality estimates directly from the LLM's own
+  token predictions, bypassing the need for external Ising verification on easy queries.
+- **Proposed experiment for Exp 169:** Implement LookaheadEnergyExtractor using the AR-EBM
+  bijection. Measure: does lookahead energy predict constraint violations better than spilled
+  energy alone? Run on same TruthfulQA and GSM8K samples. If AUROC > 0.70 → add to pipeline
+  as a fast pre-filter before Ising.
+
+### Thermodynamic Computing System for AI Applications
+- **Paper:** [s41467-025-59011-x](https://www.nature.com/articles/s41467-025-59011-x)
+  (Nature Communications, 2025)
+- **What:** Implements a stochastic processing unit (SPU) using RLC circuits controlled by
+  FPGA. The circuits naturally sample from Boltzmann distributions — thermodynamic noise IS
+  the computation. Used for MCMC sampling and linear algebra. Demonstrates 100x energy
+  efficiency vs GPU for Boltzmann sampling.
+- **Relevance to Carnot:** Validates the hardware path for thermodynamic/Ising sampling.
+  The FPGA-RLC hybrid is a near-term implementation of what Extropic's Z1 will do at larger
+  scale. Carnot's SamplerBackend (Exp 71) is designed exactly for this: swap CpuBackend for
+  FpgaBackend (or SPU backend) without changing the pipeline. The paper's FPGA control logic
+  would map directly to a Kria KV260 + analog frontend circuit.
+- **When to pursue:** When FPGA hardware is available. Read this paper for the FPGA controller
+  design before implementing FpgaBackend.
+
+### Foundations of Global Consistency Checking with Noisy LLM Oracles
+- **ArXiv:** [2601.13600](https://arxiv.org/abs/2601.13600) (2026-01)
+- **What:** Addresses the problem of verifying global consistency of LLM outputs when the
+  verifier itself (the LLM) is noisy. Introduces structured checking frameworks — checking
+  multiple outputs for pairwise consistency using a noisy oracle. Shows that majority-voting
+  consistency checks converge even with 30% oracle error rate.
+- **Relevance to Carnot:** Directly applicable to multi-turn agentic verification (Goal #2).
+  When VerifyRepairPipeline acts as the "oracle" across a reasoning chain, it may make errors.
+  The consistency checking framework from 2601.13600 provides the theoretical basis for
+  ConstraintStateMachine's contradiction detection: if step 3's verified output contradicts
+  step 1's verified fact, a global inconsistency exists even if each step passed locally.
+- **Proposed experiment for Exp 176:** Implement GlobalConsistencyChecker using 2601.13600's
+  pairwise consistency framework. Test on 20 multi-step factual reasoning chains. Measure:
+  fraction of globally inconsistent chains detected that local step-by-step checking misses.
+
 ### VALENCE-SALS — RT-Core Geometric Constraint Indexing
 - **Repo:** github.com/PaperScarecrow/VALENCE-SALS
 - **Paper:** zenodo.org/records/19421339
