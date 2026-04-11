@@ -143,6 +143,10 @@ class VerificationResult:
     energy: float
     violations: list[ConstraintResult]
     certificate: dict = field(default_factory=dict)
+    mode: str = "FULL"
+    """Verification mode: "FULL" for normal pipeline, "FAST_PATH" for JEPA early-exit."""
+    skipped: bool = False
+    """True when Tier 3 JEPA predictor gated this check as low-risk (fast path taken)."""
 
 
 @dataclass
@@ -480,6 +484,8 @@ class VerifyRepairPipeline:
         response: str,
         domain: str | None = None,
         tracker: ConstraintTracker | None = None,
+        jepa_predictor: Any = None,
+        jepa_threshold: float = 0.5,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -511,15 +517,57 @@ class VerifyRepairPipeline:
                 provided, records fired/caught counts for each constraint
                 type found during this verification call. Default None
                 (no tracking -- backward compatible).
+            jepa_predictor: Optional JEPAViolationPredictor instance (Tier 3).
+                If provided, embeds the first 50 whitespace-split tokens of
+                ``response`` and queries the predictor. If
+                ``max(predict(embed(first_50_tokens)).values()) < jepa_threshold``
+                the response is considered low-risk and the expensive constraint
+                extraction + Ising verification is skipped entirely — returning
+                a VerificationResult with ``verified=True``, ``mode="FAST_PATH"``,
+                and ``skipped=True``. Default None (no JEPA gating, full path).
+            jepa_threshold: Violation-probability threshold for the JEPA gate.
+                A predicted max probability BELOW this value triggers the fast
+                path (skip full verification). Default 0.5. Lower values make
+                the gate more aggressive (more fast-path skips, higher risk).
 
         Returns:
             VerificationResult with constraint evaluation details.
+            ``mode="FAST_PATH"`` and ``skipped=True`` when JEPA gating fired.
 
         Raises:
             PipelineTimeoutError: If the call exceeds timeout_seconds.
 
-        Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001
+        Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
+              REQ-JEPA-002
         """
+        # Tier 3 JEPA fast-path gate (optional).
+        # If a JEPA predictor is supplied, embed the first 50 whitespace-split
+        # tokens of the response and ask the predictor whether any constraint
+        # domain looks risky. When max probability < threshold, we trust the
+        # response is clean and skip the expensive extraction + Ising pass.
+        # This is the "fast path" — verified=True is optimistic (low-risk default).
+        if jepa_predictor is not None:
+            first_50_tokens = " ".join(response.split()[:50])
+            from carnot.embeddings.fast_embedding import RandomProjectionEmbedding
+            _embedder = RandomProjectionEmbedding(embed_dim=256, seed=42)
+            partial_embedding = _embedder.encode(first_50_tokens)
+            probs = jepa_predictor.predict(partial_embedding)
+            max_prob = max(probs.values()) if probs else 0.0
+            if max_prob < jepa_threshold:
+                return VerificationResult(
+                    verified=True,
+                    constraints=[],
+                    energy=0.0,
+                    violations=[],
+                    certificate={
+                        "mode": "FAST_PATH",
+                        "jepa_max_prob": max_prob,
+                        "jepa_threshold": jepa_threshold,
+                        "jepa_probs": probs,
+                    },
+                    mode="FAST_PATH",
+                    skipped=True,
+                )
         # Fast path: delegate to Rust pipeline when available.
         # Repair still uses Python (requires LLM), but the hot verification
         # inner loop gets a 10x speedup from the Rust implementation.

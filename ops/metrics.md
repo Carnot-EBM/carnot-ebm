@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 145 JEPA Fast-Path Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T04:17:02Z | 2026-04-11T04:23:55Z | Add JEPA fast-path gate to VerifyRepairPipeline.verify() (jepa_predictor=, jepa_threshold=, mode/skipped fields on VerificationResult); 8 new tests 100% coverage; create + run scripts/experiment_145_jepa_fastpath.py; threshold=0.3: 38% fast-path (miss), 11.6% degradation (miss); threshold=0.5: 95.4% fast-path (pass), 19.8% degradation (miss); targets not met — predictor AUROC 0.57 insufficient; results/experiment_145_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 142 Combined Learning Benchmark
 
 ### Turn Log

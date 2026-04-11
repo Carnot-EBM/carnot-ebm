@@ -1,0 +1,75 @@
+{
+  "experiment": 145,
+  "description": "JEPA fast-path integration benchmark",
+  "n_total": 500,
+  "n_arithmetic": 200,
+  "n_code": 200,
+  "n_logic": 100,
+  "targets": {
+    "fast_path_rate_min": 0.4,
+    "max_accuracy_degradation": 0.02
+  },
+  "baseline": {
+    "total_time_s": 0.015308836998883635,
+    "n_verified": 397,
+    "gt_accuracy": 0.78
+  },
+  "modes": [
+    {
+      "name": "threshold=0.3",
+      "threshold": 0.3,
+      "total_time_s": 0.8592809950059745,
+      "speedup": 0.01781586825247682,
+      "fast_path_count": 190,
+      "slow_path_count": 310,
+      "fast_path_rate": 0.38,
+      "fast_path_accuracy": 0.6947368421052632,
+      "slow_path_accuracy": 1.0,
+      "overall_accuracy": 0.884,
+      "accuracy_degradation": 0.11599999999999999,
+      "n_fast_path_errors": 58,
+      "target_fast_path_met": false,
+      "target_degradation_met": false
+    },
+    {
+      "name": "threshold=0.5",
+      "threshold": 0.5,
+      "total_time_s": 0.6668667519988958,
+      "speedup": 0.022956365650253597,
+      "fast_path_count": 477,
+      "slow_path_count": 23,
+      "fast_path_rate": 0.954,
+      "fast_path_accuracy": 0.7924528301886793,
+      "slow_path_accuracy": 1.0,
+      "overall_accuracy": 0.802,
+      "accuracy_degradation": 0.19799999999999995,
+      "n_fast_path_errors": 99,
+      "target_fast_path_met": true,
+      "target_degradation_met": false
+    }
+  ],
+  "error_analysis": [
+    {
+      "mode": "threshold=0.3",
+      "n_errors": 58,
+      "domain_counts": {
+        "arithmetic": 16,
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.1922788363078545,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "code"
+    },
+    {
+      "mode": "threshold=0.5",
+      "n_errors": 99,
+      "domain_counts": {
+        "arithmetic": 57,
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.2724237718967476,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "arithmetic"
+    }
+  ]
+}
