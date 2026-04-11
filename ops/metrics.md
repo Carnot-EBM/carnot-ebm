@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 139 ArXiv Scan
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T02:30:45Z | 2026-04-11T02:34:00Z | Create scripts/experiment_139_arxiv_scan.py — scans arXiv for 8 query topics, selects top 10 papers, annotates with Carnot relevance, proposes EXP-140/141/142; appends 10 new papers to research-references.md; results in results/experiment_139_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 138 Guided Benchmark
 
 ### Turn Log

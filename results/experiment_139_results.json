@@ -1,0 +1,243 @@
+{
+  "experiment": "Exp 139",
+  "scan_date": "2026-04-11T02:33:55.426833+00:00",
+  "earliest_date_filter": "2025-01-01",
+  "queries_run": [
+    "ebm_verification",
+    "ising_language",
+    "constraint_neural",
+    "kan_energy",
+    "guided_decoding",
+    "fpga_ising",
+    "continual_constraint",
+    "thermodynamic_sampling"
+  ],
+  "total_fetched_unique": 14,
+  "papers": [
+    {
+      "rank": 1,
+      "arxiv_id": "2604.04636",
+      "title": "Interpretation of Crystal Energy Landscapes with Kolmogorov-Arnold Networks",
+      "authors": [
+        "Gen Zu",
+        "Ning Mao",
+        "Claudia Felser",
+        "Yang Zhang"
+      ],
+      "published": "2026-04-06",
+      "url": "https://arxiv.org/abs/2604.04636",
+      "categories": [
+        "cond-mat.dis-nn"
+      ],
+      "relevance_score": 10.0,
+      "one_paragraph_summary": "Characterizing crystalline energy landscapes is essential to predicting thermodynamic stability, electronic structure, and functional behavior. While machine learning (ML) enables rapid property predictions, the \"black-box\" nature of most models limits their utility for generating new scientific insights. Here, we introduce Kolmogorov-Arnold Networks (KANs) as an interpretable framework to bridge this gap. Unlike conventional neural networks with fixed activation functions, KANs employ learnable functions that reveal underlying physical relationships. We developed the Element-Weighted KAN, a c...",
+      "relevance_to_carnot": "KAN energy tier (carnot-kan, Exp 108-109) is already implemented. New results on KAN expressiveness or spline approximation quality could guide hyperparameter tuning or motivate a deeper KAN variant.",
+      "proposed_experiment": "Exp 141 candidate: Apply the paper's spline-depth or basis-function findings to carnot-kan and re-run Exp 109 AUROC benchmark."
+    },
+    {
+      "rank": 2,
+      "arxiv_id": "2506.14167",
+      "title": "Kolmogorov-Arnold Energy Models: Fast, Interpretable Generative Modeling",
+      "authors": [
+        "Prithvi Raj"
+      ],
+      "published": "2025-06-17",
+      "url": "https://arxiv.org/abs/2506.14167",
+      "categories": [
+        "cs.LG"
+      ],
+      "relevance_score": 7.5,
+      "one_paragraph_summary": "Generative models typically rely on either simple latent priors (e.g., Variational Autoencoders, VAEs), which are efficient but limited, or highly expressive iterative samplers (e.g., Diffusion and Energy-based Models), which are costly and opaque. We introduce the Kolmogorov-Arnold Energy Model (KAEM) to bridge this trade-off and provide a new avenue for latent-space interpretability. Based on a novel interpretation of the Kolmogorov-Arnold Representation Theorem, KAEM imposes a univariate latent structure that enables fast and exact inference via the inverse transform method. With a low-dime...",
+      "relevance_to_carnot": "KAN energy tier (carnot-kan, Exp 108-109) is already implemented. New results on KAN expressiveness or spline approximation quality could guide hyperparameter tuning or motivate a deeper KAN variant.",
+      "proposed_experiment": "Exp 141 candidate: Apply the paper's spline-depth or basis-function findings to carnot-kan and re-run Exp 109 AUROC benchmark."
+    },
+    {
+      "rank": 3,
+      "arxiv_id": "2504.03913",
+      "title": "Opening the Black-Box: Symbolic Regression with Kolmogorov-Arnold Networks for Energy Applications",
+      "authors": [
+        "Nataly R. Panczyk",
+        "Omer F. Erdem",
+        "Majdi I. Radaideh"
+      ],
+      "published": "2025-04-04",
+      "url": "https://arxiv.org/abs/2504.03913",
+      "categories": [
+        "cs.LG"
+      ],
+      "relevance_score": 7.5,
+      "one_paragraph_summary": "While most modern machine learning methods offer speed and accuracy, few promise interpretability or explainability -- two key features necessary for highly sensitive industries, like medicine, finance, and engineering. Using eight datasets representative of one especially sensitive industry, nuclear power, this work compares a traditional feedforward neural network (FNN) to a Kolmogorov-Arnold Network (KAN). We consider not only model performance and accuracy, but also interpretability through model architecture and explainability through a post-hoc SHAP analysis. In terms of accuracy, we fin...",
+      "relevance_to_carnot": "KAN energy tier (carnot-kan, Exp 108-109) is already implemented. New results on KAN expressiveness or spline approximation quality could guide hyperparameter tuning or motivate a deeper KAN variant.",
+      "proposed_experiment": "Exp 141 candidate: Apply the paper's spline-depth or basis-function findings to carnot-kan and re-run Exp 109 AUROC benchmark."
+    },
+    {
+      "rank": 4,
+      "arxiv_id": "2602.15985",
+      "title": "Decomposing Large-Scale Ising Problems on FPGAs: A Hybrid Hardware Approach",
+      "authors": [
+        "Ruihong Yin",
+        "Yue Zheng",
+        "Chaohui Li",
+        "Ahmet Efe",
+        "Abhimanyu Kumar"
+      ],
+      "published": "2026-02-17",
+      "url": "https://arxiv.org/abs/2602.15985",
+      "categories": [
+        "cs.ET"
+      ],
+      "relevance_score": 7.5,
+      "one_paragraph_summary": "Emerging analog computing substrates, such as oscillator-based Ising machines, offer rapid convergence times for combinatorial optimization but often suffer from limited scalability due to physical implementation constraints. To tackle real-world problems involving thousands of variables, problem decomposition is required; however, performing this step on standard CPUs introduces significant latency, preventing the high-speed solver from operating at full capacity. This work presents a heterogeneous system that offloads the decomposition workload to an FPGA, tightly integrated with a custom 28...",
+      "relevance_to_carnot": "Direct hardware path for Carnot's TSU-simulation backend (research-references.md §FPGA Ising Machine).  Architectural details (bit-width, LFSR design, AXI interface) could accelerate the FpgaBackend prototype for SamplerBackend (Exp 71).",
+      "proposed_experiment": "Exp 142 candidate: Implement a minimal Verilog Ising cell based on the paper's design, simulate in Verilator, and compare sample quality to CPU ParallelIsingSampler on a 100-variable SAT."
+    },
+    {
+      "rank": 5,
+      "arxiv_id": "2504.13407",
+      "title": "LoRA-Based Continual Learning with Constraints on Critical Parameter Changes",
+      "authors": [
+        "Shimou Ling",
+        "Liang Zhang",
+        "Jiangwei Zhao",
+        "Lili Pan",
+        "Hongliang Li"
+      ],
+      "published": "2025-04-18",
+      "url": "https://arxiv.org/abs/2504.13407",
+      "categories": [
+        "cs.CV"
+      ],
+      "relevance_score": 7.0,
+      "one_paragraph_summary": "LoRA-based continual learning represents a promising avenue for leveraging pre-trained models in downstream continual learning tasks. Recent studies have shown that orthogonal LoRA tuning effectively mitigates forgetting. However, this work unveils that under orthogonal LoRA tuning, the critical parameters for pre-tasks still change notably after learning post-tasks. To address this problem, we directly propose freezing the most critical parameter matrices in the Vision Transformer (ViT) for pre-tasks before learning post-tasks. In addition, building on orthogonal LoRA tuning, we propose ortho...",
+      "relevance_to_carnot": "Multi-turn agentic verification (Goal #2) requires the constraint model to accumulate knowledge across steps without catastrophic forgetting.  Directly applicable to the LNN-based constraint adaptation explored in Exp 116.",
+      "proposed_experiment": "Exp 143 candidate: Apply the paper's continual-learning strategy to carnot-gibbs constraint updates across a 5-step reasoning chain and measure constraint retention vs Exp 116 baseline."
+    },
+    {
+      "rank": 6,
+      "arxiv_id": "2505.07179",
+      "title": "Lagrange Oscillatory Neural Networks for Constraint Satisfaction and Optimization",
+      "authors": [
+        "Corentin Delacour",
+        "Bram Haverkort",
+        "Filip Sabo",
+        "Nadine Azemard",
+        "Aida Todri-Sanial"
+      ],
+      "published": "2025-05-12",
+      "url": "https://arxiv.org/abs/2505.07179",
+      "categories": [
+        "cs.ET"
+      ],
+      "relevance_score": 6.5,
+      "one_paragraph_summary": "Physics-inspired computing paradigms are receiving renewed attention to enhance efficiency in compute-intensive tasks such as artificial intelligence and optimization. Similar to Hopfield neural networks, oscillatory neural networks (ONNs) minimize an Ising energy function that embeds the solutions of hard combinatorial optimization problems. Despite their success in solving unconstrained optimization problems, Ising machines still face challenges with constrained problems as they can become trapped in infeasible local minima. In this paper, we introduce a Lagrange ONN (LagONN) designed to esc...",
+      "relevance_to_carnot": "Constraint reasoning paper relevant to Carnot's constraint extraction and satisfaction pipeline.  Review for novel constraint types or evaluation benchmarks.",
+      "proposed_experiment": null
+    },
+    {
+      "rank": 7,
+      "arxiv_id": "2602.00166",
+      "title": "Joint Continual Learning of Local Language Models and Cloud Offloading Decisions with Budget Constraints",
+      "authors": [
+        "Evan Chen",
+        "Wenzhi Fang",
+        "Shiqiang Wang",
+        "Christopher Brinton"
+      ],
+      "published": "2026-01-29",
+      "url": "https://arxiv.org/abs/2602.00166",
+      "categories": [
+        "cs.LG"
+      ],
+      "relevance_score": 6.5,
+      "one_paragraph_summary": "Locally deployed Small Language Models (SLMs) must continually support diverse tasks under strict memory and computation constraints, making selective reliance on cloud Large Language Models (LLMs) unavoidable. Regulating cloud assistance during continual learning is challenging, as naive reward-based reinforcement learning often yields unstable offloading behavior and exacerbates catastrophic forgetting as task distributions shift. We propose DA-GRPO, a dual-advantage extension of Group Relative Policy Optimization that incorporates cloud-usage constraints directly into advantage computation,...",
+      "relevance_to_carnot": "Multi-turn agentic verification (Goal #2) requires the constraint model to accumulate knowledge across steps without catastrophic forgetting.  Directly applicable to the LNN-based constraint adaptation explored in Exp 116.",
+      "proposed_experiment": "Exp 143 candidate: Apply the paper's continual-learning strategy to carnot-gibbs constraint updates across a 5-step reasoning chain and measure constraint retention vs Exp 116 baseline."
+    },
+    {
+      "rank": 8,
+      "arxiv_id": "2503.01618",
+      "title": "Energy-Dissipative Evolutionary Kolmogorov-Arnold Networks for Complex PDE Systems",
+      "authors": [
+        "Guang Lin",
+        "Changhong Mou",
+        "Jiahao Zhang"
+      ],
+      "published": "2025-03-03",
+      "url": "https://arxiv.org/abs/2503.01618",
+      "categories": [
+        "math.NA"
+      ],
+      "relevance_score": 6.0,
+      "one_paragraph_summary": "We introduce evolutionary Kolmogorov-Arnold Networks (EvoKAN), a novel framework for solving complex partial differential equations (PDEs). EvoKAN builds on Kolmogorov-Arnold Networks (KANs), where activation functions are spline based and trainable on each edge, offering localized flexibility across multiple scales. Rather than retraining the network repeatedly, EvoKAN encodes only the PDE's initial state during an initial learning phase. The network parameters then evolve numerically, governed by the same PDE, without any additional optimization. By treating these parameters as continuous fu...",
+      "relevance_to_carnot": "KAN energy tier (carnot-kan, Exp 108-109) is already implemented. New results on KAN expressiveness or spline approximation quality could guide hyperparameter tuning or motivate a deeper KAN variant.",
+      "proposed_experiment": "Exp 141 candidate: Apply the paper's spline-depth or basis-function findings to carnot-kan and re-run Exp 109 AUROC benchmark."
+    },
+    {
+      "rank": 9,
+      "arxiv_id": "2512.10461",
+      "title": "T-SKM-Net: Trainable Neural Network Framework for Linear Constraint Satisfaction via Sampling Kaczmarz-Motzkin Method",
+      "authors": [
+        "Haoyu Zhu",
+        "Yao Zhang",
+        "Jiashen Ren",
+        "Qingchun Hou"
+      ],
+      "published": "2025-12-11",
+      "url": "https://arxiv.org/abs/2512.10461",
+      "categories": [
+        "cs.LG"
+      ],
+      "relevance_score": 5.0,
+      "one_paragraph_summary": "Neural network constraint satisfaction is crucial for safety-critical applications such as power system optimization, robotic path planning, and autonomous driving. However, existing constraint satisfaction methods face efficiency-applicability trade-offs, with hard constraint methods suffering from either high computational complexity or restrictive assumptions on constraint structures. The Sampling Kaczmarz-Motzkin (SKM) method is a randomized iterative algorithm for solving large-scale linear inequality systems with favorable convergence properties, but its argmax operations introduce non-d...",
+      "relevance_to_carnot": "Constraint reasoning paper relevant to Carnot's constraint extraction and satisfaction pipeline.  Review for novel constraint types or evaluation benchmarks.",
+      "proposed_experiment": null
+    },
+    {
+      "rank": 10,
+      "arxiv_id": "2503.12053",
+      "title": "Ferret: An Efficient Online Continual Learning Framework under Varying Memory Constraints",
+      "authors": [
+        "Yuhao Zhou",
+        "Yuxin Tian",
+        "Jindi Lv",
+        "Mingjia Shi",
+        "Yuanxi Li"
+      ],
+      "published": "2025-03-15",
+      "url": "https://arxiv.org/abs/2503.12053",
+      "categories": [
+        "cs.LG"
+      ],
+      "relevance_score": 4.0,
+      "one_paragraph_summary": "In the realm of high-frequency data streams, achieving real-time learning within varying memory constraints is paramount. This paper presents Ferret, a comprehensive framework designed to enhance online accuracy of Online Continual Learning (OCL) algorithms while dynamically adapting to varying memory budgets. Ferret employs a fine-grained pipeline parallelism strategy combined with an iterative gradient compensation algorithm, ensuring seamless handling of high-frequency data with minimal latency, and effectively counteracting the challenge of stale gradients in parallel training. To adapt to...",
+      "relevance_to_carnot": "Multi-turn agentic verification (Goal #2) requires the constraint model to accumulate knowledge across steps without catastrophic forgetting.  Directly applicable to the LNN-based constraint adaptation explored in Exp 116.",
+      "proposed_experiment": "Exp 143 candidate: Apply the paper's continual-learning strategy to carnot-gibbs constraint updates across a 5-step reasoning chain and measure constraint retention vs Exp 116 baseline."
+    }
+  ],
+  "proposed_experiments": [
+    {
+      "id": "EXP-140",
+      "title": "Constraint-Projection Guided Decoding Latency Benchmark",
+      "description": "Implement a per-token constraint-projection operator in the EnergyGuidedSampler that projects logits onto a constraint-satisfying subspace using the KAN energy gradient.  Measure wall-clock overhead per token at batch sizes 1, 8, 32 on CPU.  Success criterion: <1 ms per token at batch=1 (Exp 102 budget).  Compare to Exp 138's alpha-penalty approach.  This directly addresses Goal #4 (guided decoding latency) and produces publishable numbers for the HuggingFace model card.",
+      "goal": "Goal #4 — Guided decoding latency benchmark",
+      "spec_refs": "REQ-GUIDED-001, SCENARIO-GUIDED-002",
+      "estimated_complexity": "medium"
+    },
+    {
+      "id": "EXP-141",
+      "title": "Apple GSM8K Adversarial Benchmark — Carnot vs LLM Baseline",
+      "description": "Run Carnot's verify-repair pipeline on the Apple GSM8K adversarial variant (arxiv 2410.05229): same problems with swapped numbers and one irrelevant sentence added.  Measure: (a) LLM accuracy drop on adversarial vs standard, (b) Carnot accuracy on adversarial, (c) delta between Carnot improvement on adversarial vs standard.  Expected result: improvement is larger on adversarial because there are more arithmetic errors to catch via Ising constraint checking.  This is the single most credibility-building experiment available and directly tests the core thesis.",
+      "goal": "Goal #5 — Apple GSM8K adversarial benchmark",
+      "spec_refs": "REQ-VERIFY-002, SCENARIO-VERIFY-005",
+      "estimated_complexity": "medium"
+    },
+    {
+      "id": "EXP-142",
+      "title": "Multi-Turn Constraint Propagation — 3-Step Reasoning Chain",
+      "description": "Extend the verify-repair loop (Exp 57) to a 3-step chain: plan → calculate → conclude.  Each step's verified facts become hard constraints on the next step.  Measure constraint retention rate (what fraction of step-1 constraints are still satisfied at step 3) and overall accuracy on a 50-problem multi-step arithmetic dataset.  Directly addresses Goal #2 (multi-turn agentic verification) and produces the first multi-step constraint propagation numbers for the project.",
+      "goal": "Goal #2 — Multi-turn agentic verification",
+      "spec_refs": "REQ-MULTITURN-001, SCENARIO-MULTITURN-001",
+      "estimated_complexity": "high"
+    }
+  ]
+}
