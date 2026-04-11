@@ -1018,21 +1018,29 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         ))
         return True
 
-    # Clean any dirty state from previous interrupted runs
-    # But preserve conductor-log.md (it's modified every iteration)
+    # Preserve any dirty state from previous interrupted runs by committing it.
+    # Previous behavior (git checkout -- .) destroyed uncommitted experiment
+    # deliverables when claude -p was killed mid-run. Now we commit everything
+    # as a checkpoint so nothing is lost.
     if git_has_changes():
-        # Check if the ONLY change is conductor-log.md (normal operation)
         _, porcelain, _ = run_cmd(["git", "diff", "--name-only"])
-        changed_files = [f.strip() for f in porcelain.splitlines() if f.strip()]
-        if changed_files == ["ops/conductor-log.md"]:
-            # Just the log — commit it and continue
-            run_cmd(["git", "add", "ops/conductor-log.md"])
-            run_cmd(["git", "commit", "-m", "[conductor] Update conductor log"])
-        else:
-            # Real dirty state — revert everything except the log
-            logger.warning("Dirty working tree detected — reverting to clean state")
-            run_cmd(["git", "checkout", "--", "."])
-            run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
+        _, untracked, _ = run_cmd(["git", "ls-files", "--others", "--exclude-standard"])
+        changed = [f.strip() for f in porcelain.splitlines() if f.strip()]
+        new_files = [f.strip() for f in untracked.splitlines() if f.strip()]
+        all_dirty = changed + new_files
+
+        # Filter out files we never want to commit
+        skip = {".coverage", ".pytest_cache"}
+        committable = [f for f in all_dirty if not any(f.startswith(s) for s in skip)]
+
+        if committable:
+            logger.info("Committing %d dirty files as checkpoint (preserving work)", len(committable))
+            for f in committable:
+                run_cmd(["git", "add", "--", f])
+            msg = _sign_commit(
+                "[conductor] Checkpoint: preserve uncommitted work from interrupted run"
+            )
+            run_cmd(["git", "commit", "-m", msg])
 
     # Run tests first — ensure clean state
     tests_ok, test_summary = run_tests()
@@ -1173,10 +1181,16 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         tests_ok, test_summary = run_tests()
 
     if not tests_ok:
-        logger.error("Tests still failing after %d fix attempts — reverting", MAX_FIX_ATTEMPTS)
-        run_cmd(["git", "checkout", "."])
-        run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
-        log_step(task["title"], "REVERT", f"Post-tests failed: {test_summary}")
+        logger.error("Tests still failing after %d fix attempts — committing as broken checkpoint", MAX_FIX_ATTEMPTS)
+        # Commit the broken state as a checkpoint instead of reverting.
+        # This preserves experiment deliverables even when tests fail.
+        if git_has_changes():
+            run_cmd(["git", "add", "-A"])
+            msg = _sign_commit(
+                f"[conductor] Checkpoint (tests failing): {task['title']}"
+            )
+            run_cmd(["git", "commit", "-m", msg])
+        log_step(task["title"], "FAIL", f"Post-tests failed: {test_summary}")
         return False
 
     logger.info("Post-check: %s", test_summary)
