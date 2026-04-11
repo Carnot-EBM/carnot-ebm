@@ -567,3 +567,4 @@
 ### Session Summary
 
 *To be filled by `scripts/session-metrics.py` at session end.*
+| 6 | 2026-04-11T20:36:12Z | 2026-04-11T20:37:59Z | Minimal doc updates for Exp 178 (append entries to changelog.md, status.md, traceability.md); Goal #5 ACHIEVED | 1m47s |
