@@ -8,6 +8,7 @@
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-11T00:28:47Z | 2026-04-11T00:32:25Z | Run experiment_121_adversarial_verify_repair.py (CARNOT_SKIP_LLM=1 simulation); results/experiment_121_results.json created (17KB); Qwen3.5-0.8B hypothesis p=0.005 (supported), Gemma4-E4B-it p=0.290 (not significant) | TBD |
 | 2 | 2026-04-11T00:35:58Z | 2026-04-11T00:36:29Z | Update docs for Exp 130 adversarial verify-repair: add Exp 121 entry to _bmad/traceability.md | TBD |
+| 3 | 2026-04-11T00:40:11Z | 2026-04-11T00:43:33Z | Exp 131: Create adversarial writeup script; generates comparison tables (per-variant/mode/model), bootstrap CIs, appends Section 18 to docs/technical-report.md, saves experiment_131_results.json | TBD |
 
 ---
 
