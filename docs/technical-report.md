@@ -434,7 +434,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 
 ## 7. Principles Learned
 
-From 85+ experiments across four milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From 160+ experiments across eleven milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -476,7 +476,7 @@ The failure of Principles 4-14 establishes a fundamental limit: **you cannot det
 
 ## 8. The Production Architecture
 
-The architecture that emerged from 85+ experiments:
+The architecture that emerged from 160+ experiments:
 
 ```
 User Question
@@ -546,7 +546,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** 1153 tests (104 Rust + 1049 Python), 100% code coverage, 100% spec coverage.
+**Total:** 2,251 tests, 100% code coverage, 100% spec coverage.
 
 ---
 
@@ -604,7 +604,7 @@ make research-loop
 
 ## 12. Conclusion
 
-Across 85+ experiments on 16 model families spanning 350M to 35B parameters, four milestones over two months, and a fundamental paradigm shift, we reached a clear two-part conclusion.
+Across 160+ experiments on 16 model families spanning 350M to 35B parameters, eleven milestones, and a fundamental paradigm shift, we reached a clear two-part conclusion.
 
 ### Part 1: Activation-based detection fails
 
@@ -621,8 +621,14 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 The paradigm shift from detection to verification transforms the problem. Instead of asking "is this output correct?" (requires omniscience), we ask "does this output satisfy known constraints?" (requires only the constraints). Results:
 
+- **Full GSM8K (1,319 questions)**: Qwen3.5 70.6% -> 84.4%, Gemma4 77.1% -> 87.8%
+- **Adversarial GSM8K**: +24-28% on number-swapped variants (Apple methodology)
+- **Self-learning Tier 1**: 67.6% -> 97.0% accuracy over 500 questions
+- **Factual coverage**: 96% via Wikidata knowledge base integration
+- **KAN energy tier**: 0.994 AUROC with 8.7x fewer parameters
+- **JEPA predictive verification**: multi-domain predictor
+- **Agentic workflows**: constraint state machine catching 60/60 violations
 - **100% hallucination detection** on live LLM output (Experiment 56, 19/20 accuracy)
-- **+27% accuracy improvement** via verify-repair loop (Experiment 57, 60% -> 87%)
 - **HumanEval pass@1: 90% -> 96%** with Ising-guided fuzzing and repair (Experiment 68)
 - **Model-agnostic** — same pipeline works on Qwen3.5, Gemma4, and any other LLM (Experiment 69)
 - **Real-time** — 36,887 verifications/second, sub-millisecond p99 (Experiment 83)
@@ -630,7 +636,7 @@ The paradigm shift from detection to verification transforms the problem. Instea
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, proved that constraint verification works dramatically better on every metric, scaled it from toy problems to 5000-variable SAT instances, connected it to a live LLM, validated it on published benchmarks (HumanEval, GSM8K), and shipped it as an installable library with a production API, MCP server, CLI tool, and 5 integration examples.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, proved that constraint verification works dramatically better on every metric, scaled it from toy problems to 5000-variable SAT instances, connected it to a live LLM, validated it on published benchmarks (HumanEval, GSM8K), extended it with four energy tiers, self-learning, adversarial robustness, agentic workflow support, and JEPA predictive verification, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,251 tests.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
@@ -663,7 +669,7 @@ Beyond post-hoc verification, Carnot implements an automated research loop inspi
 5. **Plan.** When all tasks in a milestone complete, a planning agent reads `research-program.md` (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.
 6. **Repeat.** The loop runs until a circuit breaker halts it after N consecutive failures.
 
-In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor has autonomously completed 4 milestones (85+ experiments) with automatic milestone archival and transition.
+In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor has autonomously completed 11 milestones (160+ experiments) with automatic milestone archival and transition.
 
 The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.
 
