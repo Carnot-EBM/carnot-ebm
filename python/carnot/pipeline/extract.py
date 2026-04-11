@@ -845,10 +845,36 @@ class AutoExtractor:
         LogicExtractor, NLExtractor, and FactualKBExtractor (Exp 113).
         Additional extractors can be added via ``add_extractor()``.
 
+        **FactualExtractor (Exp 158) — opt-in:**
+        FactualExtractor makes live Wikidata network calls, so it is disabled
+        by default. Enable it with ``enable_factual_extractor=True`` or by
+        calling ``add_extractor(FactualExtractor())`` explicitly::
+
+            # Opt-in via constructor
+            auto = AutoExtractor(enable_factual_extractor=True)
+
+            # Opt-in via add_extractor
+            from carnot.pipeline.factual_extractor import FactualExtractor
+            auto = AutoExtractor()
+            auto.add_extractor(FactualExtractor())
+
+        With domain="factual", only extractors whose supported_domains
+        includes "factual" are invoked (SpilledEnergyExtractor and,
+        if enabled, FactualExtractor).
+
     Spec: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
     """
 
-    def __init__(self) -> None:
+    def __init__(self, enable_factual_extractor: bool = False) -> None:
+        """Create an AutoExtractor combining all built-in domain extractors.
+
+        Args:
+            enable_factual_extractor: If True, adds FactualExtractor (Exp 158)
+                to the extractor list. FactualExtractor makes live Wikidata
+                SPARQL calls; it is disabled by default to avoid unintended
+                network traffic in environments where it is not needed.
+                Defaults to False.
+        """
         # Import here to avoid circular imports (knowledge_base imports from
         # extract, so we defer the import to instantiation time).
         from carnot.pipeline.knowledge_base import FactualKBExtractor  # noqa: PLC0415
@@ -861,6 +887,15 @@ class AutoExtractor:
             NLExtractor(),
             FactualKBExtractor(),
         ]
+
+        # FactualExtractor (Exp 158) — opt-in: disabled by default because it
+        # makes live Wikidata SPARQL network calls. Enable explicitly when the
+        # pipeline is running in an environment with internet access.
+        if enable_factual_extractor:
+            from carnot.pipeline.factual_extractor import FactualExtractor  # noqa: PLC0415
+
+            self._extractors.append(FactualExtractor())
+
         # SpilledEnergyExtractor is held separately because it requires
         # logits from the generation step and is called via a dedicated
         # code path rather than the standard Protocol loop.
