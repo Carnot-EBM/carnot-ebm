@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 178 Definitive Adversarial GSM8K
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T20:26:40Z | 2026-04-11T20:33:47Z | Exp 178: Definitive adversarial GSM8K N=400/variant paired permutation test; fixes Exp 162 underpowered permutation test (N=8→N=800 paired deltas); GOAL #5 ACHIEVED — number_swapped: perm p≈0 AND z p≈0; irrel_injected/combined not sig (logic errors, Ising can't catch); adv/ctrl ratio 1.19×; simulated inference | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 176 Multi-Turn Factual Verification
 
 ### Turn Log

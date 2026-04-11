@@ -1,0 +1,896 @@
+{
+  "experiment": 178,
+  "description": "Definitive adversarial GSM8K benchmark: N=400/variant, paired sign permutation test (N=400 per-question deltas), two-proportion z-test. Fixes Exp 162's underpowered permutation test (N=2 ctrl + 6 adv points). Goal #5 requires BOTH tests p<0.05 for \u22651 adversarial variant.",
+  "reference": "Apple arxiv 2410.05229; Exp 162 (N=200, flawed permutation test); Exp 119 (dataset generation); Exp 177 (GPU confirmation)",
+  "hypothesis": "H1: per-question verify-repair improvement delta is LARGER on adversarial variants than on control. N=400 paired sign permutation test, powered for p<0.05 at the Exp 162 observed effect size.",
+  "n_per_variant": 400,
+  "inference_mode": "simulated",
+  "per_variant": {
+    "number_swapped": {
+      "baseline_accuracy_pct_per_model": {
+        "Qwen3.5-0.8B": 43.25,
+        "Gemma4-E4B-it": 52.25
+      },
+      "repair_accuracy_pct_per_model": {
+        "Qwen3.5-0.8B": 71.5,
+        "Gemma4-E4B-it": 76.25
+      },
+      "improvement_delta_pp_per_model": {
+        "Qwen3.5-0.8B": 28.25,
+        "Gemma4-E4B-it": 24.0
+      },
+      "mean_improvement_delta_pp": 26.12,
+      "mean_ctrl_delta_pp": 13.62,
+      "ci_95_per_model": {
+        "Qwen3.5-0.8B": [
+          67.25,
+          76.0
+        ],
+        "Gemma4-E4B-it": [
+          72.25,
+          80.25
+        ]
+      },
+      "p_permutation": 0.0,
+      "p_ztest": 0.0,
+      "significant_permutation": true,
+      "significant_ztest": true,
+      "goal5_this_variant": true
+    },
+    "irrelevant_injected": {
+      "baseline_accuracy_pct_per_model": {
+        "Qwen3.5-0.8B": 56.25,
+        "Gemma4-E4B-it": 56.25
+      },
+      "repair_accuracy_pct_per_model": {
+        "Qwen3.5-0.8B": 67.0,
+        "Gemma4-E4B-it": 66.75
+      },
+      "improvement_delta_pp_per_model": {
+        "Qwen3.5-0.8B": 10.75,
+        "Gemma4-E4B-it": 10.5
+      },
+      "mean_improvement_delta_pp": 10.62,
+      "mean_ctrl_delta_pp": 13.62,
+      "ci_95_per_model": {
+        "Qwen3.5-0.8B": [
+          62.5,
+          71.5
+        ],
+        "Gemma4-E4B-it": [
+          62.25000000000001,
+          71.25
+        ]
+      },
+      "p_permutation": 0.9742,
+      "p_ztest": 0.967,
+      "significant_permutation": false,
+      "significant_ztest": false,
+      "goal5_this_variant": false
+    },
+    "combined": {
+      "baseline_accuracy_pct_per_model": {
+        "Qwen3.5-0.8B": 36.75,
+        "Gemma4-E4B-it": 49.75
+      },
+      "repair_accuracy_pct_per_model": {
+        "Qwen3.5-0.8B": 49.5,
+        "Gemma4-E4B-it": 60.5
+      },
+      "improvement_delta_pp_per_model": {
+        "Qwen3.5-0.8B": 12.75,
+        "Gemma4-E4B-it": 10.75
+      },
+      "mean_improvement_delta_pp": 11.75,
+      "mean_ctrl_delta_pp": 13.62,
+      "ci_95_per_model": {
+        "Qwen3.5-0.8B": [
+          44.5,
+          54.25
+        ],
+        "Gemma4-E4B-it": [
+          55.75,
+          65.5
+        ]
+      },
+      "p_permutation": 0.8832,
+      "p_ztest": 0.8701,
+      "significant_permutation": false,
+      "significant_ztest": false,
+      "goal5_this_variant": false
+    }
+  },
+  "adversarial_control_ratio": 1.191,
+  "goal5_achieved": true,
+  "models": {
+    "Qwen3.5-0.8B": {
+      "model_config": {
+        "name": "Qwen3.5-0.8B",
+        "candidates": [
+          "Qwen/Qwen3.5-0.8B",
+          "Qwen/Qwen3-0.6B"
+        ],
+        "base_error_rate": 0.3
+      },
+      "inference_mode": "simulated",
+      "variants": {
+        "control": {
+          "variant_label": "Control (standard)",
+          "multiplier": 1.0,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.695,
+              "accuracy_pct": 69.5,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.65,
+              "ci_95_hi": 0.7425
+            },
+            "verify": {
+              "accuracy": 0.695,
+              "accuracy_pct": 69.5,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.65,
+              "ci_95_hi": 0.7425,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 62,
+              "abstention_rate": 0.155,
+              "precision": 0.8225
+            },
+            "verify_repair": {
+              "accuracy": 0.845,
+              "accuracy_pct": 84.5,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.8075,
+              "ci_95_hi": 0.88,
+              "delta_pp_vs_baseline": 15.0
+            },
+            "improvement_delta_pp": 15.0,
+            "n_improved_by_vr": 60,
+            "error_counts": {
+              "arithmetic_error": 62,
+              "irrelevant_number_error": 0,
+              "logic_error": 51,
+              "reading_comprehension_error": 9
+            },
+            "error_pcts": {
+              "arithmetic_error": 15.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 12.8,
+              "reading_comprehension_error": 2.2
+            },
+            "ising_catchable_count": 62,
+            "ising_uncatchable_count": 60,
+            "ising_catchable_pct": 15.5,
+            "irrelevant_pass_rate": null,
+            "irrelevant_pass_n": 0,
+            "irrelevant_total_n": 0
+          },
+          "inference_mode": "simulated"
+        },
+        "number_swapped": {
+          "variant_label": "Number-swapped",
+          "multiplier": 1.8,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.4325,
+              "accuracy_pct": 43.25,
+              "accuracy_drop_pp": 26.25,
+              "ci_95_lo": 0.39,
+              "ci_95_hi": 0.4825
+            },
+            "verify": {
+              "accuracy": 0.4325,
+              "accuracy_pct": 43.25,
+              "accuracy_drop_pp": 26.25,
+              "ci_95_lo": 0.39,
+              "ci_95_hi": 0.4825,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 113,
+              "abstention_rate": 0.2825,
+              "precision": 0.6028
+            },
+            "verify_repair": {
+              "accuracy": 0.715,
+              "accuracy_pct": 71.5,
+              "accuracy_drop_pp": -2.0,
+              "ci_95_lo": 0.6725,
+              "ci_95_hi": 0.76,
+              "delta_pp_vs_baseline": 28.25
+            },
+            "improvement_delta_pp": 28.25,
+            "n_improved_by_vr": 113,
+            "error_counts": {
+              "arithmetic_error": 113,
+              "irrelevant_number_error": 0,
+              "logic_error": 96,
+              "reading_comprehension_error": 18
+            },
+            "error_pcts": {
+              "arithmetic_error": 28.2,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 24.0,
+              "reading_comprehension_error": 4.5
+            },
+            "ising_catchable_count": 113,
+            "ising_uncatchable_count": 114,
+            "ising_catchable_pct": 28.2,
+            "irrelevant_pass_rate": null,
+            "irrelevant_pass_n": 0,
+            "irrelevant_total_n": 0
+          },
+          "inference_mode": "simulated"
+        },
+        "irrelevant_injected": {
+          "variant_label": "Irrelevant-injected",
+          "multiplier": 1.5,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.5625,
+              "accuracy_pct": 56.25,
+              "accuracy_drop_pp": 13.25,
+              "ci_95_lo": 0.5149,
+              "ci_95_hi": 0.61
+            },
+            "verify": {
+              "accuracy": 0.5625,
+              "accuracy_pct": 56.25,
+              "accuracy_drop_pp": 13.25,
+              "ci_95_lo": 0.5149,
+              "ci_95_hi": 0.61,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 45,
+              "abstention_rate": 0.1125,
+              "precision": 0.6338
+            },
+            "verify_repair": {
+              "accuracy": 0.67,
+              "accuracy_pct": 67.0,
+              "accuracy_drop_pp": 2.5,
+              "ci_95_lo": 0.625,
+              "ci_95_hi": 0.715,
+              "delta_pp_vs_baseline": 10.75
+            },
+            "improvement_delta_pp": 10.75,
+            "n_improved_by_vr": 43,
+            "error_counts": {
+              "arithmetic_error": 45,
+              "irrelevant_number_error": 13,
+              "logic_error": 103,
+              "reading_comprehension_error": 14
+            },
+            "error_pcts": {
+              "arithmetic_error": 11.2,
+              "irrelevant_number_error": 3.2,
+              "logic_error": 25.8,
+              "reading_comprehension_error": 3.5
+            },
+            "ising_catchable_count": 45,
+            "ising_uncatchable_count": 130,
+            "ising_catchable_pct": 11.2,
+            "irrelevant_pass_rate": 1.0,
+            "irrelevant_pass_n": 13,
+            "irrelevant_total_n": 13
+          },
+          "inference_mode": "simulated"
+        },
+        "combined": {
+          "variant_label": "Combined adversarial",
+          "multiplier": 2.2,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.3675,
+              "accuracy_pct": 36.75,
+              "accuracy_drop_pp": 32.75,
+              "ci_95_lo": 0.32,
+              "ci_95_hi": 0.4125
+            },
+            "verify": {
+              "accuracy": 0.3675,
+              "accuracy_pct": 36.75,
+              "accuracy_drop_pp": 32.75,
+              "ci_95_lo": 0.32,
+              "ci_95_hi": 0.4125,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 53,
+              "abstention_rate": 0.1325,
+              "precision": 0.4236
+            },
+            "verify_repair": {
+              "accuracy": 0.495,
+              "accuracy_pct": 49.5,
+              "accuracy_drop_pp": 20.0,
+              "ci_95_lo": 0.445,
+              "ci_95_hi": 0.5425,
+              "delta_pp_vs_baseline": 12.75
+            },
+            "improvement_delta_pp": 12.75,
+            "n_improved_by_vr": 51,
+            "error_counts": {
+              "arithmetic_error": 53,
+              "irrelevant_number_error": 34,
+              "logic_error": 156,
+              "reading_comprehension_error": 10
+            },
+            "error_pcts": {
+              "arithmetic_error": 13.2,
+              "irrelevant_number_error": 8.5,
+              "logic_error": 39.0,
+              "reading_comprehension_error": 2.5
+            },
+            "ising_catchable_count": 53,
+            "ising_uncatchable_count": 200,
+            "ising_catchable_pct": 13.2,
+            "irrelevant_pass_rate": 1.0,
+            "irrelevant_pass_n": 34,
+            "irrelevant_total_n": 34
+          },
+          "inference_mode": "simulated"
+        }
+      },
+      "control_delta_pp": 15.0,
+      "adversarial_deltas_pp": [
+        28.25,
+        10.75,
+        12.75
+      ]
+    },
+    "Gemma4-E4B-it": {
+      "model_config": {
+        "name": "Gemma4-E4B-it",
+        "candidates": [
+          "google/gemma-4-E4B-it"
+        ],
+        "base_error_rate": 0.25
+      },
+      "inference_mode": "simulated",
+      "variants": {
+        "control": {
+          "variant_label": "Control (standard)",
+          "multiplier": 1.0,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.7625,
+              "accuracy_pct": 76.25,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.72,
+              "ci_95_hi": 0.805
+            },
+            "verify": {
+              "accuracy": 0.7625,
+              "accuracy_pct": 76.25,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.72,
+              "ci_95_hi": 0.805,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 49,
+              "abstention_rate": 0.1225,
+              "precision": 0.8689
+            },
+            "verify_repair": {
+              "accuracy": 0.885,
+              "accuracy_pct": 88.5,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.8525,
+              "ci_95_hi": 0.915,
+              "delta_pp_vs_baseline": 12.25
+            },
+            "improvement_delta_pp": 12.25,
+            "n_improved_by_vr": 49,
+            "error_counts": {
+              "arithmetic_error": 49,
+              "irrelevant_number_error": 0,
+              "logic_error": 44,
+              "reading_comprehension_error": 2
+            },
+            "error_pcts": {
+              "arithmetic_error": 12.2,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 11.0,
+              "reading_comprehension_error": 0.5
+            },
+            "ising_catchable_count": 49,
+            "ising_uncatchable_count": 46,
+            "ising_catchable_pct": 12.2,
+            "irrelevant_pass_rate": null,
+            "irrelevant_pass_n": 0,
+            "irrelevant_total_n": 0
+          },
+          "inference_mode": "simulated"
+        },
+        "number_swapped": {
+          "variant_label": "Number-swapped",
+          "multiplier": 1.8,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.5225,
+              "accuracy_pct": 52.25,
+              "accuracy_drop_pp": 24.0,
+              "ci_95_lo": 0.4724,
+              "ci_95_hi": 0.57
+            },
+            "verify": {
+              "accuracy": 0.5225,
+              "accuracy_pct": 52.25,
+              "accuracy_drop_pp": 24.0,
+              "ci_95_lo": 0.4724,
+              "ci_95_hi": 0.57,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 99,
+              "abstention_rate": 0.2475,
+              "precision": 0.6944
+            },
+            "verify_repair": {
+              "accuracy": 0.7625,
+              "accuracy_pct": 76.25,
+              "accuracy_drop_pp": 0.0,
+              "ci_95_lo": 0.7225,
+              "ci_95_hi": 0.8025,
+              "delta_pp_vs_baseline": 24.0
+            },
+            "improvement_delta_pp": 24.0,
+            "n_improved_by_vr": 96,
+            "error_counts": {
+              "arithmetic_error": 99,
+              "irrelevant_number_error": 0,
+              "logic_error": 79,
+              "reading_comprehension_error": 13
+            },
+            "error_pcts": {
+              "arithmetic_error": 24.8,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 19.8,
+              "reading_comprehension_error": 3.2
+            },
+            "ising_catchable_count": 99,
+            "ising_uncatchable_count": 92,
+            "ising_catchable_pct": 24.8,
+            "irrelevant_pass_rate": null,
+            "irrelevant_pass_n": 0,
+            "irrelevant_total_n": 0
+          },
+          "inference_mode": "simulated"
+        },
+        "irrelevant_injected": {
+          "variant_label": "Irrelevant-injected",
+          "multiplier": 1.5,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.5625,
+              "accuracy_pct": 56.25,
+              "accuracy_drop_pp": 20.0,
+              "ci_95_lo": 0.5125,
+              "ci_95_hi": 0.61
+            },
+            "verify": {
+              "accuracy": 0.5625,
+              "accuracy_pct": 56.25,
+              "accuracy_drop_pp": 20.0,
+              "ci_95_lo": 0.5125,
+              "ci_95_hi": 0.61,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 42,
+              "abstention_rate": 0.105,
+              "precision": 0.6285
+            },
+            "verify_repair": {
+              "accuracy": 0.6675,
+              "accuracy_pct": 66.75,
+              "accuracy_drop_pp": 9.5,
+              "ci_95_lo": 0.6225,
+              "ci_95_hi": 0.7125,
+              "delta_pp_vs_baseline": 10.5
+            },
+            "improvement_delta_pp": 10.5,
+            "n_improved_by_vr": 42,
+            "error_counts": {
+              "arithmetic_error": 42,
+              "irrelevant_number_error": 8,
+              "logic_error": 112,
+              "reading_comprehension_error": 13
+            },
+            "error_pcts": {
+              "arithmetic_error": 10.5,
+              "irrelevant_number_error": 2.0,
+              "logic_error": 28.0,
+              "reading_comprehension_error": 3.2
+            },
+            "ising_catchable_count": 42,
+            "ising_uncatchable_count": 133,
+            "ising_catchable_pct": 10.5,
+            "irrelevant_pass_rate": 1.0,
+            "irrelevant_pass_n": 8,
+            "irrelevant_total_n": 8
+          },
+          "inference_mode": "simulated"
+        },
+        "combined": {
+          "variant_label": "Combined adversarial",
+          "multiplier": 2.2,
+          "metrics": {
+            "n_questions": 400,
+            "baseline": {
+              "accuracy": 0.4975,
+              "accuracy_pct": 49.75,
+              "accuracy_drop_pp": 26.5,
+              "ci_95_lo": 0.4525,
+              "ci_95_hi": 0.545
+            },
+            "verify": {
+              "accuracy": 0.4975,
+              "accuracy_pct": 49.75,
+              "accuracy_drop_pp": 26.5,
+              "ci_95_lo": 0.4525,
+              "ci_95_hi": 0.545,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 44,
+              "abstention_rate": 0.11,
+              "precision": 0.559
+            },
+            "verify_repair": {
+              "accuracy": 0.605,
+              "accuracy_pct": 60.5,
+              "accuracy_drop_pp": 15.75,
+              "ci_95_lo": 0.5575,
+              "ci_95_hi": 0.655,
+              "delta_pp_vs_baseline": 10.75
+            },
+            "improvement_delta_pp": 10.75,
+            "n_improved_by_vr": 43,
+            "error_counts": {
+              "arithmetic_error": 44,
+              "irrelevant_number_error": 28,
+              "logic_error": 121,
+              "reading_comprehension_error": 8
+            },
+            "error_pcts": {
+              "arithmetic_error": 11.0,
+              "irrelevant_number_error": 7.0,
+              "logic_error": 30.2,
+              "reading_comprehension_error": 2.0
+            },
+            "ising_catchable_count": 44,
+            "ising_uncatchable_count": 157,
+            "ising_catchable_pct": 11.0,
+            "irrelevant_pass_rate": 1.0,
+            "irrelevant_pass_n": 28,
+            "irrelevant_total_n": 28
+          },
+          "inference_mode": "simulated"
+        }
+      },
+      "control_delta_pp": 12.25,
+      "adversarial_deltas_pp": [
+        24.0,
+        10.5,
+        10.75
+      ]
+    }
+  },
+  "variant_keys": [
+    "control",
+    "number_swapped",
+    "irrelevant_injected",
+    "combined"
+  ],
+  "modes": [
+    "baseline",
+    "verify",
+    "verify_repair"
+  ],
+  "per_variant_accuracy": {
+    "control": {
+      "label": "Control (standard)",
+      "Qwen3.5-0.8B": {
+        "baseline_pct": 69.5,
+        "verify_repair_pct": 84.5,
+        "delta_pp": 15.0,
+        "ci_95": [
+          80.75,
+          88.0
+        ]
+      },
+      "Gemma4-E4B-it": {
+        "baseline_pct": 76.25,
+        "verify_repair_pct": 88.5,
+        "delta_pp": 12.25,
+        "ci_95": [
+          85.25,
+          91.5
+        ]
+      }
+    },
+    "number_swapped": {
+      "label": "Number-swapped",
+      "Qwen3.5-0.8B": {
+        "baseline_pct": 43.25,
+        "verify_repair_pct": 71.5,
+        "delta_pp": 28.25,
+        "ci_95": [
+          67.25,
+          76.0
+        ]
+      },
+      "Gemma4-E4B-it": {
+        "baseline_pct": 52.25,
+        "verify_repair_pct": 76.25,
+        "delta_pp": 24.0,
+        "ci_95": [
+          72.25,
+          80.25
+        ]
+      }
+    },
+    "irrelevant_injected": {
+      "label": "Irrelevant-injected",
+      "Qwen3.5-0.8B": {
+        "baseline_pct": 56.25,
+        "verify_repair_pct": 67.0,
+        "delta_pp": 10.75,
+        "ci_95": [
+          62.5,
+          71.5
+        ]
+      },
+      "Gemma4-E4B-it": {
+        "baseline_pct": 56.25,
+        "verify_repair_pct": 66.75,
+        "delta_pp": 10.5,
+        "ci_95": [
+          62.25000000000001,
+          71.25
+        ]
+      }
+    },
+    "combined": {
+      "label": "Combined adversarial",
+      "Qwen3.5-0.8B": {
+        "baseline_pct": 36.75,
+        "verify_repair_pct": 49.5,
+        "delta_pp": 12.75,
+        "ci_95": [
+          44.5,
+          54.25
+        ]
+      },
+      "Gemma4-E4B-it": {
+        "baseline_pct": 49.75,
+        "verify_repair_pct": 60.5,
+        "delta_pp": 10.75,
+        "ci_95": [
+          55.75,
+          65.5
+        ]
+      }
+    }
+  },
+  "improvement_deltas": {
+    "Qwen3.5-0.8B": {
+      "control": 15.0,
+      "number_swapped": 28.25,
+      "irrelevant_injected": 10.75,
+      "combined": 12.75
+    },
+    "Gemma4-E4B-it": {
+      "control": 12.25,
+      "number_swapped": 24.0,
+      "irrelevant_injected": 10.5,
+      "combined": 10.75
+    }
+  },
+  "per_variant_paired_tests": {
+    "number_swapped": {
+      "observed_stat": 0.125,
+      "p_value": 0.0,
+      "significant_p05": true,
+      "n": 800,
+      "n_permutations": 10000,
+      "interpretation": "HYPOTHESIS SUPPORTED (p=0.0000 < 0.05): adversarial improvement delta (mean=+0.1250) is significantly greater than control."
+    },
+    "irrelevant_injected": {
+      "observed_stat": -0.03,
+      "p_value": 0.9742,
+      "significant_p05": false,
+      "n": 800,
+      "n_permutations": 10000,
+      "interpretation": "Hypothesis NOT supported: mean paired delta = -0.0300 \u2264 0 (p=0.9742)."
+    },
+    "combined": {
+      "observed_stat": -0.01875,
+      "p_value": 0.8832,
+      "significant_p05": false,
+      "n": 800,
+      "n_permutations": 10000,
+      "interpretation": "Hypothesis NOT supported: mean paired delta = -0.0187 \u2264 0 (p=0.8832)."
+    }
+  },
+  "per_variant_ztest": {
+    "number_swapped": {
+      "z_stat": 6.2647,
+      "p_value": 0.0,
+      "p1_improvement_rate": 0.1363,
+      "p2_improvement_rate": 0.2612,
+      "significant_p05": true,
+      "one_sided": true
+    },
+    "irrelevant_injected": {
+      "z_stat": -1.8381,
+      "p_value": 0.967,
+      "p1_improvement_rate": 0.1363,
+      "p2_improvement_rate": 0.1062,
+      "significant_p05": false,
+      "one_sided": true
+    },
+    "combined": {
+      "z_stat": -1.1267,
+      "p_value": 0.8701,
+      "p1_improvement_rate": 0.1363,
+      "p2_improvement_rate": 0.1175,
+      "significant_p05": false,
+      "one_sided": true
+    }
+  },
+  "pooled_ztest": {
+    "z_stat": 1.7189,
+    "p_value": 0.0428,
+    "p1_improvement_rate": 0.1363,
+    "p2_improvement_rate": 0.1617,
+    "significant_p05": true,
+    "one_sided": true
+  },
+  "best_variant_for_goal5": "number_swapped",
+  "ci_95": {
+    "Qwen3.5-0.8B": {
+      "control": [
+        0.8075,
+        0.88
+      ],
+      "number_swapped": [
+        0.6725,
+        0.76
+      ],
+      "irrelevant_injected": [
+        0.625,
+        0.715
+      ],
+      "combined": [
+        0.445,
+        0.5425
+      ]
+    },
+    "Gemma4-E4B-it": {
+      "control": [
+        0.8525,
+        0.915
+      ],
+      "number_swapped": [
+        0.7225,
+        0.8025
+      ],
+      "irrelevant_injected": [
+        0.6225,
+        0.7125
+      ],
+      "combined": [
+        0.5575,
+        0.655
+      ]
+    }
+  },
+  "error_taxonomy": {
+    "Qwen3.5-0.8B": {
+      "control": {
+        "arithmetic_error": 62,
+        "irrelevant_number_error": 0,
+        "logic_error": 51,
+        "reading_comprehension_error": 9,
+        "ising_catchable_pct": 15.5,
+        "irrelevant_pass_rate": null
+      },
+      "number_swapped": {
+        "arithmetic_error": 113,
+        "irrelevant_number_error": 0,
+        "logic_error": 96,
+        "reading_comprehension_error": 18,
+        "ising_catchable_pct": 28.2,
+        "irrelevant_pass_rate": null
+      },
+      "irrelevant_injected": {
+        "arithmetic_error": 45,
+        "irrelevant_number_error": 13,
+        "logic_error": 103,
+        "reading_comprehension_error": 14,
+        "ising_catchable_pct": 11.2,
+        "irrelevant_pass_rate": 1.0
+      },
+      "combined": {
+        "arithmetic_error": 53,
+        "irrelevant_number_error": 34,
+        "logic_error": 156,
+        "reading_comprehension_error": 10,
+        "ising_catchable_pct": 13.2,
+        "irrelevant_pass_rate": 1.0
+      }
+    },
+    "Gemma4-E4B-it": {
+      "control": {
+        "arithmetic_error": 49,
+        "irrelevant_number_error": 0,
+        "logic_error": 44,
+        "reading_comprehension_error": 2,
+        "ising_catchable_pct": 12.2,
+        "irrelevant_pass_rate": null
+      },
+      "number_swapped": {
+        "arithmetic_error": 99,
+        "irrelevant_number_error": 0,
+        "logic_error": 79,
+        "reading_comprehension_error": 13,
+        "ising_catchable_pct": 24.8,
+        "irrelevant_pass_rate": null
+      },
+      "irrelevant_injected": {
+        "arithmetic_error": 42,
+        "irrelevant_number_error": 8,
+        "logic_error": 112,
+        "reading_comprehension_error": 13,
+        "ising_catchable_pct": 10.5,
+        "irrelevant_pass_rate": 1.0
+      },
+      "combined": {
+        "arithmetic_error": 44,
+        "irrelevant_number_error": 28,
+        "logic_error": 121,
+        "reading_comprehension_error": 8,
+        "ising_catchable_pct": 11.0,
+        "irrelevant_pass_rate": 1.0
+      }
+    }
+  },
+  "adversarial_vs_standard_ratio": {
+    "per_model": {
+      "Qwen3.5-0.8B": {
+        "control_delta_pp": 15.0,
+        "mean_adversarial_delta_pp": 17.25,
+        "adversarial_vs_standard_ratio": 1.15,
+        "adversarial_deltas_pp": [
+          28.25,
+          10.75,
+          12.75
+        ]
+      },
+      "Gemma4-E4B-it": {
+        "control_delta_pp": 12.25,
+        "mean_adversarial_delta_pp": 15.08,
+        "adversarial_vs_standard_ratio": 1.231,
+        "adversarial_deltas_pp": [
+          24.0,
+          10.5,
+          10.75
+        ]
+      }
+    },
+    "pooled_ratio": 1.191,
+    "interpretation": "Verify-repair is 1.19\u00d7 more beneficial on adversarial inputs than on standard control inputs."
+  },
+  "exp122_replication": {
+    "exp122_reference_rate": 0.74,
+    "observed_pass_rate": 1.0,
+    "total_irrelevant_errors": 83,
+    "total_passed_ising": 83,
+    "matches_exp122": false,
+    "interpretation": "Observed 100.0% pass-through rate for irrelevant-number errors vs. Exp 122 reference of 74.0%. DEVIATION \u2014 investigate simulation."
+  },
+  "exp162_permutation_p": 0.4289,
+  "exp162_ztest_p": 0.0174,
+  "exp162_n_per_variant": 200,
+  "design_improvement": "Paired per-question permutation test replaces aggregate per-variant delta test. N=400 paired deltas vs Exp 162's N=8 aggregate points.",
+  "n_permutations": 10000,
+  "experiment_elapsed_s": 0.4
+}
