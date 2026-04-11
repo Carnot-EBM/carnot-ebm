@@ -34,9 +34,14 @@ from __future__ import annotations
 import ast
 import re
 from dataclasses import dataclass, field
-from typing import Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
 from carnot.verify.constraint import ConstraintTerm
+
+if TYPE_CHECKING:
+    # Imported only for type-checker; at runtime we defer inside the method
+    # body to break the generation.py → extract.py circular import.
+    from carnot.pipeline.memory import ConstraintMemory
 
 
 # ---------------------------------------------------------------------------
@@ -869,7 +874,10 @@ class AutoExtractor:
         self._extractors.append(extractor)
 
     def extract(
-        self, text: str, domain: str | None = None
+        self,
+        text: str,
+        domain: str | None = None,
+        memory: "ConstraintMemory | None" = None,
     ) -> list[ConstraintResult]:
         """Run all applicable extractors and merge results.
 
@@ -878,6 +886,34 @@ class AutoExtractor:
             only runs extractors whose supported_domains include it.
             Deduplicates results by description to avoid reporting the same
             constraint from multiple extractors.
+
+            **memory= parameter (Exp 141 -- Tier 2 constraint addition):**
+            When a ConstraintMemory is provided, also runs ConstraintGenerator
+            to add new constraints for pattern types that memory has seen
+            3+ times in the target domain. Generated constraints are merged
+            with the static extraction results and deduplicated by
+            constraint_type -- so if a type is already present in the static
+            results, we don't add a second constraint of the same type.
+
+            This is the fix for Exp 134's finding: reweighting existing
+            constraints cannot close gaps caused by MISSING constraint types.
+            By ADDING constraints from memory, we cover error patterns that
+            the static extractors were never designed to catch.
+
+            Backward compatibility: when memory=None (the default), behavior
+            is identical to the pre-Exp-141 version.
+
+        Args:
+            text: Input text to extract constraints from.
+            domain: Optional domain hint. When provided, only extractors
+                that support this domain are invoked.
+            memory: Optional ConstraintMemory for Tier 2 constraint
+                addition. When provided, mature patterns for the domain
+                trigger additional extractors. Defaults to None.
+
+        Returns:
+            List of ConstraintResult objects, deduplicated by description
+            (static results) and by constraint_type (generated results).
         """
         results: list[ConstraintResult] = []
         seen_descriptions: set[str] = set()
@@ -889,4 +925,23 @@ class AutoExtractor:
                 if result.description not in seen_descriptions:
                     seen_descriptions.add(result.description)
                     results.append(result)
+
+        # Tier 2 constraint addition: generate new constraints from memory.
+        # Import deferred to avoid a circular import at module level
+        # (generation.py imports from extract.py).
+        if memory is not None and domain is not None:
+            from carnot.pipeline.generation import ConstraintGenerator  # noqa: PLC0415
+
+            generator = ConstraintGenerator.from_memory(memory)
+            # Only block types already present from STATIC extraction.
+            # Multiple generated constraints of the same NEW type (e.g., two
+            # different carry-chain violations) are all kept -- we do NOT add
+            # generated types to this set.
+            static_types: set[str] = {r.constraint_type for r in results}
+            for generated in generator.generate(text, domain):
+                # Block only types that came from static extractors, allowing
+                # the memory extractor to add multiple violations of a new type.
+                if generated.constraint_type not in static_types:
+                    results.append(generated)
+
         return results
