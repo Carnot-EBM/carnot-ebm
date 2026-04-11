@@ -981,3 +981,65 @@ milestones:
     title: "Exp 165: ArXiv research scan \u2014 prepare next milestone bibliography"
     deliverable: results/experiment_165_arxiv_scan.json
     result: OK (conductor)
+- id: 2026.04.12
+  title: JEPA Logic Repair + Lookahead Energy + Live Inference + Tier-4 Structure
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-11'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp166-jepa-logic-symbolic-features
+    title: 'Exp 166: Logic-aware JEPA training data with symbolic features'
+    deliverable: results/jepa_training_pairs_logic_v3.json
+    result: OK (conductor)
+  - id: exp167-jepa-v3-symbolic-heads
+    title: "Exp 167: JEPA predictor v3 \u2014 domain-specific symbolic embedding heads"
+    deliverable: results/jepa_predictor_v3.safetensors
+    result: OK (conductor)
+  - id: exp168-jepa-fastpath-v3
+    title: "Exp 168: JEPA fast-path benchmark v3 \u2014 target <2% degradation at \u226540% fast-path"
+    deliverable: results/experiment_168_results.json
+    result: OK (conductor)
+  - id: exp169-lookahead-energy-extractor
+    title: "Exp 169: Lookahead energy extractor \u2014 AR-EBM bijection (arxiv 2512.15605)"
+    deliverable: python/carnot/pipeline/lookahead_energy.py
+    result: OK (conductor)
+  - id: exp170-real-logits-benchmark
+    title: 'Exp 170: Real LLM logits benchmark for spilled + lookahead energy signals'
+    deliverable: results/experiment_170_real_logits_results.json
+    result: OK (conductor)
+  - id: exp171-combined-signal-benchmark
+    title: "Exp 171: Combined signal pipeline benchmark \u2014 all detectors vs individual"
+    deliverable: results/experiment_171_combined_results.json
+    result: OK (conductor)
+  - id: exp172-global-consistency-checker
+    title: 'Exp 172: Global consistency checker for multi-turn chains (arxiv 2601.13600)'
+    deliverable: python/carnot/pipeline/consistency_checker.py
+    result: OK (conductor)
+  - id: exp173-constraint-generation-v2
+    title: "Exp 173: Constraint generation v2 \u2014 NegationConstraint + CarryChain improvements"
+    deliverable: results/experiment_173_results.json
+    result: OK (conductor)
+  - id: exp174-lagoon-constraint-solver
+    title: "Exp 174: LagONN constraint solver \u2014 escape infeasible Ising states (arxiv 2505.07179)"
+    deliverable: python/carnot/models/lagoon.py
+    result: OK (conductor)
+  - id: exp175-tier4-adaptive-kan-loop
+    title: 'Exp 175: Tier-4 KAN adaptive structure self-learning loop'
+    deliverable: python/carnot/models/adaptive_kan.py
+    result: OK (conductor)
+  - id: exp176-multiturn-factual-consistency
+    title: 'Exp 176: Multi-turn factual verification with global consistency checking'
+    deliverable: results/experiment_176_results.json
+    result: OK (conductor)
+  - id: exp177-egpu-live-inference-setup
+    title: 'Exp 177: eGPU hardware setup + live model inference baseline'
+    deliverable: results/experiment_177_results.json
+    result: OK (conductor)
+  - id: exp178-live-adversarial-definitive
+    title: "Exp 178: Definitive adversarial GSM8K \u2014 Goal #5 with statistical power (N\u2265400/variant)"
+    deliverable: results/experiment_178_results.json
+    result: OK (conductor)
+  - id: exp179-npu-vitisai-activation
+    title: "Exp 179: AMD XDNA NPU activation \u2014 VitisAI onnxruntime for JEPA predictor"
+    deliverable: results/experiment_179_npu_results.json
+    result: OK (conductor)
