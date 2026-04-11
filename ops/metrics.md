@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 136 Cross-Session Memory
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T01:57:14Z | 2026-04-11T02:02:12Z | Create scripts/experiment_136_cross_session.py — 3-session cross-session memory test (200 arith S1, 200 arith S2 no-mem vs mem, 200 mixed S3); all 4 hypotheses pass: memory accumulates (115 patterns), S2 hint delta +1.0/q, repair speedup 1.43x, domain specificity (logic/code get 0 hints); 0.5s wall-clock | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 134 Online Learning
 
 ### Turn Log

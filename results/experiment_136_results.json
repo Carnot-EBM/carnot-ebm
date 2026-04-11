@@ -1,0 +1,136 @@
+{
+  "experiment": "exp_136_cross_session_memory",
+  "parameters": {
+    "n_session_1": 200,
+    "n_session_2": 200,
+    "n_session_3": 200,
+    "correct_fraction": 0.5,
+    "memory_threshold": 3,
+    "p_repair_base": 0.4,
+    "max_repair_attempts": 5,
+    "memory_boost_cap": 0.5,
+    "seeds": {
+      "session_1": 136,
+      "session_2": 137,
+      "session_3": 138
+    }
+  },
+  "session_1": {
+    "accuracy": 1.0,
+    "n_memory_suggestions_total": 193,
+    "avg_memory_suggestions": 0.965,
+    "elapsed_seconds": 0.0,
+    "memory_summary": {
+      "arithmetic": {
+        "total_patterns": 1,
+        "mature_patterns": 1,
+        "top_patterns": [
+          {
+            "error_type": "arithmetic",
+            "frequency": 115
+          }
+        ]
+      }
+    },
+    "tracker_stats": {
+      "arithmetic": {
+        "fired": 200,
+        "caught": 115,
+        "total_errors": 115,
+        "precision": 0.575,
+        "recall": 1.0
+      },
+      "learned": {
+        "fired": 193,
+        "caught": 0,
+        "total_errors": 112,
+        "precision": 0.0,
+        "recall": 0.0
+      }
+    },
+    "adaptive_weights": {
+      "arithmetic": 3.0494003221339683,
+      "learned": 0.1
+    },
+    "arith_precision": 0.575
+  },
+  "session_2": {
+    "no_memory": {
+      "accuracy": 1.0,
+      "avg_memory_suggestions": 0.0,
+      "n_memory_suggestions_total": 0
+    },
+    "with_memory": {
+      "accuracy": 1.0,
+      "avg_memory_suggestions": 1.0,
+      "n_memory_suggestions_total": 200,
+      "loaded_memory_summary": {
+        "arithmetic": {
+          "total_patterns": 1,
+          "mature_patterns": 1,
+          "top_patterns": [
+            {
+              "error_type": "arithmetic",
+              "frequency": 115
+            }
+          ]
+        }
+      }
+    },
+    "accuracy_delta": 0.0,
+    "hint_delta": 1.0,
+    "repair_simulation": {
+      "domain": "arithmetic",
+      "p_base": 0.4,
+      "memory_precision_input": 0.575,
+      "memory_boost": 0.5,
+      "p_with_memory": 0.7,
+      "no_memory": {
+        "n_wrong": 96,
+        "n_repaired": 87,
+        "fraction_repaired": 0.9062,
+        "mean_iterations_to_repair": 1.954
+      },
+      "with_memory": {
+        "n_wrong": 96,
+        "n_repaired": 96,
+        "fraction_repaired": 1.0,
+        "mean_iterations_to_repair": 1.3646
+      },
+      "speedup_ratio": 1.4319
+    },
+    "elapsed_seconds": 0.0
+  },
+  "session_3": {
+    "total_accuracy": 0.7,
+    "domain_summaries": {
+      "arithmetic": {
+        "n_questions": 66,
+        "accuracy": 1.0,
+        "n_memory_suggestions": 66,
+        "avg_memory_suggestions": 1.0
+      },
+      "logic": {
+        "n_questions": 66,
+        "accuracy": 0.6061,
+        "n_memory_suggestions": 0,
+        "avg_memory_suggestions": 0.0
+      },
+      "code": {
+        "n_questions": 68,
+        "accuracy": 0.5,
+        "n_memory_suggestions": 0,
+        "avg_memory_suggestions": 0.0
+      }
+    },
+    "elapsed_seconds": 0.01
+  },
+  "hypotheses": {
+    "h1_memory_accumulates": true,
+    "h2_memory_hints_same_domain": true,
+    "h3_memory_speeds_repair": true,
+    "h4_domain_specificity": true,
+    "all_pass": true
+  },
+  "total_elapsed_seconds": 0.47
+}
