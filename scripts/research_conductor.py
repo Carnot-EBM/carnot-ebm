@@ -1234,6 +1234,9 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         logger.warning("%s modified research_conductor.py — reverting that file", AGENT_DISPLAY)
         run_cmd(["git", "checkout", "--", "scripts/research_conductor.py"])
 
+    # ── Dogfooding: use Carnot to verify generated code ──────────
+    _dogfood_verify_generated_code()
+
     # Run tests after changes — retry up to 2 times if tests fail
     MAX_FIX_ATTEMPTS = 2
     tests_ok, test_summary = run_tests()
