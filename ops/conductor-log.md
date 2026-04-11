@@ -1291,3 +1291,5 @@
 | 2026-04-11 21:00 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
 | 2026-04-11 21:00 UTC | Milestone 2026.04.13 activated | OK | 10 tasks queued |
 | 2026-04-11 21:23 UTC | Exp 180: GPU inference baseline — Qwen3.5 + Gemma4 | OK | =========== 2484 passed, 1 skipped, 22 warnings in 105.53s (0:01:45) =========== |
+| 2026-04-11 21:51 UTC | Exp 181: GSM8K full 1319 with LIVE GPU inference — | FAIL | Claude Code error: e top before any imports
+- **No simulation fallback** — `sys |

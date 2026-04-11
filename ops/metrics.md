@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 181 Definitive GSM8K Live GPU
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T21:25:47Z | 2026-04-11T21:41:57Z | Exp 181: Created scripts/experiment_181_gsm8k_live_gpu.py — definitive GSM8K 1319q × 2 models × 3 modes on RTX 3090 (no simulation); launched in background; GPU0 64% util, Qwen3.5-0.8B active | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-11 Exp 180 Dual RTX 3090 GPU Baseline
 
 ### Turn Log
