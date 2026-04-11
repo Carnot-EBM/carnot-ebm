@@ -93,8 +93,8 @@
 - End-to-end differentiable constraint reasoning: fully differentiable text → embedding → constraints → continuous Ising → MLP → score pipeline; joint model 1.0 test AUROC (vs 0.54 Ising-only, 0.98 embedding-only); validates Ising adds discriminative power beyond embeddings; stable gradients; 5 domains (Exp 66)
 
 ### GPU Compute
-- carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested)
-- carnot-webgpu-gateway: distributed browser GPU compute
+- carnot-gpu: wgpu Vulkan backend (AMD Radeon 890M, tested) — **DEPRECATED:** not used by current pipeline. Retained for potential future browser/edge deployment or GPU training experiments.
+- carnot-webgpu-gateway: distributed browser GPU compute — **DEPRECATED:** not used by current pipeline. Retained for potential future distributed training or browser-based verification.
 - ROCm 7.2: PyTorch 2.11.0+rocm7.2, native gfx1150, 3.3x speedup on Qwen3
 
 ### Autoresearch Pipeline (REQ-AUTO-001–014)
