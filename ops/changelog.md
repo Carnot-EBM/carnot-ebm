@@ -716,3 +716,9 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 164 Complete
 
 - Exp 164: HuggingFace publishing sprint — publishes 5 artifacts (guided-decoding adapter, 3 constraint-propagation models, JEPA predictor v2); updates 16 per-token EBM READMEs; enables community access to Carnot-trained models and VerifyRepairPipeline integration via `pip install carnot`
+
+---
+
+## 2026-04-11: Experiment 165 Complete
+
+- Exp 165: ArXiv research scan — prepare next milestone bibliography; scans ArXiv and prepares research bibliography for next research milestone
