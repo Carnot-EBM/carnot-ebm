@@ -591,6 +591,12 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 ---
 
+## 2026-04-11: Experiment 147 Complete
+
+- Exp 147: Apple GSM8K Adversarial Benchmark — credibility validation experiment measuring verifier robustness on benign/adversarial question pairs; validates Carnot against distribution-shifted GSM8K variants; results at `results/experiment_147_results.json`
+
+---
+
 ## 2026-04-11: Experiment 145 Complete
 
 - Exp 145: JEPA fast-path / slow-path integration and benchmark; VerifyRepairPipeline extended with early-exit gate; architecture validated but predictor quality insufficient for <2% degradation target; results at `results/experiment_145_results.json`

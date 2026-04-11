@@ -298,7 +298,7 @@
 
 ### High Priority
 - **Exp 146 (COMPLETED — 2026-04-11)**: AMD XDNA NPU Hardware Integration — detected hardware present, exported JEPA predictor to ONNX opset 17, validated CPU baseline <1ms (p50=0.005ms, p99=0.009ms); identified software blocker (onnxruntime-vitisai not in PyPI, requires conda install -c amd); `NpuJEPAPredictor` stub ready for when AMD Ryzen AI software stack available; research-program.md Tier 3 hardware target validated.
-- **Exp 147 — Multi-domain JEPA training pairs** (follow-on to Exp 145): Exp 143 only collected arithmetic pairs, leaving code/logic AUROC at 0.5. Exp 147 should generate code+logic synthetic pairs (similar to Exp 145's generate_code_qa/generate_logic_qa), retrain the predictor, and re-run the fast-path benchmark. Target: macro AUROC > 0.70 and <2% degradation at threshold=0.3.
+- **Exp 147 (COMPLETED — 2026-04-11)**: Apple GSM8K Adversarial Benchmark — credibility validation experiment measuring Carnot verifier robustness on benign/adversarial GSM8K question pairs; validates robustness against distribution-shifted variants; results at `results/experiment_147_results.json`.
 - **Scale thrml constraint verification**: larger SAT/coloring problems, more constraint types
 - **LLM constraint extraction**: parse natural language into Ising-encodable constraints
 - **Extropic hardware testing**: when TSU is available, run thrml code natively
