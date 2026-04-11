@@ -67,6 +67,7 @@ else:
 
 AGENT_MODEL = os.environ.get("AGENT_MODEL", DEFAULT_MODEL)
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
+DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
 AGENT_DISPLAY = {
     "claude": "Claude Code",
     "gemini": "Gemini CLI",
@@ -1041,11 +1042,33 @@ def _plan_next_milestone(push: bool = True) -> bool:
     return True
 
 
+def _load_dogfood_memory() -> dict:
+    """Load persistent dogfood memory from disk.
+
+    Tracks patterns across conductor restarts: which experiments fail,
+    which brace patterns recur, which file types need extra attention.
+    """
+    if DOGFOOD_MEMORY_FILE.exists():
+        try:
+            return json.loads(DOGFOOD_MEMORY_FILE.read_text())
+        except Exception:
+            return {"patterns": {}, "brace_fixes": 0, "code_violations": 0, "experiments_checked": 0}
+    return {"patterns": {}, "brace_fixes": 0, "code_violations": 0, "experiments_checked": 0}
+
+
+def _save_dogfood_memory(memory: dict) -> None:
+    """Persist dogfood memory to disk."""
+    try:
+        DOGFOOD_MEMORY_FILE.write_text(json.dumps(memory, indent=2))
+    except Exception as e:
+        logger.debug("DOGFOOD: Failed to save memory: %s", e)
+
+
 def _dogfood_verify_generated_code() -> None:
     """Use Carnot's own pipeline to verify code the conductor just generated.
 
-    This is the dogfooding step: we eat our own cooking. Runs three checks
-    on any new/modified Python files:
+    This is the dogfooding step: we eat our own cooking. Runs checks
+    on any new/modified Python files and persists learned patterns:
 
     1. Brace validation — catch {key} patterns in YAML prompts that will
        break .format(). This was our #1 recurring bug.
@@ -1125,8 +1148,31 @@ def _dogfood_verify_generated_code() -> None:
             except Exception as e:
                 logger.debug("DOGFOOD: CodeExtractor check failed: %s", e)
 
-        # 3. Log dogfooding results
-        logger.info("DOGFOOD: Verification complete on generated code")
+        # 3. Persist learned patterns to disk
+        memory = _load_dogfood_memory()
+        memory["experiments_checked"] = memory.get("experiments_checked", 0) + 1
+
+        # Record brace fix pattern
+        if 'fixed_raw' in dir() and fixed_raw != raw:
+            memory["brace_fixes"] = memory.get("brace_fixes", 0) + 1
+            # Track which tasks had braces
+            brace_tasks = memory.get("brace_fix_tasks", [])
+            brace_tasks.append(yaml_file if 'yaml_file' in dir() else "unknown")
+            memory["brace_fix_tasks"] = brace_tasks[-50:]  # Keep last 50
+
+        # Record code violations
+        if py_files:
+            memory["code_violations"] = memory.get("code_violations", 0) + len(
+                [c for c in (constraints if 'constraints' in dir() else [])
+                 if c.metadata.get("satisfied") is False]
+            )
+
+        _save_dogfood_memory(memory)
+        logger.info(
+            "DOGFOOD: Verification complete (total: %d checks, %d brace fixes, %d violations)",
+            memory["experiments_checked"], memory.get("brace_fixes", 0),
+            memory.get("code_violations", 0),
+        )
 
     except Exception as e:
         # Never let dogfooding block the pipeline
@@ -1459,6 +1505,13 @@ def main() -> int:
         print(f"  Mode: continuous (every {args.interval} min)")
     else:
         print("  Mode: single step")
+
+    # Load and display persistent dogfood memory
+    memory = _load_dogfood_memory()
+    if memory.get("experiments_checked", 0) > 0:
+        print(f"  Dogfood memory: {memory['experiments_checked']} checks, "
+              f"{memory.get('brace_fixes', 0)} brace fixes, "
+              f"{memory.get('code_violations', 0)} code violations")
     print()
 
     iteration = 0
