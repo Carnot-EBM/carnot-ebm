@@ -1279,3 +1279,7 @@
 | 2026-04-11 20:10 UTC | Exp 176: Multi-turn factual verification with glob | OK | =========== 2483 passed, 1 skipped, 22 warnings in 95.28s (0:01:35) ============ |
 | 2026-04-11 20:11 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 20:11 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 20:23 UTC | Exp 177: eGPU hardware setup + live model inferenc | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-11 20:24 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 20:24 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 20:24 UTC | Exp 177: eGPU hardware setup + live model inferenc | OK | Deliverable already exists in repo |

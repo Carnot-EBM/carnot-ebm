@@ -1,0 +1,72 @@
+{
+  "experiment": 177,
+  "date": "20260411",
+  "model_qwen": "Qwen/Qwen3.5-0.8B",
+  "hardware_detection": {
+    "rocm": {
+      "rocminfo_available": true,
+      "raw_gfx_lines": [
+        "Name:                    gfx1150",
+        "Name:                    amdgcn-amd-amdhsa--gfx1150",
+        "Name:                    amdgcn-amd-amdhsa--gfx11-generic"
+      ],
+      "has_gfx1100": false,
+      "has_gfx1150": true,
+      "all_gfx_ids": [
+        "gfx11",
+        "gfx1150"
+      ]
+    },
+    "torch": {
+      "torch_available": true,
+      "cuda_available": true,
+      "device_count": 2,
+      "device_names": [
+        "NVIDIA GeForce RTX 3090",
+        "NVIDIA GeForce RTX 3090"
+      ]
+    },
+    "jax": {
+      "jax_available": true,
+      "devices": [
+        "cuda:0",
+        "cuda:1"
+      ],
+      "has_gpu_device": true,
+      "platform": "gpu"
+    },
+    "rocm_version": "7.2.1"
+  },
+  "has_egpu": true,
+  "gpu_type": "NVIDIA CUDA (NVIDIA GeForce RTX 3090, NVIDIA GeForce RTX 3090)",
+  "jax_gpu_works": true,
+  "jax_matmul_result": {
+    "ran": true,
+    "warmup_ok": true,
+    "matmul_ms": 1.869,
+    "error": null
+  },
+  "cpu_inference_p50_ms": null,
+  "gpu_inference_p50_ms": null,
+  "speedup_ratio": null,
+  "live_gsm8k_accuracy": null,
+  "cpu_only_baseline": null,
+  "notes": [
+    "GPU model load for GSM8K failed; accuracy not measured.",
+    "GPU inference confirmed. Set CARNOT_FORCE_CPU=0 in future experiments."
+  ],
+  "nvidia_gpus": [
+    "NVIDIA GeForce RTX 3090",
+    "NVIDIA GeForce RTX 3090"
+  ],
+  "inference_benchmark": {
+    "model": "Qwen/Qwen3.5-0.8B",
+    "cpu_latencies_ms": [],
+    "gpu_latencies_ms": [],
+    "cpu_p50_ms": null,
+    "gpu_p50_ms": null,
+    "speedup_ratio": null,
+    "cpu_only": false,
+    "error": "CPU model returned None (CARNOT_SKIP_LLM?)"
+  }
+}
