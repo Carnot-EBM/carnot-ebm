@@ -650,3 +650,9 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 152 Complete
 
 - Exp 152: Continual learning for constraint retention across agent steps — extends ConstraintStateMachine with learned constraint weighting; enables agent workflows to retain correct constraints and deprioritize incorrect ones via per-constraint confidence scores; improves multi-step accuracy through constraint feedback loop
+
+---
+
+## 2026-04-11: Experiment 155 Complete
+
+- Exp 155: Retrain JEPA violation predictor v2 with multi-domain data — retrained JEPAViolationPredictor on 1200-pair multi-domain dataset (arithmetic, code, logic); macro AUROC 0.6478→0.6588 (+0.0111), code domain +7.0pp (0.706→0.776); v2 model at `results/jepa_predictor_v2.safetensors`; improves on Exp 144 single-domain baseline
