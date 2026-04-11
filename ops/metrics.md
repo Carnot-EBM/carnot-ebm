@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 138 Guided Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T02:20:12Z | 2026-04-11T02:24:15Z | Create scripts/experiment_138_guided_benchmark.py — 3-task guided decoding benchmark (GSM8K 200, HumanEval 50, TruthfulQA 100); 4 modes; latency profiling; results saved to results/experiment_138_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Doc update Exp 137
 
 ### Turn Log

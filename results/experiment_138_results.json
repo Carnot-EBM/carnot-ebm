@@ -1,0 +1,171 @@
+{
+  "experiment": "exp_138_guided_benchmark",
+  "spec": [
+    "REQ-VERIFY-001",
+    "REQ-VERIFY-002",
+    "REQ-VERIFY-003",
+    "SCENARIO-VERIFY-004",
+    "SCENARIO-VERIFY-006"
+  ],
+  "parameters": {
+    "n_gsm8k": 200,
+    "n_humaneval": 50,
+    "n_truthfulqa": 100,
+    "n_latency_samples": 500,
+    "seed": 138,
+    "adapter_path": "/home/ianblenke/github.com/ianblenke/carnot/exports/guided-decoding-adapter",
+    "adapter_alpha": 0.5,
+    "adapter_check_every_k": 1,
+    "modes": [
+      "baseline",
+      "guided",
+      "verify_repair",
+      "guided_verify_repair"
+    ]
+  },
+  "latency_profile": {
+    "n_samples": 485,
+    "mean_ms": 0.0718,
+    "p50_ms": 0.0719,
+    "p95_ms": 0.114,
+    "p99_ms": 0.1275,
+    "within_budget_01ms_fraction": 0.0
+  },
+  "gsm8k": {
+    "n_questions": 200,
+    "modes": {
+      "baseline": {
+        "accuracy": 0.555,
+        "correct": 111,
+        "total": 200,
+        "elapsed_seconds": 0.002
+      },
+      "guided": {
+        "accuracy": 0.625,
+        "correct": 125,
+        "total": 200,
+        "elapsed_seconds": 0.003
+      },
+      "verify_repair": {
+        "accuracy": 0.545,
+        "correct": 109,
+        "total": 200,
+        "elapsed_seconds": 0.026
+      },
+      "guided_verify_repair": {
+        "accuracy": 0.65,
+        "correct": 130,
+        "total": 200,
+        "elapsed_seconds": 0.03
+      }
+    },
+    "sources": [
+      "gsm8k"
+    ]
+  },
+  "humaneval": {
+    "n_problems": 50,
+    "modes": {
+      "baseline": {
+        "pass_at_1": 1.0,
+        "passed": 50,
+        "total": 50,
+        "elapsed_seconds": 0.012
+      },
+      "guided": {
+        "pass_at_1": 1.0,
+        "passed": 50,
+        "total": 50,
+        "elapsed_seconds": 0.011
+      },
+      "verify_repair": {
+        "pass_at_1": 1.0,
+        "passed": 50,
+        "total": 50,
+        "elapsed_seconds": 0.082
+      },
+      "guided_verify_repair": {
+        "pass_at_1": 1.0,
+        "passed": 50,
+        "total": 50,
+        "elapsed_seconds": 0.093
+      }
+    },
+    "sources": [
+      "humaneval"
+    ]
+  },
+  "truthfulqa": {
+    "n_questions": 100,
+    "modes": {
+      "baseline": {
+        "accuracy": 0.55,
+        "correct": 55,
+        "abstained": 0,
+        "total": 100,
+        "elapsed_seconds": 0.001
+      },
+      "guided": {
+        "accuracy": 0.56,
+        "correct": 56,
+        "abstained": 0,
+        "total": 100,
+        "elapsed_seconds": 0.001
+      },
+      "verify_repair": {
+        "accuracy": 0.57,
+        "correct": 57,
+        "abstained": 0,
+        "total": 100,
+        "elapsed_seconds": 0.049
+      },
+      "guided_verify_repair": {
+        "accuracy": 0.61,
+        "correct": 61,
+        "abstained": 0,
+        "total": 100,
+        "elapsed_seconds": 0.035
+      }
+    },
+    "sources": [
+      "truthfulqa"
+    ]
+  },
+  "summary": {
+    "modes": {
+      "baseline": {
+        "gsm8k_accuracy": 0.555,
+        "gsm8k_delta_over_baseline": 0.0,
+        "humaneval_pass_at_1": 1.0,
+        "humaneval_delta_over_baseline": 0.0,
+        "truthfulqa_accuracy": 0.55,
+        "truthfulqa_delta_over_baseline": 0.0
+      },
+      "guided": {
+        "gsm8k_accuracy": 0.625,
+        "gsm8k_delta_over_baseline": 0.07,
+        "humaneval_pass_at_1": 1.0,
+        "humaneval_delta_over_baseline": 0.0,
+        "truthfulqa_accuracy": 0.56,
+        "truthfulqa_delta_over_baseline": 0.01
+      },
+      "verify_repair": {
+        "gsm8k_accuracy": 0.545,
+        "gsm8k_delta_over_baseline": -0.01,
+        "humaneval_pass_at_1": 1.0,
+        "humaneval_delta_over_baseline": 0.0,
+        "truthfulqa_accuracy": 0.57,
+        "truthfulqa_delta_over_baseline": 0.02
+      },
+      "guided_verify_repair": {
+        "gsm8k_accuracy": 0.65,
+        "gsm8k_delta_over_baseline": 0.095,
+        "humaneval_pass_at_1": 1.0,
+        "humaneval_delta_over_baseline": 0.0,
+        "truthfulqa_accuracy": 0.61,
+        "truthfulqa_delta_over_baseline": 0.06
+      }
+    }
+  },
+  "total_elapsed_seconds": 9.18
+}
