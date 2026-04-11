@@ -98,6 +98,7 @@ cargo tarpaulin --workspace --exclude carnot-python --out Html --fail-under 100
 |------|------|-------|---------------|
 | Large | Boltzmann | `carnot-boltzmann` | `carnot.models.boltzmann` |
 | Medium | Gibbs | `carnot-gibbs` | `carnot.models.gibbs` |
+| Efficient | KAN | `carnot-kan` | `carnot.models.kan` |
 | Small | Ising | `carnot-ising` | `carnot.models.ising` |
 
 ## Session Metrics (MANDATORY)
