@@ -1155,3 +1155,7 @@
 | 2026-04-10 23:52 UTC | Exp 126: Agent rollback on constraint violation | OK | =========== 1813 passed, 1 skipped, 12 warnings in 126.72s (0:02:06) =========== |
 | 2026-04-11 00:09 UTC | Exp 127: Agent workflow verification benchmark | OK | =========== 1813 passed, 1 skipped, 12 warnings in 125.18s (0:02:05) =========== |
 | 2026-04-11 00:36 UTC | Exp 130: Execute adversarial verify-repair | OK | =========== 1844 passed, 1 skipped, 12 warnings in 138.79s (0:02:18) =========== |
+| 2026-04-11 01:40 UTC | Exp 134: Online learning benchmark | OK | =========== 1895 passed, 1 skipped, 12 warnings in 134.38s (0:02:14) =========== |
+| 2026-04-11 01:41 UTC | Exp 131: Adversarial results analysis and writeup | OK | Deliverable already exists in repo |
+| 2026-04-11 01:41 UTC | Exp 132: Constraint performance tracker | OK | Deliverable already exists in repo |
+| 2026-04-11 01:41 UTC | Exp 133: Adaptive constraint weighting from tracke | OK | Deliverable already exists in repo |
