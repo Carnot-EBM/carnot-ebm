@@ -1161,3 +1161,4 @@
 | 2026-04-11 01:41 UTC | Exp 133: Adaptive constraint weighting from tracke | OK | Deliverable already exists in repo |
 | 2026-04-11 02:06 UTC | Exp 136: Cross-session learning benchmark | OK | =========== 1928 passed, 1 skipped, 12 warnings in 139.71s (0:02:19) =========== |
 | 2026-04-11 02:07 UTC | Exp 135: Persistent constraint memory | OK | Deliverable already exists in repo |
+| 2026-04-11 02:17 UTC | Exp 137: Package guided decoding for HuggingFace | OK | =========== 1935 passed, 1 skipped, 12 warnings in 102.88s (0:01:42) =========== |
