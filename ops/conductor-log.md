@@ -1298,3 +1298,4 @@
 | 2026-04-11 22:36 UTC | Exp 182: Adversarial GSM8K N=400/variant with LIVE | FAIL | Claude Code error:  |
 | 2026-04-11 22:51 UTC | Exp 182: Adversarial GSM8K N=400/variant with LIVE | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-11 22:56 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
+| 2026-04-11 23:21 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
