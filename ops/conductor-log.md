@@ -1175,3 +1175,4 @@
 | 2026-04-11 05:12 UTC | Exp 147: Apple GSM8K adversarial benchmark — THE c | OK | =========== 2041 passed, 1 skipped, 12 warnings in 186.41s (0:03:06) =========== |
 | 2026-04-11 05:41 UTC | Exp 148: Full GSM8K (1319 questions) with live inf | FAIL | Claude Code error:  |
 | 2026-04-11 05:42 UTC | Exp 148: Full GSM8K (1319 questions) with live inf | OK | Deliverable already exists in repo |
+| 2026-04-11 06:26 UTC | Exp 149: TruthfulQA at scale with factual constrai | SKIP | Pre-tests failing, self-heal failed:  |
