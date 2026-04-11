@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 AdaptiveWeighter (Tier 1 Self-Learning)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T01:07:05Z | 2026-04-11T01:12:37Z | Create python/carnot/pipeline/adaptive.py (AdaptiveWeighter: from_tracker/apply_to_pipeline, run_comparison, ComparisonResult) + modify verify_repair.py to use _adaptive_weights + tests/python/test_adaptive.py (23 tests, 100% coverage, 1895 total pass) | TBD |
+
+---
+
 ## Session: 2026-04-11 ConstraintTracker (Tier 1 Self-Learning)
 
 ### Turn Log
