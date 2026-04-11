@@ -520,6 +520,7 @@
 | 2 | 2026-04-10T20:45:20Z | 2026-04-10T20:52:49Z | Publish KAN + guided decoding adapter as HF-ready artifacts in models/constraint-verifier-v2 | 7m29s |
 | 3 | 2026-04-11T11:23:30Z | 2026-04-11T11:31:54Z | Exp 155: Retrain JEPA v2 on multi-domain data; generate v2 pairs, train with weighted BCE + early stopping, evaluate vs v1 | 8m24s |
 | 4 | 2026-04-11T16:44:07Z | 2026-04-11T16:45:10Z | Doc updates for Exp 166: append changelog entry, traceability row, verify REQ-JEPA-001 + SCENARIO-JEPA-LOGIC-001 | 1m3s |
+| 5 | 2026-04-11T18:26:42Z | 2026-04-11T18:28:48Z | Exp 170: create real-logits benchmark (100 Q, simulated fallback — torch not installed); SpilledEnergy AUROC=1.000, LookaheadEnergy AUROC=1.000, optimal α=0.0; results saved | 2m6s |
 
 ### Session Summary
 
