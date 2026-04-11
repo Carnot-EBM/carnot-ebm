@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 144 JEPA Predictor Training
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T03:32:26Z | 2026-04-11T03:37:53Z | Create python/carnot/pipeline/jepa_predictor.py (JEPAViolationPredictor MLP 256→64→32→3), tests/python/test_jepa_predictor.py (36 tests, 100% coverage), scripts/experiment_144_train_jepa.py; train on Exp 143 pairs: arithmetic AUROC=0.7126, macro AUROC=0.5709 (code/logic AUROC=0.5 — no positives in data); model saved to results/jepa_predictor.safetensors (73.1 KB) | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 143 JEPA Training Pair Collection
 
 ### Turn Log
