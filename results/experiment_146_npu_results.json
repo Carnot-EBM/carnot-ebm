@@ -1,0 +1,48 @@
+{
+  "experiment": 146,
+  "title": "JEPA Predictor NPU Latency Benchmark",
+  "spec_refs": [
+    "REQ-JEPA-001"
+  ],
+  "timestamp_utc": "2026-04-11T04:44:24Z",
+  "elapsed_seconds": 0.21,
+  "npu_hw_present": true,
+  "npu_sw_available": false,
+  "npu_available": false,
+  "device_info": {
+    "kernel_version": "6.19.11-1-cachyos",
+    "dev_accel": [
+      "/dev/accel"
+    ],
+    "amdxdna_loaded": true,
+    "amdxdna_module_lines": [
+      "amdxdna               208896  0",
+      "gpu_sched              73728  2 amdxdna,amdgpu"
+    ],
+    "lspci_xdna": [],
+    "onnxruntime_version": "1.24.4",
+    "providers": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ]
+  },
+  "blocker": "NPU hardware present (amdxdna module loaded, /dev/accel0 exists) but AMDXDNAExecutionProvider is absent from onnxruntime. Requires AMD Ryzen AI software stack: conda install -c amd onnxruntime-vitisai",
+  "onnx_model_path": "/home/ianblenke/github.com/ianblenke/carnot/results/jepa_predictor_146.onnx",
+  "cpu_benchmark": {
+    "p50_ms": 0.004578992957249284,
+    "p95_ms": 0.007094009197317063,
+    "p99_ms": 0.009358106181025505,
+    "mean_ms": 0.0053827844094485044,
+    "min_ms": 0.004458008334040642,
+    "max_ms": 0.07403898052871227
+  },
+  "cpu_p50_ms": 0.004578992957249284,
+  "cpu_p99_ms": 0.009358106181025505,
+  "npu_benchmark": null,
+  "npu_p50_ms": null,
+  "npu_p99_ms": null,
+  "speedup": null,
+  "npu_p99_target_met": null,
+  "target_npu_p99_ms": 1.0,
+  "conclusion": "NPU hardware detected and kernel module active, but ONNX AMDXDNAExecutionProvider not available in standard onnxruntime. CPU ONNX baseline established. NPU path blocked until AMD Ryzen AI software stack installed."
+}
