@@ -111,17 +111,19 @@ def with_agent_signature(message: str) -> str:
 def _build_agent_command(
     prompt: str,
     max_turns: int,
+    model_override: str | None = None,
 ) -> tuple[list[str], str | None, str]:
     """Build the command, optional stdin payload, and log message."""
+    model = model_override or AGENT_MODEL
     if AGENT_TYPE == "gemini":
         return (
             [
                 AGENT_BIN, "-p", prompt,
                 "--yolo",
-                "--model", AGENT_MODEL,
+                "--model", model,
             ],
             None,
-            f"Calling {AGENT_DISPLAY} (model: {AGENT_MODEL})...",
+            f"Calling {AGENT_DISPLAY} (model: {model})...",
         )
 
     if AGENT_TYPE == "opencode":
@@ -129,12 +131,12 @@ def _build_agent_command(
             [
                 AGENT_BIN, "run",
                 "--dangerously-skip-permissions",
-                "--model", AGENT_MODEL,
+                "--model", model,
                 "--dir", str(PROJECT_ROOT),
                 prompt,
             ],
             None,
-            f"Calling {AGENT_DISPLAY} (model: {AGENT_MODEL})...",
+            f"Calling {AGENT_DISPLAY} (model: {model})...",
         )
 
     if AGENT_TYPE == "codex":
@@ -143,12 +145,12 @@ def _build_agent_command(
                 AGENT_BIN, "exec",
                 "--dangerously-bypass-approvals-and-sandbox",
                 "--color", "never",
-                "--model", AGENT_MODEL,
+                "--model", model,
                 "--cd", str(PROJECT_ROOT),
                 "-",
             ],
             prompt,
-            f"Calling {AGENT_DISPLAY} (model: {AGENT_MODEL})...",
+            f"Calling {AGENT_DISPLAY} (model: {model})...",
         )
 
     return (
@@ -157,19 +159,27 @@ def _build_agent_command(
             "--dangerously-skip-permissions",
             "--verbose",
             "--max-turns", str(max_turns),
-            "--model", AGENT_MODEL,
+            "--model", model,
         ],
         prompt,
-        f"Calling {AGENT_DISPLAY} ({max_turns} max turns, model: {AGENT_MODEL})...",
+        f"Calling {AGENT_DISPLAY} ({max_turns} max turns, model: {model})...",
     )
 
 
-def run_agent(prompt: str, max_turns: int = 20, timeout: int = 600) -> tuple[bool, str]:
+def run_agent(
+    prompt: str,
+    max_turns: int = 20,
+    timeout: int = 600,
+    model_override: str | None = None,
+) -> tuple[bool, str]:
     """Run the configured agent with a research prompt.
 
     Streams output live to the terminal.
+    Args:
+        model_override: Use a different model for this call (e.g., "haiku"
+            for lightweight tasks like doc reconciliation).
     """
-    cmd, stdin_text, msg = _build_agent_command(prompt, max_turns)
+    cmd, stdin_text, msg = _build_agent_command(prompt, max_turns, model_override)
 
     logger.info(msg)
 
@@ -1149,8 +1159,13 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             f"so all tests pass with 100% coverage.\n"
             f"Do NOT modify scripts/research_conductor.py."
         )
+        # Use haiku for first fix attempt (usually simple coverage gaps),
+        # escalate to default model on second attempt if haiku fails.
+        fix_model = "haiku" if (AGENT_TYPE == "claude" and fix_attempt == 0) else None
         logger.info("Asking %s to fix test failures...", AGENT_DISPLAY)
-        fix_ok, fix_output = run_agent(fix_prompt, max_turns=30, timeout=600)
+        fix_ok, fix_output = run_agent(
+            fix_prompt, max_turns=30, timeout=600, model_override=fix_model,
+        )
         if not fix_ok:
             logger.error("%s failed to fix tests", AGENT_DISPLAY)
             break
@@ -1192,7 +1207,11 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         f"6. Do NOT read entire files — only read the tail to find where to append.\n"
         f"   This keeps you within the turn budget.\n"
     )
-    recon_ok, recon_output = run_agent(reconcile_prompt, max_turns=25, timeout=300)
+    # Use haiku for doc reconciliation — it's just appending table rows.
+    recon_model = "haiku" if AGENT_TYPE == "claude" else None
+    recon_ok, recon_output = run_agent(
+        reconcile_prompt, max_turns=25, timeout=300, model_override=recon_model,
+    )
     if recon_ok and git_has_changes():
         # Guard protected files
         for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
