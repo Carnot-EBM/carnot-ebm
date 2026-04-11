@@ -356,3 +356,22 @@ Top 10 selected by relevance score.
 - **Complexity:** high
 - **Description:** Extend the verify-repair loop (Exp 57) to a 3-step chain: plan → calculate → conclude.  Each step's verified facts become hard constraints on the next step.  Measure constraint retention rate (what fraction of step-1 constraints are still satisfied at step 3) and overall accuracy on a 50-problem multi-step arithmetic dataset.  Directly addresses Goal #2 (multi-turn agentic verification) and produces the first multi-step constraint propagation numbers for the project.
 
+
+### VALENCE-SALS — RT-Core Geometric Constraint Indexing
+- **Repo:** github.com/PaperScarecrow/VALENCE-SALS
+- **Paper:** zenodo.org/records/19421339
+- **What:** Replaces O(N²) transformer attention with O(log N) GPU ray-tracing
+  through a 3D BVH of UMAP-projected word embeddings. Vulkan RT cores do
+  spatial search instead of dot-product attention. ~1.2GB VRAM, 20-30W.
+- **Relevance to Carnot:**
+  1. **Geometric constraint indexing** — Map constraint types into 3D space
+     where related constraints cluster. Fire rays to find relevant constraints
+     for a given input in O(log N) instead of running all 5+ extractors.
+     Matters when we have 100+ constraint types.
+  2. **RT-core Ising coupling lookup** — BVH over sparse coupling graph could
+     skip zero-couplings in O(log N). Only relevant at 50K+ vars where O(N²)
+     dominates. FPGA is a more direct path for us.
+- **Limitation:** VALENCE does retrieval only, not generation or verification.
+  The "thermodynamic" framing is metaphorical, not actual energy minimization.
+- **When to pursue:** When constraint type count exceeds ~50 and AutoExtractor
+  becomes a bottleneck. Low priority currently.
