@@ -393,3 +393,4 @@
 **Stories failed:** 0/3
 **Total cost:** $0.00
 **Completed:** DOCUI-001, DOCUI-002
+- **Exp 176 (COMPLETED — 2026-04-11)**: Multi-turn factual verification with global consistency checking — combines ConstraintStateMachine + FactualExtractor (Wikidata KB) with GlobalConsistencyChecker (Exp 172); 20 synthetic chains (10 consistent + 10 inconsistent); local-only Mode B 60% detection (6/10) → local+global Mode C 100% detection (10/10 inconsistent, 0 FP on consistent); GlobalConsistencyChecker adds 4 detections for numeric/arithmetic cross-step contradictions; demonstrates cascade of verification strategies for multi-turn reasoning; results at `results/experiment_176_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-005.
