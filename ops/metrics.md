@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 180 Dual RTX 3090 GPU Baseline
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T21:03:39Z | 2026-04-11T21:12:38Z | Exp 180: Dual RTX 3090 GPU baseline — load time, VRAM, 50-prompt benchmark, GPU vs CPU speedup; Qwen 4.88x, Gemma 28x; fixed triton/Python 3.14 import issue | TBD |
+| 2 | 2026-04-11T21:15:05Z | 2026-04-11T21:20:25Z | Fix test coverage gap (99.98% → 100%): added test for torch/transformers unavailable with CARNOT_FORCE_LIVE unset (lines 239-240 in model_loader.py); all 2484 tests pass with 100% coverage | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-11 Exp 178 Definitive Adversarial GSM8K
 
 ### Turn Log
