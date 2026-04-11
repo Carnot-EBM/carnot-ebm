@@ -811,3 +811,65 @@ milestones:
     title: 'Exp 153: KAN adaptive mesh refinement for energy landscapes'
     deliverable: scripts/experiment_153_kan_refinement.py
     result: OK (conductor)
+- id: 2026.04.10
+  title: JEPA Predictive Verification + Constraint Generation + Credibility Proof
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-11'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp140-guided-latency
+    title: 'Exp 140: Constraint-projection guided decoding latency benchmark'
+    deliverable: scripts/experiment_140_guided_latency.py
+    result: OK (conductor)
+  - id: exp143-jepa-pairs
+    title: 'Exp 143: Collect (partial response, final violation) JEPA training pairs'
+    deliverable: results/jepa_training_pairs.json
+    result: OK (conductor)
+  - id: exp141-constraint-generation
+    title: 'Exp 141: Memory-augmented constraint generation'
+    deliverable: python/carnot/pipeline/generation.py
+    result: OK (conductor)
+  - id: exp144-jepa-predictor
+    title: 'Exp 144: Train JEPA violation predictor'
+    deliverable: python/carnot/pipeline/jepa_predictor.py
+    result: OK (conductor)
+  - id: exp142-combined-learning
+    title: 'Exp 142: Combined Tier 1+2 learning benchmark'
+    deliverable: scripts/experiment_142_combined_learning.py
+    result: OK (conductor)
+  - id: exp145-jepa-fastpath
+    title: 'Exp 145: JEPA fast-path / slow-path integration and benchmark'
+    deliverable: scripts/experiment_145_jepa_fastpath.py
+    result: OK (conductor)
+  - id: exp146-npu
+    title: 'Exp 146: AMD XDNA NPU experimentation'
+    deliverable: results/experiment_146_npu_results.json
+    result: OK (conductor)
+  - id: exp147-apple-gsm8k
+    title: "Exp 147: Apple GSM8K adversarial benchmark \u2014 THE credibility experiment"
+    deliverable: scripts/experiment_147_apple_gsm8k.py
+    result: OK (conductor)
+  - id: exp148-gsm8k-full
+    title: 'Exp 148: Full GSM8K (1319 questions) with live inference + confidence intervals'
+    deliverable: scripts/experiment_148_gsm8k_full.py
+    result: OK (conductor)
+  - id: exp149-truthfulqa-scale
+    title: 'Exp 149: TruthfulQA at scale with factual constraint coverage analysis'
+    deliverable: scripts/experiment_149_truthfulqa.py
+    result: OK (conductor)
+  - id: exp150-hf-push
+    title: 'Exp 150: Push guided decoding adapter + update 16 model READMEs on HuggingFace'
+    deliverable: results/experiment_150_results.json
+    result: OK (conductor)
+  - id: exp151-publish-constraint-models
+    title: 'Exp 151: Publish constraint propagation models to HuggingFace'
+    deliverable: exports/constraint-propagation-models/README.md
+    result: OK (conductor)
+  - id: exp152-continual-learning
+    title: 'Exp 152: Continual learning for constraint retention across agent steps'
+    deliverable: python/carnot/models/continual_gibbs.py
+    result: OK (conductor)
+  - id: exp153-kan-refinement
+    title: 'Exp 153: KAN adaptive mesh refinement for energy landscapes'
+    deliverable: scripts/experiment_153_kan_refinement.py
+    result: OK (conductor)
