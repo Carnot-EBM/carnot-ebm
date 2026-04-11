@@ -671,6 +671,12 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 ---
 
+## 2026-04-11: Experiment 159 Complete
+
+- Exp 159: Full 5-domain benchmark with factual extractor + memory generation — comprehensive evaluation across 5 domains with memory-augmented constraint generation; validates hallucination detection pipeline across diverse domains
+
+---
+
 ## 2026-04-11: Experiment 155 Complete
 
 - Exp 155: Retrain JEPA violation predictor v2 with multi-domain data — retrained JEPAViolationPredictor on 1200-pair multi-domain dataset (arithmetic, code, logic); macro AUROC 0.6478→0.6588 (+0.0111), code domain +7.0pp (0.706→0.776); v2 model at `results/jepa_predictor_v2.safetensors`; improves on Exp 144 single-domain baseline
