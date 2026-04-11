@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 164: HuggingFace Publishing — guided-decoding-adapter, constraint-propagation models, JEPA v2, README updates)
+
+- `scripts/experiment_164_hf_publish.py` — HuggingFace publishing script. Checks authentication via `huggingface_hub.whoami()`, uploads all pending model artifacts, verifies uploads by downloading READMEs, updates 16 per-token EBM model cards, and writes `results/experiment_164_results.json`. Falls back gracefully to `scripts/hf_upload_commands.sh` if unauthenticated. (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, NFR-03, user instruction: Exp 164)
+- `exports/guided-decoding-adapter` (Exp 137) → published to `Carnot-EBM/guided-decoding-adapter` (commit 3727dac). Verified: README.md 6419 bytes.
+- `exports/constraint-propagation-models/arithmetic` (Exp 151) → published to `Carnot-EBM/constraint-propagation-arithmetic` (commit 7e069b3). Verified: README.md 5834 bytes. AUROC 0.997.
+- `exports/constraint-propagation-models/logic` (Exp 151) → published to `Carnot-EBM/constraint-propagation-logic` (commit dd34eba). Verified: README.md 4570 bytes. AUROC 1.000.
+- `exports/constraint-propagation-models/code` (Exp 151) → published to `Carnot-EBM/constraint-propagation-code` (commit 646c7cb). Verified: README.md 4918 bytes. AUROC 0.867.
+- `results/jepa_predictor_v2.safetensors` (Exp 155, 74.9 KB) + generated model card → published to `Carnot-EBM/jepa-predictor-v2` (commit 5b17fa3). Macro AUROC 0.659; arithmetic 0.721, code 0.776, logic 0.479. Verified: README.md 3609 bytes.
+- All 16 per-token EBM model READMEs on HuggingFace updated to add `pip install carnot` note pointing to `https://github.com/ianblenke/carnot`. All 16 updated successfully.
+- `results/experiment_164_results.json` — Full results: 5 uploads (0 failed), 16 README updates (0 failed).
+
+---
+
 ## 2026-04-11 (Exp 163: Full HumanEval Benchmark — 164 problems, publishable code verification)
 
 - `scripts/experiment_163_humaneval_full.py` — Full HumanEval benchmark (164 official problems). Loads real HumanEval from HuggingFace `openai_humaneval`, runs baseline → verify → repair (up to 3 iterations) pipeline per problem. Live Qwen3.5-0.8B with subprocess code execution + 5s timeout; falls back to Exp-68-calibrated simulation. Reports pass@1 baseline/verify/repair with 95% bootstrap CIs (N=10,000 samples). Results: baseline 68.9% [61.6%, 75.6%], repair 100.0% (simulation); Δ+31.1% [+24.4%, +38.4%]; 51/164 failures all repaired in avg 1.24 iters. Publishable with live model inference. (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, user instruction: Exp 163)
