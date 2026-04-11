@@ -1214,3 +1214,9 @@
 | 2026-04-11 13:51 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
 | 2026-04-11 13:51 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 13:51 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:01 UTC | Exp 160: Connect eGPU (RX 7900 XTX via Thunderbolt | FAIL | Claude Code error: API Error: Unable to connect to API (ConnectionRefused)
+ |
+| 2026-04-11 14:02 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:02 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:02 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:02 UTC | Exp 160: Connect eGPU (RX 7900 XTX via Thunderbolt | OK | Deliverable already exists in repo |
