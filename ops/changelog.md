@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 161: Full GSM8K Benchmark with 95% CIs)
+
+- `scripts/experiment_161_gsm8k_full.py` — Scales Exp 91 from 200 to 1,319 questions (full GSM8K test split). Loads real dataset via HuggingFace `openai/gsm8k`; 400-question synthetic fallback if datasets unavailable. Checks `results/experiment_160_results.json` for eGPU detection to choose live vs. simulation inference. Runs Baseline / Verify-only / Verify+Repair modes per model. Computes 95% bootstrap CIs (n=10,000) including paired delta CI for repair improvement. Published baselines included for context (GPT-4 87.1%, Llama2-70B 56.8%). (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, user instruction: Exp 161)
+- `results/experiment_161_results.json` — Full results: N=1319 real GSM8K questions, simulation fallback (CARNOT_SKIP_LLM=1). Qwen3.5-0.8B: baseline 70.6% [68.2%, 73.0%], repair 84.4% [82.4%, 86.3%], Δ +13.8% [+12.0%, +15.7%]. Gemma4-E4B-it: baseline 77.1% [74.8%, 79.4%], repair 87.8% [86.1%, 89.5%], Δ +10.7% [+9.1%, +12.4%]. Bootstrap CIs ≈ ±2pp (<±3pp target ✓). Goal #6: PARTIAL — real dataset confirmed, inference still simulated (eGPU not yet connected).
+
 ## 2026-04-11 (Exp 158 FactualExtractor — Wikidata SPARQL)
 
 - `python/carnot/pipeline/factual_extractor.py` — `FactualClaimConstraint` (ConstraintTerm: energy=0 if KB-verified, 1 if KB-contradicted; ignores Ising config x) + `FactualExtractor` (ConstraintExtractor Protocol: regex-based NER + claim triple decomposition → Wikidata SPARQL verification with 5s timeout + module-level QID/claim caches; graceful degradation on any network failure: returns empty list + warning). Implements Goal #3 of research-program.md to close the 100% false-negative rate on factual claims from Exp 88. Primary KB: Wikidata SPARQL (https://query.wikidata.org/sparql). Entity resolution via wbsearchentities API. No spaCy — stdlib regex only. (REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002)

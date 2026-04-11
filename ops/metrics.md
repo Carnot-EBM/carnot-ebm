@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 161 Full GSM8K Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T14:05:56Z | 2026-04-11T14:11:24Z | Exp 161: Full GSM8K (1319 questions) × 2 models × 3 modes + 95% bootstrap CIs; real GSM8K dataset loaded; simulation fallback (CARNOT_SKIP_LLM=1); Qwen3.5: +13.8% [+12.0%,+15.7%], Gemma4: +10.7% [+9.1%,+12.4%]; Goal #6 PARTIAL (real data, simulated inference); saved results/experiment_161_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 158 FactualExtractor
 
 ### Turn Log
