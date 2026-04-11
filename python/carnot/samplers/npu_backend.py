@@ -3,7 +3,7 @@
 **Researcher summary:**
     Provides ``NpuJEPAPredictor`` — a drop-in replacement for direct JAX-based
     JEPA inference that routes execution to the AMD Ryzen AI NPU when the
-    ``AMDXDNAExecutionProvider`` is available in onnxruntime. Falls back to
+    ``VitisAIExecutionProvider`` is available in onnxruntime. Falls back to
     ``CPUExecutionProvider`` transparently if the NPU software stack is absent.
 
 **Detailed explanation for engineers:**
@@ -20,22 +20,31 @@
 
     2. AMD Ryzen AI software stack:
        - ``onnxruntime-vitisai`` (conda: ``conda install -c amd onnxruntime-vitisai``)
-       - This package extends onnxruntime with ``AMDXDNAExecutionProvider``
+       - This package extends onnxruntime with ``VitisAIExecutionProvider``
        - Vitis AI compiler is bundled and compiles ONNX graphs to AIE instructions
 
     3. The ONNX model (exported by Exp 146 to results/jepa_predictor_146.onnx)
        is passed to onnxruntime; the provider compiles it at session creation time
        and caches the compiled form. Subsequent calls skip compilation.
 
-    **Current status (Exp 146):**
-        NPU hardware IS present (/dev/accel0, amdxdna module loaded).
-        AMDXDNAExecutionProvider IS NOT available in standard onnxruntime.
-        NPU path BLOCKED until AMD Ryzen AI software stack is installed.
-        See: https://ryzenai.docs.amd.com/en/latest/inst.html
+    **Current status (Exp 179):**
+        NPU hardware IS present (/dev/accel0, amdxdna module loaded). ✅
+        Git symlinks in RyzenAI-SW/linux/onnx/ryzen14/ FIXED. ✅
+        VitisAI EP .so files in .venv-npu/ PRESENT but built for Python 3.10. ⚠️
+        Running Python 3.12 — EP requires libpython3.10.so.1.0, not found.
+        REMAINING BLOCKER: Need AMD VitisAI wheel for Python 3.12.
+        Download from: ryzenai.docs.amd.com/en/latest/inst.html
+        Provider name CORRECTED: 'VitisAIExecutionProvider' (was wrong in Exp 146).
+
+    **Provider name (CORRECTED in Exp 179):**
+        The correct ONNX Runtime provider name is ``VitisAIExecutionProvider``,
+        NOT ``AMDXDNAExecutionProvider`` as assumed in Exp 146. AMD's own
+        example code (RyzenAI-SW/example/image_classification/utils.py) uses
+        ``VitisAIExecutionProvider``.
 
     **How this class works:**
         - At construction time, attempts to create an onnxruntime session with
-          ``AMDXDNAExecutionProvider``. If that fails (missing provider or no
+          ``VitisAIExecutionProvider``. If that fails (missing provider or no
           device), falls back to ``CPUExecutionProvider`` and logs a warning.
         - ``predict(x)`` accepts a (256,) numpy array and returns domain probs.
         - ``is_high_risk(x, threshold)`` replicates JEPAViolationPredictor's
@@ -45,7 +54,7 @@
     **Why not use JAX for NPU?**
         JAX targets CUDA/ROCm/XLA backends. AMD's XDNA NPU is not a CUDA or
         ROCm device — it's a separate accelerator with its own ISA (AIE
-        instructions). ONNX Runtime with AMDXDNAExecutionProvider is the
+        instructions). ONNX Runtime with VitisAIExecutionProvider is the
         officially supported inference path for this hardware.
 
 Spec: REQ-JEPA-001 (Tier 3 predictor), research-program.md §"Next Milestone Focus" #5
@@ -91,8 +100,8 @@ class NpuJEPAPredictor:
         differentiable through JAX autodiff. Use JAX-based JEPAViolationPredictor
         when gradients are needed (e.g., Langevin sampling).
 
-        **NPU path blocked until AMDXDNAExecutionProvider available:**
-            When ``AMDXDNAExecutionProvider`` is absent from onnxruntime,
+        **NPU path blocked until VitisAIExecutionProvider available:**
+            When ``VitisAIExecutionProvider`` is absent from onnxruntime,
             the constructor logs a warning and silently uses CPUExecutionProvider.
             No user code changes required when the NPU stack is later installed —
             just reinstantiate and the NPU path activates automatically.
@@ -114,19 +123,28 @@ class NpuJEPAPredictor:
         self,
         onnx_path: str | Path | None = None,
         prefer_npu: bool = True,
+        vaip_config: str | Path | None = None,
     ) -> None:
         """Load the ONNX model and create an inference session.
 
         **Detailed explanation for engineers:**
             Session creation strategy:
             1. If ``prefer_npu=True`` (default), first tries to create a session
-               with ``["AMDXDNAExecutionProvider", "CPUExecutionProvider"]``.
-               The XDNA provider will compile the graph to AIE instructions at
-               this point (takes ~1–2s on first call, then cached).
-            2. If that raises ``InvalidGraph`` or ``NoSuchFile`` (provider not
-               installed) or the provider is simply absent, falls back to
-               ``["CPUExecutionProvider"]`` and sets ``_active_backend = "cpu_fallback"``.
+               with ``["VitisAIExecutionProvider", "CPUExecutionProvider"]``.
+               VitisAI EP requires provider_options with config_file pointing to
+               vaip_config_npu_2_3.json (AMD VitisAI pass configuration). The
+               provider compiles the graph to AIE instructions at session creation
+               time (takes ~5-60s on first call, then cached in cacheDir).
+            2. If that raises any exception or the provider is absent, falls back
+               to ``["CPUExecutionProvider"]`` and sets
+               ``_active_backend = "cpu_fallback"``.
             3. If ``prefer_npu=False``, goes straight to CPU.
+
+            **VitisAI EP provider options (Exp 179):**
+                - ``config_file``: path to vaip_config_npu_2_3.json
+                  (in ~/github.com/amd/RyzenAI-SW/.../ryzen14/)
+                - ``cacheDir``: directory for compiled model cache
+                - ``cacheKey``: unique key per model
 
             The ONNX model must be exported first by running:
                 ``JAX_PLATFORMS=cpu python scripts/experiment_146_npu.py``
@@ -135,6 +153,8 @@ class NpuJEPAPredictor:
             onnx_path: Path to the ONNX model file. Defaults to
                 ``results/jepa_predictor_146.onnx`` (created by Exp 146).
             prefer_npu: If True, attempt NPU provider before CPU fallback.
+            vaip_config: Path to vaip_config_npu_2_3.json. If None, searched
+                in the standard AMD RyzenAI-SW location.
         """
         import onnxruntime as ort  # type: ignore[import]
 
@@ -148,14 +168,36 @@ class NpuJEPAPredictor:
         available_providers = ort.get_available_providers()
         self._active_backend = "cpu_fallback"
 
-        if prefer_npu and "AMDXDNAExecutionProvider" in available_providers:
+        # Locate vaip config for VitisAI EP
+        _vaip_default = (
+            Path.home()
+            / "github.com"
+            / "amd"
+            / "RyzenAI-SW"
+            / "Ryzen-AI-CVML-Library"
+            / "linux"
+            / "onnx"
+            / "ryzen14"
+            / "vaip_config_npu_2_3.json"
+        )
+        vaip_config_path = Path(vaip_config) if vaip_config else _vaip_default
+
+        if prefer_npu and "VitisAIExecutionProvider" in available_providers:
+            _cache_dir = model_path.parent / "npu_cache"
+            _cache_dir.mkdir(exist_ok=True)
+            _provider_options = [{
+                "config_file": str(vaip_config_path),
+                "cacheDir": str(_cache_dir),
+                "cacheKey": "jepa_predictor_npu",
+            }]
             try:
                 self._session = ort.InferenceSession(
                     str(model_path),
-                    providers=["AMDXDNAExecutionProvider", "CPUExecutionProvider"],
+                    providers=["VitisAIExecutionProvider", "CPUExecutionProvider"],
+                    provider_options=_provider_options,
                 )
                 self._active_backend = "npu"
-                logger.info("NpuJEPAPredictor: AMDXDNAExecutionProvider active.")
+                logger.info("NpuJEPAPredictor: VitisAIExecutionProvider active.")
             except Exception as exc:
                 # NPU provider present but session creation failed (e.g. device
                 # busy, driver error). Fall back gracefully.
@@ -169,10 +211,10 @@ class NpuJEPAPredictor:
                     providers=["CPUExecutionProvider"],
                 )
         else:
-            if prefer_npu and "AMDXDNAExecutionProvider" not in available_providers:
+            if prefer_npu and "VitisAIExecutionProvider" not in available_providers:
                 # NPU path blocked — explain what's missing
                 logger.warning(
-                    "NpuJEPAPredictor: AMDXDNAExecutionProvider not found in "
+                    "NpuJEPAPredictor: VitisAIExecutionProvider not found in "
                     "onnxruntime (available: %s). "
                     "NPU path blocked until AMD Ryzen AI software stack is "
                     "installed: conda install -c amd onnxruntime-vitisai. "
@@ -201,7 +243,7 @@ class NpuJEPAPredictor:
         """Active execution backend: ``"npu"`` or ``"cpu_fallback"``.
 
         **Detailed explanation for engineers:**
-            "npu" means AMDXDNAExecutionProvider was successfully activated.
+            "npu" means VitisAIExecutionProvider was successfully activated.
             "cpu_fallback" means the NPU provider was unavailable or failed,
             so CPUExecutionProvider is being used instead.
         """

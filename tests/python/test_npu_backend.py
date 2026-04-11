@@ -62,7 +62,7 @@ def _make_mock_ort(
 
         def session_side_effect(path: str, providers: list[str] | None = None) -> MagicMock:
             call_count["n"] += 1
-            if providers and "AMDXDNAExecutionProvider" in providers:
+            if providers and "VitisAIExecutionProvider" in providers:
                 raise npu_session_raises  # type: ignore[misc]
             return mock_session
 
@@ -135,10 +135,10 @@ class TestNpuJEPAPredictorInit:
         assert pred.backend_name == "cpu_fallback"
 
     def test_npu_backend_when_provider_available(self, fake_onnx: Path) -> None:
-        """REQ-JEPA-001: AMDXDNAExecutionProvider present → backend_name='npu'."""
+        """REQ-JEPA-001: VitisAIExecutionProvider present → backend_name='npu'."""
         pred = _make_predictor(
             fake_onnx,
-            available_providers=["AMDXDNAExecutionProvider", "CPUExecutionProvider"],
+            available_providers=["VitisAIExecutionProvider", "CPUExecutionProvider"],
             prefer_npu=True,
         )
         assert pred.backend_name == "npu"
@@ -147,7 +147,7 @@ class TestNpuJEPAPredictorInit:
         """REQ-JEPA-001: NPU session creation error → graceful CPU fallback."""
         pred = _make_predictor(
             fake_onnx,
-            available_providers=["AMDXDNAExecutionProvider", "CPUExecutionProvider"],
+            available_providers=["VitisAIExecutionProvider", "CPUExecutionProvider"],
             npu_session_raises=RuntimeError("device busy"),
             prefer_npu=True,
         )
