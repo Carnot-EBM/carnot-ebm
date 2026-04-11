@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 146 AMD XDNA NPU Latency Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T04:41:15Z | 2026-04-11T04:44:27Z | Create scripts/experiment_146_npu.py + python/carnot/samplers/npu_backend.py; detect NPU HW (present: /dev/accel0, amdxdna loaded) vs SW (AMDXDNAExecutionProvider absent from std onnxruntime); export JEPA MLP to ONNX; CPU benchmark p50=0.005ms p99=0.009ms; NPU blocked — needs conda install -c amd onnxruntime-vitisai; results/experiment_146_npu_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 145 JEPA Fast-Path Benchmark
 
 ### Turn Log
