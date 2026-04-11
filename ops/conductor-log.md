@@ -1268,3 +1268,7 @@
 | 2026-04-11 19:15 UTC | Exp 173: Constraint generation v2 — NegationConstr | OK | =========== 2386 passed, 1 skipped, 12 warnings in 90.58s (0:01:30) ============ |
 | 2026-04-11 19:16 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 19:16 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:32 UTC | Exp 174: LagONN constraint solver — escape infeasi | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-11 19:33 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:33 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:33 UTC | Exp 174: LagONN constraint solver — escape infeasi | OK | Deliverable already exists in repo |

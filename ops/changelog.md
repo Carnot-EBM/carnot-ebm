@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 174: LagONN — Lagrange Oscillatory Neural Networks, arxiv 2505.07179)
+
+- `python/carnot/models/lagoon.py` — New `LagONN` model implementing arxiv 2505.07179 (Delacour et al., 2025). Extends Ising EBM with m hard linear constraints Ax≤b enforced via Lagrange multiplier dual ascent. Energy: E(x) = -0.5 x^T J x - bias^T x + λ^T max(0, Ax - b). Parallel Gibbs sampling uses exact Lagrange-augmented conditionals (O(mn) vectorized local field). Lambda updates: λ ← max(0, λ + lr * max(0, Ax - b)) after each sweep. Implements EnergyFunction protocol. Includes `make_random_constrained_ising`, `make_sat_constrained_ising`, `make_scheduling_ising` benchmark generators. (REQ-LAGOON-001, REQ-LAGOON-002, REQ-LAGOON-003, user instruction: Exp 174)
+- `tests/python/test_lagoon.py` — 46 tests, 100% coverage on lagoon.py. Tests: EnergyFunction protocol compliance, energy composition (Ising + Lagrange), dual-ascent λ updates (growth, non-negativity, immutability), feasibility checking, local field correctness (λ=0 matches Ising, Lagrange field discourages violation), Gibbs sweep outputs, sample method behavior, all three generators, gradient via finite-diff.
+- `scripts/experiment_174_lagoon_benchmark.py` — Benchmark vs vanilla Ising (lr=0) on 20 Max-3-SAT-style and 20 scheduling instances. Metrics: feasibility_rate, mean_ising_energy, λ_max.
+- `results/experiment_174_results.json` — Benchmark results: scheduling 0.5%→49.2% feasibility (20/20 LagONN wins, +49pp); SAT mixed (constraint calibration needs refinement, λ small suggesting SAT-knapsack coupling is weak). Overall: 23.2%→47.6% (+24.4pp), 23/40 wins. λ_max scheduling: 13–25 (strong dual ascent); SAT: 0–0.7 (weak).
+
+---
+
 ## 2026-04-11 (Exp 167: JEPA Violation Predictor v3 — symbolic logic features, targets MET)
 
 - `scripts/experiment_167_train_jepa_v3.py` — Retrains JEPAViolationPredictor with 1500 combined pairs (800 arithmetic + 200 code from v2, 500 new symbolic-feature logic pairs from Exp 166). Improvements: stratified (domain×violated) split, per-domain class weights (clipped [0.5,10]), logic loss ×2.0, 200 epochs with early stopping on val macro AUROC (patience=20), AdamW weight_decay=1e-4. Architecture unchanged (256→64→32→3). (REQ-JEPA-001, SCENARIO-JEPA-003, user instruction: Exp 167)
