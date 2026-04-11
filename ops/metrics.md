@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Constraint Propagation Model Export
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T08:58:24Z | 2026-04-11T09:11:35Z | Create exports/constraint-propagation-models/ (arithmetic AUROC=0.997, logic 1.0, code 0.867); python/carnot/inference/constraint_models.py (IsingConstraintModel + ConstraintPropagationModel with from_pretrained/save_pretrained); scripts/export_constraint_models.py (training + export); 3 model cards + collection README; 52 tests passing, constraint_models.py 100% coverage | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 149 TruthfulQA Factual Coverage Benchmark
 
 ### Turn Log

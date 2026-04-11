@@ -1,0 +1,38 @@
+{
+  "model_type": "ising_constraint_model",
+  "domain": "code",
+  "feature_dim": 200,
+  "carnot_version": "0.1.0",
+  "spec": [
+    "REQ-VERIFY-002",
+    "REQ-VERIFY-003",
+    "FR-11"
+  ],
+  "training": {
+    "n_pairs": 500,
+    "n_train": 400,
+    "n_test": 100,
+    "algorithm": "discriminative_cd",
+    "lr": 0.01,
+    "l1_lambda": 0.0,
+    "weight_decay": 0.005,
+    "n_epochs": 300,
+    "source_experiments": [
+      "Exp-62",
+      "Exp-89"
+    ]
+  },
+  "benchmark": {
+    "auroc_reproduced": 0.8669,
+    "accuracy_reproduced": 0.88,
+    "auroc_exp89_reference": 0.9096,
+    "accuracy_exp89_reference": 0.88,
+    "n_test_exp89": 25
+  },
+  "limitations": [
+    "Feature encoder uses binary structural features \u2014 not embeddings.",
+    "Only learns from structural patterns, not semantics.",
+    "Exp 89 AUROC (0.9096) was for self-bootstrapped pipeline data; this export uses simpler Exp 62-style deterministic encoding.",
+    "factual and scheduling domains not included (near-zero AUROC in Exp 89)."
+  ]
+}

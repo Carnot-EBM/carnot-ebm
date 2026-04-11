@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Constraint Propagation Model Export)
+
+- `python/carnot/inference/constraint_models.py` — new `IsingConstraintModel` with `energy(x)`, `score(x)`, `energy_batch(X)`, `from_pretrained(path_or_repo)`, `save_pretrained(path)`; `ConstraintPropagationModel` factory; 100% coverage. (REQ-VERIFY-002, REQ-VERIFY-003, FR-11)
+- `scripts/export_constraint_models.py` — trains and exports domain Ising models; discriminative CD, best HP from Exp 89 (lr=0.01, L1=0, 300 epochs), 500 pairs/domain, 200-dim binary features.
+- `exports/constraint-propagation-models/arithmetic/` — AUROC=0.997, accuracy=99.0% (Exp 89 ref: 1.0).
+- `exports/constraint-propagation-models/logic/` — AUROC=1.000, accuracy=100.0% (Exp 89 ref: 1.0).
+- `exports/constraint-propagation-models/code/` — AUROC=0.867, accuracy=88.0% (Exp 89 ref: 0.91).
+- `exports/constraint-propagation-models/README.md` — collection card with quick-start, save API, technical details.
+- `tests/python/test_constraint_models.py` — 52 tests, 100% constraint_models.py coverage; construction validation, energy/score analytical checks, batch energy, save/load round-trip, Hub-load mock, ImportError branches, 3 domain model integration tests.
+- HuggingFace CLI not found in venv — Hub upload skipped. Publish with: `huggingface-cli upload Carnot-EBM/constraint-propagation-{arithmetic,logic,code} exports/constraint-propagation-models/{arithmetic,logic,code}/`. (User instruction: publish novel Ising constraint artifacts)
+
 ## 2026-04-11 (Exp 147)
 
 - Exp 147 (Apple GSM8K Adversarial — Carnot Verify-Repair, Goal #5): `scripts/experiment_147_apple_gsm8k.py` — tests Carnot's constraint verification pipeline against Apple (arxiv 2410.05229)'s adversarial GSM8K variants (control, number-swapped, irrelevant-injected, combined); 3 evaluation modes (baseline / verify-only / verify-repair, max 3 repair iters) × 4 variants × 2 models (Qwen3.5-0.8B, Gemma4-E4B-it); uses pre-generated `results/adversarial_gsm8k_data.json` (200 items/variant); simulation mode (CARNOT_SKIP_LLM=1) with Apple-calibrated error rates (control 1.0×, number-swapped 1.8×, irrelevant-injected 1.5×, combined 2.2×); **key results**: number-swapped baseline drops 31pp (Qwen) / 17pp (Gemma) vs control; verify-repair recovers to +27pp / +24.5pp delta on number-swapped (vs +10pp / +13pp on control) — confirms hypothesis direction; combined variant shows only +10.5pp / +10pp (close to control) because irrelevant-number errors dominate error mix (Ising correctly misses them); error breakdown: number-swapped has 57/49 arithmetic errors (Ising catches all); combined has 13/21 irrelevant-number errors (Ising correctly ignores — arithmetic with wrong inputs is internally consistent); **hypothesis test**: permutation test observed stat +3.67pp, p=0.463 (positive direction, not significant — N=6 adversarial vs N=2 control data points insufficient for statistical power); **bootstrap CIs**: Qwen VR on number-swapped 67–79%, Gemma 72–83%; results saved to `results/experiment_147_results.json` (14 KB). (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, Goal #5)
