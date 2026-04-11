@@ -1252,3 +1252,5 @@
 | 2026-04-11 16:07 UTC | Milestone 2026.04.12 activated | OK | 14 tasks queued |
 | 2026-04-11 16:45 UTC | Exp 166: Logic-aware JEPA training data with symbo | OK | =========== 2251 passed, 1 skipped, 12 warnings in 426.36s (0:07:06) =========== |
 | 2026-04-11 17:07 UTC | Exp 167: JEPA predictor v3 — domain-specific symbo | OK | =========== 2256 passed, 1 skipped, 12 warnings in 405.26s (0:06:45) =========== |
+| 2026-04-11 17:28 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | =========== 2256 passed, 1 skipped, 12 warnings in 423.79s (0:07:03) =========== |
+| 2026-04-11 17:29 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
