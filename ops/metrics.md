@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 147 Apple GSM8K Adversarial
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T04:52:33Z | 2026-04-11T05:07:44Z | Create scripts/experiment_147_apple_gsm8k.py; 3-mode eval (baseline/verify/verify-repair) × 4 adversarial variants × 2 models; Qwen number-swapped: baseline 46% → VR 73% (+27pp); Gemma number-swapped: 53% → 77.5% (+24.5pp); control deltas: +10pp/+13pp; hypothesis direction supported (num-swap delta >> control delta); permutation test p=0.463 (N too small); results/experiment_147_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 146 AMD XDNA NPU Latency Benchmark
 
 ### Turn Log

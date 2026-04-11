@@ -1,0 +1,465 @@
+{
+  "experiment": 147,
+  "description": "Apple GSM8K Adversarial: Carnot verify-repair pipeline maintains accuracy under adversarial perturbations (number-swapped, irrelevant-injected, combined) by catching arithmetic errors regardless of irrelevant context. Tests Goal #5 from research-program.md.",
+  "reference": "Apple arxiv 2410.05229",
+  "hypothesis": "Carnot verify-repair improvement delta is LARGER on adversarial variants than on control (because adversarial inputs cause more arithmetic errors that Ising constraint verification can catch).",
+  "models": {
+    "Qwen3.5-0.8B": {
+      "model_config": {
+        "name": "Qwen3.5-0.8B",
+        "candidates": [
+          "Qwen/Qwen3.5-0.8B",
+          "Qwen/Qwen3-0.6B"
+        ],
+        "base_error_rate": 0.3
+      },
+      "inference_mode": "simulated",
+      "variants": {
+        "control": {
+          "variant_label": "Control (standard)",
+          "multiplier": 1.0,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.77,
+              "accuracy_pct": 77.0,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.71,
+              "ci_95_hi": 0.825
+            },
+            "verify": {
+              "accuracy": 0.77,
+              "accuracy_pct": 77.0,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.71,
+              "ci_95_hi": 0.825,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 21,
+              "abstention_rate": 0.105,
+              "precision": 0.8603
+            },
+            "verify_repair": {
+              "accuracy": 0.87,
+              "accuracy_pct": 87.0,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.82,
+              "ci_95_hi": 0.915,
+              "delta_pp_vs_baseline": 10.0
+            },
+            "improvement_delta_pp": 10.0,
+            "error_counts": {
+              "arithmetic_error": 21,
+              "irrelevant_number_error": 0,
+              "logic_error": 22,
+              "reading_comprehension_error": 3
+            },
+            "error_pcts": {
+              "arithmetic_error": 10.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 11.0,
+              "reading_comprehension_error": 1.5
+            },
+            "ising_catchable_count": 21,
+            "ising_uncatchable_count": 25,
+            "ising_catchable_pct": 10.5
+          },
+          "inference_mode": "simulated"
+        },
+        "number_swapped": {
+          "variant_label": "Number-swapped",
+          "multiplier": 1.8,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.46,
+              "accuracy_pct": 46.0,
+              "accuracy_drop_pp": 31.0,
+              "ci_95_lo": 0.3949,
+              "ci_95_hi": 0.525
+            },
+            "verify": {
+              "accuracy": 0.46,
+              "accuracy_pct": 46.0,
+              "accuracy_drop_pp": 31.0,
+              "ci_95_lo": 0.3949,
+              "ci_95_hi": 0.525,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 57,
+              "abstention_rate": 0.285,
+              "precision": 0.6434
+            },
+            "verify_repair": {
+              "accuracy": 0.73,
+              "accuracy_pct": 73.0,
+              "accuracy_drop_pp": 4.0,
+              "ci_95_lo": 0.67,
+              "ci_95_hi": 0.79,
+              "delta_pp_vs_baseline": 27.0
+            },
+            "improvement_delta_pp": 27.0,
+            "error_counts": {
+              "arithmetic_error": 57,
+              "irrelevant_number_error": 0,
+              "logic_error": 43,
+              "reading_comprehension_error": 8
+            },
+            "error_pcts": {
+              "arithmetic_error": 28.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 21.5,
+              "reading_comprehension_error": 4.0
+            },
+            "ising_catchable_count": 57,
+            "ising_uncatchable_count": 51,
+            "ising_catchable_pct": 28.5
+          },
+          "inference_mode": "simulated"
+        },
+        "irrelevant_injected": {
+          "variant_label": "Irrelevant-injected",
+          "multiplier": 1.5,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.55,
+              "accuracy_pct": 55.0,
+              "accuracy_drop_pp": 22.0,
+              "ci_95_lo": 0.485,
+              "ci_95_hi": 0.62
+            },
+            "verify": {
+              "accuracy": 0.55,
+              "accuracy_pct": 55.0,
+              "accuracy_drop_pp": 22.0,
+              "ci_95_lo": 0.485,
+              "ci_95_hi": 0.62,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 23,
+              "abstention_rate": 0.115,
+              "precision": 0.6215
+            },
+            "verify_repair": {
+              "accuracy": 0.665,
+              "accuracy_pct": 66.5,
+              "accuracy_drop_pp": 10.5,
+              "ci_95_lo": 0.5999,
+              "ci_95_hi": 0.73,
+              "delta_pp_vs_baseline": 11.5
+            },
+            "improvement_delta_pp": 11.5,
+            "error_counts": {
+              "arithmetic_error": 23,
+              "irrelevant_number_error": 1,
+              "logic_error": 61,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 11.5,
+              "irrelevant_number_error": 0.5,
+              "logic_error": 30.5,
+              "reading_comprehension_error": 2.5
+            },
+            "ising_catchable_count": 23,
+            "ising_uncatchable_count": 67,
+            "ising_catchable_pct": 11.5
+          },
+          "inference_mode": "simulated"
+        },
+        "combined": {
+          "variant_label": "Combined adversarial",
+          "multiplier": 2.2,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.38,
+              "accuracy_pct": 38.0,
+              "accuracy_drop_pp": 39.0,
+              "ci_95_lo": 0.315,
+              "ci_95_hi": 0.445
+            },
+            "verify": {
+              "accuracy": 0.38,
+              "accuracy_pct": 38.0,
+              "accuracy_drop_pp": 39.0,
+              "ci_95_lo": 0.315,
+              "ci_95_hi": 0.445,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 22,
+              "abstention_rate": 0.11,
+              "precision": 0.427
+            },
+            "verify_repair": {
+              "accuracy": 0.485,
+              "accuracy_pct": 48.5,
+              "accuracy_drop_pp": 28.5,
+              "ci_95_lo": 0.42,
+              "ci_95_hi": 0.55,
+              "delta_pp_vs_baseline": 10.5
+            },
+            "improvement_delta_pp": 10.5,
+            "error_counts": {
+              "arithmetic_error": 22,
+              "irrelevant_number_error": 13,
+              "logic_error": 85,
+              "reading_comprehension_error": 4
+            },
+            "error_pcts": {
+              "arithmetic_error": 11.0,
+              "irrelevant_number_error": 6.5,
+              "logic_error": 42.5,
+              "reading_comprehension_error": 2.0
+            },
+            "ising_catchable_count": 22,
+            "ising_uncatchable_count": 102,
+            "ising_catchable_pct": 11.0
+          },
+          "inference_mode": "simulated"
+        }
+      },
+      "control_delta_pp": 10.0,
+      "adversarial_deltas_pp": [
+        27.0,
+        11.5,
+        10.5
+      ]
+    },
+    "Gemma4-E4B-it": {
+      "model_config": {
+        "name": "Gemma4-E4B-it",
+        "candidates": [
+          "google/gemma-4-E4B-it"
+        ],
+        "base_error_rate": 0.25
+      },
+      "inference_mode": "simulated",
+      "variants": {
+        "control": {
+          "variant_label": "Control (standard)",
+          "multiplier": 1.0,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.7,
+              "accuracy_pct": 70.0,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.64,
+              "ci_95_hi": 0.76
+            },
+            "verify": {
+              "accuracy": 0.7,
+              "accuracy_pct": 70.0,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.64,
+              "ci_95_hi": 0.76,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 26,
+              "abstention_rate": 0.13,
+              "precision": 0.8046
+            },
+            "verify_repair": {
+              "accuracy": 0.83,
+              "accuracy_pct": 83.0,
+              "accuracy_drop_pp": null,
+              "ci_95_lo": 0.78,
+              "ci_95_hi": 0.88,
+              "delta_pp_vs_baseline": 13.0
+            },
+            "improvement_delta_pp": 13.0,
+            "error_counts": {
+              "arithmetic_error": 26,
+              "irrelevant_number_error": 0,
+              "logic_error": 29,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 13.0,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 14.5,
+              "reading_comprehension_error": 2.5
+            },
+            "ising_catchable_count": 26,
+            "ising_uncatchable_count": 34,
+            "ising_catchable_pct": 13.0
+          },
+          "inference_mode": "simulated"
+        },
+        "number_swapped": {
+          "variant_label": "Number-swapped",
+          "multiplier": 1.8,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.53,
+              "accuracy_pct": 53.0,
+              "accuracy_drop_pp": 17.0,
+              "ci_95_lo": 0.46,
+              "ci_95_hi": 0.595
+            },
+            "verify": {
+              "accuracy": 0.53,
+              "accuracy_pct": 53.0,
+              "accuracy_drop_pp": 17.0,
+              "ci_95_lo": 0.46,
+              "ci_95_hi": 0.595,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 49,
+              "abstention_rate": 0.245,
+              "precision": 0.702
+            },
+            "verify_repair": {
+              "accuracy": 0.775,
+              "accuracy_pct": 77.5,
+              "accuracy_drop_pp": -7.5,
+              "ci_95_lo": 0.72,
+              "ci_95_hi": 0.83,
+              "delta_pp_vs_baseline": 24.5
+            },
+            "improvement_delta_pp": 24.5,
+            "error_counts": {
+              "arithmetic_error": 49,
+              "irrelevant_number_error": 0,
+              "logic_error": 42,
+              "reading_comprehension_error": 3
+            },
+            "error_pcts": {
+              "arithmetic_error": 24.5,
+              "irrelevant_number_error": 0.0,
+              "logic_error": 21.0,
+              "reading_comprehension_error": 1.5
+            },
+            "ising_catchable_count": 49,
+            "ising_uncatchable_count": 45,
+            "ising_catchable_pct": 24.5
+          },
+          "inference_mode": "simulated"
+        },
+        "irrelevant_injected": {
+          "variant_label": "Irrelevant-injected",
+          "multiplier": 1.5,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.67,
+              "accuracy_pct": 67.0,
+              "accuracy_drop_pp": 3.0,
+              "ci_95_lo": 0.605,
+              "ci_95_hi": 0.735
+            },
+            "verify": {
+              "accuracy": 0.67,
+              "accuracy_pct": 67.0,
+              "accuracy_drop_pp": 3.0,
+              "ci_95_lo": 0.605,
+              "ci_95_hi": 0.735,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 15,
+              "abstention_rate": 0.075,
+              "precision": 0.7243
+            },
+            "verify_repair": {
+              "accuracy": 0.745,
+              "accuracy_pct": 74.5,
+              "accuracy_drop_pp": -4.5,
+              "ci_95_lo": 0.685,
+              "ci_95_hi": 0.8001,
+              "delta_pp_vs_baseline": 7.5
+            },
+            "improvement_delta_pp": 7.5,
+            "error_counts": {
+              "arithmetic_error": 15,
+              "irrelevant_number_error": 1,
+              "logic_error": 45,
+              "reading_comprehension_error": 5
+            },
+            "error_pcts": {
+              "arithmetic_error": 7.5,
+              "irrelevant_number_error": 0.5,
+              "logic_error": 22.5,
+              "reading_comprehension_error": 2.5
+            },
+            "ising_catchable_count": 15,
+            "ising_uncatchable_count": 51,
+            "ising_catchable_pct": 7.5
+          },
+          "inference_mode": "simulated"
+        },
+        "combined": {
+          "variant_label": "Combined adversarial",
+          "multiplier": 2.2,
+          "metrics": {
+            "n_questions": 200,
+            "baseline": {
+              "accuracy": 0.44,
+              "accuracy_pct": 44.0,
+              "accuracy_drop_pp": 26.0,
+              "ci_95_lo": 0.375,
+              "ci_95_hi": 0.51
+            },
+            "verify": {
+              "accuracy": 0.44,
+              "accuracy_pct": 44.0,
+              "accuracy_drop_pp": 26.0,
+              "ci_95_lo": 0.375,
+              "ci_95_hi": 0.51,
+              "delta_pp_vs_baseline": 0.0,
+              "n_abstained": 21,
+              "abstention_rate": 0.105,
+              "precision": 0.4916
+            },
+            "verify_repair": {
+              "accuracy": 0.54,
+              "accuracy_pct": 54.0,
+              "accuracy_drop_pp": 16.0,
+              "ci_95_lo": 0.4799,
+              "ci_95_hi": 0.6051,
+              "delta_pp_vs_baseline": 10.0
+            },
+            "improvement_delta_pp": 10.0,
+            "error_counts": {
+              "arithmetic_error": 21,
+              "irrelevant_number_error": 21,
+              "logic_error": 66,
+              "reading_comprehension_error": 4
+            },
+            "error_pcts": {
+              "arithmetic_error": 10.5,
+              "irrelevant_number_error": 10.5,
+              "logic_error": 33.0,
+              "reading_comprehension_error": 2.0
+            },
+            "ising_catchable_count": 21,
+            "ising_uncatchable_count": 91,
+            "ising_catchable_pct": 10.5
+          },
+          "inference_mode": "simulated"
+        }
+      },
+      "control_delta_pp": 13.0,
+      "adversarial_deltas_pp": [
+        24.5,
+        7.5,
+        10.0
+      ]
+    }
+  },
+  "variant_keys": [
+    "control",
+    "number_swapped",
+    "irrelevant_injected",
+    "combined"
+  ],
+  "hypothesis_test": {
+    "observed_stat": 3.6667,
+    "p_value": 0.4626,
+    "significant_p05": false,
+    "n_ctrl": 2,
+    "n_adv": 6,
+    "n_permutations": 5000,
+    "interpretation": "Positive direction (adv delta > ctrl delta) but not significant at p<0.05 (p=0.463)."
+  },
+  "modes": [
+    "baseline",
+    "verify",
+    "verify_repair"
+  ]
+}
