@@ -61,7 +61,7 @@ The narrative arc of this report is: tried activation approaches -> learned 14 p
 
 Carnot provides EBM implementations in both Rust (for production performance) and Python/JAX (for research iteration):
 
-- **Three model tiers**: Ising (quadratic, O(d^2)), Gibbs (multi-layer MLP), Boltzmann (deep residual)
+- **Four model tiers**: Ising (quadratic, O(d^2)), KAN (learnable B-spline edges, 8.7x fewer params than Ising at same AUROC — Exp 108-109), Gibbs (multi-layer MLP), Boltzmann (deep residual)
 - **Samplers**: Langevin dynamics + HMC, both with gradient clipping (REQ-SAMPLE-004)
 - **Training**: Contrastive Divergence, Denoising Score Matching, Noise Contrastive Estimation, Self-Normalised Likelihood
 - **Serialization**: safetensors for cross-language model sharing

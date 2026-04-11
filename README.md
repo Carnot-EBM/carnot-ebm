@@ -147,8 +147,9 @@ See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage inst
 | Tier | Name | Scale | Use Case |
 |------|------|-------|----------|
 | Large | **Boltzmann** | Deep residual + attention | Research frontiers, large-scale generation |
-| Medium | **Gibbs** | Multi-layer (2-4 hidden) | Applied ML, domain adaptation |
-| Small | **Ising** | Pairwise interactions | Edge deployment, teaching |
+| Medium | **Gibbs** | Multi-layer MLP (2-4 hidden) | Applied ML, domain adaptation |
+| Efficient | **KAN** | Learnable B-spline edges | Best accuracy/param ratio (0.994 AUROC, 2.3K params) |
+| Small | **Ising** | Pairwise quadratic | Edge deployment, hardware (FPGA/TSU), teaching |
 
 All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), so algorithms written against the interface work with any tier.
 
