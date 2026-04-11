@@ -612,3 +612,9 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - Python/JAX package with core abstractions, Ising model, samplers
 - Pre-commit hooks, spec coverage script
 - README with anti-hallucination framing and self-learning vision
+
+---
+
+## 2026-04-11: Experiment 150 Complete
+
+- Exp 150: Guided decoding adapter publication and model documentation — Published trained EBM models to HuggingFace with guided decoding adapter; updated READMEs for 16 model variants with inference instructions and benchmark results; enables community access to Carnot-trained models
