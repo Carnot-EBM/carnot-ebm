@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 152 ContinualGibbs
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T09:28:39Z | 2026-04-11T09:37:39Z | Exp 152: ContinualGibbsModel (orthogonal gradient continual learning); 29 tests, 100% module coverage; benchmark vs Ising/LNN (Exp 116) — ContinualGibbs 100% step-5 accuracy (target >80% met); results/experiment_152_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Constraint Propagation Model Export
 
 ### Turn Log

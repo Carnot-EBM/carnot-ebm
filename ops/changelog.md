@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 152 ContinualGibbs)
+
+- `python/carnot/models/continual_gibbs.py` — `ContinualGibbsConfig` + `ContinualGibbsModel` extending `GibbsModel`; orthogonal parameter updates via Gram-Schmidt projection of hidden representations onto null space of prior step gradients; `update_step(obs, step_idx)` accumulates constraints without overwriting prior ones; `reset()` clears buffer + zeroes output_weight for new chains; `gradient_buffer_size()` + `orthogonality_residual()` diagnostic API; backward compatible with `EnergyFunction` protocol. (REQ-CORE-001, REQ-CORE-002)
+- `tests/python/test_continual_gibbs.py` — 29 tests, 100% `continual_gibbs.py` coverage; validates orthogonal buffer entries (Gram-Schmidt correctness), prior-step energy preservation, reset isolation, EnergyFunction protocol, 5-step chain E2E.
+- `scripts/experiment_152_continual.py` — 5-step benchmark (20 chains, same seed as Exp 116); ContinualGibbs: **100% step-5 accuracy** (target >80% met); LNN (Exp 116): 90% step-5 accuracy; Ising (Exp 116): 100%; per-step accuracy: step2=60%, step3=70%, step4=90%, step5=100% (accuracy increases monotonically as constraints accumulate); results saved to `results/experiment_152_results.json`. (REQ-CORE-001, user instruction: Exp 152 ContinualGibbs benchmark)
+
 ## 2026-04-11 (Constraint Propagation Model Export)
 
 - `python/carnot/inference/constraint_models.py` — new `IsingConstraintModel` with `energy(x)`, `score(x)`, `energy_batch(X)`, `from_pretrained(path_or_repo)`, `save_pretrained(path)`; `ConstraintPropagationModel` factory; 100% coverage. (REQ-VERIFY-002, REQ-VERIFY-003, FR-11)
