@@ -1228,3 +1228,7 @@
 | 2026-04-11 14:47 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
 | 2026-04-11 14:47 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 14:47 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 15:25 UTC | Exp 163: HumanEval full 164 problems with live cod | OK | =========== 2251 passed, 1 skipped, 12 warnings in 195.32s (0:03:15) =========== |
+| 2026-04-11 15:26 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 15:26 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 15:26 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
