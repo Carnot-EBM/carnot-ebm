@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 176 Multi-Turn Factual Verification
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T19:55:13Z | 2026-04-11T20:05:22Z | Exp 176: Multi-turn factual reasoning verification combining FactualExtractor+ConstraintStateMachine+GlobalConsistencyChecker; 20 chains (10 consistent, 10 inconsistent); Mode A 0%, Mode B 60%, Mode C 100%; FP rate 0%; GlobalChecker adds +4 detections (all 4 numeric chains); _SingleArgPipeline wrapper added for agentic.propagate() compat | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 173 Constraint Gen v2
 
 ### Turn Log
