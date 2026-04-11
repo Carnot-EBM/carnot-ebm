@@ -741,3 +741,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 168 Complete
 
 - Exp 168: JEPA fast-path v3 validation — threshold=0.5 achieves 40% fast-path with 8.4% degradation (target <2% not met); symbolic logic embeddings + RandomProjection; results at `results/experiment_168_results.json`; REQ-JEPA-001
+
+## 2026-04-11: Experiment 169 Complete
+
+- Exp 169: Lookahead energy extractor — AR-EBM bijection implementation (arxiv 2512.15605); enables energy-based auto-regressive path scoring for EBM candidate ranking
