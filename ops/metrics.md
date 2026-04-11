@@ -1,5 +1,25 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 149 TruthfulQA Factual Coverage Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T07:45:33Z | 2026-04-11T07:49:58Z | Create + run scripts/experiment_149_truthfulqa.py; TruthfulQA 196q balanced 7 cats; overall coverage 43.4%; KB adds 0%; covered q: accept 100%, reject 0% (shallow extraction); top-1 missing: world_knowledge (8.1% gain); recommend FactualWorldKnowledgeExtractor; results/experiment_149_results.json | TBD |
+
+---
+
+## Session: 2026-04-11 Pre-research test suite check
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T07:32:37Z | 2026-04-11T07:43:14Z | Run full test suite to verify pre-research baseline — 2041 passed, 1 skipped, 0 failures, 99.26% coverage (≥99% threshold met) | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 147 Apple GSM8K Adversarial
 
 ### Turn Log
