@@ -80,10 +80,10 @@ tasks:
       3. For each of the 500 logic texts, extract 4 prefix ratios (10%, 25%, 50%, 75%):
          a. Compute logic_feature_vector(prefix_text) → embedding[256]
          b. Run LogicExtractor(full_text) to get violated_logic label
-         c. Record: {prefix_ratio, embedding[256], violated_logic, domain="logic", source_exp=166}
+         c. Record: (prefix_ratio, embedding[256], violated_logic, domain="logic", source_exp=166)
 
       4. Merge with arithmetic data from results/jepa_training_pairs_v2.json (arithmetic only):
-         Combined schema: {pairs:[...], total, domain_counts, positive_rate_per_domain}
+         Combined schema: (pairs:[...], total, domain_counts, positive_rate_per_domain)
          Ensure: at least 200 positive (violated=True) examples in logic domain.
 
       5. Print balance summary: pairs per domain, positive rate, feature vector stats.
@@ -145,10 +145,10 @@ tasks:
          - Print comparison table vs v2 (arithmetic=0.721, code=0.776, logic=0.479)
 
       5. Save to results/jepa_predictor_v3.safetensors (same safetensors format as v1/v2)
-         Include metadata key: {"version": "v3", "macro_auroc": "...", "logic_auroc": "..."}
+         Include metadata key: ("version": "v3", "macro_auroc": "...", "logic_auroc": "...")
 
       6. Save results to results/experiment_167_results.json:
-         {v2_per_domain, v3_per_domain, macro_improvement, logic_improvement, target_met: bool}
+         (v2_per_domain, v3_per_domain, macro_improvement, logic_improvement, target_met: bool)
 
       7. Add/update tests in tests/python/test_jepa_predictor.py:
          - Test v3 loads without error
@@ -212,7 +212,7 @@ tasks:
          Add a comment: # Exp 168: Tier 3 self-learning complete
 
       7. Save results/experiment_168_results.json:
-         {thresholds: [{t, fast_path_rate, accuracy, degradation, per_domain}],
+         (thresholds: [{t, fast_path_rate, accuracy, degradation, per_domain)],
           target_met: bool, optimal_threshold, v1_v2_v3_comparison}
 
       8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_168_jepa_fastpath_v3.py
@@ -340,10 +340,10 @@ tasks:
          Report optimal alpha and combined AUROC.
 
       5. Save results/experiment_170_real_logits_results.json:
-         {n_questions: 100, logits_source: "real"|"simulated",
+         (n_questions: 100, logits_source: "real"|"simulated",
           spilled_auroc, lookahead_auroc, combined_auroc, optimal_alpha,
           factual_extractor_accuracy (from Exp 158 for comparison),
-          per_question_breakdown: [{question_id, spilled, lookahead, ground_truth}]}
+          per_question_breakdown: [{question_id, spilled, lookahead, ground_truth)]}
 
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_170_real_logits_benchmark.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -404,7 +404,7 @@ tasks:
          - Which domain benefits most from each signal?
 
       5. Save results/experiment_171_combined_results.json:
-         {n_questions: 200, configs: {config_name: {per_domain_accuracy, latency_ms}},
+         (n_questions: 200, configs: {config_name: {per_domain_accuracy, latency_ms)},
           best_config_per_domain, combined_vs_ising_only_delta}
 
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_171_combined_signal_benchmark.py
@@ -454,8 +454,8 @@ tasks:
                 Example: "capital is Paris" (step 1) vs "capital is Berlin" (step 3)
                 Method: run FactualExtractor on both, compare extracted triples
            - Returns GlobalConsistencyReport:
-             {consistent: bool, inconsistent_pairs: [(i, j, contradiction_type, description)],
-              severity: "none"|"warning"|"critical", recommended_rollback_step: int|None}
+             (consistent: bool, inconsistent_pairs: [(i, j, contradiction_type, description)],
+              severity: "none"|"warning"|"critical", recommended_rollback_step: int|None)
 
       2. Integration with ConstraintStateMachine:
          - Add method: state_machine.check_global_consistency() → GlobalConsistencyReport
@@ -777,10 +777,10 @@ tasks:
          - Per-contradiction-type detection rate (numeric, temporal, factual)
 
       4. Save results/experiment_176_results.json:
-         {n_chains: 20, consistent_chains: 10, inconsistent_chains: 10,
+         (n_chains: 20, consistent_chains: 10, inconsistent_chains: 10,
           mode_a_detection: 0.0 (baseline), mode_b_detection, mode_c_detection,
           false_positive_rate_b, false_positive_rate_c,
-          global_checker_added_detections, per_type_breakdown}
+          global_checker_added_detections, per_type_breakdown)
 
       5. Note: FactualExtractor makes Wikidata SPARQL calls (Exp 158, 5s timeout).
          Set JAX_PLATFORMS=cpu and allow network access for this experiment.
@@ -836,8 +836,8 @@ tasks:
          d. Recommend: connect Thunderbolt chassis; proceed with CARNOT_SKIP_LLM=1 simulation
 
       4. Save results/experiment_177_results.json:
-         {has_egpu: bool, gpu_type, cpu_inference_p50_ms, gpu_inference_p50_ms (if available),
-          speedup_ratio, jax_gpu_works: bool, live_gsm8k_accuracy (5 questions)}
+         (has_egpu: bool, gpu_type, cpu_inference_p50_ms, gpu_inference_p50_ms (if available),
+          speedup_ratio, jax_gpu_works: bool, live_gsm8k_accuracy (5 questions))
 
       5. If GPU works: remove JAX_PLATFORMS=cpu from subsequent experiment prompts
          (they will use JAX on GPU by default). Document this change.
@@ -904,8 +904,8 @@ tasks:
          - Goal #5 achieved: bool (requires BOTH tests p<0.05 for ≥1 adversarial variant)
 
       6. Save results/experiment_178_results.json:
-         {n_per_variant: 400, inference_mode: "live"|"simulated",
-          per_variant: {variant_name: {baseline, repair, delta, ci_95, p_permutation, p_ztest}},
+         (n_per_variant: 400, inference_mode: "live"|"simulated",
+          per_variant: {variant_name: {baseline, repair, delta, ci_95, p_permutation, p_ztest)},
           adversarial_control_ratio, goal5_achieved: bool}
 
       7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_178_adversarial_definitive.py
@@ -948,7 +948,7 @@ tasks:
 
       2. Try Path B: AMD prebuilt wheel
          a. Check ~/github.com/amd/RyzenAI-SW/ for pre-built Python wheels
-         b. If found: `pip install {wheel_path}` in .venv-npu/
+         b. If found: `pip install (wheel_path)` in .venv-npu/
          c. Test: `python -c "import onnxruntime as ort; print(ort.get_available_providers())"`
 
       3. Try Path C: Build from source (most reliable but slowest)
@@ -972,10 +972,10 @@ tasks:
             (or v1 if v3 not available) on CPU onnxruntime. Report p50/p99.
 
       6. Save results/experiment_179_npu_results.json:
-         {npu_activated: bool, path_tried: ["conda", "prebuilt", "source"],
+         (npu_activated: bool, path_tried: ["conda", "prebuilt", "source"],
           successful_path: str|null, npu_p50_ms: float|null, cpu_p50_ms: float,
           onnxruntime_version, providers_available, blocker_message: str|null,
-          next_step_recommendation: str}
+          next_step_recommendation: str)
 
       7. Run: .venv-npu/bin/python scripts/experiment_179_npu_activation.py
          (use .venv-npu/ which has Python 3.12 and may have VitisAI after Path A/B/C)
