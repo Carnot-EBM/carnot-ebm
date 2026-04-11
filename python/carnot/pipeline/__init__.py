@@ -30,6 +30,7 @@ from carnot.pipeline.extract import (
     LogicExtractor,
     NLExtractor,
 )
+from carnot.pipeline.memory import PATTERN_THRESHOLD, ConstraintMemory
 from carnot.pipeline.mining import (
     FailureAnalyzer,
     FailureReport,
@@ -46,6 +47,7 @@ __all__ = [
     "ArithmeticExtractor",
     "AutoExtractor",
     "CarnotError",
+    "ConstraintMemory",
     "ConstraintState",
     "CodeExtractor",
     "ConstraintExtractor",
@@ -58,6 +60,7 @@ __all__ = [
     "LogicExtractor",
     "ModelLoadError",
     "NLExtractor",
+    "PATTERN_THRESHOLD",
     "PipelineTimeoutError",
     "RepairError",
     "RepairResult",

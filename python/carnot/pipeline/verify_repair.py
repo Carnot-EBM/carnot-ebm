@@ -58,6 +58,7 @@ from carnot.pipeline.errors import (
     VerificationError,
 )
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
+from carnot.pipeline.memory import ConstraintMemory
 from carnot.pipeline.tracker import ConstraintTracker
 
 logger = logging.getLogger(__name__)
@@ -233,6 +234,7 @@ class VerifyRepairPipeline:
         max_repairs: int = 3,
         extractor: ConstraintExtractor | None = None,
         timeout_seconds: float = 30.0,
+        memory: ConstraintMemory | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -260,15 +262,22 @@ class VerifyRepairPipeline:
             extractor: Custom extractor, or None for AutoExtractor.
             timeout_seconds: Max wall-clock seconds per verify/repair call.
                 Default 30. Set to 0 or None to disable.
+            memory: Optional ConstraintMemory for Tier 2 cross-session pattern
+                learning. When provided, the pipeline queries memory for
+                learned constraint suggestions before each verification and
+                records new violation patterns after each verification. If
+                None (default), memory integration is skipped entirely for
+                full backward compatibility.
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
-        Spec: REQ-VERIFY-001
+        Spec: REQ-VERIFY-001, REQ-LEARN-003
         """
         self._domains = domains
         self._max_repairs = max_repairs
         self._timeout_seconds = timeout_seconds or 0.0
+        self._memory = memory
 
         # Set up the constraint extractor.
         if extractor is not None:
@@ -537,6 +546,17 @@ class VerifyRepairPipeline:
         try:
             self._check_deadline(deadline)
             constraints = self.extract_constraints(response, domain)
+
+            # Tier 2: prepend learned constraint suggestions from memory.
+            if self._memory is not None:
+                effective_domain = domain or (
+                    self._domains[0] if self._domains and len(self._domains) == 1
+                    else "auto"
+                )
+                learned = self._memory.suggest_constraints(response, effective_domain)
+                if learned:
+                    constraints = learned + constraints
+
             self._check_deadline(deadline)
             result = self._evaluate_constraints(constraints)
         except PipelineTimeoutError:
@@ -553,6 +573,20 @@ class VerifyRepairPipeline:
 
         if tracker is not None:
             self._update_tracker(tracker, result)
+
+        # Tier 2: record violation patterns into memory after verification.
+        if self._memory is not None and result.violations:
+            effective_domain = domain or (
+                self._domains[0] if self._domains and len(self._domains) == 1
+                else "auto"
+            )
+            for violation in result.violations:
+                self._memory.record_pattern(
+                    domain=effective_domain,
+                    error_type=violation.constraint_type,
+                    constraint_that_caught_it=violation.description,
+                )
+
         return result
 
     def verify_and_repair(
