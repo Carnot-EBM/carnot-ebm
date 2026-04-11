@@ -1172,3 +1172,4 @@
 | 2026-04-11 04:13 UTC | Exp 142: Combined Tier 1+2 learning benchmark | OK | =========== 2033 passed, 1 skipped, 12 warnings in 144.79s (0:02:24) =========== |
 | 2026-04-11 04:30 UTC | Exp 145: JEPA fast-path / slow-path integration an | OK | =========== 2041 passed, 1 skipped, 12 warnings in 155.41s (0:02:35) =========== |
 | 2026-04-11 04:49 UTC | Exp 146: AMD XDNA NPU experimentation | OK | =========== 2041 passed, 1 skipped, 12 warnings in 147.55s (0:02:27) =========== |
+| 2026-04-11 05:12 UTC | Exp 147: Apple GSM8K adversarial benchmark — THE c | OK | =========== 2041 passed, 1 skipped, 12 warnings in 186.41s (0:03:06) =========== |
