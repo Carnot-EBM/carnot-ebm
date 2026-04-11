@@ -1,982 +1,318 @@
-# Carnot Research Roadmap — Milestone 2026.04.12
-# "JEPA Logic Repair + Lookahead Energy + Live Inference + Tier-4 Structure"
+# Carnot Research Roadmap — Milestone 2026.04.13
+# "Live GPU Benchmarks + Multi-Model Scaling + Publishable Results"
 #
 # Active experiment queue — processed in order by research_conductor.py
-# This file is renamed to research-roadmap.yaml when 2026.04.11 completes.
+# This file is picked up automatically when 2026.04.12 completes.
 #
 # Versioning: CalVer (YYYY.MM.seq)
 # Completed tasks are moved to research-complete.yaml
 
-milestone: "2026.04.12"
-milestone_title: "JEPA Logic Repair + Lookahead Energy + Live Inference + Tier-4 Structure"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: "2026.04.13"
+milestone_title: "Live GPU Benchmarks + Multi-Model Scaling + Publishable Results"
+milestone_doc: "openspec/change-proposals/research-roadmap-v17.md"
 
 tasks:
-  # ── Phase 45: Fix JEPA Logic Domain ──────────────────────────
-  - id: exp166-jepa-logic-symbolic-features
-    milestone: "2026.04.12"
-    deliverable: results/jepa_training_pairs_logic_v3.json
-    title: "Exp 166: Logic-aware JEPA training data with symbolic features"
+  # ── Phase 48: Live GPU Inference Validation ──────────────────
+  - id: exp180-gpu-inference-baseline
+    milestone: "2026.04.13"
+    deliverable: results/experiment_180_results.json
+    title: "Exp 180: GPU inference baseline — Qwen3.5 + Gemma4 on RTX 3090"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 155 trained JEPA v2 with multi-domain data but logic AUROC=0.479 (chance).
-      Root cause: RandomProjection byte-histogram embeddings cannot distinguish valid from invalid
-      logical arguments at the byte level. Logic requires structured symbolic features:
-      truth table consistency, quantifier patterns, negation scope, entailment structure.
-      This experiment generates 500 logic pairs with 40-dimensional symbolic feature vectors
-      to replace RandomProjection for the logic domain.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+      CONTEXT: Two NVIDIA RTX 3090s (48GB total VRAM) are now available via CUDA.
+      PyTorch 2.11.0+cu126 and JAX CUDA are installed. This experiment establishes
+      baseline inference speed and validates live model loading on GPU.
 
       EXISTING CODE TO READ FIRST:
-      - results/jepa_training_pairs_v2.json — Exp 155 data schema to extend
-      - scripts/experiment_154_collect_multidom_pairs.py — multi-domain collection methodology
-      - python/carnot/pipeline/extract.py — LogicExtractor for violation labeling
-      - python/carnot/embeddings/fast_embedding.py — RandomProjectionEmbedding (do NOT use for logic)
-      - research-program.md — Tier 3 self-learning, JEPA fast-path targets
+      - python/carnot/inference/model_loader.py — robust model loading
+      - scripts/experiment_91_gsm8k_live.py — GSM8K benchmark (was simulated)
+      - research-hardware-wishlist.md — hardware details
 
-      TASK: Create scripts/experiment_166_logic_symbolic_features.py
-            and results/jepa_training_pairs_logic_v3.json
+      TASK: Create results/experiment_180_results.json by running:
 
       CONCRETE STEPS:
-      1. Define logic_feature_vector(text: str) -> np.ndarray[256] that computes:
-         a. 40-dim symbolic features:
-            - has_negation: count("not"|"no"|"never"|"neither"|"nor") / len(tokens)
-            - has_quantifier_all: count("all"|"every"|"each") > 0
-            - has_quantifier_some: count("some"|"many"|"most") > 0
-            - has_quantifier_no: count("no "|"none"|"neither") > 0
-            - has_therefore: count("therefore"|"thus"|"hence"|"so ") > 0
-            - has_if_then: count("if ") > 0 and count("then ") > 0
-            - has_contradiction: count("but"|"however"|"although"|"yet") > 0
-            - conditional_depth: min(count("if "), 3) / 3
-            - n_clauses: count(","|";"|".") / max(len(tokens), 1)
-            - conclusion_ratio: len(last_sentence) / max(len(text), 1)
-            - negation_after_quantifier: 1 if "all...not" or "no...all" pattern
-            - double_negation: 1 if "not.*not" in text (re.search)
-            - [pad remaining 40-dim features with derived combinations and zeros]
-         b. Pad to 256 dims: np.pad(features_40, (0, 216), mode='constant')
-         c. L2-normalize the 256-dim vector
-
-      2. Generate 500 logic problem pairs (250 valid, 250 with deliberate violations):
-         VALID ARGUMENT TYPES (125 pairs, each with correct prefix extracts):
-         - Modus ponens: "If P then Q. P is true. Therefore Q."
-         - Modus tollens: "If P then Q. Q is false. Therefore P is false."
-         - Disjunctive syllogism: "P or Q. Not P. Therefore Q."
-         - Universal instantiation: "All A are B. X is an A. Therefore X is a B."
-         - Categorical syllogism: "All M are P. All S are M. Therefore All S are P."
-
-         INVALID ARGUMENT TYPES (125 pairs, each with false conclusion):
-         - Affirming the consequent: "If P then Q. Q. Therefore P." (FALLACY)
-         - Denying the antecedent: "If P then Q. Not P. Therefore not Q." (FALLACY)
-         - Undistributed middle: "All A are C. All B are C. Therefore A=B." (FALLACY)
-         - Negation scope error: "Not all A are B" → "All A are not B" (WRONG)
-         - Quantifier shift: "Some A are B. Some B are C. Therefore some A are C." (INVALID)
-
-         Use concrete subject matter (animals, shapes, people, cities) for naturalness.
-         Generate 5 instances per argument type with varied content.
-
-      3. For each of the 500 logic texts, extract 4 prefix ratios (10%, 25%, 50%, 75%):
-         a. Compute logic_feature_vector(prefix_text) → embedding[256]
-         b. Run LogicExtractor(full_text) to get violated_logic label
-         c. Record: (prefix_ratio, embedding[256], violated_logic, domain="logic", source_exp=166)
-
-      4. Merge with arithmetic data from results/jepa_training_pairs_v2.json (arithmetic only):
-         Combined schema: (pairs:[...], total, domain_counts, positive_rate_per_domain)
-         Ensure: at least 200 positive (violated=True) examples in logic domain.
-
-      5. Print balance summary: pairs per domain, positive rate, feature vector stats.
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_166_logic_symbolic_features.py
+      1. Load Qwen3.5-0.8B on GPU 0 — measure load time and VRAM usage
+      2. Load Gemma4-E4B-it on GPU 1 — measure load time and VRAM usage
+      3. Benchmark inference on 50 questions per model:
+         - Tokens/second, latency per generation (p50, p95)
+         - Compare: GPU vs CPU inference speed
+      4. Test: both models loaded simultaneously (one per GPU)
+      5. Save results with load times, VRAM, throughput, latency
+      6. Run: .venv/bin/python scripts/experiment_180_gpu_baseline.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp167-jepa-v3-symbolic-heads
-    milestone: "2026.04.12"
-    deliverable: results/jepa_predictor_v3.safetensors
-    title: "Exp 167: JEPA predictor v3 — domain-specific symbolic embedding heads"
+  - id: exp181-gsm8k-live-gpu
+    milestone: "2026.04.13"
+    deliverable: results/experiment_181_results.json
+    title: "Exp 181: GSM8K full 1319 with LIVE GPU inference — publishable"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 155 achieved logic AUROC=0.479 (chance) because RandomProjection byte-histogram
-      cannot represent logical structure. Exp 166 collected 500 logic pairs with 40-dim symbolic
-      features padded to 256 dims. This experiment retrains JEPAViolationPredictor with the new
-      logic data, targeting logic AUROC >0.70 and macro AUROC >0.75.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+      CONTEXT: RTX 3090 GPUs are available. Previous GSM8K experiments used
+      simulated inference. This is the DEFINITIVE run with real model outputs.
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/jepa_predictor.py — JEPAViolationPredictor (256→64→32→3 MLP)
-      - results/jepa_predictor_v2.safetensors — v2 model (baseline to beat)
-      - results/jepa_training_pairs_logic_v3.json — new logic pairs from Exp 166
-      - results/jepa_training_pairs_v2.json — existing arithmetic + code data (Exp 155)
-      - scripts/experiment_155_train_jepa_v2.py — v2 training script to extend
-      - research-program.md — Tier 3 self-learning targets
-
-      TASK: Create scripts/experiment_167_train_jepa_v3.py
-            and results/jepa_predictor_v3.safetensors
-
-      CONCRETE STEPS:
-      1. Load training data:
-         a. results/jepa_training_pairs_v2.json — arithmetic + code pairs
-         b. results/jepa_training_pairs_logic_v3.json — new symbolic logic pairs
-         c. Combine: verify each pair has embedding[256], violated_arithmetic/code/logic, domain
-
-      2. Verify embedding compatibility:
-         - Arithmetic pairs: RandomProjection embeddings (float32[256], L2-normalized)
-         - Code pairs: RandomProjection embeddings (float32[256], L2-normalized)
-         - Logic pairs: symbolic features padded to 256 dims, L2-normalized (Exp 166)
-         All 256-dim → compatible with existing MLP input layer. No architecture change needed.
-
-      3. Retrain JEPAViolationPredictor with improvements:
-         a. Stratified 80/20 split by (domain × violated) label
-         b. Per-domain class weights: pos_weight = n_neg/n_pos per domain (clip [0.5, 10])
-         c. Domain-weighted loss: multiply logic loss by 2.0 (logic is the failing domain,
-            give it priority during training without changing architecture)
-         d. Same architecture: Linear(256, 64) → ReLU → Linear(64, 32) → ReLU → Linear(32, 3)
-         e. 200 epochs with early stopping on val macro AUROC (patience=20)
-         f. Adam lr=1e-3, weight decay=1e-4
-
-      4. Evaluate on held-out validation set:
-         - Per-domain AUROC: arithmetic, code, logic
-         - Macro AUROC (target: >0.75)
-         - Precision/recall at threshold=0.5 per domain
-         - Print comparison table vs v2 (arithmetic=0.721, code=0.776, logic=0.479)
-
-      5. Save to results/jepa_predictor_v3.safetensors (same safetensors format as v1/v2)
-         Include metadata key: ("version": "v3", "macro_auroc": "...", "logic_auroc": "...")
-
-      6. Save results to results/experiment_167_results.json:
-         (v2_per_domain, v3_per_domain, macro_improvement, logic_improvement, target_met: bool)
-
-      7. Add/update tests in tests/python/test_jepa_predictor.py:
-         - Test v3 loads without error
-         - Test logic domain prediction varies across symbolic valid vs invalid inputs
-         - 100% coverage on any new code paths
-         Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_jepa_predictor.py -q
-
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_167_train_jepa_v3.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp168-jepa-fastpath-v3
-    milestone: "2026.04.12"
-    deliverable: results/experiment_168_results.json
-    title: "Exp 168: JEPA fast-path benchmark v3 — target <2% degradation at ≥40% fast-path"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 156 (fast-path v2) had target_met=false: code errors dominated at all
-      thresholds (code fast-paths 200/200 questions, AUROC=0.776 still produces false negatives).
-      Logic AUROC=0.479 caused 100% logic errors at t=0.3. Exp 167 trained v3 predictor with
-      symbolic logic features targeting logic AUROC >0.70. This experiment validates whether
-      v3 finally meets the fast-path targets established in Exp 145.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/jepa_predictor.py — JEPAViolationPredictor
-      - results/jepa_predictor_v3.safetensors — improved predictor from Exp 167
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline with jepa_predictor= param
-      - scripts/experiment_156_jepa_fastpath_v2.py — v2 benchmark to replicate and compare
-      - results/experiment_156_results.json — v2 baseline: target_met=false
-      - results/experiment_145_results.json — v1 baseline numbers
-
-      TASK: Create scripts/experiment_168_jepa_fastpath_v3.py
-            and results/experiment_168_results.json
-
-      CONCRETE STEPS:
-      1. Replicate Exp 156 exactly (same 500 questions: 200 arithmetic, 200 code, 100 logic;
-         same seed for reproducibility).
-
-      2. Run three threshold configurations (0.3, 0.5, 0.7) with jepa_predictor_v3.safetensors:
-         a. For each question: embed first 50 tokens with the DOMAIN-APPROPRIATE embedding
-            (logic: symbolic feature vector; arithmetic/code: RandomProjection — must match
-            what v3 was trained on — see Exp 166/167 methodology)
-         b. Run JEPA gate: if max(predict(embedding).values()) < threshold → fast-path
-         c. Fast-path: return VerificationResult(mode="FAST_PATH", skipped=True, verified=True)
-         d. Slow-path: run full VerifyRepairPipeline as baseline
-         e. Record: fast_path_taken, accuracy (vs ground truth), degradation vs no-JEPA
-
-      3. Compare v3 vs v2 vs v1 at each threshold in one table.
-
-      4. Success criteria from research-program.md Tier 3:
-         - Find threshold where: fast_path_rate ≥ 40% AND accuracy_degradation < 2%
-         - Report `target_met: bool` and the optimal threshold
-
-      5. Per-domain breakdown: how many logic questions are now fast-pathed safely?
-         Root cause analysis if target still not met.
-
-      6. If target met: update VerifyRepairPipeline default to load v3 predictor when present.
-         Add a comment: # Exp 168: Tier 3 self-learning complete
-
-      7. Save results/experiment_168_results.json:
-         (thresholds: [(t, fast_path_rate, accuracy, degradation, per_domain)],
-          target_met: bool, optimal_threshold, v1_v2_v3_comparison)
-
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_168_jepa_fastpath_v3.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 46: Lookahead Energy + Real Logits Validation ────────
-  - id: exp169-lookahead-energy-extractor
-    milestone: "2026.04.12"
-    deliverable: python/carnot/pipeline/lookahead_energy.py
-    title: "Exp 169: Lookahead energy extractor — AR-EBM bijection (arxiv 2512.15605)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: arxiv 2512.15605 (2025) establishes that autoregressive LLMs are secretly EBMs:
-      the "lookahead energy" of a response = -log P(response | prompt) = sum(-log p(token_t)),
-      which is exactly the negative log-likelihood computed during generation. High NLL = model
-      is "surprised" by its own output = likely hallucination or constraint violation. This is
-      complementary to "spilled energy" (2602.18671): spilled energy measures token-level
-      uncertainty between logit and output; lookahead energy measures global response likelihood.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/spilled_energy.py — SpilledEnergyExtractor (Exp 157) to parallel
-      - python/carnot/pipeline/extract.py — ConstraintExtractor Protocol, AutoExtractor
-      - python/carnot/verify/constraint.py — ConstraintTerm, ComposedEnergy
-      - python/carnot/inference/model_loader.py — generate() API (logits if available)
-      - research-references.md — "Autoregressive Language Models as EBMs" section (Exp 165 scan)
-
-      TASK: Create python/carnot/pipeline/lookahead_energy.py
-
-      CONCRETE STEPS:
-      1. LookaheadEnergyConstraint (ConstraintTerm):
-         - name: "lookahead_energy"
-         - energy(x): returns stored lookahead_energy value (x ignored — energy is pre-computed)
-         - is_satisfied: lookahead_energy < self.threshold
-         - gradient(x): returns jnp.zeros_like(x) (no gradient through pre-computed energy)
-         - threshold: calibrated default = 2.0 nats/token (empirical: ~1.5 for factual correct,
-           ~3.0+ for hallucinated, calibrate on 50 TruthfulQA pairs)
-
-      2. LookaheadEnergyExtractor (ConstraintExtractor Protocol):
-         def extract(self, text: str, logits: jnp.ndarray | None = None) -> list[ConstraintTerm]:
-           - If logits is None: return [] (graceful degradation — no logits → no signal)
-           - If logits provided (shape [T, V] or [V]):
-             * Per-token NLL: nll_t = -log(softmax(logits[t])[argmax(logits[t])]) for 1D,
-               or -log(softmax(logits[t])[t_token_id]) for 2D (use argmax as proxy)
-             * Lookahead energy = mean(nll_t) over all T tokens
-             * Return [LookaheadEnergyConstraint(lookahead_energy=mean_nll, threshold=2.0)]
-
-      3. Integrate into AutoExtractor (same pattern as SpilledEnergyExtractor in Exp 157):
-         - AutoExtractor.extract() already accepts logits= parameter
-         - Add LookaheadEnergyExtractor instance alongside SpilledEnergyExtractor
-         - When logits provided: run both; include both constraints in results
-         - Backward compatible: no logits → no change
-
-      4. Benchmark vs SpilledEnergyExtractor on 50 synthetic QA pairs:
-         a. 25 "correct" responses: logits with peak distribution (low entropy, low NLL)
-         b. 25 "wrong" responses: logits with flatter distribution (higher entropy, higher NLL)
-         c. Compute AUROC for: spilled energy alone, lookahead energy alone, combined (max)
-         d. Save results to results/experiment_169_results.json
-
-      5. Write tests in tests/python/test_lookahead_energy.py:
-         - ConstraintTerm protocol compliance (energy, gradient, is_satisfied, name, threshold)
-         - 1D/2D logit handling
-         - Graceful degradation (logits=None → empty list)
-         - Peak vs flat logit discrimination (peak → low energy, flat → high energy)
-         - AutoExtractor integration: logits= adds lookahead_energy and spilled_energy
-         - 100% coverage on lookahead_energy.py
-         Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_lookahead_energy.py -q
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_169_lookahead_energy.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp170-real-logits-benchmark
-    milestone: "2026.04.12"
-    deliverable: results/experiment_170_real_logits_results.json
-    title: "Exp 170: Real LLM logits benchmark for spilled + lookahead energy signals"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 157 achieved SpilledEnergy AUROC=1.000 on HAND-CRAFTED simulated logits.
-      Exp 169 implemented LookaheadEnergyExtractor. Both signals need validation on real
-      Qwen3.5-0.8B inference outputs — not synthetic logits. The claim "spilled energy detects
-      hallucinations" needs real data to be credible. This experiment provides that validation.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/spilled_energy.py — SpilledEnergyExtractor (Exp 157)
-      - python/carnot/pipeline/lookahead_energy.py — LookaheadEnergyExtractor (Exp 169)
-      - python/carnot/inference/model_loader.py — load_model(), generate() API
-      - python/carnot/pipeline/factual_extractor.py — FactualExtractor (Exp 158, 83.3% accuracy)
-      - results/experiment_158_results.json — factual extractor baseline to compare against
-
-      TASK: Create scripts/experiment_170_real_logits_benchmark.py
-            and results/experiment_170_real_logits_results.json
-
-      CONCRETE STEPS:
-      1. Generate 100 real QA pairs using local model:
-         a. Load Qwen3.5-0.8B via model_loader.load_model() with return_logits=True if supported
-         b. If logits unavailable from generate(): use simulated logits calibrated from
-            results/experiment_157_results.json (spilled energy mean values) as fallback
-         c. 50 EASY factual questions (well-known facts: capital cities, famous inventors,
-            basic science — high confidence expected)
-         d. 50 HARD factual questions (obscure facts, plausible-but-wrong dates, model-specific
-            hallucination targets from TruthfulQA dataset)
-         e. Ground truth: manually marked as likely_correct (easy) vs likely_hallucinated (hard)
-
-      2. For each response, extract both signals:
-         spilled = SpilledEnergyExtractor().extract(text, logits=logits_or_None)
-         lookahead = LookaheadEnergyExtractor().extract(text, logits=logits_or_None)
-
-      3. Compute AUROC for each signal vs likely_correct/likely_hallucinated ground truth:
-         - SpilledEnergy AUROC (target: validate Exp 157's 1.000 holds on real data, expect lower)
-         - LookaheadEnergy AUROC (target: >0.65 on real data)
-         - FactualExtractor accuracy (Exp 158 baseline: 83.3%) as reference comparison
-         - Combined AUROC: max(spilled_energy, lookahead_energy) > threshold
-
-      4. Grid search optimal combination:
-         for alpha in [0.0, 0.1, 0.2, ..., 1.0]:
-           combined_score = alpha * spilled_energy + (1-alpha) * lookahead_energy
-           auroc = roc_auc_score(ground_truth, combined_score)
-         Report optimal alpha and combined AUROC.
-
-      5. Save results/experiment_170_real_logits_results.json:
-         (n_questions: 100, logits_source: "real"|"simulated",
-          spilled_auroc, lookahead_auroc, combined_auroc, optimal_alpha,
-          factual_extractor_accuracy (from Exp 158 for comparison),
-          per_question_breakdown: [(question_id, spilled, lookahead, ground_truth)])
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_170_real_logits_benchmark.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp171-combined-signal-benchmark
-    milestone: "2026.04.12"
-    deliverable: results/experiment_171_combined_results.json
-    title: "Exp 171: Combined signal pipeline benchmark — all detectors vs individual"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Three hallucination detection signals now exist:
-      (1) Ising constraint verification (arithmetic, code, logic domains — Exp 74-75)
-      (2) Spilled energy extractor (Exp 157, AUROC=1.000 simulated)
-      (3) Lookahead energy extractor (Exp 169, AR-EBM bijection)
-      Plus: FactualExtractor for factual domain (Exp 158, 83.3% accuracy).
-      This experiment benchmarks all combinations to determine whether combining signals
-      improves accuracy over any single signal.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_161_gsm8k_full.py — previous attempt (simulated)
+      - results/experiment_180_results.json — GPU baseline (Exp 180)
+      - python/carnot/inference/model_loader.py — model loading
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — AutoExtractor (handles all extractors)
-      - python/carnot/pipeline/spilled_energy.py — SpilledEnergyExtractor (Exp 157)
-      - python/carnot/pipeline/lookahead_energy.py — LookaheadEnergyExtractor (Exp 169)
-      - python/carnot/pipeline/factual_extractor.py — FactualExtractor (Exp 158)
-      - results/experiment_170_real_logits_results.json — optimal alpha from Exp 170
 
-      TASK: Create scripts/experiment_171_combined_signal_benchmark.py
-            and results/experiment_171_combined_results.json
+      TASK: Create results/experiment_181_results.json
 
       CONCRETE STEPS:
-      1. Generate 200 multi-domain questions (50 arithmetic, 50 code, 50 logic, 50 factual)
-         with ground truth correct/incorrect labels. Use structured generators:
-         - Arithmetic: GSM8K-style (correct: verified answers, incorrect: common error patterns)
-         - Code: HumanEval-style (correct: working functions, incorrect: buggy with AST errors)
-         - Logic: from Exp 166 methodology (valid/invalid argument forms)
-         - Factual: from Exp 170 methodology (easy vs hard factual questions)
-
-      2. Run 5 pipeline configurations per question:
-         Config 1: Baseline (no verification)
-         Config 2: Ising constraints only (AutoExtractor without logits, no factual)
-         Config 3: Spilled energy + Ising (AutoExtractor with simulated logits)
-         Config 4: Lookahead energy + Ising (AutoExtractor with simulated logits)
-         Config 5: All combined (Config 4 + FactualExtractor for factual domain)
-         Use JAX_PLATFORMS=cpu, CARNOT_SKIP_LLM=1 for consistent benchmarking.
-
-      3. For each config, measure per-domain:
-         - Accuracy (fraction correctly classified)
-         - Precision, recall, F1 for hallucination detection
-         - Wall-clock latency (ms per question)
-
-      4. Key metrics to highlight:
-         - Does Config 5 (all signals) beat Config 2 (Ising only) on accuracy?
-         - What is the latency overhead of adding spilled/lookahead signals?
-         - Which domain benefits most from each signal?
-
-      5. Save results/experiment_171_combined_results.json:
-         (n_questions: 200, configs: (config_name: (per_domain_accuracy, latency_ms)),
-          best_config_per_domain, combined_vs_ising_only_delta)
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_171_combined_signal_benchmark.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp172-global-consistency-checker
-    milestone: "2026.04.12"
-    deliverable: python/carnot/pipeline/consistency_checker.py
-    title: "Exp 172: Global consistency checker for multi-turn chains (arxiv 2601.13600)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: ConstraintStateMachine (Exp 125) checks each step locally — a step passes
-      if its constraints are satisfied. But step 3's output can be globally inconsistent with
-      step 1's verified facts even if each step passed locally (example: step 1 says "John is
-      35 years old" and step 3 says "John was born in 1990" — both pass locally but are
-      inconsistent at current date 2026). arxiv 2601.13600 provides the theoretical framework
-      for detecting such global inconsistencies using pairwise consistency checking.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine (Exp 125)
-      - python/carnot/pipeline/extract.py — AutoExtractor, ArithmeticExtractor
-      - python/carnot/pipeline/factual_extractor.py — FactualExtractor (Exp 158)
-      - python/carnot/verify/constraint.py — ConstraintTerm, VerificationCertificate
-      - research-references.md — "Foundations of Global Consistency Checking" section
-
-      TASK: Create python/carnot/pipeline/consistency_checker.py
-            and scripts/experiment_172_global_consistency.py
-            and results/experiment_172_results.json
-
-      CONCRETE STEPS:
-      1. GlobalConsistencyChecker class:
-         def check(self, state_machine: ConstraintStateMachine) -> GlobalConsistencyReport:
-           - Iterate over all verified step pairs (i, j) where i < j
-           - For each pair: extract claims from step i output and step j output
-           - Check for contradiction types:
-             a. Numeric contradiction: same entity, different numeric values
-                Example: "X costs $50" (step 1) vs "X costs $75" (step 3)
-                Method: extract (entity, numeric_value) pairs, compare
-             b. Temporal contradiction: event ordering violates causality
-                Example: "result was 100" (step 2) vs "input was 200, result is 100*2=100" (step 3 — math wrong)
-                Method: check if step j claims violate verified arithmetic from step i
-             c. Factual contradiction: same entity, different property values
-                Example: "capital is Paris" (step 1) vs "capital is Berlin" (step 3)
-                Method: run FactualExtractor on both, compare extracted triples
-           - Returns GlobalConsistencyReport:
-             (consistent: bool, inconsistent_pairs: [(i, j, contradiction_type, description)],
-              severity: "none"|"warning"|"critical", recommended_rollback_step: int|None)
-
-      2. Integration with ConstraintStateMachine:
-         - Add method: state_machine.check_global_consistency() → GlobalConsistencyReport
-         - Calls GlobalConsistencyChecker().check(self) internally
-         - Available after verify_step() has been called at least twice
-
-      3. Write tests/python/test_consistency_checker.py:
-         - Test with 3-step chain where each step passes locally but steps 1+3 contradict
-         - Test with globally consistent chain (all steps compatible)
-         - Test numeric contradiction detection (same entity, different values)
-         - Test empty chain (no steps yet) → consistent by default
-         - 100% coverage on consistency_checker.py
-         Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_consistency_checker.py -q
-
-      4. Benchmark: 20 multi-step chains (10 locally-consistent globally-inconsistent, 10 fully-consistent):
-         - Each chain: 4 steps with deliberate cross-step contradiction in 10 chains
-         - Measure: detection rate with GlobalConsistencyChecker vs local-only ConstraintStateMachine
-         - Save results/experiment_172_results.json
-
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_172_global_consistency.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 47: Constraint Generation v2 + LagONN + Tier-4 ──────
-  - id: exp173-constraint-generation-v2
-    milestone: "2026.04.12"
-    deliverable: results/experiment_173_results.json
-    title: "Exp 173: Constraint generation v2 — NegationConstraint + CarryChain improvements"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 141 ConstraintGenerator wired ConstraintMemory into constraint ADDITION
-      (not reweighting), boosting accuracy +0.11 on comparison_boundary recall (0% → 100%).
-      But two patterns were not fully implemented: negation_scope and arithmetic_carry.
-      The current NegationConstraint uses placeholder logic; CarryChainConstraint misses
-      subtraction borrowing and digit-count checks. This experiment implements both properly.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/generation.py — ConstraintGenerator (Exp 141): read ENTIRE file
-      - python/carnot/pipeline/extract.py — ArithmeticExtractor, LogicExtractor
-      - results/experiment_141_results.json — Exp 141 results (+0.11 delta, comparison_boundary 100%)
-      - python/carnot/pipeline/mining.py — gap types: arithmetic_carry, negation_scope (Exp 88)
-
-      TASK: Update python/carnot/pipeline/generation.py with improved NegationConstraint
-            and CarryChainConstraint v2. Create scripts/experiment_173_constraint_gen_v2.py
-            and results/experiment_173_results.json.
-
-      CONCRETE STEPS:
-      1. NegationConstraint (fully implement negation_scope pattern):
-         Pattern: text contains "X is not Y", "not all A are B", "neither X nor Y",
-                  "X never Y", "no A are B"
-         Extraction:
-           a. Regex: r"(\w+)\s+is\s+not\s+(\w+)" → (subject, negated_predicate)
-                     r"not\s+all\s+(\w+)\s+are\s+(\w+)" → negated universal claim
-                     r"no\s+(\w+)\s+(?:are|is|has)\s+(\w+)" → universal negation
-           b. For each negated claim: check if LLM response asserts the positive version
-              e.g., "Paris is not the capital of Germany" → if response says "Paris is capital of Germany" → violated
-         Energy: 0 if negation respected, 1 if negation violated
-         Test cases: "The answer is NOT 42. The answer is 17." → verified
-                     "The answer is NOT 42. The answer is 42." → violated
-
-      2. CarryChainConstraint v2 (improve arithmetic_carry pattern):
-         Current: detects cascading carries in addition (99+1, 999+1)
-         Add:
-           a. Subtraction borrowing: 1000-1=999 (borrow chain). Detect when answer
-              has wrong leading digit due to missed borrow.
-           b. Digit count check: result of A+B should have at most max(digits(A), digits(B))+1 digits.
-              If A=99, B=2 → result should be 2 digits (101 is wrong; 101 IS correct; 10099 is wrong).
-           c. Negative result detection: if A-B where B>A, result should be negative.
-              If response gives positive result for B>A subtraction → violated.
-         Keep existing multi-carry detection. Extend _count_carries to handle subtraction.
-
-      3. Benchmark on 300 targeted test questions (new, not the Exp 141 test set):
-         - 100 negation violations: "X is not Y" in context + LLM asserts Y anyway
-         - 100 carry violations: multi-digit arithmetic with carry/borrow errors
-         - 100 mixed (from Exp 141 test set for regression check)
-         Modes: static-only (no memory) vs memory-augmented v2 (NegationConstraint + CarryChain v2)
-         Metric: accuracy improvement (target: +5pp over Exp 141's +0.11 = 0.96 + 0.05 = aim for 0.98+ on targeted set)
-
-      4. Deduplication fix: verify Exp 141's dedup bug is still fixed in current code
-         (adversarial review from Exp 141 found original code added generated type to existing_types
-         blocking subsequent violations of same type — ensure this is still correct).
-
-      5. Write/extend tests:
-         - Test NegationConstraint: satisfied when negation respected, violated when positive asserted
-         - Test CarryChain v2: subtraction borrowing, digit count, negative result
-         - 100% coverage on generation.py
-         Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_constraint_generation.py -q
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_173_constraint_gen_v2.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp174-lagoon-constraint-solver
-    milestone: "2026.04.12"
-    deliverable: python/carnot/models/lagoon.py
-    title: "Exp 174: LagONN constraint solver — escape infeasible Ising states (arxiv 2505.07179)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: arxiv 2505.07179 (2025) introduces Lagrange Oscillatory Neural Networks (LagONN):
-      Ising machines using Lagrange multipliers to escape infeasible states in constrained
-      optimization. Standard Ising machines get stuck in infeasible local minima when hard
-      constraints exist. LagONN augments the energy with constraint-violation penalties that
-      grow over time via dual ascent, pushing solutions toward feasibility. This implements
-      that approach as a new model in the Carnot ecosystem.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/ising.py — IsingEBM base (LagONN extends Ising)
-      - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler (compare against)
-      - python/carnot/verify/constraint.py — ConstraintTerm protocol
-      - crates/carnot-ising/src/lib.rs — Rust Ising (understand coupling structure)
-      - research-references.md — "Lagrange Oscillatory Neural Networks" section
-
-      TASK: Create python/carnot/models/lagoon.py
-            and scripts/experiment_174_lagoon_benchmark.py
-            and results/experiment_174_results.json
-
-      CONCRETE STEPS:
-      1. LagONN class implementing EnergyFunction protocol:
-         class LagONN:
-           J: jnp.ndarray  # coupling matrix (n × n)
-           bias: jnp.ndarray  # bias vector (n,)
-           A: jnp.ndarray  # constraint matrix (m × n) — Ax ≤ b hard constraints
-           b: jnp.ndarray  # constraint bounds (m,)
-           lambda_: jnp.ndarray  # Lagrange multipliers (m,) — initialized to zeros
-
-           def energy(self, x: jnp.ndarray) -> jnp.ndarray:
-             # Base Ising energy
-             e_ising = -0.5 * x @ self.J @ x - self.bias @ x
-             # Constraint violation penalty (non-negative: only penalize violations)
-             violation = jnp.maximum(0.0, self.A @ x - self.b)
-             e_lagrange = self.lambda_ @ violation
-             return e_ising + e_lagrange
-
-           def update_lambda(self, x: jnp.ndarray, lr: float = 0.01) -> 'LagONN':
-             # Dual ascent step: increase penalty for currently-violated constraints
-             violation = jnp.maximum(0.0, self.A @ x - self.b)
-             new_lambda = jnp.maximum(0.0, self.lambda_ + lr * violation)  # λ ≥ 0 always
-             return dataclasses.replace(self, lambda_=new_lambda)
-
-           def sample(self, n_steps: int = 100, n_samples: int = 10, lr: float = 0.01):
-             # Interleave Gibbs sampling with lambda updates
-             # After each Gibbs sweep: update_lambda(current_x)
-             # Return final samples and final lambda_
-
-      2. Constrained problem generator for benchmarking:
-         - Max-3-SAT: n variables, m clauses (each clause: 3 literals, exactly)
-           Convert SAT to Ising: each clause penalizes violating assignment
-           Hard constraint A: at least K clauses must be satisfied (Ax ≥ K → encode as ≤)
-         - Scheduling: n jobs, m time slots, each job must fit in one slot without overlap
-           Hard constraint: total time ≤ T, job dependencies respected
-         Generate 20 instances of each type (200-variable SAT, 10-job scheduling)
-
-      3. Benchmark vs ParallelIsingSampler:
-         For each problem instance:
-           - Run ParallelIsingSampler (no Lagrange): record final feasibility rate, energy
-           - Run LagONN: record final feasibility rate, energy, lambda trajectory
-           - Feasibility = fraction of final samples satisfying all hard constraints
-         Target: LagONN achieves higher feasibility rate than Ising on constrained problems.
-
-      4. Write tests/python/test_lagoon.py:
-         - Test EnergyFunction protocol compliance (energy, gradient, is_satisfied proxy)
-         - Test lambda update (violation → lambda grows, satisfaction → lambda bounded)
-         - Test energy composition (Ising term + Lagrange term)
-         - Test sample produces feasible solutions on small constrained problem
-         - 100% coverage on lagoon.py
-         Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_lagoon.py -q
-
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_174_lagoon_benchmark.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp175-tier4-adaptive-kan-loop
-    milestone: "2026.04.12"
-    deliverable: python/carnot/models/adaptive_kan.py
-    title: "Exp 175: Tier-4 KAN adaptive structure self-learning loop"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: research-program.md Tier 4 self-learning: the energy function structure
-      itself evolves based on query distribution — adding knots where the landscape is complex,
-      removing where it's smooth. Exp 153 proved KAN AMR (adaptive mesh refinement) maintains
-      AUROC while reducing params by 1.3%. This experiment wires AMR into a live verification
-      tracking loop: AdaptiveKAN restructures after every N=500 verifications, demonstrating
-      Tier-4 autonomous structural adaptation without human intervention.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/kan.py — KANConstraintModel (Exp 108-109)
-      - scripts/experiment_153_kan_refinement.py — AMR implementation to reuse
-      - results/experiment_153_results.json — AMR results: AUROC 0.875→0.875, -1.3% params
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (integration point)
-      - research-program.md — "Tier 4: Adaptive Energy Landscapes" section
-
-      TASK: Create python/carnot/models/adaptive_kan.py
-            and scripts/experiment_175_adaptive_kan_loop.py
-            and results/experiment_175_results.json
-
-      CONCRETE STEPS:
-      1. AdaptiveKAN extends KANConstraintModel:
-         class AdaptiveKAN(KANConstraintModel):
-           _verification_count: int = 0
-           _recent_inputs: list = []  # circular buffer of last 100 inputs
-           _curvature_history: list = []  # per-restructure curvature stats
-           restructure_every: int = 500  # configurable
-
-           def verify_and_maybe_restructure(self, x: jnp.ndarray) -> tuple[float, bool]:
-             # Run energy computation
-             energy = self.energy(x)
-             # Accumulate input for curvature analysis
-             self._recent_inputs.append(x)
-             if len(self._recent_inputs) > 100:
-               self._recent_inputs.pop(0)
-             # Count and maybe restructure
-             self._verification_count += 1
-             restructured = False
-             if self._verification_count % self.restructure_every == 0:
-               self._restructure()
-               restructured = True
-             return float(energy), restructured
-
-           def _restructure(self):
-             # Compute curvature on recent inputs (reuse Exp 153 methodology)
-             # Call self.refine(threshold_multiplier=1.5)
-             # Log: params before/after, curvature stats, timestamp
-
-           def checkpoint(self, path: str):
-             # Save current knot structure + weights via safetensors
-
-      2. Simulation: 1500 arithmetic verifications (3 batches of 500):
-         - Batch 1: 500 simple arithmetic (single-digit, no carry)
-         - Batch 2: 500 medium arithmetic (multi-digit, some carry)
-         - Batch 3: 500 complex arithmetic (multi-carry, large numbers)
-         After each batch: trigger _restructure() explicitly (simulate 500-verification trigger)
-         Evaluate on 200 held-out questions after each batch.
-
-      3. Measure across 3 restructuring cycles:
-         - AUROC after batch 0 (baseline, no restructuring)
-         - AUROC after batch 1 (first restructure)
-         - AUROC after batch 2 (second restructure)
-         - AUROC after batch 3 (third restructure)
-         - Param count at each step (should adapt to data complexity)
-         Target: AUROC does not decrease across restructures (maintain or improve)
-
-      4. Compare vs static KAN (no AMR) on same 200-question test set.
-
-      5. Write tests/python/test_adaptive_kan.py:
-         - Test restructure_every=10 (small trigger for fast testing)
-         - Test _restructure() is called at correct intervals
-         - Test checkpoint saves/loads knot structure correctly
-         - Test AUROC is maintained after restructure (regression test)
-         - 100% coverage on adaptive_kan.py
-         Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_adaptive_kan.py -q
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_175_adaptive_kan_loop.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp176-multiturn-factual-consistency
-    milestone: "2026.04.12"
-    deliverable: results/experiment_176_results.json
-    title: "Exp 176: Multi-turn factual verification with global consistency checking"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: FactualExtractor (Exp 158) verified 96% coverage, 83.3% accuracy on TruthfulQA.
-      ConstraintStateMachine (Exp 125) handles multi-step agent workflows. GlobalConsistencyChecker
-      (Exp 172) detects cross-step contradictions missed by local checking. This experiment
-      combines all three for multi-turn factual reasoning verification — a key differentiator
-      (Goal #2 from research-program.md: multi-turn agentic verification).
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine (Exp 125)
-      - python/carnot/pipeline/factual_extractor.py — FactualExtractor (Exp 158)
-      - python/carnot/pipeline/consistency_checker.py — GlobalConsistencyChecker (Exp 172)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - results/experiment_158_results.json — factual accuracy baseline
-
-      TASK: Create scripts/experiment_176_multiturn_factual.py
-            and results/experiment_176_results.json
-
-      CONCRETE STEPS:
-      1. Generate 20 multi-step factual reasoning chains (4 steps each):
-         Format: each step is (question_prompt, llm_response) where llm_response may contain
-         a factual claim that will be verified.
-
-         CONSISTENT CHAINS (10 chains — each step's facts agree with prior steps):
-         Example 4-step chain:
-           Step 1: "What is France's capital?" → "Paris is the capital of France."
-           Step 2: "What language is spoken there?" → "French is the primary language in Paris."
-           Step 3: "Who leads the country?" → "France is led by President Macron."
-           Step 4: "What continent?" → "France is in Europe."
-
-         INCONSISTENT CHAINS (10 chains — cross-step contradiction, each step plausible locally):
-         Example 4-step inconsistent chain:
-           Step 1: "When was Einstein born?" → "Albert Einstein was born in 1879."
-           Step 2: "What is his most famous work?" → "His theory of relativity was published in 1905."
-           Step 3: "How old was he when he published it?" → "He was 26 years old." (correct: 1905-1879=26)
-           Step 4: "He published relativity in 1905, and was born in 1883, making him 22." (CONTRADICTION: 1879 ≠ 1883)
-         Generate with deliberate numeric/date contradictions across steps.
-
-      2. Run three verification modes per chain:
-         Mode A: No verification (baseline — count cross-step contradictions undetected)
-         Mode B: Local-only (ConstraintStateMachine + FactualExtractor, step-by-step)
-         Mode C: Local + global (Mode B + GlobalConsistencyChecker after all steps)
-
-      3. Measure:
-         - Detection rate: fraction of INCONSISTENT chains where contradiction is caught
-         - False positive rate: fraction of CONSISTENT chains flagged as inconsistent
-         - Mode B vs Mode C: how many additional inconsistencies does global checking add?
-         - Per-contradiction-type detection rate (numeric, temporal, factual)
-
-      4. Save results/experiment_176_results.json:
-         (n_chains: 20, consistent_chains: 10, inconsistent_chains: 10,
-          mode_a_detection: 0.0 (baseline), mode_b_detection, mode_c_detection,
-          false_positive_rate_b, false_positive_rate_c,
-          global_checker_added_detections, per_type_breakdown)
-
-      5. Note: FactualExtractor makes Wikidata SPARQL calls (Exp 158, 5s timeout).
-         Set JAX_PLATFORMS=cpu and allow network access for this experiment.
-         If SPARQL fails for any chain: use cached facts from results/experiment_158_results.json.
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_176_multiturn_factual.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 48: Live Inference + NPU ───────────────────────────
-  - id: exp177-egpu-live-inference-setup
-    milestone: "2026.04.12"
-    deliverable: results/experiment_177_results.json
-    title: "Exp 177: eGPU hardware setup + live model inference baseline"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: The RX 7900 XTX eGPU (24GB VRAM, gfx1100) is owned hardware available via
-      Thunderbolt connection per research-hardware-wishlist.md. gfx1100 (unlike gfx1150 iGPU)
-      has full ROCm + JAX support. This experiment validates the GPU stack and provides the
-      first live model inference baseline. Results unblock Exp 178 (live adversarial).
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/model_loader.py — load_model(), generate() with env var support
-      - research-hardware-wishlist.md — "Connect RX 7900 XTX via Thunderbolt" action steps
-      - ops/known-issues.md — any ROCm/JAX known issues
-      - results/experiment_160_results.json — Exp 160 eGPU attempt results if available
-
-      TASK: Create scripts/experiment_177_egpu_setup.py
-            and results/experiment_177_results.json
-
-      CONCRETE STEPS:
-      1. Hardware detection (fail gracefully at each step):
-         a. Check `rocminfo | grep gfx` for gfx1100 (eGPU) vs gfx1150 (iGPU only)
-         b. Check `python -c "import torch; print(torch.cuda.get_device_name(0))"`
-         c. Check `python -c "import jax; print(jax.devices())"` (expects GPU device if gfx1100)
-         d. Log: detected_devices, has_egpu (bool), gpu_type, rocm_version
-
-      2. If eGPU detected (gfx1100 present):
-         a. Test JAX matrix multiplication on GPU: 1000×1000 @ 1000×1000 (warmup + timed)
-         b. Benchmark Qwen3.5-0.8B inference on 10 short prompts (CPU vs GPU):
-            cpu_p50_ms, gpu_p50_ms, speedup_ratio
-         c. Verify accuracy: run 5 GSM8K questions live, compare to expected answers
-         d. Set CARNOT_FORCE_CPU=0 if GPU works reliably
-         e. Update comment in model_loader.py: # eGPU gfx1100 confirmed working {date}
-
-      3. If eGPU NOT detected (Thunderbolt not connected):
-         a. Document: THUNDERBOLT_NOT_CONNECTED in results
-         b. Run CPU inference baseline: 10 GSM8K questions, p50 latency
-         c. Estimate: expected eGPU speedup based on gfx1100 specs (3B flop/s ROCm)
-         d. Recommend: connect Thunderbolt chassis; proceed with CARNOT_SKIP_LLM=1 simulation
-
-      4. Save results/experiment_177_results.json:
-         (has_egpu: bool, gpu_type, cpu_inference_p50_ms, gpu_inference_p50_ms (if available),
-          speedup_ratio, jax_gpu_works: bool, live_gsm8k_accuracy (5 questions))
-
-      5. If GPU works: remove JAX_PLATFORMS=cpu from subsequent experiment prompts
-         (they will use JAX on GPU by default). Document this change.
-
-      6. Run: .venv/bin/python scripts/experiment_177_egpu_setup.py
-         (Note: do NOT prepend JAX_PLATFORMS=cpu if testing GPU; use auto-detect)
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp178-live-adversarial-definitive
-    milestone: "2026.04.12"
-    deliverable: results/experiment_178_results.json
-    title: "Exp 178: Definitive adversarial GSM8K — Goal #5 with statistical power (N≥400/variant)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 162 achieved z-test p=0.017 (significant) but permutation test p=0.429
-      (not significant) for the adversarial hypothesis. Full significance requires BOTH tests
-      to pass p<0.05. The permutation test needs more variance: N=200/variant gave only 2
-      control data points for the permutation statistic. This experiment scales to N=400/variant
-      (1,600 total questions) with paired design for permutation test power.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_162_adversarial_live.py — Exp 162 design (extend, don't replace)
-      - results/experiment_162_results.json — Exp 162 results: z-test p=0.017, ratio 1.41x
-      - results/adversarial_gsm8k_data.json — 200 items/variant (Exp 119 dataset)
-      - python/carnot/inference/model_loader.py — load_model(), CARNOT_SKIP_LLM fallback
-      - research-program.md — Goal #5 (Apple GSM8K adversarial), requires both tests p<0.05
-
-      TASK: Create scripts/experiment_178_adversarial_definitive.py
-            and results/experiment_178_results.json
-
-      CONCRETE STEPS:
-      1. Load Exp 119 adversarial dataset (results/adversarial_gsm8k_data.json, 200/variant).
-         If N<400/variant: augment by generating additional adversarial variants using the
-         same methodology as Exp 119 (number swapping + irrelevant sentence injection).
-         Target: 400 questions per variant (control, number-swapped, irrelevant, combined).
-
-      2. Statistical design for paired permutation test:
-         For each question q in control set:
-           - matched_adversarial_q = same problem with adversarial perturbation
-           - Compute: improvement_delta_q = repair_accuracy(adv_q) - baseline_accuracy(adv_q)
-                                          - (repair_accuracy(ctrl_q) - baseline_accuracy(ctrl_q))
-         This gives N=400 paired deltas per adversarial variant.
-         Permutation test on paired deltas has 80% power at 5pp effect with N=400.
-
-      3. Run inference:
-         If results/experiment_177_results.json shows has_egpu=True: use live GPU inference
-         Else: use CARNOT_SKIP_LLM=1 simulation with Apple-calibrated error rates (Exp 162 methodology)
-         Modes: baseline, verify-repair (max 3 iters) × 4 variants × 2 models
-
-      4. Statistical tests (both required for Goal #5):
-         Test A: Paired permutation test on N=400 improvement deltas per variant
-                 H0: adversarial improvement ≤ control improvement
-                 N=10,000 permutation samples
-         Test B: Two-proportion z-test (same as Exp 162) on per-question improvement flags
-
-      5. Report:
-         - Per-variant: baseline accuracy, repair accuracy, improvement delta with 95% CI
-         - Adversarial/control improvement ratio (was 1.41× in Exp 162)
-         - p-values from both tests per variant
-         - Goal #5 achieved: bool (requires BOTH tests p<0.05 for ≥1 adversarial variant)
-
-      6. Save results/experiment_178_results.json:
-         (n_per_variant: 400, inference_mode: "live"|"simulated",
-          per_variant: (variant_name: (baseline, repair, delta, ci_95, p_permutation, p_ztest)),
-          adversarial_control_ratio, goal5_achieved: bool)
-
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_178_adversarial_definitive.py
-         (or without JAX_PLATFORMS=cpu if Exp 177 confirmed GPU works)
+      1. Load Qwen3.5-0.8B on GPU, set CARNOT_FORCE_LIVE=1
+      2. Run full 1,319 GSM8K test questions through 3 modes:
+         a. Baseline (LLM only)
+         b. Verify-only
+         c. Verify-repair (max 3 iterations)
+      3. Report with 95% bootstrap confidence intervals
+      4. Compare to published Qwen3.5-0.8B GSM8K baselines
+      5. Repeat with Gemma4-E4B-it on GPU 1
+      6. Save comprehensive results with CIs
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_181_gsm8k_live_gpu.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp179-npu-vitisai-activation
-    milestone: "2026.04.12"
-    deliverable: results/experiment_179_npu_results.json
-    title: "Exp 179: AMD XDNA NPU activation — VitisAI onnxruntime for JEPA predictor"
+  - id: exp182-adversarial-live-gpu
+    milestone: "2026.04.13"
+    deliverable: results/experiment_182_results.json
+    title: "Exp 182: Adversarial GSM8K N=400/variant with LIVE GPU — publishable"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 146 detected AMD XDNA NPU hardware (/dev/accel0, amdxdna module, XRT 2.20.0)
-      and exported JEPA predictor to ONNX (results/jepa_predictor_146.onnx). Blocker: standard
-      PyPI onnxruntime lacks AMDXDNAExecutionProvider. research-hardware-wishlist.md documents
-      three resolution paths. Exp 146 created .venv-npu/ (Python 3.12) + npu_backend.py stub.
-      This experiment resolves the blocker and runs JEPA predictor on the NPU.
-
-      Date: {date}. Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+      CONTEXT: This is the DEFINITIVE adversarial benchmark with live GPU
+      inference and N>=400 per variant for statistical power. Previous runs
+      used simulated inference or N=200.
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/samplers/npu_backend.py — NpuJEPAPredictor stub (Exp 146)
-      - scripts/experiment_146_npu.py — Exp 146 setup and ONNX export methodology
-      - results/experiment_146_npu_results.json — Exp 146 results: CPU p50=0.005ms
-      - results/jepa_predictor_146.onnx — ONNX model (exported by Exp 146)
-      - research-hardware-wishlist.md — "AMD Ryzen AI 300 series" section (three paths)
+      - scripts/experiment_162_adversarial_live.py — previous attempt
+      - scripts/experiment_119_adversarial_gsm8k.py — variant generator
+      - results/experiment_180_results.json — GPU baseline
 
-      TASK: Create scripts/experiment_179_npu_activation.py
-            and results/experiment_179_npu_results.json
+      TASK: Create results/experiment_182_results.json
 
       CONCRETE STEPS:
-      1. Try Path A: conda installation (fastest if conda available)
-         a. Check if conda is available: `which conda || which mamba`
-         b. If yes: `conda create -n carnot-npu python=3.11 -y`
-                    `conda run -n carnot-npu conda install -c amd onnxruntime-vitisai -y`
-                    `conda run -n carnot-npu python -c "import onnxruntime; print(onnxruntime.get_available_providers())"`
-         c. Check if AMDXDNAExecutionProvider appears in providers list
-
-      2. Try Path B: AMD prebuilt wheel
-         a. Check ~/github.com/amd/RyzenAI-SW/ for pre-built Python wheels
-         b. If found: `pip install (wheel_path)` in .venv-npu/
-         c. Test: `python -c "import onnxruntime as ort; print(ort.get_available_providers())"`
-
-      3. Try Path C: Build from source (most reliable but slowest)
-         a. Check if onnxruntime source available in ~/.cache/ or ~/github.com/
-         b. If not: note that this requires separate manual step
-         c. Document: cmake flags needed = `-Donnxruntime_USE_VITISAI=ON -Donnxruntime_VITISAI_HOME=/opt/xilinx/xrt`
-
-      4. If ANY path succeeds (AMDXDNAExecutionProvider available):
-         a. Export JEPA predictor v3 to ONNX (from results/jepa_predictor_v3.safetensors Exp 167)
-            or fall back to results/jepa_predictor_146.onnx (v1 model, same architecture)
-         b. Create ONNX InferenceSession with providers=["AMDXDNAExecutionProvider", "CPUExecutionProvider"]
-         c. Benchmark: 1000 inference calls, measure p50/p99 latency
-         d. Compare: NPU p50 vs CPU p50 (Exp 146: CPU p50=0.005ms)
-         e. Target: NPU inference succeeds (latency parity or better is ideal; proving it works is sufficient)
-         f. Update npu_backend.py: activate real NPU path, add NPU provider name
-
-      5. Whether or not NPU activation succeeds:
-         a. Document exact error messages for any failed path
-         b. If all paths fail: recommend specific next step for user (e.g., "download AMD wheel from X")
-         c. Run CPU baseline for comparison: 1000 inferences with jepa_predictor_v3.safetensors
-            (or v1 if v3 not available) on CPU onnxruntime. Report p50/p99.
-
-      6. Save results/experiment_179_npu_results.json:
-         (npu_activated: bool, path_tried: ["conda", "prebuilt", "source"],
-          successful_path: str|null, npu_p50_ms: float|null, cpu_p50_ms: float,
-          onnxruntime_version, providers_available, blocker_message: str|null,
-          next_step_recommendation: str)
-
-      7. Run: .venv-npu/bin/python scripts/experiment_179_npu_activation.py
-         (use .venv-npu/ which has Python 3.12 and may have VitisAI after Path A/B/C)
+      1. Generate 400 adversarial variants per type (number-swapped,
+         irrelevant-injected, combined) = 1,600 total
+      2. Run with LIVE Qwen3.5-0.8B on GPU:
+         a. Baseline, b. Verify-only, c. Verify-repair per variant
+      3. Run with LIVE Gemma4-E4B-it on GPU
+      4. 95% bootstrap CIs on all accuracy numbers
+      5. Paired significance test: adversarial improvement > control
+      6. Error taxonomy with sufficient N for per-type statistics
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_182_adversarial_live_gpu.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp183-humaneval-live-gpu
+    milestone: "2026.04.13"
+    deliverable: results/experiment_183_results.json
+    title: "Exp 183: HumanEval full 164 with LIVE GPU — publishable"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Full HumanEval with live GPU inference. Previous runs used
+      simulated or partial data.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_163_humaneval_full.py — previous attempt
+      - python/carnot/pipeline/verify_repair.py — pipeline
+      - python/carnot/pipeline/extract.py — CodeExtractor
+
+      TASK: Create results/experiment_183_results.json
+
+      CONCRETE STEPS:
+      1. Load HumanEval dataset (164 problems)
+      2. Run with LIVE Qwen3.5-0.8B on GPU:
+         a. Generate code, b. Extract constraints, c. Instrument + verify,
+         d. Ising-guided fuzz, e. Verify-repair loop
+      3. Report: pass@1 baseline vs pass@1+repair with CIs
+      4. Bug detection source breakdown (tests, instrumentation, fuzzing)
+      5. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_183_humaneval_live_gpu.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 49: Multi-Model Scaling ───────────────────────────
+  - id: exp184-3b-model-verify
+    milestone: "2026.04.13"
+    deliverable: results/experiment_184_results.json
+    title: "Exp 184: 3B model verification — does verify-repair help larger models?"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: All experiments so far used 0.6-0.8B models. With 24GB VRAM
+      per GPU, we can test 3B models. Key question: does verify-repair still
+      help when the base model is already stronger?
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py — pipeline
+      - results/experiment_181_results.json — 0.8B GSM8K results
+
+      TASK: Create results/experiment_184_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3-3B (or Qwen3.5-3B if available) on GPU
+      2. Run 200 GSM8K questions: baseline vs verify-repair
+      3. Compare improvement delta to 0.8B results (Exp 181)
+      4. Hypothesis: verify-repair helps LESS on larger models because they
+         make fewer arithmetic errors — but still helps on adversarial
+      5. Run 200 adversarial (number-swapped) on 3B model
+      6. Report: is adversarial improvement still significant at 3B?
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_184_3b_model.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp185-igpu-large-model
+    milestone: "2026.04.13"
+    deliverable: results/experiment_185_results.json
+    title: "Exp 185: iGPU large model loading — 13B+ via system RAM"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The AMD Radeon 890M iGPU shares system RAM, enabling models
+      far larger than 24GB VRAM. Test loading 13B+ models via the iGPU path
+      and verify-repair on their outputs.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/model_loader.py — model loading
+      - results/experiment_184_results.json — 3B results
+
+      TASK: Create results/experiment_185_results.json
+
+      CONCRETE STEPS:
+      1. Check available system RAM
+      2. Load a 13B model (Qwen3.5-14B or similar) via CPU/iGPU
+         - Use torch_dtype=float16 or bfloat16 to fit in RAM
+      3. Run 50 GSM8K questions: baseline vs verify-repair
+      4. Compare to 0.8B and 3B results — scaling trend
+      5. Test: can we verify RTX 3090 outputs using the iGPU-loaded model
+         as a reference? (cross-model verification)
+      6. Run: .venv/bin/python scripts/experiment_185_igpu_large.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 50: Real-Time Guided Decoding on GPU ──────────────
+  - id: exp186-guided-decoding-live
+    milestone: "2026.04.13"
+    deliverable: results/experiment_186_results.json
+    title: "Exp 186: Live guided decoding — constrain token generation on GPU"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Guided decoding was prototyped (Exp 110) and benchmarked
+      (0.006ms per check). Now test it LIVE on GPU — actually modify token
+      probabilities during Qwen3.5 generation based on constraint energy.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/guided_decoding.py — guided decoding module
+      - results/experiment_102_results.json — latency benchmarks
+      - results/experiment_180_results.json — GPU baseline
+
+      TASK: Create results/experiment_186_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU with guided decoding hooks
+      2. Test on 100 arithmetic questions:
+         a. Standard generation (no guidance)
+         b. Guided generation (constraint energy modifies logits)
+      3. Measure: accuracy improvement, latency overhead per token
+      4. Compare: guided decoding vs post-hoc verify-repair
+      5. Can they be combined? Guided + verify-repair
+      6. Run: .venv/bin/python scripts/experiment_186_guided_live.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 51: Self-Learning on Live Data ────────────────────
+  - id: exp187-online-learning-live
+    milestone: "2026.04.13"
+    deliverable: results/experiment_187_results.json
+    title: "Exp 187: Online self-learning with live GPU inference"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Self-learning (Tier 1+2) was tested with simulated data and
+      showed 67->97% improvement. Now test with LIVE model inference —
+      does the system still learn when seeing real model errors?
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — constraint tracker
+      - python/carnot/pipeline/memory.py — constraint memory
+      - python/carnot/pipeline/adaptive.py — adaptive weighting
+      - results/experiment_134_results.json — simulated learning results
+
+      TASK: Create results/experiment_187_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU
+      2. Stream 500 LIVE GSM8K questions through pipeline with tracker
+      3. Every 50 questions: update constraint weights + generate new constraints
+      4. Plot accuracy over time with live inference
+      5. Compare: simulated learning curve vs live learning curve
+      6. Key question: does live inference produce different error patterns
+         than simulation, and does the self-learning system adapt?
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_187_online_live.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 52: HuggingFace Publishing with Live Numbers ──────
+  - id: exp188-hf-update-live-numbers
+    milestone: "2026.04.13"
+    deliverable: results/experiment_188_results.json
+    title: "Exp 188: Update HuggingFace model cards with live GPU benchmark numbers"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: HuggingFace model cards and guided decoding adapter currently
+      have simulated benchmark numbers. Update with LIVE GPU results from
+      Exp 181-186.
+
+      EXISTING CODE TO READ FIRST:
+      - exports/guided-decoding-adapter/README.md — current adapter card
+      - results/experiment_181_results.json — live GSM8K
+      - results/experiment_182_results.json — live adversarial
+      - results/experiment_183_results.json — live HumanEval
+      - results/experiment_186_results.json — live guided decoding
+
+      TASK: Create results/experiment_188_results.json
+
+      CONCRETE STEPS:
+      1. Update exports/guided-decoding-adapter/README.md with live numbers
+      2. Update exports/constraint-propagation-models READMEs
+      3. Generate comparison table: simulated vs live results
+      4. Prepare model card updates for HuggingFace upload
+      5. Run: .venv/bin/python scripts/experiment_188_hf_update.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 53: ArXiv + Research ──────────────────────────────
+  - id: exp189-arxiv-scan-v2
+    milestone: "2026.04.13"
+    deliverable: results/experiment_189_results.json
+    title: "Exp 189: Research scan v2 — arxiv + OpenReview + Extropic + GitHub"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The planning agent now searches multiple sources beyond arxiv.
+      This experiment does a comprehensive scan.
+
+      EXISTING CODE TO READ FIRST:
+      - research-references.md — current references
+      - research-program.md — "Research Sources" section
+      - results/experiment_139_results.json — previous arxiv scan
+
+      TASK: Create results/experiment_189_results.json
+
+      CONCRETE STEPS:
+      1. Search arxiv for papers (2025-2026) on: EBMs, KANs, Ising machines,
+         constrained decoding, continual learning for constraints
+      2. Check OpenReview for NeurIPS/ICML/ICLR submissions
+      3. Check extropic.ai/writing for TSU updates
+      4. Check Semantic Scholar for papers citing EBT and ARM-EBM
+      5. Check GitHub trending for new EBM/constraint repos
+      6. Update research-references.md with findings
+      7. Propose 3-5 experiments for 2026.04.14
+      8. Run: .venv/bin/python scripts/experiment_189_research_scan.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
