@@ -1,0 +1,291 @@
+# Carnot Research Roadmap — Milestone 2026.04.14
+# "Live GPU Benchmarks (Phased) + Checkpoint Cleanup + Scaling"
+#
+# Active experiment queue — processed in order by research_conductor.py
+# This file is picked up automatically when 2026.04.13 completes.
+#
+# LESSON LEARNED: Large benchmarks must be split into phases (script, test,
+# run, analyze) because claude -p exhausts 50 turns on combined tasks.
+
+milestone: "2026.04.14"
+milestone_title: "Live GPU Benchmarks (Phased) + Checkpoint Cleanup + Scaling"
+milestone_doc: "openspec/change-proposals/research-roadmap-v18.md"
+
+tasks:
+  # ── Phase 54: Checkpoint Cleanup ─────────────────────────────
+  - id: exp190-checkpoint-cleanup
+    milestone: "2026.04.14"
+    deliverable: scripts/experiment_190_checkpoint_cleanup.py
+    title: "Exp 190: Clean up partial checkpoint results from Exp 181-183"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Experiments 181-183 (live GPU benchmarks) partially ran but
+      failed to complete. They left checkpoint files that need cleanup.
+
+      EXISTING CODE TO READ FIRST:
+      - results/exp181_ckpt_Qwen3.5-0.8B.json — Exp 181 partial (empty)
+      - results/exp182_ckpt_Qwen3.5-0.8B_control_baseline.json — 250 questions
+      - results/exp182_ckpt_Qwen3.5-0.8B_control_repair.json — 250 questions
+      - results/exp182_ckpt_Qwen3.5-0.8B_control_verify.json — 250 questions
+      - results/exp183_ckpt.json — Exp 183 partial (empty)
+
+      TASK: Create scripts/experiment_190_checkpoint_cleanup.py
+
+      CONCRETE STEPS:
+      1. Read each checkpoint file
+      2. Validate: are the results from live inference or simulated fallback?
+         (check for inference_mode, model_name, or response quality indicators)
+      3. If valid live data: consolidate into proper results/experiment_NNN_results.json
+      4. If simulated/empty: delete the checkpoint files
+      5. Report what was salvaged vs discarded
+      6. Run: .venv/bin/python scripts/experiment_190_checkpoint_cleanup.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 55: Adversarial GSM8K (Phased) ─────────────���──────
+  - id: exp191-adversarial-script
+    milestone: "2026.04.14"
+    deliverable: scripts/experiment_191_adversarial_gpu_v2.py
+    title: "Exp 191: Adversarial live GPU script (write only, no tests)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 182 failed 3 times because the script was too large (81KB)
+      for tests + coverage in 50 turns. This experiment ONLY writes the script.
+      Tests come in a separate experiment.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_182_adversarial_live_gpu.py — previous attempt (81KB)
+      - scripts/experiment_119_adversarial_gsm8k.py — variant generator
+      - python/carnot/inference/model_loader.py — model loading
+
+      TASK: Create a SMALLER, focused adversarial benchmark script
+
+      CONCRETE STEPS:
+      1. Simplify: N=200 per variant (not 400) — still statistically meaningful
+      2. Single model only (Qwen3.5-0.8B) — test Gemma4 separately
+      3. Reuse existing adversarial data from results/adversarial_gsm8k_data.json
+      4. Target script size: <30KB (half of the failed 81KB version)
+      5. Use model_loader.py for robust GPU loading
+      6. Save results to results/experiment_191_results.json
+      7. Do NOT write tests — that comes in Exp 192
+      8. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_191_adversarial_gpu_v2.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp192-adversarial-tests
+    milestone: "2026.04.14"
+    deliverable: tests/python/test_experiment_191.py
+    title: "Exp 192: Tests for adversarial GPU benchmark (Exp 191)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 191 wrote the adversarial GPU benchmark script. This
+      experiment adds tests to reach 100% coverage on it.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_191_adversarial_gpu_v2.py — the script to test
+      - tests/python/ — existing test patterns
+
+      TASK: Create tests/python/test_experiment_191.py
+
+      CONCRETE STEPS:
+      1. Write tests that mock GPU/model loading and test the pipeline logic
+      2. Test variant generation, constraint extraction, verify-repair flow
+      3. Test results serialization
+      4. Achieve 100% coverage of experiment_191
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 56: HumanEval Live GPU (Phased) ───────────────────
+  - id: exp193-humaneval-script
+    milestone: "2026.04.14"
+    deliverable: scripts/experiment_193_humaneval_gpu_v2.py
+    title: "Exp 193: HumanEval live GPU script (write only, no tests)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 183 failed because the script was too large (57KB).
+      This experiment writes a SMALLER, focused version.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_183_humaneval_live_gpu.py — previous attempt
+      - python/carnot/pipeline/verify_repair.py — pipeline
+      - python/carnot/pipeline/extract.py — CodeExtractor
+
+      TASK: Create a focused HumanEval benchmark script
+
+      CONCRETE STEPS:
+      1. Target 50 HumanEval problems (not 164) for initial validation
+      2. Single model (Qwen3.5-0.8B on GPU)
+      3. Focus: pass@1 baseline vs pass@1+repair
+      4. Target script size: <25KB
+      5. Save results to results/experiment_193_results.json
+      6. Do NOT write tests — that comes in Exp 194
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_193_humaneval_gpu_v2.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp194-humaneval-tests
+    milestone: "2026.04.14"
+    deliverable: tests/python/test_experiment_193.py
+    title: "Exp 194: Tests for HumanEval GPU benchmark (Exp 193)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 193 wrote the HumanEval GPU benchmark script.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_193_humaneval_gpu_v2.py — the script to test
+
+      TASK: Create tests/python/test_experiment_193.py
+
+      CONCRETE STEPS:
+      1. Mock GPU/model loading, test pipeline logic
+      2. Test code extraction, instrumentation, fuzzing, repair flow
+      3. 100% coverage of experiment_193
+      4. Run: .venv/bin/pytest tests/python -q
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 57: Full GSM8K Live GPU (Phased) ──────────────���───
+  - id: exp195-gsm8k-script
+    milestone: "2026.04.14"
+    deliverable: scripts/experiment_195_gsm8k_gpu_v2.py
+    title: "Exp 195: GSM8K 1319 live GPU script (write only, no tests)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 181 partially succeeded but got stuck on coverage.
+      This writes a clean, focused version.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_181_gsm8k_live_gpu.py — previous attempt
+      - python/carnot/inference/model_loader.py — model loading
+
+      TASK: Create a focused GSM8K benchmark script
+
+      CONCRETE STEPS:
+      1. Full 1,319 questions but single model (Qwen3.5-0.8B)
+      2. 3 modes: baseline, verify-only, verify-repair
+      3. Bootstrap 95% CIs
+      4. Checkpoint every 100 questions (resume on failure)
+      5. Target script size: <25KB
+      6. Save to results/experiment_195_results.json
+      7. Do NOT write tests
+      8. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_195_gsm8k_gpu_v2.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp196-gsm8k-tests
+    milestone: "2026.04.14"
+    deliverable: tests/python/test_experiment_195.py
+    title: "Exp 196: Tests for GSM8K GPU benchmark (Exp 195)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 195 wrote the GSM8K GPU benchmark script.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_195_gsm8k_gpu_v2.py — the script to test
+
+      TASK: Create tests/python/test_experiment_195.py
+
+      CONCRETE STEPS:
+      1. Mock GPU/model, test pipeline logic
+      2. Test checkpointing (resume from partial)
+      3. Test CI computation
+      4. 100% coverage
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 58: Run Benchmarks + Analyze ──────────────────────
+  - id: exp197-run-all-benchmarks
+    milestone: "2026.04.14"
+    deliverable: results/experiment_197_combined_results.json
+    title: "Exp 197: Execute all GPU benchmarks and combine results"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Experiments 191-196 created and tested benchmark scripts.
+      This experiment RUNS them all and combines the results.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_191_adversarial_gpu_v2.py
+      - scripts/experiment_193_humaneval_gpu_v2.py
+      - scripts/experiment_195_gsm8k_gpu_v2.py
+
+      TASK: Create results/experiment_197_combined_results.json
+
+      CONCRETE STEPS:
+      1. Run each benchmark script with CARNOT_FORCE_LIVE=1
+      2. Collect results from each
+      3. Combine into a single summary with all benchmarks
+      4. Compare to previous simulated results
+      5. Save combined results
+      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_197_run_all.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp198-benchmark-analysis
+    milestone: "2026.04.14"
+    deliverable: scripts/experiment_198_analysis.py
+    title: "Exp 198: Analyze live GPU results + update docs + HuggingFace"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 197 ran all GPU benchmarks and produced combined results.
+      This experiment analyzes the data and updates all documentation.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_197_combined_results.json — combined benchmark data
+      - docs/technical-report.md — technical report to update
+      - docs/index.html — GitHub pages to update
+      - README.md — readme to update
+
+      TASK: Create scripts/experiment_198_analysis.py
+
+      CONCRETE STEPS:
+      1. Load combined results
+      2. Generate comparison tables: simulated vs live, per-benchmark
+      3. Compute improvement deltas with 95% CIs
+      4. Update docs/technical-report.md with live GPU results section
+      5. Update docs/index.html stats and results cards
+      6. Update README.md key results table
+      7. Prepare HuggingFace model card updates with live numbers
+      8. Save analysis to results/experiment_198_results.json
+      9. Run: .venv/bin/python scripts/experiment_198_analysis.py
+      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 59: Research Scan ─────────────────────────────────
+  - id: exp199-research-scan
+    milestone: "2026.04.14"
+    deliverable: results/experiment_199_results.json
+    title: "Exp 199: Research scan v3 — multi-source with live GPU context"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Now that we have live GPU results, search for papers that
+      compare constraint verification approaches on standard benchmarks.
+
+      EXISTING CODE TO READ FIRST:
+      - research-references.md — current references
+      - research-program.md — "Research Sources" section
+      - results/experiment_197_combined_results.json — our live numbers
+
+      TASK: Create results/experiment_199_results.json
+
+      CONCRETE STEPS:
+      1. Search arxiv + secondary sources for recent work
+      2. Focus on: papers reporting GSM8K/HumanEval improvements via
+         verification, constrained decoding, or energy-based methods
+      3. Compare our live numbers to published baselines
+      4. Update research-references.md
+      5. Propose experiments for 2026.04.15
+      6. Run: .venv/bin/python scripts/experiment_199_research_scan.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
