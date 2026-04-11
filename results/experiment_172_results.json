@@ -1,0 +1,348 @@
+{
+  "experiment": "172_global_consistency",
+  "date": "2026-04-11",
+  "target_models": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "description": "Benchmark GlobalConsistencyChecker (Exp 172) on 20 synthetic 4-step chains: 10 locally-consistent globally-inconsistent, 10 fully-consistent. Measures detection improvement over local per-step verification. Theoretical basis: arxiv 2601.13600.",
+  "chains": [
+    {
+      "chain_id": 0,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'widget' has value 50.0 in step 0 but 75.0 in step 3"
+        }
+      ],
+      "latency_ms": 43.475
+    },
+    {
+      "chain_id": 1,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'widget' has value 50.0 in step 0 but 80.0 in step 3"
+        }
+      ],
+      "latency_ms": 2.118
+    },
+    {
+      "chain_id": 2,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'widget' has value 50.0 in step 0 but 60.0 in step 3"
+        }
+      ],
+      "latency_ms": 2.341
+    },
+    {
+      "chain_id": 3,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'widget' has value 50.0 in step 0 but 100.0 in step 3"
+        }
+      ],
+      "latency_ms": 2.043
+    },
+    {
+      "chain_id": 4,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "arithmetic",
+          "description": "Arithmetic 3 + 5 = 8 (step 0) contradicts = 10 (step 3)"
+        }
+      ],
+      "latency_ms": 1.546
+    },
+    {
+      "chain_id": 5,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "arithmetic",
+          "description": "Arithmetic 3 + 5 = 8 (step 0) contradicts = 9 (step 3)"
+        }
+      ],
+      "latency_ms": 1.527
+    },
+    {
+      "chain_id": 6,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "warning",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "arithmetic",
+          "description": "Arithmetic 3 + 5 = 8 (step 0) contradicts = 7 (step 3)"
+        }
+      ],
+      "latency_ms": 1.499
+    },
+    {
+      "chain_id": 7,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "critical",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'france' capital is 'paris' (step 0) but 'berlin' (step 3)"
+        }
+      ],
+      "latency_ms": 1.508
+    },
+    {
+      "chain_id": 8,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "critical",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'france' capital is 'paris' (step 0) but 'berlin' (step 3)"
+        }
+      ],
+      "latency_ms": 1.502
+    },
+    {
+      "chain_id": 9,
+      "chain_type": "globally_inconsistent",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "local_detected": false,
+      "global_detected": true,
+      "global_report_severity": "critical",
+      "n_inconsistent_pairs": 1,
+      "inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'france' capital is 'paris' (step 0) but 'berlin' (step 3)"
+        }
+      ],
+      "latency_ms": 1.492
+    },
+    {
+      "chain_id": 10,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.363
+    },
+    {
+      "chain_id": 11,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.422
+    },
+    {
+      "chain_id": 12,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.718
+    },
+    {
+      "chain_id": 13,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.556
+    },
+    {
+      "chain_id": 14,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.447
+    },
+    {
+      "chain_id": 15,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.277
+    },
+    {
+      "chain_id": 16,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.246
+    },
+    {
+      "chain_id": 17,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.455
+    },
+    {
+      "chain_id": 18,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.602
+    },
+    {
+      "chain_id": 19,
+      "chain_type": "fully_consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "local_detected": false,
+      "global_detected": false,
+      "global_report_severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.307
+    }
+  ],
+  "summary": {
+    "n_chains_total": 20,
+    "n_inconsistent_chains": 10,
+    "n_consistent_chains": 10,
+    "local_detection_rate": 0.0,
+    "global_detection_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "detection_improvement": 1.0,
+    "avg_latency_ms": 3.672,
+    "per_type_detection": {
+      "numeric": {
+        "n_chains": 4,
+        "global_detected": 4,
+        "detection_rate": 1.0
+      },
+      "arithmetic": {
+        "n_chains": 3,
+        "global_detected": 3,
+        "detection_rate": 1.0
+      },
+      "factual": {
+        "n_chains": 3,
+        "global_detected": 3,
+        "detection_rate": 1.0
+      }
+    }
+  }
+}
