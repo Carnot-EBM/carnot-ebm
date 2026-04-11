@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-11T09:28:39Z | 2026-04-11T09:37:39Z | Exp 152: ContinualGibbsModel (orthogonal gradient continual learning); 29 tests, 100% module coverage; benchmark vs Ising/LNN (Exp 116) — ContinualGibbs 100% step-5 accuracy (target >80% met); results/experiment_152_results.json | TBD |
+| 2 | 2026-04-11T09:52:26Z | 2026-04-11T10:02:54Z | Exp 153: KAN adaptive mesh refinement — compute_edge_curvature() + refine(threshold=1.5); AUROC 0.875→0.875 (delta=0.000, ✓), params 2310→2281 (-1.3%, ✓); 36 knots added, 65 removed; high-curv=domain×numeric edges, low-curv=within-group edges | TBD |
 
 ---
 

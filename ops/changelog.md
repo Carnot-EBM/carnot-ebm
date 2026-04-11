@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 153 KAN Adaptive Mesh Refinement)
+
+- `scripts/experiment_153_kan_refinement.py` — implements `KANConstraintModel` with `compute_edge_curvature()` (finite-difference second derivative |d²f/dx²| over 100 sample points per edge) and `refine(threshold_multiplier=1.5)` (insert knot at max-curvature point for high-curvature edges; merge min-diff adjacent knots for low-curvature edges); fine-tuning loop supports per-edge variable n_ctrl post-refinement. Benchmarked on 200-question arithmetic+logic constraint verification (160 train / 40 test, top-20 Ising-selected features). Results: AUROC 0.875→0.875 (delta=0.000, ✓ target ≥-0.01), params 2310→2281 (-1.3%, ✓ target ±20%), 36 knots added + 65 removed. Interpretability finding: high-curvature edges cluster on `domain_specific × numeric` cross-group interactions (complex nonlinear constraint); low-curvature edges are within-group (`domain_specific × domain_specific`, `consistency × consistency`) near-linear interactions. Saved to `results/experiment_153_results.json`. (REQ-CORE-001, REQ-TIER-001, user instruction: Exp 153 KAN AMR)
+
 ## 2026-04-11 (Exp 152 ContinualGibbs)
 
 - `python/carnot/models/continual_gibbs.py` — `ContinualGibbsConfig` + `ContinualGibbsModel` extending `GibbsModel`; orthogonal parameter updates via Gram-Schmidt projection of hidden representations onto null space of prior step gradients; `update_step(obs, step_idx)` accumulates constraints without overwriting prior ones; `reset()` clears buffer + zeroes output_weight for new chains; `gradient_buffer_size()` + `orthogonality_residual()` diagnostic API; backward compatible with `EnergyFunction` protocol. (REQ-CORE-001, REQ-CORE-002)
