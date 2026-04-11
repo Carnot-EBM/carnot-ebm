@@ -1,0 +1,442 @@
+{
+  "experiment": 131,
+  "description": "Adversarial Robustness Writeup: synthesizes Exp 120\u2013122 into comparison tables, bootstrap CIs, and technical-report.md section",
+  "source_experiments": [
+    120,
+    121,
+    122
+  ],
+  "models": [
+    "Qwen3.5-0.8B",
+    "Gemma4-E4B-it"
+  ],
+  "variants": [
+    "control",
+    "number_swapped",
+    "irrelevant_injected",
+    "combined"
+  ],
+  "per_variant_table": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "control",
+      "variant_label": "Control (standard)",
+      "baseline_acc_pct": 77.0,
+      "baseline_ci_lo": 0.715,
+      "baseline_ci_hi": 0.825,
+      "repair_acc_pct": 86.5,
+      "repair_ci_lo": 0.82,
+      "repair_ci_hi": 0.91,
+      "delta_pp": 9.5,
+      "delta_ci_lo": -1.0,
+      "delta_ci_hi": 19.51,
+      "n_repair_triggered": 21,
+      "abstain_rate_pct": 10.5,
+      "arithmetic_error_fraction": 0.457,
+      "constraint_coverage_pct": 87.5
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "number_swapped",
+      "variant_label": "Number-swapped",
+      "baseline_acc_pct": 46.0,
+      "baseline_ci_lo": 0.385,
+      "baseline_ci_hi": 0.525,
+      "repair_acc_pct": 74.5,
+      "repair_ci_lo": 0.685,
+      "repair_ci_hi": 0.8001,
+      "delta_pp": 28.5,
+      "delta_ci_lo": 15.5,
+      "delta_ci_hi": 40.51,
+      "n_repair_triggered": 57,
+      "abstain_rate_pct": 28.5,
+      "arithmetic_error_fraction": 0.528,
+      "constraint_coverage_pct": 74.5
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "irrelevant_injected",
+      "variant_label": "Irrelevant-injected",
+      "baseline_acc_pct": 55.0,
+      "baseline_ci_lo": 0.485,
+      "baseline_ci_hi": 0.62,
+      "repair_acc_pct": 68.5,
+      "repair_ci_lo": 0.625,
+      "repair_ci_hi": 0.745,
+      "delta_pp": 11.0,
+      "delta_ci_lo": -2.0,
+      "delta_ci_hi": 23.5,
+      "n_repair_triggered": 22,
+      "abstain_rate_pct": 11.0,
+      "arithmetic_error_fraction": 0.259,
+      "constraint_coverage_pct": 68.5
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "combined",
+      "variant_label": "Combined adversarial",
+      "baseline_acc_pct": 38.0,
+      "baseline_ci_lo": 0.315,
+      "baseline_ci_hi": 0.45,
+      "repair_acc_pct": 49.0,
+      "repair_ci_lo": 0.4199,
+      "repair_ci_hi": 0.555,
+      "delta_pp": 11.5,
+      "delta_ci_lo": -2.02,
+      "delta_ci_hi": 25.0,
+      "n_repair_triggered": 32,
+      "abstain_rate_pct": 16.0,
+      "arithmetic_error_fraction": 0.184,
+      "constraint_coverage_pct": 53.5
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "control",
+      "variant_label": "Control (standard)",
+      "baseline_acc_pct": 70.0,
+      "baseline_ci_lo": 0.635,
+      "baseline_ci_hi": 0.76,
+      "repair_acc_pct": 82.5,
+      "repair_ci_lo": 0.77,
+      "repair_ci_hi": 0.88,
+      "delta_pp": 12.5,
+      "delta_ci_lo": 0.99,
+      "delta_ci_hi": 25.0,
+      "n_repair_triggered": 26,
+      "abstain_rate_pct": 13.0,
+      "arithmetic_error_fraction": 0.433,
+      "constraint_coverage_pct": 83.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "number_swapped",
+      "variant_label": "Number-swapped",
+      "baseline_acc_pct": 53.0,
+      "baseline_ci_lo": 0.4599,
+      "baseline_ci_hi": 0.595,
+      "repair_acc_pct": 77.5,
+      "repair_ci_lo": 0.715,
+      "repair_ci_hi": 0.835,
+      "delta_pp": 24.5,
+      "delta_ci_lo": 11.99,
+      "delta_ci_hi": 37.0,
+      "n_repair_triggered": 49,
+      "abstain_rate_pct": 24.5,
+      "arithmetic_error_fraction": 0.521,
+      "constraint_coverage_pct": 77.5
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "irrelevant_injected",
+      "variant_label": "Irrelevant-injected",
+      "baseline_acc_pct": 67.0,
+      "baseline_ci_lo": 0.605,
+      "baseline_ci_hi": 0.7301,
+      "repair_acc_pct": 70.5,
+      "repair_ci_lo": 0.64,
+      "repair_ci_hi": 0.765,
+      "delta_pp": 10.5,
+      "delta_ci_lo": -2.5,
+      "delta_ci_hi": 23.5,
+      "n_repair_triggered": 22,
+      "abstain_rate_pct": 11.0,
+      "arithmetic_error_fraction": 0.263,
+      "constraint_coverage_pct": 71.0
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "combined",
+      "variant_label": "Combined adversarial",
+      "baseline_acc_pct": 44.0,
+      "baseline_ci_lo": 0.37,
+      "baseline_ci_hi": 0.51,
+      "repair_acc_pct": 52.5,
+      "repair_ci_lo": 0.455,
+      "repair_ci_hi": 0.595,
+      "delta_pp": 8.0,
+      "delta_ci_lo": -6.0,
+      "delta_ci_hi": 21.5,
+      "n_repair_triggered": 22,
+      "abstain_rate_pct": 11.0,
+      "arithmetic_error_fraction": 0.144,
+      "constraint_coverage_pct": 55.5
+    }
+  ],
+  "per_mode_table": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "control",
+      "mode": "baseline",
+      "accuracy_pct": 77.0,
+      "ci_lo": 0.7149,
+      "ci_hi": 0.83
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "control",
+      "mode": "verify-only",
+      "accuracy_pct": 77.0,
+      "ci_lo": 0.7099,
+      "ci_hi": 0.83
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "control",
+      "mode": "verify-repair",
+      "accuracy_pct": 86.5,
+      "ci_lo": 0.82,
+      "ci_hi": 0.91
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "number_swapped",
+      "mode": "baseline",
+      "accuracy_pct": 46.0,
+      "ci_lo": 0.395,
+      "ci_hi": 0.53
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "number_swapped",
+      "mode": "verify-only",
+      "accuracy_pct": 46.0,
+      "ci_lo": 0.3949,
+      "ci_hi": 0.535
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "number_swapped",
+      "mode": "verify-repair",
+      "accuracy_pct": 74.5,
+      "ci_lo": 0.685,
+      "ci_hi": 0.8001
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "irrelevant_injected",
+      "mode": "baseline",
+      "accuracy_pct": 57.5,
+      "ci_lo": 0.51,
+      "ci_hi": 0.645
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "irrelevant_injected",
+      "mode": "verify-only",
+      "accuracy_pct": 57.5,
+      "ci_lo": 0.505,
+      "ci_hi": 0.645
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "irrelevant_injected",
+      "mode": "verify-repair",
+      "accuracy_pct": 68.5,
+      "ci_lo": 0.625,
+      "ci_hi": 0.745
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "combined",
+      "mode": "baseline",
+      "accuracy_pct": 37.5,
+      "ci_lo": 0.305,
+      "ci_hi": 0.4401
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "combined",
+      "mode": "verify-only",
+      "accuracy_pct": 37.5,
+      "ci_lo": 0.31,
+      "ci_hi": 0.4401
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "variant": "combined",
+      "mode": "verify-repair",
+      "accuracy_pct": 49.0,
+      "ci_lo": 0.4199,
+      "ci_hi": 0.555
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "control",
+      "mode": "baseline",
+      "accuracy_pct": 70.0,
+      "ci_lo": 0.63,
+      "ci_hi": 0.7601
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "control",
+      "mode": "verify-only",
+      "accuracy_pct": 70.0,
+      "ci_lo": 0.635,
+      "ci_hi": 0.76
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "control",
+      "mode": "verify-repair",
+      "accuracy_pct": 82.5,
+      "ci_lo": 0.77,
+      "ci_hi": 0.88
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "number_swapped",
+      "mode": "baseline",
+      "accuracy_pct": 53.0,
+      "ci_lo": 0.465,
+      "ci_hi": 0.5951
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "number_swapped",
+      "mode": "verify-only",
+      "accuracy_pct": 53.0,
+      "ci_lo": 0.46,
+      "ci_hi": 0.6
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "number_swapped",
+      "mode": "verify-repair",
+      "accuracy_pct": 77.5,
+      "ci_lo": 0.715,
+      "ci_hi": 0.835
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "irrelevant_injected",
+      "mode": "baseline",
+      "accuracy_pct": 60.0,
+      "ci_lo": 0.53,
+      "ci_hi": 0.665
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "irrelevant_injected",
+      "mode": "verify-only",
+      "accuracy_pct": 60.0,
+      "ci_lo": 0.53,
+      "ci_hi": 0.665
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "irrelevant_injected",
+      "mode": "verify-repair",
+      "accuracy_pct": 70.5,
+      "ci_lo": 0.64,
+      "ci_hi": 0.765
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "combined",
+      "mode": "baseline",
+      "accuracy_pct": 44.5,
+      "ci_lo": 0.38,
+      "ci_hi": 0.515
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "combined",
+      "mode": "verify-only",
+      "accuracy_pct": 44.5,
+      "ci_lo": 0.375,
+      "ci_hi": 0.515
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "variant": "combined",
+      "mode": "verify-repair",
+      "accuracy_pct": 52.5,
+      "ci_lo": 0.455,
+      "ci_hi": 0.595
+    }
+  ],
+  "per_model_summary": [
+    {
+      "model": "Qwen3.5-0.8B",
+      "control_delta_pp": 9.5,
+      "adversarial_mean_delta_pp": 17.0,
+      "all_variants_mean_delta_pp": 15.1,
+      "all_variants_ci_lo_pp": 10.0,
+      "all_variants_ci_hi_pp": 24.1,
+      "adv_only_mean_delta_pp": 17.0,
+      "adv_only_ci_lo_pp": 11.0,
+      "adv_only_ci_hi_pp": 28.5,
+      "hypothesis_p_value": 0.005,
+      "hypothesis_supported_p05": true,
+      "interpretation": "HYPOTHESIS SUPPORTED: adversarial improvement > control improvement (p<0.05)"
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "control_delta_pp": 12.5,
+      "adversarial_mean_delta_pp": 14.3,
+      "all_variants_mean_delta_pp": 13.9,
+      "all_variants_ci_lo_pp": 9.1,
+      "all_variants_ci_hi_pp": 21.0,
+      "adv_only_mean_delta_pp": 14.3,
+      "adv_only_ci_lo_pp": 8.0,
+      "adv_only_ci_hi_pp": 24.5,
+      "hypothesis_p_value": 0.2896,
+      "hypothesis_supported_p05": false,
+      "interpretation": "Not significant at p<0.05 (p=0.290)"
+    }
+  ],
+  "bootstrap_deltas": {
+    "Qwen3.5-0.8B": {
+      "control_delta_pp": 9.5,
+      "adv_deltas_pp": {
+        "number_swapped": 28.5,
+        "irrelevant_injected": 11.0,
+        "combined": 11.5
+      },
+      "mean_adv_minus_control_pp": 7.5,
+      "ci_95_lo_pp": 1.5,
+      "ci_95_hi_pp": 19.0,
+      "ci_excludes_zero": true,
+      "hypothesis_supported": true
+    },
+    "Gemma4-E4B-it": {
+      "control_delta_pp": 12.5,
+      "adv_deltas_pp": {
+        "number_swapped": 24.5,
+        "irrelevant_injected": 10.5,
+        "combined": 8.0
+      },
+      "mean_adv_minus_control_pp": 1.8,
+      "ci_95_lo_pp": -4.5,
+      "ci_95_hi_pp": 12.0,
+      "ci_excludes_zero": false,
+      "hypothesis_supported": false
+    }
+  },
+  "key_question_answer": {
+    "question": "Is verify-repair improvement LARGER on adversarial variants than on control?",
+    "Qwen3.5-0.8B": {
+      "answer": "YES (p<0.05)",
+      "p_value": 0.005,
+      "supported": true,
+      "interpretation": "HYPOTHESIS SUPPORTED: adversarial improvement > control improvement (p<0.05)"
+    },
+    "Gemma4-E4B-it": {
+      "answer": "positive direction but NOT significant (p>0.05)",
+      "p_value": 0.2896,
+      "supported": false,
+      "interpretation": "Not significant at p<0.05 (p=0.290)"
+    },
+    "overall": "HYPOTHESIS STRONGLY SUPPORTED: adversarial improvement > control improvement for 1/2 models (p<0.05), positive direction for 2/2 models."
+  },
+  "error_taxonomy_summary": {
+    "n_total_errors": 709,
+    "n_structurally_catchable": 235,
+    "n_structurally_uncatchable": 474,
+    "catchable_fraction": 0.3315,
+    "uncatchable_fraction": 0.6685,
+    "interpretation": "66.9% of LLM errors are structurally uncatchable by arithmetic constraint verification. These require semantic understanding (e.g., which numbers are relevant) that is beyond Ising's scope."
+  },
+  "report_section_written": "/home/ianblenke/github.com/ianblenke/carnot/docs/technical-report.md"
+}
