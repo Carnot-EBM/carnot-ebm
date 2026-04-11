@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 143 JEPA Training Pair Collection
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T03:09:05Z | 2026-04-11T03:12:06Z | Create scripts/experiment_143_collect_pairs.py — mines result logs (0 pairs found), generates 200 synthetic arithmetic pairs via AutoExtractor+VerifyRepairPipeline, embeds 4 prefix ratios with RandomProjection(256-dim, seed=42); 800 total pairs, 33.5% positive rate; saved to results/jepa_training_pairs.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 140 Constraint-Projection Guided Latency
 
 ### Turn Log
