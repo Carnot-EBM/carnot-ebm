@@ -1,0 +1,128 @@
+{
+  "experiment": "175_adaptive_kan_live_verification_loop",
+  "description": "AdaptiveKAN Tier-4 structural adaptation: AMR every 500 verifications across 3 difficulty levels (simple \u2192 medium \u2192 complex arithmetic). Demonstrates autonomous structural adaptation without human intervention.",
+  "reference_models": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "config": {
+    "input_dim": 20,
+    "num_knots_initial": 8,
+    "degree": 3,
+    "restructure_every": 500,
+    "n_train": 160,
+    "n_eval": 200,
+    "top_features": [
+      125,
+      74,
+      126,
+      180,
+      127,
+      78,
+      162,
+      15,
+      16,
+      17,
+      167,
+      79,
+      168,
+      22,
+      171,
+      175,
+      77,
+      166,
+      169,
+      114
+    ],
+    "baseline_epochs": 100,
+    "finetune_epochs": 10,
+    "baseline_lr": 0.01,
+    "finetune_lr": 0.005,
+    "seed": 175
+  },
+  "results": {
+    "auroc_adaptive": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "auroc_static": [
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "params_adaptive": [
+      2310,
+      2328,
+      2283,
+      2217
+    ],
+    "batch_labels": [
+      "batch_0_baseline",
+      "batch_1_simple",
+      "batch_2_medium",
+      "batch_3_complex"
+    ],
+    "n_restructure_cycles": 3,
+    "total_verifications": 1500
+  },
+  "validation": {
+    "auroc_maintained_delta_ge_neg001": true,
+    "param_change_within_20pct": true,
+    "param_change_pct": -4.025974025974026,
+    "n_restructures_is_3": true,
+    "all_targets_pass": true
+  },
+  "restructure_log": [
+    {
+      "timestamp": "2026-04-11T19:51:58.384141Z",
+      "verification_count": 500,
+      "n_params_before": 2310,
+      "n_params_after": 2328,
+      "param_delta": 18,
+      "knots_added": 91,
+      "knots_removed": 73,
+      "curvature_mean": 0.000579280190561947,
+      "curvature_std": 0.0005844693556687774,
+      "n_recent_inputs": 100
+    },
+    {
+      "timestamp": "2026-04-11T19:52:03.416091Z",
+      "verification_count": 1000,
+      "n_params_before": 2328,
+      "n_params_after": 2283,
+      "param_delta": -45,
+      "knots_added": 28,
+      "knots_removed": 73,
+      "curvature_mean": 0.0004548844146101098,
+      "curvature_std": 0.0005952139568565284,
+      "n_recent_inputs": 100
+    },
+    {
+      "timestamp": "2026-04-11T19:52:08.389033Z",
+      "verification_count": 1500,
+      "n_params_before": 2283,
+      "n_params_after": 2217,
+      "param_delta": -66,
+      "knots_added": 28,
+      "knots_removed": 94,
+      "curvature_mean": 0.00035956403926799173,
+      "curvature_std": 0.0005440079297322639,
+      "n_recent_inputs": 100
+    }
+  ],
+  "summary": {
+    "auroc_batch0": 1.0,
+    "auroc_batch1": 1.0,
+    "auroc_batch2": 1.0,
+    "auroc_batch3": 1.0,
+    "auroc_delta_max_drop": 0.0,
+    "params_initial": 2310,
+    "params_final": 2217,
+    "static_kan_auroc_batch0": 1.0,
+    "static_kan_auroc_final": 1.0
+  },
+  "wall_time_seconds": 62.5
+}

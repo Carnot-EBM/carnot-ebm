@@ -8,6 +8,7 @@
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-11T19:02:48Z | 2026-04-11T19:12:38Z | Exp 173: NegationConstraint v2 (violation detection, not_all/no_A_are_B patterns) + CarryChainConstraint v2 (subtraction borrow, digit-count, negative-result); 58 new tests (100% generation.py coverage); cohort A negation recall 0%→100%; combined accuracy 0.9733 (+0.013 vs Exp141 0.96); dedup fix confirmed | TBD |
 | 2 | 2026-04-11T19:17:55Z | 2026-04-11T19:31:54Z | Exp 174: LagONN (arxiv 2505.07179) — LagONN model, 46 tests 100% coverage, benchmark 20 SAT + 20 scheduling; scheduling: 0.5%→49.2% feasibility, 20/20 wins; SAT: mixed (encoding calibration needed); overall 23.2%→47.6% | TBD |
+| 3 | 2026-04-11T19:35:21Z | 2026-04-11T19:47:10Z | Exp 175: AdaptiveKAN live verification tracking loop — adaptive_kan.py (KANConstraintModel base + AdaptiveKAN Tier-4), 45 tests 100% coverage, experiment 175 (3 AMR cycles: 500/1000/1500 verifications); AUROC 1.0 maintained across all 3 restructures; params 2310→2217 (-4%); ALL TARGETS PASS; 61.8s runtime | TBD |
 
 ---
 
