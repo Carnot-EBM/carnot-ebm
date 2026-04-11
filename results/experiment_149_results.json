@@ -1,0 +1,197 @@
+{
+  "experiment": "149_truthfulqa_factual_coverage",
+  "description": "TruthfulQA scale benchmark to quantify factual constraint coverage gap and identify top-5 constraint types for Goal #3 factual extractor.",
+  "target_models": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "dataset": "truthful_qa (generation split, balanced 200-question sample)",
+  "total_questions": 196,
+  "category_distribution": {
+    "health": 28,
+    "misconceptions": 28,
+    "other": 28,
+    "science": 28,
+    "fiction": 28,
+    "law": 28,
+    "history": 28
+  },
+  "coverage": {
+    "total_covered": 85,
+    "total_blind_spots": 111,
+    "overall_coverage_rate": 0.4337,
+    "per_category": {
+      "misconceptions": {
+        "total": 28,
+        "covered": 14,
+        "coverage_rate": 0.5,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      },
+      "fiction": {
+        "total": 28,
+        "covered": 15,
+        "coverage_rate": 0.5357,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      },
+      "history": {
+        "total": 28,
+        "covered": 4,
+        "coverage_rate": 0.1429,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      },
+      "science": {
+        "total": 28,
+        "covered": 7,
+        "coverage_rate": 0.25,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      },
+      "health": {
+        "total": 28,
+        "covered": 16,
+        "coverage_rate": 0.5714,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      },
+      "law": {
+        "total": 28,
+        "covered": 17,
+        "coverage_rate": 0.6071,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      },
+      "other": {
+        "total": 28,
+        "covered": 12,
+        "coverage_rate": 0.4286,
+        "kb_covered": 0,
+        "kb_coverage_rate": 0.0
+      }
+    },
+    "kb_total_covered": 0,
+    "kb_coverage_rate": 0.0,
+    "kb_only_gain_count": 0
+  },
+  "accuracy": {
+    "covered_count": 85,
+    "correct_accept_count": 85,
+    "correct_accept_rate": 1.0,
+    "wrong_tested_count": 85,
+    "wrong_reject_count": 0,
+    "wrong_reject_rate": 0.0
+  },
+  "mining": {
+    "total_blind_spots_analyzed": 111,
+    "fa_false_negative_count": 111,
+    "fa_false_negative_rate": 1.0,
+    "detector_counts": {
+      "comparison": 2,
+      "implicit_logic": 2,
+      "negation": 4,
+      "world_knowledge": 5
+    },
+    "fa_category_counts": {
+      "arithmetic_chain": 0,
+      "implicit_logic": 1,
+      "world_knowledge": 4,
+      "code_semantics": 0,
+      "comparison": 2,
+      "negation": 2
+    },
+    "merged_category_counts": {
+      "comparison": 4,
+      "implicit_logic": 3,
+      "negation": 6,
+      "world_knowledge": 9,
+      "arithmetic_chain": 0,
+      "code_semantics": 0
+    },
+    "top5_constraint_types": [
+      {
+        "rank": 1,
+        "constraint_type": "world_knowledge",
+        "blind_spot_count": 9,
+        "estimated_coverage_improvement_pct": 8.1
+      },
+      {
+        "rank": 2,
+        "constraint_type": "negation",
+        "blind_spot_count": 6,
+        "estimated_coverage_improvement_pct": 5.4
+      },
+      {
+        "rank": 3,
+        "constraint_type": "comparison",
+        "blind_spot_count": 4,
+        "estimated_coverage_improvement_pct": 3.6
+      },
+      {
+        "rank": 4,
+        "constraint_type": "implicit_logic",
+        "blind_spot_count": 3,
+        "estimated_coverage_improvement_pct": 2.7
+      },
+      {
+        "rank": 5,
+        "constraint_type": "arithmetic_chain",
+        "blind_spot_count": 0,
+        "estimated_coverage_improvement_pct": 0.0
+      }
+    ],
+    "suggested_patterns": [
+      {
+        "category": "world_knowledge",
+        "name": "entity_property",
+        "pattern": "([A-Z][a-z]+(?:\\s+[A-Z][a-z]+)*)\\s+(?:is|was)\\s+(?:a|an|the)\\s+(.+?)(?:\\.|$)",
+        "description": "Extract entity-property claims for KB lookup verification",
+        "estimated_catch_count": 4,
+        "estimated_catch_rate": 0.036036036036036036
+      },
+      {
+        "category": "negation",
+        "name": "never_claim",
+        "pattern": "(\\w+(?:\\s+\\w+)?)\\s+never\\s+(\\w+(?:\\s+\\w+)?)",
+        "description": "Extract 'X never Y' claims as negated constraints",
+        "estimated_catch_count": 2,
+        "estimated_catch_rate": 0.018018018018018018
+      },
+      {
+        "category": "comparison",
+        "name": "numeric_comparison",
+        "pattern": "(-?\\d+\\.?\\d*)\\s*([<>]=?)\\s*(-?\\d+\\.?\\d*)",
+        "description": "Extract and verify numeric comparison claims",
+        "estimated_catch_count": 0,
+        "estimated_catch_rate": 0.0
+      },
+      {
+        "category": "comparison",
+        "name": "superlative_claim",
+        "pattern": "(\\w+(?:\\s+\\w+)?)\\s+is\\s+the\\s+(largest|smallest|biggest|best|worst|highest|lowest|most|least|fastest|slowest)\\b",
+        "description": "Extract superlative claims about entities",
+        "estimated_catch_count": 0,
+        "estimated_catch_rate": 0.0
+      },
+      {
+        "category": "negation",
+        "name": "no_entity_claim",
+        "pattern": "\\bno\\s+(duplicate|error|overflow|exception|bug|issue)s?\\b",
+        "description": "Extract 'no X' absence claims",
+        "estimated_catch_count": 0,
+        "estimated_catch_rate": 0.0
+      }
+    ]
+  },
+  "recommendation": {
+    "top1_constraint_type": "world_knowledge",
+    "top1_estimated_improvement_pct": 8.1,
+    "recommended_extractor_class": "FactualWorldKnowledgeExtractor",
+    "rationale": "Dense-retrieval entity-property verifier using a larger KB or FAISS index. Replaces hard-coded KB with sentence-embedding lookup for TruthfulQA-style factual claims (entity + is/was + property).",
+    "estimated_post_build_coverage_pct": 48.0,
+    "implementation_note": "Implement as a ConstraintExtractor Protocol class in python/carnot/pipeline/extract.py or a new module, then register in AutoExtractor.__init__()."
+  },
+  "elapsed_seconds": 4.87,
+  "spec": "REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-005"
+}
