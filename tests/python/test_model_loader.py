@@ -381,6 +381,17 @@ class TestLoadModelForceLive:
         assert model is None
         assert tok is None
 
+    def test_no_raise_on_import_error_without_force_live(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """REQ-VERIFY-001: returns (None, None) when torch/transformers unavailable without FORCE_LIVE."""
+        # Simulate transformers not installed by setting module-level sentinels to None.
+        with patch("carnot.inference.model_loader.AutoTokenizer", None), \
+             patch("carnot.inference.model_loader.AutoModelForCausalLM", None):
+            model, tok = load_model("Qwen/Qwen3.5-0.8B")
+        assert model is None
+        assert tok is None
+
 
 # ---------------------------------------------------------------------------
 # Tests: generate
