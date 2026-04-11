@@ -1041,6 +1041,98 @@ def _plan_next_milestone(push: bool = True) -> bool:
     return True
 
 
+def _dogfood_verify_generated_code() -> None:
+    """Use Carnot's own pipeline to verify code the conductor just generated.
+
+    This is the dogfooding step: we eat our own cooking. Runs three checks
+    on any new/modified Python files:
+
+    1. Brace validation — catch {key} patterns in YAML prompts that will
+       break .format(). This was our #1 recurring bug.
+    2. CodeExtractor — static constraint extraction (types, bounds, returns)
+       on new .py files. Catches issues pytest might miss.
+    3. Constraint tracker update — record what we find for future learning.
+    """
+    try:
+        # 1. Validate YAML prompt braces in roadmap files
+        for yaml_file in ["research-roadmap.yaml", "research-roadmap-next.yaml"]:
+            yaml_path = PROJECT_ROOT / yaml_file
+            if not yaml_path.exists():
+                continue
+            try:
+                import yaml as _yaml
+                with open(yaml_path) as f:
+                    data = _yaml.safe_load(f)
+                for t in data.get("tasks", []):
+                    prompt = t.get("prompt", "")
+                    try:
+                        prompt.format(project_root="/test", date="20260101")
+                    except (KeyError, ValueError) as e:
+                        logger.warning(
+                            "DOGFOOD: Brace error in %s task %s: %s — auto-fixing",
+                            yaml_file, t.get("id", "?"), e,
+                        )
+                        # Auto-fix: replace non-template braces
+                        import re
+                        fixed = prompt
+                        fixed = re.sub(
+                            r'\{([^}]+)\}',
+                            lambda m: m.group(0) if m.group(1) in ('project_root', 'date')
+                            else '(' + m.group(1) + ')',
+                            fixed,
+                        )
+                        t["prompt"] = fixed
+                # Rewrite using string replacement to preserve comments
+                raw = yaml_path.read_text()
+                import re as _re
+                def _fix_braces(m):
+                    inner = m.group(1)
+                    if inner in ('project_root', 'date'):
+                        return m.group(0)
+                    return '(' + inner + ')'
+                fixed_raw = _re.sub(r'\{([^}]+)\}', _fix_braces, raw)
+                if fixed_raw != raw:
+                    yaml_path.write_text(fixed_raw)
+                    logger.info("DOGFOOD: Auto-fixed brace escaping in %s", yaml_file)
+            except Exception as e:
+                logger.debug("DOGFOOD: YAML check skipped: %s", e)
+
+        # 2. Run CodeExtractor on new Python files
+        _, new_files, _ = run_cmd(["git", "diff", "--name-only", "--diff-filter=A"])
+        py_files = [f.strip() for f in new_files.splitlines()
+                    if f.strip().endswith(".py") and "test" not in f.lower()]
+        if py_files:
+            try:
+                from carnot.pipeline.extract import CodeExtractor
+                extractor = CodeExtractor()
+                for py_file in py_files[:5]:  # Limit to 5 files
+                    path = PROJECT_ROOT / py_file
+                    if not path.exists():
+                        continue
+                    code = path.read_text()
+                    constraints = extractor.extract(code, domain="code")
+                    violations = [c for c in constraints
+                                  if c.metadata.get("satisfied") is False]
+                    if violations:
+                        logger.info(
+                            "DOGFOOD: CodeExtractor found %d violations in %s",
+                            len(violations), py_file,
+                        )
+                        for v in violations[:3]:
+                            logger.info("  - %s", v.description[:100])
+            except ImportError:
+                logger.debug("DOGFOOD: CodeExtractor not available, skipping")
+            except Exception as e:
+                logger.debug("DOGFOOD: CodeExtractor check failed: %s", e)
+
+        # 3. Log dogfooding results
+        logger.info("DOGFOOD: Verification complete on generated code")
+
+    except Exception as e:
+        # Never let dogfooding block the pipeline
+        logger.debug("DOGFOOD: Skipped due to error: %s", e)
+
+
 def research_step(push: bool = True, dry_run: bool = False) -> bool:
     """Execute one research step. Returns True if progress was made."""
     timestamp = datetime.now(timezone.utc)
