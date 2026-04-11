@@ -799,3 +799,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 176 Complete
 
 - Exp 176: Multi-turn factual verification with global consistency checking — combines ConstraintStateMachine + FactualExtractor (Wikidata KB) with GlobalConsistencyChecker (Exp 172); 20 synthetic chains (10 consistent + 10 inconsistent); local-only Mode B 60% detection (6/10) → local+global Mode C 100% detection (10/10 inconsistent, 0 FP on consistent); GlobalConsistencyChecker adds 4 detections for numeric/arithmetic cross-step contradictions; results at `results/experiment_176_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-005
+
+## 2026-04-11: Experiment 178 Complete
+
+- Exp 178: Definitive adversarial GSM8K — Goal #5 with statistical power (N≥400/variant) — paired sign permutation test + two-proportion z-test (N=400/variant, 10k resamples); number_swapped variant: Qwen3.5-0.8B baseline 43.3%→71.5% (+28.2pp), Gemma4-E4B-it 52.3%→76.3% (+24.0pp); both p=0.0; Goal #5 ACHIEVED; fixes Exp 162's underpowered aggregate permutation test; results at `results/experiment_178_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006
