@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 173 Constraint Gen v2
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T19:02:48Z | 2026-04-11T19:12:38Z | Exp 173: NegationConstraint v2 (violation detection, not_all/no_A_are_B patterns) + CarryChainConstraint v2 (subtraction borrow, digit-count, negative-result); 58 new tests (100% generation.py coverage); cohort A negation recall 0%→100%; combined accuracy 0.9733 (+0.013 vs Exp141 0.96); dedup fix confirmed | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 171 Combined Signal Benchmark
 
 ### Turn Log

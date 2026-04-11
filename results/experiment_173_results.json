@@ -1,0 +1,115 @@
+{
+  "experiment": "exp_173_constraint_gen_v2",
+  "date": "20260411",
+  "parent_experiment": "exp_141",
+  "n_questions_total": 300,
+  "warmup_size": 100,
+  "correct_fraction": 0.6,
+  "exp_141_baseline": 0.96,
+  "warmup_memory_summary": {
+    "arithmetic": {
+      "total_patterns": 3,
+      "mature_patterns": 3,
+      "top_patterns": [
+        {
+          "error_type": "arithmetic_carry",
+          "frequency": 23
+        },
+        {
+          "error_type": "negation_scope",
+          "frequency": 9
+        },
+        {
+          "error_type": "comparison_boundary",
+          "frequency": 7
+        }
+      ]
+    }
+  },
+  "by_cohort": {
+    "negation": {
+      "n_questions": 100,
+      "accuracy_static": 0.66,
+      "accuracy_memory": 1.0,
+      "delta": 0.34,
+      "avg_constraints_static": 0.0,
+      "avg_constraints_memory": 1.0,
+      "per_error_breakdown": {
+        "negation_scope": {
+          "n_wrong": 34,
+          "caught_static": 0,
+          "caught_memory": 34,
+          "recall_static": 0.0,
+          "recall_memory": 1.0
+        }
+      },
+      "elapsed_s": 0.005
+    },
+    "carry": {
+      "n_questions": 100,
+      "accuracy_static": 1.0,
+      "accuracy_memory": 1.0,
+      "delta": 0.0,
+      "avg_constraints_static": 0.79,
+      "avg_constraints_memory": 1.75,
+      "per_error_breakdown": {
+        "arithmetic_carry": {
+          "n_wrong": 38,
+          "caught_static": 38,
+          "caught_memory": 38,
+          "recall_static": 1.0,
+          "recall_memory": 1.0
+        }
+      },
+      "elapsed_s": 0.002
+    },
+    "regression": {
+      "n_questions": 100,
+      "accuracy_static": 0.87,
+      "accuracy_memory": 0.92,
+      "delta": 0.05,
+      "avg_constraints_static": 0.29,
+      "avg_constraints_memory": 0.94,
+      "per_error_breakdown": {
+        "arithmetic_carry": {
+          "n_wrong": 29,
+          "caught_static": 29,
+          "caught_memory": 29,
+          "recall_static": 1.0,
+          "recall_memory": 1.0
+        },
+        "comparison_boundary": {
+          "n_wrong": 5,
+          "caught_static": 0,
+          "caught_memory": 5,
+          "recall_static": 0.0,
+          "recall_memory": 1.0
+        },
+        "negation_scope": {
+          "n_wrong": 8,
+          "caught_static": 0,
+          "caught_memory": 0,
+          "recall_static": 0.0,
+          "recall_memory": 0.0
+        }
+      },
+      "elapsed_s": 0.003
+    }
+  },
+  "combined": {
+    "n_questions": 300,
+    "accuracy_static": 0.8433,
+    "accuracy_memory_v2": 0.9733,
+    "delta": 0.13,
+    "delta_vs_exp141": 0.0133,
+    "avg_constraints_static": 0.36,
+    "avg_constraints_memory": 1.23
+  },
+  "hypotheses": {
+    "negation_recall_improved": true,
+    "delta_vs_exp141_positive": true,
+    "combined_accuracy_above_098": false
+  },
+  "warmup_elapsed_s": 0.0,
+  "total_elapsed_s": 0.019
+}

@@ -10,15 +10,16 @@
     reweighting what was already there.
 
     Three new constraint types are generated from memory patterns:
-    - "arithmetic_carry" → CarryChainConstraint: catches multi-step carry
-      propagation errors (e.g., 99 + 1, 999 + 11) that the base
-      ArithmeticExtractor misses because it only checks the final sum.
+    - "arithmetic_carry" → CarryChainConstraint v2: catches multi-step carry
+      propagation errors in addition (e.g., 99 + 1, 999 + 11), subtraction
+      borrow chains (1000 - 1), digit-count violations, and negative-result
+      errors in B > A subtractions.
     - "comparison_boundary" → BoundConstraint: catches numeric inequality
       claims (X < Y, X >= 0) embedded in prose that LogicExtractor ignores
       because it only handles "if/then" and "but not" patterns.
-    - "negation_scope" → NegationConstraint: catches "X is not Y" and
-      "not X" negation patterns that create logical scope errors in
-      step-by-step reasoning.
+    - "negation_scope" → NegationConstraint v2: catches "X is not Y",
+      "not all A are B", "no A are B" patterns AND checks for violations
+      (positive assertion of the negated claim elsewhere in the text).
 
 **Detailed explanation for engineers:**
     How memory patterns map to new constraints:
@@ -117,6 +118,65 @@ def _count_carries(a: int, b: int) -> int:
     return count
 
 
+def _count_borrows(a: int, b: int) -> int:
+    """Count borrow operations in the subtraction |a| - |b|.
+
+    **Detailed explanation for engineers:**
+        Simulates column-by-column subtraction from least significant digit,
+        operating on absolute values. When the digit of the minuend is smaller
+        than the digit of the subtrahend plus any pending borrow, the algorithm
+        borrows from the next column -- incrementing the count. Cascade borrows
+        occur in cases like 1000 - 1 = 999 (three borrows: units, tens,
+        hundreds all need to borrow from the next column in turn).
+
+        If |a| < |b| we swap them so the algorithm always subtracts the smaller
+        from the larger; the negative-result detection is handled separately
+        by the caller (CarryChainConstraint) via the sign check.
+
+    Args:
+        a: Minuend (may be negative; absolute value is used).
+        b: Subtrahend (may be negative; absolute value is used).
+
+    Returns:
+        Number of borrow operations (0 = no borrows, 2+ = cascade borrows).
+    """
+    a, b = abs(a), abs(b)
+    # Always subtract smaller from larger for borrow-counting purposes.
+    if a < b:
+        a, b = b, a
+    count = 0
+    borrow = 0
+    while b > 0 or borrow > 0:
+        digit_a = a % 10
+        digit_b = b % 10
+        if digit_a < digit_b + borrow:
+            count += 1
+            borrow = 1
+        else:
+            borrow = 0
+        a //= 10
+        b //= 10
+    return count
+
+
+def _digit_count(n: int) -> int:
+    """Return the number of decimal digits in the absolute value of n.
+
+    **Detailed explanation for engineers:**
+        Used by CarryChainConstraint to check whether a claimed result has
+        a plausible digit count. The addition A + B can produce at most
+        max(digits(A), digits(B)) + 1 digits -- if the LLM writes a result
+        with far more digits, that is a carry-propagation error.
+
+    Args:
+        n: Any integer (sign ignored).
+
+    Returns:
+        Number of digits (e.g., _digit_count(0) = 1, _digit_count(999) = 3).
+    """
+    return len(str(abs(n))) if n != 0 else 1
+
+
 def _eval_comparison(left: float, op: str, right: float) -> bool:
     """Evaluate a numeric comparison operator.
 
@@ -150,16 +210,16 @@ def _eval_comparison(left: float, op: str, right: float) -> bool:
 
 @dataclass
 class CarryChainConstraint:
-    """Extract multi-step carry-chain arithmetic violations from text.
+    """Extract carry-chain and borrow-chain arithmetic violations from text (v2).
 
-    **Researcher summary:**
-        Catches addition errors where carries propagate across multiple
-        digit columns -- the error type most commonly missed by the base
-        ArithmeticExtractor.
+    **Researcher summary (v2):**
+        Extended in Exp 173 to also catch subtraction borrow chains
+        (1000 - 1 = 999), digit-count violations in additions, and sign
+        errors in B > A subtractions. Original carry detection retained.
 
     **Detailed explanation for engineers:**
         The base ArithmeticExtractor verifies "a + b = c" by simple
-        subtraction: correct = a + b, satisfied = (c == correct). But
+        arithmetic: correct = a + b, satisfied = (c == correct). But
         carry-chain errors have a distinct pattern in reasoning traces:
         LLMs often correctly handle the ones column and tens column but
         fail to propagate the final carry, e.g.:
@@ -169,8 +229,12 @@ class CarryChainConstraint:
 
         We identify carry-chain cases by checking whether _count_carries
         >= 2 (two or more cascading carries), then verifying the claimed
-        result. This is a SEPARATE constraint type ("arithmetic_carry")
-        so it coexists with "arithmetic" without duplicate deduplication.
+        result. Subtraction borrow chains are detected via _count_borrows.
+        Negative-result errors (A - B where B > A claimed as positive) are
+        flagged regardless of borrow count.
+
+        This is a SEPARATE constraint type ("arithmetic_carry") so it
+        coexists with "arithmetic" without duplicate deduplication.
 
     Spec: REQ-LEARN-004
     """
@@ -179,32 +243,57 @@ class CarryChainConstraint:
     min_carries: int = 2
 
     def extract(self, text: str) -> list[ConstraintResult]:
-        """Extract carry-chain arithmetic claims from text.
+        """Extract carry-chain and borrow-chain arithmetic claims from text.
+
+        **Detailed explanation for engineers (v2 additions):**
+            In addition to detecting cascade carries in addition, this version
+            also handles three new checks introduced in Exp 173:
+
+            1. Subtraction borrow chains: "a - b = c" patterns where the
+               subtraction requires >= min_carries consecutive borrows (e.g.,
+               1000 - 1 needs 3 borrows). Detected via _count_borrows().
+
+            2. Digit count check (addition only): the sum A + B can have at
+               most max(digits(A), digits(B)) + 1 digits. A claimed result
+               with far more digits indicates a carry-propagation error where
+               the LLM copied intermediate carry bits into the result.
+
+            3. Negative result check (subtraction only): if the minuend A is
+               less than the subtrahend B, the result must be negative. If the
+               LLM claims a non-negative result, that is a sign error -- flagged
+               as satisfied=False regardless of borrow count.
 
         Args:
-            text: Arbitrary text that may contain "a + b = c" patterns.
+            text: Arbitrary text that may contain "a + b = c" or "a - b = c".
 
         Returns:
             List of ConstraintResult with constraint_type="arithmetic_carry"
-            for any addition expressions where carries cascade min_carries+
-            times. Empty list if no carry-chain patterns are found.
+            for qualified expressions. Empty list if none are found.
         """
         results: list[ConstraintResult] = []
-        # Match "a + b = c" only (subtraction rarely has multi-carry issues).
-        pattern = r"(-?\d+)\s*\+\s*(\d+)\s*=\s*(-?\d+)"
-        for m in re.finditer(pattern, text):
+
+        # ---- Addition: cascade carry detection + digit count check -----------
+        add_pattern = r"(-?\d+)\s*\+\s*(\d+)\s*=\s*(-?\d+)"
+        for m in re.finditer(add_pattern, text):
             a = int(m.group(1))
             b = int(m.group(2))
             claimed = int(m.group(3))
 
-            # Only flag carry-chain cases -- let ArithmeticExtractor handle
-            # single-carry or no-carry additions.
             carry_count = _count_carries(a, b)
-            if carry_count < self.min_carries:
+            correct = a + b
+
+            # Digit count check: sum can have at most max(digits(a), digits(b))+1.
+            max_expected_digits = max(_digit_count(a), _digit_count(b)) + 1
+            claimed_digits = _digit_count(claimed)
+            digit_count_ok = claimed_digits <= max_expected_digits
+
+            # Only flag if there are cascade carries OR a digit-count violation.
+            # Single-carry / no-carry additions without digit issues are left
+            # to ArithmeticExtractor.
+            if carry_count < self.min_carries and digit_count_ok:
                 continue
 
-            correct = a + b
-            satisfied = claimed == correct
+            satisfied = (claimed == correct) and digit_count_ok
             results.append(
                 ConstraintResult(
                     constraint_type=PATTERN_ARITHMETIC_CARRY,
@@ -215,9 +304,61 @@ class CarryChainConstraint:
                     metadata={
                         "a": a,
                         "b": b,
+                        "op": "+",
                         "claimed_result": claimed,
                         "correct_result": correct,
                         "carry_count": carry_count,
+                        "digit_count_ok": digit_count_ok,
+                        "claimed_digits": claimed_digits,
+                        "max_expected_digits": max_expected_digits,
+                        "satisfied": satisfied,
+                    },
+                )
+            )
+
+        # ---- Subtraction: borrow chain + negative result detection -----------
+        # Pattern avoids matching "a + -b" by requiring literal minus between
+        # two digit groups (not preceded by another operator).
+        sub_pattern = r"(-?\d+)\s*-\s*(\d+)\s*=\s*(-?\d+)"
+        for m in re.finditer(sub_pattern, text):
+            a = int(m.group(1))
+            b = int(m.group(2))
+            claimed = int(m.group(3))
+            correct = a - b
+
+            borrow_count = _count_borrows(a, b)
+            # Negative-result case: when B > A the true result is negative.
+            # We ALWAYS flag these (to verify the sign) regardless of borrow count.
+            is_negative_case = a < b
+            # Negative-result violation: B > A and LLM claims non-negative (wrong sign).
+            negative_violated = is_negative_case and (claimed >= 0) and (claimed != correct)
+
+            # Only flag if there are cascade borrows OR this is a B > A subtraction.
+            if borrow_count < self.min_carries and not is_negative_case:
+                continue
+
+            satisfied = claimed == correct
+            if negative_violated:
+                desc_suffix = f" (should be negative: {correct})"
+            elif not satisfied:
+                desc_suffix = f" (correct: {correct})"
+            else:
+                desc_suffix = ""
+            results.append(
+                ConstraintResult(
+                    constraint_type=PATTERN_ARITHMETIC_CARRY,
+                    description=(
+                        f"borrow chain {borrow_count}x: {a} - {b} = {claimed}"
+                        + desc_suffix
+                    ),
+                    metadata={
+                        "a": a,
+                        "b": b,
+                        "op": "-",
+                        "claimed_result": claimed,
+                        "correct_result": correct,
+                        "borrow_count": borrow_count,
+                        "negative_violated": negative_violated,
                         "satisfied": satisfied,
                     },
                 )
@@ -287,45 +428,78 @@ class BoundConstraint:
 
 
 class NegationConstraint:
-    """Extract negation-scope claims ("X is not Y", "not X") from text.
+    """Extract negation-scope claims and detect violations (v2).
 
-    **Researcher summary:**
-        Catches negation patterns that create logical scope errors in
-        step-by-step reasoning -- e.g., "the answer is not 42" followed
-        by "therefore the answer is 42."
+    **Researcher summary (v2):**
+        Extended in Exp 173 to ADD violation detection: satisfied=True when
+        the negation is respected, satisfied=False when the text first denies
+        "X is Y" but then asserts it anyway. Also adds "not all A are B" and
+        "no A are/is/has B" universal-negation patterns.
 
     **Detailed explanation for engineers:**
         The LogicExtractor handles "cannot/can't/does not" patterns using
-        full-sentence regex. NegationConstraint is complementary: it
-        handles shorter inline negation phrases ("X is not Y") that appear
-        mid-sentence and are often missed by sentence-boundary splitting.
+        full-sentence regex. NegationConstraint is complementary: it handles
+        shorter inline negation phrases that appear mid-sentence.
 
-        Extracts three negation sub-patterns:
-        1. "X is not Y"   → constraint_type="negation_scope", subject X,
-           negated predicate Y.
-        2. "not X"        → standalone negation of phrase X.
-        3. "X ≠ Y"        → mathematical not-equal assertion.
+        Extracts four negation sub-patterns (v2):
+        1. "X is not Y"      → subject X, negated predicate Y.
+           Violated if "X is Y" appears outside the negation span.
+        2. "not all A are B" → negated universal. Violated if "all A are B"
+           appears outside the span.
+        3. "no A are/is/has B" → universal negation. Violated if "A are B"
+           appears outside the span.
+        4. "X ≠ Y" / "X != Y" → mathematical not-equal. Violated if
+           "X = Y" or "X == Y" appears outside the span.
 
-        These are soft constraints -- they don't compute an energy term,
-        but they flag negation patterns for the pipeline to evaluate.
+        All results carry ``satisfied`` in metadata (True/False) reflecting
+        whether the negation was upheld in the surrounding text.
 
     Spec: REQ-LEARN-004
     """
 
     def extract(self, text: str) -> list[ConstraintResult]:
-        """Extract negation-scope patterns from text.
+        """Extract negation-scope patterns from text and check for violations.
+
+        **Detailed explanation for engineers (v2 additions):**
+            The original implementation only DETECTED negation phrases; it did
+            not check whether the surrounding text VIOLATED them. This v2
+            version adds a ``satisfied`` field to every result:
+
+            - satisfied=True  → the negation was respected (no positive
+              assertion of the negated claim found elsewhere in the text).
+            - satisfied=False → the negation was violated (the text first
+              says "X is not Y" but later asserts "X is Y", or says
+              "no A are B" but later asserts "A is B").
+
+            Violation check method:
+                For each extracted negation claim, we build the "positive form"
+                of the claim (strip "not"/"no"), then search for it in the text
+                OUTSIDE the negation phrase's span. We remove the negation span
+                from the text before searching to avoid false-positive matches
+                on the negation phrase itself (since "cats are black" is a
+                substring of "no cats are black").
+
+            New patterns added in v2:
+                3. "not all A are B" → negated universal claim. Violated if
+                   "all A are B" appears elsewhere.
+                4. "no A are/is/has B" → universal negation. Violated if
+                   "A are/is/has B" appears elsewhere.
 
         Args:
             text: Arbitrary text that may contain negation phrases.
 
         Returns:
             List of ConstraintResult with constraint_type="negation_scope".
+            Each result has ``satisfied`` in metadata (True/False).
             Empty list if no negation patterns are found.
         """
         results: list[ConstraintResult] = []
         seen: set[str] = set()  # Deduplicate within a single text.
 
-        # Pattern 1: "X is not Y" (3-15 word subject/predicate phrases).
+        # ------------------------------------------------------------------
+        # Pattern 1: "X is not Y" (subject + negated predicate).
+        # Violation: text outside this span asserts "X is Y" (positive form).
+        # ------------------------------------------------------------------
         for m in re.finditer(
             r"\b([\w\s]{1,40}?)\s+is\s+not\s+([\w\s]{1,40}?)(?=[.,;!?]|$)",
             text,
@@ -336,6 +510,14 @@ class NegationConstraint:
             desc = f"negation: '{subject}' is not '{negated}'"
             if desc not in seen:
                 seen.add(desc)
+                # Remove the negation span from text before searching for
+                # the positive form, to avoid matching against itself.
+                text_outside = text[: m.start()] + text[m.end() :]
+                positive_re = re.compile(
+                    r"\b" + re.escape(subject) + r"\s+is\s+" + re.escape(negated) + r"\b",
+                    re.IGNORECASE,
+                )
+                violated = bool(positive_re.search(text_outside))
                 results.append(
                     ConstraintResult(
                         constraint_type=PATTERN_NEGATION_SCOPE,
@@ -345,11 +527,84 @@ class NegationConstraint:
                             "subject": subject,
                             "negated_predicate": negated,
                             "raw": m.group(0).strip(),
+                            "satisfied": not violated,
                         },
                     )
                 )
 
-        # Pattern 2: "X ≠ Y" or "X != Y" (mathematical inequality in prose).
+        # ------------------------------------------------------------------
+        # Pattern 2: "not all A are B" → negated universal claim.
+        # Violation: text outside this span asserts "all A are B".
+        # ------------------------------------------------------------------
+        for m in re.finditer(
+            r"\bnot\s+all\s+([\w]+(?:\s+[\w]+)?)\s+are\s+([\w]+(?:\s+[\w]+)?)\b",
+            text,
+            re.IGNORECASE,
+        ):
+            subject = m.group(1).strip()
+            predicate = m.group(2).strip()
+            desc = f"negation: not all {subject} are {predicate}"
+            if desc not in seen:
+                seen.add(desc)
+                text_outside = text[: m.start()] + text[m.end() :]
+                positive_re = re.compile(
+                    r"\ball\s+" + re.escape(subject) + r"\s+are\s+" + re.escape(predicate) + r"\b",
+                    re.IGNORECASE,
+                )
+                violated = bool(positive_re.search(text_outside))
+                results.append(
+                    ConstraintResult(
+                        constraint_type=PATTERN_NEGATION_SCOPE,
+                        description=desc,
+                        metadata={
+                            "pattern": "not_all",
+                            "subject": subject,
+                            "negated_predicate": predicate,
+                            "raw": m.group(0).strip(),
+                            "satisfied": not violated,
+                        },
+                    )
+                )
+
+        # ------------------------------------------------------------------
+        # Pattern 3: "no A are/is/has B" → universal negation.
+        # Violation: text outside this span asserts "A are/is/has B".
+        # ------------------------------------------------------------------
+        for m in re.finditer(
+            r"\bno\s+([\w]+(?:\s+[\w]+)?)\s+(are|is|has)\s+([\w]+(?:\s+[\w]+)?)\b",
+            text,
+            re.IGNORECASE,
+        ):
+            subject = m.group(1).strip()
+            verb = m.group(2).strip().lower()
+            predicate = m.group(3).strip()
+            desc = f"negation: no {subject} {verb} {predicate}"
+            if desc not in seen:
+                seen.add(desc)
+                text_outside = text[: m.start()] + text[m.end() :]
+                positive_re = re.compile(
+                    r"\b" + re.escape(subject) + r"\s+(?:are|is|has)\s+" + re.escape(predicate) + r"\b",
+                    re.IGNORECASE,
+                )
+                violated = bool(positive_re.search(text_outside))
+                results.append(
+                    ConstraintResult(
+                        constraint_type=PATTERN_NEGATION_SCOPE,
+                        description=desc,
+                        metadata={
+                            "pattern": "no_A_are_B",
+                            "subject": subject,
+                            "negated_predicate": predicate,
+                            "raw": m.group(0).strip(),
+                            "satisfied": not violated,
+                        },
+                    )
+                )
+
+        # ------------------------------------------------------------------
+        # Pattern 4: "X ≠ Y" or "X != Y" (mathematical not-equal assertion).
+        # Violation: text also asserts "X == Y" or "X = Y" (positive equality).
+        # ------------------------------------------------------------------
         for m in re.finditer(
             r"(-?\d+(?:\.\d+)?)\s*(?:≠|!=)\s*(-?\d+(?:\.\d+)?)",
             text,
@@ -359,6 +614,11 @@ class NegationConstraint:
             desc = f"negation: {left} ≠ {right}"
             if desc not in seen:
                 seen.add(desc)
+                text_outside = text[: m.start()] + text[m.end() :]
+                positive_re = re.compile(
+                    re.escape(left) + r"\s*(?:==|(?<!=)=(?!=))\s*" + re.escape(right)
+                )
+                violated = bool(positive_re.search(text_outside))
                 results.append(
                     ConstraintResult(
                         constraint_type=PATTERN_NEGATION_SCOPE,
@@ -368,6 +628,7 @@ class NegationConstraint:
                             "left": left,
                             "right": right,
                             "raw": m.group(0).strip(),
+                            "satisfied": not violated,
                         },
                     )
                 )
