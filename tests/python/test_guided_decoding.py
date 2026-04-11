@@ -568,3 +568,93 @@ class TestGuidedDecoder:
         # Positional args: model, tokenizer, prompt — as per the task spec.
         result = decoder.generate(model, tokenizer, "test prompt")
         assert isinstance(result, GuidedDecodingResult)
+
+    def test_from_pretrained_energy_threshold_kwarg(self) -> None:
+        """REQ-VERIFY-001: energy_threshold kwarg overrides config default."""
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR, energy_threshold=0.75)
+        assert decoder._sampler.energy_threshold == pytest.approx(0.75)
+
+    def test_from_pretrained_missing_config_raises(self, tmp_path: Any) -> None:
+        """REQ-VERIFY-001: directory without config.json raises FileNotFoundError."""
+        # tmp_path is a real directory but has no config.json.
+        with pytest.raises(FileNotFoundError, match="config.json"):
+            GuidedDecoder.from_pretrained(str(tmp_path))
+
+    def test_from_pretrained_missing_weights_raises(self, tmp_path: Any) -> None:
+        """REQ-VERIFY-001: directory with config.json but no weights raises FileNotFoundError."""
+        import json as _json
+
+        config = {"adapter_type": "guided_decoding", "default_alpha": 0.5}
+        (tmp_path / "config.json").write_text(_json.dumps(config))
+        # No constraint_weights.safetensors written.
+        with pytest.raises(FileNotFoundError, match="constraint_weights.safetensors"):
+            GuidedDecoder.from_pretrained(str(tmp_path))
+
+    def test_from_pretrained_huggingface_hub_fallback(self, tmp_path: Any) -> None:
+        """REQ-VERIFY-001: non-local path resolves via snapshot_download fallback."""
+        # snapshot_download returns our real adapter dir so the rest loads fine.
+        with patch(
+            "carnot.inference.guided_decoding.GuidedDecoder.from_pretrained",
+            wraps=GuidedDecoder.from_pretrained,
+        ):
+            with patch(
+                "huggingface_hub.snapshot_download",
+                return_value=_ADAPTER_DIR,
+            ):
+                # Use a repo ID that doesn't exist locally so the HF branch fires.
+                decoder = GuidedDecoder.from_pretrained("Carnot-EBM/guided-decoding-adapter")
+        assert isinstance(decoder._sampler, EnergyGuidedSampler)
+
+
+# ---------------------------------------------------------------------------
+# Test: EnergyGuidedSampler.project_logits
+# ---------------------------------------------------------------------------
+
+
+class TestProjectLogits:
+    """REQ-VERIFY-001, SCENARIO-VERIFY-004: gradient-based logit projection."""
+
+    def test_zero_gradient_returns_logits_unchanged(self) -> None:
+        """REQ-VERIFY-001: near-zero gradient norm → logits returned as-is."""
+        sampler = EnergyGuidedSampler()
+        logits = jnp.array([1.0, 2.0, 3.0])
+        # All-zero gradient has norm 0.0 < 1e-12 → early return.
+        grad = jnp.zeros(3)
+        result = sampler.project_logits(logits, grad, alpha=0.5)
+        import numpy as np
+
+        np.testing.assert_allclose(np.asarray(result), np.asarray(logits), atol=1e-7)
+
+    def test_nonzero_gradient_projects_parallel_component(self) -> None:
+        """SCENARIO-VERIFY-004: nonzero gradient removes parallel component."""
+        import numpy as np
+
+        sampler = EnergyGuidedSampler()
+        # logits = [1, 0, 0], grad = [1, 0, 0] → fully aligned.
+        # With alpha=1.0 the parallel component (magnitude=1) is fully removed → [0, 0, 0].
+        logits = jnp.array([1.0, 0.0, 0.0])
+        grad = jnp.array([1.0, 0.0, 0.0])
+        result = sampler.project_logits(logits, grad, alpha=1.0)
+        np.testing.assert_allclose(np.asarray(result), [0.0, 0.0, 0.0], atol=1e-6)
+
+    def test_alpha_zero_no_projection(self) -> None:
+        """REQ-VERIFY-001: alpha=0 leaves logits unchanged even with nonzero gradient."""
+        import numpy as np
+
+        sampler = EnergyGuidedSampler()
+        logits = jnp.array([3.0, 1.0, 2.0])
+        grad = jnp.array([1.0, 0.0, 0.0])
+        result = sampler.project_logits(logits, grad, alpha=0.0)
+        np.testing.assert_allclose(np.asarray(result), np.asarray(logits), atol=1e-6)
+
+    def test_perpendicular_gradient_unchanged(self) -> None:
+        """SCENARIO-VERIFY-004: gradient orthogonal to logits leaves them unchanged."""
+        import numpy as np
+
+        sampler = EnergyGuidedSampler()
+        # logits lives in x-y plane, gradient is z-axis → dot product = 0.
+        logits = jnp.array([1.0, 2.0, 0.0])
+        grad = jnp.array([0.0, 0.0, 1.0])
+        result = sampler.project_logits(logits, grad, alpha=1.0)
+        # parallel_magnitude = dot([1,2,0],[0,0,1]) = 0 → no change.
+        np.testing.assert_allclose(np.asarray(result), np.asarray(logits), atol=1e-6)
