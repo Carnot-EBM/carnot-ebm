@@ -1294,3 +1294,4 @@
 | 2026-04-11 21:51 UTC | Exp 181: GSM8K full 1319 with LIVE GPU inference — | FAIL | Claude Code error: e top before any imports
 - **No simulation fallback** — `sys |
 | 2026-04-11 21:58 UTC | Exp 181: GSM8K full 1319 with LIVE GPU inference — | OK | =========== 2484 passed, 1 skipped, 22 warnings in 115.08s (0:01:55) =========== |
+| 2026-04-11 22:22 UTC | Exp 182: Adversarial GSM8K N=400/variant with LIVE | FAIL | Claude Code error:  |
