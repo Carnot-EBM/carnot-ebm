@@ -1177,3 +1177,4 @@
 | 2026-04-11 05:42 UTC | Exp 148: Full GSM8K (1319 questions) with live inf | OK | Deliverable already exists in repo |
 | 2026-04-11 06:26 UTC | Exp 149: TruthfulQA at scale with factual constrai | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-04-11 07:04 UTC | Exp 149: TruthfulQA at scale with factual constrai | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-11 08:04 UTC | Exp 149: TruthfulQA at scale with factual constrai | OK | Deliverable already exists in repo |
