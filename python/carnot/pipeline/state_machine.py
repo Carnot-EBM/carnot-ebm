@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import copy
 from dataclasses import dataclass, field
+from typing import TYPE_CHECKING
 
 from carnot.pipeline.agentic import (
     AgentStep,
@@ -45,6 +46,9 @@ from carnot.pipeline.agentic import (
     propagate,
 )
 from carnot.pipeline.verify_repair import VerificationResult, VerifyRepairPipeline
+
+if TYPE_CHECKING:
+    from carnot.pipeline.consistency_checker import GlobalConsistencyReport
 
 
 # ---------------------------------------------------------------------------
@@ -84,6 +88,8 @@ class StepResult:
     new_facts: list[TrackedFact]
     contradictions: list[str]
     state_snapshot: dict
+    output_text: str = ""
+    """Raw output text for this step, stored for global consistency checking (Exp 172)."""
 
 
 # ---------------------------------------------------------------------------
@@ -230,6 +236,7 @@ class ConstraintStateMachine:
             new_facts=new_facts,
             contradictions=contradictions,
             state_snapshot=state_snapshot,
+            output_text=output_text,
         )
 
         # Store a deep copy of the state for rollback support.
@@ -320,6 +327,36 @@ class ConstraintStateMachine:
         Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
         """
         return self._state.get_assumed()
+
+    def check_global_consistency(self) -> "GlobalConsistencyReport":
+        """Check all completed steps for global cross-step consistency (Exp 172).
+
+        **Detailed explanation for engineers:**
+            Delegates to GlobalConsistencyChecker().check(self). Each step's
+            output_text is inspected for three types of cross-step contradiction:
+            numeric (same entity, different value), arithmetic (same equation,
+            different claimed result), and factual (same subject+predicate,
+            different object). Local per-step verification cannot catch these
+            because it checks each step in isolation.
+
+            Meaningful only after at least 2 steps have been run via step().
+            With 0 or 1 steps, returns a trivially consistent report.
+
+            The import of GlobalConsistencyChecker is deferred to the method
+            body to avoid a circular import at module load time (consistency_checker
+            TYPE_CHECKING-imports ConstraintStateMachine for type hints only).
+
+        Returns:
+            GlobalConsistencyReport with consistent flag, list of contradicting
+            (i, j, type, description) pairs, severity level, and
+            recommended_rollback_step.
+
+        Spec: REQ-VERIFY-001, SCENARIO-VERIFY-005
+        """
+        # Deferred import prevents circular dependency at load time.
+        from carnot.pipeline.consistency_checker import GlobalConsistencyChecker
+
+        return GlobalConsistencyChecker().check(self)
 
 
 __all__ = [
