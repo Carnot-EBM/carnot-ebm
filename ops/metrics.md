@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-11T21:25:47Z | 2026-04-11T21:41:57Z | Exp 181: Created scripts/experiment_181_gsm8k_live_gpu.py — definitive GSM8K 1319q × 2 models × 3 modes on RTX 3090 (no simulation); launched in background; GPU0 64% util, Qwen3.5-0.8B active | TBD |
+| 2 | 2026-04-11T21:53:53Z | 2026-04-11T21:54:35Z | Exp 181 resume: read existing script (already complete), verified checkpoint at 100/1319 Qwen, relaunched — GPU0 67% util, 1824 MB VRAM, Qwen running live | TBD |
 
 ### Session Summary
 
