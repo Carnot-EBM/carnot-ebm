@@ -1,0 +1,253 @@
+{
+  "experiment": "Exp 171 \u2014 Combined Signal Benchmark",
+  "date": "20260411",
+  "target_models": [
+    "Qwen/Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "note": "Logits simulated (CARNOT_SKIP_LLM=1). Correct answers: peaked logits (PEAK=8.0). Incorrect answers: flat logits (std=0.5).",
+  "n_questions": 200,
+  "n_per_domain": 50,
+  "n_correct_per_domain": 25,
+  "n_hallucinated_per_domain": 25,
+  "domains": [
+    "arithmetic",
+    "code",
+    "logic",
+    "factual"
+  ],
+  "simulation_config": {
+    "vocab_size": 1000,
+    "n_tokens": 20,
+    "correct_peak_logit": 8.0,
+    "wrong_noise_std": 0.5,
+    "spilled_threshold": 0.5,
+    "lookahead_threshold": 2.0,
+    "seed": 171
+  },
+  "configs": {
+    "config1_baseline": {
+      "description": "Baseline: no verification (always predicts correct)",
+      "overall_accuracy": 0.5,
+      "per_domain": {
+        "arithmetic": {
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "latency_ms": 0.00022271999114309438,
+          "n_total": 50,
+          "n_correct": 25
+        },
+        "code": {
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "latency_ms": 0.00012465997315302957,
+          "n_total": 50,
+          "n_correct": 25
+        },
+        "logic": {
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "latency_ms": 0.00010255998859065585,
+          "n_total": 50,
+          "n_correct": 25
+        },
+        "factual": {
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "latency_ms": 0.00010374001249147113,
+          "n_total": 50,
+          "n_correct": 25
+        }
+      }
+    },
+    "config2_ising_only": {
+      "description": "Ising constraints only (arithmetic/code/logic, no logits)",
+      "overall_accuracy": 0.8,
+      "per_domain": {
+        "arithmetic": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "latency_ms": 0.008212419970732299,
+          "n_total": 50,
+          "n_correct": 50
+        },
+        "code": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "latency_ms": 0.049866419976751786,
+          "n_total": 50,
+          "n_correct": 50
+        },
+        "logic": {
+          "accuracy": 0.7,
+          "precision": 1.0,
+          "recall": 0.4,
+          "f1": 0.5714285714285715,
+          "latency_ms": 0.03609214002608496,
+          "n_total": 50,
+          "n_correct": 35
+        },
+        "factual": {
+          "accuracy": 0.5,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "latency_ms": 0.0001817199881770648,
+          "n_total": 50,
+          "n_correct": 25
+        }
+      }
+    },
+    "config3_spilled_ising": {
+      "description": "Spilled energy + Ising (Exp 157)",
+      "overall_accuracy": 0.68,
+      "per_domain": {
+        "arithmetic": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 5.5805498600057035,
+          "n_total": 50,
+          "n_correct": 34
+        },
+        "code": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 0.3737784599798033,
+          "n_total": 50,
+          "n_correct": 34
+        },
+        "logic": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 0.3554280799744447,
+          "n_total": 50,
+          "n_correct": 34
+        },
+        "factual": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 0.3442720800103416,
+          "n_total": 50,
+          "n_correct": 34
+        }
+      }
+    },
+    "config4_lookahead_ising": {
+      "description": "Lookahead energy + Ising (Exp 169)",
+      "overall_accuracy": 1.0,
+      "per_domain": {
+        "arithmetic": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "latency_ms": 0.43955220001407724,
+          "n_total": 50,
+          "n_correct": 50
+        },
+        "code": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "latency_ms": 0.41032510001059563,
+          "n_total": 50,
+          "n_correct": 50
+        },
+        "logic": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "latency_ms": 0.3715332399769977,
+          "n_total": 50,
+          "n_correct": 50
+        },
+        "factual": {
+          "accuracy": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "latency_ms": 0.33032708000064304,
+          "n_total": 50,
+          "n_correct": 50
+        }
+      }
+    },
+    "config5_all_combined": {
+      "description": "All combined: Ising + Spilled + Lookahead + Factual (Exps 157,158,169)",
+      "overall_accuracy": 0.68,
+      "per_domain": {
+        "arithmetic": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 0.5233048999798484,
+          "n_total": 50,
+          "n_correct": 34
+        },
+        "code": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 0.5763188799755881,
+          "n_total": 50,
+          "n_correct": 34
+        },
+        "logic": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 0.5323551000310545,
+          "n_total": 50,
+          "n_correct": 34
+        },
+        "factual": {
+          "accuracy": 0.68,
+          "precision": 0.6097560975609756,
+          "recall": 1.0,
+          "f1": 0.7575757575757575,
+          "latency_ms": 41.99171644001581,
+          "n_total": 50,
+          "n_correct": 34
+        }
+      }
+    }
+  },
+  "best_config_per_domain": {
+    "arithmetic": "config2_ising_only",
+    "code": "config2_ising_only",
+    "logic": "config4_lookahead_ising",
+    "factual": "config4_lookahead_ising"
+  },
+  "combined_vs_ising_only_delta": {
+    "arithmetic": -0.31999999999999995,
+    "code": -0.31999999999999995,
+    "logic": -0.019999999999999907,
+    "factual": 0.18000000000000005
+  },
+  "combined_vs_ising_only_overall_delta": -0.12
+}

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 171 Combined Signal Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T18:34:35Z | 2026-04-11T18:40:09Z | Exp 171: Combined signal benchmark — 200 questions (50 each: arithmetic/code/logic/factual), 5 configs; Config4 (Lookahead+Ising) best at 100% accuracy; Config2 (Ising-only) 80% (factual domain uncovered); Spilled energy (Config3/5) generates false positives at 0.5 nats threshold with V=1000; saved results/experiment_171_combined_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 167 JEPA v3 Training
 
 ### Turn Log
