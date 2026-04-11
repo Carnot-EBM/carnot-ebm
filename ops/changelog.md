@@ -719,6 +719,12 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 ---
 
+## 2026-04-11: Experiment 166 Complete
+
+- Exp 166: Logic-aware JEPA training data with symbolic features — replaces byte-histogram embeddings with 40-dimensional symbolic features (negation density, quantifier presence, conditional depth, entailment markers) for logic domain; generates 500 logic+arithmetic pairs at `results/jepa_training_pairs_logic_v3.json`; REQ-JEPA-001, SCENARIO-JEPA-LOGIC-001
+
+---
+
 ## 2026-04-11: Experiment 165 Complete
 
 - Exp 165: ArXiv research scan — prepare next milestone bibliography; scans ArXiv and prepares research bibliography for next research milestone
