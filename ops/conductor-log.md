@@ -1257,3 +1257,5 @@
 | 2026-04-11 18:00 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 18:24 UTC | Exp 169: Lookahead energy extractor — AR-EBM bijec | OK | =========== 2294 passed, 1 skipped, 12 warnings in 89.35s (0:01:29) ============ |
 | 2026-04-11 18:25 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 18:31 UTC | Exp 170: Real LLM logits benchmark for spilled + l | OK | =========== 2294 passed, 1 skipped, 12 warnings in 92.81s (0:01:32) ============ |
+| 2026-04-11 18:32 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
