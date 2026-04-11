@@ -90,10 +90,7 @@ impl BoundConstraint {
     /// # Panics
     /// Panics if `lo > hi` (empty interval makes no sense).
     pub fn new(name: &str, index: usize, lo: Float, hi: Float) -> Self {
-        assert!(
-            lo <= hi,
-            "BoundConstraint: lo ({lo}) must be <= hi ({hi})"
-        );
+        assert!(lo <= hi, "BoundConstraint: lo ({lo}) must be <= hi ({hi})");
         Self {
             constraint_name: name.to_string(),
             index,

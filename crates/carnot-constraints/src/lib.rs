@@ -38,6 +38,8 @@ pub use carnot_core::verify::{
 };
 
 pub use constraint::{BoundConstraint, EqualityConstraint, IsingConstraint};
-pub use extract::{ArithmeticExtractor, AutoExtractor, ConstraintExtractor, ConstraintResult, LogicExtractor};
+pub use extract::{
+    ArithmeticExtractor, AutoExtractor, ConstraintExtractor, ConstraintResult, LogicExtractor,
+};
 pub use pipeline::{PipelineResult, VerifyPipeline};
 pub use verify::VerificationCertificate;

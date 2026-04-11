@@ -131,11 +131,7 @@ impl VerificationCertificate {
     ///
     /// # Returns
     /// A `VerificationCertificate` capturing the full verification state.
-    pub fn generate(
-        composed: &ComposedEnergy,
-        x: &ArrayView1<Float>,
-        timestamp: &str,
-    ) -> Self {
+    pub fn generate(composed: &ComposedEnergy, x: &ArrayView1<Float>, timestamp: &str) -> Self {
         let result: VerificationResult = composed.verify(x);
         Self::from_result(&result, timestamp)
     }
@@ -145,8 +141,11 @@ impl VerificationCertificate {
     /// Useful when you've already computed the verification and want to
     /// wrap it in a certificate without re-computing.
     pub fn from_result(result: &VerificationResult, timestamp: &str) -> Self {
-        let constraints: Vec<CertificateConstraint> =
-            result.constraints.iter().map(CertificateConstraint::from).collect();
+        let constraints: Vec<CertificateConstraint> = result
+            .constraints
+            .iter()
+            .map(CertificateConstraint::from)
+            .collect();
 
         let num_satisfied = constraints.iter().filter(|c| c.satisfied).count();
         let num_violated = constraints.len() - num_satisfied;

@@ -285,8 +285,7 @@ fn pipeline_certificate_json_roundtrip() {
     let pipeline = VerifyPipeline::default();
     let result = pipeline.verify("Test", "2 + 3 = 5. 10 - 4 = 7.");
     let json = result.certificate.to_json().unwrap();
-    let restored =
-        carnot_constraints::verify::VerificationCertificate::from_json(&json).unwrap();
+    let restored = carnot_constraints::verify::VerificationCertificate::from_json(&json).unwrap();
     assert_eq!(result.certificate.status, restored.status);
     assert_eq!(result.certificate.num_constraints, restored.num_constraints);
     assert_eq!(result.certificate.num_violated, restored.num_violated);
@@ -296,10 +295,7 @@ fn pipeline_certificate_json_roundtrip() {
 fn pipeline_custom_extractor() {
     // REQ-VERIFY-002: Pipeline works with custom extractor.
     let pipeline = VerifyPipeline::with_extractor(Box::new(ArithmeticExtractor::new()));
-    let result = pipeline.verify(
-        "Mixed",
-        "2 + 3 = 5. If A then B.",
-    );
+    let result = pipeline.verify("Mixed", "2 + 3 = 5. If A then B.");
     // Only arithmetic extractor, so logic patterns are not extracted.
     assert!(result
         .constraints

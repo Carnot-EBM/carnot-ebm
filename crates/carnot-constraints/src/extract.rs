@@ -222,10 +222,8 @@ impl LogicExtractor {
     pub fn new() -> Self {
         Self {
             // "if X then Y" or "if X, Y" or "if X, then Y"
-            implication_re: Regex::new(
-                r"(?i)^if\s+(.+?)(?:,\s*(?:then\s+)?|\s+then\s+)(.+?)\.?$",
-            )
-            .unwrap(),
+            implication_re: Regex::new(r"(?i)^if\s+(.+?)(?:,\s*(?:then\s+)?|\s+then\s+)(.+?)\.?$")
+                .unwrap(),
             // "X but not Y"
             exclusion_re: Regex::new(r"(?i)^(.+?)\s+but\s+not\s+(.+?)\.?$").unwrap(),
             // "either X or Y" or "X or Y"
@@ -280,13 +278,12 @@ impl LogicExtractor {
         if let Some(cap) = self.implication_re.captures(&s) {
             let ante = cap[1].trim().to_string();
             let cons = cap[2].trim().to_string();
-            return vec![ConstraintResult::new(
-                "implication",
-                &format!("If {ante}, then {cons}"),
-            )
-            .with_meta("antecedent", &ante)
-            .with_meta("consequent", &cons)
-            .with_meta("raw", sentence.trim())];
+            return vec![
+                ConstraintResult::new("implication", &format!("If {ante}, then {cons}"))
+                    .with_meta("antecedent", &ante)
+                    .with_meta("consequent", &cons)
+                    .with_meta("raw", sentence.trim()),
+            ];
         }
         Vec::new()
     }
@@ -296,12 +293,13 @@ impl LogicExtractor {
         if let Some(cap) = self.exclusion_re.captures(&s) {
             let positive = cap[1].trim().to_string();
             let negative = cap[2].trim().to_string();
-            return vec![
-                ConstraintResult::new("exclusion", &format!("{positive} but not {negative}"))
-                    .with_meta("positive", &positive)
-                    .with_meta("negative", &negative)
-                    .with_meta("raw", sentence.trim()),
-            ];
+            return vec![ConstraintResult::new(
+                "exclusion",
+                &format!("{positive} but not {negative}"),
+            )
+            .with_meta("positive", &positive)
+            .with_meta("negative", &negative)
+            .with_meta("raw", sentence.trim())];
         }
         Vec::new()
     }
@@ -326,12 +324,13 @@ impl LogicExtractor {
         if let Some(cap) = self.negation_re.captures(&s) {
             let subject = cap[1].trim().to_string();
             let predicate = cap[2].trim().to_string();
-            return vec![
-                ConstraintResult::new("negation", &format!("{subject} cannot {predicate}"))
-                    .with_meta("subject", &subject)
-                    .with_meta("predicate", &predicate)
-                    .with_meta("raw", sentence.trim()),
-            ];
+            return vec![ConstraintResult::new(
+                "negation",
+                &format!("{subject} cannot {predicate}"),
+            )
+            .with_meta("subject", &subject)
+            .with_meta("predicate", &predicate)
+            .with_meta("raw", sentence.trim())];
         }
         Vec::new()
     }

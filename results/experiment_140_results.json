@@ -1,0 +1,149 @@
+{
+  "experiment": "exp_140_guided_latency",
+  "spec": [
+    "REQ-VERIFY-001",
+    "SCENARIO-VERIFY-004"
+  ],
+  "parameters": {
+    "kan_input_dim": 128,
+    "kan_edge_density": 0.1,
+    "kan_n_edges": 812,
+    "kan_n_params": 12220,
+    "warmup_iters": 100,
+    "measure_iters": 1000,
+    "batch_sizes": [
+      1,
+      8,
+      32
+    ],
+    "projection_alpha": 0.1,
+    "penalty_alpha": 0.5,
+    "n_gsm8k": 50,
+    "gsm8k_seed": 140,
+    "success_threshold_ms": 5.0
+  },
+  "latency_benchmark": [
+    {
+      "batch_size": 1,
+      "grad_only": {
+        "n": 1000,
+        "mean_ms": 0.30885413009673357,
+        "std_ms": 0.0902620432239534,
+        "p50_ms": 0.2809509896906093,
+        "p95_ms": 0.45121563889551897,
+        "p99_ms": 0.6179665680974721
+      },
+      "project_only": {
+        "n": 1000,
+        "mean_ms": 0.08220371740753762,
+        "std_ms": 0.05065494648471812,
+        "p50_ms": 0.06997599848546088,
+        "p95_ms": 0.1264819991774857,
+        "p99_ms": 0.22864132042741397
+      },
+      "total": {
+        "n": 1000,
+        "mean_ms": 0.4320923767227214,
+        "std_ms": 0.18513961488324016,
+        "p50_ms": 0.37416600389406085,
+        "p95_ms": 0.7645490579307079,
+        "p99_ms": 0.956503959314432
+      }
+    },
+    {
+      "batch_size": 8,
+      "grad_only": {
+        "n": 1000,
+        "mean_ms": 0.20407872015493922,
+        "std_ms": 0.0856967674216794,
+        "p50_ms": 0.17046899301931262,
+        "p95_ms": 0.3447685012361035,
+        "p99_ms": 0.4662315841414965
+      },
+      "project_only": {
+        "n": 1000,
+        "mean_ms": 0.7390322949795518,
+        "std_ms": 0.18677805984608117,
+        "p50_ms": 0.6968149973545223,
+        "p95_ms": 0.8766487910179417,
+        "p99_ms": 1.752561304019764
+      },
+      "total": {
+        "n": 1000,
+        "mean_ms": 1.7601472146634478,
+        "std_ms": 0.6629505998070591,
+        "p50_ms": 1.5947215142659843,
+        "p95_ms": 3.0353407404618338,
+        "p99_ms": 3.624383612477685
+      }
+    },
+    {
+      "batch_size": 32,
+      "grad_only": {
+        "n": 1000,
+        "mean_ms": 0.25220662128413096,
+        "std_ms": 0.10910759643070879,
+        "p50_ms": 0.24196298909373581,
+        "p95_ms": 0.40971704584080726,
+        "p99_ms": 0.5412120706751011
+      },
+      "project_only": {
+        "n": 1000,
+        "mean_ms": 3.307805411721347,
+        "std_ms": 0.960357856632216,
+        "p50_ms": 2.8654710040427744,
+        "p95_ms": 5.634598921460565,
+        "p99_ms": 6.97311695665121
+      },
+      "total": {
+        "n": 1000,
+        "mean_ms": 4.614232066785917,
+        "std_ms": 1.3576300683621696,
+        "p50_ms": 4.237455490510911,
+        "p95_ms": 7.558973465347662,
+        "p99_ms": 8.946667707641609
+      }
+    }
+  ],
+  "gsm8k_accuracy": {
+    "n_questions": 50,
+    "modes": {
+      "baseline": {
+        "accuracy": 0.56,
+        "correct": 28,
+        "total": 50,
+        "elapsed_seconds": 0.0005,
+        "correct_prob_used": 0.555
+      },
+      "penalty": {
+        "accuracy": 0.62,
+        "correct": 31,
+        "total": 50,
+        "elapsed_seconds": 0.0003,
+        "correct_prob_used": 0.625
+      },
+      "projection": {
+        "accuracy": 0.56,
+        "correct": 28,
+        "total": 50,
+        "elapsed_seconds": 0.0428,
+        "correct_prob_used": 0.59
+      }
+    },
+    "deltas_vs_baseline": {
+      "penalty": 0.06,
+      "projection": 0.0
+    }
+  },
+  "success_criterion": {
+    "threshold_ms": 5.0,
+    "total_p50_batch1_ms": 0.3742,
+    "passed": true
+  },
+  "overhead_comparison": {
+    "exp138_penalty_p50_ms": 0.0719,
+    "exp140_projection_p50_ms": 0.3742,
+    "overhead_ratio": 5.204
+  },
+  "total_elapsed_seconds": 42.503
+}
