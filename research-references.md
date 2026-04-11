@@ -209,6 +209,57 @@ should read this file when designing new milestones.
   reconfiguration — just rewrite the LUT contents. Mesh refinement (adding/
   removing knots) requires partial FPGA reconfiguration.
 
+### EBM Hallucination Detection via "Spilled Energy" (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2602.18671 — "LLM Hallucination Detection via Energy-Based Models" (ICLR 2026)
+- **What:** Reinterprets autoregressive LLMs as EBMs via soft Bellman equation in max-entropy RL.
+  Detects hallucinations via "spilled energy" — the discrepancy between logit energy (pre-softmax)
+  and output energy (post-softmax). Factually incorrect outputs have higher spilled energy.
+- **Relevance:** This is a conceptual bridge between Carnot's structural constraint verification
+  and the LLM's internal energy signal. "Spilled energy" is detectable without external KB.
+  Could add a fast factual-plausibility signal complementing Ising constraint verification.
+- **When to pursue:** Next milestone. Add SpilledEnergyExtractor to pipeline as lightweight
+  factual-plausibility check before KB-backed verification.
+
+### FactNet — Billion-Scale Knowledge Graph for Verification
+- **Paper:** arxiv.org/abs/2602.03417 — "FactNet: A Billion-Scale Knowledge Graph" (2026-02)
+- **What:** 1.7B atomic assertions with 3.01B auditable evidence pointers; 92.1% grounding
+  precision. Designed for factual claim verification. Open-source, structured as triples.
+- **Relevance:** Could serve as the knowledge base for factual constraint extraction (Goal #3).
+  Triples map directly to Carnot's ConstraintTerm protocol — each (subject, predicate, object)
+  becomes an IsingConstraint on whether the LLM's output is consistent with FactNet.
+- **When to pursue:** Factual extractor milestone. Use FactNet as KB source for factual claims.
+
+### Energy-Based Transformers (EBTs) for Scalable Reasoning
+- **Paper:** arxiv.org/abs/2507.02092 — "Energy-Based Transformers are Scalable Learners and Thinkers" (2025-07)
+- **What:** Reformulate transformer prediction as energy minimization. 35% higher scaling rates
+  than Transformer++ baseline on standard benchmarks. Energy function verifies compatibility
+  between input and prediction.
+- **Relevance:** Validates the EBM-for-verification architectural direction at scale. The
+  "input-prediction compatibility" framing is exactly Carnot's constraint verification use case.
+  Could inform a deeper Boltzmann-tier integration with LLM hidden states.
+- **When to pursue:** Long-term. Consider for Boltzmann tier redesign in 6+ months.
+
+### Quantum-Inspired FPGA Ising Machine with Sparsified Connectivity
+- **Paper:** arxiv.org/abs/2604.04606 (2026-04)
+- **What:** FPGA Ising machine using sparsified spin connectivity. 6x faster than simulated
+  annealing; solves 1,600-spin problems vs 400-spin baseline. Uses quantum-inspired anneal schedule.
+- **Relevance:** Directly applicable to Carnot's FPGA Ising backend (SamplerBackend Exp 71).
+  Sparsification matches Carnot's sparse Ising work (Exp 61, clause-graph masking). The 6x
+  speedup and 4x scale increase are directly transferable to FpgaBackend design.
+- **When to pursue:** FPGA hardware milestone. Use this paper's sparsification and annealing
+  schedule for the Kria KV260 FpgaBackend implementation.
+
+### Hard-Constrained Neural Networks via Orthogonal Projection (Πnet)
+- **Paper:** arxiv.org/abs/2508.10480 — "Hard-Constrained Neural Networks with Orthogonal Projections" (2025-08)
+- **What:** Output layer using operator splitting to guarantee convex constraint satisfaction.
+  The projection operator maps any unconstrained output onto the feasible constraint set.
+- **Relevance:** Applicable to Carnot's continuous Ising relaxation (Exp 64) and gradient repair
+  (Exp 87). The orthogonal projection idea is more principled than the current Langevin repair —
+  would guarantee constraint satisfaction rather than just reduce energy. Could replace the
+  "random restart" fallback in VerifyRepairPipeline.
+- **When to pursue:** Repair pipeline improvement milestone. Add ProjectionRepair strategy
+  alongside existing Langevin repair.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
 ## ArXiv Scan — Exp 139 (2026-04-11)
