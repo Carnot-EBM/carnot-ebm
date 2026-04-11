@@ -1162,3 +1162,6 @@
 | 2026-04-11 02:06 UTC | Exp 136: Cross-session learning benchmark | OK | =========== 1928 passed, 1 skipped, 12 warnings in 139.71s (0:02:19) =========== |
 | 2026-04-11 02:07 UTC | Exp 135: Persistent constraint memory | OK | Deliverable already exists in repo |
 | 2026-04-11 02:17 UTC | Exp 137: Package guided decoding for HuggingFace | OK | =========== 1935 passed, 1 skipped, 12 warnings in 102.88s (0:01:42) =========== |
+| 2026-04-11 02:37 UTC | Exp 139: ArXiv research scan and integration | OK | =========== 1935 passed, 1 skipped, 12 warnings in 97.49s (0:01:37) ============ |
+| 2026-04-11 02:38 UTC | Exp 138: Guided decoding benchmark | OK | Deliverable already exists in repo |
+| 2026-04-11 02:38 UTC | Milestone 2026.04.9 activated | OK | 10 tasks queued |

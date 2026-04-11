@@ -1,379 +1,744 @@
-# Carnot Research Roadmap — Milestone 2026.04.9
-# "Self-Learning Pipeline + Adversarial Proof at Scale"
+# Carnot Research Roadmap — Milestone 2026.04.10
+# "JEPA Predictive Verification + Constraint Generation + Credibility Proof"
 #
 # Active experiment queue — processed in order by research_conductor.py
-# This file is picked up automatically when 2026.04.8 completes.
+# This file is picked up automatically when 2026.04.9 completes.
 #
 # Versioning: CalVer (YYYY.MM.seq)
 # Completed tasks are moved to research-complete.yaml
 
-milestone: "2026.04.9"
-milestone_title: "Self-Learning Pipeline + Adversarial Proof at Scale"
-milestone_doc: "openspec/change-proposals/research-roadmap-v14.md"
+milestone: "2026.04.10"
+milestone_title: "JEPA Predictive Verification + Constraint Generation + Credibility Proof"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  # ── Phase 37: Execute Adversarial Experiments ────────────────
-  - id: exp130-run-adversarial
-    milestone: "2026.04.9"
-    deliverable: results/experiment_121_results.json
-    title: "Exp 130: Execute adversarial verify-repair"
+  # ── Phase 42: Fix Self-Learning — Constraint Generation ──────
+  - id: exp140-guided-latency
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_140_guided_latency.py
+    title: "Exp 140: Constraint-projection guided decoding latency benchmark"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 121 script exists at scripts/experiment_121_adversarial_verify_repair.py
-      (71KB) but was never executed — no results JSON exists. This experiment RUNS
-      the existing script and captures results. DO NOT REWRITE THE SCRIPT.
+      CONTEXT: Exp 138 benchmarked the alpha-penalty guided decoding approach (Exp 110).
+      This experiment implements a constraint-PROJECTION operator — projecting token logits
+      onto the constraint-satisfying subspace via the KAN energy gradient — and measures
+      its wall-clock overhead. This addresses Goal #4 from research-program.md.
+      Proposed as Exp 140 by the Exp 139 arxiv scan.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_121_adversarial_verify_repair.py — THE SCRIPT TO RUN
-      - results/adversarial_gsm8k_data.json — adversarial datasets
-      - results/experiment_120_results.json — baseline accuracy
-      - python/carnot/inference/model_loader.py — robust model loading
+      - python/carnot/inference/guided_decoding.py — EnergyGuidedSampler (Exp 110)
+      - python/carnot/models/kan.py — KAN energy tier (Exp 103/108)
+      - scripts/experiment_102_latency_benchmark.py — latency benchmark methodology
+      - exports/guided-decoding-adapter/config.json — current constraint weights
+      - research-program.md — Goal #4 (guided decoding latency)
 
-      TASK: Run the existing Exp 121 script and verify results
+      TASK: Create scripts/experiment_140_guided_latency.py
 
       CONCRETE STEPS:
-      1. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_121_adversarial_verify_repair.py
-      2. Verify results/experiment_121_results.json was created
-      3. If the script fails, fix ONLY the bug that caused the failure
-         (do not rewrite the script)
-      4. If model loading fails, ensure simulated fallback produces results
-      5. Print summary: per-variant accuracy for baseline vs verify-repair
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Add `project_logits(logits, energy_grad, alpha=0.1)` to EnergyGuidedSampler:
+         - Compute unit vector of energy gradient
+         - Subtract alpha * dot(logits, grad_unit) * grad_unit from logits
+         - This projects logits away from high-energy token directions
+      2. Benchmark projection overhead at batch sizes 1, 8, 32:
+         - Use KAN energy (carnot.models.kan.KANConstraintModel) for gradient
+         - Measure: (a) gradient computation time, (b) projection time, (c) total
+         - 1000 repetitions, report p50/p95/p99
+      3. Compare to Exp 138's alpha-penalty approach on 50 GSM8K questions:
+         - Accuracy: projection vs penalty vs no-guidance
+         - Overhead: projection vs penalty
+      4. Success criterion: total overhead <5ms per token at batch=1
+      5. Save results to results/experiment_140_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_140_guided_latency.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp131-adversarial-writeup
-    milestone: "2026.04.9"
-    deliverable: scripts/experiment_131_adversarial_writeup.py
-    title: "Exp 131: Adversarial results analysis and writeup"
+  - id: exp143-jepa-pairs
+    milestone: "2026.04.10"
+    deliverable: results/jepa_training_pairs.json
+    title: "Exp 143: Collect (partial response, final violation) JEPA training pairs"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 130 ran the adversarial verify-repair experiment. This
-      experiment analyzes the results and updates documentation.
+      CONTEXT: JEPA predictive verification (research-program.md Tier 3, Goal #2) requires
+      a training set of (partial_response, final_violated) pairs. We have accumulated
+      verify-repair logs from Exp 130-138 and can mine them retroactively. This experiment
+      collects and formats that training data.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_121_results.json — adversarial verify-repair results
-      - results/experiment_120_results.json — baseline results
-      - results/experiment_122_results.json — robustness analysis
-      - docs/technical-report.md — technical report to update
+      - results/experiment_121_results.json — adversarial verify-repair results (if exists)
+      - results/experiment_130_results.json — adversarial verify-repair run
+      - results/experiment_136_results.json — cross-session benchmark
+      - results/experiment_138_results.json — guided decoding benchmark
+      - python/carnot/embeddings/fast_embedding.py — RandomProjection (Exp 112, 0.026ms)
+      - research-program.md — "Continuous Self-Learning" Tier 3
 
-      TASK: Create scripts/experiment_131_adversarial_writeup.py
+      TASK: Create scripts/experiment_143_collect_pairs.py and results/jepa_training_pairs.json
 
       CONCRETE STEPS:
-      1. Load all adversarial results (Exp 120, 121, 122)
-      2. Generate comparison tables:
-         - Per-variant: control, number-swapped, irrelevant, combined
-         - Per-mode: baseline, verify-only, verify-repair
-         - Per-model: Qwen3.5 vs Gemma4
-      3. Compute improvement deltas and 95% bootstrap CIs
-      4. Key question: is improvement LARGER on adversarial variants?
-      5. Update docs/technical-report.md with new "Adversarial Robustness" section
-      6. Save analysis to results/experiment_131_results.json
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_131_adversarial_writeup.py
-      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Load all available verify-repair result files from results/ directory
+      2. For each (question, llm_response, was_violated) tuple found:
+         a. Tokenize response (use simple whitespace split if no tokenizer available)
+         b. Create 4 prefix lengths: 10%, 25%, 50%, 75% of tokens
+         c. Embed each prefix with RandomProjection (256-dim, seed=42)
+         d. Record: {prefix_ratio, embedding, violated_arithmetic, violated_code,
+                     violated_logic, any_violated, source_exp}
+      3. If fewer than 500 pairs exist in logs, SUPPLEMENT by generating:
+         - 200 synthetic arithmetic questions (x+y, x*y, multi-step)
+         - Run AutoExtractor + Ising verify on each
+         - Use first 25% and 75% of the response as prefixes
+         - Label with actual violation result
+      4. Save to results/jepa_training_pairs.json:
+         {pairs: [{prefix_ratio, embedding_256d, violated, domain, source_exp}...],
+          total: N, domain_counts: {arithmetic: N, code: N, logic: N}}
+      5. Print summary: total pairs, per-domain breakdown, positive rate
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_143_collect_pairs.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 38: Online Constraint Learning (Tier 1) ───────────
-  - id: exp132-constraint-tracker
-    milestone: "2026.04.9"
-    deliverable: python/carnot/pipeline/tracker.py
-    title: "Exp 132: Constraint performance tracker"
+  - id: exp141-constraint-generation
+    milestone: "2026.04.10"
+    deliverable: python/carnot/pipeline/generation.py
+    title: "Exp 141: Memory-augmented constraint generation"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Carnot currently starts every verification from scratch. This
-      experiment adds the foundation for self-learning: tracking which constraints
-      fire and which catch real errors, accumulating statistics over time.
-      See research-program.md "Continuous Self-Learning" Tier 1 for the design.
+      CONTEXT: Exp 134 showed that precision-based constraint REWEIGHTING produced no
+      measurable improvement (fixed=0.53, adaptive=0.55). The root cause: reweighting
+      existing constraints cannot close gaps caused by missing constraint types entirely.
+      The fix from research-program.md §"Next Milestone Focus (2026.04.10)" #1: wire
+      ConstraintMemory into AutoExtractor to ADD new constraints from learned patterns.
 
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — constraint extractors
-      - research-program.md — "Continuous Self-Learning" section
-
-      TASK: Create python/carnot/pipeline/tracker.py
-
-      CONCRETE STEPS:
-      1. ConstraintTracker class:
-         - record(constraint_type: str, fired: bool, caught_error: bool)
-         - precision(constraint_type: str) -> float (caught / fired)
-         - recall(constraint_type: str) -> float (caught / total_errors)
-         - stats() -> dict of per-type precision/recall/count
-         - save(path: str) — persist to JSON
-         - load(path: str) — restore from JSON
-         - merge(other: ConstraintTracker) — combine statistics
-
-      2. Integration with VerifyRepairPipeline:
-         - verify() accepts optional tracker parameter
-         - After verification, records which constraints fired and caught errors
-         - Tracker is NOT required (backward compatible)
-
-      3. Tests in tests/python/test_tracker.py:
-         - Test recording and precision/recall computation
-         - Test save/load round-trip
-         - Test merge of two trackers
-         - Test integration with VerifyRepairPipeline
-
-      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp133-adaptive-weighting
-    milestone: "2026.04.9"
-    deliverable: python/carnot/pipeline/adaptive.py
-    title: "Exp 133: Adaptive constraint weighting from tracker"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 132 built the ConstraintTracker. This experiment uses the
-      accumulated statistics to automatically adjust constraint weights —
-      high-precision constraints get more weight, noisy ones get downweighted.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/verify/constraint.py — ComposedEnergy weights
-
-      TASK: Create python/carnot/pipeline/adaptive.py
-
-      CONCRETE STEPS:
-      1. AdaptiveWeighter class:
-         - from_tracker(tracker: ConstraintTracker) -> dict of weights
-         - Weight formula: w_i = precision_i * log(count_i + 1)
-           (high precision + high count = high weight)
-         - Minimum weight floor (0.1) to avoid zeroing out constraints
-         - apply_to_pipeline(pipeline, weights) -> updates ComposedEnergy weights
-
-      2. Compare on 200 GSM8K questions:
-         - Fixed weights (default) vs adaptive weights (from 100-question warmup)
-         - Metric: accuracy improvement from adaptive weighting
-
-      3. Tests in tests/python/test_adaptive.py
-
-      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp134-online-learning-benchmark
-    milestone: "2026.04.9"
-    deliverable: scripts/experiment_134_online_learning.py
-    title: "Exp 134: Online learning benchmark"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 132-133 built constraint tracking and adaptive weighting.
-      This experiment tests whether the system actually gets smarter over time
-      by streaming questions and periodically updating weights.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
-      - python/carnot/pipeline/adaptive.py — AdaptiveWeighter (Exp 133)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-
-      TASK: Create scripts/experiment_134_online_learning.py
-
-      CONCRETE STEPS:
-      1. Simulate deployment: stream 500 questions through pipeline
-      2. Every 50 questions: update constraint weights from tracker
-      3. Record accuracy per batch of 50
-      4. Plot (or print table): accuracy over time
-      5. Compare: no learning (fixed weights) vs Tier 1 (online updates)
-      6. Target: measurable accuracy improvement by question 200
-      7. Save results to results/experiment_134_results.json
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_134_online_learning.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 39: Constraint Memory (Tier 2) ────────────────────
-  - id: exp135-constraint-memory
-    milestone: "2026.04.9"
-    deliverable: python/carnot/pipeline/memory.py
-    title: "Exp 135: Persistent constraint memory"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Tier 1 (online weighting) adjusts existing constraint weights.
-      Tier 2 goes further: LEARN NEW CONSTRAINT PATTERNS from accumulated
-      verifications and persist them across sessions.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
-      - python/carnot/pipeline/extract.py — constraint extractors
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - research-program.md — "Continuous Self-Learning" Tier 2
-
-      TASK: Create python/carnot/pipeline/memory.py
-
-      CONCRETE STEPS:
-      1. ConstraintMemory class:
-         - record_pattern(domain, error_pattern, constraint_that_caught_it)
-         - suggest_constraints(text, domain) -> list of additional constraints
-           based on learned patterns for this domain
-         - save(path) / load(path) — JSON persistence
-         - summary() -> per-domain pattern counts and top patterns
-
-      2. Pattern learning:
-         - Track (domain, error_type, frequency) triples
-         - When a pattern appears 3+ times, auto-generate a constraint
-         - Example: "arithmetic carry errors" seen 5 times → add carry-check
-           constraint automatically for future arithmetic verifications
-
-      3. Integration with VerifyRepairPipeline:
-         - Pipeline accepts optional memory parameter
-         - Before extraction, check memory for additional constraints
-         - After verification, record any new patterns to memory
-
-      4. Tests in tests/python/test_constraint_memory.py
-
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp136-cross-session-benchmark
-    milestone: "2026.04.9"
-    deliverable: scripts/experiment_136_cross_session.py
-    title: "Exp 136: Cross-session learning benchmark"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 135 built persistent constraint memory. This experiment
-      tests whether memory from one session improves the next session.
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
       - python/carnot/pipeline/memory.py — ConstraintMemory (Exp 135)
+      - python/carnot/pipeline/extract.py — AutoExtractor, ConstraintExtractor Protocol
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - python/carnot/verify/constraint.py — ComposedEnergy, ConstraintTerm
+      - results/experiment_134_results.json — shows reweighting failure
+      - research-program.md — "Next Milestone Focus" #1
+
+      TASK: Create python/carnot/pipeline/generation.py
+
+      CONCRETE STEPS:
+      1. ConstraintGenerator class:
+         - from_memory(memory: ConstraintMemory) -> ConstraintGenerator
+         - generate(text: str, domain: str) -> list[ConstraintTerm]
+           Reads memory patterns for domain and maps them to new ConstraintTerms:
+           * "arithmetic_carry" pattern → CarryChainConstraint (from extract.py or new)
+           * "comparison_boundary" pattern → BoundConstraint
+           * "negation_scope" pattern → NegationConstraint (new: detect "not X" patterns)
+         - Threshold: only add constraints for patterns seen ≥3 times in memory
+
+      2. Extend AutoExtractor.extract(text, domain=None, memory=None):
+         - If memory provided: instantiate ConstraintGenerator, call generate()
+         - Merge generated constraints with static extraction results
+         - Deduplicate by constraint type (don't add ArithmeticConstraint twice)
+         - Backward compatible: memory=None produces identical behavior to current
+
+      3. Benchmark on 200 GSM8K questions:
+         - Warmup: first 100 questions build memory (use results from Exp 132-136 if available)
+         - Test: next 100 questions compare AutoExtractor vs memory-augmented
+         - Metric: constraint count per question, accuracy with/without generation
+         - Save to results/experiment_141_results.json
+
+      4. Tests in tests/python/test_generation.py:
+         - Test ConstraintGenerator with mocked memory patterns
+         - Test AutoExtractor with memory= parameter
+         - Test memory threshold (patterns seen < 3 times → no constraint added)
+         - 100% coverage required
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_generation.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_141_constraint_generation.py
+         (create this script as the benchmark from step 3)
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp144-jepa-predictor
+    milestone: "2026.04.10"
+    deliverable: python/carnot/pipeline/jepa_predictor.py
+    title: "Exp 144: Train JEPA violation predictor"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 143 collected (partial_response_embedding, final_violated) training pairs.
+      This experiment trains a small MLP to predict constraint violations from partial responses
+      — the Tier 3 JEPA predictive verification mechanism from research-program.md.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - results/jepa_training_pairs.json — training data from Exp 143
+      - python/carnot/embeddings/fast_embedding.py — RandomProjection (same embeddings)
+      - python/carnot/models/kan.py — KAN training pattern to follow
+      - python/carnot/training/ — CD and training loop patterns
+      - research-program.md — "Continuous Self-Learning" Tier 3
+
+      TASK: Create python/carnot/pipeline/jepa_predictor.py
+
+      CONCRETE STEPS:
+      1. JEPAViolationPredictor class implementing EnergyFunction protocol:
+         - Architecture: Linear(256, 64) → ReLU → Linear(64, 32) → ReLU → Linear(32, N_domains)
+           where N_domains = number of constraint types (arithmetic, code, logic, etc.)
+         - predict(partial_embedding: jnp.ndarray) -> dict[str, float] (per-domain probabilities)
+         - is_high_risk(partial_embedding, threshold=0.5) -> bool
+         - save(path: str) — safetensors format
+         - load(path: str) — restore from safetensors
+         - train(pairs: list[dict]) -> training_log — binary cross-entropy, 50 epochs, Adam
+
+      2. Training:
+         - Load results/jepa_training_pairs.json
+         - 80/20 train/val split (stratified by domain)
+         - Run training, report per-domain AUROC on val set
+         - Save model to results/jepa_predictor.safetensors
+
+      3. Evaluation metrics:
+         - AUROC per domain + macro AUROC
+         - Precision and recall at threshold=0.5
+         - Confusion matrix (fast-path errors: false negatives are costly)
+         - Target: macro AUROC > 0.65
+
+      4. Tests in tests/python/test_jepa_predictor.py:
+         - Test predict() with random embeddings
+         - Test save/load round-trip
+         - Test is_high_risk() threshold behavior
+         - 100% coverage required
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_jepa_predictor.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_144_train_jepa.py
+         (create this script: loads data, trains, prints AUROC, saves model)
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp142-combined-learning
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_142_combined_learning.py
+    title: "Exp 142: Combined Tier 1+2 learning benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Tier 1 (ConstraintTracker + AdaptiveWeighter, Exp 132-134) adjusts weights
+      on existing constraints. Tier 2 (ConstraintMemory, Exp 135 + ConstraintGenerator, Exp 141)
+      adds new constraint types. This experiment benchmarks all four combinations on 500
+      questions to determine which learning mechanism actually helps and how they compose.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
       - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
       - python/carnot/pipeline/adaptive.py — AdaptiveWeighter (Exp 133)
+      - python/carnot/pipeline/memory.py — ConstraintMemory (Exp 135)
+      - python/carnot/pipeline/generation.py — ConstraintGenerator (Exp 141)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - results/experiment_134_results.json — Tier 1 baseline (fixed=0.53, adaptive=0.55)
 
-      TASK: Create scripts/experiment_136_cross_session.py
+      TASK: Create scripts/experiment_142_combined_learning.py
 
       CONCRETE STEPS:
-      1. Session 1: verify 200 arithmetic questions, build memory + tracker
-      2. Save memory and tracker to disk
-      3. Session 2: load memory, verify 200 NEW arithmetic questions
-      4. Session 3: verify 200 mixed domain (arithmetic + logic + code)
-      5. Metrics per session:
-         - Accuracy (with vs without memory)
-         - Number of additional constraints suggested by memory
-         - Time to first correct repair (does memory speed up repair?)
-      6. Key question: does domain-specific memory help cross-domain?
-      7. Save to results/experiment_136_results.json
-      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_136_cross_session.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Build four pipeline configurations:
+         a. Baseline: default VerifyRepairPipeline (fixed weights, no memory)
+         b. Tier1: + ConstraintTracker + AdaptiveWeighter (reweighting only)
+         c. Tier2: + ConstraintMemory + ConstraintGenerator (new constraints only)
+         d. Combined: Tier1 + Tier2 (both mechanisms)
 
-  # ── Phase 40: Energy-Guided Decoding for HuggingFace ────────
-  - id: exp137-hf-guided-decoding
-    milestone: "2026.04.9"
-    deliverable: exports/guided-decoding-adapter/README.md
-    title: "Exp 137: Package guided decoding for HuggingFace"
+      2. Run 500 arithmetic + logic questions (from GSM8K subset or synthetic):
+         - Warmup first 100 questions to build tracker + memory state
+         - Test on remaining 400 questions
+         - Per configuration: accuracy, constraint count per question,
+           % of questions where memory added a new constraint
+
+      3. Per-domain breakdown: arithmetic vs logic vs code (if code available)
+
+      4. Key analysis:
+         - Does Tier 2 beat Tier 1? (Hypothesis: yes)
+         - Does Combined beat either alone?
+         - What % of Tier 2 improvements are from NEW constraints vs better coverage?
+
+      5. Save to results/experiment_142_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_142_combined_learning.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 43: JEPA Predictive Verification (Tier 3) ─────────
+  - id: exp145-jepa-fastpath
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_145_jepa_fastpath.py
+    title: "Exp 145: JEPA fast-path / slow-path integration and benchmark"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Guided decoding works (Exp 110, 0.006ms per check). This
-      experiment packages it as a HuggingFace-publishable artifact.
+      CONTEXT: Exp 144 trained a JEPA predictor that estimates violation probability from
+      partial responses. This experiment integrates it into VerifyRepairPipeline as an
+      optional early-exit gate: if the predictor says "low risk," skip the expensive
+      Ising verification (fast path). This is the Tier 3 architecture from research-program.md.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/guided_decoding.py — guided decoding module
-      - scripts/experiment_110_guided_decoding.py — prototype results
-      - results/experiment_102_results.json — latency benchmarks
-      - exports/ — existing HuggingFace export format
+      - python/carnot/pipeline/jepa_predictor.py — JEPAViolationPredictor (Exp 144)
+      - results/jepa_predictor.safetensors — trained model
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - python/carnot/embeddings/fast_embedding.py — RandomProjection
+      - research-program.md — "Continuous Self-Learning" Tier 3 fast-path/slow-path
 
-      TASK: Create exports/guided-decoding-adapter/
+      TASK: Create scripts/experiment_145_jepa_fastpath.py
 
       CONCRETE STEPS:
-      1. Create export directory with:
-         - README.md: what it is, how to use, latency numbers, limitations
-         - config.json: constraint types, default weights, model compatibility
-         - constraint_weights.safetensors: default constraint energy weights
-         - example.py: 10-line usage example
+      1. Add optional JEPA gating to VerifyRepairPipeline.verify():
+         - New parameter: jepa_predictor=None, jepa_threshold=0.5
+         - If predictor provided and max(predict(embed(first_50_tokens))) < threshold:
+             return VerificationResult(mode="FAST_PATH", skipped=True)
+         - Else: run full constraint extraction + Ising as normal
+         - FAST_PATH result marks verified=True (optimistic default for low-risk)
 
-      2. Usage API:
-         ```python
-         from carnot.inference.guided_decoding import GuidedDecoder
-         decoder = GuidedDecoder.from_pretrained("Carnot-EBM/guided-decoding-adapter")
-         # Attach to any HF model
-         output = decoder.generate(model, tokenizer, "What is 47 + 28?")
-         ```
+      2. Benchmark on 500 questions (200 arithmetic, 200 code, 100 logic):
+         - Three modes: no-gating baseline, JEPA-gate at threshold=0.3, at threshold=0.5
+         - Metrics per mode:
+             * % fast-path taken (want ≥40%)
+             * Accuracy on fast-path questions specifically
+             * Accuracy on slow-path questions specifically
+             * Overall accuracy vs no-gating
+             * Wall-clock speedup: total time with gating vs without
 
-      3. Test: verify the export loads and produces valid output
-      4. Do NOT actually push to HuggingFace (just prepare the artifacts)
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      3. Error analysis: for fast-path errors (we skipped but should have checked):
+         - What domain/type were they? Arithmetic? Logic?
+         - Is there a pattern (e.g., always short answers → higher risk?)
 
-  - id: exp138-guided-decoding-benchmark
-    milestone: "2026.04.9"
-    deliverable: scripts/experiment_138_guided_benchmark.py
-    title: "Exp 138: Guided decoding benchmark"
+      4. Target: ≥40% fast-path rate with <2% accuracy degradation
+      5. Save to results/experiment_145_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_145_jepa_fastpath.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp146-npu
+    milestone: "2026.04.10"
+    deliverable: results/experiment_146_npu_results.json
+    title: "Exp 146: AMD XDNA NPU experimentation"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 137 packaged guided decoding. This benchmarks it on
-      standard tasks to get publishable numbers for the HuggingFace card.
+      CONTEXT: The host machine has an AMD Ryzen AI (XDNA) NPU from research-program.md
+      §"Next Milestone Focus" #5. This experiment tries to run the JEPA predictor (Exp 144)
+      on the NPU, documenting setup and achieving a latency measurement. This is the Tier 3
+      hardware acceleration target from research-program.md.
 
       EXISTING CODE TO READ FIRST:
-      - exports/guided-decoding-adapter/ — packaged adapter (Exp 137)
-      - python/carnot/inference/guided_decoding.py — guided decoding module
-      - scripts/experiment_91_gsm8k_live.py — GSM8K infrastructure
+      - python/carnot/pipeline/jepa_predictor.py — JEPAViolationPredictor (Exp 144)
+      - results/jepa_predictor.safetensors — trained model weights
+      - python/carnot/samplers/backend.py — SamplerBackend pattern to follow for NPU
+      - research-hardware-wishlist.md — AMD XDNA setup steps (if present)
 
-      TASK: Create scripts/experiment_138_guided_benchmark.py
+      TASK: Create scripts/experiment_146_npu.py + results/experiment_146_npu_results.json
 
       CONCRETE STEPS:
-      1. Benchmark guided decoding on 3 tasks:
-         a. 200 GSM8K questions: accuracy with vs without guided decoding
-         b. 50 HumanEval problems: pass@1 with vs without
-         c. 100 TruthfulQA questions: accuracy with vs without
-      2. Report latency overhead per token (should be <0.01ms)
-      3. Compare: baseline vs guided vs verify-repair vs guided+verify-repair
-      4. Save to results/experiment_138_results.json
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_138_guided_benchmark.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Detect NPU availability:
+         - Run: lspci | grep -i xdna (check for NPU)
+         - Run: ls /dev/accel* (check for accelerator device nodes)
+         - Run: python -c "import onnxruntime; print(onnxruntime.get_available_providers())"
+           (check for AMDXDNAExecutionProvider)
 
-  # ── Phase 41: ArXiv Research ────────────────────────────────
-  - id: exp139-arxiv-scan
-    milestone: "2026.04.9"
-    deliverable: scripts/experiment_139_arxiv_scan.py
-    title: "Exp 139: ArXiv research scan and integration"
+      2. If NPU available:
+         a. Export JEPAViolationPredictor to ONNX format
+            (model has 256 inputs → 64 → 32 → N outputs, fully standard)
+         b. Create onnxruntime.InferenceSession with AMDXDNAExecutionProvider
+         c. Run 1000 inference calls, measure p50/p95/p99 latency
+         d. Compare to CPU: create same session with CPUExecutionProvider
+         e. Target: NPU < 1ms p99 (Tier 3 predictor hardware target)
+
+      3. If NPU NOT available (ONNX provider missing or no device):
+         a. Document the environment state clearly:
+            - kernel version, xdna module status, /dev/accel presence
+            - What would be needed to enable it
+         b. Run CPU-only ONNX benchmark as fallback
+         c. Export ONNX model anyway (useful for future NPU testing)
+
+      4. Create NpuBackend stub (even if not running) following SamplerBackend pattern:
+         - python/carnot/samplers/npu_backend.py with NpuJEPAPredictor class
+         - Falls back to CPU if NPU unavailable
+         - Documents: "NPU path blocked until AMDXDNAExecutionProvider available"
+
+      5. Save to results/experiment_146_npu_results.json:
+         {npu_available: bool, device_info: str, npu_p50_ms: float|null,
+          cpu_p50_ms: float, speedup: float|null, onnx_model_path: str}
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_146_npu.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 44: Credibility Benchmarks ────────────────────────
+  - id: exp147-apple-gsm8k
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_147_apple_gsm8k.py
+    title: "Exp 147: Apple GSM8K adversarial benchmark — THE credibility experiment"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: The research program requires arxiv research before each
-      milestone. This experiment scans recent papers and proposes experiments.
+      CONTEXT: Apple (arxiv 2410.05229) proved that LLMs pattern-match math — swapping numbers
+      or adding one irrelevant sentence drops accuracy up to 65%, even o1-preview drops from
+      92.7% → 77.4%. This experiment runs Carnot's verify-repair pipeline on the Apple adversarial
+      variant and proves that constraint verification is immune to this. This is Goal #5 from
+      research-program.md and is described as "the single most compelling experiment we can run."
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - research-references.md — current references
-      - research-program.md — priorities and self-learning tiers
-      - scripts/arxiv_scan.py — existing arxiv scanner (if present)
+      - scripts/experiment_119_adversarial_generator.py — Apple adversarial generator
+      - results/adversarial_gsm8k_data.json — pre-generated adversarial data (if exists)
+      - scripts/experiment_120_adversarial_baseline.py — baseline methodology
+      - scripts/experiment_121_adversarial_verify_repair.py — verify-repair script
+      - results/experiment_121_results.json — prior results (if exists from Exp 130)
+      - python/carnot/inference/model_loader.py — robust loader (Exp 123)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - research-program.md — Goal #5 and research-references.md Apple paper section
 
-      TASK: Create scripts/experiment_139_arxiv_scan.py
+      TASK: Create scripts/experiment_147_apple_gsm8k.py
 
       CONCRETE STEPS:
-      1. Search arxiv (via API or web) for papers from 2025-2026 on:
-         - "energy based model" + verification
-         - "Ising model" + "language model"
-         - "constraint satisfaction" + "neural"
-         - "Kolmogorov-Arnold" + energy
-         - "guided decoding" + constraint
-         - "FPGA" + "Ising" OR "Boltzmann"
-         - "continual learning" + constraint
-         - "thermodynamic computing" + sampling
+      1. Load or generate adversarial dataset (200 GSM8K questions, 3 variants each):
+         - control: original question
+         - number_swapped: same structure, all numbers replaced with fresh values
+         - irrelevant_sentence: one semantically irrelevant numeric sentence injected
+         - combined: both perturbations applied
+         If results/adversarial_gsm8k_data.json exists, use it directly.
 
-      2. For each promising paper (up to 10):
-         - Title, authors, arxiv ID
-         - One-paragraph summary
-         - Relevance to Carnot (specific experiment or architecture idea)
-         - Proposed experiment if applicable
+      2. For each of 4 variants × 2 models × 3 modes (baseline/verify/verify-repair):
+         a. baseline: model answers directly
+         b. verify: verify only (flag violations, don't repair)
+         c. verify-repair: full pipeline (up to 3 repair iterations)
+         Use model_loader.load_model() with CARNOT_FORCE_LIVE or simulated fallback.
 
-      3. Update research-references.md with new entries
+      3. Score answers (exact match or arithmetic equivalence for number-swapped).
 
-      4. Propose 2-3 concrete experiments for milestone 2026.04.10
+      4. Report:
+         - Accuracy table: model × variant × mode
+         - Improvement delta (verify-repair vs baseline) per variant
+         - Key result: delta on combined adversarial vs delta on control
+         - Error breakdown: what types of errors does Ising catch on adversarial?
+         - 95% bootstrap CI on each accuracy estimate
 
-      5. Save scan results to results/experiment_139_results.json
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_139_arxiv_scan.py
+      5. The hypothesis to test: improvement delta is LARGER on adversarial variants than
+         on control (because adversarial inputs cause more arithmetic errors to catch).
+
+      6. Save full results to results/experiment_147_results.json
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_147_apple_gsm8k.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp148-gsm8k-full
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_148_gsm8k_full.py
+    title: "Exp 148: Full GSM8K (1319 questions) with live inference + confidence intervals"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 91 ran 200 GSM8K questions with simulated inference (+14-15%).
+      This experiment runs all 1,319 test questions with LIVE model inference using the
+      robust model loader (Exp 123) that eliminates simulated fallbacks. This is Goal #6
+      from research-program.md — the credibility number with confidence intervals.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_91_gsm8k_live.py — GSM8K infrastructure and dataset loading
+      - python/carnot/inference/model_loader.py — robust loader (Exp 123)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - results/experiment_91_results.json — 200-question baseline to compare
+
+      TASK: Create scripts/experiment_148_gsm8k_full.py
+
+      CONCRETE STEPS:
+      1. Load full GSM8K test split (1,319 questions) via datasets library
+         (or huggingface datasets: gsm8k, split="test")
+         If datasets unavailable, use the synthetic generator from Exp 119 to create
+         1,319 arithmetic questions of equivalent difficulty.
+
+      2. Run with CARNOT_FORCE_LIVE=1 env var (or os.environ['CARNOT_FORCE_LIVE']='1'):
+         - Use model_loader.load_model() for Qwen3.5-0.8B and google/gemma-4-E4B-it
+         - If OOM, apply float32 + gc.collect() retry (as in Exp 123 model loader)
+         - Simulated inference IS acceptable as fallback but must be logged clearly
+
+      3. Three modes: baseline, verify-only, verify-repair (up to 3 repair iterations)
+      4. Scoring: exact match on final numeric answer (strip units, round floats)
+      5. Report:
+         - Accuracy per mode, 95% bootstrap CI (1000 bootstrap resamples)
+         - Compare to Exp 91 (200-question subset) — does full test set match?
+         - Compare to published Qwen3.5-0.8B GSM8K baseline (~60-65%)
+         - Marginal improvement: verify-repair vs baseline (point estimate ± CI)
+      6. Save to results/experiment_148_results.json
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_148_gsm8k_full.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp149-truthfulqa-scale
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_149_truthfulqa.py
+    title: "Exp 149: TruthfulQA at scale with factual constraint coverage analysis"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 88 showed factual and scheduling domains have near-zero constraint coverage
+      (100% false negative rate). This experiment benchmarks TruthfulQA at scale to quantify
+      the factual coverage gap and identify the top-5 constraint types that would close it.
+      This maps to Goal #3 (factual constraint extractor) from research-program.md.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — AutoExtractor, extractors
+      - python/carnot/pipeline/knowledge_base.py — KB factual verifier (Exp 98)
+      - python/carnot/pipeline/mining.py — ConstraintMiner (Exp 88)
+      - results/experiment_88_results.json — failure mode analysis
+      - research-program.md — Goal #3 (factual constraint extractor)
+
+      TASK: Create scripts/experiment_149_truthfulqa.py
+
+      CONCRETE STEPS:
+      1. Load TruthfulQA (200 questions, balanced across categories):
+         Categories: misconceptions, fiction, history, science, health, law, other
+         Use HuggingFace datasets if available: truthful_qa, multiple_choice split.
+         If unavailable, create 200 synthetic factual questions across 7 categories.
+
+      2. For each question: run AutoExtractor and measure:
+         - Was any constraint extracted? (coverage rate per category)
+         - If extracted: run verify-repair, measure accuracy
+         - If not extracted: log as BLIND_SPOT
+
+      3. Also run with KB factual verifier (Exp 98) if available:
+         - Coverage with KB vs without
+         - Accuracy with KB on covered questions
+
+      4. Apply ConstraintMiner (Exp 88) to the FALSE NEGATIVES:
+         - What patterns explain the coverage gaps?
+         - Categorize: world_knowledge, implicit_logic, negation, comparison, etc.
+
+      5. Output:
+         - Coverage rate per TruthfulQA category
+         - Accuracy: covered vs blind-spot questions
+         - Top-5 constraint types that would improve coverage the most (with estimated
+           coverage improvement % from ConstraintMiner analysis)
+         - Concrete recommendation for which extractor to build next
+
+      6. Save to results/experiment_149_results.json
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_149_truthfulqa.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 45: HuggingFace Publishing + Continual Learning ───
+  - id: exp150-hf-push
+    milestone: "2026.04.10"
+    deliverable: results/experiment_150_results.json
+    title: "Exp 150: Push guided decoding adapter + update 16 model READMEs on HuggingFace"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 137 packaged exports/guided-decoding-adapter/ (README, config.json,
+      constraint_weights.safetensors, example.py) and Exp 138 benchmarked it. Neither
+      pushed to HuggingFace. This is priority #3 from research-program.md §"Next Milestone
+      Focus (2026.04.10)". Also, the 16 existing Carnot-EBM model cards need to clarify
+      they are Phase 1 research artifacts and point to pip install carnot.
+
+      EXISTING CODE TO READ FIRST:
+      - exports/guided-decoding-adapter/README.md — adapter README (Exp 137)
+      - exports/guided-decoding-adapter/config.json — constraint config
+      - exports/guided-decoding-adapter/example.py — usage example
+      - results/experiment_138_results.json — benchmark numbers for the model card
+      - research-program.md — §"HuggingFace Publishing Milestones" item #3
+
+      TASK: Create scripts/experiment_150_hf_push.py
+
+      CONCRETE STEPS:
+      1. Check HuggingFace CLI is available: `huggingface-cli whoami`
+         If not logged in or no token, log SKIPPED and save partial results.
+
+      2. Update exports/guided-decoding-adapter/README.md to include:
+         - Benchmark results from results/experiment_138_results.json
+         - Latency numbers from results/experiment_140_results.json (if available)
+         - Section "Limitations": simulated inference used in benchmark (if applicable)
+         - Installation: pip install carnot
+
+      3. If HuggingFace CLI available:
+         a. huggingface-cli upload Carnot-EBM/guided-decoding-adapter \
+              exports/guided-decoding-adapter/
+         b. Verify: huggingface-cli repo info Carnot-EBM/guided-decoding-adapter
+
+      4. Generate updated README content for the 16 existing Carnot-EBM models.
+         Save to exports/model-readme-updates/ (one file per model):
+         - Prepend: "## Note: Phase 1 Research Artifact"
+           "These EBMs were trained in Phase 1 to detect model confidence (not correctness).
+           See [Carnot verify-repair pipeline](https://pypi.org/project/carnot) for production use:
+           `pip install carnot`"
+         - Add link to guided-decoding-adapter
+         (Actual HuggingFace update requires API token — generate content, note step needed)
+
+      5. Save to results/experiment_150_results.json:
+         {pushed: bool, skip_reason: str|null, hf_url: str|null,
+          readme_updates_generated: int, timestamp: str}
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_150_hf_push.py
+      7. Do NOT push git changes. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp151-publish-constraint-models
+    milestone: "2026.04.10"
+    deliverable: exports/constraint-propagation-models/README.md
+    title: "Exp 151: Publish constraint propagation models to HuggingFace"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Carnot has trained domain-specific Ising models for arithmetic, logic, and code
+      (Exp 50-63, 89). These are novel artifacts — no other HuggingFace repo has learned Ising
+      constraint models. Publishing them extends Carnot's community presence and proves the
+      constraint learning pipeline produces portable artifacts.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_62_domain_constraint_learning.py — domain Ising training
+      - scripts/experiment_89_self_bootstrap.py — self-bootstrapped Ising models
+      - python/carnot/models/ising.py — IsingEBM (check for save/load)
+      - exports/guided-decoding-adapter/ — format reference (Exp 137)
+      - research-program.md — §"HuggingFace Publishing Milestones" item #4
+
+      TASK: Create exports/constraint-propagation-models/ directory with model cards
+
+      CONCRETE STEPS:
+      1. For each domain (arithmetic, logic, code):
+         a. Load the best-available Ising model for that domain
+            (check results/experiment_89_results.json, experiment_62_results.json)
+         b. Export coupling matrix J and biases b to:
+            exports/constraint-propagation-models/{domain}/model.safetensors
+         c. Write model card: exports/constraint-propagation-models/{domain}/README.md
+            - What it is: "Learned Ising constraint model for {domain} verification"
+            - How it was trained (CD on {N} verified examples)
+            - Benchmark results (AUROC from Exp 89, accuracy from Exp 67/68)
+            - Usage example (5 lines: load model, extract constraints, verify)
+            - Limitations
+
+      2. Create ConstraintPropagationModel.from_pretrained() API in
+         python/carnot/inference/constraint_models.py:
+         - from_pretrained(path_or_repo: str) -> IsingConstraintModel
+         - save_pretrained(path: str) — exports J, b, config as safetensors + JSON
+
+      3. Create exports/constraint-propagation-models/README.md (collection card):
+         - "Three learned Ising constraint models: arithmetic, logic, code"
+         - Usage: 5-line example using from_pretrained()
+
+      4. If HuggingFace CLI available:
+         huggingface-cli upload Carnot-EBM/constraint-propagation-arithmetic \
+           exports/constraint-propagation-models/arithmetic/
+
+      5. Tests in tests/python/test_constraint_models.py
+
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_constraint_models.py -q
+      7. Do NOT push git changes. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp152-continual-learning
+    milestone: "2026.04.10"
+    deliverable: python/carnot/models/continual_gibbs.py
+    title: "Exp 152: Continual learning for constraint retention across agent steps"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 116 showed LNN adaptive couplings hurt multi-step performance (10% vs 100%
+      for static Ising). The failure mode: adapting within a chain destroys previously verified
+      constraints. The fix proposed by Exp 139 arxiv scan (LoRA continual learning papers):
+      use orthogonal parameter updates — when learning new step N constraints, project the
+      gradient update onto the null space of prior step constraints. This preserves all previous
+      verifications while adapting to new observations.
+
+      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/gibbs.py — GibbsEBM (base model to extend)
+      - scripts/experiment_116_lnn_coupling.py — LNN baseline (10% accuracy)
+      - scripts/experiment_127_agent_workflow.py — agent workflow benchmark
+      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine (Exp 125)
+      - research-program.md — §"What LNN Taught Us (Exp 116)"
+
+      TASK: Create python/carnot/models/continual_gibbs.py
+
+      CONCRETE STEPS:
+      1. ContinualGibbsModel class extending GibbsEBM:
+         - gradient_buffer: list of prior step gradients (as unit vectors)
+         - update_step(observations: jnp.ndarray, step_idx: int):
+             * Compute gradient of energy w.r.t. observations for current step
+             * Project gradient onto null space of all prior step gradients
+               (Gram-Schmidt orthogonalization against gradient_buffer)
+             * Apply orthogonal component only as parameter update
+         - reset() — clears gradient buffer (call at start of new agent chain)
+         - Backward compatible with GibbsEBM interface (implements EnergyFunction)
+
+      2. Benchmark on 5-step math reasoning chains (20 problems):
+         - Compare: static Ising, LNN (Exp 116 results), ContinualGibbs
+         - Metric: accuracy on step 5 when steps 1-4 constraints are accumulated
+         - Secondary: does accuracy degrade from step 1 to step 5 under each approach?
+         - Target: ContinualGibbs > 80% on step 5 (vs LNN 10%, static Ising 100%)
+
+      3. Tests in tests/python/test_continual_gibbs.py:
+         - Test that orthogonal updates preserve prior step gradients
+         - Test reset() clears buffer correctly
+         - 100% coverage
+
+      4. Save to results/experiment_152_results.json
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_continual_gibbs.py -q
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_152_continual.py
+         (create this script: runs the 5-step chain benchmark from step 2)
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp153-kan-refinement
+    milestone: "2026.04.10"
+    deliverable: scripts/experiment_153_kan_refinement.py
+    title: "Exp 153: KAN adaptive mesh refinement for energy landscapes"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: KAN achieves 0.994 AUROC with 8.7x fewer params than Ising (Exp 108-109).
+      The spline structure allows adaptive mesh refinement: edges with high curvature (complex
+      nonlinear constraints) get more knots; near-linear edges get fewer. This is the Tier 4
+      "adaptive energy structure" mechanism from research-program.md. The KAEM paper from
+      Exp 139 (arxiv 2506.14167) and EvoKAN (arxiv 2503.01618) validate this direction.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan.py — KANConstraintModel (Exp 103/108)
+      - scripts/experiment_108_kan_prototype.py — KAN training results
+      - scripts/experiment_109_kan_benchmark.py — 0.994 AUROC results
+      - research-references.md — §"KAN Adaptive Mesh Refinement for Energy Landscapes"
+      - research-program.md — "Continuous Self-Learning" Tier 4
+
+      TASK: Create scripts/experiment_153_kan_refinement.py
+
+      CONCRETE STEPS:
+      1. Add refinement to KANConstraintModel:
+         - compute_edge_curvature() -> dict[edge_id, curvature_score]
+           Method: sample 100 points per edge, compute |d²f/dx²| via JAX autodiff
+         - refine(threshold_multiplier=1.5):
+           * For each edge: if curvature > threshold_multiplier × mean_curvature:
+               insert knot at the highest-curvature point (bisect the interval)
+           * For each edge: if curvature < mean_curvature / threshold_multiplier:
+               merge adjacent knots if curvature difference is minimal
+           * Returns: (added_knots: int, removed_knots: int)
+         - This modifies the spline grid in-place and re-initializes affected weights
+
+      2. Benchmark on constraint verification task (arithmetic + logic 200 questions):
+         a. Train KAN to baseline (same as Exp 109 methodology)
+         b. Run refinement(threshold_multiplier=1.5)
+         c. Fine-tune for 10 more epochs post-refinement
+         d. Compare AUROC before vs after refinement
+         e. Compare parameter count before vs after
+
+      3. Analysis:
+         - Which edges gained knots? (High-curvature → complex nonlinear constraint)
+         - Which edges lost knots? (Near-linear → effectively linear constraint)
+         - Interpretability: do high-curvature edges correspond to semantically complex
+           constraint interactions?
+
+      4. Target: AUROC maintained or improved post-refinement;
+                 parameter count changes by ≤ ±20%
+
+      5. Save to results/experiment_153_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_153_kan_refinement.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
