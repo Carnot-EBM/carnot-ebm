@@ -15,7 +15,11 @@ from unittest.mock import MagicMock, patch
 import jax.numpy as jnp
 import pytest
 
-from carnot.inference.guided_decoding import EnergyGuidedSampler, GuidedDecodingResult
+from carnot.inference.guided_decoding import (
+    EnergyGuidedSampler,
+    GuidedDecoder,
+    GuidedDecodingResult,
+)
 
 
 # ---------------------------------------------------------------------------
@@ -460,3 +464,107 @@ class TestGenerate:
         result = sampler.generate("prompt", model, tokenizer, max_tokens=4, temperature=0)
 
         assert result.tokens_generated <= 4
+
+
+# ---------------------------------------------------------------------------
+# Test: GuidedDecoder (HuggingFace-publishable adapter)
+# ---------------------------------------------------------------------------
+
+_ADAPTER_DIR = "exports/guided-decoding-adapter"
+
+
+class TestGuidedDecoder:
+    """REQ-VERIFY-001, SCENARIO-VERIFY-004: GuidedDecoder adapter loads and generates."""
+
+    def test_from_pretrained_loads_config(self) -> None:
+        """REQ-VERIFY-001: from_pretrained reads config.json correctly."""
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
+        assert decoder.config["adapter_type"] == "guided_decoding"
+        assert decoder.config["default_alpha"] == 0.5
+
+    def test_from_pretrained_loads_weights(self) -> None:
+        """REQ-VERIFY-001: from_pretrained loads constraint_weights.safetensors."""
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
+        assert "arithmetic" in decoder.constraint_weights
+        assert decoder.constraint_weights["arithmetic"] == pytest.approx(1.0)
+        assert decoder.constraint_weights["nl_consistency"] == pytest.approx(0.5)
+
+    def test_from_pretrained_builds_sampler(self) -> None:
+        """REQ-VERIFY-001: from_pretrained creates a properly configured sampler."""
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
+        assert isinstance(decoder._sampler, EnergyGuidedSampler)
+        assert decoder._sampler.alpha == pytest.approx(0.5)
+
+    def test_from_pretrained_kwarg_override(self) -> None:
+        """REQ-VERIFY-001: kwargs override config defaults at load time."""
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR, alpha=2.0, check_every_k=4)
+        assert decoder._sampler.alpha == pytest.approx(2.0)
+        assert decoder._sampler.check_every_k == 4
+
+    def test_from_pretrained_missing_dir_raises(self) -> None:
+        """REQ-VERIFY-001: non-existent path raises FileNotFoundError."""
+        with pytest.raises(FileNotFoundError):
+            GuidedDecoder.from_pretrained("/tmp/no_such_adapter_xyz")
+
+    def test_generate_returns_result(self) -> None:
+        """SCENARIO-VERIFY-004: generate() produces a valid GuidedDecodingResult."""
+        import torch
+
+        step: dict[str, int] = {"n": 0}
+
+        def forward(input_ids: torch.Tensor) -> MagicMock:
+            logits = torch.zeros(1, input_ids.shape[1], 10)
+            logits[0, -1, 1 if step["n"] >= 3 else 0] = 10.0
+            step["n"] += 1
+            out = MagicMock()
+            out.logits = logits
+            return out
+
+        model = MagicMock()
+        model.side_effect = forward
+        model.parameters = MagicMock(return_value=iter([torch.zeros(1)]))
+
+        tokenizer = MagicMock()
+        tokenizer.eos_token_id = 1
+        tokenizer.encode = MagicMock(return_value=torch.tensor([[2, 3, 4]]))
+        tokenizer.decode = MagicMock(
+            side_effect=lambda ids, **kw: "" if ids.item() == 1 else "A"
+        )
+
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
+        result = decoder.generate(model, tokenizer, "What is 47 + 28?")
+
+        assert isinstance(result, GuidedDecodingResult)
+        assert result.tokens_generated >= 1
+        assert result.latency_seconds >= 0.0
+        assert result.energy_checks >= 1
+
+    def test_generate_signature_model_tokenizer_prompt(self) -> None:
+        """SCENARIO-VERIFY-004: generate(model, tokenizer, prompt) positional API works."""
+        import torch
+
+        step: dict[str, int] = {"n": 0}
+
+        def forward(input_ids: torch.Tensor) -> MagicMock:
+            logits = torch.zeros(1, input_ids.shape[1], 10)
+            logits[0, -1, 1 if step["n"] >= 2 else 0] = 10.0
+            step["n"] += 1
+            out = MagicMock()
+            out.logits = logits
+            return out
+
+        model = MagicMock()
+        model.side_effect = forward
+        model.parameters = MagicMock(return_value=iter([torch.zeros(1)]))
+
+        tokenizer = MagicMock()
+        tokenizer.eos_token_id = 1
+        tokenizer.encode = MagicMock(return_value=torch.tensor([[2, 3]]))
+        tokenizer.decode = MagicMock(
+            side_effect=lambda ids, **kw: "" if ids.item() == 1 else "B"
+        )
+
+        decoder = GuidedDecoder.from_pretrained(_ADAPTER_DIR)
+        # Positional args: model, tokenizer, prompt — as per the task spec.
+        result = decoder.generate(model, tokenizer, "test prompt")
+        assert isinstance(result, GuidedDecodingResult)

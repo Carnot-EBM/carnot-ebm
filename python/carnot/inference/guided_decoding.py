@@ -61,12 +61,15 @@ Spec: REQ-VERIFY-001, SCENARIO-VERIFY-004
 
 from __future__ import annotations
 
+import json
 import logging
 import time
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any
 
 import jax.numpy as jnp
+import numpy as np
 
 from carnot.pipeline.extract import AutoExtractor
 
@@ -404,4 +407,216 @@ class EnergyGuidedSampler:
             mean_penalty=mean_penalty,
             latency_seconds=latency,
             final_energy=last_energy,
+        )
+
+
+# ---------------------------------------------------------------------------
+# HuggingFace-publishable adapter: GuidedDecoder
+# ---------------------------------------------------------------------------
+
+
+class GuidedDecoder:
+    """HuggingFace-style adapter that wraps EnergyGuidedSampler for easy sharing.
+
+    **Researcher summary:**
+        Provides a ``from_pretrained`` class method so the adapter can be
+        loaded from a local directory or HuggingFace Hub path exactly like a
+        standard HF model.  Constraint energy weights are loaded from
+        ``constraint_weights.safetensors`` and override the alpha / threshold
+        defaults from ``config.json``.
+
+    **Detailed explanation for engineers:**
+        The adapter directory must contain:
+        - ``config.json``: adapter parameters (alpha, check_every_k, etc.)
+        - ``constraint_weights.safetensors``: per-type energy weights
+
+        ``from_pretrained(path_or_repo)`` resolves a local directory first;
+        HuggingFace Hub download is performed automatically when the path is
+        not a local directory and ``huggingface_hub`` is installed.
+
+        After construction, call ``generate(model, tokenizer, prompt)`` to
+        produce constrained text.  The signature matches the task spec exactly:
+
+            decoder = GuidedDecoder.from_pretrained("Carnot-EBM/guided-decoding-adapter")
+            output = decoder.generate(model, tokenizer, "What is 47 + 28?")
+
+        ``generate`` returns a :class:`GuidedDecodingResult`.
+
+    Spec: REQ-VERIFY-001, SCENARIO-VERIFY-004
+    """
+
+    def __init__(
+        self,
+        sampler: EnergyGuidedSampler,
+        constraint_weights: dict[str, float],
+        config: dict[str, Any],
+    ) -> None:
+        """Construct from pre-built sampler and loaded config/weights.
+
+        **Detailed explanation for engineers:**
+            Do not call this directly — use ``from_pretrained`` instead.
+            ``constraint_weights`` is stored for inspection but does not yet
+            automatically feed into the per-type penalty logic (the sampler
+            applies a uniform penalty).  Future work: per-type weighting
+            (see Exp-111 roadmap).
+
+        Args:
+            sampler: Configured EnergyGuidedSampler instance.
+            constraint_weights: Dict mapping constraint type names to floats.
+            config: Raw config dict loaded from config.json.
+        """
+        self._sampler = sampler
+        self.constraint_weights = constraint_weights
+        self.config = config
+
+    # ------------------------------------------------------------------
+    # Construction
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def from_pretrained(cls, path_or_repo: str, **kwargs: Any) -> "GuidedDecoder":
+        """Load a GuidedDecoder from a local directory or HuggingFace Hub.
+
+        **Detailed explanation for engineers:**
+            Resolution order:
+            1. Try ``path_or_repo`` as a local filesystem path.
+            2. If not found locally and ``huggingface_hub`` is installed,
+               call ``snapshot_download(path_or_repo)`` to fetch from Hub.
+            3. Otherwise raise ``FileNotFoundError``.
+
+            ``kwargs`` can override any config key:
+            - ``alpha``: guidance strength (float)
+            - ``check_every_k``: energy refresh interval (int)
+            - ``energy_threshold``: min energy to trigger penalty (float)
+            - ``pipeline``: VerifyRepairPipeline instance (optional)
+
+        Args:
+            path_or_repo: Local directory path or HuggingFace repo ID.
+            **kwargs: Parameter overrides applied after loading config.
+
+        Returns:
+            Configured GuidedDecoder ready for use.
+
+        Raises:
+            FileNotFoundError: If the path cannot be resolved locally or
+                via HuggingFace Hub.
+        """
+        from safetensors.numpy import load_file as st_load
+
+        path = Path(path_or_repo)
+        if not path.is_dir():
+            # Try HuggingFace Hub download.
+            try:
+                from huggingface_hub import snapshot_download  # type: ignore[import]
+
+                local = snapshot_download(path_or_repo)
+                path = Path(local)
+            except Exception as exc:
+                raise FileNotFoundError(
+                    f"Could not find adapter at '{path_or_repo}'. "
+                    f"Tried as local path and HuggingFace Hub. Error: {exc}"
+                ) from exc
+
+        config_path = path / "config.json"
+        weights_path = path / "constraint_weights.safetensors"
+
+        if not config_path.exists():
+            raise FileNotFoundError(f"config.json not found in {path}")
+        if not weights_path.exists():
+            raise FileNotFoundError(f"constraint_weights.safetensors not found in {path}")
+
+        with open(config_path) as f:
+            config: dict[str, Any] = json.load(f)
+
+        raw_weights = st_load(str(weights_path))
+        # Build a plain Python dict of constraint_type -> float.
+        constraint_weights: dict[str, float] = {}
+        for key, val in raw_weights.items():
+            if key.startswith("weight_"):
+                ctype = key[len("weight_"):]
+                constraint_weights[ctype] = float(val[0])
+
+        # Resolve effective alpha and other hyperparams.
+        # Priority (highest last, so each step can override the previous):
+        #   config.json defaults → safetensors defaults → call-site kwargs
+        alpha: float = float(config.get("default_alpha", 0.5))
+        check_every_k: int = int(config.get("default_check_every_k", 1))
+        energy_threshold: float = float(config.get("default_energy_threshold", 0.0))
+
+        if "default_alpha" in raw_weights:
+            alpha = float(raw_weights["default_alpha"][0])
+        if "default_energy_threshold" in raw_weights:
+            energy_threshold = float(raw_weights["default_energy_threshold"][0])
+
+        # Call-site kwargs win over everything.
+        pipeline = kwargs.pop("pipeline", None)
+        if "alpha" in kwargs:
+            alpha = float(kwargs.pop("alpha"))
+        if "check_every_k" in kwargs:
+            check_every_k = int(kwargs.pop("check_every_k"))
+        if "energy_threshold" in kwargs:
+            energy_threshold = float(kwargs.pop("energy_threshold"))
+
+        sampler = EnergyGuidedSampler(
+            pipeline=pipeline,
+            alpha=alpha,
+            check_every_k=check_every_k,
+            energy_threshold=energy_threshold,
+        )
+
+        logger.info(
+            "GuidedDecoder loaded from %s  alpha=%.2f  check_every_k=%d",
+            path,
+            alpha,
+            check_every_k,
+        )
+        return cls(sampler=sampler, constraint_weights=constraint_weights, config=config)
+
+    # ------------------------------------------------------------------
+    # Generation
+    # ------------------------------------------------------------------
+
+    def generate(
+        self,
+        model: Any,
+        tokenizer: Any,
+        prompt: str,
+        *,
+        max_tokens: int | None = None,
+        temperature: float | None = None,
+        domain: str | None = None,
+    ) -> GuidedDecodingResult:
+        """Generate constrained text using the loaded adapter.
+
+        **Detailed explanation for engineers:**
+            Thin delegation to ``EnergyGuidedSampler.generate``.  Argument
+            order matches the task spec (model, tokenizer, prompt) for
+            ergonomic use as a drop-in alongside HuggingFace pipelines.
+
+            ``max_tokens`` and ``temperature`` default to the values in
+            ``config.json`` when not supplied.
+
+        Args:
+            model: HuggingFace AutoModelForCausalLM in eval mode.
+            tokenizer: Matching HuggingFace tokenizer.
+            prompt: Input prompt string.
+            max_tokens: Max tokens to generate.  Defaults to config value.
+            temperature: Sampling temperature.  Defaults to config value.
+            domain: Optional domain hint for the constraint extractor.
+
+        Returns:
+            GuidedDecodingResult with generated text and energy telemetry.
+        """
+        if max_tokens is None:
+            max_tokens = int(self.config.get("default_max_tokens", 256))
+        if temperature is None:
+            temperature = float(self.config.get("default_temperature", 1.0))
+
+        return self._sampler.generate(
+            prompt=prompt,
+            model=model,
+            tokenizer=tokenizer,
+            max_tokens=max_tokens,
+            temperature=temperature,
+            domain=domain,
         )

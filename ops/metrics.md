@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 guided-decoding-adapter export
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T02:09:32Z | 2026-04-11T02:14:00Z | Create exports/guided-decoding-adapter/ — HuggingFace-publishable artifact for GuidedDecoder; added GuidedDecoder.from_pretrained() API to guided_decoding.py; 7 new tests all pass; example.py verified | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 136 Cross-Session Memory
 
 ### Turn Log
