@@ -61,21 +61,19 @@ logger = logging.getLogger(__name__)
 try:
     import torch as _torch_module
     import torch
-
-    _TORCH_AVAILABLE = True
 except ImportError:  # pragma: no cover
     _torch_module = None  # type: ignore[assignment]
     torch = None  # type: ignore[assignment]
-    _TORCH_AVAILABLE = False
 
 try:
     from transformers import AutoModelForCausalLM, AutoTokenizer
-
-    _TRANSFORMERS_AVAILABLE = True
 except ImportError:  # pragma: no cover
     AutoModelForCausalLM = None  # type: ignore[assignment,misc]
     AutoTokenizer = None  # type: ignore[assignment,misc]
-    _TRANSFORMERS_AVAILABLE = False
+
+# Derived flags — always assigned (no branch coverage gap).
+_TORCH_AVAILABLE: bool = torch is not None
+_TRANSFORMERS_AVAILABLE: bool = AutoModelForCausalLM is not None
 
 # ---------------------------------------------------------------------------
 # Configuration constants
@@ -223,7 +221,12 @@ def load_model(
     force_live = os.environ.get("CARNOT_FORCE_LIVE", "") == "1"
 
     # --- Import check ---
-    if not _TORCH_AVAILABLE or not _TRANSFORMERS_AVAILABLE or AutoTokenizer is None or AutoModelForCausalLM is None:
+    # Check the actual module-level sentinels rather than the boolean flags so
+    # that tests can patch AutoModelForCausalLM / AutoTokenizer to mocks and
+    # exercise the load path without needing to also patch _TRANSFORMERS_AVAILABLE.
+    # (The bool flags can be False when a transitive import inside transformers
+    # fails at module-load time even though `import transformers` itself works.)
+    if torch is None or AutoTokenizer is None or AutoModelForCausalLM is None:
         err = ModelLoadError(
             f"torch/transformers not installed. Cannot load '{model_name}'. "
             f"Install with: pip install torch transformers",
