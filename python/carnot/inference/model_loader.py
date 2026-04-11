@@ -33,6 +33,8 @@
       (useful in CI where no models are cached).
     - CARNOT_FORCE_CPU=1 (default 1): force CPU regardless of GPU availability,
       because ROCm hangs during generation on the current research machine.
+      # eGPU gfx1100 confirmed working 20260411 — set CARNOT_FORCE_CPU=0 to
+      # enable GPU inference on the RX 7900 XTX (Thunderbolt chassis).
 
     Public API (also exported from carnot.inference):
     - load_model(model_name, device, dtype, max_retries) → (model, tokenizer)
