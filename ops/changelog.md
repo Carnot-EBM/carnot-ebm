@@ -804,6 +804,10 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 - Exp 178: Definitive adversarial GSM8K — Goal #5 with statistical power (N≥400/variant) — paired sign permutation test + two-proportion z-test (N=400/variant, 10k resamples); number_swapped variant: Qwen3.5-0.8B baseline 43.3%→71.5% (+28.2pp), Gemma4-E4B-it 52.3%→76.3% (+24.0pp); both p=0.0; Goal #5 ACHIEVED; fixes Exp 162's underpowered aggregate permutation test; results at `results/experiment_178_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006
 
+## 2026-04-11: Experiment 180 Complete
+
+- Exp 180: GPU inference baseline — dual RTX 3090 load times, VRAM, throughput, latency for Qwen3.5-0.8B and Gemma4-E4B-it; Qwen load 2.98s, 1.46GB VRAM, mean latency 719ms/query (50 GSM8K questions); Gemma load 3.12s, 2.43GB VRAM, mean latency 642ms/query; establishes hardware baseline for GPU inference pipeline; results at `results/experiment_180_results.json`
+
 ## 2026-04-11: Experiment 179 Checkpoint
 
 - Exp 179: AMD XDNA NPU activation — VitisAI onnxruntime for JEPA predictor — fixed RyzenAI-SW symlinks (24 .so stubs → real OS symlinks), corrected provider name (VitisAIExecutionProvider), upgraded onnxruntime 1.20.1→1.24.4 for IR v13 support; BLOCKER: Python 3.12/3.10 mismatch (VitisAI EP built for 3.10, venv uses 3.12; next: AMD wheel for Python 3.12); CPU baseline p50=0.0046ms; results at `results/experiment_179_npu_results.json`; REQ-JEPA-001
