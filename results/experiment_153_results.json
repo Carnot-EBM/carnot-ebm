@@ -1,0 +1,2489 @@
+{
+  "experiment": "153_kan_adaptive_mesh_refinement",
+  "description": "KAN adaptive mesh refinement: insert/remove knots based on edge curvature to improve representational efficiency while maintaining AUROC.",
+  "config": {
+    "input_dim": 20,
+    "n_edges": 190,
+    "num_knots_initial": 8,
+    "degree": 3,
+    "n_ctrl_initial": 11,
+    "n_train": 160,
+    "n_test": 40,
+    "n_total_pairs": 200,
+    "domains": [
+      "arithmetic",
+      "logic"
+    ],
+    "top_features": [
+      125,
+      74,
+      126,
+      180,
+      127,
+      78,
+      162,
+      15,
+      16,
+      17,
+      167,
+      79,
+      168,
+      22,
+      171,
+      175,
+      77,
+      166,
+      169,
+      114
+    ],
+    "refinement_threshold_multiplier": 1.5,
+    "baseline_epochs": 100,
+    "finetune_epochs": 10,
+    "baseline_lr": 0.01,
+    "finetune_lr": 0.005,
+    "weight_decay": 0.001,
+    "seed": 153
+  },
+  "summary": {
+    "auroc_before": 0.875,
+    "auroc_before_ci": [
+      0.780625,
+      0.945
+    ],
+    "auroc_after": 0.875,
+    "auroc_after_ci": [
+      0.780625,
+      0.945
+    ],
+    "auroc_delta": 0.0,
+    "target_auroc_met": true,
+    "params_before": 2310,
+    "params_after": 2281,
+    "param_delta": -29,
+    "param_delta_pct": -1.2554112554112553,
+    "target_param_met": true,
+    "added_knots": 36,
+    "removed_knots": 65,
+    "energy_gap_before": 95.35922241210938,
+    "energy_gap_after": 100.12012481689453
+  },
+  "curvature_analysis": {
+    "before": {
+      "stats": {
+        "mean": 2.049646930337124,
+        "std": 1.36084313268845,
+        "min": 0.2000449225306511,
+        "max": 5.669678025878966,
+        "p25": 0.7470797601854429,
+        "p75": 2.844020312477369
+      },
+      "top_edges": [
+        {
+          "edge": [
+            2,
+            7
+          ],
+          "curvature": 5.669678025878966
+        },
+        {
+          "edge": [
+            0,
+            8
+          ],
+          "curvature": 5.641038250178099
+        },
+        {
+          "edge": [
+            1,
+            8
+          ],
+          "curvature": 5.612212224514224
+        },
+        {
+          "edge": [
+            2,
+            8
+          ],
+          "curvature": 5.546686690649949
+        },
+        {
+          "edge": [
+            1,
+            7
+          ],
+          "curvature": 5.505704460665584
+        },
+        {
+          "edge": [
+            0,
+            7
+          ],
+          "curvature": 5.466632358729839
+        },
+        {
+          "edge": [
+            0,
+            9
+          ],
+          "curvature": 5.407133232802153
+        },
+        {
+          "edge": [
+            2,
+            9
+          ],
+          "curvature": 5.366826697718352
+        },
+        {
+          "edge": [
+            1,
+            9
+          ],
+          "curvature": 5.246399343013763
+        },
+        {
+          "edge": [
+            4,
+            8
+          ],
+          "curvature": 4.431171540636569
+        }
+      ],
+      "bottom_edges": [
+        {
+          "edge": [
+            12,
+            15
+          ],
+          "curvature": 0.35690157674252987
+        },
+        {
+          "edge": [
+            14,
+            17
+          ],
+          "curvature": 0.3390358207980171
+        },
+        {
+          "edge": [
+            1,
+            14
+          ],
+          "curvature": 0.3274436283390969
+        },
+        {
+          "edge": [
+            9,
+            18
+          ],
+          "curvature": 0.29963760753162205
+        },
+        {
+          "edge": [
+            11,
+            16
+          ],
+          "curvature": 0.28197020292282104
+        },
+        {
+          "edge": [
+            12,
+            13
+          ],
+          "curvature": 0.2779715694487095
+        },
+        {
+          "edge": [
+            7,
+            16
+          ],
+          "curvature": 0.26281746104359627
+        },
+        {
+          "edge": [
+            9,
+            16
+          ],
+          "curvature": 0.223912630463019
+        },
+        {
+          "edge": [
+            12,
+            16
+          ],
+          "curvature": 0.21756994538009167
+        },
+        {
+          "edge": [
+            1,
+            2
+          ],
+          "curvature": 0.2000449225306511
+        }
+      ]
+    },
+    "after": {
+      "stats": {
+        "mean": 2.613832784826579,
+        "std": 1.292471244237985,
+        "min": 0.4924453794956207,
+        "max": 6.5150882583111525,
+        "p25": 1.6341392838512547,
+        "p75": 3.091044322354719
+      },
+      "top_edges": [
+        {
+          "edge": [
+            2,
+            7
+          ],
+          "curvature": 6.5150882583111525
+        },
+        {
+          "edge": [
+            0,
+            8
+          ],
+          "curvature": 6.483459006994963
+        },
+        {
+          "edge": [
+            2,
+            8
+          ],
+          "curvature": 6.477359801647253
+        },
+        {
+          "edge": [
+            1,
+            8
+          ],
+          "curvature": 6.4550225681159645
+        },
+        {
+          "edge": [
+            0,
+            7
+          ],
+          "curvature": 6.291591981425881
+        },
+        {
+          "edge": [
+            1,
+            7
+          ],
+          "curvature": 6.20827148668468
+        },
+        {
+          "edge": [
+            2,
+            9
+          ],
+          "curvature": 6.168471369892359
+        },
+        {
+          "edge": [
+            0,
+            9
+          ],
+          "curvature": 6.092207320034504
+        },
+        {
+          "edge": [
+            1,
+            9
+          ],
+          "curvature": 6.040246272459626
+        },
+        {
+          "edge": [
+            4,
+            8
+          ],
+          "curvature": 5.107838101685047
+        }
+      ],
+      "bottom_edges": [
+        {
+          "edge": [
+            11,
+            13
+          ],
+          "curvature": 1.0680724284611642
+        },
+        {
+          "edge": [
+            14,
+            17
+          ],
+          "curvature": 0.9212092627421953
+        },
+        {
+          "edge": [
+            12,
+            15
+          ],
+          "curvature": 0.9168763644993305
+        },
+        {
+          "edge": [
+            12,
+            13
+          ],
+          "curvature": 0.9019236080348492
+        },
+        {
+          "edge": [
+            7,
+            16
+          ],
+          "curvature": 0.8989305701106787
+        },
+        {
+          "edge": [
+            1,
+            14
+          ],
+          "curvature": 0.8172077825292945
+        },
+        {
+          "edge": [
+            11,
+            16
+          ],
+          "curvature": 0.7964628632180393
+        },
+        {
+          "edge": [
+            9,
+            16
+          ],
+          "curvature": 0.6944053107872605
+        },
+        {
+          "edge": [
+            12,
+            16
+          ],
+          "curvature": 0.6421157158911228
+        },
+        {
+          "edge": [
+            1,
+            2
+          ],
+          "curvature": 0.4924453794956207
+        }
+      ]
+    },
+    "n_ctrl_distribution_after": {
+      "10": 65,
+      "11": 89,
+      "12": 36
+    },
+    "gained_knots_count": 36,
+    "lost_knots_count": 65,
+    "unchanged_count": 89,
+    "gained_edges_sample": [
+      {
+        "edge": [
+          0,
+          7
+        ],
+        "feat_indices": [
+          125,
+          15
+        ],
+        "curvature_before": 5.466632358729839,
+        "curvature_after": 6.291591981425881,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          8
+        ],
+        "feat_indices": [
+          125,
+          16
+        ],
+        "curvature_before": 5.641038250178099,
+        "curvature_after": 6.483459006994963,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          9
+        ],
+        "feat_indices": [
+          125,
+          17
+        ],
+        "curvature_before": 5.407133232802153,
+        "curvature_after": 6.092207320034504,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          7
+        ],
+        "feat_indices": [
+          74,
+          15
+        ],
+        "curvature_before": 5.505704460665584,
+        "curvature_after": 6.20827148668468,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          8
+        ],
+        "feat_indices": [
+          74,
+          16
+        ],
+        "curvature_before": 5.612212224514224,
+        "curvature_after": 6.4550225681159645,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          9
+        ],
+        "feat_indices": [
+          74,
+          17
+        ],
+        "curvature_before": 5.246399343013763,
+        "curvature_after": 6.040246272459626,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          12
+        ],
+        "feat_indices": [
+          74,
+          168
+        ],
+        "curvature_before": 3.32000064663589,
+        "curvature_after": 3.776605287566781,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          7
+        ],
+        "feat_indices": [
+          126,
+          15
+        ],
+        "curvature_before": 5.669678025878966,
+        "curvature_after": 6.5150882583111525,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          8
+        ],
+        "feat_indices": [
+          126,
+          16
+        ],
+        "curvature_before": 5.546686690649949,
+        "curvature_after": 6.477359801647253,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          9
+        ],
+        "feat_indices": [
+          126,
+          17
+        ],
+        "curvature_before": 5.366826697718352,
+        "curvature_after": 6.168471369892359,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          19
+        ],
+        "feat_indices": [
+          180,
+          114
+        ],
+        "curvature_before": 4.027898469939828,
+        "curvature_after": 4.626431176438928,
+        "n_ctrl_after": 12,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          7
+        ],
+        "feat_indices": [
+          127,
+          15
+        ],
+        "curvature_before": 4.287073796149343,
+        "curvature_after": 4.832576832268387,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          8
+        ],
+        "feat_indices": [
+          127,
+          16
+        ],
+        "curvature_before": 4.431171540636569,
+        "curvature_after": 5.107838101685047,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          9
+        ],
+        "feat_indices": [
+          127,
+          17
+        ],
+        "curvature_before": 4.088623961433768,
+        "curvature_after": 4.699091659858823,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          11
+        ],
+        "feat_indices": [
+          127,
+          79
+        ],
+        "curvature_before": 4.101404291577637,
+        "curvature_after": 4.7048324486240745,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          12
+        ],
+        "feat_indices": [
+          127,
+          168
+        ],
+        "curvature_before": 4.132444690912962,
+        "curvature_after": 4.735409561544657,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          7
+        ],
+        "feat_indices": [
+          78,
+          15
+        ],
+        "curvature_before": 4.324365081265569,
+        "curvature_after": 5.087135639041662,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          8
+        ],
+        "feat_indices": [
+          78,
+          16
+        ],
+        "curvature_before": 4.312228760682046,
+        "curvature_after": 4.861681465990841,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          9
+        ],
+        "feat_indices": [
+          78,
+          17
+        ],
+        "curvature_before": 4.405741393566132,
+        "curvature_after": 5.045630037784576,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          11
+        ],
+        "feat_indices": [
+          78,
+          79
+        ],
+        "curvature_before": 4.195724846795201,
+        "curvature_after": 4.721751669421792,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      }
+    ],
+    "lost_edges_sample": [
+      {
+        "edge": [
+          0,
+          1
+        ],
+        "feat_indices": [
+          125,
+          74
+        ],
+        "curvature_before": 0.782164721749723,
+        "curvature_after": 2.3772885790094733,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          2
+        ],
+        "feat_indices": [
+          125,
+          126
+        ],
+        "curvature_before": 0.6155879702419043,
+        "curvature_after": 1.918618381023407,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          14
+        ],
+        "feat_indices": [
+          125,
+          171
+        ],
+        "curvature_before": 0.8480306714773178,
+        "curvature_after": 2.6105349184945226,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          2
+        ],
+        "feat_indices": [
+          74,
+          126
+        ],
+        "curvature_before": 0.2000449225306511,
+        "curvature_after": 0.4924453794956207,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          4
+        ],
+        "feat_indices": [
+          74,
+          127
+        ],
+        "curvature_before": 1.2887315126135945,
+        "curvature_after": 3.481458593159914,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          14
+        ],
+        "feat_indices": [
+          74,
+          171
+        ],
+        "curvature_before": 0.3274436283390969,
+        "curvature_after": 0.8172077825292945,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          4
+        ],
+        "feat_indices": [
+          126,
+          127
+        ],
+        "curvature_before": 1.3161825016140938,
+        "curvature_after": 3.8189027458429337,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          14
+        ],
+        "feat_indices": [
+          126,
+          171
+        ],
+        "curvature_before": 0.4132485017180443,
+        "curvature_after": 1.2120077619329095,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          4
+        ],
+        "feat_indices": [
+          180,
+          127
+        ],
+        "curvature_before": 0.6378648802638054,
+        "curvature_after": 2.035020850598812,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          5
+        ],
+        "feat_indices": [
+          180,
+          78
+        ],
+        "curvature_before": 0.7289160043001175,
+        "curvature_after": 2.140184957534075,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          6
+        ],
+        "feat_indices": [
+          180,
+          162
+        ],
+        "curvature_before": 0.6687180837616324,
+        "curvature_after": 2.0708713098429143,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          7
+        ],
+        "feat_indices": [
+          180,
+          15
+        ],
+        "curvature_before": 1.0405348672065884,
+        "curvature_after": 2.7385601424612105,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          8
+        ],
+        "feat_indices": [
+          180,
+          16
+        ],
+        "curvature_before": 1.1561191640794277,
+        "curvature_after": 3.1823338009417057,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          5
+        ],
+        "feat_indices": [
+          127,
+          78
+        ],
+        "curvature_before": 0.5619750241748989,
+        "curvature_after": 1.812775549478829,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          6
+        ],
+        "feat_indices": [
+          127,
+          162
+        ],
+        "curvature_before": 0.5279393633827567,
+        "curvature_after": 1.6760449390858412,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          6
+        ],
+        "feat_indices": [
+          78,
+          162
+        ],
+        "curvature_before": 0.8039806416491047,
+        "curvature_after": 2.179272088687867,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          10
+        ],
+        "feat_indices": [
+          78,
+          167
+        ],
+        "curvature_before": 1.2672910932451487,
+        "curvature_after": 3.2556974561885,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          7
+        ],
+        "feat_indices": [
+          162,
+          15
+        ],
+        "curvature_before": 0.7048794999718666,
+        "curvature_after": 2.0903456024825573,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          8
+        ],
+        "feat_indices": [
+          162,
+          16
+        ],
+        "curvature_before": 1.1531385825946927,
+        "curvature_after": 2.898859092965722,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          9
+        ],
+        "feat_indices": [
+          162,
+          17
+        ],
+        "curvature_before": 1.0279963491484523,
+        "curvature_after": 2.829159516841173,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      }
+    ]
+  },
+  "training": {
+    "baseline_loss_history": [
+      0.40661590735035136,
+      1.5759671779205746,
+      2.757589254232516,
+      3.9186818429689083,
+      5.089007125503121,
+      6.269987077434417,
+      7.4411357388526085,
+      8.607692150156618,
+      9.77484795675482,
+      10.950486546667525,
+      12.122690617341869,
+      13.289050047684213,
+      14.464789169134928,
+      15.636470289613499,
+      16.80744299502785,
+      17.975344037926696,
+      19.141140452322,
+      20.311111660647292,
+      21.486702966150915,
+      22.65606843654241,
+      23.827093338619306,
+      24.998857848916668,
+      26.167176280928107,
+      27.331642030974034,
+      28.508429127955242,
+      29.674646139015387,
+      30.839723421759846,
+      32.02026061631041,
+      33.180726288520965,
+      34.35765462128329,
+      35.528505456354466,
+      36.69325619780866,
+      37.866990751773116,
+      39.02953521093004,
+      40.20566144390614,
+      41.37661123675643,
+      42.53960409983993,
+      43.707505397763455,
+      44.876545483397784,
+      46.052007129148116,
+      47.21638409103616,
+      48.387923730688634,
+      49.55530060499441,
+      50.72519530626596,
+      51.89228544864163,
+      53.06505036767048,
+      54.22627781716583,
+      55.39405829570315,
+      56.56932767130784,
+      57.73781087866227,
+      58.89571219041536,
+      60.073030608214324,
+      61.24508453755989,
+      62.41201828417543,
+      63.57540181112999,
+      64.74125417384494,
+      65.91513284468093,
+      67.0803274349295,
+      68.25289463180525,
+      69.42393609282881,
+      70.58688585319105,
+      71.75707984854088,
+      72.91431875075796,
+      74.08955348899471,
+      75.26319728963536,
+      76.4271695720643,
+      77.58447703537459,
+      78.76097228778163,
+      79.92637779773796,
+      81.09768053377266,
+      82.26323140472887,
+      83.4289057573038,
+      84.58564980455216,
+      85.764034748001,
+      86.92445678462204,
+      88.098873886836,
+      89.2646198526816,
+      90.43254614757534,
+      91.59304827684427,
+      92.7612697163,
+      93.93013732369437,
+      95.09641300287913,
+      96.26586407508731,
+      97.43497736279679,
+      98.59359431656193,
+      99.76946595606714,
+      100.93248494453437,
+      102.09197675245814,
+      103.2648499989984,
+      104.427727964925,
+      105.59520502906526,
+      106.76178467960126,
+      107.92478224536899,
+      109.09053584531503,
+      110.26203429872548,
+      111.42105045667559,
+      112.58447785787284,
+      113.74860352907999,
+      114.92291706396936,
+      116.09028412987463
+    ],
+    "finetune_loss_history": [
+      117.02280113958696,
+      117.60457755058887,
+      118.19258372842451,
+      118.77019460377633,
+      119.3524768023577,
+      119.94012576639071,
+      120.52293794747092,
+      121.10331259242375,
+      121.6841597042774,
+      122.26910467651905
+    ]
+  },
+  "interpretability": {
+    "high_curvature_edges": [
+      {
+        "edge": [
+          0,
+          7
+        ],
+        "feat_indices": [
+          125,
+          15
+        ],
+        "curvature_before": 5.466632358729839,
+        "curvature_after": 6.291591981425881,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          8
+        ],
+        "feat_indices": [
+          125,
+          16
+        ],
+        "curvature_before": 5.641038250178099,
+        "curvature_after": 6.483459006994963,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          9
+        ],
+        "feat_indices": [
+          125,
+          17
+        ],
+        "curvature_before": 5.407133232802153,
+        "curvature_after": 6.092207320034504,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          7
+        ],
+        "feat_indices": [
+          74,
+          15
+        ],
+        "curvature_before": 5.505704460665584,
+        "curvature_after": 6.20827148668468,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          8
+        ],
+        "feat_indices": [
+          74,
+          16
+        ],
+        "curvature_before": 5.612212224514224,
+        "curvature_after": 6.4550225681159645,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          9
+        ],
+        "feat_indices": [
+          74,
+          17
+        ],
+        "curvature_before": 5.246399343013763,
+        "curvature_after": 6.040246272459626,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          12
+        ],
+        "feat_indices": [
+          74,
+          168
+        ],
+        "curvature_before": 3.32000064663589,
+        "curvature_after": 3.776605287566781,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          7
+        ],
+        "feat_indices": [
+          126,
+          15
+        ],
+        "curvature_before": 5.669678025878966,
+        "curvature_after": 6.5150882583111525,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          8
+        ],
+        "feat_indices": [
+          126,
+          16
+        ],
+        "curvature_before": 5.546686690649949,
+        "curvature_after": 6.477359801647253,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          9
+        ],
+        "feat_indices": [
+          126,
+          17
+        ],
+        "curvature_before": 5.366826697718352,
+        "curvature_after": 6.168471369892359,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          19
+        ],
+        "feat_indices": [
+          180,
+          114
+        ],
+        "curvature_before": 4.027898469939828,
+        "curvature_after": 4.626431176438928,
+        "n_ctrl_after": 12,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          7
+        ],
+        "feat_indices": [
+          127,
+          15
+        ],
+        "curvature_before": 4.287073796149343,
+        "curvature_after": 4.832576832268387,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          8
+        ],
+        "feat_indices": [
+          127,
+          16
+        ],
+        "curvature_before": 4.431171540636569,
+        "curvature_after": 5.107838101685047,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          9
+        ],
+        "feat_indices": [
+          127,
+          17
+        ],
+        "curvature_before": 4.088623961433768,
+        "curvature_after": 4.699091659858823,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          11
+        ],
+        "feat_indices": [
+          127,
+          79
+        ],
+        "curvature_before": 4.101404291577637,
+        "curvature_after": 4.7048324486240745,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          12
+        ],
+        "feat_indices": [
+          127,
+          168
+        ],
+        "curvature_before": 4.132444690912962,
+        "curvature_after": 4.735409561544657,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          7
+        ],
+        "feat_indices": [
+          78,
+          15
+        ],
+        "curvature_before": 4.324365081265569,
+        "curvature_after": 5.087135639041662,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          8
+        ],
+        "feat_indices": [
+          78,
+          16
+        ],
+        "curvature_before": 4.312228760682046,
+        "curvature_after": 4.861681465990841,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          9
+        ],
+        "feat_indices": [
+          78,
+          17
+        ],
+        "curvature_before": 4.405741393566132,
+        "curvature_after": 5.045630037784576,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          11
+        ],
+        "feat_indices": [
+          78,
+          79
+        ],
+        "curvature_before": 4.195724846795201,
+        "curvature_after": 4.721751669421792,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          12
+        ],
+        "feat_indices": [
+          78,
+          168
+        ],
+        "curvature_before": 3.943173633888364,
+        "curvature_after": 4.533671215176582,
+        "n_ctrl_after": 12,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          16
+        ],
+        "feat_indices": [
+          162,
+          77
+        ],
+        "curvature_before": 3.951168432831764,
+        "curvature_after": 4.447193583473563,
+        "n_ctrl_after": 12,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          19
+        ],
+        "feat_indices": [
+          162,
+          114
+        ],
+        "curvature_before": 3.658386692404747,
+        "curvature_after": 4.20335796661675,
+        "n_ctrl_after": 12,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          8
+        ],
+        "feat_indices": [
+          15,
+          16
+        ],
+        "curvature_before": 3.5259924130514264,
+        "curvature_after": 4.052575095556676,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 numeric (within-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          9
+        ],
+        "feat_indices": [
+          15,
+          17
+        ],
+        "curvature_before": 3.21686202660203,
+        "curvature_after": 3.6950047593563795,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 numeric (within-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          10
+        ],
+        "feat_indices": [
+          15,
+          167
+        ],
+        "curvature_before": 3.192626894451678,
+        "curvature_after": 3.7085851654410362,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          12
+        ],
+        "feat_indices": [
+          15,
+          168
+        ],
+        "curvature_before": 3.1569629907608032,
+        "curvature_after": 3.5553176887333393,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          14
+        ],
+        "feat_indices": [
+          15,
+          171
+        ],
+        "curvature_before": 3.206011652946472,
+        "curvature_after": 3.6747266771271825,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          15
+        ],
+        "feat_indices": [
+          15,
+          175
+        ],
+        "curvature_before": 3.135679103434086,
+        "curvature_after": 3.5343012772500515,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          17
+        ],
+        "feat_indices": [
+          15,
+          166
+        ],
+        "curvature_before": 3.1932353071169928,
+        "curvature_after": 3.6542596149956807,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          9
+        ],
+        "feat_indices": [
+          16,
+          17
+        ],
+        "curvature_before": 3.080927161499858,
+        "curvature_after": 3.477044915780425,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 numeric (within-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          11
+        ],
+        "feat_indices": [
+          16,
+          79
+        ],
+        "curvature_before": 3.2274513505399227,
+        "curvature_after": 3.634075541049242,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          12
+        ],
+        "feat_indices": [
+          16,
+          168
+        ],
+        "curvature_before": 3.1752081704325974,
+        "curvature_after": 3.644003567751497,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          14
+        ],
+        "feat_indices": [
+          16,
+          171
+        ],
+        "curvature_before": 3.1804941594600677,
+        "curvature_after": 3.6538585321977735,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          15
+        ],
+        "feat_indices": [
+          16,
+          175
+        ],
+        "curvature_before": 3.4291745454538614,
+        "curvature_after": 3.9202711661346257,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          17
+        ],
+        "feat_indices": [
+          16,
+          166
+        ],
+        "curvature_before": 3.322886349633336,
+        "curvature_after": 3.7987126503139734,
+        "n_ctrl_after": 12,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      }
+    ],
+    "low_curvature_edges": [
+      {
+        "edge": [
+          0,
+          1
+        ],
+        "feat_indices": [
+          125,
+          74
+        ],
+        "curvature_before": 0.782164721749723,
+        "curvature_after": 2.3772885790094733,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          2
+        ],
+        "feat_indices": [
+          125,
+          126
+        ],
+        "curvature_before": 0.6155879702419043,
+        "curvature_after": 1.918618381023407,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          0,
+          14
+        ],
+        "feat_indices": [
+          125,
+          171
+        ],
+        "curvature_before": 0.8480306714773178,
+        "curvature_after": 2.6105349184945226,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          2
+        ],
+        "feat_indices": [
+          74,
+          126
+        ],
+        "curvature_before": 0.2000449225306511,
+        "curvature_after": 0.4924453794956207,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          4
+        ],
+        "feat_indices": [
+          74,
+          127
+        ],
+        "curvature_before": 1.2887315126135945,
+        "curvature_after": 3.481458593159914,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          1,
+          14
+        ],
+        "feat_indices": [
+          74,
+          171
+        ],
+        "curvature_before": 0.3274436283390969,
+        "curvature_after": 0.8172077825292945,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          4
+        ],
+        "feat_indices": [
+          126,
+          127
+        ],
+        "curvature_before": 1.3161825016140938,
+        "curvature_after": 3.8189027458429337,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          2,
+          14
+        ],
+        "feat_indices": [
+          126,
+          171
+        ],
+        "curvature_before": 0.4132485017180443,
+        "curvature_after": 1.2120077619329095,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          4
+        ],
+        "feat_indices": [
+          180,
+          127
+        ],
+        "curvature_before": 0.6378648802638054,
+        "curvature_after": 2.035020850598812,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          5
+        ],
+        "feat_indices": [
+          180,
+          78
+        ],
+        "curvature_before": 0.7289160043001175,
+        "curvature_after": 2.140184957534075,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          6
+        ],
+        "feat_indices": [
+          180,
+          162
+        ],
+        "curvature_before": 0.6687180837616324,
+        "curvature_after": 2.0708713098429143,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          7
+        ],
+        "feat_indices": [
+          180,
+          15
+        ],
+        "curvature_before": 1.0405348672065884,
+        "curvature_after": 2.7385601424612105,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          3,
+          8
+        ],
+        "feat_indices": [
+          180,
+          16
+        ],
+        "curvature_before": 1.1561191640794277,
+        "curvature_after": 3.1823338009417057,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          5
+        ],
+        "feat_indices": [
+          127,
+          78
+        ],
+        "curvature_before": 0.5619750241748989,
+        "curvature_after": 1.812775549478829,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          4,
+          6
+        ],
+        "feat_indices": [
+          127,
+          162
+        ],
+        "curvature_before": 0.5279393633827567,
+        "curvature_after": 1.6760449390858412,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          6
+        ],
+        "feat_indices": [
+          78,
+          162
+        ],
+        "curvature_before": 0.8039806416491047,
+        "curvature_after": 2.179272088687867,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          5,
+          10
+        ],
+        "feat_indices": [
+          78,
+          167
+        ],
+        "curvature_before": 1.2672910932451487,
+        "curvature_after": 3.2556974561885,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          7
+        ],
+        "feat_indices": [
+          162,
+          15
+        ],
+        "curvature_before": 0.7048794999718666,
+        "curvature_after": 2.0903456024825573,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          8
+        ],
+        "feat_indices": [
+          162,
+          16
+        ],
+        "curvature_before": 1.1531385825946927,
+        "curvature_after": 2.898859092965722,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          9
+        ],
+        "feat_indices": [
+          162,
+          17
+        ],
+        "curvature_before": 1.0279963491484523,
+        "curvature_after": 2.829159516841173,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 numeric (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          10
+        ],
+        "feat_indices": [
+          162,
+          167
+        ],
+        "curvature_before": 0.9696794673800468,
+        "curvature_after": 2.569186594337225,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          11
+        ],
+        "feat_indices": [
+          162,
+          79
+        ],
+        "curvature_before": 1.2272772612050176,
+        "curvature_after": 3.2630117842927575,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          12
+        ],
+        "feat_indices": [
+          162,
+          168
+        ],
+        "curvature_before": 1.1452718637883663,
+        "curvature_after": 3.0946779996156693,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          6,
+          14
+        ],
+        "feat_indices": [
+          162,
+          171
+        ],
+        "curvature_before": 1.2890510726720095,
+        "curvature_after": 3.286703350022435,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          13
+        ],
+        "feat_indices": [
+          15,
+          22
+        ],
+        "curvature_before": 0.82317388150841,
+        "curvature_after": 2.2835102630779147,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 structural (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          16
+        ],
+        "feat_indices": [
+          15,
+          77
+        ],
+        "curvature_before": 0.26281746104359627,
+        "curvature_after": 0.8989305701106787,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          18
+        ],
+        "feat_indices": [
+          15,
+          169
+        ],
+        "curvature_before": 0.7328964158659801,
+        "curvature_after": 2.1503943135030568,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          7,
+          19
+        ],
+        "feat_indices": [
+          15,
+          114
+        ],
+        "curvature_before": 0.8164737781044096,
+        "curvature_after": 2.1177948568947613,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          13
+        ],
+        "feat_indices": [
+          16,
+          22
+        ],
+        "curvature_before": 0.5733275320380926,
+        "curvature_after": 1.6942616552114487,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 structural (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          16
+        ],
+        "feat_indices": [
+          16,
+          77
+        ],
+        "curvature_before": 0.6093105301260948,
+        "curvature_after": 1.7350205220282078,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          18
+        ],
+        "feat_indices": [
+          16,
+          169
+        ],
+        "curvature_before": 0.7740018656477332,
+        "curvature_after": 2.1502458257600665,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          8,
+          19
+        ],
+        "feat_indices": [
+          16,
+          114
+        ],
+        "curvature_before": 0.7381057250313461,
+        "curvature_after": 2.162546571344137,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          9,
+          13
+        ],
+        "feat_indices": [
+          17,
+          22
+        ],
+        "curvature_before": 0.7246162742376328,
+        "curvature_after": 2.1029649768024683,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 structural (cross-group interaction)"
+      },
+      {
+        "edge": [
+          9,
+          16
+        ],
+        "feat_indices": [
+          17,
+          77
+        ],
+        "curvature_before": 0.223912630463019,
+        "curvature_after": 0.6944053107872605,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          9,
+          18
+        ],
+        "feat_indices": [
+          17,
+          169
+        ],
+        "curvature_before": 0.29963760753162205,
+        "curvature_after": 1.1011393857188523,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          9,
+          19
+        ],
+        "feat_indices": [
+          17,
+          114
+        ],
+        "curvature_before": 0.60577099211514,
+        "curvature_after": 1.5953263267874718,
+        "n_ctrl_after": 10,
+        "semantics": "numeric \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          10,
+          13
+        ],
+        "feat_indices": [
+          167,
+          22
+        ],
+        "curvature_before": 0.6215036613866687,
+        "curvature_after": 1.7420840449631214,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 structural (cross-group interaction)"
+      },
+      {
+        "edge": [
+          10,
+          14
+        ],
+        "feat_indices": [
+          167,
+          171
+        ],
+        "curvature_before": 0.4235415253788233,
+        "curvature_after": 1.2385624228045344,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          10,
+          15
+        ],
+        "feat_indices": [
+          167,
+          175
+        ],
+        "curvature_before": 0.45004079584032297,
+        "curvature_after": 1.3857392128556967,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          10,
+          16
+        ],
+        "feat_indices": [
+          167,
+          77
+        ],
+        "curvature_before": 0.7022368488833308,
+        "curvature_after": 1.8289463361725211,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          10,
+          18
+        ],
+        "feat_indices": [
+          167,
+          169
+        ],
+        "curvature_before": 0.49176530446857214,
+        "curvature_after": 1.4201473852153867,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          10,
+          19
+        ],
+        "feat_indices": [
+          167,
+          114
+        ],
+        "curvature_before": 0.5862509831786156,
+        "curvature_after": 1.693770196288824,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          11,
+          12
+        ],
+        "feat_indices": [
+          79,
+          168
+        ],
+        "curvature_before": 0.3801490005571395,
+        "curvature_after": 1.1602131882682443,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          11,
+          13
+        ],
+        "feat_indices": [
+          79,
+          22
+        ],
+        "curvature_before": 0.37057449808344245,
+        "curvature_after": 1.0680724284611642,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 structural (cross-group interaction)"
+      },
+      {
+        "edge": [
+          11,
+          15
+        ],
+        "feat_indices": [
+          79,
+          175
+        ],
+        "curvature_before": 0.45627771178260446,
+        "curvature_after": 1.5369142056442797,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          11,
+          16
+        ],
+        "feat_indices": [
+          79,
+          77
+        ],
+        "curvature_before": 0.28197020292282104,
+        "curvature_after": 0.7964628632180393,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          11,
+          18
+        ],
+        "feat_indices": [
+          79,
+          169
+        ],
+        "curvature_before": 0.5116649786941707,
+        "curvature_after": 1.2515895999968052,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          11,
+          19
+        ],
+        "feat_indices": [
+          79,
+          114
+        ],
+        "curvature_before": 0.459777913056314,
+        "curvature_after": 1.2644920498132706,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 domain_specific (within-group interaction)"
+      },
+      {
+        "edge": [
+          12,
+          13
+        ],
+        "feat_indices": [
+          168,
+          22
+        ],
+        "curvature_before": 0.2779715694487095,
+        "curvature_after": 0.9019236080348492,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 structural (cross-group interaction)"
+      },
+      {
+        "edge": [
+          12,
+          15
+        ],
+        "feat_indices": [
+          168,
+          175
+        ],
+        "curvature_before": 0.35690157674252987,
+        "curvature_after": 0.9168763644993305,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          12,
+          16
+        ],
+        "feat_indices": [
+          168,
+          77
+        ],
+        "curvature_before": 0.21756994538009167,
+        "curvature_after": 0.6421157158911228,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          12,
+          18
+        ],
+        "feat_indices": [
+          168,
+          169
+        ],
+        "curvature_before": 0.6341273430734873,
+        "curvature_after": 2.0389029756188393,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          12,
+          19
+        ],
+        "feat_indices": [
+          168,
+          114
+        ],
+        "curvature_before": 0.5169682204723358,
+        "curvature_after": 1.6018562950193882,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          13,
+          14
+        ],
+        "feat_indices": [
+          22,
+          171
+        ],
+        "curvature_before": 0.5993808154016733,
+        "curvature_after": 1.2568527134135365,
+        "n_ctrl_after": 10,
+        "semantics": "structural \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          13,
+          16
+        ],
+        "feat_indices": [
+          22,
+          77
+        ],
+        "curvature_before": 0.5048031685873866,
+        "curvature_after": 1.5392349101603031,
+        "n_ctrl_after": 10,
+        "semantics": "structural \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          13,
+          17
+        ],
+        "feat_indices": [
+          22,
+          166
+        ],
+        "curvature_before": 0.7140044588595629,
+        "curvature_after": 2.0121365785598755,
+        "n_ctrl_after": 10,
+        "semantics": "structural \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          14,
+          15
+        ],
+        "feat_indices": [
+          171,
+          175
+        ],
+        "curvature_before": 0.5611514672636986,
+        "curvature_after": 1.4322483912110329,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          14,
+          16
+        ],
+        "feat_indices": [
+          171,
+          77
+        ],
+        "curvature_before": 0.7283003418706357,
+        "curvature_after": 2.337978035211563,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      },
+      {
+        "edge": [
+          14,
+          17
+        ],
+        "feat_indices": [
+          171,
+          166
+        ],
+        "curvature_before": 0.3390358207980171,
+        "curvature_after": 0.9212092627421953,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          14,
+          18
+        ],
+        "feat_indices": [
+          171,
+          169
+        ],
+        "curvature_before": 0.4142618738114834,
+        "curvature_after": 1.1650909204035997,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          15,
+          17
+        ],
+        "feat_indices": [
+          175,
+          166
+        ],
+        "curvature_before": 0.39022599812597036,
+        "curvature_after": 1.1339772958308458,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          15,
+          18
+        ],
+        "feat_indices": [
+          175,
+          169
+        ],
+        "curvature_before": 0.5962322989944369,
+        "curvature_after": 1.9038892001844943,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          16,
+          17
+        ],
+        "feat_indices": [
+          77,
+          166
+        ],
+        "curvature_before": 0.38343658670783043,
+        "curvature_after": 1.1723683681339025,
+        "n_ctrl_after": 10,
+        "semantics": "domain_specific \u00d7 consistency (cross-group interaction)"
+      },
+      {
+        "edge": [
+          17,
+          18
+        ],
+        "feat_indices": [
+          166,
+          169
+        ],
+        "curvature_before": 0.5987508222460747,
+        "curvature_after": 1.875478308647871,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 consistency (within-group interaction)"
+      },
+      {
+        "edge": [
+          17,
+          19
+        ],
+        "feat_indices": [
+          166,
+          114
+        ],
+        "curvature_before": 0.5901048425585032,
+        "curvature_after": 1.6783075872808695,
+        "n_ctrl_after": 10,
+        "semantics": "consistency \u00d7 domain_specific (cross-group interaction)"
+      }
+    ],
+    "finding": "High-curvature edges correspond to nonlinear constraint interactions in the learned feature space. Low-curvature edges are near-linear and benefit from knot removal to reduce parameters."
+  }
+}
