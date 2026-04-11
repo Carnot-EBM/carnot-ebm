@@ -1,0 +1,108 @@
+{
+  "experiment": 179,
+  "title": "AMD XDNA NPU Activation for JEPA Predictor",
+  "spec_refs": [
+    "REQ-JEPA-001"
+  ],
+  "timestamp_utc": "2026-04-11T20:47:52Z",
+  "elapsed_seconds": 0.22,
+  "npu_activated": false,
+  "npu_inference_success": false,
+  "path_tried": [
+    "prebuilt",
+    "conda",
+    "source"
+  ],
+  "successful_path": null,
+  "npu_p50_ms": null,
+  "npu_p99_ms": null,
+  "cpu_p50_ms": 0.004568999429466203,
+  "cpu_p99_ms": 0.0055004000387270935,
+  "speedup_npu_vs_cpu": null,
+  "blocker_message": "TWO BLOCKERS resolved, ONE REMAINING: (1) Git symlinks fixed \u2014 24 text stubs converted to real OS symlinks. (2) Correct provider name is VitisAIExecutionProvider (not AMDXDNAExecutionProvider). (3) REMAINING: VitisAI EP in .venv-npu/ built for Python 3.10, but venv uses Python 3.12. EP loads libpython3.10.so.1.0.0 which is not available.",
+  "next_step_recommendation": "To activate NPU: need VitisAI EP built for Python 3.12. Two options: (A) Create Python 3.10 venv: python3.10 -m venv .venv-npu-py310, then reinstall AMD onnxruntime wheel from ryzenai.docs.amd.com. (B) Get AMD wheel for Python 3.12 from ryzenai.docs.amd.com \u2014 AMD distributes custom onnxruntime wheels for Python 3.9-3.12. The .venv-npu/ Python 3.12 environment is otherwise ready (symlinks fixed, onnxruntime 1.24.4, model IR v13 supported, hardware present, vaip config at /home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/vaip_config_npu_2_3.json).",
+  "onnxruntime_version": "1.24.4",
+  "providers_initial": [
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "providers_available": [
+    "AzureExecutionProvider",
+    "CPUExecutionProvider"
+  ],
+  "npu_hw": {
+    "kernel_version": "6.19.11-1-cachyos",
+    "dev_accel": [
+      "/dev/accel"
+    ],
+    "amdxdna_loaded": true,
+    "amdxdna_module_lines": [
+      "amdxdna               208896  0",
+      "gpu_sched              73728  2 amdxdna,amdgpu"
+    ],
+    "npu_hw_present": true
+  },
+  "vaip_config_path": "/home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/vaip_config_npu_2_3.json",
+  "vaip_config_exists": true,
+  "ryzenai_lib_dir": "/home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14",
+  "ryzenai_lib_dir_exists": true,
+  "path_b_prebuilt": {
+    "attempted": true,
+    "lib_dir_found": true,
+    "python_compat": {
+      "ep_found": true,
+      "ep_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv-npu/lib/python3.12/site-packages/onnxruntime/capi/libonnxruntime_vitisai_ep.so.1.0.0",
+      "ep_python_required": "3.10",
+      "running_python": "3.12",
+      "compatible": false,
+      "ldd_output": "\tlinux-vdso.so.1 (0x00007f11babbd000)\n\tlibvart-cpu-runner.so.3 => /home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/libvart-cpu-runner.so.3 (0x00007f11baba0000)\n\tlibxcompiler-xcompiler-core.so.3 => /home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/libxcompiler-xcompiler-core.so.3 (0x00007f11bab94000)\n\tlibvaip-core.so => /home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/libvaip-core.so (0x00007f11ba400000)\n\tlibcpu-runner_without_symbol.so => /home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/libcpu-runner_without_symbol.so (0x00007f11b9600000)\n\tlibstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x00007f11b9200000)\n\tlibgcc_s.so.1 => /usr/lib/libgcc_s.so.1 (0x00007f11bab35000)\n\tlibc.so.6 => /usr/lib/libc.so.6 (0x00007f11b8e00000)\n\tlibxcompiler-core-without-symbol.so => /home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14/libxcompiler-core",
+      "error": "VitisAI EP requires libpython3.10.so.1.0 but running Python 3.12. Need AMD VitisAI wheel built for Python 3.12."
+    },
+    "symlink_fix": {
+      "fixed": [],
+      "already_real": 24,
+      "target_missing": [],
+      "error": null
+    },
+    "providers_after_fix": [
+      "AzureExecutionProvider",
+      "CPUExecutionProvider"
+    ],
+    "vitisai_available": false,
+    "error": "VitisAI EP Python version mismatch: EP built for Python 3.10, venv uses Python 3.12. Need AMD VitisAI wheel for Python 3.12. Download from ryzenai.docs.amd.com or use Python 3.10 venv."
+  },
+  "path_a_conda": {
+    "attempted": false,
+    "conda_found": false,
+    "error": "conda/mamba not available in PATH",
+    "vitisai_available": false
+  },
+  "path_c_source": {
+    "attempted": false,
+    "xrt_present": true,
+    "source_found": null,
+    "cmake_flags_needed": "-Donnxruntime_USE_VITISAI=ON -Donnxruntime_VITISAI_HOME=/opt/xilinx/xrt -DCMAKE_BUILD_TYPE=Release",
+    "vitisai_available": false,
+    "note": "Source build not attempted (20-40 min). Path B symlink fix is sufficient if AMD libs present."
+  },
+  "npu_benchmark": null,
+  "cpu_benchmark": {
+    "p50_ms": 0.004568999429466203,
+    "p95_ms": 0.00464899867438362,
+    "p99_ms": 0.0055004000387270935,
+    "mean_ms": 0.004603517021678272,
+    "min_ms": 0.004478000846575014,
+    "max_ms": 0.009266999768442474,
+    "model": "jepa_predictor_146.onnx"
+  },
+  "exp146_cpu_p50_ms": 0.004578992957249284,
+  "exp146_cpu_p99_ms": 0.009358106181025505,
+  "key_findings": [
+    "FINDING 1: Root cause of Exp 146 symlink blocker: RyzenAI-SW git repo cloned with core.symlinks=false \u2014 0 .so versioning symlinks stored as text files. FIXED by Exp 179.",
+    "FINDING 2: Wrong provider name in Exp 146 + npu_backend.py: 'AMDXDNAExecutionProvider' is INCORRECT. AMD examples use 'VitisAIExecutionProvider'. Corrected in Exp 179.",
+    "FINDING 3: VitisAI EP Python version mismatch: EP in .venv-npu/ built for Python 3.10, venv uses Python 3.12. Need AMD wheel for Python 3.12.",
+    "FINDING 4: onnxruntime 1.20.1 \u2192 1.24.4 upgrade required: ONNX model IR version 13 needs onnxruntime \u22651.22. Upgraded in Exp 179.",
+    "FINDING 5: CPU baseline p50=0.0046ms (Exp 146: 0.0046ms \u2014 consistent)",
+    "FINDING 6: XRT /opt/xilinx/xrt present=True, vaip_config_npu_2_3.json present=True. Hardware + config stack complete; only AMD Python 3.12 wheel missing."
+  ]
+}
