@@ -1,0 +1,344 @@
+{
+  "experiment": 168,
+  "description": "JEPA fast-path v3 validation \u2014 domain-specific symbolic embedding heads",
+  "date": "20260411",
+  "target_models_reference": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "references": {
+    "exp_145": "v1 baseline benchmark",
+    "exp_156": "v2 benchmark (target_met=false, code errors dominated)",
+    "exp_166": "symbolic logic feature vectors (training data for v3)",
+    "exp_167": "v3 predictor training (domain-specific embeddings)"
+  },
+  "predictor_versions": {
+    "v3_path": "results/jepa_predictor_v3.safetensors",
+    "v3_embedding_strategy": "logic: 40-dim symbolic features padded to 256, L2-norm; arithmetic/code: RandomProjection",
+    "v2_macro_auroc_from_exp155": 0.6588828939009381,
+    "v2_logic_auroc_from_exp155": 0.479,
+    "v3_logic_auroc_target": 0.7,
+    "v3_macro_auroc_target": 0.75
+  },
+  "n_total": 500,
+  "n_arithmetic": 200,
+  "n_code": 200,
+  "n_logic": 100,
+  "seed": 42,
+  "targets": {
+    "fast_path_rate_min": 0.4,
+    "max_accuracy_degradation": 0.02
+  },
+  "baseline": {
+    "total_time_s": 0.0383634090248961,
+    "n_verified": 397,
+    "gt_accuracy": 0.78
+  },
+  "thresholds": [
+    {
+      "threshold": 0.3,
+      "v3": {
+        "fast_path_rate": 0.222,
+        "fast_path_count": 111,
+        "slow_path_count": 389,
+        "fast_path_accuracy": 0.8018018018018018,
+        "slow_path_accuracy": 1.0,
+        "overall_accuracy": 0.956,
+        "accuracy_degradation": 0.04400000000000004,
+        "n_fast_path_errors": 22,
+        "total_time_s": 1.101015191001352,
+        "speedup_vs_baseline": 0.03484366913230809,
+        "target_fast_path_met": false,
+        "target_degradation_met": false,
+        "per_domain_fast_path_accuracy": {
+          "arithmetic": null,
+          "code": 0.8018018018018018,
+          "logic": null
+        },
+        "per_domain_fast_path_count": {
+          "arithmetic": 0,
+          "code": 111,
+          "logic": 0
+        },
+        "embedding_strategy": "symbolic_logic_rp_others"
+      },
+      "v2_comparison": {
+        "fast_path_rate": 0.334,
+        "accuracy_degradation": 0.08399999999999996,
+        "fast_path_rate_delta": -0.11200000000000002,
+        "degradation_delta": -0.039999999999999925,
+        "source": "live_run"
+      },
+      "v1_comparison": {
+        "fast_path_rate": 0.38,
+        "accuracy_degradation": 0.11599999999999999,
+        "fast_path_rate_delta": -0.158,
+        "degradation_delta": -0.07199999999999995,
+        "source": "live_run"
+      }
+    },
+    {
+      "threshold": 0.5,
+      "v3": {
+        "fast_path_rate": 0.4,
+        "fast_path_count": 200,
+        "slow_path_count": 300,
+        "fast_path_accuracy": 0.79,
+        "slow_path_accuracy": 1.0,
+        "overall_accuracy": 0.916,
+        "accuracy_degradation": 0.08399999999999996,
+        "n_fast_path_errors": 42,
+        "total_time_s": 0.5667415189964231,
+        "speedup_vs_baseline": 0.06769119208493744,
+        "target_fast_path_met": true,
+        "target_degradation_met": false,
+        "per_domain_fast_path_accuracy": {
+          "arithmetic": null,
+          "code": 0.79,
+          "logic": null
+        },
+        "per_domain_fast_path_count": {
+          "arithmetic": 0,
+          "code": 200,
+          "logic": 0
+        },
+        "embedding_strategy": "symbolic_logic_rp_others"
+      },
+      "v2_comparison": {
+        "fast_path_rate": 0.528,
+        "accuracy_degradation": 0.10199999999999998,
+        "fast_path_rate_delta": -0.128,
+        "degradation_delta": -0.018000000000000016,
+        "source": "live_run"
+      },
+      "v1_comparison": {
+        "fast_path_rate": 0.954,
+        "accuracy_degradation": 0.19799999999999995,
+        "fast_path_rate_delta": -0.5539999999999999,
+        "degradation_delta": -0.11399999999999999,
+        "source": "live_run"
+      }
+    },
+    {
+      "threshold": 0.7,
+      "v3": {
+        "fast_path_rate": 0.516,
+        "fast_path_count": 258,
+        "slow_path_count": 242,
+        "fast_path_accuracy": 0.7364341085271318,
+        "slow_path_accuracy": 1.0,
+        "overall_accuracy": 0.864,
+        "accuracy_degradation": 0.136,
+        "n_fast_path_errors": 68,
+        "total_time_s": 0.5551038820121903,
+        "speedup_vs_baseline": 0.06911032379350866,
+        "target_fast_path_met": true,
+        "target_degradation_met": false,
+        "per_domain_fast_path_accuracy": {
+          "arithmetic": 0.5517241379310345,
+          "code": 0.79,
+          "logic": null
+        },
+        "per_domain_fast_path_count": {
+          "arithmetic": 58,
+          "code": 200,
+          "logic": 0
+        },
+        "embedding_strategy": "symbolic_logic_rp_others"
+      },
+      "v2_comparison": {
+        "fast_path_rate": 0.784,
+        "accuracy_degradation": 0.18999999999999995,
+        "fast_path_rate_delta": -0.268,
+        "degradation_delta": -0.05399999999999994,
+        "source": "live_run"
+      },
+      "v1_comparison": {
+        "fast_path_rate": 1.0,
+        "accuracy_degradation": 0.20599999999999996,
+        "fast_path_rate_delta": -0.484,
+        "degradation_delta": -0.06999999999999995,
+        "source": "live_run"
+      }
+    }
+  ],
+  "optimal_threshold": null,
+  "target_met": false,
+  "error_analysis": [
+    {
+      "mode": "v3_threshold=0.3",
+      "n_errors": 22,
+      "domain_counts": {
+        "code": 22
+      },
+      "avg_jepa_max_prob": 0.193197563290596,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "code"
+    },
+    {
+      "mode": "v3_threshold=0.5",
+      "n_errors": 42,
+      "domain_counts": {
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.25099714526108335,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "code"
+    },
+    {
+      "mode": "v3_threshold=0.7",
+      "n_errors": 68,
+      "domain_counts": {
+        "arithmetic": 26,
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.4012621400110862,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "code"
+    }
+  ],
+  "v1_v2_v3_comparison": {
+    "source_experiments": {
+      "v1": "Exp 145",
+      "v2": "Exp 156 (and live runs in Exp 168)",
+      "v3": "Exp 168 (domain-specific symbolic embeddings)"
+    },
+    "by_threshold": [
+      {
+        "threshold": 0.3,
+        "v3": {
+          "fast_path_rate": 0.222,
+          "fast_path_count": 111,
+          "slow_path_count": 389,
+          "fast_path_accuracy": 0.8018018018018018,
+          "slow_path_accuracy": 1.0,
+          "overall_accuracy": 0.956,
+          "accuracy_degradation": 0.04400000000000004,
+          "n_fast_path_errors": 22,
+          "total_time_s": 1.101015191001352,
+          "speedup_vs_baseline": 0.03484366913230809,
+          "target_fast_path_met": false,
+          "target_degradation_met": false,
+          "per_domain_fast_path_accuracy": {
+            "arithmetic": null,
+            "code": 0.8018018018018018,
+            "logic": null
+          },
+          "per_domain_fast_path_count": {
+            "arithmetic": 0,
+            "code": 111,
+            "logic": 0
+          },
+          "embedding_strategy": "symbolic_logic_rp_others"
+        },
+        "v2_comparison": {
+          "fast_path_rate": 0.334,
+          "accuracy_degradation": 0.08399999999999996,
+          "fast_path_rate_delta": -0.11200000000000002,
+          "degradation_delta": -0.039999999999999925,
+          "source": "live_run"
+        },
+        "v1_comparison": {
+          "fast_path_rate": 0.38,
+          "accuracy_degradation": 0.11599999999999999,
+          "fast_path_rate_delta": -0.158,
+          "degradation_delta": -0.07199999999999995,
+          "source": "live_run"
+        }
+      },
+      {
+        "threshold": 0.5,
+        "v3": {
+          "fast_path_rate": 0.4,
+          "fast_path_count": 200,
+          "slow_path_count": 300,
+          "fast_path_accuracy": 0.79,
+          "slow_path_accuracy": 1.0,
+          "overall_accuracy": 0.916,
+          "accuracy_degradation": 0.08399999999999996,
+          "n_fast_path_errors": 42,
+          "total_time_s": 0.5667415189964231,
+          "speedup_vs_baseline": 0.06769119208493744,
+          "target_fast_path_met": true,
+          "target_degradation_met": false,
+          "per_domain_fast_path_accuracy": {
+            "arithmetic": null,
+            "code": 0.79,
+            "logic": null
+          },
+          "per_domain_fast_path_count": {
+            "arithmetic": 0,
+            "code": 200,
+            "logic": 0
+          },
+          "embedding_strategy": "symbolic_logic_rp_others"
+        },
+        "v2_comparison": {
+          "fast_path_rate": 0.528,
+          "accuracy_degradation": 0.10199999999999998,
+          "fast_path_rate_delta": -0.128,
+          "degradation_delta": -0.018000000000000016,
+          "source": "live_run"
+        },
+        "v1_comparison": {
+          "fast_path_rate": 0.954,
+          "accuracy_degradation": 0.19799999999999995,
+          "fast_path_rate_delta": -0.5539999999999999,
+          "degradation_delta": -0.11399999999999999,
+          "source": "live_run"
+        }
+      },
+      {
+        "threshold": 0.7,
+        "v3": {
+          "fast_path_rate": 0.516,
+          "fast_path_count": 258,
+          "slow_path_count": 242,
+          "fast_path_accuracy": 0.7364341085271318,
+          "slow_path_accuracy": 1.0,
+          "overall_accuracy": 0.864,
+          "accuracy_degradation": 0.136,
+          "n_fast_path_errors": 68,
+          "total_time_s": 0.5551038820121903,
+          "speedup_vs_baseline": 0.06911032379350866,
+          "target_fast_path_met": true,
+          "target_degradation_met": false,
+          "per_domain_fast_path_accuracy": {
+            "arithmetic": 0.5517241379310345,
+            "code": 0.79,
+            "logic": null
+          },
+          "per_domain_fast_path_count": {
+            "arithmetic": 58,
+            "code": 200,
+            "logic": 0
+          },
+          "embedding_strategy": "symbolic_logic_rp_others"
+        },
+        "v2_comparison": {
+          "fast_path_rate": 0.784,
+          "accuracy_degradation": 0.18999999999999995,
+          "fast_path_rate_delta": -0.268,
+          "degradation_delta": -0.05399999999999994,
+          "source": "live_run"
+        },
+        "v1_comparison": {
+          "fast_path_rate": 1.0,
+          "accuracy_degradation": 0.20599999999999996,
+          "fast_path_rate_delta": -0.484,
+          "degradation_delta": -0.06999999999999995,
+          "source": "live_run"
+        }
+      }
+    ]
+  },
+  "wall_clock_summary": {
+    "baseline_s": 0.0383634090248961,
+    "v3_by_threshold": {
+      "0.3": 1.101015191001352,
+      "0.5": 0.5667415189964231,
+      "0.7": 0.5551038820121903
+    }
+  },
+  "total_experiment_time_s": 7.326085957000032
+}
