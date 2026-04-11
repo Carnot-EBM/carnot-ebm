@@ -1220,3 +1220,7 @@
 | 2026-04-11 14:02 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 14:02 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 14:02 UTC | Exp 160: Connect eGPU (RX 7900 XTX via Thunderbolt | OK | Deliverable already exists in repo |
+| 2026-04-11 14:16 UTC | Exp 161: Full GSM8K (1,319 questions) with live in | OK | =========== 2229 passed, 1 skipped, 12 warnings in 162.22s (0:02:42) =========== |
+| 2026-04-11 14:17 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:17 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:17 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
