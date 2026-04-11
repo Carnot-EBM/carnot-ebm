@@ -44,22 +44,34 @@ fn test_ising_energy_batch() {
     // Batch of 3 configurations
     let inputs = vec![
         // x = [1, 0, 0, 0] -> E = -0.5 * 1 = -0.5
-        1.0, 0.0, 0.0, 0.0,
-        // x = [1, 1, 0, 0] -> E = -0.5 * 2 = -1.0
-        1.0, 1.0, 0.0, 0.0,
-        // x = [0, 0, 0, 0] -> E = 0.0
+        1.0, 0.0, 0.0, 0.0, // x = [1, 1, 0, 0] -> E = -0.5 * 2 = -1.0
+        1.0, 1.0, 0.0, 0.0, // x = [0, 0, 0, 0] -> E = 0.0
         0.0, 0.0, 0.0, 0.0,
     ];
 
-    let energies = ising.energy_batch(&ctx, &inputs).expect("GPU compute failed");
+    let energies = ising
+        .energy_batch(&ctx, &inputs)
+        .expect("GPU compute failed");
     assert_eq!(energies.len(), 3);
 
     println!("GPU energies: {:?}", energies);
 
     // Check values (with tolerance for GPU floating-point)
-    assert!((energies[0] - (-0.5)).abs() < 0.01, "Expected -0.5, got {}", energies[0]);
-    assert!((energies[1] - (-1.0)).abs() < 0.01, "Expected -1.0, got {}", energies[1]);
-    assert!((energies[2] - 0.0).abs() < 0.01, "Expected 0.0, got {}", energies[2]);
+    assert!(
+        (energies[0] - (-0.5)).abs() < 0.01,
+        "Expected -0.5, got {}",
+        energies[0]
+    );
+    assert!(
+        (energies[1] - (-1.0)).abs() < 0.01,
+        "Expected -1.0, got {}",
+        energies[1]
+    );
+    assert!(
+        (energies[2] - 0.0).abs() < 0.01,
+        "Expected 0.0, got {}",
+        energies[2]
+    );
 }
 
 /// REQ-CORE-002: GPU results match CPU ndarray computation

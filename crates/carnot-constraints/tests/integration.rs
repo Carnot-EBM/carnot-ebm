@@ -6,11 +6,10 @@
 //! Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-VERIFY-004, REQ-VERIFY-005
 
 use carnot_constraints::{
-    BoundConstraint, ComposedEnergy, EqualityConstraint, IsingConstraint,
-    VerificationCertificate,
+    BoundConstraint, ComposedEnergy, EqualityConstraint, IsingConstraint, VerificationCertificate,
 };
-use carnot_core::EnergyFunction;
 use carnot_core::verify::repair;
+use carnot_core::EnergyFunction;
 use carnot_ising::{IsingConfig, IsingModel};
 use ndarray::array;
 
@@ -72,10 +71,7 @@ fn test_composed_with_violations() {
 #[test]
 fn test_decomposition_consistency() {
     let mut composed = ComposedEnergy::new(2);
-    composed.add_constraint(
-        Box::new(BoundConstraint::new("x0_bound", 0, 2.0, 8.0)),
-        1.5,
-    );
+    composed.add_constraint(Box::new(BoundConstraint::new("x0_bound", 0, 2.0, 8.0)), 1.5);
     composed.add_constraint(
         Box::new(EqualityConstraint::new("x1_eq", 1, 4.0, 0.01)),
         2.0,
@@ -96,14 +92,8 @@ fn test_decomposition_consistency() {
 #[test]
 fn test_repair_with_bound_constraints() {
     let mut composed = ComposedEnergy::new(2);
-    composed.add_constraint(
-        Box::new(BoundConstraint::new("x0_bound", 0, 3.0, 7.0)),
-        1.0,
-    );
-    composed.add_constraint(
-        Box::new(BoundConstraint::new("x1_bound", 1, 3.0, 7.0)),
-        1.0,
-    );
+    composed.add_constraint(Box::new(BoundConstraint::new("x0_bound", 0, 3.0, 7.0)), 1.0);
+    composed.add_constraint(Box::new(BoundConstraint::new("x1_bound", 1, 3.0, 7.0)), 1.0);
 
     let x = array![0.0, 10.0]; // x0 below, x1 above
     let (repaired, history) = repair(&composed, &x, 0.1, 200);
@@ -123,10 +113,7 @@ fn test_repair_with_bound_constraints() {
 #[test]
 fn test_repair_with_equality_constraints() {
     let mut composed = ComposedEnergy::new(2);
-    composed.add_constraint(
-        Box::new(EqualityConstraint::new("x0_eq", 0, 5.0, 0.1)),
-        1.0,
-    );
+    composed.add_constraint(Box::new(EqualityConstraint::new("x0_eq", 0, 5.0, 0.1)), 1.0);
     composed.add_constraint(
         Box::new(EqualityConstraint::new("x1_eq", 1, -2.0, 0.1)),
         1.0,
@@ -136,7 +123,10 @@ fn test_repair_with_equality_constraints() {
     let (repaired, history) = repair(&composed, &x, 0.1, 500);
 
     let final_energy = history.last().unwrap().total_energy;
-    assert!(final_energy < 1.0, "Repair should converge: final_energy={final_energy}");
+    assert!(
+        final_energy < 1.0,
+        "Repair should converge: final_energy={final_energy}"
+    );
     // Values should approach targets
     assert!(
         (repaired[0] - 5.0).abs() < 1.0,
@@ -214,17 +204,16 @@ fn test_certificate_full_workflow() {
         VerificationCertificate::generate(&composed, &x_bad.view(), "2026-04-09T19:01:00Z");
     assert!(!cert_bad.is_verified());
     assert_eq!(cert_bad.num_violated, 1);
-    assert!(cert_bad.failing_constraints.contains(&"pressure_target".to_string()));
+    assert!(cert_bad
+        .failing_constraints
+        .contains(&"pressure_target".to_string()));
 }
 
 /// SCENARIO-VERIFY-006: Deterministic reproducibility.
 #[test]
 fn test_deterministic_results() {
     let mut composed = ComposedEnergy::new(2);
-    composed.add_constraint(
-        Box::new(BoundConstraint::new("x0_bound", 0, 0.0, 5.0)),
-        1.0,
-    );
+    composed.add_constraint(Box::new(BoundConstraint::new("x0_bound", 0, 0.0, 5.0)), 1.0);
     composed.add_constraint(
         Box::new(EqualityConstraint::new("x1_eq", 1, 3.0, 0.01)),
         1.0,

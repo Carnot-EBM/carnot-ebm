@@ -234,5 +234,6 @@ function connect() {
 })();
 </script>
 </body>
-</html>"#)
+</html>"#,
+    )
 }

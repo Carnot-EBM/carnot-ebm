@@ -179,7 +179,8 @@ impl VerifyPipeline {
             .collect();
 
         let num_satisfied = cert_constraints.iter().filter(|c| c.satisfied).count();
-        let failing_constraints: Vec<String> = violations.iter().map(|v| v.description.clone()).collect();
+        let failing_constraints: Vec<String> =
+            violations.iter().map(|v| v.description.clone()).collect();
 
         let status = if violations.is_empty() {
             CertificateStatus::Verified
@@ -219,9 +220,7 @@ impl VerifyPipeline {
         // Compute year/month/day from days since epoch (1970-01-01).
         let (year, month, day) = epoch_days_to_ymd(days);
 
-        format!(
-            "{year:04}-{month:02}-{day:02}T{hours:02}:{minutes:02}:{seconds:02}Z"
-        )
+        format!("{year:04}-{month:02}-{day:02}T{hours:02}:{minutes:02}:{seconds:02}Z")
     }
 }
 
@@ -280,10 +279,7 @@ mod tests {
     fn test_verify_multiple_constraints() {
         // REQ-VERIFY-003: Multiple constraints verified together.
         let pipeline = VerifyPipeline::default();
-        let result = pipeline.verify(
-            "Compute",
-            "First: 2 + 3 = 5. Then: 10 - 4 = 7.",
-        );
+        let result = pipeline.verify("Compute", "First: 2 + 3 = 5. Then: 10 - 4 = 7.");
         // 2+3=5 is correct, 10-4=7 is wrong (should be 6).
         assert!(!result.verified);
         assert_eq!(result.violations.len(), 1);
@@ -316,11 +312,8 @@ mod tests {
     fn test_verify_domain_filter() {
         // SCENARIO-VERIFY-002: Domain filter restricts extraction.
         let pipeline = VerifyPipeline::default();
-        let result = pipeline.verify_with_domain(
-            "Mixed",
-            "2 + 3 = 5. If A then B.",
-            Some("arithmetic"),
-        );
+        let result =
+            pipeline.verify_with_domain("Mixed", "2 + 3 = 5. If A then B.", Some("arithmetic"));
         assert!(result
             .constraints
             .iter()

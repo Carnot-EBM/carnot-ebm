@@ -147,7 +147,9 @@ mod tests {
         let mut param = array![0.0, 0.0];
         let large_grad = array![100.0, 100.0];
 
-        let norm = opt.step("test", &mut param, &large_grad, Some(1.0)).unwrap();
+        let norm = opt
+            .step("test", &mut param, &large_grad, Some(1.0))
+            .unwrap();
         // Grad norm should have been clipped
         assert!(param.iter().all(|v| v.is_finite()));
     }

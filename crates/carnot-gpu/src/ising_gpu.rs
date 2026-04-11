@@ -39,47 +39,50 @@ impl IsingGpu {
     /// * `coupling` - Flattened coupling matrix J, row-major, dim*dim elements
     /// * `bias` - Bias vector b, dim elements
     /// * `dim` - Input dimensionality
-    pub fn new(
-        ctx: &GpuContext,
-        coupling: &[Float],
-        bias: &[Float],
-        dim: usize,
-    ) -> Self {
+    pub fn new(ctx: &GpuContext, coupling: &[Float], bias: &[Float], dim: usize) -> Self {
         use wgpu::util::DeviceExt;
 
         assert_eq!(coupling.len(), dim * dim, "coupling must be dim*dim");
         assert_eq!(bias.len(), dim, "bias must be dim");
 
         // Upload coupling matrix to GPU
-        let coupling_buffer = ctx.device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("coupling"),
-            contents: bytemuck::cast_slice(coupling),
-            usage: wgpu::BufferUsages::STORAGE,
-        });
+        let coupling_buffer = ctx
+            .device
+            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("coupling"),
+                contents: bytemuck::cast_slice(coupling),
+                usage: wgpu::BufferUsages::STORAGE,
+            });
 
         // Upload bias vector to GPU
-        let bias_buffer = ctx.device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("bias"),
-            contents: bytemuck::cast_slice(bias),
-            usage: wgpu::BufferUsages::STORAGE,
-        });
+        let bias_buffer = ctx
+            .device
+            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("bias"),
+                contents: bytemuck::cast_slice(bias),
+                usage: wgpu::BufferUsages::STORAGE,
+            });
 
         // Params buffer (dim, batch_size) — updated per dispatch
-        let params_buffer = ctx.device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("params"),
-            contents: bytemuck::bytes_of(&Params {
-                dim: dim as u32,
-                batch_size: 0,
-            }),
-            usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
-        });
+        let params_buffer = ctx
+            .device
+            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("params"),
+                contents: bytemuck::bytes_of(&Params {
+                    dim: dim as u32,
+                    batch_size: 0,
+                }),
+                usage: wgpu::BufferUsages::STORAGE | wgpu::BufferUsages::COPY_DST,
+            });
 
         // Load WGSL shader
         let shader_source = include_str!("shaders/ising_energy.wgsl");
-        let shader_module = ctx.device.create_shader_module(wgpu::ShaderModuleDescriptor {
-            label: Some("ising_energy"),
-            source: wgpu::ShaderSource::Wgsl(shader_source.into()),
-        });
+        let shader_module = ctx
+            .device
+            .create_shader_module(wgpu::ShaderModuleDescriptor {
+                label: Some("ising_energy"),
+                source: wgpu::ShaderSource::Wgsl(shader_source.into()),
+            });
 
         // Bind group layout: coupling, bias, inputs, outputs, params
         let bind_group_layout =
@@ -182,11 +185,7 @@ impl IsingGpu {
     ///
     /// # Returns
     /// Vector of energies, one per input configuration.
-    pub fn energy_batch(
-        &self,
-        ctx: &GpuContext,
-        inputs: &[Float],
-    ) -> Result<Vec<Float>, GpuError> {
+    pub fn energy_batch(&self, ctx: &GpuContext, inputs: &[Float]) -> Result<Vec<Float>, GpuError> {
         let batch_size = inputs.len() / self.dim as usize;
         assert_eq!(
             inputs.len(),
@@ -197,11 +196,13 @@ impl IsingGpu {
         use wgpu::util::DeviceExt;
 
         // Upload inputs
-        let input_buffer = ctx.device.create_buffer_init(&wgpu::util::BufferInitDescriptor {
-            label: Some("inputs"),
-            contents: bytemuck::cast_slice(inputs),
-            usage: wgpu::BufferUsages::STORAGE,
-        });
+        let input_buffer = ctx
+            .device
+            .create_buffer_init(&wgpu::util::BufferInitDescriptor {
+                label: Some("inputs"),
+                contents: bytemuck::cast_slice(inputs),
+                usage: wgpu::BufferUsages::STORAGE,
+            });
 
         // Create output buffer
         let output_size = (batch_size * std::mem::size_of::<Float>()) as u64;

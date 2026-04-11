@@ -136,9 +136,7 @@ async fn handle_worker(socket: WebSocket, state: Arc<GatewayState>) {
                         } else {
                             let idle = ServerMessage::Idle;
                             let _ = sender
-                                .send(Message::Text(
-                                    serde_json::to_string(&idle).unwrap(),
-                                ))
+                                .send(Message::Text(serde_json::to_string(&idle).unwrap()))
                                 .await;
                         }
                     }
@@ -164,12 +162,7 @@ async fn handle_worker(socket: WebSocket, state: Arc<GatewayState>) {
                     }
 
                     WorkerMessage::Error { work_id, message } => {
-                        tracing::error!(
-                            "Worker {} error on {}: {}",
-                            worker_id,
-                            work_id,
-                            message
-                        );
+                        tracing::error!("Worker {} error on {}: {}", worker_id, work_id, message);
                     }
 
                     WorkerMessage::Heartbeat => {

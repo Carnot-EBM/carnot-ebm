@@ -235,6 +235,76 @@ class EnergyGuidedSampler:
 
         return violations
 
+    def project_logits(
+        self,
+        logits: Any,
+        energy_grad: Any,
+        alpha: float = 0.1,
+    ) -> Any:
+        """Project logits onto the constraint-satisfying subspace.
+
+        **Researcher summary:**
+            Implements the constraint-projection operator from Exp 140.
+            Instead of uniformly penalising all logits (the Exp 110 alpha-penalty
+            approach), this method removes only the component of the logit vector
+            that lies *along* the energy gradient direction.  Tokens whose
+            probability mass points toward high-energy (constraint-violating)
+            directions are suppressed; tokens perpendicular to the gradient
+            are unaffected.
+
+        **Detailed explanation for engineers:**
+            The operation is a scaled orthogonal projection:
+
+                grad_unit  = energy_grad / ||energy_grad||₂
+                projection = dot(logits, grad_unit) * grad_unit
+                result     = logits − alpha * projection
+
+            Geometric interpretation: ``logits`` is decomposed into a component
+            parallel to the energy gradient (the "bad direction") and a
+            component perpendicular to it (the "good direction").  We subtract
+            a fraction ``alpha`` of the parallel component, keeping the
+            perpendicular component unchanged.
+
+            When ``alpha = 1.0`` the parallel component is fully removed
+            (hard projection onto the constraint-satisfying hyperplane).
+            When ``alpha = 0.1`` only 10 % of the bad direction is subtracted
+            (a soft nudge, matching Exp 140 default).
+
+            Precondition: ``logits`` and ``energy_grad`` must have the same
+            shape ``(D,)``.  In practice D = ``kan_model.input_dim`` which
+            must match the vocabulary or feature dimension used during the
+            forward pass.
+
+            If the gradient norm is essentially zero (< 1e-12) the logits are
+            returned unchanged to avoid division-by-zero.
+
+        Args:
+            logits: 1-D JAX/numpy array of shape (D,) — the raw next-token
+                logits from the LM.
+            energy_grad: 1-D array of shape (D,) — gradient of the KAN
+                energy function w.r.t. the token feature vector.
+            alpha: Projection strength in [0, 1].  0 = no change; 1 = full
+                projection onto constraint-satisfying hyperplane.
+                Default 0.1 (soft nudge, minimal accuracy loss).
+
+        Returns:
+            Projected logits array of the same shape and dtype as ``logits``.
+
+        Spec: REQ-VERIFY-001, SCENARIO-VERIFY-004
+        """
+        grad_norm = jnp.linalg.norm(energy_grad)
+        if float(grad_norm) < 1e-12:
+            # Gradient is zero — energy landscape is flat here; nothing to project.
+            return logits
+
+        grad_unit = energy_grad / grad_norm
+        # Scalar component of logits along the energy-gradient direction.
+        parallel_magnitude = jnp.dot(jnp.asarray(logits, dtype=jnp.float32), grad_unit)
+        # Vector component in the gradient direction.
+        parallel_component = parallel_magnitude * grad_unit
+        # Subtract alpha fraction of the parallel component.
+        return jnp.asarray(logits, dtype=jnp.float32) - alpha * parallel_component
+
     def modify_logits(
         self,
         logits: Any,
