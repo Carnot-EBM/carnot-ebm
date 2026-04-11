@@ -1195,3 +1195,10 @@
 | 2026-04-11 11:39 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | =========== 2127 passed, 1 skipped, 12 warnings in 352.62s (0:05:52) =========== |
 | 2026-04-11 11:40 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
 | 2026-04-11 11:40 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:00 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:00 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:00 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:01 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:01 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:01 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:01 UTC | Exp 157: Spilled energy pre-filter for factual hal | OK | Deliverable already exists in repo |

@@ -1037,7 +1037,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             logger.info("Committing %d dirty files as checkpoint (preserving work)", len(committable))
             for f in committable:
                 run_cmd(["git", "add", "--", f])
-            msg = _sign_commit(
+            msg = with_agent_signature(
                 "[conductor] Checkpoint: preserve uncommitted work from interrupted run"
             )
             run_cmd(["git", "commit", "-m", msg])
@@ -1186,7 +1186,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         # This preserves experiment deliverables even when tests fail.
         if git_has_changes():
             run_cmd(["git", "add", "-A"])
-            msg = _sign_commit(
+            msg = with_agent_signature(
                 f"[conductor] Checkpoint (tests failing): {task['title']}"
             )
             run_cmd(["git", "commit", "-m", msg])
