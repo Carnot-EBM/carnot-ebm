@@ -86,16 +86,16 @@ tasks:
          a. Tokenize response (use simple whitespace split if no tokenizer available)
          b. Create 4 prefix lengths: 10%, 25%, 50%, 75% of tokens
          c. Embed each prefix with RandomProjection (256-dim, seed=42)
-         d. Record: {prefix_ratio, embedding, violated_arithmetic, violated_code,
-                     violated_logic, any_violated, source_exp}
+         d. Record: (prefix_ratio, embedding, violated_arithmetic, violated_code,
+                     violated_logic, any_violated, source_exp)
       3. If fewer than 500 pairs exist in logs, SUPPLEMENT by generating:
          - 200 synthetic arithmetic questions (x+y, x*y, multi-step)
          - Run AutoExtractor + Ising verify on each
          - Use first 25% and 75% of the response as prefixes
          - Label with actual violation result
       4. Save to results/jepa_training_pairs.json:
-         {pairs: [{prefix_ratio, embedding_256d, violated, domain, source_exp}...],
-          total: N, domain_counts: {arithmetic: N, code: N, logic: N}}
+         (pairs: [(prefix_ratio, embedding_256d, violated, domain, source_exp)...],
+          total: N, domain_counts: (arithmetic: N, code: N, logic: N))
       5. Print summary: total pairs, per-domain breakdown, positive rate
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_143_collect_pairs.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -364,7 +364,7 @@ tasks:
          - Documents: "NPU path blocked until AMDXDNAExecutionProvider available"
 
       5. Save to results/experiment_146_npu_results.json:
-         {npu_available: bool, device_info: str, npu_p50_ms: float|null,
+         (npu_available: bool, device_info: str, npu_p50_ms: float|null,
           cpu_p50_ms: float, speedup: float|null, onnx_model_path: str}
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_146_npu.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -576,7 +576,7 @@ tasks:
          (Actual HuggingFace update requires API token — generate content, note step needed)
 
       5. Save to results/experiment_150_results.json:
-         {pushed: bool, skip_reason: str|null, hf_url: str|null,
+         (pushed: bool, skip_reason: str|null, hf_url: str|null,
           readme_updates_generated: int, timestamp: str}
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_150_hf_push.py
       7. Do NOT push git changes. Do NOT modify scripts/research_conductor.py.
@@ -608,10 +608,10 @@ tasks:
          a. Load the best-available Ising model for that domain
             (check results/experiment_89_results.json, experiment_62_results.json)
          b. Export coupling matrix J and biases b to:
-            exports/constraint-propagation-models/{domain}/model.safetensors
-         c. Write model card: exports/constraint-propagation-models/{domain}/README.md
-            - What it is: "Learned Ising constraint model for {domain} verification"
-            - How it was trained (CD on {N} verified examples)
+            exports/constraint-propagation-models/<domain>/model.safetensors
+         c. Write model card: exports/constraint-propagation-models/<domain>/README.md
+            - What it is: "Learned Ising constraint model for <domain> verification"
+            - How it was trained (CD on <N> verified examples)
             - Benchmark results (AUROC from Exp 89, accuracy from Exp 67/68)
             - Usage example (5 lines: load model, extract constraints, verify)
             - Limitations
