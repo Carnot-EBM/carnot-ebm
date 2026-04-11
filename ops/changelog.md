@@ -749,3 +749,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 170 Complete
 
 - Exp 170: Real LLM logits benchmark for spilled + lookahead energy signals — validates hallucination-detection signals on live Qwen/Gemma models (100 questions: 50 EASY + 50 HARD); targets SpilledEnergy AUROC > 0.55, LookaheadEnergy > 0.65, combined > individual; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
+
+## 2026-04-11: Experiment 171 Complete
+
+- Exp 171: Combined signal pipeline benchmark — benchmarks five detector configurations (baseline, Ising-only, spilled+Ising, lookahead+Ising, all-combined) across 200 multi-domain questions (50 each: arithmetic, code, logic, factual); key finding: all-combined does NOT beat Ising-only (Δ−12% overall); best config varies per domain (Ising for arithmetic/code, lookahead for logic/factual); energy signals add 0.5–42ms latency; results at `results/experiment_171_combined_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, REQ-CORE-001
