@@ -1192,3 +1192,6 @@
 | 2026-04-11 10:11 UTC | Milestone 2026.04.10 activated | OK | 14 tasks queued |
 | 2026-04-11 10:12 UTC | Exp 150: Push guided decoding adapter + update 16  | OK | Deliverable already exists in repo |
 | 2026-04-11 10:12 UTC | Exp 151: Publish constraint propagation models to  | OK | Deliverable already exists in repo |
+| 2026-04-11 11:39 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | =========== 2127 passed, 1 skipped, 12 warnings in 352.62s (0:05:52) =========== |
+| 2026-04-11 11:40 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 11:40 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
