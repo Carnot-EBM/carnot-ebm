@@ -1210,3 +1210,7 @@
 | 2026-04-11 13:37 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 13:37 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 13:37 UTC | Exp 158: Wikidata-backed factual claim extractor ( | OK | Deliverable already exists in repo |
+| 2026-04-11 13:50 UTC | Exp 159: Full 5-domain benchmark with factual extr | OK | =========== 2229 passed, 1 skipped, 12 warnings in 171.11s (0:02:51) =========== |
+| 2026-04-11 13:51 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:51 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:51 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
