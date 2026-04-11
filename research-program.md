@@ -225,14 +225,53 @@ When designing new milestones, the planning agent MUST:
 4. **Update research-references.md** — Any new papers or tools discovered
    during planning must be filed for future reference.
 
+## Next Milestone Focus (2026.04.10)
+
+The planning agent MUST prioritize these for the next milestone:
+
+1. **Make Tier 1 self-learning actually work** — Exp 134 showed that
+   precision-based REWEIGHTING didn't improve accuracy (fixed=adaptive
+   across all 500 questions). The infrastructure works (tracker, adaptive
+   weighter) but the approach is wrong. The fix: constraint ADDITION from
+   memory patterns, not just weight changes. When memory detects "arithmetic
+   carry errors are common," ADD a carry-check constraint — don't just
+   upweight existing ones. Tier 2 memory (Exp 135) has the pattern data;
+   wire it into constraint generation, not just weight adjustment.
+
+2. **JEPA predictive verification (Tier 3)** — Predict constraint violations
+   from partial LLM responses BEFORE generation completes. Train a small
+   predictor on (partial_response, final_violation) pairs from accumulated
+   verify-repair logs. If it predicts "high energy likely," trigger full
+   Ising verification; otherwise fast-path skip. This is the key to making
+   guided decoding practical at scale.
+
+3. **Actually upload to HuggingFace** — Exp 137 prepared the guided decoding
+   adapter artifacts but didn't push them. Run `huggingface-cli upload` to
+   publish. Also update the existing 16 model READMEs to point users to
+   `pip install carnot` for the actual product.
+
+4. **Integrate arxiv findings from Exp 139** — Whatever papers the scan
+   discovers, incorporate the most promising as concrete experiments.
+
+5. **AMD XDNA NPU experimentation** — The current machine has an unused
+   NPU. Install the AMD XDNA driver + SDK and test whether small constraint
+   models can run on the NPU. This is $0 cost and could unlock Tier 3
+   (JEPA predictor on NPU while LLM runs on CPU). See
+   research-hardware-wishlist.md for setup steps.
+
 ## What Works (do more of this)
 
 - Ising constraint verification: 100% hallucination detection
-- Verify-repair loop: +27% accuracy improvement
+- Verify-repair loop: +27% accuracy improvement, +26.5% on adversarial
+- Adversarial robustness: Ising ignores irrelevant context (74% correctly silent)
+- KAN energy tier: 0.994 AUROC with 8.7x fewer params than Ising
 - Parallel Ising sampler: 183x faster than thrml
 - CD training: learned couplings generalize to unseen instances
 - Runtime instrumentation: catches bugs static analysis misses
 - HumanEval pass@1+repair: 96% (up from 90% baseline)
+- Guided decoding: 0.006ms per constraint check, 100% CSR
+- Agentic verification: 60/60 violations caught in multi-step workflows
+- Constraint state machine with rollback: works for multi-turn agents
 
 ## What Doesn't Work (don't repeat)
 
@@ -242,6 +281,9 @@ When designing new milestones, the planning agent MUST:
 - Normalization: destroys signal
 - Logit lens: dynamics identical for correct/wrong
 - Sentence/NLI encoders: embed topic, not truth
+- LNN adaptive couplings within a chain: 10% vs 100% for static Ising (Exp 116)
+- Precision-based constraint REWEIGHTING: no improvement over fixed weights (Exp 134)
+  — need constraint ADDITION instead
 
 ## Quality Standards
 
