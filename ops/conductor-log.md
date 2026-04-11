@@ -1205,3 +1205,8 @@
 | 2026-04-11 13:02 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
 | 2026-04-11 13:02 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 13:02 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:36 UTC | Exp 158: Wikidata-backed factual claim extractor ( | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-11 13:37 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:37 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:37 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 13:37 UTC | Exp 158: Wikidata-backed factual claim extractor ( | OK | Deliverable already exists in repo |

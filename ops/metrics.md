@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 158 FactualExtractor
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T13:20:24Z | 2026-04-11T13:34:57Z | Exp 158: FactualExtractor (Wikidata SPARQL) — factual_extractor.py + 69 tests (100% cov) + AutoExtractor enable_factual_extractor= param; benchmark: coverage=96.0% (target >30% ✓), accuracy=83.3%; results/experiment_158_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 157 Spilled Energy Pre-Filter
 
 ### Turn Log
