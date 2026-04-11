@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 142 Combined Learning Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T04:03:52Z | 2026-04-11T04:09:25Z | Create scripts/experiment_142_combined_learning.py — 4-way benchmark (Baseline/Tier1/Tier2/Combined) on 500 questions; Tier2 beats Tier1: YES (+7%, 71.75%→78.75%); Combined≈Tier2 (no Tier1 additive gain); 100% of Tier2 gains from new constraints; results/experiment_142_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 141 Constraint Generation from Memory
 
 ### Turn Log
