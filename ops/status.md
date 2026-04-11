@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-11 — 128 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 120, 121, 122, 123, 125, 126, 127, 128), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), LLM ADVERSARIAL BASELINE (EXP 120), ADVERSARIAL VERIFY-REPAIR EXECUTED (EXP 121), ADVERSARIAL ROBUSTNESS DEEP ANALYSIS (EXP 122), ROBUST MODEL LOADER (EXP 123), CONSTRAINT STATE MACHINE FOR AGENT WORKFLOWS (EXP 125), AGENT ROLLBACK ON CONSTRAINT VIOLATION (EXP 126), MULTI-WORKFLOW CSM BENCHMARK 100% ACCURACY (EXP 127), LNN COUPLING-MATRIX ADAPTIVE MODEL (EXP 128)
+**Last Updated:** 2026-04-11 — 137 EXPERIMENTS (incl. Exp 101, 102, 108, 110, 112, 117, 118, 119, 120, 121, 122, 123, 125, 126, 127, 128, 134, 136, 137), 14 PRINCIPLES, 17 MODELS ON HUGGINGFACE, THRML/EXTROPIC INTEGRATION, 0.1.0-BETA1 SHIPPED, KAN ENERGY TIER, VERIFYPAIRPIPELINE PRODUCTION API, RUST VERIFYPIPELINE (NFR-01), DEFINITIVE MULTI-MODEL BENCHMARK (+10.2% avg improvement), ENERGY-GUIDED DECODING (EXP 110), FAST EMBEDDING BENCHMARK (EXP 112), V12 ARTIFACTS PUBLISHED TO HUGGINGFACE (EXP 118), ADVERSARIAL GSM8K DATASET GENERATOR (EXP 119), LLM ADVERSARIAL BASELINE (EXP 120), ADVERSARIAL VERIFY-REPAIR EXECUTED (EXP 121), ADVERSARIAL ROBUSTNESS DEEP ANALYSIS (EXP 122), ROBUST MODEL LOADER (EXP 123), CONSTRAINT STATE MACHINE FOR AGENT WORKFLOWS (EXP 125), AGENT ROLLBACK ON CONSTRAINT VIOLATION (EXP 126), MULTI-WORKFLOW CSM BENCHMARK 100% ACCURACY (EXP 127), LNN COUPLING-MATRIX ADAPTIVE MODEL (EXP 128), ONLINE LEARNING ADAPTIVE WEIGHTS (EXP 134), CROSS-SESSION CONSTRAINT MEMORY (EXP 136), HF GUIDED DECODING ADAPTER EXPORT (EXP 137)
 
 ## What's Working
 
@@ -49,6 +49,12 @@
 - Diffusion generation (parallel solution from noise)
 - Per-token EBM (84.5% test on Qwen3-0.6B, 67.2% on Qwen3.5-0.8B, experiments 19-22)
 - Robust model loader (`carnot.inference.model_loader`, Exp 123): centralised `load_model()` + `generate()` API with RAM pre-check (psutil), float32-on-CPU default (avoids AVX2 crashes), OOM retry with gc.collect() + cuda.empty_cache(), Qwen3 enable_thinking fallback chain, `CARNOT_FORCE_LIVE` / `CARNOT_SKIP_LLM` / `CARNOT_FORCE_CPU` env vars; eliminates conductor subprocess fallback to simulated outputs (REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-003)
+
+### HuggingFace Guided Decoding Adapter Export (Exp 137)
+- `exports/guided-decoding-adapter/` — HuggingFace-publishable artifact packaging Exp-110 guided decoding results for community reuse
+- `GuidedDecoder` class added to `python/carnot/inference/guided_decoding.py` with `from_pretrained(path_or_repo)` + `generate(model, tokenizer, prompt)` API delegating to `EnergyGuidedSampler`
+- Artifacts: `config.json` (constraint types, default weights, latency profile), `constraint_weights.safetensors` (12 per-type float32 weights + default_alpha + default_energy_threshold), `README.md` (latency numbers, usage, limitations), `example.py` (10-line mock demo)
+- 7 new tests in `tests/python/test_guided_decoding.py` — all pass, no regressions; not yet pushed to HuggingFace Hub (REQ-VERIFY-001, SCENARIO-VERIFY-004)
 
 ### Fast Embedding for Guided Decoding (Exp 112)
 - `FastEmbeddingProtocol` + 5 strategies: MiniLM (3.1ms GPU), TF-IDF+projection (0.115ms), CharNgram (1.0ms), HashEmbedding (0.097ms), RandomProjection (0.026ms p50 — winner)

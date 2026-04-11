@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Doc update Exp 137
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T02:16:21Z | 2026-04-11T02:17:11Z | Update ops/status.md + ops/changelog.md for Exp 137 (HF guided decoding adapter export); changelog was already written by conductor; added status.md header update + new HuggingFace Guided Decoding Adapter Export section | TBD |
+
+---
+
 ## Session: 2026-04-11 guided-decoding-adapter export
 
 ### Turn Log
