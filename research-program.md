@@ -202,7 +202,9 @@ right — it just needs to operate at the right timescale:
 
 ## Research Constraints
 
-- **JAX_PLATFORMS=cpu** is mandatory — ROCm GPU is slower than CPU on this machine
+- **GPU available:** 2x RTX 3090 (48GB VRAM total) via CUDA + iGPU (Radeon 890M,
+  shares system RAM for large models). JAX_PLATFORMS=cpu no longer required.
+  Use GPU for LLM inference and training. Use CPU for Ising sampling (fastest).
 - **100% test coverage** required for all code changes
 - **100% spec coverage** — every test traces to REQ-* or SCENARIO-*
 - **Never modify research_conductor.py** from within experiment prompts
