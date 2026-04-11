@@ -571,6 +571,57 @@ def _activate_next_roadmap(push: bool = True) -> bool:
         return False
 
 
+def _update_docs_before_planning(push: bool = True) -> bool:
+    """Update docs, technical report, and GitHub pages before planning.
+
+    Runs before the planning agent to ensure documentation reflects the
+    latest experiment results. The planning agent then reads up-to-date
+    docs when designing the next milestone.
+    """
+    logger.info("=" * 60)
+    logger.info("UPDATING DOCS BEFORE PLANNING")
+    logger.info("=" * 60)
+
+    doc_prompt = (
+        f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n"
+        f"Read CLAUDE.md for project context.\n\n"
+        f"TASK: Update ALL documentation to reflect the latest experiment results.\n"
+        f"This runs BEFORE the planning agent, so docs must be current.\n\n"
+        f"READ FIRST:\n"
+        f"- ops/status.md — current experiment count and results\n"
+        f"- ops/changelog.md — recent experiments\n"
+        f"- research-complete.yaml — all completed milestones\n\n"
+        f"UPDATE THESE FILES:\n"
+        f"1. docs/index.html — update stats (experiment count, test count),\n"
+        f"   results cards with latest numbers, capabilities if new ones added\n"
+        f"2. README.md — update experiment count, key results table\n"
+        f"3. docs/technical-report.md — update header experiment count\n"
+        f"4. docs/technical-report.html — update abstract if stale\n\n"
+        f"RULES:\n"
+        f"- Only update NUMBERS and RESULTS — don't restructure\n"
+        f"- Keep changes minimal and focused on accuracy\n"
+        f"- Do NOT modify scripts/research_conductor.py\n"
+        f"- Do NOT push\n"
+    )
+
+    success, output = run_agent(doc_prompt, max_turns=30, timeout=600)
+
+    if success and git_has_changes():
+        run_cmd(["git", "add", "-A"])
+        msg = with_agent_signature(
+            "[conductor] Update docs before planning — sync with latest results"
+        )
+        run_cmd(["git", "commit", "-m", msg])
+        if push:
+            run_cmd(["git", "push", "origin", "main"], timeout=60)
+        logger.info("Docs updated before planning")
+        return True
+
+    logger.info("No doc updates needed (or update failed)")
+    return False
+
+
+
 def _plan_next_milestone(push: bool = True) -> bool:
     """Ask the configured agent to plan the next research milestone.
 
@@ -992,7 +1043,13 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
                 logger.error("Failed to activate next roadmap")
                 return False
         else:
-            # No next roadmap — ask planning agent to create one
+            # No next roadmap — first update docs, then plan next milestone.
+            # This ensures documentation reflects latest results before
+            # the planning agent reads them to design the next milestone.
+            logger.info("Updating docs before planning next milestone...")
+            if not dry_run:
+                _update_docs_before_planning(push=push)
+
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:
                 logger.info("[DRY RUN] Would launch planning agent for next milestone")

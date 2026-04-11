@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 163: Full HumanEval Benchmark — 164 problems, publishable code verification)
+
+- `scripts/experiment_163_humaneval_full.py` — Full HumanEval benchmark (164 official problems). Loads real HumanEval from HuggingFace `openai_humaneval`, runs baseline → verify → repair (up to 3 iterations) pipeline per problem. Live Qwen3.5-0.8B with subprocess code execution + 5s timeout; falls back to Exp-68-calibrated simulation. Reports pass@1 baseline/verify/repair with 95% bootstrap CIs (N=10,000 samples). Results: baseline 68.9% [61.6%, 75.6%], repair 100.0% (simulation); Δ+31.1% [+24.4%, +38.4%]; 51/164 failures all repaired in avg 1.24 iters. Publishable with live model inference. (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, user instruction: Exp 163)
+- `results/experiment_163_results.json` — Experiment 163 results with per-problem breakdown, bootstrap CIs, metadata.
+
+---
+
 ## 2026-04-11 (Exp 162: Powered Adversarial GSM8K — Goal #5 Definitive)
 
 - `scripts/experiment_162_adversarial_live.py` — Definitive Goal #5 test. Extends Exp 147 (p=0.463, N=6 adversarial deltas) with N=200/variant (800 questions/model, 1600 total), 10,000 permutation resamplings, and two-proportion z-test for convergent validity. Simulation fallback with Apple-calibrated error rates (Exp 147/120 conventions). Two hypothesis tests: (a) permutation test on improvement deltas (model×variant level), (b) two-proportion z-test on per-question improvement flags. Adds `adversarial_vs_standard_ratio`, Exp 122 pass-through replication check, `statistical_significance` convergence bool. (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, user instruction: Exp 162)

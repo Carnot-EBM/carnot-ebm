@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 163 Full HumanEval Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T15:08:48Z | 2026-04-11T15:19:34Z | Exp 163: Full HumanEval benchmark (164 problems); created scripts/experiment_163_humaneval_full.py; loaded real HumanEval from HuggingFace; simulation mode (CARNOT_SKIP_LLM=1); baseline 68.9% [61.6%,75.6%], repair 100% [100%,100%], Δ+31.1%; 4.7s runtime; results saved to experiment_163_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 162 Powered Adversarial GSM8K
 
 ### Turn Log
