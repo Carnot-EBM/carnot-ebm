@@ -873,3 +873,57 @@ milestones:
     title: 'Exp 153: KAN adaptive mesh refinement for energy landscapes'
     deliverable: scripts/experiment_153_kan_refinement.py
     result: OK (conductor)
+- id: 2026.04.11
+  title: Multi-Domain JEPA + Factual Extraction + Live Model Benchmarks
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-11'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp154-jepa-multidom-pairs
+    title: 'Exp 154: Collect multi-domain JEPA training pairs (code + logic + factual)'
+    deliverable: results/jepa_training_pairs_v2.json
+    result: OK (conductor)
+  - id: exp155-jepa-v2-retrain
+    title: 'Exp 155: Retrain JEPA violation predictor v2 with multi-domain data'
+    deliverable: results/jepa_predictor_v2.safetensors
+    result: OK (conductor)
+  - id: exp156-jepa-fastpath-v2
+    title: "Exp 156: JEPA fast-path benchmark v2 \u2014 target <2% degradation at \u226540% fast-path"
+    deliverable: scripts/experiment_156_jepa_fastpath_v2.py
+    result: OK (conductor)
+  - id: exp157-spilled-energy
+    title: 'Exp 157: Spilled energy pre-filter for factual hallucination detection'
+    deliverable: python/carnot/pipeline/spilled_energy.py
+    result: OK (conductor)
+  - id: exp158-factual-extractor
+    title: 'Exp 158: Wikidata-backed factual claim extractor (closes Goal #3)'
+    deliverable: python/carnot/pipeline/factual_extractor.py
+    result: OK (conductor)
+  - id: exp159-five-domain-benchmark
+    title: 'Exp 159: Full 5-domain benchmark with factual extractor + memory generation'
+    deliverable: scripts/experiment_159_five_domain.py
+    result: OK (conductor)
+  - id: exp160-egpu-setup
+    title: 'Exp 160: Connect eGPU (RX 7900 XTX via Thunderbolt) and validate ROCm/JAX stack'
+    deliverable: scripts/experiment_160_egpu_setup.py
+    result: OK (conductor)
+  - id: exp161-gsm8k-full
+    title: 'Exp 161: Full GSM8K (1,319 questions) with live inference + 95% CIs'
+    deliverable: scripts/experiment_161_gsm8k_full.py
+    result: OK (conductor)
+  - id: exp162-adversarial-live
+    title: 'Exp 162: Apple adversarial GSM8K with N=200/variant for statistical significance'
+    deliverable: scripts/experiment_162_adversarial_live.py
+    result: OK (conductor)
+  - id: exp163-humaneval-full
+    title: 'Exp 163: HumanEval full 164 problems with live code generation + repair'
+    deliverable: scripts/experiment_163_humaneval_full.py
+    result: OK (conductor)
+  - id: exp164-hf-publishing
+    title: 'Exp 164: HuggingFace publishing sprint (guided decoding adapter + constraint models)'
+    deliverable: scripts/experiment_164_hf_publish.py
+    result: OK (conductor)
+  - id: exp165-arxiv-scan
+    title: "Exp 165: ArXiv research scan \u2014 prepare next milestone bibliography"
+    deliverable: results/experiment_165_arxiv_scan.json
+    result: OK (conductor)
