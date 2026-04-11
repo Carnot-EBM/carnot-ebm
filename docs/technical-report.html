@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technical Report - Carnot: Energy-Based Verification for LLM Output</title>
-  <meta name="description" content="Technical report: 125+ experiments combining EBMs with LLMs. Constraint verification recovers +15% on adversarial math. 4 energy tiers, 0.006ms guided decoding, self-learning pipeline.">
+  <meta name="description" content="Technical report: 160+ experiments across eleven milestones combining EBMs with LLMs. Full GSM8K 84-88%, adversarial +24-28%, self-learning 97%, KAN 0.994 AUROC, 4 energy tiers, agentic verification 60/60.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
   <h1>Carnot: Energy-Based Verification for LLM Output</h1>
-  <div class="subtitle">A Technical Report on 85+ Experiments Across Four Research Milestones</div>
+  <div class="subtitle">A Technical Report on 160+ Experiments Across Eleven Research Milestones</div>
 
   <div class="meta">
     <strong>Author:</strong> Ian Blenke &nbsp;|&nbsp;
@@ -172,10 +172,10 @@
   <!-- Abstract -->
   <div class="abstract">
     <h3>Abstract</h3>
-    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 85+ systematic experiments across four milestones, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through a paradigm shift to constraint-based verification via Ising models (which works), culminating in a shipped production library.</p>
+    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 160+ systematic experiments across eleven research milestones, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through a paradigm shift to constraint-based verification via Ising models (which works), culminating in a shipped production library with four energy tiers, self-learning verification, adversarial robustness, and agentic workflow support backed by 2,251 tests.</p>
     <p style="margin-top: 1rem;">Our key findings span two phases. <strong>Phase 1 (Activation-based, Experiments 1-38):</strong> (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy), (2) structural test execution dominates for code verification (0% to 30% accuracy), (3) activation-space approaches show detectable signals but fail to improve output quality &mdash; activation EBMs detect confidence, not correctness, (4) instruction tuning compresses the hallucination signal (84.5% base vs 67.2% instruction-tuned), (5) chain-of-thought further compresses it (75.5% to 61.3%), (6) adversarial questions defeat post-hoc detection entirely, and (7) no internal signal &mdash; activations, logit lens, NLI, confidence &mdash; can distinguish factual truth from confident hallucination. These 14 systematic negative results are the project's primary contribution to the activation-based literature.</p>
-    <p style="margin-top: 1rem;"><strong>Phase 2 (Constraint-based, Experiments 39-85):</strong> The paradigm shift from detection to verification yielded: (1) Ising constraint verification achieves 100% hallucination detection on live LLM output (Experiment 56, 19/20 accuracy), (2) verify-repair loops improve accuracy by +27% on tricky questions (Experiment 57), (3) HumanEval pass@1 improves from 90% to 96% with Ising-guided fuzzing and repair (Experiment 68), (4) arithmetic QUBO verification achieves 16/16 perfect (Experiment 42c), (5) SAT solving scales to 5000 variables in 0.7 seconds (Experiment 46b), (6) learned Ising models via Contrastive Divergence generalize to unseen instances (Experiment 50, 89/100), (7) the parallel Ising sampler is 183x faster than thrml, and (8) the constraint pipeline transfers across model families without retraining (Experiment 69, Qwen3.5 + Gemma4).</p>
-    <p style="margin-top: 1rem;">We release the complete framework as <code>pip install carnot</code>, including the VerifyRepairPipeline production API, five constraint extractors (arithmetic, code, logic, NL, auto-detection), an MCP server for Claude Code integration, a CLI tool, Rust core crates, and 16 pre-trained EBM models on HuggingFace.</p>
+    <p style="margin-top: 1rem;"><strong>Phase 2 (Constraint-based, Experiments 39-160+):</strong> The paradigm shift from detection to verification yielded: (1) full GSM8K (1,319 questions) showing Qwen3.5 improving from 70.6% to 84.4% and Gemma4 from 77.1% to 87.8% with verify-repair, (2) adversarial GSM8K (Apple methodology) recovering +24-28% accuracy on number-swapped variants, (3) self-learning Tier 1 improving from 67.6% to 97.0% accuracy over 500 questions via online constraint generation, (4) 96% factual claim coverage via Wikidata knowledge base integration, (5) KAN energy tier achieving 0.994 AUROC with 8.7x fewer parameters than Ising, (6) JEPA predictive verification as a multi-domain predictor, (7) constraint state machine for agentic workflows catching 60/60 violations, (8) Ising constraint verification achieving 100% hallucination detection on live LLM output (Experiment 56), (9) HumanEval pass@1 improving from 90% to 96% (Experiment 68), (10) SAT solving scaling to 5000 variables in 0.7 seconds (Experiment 46b), and (11) the constraint pipeline transferring across model families without retraining (Experiment 69).</p>
+    <p style="margin-top: 1rem;">We release the complete framework as <code>pip install carnot</code> with four energy tiers (Ising, KAN, Gibbs, Boltzmann), the VerifyRepairPipeline production API, five constraint extractors (arithmetic, code, logic, NL, auto-detection), self-learning verification, a constraint state machine for agentic workflows, an MCP server for Claude Code integration, a CLI tool, Rust core crates, and 16 pre-trained EBM models on HuggingFace.</p>
   </div>
 
   <!-- 1. Introduction -->
@@ -518,7 +518,7 @@ result = pipeline.<span class="fn">verify_and_repair</span>(
 
   <!-- 7. Principles Learned -->
   <h2>7. Principles Learned</h2>
-  <p>From 85+ experiments across four milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection &mdash; these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
+  <p>From 160+ experiments across eleven milestones, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection &mdash; these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
 
   <h3>What works</h3>
 
@@ -601,7 +601,7 @@ result = pipeline.<span class="fn">verify_and_repair</span>(
 
   <!-- 8. The Production Architecture -->
   <h2>8. The Production Architecture</h2>
-  <p>The architecture that emerged from 85+ experiments:</p>
+  <p>The architecture that emerged from 160+ experiments:</p>
   <div class="arch-diagram">User Question
      |
      v
@@ -674,7 +674,7 @@ Verified + Repaired Answer</div>
       <tr><td>PyPI packaging</td><td><code>pip install carnot</code>, extras for rust/mcp/cuda/llm</td><td>Integration tests</td><td>Beta</td></tr>
     </tbody>
   </table>
-  <p><strong>Total:</strong> 1153 tests (104 Rust + 1049 Python), 100% code coverage, 100% spec coverage.</p>
+  <p><strong>Total:</strong> 2,251 tests, 100% code coverage, 100% spec coverage.</p>
 
   <hr>
 
@@ -730,7 +730,7 @@ make research-loop</code></pre>
 
   <!-- 12. Conclusion -->
   <h2>12. Conclusion</h2>
-  <p>Across 85+ experiments on 16 model families spanning 350M to 35B parameters, four milestones over two months, and a fundamental paradigm shift, we reached a clear two-part conclusion.</p>
+  <p>Across 160+ experiments on 16 model families spanning 350M to 35B parameters, eleven milestones, and a fundamental paradigm shift, we reached a clear two-part conclusion.</p>
 
   <h3>Part 1: Activation-based detection fails</h3>
   <p>Activation-based EBMs detect model confidence, not factual correctness. The 75-88% test-set accuracy is statistically real but practically misleading &mdash; in deployment, the EBM agrees with ground truth only 50% of the time. Four compounding effects defeat activation-based detection:</p>
@@ -745,8 +745,14 @@ make research-loop</code></pre>
   <h3>Part 2: Constraint-based verification works</h3>
   <p>The paradigm shift from detection to verification transforms the problem. Instead of asking "is this output correct?" (requires omniscience), we ask "does this output satisfy known constraints?" (requires only the constraints). Results:</p>
   <ul>
+    <li><strong>Full GSM8K (1,319 questions)</strong>: Qwen3.5 70.6% -> 84.4%, Gemma4 77.1% -> 87.8%</li>
+    <li><strong>Adversarial GSM8K</strong>: +24-28% on number-swapped variants (Apple methodology)</li>
+    <li><strong>Self-learning Tier 1</strong>: 67.6% -> 97.0% accuracy over 500 questions</li>
+    <li><strong>Factual coverage</strong>: 96% via Wikidata knowledge base integration</li>
+    <li><strong>KAN energy tier</strong>: 0.994 AUROC with 8.7x fewer parameters</li>
+    <li><strong>JEPA predictive verification</strong>: multi-domain predictor</li>
+    <li><strong>Agentic workflows</strong>: constraint state machine catching 60/60 violations</li>
     <li><strong>100% hallucination detection</strong> on live LLM output (Experiment 56, 19/20 accuracy)</li>
-    <li><strong>+27% accuracy improvement</strong> via verify-repair loop (Experiment 57, 60% -> 87%)</li>
     <li><strong>HumanEval pass@1: 90% -> 96%</strong> with Ising-guided fuzzing and repair (Experiment 68)</li>
     <li><strong>Model-agnostic</strong> &mdash; same pipeline works on Qwen3.5, Gemma4, and any other LLM (Experiment 69)</li>
     <li><strong>Real-time</strong> &mdash; 36,887 verifications/second, sub-millisecond p99 (Experiment 83)</li>
@@ -754,7 +760,7 @@ make research-loop</code></pre>
   </ul>
 
   <h3>The story</h3>
-  <p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, proved that constraint verification works dramatically better on every metric, scaled it from toy problems to 5000-variable SAT instances, connected it to a live LLM, validated it on published benchmarks (HumanEval, GSM8K), and shipped it as an installable library with a production API, MCP server, CLI tool, and 5 integration examples.</p>
+  <p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, proved that constraint verification works dramatically better on every metric, scaled it from toy problems to 5000-variable SAT instances, connected it to a live LLM, validated it on published benchmarks (HumanEval, GSM8K), extended it with four energy tiers, self-learning, adversarial robustness, agentic workflow support, and JEPA predictive verification, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,251 tests.</p>
   <p>The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.</p>
 
   <hr>
@@ -789,7 +795,7 @@ make research-loop</code></pre>
     <li><strong>Plan.</strong> When all tasks in a milestone complete, a planning agent reads <code>research-program.md</code> (human-written goals) and autonomously designs the next milestone &mdash; selecting experiments, ordering dependencies, and writing full conductor-ready prompts.</li>
     <li><strong>Repeat.</strong> The loop runs until a circuit breaker halts it after N consecutive failures.</li>
   </ol>
-  <p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor has autonomously completed 4 milestones (85+ experiments) with automatic milestone archival and transition.</p>
+  <p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor has autonomously completed 11 milestones (160+ experiments) with automatic milestone archival and transition.</p>
   <p>The energy function serves as the objective judge &mdash; no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.</p>
 
   <hr>
