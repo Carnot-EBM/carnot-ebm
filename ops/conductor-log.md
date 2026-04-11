@@ -1183,3 +1183,6 @@
 | 2026-04-11 09:20 UTC | Exp 151: Publish constraint propagation models to  | OK | =========== 2093 passed, 1 skipped, 12 warnings in 379.12s (0:06:19) =========== |
 | 2026-04-11 09:21 UTC | Exp 150: Push guided decoding adapter + update 16  | OK | Deliverable already exists in repo |
 | 2026-04-11 09:21 UTC | Exp 151: Publish constraint propagation models to  | OK | Deliverable already exists in repo |
+| 2026-04-11 09:45 UTC | Exp 152: Continual learning for constraint retenti | OK | =========== 2122 passed, 1 skipped, 12 warnings in 358.11s (0:05:58) =========== |
+| 2026-04-11 09:46 UTC | Exp 150: Push guided decoding adapter + update 16  | OK | Deliverable already exists in repo |
+| 2026-04-11 09:46 UTC | Exp 151: Publish constraint propagation models to  | OK | Deliverable already exists in repo |
