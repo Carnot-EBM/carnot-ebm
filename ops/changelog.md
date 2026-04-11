@@ -745,3 +745,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 169 Complete
 
 - Exp 169: Lookahead energy extractor — AR-EBM bijection implementation (arxiv 2512.15605); enables energy-based auto-regressive path scoring for EBM candidate ranking
+
+## 2026-04-11: Experiment 170 Complete
+
+- Exp 170: Real LLM logits benchmark for spilled + lookahead energy signals — validates hallucination-detection signals on live Qwen/Gemma models (100 questions: 50 EASY + 50 HARD); targets SpilledEnergy AUROC > 0.55, LookaheadEnergy > 0.65, combined > individual; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-002
