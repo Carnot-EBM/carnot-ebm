@@ -20,25 +20,20 @@
     uncertain (hallucinating), probability mass is spread across many tokens →
     high spilled energy.
 
-    **Practical formula (numerically stable approximation):**
+    **Practical formula (numerically stable):**
 
     For a generated sequence with T tokens and logits of shape (T, V):
 
         For each position t:
             log_probs[t]    = log_softmax(logits[t])      # shape (V,)
             x_t             = argmax(logits[t])             # greedy output token
-            output_energy_t = -log_probs[t, x_t]           # NLL of chosen token
-            logit_energy_t  = mean_v(-log_probs[t, v])     # entropy H(p_t)
-            spilled_t       = max(0, output_energy_t - logit_energy_t)
+            spilled_t       = -log_probs[t, x_t]           # NLL of chosen token
 
         total_spilled = mean(spilled_t over T positions)
 
-    Why output_energy ≥ logit_energy (entropy)? Because p(x_t) = max_v p(v),
-    so -log p(x_t) ≤ -log p(v) for all v, so -log p(x_t) ≤ mean_v(-log p(v)) = H(p).
-
-    A simpler view: spilled_t ≈ NLL of the greedy token, which is:
-        ≈ 0     when model is confident (p_max → 1)
-        ≈ log V when model is uncertain (p uniform across V tokens)
+    Interpretation:
+        spilled_t ≈ 0     when model is confident (p_max → 1)
+        spilled_t ≈ log V when model is uncertain (p uniform across V tokens)
 
     **Integration:**
     - SpilledEnergyExtractor: implements ConstraintExtractor Protocol.
@@ -319,24 +314,31 @@ class SpilledEnergyExtractor:
 
         **Detailed explanation for engineers:**
             The formula follows the "spilled energy" concept from arxiv
-            2602.18671 — the discrepancy between the logit energy across
-            the full vocabulary and the energy at the chosen output token.
+            2602.18671: a high-confidence model concentrates probability on
+            one token; an uncertain model "spills" probability across many.
 
-            For each token position t:
-                log_probs[t]    = log_softmax(logits[t])   # normalised
-                x_t             = argmax(logits[t])          # greedy token
-                output_energy_t = -log_probs[t, x_t]        # NLL of argmax
-                logit_energy_t  = mean_v(-log_probs[t, v])  # entropy H(p_t)
-                spilled_t       = max(0, output_energy_t - logit_energy_t)
+            We measure this as the negative log-probability of the greedy
+            (argmax) output token at each position:
 
-            Because p(x_t) = max_v p(v), we have:
-                -log p(x_t) ≤ -log p(v) for all v
-                ⟹ -log p(x_t) ≤ mean_v(-log p(v))  ← equality iff uniform
-            So spilled_t ≥ 0 always, and max(0, ...) is guaranteed non-negative.
+                For each token position t:
+                    log_probs[t]    = log_softmax(logits[t])  # shape (V,)
+                    x_t             = argmax(logits[t])         # greedy token
+                    spilled_t       = -log_probs[t, x_t]        # NLL of x_t
 
-            Interpretation:
-                spilled_t ≈ 0     → model confident (good)
-                spilled_t ≈ H(p)  → model uncertain (hallucination risk)
+                total_spilled = mean(spilled_t over T positions)
+
+            Why NLL of the greedy token?
+                − Confident model (p(x_t) → 1): spilled_t → 0     (low energy)
+                − Uncertain model (uniform p_v = 1/V): spilled_t → log V  (high energy)
+
+            Note: Using "sum over vocab" of -log_softmax would give 0 for flat
+            logits (since entropy H = -log p_max for uniform distribution).
+            Using only the output-token NLL avoids this degenerate case and is
+            monotonically related to per-token uncertainty.
+
+            The formula matches the paper's intent: factually incorrect outputs
+            tend to have higher per-token uncertainty → higher spilled energy →
+            constraint violated.
 
         Args:
             logits: JAX array of shape (T, V) or (V,).
@@ -354,19 +356,14 @@ class SpilledEnergyExtractor:
         # Normalised log-probabilities: shape (T, V).
         log_probs = jax.nn.log_softmax(logits, axis=-1)
 
-        # Output token at each position (greedy decoding = argmax).
-        output_tokens = jnp.argmax(logits, axis=-1)  # (T,)
-
-        # Output energy: negative log-probability of the greedy token.
+        # Greedy output token at each position (= argmax of logits).
         # Shape (T,).
-        output_energy = -log_probs[jnp.arange(T), output_tokens]
+        output_tokens = jnp.argmax(logits, axis=-1)
 
-        # Logit energy: mean over vocab of -log p(v) = entropy H(p_t).
+        # Spilled energy per position: NLL of the greedy token.
+        # -log p(x_t) is 0 when p_max→1 (confident) and log V when uniform
+        # (uncertain). Always ≥ 0 because log p(x_t) ≤ 0.
         # Shape (T,).
-        logit_energy = jnp.mean(-log_probs, axis=-1)
-
-        # Spilled energy per position: excess energy beyond the greedy token.
-        # Guaranteed ≥ 0 by the argmax inequality above; clamp for safety.
-        spilled = jnp.maximum(0.0, output_energy - logit_energy)
+        spilled = -log_probs[jnp.arange(T), output_tokens]
 
         return float(jnp.mean(spilled))

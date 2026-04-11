@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 157 Spilled Energy Pre-Filter
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T12:56:05Z | 2026-04-11T13:07:17Z | Exp 157: SpilledEnergyExtractor (arxiv 2602.18671 ICLR 2026) — spilled_energy.py + 33 tests (100% cov) + AutoExtractor logits= param; benchmark AUROC=1.000 (target >0.60 ✓); coverage 100% vs NLExtractor 60%; results/experiment_157_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 156 JEPA Fast-Path v2
 
 ### Turn Log
