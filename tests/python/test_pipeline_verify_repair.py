@@ -1052,3 +1052,150 @@ class TestRustBackendPaths:
         assert result.verified is True
         # When verified is None, "satisfied" should NOT be set in metadata
         assert "satisfied" not in result.constraints[0].metadata
+
+
+# ---------------------------------------------------------------------------
+# JEPA fast-path gating tests -- REQ-JEPA-002
+# ---------------------------------------------------------------------------
+
+
+class TestJEPAFastPath:
+    """Tests for the optional JEPA Tier 3 fast-path gate in verify()."""
+
+    def _make_mock_predictor(self, max_prob: float) -> Any:
+        """Build a mock JEPA predictor that always returns a fixed max probability.
+
+        Args:
+            max_prob: The maximum domain probability the predictor will return.
+
+        Returns:
+            MagicMock object mimicking JEPAViolationPredictor.predict().
+        """
+        predictor = MagicMock()
+        predictor.predict.return_value = {
+            "arithmetic": max_prob,
+            "code": 0.0,
+            "logic": 0.0,
+        }
+        return predictor
+
+    def test_jepa_fast_path_taken_when_low_prob(self) -> None:
+        """REQ-JEPA-002: FAST_PATH returned when max_prob < threshold."""
+        pipeline = VerifyRepairPipeline()
+        predictor = self._make_mock_predictor(max_prob=0.1)
+
+        result = pipeline.verify(
+            "What is 2+2?",
+            "2 + 2 = 4",
+            jepa_predictor=predictor,
+            jepa_threshold=0.5,
+        )
+
+        assert result.mode == "FAST_PATH"
+        assert result.skipped is True
+        assert result.verified is True
+        assert result.violations == []
+        assert result.constraints == []
+        assert result.energy == 0.0
+        assert result.certificate["jepa_max_prob"] == pytest.approx(0.1)
+        assert result.certificate["jepa_threshold"] == pytest.approx(0.5)
+
+    def test_jepa_slow_path_when_high_prob(self) -> None:
+        """REQ-JEPA-002: Full pipeline runs when max_prob >= threshold."""
+        pipeline = VerifyRepairPipeline(domains=["arithmetic"])
+        predictor = self._make_mock_predictor(max_prob=0.8)
+
+        result = pipeline.verify(
+            "What is 2+2?",
+            "2 + 2 = 4",
+            jepa_predictor=predictor,
+            jepa_threshold=0.5,
+        )
+
+        # Full pipeline ran — mode should be default FULL, skipped=False.
+        assert result.mode == "FULL"
+        assert result.skipped is False
+
+    def test_jepa_no_predictor_uses_full_path(self) -> None:
+        """REQ-JEPA-002: No predictor → full pipeline always runs (backward compat)."""
+        pipeline = VerifyRepairPipeline(domains=["arithmetic"])
+
+        result = pipeline.verify(
+            "What is 2+2?",
+            "2 + 2 = 4",
+        )
+
+        assert result.mode == "FULL"
+        assert result.skipped is False
+
+    def test_jepa_fast_path_boundary_equal_to_threshold(self) -> None:
+        """REQ-JEPA-002: max_prob == threshold triggers slow path (< not <=)."""
+        pipeline = VerifyRepairPipeline()
+        predictor = self._make_mock_predictor(max_prob=0.5)
+
+        result = pipeline.verify(
+            "What is 2+2?",
+            "2 + 2 = 4",
+            jepa_predictor=predictor,
+            jepa_threshold=0.5,
+        )
+
+        # 0.5 is NOT < 0.5, so slow path should run.
+        assert result.mode == "FULL"
+        assert result.skipped is False
+
+    def test_jepa_fast_path_low_threshold_more_aggressive(self) -> None:
+        """REQ-JEPA-002: Lower threshold → less likely to fast-path (prob=0.25 >= 0.2)."""
+        pipeline = VerifyRepairPipeline()
+        predictor = self._make_mock_predictor(max_prob=0.25)
+
+        result = pipeline.verify(
+            "What is 2+2?",
+            "2 + 2 = 4",
+            jepa_predictor=predictor,
+            jepa_threshold=0.2,
+        )
+
+        # 0.25 >= 0.2, so slow path runs.
+        assert result.mode == "FULL"
+        assert result.skipped is False
+
+    def test_jepa_fast_path_certificate_contains_probs(self) -> None:
+        """REQ-JEPA-002: FAST_PATH certificate includes per-domain probs."""
+        pipeline = VerifyRepairPipeline()
+        predictor = self._make_mock_predictor(max_prob=0.05)
+
+        result = pipeline.verify(
+            "Q",
+            "short response text",
+            jepa_predictor=predictor,
+            jepa_threshold=0.5,
+        )
+
+        assert result.mode == "FAST_PATH"
+        assert "jepa_probs" in result.certificate
+        assert "arithmetic" in result.certificate["jepa_probs"]
+
+    def test_verification_result_default_mode_full(self) -> None:
+        """REQ-JEPA-002: VerificationResult defaults to mode=FULL, skipped=False."""
+        vr = VerificationResult(
+            verified=True,
+            constraints=[],
+            energy=0.0,
+            violations=[],
+        )
+        assert vr.mode == "FULL"
+        assert vr.skipped is False
+
+    def test_verification_result_fast_path_fields(self) -> None:
+        """REQ-JEPA-002: VerificationResult can be constructed with FAST_PATH mode."""
+        vr = VerificationResult(
+            verified=True,
+            constraints=[],
+            energy=0.0,
+            violations=[],
+            mode="FAST_PATH",
+            skipped=True,
+        )
+        assert vr.mode == "FAST_PATH"
+        assert vr.skipped is True

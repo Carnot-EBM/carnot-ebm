@@ -55,6 +55,15 @@ The system shall provide tools to analyze the energy landscape around a solution
 
 Given identical inputs, model parameters, and random seeds, the system shall produce bit-identical energy values and verification results across runs (within the same language implementation).
 
+### REQ-JEPA-002: Tier 3 Fast-Path Gate
+
+The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
+- Accepts `jepa_predictor` (optional `JEPAViolationPredictor`) and `jepa_threshold` (float, default 0.5)
+- When a predictor is provided, embeds the first 50 whitespace-split tokens of the response and queries the predictor for per-domain violation probabilities
+- If `max(probabilities) < jepa_threshold`, returns a `VerificationResult` with `mode="FAST_PATH"`, `skipped=True`, and `verified=True` (optimistic low-risk assumption)
+- When no predictor is provided, behaves identically to the original full-pipeline path (backward compatible)
+- `VerificationResult` shall include `mode: str = "FULL"` and `skipped: bool = False` fields (defaulting to full-path semantics for all existing callers)
+
 ## Scenarios
 
 ### SCENARIO-VERIFY-001: Sudoku Constraint Satisfaction
@@ -122,3 +131,4 @@ Given identical inputs, model parameters, and random seeds, the system shall pro
 | REQ-VERIFY-005 | Implemented | Implemented | 2 Rust + 2 Python |
 | REQ-VERIFY-006 | Not Started | Not Started | Not Started |
 | REQ-VERIFY-007 | Implemented | Implemented | 1 Rust + 2 Python |
+| REQ-JEPA-002 | Not Started | Implemented | 8 Python |
