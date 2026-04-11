@@ -227,6 +227,28 @@ When designing new milestones, the planning agent MUST:
 4. **Update research-references.md** — Any new papers or tools discovered
    during planning must be filed for future reference.
 
+## Lessons Learned: Large Benchmark Experiments
+
+Experiments 181-183 (live GPU benchmarks) repeatedly failed because they
+were too large for a single `claude -p` session (50 turns). Pattern:
+- Claude writes 50-80KB script successfully
+- Gets stuck in test-fix loop trying to reach 100% coverage
+- Hits max turns, conductor retries, same result, exhausted after 3 failures
+
+**Rule for future milestones:** Break large benchmarks into phases:
+1. **Script generation** — write the benchmark script (no tests needed,
+   deliverable = script file)
+2. **Test coverage** — add tests for the new script (separate experiment)
+3. **Execution** — run the script and capture results (deliverable = results JSON)
+4. **Analysis** — analyze results and update docs (separate experiment)
+
+Each phase is small enough for 50 turns. The checkpoint system preserves
+work between phases.
+
+**Also:** Dirty checkpoint files (exp181_ckpt, exp182_ckpt, exp183_ckpt)
+need cleanup — consolidate partial results into proper experiment_NNN_results.json
+files or remove if data is invalid.
+
 ## Next Milestone Focus (2026.04.10)
 
 The planning agent MUST prioritize these for the next milestone:
