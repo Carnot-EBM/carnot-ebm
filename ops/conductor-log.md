@@ -1272,3 +1272,7 @@
 | 2026-04-11 19:33 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 19:33 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
 | 2026-04-11 19:33 UTC | Exp 174: LagONN constraint solver — escape infeasi | OK | Deliverable already exists in repo |
+| 2026-04-11 19:52 UTC | Exp 175: Tier-4 KAN adaptive structure self-learni | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-11 19:53 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:53 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:53 UTC | Exp 175: Tier-4 KAN adaptive structure self-learni | OK | Deliverable already exists in repo |
