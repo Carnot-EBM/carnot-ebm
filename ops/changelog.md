@@ -710,3 +710,9 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 155 Complete
 
 - Exp 155: Retrain JEPA violation predictor v2 with multi-domain data — retrained JEPAViolationPredictor on 1200-pair multi-domain dataset (arithmetic, code, logic); macro AUROC 0.6478→0.6588 (+0.0111), code domain +7.0pp (0.706→0.776); v2 model at `results/jepa_predictor_v2.safetensors`; improves on Exp 144 single-domain baseline
+
+---
+
+## 2026-04-11: Experiment 164 Complete
+
+- Exp 164: HuggingFace publishing sprint — publishes 5 artifacts (guided-decoding adapter, 3 constraint-propagation models, JEPA predictor v2); updates 16 per-token EBM READMEs; enables community access to Carnot-trained models and VerifyRepairPipeline integration via `pip install carnot`
