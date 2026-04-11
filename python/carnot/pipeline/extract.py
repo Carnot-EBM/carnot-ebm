@@ -852,6 +852,7 @@ class AutoExtractor:
         # Import here to avoid circular imports (knowledge_base imports from
         # extract, so we defer the import to instantiation time).
         from carnot.pipeline.knowledge_base import FactualKBExtractor  # noqa: PLC0415
+        from carnot.pipeline.spilled_energy import SpilledEnergyExtractor  # noqa: PLC0415
 
         self._extractors: list[ConstraintExtractor] = [
             ArithmeticExtractor(),
@@ -860,6 +861,10 @@ class AutoExtractor:
             NLExtractor(),
             FactualKBExtractor(),
         ]
+        # SpilledEnergyExtractor is held separately because it requires
+        # logits from the generation step and is called via a dedicated
+        # code path rather than the standard Protocol loop.
+        self._spilled_energy_extractor = SpilledEnergyExtractor()
 
     @property
     def supported_domains(self) -> list[str]:
@@ -880,6 +885,7 @@ class AutoExtractor:
         text: str,
         domain: str | None = None,
         memory: "ConstraintMemory | None" = None,
+        logits: "jnp.ndarray | None" = None,
     ) -> list[ConstraintResult]:
         """Run all applicable extractors and merge results.
 
@@ -902,8 +908,16 @@ class AutoExtractor:
             By ADDING constraints from memory, we cover error patterns that
             the static extractors were never designed to catch.
 
-            Backward compatibility: when memory=None (the default), behavior
-            is identical to the pre-Exp-141 version.
+            **logits= parameter (Exp 157 -- spilled energy pre-filter):**
+            When a JAX array of generation logits is provided (shape T×V or V),
+            the SpilledEnergyExtractor runs as an additional pass and returns
+            a SpilledEnergyConstraint encoding the model's confidence during
+            generation. This is the lightweight factual hallucination signal
+            from arxiv 2602.18671 (ICLR 2026) — no external KB required.
+
+            Backward compatibility: when logits=None (the default), behavior
+            is identical to the pre-Exp-157 version. Existing callers need no
+            changes.
 
         Args:
             text: Input text to extract constraints from.
@@ -912,6 +926,9 @@ class AutoExtractor:
             memory: Optional ConstraintMemory for Tier 2 constraint
                 addition. When provided, mature patterns for the domain
                 trigger additional extractors. Defaults to None.
+            logits: Optional JAX array of generation logits, shape (T, V)
+                or (V,). When provided, runs SpilledEnergyExtractor to
+                add a hallucination confidence signal. Defaults to None.
 
         Returns:
             List of ConstraintResult objects, deduplicated by description
@@ -945,5 +962,21 @@ class AutoExtractor:
                 # the memory extractor to add multiple violations of a new type.
                 if generated.constraint_type not in static_types:
                     results.append(generated)
+
+        # Exp 157 — Spilled energy pre-filter (arxiv 2602.18671, ICLR 2026).
+        # When generation logits are available, run SpilledEnergyExtractor as
+        # an additional pass. This is separate from the main extractor loop
+        # because it requires logits (not just text) and is domain-agnostic
+        # (always runs regardless of the domain= hint).
+        # Backward compatible: logits=None (the default) skips this block
+        # entirely, so existing callers see no change in behavior.
+        if logits is not None:
+            spilled_results = self._spilled_energy_extractor.extract(
+                text, logits=logits
+            )
+            for result in spilled_results:
+                if result.description not in seen_descriptions:
+                    seen_descriptions.add(result.description)
+                    results.append(result)
 
         return results
