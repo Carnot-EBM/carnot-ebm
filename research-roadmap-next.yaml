@@ -1,0 +1,318 @@
+# Carnot Research Roadmap — Milestone 2026.04.13
+# "Live GPU Benchmarks + Multi-Model Scaling + Publishable Results"
+#
+# Active experiment queue — processed in order by research_conductor.py
+# This file is picked up automatically when 2026.04.12 completes.
+#
+# Versioning: CalVer (YYYY.MM.seq)
+# Completed tasks are moved to research-complete.yaml
+
+milestone: "2026.04.13"
+milestone_title: "Live GPU Benchmarks + Multi-Model Scaling + Publishable Results"
+milestone_doc: "openspec/change-proposals/research-roadmap-v17.md"
+
+tasks:
+  # ── Phase 48: Live GPU Inference Validation ──────────────────
+  - id: exp180-gpu-inference-baseline
+    milestone: "2026.04.13"
+    deliverable: results/experiment_180_results.json
+    title: "Exp 180: GPU inference baseline — Qwen3.5 + Gemma4 on RTX 3090"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Two NVIDIA RTX 3090s (48GB total VRAM) are now available via CUDA.
+      PyTorch 2.11.0+cu126 and JAX CUDA are installed. This experiment establishes
+      baseline inference speed and validates live model loading on GPU.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/model_loader.py — robust model loading
+      - scripts/experiment_91_gsm8k_live.py — GSM8K benchmark (was simulated)
+      - research-hardware-wishlist.md — hardware details
+
+      TASK: Create results/experiment_180_results.json by running:
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU 0 — measure load time and VRAM usage
+      2. Load Gemma4-E4B-it on GPU 1 — measure load time and VRAM usage
+      3. Benchmark inference on 50 questions per model:
+         - Tokens/second, latency per generation (p50, p95)
+         - Compare: GPU vs CPU inference speed
+      4. Test: both models loaded simultaneously (one per GPU)
+      5. Save results with load times, VRAM, throughput, latency
+      6. Run: .venv/bin/python scripts/experiment_180_gpu_baseline.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp181-gsm8k-live-gpu
+    milestone: "2026.04.13"
+    deliverable: results/experiment_181_results.json
+    title: "Exp 181: GSM8K full 1319 with LIVE GPU inference — publishable"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: RTX 3090 GPUs are available. Previous GSM8K experiments used
+      simulated inference. This is the DEFINITIVE run with real model outputs.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_161_gsm8k_full.py — previous attempt (simulated)
+      - results/experiment_180_results.json — GPU baseline (Exp 180)
+      - python/carnot/inference/model_loader.py — model loading
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+
+      TASK: Create results/experiment_181_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU, set CARNOT_FORCE_LIVE=1
+      2. Run full 1,319 GSM8K test questions through 3 modes:
+         a. Baseline (LLM only)
+         b. Verify-only
+         c. Verify-repair (max 3 iterations)
+      3. Report with 95% bootstrap confidence intervals
+      4. Compare to published Qwen3.5-0.8B GSM8K baselines
+      5. Repeat with Gemma4-E4B-it on GPU 1
+      6. Save comprehensive results with CIs
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_181_gsm8k_live_gpu.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp182-adversarial-live-gpu
+    milestone: "2026.04.13"
+    deliverable: results/experiment_182_results.json
+    title: "Exp 182: Adversarial GSM8K N=400/variant with LIVE GPU — publishable"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: This is the DEFINITIVE adversarial benchmark with live GPU
+      inference and N>=400 per variant for statistical power. Previous runs
+      used simulated inference or N=200.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_162_adversarial_live.py — previous attempt
+      - scripts/experiment_119_adversarial_gsm8k.py — variant generator
+      - results/experiment_180_results.json — GPU baseline
+
+      TASK: Create results/experiment_182_results.json
+
+      CONCRETE STEPS:
+      1. Generate 400 adversarial variants per type (number-swapped,
+         irrelevant-injected, combined) = 1,600 total
+      2. Run with LIVE Qwen3.5-0.8B on GPU:
+         a. Baseline, b. Verify-only, c. Verify-repair per variant
+      3. Run with LIVE Gemma4-E4B-it on GPU
+      4. 95% bootstrap CIs on all accuracy numbers
+      5. Paired significance test: adversarial improvement > control
+      6. Error taxonomy with sufficient N for per-type statistics
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_182_adversarial_live_gpu.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp183-humaneval-live-gpu
+    milestone: "2026.04.13"
+    deliverable: results/experiment_183_results.json
+    title: "Exp 183: HumanEval full 164 with LIVE GPU — publishable"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Full HumanEval with live GPU inference. Previous runs used
+      simulated or partial data.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_163_humaneval_full.py — previous attempt
+      - python/carnot/pipeline/verify_repair.py — pipeline
+      - python/carnot/pipeline/extract.py — CodeExtractor
+
+      TASK: Create results/experiment_183_results.json
+
+      CONCRETE STEPS:
+      1. Load HumanEval dataset (164 problems)
+      2. Run with LIVE Qwen3.5-0.8B on GPU:
+         a. Generate code, b. Extract constraints, c. Instrument + verify,
+         d. Ising-guided fuzz, e. Verify-repair loop
+      3. Report: pass@1 baseline vs pass@1+repair with CIs
+      4. Bug detection source breakdown (tests, instrumentation, fuzzing)
+      5. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_183_humaneval_live_gpu.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 49: Multi-Model Scaling ───────────────────────────
+  - id: exp184-3b-model-verify
+    milestone: "2026.04.13"
+    deliverable: results/experiment_184_results.json
+    title: "Exp 184: 3B model verification — does verify-repair help larger models?"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: All experiments so far used 0.6-0.8B models. With 24GB VRAM
+      per GPU, we can test 3B models. Key question: does verify-repair still
+      help when the base model is already stronger?
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py — pipeline
+      - results/experiment_181_results.json — 0.8B GSM8K results
+
+      TASK: Create results/experiment_184_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3-3B (or Qwen3.5-3B if available) on GPU
+      2. Run 200 GSM8K questions: baseline vs verify-repair
+      3. Compare improvement delta to 0.8B results (Exp 181)
+      4. Hypothesis: verify-repair helps LESS on larger models because they
+         make fewer arithmetic errors — but still helps on adversarial
+      5. Run 200 adversarial (number-swapped) on 3B model
+      6. Report: is adversarial improvement still significant at 3B?
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_184_3b_model.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp185-igpu-large-model
+    milestone: "2026.04.13"
+    deliverable: results/experiment_185_results.json
+    title: "Exp 185: iGPU large model loading — 13B+ via system RAM"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The AMD Radeon 890M iGPU shares system RAM, enabling models
+      far larger than 24GB VRAM. Test loading 13B+ models via the iGPU path
+      and verify-repair on their outputs.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/model_loader.py — model loading
+      - results/experiment_184_results.json — 3B results
+
+      TASK: Create results/experiment_185_results.json
+
+      CONCRETE STEPS:
+      1. Check available system RAM
+      2. Load a 13B model (Qwen3.5-14B or similar) via CPU/iGPU
+         - Use torch_dtype=float16 or bfloat16 to fit in RAM
+      3. Run 50 GSM8K questions: baseline vs verify-repair
+      4. Compare to 0.8B and 3B results — scaling trend
+      5. Test: can we verify RTX 3090 outputs using the iGPU-loaded model
+         as a reference? (cross-model verification)
+      6. Run: .venv/bin/python scripts/experiment_185_igpu_large.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 50: Real-Time Guided Decoding on GPU ──────────────
+  - id: exp186-guided-decoding-live
+    milestone: "2026.04.13"
+    deliverable: results/experiment_186_results.json
+    title: "Exp 186: Live guided decoding — constrain token generation on GPU"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Guided decoding was prototyped (Exp 110) and benchmarked
+      (0.006ms per check). Now test it LIVE on GPU — actually modify token
+      probabilities during Qwen3.5 generation based on constraint energy.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/guided_decoding.py — guided decoding module
+      - results/experiment_102_results.json — latency benchmarks
+      - results/experiment_180_results.json — GPU baseline
+
+      TASK: Create results/experiment_186_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU with guided decoding hooks
+      2. Test on 100 arithmetic questions:
+         a. Standard generation (no guidance)
+         b. Guided generation (constraint energy modifies logits)
+      3. Measure: accuracy improvement, latency overhead per token
+      4. Compare: guided decoding vs post-hoc verify-repair
+      5. Can they be combined? Guided + verify-repair
+      6. Run: .venv/bin/python scripts/experiment_186_guided_live.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 51: Self-Learning on Live Data ────────────────────
+  - id: exp187-online-learning-live
+    milestone: "2026.04.13"
+    deliverable: results/experiment_187_results.json
+    title: "Exp 187: Online self-learning with live GPU inference"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Self-learning (Tier 1+2) was tested with simulated data and
+      showed 67->97% improvement. Now test with LIVE model inference —
+      does the system still learn when seeing real model errors?
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — constraint tracker
+      - python/carnot/pipeline/memory.py — constraint memory
+      - python/carnot/pipeline/adaptive.py — adaptive weighting
+      - results/experiment_134_results.json — simulated learning results
+
+      TASK: Create results/experiment_187_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU
+      2. Stream 500 LIVE GSM8K questions through pipeline with tracker
+      3. Every 50 questions: update constraint weights + generate new constraints
+      4. Plot accuracy over time with live inference
+      5. Compare: simulated learning curve vs live learning curve
+      6. Key question: does live inference produce different error patterns
+         than simulation, and does the self-learning system adapt?
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_187_online_live.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 52: HuggingFace Publishing with Live Numbers ──────
+  - id: exp188-hf-update-live-numbers
+    milestone: "2026.04.13"
+    deliverable: results/experiment_188_results.json
+    title: "Exp 188: Update HuggingFace model cards with live GPU benchmark numbers"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: HuggingFace model cards and guided decoding adapter currently
+      have simulated benchmark numbers. Update with LIVE GPU results from
+      Exp 181-186.
+
+      EXISTING CODE TO READ FIRST:
+      - exports/guided-decoding-adapter/README.md — current adapter card
+      - results/experiment_181_results.json — live GSM8K
+      - results/experiment_182_results.json — live adversarial
+      - results/experiment_183_results.json — live HumanEval
+      - results/experiment_186_results.json — live guided decoding
+
+      TASK: Create results/experiment_188_results.json
+
+      CONCRETE STEPS:
+      1. Update exports/guided-decoding-adapter/README.md with live numbers
+      2. Update exports/constraint-propagation-models READMEs
+      3. Generate comparison table: simulated vs live results
+      4. Prepare model card updates for HuggingFace upload
+      5. Run: .venv/bin/python scripts/experiment_188_hf_update.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 53: ArXiv + Research ──────────────────────────────
+  - id: exp189-arxiv-scan-v2
+    milestone: "2026.04.13"
+    deliverable: results/experiment_189_results.json
+    title: "Exp 189: Research scan v2 — arxiv + OpenReview + Extropic + GitHub"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The planning agent now searches multiple sources beyond arxiv.
+      This experiment does a comprehensive scan.
+
+      EXISTING CODE TO READ FIRST:
+      - research-references.md — current references
+      - research-program.md — "Research Sources" section
+      - results/experiment_139_results.json — previous arxiv scan
+
+      TASK: Create results/experiment_189_results.json
+
+      CONCRETE STEPS:
+      1. Search arxiv for papers (2025-2026) on: EBMs, KANs, Ising machines,
+         constrained decoding, continual learning for constraints
+      2. Check OpenReview for NeurIPS/ICML/ICLR submissions
+      3. Check extropic.ai/writing for TSU updates
+      4. Check Semantic Scholar for papers citing EBT and ARM-EBM
+      5. Check GitHub trending for new EBM/constraint repos
+      6. Update research-references.md with findings
+      7. Propose 3-5 experiments for 2026.04.14
+      8. Run: .venv/bin/python scripts/experiment_189_research_scan.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
