@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technical Report - Carnot: Energy-Based Verification for LLM Output</title>
-  <meta name="description" content="Technical report on combining Energy-Based Models with LLMs. 25 experiments on Qwen3-0.6B and Qwen3.5-0.8B. Key findings and 10 principles.">
+  <meta name="description" content="Technical report: 125+ experiments combining EBMs with LLMs. Constraint verification recovers +15% on adversarial math. 4 energy tiers, 0.006ms guided decoding, self-learning pipeline.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
   
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -139,7 +139,7 @@
 
   <div class="abstract">
     <h3>Abstract</h3>
-    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations. Through 25 systematic experiments on Qwen3-0.6B and Qwen3.5-0.8B, we establish that the model's own log-probabilities are the most effective energy signal for candidate selection (+10% accuracy on 20 questions), while structural test execution dominates for code (0% → 30% on 10 tasks vs. unmodified baseline). Activation-space approaches show high detection power (0.945 AUROC) but zero causal effect when used for generation steering. This is alpha-stage research software; see the paper for statistical limitations.</p>
+    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to verify and repair hallucinations. Through 125+ experiments across 8 milestones, we established that activation-based detection fails (detects confidence, not correctness) but structural constraint verification via Ising models succeeds: +15% accuracy recovery on adversarial math (Apple GSM8K), HumanEval pass@1 90%→96%, and 0.006ms per constraint check enabling real-time guided decoding. Ships as <code>pip install carnot</code> with VerifyRepairPipeline, 4 energy tiers (Ising, KAN, Gibbs, Boltzmann), MCP server, and self-learning constraint memory.</p>
   </div>
 
   <h2>1. Introduction</h2>
@@ -154,9 +154,10 @@
   
   <h3>2.2 Model Tiers</h3>
   <ul>
-    <li><strong>Ising</strong>: Quadratic energy, O(d²) complexity.</li>
-    <li><strong>Gibbs</strong>: Multi-layer MLP verifier.</li>
-    <li><strong>Boltzmann</strong>: Deep residual transformer-based verifier.</li>
+    <li><strong>Ising</strong>: Quadratic energy, O(d²). Hardware-mappable to FPGA/TSU.</li>
+    <li><strong>KAN</strong>: Learnable B-spline edge activations. 0.994 AUROC with 8.7x fewer parameters than Ising. Interpretable and differentiable.</li>
+    <li><strong>Gibbs</strong>: Multi-layer MLP energy network.</li>
+    <li><strong>Boltzmann</strong>: Deep residual transformer-based energy network.</li>
   </ul>
 
   <h2>3. Key Results</h2>
