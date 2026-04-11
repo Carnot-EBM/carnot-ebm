@@ -811,3 +811,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 179 Checkpoint
 
 - Exp 179: AMD XDNA NPU activation — VitisAI onnxruntime for JEPA predictor — fixed RyzenAI-SW symlinks (24 .so stubs → real OS symlinks), corrected provider name (VitisAIExecutionProvider), upgraded onnxruntime 1.20.1→1.24.4 for IR v13 support; BLOCKER: Python 3.12/3.10 mismatch (VitisAI EP built for 3.10, venv uses 3.12; next: AMD wheel for Python 3.12); CPU baseline p50=0.0046ms; results at `results/experiment_179_npu_results.json`; REQ-JEPA-001
+
+## 2026-04-11: Experiment 181 In Progress
+
+- Exp 181: GSM8K full 1319 with LIVE GPU inference — Qwen3.5-0.8B baseline on RTX 3090 dual-GPU setup; runs full GSM8K test set (1319 questions) with actual LIVE GPU inference (not simulated) using models loaded from Exp 180 GPU baseline; produces checkpoint format for long-running inference; publishable baseline for GPU-accelerated verification pipeline; results at `results/experiment_181_ckpt_*.json` (progressive checkpoints); REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006
