@@ -1,0 +1,333 @@
+{
+  "experiment": "152_continual_gibbs",
+  "description": "ContinualGibbs orthogonal gradient vs LNN (Exp 116) and Ising on 5-step chains",
+  "config": {
+    "input_dim": 16,
+    "hidden_dim": 8,
+    "n_chains": 20,
+    "n_steps": 5,
+    "seed": 2024,
+    "learning_rate": 0.1,
+    "activation": "silu"
+  },
+  "summary": {
+    "continual_step5_accuracy": 1.0,
+    "lnn_step5_accuracy": 0.9,
+    "ising_step5_accuracy": 1.0,
+    "target_80pct_met": true,
+    "continual_vs_lnn_improvement": 0.09999999999999998,
+    "continual_energy_gap_step5": -0.71188541688025,
+    "continual_mean_correct_step5_energy": -0.021877264603972435,
+    "continual_mean_error_step5_energy": -0.7337626814842224,
+    "continual_classification_threshold": -0.2688877582550049,
+    "continual_per_step_accuracies": [
+      0.6,
+      0.7,
+      0.9,
+      1.0
+    ]
+  },
+  "lnn_exp116_available": true,
+  "per_chain_results": [
+    {
+      "chain_id": "correct_00",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        -0.009928232058882713,
+        0.019646935164928436,
+        0.019580869004130363,
+        -0.018614767119288445
+      ],
+      "continual_step5_energy": -0.018614767119288445,
+      "lnn_step5_energy": 0.05673579126596451,
+      "ising_step5_energy": 0.15968984365463257
+    },
+    {
+      "chain_id": "correct_01",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        -0.0009539497550576925,
+        -0.004455711226910353,
+        0.011917454190552235,
+        -0.020433183759450912
+      ],
+      "continual_step5_energy": -0.020433183759450912,
+      "lnn_step5_energy": -0.03186321258544922,
+      "ising_step5_energy": -0.20253196358680725
+    },
+    {
+      "chain_id": "correct_02",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        0.007847895845770836,
+        0.010457267984747887,
+        -0.0006522240582853556,
+        -0.003800617530941963
+      ],
+      "continual_step5_energy": -0.003800617530941963,
+      "lnn_step5_energy": 0.06632005423307419,
+      "ising_step5_energy": 0.30831098556518555
+    },
+    {
+      "chain_id": "correct_03",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        -0.006927987560629845,
+        0.0013543087989091873,
+        -0.00723126670345664,
+        -0.02782866358757019
+      ],
+      "continual_step5_energy": -0.02782866358757019,
+      "lnn_step5_energy": 0.06226595118641853,
+      "ising_step5_energy": 0.22328035533428192
+    },
+    {
+      "chain_id": "correct_04",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        0.000819049368146807,
+        -0.007970325648784637,
+        0.005803040228784084,
+        -0.023449862375855446
+      ],
+      "continual_step5_energy": -0.023449862375855446,
+      "lnn_step5_energy": -0.006983831524848938,
+      "ising_step5_energy": 0.2084789127111435
+    },
+    {
+      "chain_id": "correct_05",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        0.012592501938343048,
+        -0.021760616451501846,
+        -0.02551664598286152,
+        -0.021527163684368134
+      ],
+      "continual_step5_energy": -0.021527163684368134,
+      "lnn_step5_energy": 0.0742369219660759,
+      "ising_step5_energy": -0.03291212022304535
+    },
+    {
+      "chain_id": "correct_06",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        0.009898257441818714,
+        0.005949337966740131,
+        -0.025856947526335716,
+        -0.03921108692884445
+      ],
+      "continual_step5_energy": -0.03921108692884445,
+      "lnn_step5_energy": 0.04806068167090416,
+      "ising_step5_energy": 0.3177343010902405
+    },
+    {
+      "chain_id": "correct_07",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        -0.006829632446169853,
+        -0.014999862760305405,
+        0.008322134613990784,
+        -0.01998298615217209
+      ],
+      "continual_step5_energy": -0.01998298615217209,
+      "lnn_step5_energy": 0.014649812132120132,
+      "ising_step5_energy": 0.12161990255117416
+    },
+    {
+      "chain_id": "correct_08",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        -0.01387393195182085,
+        0.004047751892358065,
+        0.014081119559705257,
+        -0.01579650305211544
+      ],
+      "continual_step5_energy": -0.01579650305211544,
+      "lnn_step5_energy": 0.06338369846343994,
+      "ising_step5_energy": 0.21195374429225922
+    },
+    {
+      "chain_id": "correct_09",
+      "is_correct": true,
+      "error_at_step": null,
+      "continual_energies": [
+        0.0,
+        0.011642512865364552,
+        -0.006405828054994345,
+        -0.011190000921487808,
+        -0.028127819299697876
+      ],
+      "continual_step5_energy": -0.028127819299697876,
+      "lnn_step5_energy": 0.01166971493512392,
+      "ising_step5_energy": -0.002001041080802679
+    },
+    {
+      "chain_id": "error_00",
+      "is_correct": false,
+      "error_at_step": 1,
+      "continual_energies": [
+        0.0,
+        0.03801621124148369,
+        -1.1409275531768799,
+        -0.9707035422325134,
+        -0.8619698286056519
+      ],
+      "continual_step5_energy": -0.8619698286056519,
+      "lnn_step5_energy": 0.20398512482643127,
+      "ising_step5_energy": 5.750137805938721
+    },
+    {
+      "chain_id": "error_01",
+      "is_correct": false,
+      "error_at_step": 2,
+      "continual_energies": [
+        0.0,
+        -0.009054836817085743,
+        0.05440885201096535,
+        -0.6220449209213257,
+        -0.6721144914627075
+      ],
+      "continual_step5_energy": -0.6721144914627075,
+      "lnn_step5_energy": 0.30486226081848145,
+      "ising_step5_energy": 4.853778839111328
+    },
+    {
+      "chain_id": "error_02",
+      "is_correct": false,
+      "error_at_step": 3,
+      "continual_energies": [
+        0.0,
+        -0.00986175611615181,
+        -0.010469992645084858,
+        0.05294213071465492,
+        -0.6137498021125793
+      ],
+      "continual_step5_energy": -0.6137498021125793,
+      "lnn_step5_energy": 0.3107275068759918,
+      "ising_step5_energy": 6.651641368865967
+    },
+    {
+      "chain_id": "error_03",
+      "is_correct": false,
+      "error_at_step": 1,
+      "continual_energies": [
+        0.0,
+        -0.023035544902086258,
+        -0.8893780708312988,
+        -1.1612460613250732,
+        -0.9671297669410706
+      ],
+      "continual_step5_energy": -0.9671297669410706,
+      "lnn_step5_energy": 0.334062397480011,
+      "ising_step5_energy": 6.702652931213379
+    },
+    {
+      "chain_id": "error_04",
+      "is_correct": false,
+      "error_at_step": 2,
+      "continual_energies": [
+        0.0,
+        -0.0018435149686411023,
+        0.033830706030130386,
+        -0.4742034673690796,
+        -0.8592766523361206
+      ],
+      "continual_step5_energy": -0.8592766523361206,
+      "lnn_step5_energy": 0.21537145972251892,
+      "ising_step5_energy": 8.021848678588867
+    },
+    {
+      "chain_id": "error_05",
+      "is_correct": false,
+      "error_at_step": 3,
+      "continual_energies": [
+        0.0,
+        0.0015633394941687584,
+        -0.008249160833656788,
+        -0.03898663818836212,
+        -0.4985644519329071
+      ],
+      "continual_step5_energy": -0.4985644519329071,
+      "lnn_step5_energy": 0.0973602682352066,
+      "ising_step5_energy": 7.648543834686279
+    },
+    {
+      "chain_id": "error_06",
+      "is_correct": false,
+      "error_at_step": 1,
+      "continual_energies": [
+        0.0,
+        0.020315255969762802,
+        -0.6382112503051758,
+        -0.838295578956604,
+        -0.9969362020492554
+      ],
+      "continual_step5_energy": -0.9969362020492554,
+      "lnn_step5_energy": 0.18254528939723969,
+      "ising_step5_energy": 8.094427108764648
+    },
+    {
+      "chain_id": "error_07",
+      "is_correct": false,
+      "error_at_step": 2,
+      "continual_energies": [
+        0.0,
+        -0.008947968482971191,
+        -0.04192826524376869,
+        -0.6144242882728577,
+        -0.7327127456665039
+      ],
+      "continual_step5_energy": -0.7327127456665039,
+      "lnn_step5_energy": 0.1154012531042099,
+      "ising_step5_energy": 4.896388530731201
+    },
+    {
+      "chain_id": "error_08",
+      "is_correct": false,
+      "error_at_step": 3,
+      "continual_energies": [
+        0.0,
+        -0.0005214163684286177,
+        -0.006862871814519167,
+        -0.07401461899280548,
+        -0.6214136481285095
+      ],
+      "continual_step5_energy": -0.6214136481285095,
+      "lnn_step5_energy": -0.023827552795410156,
+      "ising_step5_energy": 8.79763412475586
+    },
+    {
+      "chain_id": "error_09",
+      "is_correct": false,
+      "error_at_step": 2,
+      "continual_energies": [
+        0.0,
+        -0.008601195178925991,
+        0.002656372729688883,
+        -0.6633358001708984,
+        -0.5137597322463989
+      ],
+      "continual_step5_energy": -0.5137597322463989,
+      "lnn_step5_energy": 0.25801050662994385,
+      "ising_step5_energy": 4.426496982574463
+    }
+  ]
+}
