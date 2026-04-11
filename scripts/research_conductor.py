@@ -666,8 +666,10 @@ READ THESE FILES FIRST (in order):
 10. research-references.md — technologies and ideas to consider
 11. research-hardware-wishlist.md — available and desired hardware
 
-THEN DO ARXIV RESEARCH:
-Search arxiv.org for recent papers (2025-2026) relevant to:
+THEN DO RESEARCH (arxiv + other sources):
+Search these sources for recent work (2025-2026) relevant to Carnot:
+
+PRIMARY — arxiv.org:
 - Energy-Based Models for verification/reasoning
 - Constraint satisfaction with neural networks
 - Ising model applications in ML
@@ -675,6 +677,17 @@ Search arxiv.org for recent papers (2025-2026) relevant to:
 - Kolmogorov-Arnold Networks
 - Energy-guided decoding / constrained generation
 - Hardware-accelerated sampling (FPGA, thermodynamic computing)
+- Continual/online learning for constraint systems
+
+SECONDARY — also check:
+- OpenReview.net — NeurIPS/ICML/ICLR submissions on EBMs, constrained decoding
+- extropic.ai/writing — Extropic TSU hardware updates
+- Semantic Scholar — papers CITING our key references (EBT arxiv:2507.02092,
+  ARM-EBM bijection arxiv:2512.15605)
+- HuggingFace papers (huggingface.co/papers) — verification/hallucination work
+- GitHub trending repos — new EBM/constraint/KAN implementations (Python+Rust)
+- logicalintelligence.com — Kona architecture updates
+
 Add any promising findings to research-references.md before designing experiments.
 This research phase ensures we stay current and don't miss accelerating ideas.
 
@@ -931,8 +944,9 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"9. ops/conductor-log.md — per-experiment results\n"
         f"10. research-references.md — technologies and ideas to consider\n"
         f"11. research-hardware-wishlist.md — available and desired hardware\n\n"
-        f"THEN DO ARXIV RESEARCH:\n"
-        f"Search arxiv.org for recent papers (2025-2026) relevant to:\n"
+        f"THEN DO RESEARCH (arxiv + other sources):\n"
+        f"Search these sources for recent work (2025-2026) relevant to Carnot:\n\n"
+        f"PRIMARY — arxiv.org:\n"
         f"- Energy-Based Models for verification/reasoning\n"
         f"- Constraint satisfaction with neural networks\n"
         f"- Ising model applications in ML\n"
@@ -940,6 +954,14 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"- Kolmogorov-Arnold Networks\n"
         f"- Energy-guided decoding / constrained generation\n"
         f"- Hardware-accelerated sampling (FPGA, thermodynamic computing)\n"
+        f"- Continual/online learning for constraint systems\n\n"
+        f"SECONDARY — also check:\n"
+        f"- OpenReview.net — NeurIPS/ICML/ICLR submissions on EBMs\n"
+        f"- extropic.ai/writing — TSU hardware updates\n"
+        f"- Semantic Scholar — papers citing EBT (2507.02092) and ARM-EBM (2512.15605)\n"
+        f"- HuggingFace papers (huggingface.co/papers) — verification work\n"
+        f"- GitHub trending — new EBM/constraint/KAN repos\n"
+        f"- logicalintelligence.com — Kona architecture updates\n\n"
         f"Add any promising findings to research-references.md before designing "
         f"experiments. This ensures we stay current and don't miss ideas.\n\n"
         f"THEN DESIGN THE MILESTONE:\n"

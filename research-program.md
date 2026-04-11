@@ -285,6 +285,23 @@ The planning agent MUST prioritize these for the next milestone:
 - Precision-based constraint REWEIGHTING: no improvement over fixed weights (Exp 134)
   — need constraint ADDITION instead
 
+## Research Sources
+
+The planning agent searches these sources when designing milestones:
+
+**Primary — arxiv.org:** EBMs, constraint satisfaction, Ising models, KANs,
+guided decoding, FPGA/thermodynamic sampling, continual learning.
+
+**Secondary:**
+- **OpenReview.net** — NeurIPS/ICML/ICLR submissions (3-6 months before arxiv)
+- **extropic.ai/writing** — TSU hardware updates and thermodynamic computing
+- **Semantic Scholar** — Papers citing our key references (EBT, ARM-EBM bijection)
+- **HuggingFace papers** (huggingface.co/papers) — verification/hallucination work
+- **GitHub trending** — New EBM/constraint/KAN repos (Python + Rust)
+- **logicalintelligence.com** — Kona architecture updates
+- **FPGA conference proceedings** (FCCM, FPL, DAC) — Ising machine implementations
+- **AMD developer forums** — Ryzen AI NPU SDK, XDNA updates, onnxruntime VitisAI
+
 ## Quality Standards
 
 - Every experiment must run end-to-end and produce results
