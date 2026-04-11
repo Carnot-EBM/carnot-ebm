@@ -1,0 +1,66 @@
+{
+  "adapter_type": "guided_decoding",
+  "carnot_version": "0.1.0",
+  "spec": ["REQ-VERIFY-001", "SCENARIO-VERIFY-004"],
+
+  "constraint_types": [
+    "arithmetic",
+    "type_check",
+    "return_type",
+    "return_value_type",
+    "bound",
+    "initialization",
+    "implication",
+    "exclusion",
+    "disjunction",
+    "negation",
+    "universal",
+    "nl_consistency"
+  ],
+
+  "default_weights": {
+    "arithmetic":       1.0,
+    "type_check":       1.0,
+    "return_type":      1.0,
+    "return_value_type":1.0,
+    "bound":            1.0,
+    "initialization":   0.8,
+    "implication":      0.9,
+    "exclusion":        0.9,
+    "disjunction":      0.7,
+    "negation":         0.8,
+    "universal":        0.7,
+    "nl_consistency":   0.5
+  },
+
+  "default_alpha": 0.5,
+  "default_check_every_k": 1,
+  "default_energy_threshold": 0.0,
+  "default_max_tokens": 256,
+  "default_temperature": 1.0,
+
+  "compatible_model_families": [
+    "Qwen/Qwen3-0.6B",
+    "Qwen/Qwen3.5-0.8B",
+    "Qwen/Qwen2.5-*",
+    "google/gemma-4-*",
+    "meta-llama/Llama-*",
+    "mistralai/Mistral-*"
+  ],
+
+  "latency_profile": {
+    "constraint_check_p50_ms": 0.006,
+    "constraint_check_p99_ms": 0.034,
+    "extraction_p50_ms": 0.275,
+    "per_token_overhead_budget_fraction": 0.0004,
+    "source_experiments": ["Exp-102", "Exp-110"]
+  },
+
+  "known_limitations": [
+    "AutoExtractor min-text guard (< 5 chars) skips early tokens",
+    "No KV-cache: full forward pass every token — use max_tokens < 256 for speed",
+    "Uniform logit penalty preserves token ranking but does not steer vocabulary selection",
+    "Energy is a violation count, not a calibrated probability",
+    "Real-model validation pending (Exp-111); Exp-110 used MockArithmeticLLM"
+  ]
+}
