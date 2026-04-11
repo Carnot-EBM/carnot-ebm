@@ -1169,3 +1169,4 @@
 | 2026-04-11 03:16 UTC | Exp 140: Constraint-projection guided decoding lat | OK | Deliverable already exists in repo |
 | 2026-04-11 03:42 UTC | Exp 144: Train JEPA violation predictor | OK | =========== 1971 passed, 1 skipped, 12 warnings in 146.39s (0:02:26) =========== |
 | 2026-04-11 03:59 UTC | Exp 141: Memory-augmented constraint generation | OK | =========== 2033 passed, 1 skipped, 12 warnings in 149.81s (0:02:29) =========== |
+| 2026-04-11 04:13 UTC | Exp 142: Combined Tier 1+2 learning benchmark | OK | =========== 2033 passed, 1 skipped, 12 warnings in 144.79s (0:02:24) =========== |
