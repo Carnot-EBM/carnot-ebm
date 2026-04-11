@@ -611,3 +611,49 @@ milestones:
     title: 'Exp 118: HuggingFace Publish v12 Artifacts'
     deliverable: scripts/publish_v12_models.py
     result: OK (conductor)
+- id: 2026.04.8
+  title: "Adversarial Proof \u2014 Break the Benchmarks, Then Fix Them"
+  doc: openspec/change-proposals/research-roadmap-v13.md
+  completed: '2026-04-11'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp119-adversarial-gsm8k-generator
+    title: 'Exp 119: Apple adversarial GSM8K variant generator'
+    deliverable: scripts/experiment_119_adversarial_gsm8k.py
+    result: OK (conductor)
+  - id: exp120-adversarial-baseline
+    title: 'Exp 120: LLM baseline on adversarial GSM8K'
+    deliverable: scripts/experiment_120_adversarial_baseline.py
+    result: OK (conductor)
+  - id: exp123-fix-model-loading
+    title: 'Exp 123: Robust model loading for experiments'
+    deliverable: python/carnot/inference/model_loader.py
+    result: OK (conductor)
+  - id: exp121-adversarial-verify-repair
+    title: 'Exp 121: Carnot verify-repair on adversarial GSM8K'
+    deliverable: scripts/experiment_121_adversarial_verify_repair.py
+    result: OK (conductor)
+  - id: exp124-full-gsm8k-live
+    title: 'Exp 124: Full GSM8K (1319) with live inference'
+    deliverable: scripts/experiment_124_full_gsm8k_live.py
+    result: OK (conductor)
+  - id: exp122-adversarial-analysis
+    title: 'Exp 122: Adversarial robustness deep analysis'
+    deliverable: scripts/experiment_122_adversarial_analysis.py
+    result: OK (conductor)
+  - id: exp125-constraint-state-machine
+    title: 'Exp 125: Constraint state machine for agent workflows'
+    deliverable: python/carnot/pipeline/state_machine.py
+    result: OK (conductor)
+  - id: exp126-agent-rollback
+    title: 'Exp 126: Agent rollback on constraint violation'
+    deliverable: scripts/experiment_126_agent_rollback.py
+    result: OK (conductor)
+  - id: exp127-agent-workflow-benchmark
+    title: 'Exp 127: Agent workflow verification benchmark'
+    deliverable: scripts/experiment_127_agent_workflow.py
+    result: OK (conductor)
+  - id: exp128-lnn-prototype
+    title: 'Exp 128: LNN adaptive constraint model'
+    deliverable: python/carnot/models/lnn.py
+    result: OK (conductor)
