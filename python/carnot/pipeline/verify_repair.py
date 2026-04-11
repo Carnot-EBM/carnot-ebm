@@ -58,6 +58,7 @@ from carnot.pipeline.errors import (
     VerificationError,
 )
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
+from carnot.pipeline.tracker import ConstraintTracker
 
 logger = logging.getLogger(__name__)
 
@@ -465,7 +466,11 @@ class VerifyRepairPipeline:
         return self._extractor.extract(text)
 
     def verify(
-        self, question: str, response: str, domain: str | None = None
+        self,
+        question: str,
+        response: str,
+        domain: str | None = None,
+        tracker: ConstraintTracker | None = None,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -479,6 +484,11 @@ class VerifyRepairPipeline:
                flag in their metadata (set by the extractor during parsing).
             4. Return a VerificationResult with verified flag, energy,
                violations list, and full certificate.
+            5. If ``tracker`` is provided, record per-constraint-type
+               statistics for online self-learning (Tier 1). The tracker
+               is updated in-place after verification completes; passing
+               tracker=None (the default) skips this step entirely for
+               full backward compatibility.
 
             Respects the configured timeout. If extraction or evaluation
             fails, returns a VerificationResult with verified=False and
@@ -488,6 +498,10 @@ class VerifyRepairPipeline:
             question: The original question (for context/logging).
             response: The response text to verify.
             domain: Optional domain hint for constraint extraction.
+            tracker: Optional ConstraintTracker for online learning. If
+                provided, records fired/caught counts for each constraint
+                type found during this verification call. Default None
+                (no tracking -- backward compatible).
 
         Returns:
             VerificationResult with constraint evaluation details.
@@ -495,7 +509,7 @@ class VerifyRepairPipeline:
         Raises:
             PipelineTimeoutError: If the call exceeds timeout_seconds.
 
-        Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003
+        Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001
         """
         # Fast path: delegate to Rust pipeline when available.
         # Repair still uses Python (requires LLM), but the hot verification
@@ -524,7 +538,7 @@ class VerifyRepairPipeline:
             self._check_deadline(deadline)
             constraints = self.extract_constraints(response, domain)
             self._check_deadline(deadline)
-            return self._evaluate_constraints(constraints)
+            result = self._evaluate_constraints(constraints)
         except PipelineTimeoutError:
             raise
         except CarnotError as exc:
@@ -536,6 +550,10 @@ class VerifyRepairPipeline:
                 violations=[],
                 certificate={"error": str(exc), "error_type": type(exc).__name__},
             )
+
+        if tracker is not None:
+            self._update_tracker(tracker, result)
+        return result
 
     def verify_and_repair(
         self,
@@ -919,3 +937,50 @@ class VerifyRepairPipeline:
             lines.append(line)
 
         return "\n".join(lines)
+
+    @staticmethod
+    def _update_tracker(
+        tracker: ConstraintTracker, result: VerificationResult
+    ) -> None:
+        """Record per-constraint-type statistics in the tracker after verify().
+
+        **Detailed explanation for engineers:**
+            Called by verify() when a ConstraintTracker is provided. Iterates
+            over all extracted constraints in the VerificationResult and calls
+            tracker.record() once per unique constraint_type per verification
+            call.
+
+            Design decisions:
+            - We record ONE entry per constraint_type per verify call, not one
+              per individual constraint. This prevents high-firing types (like
+              code, which may extract 10 constraints from one function) from
+              dominating the precision metric.
+            - "fired" is always True here because we only record types that
+              actually produced at least one constraint result.
+            - "caught_error" is True if ANY constraint of this type is in the
+              violations list.
+            - "any_error_in_batch" is True if ANY constraint was violated
+              (regardless of type). This is the recall denominator.
+
+        Args:
+            tracker: The ConstraintTracker to update in place.
+            result: The VerificationResult from the just-completed verify().
+        """
+        any_error = len(result.violations) > 0
+
+        # Build a set of constraint types that caught at least one error.
+        caught_types: set[str] = {v.constraint_type for v in result.violations}
+
+        # Deduplicate: record once per type, not once per constraint instance.
+        seen_types: set[str] = set()
+        for cr in result.constraints:
+            ctype = cr.constraint_type
+            if ctype in seen_types:
+                continue
+            seen_types.add(ctype)
+            tracker.record(
+                constraint_type=ctype,
+                fired=True,
+                caught_error=(ctype in caught_types),
+                any_error_in_batch=any_error,
+            )

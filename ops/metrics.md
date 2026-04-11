@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 ConstraintTracker (Tier 1 Self-Learning)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T00:51:06Z | 2026-04-11T00:59:08Z | Create python/carnot/pipeline/tracker.py (ConstraintTracker: record/precision/recall/stats/save/load/merge) + integrate into VerifyRepairPipeline.verify(tracker=) + tests/python/test_tracker.py (28 tests, 100% coverage, 1872 total pass) | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 121 Adversarial Verify-Repair
 
 ### Turn Log
