@@ -375,3 +375,92 @@ Top 10 selected by relevance score.
   The "thermodynamic" framing is metaphorical, not actual energy minimization.
 - **When to pursue:** When constraint type count exceeds ~50 and AutoExtractor
   becomes a bottleneck. Low priority currently.
+
+## ArXiv Scan — Exp 165 (20260411)
+
+Queries: jepa_prediction, factual_verification_kg, fpga_ising_2026, ebm_reasoning_verification, orthogonal_projection, ebm_hallucination, continual_forgetting, kan_interpretable, guided_decoding_2026, thermodynamic_hardware  
+Total unique new papers scanned: 29  
+Deduplicated against Exp 139: 0 papers skipped.  
+Top 10 selected by relevance score.
+
+### Cram Less to Fit More: Training Data Pruning Improves Memorization of Facts
+- **ArXiv:** [2604.08519](https://arxiv.org/abs/2604.08519)  (2026-04-09)
+- **Authors:** Jiayuan Ye, Vitaly Feldman, Kunal Talwar
+- **Summary:** Large language models (LLMs) can struggle to memorize factual knowledge in their parameters, often leading to hallucinations and poor performance on knowledge-intensive tasks. In this paper, we formalize fact memorization from an information-theoretic perspective and study how training data distributions affect fact accuracy. We show that fact accuracy is suboptimal (below the capacity limit) whenever the amount of information contained in the training data facts exceeds model capacity. This is further exacerbated when the fact frequency distribution is skewed (e.g. a power law). We propose da...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Ads in AI Chatbots? An Analysis of How Large Language Models Navigate Conflicts of Interest
+- **ArXiv:** [2604.08525](https://arxiv.org/abs/2604.08525)  (2026-04-09)
+- **Authors:** Addison J. Wu, Ryan Liu, Shuyue Stella Li et al.
+- **Summary:** Today's large language models (LLMs) are trained to align with user preferences through methods such as reinforcement learning. Yet models are beginning to be deployed not merely to satisfy users, but also to generate revenue for the companies that created them through advertisements. This creates the potential for LLMs to face conflicts of interest, where the most beneficial response to a user may not be aligned with the company's incentives. For instance, a sponsored product may be more expensive but otherwise equal to another; in this case, what does (and should) the LLM recommend to the us...
+- **Relevance to Carnot:** Ising-language model intersection maps directly to Carnot's constraint extraction → Ising energy pipeline. New coupling structures or sampling tricks could improve Exp 55/62/88 results.
+- **Proposed experiment:** Exp 167 candidate: Replace Carnot's current Ising coupling initialisation with the paper's method and compare constraint satisfaction rate on the GSM8K adversarial benchmark.
+
+### Scal3R: Scalable Test-Time Training for Large-Scale 3D Reconstruction
+- **ArXiv:** [2604.08542](https://arxiv.org/abs/2604.08542)  (2026-04-09)
+- **Authors:** Tao Xie, Peishan Yang, Yudong Jin et al.
+- **Summary:** This paper addresses the task of large-scale 3D scene reconstruction from long video sequences. Recent feed-forward reconstruction models have shown promising results by directly regressing 3D geometry from RGB images without explicit 3D priors or geometric constraints. However, these methods often struggle to maintain reconstruction accuracy and consistency over long sequences due to limited memory capacity and the inability to effectively capture global contextual cues. In contrast, humans can naturally exploit the global understanding of the scene to inform local perception. Motivated by th...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Demystifying OPD: Length Inflation and Stabilization Strategies for Large Language Models
+- **ArXiv:** [2604.08527](https://arxiv.org/abs/2604.08527)  (2026-04-09)
+- **Authors:** Feng Luo, Yu-Neng Chuang, Guanchu Wang et al.
+- **Summary:** On-policy distillation (OPD) trains student models under their own induced distribution while leveraging supervision from stronger teachers. We identify a failure mode of OPD: as training progresses, on-policy rollouts can undergo abrupt length inflation, causing truncated trajectories to dominate the training data. This truncation collapse coincides with abrupt repetition saturation and induces biased gradient signals, leading to severe training instability and sharp degradation in validation performance. We attribute this problem to the interaction between student-induced data collection and...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Johnson-Schwartzman Gap Labelling for Metric and Discrete Decorated Graphs
+- **ArXiv:** [2604.08496](https://arxiv.org/abs/2604.08496)  (2026-04-09)
+- **Authors:** Ram Band, Gilad Sofer
+- **Summary:** We study Schrödinger operators on metric and discrete decorated graphs. The values taken by the integrated density of states (IDS) on spectral gaps are called gap labels. A natural question is which gap labels can occur. We answer this for graphs arising from uniquely ergodic one-dimensional dynamical systems by proving Johnson-Schwartzman gap-labelling theorems in both the metric and discrete settings. Our results extend Johnson-Schwartzman gap labelling beyond the standard one-dimensional setting. Unlike in one dimension, these graphs may contain cycles, which prevent the use of Sturm oscill...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Wideband Compressed-Domain Cramér--Rao Bounds for Near-Field XL-MIMO: Data and Geometric Diversity Decomposition
+- **ArXiv:** [2604.08531](https://arxiv.org/abs/2604.08531)  (2026-04-09)
+- **Authors:** Rıfat Volkan Şenyuva
+- **Summary:** Wideband orthogonal frequency-division multiplexing (OFDM) over extremely large-scale MIMO (XL-MIMO) arrays in the near-field Fresnel regime suffers from a coupled beam-squint and wavefront-curvature effect that renders single-frequency covariance models severely biased: the per-subcarrier compressed covariance diverges from the center-frequency model by 64\% at $B = 100$~MHz and by 177\% at $B = 400$~MHz. We derive the wideband compressed-domain Cramér--Rao bound (CRB) for hybrid analog--digital architectures and decompose the Fisher information gain into a dominant data-diversity term that s...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### FIT: A Large-Scale Dataset for Fit-Aware Virtual Try-On
+- **ArXiv:** [2604.08526](https://arxiv.org/abs/2604.08526)  (2026-04-09)
+- **Authors:** Johanna Karras, Yuanhao Wang, Yingwei Li et al.
+- **Summary:** Given a person and a garment image, virtual try-on (VTO) aims to synthesize a realistic image of the person wearing the garment, while preserving their original pose and identity. Although recent VTO methods excel at visualizing garment appearance, they largely overlook a crucial aspect of the try-on experience: the accuracy of garment fit -- for example, depicting how an extra-large shirt looks on an extra-small person. A key obstacle is the absence of datasets that provide precise garment and body size information, particularly for "ill-fit" cases, where garments are significantly too large...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Disentangling cosmic distance tensions with early and late dark energy
+- **ArXiv:** [2604.08530](https://arxiv.org/abs/2604.08530)  (2026-04-09)
+- **Authors:** Tanisha Jhaveri, Tanvi Karwal, Thomas Crawford et al.
+- **Summary:** Recent cosmological data reveal tension between parameters inferred from measurements of the cosmic microwave background (CMB), baryon acoustic oscillations (BAO), and supernovae (SN) under $Λ$CDM. Typical dynamical dark energy parameterizations (such as $w_0w_a$) that seek to jointly resolve these tensions have an equation of state parameter that crosses into the phantom regime, leading to potential instabilities for physical models. We show that the BAO (early-time) and SN (late-time) sides of the tension can instead be treated independently. Early dark energy (EDE) can reduce the tension be...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Measurement-induced state transitions across the fluxonium qubit landscape
+- **ArXiv:** [2604.08515](https://arxiv.org/abs/2604.08515)  (2026-04-09)
+- **Authors:** Alex A. Chapple, Boris M. Varbanov, Alexander McDonald et al.
+- **Summary:** Understanding the mechanisms that limit high-fidelity readout in circuit quantum electrodynamics is essential for its optimization. Multi-photon resonances are understood to be a limiting factor, causing population transfer from the computational states to higher-energy states under drive. This effect, known as measurement-induced state transitions, has been extensively studied for the transmon qubit. While this exploration has begun for the fluxonium qubit, a systematic study of this effect is lacking. Here, we bridge this gap by theoretically studying measurement-induced state transitions in...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### MolmoWeb: Open Visual Web Agent and Open Data for the Open Web
+- **ArXiv:** [2604.08516](https://arxiv.org/abs/2604.08516)  (2026-04-09)
+- **Authors:** Tanmay Gupta, Piper Wolters, Zixian Ma et al.
+- **Summary:** Web agents--autonomous systems that navigate and execute tasks on the web on behalf of users--have the potential to transform how people interact with the digital world. However, the most capable web agents today rely on proprietary models with undisclosed training data and recipes, limiting scientific understanding, reproducibility, and community-driven progress. We believe agents for the open web should be built in the open. To this end, we introduce (1) MolmoWebMix, a large and diverse mixture of browser task demonstrations and web-GUI perception data and (2) MolmoWeb, a family of fully ope...
+- **Relevance to Carnot:** General relevance to energy-based models or neural constraint satisfaction. Review for techniques applicable to Carnot's sampling or verification pipeline.
+
+### Proposed Experiments for Milestone 2026.04.12
+
+#### EXP-166: JEPA Fast-Path Violation Predictor
+- **Goal:** Goal #4 — Guided decoding latency; JEPA fast-path research direction
+- **Spec:** REQ-GUIDED-001, SCENARIO-GUIDED-002, REQ-RESEARCH-001
+- **Complexity:** medium
+- **Description:** Train a small (≤10 M param) JEPA-style joint-embedding predictor on (partial_response_prefix, constraint_violation_flag) pairs derived from accumulated verify-repair logs (Exps 57/96/138). The predictor reads the first 50% of tokens and predicts whether the completed response will violate any active constraint. If confidence is high, skip the full Ising verification pass (fast-path). If confidence is low or violation likely, trigger full verification. Measure: AUROC of violation prediction, false-negative rate (missed violations), and net latency saving vs always-full-verify. Success: >0.85 AUROC and >40% latency reduction on the Exp 138 benchmark trace, with zero false-negative budget exceeded. Models: Qwen3.5-0.8B and google/gemma-4-E4B-it as LLM backends.
+
+#### EXP-167: Orthogonal Projection Constraint Repair in EnergyGuidedSampler
+- **Goal:** Goal #4 — Guided decoding; orthogonal projection repair direction
+- **Spec:** REQ-GUIDED-001, SCENARIO-GUIDED-002
+- **Complexity:** medium
+- **Description:** Replace the current alpha-penalty logit adjustment in EnergyGuidedSampler with an orthogonal projection operator: given the set of active constraints as linear inequalities in logit space, project the model's logit vector onto the feasible polytope using a fast iterative solver (e.g., Dykstra's algorithm). This guarantees hard constraint satisfaction (CSR=100%) without penalty tuning. Benchmark: (a) Constraint satisfaction rate on 100 arithmetic generation tasks, (b) per-token latency at batch=1 on CPU, (c) generation quality (BLEU vs unconstrained). Success: CSR=100% with <1 ms per token and BLEU within 5% of unconstrained. This directly addresses the open question from Exp 138 (alpha-tuning instability) and could become the canonical guided decoding method for Carnot. Models: Qwen3.5-0.8B and google/gemma-4-E4B-it.
+
+#### EXP-168: Knowledge-Graph Factual Constraint Extraction — TriviaQA Pilot
+- **Goal:** Goal #3 — Factual extractor; knowledge-graph constraint grounding
+- **Spec:** REQ-FACTUAL-001, SCENARIO-FACTUAL-001, REQ-RESEARCH-001
+- **Complexity:** high
+- **Description:** Extend Carnot's constraint extraction pipeline (currently arithmetic-only) to factual claims grounded in a lightweight knowledge graph. Use Wikidata SPARQL (public endpoint, no cost) to resolve named entities and their relations as soft constraints encoded into Ising couplings. Run on 100 TriviaQA questions using Qwen3.5-0.8B as the LLM. Measure: (a) factual claim detection rate, (b) KG resolution success rate, (c) Ising verifier precision/recall on factual hallucinations vs arithmetic-only baseline. Success: ≥60% factual claim detection with ≥70% verifier precision — establishing the first data point for Goal #3 (factual extractor). Also test with google/gemma-4-E4B-it to check model-agnosticism.
+
