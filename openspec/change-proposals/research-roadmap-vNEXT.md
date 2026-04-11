@@ -1,413 +1,327 @@
-# Carnot Research Roadmap v15: JEPA Predictive Verification + Constraint Generation + Credibility Proof
+# Carnot Research Roadmap v16: Multi-Domain JEPA + Factual Extraction + Live Model Benchmarks
 
 **Created:** 2026-04-11
-**Milestone:** 2026.04.10
-**Status:** Planned (activates when milestone 2026.04.9 completes)
-**Supersedes:** research-roadmap-v14.md (milestone 2026.04.9)
-**Informed by:** Exp 134 (reweighting failure), Exp 135-136 (memory built), Exp 137-138 (guided decoding packaged), Exp 139 (arxiv scan), research-program.md §"Next Milestone Focus (2026.04.10)"
+**Milestone:** 2026.04.11
+**Status:** Planned (activates when milestone 2026.04.10 completes)
+**Supersedes:** research-roadmap-vNEXT.md (milestone 2026.04.10 / v15)
+**Informed by:** Exp 141 (+0.11 accuracy from memory-augmented generation), Exp 144 (JEPA arithmetic AUROC=0.71), Exp 145 (fast-path architecture works, predictor insufficient), Exp 147 (adversarial results not statistically significant — p=0.463), Exp 151 (HF models published), Exp 152 (ContinualGibbs 100% accuracy), Exp 153 (KAN AMR -1.3% params)
+**ArXiv inputs:** 2602.18671 (EBM hallucination ICLR 2026), 2602.03417 (FactNet KB), 2507.02092 (EBTs), 2604.04606 (FPGA Ising 6x), 2508.10480 (Πnet hard constraints)
 
-## What 2026.04.9 Proved
+## What 2026.04.10 Proved
 
-- **Tier 1 reweighting doesn't work** — Exp 134: precision-based AdaptiveWeighter produced
-  fixed=0.53 vs adaptive=0.55 (no meaningful improvement). The infrastructure (ConstraintTracker,
-  AdaptiveWeighter) is built and works mechanically, but adjusting _weights_ on existing constraints
-  is the wrong approach. The error patterns that matter aren't captured by the existing constraint
-  types at all — they need NEW constraint types generated from memory.
-- **Tier 2 memory infrastructure is ready** — Exp 135-136: ConstraintMemory persists error
-  patterns across sessions. Session 2 accuracy improved when session 1 memory was loaded.
-  The pattern data is there; it just isn't being converted into new constraints at extraction time.
-- **Guided decoding is packaged but not published** — Exp 137 produced
-  `exports/guided-decoding-adapter/` with README, config.json, constraint_weights.safetensors,
-  and example.py. Exp 138 benchmarked it. Neither pushed to HuggingFace.
-- **ArXiv scan identified three concrete opportunities** — Exp 139 proposed:
-  - Exp 140: Constraint-projection guided decoding latency benchmark
-  - Exp 141: Apple GSM8K adversarial credibility experiment
-  - Exp 143 (renumbered 152): LoRA-style continual learning for constraint retention
+- **Memory-augmented constraint generation works** — Exp 141: `ConstraintGenerator` wiring
+  `ConstraintMemory` into `AutoExtractor` boosted accuracy +0.11 (0.85 → 0.96) on 200 GSM8K
+  questions. `comparison_boundary` recall jumped 0% → 100%. Constraint ADDITION beats
+  reweighting (Exp 134), confirming the research-program.md diagnosis.
+- **JEPA architecture is correct, predictor quality is the bottleneck** — Exp 144 achieved
+  arithmetic AUROC=0.7126 (target met). But code/logic AUROC=0.5 (chance) because Exp 143
+  only had arithmetic training data. Exp 145: fast-path gate fires and runs correctly, but
+  19.8% accuracy degradation (vs <2% target) — entirely caused by missing code/logic signal.
+  Fix is clear: collect multi-domain training pairs and retrain.
+- **AMD XDNA NPU hardware detected, software blocked** — Exp 146: `/dev/accel0` and
+  `amdxdna` kernel module confirmed. Blocker: `onnxruntime-vitisai` requires AMD conda channel,
+  not PyPI. ONNX model exported, CPU baseline p50=0.005ms. NPU would help at sustained load.
+- **Adversarial results positive but underpowered** — Exp 147: number-swapped recovery
+  +27pp (Qwen) / +24.5pp (Gemma) vs +10pp / +13pp on standard GSM8K — hypothesis direction
+  confirmed. But p=0.463, N=6 adversarial vs N=2 control data points. Need live models +
+  full dataset (N≥100/variant) for statistical significance.
+- **ContinualGibbs achieves 100% step-5 accuracy** — Exp 152: orthogonal Gram-Schmidt
+  projection prevents catastrophic forgetting in multi-step agent chains. Beats LNN (90%)
+  and matches static Ising (100%) while learning across steps.
+- **KAN AMR maintains accuracy with fewer params** — Exp 153: adaptive mesh refinement
+  -1.3% params at same AUROC. High-curvature edges on domain×numeric cross-interactions
+  (the interesting nonlinear regions).
 
-## The Gaps (3 Biggest vs PRD Vision)
+## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: Self-Learning Doesn't Actually Improve Accuracy Yet (vs FR-11)
+### Gap 1: JEPA Fast-Path Not Yet Working (Tier 3 Self-Learning, FR-11)
 
-FR-11 requires an "autonomous self-improvement" loop. We have tracking (Tier 1) and memory
-(Tier 2) infrastructure, but neither demonstrably improves accuracy. The root cause is architectural:
-accumulating statistics about _existing_ constraints and reweighting them cannot close gaps that
-exist because the constraints themselves don't cover the error modes. The fix is constraint
-_generation_: when ConstraintMemory detects "arithmetic carry errors appear 5+ times," it should
-produce a `CarryChainConstraint` and inject it into AutoExtractor for future queries — not just
-reweight the existing `ArithmeticConstraint`.
+The fast-path gate architecture is complete and integrated into `VerifyRepairPipeline`. The
+bottleneck is purely data: Exp 143 collected only arithmetic training pairs, so code/logic
+AUROC=0.5. The fix requires three steps: (1) collect multi-domain (partial_response, violation)
+pairs for code and logic domains, (2) retrain the JEPA predictor with balanced domain coverage,
+(3) benchmark the improved predictor to confirm <2% degradation at ≥40% fast-path rate.
+This is the highest-priority incomplete item in the self-learning roadmap.
 
-### Gap 2: No Predictive/Proactive Verification (vs FR-12, research-program.md Tier 3)
+### Gap 2: Factual Domain Still Blind (Goal #3, REQ-VERIFY-001)
 
-The current pipeline is purely post-hoc: generate → verify → repair. This is provably slower than
-it needs to be. After accumulating (partial_response, final_violation) pairs from Exp 130-136's
-verify-repair logs, we have the training signal to predict constraint violations _before_ generation
-completes. A small JEPA-style predictor that takes the first 50-100 tokens of a response and
-predicts violation probability can gate the expensive Ising check: run full verification only when
-the predictor says "high energy likely." This creates a fast-path/slow-path architecture that could
-halve average verification latency.
+Exp 88 measured 100% false negative rate on factual claims. Exp 122 confirmed: 66.9% of
+adversarial errors are structurally uncatchable by arithmetic constraint verification. The
+factual domain requires a fundamentally different approach — external knowledge grounding.
+Two recent papers provide the path: FactNet (2602.03417, 1.7B assertions) as the KB, and
+"spilled energy" detection (2602.18671, ICLR 2026) as a fast pre-filter. A factual claim
+extractor that maps LLM outputs to FactNet triples would close the biggest coverage gap in
+the entire pipeline.
 
-### Gap 3: No Published Credibility Numbers (vs PRD §Success Metrics, research-program.md Goal #5)
+### Gap 3: No Statistically Significant Live Benchmark (Goals #5, #6)
 
-Carnot has strong internal results (+27% accuracy on adversarial math, 100% hallucination detection)
-but they're not on any external benchmark that the community trusts. The Apple GSM8K adversarial
-variant (arxiv 2410.05229) is the ideal vehicle: it's a published methodology that exposes exactly
-the weakness Carnot's architecture fixes (LLMs pattern-match irrelevant context; Ising verifies
-independently). Running Carnot on the Apple adversarial variants and showing the improvement is
-_larger_ on adversarial than standard GSM8K is the single most compelling result we can publish.
-Additionally, the HuggingFace guided decoding adapter (Exp 137) is packaged but not uploaded —
-no external user can try it yet.
+All benchmarks with strong results use simulated inference (CARNOT_SKIP_LLM=1). The
+adversarial GSM8K result had p=0.463. The eGPU (RX 7900 XTX, 24GB VRAM) is available
+in hardware but not connected. Once connected, gfx1100 (unlike gfx1150) has full ROCm + JAX
+support, enabling: full GSM8K (1,319 questions), full adversarial battery (200/variant × 4
+variants), HumanEval 164 problems — all with live inference and N large enough for significance.
 
-## Architecture
+## Architecture (2026.04.11)
 
 ```
-                    ┌─────────────────────────────────────────────────────┐
-                    │              Carnot Pipeline (2026.04.10)           │
-                    │                                                     │
-  LLM generates ──▶ │  ┌──────────────┐     ┌──────────────────────────┐ │
-  tokens (partial)  │  │ JEPA Predictor│────▶│ fast-path: skip Ising   │ │
-                    │  │ (Tier 3, NEW) │     └──────────────────────────┘ │
-                    │  │ MLP on partial│     ┌──────────────────────────┐ │
-                    │  │ embeddings    │────▶│ slow-path: full Ising    │ │
-                    │  └──────────────┘     └──────────┬───────────────┘ │
-                    │         ▲                         │                 │
-                    │         │                         ▼                 │
-                    │  ┌──────────────┐     ┌──────────────────────────┐ │
-                    │  │ConstraintMem │     │ ConstraintStateMachine   │ │
-                    │  │ory (Tier 2)  │────▶│ + rollback               │ │
-                    │  │ patterns →   │     │ (Exp 125-127, working)   │ │
-                    │  │ NEW constraints│    └──────────────────────────┘ │
-                    │  └──────────────┘                                   │
-                    │         ▲                                           │
-                    │         │ ADD constraints                           │
-                    │  ┌──────────────┐                                   │
-                    │  │AutoExtractor │ ◀── memory-augmented extraction   │
-                    │  │ (Exp 141 fix)│     (new in 2026.04.10)          │
-                    │  └──────────────┘                                   │
-                    └─────────────────────────────────────────────────────┘
-                                    │
-                    ┌───────────────▼─────────────────────────────────────┐
-                    │            Hardware Acceleration Path               │
-                    │  CPU: AutoExtractor, ConstraintMemory (Tier 1-2)   │
-                    │  GPU/NPU: JEPA predictor inference (Tier 3, NEW)   │
-                    │  FPGA/TSU: Ising sampling (future)                 │
-                    └─────────────────────────────────────────────────────┘
+                    ┌──────────────────────────────────────────────────────────┐
+                    │                Carnot Pipeline (2026.04.11)              │
+                    │                                                          │
+  LLM generates ──▶ │  ┌─────────────────────────────────────────────────┐    │
+  tokens (partial)  │  │ SpilledEnergyExtractor (NEW, arxiv 2602.18671)  │    │
+                    │  │ Fast pre-filter: logit vs output energy delta    │    │
+                    │  └───────────────────┬─────────────────────────────┘    │
+                    │                      │ high spilled energy?              │
+                    │  ┌─────────────┐     ▼     ┌────────────────────────┐   │
+                    │  │JEPA Predictor│ (FIXED)  │ FactualExtractor (NEW) │   │
+                    │  │v2: multi-domain│────────▶│ FactNet triples →     │   │
+                    │  │AUROC >0.70  │           │ IsingConstraints       │   │
+                    │  └──────┬──────┘           └────────────────────────┘   │
+                    │         │ fast-path / slow-path                         │
+                    │         ▼                                               │
+                    │  ┌─────────────────────────────────────────────────┐    │
+                    │  │ AutoExtractor + ConstraintGenerator (Exp 141)  │    │
+                    │  │ memory-augmented: +0.11 accuracy proven         │    │
+                    │  └──────────────────┬──────────────────────────────┘   │
+                    │                     │                                   │
+                    │                     ▼                                   │
+                    │  ┌─────────────────────────────────────────────────┐    │
+                    │  │ ComposedEnergy + KAN verifier (Exp 108)        │    │
+                    │  │ Ising MCMC (183x vs thrml, Exp 71)             │    │
+                    │  └──────────────────┬──────────────────────────────┘   │
+                    │                     │                                   │
+                    │                     ▼                                   │
+                    │  ┌─────────────────────────────────────────────────┐    │
+                    │  │ ConstraintStateMachine + rollback (Exp 125-127)│    │
+                    │  │ ContinualGibbs for multi-step chains (Exp 152) │    │
+                    │  └─────────────────────────────────────────────────┘    │
+                    └──────────────────────────────────────────────────────────┘
+                                         │
+                    ┌────────────────────▼────────────────────────────────────┐
+                    │              Hardware Path (2026.04.11)                 │
+                    │  eGPU (RX 7900 XTX): live LLM inference — CONNECT NOW  │
+                    │  CPU: AutoExtractor, ConstraintMemory, KAN verify       │
+                    │  NPU (XDNA, blocked): JEPA predictor (conda AMD stack) │
+                    │  FPGA (Kria KV260, future): sparse Ising (arxiv 2604.04606) │
+                    └──────────────────────────────────────────────────────────┘
 ```
 
-## Phase 42: Fix Self-Learning — Constraint Generation (Experiments 140–142)
+## Dependency Graph
 
-### Exp 140: Constraint-Projection Guided Decoding Latency Benchmark
+```
+Exp 154 (multi-domain pairs) ──▶ Exp 155 (retrain JEPA v2) ──▶ Exp 156 (fast-path v2)
+                                                                      │
+Exp 157 (spilled energy extractor) ──▶ Exp 158 (FactNet KB extractor)  │
+                │                         │                            │
+                └──────────────────────┐  │                            │
+                                       ▼  ▼                            ▼
+                              Exp 159 (5-domain benchmark) ──▶ Exp 161 (full live GSM8K)
+                                                                       ▲
+Exp 160 (eGPU setup) ─────────────────────────────────────────────────┘
+                           │
+                           ├──▶ Exp 162 (adversarial live, N≥200/variant)
+                           └──▶ Exp 163 (HumanEval live + repair)
 
-The per-token constraint-projection operator measures whether the KAN energy gradient can project
-logits onto the constraint-satisfying subspace fast enough for real-time guided decoding.
+Exp 164 (HuggingFace publishing) [independent]
+Exp 165 (ArXiv scan, next milestone prep) [independent]
+```
 
-**Deliverable:** `scripts/experiment_140_guided_latency.py`
+## Phase 44: Fix JEPA to Multi-Domain (Experiments 154–156)
 
-Implement a projection operator in `EnergyGuidedSampler` that:
-1. Computes KAN energy gradient w.r.t. embedding at current generation state
-2. Projects token logits away from high-energy directions
-3. Measures wall-clock overhead at batch sizes 1, 8, 32 on CPU
+The JEPA fast-path architecture (Exp 145) works correctly. The predictor quality is bottlenecked
+by single-domain training data. These three experiments fix the data → model → integration path.
 
-Success criterion: <1ms per token at batch=1 (Exp 102 budget was 0.006ms for check-only;
-projection adds gradient computation overhead). Compare to Exp 138's alpha-penalty approach.
+### Exp 154: Multi-Domain JEPA Training Data Collection
 
-### Exp 141: Memory-Augmented Constraint Generation
+Collect (partial_response, violation) pairs for code and logic domains to supplement the
+arithmetic-only Exp 143 dataset.
 
-Wire `ConstraintMemory` (Exp 135) into `AutoExtractor` to _add_ new constraints when memory
-patterns are found. This fixes the root cause of Exp 134's failure.
+**Deliverable:** `results/jepa_training_pairs_v2.json`
 
-**Deliverable:** `python/carnot/pipeline/generation.py`
+Generate 200 code verification pairs (Python functions + constraints) and 200 logic pairs
+(NL reasoning + logic constraints). Apply prefix-ratio extraction (10%, 25%, 50%, 75%) with
+RandomProjection (same as Exp 143: 256-dim, seed=42). Target ≥800 multi-domain pairs total.
+Label with per-domain violation flags.
+
+### Exp 155: JEPA Predictor v2 — Retrain with Multi-Domain Data
+
+Retrain `JEPAViolationPredictor` on the combined Exp 143 (arithmetic) + Exp 154 (code+logic)
+dataset.
+
+**Deliverable:** `results/jepa_predictor_v2.safetensors`
+
+Target: macro AUROC >0.70 across all three domains (arithmetic, code, logic).
+Use same architecture (256→64→32→3) but ensure balanced domain sampling during training.
+Report per-domain AUROC improvement vs Exp 144 (arithmetic=0.71, code=0.50, logic=0.50).
+
+### Exp 156: JEPA Fast-Path Benchmark v2
+
+Re-run the Exp 145 benchmark with the improved predictor.
+
+**Deliverable:** `scripts/experiment_156_jepa_fastpath_v2.py`, `results/experiment_156_results.json`
+
+Same 500-question benchmark (200 arithmetic, 200 code, 100 logic). Target: ≥40% fast-path
+taken with <2% accuracy degradation. Compare threshold=0.3 / 0.5 / 0.7.
+Update `VerifyRepairPipeline` to load `jepa_predictor_v2.safetensors` by default when present.
+
+## Phase 45: Factual Constraint Extraction (Experiments 157–159)
+
+The factual domain has 100% false negative rate (Exp 88). These experiments build the knowledge-
+grounded extractor and measure its impact. Incorporates two new arxiv papers.
+
+### Exp 157: Spilled Energy Pre-Filter
+
+Implement the "spilled energy" signal from arxiv 2602.18671 (ICLR 2026) as a fast factual
+plausibility detector. No external KB required.
+
+**Deliverable:** `python/carnot/pipeline/spilled_energy.py`
+
+"Spilled energy" = sum of max(0, logit_energy - output_energy) across token positions, where
+logit_energy = -log(softmax(logits)) at the output token and output_energy = -log(p_output).
+High spilled energy → model is "uncertain" about its generation → factual hallucination risk.
+Measure AUROC on TruthfulQA (factual domain ground truth).
+This is orthogonal to Ising constraint verification — acts as a fast pre-filter.
+
+### Exp 158: Wikidata/FactNet-Backed Factual Claim Extractor
+
+Build the `FactualExtractor` that maps LLM claims to knowledge-base triples for Ising encoding.
+
+**Deliverable:** `python/carnot/pipeline/factual_extractor.py`
 
 Design:
-- `ConstraintGenerator` class: reads ConstraintMemory, translates patterns into new
-  `ConstraintTerm` instances, injects them alongside AutoExtractor's static constraints
-- Pattern→constraint mapping:
-  - "arithmetic carry errors" → `CarryChainConstraint` for all arithmetic questions
-  - "comparison boundary errors" → `BoundaryConstraint` for questions with inequalities
-  - "negation scope errors" → `NegationConstraint` for questions with "not" / "never"
-- Integration: `AutoExtractor.extract(text, memory=None)` accepts optional ConstraintMemory
+- Entity extraction: spaCy NER to identify people, places, dates, organizations
+- Claim decomposition: subject-predicate-object triples from NL text
+- KB lookup: Wikidata SPARQL API for entity relations (use cached/offline subset for speed)
+- Encoding: each (subject, predicate, object) triple becomes a binary ConstraintTerm:
+  satisfied if LLM's claimed value matches KB value, violated otherwise
+- Test on TruthfulQA subset (50 factual questions): measure constraint coverage (was ~0%, target >30%)
 
-Benchmark: compare AutoExtractor alone vs memory-augmented on 200 GSM8K questions where
-Exp 134 warmup data exists. Target: measurable improvement over fixed weights.
+### Exp 159: Full 5-Domain Benchmark with Factual Extractor
 
-### Exp 142: Combined Tier 1+2 Learning Benchmark
+Run the full pipeline benchmark including the new factual extractor.
 
-Compare all four configurations on a 500-question benchmark:
+**Deliverable:** `scripts/experiment_159_five_domain.py`, `results/experiment_159_results.json`
 
-| Configuration | Tier 1 | Tier 2 |
-|---------------|--------|--------|
-| Baseline      | off    | off    |
-| Tier 1 only   | on     | off    |
-| Tier 2 only   | off    | on     |
-| Combined      | on     | on     |
+Extend the Exp 93 benchmark (250 questions × 2 models × 3 modes) to include factual domain
+with `FactualExtractor`. Target: factual domain accuracy improvement >0pp (even small is a win
+vs the current 0% constraint coverage). Report constraint coverage per domain.
 
-**Deliverable:** `scripts/experiment_142_combined_learning.py`
+## Phase 46: eGPU Setup + Live Model Benchmarks at Scale (Experiments 160–163)
 
-Key questions:
-- Does Tier 2 (generation) beat Tier 1 (reweighting)? (Hypothesis: yes, reweighting is wrong)
-- Does combined beat either alone?
-- Which domains benefit most from memory-augmented generation?
+The RX 7900 XTX eGPU is owned hardware but not connected. These experiments establish live
+inference and run the high-N benchmarks that produce publishable statistics.
 
-## Phase 43: JEPA Predictive Verification — Tier 3 (Experiments 143–146)
+### Exp 160: eGPU Hardware Setup and ROCm/JAX Validation
 
-### Exp 143: Collect (Partial Response, Final Violation) Training Pairs
+Connect the RX 7900 XTX via Thunderbolt and validate the full ML stack.
 
-Mine existing verify-repair logs and the Exp 130-138 results to build the JEPA training set.
+**Deliverable:** `scripts/experiment_160_egpu_setup.py`, `results/experiment_160_results.json`
 
-**Deliverable:** `results/jepa_training_pairs.json` + `scripts/experiment_143_collect_pairs.py`
+Steps: `rocminfo | grep gfx` (expect gfx1100, not gfx1150), JAX GPU test, PyTorch GPU test,
+Qwen3.5-0.8B inference speed comparison (CPU vs eGPU). Update `research-program.md` constraints
+if JAX works (remove `JAX_PLATFORMS=cpu` requirement). Baseline: CPU Qwen3.5-0.8B inference
+latency (p50, p99 per token). Target: >5x speedup on eGPU vs CPU.
 
-For each logged verification event:
-1. Retrieve the full LLM response
-2. Create N prefixes at 10%, 25%, 50%, 75% of token length
-3. Label each prefix with: `final_violated` (bool) + per-constraint-type violation flags
-4. Embed each prefix with RandomProjection (0.026ms, best from Exp 112)
+**Hardware note:** This experiment requires physical hardware connection (Thunderbolt chassis).
+If the Thunderbolt connection is unavailable, document the blocker and proceed with CPU-only
+inference for subsequent experiments using `CARNOT_SKIP_LLM=1` simulation as fallback.
 
-Target: ≥1,000 (prefix, violation_label) pairs across arithmetic, code, logic domains.
+### Exp 161: Full GSM8K Live Benchmark at Scale
 
-### Exp 144: Train JEPA Violation Predictor
+Run the full 1,319-question GSM8K test set with live model inference.
 
-A small MLP trained to predict "will this response violate constraints?" from the first 50 tokens.
+**Deliverable:** `scripts/experiment_161_gsm8k_full.py`, `results/experiment_161_results.json`
 
-**Deliverable:** `python/carnot/pipeline/jepa_predictor.py` + `results/jepa_predictor.safetensors`
+Modes: baseline / verify-only / verify-repair × Qwen3.5-0.8B × Gemma4-E4B-it.
+Report: accuracy, 95% bootstrap CI (N=1319 → CI < ±3pp), comparison to published baselines
+(GPT-4 87.1%, Llama2-70B 56.8%). This produces the first Carnot result with rigorous CIs.
+Requires live inference from Exp 160 (or simulation fallback with `CARNOT_SKIP_LLM=1`).
 
-Architecture:
-- Input: 256-dim RandomProjection embedding of first 50 tokens (0.026ms)
-- Hidden: 64-dim ReLU layer
-- Output: per-constraint-type violation probability (sigmoid)
-- Training: binary cross-entropy on (partial_embedding, final_violated) pairs
-- Train/val split: 80/20 from Exp 143 dataset
+### Exp 162: Apple Adversarial GSM8K with Statistical Power
 
-Evaluation: AUROC, precision@0.5, recall@0.5 per constraint type.
-Target: AUROC >0.65 (above chance, below KAN's 0.994 — this is a predictor, not a verifier).
+Re-run the Exp 147 adversarial experiment with live models and N=200/variant.
 
-### Exp 145: JEPA Fast-Path / Slow-Path Integration and Benchmark
+**Deliverable:** `scripts/experiment_162_adversarial_live.py`, `results/experiment_162_results.json`
 
-Integrate the JEPA predictor into `VerifyRepairPipeline` as an optional early-exit gate.
+Use Exp 119's adversarial dataset (800 items: 200/variant × 4 variants). Run all 4 variants
+(control, number-swapped, irrelevant-injected, combined) × 3 modes × 2 models = 4,800
+inference calls. Target: p<0.05 (two-sided permutation test) for "adversarial improvement >
+control improvement." With N=200/variant this should be achievable if the effect is real.
+This addresses the p=0.463 statistical weakness in Exp 147.
 
-**Deliverable:** `scripts/experiment_145_jepa_fastpath.py`
+### Exp 163: HumanEval Full 164 Problems with Live Repair
 
-Protocol:
-- After N=50 tokens generated: run JEPA predictor (target: <1ms)
-- If max(violation_probs) < threshold: skip full Ising, mark as FAST_PATH
-- If max(violation_probs) >= threshold: run full constraint extraction + Ising
+Run the full HumanEval benchmark (164 problems) with live code generation and repair.
 
-Benchmark on 500 questions (200 arithmetic, 200 code, 100 logic):
-- Metrics: % fast-path taken, accuracy on fast-path, accuracy on slow-path, total wall-clock vs
-  no-gating baseline
-- Target: ≥40% fast-path taken with <2% accuracy degradation
+**Deliverable:** `scripts/experiment_163_humaneval_full.py`, `results/experiment_163_results.json`
 
-### Exp 146: AMD XDNA NPU Experimentation
+Modes: pass@1 baseline / pass@1+verify / pass@1+verify+repair × Qwen3.5-0.8B.
+Use CodeExtractor + runtime instrumentation (Exp 53). Target: pass@1+repair > 90% (Exp 68
+established 96% on 50-problem subset with simulated inference).
+Report: comparison to published HumanEval baselines (GPT-4 86.5%, Llama2-70B 29.9%).
 
-The machine has an AMD XDNA NPU (Ryzen AI / Strix Point). Install the AMDXDNA kernel driver and
-Ryzen AI Software SDK, then test whether the JEPA predictor (Exp 144) runs on the NPU.
+## Phase 47: Publication + ArXiv Scan (Experiments 164–165)
 
-**Deliverable:** `scripts/experiment_146_npu.py` + `results/experiment_146_npu_results.json`
+### Exp 164: HuggingFace Publishing Sprint
 
-Steps:
-1. Check NPU availability: `lspci | grep -i xdna` / `ls /dev/accel`
-2. Install: `pip install amdxdna-sdk` (or follow AMD Ryzen AI SDK setup)
-3. Run JEPA MLP (128 input, 64 hidden, 12 output) on NPU, benchmark latency
-4. Compare: NPU vs CPU on 1000 inference calls
-5. If NPU unavailable, document the setup attempt and environment constraints
+Push all packaged-but-unpublished artifacts to HuggingFace.
 
-Success: NPU inference working with latency measurement. If driver unavailable, document
-environment state (useful for future sessions when AMDXDNA driver is in-tree).
+**Deliverable:** Published model cards at huggingface.co/Carnot-EBM
 
-## Phase 44: Credibility Benchmarks (Experiments 147–149)
+Artifacts to publish:
+1. `exports/guided-decoding-adapter/` (Exp 137 — packaged, not pushed)
+2. `exports/constraint-propagation-models/{arithmetic,logic,code}/` (Exp 151 — packaged, not pushed)
+3. Update existing 16 per-token EBM READMEs to point to `pip install carnot`
+4. New model card: JEPA violation predictor v2 (Exp 155 result)
 
-### Exp 147: Apple GSM8K Adversarial Benchmark — THE Credibility Experiment
+Use `huggingface-cli` or `huggingface_hub` Python API. Verify each upload with `hf_hub_download`.
 
-Directly prove Carnot's value proposition on the Apple (arxiv 2410.05229) adversarial benchmark.
+### Exp 165: ArXiv Research Scan (Next Milestone Prep)
 
-**Deliverable:** `scripts/experiment_147_apple_gsm8k.py` + `results/experiment_147_results.json`
+Scan arxiv for new papers to inform Milestone 2026.04.12.
 
-Methodology (reproducing Apple's approach):
-1. Take 200 GSM8K test questions
-2. Generate 3 adversarial variants per question:
-   - **Number-swapped**: same logic, all numeric values replaced with different numbers
-   - **Irrelevant-sentence**: one semantically irrelevant sentence injected with a number
-   - **Combined**: both perturbations applied
-3. Run **Qwen3.5-0.8B** and **google/gemma-4-E4B-it** on all 4 variants (baseline)
-4. Run Carnot **verify-repair** pipeline on all 4 variants
+**Deliverable:** Updated `research-references.md`, `results/experiment_165_arxiv_scan.json`
 
-Key hypothesis:
-- LLM accuracy drops on adversarial variants (reproduce Apple's finding)
-- Carnot verify-repair maintains accuracy (Ising ignores irrelevant context)
-- **Improvement delta is LARGER on adversarial than standard** (more errors to catch)
+Queries: ebm_reasoning_2026, factual_verification_kg, jepa_prediction, kan_energy_new,
+fpga_ising_2026, constrained_generation_llm, orthogonal_projection_constraint,
+spilled_energy_ebm, continual_learning_constraint, thermodynamic_ebm_hardware
+Update `research-references.md` with top 10 findings and proposed next experiments.
 
-Report: accuracy table per model × variant × mode (baseline/verify/verify-repair),
-improvement delta ± 95% bootstrap CI, error type breakdown.
+## Hardware Requirements
 
-### Exp 148: Full GSM8K (1,319 questions) with Live Inference + CIs
-
-The full benchmark with Exp 123's robust model loader guaranteeing live inference.
-
-**Deliverable:** `scripts/experiment_148_gsm8k_full.py` + `results/experiment_148_results.json`
-
-Protocol:
-- Use `CARNOT_FORCE_LIVE=1` (fail rather than fall back to simulated)
-- All 1,319 GSM8K test questions
-- Both models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-- Three modes: baseline, verify-only, verify-repair
-- Report: accuracy ± 95% bootstrap CI
-- Compare to published baselines (Qwen3.5 GSM8K ~60-65%)
-
-Target: verify-repair ≥ +10% over baseline on live inference, consistent with simulated results.
-
-### Exp 149: TruthfulQA at Scale with Factual Constraint Coverage Analysis
-
-Benchmark the factual domain — the known weak spot (Exp 88: near-zero coverage on factual claims).
-
-**Deliverable:** `scripts/experiment_149_truthfulqa.py` + `results/experiment_149_results.json`
-
-Protocol:
-- 200 TruthfulQA questions (full categories: misconceptions, history, science, health)
-- Measure factual constraint coverage (what % of questions yield extractable constraints)
-- Run knowledge-base verifier (Exp 98) where coverage exists
-- Run AutoExtractor elsewhere
-
-Output:
-- Per-category coverage rate and accuracy
-- Which TruthfulQA categories are covered vs blind spots
-- Estimated improvement from memory-augmented extraction (Exp 141 applied)
-- Concrete list of 5 constraint types that would close the coverage gap
-
-## Phase 45: HuggingFace Publishing + Continual Learning (Experiments 150–153)
-
-### Exp 150: Push Guided Decoding Adapter to HuggingFace + Update Model READMEs
-
-Exp 137 packaged `exports/guided-decoding-adapter/` but never uploaded it. This experiment
-actually publishes to HuggingFace.
-
-**Deliverable:** `scripts/experiment_150_hf_push.py` + updated HuggingFace model cards
-
-Steps:
-1. Run `huggingface-cli upload Carnot-EBM/guided-decoding-adapter exports/guided-decoding-adapter/`
-2. Verify upload at huggingface.co/Carnot-EBM/guided-decoding-adapter
-3. Update all 16 existing Carnot-EBM model READMEs:
-   - Clarify: "These are Phase 1 research artifacts (detect confidence, not correctness)"
-   - Add: "For the production verify-repair pipeline: `pip install carnot`"
-   - Link to guided-decoding-adapter for guided decoding use
-4. Log upload confirmation to `results/experiment_150_results.json`
-
-### Exp 151: Publish Constraint Propagation Models to HuggingFace
-
-Package the domain-specific trained Ising models (arithmetic, logic, code) as community artifacts.
-
-**Deliverable:** `exports/constraint-propagation-models/` + HuggingFace upload
-
-For each domain (arithmetic, logic, code):
-1. Export trained Ising coupling matrix J as safetensors
-2. Write model card: training methodology, benchmark results, usage example
-3. Create `ConstraintPropagationModel.from_pretrained()` API
-4. Upload to `Carnot-EBM/constraint-propagation-{domain}`
-
-These are novel artifacts — no other HuggingFace repo has learned Ising constraint models.
-
-### Exp 152: Continual Learning for Constraint Retention Across Agent Steps
-
-Based on Exp 139 arxiv proposals (LoRA continual learning, Ferret framework): test whether
-orthogonal LoRA-style updates to Gibbs parameters can retain constraints across a 5-step
-reasoning chain without catastrophic forgetting — fixing the Exp 116 failure mode (LNN 10% vs
-static Ising 100%).
-
-**Deliverable:** `python/carnot/models/continual_gibbs.py` + `scripts/experiment_152_continual.py`
-
-Design:
-- `ContinualGibbsModel` wraps Gibbs MLP with orthogonal projection buffer
-- At each agent step: compute gradient of new constraint → project onto null space of prior
-  constraint gradients → update only the orthogonal component
-- Compare: static Ising (100%), LNN (10%, Exp 116), ContinualGibbs (target: >80%)
-
-Benchmark: 5-step math reasoning chains, 20 problems, accuracy on step 5 given constraints
-accumulated across steps 1-4.
-
-### Exp 153: KAN Adaptive Mesh Refinement (Tier 4 Foundation)
-
-Implement knot insertion/pruning for carnot-kan based on local energy landscape complexity.
-This is the Tier 4 "adaptive structure" mechanism from research-program.md.
-
-**Deliverable:** `python/carnot/models/kan.py` (updated) + `scripts/experiment_153_kan_refinement.py`
-
-Design:
-- After training: compute per-edge curvature (second derivative of spline)
-- High curvature edges get more knots (add at inflection points)
-- Near-linear edges get fewer knots (prune)
-- Refinement criterion: curvature > threshold × mean_curvature
-- Measure: AUROC before vs after refinement on constraint verification task
-
-Why now: carnot-kan exists (Exp 108-109, 0.994 AUROC). Adaptive mesh refinement is cheap
-to add (pure Python/JAX, no new architecture). This plants the flag for Tier 4 adaptive structure.
-
-## Dependencies
-
-```
-Phase 42 (constraint generation):
-  Exp 140 ← exports/guided-decoding-adapter/ (Exp 137), EnergyGuidedSampler (Exp 110)
-  Exp 141 ← python/carnot/pipeline/memory.py (Exp 135), AutoExtractor (Exp 74)
-  Exp 142 ← Exp 141 + tracker.py (Exp 132) + adaptive.py (Exp 133)
-
-Phase 43 (JEPA):
-  Exp 143 ← verify-repair logs from Exp 130-138
-  Exp 144 ← Exp 143 (training data) + fast_embedding.py (Exp 112)
-  Exp 145 ← Exp 144 (predictor) + VerifyRepairPipeline (Exp 75)
-  Exp 146 ← Exp 144 (model to deploy) + AMD hardware
-
-Phase 44 (credibility):
-  Exp 147 ← results/adversarial_gsm8k_data.json (Exp 119), verify-repair pipeline
-  Exp 148 ← model_loader.py (Exp 123), VerifyRepairPipeline
-  Exp 149 ← knowledge_base.py (Exp 98), AutoExtractor, memory.py (Exp 135)
-
-Phase 45 (publishing + continual learning):
-  Exp 150 ← exports/guided-decoding-adapter/ (Exp 137), HuggingFace credentials
-  Exp 151 ← domain-specific Ising models (Exp 62), carnot-constraints crate
-  Exp 152 ← LNN baseline (Exp 116, 128), Gibbs model, ConstraintStateMachine (Exp 125)
-  Exp 153 ← carnot-kan (Exp 108-109), constraint benchmark data
-```
-
-## Execution Order
-
-```
-1.  exp140  — Guided decoding latency (quick, validates constraint projection)
-2.  exp143  — Collect JEPA training pairs (independent, mines existing logs)
-3.  exp141  — Memory-augmented constraint generation (fixes Exp 134 root cause)
-4.  exp144  — Train JEPA predictor (depends on exp143 dataset)
-5.  exp142  — Combined Tier 1+2 benchmark (depends on exp141)
-6.  exp145  — JEPA fast-path integration (depends on exp144)
-7.  exp146  — AMD XDNA NPU experiment (depends on exp144 model)
-8.  exp147  — Apple GSM8K adversarial (can use existing adversarial data from Exp 119)
-9.  exp148  — Full GSM8K 1319 with live inference
-10. exp149  — TruthfulQA at scale + coverage analysis
-11. exp150  — Push to HuggingFace (requires internet/credentials)
-12. exp151  — Publish constraint propagation models
-13. exp152  — Continual learning for constraint retention
-14. exp153  — KAN adaptive mesh refinement
-```
-
-## Hardware Notes
-
-- **AMD XDNA NPU (Exp 146):** Ryzen AI / Strix Point NPU. Check via `lspci | grep -i xdna`.
-  Driver: AMDXDNA kernel module (in-tree on recent kernels ≥6.12). SDK: `pip install amdxdna-sdk`
-  or AMD Ryzen AI Software. If unavailable in kernel, document for future session.
-- **ROCm:** `JAX_PLATFORMS=cpu` mandatory — ROCm JAX backend crashes on gfx1150. PyTorch ROCm
-  works (3.3x speedup) but JAX must stay on CPU for all research experiments.
-- **RAM budget:** Qwen3.5-0.8B requires ~2.5GB RAM. Gemma4-E4B-it requires ~8GB. Use
-  `CARNOT_FORCE_LIVE=1` with `torch_dtype=float32` via Exp 123 model loader.
+| Experiment | Hardware | Available |
+|------------|----------|-----------|
+| Exp 154-159 | CPU (JAX) | Yes |
+| Exp 160 | RX 7900 XTX + Thunderbolt chassis | **Owned, needs connection** |
+| Exp 161-163 | eGPU (or simulation fallback) | Conditional on Exp 160 |
+| Exp 164 | CPU + internet | Yes |
+| Exp 165 | CPU + internet | Yes |
+
+**Priority action:** Connect RX 7900 XTX via Thunderbolt before Exp 160. This unblocks
+Goals #1, #5, #6 and is the single highest-leverage hardware action available.
+
+## Self-Learning Advancement
+
+This milestone advances all four self-learning tiers:
+
+| Tier | This Milestone |
+|------|----------------|
+| 1: Online weights | No new work (Exp 134 complete) |
+| 2: Constraint memory | Exp 159 benchmarks memory-augmented generation at 5-domain scale |
+| **3: Predictive verify** | **Exp 154-156: fix JEPA to multi-domain → unblock fast-path** |
+| 4: Adaptive structure | No new work (Exp 153 KAN AMR complete) |
+
+The Tier 3 fix (JEPA multi-domain) is the core self-learning advance for this milestone.
+Once the fast-path gate works with <2% degradation, Carnot routes easy queries through
+a sub-1ms path — inference gets faster with every example seen.
 
 ## Success Criteria
 
-| Experiment | Success |
-|------------|---------|
-| Exp 140    | Constraint projection <5ms per token on CPU (publishable latency number) |
-| Exp 141    | Memory-augmented extraction improves over AutoExtractor alone on ≥1 domain |
-| Exp 142    | Tier 2 (generation) > Tier 1 (reweighting) on arithmetic |
-| Exp 143    | ≥1,000 (partial_response, violation) training pairs collected |
-| Exp 144    | JEPA predictor AUROC >0.65 on held-out test set |
-| Exp 145    | ≥40% fast-path rate with <2% accuracy degradation |
-| Exp 146    | NPU benchmarked (pass/fail + latency, or documented environment state) |
-| Exp 147    | LLM accuracy drops on adversarial; Carnot verify-repair maintains; delta LARGER on adversarial |
-| Exp 148    | Full 1319 GSM8K with live inference, ±95% CI reported |
-| Exp 149    | TruthfulQA coverage analysis and top-5 gap constraint types identified |
-| Exp 150    | Guided decoding adapter live on HuggingFace; 16 model READMEs updated |
-| Exp 151    | 3 domain-specific Ising models published |
-| Exp 152    | ContinualGibbs retention >80% (vs LNN 10%) on 5-step chains |
-| Exp 153    | KAN refinement implemented; AUROC maintained or improved post-refinement |
+| Experiment | Target | Why It Matters |
+|------------|--------|----------------|
+| Exp 155 (JEPA v2) | macro AUROC >0.70 | Proves multi-domain training fixes the gap |
+| Exp 156 (fast-path v2) | ≥40% fast-path, <2% degradation | Tier 3 self-learning complete |
+| Exp 158 (factual) | factual coverage >30% | Closes biggest blind spot |
+| Exp 161 (full GSM8K) | CI < ±3pp, beats simulated baseline | Credible external number |
+| Exp 162 (adversarial) | p<0.05 adversarial > control | Apple thesis validated |
+| Exp 163 (HumanEval) | pass@1+repair > 90% | Code domain credibility |

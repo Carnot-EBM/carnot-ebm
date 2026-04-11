@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Planning Agent — Milestone 2026.04.11
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T10:12:16Z | 2026-04-11T10:19:32Z | Plan milestone 2026.04.11: read 14 source files + arxiv research; wrote research-roadmap-vNEXT.md (v16) + research-roadmap-next.yaml (12 experiments, 4 phases); updated research-references.md with 5 new arxiv papers; 3 biggest gaps: JEPA multi-domain fix, factual extractor, live eGPU benchmarks | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 152 ContinualGibbs
 
 ### Turn Log
