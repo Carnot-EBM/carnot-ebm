@@ -74,10 +74,27 @@ production goals. Updated as new needs emerge from experiments.
 
 ### Options
 - **AMD Ryzen AI 300 series** (current machine has Ryzen AI 9 HX 370)
-  - XDNA NPU is present but unused — need AMD's NPU SDK
-  - Potential for running small constraint models on NPU while LLM runs on CPU
-  - **Action needed:** Install AMD XDNA driver + SDK, test if constraint
-    check can run on NPU. No hardware purchase needed — just software.
+  - XDNA NPU present, `amdxdna` kernel module loaded, XRT 2.20.0 installed
+  - **BLOCKER:** VitisAI Execution Provider requires a custom-built
+    `onnxruntime` with VitisAI compiled in. The pip package does NOT include
+    it, and AMD only distributes pre-built wheels for Python 3.9-3.12.
+  - **Current workaround:** `.venv-npu/` (Python 3.12) created with
+    onnxruntime 1.20.1, but pip's build lacks VitisAI EP. Need AMD's
+    custom onnxruntime wheel from their Ryzen AI Software installer.
+  - **What we have:**
+    - `/opt/xilinx/xrt/` — XRT 2.20.0 driver stack ✅
+    - `~/github.com/amd/RyzenAI-SW/` — includes `libonnxruntime_providers_vitisai.so`
+      and `libonnxruntime_vitisai_ep.so` (built for onnxruntime 1.20.1) ✅
+    - `.venv-npu/` — Python 3.12 venv with onnxruntime 1.20.1 (CPU only) ✅
+    - `amdxdna` kernel module loaded ✅
+    - ONNX model exported by Exp 146 (`results/jepa_predictor_146.onnx`) ✅
+  - **What's missing:**
+    - AMD's custom `onnxruntime` Python wheel with VitisAI EP compiled in
+    - Download from: ryzenai.docs.amd.com/en/latest/inst.html (requires
+      AMD account + EULA agreement)
+    - Or build onnxruntime 1.20.1 from source with `-Donnxruntime_USE_VITISAI=ON`
+  - **Status:** ONNX model ready, driver ready, Python 3.12 venv ready.
+    Just need the VitisAI-enabled onnxruntime wheel to unlock NPU inference.
 - **Intel Core Ultra (Lunar Lake/Arrow Lake)**
   - Integrated NPU, well-documented SDK
   - Could be a comparison platform for edge constraint verification
