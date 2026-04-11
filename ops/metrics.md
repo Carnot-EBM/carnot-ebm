@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 164 HuggingFace Publishing
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T15:29:40Z | 2026-04-11T15:34:14Z | Exp 164: HuggingFace publishing — created scripts/experiment_164_hf_publish.py; uploaded guided-decoding-adapter, 3 constraint-propagation models, JEPA v2; updated 16 per-token EBM READMEs with pip install note; 5/5 uploads verified, 16/16 READMEs updated | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 163 Full HumanEval Benchmark
 
 ### Turn Log
