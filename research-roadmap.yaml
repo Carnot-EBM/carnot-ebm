@@ -404,8 +404,8 @@ tasks:
          - Which domain benefits most from each signal?
 
       5. Save results/experiment_171_combined_results.json:
-         (n_questions: 200, configs: (config_name: {per_domain_accuracy, latency_ms)),
-          best_config_per_domain, combined_vs_ising_only_delta}
+         (n_questions: 200, configs: (config_name: (per_domain_accuracy, latency_ms)),
+          best_config_per_domain, combined_vs_ising_only_delta)
 
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_171_combined_signal_benchmark.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -905,8 +905,8 @@ tasks:
 
       6. Save results/experiment_178_results.json:
          (n_per_variant: 400, inference_mode: "live"|"simulated",
-          per_variant: (variant_name: {baseline, repair, delta, ci_95, p_permutation, p_ztest)),
-          adversarial_control_ratio, goal5_achieved: bool}
+          per_variant: (variant_name: (baseline, repair, delta, ci_95, p_permutation, p_ztest)),
+          adversarial_control_ratio, goal5_achieved: bool)
 
       7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_178_adversarial_definitive.py
          (or without JAX_PLATFORMS=cpu if Exp 177 confirmed GPU works)
