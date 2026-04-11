@@ -125,14 +125,60 @@ Tested target models (Exp-110):
 Any HuggingFace `AutoModelForCausalLM` with `.logits` output should work.
 The adapter does not modify model weights.
 
-## Known Limitations
 
-1. **No KV-cache**: Full forward pass every token. Keep `max_tokens < 256`.
-2. **Uniform penalty**: Does not steer vocabulary — only adjusts entropy.
-3. **Energy is a count**: Not calibrated; high alpha + many violations = very
-   flat distribution (model may repeat or stall).
-4. **Min-text guard**: AutoExtractor skips texts < 5 chars (early tokens).
-5. **Mock-only validation**: Exp-110 used a mock LLM. Live-model E2E pending.
+## Benchmark Results (Exp-138 & Exp-140)
+
+> **Note — Simulated Inference**: All benchmark numbers below were produced
+> with a *simulated* (mock) LLM, not a real transformer model.  The constraint
+> checker and logit-penalty logic are real; the generation loop uses a
+> deterministic stand-in.  Live-model E2E validation is pending (Exp-111).
+
+### Accuracy (Exp-138, n=200/50/100, simulated inference)
+
+| Dataset | Baseline | Guided | Guided+Verify-Repair | Delta (guided) |
+|---------|----------|--------|----------------------|----------------|
+| GSM8K (math) | 55.5% | 62.5% | 65.0% | **+7.0%** |
+| HumanEval (code) | 100.0% | 100.0% | — | **+0.0%** |
+| TruthfulQA | 55.0% | 56.0% | 61.0% | **+1.0%** |
+
+### Latency (Exp-138, n=485 samples, CPU)
+
+| Metric | Value |
+|--------|-------|
+| Constraint-check p50 | 0.0719 ms |
+| Constraint-check p99 | 0.1275 ms |
+
+### Latency — KAN Projection Mode (Exp-140, batch=1, CPU)
+
+| Operation | p50 | p99 |
+|-----------|-----|-----|
+| Logit projection (energy gradient) | 0.077 ms | 0.271 ms |
+| Total per-token (grad + projection) | 0.405 ms | 0.924 ms |
+
+Exp-140 pass criterion: total p50 < 5 ms — **PASSED**
+(actual 0.4054 ms vs 5.0 ms threshold).
+
+## Installation
+
+```bash
+pip install carnot
+```
+
+Requires Python 3.11+.  See [pypi.org/project/carnot](https://pypi.org/project/carnot)
+for the full package including the verify-repair pipeline.
+
+## Limitations
+
+1. **Simulated inference benchmark**: Exp-138 and Exp-140 used a mock LLM.
+   Numbers show constraint-checker and logit-penalty overhead, not end-to-end
+   accuracy on real models.  Treat accuracy deltas as directional, not final.
+2. **No KV-cache**: Full forward pass every token.  Keep `max_tokens < 256`.
+3. **Uniform penalty**: Adjusts entropy across the whole vocabulary; does not
+   steer towards specific correct tokens.
+4. **Energy is a violation count**: Not a calibrated probability.  High `alpha`
+   + many violations → very flat distribution (model may repeat or stall).
+5. **Min-text guard**: `AutoExtractor` skips texts < 5 chars (early tokens).
+6. **Live-model E2E pending**: Exp-111 validation against Qwen/Gemma not done yet.
 
 ## Spec
 
