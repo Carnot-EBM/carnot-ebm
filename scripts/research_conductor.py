@@ -239,10 +239,11 @@ def run_tests() -> tuple[bool, str]:
     """Run the full test suite. Returns (passed, summary)."""
     logger.info("Running test suite...")
     venv_pytest = str(PROJECT_ROOT / ".venv" / "bin" / "pytest")
+    # Use pyproject.toml's addopts (includes coverage, parallelism, threshold).
+    # Only add -q and --no-header for concise output parsing.
     rc, stdout, stderr = run_cmd(
-        [venv_pytest, "tests/python", "--cov=python/carnot",
-         "--cov-fail-under=99", "-q", "--no-header"],
-        timeout=300,
+        [venv_pytest, "tests/python", "-q", "--no-header"],
+        timeout=600,
     )
     # Find the summary line
     summary = ""
