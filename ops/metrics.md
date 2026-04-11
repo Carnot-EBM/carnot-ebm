@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-11T14:20:23Z | 2026-04-11T14:40:49Z | Exp 162: Powered adversarial GSM8K (N=200/variant, 10k permutations, two-proportion z-test); Goal #5 definitive; live CPU inference killed (~17s/q → 7hr est); simulation fallback; z-test p=0.017 SIGNIFICANT; perm-test p=0.429 (structural underpowering); ratio 1.41×; script + results saved | TBD |
+| 2 | 2026-04-11T14:44:41Z | 2026-04-11T14:45:59Z | Minimal doc updates: append Exp 162 to ops/status.md (High Priority section), _bmad/traceability.md (research validation table); changelog already has entry from Exp 162 script | TBD |
 
 ---
 
