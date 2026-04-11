@@ -1178,3 +1178,5 @@
 | 2026-04-11 06:26 UTC | Exp 149: TruthfulQA at scale with factual constrai | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-04-11 07:04 UTC | Exp 149: TruthfulQA at scale with factual constrai | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-04-11 08:04 UTC | Exp 149: TruthfulQA at scale with factual constrai | OK | Deliverable already exists in repo |
+| 2026-04-11 08:51 UTC | Exp 150: Push guided decoding adapter + update 16  | OK | =========== 2041 passed, 1 skipped, 12 warnings in 342.64s (0:05:42) =========== |
+| 2026-04-11 08:52 UTC | Exp 150: Push guided decoding adapter + update 16  | OK | Deliverable already exists in repo |
