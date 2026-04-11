@@ -1286,3 +1286,7 @@
 | 2026-04-11 20:38 UTC | Exp 178: Definitive adversarial GSM8K — Goal #5 wi | OK | =========== 2483 passed, 1 skipped, 22 warnings in 93.38s (0:01:33) ============ |
 | 2026-04-11 20:39 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 20:39 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 20:59 UTC | Exp 179: AMD XDNA NPU activation — VitisAI onnxrun | OK | =========== 2483 passed, 1 skipped, 22 warnings in 108.79s (0:01:48) =========== |
+| 2026-04-11 21:00 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 21:00 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 21:00 UTC | Milestone 2026.04.13 activated | OK | 10 tasks queued |
