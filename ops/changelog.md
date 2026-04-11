@@ -635,3 +635,9 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 150 Complete
 
 - Exp 150: Guided decoding adapter publication and model documentation — Published trained EBM models to HuggingFace with guided decoding adapter; updated READMEs for 16 model variants with inference instructions and benchmark results; enables community access to Carnot-trained models
+
+---
+
+## 2026-04-11: Experiment 152 Complete
+
+- Exp 152: Continual learning for constraint retention across agent steps — extends ConstraintStateMachine with learned constraint weighting; enables agent workflows to retain correct constraints and deprioritize incorrect ones via per-constraint confidence scores; improves multi-step accuracy through constraint feedback loop
