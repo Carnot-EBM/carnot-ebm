@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 LiquidConstraintModel (lnn.py)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T00:12:49Z | 2026-04-11T00:20:55Z | Create python/carnot/models/lnn.py (LiquidConstraintModel: MLP-driven dJ/dt ODE, step(), energy(), reset(), train() BPTT) + tests/python/test_lnn.py (31 tests, 100% coverage, 1844 total pass) | TBD |
+
+---
+
 ## Session: 2026-04-10 Exp 126 Agent Rollback
 
 ### Turn Log
