@@ -570,6 +570,15 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 ---
 
+## 2026-04-11: Exp 142 - Combined Tier 1+2 Learning Benchmark (automated conductor)
+
+### Added
+- Experiment 142: benchmarks Tier 1 (weight adaptation) + Tier 2 (constraint generation) combined vs separate on 500 synthetic arithmetic+logic questions
+- Findings: Tier 2 beats Tier 1 alone; Combined matches Tier 2 (ceiling effect at 60% correct fraction); constraint generation more impactful than weight tuning
+- scripts/experiment_142_combined_learning.py (1005 LOC), results/experiment_142_results.json
+
+---
+
 ## 2026-04-03: Project Bootstrap (user instruction: initial project setup)
 
 ### Added
