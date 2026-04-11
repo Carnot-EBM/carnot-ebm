@@ -1224,3 +1224,7 @@
 | 2026-04-11 14:17 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
 | 2026-04-11 14:17 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 14:17 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:46 UTC | Exp 162: Apple adversarial GSM8K with N=200/varian | OK | =========== 2229 passed, 1 skipped, 12 warnings in 174.89s (0:02:54) =========== |
+| 2026-04-11 14:47 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:47 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 14:47 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
