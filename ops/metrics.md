@@ -437,6 +437,7 @@
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-03T14:20:41Z | TBD | Initial project bootstrap: BMAD, specs, Rust workspace, Python package, pre-commit | TBD |
 | 2 | 2026-04-10T20:45:20Z | 2026-04-10T20:52:49Z | Publish KAN + guided decoding adapter as HF-ready artifacts in models/constraint-verifier-v2 | 7m29s |
+| 3 | 2026-04-11T11:23:30Z | 2026-04-11T11:31:54Z | Exp 155: Retrain JEPA v2 on multi-domain data; generate v2 pairs, train with weighted BCE + early stopping, evaluate vs v1 | 8m24s |
 
 ### Session Summary
 
