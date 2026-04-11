@@ -36,6 +36,8 @@ import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Protocol, runtime_checkable
 
+import jax.numpy as jnp
+
 from carnot.verify.constraint import ConstraintTerm
 
 if TYPE_CHECKING:
