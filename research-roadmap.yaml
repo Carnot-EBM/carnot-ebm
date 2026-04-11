@@ -1,453 +1,379 @@
-# Carnot Research Roadmap — Milestone 2026.04.8
-# "Adversarial Proof — Break the Benchmarks, Then Fix Them"
+# Carnot Research Roadmap — Milestone 2026.04.9
+# "Self-Learning Pipeline + Adversarial Proof at Scale"
 #
 # Active experiment queue — processed in order by research_conductor.py
-# This file is picked up automatically when 2026.04.7 completes.
+# This file is picked up automatically when 2026.04.8 completes.
 #
 # Versioning: CalVer (YYYY.MM.seq)
 # Completed tasks are moved to research-complete.yaml
 
-milestone: "2026.04.8"
-milestone_title: "Adversarial Proof — Break the Benchmarks, Then Fix Them"
-milestone_doc: "openspec/change-proposals/research-roadmap-v13.md"
+milestone: "2026.04.9"
+milestone_title: "Self-Learning Pipeline + Adversarial Proof at Scale"
+milestone_doc: "openspec/change-proposals/research-roadmap-v14.md"
 
 tasks:
-  # ── Phase 33: Apple Adversarial GSM8K ────────────────────────
-  - id: exp119-adversarial-gsm8k-generator
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_119_adversarial_gsm8k.py
-    title: "Exp 119: Apple adversarial GSM8K variant generator"
+  # ── Phase 37: Execute Adversarial Experiments ────────────────
+  - id: exp130-run-adversarial
+    milestone: "2026.04.9"
+    deliverable: results/experiment_121_results.json
+    title: "Exp 130: Execute adversarial verify-repair"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Apple (arxiv 2410.05229) proved LLMs pattern-match math instead
-      of reasoning. They took GSM8K problems and: (1) swapped the numbers (same
-      logic, different values), and (2) added one irrelevant sentence containing
-      a number (e.g., "five of them were a bit smaller than average"). Models
-      dropped up to 65%. This experiment recreates their methodology.
+      CONTEXT: Exp 121 script exists at scripts/experiment_121_adversarial_verify_repair.py
+      (71KB) but was never executed — no results JSON exists. This experiment RUNS
+      the existing script and captures results. DO NOT REWRITE THE SCRIPT.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_91_gsm8k_live.py — GSM8K benchmark infrastructure
-      - scripts/experiment_67_gsm8k_benchmark.py — earlier GSM8K experiment
-      - python/carnot/pipeline/extract.py — ArithmeticExtractor
-
-      TASK: Create scripts/experiment_119_adversarial_gsm8k.py
-
-      CONCRETE STEPS:
-      1. Create adversarial variant generator:
-         a. number_swap(problem: str) -> str:
-            - Parse all numbers in the problem
-            - Replace with random different numbers (same magnitude range)
-            - Recompute the correct answer with new numbers
-            - Return (modified_problem, new_correct_answer)
-
-         b. irrelevant_injection(problem: str) -> str:
-            - Generate one irrelevant sentence containing a number, e.g.:
-              "Five of the items were slightly smaller than average."
-              "The store had been open for 12 years."
-              "She noticed 3 birds outside the window."
-            - Insert at a random position in the problem
-            - The correct answer is UNCHANGED (sentence is irrelevant)
-
-         c. combined_adversarial(problem: str) -> str:
-            - Apply both: swap numbers AND inject irrelevant sentence
-
-      2. Generate 4 datasets of 200 questions each:
-         a. Standard GSM8K (control)
-         b. Number-swapped only
-         c. Irrelevant-sentence only
-         d. Combined (both perturbations)
-         Save all as JSON with original problem, perturbed problem, correct answer.
-
-      3. Validate: spot-check 10 from each set, verify correct answers are right.
-
-      4. Save to results/adversarial_gsm8k_data.json
-
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_119_adversarial_gsm8k.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp120-adversarial-baseline
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_120_adversarial_baseline.py
-    title: "Exp 120: LLM baseline on adversarial GSM8K"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 119 generated adversarial GSM8K variants (number-swapped,
-      irrelevant-sentence, combined). This experiment measures baseline LLM
-      accuracy on each variant to quantify the degradation.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_119_adversarial_gsm8k.py — adversarial data generator
-      - results/adversarial_gsm8k_data.json — generated datasets
-      - scripts/experiment_91_gsm8k_live.py — GSM8K inference infrastructure
-
-      TASK: Create scripts/experiment_120_adversarial_baseline.py
-
-      CONCRETE STEPS:
-      1. Load adversarial data from results/adversarial_gsm8k_data.json
-         (or regenerate if not found, using Exp 119 logic)
-
-      2. For each model (Qwen3.5-0.8B, Gemma4-E4B-it):
-         Run inference on all 4 variants (200 questions each):
-         a. Standard GSM8K (control)
-         b. Number-swapped
-         c. Irrelevant-sentence
-         d. Combined adversarial
-         If model loading fails, use simulated outputs with realistic
-         error patterns (keyword-triggered errors per Apple findings)
-
-      3. Metrics per variant per model:
-         - Accuracy (exact match on final numeric answer)
-         - Accuracy drop vs control (percentage points)
-         - Error categorization: arithmetic error, irrelevant-number error,
-           logic error, reading comprehension error
-         - 95% bootstrap confidence intervals
-
-      4. Save results to results/experiment_120_results.json
-
-      5. Print comparison table: model x variant x accuracy
-
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_120_adversarial_baseline.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp123-fix-model-loading
-    milestone: "2026.04.8"
-    deliverable: python/carnot/inference/model_loader.py
-    title: "Exp 123: Robust model loading for experiments"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Many experiments fall back to simulated LLM outputs because model
-      loading fails in the conductor's claude -p subprocess. Qwen3.5-0.8B (752M
-      params, ~1.5GB) loads fine when run directly but fails inconsistently in
-      subprocesses. This must be fixed for benchmark credibility.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_56_live_llm_pipeline.py — model loading pattern
-      - scripts/experiment_91_gsm8k_live.py — model loading with fallback
-      - python/carnot/pipeline/verify_repair.py — _load_model method
-
-      TASK: Create python/carnot/inference/model_loader.py
-
-      CONCRETE STEPS:
-      1. Create a robust model loader module:
-         a. load_model(model_name, device="cpu", dtype=None, max_retries=3):
-            - Check available memory before loading (psutil.virtual_memory)
-            - Default dtype=torch.float32 on CPU (not float16 which can fail)
-            - Retry on OOM with gc.collect() + torch.cuda.empty_cache()
-            - Return (model, tokenizer) or raise ModelLoadError with details
-
-         b. generate(model, tokenizer, prompt, max_new_tokens=256):
-            - Handle chat template (with/without enable_thinking)
-            - Strip think tokens from Qwen output
-            - Return generated text
-
-         c. Environment variable: CARNOT_FORCE_LIVE=1
-            - When set, raise instead of falling back to simulated
-            - Default: allow fallback (backward compatible)
-
-      2. Update python/carnot/inference/__init__.py to export load_model, generate
-
-      3. Create tests/python/test_model_loader.py:
-         - Test load_model with mock (patch transformers)
-         - Test memory check logic
-         - Test retry on OOM
-         - Test CARNOT_FORCE_LIVE env var
-         - Test generate with chat template
-
-      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp121-adversarial-verify-repair
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_121_adversarial_verify_repair.py
-    title: "Exp 121: Carnot verify-repair on adversarial GSM8K"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: This is THE credibility experiment. Exp 120 showed that LLMs
-      drop accuracy on adversarial GSM8K variants. This experiment shows that
-      Carnot's verify-repair pipeline MAINTAINS accuracy because Ising constraint
-      verification catches arithmetic errors regardless of irrelevant context.
-
-      The hypothesis: Carnot's improvement is LARGER on adversarial variants
-      than standard GSM8K, because there are more arithmetic errors to catch
-      when the LLM is confused by irrelevant information.
-
-      Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_120_adversarial_baseline.py — baseline results
+      - scripts/experiment_121_adversarial_verify_repair.py — THE SCRIPT TO RUN
       - results/adversarial_gsm8k_data.json — adversarial datasets
       - results/experiment_120_results.json — baseline accuracy
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - scripts/experiment_91_gsm8k_live.py — verify-repair on GSM8K
+      - python/carnot/inference/model_loader.py — robust model loading
 
-      TASK: Create scripts/experiment_121_adversarial_verify_repair.py
+      TASK: Run the existing Exp 121 script and verify results
 
       CONCRETE STEPS:
-      1. Load adversarial data and baseline results
+      1. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_121_adversarial_verify_repair.py
+      2. Verify results/experiment_121_results.json was created
+      3. If the script fails, fix ONLY the bug that caused the failure
+         (do not rewrite the script)
+      4. If model loading fails, ensure simulated fallback produces results
+      5. Print summary: per-variant accuracy for baseline vs verify-repair
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      2. For each model x each variant (4 x 200 = 800 questions):
-         Run 3 modes:
-         a. Baseline (from Exp 120, or re-run)
-         b. Verify-only: extract arithmetic constraints, check via Ising
-         c. Verify-repair: full loop (max 3 iterations)
-
-      3. Key metrics:
-         - Accuracy per mode per variant
-         - Improvement delta: (verify-repair - baseline) per variant
-         - Is delta LARGER on adversarial variants? (core hypothesis)
-         - Error type breakdown: which errors does Ising catch?
-         - Does Ising correctly ignore the irrelevant sentence?
-
-      4. Statistical analysis:
-         - 95% bootstrap confidence intervals on all accuracy numbers
-         - Paired test: is adversarial improvement significantly > standard?
-
-      5. Print comprehensive results table
-      6. Save to results/experiment_121_results.json
-
-      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_121_adversarial_verify_repair.py
-      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp124-full-gsm8k-live
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_124_full_gsm8k_live.py
-    title: "Exp 124: Full GSM8K (1319) with live inference"
+  - id: exp131-adversarial-writeup
+    milestone: "2026.04.9"
+    deliverable: scripts/experiment_131_adversarial_writeup.py
+    title: "Exp 131: Adversarial results analysis and writeup"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 91 ran 200 GSM8K questions with simulated inference. Exp 123
-      fixed model loading. This experiment runs the FULL 1,319-question GSM8K
-      test set with live model inference — the publishable benchmark.
+      CONTEXT: Exp 130 ran the adversarial verify-repair experiment. This
+      experiment analyzes the results and updates documentation.
 
       Target models: Qwen3.5-0.8B, google/gemma-4-E4B-it
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_91_gsm8k_live.py — 200-question GSM8K
-      - python/carnot/inference/model_loader.py — robust model loading (Exp 123)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-
-      TASK: Create scripts/experiment_124_full_gsm8k_live.py
-
-      CONCRETE STEPS:
-      1. Load full GSM8K test set (1,319 questions):
-         - Try: datasets library (load_dataset("gsm8k", "main", split="test"))
-         - Fallback: generate 1,319 GSM8K-style questions programmatically
-
-      2. Use robust model loader (Exp 123) with CARNOT_FORCE_LIVE=1
-
-      3. Run 3 modes on all 1,319 questions per model:
-         a. Baseline, b. Verify-only, c. Verify-repair
-
-      4. Report:
-         - Accuracy per mode with 95% confidence intervals
-         - Compare to published Qwen3.5-0.8B GSM8K baselines
-         - Per-difficulty breakdown if available
-         - Wall-clock time
-
-      5. Save to results/experiment_124_results.json
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_124_full_gsm8k_live.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp122-adversarial-analysis
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_122_adversarial_analysis.py
-    title: "Exp 122: Adversarial robustness deep analysis"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 121 showed Carnot's performance on adversarial GSM8K. This
-      experiment analyzes WHY Carnot succeeds — which error types are caught,
-      which are missed, and whether Ising energy predicts LLM failure.
 
       EXISTING CODE TO READ FIRST:
       - results/experiment_121_results.json — adversarial verify-repair results
       - results/experiment_120_results.json — baseline results
-      - results/adversarial_gsm8k_data.json — adversarial datasets
+      - results/experiment_122_results.json — robustness analysis
+      - docs/technical-report.md — technical report to update
 
-      TASK: Create scripts/experiment_122_adversarial_analysis.py
+      TASK: Create scripts/experiment_131_adversarial_writeup.py
 
       CONCRETE STEPS:
-      1. Error taxonomy: categorize every LLM error by type:
-         - Keyword-triggered (saw "smaller" → subtracted)
-         - Irrelevant-number (used the injected number in calculation)
-         - Arithmetic (correct logic, wrong computation)
-         - Logic (wrong approach to the problem)
+      1. Load all adversarial results (Exp 120, 121, 122)
+      2. Generate comparison tables:
+         - Per-variant: control, number-swapped, irrelevant, combined
+         - Per-mode: baseline, verify-only, verify-repair
+         - Per-model: Qwen3.5 vs Gemma4
+      3. Compute improvement deltas and 95% bootstrap CIs
+      4. Key question: is improvement LARGER on adversarial variants?
+      5. Update docs/technical-report.md with new "Adversarial Robustness" section
+      6. Save analysis to results/experiment_131_results.json
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_131_adversarial_writeup.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      2. Carnot detection analysis: for each error type:
-         - What fraction does Ising catch?
-         - What fraction does verify-repair fix?
-         - Which types are uncatchable by constraint verification?
+  # ── Phase 38: Online Constraint Learning (Tier 1) ───────────
+  - id: exp132-constraint-tracker
+    milestone: "2026.04.9"
+    deliverable: python/carnot/pipeline/tracker.py
+    title: "Exp 132: Constraint performance tracker"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
 
-      3. Energy-prediction analysis:
-         - Does high Ising energy predict LLM will be wrong?
-         - ROC curve: energy as predictor of incorrect answer
-         - Can we use energy to triage which answers need human review?
+      CONTEXT: Carnot currently starts every verification from scratch. This
+      experiment adds the foundation for self-learning: tracking which constraints
+      fire and which catch real errors, accumulating statistics over time.
+      See research-program.md "Continuous Self-Learning" Tier 1 for the design.
 
-      4. Irrelevant sentence analysis:
-         - Does the ArithmeticExtractor ever extract the irrelevant number?
-         - How robust is constraint extraction to adversarial context?
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - python/carnot/pipeline/extract.py — constraint extractors
+      - research-program.md — "Continuous Self-Learning" section
 
-      5. Save analysis to results/experiment_122_results.json
-      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_122_adversarial_analysis.py
+      TASK: Create python/carnot/pipeline/tracker.py
+
+      CONCRETE STEPS:
+      1. ConstraintTracker class:
+         - record(constraint_type: str, fired: bool, caught_error: bool)
+         - precision(constraint_type: str) -> float (caught / fired)
+         - recall(constraint_type: str) -> float (caught / total_errors)
+         - stats() -> dict of per-type precision/recall/count
+         - save(path: str) — persist to JSON
+         - load(path: str) — restore from JSON
+         - merge(other: ConstraintTracker) — combine statistics
+
+      2. Integration with VerifyRepairPipeline:
+         - verify() accepts optional tracker parameter
+         - After verification, records which constraints fired and caught errors
+         - Tracker is NOT required (backward compatible)
+
+      3. Tests in tests/python/test_tracker.py:
+         - Test recording and precision/recall computation
+         - Test save/load round-trip
+         - Test merge of two trackers
+         - Test integration with VerifyRepairPipeline
+
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp133-adaptive-weighting
+    milestone: "2026.04.9"
+    deliverable: python/carnot/pipeline/adaptive.py
+    title: "Exp 133: Adaptive constraint weighting from tracker"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 132 built the ConstraintTracker. This experiment uses the
+      accumulated statistics to automatically adjust constraint weights —
+      high-precision constraints get more weight, noisy ones get downweighted.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - python/carnot/verify/constraint.py — ComposedEnergy weights
+
+      TASK: Create python/carnot/pipeline/adaptive.py
+
+      CONCRETE STEPS:
+      1. AdaptiveWeighter class:
+         - from_tracker(tracker: ConstraintTracker) -> dict of weights
+         - Weight formula: w_i = precision_i * log(count_i + 1)
+           (high precision + high count = high weight)
+         - Minimum weight floor (0.1) to avoid zeroing out constraints
+         - apply_to_pipeline(pipeline, weights) -> updates ComposedEnergy weights
+
+      2. Compare on 200 GSM8K questions:
+         - Fixed weights (default) vs adaptive weights (from 100-question warmup)
+         - Metric: accuracy improvement from adaptive weighting
+
+      3. Tests in tests/python/test_adaptive.py
+
+      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp134-online-learning-benchmark
+    milestone: "2026.04.9"
+    deliverable: scripts/experiment_134_online_learning.py
+    title: "Exp 134: Online learning benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 132-133 built constraint tracking and adaptive weighting.
+      This experiment tests whether the system actually gets smarter over time
+      by streaming questions and periodically updating weights.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
+      - python/carnot/pipeline/adaptive.py — AdaptiveWeighter (Exp 133)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+
+      TASK: Create scripts/experiment_134_online_learning.py
+
+      CONCRETE STEPS:
+      1. Simulate deployment: stream 500 questions through pipeline
+      2. Every 50 questions: update constraint weights from tracker
+      3. Record accuracy per batch of 50
+      4. Plot (or print table): accuracy over time
+      5. Compare: no learning (fixed weights) vs Tier 1 (online updates)
+      6. Target: measurable accuracy improvement by question 200
+      7. Save results to results/experiment_134_results.json
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_134_online_learning.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 39: Constraint Memory (Tier 2) ────────────────────
+  - id: exp135-constraint-memory
+    milestone: "2026.04.9"
+    deliverable: python/carnot/pipeline/memory.py
+    title: "Exp 135: Persistent constraint memory"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Tier 1 (online weighting) adjusts existing constraint weights.
+      Tier 2 goes further: LEARN NEW CONSTRAINT PATTERNS from accumulated
+      verifications and persist them across sessions.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
+      - python/carnot/pipeline/extract.py — constraint extractors
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - research-program.md — "Continuous Self-Learning" Tier 2
+
+      TASK: Create python/carnot/pipeline/memory.py
+
+      CONCRETE STEPS:
+      1. ConstraintMemory class:
+         - record_pattern(domain, error_pattern, constraint_that_caught_it)
+         - suggest_constraints(text, domain) -> list of additional constraints
+           based on learned patterns for this domain
+         - save(path) / load(path) — JSON persistence
+         - summary() -> per-domain pattern counts and top patterns
+
+      2. Pattern learning:
+         - Track (domain, error_type, frequency) triples
+         - When a pattern appears 3+ times, auto-generate a constraint
+         - Example: "arithmetic carry errors" seen 5 times → add carry-check
+           constraint automatically for future arithmetic verifications
+
+      3. Integration with VerifyRepairPipeline:
+         - Pipeline accepts optional memory parameter
+         - Before extraction, check memory for additional constraints
+         - After verification, record any new patterns to memory
+
+      4. Tests in tests/python/test_constraint_memory.py
+
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp136-cross-session-benchmark
+    milestone: "2026.04.9"
+    deliverable: scripts/experiment_136_cross_session.py
+    title: "Exp 136: Cross-session learning benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 135 built persistent constraint memory. This experiment
+      tests whether memory from one session improves the next session.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/memory.py — ConstraintMemory (Exp 135)
+      - python/carnot/pipeline/tracker.py — ConstraintTracker (Exp 132)
+      - python/carnot/pipeline/adaptive.py — AdaptiveWeighter (Exp 133)
+
+      TASK: Create scripts/experiment_136_cross_session.py
+
+      CONCRETE STEPS:
+      1. Session 1: verify 200 arithmetic questions, build memory + tracker
+      2. Save memory and tracker to disk
+      3. Session 2: load memory, verify 200 NEW arithmetic questions
+      4. Session 3: verify 200 mixed domain (arithmetic + logic + code)
+      5. Metrics per session:
+         - Accuracy (with vs without memory)
+         - Number of additional constraints suggested by memory
+         - Time to first correct repair (does memory speed up repair?)
+      6. Key question: does domain-specific memory help cross-domain?
+      7. Save to results/experiment_136_results.json
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_136_cross_session.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 40: Energy-Guided Decoding for HuggingFace ────────
+  - id: exp137-hf-guided-decoding
+    milestone: "2026.04.9"
+    deliverable: exports/guided-decoding-adapter/README.md
+    title: "Exp 137: Package guided decoding for HuggingFace"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Guided decoding works (Exp 110, 0.006ms per check). This
+      experiment packages it as a HuggingFace-publishable artifact.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/guided_decoding.py — guided decoding module
+      - scripts/experiment_110_guided_decoding.py — prototype results
+      - results/experiment_102_results.json — latency benchmarks
+      - exports/ — existing HuggingFace export format
+
+      TASK: Create exports/guided-decoding-adapter/
+
+      CONCRETE STEPS:
+      1. Create export directory with:
+         - README.md: what it is, how to use, latency numbers, limitations
+         - config.json: constraint types, default weights, model compatibility
+         - constraint_weights.safetensors: default constraint energy weights
+         - example.py: 10-line usage example
+
+      2. Usage API:
+         ```python
+         from carnot.inference.guided_decoding import GuidedDecoder
+         decoder = GuidedDecoder.from_pretrained("Carnot-EBM/guided-decoding-adapter")
+         # Attach to any HF model
+         output = decoder.generate(model, tokenizer, "What is 47 + 28?")
+         ```
+
+      3. Test: verify the export loads and produces valid output
+      4. Do NOT actually push to HuggingFace (just prepare the artifacts)
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp138-guided-decoding-benchmark
+    milestone: "2026.04.9"
+    deliverable: scripts/experiment_138_guided_benchmark.py
+    title: "Exp 138: Guided decoding benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 137 packaged guided decoding. This benchmarks it on
+      standard tasks to get publishable numbers for the HuggingFace card.
+
+      EXISTING CODE TO READ FIRST:
+      - exports/guided-decoding-adapter/ — packaged adapter (Exp 137)
+      - python/carnot/inference/guided_decoding.py — guided decoding module
+      - scripts/experiment_91_gsm8k_live.py — GSM8K infrastructure
+
+      TASK: Create scripts/experiment_138_guided_benchmark.py
+
+      CONCRETE STEPS:
+      1. Benchmark guided decoding on 3 tasks:
+         a. 200 GSM8K questions: accuracy with vs without guided decoding
+         b. 50 HumanEval problems: pass@1 with vs without
+         c. 100 TruthfulQA questions: accuracy with vs without
+      2. Report latency overhead per token (should be <0.01ms)
+      3. Compare: baseline vs guided vs verify-repair vs guided+verify-repair
+      4. Save to results/experiment_138_results.json
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_138_guided_benchmark.py
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 41: ArXiv Research ────────────────────────────────
+  - id: exp139-arxiv-scan
+    milestone: "2026.04.9"
+    deliverable: scripts/experiment_139_arxiv_scan.py
+    title: "Exp 139: ArXiv research scan and integration"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The research program requires arxiv research before each
+      milestone. This experiment scans recent papers and proposes experiments.
+
+      EXISTING CODE TO READ FIRST:
+      - research-references.md — current references
+      - research-program.md — priorities and self-learning tiers
+      - scripts/arxiv_scan.py — existing arxiv scanner (if present)
+
+      TASK: Create scripts/experiment_139_arxiv_scan.py
+
+      CONCRETE STEPS:
+      1. Search arxiv (via API or web) for papers from 2025-2026 on:
+         - "energy based model" + verification
+         - "Ising model" + "language model"
+         - "constraint satisfaction" + "neural"
+         - "Kolmogorov-Arnold" + energy
+         - "guided decoding" + constraint
+         - "FPGA" + "Ising" OR "Boltzmann"
+         - "continual learning" + constraint
+         - "thermodynamic computing" + sampling
+
+      2. For each promising paper (up to 10):
+         - Title, authors, arxiv ID
+         - One-paragraph summary
+         - Relevance to Carnot (specific experiment or architecture idea)
+         - Proposed experiment if applicable
+
+      3. Update research-references.md with new entries
+
+      4. Propose 2-3 concrete experiments for milestone 2026.04.10
+
+      5. Save scan results to results/experiment_139_results.json
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_139_arxiv_scan.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 35: Multi-Turn Agentic Verification ───────────────
-  - id: exp125-constraint-state-machine
-    milestone: "2026.04.8"
-    deliverable: python/carnot/pipeline/state_machine.py
-    title: "Exp 125: Constraint state machine for agent workflows"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 99 built constraint state propagation. This experiment
-      creates a production-grade ConstraintStateMachine that agent frameworks
-      can integrate.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/agentic.py — ConstraintState, propagate()
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-      - python/carnot/pipeline/extract.py — AutoExtractor
-
-      TASK: Create python/carnot/pipeline/state_machine.py
-
-      CONCRETE STEPS:
-      1. ConstraintStateMachine class:
-         - step(input_text, output_text) -> StepResult
-         - Internally: extract constraints, verify against accumulated state,
-           flag contradictions with previous facts, update state
-         - rollback(to_step: int) -> restores state to after that step
-         - history() -> list of all steps with per-step verification results
-         - verified_facts() -> all facts currently marked VERIFIED
-         - pending_facts() -> all facts still ASSUMED
-
-      2. StepResult dataclass:
-         - step_index, verification, new_facts, contradictions, state_snapshot
-
-      3. Tests in tests/python/test_state_machine.py
-
-      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp126-agent-rollback
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_126_agent_rollback.py
-    title: "Exp 126: Agent rollback on constraint violation"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 125 built the ConstraintStateMachine with rollback. This
-      experiment tests rollback on multi-step reasoning tasks.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine (Exp 125)
-      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
-
-      TASK: Create scripts/experiment_126_agent_rollback.py
-
-      CONCRETE STEPS:
-      1. Create 20 multi-step math problems (4 steps each):
-         Step 1: Extract given values
-         Step 2: Compute intermediate result
-         Step 3: Apply final operation
-         Step 4: State answer
-
-      2. Simulate agent with deliberate errors at step 2 or 3
-
-      3. Run with ConstraintStateMachine:
-         - Detect violation at step N
-         - Rollback to step N-1
-         - Re-run from rollback point with constraint feedback
-         - Measure: final accuracy with vs without rollback
-
-      4. Save results to results/experiment_126_results.json
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_126_agent_rollback.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp127-agent-workflow-benchmark
-    milestone: "2026.04.8"
-    deliverable: scripts/experiment_127_agent_workflow.py
-    title: "Exp 127: Agent workflow verification benchmark"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 125-126 built constraint state machine and rollback. This
-      experiment benchmarks agent workflow verification end-to-end.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/state_machine.py — ConstraintStateMachine
-      - scripts/experiment_126_agent_rollback.py — rollback results
-
-      TASK: Create scripts/experiment_127_agent_workflow.py
-
-      CONCRETE STEPS:
-      1. Three workflow types (20 problems each):
-         a. 4-step math: extract → compute → verify → answer
-         b. 3-step code: design → implement → test
-         c. 5-step planning: goals → constraints → schedule → verify → output
-
-      2. Run each with and without ConstraintStateMachine
-
-      3. Metrics: final accuracy, steps to completion, rollbacks triggered,
-         constraint violations caught per step
-
-      4. Save to results/experiment_127_results.json
-      5. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_127_agent_workflow.py
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 36: LNN Adaptive Constraints ──────────────────────
-  - id: exp128-lnn-prototype
-    milestone: "2026.04.8"
-    deliverable: python/carnot/models/lnn.py
-    title: "Exp 128: LNN adaptive constraint model"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Liquid Neural Networks have parameters that adapt during inference
-      via differential equations. For Carnot, this means constraint coupling
-      strengths that evolve as new facts arrive in multi-turn agent workflows.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/ising.py — static Ising model (for comparison)
-      - python/carnot/models/kan.py — KAN model (Exp 108)
-      - python/carnot/pipeline/state_machine.py — agent state machine (Exp 125)
-
-      TASK: Create python/carnot/models/lnn.py
-
-      CONCRETE STEPS:
-      1. LiquidConstraintModel class:
-         - Coupling matrix that evolves via ODE: dJ/dt = f(J, observations)
-         - f parameterized as small MLP (learnable)
-         - step(observation) -> updates couplings based on new information
-         - energy(state) -> computed with current (adapted) couplings
-         - reset() -> return to initial couplings
-
-      2. Training: learn the ODE parameters from multi-step sequences
-         - Input: sequence of (observation, correct_label) pairs
-         - Loss: sum of energy-based classification losses across sequence
-         - The model should learn to ADAPT its couplings to be more accurate
-           as it sees more observations
-
-      3. Tests in tests/python/test_lnn.py
-
-      4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
