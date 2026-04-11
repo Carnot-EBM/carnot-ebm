@@ -817,10 +817,14 @@ class VerifyRepairPipeline:
         total_energy = 0.0
 
         # Separate energy-backed and metadata-backed constraints.
+        # Use adaptive weights if installed via AdaptiveWeighter.apply_to_pipeline().
+        # Falls back to uniform weight 1.0 for any type not in the dict.
+        adaptive_weights: dict[str, float] = getattr(self, "_adaptive_weights", {})
         energy_terms: list[tuple[ConstraintResult, float]] = []
         for cr in constraints:
             if cr.energy_term is not None:
-                energy_terms.append((cr, 1.0))
+                weight = adaptive_weights.get(cr.constraint_type, 1.0)
+                energy_terms.append((cr, weight))
 
         # If we have energy terms, build ComposedEnergy and verify.
         if energy_terms:
