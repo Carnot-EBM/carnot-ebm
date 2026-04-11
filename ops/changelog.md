@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 156 JEPA Fast-Path v2 Validation)
+
+- `scripts/experiment_156_jepa_fastpath_v2.py` — validates v2 JEPA predictor (Exp 155) against the Exp 145 fast-path benchmark; same 500 synthetic Q&A pairs (seed=42), three thresholds (0.3, 0.5, 0.7). v2 results: t=0.3 → 33.4% fast-path, 8.4% degradation; t=0.5 → 52.8% fast-path, 10.2% degradation; t=0.7 → 78.4% fast-path, 19.0% degradation. v2 improves degradation over v1 at all thresholds (t=0.5: -9.6pp; t=0.7: -1.6pp) but no threshold meets <2% degradation target. Root cause: code domain accounts for all 42 errors at t≤0.5 — the pipeline fast-paths the entire code question set (200/200) because v2 code AUROC=0.776 still does not suppress false negatives enough. Arithmetic errors emerge at t=0.7 (53/95). Logic: 0 errors at all thresholds (100% fast-path accuracy). Target NOT MET; `target_met: false` in results. Saved `results/experiment_156_results.json`. (REQ-JEPA-002, REQ-VERIFY-003, user instruction: Exp 156)
+
 ## 2026-04-11 (Exp 155 JEPA v2 Multi-Domain Retrain)
 
 - `scripts/experiment_155_train_jepa_v2.py` — retrains JEPAViolationPredictor on balanced multi-domain data; generates `results/jepa_training_pairs_v2.json` (1200 pairs: 800 arithmetic reused from Exp 143, 200 synthetic code, 200 synthetic logic); stratified split by (domain × violated); class-weighted BCE loss (pos_weight = n_neg/n_pos per domain, clipped [0.1, 10]); 100-epoch budget with early stopping on val macro AUROC (patience=15); best epoch 19 (val macro AUROC=0.9172 cross-domain); held-out per-domain AUROC: arithmetic=0.721 (+0.018 vs v1), code=0.777 (+0.071 vs v1), logic=0.479 (limited byte-level signal). Saved `results/jepa_predictor_v2.safetensors` (73.1 KB) and `results/experiment_155_results.json`. (REQ-JEPA-001, SCENARIO-JEPA-003, user instruction: Exp 155)

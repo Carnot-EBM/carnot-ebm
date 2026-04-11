@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 156 JEPA Fast-Path v2
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T11:46:44Z | 2026-04-11T11:49:59Z | Exp 156: JEPA fast-path v2 validation — v2 predictor vs v1 at thresholds 0.3/0.5/0.7; target NOT MET (no threshold achieved <2% degradation); best: t=0.5 → 52.8% fast-path, 10.2% degradation (v1: 95.4%/19.8%); code domain still dominates errors (42/51 at t=0.5); root cause: code pipeline fast-paths entire domain; saved results/experiment_156_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Planning Agent — Milestone 2026.04.11
 
 ### Turn Log

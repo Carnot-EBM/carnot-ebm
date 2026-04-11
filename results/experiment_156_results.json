@@ -1,0 +1,212 @@
+{
+  "experiment": 156,
+  "description": "JEPA fast-path v2 validation \u2014 validates Exp 155 improved predictor",
+  "references": {
+    "exp_145": "v1 baseline benchmark",
+    "exp_155": "v2 predictor training (multi-domain)"
+  },
+  "predictor_versions": {
+    "v1_path": "results/jepa_predictor.safetensors",
+    "v2_path": "results/jepa_predictor_v2.safetensors",
+    "v2_macro_auroc_from_exp155": 0.6588828939009381,
+    "v2_code_auroc_from_exp155": 0.7764705882352941,
+    "v1_macro_auroc_from_exp155": 0.647760691766653
+  },
+  "n_total": 500,
+  "n_arithmetic": 200,
+  "n_code": 200,
+  "n_logic": 100,
+  "seed": 42,
+  "targets": {
+    "fast_path_rate_min": 0.4,
+    "max_accuracy_degradation": 0.02
+  },
+  "baseline": {
+    "total_time_s": 0.030011424998519942,
+    "n_verified": 397,
+    "gt_accuracy": 0.78
+  },
+  "thresholds": [
+    {
+      "threshold": 0.3,
+      "v2": {
+        "fast_path_rate": 0.334,
+        "fast_path_count": 167,
+        "slow_path_count": 333,
+        "fast_path_accuracy": 0.7485029940119761,
+        "slow_path_accuracy": 1.0,
+        "overall_accuracy": 0.916,
+        "accuracy_degradation": 0.08399999999999996,
+        "n_fast_path_errors": 42,
+        "total_time_s": 2.584938754007453,
+        "speedup_vs_baseline": 0.011610110665868957,
+        "target_fast_path_met": false,
+        "target_degradation_met": false,
+        "per_domain_fast_path_accuracy": {
+          "arithmetic": 1.0,
+          "code": 0.7375,
+          "logic": 1.0
+        },
+        "per_domain_fast_path_count": {
+          "arithmetic": 1,
+          "code": 160,
+          "logic": 6
+        }
+      },
+      "v1_comparison": {
+        "fast_path_rate": 0.38,
+        "accuracy_degradation": 0.11599999999999999,
+        "fast_path_rate_delta": -0.045999999999999985,
+        "degradation_delta": -0.03200000000000003,
+        "source": "live_run"
+      }
+    },
+    {
+      "threshold": 0.5,
+      "v2": {
+        "fast_path_rate": 0.528,
+        "fast_path_count": 264,
+        "slow_path_count": 236,
+        "fast_path_accuracy": 0.8068181818181818,
+        "slow_path_accuracy": 1.0,
+        "overall_accuracy": 0.898,
+        "accuracy_degradation": 0.10199999999999998,
+        "n_fast_path_errors": 51,
+        "total_time_s": 1.843077858997276,
+        "speedup_vs_baseline": 0.016283319151176617,
+        "target_fast_path_met": true,
+        "target_degradation_met": false,
+        "per_domain_fast_path_accuracy": {
+          "arithmetic": 0.6538461538461539,
+          "code": 0.79,
+          "logic": 1.0
+        },
+        "per_domain_fast_path_count": {
+          "arithmetic": 26,
+          "code": 200,
+          "logic": 38
+        }
+      },
+      "v1_comparison": {
+        "fast_path_rate": 0.954,
+        "accuracy_degradation": 0.19799999999999995,
+        "fast_path_rate_delta": -0.42599999999999993,
+        "degradation_delta": -0.09599999999999997,
+        "source": "live_run"
+      }
+    },
+    {
+      "threshold": 0.7,
+      "v2": {
+        "fast_path_rate": 0.784,
+        "fast_path_count": 392,
+        "slow_path_count": 108,
+        "fast_path_accuracy": 0.7576530612244898,
+        "slow_path_accuracy": 1.0,
+        "overall_accuracy": 0.81,
+        "accuracy_degradation": 0.18999999999999995,
+        "n_fast_path_errors": 95,
+        "total_time_s": 1.808719063992612,
+        "speedup_vs_baseline": 0.016592640391743296,
+        "target_fast_path_met": true,
+        "target_degradation_met": false,
+        "per_domain_fast_path_accuracy": {
+          "arithmetic": 0.5655737704918032,
+          "code": 0.79,
+          "logic": 1.0
+        },
+        "per_domain_fast_path_count": {
+          "arithmetic": 122,
+          "code": 200,
+          "logic": 70
+        }
+      },
+      "v1_comparison": {
+        "fast_path_rate": 1.0,
+        "accuracy_degradation": 0.20599999999999996,
+        "fast_path_rate_delta": -0.21599999999999997,
+        "degradation_delta": -0.016000000000000014,
+        "source": "live_run"
+      }
+    }
+  ],
+  "optimal_threshold": null,
+  "target_met": false,
+  "error_analysis": [
+    {
+      "mode": "v2_threshold=0.3",
+      "n_errors": 42,
+      "domain_counts": {
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.1885045241741907,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "code"
+    },
+    {
+      "mode": "v2_threshold=0.5",
+      "n_errors": 51,
+      "domain_counts": {
+        "arithmetic": 9,
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.23015635971929513,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "code"
+    },
+    {
+      "mode": "v2_threshold=0.7",
+      "n_errors": 95,
+      "domain_counts": {
+        "arithmetic": 53,
+        "code": 42
+      },
+      "avg_jepa_max_prob": 0.4058680879442315,
+      "short_response_fraction": 1.0,
+      "most_common_domain": "arithmetic"
+    }
+  ],
+  "v1_exp145_reference": {
+    "threshold_0_3": {
+      "name": "threshold=0.3",
+      "threshold": 0.3,
+      "total_time_s": 0.8592809950059745,
+      "speedup": 0.01781586825247682,
+      "fast_path_count": 190,
+      "slow_path_count": 310,
+      "fast_path_rate": 0.38,
+      "fast_path_accuracy": 0.6947368421052632,
+      "slow_path_accuracy": 1.0,
+      "overall_accuracy": 0.884,
+      "accuracy_degradation": 0.11599999999999999,
+      "n_fast_path_errors": 58,
+      "target_fast_path_met": false,
+      "target_degradation_met": false
+    },
+    "threshold_0_5": {
+      "name": "threshold=0.5",
+      "threshold": 0.5,
+      "total_time_s": 0.6668667519988958,
+      "speedup": 0.022956365650253597,
+      "fast_path_count": 477,
+      "slow_path_count": 23,
+      "fast_path_rate": 0.954,
+      "fast_path_accuracy": 0.7924528301886793,
+      "slow_path_accuracy": 1.0,
+      "overall_accuracy": 0.802,
+      "accuracy_degradation": 0.19799999999999995,
+      "n_fast_path_errors": 99,
+      "target_fast_path_met": true,
+      "target_degradation_met": false
+    }
+  },
+  "wall_clock_summary": {
+    "baseline_s": 0.030011424998519942,
+    "v2_by_threshold": {
+      "0.3": 2.584938754007453,
+      "0.5": 1.843077858997276,
+      "0.7": 1.808719063992612
+    }
+  },
+  "total_experiment_time_s": 13.79732832100126
+}
