@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 134 Online Learning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T01:21:28Z | 2026-04-11T01:36:32Z | Create scripts/experiment_134_online_learning.py — online learning demo with soft weighted-score verifier + NoisyHeuristicExtractor + ground-truth tracker recording; fixed=67.6%, adaptive=97.0%, delta=+29.4% overall; at q200 delta=+42.0% (target met) | TBD |
+
+---
+
 ## Session: 2026-04-11 AdaptiveWeighter (Tier 1 Self-Learning)
 
 ### Turn Log
