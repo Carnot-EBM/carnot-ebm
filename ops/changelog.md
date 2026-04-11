@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 167: JEPA Violation Predictor v3 — symbolic logic features, targets MET)
+
+- `scripts/experiment_167_train_jepa_v3.py` — Retrains JEPAViolationPredictor with 1500 combined pairs (800 arithmetic + 200 code from v2, 500 new symbolic-feature logic pairs from Exp 166). Improvements: stratified (domain×violated) split, per-domain class weights (clipped [0.5,10]), logic loss ×2.0, 200 epochs with early stopping on val macro AUROC (patience=20), AdamW weight_decay=1e-4. Architecture unchanged (256→64→32→3). (REQ-JEPA-001, SCENARIO-JEPA-003, user instruction: Exp 167)
+- `results/jepa_predictor_v3.safetensors` — v3 model. logic AUROC: 0.479→0.946 (+0.467). arithmetic AUROC: 0.721→0.874. code AUROC: 0.776→0.976. macro AUROC: 0.659→0.932. Both targets MET (logic>0.70, macro>0.75). Trained in 30 epochs (early stop). Metadata: version=v3, macro_auroc=0.932121, logic_auroc=0.945800.
+- `results/experiment_167_results.json` — Full comparison table: v2 vs v3 per-domain AUROC, macro improvement (+0.273), logic improvement (+0.467), target_met=true.
+- `tests/python/test_jepa_predictor.py` — Added TestV3ModelFile class (5 tests): v3 loads without error, predict returns all domains, logic domain varies on symbolic inputs, all params present, EnergyFunction protocol. All 46 tests pass.
+
+---
+
 ## 2026-04-11 (Exp 164: HuggingFace Publishing — guided-decoding-adapter, constraint-propagation models, JEPA v2, README updates)
 
 - `scripts/experiment_164_hf_publish.py` — HuggingFace publishing script. Checks authentication via `huggingface_hub.whoami()`, uploads all pending model artifacts, verifies uploads by downloading READMEs, updates 16 per-token EBM model cards, and writes `results/experiment_164_results.json`. Falls back gracefully to `scripts/hf_upload_commands.sh` if unauthenticated. (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, NFR-03, user instruction: Exp 164)

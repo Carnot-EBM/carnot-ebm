@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 167 JEPA v3 Training
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T16:53:15Z | 2026-04-11T16:58:37Z | Exp 167: JEPA v3 training with symbolic logic features; created scripts/experiment_167_train_jepa_v3.py; combined 1500 pairs (800 arith + 200 code + 500 logic symbolic); trained AdamW 200ep patience=20; logic AUROC 0.479→0.946, macro 0.659→0.932; both targets MET; 46/46 tests pass; saved results/jepa_predictor_v3.safetensors | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 164 HuggingFace Publishing
 
 ### Turn Log

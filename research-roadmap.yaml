@@ -212,8 +212,8 @@ tasks:
          Add a comment: # Exp 168: Tier 3 self-learning complete
 
       7. Save results/experiment_168_results.json:
-         (thresholds: [{t, fast_path_rate, accuracy, degradation, per_domain)],
-          target_met: bool, optimal_threshold, v1_v2_v3_comparison}
+         (thresholds: [(t, fast_path_rate, accuracy, degradation, per_domain)],
+          target_met: bool, optimal_threshold, v1_v2_v3_comparison)
 
       8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_168_jepa_fastpath_v3.py
       9. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -343,7 +343,7 @@ tasks:
          (n_questions: 100, logits_source: "real"|"simulated",
           spilled_auroc, lookahead_auroc, combined_auroc, optimal_alpha,
           factual_extractor_accuracy (from Exp 158 for comparison),
-          per_question_breakdown: [{question_id, spilled, lookahead, ground_truth)]}
+          per_question_breakdown: [(question_id, spilled, lookahead, ground_truth)])
 
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_170_real_logits_benchmark.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -404,7 +404,7 @@ tasks:
          - Which domain benefits most from each signal?
 
       5. Save results/experiment_171_combined_results.json:
-         (n_questions: 200, configs: {config_name: {per_domain_accuracy, latency_ms)},
+         (n_questions: 200, configs: (config_name: {per_domain_accuracy, latency_ms)),
           best_config_per_domain, combined_vs_ising_only_delta}
 
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_171_combined_signal_benchmark.py
@@ -905,7 +905,7 @@ tasks:
 
       6. Save results/experiment_178_results.json:
          (n_per_variant: 400, inference_mode: "live"|"simulated",
-          per_variant: {variant_name: {baseline, repair, delta, ci_95, p_permutation, p_ztest)},
+          per_variant: (variant_name: {baseline, repair, delta, ci_95, p_permutation, p_ztest)),
           adversarial_control_ratio, goal5_achieved: bool}
 
       7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_178_adversarial_definitive.py
