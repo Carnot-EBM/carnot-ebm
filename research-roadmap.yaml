@@ -49,7 +49,7 @@ tasks:
          c. For each response (function body), extract 4 prefix lengths (10%, 25%, 50%, 75%)
          d. Run CodeExtractor on each full response to get violation labels
          e. Embed each prefix with RandomProjectionEmbedding(embed_dim=256, seed=42)
-         f. Record: (prefix_ratio, embedding[256], violated_code, domain="code", source_exp=154)
+         f. Record: {prefix_ratio, embedding[256], violated_code, domain="code", source_exp=154}
 
       3. Generate 200 LOGIC domain pairs:
          a. Create 50 logical reasoning problems (syllogisms, propositional logic, 3-step chains)
@@ -59,7 +59,7 @@ tasks:
          e. Record with domain="logic"
 
       4. Merge arithmetic + code + logic into results/jepa_training_pairs_v2.json:
-         - Same schema as Exp 143: (pairs:[...], total, domain_counts, positive_rate)
+         - Same schema as Exp 143: {pairs:[...], total, domain_counts, positive_rate}
          - Ensure roughly balanced domain distribution (aim for ~33% per domain)
          - Print summary: total pairs by domain, positive rate per domain
 
@@ -113,7 +113,7 @@ tasks:
       4. Save to results/jepa_predictor_v2.safetensors (same safetensors format as v1)
 
       5. Save results to results/experiment_155_results.json:
-         (v1_macro_auroc, v2_macro_auroc, per_domain_v1, per_domain_v2, improvement)
+         {v1_macro_auroc, v2_macro_auroc, per_domain_v1, per_domain_v2, improvement}
 
       6. Add tests in tests/python/test_jepa_predictor.py if not already covering v2:
          - Test that load() works with the v2 model file
@@ -172,8 +172,8 @@ tasks:
       6. Wall-clock comparison: with vs without JEPA gate (JIT overhead vs savings)
 
       7. Save results to results/experiment_156_results.json:
-         (thresholds: [(t, fast_path_rate, degradation, per_domain)], optimal_threshold,
-          v1_comparison, target_met: bool)
+         {thresholds: [{t, fast_path_rate, degradation, per_domain}], optimal_threshold,
+          v1_comparison, target_met: bool}
 
       8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_156_jepa_fastpath_v2.py
       9. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -398,7 +398,7 @@ tasks:
          a. Check if eGPU is detected: `rocminfo 2>/dev/null | grep -i gfx`
          b. Check PyTorch ROCm: `import torch; torch.cuda.is_available()`
          c. Check JAX GPU: `import jax; print(jax.devices())`
-         d. Record: (egpu_detected: bool, rocm_devices: list, jax_devices: list)
+         d. Record: {egpu_detected: bool, rocm_devices: list, jax_devices: list}
 
       2. If eGPU detected:
          a. Benchmark Qwen3.5-0.8B inference on eGPU vs CPU:
@@ -417,8 +417,8 @@ tasks:
          c. Still run CPU inference baseline for comparison
 
       4. Save to results/experiment_160_results.json:
-         (egpu_detected, rocm_version, jax_backend, cpu_inference_ms, gpu_inference_ms,
-          speedup_ratio, blocker_if_any)
+         {egpu_detected, rocm_version, jax_backend, cpu_inference_ms, gpu_inference_ms,
+          speedup_ratio, blocker_if_any}
 
       5. Hardware note: If the Thunderbolt chassis requires physical connection that
          hasn't been done yet, write the script to detect the current state and report
@@ -479,8 +479,8 @@ tasks:
          - Compare to published baselines: GPT-4 87.1%, Llama2-70B 56.8%
 
       6. Save to results/experiment_161_results.json:
-         (n_questions, mode: (accuracy, ci_lower, ci_upper, improvement_delta, ci_delta),
-          inference_mode: "live" | "simulation", runtime_seconds)
+         {n_questions, mode: {accuracy, ci_lower, ci_upper, improvement_delta, ci_delta},
+          inference_mode: "live" | "simulation", runtime_seconds}
 
       7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_161_gsm8k_full.py
          (or without JAX_PLATFORMS=cpu if Exp 160 confirms JAX GPU works)
@@ -539,8 +539,8 @@ tasks:
          - Adversarial vs standard improvement ratio (key thesis metric)
 
       6. Save to results/experiment_162_results.json:
-         (per_variant_accuracy, improvement_deltas, hypothesis_test_p, ci_95, error_taxonomy,
-          adversarial_vs_standard_ratio, statistical_significance: bool)
+         {per_variant_accuracy, improvement_deltas, hypothesis_test_p, ci_95, error_taxonomy,
+          adversarial_vs_standard_ratio, statistical_significance: bool}
 
       7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_162_adversarial_live.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -592,8 +592,8 @@ tasks:
          - 95% bootstrap CI (N=164)
 
       5. Save to results/experiment_163_results.json:
-         (n_problems, pass_at_1_baseline, pass_at_1_verify, pass_at_1_repair, ci_95,
-          per_problem_results, inference_mode, runtime_seconds)
+         {n_problems, pass_at_1_baseline, pass_at_1_verify, pass_at_1_repair, ci_95,
+          per_problem_results, inference_mode, runtime_seconds}
 
       6. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_163_humaneval_full.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -609,7 +609,7 @@ tasks:
 
       CONTEXT: Several artifacts are packaged but not pushed to HuggingFace:
       - exports/guided-decoding-adapter/ (Exp 137) — not pushed (huggingface-cli not found)
-      - exports/constraint-propagation-models/(arithmetic,logic,code)/ (Exp 151) — not pushed
+      - exports/constraint-propagation-models/{arithmetic,logic,code}/ (Exp 151) — not pushed
       - The 16 per-token EBM model READMEs on HuggingFace still don't mention carnot pip install
       This experiment does the publishing and updates the READMEs.
 
@@ -640,8 +640,8 @@ tasks:
       3. Upload constraint propagation models (one repo each):
          For domain in [arithmetic, logic, code]:
            api.upload_folder(
-               folder_path=f"exports/constraint-propagation-models/(domain)",
-               repo_id=f"Carnot-EBM/constraint-propagation-(domain)",
+               folder_path=f"exports/constraint-propagation-models/{domain}",
+               repo_id=f"Carnot-EBM/constraint-propagation-{domain}",
                repo_type="model"
            )
 
@@ -660,7 +660,7 @@ tasks:
          (Use api.upload_file() to update each README)
 
       7. Save to results/experiment_164_results.json:
-         (uploads: [(repo_id, status, url)], readme_updates: [(repo_id, status)])
+         {uploads: [{repo_id, status, url}], readme_updates: [{repo_id, status}]}
 
       8. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_164_hf_publish.py
          Note: requires HuggingFace login. If not authenticated, write the upload commands
@@ -718,8 +718,8 @@ tasks:
       5. Propose 3 candidate experiments for Milestone 2026.04.12 based on findings.
 
       6. Save to results/experiment_165_arxiv_scan.json:
-         (queries, total_scanned, top_10: [(arxiv_id, title, date, relevance, proposed_exp)],
-          milestone_proposals: [(title, goal_ref, complexity, description)])
+         {queries, total_scanned, top_10: [{arxiv_id, title, date, relevance, proposed_exp}],
+          milestone_proposals: [{title, goal_ref, complexity, description}]}
 
       7. Run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_165_arxiv_scan.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
