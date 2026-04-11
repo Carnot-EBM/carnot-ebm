@@ -1170,3 +1170,4 @@
 | 2026-04-11 03:42 UTC | Exp 144: Train JEPA violation predictor | OK | =========== 1971 passed, 1 skipped, 12 warnings in 146.39s (0:02:26) =========== |
 | 2026-04-11 03:59 UTC | Exp 141: Memory-augmented constraint generation | OK | =========== 2033 passed, 1 skipped, 12 warnings in 149.81s (0:02:29) =========== |
 | 2026-04-11 04:13 UTC | Exp 142: Combined Tier 1+2 learning benchmark | OK | =========== 2033 passed, 1 skipped, 12 warnings in 144.79s (0:02:24) =========== |
+| 2026-04-11 04:30 UTC | Exp 145: JEPA fast-path / slow-path integration an | OK | =========== 2041 passed, 1 skipped, 12 warnings in 155.41s (0:02:35) =========== |
