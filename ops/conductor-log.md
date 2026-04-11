@@ -1165,3 +1165,5 @@
 | 2026-04-11 02:37 UTC | Exp 139: ArXiv research scan and integration | OK | =========== 1935 passed, 1 skipped, 12 warnings in 97.49s (0:01:37) ============ |
 | 2026-04-11 02:38 UTC | Exp 138: Guided decoding benchmark | OK | Deliverable already exists in repo |
 | 2026-04-11 02:38 UTC | Milestone 2026.04.9 activated | OK | 10 tasks queued |
+| 2026-04-11 03:15 UTC | Exp 143: Collect (partial response, final violatio | OK | =========== 1935 passed, 1 skipped, 12 warnings in 96.68s (0:01:36) ============ |
+| 2026-04-11 03:16 UTC | Exp 140: Constraint-projection guided decoding lat | OK | Deliverable already exists in repo |
