@@ -1180,15 +1180,19 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         f"A research experiment was just completed and committed:\n"
         f"  Task: {task['title']}\n"
         f"  ID: {task['id']}\n\n"
-        f"TASK: Update documentation to reflect this new work.\n"
-        f"1. Add an entry to ops/changelog.md for today ({timestamp.strftime('%Y-%m-%d')})\n"
-        f"2. Update ops/status.md if this adds new capabilities\n"
-        f"3. Update _bmad/traceability.md if new REQ-*/SCENARIO-* were added\n"
-        f"4. Do NOT remove existing content — only ADD\n"
+        f"TASK: Make MINIMAL doc updates for this experiment. Be fast.\n"
+        f"1. Read the TAIL of ops/changelog.md (last 20 lines) and append\n"
+        f"   a 1-line entry for today ({timestamp.strftime('%Y-%m-%d')})\n"
+        f"2. Read the TAIL of ops/status.md (last 30 lines of experiment table)\n"
+        f"   and append a row for this experiment if it adds new capabilities\n"
+        f"3. Read the TAIL of _bmad/traceability.md (last 10 lines) and append\n"
+        f"   a row if new REQ-*/SCENARIO-* were added\n"
+        f"4. Do NOT remove existing content — only APPEND\n"
         f"5. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml\n"
-        f"6. Keep changes minimal — just the doc updates for this experiment.\n"
+        f"6. Do NOT read entire files — only read the tail to find where to append.\n"
+        f"   This keeps you within the turn budget.\n"
     )
-    recon_ok, recon_output = run_agent(reconcile_prompt, max_turns=15, timeout=300)
+    recon_ok, recon_output = run_agent(reconcile_prompt, max_turns=25, timeout=300)
     if recon_ok and git_has_changes():
         # Guard protected files
         for guarded in ["scripts/research_conductor.py", "research-roadmap.yaml"]:
