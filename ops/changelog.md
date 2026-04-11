@@ -788,3 +788,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - Exp 173: Constraint generation v2 — NegationConstraint + CarryChain improvements (300-question benchmark: negation recall 0→100%, carry precision 1.0, combined accuracy 84.3%→97.3% via memory-augmented constraint tracking); delta vs Exp 141: +1.33%; results at `results/experiment_173_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-005
 
 - Exp 171: Combined signal pipeline benchmark — benchmarks five detector configurations (baseline, Ising-only, spilled+Ising, lookahead+Ising, all-combined) across 200 multi-domain questions (50 each: arithmetic, code, logic, factual); key finding: all-combined does NOT beat Ising-only (Δ−12% overall); best config varies per domain (Ising for arithmetic/code, lookahead for logic/factual); energy signals add 0.5–42ms latency; results at `results/experiment_171_combined_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, REQ-CORE-001
+
+## 2026-04-11: Experiment 176 Complete
+
+- Exp 176: Multi-turn factual verification with global consistency checking — combines ConstraintStateMachine + FactualExtractor (Wikidata KB) with GlobalConsistencyChecker (Exp 172); 20 synthetic chains (10 consistent + 10 inconsistent); local-only Mode B 60% detection (6/10) → local+global Mode C 100% detection (10/10 inconsistent, 0 FP on consistent); GlobalConsistencyChecker adds 4 detections for numeric/arithmetic cross-step contradictions; results at `results/experiment_176_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-005
