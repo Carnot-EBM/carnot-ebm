@@ -1296,8 +1296,20 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
 
     logger.info("Pre-check: %s", test_summary)
 
+    # Auto-fix brace escaping before formatting (dogfooding: prevent recurring bug)
+    import re as _re
+    raw_prompt = task["prompt"]
+    def _fix_braces(m):
+        inner = m.group(1)
+        if inner in ('project_root', 'date'):
+            return m.group(0)
+        return '(' + inner + ')'
+    safe_prompt = _re.sub(r'\{([^}]+)\}', _fix_braces, raw_prompt)
+    if safe_prompt != raw_prompt:
+        logger.info("DOGFOOD: Auto-fixed brace escaping in task %s prompt", task.get("id", "?"))
+
     # Format the prompt with project root
-    prompt = task["prompt"].format(
+    prompt = safe_prompt.format(
         project_root=PROJECT_ROOT,
         date=timestamp.strftime("%Y%m%d"),
     )
