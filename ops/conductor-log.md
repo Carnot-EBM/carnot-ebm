@@ -1232,3 +1232,7 @@
 | 2026-04-11 15:26 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
 | 2026-04-11 15:26 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 15:26 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 15:39 UTC | Exp 164: HuggingFace publishing sprint (guided dec | OK | =========== 2251 passed, 1 skipped, 12 warnings in 197.21s (0:03:17) =========== |
+| 2026-04-11 15:40 UTC | Exp 154: Collect multi-domain JEPA training pairs  | OK | Deliverable already exists in repo |
+| 2026-04-11 15:40 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
+| 2026-04-11 15:40 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
