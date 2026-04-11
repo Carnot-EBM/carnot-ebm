@@ -879,6 +879,7 @@ class AutoExtractor:
         # extract, so we defer the import to instantiation time).
         from carnot.pipeline.knowledge_base import FactualKBExtractor  # noqa: PLC0415
         from carnot.pipeline.spilled_energy import SpilledEnergyExtractor  # noqa: PLC0415
+        from carnot.pipeline.lookahead_energy import LookaheadEnergyExtractor  # noqa: PLC0415
 
         self._extractors: list[ConstraintExtractor] = [
             ArithmeticExtractor(),
@@ -896,10 +897,14 @@ class AutoExtractor:
 
             self._extractors.append(FactualExtractor())
 
-        # SpilledEnergyExtractor is held separately because it requires
-        # logits from the generation step and is called via a dedicated
-        # code path rather than the standard Protocol loop.
+        # SpilledEnergyExtractor and LookaheadEnergyExtractor are held separately
+        # because they require logits from the generation step and are called
+        # via a dedicated code path rather than the standard Protocol loop.
         self._spilled_energy_extractor = SpilledEnergyExtractor()
+        # Exp 169 — Lookahead energy (arxiv 2512.15605, 2025).
+        # Complements spilled energy: measures global response likelihood (NLL)
+        # rather than token-level confidence dispersion.
+        self._lookahead_energy_extractor = LookaheadEnergyExtractor()
 
     @property
     def supported_domains(self) -> list[str]:
@@ -943,12 +948,16 @@ class AutoExtractor:
             By ADDING constraints from memory, we cover error patterns that
             the static extractors were never designed to catch.
 
-            **logits= parameter (Exp 157 -- spilled energy pre-filter):**
+            **logits= parameter (Exp 157/169 -- spilled + lookahead energy):**
             When a JAX array of generation logits is provided (shape T×V or V),
-            the SpilledEnergyExtractor runs as an additional pass and returns
-            a SpilledEnergyConstraint encoding the model's confidence during
-            generation. This is the lightweight factual hallucination signal
-            from arxiv 2602.18671 (ICLR 2026) — no external KB required.
+            two additional passes run:
+            - SpilledEnergyExtractor (Exp 157, arxiv 2602.18671, ICLR 2026):
+              measures token-level confidence dispersion (how much probability
+              is "spilled" across the vocabulary).
+            - LookaheadEnergyExtractor (Exp 169, arxiv 2512.15605, 2025):
+              measures global response likelihood (mean NLL = lookahead energy).
+            Both return pre-computed constraints that are domain-agnostic and
+            require no external KB.
 
             Backward compatibility: when logits=None (the default), behavior
             is identical to the pre-Exp-157 version. Existing callers need no
@@ -962,8 +971,9 @@ class AutoExtractor:
                 addition. When provided, mature patterns for the domain
                 trigger additional extractors. Defaults to None.
             logits: Optional JAX array of generation logits, shape (T, V)
-                or (V,). When provided, runs SpilledEnergyExtractor to
-                add a hallucination confidence signal. Defaults to None.
+                or (V,). When provided, runs SpilledEnergyExtractor and
+                LookaheadEnergyExtractor to add hallucination confidence
+                signals. Defaults to None.
 
         Returns:
             List of ConstraintResult objects, deduplicated by description
@@ -998,18 +1008,28 @@ class AutoExtractor:
                 if generated.constraint_type not in static_types:
                     results.append(generated)
 
-        # Exp 157 — Spilled energy pre-filter (arxiv 2602.18671, ICLR 2026).
-        # When generation logits are available, run SpilledEnergyExtractor as
-        # an additional pass. This is separate from the main extractor loop
-        # because it requires logits (not just text) and is domain-agnostic
-        # (always runs regardless of the domain= hint).
+        # Exp 157/169 — Spilled energy + lookahead energy pre-filters.
+        # When generation logits are available, run both logit-based extractors
+        # as additional passes. These are separate from the main extractor loop
+        # because they require logits (not just text) and are domain-agnostic
+        # (always run regardless of the domain= hint).
         # Backward compatible: logits=None (the default) skips this block
         # entirely, so existing callers see no change in behavior.
         if logits is not None:
+            # Exp 157: spilled energy (arxiv 2602.18671, ICLR 2026).
             spilled_results = self._spilled_energy_extractor.extract(
                 text, logits=logits
             )
             for result in spilled_results:
+                if result.description not in seen_descriptions:
+                    seen_descriptions.add(result.description)
+                    results.append(result)
+
+            # Exp 169: lookahead energy (arxiv 2512.15605, 2025).
+            lookahead_results = self._lookahead_energy_extractor.extract(
+                text, logits=logits
+            )
+            for result in lookahead_results:
                 if result.description not in seen_descriptions:
                     seen_descriptions.add(result.description)
                     results.append(result)
