@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 141 Constraint Generation from Memory
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T03:45:37Z | 2026-04-11T03:55:16Z | Create generation.py (ConstraintGenerator, CarryChainConstraint, BoundConstraint, NegationConstraint); extend AutoExtractor.extract(memory=); 62 tests 100% coverage; Exp 141 benchmark: static=0.85→memory=0.96 (+0.11 delta, hypothesis MET); adversarial review found+fixed dedup bug | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 144 JEPA Predictor Training
 
 ### Turn Log

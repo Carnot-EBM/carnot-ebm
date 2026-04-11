@@ -1,0 +1,66 @@
+{
+  "experiment": "exp_141_constraint_generation",
+  "n_questions": 200,
+  "warmup_size": 100,
+  "test_size": 100,
+  "correct_fraction": 0.6,
+  "error_type_distribution": {
+    "arithmetic_carry": 0.6,
+    "comparison_boundary": 0.2,
+    "negation_scope": 0.2
+  },
+  "random_seed": 141,
+  "warmup_memory_summary": {
+    "arithmetic": {
+      "total_patterns": 3,
+      "mature_patterns": 3,
+      "top_patterns": [
+        {
+          "error_type": "arithmetic_carry",
+          "frequency": 24
+        },
+        {
+          "error_type": "negation_scope",
+          "frequency": 10
+        },
+        {
+          "error_type": "comparison_boundary",
+          "frequency": 5
+        }
+      ]
+    }
+  },
+  "static_accuracy": 0.85,
+  "memory_accuracy": 0.96,
+  "delta": 0.11,
+  "avg_constraints_static": 0.21,
+  "avg_constraints_memory": 0.8,
+  "constraint_delta": 0.59,
+  "per_error_type_breakdown": {
+    "arithmetic_carry": {
+      "n_wrong": 21,
+      "caught_static": 21,
+      "caught_memory": 21,
+      "recall_static": 1.0,
+      "recall_memory": 1.0
+    },
+    "comparison_boundary": {
+      "n_wrong": 11,
+      "caught_static": 0,
+      "caught_memory": 11,
+      "recall_static": 0.0,
+      "recall_memory": 1.0
+    },
+    "negation_scope": {
+      "n_wrong": 4,
+      "caught_static": 0,
+      "caught_memory": 0,
+      "recall_static": 0.0,
+      "recall_memory": 0.0
+    }
+  },
+  "hypothesis_met": true,
+  "warmup_elapsed_s": 0.0,
+  "test_elapsed_s": 0.002,
+  "total_elapsed_s": 0.009
+}
