@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-11 Exp 140 Constraint-Projection Guided Latency
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-11T02:50:09Z | 2026-04-11T03:00:29Z | Create scripts/experiment_140_guided_latency.py — adds project_logits() to EnergyGuidedSampler; benchmarks constraint-projection at batch sizes 1/8/32 (p50=0.405/1.284/4.056 ms); GSM8K accuracy baseline=56% penalty=64% projection=60%; success criterion PASS (0.405ms < 5ms); results in results/experiment_140_results.json | TBD |
+
+---
+
 ## Session: 2026-04-11 Exp 139 ArXiv Scan
 
 ### Turn Log
