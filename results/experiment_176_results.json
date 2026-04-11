@@ -1,0 +1,1166 @@
+{
+  "experiment": "Exp 176 \u2014 Multi-Turn Factual Reasoning Verification",
+  "date": "20260411",
+  "target_models": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
+  "n_chains": 20,
+  "consistent_chains": 10,
+  "inconsistent_chains": 10,
+  "mode_a_detection": 0.0,
+  "mode_a_description": "No verification \u2014 baseline. Always 0% by construction.",
+  "mode_b_detection": 0.6,
+  "mode_b_n_detected": 6,
+  "mode_b_description": "Local-only verification: ConstraintStateMachine + FactualExtractor (Wikidata KB). Detects within-step KB violations. Cannot detect pure cross-step numeric/arithmetic contradictions.",
+  "mode_c_detection": 1.0,
+  "mode_c_n_detected": 10,
+  "mode_c_description": "Local + Global: Mode B + GlobalConsistencyChecker (Exp 172). Adds cross-step numeric, arithmetic, and factual pattern matching.",
+  "false_positive_rate_b": 0.0,
+  "false_positive_rate_c": 0.0,
+  "n_false_positives_b": 0,
+  "n_false_positives_c": 0,
+  "global_checker_added_detections": 4,
+  "global_checker_added_description": "GlobalConsistencyChecker added 4 detections beyond Mode B, specifically for numeric and arithmetic cross-step contradictions.",
+  "per_type_breakdown": {
+    "numeric": {
+      "total": 4,
+      "detected_b": 0,
+      "detected_c": 4
+    },
+    "arithmetic": {
+      "total": 3,
+      "detected_b": 3,
+      "detected_c": 3
+    },
+    "factual": {
+      "total": 3,
+      "detected_b": 3,
+      "detected_c": 3
+    }
+  },
+  "per_chain": [
+    {
+      "chain_id": 0,
+      "label": "C1-France-geography",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.269
+    },
+    {
+      "chain_id": 1,
+      "label": "C2-Japan-geography",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.01
+    },
+    {
+      "chain_id": 2,
+      "label": "C3-Einstein-consistent",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.009
+    },
+    {
+      "chain_id": 3,
+      "label": "C4-MarieCurie",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.121
+    },
+    {
+      "chain_id": 4,
+      "label": "C5-SolarSystem",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.007
+    },
+    {
+      "chain_id": 5,
+      "label": "C6-WaterChemistry",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.012
+    },
+    {
+      "chain_id": 6,
+      "label": "C7-Germany",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.122
+    },
+    {
+      "chain_id": 7,
+      "label": "C8-NewtonPhysics",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.01
+    },
+    {
+      "chain_id": 8,
+      "label": "C9-AmazonRiver",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.288
+    },
+    {
+      "chain_id": 9,
+      "label": "C10-AncientRome",
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": false,
+      "global_report_consistent": true,
+      "global_report_severity": "none",
+      "global_inconsistent_pairs": [],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.013
+    },
+    {
+      "chain_id": 10,
+      "label": "IC1-WidgetPrice-50vs75",
+      "chain_type": "inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'widget' has value 50.0 in step 0 but 75.0 in step 3"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.008
+    },
+    {
+      "chain_id": 11,
+      "label": "IC2-Temperature-25vs32",
+      "chain_type": "inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'temperature' has value 25.0 in step 0 but 32.0 in step 3"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.009
+    },
+    {
+      "chain_id": 12,
+      "label": "IC3-Population-5vs8million",
+      "chain_type": "inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 2,
+          "type": "numeric",
+          "description": "Entity 'city population' has value 5.0 in step 0 but 8.0 in step 2"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.01
+    },
+    {
+      "chain_id": 13,
+      "label": "IC4-TrainSpeed-60vs90",
+      "chain_type": "inconsistent",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": false,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 2,
+          "type": "numeric",
+          "description": "Entity 'train speed' has value 60.0 in step 0 but 90.0 in step 2"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.011
+    },
+    {
+      "chain_id": 14,
+      "label": "IC5-Arithmetic-3plus5",
+      "chain_type": "inconsistent",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": true,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "arithmetic",
+          "description": "Arithmetic 3 + 5 = 8 (step 0) contradicts = 10 (step 3)"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_violations": 1,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [
+            "3 + 5 = 10 (correct: 8)"
+          ],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.008
+    },
+    {
+      "chain_id": 15,
+      "label": "IC6-Arithmetic-10minus3",
+      "chain_type": "inconsistent",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": true,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 2,
+          "type": "arithmetic",
+          "description": "Arithmetic 10 - 3 = 7 (step 0) contradicts = 5 (step 2)"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": false,
+          "n_violations": 1,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [
+            "10 - 3 = 5 (correct: 7)"
+          ],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.008
+    },
+    {
+      "chain_id": 16,
+      "label": "IC7-Arithmetic-4plus7",
+      "chain_type": "inconsistent",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": true,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "warning",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "arithmetic",
+          "description": "Arithmetic 4 + 7 = 11 (step 1) contradicts = 13 (step 3)"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_violations": 1,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [
+            "4 + 7 = 13 (correct: 11)"
+          ],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.006
+    },
+    {
+      "chain_id": 17,
+      "label": "IC8-FranceCapital-ParisvsBerlin",
+      "chain_type": "inconsistent",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": true,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "critical",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'france' capital is 'paris' (step 0) but 'berlin' (step 3)"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_violations": 1,
+          "n_contradictions": 0,
+          "energy": 1.0,
+          "violations": [
+            "KB contradicts: France capital Berlin"
+          ],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.012
+    },
+    {
+      "chain_id": 18,
+      "label": "IC9-EinsteinBirthplace-GermanyvsAustria",
+      "chain_type": "inconsistent",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": true,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "critical",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'albert einstein' born in is 'germany' (step 0) but 'austria' (step 3)"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_violations": 1,
+          "n_contradictions": 0,
+          "energy": 1.0,
+          "violations": [
+            "KB contradicts: Albert Einstein born in Austria"
+          ],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.445
+    },
+    {
+      "chain_id": 19,
+      "label": "IC10-JapanCapital-TokyovsOsaka",
+      "chain_type": "inconsistent",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "mode_a_detected": false,
+      "mode_b_detected": true,
+      "mode_c_detected": true,
+      "global_report_consistent": false,
+      "global_report_severity": "critical",
+      "global_inconsistent_pairs": [
+        {
+          "step_i": 0,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'japan' capital is 'tokyo' (step 0) but 'osaka' (step 3)"
+        }
+      ],
+      "mode_b_steps": [
+        {
+          "step_index": 0,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 1,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 2,
+          "verified": true,
+          "n_violations": 0,
+          "n_contradictions": 0,
+          "energy": 0.0,
+          "violations": [],
+          "contradictions": []
+        },
+        {
+          "step_index": 3,
+          "verified": false,
+          "n_violations": 1,
+          "n_contradictions": 0,
+          "energy": 1.0,
+          "violations": [
+            "KB contradicts: Japan capital Osaka"
+          ],
+          "contradictions": []
+        }
+      ],
+      "elapsed_s": 0.01
+    }
+  ]
+}

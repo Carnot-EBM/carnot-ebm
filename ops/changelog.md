@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 176: Multi-Turn Factual Reasoning Verification — FactualExtractor + ConstraintStateMachine + GlobalConsistencyChecker)
+
+- `scripts/experiment_176_multiturn_factual.py` — End-to-end multi-turn factual verification experiment. 20 chains (10 consistent, 10 inconsistent; 4 steps each). Three verification modes: Mode A (baseline, 0%), Mode B (ConstraintStateMachine + FactualExtractor via Wikidata, 60%), Mode C (Mode B + GlobalConsistencyChecker, 100%). False positive rate 0% for both B and C. GlobalConsistencyChecker adds +4 detections (all 4 numeric cross-step contradictions). Arithmetic chains caught by Mode B due to within-step arithmetic verification. Factual chains (capital/birthplace errors) caught by Mode B via Wikidata KB contradiction. Adds `_SingleArgPipeline` wrapper to bridge agentic.propagate()'s single-arg verify() call to VerifyRepairPipeline.verify(question, response). Pre-populates FactualExtractor module caches from Exp 158 known QIDs/claims for reliable KB lookups. (REQ-VERIFY-001, SCENARIO-VERIFY-005, user instruction: Exp 176)
+- `results/experiment_176_results.json` — n_chains=20, consistent=10, inconsistent=10, mode_a_detection=0.0, mode_b_detection=0.6, mode_c_detection=1.0, false_positive_rate_b=0.0, false_positive_rate_c=0.0, global_checker_added_detections=4. Per-type: numeric 4/4 C, 0/4 B; arithmetic 3/3 C+B; factual 3/3 C+B. 1.4s wall time.
+
+---
+
 ## 2026-04-11 (Exp 175: AdaptiveKAN — Tier-4 autonomous structural adaptation, live verification tracking loop)
 
 - `python/carnot/models/adaptive_kan.py` — New library module containing `KANConstraintModel` (piecewise-linear B-spline KAN, AMR methods from Exp 153 integrated as a proper library class) and `AdaptiveKAN(KANConstraintModel)` (Tier-4 self-learning: verification counter, circular input buffer, auto-AMR every N=500 verifications). Key methods: `verify_and_maybe_restructure(x)` (energy + counter + optional restructure), `_restructure()` (curvature → refine → log stats), `checkpoint()` (safetensors + JSON metadata), `from_checkpoint()` (classmethod restore). (REQ-CORE-001, REQ-CORE-002, REQ-TIER-001, user instruction: Exp 175)
