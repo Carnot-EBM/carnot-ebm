@@ -1250,3 +1250,4 @@
 | 2026-04-11 16:07 UTC | Exp 155: Retrain JEPA violation predictor v2 with  | OK | Deliverable already exists in repo |
 | 2026-04-11 16:07 UTC | Exp 156: JEPA fast-path benchmark v2 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 16:07 UTC | Milestone 2026.04.12 activated | OK | 14 tasks queued |
+| 2026-04-11 16:45 UTC | Exp 166: Logic-aware JEPA training data with symbo | OK | =========== 2251 passed, 1 skipped, 12 warnings in 426.36s (0:07:06) =========== |
