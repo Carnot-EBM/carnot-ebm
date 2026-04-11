@@ -1173,3 +1173,5 @@
 | 2026-04-11 04:30 UTC | Exp 145: JEPA fast-path / slow-path integration an | OK | =========== 2041 passed, 1 skipped, 12 warnings in 155.41s (0:02:35) =========== |
 | 2026-04-11 04:49 UTC | Exp 146: AMD XDNA NPU experimentation | OK | =========== 2041 passed, 1 skipped, 12 warnings in 147.55s (0:02:27) =========== |
 | 2026-04-11 05:12 UTC | Exp 147: Apple GSM8K adversarial benchmark — THE c | OK | =========== 2041 passed, 1 skipped, 12 warnings in 186.41s (0:03:06) =========== |
+| 2026-04-11 05:41 UTC | Exp 148: Full GSM8K (1319 questions) with live inf | FAIL | Claude Code error:  |
+| 2026-04-11 05:42 UTC | Exp 148: Full GSM8K (1319 questions) with live inf | OK | Deliverable already exists in repo |
