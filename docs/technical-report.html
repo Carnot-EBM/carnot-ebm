@@ -154,11 +154,12 @@
   
   <h3>2.2 Model Tiers</h3>
   <ul>
-    <li><strong>Ising</strong>: Quadratic energy, O(d²). Hardware-mappable to FPGA/TSU.</li>
-    <li><strong>KAN</strong>: Learnable B-spline edge activations. 0.994 AUROC with 8.7x fewer parameters than Ising. Interpretable and differentiable.</li>
-    <li><strong>Gibbs</strong>: Multi-layer MLP energy network.</li>
-    <li><strong>Boltzmann</strong>: Deep residual transformer-based energy network.</li>
+    <li><strong>KAN</strong> (default for verification): Learnable B-spline edge activations. 0.994 AUROC with 8.7x fewer parameters than Ising. Best accuracy per parameter. Interpretable and differentiable.</li>
+    <li><strong>Ising</strong> (real-time + hardware): Quadratic energy, O(d²). Direct FPGA/TSU mapping. Fastest parallel Gibbs sampling (183x speedup). Best for guided decoding and hardware deployment.</li>
+    <li><strong>Gibbs</strong>: Multi-layer MLP energy network. Most expressive, for complex patterns.</li>
+    <li><strong>Boltzmann</strong>: Deep residual transformer-based. Research frontiers.</li>
   </ul>
+  <p><em>KAN and Ising are complementary: KAN for accuracy, Ising for speed. Use KAN as the default verifier; use Ising when latency or hardware mapping matters.</em></p>
 
   <h2>3. Key Results</h2>
   <h3>3.1 SAT Gradient Repair</h3>

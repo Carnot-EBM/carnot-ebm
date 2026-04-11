@@ -147,11 +147,13 @@ See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage inst
 | Tier | Name | Scale | Use Case |
 |------|------|-------|----------|
 | Large | **Boltzmann** | Deep residual + attention | Research frontiers, large-scale generation |
-| Medium | **Gibbs** | Multi-layer MLP (2-4 hidden) | Applied ML, domain adaptation |
-| Efficient | **KAN** | Learnable B-spline edges | Best accuracy/param ratio (0.994 AUROC, 2.3K params) |
-| Small | **Ising** | Pairwise quadratic | Edge deployment, hardware (FPGA/TSU), teaching |
+| Medium | **Gibbs** | Multi-layer MLP (2-4 hidden) | Applied ML, complex pattern learning |
+| Efficient | **KAN** | Learnable B-spline edges | **Default for verification** — best accuracy/param ratio (0.994 AUROC, 2.3K params) |
+| Hardware | **Ising** | Pairwise quadratic | **Real-time sampling + FPGA/TSU** — direct hardware mapping, fastest parallel Gibbs |
 
 All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), so algorithms written against the interface work with any tier.
+
+**When to use which:** KAN is the default for constraint verification (most accurate per parameter). Ising is for real-time guided decoding and hardware deployment (fastest sampling, maps to physical p-bits). They complement each other — KAN for accuracy, Ising for speed.
 
 ## Architecture
 

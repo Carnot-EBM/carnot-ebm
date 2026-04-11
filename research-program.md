@@ -71,15 +71,17 @@ autonomous directed self-learning where the energy function is ground truth.
    44.8% of current false negatives. Then self-bootstrap on the expanded
    constraint set.
 
-8. **KAN-based energy tier** — NEW ARCHITECTURE, HIGH IMPACT.
-   Kolmogorov-Arnold Networks as a new energy function tier between Ising
-   (quadratic, interpretable) and Gibbs (MLP, opaque). KAN edges have
-   learnable spline activations — strictly more expressive than Ising while
-   remaining interpretable. Addresses the constraint learning ceiling from
-   Exp 62/88 where linear Ising features can't capture nonlinear
-   relationships. Differentiable (slots into Exp 66 pipeline). Potentially
-   hardware-mappable (spline lookup tables in FPGA). Create `carnot-kan`
-   crate and `carnot.models.kan` Python module.
+8. **KAN-based energy tier** — DONE (Exp 108-109). DEPLOYMENT GUIDANCE:
+   KAN achieves 0.994 AUROC with 8.7x fewer params than Ising on the same
+   task. Use the right tier for the right job:
+   - **KAN = default for verification** — best accuracy/cost ratio, nonlinear
+     edge detection, interpretable spline shapes, differentiable
+   - **Ising = hardware and real-time sampling** — direct FPGA/TSU mapping,
+     fastest parallel Gibbs (183x speedup relies on quadratic structure),
+     coupling matrix is just wire strengths in hardware
+   - **Gibbs MLP = research/complex patterns** — most expressive, opaque
+   - **Boltzmann = large-scale generation** — deep residual, attention
+   KAN and Ising complement each other: KAN for accuracy, Ising for speed.
 
 9. **LNN-based adaptive constraints for agentic verification** — PAIRS WITH #2.
    Liquid Neural Networks for constraint models that adapt during multi-turn
