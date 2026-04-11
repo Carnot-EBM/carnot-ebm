@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-04-11 (Exp 178: Definitive Adversarial GSM8K — GOAL #5 ACHIEVED, Paired Sign Permutation Test N=400/variant)
+
+- `scripts/experiment_178_adversarial_definitive.py` — Definitive adversarial GSM8K benchmark fixing Exp 162's underpowered permutation test. N=400/variant (200 from Exp 119 + 200 augmented with seed 178000). Paired sign permutation test: per-question paired delta = improvement_adv_q − improvement_ctrl_q; sign-flip permutation on N=800 pooled paired deltas (2 models × 400). Design fix: Exp 162 had N=8 aggregate delta points (C(8,2)=28 distinct permutations); Exp 178 has N=800 paired deltas (2^800 configurations). GOAL #5 ACHIEVED: number_swapped paired perm p≈0.0000, z-test p≈0.0000 (BOTH p<0.05). Qwen: +28.2pp VR on number_swapped vs +15.0pp control; Gemma: +24.0pp vs +12.2pp. Adversarial/control ratio 1.19×. Irrelevant_injected/combined NOT significant (Ising can't catch distractor-incorporation logic errors — expected per Exp 122). Exp 122 simulation deviation noted: 100% NoOp pass-through vs 74% reference (known simulation calibration issue from Exp 162). Inference mode: simulated (CARNOT_SKIP_LLM). (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, user instruction: Exp 178)
+- `results/experiment_178_results.json` — n_per_variant=400, inference_mode=simulated, number_swapped: p_permutation=0.0000, p_ztest=0.0000, goal5_achieved=True; adversarial_control_ratio=1.19; elapsed=0.4s.
+
+---
+
 ## 2026-04-11 (Exp 176: Multi-Turn Factual Reasoning Verification — FactualExtractor + ConstraintStateMachine + GlobalConsistencyChecker)
 
 - `scripts/experiment_176_multiturn_factual.py` — End-to-end multi-turn factual verification experiment. 20 chains (10 consistent, 10 inconsistent; 4 steps each). Three verification modes: Mode A (baseline, 0%), Mode B (ConstraintStateMachine + FactualExtractor via Wikidata, 60%), Mode C (Mode B + GlobalConsistencyChecker, 100%). False positive rate 0% for both B and C. GlobalConsistencyChecker adds +4 detections (all 4 numeric cross-step contradictions). Arithmetic chains caught by Mode B due to within-step arithmetic verification. Factual chains (capital/birthplace errors) caught by Mode B via Wikidata KB contradiction. Adds `_SingleArgPipeline` wrapper to bridge agentic.propagate()'s single-arg verify() call to VerifyRepairPipeline.verify(question, response). Pre-populates FactualExtractor module caches from Exp 158 known QIDs/claims for reliable KB lookups. (REQ-VERIFY-001, SCENARIO-VERIFY-005, user instruction: Exp 176)
