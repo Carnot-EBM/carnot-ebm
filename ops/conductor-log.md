@@ -1262,3 +1262,6 @@
 | 2026-04-11 18:43 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | =========== 2294 passed, 1 skipped, 12 warnings in 90.64s (0:01:30) ============ |
 | 2026-04-11 18:44 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
 | 2026-04-11 18:44 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:00 UTC | Exp 172: Global consistency checker for multi-turn | OK | =========== 2328 passed, 1 skipped, 12 warnings in 93.62s (0:01:33) ============ |
+| 2026-04-11 19:01 UTC | Exp 168: JEPA fast-path benchmark v3 — target <2%  | OK | Deliverable already exists in repo |
+| 2026-04-11 19:01 UTC | Exp 171: Combined signal pipeline benchmark — all  | OK | Deliverable already exists in repo |
