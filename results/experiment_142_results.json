@@ -1,0 +1,237 @@
+{
+  "experiment": "exp_142_combined_learning",
+  "n_questions": 500,
+  "warmup_size": 100,
+  "eval_size": 400,
+  "correct_fraction": 0.6,
+  "domain_split": {
+    "arithmetic": 0.6,
+    "logic": 0.4
+  },
+  "arithmetic_error_distribution": {
+    "arithmetic_carry": 0.6,
+    "comparison_boundary": 0.25,
+    "negation_scope": 0.15
+  },
+  "logic_error_distribution": {
+    "implication": 0.6,
+    "negation_scope": 0.4
+  },
+  "random_seed": 142,
+  "weight_update_interval": 50,
+  "dataset": {
+    "n_arith_warmup": 55,
+    "n_logic_warmup": 45,
+    "n_wrong_warmup": 32,
+    "n_arith_eval": 245,
+    "n_logic_eval": 155
+  },
+  "warmup": {
+    "elapsed_s": 0.006,
+    "tier1_tracker_stats": {
+      "implication": {
+        "fired": 50,
+        "caught": 0,
+        "total_errors": 0,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "negation": {
+        "fired": 50,
+        "caught": 0,
+        "total_errors": 0,
+        "precision": 0.0,
+        "recall": 0.0
+      },
+      "arithmetic": {
+        "fired": 67,
+        "caught": 67,
+        "total_errors": 67,
+        "precision": 1.0,
+        "recall": 1.0
+      }
+    },
+    "tier1_adaptive_weights": {
+      "implication": 0.1,
+      "negation": 0.1,
+      "arithmetic": 2.70805
+    },
+    "tier2_memory_summary": {
+      "logic": {
+        "total_patterns": 2,
+        "mature_patterns": 2,
+        "top_patterns": [
+          {
+            "error_type": "implication",
+            "frequency": 10
+          },
+          {
+            "error_type": "negation_scope",
+            "frequency": 4
+          }
+        ]
+      },
+      "arithmetic": {
+        "total_patterns": 4,
+        "mature_patterns": 3,
+        "top_patterns": [
+          {
+            "error_type": "arithmetic",
+            "frequency": 14
+          },
+          {
+            "error_type": "arithmetic_carry",
+            "frequency": 14
+          },
+          {
+            "error_type": "comparison_boundary",
+            "frequency": 3
+          },
+          {
+            "error_type": "negation_scope",
+            "frequency": 1
+          }
+        ]
+      }
+    },
+    "combined_adaptive_weights": {
+      "implication": 0.1,
+      "negation": 0.1,
+      "arithmetic": 2.70805,
+      "learned": 0.1
+    },
+    "combined_memory_summary": {
+      "logic": {
+        "total_patterns": 2,
+        "mature_patterns": 2,
+        "top_patterns": [
+          {
+            "error_type": "implication",
+            "frequency": 10
+          },
+          {
+            "error_type": "negation_scope",
+            "frequency": 4
+          }
+        ]
+      },
+      "arithmetic": {
+        "total_patterns": 4,
+        "mature_patterns": 3,
+        "top_patterns": [
+          {
+            "error_type": "arithmetic",
+            "frequency": 67
+          },
+          {
+            "error_type": "arithmetic_carry",
+            "frequency": 14
+          },
+          {
+            "error_type": "comparison_boundary",
+            "frequency": 3
+          },
+          {
+            "error_type": "negation_scope",
+            "frequency": 1
+          }
+        ]
+      }
+    }
+  },
+  "accuracy": {
+    "baseline": 0.7175,
+    "tier1": 0.7175,
+    "tier2": 0.7875,
+    "combined": 0.7875
+  },
+  "avg_constraints": {
+    "baseline": 0.43,
+    "tier1": 0.43,
+    "tier2": 0.81,
+    "combined": 3.04
+  },
+  "pct_memory_added_new": {
+    "tier2": 0.3725,
+    "combined": 0.3725
+  },
+  "per_domain": {
+    "baseline": {
+      "arithmetic": {
+        "n": 245,
+        "accuracy": 0.8163,
+        "avg_constraints": 0.22,
+        "pct_memory_added_new": 0.0
+      },
+      "logic": {
+        "n": 155,
+        "accuracy": 0.5613,
+        "avg_constraints": 0.77,
+        "pct_memory_added_new": 0.0
+      }
+    },
+    "tier1": {
+      "arithmetic": {
+        "n": 245,
+        "accuracy": 0.8163,
+        "avg_constraints": 0.22,
+        "pct_memory_added_new": 0.0
+      },
+      "logic": {
+        "n": 155,
+        "accuracy": 0.5613,
+        "avg_constraints": 0.77,
+        "pct_memory_added_new": 0.0
+      }
+    },
+    "tier2": {
+      "arithmetic": {
+        "n": 245,
+        "accuracy": 0.9306,
+        "avg_constraints": 0.71,
+        "pct_memory_added_new": 0.4939
+      },
+      "logic": {
+        "n": 155,
+        "accuracy": 0.5613,
+        "avg_constraints": 0.95,
+        "pct_memory_added_new": 0.1806
+      }
+    },
+    "combined": {
+      "arithmetic": {
+        "n": 245,
+        "accuracy": 0.9306,
+        "avg_constraints": 3.22,
+        "pct_memory_added_new": 0.4939
+      },
+      "logic": {
+        "n": 155,
+        "accuracy": 0.5613,
+        "avg_constraints": 2.77,
+        "pct_memory_added_new": 0.1806
+      }
+    }
+  },
+  "deltas_vs_baseline": {
+    "tier1": 0.0,
+    "tier2": 0.07,
+    "combined": 0.07
+  },
+  "hypotheses": {
+    "tier2_beats_tier1": true,
+    "tier2_delta_vs_tier1": 0.07,
+    "combined_beats_both": false,
+    "combined_delta_vs_best": 0.0,
+    "pct_tier2_gains_from_new_constraints": 1.0,
+    "n_tier2_gained_questions": 28
+  },
+  "exp134_reference": {
+    "fixed_overall_accuracy": 0.676,
+    "adaptive_overall_accuracy": 0.97,
+    "overall_delta": 0.294,
+    "note": "Exp 134 used synthetic data with 60% correct, 40% heuristic noise; direct comparison is approximate."
+  },
+  "eval_elapsed_s": 0.032,
+  "total_elapsed_s": 0.039
+}
