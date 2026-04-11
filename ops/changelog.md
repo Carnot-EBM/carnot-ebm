@@ -752,4 +752,10 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 
 ## 2026-04-11: Experiment 171 Complete
 
+- Exp 171: Combined Signal Pipeline Benchmark — all detectors vs individual
+
+## 2026-04-11: Experiment 172 Complete
+
+- Exp 172: Global consistency checker for multi-turn chains — detects global inconsistencies across steps (arxiv 2601.13600); GlobalConsistencyChecker validates contradictions in entity values, arithmetic, facts across multi-step reasoning; local-only 0% detection → global 90-100% on 10 inconsistent synthetic chains, 0% false positives on 10 consistent chains; REQ-VERIFY-001, SCENARIO-VERIFY-005
+
 - Exp 171: Combined signal pipeline benchmark — benchmarks five detector configurations (baseline, Ising-only, spilled+Ising, lookahead+Ising, all-combined) across 200 multi-domain questions (50 each: arithmetic, code, logic, factual); key finding: all-combined does NOT beat Ising-only (Δ−12% overall); best config varies per domain (Ising for arithmetic/code, lookahead for logic/factual); energy signals add 0.5–42ms latency; results at `results/experiment_171_combined_results.json`; REQ-VERIFY-001, REQ-VERIFY-002, REQ-CORE-001
