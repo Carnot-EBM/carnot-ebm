@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 205 LLM-as-Extractor
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T03:12:46Z | 2026-04-12T03:32:18Z | Exp 205: Added `LLMConstraintExtractor` with lazy `model_loader` hooks, canonical `CLAIM: a OP b = c` prompting, constant-energy claim terms, and per-response latency tracking; wrote 14 tests with 100% `llm_extractor.py` coverage plus an Exp 203 regression harness over the repo's current 3 wrong live Gemma cases and 3 correct showcases; `.venv/bin/pytest tests/python -q` passed at 100% coverage and `tests/integration/test_full_pipeline.py` passed; spec coverage / ruff / format-check / mypy remain blocked by pre-existing repo-wide failures | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 203 Extraction Autopsy
 
 ### Turn Log
