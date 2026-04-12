@@ -1043,3 +1043,41 @@ milestones:
     title: "Exp 179: AMD XDNA NPU activation \u2014 VitisAI onnxruntime for JEPA predictor"
     deliverable: results/experiment_179_npu_results.json
     result: OK (conductor)
+- id: 2026.04.14
+  title: 'Ground Truth: Rebuild Extraction for Real Models'
+  doc: openspec/change-proposals/research-roadmap-v19.md
+  completed: '2026-04-12'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp203-extraction-autopsy
+    title: "Exp 203: Extraction autopsy \u2014 why ArithmeticExtractor finds 0 violations on IT models"
+    deliverable: results/experiment_203_results.json
+    result: OK (conductor)
+  - id: exp204-z3-smt-extractor
+    title: "Exp 204: Z3 SMT constraint extractor \u2014 formal verification with zero FP"
+    deliverable: python/carnot/pipeline/z3_extractor.py
+    result: OK (conductor)
+  - id: exp205-llm-as-extractor
+    title: "Exp 205: LLM-as-extractor \u2014 use a second LLM call to extract constraints"
+    deliverable: python/carnot/pipeline/llm_extractor.py
+    result: OK (conductor)
+  - id: exp206-z3-live-benchmark
+    title: "Exp 206: Z3 extractor on 100 live GSM8K (Gemma4-E4B-it) \u2014 the real test"
+    deliverable: results/experiment_206_results.json
+    result: OK (conductor)
+  - id: exp207-llm-extractor-live-benchmark
+    title: "Exp 207: LLM extractor on 100 live GSM8K \u2014 compare to Z3"
+    deliverable: results/experiment_207_results.json
+    result: OK (conductor)
+  - id: exp208-humaneval-live-it
+    title: "Exp 208: HumanEval with LIVE IT model \u2014 code verification via execution"
+    deliverable: results/experiment_208_results.json
+    result: OK (conductor)
+  - id: exp209-cleanup-checkpoints
+    title: 'Exp 209: Clean up simulation artifacts and update documentation'
+    deliverable: scripts/experiment_209_cleanup.py
+    result: OK (conductor)
+  - id: exp210-research-scan
+    title: "Exp 210: Research scan \u2014 focus on constraint extraction for IT models"
+    deliverable: results/experiment_210_results.json
+    result: OK (conductor)
