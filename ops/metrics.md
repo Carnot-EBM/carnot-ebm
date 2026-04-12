@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 224c TensorRT-LLM Backend
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T19:19:31Z | 2026-04-12T19:40:38Z | Exp 224c: extended `verifiable-reasoning` with `REQ-VERIFY-039` and `REQ-VERIFY-040`, wrote `test_tensorrt_backend.py` plus the warm-server preference assertions in `test_model_server.py` first, implemented `python/carnot/inference/tensorrt_backend.py` plus the `ModelServer` preference/export wiring and `cuda` extra update, generated blocked-status artifact `results/experiment_224c_results.json`, and reran targeted 100% coverage for the new module, the full Python suite, spec coverage, Ruff, mypy, and `tests/integration/test_full_pipeline.py`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Warm Server True Batched Forward Pass
 
 ### Turn Log

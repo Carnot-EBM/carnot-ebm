@@ -18,6 +18,7 @@ from carnot.inference.model_loader import (
     load_model,
     register_model_server,
 )
+from carnot.inference.tensorrt_backend import TRTBackendStatus
 
 
 class _FakeClock:
@@ -415,6 +416,90 @@ class TestModelServerCoveragePaths:
 
         assert load_calls == [("Qwen/Qwen3.5-0.8B", "cuda")]
 
+    def test_default_loader_prefers_tensorrt_backend_when_available(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """REQ-VERIFY-040: the default loader returns TensorRT before HuggingFace."""
+        import carnot.inference.model_server as model_server_module
+
+        fake_backend = object()
+
+        def fake_load_trt_backend(
+            model_name: str,
+            **kwargs: Any,
+        ) -> tuple[object, TRTBackendStatus]:
+            del kwargs
+            assert model_name == "Qwen/Qwen3.5-0.8B"
+            return fake_backend, TRTBackendStatus(
+                available=True,
+                reason=None,
+                engine_dir=None,
+                used_cached_engine=True,
+                built_engine=False,
+                quantization="fp16",
+            )
+
+        def fail_if_called(*args: Any, **kwargs: Any) -> Any:
+            del args, kwargs
+            raise AssertionError("load_model should not be called when TensorRT is ready")
+
+        monkeypatch.setattr(model_server_module, "load_trt_backend", fake_load_trt_backend)
+        monkeypatch.setattr(model_server_module, "load_model", fail_if_called)
+
+        model, tokenizer = model_server_module._default_loader(
+            "Qwen/Qwen3.5-0.8B",
+            batch_size=4,
+        )
+
+        assert model is fake_backend
+        assert tokenizer is fake_backend
+
+    def test_default_loader_falls_back_to_huggingface_when_tensorrt_is_unavailable(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """SCENARIO-VERIFY-040: TensorRT loader failure falls back to HuggingFace."""
+        import carnot.inference.model_server as model_server_module
+
+        load_calls: list[tuple[str, str]] = []
+
+        def fake_load_trt_backend(
+            model_name: str,
+            **kwargs: Any,
+        ) -> tuple[None, TRTBackendStatus]:
+            del model_name, kwargs
+            return None, TRTBackendStatus(
+                available=False,
+                reason="tensorrt_llm not installed",
+                engine_dir=None,
+                used_cached_engine=False,
+                built_engine=False,
+                quantization="fp16",
+            )
+
+        def fake_load_model(
+            model_name: str,
+            device: str = "cpu",
+            dtype: Any = None,
+            max_retries: int = 3,
+        ) -> tuple[dict[str, str], dict[str, str]]:
+            del dtype, max_retries
+            load_calls.append((model_name, device))
+            return {"model_name": model_name}, {"tokenizer_name": model_name}
+
+        monkeypatch.setattr(model_server_module, "load_trt_backend", fake_load_trt_backend)
+        monkeypatch.setattr(model_server_module, "load_model", fake_load_model)
+
+        model, tokenizer = model_server_module._default_loader(
+            "Qwen/Qwen3.5-0.8B",
+            batch_size=4,
+        )
+
+        assert model == {"model_name": "Qwen/Qwen3.5-0.8B"}
+        assert tokenizer == {"tokenizer_name": "Qwen/Qwen3.5-0.8B"}
+        assert load_calls == [("Qwen/Qwen3.5-0.8B", "cuda")]
+
     def test_model_device_returns_string_cpu_when_torch_is_unavailable(
         self,
         monkeypatch: pytest.MonkeyPatch,
@@ -523,6 +608,34 @@ class TestModelServerCoveragePaths:
         assert fake_model.generate_calls[0]["do_sample"] is False
         assert fake_model.generate_calls[0]["pad_token_id"] == fake_tokenizer.eos_token_id
         assert health["batch_stats"]["total_batches"] == 1
+
+    def test_default_batch_generate_delegates_to_tensorrt_backend(self) -> None:
+        """REQ-VERIFY-040: the batching helper delegates directly to TensorRT backends."""
+        import carnot.inference.model_server as model_server_module
+
+        class _FakeTRTBackend:
+            def __init__(self) -> None:
+                self.calls: list[tuple[list[str], int]] = []
+
+            def generate_batch(
+                self,
+                prompts: list[str],
+                max_new_tokens: int = 256,
+            ) -> list[str]:
+                self.calls.append((list(prompts), max_new_tokens))
+                return [f"trt::{prompt}" for prompt in prompts]
+
+        backend = _FakeTRTBackend()
+
+        results = model_server_module._default_batch_generate(
+            backend,
+            backend,
+            ["question-1", "question-2"],
+            48,
+        )
+
+        assert results == ["trt::question-1", "trt::question-2"]
+        assert backend.calls == [(["question-1", "question-2"], 48)]
 
     def test_default_batch_generate_guard_paths_and_generate_wrapper(self) -> None:
         """REQ-VERIFY-037: empty-batch guard paths return early and generate() delegates."""

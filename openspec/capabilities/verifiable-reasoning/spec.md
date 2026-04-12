@@ -921,6 +921,73 @@ per-call cold loads versus the registered warm server
 **And** `load_model()` returns a server-backed handle instead of loading the
   same model again
 
+### REQ-VERIFY-039: Optional TensorRT-LLM Backend With Cached Engines
+
+The repository shall provide an optional TensorRT-LLM backend in
+`python/carnot/inference/tensorrt_backend.py`, where:
+- `TRTLLMBackend` accepts a HuggingFace model identifier plus backend options
+  and exposes deterministic single-prompt and batched generation methods
+  compatible with the existing HuggingFace generate contract
+- the backend keeps TensorRT engines in an on-disk cache keyed by model name,
+  quantization mode, and build parameters so repeated loads reuse an existing
+  engine instead of rebuilding it
+- before attempting a build, the backend checks the engine cache for a
+  compatible engine and loads that engine directly when present
+- when a cached engine is absent, the backend can build a TensorRT engine from
+  the HuggingFace checkpoint and persist metadata describing the cached build
+- the backend supports `fp16` and `int8` quantization modes
+- if `tensorrt_llm` is unavailable, CUDA execution is not usable, or the build
+  or engine load fails, the backend reports the failure in a structured way so
+  callers can fall back to the existing HuggingFace path without breaking the
+  public inference API
+
+### REQ-VERIFY-040: Warm Server Preference And TensorRT Benchmarking
+
+The warm inference path shall prefer the TensorRT-LLM backend when possible,
+where:
+- `python/carnot/inference/model_server.py` prefers a ready TensorRT-LLM
+  backend before falling back to the existing HuggingFace loader
+- the default preference preserves the existing `CARNOT_FORCE_CPU` override
+  and degrades to HuggingFace when TensorRT-LLM is unavailable or unhealthy
+- the repository provides a deterministic benchmark helper for `50` questions
+  that compares HuggingFace generation against TensorRT-LLM generation and
+  reports elapsed times plus speedup when the TensorRT backend is available
+- the same benchmark helper returns a structured unavailable/fallback result
+  instead of raising when TensorRT-LLM cannot be used in the local environment
+
+### SCENARIO-VERIFY-039: Cached TensorRT Engine Avoids Rebuild
+
+**Given** a compatible TensorRT engine for
+`Qwen/Qwen3.5-0.8B` or `google/gemma-4-E4B-it` already exists in the engine
+cache for the requested quantization mode
+**When** the backend is asked to initialize the same model again
+**Then** it loads the cached engine instead of rebuilding from the
+  HuggingFace checkpoint
+**And** the cached-engine metadata shows the matching model name,
+  quantization mode, and build parameters
+
+### SCENARIO-VERIFY-040: TensorRT Failure Falls Back To HuggingFace
+
+**Given** TensorRT-LLM is not installed, CUDA execution is disabled, or the
+engine build or load fails for a requested model
+**When** the warm inference path tries to initialize that model
+**Then** the failure is captured as backend status or metadata rather than an
+  uncaught exception
+**And** `ModelServer` falls back to the existing HuggingFace loader for that
+  model
+**And** caller-visible generation still succeeds through the fallback path
+
+### SCENARIO-VERIFY-041: HF Versus TensorRT Benchmark Reports Speedup
+
+**Given** deterministic HuggingFace and TensorRT-LLM backends for the same
+  model and a list of `50` benchmark prompts
+**When** the benchmark helper runs both backends on those prompts
+**Then** the reported HuggingFace and TensorRT elapsed times are reproducible
+**And** the speedup is reported as
+  `huggingface_elapsed_seconds / tensorrt_elapsed_seconds`
+**And** if TensorRT-LLM is unavailable, the result is marked unavailable with
+  a fallback reason instead of raising
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -963,4 +1030,6 @@ per-call cold loads versus the registered warm server
 | REQ-VERIFY-036 | Not Started | Implemented | Warm `ModelServer` lifecycle + export tests |
 | REQ-VERIFY-037 | Not Started | Implemented | Queued batching, health reporting, and shutdown-path tests |
 | REQ-VERIFY-038 | Not Started | Implemented | Model-loader server-handle + deterministic benchmark tests |
+| REQ-VERIFY-039 | Not Started | Implemented | TensorRT backend cache/build/fallback tests |
+| REQ-VERIFY-040 | Not Started | Implemented | Warm-server preference + HF-vs-TRT benchmark tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

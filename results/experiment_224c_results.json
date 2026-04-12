@@ -1,0 +1,45 @@
+{
+  "benchmark": {
+    "executed": false,
+    "n_questions": 50,
+    "reason": "TensorRT-LLM prerequisites unavailable in the active .venv; no live HF-vs-TRT benchmark was run."
+  },
+  "environment": {
+    "device_count": 2,
+    "nvcc_in_path": false,
+    "nvidia_smi": [
+      "NVIDIA GeForce RTX 3090, 595.58.03, 24576 MiB",
+      "NVIDIA GeForce RTX 3090, 595.58.03, 24576 MiB"
+    ],
+    "tensorrt_llm_installed": false,
+    "torch_cuda": "12.6",
+    "torch_cuda_available": true,
+    "torch_version": "2.11.0+cu126",
+    "trtllm_build_in_path": false
+  },
+  "experiment_id": "exp224c",
+  "models": {
+    "Qwen/Qwen3.5-0.8B": {
+      "available": false,
+      "built_engine": false,
+      "engine_dir": null,
+      "quantization": "fp16",
+      "reason": "tensorrt_llm is not installed",
+      "used_cached_engine": false
+    },
+    "google/gemma-4-E4B-it": {
+      "available": false,
+      "built_engine": false,
+      "engine_dir": null,
+      "quantization": "fp16",
+      "reason": "tensorrt_llm is not installed",
+      "used_cached_engine": false
+    }
+  },
+  "notes": [
+    "Code, tests, and fallback behavior for the optional TensorRT-LLM backend are implemented.",
+    "Live engine build and HF-vs-TRT benchmarking remain blocked until tensorrt_llm and its local build/runtime prerequisites are installed in the active environment."
+  ],
+  "status": "blocked",
+  "title": "TensorRT-LLM acceleration for 2-4x inference speedup"
+}
