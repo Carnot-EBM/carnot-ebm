@@ -1327,3 +1327,4 @@
 | 2026-04-12 09:25 UTC | Exp 213: Chain-of-thought monitorability audit and | OK | =========== 1898 passed, 1 skipped, 22 warnings in 96.61s (0:01:36) ============ |
 | 2026-04-12 09:56 UTC | Exp 212: Typed reasoning IR and dual-path extracti | OK | =========== 1907 passed, 1 skipped, 22 warnings in 95.19s (0:01:35) ============ |
 | 2026-04-12 10:26 UTC | Exp 214: Semantic failure corpus from live verifie | OK | =========== 1913 passed, 1 skipped, 22 warnings in 98.02s (0:01:38) ============ |
+| 2026-04-12 11:15 UTC | Exp 215: Semantic grounding verifier for question- | OK | =========== 1926 passed, 1 skipped, 22 warnings in 98.01s (0:01:38) ============ |
