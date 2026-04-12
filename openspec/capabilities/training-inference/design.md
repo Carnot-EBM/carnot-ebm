@@ -119,3 +119,24 @@ def train_step(params, batch, opt_state):
 ## Checkpointing
 
 Both languages use `safetensors` for parameter serialization. Training state (optimizer moments, step count, RNG state) is stored as a separate JSON sidecar file alongside the safetensors checkpoint.
+
+## FPGA Ising Backend Design
+
+For KV260-class prototyping, the Ising backend uses a tiled p-bit design with
+32 tiles of 128 spins (4096 total spins). Each tile keeps local spin state,
+biases, and sparse coupling rows in BRAM-addressable windows so the coupling
+graph can be reprogrammed at runtime instead of being fixed in RTL.
+
+The control plane is AXI-Lite:
+- low-address registers hold control, status, annealing parameters, and seeds
+- fixed windows hold quantized biases, sparse row pointers, sparse edge data,
+  and sampled-state readback
+
+The Python implementation mirrors that contract through a software model first:
+- if a PYNQ overlay is available, the backend writes the AXI-Lite windows and
+  polls hardware status
+- otherwise it runs the same upload/trigger/readback flow against a software
+  model and can still fall back to the CPU sampler for correctness
+
+Detailed module partitioning, register assignments, and Verilog notes live in
+`docs/fpga-ising-design.md`.
