@@ -41,6 +41,7 @@ from carnot.pipeline.verify_repair import (
     VerificationResult,
     VerifyRepairPipeline,
 )
+from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
 
 __all__ = [
     "AgentStep",
@@ -68,5 +69,6 @@ __all__ = [
     "VerificationError",
     "VerificationResult",
     "VerifyRepairPipeline",
+    "Z3ArithmeticExtractor",
     "propagate",
 ]

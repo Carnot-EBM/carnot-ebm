@@ -67,6 +67,19 @@ responses, where:
 - The autopsy result is serializable to JSON for offline review and follow-on
   extractor development
 
+### REQ-VERIFY-009: SMT-Backed Arithmetic Extraction
+
+The system shall support an SMT-backed arithmetic extractor for instruction-
+tuned reasoning traces, where:
+- Explicit equations and verbal arithmetic steps (for example, "half of 48")
+  are normalized into solver constraints
+- Multi-step chains can reference values derived earlier in the response
+- Approximate claims (for example, "about 150") are represented as bounded
+  numeric ranges rather than exact-equality checks
+- Each extracted step records whether the solver found it satisfiable and, if
+  not, the violation includes the claimed result, the solver-derived result,
+  and the source step text
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -142,6 +155,17 @@ correctness, and arithmetic extractor matches
 extraction strategy that would have caught the reasoning error
 **And** at least three correct answers are preserved as contrast cases
 
+### SCENARIO-VERIFY-009: SMT Verification of Arithmetic Chains
+
+**Given** a chain-of-thought response containing explicit equations, verbal
+arithmetic steps, and approximate values
+**When** the SMT-backed arithmetic extractor verifies the response
+**Then** each arithmetic step is returned with a satisfiable/unsatisfiable
+verdict
+**And** unsatisfiable steps include the solver-derived correction and the
+offending source step
+**And** correct chains produce zero arithmetic false positives
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -154,4 +178,5 @@ extraction strategy that would have caught the reasoning error
 | REQ-VERIFY-006 | Not Started | Not Started | Not Started |
 | REQ-VERIFY-007 | Implemented | Implemented | 1 Rust + 2 Python |
 | REQ-VERIFY-008 | Not Started | Implemented | 10 Python |
+| REQ-VERIFY-009 | Not Started | Not Started | Not Started |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
