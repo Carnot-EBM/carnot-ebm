@@ -1344,3 +1344,4 @@
 | 2026-04-12 18:27 UTC | Exp 224a: Warm model server — persistent GPU model | FAIL | Codex CLI error: hmark_cold_load_vs_warm_server
 E   ImportError: cannot impor |
 | 2026-04-12 19:15 UTC | Exp 224a: Warm model server — persistent GPU model | OK | =========== 2039 passed, 1 skipped, 22 warnings in 83.67s (0:01:23) ============ |
+| 2026-04-12 19:44 UTC | Exp 224c: TensorRT-LLM acceleration for 2-4x infer | OK | =========== 2058 passed, 1 skipped, 22 warnings in 80.37s (0:01:20) ============ |
