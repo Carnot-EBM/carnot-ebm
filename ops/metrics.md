@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 211 Constraint IR Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T08:08:12Z | 2026-04-12T08:29:58Z | Exp 211: extended `verifiable-reasoning` with `VERIFY-012`, wrote `test_experiment_211_constraint_ir_benchmark.py` first, implemented `scripts/experiment_211_constraint_ir_benchmark.py`, generated `data/research/constraint_ir_benchmark_211.jsonl` plus `results/experiment_211_results.json`, reconciled traceability/status/changelog, and reran the required verification commands including the full Python suite, explicit E2E tests, spec coverage, reconciliation, and 100% targeted coverage for the new script | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 210 Research Scan
 
 ### Turn Log
