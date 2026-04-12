@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 218 Shared Dual-Model Live Benchmark Harness
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T12:15:49Z | 2026-04-12T12:35:06Z | Exp 218: extended `verifiable-reasoning` with `VERIFY-025` and `VERIFY-026`, wrote `test_experiment_218_live_dual_model_suite.py` first, implemented `scripts/experiment_218_live_dual_model_suite.py`, added deterministic cohort and shared-prompt-seed bookkeeping plus per-benchmark/model/mode checkpoints and a stable paired artifact schema, reconciled traceability/status/changelog, and reran the required verification commands including targeted 100% script coverage, the full Python suite, spec coverage, Ruff, mypy, `scripts/experiment_218_live_dual_model_suite.py --help`, `tests/integration/test_full_pipeline.py`, and `bash scripts/validate-reconciliation.sh`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 217 Prompt-Derived Property Verifier
 
 ### Turn Log
