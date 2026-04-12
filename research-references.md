@@ -569,3 +569,51 @@ Top 10 selected by relevance score.
 - **Diagnosing Pathological Chain-of-Thought in Reasoning Models** (2026) - https://arxiv.org/abs/2602.13904 - Gives concrete pathology categories and cheap diagnostics for post-hoc rationalization, encoded reasoning, and internalized reasoning.
 - **Lie to Me: How Faithful Is Chain-of-Thought Reasoning in Reasoning Models?** (2026) - https://arxiv.org/abs/2603.22582 - Recent cross-model evidence that faithfulness varies sharply by family and hint type, which argues for model-specific monitorability gates.
 <!-- EXP210_REFERENCES_END -->
+
+## 2026-04-12 - Milestone 2026.04.15 Planning Refresh
+
+### Prompt-Side Constraint IR and Constrained Generation
+- **ConstraintBench: Benchmarking LLM Constraint Reasoning on Direct Optimization** (arXiv 2602.22465) - https://arxiv.org/abs/2602.22465
+  Why it matters: benchmark centered on hard, soft, and compositional constraints instead of generic instruction-following scores.
+  Carnot use: seed Exp 211 and Exp 221 with a prompt-to-constraint IR benchmark that measures constraint extraction coverage before repair.
+- **CRANE: Reasoning with constrained LLM generation** (ICML 2025 / arXiv 2502.09061) - https://arxiv.org/abs/2502.09061
+  Why it matters: shows why tight grammars can suppress reasoning, then fixes that with reasoning-augmented constrained decoding.
+  Carnot use: use a typed reasoning grammar that preserves solve quality while forcing monitorable structure for Qwen3.5-0.8B and Gemma4-E4B-it.
+- **SynCode: LLM Generation with Grammar Augmentation** (TMLR 2025 / OpenReview) - https://openreview.net/forum?id=HiUZtgAPoH
+  Why it matters: practical CFG-constrained decoding with soundness and completeness guarantees for JSON, Python, SQL, and Go.
+  Carnot use: candidate backend for emitting typed step graphs and structured verifier payloads in Exp 212 and Exp 216.
+- **BEAVER: An Efficient Deterministic LLM Verifier** (2025 preprint PDF) - https://ggndpsngh.github.io/files/BEAVER.pdf
+  Why it matters: deterministic probability bounds for prefix-closed semantic constraints are a better fit than rejection sampling when a verifier needs bounded risk, not just empirical pass rates.
+  Carnot use: design inspiration for a bounded semantic verifier that prunes impossible continuations early instead of only inspecting final text.
+
+### Semantic Verification and Hallucination Decomposition
+- **MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination** (arXiv 2603.24579) - https://arxiv.org/abs/2603.24579
+  Why it matters: decomposes answers into atomic claims and routes them to specialized checkers before recombining the verdict.
+  Carnot use: direct template for Exp 215's semantic/question-grounding verifier, where current live GSM8K errors are semantic rather than arithmetic.
+- **Monitoring Reasoning Models for Misbehavior and the Risks of Promoting Obfuscation** (arXiv 2503.11926) - https://arxiv.org/abs/2503.11926
+  Why it matters: makes the monitorability failure mode explicit: free-form reasoning traces can become less useful exactly when oversight pressure increases.
+  Carnot use: justifies Exp 213's monitorability audit and fallback policy before Carnot relies on chain-of-thought as a verifier input.
+- **Diagnosing Pathological Chain-of-Thought in Reasoning Models** (arXiv 2602.13904) - https://arxiv.org/abs/2602.13904
+  Why it matters: supplies concrete pathology labels for post-hoc rationalization, hidden reasoning, and encoded shortcuts.
+  Carnot use: label schema for Exp 214's semantic failure corpus and the structured fallback rules in Exp 213.
+
+### Code Verification and Formalization
+- **Use Property-Based Testing to Bridge LLM Code Generation and Validation** (arXiv 2506.18315) - https://arxiv.org/abs/2506.18315
+  Why it matters: property synthesis closes the gap between weak prompt-derived tests and stronger verifier feedback for generated code.
+  Carnot use: strongest direct follow-on to Exp 208; use property-generated tests and invariants to improve repair on HumanEval without changing the base models.
+- **Logical Intelligence / Aleph Prover update** (Jan 6, 2026) - https://logicalintelligence.com/aleph-prover-1000.html
+  Why it matters: machine-checked proof generation is now strong enough to be a realistic north star for formal code verification rather than a distant aspirational target.
+  Carnot use: not a next-milestone dependency, but a useful end-state reference for where code verification should head after runtime and property-based checks mature.
+
+### Continuous Self-Learning and EBM Follow-Ons
+- **Project Aletheia: Verifier-Guided Distillation of Backtracking for Small Language Models** (arXiv 2601.14290) - https://arxiv.org/abs/2601.14290
+  Why it matters: learns from verifier-approved backtracking traces instead of static supervised targets.
+  Carnot use: direct inspiration for Exp 222 and Exp 223, where live verifier traces become reusable memory and repair policy updates.
+- **Semantic Scholar citation sweep for EBT (2507.02092)** - https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b
+  Why it matters: the most actionable citations are `A Pipeline for Assessing Metacognitive Reasoning in Energy-Based Transformers while Generating Code` and `Transformers as Intrinsic Optimizers: Forward Inference through the Energy Principle`, both of which point toward verifier-in-the-loop reasoning rather than pure architecture replacement.
+  Carnot use: reinforces the choice to push Carnot's code-verification and trace-learning loops first; the ARM-EBM citation tree is still too young to drive near-term experiments by itself.
+
+### Hardware Watch
+- **Extropic hardware direction (TSU / XTR-0)** - https://extropic.ai/
+  Why it matters: Extropic is now explicitly positioning XTR-0 as the bridge between conventional processors and future thermodynamic chips, which makes software-side algorithm design on classical hardware more valuable right now.
+  Carnot use: keep the TSU path alive, but do not block 2026.04.15 on new hardware; the next milestone should win on CUDA + CPU first, then hand cleaner verifier workloads to FPGA/TSU prototypes later.
