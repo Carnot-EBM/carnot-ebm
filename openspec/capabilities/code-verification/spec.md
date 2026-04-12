@@ -134,6 +134,45 @@ execution-only path:
   wrong solutions beyond basic execution while keeping correct solutions clean
 - The comparison stays deterministic in the checked-in test suite
 
+### REQ-CODE-012: Full HumanEval PBT Benchmark
+
+The repository shall provide a full official HumanEval benchmark workflow for
+the Hypothesis-backed verifier:
+- The workflow runs all 164 official `openai_humaneval` test problems with live
+  GPU inference on `google/gemma-4-E4B-it`
+- Each case records the baseline generation, official `check()` harness result,
+  additive static or runtime findings, Hypothesis-backed PBT findings, and up
+  to 3 repair attempts
+- The benchmark keeps the same prompt, entry point, and official tests across
+  baseline, PBT verification, and repair for a given case
+- The primary pass@1 metrics remain the official HumanEval harness outcomes so
+  the result stays comparable to published HumanEval baselines
+
+### REQ-CODE-013: Resume-Aware Full-Benchmark Checkpointing
+
+The full HumanEval PBT benchmark shall support long-running checkpointed
+execution:
+- The workflow checkpoints every 10 completed problems and writes a final
+  checkpoint or artifact save at the end of the run
+- Resume logic only reuses a checkpoint when the expected ordered cohort still
+  matches
+- Resumed runs skip completed cases, execute only the pending cases, and emit
+  final ordered results in the original cohort order
+- The persisted checkpoint stores enough metadata to report progress honestly
+  and resume without silently dropping completed work
+
+### REQ-CODE-014: Publishable Summary And Baseline Comparison
+
+The full HumanEval PBT benchmark shall emit a publishable summary payload:
+- The artifact reports baseline and verify-repair pass@1, 95% bootstrap
+  confidence intervals, and the paired improvement delta confidence interval
+- The artifact includes compare-to-published baseline entries for
+  `Gemma4-E4B-it`, including the source title, URL, reported metric, and the
+  local delta versus each published number
+- The artifact includes a concise technical-report-ready summary that states the
+  cohort size, local baseline, verify-repair outcome, improvement delta, repair
+  yield, and relation to the published baseline(s)
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -200,6 +239,21 @@ property verification are compared on the same buggy candidates, then the
 property-based path flags at least one additional wrong solution while the same
 verifier keeps the matching correct solutions verified.
 
+### SCENARIO-CODE-011: Checkpoint Resume Skips Completed Cases
+
+Given a full-benchmark checkpoint whose ordered cohort metadata still matches
+the current 164-problem run, when the workflow resumes, then only the pending
+cases execute and the final ordered result list preserves the original case
+order.
+
+### SCENARIO-CODE-012: Full-Benchmark Summary Includes Delta CI And Published Comparison
+
+Given full-benchmark baseline and verify-repair outcomes plus at least one
+published `Gemma4-E4B-it` HumanEval baseline, when the artifact summary is
+built, then it reports baseline and verify-repair pass@1, the paired bootstrap
+delta confidence interval, published-baseline deltas, and a technical-report
+summary suitable for direct quoting.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -215,3 +269,6 @@ verifier keeps the matching correct solutions verified.
 | REQ-CODE-009 | Implemented |
 | REQ-CODE-010 | Implemented |
 | REQ-CODE-011 | Implemented |
+| REQ-CODE-012 | Implemented |
+| REQ-CODE-013 | Implemented |
+| REQ-CODE-014 | Implemented |
