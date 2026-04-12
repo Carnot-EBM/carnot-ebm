@@ -205,6 +205,9 @@ right — it just needs to operate at the right timescale:
 - **GPU available:** 2x RTX 3090 (48GB VRAM total) via CUDA + iGPU (Radeon 890M,
   shares system RAM for large models). JAX_PLATFORMS=cpu no longer required.
   Use GPU for LLM inference and training. Use CPU for Ising sampling (fastest).
+- **Agent allocation:** Codex (20x pro) for autoresearch conductor. Claude (20x max)
+  for interactive work, planning, and code review. This prevents the conductor's
+  high token consumption from exhausting the Claude weekly quota.
 - **100% test coverage** required for all code changes
 - **100% spec coverage** — every test traces to REQ-* or SCENARIO-*
 - **Never modify research_conductor.py** from within experiment prompts
