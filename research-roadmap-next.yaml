@@ -1,445 +1,270 @@
 # Carnot Research Roadmap — Milestone 2026.04.14
-# "Live GPU Benchmarks (Phased) + Checkpoint Cleanup + Scaling"
+# "Ground Truth: Rebuild Extraction for Real Models"
 #
-# Active experiment queue — processed in order by research_conductor.py
-# This file is picked up automatically when 2026.04.13 completes.
+# CONTEXT: All previous positive results were simulation artifacts.
+# Live GPU testing showed 0% improvement (base models) and 0 violations
+# detected (instruction-tuned models). The constraint EXTRACTION is broken,
+# not the verification infrastructure.
 #
-# LESSON LEARNED: Large benchmarks must be split into phases (script, test,
-# run, analyze) because claude -p exhausts 50 turns on combined tasks.
+# This milestone rebuilds extraction from scratch for real IT models.
 
 milestone: "2026.04.14"
-milestone_title: "Live GPU Benchmarks (Phased) + Precision Ceiling Investigation + Scaling"
-milestone_doc: "openspec/change-proposals/research-roadmap-v18.md"
+milestone_title: "Ground Truth: Rebuild Extraction for Real Models"
+milestone_doc: "openspec/change-proposals/research-roadmap-v19.md"
 
 tasks:
-  # ── PRIORITY ZERO: Validate Core Claim with Live Inference ───
-  # ALL previous positive results used SIMULATED inference.
-  # The ONLY live experiment (Exp 184, 3B) showed NEGATIVE results.
-  # This experiment determines whether Carnot's value proposition is real.
-  - id: exp190a-live-08b-validation
+  # ── Phase 60: Understand the Extraction Failure ──────────────
+  - id: exp203-extraction-autopsy
     milestone: "2026.04.14"
-    deliverable: results/experiment_190a_results.json
-    title: "Exp 190a: CRITICAL — Live 0.8B GPU inference validation of core claim"
-    prompt: |
-      You are working on the Carnot EBM framework in (project_root).
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: THIS IS THE MOST IMPORTANT EXPERIMENT IN THE PROJECT.
-
-      ALL previous experiments showing positive verify-repair improvement
-      (Exp 91: +14%, Exp 121: +26%, Exp 161: +10-14%) used SIMULATED
-      inference — the LLM was NOT actually generating responses. The ONLY
-      experiment with LIVE GPU inference (Exp 184, 3B model) showed
-      NEGATIVE results (-2% standard, -12% adversarial).
-
-      We MUST determine whether the positive results are REAL or simulation
-      artifacts. This experiment runs the SAME test as previous experiments
-      but with LIVE Qwen3.5-0.8B inference on GPU.
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_91_gsm8k_live.py — the original (simulated)
-      - scripts/experiment_184_3b_model.py — the live GPU experiment
-      - python/carnot/inference/model_loader.py — GPU model loading
-      - python/carnot/pipeline/verify_repair.py — pipeline
-
-      TASK: Create results/experiment_190a_results.json
-
-      CONCRETE STEPS:
-      1. Load Qwen3.5-0.8B on GPU with CARNOT_FORCE_LIVE=1
-      2. Run 200 GSM8K questions (SAME questions as Exp 91) through:
-         a. Baseline (LLM generates, extract answer)
-         b. Verify-only (extract constraints, check)
-         c. Verify-repair (full loop, max 3 iterations)
-      3. CRITICAL METRICS:
-         - Baseline accuracy (should be ~65-70% for 0.8B on GSM8K)
-         - Verify-repair accuracy
-         - Improvement delta with 95% CI
-         - If delta > 0: core claim VALIDATED — precision ceiling is model-size
-         - If delta <= 0: core claim IN QUESTION — simulated inference was artifact
-      4. Also run 100 adversarial (number-swapped) questions:
-         - Same three modes
-         - Compare delta to simulated Exp 121 (+26%)
-      5. Save with inference_mode="live_gpu" clearly marked
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_190a_live_validation.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 54: Checkpoint Cleanup ─────────────────────────────
-  - id: exp190-checkpoint-cleanup
-    milestone: "2026.04.14"
-    deliverable: scripts/experiment_190_checkpoint_cleanup.py
-    title: "Exp 190: Clean up partial checkpoint results from Exp 181-183"
+    deliverable: results/experiment_203_results.json
+    title: "Exp 203: Extraction autopsy — why ArithmeticExtractor finds 0 violations on IT models"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Experiments 181-183 (live GPU benchmarks) partially ran but
-      failed to complete. They left checkpoint files that need cleanup.
+      CONTEXT: Gemma4-E4B-it scores 80% on GSM8K with LIVE GPU inference.
+      But the ArithmeticExtractor found ZERO violations on all 20 questions —
+      even the 4 wrong answers. This experiment investigates WHY.
 
       EXISTING CODE TO READ FIRST:
-      - results/exp181_ckpt_Qwen3.5-0.8B.json — Exp 181 partial (empty)
-      - results/exp182_ckpt_Qwen3.5-0.8B_control_baseline.json — 250 questions
-      - results/exp182_ckpt_Qwen3.5-0.8B_control_repair.json — 250 questions
-      - results/exp182_ckpt_Qwen3.5-0.8B_control_verify.json — 250 questions
-      - results/exp183_ckpt.json — Exp 183 partial (empty)
+      - python/carnot/pipeline/extract.py — ArithmeticExtractor (regex-based)
+      - scripts/experiment_181_gsm8k_live_gpu.py — extraction logic
 
-      TASK: Create scripts/experiment_190_checkpoint_cleanup.py
+      TASK: Create results/experiment_203_results.json
 
       CONCRETE STEPS:
-      1. Read each checkpoint file
-      2. Validate: are the results from live inference or simulated fallback?
-         (check for inference_mode, model_name, or response quality indicators)
-      3. If valid live data: consolidate into proper results/experiment_NNN_results.json
-      4. If simulated/empty: delete the checkpoint files
-      5. Report what was salvaged vs discarded
-      6. Run: .venv/bin/python scripts/experiment_190_checkpoint_cleanup.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 55: Adversarial GSM8K (Phased) ─────────────���──────
-  - id: exp191-adversarial-script
-    milestone: "2026.04.14"
-    deliverable: scripts/experiment_191_adversarial_gpu_v2.py
-    title: "Exp 191: Adversarial live GPU script (write only, no tests)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 182 failed 3 times because the script was too large (81KB)
-      for tests + coverage in 50 turns. This experiment ONLY writes the script.
-      Tests come in a separate experiment.
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_182_adversarial_live_gpu.py — previous attempt (81KB)
-      - scripts/experiment_119_adversarial_gsm8k.py — variant generator
-      - python/carnot/inference/model_loader.py — model loading
-
-      TASK: Create a SMALLER, focused adversarial benchmark script
-
-      CONCRETE STEPS:
-      1. Simplify: N=200 per variant (not 400) — still statistically meaningful
-      2. Single model only (Qwen3.5-0.8B) — test Gemma4 separately
-      3. Reuse existing adversarial data from results/adversarial_gsm8k_data.json
-      4. Target script size: <30KB (half of the failed 81KB version)
-      5. Use model_loader.py for robust GPU loading
-      6. Save results to results/experiment_191_results.json
-      7. Do NOT write tests — that comes in Exp 192
-      8. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_191_adversarial_gpu_v2.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp192-adversarial-tests
-    milestone: "2026.04.14"
-    deliverable: tests/python/test_experiment_191.py
-    title: "Exp 192: Tests for adversarial GPU benchmark (Exp 191)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 191 wrote the adversarial GPU benchmark script. This
-      experiment adds tests to reach 100% coverage on it.
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_191_adversarial_gpu_v2.py — the script to test
-      - tests/python/ — existing test patterns
-
-      TASK: Create tests/python/test_experiment_191.py
-
-      CONCRETE STEPS:
-      1. Write tests that mock GPU/model loading and test the pipeline logic
-      2. Test variant generation, constraint extraction, verify-repair flow
-      3. Test results serialization
-      4. Achieve 100% coverage of experiment_191
-      5. Run: .venv/bin/pytest tests/python -q
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 56: HumanEval Live GPU (Phased) ───────────────────
-  - id: exp193-humaneval-script
-    milestone: "2026.04.14"
-    deliverable: scripts/experiment_193_humaneval_gpu_v2.py
-    title: "Exp 193: HumanEval live GPU script (write only, no tests)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 183 failed because the script was too large (57KB).
-      This experiment writes a SMALLER, focused version.
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_183_humaneval_live_gpu.py — previous attempt
-      - python/carnot/pipeline/verify_repair.py — pipeline
-      - python/carnot/pipeline/extract.py — CodeExtractor
-
-      TASK: Create a focused HumanEval benchmark script
-
-      CONCRETE STEPS:
-      1. Target 50 HumanEval problems (not 164) for initial validation
-      2. Single model (Qwen3.5-0.8B on GPU)
-      3. Focus: pass@1 baseline vs pass@1+repair
-      4. Target script size: <25KB
-      5. Save results to results/experiment_193_results.json
-      6. Do NOT write tests — that comes in Exp 194
-      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_193_humaneval_gpu_v2.py
+      1. Load Gemma4-E4B-it on GPU
+      2. Run 20 GSM8K questions, save FULL response text for each
+      3. For each of the ~4 wrong answers:
+         a. Print the full response
+         b. Show what the ArithmeticExtractor regex matched (or didn't)
+         c. Identify the actual error in the reasoning
+         d. Categorize: format mismatch, subtle logic error, rounding, etc.
+      4. For 3 correct answers, also show extraction results
+      5. Propose: what extraction approach WOULD have caught each error?
+      6. Save detailed analysis
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_203_extraction_autopsy.py
       8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp194-humaneval-tests
+  - id: exp204-z3-smt-extractor
     milestone: "2026.04.14"
-    deliverable: tests/python/test_experiment_193.py
-    title: "Exp 194: Tests for HumanEval GPU benchmark (Exp 193)"
+    deliverable: python/carnot/pipeline/z3_extractor.py
+    title: "Exp 204: Z3 SMT constraint extractor — formal verification with zero FP"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 193 wrote the HumanEval GPU benchmark script.
+      CONTEXT: The regex ArithmeticExtractor fails on instruction-tuned models.
+      NSVIF (arxiv 2601.17789) showed that formalizing constraints as first-order
+      logic and solving with Z3 SMT eliminates false positives. This experiment
+      implements a Z3-based extractor.
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_193_humaneval_gpu_v2.py — the script to test
+      - python/carnot/pipeline/extract.py — current extractors (ConstraintExtractor protocol)
+      - results/experiment_203_results.json — extraction autopsy findings
 
-      TASK: Create tests/python/test_experiment_193.py
+      TASK: Create python/carnot/pipeline/z3_extractor.py
 
       CONCRETE STEPS:
-      1. Mock GPU/model loading, test pipeline logic
-      2. Test code extraction, instrumentation, fuzzing, repair flow
-      3. 100% coverage of experiment_193
-      4. Run: .venv/bin/pytest tests/python -q
-      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. pip install z3-solver if not installed
+      2. Create Z3ArithmeticExtractor implementing ConstraintExtractor protocol:
+         a. Parse chain-of-thought response into steps
+         b. For each step with a calculation, extract operands and result
+         c. Encode as Z3 constraint: a + b == c (or a * b == c, etc.)
+         d. Check satisfiability — if UNSAT, the step is wrong
+         e. Return ConstraintResult with violation details
+      3. Key difference from regex: Z3 handles:
+         - Implicit calculations ("half of 48" → 48/2 == 24)
+         - Multi-step chains (a + b = c, then c * d = e)
+         - Approximate values ("about 150" → 145 <= x <= 155)
+      4. Test on the 4 wrong Gemma4 answers from Exp 203
+      5. Test on 3 correct answers — verify ZERO false positives
+      6. Write tests, 100% coverage
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 57: Full GSM8K Live GPU (Phased) ──────────────���───
-  - id: exp195-gsm8k-script
+  - id: exp205-llm-as-extractor
     milestone: "2026.04.14"
-    deliverable: scripts/experiment_195_gsm8k_gpu_v2.py
-    title: "Exp 195: GSM8K 1319 live GPU script (write only, no tests)"
+    deliverable: python/carnot/pipeline/llm_extractor.py
+    title: "Exp 205: LLM-as-extractor — use a second LLM call to extract constraints"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 181 partially succeeded but got stuck on coverage.
-      This writes a clean, focused version.
+      CONTEXT: As an alternative to Z3, use a small LLM to extract verifiable
+      claims from a response. The LLM understands natural language better than
+      regex or even Z3 parsing. The extracted claims are then verified by Ising.
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_181_gsm8k_live_gpu.py — previous attempt
+      - python/carnot/pipeline/extract.py — ConstraintExtractor protocol
       - python/carnot/inference/model_loader.py — model loading
 
-      TASK: Create a focused GSM8K benchmark script
+      TASK: Create python/carnot/pipeline/llm_extractor.py
 
       CONCRETE STEPS:
-      1. Full 1,319 questions but single model (Qwen3.5-0.8B)
-      2. 3 modes: baseline, verify-only, verify-repair
-      3. Bootstrap 95% CIs
-      4. Checkpoint every 100 questions (resume on failure)
-      5. Target script size: <25KB
-      6. Save to results/experiment_195_results.json
-      7. Do NOT write tests
-      8. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_195_gsm8k_gpu_v2.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp196-gsm8k-tests
-    milestone: "2026.04.14"
-    deliverable: tests/python/test_experiment_195.py
-    title: "Exp 196: Tests for GSM8K GPU benchmark (Exp 195)"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 195 wrote the GSM8K GPU benchmark script.
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_195_gsm8k_gpu_v2.py — the script to test
-
-      TASK: Create tests/python/test_experiment_195.py
-
-      CONCRETE STEPS:
-      1. Mock GPU/model, test pipeline logic
-      2. Test checkpointing (resume from partial)
-      3. Test CI computation
-      4. 100% coverage
-      5. Run: .venv/bin/pytest tests/python -q
-      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 58: Run Benchmarks + Analyze ──────────────────────
-  - id: exp197-run-all-benchmarks
-    milestone: "2026.04.14"
-    deliverable: results/experiment_197_combined_results.json
-    title: "Exp 197: Execute all GPU benchmarks and combine results"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Experiments 191-196 created and tested benchmark scripts.
-      This experiment RUNS them all and combines the results.
-
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_191_adversarial_gpu_v2.py
-      - scripts/experiment_193_humaneval_gpu_v2.py
-      - scripts/experiment_195_gsm8k_gpu_v2.py
-
-      TASK: Create results/experiment_197_combined_results.json
-
-      CONCRETE STEPS:
-      1. Run each benchmark script with CARNOT_FORCE_LIVE=1
-      2. Collect results from each
-      3. Combine into a single summary with all benchmarks
-      4. Compare to previous simulated results
-      5. Save combined results
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_197_run_all.py
+      1. Create LLMConstraintExtractor implementing ConstraintExtractor protocol:
+         a. Takes a response text
+         b. Prompts a small model (can be same model or different):
+            "List all verifiable arithmetic claims in this response.
+             Format each as: CLAIM: a OP b = c"
+         c. Parses the extraction output
+         d. Returns ConstraintResults that can be verified by Ising
+      2. Test: can the LLM-extractor find errors that regex misses?
+      3. Test on Gemma4-E4B-it's 4 wrong GSM8K answers
+      4. Measure: extraction latency (acceptable if <1s per response)
+      5. Write tests
+      6. Run: .venv/bin/pytest tests/python -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp198-benchmark-analysis
+  # ── Phase 61: Test New Extractors on Live IT Models ──────────
+  - id: exp206-z3-live-benchmark
     milestone: "2026.04.14"
-    deliverable: scripts/experiment_198_analysis.py
-    title: "Exp 198: Analyze live GPU results + update docs + HuggingFace"
+    deliverable: results/experiment_206_results.json
+    title: "Exp 206: Z3 extractor on 100 live GSM8K (Gemma4-E4B-it) — the real test"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Exp 197 ran all GPU benchmarks and produced combined results.
-      This experiment analyzes the data and updates all documentation.
+      CONTEXT: This is the experiment that determines if Carnot's value
+      proposition is real. Using the Z3 SMT extractor (Exp 204) on
+      instruction-tuned Gemma4-E4B-it with LIVE GPU inference.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_197_combined_results.json — combined benchmark data
-      - docs/technical-report.md — technical report to update
-      - docs/index.html — GitHub pages to update
-      - README.md — readme to update
-
-      TASK: Create scripts/experiment_198_analysis.py
-
-      CONCRETE STEPS:
-      1. Load combined results
-      2. Generate comparison tables: simulated vs live, per-benchmark
-      3. Compute improvement deltas with 95% CIs
-      4. Update docs/technical-report.md with live GPU results section
-      5. Update docs/index.html stats and results cards
-      6. Update README.md key results table
-      7. Prepare HuggingFace model card updates with live numbers
-      8. Save analysis to results/experiment_198_results.json
-      9. Run: .venv/bin/python scripts/experiment_198_analysis.py
-      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 59: Precision Ceiling Investigation ────────────────
-  - id: exp200-false-positive-analysis
-    milestone: "2026.04.14"
-    deliverable: results/experiment_200_results.json
-    title: "Exp 200: False positive analysis — why 3B repair breaks correct answers"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: Exp 184 showed verify-repair has 0% net improvement on 3B models
-      (6 fixed, 6 broken). The ArithmeticExtractor triggers false positives on
-      larger models where answers are more sophisticated. This experiment
-      investigates the 6 broken cases to understand WHY.
-
-      EXISTING CODE TO READ FIRST:
-      - results/exp184_ckpt_standard.json — checkpoint with baseline + repair data
-      - python/carnot/pipeline/extract.py — ArithmeticExtractor
+      - python/carnot/pipeline/z3_extractor.py — Z3 extractor (Exp 204)
       - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
 
-      TASK: Create results/experiment_200_results.json
+      TASK: Create results/experiment_206_results.json
 
       CONCRETE STEPS:
-      1. Load Exp 184 checkpoint data
-      2. Identify the 6 cases where repair BROKE a correct answer
-      3. For each broken case:
-         - What constraint was extracted?
-         - Was it a true violation or false positive?
-         - What did the repair change?
-         - Why did the change make it wrong?
-      4. Identify the 6 cases where repair FIXED a wrong answer
-      5. Compare: what's different about fixable vs breakable constraints?
-      6. Categorize false positive types: intermediate step, rounding,
-         valid reformulation, misparse
-      7. Save detailed analysis
-      8. Run: .venv/bin/python scripts/experiment_200_fp_analysis.py
-      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Load Gemma4-E4B-it on GPU
+      2. Configure VerifyRepairPipeline with Z3ArithmeticExtractor
+      3. Run 100 GSM8K questions through 3 modes:
+         a. Baseline (LLM only)
+         b. Verify-only (Z3 extraction + Ising verification)
+         c. Verify-repair (Z3 + Ising + repair loop)
+      4. CRITICAL METRICS:
+         - Baseline accuracy (should be ~80%)
+         - Violations detected (should be >0 on wrong answers)
+         - False positive rate (should be ~0% with Z3)
+         - Net improvement delta with 95% CI
+         - THIS IS THE NUMBER THAT MATTERS
+      5. Compare to old regex extractor (should be strictly better)
+      6. Save with inference_mode="live_gpu"
+      7. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_206_z3_live.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp201-precision-by-model-size
+  - id: exp207-llm-extractor-live-benchmark
     milestone: "2026.04.14"
-    deliverable: results/experiment_201_results.json
-    title: "Exp 201: Constraint precision curve across model sizes (0.8B, 3B)"
+    deliverable: results/experiment_207_results.json
+    title: "Exp 207: LLM extractor on 100 live GSM8K — compare to Z3"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: We need to map the precision ceiling — at what model size do
-      false positives overtake true positives? Run the SAME 100 GSM8K questions
-      on 0.8B and 3B, measuring TP rate, FP rate, and net improvement for each.
+      CONTEXT: Compare LLM-as-extractor (Exp 205) to Z3 extractor (Exp 204)
+      on the same 100 GSM8K questions with live Gemma4-E4B-it.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_200_results.json — false positive analysis
-      - results/experiment_181_results.json — 0.8B GSM8K results
-      - results/exp184_ckpt_standard.json — 3B checkpoint data
+      - python/carnot/pipeline/llm_extractor.py — LLM extractor (Exp 205)
+      - results/experiment_206_results.json — Z3 results for comparison
 
-      TASK: Create results/experiment_201_results.json
-
-      CONCRETE STEPS:
-      1. Select 100 GSM8K questions (same set for both models)
-      2. For each model (Qwen3.5-0.8B, Qwen3-3B on GPU):
-         - Run baseline + verify-repair
-         - Classify each constraint firing: true positive, false positive
-         - Compute TP rate, FP rate, net improvement
-      3. Plot precision curve: model size vs (TP rate - FP rate)
-      4. Identify the crossover point where FP > TP
-      5. Save results
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_201_precision_curve.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp202-confidence-weighted-constraints
-    milestone: "2026.04.14"
-    deliverable: python/carnot/pipeline/confidence.py
-    title: "Exp 202: Confidence-weighted constraints — reduce FP on larger models"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-
-      CONTEXT: The precision ceiling (Exp 200-201) shows false positives
-      hurt larger models. Fix: weight constraint violations by confidence.
-      "47+28=76" is high-confidence (definitely wrong). "approximately 150"
-      is low-confidence (might be rounding). Only repair high-confidence.
-
-      EXISTING CODE TO READ FIRST:
-      - results/experiment_200_results.json — FP analysis (types of FPs)
-      - python/carnot/pipeline/extract.py — current extractors
-      - python/carnot/pipeline/verify_repair.py — pipeline
-
-      TASK: Create python/carnot/pipeline/confidence.py
+      TASK: Create results/experiment_207_results.json
 
       CONCRETE STEPS:
-      1. Add confidence score (0.0-1.0) to ConstraintResult:
-         - Exact arithmetic (a+b=c with integers): 1.0
-         - Approximate ("about 150"): 0.3
-         - Intermediate step ("then we get 75"): 0.5
-         - Multi-step chain: product of individual confidences
-      2. Add confidence_threshold parameter to VerifyRepairPipeline:
-         - Only repair violations above threshold (default 0.7)
-         - Log skipped low-confidence violations for learning
-      3. Test: re-run Exp 184's 6 broken cases with confidence filtering
-         - Do the false positives have lower confidence than true positives?
-      4. Write tests achieving 100% coverage
-      5. Run: .venv/bin/pytest tests/python -q
+      1. Same 100 questions as Exp 206
+      2. Same 3 modes but with LLMConstraintExtractor
+      3. Compare: Z3 vs LLM extraction on same questions
+         - Which finds more violations?
+         - Which has fewer false positives?
+         - Which produces better repair outcomes?
+      4. Save with inference_mode="live_gpu"
+      5. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_207_llm_extractor_live.py
       6. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 60: Research Scan ─────────────────────────────────
-  - id: exp199-research-scan
+  # ── Phase 62: Code Verification (Likely Still Works) ─────────
+  - id: exp208-humaneval-live-it
     milestone: "2026.04.14"
-    deliverable: results/experiment_199_results.json
-    title: "Exp 199: Research scan v3 — multi-source with live GPU context"
+    deliverable: results/experiment_208_results.json
+    title: "Exp 208: HumanEval with LIVE IT model — code verification via execution"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
 
-      CONTEXT: Now that we have live GPU results, search for papers that
-      compare constraint verification approaches on standard benchmarks.
+      CONTEXT: Code verification uses EXECUTION (run code, check tests),
+      not regex extraction. This is likely still effective because it
+      verifies via structural tests, not pattern matching. Test on live
+      instruction-tuned model.
 
       EXISTING CODE TO READ FIRST:
-      - research-references.md — current references
-      - research-program.md — "Research Sources" section
-      - results/experiment_197_combined_results.json — our live numbers
+      - python/carnot/pipeline/extract.py — CodeExtractor
+      - scripts/experiment_53_runtime_constraints.py — instrumentation
 
-      TASK: Create results/experiment_199_results.json
+      TASK: Create results/experiment_208_results.json
 
       CONCRETE STEPS:
-      1. Search arxiv + secondary sources for recent work
-      2. Focus on: papers reporting GSM8K/HumanEval improvements via
-         verification, constrained decoding, or energy-based methods
-      3. Compare our live numbers to published baselines
-      4. Update research-references.md
-      5. Propose experiments for 2026.04.15
-      6. Run: .venv/bin/python scripts/experiment_199_research_scan.py
+      1. Load Gemma4-E4B-it on GPU
+      2. Run 30 HumanEval problems:
+         a. Generate code
+         b. Extract constraints via CodeExtractor (AST-based)
+         c. Runtime instrumentation (Exp 53 approach)
+         d. Run test cases
+         e. Verify-repair if tests fail
+      3. Report: pass@1 baseline vs pass@1+verify-repair
+      4. This is the domain most likely to show real improvement
+      5. Save with inference_mode="live_gpu"
+      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_208_humaneval_live_it.py
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 63: Cleanup and Honest Documentation ───────────────
+  - id: exp209-cleanup-checkpoints
+    milestone: "2026.04.14"
+    deliverable: scripts/experiment_209_cleanup.py
+    title: "Exp 209: Clean up simulation artifacts and update documentation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Many result files contain simulated data that was incorrectly
+      presented as real. This experiment cleans up and documents honestly.
+
+      TASK: Create scripts/experiment_209_cleanup.py
+
+      CONCRETE STEPS:
+      1. Scan all results/experiment_*_results.json files
+      2. For each, check inference_mode field:
+         - "live_gpu" → keep as-is, mark as validated
+         - "simulated" or missing → add warning header
+      3. Update docs/technical-report.md:
+         - Add "Simulation vs Reality" section documenting the finding
+         - Revise all claimed improvement numbers with honest caveats
+         - Mark which results are live vs simulated
+      4. Update README.md key results table with honest numbers
+      5. Update docs/index.html with revised stats
+      6. Do NOT remove simulated results — add caveats, not deletions
+      7. Run: .venv/bin/python scripts/experiment_209_cleanup.py
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 64: Research ──────────────────────────────────────
+  - id: exp210-research-scan
+    milestone: "2026.04.14"
+    deliverable: results/experiment_210_results.json
+    title: "Exp 210: Research scan — focus on constraint extraction for IT models"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Our #1 problem is constraint extraction on instruction-tuned
+      models. Search for papers addressing this specific challenge.
+
+      TASK: Create results/experiment_210_results.json
+
+      CONCRETE STEPS:
+      1. Search arxiv + secondary sources for:
+         - Constraint extraction from chain-of-thought responses
+         - Formal verification of LLM reasoning steps
+         - SMT/SAT-based LLM output verification
+         - Neuro-symbolic verification frameworks
+      2. Update research-references.md and research-studying.md
+      3. Propose experiments for 2026.04.15
+      4. Run: .venv/bin/python scripts/experiment_210_research_scan.py
+      5. Do NOT push. Do NOT modify scripts/research_conductor.py.
