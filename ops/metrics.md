@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 209 Provenance Cleanup
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T06:31:36Z | 2026-04-12T06:53:38Z | Exp 209: added `research-reporting` spec + `REPORT-001`, wrote `test_experiment_209_cleanup.py` first, implemented `scripts/experiment_209_cleanup.py`, audited 66 result artifacts (5 validated live_gpu, 3 simulated, 58 unverified), rewrote README / technical report / landing page with provenance-aware claims, and reran the required verification commands including full Python suite and 100% targeted coverage for the new script | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 208 HumanEval Live Benchmark
 
 ### Turn Log

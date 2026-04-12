@@ -88,7 +88,7 @@
       ],
       "relevance_score": 7.5,
       "one_paragraph_summary": "Emerging analog computing substrates, such as oscillator-based Ising machines, offer rapid convergence times for combinatorial optimization but often suffer from limited scalability due to physical implementation constraints. To tackle real-world problems involving thousands of variables, problem decomposition is required; however, performing this step on standard CPUs introduces significant latency, preventing the high-speed solver from operating at full capacity. This work presents a heterogeneous system that offloads the decomposition workload to an FPGA, tightly integrated with a custom 28...",
-      "relevance_to_carnot": "Direct hardware path for Carnot's TSU-simulation backend (research-references.md §FPGA Ising Machine).  Architectural details (bit-width, LFSR design, AXI interface) could accelerate the FpgaBackend prototype for SamplerBackend (Exp 71).",
+      "relevance_to_carnot": "Direct hardware path for Carnot's TSU-simulation backend (research-references.md \u00a7FPGA Ising Machine).  Architectural details (bit-width, LFSR design, AXI interface) could accelerate the FpgaBackend prototype for SamplerBackend (Exp 71).",
       "proposed_experiment": "Exp 142 candidate: Implement a minimal Verilog Ising cell based on the paper's design, simulate in Verilator, and compare sample quality to CPU ParallelIsingSampler on a 100-variable SAT."
     },
     {
@@ -219,25 +219,33 @@
       "id": "EXP-140",
       "title": "Constraint-Projection Guided Decoding Latency Benchmark",
       "description": "Implement a per-token constraint-projection operator in the EnergyGuidedSampler that projects logits onto a constraint-satisfying subspace using the KAN energy gradient.  Measure wall-clock overhead per token at batch sizes 1, 8, 32 on CPU.  Success criterion: <1 ms per token at batch=1 (Exp 102 budget).  Compare to Exp 138's alpha-penalty approach.  This directly addresses Goal #4 (guided decoding latency) and produces publishable numbers for the HuggingFace model card.",
-      "goal": "Goal #4 — Guided decoding latency benchmark",
+      "goal": "Goal #4 \u2014 Guided decoding latency benchmark",
       "spec_refs": "REQ-GUIDED-001, SCENARIO-GUIDED-002",
       "estimated_complexity": "medium"
     },
     {
       "id": "EXP-141",
-      "title": "Apple GSM8K Adversarial Benchmark — Carnot vs LLM Baseline",
+      "title": "Apple GSM8K Adversarial Benchmark \u2014 Carnot vs LLM Baseline",
       "description": "Run Carnot's verify-repair pipeline on the Apple GSM8K adversarial variant (arxiv 2410.05229): same problems with swapped numbers and one irrelevant sentence added.  Measure: (a) LLM accuracy drop on adversarial vs standard, (b) Carnot accuracy on adversarial, (c) delta between Carnot improvement on adversarial vs standard.  Expected result: improvement is larger on adversarial because there are more arithmetic errors to catch via Ising constraint checking.  This is the single most credibility-building experiment available and directly tests the core thesis.",
-      "goal": "Goal #5 — Apple GSM8K adversarial benchmark",
+      "goal": "Goal #5 \u2014 Apple GSM8K adversarial benchmark",
       "spec_refs": "REQ-VERIFY-002, SCENARIO-VERIFY-005",
       "estimated_complexity": "medium"
     },
     {
       "id": "EXP-142",
-      "title": "Multi-Turn Constraint Propagation — 3-Step Reasoning Chain",
-      "description": "Extend the verify-repair loop (Exp 57) to a 3-step chain: plan → calculate → conclude.  Each step's verified facts become hard constraints on the next step.  Measure constraint retention rate (what fraction of step-1 constraints are still satisfied at step 3) and overall accuracy on a 50-problem multi-step arithmetic dataset.  Directly addresses Goal #2 (multi-turn agentic verification) and produces the first multi-step constraint propagation numbers for the project.",
-      "goal": "Goal #2 — Multi-turn agentic verification",
+      "title": "Multi-Turn Constraint Propagation \u2014 3-Step Reasoning Chain",
+      "description": "Extend the verify-repair loop (Exp 57) to a 3-step chain: plan \u2192 calculate \u2192 conclude.  Each step's verified facts become hard constraints on the next step.  Measure constraint retention rate (what fraction of step-1 constraints are still satisfied at step 3) and overall accuracy on a 50-problem multi-step arithmetic dataset.  Directly addresses Goal #2 (multi-turn agentic verification) and produces the first multi-step constraint propagation numbers for the project.",
+      "goal": "Goal #2 \u2014 Multi-turn agentic verification",
       "spec_refs": "REQ-MULTITURN-001, SCENARIO-MULTITURN-001",
       "estimated_complexity": "high"
     }
-  ]
+  ],
+  "result_header": "WARNING: Experiment 139 has no explicit live inference provenance. Keep this artifact for the research record, but treat its metrics as unverified rather than validated live performance.",
+  "result_provenance": {
+    "experiment": 209,
+    "status": "warning",
+    "detected_mode": null,
+    "normalized_mode": "missing",
+    "source": "missing"
+  }
 }

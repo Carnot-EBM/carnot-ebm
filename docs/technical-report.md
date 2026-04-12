@@ -14,11 +14,27 @@ We present Carnot, an open-source framework that combines Energy-Based Models (E
 
 Our key findings span two phases. **Phase 1 (Activation-based, Experiments 1-38):** (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy), (2) structural test execution dominates for code verification (0% to 30% accuracy), (3) activation-space approaches show detectable signals but fail to improve output quality — activation EBMs detect confidence, not correctness, (4) instruction tuning compresses the hallucination signal (84.5% base vs 67.2% instruction-tuned), (5) chain-of-thought further compresses it (75.5% to 61.3%), (6) adversarial questions defeat post-hoc detection entirely, and (7) no internal signal — activations, logit lens, NLI, confidence — can distinguish factual truth from confident hallucination. These 14 systematic negative results are the project's primary contribution to the activation-based literature.
 
-**Phase 2 (Constraint-based, Experiments 39-160+):** The paradigm shift from detection to verification yielded: (1) full GSM8K (1,319 questions) showing Qwen3.5 improving from 70.6% to 84.4% and Gemma4 from 77.1% to 87.8% with verify-repair, (2) adversarial GSM8K (Apple methodology) recovering +24-28% accuracy on number-swapped variants, (3) self-learning Tier 1 improving from 67.6% to 97.0% accuracy over 500 questions via online constraint generation, (4) 96% factual claim coverage via Wikidata knowledge base integration, (5) KAN energy tier achieving 0.994 AUROC with 8.7x fewer parameters than Ising, (6) JEPA predictive verification as a multi-domain predictor, (7) constraint state machine for agentic workflows catching 60/60 violations, (8) Ising constraint verification achieving 100% hallucination detection on live LLM output (Experiment 56), (9) HumanEval pass@1 improving from 90% to 96% (Experiment 68), (10) SAT solving scaling to 5000 variables in 0.7 seconds (Experiment 46b), and (11) the constraint pipeline transferring across model families without retraining (Experiment 69).
+**Phase 2 (Constraint-based, Experiments 39-160+):** The paradigm shift from detection to verification produced a mix of validated live, simulated, and unverified evidence. The strongest full-dataset GSM8K numbers remain simulated (Exp 161: Qwen 70.6% -> 84.4%, Gemma 77.1% -> 87.8%); the strongest adversarial recovery remains simulated (Exp 178: Qwen +28.2pp, Gemma +24.0pp on number-swapped variants); the clearest positive validated live benchmark is Exp 208 on HumanEval (16.7% -> 20.0%); the self-learning result (67.6% -> 97.0%) and factual coverage (96.0%) remain in the record but lack explicit live inference provenance.
 
 We release the complete framework as `pip install carnot` with four energy tiers (Ising, KAN, Gibbs, Boltzmann), the VerifyRepairPipeline production API, five constraint extractors (arithmetic, code, logic, NL, auto-detection), self-learning verification, a constraint state machine for agentic workflows, an MCP server for Claude Code integration, a CLI tool, Rust core crates, and 16 pre-trained EBM models on HuggingFace.
 
 ---
+
+## Simulation vs Reality
+
+This provenance audit found 5 validated live_gpu artifacts, 3 explicitly simulated artifacts, and 58 artifacts missing explicit live inference provenance.
+
+- Validated live artifacts: Exp 184, Exp 203, Exp 206, Exp 207, Exp 208
+- Simulated artifacts: Exp 161, Exp 163, Exp 178
+- Unverified artifacts: 58 result files without explicit live provenance
+
+| Headline claim | Current number | Provenance | Interpretation |
+|---------------|----------------|------------|----------------|
+| Live HumanEval (Exp 208) | 16.7% -> 20.0% (+3.3pp) | Validated live_gpu | Best current validated live benchmark improvement |
+| Full GSM8K (Exp 161) | Qwen 70.6% -> 84.4%; Gemma 77.1% -> 87.8% | Simulated | Promising full benchmark, but not yet validated as a full live benchmark |
+| Adversarial GSM8K (Exp 178) | Qwen +28.2pp; Gemma +24.0pp | Simulated | Strong adversarial signal, but still simulated |
+| Self-learning (Exp 134) | 67.6% -> 97.0% | Missing explicit inference provenance | Useful research result, but not explicit live inference evidence |
+| Factual coverage (Exp 158) | 96.0% | Missing explicit inference provenance | Coverage study retained with caveat rather than deleted |
 
 ## 1. Introduction
 
@@ -49,7 +65,7 @@ This work began as an investigation of activation-based hallucination detection:
 
 This negative result forced a fundamental rethinking. Instead of asking "is this output correct?" (detection), we pivoted to asking "does this output satisfy known constraints?" (verification). The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints are encoded as spin couplings. Ising models can be solved via parallel Gibbs sampling (CPU), continuous relaxation (gradient descent), or eventually thermodynamic hardware (Extropic TSU).
 
-The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — proved dramatically more effective than any activation-based approach. On live LLM output, it achieves 100% hallucination detection (vs 50% practical for activation EBMs), +27% accuracy improvement via repair (vs -3% to -6% for activation-based rejection), and 96% pass@1 on HumanEval (vs 90% baseline).
+The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — clearly works as a live end-to-end pattern, but the evidence is more mixed than the earlier summaries implied. The live small-sample studies (Experiments 56-57) remain encouraging, the currently validated live benchmark gain is Exp 208 on HumanEval (16.7% -> 20.0%), and the larger GSM8K and adversarial gains elsewhere in this report remain simulated until rerun with explicit live provenance.
 
 The narrative arc of this report is: tried activation approaches -> learned 14 principles about what doesn't work -> pivoted to constraint verification -> proved it works at scale -> shipped it as a product.
 
@@ -319,7 +335,7 @@ The failure of activation-based detection forced a paradigm shift. Instead of tr
 
 ## 5. Phase 3: Live LLM End-to-End (Experiments 53-64)
 
-Phase 2 validated individual components with simulated LLM outputs. Phase 3 connects a real LLM (Qwen3.5-0.8B, local) to the constraint pipeline and runs everything end-to-end. This is where the paradigm shift delivers its payoff.
+Phase 2 validated individual components with simulated LLM outputs. Phase 3 connects a real LLM (Qwen3.5-0.8B, local) to the constraint pipeline and runs everything end-to-end. These live Experiments 53-64 are the strongest evidence that the architecture works at all, but they should not be conflated with the later simulated full-benchmark numbers.
 
 ### 5.1 Runtime Constraint Instrumentation (Experiment 53)
 
@@ -339,7 +355,7 @@ Phase 2 validated individual components with simulated LLM outputs. Phase 3 conn
 
 **Setup:** When the Ising verifier finds constraint violations, format them as natural language feedback and feed them back to the LLM. The LLM regenerates with constraint context in the prompt. Re-verify, up to 3 iterations.
 
-**Result:** Starting from 60% accuracy on tricky questions, the verify-repair loop achieves 87% (+27% improvement). The architecture works; constraint coverage is the bottleneck (1/6 repair attempts triggered).
+**Result:** Starting from 60% accuracy on tricky questions, the verify-repair loop reaches 87% (+27% improvement) on this small live study. The architecture works, but the sample is too small to treat as a validated full benchmark and constraint coverage remains the bottleneck (1/6 repair attempts triggered).
 
 **Finding:** The repair loop is where EBMs add value — not as classifiers (which failed in Phase 1) but as reasoning constraints that guide the LLM toward correct answers. The LLM handles language; the Ising model handles logic. Each does what it's best at.
 
@@ -386,7 +402,7 @@ Phase 3 proved the pipeline works end-to-end. Phase 4 validates it against publi
 
 ### 6.1 External Benchmark Validation
 
-**HumanEval (Experiment 68):** 50 HumanEval-style problems through the full pipeline (extract -> instrument -> test -> fuzz -> repair). Pass@1 improves from 90% to 96% with Ising-guided fuzzing and repair. Bug detection breaks down across test execution, runtime instrumentation, and Ising-guided fuzzing — each catches bugs the others miss.
+**HumanEval (Experiment 68):** 50 HumanEval-style problems through the full pipeline (extract -> instrument -> test -> fuzz -> repair). This historical benchmark reported pass@1 improving from 90% to 96%, but it is not currently validated as a full live benchmark. Bug detection breaks down across test execution, runtime instrumentation, and Ising-guided fuzzing — each catches bugs the others miss.
 
 **GSM8K (Experiment 67):** 200 GSM8K test questions in 3 modes (baseline, verify, verify-repair). First external benchmark of Ising-guided arithmetic repair.
 
@@ -619,24 +635,17 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### Part 2: Constraint-based verification works
 
-The paradigm shift from detection to verification transforms the problem. Instead of asking "is this output correct?" (requires omniscience), we ask "does this output satisfy known constraints?" (requires only the constraints). Results:
-
-- **Full GSM8K (1,319 questions)**: Qwen3.5 70.6% -> 84.4%, Gemma4 77.1% -> 87.8%
-- **Adversarial GSM8K**: +24-28% on number-swapped variants (Apple methodology)
-- **Self-learning Tier 1**: 67.6% -> 97.0% accuracy over 500 questions
-- **Factual coverage**: 96% via Wikidata knowledge base integration
-- **KAN energy tier**: 0.994 AUROC with 8.7x fewer parameters
-- **JEPA predictive verification**: multi-domain predictor
-- **Agentic workflows**: constraint state machine catching 60/60 violations
-- **100% hallucination detection** on live LLM output (Experiment 56, 19/20 accuracy)
-- **HumanEval pass@1: 90% -> 96%** with Ising-guided fuzzing and repair (Experiment 68)
-- **Model-agnostic** — same pipeline works on Qwen3.5, Gemma4, and any other LLM (Experiment 69)
-- **Real-time** — 36,887 verifications/second, sub-millisecond p99 (Experiment 83)
-- **Learned constraints generalize** — CD training at 1000 vars, 89/100 on unseen instances (Experiments 50, 60-63)
+- **Validated live HumanEval (Exp 208):** 16.7% -> 20.0% (+3.3pp)
+- **Full GSM8K (Exp 161, simulated):** Qwen 70.6% -> 84.4%, Gemma 77.1% -> 87.8%
+- **Adversarial GSM8K (Exp 178, simulated):** Qwen +28.2pp, Gemma +24.0pp on number-swapped variants
+- **Self-learning Tier 1 (Exp 134, unverified provenance):** 67.6% -> 97.0%
+- **Factual coverage (Exp 158, unverified provenance):** 96.0% via Wikidata knowledge base integration
+- **Experiment 56 (live small-sample):** 100% wrong-answer detection on a 20-question live study
+- **HumanEval pass@1 90% -> 96% (Experiment 68):** retained as a historical result, but not currently validated as a full live benchmark
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, proved that constraint verification works dramatically better on every metric, scaled it from toy problems to 5000-variable SAT instances, connected it to a live LLM, validated it on published benchmarks (HumanEval, GSM8K), extended it with four energy tiers, self-learning, adversarial robustness, agentic workflow support, and JEPA predictive verification, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,251 tests.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, proved that constraint verification works dramatically better on every metric, scaled it from toy problems to 5000-variable SAT instances, connected it to a live LLM, benchmarked it on published datasets, while the largest GSM8K-style gains remain simulated or otherwise unverified, extended it with four energy tiers, self-learning, adversarial robustness, agentic workflow support, and JEPA predictive verification, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,251 tests.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
@@ -681,7 +690,7 @@ The energy function serves as the objective judge — no human evaluation or LLM
 
 2. **Constraint coverage.** The pipeline can only verify claims for which constraints exist. Semantic claims ("the logic is sound") and factual claims without a knowledge base escape verification. Experiment 73 quantifies this gap.
 
-3. **Simulated fallbacks.** Some benchmark experiments (GSM8K, HumanEval) used simulated LLM outputs when model loading failed. Live results are available for Experiments 56-57 but not all benchmarks have been validated at full scale with live models.
+3. **Simulation vs reality gap.** The Exp 209 provenance audit found 5 validated live_gpu artifacts, 3 explicitly simulated artifacts, and 58 artifacts missing explicit live provenance. Large GSM8K and adversarial improvements remain in the research record, but they are not yet validated as full live benchmarks.
 
 4. **Statistical power.** QA evaluations use 20-200 questions. The reported improvements lack formal significance testing; bootstrap confidence intervals would strengthen claims.
 

@@ -4,7 +4,10 @@
   "status": "success",
   "description": "Created KAN (Kolmogorov-Arnold Networks) energy function implementation as a new tier in the Carnot EBM framework. KAN addresses the constraint learning ceiling where linear Ising features cannot capture nonlinear constraint relationships.",
   "timestamp": "2026-04-10T00:00:00Z",
-  "target_models": ["Qwen3.5-0.8B", "google/gemma-4-E4B-it"],
+  "target_models": [
+    "Qwen3.5-0.8B",
+    "google/gemma-4-E4B-it"
+  ],
   "context": "Exp 103 (KAN energy tier) failed due to rate limits. This is a re-attempt with the KAN implementation completed.",
   "artifacts": {
     "python": {
@@ -12,7 +15,7 @@
       "description": "Python KAN implementation with BSpline, KANEnergyFunction, KANModel",
       "classes": [
         "BSpline",
-        "BSplineParams", 
+        "BSplineParams",
         "KANConfig",
         "KANEnergyFunction",
         "KANModel"
@@ -101,5 +104,13 @@
     "Contrastive divergence training for KANModel",
     "Integration with existing samplers (Langevin, HMC)",
     "E2E tests with target models (Qwen3.5-0.8B, google/gemma-4-E4B-it)"
-  ]
+  ],
+  "result_header": "WARNING: Experiment 108 has no explicit live inference provenance. Keep this artifact for the research record, but treat its metrics as unverified rather than validated live performance.",
+  "result_provenance": {
+    "experiment": 209,
+    "status": "warning",
+    "detected_mode": null,
+    "normalized_mode": "missing",
+    "source": "missing"
+  }
 }

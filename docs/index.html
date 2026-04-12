@@ -287,15 +287,14 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. Adversarial-robust, self-learning,
-      real-time guided decoding. Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. Live and simulated research evidence are labeled separately after the Exp 209 provenance audit. Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">160+</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">186</div><div class="stat-label">Experiments</div></div>
       <div class="stat"><div class="stat-num">4</div><div class="stat-label">Energy Tiers</div></div>
       <div class="stat"><div class="stat-num">0.006ms</div><div class="stat-label">Verify Latency</div></div>
       <div class="stat"><div class="stat-num">2,251</div><div class="stat-label">Tests</div></div>
@@ -338,7 +337,7 @@
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
         <h3 class="bento-title">Verify-Repair Pipeline</h3>
-        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. +15% on adversarial math, +6% on HumanEval. 5 lines of Python.</p>
+        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. The clearest validated live benchmark is Exp 208 on HumanEval: 16.7% -> 20.0% on 30 official problems.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">⚡</div>
@@ -348,7 +347,7 @@
       <div class="bento-card span-2">
         <div class="bento-icon">🛡️</div>
         <h3 class="bento-title">Adversarial Robust</h3>
-        <p class="bento-text">Apple proved LLMs can't do math (accuracy drops 21% with irrelevant sentences). Carnot recovers +15% because Ising verification ignores irrelevant context entirely.</p>
+        <p class="bento-text">The largest adversarial recovery numbers are currently simulated (Exp 178: +28.3pp Qwen, +24.0pp Gemma on number-swapped variants). They remain in the record, but are no longer presented as validated live results.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🤖</div>
@@ -358,7 +357,7 @@
       <div class="bento-card">
         <div class="bento-icon">📈</div>
         <h3 class="bento-title">Self-Learning</h3>
-        <p class="bento-text">Gets smarter with use: 67.6% &rarr; 97.0% over 500 questions. Online constraint generation from memory patterns, persistent across sessions. 96% factual claim coverage via Wikidata.</p>
+        <p class="bento-text">Self-learning (Exp 134) still shows 67.6% &rarr; 97.0%, and factual coverage (Exp 158) still shows 96%, but both artifacts currently lack explicit live inference provenance and are labeled accordingly.</p>
       </div>
     </div>
   </div>
@@ -367,44 +366,38 @@
 <section id="results">
   <div class="container">
     <span class="section-label">Evidence</span>
-    <h2 class="section-title">Measured Performance</h2>
-    
+    <h2 class="section-title">Measured Performance With Provenance</h2>
+    <p class="section-desc">This provenance audit found 5 validated live GPU artifacts, 3 simulated artifacts, and 58 artifacts missing explicit live provenance. The cards below keep the strongest historical numbers while labeling what is and is not validated live evidence.</p>
     <div class="results-grid">
       <div class="r-card">
-        <span class="r-tag">GSM8K Full (1,319 Questions)</span>
-        <h3 class="r-title">Math Reasoning at Scale</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 88%;"></div></div>
-        <div class="r-stats"><span class="r-before">Baseline: 70-77%</span> <span class="r-after">+Repair: 84-88%</span></div>
+        <span class="r-tag">Validated live GPU</span>
+        <h3 class="r-title">Live HumanEval (Exp 208)</h3>
+        <div class="r-stats"><span class="r-before">Baseline: 16.7%</span> <span class="r-after">+Repair: 20.0%</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Adversarial Math (Apple GSM8K)</span>
-        <h3 class="r-title">+24-28% on Number-Swapped</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 76%; background: var(--accent-verify);"></div></div>
-        <div class="r-stats"><span class="r-before">LLM drops to: 46-53%</span> <span class="r-after">+Repair: 74-78%</span></div>
+        <span class="r-tag">Validated live GPU</span>
+        <h3 class="r-title">Live GSM8K reality check (Exp 184)</h3>
+        <div class="r-stats"><span class="r-before">Baseline: 63.0%</span> <span class="r-after">+Repair: 61.0%</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">Self-Learning (Tier 1)</span>
-        <h3 class="r-title">Gets Smarter Over Time</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 97%; background: var(--accent-reason);"></div></div>
+        <span class="r-tag">Simulated benchmark</span>
+        <h3 class="r-title">Full GSM8K (Exp 161)</h3>
+        <div class="r-stats"><span class="r-before">Qwen: 70.6%</span> <span class="r-after">Repair: 84.4%</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Simulated benchmark</span>
+        <h3 class="r-title">Adversarial GSM8K (Exp 178)</h3>
+        <div class="r-stats"><span class="r-before">Qwen: +28.2pp</span> <span class="r-after">Gemma: +24.0pp</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Missing explicit inference provenance</span>
+        <h3 class="r-title">Self-learning (Exp 134)</h3>
         <div class="r-stats"><span class="r-before">Fixed: 67.6%</span> <span class="r-after">Adaptive: 97.0%</span></div>
       </div>
       <div class="r-card">
-        <span class="r-tag">KAN Energy Tier</span>
-        <h3 class="r-title">8.7x Fewer Parameters, Same Accuracy</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 99.4%;"></div></div>
-        <div class="r-stats"><span class="r-before">Ising: 20,100 params</span> <span class="r-after">KAN: 2,310 (0.994 AUROC)</span></div>
-      </div>
-      <div class="r-card">
-        <span class="r-tag">Guided Decoding</span>
-        <h3 class="r-title">Real-Time Constraint Steering</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Latency: 0.006ms</span> <span class="r-after">100% CSR</span></div>
-      </div>
-      <div class="r-card">
-        <span class="r-tag">Agentic Verification</span>
-        <h3 class="r-title">Multi-Step Workflow Constraint Catching</h3>
-        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">Violations: 60</span> <span class="r-after">Caught: 60/60 (100%)</span></div>
+        <span class="r-tag">Missing explicit inference provenance</span>
+        <h3 class="r-title">Factual coverage (Exp 158)</h3>
+        <div class="r-stats"><span class="r-before">Coverage</span> <span class="r-after">96.0%</span></div>
       </div>
     </div>
   </div>
