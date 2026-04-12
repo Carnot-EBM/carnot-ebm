@@ -1,0 +1,81 @@
+{
+  "experiment": "Exp 211",
+  "title": "Constraint IR benchmark for semantic grounding and typed prompt constraints",
+  "run_date": "20260412",
+  "benchmark_path": "data/research/constraint_ir_benchmark_211.jsonl",
+  "summary": {
+    "n_examples": 81,
+    "by_source_family": {
+      "live_gsm8k_semantic_failure": 9,
+      "instruction_following": 36,
+      "code_typed_properties": 36
+    },
+    "by_constraint_type": {
+      "compositional": 72,
+      "semantic_grounding": 27,
+      "literal": 24,
+      "typed_property": 36
+    },
+    "by_verifier_path": {
+      "question_grounding.quantity_graph": 1,
+      "question_grounding.unit_reasoner": 1,
+      "question_grounding.scope_alignment": 2,
+      "question_grounding.count_expansion": 1,
+      "question_grounding.event_timeline": 1,
+      "question_grounding.temporal_schedule": 1,
+      "question_grounding.repeated_event_accumulator": 1,
+      "question_grounding.annotation_review": 1,
+      "prompt_ir.surface_schema": 3,
+      "prompt_ir.surface_json_schema": 3,
+      "prompt_ir.ordered_sections": 3,
+      "prompt_ir.grounded_selection": 9,
+      "prompt_ir.rewrite_constraints": 3,
+      "prompt_ir.grounded_decision_json": 3,
+      "prompt_ir.plan_schema": 3,
+      "prompt_ir.grounded_yaml_extraction": 3,
+      "prompt_ir.negation_scope_grounding": 3,
+      "prompt_ir.answer_plus_uncertainty": 3,
+      "code_ir.typed_contracts_plus_execution": 36
+    },
+    "by_answer_schema_type": {
+      "number": 9,
+      "bullet_list": 3,
+      "json_object": 6,
+      "markdown_sections": 3,
+      "comma_separated_list": 9,
+      "identifier": 3,
+      "paragraph": 3,
+      "numbered_list": 3,
+      "yaml_object": 3,
+      "two_sentences": 3,
+      "python_function": 36
+    },
+    "by_monitorability": {
+      "true": 18,
+      "false": 63
+    },
+    "coverage_checks": {
+      "example_count_in_range": true,
+      "has_live_gsm8k_examples": true,
+      "has_instruction_examples": true,
+      "has_code_examples": true,
+      "has_literal_constraints": true,
+      "has_compositional_constraints": true,
+      "has_semantic_grounding_constraints": true,
+      "has_typed_property_constraints": true,
+      "has_monitorable_examples": true
+    }
+  },
+  "benchmark_preview": [
+    "exp211-live-gsm8k-923",
+    "exp211-live-gsm8k-814",
+    "exp211-live-gsm8k-943",
+    "exp211-live-gsm8k-506",
+    "exp211-live-gsm8k-1019",
+    "exp211-live-gsm8k-515",
+    "exp211-live-gsm8k-1077",
+    "exp211-live-gsm8k-796",
+    "exp211-live-gsm8k-1309",
+    "exp211-instruction-bullets-1"
+  ]
+}

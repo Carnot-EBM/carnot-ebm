@@ -95,6 +95,35 @@ free-form reasoning traces, where:
 - Each extracted claim is returned as a `ConstraintResult` that can flow
   through the existing `VerifyRepairPipeline` / `ComposedEnergy` path
 
+### REQ-VERIFY-011: Constraint IR Benchmark Corpus
+
+The repository shall provide a deterministic workflow that writes
+`data/research/constraint_ir_benchmark_211.jsonl`, where:
+- the benchmark contains between 80 and 120 examples
+- every record includes `prompt`, `gold_atomic_constraints`,
+  `constraint_types`, `expected_verifier_path`, `expected_answer_schema`, and
+  `free_form_reasoning_monitorable`
+- the corpus includes live GSM8K semantic or question-grounding failures drawn
+  from Exp 203 / 206 / 207
+- the corpus includes multi-constraint instruction-following prompts inspired
+  by VIFBench, ConstraintBench, CFBench, FollowBench, or RealInstruct-style
+  task shapes
+- the corpus includes code prompts whose requirements can be represented as
+  typed properties rather than only free-form textual judgments
+- the overall mix spans literal constraints, compositional constraints, and
+  semantic/question-grounding constraints
+
+### REQ-VERIFY-012: Constraint IR Benchmark Summary
+
+The same workflow shall write `results/experiment_211_results.json`, where:
+- the artifact records the fixed Exp 211 run date used for the benchmark
+- the summary reports counts by source family, constraint type, verifier path,
+  answer-schema type, and reasoning-monitorability flag
+- the summary records simple coverage checks confirming the benchmark stays in
+  the 80-120 example range and covers the required benchmark slices
+- re-running the workflow rewrites the JSONL and summary artifacts
+  deterministically without duplicate records
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -191,6 +220,25 @@ than explicit regex-readable equations
 existing `VerifyRepairPipeline`
 **And** the extractor records per-response latency for the auxiliary LLM call
 
+### SCENARIO-VERIFY-011: Exp 211 Benchmark Writes the Curated Corpus
+
+**Given** the Exp 211 benchmark workflow is run
+**When** it materializes the benchmark artifacts
+**Then** `data/research/constraint_ir_benchmark_211.jsonl` is written with
+between 80 and 120 records
+**And** each record contains the required prompt, constraint, verifier-path,
+answer-schema, and monitorability fields
+**And** the corpus includes live GSM8K semantic failures plus instruction and
+code-oriented prompt constraints
+
+### SCENARIO-VERIFY-012: Exp 211 Rerun Is Deterministic
+
+**Given** the Exp 211 benchmark artifacts already exist
+**When** the workflow runs again
+**Then** the JSONL corpus is rewritten in the same example order
+**And** `results/experiment_211_results.json` is refreshed in place
+**And** the summary still reports the same benchmark counts and coverage checks
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -205,4 +253,6 @@ existing `VerifyRepairPipeline`
 | REQ-VERIFY-008 | Not Started | Implemented | 10 Python |
 | REQ-VERIFY-009 | Not Started | Implemented | 29 + paired live benchmark Python |
 | REQ-VERIFY-010 | Not Started | Implemented | 14 + paired live benchmark Python |
+| REQ-VERIFY-011 | Not Started | Implemented | Exp 211 benchmark generator + artifact tests |
+| REQ-VERIFY-012 | Not Started | Implemented | Exp 211 benchmark generator + artifact tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
