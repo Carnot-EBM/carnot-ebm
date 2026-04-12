@@ -173,6 +173,22 @@ The full HumanEval PBT benchmark shall emit a publishable summary payload:
   cohort size, local baseline, verify-repair outcome, improvement delta, repair
   yield, and relation to the published baseline(s)
 
+### REQ-CODE-015: Seeded Qwen PBT Benchmark With Gemma Cohort Comparison
+
+The repository shall provide a deterministic 30-problem HumanEval benchmark
+workflow for `Qwen/Qwen3.5-0.8B` that reuses the checked-in Exp 208 Gemma
+cohort:
+- The workflow loads the exact ordered dataset indices and task ids from
+  `results/experiment_208_results.json` instead of resampling HumanEval
+- Each case runs live GPU baseline generation, official `check()` execution,
+  additive Hypothesis-backed PBT verification, and up to 3 repair attempts
+- The final artifact reports baseline and verify-repair pass@1 for the Qwen run
+  and an explicit comparison against the Exp 208 `Gemma4-E4B-it` artifact on
+  the same 30-problem cohort
+- The comparison records per-metric deltas and an honest methodology note when
+  the historical Gemma artifact used an earlier non-Hypothesis verify-repair
+  path
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -254,6 +270,14 @@ built, then it reports baseline and verify-repair pass@1, the paired bootstrap
 delta confidence interval, published-baseline deltas, and a technical-report
 summary suitable for direct quoting.
 
+### SCENARIO-CODE-013: Seeded Qwen Run Reuses The Gemma Cohort
+
+Given the checked-in Exp 208 Gemma artifact and a live Qwen run on the same
+ordered 30-case cohort, when the Exp 227 artifact summary is built, then it
+reports the reused cohort ids, Qwen baseline and verify-repair outcomes, the
+Gemma baseline and verify-repair reference numbers, the Qwen-minus-Gemma
+deltas, and the methodology note for the comparison.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -272,3 +296,4 @@ summary suitable for direct quoting.
 | REQ-CODE-012 | Implemented |
 | REQ-CODE-013 | Implemented |
 | REQ-CODE-014 | Implemented |
+| REQ-CODE-015 | Implemented |
