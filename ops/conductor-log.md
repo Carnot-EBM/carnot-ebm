@@ -1324,3 +1324,4 @@
 | 2026-04-12 08:03 UTC | Exp 209: Clean up simulation artifacts and update  | OK | Deliverable already exists in repo |
 | 2026-04-12 08:03 UTC | Milestone 2026.04.15 activated | OK | 13 tasks queued |
 | 2026-04-12 08:33 UTC | Exp 211: Instruction-to-constraint IR benchmark fo | OK | =========== 1889 passed, 1 skipped, 22 warnings in 94.86s (0:01:34) ============ |
+| 2026-04-12 09:25 UTC | Exp 213: Chain-of-thought monitorability audit and | OK | =========== 1898 passed, 1 skipped, 22 warnings in 96.61s (0:01:36) ============ |

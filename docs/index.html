@@ -287,17 +287,17 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. Live and simulated research evidence are labeled separately after the Exp 209 provenance audit. Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. 213+ experiments across 15 milestones with honest provenance: live results labeled separately from simulated. Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">187</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Energy Tiers</div></div>
+      <div class="stat"><div class="stat-num">213+</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">15</div><div class="stat-label">Milestones</div></div>
       <div class="stat"><div class="stat-num">0.006ms</div><div class="stat-label">Verify Latency</div></div>
-      <div class="stat"><div class="stat-num">2,148</div><div class="stat-label">Tests</div></div>
+      <div class="stat"><div class="stat-num">1,889</div><div class="stat-label">Tests (100%)</div></div>
     </div>
   </div>
 </section>
@@ -337,7 +337,7 @@
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
         <h3 class="bento-title">Verify-Repair Pipeline</h3>
-        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. Recent live evidence includes Exp 207 cutting extractor false positives to 1/91 vs Z3's 3/91 and Exp 208 improving HumanEval from 16.7% to 20.0%.</p>
+        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. Three extractors available: regex (fast), Z3 SMT (formal, zero false positives), LLM-as-extractor (best precision, 1/91 FP). Live HumanEval: 16.7% &rarr; 20.0% (+3.3pp).</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">⚡</div>
@@ -347,7 +347,7 @@
       <div class="bento-card span-2">
         <div class="bento-icon">🛡️</div>
         <h3 class="bento-title">Adversarial Robust</h3>
-        <p class="bento-text">The largest adversarial recovery numbers are currently simulated (Exp 178: +28.2pp Qwen, +24.0pp Gemma on number-swapped variants). They remain in the record, but are no longer presented as validated live results.</p>
+        <p class="bento-text">Adversarial recovery (Exp 178: +28.2pp Qwen, +24.0pp Gemma on number-swapped) was simulated, not live. Code verification via execution is the strongest live result. Arithmetic verification doesn't catch IT model errors (semantic, not arithmetic).</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🤖</div>
@@ -357,7 +357,7 @@
       <div class="bento-card">
         <div class="bento-icon">📈</div>
         <h3 class="bento-title">Self-Learning</h3>
-        <p class="bento-text">Self-learning (Exp 134) still shows 67.6% &rarr; 97.0%, and factual coverage (Exp 158) still shows 96%, but both artifacts currently lack explicit live inference provenance and are labeled accordingly.</p>
+        <p class="bento-text">Self-learning (Exp 134: 67.6% &rarr; 97.0%) and factual coverage (Exp 158: 96%) lack live provenance. Current milestone (2026.04.15) is building semantic grounding &mdash; typed constraints and CoT verification to catch the errors arithmetic can't.</p>
       </div>
     </div>
   </div>
@@ -367,7 +367,7 @@
   <div class="container">
     <span class="section-label">Evidence</span>
     <h2 class="section-title">Measured Performance With Provenance</h2>
-    <p class="section-desc">This provenance audit found 5 validated live GPU artifacts, 3 simulated artifacts, and 58 artifacts missing explicit live provenance. The cards below keep the strongest historical numbers while labeling what is and is not validated live evidence.</p>
+    <p class="section-desc">Exp 209 audited 66 result artifacts: 5 validated live, 3 simulated, 58 unverified. Key discovery: IT models make semantic errors (wrong problem setup), not arithmetic errors. Code verification works; arithmetic verification needs semantic grounding.</p>
     <div class="results-grid">
       <div class="r-card">
         <span class="r-tag">Validated live GPU</span>
@@ -405,7 +405,7 @@
         <div class="r-stats"><span class="r-before">Coverage</span> <span class="r-after">96.0%</span></div>
       </div>
     </div>
-    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Latest research scan (Exp 210): 10 core papers, 8 benchmark assets, and 5 chain-of-thought monitorability-risk papers. Current recommended follow-on order: <code>EXP-211 -&gt; EXP-213 -&gt; EXP-212</code>.</p>
+    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;"><strong>Extractor comparison (Exp 206-207, 100 live GSM8K):</strong> Regex: 5/91 FP, Z3: 3/91 FP, LLM: 1/91 FP. None detected 9/9 wrong answers (semantic errors). <strong>Current milestone (2026.04.15):</strong> "Semantic Grounding" &mdash; typed constraints, CoT verification, property-based code checking, and self-learning from live traces. Informed by 10 papers from Exp 210 research scan.</p>
   </div>
 </section>
 
