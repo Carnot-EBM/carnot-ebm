@@ -50,6 +50,44 @@ tasks:
       6. Run: .venv/bin/pytest tests/python -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+  # ── Phase 69: Infrastructure Acceleration ──
+  - id: exp224a-warm-model-server
+    milestone: "2026.04.16"
+    deliverable: python/carnot/inference/model_server.py
+    title: "Exp 224a: Warm model server — persistent GPU models with batched inference"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Every experiment cold-loads models (~3s each, 400 times in
+      Exp 219). We also process 1 question at a time when GPUs can batch
+      8-16 questions per forward pass for 4-8x throughput.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/model_loader.py — current model loading
+      - python/carnot/pipeline/dual_model_harness.py — Exp 218 harness
+
+      TASK: Create python/carnot/inference/model_server.py
+
+      CONCRETE STEPS:
+      1. Create ModelServer that:
+         a. Loads models once and keeps them warm on GPU
+         b. Accepts inference requests via a queue (multiprocessing or threading)
+         c. Batches multiple questions into a single forward pass
+         d. Returns results per-question from the batched output
+         e. Configurable batch size (default 8, max 16)
+         f. Graceful shutdown: releases GPU memory on exit
+         g. Health check: reports loaded models, GPU memory, batch stats
+      2. Create a context manager API:
+         with ModelServer(["Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it"]) as server:
+             results = server.generate_batch(questions, model="Qwen/Qwen3.5-0.8B")
+      3. Update model_loader.py to optionally connect to a running ModelServer
+         instead of loading a fresh model each time
+      4. Benchmark: cold-load vs warm-server on 50 questions (measure speedup)
+      5. Write tests (mock GPU for CI)
+      6. Run: .venv/bin/pytest tests/python -q
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
   - id: exp224b-dual-gpu-parallel
     milestone: "2026.04.16"
     deliverable: python/carnot/inference/dual_gpu.py
