@@ -1300,3 +1300,4 @@
 | 2026-04-11 22:56 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
 | 2026-04-11 23:21 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
 | 2026-04-11 23:40 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
+| 2026-04-12 00:06 UTC | Exp 184: 3B model verification — does verify-repai | FAIL | Claude Code error:  |
