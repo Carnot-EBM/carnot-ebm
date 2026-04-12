@@ -1074,7 +1074,11 @@ def _dogfood_verify_generated_code() -> None:
        break .format(). This was our #1 recurring bug.
     2. CodeExtractor — static constraint extraction (types, bounds, returns)
        on new .py files. Catches issues pytest might miss.
-    3. Constraint tracker update — record what we find for future learning.
+    3. Z3ArithmeticExtractor — formal verification of any arithmetic claims
+       in generated code comments/docstrings (zero false positives).
+    4. LLMConstraintExtractor — LLM-based extraction for natural language
+       claims in docstrings and comments (best precision, 1/91 FP).
+    5. Constraint tracker update — record what we find for future learning.
     """
     try:
         # 1. Validate YAML prompt braces in roadmap files
@@ -1148,7 +1152,73 @@ def _dogfood_verify_generated_code() -> None:
             except Exception as e:
                 logger.debug("DOGFOOD: CodeExtractor check failed: %s", e)
 
-        # 3. Persist learned patterns to disk
+        # 3. Run Z3ArithmeticExtractor on new Python files
+        z3_violations = 0
+        if py_files:
+            try:
+                from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
+                z3_ext = Z3ArithmeticExtractor()
+                for py_file in py_files[:5]:
+                    path = PROJECT_ROOT / py_file
+                    if not path.exists():
+                        continue
+                    code = path.read_text()
+                    z3_results = z3_ext.extract(code)
+                    z3_bad = [r for r in z3_results
+                              if r.metadata.get("satisfied") is False]
+                    if z3_bad:
+                        z3_violations += len(z3_bad)
+                        logger.info(
+                            "DOGFOOD: Z3 found %d violations in %s",
+                            len(z3_bad), py_file,
+                        )
+                        for v in z3_bad[:3]:
+                            logger.info("  - Z3: %s", v.description[:100])
+            except ImportError:
+                logger.debug("DOGFOOD: Z3ArithmeticExtractor not available")
+            except Exception as e:
+                logger.debug("DOGFOOD: Z3 check failed: %s", e)
+
+        # 4. Run LLMConstraintExtractor on new Python files (docstrings only)
+        llm_violations = 0
+        if py_files:
+            try:
+                from carnot.pipeline.llm_extractor import LLMConstraintExtractor
+                llm_ext = LLMConstraintExtractor()
+                for py_file in py_files[:3]:  # Limit to 3 (LLM calls are slower)
+                    path = PROJECT_ROOT / py_file
+                    if not path.exists():
+                        continue
+                    code = path.read_text()
+                    # Extract docstrings only to avoid false positives on code
+                    import ast
+                    try:
+                        tree = ast.parse(code)
+                        docstrings = []
+                        for node in ast.walk(tree):
+                            if isinstance(node, (ast.FunctionDef, ast.ClassDef, ast.Module)):
+                                ds = ast.get_docstring(node)
+                                if ds:
+                                    docstrings.append(ds)
+                        if docstrings:
+                            combined = "\n".join(docstrings)
+                            llm_results = llm_ext.extract(combined)
+                            llm_bad = [r for r in llm_results
+                                       if r.metadata.get("satisfied") is False]
+                            if llm_bad:
+                                llm_violations += len(llm_bad)
+                                logger.info(
+                                    "DOGFOOD: LLM extractor found %d violations in %s",
+                                    len(llm_bad), py_file,
+                                )
+                    except SyntaxError:
+                        pass  # Skip files that don't parse
+            except ImportError:
+                logger.debug("DOGFOOD: LLMConstraintExtractor not available")
+            except Exception as e:
+                logger.debug("DOGFOOD: LLM extractor check failed: %s", e)
+
+        # 5. Persist learned patterns to disk
         memory = _load_dogfood_memory()
         memory["experiments_checked"] = memory.get("experiments_checked", 0) + 1
 
@@ -1160,18 +1230,22 @@ def _dogfood_verify_generated_code() -> None:
             brace_tasks.append(yaml_file if 'yaml_file' in dir() else "unknown")
             memory["brace_fix_tasks"] = brace_tasks[-50:]  # Keep last 50
 
-        # Record code violations
-        if py_files:
-            memory["code_violations"] = memory.get("code_violations", 0) + len(
-                [c for c in (constraints if 'constraints' in dir() else [])
-                 if c.metadata.get("satisfied") is False]
-            )
+        # Record code violations (all extractors combined)
+        code_v = len(
+            [c for c in (constraints if 'constraints' in dir() else [])
+             if c.metadata.get("satisfied") is False]
+        ) if py_files else 0
+        total_violations = code_v + z3_violations + llm_violations
+        memory["code_violations"] = memory.get("code_violations", 0) + total_violations
+        memory["z3_violations"] = memory.get("z3_violations", 0) + z3_violations
+        memory["llm_violations"] = memory.get("llm_violations", 0) + llm_violations
 
         _save_dogfood_memory(memory)
         logger.info(
-            "DOGFOOD: Verification complete (total: %d checks, %d brace fixes, %d violations)",
+            "DOGFOOD: Verification complete (total: %d checks, %d brace fixes, "
+            "%d code/%d z3/%d llm violations)",
             memory["experiments_checked"], memory.get("brace_fixes", 0),
-            memory.get("code_violations", 0),
+            code_v, z3_violations, llm_violations,
         )
 
     except Exception as e:
