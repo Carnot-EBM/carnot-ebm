@@ -1337,3 +1337,6 @@
 | 2026-04-12 16:40 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
 | 2026-04-12 17:13 UTC | Exp 222: Live trace to memory / repair-snippet bui | OK | =========== 2000 passed, 1 skipped, 22 warnings in 77.50s (0:01:17) ============ |
 | 2026-04-12 17:14 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
+| 2026-04-12 17:49 UTC | Exp 223: Chronological replay benchmark for contin | OK | =========== 2006 passed, 1 skipped, 22 warnings in 77.16s (0:01:17) ============ |
+| 2026-04-12 17:50 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
+| 2026-04-12 17:50 UTC | Milestone 2026.04.16 activated | OK | 11 tasks queued |
