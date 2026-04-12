@@ -13,5 +13,6 @@ them.
 - [x] Add `REQ-VERIFY-010` and `SCENARIO-VERIFY-010` to the verifiable-reasoning spec
 - [x] Write tests for LLM-assisted arithmetic extraction, including Exp 203 regression coverage
 - [x] Implement `python/carnot/pipeline/llm_extractor.py`
+- [x] Benchmark the LLM extractor head-to-head against the shared live Exp 206 Z3 cohort and publish the paired Exp 207 artifact
 - [x] Run unit tests, full Python test suite, spec coverage, and the applicable E2E/integration checks
 - [x] Reconcile `_bmad/traceability.md`, `ops/status.md`, and `ops/changelog.md`

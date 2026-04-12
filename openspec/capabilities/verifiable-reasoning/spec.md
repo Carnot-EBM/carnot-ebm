@@ -203,6 +203,6 @@ existing `VerifyRepairPipeline`
 | REQ-VERIFY-006 | Not Started | Not Started | Not Started |
 | REQ-VERIFY-007 | Implemented | Implemented | 1 Rust + 2 Python |
 | REQ-VERIFY-008 | Not Started | Implemented | 10 Python |
-| REQ-VERIFY-009 | Not Started | Implemented | 29 Python |
-| REQ-VERIFY-010 | Not Started | Implemented | 14 Python |
+| REQ-VERIFY-009 | Not Started | Implemented | 29 + paired live benchmark Python |
+| REQ-VERIFY-010 | Not Started | Implemented | 14 + paired live benchmark Python |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

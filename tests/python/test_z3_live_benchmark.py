@@ -1,9 +1,9 @@
-"""Tests for the Exp 206 Z3 live benchmark helpers.
+"""Tests for the Exp 206/207 live benchmark helpers.
 
 Each test references REQ-VERIFY-* or SCENARIO-VERIFY-* per spec-anchored
 development requirements.
 
-Spec: REQ-VERIFY-009, SCENARIO-VERIFY-009
+Spec: REQ-VERIFY-009, REQ-VERIFY-010, SCENARIO-VERIFY-009, SCENARIO-VERIFY-010
 """
 
 from __future__ import annotations
@@ -11,8 +11,10 @@ from __future__ import annotations
 from carnot.pipeline.extract import ConstraintResult
 from carnot.pipeline.verify_repair import VerificationResult
 from carnot.pipeline.z3_live_benchmark import (
+    build_comparison_payload,
     build_results_payload,
     compare_extractors,
+    compare_named_extractors,
     run_repair_loop,
     run_verify_only,
     sample_questions,
@@ -253,6 +255,126 @@ def test_compare_extractors_requires_non_regression_and_one_strict_win() -> None
     assert comparison["strictly_better"] is True
 
 
+def test_compare_named_extractors_reports_metric_winners_for_exp207() -> None:
+    """SCENARIO-VERIFY-010: Exp 207 can compare LLM extraction directly against Z3."""
+    llm_summary = {
+        "verify_only": {
+            "n_wrong_detected": 4,
+            "n_violations_on_wrong_answers": 6,
+            "false_positive_rate": 0.01,
+        },
+        "verify_repair": {
+            "improvement_delta": 0.12,
+        },
+    }
+    z3_summary = {
+        "verify_only": {
+            "n_wrong_detected": 2,
+            "n_violations_on_wrong_answers": 3,
+            "false_positive_rate": 0.03,
+        },
+        "verify_repair": {
+            "improvement_delta": 0.05,
+        },
+    }
+
+    comparison = compare_named_extractors(
+        llm_summary,
+        z3_summary,
+        primary_label="llm",
+        secondary_label="z3",
+    )
+
+    assert comparison["llm_found_at_least_as_many_wrong_answers"] is True
+    assert comparison["llm_lower_or_equal_false_positive_rate"] is True
+    assert comparison["llm_higher_or_equal_repair_delta"] is True
+    assert comparison["llm_strictly_better"] is True
+    assert comparison["llm_minus_z3"]["wrong_answers_detected"] == 2
+    assert comparison["llm_minus_z3"]["violations_on_wrong_answers"] == 3
+    assert comparison["llm_minus_z3"]["false_positive_rate"] == -0.02
+    assert comparison["llm_minus_z3"]["repair_delta"] == 0.07
+    assert comparison["winner_by_metric"] == {
+        "wrong_answers_detected": "llm",
+        "violations_on_wrong_answers": "llm",
+        "false_positive_rate": "llm",
+        "repair_delta": "llm",
+    }
+
+
+def test_compare_named_extractors_reports_ties_without_strict_win() -> None:
+    """REQ-VERIFY-010: Generic comparison does not overstate tied extractor results."""
+    summary = {
+        "verify_only": {
+            "n_wrong_detected": 1,
+            "n_violations_on_wrong_answers": 1,
+            "false_positive_rate": 0.0,
+        },
+        "verify_repair": {
+            "improvement_delta": 0.0,
+        },
+    }
+
+    comparison = compare_named_extractors(
+        summary,
+        summary,
+        primary_label="llm",
+        secondary_label="z3",
+    )
+
+    assert comparison["llm_found_at_least_as_many_wrong_answers"] is True
+    assert comparison["llm_lower_or_equal_false_positive_rate"] is True
+    assert comparison["llm_higher_or_equal_repair_delta"] is True
+    assert comparison["llm_strictly_better"] is False
+    assert comparison["winner_by_metric"] == {
+        "wrong_answers_detected": "tie",
+        "violations_on_wrong_answers": "tie",
+        "false_positive_rate": "tie",
+        "repair_delta": "tie",
+    }
+
+
+def test_compare_named_extractors_reports_when_secondary_wins_metrics() -> None:
+    """REQ-VERIFY-010: Generic comparison can attribute wins to the secondary extractor."""
+    llm_summary = {
+        "verify_only": {
+            "n_wrong_detected": 1,
+            "n_violations_on_wrong_answers": 1,
+            "false_positive_rate": 0.04,
+        },
+        "verify_repair": {
+            "improvement_delta": -0.01,
+        },
+    }
+    z3_summary = {
+        "verify_only": {
+            "n_wrong_detected": 2,
+            "n_violations_on_wrong_answers": 3,
+            "false_positive_rate": 0.01,
+        },
+        "verify_repair": {
+            "improvement_delta": 0.02,
+        },
+    }
+
+    comparison = compare_named_extractors(
+        llm_summary,
+        z3_summary,
+        primary_label="llm",
+        secondary_label="z3",
+    )
+
+    assert comparison["llm_found_at_least_as_many_wrong_answers"] is False
+    assert comparison["llm_lower_or_equal_false_positive_rate"] is False
+    assert comparison["llm_higher_or_equal_repair_delta"] is False
+    assert comparison["llm_strictly_better"] is False
+    assert comparison["winner_by_metric"] == {
+        "wrong_answers_detected": "z3",
+        "violations_on_wrong_answers": "z3",
+        "false_positive_rate": "z3",
+        "repair_delta": "z3",
+    }
+
+
 def test_build_results_payload_records_live_gpu_metadata_and_comparison() -> None:
     """REQ-VERIFY-009: Final artifact retains the benchmark metadata and verdict."""
     payload = build_results_payload(
@@ -277,6 +399,44 @@ def test_build_results_payload_records_live_gpu_metadata_and_comparison() -> Non
     assert payload["metadata"]["sample_seed"] == 5
     assert payload["statistics"]["z3"]["verify_repair"]["improvement_delta"] == 0.05
     assert payload["comparison"]["strictly_better"] is True
+    assert payload["results"][0]["dataset_idx"] == 1
+
+
+def test_build_comparison_payload_supports_exp207_metadata() -> None:
+    """REQ-VERIFY-010: Generic payload builder preserves shared-baseline metadata."""
+    payload = build_comparison_payload(
+        experiment=207,
+        title="LLM extractor on 100 live GSM8K (Gemma4-E4B-it) — head-to-head vs Z3",
+        timestamp="2026-04-12T05:00:00Z",
+        sample_seed=5,
+        sample_size=100,
+        sample_dataset_indices=[1, 2, 3],
+        max_new_tokens=768,
+        max_repairs=3,
+        runtime_seconds=45.6,
+        model_name="Gemma4-E4B-it",
+        hf_id="google/gemma-4-E4B-it",
+        inference_mode="live_gpu",
+        statistics={
+            "llm": {"verify_repair": {"improvement_delta": 0.04}},
+            "z3": {"verify_repair": {"improvement_delta": 0.0}},
+        },
+        comparison={"llm_strictly_better": True},
+        cases=[{"dataset_idx": 1}],
+        extra_metadata={
+            "baseline_source_experiment": 206,
+            "shared_baseline_responses": True,
+            "extractor_max_new_tokens": 256,
+        },
+    )
+
+    assert payload["experiment"] == 207
+    assert payload["metadata"]["inference_mode"] == "live_gpu"
+    assert payload["metadata"]["baseline_source_experiment"] == 206
+    assert payload["metadata"]["shared_baseline_responses"] is True
+    assert payload["metadata"]["extractor_max_new_tokens"] == 256
+    assert payload["statistics"]["llm"]["verify_repair"]["improvement_delta"] == 0.04
+    assert payload["comparison"]["llm_strictly_better"] is True
     assert payload["results"][0]["dataset_idx"] == 1
 
 
