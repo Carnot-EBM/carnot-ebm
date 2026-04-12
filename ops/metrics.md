@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 212 Typed Reasoning IR
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T09:29:29Z | 2026-04-12T09:52:30Z | Exp 212: extended `verifiable-reasoning` with `VERIFY-015` through `VERIFY-017`, wrote `test_typed_reasoning.py` first, implemented `python/carnot/pipeline/typed_reasoning.py`, wired the additive `VerifyRepairPipeline` hook, reconciled traceability/status/changelog, and reran the required validation commands including the full Python suite, targeted 100% module coverage, spec coverage, Ruff checks, reconciliation, and the explicit E2E checks from `ops/e2e-test-plan.md` | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 213 Monitorability Audit
 
 ### Turn Log

@@ -43,11 +43,10 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-004
 from __future__ import annotations
 
 import logging
-import signal
-import threading
+import os
 import time
 from dataclasses import dataclass, field
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from carnot.pipeline.errors import (
     CarnotError,
@@ -58,8 +57,12 @@ from carnot.pipeline.errors import (
     VerificationError,
 )
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
-from carnot.pipeline.memory import ConstraintMemory
-from carnot.pipeline.tracker import ConstraintTracker
+from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typed_reasoning_ir
+
+if TYPE_CHECKING:
+    from carnot.pipeline.memory import ConstraintMemory
+    from carnot.pipeline.tracker import ConstraintTracker
+    from carnot.pipeline.typed_reasoning import TypedReasoningIR
 
 logger = logging.getLogger(__name__)
 
@@ -69,9 +72,7 @@ logger = logging.getLogger(__name__)
 
 # Check for CARNOT_USE_RUST env var (1 = force Rust, 0 = force Python).
 # If unset, auto-detect: use Rust when available.
-import os as _os
-
-_FORCE_RUST = _os.environ.get("CARNOT_USE_RUST")
+_FORCE_RUST = os.environ.get("CARNOT_USE_RUST")
 
 try:
     from carnot._rust_compat import RUST_AVAILABLE, RustVerifyPipeline
@@ -84,8 +85,7 @@ if _FORCE_RUST == "1":
     _USE_RUST_PIPELINE = RUST_AVAILABLE
     if not RUST_AVAILABLE:
         logger.warning(
-            "CARNOT_USE_RUST=1 but Rust bindings not installed. "
-            "Falling back to Python pipeline."
+            "CARNOT_USE_RUST=1 but Rust bindings not installed. Falling back to Python pipeline."
         )
 elif _FORCE_RUST == "0":
     _USE_RUST_PIPELINE = False
@@ -147,6 +147,8 @@ class VerificationResult:
     """Verification mode: "FULL" for normal pipeline, "FAST_PATH" for JEPA early-exit."""
     skipped: bool = False
     """True when Tier 3 JEPA predictor gated this check as low-risk (fast path taken)."""
+    typed_reasoning: TypedReasoningIR | None = None
+    """Optional typed reasoning IR extracted from the prompt/response pair."""
 
 
 @dataclass
@@ -334,9 +336,7 @@ class VerifyRepairPipeline:
             self._device = "cuda" if torch.cuda.is_available() else "cpu"
             logger.info("Loading model %s on %s...", model_name, self._device)
 
-            self._tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=True
-            )
+            self._tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
             self._model = AutoModelForCausalLM.from_pretrained(
                 model_name,
                 trust_remote_code=True,
@@ -372,9 +372,7 @@ class VerifyRepairPipeline:
             RuntimeError: If no model is loaded.
         """
         if self._model is None or self._tokenizer is None:
-            raise RuntimeError(
-                "No model loaded. Initialize with model='...' to enable generation."
-            )
+            raise RuntimeError("No model loaded. Initialize with model='...' to enable generation.")
 
         import torch
 
@@ -419,9 +417,7 @@ class VerifyRepairPipeline:
 
         return response
 
-    def extract_constraints(
-        self, text: str, domain: str | None = None
-    ) -> list[ConstraintResult]:
+    def extract_constraints(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         """Extract constraints from text without verification.
 
         **Detailed explanation for engineers:**
@@ -477,6 +473,14 @@ class VerifyRepairPipeline:
 
         # No domain filter: let extractor auto-detect.
         return self._extractor.extract(text)
+
+    def extract_typed_reasoning(self, question: str, response: str) -> TypedReasoningIR | None:
+        """Extract typed reasoning IR without affecting verification behavior."""
+        try:
+            return build_typed_reasoning_ir(question=question, response=response)
+        except Exception as exc:
+            logger.warning("Typed reasoning extraction degraded: %s", exc)
+            return None
 
     def verify(
         self,
@@ -540,6 +544,8 @@ class VerifyRepairPipeline:
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
               REQ-JEPA-002
         """
+        typed_reasoning = self.extract_typed_reasoning(question, response)
+
         # Tier 3 JEPA fast-path gate (optional).
         # If a JEPA predictor is supplied, embed the first 50 whitespace-split
         # tokens of the response and ask the predictor whether any constraint
@@ -549,6 +555,7 @@ class VerifyRepairPipeline:
         if jepa_predictor is not None:
             first_50_tokens = " ".join(response.split()[:50])
             from carnot.embeddings.fast_embedding import RandomProjectionEmbedding
+
             _embedder = RandomProjectionEmbedding(embed_dim=256, seed=42)
             partial_embedding = _embedder.encode(first_50_tokens)
             probs = jepa_predictor.predict(partial_embedding)
@@ -567,6 +574,7 @@ class VerifyRepairPipeline:
                     },
                     mode="FAST_PATH",
                     skipped=True,
+                    typed_reasoning=typed_reasoning,
                 )
         # Fast path: delegate to Rust pipeline when available.
         # Repair still uses Python (requires LLM), but the hot verification
@@ -583,11 +591,13 @@ class VerifyRepairPipeline:
             # (auto-detect all), Python may have more extractors.
             if effective_domains and effective_domains <= _rust_supported:
                 try:
-                    return self._verify_rust(question, response)
-                except Exception as exc:
-                    logger.warning(
-                        "Rust verify failed, falling back to Python: %s", exc
+                    return self._verify_rust(
+                        question,
+                        response,
+                        typed_reasoning=typed_reasoning,
                     )
+                except Exception as exc:
+                    logger.warning("Rust verify failed, falling back to Python: %s", exc)
                     # Fall through to Python path.
 
         deadline = self._make_deadline()
@@ -598,8 +608,7 @@ class VerifyRepairPipeline:
             # Tier 2: prepend learned constraint suggestions from memory.
             if self._memory is not None:
                 effective_domain = domain or (
-                    self._domains[0] if self._domains and len(self._domains) == 1
-                    else "auto"
+                    self._domains[0] if self._domains and len(self._domains) == 1 else "auto"
                 )
                 learned = self._memory.suggest_constraints(response, effective_domain)
                 if learned:
@@ -617,7 +626,10 @@ class VerifyRepairPipeline:
                 energy=0.0,
                 violations=[],
                 certificate={"error": str(exc), "error_type": type(exc).__name__},
+                typed_reasoning=typed_reasoning,
             )
+
+        result.typed_reasoning = typed_reasoning
 
         if tracker is not None:
             self._update_tracker(tracker, result)
@@ -625,8 +637,7 @@ class VerifyRepairPipeline:
         # Tier 2: record violation patterns into memory after verification.
         if self._memory is not None and result.violations:
             effective_domain = domain or (
-                self._domains[0] if self._domains and len(self._domains) == 1
-                else "auto"
+                self._domains[0] if self._domains and len(self._domains) == 1 else "auto"
             )
             for violation in result.violations:
                 self._memory.record_pattern(
@@ -747,9 +758,7 @@ class VerifyRepairPipeline:
             except (CarnotError, PipelineTimeoutError):
                 raise
             except Exception as exc:
-                logger.warning(
-                    "Repair iteration %d failed: %s", i + 1, exc
-                )
+                logger.warning("Repair iteration %d failed: %s", i + 1, exc)
                 # Return best response so far rather than crashing.
                 return RepairResult(
                     initial_response=initial_response,
@@ -790,7 +799,10 @@ class VerifyRepairPipeline:
     # -------------------------------------------------------------------
 
     def _verify_rust(
-        self, question: str, response: str
+        self,
+        question: str,
+        response: str,
+        typed_reasoning: TypedReasoningIR | None = None,
     ) -> VerificationResult:
         """Verify using the Rust pipeline for 10x performance.
 
@@ -818,7 +830,7 @@ class VerifyRepairPipeline:
             for c in rust_result.constraints
         ]
         # Set the satisfied metadata from the Rust verified field.
-        for c, rc in zip(constraints, rust_result.constraints):
+        for c, rc in zip(constraints, rust_result.constraints, strict=True):
             if rc["verified"] is not None:
                 c.metadata["satisfied"] = rc["verified"]
 
@@ -830,7 +842,7 @@ class VerifyRepairPipeline:
             )
             for v in rust_result.violations
         ]
-        for v, rv in zip(violations, rust_result.violations):
+        for v, rv in zip(violations, rust_result.violations, strict=True):
             if rv["verified"] is not None:
                 v.metadata["satisfied"] = rv["verified"]
 
@@ -845,11 +857,10 @@ class VerifyRepairPipeline:
                 "n_violations": len(violations),
                 "backend": "rust",
             },
+            typed_reasoning=typed_reasoning,
         )
 
-    def _evaluate_constraints(
-        self, constraints: list[ConstraintResult]
-    ) -> VerificationResult:
+    def _evaluate_constraints(self, constraints: list[ConstraintResult]) -> VerificationResult:
         """Evaluate a list of extracted constraints and build a VerificationResult.
 
         **Detailed explanation for engineers:**
@@ -1025,9 +1036,7 @@ class VerifyRepairPipeline:
         return "\n".join(lines)
 
     @staticmethod
-    def _update_tracker(
-        tracker: ConstraintTracker, result: VerificationResult
-    ) -> None:
+    def _update_tracker(tracker: ConstraintTracker, result: VerificationResult) -> None:
         """Record per-constraint-type statistics in the tracker after verify().
 
         **Detailed explanation for engineers:**

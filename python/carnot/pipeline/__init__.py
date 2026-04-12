@@ -37,6 +37,16 @@ from carnot.pipeline.mining import (
     FailureReport,
     FalseNegative,
 )
+from carnot.pipeline.typed_reasoning import (
+    AtomicClaim,
+    ExtractionProvenance,
+    FinalAnswer,
+    ReasoningStep,
+    TypedReasoningExtractor,
+    TypedReasoningIR,
+    UserConstraint,
+    extract_typed_reasoning,
+)
 from carnot.pipeline.verify_repair import (
     RepairResult,
     VerificationResult,
@@ -47,6 +57,7 @@ from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
 __all__ = [
     "AgentStep",
     "ArithmeticExtractor",
+    "AtomicClaim",
     "AutoExtractor",
     "CarnotError",
     "ConstraintMemory",
@@ -55,10 +66,12 @@ __all__ = [
     "ConstraintExtractor",
     "ConstraintResult",
     "ExtractionError",
+    "ExtractionProvenance",
     "FactStatus",
     "FailureAnalyzer",
     "FailureReport",
     "FalseNegative",
+    "FinalAnswer",
     "LogicExtractor",
     "LLMConstraintExtractor",
     "ModelLoadError",
@@ -67,10 +80,15 @@ __all__ = [
     "PipelineTimeoutError",
     "RepairError",
     "RepairResult",
+    "ReasoningStep",
     "TrackedFact",
+    "TypedReasoningExtractor",
+    "TypedReasoningIR",
+    "UserConstraint",
     "VerificationError",
     "VerificationResult",
     "VerifyRepairPipeline",
     "Z3ArithmeticExtractor",
+    "extract_typed_reasoning",
     "propagate",
 ]
