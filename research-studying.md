@@ -191,6 +191,61 @@ loop) executes the current experiments.
 | 12 | Differentiable constraint compilation | 90 | Long-term |
 | 14 | KAN computing-in-memory | **60** | NEW — validates path |
 
+### Kona 1.0 Architecture Details (STRATEGIC INTELLIGENCE)
+- **Source:** [logicalintelligence.com](https://logicalintelligence.com/kona-ebms-energy-based-models),
+  [BusinessWire Jan 2026](https://www.businesswire.com/news/home/20260120751310)
+- **What:** Kona 1.0 is now in pilot programs. Key architectural details:
+  - **Non-autoregressive at trace level** — generates complete reasoning traces
+    simultaneously (not token-by-token)
+  - **Continuous latent space** — outputs dense vector tokens, not discrete
+  - **Self-correcting** — learns by recognizing and correcting own mistakes
+  - **96.2% Sudoku** in 313ms (vs LLMs at 2%)
+  - Yann LeCun added to leadership (validates EBM direction)
+  - Pilot sectors: energy, manufacturing, semiconductors
+- **Relevance:** This is our North Star competitor. Key differences from Carnot:
+  - Kona generates reasoning; Carnot verifies LLM reasoning
+  - Kona is non-autoregressive; Carnot works with autoregressive LLMs
+  - Kona operates in continuous latent space; we're bridging to it (Exp 64-66)
+  - The self-correcting aspect is what our verify-repair loop does externally
+- **Implications for our precision ceiling:** Kona's continuous latent space
+  may not have the FP problem because it doesn't use discrete constraint
+  matching. Our Z3 SMT approach (NSVIF) is the bridge.
+- **Score:** Strategic intelligence, not directly actionable. Monitor.
+
+### Extropic Z1 Timeline Update
+- **Source:** [extropic.ai/hardware](https://extropic.ai/hardware)
+- **What:** Z1 chip (hundreds of thousands of p-bits per chip, millions per
+  card) scheduled for early access 2026. XTR-0 testing platform was Q3 2025.
+  Mass-manufacturable using standard CMOS.
+- **Relevance:** Our KV260 FPGA (arriving in 4 days) is the bridge. If Z1
+  early access opens, we have the SamplerBackend abstraction (Exp 71) ready
+  to plug in. Our FPGA work validates the architecture before Z1 ships.
+- **Score:** 3×3×2×3 = 54 — monitor, hardware path validated
+
+### "Hallucination is Inevitable" (HuggingFace trending)
+- **Source:** [huggingface.co/papers/2401.11817](https://huggingface.co/papers/2401.11817)
+- **What:** Formal proof that LLMs inherently hallucinate — cannot learn all
+  computable functions. Hallucination is a mathematical inevitability.
+- **Relevance:** VALIDATES our entire approach. If hallucination can't be
+  eliminated from INSIDE the model, external verification (Carnot) is the
+  only path. This is the theoretical justification for our product.
+- **Score:** 5×1×1×5 = 25 — not actionable but validates our thesis
+
+## Libraries of Reference (Consulted During Study Runs)
+
+Study runs check ALL of these sources:
+1. **arxiv.org** — primary research papers
+2. **OpenReview.net** — NeurIPS/ICML/ICLR submissions
+3. **extropic.ai/writing** — TSU hardware updates
+4. **Semantic Scholar** — citation tracking for key papers
+5. **HuggingFace papers** (huggingface.co/papers) — daily ML paper feed
+6. **GitHub trending** — new repos (ising-model, energy-based-model topics)
+7. **logicalintelligence.com** — Kona architecture updates
+8. **FPGA conferences** (FCCM, FPL, DAC) — Ising machine implementations
+9. **AMD developer forums** — NPU/XDNA updates
+10. **Nature Electronics/Communications** — hardware implementations
+11. **ACL Anthology** — NLP constraint/verification papers
+
 ## Needs Investigation (Unranked)
 
 - LagONN + guided decoding combination (oscillatory escape + energy steering)
