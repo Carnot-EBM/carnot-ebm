@@ -1345,3 +1345,5 @@
 E   ImportError: cannot impor |
 | 2026-04-12 19:15 UTC | Exp 224a: Warm model server — persistent GPU model | OK | =========== 2039 passed, 1 skipped, 22 warnings in 83.67s (0:01:23) ============ |
 | 2026-04-12 19:44 UTC | Exp 224c: TensorRT-LLM acceleration for 2-4x infer | OK | =========== 2058 passed, 1 skipped, 22 warnings in 80.37s (0:01:20) ============ |
+| 2026-04-12 20:40 UTC | Exp 224b: Dual-GPU parallel inference — run both m | OK | =========== 2077 passed, 1 skipped, 22 warnings in 81.68s (0:01:21) ============ |
+| 2026-04-12 20:41 UTC | Exp 225: PBT on 30 HumanEval problems — head-to-he | OK | Deliverable already exists in repo |
