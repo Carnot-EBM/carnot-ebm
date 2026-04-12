@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 210 Research Scan
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T07:03:16Z | 2026-04-12T07:22:54Z | Exp 210: extended the `research-reporting` spec plus `REPORT-002`, wrote `test_experiment_210_research_scan.py` first, implemented `scripts/experiment_210_research_scan.py`, refreshed `research-references.md` and `research-studying.md`, generated `results/experiment_210_results.json`, and reran the required verification commands including the full Python suite and 100% targeted coverage for the new script | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 209 Provenance Cleanup
 
 ### Turn Log

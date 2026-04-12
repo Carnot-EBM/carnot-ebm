@@ -10,7 +10,7 @@
 //!
 //! where f_ij and g_i are learnable B-spline functions.
 //!
-//! Spec: TODO: Add spec references when spec is created
+//! Spec: REQ-CORE-001, REQ-TIER-005, REQ-TIER-006
 
 use carnot_core::{CarnotError, EnergyFunction, Float};
 use ndarray::{Array1, ArrayView1};
@@ -252,6 +252,7 @@ impl EnergyFunction for KANEnergyFunction {
 mod tests {
     use super::*;
 
+    // REQ-CORE-001: BSpline constructor produces a valid finite lookup object
     #[test]
     fn test_bspline_creation() {
         let spline = BSpline::new(10, 3);
@@ -259,6 +260,7 @@ mod tests {
         assert_eq!(spline.degree, 3);
     }
 
+    // REQ-CORE-001, SCENARIO-CORE-001: BSpline evaluation returns a finite scalar
     #[test]
     fn test_bspline_evaluate() {
         let spline = BSpline::new(5, 1);
@@ -266,6 +268,7 @@ mod tests {
         assert!(result.is_finite());
     }
 
+    // REQ-TIER-005: default KAN configuration exposes sensible defaults
     #[test]
     fn test_kan_config_default() {
         let config = KANConfig::default();
@@ -274,6 +277,7 @@ mod tests {
         assert_eq!(config.degree, 3);
     }
 
+    // REQ-TIER-005, SCENARIO-TIER-006: invalid config is rejected
     #[test]
     fn test_kan_config_validation() {
         let config = KANConfig {
@@ -283,6 +287,7 @@ mod tests {
         assert!(config.validate().is_err());
     }
 
+    // REQ-CORE-001, REQ-TIER-005: KAN energy function constructs from config
     #[test]
     fn test_kan_energy_function_creation() {
         let config = KANConfig::default();
@@ -290,6 +295,7 @@ mod tests {
         assert_eq!(kan.input_dim(), 784);
     }
 
+    // REQ-CORE-001, SCENARIO-CORE-001: KAN energy is finite for valid input
     #[test]
     fn test_kan_energy_finite() {
         let config = KANConfig {
@@ -302,6 +308,7 @@ mod tests {
         assert!(e.is_finite());
     }
 
+    // REQ-CORE-001, SCENARIO-CORE-003: gradient shape matches input dimension
     #[test]
     fn test_kan_gradient_shape() {
         let config = KANConfig {
@@ -314,6 +321,7 @@ mod tests {
         assert_eq!(grad.len(), 10);
     }
 
+    // REQ-TIER-005, REQ-TIER-006: parameter count is positive for valid config
     #[test]
     fn test_kan_n_params() {
         let config = KANConfig {

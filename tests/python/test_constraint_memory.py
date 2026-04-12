@@ -425,6 +425,7 @@ class TestRepr:
         assert "domains=0" in repr(mem)
         assert "patterns=0" in repr(mem)
 
+    # REQ-LEARN-003: repr reflects tracked domains and patterns after updates
     def test_repr_with_patterns(self) -> None:
         mem = ConstraintMemory()
         mem.record_pattern("arithmetic", "arithmetic", "err")
