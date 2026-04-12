@@ -80,6 +80,21 @@ tuned reasoning traces, where:
   not, the violation includes the claimed result, the solver-derived result,
   and the source step text
 
+### REQ-VERIFY-010: LLM-Assisted Arithmetic Claim Extraction
+
+The system shall support an auxiliary LLM-based arithmetic extractor for
+free-form reasoning traces, where:
+- A small language model is prompted with the response text only
+- The prompt requests canonical claim lines in the form
+  `CLAIM: a OP b = c`
+- The extractor parses zero or more claim lines, ignoring malformed model
+  output without crashing
+- Each extracted claim is verified by deterministic arithmetic and records the
+  operands, operator, claimed result, computed result, satisfaction verdict,
+  raw claim text, and extraction latency
+- Each extracted claim is returned as a `ConstraintResult` that can flow
+  through the existing `VerifyRepairPipeline` / `ComposedEnergy` path
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -166,6 +181,16 @@ verdict
 offending source step
 **And** correct chains produce zero arithmetic false positives
 
+### SCENARIO-VERIFY-010: LLM Extractor Recovers Natural-Language Arithmetic
+
+**Given** a response whose arithmetic is expressed in natural language rather
+than explicit regex-readable equations
+**When** the LLM-assisted arithmetic extractor is run
+**Then** it emits canonical `CLAIM: a OP b = c` lines for the verifiable steps
+**And** wrong extracted claims are surfaced as arithmetic violations by the
+existing `VerifyRepairPipeline`
+**And** the extractor records per-response latency for the auxiliary LLM call
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -179,4 +204,5 @@ offending source step
 | REQ-VERIFY-007 | Implemented | Implemented | 1 Rust + 2 Python |
 | REQ-VERIFY-008 | Not Started | Implemented | 10 Python |
 | REQ-VERIFY-009 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-010 | Not Started | Implemented | 14 Python |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

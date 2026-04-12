@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-04-12 (Exp 205: LLM-as-extractor — canonical CLAIM lines for natural-language arithmetic)
+
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-010` (LLM-assisted arithmetic claim extraction) and `SCENARIO-VERIFY-010` (LLM extractor recovers natural-language arithmetic). Updated implementation status for the completed Python implementation and test coverage. (REQ-VERIFY-010, SCENARIO-VERIFY-010, user instruction: Exp 205)
+- `epics/stories/VERIFY-010.md` — Added and completed the story record for the LLM-assisted arithmetic extractor. (REQ-VERIFY-010, user instruction: Exp 205)
+- `python/carnot/pipeline/llm_extractor.py` — New `LLMConstraintExtractor` module. It prompts an auxiliary model for canonical `CLAIM: a OP b = c` lines, parses numeric claims, verifies them deterministically, wraps them as constant-energy `ConstraintResult`s consumable by `VerifyRepairPipeline`, records per-response latency, and lazily resolves `carnot.inference.model_loader` only when the extractor is actually used. (REQ-VERIFY-001, REQ-VERIFY-003, REQ-VERIFY-010, user instruction: Exp 205)
+- `python/carnot/pipeline/__init__.py` — Exported `LLMConstraintExtractor` through the pipeline package. (REQ-VERIFY-010, user instruction: Exp 205)
+- `tests/python/test_llm_extractor.py` — New 14-test module covering prompt construction, lazy/default model-loader integration, malformed output handling, pipeline energy-term compatibility, regex-miss recovery on natural-language arithmetic, latency tracking, and the current Exp 203 live Gemma regression corpus. The regression harness uses the repo's existing Exp 203 artifact, which currently contains **3** wrong live cases rather than the **4** still mentioned in `research-roadmap.yaml`. `python/carnot/pipeline/llm_extractor.py` reached **100%** targeted coverage. (REQ-VERIFY-010, SCENARIO-VERIFY-010, user instruction: Exp 205)
+- Validation — `.venv/bin/pytest tests/python -q` → `1845 passed, 1 skipped, 22 warnings`, coverage `100.00%` on the final Python suite. `.venv/bin/pytest -n 0 tests/integration/test_full_pipeline.py -q --no-cov` → `22 passed`. Targeted module coverage: `.venv/bin/python -m coverage run -m pytest -n 0 tests/python/test_llm_extractor.py -q --no-cov && .venv/bin/python -m coverage report -m python/carnot/pipeline/llm_extractor.py` → `100%`. `.venv/bin/python scripts/check_spec_coverage.py`, `.venv/bin/ruff check python/ tests/`, `.venv/bin/ruff format --check python/ tests/`, and `.venv/bin/mypy python/carnot` still fail on pre-existing repo-wide issues unrelated to Exp 205. (user instruction: Exp 205)
+
+---
+
 ## 2026-04-12 (Exp 203: Extraction Autopsy — regex misses all 3 wrong live Gemma answers)
 
 - `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-008` (Extraction Autopsy Records) and `SCENARIO-VERIFY-008` (Live Extraction Autopsy). Updated implementation status to reflect the new Python test coverage. (REQ-VERIFY-008, SCENARIO-VERIFY-008, user instruction: Exp 203)
