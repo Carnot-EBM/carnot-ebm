@@ -1,0 +1,66 @@
+{
+  "experiment": "Exp 214",
+  "run_date": "20260412",
+  "title": "Semantic failure corpus for verifier training and semantic diagnosis",
+  "artifacts": {
+    "corpus_path": "data/research/semantic_failure_corpus_214.jsonl",
+    "results_path": "results/experiment_214_results.json"
+  },
+  "summary": {
+    "n_examples": 60,
+    "by_source_type": {
+      "live_trace": 8,
+      "targeted_follow_up": 52
+    },
+    "by_source_artifact": {
+      "exp203_live": 3,
+      "exp206_live": 5,
+      "exp214_followup": 42,
+      "exp208_followup": 10
+    },
+    "by_domain": {
+      "word_problem": 50,
+      "code": 10
+    },
+    "by_taxonomy": {
+      "omitted_premises": 10,
+      "unit_aggregation_errors": 10,
+      "entity_quantity_binding_errors": 10,
+      "question_grounding_failures": 10,
+      "genuine_arithmetic_slips": 10,
+      "code_specific_oracle_property_misses": 10
+    },
+    "by_expected_verifier_signal": {
+      "question_grounding.quantity_graph": 3,
+      "question_grounding.unit_reasoner": 4,
+      "question_grounding.scope_alignment": 5,
+      "question_grounding.count_expansion": 2,
+      "question_grounding.event_timeline": 3,
+      "question_grounding.temporal_schedule": 2,
+      "question_grounding.repeated_event_accumulator": 2,
+      "question_grounding.answer_target_alignment": 4,
+      "question_grounding.compare_target_alignment": 3,
+      "question_grounding.entity_target_alignment": 1,
+      "question_grounding.post_adjustment_chain": 2,
+      "question_grounding.partial_interval": 1,
+      "question_grounding.promotion_adjustment": 1,
+      "question_grounding.entity_binding": 3,
+      "question_grounding.segment_unit_reasoner": 1,
+      "question_grounding.aggregation": 2,
+      "question_grounding.recurring_vs_one_time": 1,
+      "arithmetic_chain.exact_check": 10,
+      "code_ir.typed_contracts_plus_execution": 10
+    },
+    "by_structured_reasoning_helpful": {
+      "true": 27,
+      "false": 33
+    },
+    "coverage_checks": {
+      "min_example_count_met": true,
+      "has_live_trace_examples": true,
+      "has_targeted_follow_up_examples": true,
+      "covers_required_taxonomy": true,
+      "has_exp208_informed_code_followups": true
+    }
+  }
+}
