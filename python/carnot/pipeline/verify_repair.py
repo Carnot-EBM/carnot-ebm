@@ -58,6 +58,7 @@ from carnot.pipeline.errors import (
 )
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
 from carnot.pipeline.semantic_grounding import SemanticGroundingVerifier
+from carnot.pipeline.structured_reasoning import StructuredReasoningController
 from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typed_reasoning_ir
 
 if TYPE_CHECKING:
@@ -301,6 +302,7 @@ class VerifyRepairPipeline:
         self._model: Any = None
         self._tokenizer: Any = None
         self._device: str = "cpu"
+        self._model_name: str | None = model
 
         if model is not None:
             self._load_model(model)
@@ -487,6 +489,26 @@ class VerifyRepairPipeline:
         except Exception as exc:
             logger.warning("Typed reasoning extraction degraded: %s", exc)
             return None
+
+    def generate_structured_reasoning(
+        self,
+        question: str,
+        task_slice: str,
+        model_name: str | None = None,
+    ) -> object:
+        """Generate a policy-gated structured response through an additive entry point."""
+        if self._model is None or self._tokenizer is None:
+            raise RuntimeError("No model loaded. Initialize with model='...' to enable generation.")
+
+        controller = StructuredReasoningController()
+        return controller.emit(
+            question=question,
+            task_slice=task_slice,
+            model_name=model_name or self._model_name,
+            model=self._model,
+            tokenizer=self._tokenizer,
+            fallback_generate=self._generate,
+        )
 
     def verify_semantic_grounding(
         self,

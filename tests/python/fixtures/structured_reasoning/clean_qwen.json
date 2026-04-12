@@ -1,0 +1,58 @@
+{
+  "constraints": [
+    {
+      "constraint_id": "uc1",
+      "kind": "prompt_constraint",
+      "text": "Use only the cups left after cinnamon tea."
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "s1",
+      "kind": "analysis",
+      "text": "27 - 15 = 12 cups remain for chamomile and mint.",
+      "claim_ids": ["cl1"]
+    },
+    {
+      "step_id": "s2",
+      "kind": "analysis",
+      "text": "12 / 3 = 4 cups per row.",
+      "claim_ids": ["cl2"]
+    },
+    {
+      "step_id": "s3",
+      "kind": "finalization",
+      "text": "4 / 2 = 2 mint cups per row.",
+      "claim_ids": ["cl3"]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "cl1",
+      "kind": "derived_fact",
+      "text": "remaining cups = 12",
+      "value": 12,
+      "step_id": "s1"
+    },
+    {
+      "claim_id": "cl2",
+      "kind": "derived_fact",
+      "text": "cups per row = 4",
+      "value": 4,
+      "step_id": "s2"
+    },
+    {
+      "claim_id": "cl3",
+      "kind": "answer_binding",
+      "text": "mint cups per row = 2",
+      "value": 2,
+      "step_id": "s3"
+    }
+  ],
+  "final_answer": {
+    "text": "2",
+    "normalized": 2,
+    "answer_type": "number",
+    "source_step_id": "s3"
+  }
+}

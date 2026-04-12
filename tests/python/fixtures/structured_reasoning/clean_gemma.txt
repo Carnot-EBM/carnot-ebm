@@ -1,0 +1,47 @@
+```json
+{
+  "constraints": [
+    {
+      "constraint_id": "uc1",
+      "kind": "prompt_constraint",
+      "text": "Return the final answer as a number."
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "s1",
+      "kind": "analysis",
+      "text": "The remaining cups after cinnamon are 12.",
+      "claim_ids": ["cl1"]
+    },
+    {
+      "step_id": "s2",
+      "kind": "finalization",
+      "text": "Each row has 4 cups, so mint is 2.",
+      "claim_ids": ["cl2"]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "cl1",
+      "kind": "derived_fact",
+      "text": "remaining cups = 12",
+      "value": 12,
+      "step_id": "s1"
+    },
+    {
+      "claim_id": "cl2",
+      "kind": "answer_binding",
+      "text": "mint cups per row = 2",
+      "value": 2,
+      "step_id": "s2"
+    }
+  ],
+  "final_answer": {
+    "text": "2",
+    "normalized": 2,
+    "answer_type": "number",
+    "source_step_id": "s2"
+  }
+}
+```

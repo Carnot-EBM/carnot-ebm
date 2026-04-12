@@ -255,6 +255,45 @@ where:
 - later repair or audit stages can inspect the semantic-grounding result or the
   pipeline-compatible violation objects without depending on raw prose parsing
 
+### REQ-VERIFY-022: Structured Reasoning Emission Schema And Model Prompts
+
+The repository shall provide a structured reasoning emission path in
+`python/carnot/pipeline/structured_reasoning.py`, where:
+- the emitted schema covers prompt constraints, ordered reasoning steps,
+  atomic claims, and the final answer in a form that can be consumed by the
+  typed reasoning IR
+- prompt helpers exist for `Qwen/Qwen3.5-0.8B` and
+  `google/gemma-4-E4B-it`
+- the prompts request monitorable structured output without forcing verbose or
+  hidden chain-of-thought
+- the schema stays minimal enough that later verifier stages can inspect the
+  emitted state deterministically
+
+### REQ-VERIFY-023: Structured Emission Validation, Retry, And Fallback
+
+The same module shall validate structured reasoning emissions before they are
+trusted, where:
+- malformed JSON, missing required schema sections, or typed-IR validation
+  failures are rejected deterministically
+- the emission path retries at least once with explicit correction feedback
+  when a structured response is malformed
+- the emission path can fall back to a caller-provided non-structured
+  generation path when retries are exhausted
+- fallback responses can still be converted into typed reasoning via the
+  existing dual-path extractor when possible
+
+### REQ-VERIFY-024: Exp 213 Policy-Gated Structured Emission
+
+The same module shall integrate `results/monitorability_policy_213.json`, where:
+- structured prompting is used only when the Exp 213 policy recommends
+  `structured_json` for the task slice
+- non-structured tasks continue to use the existing generation path rather than
+  paying the structured-output token cost by default
+- unsupported or unknown model families do not trigger the structured path
+  unless an explicit prompt helper is available
+- `VerifyRepairPipeline` can expose the structured emission path through an
+  additive entry point without breaking existing verification or repair flows
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -462,6 +501,38 @@ related quantity correctly but answers the wrong target
 arithmetic
 **And** optional refinement is not required to catch the case
 
+### SCENARIO-VERIFY-022: Clean Structured Emission Produces Direct Typed IR
+
+**Given** a supported model is asked for structured reasoning on a task slice
+where the Exp 213 policy recommends `structured_json`
+**When** the structured reasoning controller receives a well-formed emission
+**Then** the emission validates as direct JSON against the required schema
+**And** the resulting typed reasoning IR preserves constraints, steps, claims,
+  and the final answer
+**And** the controller reports that the structured path succeeded without
+  falling back
+
+### SCENARIO-VERIFY-023: Malformed Structured Emission Retries Then Falls Back
+
+**Given** a supported model first emits malformed structured output for a task
+slice that requests `structured_json`
+**When** the structured reasoning controller validates the response
+**Then** it records the validation failure deterministically
+**And** it retries with explicit schema-correction feedback
+**And** if the structured output remains malformed, it falls back to the
+  caller-provided non-structured generation path instead of crashing
+
+### SCENARIO-VERIFY-024: Policy Gate Avoids Structured Cost On Terse Tasks
+
+**Given** the Exp 213 policy recommends a non-structured mode for a task slice
+such as `code_typed_properties`
+**When** the structured reasoning controller is asked to emit a response for
+that task slice
+**Then** it does not call the structured generation path
+**And** it returns the caller-provided fallback response path instead
+**And** existing `VerifyRepairPipeline` callers remain backward compatible
+  unless they opt into the additive structured entry point
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -487,4 +558,7 @@ arithmetic
 | REQ-VERIFY-019 | Not Started | Implemented | Exp 214 semantic failure corpus tests |
 | REQ-VERIFY-020 | Not Started | Implemented | Semantic grounding verifier tests |
 | REQ-VERIFY-021 | Not Started | Implemented | Semantic grounding verifier + pipeline integration tests |
+| REQ-VERIFY-022 | Not Started | Implemented | Structured reasoning emission tests |
+| REQ-VERIFY-023 | Not Started | Implemented | Structured reasoning retry + fallback tests |
+| REQ-VERIFY-024 | Not Started | Implemented | Structured reasoning policy + pipeline entrypoint tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
