@@ -105,6 +105,13 @@ from carnot.inference.semantic_energy import (
     classify_hallucination,
     compute_semantic_energy,
 )
+from carnot.inference.tensorrt_backend import (
+    TRTBackendStatus,
+    TRTLLMBackend,
+    TRTLLMBenchmarkResult,
+    benchmark_huggingface_vs_tensorrt,
+    load_trt_backend,
+)
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,
     parse_llm_coloring,
@@ -138,6 +145,9 @@ __all__ = [
     "SemanticEnergyResult",
     "ServerBackedModelHandle",
     "TokenEnergyAnalysis",
+    "TRTBackendStatus",
+    "TRTLLMBackend",
+    "TRTLLMBenchmarkResult",
     "ModelLoadError",
     "ModelServer",
     "VerifyRepairResult",
@@ -148,6 +158,7 @@ __all__ = [
     "classify_hallucination",
     "clear_model_server",
     "ebm_rejection_sample",
+    "benchmark_huggingface_vs_tensorrt",
     "generate",
     "get_model_info",
     "compare_learned_vs_handcoded",
@@ -174,6 +185,7 @@ __all__ = [
     "solve_coloring_with_llm",
     "solve_sat_with_llm",
     "register_model_server",
+    "load_trt_backend",
     "train_code_verifier",
     "train_reasoning_energy",
     "train_sat_verifier",

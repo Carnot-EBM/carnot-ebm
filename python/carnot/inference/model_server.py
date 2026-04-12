@@ -14,7 +14,7 @@ from contextlib import nullcontext
 from dataclasses import dataclass, field
 from queue import Empty, Queue
 from time import perf_counter
-from typing import Any
+from typing import Any, cast
 
 import carnot.inference.model_loader as model_loader_module
 from carnot.inference.model_loader import (
@@ -24,6 +24,7 @@ from carnot.inference.model_loader import (
     generate,
     load_model,
 )
+from carnot.inference.tensorrt_backend import load_trt_backend
 
 LoaderFn = Callable[[str], tuple[Any, Any]]
 BatchGenerateFn = Callable[[Any, Any, list[str], int], list[str]]
@@ -77,6 +78,8 @@ def _default_batch_generate(
     prompts: list[str],
     max_new_tokens: int,
 ) -> list[str]:
+    if model is tokenizer and hasattr(model, "generate_batch"):
+        return cast("list[str]", model.generate_batch(prompts, max_new_tokens=max_new_tokens))
     if model is None or tokenizer is None:
         raise RuntimeError(
             "_default_batch_generate() called with model=None or tokenizer=None. "
@@ -122,8 +125,15 @@ def _default_batch_generate(
     return responses
 
 
-def _default_loader(model_name: str) -> tuple[Any, Any]:
-    """Request CUDA by default while preserving load_model() fallback behavior."""
+def _default_loader(model_name: str, *, batch_size: int = 8) -> tuple[Any, Any]:
+    """Prefer TensorRT-LLM and otherwise request CUDA through the HF loader."""
+    backend, status = load_trt_backend(
+        model_name,
+        max_batch_size=batch_size,
+    )
+    if backend is not None:
+        return backend, backend
+    del status
     return load_model(model_name, device="cuda")
 
 
@@ -135,7 +145,7 @@ class ModelServer:
         model_names: Sequence[str],
         *,
         batch_size: int = 8,
-        loader: LoaderFn = _default_loader,
+        loader: LoaderFn | None = None,
         batch_generate_fn: BatchGenerateFn = _default_batch_generate,
         torch_module: Any | None = None,
         clock: Callable[[], float] = perf_counter,
@@ -145,7 +155,9 @@ class ModelServer:
 
         self.model_names = tuple(model_names)
         self.batch_size = batch_size
-        self._loader = loader
+        self._loader = loader or (
+            lambda model_name: _default_loader(model_name, batch_size=batch_size)
+        )
         self._batch_generate_fn = batch_generate_fn
         self._torch = torch_module
         self._clock = clock
