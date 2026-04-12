@@ -147,6 +147,7 @@ Every user instruction must be captured and traceable to outcomes:
 | Research roadmap | `research-roadmap.yaml` |
 | Research history | `research-complete.yaml` |
 | Research program | `research-program.md` |
+| Research studying | `research-studying.md` |
 | Research references | `research-references.md` |
 | Hardware wishlist | `research-hardware-wishlist.md` |
 | Research conductor | `scripts/research_conductor.py` |
