@@ -1,0 +1,2178 @@
+{
+  "experiment": 208,
+  "title": "30 HumanEval live verify-repair benchmark on Gemma4-E4B-it",
+  "metadata": {
+    "timestamp": "2026-04-12T06:04:18Z",
+    "dataset_source": "HumanEval (openai_humaneval)",
+    "model_name": "Gemma4-E4B-it",
+    "model_hf_id": "google/gemma-4-E4B-it",
+    "device": "cuda:0",
+    "inference_mode": "live_gpu",
+    "sample_seed": 208,
+    "sample_size": 30,
+    "sample_dataset_indices": [
+      106,
+      90,
+      140,
+      1,
+      29,
+      138,
+      79,
+      64,
+      92,
+      47,
+      26,
+      127,
+      150,
+      21,
+      40,
+      147,
+      8,
+      51,
+      149,
+      84,
+      135,
+      23,
+      145,
+      153,
+      28,
+      41,
+      105,
+      25,
+      75,
+      2
+    ],
+    "sample_task_ids": [
+      "HumanEval/106",
+      "HumanEval/90",
+      "HumanEval/140",
+      "HumanEval/1",
+      "HumanEval/29",
+      "HumanEval/138",
+      "HumanEval/79",
+      "HumanEval/64",
+      "HumanEval/92",
+      "HumanEval/47",
+      "HumanEval/26",
+      "HumanEval/127",
+      "HumanEval/150",
+      "HumanEval/21",
+      "HumanEval/40",
+      "HumanEval/147",
+      "HumanEval/8",
+      "HumanEval/51",
+      "HumanEval/149",
+      "HumanEval/84",
+      "HumanEval/135",
+      "HumanEval/23",
+      "HumanEval/145",
+      "HumanEval/153",
+      "HumanEval/28",
+      "HumanEval/41",
+      "HumanEval/105",
+      "HumanEval/25",
+      "HumanEval/75",
+      "HumanEval/2"
+    ],
+    "max_new_tokens": 512,
+    "max_repairs": 3,
+    "runtime_seconds": 914.6170815320002
+  },
+  "statistics": {
+    "n_problems": 30,
+    "baseline": {
+      "pass_at_1": 0.16666666666666666,
+      "ci_lower": 0.03333333333333333,
+      "ci_upper": 0.3,
+      "n_correct": 5
+    },
+    "verify_repair": {
+      "pass_at_1": 0.2,
+      "ci_lower": 0.06666666666666667,
+      "ci_upper": 0.3333333333333333,
+      "n_correct": 6
+    },
+    "improvement": {
+      "delta": 0.03333333333333333,
+      "ci_lower": 0.0,
+      "ci_upper": 0.1
+    },
+    "repair_stats": {
+      "n_problems_needing_repair": 25,
+      "n_repaired": 1,
+      "repair_success_rate": 0.04,
+      "avg_repair_iterations": 2.92
+    },
+    "instrumentation": {
+      "problems_with_static_violations": 2,
+      "problems_with_dynamic_violations": 27,
+      "total_static_violations": 3,
+      "total_dynamic_violations": 27
+    },
+    "inference_mode": "live_gpu"
+  },
+  "per_problem_results": [
+    {
+      "task_id": "HumanEval/106",
+      "dataset_idx": 106,
+      "entry_point": "f",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "body": "def factorial(k):\n        if k == 0:\n            return 1\n        res = 1\n        for i in range(1, k + 1):\n            res *= i\n        return res\n\n    def sum_to_i(k):\n        return k * (k + 1) // 2\n\n    result = []\n    for i in range(1, n + 1):\n        if i % 2 == 0:\n            result.append(factorial(i))\n        else:\n            result.append(sum_to_i(i))\n    return result"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "def factorial(k):\n            if k == 0:\n                return 1\n            res = 1\n            for i in range(1, k + 1):\n                res *= i\n            return res\n\n        def sum_to_i(k):\n            return k * (k + 1) // 2\n\n        result = []\n        for i in range(1, n + 1):\n            if i % 2 == 0:\n                result.append(factorial(i))\n            else:\n                result.append(sum_to_i(i))\n        return result"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/90",
+      "dataset_idx": 90,
+      "entry_point": "next_smallest",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "body": "if len(lst) < 2:\n        return None\n    \n    unique_sorted = sorted(list(set(lst)))\n    \n    if len(unique_sorted) < 2:\n        return None\n    \n    return unique_sorted[1]"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if len(lst) < 2:\n        return None\n\n    unique_sorted = sorted(list(set(lst)))\n\n    if len(unique_sorted) < 2:\n        return None\n\n    return unique_sorted[1]"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/140",
+      "dataset_idx": 140,
+      "entry_point": "fix_spaces",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "probe_inputs": [
+          {
+            "text": 1
+          },
+          {
+            "text": 0
+          },
+          {
+            "text": -1
+          }
+        ],
+        "body": "result = []\n    in_consecutive_spaces = False\n    consecutive_count = 0\n    for char in text:\n        if char == ' ':\n            consecutive_count += 1\n            if consecutive_count == 1:\n                in_consecutive_spaces = True\n            elif consecutive_count == 2:\n                pass  # Keep counting for now\n            else:\n                # More than 2 consecutive spaces, replace with '-'\n                if not in_consecutive_spaces:\n                    # This case should ideally not happen if logic is perfect, \n                    # but ensures we handle the transition correctly if we were to use a different state machine.\n                    pass\n                # We will handle the replacement when the sequence ends or at the end of the string\n                pass\n        else:\n            if in_consecutive_spaces:\n                if consecutive_count == 1:\n                    result.append('_')\n                elif consecutive_count == 2:\n                    result.append('__') # Wait, the requirement is to replace *all* consecutive spaces with '-' if > 2.\n                                       # If it's 2, it should be '_'.\n                    result.append('_')\n                else: # consecutive_count > 2\n                    result.append('-')\n            \n            in_consecutive_spaces = False\n            consecutive_count = 0\n            result.append(char)\n\n    # Handle trailing spaces\n    if in_consecutive_spaces:\n        if consecutive_count == 1:\n            result.append('_')\n        elif consecutive_count == 2:\n            result.append('_')\n        else: # consecutive_count > 2\n            result.append('-')\n            \n    # Re-evaluating the logic based on examples:\n    # \"Example 1\" -> \"Example_1\" (1 space -> _)\n    # \" Example 2\" -> \"_Example_2\" (leading space -> _)\n    # \" Example   3\" -> \"_Example-3\" (3 spaces -> -)\n\n    # A simpler approach using regex or iterative replacement might be cleaner.\n    # Let's stick to iteration but refine the state management based on the rules:\n    # 1. Single space -> '_'\n    # 2. Two spaces -> '__' (Wait, the"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "result = []\n    i = 0\n    n = len(text)\n    while i < n:\n        char = text[i]\n        if char == ' ':\n            j = i\n            while j < n and text[j] == ' ':\n                j += 1\n\n            space_count = j - i\n\n            if space_count == 1:\n                result.append('_')\n            elif space_count == 2:\n                result.append('_')\n            else: # space_count > 2\n                result.append('-')\n\n            i = j\n        else:\n            result.append(char)\n            i += 1\n\n    return \"\".join(result)"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/1",
+      "dataset_idx": 1,
+      "entry_point": "separate_paren_groups",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "body": "paren_string = paren_string.replace(\" \", \"\")\n    groups = []\n    balance = 0\n    start_index = 0\n    for i, char in enumerate(paren_string):\n        if char == '(':\n            balance += 1\n        elif char == ')':\n            balance -= 1\n        \n        if balance == 0 and char == ')':\n            groups.append(paren_string[start_index:i+1])\n            start_index = i + 1\n            \n    return groups"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "paren_string = paren_string.replace(\" \", \"\")\n    groups = []\n    balance = 0\n    start_index = 0\n    for i, char in enumerate(paren_string):\n        if char == '(':\n            balance += 1\n        elif char == ')':\n            balance -= 1\n\n        if balance == 0 and char == ')':\n            groups.append(paren_string[start_index:i+1])\n            start_index = i + 1\n\n    return groups"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/29",
+      "dataset_idx": 29,
+      "entry_point": "filter_by_prefix",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "n_static_violations": 2,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [
+          "filter_by_prefix(): variable 'List' used but never assigned or passed as parameter",
+          "filter_by_prefix(): variable 's' used but never assigned or passed as parameter"
+        ],
+        "static_violations": [
+          "filter_by_prefix(): variable 'List' used but never assigned or passed as parameter",
+          "filter_by_prefix(): variable 's' used but never assigned or passed as parameter"
+        ],
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "probe_inputs": [
+          {
+            "strings": [
+              1,
+              2
+            ],
+            "prefix": "x"
+          },
+          {
+            "strings": [],
+            "prefix": ""
+          },
+          {
+            "strings": [
+              0
+            ],
+            "prefix": " "
+          }
+        ],
+        "body": "return [s for s in strings if s.startswith(prefix)]"
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_error_type": "none",
+        "final_error_message": "",
+        "final_body": "return [s for s in strings if s.startswith(prefix)]"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": true,
+          "error_type": "none",
+          "error_message": "",
+          "n_static_violations": 2,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/138",
+      "dataset_idx": 138,
+      "entry_point": "is_equal_to_sum_even",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "body": "if n < 8 or n % 2 != 0:\n        return False\n    return True"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if n < 8 or n % 2 != 0:\n        return False\n    return True"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/79",
+      "dataset_idx": 79,
+      "entry_point": "decimal_to_binary",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "decimal": 1
+          },
+          {
+            "decimal": 0
+          },
+          {
+            "decimal": -1
+          }
+        ],
+        "body": "if decimal == 0:\n        return \"db0db\"\n    binary_string = \"\"\n    while decimal > 0:\n        remainder = decimal % 2\n        binary_string = str(remainder) + binary_string\n        decimal //= 2\n    return \"db\" + binary_string + \"db\""
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if decimal == 0:\n        return \"db0db\"\n    binary_string = \"\"\n    while decimal > 0:\n        remainder = decimal % 2\n        binary_string = str(remainder) + binary_string\n        decimal //= 2\n    return \"db\" + binary_string + \"db\""
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/64",
+      "dataset_idx": 64,
+      "entry_point": "vowels_count",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 19)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "body": "vowels = \"aeiouAEIOU\"\n    count = 0\n    n = len(s)\n    for i, char in enumerate(s):\n        if char in vowels:\n            count += 1\n        elif char.lower() == 'y':\n            if i == n - 1:\n                count += 1\n    return count"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "vowels = \"aeiouAEIOU\"\n    count = 0\n    n = len(s)\n    for i, char in enumerate(s):\n        if char in vowels:\n            count += 1\n        elif char.lower() == 'y':\n            if i == n - 1:\n                count += 1\n    return count"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/92",
+      "dataset_idx": 92,
+      "entry_point": "any_int",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": -1,
+            "y": -1,
+            "z": -1
+          }
+        ],
+        "body": "if not all(isinstance(n, int) for n in [x, y, z]):\n        return False\n    if x + y == z or x + z == y or y + z == x:\n        return True\n    return False"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if not all(isinstance(n, int) for n in [x, y, z]):\n        return False\n    if x + y == z or x + z == y or y + z == x:\n        return True\n    return False"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/47",
+      "dataset_idx": 47,
+      "entry_point": "median",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "body": "l.sort()\n    n = len(l)\n    if n % 2 == 1:\n        return l[n // 2]\n    else:\n        mid1 = l[n // 2 - 1]\n        mid2 = l[n // 2]\n        return (mid1 + mid2) / 2.0"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "l.sort()\n    n = len(l)\n    if n % 2 == 1:\n        return l[n // 2]\n    else:\n        mid1 = l[n // 2 - 1]\n        mid2 = l[n // 2]\n        return (mid1 + mid2) / 2.0"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/26",
+      "dataset_idx": 26,
+      "entry_point": "remove_duplicates",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "body": "seen = set()\n    result = []\n    for number in numbers:\n        if number not in seen:\n            result.append(number)\n            seen.add(number)\n    return result"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "seen = set()\n    result = []\n    for number in numbers:\n        if number not in seen:\n            result.append(number)\n            seen.add(number)\n    return result"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/127",
+      "dataset_idx": 127,
+      "entry_point": "intersection",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 23)"
+        ],
+        "probe_inputs": [
+          {
+            "interval1": 1,
+            "interval2": 1
+          },
+          {
+            "interval1": 0,
+            "interval2": 0
+          },
+          {
+            "interval1": -1,
+            "interval2": -1
+          }
+        ],
+        "body": "start1, end1 = interval1\n    start2, end2 = interval2\n\n    overlap_start = max(start1, start2)\n    overlap_end = min(end1, end2)\n\n    if overlap_start > overlap_end:\n        return \"NO\"\n\n    # The length of a closed interval [a, b] is b - a + 1\n    length = overlap_end - overlap_start + 1\n\n    def is_prime(n):\n        if n < 2:\n            return False\n        for i in range(2, int(n**0.5) + 1):\n            if n % i == 0:\n                return False\n        return True\n\n    if is_prime(length):\n        return \"YES\"\n    else:\n        return \"NO\""
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "start1, end1 = interval1\n    start2, end2 = interval2\n\n    overlap_start = max(start1, start2)\n    overlap_end = min(end1, end2)\n\n    if overlap_start > overlap_end:\n        return \"NO\"\n\n    # The length of a closed interval [a, b] is b - a + 1\n    length = overlap_end - overlap_start + 1\n\n    def is_prime(n):\n        if n < 2:\n            return False\n        for i in range(2, int(n**0.5) + 1):\n            if n % i == 0:\n                return False\n        return True\n\n    if is_prime(length):\n        return \"YES\"\n    else:\n        return \"NO\""
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/150",
+      "dataset_idx": 150,
+      "entry_point": "x_or_y",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1,
+            "x": 1,
+            "y": 1
+          },
+          {
+            "n": 0,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "n": -1,
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "body": "if n < 2:\n        return y\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return y\n    return x"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if n < 2:\n        return y\n    for i in range(2, int(n**0.5) + 1):\n        if n % i == 0:\n            return y\n    return x"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/21",
+      "dataset_idx": 21,
+      "entry_point": "rescale_to_unit",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "body": "min_val = min(numbers)\n    max_val = max(numbers)\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n    return [(x - min_val) / (max_val - min_val) for x in numbers]"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "min_val = min(numbers)\n    max_val = max(numbers)\n    if max_val == min_val:\n        return [0.0] * len(numbers)\n    return [(x - min_val) / (max_val - min_val) for x in numbers]"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/40",
+      "dataset_idx": 40,
+      "entry_point": "triples_sum_to_zero",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 21)"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "body": "n = len(l)\n    if n < 3:\n        return False\n\n    l.sort()\n    for i in range(n - 2):\n        left = i + 1\n        right = n - 1\n        while left < right:\n            current_sum = l[i] + l[left] + l[right]\n            if current_sum == 0:\n                return True\n            elif current_sum < 0:\n                left += 1\n            else:\n                right -= 1\n    return False"
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": true,
+        "n_repairs": 1,
+        "final_error_type": "none",
+        "final_error_message": "",
+        "final_body": "def triples_sum_to_zero(l: list):\n    n = len(l)\n    if n < 3:\n        return False\n\n    l.sort()\n    for i in range(n - 2):\n        left = i + 1\n        right = n - 1\n        while left < right:\n            current_sum = l[i] + l[left] + l[right]\n            if current_sum == 0:\n                return True\n            elif current_sum < 0:\n                left += 1\n            else:\n                right -= 1\n    return False"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": true,
+          "error_type": "none",
+          "error_message": "",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 0
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/147",
+      "dataset_idx": 147,
+      "entry_point": "get_max_triples",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "body": "remainders = [0] * 3\n    for i in range(1, n + 1):\n        a_i = i * i - i + 1\n        remainder = a_i % 3\n        remainders[remainder] += 1\n\n    c0 = remainders[0]\n    c1 = remainders[1]\n    c2 = remainders[2]\n\n    count = 0\n\n    # Case 1: (0, 0, 0) mod 3\n    count += c0 * (c0 - 1) * (c0 - 2) // 6\n\n    # Case 2: (1, 1, 1) mod 3\n    count += c1 * (c1 - 1) * (c1 - 2) // 6\n\n    # Case 3: (2, 2, 2) mod 3\n    count += c2 * (c2 - 1) * (c2 - 2) // 6\n\n    # Case 4: (0, 1, 2) mod 3 (any permutation)\n    count += c0 * c1 * c2\n\n    return count"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "remainders = [0] * 3\n    for i in range(1, n + 1):\n        a_i = i * i - i + 1\n        remainder = a_i % 3\n        remainders[remainder] += 1\n\n    c0 = remainders[0]\n    c1 = remainders[1]\n    c2 = remainders[2]\n\n    count = 0\n\n    # Case 1: (0, 0, 0) mod 3\n    count += c0 * (c0 - 1) * (c0 - 2) // 6\n\n    # Case 2: (1, 1, 1) mod 3\n    count += c1 * (c1 - 1) * (c1 - 2) // 6\n\n    # Case 3: (2, 2, 2) mod 3\n    count += c2 * (c2 - 1) * (c2 - 2) // 6\n\n    # Case 4: (0, 1, 2) mod 3 (any permutation)\n    count += c0 * c1 * c2\n\n    return count"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/8",
+      "dataset_idx": 8,
+      "entry_point": "sum_product",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "body": "total_sum = 0\n    total_product = 1\n    for number in numbers:\n        total_sum += number\n        total_product *= number\n    return (total_sum, total_product)"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "total_sum = 0\n    total_product = 1\n    for number in numbers:\n        total_sum += number\n        total_product *= number\n    return (total_sum, total_product)"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/51",
+      "dataset_idx": 51,
+      "entry_point": "remove_vowels",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 20)"
+        ],
+        "probe_inputs": [
+          {
+            "text": 1
+          },
+          {
+            "text": 0
+          },
+          {
+            "text": -1
+          }
+        ],
+        "body": "vowels = \"aeiouAEIOU\"\n    result = \"\"\n    for char in text:\n        if char not in vowels:\n            result += char\n    return result"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "vowels = \"aeiouAEIOU\"\n    result = \"\"\n    for char in text:\n        if char not in vowels:\n            result += char\n    return result"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/149",
+      "dataset_idx": 149,
+      "entry_point": "sorted_list_sum",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 18)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "body": "filtered_list = [s for s in lst if len(s) % 2 == 0]\n    return sorted(filtered_list, key=lambda x: (len(x), x))"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "filtered_list = [s for s in lst if len(s) % 2 == 0]\n    return sorted(filtered_list, key=lambda x: (len(x), x))"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/84",
+      "dataset_idx": 84,
+      "entry_point": "solve",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 19)"
+        ],
+        "probe_inputs": [
+          {
+            "N": 1
+          },
+          {
+            "N": 0
+          },
+          {
+            "N": -1
+          }
+        ],
+        "body": "if N == 0:\n        return \"0\"\n    \n    count = 0\n    temp_N = N\n    while temp_N > 0:\n        if temp_N & 1:\n            count += 1\n        temp_N >>= 1\n        \n    return bin(count)[2:]"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if N == 0:\n        return \"0\"\n\n    count = 0\n    temp_N = N\n    while temp_N > 0:\n        if temp_N & 1:\n            count += 1\n        temp_N >>= 1\n\n    return bin(count)[2:]"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/135",
+      "dataset_idx": 135,
+      "entry_point": "can_arrange",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 15)"
+        ],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "body": "for i in range(1, len(arr)):\n        if arr[i] < arr[i-1]:\n            return i\n    return -1"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "for i in range(1, len(arr)):\n        if arr[i] < arr[i-1]:\n            return i\n    return -1"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/23",
+      "dataset_idx": 23,
+      "entry_point": "strlen",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 0,
+        "constraint_feedback": [
+          "strlen(): parameter 'string' annotated as str",
+          "strlen() annotated to return int"
+        ],
+        "static_violations": [],
+        "dynamic_violations": [],
+        "probe_inputs": [
+          {
+            "string": "x"
+          },
+          {
+            "string": ""
+          },
+          {
+            "string": " "
+          }
+        ],
+        "body": "return len(string)"
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_error_type": "none",
+        "final_error_message": "",
+        "final_body": "return len(string)"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": true,
+          "error_type": "none",
+          "error_message": "",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 0
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/145",
+      "dataset_idx": 145,
+      "entry_point": "order_by_points",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "nums": 1
+          },
+          {
+            "nums": 0
+          },
+          {
+            "nums": -1
+          }
+        ],
+        "body": "def digit_sum(n):\n        return sum(int(digit) for digit in str(abs(n)))\n\n    return sorted(enumerate(nums), key=lambda x: (digit_sum(x[1]), x[0]))\n        [item[1] for item in sorted(enumerate(nums), key=lambda x: (digit_sum(x[1]), x[0]))]"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "def digit_sum(n):\n        return sum(int(digit) for digit in str(abs(n)))\n\n    return [item[1] for item in sorted(enumerate(nums), key=lambda x: (digit_sum(x[1]), x[0]))]"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/153",
+      "dataset_idx": 153,
+      "entry_point": "Strongest_Extension",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 20)"
+        ],
+        "probe_inputs": [
+          {
+            "class_name": 1,
+            "extensions": 1
+          },
+          {
+            "class_name": 0,
+            "extensions": 0
+          },
+          {
+            "class_name": -1,
+            "extensions": -1
+          }
+        ],
+        "body": "best_strength = -float('inf')\n    strongest_extension = \"\"\n\n    for extension in extensions:\n        cap_count = sum(1 for char in extension if char.isupper())\n        sm_count = sum(1 for char in extension if char.islower())\n        strength = cap_count - sm_count\n\n        if strength > best_strength:\n            best_strength = strength\n            strongest_extension = extension\n        elif strength == best_strength and strongest_extension == \"\":\n            # This handles the case where the first element has the initial best_strength\n            # but the logic above already covers this if best_strength is initialized correctly.\n            # However, to strictly adhere to \"choose the one that comes first in the list\"\n            # when strengths are equal, we only update if strictly greater, which is already done.\n            # If we reach here with equal strength, we keep the current strongest_extension\n            # because it appeared earlier.\n            pass\n\n    return f\"{class_name}.{strongest_extension}\""
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "best_strength = -float('inf')\n    strongest_extension = \"\"\n\n    for extension in extensions:\n        cap_count = sum(1 for char in extension if char.isupper())\n        sm_count = sum(1 for char in extension if char.islower())\n        strength = cap_count - sm_count\n\n        if strength > best_strength:\n            best_strength = strength\n            strongest_extension = extension\n        # If strength == best_strength, we do nothing, which correctly keeps the\n        # extension that appeared first in the list.\n\n    return f\"{class_name}.{strongest_extension}\""
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/28",
+      "dataset_idx": 28,
+      "entry_point": "concatenate",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "n_static_violations": 1,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "static_violations": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "probe_inputs": [
+          {
+            "strings": [
+              1,
+              2
+            ]
+          },
+          {
+            "strings": []
+          },
+          {
+            "strings": [
+              0
+            ]
+          }
+        ],
+        "body": "return \"\".join(strings)"
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_error_type": "none",
+        "final_error_message": "",
+        "final_body": "return \"\".join(strings)"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": true,
+          "error_type": "none",
+          "error_message": "",
+          "n_static_violations": 1,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/41",
+      "dataset_idx": 41,
+      "entry_point": "car_race_collision",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 0,
+        "constraint_feedback": [
+          "car_race_collision(): parameter 'n' annotated as int"
+        ],
+        "static_violations": [],
+        "dynamic_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "body": "return n * n"
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_error_type": "none",
+        "final_error_message": "",
+        "final_body": "return n * n"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": true,
+          "error_type": "none",
+          "error_message": "",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 0
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/105",
+      "dataset_idx": 105,
+      "entry_point": "by_length",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 27)"
+        ],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "body": "if not arr:\n        return []\n\n    filtered_arr = [x for x in arr if 1 <= x <= 9]\n    \n    if not filtered_arr:\n        return []\n\n    filtered_arr.sort()\n    filtered_arr.reverse()\n\n    digit_names = {\n        1: \"One\", 2: \"Two\", 3: \"Three\", 4: \"Four\", 5: \"Five\",\n        6: \"Six\", 7: \"Seven\", 8: \"Eight\", 9: \"Nine\"\n    }\n\n    result = [digit_names[digit] for digit in filtered_arr]\n    return result"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if not arr:\n            return []\n\n    # Filter only numbers between 1 and 9 inclusive\n    filtered_arr = [x for x in arr if 1 <= x <= 9]\n\n    if not filtered_arr:\n        # If no numbers between 1 and 9 are found, return an empty list\n        # based on the logic implied by the examples (though the prompt is slightly ambiguous here,\n        # the previous code returned [] if filtered_arr was empty, which seems safest).\n        return []\n\n    # Sort the filtered array\n    filtered_arr.sort()\n    \n    # Reverse the sorted array\n    filtered_arr.reverse()\n\n    digit_names = {\n        1: \"One\", 2: \"Two\", 3: \"Three\", 4: \"Four\", 5: \"Five\",\n        6: \"Six\", 7: \"Seven\", 8: \"Eight\", 9: \"Nine\"\n    }\n\n    # Replace each digit by its corresponding name\n    result = [digit_names[digit] for digit in filtered_arr]\n    return result"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/25",
+      "dataset_idx": 25,
+      "entry_point": "factorize",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "body": "factors = []\n    d = 2\n    temp_n = n\n    while d * d <= temp_n:\n        while temp_n % d == 0:\n            factors.append(d)\n            temp_n //= d\n        d += 1\n    if temp_n > 1:\n        factors.append(temp_n)\n    return factors"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unexpected indent",
+        "final_body": "factors = []\n    d = 2\n    temp_n = n\n    while d * d <= temp_n:\n        while temp_n % d == 0:\n            factors.append(d)\n            temp_n //= d\n        d += 1\n    if temp_n > 1:\n        factors.append(temp_n)\n    return factors"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unexpected indent",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/75",
+      "dataset_idx": 75,
+      "entry_point": "is_multiply_prime",
+      "baseline": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 1,
+        "constraint_feedback": [],
+        "static_violations": [],
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "a": 1
+          },
+          {
+            "a": 0
+          },
+          {
+            "a": -1
+          }
+        ],
+        "body": "if a < 8:\n        return False\n    primes = []\n    n = 2\n    temp_a = a\n    while n * n <= temp_a:\n        if temp_a % n == 0:\n            primes.append(n)\n            temp_a //= n\n            if len(primes) > 3:\n                return False\n            while temp_a % n == 0:\n                primes.append(n)\n                temp_a //= n\n        n += 1\n    if temp_a > 1:\n        primes.append(temp_a)\n\n    return len(primes) == 3"
+      },
+      "verify_repair": {
+        "passed": false,
+        "repaired": false,
+        "n_repairs": 3,
+        "final_error_type": "failure",
+        "final_error_message": "IndentationError: unindent does not match any outer indentation level",
+        "final_body": "if a < 8:\n        return False\n    primes = []\n    n = 2\n    temp_a = a\n    while n * n <= temp_a:\n        if temp_a % n == 0:\n            primes.append(n)\n            temp_a //= n\n            while temp_a % n == 0:\n                primes.append(n)\n                temp_a //= n\n        n += 1\n    if temp_a > 1:\n        primes.append(temp_a)\n\n    return len(primes) == 3 and all(p > 1 for p in primes)"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 1,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 2,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        },
+        {
+          "iteration": 3,
+          "passed": false,
+          "error_type": "failure",
+          "error_message": "IndentationError: unindent does not match any outer indentation level",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 1
+        }
+      ]
+    },
+    {
+      "task_id": "HumanEval/2",
+      "dataset_idx": 2,
+      "entry_point": "truncate_number",
+      "baseline": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "n_static_violations": 0,
+        "n_dynamic_violations": 0,
+        "constraint_feedback": [
+          "truncate_number(): parameter 'number' annotated as float",
+          "truncate_number() annotated to return float"
+        ],
+        "static_violations": [],
+        "dynamic_violations": [],
+        "probe_inputs": [
+          {
+            "number": 1.0
+          },
+          {
+            "number": 0.0
+          },
+          {
+            "number": -1.0
+          }
+        ],
+        "body": "return number - int(number)"
+      },
+      "verify_repair": {
+        "passed": true,
+        "repaired": false,
+        "n_repairs": 0,
+        "final_error_type": "none",
+        "final_error_message": "",
+        "final_body": "return number - int(number)"
+      },
+      "iterations": [
+        {
+          "iteration": 0,
+          "passed": true,
+          "error_type": "none",
+          "error_message": "",
+          "n_static_violations": 0,
+          "n_dynamic_violations": 0
+        }
+      ]
+    }
+  ]
+}

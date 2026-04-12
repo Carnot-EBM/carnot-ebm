@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 208 HumanEval Live Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T05:49:41Z | 2026-04-12T06:20:07Z | Exp 208: added `VERIFY-011`, implemented `humaneval_live_benchmark.py` plus 16 tests at 100% targeted coverage, added `scripts/experiment_208_humaneval_live_it.py`, reran `.venv/bin/pytest tests/python -q` at 100% suite coverage plus integration/lint/type checks, and completed the live 30-problem Gemma4-E4B-it HumanEval run; final result: baseline 5/30 (16.7%), verify-repair 6/30 (20.0%), Δ +3.3pp [0.0pp, +10.0pp], 1/25 failing baselines repaired | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 207 LLM vs Z3 Live Benchmark
 
 ### Turn Log
