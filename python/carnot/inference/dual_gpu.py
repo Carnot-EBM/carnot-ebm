@@ -58,7 +58,13 @@ def requires_device_map_auto(model_name: str, *, threshold_b: float = 7.0) -> bo
 
 
 class DualGPURunner:
-    """Run paired benchmark tasks on dedicated GPUs or sharded sequential fallback."""
+    """Run paired benchmark tasks on dedicated GPUs or sharded sequential fallback.
+
+    When a ModelServer is provided, the runner delegates model loading and
+    inference to it — gaining warm caching, batched inference, and TensorRT
+    acceleration automatically. Without a server, falls back to direct
+    load_model calls (one cold load per run).
+    """
 
     def __init__(
         self,
@@ -66,6 +72,7 @@ class DualGPURunner:
         *,
         load_model_fn: LoadModelFn | None = None,
         unload_fn: UnloadModelFn | None = None,
+        model_server: Any | None = None,
         torch_module: Any | None = None,
         clock: Callable[[], float] = perf_counter,
         large_model_threshold_b: float = 7.0,
@@ -75,6 +82,7 @@ class DualGPURunner:
         self.model_specs = tuple(
             {"name": str(spec["name"]), "hf_id": str(spec["hf_id"])} for spec in model_specs
         )
+        self._model_server = model_server
         if load_model_fn is None:
             from carnot.inference.model_loader import load_model
 
@@ -116,6 +124,19 @@ class DualGPURunner:
         return "parallel"
 
     def _load_context(self, spec: Mapping[str, str], index: int) -> DualGPUExecutionContext:
+        # If a ModelServer is available and serves this model, use it.
+        # The server provides warm caching, batched inference, and TensorRT.
+        if self._model_server is not None and hasattr(self._model_server, "serves_model"):
+            if self._model_server.serves_model(spec["hf_id"]):
+                return DualGPUExecutionContext(
+                    model_name=spec["name"],
+                    model_hf_id=spec["hf_id"],
+                    device_assignment="model_server",
+                    uses_device_map_auto=False,
+                    model=self._model_server,
+                    tokenizer=self._model_server,
+                )
+
         uses_device_map_auto = requires_device_map_auto(
             spec["hf_id"],
             threshold_b=self._large_model_threshold_b,
