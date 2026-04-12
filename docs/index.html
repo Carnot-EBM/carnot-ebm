@@ -294,10 +294,10 @@
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">186</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">187</div><div class="stat-label">Experiments</div></div>
       <div class="stat"><div class="stat-num">4</div><div class="stat-label">Energy Tiers</div></div>
       <div class="stat"><div class="stat-num">0.006ms</div><div class="stat-label">Verify Latency</div></div>
-      <div class="stat"><div class="stat-num">2,251</div><div class="stat-label">Tests</div></div>
+      <div class="stat"><div class="stat-num">2,148</div><div class="stat-label">Tests</div></div>
     </div>
   </div>
 </section>
@@ -337,7 +337,7 @@
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
         <h3 class="bento-title">Verify-Repair Pipeline</h3>
-        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. The clearest validated live benchmark is Exp 208 on HumanEval: 16.7% -> 20.0% on 30 official problems.</p>
+        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. Recent live evidence includes Exp 207 cutting extractor false positives to 1/91 vs Z3's 3/91 and Exp 208 improving HumanEval from 16.7% to 20.0%.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">⚡</div>
@@ -347,7 +347,7 @@
       <div class="bento-card span-2">
         <div class="bento-icon">🛡️</div>
         <h3 class="bento-title">Adversarial Robust</h3>
-        <p class="bento-text">The largest adversarial recovery numbers are currently simulated (Exp 178: +28.3pp Qwen, +24.0pp Gemma on number-swapped variants). They remain in the record, but are no longer presented as validated live results.</p>
+        <p class="bento-text">The largest adversarial recovery numbers are currently simulated (Exp 178: +28.2pp Qwen, +24.0pp Gemma on number-swapped variants). They remain in the record, but are no longer presented as validated live results.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🤖</div>
@@ -376,6 +376,11 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Validated live GPU</span>
+        <h3 class="r-title">Live extractor benchmark (Exp 207)</h3>
+        <div class="r-stats"><span class="r-before">Wrong answers: 0/9</span> <span class="r-after">False positives: 1/91</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Validated live GPU</span>
         <h3 class="r-title">Live GSM8K reality check (Exp 184)</h3>
         <div class="r-stats"><span class="r-before">Baseline: 63.0%</span> <span class="r-after">+Repair: 61.0%</span></div>
       </div>
@@ -400,6 +405,7 @@
         <div class="r-stats"><span class="r-before">Coverage</span> <span class="r-after">96.0%</span></div>
       </div>
     </div>
+    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Latest research scan (Exp 210): 10 core papers, 8 benchmark assets, and 5 chain-of-thought monitorability-risk papers. Current recommended follow-on order: <code>EXP-211 -&gt; EXP-213 -&gt; EXP-212</code>.</p>
   </div>
 </section>
 
