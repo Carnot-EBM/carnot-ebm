@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 227 Seeded Qwen HumanEval PBT Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T21:59:44Z | 2026-04-12T22:23:20Z | Exp 227: extended `code-verification` with `REQ-CODE-015` and `SCENARIO-CODE-013`, wrote `test_experiment_227_qwen_pbt.py` first, implemented `scripts/experiment_227_qwen_pbt.py`, ran the live 30-problem Qwen3.5-0.8B HumanEval PBT benchmark on the exact Exp 208 cohort to `results/experiment_227_results.json`, reconciled spec/traceability/ops docs, and reran targeted 100% coverage for the new script, Ruff, spec coverage, the full Python suite, `tests/integration/test_full_pipeline.py`, and reconciliation validation. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 226 Full HumanEval PBT Benchmark
 
 ### Turn Log
