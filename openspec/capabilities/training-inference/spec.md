@@ -71,6 +71,32 @@ The system shall define a `Sampler` trait/protocol:
 - `sample_chain(&self, ...) -> Vec<Array>` — return full chain for diagnostics
 - Parallel Ising Gibbs sampler (`parallel_ising.py`): checkerboard updates, simulated annealing schedules, and thrml-compatible `parallel_sample_states` wrapper
 
+### REQ-SAMPLE-005: FPGA Ising Architecture And Register Map
+
+The system shall define a KV260-class FPGA Ising sampler architecture for
+dynamic constraint verification, where:
+- the target array size is up to 4096 spins using a tiled p-bit design
+  (32 tiles × 128 spins per tile)
+- spin updates use an even/odd phase schedule compatible with the existing
+  parallel Ising approximation
+- couplings are uploaded at runtime as sparse row data rather than fixed at
+  synthesis time
+- an AXI-Lite register map covers control, status, annealing configuration,
+  bias upload, sparse coupling upload, and sampled-state readback
+
+### REQ-SAMPLE-006: FPGA Sampler Backend With Simulation And Fallback
+
+The system shall provide an `FPGAIsingSampler` backend in
+`python/carnot/samplers/fpga_ising.py`, where:
+- the backend satisfies the `SamplerBackend` protocol
+- the backend can drive a PYNQ overlay when available
+- the backend provides a software model that exercises the same register-map
+  upload, trigger, and readback path without hardware
+- the backend falls back to the CPU Ising sampler when FPGA access is not
+  available or explicitly disabled
+- the backend exposes a small benchmark helper comparing the simulated FPGA
+  control path against the CPU sampler on the same Ising problem
+
 ## Scenarios
 
 ### SCENARIO-TRAIN-001: CD-1 Training Step
@@ -140,6 +166,31 @@ The system shall define a `Sampler` trait/protocol:
 **Then** samples are returned as a list of (n_vars, 1) arrays matching thrml conventions
 **And** the sampler uses extracted coupling matrices and biases from the IsingEBM
 
+### SCENARIO-SAMPLE-009: Software FPGA Upload And Readback
+
+**Given** a sparse Ising coupling matrix and bias vector for up to 4096 spins
+**When** the software FPGA model receives the upload through the AXI-Lite
+register map and a sampling run is triggered
+**Then** the uploaded biases, sparse row pointers, and coupling entries are
+stored without shape loss
+**And** sampled spin states can be read back through the modeled result window
+
+### SCENARIO-SAMPLE-010: FPGA Detection Fallback
+
+**Given** an environment without a loadable PYNQ overlay or FPGA device
+**When** `FPGAIsingSampler` is constructed in auto-detect mode
+**Then** it remains callable through the `SamplerBackend` interface
+**And** it delegates sampling to the CPU Ising sampler while recording that
+the active execution path is a fallback
+
+### SCENARIO-SAMPLE-011: Simulated FPGA Benchmark Contract
+
+**Given** the same Ising problem and sample request
+**When** the repository benchmark helper runs the software FPGA model and the
+CPU backend
+**Then** it returns elapsed-time metrics for both paths
+**And** it reports the compared backend names, problem size, and sample shape
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -159,3 +210,5 @@ The system shall define a `Sampler` trait/protocol:
 | REQ-SAMPLE-002 | Implemented | Implemented | 6 Rust + 2 Python |
 | REQ-SAMPLE-003 | Implemented | Implemented | 2 Rust + 30+ Python (incl. parallel Ising) |
 | REQ-SAMPLE-004 | Not Started | Implemented | 8 Python |
+| REQ-SAMPLE-005 | Not Started | Implemented | 6 Python |
+| REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |

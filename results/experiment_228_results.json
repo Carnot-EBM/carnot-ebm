@@ -1,0 +1,69 @@
+{
+  "experiment": 228,
+  "benchmark": "fpga_ising_design_and_simulation",
+  "title": "KV260 FPGA Ising sampler design and software-model benchmark",
+  "run_date": "20260412",
+  "schema": {
+    "artifact": "carnot.fpga_ising_design.v1"
+  },
+  "metadata": {
+    "hardware_target": "AMD/Xilinx Kria KV260",
+    "inference_mode": "software_simulation",
+    "hardware_detected": false,
+    "module": "python/carnot/samplers/fpga_ising.py",
+    "design_doc": "docs/fpga-ising-design.md",
+    "spec_requirements": [
+      "REQ-SAMPLE-005",
+      "REQ-SAMPLE-006",
+      "SCENARIO-SAMPLE-009",
+      "SCENARIO-SAMPLE-010",
+      "SCENARIO-SAMPLE-011"
+    ],
+    "notes": [
+      "The software-model benchmark validates the AXI-Lite upload/trigger/readback contract.",
+      "The measured timings are not a claim about synthesized FPGA throughput.",
+      "Auto-detect mode currently falls back to CPU because no PYNQ bitstream/MMIO endpoint is configured in this environment."
+    ]
+  },
+  "architecture": {
+    "max_spins": 4096,
+    "tile_size": 128,
+    "tile_count": 32,
+    "max_degree": 32,
+    "fixed_point_format": "Q8.8",
+    "update_schedule": "global even/odd phases"
+  },
+  "register_map": {
+    "control": "0x0000",
+    "status": "0x0004",
+    "spin_count": "0x0008",
+    "sample_count": "0x000c",
+    "warmup_steps": "0x0010",
+    "steps_per_sample": "0x0014",
+    "beta_init": "0x0018",
+    "beta_final": "0x001c",
+    "run_flags": "0x0020",
+    "bias_base": "0x1000",
+    "row_ptr_base": "0x2000",
+    "edge_base": "0x4000",
+    "sample_base": "0x8010"
+  },
+  "benchmark_result": {
+    "problem": {
+      "n_spins": 128,
+      "topology": "symmetric sparse ring with 4 neighbors on each side",
+      "n_samples": 16,
+      "n_steps": 100,
+      "beta": 6.0,
+      "seed": 228
+    },
+    "fpga_backend": "fpga_sim",
+    "fpga_seconds": 0.8245494040002086,
+    "cpu_backend": "cpu",
+    "cpu_seconds": 0.28809158799958823,
+    "sample_shape": [
+      16,
+      128
+    ]
+  }
+}

@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 228 KV260 FPGA Ising Sampler Design
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T22:31:05Z | 2026-04-12T22:48:41Z | Exp 228: extended `training-inference` with `REQ-SAMPLE-005` / `REQ-SAMPLE-006` and `SCENARIO-SAMPLE-009` through `SCENARIO-SAMPLE-011`, wrote `tests/python/test_fpga_ising.py` first, implemented `python/carnot/samplers/fpga_ising.py` plus `get_backend("fpga")` wiring and the 4K-spin AXI-Lite design contract, documented the architecture in `docs/fpga-ising-design.md`, recorded the honest software-model benchmark in `results/experiment_228_results.json`, and reran targeted 100% module coverage, spec coverage, Ruff, mypy, the full Python suite, applicable E2E/integration checks, and reconciliation validation. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 227 Seeded Qwen HumanEval PBT Benchmark
 
 ### Turn Log

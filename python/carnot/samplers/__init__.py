@@ -1,20 +1,17 @@
 """MCMC samplers for Energy Based Models."""
 
-from carnot.samplers.langevin import LangevinSampler
+from carnot.samplers.backend import CpuBackend, SamplerBackend, TsuBackend, get_backend
+from carnot.samplers.fpga_ising import FPGAIsingSampler
 from carnot.samplers.hmc import HMCSampler
-from carnot.samplers.parallel_ising import ParallelIsingSampler, AnnealingSchedule
-from carnot.samplers.backend import (
-    SamplerBackend,
-    CpuBackend,
-    TsuBackend,
-    get_backend,
-)
+from carnot.samplers.langevin import LangevinSampler
+from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
 
 __all__ = [
     "LangevinSampler",
     "HMCSampler",
     "ParallelIsingSampler",
     "AnnealingSchedule",
+    "FPGAIsingSampler",
     "SamplerBackend",
     "CpuBackend",
     "TsuBackend",

@@ -29,7 +29,10 @@
        switching logic end-to-end. When the real TSU driver lands, this stub
        gets replaced with actual hardware calls.
 
-    4. ``get_backend(name)`` — factory function that maps a string name to a
+    4. ``FPGAIsingSampler`` — optional KV260/PYNQ-oriented backend with a
+       software-model control plane and CPU fallback.
+
+    5. ``get_backend(name)`` — factory function that maps a string name to a
        backend instance. Reads ``CARNOT_BACKEND`` env var as default.
 
 Spec: REQ-SAMPLE-003
@@ -39,8 +42,9 @@ from __future__ import annotations
 
 import logging
 import os
+from collections.abc import Callable
 from dataclasses import dataclass, field
-from typing import Any, Protocol, runtime_checkable
+from typing import Any, Protocol, cast, runtime_checkable
 
 import jax
 import jax.numpy as jnp
@@ -174,7 +178,7 @@ class CpuBackend:
     def _next_key(self) -> jax.Array:
         """Split and advance the internal PRNG key."""
         self._key, subkey = jrandom.split(self._key)
-        return subkey
+        return cast("jax.Array", subkey)
 
     def minimize_energy(
         self,
@@ -201,8 +205,8 @@ class CpuBackend:
             use_checkerboard=True,
         )
         b = jnp.asarray(biases, dtype=jnp.float32)
-        J = jnp.asarray(couplings, dtype=jnp.float32)
-        samples = sampler.sample(self._next_key(), b, J, beta=beta)
+        couplings_jax = jnp.asarray(couplings, dtype=jnp.float32)
+        samples = sampler.sample(self._next_key(), b, couplings_jax, beta=beta)
         return np.asarray(samples)
 
     def sample(
@@ -235,8 +239,8 @@ class CpuBackend:
             use_checkerboard=use_checkerboard,
         )
         b = jnp.asarray(biases, dtype=jnp.float32)
-        J = jnp.asarray(couplings, dtype=jnp.float32)
-        samples = sampler.sample(self._next_key(), b, J, beta=beta)
+        couplings_jax = jnp.asarray(couplings, dtype=jnp.float32)
+        samples = sampler.sample(self._next_key(), b, couplings_jax, beta=beta)
         return np.asarray(samples)
 
 
@@ -350,7 +354,10 @@ class TsuBackend:
         return rng.integers(0, 2, size=(n_samples, n_spins)).astype(bool)
 
 
-_BACKENDS: dict[str, type] = {
+BackendFactory = Callable[[], SamplerBackend]
+
+
+_BACKENDS: dict[str, BackendFactory] = {
     "cpu": CpuBackend,
     "tsu": TsuBackend,
 }
@@ -373,7 +380,7 @@ def get_backend(name: str | None = None) -> SamplerBackend:
             samples = backend.minimize_energy(biases, couplings, 100, 1000, 10.0)
 
     Args:
-        name: Backend name (``"cpu"`` or ``"tsu"``). If None, reads
+        name: Backend name (``"cpu"``, ``"tsu"``, or ``"fpga"``). If None, reads
             ``CARNOT_BACKEND`` env var, defaulting to ``"cpu"``.
 
     Returns:
@@ -387,10 +394,14 @@ def get_backend(name: str | None = None) -> SamplerBackend:
     if name is None:
         name = os.environ.get("CARNOT_BACKEND", "cpu")
 
+    if name == "fpga":
+        from carnot.samplers.fpga_ising import FPGAIsingSampler
+
+        fpga_backend: SamplerBackend = FPGAIsingSampler()
+        return fpga_backend
+
     if name not in _BACKENDS:
-        available = ", ".join(sorted(_BACKENDS.keys()))
-        raise ValueError(
-            f"Unknown sampler backend {name!r}. Available backends: {available}"
-        )
+        available = ", ".join(sorted([*_BACKENDS.keys(), "fpga"]))
+        raise ValueError(f"Unknown sampler backend {name!r}. Available backends: {available}")
 
     return _BACKENDS[name]()
