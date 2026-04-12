@@ -12,6 +12,57 @@ milestone_title: "Live GPU Benchmarks (Phased) + Precision Ceiling Investigation
 milestone_doc: "openspec/change-proposals/research-roadmap-v18.md"
 
 tasks:
+  # ── PRIORITY ZERO: Validate Core Claim with Live Inference ───
+  # ALL previous positive results used SIMULATED inference.
+  # The ONLY live experiment (Exp 184, 3B) showed NEGATIVE results.
+  # This experiment determines whether Carnot's value proposition is real.
+  - id: exp190a-live-08b-validation
+    milestone: "2026.04.14"
+    deliverable: results/experiment_190a_results.json
+    title: "Exp 190a: CRITICAL — Live 0.8B GPU inference validation of core claim"
+    prompt: |
+      You are working on the Carnot EBM framework in (project_root).
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: THIS IS THE MOST IMPORTANT EXPERIMENT IN THE PROJECT.
+
+      ALL previous experiments showing positive verify-repair improvement
+      (Exp 91: +14%, Exp 121: +26%, Exp 161: +10-14%) used SIMULATED
+      inference — the LLM was NOT actually generating responses. The ONLY
+      experiment with LIVE GPU inference (Exp 184, 3B model) showed
+      NEGATIVE results (-2% standard, -12% adversarial).
+
+      We MUST determine whether the positive results are REAL or simulation
+      artifacts. This experiment runs the SAME test as previous experiments
+      but with LIVE Qwen3.5-0.8B inference on GPU.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_91_gsm8k_live.py — the original (simulated)
+      - scripts/experiment_184_3b_model.py — the live GPU experiment
+      - python/carnot/inference/model_loader.py — GPU model loading
+      - python/carnot/pipeline/verify_repair.py — pipeline
+
+      TASK: Create results/experiment_190a_results.json
+
+      CONCRETE STEPS:
+      1. Load Qwen3.5-0.8B on GPU with CARNOT_FORCE_LIVE=1
+      2. Run 200 GSM8K questions (SAME questions as Exp 91) through:
+         a. Baseline (LLM generates, extract answer)
+         b. Verify-only (extract constraints, check)
+         c. Verify-repair (full loop, max 3 iterations)
+      3. CRITICAL METRICS:
+         - Baseline accuracy (should be ~65-70% for 0.8B on GSM8K)
+         - Verify-repair accuracy
+         - Improvement delta with 95% CI
+         - If delta > 0: core claim VALIDATED — precision ceiling is model-size
+         - If delta <= 0: core claim IN QUESTION — simulated inference was artifact
+      4. Also run 100 adversarial (number-swapped) questions:
+         - Same three modes
+         - Compare delta to simulated Exp 121 (+26%)
+      5. Save with inference_mode="live_gpu" clearly marked
+      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_190a_live_validation.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
   # ── Phase 54: Checkpoint Cleanup ─────────────────────────────
   - id: exp190-checkpoint-cleanup
     milestone: "2026.04.14"
