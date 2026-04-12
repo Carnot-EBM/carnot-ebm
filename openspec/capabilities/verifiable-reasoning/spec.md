@@ -324,6 +324,24 @@ artifacts can consume directly, where:
 - re-running the harness with matching cohort metadata refreshes the output in
   place rather than appending duplicate runs or scrambling case order
 
+### REQ-VERIFY-027: Exp 219 GSM8K Semantic Artifact Metrics And Trace Data
+
+The same harness shall support writing `results/experiment_219_results.json`
+for the `gsm8k_semantic` benchmark, where:
+- the top-level payload records experiment id `219` when the output path is
+  `results/experiment_219_results.json`
+- the artifact preserves the fixed run date `20260412` plus live-run metadata
+  needed to interpret the benchmark, including the forced-live setting,
+  checkpoint directory, max-repair limit, and monitorability-policy source
+- each model summary reports baseline, verify-only, and verify-repair accuracy
+  together with paired deltas, semantic-violation detections, false positives,
+  parse coverage, repair yield, and latency/token overhead
+- each per-question result preserves the raw response plus verifier-visible
+  artifacts needed for later trace learning, including typed-reasoning parse
+  status, semantic-grounding violations, and repair history when repairs occur
+- re-running the benchmark with matching cohort metadata refreshes the same
+  artifact in place without changing the sampled case order
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -586,6 +604,19 @@ sample seed
   ordered paired runs
 **And** the refreshed artifact does not duplicate cases or mode entries
 
+### SCENARIO-VERIFY-027: Exp 219 GSM8K Artifact Records Semantic Metrics And Trace Evidence
+
+**Given** the shared harness runs `gsm8k_semantic` with output path
+`results/experiment_219_results.json`
+**When** the Exp 219 artifact is written
+**Then** the top-level payload records experiment id `219`
+**And** each model summary includes accuracy, paired deltas, semantic
+  violations detected, false positives, parse coverage, repair yield, and
+  latency/token overhead
+**And** each per-question result preserves the raw response together with
+  typed-reasoning parse status, semantic-grounding evidence, and repair
+  history needed for later trace learning
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -616,4 +647,5 @@ sample seed
 | REQ-VERIFY-024 | Not Started | Implemented | Structured reasoning policy + pipeline entrypoint tests |
 | REQ-VERIFY-025 | Not Started | Implemented | Exp 218 harness CLI + checkpoint tests |
 | REQ-VERIFY-026 | Not Started | Implemented | Exp 218 stable payload + prompt seed tests |
+| REQ-VERIFY-027 | Not Started | Implemented | Exp 219 artifact + harness regression tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

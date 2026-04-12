@@ -19,8 +19,8 @@ The harness keeps paired comparisons honest by:
 Usage:
     .venv/bin/python scripts/experiment_218_live_dual_model_suite.py --help
 
-Spec: REQ-VERIFY-025, REQ-VERIFY-026, SCENARIO-VERIFY-025,
-SCENARIO-VERIFY-026
+Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027,
+SCENARIO-VERIFY-025, SCENARIO-VERIFY-026, SCENARIO-VERIFY-027
 """
 
 from __future__ import annotations
@@ -32,7 +32,9 @@ import importlib.util
 import json
 import os
 import random
+import re
 import time
+from dataclasses import asdict, is_dataclass
 from pathlib import Path
 from typing import Any
 
@@ -42,6 +44,7 @@ SCHEMA_ARTIFACT = "carnot.live_dual_model_suite.v1"
 DEFAULT_SAMPLE_SEED = 218
 DEFAULT_MAX_REPAIRS = 3
 MODE_ORDER = ("baseline", "verify_only", "verify_repair")
+_EXPERIMENT_OUTPUT_RE = re.compile(r"experiment_(\d+)_results\.json$")
 
 MODEL_SPECS: list[dict[str, str]] = [
     {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B"},
@@ -103,6 +106,172 @@ def default_output_path(benchmark: str) -> Path:
 def default_checkpoint_dir() -> Path:
     """Return the default checkpoint directory."""
     return get_repo_root() / "results" / "checkpoints" / "experiment_218"
+
+
+def artifact_experiment_id(output_path: Path) -> int:
+    """Infer the deliverable experiment id from the output filename when present."""
+    match = _EXPERIMENT_OUTPUT_RE.search(output_path.name)
+    if match is None:
+        return EXPERIMENT
+    return int(match.group(1))
+
+
+def live_inference_mode() -> str:
+    """Describe the current run's intended inference mode from env defaults."""
+    if os.environ.get("CARNOT_FORCE_LIVE") == "1":
+        return "live_cpu" if os.environ.get("CARNOT_FORCE_CPU") == "1" else "live_gpu"
+    return "simulated"
+
+
+def _token_count(tokenizer: Any, text: str) -> int:
+    """Count tokens conservatively, falling back to whitespace if needed."""
+    if not text:
+        return 0
+    if tokenizer is None:
+        return len(text.split())
+    try:
+        encoded = tokenizer(
+            text,
+            add_special_tokens=False,
+            return_attention_mask=False,
+            return_token_type_ids=False,
+        )
+        input_ids = encoded.get("input_ids")
+        if isinstance(input_ids, list):
+            return len(input_ids)
+    except Exception:
+        pass
+    return len(text.split())
+
+
+def _round_mean(values: list[float]) -> float:
+    if not values:
+        return 0.0
+    return round(sum(values) / len(values), 3)
+
+
+def _typed_reasoning_parse_status(typed_reasoning: Any) -> str:
+    """Return a stable parse-status label for typed reasoning artifacts."""
+    if typed_reasoning is None:
+        return "unavailable"
+    provenance = getattr(typed_reasoning, "provenance", None)
+    extraction_method = getattr(provenance, "extraction_method", None)
+    if isinstance(extraction_method, str) and extraction_method:
+        return extraction_method
+    if hasattr(typed_reasoning, "to_dict"):
+        payload = typed_reasoning.to_dict()
+        provenance_payload = payload.get("provenance", {})
+        if isinstance(provenance_payload, dict):
+            method = provenance_payload.get("extraction_method")
+            if isinstance(method, str) and method:
+                return method
+    return "parsed"
+
+
+def _serialize_jsonable(value: Any) -> Any:
+    """Best-effort conversion into JSON-friendly structures."""
+    if isinstance(value, (str, int, float, bool)) or value is None:
+        return value
+    if isinstance(value, dict):
+        return {str(key): _serialize_jsonable(val) for key, val in value.items()}
+    if isinstance(value, list):
+        return [_serialize_jsonable(item) for item in value]
+    if isinstance(value, tuple):
+        return [_serialize_jsonable(item) for item in value]
+    if hasattr(value, "to_dict"):
+        return _serialize_jsonable(value.to_dict())
+    if is_dataclass(value) and not isinstance(value, type):
+        return _serialize_jsonable(asdict(value))
+    return str(value)
+
+
+def _serialize_constraint_result(constraint: Any) -> dict[str, Any]:
+    """Serialize one pipeline constraint result without leaking opaque objects."""
+    if isinstance(constraint, dict):
+        return dict(constraint)
+    return {
+        "constraint_type": getattr(constraint, "constraint_type", None),
+        "description": getattr(constraint, "description", ""),
+        "metadata": _serialize_jsonable(getattr(constraint, "metadata", {})),
+    }
+
+
+def _serialize_verification_result(verification: Any) -> dict[str, Any]:
+    """Serialize verification output for later trace-learning and audit work."""
+    typed_reasoning = getattr(verification, "typed_reasoning", None)
+    semantic_grounding = getattr(verification, "semantic_grounding", None)
+    constraints = [
+        _serialize_constraint_result(constraint)
+        for constraint in list(getattr(verification, "constraints", []))
+    ]
+    violations = [
+        _serialize_constraint_result(violation)
+        for violation in list(getattr(verification, "violations", []))
+    ]
+    return {
+        "verified": bool(getattr(verification, "verified", False)),
+        "energy": round(float(getattr(verification, "energy", 0.0)), 6),
+        "certificate": _serialize_jsonable(getattr(verification, "certificate", {})),
+        "constraints": constraints,
+        "violations": violations,
+        "n_constraints": len(constraints),
+        "n_violations": len(violations),
+        "typed_reasoning_parse_status": _typed_reasoning_parse_status(typed_reasoning),
+        "typed_reasoning": _serialize_jsonable(typed_reasoning),
+        "semantic_grounding": _serialize_jsonable(semantic_grounding),
+    }
+
+
+def _serialize_generation_attempt(
+    *,
+    prompt: str,
+    response: str,
+    tokenizer: Any,
+    valid: bool | None = None,
+    error: str | None = None,
+) -> dict[str, Any]:
+    """Serialize one generation attempt with prompt/response token counts."""
+    prompt_tokens = _token_count(tokenizer, prompt)
+    response_tokens = _token_count(tokenizer, response)
+    payload = {
+        "prompt": prompt,
+        "response": response,
+        "prompt_tokens": prompt_tokens,
+        "response_tokens": response_tokens,
+        "total_tokens": prompt_tokens + response_tokens,
+    }
+    if valid is not None:
+        payload["valid"] = valid
+    if error is not None:
+        payload["error"] = error
+    return payload
+
+
+def _build_generation_trace(
+    *,
+    tokenizer: Any,
+    attempts: list[dict[str, Any]],
+    fallback_record: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Collect prompt/response attempts and aggregate token usage."""
+    serialized_attempts = list(attempts)
+    if fallback_record:
+        serialized_attempts.append(
+            _serialize_generation_attempt(
+                prompt=str(fallback_record.get("prompt", "")),
+                response=str(fallback_record.get("response", "")),
+                tokenizer=tokenizer,
+            )
+        )
+    prompt_tokens = sum(int(attempt.get("prompt_tokens", 0)) for attempt in serialized_attempts)
+    response_tokens = sum(int(attempt.get("response_tokens", 0)) for attempt in serialized_attempts)
+    return {
+        "attempts": serialized_attempts,
+        "prompt_tokens": prompt_tokens,
+        "response_tokens": response_tokens,
+        "total_tokens": prompt_tokens + response_tokens,
+        "fallback_used": bool(fallback_record),
+    }
 
 
 def load_monitorability_policy(path: Path | None = None) -> dict[str, Any]:
@@ -266,11 +435,15 @@ def build_artifact_payload(
     started_at: str,
     finished_at: str,
     runtime_seconds: float,
+    checkpoint_dir: Path,
+    max_repairs: int,
+    policy_path: Path,
+    inference_mode: str,
 ) -> dict[str, Any]:
     """Build the stable top-level Exp 218 artifact payload."""
     spec = BENCHMARK_SPECS[benchmark]
     return {
-        "experiment": EXPERIMENT,
+        "experiment": artifact_experiment_id(output_path),
         "benchmark": benchmark,
         "title": spec["title"],
         "run_date": RUN_DATE,
@@ -289,9 +462,15 @@ def build_artifact_payload(
             "models": [dict(model) for model in MODEL_SPECS],
             "source_artifacts": list(spec["source_artifacts"]),
             "output_path": str(output_path),
+            "checkpoint_dir": str(checkpoint_dir),
             "checkpoint_pattern": (
                 "results/checkpoints/experiment_218/<benchmark>__<model>__<mode>.json"
             ),
+            "max_repairs": max_repairs,
+            "policy_source": str(policy_path),
+            "inference_mode": inference_mode,
+            "force_live": os.environ.get("CARNOT_FORCE_LIVE") == "1",
+            "force_cpu": os.environ.get("CARNOT_FORCE_CPU") == "1",
         },
         "cohort": {
             "case_count": len(cohort),
@@ -443,17 +622,17 @@ def _generate_text(
 
 
 def _extract_final_number(text: str) -> int | None:  # pragma: no cover
-    import re
+    numeric_token = r"-?(?:\d[\d,]*)"
 
-    match = re.search(r"####\s*(-?[\d,]+)", text)
+    match = re.search(rf"####\s*({numeric_token})", text)
     if match:
         return int(match.group(1).replace(",", ""))
 
-    match = re.search(r"[Aa]nswer[:\s]+(-?[\d,]+)", text)
+    match = re.search(rf"[Aa]nswer[:\s]+({numeric_token})", text)
     if match:
         return int(match.group(1).replace(",", ""))
 
-    numbers = re.findall(r"-?[\d,]+", text)
+    numbers = re.findall(numeric_token, text)
     if numbers:
         return int(numbers[-1].replace(",", ""))
     return None
@@ -554,6 +733,7 @@ def _run_gsm8k_baseline(
 ) -> dict[str, Any]:  # pragma: no cover
     from carnot.pipeline.verify_repair import VerifyRepairPipeline  # type: ignore[import-untyped]
 
+    typed_reasoning = None
     response_mode = recommended_response_mode(str(case["task_slice"]), policy)
     prompt_seed = int(case["prompt_seeds"]["baseline"])
     task = f"Question: {case['question']}\nSolve the problem and give the final answer as a number."
@@ -568,6 +748,24 @@ def _run_gsm8k_baseline(
             StructuredReasoningController,
         )
 
+        fallback_record: dict[str, Any] = {}
+
+        def fallback_generate(generated_prompt: str, max_new_tokens: int) -> str:
+            response = _generate_text(
+                model=model,
+                tokenizer=tokenizer,
+                prompt=generated_prompt,
+                prompt_seed=prompt_seed,
+                max_new_tokens=max_new_tokens,
+            )
+            fallback_record.update(
+                {
+                    "prompt": generated_prompt,
+                    "response": response,
+                }
+            )
+            return response
+
         controller = StructuredReasoningController(policy=policy)
         emission = controller.emit(
             question=task,
@@ -575,17 +773,25 @@ def _run_gsm8k_baseline(
             model_name=model_spec["hf_id"],
             model=model,
             tokenizer=tokenizer,
-            fallback_generate=lambda generated_prompt, max_new_tokens: _generate_text(
-                model=model,
-                tokenizer=tokenizer,
-                prompt=generated_prompt,
-                prompt_seed=prompt_seed,
-                max_new_tokens=max_new_tokens,
-            ),
+            fallback_generate=fallback_generate,
         )
         response = emission.response
-        typed_reasoning_available = emission.typed_reasoning is not None
+        typed_reasoning = emission.typed_reasoning
         effective_mode = emission.response_mode
+        generation_trace = _build_generation_trace(
+            tokenizer=tokenizer,
+            attempts=[
+                _serialize_generation_attempt(
+                    prompt=str(attempt.prompt),
+                    response=str(attempt.raw_response),
+                    tokenizer=tokenizer,
+                    valid=bool(attempt.valid),
+                    error=attempt.error,
+                )
+                for attempt in emission.attempts
+            ],
+            fallback_record=fallback_record if emission.fallback_used else None,
+        )
     else:
         response = _generate_text(
             model=model,
@@ -594,10 +800,18 @@ def _run_gsm8k_baseline(
             prompt_seed=prompt_seed,
             max_new_tokens=96,
         )
-        typed_reasoning_available = (
-            VerifyRepairPipeline(model=None).extract_typed_reasoning(task, response) is not None
-        )
+        typed_reasoning = VerifyRepairPipeline(model=None).extract_typed_reasoning(task, response)
         effective_mode = response_mode
+        generation_trace = _build_generation_trace(
+            tokenizer=tokenizer,
+            attempts=[
+                _serialize_generation_attempt(
+                    prompt=prompt,
+                    response=response,
+                    tokenizer=tokenizer,
+                )
+            ],
+        )
 
     extracted_answer = _extract_final_number(response)
     correct = extracted_answer == int(case["ground_truth"])
@@ -610,7 +824,13 @@ def _run_gsm8k_baseline(
         "extracted_answer": extracted_answer,
         "ground_truth": int(case["ground_truth"]),
         "correct": correct,
-        "typed_reasoning_available": typed_reasoning_available,
+        "typed_reasoning_available": typed_reasoning is not None,
+        "typed_reasoning_parse_status": _typed_reasoning_parse_status(typed_reasoning),
+        "typed_reasoning": _serialize_jsonable(typed_reasoning),
+        "generation_trace": generation_trace,
+        "prompt_tokens": int(generation_trace["prompt_tokens"]),
+        "response_tokens": int(generation_trace["response_tokens"]),
+        "total_tokens": int(generation_trace["total_tokens"]),
         "latency_seconds": round(time.perf_counter() - started, 3),
     }
 
@@ -622,14 +842,20 @@ def _run_gsm8k_verify_only(
     from carnot.pipeline.verify_repair import VerifyRepairPipeline
 
     pipeline = VerifyRepairPipeline(model=None, domains=["arithmetic"], timeout_seconds=30.0)
+    started = time.perf_counter()
     verification = pipeline.verify(
         str(case["question"]),
         str(baseline["response"]),
         domain="arithmetic",
     )
-    semantic_violation_count = 0
-    if verification.semantic_grounding is not None:
-        semantic_violation_count = len(verification.semantic_grounding.violations)
+    verification_trace = _serialize_verification_result(verification)
+    semantic_grounding = verification_trace.get("semantic_grounding", {})
+    semantic_violations = []
+    if isinstance(semantic_grounding, dict):
+        violations = semantic_grounding.get("violations", [])
+        if isinstance(violations, list):
+            semantic_violations = violations
+    semantic_violation_count = len(semantic_violations)
     flagged = (not verification.verified) or bool(verification.violations)
     return {
         "case_id": str(case["case_id"]),
@@ -643,8 +869,15 @@ def _run_gsm8k_verify_only(
         "n_violations": len(verification.violations),
         "semantic_violation_count": semantic_violation_count,
         "typed_reasoning_available": bool(verification.typed_reasoning),
+        "typed_reasoning_parse_status": str(verification_trace["typed_reasoning_parse_status"]),
+        "parseable": verification_trace["typed_reasoning_parse_status"] != "unavailable",
+        "verification": verification_trace,
         "correct": bool(baseline["correct"]),
         "accepted_correct": bool(baseline["correct"]) and not flagged,
+        "prompt_tokens": 0,
+        "response_tokens": 0,
+        "total_tokens": 0,
+        "latency_seconds": round(time.perf_counter() - started, 3),
     }
 
 
@@ -662,11 +895,15 @@ def _run_gsm8k_verify_repair(
 
     pipeline = VerifyRepairPipeline(model=None, domains=["arithmetic"], timeout_seconds=30.0)
     current_response = str(baseline["response"])
+    started = time.perf_counter()
     verification = pipeline.verify(str(case["question"]), current_response, domain="arithmetic")
+    initial_trace = _serialize_verification_result(verification)
     history = [
         {
-            "verified": verification.verified,
-            "n_violations": len(verification.violations),
+            "iteration": 0,
+            "response_mode": baseline["response_mode"],
+            "response": current_response,
+            "verification": initial_trace,
         }
     ]
     if verification.verified:
@@ -682,6 +919,13 @@ def _run_gsm8k_verify_repair(
             "verified": True,
             "repaired": False,
             "n_repairs": 0,
+            "typed_reasoning_parse_status": str(initial_trace["typed_reasoning_parse_status"]),
+            "initial_verification": initial_trace,
+            "final_verification": initial_trace,
+            "prompt_tokens": 0,
+            "response_tokens": 0,
+            "total_tokens": 0,
+            "latency_seconds": round(time.perf_counter() - started, 3),
             "history": history,
         }
 
@@ -694,6 +938,8 @@ def _run_gsm8k_verify_repair(
         "Please provide a corrected answer."
     )
     n_repairs = 0
+    total_prompt_tokens = 0
+    total_response_tokens = 0
     for repair_idx in range(1, max_repairs + 1):
         response_mode = str(baseline["response_mode"])
         if response_mode == "structured_json":
@@ -701,20 +947,29 @@ def _run_gsm8k_verify_repair(
 
             controller = StructuredReasoningController(policy=policy)
             repair_seed = int(case["prompt_seeds"]["verify_repair"]) + repair_idx
+            fallback_record: dict[str, Any] = {}
 
             def fallback_generate(
                 generated_prompt: str,
                 max_new_tokens: int,
                 *,
                 repair_seed: int = repair_seed,
+                fallback_record: dict[str, Any] = fallback_record,
             ) -> str:
-                return _generate_text(
+                response = _generate_text(
                     model=model,
                     tokenizer=tokenizer,
                     prompt=generated_prompt,
                     prompt_seed=repair_seed,
                     max_new_tokens=max_new_tokens,
                 )
+                fallback_record.update(
+                    {
+                        "prompt": generated_prompt,
+                        "response": response,
+                    }
+                )
+                return response
 
             emission = controller.emit(
                 question=task_prefix,
@@ -725,19 +980,52 @@ def _run_gsm8k_verify_repair(
                 fallback_generate=fallback_generate,
             )
             current_response = emission.response
+            generation_trace = _build_generation_trace(
+                tokenizer=tokenizer,
+                attempts=[
+                    _serialize_generation_attempt(
+                        prompt=str(attempt.prompt),
+                        response=str(attempt.raw_response),
+                        tokenizer=tokenizer,
+                        valid=bool(attempt.valid),
+                        error=attempt.error,
+                    )
+                    for attempt in emission.attempts
+                ],
+                fallback_record=fallback_record if emission.fallback_used else None,
+            )
+            current_response_mode = emission.response_mode
         else:
+            repair_prompt = task_prefix + "\nReturn only the final numeric answer."
             current_response = _generate_text(
                 model=model,
                 tokenizer=tokenizer,
-                prompt=task_prefix + "\nReturn only the final numeric answer.",
+                prompt=repair_prompt,
                 prompt_seed=int(case["prompt_seeds"]["verify_repair"]) + repair_idx,
                 max_new_tokens=96,
             )
+            generation_trace = _build_generation_trace(
+                tokenizer=tokenizer,
+                attempts=[
+                    _serialize_generation_attempt(
+                        prompt=repair_prompt,
+                        response=current_response,
+                        tokenizer=tokenizer,
+                    )
+                ],
+            )
+            current_response_mode = response_mode
+        total_prompt_tokens += int(generation_trace["prompt_tokens"])
+        total_response_tokens += int(generation_trace["response_tokens"])
         verification = pipeline.verify(str(case["question"]), current_response, domain="arithmetic")
+        verification_trace = _serialize_verification_result(verification)
         history.append(
             {
-                "verified": verification.verified,
-                "n_violations": len(verification.violations),
+                "iteration": repair_idx,
+                "response_mode": current_response_mode,
+                "response": current_response,
+                "generation_trace": generation_trace,
+                "verification": verification_trace,
             }
         )
         n_repairs = repair_idx
@@ -758,6 +1046,15 @@ def _run_gsm8k_verify_repair(
         "verified": verification.verified,
         "repaired": (not bool(baseline["correct"])) and final_correct,
         "n_repairs": n_repairs,
+        "typed_reasoning_parse_status": str(
+            history[-1]["verification"]["typed_reasoning_parse_status"]
+        ),
+        "initial_verification": initial_trace,
+        "final_verification": history[-1]["verification"],
+        "prompt_tokens": total_prompt_tokens,
+        "response_tokens": total_response_tokens,
+        "total_tokens": total_prompt_tokens + total_response_tokens,
+        "latency_seconds": round(time.perf_counter() - started, 3),
         "history": history,
     }
 
@@ -1068,29 +1365,83 @@ def _summarize_runs(
         baseline_accuracy = sum(1 for run in baseline_runs if run["correct"]) / n_cases
         verify_accuracy = sum(1 for run in verify_only_runs if run["accepted_correct"]) / n_cases
         repair_accuracy = sum(1 for run in verify_repair_runs if run["correct"]) / n_cases
+        n_wrong_answers = sum(1 for run in baseline_runs if not run["correct"])
+        n_wrong_detected = sum(
+            1 for run in verify_only_runs if run["flagged"] and not run["correct"]
+        )
+        false_positives = sum(1 for run in verify_only_runs if run["flagged"] and run["correct"])
+        n_repaired = sum(1 for run in verify_repair_runs if run["repaired"])
+        semantic_violation_count = sum(
+            int(run.get("semantic_violation_count", 0)) for run in verify_only_runs
+        )
+        parse_coverage = (
+            sum(
+                1
+                for run in verify_only_runs
+                if str(run.get("typed_reasoning_parse_status", "unavailable")) != "unavailable"
+            )
+            / n_cases
+        )
         return {
             "baseline": {
                 "n_cases": n_cases,
                 "accuracy": baseline_accuracy,
+                "n_correct": sum(1 for run in baseline_runs if run["correct"]),
+                "mean_latency_seconds": _round_mean(
+                    [float(run.get("latency_seconds", 0.0)) for run in baseline_runs]
+                ),
+                "mean_prompt_tokens": _round_mean(
+                    [float(run.get("prompt_tokens", 0.0)) for run in baseline_runs]
+                ),
+                "mean_response_tokens": _round_mean(
+                    [float(run.get("response_tokens", 0.0)) for run in baseline_runs]
+                ),
+                "mean_total_tokens": _round_mean(
+                    [float(run.get("total_tokens", 0.0)) for run in baseline_runs]
+                ),
             },
             "verify_only": {
                 "n_cases": n_cases,
                 "accuracy": verify_accuracy,
                 "n_flagged": sum(1 for run in verify_only_runs if run["flagged"]),
-                "semantic_violation_count": sum(
-                    int(run["semantic_violation_count"]) for run in verify_only_runs
+                "n_wrong_answers": n_wrong_answers,
+                "n_wrong_detected": n_wrong_detected,
+                "wrong_detection_rate": round(
+                    n_wrong_detected / n_wrong_answers if n_wrong_answers else 0.0,
+                    6,
                 ),
-                "false_positives": sum(
-                    1 for run in verify_only_runs if run["flagged"] and run["correct"]
+                "semantic_violation_count": semantic_violation_count,
+                "parse_coverage": round(parse_coverage, 6),
+                "false_positives": false_positives,
+                "false_positive_rate": round(
+                    false_positives / max(1, sum(1 for run in baseline_runs if run["correct"])),
+                    6,
+                ),
+                "mean_additional_latency_seconds": _round_mean(
+                    [float(run.get("latency_seconds", 0.0)) for run in verify_only_runs]
+                ),
+                "mean_additional_tokens": _round_mean(
+                    [float(run.get("total_tokens", 0.0)) for run in verify_only_runs]
                 ),
             },
             "verify_repair": {
                 "n_cases": n_cases,
                 "accuracy": repair_accuracy,
-                "n_repaired": sum(1 for run in verify_repair_runs if run["repaired"]),
-                "avg_repairs": (sum(int(run["n_repairs"]) for run in verify_repair_runs) / n_cases),
+                "n_repaired": n_repaired,
+                "repair_yield": round(n_repaired / n_wrong_answers if n_wrong_answers else 0.0, 6),
+                "avg_repairs": round(
+                    sum(int(run["n_repairs"]) for run in verify_repair_runs) / n_cases,
+                    3,
+                ),
+                "mean_additional_latency_seconds": _round_mean(
+                    [float(run.get("latency_seconds", 0.0)) for run in verify_repair_runs]
+                ),
+                "mean_additional_tokens": _round_mean(
+                    [float(run.get("total_tokens", 0.0)) for run in verify_repair_runs]
+                ),
             },
             "paired_deltas": {
+                "verify_only_minus_baseline": verify_accuracy - baseline_accuracy,
                 "repair_minus_baseline": repair_accuracy - baseline_accuracy,
             },
         }
@@ -1166,7 +1517,8 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
     benchmark = str(args.benchmark)
     started_at = utc_now()
     started = time.perf_counter()
-    policy = load_monitorability_policy()
+    policy_path = get_repo_root() / "results" / "monitorability_policy_213.json"
+    policy = load_monitorability_policy(policy_path)
     records = _load_benchmark_records(benchmark)
     cohort = build_cohort_manifest(
         records,
@@ -1337,6 +1689,10 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
         started_at=started_at,
         finished_at=finished_at,
         runtime_seconds=time.perf_counter() - started,
+        checkpoint_dir=Path(args.checkpoint_dir),
+        max_repairs=int(args.max_repairs),
+        policy_path=policy_path,
+        inference_mode=live_inference_mode(),
     )
 
 
