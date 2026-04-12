@@ -838,6 +838,81 @@ shape
 **And** the resulting held-out outcome remains traceable to the live source
   cases that supplied the reused pattern
 
+### REQ-VERIFY-036: Warm Multi-Model Inference Server Lifecycle
+
+The repository shall provide a warm inference server in
+`python/carnot/inference/model_server.py`, where:
+- `ModelServer` accepts one or more HuggingFace model identifiers and loads
+  them eagerly when the server starts
+- the server keeps loaded models warm for repeated inference requests instead
+  of re-loading weights for every experiment call
+- the server exposes a context-manager API so callers can scope startup and
+  shutdown with `with ModelServer([...]) as server: ...`
+- the server validates `batch_size` deterministically with a default of `8`
+  and rejects values outside `1..16`
+- shutting the server down clears loaded model references, stops the worker
+  loop, and attempts GPU memory cleanup via `gc.collect()` plus
+  `torch.cuda.empty_cache()` when torch is available
+
+### REQ-VERIFY-037: Queued Batched Generation And Health Reporting
+
+The same module shall batch queued generation requests, where:
+- requests are accepted through an internal queue serviced by a dedicated
+  worker thread or process
+- compatible requests for the same loaded model are coalesced into a single
+  forward pass up to the configured batch-size limit
+- `generate_batch()` returns one response per input question in the original
+  question order even when multiple callers are batched together
+- the server records batch metrics including total requests served, total
+  batches executed, average batch size, and max observed batch size
+- `health_check()` reports loaded models, queue depth, batch metrics, and a
+  GPU-memory snapshot when torch CUDA APIs are available
+
+### REQ-VERIFY-038: Model Loader Integration And Warm-Server Benchmarking
+
+`python/carnot/inference/model_loader.py` shall integrate with the warm server,
+where:
+- callers can register or clear a running `ModelServer` instance without
+  breaking the existing `load_model()` / `generate()` API
+- when a compatible server is registered, `load_model()` returns a lightweight
+  server-backed handle instead of loading a fresh HuggingFace model
+- `generate()` detects the server-backed handle and routes generation through
+  the running server while preserving the existing caller contract
+- `python/carnot/inference/model_server.py` provides a deterministic benchmark
+  helper for `50` questions that compares repeated cold-load generation
+  against warm-server generation and reports elapsed times plus speedup
+
+### SCENARIO-VERIFY-036: Batched Requests Preserve Per-Question Results
+
+**Given** a running `ModelServer` with a loaded model and `batch_size=8`
+**And** multiple queued questions targeting the same model
+**When** the worker coalesces those questions into one forward pass
+**Then** each caller receives exactly one response for each submitted question
+**And** the responses remain aligned with the original per-question order
+**And** the server records one executed batch with the observed batch size
+
+### SCENARIO-VERIFY-037: Graceful Shutdown Releases Warm Resources
+
+**Given** a running `ModelServer` has loaded one or more models
+**When** the caller exits the context manager or calls `shutdown()`
+**Then** the worker loop stops accepting new work
+**And** loaded model references are cleared
+**And** the server attempts garbage collection and GPU cache cleanup without
+  raising when CUDA APIs are unavailable
+
+### SCENARIO-VERIFY-038: Registered Server Avoids Repeated Cold Loads
+
+**Given** a running `ModelServer` is registered with
+`carnot.inference.model_loader`
+**And** a benchmark compares `50` repeated question generations using
+per-call cold loads versus the registered warm server
+**When** the benchmark runs with deterministic injected clocks or backends
+**Then** the reported cold and warm elapsed times are reproducible
+**And** the benchmark reports a speedup ratio of
+  `cold_elapsed_seconds / warm_elapsed_seconds`
+**And** `load_model()` returns a server-backed handle instead of loading the
+  same model again
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -877,4 +952,7 @@ shape
 | REQ-VERIFY-033 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
 | REQ-VERIFY-034 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
 | REQ-VERIFY-035 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
+| REQ-VERIFY-036 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-037 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-038 | Not Started | Not Started | Not Started |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

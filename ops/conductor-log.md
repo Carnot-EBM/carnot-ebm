@@ -1341,3 +1341,5 @@
 | 2026-04-12 17:50 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
 | 2026-04-12 17:50 UTC | Milestone 2026.04.16 activated | OK | 11 tasks queued |
 | 2026-04-12 18:17 UTC | Exp 224: Property-based test generation for code v | OK | =========== 2017 passed, 1 skipped, 22 warnings in 79.65s (0:01:19) ============ |
+| 2026-04-12 18:27 UTC | Exp 224a: Warm model server — persistent GPU model | FAIL | Codex CLI error: hmark_cold_load_vs_warm_server
+E   ImportError: cannot impor |
