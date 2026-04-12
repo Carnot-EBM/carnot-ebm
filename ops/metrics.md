@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 214 Semantic Failure Corpus
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T10:00:41Z | 2026-04-12T10:22:17Z | Exp 214: extended `verifiable-reasoning` with `VERIFY-018` and `VERIFY-019`, wrote `test_experiment_214_semantic_failure_corpus.py` first, implemented `scripts/experiment_214_semantic_failure_corpus.py`, generated `data/research/semantic_failure_corpus_214.jsonl` plus `results/experiment_214_results.json`, reconciled traceability/status/changelog, and reran the required verification commands including targeted 100% script coverage, the full Python suite, spec coverage, Ruff checks, and reconciliation. `ops/e2e-test-plan.md` has no model-training or cross-language item applicable to this deterministic corpus-generation workflow, so end-to-end verification for the task was the actual Exp 214 artifact generation command. | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 212 Typed Reasoning IR
 
 ### Turn Log

@@ -189,6 +189,39 @@ integration for the typed reasoning IR, where:
 - later verifiers can consume the serialized IR without depending on the
   original raw response formatting
 
+### REQ-VERIFY-018: Semantic Failure Corpus Artifact
+
+The repository shall provide a deterministic workflow that writes
+`data/research/semantic_failure_corpus_214.jsonl`, where:
+- the corpus contains at least 60 labeled failure cases
+- the cases combine live traces from Exp 203 / 206 / 207 with targeted
+  follow-up prompts informed by the live semantic and code-path failures
+  reviewed in Exp 208
+- every record includes `example_id`, `source_type`, `source_refs`, `domain`,
+  `prompt`, `response`, `gold_diagnosis`, `expected_verifier_signal`, and
+  `structured_reasoning_helpful`
+- `gold_diagnosis` records the primary taxonomy label plus a concise
+  explanation of why the response is wrong in verifier-friendly terms
+- `expected_verifier_signal` records the verifier path or signal family that a
+  future semantic verifier should surface for the case
+- the taxonomy separates question-grounding failures, omitted premises,
+  entity/quantity binding errors, unit/aggregation errors, genuine arithmetic
+  slips, and code-specific oracle/property misses
+- the record layout stays easy to convert into later unit tests without
+  depending on the original result-artifact schemas
+
+### REQ-VERIFY-019: Semantic Failure Corpus Summary
+
+The same workflow shall write `results/experiment_214_results.json`, where:
+- the artifact records the fixed Exp 214 run date `20260412`
+- the summary reports counts by source type, source artifact, domain,
+  taxonomy label, expected verifier signal, and
+  `structured_reasoning_helpful`
+- the summary records coverage checks confirming the corpus has at least 60
+  cases and covers every required taxonomy bucket
+- re-running the workflow refreshes the JSONL and summary artifacts in place
+  without duplicate records or order drift
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -356,6 +389,25 @@ constraint extractors
   verifier stages
 **And** existing callers that ignore the new IR continue to work unchanged
 
+### SCENARIO-VERIFY-018: Exp 214 Workflow Writes The Semantic Failure Corpus
+
+**Given** the curated live failure artifacts from Exp 203 / 206 / 207 and the
+Exp 208 code-path failure review are available
+**When** the Exp 214 semantic-failure-corpus workflow runs
+**Then** `data/research/semantic_failure_corpus_214.jsonl` is written with at
+least 60 records
+**And** each record contains the required prompt, response, diagnosis,
+verifier-signal, and structured-reasoning fields
+**And** the taxonomy coverage spans all six required failure categories
+
+### SCENARIO-VERIFY-019: Exp 214 Rerun Refreshes The Corpus Deterministically
+
+**Given** the Exp 214 corpus and summary already exist
+**When** the workflow runs again
+**Then** the JSONL corpus is rewritten in the same example order
+**And** `results/experiment_214_results.json` is refreshed in place
+**And** the summary still reports the same coverage checks and taxonomy counts
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -377,4 +429,6 @@ constraint extractors
 | REQ-VERIFY-015 | Not Started | Implemented | Typed reasoning IR tests |
 | REQ-VERIFY-016 | Not Started | Implemented | Typed reasoning IR tests |
 | REQ-VERIFY-017 | Not Started | Implemented | Typed reasoning IR tests + pipeline integration tests |
+| REQ-VERIFY-018 | Not Started | Implemented | Exp 214 semantic failure corpus tests |
+| REQ-VERIFY-019 | Not Started | Implemented | Exp 214 semantic failure corpus tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
