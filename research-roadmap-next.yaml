@@ -8,7 +8,7 @@
 # run, analyze) because claude -p exhausts 50 turns on combined tasks.
 
 milestone: "2026.04.14"
-milestone_title: "Live GPU Benchmarks (Phased) + Checkpoint Cleanup + Scaling"
+milestone_title: "Live GPU Benchmarks (Phased) + Precision Ceiling Investigation + Scaling"
 milestone_doc: "openspec/change-proposals/research-roadmap-v18.md"
 
 tasks:
@@ -261,7 +261,110 @@ tasks:
       9. Run: .venv/bin/python scripts/experiment_198_analysis.py
       10. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 59: Research Scan ─────────────────────────────────
+  # ── Phase 59: Precision Ceiling Investigation ────────────────
+  - id: exp200-false-positive-analysis
+    milestone: "2026.04.14"
+    deliverable: results/experiment_200_results.json
+    title: "Exp 200: False positive analysis — why 3B repair breaks correct answers"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 184 showed verify-repair has 0% net improvement on 3B models
+      (6 fixed, 6 broken). The ArithmeticExtractor triggers false positives on
+      larger models where answers are more sophisticated. This experiment
+      investigates the 6 broken cases to understand WHY.
+
+      EXISTING CODE TO READ FIRST:
+      - results/exp184_ckpt_standard.json — checkpoint with baseline + repair data
+      - python/carnot/pipeline/extract.py — ArithmeticExtractor
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+
+      TASK: Create results/experiment_200_results.json
+
+      CONCRETE STEPS:
+      1. Load Exp 184 checkpoint data
+      2. Identify the 6 cases where repair BROKE a correct answer
+      3. For each broken case:
+         - What constraint was extracted?
+         - Was it a true violation or false positive?
+         - What did the repair change?
+         - Why did the change make it wrong?
+      4. Identify the 6 cases where repair FIXED a wrong answer
+      5. Compare: what's different about fixable vs breakable constraints?
+      6. Categorize false positive types: intermediate step, rounding,
+         valid reformulation, misparse
+      7. Save detailed analysis
+      8. Run: .venv/bin/python scripts/experiment_200_fp_analysis.py
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp201-precision-by-model-size
+    milestone: "2026.04.14"
+    deliverable: results/experiment_201_results.json
+    title: "Exp 201: Constraint precision curve across model sizes (0.8B, 3B)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: We need to map the precision ceiling — at what model size do
+      false positives overtake true positives? Run the SAME 100 GSM8K questions
+      on 0.8B and 3B, measuring TP rate, FP rate, and net improvement for each.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_200_results.json — false positive analysis
+      - results/experiment_181_results.json — 0.8B GSM8K results
+      - results/exp184_ckpt_standard.json — 3B checkpoint data
+
+      TASK: Create results/experiment_201_results.json
+
+      CONCRETE STEPS:
+      1. Select 100 GSM8K questions (same set for both models)
+      2. For each model (Qwen3.5-0.8B, Qwen3-3B on GPU):
+         - Run baseline + verify-repair
+         - Classify each constraint firing: true positive, false positive
+         - Compute TP rate, FP rate, net improvement
+      3. Plot precision curve: model size vs (TP rate - FP rate)
+      4. Identify the crossover point where FP > TP
+      5. Save results
+      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_201_precision_curve.py
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp202-confidence-weighted-constraints
+    milestone: "2026.04.14"
+    deliverable: python/carnot/pipeline/confidence.py
+    title: "Exp 202: Confidence-weighted constraints — reduce FP on larger models"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The precision ceiling (Exp 200-201) shows false positives
+      hurt larger models. Fix: weight constraint violations by confidence.
+      "47+28=76" is high-confidence (definitely wrong). "approximately 150"
+      is low-confidence (might be rounding). Only repair high-confidence.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_200_results.json — FP analysis (types of FPs)
+      - python/carnot/pipeline/extract.py — current extractors
+      - python/carnot/pipeline/verify_repair.py — pipeline
+
+      TASK: Create python/carnot/pipeline/confidence.py
+
+      CONCRETE STEPS:
+      1. Add confidence score (0.0-1.0) to ConstraintResult:
+         - Exact arithmetic (a+b=c with integers): 1.0
+         - Approximate ("about 150"): 0.3
+         - Intermediate step ("then we get 75"): 0.5
+         - Multi-step chain: product of individual confidences
+      2. Add confidence_threshold parameter to VerifyRepairPipeline:
+         - Only repair violations above threshold (default 0.7)
+         - Log skipped low-confidence violations for learning
+      3. Test: re-run Exp 184's 6 broken cases with confidence filtering
+         - Do the false positives have lower confidence than true positives?
+      4. Write tests achieving 100% coverage
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 60: Research Scan ─────────────────────────────────
   - id: exp199-research-scan
     milestone: "2026.04.14"
     deliverable: results/experiment_199_results.json
