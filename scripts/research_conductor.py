@@ -1360,6 +1360,23 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         date=timestamp.strftime("%Y%m%d"),
     )
 
+    # Prepend mandatory workflow instructions for non-Claude agents.
+    # Claude reads CLAUDE.md automatically; other agents need explicit
+    # instructions to follow the spec-anchored development workflow.
+    if AGENT_TYPE != "claude":
+        workflow_preamble = (
+            "MANDATORY WORKFLOW — you MUST follow these steps:\n"
+            "1. Read AGENTS.md and CODEX.md (or OPENCODE.md) for repo instructions\n"
+            "2. Spec first: ensure relevant openspec/capabilities/*/spec.md has REQ-*\n"
+            "3. Write tests FIRST that reference REQ-* or SCENARIO-*\n"
+            "4. Implement the code to satisfy the tests\n"
+            "5. Run: .venv/bin/pytest tests/python -q — ALL tests must pass\n"
+            "6. Verify 100% test coverage on new code\n"
+            "7. Update ops/changelog.md and ops/status.md\n"
+            "8. Do NOT skip tests. Do NOT skip coverage. Do NOT just run scripts.\n\n"
+        )
+        prompt = workflow_preamble + prompt
+
     # Run the configured agent
     success, output = run_agent(prompt, max_turns=50, timeout=1200)
 
