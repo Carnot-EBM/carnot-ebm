@@ -1416,6 +1416,23 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
 
     logger.info("Pre-check: %s", test_summary)
 
+    # GPU resource check — detect zombies and log suggestions
+    try:
+        from gpu_monitor import generate_report, kill_zombies, format_report
+        gpu_report = generate_report()
+        if gpu_report.warnings:
+            for w in gpu_report.warnings:
+                logger.warning("GPU: %s", w)
+            # Auto-kill zombies to free GPU memory for the experiment
+            killed = kill_zombies(gpu_report, dry_run=False)
+            if killed:
+                logger.info("GPU: Killed %d zombie processes, freed GPU memory", len(killed))
+        if gpu_report.suggestions:
+            for s in gpu_report.suggestions:
+                logger.debug("GPU suggestion: %s", s)
+    except Exception as e:
+        logger.debug("GPU monitor skipped: %s", e)
+
     # Auto-fix brace escaping before formatting (dogfooding: prevent recurring bug)
     import re as _re
     raw_prompt = task["prompt"]
