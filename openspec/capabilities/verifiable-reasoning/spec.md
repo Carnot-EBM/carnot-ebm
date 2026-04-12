@@ -124,6 +124,34 @@ The same workflow shall write `results/experiment_211_results.json`, where:
 - re-running the workflow rewrites the JSONL and summary artifacts
   deterministically without duplicate records
 
+### REQ-VERIFY-013: Monitorability Audit Artifact
+
+The repository shall provide a workflow that writes
+`results/experiment_213_results.json`, where:
+- the workflow evaluates `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it`
+  against a representative subset of `data/research/constraint_ir_benchmark_211.jsonl`
+- each model is evaluated in three response modes: free-form reasoning,
+  answer-only terse output, and structured JSON or typed reasoning scaffold
+- the artifact records per-model and per-mode measurements for parseability,
+  constraint coverage, semantic visibility of the true error, answer quality,
+  token cost, and latency
+- the artifact preserves the fixed Exp 213 run date `20260412` and the
+  benchmark subset composition used for the audit
+- re-running the workflow refreshes the artifact in place rather than
+  appending duplicate runs
+
+### REQ-VERIFY-014: Monitorability Fallback Policy
+
+The same workflow shall write `results/monitorability_policy_213.json`, where:
+- the policy states when Carnot should request structured reasoning, accept
+  terse output, or distrust free-form traces
+- the policy is derived from the measured Exp 213 audit metrics rather than
+  hard-coded without evidence
+- the policy includes model-family and task-shape guidance when the audit
+  shows materially different monitorability behavior across response modes
+- the policy remains machine-readable and deterministic given the measured
+  audit summary
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -239,6 +267,30 @@ code-oriented prompt constraints
 **And** `results/experiment_211_results.json` is refreshed in place
 **And** the summary still reports the same benchmark counts and coverage checks
 
+### SCENARIO-VERIFY-013: Exp 213 Audit Writes Both Artifacts
+
+**Given** the Exp 211 benchmark exists
+**When** the Exp 213 monitorability-audit workflow runs
+**Then** `results/experiment_213_results.json` is written with per-model and
+per-mode metrics for parseability, constraint coverage, semantic visibility,
+answer quality, token cost, and latency
+**And** `results/monitorability_policy_213.json` is written with structured
+fallback guidance
+**And** the audit records the fixed Exp 213 run date and the representative
+subset that was evaluated
+
+### SCENARIO-VERIFY-014: Policy Prefers Structured Or Terse Output When Needed
+
+**Given** the Exp 213 audit shows that one or more response modes have weak
+monitorability or poor parseability on a task slice
+**When** the fallback policy is derived from the audit summary
+**Then** the policy recommends structured reasoning when explicit intermediate
+state is useful and reliably parseable
+**And** the policy recommends terse output when reasoning text adds little
+visibility relative to cost
+**And** the policy marks free-form traces as distrusted when their observed
+monitorability is too weak to support verifier decisions
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -255,4 +307,6 @@ code-oriented prompt constraints
 | REQ-VERIFY-010 | Not Started | Implemented | 14 + paired live benchmark Python |
 | REQ-VERIFY-011 | Not Started | Implemented | Exp 211 benchmark generator + artifact tests |
 | REQ-VERIFY-012 | Not Started | Implemented | Exp 211 benchmark generator + artifact tests |
+| REQ-VERIFY-013 | Not Started | Implemented | 9 Python + live Exp 213 audit artifact |
+| REQ-VERIFY-014 | Not Started | Implemented | 9 Python + live Exp 213 policy artifact |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

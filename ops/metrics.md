@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 213 Monitorability Audit
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T08:36:59Z | 2026-04-12T09:21:46Z | Exp 213: extended `verifiable-reasoning` with `VERIFY-013`, wrote `test_experiment_213_monitorability_audit.py` first, implemented `scripts/experiment_213_monitorability_audit.py`, ran the live Qwen/Gemma monitorability audit over an 11-example Exp 211 subset in free-form / terse / structured modes, generated `results/experiment_213_results.json` plus `results/monitorability_policy_213.json`, reconciled traceability/status/changelog, and reran the required verification commands including the full Python suite, targeted 100% script coverage, spec coverage, reconciliation, and the explicit E2E checks from `ops/e2e-test-plan.md` | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 211 Constraint IR Benchmark
 
 ### Turn Log
