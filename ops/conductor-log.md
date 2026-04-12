@@ -1313,3 +1313,6 @@
 | 2026-04-12 05:38 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
 | 2026-04-12 06:28 UTC | Exp 208: HumanEval with LIVE IT model — code verif | OK | =========== 1874 passed, 1 skipped, 22 warnings in 112.62s (0:01:52) =========== |
 | 2026-04-12 06:29 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
+| 2026-04-12 07:00 UTC | Exp 209: Clean up simulation artifacts and update  | OK | =========== 1878 passed, 1 skipped, 22 warnings in 108.75s (0:01:48) =========== |
+| 2026-04-12 07:01 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
+| 2026-04-12 07:01 UTC | Exp 209: Clean up simulation artifacts and update  | OK | Deliverable already exists in repo |
