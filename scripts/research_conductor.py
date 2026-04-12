@@ -637,7 +637,12 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     This is Tier 1 self-learning applied to the research process itself:
     the system gets better at running experiments, not just at verification.
     """
-    current = _current_milestone_id()
+    try:
+        with open(ROADMAP_FILE) as f:
+            roadmap = yaml.safe_load(f) or {}
+        current = roadmap.get("milestone", "unknown")
+    except Exception:
+        current = "unknown"
     logger.info("=" * 60)
     logger.info("OPERATIONAL RETROSPECTIVE (milestone %s)", current)
     logger.info("=" * 60)
