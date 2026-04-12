@@ -1,0 +1,4088 @@
+{
+  "benchmark": "humaneval_property",
+  "model_name": "Gemma4-E4B-it",
+  "mode": "verify_only",
+  "case_ids": [
+    "humaneval-92",
+    "humaneval-87",
+    "humaneval-40",
+    "humaneval-126",
+    "humaneval-64",
+    "humaneval-37",
+    "humaneval-13",
+    "humaneval-113",
+    "humaneval-91",
+    "humaneval-156",
+    "humaneval-44",
+    "humaneval-160",
+    "humaneval-112",
+    "humaneval-68",
+    "humaneval-35",
+    "humaneval-9",
+    "humaneval-78",
+    "humaneval-82",
+    "humaneval-51",
+    "humaneval-54",
+    "humaneval-161",
+    "humaneval-121",
+    "humaneval-85",
+    "humaneval-57",
+    "humaneval-98",
+    "humaneval-94",
+    "humaneval-107",
+    "humaneval-45",
+    "humaneval-106",
+    "humaneval-41",
+    "humaneval-95",
+    "humaneval-125",
+    "humaneval-157",
+    "humaneval-73",
+    "humaneval-28",
+    "humaneval-42",
+    "humaneval-56",
+    "humaneval-139",
+    "humaneval-132",
+    "humaneval-88",
+    "humaneval-1",
+    "humaneval-80",
+    "humaneval-138",
+    "humaneval-61",
+    "humaneval-66",
+    "humaneval-6",
+    "humaneval-134",
+    "humaneval-53",
+    "humaneval-150",
+    "humaneval-93"
+  ],
+  "results_by_case": {
+    "humaneval-92": {
+      "case_id": "humaneval-92",
+      "mode": "verify_only",
+      "prompt_seed": 1736763784,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_hgj4qouf.py\", line 22\n    if x + y == z or x + z == y or y + z == x:\n                                              ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": -1,
+            "y": -1,
+            "z": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(2, 3, 1): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=(2.5, 2, 3): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=(1.5, 5, 3.5): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=(2, 6, 2): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=(4, 2, 2): raised unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": -1,
+            "y": -1,
+            "z": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.036,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.037
+    },
+    "humaneval-87": {
+      "case_id": "humaneval-87",
+      "mode": "verify_only",
+      "prompt_seed": 3998300011,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_tc2d8z7g.py\", line 23\n    for r in range(len(lst)):\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 23)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1,
+            "x": 1
+          },
+          {
+            "lst": 0,
+            "x": 0
+          },
+          {
+            "lst": -1,
+            "x": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 23)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 1, 6], [1, 2, 3, 4, 5, 1]], 1): raised unexpected indent (<string>, line 23)",
+          "deterministic (official_tests) failed for input=([[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6]], 2): raised unexpected indent (<string>, line 23)",
+          "deterministic (official_tests) failed for input=([[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 1, 3, 4, 5, 6], [1, 2, 1, 4, 5, 6], [1, 2, 3, 1, 5, 6], [1, 2, 3, 4, 1, 6], [1, 2, 3, 4, 5, 1]], 1): raised unexpected indent (<string>, line 23)",
+          "deterministic (official_tests) failed for input=([], 1): raised unexpected indent (<string>, line 23)",
+          "deterministic (official_tests) failed for input=([[1]], 2): raised unexpected indent (<string>, line 23)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1,
+            "x": 1
+          },
+          {
+            "lst": 0,
+            "x": 0
+          },
+          {
+            "lst": -1,
+            "x": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.029,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-40": {
+      "case_id": "humaneval-40",
+      "mode": "verify_only",
+      "prompt_seed": 2306497581,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_rse7ck88.py\", line 21\n    if n < 3:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 21)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 21)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 3, 5, 0],): expected False; raised unexpected indent (<string>, line 21)",
+          "example_regression (docstring_example) failed for input=([1, 3, -2, 1],): expected True; raised unexpected indent (<string>, line 21)",
+          "example_regression (docstring_example) failed for input=([1, 2, 3, 7],): expected False; raised unexpected indent (<string>, line 21)",
+          "example_regression (docstring_example) failed for input=([2, 4, -5, 3, 9, 7],): expected True; raised unexpected indent (<string>, line 21)",
+          "example_regression (docstring_example) failed for input=([1],): expected False; raised unexpected indent (<string>, line 21)"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-126": {
+      "case_id": "humaneval-126",
+      "mode": "verify_only",
+      "prompt_seed": 230029245,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_ya26bmn2.py\", line 22\n    if len(lst) != len(set(lst)):\n                                 ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([5],): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 5],): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([1, 3, 2, 4, 5],): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 5, 6],): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 5, 6, 7],): raised unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-64": {
+      "case_id": "humaneval-64",
+      "mode": "verify_only",
+      "prompt_seed": 1841873592,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_8c1l6vvy.py\", line 19\n    count = 0\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 19)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 19)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('abcde',): expected 2; raised unexpected indent (<string>, line 19)",
+          "example_regression (docstring_example) failed for input=('ACEDY',): expected 3; raised unexpected indent (<string>, line 19)",
+          "deterministic (official_tests) failed for input=('abcde',): raised unexpected indent (<string>, line 19)",
+          "deterministic (official_tests) failed for input=('ACEDY',): raised unexpected indent (<string>, line 19)",
+          "deterministic (official_tests) failed for input=('Alone',): raised unexpected indent (<string>, line 19)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-37": {
+      "case_id": "humaneval-37",
+      "mode": "verify_only",
+      "prompt_seed": 703929641,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_pi5ngp0k.py\", line 13\n    sorted_even_elements = sorted(even_elements)\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 2, 3],): expected [1, 2, 3]; raised unexpected indent (<string>, line 13)",
+          "example_regression (docstring_example) failed for input=([5, 6, 3, 4],): expected [3, 6, 5, 4]; raised unexpected indent (<string>, line 13)",
+          "deterministic (signature) failed for input=([1, 2, 3],): raised unexpected indent (<string>, line 13)",
+          "deterministic (signature) failed for input=([5, 6, 3, 4],): raised unexpected indent (<string>, line 13)",
+          "deterministic (signature) failed for input=([3, 1, 2],): raised unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.025
+    },
+    "humaneval-13": {
+      "case_id": "humaneval-13",
+      "mode": "verify_only",
+      "prompt_seed": 4003379259,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_lm103dav.py\", line 12\n    return abs(a)\n                 ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1
+          },
+          {
+            "a": 0,
+            "b": 0
+          },
+          {
+            "a": -1,
+            "b": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(3, 5): expected 1; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "example_regression (docstring_example) failed for input=(25, 15): expected 5; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=(3, 5): expected int; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=(25, 15): expected int; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=(3, 7): expected int; raised unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1
+          },
+          {
+            "a": 0,
+            "b": 0
+          },
+          {
+            "a": -1,
+            "b": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-113": {
+      "case_id": "humaneval-113",
+      "mode": "verify_only",
+      "prompt_seed": 1715056325,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_ed29ks20.py\", line 15\n    for i, s in enumerate(lst):\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 4,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(['1234567'],): expected ['the number of odd elements 4n the str4ng 4 of the 4nput.']; raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=(['1234567'],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=(['3', '11111111'],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=(['271', '137', '314'],): raised unexpected indent (<string>, line 15)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-91": {
+      "case_id": "humaneval-91",
+      "mode": "verify_only",
+      "prompt_seed": 1348576447,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_c91o38ln.py\", line 15\n    for sentence in sentences:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "S": 1
+          },
+          {
+            "S": 0
+          },
+          {
+            "S": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('Hello world',): expected 0; raised unexpected indent (<string>, line 15)",
+          "example_regression (docstring_example) failed for input=('The sky is blue. The sun is shining. I love this weather',): expected 1; raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('Hello world',): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('The sky is blue. The sun is shining. I love this weather',): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('Is the sky blue?',): raised unexpected indent (<string>, line 15)"
+        ],
+        "probe_inputs": [
+          {
+            "S": 1
+          },
+          {
+            "S": 0
+          },
+          {
+            "S": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.045,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.046
+    },
+    "humaneval-156": {
+      "case_id": "humaneval-156",
+      "mode": "verify_only",
+      "prompt_seed": 266459157,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_093uvrgf.py\", line 18\n    result = \"\"\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 18)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "number": 1
+          },
+          {
+            "number": 0
+          },
+          {
+            "number": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 18)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(19,): raised unexpected indent (<string>, line 18)",
+          "deterministic (official_tests) failed for input=(152,): raised unexpected indent (<string>, line 18)",
+          "deterministic (official_tests) failed for input=(251,): raised unexpected indent (<string>, line 18)",
+          "deterministic (official_tests) failed for input=(426,): raised unexpected indent (<string>, line 18)",
+          "deterministic (official_tests) failed for input=(500,): raised unexpected indent (<string>, line 18)"
+        ],
+        "probe_inputs": [
+          {
+            "number": 1
+          },
+          {
+            "number": 0
+          },
+          {
+            "number": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.035,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.037
+    },
+    "humaneval-44": {
+      "case_id": "humaneval-44",
+      "mode": "verify_only",
+      "prompt_seed": 3441571323,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_pt3p8wx7.py\", line 16\n    digits = \"0123456789ABCDEF\"\n                               ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "base": 1
+          },
+          {
+            "x": 0,
+            "base": 0
+          },
+          {
+            "x": -1,
+            "base": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(8, 3): expected '22'; raised unindent does not match any outer indentation level (<string>, line 16)",
+          "example_regression (docstring_example) failed for input=(8, 2): expected '1000'; raised unindent does not match any outer indentation level (<string>, line 16)",
+          "example_regression (docstring_example) failed for input=(7, 2): expected '111'; raised unindent does not match any outer indentation level (<string>, line 16)",
+          "deterministic (official_tests) failed for input=(8, 3): raised unindent does not match any outer indentation level (<string>, line 16)",
+          "deterministic (official_tests) failed for input=(8, 2): raised unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "base": 1
+          },
+          {
+            "x": 0,
+            "base": 0
+          },
+          {
+            "x": -1,
+            "base": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.029
+    },
+    "humaneval-160": {
+      "case_id": "humaneval-160",
+      "mode": "verify_only",
+      "prompt_seed": 2396731742,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_4_rtkt63.py\", line 31\n    precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '**': 3}\n                                                          ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 31)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "operator": 1,
+            "operand": 1
+          },
+          {
+            "operator": 0,
+            "operand": 0
+          },
+          {
+            "operator": -1,
+            "operand": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 31)"
+        ],
+        "n_property_violations": 3,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(['**', '*', '+'], [2, 3, 4, 5]): raised unindent does not match any outer indentation level (<string>, line 31)",
+          "deterministic (official_tests) failed for input=(['+', '*', '-'], [2, 3, 4, 5]): raised unindent does not match any outer indentation level (<string>, line 31)",
+          "deterministic (official_tests) failed for input=(['//', '*'], [7, 3, 4]): raised unindent does not match any outer indentation level (<string>, line 31)"
+        ],
+        "probe_inputs": [
+          {
+            "operator": 1,
+            "operand": 1
+          },
+          {
+            "operator": 0,
+            "operand": 0
+          },
+          {
+            "operator": -1,
+            "operand": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.025
+    },
+    "humaneval-112": {
+      "case_id": "humaneval-112",
+      "mode": "verify_only",
+      "prompt_seed": 1342973243,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_o4u2jolb.py\", line 14\n    result_string = \"\".join([char for char in s if char not in chars_to_delete])\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1,
+            "c": 1
+          },
+          {
+            "s": 0,
+            "c": 0
+          },
+          {
+            "s": -1,
+            "c": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('abcde', 'ae'): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('abcdef', 'b'): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('abcdedcba', 'ab'): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('dwik', 'w'): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('a', 'a'): raised unexpected indent (<string>, line 14)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1,
+            "c": 1
+          },
+          {
+            "s": 0,
+            "c": 0
+          },
+          {
+            "s": -1,
+            "c": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-68": {
+      "case_id": "humaneval-68",
+      "mode": "verify_only",
+      "prompt_seed": 293727922,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_imujwhug.py\", line 37\n    smallest_even_index = -1\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 37)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 37)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([4, 2, 3],): raised unexpected indent (<string>, line 37)",
+          "deterministic (official_tests) failed for input=([1, 2, 3],): raised unexpected indent (<string>, line 37)",
+          "deterministic (official_tests) failed for input=([],): raised unexpected indent (<string>, line 37)",
+          "deterministic (official_tests) failed for input=([5, 0, 3, 0, 4, 2],): raised unexpected indent (<string>, line 37)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 0, 5, 3],): raised unexpected indent (<string>, line 37)"
+        ],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.039,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-35": {
+      "case_id": "humaneval-35",
+      "mode": "verify_only",
+      "prompt_seed": 3908636939,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_jd1yf4e6.py\", line 12\n    max_val = l[0]\n                  ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 2, 3],): expected 3; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "example_regression (docstring_example) failed for input=([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10],): expected 123; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([1, 2, 3],): raised unindent does not match any outer indentation level (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([5, 3, -5, 2, -3, 3, 9, 0, 123, 1, -10],): raised unindent does not match any outer indentation level (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([5, 3, -5, 2, -3, 3, 9, 0, 124, 1, -10],): raised unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.03,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-9": {
+      "case_id": "humaneval-9",
+      "mode": "verify_only",
+      "prompt_seed": 2977635615,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_zo_thrc8.py\", line 12\n    result = []\n               ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 2, 3, 2, 3, 4, 2],): expected [1, 2, 3, 3, 3, 4, 4]; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=([1, 2, 3, 2, 3, 4, 2],): expected list; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=([],): expected list; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=([1, 2, 3, 4],): expected list; raised unindent does not match any outer indentation level (<string>, line 12)",
+          "annotated_return_type (signature) failed for input=([4, 3, 2, 1],): expected list; raised unindent does not match any outer indentation level (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-78": {
+      "case_id": "humaneval-78",
+      "mode": "verify_only",
+      "prompt_seed": 3630265596,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_5n2fagxm.py\", line 22\n    prime_hex_digits = {'2', '3', '5', '7', 'B', 'D'}\n                                                     ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "num": 1
+          },
+          {
+            "num": 0
+          },
+          {
+            "num": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('AB',): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=('1077E',): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=('ABED1A33',): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=('2020',): raised unindent does not match any outer indentation level (<string>, line 22)",
+          "deterministic (official_tests) failed for input=('123456789ABCDEF0',): raised unindent does not match any outer indentation level (<string>, line 22)"
+        ],
+        "probe_inputs": [
+          {
+            "num": 1
+          },
+          {
+            "num": 0
+          },
+          {
+            "num": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.025
+    },
+    "humaneval-82": {
+      "case_id": "humaneval-82",
+      "mode": "verify_only",
+      "prompt_seed": 240370321,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_cb1ojm6g.py\", line 12\n    if length < 2:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 12)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 12)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('Hello',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('abcdcba',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('kittens',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('orange',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('wow',): raised unexpected indent (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-51": {
+      "case_id": "humaneval-51",
+      "mode": "verify_only",
+      "prompt_seed": 3259130433,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_pnatl2vb.py\", line 20\n    result = \"\"\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 20)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "text": 1
+          },
+          {
+            "text": 0
+          },
+          {
+            "text": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 20)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('',): expected ''; raised unexpected indent (<string>, line 20)",
+          "example_regression (docstring_example) failed for input=('abcdef',): expected 'bcdf'; raised unexpected indent (<string>, line 20)",
+          "example_regression (docstring_example) failed for input=('aaaaa',): expected ''; raised unexpected indent (<string>, line 20)",
+          "example_regression (docstring_example) failed for input=('aaBAA',): expected 'B'; raised unexpected indent (<string>, line 20)",
+          "example_regression (docstring_example) failed for input=('zbcd',): expected 'zbcd'; raised unexpected indent (<string>, line 20)"
+        ],
+        "probe_inputs": [
+          {
+            "text": 1
+          },
+          {
+            "text": 0
+          },
+          {
+            "text": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.039,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-54": {
+      "case_id": "humaneval-54",
+      "mode": "verify_only",
+      "prompt_seed": 1727497090,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_66cryo1u.py\", line 38, in <module>\n    check(same_chars)\n    ~~~~~^^^^^^^^^^^^\n  File \"/tmp/exp208_66cryo1u.py\", line 28, in check\n    assert candidate('eabcdzzzz', 'dddzzzzzzzddeddabc') == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "same_chars(): parameter 's0' annotated as str",
+          "same_chars(): parameter 's1' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s0": "x",
+            "s1": "x"
+          },
+          {
+            "s0": "",
+            "s1": ""
+          },
+          {
+            "s0": " ",
+            "s1": " "
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "same_chars(): parameter 's0' annotated as str",
+          "same_chars(): parameter 's1' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 3,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('eabcdzzzz', 'dddzzzzzzzddeddabc'): expected True; returned False",
+          "example_regression (docstring_example) failed for input=('abcd', 'dddddddabc'): expected True; returned False",
+          "example_regression (docstring_example) failed for input=('dddddddabc', 'abcd'): expected True; returned False"
+        ],
+        "probe_inputs": [
+          {
+            "s0": "x",
+            "s1": "x"
+          },
+          {
+            "s0": "",
+            "s1": ""
+          },
+          {
+            "s0": " ",
+            "s1": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": true,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.029,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.031
+    },
+    "humaneval-161": {
+      "case_id": "humaneval-161",
+      "mode": "verify_only",
+      "prompt_seed": 51867162,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_rh01y5_n.py\", line 14\n    if not has_letters:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('AsDf',): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('1234',): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('ab',): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('#a@C',): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('#AsdfW^45',): raised unexpected indent (<string>, line 14)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.025
+    },
+    "humaneval-121": {
+      "case_id": "humaneval-121",
+      "mode": "verify_only",
+      "prompt_seed": 2512920543,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_bz9rurch.py\", line 12\n    for i in range(len(lst)):\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 12)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 12)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([5, 8, 7, 1],): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([3, 3, 3, 3, 3],): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([30, 13, 24, 321],): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([5, 9],): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=([2, 4, 8],): raised unexpected indent (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-85": {
+      "case_id": "humaneval-85",
+      "mode": "verify_only",
+      "prompt_seed": 3596814835,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_2lwsvaz0.py\", line 10\n    for i in range(len(lst)):\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 10)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 10)"
+        ],
+        "n_property_violations": 4,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([4, 88],): raised unexpected indent (<string>, line 10)",
+          "deterministic (official_tests) failed for input=([4, 5, 6, 7, 2, 122],): raised unexpected indent (<string>, line 10)",
+          "deterministic (official_tests) failed for input=([4, 0, 6, 7],): raised unexpected indent (<string>, line 10)",
+          "deterministic (official_tests) failed for input=([4, 4, 6, 8],): raised unexpected indent (<string>, line 10)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.04,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.041
+    },
+    "humaneval-57": {
+      "case_id": "humaneval-57",
+      "mode": "verify_only",
+      "prompt_seed": 502914712,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_9jt8izhc.py\", line 13\n    decreasing = all(l[i] >= l[i+1] for i in range(len(l)-1))\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 2, 4, 20],): expected True; raised unexpected indent (<string>, line 13)",
+          "example_regression (docstring_example) failed for input=([1, 20, 4, 10],): expected False; raised unexpected indent (<string>, line 13)",
+          "example_regression (docstring_example) failed for input=([4, 1, 0, -10],): expected True; raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=([1, 2, 4, 20],): raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=([1, 20, 4, 10],): raised unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.046,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-98": {
+      "case_id": "humaneval-98",
+      "mode": "verify_only",
+      "prompt_seed": 1956552540,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_ygh1u5t2.py\", line 12\n    vowels = \"AEIOU\"\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 12)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 12)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('aBCdEf',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('abcdefg',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('dBBE',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('B',): raised unexpected indent (<string>, line 12)",
+          "deterministic (official_tests) failed for input=('U',): raised unexpected indent (<string>, line 12)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.023,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.024
+    },
+    "humaneval-94": {
+      "case_id": "humaneval-94",
+      "mode": "verify_only",
+      "prompt_seed": 102582533,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_m53flypi.py\", line 15\n    if n < 2:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([0, 3, 2, 1, 3, 5, 7, 4, 5, 5, 5, 2, 181, 32, 4, 32, 3, 2, 32, 324, 4, 3],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([1, 0, 1, 8, 2, 4597, 2, 1, 3, 40, 1, 2, 1, 2, 4, 2, 5, 1],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([1, 3, 1, 32, 5107, 34, 83278, 109, 163, 23, 2323, 32, 30, 1, 9, 3],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([0, 724, 32, 71, 99, 32, 6, 0, 5, 91, 83, 0, 5, 6],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([0, 81, 12, 3, 1, 21],): raised unexpected indent (<string>, line 15)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.039,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-107": {
+      "case_id": "humaneval-107",
+      "mode": "verify_only",
+      "prompt_seed": 1154082411,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_j2sqch8n.py\", line 26\n    odd_count = 0\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 26)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 26)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(123,): raised unexpected indent (<string>, line 26)",
+          "deterministic (official_tests) failed for input=(12,): raised unexpected indent (<string>, line 26)",
+          "deterministic (official_tests) failed for input=(3,): raised unexpected indent (<string>, line 26)",
+          "deterministic (official_tests) failed for input=(63,): raised unexpected indent (<string>, line 26)",
+          "deterministic (official_tests) failed for input=(25,): raised unexpected indent (<string>, line 26)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.029,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-45": {
+      "case_id": "humaneval-45",
+      "mode": "verify_only",
+      "prompt_seed": 3472679776,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "h": 1
+          },
+          {
+            "a": 0,
+            "h": 0
+          },
+          {
+            "a": -1,
+            "h": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "h": 1
+          },
+          {
+            "a": 0,
+            "h": 0
+          },
+          {
+            "a": -1,
+            "h": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.011,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.013
+    },
+    "humaneval-106": {
+      "case_id": "humaneval-106",
+      "mode": "verify_only",
+      "prompt_seed": 1547261225,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_6ho7qcu_.py\", line 11\n    if k == 0:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 11)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 11)"
+        ],
+        "n_property_violations": 4,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(5,): raised unexpected indent (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(7,): raised unexpected indent (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(1,): raised unexpected indent (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(3,): raised unexpected indent (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.029,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-41": {
+      "case_id": "humaneval-41",
+      "mode": "verify_only",
+      "prompt_seed": 2585211556,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "car_race_collision(): parameter 'n' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "car_race_collision(): parameter 'n' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.017,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.018
+    },
+    "humaneval-95": {
+      "case_id": "humaneval-95",
+      "mode": "verify_only",
+      "prompt_seed": 103659202,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_erf017vs.py\", line 17\n    keys = list(dict.keys())\n                            ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 17)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "dict": 1
+          },
+          {
+            "dict": 0
+          },
+          {
+            "dict": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 17)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=({'p': 'pineapple', 'b': 'banana'},): raised unindent does not match any outer indentation level (<string>, line 17)",
+          "deterministic (official_tests) failed for input=({'p': 'pineapple', 'A': 'banana', 'B': 'banana'},): raised unindent does not match any outer indentation level (<string>, line 17)",
+          "deterministic (official_tests) failed for input=({'p': 'pineapple', 5: 'banana', 'a': 'apple'},): raised unindent does not match any outer indentation level (<string>, line 17)",
+          "deterministic (official_tests) failed for input=({'Name': 'John', 'Age': '36', 'City': 'Houston'},): raised unindent does not match any outer indentation level (<string>, line 17)",
+          "deterministic (official_tests) failed for input=({'STATE': 'NC', 'ZIP': '12345'},): raised unindent does not match any outer indentation level (<string>, line 17)"
+        ],
+        "probe_inputs": [
+          {
+            "dict": 1
+          },
+          {
+            "dict": 0
+          },
+          {
+            "dict": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.032,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.032
+    },
+    "humaneval-125": {
+      "case_id": "humaneval-125",
+      "mode": "verify_only",
+      "prompt_seed": 1854131264,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_a46pmor5.py\", line 14\n    elif ',' in txt:\n                    ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 14)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 14)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('Hello world!',): raised unindent does not match any outer indentation level (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('Hello,world!',): raised unindent does not match any outer indentation level (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('Hello world,!',): raised unindent does not match any outer indentation level (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('Hello,Hello,world !',): raised unindent does not match any outer indentation level (<string>, line 14)",
+          "deterministic (official_tests) failed for input=('abcdef',): raised unindent does not match any outer indentation level (<string>, line 14)"
+        ],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.026,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-157": {
+      "case_id": "humaneval-157",
+      "mode": "verify_only",
+      "prompt_seed": 3017268020,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_q3n4g50t.py\", line 13\n    return sides[0]**2 + sides[1]**2 == sides[2]**2\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1,
+            "c": 1
+          },
+          {
+            "a": 0,
+            "b": 0,
+            "c": 0
+          },
+          {
+            "a": -1,
+            "b": -1,
+            "c": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(3, 4, 5): raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(1, 2, 3): raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(10, 6, 8): raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(2, 2, 2): raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(7, 24, 25): raised unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1,
+            "c": 1
+          },
+          {
+            "a": 0,
+            "b": 0,
+            "c": 0
+          },
+          {
+            "a": -1,
+            "b": -1,
+            "c": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.025
+    },
+    "humaneval-73": {
+      "case_id": "humaneval-73",
+      "mode": "verify_only",
+      "prompt_seed": 3738074870,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_jdoj_2dm.py\", line 14\n    changes = 0\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 14)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([1, 2, 3, 5, 4, 7, 9, 6],): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 3, 2, 2],): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=([1, 4, 2],): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=([1, 4, 4, 2],): raised unexpected indent (<string>, line 14)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 2, 1],): raised unexpected indent (<string>, line 14)"
+        ],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.038,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.039
+    },
+    "humaneval-28": {
+      "case_id": "humaneval-28",
+      "mode": "verify_only",
+      "prompt_seed": 2345356610,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "strings": [
+              1,
+              2
+            ]
+          },
+          {
+            "strings": []
+          },
+          {
+            "strings": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "strings": [
+              1,
+              2
+            ]
+          },
+          {
+            "strings": []
+          },
+          {
+            "strings": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.016,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.018
+    },
+    "humaneval-42": {
+      "case_id": "humaneval-42",
+      "mode": "verify_only",
+      "prompt_seed": 3476030397,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.016,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.017
+    },
+    "humaneval-56": {
+      "case_id": "humaneval-56",
+      "mode": "verify_only",
+      "prompt_seed": 1581629214,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_z90k8psx.py\", line 17\n    for char in brackets:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('<',): expected False; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=('<>',): expected True; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=('<<><>>',): expected True; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=('><<>',): expected False; raised unexpected indent (<string>, line 17)",
+          "deterministic (official_tests) failed for input=('<',): raised unexpected indent (<string>, line 17)"
+        ],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.035,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.036
+    },
+    "humaneval-139": {
+      "case_id": "humaneval-139",
+      "mode": "verify_only",
+      "prompt_seed": 3430208743,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_slreeesl.py\", line 16\n    result = 1\n              ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(4,): expected 288; raised unindent does not match any outer indentation level (<string>, line 16)",
+          "deterministic (official_tests) failed for input=(4,): raised unindent does not match any outer indentation level (<string>, line 16)",
+          "deterministic (official_tests) failed for input=(5,): raised unindent does not match any outer indentation level (<string>, line 16)",
+          "deterministic (official_tests) failed for input=(7,): raised unindent does not match any outer indentation level (<string>, line 16)",
+          "deterministic (official_tests) failed for input=(1,): raised unindent does not match any outer indentation level (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.027,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.028
+    },
+    "humaneval-132": {
+      "case_id": "humaneval-132",
+      "mode": "verify_only",
+      "prompt_seed": 3711468213,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_lmocvenf.py\", line 16\n    for char in string:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('[[]]',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('[]]]]]]][[[[[]',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('[][]',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('[]',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('[[[[]]]]',): raised unexpected indent (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.03,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.031
+    },
+    "humaneval-88": {
+      "case_id": "humaneval-88",
+      "mode": "verify_only",
+      "prompt_seed": 1208417414,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_kkfc2w_q.py\", line 20\n    first_value = array[0]\n                          ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 20)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "array": 1
+          },
+          {
+            "array": 0
+          },
+          {
+            "array": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 20)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([],): raised unindent does not match any outer indentation level (<string>, line 20)",
+          "deterministic (official_tests) failed for input=([5],): raised unindent does not match any outer indentation level (<string>, line 20)",
+          "deterministic (official_tests) failed for input=([2, 4, 3, 0, 1, 5],): raised unindent does not match any outer indentation level (<string>, line 20)",
+          "deterministic (official_tests) failed for input=([2, 4, 3, 0, 1, 5, 6],): raised unindent does not match any outer indentation level (<string>, line 20)",
+          "deterministic (official_tests) failed for input=([2, 1],): raised unindent does not match any outer indentation level (<string>, line 20)"
+        ],
+        "probe_inputs": [
+          {
+            "array": 1
+          },
+          {
+            "array": 0
+          },
+          {
+            "array": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.036,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.037
+    },
+    "humaneval-1": {
+      "case_id": "humaneval-1",
+      "mode": "verify_only",
+      "prompt_seed": 1562413286,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_8s00n_9x.py\", line 13\n    groups = []\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('( ) (( )) (( )( ))',): expected ['()', '(())', '(()())']; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('( ) (( )) (( )( ))',): expected list; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('(()()) ((())) () ((())()())',): expected list; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('() (()) ((())) (((())))',): expected list; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('(()(())((())))',): expected list; raised unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.026,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.027
+    },
+    "humaneval-80": {
+      "case_id": "humaneval-80",
+      "mode": "verify_only",
+      "prompt_seed": 3380646839,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_occf2_bb.py\", line 15\n    if n < 3:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('a',): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('aa',): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('abcd',): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('aabb',): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=('adb',): raised unexpected indent (<string>, line 15)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.046,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.047
+    },
+    "humaneval-138": {
+      "case_id": "humaneval-138",
+      "mode": "verify_only",
+      "prompt_seed": 1318871162,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_plu1mb97.py\", line 11\n    return True\n               ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 11)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 11)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(4,): raised unindent does not match any outer indentation level (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(6,): raised unindent does not match any outer indentation level (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(8,): raised unindent does not match any outer indentation level (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(10,): raised unindent does not match any outer indentation level (<string>, line 11)",
+          "deterministic (official_tests) failed for input=(11,): raised unindent does not match any outer indentation level (<string>, line 11)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-61": {
+      "case_id": "humaneval-61",
+      "mode": "verify_only",
+      "prompt_seed": 764249244,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_jj_22mzn.py\", line 17\n    for char in brackets:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('(',): expected False; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=('()',): expected True; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=('(()())',): expected True; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=(')(()',): expected False; raised unexpected indent (<string>, line 17)",
+          "deterministic (official_tests) failed for input=('(',): raised unexpected indent (<string>, line 17)"
+        ],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-66": {
+      "case_id": "humaneval-66",
+      "mode": "verify_only",
+      "prompt_seed": 695192111,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_pwz9njtz.py\", line 16\n    for char in s:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('abAB',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('abcCd',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('helloE',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('woArBld',): raised unexpected indent (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-6": {
+      "case_id": "humaneval-6",
+      "mode": "verify_only",
+      "prompt_seed": 2185306499,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_mcgufcnz.py\", line 13\n    groups = paren_string.split(' ')\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 13)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('(()()) ((())) () ((())()())',): expected [2, 3, 1, 3]; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('(()()) ((())) () ((())()())',): expected list; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('() (()) ((())) (((())))',): expected list; raised unexpected indent (<string>, line 13)",
+          "annotated_return_type (signature) failed for input=('(()(())((())))',): expected list; raised unexpected indent (<string>, line 13)",
+          "deterministic (official_tests) failed for input=('(()()) ((())) () ((())()())',): raised unexpected indent (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.023,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.024
+    },
+    "humaneval-134": {
+      "case_id": "humaneval-134",
+      "mode": "verify_only",
+      "prompt_seed": 2094058149,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_r92se5lv.py\", line 16\n    if not txt:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 16)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('apple',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('apple pi e',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('eeeee',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('A',): raised unexpected indent (<string>, line 16)",
+          "deterministic (official_tests) failed for input=('Pumpkin pie ',): raised unexpected indent (<string>, line 16)"
+        ],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.037,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.038
+    },
+    "humaneval-53": {
+      "case_id": "humaneval-53",
+      "mode": "verify_only",
+      "prompt_seed": 3495814707,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "add(): parameter 'x' annotated as int",
+          "add(): parameter 'y' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "add(): parameter 'x' annotated as int",
+          "add(): parameter 'y' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.015,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.016
+    },
+    "humaneval-150": {
+      "case_id": "humaneval-150",
+      "mode": "verify_only",
+      "prompt_seed": 4075872429,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unindent does not match any outer indentation level",
+        "stdout": "  File \"/tmp/exp208_uk2g1n03.py\", line 13\n    for i in range(2, int(n**0.5) + 1):\n                                       ^\nIndentationError: unindent does not match any outer indentation level\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 13)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1,
+            "x": 1,
+            "y": 1
+          },
+          {
+            "n": 0,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "n": -1,
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unindent does not match any outer indentation level (<string>, line 13)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(7, 34, 12): raised unindent does not match any outer indentation level (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(15, 8, 5): raised unindent does not match any outer indentation level (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(3, 33, 5212): raised unindent does not match any outer indentation level (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(1259, 3, 52): raised unindent does not match any outer indentation level (<string>, line 13)",
+          "deterministic (official_tests) failed for input=(7919, -1, 12): raised unindent does not match any outer indentation level (<string>, line 13)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1,
+            "x": 1,
+            "y": 1
+          },
+          {
+            "n": 0,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "n": -1,
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.032,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.033
+    },
+    "humaneval-93": {
+      "case_id": "humaneval-93",
+      "mode": "verify_only",
+      "prompt_seed": 3622577310,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_5w64h70l.py\", line 17\n    vowels = \"aeiouAEIOU\"\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "message": 1
+          },
+          {
+            "message": 0
+          },
+          {
+            "message": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 17)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('test',): expected 'TGST'; raised unexpected indent (<string>, line 17)",
+          "example_regression (docstring_example) failed for input=('This is a message',): expected 'tHKS KS C MGSSCGG'; raised unexpected indent (<string>, line 17)",
+          "deterministic (official_tests) failed for input=('test',): raised unexpected indent (<string>, line 17)",
+          "deterministic (official_tests) failed for input=('This is a message',): raised unexpected indent (<string>, line 17)",
+          "deterministic (official_tests) failed for input=('TEST',): raised unexpected indent (<string>, line 17)"
+        ],
+        "probe_inputs": [
+          {
+            "message": 1
+          },
+          {
+            "message": 0
+          },
+          {
+            "message": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.029
+    }
+  }
+}
