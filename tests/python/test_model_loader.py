@@ -12,7 +12,8 @@ Verifies that load_model and generate:
 9. Fall back to raw prompt when chat template is unavailable (REQ-VERIFY-002)
 10. Export load_model and generate from carnot.inference (REQ-VERIFY-001)
 
-Spec coverage: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-003
+Spec coverage: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-041,
+SCENARIO-VERIFY-003
 """
 
 from __future__ import annotations
@@ -143,26 +144,28 @@ class TestLoadModelMemoryCheck:
         # Simulate only 512 MiB available — well below the 2 GiB minimum.
         with patch(
             "carnot.inference.model_loader._available_ram_bytes",
-            return_value=512 * 1024 ** 2,
+            return_value=512 * 1024**2,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer"), \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM"):
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer"),
+                patch("carnot.inference.model_loader.AutoModelForCausalLM"),
+            ):
                 model, tok = load_model("Qwen/Qwen3.5-0.8B")
         assert model is None
         assert tok is None
 
-    def test_low_memory_raises_when_force_live(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_low_memory_raises_when_force_live(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: raises ModelLoadError when CARNOT_FORCE_LIVE=1 and RAM low."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
         monkeypatch.setenv("CARNOT_FORCE_CPU", "1")
         with patch(
             "carnot.inference.model_loader._available_ram_bytes",
-            return_value=512 * 1024 ** 2,
+            return_value=512 * 1024**2,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer"), \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM"):
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer"),
+                patch("carnot.inference.model_loader.AutoModelForCausalLM"),
+            ):
                 with pytest.raises(ModelLoadError, match="Insufficient memory"):
                     load_model("Qwen/Qwen3.5-0.8B")
 
@@ -175,8 +178,10 @@ class TestLoadModelMemoryCheck:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel:
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+            ):
                 MockTok.from_pretrained.return_value = fake_tok
                 MockModel.from_pretrained.return_value = fake_model
                 model, tok = load_model("Qwen/Qwen3.5-0.8B")
@@ -191,9 +196,7 @@ class TestLoadModelDtype:
     is float32 on CPU, float16 on CUDA.
     """
 
-    def test_default_dtype_is_float32_on_cpu(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_default_dtype_is_float32_on_cpu(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: dtype defaults to torch.float32 on CPU."""
         import torch
 
@@ -204,8 +207,10 @@ class TestLoadModelDtype:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel:
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+            ):
                 MockTok.from_pretrained.return_value = fake_tok
                 MockModel.from_pretrained.return_value = fake_model
                 load_model("Qwen/Qwen3.5-0.8B")
@@ -213,9 +218,7 @@ class TestLoadModelDtype:
                 call_kwargs = MockModel.from_pretrained.call_args[1]
                 assert call_kwargs.get("torch_dtype") == torch.float32
 
-    def test_explicit_dtype_is_passed_through(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_explicit_dtype_is_passed_through(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: caller-supplied dtype overrides the default."""
         import torch
 
@@ -226,8 +229,10 @@ class TestLoadModelDtype:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel:
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+            ):
                 MockTok.from_pretrained.return_value = fake_tok
                 MockModel.from_pretrained.return_value = fake_model
                 load_model("Qwen/Qwen3.5-0.8B", dtype=torch.bfloat16)
@@ -261,10 +266,12 @@ class TestLoadModelRetryOnOOM:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel, \
-                 patch("carnot.inference.model_loader.time") as mock_time, \
-                 patch("carnot.inference.model_loader.gc") as mock_gc:
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+                patch("carnot.inference.model_loader.time") as mock_time,
+                patch("carnot.inference.model_loader.gc") as mock_gc,
+            ):
                 MockTok.from_pretrained.return_value = fake_tok
                 MockModel.from_pretrained.side_effect = fake_from_pretrained
                 model, tok = load_model("Qwen/Qwen3.5-0.8B", max_retries=3)
@@ -275,31 +282,27 @@ class TestLoadModelRetryOnOOM:
         mock_gc.collect.assert_called()  # gc.collect() must have been called.
         mock_time.sleep.assert_called()  # sleep between retries.
 
-    def test_exhausts_retries_returns_none_none(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_exhausts_retries_returns_none_none(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: returns (None, None) after all retries fail with OOM."""
         monkeypatch.setenv("CARNOT_FORCE_CPU", "1")
         with patch(
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel, \
-                 patch("carnot.inference.model_loader.time"), \
-                 patch("carnot.inference.model_loader.gc"):
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+                patch("carnot.inference.model_loader.time"),
+                patch("carnot.inference.model_loader.gc"),
+            ):
                 MockTok.from_pretrained.return_value = _make_fake_tokenizer()
-                MockModel.from_pretrained.side_effect = RuntimeError(
-                    "out of memory"
-                )
+                MockModel.from_pretrained.side_effect = RuntimeError("out of memory")
                 model, tok = load_model("Qwen/Qwen3.5-0.8B", max_retries=2)
 
         assert model is None
         assert tok is None
 
-    def test_non_oom_failure_does_not_retry(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_non_oom_failure_does_not_retry(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: non-OOM errors break immediately without retrying."""
         monkeypatch.setenv("CARNOT_FORCE_CPU", "1")
         call_count = {"n": 0}
@@ -312,10 +315,12 @@ class TestLoadModelRetryOnOOM:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel, \
-                 patch("carnot.inference.model_loader.time"), \
-                 patch("carnot.inference.model_loader.gc"):
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+                patch("carnot.inference.model_loader.time"),
+                patch("carnot.inference.model_loader.gc"),
+            ):
                 MockTok.from_pretrained.return_value = _make_fake_tokenizer()
                 MockModel.from_pretrained.side_effect = fake_from_pretrained
                 model, tok = load_model("nonexistent/model", max_retries=3)
@@ -334,20 +339,18 @@ class TestLoadModelForceLive:
     return into a hard ModelLoadError that the benchmark can surface.
     """
 
-    def test_raises_on_import_error_when_force_live(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_raises_on_import_error_when_force_live(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: raises ModelLoadError when transformers unavailable + FORCE_LIVE."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
         # Simulate transformers not installed by setting module-level sentinel to None.
-        with patch("carnot.inference.model_loader.AutoTokenizer", None), \
-             patch("carnot.inference.model_loader.AutoModelForCausalLM", None):
+        with (
+            patch("carnot.inference.model_loader.AutoTokenizer", None),
+            patch("carnot.inference.model_loader.AutoModelForCausalLM", None),
+        ):
             with pytest.raises(ModelLoadError, match="not installed"):
                 load_model("Qwen/Qwen3.5-0.8B")
 
-    def test_raises_on_load_failure_when_force_live(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_raises_on_load_failure_when_force_live(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: raises ModelLoadError when model load fails + FORCE_LIVE."""
         monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
         monkeypatch.setenv("CARNOT_FORCE_CPU", "1")
@@ -355,10 +358,12 @@ class TestLoadModelForceLive:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel, \
-                 patch("carnot.inference.model_loader.time"), \
-                 patch("carnot.inference.model_loader.gc"):
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+                patch("carnot.inference.model_loader.time"),
+                patch("carnot.inference.model_loader.gc"),
+            ):
                 MockTok.from_pretrained.return_value = _make_fake_tokenizer()
                 MockModel.from_pretrained.side_effect = OSError("not found")
                 with pytest.raises(ModelLoadError, match="Failed to load"):
@@ -371,10 +376,12 @@ class TestLoadModelForceLive:
             "carnot.inference.model_loader._available_ram_bytes",
             return_value=_MIN_FREE_RAM_BYTES + 1,
         ):
-            with patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-                 patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel, \
-                 patch("carnot.inference.model_loader.time"), \
-                 patch("carnot.inference.model_loader.gc"):
+            with (
+                patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+                patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+                patch("carnot.inference.model_loader.time"),
+                patch("carnot.inference.model_loader.gc"),
+            ):
                 MockTok.from_pretrained.return_value = _make_fake_tokenizer()
                 MockModel.from_pretrained.side_effect = OSError("not found")
                 model, tok = load_model("nonexistent/model", max_retries=1)
@@ -386,8 +393,10 @@ class TestLoadModelForceLive:
     ) -> None:
         """REQ-VERIFY-001: returns (None, None) when torch/transformers unavailable without FORCE_LIVE."""
         # Simulate transformers not installed by setting module-level sentinels to None.
-        with patch("carnot.inference.model_loader.AutoTokenizer", None), \
-             patch("carnot.inference.model_loader.AutoModelForCausalLM", None):
+        with (
+            patch("carnot.inference.model_loader.AutoTokenizer", None),
+            patch("carnot.inference.model_loader.AutoModelForCausalLM", None),
+        ):
             model, tok = load_model("Qwen/Qwen3.5-0.8B")
         assert model is None
         assert tok is None
@@ -587,6 +596,7 @@ class TestMemoryHelpers:
         crashing, so the memory check is effectively skipped.
         """
         import builtins
+
         real_import = builtins.__import__
 
         def import_blocker(name: str, *args: Any, **kwargs: Any) -> Any:
@@ -597,7 +607,7 @@ class TestMemoryHelpers:
         with patch("builtins.__import__", side_effect=import_blocker):
             result = _available_ram_bytes()
 
-        assert result == 2 ** 63
+        assert result == 2**63
 
 
 # ---------------------------------------------------------------------------
@@ -613,9 +623,7 @@ class TestLoadModelTorchUnavailable:
     state the module is in when torch/transformers are not installed.
     """
 
-    def test_returns_none_none_when_torch_flag_false(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_returns_none_none_when_torch_flag_false(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: returns (None, None) silently when _TORCH_AVAILABLE=False."""
         with patch("carnot.inference.model_loader._TORCH_AVAILABLE", False):
             model, tok = load_model("any_model")
@@ -648,12 +656,15 @@ class TestLoadModelForceCPUDisabled:
         monkeypatch.setenv("CARNOT_FORCE_CPU", "0")
         fake_model = _make_fake_model()
         fake_tok = _make_fake_tokenizer()
-        with patch(
-            "carnot.inference.model_loader._available_ram_bytes",
-            return_value=_MIN_FREE_RAM_BYTES + 1,
-        ), patch("carnot.inference.model_loader.torch") as mock_torch, \
-           patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-           patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel:
+        with (
+            patch(
+                "carnot.inference.model_loader._available_ram_bytes",
+                return_value=_MIN_FREE_RAM_BYTES + 1,
+            ),
+            patch("carnot.inference.model_loader.torch") as mock_torch,
+            patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+            patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+        ):
             mock_torch.cuda.is_available.return_value = False
             mock_torch.float32 = torch.float32
             MockTok.from_pretrained.return_value = fake_tok
@@ -667,9 +678,7 @@ class TestLoadModelForceCPUDisabled:
 class TestLoadModelCUDAPath:
     """load_model calls model.cuda() when effective_device is cuda."""
 
-    def test_model_moved_to_cuda_when_available(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_model_moved_to_cuda_when_available(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: model.cuda() is called when CUDA is available."""
         import torch
 
@@ -680,18 +689,122 @@ class TestLoadModelCUDAPath:
         fake_model.cuda.return_value = cuda_model
         fake_tok = _make_fake_tokenizer()
 
-        with patch(
-            "carnot.inference.model_loader._available_ram_bytes",
-            return_value=_MIN_FREE_RAM_BYTES + 1,
-        ), patch("carnot.inference.model_loader.torch") as mock_torch, \
-           patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-           patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel:
+        with (
+            patch(
+                "carnot.inference.model_loader._available_ram_bytes",
+                return_value=_MIN_FREE_RAM_BYTES + 1,
+            ),
+            patch("carnot.inference.model_loader.torch") as mock_torch,
+            patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+            patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+        ):
             mock_torch.cuda.is_available.return_value = True
             mock_torch.float16 = torch.float16
             MockTok.from_pretrained.return_value = fake_tok
             MockModel.from_pretrained.return_value = fake_model
             model, tok = load_model("any_model", device="cuda")
 
+        fake_model.cuda.assert_called_once()
+        assert model is cuda_model
+
+    def test_model_moved_to_explicit_cuda_index_when_available(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """REQ-VERIFY-041: explicit CUDA indices route through model.to(device)."""
+        import torch
+
+        monkeypatch.setenv("CARNOT_FORCE_CPU", "0")
+        fake_model = _make_fake_model()
+        indexed_model = _make_fake_model("cuda:1")
+        fake_model.to.return_value = indexed_model
+        fake_tok = _make_fake_tokenizer()
+
+        with (
+            patch(
+                "carnot.inference.model_loader._available_ram_bytes",
+                return_value=_MIN_FREE_RAM_BYTES + 1,
+            ),
+            patch("carnot.inference.model_loader.torch") as mock_torch,
+            patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+            patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+        ):
+            mock_torch.cuda.is_available.return_value = True
+            mock_torch.float16 = torch.float16
+            MockTok.from_pretrained.return_value = fake_tok
+            MockModel.from_pretrained.return_value = fake_model
+            model, tok = load_model("any_model", device="cuda:1")
+
+        del tok
+        fake_model.cuda.assert_not_called()
+        fake_model.to.assert_called_once_with("cuda:1")
+        assert model is indexed_model
+
+
+class TestLoadModelDeviceMapAuto:
+    """load_model passes through HuggingFace device_map loading when requested."""
+
+    def test_device_map_auto_skips_manual_device_move(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """REQ-VERIFY-041: device_map='auto' is delegated to from_pretrained."""
+        import torch
+
+        monkeypatch.setenv("CARNOT_FORCE_CPU", "0")
+        fake_model = _make_fake_model("cuda:0")
+        fake_tok = _make_fake_tokenizer()
+
+        with (
+            patch(
+                "carnot.inference.model_loader._available_ram_bytes",
+                return_value=_MIN_FREE_RAM_BYTES + 1,
+            ),
+            patch("carnot.inference.model_loader.torch") as mock_torch,
+            patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+            patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+        ):
+            mock_torch.cuda.is_available.return_value = True
+            mock_torch.float16 = torch.float16
+            MockTok.from_pretrained.return_value = fake_tok
+            MockModel.from_pretrained.return_value = fake_model
+            model, tok = load_model("any_model", device="cuda", device_map="auto")
+
+        del tok
+        call_kwargs = MockModel.from_pretrained.call_args[1]
+        assert call_kwargs["device_map"] == "auto"
+        fake_model.cuda.assert_not_called()
+        fake_model.to.assert_not_called()
+        assert model is fake_model
+
+
+class TestLoadModelUnknownDeviceFallback:
+    """load_model falls back to generic CUDA when the device string is not recognised."""
+
+    def test_unknown_device_uses_cuda_when_available(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """REQ-VERIFY-041: unknown non-CPU device names fall back to CUDA."""
+        import torch
+
+        monkeypatch.setenv("CARNOT_FORCE_CPU", "0")
+        fake_model = _make_fake_model()
+        cuda_model = _make_fake_model("cuda:0")
+        fake_model.cuda.return_value = cuda_model
+        fake_tok = _make_fake_tokenizer()
+
+        with (
+            patch(
+                "carnot.inference.model_loader._available_ram_bytes",
+                return_value=_MIN_FREE_RAM_BYTES + 1,
+            ),
+            patch("carnot.inference.model_loader.torch") as mock_torch,
+            patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+            patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+        ):
+            mock_torch.cuda.is_available.return_value = True
+            mock_torch.float16 = torch.float16
+            MockTok.from_pretrained.return_value = fake_tok
+            MockModel.from_pretrained.return_value = fake_model
+            model, tok = load_model("any_model", device="mps")
+
+        del tok
         fake_model.cuda.assert_called_once()
         assert model is cuda_model
 
@@ -704,9 +817,7 @@ class TestLoadModelOOMEmptyCacheException:
     loop continues.
     """
 
-    def test_empty_cache_exception_is_swallowed(
-        self, monkeypatch: pytest.MonkeyPatch
-    ) -> None:
+    def test_empty_cache_exception_is_swallowed(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """REQ-VERIFY-001: cuda.empty_cache() exception during OOM retry is ignored."""
         import torch
 
@@ -721,14 +832,17 @@ class TestLoadModelOOMEmptyCacheException:
                 raise RuntimeError("out of memory")
             return fake_model
 
-        with patch(
-            "carnot.inference.model_loader._available_ram_bytes",
-            return_value=_MIN_FREE_RAM_BYTES + 1,
-        ), patch("carnot.inference.model_loader.AutoTokenizer") as MockTok, \
-           patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel, \
-           patch("carnot.inference.model_loader.time"), \
-           patch("carnot.inference.model_loader.gc"), \
-           patch("carnot.inference.model_loader.torch") as mock_torch:
+        with (
+            patch(
+                "carnot.inference.model_loader._available_ram_bytes",
+                return_value=_MIN_FREE_RAM_BYTES + 1,
+            ),
+            patch("carnot.inference.model_loader.AutoTokenizer") as MockTok,
+            patch("carnot.inference.model_loader.AutoModelForCausalLM") as MockModel,
+            patch("carnot.inference.model_loader.time"),
+            patch("carnot.inference.model_loader.gc"),
+            patch("carnot.inference.model_loader.torch") as mock_torch,
+        ):
             mock_torch.float32 = torch.float32
             mock_torch.cuda.empty_cache.side_effect = RuntimeError("CUDA not init")
             MockTok.from_pretrained.return_value = fake_tok

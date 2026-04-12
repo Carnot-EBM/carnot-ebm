@@ -43,7 +43,8 @@
     - ServerBackedModelHandle for warm-server integration
     - ModelLoadError (re-exported from carnot.pipeline.errors)
 
-Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-038, SCENARIO-VERIFY-003
+Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-038, REQ-VERIFY-041,
+SCENARIO-VERIFY-003
 """
 
 from __future__ import annotations
@@ -260,6 +261,7 @@ def load_model(
     device: str = "cpu",
     dtype: Any = None,
     max_retries: int = 3,
+    device_map: str | None = None,
 ) -> tuple[Any, Any]:
     """Load a HuggingFace causal-LM and its tokenizer robustly.
 
@@ -274,7 +276,8 @@ def load_model(
         2. Check available RAM via psutil; raise ModelLoadError if < 2 GiB.
         3. Determine device: respect the ``device`` argument unless
            CARNOT_FORCE_CPU=1 (default), which always forces CPU to avoid
-           ROCm hangs on the research machine.
+           ROCm hangs on the research machine. Explicit CUDA indices such as
+           ``cuda:0`` and ``cuda:1`` are preserved when CUDA is available.
         4. Determine dtype: if caller passes None, use torch.float32 on CPU
            and torch.float16 on CUDA. float16 on CPU triggers AVX2 crashes
            on some kernels, so float32 is the safe default.
@@ -295,10 +298,12 @@ def load_model(
 
     Args:
         model_name: HuggingFace model ID or local path (e.g., "Qwen/Qwen3.5-0.8B").
-        device: "cpu" or "cuda". Overridden to "cpu" when CARNOT_FORCE_CPU=1.
+        device: "cpu", "cuda", or an explicit CUDA device string such as
+            "cuda:0". Overridden to "cpu" when CARNOT_FORCE_CPU=1.
         dtype: torch dtype for the model weights, or None to auto-select.
             Defaults to torch.float32 on CPU, torch.float16 on CUDA.
         max_retries: Total number of load attempts before giving up (default 3).
+        device_map: Optional HuggingFace device_map value such as "auto".
 
     Returns:
         Tuple of (model, tokenizer) on success, or (None, None) on failure
@@ -309,7 +314,7 @@ def load_model(
             torch/transformers are not installed, or when available RAM
             is below the minimum threshold.
 
-    Spec: REQ-VERIFY-001, REQ-VERIFY-038, SCENARIO-VERIFY-003
+    Spec: REQ-VERIFY-001, REQ-VERIFY-038, REQ-VERIFY-041, SCENARIO-VERIFY-003
     """
     server = _server_for_model(model_name)
     if server is not None:
@@ -342,12 +347,12 @@ def load_model(
 
     # --- Device resolution ---
     force_cpu = os.environ.get("CARNOT_FORCE_CPU", "1") == "1"
-    if force_cpu:
+    if force_cpu or device == "cpu":
         effective_device = "cpu"
+    elif device == "cuda" or device.startswith("cuda:"):
+        effective_device = device if torch.cuda.is_available() else "cpu"
     else:
-        effective_device = (
-            device if device == "cpu" else ("cuda" if torch.cuda.is_available() else "cpu")
-        )
+        effective_device = "cuda" if torch.cuda.is_available() else "cpu"
 
     # --- dtype resolution ---
     if dtype is None:
@@ -385,14 +390,21 @@ def load_model(
                 model_name,
                 trust_remote_code=True,
             )
+            model_kwargs: dict[str, Any] = {
+                "trust_remote_code": True,
+                "torch_dtype": effective_dtype,
+            }
+            if device_map is not None and effective_device != "cpu":
+                model_kwargs["device_map"] = device_map
             model = AutoModelForCausalLM.from_pretrained(
                 model_name,
-                trust_remote_code=True,
-                torch_dtype=effective_dtype,
+                **model_kwargs,
             )
             model = cast("Any", model)
-            if effective_device == "cuda":
+            if device_map is None and effective_device == "cuda":
                 model = model.cuda()
+            elif device_map is None and effective_device.startswith("cuda:"):
+                model = model.to(effective_device)
             model.eval()
             logger.info("Loaded '%s' successfully on %s.", model_name, effective_device)
             return model, tokenizer
@@ -430,6 +442,7 @@ def load_model(
         details={
             "model_name": model_name,
             "device": effective_device,
+            "device_map": device_map,
             "dtype": str(effective_dtype),
             "attempts": max_retries,
             "last_error": str(last_exc),

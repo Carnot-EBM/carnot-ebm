@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 225 Dual-GPU Paired Inference Runner
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T19:47:00Z | 2026-04-12T20:34:48Z | Exp 225: extended `verifiable-reasoning` with `REQ-VERIFY-041` and `SCENARIO-VERIFY-042`, wrote `test_dual_gpu.py` plus the `model_loader` and Exp 218 harness parallel-dispatch assertions first, implemented `python/carnot/inference/dual_gpu.py` plus explicit `cuda:N` / `device_map="auto"` loading and the Exp 218 `--parallel` path, recorded the honest 10-question dual-GPU microbenchmark at `results/experiment_225_results.json`, reconciled specs/ops/story docs, and reran targeted diff-coverage, the full Python suite, spec coverage, Ruff, `tests/integration/test_full_pipeline.py`, CLI help, and reconciliation checks. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 224c TensorRT-LLM Backend
 
 ### Turn Log

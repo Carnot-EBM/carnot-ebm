@@ -41,6 +41,13 @@ from carnot.inference.diffusion import (
     diffusion_generate_coloring,
     diffusion_generate_sat,
 )
+from carnot.inference.dual_gpu import (
+    DualGPUExecutionContext,
+    DualGPUExecutionResult,
+    DualGPURunner,
+    estimate_model_size_billions,
+    requires_device_map_auto,
+)
 from carnot.inference.ebm_loader import (
     KNOWN_MODELS,
     get_model_info,
@@ -130,6 +137,9 @@ __all__ = [
     "EBMCandidateScore",
     "EBMRejectionConfig",
     "EBMRejectionResult",
+    "DualGPUExecutionContext",
+    "DualGPUExecutionResult",
+    "DualGPURunner",
     "KNOWN_MODELS",
     "DiffusionConfig",
     "DiffusionResult",
@@ -168,6 +178,7 @@ __all__ = [
     "diffusion_generate",
     "diffusion_generate_coloring",
     "diffusion_generate_sat",
+    "estimate_model_size_billions",
     "extract_token_rewards",
     "extract_token_rewards_from_logprobs",
     "generate_code_training_data",
@@ -182,6 +193,7 @@ __all__ = [
     "logprob_rejection_sample",
     "score_activations_with_ebm",
     "run_llm_sat_experiment",
+    "requires_device_map_auto",
     "solve_coloring_with_llm",
     "solve_sat_with_llm",
     "register_model_server",
