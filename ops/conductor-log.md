@@ -1329,3 +1329,4 @@
 | 2026-04-12 10:26 UTC | Exp 214: Semantic failure corpus from live verifie | OK | =========== 1913 passed, 1 skipped, 22 warnings in 98.02s (0:01:38) ============ |
 | 2026-04-12 11:15 UTC | Exp 215: Semantic grounding verifier for question- | OK | =========== 1926 passed, 1 skipped, 22 warnings in 98.01s (0:01:38) ============ |
 | 2026-04-12 11:40 UTC | Exp 216: Structured reasoning emission path for Qw | OK | =========== 1944 passed, 1 skipped, 22 warnings in 97.32s (0:01:37) ============ |
+| 2026-04-12 12:11 UTC | Exp 217: Property-generated code verifier for Huma | OK | =========== 1968 passed, 1 skipped, 22 warnings in 95.49s (0:01:35) ============ |
