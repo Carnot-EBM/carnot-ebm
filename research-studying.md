@@ -283,6 +283,47 @@ Study runs check ALL of these sources:
 - Block verification for speculative decoding (5-8% speedup, OpenReview)
 - Physics-informed KAN with augmented Lagrangian (Nature 2025)
 
+## Revalidation Sweep — Approaches That Deserve Live Re-Testing
+
+**Context:** The simulation artifact discovery (Exp 203-209) led us to remove
+unverified numbers from reporting. But some earlier approaches may genuinely
+work — they were tested with bad experimental methodology, not bad ideas.
+This sweep re-runs the most promising old experiments with live GPU inference
+to either confirm or definitively rule them out.
+
+### High Priority (architecture likely valid, just needs live data)
+
+| Original Exp | What it tested | Why re-test | Proposed revalidation |
+|-------------|---------------|-------------|----------------------|
+| 172, 176 | Global consistency checker | Logic-based contradiction detection across reasoning steps. Uses ConstraintStateMachine, not regex. Should work on real chains. | Run on live multi-turn Gemma4/Qwen outputs, measure detection rate on real contradictions |
+| 134 (Tier 1) | Online self-learning weights | Architecture validated by Exp 223 (-86% FP). Original numbers trained on simulated errors — retrain on live traces. | Re-run with Exp 219-221 live traces as training data |
+| 126-127 | Agent rollback/workflow verification | Constraint-based rollback logic doesn't depend on inference mode. May already work. | Run existing agent workflow tests with live model in the loop |
+| 158 | Factual extractor (Wikidata SPARQL) | Extraction logic queries external KB, not model internals. May work on IT model responses. | Test on Gemma4-E4B-it factual QA with live inference |
+| 175 | Adaptive KAN live verification | KAN architecture proven (0.994 AUROC). The live loop needs real verification traces. | Feed Exp 219-221 traces through KAN adaptive mesh refinement |
+
+### Medium Priority (approach may work differently on IT models)
+
+| Original Exp | What it tested | Why re-test | Proposed revalidation |
+|-------------|---------------|-------------|----------------------|
+| 91-92 | GSM8K/MATH with constraint verification | Original used regex extraction on base models. Now we have Z3 + LLM + semantic extractors on IT models. Completely different pipeline. | Run full GSM8K with the Exp 215 semantic grounding verifier |
+| 142 | Combined learning (multiple signals) | Combined multiple constraint signals. With better extractors, the combination may be more effective. | Re-test signal combination with Z3 + LLM + semantic extractors |
+| 149 | TruthfulQA factual coverage | Factual domain needs Wikidata KB (Exp 158). With live IT models, factual extraction may work differently. | Test on TruthfulQA subset with live Gemma4 + factual extractor |
+| 136 | Cross-session constraint memory | Persistence architecture is valid. Needs real constraint patterns to learn from. | Populate memory from Exp 219-221 live traces, test on new questions |
+
+### Low Priority (likely ruled out but worth a quick check)
+
+| Original Exp | What it tested | Why re-test | Proposed revalidation |
+|-------------|---------------|-------------|----------------------|
+| 161, 163 | Full GSM8K benchmark | These were the main simulation artifacts. But with new extractors (Z3/LLM/semantic), the full benchmark may show different results. | Already partially covered by Exp 219 (200 questions). Could extend to full 1319. |
+| 178 | Adversarial GSM8K (number-swapped) | Adversarial variants test robustness. Semantic grounding should handle number swaps better than regex. | Run Apple adversarial variants with semantic grounding verifier |
+
+### Definitively Ruled Out (evidence-based, not provenance-based)
+
+These are NOT candidates for revalidation — they were disproven by experimental evidence:
+- **Activation-based EBMs** (Exp 1-38): 14 principles prove they detect confidence, not correctness. No provenance issue — the approach is fundamentally flawed.
+- **LNN adaptive couplings** (Exp 116): -90% vs static Ising. Worse in every metric.
+- **Precision-based constraint reweighting** (Exp 134 original): 0% improvement on the specific reweighting approach (though the self-learning architecture was validated by Exp 223).
+
 ## Archived (Investigated, Not Promising)
 
 - LNN adaptive couplings within chains: -90% vs static Ising (Exp 116)
@@ -463,3 +504,17 @@ if we integrate property-based testing into our CodeExtractor + repair loop.
 4. Multi-model code verification (Qwen + Gemma + larger models)
 5. Self-learning from code verification traces (Tier 1-2)
 6. Bridge to production: package the code verification pipeline
+
+### Proposed Milestone: "Revalidation Sweep" (after 2026.04.16)
+
+**Theme:** Re-run the 10 most promising pre-provenance experiments with
+live GPU inference and modern extractors. Either confirm they work (and
+add to the live results portfolio) or definitively rule them out with
+evidence, not just missing metadata.
+
+**Estimated experiments:** 8-10 (one per approach above)
+**Dependencies:** Exp 215 semantic grounding, Exp 217 PBT code verifier,
+Exp 222 trace memory — all completed in milestone 2026.04.15
+**Expected outcome:** 3-5 approaches confirmed as working on live data,
+3-5 definitively ruled out with evidence, expanding our credible results
+portfolio significantly.
