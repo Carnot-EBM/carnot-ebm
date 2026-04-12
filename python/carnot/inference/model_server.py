@@ -10,12 +10,20 @@ import gc
 import threading
 from collections import deque
 from collections.abc import Callable, Sequence
+from contextlib import nullcontext
 from dataclasses import dataclass, field
 from queue import Empty, Queue
 from time import perf_counter
 from typing import Any
 
-from carnot.inference.model_loader import generate, load_model
+import carnot.inference.model_loader as model_loader_module
+from carnot.inference.model_loader import (
+    _model_device,
+    _render_generation_prompt,
+    _strip_thinking_tokens,
+    generate,
+    load_model,
+)
 
 LoaderFn = Callable[[str], tuple[Any, Any]]
 BatchGenerateFn = Callable[[Any, Any, list[str], int], list[str]]
@@ -69,7 +77,54 @@ def _default_batch_generate(
     prompts: list[str],
     max_new_tokens: int,
 ) -> list[str]:
-    return [generate(model, tokenizer, prompt, max_new_tokens=max_new_tokens) for prompt in prompts]
+    if model is None or tokenizer is None:
+        raise RuntimeError(
+            "_default_batch_generate() called with model=None or tokenizer=None. "
+            "Warm loading must succeed before batched generation."
+        )
+    if not prompts:
+        return []
+
+    rendered_prompts = [_render_generation_prompt(tokenizer, prompt) for prompt in prompts]
+    device = _model_device(model)
+
+    if (
+        getattr(tokenizer, "pad_token_id", None) is None
+        and getattr(tokenizer, "eos_token", None) is not None
+    ):
+        tokenizer.pad_token = tokenizer.eos_token
+
+    inputs = tokenizer(
+        rendered_prompts,
+        return_tensors="pt",
+        padding=True,
+    )
+    inputs = {key: value.to(device) for key, value in inputs.items()}
+    input_length = int(inputs["input_ids"].shape[1])
+
+    torch_module = getattr(model_loader_module, "torch", None)
+    no_grad = torch_module.no_grad if torch_module is not None else nullcontext
+    with no_grad():
+        outputs = model.generate(
+            **inputs,
+            max_new_tokens=max_new_tokens,
+            do_sample=False,
+            pad_token_id=tokenizer.eos_token_id,
+        )
+
+    responses: list[str] = []
+    for index in range(len(prompts)):
+        decoded = tokenizer.decode(
+            outputs[index, input_length:],
+            skip_special_tokens=True,
+        )
+        responses.append(_strip_thinking_tokens(decoded))
+    return responses
+
+
+def _default_loader(model_name: str) -> tuple[Any, Any]:
+    """Request CUDA by default while preserving load_model() fallback behavior."""
+    return load_model(model_name, device="cuda")
 
 
 class ModelServer:
@@ -80,7 +135,7 @@ class ModelServer:
         model_names: Sequence[str],
         *,
         batch_size: int = 8,
-        loader: LoaderFn = load_model,
+        loader: LoaderFn = _default_loader,
         batch_generate_fn: BatchGenerateFn = _default_batch_generate,
         torch_module: Any | None = None,
         clock: Callable[[], float] = perf_counter,
