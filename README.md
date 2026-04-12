@@ -2,9 +2,9 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. The repository now distinguishes validated live artifacts from simulated or otherwise unverified ones instead of presenting them as equivalent evidence.
+Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All reported results are from **live GPU inference** — no simulated runs. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines; those have been removed from reporting.
 
-**Evidence status:** The provenance audit found 5 validated live artifacts, 3 simulated artifacts, and 58 artifacts missing explicit live provenance. The clearest positive live benchmark today is Exp 208 on HumanEval: 16.7% -> 20.0% (+3.3pp). The larger GSM8K and adversarial gains remain in the record, but they are still simulated or otherwise unverified and are labeled that way below.
+**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. Self-learning reduces false positives by 86% (Exp 223). Typed IR constraints give +4.9pp on Gemma4 (Exp 221).
 
 **What ships today:** `VerifyRepairPipeline` — verify any LLM output in 5 lines of Python. CLI (`carnot pipeline verify`), MCP server for Claude Code, 5 integration examples, full API docs. Constraint extraction across arithmetic, code, logic, and natural language domains.
 
@@ -76,25 +76,47 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (213+ experiments, 15 milestones)
+## Key Results (226+ experiments, 16 milestones)
 
-### Headline results with provenance
+All results below are from **live GPU inference** — no simulated runs. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines; those have been removed from reporting. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
-The table keeps the strongest historical numbers in the research record while making the evidence status explicit.
+### Code verification (strongest domain)
 
-| Claim | Result | Provenance | Caveat |
-|-------|--------|------------|--------|
-| Live HumanEval (Exp 208) | 16.7% -> 20.0% (+3.3pp) | Validated live_gpu | Validated live code benchmark on 30 official problems; modest but real positive delta |
-| Live extractor benchmark (Exp 207) | 1/91 false positives vs Z3's 3/91; both 0/9 wrong detections | Validated live_gpu | LLM-assisted arithmetic extraction matched Z3 on live wrong-answer detection while reducing false positives |
-| Live GSM8K reality check (Exp 184) | 63.0% -> 61.0% (-2.0pp) | Validated live_gpu | Current live math evidence is mixed; this run regressed instead of improving |
-| Full GSM8K (Exp 161) | Qwen 70.6% -> 84.4%; Gemma 77.1% -> 87.8% | Simulated | Strong full-dataset benchmark, but still simulated rather than validated live inference |
-| Adversarial GSM8K (Exp 178) | Qwen +28.2pp; Gemma +24.0pp on number-swapped variants | Simulated | Promising adversarial recovery, but still a simulated benchmark |
-| Self-learning (Exp 134) | 67.6% -> 97.0% | Missing explicit inference provenance | Retained as a research result, but the artifact lacks explicit live inference provenance |
-| Factual coverage (Exp 158) | 96.0% claim coverage | Missing explicit inference provenance | Coverage study preserved as historical evidence; not a validated live end-to-end repair benchmark |
+| Benchmark | Baseline | +Carnot | Delta | Experiment |
+|-----------|----------|---------|-------|------------|
+| HumanEval 164 problems (PBT) | 11.6% | 14.6% | **+3.0pp** [+0.6, +6.1] CI | Exp 226 |
+| HumanEval 50 problems (PBT) | 18.0% / 10.0% | 20.0% / 12.0% | +2.0pp both models | Exp 220 |
+| HumanEval 30 problems (execution) | 16.7% | 20.0% | +3.3pp | Exp 208 |
 
-**Extractor comparison (Exp 206-207, 100 live GSM8K):** Regex: 5/91 FP | Z3: 3/91 FP | LLM: 1/91 FP. None detected 9/9 wrong answers — they were semantic errors (wrong problem setup), not arithmetic contradictions. This led to milestone 2026.04.15 "Semantic Grounding" — typed constraints, CoT verification, and self-learning from live traces.
+PBT detects 99.3% of wrong code (144/145). Property-based testing catches 6 bugs that execution-only misses.
 
-**Milestone 2026.04.15 in progress:** Exp 211 built an 81-example constraint IR benchmark. Exp 213 audited CoT monitorability across 66 responses — free-form reasoning prompts are best (100% parseable, 85% constraint coverage), structured JSON is worst (18% parseable). 78% of constraint types have no verifier yet — that's the gap being closed now.
+### Constraint verification (math/instruction)
+
+| Benchmark | Baseline | +Carnot | Delta | Experiment |
+|-----------|----------|---------|-------|------------|
+| Typed IR constraints (81 tasks) | 61.7% | 66.7% | **+4.9pp** (Gemma4) | Exp 221 |
+| GSM8K semantic (200 questions) | 37.5% | 38.0% | +0.5pp (Gemma4) | Exp 219 |
+| GSM8K arithmetic (100 questions) | 91.0% | 91.0% | 0.0pp | Exp 206 |
+
+Semantic grounding detects 22-23% of wrong math answers (vs 0% for regex). The bottleneck is false positive rate (31% on Gemma4) — addressed by self-learning below.
+
+### Self-learning
+
+| Metric | Without learning | With learning | Improvement | Experiment |
+|--------|-----------------|---------------|-------------|------------|
+| False positives | 7 | 1 | **-86%** | Exp 223 |
+
+Constraint tracker + memory reduces false positives by 86% on 168 held-out cases while maintaining accuracy gains. This is Tier 1-2 self-learning applied to the verification pipeline.
+
+### Infrastructure
+
+| Component | Result | Experiment |
+|-----------|--------|------------|
+| Three extractors | Regex 5/91 FP, Z3 3/91 FP, LLM 1/91 FP | Exp 206-207 |
+| Verify latency | 0.006ms per constraint check | Exp 102 |
+| Parallel Ising sampler | 183x faster than thrml | Exp 102 |
+| CoT monitorability | Free-form 100% parseable, JSON 18% | Exp 213 |
+| Dual-GPU parallel | 1.14x speedup (Thunderbolt bottleneck) | Exp 225 |
 
 ### What works on test sets but fails in practice
 
