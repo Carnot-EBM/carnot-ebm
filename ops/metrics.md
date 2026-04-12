@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 226 Full HumanEval PBT Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T20:56:29Z | 2026-04-12T21:52:25Z | Exp 226: extended `code-verification` with `REQ-CODE-012` through `REQ-CODE-014`, wrote `test_experiment_226_pbt_humaneval_full.py` first, implemented `scripts/experiment_226_pbt_humaneval_full.py`, ran the full live 164-problem Gemma4-E4B-it HumanEval PBT benchmark to `results/experiment_226_results.json`, reconciled spec/traceability/ops docs, and reran targeted 100% coverage for the new script, Ruff, spec coverage, the full Python suite, `tests/integration/test_full_pipeline.py`, and reconciliation validation. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 225 Dual-GPU Paired Inference Runner
 
 ### Turn Log
