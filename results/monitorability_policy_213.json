@@ -1,0 +1,167 @@
+{
+  "experiment": "Exp 213",
+  "run_date": "20260412",
+  "title": "Fallback policy derived from Exp 213 monitorability audit",
+  "derived_from": "results/experiment_213_results.json",
+  "global_policy": {
+    "request_structured_reasoning_when": [
+      "Request structured_json for live_gsm8k_semantic_failure when semantic visibility and constraint coverage materially exceed terse output."
+    ],
+    "accept_terse_output_when": [
+      "Accept answer_only_terse for code_typed_properties when surface-schema or executable checks already expose the relevant constraints.",
+      "Accept answer_only_terse for instruction_grounded when structured scaffolds do not improve evidence coverage enough to justify extra cost.",
+      "Accept answer_only_terse for instruction_surface_only when surface-schema or executable checks already expose the relevant constraints."
+    ],
+    "distrust_free_form_traces_when": [
+      "free_form_reasoning",
+      "Distrust free_form_reasoning on code_typed_properties when free-form traces are less parseable or reveal less of the real constraint state than structured_json.",
+      "Distrust free_form_reasoning on instruction_surface_only when free-form traces are less parseable or reveal less of the real constraint state than structured_json."
+    ]
+  },
+  "per_task_slice": {
+    "code_typed_properties": {
+      "recommended_mode": "answer_only_terse",
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 6,
+          "parseability_rate": 1.0,
+          "constraint_coverage_mean": 1.0,
+          "semantic_visibility_mean": 0.0,
+          "answer_quality_mean": 1.0,
+          "mean_prompt_tokens": 113.0,
+          "mean_completion_tokens": 138.6667,
+          "mean_latency_seconds": 2.8095
+        },
+        "answer_only_terse": {
+          "n_records": 6,
+          "parseability_rate": 1.0,
+          "constraint_coverage_mean": 1.0,
+          "semantic_visibility_mean": 1.0,
+          "answer_quality_mean": 0.8333,
+          "mean_prompt_tokens": 94.0,
+          "mean_completion_tokens": 50.6667,
+          "mean_latency_seconds": 1.1463
+        },
+        "structured_json": {
+          "n_records": 6,
+          "parseability_rate": 0.0,
+          "constraint_coverage_mean": 0.0,
+          "semantic_visibility_mean": 0.0,
+          "answer_quality_mean": 0.0,
+          "mean_prompt_tokens": 120.0,
+          "mean_completion_tokens": 226.5,
+          "mean_latency_seconds": 4.7181
+        }
+      }
+    },
+    "instruction_grounded": {
+      "recommended_mode": "answer_only_terse",
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 4,
+          "parseability_rate": 1.0,
+          "constraint_coverage_mean": 0.9167,
+          "semantic_visibility_mean": 1.0,
+          "answer_quality_mean": 0.5834,
+          "mean_prompt_tokens": 165.25,
+          "mean_completion_tokens": 99.5,
+          "mean_latency_seconds": 2.0408
+        },
+        "answer_only_terse": {
+          "n_records": 4,
+          "parseability_rate": 1.0,
+          "constraint_coverage_mean": 0.0833,
+          "semantic_visibility_mean": 0.3333,
+          "answer_quality_mean": 0.5,
+          "mean_prompt_tokens": 141.75,
+          "mean_completion_tokens": 14.75,
+          "mean_latency_seconds": 0.3568
+        },
+        "structured_json": {
+          "n_records": 4,
+          "parseability_rate": 0.75,
+          "constraint_coverage_mean": 0.8334,
+          "semantic_visibility_mean": 0.75,
+          "answer_quality_mean": 0.25,
+          "mean_prompt_tokens": 166.25,
+          "mean_completion_tokens": 163.25,
+          "mean_latency_seconds": 3.5852
+        }
+      }
+    },
+    "instruction_surface_only": {
+      "recommended_mode": "answer_only_terse",
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 4,
+          "parseability_rate": 0.75,
+          "constraint_coverage_mean": 0.75,
+          "semantic_visibility_mean": 0.5,
+          "answer_quality_mean": 0.7083,
+          "mean_prompt_tokens": 121.5,
+          "mean_completion_tokens": 104.75,
+          "mean_latency_seconds": 2.0341
+        },
+        "answer_only_terse": {
+          "n_records": 4,
+          "parseability_rate": 0.75,
+          "constraint_coverage_mean": 0.75,
+          "semantic_visibility_mean": 0.0,
+          "answer_quality_mean": 0.75,
+          "mean_prompt_tokens": 98.0,
+          "mean_completion_tokens": 34.75,
+          "mean_latency_seconds": 0.7067
+        },
+        "structured_json": {
+          "n_records": 4,
+          "parseability_rate": 0.0,
+          "constraint_coverage_mean": 0.0,
+          "semantic_visibility_mean": 0.0,
+          "answer_quality_mean": 0.0,
+          "mean_prompt_tokens": 122.5,
+          "mean_completion_tokens": 204.5,
+          "mean_latency_seconds": 4.1893
+        }
+      }
+    },
+    "live_gsm8k_semantic_failure": {
+      "recommended_mode": "structured_json",
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 8,
+          "parseability_rate": 1.0,
+          "constraint_coverage_mean": 0.5834,
+          "semantic_visibility_mean": 0.6667,
+          "answer_quality_mean": 0.25,
+          "mean_prompt_tokens": 182.75,
+          "mean_completion_tokens": 116.375,
+          "mean_latency_seconds": 2.3762
+        },
+        "answer_only_terse": {
+          "n_records": 8,
+          "parseability_rate": 1.0,
+          "constraint_coverage_mean": 0.0,
+          "semantic_visibility_mean": 0.0,
+          "answer_quality_mean": 0.25,
+          "mean_prompt_tokens": 153.75,
+          "mean_completion_tokens": 2.75,
+          "mean_latency_seconds": 0.1482
+        },
+        "structured_json": {
+          "n_records": 8,
+          "parseability_rate": 0.5,
+          "constraint_coverage_mean": 0.7083,
+          "semantic_visibility_mean": 0.375,
+          "answer_quality_mean": 0.0,
+          "mean_prompt_tokens": 183.75,
+          "mean_completion_tokens": 174.75,
+          "mean_latency_seconds": 3.8095
+        }
+      }
+    }
+  },
+  "model_guidance": {
+    "Gemma4-E4B-it": "Use terse or structured outputs based on task slice; do not trust free-form traces by default.",
+    "Qwen3.5-0.8B": "Use terse or structured outputs based on task slice; do not trust free-form traces by default."
+  }
+}
