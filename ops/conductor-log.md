@@ -1343,3 +1343,4 @@
 | 2026-04-12 18:17 UTC | Exp 224: Property-based test generation for code v | OK | =========== 2017 passed, 1 skipped, 22 warnings in 79.65s (0:01:19) ============ |
 | 2026-04-12 18:27 UTC | Exp 224a: Warm model server — persistent GPU model | FAIL | Codex CLI error: hmark_cold_load_vs_warm_server
 E   ImportError: cannot impor |
+| 2026-04-12 19:15 UTC | Exp 224a: Warm model server — persistent GPU model | OK | =========== 2039 passed, 1 skipped, 22 warnings in 83.67s (0:01:23) ============ |
