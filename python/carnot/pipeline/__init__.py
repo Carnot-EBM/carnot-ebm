@@ -37,6 +37,15 @@ from carnot.pipeline.mining import (
     FailureReport,
     FalseNegative,
 )
+from carnot.pipeline.semantic_grounding import (
+    PromptClause,
+    QuestionProfile,
+    SemanticClaim,
+    SemanticGroundingResult,
+    SemanticGroundingVerifier,
+    SemanticGroundingViolation,
+    verify_semantic_grounding,
+)
 from carnot.pipeline.typed_reasoning import (
     AtomicClaim,
     ExtractionProvenance,
@@ -78,9 +87,15 @@ __all__ = [
     "NLExtractor",
     "PATTERN_THRESHOLD",
     "PipelineTimeoutError",
+    "PromptClause",
+    "QuestionProfile",
     "RepairError",
     "RepairResult",
     "ReasoningStep",
+    "SemanticClaim",
+    "SemanticGroundingResult",
+    "SemanticGroundingVerifier",
+    "SemanticGroundingViolation",
     "TrackedFact",
     "TypedReasoningExtractor",
     "TypedReasoningIR",
@@ -91,4 +106,5 @@ __all__ = [
     "Z3ArithmeticExtractor",
     "extract_typed_reasoning",
     "propagate",
+    "verify_semantic_grounding",
 ]
