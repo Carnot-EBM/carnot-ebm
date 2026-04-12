@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 184 3B Model Scaling Study
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T00:09:39Z | 2026-04-12T01:30:18Z | Exp 184: 3B scaling study — ran Qwen3-4B on GPU0 (fallback from Qwen3.5-3B/Qwen3-3B not on HF); 200 standard GSM8K + 200 adversarial; baseline 63%/81.5%, repair 61%/68.5%; verify-repair HURTS on adversarial (-13pp, CI excludes zero); results saved to experiment_184_results.json | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-11 Exp 181 Definitive GSM8K Live GPU
 
 ### Turn Log
