@@ -38,8 +38,20 @@ loop) executes the current experiments.
   SAME GSM8K questions. If 0.8B live shows +10-14%, precision ceiling is real
   and we fix it with Z3/confidence. If 0.8B live shows ~0%, our ENTIRE results
   narrative is based on simulation artifacts and we have a fundamental problem.
-- **Status:** NOT IN ROADMAP — must add immediately
-- **Why #0:** This determines whether Carnot's core claim is real or an artifact.
+- **Status:** INVESTIGATED — result is CONFIRMED ARTIFACT
+- **Finding:** Live 0.8B inference on GSM8K produces identical wrong answers
+  as the checkpoint (Q0=182, Q1=3, Q2=120000). The model scores ~25% on
+  GSM8K — the simulated inference assumed ~65-70% (instruction-tuned level).
+  ALL positive improvement numbers were measured against fake baselines.
+- **Root cause:** Simulated inference was calibrated to published benchmarks
+  for instruction-tuned models, but we loaded the BASE model (Qwen3.5-0.8B,
+  not an instruct variant). The base model's actual GSM8K score is ~25%.
+- **Impact:** The core +10-28% improvement claim is based on simulation
+  artifacts. Real live inference shows 0% improvement at both 0.8B and 3B.
+- **Path forward:** Either (a) use instruction-tuned models, (b) improve
+  prompt engineering for base models, or (c) acknowledge constraint
+  verification helps simulated/ideal scenarios but not raw base model outputs.
+- **Why #0:** This is the most important finding of the entire project.
 
 ### Rank 1: Confidence-Calibrated Constraint Verification
 - **Score:** 5×4×5×5 = 500
