@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 203 Extraction Autopsy
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T01:59:15Z | 2026-04-12T02:40:57Z | Exp 203: Added extraction-autopsy helper + live GPU script; ran seeded 20-question Gemma4-E4B-it GSM8K sample with full responses; final result 17/20 correct, 3 wrong; ArithmeticExtractor/VerifyRepairPipeline caught 0/3 wrong and flagged 3 correct-only violations; results saved to experiment_203_results.json | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 184 3B Model Scaling Study
 
 ### Turn Log

@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-10 (reconciled with codebase)
+**Last Updated:** 2026-04-12 (reconciled with codebase)
 
 ## Functional Requirements → Implementation Status
 
@@ -17,7 +17,7 @@
 | FR-09 | Test Coverage | N/A (process) | 104 Rust + 1093 Python | pre-commit + CI | Implemented |
 | FR-10 | Spec-Driven Dev | N/A (process) | spec_coverage.py | pre-commit + CI | Implemented |
 | FR-11 | Autonomous Self-Learning | `openspec/capabilities/autoresearch/spec.md` | 100+ Python | Sandbox, evaluator, orchestrator, Trace2Skill, conductor | Implemented |
-| FR-12 | Verifiable Reasoning | `openspec/capabilities/verifiable-reasoning/spec.md` | 40+ Python | Constraints, repair, SAT, coloring, code, property tests, convergence | Implemented |
+| FR-12 | Verifiable Reasoning | `openspec/capabilities/verifiable-reasoning/spec.md` | 50+ Python | Constraints, repair, SAT, coloring, code, property tests, convergence, extraction autopsy | Implemented |
 | FR-13 | LLM-EBM Inference | `openspec/capabilities/llm-ebm-inference/spec.md` | 170+ Python | Composite scorer, iterative refinement, logprob rejection, EBM rejection, multi-start, semantic energy, ARM-EBM bridge, diffusion, reasoning energy | Implemented |
 | FR-14 | Code Verification | `openspec/capabilities/code-verification/spec.md` | 50+ Python | Type/exception/test constraints, code embeddings (bag-of-tokens + AST), learned verifier, self-improving loop | Implemented |
 | FR-15 | Activation Analysis | `openspec/capabilities/llm-ebm-inference/spec.md` | 110+ Python | Activation extractor, hallucination direction, layer EBM, LayerNavigator, steering, weight steering, concept vectors, multi-layer probing | Implemented |
@@ -123,3 +123,4 @@
 | Exp 172: Global consistency checker for multi-turn chains | ✅ Complete (Detects global inconsistencies across multi-step reasoning chains via GlobalConsistencyChecker; pairwise step comparison for numeric/arithmetic/factual contradictions; arxiv 2601.13600; 20 synthetic chains: 10 locally-consistent-but-globally-inconsistent (0% local detection → 90-100% global detection), 10 fully consistent (0% false positives); results at `results/experiment_172_results.json`; REQ-VERIFY-001, SCENARIO-VERIFY-005) | — |
 | Exp 178: Definitive adversarial GSM8K (Goal #5 statistical power) | ✅ Complete (paired sign permutation test + two-proportion z-test, N=400/variant, 10k resamples; number_swapped: Qwen baseline 43.3%→71.5% (+28.2pp), Gemma 52.3%→76.3% (+24.0pp); both p=0.0 (significant); all variants achieve Goal #5 thresholds; fixes Exp 162 underpowered aggregate design; REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006) | — |
 | Exp 181: GSM8K full 1319 with LIVE GPU inference | In Progress | REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006 | Dual RTX 3090 GPU inference on full GSM8K test set (1319 questions); publishable GPU-accelerated baseline |
+| Exp 203: Extraction autopsy on live Gemma GSM8K | ✅ Complete (seeded 20-question live Gemma4-E4B-it sample with `max_new_tokens=768` to avoid truncation; 17/20 correct, 3 wrong. ArithmeticExtractor + VerifyRepairPipeline caught 0/3 wrong answers, while regex emitted 3 violations on correct answers only. Wrong-answer categories: missing intermediate step, semantic modeling error, reading comprehension error. Results at `results/experiment_203_results.json`; REQ-VERIFY-008, SCENARIO-VERIFY-008) | — |

@@ -55,6 +55,18 @@ The system shall provide tools to analyze the energy landscape around a solution
 
 Given identical inputs, model parameters, and random seeds, the system shall produce bit-identical energy values and verification results across runs (within the same language implementation).
 
+### REQ-VERIFY-008: Extraction Autopsy Records
+
+The system shall support experiment-grade extraction autopsies for live model
+responses, where:
+- Full response text is preserved for each sampled question
+- Arithmetic extractor matches are recorded with exact matched expressions and
+  verification verdicts
+- Wrong answers can be annotated with a diagnosed failure category and a
+  recommended extraction approach that would have caught the error
+- The autopsy result is serializable to JSON for offline review and follow-on
+  extractor development
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -120,6 +132,16 @@ The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predic
 **And** the LLM solution has energy > 0 in at least some constraint terms (hallucinated violations)
 **And** the specific violations in the LLM output are identified by constraint name
 
+### SCENARIO-VERIFY-008: Live Extraction Autopsy
+
+**Given** 20 live GSM8K responses from an instruction-tuned model
+**When** the extraction-autopsy workflow runs
+**Then** it stores each question, full response, extracted final answer,
+correctness, and arithmetic extractor matches
+**And** each wrong answer includes a diagnosed failure category and a proposed
+extraction strategy that would have caught the reasoning error
+**And** at least three correct answers are preserved as contrast cases
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -131,4 +153,5 @@ The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predic
 | REQ-VERIFY-005 | Implemented | Implemented | 2 Rust + 2 Python |
 | REQ-VERIFY-006 | Not Started | Not Started | Not Started |
 | REQ-VERIFY-007 | Implemented | Implemented | 1 Rust + 2 Python |
+| REQ-VERIFY-008 | Not Started | Implemented | 10 Python |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
