@@ -1340,3 +1340,4 @@
 | 2026-04-12 17:49 UTC | Exp 223: Chronological replay benchmark for contin | OK | =========== 2006 passed, 1 skipped, 22 warnings in 77.16s (0:01:17) ============ |
 | 2026-04-12 17:50 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
 | 2026-04-12 17:50 UTC | Milestone 2026.04.16 activated | OK | 11 tasks queued |
+| 2026-04-12 18:17 UTC | Exp 224: Property-based test generation for code v | OK | =========== 2017 passed, 1 skipped, 22 warnings in 79.65s (0:01:19) ============ |
