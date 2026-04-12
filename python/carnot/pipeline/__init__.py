@@ -46,6 +46,14 @@ from carnot.pipeline.semantic_grounding import (
     SemanticGroundingViolation,
     verify_semantic_grounding,
 )
+from carnot.pipeline.structured_reasoning import (
+    StructuredReasoningAttempt,
+    StructuredReasoningController,
+    StructuredReasoningEmission,
+    build_gemma_structured_reasoning_prompt,
+    build_qwen_structured_reasoning_prompt,
+    load_monitorability_policy,
+)
 from carnot.pipeline.typed_reasoning import (
     AtomicClaim,
     ExtractionProvenance,
@@ -96,6 +104,9 @@ __all__ = [
     "SemanticGroundingResult",
     "SemanticGroundingVerifier",
     "SemanticGroundingViolation",
+    "StructuredReasoningAttempt",
+    "StructuredReasoningController",
+    "StructuredReasoningEmission",
     "TrackedFact",
     "TypedReasoningExtractor",
     "TypedReasoningIR",
@@ -106,5 +117,8 @@ __all__ = [
     "Z3ArithmeticExtractor",
     "extract_typed_reasoning",
     "propagate",
+    "build_gemma_structured_reasoning_prompt",
+    "build_qwen_structured_reasoning_prompt",
+    "load_monitorability_policy",
     "verify_semantic_grounding",
 ]

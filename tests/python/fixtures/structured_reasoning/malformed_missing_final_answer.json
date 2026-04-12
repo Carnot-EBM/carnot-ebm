@@ -1,0 +1,26 @@
+{
+  "constraints": [
+    {
+      "constraint_id": "uc1",
+      "kind": "prompt_constraint",
+      "text": "Use the remaining cups."
+    }
+  ],
+  "steps": [
+    {
+      "step_id": "s1",
+      "kind": "analysis",
+      "text": "27 - 15 = 12.",
+      "claim_ids": ["cl1"]
+    }
+  ],
+  "claims": [
+    {
+      "claim_id": "cl1",
+      "kind": "derived_fact",
+      "text": "remaining cups = 12",
+      "value": 12,
+      "step_id": "s1"
+    }
+  ]
+}
