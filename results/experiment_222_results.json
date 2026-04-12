@@ -1,0 +1,3808 @@
+{
+  "experiment": 222,
+  "run_date": "20260412",
+  "title": "Live trace memory and repair guidance",
+  "metadata": {
+    "source_artifacts": [
+      "results/experiment_219_results.json",
+      "results/experiment_220_results.json",
+      "results/experiment_221_results.json"
+    ],
+    "policy_source": "results/monitorability_policy_213.json",
+    "memory_output_path": "results/constraint_memory_live_222.json",
+    "output_path": "results/experiment_222_results.json"
+  },
+  "summary": {
+    "n_trace_events": 662,
+    "memory_growth": {
+      "accepted_trace_events": 230,
+      "quarantined_trace_events": 266,
+      "total_patterns": 43,
+      "mature_patterns": 29,
+      "patterns_by_domain": {
+        "live_gsm8k_semantic_failure": {
+          "total_patterns": 10,
+          "mature_patterns": 8,
+          "top_patterns": [
+            {
+              "error_type": "question_grounding_failures:answer_target_mismatch",
+              "frequency": 53
+            },
+            {
+              "error_type": "omitted_premises:missing_quantity_coverage",
+              "frequency": 20
+            },
+            {
+              "error_type": "semantic:final_answer_binding",
+              "frequency": 10
+            },
+            {
+              "error_type": "arithmetic",
+              "frequency": 7
+            },
+            {
+              "error_type": "entity_quantity_binding_errors:missing_quantity_coverage",
+              "frequency": 6
+            }
+          ]
+        },
+        "code_typed_properties": {
+          "total_patterns": 16,
+          "mature_patterns": 12,
+          "top_patterns": [
+            {
+              "error_type": "humaneval_failure",
+              "frequency": 73
+            },
+            {
+              "error_type": "official_test_failure",
+              "frequency": 51
+            },
+            {
+              "error_type": "search_optimization_limited:semantic_property",
+              "frequency": 38
+            },
+            {
+              "error_type": "literal:function_name",
+              "frequency": 19
+            },
+            {
+              "error_type": "literal:signature",
+              "frequency": 19
+            }
+          ]
+        },
+        "instruction_surface_only": {
+          "total_patterns": 10,
+          "mature_patterns": 5,
+          "top_patterns": [
+            {
+              "error_type": "literal:word_count_range",
+              "frequency": 7
+            },
+            {
+              "error_type": "literal:forbidden_token",
+              "frequency": 6
+            },
+            {
+              "error_type": "literal:must_include_token",
+              "frequency": 5
+            },
+            {
+              "error_type": "literal:section_order",
+              "frequency": 4
+            },
+            {
+              "error_type": "literal:sentence_count_per_section",
+              "frequency": 4
+            }
+          ]
+        },
+        "instruction_grounded": {
+          "total_patterns": 7,
+          "mature_patterns": 4,
+          "top_patterns": [
+            {
+              "error_type": "semantic:grounded_selection",
+              "frequency": 9
+            },
+            {
+              "error_type": "semantic:ordering",
+              "frequency": 5
+            },
+            {
+              "error_type": "semantic:grounded_evidence_ids",
+              "frequency": 5
+            },
+            {
+              "error_type": "literal:count_exact",
+              "frequency": 3
+            },
+            {
+              "error_type": "semantic:negation_scope",
+              "frequency": 2
+            }
+          ]
+        }
+      }
+    },
+    "retrieval_usefulness": {
+      "events_with_suggestions": 624,
+      "helpful_retrieval_events": 237,
+      "reused_pattern_suggestions": 3043,
+      "reused_pattern_precision": 0.12619125862635558
+    }
+  },
+  "verifier_reliability": [
+    {
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "n_cases": 36,
+      "true_positives": 14,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 22,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_grounded",
+      "n_cases": 18,
+      "true_positives": 2,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 16,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "n_cases": 18,
+      "true_positives": 8,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 10,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "live_gsm8k_semantic_failure",
+      "n_cases": 9,
+      "true_positives": 7,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 2,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "gsm8k_semantic",
+      "domain": "live_gsm8k_semantic_failure",
+      "n_cases": 200,
+      "true_positives": 29,
+      "false_positives": 23,
+      "false_negatives": 96,
+      "true_negatives": 52,
+      "precision": 0.5576923076923077,
+      "recall": 0.232
+    },
+    {
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "n_cases": 50,
+      "true_positives": 45,
+      "false_positives": 2,
+      "false_negatives": 0,
+      "true_negatives": 3,
+      "precision": 0.9574468085106383,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "n_cases": 36,
+      "true_positives": 30,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 6,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_grounded",
+      "n_cases": 18,
+      "true_positives": 11,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 7,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "n_cases": 18,
+      "true_positives": 12,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 6,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "live_gsm8k_semantic_failure",
+      "n_cases": 9,
+      "true_positives": 7,
+      "false_positives": 0,
+      "false_negatives": 0,
+      "true_negatives": 2,
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    {
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "gsm8k_semantic",
+      "domain": "live_gsm8k_semantic_failure",
+      "n_cases": 200,
+      "true_positives": 35,
+      "false_positives": 7,
+      "false_negatives": 122,
+      "true_negatives": 36,
+      "precision": 0.8333333333333334,
+      "recall": 0.2229299363057325
+    },
+    {
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "n_cases": 50,
+      "true_positives": 34,
+      "false_positives": 5,
+      "false_negatives": 7,
+      "true_negatives": 4,
+      "precision": 0.8717948717948718,
+      "recall": 0.8292682926829268
+    }
+  ],
+  "repair_snippets": [
+    {
+      "snippet_id": "constraint_ir:literal:forbidden_token",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "literal:forbidden_token",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 18,
+      "successful_cases": 0,
+      "failed_cases": 3,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-two-sentence-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-two-sentence-3",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:literal:function_name",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "literal:function_name",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 41,
+      "successful_cases": 1,
+      "failed_cases": 7,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-groupby-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-score-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-score-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-groupby-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-config-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-config-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-config-3",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:literal:must_include_token",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "literal:must_include_token",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 6,
+      "successful_cases": 0,
+      "failed_cases": 1,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-bullets-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-bullets-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-bullets-3",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:literal:section_order",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "literal:section_order",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 6,
+      "successful_cases": 0,
+      "failed_cases": 1,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-sections-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-sections-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-sections-2",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:literal:step_roles",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "model_names": [
+        "Gemma4-E4B-it"
+      ],
+      "trigger_error_type": "literal:step_roles",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 6,
+      "successful_cases": 0,
+      "failed_cases": 2,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-plan-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-plan-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-plan-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-plan-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-plan-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-plan-1",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:literal:word_count_range",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "literal:word_count_range",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 4,
+      "successful_cases": 1,
+      "failed_cases": 1,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-rewrite-2",
+          "iteration": 1
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:repair_feedback",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "repair_feedback",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 103,
+      "successful_cases": 1,
+      "failed_cases": 32,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-score-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-negation-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-negation-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-negation-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-814",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-814",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-814",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-phone-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-phone-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-phone-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-grounded-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-slugify-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-intervals-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-yaml-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-yaml-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-yaml-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-1019",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-1019",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-1019",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-rewrite-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-dedupe-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-dedupe-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-dedupe-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-bullets-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-sections-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-negation-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-negation-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-negation-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-rolling-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-filter-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-schedule-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-schedule-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-schedule-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-814",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-814",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-814",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-1019",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-1019",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-1019",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:search_optimization_limited:error_policy",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "search_optimization_limited:error_policy",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 18,
+      "successful_cases": 0,
+      "failed_cases": 3,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-toposort-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-config-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-toposort-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-roman-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-roman-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-roman-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-config-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-config-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-config-2",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:search_optimization_limited:semantic_property",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "search_optimization_limited:semantic_property",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 22,
+      "successful_cases": 1,
+      "failed_cases": 4,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-roman-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-phone-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-phone-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-phone-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-code-csv-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-csv-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-csv-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-csv-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-roman-3",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-roman-3",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-roman-3",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-phone-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-phone-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-phone-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-code-csv-3",
+          "iteration": 1
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:semantic:final_answer_binding",
+      "benchmark": "constraint_ir",
+      "domain": "live_gsm8k_semantic_failure",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "semantic:final_answer_binding",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 28,
+      "successful_cases": 1,
+      "failed_cases": 5,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-923",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-923",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-923",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-515",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-515",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-515",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-943",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-943",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-943",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-796",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-796",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-796",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-1077",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-1077",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-live-gsm8k-1077",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-923",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-515",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-515",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-515",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-943",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-943",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-943",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-796",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-796",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-796",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-1077",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-1077",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-live-gsm8k-1077",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "constraint_ir:semantic:grounded_evidence_ids",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_grounded",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "semantic:grounded_evidence_ids",
+      "template": "Your previous response did not satisfy the required contract.\nIssues:\n- parseable={parseable}\n- answer_quality={answer_quality}\n- constraint_coverage={constraint_coverage}\n\nAnswer again using the same response contract.",
+      "support": 12,
+      "successful_cases": 0,
+      "failed_cases": 2,
+      "provenance": [
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "exp211-instruction-decision-2",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-decision-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-decision-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-decision-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-decision-2",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-decision-2",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 221,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "exp211-instruction-decision-2",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "humaneval_property:annotation_feedback",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "annotation_feedback",
+      "template": "HumanEval test failure:\n  - {failure_message}\n\nWrite ONLY the corrected function body. No markdown fences.\nIndent with 4 spaces.",
+      "support": 3,
+      "successful_cases": 0,
+      "failed_cases": 1,
+      "provenance": [
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-41",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-41",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-41",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "humaneval_property:humaneval_failure",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "humaneval_failure",
+      "template": "HumanEval test failure:\n  - {failure_message}\n\nWrite ONLY the corrected function body. No markdown fences.\nIndent with 4 spaces.",
+      "support": 96,
+      "successful_cases": 0,
+      "failed_cases": 18,
+      "provenance": [
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-40",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-40",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-40",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-64",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-64",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-64",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-37",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-37",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-37",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-113",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-113",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-113",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-91",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-91",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-91",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-44",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-44",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-44",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-9",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-9",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-9",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-54",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-54",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-54",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-57",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-57",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-57",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-56",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-56",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-56",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-139",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-139",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-139",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-6",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-6",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-6",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-93",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-93",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-93",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-40",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-40",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-40",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-64",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-64",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-64",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-37",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-37",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-37",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-13",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-13",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-13",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-113",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-113",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-113",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-91",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-91",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-91",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-44",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-44",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-44",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-35",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-35",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-35",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-9",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-9",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-9",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-51",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-51",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-51",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-54",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-54",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-54",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-57",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-57",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-57",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-56",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-56",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-56",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-139",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-139",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-139",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-1",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-1",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-1",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-61",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-61",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-61",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-6",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-6",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-6",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-93",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-93",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-93",
+          "iteration": 3
+        }
+      ]
+    },
+    {
+      "snippet_id": "humaneval_property:official_test_failure",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "model_names": [
+        "Gemma4-E4B-it",
+        "Qwen3.5-0.8B"
+      ],
+      "trigger_error_type": "official_test_failure",
+      "template": "HumanEval test failure:\n  - {failure_message}\n\nWrite ONLY the corrected function body. No markdown fences.\nIndent with 4 spaces.",
+      "support": 155,
+      "successful_cases": 2,
+      "failed_cases": 26,
+      "provenance": [
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-92",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-92",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-92",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-87",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-87",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-87",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-126",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-126",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-126",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-156",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-156",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-156",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-160",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-160",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-160",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-112",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-112",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-112",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-68",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-68",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-68",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-78",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-78",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-78",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-82",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-82",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-82",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-161",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-161",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-161",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-85",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-85",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-85",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-98",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-98",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-98",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-94",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-94",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-94",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-107",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-107",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-107",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-45",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-106",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-106",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-106",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-95",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-95",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-95",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-125",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-125",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-125",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-157",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-157",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-157",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-73",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-73",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-73",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-132",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-132",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-132",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-88",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-88",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-88",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-80",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-80",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-80",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-138",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-138",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-138",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-134",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-134",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-134",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-150",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-150",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Qwen3.5-0.8B",
+          "case_id": "humaneval-150",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-92",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-92",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-92",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-87",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-87",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-87",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-126",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-126",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-126",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-156",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-156",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-156",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-160",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-160",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-160",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-112",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-112",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-112",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-68",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-68",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-68",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-78",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-78",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-78",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-82",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-82",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-82",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-161",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-161",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-161",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-121",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-121",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-121",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-85",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-85",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-85",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-98",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-98",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-98",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-94",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-94",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-94",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-107",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-107",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-107",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-106",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-106",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-106",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-95",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-95",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-95",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-125",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-125",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-125",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-157",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-157",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-157",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-73",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-73",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-73",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-132",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-132",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-132",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-88",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-88",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-88",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-80",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-80",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-80",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-138",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-138",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-138",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-66",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-134",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-134",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-134",
+          "iteration": 3
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-150",
+          "iteration": 1
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-150",
+          "iteration": 2
+        },
+        {
+          "source_experiment": 220,
+          "model_name": "Gemma4-E4B-it",
+          "case_id": "humaneval-150",
+          "iteration": 3
+        }
+      ]
+    }
+  ],
+  "monitorability_policy_updates": [
+    {
+      "update_id": "constraint_ir:gemma4-e4b-it:code_typed_properties",
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 36,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 14,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:gemma4-e4b-it:instruction_grounded",
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_grounded",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 18,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 2,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:gemma4-e4b-it:instruction_surface_only",
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 18,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 8,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:gemma4-e4b-it:live_gsm8k_semantic_failure",
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "constraint_ir",
+      "domain": "live_gsm8k_semantic_failure",
+      "recommended_mode": "structured_json",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 9,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 7,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "gsm8k_semantic:gemma4-e4b-it:live_gsm8k_semantic_failure",
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "gsm8k_semantic",
+      "domain": "live_gsm8k_semantic_failure",
+      "recommended_mode": "structured_json",
+      "recommended_action": "guarded_memory_only",
+      "evidence": {
+        "n_cases": 200,
+        "precision": 0.5576923076923077,
+        "recall": 0.232,
+        "true_positives": 29,
+        "false_positives": 23,
+        "false_negatives": 96
+      }
+    },
+    {
+      "update_id": "humaneval_property:gemma4-e4b-it:code_typed_properties",
+      "model_name": "Gemma4-E4B-it",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "repair_guidance_only",
+      "evidence": {
+        "n_cases": 50,
+        "precision": 0.9574468085106383,
+        "recall": 1.0,
+        "true_positives": 45,
+        "false_positives": 2,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:qwen3.5-0.8b:code_typed_properties",
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "code_typed_properties",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 36,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 30,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:qwen3.5-0.8b:instruction_grounded",
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_grounded",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 18,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 11,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:qwen3.5-0.8b:instruction_surface_only",
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "instruction_surface_only",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 18,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 12,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "constraint_ir:qwen3.5-0.8b:live_gsm8k_semantic_failure",
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "constraint_ir",
+      "domain": "live_gsm8k_semantic_failure",
+      "recommended_mode": "structured_json",
+      "recommended_action": "reuse_contract_patch",
+      "evidence": {
+        "n_cases": 9,
+        "precision": 1.0,
+        "recall": 1.0,
+        "true_positives": 7,
+        "false_positives": 0,
+        "false_negatives": 0
+      }
+    },
+    {
+      "update_id": "gsm8k_semantic:qwen3.5-0.8b:live_gsm8k_semantic_failure",
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "gsm8k_semantic",
+      "domain": "live_gsm8k_semantic_failure",
+      "recommended_mode": "structured_json",
+      "recommended_action": "guarded_memory_only",
+      "evidence": {
+        "n_cases": 200,
+        "precision": 0.8333333333333334,
+        "recall": 0.2229299363057325,
+        "true_positives": 35,
+        "false_positives": 7,
+        "false_negatives": 122
+      }
+    },
+    {
+      "update_id": "humaneval_property:qwen3.5-0.8b:code_typed_properties",
+      "model_name": "Qwen3.5-0.8B",
+      "benchmark": "humaneval_property",
+      "domain": "code_typed_properties",
+      "recommended_mode": "answer_only_terse",
+      "recommended_action": "guarded_memory_only",
+      "evidence": {
+        "n_cases": 50,
+        "precision": 0.8717948717948718,
+        "recall": 0.8292682926829268,
+        "true_positives": 34,
+        "false_positives": 5,
+        "false_negatives": 7
+      }
+    }
+  ]
+}

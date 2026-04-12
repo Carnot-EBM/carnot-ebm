@@ -388,6 +388,51 @@ for the `constraint_ir` benchmark, where:
 - re-running the benchmark with matching cohort metadata refreshes the same
   artifact in place without changing the sampled case order
 
+### REQ-VERIFY-030: Live Trace Ingestion And Provenance Gate
+
+The repository shall provide a live-trace ingestion workflow for Exp 222,
+where:
+- the workflow reads the checked-in live artifacts
+  `results/experiment_219_results.json`,
+  `results/experiment_220_results.json`, and
+  `results/experiment_221_results.json`
+- case-level verifier outcomes are normalized into trace events that preserve
+  the source experiment, benchmark, model, case identifier, response mode,
+  derived error taxonomy, and provenance confidence
+- only high-confidence, non-ambiguous true-positive traces are admitted into
+  learned memory
+- false positives, false negatives, and ambiguous traces are preserved as
+  quarantined provenance records rather than silently contaminating memory
+- re-running the workflow on the same source artifacts rebuilds the same
+  normalized trace set deterministically
+
+### REQ-VERIFY-031: Exp 222 Live Constraint Memory And Repair Patch Artifacts
+
+The same workflow shall write `results/constraint_memory_live_222.json`, where:
+- the artifact remains compatible with the existing `ConstraintMemory` pattern
+  schema so learned patterns can be loaded by later memory-aware code
+- the artifact adds accepted and quarantined live-trace provenance records
+  alongside the learned pattern table
+- the artifact records reusable repair snippets or prompt patches derived from
+  live verify-repair histories, together with support counts and observed
+  repair outcomes when available
+- re-running the workflow refreshes the artifact in place without duplicating
+  pattern or snippet records
+
+### REQ-VERIFY-032: Exp 222 Reliability, Retrieval, And Policy Update Summary
+
+The same workflow shall write `results/experiment_222_results.json`, where:
+- the artifact records the fixed Exp 222 run date `20260412`
+- the summary reports model- and benchmark-specific verifier reliability stats,
+  including true positives, false positives, false negatives, true negatives,
+  precision, and recall
+- the summary reports memory growth, chronological retrieval usefulness, and
+  the precision of reused learned patterns
+- the summary emits machine-readable monitorability-policy update suggestions
+  grounded in live trace evidence rather than simulated traces
+- low-confidence or quarantined traces do not contribute to memory-growth or
+  policy-update counts as if they were accepted learning events
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -693,6 +738,34 @@ sample seed
 **And** a non-terminating code answer is marked as a bounded scoring failure
   instead of stalling the benchmark refresh
 
+### SCENARIO-VERIFY-030: Ambiguous Live Traces Stay Quarantined
+
+**Given** a live trace whose verifier signal is ambiguous or is contradicted by
+the benchmark outcome
+**When** the Exp 222 ingestion workflow runs
+**Then** the trace is preserved with its provenance and exclusion reason
+**And** it does not increment any learned `ConstraintMemory` pattern counts
+
+### SCENARIO-VERIFY-031: Repeated High-Confidence Live Patterns Become Reusable
+
+**Given** three or more high-confidence live traces with the same benchmark,
+domain, and error pattern
+**And** a later live trace exposes the same error pattern again
+**When** the Exp 222 ingestion workflow runs in chronological replay order
+**Then** the learned pattern is promoted into the memory artifact
+**And** the later trace is counted as a retrieval-usefulness hit for the
+  promoted pattern
+
+### SCENARIO-VERIFY-032: Live Repair Histories Yield Reusable Prompt Patches
+
+**Given** verify-repair histories from Exp 220 or Exp 221 preserve repeated
+repair prompts for the same failure shape
+**When** the Exp 222 ingestion workflow consolidates the live traces
+**Then** it emits a reusable repair snippet or prompt patch with support and
+  observed outcome counts
+**And** the snippet remains traceable to the source experiment, model, and
+  case histories that produced it
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -726,4 +799,7 @@ sample seed
 | REQ-VERIFY-027 | Not Started | Implemented | Exp 219 artifact + harness regression tests |
 | REQ-VERIFY-028 | Not Started | Implemented | Exp 220 artifact + harness regression tests |
 | REQ-VERIFY-029 | Not Started | Implemented | Exp 221 artifact + harness regression tests |
+| REQ-VERIFY-030 | Not Started | Implemented | Exp 222 live trace memory tests |
+| REQ-VERIFY-031 | Not Started | Implemented | Exp 222 live trace memory tests + artifact refresh |
+| REQ-VERIFY-032 | Not Started | Implemented | Exp 222 reliability, retrieval, and policy update tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
