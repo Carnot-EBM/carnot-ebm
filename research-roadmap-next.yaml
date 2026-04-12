@@ -88,6 +88,39 @@ tasks:
       6. Run: .venv/bin/pytest tests/python -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+  - id: exp224c-tensorrt-acceleration
+    milestone: "2026.04.16"
+    deliverable: results/experiment_224c_results.json
+    title: "Exp 224c: TensorRT-LLM acceleration for 2-4x inference speedup"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Our benchmarks spend most wall time on model.generate() calls.
+      TensorRT-LLM can give 2-4x speedup via kernel fusion, quantization,
+      and KV cache optimization. We have 2x RTX 3090 with CUDA 12.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/model_loader.py — current HF model loading
+      - python/carnot/inference/model_server.py — warm model server (Exp 224a)
+
+      TASK: Add TensorRT-LLM backend to the inference pipeline
+
+      CONCRETE STEPS:
+      1. Add tensorrt-llm to pyproject.toml optional dependencies [cuda]
+      2. Create python/carnot/inference/tensorrt_backend.py:
+         a. TRTLLMBackend implementing the same interface as HF generate
+         b. Engine build step: convert HF model to TRT engine (cached on disk)
+         c. Engine cache: check for pre-built engine before rebuilding
+         d. Fallback to HF if TRT-LLM not installed or build fails
+         e. Support FP16 and INT8 quantization modes
+      3. Update ModelServer (Exp 224a) to prefer TRT backend when available
+      4. Build TRT engines for Qwen3.5-0.8B and Gemma4-E4B-it
+      5. Benchmark: HF vs TRT-LLM on 50 questions (measure latency speedup)
+      6. Write tests (mock TRT for CI, real TRT for local)
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
   - id: exp224b-dual-gpu-parallel
     milestone: "2026.04.16"
     deliverable: python/carnot/inference/dual_gpu.py
