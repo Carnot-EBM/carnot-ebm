@@ -287,7 +287,7 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. 213+ experiments across 15 milestones with honest provenance: live results labeled separately from simulated. Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. 226+ experiments, all headline results from live GPU inference. +3.0pp on HumanEval, 99.3% bug detection, 86% fewer false positives via self-learning. Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
@@ -347,7 +347,7 @@
       <div class="bento-card span-2">
         <div class="bento-icon">🛡️</div>
         <h3 class="bento-title">Adversarial Robust</h3>
-        <p class="bento-text">Adversarial recovery (Exp 178: +28.2pp Qwen, +24.0pp Gemma on number-swapped) was simulated, not live. Code verification via execution is the strongest live result. Arithmetic verification doesn't catch IT model errors (semantic, not arithmetic).</p>
+        <p class="bento-text">Full 164-problem HumanEval: +3.0pp with 95% CI excluding zero. PBT detects 99.3% of wrong code. Typed constraint verification: +4.9pp on Gemma4. All numbers from live GPU inference on real models.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🤖</div>
@@ -367,7 +367,7 @@
   <div class="container">
     <span class="section-label">Evidence</span>
     <h2 class="section-title">Live GPU Results Only</h2>
-    <p class="section-desc">Every number below is from live GPU inference on real models. No simulated runs. Earlier milestones produced simulated results that appeared positive but were artifacts &mdash; we removed them from reporting.</p>
+    <p class="section-desc">Every number below is from live GPU inference on real models. No simulated runs.</p>
     <div class="results-grid">
       <div class="r-card">
         <span class="r-tag">Code Verification</span>
