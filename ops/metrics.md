@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 VERIFY-030 Code Verification Trace Learning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T22:48:50Z | 2026-04-12T23:21:56Z | VERIFY-030: extended `code-verification` with `REQ-CODE-016` / `REQ-CODE-017` / `REQ-CODE-018` plus `SCENARIO-CODE-014` / `SCENARIO-CODE-015`, wrote `tests/python/test_code_learning.py` first, implemented `python/carnot/pipeline/code_learning.py` plus the `carnot.pipeline` exports, reconciled traceability/status/changelog, and reran targeted 100% module coverage, Ruff, mypy, spec coverage, the full Python suite, and `tests/integration/test_full_pipeline.py`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 228 KV260 FPGA Ising Sampler Design
 
 ### Turn Log

@@ -189,6 +189,51 @@ cohort:
   the historical Gemma artifact used an earlier non-Hypothesis verify-repair
   path
 
+### REQ-CODE-016: Verification Trace Analysis From Checked-In Benchmark Artifacts
+
+The system shall extract learnable code-verification patterns from checked-in
+benchmark artifacts such as Exp 225 and Exp 226:
+- Inputs may mix artifacts with full per-problem verification traces and
+  metadata-only artifacts that contain no usable trace history
+- Trace ingestion normalizes each case into a stable structure carrying the
+  source experiment, task id, baseline verifier outcomes, per-iteration repair
+  history, PBT derived properties, PBT failure records, and final verify-repair
+  outcome
+- Artifacts without usable per-problem traces are skipped without raising, but
+  are counted in the analysis summary so the caller can see what was ignored
+- The analysis summary reports enough detail to answer which properties catch
+  the most bugs, which repair families succeed, and which problem families gain
+  the most from additive verification
+
+### REQ-CODE-017: Rank PBT Properties By Observed Effectiveness
+
+The system shall rank Hypothesis-backed PBT properties by observed
+effectiveness on accumulated verification traces:
+- Property statistics track raw failure support, number of affected cases,
+  official-test misses caught beyond the harness, and repaired cases where the
+  property was present in the failing baseline
+- The ranking stays deterministic for the same trace corpus
+- The ranking output includes enough structured fields for downstream reporting
+  and later cumulative updates
+- Ranking may be recomputed on prefixes or merged corpora so later traces can
+  refine earlier property priorities
+
+### REQ-CODE-018: Learn Repair Strategies From Verification Histories
+
+The system shall learn which repair strategies work for which verification
+error families:
+- The learner infers coarse strategy labels from trace evidence, including
+  syntax recovery, exception hardening, return-type alignment,
+  immutability-preserving fixes, ordering fixes, and harness-only semantic
+  fixes
+- For each strategy and error family, the learner tracks attempts, successful
+  repairs, partial recoveries, and supporting case ids
+- The learner exposes ranked recommendations for a new failing trace based on
+  accumulated evidence
+- The module includes a learning-curve style demonstration that shows how the
+  accumulated trace history changes property or repair recommendations over
+  time
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -278,6 +323,21 @@ reports the reused cohort ids, Qwen baseline and verify-repair outcomes, the
 Gemma baseline and verify-repair reference numbers, the Qwen-minus-Gemma
 deltas, and the methodology note for the comparison.
 
+### SCENARIO-CODE-014: Exp 225 Metadata Is Skipped And Exp 226 Traces Are Learned
+
+Given the checked-in Exp 225 and Exp 226 benchmark artifacts, when the
+trace-learning module analyzes them together, then it records Exp 225 as a
+metadata-only artifact with no usable verification history, ingests Exp 226's
+per-problem verification traces, and produces property and repair summaries
+from the accumulated trace corpus.
+
+### SCENARIO-CODE-015: Cumulative Trace Learning Sharpens Recommendations
+
+Given an ordered stream of verification traces where some repair families
+reliably succeed and others do not, when the learner recomputes its rankings on
+larger and larger prefixes, then the recommended property and repair strategy
+for the matching error family moves toward the empirically successful choice.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -297,3 +357,6 @@ deltas, and the methodology note for the comparison.
 | REQ-CODE-013 | Implemented |
 | REQ-CODE-014 | Implemented |
 | REQ-CODE-015 | Implemented |
+| REQ-CODE-016 | Implemented |
+| REQ-CODE-017 | Implemented |
+| REQ-CODE-018 | Implemented |
