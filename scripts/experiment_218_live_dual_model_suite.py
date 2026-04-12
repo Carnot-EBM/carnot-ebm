@@ -3372,10 +3372,23 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
         ) -> tuple[Any, Any]:
             return _load_live_model(model_name, device=device, device_map=device_map)
 
+        # Try to use ModelServer for warm caching + batching + TensorRT
+        _model_server = None
+        try:
+            from carnot.inference.model_server import ModelServer
+            hf_ids = [spec["hf_id"] for spec in MODEL_SPECS]
+            _model_server = ModelServer(hf_ids, batch_size=8)
+            _model_server.start()
+            print(f"  ModelServer started: warm cache + batching for {hf_ids}")
+        except Exception as e:
+            print(f"  ModelServer unavailable ({e}), falling back to cold loads")
+            _model_server = None
+
         runner = DualGPURunner(
             MODEL_SPECS,
             load_model_fn=load_model_fn,
             unload_fn=_unload_live_model,
+            model_server=_model_server,
         )
         if runner.has_two_gpus():
             used_dual_gpu_runner = True
@@ -3404,6 +3417,11 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
                 suite = result.payload
                 statistics[result.model_name] = suite["model_summary"]
                 paired_runs.extend(suite["paired_runs"])
+
+            # Shut down ModelServer if we started one
+            if _model_server is not None:
+                _model_server.shutdown()
+                print("  ModelServer shut down, GPU memory freed")
 
     if not used_dual_gpu_runner:
         for model_spec in MODEL_SPECS:
