@@ -1350,3 +1350,4 @@ E   ImportError: cannot impor |
 | 2026-04-12 21:55 UTC | Exp 226: Full 164-problem HumanEval with PBT — pub | OK | =========== 2088 passed, 1 skipped, 22 warnings in 93.06s (0:01:33) ============ |
 | 2026-04-12 22:27 UTC | Exp 227: PBT code verification on Qwen3.5-0.8B — c | OK | =========== 2099 passed, 1 skipped, 22 warnings in 84.94s (0:01:24) ============ |
 | 2026-04-12 22:59 UTC | Exp 228: KV260 FPGA Ising sampler design and simul | OK | =========== 2120 passed, 1 skipped, 22 warnings in 85.01s (0:01:25) ============ |
+| 2026-04-12 23:29 UTC | Exp 229: Self-learning from code verification trac | OK | =========== 2125 passed, 1 skipped, 22 warnings in 86.64s (0:01:26) ============ |
