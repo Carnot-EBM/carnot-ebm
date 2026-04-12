@@ -845,3 +845,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 ## 2026-04-11: Experiment 181 In Progress
 
 - Exp 181: GSM8K full 1319 with LIVE GPU inference — Qwen3.5-0.8B baseline on RTX 3090 dual-GPU setup; runs full GSM8K test set (1319 questions) with actual LIVE GPU inference (not simulated) using models loaded from Exp 180 GPU baseline; produces checkpoint format for long-running inference; publishable baseline for GPU-accelerated verification pipeline; results at `results/experiment_181_ckpt_*.json` (progressive checkpoints); REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006
+- 2026-04-12: Exp 205: LLM-as-extractor — second LLM call emits canonical `CLAIM: a OP b = c` constraints for natural-language arithmetic; `LLMConstraintExtractor` improves Exp 203 wrong-case detection from 0→1 while keeping 3/3 correct showcases violation-free; REQ-VERIFY-010, SCENARIO-VERIFY-010
