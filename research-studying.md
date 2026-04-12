@@ -405,6 +405,50 @@ Study runs check ALL of these sources:
 | 12 | Scientific decoding constraints | **144** | NEW — guided decoding |
 | 14 | FPGA Ising real-time updates | 135 | KV260 arriving |
 
+#### 1024-Neuron FPGA Ising Accelerator (FPGA REFERENCE)
+- **Source:** [arxiv 2505.20250](https://arxiv.org/abs/2505.20250)
+- **What:** All-to-all connected probabilistic Ising machine on FPGA with
+  ~10,000x speedup over GPU heuristics. 1024 neurons.
+- **Relevance:** Direct implementation reference for our KV260 Ising sampler
+  (Exp 228). Our target is 4K spins — this shows 1K is proven.
+- **Score:** 5×4×5×4 = 400
+
+#### VCoT-Bench: Z3 Proofs → Verus Rust Verification
+- **Source:** [arxiv 2603.18334](https://arxiv.org/html/2603.18334)
+- **What:** Benchmarks LLMs on transforming Z3 proofs into Verus-level
+  Rust verification steps. Bridges formal proofs to systems code.
+- **Relevance:** Could connect our Z3 constraint verification to our Rust
+  crates — formal proofs that compile to verified Rust code.
+- **Score:** 4×5×2×3 = 120
+
+#### Solver-Aided Policy Compliance for LLM Agents
+- **Source:** [arxiv 2603.20449](https://arxiv.org/html/2603.20449)
+- **What:** Translates NL tool-use policies into Z3 constraints, checks
+  planned tool calls before execution.
+- **Relevance:** Directly applicable to our agentic verification — could
+  verify conductor/agent actions before they execute.
+- **Score:** 5×4×4×3 = 240
+
+#### SemLoc: Structured Grounding of LLM Reasoning
+- **Source:** [arxiv 2603.29109](https://arxiv.org/abs/2603.29109)
+- **What:** Binds each inferred property to a typed program anchor for
+  runtime checking. 42.8% Top-1 fault localization accuracy.
+- **Relevance:** Typed grounding of reasoning steps — aligns with Exp 212
+  typed reasoning IR and Exp 215 semantic grounding.
+- **Score:** 4×5×3×4 = 240
+
+#### Graph of Verification: DAG-Based Multi-Granular Verification
+- **Source:** [arxiv 2506.12509](https://arxiv.org/abs/2506.12509)
+- **What:** Adaptive multi-granular verification using DAG structure over
+  reasoning steps. Complements our step-by-step approach.
+- **Score:** 4×4×3×3 = 144
+
+#### Continuous Self-Improvement via Learned Verifier
+- **Source:** [arxiv 2505.19475](https://arxiv.org/abs/2505.19475)
+- **What:** Learned verifier scores candidates for test-time self-training
+  loop. Matches Carnot's autonomous self-learning vision.
+- **Score:** 4×4×3×4 = 192
+
 ### Implications for Milestone 2026.04.16
 
 The Property-Generated Solver finding is transformative for code verification.
