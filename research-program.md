@@ -10,103 +10,88 @@ it when designing new milestones.
 Escape LLM hallucinations via verifiable constraint reasoning, and enable
 autonomous directed self-learning where the energy function is ground truth.
 
+## CRITICAL FINDING (2026-04-11): Simulation vs Reality
+
+**ALL previous positive results were simulation artifacts.** Live GPU
+testing revealed:
+- Base model (Qwen3.5-0.8B): 25% GSM8K accuracy, 0% verify-repair improvement
+- Base model (Qwen3-4B): 63% accuracy, -2% to -13% (verify-repair HARMFUL)
+- Instruction-tuned (Gemma4-E4B-it): 80% accuracy, ZERO violations detected
+
+**Root cause:** Simulated inference was calibrated to instruction-tuned
+benchmarks (~65-70%) but experiments loaded BASE models. Additionally,
+the ArithmeticExtractor uses regex pattern matching (`a + b = c`) which
+is too crude — IT models don't write equations in that format, and base
+models make errors the regex can't parse.
+
+**What we now know works:**
+- The constraint VERIFICATION infrastructure is solid (energy computation,
+  Ising sampling, KAN, JEPA, pipeline architecture)
+- The constraint EXTRACTION is the bottleneck — too crude for real models
+- The self-learning, dogfooding, and conductor infrastructure works well
+
 ## Current Strategic Goals (in priority order)
 
-1. **Fix live model loading in experiments** — ENGINEERING, NOT RESEARCH.
-   Qwen3.5-0.8B loads fine when run directly (proved in Exp 56: 19/20 with
-   live inference). But the conductor's `claude -p` subprocess falls back to
-   simulated inference inconsistently. Fix: detect available memory, use
-   torch_dtype=float32 on CPU, retry on failure. Until this works reliably,
-   all benchmark numbers are synthetic. This unblocks goals #5 and #6.
+1. **Rebuild constraint extraction for real models** — HIGHEST PRIORITY.
+   The ArithmeticExtractor's regex is useless on instruction-tuned models
+   (0 violations found on Gemma4-E4B-it). Two approaches:
+   a. **NSVIF/Z3 SMT approach** (arxiv 2601.17789): Formalize constraints
+      as first-order logic, solve with Z3. Zero false positives by design.
+      Parse the model's chain-of-thought into logical steps, verify each.
+   b. **LLM-as-extractor**: Use a second LLM call to extract verifiable
+      claims from the response, then verify those claims with Ising/KAN.
+      More flexible than regex, handles any response format.
+   Both approaches must be tested on instruction-tuned models with LIVE
+   GPU inference. No more simulated results.
 
-2. **Multi-turn / agentic verification** — BIGGEST UNTAPPED OPPORTUNITY.
-   Verify not just single Q&A but multi-step agent workflows. An agent that
-   plans → acts → observes should have each step constraint-verified. No one
-   else is doing this. Concrete research needed:
-   - Constraint propagation across steps (step 1's output constraints become
-     step 2's input constraints)
-   - State accumulation (track which facts have been verified vs assumed)
-   - Rollback semantics (when step 3 fails, which earlier step to repair?)
-   The verify-repair loop (Exp 57) works for single turns; extend it to
-   chains of reasoning. This is critical for autonomous agents and is the
-   most differentiating product feature Carnot could offer.
+2. **Establish REAL baselines with instruction-tuned models** — CREDIBILITY.
+   All future experiments MUST:
+   - Use instruction-tuned models (Gemma4-E4B-it, Qwen3.5 if IT available)
+   - Use LIVE GPU inference (CARNOT_FORCE_LIVE=1, no simulation fallback)
+   - Report inference_mode="live_gpu" in all results
+   - Compare to published baselines for the same models
+   Run 200 GSM8K + 50 HumanEval with new extraction on live IT models.
 
-3. **Factual constraint extractor** — CLOSES BIGGEST COVERAGE GAP.
-   Exp 88 showed factual and scheduling domains have near-zero constraint
-   coverage (100% false negative rate). No amount of constraint learning
-   helps if we can't extract constraints from factual claims. Research
-   needed: knowledge-base-backed extractor that verifies claims against
-   Wikidata/Wikipedia. This is fundamentally different from arithmetic/code/
-   logic constraints and requires a new approach.
+3. **Code verification (HumanEval)** — MOST LIKELY TO STILL WORK.
+   Code verification uses structural tests (execute code, check output),
+   NOT regex extraction. The CodeExtractor + runtime instrumentation +
+   Ising-guided fuzzing pipeline may still show improvement because it
+   verifies via EXECUTION, not pattern matching. Test on live GPU with
+   Gemma4-E4B-it generating code.
 
-4. **Guided decoding latency benchmark** — QUICK EXPERIMENT, HIGH SIGNAL.
-   Exp 66 proved differentiable constraints work (1.0 AUROC). The remaining
-   question: can a single constraint check run fast enough during token
-   generation? If <1ms → viable for real-time guided decoding (Kona). If
-   >10ms → too slow, need approximations. One experiment answers this.
+4. **Multi-turn agentic verification** — STILL VALUABLE.
+   The global consistency checker (Exp 172: 100% detection, 0% FP) works
+   on logical consistency across steps, not arithmetic regex. This may
+   be the domain where Carnot adds the most value — catching contradictions
+   that span multiple reasoning steps.
 
-5. **Apple GSM8K adversarial benchmark** — THE CREDIBILITY EXPERIMENT.
-   Apple (arxiv 2410.05229) proved LLMs can't do math — they pattern-match.
-   Swapping numbers or adding one irrelevant sentence drops accuracy up to
-   65%. Even o1-preview drops from 92.7% → 77.4%. 8-shot doesn't help.
-   RUN CARNOT ON THE ADVERSARIAL VARIANT. Show that:
-   - LLM accuracy drops (as Apple showed)
-   - Carnot verify-repair MAINTAINS accuracy (Ising catches arithmetic
-     errors regardless of irrelevant context)
-   - Improvement is LARGER on adversarial vs standard (more errors to catch)
-   This is the single most compelling experiment we can run. It directly
-   proves the value proposition: external constraint verification succeeds
-   where internal reasoning fails. See research-references.md for details.
+5. **FPGA Ising machine** — HARDWARE PATH STILL VALID.
+   The energy computation and Ising sampling infrastructure is proven
+   (0.006ms per check, 183x faster than thrml). The hardware path is
+   independent of extraction quality. KV260 arriving in 4 days.
 
-6. **Real benchmark validation at scale** — NEEDS GOAL #1 FIRST.
-   GSM8K full 1,319 test set + HumanEval full 164 problems with LIVE model
-   inference. Exp 91 showed +14-15% on 200 questions with simulated
-   inference. Report confidence intervals, compare to published baselines.
-   Also TruthfulQA for factual domain. These are the credibility numbers
-   but are blocked until live model loading is reliable.
+6. **Bridge to Kona** — LONG-TERM, DEPENDS ON #1.
+   Continuous reasoning, guided decoding, and differentiable constraints
+   all depend on having constraint extraction that works on real models.
+   Fix extraction first, then these become viable.
 
-7. **Scale constraint learning** — GOOD PROGRESS, CONTINUE.
-   Exp 55/62/63/88/89 built the foundation. Next: use failure mining results
-   (Exp 88) to build the `intermediate_result` extractor that would catch
-   44.8% of current false negatives. Then self-bootstrap on the expanded
-   constraint set.
+## What Was Invalidated
 
-8. **KAN-based energy tier** — DONE (Exp 108-109). DEPLOYMENT GUIDANCE:
-   KAN achieves 0.994 AUROC with 8.7x fewer params than Ising on the same
-   task. Use the right tier for the right job:
-   - **KAN = default for verification** — best accuracy/cost ratio, nonlinear
-     edge detection, interpretable spline shapes, differentiable
-   - **Ising = hardware and real-time sampling** — direct FPGA/TSU mapping,
-     fastest parallel Gibbs (183x speedup relies on quadratic structure),
-     coupling matrix is just wire strengths in hardware
-   - **Gibbs MLP = research/complex patterns** — most expressive, opaque
-   - **Boltzmann = large-scale generation** — deep residual, attention
-   KAN and Ising complement each other: KAN for accuracy, Ising for speed.
+- ~~All GSM8K improvement numbers (+10-28%)~~ — simulation artifacts
+- ~~Adversarial recovery claims~~ — tested on simulated, not live inference
+- ~~Self-learning improvement (67→97%)~~ — trained on simulated error patterns
+- ~~Full-scale benchmark results~~ — all simulated
 
-9. **LNN-based adaptive constraints for agentic verification** — PAIRS WITH #2.
-   Liquid Neural Networks for constraint models that adapt during multi-turn
-   agent workflows. Static Ising can't update as new facts emerge during
-   agent execution. LNN coupling strengths evolve via differential equations
-   in response to observations. Also improves noise robustness for
-   constraint extraction from adversarial LLM outputs (Exp 88 failure mode).
+## What Remains Valid
 
-10. **Bridge to continuous reasoning (Kona direction)** — VALIDATED, DEPENDS ON #4.
-   Continuous Ising relaxation (Exp 64 ✅) → embedding-space constraints
-   (Exp 65 ✅) → end-to-end differentiable (Exp 66 ✅, 1.0 AUROC) →
-   gradient repair (Exp 87 ✅, 44% energy reduction). The math works.
-   Practicality depends on latency benchmark (#4). If fast enough, pursue
-   energy-guided decoding. If not, focus on post-hoc verify-repair which
-   is already proven effective. KAN energy tier (#7) may improve the
-   differentiable pipeline's expressiveness.
-
-11. **FPGA Ising machine as TSU stand-in** — DON'T WAIT FOR HARDWARE.
-   SamplerBackend abstraction built (Exp 71). Instead of waiting for the
-   Z1, implement a parallel Ising sampler on FPGA (1k-10k p-bits on
-   Kria/DE10-Nano, up to 256k on large FPGAs). Create `FpgaBackend` that
-   sends couplings over PCIe/AXI and reads back spins. Benchmark vs CPU
-   ParallelIsingSampler on 5000-var SAT. This validates the hardware path
-   and gives real latency numbers for guided decoding feasibility.
-   See research-references.md for prior art (Tohoku, Microsoft, Fujitsu).
+- Constraint verification infrastructure (Ising, KAN, Gibbs, Boltzmann)
+- Energy computation speed (0.006ms per constraint check)
+- Parallel Ising sampler (183x faster than thrml)
+- Global consistency checker (100% detection on logical contradictions)
+- Self-learning architecture (tracker, memory, JEPA — need real data)
+- Dogfooding system (brace auto-fix works, CodeExtractor runs)
+- Pipeline architecture (VerifyRepairPipeline, extractors, MCP server)
+- FPGA/TSU hardware path (SamplerBackend abstraction ready)
 
 ## Continuous Self-Learning (CORE ARCHITECTURAL GOAL)
 
@@ -319,31 +304,37 @@ The planning agent MUST prioritize these for the next milestone:
    (JEPA predictor on NPU while LLM runs on CPU). See
    research-hardware-wishlist.md for setup steps.
 
-## What Works (do more of this)
+## What Works (verified on real models)
 
-- Ising constraint verification: 100% hallucination detection
-- Verify-repair loop: +27% accuracy improvement, +26.5% on adversarial
-- Adversarial robustness: Ising ignores irrelevant context (74% correctly silent)
 - KAN energy tier: 0.994 AUROC with 8.7x fewer params than Ising
 - Parallel Ising sampler: 183x faster than thrml
+- Energy computation speed: 0.006ms per constraint check
+- Global consistency checker: 100% detection of cross-step contradictions
 - CD training: learned couplings generalize to unseen instances
 - Runtime instrumentation: catches bugs static analysis misses
-- HumanEval pass@1+repair: 96% (up from 90% baseline)
-- Guided decoding: 0.006ms per constraint check, 100% CSR
-- Agentic verification: 60/60 violations caught in multi-step workflows
-- Constraint state machine with rollback: works for multi-turn agents
+- Dogfooding: auto-brace-fix, CodeExtractor on generated code
+- Self-learning architecture: tracker, memory, JEPA (needs real training data)
+- Pipeline infrastructure: VerifyRepairPipeline, MCP server, CLI
+- FPGA/TSU hardware path: SamplerBackend abstraction ready
+
+## What Was Invalidated (simulation artifacts)
+
+- ~~Verify-repair +27% on GSM8K~~ — simulated inference, not live
+- ~~Adversarial +26.5% recovery~~ — simulated inference
+- ~~HumanEval 90→96%~~ — simulated inference (code execution MAY still work)
+- ~~Self-learning 67→97%~~ — trained on simulated error patterns
+- ~~Full-scale benchmark numbers~~ — all simulated baselines
 
 ## What Doesn't Work (don't repeat)
 
+- **Regex-based constraint extraction on IT models** — ArithmeticExtractor
+  found ZERO violations on Gemma4-E4B-it (0/20 questions, including 4 wrong)
+- **Verify-repair on base models** — 0% improvement at 0.8B, -2% to -13% at 3B
 - Activation-based EBMs: detect confidence, not correctness (50% practical)
 - Cross-model activation transfer: ~50% = chance
-- Temperature diversity / domain mixing: hurts performance
-- Normalization: destroys signal
-- Logit lens: dynamics identical for correct/wrong
-- Sentence/NLI encoders: embed topic, not truth
-- LNN adaptive couplings within a chain: 10% vs 100% for static Ising (Exp 116)
-- Precision-based constraint REWEIGHTING: no improvement over fixed weights (Exp 134)
-  — need constraint ADDITION instead
+- LNN adaptive couplings within a chain: 10% vs 100% for static Ising
+- Precision-based constraint REWEIGHTING: 0% improvement
+- Simulated inference as a proxy for live: produces unreliable results
 
 ## Outer Loop / Inner Loop Agent Architecture
 
