@@ -1087,6 +1087,16 @@ def _run_humaneval_baseline(
         prompt_seed=prompt_seed,
         max_new_tokens=220,
     )
+    generation_trace = _build_generation_trace(
+        tokenizer=tokenizer,
+        attempts=[
+            _serialize_generation_attempt(
+                prompt=generation_prompt,
+                response=body,
+                tokenizer=tokenizer,
+            )
+        ],
+    )
     candidate_code = build_candidate_code(str(case["prompt"]), body)
     harness = execute_humaneval(candidate_code, case, timeout=5.0)
     instrumentation = run_instrumentation(
@@ -1105,7 +1115,17 @@ def _run_humaneval_baseline(
         "passed": harness.passed,
         "error_type": harness.error_type,
         "error_message": harness.error_message,
+        "harness": {
+            "passed": harness.passed,
+            "error_type": harness.error_type,
+            "error_message": harness.error_message,
+            "stdout": harness.stdout,
+        },
         "instrumentation": instrumentation,
+        "generation_trace": generation_trace,
+        "prompt_tokens": int(generation_trace["prompt_tokens"]),
+        "response_tokens": int(generation_trace["response_tokens"]),
+        "total_tokens": int(generation_trace["total_tokens"]),
         "latency_seconds": round(time.perf_counter() - started, 3),
     }
 
@@ -1120,27 +1140,62 @@ def _run_humaneval_verify_only(
     )
 
     candidate_code = str(baseline["candidate_code"])
+    started = time.perf_counter()
     execution_only = run_instrumentation(
         candidate_code,
         str(case["prompt"]),
         str(case["entry_point"]),
         official_tests=None,
     )
+    after_execution_only = time.perf_counter()
     execution_plus_property = run_instrumentation(
         candidate_code,
         str(case["prompt"]),
         str(case["entry_point"]),
         official_tests=str(case["test"]),
     )
+    after_execution_plus_property = time.perf_counter()
     harness = execute_humaneval(candidate_code, case, timeout=5.0)
+    passed = harness.passed
+    execution_only_detected = bool(execution_only["detected"])
+    execution_plus_property_detected = bool(execution_plus_property["detected"])
+    property_violation_count = int(execution_plus_property.get("n_property_violations", 0))
+    execution_only_accepted = passed and not execution_only_detected
+    execution_plus_property_accepted = passed and not execution_plus_property_detected
+    property_only_detected = (
+        execution_plus_property_detected
+        and not execution_only_detected
+        and property_violation_count > 0
+    )
+    finished = time.perf_counter()
     return {
         "case_id": str(case["case_id"]),
         "mode": "verify_only",
         "prompt_seed": int(case["prompt_seeds"]["verify_only"]),
         "response_mode": "answer_only_terse",
-        "passed": harness.passed,
+        "passed": passed,
+        "harness": {
+            "passed": harness.passed,
+            "error_type": harness.error_type,
+            "error_message": harness.error_message,
+            "stdout": harness.stdout,
+        },
         "execution_only": execution_only,
         "execution_plus_property": execution_plus_property,
+        "execution_only_accepted": execution_only_accepted,
+        "execution_plus_property_accepted": execution_plus_property_accepted,
+        "property_only_detected": property_only_detected,
+        "official_test_miss_caught_by_property": passed and property_violation_count > 0,
+        "execution_only_latency_seconds": round(after_execution_only - started, 3),
+        "execution_plus_property_latency_seconds": round(
+            after_execution_plus_property - after_execution_only,
+            3,
+        ),
+        "harness_latency_seconds": round(finished - after_execution_plus_property, 3),
+        "prompt_tokens": 0,
+        "response_tokens": 0,
+        "total_tokens": 0,
+        "latency_seconds": round(finished - started, 3),
     }
 
 
@@ -1160,6 +1215,35 @@ def _run_humaneval_verify_repair(
         run_instrumentation,
     )
 
+    current_body = str(baseline["body"])
+    current_code = str(baseline["candidate_code"])
+    harness = HarnessResult(
+        passed=False,
+        error_type=str(baseline["error_type"]),
+        error_message=str(baseline["error_message"]),
+        stdout="",
+    )
+    instrumentation = dict(baseline["instrumentation"])
+    n_repairs = 0
+    started = time.perf_counter()
+    history = [
+        {
+            "iteration": 0,
+            "body": current_body,
+            "candidate_code": current_code,
+            "harness": {
+                "passed": bool(baseline["passed"]),
+                "error_type": str(baseline["error_type"]),
+                "error_message": str(baseline["error_message"]),
+                "stdout": str(baseline.get("harness", {}).get("stdout", "")),
+            },
+            "instrumentation": dict(instrumentation),
+            "generation_trace": _serialize_jsonable(baseline.get("generation_trace")),
+        }
+    ]
+    total_prompt_tokens = 0
+    total_response_tokens = 0
+
     if bool(baseline["passed"]):
         return {
             "case_id": str(case["case_id"]),
@@ -1171,18 +1255,15 @@ def _run_humaneval_verify_repair(
             "repaired": False,
             "n_repairs": 0,
             "final_body": baseline["body"],
+            "final_code": baseline["candidate_code"],
+            "final_harness": history[0]["harness"],
+            "final_instrumentation": history[0]["instrumentation"],
+            "prompt_tokens": 0,
+            "response_tokens": 0,
+            "total_tokens": 0,
+            "latency_seconds": round(time.perf_counter() - started, 3),
+            "history": history,
         }
-
-    current_body = str(baseline["body"])
-    current_code = str(baseline["candidate_code"])
-    harness = HarnessResult(
-        passed=False,
-        error_type=str(baseline["error_type"]),
-        error_message=str(baseline["error_message"]),
-        stdout="",
-    )
-    instrumentation = dict(baseline["instrumentation"])
-    n_repairs = 0
 
     for repair_idx in range(max_repairs):
         repair_prompt = build_repair_prompt(
@@ -1199,6 +1280,16 @@ def _run_humaneval_verify_repair(
             prompt_seed=int(case["prompt_seeds"]["verify_repair"]) + repair_idx + 1,
             max_new_tokens=220,
         )
+        generation_trace = _build_generation_trace(
+            tokenizer=tokenizer,
+            attempts=[
+                _serialize_generation_attempt(
+                    prompt=repair_prompt,
+                    response=current_body,
+                    tokenizer=tokenizer,
+                )
+            ],
+        )
         current_code = build_candidate_code(str(case["prompt"]), current_body)
         harness = execute_humaneval(current_code, case, timeout=5.0)
         instrumentation = run_instrumentation(
@@ -1206,6 +1297,24 @@ def _run_humaneval_verify_repair(
             str(case["prompt"]),
             str(case["entry_point"]),
             official_tests=str(case["test"]),
+        )
+        total_prompt_tokens += int(generation_trace["prompt_tokens"])
+        total_response_tokens += int(generation_trace["response_tokens"])
+        history.append(
+            {
+                "iteration": repair_idx + 1,
+                "repair_prompt": repair_prompt,
+                "body": current_body,
+                "candidate_code": current_code,
+                "generation_trace": generation_trace,
+                "harness": {
+                    "passed": harness.passed,
+                    "error_type": harness.error_type,
+                    "error_message": harness.error_message,
+                    "stdout": harness.stdout,
+                },
+                "instrumentation": instrumentation,
+            }
         )
         n_repairs = repair_idx + 1
         if harness.passed:
@@ -1222,6 +1331,13 @@ def _run_humaneval_verify_repair(
         "n_repairs": n_repairs,
         "final_body": current_body,
         "final_code": current_code,
+        "final_harness": history[-1]["harness"],
+        "final_instrumentation": history[-1]["instrumentation"],
+        "prompt_tokens": total_prompt_tokens,
+        "response_tokens": total_response_tokens,
+        "total_tokens": total_prompt_tokens + total_response_tokens,
+        "latency_seconds": round(time.perf_counter() - started, 3),
+        "history": history,
         "error_type": harness.error_type,
         "error_message": harness.error_message,
     }
@@ -1448,32 +1564,133 @@ def _summarize_runs(
 
     if benchmark == "humaneval_property":
         baseline_pass = sum(1 for run in baseline_runs if run["passed"]) / n_cases
+        n_wrong_answers = sum(1 for run in baseline_runs if not run["passed"])
+        execution_only_pass = (
+            sum(1 for run in verify_only_runs if run["execution_only_accepted"]) / n_cases
+        )
+        execution_plus_property_pass = (
+            sum(1 for run in verify_only_runs if run["execution_plus_property_accepted"]) / n_cases
+        )
+        execution_only_wrong_detected = sum(
+            1
+            for run in verify_only_runs
+            if (not run["passed"]) and run["execution_only"]["detected"]
+        )
+        execution_plus_property_wrong_detected = sum(
+            1
+            for run in verify_only_runs
+            if (not run["passed"]) and run["execution_plus_property"]["detected"]
+        )
+        execution_only_false_positives = sum(
+            1 for run in verify_only_runs if run["passed"] and run["execution_only"]["detected"]
+        )
+        execution_plus_property_false_positives = sum(
+            1
+            for run in verify_only_runs
+            if run["passed"] and run["execution_plus_property"]["detected"]
+        )
+        n_repaired = sum(1 for run in verify_repair_runs if run["repaired"])
         repair_pass = sum(1 for run in verify_repair_runs if run["passed"]) / n_cases
         return {
             "baseline": {
                 "n_cases": n_cases,
                 "pass_at_1": baseline_pass,
+                "mean_latency_seconds": _round_mean(
+                    [float(run.get("latency_seconds", 0.0)) for run in baseline_runs]
+                ),
             },
             "verify_only": {
                 "n_cases": n_cases,
-                "execution_only_detected": sum(
-                    1 for run in verify_only_runs if run["execution_only"]["detected"]
-                ),
-                "execution_plus_property_detected": sum(
-                    1 for run in verify_only_runs if run["execution_plus_property"]["detected"]
-                ),
-                "property_violation_total": sum(
-                    int(run["execution_plus_property"]["n_property_violations"])
-                    for run in verify_only_runs
+                "execution_only": {
+                    "pass_at_1": execution_only_pass,
+                    "n_wrong_answers": n_wrong_answers,
+                    "n_wrong_detected": execution_only_wrong_detected,
+                    "wrong_detection_rate": round(
+                        execution_only_wrong_detected / n_wrong_answers if n_wrong_answers else 0.0,
+                        6,
+                    ),
+                    "false_positives": execution_only_false_positives,
+                    "false_positive_rate": round(
+                        execution_only_false_positives
+                        / max(1, sum(1 for run in baseline_runs if run["passed"])),
+                        6,
+                    ),
+                    "mean_latency_seconds": _round_mean(
+                        [
+                            float(run.get("execution_only_latency_seconds", 0.0))
+                            for run in verify_only_runs
+                        ]
+                    ),
+                },
+                "execution_plus_property": {
+                    "pass_at_1": execution_plus_property_pass,
+                    "n_wrong_answers": n_wrong_answers,
+                    "n_wrong_detected": execution_plus_property_wrong_detected,
+                    "wrong_detection_rate": round(
+                        (
+                            execution_plus_property_wrong_detected / n_wrong_answers
+                            if n_wrong_answers
+                            else 0.0
+                        ),
+                        6,
+                    ),
+                    "false_positives": execution_plus_property_false_positives,
+                    "false_positive_rate": round(
+                        execution_plus_property_false_positives
+                        / max(1, sum(1 for run in baseline_runs if run["passed"])),
+                        6,
+                    ),
+                    "property_violation_total": sum(
+                        int(run["execution_plus_property"]["n_property_violations"])
+                        for run in verify_only_runs
+                    ),
+                    "problems_with_property_violations": sum(
+                        1
+                        for run in verify_only_runs
+                        if int(run["execution_plus_property"]["n_property_violations"]) > 0
+                    ),
+                    "official_test_misses_caught_by_property": sum(
+                        1
+                        for run in verify_only_runs
+                        if run["official_test_miss_caught_by_property"]
+                    ),
+                    "execution_only_misses_caught_by_property": sum(
+                        1 for run in verify_only_runs if run["property_only_detected"]
+                    ),
+                    "mean_latency_seconds": _round_mean(
+                        [
+                            float(run.get("execution_plus_property_latency_seconds", 0.0))
+                            for run in verify_only_runs
+                        ]
+                    ),
+                },
+                "mean_total_latency_seconds": _round_mean(
+                    [float(run.get("latency_seconds", 0.0)) for run in verify_only_runs]
                 ),
             },
             "verify_repair": {
                 "n_cases": n_cases,
                 "pass_at_1": repair_pass,
-                "n_repaired": sum(1 for run in verify_repair_runs if run["repaired"]),
-                "avg_repairs": (sum(int(run["n_repairs"]) for run in verify_repair_runs) / n_cases),
+                "n_repaired": n_repaired,
+                "repair_success_rate": round(
+                    n_repaired / n_wrong_answers if n_wrong_answers else 0.0,
+                    6,
+                ),
+                "avg_repairs": round(
+                    sum(int(run["n_repairs"]) for run in verify_repair_runs) / n_cases,
+                    3,
+                ),
+                "mean_latency_seconds": _round_mean(
+                    [float(run.get("latency_seconds", 0.0)) for run in verify_repair_runs]
+                ),
             },
             "paired_deltas": {
+                "execution_only_minus_baseline": execution_only_pass - baseline_pass,
+                "execution_plus_property_minus_baseline": execution_plus_property_pass
+                - baseline_pass,
+                "execution_plus_property_minus_execution_only": (
+                    execution_plus_property_pass - execution_only_pass
+                ),
                 "repair_minus_baseline": repair_pass - baseline_pass,
             },
         }

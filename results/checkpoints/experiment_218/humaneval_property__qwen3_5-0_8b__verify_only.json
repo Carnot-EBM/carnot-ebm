@@ -1,0 +1,4087 @@
+{
+  "benchmark": "humaneval_property",
+  "model_name": "Qwen3.5-0.8B",
+  "mode": "verify_only",
+  "case_ids": [
+    "humaneval-92",
+    "humaneval-87",
+    "humaneval-40",
+    "humaneval-126",
+    "humaneval-64",
+    "humaneval-37",
+    "humaneval-13",
+    "humaneval-113",
+    "humaneval-91",
+    "humaneval-156",
+    "humaneval-44",
+    "humaneval-160",
+    "humaneval-112",
+    "humaneval-68",
+    "humaneval-35",
+    "humaneval-9",
+    "humaneval-78",
+    "humaneval-82",
+    "humaneval-51",
+    "humaneval-54",
+    "humaneval-161",
+    "humaneval-121",
+    "humaneval-85",
+    "humaneval-57",
+    "humaneval-98",
+    "humaneval-94",
+    "humaneval-107",
+    "humaneval-45",
+    "humaneval-106",
+    "humaneval-41",
+    "humaneval-95",
+    "humaneval-125",
+    "humaneval-157",
+    "humaneval-73",
+    "humaneval-28",
+    "humaneval-42",
+    "humaneval-56",
+    "humaneval-139",
+    "humaneval-132",
+    "humaneval-88",
+    "humaneval-1",
+    "humaneval-80",
+    "humaneval-138",
+    "humaneval-61",
+    "humaneval-66",
+    "humaneval-6",
+    "humaneval-134",
+    "humaneval-53",
+    "humaneval-150",
+    "humaneval-93"
+  ],
+  "results_by_case": {
+    "humaneval-92": {
+      "case_id": "humaneval-92",
+      "mode": "verify_only",
+      "prompt_seed": 1736763784,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: This prints if this assert fails 1 (good for debugging!)",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_wp7gu4cv.py\", line 45, in <module>\n    check(any_int)\n    ~~~~~^^^^^^^^^\n  File \"/tmp/exp208_wp7gu4cv.py\", line 30, in check\n    assert candidate(2, 3, 1)==True, \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": -1,
+            "y": -1,
+            "z": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1,
+            "z": 1
+          },
+          {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          },
+          {
+            "x": -1,
+            "y": -1,
+            "z": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.048,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.05
+    },
+    "humaneval-87": {
+      "case_id": "humaneval-87",
+      "mode": "verify_only",
+      "prompt_seed": 3998300011,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: unterminated triple-quoted string literal (detected at line 74)",
+        "stdout": "  File \"/tmp/exp208_ycaulszb.py\", line 22\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 74)\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1,
+            "x": 1
+          },
+          {
+            "lst": 0,
+            "x": 0
+          },
+          {
+            "lst": -1,
+            "x": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 1, 6], [1, 2, 3, 4, 5, 1]], 1): raised unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6]], 2): raised unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([[1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6], [1, 1, 3, 4, 5, 6], [1, 2, 1, 4, 5, 6], [1, 2, 3, 1, 5, 6], [1, 2, 3, 4, 1, 6], [1, 2, 3, 4, 5, 1]], 1): raised unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([], 1): raised unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)",
+          "deterministic (official_tests) failed for input=([[1]], 2): raised unterminated triple-quoted string literal (detected at line 37) (<string>, line 22)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1,
+            "x": 1
+          },
+          {
+            "lst": 0,
+            "x": 0
+          },
+          {
+            "lst": -1,
+            "x": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.035,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.037
+    },
+    "humaneval-40": {
+      "case_id": "humaneval-40",
+      "mode": "verify_only",
+      "prompt_seed": 2306497581,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_dt9dmcsv.py\", line 61, in <module>\n    check(triples_sum_to_zero)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_dt9dmcsv.py\", line 49, in check\n    assert candidate([1, 3, 5, 0]) == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 4,
+        "constraint_feedback": [
+          "triples_sum_to_zero(): parameter 'l' annotated as list",
+          "triples_sum_to_zero(): loop var 'i' bounded by 0 <= i < len(l)",
+          "triples_sum_to_zero(): loop var 'j' bounded by i + 1 <= j < len(l)",
+          "triples_sum_to_zero(): loop var 'k' bounded by j + 1 <= k < len(l)"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 4,
+        "constraint_feedback": [
+          "triples_sum_to_zero(): parameter 'l' annotated as list",
+          "triples_sum_to_zero(): loop var 'i' bounded by 0 <= i < len(l)",
+          "triples_sum_to_zero(): loop var 'j' bounded by i + 1 <= j < len(l)",
+          "triples_sum_to_zero(): loop var 'k' bounded by j + 1 <= k < len(l)"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 3, 5, 0],): expected False; returned None",
+          "example_regression (docstring_example) failed for input=([1, 3, -2, 1],): expected True; returned None",
+          "example_regression (docstring_example) failed for input=([1, 2, 3, 7],): expected False; returned None",
+          "example_regression (docstring_example) failed for input=([2, 4, -5, 3, 9, 7],): expected True; returned None",
+          "example_regression (docstring_example) failed for input=([1],): expected False; returned None"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": true,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.002,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.026,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-126": {
+      "case_id": "humaneval-126",
+      "mode": "verify_only",
+      "prompt_seed": 230029245,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: unterminated triple-quoted string literal (detected at line 54)",
+        "stdout": "  File \"/tmp/exp208_4bzpie5c.py\", line 18\n    '''\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 54)\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([5],): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 5],): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)",
+          "deterministic (official_tests) failed for input=([1, 3, 2, 4, 5],): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 5, 6],): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 5, 6, 7],): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 18)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.048,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.049
+    },
+    "humaneval-64": {
+      "case_id": "humaneval-64",
+      "mode": "verify_only",
+      "prompt_seed": 1841873592,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: Test 2",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_jv6bq2ox.py\", line 53, in <module>\n    check(vowels_count)\n    ~~~~~^^^^^^^^^^^^^^\n  File \"/tmp/exp208_jv6bq2ox.py\", line 41, in check\n    assert candidate(\"Alone\") == 3, \"Test 2\"\n           ^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 2\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 1,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('ACEDY',): expected 3; returned 0"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.04,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.042
+    },
+    "humaneval-37": {
+      "case_id": "humaneval-37",
+      "mode": "verify_only",
+      "prompt_seed": 703929641,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_a952atbo.py\", line 35, in <module>\n    check(sort_even)\n    ~~~~~^^^^^^^^^^^\n  File \"/tmp/exp208_a952atbo.py\", line 29, in check\n    assert tuple(candidate([1, 2, 3])) == tuple([1, 2, 3])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "sort_even(): variable 'i' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "sort_even(): variable 'i' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "sort_even(): variable 'i' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "sort_even(): variable 'i' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 2, 3],): expected [1, 2, 3]; returned [1, 3]",
+          "example_regression (docstring_example) failed for input=([5, 6, 3, 4],): expected [3, 6, 5, 4]; returned [5, 3]",
+          "sorted_output (prompt_intent) failed for input=([1, 2, 3],): expected [1, 2, 3]; returned [1, 3]",
+          "sorted_output (prompt_intent) failed for input=([5, 6, 3, 4],): expected [3, 4, 5, 6]; returned [5, 3]",
+          "sorted_output (prompt_intent) failed for input=([3, 1, 2],): expected [1, 2, 3]; returned [3, 2]"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-13": {
+      "case_id": "humaneval-13",
+      "mode": "verify_only",
+      "prompt_seed": 4003379259,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 3,
+        "constraint_feedback": [
+          "greatest_common_divisor(): parameter 'a' annotated as int",
+          "greatest_common_divisor(): parameter 'b' annotated as int",
+          "greatest_common_divisor() annotated to return int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1
+          },
+          {
+            "a": 0,
+            "b": 0
+          },
+          {
+            "a": -1,
+            "b": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 3,
+        "constraint_feedback": [
+          "greatest_common_divisor(): parameter 'a' annotated as int",
+          "greatest_common_divisor(): parameter 'b' annotated as int",
+          "greatest_common_divisor() annotated to return int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1
+          },
+          {
+            "a": 0,
+            "b": 0
+          },
+          {
+            "a": -1,
+            "b": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.01,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.013
+    },
+    "humaneval-113": {
+      "case_id": "humaneval-113",
+      "mode": "verify_only",
+      "prompt_seed": 1715056325,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: expected an indented block after 'if' statement on line 29",
+        "stdout": "  File \"/tmp/exp208_uxrxirya.py\", line 32\n    def check(candidate):\nIndentationError: expected an indented block after 'if' statement on line 29\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: expected an indented block after 'if' statement on line 29 (<string>, line 29)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: expected an indented block after 'if' statement on line 29 (<string>, line 29)"
+        ],
+        "n_property_violations": 4,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(['1234567'],): expected ['the number of odd elements 4n the str4ng 4 of the 4nput.']; raised expected an indented block after 'if' statement on line 29 (<string>, line 29)",
+          "deterministic (official_tests) failed for input=(['1234567'],): raised expected an indented block after 'if' statement on line 29 (<string>, line 29)",
+          "deterministic (official_tests) failed for input=(['3', '11111111'],): raised expected an indented block after 'if' statement on line 29 (<string>, line 29)",
+          "deterministic (official_tests) failed for input=(['271', '137', '314'],): raised expected an indented block after 'if' statement on line 29 (<string>, line 29)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.032,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.033
+    },
+    "humaneval-91": {
+      "case_id": "humaneval-91",
+      "mode": "verify_only",
+      "prompt_seed": 1348576447,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: Test 5",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_5knyrj3y.py\", line 53, in <module>\n    check(is_bored)\n    ~~~~~^^^^^^^^^^\n  File \"/tmp/exp208_5knyrj3y.py\", line 45, in check\n    assert candidate(\"I feel good today. I will be productive. will kill It\") == 2, \"Test 5\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 5\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "Unexpected AttributeError: 'int' object has no attribute 'split'",
+          "Unexpected AttributeError: 'int' object has no attribute 'split'"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "S": 1
+          },
+          {
+            "S": 0
+          },
+          {
+            "S": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "Unexpected AttributeError: 'int' object has no attribute 'split'",
+          "Unexpected AttributeError: 'int' object has no attribute 'split'"
+        ],
+        "n_property_violations": 1,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('The sky is blue. The sun is shining. I love this weather',): expected 1; returned 0"
+        ],
+        "probe_inputs": [
+          {
+            "S": 1
+          },
+          {
+            "S": 0
+          },
+          {
+            "S": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.026,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.027
+    },
+    "humaneval-156": {
+      "case_id": "humaneval-156",
+      "mode": "verify_only",
+      "prompt_seed": 266459157,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: invalid syntax",
+        "stdout": "  File \"/tmp/exp208_rfyc32ae.py\", line 36\n    if\n      ^\nSyntaxError: invalid syntax\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: invalid syntax (<string>, line 36)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "number": 1
+          },
+          {
+            "number": 0
+          },
+          {
+            "number": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: invalid syntax (<string>, line 36)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(19,): raised invalid syntax (<string>, line 36)",
+          "deterministic (official_tests) failed for input=(152,): raised invalid syntax (<string>, line 36)",
+          "deterministic (official_tests) failed for input=(251,): raised invalid syntax (<string>, line 36)",
+          "deterministic (official_tests) failed for input=(426,): raised invalid syntax (<string>, line 36)",
+          "deterministic (official_tests) failed for input=(500,): raised invalid syntax (<string>, line 36)"
+        ],
+        "probe_inputs": [
+          {
+            "number": 1
+          },
+          {
+            "number": 0
+          },
+          {
+            "number": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.049,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.051
+    },
+    "humaneval-44": {
+      "case_id": "humaneval-44",
+      "mode": "verify_only",
+      "prompt_seed": 3441571323,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: invalid syntax",
+        "stdout": "  File \"/tmp/exp208_5i27rfbt.py\", line 40\n    if base ==\n              ^\nSyntaxError: invalid syntax\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: invalid syntax (<string>, line 40)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "base": 1
+          },
+          {
+            "x": 0,
+            "base": 0
+          },
+          {
+            "x": -1,
+            "base": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: invalid syntax (<string>, line 40)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(8, 3): expected '22'; raised invalid syntax (<string>, line 40)",
+          "example_regression (docstring_example) failed for input=(8, 2): expected '1000'; raised invalid syntax (<string>, line 40)",
+          "example_regression (docstring_example) failed for input=(7, 2): expected '111'; raised invalid syntax (<string>, line 40)",
+          "deterministic (official_tests) failed for input=(8, 3): raised invalid syntax (<string>, line 40)",
+          "deterministic (official_tests) failed for input=(8, 2): raised invalid syntax (<string>, line 40)"
+        ],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "base": 1
+          },
+          {
+            "x": 0,
+            "base": 0
+          },
+          {
+            "x": -1,
+            "base": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.004,
+      "harness_latency_seconds": 0.035,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-160": {
+      "case_id": "humaneval-160",
+      "mode": "verify_only",
+      "prompt_seed": 2396731742,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_xbwsae0n.py\", line 66, in <module>\n    check(do_algebra)\n    ~~~~~^^^^^^^^^^^^\n  File \"/tmp/exp208_xbwsae0n.py\", line 57, in check\n    assert candidate(['**', '*', '+'], [2, 3, 4, 5]) == 37\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "operator": 1,
+            "operand": 1
+          },
+          {
+            "operator": 0,
+            "operand": 0
+          },
+          {
+            "operator": -1,
+            "operand": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "operator": 1,
+            "operand": 1
+          },
+          {
+            "operator": 0,
+            "operand": 0
+          },
+          {
+            "operator": -1,
+            "operand": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.026,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.027
+    },
+    "humaneval-112": {
+      "case_id": "humaneval-112",
+      "mode": "verify_only",
+      "prompt_seed": 1342973243,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_ns8k8383.py\", line 34, in <module>\n    check(reverse_delete)\n    ~~~~~^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_ns8k8383.py\", line 23, in check\n    assert candidate(\"abcde\",\"ae\") == ('bcd',False)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "reverse_delete(): variable 'char' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "reverse_delete(): variable 'char' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1,
+            "c": 1
+          },
+          {
+            "s": 0,
+            "c": 0
+          },
+          {
+            "s": -1,
+            "c": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "reverse_delete(): variable 'char' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "reverse_delete(): variable 'char' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1,
+            "c": 1
+          },
+          {
+            "s": 0,
+            "c": 0
+          },
+          {
+            "s": -1,
+            "c": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.044,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.046
+    },
+    "humaneval-68": {
+      "case_id": "humaneval-68",
+      "mode": "verify_only",
+      "prompt_seed": 293727922,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: Error",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_teii1evi.py\", line 69, in <module>\n    check(pluck)\n    ~~~~~^^^^^^^\n  File \"/tmp/exp208_teii1evi.py\", line 65, in check\n    assert candidate([7, 9, 7, 1]) == [], \"Error\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: Error\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "pluck(): variable 'i' used but never assigned or passed as parameter",
+          "pluck(): variable 'node' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 2,
+        "static_violations": [
+          "pluck(): variable 'i' used but never assigned or passed as parameter",
+          "pluck(): variable 'node' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "pluck(): variable 'i' used but never assigned or passed as parameter",
+          "pluck(): variable 'node' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 2,
+        "static_violations": [
+          "pluck(): variable 'i' used but never assigned or passed as parameter",
+          "pluck(): variable 'node' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.031,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.033
+    },
+    "humaneval-35": {
+      "case_id": "humaneval-35",
+      "mode": "verify_only",
+      "prompt_seed": 3908636939,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "max_element(): parameter 'l' annotated as list"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "max_element(): parameter 'l' annotated as list"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.017,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.018
+    },
+    "humaneval-9": {
+      "case_id": "humaneval-9",
+      "mode": "verify_only",
+      "prompt_seed": 2977635615,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndexError: list index out of range",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_3v537mqw.py\", line 37, in <module>\n    check(rolling_max)\n    ~~~~~^^^^^^^^^^^^^\n  File \"/tmp/exp208_3v537mqw.py\", line 31, in check\n    assert candidate([]) == []\n           ~~~~~~~~~^^^^\n  File \"/tmp/exp208_3v537mqw.py\", line 11, in rolling_max\n    current_max = numbers[0]\n                  ~~~~~~~^^^\nIndexError: list index out of range\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "rolling_max(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "rolling_max(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "rolling_max(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "rolling_max(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 4,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 2, 3, 2, 3, 4, 2],): expected [1, 2, 3, 3, 3, 4, 4]; returned [3, 4, 2]",
+          "annotated_return_type (signature) failed for input=([],): expected list; raised list index out of range",
+          "deterministic (official_tests) failed for input=([],): raised list index out of range",
+          "input_immutability (signature) failed for input=([],): raised list index out of range"
+        ],
+        "probe_inputs": [
+          {
+            "numbers": [
+              1,
+              2
+            ]
+          },
+          {
+            "numbers": []
+          },
+          {
+            "numbers": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.042,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.045
+    },
+    "humaneval-78": {
+      "case_id": "humaneval-78",
+      "mode": "verify_only",
+      "prompt_seed": 3630265596,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: unterminated triple-quoted string literal (detected at line 49)",
+        "stdout": "  File \"/tmp/exp208_wu5rfah7.py\", line 20\n    \"\"\"You have been tasked to write a function that receives \n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 49)\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "num": 1
+          },
+          {
+            "num": 0
+          },
+          {
+            "num": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('AB',): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)",
+          "deterministic (official_tests) failed for input=('1077E',): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)",
+          "deterministic (official_tests) failed for input=('ABED1A33',): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)",
+          "deterministic (official_tests) failed for input=('2020',): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)",
+          "deterministic (official_tests) failed for input=('123456789ABCDEF0',): raised unterminated triple-quoted string literal (detected at line 30) (<string>, line 20)"
+        ],
+        "probe_inputs": [
+          {
+            "num": 1
+          },
+          {
+            "num": 0
+          },
+          {
+            "num": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.028
+    },
+    "humaneval-82": {
+      "case_id": "humaneval-82",
+      "mode": "verify_only",
+      "prompt_seed": 240370321,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_e4y8th4w.py\", line 58, in <module>\n    check(prime_length)\n    ~~~~~^^^^^^^^^^^^^^\n  File \"/tmp/exp208_e4y8th4w.py\", line 49, in check\n    assert candidate('aaaaaaaaaaaaaaa') == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "prime_length(): loop var 'i' bounded by 3 <= i < int(length ** 0.5) + 1"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "prime_length(): loop var 'i' bounded by 3 <= i < int(length ** 0.5) + 1"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.048,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.052
+    },
+    "humaneval-51": {
+      "case_id": "humaneval-51",
+      "mode": "verify_only",
+      "prompt_seed": 3259130433,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "text": 1
+          },
+          {
+            "text": 0
+          },
+          {
+            "text": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "text": 1
+          },
+          {
+            "text": 0
+          },
+          {
+            "text": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.018,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.02
+    },
+    "humaneval-54": {
+      "case_id": "humaneval-54",
+      "mode": "verify_only",
+      "prompt_seed": 1727497090,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_dqv4vtak.py\", line 49, in <module>\n    check(same_chars)\n    ~~~~~^^^^^^^^^^^^\n  File \"/tmp/exp208_dqv4vtak.py\", line 39, in check\n    assert candidate('eabcdzzzz', 'dddzzzzzzzddeddabc') == True\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "same_chars(): parameter 's0' annotated as str",
+          "same_chars(): parameter 's1' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s0": "x",
+            "s1": "x"
+          },
+          {
+            "s0": "",
+            "s1": ""
+          },
+          {
+            "s0": " ",
+            "s1": " "
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "same_chars(): parameter 's0' annotated as str",
+          "same_chars(): parameter 's1' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 3,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('eabcdzzzz', 'dddzzzzzzzddeddabc'): expected True; returned False",
+          "example_regression (docstring_example) failed for input=('abcd', 'dddddddabc'): expected True; returned False",
+          "example_regression (docstring_example) failed for input=('dddddddabc', 'abcd'): expected True; returned False"
+        ],
+        "probe_inputs": [
+          {
+            "s0": "x",
+            "s1": "x"
+          },
+          {
+            "s0": "",
+            "s1": ""
+          },
+          {
+            "s0": " ",
+            "s1": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": true,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.038,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-161": {
+      "case_id": "humaneval-161",
+      "mode": "verify_only",
+      "prompt_seed": 51867162,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_mqlyj0qh.py\", line 52, in <module>\n    check(solve)\n    ~~~~~^^^^^^^\n  File \"/tmp/exp208_mqlyj0qh.py\", line 39, in check\n    assert candidate(\"1234\") == \"4321\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "reverse_output (prompt_intent) failed for input=('AsDf',): expected 'fDsA'; returned 'aSdF'",
+          "reverse_output (prompt_intent) failed for input=('1234',): expected '4321'; returned '1234'",
+          "reverse_output (prompt_intent) failed for input=('ab',): expected 'ba'; returned 'AB'",
+          "reverse_output (prompt_intent) failed for input=('#a@C',): expected 'C@a#'; returned '#A@c'",
+          "reverse_output (prompt_intent) failed for input=('#AsdfW^45',): expected '54^WfdsA#'; returned '#aSDFw^45'"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.03
+    },
+    "humaneval-121": {
+      "case_id": "humaneval-121",
+      "mode": "verify_only",
+      "prompt_seed": 2512920543,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "solution(): loop var 'i' bounded by 0 <= i < len(lst)"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "solution(): loop var 'i' bounded by 0 <= i < len(lst)"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.018,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.019
+    },
+    "humaneval-85": {
+      "case_id": "humaneval-85",
+      "mode": "verify_only",
+      "prompt_seed": 3596814835,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_hb3yosu_.py\", line 29, in <module>\n    check(add)\n    ~~~~~^^^^^\n  File \"/tmp/exp208_hb3yosu_.py\", line 20, in check\n    assert candidate([4, 88]) == 88\n           ^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "add(): variable 'i' used but never assigned or passed as parameter",
+          "add(): variable 'num' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 2,
+        "static_violations": [
+          "add(): variable 'i' used but never assigned or passed as parameter",
+          "add(): variable 'num' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "add(): variable 'i' used but never assigned or passed as parameter",
+          "add(): variable 'num' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 2,
+        "static_violations": [
+          "add(): variable 'i' used but never assigned or passed as parameter",
+          "add(): variable 'num' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.04,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.042
+    },
+    "humaneval-57": {
+      "case_id": "humaneval-57",
+      "mode": "verify_only",
+      "prompt_seed": 502914712,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208__lzj7c5a.py\", line 46, in <module>\n    check(monotonic)\n    ~~~~~^^^^^^^^^^^\n  File \"/tmp/exp208__lzj7c5a.py\", line 37, in check\n    assert candidate([1, 20, 4, 10]) == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "monotonic(): parameter 'l' annotated as list"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "monotonic(): parameter 'l' annotated as list"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 2,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=([1, 20, 4, 10],): expected False; returned True",
+          "example_regression (docstring_example) failed for input=([4, 1, 0, -10],): expected True; returned False"
+        ],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": true,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.031
+    },
+    "humaneval-98": {
+      "case_id": "humaneval-98",
+      "mode": "verify_only",
+      "prompt_seed": 1956552540,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AttributeError: 'str' object has no attribute 'isvowel'. Did you mean: 'islower'?",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_auxenuwh.py\", line 34, in <module>\n    check(count_upper)\n    ~~~~~^^^^^^^^^^^^^\n  File \"/tmp/exp208_auxenuwh.py\", line 21, in check\n    assert candidate('aBCdEf')  == 1\n           ~~~~~~~~~^^^^^^^^^^\n  File \"/tmp/exp208_auxenuwh.py\", line 13, in count_upper\n    if i % 2 == 0 and s[i].isupper() and s[i].isvowel():\n                                         ^^^^^^^^^^^^\nAttributeError: 'str' object has no attribute 'isvowel'. Did you mean: 'islower'?\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "count_upper(): loop var 'i' bounded by 0 <= i < len(s)"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "count_upper(): loop var 'i' bounded by 0 <= i < len(s)"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=('aBCdEf',): raised 'str' object has no attribute 'isvowel'",
+          "deterministic (official_tests) failed for input=('dBBE',): raised 'str' object has no attribute 'isvowel'",
+          "deterministic (official_tests) failed for input=('B',): raised 'str' object has no attribute 'isvowel'",
+          "deterministic (official_tests) failed for input=('U',): raised 'str' object has no attribute 'isvowel'",
+          "deterministic (official_tests) failed for input=('EEEE',): raised 'str' object has no attribute 'isvowel'"
+        ],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-94": {
+      "case_id": "humaneval-94",
+      "mode": "verify_only",
+      "prompt_seed": 102582533,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: unexpected indent",
+        "stdout": "  File \"/tmp/exp208_ch_fm3wu.py\", line 15\n    if n < 2:\nIndentationError: unexpected indent\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unexpected indent (<string>, line 15)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([0, 3, 2, 1, 3, 5, 7, 4, 5, 5, 5, 2, 181, 32, 4, 32, 3, 2, 32, 324, 4, 3],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([1, 0, 1, 8, 2, 4597, 2, 1, 3, 40, 1, 2, 1, 2, 4, 2, 5, 1],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([1, 3, 1, 32, 5107, 34, 83278, 109, 163, 23, 2323, 32, 30, 1, 9, 3],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([0, 724, 32, 71, 99, 32, 6, 0, 5, 91, 83, 0, 5, 6],): raised unexpected indent (<string>, line 15)",
+          "deterministic (official_tests) failed for input=([0, 81, 12, 3, 1, 21],): raised unexpected indent (<string>, line 15)"
+        ],
+        "probe_inputs": [
+          {
+            "lst": 1
+          },
+          {
+            "lst": 0
+          },
+          {
+            "lst": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.04,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.041
+    },
+    "humaneval-107": {
+      "case_id": "humaneval-107",
+      "mode": "verify_only",
+      "prompt_seed": 1154082411,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: unterminated triple-quoted string literal (detected at line 64)",
+        "stdout": "  File \"/tmp/exp208_07j3mbh1.py\", line 25\n    \"\"\"\n    ^\nSyntaxError: unterminated triple-quoted string literal (detected at line 64)\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(123,): raised unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)",
+          "deterministic (official_tests) failed for input=(12,): raised unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)",
+          "deterministic (official_tests) failed for input=(3,): raised unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)",
+          "deterministic (official_tests) failed for input=(63,): raised unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)",
+          "deterministic (official_tests) failed for input=(25,): raised unterminated triple-quoted string literal (detected at line 45) (<string>, line 25)"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.029,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.029
+    },
+    "humaneval-45": {
+      "case_id": "humaneval-45",
+      "mode": "verify_only",
+      "prompt_seed": 3472679776,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_jaj19bnr.py\", line 23, in <module>\n    check(triangle_area)\n    ~~~~~^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_jaj19bnr.py\", line 17, in check\n    assert candidate(5, 3) == 7.5\n           ^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "h": 1
+          },
+          {
+            "a": 0,
+            "h": 0
+          },
+          {
+            "a": -1,
+            "h": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 1,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(5, 3): expected 7.5; returned None"
+        ],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "h": 1
+          },
+          {
+            "a": 0,
+            "h": 0
+          },
+          {
+            "a": -1,
+            "h": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": true,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.0,
+      "harness_latency_seconds": 0.046,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.046
+    },
+    "humaneval-106": {
+      "case_id": "humaneval-106",
+      "mode": "verify_only",
+      "prompt_seed": 1547261225,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "NameError: name 'factorial' is not defined",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_x4_2ehrm.py\", line 28, in <module>\n    check(f)\n    ~~~~~^^^\n  File \"/tmp/exp208_x4_2ehrm.py\", line 22, in check\n    assert candidate(5) == [1, 2, 6, 24, 15]\n           ~~~~~~~~~^^^\n  File \"/tmp/exp208_x4_2ehrm.py\", line 14, in f\n    result.append(factorial(i))\n                  ^^^^^^^^^\nNameError: name 'factorial' is not defined\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "f(): variable 'factorial' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "f(): variable 'factorial' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "f(): variable 'factorial' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "f(): variable 'factorial' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 3,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=(5,): raised name 'factorial' is not defined",
+          "deterministic (official_tests) failed for input=(7,): raised name 'factorial' is not defined",
+          "deterministic (official_tests) failed for input=(3,): raised name 'factorial' is not defined"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-41": {
+      "case_id": "humaneval-41",
+      "mode": "verify_only",
+      "prompt_seed": 2585211556,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_hfaikmcr.py\", line 43, in <module>\n    check(car_race_collision)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_hfaikmcr.py\", line 35, in check\n    assert candidate(2) == 4\n           ^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "car_race_collision(): parameter 'n' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "car_race_collision(): parameter 'n' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.048,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.049
+    },
+    "humaneval-95": {
+      "case_id": "humaneval-95",
+      "mode": "verify_only",
+      "prompt_seed": 103659202,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: First test error: None",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_xmogpe3m.py\", line 51, in <module>\n    check(check_dict_case)\n    ~~~~~^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_xmogpe3m.py\", line 38, in check\n    assert candidate({\"p\":\"pineapple\", \"b\":\"banana\"}) == True, \"First test error: \" + str(candidate({\"p\":\"pineapple\", \"b\":\"banana\"}))\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: First test error: None\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "dict": 1
+          },
+          {
+            "dict": 0
+          },
+          {
+            "dict": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "dict": 1
+          },
+          {
+            "dict": 0
+          },
+          {
+            "dict": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.025,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.026
+    },
+    "humaneval-125": {
+      "case_id": "humaneval-125",
+      "mode": "verify_only",
+      "prompt_seed": 1854131264,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_n3oxiahi.py\", line 30, in <module>\n    check(split_words)\n    ~~~~~^^^^^^^^^^^^^\n  File \"/tmp/exp208_n3oxiahi.py\", line 20, in check\n    assert candidate(\"Hello world!\") == [\"Hello\",\"world!\"]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "split_words(): variable 'c' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "split_words(): variable 'c' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "Unexpected AttributeError: 'int' object has no attribute 'split'",
+          "Unexpected AttributeError: 'int' object has no attribute 'split'",
+          "Unexpected AttributeError: 'int' object has no attribute 'split'"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "split_words(): variable 'c' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "split_words(): variable 'c' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "Unexpected AttributeError: 'int' object has no attribute 'split'",
+          "Unexpected AttributeError: 'int' object has no attribute 'split'",
+          "Unexpected AttributeError: 'int' object has no attribute 'split'"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.048
+    },
+    "humaneval-157": {
+      "case_id": "humaneval-157",
+      "mode": "verify_only",
+      "prompt_seed": 3017268020,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_vc0u64wx.py\", line 36, in <module>\n    check(right_angle_triangle)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_vc0u64wx.py\", line 23, in check\n    assert candidate(2, 2, 2) == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1,
+            "c": 1
+          },
+          {
+            "a": 0,
+            "b": 0,
+            "c": 0
+          },
+          {
+            "a": -1,
+            "b": -1,
+            "c": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "a": 1,
+            "b": 1,
+            "c": 1
+          },
+          {
+            "a": 0,
+            "b": 0,
+            "c": 0
+          },
+          {
+            "a": -1,
+            "b": -1,
+            "c": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.034,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.035
+    },
+    "humaneval-73": {
+      "case_id": "humaneval-73",
+      "mode": "verify_only",
+      "prompt_seed": 3738074870,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "SyntaxError: '[' was never closed",
+        "stdout": "  File \"/tmp/exp208_32m98qga.py\", line 30\n    missing[ord\n           ^\nSyntaxError: '[' was never closed\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: '[' was never closed (<string>, line 30)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: '[' was never closed (<string>, line 30)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([1, 2, 3, 5, 4, 7, 9, 6],): raised '[' was never closed (<string>, line 30)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 4, 3, 2, 2],): raised '[' was never closed (<string>, line 30)",
+          "deterministic (official_tests) failed for input=([1, 4, 2],): raised '[' was never closed (<string>, line 30)",
+          "deterministic (official_tests) failed for input=([1, 4, 4, 2],): raised '[' was never closed (<string>, line 30)",
+          "deterministic (official_tests) failed for input=([1, 2, 3, 2, 1],): raised '[' was never closed (<string>, line 30)"
+        ],
+        "probe_inputs": [
+          {
+            "arr": 1
+          },
+          {
+            "arr": 0
+          },
+          {
+            "arr": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.028,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.029
+    },
+    "humaneval-28": {
+      "case_id": "humaneval-28",
+      "mode": "verify_only",
+      "prompt_seed": 2345356610,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "strings": [
+              1,
+              2
+            ]
+          },
+          {
+            "strings": []
+          },
+          {
+            "strings": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "concatenate(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "strings": [
+              1,
+              2
+            ]
+          },
+          {
+            "strings": []
+          },
+          {
+            "strings": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.012,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.014
+    },
+    "humaneval-42": {
+      "case_id": "humaneval-42",
+      "mode": "verify_only",
+      "prompt_seed": 3476030397,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "incr_list(): variable 'x' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "l": [
+              1,
+              2
+            ]
+          },
+          {
+            "l": []
+          },
+          {
+            "l": [
+              0
+            ]
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.015,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.016
+    },
+    "humaneval-56": {
+      "case_id": "humaneval-56",
+      "mode": "verify_only",
+      "prompt_seed": 1581629214,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_heo4gvv8.py\", line 59, in <module>\n    check(correct_bracketing)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_heo4gvv8.py\", line 48, in check\n    assert not candidate(\"<<<><>>>>\")\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "correct_bracketing(): parameter 'brackets' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "correct_bracketing(): parameter 'brackets' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.047,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.05
+    },
+    "humaneval-139": {
+      "case_id": "humaneval-139",
+      "mode": "verify_only",
+      "prompt_seed": 3430208743,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: Test 4",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_4mv40miv.py\", line 43, in <module>\n    check(special_factorial)\n    ~~~~~^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_4mv40miv.py\", line 34, in check\n    assert candidate(4) == 288, \"Test 4\"\n           ^^^^^^^^^^^^^^^^^^^\nAssertionError: Test 4\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "special_factorial(): loop var 'i' bounded by 1 <= i < n + 1"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "special_factorial(): loop var 'i' bounded by 1 <= i < n + 1"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 1,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=(4,): expected 288; returned 24"
+        ],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": true,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.038,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-132": {
+      "case_id": "humaneval-132",
+      "mode": "verify_only",
+      "prompt_seed": 3711468213,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_br40t2j2.py\", line 62, in <module>\n    check(is_nested)\n    ~~~~~^^^^^^^^^^^\n  File \"/tmp/exp208_br40t2j2.py\", line 45, in check\n    assert candidate('[][]') == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "string": 1
+          },
+          {
+            "string": 0
+          },
+          {
+            "string": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.046,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.049
+    },
+    "humaneval-88": {
+      "case_id": "humaneval-88",
+      "mode": "verify_only",
+      "prompt_seed": 1208417414,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "IndentationError: expected an indented block after 'if' statement on line 31",
+        "stdout": "  File \"/tmp/exp208_2_z8cjqz.py\", line 34\n    def check(candidate):\nIndentationError: expected an indented block after 'if' statement on line 31\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: expected an indented block after 'if' statement on line 31 (<string>, line 31)"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "array": 1
+          },
+          {
+            "array": 0
+          },
+          {
+            "array": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: expected an indented block after 'if' statement on line 31 (<string>, line 31)"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "deterministic (official_tests) failed for input=([],): raised expected an indented block after 'if' statement on line 31 (<string>, line 31)",
+          "deterministic (official_tests) failed for input=([5],): raised expected an indented block after 'if' statement on line 31 (<string>, line 31)",
+          "deterministic (official_tests) failed for input=([2, 4, 3, 0, 1, 5],): raised expected an indented block after 'if' statement on line 31 (<string>, line 31)",
+          "deterministic (official_tests) failed for input=([2, 4, 3, 0, 1, 5, 6],): raised expected an indented block after 'if' statement on line 31 (<string>, line 31)",
+          "deterministic (official_tests) failed for input=([2, 1],): raised expected an indented block after 'if' statement on line 31 (<string>, line 31)"
+        ],
+        "probe_inputs": [
+          {
+            "array": 1
+          },
+          {
+            "array": 0
+          },
+          {
+            "array": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.025
+    },
+    "humaneval-1": {
+      "case_id": "humaneval-1",
+      "mode": "verify_only",
+      "prompt_seed": 1562413286,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_o36z7yue.py\", line 56, in <module>\n    check(separate_paren_groups)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_o36z7yue.py\", line 44, in check\n    assert candidate('(()()) ((())) () ((())()())') == [\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n        '(()())', '((()))', '()', '((())()())'\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    ]\n    ^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "separate_paren_groups(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "separate_paren_groups(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "separate_paren_groups(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "separate_paren_groups(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 5,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('( ) (( )) (( )( ))',): expected ['()', '(())', '(()())']; returned None",
+          "annotated_return_type (signature) failed for input=('( ) (( )) (( )( ))',): expected list; returned None",
+          "annotated_return_type (signature) failed for input=('(()()) ((())) () ((())()())',): expected list; returned None",
+          "annotated_return_type (signature) failed for input=('() (()) ((())) (((())))',): expected list; returned None",
+          "annotated_return_type (signature) failed for input=('(()(())((())))',): expected list; returned None"
+        ],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.038,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.041
+    },
+    "humaneval-80": {
+      "case_id": "humaneval-80",
+      "mode": "verify_only",
+      "prompt_seed": 3380646839,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: xyy",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_dvzzabo2.py\", line 48, in <module>\n    check(is_happy)\n    ~~~~~^^^^^^^^^^\n  File \"/tmp/exp208_dvzzabo2.py\", line 43, in check\n    assert candidate(\"xyy\") == False , \"xyy\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: xyy\n"
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "is_happy(): loop var 'i' bounded by 0 <= i < len(s) - 2"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "is_happy(): loop var 'i' bounded by 0 <= i < len(s) - 2"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()",
+          "TypeError: object of type 'int' has no len()"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.002,
+      "execution_plus_property_latency_seconds": 0.003,
+      "harness_latency_seconds": 0.024,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.028
+    },
+    "humaneval-138": {
+      "case_id": "humaneval-138",
+      "mode": "verify_only",
+      "prompt_seed": 1318871162,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_vg42ygrq.py\", line 35, in <module>\n    check(is_equal_to_sum_even)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_vg42ygrq.py\", line 25, in check\n    assert candidate(4) == False\n           ^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1
+          },
+          {
+            "n": 0
+          },
+          {
+            "n": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.037,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-61": {
+      "case_id": "humaneval-61",
+      "mode": "verify_only",
+      "prompt_seed": 764249244,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "correct_bracketing(): parameter 'brackets' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "correct_bracketing(): parameter 'brackets' annotated as str"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "brackets": "x"
+          },
+          {
+            "brackets": ""
+          },
+          {
+            "brackets": " "
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.013,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.015
+    },
+    "humaneval-66": {
+      "case_id": "humaneval-66",
+      "mode": "verify_only",
+      "prompt_seed": 695192111,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "digitSum(): variable 'ord' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "digitSum(): variable 'ord' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 1,
+        "constraint_feedback": [
+          "digitSum(): variable 'ord' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "digitSum(): variable 'ord' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "s": 1
+          },
+          {
+            "s": 0
+          },
+          {
+            "s": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.016,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.018
+    },
+    "humaneval-6": {
+      "case_id": "humaneval-6",
+      "mode": "verify_only",
+      "prompt_seed": 2185306499,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_lnpezx6a.py\", line 45, in <module>\n    check(parse_nested_parens)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_lnpezx6a.py\", line 40, in check\n    assert candidate('(()()) ((())) () ((())()())') == [2, 3, 1, 3]\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "parse_nested_parens(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "parse_nested_parens(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "parse_nested_parens(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_static_violations": 1,
+        "static_violations": [
+          "parse_nested_parens(): variable 'List' used but never assigned or passed as parameter"
+        ],
+        "n_dynamic_violations": 1,
+        "dynamic_violations": [
+          "Code execution failed: __import__ not found"
+        ],
+        "n_property_violations": 1,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('(()()) ((())) () ((())()())',): expected [2, 3, 1, 3]; returned [0, 0, 0, 0]"
+        ],
+        "probe_inputs": [
+          {
+            "paren_string": "x"
+          },
+          {
+            "paren_string": ""
+          },
+          {
+            "paren_string": " "
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.038,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.04
+    },
+    "humaneval-134": {
+      "case_id": "humaneval-134",
+      "mode": "verify_only",
+      "prompt_seed": 2094058149,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_vaf97nyr.py\", line 42, in <module>\n    check(check_if_last_char_is_a_letter)\n    ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/tmp/exp208_vaf97nyr.py\", line 26, in check\n    assert candidate(\"apple\") == False\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not subscriptable",
+          "TypeError: 'int' object is not subscriptable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 2,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not subscriptable",
+          "TypeError: 'int' object is not subscriptable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "txt": 1
+          },
+          {
+            "txt": 0
+          },
+          {
+            "txt": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.027,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.029
+    },
+    "humaneval-53": {
+      "case_id": "humaneval-53",
+      "mode": "verify_only",
+      "prompt_seed": 3495814707,
+      "response_mode": "answer_only_terse",
+      "passed": true,
+      "harness": {
+        "passed": true,
+        "error_type": "none",
+        "error_message": "",
+        "stdout": ""
+      },
+      "execution_only": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "add(): parameter 'x' annotated as int",
+          "add(): parameter 'y' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 2,
+        "constraint_feedback": [
+          "add(): parameter 'x' annotated as int",
+          "add(): parameter 'y' annotated as int"
+        ],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "x": 1,
+            "y": 1
+          },
+          {
+            "x": 0,
+            "y": 0
+          },
+          {
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": true,
+      "execution_plus_property_accepted": true,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.0,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.019,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.02
+    },
+    "humaneval-150": {
+      "case_id": "humaneval-150",
+      "mode": "verify_only",
+      "prompt_seed": 4075872429,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_qy_lhxfq.py\", line 58, in <module>\n    check(x_or_y)\n    ~~~~~^^^^^^^^\n  File \"/tmp/exp208_qy_lhxfq.py\", line 42, in check\n    assert candidate(7, 34, 12) == 34\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1,
+            "x": 1,
+            "y": 1
+          },
+          {
+            "n": 0,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "n": -1,
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 0,
+        "dynamic_violations": [],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "n": 1,
+            "x": 1,
+            "y": 1
+          },
+          {
+            "n": 0,
+            "x": 0,
+            "y": 0
+          },
+          {
+            "n": -1,
+            "x": -1,
+            "y": -1
+          }
+        ],
+        "detected": false
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.002,
+      "harness_latency_seconds": 0.05,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.053
+    },
+    "humaneval-93": {
+      "case_id": "humaneval-93",
+      "mode": "verify_only",
+      "prompt_seed": 3622577310,
+      "response_mode": "answer_only_terse",
+      "passed": false,
+      "harness": {
+        "passed": false,
+        "error_type": "failure",
+        "error_message": "AssertionError: This prints if this assert fails 1 (good for debugging!)",
+        "stdout": "Traceback (most recent call last):\n  File \"/tmp/exp208_komun6gx.py\", line 43, in <module>\n    check(encode)\n    ~~~~~^^^^^^^^\n  File \"/tmp/exp208_komun6gx.py\", line 33, in check\n    assert candidate('TEST') == 'tgst', \"This prints if this assert fails 1 (good for debugging!)\"\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: This prints if this assert fails 1 (good for debugging!)\n"
+      },
+      "execution_only": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 0,
+        "property_violations": [],
+        "probe_inputs": [
+          {
+            "message": 1
+          },
+          {
+            "message": 0
+          },
+          {
+            "message": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_plus_property": {
+        "n_constraints": 0,
+        "constraint_feedback": [],
+        "n_static_violations": 0,
+        "static_violations": [],
+        "n_dynamic_violations": 3,
+        "dynamic_violations": [
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable",
+          "TypeError: 'int' object is not iterable"
+        ],
+        "n_property_violations": 2,
+        "property_violations": [
+          "example_regression (docstring_example) failed for input=('test',): expected 'TGST'; returned 'TEST'",
+          "example_regression (docstring_example) failed for input=('This is a message',): expected 'tHKS KS C MGSSCGG'; returned 'tHIS IS A MESSAGE'"
+        ],
+        "probe_inputs": [
+          {
+            "message": 1
+          },
+          {
+            "message": 0
+          },
+          {
+            "message": -1
+          }
+        ],
+        "detected": true
+      },
+      "execution_only_accepted": false,
+      "execution_plus_property_accepted": false,
+      "property_only_detected": false,
+      "official_test_miss_caught_by_property": false,
+      "execution_only_latency_seconds": 0.001,
+      "execution_plus_property_latency_seconds": 0.001,
+      "harness_latency_seconds": 0.035,
+      "prompt_tokens": 0,
+      "response_tokens": 0,
+      "total_tokens": 0,
+      "latency_seconds": 0.038
+    }
+  }
+}

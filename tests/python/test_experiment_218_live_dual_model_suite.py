@@ -1,5 +1,6 @@
-"""Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027,
-SCENARIO-VERIFY-025, SCENARIO-VERIFY-026, SCENARIO-VERIFY-027.
+"""Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027, REQ-VERIFY-028,
+SCENARIO-VERIFY-025, SCENARIO-VERIFY-026, SCENARIO-VERIFY-027,
+SCENARIO-VERIFY-028.
 """
 
 from __future__ import annotations
@@ -340,6 +341,103 @@ def test_summarize_gsm8k_runs_reports_semantic_metrics_parse_coverage_and_overhe
     assert summary["paired_deltas"]["verify_only_minus_baseline"] == 0.0
 
 
+# REQ-VERIFY-028, SCENARIO-VERIFY-028
+def test_summarize_humaneval_runs_reports_execution_vs_property_metrics_and_traces():
+    module = load_module()
+
+    baseline_runs = [
+        {"passed": True, "latency_seconds": 1.0},
+        {"passed": False, "latency_seconds": 1.4},
+        {"passed": True, "latency_seconds": 1.6},
+    ]
+    verify_only_runs = [
+        {
+            "passed": True,
+            "execution_only": {"detected": False},
+            "execution_plus_property": {"detected": False, "n_property_violations": 0},
+            "execution_only_accepted": True,
+            "execution_plus_property_accepted": True,
+            "property_only_detected": False,
+            "official_test_miss_caught_by_property": False,
+            "execution_only_latency_seconds": 0.2,
+            "execution_plus_property_latency_seconds": 0.4,
+            "latency_seconds": 0.7,
+        },
+        {
+            "passed": False,
+            "execution_only": {"detected": True},
+            "execution_plus_property": {"detected": True, "n_property_violations": 2},
+            "execution_only_accepted": False,
+            "execution_plus_property_accepted": False,
+            "property_only_detected": False,
+            "official_test_miss_caught_by_property": False,
+            "execution_only_latency_seconds": 0.3,
+            "execution_plus_property_latency_seconds": 0.5,
+            "latency_seconds": 0.9,
+        },
+        {
+            "passed": True,
+            "execution_only": {"detected": False},
+            "execution_plus_property": {"detected": True, "n_property_violations": 1},
+            "execution_only_accepted": True,
+            "execution_plus_property_accepted": False,
+            "property_only_detected": True,
+            "official_test_miss_caught_by_property": True,
+            "execution_only_latency_seconds": 0.4,
+            "execution_plus_property_latency_seconds": 0.8,
+            "latency_seconds": 1.1,
+        },
+    ]
+    verify_repair_runs = [
+        {"passed": True, "repaired": False, "n_repairs": 0, "latency_seconds": 0.0},
+        {"passed": True, "repaired": True, "n_repairs": 1, "latency_seconds": 2.5},
+        {"passed": True, "repaired": False, "n_repairs": 0, "latency_seconds": 0.0},
+    ]
+
+    summary = module._summarize_runs(
+        "humaneval_property",
+        baseline_runs,
+        verify_only_runs,
+        verify_repair_runs,
+    )
+
+    assert summary["baseline"]["pass_at_1"] == 2 / 3
+    assert summary["baseline"]["mean_latency_seconds"] == 1.333
+    assert summary["verify_only"]["execution_only"]["pass_at_1"] == 2 / 3
+    assert summary["verify_only"]["execution_only"]["n_wrong_answers"] == 1
+    assert summary["verify_only"]["execution_only"]["n_wrong_detected"] == 1
+    assert summary["verify_only"]["execution_only"]["false_positives"] == 0
+    assert summary["verify_only"]["execution_only"]["mean_latency_seconds"] == 0.3
+    assert summary["verify_only"]["execution_plus_property"]["pass_at_1"] == 1 / 3
+    assert summary["verify_only"]["execution_plus_property"]["n_wrong_detected"] == 1
+    assert summary["verify_only"]["execution_plus_property"]["false_positives"] == 1
+    assert summary["verify_only"]["execution_plus_property"]["property_violation_total"] == 3
+    assert (
+        summary["verify_only"]["execution_plus_property"]["official_test_misses_caught_by_property"]
+        == 1
+    )
+    assert (
+        summary["verify_only"]["execution_plus_property"][
+            "execution_only_misses_caught_by_property"
+        ]
+        == 1
+    )
+    assert summary["verify_only"]["execution_plus_property"]["mean_latency_seconds"] == 0.567
+    assert summary["verify_only"]["mean_total_latency_seconds"] == 0.9
+    assert summary["verify_repair"]["pass_at_1"] == 1.0
+    assert summary["verify_repair"]["n_repaired"] == 1
+    assert summary["verify_repair"]["repair_success_rate"] == 1.0
+    assert summary["verify_repair"]["mean_latency_seconds"] == 0.833
+    assert summary["paired_deltas"]["execution_only_minus_baseline"] == 0.0
+    assert summary["paired_deltas"]["execution_plus_property_minus_baseline"] == pytest.approx(
+        -(1 / 3)
+    )
+    assert summary["paired_deltas"]["repair_minus_baseline"] == pytest.approx(1 / 3)
+    assert summary["paired_deltas"][
+        "execution_plus_property_minus_execution_only"
+    ] == pytest.approx(-(1 / 3))
+
+
 @dataclass
 class _FakeSerializable:
     payload: dict[str, object]
@@ -392,6 +490,190 @@ def test_serialize_verification_result_preserves_semantic_trace_artifacts():
     assert serialized["semantic_grounding"]["violations"][0]["violation_type"] == (
         "answer_target_mismatch"
     )
+
+
+# REQ-VERIFY-028
+def test_run_humaneval_baseline_preserves_generation_trace(monkeypatch: pytest.MonkeyPatch):
+    module = load_module()
+    from carnot.pipeline import humaneval_live_benchmark as humaneval_module
+
+    class FakeTokenizer:
+        def __call__(self, text: str, **_: object) -> dict[str, list[int]]:
+            return {"input_ids": list(range(len(text.split())))}
+
+    monkeypatch.setattr(module, "_generate_text", lambda **_: "return x + 1")
+    monkeypatch.setattr(
+        humaneval_module,
+        "build_candidate_code",
+        lambda prompt, body: f"{prompt.strip()}::{body}",
+    )
+    monkeypatch.setattr(
+        humaneval_module,
+        "execute_humaneval",
+        lambda code, problem, timeout=5.0: humaneval_module.HarnessResult(
+            passed=True,
+            error_type="none",
+            error_message="",
+            stdout="",
+        ),
+    )
+    monkeypatch.setattr(
+        humaneval_module,
+        "run_instrumentation",
+        lambda code, prompt, entry_point, official_tests=None: {
+            "detected": False,
+            "n_property_violations": 0,
+        },
+    )
+    perf = iter([1.0, 1.4])
+    monkeypatch.setattr(module.time, "perf_counter", lambda: next(perf))
+
+    result = module._run_humaneval_baseline(
+        {
+            "case_id": "humaneval-1",
+            "prompt": 'def add_one(x: int) -> int:\n    """Return x + 1."""\n',
+            "entry_point": "add_one",
+            "test": "def check(candidate):\n    assert candidate(1) == 2\n",
+            "prompt_seeds": {"baseline": 17},
+        },
+        model=object(),
+        tokenizer=FakeTokenizer(),
+    )
+
+    assert result["generation_trace"]["attempts"][0]["response"] == "return x + 1"
+    assert result["prompt_tokens"] > 0
+    assert result["response_tokens"] == 4
+    assert result["total_tokens"] == result["prompt_tokens"] + result["response_tokens"]
+    assert result["latency_seconds"] == 0.4
+
+
+# REQ-VERIFY-028, SCENARIO-VERIFY-028
+def test_run_humaneval_verify_only_records_property_only_catches_and_latency(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_module()
+    from carnot.pipeline import humaneval_live_benchmark as humaneval_module
+
+    execution_only = {"detected": False, "n_property_violations": 0}
+    execution_plus_property = {"detected": True, "n_property_violations": 2}
+
+    def fake_run_instrumentation(
+        code: str,
+        prompt: str,
+        entry_point: str,
+        official_tests: str | None = None,
+    ) -> dict[str, object]:
+        return execution_only if official_tests is None else execution_plus_property
+
+    monkeypatch.setattr(humaneval_module, "run_instrumentation", fake_run_instrumentation)
+    monkeypatch.setattr(
+        humaneval_module,
+        "execute_humaneval",
+        lambda code, problem, timeout=5.0: humaneval_module.HarnessResult(
+            passed=True,
+            error_type="none",
+            error_message="",
+            stdout="",
+        ),
+    )
+    perf = iter([10.0, 10.2, 10.5, 10.9])
+    monkeypatch.setattr(module.time, "perf_counter", lambda: next(perf))
+
+    result = module._run_humaneval_verify_only(
+        {
+            "case_id": "humaneval-2",
+            "prompt": "def sort_numbers(nums):\n",
+            "entry_point": "sort_numbers",
+            "test": "def check(candidate):\n    assert candidate([1, 2]) == [1, 2]\n",
+            "prompt_seeds": {"verify_only": 29},
+        },
+        {
+            "candidate_code": "def sort_numbers(nums):\n    return nums\n",
+            "passed": True,
+        },
+    )
+
+    assert result["execution_only_accepted"] is True
+    assert result["execution_plus_property_accepted"] is False
+    assert result["property_only_detected"] is True
+    assert result["official_test_miss_caught_by_property"] is True
+    assert result["execution_only_latency_seconds"] == 0.2
+    assert result["execution_plus_property_latency_seconds"] == 0.3
+    assert result["latency_seconds"] == 0.9
+
+
+# REQ-VERIFY-028
+def test_run_humaneval_verify_repair_records_history_and_generation_trace(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_module()
+    from carnot.pipeline import humaneval_live_benchmark as humaneval_module
+
+    class FakeTokenizer:
+        def __call__(self, text: str, **_: object) -> dict[str, list[int]]:
+            return {"input_ids": list(range(len(text.split())))}
+
+    monkeypatch.setattr(module, "_generate_text", lambda **_: "return x + 1")
+    monkeypatch.setattr(
+        humaneval_module, "build_repair_prompt", lambda *args, **kwargs: "repair prompt"
+    )
+    monkeypatch.setattr(
+        humaneval_module,
+        "build_candidate_code",
+        lambda prompt, body: f"CODE::{body}",
+    )
+    monkeypatch.setattr(
+        humaneval_module,
+        "execute_humaneval",
+        lambda code, problem, timeout=5.0: humaneval_module.HarnessResult(
+            passed=True,
+            error_type="none",
+            error_message="",
+            stdout="",
+        ),
+    )
+    monkeypatch.setattr(
+        humaneval_module,
+        "run_instrumentation",
+        lambda code, prompt, entry_point, official_tests=None: {
+            "detected": False,
+            "n_property_violations": 0,
+        },
+    )
+    perf = iter([20.0, 21.25])
+    monkeypatch.setattr(module.time, "perf_counter", lambda: next(perf))
+
+    result = module._run_humaneval_verify_repair(
+        {
+            "case_id": "humaneval-3",
+            "prompt": 'def add_one(x: int) -> int:\n    """Return x + 1."""\n',
+            "entry_point": "add_one",
+            "test": "def check(candidate):\n    assert candidate(1) == 2\n",
+            "prompt_seeds": {"verify_repair": 101},
+        },
+        {
+            "body": "return x - 1",
+            "candidate_code": "CODE::return x - 1",
+            "passed": False,
+            "error_type": "failure",
+            "error_message": "AssertionError",
+            "instrumentation": {"detected": True, "n_property_violations": 1},
+        },
+        model=object(),
+        tokenizer=FakeTokenizer(),
+        max_repairs=3,
+    )
+
+    assert result["passed"] is True
+    assert result["repaired"] is True
+    assert result["n_repairs"] == 1
+    assert len(result["history"]) == 2
+    assert result["history"][0]["harness"]["error_message"] == "AssertionError"
+    assert result["history"][1]["repair_prompt"] == "repair prompt"
+    assert result["history"][1]["generation_trace"]["attempts"][0]["response"] == "return x + 1"
+    assert result["prompt_tokens"] > 0
+    assert result["total_tokens"] == result["prompt_tokens"] + result["response_tokens"]
+    assert result["latency_seconds"] == 1.25
 
 
 # REQ-VERIFY-027

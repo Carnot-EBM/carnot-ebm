@@ -627,6 +627,130 @@ def _update_docs_before_planning(push: bool = True) -> bool:
 
 
 
+def _run_operational_retrospective(push: bool = True) -> bool:
+    """Run an operational retrospective at milestone boundary.
+
+    Evaluates HOW the milestone was executed, not just WHAT it produced.
+    Identifies bottlenecks, resource waste, and process improvements.
+    Feeds suggestions into the next milestone planning.
+
+    This is Tier 1 self-learning applied to the research process itself:
+    the system gets better at running experiments, not just at verification.
+    """
+    current = _current_milestone_id()
+    logger.info("=" * 60)
+    logger.info("OPERATIONAL RETROSPECTIVE (milestone %s)", current)
+    logger.info("=" * 60)
+
+    # Gather timing data from git log
+    try:
+        _, git_log, _ = run_cmd([
+            "git", "log", "--format=%H %ai %s",
+            "--grep=\\[conductor\\]",
+            "--since=7 days ago",
+        ])
+        experiment_times: list[dict] = []
+        commits = git_log.strip().splitlines()
+        prev_time = None
+        for line in reversed(commits):
+            parts = line.split(maxsplit=3)
+            if len(parts) < 4:
+                continue
+            # Parse timestamp (format: 2026-04-12 08:35:46 -0400)
+            try:
+                ts_str = f"{parts[1]} {parts[2]}"
+                from datetime import datetime as _dt
+                ts = _dt.strptime(ts_str, "%Y-%m-%d %H:%M:%S")
+                msg = parts[3] if len(parts) > 3 else ""
+                if prev_time and "Exp " in msg:
+                    duration_min = (ts - prev_time).total_seconds() / 60
+                    experiment_times.append({
+                        "experiment": msg[:80],
+                        "duration_min": round(duration_min, 1),
+                    })
+                prev_time = ts
+            except (ValueError, IndexError):
+                continue
+
+    except Exception:
+        experiment_times = []
+
+    # Gather GPU utilization data
+    gpu_report_text = ""
+    try:
+        from gpu_monitor import generate_report, format_report
+        gpu_report = generate_report()
+        gpu_report_text = format_report(gpu_report)
+    except Exception:
+        gpu_report_text = "GPU monitor not available"
+
+    # Build the retrospective prompt
+    timing_summary = ""
+    if experiment_times:
+        total_min = sum(e["duration_min"] for e in experiment_times)
+        slowest = sorted(experiment_times, key=lambda x: x["duration_min"], reverse=True)[:5]
+        timing_summary = (
+            f"Total milestone wall time: {total_min:.0f} minutes ({total_min/60:.1f} hours)\n"
+            f"Experiments completed: {len(experiment_times)}\n"
+            f"Average per experiment: {total_min/len(experiment_times):.0f} minutes\n"
+            f"Slowest experiments:\n"
+        )
+        for e in slowest:
+            timing_summary += f"  - {e['duration_min']:.0f}min: {e['experiment']}\n"
+
+    retro_prompt = (
+        f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
+        f"TASK: Write an operational retrospective for milestone {current}.\n\n"
+        f"This is NOT about research results — it's about how EFFICIENTLY\n"
+        f"the milestone was executed. Analyze bottlenecks and suggest\n"
+        f"improvements for the next milestone.\n\n"
+        f"TIMING DATA:\n{timing_summary}\n\n"
+        f"GPU STATE:\n{gpu_report_text}\n\n"
+        f"QUESTIONS TO ANSWER:\n"
+        f"1. Which experiments took the longest and why?\n"
+        f"2. Was GPU utilization efficient? (sequential vs parallel)\n"
+        f"3. Were there zombie processes wasting resources?\n"
+        f"4. Could any experiments have been parallelized?\n"
+        f"5. Was the pre-flight test suite a bottleneck?\n"
+        f"6. Were doc reconciliation passes efficient?\n"
+        f"7. What tooling/infrastructure changes would speed up the next milestone?\n\n"
+        f"EXISTING FILES TO READ:\n"
+        f"- ops/metrics.md — session metrics\n"
+        f"- ops/changelog.md — recent experiment log\n"
+        f"- scripts/gpu_monitor.py — GPU resource monitor\n\n"
+        f"DELIVERABLES:\n"
+        f"1. Write results/operational_retro_{current.replace('.', '_')}.json with:\n"
+        f"   - total_wall_time_minutes\n"
+        f"   - experiments_completed\n"
+        f"   - slowest_experiments (top 5)\n"
+        f"   - bottlenecks_identified (list of strings)\n"
+        f"   - improvements_suggested (list of strings)\n"
+        f"   - estimated_time_savings_pct (how much faster next milestone could be)\n"
+        f"2. Append a brief summary to ops/changelog.md\n"
+        f"3. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml.\n"
+    )
+
+    logger.info("Calling agent for operational retrospective...")
+    exit_code, stdout, stderr = _call_agent(retro_prompt, max_turns=15)
+
+    if exit_code == 0:
+        logger.info("Operational retrospective complete")
+        if git_has_changes():
+            run_cmd(["git", "add", "-A"])
+            run_cmd(["git", "commit", "-m",
+                     f"[conductor] Operational retrospective for milestone {current}"])
+            if push:
+                _git_push()
+        return True
+    else:
+        logger.warning("Operational retrospective failed (exit %d) — continuing", exit_code)
+        # Clean up any partial changes
+        if git_has_changes():
+            run_cmd(["git", "checkout", "."])
+            run_cmd(["git", "clean", "-fd", "--exclude=.coverage*"])
+        return False
+
+
 def _plan_next_milestone(push: bool = True) -> bool:
     """Ask the configured agent to plan the next research milestone.
 
@@ -1287,6 +1411,11 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             logger.info("Updating docs before planning next milestone...")
             if not dry_run:
                 _update_docs_before_planning(push=push)
+
+            # Run operational retrospective before planning
+            logger.info("Running operational retrospective...")
+            if not dry_run:
+                _run_operational_retrospective(push=push)
 
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:

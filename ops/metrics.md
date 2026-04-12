@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 220 Live HumanEval Property Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T14:42:11Z | 2026-04-12T15:07:46Z | Exp 220: extended `verifiable-reasoning` with `VERIFY-028`, wrote tests first for HumanEval summary splits plus generation/repair traces, patched `scripts/experiment_218_live_dual_model_suite.py`, reran targeted 100% coverage plus the full Python suite, spec coverage, Ruff, mypy, and `tests/integration/test_full_pipeline.py`, then completed the live 50-problem/model HumanEval property benchmark to `results/experiment_220_results.json`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 219 Live GSM8K Semantic Benchmark
 
 ### Turn Log

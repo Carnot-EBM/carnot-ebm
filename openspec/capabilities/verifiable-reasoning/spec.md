@@ -342,6 +342,27 @@ for the `gsm8k_semantic` benchmark, where:
 - re-running the benchmark with matching cohort metadata refreshes the same
   artifact in place without changing the sampled case order
 
+### REQ-VERIFY-028: Exp 220 HumanEval Property Artifact Metrics And Trace Data
+
+The same harness shall support writing `results/experiment_220_results.json`
+for the `humaneval_property` benchmark, where:
+- the top-level payload records experiment id `220` when the output path is
+  `results/experiment_220_results.json`
+- each model summary compares the same paired cohort across baseline pass@1,
+  execution-only accepted pass@1, execution-plus-property accepted pass@1, and
+  full verify-repair pass@1
+- each model summary reports wrong-answer detections, false positives,
+  prompt-derived property violations, repair success rate, and verification or
+  repair latency needed to compare execution-only checks against the stronger
+  property-derived verifier
+- the artifact explicitly records whether prompt-derived properties catch bugs
+  that the official HumanEval harness alone did not reject
+- each per-problem result preserves the generated code, execution-only
+  findings, execution-plus-property findings, and repair traces needed for
+  later self-learning and audit analysis
+- re-running the benchmark with matching cohort metadata refreshes the same
+  artifact in place without changing the sampled case order
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -617,6 +638,20 @@ sample seed
   typed-reasoning parse status, semantic-grounding evidence, and repair
   history needed for later trace learning
 
+### SCENARIO-VERIFY-028: Exp 220 HumanEval Artifact Separates Execution-Only And Property Verification
+
+**Given** the shared harness runs `humaneval_property` with output path
+`results/experiment_220_results.json`
+**When** the Exp 220 artifact is written
+**Then** the top-level payload records experiment id `220`
+**And** each model summary includes the baseline, execution-only,
+  execution-plus-property, and verify-repair comparisons with pass@1,
+  property-violation totals, repair success rate, and latency
+**And** the artifact records whether prompt-derived properties caught a bug
+  that the official HumanEval tests alone would have accepted
+**And** each per-problem result preserves the generated candidate code plus
+  execution and repair traces needed for later self-learning
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -648,4 +683,5 @@ sample seed
 | REQ-VERIFY-025 | Not Started | Implemented | Exp 218 harness CLI + checkpoint tests |
 | REQ-VERIFY-026 | Not Started | Implemented | Exp 218 stable payload + prompt seed tests |
 | REQ-VERIFY-027 | Not Started | Implemented | Exp 219 artifact + harness regression tests |
+| REQ-VERIFY-028 | Not Started | Implemented | Exp 220 artifact + harness regression tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
