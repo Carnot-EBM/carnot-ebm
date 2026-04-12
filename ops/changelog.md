@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-04-12 (Exp 203: Extraction Autopsy — regex misses all 3 wrong live Gemma answers)
+
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-008` (Extraction Autopsy Records) and `SCENARIO-VERIFY-008` (Live Extraction Autopsy). Updated implementation status to reflect the new Python test coverage. (REQ-VERIFY-008, SCENARIO-VERIFY-008, user instruction: Exp 203)
+- `epics/stories/VERIFY-008.md` — Added and completed the story record for the live extraction-autopsy workflow. (REQ-VERIFY-008, user instruction: Exp 203)
+- `python/carnot/pipeline/extraction_autopsy.py` — New helper module for Exp 203: final-answer extraction, exact regex-match capture, heuristic/manual diagnosis, showcase selection, and JSON-ready case summaries. `select_showcase_cases()` now prefers correct cases that actually expose regex matches so the contrast set is informative. (REQ-VERIFY-008, user instruction: Exp 203)
+- `tests/python/test_extraction_autopsy.py` — New 10-test module covering regex capture, answer extraction, autopsy categorization, case serialization, and showcase/summary behavior. `python/carnot/pipeline/extraction_autopsy.py` reached 100% coverage in the full Python suite. (REQ-VERIFY-008, SCENARIO-VERIFY-008, user instruction: Exp 203)
+- `scripts/experiment_203_extraction_autopsy.py` — New live GPU experiment script. Uses Gemma4-E4B-it on `cuda:1`, a deterministic GSM8K seeded shuffle (`seed=5`), `max_new_tokens=768` to avoid truncation, and case-specific autopsy overrides grounded in GSM8K gold answers. Saves full responses, extractor matches, pipeline verdicts, and curated wrong/correct showcases. (REQ-VERIFY-008, SCENARIO-VERIFY-008, user instruction: Exp 203)
+- `results/experiment_203_results.json` — Final Exp 203 artifact. Sample dataset indices: `[1044, 594, 1136, 1117, 1199, 923, 525, 931, 814, 759, 276, 964, 306, 499, 176, 336, 1118, 148, 1020, 943]`. Live Gemma accuracy: **17/20 (85%)**. Wrong answers: **3/20** (dataset_idx 923, 814, 943). ArithmeticExtractor / VerifyRepairPipeline caught **0/3 wrong answers**. Regex emitted **3 violations total, all on correct answers**. Diagnosed failure modes: `missing_intermediate_step` (923), `semantic_modeling_error` (814), and `reading_comprehension_error` (943). This confirms the live failure is mostly extraction/modeling mismatch, not arithmetic-evaluation weakness. (REQ-VERIFY-008, SCENARIO-VERIFY-008, user instruction: Exp 203)
+- Validation — `.venv/bin/pytest tests/python -q` → `2494 passed, 1 skipped, 22 warnings`, coverage `100.00%` on the final code state. `ruff check` / `ruff format --check` passed on the new Exp 203 files. `python scripts/check_spec_coverage.py`, `ruff check python/ tests/`, and `mypy python/carnot` still fail on pre-existing repo-wide issues unrelated to Exp 203; the new `test_extraction_autopsy.py` file passes targeted spec-traceability checks. (user instruction: Exp 203)
+
+---
+
 ## 2026-04-12 (Exp 184: 3B Model Scaling — Verify-Repair HURTS on Adversarial at 4B Scale)
 
 - `scripts/experiment_184_3b_model.py` — Pre-existing script. Ran Qwen3-4B (fallback; Qwen3.5-3B and Qwen3-3B not available on HuggingFace) on GPU0 (RTX 3090, 11.9 GB VRAM used). N=200 standard GSM8K + N=200 number-swapped adversarial. Baseline vs Verify+Repair (max 3 iterations). 0.8B comparison loaded from exp181_ckpt_Qwen3.5-0.8B.json. Runtime: 4501s (~75 min). (REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006, user instruction: Exp 184)

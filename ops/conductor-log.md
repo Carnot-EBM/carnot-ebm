@@ -1301,3 +1301,6 @@
 | 2026-04-11 23:21 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
 | 2026-04-11 23:40 UTC | Exp 183: HumanEval full 164 with LIVE GPU — publis | FAIL | Claude Code error:  |
 | 2026-04-12 00:06 UTC | Exp 184: 3B model verification — does verify-repai | FAIL | Claude Code error:  |
+| 2026-04-12 02:41 UTC | Exp 203: Extraction autopsy — why ArithmeticExtrac | FAIL | Codex CLI error: 1["correct"] is True
++    assert correct1["failure_category" |
+| 2026-04-12 02:42 UTC | Exp 203: Extraction autopsy — why ArithmeticExtrac | OK | Deliverable already exists in repo |
