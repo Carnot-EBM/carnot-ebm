@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 207 LLM vs Z3 Live Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T04:50:22Z | 2026-04-12T05:32:57Z | Exp 207: generalized `z3_live_benchmark.py` for named extractor comparisons, expanded `test_z3_live_benchmark.py` to 13 tests with 100% targeted coverage, added `scripts/experiment_207_llm_extractor_live.py`, reran `.venv/bin/pytest tests/python -q` at 100% coverage plus integration/lint/type checks, and completed the live Gemma4-E4B-it head-to-head run on the exact Exp 206 cohort; final result: LLM verify-only 90.0% with 1/91 false positives vs Z3 88.0% with 3/91 false positives, both 0/9 wrong-answer detections, both 91.0% verify-repair (Δ +0.0pp) | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 206 Z3 Live Benchmark
 
 ### Turn Log

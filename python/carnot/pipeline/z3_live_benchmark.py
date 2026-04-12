@@ -1,10 +1,10 @@
-"""Helpers for Exp 206: live GSM8K benchmarking with Z3-backed verification.
+"""Helpers for Exp 206/207 live GSM8K benchmarking with arithmetic extractors.
 
 Provides the benchmark bookkeeping for paired baseline / verify-only /
 verify-repair evaluation on shared baseline responses, plus side-by-side
-comparison against the legacy regex arithmetic extractor.
+comparison between arithmetic extractors on the same cohort.
 
-Spec: REQ-VERIFY-009, SCENARIO-VERIFY-009
+Spec: REQ-VERIFY-009, REQ-VERIFY-010, SCENARIO-VERIFY-009, SCENARIO-VERIFY-010
 """
 
 from __future__ import annotations
@@ -255,6 +255,83 @@ def compare_extractors(z3_summary: dict[str, Any], regex_summary: dict[str, Any]
     }
 
 
+def compare_named_extractors(
+    primary_summary: dict[str, Any],
+    secondary_summary: dict[str, Any],
+    *,
+    primary_label: str,
+    secondary_label: str,
+) -> dict[str, Any]:
+    """Return a named extractor comparison with per-metric winners.
+
+    This is the generic form used by Exp 207, where the comparison is no
+    longer fixed to Z3 vs regex.
+    """
+    primary_detected = int(primary_summary["verify_only"]["n_wrong_detected"])
+    secondary_detected = int(secondary_summary["verify_only"]["n_wrong_detected"])
+    primary_violations = int(primary_summary["verify_only"].get("n_violations_on_wrong_answers", 0))
+    secondary_violations = int(
+        secondary_summary["verify_only"].get("n_violations_on_wrong_answers", 0)
+    )
+    primary_fp = float(primary_summary["verify_only"]["false_positive_rate"])
+    secondary_fp = float(secondary_summary["verify_only"]["false_positive_rate"])
+    primary_delta = float(primary_summary["verify_repair"]["improvement_delta"])
+    secondary_delta = float(secondary_summary["verify_repair"]["improvement_delta"])
+
+    primary_found_at_least_as_many = primary_detected >= secondary_detected
+    primary_lower_or_equal_fp = primary_fp <= secondary_fp
+    primary_higher_or_equal_delta = primary_delta >= secondary_delta
+    has_strict_win = (
+        (primary_detected > secondary_detected)
+        or (primary_fp < secondary_fp)
+        or (primary_delta > secondary_delta)
+    )
+
+    return {
+        f"{primary_label}_found_at_least_as_many_wrong_answers": primary_found_at_least_as_many,
+        f"{primary_label}_lower_or_equal_false_positive_rate": primary_lower_or_equal_fp,
+        f"{primary_label}_higher_or_equal_repair_delta": primary_higher_or_equal_delta,
+        f"{primary_label}_strictly_better": (
+            primary_found_at_least_as_many
+            and primary_lower_or_equal_fp
+            and primary_higher_or_equal_delta
+            and has_strict_win
+        ),
+        f"{primary_label}_minus_{secondary_label}": {
+            "wrong_answers_detected": primary_detected - secondary_detected,
+            "violations_on_wrong_answers": primary_violations - secondary_violations,
+            "false_positive_rate": round(primary_fp - secondary_fp, 6),
+            "repair_delta": round(primary_delta - secondary_delta, 6),
+        },
+        "winner_by_metric": {
+            "wrong_answers_detected": _winner_for_higher_better(
+                primary_detected,
+                secondary_detected,
+                primary_label=primary_label,
+                secondary_label=secondary_label,
+            ),
+            "violations_on_wrong_answers": _winner_for_higher_better(
+                primary_violations,
+                secondary_violations,
+                primary_label=primary_label,
+                secondary_label=secondary_label,
+            ),
+            "false_positive_rate": _winner_for_lower_better(
+                primary_fp,
+                secondary_fp,
+                primary_label=primary_label,
+                secondary_label=secondary_label,
+            ),
+            "repair_delta": _winner_for_higher_better(
+                primary_delta,
+                secondary_delta,
+                primary_label=primary_label,
+                secondary_label=secondary_label,
+            ),
+        },
+    }
+
+
 def build_results_payload(
     *,
     timestamp: str,
@@ -273,28 +350,71 @@ def build_results_payload(
     cases: list[dict[str, Any]],
 ) -> dict[str, Any]:
     """Build the final JSON payload for ``results/experiment_206_results.json``."""
-    return {
-        "experiment": 206,
-        "title": "Z3 extractor on 100 live GSM8K (Gemma4-E4B-it) — the real test",
-        "metadata": {
-            "timestamp": timestamp,
-            "model_name": model_name,
-            "hf_id": hf_id,
-            "inference_mode": inference_mode,
-            "sample_size": sample_size,
-            "sample_seed": sample_seed,
-            "sample_strategy": "seeded_shuffle_first_n",
-            "sample_dataset_indices": sample_dataset_indices,
-            "max_new_tokens": max_new_tokens,
-            "max_repairs": max_repairs,
-            "bootstrap_samples": 10_000,
-            "confidence_level": 0.95,
-            "runtime_seconds": round(runtime_seconds, 3),
-        },
-        "statistics": {
+    return build_comparison_payload(
+        experiment=206,
+        title="Z3 extractor on 100 live GSM8K (Gemma4-E4B-it) — the real test",
+        timestamp=timestamp,
+        sample_seed=sample_seed,
+        sample_size=sample_size,
+        sample_dataset_indices=sample_dataset_indices,
+        max_new_tokens=max_new_tokens,
+        max_repairs=max_repairs,
+        runtime_seconds=runtime_seconds,
+        model_name=model_name,
+        hf_id=hf_id,
+        inference_mode=inference_mode,
+        statistics={
             "z3": z3_summary,
             "regex": regex_summary,
         },
+        comparison=comparison,
+        cases=cases,
+    )
+
+
+def build_comparison_payload(
+    *,
+    experiment: int,
+    title: str,
+    timestamp: str,
+    sample_seed: int,
+    sample_size: int,
+    sample_dataset_indices: list[int],
+    max_new_tokens: int,
+    max_repairs: int,
+    runtime_seconds: float,
+    model_name: str,
+    hf_id: str,
+    inference_mode: str,
+    statistics: dict[str, Any],
+    comparison: dict[str, Any],
+    cases: list[dict[str, Any]],
+    extra_metadata: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Build the final JSON payload for a paired extractor benchmark."""
+    metadata: dict[str, Any] = {
+        "timestamp": timestamp,
+        "model_name": model_name,
+        "hf_id": hf_id,
+        "inference_mode": inference_mode,
+        "sample_size": sample_size,
+        "sample_seed": sample_seed,
+        "sample_strategy": "seeded_shuffle_first_n",
+        "sample_dataset_indices": sample_dataset_indices,
+        "max_new_tokens": max_new_tokens,
+        "max_repairs": max_repairs,
+        "bootstrap_samples": 10_000,
+        "confidence_level": 0.95,
+        "runtime_seconds": round(runtime_seconds, 3),
+    }
+    if extra_metadata:
+        metadata.update(extra_metadata)
+
+    return {
+        "experiment": experiment,
+        "title": title,
+        "metadata": metadata,
+        "statistics": statistics,
         "comparison": comparison,
         "results": cases,
     }
@@ -356,6 +476,34 @@ def _bootstrap_delta_ci(
         float(np.percentile(bootstrap_deltas, 2.5)),
         float(np.percentile(bootstrap_deltas, 97.5)),
     )
+
+
+def _winner_for_higher_better(
+    primary_value: int | float,
+    secondary_value: int | float,
+    *,
+    primary_label: str,
+    secondary_label: str,
+) -> str:
+    if primary_value > secondary_value:
+        return primary_label
+    if primary_value < secondary_value:
+        return secondary_label
+    return "tie"
+
+
+def _winner_for_lower_better(
+    primary_value: int | float,
+    secondary_value: int | float,
+    *,
+    primary_label: str,
+    secondary_label: str,
+) -> str:
+    if primary_value < secondary_value:
+        return primary_label
+    if primary_value > secondary_value:
+        return secondary_label
+    return "tie"
 
 
 def _safe_rate(numerator: int, denominator: int) -> float:
