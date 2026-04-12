@@ -106,12 +106,100 @@ loop) executes the current experiments.
 - **Status:** Long-term, needs FPGA first
 - **Why #8:** The eventual production architecture
 
+## New Findings from Study Run (2026-04-11)
+
+### NSVIF: Neuro-Symbolic Verification via First-Order Logic (HIGH RELEVANCE)
+- **Source:** [arxiv 2601.17789](https://arxiv.org/html/2601.17789v1)
+- **What:** Formalizes instruction verification as a CSP — extracts constraints
+  from instructions, converts to first-order logic, solves with Z3 SMT solver.
+- **Relevance to precision ceiling:** This is EXACTLY what we need for larger
+  models. Instead of pattern-matching arithmetic (ArithmeticExtractor), formalize
+  the constraints as FOL and use an SMT solver. FOL constraints have NO false
+  positives — they're either satisfied or not. This could eliminate the FP
+  problem on 3B+ models entirely.
+- **Score:** 5×5×4×5 = **500** — ties with Rank 1
+- **Action:** Promote to roadmap. Replace ArithmeticExtractor's regex with
+  Z3 SMT solving for arithmetic constraints. Keep regex as fast path, Z3
+  as verification backend.
+
+### ConstraintLLM: Neuro-Symbolic for Industrial Scheduling
+- **Source:** [EMNLP 2025](https://aclanthology.org/2025.emnlp-main.809.pdf)
+- **What:** Neuro-symbolic framework combining LLMs with constraint solvers
+  for industrial scheduling. LLM generates constraint specifications, solver
+  verifies feasibility.
+- **Relevance:** Directly applicable to our scheduling domain (Exp 44, LagONN).
+  Could improve scheduling constraint extraction.
+- **Score:** 4×4×4×3 = 192
+
+### FPGA P-Bit Cluster: 6400 Spins, 64 Billion Flips/Second
+- **Source:** [arxiv 2512.24558](https://arxiv.org/html/2512.24558) + 
+  [Nature Electronics](https://www.nature.com/articles/s41928-024-01182-4)
+- **What:** Multi-FPGA cluster implementing sparse Boltzmann machines with
+  p-bits. Achieved 6400 spins (80×80 Ising) on FPGA, 50-64 billion
+  probabilistic flips/second. CD training with up to n=10M sweeps.
+- **Relevance:** Our KV260 (arriving in 4 days) has 256K LUTs — enough for
+  ~4K p-bits. This paper provides the implementation reference: sparse
+  connectivity, local parallel updates, low-precision arithmetic.
+  Key detail: they use CD-n with n=10M sweeps per update, far more than
+  our CD-1 or CD-5. Worth testing higher-n CD on our learned Ising models.
+- **Score:** 4×4×5×3 = 240 — promotes above energy-aware beam search
+- **Action:** Use as implementation reference for KV260 Ising sampler.
+  Add high-n CD experiment to roadmap.
+
+### Speculative Speculative Decoding (ICLR 2026)
+- **Source:** [ICLR 2026](https://openreview.net/pdf?id=aL1Wnml9Ef)
+- **What:** Meta-speculation — speculate the NEXT round during current
+  verification. Amortizes verification cost across rounds.
+- **Relevance:** If we combine with constraint energy, the draft model
+  generates candidates, constraint energy pre-filters, and the target
+  model verifies. Three-level pipeline. But complex to implement.
+- **Score:** 3×5×2×3 = 90
+
+### KAN Computing-in-Memory (Nature Communications 2026)
+- **Source:** [Nature Comms](https://www.nature.com/articles/s41467-026-69592-w)
+- **What:** Hardware implementation of KAN using tunable Gaussian-like
+  memory cells. Spline activations implemented as analog memory lookups.
+- **Relevance:** Validates our Tier 4 vision (KAN → hardware). Not directly
+  actionable until we have the right hardware, but confirms the path.
+- **Score:** 3×5×2×2 = 60
+
+### Agentic Confidence Calibration (2026)
+- **Source:** [arxiv 2601.15778](https://arxiv.org/html/2601.15778v1)
+- **What:** Holistic Trajectory Calibration — extracts process-level features
+  across an agent's entire trajectory to calibrate confidence.
+- **Relevance:** Directly applicable to our multi-turn agentic verification.
+  Instead of per-step constraint checking, calibrate confidence across the
+  whole reasoning trajectory. Could improve the global consistency checker.
+- **Score:** 4×4×3×4 = 192
+
+## Updated Rankings After Study Run
+
+| Rank | Idea | Score | Status |
+|------|------|-------|--------|
+| 1 | NSVIF: FOL + Z3 SMT constraint verification | **500** | NEW — promote to roadmap |
+| 1 | Confidence-calibrated constraints | 500 | In roadmap (Exp 202) |
+| 3 | Semantic constraint via CoT decomposition | 375 | Noted |
+| 4 | Contrastive constraint learning | 256 | Partially in Exp 201 |
+| 5 | FPGA p-bit cluster (implementation ref) | **240** | NEW — use for KV260 |
+| 6 | Speculative decoding with constraints | 240 | Needs research |
+| 7 | ConstraintLLM industrial scheduling | **192** | NEW |
+| 7 | Agentic confidence calibration | **192** | NEW |
+| 9 | Energy-aware beam search | 144 | Noted |
+| 9 | Hierarchical constraint composition | 144 | Partially explored |
+| 11 | FPGA Ising real-time updates | 135 | KV260 arriving |
+| 12 | Speculative speculative decoding | **90** | NEW — complex |
+| 12 | Differentiable constraint compilation | 90 | Long-term |
+| 14 | KAN computing-in-memory | **60** | NEW — validates path |
+
 ## Needs Investigation (Unranked)
 
 - LagONN + guided decoding combination (oscillatory escape + energy steering)
 - Multi-agent constraint verification (one agent generates, another verifies)
 - Retrieval-augmented constraints (look up facts before verifying)
 - Constraint transfer learning (train on one domain, apply to another)
+- Grammar-constrained decoding as constraint substitute (ACL 2025 finding)
+- Block verification for speculative decoding (5-8% speedup, OpenReview)
+- Physics-informed KAN with augmented Lagrangian (Nature 2025)
 
 ## Archived (Investigated, Not Promising)
 
