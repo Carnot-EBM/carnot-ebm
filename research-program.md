@@ -345,6 +345,19 @@ The planning agent MUST prioritize these for the next milestone:
 - Precision-based constraint REWEIGHTING: no improvement over fixed weights (Exp 134)
   — need constraint ADDITION instead
 
+## Outer Loop / Inner Loop Agent Architecture
+
+- **Claude (outer loop):** Continuously researches novel ideas, ranks them by
+  impact on current research state, and queues the most promising into the
+  next roadmap milestone. Tracks findings in `research-studying.md` with
+  scored rankings (relevance × novelty × feasibility × urgency).
+- **Codex (inner loop):** Executes the current experiments and plans the
+  future roadmap when empty. Follows AGENTS.md/CODEX.md workflow.
+- **Principle:** Claude stays a step ahead — by the time Codex finishes
+  a milestone, Claude has already identified the most promising next
+  experiments from online research. Only top-ranked ideas get promoted
+  to the roadmap; lower-ranked ideas stay in research-studying.md.
+
 ## Research Sources
 
 The planning agent searches these sources when designing milestones:
