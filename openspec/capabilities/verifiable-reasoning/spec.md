@@ -363,6 +363,31 @@ for the `humaneval_property` benchmark, where:
 - re-running the benchmark with matching cohort metadata refreshes the same
   artifact in place without changing the sampled case order
 
+### REQ-VERIFY-029: Exp 221 Constraint IR Artifact Metrics And Failure Taxonomy
+
+The same harness shall support writing `results/experiment_221_results.json`
+for the `constraint_ir` benchmark, where:
+- the top-level payload records experiment id `221` when the output path is
+  `results/experiment_221_results.json`
+- the harness deterministically enriches Exp 211 benchmark rows with the task
+  slices needed to apply the Exp 213 response-mode policy across live GSM8K,
+  instruction-following, and code-typed-property cases
+- each model summary reports parse success, constraint extraction coverage,
+  exact satisfaction, partial satisfaction, semantic-violation detection, and
+  repair yield over the paired cohort
+- each model summary breaks failures down by constraint type and by observed
+  output style so the artifact makes literal versus semantic versus
+  search-or-optimization-limited errors visible without relying on hidden
+  chain-of-thought
+- each per-case result preserves the raw response, observed output style,
+  deterministic scoring breakdown, and any explicitly labeled heuristic or
+  model-assisted judge path used during evaluation
+- deterministic code scoring keeps any executed prompt-derived code probe within
+  a bounded timeout so one non-terminating answer cannot block the artifact
+  refresh
+- re-running the benchmark with matching cohort metadata refreshes the same
+  artifact in place without changing the sampled case order
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -652,6 +677,22 @@ sample seed
 **And** each per-problem result preserves the generated candidate code plus
   execution and repair traces needed for later self-learning
 
+### SCENARIO-VERIFY-029: Exp 221 Constraint IR Artifact Records Prompt-Side Constraint Metrics
+
+**Given** the shared harness runs `constraint_ir` with output path
+`results/experiment_221_results.json`
+**When** the Exp 221 artifact is written
+**Then** the top-level payload records experiment id `221`
+**And** each model summary includes parse success, extraction coverage,
+  exact satisfaction, partial satisfaction, semantic-violation counts,
+  repair yield, and failure breakdowns by constraint type and output style
+**And** each per-case result preserves the raw response together with the
+  deterministic constraint-scoring breakdown, observed output style, and any
+  explicitly labeled heuristic or model-assisted judging metadata used during
+  evaluation
+**And** a non-terminating code answer is marked as a bounded scoring failure
+  instead of stalling the benchmark refresh
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -684,4 +725,5 @@ sample seed
 | REQ-VERIFY-026 | Not Started | Implemented | Exp 218 stable payload + prompt seed tests |
 | REQ-VERIFY-027 | Not Started | Implemented | Exp 219 artifact + harness regression tests |
 | REQ-VERIFY-028 | Not Started | Implemented | Exp 220 artifact + harness regression tests |
+| REQ-VERIFY-029 | Not Started | Implemented | Exp 221 artifact + harness regression tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
