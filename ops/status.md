@@ -4,6 +4,11 @@
 
 ## What's Working
 
+### Research Reporting Provenance (Exp 209)
+- `scripts/experiment_209_cleanup.py` now audits every `results/experiment_*_results.json` artifact and adds a top-level `result_header` plus machine-readable `result_provenance` summary without deleting any historical data.
+- Current audit counts: **66** result artifacts scanned, **5** validated `live_gpu`, **3** explicitly simulated, and **58** missing explicit live inference provenance.
+- `README.md`, `docs/technical-report.md`, and `docs/index.html` now separate validated live evidence from simulated or unverified results. The strongest current live benchmark remains **Exp 208** on HumanEval (**16.7% → 20.0%**, +3.3pp), while the large GSM8K / adversarial gains from **Exp 161** and **Exp 178** are now marked as simulated.
+
 ### Core Framework (REQ-CORE-001–006)
 - EnergyFunction trait (Rust) and protocol (Python/JAX)
 - Four model tiers: Ising (both), Gibbs (both), Boltzmann (both), KAN (Python/JAX with Rust scaffold)
@@ -326,6 +331,7 @@
 - ~~**Exp 206 (NEXT)**: Z3 extractor on 100 live GSM8K with Gemma4-E4B-it.~~ **COMPLETED 2026-04-12** via `results/experiment_206_results.json`; Z3 lowered false positives vs regex but delivered 0/9 wrong-answer detections and a net repair delta of +0.0pp on the live cohort.
 - ~~**Exp 207 (NEXT)**: LLM extractor on the shared 100-question live Gemma4-E4B-it cohort from Exp 206.~~ **COMPLETED 2026-04-12** via `results/experiment_207_results.json`; LLM reduced false positives to 1/91 vs Z3's 3/91, but both extractors remained at 0/9 wrong-answer detections and +0.0pp repair delta.
 - **Next live GSM8K gap**: add semantic/question-grounding verification beyond arithmetic extractors; Exp 206 and Exp 207 show that better arithmetic normalization mainly trims false positives while leaving 0/9 wrong-answer detections unchanged.
+- **Next provenance follow-on**: rerun the large simulated math benchmarks (Exp 161 full GSM8K and Exp 178 adversarial GSM8K) with explicit `live_gpu` provenance so the current simulated headline deltas can either be validated or revised downward.
 - **Scale thrml constraint verification**: larger SAT/coloring problems, more constraint types
 - **LLM constraint extraction**: parse natural language into Ising-encodable constraints
 - **Extropic hardware testing**: when TSU is available, run thrml code natively

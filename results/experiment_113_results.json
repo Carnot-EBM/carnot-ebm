@@ -34,13 +34,15 @@
         "features": [
           "JSON external facts file loading",
           "Entity alias normalization (50+ aliases)",
-          "Numeric tolerance comparison (year: ±5, others: ±10%)",
+          "Numeric tolerance comparison (year: \u00b15, others: \u00b110%)",
           "Explicit range support ({min, max})"
         ]
       },
       "FactualKBExtractor": {
         "extraction_patterns": 16,
-        "supported_domains": ["factual_kb"],
+        "supported_domains": [
+          "factual_kb"
+        ],
         "energy_encoding": {
           "verified": 0.0,
           "contradicted": 1.0,
@@ -75,5 +77,13 @@
     "REQ-VERIFY-001",
     "REQ-VERIFY-002",
     "SCENARIO-VERIFY-002"
-  ]
+  ],
+  "result_header": "WARNING: Experiment 113 has no explicit live inference provenance. Keep this artifact for the research record, but treat its metrics as unverified rather than validated live performance.",
+  "result_provenance": {
+    "experiment": 209,
+    "status": "warning",
+    "detected_mode": null,
+    "normalized_mode": "missing",
+    "source": "missing"
+  }
 }
