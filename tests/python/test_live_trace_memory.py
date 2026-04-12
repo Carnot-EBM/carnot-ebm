@@ -10,10 +10,8 @@ import json
 import runpy
 import sys
 from pathlib import Path
-from typing import TYPE_CHECKING
 
-if TYPE_CHECKING:
-    import pytest
+import pytest
 
 
 def load_pipeline_module():
@@ -589,6 +587,17 @@ def test_trace_event_and_helper_branches_cover_defaults_and_fallbacks(
 
     reliability = module._build_reliability_stats([true_negative])
     assert reliability[0]["true_negatives"] == 1
+
+
+# REQ-VERIFY-030
+def test_load_json_rejects_non_object_payload(tmp_path: Path):
+    """REQ-VERIFY-030: load_json rejects JSON payloads that are not top-level objects."""
+    module = load_pipeline_module()
+    payload_path = tmp_path / "invalid.json"
+    payload_path.write_text('["not", "an", "object"]\n', encoding="utf-8")
+
+    with pytest.raises(ValueError, match="Expected JSON object"):
+        module.load_json(payload_path)
 
 
 # REQ-VERIFY-030
