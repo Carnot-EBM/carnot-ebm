@@ -369,42 +369,178 @@ class TestWarmServerBenchmark:
 class TestModelServerCoveragePaths:
     """Extra coverage for default helpers and defensive server paths."""
 
-    def test_start_is_idempotent_and_default_batch_generate_uses_generate(
-        self,
-        monkeypatch: pytest.MonkeyPatch,
-    ) -> None:
-        """REQ-VERIFY-036: default warm batching reuses the exported generate helper."""
-        import carnot.inference.model_server as model_server_module
-
+    def test_start_is_idempotent(self) -> None:
+        """REQ-VERIFY-036: repeated start() calls do not reload already-warm models."""
         load_calls: list[str] = []
-        generate_calls: list[tuple[str, str, int]] = []
-
-        def fake_generate(
-            model: dict[str, str],
-            tokenizer: dict[str, str],
-            prompt: str,
-            max_new_tokens: int = 256,
-        ) -> str:
-            del tokenizer
-            generate_calls.append((model["model_name"], prompt, max_new_tokens))
-            return f"{model['model_name']}::{prompt}"
-
-        monkeypatch.setattr(model_server_module, "generate", fake_generate)
-
-        server = model_server_module.ModelServer(
+        server = ModelServer(
             ["Qwen/Qwen3.5-0.8B"],
             loader=_make_loader(load_calls),
+            batch_generate_fn=_make_batch_generate([]),
         )
         server.start()
         server.start()
         try:
-            result = server.generate("Explain batching", model="Qwen/Qwen3.5-0.8B")
+            assert server.serves_model("Qwen/Qwen3.5-0.8B") is True
         finally:
             server.shutdown()
 
-        assert result == "Qwen/Qwen3.5-0.8B::Explain batching"
         assert load_calls == ["Qwen/Qwen3.5-0.8B"]
-        assert generate_calls == [("Qwen/Qwen3.5-0.8B", "Explain batching", 256)]
+
+    def test_default_loader_requests_cuda(self, monkeypatch: pytest.MonkeyPatch) -> None:
+        """REQ-VERIFY-036: the default loader path requests CUDA.
+
+        Fallback and opt-out behavior still belong to load_model().
+        """
+        import carnot.inference.model_server as model_server_module
+
+        load_calls: list[tuple[str, str]] = []
+
+        def fake_load_model(
+            model_name: str,
+            device: str = "cpu",
+            dtype: Any = None,
+            max_retries: int = 3,
+        ) -> tuple[dict[str, str], dict[str, str]]:
+            del dtype, max_retries
+            load_calls.append((model_name, device))
+            return {"model_name": model_name}, {"tokenizer_name": model_name}
+
+        monkeypatch.setattr(model_server_module, "load_model", fake_load_model)
+
+        with model_server_module.ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            batch_generate_fn=_make_batch_generate([]),
+        ) as server:
+            assert server.serves_model("Qwen/Qwen3.5-0.8B") is True
+
+        assert load_calls == [("Qwen/Qwen3.5-0.8B", "cuda")]
+
+    def test_model_device_returns_string_cpu_when_torch_is_unavailable(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """REQ-VERIFY-037: shared device detection still falls back cleanly when torch is absent."""
+
+        class _EmptyModel:
+            def parameters(self) -> Any:
+                return iter(())
+
+        import carnot.inference.model_loader as model_loader_module
+
+        monkeypatch.setattr(model_loader_module, "torch", None)
+        assert model_loader_module._model_device(_EmptyModel()) == "cpu"
+
+    def test_default_batch_generate_issues_one_batched_model_call(self) -> None:
+        """SCENARIO-VERIFY-036: default batching uses one padded model.generate() call."""
+        import torch
+
+        class _FakeTokenizer:
+            eos_token_id = 99
+            eos_token = "<eos>"
+            pad_token_id = None
+
+            def __init__(self) -> None:
+                self.chat_prompts: list[str] = []
+                self.tokenized_texts: list[list[str]] = []
+                self.decode_inputs: list[list[int]] = []
+                self.pad_token: str | None = None
+
+            def apply_chat_template(
+                self,
+                messages: list[dict[str, str]],
+                *,
+                tokenize: bool = False,
+                add_generation_prompt: bool = True,
+                enable_thinking: bool = False,
+            ) -> str:
+                del tokenize, add_generation_prompt, enable_thinking
+                prompt = messages[0]["content"]
+                self.chat_prompts.append(prompt)
+                return f"chat::{prompt}"
+
+            def __call__(
+                self,
+                texts: list[str],
+                *,
+                return_tensors: str = "pt",
+                padding: bool = False,
+            ) -> dict[str, torch.Tensor]:
+                assert return_tensors == "pt"
+                assert padding is True
+                self.tokenized_texts.append(list(texts))
+                return {
+                    "input_ids": torch.tensor([[10, 11, 0], [20, 21, 22]]),
+                    "attention_mask": torch.tensor([[1, 1, 0], [1, 1, 1]]),
+                }
+
+            def decode(self, token_ids: torch.Tensor, *, skip_special_tokens: bool = True) -> str:
+                assert skip_special_tokens is True
+                values = token_ids.tolist()
+                self.decode_inputs.append(values)
+                mapping = {
+                    (30, 31): "first-response",
+                    (40, 41): "<think>ignored</think>second-response",
+                }
+                return mapping[tuple(values)]
+
+        class _FakeModel:
+            def __init__(self) -> None:
+                self.generate_calls: list[dict[str, Any]] = []
+
+            def parameters(self) -> Any:
+                fake_param = type("Param", (), {"device": torch.device("cpu")})()
+                return iter([fake_param])
+
+            def generate(self, **kwargs: Any) -> torch.Tensor:
+                self.generate_calls.append(kwargs)
+                return torch.tensor(
+                    [
+                        [10, 11, 0, 30, 31],
+                        [20, 21, 22, 40, 41],
+                    ]
+                )
+
+        fake_model = _FakeModel()
+        fake_tokenizer = _FakeTokenizer()
+
+        with ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=lambda _name: (fake_model, fake_tokenizer),
+        ) as server:
+            results = server.generate_batch(
+                ["question-1", "question-2"],
+                model="Qwen/Qwen3.5-0.8B",
+            )
+            health = server.health_check()
+
+        assert results == ["first-response", "second-response"]
+        assert fake_tokenizer.chat_prompts == ["question-1", "question-2"]
+        assert fake_tokenizer.tokenized_texts == [["chat::question-1", "chat::question-2"]]
+        assert fake_tokenizer.decode_inputs == [[30, 31], [40, 41]]
+        assert fake_tokenizer.pad_token == fake_tokenizer.eos_token
+        assert len(fake_model.generate_calls) == 1
+        assert fake_model.generate_calls[0]["max_new_tokens"] == 256
+        assert fake_model.generate_calls[0]["do_sample"] is False
+        assert fake_model.generate_calls[0]["pad_token_id"] == fake_tokenizer.eos_token_id
+        assert health["batch_stats"]["total_batches"] == 1
+
+    def test_default_batch_generate_guard_paths_and_generate_wrapper(self) -> None:
+        """REQ-VERIFY-037: empty-batch guard paths return early and generate() delegates."""
+        import carnot.inference.model_server as model_server_module
+
+        assert model_server_module._default_batch_generate(object(), object(), [], 8) == []
+        with pytest.raises(RuntimeError, match="called with model=None or tokenizer=None"):
+            model_server_module._default_batch_generate(None, object(), ["hello"], 8)
+
+        with ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=_make_loader([]),
+            batch_generate_fn=_make_batch_generate([]),
+        ) as server:
+            assert (
+                server.generate("question-1", model="Qwen/Qwen3.5-0.8B")
+                == "Qwen/Qwen3.5-0.8B::question-1"
+            )
 
     def test_start_raises_when_loader_cannot_warm_load(self) -> None:
         """REQ-VERIFY-036: startup fails fast when eager warm loading yields no model."""

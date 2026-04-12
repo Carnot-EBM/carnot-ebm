@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Warm Server True Batched Forward Pass
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T18:56:19Z | 2026-04-12T19:11:08Z | Warm-server batching fix: tightened `verifiable-reasoning` so `REQ-VERIFY-036` / `REQ-VERIFY-037` require CUDA-requesting warm loads plus one padded `model.generate(...)` call per executed batch, wrote the new `test_model_server.py` assertions first, corrected `python/carnot/inference/model_server.py` and the shared helpers in `python/carnot/inference/model_loader.py`, closed `VERIFY-025`, and reran targeted 100% coverage, the full Python suite, spec coverage, Ruff, mypy, and `tests/integration/test_full_pipeline.py`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 224 Hypothesis-Backed PBT Code Verifier
 
 ### Turn Log

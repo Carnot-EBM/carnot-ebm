@@ -846,6 +846,9 @@ The repository shall provide a warm inference server in
   them eagerly when the server starts
 - the server keeps loaded models warm for repeated inference requests instead
   of re-loading weights for every experiment call
+- the default loader path requests `device="cuda"` so warm models stay on GPU
+  when CUDA is available, while preserving the existing loader fallback and
+  `CARNOT_FORCE_CPU` override behavior
 - the server exposes a context-manager API so callers can scope startup and
   shutdown with `with ModelServer([...]) as server: ...`
 - the server validates `batch_size` deterministically with a default of `8`
@@ -861,6 +864,9 @@ The same module shall batch queued generation requests, where:
   worker thread or process
 - compatible requests for the same loaded model are coalesced into a single
   forward pass up to the configured batch-size limit
+- the default batching path applies each prompt's chat template, tokenizes the
+  resulting prompt list with padding, and issues one `model.generate(...)`
+  call for each executed batch instead of looping prompt-by-prompt
 - `generate_batch()` returns one response per input question in the original
   question order even when multiple callers are batched together
 - the server records batch metrics including total requests served, total
@@ -889,6 +895,8 @@ where:
 **When** the worker coalesces those questions into one forward pass
 **Then** each caller receives exactly one response for each submitted question
 **And** the responses remain aligned with the original per-question order
+**And** the default batching helper issues one padded batched
+  `model.generate(...)` call for that executed batch
 **And** the server records one executed batch with the observed batch size
 
 ### SCENARIO-VERIFY-037: Graceful Shutdown Releases Warm Resources

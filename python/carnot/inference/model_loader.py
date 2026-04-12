@@ -146,6 +146,53 @@ def _as_server_handle(value: Any) -> ServerBackedModelHandle | None:
 
 
 # ---------------------------------------------------------------------------
+# Generation helpers shared by direct and server-backed paths
+# ---------------------------------------------------------------------------
+
+
+def _model_device(model: Any) -> Any:
+    """Best-effort device detection for HuggingFace causal-LM objects."""
+    try:
+        return next(model.parameters()).device
+    except StopIteration:
+        if torch is not None:
+            return torch.device("cpu")
+        return "cpu"
+
+
+def _render_generation_prompt(tokenizer: Any, prompt: str) -> str:
+    """Apply the tokenizer chat template with the existing Qwen fallback chain."""
+    messages = [{"role": "user", "content": prompt}]
+    text: str
+    try:
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=True,
+            enable_thinking=False,
+        )
+    except TypeError:
+        try:
+            text = tokenizer.apply_chat_template(
+                messages,
+                tokenize=False,
+                add_generation_prompt=True,
+            )
+        except Exception:
+            text = prompt
+    except Exception:
+        text = prompt
+    return text
+
+
+def _strip_thinking_tokens(response: str) -> str:
+    """Strip Qwen3 reasoning blocks while preserving the public output contract."""
+    if "</think>" in response:
+        response = response.split("</think>")[-1].strip()
+    return response.strip()
+
+
+# ---------------------------------------------------------------------------
 # Memory helpers
 # ---------------------------------------------------------------------------
 
@@ -459,36 +506,8 @@ def generate(
             "Call load_model() first and check it succeeded."
         )
 
-    # Detect device from model parameters.
-    try:
-        device = next(model.parameters()).device
-    except StopIteration:
-        device = torch.device("cpu")
-
-    # --- Apply chat template ---
-    messages = [{"role": "user", "content": prompt}]
-    text: str
-    try:
-        text = tokenizer.apply_chat_template(
-            messages,
-            tokenize=False,
-            add_generation_prompt=True,
-            enable_thinking=False,
-        )
-    except TypeError:
-        # Tokenizer does not support enable_thinking (pre-Qwen3 or non-Qwen).
-        try:
-            text = tokenizer.apply_chat_template(
-                messages,
-                tokenize=False,
-                add_generation_prompt=True,
-            )
-        except Exception:
-            # No chat template at all — use raw prompt.
-            text = prompt
-    except Exception:
-        # Any other failure (e.g., jinja template error) — use raw prompt.
-        text = prompt
+    device = _model_device(model)
+    text = _render_generation_prompt(tokenizer, prompt)
 
     # --- Tokenize and generate ---
     inputs = tokenizer(text, return_tensors="pt")
@@ -509,8 +528,4 @@ def generate(
         skip_special_tokens=True,
     )
 
-    # Strip Qwen3 chain-of-thought thinking tokens.
-    if "</think>" in response:
-        response = response.split("</think>")[-1].strip()
-
-    return cast("str", response.strip())
+    return _strip_thinking_tokens(response)

@@ -6,6 +6,7 @@
 
 ### Warm Multi-Model Inference Server
 - `python/carnot/inference/model_server.py` now provides the spec-backed warm inference server required by `REQ-VERIFY-036` through `REQ-VERIFY-038`. `ModelServer` eagerly loads one or more model ids, services queued batched requests on a dedicated worker, preserves per-question ordering, reports queue and batch-health stats, and releases warm resources plus CUDA cache on shutdown.
+- The default warm-server path now performs a real batched HuggingFace generate call rather than only queue-level grouping: it requests `device="cuda"` on warm load (while still respecting `load_model()` fallback and `CARNOT_FORCE_CPU`), applies chat templates per prompt, pads/tokenizes the prompt batch once, issues one `model.generate(...)` call per executed batch, then maps the decoded outputs back to the original question order.
 - `python/carnot/inference/model_loader.py` now supports `register_model_server(...)` / `clear_model_server()` plus a lightweight `ServerBackedModelHandle`, so existing `load_model()` / `generate()` callers can transparently route through a registered warm server without changing their public API usage.
 - `tests/python/test_model_server.py` now exercises lifecycle, batching, loader integration, deterministic benchmark timing, the incompatible-request deferral path, and the shutdown cleanup paths at **100%** coverage for both `model_server.py` and the new `model_loader.py` server-integration branches.
 
