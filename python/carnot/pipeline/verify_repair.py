@@ -510,6 +510,60 @@ class VerifyRepairPipeline:
             fallback_generate=self._generate,
         )
 
+    def verify_generated_code(
+        self,
+        code: str,
+        prompt: str,
+        entry_point: str,
+        official_tests: str,
+        *,
+        include_static: bool = True,
+        include_pbt: bool = True,
+    ) -> VerificationResult:
+        """Verify a generated Python candidate with static checks plus bounded PBT.
+
+        This is an additive code-verification entry point for HumanEval-style
+        tasks. It keeps the existing text-response ``verify()`` path untouched
+        while letting callers verify code directly with prompt context, the
+        official harness, and the Hypothesis-backed property verifier.
+
+        Spec: REQ-CODE-010, SCENARIO-CODE-009
+        """
+        constraints: list[ConstraintResult] = []
+        pbt_summary: dict[str, object] = {"enabled": include_pbt}
+
+        if include_static:
+            constraints.extend(self.extract_constraints(code, domain="code"))
+
+        if include_pbt:
+            from carnot.pipeline.pbt_code_verifier import PBTCodeVerifier
+
+            pbt_result = PBTCodeVerifier().verify(code, prompt, entry_point, official_tests)
+            constraints.extend(pbt_result.to_constraint_results())
+            pbt_summary.update(
+                {
+                    "verified": pbt_result.verified,
+                    "n_properties": len(pbt_result.derived_properties),
+                    "n_failures": len(pbt_result.failures),
+                    "property_names": [prop.name for prop in pbt_result.derived_properties],
+                    "wall_clock_seconds": pbt_result.wall_clock_seconds,
+                }
+            )
+        else:
+            pbt_summary.update(
+                {
+                    "verified": True,
+                    "n_properties": 0,
+                    "n_failures": 0,
+                    "property_names": [],
+                    "wall_clock_seconds": 0.0,
+                }
+            )
+
+        result = self._evaluate_constraints(constraints)
+        result.certificate["pbt_summary"] = pbt_summary
+        return result
+
     def verify_semantic_grounding(
         self,
         question: str,

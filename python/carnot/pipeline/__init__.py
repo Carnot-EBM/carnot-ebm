@@ -37,6 +37,12 @@ from carnot.pipeline.mining import (
     FailureReport,
     FalseNegative,
 )
+from carnot.pipeline.pbt_code_verifier import (
+    PBTCodeVerificationResult,
+    PBTCodeVerifier,
+    PBTDerivedProperty,
+    PBTPropertyFailure,
+)
 from carnot.pipeline.property_code_verifier import (
     DerivedProperty,
     PropertyCodeVerificationResult,
@@ -102,6 +108,10 @@ __all__ = [
     "ModelLoadError",
     "NLExtractor",
     "PATTERN_THRESHOLD",
+    "PBTCodeVerificationResult",
+    "PBTCodeVerifier",
+    "PBTDerivedProperty",
+    "PBTPropertyFailure",
     "PipelineTimeoutError",
     "PromptClause",
     "PropertyCodeVerificationResult",
