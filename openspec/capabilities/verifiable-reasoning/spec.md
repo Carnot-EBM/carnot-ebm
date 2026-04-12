@@ -294,6 +294,36 @@ The same module shall integrate `results/monitorability_policy_213.json`, where:
 - `VerifyRepairPipeline` can expose the structured emission path through an
   additive entry point without breaking existing verification or repair flows
 
+### REQ-VERIFY-025: Shared Dual-Model Live Benchmark Harness
+
+The repository shall provide a checkpointed live benchmark harness in
+`scripts/experiment_218_live_dual_model_suite.py`, where:
+- the CLI supports exactly three benchmark values:
+  `gsm8k_semantic`, `humaneval_property`, and `constraint_ir`
+- the harness supports exactly two target models:
+  `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it`
+- each benchmark runs the same high-level mode sequence:
+  `baseline`, `verify_only`, and `verify_repair`
+- the sampled case order is deterministic for a fixed sample seed
+- each sampled case records a shared prompt seed that is reused across the
+  three high-level modes so later comparisons stay paired
+- long runs can resume from checkpoints scoped by benchmark, model, and mode
+  without silently discarding already-completed case results
+
+### REQ-VERIFY-026: Stable Paired Result Schema For Exp 219-221
+
+The same harness shall emit a stable paired result schema that later live
+artifacts can consume directly, where:
+- the top-level payload records the fixed Exp 218 run date `20260412`
+- the payload records benchmark metadata, the sampled cohort manifest, and the
+  ordered paired runs for every model and high-level mode
+- every cohort case records stable identifiers plus the shared prompt seeds
+  for `baseline`, `verify_only`, and `verify_repair`
+- every paired run records the benchmark name, model name, model hf id, mode,
+  per-case results, and a mode-level summary
+- re-running the harness with matching cohort metadata refreshes the output in
+  place rather than appending duplicate runs or scrambling case order
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -533,6 +563,29 @@ that task slice
 **And** existing `VerifyRepairPipeline` callers remain backward compatible
   unless they opt into the additive structured entry point
 
+### SCENARIO-VERIFY-025: Resume Skips Completed Benchmark Cells Without Breaking Pairing
+
+**Given** the Exp 218 harness already has a checkpoint for one
+benchmark-model-mode cell with completed case results
+**When** the same harness is run again with the same benchmark, sample seed,
+and sampled case identifiers
+**Then** the completed case results are reused rather than regenerated
+**And** only the unfinished cases are executed
+**And** the final paired run preserves the original case order and prompt
+  seeds
+
+### SCENARIO-VERIFY-026: Shared Prompt Seeds And Stable Payload Survive Re-Runs
+
+**Given** the Exp 218 harness materializes a paired output artifact for one of
+`gsm8k_semantic`, `humaneval_property`, or `constraint_ir`
+**When** the harness is run again with the same benchmark, sample size, and
+sample seed
+**Then** each cohort case keeps the same shared prompt seeds across
+  `baseline`, `verify_only`, and `verify_repair`
+**And** the top-level payload still records the same benchmark manifest and
+  ordered paired runs
+**And** the refreshed artifact does not duplicate cases or mode entries
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -561,4 +614,6 @@ that task slice
 | REQ-VERIFY-022 | Not Started | Implemented | Structured reasoning emission tests |
 | REQ-VERIFY-023 | Not Started | Implemented | Structured reasoning retry + fallback tests |
 | REQ-VERIFY-024 | Not Started | Implemented | Structured reasoning policy + pipeline entrypoint tests |
+| REQ-VERIFY-025 | Not Started | Implemented | Exp 218 harness CLI + checkpoint tests |
+| REQ-VERIFY-026 | Not Started | Implemented | Exp 218 stable payload + prompt seed tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
