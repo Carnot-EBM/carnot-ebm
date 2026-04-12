@@ -1,501 +1,365 @@
-# Carnot Research Roadmap — Milestone 2026.04.15
-# "Semantic Grounding: Typed Constraints, Live Benchmarks, Self-Learning"
+# Carnot Research Roadmap — Milestone 2026.04.16
+# "Scale What Works: PBT Code Verification, FPGA Ising, Production Path"
 #
-# CONTEXT: 2026.04.14 proved that live instruction-tuned failures are mostly
-# semantic/question-grounding errors, not arithmetic normalization failures.
-# The next milestone makes those outputs monitorable, builds semantic and
-# property-based verifiers, validates them live on the two target small models,
-# and turns the resulting traces into continuous self-learning inputs.
+# CONTEXT: Milestone 2026.04.15 established that:
+# - Code verification via execution is our ONLY positive live result (+3.3pp HumanEval)
+# - Arithmetic constraint extraction doesn't catch IT model errors (semantic gap)
+# - Free-form reasoning prompts are best for monitorability (100% parseable)
+# - Property-Based Testing shows 23-37% improvement on code benchmarks (arxiv 2506.18315)
+# - KV260 FPGA should have arrived — ready for Ising sampler prototype
+#
+# This milestone doubles down on what works (code verification) and adds hardware.
 
-milestone: "2026.04.15"
-milestone_title: "Semantic Grounding: Typed Constraints, Live Benchmarks, Self-Learning"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: "2026.04.16"
+milestone_title: "Scale What Works: PBT Code Verification, FPGA Ising, Production Path"
+milestone_doc: "openspec/change-proposals/research-roadmap-v21.md"
 
 tasks:
-  # ── Phase 65: Make Instruction-Tuned Outputs Monitorable ────
-  - id: exp211-constraint-ir-benchmark
-    milestone: "2026.04.15"
-    deliverable: data/research/constraint_ir_benchmark_211.jsonl
-    title: "Exp 211: Instruction-to-constraint IR benchmark for live IT models"
+  # ── Phase 70: Property-Based Code Verification (strongest result) ──
+  - id: exp224-pbt-code-extractor
+    milestone: "2026.04.16"
+    deliverable: results/experiment_224_results.json
+    title: "Exp 224: Property-based test generation for code verification"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: Exp 203, Exp 206, and Exp 207 showed that live wrong answers on
-      Gemma4-E4B-it are mostly semantic/question-grounding failures. Before
-      building another verifier, Carnot needs a benchmark that defines what
-      structured constraints and claims should be extracted from instruction-
-      tuned outputs in the first place.
-
-      EXISTING CODE TO READ FIRST:
-      - research-program.md — current priorities and the "Continuous Self-Learning" section
-      - results/experiment_203_results.json — live extraction autopsy
-      - results/experiment_206_results.json — Z3 live benchmark
-      - results/experiment_207_results.json — LLM extractor live benchmark
-      - research-references.md — newly added 2026.04.15 planning references
-
-      TASK: Create data/research/constraint_ir_benchmark_211.jsonl
-
-      CONCRETE STEPS:
-      1. Create a curated benchmark of 80-120 examples covering:
-         - live GSM8K semantic failures from Exp 203/206/207
-         - multi-constraint instruction-following prompts inspired by VIFBench / ConstraintBench / CFBench
-         - code prompts where requirements can be represented as typed properties
-      2. For each example, record:
-         - prompt
-         - gold atomic constraints
-         - constraint types
-         - expected verifier path
-         - expected answer schema
-         - whether free-form reasoning should be considered monitorable
-      3. Include a mix of literal constraints, compositional constraints, and semantic/question-grounding constraints.
-      4. Create scripts/experiment_211_constraint_ir_benchmark.py to generate the dataset and write a summary report to results/experiment_211_results.json.
-      5. Keep the schema simple enough for later typed parsing and structured decoding experiments.
-      6. Run: .venv/bin/python scripts/experiment_211_constraint_ir_benchmark.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp213-monitorability-audit
-    milestone: "2026.04.15"
-    deliverable: results/experiment_213_results.json
-    title: "Exp 213: Chain-of-thought monitorability audit and fallback policy"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
-
-      CONTEXT: Carnot cannot assume chain-of-thought is a faithful verifier
-      input. Recent monitoring papers and Exp 203/206/207 both suggest that
-      free-form reasoning can hide the real failure mode. This experiment
-      measures when free-form traces are useful, when structured traces are
-      better, and when Carnot should skip reasoning text entirely.
-
-      EXISTING CODE TO READ FIRST:
-      - data/research/constraint_ir_benchmark_211.jsonl — benchmark from Exp 211
-      - results/experiment_203_results.json — live failure examples
-      - results/experiment_208_results.json — live code benchmark
-      - python/carnot/inference/model_loader.py — live model loading
-      - research-references.md — monitorability references
-
-      TASK: Create results/experiment_213_results.json
-
-      CONCRETE STEPS:
-      1. Evaluate Qwen3.5-0.8B and google/gemma-4-E4B-it on a representative subset of Exp 211 in three response modes:
-         - free-form reasoning
-         - answer-only / terse output
-         - structured JSON / typed reasoning scaffold
-      2. Measure:
-         - parseability
-         - constraint coverage
-         - semantic visibility of the true error
-         - answer quality
-         - token cost / latency
-      3. Define a fallback policy stating when Carnot should:
-         - request structured reasoning
-         - accept terse output
-         - distrust free-form traces
-      4. Save the policy as results/monitorability_policy_213.json and summarize the findings in results/experiment_213_results.json.
-      5. Create scripts/experiment_213_monitorability_audit.py if needed to run the evaluation.
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_213_monitorability_audit.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp212-typed-reasoning-ir
-    milestone: "2026.04.15"
-    deliverable: python/carnot/pipeline/typed_reasoning.py
-    title: "Exp 212: Typed reasoning IR and dual-path extraction"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
-
-      CONTEXT: After Exp 211 defines the benchmark and Exp 213 defines the
-      monitorability policy, Carnot needs an intermediate representation that
-      can hold constraints, claims, reasoning steps, and final answers in a
-      verifier-friendly form.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/extract.py — current extractor interfaces
-      - python/carnot/pipeline/verify_repair.py — pipeline integration points
-      - data/research/constraint_ir_benchmark_211.jsonl — benchmark contract
-      - results/experiment_213_results.json — monitorability findings
-
-      TASK: Create python/carnot/pipeline/typed_reasoning.py
-
-      CONCRETE STEPS:
-      1. Implement a typed reasoning IR that can represent:
-         - user constraints
-         - reasoning steps
-         - atomic claims
-         - final answers
-         - provenance / extraction method
-      2. Support a dual-path extractor:
-         - parse direct structured JSON when the model emits it
-         - fall back to post-hoc parsing for plain-text outputs
-      3. Add validation and serialization helpers so later verifiers can consume this IR deterministically.
-      4. Wire the new IR into the pipeline in a backward-compatible way without breaking existing extractors.
-      5. Add tests for both direct-JSON and fallback parsing paths.
-      6. Run: .venv/bin/pytest tests/python -q
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  # ── Phase 66: Build Semantic and Property-Based Verifiers ───
-  - id: exp214-semantic-failure-corpus
-    milestone: "2026.04.15"
-    deliverable: data/research/semantic_failure_corpus_214.jsonl
-    title: "Exp 214: Semantic failure corpus from live verifier traces"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
-
-      CONTEXT: Exp 203, Exp 206, and Exp 207 showed that Carnot's live blind
-      spot is semantic/question-grounding error, not arithmetic formatting.
-      This experiment creates the labeled corpus needed to test a semantic
-      verifier instead of guessing at the failure taxonomy.
-
-      EXISTING CODE TO READ FIRST:
-      - results/experiment_203_results.json — autopsy examples
-      - results/experiment_206_results.json — shared live GSM8K cohort
-      - results/experiment_207_results.json — paired LLM-vs-Z3 cohort
-      - results/experiment_208_results.json — code-path live failures
-      - ops/conductor-log.md — recent experiment provenance
-
-      TASK: Create data/research/semantic_failure_corpus_214.jsonl
-
-      CONCRETE STEPS:
-      1. Build a labeled corpus of at least 60 high-quality failure cases from live traces and targeted follow-up prompts.
-      2. Use a taxonomy that separates:
-         - question-grounding failures
-         - omitted premises
-         - entity / quantity binding errors
-         - unit / aggregation errors
-         - genuine arithmetic slips
-         - code-specific oracle/property misses
-      3. For each example, include the prompt, response, gold diagnosis, expected verifier signal, and whether structured reasoning would have helped.
-      4. Create scripts/experiment_214_semantic_failure_corpus.py to generate the corpus and write a summary to results/experiment_214_results.json.
-      5. Keep the file format easy to turn into unit tests for later verifier work.
-      6. Run: .venv/bin/python scripts/experiment_214_semantic_failure_corpus.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp215-semantic-grounding-verifier
-    milestone: "2026.04.15"
-    deliverable: python/carnot/pipeline/semantic_grounding.py
-    title: "Exp 215: Semantic grounding verifier for question-aligned claims"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
-
-      CONTEXT: The next verifier must catch cases where the model solves the
-      wrong problem correctly. Carnot needs a question-grounding and semantic
-      claim verifier, not another arithmetic parser.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/typed_reasoning.py — typed IR from Exp 212
-      - data/research/semantic_failure_corpus_214.jsonl — labeled failure corpus
-      - python/carnot/pipeline/verify_repair.py — pipeline integration
-      - research-references.md — MARCH / BEAVER notes
-
-      TASK: Create python/carnot/pipeline/semantic_grounding.py
-
-      CONCRETE STEPS:
-      1. Implement a verifier that:
-         - decomposes responses into atomic claims
-         - aligns claims to question entities, quantities, and required outputs
-         - detects missing or unsupported claims
-         - returns structured violation objects compatible with VerifyRepairPipeline
-      2. Make the first layer deterministic where possible: entity coverage, quantity coverage, answer-target mismatch, unsupported references.
-      3. Add an optional refinement path for ambiguous cases, but do not require hidden chain-of-thought to get value.
-      4. Add tests grounded in Exp 214's corpus and verify that obvious semantic failures are now caught.
-      5. Keep false positives low enough that the verifier is usable in live repair loops.
-      6. Run: .venv/bin/pytest tests/python -q
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp216-structured-reasoning-path
-    milestone: "2026.04.15"
-    deliverable: python/carnot/pipeline/structured_reasoning.py
-    title: "Exp 216: Structured reasoning emission path for Qwen and Gemma"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
-
-      CONTEXT: Exp 213 should tell Carnot when structured reasoning is worth
-      the extra tokens. This experiment adds the actual structured emission
-      path so typed verification can run on monitorable outputs instead of raw
-      prose.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/typed_reasoning.py — typed IR schema
-      - results/experiment_213_results.json — monitorability policy
-      - python/carnot/inference/model_loader.py — target model interfaces
-      - python/carnot/pipeline/verify_repair.py — pipeline entry points
-
-      TASK: Create python/carnot/pipeline/structured_reasoning.py
-
-      CONCRETE STEPS:
-      1. Define a minimal structured reasoning schema that covers constraints, claims, steps, and final answer.
-      2. Implement prompt helpers for Qwen3.5-0.8B and google/gemma-4-E4B-it that request this schema without over-constraining reasoning.
-      3. Validate emitted outputs and retry or fall back when the response is malformed.
-      4. Integrate the policy from Exp 213 so the structured path is only used when it helps.
-      5. Add tests and gold fixtures for both clean and malformed outputs.
-      6. Run: .venv/bin/pytest tests/python -q
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp217-property-code-verifier
-    milestone: "2026.04.15"
-    deliverable: python/carnot/pipeline/property_code_verifier.py
-    title: "Exp 217: Property-generated code verifier for HumanEval repair"
-    prompt: |
-      You are working on the Carnot EBM framework in {project_root}.
-      Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
-
-      CONTEXT: Exp 208 showed the code path still has a real live positive
-      signal. The natural next step is not a different model; it is a stronger
-      verifier that generates additional properties and invariants from the
-      prompt, signature, and tests.
+      CONTEXT: Our best live result is Exp 208: HumanEval 16.7% -> 20.0% (+3.3pp)
+      using basic execution testing. The paper "Property-Generated Solver"
+      (arxiv 2506.18315) showed 23-37% improvement using property-based testing
+      instead of example-based testing. We should integrate PBT into our pipeline.
 
       EXISTING CODE TO READ FIRST:
       - python/carnot/pipeline/extract.py — CodeExtractor
-      - scripts/experiment_208_humaneval_live_it.py — current live benchmark
-      - results/experiment_208_results.json — current live baseline
-      - scripts/experiment_53_runtime_constraints.py — runtime instrumentation approach
+      - python/carnot/verify/property_test.py — existing property testing
+      - python/carnot/pipeline/humaneval_live_benchmark.py — Exp 208 harness
 
-      TASK: Create python/carnot/pipeline/property_code_verifier.py
+      TASK: Create python/carnot/pipeline/pbt_code_verifier.py
 
       CONCRETE STEPS:
-      1. Implement a code verifier that derives extra properties and invariants from:
-         - the prompt intent
-         - the function signature
-         - docstrings and examples
-         - existing official tests
-      2. Turn property failures into structured repair feedback that can be passed back through VerifyRepairPipeline.
-      3. Integrate with the current execution-based code path instead of replacing it.
-      4. Add focused tests proving the verifier catches at least some bugs missed by the official tests alone.
-      5. Keep the implementation lightweight enough for live HumanEval runs.
+      1. Create PBTCodeVerifier that:
+         a. Takes LLM-generated code
+         b. Generates property-based tests (invariants, edge cases, type checks)
+         c. Uses hypothesis library for PBT test generation
+         d. Runs PBT tests against the generated code
+         e. Returns ConstraintResults with violation details
+      2. Integrate with VerifyRepairPipeline as a new code verification path
+      3. Test on 5 HumanEval problems to validate the approach
+      4. Compare: basic execution vs PBT on the same problems
+      5. Write tests achieving 100% coverage
       6. Run: .venv/bin/pytest tests/python -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 67: Rebuild the Live Evidence Base ────────────────
-  - id: exp218-live-dual-model-harness
-    milestone: "2026.04.15"
-    deliverable: scripts/experiment_218_live_dual_model_suite.py
-    title: "Exp 218: Shared dual-model live benchmark harness"
+  # ── Phase 69: Infrastructure Acceleration ──
+  - id: exp224a-warm-model-server
+    milestone: "2026.04.16"
+    deliverable: python/carnot/inference/model_server.py
+    title: "Exp 224a: Warm model server — persistent GPU models with batched inference"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: Recent live experiments were informative but fragmented. The
-      next milestone needs one checkpointed harness that can run paired live
-      benchmarks on Qwen3.5-0.8B and google/gemma-4-E4B-it with shared prompts,
-      shared seeds, and reusable output schemas.
+      CONTEXT: Every experiment cold-loads models (~3s each, 400 times in
+      Exp 219). We also process 1 question at a time when GPUs can batch
+      8-16 questions per forward pass for 4-8x throughput.
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_206_z3_live.py — shared GSM8K live benchmark pattern
-      - scripts/experiment_207_llm_extractor_live.py — paired comparison pattern
-      - scripts/experiment_208_humaneval_live_it.py — live code benchmark pattern
-      - results/experiment_180_results.json — current live GPU model-loading baseline
+      - python/carnot/inference/model_loader.py — current model loading
+      - python/carnot/pipeline/dual_model_harness.py — Exp 218 harness
 
-      TASK: Create scripts/experiment_218_live_dual_model_suite.py
+      TASK: Create python/carnot/inference/model_server.py
 
       CONCRETE STEPS:
-      1. Build a unified CLI that can run:
-         - `gsm8k_semantic`
-         - `humaneval_property`
-         - `constraint_ir`
-      2. Support exactly these models:
-         - Qwen3.5-0.8B
-         - google/gemma-4-E4B-it
-      3. Add checkpointing so long runs can resume cleanly by model, mode, and benchmark.
-      4. Reuse identical prompt seeds across baseline, verify-only, and verify-repair modes.
-      5. Emit stable JSON schemas that Exp 219, Exp 220, and Exp 221 can consume directly.
-      6. Run: .venv/bin/python scripts/experiment_218_live_dual_model_suite.py --help
+      1. Create ModelServer that:
+         a. Loads models once and keeps them warm on GPU
+         b. Accepts inference requests via a queue (multiprocessing or threading)
+         c. Batches multiple questions into a single forward pass
+         d. Returns results per-question from the batched output
+         e. Configurable batch size (default 8, max 16)
+         f. Graceful shutdown: releases GPU memory on exit
+         g. Health check: reports loaded models, GPU memory, batch stats
+      2. Create a context manager API:
+         with ModelServer(["Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it"]) as server:
+             results = server.generate_batch(questions, model="Qwen/Qwen3.5-0.8B")
+      3. Update model_loader.py to optionally connect to a running ModelServer
+         instead of loading a fresh model each time
+      4. Benchmark: cold-load vs warm-server on 50 questions (measure speedup)
+      5. Write tests (mock GPU for CI)
+      6. Run: .venv/bin/pytest tests/python -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp219-gsm8k-semantic-live
-    milestone: "2026.04.15"
-    deliverable: results/experiment_219_results.json
-    title: "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma4-E4B-it"
+  - id: exp224c-tensorrt-acceleration
+    milestone: "2026.04.16"
+    deliverable: results/experiment_224c_results.json
+    title: "Exp 224c: TensorRT-LLM acceleration for 2-4x inference speedup"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: This is the decisive live test for the new semantic verifier.
-      Exp 206 and Exp 207 proved arithmetic extractors could not see the real
-      error class. Exp 219 tests whether the new typed + semantic path can.
+      CONTEXT: Our benchmarks spend most wall time on model.generate() calls.
+      TensorRT-LLM can give 2-4x speedup via kernel fusion, quantization,
+      and KV cache optimization. We have 2x RTX 3090 with CUDA 12.
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_218_live_dual_model_suite.py — shared live harness
-      - python/carnot/pipeline/semantic_grounding.py — semantic verifier
-      - python/carnot/pipeline/structured_reasoning.py — structured path
-      - results/experiment_206_results.json — Z3 live baseline
-      - results/experiment_207_results.json — LLM extractor live baseline
+      - python/carnot/inference/model_loader.py — current HF model loading
+      - python/carnot/inference/model_server.py — warm model server (Exp 224a)
 
-      TASK: Create results/experiment_219_results.json
+      TASK: Add TensorRT-LLM backend to the inference pipeline
 
       CONCRETE STEPS:
-      1. Run 200 GSM8K questions per model with live inference.
-      2. Evaluate three modes:
-         - baseline
-         - verify-only
-         - verify-repair
-      3. Use the Exp 213 policy to decide when to request structured reasoning and when to fall back.
-      4. Report:
-         - accuracy and paired deltas
-         - semantic violations detected
-         - false positives
-         - parse coverage
-         - repair yield
-         - latency / token overhead
-      5. Save with full live inference metadata and per-question artifacts needed for later trace-learning.
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_218_live_dual_model_suite.py --benchmark gsm8k_semantic --sample-size 200 --output results/experiment_219_results.json
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Add tensorrt-llm to pyproject.toml optional dependencies [cuda]
+      2. Create python/carnot/inference/tensorrt_backend.py:
+         a. TRTLLMBackend implementing the same interface as HF generate
+         b. Engine build step: convert HF model to TRT engine (cached on disk)
+         c. Engine cache: check for pre-built engine before rebuilding
+         d. Fallback to HF if TRT-LLM not installed or build fails
+         e. Support FP16 and INT8 quantization modes
+      3. Update ModelServer (Exp 224a) to prefer TRT backend when available
+      4. Build TRT engines for Qwen3.5-0.8B and Gemma4-E4B-it
+      5. Benchmark: HF vs TRT-LLM on 50 questions (measure latency speedup)
+      6. Write tests (mock TRT for CI, real TRT for local)
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp220-humaneval-property-live
-    milestone: "2026.04.15"
-    deliverable: results/experiment_220_results.json
-    title: "Exp 220: Live HumanEval property benchmark on Qwen3.5-0.8B and Gemma4-E4B-it"
+  - id: exp224b-dual-gpu-parallel
+    milestone: "2026.04.16"
+    deliverable: python/carnot/inference/dual_gpu.py
+    title: "Exp 224b: Dual-GPU parallel inference — run both models simultaneously"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: Exp 208 already showed a small positive live repair delta on
-      code. This experiment extends that path with the property-generated code
-      verifier and validates it on both target models.
+      CONTEXT: We have 2x RTX 3090 (24GB each). Our benchmarks run Qwen on
+      GPU 0 then Gemma on GPU 1 SEQUENTIALLY. Exp 219 took 90 min. Running
+      both models in parallel would halve wall time to ~45 min.
+
+      For small models (0.8B-4B), each fits on one GPU. For larger models
+      (7B+), use device_map="auto" to split layers across both GPUs.
 
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_218_live_dual_model_suite.py — shared live harness
-      - python/carnot/pipeline/property_code_verifier.py — stronger code verifier
-      - results/experiment_208_results.json — current live baseline on Gemma
-      - python/carnot/pipeline/verify_repair.py — repair loop integration
+      - python/carnot/inference/model_loader.py — current model loading
+      - python/carnot/pipeline/dual_model_harness.py — Exp 218 harness
+      - scripts/experiment_218_live_dual_model_suite.py — benchmark runner
 
-      TASK: Create results/experiment_220_results.json
+      TASK: Create python/carnot/inference/dual_gpu.py
 
       CONCRETE STEPS:
-      1. Run 50 official HumanEval problems per model with live inference.
-      2. Compare:
-         - baseline pass@1
-         - execution-only verification
-         - execution + property-generated verification
-         - full verify-repair
-      3. Report property violations detected, repair success rate, latency, and whether the new verifier catches bugs that the official tests alone miss.
-      4. Save per-problem traces needed for later self-learning and analysis.
-      5. Keep the benchmark honest: no simulation, no older models, no hidden fallback to cached outputs.
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_218_live_dual_model_suite.py --benchmark humaneval_property --sample-size 50 --output results/experiment_220_results.json
+      1. Create DualGPURunner that:
+         a. Assigns model A to cuda:0, model B to cuda:1
+         b. Runs inference on both models in parallel (threading/asyncio)
+         c. Collects results from both into unified format
+         d. For large models: falls back to device_map="auto" across both GPUs
+      2. Update the Exp 218 harness to use DualGPURunner when 2 GPUs detected
+      3. Add --parallel flag to the benchmark CLI
+      4. Benchmark: sequential vs parallel wall time on 10 questions
+      5. Write tests (mock GPU for CI, real GPU for local)
+      6. Run: .venv/bin/pytest tests/python -q
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp221-constraint-ir-live
-    milestone: "2026.04.15"
-    deliverable: results/experiment_221_results.json
-    title: "Exp 221: Live prompt-side constraint benchmark on typed IR tasks"
+  - id: exp225-pbt-humaneval-30
+    milestone: "2026.04.16"
+    deliverable: results/experiment_225_results.json
+    title: "Exp 225: PBT on 30 HumanEval problems — head-to-head vs Exp 208"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: Carnot needs evidence that it can extract and verify prompt-side
-      constraints from instruction-tuned models, not just math solutions.
-      This experiment turns Exp 211's benchmark into a live evaluation.
+      CONTEXT: Exp 224 created PBTCodeVerifier. Now run it on the SAME 30
+      HumanEval problems as Exp 208 for direct comparison.
+      Exp 208 baseline: 16.7% -> 20.0% (+3.3pp) with basic execution.
+      Target: PBT should show a larger improvement.
 
       EXISTING CODE TO READ FIRST:
-      - data/research/constraint_ir_benchmark_211.jsonl — benchmark dataset
-      - scripts/experiment_218_live_dual_model_suite.py — shared live harness
-      - python/carnot/pipeline/typed_reasoning.py — typed IR
-      - python/carnot/pipeline/semantic_grounding.py — semantic verifier
-      - results/experiment_213_results.json — monitorability policy
+      - python/carnot/pipeline/pbt_code_verifier.py — Exp 224
+      - python/carnot/pipeline/humaneval_live_benchmark.py — benchmark harness
+      - results/experiment_208_results.json — baseline to compare against
 
-      TASK: Create results/experiment_221_results.json
+      TASK: Run PBT verification on 30 HumanEval with live Gemma4-E4B-it
 
       CONCRETE STEPS:
-      1. Run a curated 100-example live benchmark from Exp 211 on both target models.
-      2. Measure:
-         - constraint extraction coverage
-         - exact / partial constraint satisfaction
-         - parse success
-         - semantic violation detection
-         - free-form vs structured-output behavior
-      3. Break down failures by constraint type so the next milestone can see what remains literal vs semantic vs search/optimization-limited.
-      4. Save the full artifact in the same paired format as Exp 219 and Exp 220.
-      5. Prefer deterministic or rule-based scoring where possible; only use model-assisted judging when necessary and label it clearly.
-      6. Run: CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_218_live_dual_model_suite.py --benchmark constraint_ir --sample-size 100 --output results/experiment_221_results.json
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Create scripts/experiment_225_pbt_humaneval.py
+      2. Load the same 30 seeded HumanEval problems as Exp 208
+      3. Run with PBTCodeVerifier instead of basic CodeExtractor
+      4. Compare: basic execution (Exp 208) vs PBT (this exp)
+      5. Report: baseline, verify-only, verify-repair, delta, CI
+      6. Write tests for the benchmark script
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  # ── Phase 68: Continuous Self-Learning from Live Traces ─────
-  - id: exp222-live-trace-memory
-    milestone: "2026.04.15"
-    deliverable: results/experiment_222_results.json
-    title: "Exp 222: Live trace to memory / repair-snippet builder"
+  - id: exp226-pbt-humaneval-full
+    milestone: "2026.04.16"
+    deliverable: results/experiment_226_results.json
+    title: "Exp 226: Full 164-problem HumanEval with PBT — publishable result"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: `research-program.md` makes continuous self-learning a core
-      architectural goal, but Carnot is still not learning from the exact live
-      failures it now understands best. This experiment converts live verifier
-      traces into reusable memory and repair guidance.
+      CONTEXT: If Exp 225 shows improvement, run the FULL 164-problem
+      HumanEval benchmark for a publishable result with confidence intervals.
 
       EXISTING CODE TO READ FIRST:
-      - research-program.md — "Continuous Self-Learning" section
-      - python/carnot/pipeline/tracker.py — Tier 1 tracker
-      - python/carnot/pipeline/memory.py — Tier 2 memory
-      - results/experiment_219_results.json — live GSM8K semantic traces
-      - results/experiment_220_results.json — live HumanEval property traces
-      - results/experiment_221_results.json — live prompt-side constraint traces
+      - results/experiment_225_results.json — 30-problem PBT results
+      - python/carnot/pipeline/pbt_code_verifier.py
+      - python/carnot/pipeline/humaneval_live_benchmark.py
 
-      TASK: Create results/experiment_222_results.json
+      TASK: Full 164-problem HumanEval PBT benchmark
 
       CONCRETE STEPS:
-      1. Build a live trace ingestion path that converts verified outcomes into:
-         - `ConstraintMemory` entries
-         - repair snippets / prompt patches
-         - model/domain-specific verifier reliability stats
-         - monitorability-policy updates
-      2. Preserve provenance so low-confidence or ambiguous traces do not contaminate memory.
-      3. Persist the learned memory to results/constraint_memory_live_222.json.
-      4. Measure memory growth, retrieval usefulness, and the precision of reused patterns.
-      5. Create scripts/experiment_222_live_trace_memory.py to run the ingestion and analysis.
-      6. Run: .venv/bin/python scripts/experiment_222_live_trace_memory.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Create scripts/experiment_226_pbt_humaneval_full.py
+      2. Run ALL 164 official HumanEval problems with live GPU
+      3. Use PBTCodeVerifier + up to 3 repair attempts
+      4. Checkpoint every 10 problems (long-running)
+      5. Bootstrap 95% CI for improvement delta
+      6. Compare against published baselines for Gemma4-E4B-it
+      7. Write summary suitable for technical report
+      8. Write tests
+      9. Run: .venv/bin/pytest tests/python -q
+      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp223-self-learning-replay
-    milestone: "2026.04.15"
-    deliverable: results/experiment_223_results.json
-    title: "Exp 223: Chronological replay benchmark for continuous self-learning"
+  # ── Phase 71: Multi-Model Code Verification ──
+  - id: exp227-multi-model-code
+    milestone: "2026.04.16"
+    deliverable: results/experiment_227_results.json
+    title: "Exp 227: PBT code verification on Qwen3.5-0.8B — cross-model validation"
     prompt: |
       You are working on the Carnot EBM framework in {project_root}.
       Read CLAUDE.md for code style requirements.
-      Use {date} as the run date for any artifacts or metadata you create.
 
-      CONTEXT: Carnot now has live traces and a proposed memory builder. The
-      final experiment of the milestone tests whether those live-derived traces
-      produce a real held-out benefit over time instead of another simulated
-      self-learning claim.
+      CONTEXT: All code verification so far used Gemma4-E4B-it. Test on
+      Qwen3.5-0.8B to validate the approach works across model families.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_222_results.json — live trace memory summary
-      - results/constraint_memory_live_222.json — persisted live memory
-      - python/carnot/pipeline/tracker.py — Tier 1 tracker
-      - python/carnot/pipeline/memory.py — Tier 2 memory
-      - research-program.md — learning tiers and success conditions
+      - python/carnot/pipeline/pbt_code_verifier.py
+      - results/experiment_225_results.json — Gemma results
 
-      TASK: Create results/experiment_223_results.json
+      TASK: Run PBT HumanEval on Qwen3.5-0.8B (30 problems)
 
       CONCRETE STEPS:
-      1. Replay held-out live traces in chronological order and compare:
-         - no learning
-         - tracker-only learning
-         - tracker + memory learning
-      2. Use held-out slices from Exp 219, Exp 220, and Exp 221 so the benchmark measures reuse, not memorization.
-      3. Report:
-         - accuracy / pass-rate / constraint-satisfaction over time
-         - false-positive regression budget
-         - retrieval hit rate
-         - per-model transfer effects
-      4. Require all improvements to come from live-derived updates only.
-      5. Create scripts/experiment_223_self_learning_replay.py to execute the replay and analysis.
-      6. Run: .venv/bin/python scripts/experiment_223_self_learning_replay.py
-      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      1. Create scripts/experiment_227_qwen_pbt.py
+      2. Same 30 seeded problems as Exp 225
+      3. Live GPU inference with Qwen3.5-0.8B
+      4. PBT verification + repair
+      5. Compare Qwen vs Gemma results
+      6. Write tests
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 72: FPGA Ising Prototype ──
+  - id: exp228-fpga-ising-design
+    milestone: "2026.04.16"
+    deliverable: results/experiment_228_results.json
+    title: "Exp 228: KV260 FPGA Ising sampler design and simulation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The Kria KV260 FPGA should have arrived. It has 256K LUTs,
+      enough for ~4K p-bits. Reference: arxiv 2512.24558 (6400-spin FPGA
+      Ising machine, 64 billion flips/second).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/parallel_ising.py — current CPU Ising sampler
+      - python/carnot/samplers/backend.py — SamplerBackend abstraction
+      - research-hardware-wishlist.md — KV260 specs
+
+      TASK: Design the FPGA Ising sampler architecture
+
+      CONCRETE STEPS:
+      1. Design the p-bit array architecture (target: 4K spins)
+      2. Define the AXI-Lite register map for coupling updates
+      3. Create python/carnot/samplers/fpga_ising.py with:
+         a. FPGAIsingSampler implementing SamplerBackend
+         b. Coupling matrix upload via PYNQ overlay
+         c. Sampling trigger and result readback
+         d. Fallback to CPU sampler if FPGA not detected
+      4. Simulate with software model first (no hardware needed)
+      5. Benchmark: simulated FPGA vs actual CPU sampler
+      6. Document the Verilog design in docs/fpga-ising-design.md
+      7. Write tests
+      8. Run: .venv/bin/pytest tests/python -q
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 73: Self-Learning from Code Traces ──
+  - id: exp229-code-trace-learning
+    milestone: "2026.04.16"
+    deliverable: results/experiment_229_results.json
+    title: "Exp 229: Self-learning from code verification traces"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Code verification produces rich traces: which tests fail,
+      what properties are violated, what repairs work. This is Tier 1-2
+      self-learning data. Use it to improve future verifications.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — ConstraintTracker
+      - python/carnot/pipeline/pbt_code_verifier.py
+      - results/experiment_225_results.json — verification traces
+
+      TASK: Build self-learning from code verification traces
+
+      CONCRETE STEPS:
+      1. Extract patterns from Exp 225/226 verification traces:
+         a. Which PBT properties catch the most bugs?
+         b. Which repair strategies succeed?
+         c. Which problem types benefit most from verification?
+      2. Create python/carnot/pipeline/code_learning.py:
+         a. TraceAnalyzer: extract patterns from verification history
+         b. PropertyRanker: rank PBT properties by effectiveness
+         c. RepairStrategy: learn which repairs work for which errors
+      3. Demonstrate: verification improves over time with accumulated traces
+      4. Write tests
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 74: Production Packaging ──
+  - id: exp230-code-verify-package
+    milestone: "2026.04.16"
+    deliverable: results/experiment_230_results.json
+    title: "Exp 230: Package code verification as standalone tool"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Code verification is our strongest live result. Package it
+      as a standalone tool users can actually use: CLI command, MCP tool,
+      and Python API.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/cli.py — existing CLI
+      - python/carnot/mcp/ — MCP server
+      - python/carnot/pipeline/pbt_code_verifier.py
+
+      TASK: Package code verification for end users
+
+      CONCRETE STEPS:
+      1. Add CLI command: carnot verify-code <file> --func <name> --pbt
+      2. Add MCP tool: verify_code_with_pbt
+      3. Add Python API: from carnot.pipeline import verify_code
+      4. Write usage examples in docs/
+      5. Test end-to-end: generate code with LLM, verify with PBT, repair
+      6. Write tests
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp231-honest-docs-update
+    milestone: "2026.04.16"
+    deliverable: results/experiment_231_results.json
+    title: "Exp 231: Update all documentation with PBT results and FPGA progress"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      TASK: Update README, technical report, and GitHub Pages with latest results.
+
+      CONCRETE STEPS:
+      1. Update docs/technical-report.md with PBT code verification results
+      2. Update docs/index.html with new experiment counts and PBT results
+      3. Update README.md with PBT verification section
+      4. Add FPGA Ising design to hardware section
+      5. Ensure all provenance labels are accurate
+      6. Render docs/technical-report.html from updated markdown
+      7. Write tests if any new modules were created
+      8. Run: .venv/bin/pytest tests/python -q
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
