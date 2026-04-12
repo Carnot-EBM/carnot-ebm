@@ -952,7 +952,7 @@ per-call cold loads versus the registered warm server
 | REQ-VERIFY-033 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
 | REQ-VERIFY-034 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
 | REQ-VERIFY-035 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
-| REQ-VERIFY-036 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-037 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-038 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-036 | Not Started | Implemented | Warm `ModelServer` lifecycle + export tests |
+| REQ-VERIFY-037 | Not Started | Implemented | Queued batching, health reporting, and shutdown-path tests |
+| REQ-VERIFY-038 | Not Started | Implemented | Model-loader server-handle + deterministic benchmark tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

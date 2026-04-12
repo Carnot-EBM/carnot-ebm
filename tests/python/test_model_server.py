@@ -6,10 +6,10 @@ SCENARIO-VERIFY-036, SCENARIO-VERIFY-037, SCENARIO-VERIFY-038
 
 from __future__ import annotations
 
+import threading
 from typing import Any
 
 import pytest
-
 from carnot.inference import ModelServer, benchmark_cold_load_vs_warm_server
 from carnot.inference.model_loader import (
     ServerBackedModelHandle,
@@ -219,13 +219,15 @@ class TestModelServerBatching:
 
     def test_unknown_model_raises_key_error(self) -> None:
         """REQ-VERIFY-036: generate_batch rejects model ids that were not loaded by the server."""
-        with ModelServer(
-            ["Qwen/Qwen3.5-0.8B"],
-            loader=_make_loader([]),
-            batch_generate_fn=_make_batch_generate([]),
-        ) as server:
-            with pytest.raises(KeyError, match="google/gemma-4-E4B-it"):
-                server.generate_batch(["hello"], model="google/gemma-4-E4B-it")
+        with (
+            ModelServer(
+                ["Qwen/Qwen3.5-0.8B"],
+                loader=_make_loader([]),
+                batch_generate_fn=_make_batch_generate([]),
+            ) as server,
+            pytest.raises(KeyError, match="google/gemma-4-E4B-it"),
+        ):
+            server.generate_batch(["hello"], model="google/gemma-4-E4B-it")
 
 
 class TestModelLoaderServerIntegration:
@@ -266,11 +268,14 @@ class TestModelLoaderServerIntegration:
             batch_generate_fn=_make_batch_generate([]),
         ) as server:
             register_model_server(server)
-            monkeypatch.setattr(model_loader, "_available_ram_bytes", lambda: 3 * 1024 ** 3)
+            monkeypatch.setattr(model_loader, "_available_ram_bytes", lambda: 3 * 1024**3)
 
             class _DummyAutoTokenizer:
                 @staticmethod
-                def from_pretrained(model_name: str, trust_remote_code: bool = True) -> dict[str, str]:
+                def from_pretrained(
+                    model_name: str,
+                    trust_remote_code: bool = True,
+                ) -> dict[str, str]:
                     assert model_name == "google/gemma-4-E4B-it"
                     assert trust_remote_code is True
                     return {"tokenizer_name": model_name}
@@ -310,7 +315,7 @@ class TestWarmServerBenchmark:
     """Tests for the deterministic cold-load versus warm-server benchmark."""
 
     def test_benchmark_reports_speedup_for_fifty_questions(self) -> None:
-        """SCENARIO-VERIFY-038: benchmark reports reproducible timings and speedup over 50 prompts."""
+        """SCENARIO-VERIFY-038: benchmark reports reproducible timings over 50 prompts."""
         clock = _FakeClock()
         cold_load_calls: list[str] = []
         warm_batch_calls: list[list[str]] = []
@@ -359,3 +364,208 @@ class TestWarmServerBenchmark:
             [f"question-{index}" for index in range(30, 40)],
             [f"question-{index}" for index in range(40, 50)],
         ]
+
+
+class TestModelServerCoveragePaths:
+    """Extra coverage for default helpers and defensive server paths."""
+
+    def test_start_is_idempotent_and_default_batch_generate_uses_generate(
+        self,
+        monkeypatch: pytest.MonkeyPatch,
+    ) -> None:
+        """REQ-VERIFY-036: default warm batching reuses the exported generate helper."""
+        import carnot.inference.model_server as model_server_module
+
+        load_calls: list[str] = []
+        generate_calls: list[tuple[str, str, int]] = []
+
+        def fake_generate(
+            model: dict[str, str],
+            tokenizer: dict[str, str],
+            prompt: str,
+            max_new_tokens: int = 256,
+        ) -> str:
+            del tokenizer
+            generate_calls.append((model["model_name"], prompt, max_new_tokens))
+            return f"{model['model_name']}::{prompt}"
+
+        monkeypatch.setattr(model_server_module, "generate", fake_generate)
+
+        server = model_server_module.ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=_make_loader(load_calls),
+        )
+        server.start()
+        server.start()
+        try:
+            result = server.generate("Explain batching", model="Qwen/Qwen3.5-0.8B")
+        finally:
+            server.shutdown()
+
+        assert result == "Qwen/Qwen3.5-0.8B::Explain batching"
+        assert load_calls == ["Qwen/Qwen3.5-0.8B"]
+        assert generate_calls == [("Qwen/Qwen3.5-0.8B", "Explain batching", 256)]
+
+    def test_start_raises_when_loader_cannot_warm_load(self) -> None:
+        """REQ-VERIFY-036: startup fails fast when eager warm loading yields no model."""
+        server = ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=lambda _name: (None, None),
+            batch_generate_fn=_make_batch_generate([]),
+        )
+
+        with pytest.raises(RuntimeError, match="Failed to warm-load model"):
+            server.start()
+
+    def test_generate_batch_handles_empty_prompts_and_requires_running_server(self) -> None:
+        """REQ-VERIFY-037: empty prompt batches are no-ops and stopped servers reject work."""
+        with ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=_make_loader([]),
+            batch_generate_fn=_make_batch_generate([]),
+        ) as server:
+            assert server.generate_batch([], model="Qwen/Qwen3.5-0.8B") == []
+
+        with pytest.raises(RuntimeError, match="not running"):
+            server.generate_batch(["hello"], model="Qwen/Qwen3.5-0.8B")
+
+    def test_generate_batch_surfaces_worker_errors(self) -> None:
+        """REQ-VERIFY-037: worker exceptions propagate back to the caller."""
+
+        def failing_batch_generate(
+            model: dict[str, str],
+            tokenizer: dict[str, str],
+            prompts: list[str],
+            max_new_tokens: int,
+        ) -> list[str]:
+            del model, tokenizer, prompts, max_new_tokens
+            raise ValueError("boom")
+
+        with (
+            ModelServer(
+                ["Qwen/Qwen3.5-0.8B"],
+                loader=_make_loader([]),
+                batch_generate_fn=failing_batch_generate,
+            ) as server,
+            pytest.raises(RuntimeError, match="boom"),
+        ):
+            server.generate_batch(["hello"], model="Qwen/Qwen3.5-0.8B")
+
+    def test_worker_defers_incompatible_requests_until_the_current_batch_finishes(self) -> None:
+        """REQ-VERIFY-037: incompatible queued work is deferred and then replayed in order."""
+        import carnot.inference.model_server as model_server_module
+
+        batch_calls: list[list[str]] = []
+        server = ModelServer(
+            ["Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it"],
+            loader=_make_loader([]),
+            batch_generate_fn=_make_batch_generate(batch_calls),
+        )
+        server._loaded_models = {
+            "Qwen/Qwen3.5-0.8B": (
+                {"model_name": "Qwen/Qwen3.5-0.8B"},
+                {"tokenizer_name": "Qwen/Qwen3.5-0.8B"},
+            ),
+            "google/gemma-4-E4B-it": (
+                {"model_name": "google/gemma-4-E4B-it"},
+                {"tokenizer_name": "google/gemma-4-E4B-it"},
+            ),
+        }
+        server._running = True
+
+        req1 = model_server_module._QueuedRequest(
+            model_name="Qwen/Qwen3.5-0.8B",
+            prompts=("question-1",),
+            max_new_tokens=32,
+        )
+        req2 = model_server_module._QueuedRequest(
+            model_name="google/gemma-4-E4B-it",
+            prompts=("question-2",),
+            max_new_tokens=32,
+        )
+        server._request_queue.put(req1)
+        server._request_queue.put(req2)
+
+        worker = threading.Thread(target=server._worker_loop, daemon=True)
+        worker.start()
+        assert req1.done.wait(timeout=1.0)
+        assert req2.done.wait(timeout=1.0)
+        server._stop_event.set()
+        worker.join(timeout=1.0)
+
+        assert req1.responses == ["Qwen/Qwen3.5-0.8B::question-1"]
+        assert req2.responses == ["google/gemma-4-E4B-it::question-2"]
+        assert batch_calls == [["question-1"], ["question-2"]]
+
+    def test_worker_coalesces_compatible_requests_into_one_forward_pass(self) -> None:
+        """SCENARIO-VERIFY-036: compatible queued requests are coalesced up to batch_size."""
+        import carnot.inference.model_server as model_server_module
+
+        batch_calls: list[list[str]] = []
+        server = ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=_make_loader([]),
+            batch_generate_fn=_make_batch_generate(batch_calls),
+        )
+        server._loaded_models = {
+            "Qwen/Qwen3.5-0.8B": (
+                {"model_name": "Qwen/Qwen3.5-0.8B"},
+                {"tokenizer_name": "Qwen/Qwen3.5-0.8B"},
+            ),
+        }
+        server._running = True
+
+        req1 = model_server_module._QueuedRequest(
+            model_name="Qwen/Qwen3.5-0.8B",
+            prompts=("question-1",),
+            max_new_tokens=32,
+        )
+        req2 = model_server_module._QueuedRequest(
+            model_name="Qwen/Qwen3.5-0.8B",
+            prompts=("question-2",),
+            max_new_tokens=32,
+        )
+        server._request_queue.put(req1)
+        server._request_queue.put(req2)
+
+        worker = threading.Thread(target=server._worker_loop, daemon=True)
+        worker.start()
+        assert req1.done.wait(timeout=1.0)
+        assert req2.done.wait(timeout=1.0)
+        server._stop_event.set()
+        worker.join(timeout=1.0)
+
+        assert req1.responses == ["Qwen/Qwen3.5-0.8B::question-1"]
+        assert req2.responses == ["Qwen/Qwen3.5-0.8B::question-2"]
+        assert batch_calls == [["question-1", "question-2"]]
+
+    def test_fail_pending_requests_marks_deferred_and_queued_work(self) -> None:
+        """REQ-VERIFY-037: shutdown cleanup wakes callers waiting on deferred or queued work."""
+        import carnot.inference.model_server as model_server_module
+
+        server = ModelServer(
+            ["Qwen/Qwen3.5-0.8B"],
+            loader=_make_loader([]),
+            batch_generate_fn=_make_batch_generate([]),
+        )
+        deferred = model_server_module._QueuedRequest(
+            model_name="Qwen/Qwen3.5-0.8B",
+            prompts=("deferred",),
+            max_new_tokens=8,
+        )
+        queued = model_server_module._QueuedRequest(
+            model_name="Qwen/Qwen3.5-0.8B",
+            prompts=("queued",),
+            max_new_tokens=8,
+        )
+        error = RuntimeError("shutting down")
+
+        server._deferred_requests.append(deferred)
+        server._request_queue.put(queued)
+        server._request_queue.put(None)
+        server._fail_pending_requests(error)
+
+        assert deferred.error is error
+        assert deferred.done.is_set()
+        assert queued.error is error
+        assert queued.done.is_set()

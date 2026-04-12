@@ -39,9 +39,11 @@
     Public API (also exported from carnot.inference):
     - load_model(model_name, device, dtype, max_retries) → (model, tokenizer)
     - generate(model, tokenizer, prompt, max_new_tokens) → str
+    - register_model_server(server) / clear_model_server()
+    - ServerBackedModelHandle for warm-server integration
     - ModelLoadError (re-exported from carnot.pipeline.errors)
 
-Spec: REQ-VERIFY-001, REQ-VERIFY-002, SCENARIO-VERIFY-003
+Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-038, SCENARIO-VERIFY-003
 """
 
 from __future__ import annotations
@@ -50,7 +52,8 @@ import gc
 import logging
 import os
 import time
-from typing import Any
+from dataclasses import dataclass
+from typing import Any, cast
 
 logger = logging.getLogger(__name__)
 
@@ -61,8 +64,8 @@ logger = logging.getLogger(__name__)
 # ---------------------------------------------------------------------------
 
 try:
-    import torch as _torch_module
     import torch
+    import torch as _torch_module
 except ImportError:  # pragma: no cover
     _torch_module = None  # type: ignore[assignment]
     torch = None  # type: ignore[assignment]
@@ -83,7 +86,7 @@ _TRANSFORMERS_AVAILABLE: bool = AutoModelForCausalLM is not None
 
 # Minimum free RAM (in bytes) required before attempting to load a model.
 # Qwen3.5-0.8B in float32 needs ~3 GB; we require at least 2 GB free.
-_MIN_FREE_RAM_BYTES: int = 2 * 1024 ** 3  # 2 GiB
+_MIN_FREE_RAM_BYTES: int = 2 * 1024**3  # 2 GiB
 
 # How long to wait between retry attempts when an OOM is detected.
 _RETRY_WAIT_SECONDS: float = 1.0
@@ -94,6 +97,52 @@ _RETRY_WAIT_SECONDS: float = 1.0
 # ---------------------------------------------------------------------------
 
 from carnot.pipeline.errors import ModelLoadError  # noqa: E402  (after constants)
+
+# ---------------------------------------------------------------------------
+# Warm-server integration
+# ---------------------------------------------------------------------------
+
+
+@dataclass(frozen=True)
+class ServerBackedModelHandle:
+    """Lightweight marker handle returned by load_model() for warm servers."""
+
+    model_name: str
+    server: Any
+
+
+_REGISTERED_MODEL_SERVER: Any | None = None
+
+
+def register_model_server(server: Any) -> None:
+    """Register a running ModelServer for server-backed loading.
+
+    Spec: REQ-VERIFY-038
+    """
+    global _REGISTERED_MODEL_SERVER
+    _REGISTERED_MODEL_SERVER = server
+
+
+def clear_model_server() -> None:
+    """Clear the registered warm ModelServer.
+
+    Spec: REQ-VERIFY-038
+    """
+    global _REGISTERED_MODEL_SERVER
+    _REGISTERED_MODEL_SERVER = None
+
+
+def _server_for_model(model_name: str) -> Any | None:
+    server = _REGISTERED_MODEL_SERVER
+    if server is None:
+        return None
+    if server.serves_model(model_name):
+        return server
+    return None
+
+
+def _as_server_handle(value: Any) -> ServerBackedModelHandle | None:
+    return value if isinstance(value, ServerBackedModelHandle) else None
 
 
 # ---------------------------------------------------------------------------
@@ -115,7 +164,7 @@ def _available_ram_bytes() -> int:
         for environments where it is not available; a warning is logged once.
     """
     try:
-        import psutil
+        import psutil  # type: ignore[import-untyped]
 
         return int(psutil.virtual_memory().available)
     except ImportError:
@@ -123,7 +172,7 @@ def _available_ram_bytes() -> int:
             "psutil not installed — skipping pre-load memory check. "
             "Install with: pip install psutil"
         )
-        return 2 ** 63  # effectively unlimited
+        return 2**63  # effectively unlimited
 
 
 def _check_memory(model_name: str) -> None:
@@ -141,8 +190,8 @@ def _check_memory(model_name: str) -> None:
     """
     available = _available_ram_bytes()
     if available < _MIN_FREE_RAM_BYTES:
-        available_gb = available / 1024 ** 3
-        required_gb = _MIN_FREE_RAM_BYTES / 1024 ** 3
+        available_gb = available / 1024**3
+        required_gb = _MIN_FREE_RAM_BYTES / 1024**3
         raise ModelLoadError(
             f"Insufficient memory to load '{model_name}': "
             f"{available_gb:.1f} GiB available, {required_gb:.1f} GiB required.",
@@ -213,8 +262,13 @@ def load_model(
             torch/transformers are not installed, or when available RAM
             is below the minimum threshold.
 
-    Spec: REQ-VERIFY-001, SCENARIO-VERIFY-003
+    Spec: REQ-VERIFY-001, REQ-VERIFY-038, SCENARIO-VERIFY-003
     """
+    server = _server_for_model(model_name)
+    if server is not None:
+        handle = ServerBackedModelHandle(model_name=model_name, server=server)
+        return handle, handle
+
     # --- Early exits ---
     if os.environ.get("CARNOT_SKIP_LLM"):
         logger.info("CARNOT_SKIP_LLM set — skipping model load for '%s'.", model_name)
@@ -244,8 +298,8 @@ def load_model(
     if force_cpu:
         effective_device = "cpu"
     else:
-        effective_device = device if device == "cpu" else (
-            "cuda" if torch.cuda.is_available() else "cpu"
+        effective_device = (
+            device if device == "cpu" else ("cuda" if torch.cuda.is_available() else "cpu")
         )
 
     # --- dtype resolution ---
@@ -259,7 +313,11 @@ def load_model(
     for attempt in range(1, max_retries + 1):
         logger.info(
             "Loading '%s' on %s (dtype=%s, attempt %d/%d)...",
-            model_name, effective_device, effective_dtype, attempt, max_retries,
+            model_name,
+            effective_device,
+            effective_dtype,
+            attempt,
+            max_retries,
         )
 
         try:
@@ -269,19 +327,23 @@ def load_model(
                 raise
             logger.warning(
                 "Memory check failed for '%s' (attempt %d/%d).",
-                model_name, attempt, max_retries,
+                model_name,
+                attempt,
+                max_retries,
             )
             return None, None
 
         try:
             tokenizer = AutoTokenizer.from_pretrained(
-                model_name, trust_remote_code=True,
+                model_name,
+                trust_remote_code=True,
             )
             model = AutoModelForCausalLM.from_pretrained(
                 model_name,
                 trust_remote_code=True,
                 torch_dtype=effective_dtype,
             )
+            model = cast("Any", model)
             if effective_device == "cuda":
                 model = model.cuda()
             model.eval()
@@ -294,7 +356,9 @@ def load_model(
             if is_oom and attempt < max_retries:
                 logger.warning(
                     "OOM loading '%s' (attempt %d/%d). Freeing memory and retrying...",
-                    model_name, attempt, max_retries,
+                    model_name,
+                    attempt,
+                    max_retries,
                 )
                 gc.collect()
                 try:
@@ -315,8 +379,7 @@ def load_model(
 
     # All attempts failed.
     err = ModelLoadError(
-        f"Failed to load model '{model_name}' after {max_retries} attempt(s): "
-        f"{last_exc}",
+        f"Failed to load model '{model_name}' after {max_retries} attempt(s): {last_exc}",
         details={
             "model_name": model_name,
             "device": effective_device,
@@ -376,8 +439,20 @@ def generate(
     Raises:
         RuntimeError: If model or tokenizer is None (not loaded).
 
-    Spec: REQ-VERIFY-001, REQ-VERIFY-002
+    Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-038
     """
+    handle = _as_server_handle(model) or _as_server_handle(tokenizer)
+    if handle is not None:
+        responses = cast(
+            "list[str]",
+            handle.server.generate_batch(
+                [prompt],
+                model=handle.model_name,
+                max_new_tokens=max_new_tokens,
+            ),
+        )
+        return responses[0]
+
     if model is None or tokenizer is None:
         raise RuntimeError(
             "generate() called with model=None or tokenizer=None. "
@@ -438,4 +513,4 @@ def generate(
     if "</think>" in response:
         response = response.split("</think>")[-1].strip()
 
-    return response.strip()
+    return cast("str", response.strip())

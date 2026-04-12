@@ -14,26 +14,6 @@
 Spec: REQ-INFER-003 through REQ-INFER-013, REQ-CODE-004
 """
 
-from carnot.inference.guided_decoding import (
-    EnergyGuidedSampler,
-    GuidedDecodingResult,
-)
-from carnot.inference.composite_scorer import (
-    CompositeEnergyConfig,
-    CompositeEnergyScorer,
-)
-from carnot.inference.ebm_loader import (
-    KNOWN_MODELS,
-    get_model_info,
-    load_ebm,
-)
-from carnot.inference.ebm_rejection import (
-    EBMCandidateScore,
-    EBMRejectionConfig,
-    EBMRejectionResult,
-    ebm_rejection_sample,
-    score_activations_with_ebm,
-)
 from carnot.inference.arm_ebm_bridge import (
     TokenEnergyAnalysis,
     analyze_token_energy,
@@ -50,12 +30,32 @@ from carnot.inference.code_verifier import (
     train_code_verifier,
     verify_python_function,
 )
+from carnot.inference.composite_scorer import (
+    CompositeEnergyConfig,
+    CompositeEnergyScorer,
+)
 from carnot.inference.diffusion import (
     DiffusionConfig,
     DiffusionResult,
     diffusion_generate,
     diffusion_generate_coloring,
     diffusion_generate_sat,
+)
+from carnot.inference.ebm_loader import (
+    KNOWN_MODELS,
+    get_model_info,
+    load_ebm,
+)
+from carnot.inference.ebm_rejection import (
+    EBMCandidateScore,
+    EBMRejectionConfig,
+    EBMRejectionResult,
+    ebm_rejection_sample,
+    score_activations_with_ebm,
+)
+from carnot.inference.guided_decoding import (
+    EnergyGuidedSampler,
+    GuidedDecodingResult,
 )
 from carnot.inference.learned_verifier import (
     ComparisonResult,
@@ -77,6 +77,19 @@ from carnot.inference.llm_solver import (
     solve_coloring_with_llm,
     solve_sat_with_llm,
 )
+from carnot.inference.model_loader import (
+    ModelLoadError,
+    ServerBackedModelHandle,
+    clear_model_server,
+    generate,
+    load_model,
+    register_model_server,
+)
+from carnot.inference.model_server import (
+    ModelServer,
+    WarmServerBenchmarkResult,
+    benchmark_cold_load_vs_warm_server,
+)
 from carnot.inference.multi_start import (
     MultiStartResult,
     multi_start_repair,
@@ -97,11 +110,6 @@ from carnot.inference.verify_and_repair import (
     parse_llm_coloring,
     parse_llm_sat_assignment,
     verify_and_repair,
-)
-from carnot.inference.model_loader import (
-    ModelLoadError,
-    generate,
-    load_model,
 )
 
 __all__ = [
@@ -128,12 +136,17 @@ __all__ = [
     "ReasoningEnergyResult",
     "ReasoningVerifierConfig",
     "SemanticEnergyResult",
+    "ServerBackedModelHandle",
     "TokenEnergyAnalysis",
     "ModelLoadError",
+    "ModelServer",
     "VerifyRepairResult",
+    "WarmServerBenchmarkResult",
     "analyze_token_energy",
+    "benchmark_cold_load_vs_warm_server",
     "build_learned_sat_energy",
     "classify_hallucination",
+    "clear_model_server",
     "ebm_rejection_sample",
     "generate",
     "get_model_info",
@@ -155,10 +168,12 @@ __all__ = [
     "run_llm_coloring_experiment",
     "load_ebm",
     "load_model",
+    "logprob_rejection_sample",
     "score_activations_with_ebm",
     "run_llm_sat_experiment",
     "solve_coloring_with_llm",
     "solve_sat_with_llm",
+    "register_model_server",
     "train_code_verifier",
     "train_reasoning_energy",
     "train_sat_verifier",
