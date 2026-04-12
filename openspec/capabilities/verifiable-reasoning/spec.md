@@ -433,6 +433,46 @@ The same workflow shall write `results/experiment_222_results.json`, where:
 - low-confidence or quarantined traces do not contribute to memory-growth or
   policy-update counts as if they were accepted learning events
 
+### REQ-VERIFY-033: Exp 223 Held-Out Chronological Replay Cohorts
+
+The repository shall provide an Exp 223 replay workflow over the checked-in
+live artifacts from Exp 219, Exp 220, and Exp 221, where:
+- the workflow deterministically reconstructs per-case replay items for the
+  `verify_only`, `baseline`, and `verify_repair` modes of each live benchmark
+- the workflow derives deterministic held-out slices from each of Exp 219,
+  Exp 220, and Exp 221 so evaluation measures reuse rather than memorization
+- held-out replay items are evaluated in chronological order without being used
+  to update the tracker or memory state for later held-out items
+- only non-held-out live traces may contribute learning updates during the
+  replay
+
+### REQ-VERIFY-034: Exp 223 Strategy Comparison And Over-Time Metrics
+
+The Exp 223 workflow shall write `results/experiment_223_results.json`, where:
+- the artifact records the fixed Exp 223 run date `20260412`
+- the workflow compares `no_learning`, `tracker_only`, and
+  `tracker_plus_memory` replay strategies on the same held-out items
+- the summary reports held-out task metrics over time for GSM8K accuracy,
+  HumanEval pass-rate, and prompt-side exact constraint satisfaction
+- the summary reports held-out false-positive counts and whether each learning
+  strategy stayed within a zero-additional-false-positive regression budget
+  relative to `no_learning`
+- the summary reports retrieval hit rate and retrieval precision for any
+  strategy that reuses live-derived memory patterns
+
+### REQ-VERIFY-035: Exp 223 Live-Only Provenance And Transfer Analysis
+
+The same artifact shall make the learning provenance explicit, where:
+- every tracker update and memory-pattern update is traceable to prior
+  non-held-out live traces only
+- the artifact reports per-model transfer effects, including when prior traces
+  from one model materially help or gate decisions for the other model on
+  held-out cases
+- the artifact distinguishes same-model support from cross-model support for
+  tracker and memory decisions
+- improvements are not attributed to simulated traces, synthetic labels, or
+  prebuilt full-corpus memory snapshots that include held-out cases
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -766,6 +806,38 @@ repair prompts for the same failure shape
 **And** the snippet remains traceable to the source experiment, model, and
   case histories that produced it
 
+### SCENARIO-VERIFY-033: Held-Out Replay Does Not Learn From Evaluation Cases
+
+**Given** deterministic held-out slices from Exp 219, Exp 220, and Exp 221
+**When** the Exp 223 workflow replays the live traces chronologically
+**Then** held-out cases are evaluated in order
+**And** only earlier non-held-out live traces may update the tracker or memory
+  state seen by those held-out cases
+**And** rerunning the workflow yields the same held-out case order and metrics
+
+### SCENARIO-VERIFY-034: Tracker Gating Avoids Harmful False-Positive Escalation
+
+**Given** earlier live traces show that a detected error type is noisy on the
+same benchmark or domain
+**When** the `tracker_only` strategy reaches a later held-out case with the
+same detected error type
+**Then** it may suppress the repair escalation for that held-out case
+**And** the held-out false-positive count does not increase relative to
+  `no_learning`
+
+### SCENARIO-VERIFY-035: Live Memory Reuse Shows Cross-Model Transfer
+
+**Given** mature live memory patterns were learned from non-held-out traces for
+one model
+**And** a later held-out case from the other model exposes the same failure
+shape
+**When** the `tracker_plus_memory` strategy replays that held-out case
+**Then** the artifact records a memory retrieval hit
+**And** any changed decision is attributed to cross-model live support rather
+  than same-case memorization
+**And** the resulting held-out outcome remains traceable to the live source
+  cases that supplied the reused pattern
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -802,4 +874,7 @@ repair prompts for the same failure shape
 | REQ-VERIFY-030 | Not Started | Implemented | Exp 222 live trace memory tests |
 | REQ-VERIFY-031 | Not Started | Implemented | Exp 222 live trace memory tests + artifact refresh |
 | REQ-VERIFY-032 | Not Started | Implemented | Exp 222 reliability, retrieval, and policy update tests |
+| REQ-VERIFY-033 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
+| REQ-VERIFY-034 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
+| REQ-VERIFY-035 | Not Started | Implemented | Exp 223 held-out replay tests + artifact refresh |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

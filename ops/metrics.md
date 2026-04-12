@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 223 Held-Out Live Self-Learning Replay
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T17:09:30Z | 2026-04-12T17:43:10Z | Exp 223: extended `verifiable-reasoning` with `VERIFY-033` through `VERIFY-035`, wrote `test_self_learning_replay.py` first, implemented `python/carnot/pipeline/self_learning_replay.py` plus `scripts/experiment_223_self_learning_replay.py`, generated `results/experiment_223_results.json`, reconciled traceability/status/changelog, and reran the required validation commands including targeted 100% coverage for the new module/script, the full Python suite, spec coverage, Ruff, mypy, `tests/integration/test_full_pipeline.py`, and `bash scripts/validate-reconciliation.sh`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 222 Live Trace Memory And Repair Guidance
 
 ### Turn Log
