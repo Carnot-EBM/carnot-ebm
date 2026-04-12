@@ -1304,3 +1304,4 @@
 | 2026-04-12 02:41 UTC | Exp 203: Extraction autopsy — why ArithmeticExtrac | FAIL | Codex CLI error: 1["correct"] is True
 +    assert correct1["failure_category" |
 | 2026-04-12 02:42 UTC | Exp 203: Extraction autopsy — why ArithmeticExtrac | OK | Deliverable already exists in repo |
+| 2026-04-12 03:08 UTC | Exp 204: Z3 SMT constraint extractor — formal veri | OK | Deliverable already exists in repo |
