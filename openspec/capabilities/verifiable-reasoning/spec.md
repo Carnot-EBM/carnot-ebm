@@ -152,6 +152,43 @@ The same workflow shall write `results/monitorability_policy_213.json`, where:
 - the policy remains machine-readable and deterministic given the measured
   audit summary
 
+### REQ-VERIFY-015: Typed Reasoning Intermediate Representation
+
+The repository shall provide a typed reasoning intermediate representation in
+`python/carnot/pipeline/typed_reasoning.py`, where:
+- the IR can represent user constraints extracted from the prompt
+- the IR can represent ordered reasoning steps extracted from the response
+- the IR can represent atomic claims attached to individual reasoning steps
+- the IR can represent the final answer in a normalized verifier-friendly form
+- the IR records extraction provenance including the extraction method and a
+  fixed parser version string `20260412`
+
+### REQ-VERIFY-016: Dual-Path Typed Reasoning Extraction And Validation
+
+The same module shall provide a dual-path extractor for typed reasoning, where:
+- direct structured JSON emitted by a model is parsed into the typed IR when
+  the response contains a machine-readable reasoning payload
+- plain-text responses fall back to deterministic post-hoc parsing of prompt
+  constraints, reasoning steps, atomic claims, and the final answer
+- malformed or internally inconsistent IR payloads fail validation
+  deterministically rather than silently producing partial invalid state
+- the extractor remains backward compatible with the existing
+  `ConstraintExtractor` pipeline and does not require changes to existing
+  extractors
+
+### REQ-VERIFY-017: Deterministic Typed Reasoning Serialization And Pipeline Hook
+
+The same capability shall expose deterministic serialization and pipeline
+integration for the typed reasoning IR, where:
+- the IR supports `to_dict()` / `from_dict()` plus deterministic JSON
+  serialization and deserialization helpers
+- validation checks include unique identifiers plus referential integrity
+  between steps, claims, and the final answer
+- `VerifyRepairPipeline` can surface the typed IR without changing the
+  existing verification behavior or breaking current callers
+- later verifiers can consume the serialized IR without depending on the
+  original raw response formatting
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -291,6 +328,34 @@ visibility relative to cost
 **And** the policy marks free-form traces as distrusted when their observed
 monitorability is too weak to support verifier decisions
 
+### SCENARIO-VERIFY-015: Direct JSON Reasoning Payload Parses Into Typed IR
+
+**Given** a model response that emits structured JSON with explicit user
+constraints, reasoning steps, claims, and a final answer
+**When** the typed reasoning extractor parses the response
+**Then** it records `direct_json` provenance
+**And** it preserves the typed sections in a validated IR
+**And** deterministic JSON serialization round-trips back to the same IR
+
+### SCENARIO-VERIFY-016: Plain-Text Reasoning Falls Back To Post-Hoc Parsing
+
+**Given** a plain-text response with reasoning lines and a final answer marker
+**When** the typed reasoning extractor parses the response
+**Then** it records `fallback_text` provenance
+**And** it derives prompt constraints, ordered reasoning steps, atomic claims,
+  and the normalized final answer
+**And** the resulting IR validates without requiring structured JSON input
+
+### SCENARIO-VERIFY-017: VerifyRepairPipeline Surfaces Typed Reasoning Backward Compatibly
+
+**Given** an existing verification call that still uses the current
+constraint extractors
+**When** `VerifyRepairPipeline.verify()` runs on the same response
+**Then** the verification verdict remains backward compatible
+**And** the result can additionally surface the typed reasoning IR for later
+  verifier stages
+**And** existing callers that ignore the new IR continue to work unchanged
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -309,4 +374,7 @@ monitorability is too weak to support verifier decisions
 | REQ-VERIFY-012 | Not Started | Implemented | Exp 211 benchmark generator + artifact tests |
 | REQ-VERIFY-013 | Not Started | Implemented | 9 Python + live Exp 213 audit artifact |
 | REQ-VERIFY-014 | Not Started | Implemented | 9 Python + live Exp 213 policy artifact |
+| REQ-VERIFY-015 | Not Started | Implemented | Typed reasoning IR tests |
+| REQ-VERIFY-016 | Not Started | Implemented | Typed reasoning IR tests |
+| REQ-VERIFY-017 | Not Started | Implemented | Typed reasoning IR tests + pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
