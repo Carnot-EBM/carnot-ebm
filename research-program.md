@@ -277,7 +277,40 @@ The planning agent MUST prioritize these for the next milestone:
    publish. Also update the existing 16 model READMEs to point users to
    `pip install carnot` for the actual product.
 
-4. **Integrate arxiv findings from Exp 139** — Whatever papers the scan
+4. **Investigate the model-size precision ceiling** — CRITICAL FINDING.
+   Exp 184 showed verify-repair has 0% net improvement on 3B models
+   (6 fixed, 6 broken — false positives cancel true fixes). This means
+   our constraints are too coarse for stronger models. Experiments needed:
+
+   a. **False positive analysis** — On the 6 broken cases from Exp 184,
+      what did the ArithmeticExtractor flag? Were the violations real
+      errors or valid intermediate steps that looked wrong? This tells
+      us whether the problem is extraction precision or repair quality.
+
+   b. **Constraint precision by model size** — Run the SAME 200 questions
+      on 0.8B, 3B, and 13B. For each, measure: true positive rate,
+      false positive rate, and net improvement. Plot the precision ceiling.
+      Hypothesis: FP rate crosses TP rate between 1B and 3B.
+
+   c. **Confidence-weighted constraints** — Instead of binary
+      violated/not-violated, weight constraint violations by confidence.
+      A "47+28=76" violation is high-confidence (definitely wrong).
+      A "the intermediate result is approximately 150" is low-confidence.
+      Only repair high-confidence violations. This should reduce FP on
+      larger models while preserving TP.
+
+   d. **Model-adaptive constraint thresholds** — Use the self-learning
+      tracker (Exp 132) to learn per-model FP rates. When FP rate > TP
+      rate for a constraint type, disable that constraint for that model.
+      The system self-calibrates to each model's error patterns.
+
+   e. **Semantic constraints for larger models** — Larger models make
+      semantic errors (wrong problem setup, misinterpreted quantities),
+      not arithmetic errors. We need constraint types that check LOGIC
+      not just MATH. The global consistency checker (Exp 172, 100%
+      detection) is a start — apply it to single-response verification.
+
+5. **Integrate arxiv findings from Exp 139** — Whatever papers the scan
    discovers, incorporate the most promising as concrete experiments.
 
 5. **AMD XDNA NPU experimentation** — The current machine has an unused
