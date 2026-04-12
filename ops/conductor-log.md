@@ -1319,3 +1319,7 @@
 | 2026-04-12 07:26 UTC | Exp 210: Research scan — focus on constraint extra | OK | =========== 1883 passed, 1 skipped, 22 warnings in 97.65s (0:01:37) ============ |
 | 2026-04-12 07:27 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
 | 2026-04-12 07:27 UTC | Exp 209: Clean up simulation artifacts and update  | OK | Deliverable already exists in repo |
+| 2026-04-12 08:02 UTC | Plan milestone 2026.04.15 | OK | 13 tasks proposed |
+| 2026-04-12 08:03 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
+| 2026-04-12 08:03 UTC | Exp 209: Clean up simulation artifacts and update  | OK | Deliverable already exists in repo |
+| 2026-04-12 08:03 UTC | Milestone 2026.04.15 activated | OK | 13 tasks queued |
