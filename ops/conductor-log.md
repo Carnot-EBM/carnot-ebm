@@ -1335,3 +1335,5 @@
 | 2026-04-12 15:19 UTC | Exp 220: Live HumanEval property benchmark on Qwen | OK | =========== 1986 passed, 1 skipped, 22 warnings in 87.76s (0:01:27) ============ |
 | 2026-04-12 16:39 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | =========== 1993 passed, 1 skipped, 22 warnings in 77.86s (0:01:17) ============ |
 | 2026-04-12 16:40 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
+| 2026-04-12 17:13 UTC | Exp 222: Live trace to memory / repair-snippet bui | OK | =========== 2000 passed, 1 skipped, 22 warnings in 77.50s (0:01:17) ============ |
+| 2026-04-12 17:14 UTC | Exp 221: Live prompt-side constraint benchmark on  | OK | Deliverable already exists in repo |
