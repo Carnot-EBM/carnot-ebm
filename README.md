@@ -76,7 +76,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (160+ experiments, 16 models, 11 milestones)
+## Key Results (187 experiments, 13 milestones)
 
 ### Headline results with provenance
 
@@ -85,11 +85,14 @@ The table keeps the strongest historical numbers in the research record while ma
 | Claim | Result | Provenance | Caveat |
 |-------|--------|------------|--------|
 | Live HumanEval (Exp 208) | 16.7% -> 20.0% (+3.3pp) | Validated live_gpu | Validated live code benchmark on 30 official problems; modest but real positive delta |
+| Live extractor benchmark (Exp 207) | 1/91 false positives vs Z3's 3/91; both 0/9 wrong detections | Validated live_gpu | LLM-assisted arithmetic extraction matched Z3 on live wrong-answer detection while reducing false positives |
 | Live GSM8K reality check (Exp 184) | 63.0% -> 61.0% (-2.0pp) | Validated live_gpu | Current live math evidence is mixed; this run regressed instead of improving |
 | Full GSM8K (Exp 161) | Qwen 70.6% -> 84.4%; Gemma 77.1% -> 87.8% | Simulated | Strong full-dataset benchmark, but still simulated rather than validated live inference |
 | Adversarial GSM8K (Exp 178) | Qwen +28.2pp; Gemma +24.0pp on number-swapped variants | Simulated | Promising adversarial recovery, but still a simulated benchmark |
 | Self-learning (Exp 134) | 67.6% -> 97.0% | Missing explicit inference provenance | Retained as a research result, but the artifact lacks explicit live inference provenance |
 | Factual coverage (Exp 158) | 96.0% claim coverage | Missing explicit inference provenance | Coverage study preserved as historical evidence; not a validated live end-to-end repair benchmark |
+
+Latest reporting and planning updates: Exp 209 audited 66 result artifacts into 5 validated live, 3 simulated, and 58 unverified results, and Exp 210 cataloged 10 core papers, 8 benchmark assets, and 5 monitorability-risk papers while recommending `EXP-211 -> EXP-213 -> EXP-212`.
 
 ### What works on test sets but fails in practice
 
@@ -103,11 +106,11 @@ The table keeps the strongest historical numbers in the research record while ma
 
 **The core problem:** activation-based EBMs measure how confident the model is, not whether it's right. A model that confidently says "Neil Armstrong walked on Mars" produces activations indistinguishable from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.
 
-See the [technical report](docs/technical-report.md) for the full 85+ experiment analysis.
+See the [technical report](docs/technical-report.md) for the full 187-experiment analysis.
 
 ## 14 Principles Learned
 
-Hard-won lessons from 85+ experiments across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a now-187-experiment program across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
