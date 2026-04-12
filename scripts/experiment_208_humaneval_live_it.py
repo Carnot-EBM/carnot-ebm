@@ -13,7 +13,8 @@ Carnot pipeline:
 Usage:
     CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_208_humaneval_live_it.py
 
-Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006
+Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003,
+      REQ-CODE-008, SCENARIO-VERIFY-006
 """
 
 from __future__ import annotations
@@ -229,6 +230,7 @@ def run_problem(
         baseline_code,
         problem["prompt"],
         problem["entry_point"],
+        official_tests=problem["test"],
     )
     baseline_result = execute_humaneval(
         baseline_code,
@@ -246,9 +248,11 @@ def run_problem(
             "error_message": baseline_result.error_message,
             "n_static_violations": instrumentation["n_static_violations"],
             "n_dynamic_violations": instrumentation["n_dynamic_violations"],
+            "n_property_violations": instrumentation["n_property_violations"],
             "constraint_feedback": instrumentation["constraint_feedback"],
             "static_violations": instrumentation["static_violations"],
             "dynamic_violations": instrumentation["dynamic_violations"],
+            "property_violations": instrumentation["property_violations"],
             "probe_inputs": instrumentation["probe_inputs"],
             "body": baseline_body,
         },
@@ -268,6 +272,7 @@ def run_problem(
                 "error_message": baseline_result.error_message,
                 "n_static_violations": instrumentation["n_static_violations"],
                 "n_dynamic_violations": instrumentation["n_dynamic_violations"],
+                "n_property_violations": instrumentation["n_property_violations"],
             }
         ],
     }
@@ -298,6 +303,7 @@ def run_problem(
             current_code,
             problem["prompt"],
             problem["entry_point"],
+            official_tests=problem["test"],
         )
         current_result = execute_humaneval(
             current_code,
@@ -312,6 +318,7 @@ def run_problem(
                 "error_message": current_result.error_message,
                 "n_static_violations": instrumentation["n_static_violations"],
                 "n_dynamic_violations": instrumentation["n_dynamic_violations"],
+                "n_property_violations": instrumentation["n_property_violations"],
             }
         )
         case["verify_repair"]["n_repairs"] = repair_idx + 1
@@ -333,7 +340,10 @@ def main() -> int:
     print("=" * 78)
     print("EXPERIMENT 208: HumanEval live verify-repair on Gemma4-E4B-it")
     print(f"  Cohort: {SAMPLE_SIZE} problems | sample_seed={SAMPLE_SEED}")
-    print("  Pipeline: generate -> CodeExtractor -> runtime instrumentation -> tests -> repair")
+    print(
+        "  Pipeline: generate -> CodeExtractor -> runtime instrumentation -> "
+        "property verifier -> tests -> repair"
+    )
     print("=" * 78)
 
     print("\n[1/4] Loading HumanEval...")

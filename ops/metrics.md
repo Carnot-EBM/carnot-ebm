@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 217 Prompt-Derived Property Verifier
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T11:37:05Z | 2026-04-12T12:07:10Z | Exp 217: extended `code-verification` with `REQ-CODE-006` through `REQ-CODE-008`, wrote `test_property_code_verifier.py` plus the HumanEval integration tests first, implemented `python/carnot/pipeline/property_code_verifier.py`, wired the additive property verifier into the Exp 208 execution path, reconciled traceability/status/changelog, and reran the required verification commands including targeted 100% coverage for the new module plus the HumanEval helper, the full Python suite, spec coverage, Ruff, mypy, and `tests/integration/test_full_pipeline.py`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 216 Structured Reasoning Emission Path
 
 ### Turn Log
