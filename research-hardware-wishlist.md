@@ -154,6 +154,7 @@ production goals. Updated as new needs emerge from experiments.
 | AMD XDNA NPU SDK install | $0 | Medium | Tier 3 self-learning, edge deployment |
 | Kria KV260 FPGA | $250 | High | TSU path, FPGA sampling prototype |
 | 128GB DDR5 RAM | $300 | Medium | Larger models, batch benchmarks |
-| ~~RX 7900 XTX GPU~~ | ~~$900~~ | ~~Very High~~ | **ALREADY OWNED — connect via Thunderbolt** |
+| ~~RX 7900 XTX GPU~~ | ~~$900~~ | ~~Very High~~ | **REPLACED: 2x RTX 3090 connected via CUDA** |
+| ~~Kria KV260 FPGA~~ | $249 | High | **ORDERED — arriving in 4 business days** |
 | Alveo U250 FPGA | $6,000 | Very High | Production-scale Ising, 256k p-bits |
 | Extropic Z1 TSU | TBD | Transformative | Native thermodynamic sampling |
