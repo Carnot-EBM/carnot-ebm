@@ -37,6 +37,14 @@ from carnot.pipeline.mining import (
     FailureReport,
     FalseNegative,
 )
+from carnot.pipeline.property_code_verifier import (
+    DerivedProperty,
+    PropertyCodeVerificationResult,
+    PropertyCodeVerifier,
+    PropertyFailure,
+    extract_official_test_examples,
+    extract_prompt_examples,
+)
 from carnot.pipeline.semantic_grounding import (
     PromptClause,
     QuestionProfile,
@@ -96,6 +104,10 @@ __all__ = [
     "PATTERN_THRESHOLD",
     "PipelineTimeoutError",
     "PromptClause",
+    "PropertyCodeVerificationResult",
+    "PropertyCodeVerifier",
+    "PropertyFailure",
+    "DerivedProperty",
     "QuestionProfile",
     "RepairError",
     "RepairResult",
@@ -119,6 +131,8 @@ __all__ = [
     "propagate",
     "build_gemma_structured_reasoning_prompt",
     "build_qwen_structured_reasoning_prompt",
+    "extract_official_test_examples",
+    "extract_prompt_examples",
     "load_monitorability_policy",
     "verify_semantic_grounding",
 ]

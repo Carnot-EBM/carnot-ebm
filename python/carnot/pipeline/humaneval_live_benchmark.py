@@ -4,7 +4,8 @@ This module keeps the experiment script thin and pushes deterministic,
 testable logic into the Python package so the HumanEval live benchmark can be
 verified with full unit coverage before the GPU run happens.
 
-Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-006
+Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003,
+      REQ-CODE-008, SCENARIO-VERIFY-006
 """
 
 from __future__ import annotations
@@ -24,6 +25,7 @@ from typing import Any
 import numpy as np
 
 from carnot.pipeline.extract import CodeExtractor
+from carnot.pipeline.property_code_verifier import PropertyCodeVerifier
 
 _REPO_ROOT = Path(__file__).resolve().parents[3]
 _SCRIPTS_DIR = _REPO_ROOT / "scripts"
@@ -212,6 +214,7 @@ def run_instrumentation(
     code: str,
     prompt: str,
     entry_point: str,
+    official_tests: str | None = None,
 ) -> dict[str, Any]:
     """Run CodeExtractor plus Exp 53 runtime instrumentation on candidate code."""
     constraints = CodeExtractor().extract(code, domain="code")
@@ -226,6 +229,18 @@ def run_instrumentation(
     if dynamic_violations and dynamic_count == 0:
         dynamic_count = len(dynamic_violations)
 
+    property_violations: list[str] = []
+    if official_tests:
+        property_result = PropertyCodeVerifier().verify(
+            code,
+            prompt,
+            entry_point,
+            official_tests,
+        )
+        property_violations = [
+            result.description for result in property_result.to_constraint_results()
+        ][:5]
+
     return {
         "n_constraints": len(constraints),
         "constraint_feedback": (
@@ -235,8 +250,10 @@ def run_instrumentation(
         "static_violations": static_violations[:5],
         "n_dynamic_violations": dynamic_count,
         "dynamic_violations": dynamic_violations[:5],
+        "n_property_violations": len(property_violations),
+        "property_violations": property_violations,
         "probe_inputs": probes,
-        "detected": bool(static_violations or dynamic_violations),
+        "detected": bool(static_violations or dynamic_violations or property_violations),
     }
 
 
@@ -269,6 +286,10 @@ def build_repair_prompt(
     if instrumentation.get("dynamic_violations"):
         feedback_lines.extend(["", "Runtime instrumentation findings:"])
         feedback_lines.extend(f"  - {line}" for line in instrumentation["dynamic_violations"][:5])
+
+    if instrumentation.get("property_violations"):
+        feedback_lines.extend(["", "Prompt-derived property findings:"])
+        feedback_lines.extend(f"  - {line}" for line in instrumentation["property_violations"][:5])
 
     feedback_lines.extend(
         [
@@ -396,11 +417,17 @@ def summarize_cases(
             "problems_with_dynamic_violations": sum(
                 1 for case in cases if int(case["baseline"].get("n_dynamic_violations", 0)) > 0
             ),
+            "problems_with_property_violations": sum(
+                1 for case in cases if int(case["baseline"].get("n_property_violations", 0)) > 0
+            ),
             "total_static_violations": sum(
                 int(case["baseline"].get("n_static_violations", 0)) for case in cases
             ),
             "total_dynamic_violations": sum(
                 int(case["baseline"].get("n_dynamic_violations", 0)) for case in cases
+            ),
+            "total_property_violations": sum(
+                int(case["baseline"].get("n_property_violations", 0)) for case in cases
             ),
         },
     }

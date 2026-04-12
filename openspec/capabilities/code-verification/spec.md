@@ -54,6 +54,43 @@ The system shall improve code verification via the autoresearch pipeline:
 - Hypothesis templates explore model width, depth, epoch count, and data volume
 - The autoresearch loop (REQ-AUTO-003) orchestrates improvement
 
+### REQ-CODE-006: Property-Based Code Verification
+
+The system shall support property-based verification for Python functions:
+- Property checks run execution-based randomized probes against candidate code
+- Properties may be caller-provided or selected from built-in generators/checks
+- Failures report the property name, sampled input, and observed error or value
+- Property verification returns an energy-like failure rate and LLM-readable
+  repair feedback
+
+### REQ-CODE-007: Prompt-Derived Property Verification
+
+The system shall derive additional code properties and invariants from the
+available HumanEval-style problem description:
+- Inputs include the prompt intent, function signature, docstrings/examples,
+  and existing official tests
+- The derivation path is deterministic and lightweight enough for live
+  benchmark runs
+- The verifier may synthesize fixed example regressions plus heuristic
+  invariants such as determinism, non-mutation, ordering/permutation, reverse,
+  or uniqueness when those are strongly implied by the prompt or examples
+- The verifier records each derived property's source so repair feedback can
+  explain why the property exists
+
+### REQ-CODE-008: Structured Property Repair Feedback
+
+The system shall turn prompt-derived property failures into structured repair
+feedback compatible with the existing verify/repair flow:
+- Each failure is convertible to a pipeline-compatible constraint/violation
+  record
+- The current execution-based code path augments static and dynamic
+  instrumentation feedback with derived-property findings instead of replacing
+  them
+- Repair prompts can include the property name, source evidence, failing input,
+  and actual/error outcome
+- The added verifier remains additive and bounded so existing execution-based
+  checks continue to run unchanged
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -82,6 +119,21 @@ Running the autoresearch loop with hypothesis templates produces a LoopResult wh
 
 When safe_exec_function is called with syntactically invalid code, it returns (None, exception) without crashing the host process.
 
+### SCENARIO-CODE-006: Prompt-Derived Properties Catch A Missed Bug
+
+Given a prompt whose intent is to return a sorted list, and official tests that
+only exercise already-sorted inputs, when a buggy identity implementation is
+verified, then the official tests alone may pass but the prompt-derived
+property verifier flags the code for violating sorted-output or
+same-elements-different-order invariants on generated unsorted inputs.
+
+### SCENARIO-CODE-007: Property Failures Become Repair Feedback
+
+Given a candidate function with prompt-derived property failures, when the code
+verification pipeline formats repair feedback, then the output includes
+pipeline-compatible structured violations that mention the property's source,
+the failing input, and the observed incorrect behavior.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -91,3 +143,6 @@ When safe_exec_function is called with syntactically invalid code, it returns (N
 | REQ-CODE-003 | Implemented |
 | REQ-CODE-004 | Implemented |
 | REQ-CODE-005 | Implemented |
+| REQ-CODE-006 | Implemented |
+| REQ-CODE-007 | Implemented |
+| REQ-CODE-008 | Implemented |

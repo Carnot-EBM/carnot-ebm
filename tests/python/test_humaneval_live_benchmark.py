@@ -204,6 +204,31 @@ def test_run_instrumentation_handles_syntax_error_code() -> None:
     assert "Code execution failed" in result["dynamic_violations"][0]
 
 
+def test_run_instrumentation_reports_prompt_derived_property_violations() -> None:
+    """REQ-CODE-008: execution-path instrumentation includes prompt-derived property findings."""
+    prompt = (
+        "def sort_numbers(nums: list[int]) -> list[int]:\n"
+        '    """Return numbers sorted in ascending order."""\n'
+    )
+    official_tests = (
+        "def check(candidate):\n"
+        "    assert candidate([]) == []\n"
+        "    assert candidate([1, 2, 3]) == [1, 2, 3]\n"
+    )
+    code = build_candidate_code(prompt, "return nums")
+
+    result = run_instrumentation(
+        code,
+        prompt,
+        "sort_numbers",
+        official_tests=official_tests,
+    )
+
+    assert result["detected"] is True
+    assert result["n_property_violations"] > 0
+    assert any("sorted_output" in line for line in result["property_violations"])
+
+
 def test_build_repair_prompt_includes_test_and_instrumentation_feedback() -> None:
     """REQ-VERIFY-003: repair prompts include both harness and instrumentation signals."""
     prompt = 'def add(a, b):\n    """Return a + b."""\n'
@@ -232,6 +257,39 @@ def test_build_repair_prompt_includes_test_and_instrumentation_feedback() -> Non
     assert "variable 'x' used but never assigned" in repair_prompt
     assert "NameError" in repair_prompt
     assert "Write ONLY the corrected function body" in repair_prompt
+
+
+def test_build_repair_prompt_includes_property_feedback() -> None:
+    """REQ-CODE-008: repair prompts surface derived-property failures alongside harness feedback."""
+    prompt = (
+        "def sort_numbers(nums: list[int]) -> list[int]:\n"
+        '    """Return numbers sorted in ascending order."""\n'
+    )
+    harness = HarnessResult(
+        passed=False,
+        error_type="failure",
+        error_message="AssertionError",
+        stdout="trace",
+    )
+    instrumentation = {
+        "constraint_feedback": [],
+        "dynamic_violations": [],
+        "property_violations": [
+            "sorted_output (prompt_intent) failed for input=([3, 1, 2],): returned [3, 1, 2]",
+        ],
+    }
+
+    repair_prompt = build_repair_prompt(
+        prompt,
+        "return nums",
+        harness,
+        instrumentation,
+        repair_idx=0,
+    )
+
+    assert "Prompt-derived property findings" in repair_prompt
+    assert "sorted_output" in repair_prompt
+    assert "prompt_intent" in repair_prompt
 
 
 def test_bootstrap_helpers_compute_point_estimates() -> None:
