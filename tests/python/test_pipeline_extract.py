@@ -8,6 +8,7 @@ Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, SCENARIO-VERIFY-002
 
 from __future__ import annotations
 
+import jax.numpy as jnp
 import pytest
 
 from carnot.pipeline.extract import (
@@ -631,6 +632,19 @@ class TestAutoExtractor:
         results = self.ext.extract(text)
         # Should return whatever it can parse without crashing.
         assert isinstance(results, list)
+
+    def test_enable_factual_extractor_registers_network_backed_domain(self) -> None:
+        """REQ-VERIFY-002: Optional factual extractor can be enabled explicitly."""
+        ext = AutoExtractor(enable_factual_extractor=True)
+        assert "factual" in ext.supported_domains
+
+    def test_logits_run_spilled_and_lookahead_extractors(self) -> None:
+        """REQ-VERIFY-002: Logits trigger spilled-energy and lookahead-energy passes."""
+        logits = jnp.array([[3.0, 0.0, -1.0], [0.0, 3.0, -1.0]], dtype=jnp.float32)
+        results = self.ext.extract("Likely factual answer.", logits=logits)
+        types = {r.constraint_type for r in results}
+        assert "spilled_energy" in types
+        assert "lookahead_energy" in types
 
 
 # ---------------------------------------------------------------------------

@@ -18,6 +18,7 @@ from carnot.pipeline.verify_repair import (
     VerificationResult,
     VerifyRepairPipeline,
 )
+from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
 
 
 # ---------------------------------------------------------------------------
@@ -98,6 +99,21 @@ class TestVerifyEndToEnd:
         )
         assert result.verified is False
         assert len(result.violations) >= 1
+
+    def test_custom_z3_extractor_verifies_verbal_arithmetic(self) -> None:
+        """REQ-VERIFY-001: Custom Z3 extractor works end-to-end through the pipeline."""
+        pipeline = VerifyRepairPipeline(
+            extractor=Z3ArithmeticExtractor(),
+            timeout_seconds=10.0,
+        )
+        result = pipeline.verify(
+            question="What is half of 48?",
+            response="Half of 48 is 20.",
+            domain="arithmetic",
+        )
+        assert result.verified is False
+        assert len(result.violations) == 1
+        assert result.violations[0].metadata["correct_result"] == 24
 
     # -- Code domain --
 
