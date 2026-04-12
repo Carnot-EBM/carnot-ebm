@@ -1332,3 +1332,4 @@
 | 2026-04-12 12:11 UTC | Exp 217: Property-generated code verifier for Huma | OK | =========== 1968 passed, 1 skipped, 22 warnings in 95.49s (0:01:35) ============ |
 | 2026-04-12 12:38 UTC | Exp 218: Shared dual-model live benchmark harness | OK | =========== 1977 passed, 1 skipped, 22 warnings in 96.59s (0:01:36) ============ |
 | 2026-04-12 14:37 UTC | Exp 219: Live GSM8K semantic benchmark on Qwen3.5- | OK | =========== 1982 passed, 1 skipped, 22 warnings in 86.33s (0:01:26) ============ |
+| 2026-04-12 15:19 UTC | Exp 220: Live HumanEval property benchmark on Qwen | OK | =========== 1986 passed, 1 skipped, 22 warnings in 87.76s (0:01:27) ============ |
