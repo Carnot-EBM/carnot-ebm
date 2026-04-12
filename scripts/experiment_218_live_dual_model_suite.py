@@ -21,8 +21,9 @@ Usage:
     .venv/bin/python scripts/experiment_218_live_dual_model_suite.py --help
 
 Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027, REQ-VERIFY-028,
-REQ-VERIFY-029, SCENARIO-VERIFY-025, SCENARIO-VERIFY-026,
-SCENARIO-VERIFY-027, SCENARIO-VERIFY-028, SCENARIO-VERIFY-029
+REQ-VERIFY-029, REQ-VERIFY-041, SCENARIO-VERIFY-025,
+SCENARIO-VERIFY-026, SCENARIO-VERIFY-027, SCENARIO-VERIFY-028,
+SCENARIO-VERIFY-029, SCENARIO-VERIFY-042
 """
 
 from __future__ import annotations
@@ -1573,6 +1574,9 @@ def build_artifact_payload(
     max_repairs: int,
     policy_path: Path,
     inference_mode: str,
+    parallel_requested: bool = False,
+    parallel_enabled: bool = False,
+    parallel_execution_mode: str = "sequential",
 ) -> dict[str, Any]:
     """Build the stable top-level Exp 218 artifact payload."""
     spec = BENCHMARK_SPECS[benchmark]
@@ -1603,6 +1607,9 @@ def build_artifact_payload(
             "max_repairs": max_repairs,
             "policy_source": str(policy_path),
             "inference_mode": inference_mode,
+            "parallel_requested": parallel_requested,
+            "parallel_enabled": parallel_enabled,
+            "parallel_execution_mode": parallel_execution_mode,
             "force_live": os.environ.get("CARNOT_FORCE_LIVE") == "1",
             "force_cpu": os.environ.get("CARNOT_FORCE_CPU") == "1",
         },
@@ -1686,6 +1693,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_MAX_REPAIRS,
         help="Maximum verify-repair iterations per case.",
     )
+    parser.add_argument(
+        "--parallel",
+        action="store_true",
+        help="Run the paired model suites through DualGPURunner when 2 GPUs are available.",
+    )
     return parser
 
 
@@ -1717,15 +1729,25 @@ def _seed_runtime(seed: int) -> None:  # pragma: no cover
         pass
 
 
-def _load_live_model(model_spec: dict[str, str]) -> tuple[Any, Any]:  # pragma: no cover
+def _load_live_model(
+    model_spec: dict[str, str] | str,
+    *,
+    device: str = "cuda",
+    device_map: str | None = None,
+) -> tuple[Any, Any]:  # pragma: no cover
     os.environ.setdefault("CARNOT_FORCE_LIVE", "1")
     os.environ.setdefault("CARNOT_FORCE_CPU", "0")
 
     from carnot.inference.model_loader import load_model  # type: ignore[import-untyped]
 
-    model, tokenizer = load_model(model_spec["hf_id"], device="cuda")
+    model_name = model_spec["hf_id"] if isinstance(model_spec, dict) else model_spec
+    model, tokenizer = load_model(
+        model_name,
+        device=device,
+        device_map=device_map,
+    )
     if model is None or tokenizer is None:
-        raise RuntimeError(f"Failed to load live model: {model_spec['hf_id']}")
+        raise RuntimeError(f"Failed to load live model: {model_name}")
     return model, tokenizer
 
 
@@ -3164,6 +3186,161 @@ def _summarize_runs(
     raise ValueError(f"Unsupported benchmark for summary: {benchmark}")
 
 
+def _run_model_suite(
+    *,
+    benchmark: str,
+    model_spec: dict[str, str],
+    model: Any,
+    tokenizer: Any,
+    policy: dict[str, Any],
+    cohort: list[dict[str, Any]],
+    checkpoint_dir: Path,
+    max_repairs: int,
+) -> dict[str, Any]:
+    """Run baseline, verify-only, and verify-repair for one loaded model."""
+
+    def execute_baseline_case(
+        case: dict[str, Any],
+        *,
+        benchmark: str = benchmark,
+        model_spec: dict[str, str] = model_spec,
+        model: Any = model,
+        tokenizer: Any = tokenizer,
+        policy: dict[str, Any] = policy,
+    ) -> dict[str, Any]:
+        if benchmark == "gsm8k_semantic":
+            return _run_gsm8k_baseline(
+                case,
+                model_spec=model_spec,
+                model=model,
+                tokenizer=tokenizer,
+                policy=policy,
+            )
+        if benchmark == "humaneval_property":
+            return _run_humaneval_baseline(case, model=model, tokenizer=tokenizer)
+        return _run_constraint_ir_baseline(
+            case,
+            model=model,
+            tokenizer=tokenizer,
+            policy=policy,
+        )
+
+    baseline_runs = run_mode(
+        benchmark=benchmark,
+        model_name=model_spec["name"],
+        mode="baseline",
+        cases=cohort,
+        checkpoint_dir=checkpoint_dir,
+        execute_case=execute_baseline_case,
+    )
+    baseline_by_case = {run["case_id"]: run for run in baseline_runs}
+
+    def execute_verify_only_case(
+        case: dict[str, Any],
+        *,
+        benchmark: str = benchmark,
+        baseline_by_case: dict[str, dict[str, Any]] = baseline_by_case,
+    ) -> dict[str, Any]:
+        baseline = baseline_by_case[str(case["case_id"])]
+        if benchmark == "gsm8k_semantic":
+            return _run_gsm8k_verify_only(case, baseline)
+        if benchmark == "humaneval_property":
+            return _run_humaneval_verify_only(case, baseline)
+        return _run_constraint_ir_verify_only(case, baseline)
+
+    verify_only_runs = run_mode(
+        benchmark=benchmark,
+        model_name=model_spec["name"],
+        mode="verify_only",
+        cases=cohort,
+        checkpoint_dir=checkpoint_dir,
+        execute_case=execute_verify_only_case,
+    )
+
+    def execute_verify_repair_case(
+        case: dict[str, Any],
+        *,
+        benchmark: str = benchmark,
+        baseline_by_case: dict[str, dict[str, Any]] = baseline_by_case,
+        model_spec: dict[str, str] = model_spec,
+        model: Any = model,
+        tokenizer: Any = tokenizer,
+        policy: dict[str, Any] = policy,
+        max_repairs: int = max_repairs,
+    ) -> dict[str, Any]:
+        baseline = baseline_by_case[str(case["case_id"])]
+        if benchmark == "gsm8k_semantic":
+            return _run_gsm8k_verify_repair(
+                case,
+                baseline,
+                model_spec=model_spec,
+                model=model,
+                tokenizer=tokenizer,
+                policy=policy,
+                max_repairs=max_repairs,
+            )
+        if benchmark == "humaneval_property":
+            return _run_humaneval_verify_repair(
+                case,
+                baseline,
+                model=model,
+                tokenizer=tokenizer,
+                max_repairs=max_repairs,
+            )
+        return _run_constraint_ir_verify_repair(
+            case,
+            baseline,
+            model=model,
+            tokenizer=tokenizer,
+            max_repairs=max_repairs,
+        )
+
+    verify_repair_runs = run_mode(
+        benchmark=benchmark,
+        model_name=model_spec["name"],
+        mode="verify_repair",
+        cases=cohort,
+        checkpoint_dir=checkpoint_dir,
+        execute_case=execute_verify_repair_case,
+    )
+
+    model_summary = _summarize_runs(
+        benchmark,
+        baseline_runs,
+        verify_only_runs,
+        verify_repair_runs,
+    )
+    return {
+        "model_summary": model_summary,
+        "paired_runs": [
+            {
+                "benchmark": benchmark,
+                "mode": "baseline",
+                "model_name": model_spec["name"],
+                "model_hf_id": model_spec["hf_id"],
+                "summary": model_summary["baseline"],
+                "cases": baseline_runs,
+            },
+            {
+                "benchmark": benchmark,
+                "mode": "verify_only",
+                "model_name": model_spec["name"],
+                "model_hf_id": model_spec["hf_id"],
+                "summary": model_summary["verify_only"],
+                "cases": verify_only_runs,
+            },
+            {
+                "benchmark": benchmark,
+                "mode": "verify_repair",
+                "model_name": model_spec["name"],
+                "model_hf_id": model_spec["hf_id"],
+                "summary": model_summary["verify_repair"],
+                "cases": verify_repair_runs,
+            },
+        ],
+    }
+
+
 def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: no cover
     benchmark = str(args.benchmark)
     started_at = utc_now()
@@ -3179,154 +3356,75 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
     checkpoint_dir = Path(args.checkpoint_dir)
     paired_runs: list[dict[str, Any]] = []
     statistics: dict[str, Any] = {}
+    parallel_requested = bool(getattr(args, "parallel", False))
+    parallel_enabled = False
+    parallel_execution_mode = "sequential"
+    used_dual_gpu_runner = False
 
-    for model_spec in MODEL_SPECS:
-        print(f"Running {benchmark} on {model_spec['name']} ({model_spec['hf_id']})")
-        model, tokenizer = _load_live_model(model_spec)
-        try:
+    if parallel_requested:
+        from carnot.inference.dual_gpu import DualGPURunner
 
-            def execute_baseline_case(
-                case: dict[str, Any],
-                *,
-                benchmark: str = benchmark,
-                model_spec: dict[str, str] = model_spec,
-                model: Any = model,
-                tokenizer: Any = tokenizer,
-                policy: dict[str, Any] = policy,
-            ) -> dict[str, Any]:
-                if benchmark == "gsm8k_semantic":
-                    return _run_gsm8k_baseline(
-                        case,
+        def load_model_fn(
+            model_name: str,
+            *,
+            device: str = "cuda",
+            device_map: str | None = None,
+        ) -> tuple[Any, Any]:
+            return _load_live_model(model_name, device=device, device_map=device_map)
+
+        runner = DualGPURunner(
+            MODEL_SPECS,
+            load_model_fn=load_model_fn,
+            unload_fn=_unload_live_model,
+        )
+        if runner.has_two_gpus():
+            used_dual_gpu_runner = True
+            parallel_execution_mode = runner.execution_mode()
+            parallel_enabled = parallel_execution_mode == "parallel"
+
+            def make_task(model_spec: dict[str, str]):
+                def _task(context: Any) -> dict[str, Any]:
+                    return _run_model_suite(
+                        benchmark=benchmark,
                         model_spec=model_spec,
-                        model=model,
-                        tokenizer=tokenizer,
+                        model=context.model,
+                        tokenizer=context.tokenizer,
                         policy=policy,
+                        cohort=cohort,
+                        checkpoint_dir=checkpoint_dir,
+                        max_repairs=int(args.max_repairs),
                     )
-                if benchmark == "humaneval_property":
-                    return _run_humaneval_baseline(case, model=model, tokenizer=tokenizer)
-                return _run_constraint_ir_baseline(
-                    case,
+
+                return _task
+
+            runner_results = runner.run_model_tasks(
+                {model_spec["name"]: make_task(model_spec) for model_spec in MODEL_SPECS}
+            )
+            for result in runner_results:
+                suite = result.payload
+                statistics[result.model_name] = suite["model_summary"]
+                paired_runs.extend(suite["paired_runs"])
+
+    if not used_dual_gpu_runner:
+        for model_spec in MODEL_SPECS:
+            print(f"Running {benchmark} on {model_spec['name']} ({model_spec['hf_id']})")
+            model, tokenizer = _load_live_model(model_spec)
+            try:
+                suite = _run_model_suite(
+                    benchmark=benchmark,
+                    model_spec=model_spec,
                     model=model,
                     tokenizer=tokenizer,
                     policy=policy,
+                    cohort=cohort,
+                    checkpoint_dir=checkpoint_dir,
+                    max_repairs=int(args.max_repairs),
                 )
+            finally:
+                _unload_live_model(model, tokenizer)
 
-            baseline_runs = run_mode(
-                benchmark=benchmark,
-                model_name=model_spec["name"],
-                mode="baseline",
-                cases=cohort,
-                checkpoint_dir=checkpoint_dir,
-                execute_case=execute_baseline_case,
-            )
-            baseline_by_case = {run["case_id"]: run for run in baseline_runs}
-
-            def execute_verify_only_case(
-                case: dict[str, Any],
-                *,
-                benchmark: str = benchmark,
-                baseline_by_case: dict[str, dict[str, Any]] = baseline_by_case,
-            ) -> dict[str, Any]:
-                baseline = baseline_by_case[str(case["case_id"])]
-                if benchmark == "gsm8k_semantic":
-                    return _run_gsm8k_verify_only(case, baseline)
-                if benchmark == "humaneval_property":
-                    return _run_humaneval_verify_only(case, baseline)
-                return _run_constraint_ir_verify_only(case, baseline)
-
-            verify_only_runs = run_mode(
-                benchmark=benchmark,
-                model_name=model_spec["name"],
-                mode="verify_only",
-                cases=cohort,
-                checkpoint_dir=checkpoint_dir,
-                execute_case=execute_verify_only_case,
-            )
-
-            def execute_verify_repair_case(
-                case: dict[str, Any],
-                *,
-                benchmark: str = benchmark,
-                baseline_by_case: dict[str, dict[str, Any]] = baseline_by_case,
-                model_spec: dict[str, str] = model_spec,
-                model: Any = model,
-                tokenizer: Any = tokenizer,
-                policy: dict[str, Any] = policy,
-                max_repairs: int = args.max_repairs,
-            ) -> dict[str, Any]:
-                baseline = baseline_by_case[str(case["case_id"])]
-                if benchmark == "gsm8k_semantic":
-                    return _run_gsm8k_verify_repair(
-                        case,
-                        baseline,
-                        model_spec=model_spec,
-                        model=model,
-                        tokenizer=tokenizer,
-                        policy=policy,
-                        max_repairs=max_repairs,
-                    )
-                if benchmark == "humaneval_property":
-                    return _run_humaneval_verify_repair(
-                        case,
-                        baseline,
-                        model=model,
-                        tokenizer=tokenizer,
-                        max_repairs=max_repairs,
-                    )
-                return _run_constraint_ir_verify_repair(
-                    case,
-                    baseline,
-                    model=model,
-                    tokenizer=tokenizer,
-                    max_repairs=max_repairs,
-                )
-
-            verify_repair_runs = run_mode(
-                benchmark=benchmark,
-                model_name=model_spec["name"],
-                mode="verify_repair",
-                cases=cohort,
-                checkpoint_dir=checkpoint_dir,
-                execute_case=execute_verify_repair_case,
-            )
-        finally:
-            _unload_live_model(model, tokenizer)
-
-        model_summary = _summarize_runs(
-            benchmark,
-            baseline_runs,
-            verify_only_runs,
-            verify_repair_runs,
-        )
-        statistics[model_spec["name"]] = model_summary
-        paired_runs.extend(
-            [
-                {
-                    "benchmark": benchmark,
-                    "mode": "baseline",
-                    "model_name": model_spec["name"],
-                    "model_hf_id": model_spec["hf_id"],
-                    "summary": model_summary["baseline"],
-                    "cases": baseline_runs,
-                },
-                {
-                    "benchmark": benchmark,
-                    "mode": "verify_only",
-                    "model_name": model_spec["name"],
-                    "model_hf_id": model_spec["hf_id"],
-                    "summary": model_summary["verify_only"],
-                    "cases": verify_only_runs,
-                },
-                {
-                    "benchmark": benchmark,
-                    "mode": "verify_repair",
-                    "model_name": model_spec["name"],
-                    "model_hf_id": model_spec["hf_id"],
-                    "summary": model_summary["verify_repair"],
-                    "cases": verify_repair_runs,
-                },
-            ]
-        )
+            statistics[model_spec["name"]] = suite["model_summary"]
+            paired_runs.extend(suite["paired_runs"])
 
     finished_at = utc_now()
     return build_artifact_payload(
@@ -3344,6 +3442,9 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
         max_repairs=int(args.max_repairs),
         policy_path=policy_path,
         inference_mode=live_inference_mode(),
+        parallel_requested=parallel_requested,
+        parallel_enabled=parallel_enabled,
+        parallel_execution_mode=parallel_execution_mode,
     )
 
 

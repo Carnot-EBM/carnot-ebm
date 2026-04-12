@@ -988,6 +988,46 @@ engine build or load fails for a requested model
 **And** if TensorRT-LLM is unavailable, the result is marked unavailable with
   a fallback reason instead of raising
 
+### REQ-VERIFY-041: Dual-GPU Paired Benchmark Execution
+
+The repository shall provide a dual-GPU paired benchmark helper in
+`python/carnot/inference/dual_gpu.py`, where:
+- `DualGPURunner` accepts exactly two model specs that preserve the existing
+  Exp 218 model ordering and expose per-model task execution through a single
+  runner API
+- when at least two CUDA devices are available and both models are estimated
+  below `7B` parameters, the runner loads the first model onto `cuda:0` and
+  the second model onto `cuda:1`
+- the runner executes the two per-model benchmark tasks in parallel via
+  threads and returns one ordered result per model together with
+  device-assignment metadata and elapsed time
+- when a model is estimated at `7B` parameters or larger, that model is
+  loaded with `device_map="auto"` and the runner falls back to sequential
+  execution rather than attempting overlapping cross-GPU loads
+- `python/carnot/inference/model_loader.py` accepts explicit CUDA device
+  strings such as `cuda:0` and `cuda:1`, and also accepts
+  `device_map="auto"` without breaking the existing default CPU/CUDA behavior
+- `scripts/experiment_218_live_dual_model_suite.py` adds a `--parallel` flag
+  that opts into `DualGPURunner` when two GPUs are present and otherwise
+  preserves the existing sequential harness path and deterministic artifact
+  ordering
+
+### SCENARIO-VERIFY-042: Exp 218 Parallel Mode Preserves Paired Results
+
+**Given** the Exp 218 live dual-model harness is run with `--parallel`
+**And** two CUDA devices are available
+**And** both target models are estimated below `7B` parameters
+**When** the harness executes one benchmark cohort
+**Then** the first model is assigned to `cuda:0`
+**And** the second model is assigned to `cuda:1`
+**And** the two per-model benchmark tasks run through the shared
+  `DualGPURunner`
+**And** the resulting paired runs and summary statistics remain ordered by
+  model and mode as they would in the sequential harness
+**And** if one of the requested models is estimated at `7B` parameters or
+  larger, that model is loaded with `device_map="auto"` instead of a fixed
+  single-GPU assignment
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1032,4 +1072,5 @@ engine build or load fails for a requested model
 | REQ-VERIFY-038 | Not Started | Implemented | Model-loader server-handle + deterministic benchmark tests |
 | REQ-VERIFY-039 | Not Started | Implemented | TensorRT backend cache/build/fallback tests |
 | REQ-VERIFY-040 | Not Started | Implemented | Warm-server preference + HF-vs-TRT benchmark tests |
+| REQ-VERIFY-041 | Not Started | Implemented | DualGPU runner + loader/harness dispatch tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

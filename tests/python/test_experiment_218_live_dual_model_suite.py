@@ -1,6 +1,7 @@
-"""Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027, REQ-VERIFY-028, REQ-VERIFY-029,
-SCENARIO-VERIFY-025, SCENARIO-VERIFY-026, SCENARIO-VERIFY-027,
-SCENARIO-VERIFY-028, SCENARIO-VERIFY-029.
+"""Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027, REQ-VERIFY-028,
+REQ-VERIFY-029, REQ-VERIFY-041, SCENARIO-VERIFY-025,
+SCENARIO-VERIFY-026, SCENARIO-VERIFY-027, SCENARIO-VERIFY-028,
+SCENARIO-VERIFY-029, SCENARIO-VERIFY-042.
 """
 
 from __future__ import annotations
@@ -9,9 +10,11 @@ import ast
 import importlib.util
 import json
 import runpy
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 from types import SimpleNamespace
+from unittest.mock import patch
 
 import pytest
 
@@ -122,6 +125,16 @@ def test_build_parser_and_supported_models_are_fixed():
     assert args.sample_seed == module.DEFAULT_SAMPLE_SEED
     assert args.sample_size == module.BENCHMARK_SPECS["gsm8k_semantic"]["default_sample_size"]
     assert args.output == module.default_output_path("gsm8k_semantic")
+    assert args.parallel is False
+
+
+# REQ-VERIFY-041
+def test_build_parser_accepts_parallel_flag():
+    module = load_module()
+
+    args = module.build_parser().parse_args(["--benchmark", "gsm8k_semantic", "--parallel"])
+
+    assert args.parallel is True
 
 
 # REQ-VERIFY-025, SCENARIO-VERIFY-026
@@ -310,6 +323,290 @@ def test_extract_final_number_ignores_punctuation_only_matches():
 
     assert module._extract_final_number("Result: ,,,") is None
     assert module._extract_final_number("Answer: -12") == -12
+
+
+# REQ-VERIFY-041, SCENARIO-VERIFY-042
+def test_run_live_benchmark_parallel_dispatch_uses_dual_gpu_runner(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_module()
+    repo = make_repo(tmp_path)
+    checkpoint_dir = repo / "results" / "checkpoints" / "experiment_218"
+    output_path = repo / "results" / "experiment_219_results.json"
+    cohort = [
+        {"case_id": "case-a", "prompt_seeds": {"baseline": 1, "verify_only": 1, "verify_repair": 1}}
+    ]
+    executed: list[str] = []
+
+    def fake_run_model_suite(**kwargs: object) -> dict[str, object]:
+        model_spec = kwargs["model_spec"]
+        assert isinstance(model_spec, dict)
+        executed.append(str(model_spec["name"]))
+        return {
+            "model_summary": {
+                "baseline": {"n_cases": 1},
+                "verify_only": {"n_cases": 1},
+                "verify_repair": {"n_cases": 1},
+            },
+            "paired_runs": [
+                {
+                    "benchmark": "gsm8k_semantic",
+                    "mode": "baseline",
+                    "model_name": model_spec["name"],
+                    "model_hf_id": model_spec["hf_id"],
+                    "summary": {"n_cases": 1},
+                    "cases": [],
+                },
+                {
+                    "benchmark": "gsm8k_semantic",
+                    "mode": "verify_only",
+                    "model_name": model_spec["name"],
+                    "model_hf_id": model_spec["hf_id"],
+                    "summary": {"n_cases": 1},
+                    "cases": [],
+                },
+                {
+                    "benchmark": "gsm8k_semantic",
+                    "mode": "verify_repair",
+                    "model_name": model_spec["name"],
+                    "model_hf_id": model_spec["hf_id"],
+                    "summary": {"n_cases": 1},
+                    "cases": [],
+                },
+            ],
+        }
+
+    class FakeRunner:
+        def __init__(self, model_specs: list[dict[str, str]], **kwargs: object) -> None:
+            del kwargs
+            self.model_specs = model_specs
+
+        def has_two_gpus(self) -> bool:
+            return True
+
+        def execution_mode(self) -> str:
+            return "parallel"
+
+        def run_model_tasks(self, tasks: dict[str, object]) -> list[SimpleNamespace]:
+            results: list[SimpleNamespace] = []
+            for index, spec in enumerate(self.model_specs):
+                task = tasks[spec["name"]]
+                payload = task(
+                    SimpleNamespace(
+                        model_name=spec["name"],
+                        model_hf_id=spec["hf_id"],
+                        device_assignment=f"cuda:{index}",
+                        uses_device_map_auto=False,
+                        model=f"model-{spec['name']}",
+                        tokenizer=f"tok-{spec['name']}",
+                    )
+                )
+                results.append(
+                    SimpleNamespace(
+                        model_name=spec["name"],
+                        model_hf_id=spec["hf_id"],
+                        device_assignment=f"cuda:{index}",
+                        uses_device_map_auto=False,
+                        elapsed_seconds=0.25,
+                        payload=payload,
+                    )
+                )
+            return results
+
+    args = SimpleNamespace(
+        benchmark="gsm8k_semantic",
+        sample_size=1,
+        sample_seed=module.DEFAULT_SAMPLE_SEED,
+        output=output_path,
+        checkpoint_dir=checkpoint_dir,
+        max_repairs=1,
+        parallel=True,
+    )
+
+    monkeypatch.setattr(module, "get_repo_root", lambda: repo)
+    monkeypatch.setattr(module, "load_monitorability_policy", lambda path: {})
+    monkeypatch.setattr(module, "_load_benchmark_records", lambda benchmark: sample_records())
+    monkeypatch.setattr(
+        module,
+        "build_cohort_manifest",
+        lambda records, sample_size, sample_seed: cohort,
+    )
+    monkeypatch.setattr(module, "_run_model_suite", fake_run_model_suite)
+
+    fake_dual_gpu_module = SimpleNamespace(DualGPURunner=FakeRunner)
+    with patch.dict(sys.modules, {"carnot.inference.dual_gpu": fake_dual_gpu_module}):
+        payload = module._run_live_benchmark(args)
+
+    assert executed == ["Qwen3.5-0.8B", "Gemma4-E4B-it"]
+    assert payload["metadata"]["parallel_requested"] is True
+    assert payload["metadata"]["parallel_execution_mode"] == "parallel"
+    assert payload["metadata"]["parallel_enabled"] is True
+    assert [run["model_name"] for run in payload["paired_runs"][::3]] == [
+        "Qwen3.5-0.8B",
+        "Gemma4-E4B-it",
+    ]
+
+
+# REQ-VERIFY-041, SCENARIO-VERIFY-042
+@pytest.mark.parametrize(
+    ("benchmark", "baseline_attr", "verify_only_attr", "verify_repair_attr"),
+    [
+        (
+            "gsm8k_semantic",
+            "_run_gsm8k_baseline",
+            "_run_gsm8k_verify_only",
+            "_run_gsm8k_verify_repair",
+        ),
+        (
+            "humaneval_property",
+            "_run_humaneval_baseline",
+            "_run_humaneval_verify_only",
+            "_run_humaneval_verify_repair",
+        ),
+        (
+            "constraint_ir",
+            "_run_constraint_ir_baseline",
+            "_run_constraint_ir_verify_only",
+            "_run_constraint_ir_verify_repair",
+        ),
+    ],
+)
+def test_run_model_suite_dispatches_all_parallel_helper_branches(
+    benchmark: str,
+    baseline_attr: str,
+    verify_only_attr: str,
+    verify_repair_attr: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    """Spec: REQ-VERIFY-041, SCENARIO-VERIFY-042."""
+    module = load_module()
+    model_spec = {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B"}
+    model = object()
+    tokenizer = object()
+    policy = {"mode": "structured_json"}
+    cohort = [{"case_id": "case-a"}]
+    checkpoint_dir = tmp_path / "checkpoints"
+    max_repairs = 2
+    expected_benchmark = benchmark
+    stage_calls: list[tuple[str, object, object]] = []
+
+    baseline_result = {"case_id": "case-a", "stage": "baseline"}
+    verify_only_result = {"case_id": "case-a", "stage": "verify_only"}
+    verify_repair_result = {"case_id": "case-a", "stage": "verify_repair"}
+
+    def unexpected(*args: object, **kwargs: object) -> object:
+        raise AssertionError(f"unexpected helper call: args={args}, kwargs={kwargs}")
+
+    for attr in (
+        "_run_gsm8k_baseline",
+        "_run_humaneval_baseline",
+        "_run_constraint_ir_baseline",
+        "_run_gsm8k_verify_only",
+        "_run_humaneval_verify_only",
+        "_run_constraint_ir_verify_only",
+        "_run_gsm8k_verify_repair",
+        "_run_humaneval_verify_repair",
+        "_run_constraint_ir_verify_repair",
+    ):
+        monkeypatch.setattr(module, attr, unexpected)
+
+    def fake_baseline(*args: object, **kwargs: object) -> dict[str, object]:
+        stage_calls.append(("baseline", args, kwargs))
+        assert args == (cohort[0],)
+        if benchmark == "gsm8k_semantic":
+            assert kwargs == {
+                "model_spec": model_spec,
+                "model": model,
+                "tokenizer": tokenizer,
+                "policy": policy,
+            }
+        elif benchmark == "humaneval_property":
+            assert kwargs == {"model": model, "tokenizer": tokenizer}
+        else:
+            assert kwargs == {"model": model, "tokenizer": tokenizer, "policy": policy}
+        return baseline_result
+
+    def fake_verify_only(*args: object, **kwargs: object) -> dict[str, object]:
+        stage_calls.append(("verify_only", args, kwargs))
+        assert args == (cohort[0], baseline_result)
+        assert kwargs == {}
+        return verify_only_result
+
+    def fake_verify_repair(*args: object, **kwargs: object) -> dict[str, object]:
+        stage_calls.append(("verify_repair", args, kwargs))
+        assert args == (cohort[0], baseline_result)
+        if benchmark == "gsm8k_semantic":
+            assert kwargs == {
+                "model_spec": model_spec,
+                "model": model,
+                "tokenizer": tokenizer,
+                "policy": policy,
+                "max_repairs": max_repairs,
+            }
+        else:
+            assert kwargs == {
+                "model": model,
+                "tokenizer": tokenizer,
+                "max_repairs": max_repairs,
+            }
+        return verify_repair_result
+
+    monkeypatch.setattr(module, baseline_attr, fake_baseline)
+    monkeypatch.setattr(module, verify_only_attr, fake_verify_only)
+    monkeypatch.setattr(module, verify_repair_attr, fake_verify_repair)
+
+    def fake_run_mode(
+        *,
+        benchmark: str,
+        model_name: str,
+        mode: str,
+        cases: list[dict[str, object]],
+        checkpoint_dir: Path,
+        execute_case,
+    ) -> list[dict[str, object]]:
+        assert benchmark == expected_benchmark
+        assert model_name == model_spec["name"]
+        assert cases == cohort
+        assert checkpoint_dir == tmp_path / "checkpoints"
+        return [execute_case(cases[0])]
+
+    monkeypatch.setattr(module, "run_mode", fake_run_mode)
+    monkeypatch.setattr(
+        module,
+        "_summarize_runs",
+        lambda benchmark_name, baseline_runs, verify_only_runs, verify_repair_runs: {
+            "benchmark": benchmark_name,
+            "baseline": {"cases": baseline_runs},
+            "verify_only": {"cases": verify_only_runs},
+            "verify_repair": {"cases": verify_repair_runs},
+        },
+    )
+
+    suite = module._run_model_suite(
+        benchmark=benchmark,
+        model_spec=model_spec,
+        model=model,
+        tokenizer=tokenizer,
+        policy=policy,
+        cohort=cohort,
+        checkpoint_dir=checkpoint_dir,
+        max_repairs=max_repairs,
+    )
+
+    assert [stage for stage, _, _ in stage_calls] == [
+        "baseline",
+        "verify_only",
+        "verify_repair",
+    ]
+    assert suite["model_summary"]["benchmark"] == benchmark
+    assert [run["mode"] for run in suite["paired_runs"]] == [
+        "baseline",
+        "verify_only",
+        "verify_repair",
+    ]
+    assert all(run["model_name"] == model_spec["name"] for run in suite["paired_runs"])
 
 
 # REQ-VERIFY-027, SCENARIO-VERIFY-027

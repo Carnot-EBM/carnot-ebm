@@ -1,0 +1,67 @@
+{
+  "benchmark_date": "20260412",
+  "environment": {
+    "device_count": 2,
+    "gpus": [
+      "NVIDIA GeForce RTX 3090, 595.58.03, 24576 MiB",
+      "NVIDIA GeForce RTX 3090, 595.58.03, 24576 MiB"
+    ],
+    "torch_cuda": "12.6",
+    "torch_cuda_available": true,
+    "torch_version": "2.11.0+cu126"
+  },
+  "experiment_id": 225,
+  "models": {
+    "Gemma4-E4B-it": {
+      "hf_id": "google/gemma-4-E4B-it",
+      "large_model_fallback": false,
+      "parallel_device": "cuda:1",
+      "sequential_device": "cuda:1"
+    },
+    "Qwen3.5-0.8B": {
+      "hf_id": "Qwen/Qwen3.5-0.8B",
+      "large_model_fallback": false,
+      "parallel_device": "cuda:0",
+      "sequential_device": "cuda:0"
+    }
+  },
+  "notes": [
+    "This benchmark measures paired direct generation on a deterministic 10-question GSM8K slice with max_new_tokens=64.",
+    "The recorded timing is a fresh-process direct-generation microbenchmark rather than a full Exp 218 verify_only/verify_repair harness run.",
+    "The full Exp 218 live harness was started locally for the same cohort shape but was not completed within this turn budget."
+  ],
+  "results": {
+    "parallel": {
+      "elapsed_seconds": 32.774,
+      "execution_mode": "parallel",
+      "n_questions": 10,
+      "per_model_results": {
+        "Gemma4-E4B-it": {
+          "completed_questions": 10,
+          "device": "cuda:1"
+        },
+        "Qwen3.5-0.8B": {
+          "completed_questions": 10,
+          "device": "cuda:0"
+        }
+      }
+    },
+    "sequential": {
+      "elapsed_seconds": 37.371,
+      "execution_mode": "sequential",
+      "n_questions": 10
+    },
+    "speedup": {
+      "formula": "sequential_elapsed_seconds / parallel_elapsed_seconds",
+      "ratio": 1.1403
+    }
+  },
+  "status": "complete",
+  "title": "Dual-GPU paired generation microbenchmark",
+  "workload": {
+    "dataset": "gsm8k",
+    "execution_style": "fresh_process_direct_generation",
+    "max_new_tokens": 64,
+    "n_questions": 10
+  }
+}
