@@ -57,10 +57,12 @@ from carnot.pipeline.errors import (
     VerificationError,
 )
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
+from carnot.pipeline.semantic_grounding import SemanticGroundingVerifier
 from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typed_reasoning_ir
 
 if TYPE_CHECKING:
     from carnot.pipeline.memory import ConstraintMemory
+    from carnot.pipeline.semantic_grounding import SemanticGroundingResult
     from carnot.pipeline.tracker import ConstraintTracker
     from carnot.pipeline.typed_reasoning import TypedReasoningIR
 
@@ -142,13 +144,15 @@ class VerificationResult:
     constraints: list[ConstraintResult]
     energy: float
     violations: list[ConstraintResult]
-    certificate: dict = field(default_factory=dict)
+    certificate: dict[str, object] = field(default_factory=dict)
     mode: str = "FULL"
     """Verification mode: "FULL" for normal pipeline, "FAST_PATH" for JEPA early-exit."""
     skipped: bool = False
     """True when Tier 3 JEPA predictor gated this check as low-risk (fast path taken)."""
     typed_reasoning: TypedReasoningIR | None = None
     """Optional typed reasoning IR extracted from the prompt/response pair."""
+    semantic_grounding: SemanticGroundingResult | None = None
+    """Optional semantic-grounding analysis extracted from the prompt/response pair."""
 
 
 @dataclass
@@ -239,6 +243,7 @@ class VerifyRepairPipeline:
         domains: list[str] | None = None,
         max_repairs: int = 3,
         extractor: ConstraintExtractor | None = None,
+        semantic_grounding_verifier: SemanticGroundingVerifier | None = None,
         timeout_seconds: float = 30.0,
         memory: ConstraintMemory | None = None,
     ) -> None:
@@ -290,6 +295,7 @@ class VerifyRepairPipeline:
             self._extractor = extractor
         else:
             self._extractor = AutoExtractor()
+        self._semantic_grounding = semantic_grounding_verifier or SemanticGroundingVerifier()
 
         # Set up the optional LLM model.
         self._model: Any = None
@@ -415,7 +421,7 @@ class VerifyRepairPipeline:
         if "</think>" in response:
             response = response.split("</think>")[-1].strip()
 
-        return response
+        return str(response)
 
     def extract_constraints(self, text: str, domain: str | None = None) -> list[ConstraintResult]:
         """Extract constraints from text without verification.
@@ -482,6 +488,23 @@ class VerifyRepairPipeline:
             logger.warning("Typed reasoning extraction degraded: %s", exc)
             return None
 
+    def verify_semantic_grounding(
+        self,
+        question: str,
+        response: str,
+        typed_reasoning: TypedReasoningIR | None = None,
+    ) -> SemanticGroundingResult | None:
+        """Run semantic grounding additively without breaking existing verification."""
+        try:
+            return self._semantic_grounding.verify(
+                question=question,
+                response=response,
+                typed_reasoning=typed_reasoning,
+            )
+        except Exception as exc:
+            logger.warning("Semantic grounding degraded: %s", exc)
+            return None
+
     def verify(
         self,
         question: str,
@@ -545,6 +568,7 @@ class VerifyRepairPipeline:
               REQ-JEPA-002
         """
         typed_reasoning = self.extract_typed_reasoning(question, response)
+        semantic_grounding = self.verify_semantic_grounding(question, response, typed_reasoning)
 
         # Tier 3 JEPA fast-path gate (optional).
         # If a JEPA predictor is supplied, embed the first 50 whitespace-split
@@ -575,6 +599,7 @@ class VerifyRepairPipeline:
                     mode="FAST_PATH",
                     skipped=True,
                     typed_reasoning=typed_reasoning,
+                    semantic_grounding=semantic_grounding,
                 )
         # Fast path: delegate to Rust pipeline when available.
         # Repair still uses Python (requires LLM), but the hot verification
@@ -591,11 +616,12 @@ class VerifyRepairPipeline:
             # (auto-detect all), Python may have more extractors.
             if effective_domains and effective_domains <= _rust_supported:
                 try:
-                    return self._verify_rust(
+                    result = self._verify_rust(
                         question,
                         response,
                         typed_reasoning=typed_reasoning,
                     )
+                    return self._merge_semantic_grounding(result, semantic_grounding)
                 except Exception as exc:
                     logger.warning("Rust verify failed, falling back to Python: %s", exc)
                     # Fall through to Python path.
@@ -604,6 +630,8 @@ class VerifyRepairPipeline:
         try:
             self._check_deadline(deadline)
             constraints = self.extract_constraints(response, domain)
+            if semantic_grounding is not None:
+                constraints.extend(semantic_grounding.to_constraint_results())
 
             # Tier 2: prepend learned constraint suggestions from memory.
             if self._memory is not None:
@@ -627,9 +655,11 @@ class VerifyRepairPipeline:
                 violations=[],
                 certificate={"error": str(exc), "error_type": type(exc).__name__},
                 typed_reasoning=typed_reasoning,
+                semantic_grounding=semantic_grounding,
             )
 
         result.typed_reasoning = typed_reasoning
+        result.semantic_grounding = semantic_grounding
 
         if tracker is not None:
             self._update_tracker(tracker, result)
@@ -860,6 +890,24 @@ class VerifyRepairPipeline:
             typed_reasoning=typed_reasoning,
         )
 
+    @staticmethod
+    def _merge_semantic_grounding(
+        result: VerificationResult,
+        semantic_grounding: SemanticGroundingResult | None,
+    ) -> VerificationResult:
+        """Attach semantic-grounding violations to an existing verification result."""
+        result.semantic_grounding = semantic_grounding
+        if semantic_grounding is None or not semantic_grounding.violations:
+            return result
+
+        semantic_constraints = semantic_grounding.to_constraint_results()
+        result.constraints.extend(semantic_constraints)
+        result.violations.extend(semantic_constraints)
+        result.verified = False
+        result.certificate["n_constraints"] = len(result.constraints)
+        result.certificate["n_violations"] = len(result.violations)
+        return result
+
     def _evaluate_constraints(self, constraints: list[ConstraintResult]) -> VerificationResult:
         """Evaluate a list of extracted constraints and build a VerificationResult.
 
@@ -906,7 +954,7 @@ class VerifyRepairPipeline:
             ) from exc
 
         violations: list[ConstraintResult] = []
-        certificate_entries: list[dict] = []
+        certificate_entries: list[dict[str, object]] = []
         total_energy = 0.0
 
         # Separate energy-backed and metadata-backed constraints.
@@ -927,7 +975,9 @@ class VerifyRepairPipeline:
                 input_dim = 1
                 composed = ComposedEnergy(input_dim=input_dim)
                 for cr, weight in energy_terms:
-                    composed.add_constraint(cr.energy_term, weight)
+                    energy_term = cr.energy_term
+                    assert energy_term is not None
+                    composed.add_constraint(energy_term, weight)
 
                 x = jnp.zeros(input_dim)
                 ce_result = composed.verify(x)

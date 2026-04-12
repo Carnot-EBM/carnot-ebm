@@ -222,6 +222,39 @@ The same workflow shall write `results/experiment_214_results.json`, where:
 - re-running the workflow refreshes the JSONL and summary artifacts in place
   without duplicate records or order drift
 
+### REQ-VERIFY-020: Semantic Grounding Claim Decomposition And Deterministic Alignment
+
+The repository shall provide a semantic grounding verifier in
+`python/carnot/pipeline/semantic_grounding.py`, where:
+- the verifier decomposes a question-response pair into prompt clauses and
+  atomic response claims, reusing the typed reasoning IR when it is available
+- the verifier extracts prompt-side entities, quantities, and required answer
+  targets using deterministic rules rather than hidden chain-of-thought
+- the verifier aligns response claims against prompt-side entities,
+  quantities, and answer targets, with first-layer checks for entity coverage,
+  quantity or premise coverage, answer-target mismatch, and unsupported
+  references or assumptions when the evidence is strong
+- the verifier returns structured violations that preserve the violated prompt
+  clause, claim identifier, and machine-readable metadata and can be converted
+  into `ConstraintResult` objects for `VerifyRepairPipeline`
+- the deterministic layer is conservative enough that obviously grounded
+  correct answers do not get flagged in normal live verify-repair usage
+
+### REQ-VERIFY-021: Optional Semantic Refinement And Pipeline Integration
+
+The same capability shall expose optional refinement and pipeline integration,
+where:
+- the verifier accepts an optional refinement hook for ambiguous cases, but the
+  hook operates on structured summaries of prompt clauses, claims, and current
+  violations rather than requiring hidden chain-of-thought
+- `VerifyRepairPipeline` integrates semantic grounding additively with the
+  existing extractor path, so semantic violations can fail verification even
+  when the response is internally arithmetic-consistent
+- the pipeline remains backward compatible for existing callers that ignore the
+  new semantic-grounding analysis
+- later repair or audit stages can inspect the semantic-grounding result or the
+  pipeline-compatible violation objects without depending on raw prose parsing
+
 ### REQ-JEPA-002: Tier 3 Fast-Path Gate
 
 The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predictor gate that:
@@ -408,6 +441,27 @@ verifier-signal, and structured-reasoning fields
 **And** `results/experiment_214_results.json` is refreshed in place
 **And** the summary still reports the same coverage checks and taxonomy counts
 
+### SCENARIO-VERIFY-020: Exp 214 Semantic Omission Is Flagged Without Arithmetic Contradiction
+
+**Given** an Exp 214 word-problem response whose arithmetic steps are locally
+consistent but which omits a prompt premise needed by the asked-for answer
+**When** the semantic grounding verifier runs
+**Then** it emits one or more structured semantic-grounding violations
+**And** at least one violation points to the missing prompt clause or answer
+target mismatch rather than a generic arithmetic failure
+**And** the exported pipeline-compatible constraints are sufficient to mark the
+response unverified
+
+### SCENARIO-VERIFY-021: VerifyRepairPipeline Catches The Wrong Question Answered Correctly
+
+**Given** an Exp 214 question-grounding failure where the response computes a
+related quantity correctly but answers the wrong target
+**When** `VerifyRepairPipeline.verify()` runs
+**Then** verification fails even if no arithmetic contradiction is extracted
+**And** the surfaced violation is tagged as semantic grounding rather than
+arithmetic
+**And** optional refinement is not required to catch the case
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -431,4 +485,6 @@ verifier-signal, and structured-reasoning fields
 | REQ-VERIFY-017 | Not Started | Implemented | Typed reasoning IR tests + pipeline integration tests |
 | REQ-VERIFY-018 | Not Started | Implemented | Exp 214 semantic failure corpus tests |
 | REQ-VERIFY-019 | Not Started | Implemented | Exp 214 semantic failure corpus tests |
+| REQ-VERIFY-020 | Not Started | Implemented | Semantic grounding verifier tests |
+| REQ-VERIFY-021 | Not Started | Implemented | Semantic grounding verifier + pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
