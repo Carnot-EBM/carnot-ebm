@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 224 Hypothesis-Backed PBT Code Verifier
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T17:43:30Z | 2026-04-12T18:13:46Z | Exp 224: extended `code-verification` with `REQ-CODE-009` through `REQ-CODE-011`, wrote `test_pbt_code_verifier.py` first, implemented `python/carnot/pipeline/pbt_code_verifier.py` plus the additive `VerifyRepairPipeline.verify_generated_code()` path, added the `hypothesis` dependency, reconciled traceability/status/changelog, and reran targeted 100% coverage for the new module, the full Python suite, spec coverage, Ruff, mypy, and `tests/integration/test_full_pipeline.py`. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
+---
+
 ## Session: 2026-04-12 Exp 223 Held-Out Live Self-Learning Replay
 
 ### Turn Log
