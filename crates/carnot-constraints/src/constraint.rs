@@ -508,6 +508,7 @@ mod tests {
         assert!(!c.is_satisfied(&x.view()));
     }
 
+    // REQ-VERIFY-001: violated Ising constraint exposes nonzero gradient
     #[test]
     fn test_ising_constraint_gradient_when_violated() {
         let mut model = IsingModel::new(IsingConfig {
@@ -529,6 +530,7 @@ mod tests {
         assert!((grad[1] - 1.0).abs() < 1e-6);
     }
 
+    // REQ-VERIFY-001: satisfied Ising constraint returns zero gradient
     #[test]
     fn test_ising_constraint_zero_grad_when_satisfied() {
         let model = IsingModel::new(IsingConfig {
