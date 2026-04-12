@@ -26,6 +26,21 @@ loop) executes the current experiments.
 
 ## Active Research Queue (Ranked)
 
+### URGENT Rank 0: Live vs Simulated Inference Validation
+- **Score:** 5×5×5×5 = **625** (MAXIMUM)
+- **Source:** Internal finding — ALL positive results were simulated inference
+- **Crisis:** Exp 184 is the FIRST live GPU experiment and shows -2% standard,
+  -12% adversarial on 3B model. But ALL previous positive results (Exp 91,
+  120, 121, 161, 162) used SIMULATED inference. We cannot distinguish whether
+  the negative result is model-size (precision ceiling) or inference-mode
+  (simulation was unrealistically favorable).
+- **MUST DO IMMEDIATELY:** Run 0.8B Qwen3.5 with LIVE GPU inference on the
+  SAME GSM8K questions. If 0.8B live shows +10-14%, precision ceiling is real
+  and we fix it with Z3/confidence. If 0.8B live shows ~0%, our ENTIRE results
+  narrative is based on simulation artifacts and we have a fundamental problem.
+- **Status:** NOT IN ROADMAP — must add immediately
+- **Why #0:** This determines whether Carnot's core claim is real or an artifact.
+
 ### Rank 1: Confidence-Calibrated Constraint Verification
 - **Score:** 5×4×5×5 = 500
 - **Source:** Internal finding (Exp 184: 3B model -2% regression)
