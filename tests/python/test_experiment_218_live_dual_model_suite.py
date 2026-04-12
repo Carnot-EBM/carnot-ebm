@@ -1,11 +1,15 @@
-"""Spec: REQ-VERIFY-025, REQ-VERIFY-026, SCENARIO-VERIFY-025, SCENARIO-VERIFY-026."""
+"""Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027,
+SCENARIO-VERIFY-025, SCENARIO-VERIFY-026, SCENARIO-VERIFY-027.
+"""
 
 from __future__ import annotations
 
 import importlib.util
 import json
 import runpy
+from dataclasses import dataclass
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -202,7 +206,7 @@ def test_build_artifact_payload_has_stable_schema_and_order():
 
     payload = module.build_artifact_payload(
         benchmark="constraint_ir",
-        output_path=Path("results/experiment_221_results.json"),
+        output_path=Path("results/experiment_219_results.json"),
         cohort=cohort,
         paired_runs=paired_runs,
         statistics={"Qwen3.5-0.8B": {"baseline": {"n_cases": 2}}},
@@ -211,19 +215,255 @@ def test_build_artifact_payload_has_stable_schema_and_order():
         started_at="2026-04-12T12:00:00Z",
         finished_at="2026-04-12T12:01:00Z",
         runtime_seconds=60.0,
+        checkpoint_dir=Path("results/checkpoints/experiment_218"),
+        max_repairs=3,
+        policy_path=Path("results/monitorability_policy_213.json"),
+        inference_mode="live_gpu",
     )
 
-    assert payload["experiment"] == 218
+    assert payload["experiment"] == 219
     assert payload["run_date"] == "20260412"
     assert payload["schema"]["artifact"] == "carnot.live_dual_model_suite.v1"
     assert payload["schema"]["benchmark_case_schema"] == "constraint_ir.v1"
-    assert payload["metadata"]["output_path"] == "results/experiment_221_results.json"
+    assert payload["metadata"]["output_path"] == "results/experiment_219_results.json"
+    assert payload["metadata"]["checkpoint_dir"] == "results/checkpoints/experiment_218"
+    assert payload["metadata"]["max_repairs"] == 3
+    assert payload["metadata"]["policy_source"] == "results/monitorability_policy_213.json"
+    assert payload["metadata"]["inference_mode"] == "live_gpu"
     assert payload["cohort"]["case_ids"] == [case["case_id"] for case in cohort]
     assert payload["paired_runs"] == paired_runs
     assert (
         payload["cohort"]["cases"][0]["prompt_seeds"]["baseline"]
         == payload["cohort"]["cases"][0]["prompt_seeds"]["verify_repair"]
     )
+
+
+# REQ-VERIFY-027
+def test_artifact_experiment_id_follows_output_filename():
+    module = load_module()
+
+    assert module.artifact_experiment_id(Path("results/experiment_219_results.json")) == 219
+    assert module.artifact_experiment_id(Path("results/experiment_220_results.json")) == 220
+    assert module.artifact_experiment_id(Path("results/custom.json")) == 218
+
+
+# REQ-VERIFY-027
+def test_extract_final_number_ignores_punctuation_only_matches():
+    module = load_module()
+
+    assert module._extract_final_number("Result: ,,,") is None
+    assert module._extract_final_number("Answer: -12") == -12
+
+
+# REQ-VERIFY-027, SCENARIO-VERIFY-027
+def test_summarize_gsm8k_runs_reports_semantic_metrics_parse_coverage_and_overhead():
+    module = load_module()
+
+    baseline_runs = [
+        {
+            "correct": True,
+            "latency_seconds": 1.2,
+            "prompt_tokens": 18,
+            "response_tokens": 7,
+            "total_tokens": 25,
+            "typed_reasoning_parse_status": "direct_json",
+        },
+        {
+            "correct": False,
+            "latency_seconds": 1.8,
+            "prompt_tokens": 20,
+            "response_tokens": 9,
+            "total_tokens": 29,
+            "typed_reasoning_parse_status": "fallback_text",
+        },
+    ]
+    verify_only_runs = [
+        {
+            "accepted_correct": True,
+            "flagged": False,
+            "correct": True,
+            "semantic_violation_count": 0,
+            "typed_reasoning_parse_status": "direct_json",
+            "latency_seconds": 0.4,
+            "total_tokens": 0,
+        },
+        {
+            "accepted_correct": False,
+            "flagged": True,
+            "correct": False,
+            "semantic_violation_count": 2,
+            "typed_reasoning_parse_status": "unavailable",
+            "latency_seconds": 0.6,
+            "total_tokens": 0,
+        },
+    ]
+    verify_repair_runs = [
+        {
+            "initial_correct": True,
+            "correct": True,
+            "repaired": False,
+            "n_repairs": 0,
+            "latency_seconds": 0.0,
+            "total_tokens": 0,
+        },
+        {
+            "initial_correct": False,
+            "correct": True,
+            "repaired": True,
+            "n_repairs": 2,
+            "latency_seconds": 2.5,
+            "total_tokens": 34,
+        },
+    ]
+
+    summary = module._summarize_runs(
+        "gsm8k_semantic",
+        baseline_runs,
+        verify_only_runs,
+        verify_repair_runs,
+    )
+
+    assert summary["baseline"]["accuracy"] == 0.5
+    assert summary["baseline"]["mean_total_tokens"] == 27.0
+    assert summary["verify_only"]["accuracy"] == 0.5
+    assert summary["verify_only"]["n_wrong_answers"] == 1
+    assert summary["verify_only"]["n_wrong_detected"] == 1
+    assert summary["verify_only"]["semantic_violation_count"] == 2
+    assert summary["verify_only"]["parse_coverage"] == 0.5
+    assert summary["verify_only"]["false_positives"] == 0
+    assert summary["verify_only"]["mean_additional_latency_seconds"] == 0.5
+    assert summary["verify_repair"]["accuracy"] == 1.0
+    assert summary["verify_repair"]["n_repaired"] == 1
+    assert summary["verify_repair"]["repair_yield"] == 1.0
+    assert summary["verify_repair"]["mean_additional_tokens"] == 17.0
+    assert summary["paired_deltas"]["repair_minus_baseline"] == 0.5
+    assert summary["paired_deltas"]["verify_only_minus_baseline"] == 0.0
+
+
+@dataclass
+class _FakeSerializable:
+    payload: dict[str, object]
+
+    def to_dict(self) -> dict[str, object]:
+        return dict(self.payload)
+
+
+@dataclass
+class _FakeDataclassPayload:
+    label: str
+
+
+# REQ-VERIFY-027, SCENARIO-VERIFY-027
+def test_serialize_verification_result_preserves_semantic_trace_artifacts():
+    module = load_module()
+
+    verification = SimpleNamespace(
+        verified=False,
+        energy=1.25,
+        constraints=[],
+        violations=[],
+        certificate={"n_constraints": 2, "n_violations": 1},
+        typed_reasoning=_FakeSerializable(
+            {
+                "provenance": {
+                    "extraction_method": "direct_json",
+                    "parser_version": "20260412",
+                }
+            }
+        ),
+        semantic_grounding=_FakeSerializable(
+            {
+                "violations": [
+                    {
+                        "violation_type": "answer_target_mismatch",
+                        "description": "Answered the wrong target.",
+                    }
+                ]
+            }
+        ),
+    )
+
+    serialized = module._serialize_verification_result(verification)
+
+    assert serialized["verified"] is False
+    assert serialized["energy"] == 1.25
+    assert serialized["certificate"] == {"n_constraints": 2, "n_violations": 1}
+    assert serialized["typed_reasoning"]["provenance"]["extraction_method"] == "direct_json"
+    assert serialized["semantic_grounding"]["violations"][0]["violation_type"] == (
+        "answer_target_mismatch"
+    )
+
+
+# REQ-VERIFY-027
+def test_helper_serializers_cover_env_token_and_generation_branches(
+    monkeypatch: pytest.MonkeyPatch,
+):
+    module = load_module()
+
+    monkeypatch.delenv("CARNOT_FORCE_LIVE", raising=False)
+    monkeypatch.delenv("CARNOT_FORCE_CPU", raising=False)
+    assert module.live_inference_mode() == "simulated"
+
+    monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
+    monkeypatch.setenv("CARNOT_FORCE_CPU", "0")
+    assert module.live_inference_mode() == "live_gpu"
+
+    monkeypatch.setenv("CARNOT_FORCE_CPU", "1")
+    assert module.live_inference_mode() == "live_cpu"
+
+    class FakeTokenizer:
+        def __call__(self, text: str, **_: object) -> dict[str, list[int]]:
+            return {"input_ids": list(range(len(text.split())))}
+
+    class RaisingTokenizer:
+        def __call__(self, text: str, **_: object) -> dict[str, list[int]]:
+            raise RuntimeError(text)
+
+    assert module._token_count(None, "") == 0
+    assert module._token_count(None, "alpha beta") == 2
+    assert module._token_count(FakeTokenizer(), "alpha beta gamma") == 3
+    assert module._token_count(RaisingTokenizer(), "alpha beta") == 2
+    assert module._round_mean([]) == 0.0
+    assert module._round_mean([1.0, 2.0]) == 1.5
+
+    typed_with_attr = SimpleNamespace(provenance=SimpleNamespace(extraction_method="direct_json"))
+    assert module._typed_reasoning_parse_status(None) == "unavailable"
+    assert module._typed_reasoning_parse_status(typed_with_attr) == "direct_json"
+    assert module._typed_reasoning_parse_status(_FakeSerializable({})) == "parsed"
+
+    assert module._serialize_jsonable(("alpha", 2)) == ["alpha", 2]
+    assert module._serialize_jsonable(_FakeDataclassPayload(label="beta")) == {"label": "beta"}
+    assert module._serialize_jsonable(object()).startswith("<object object at ")
+    assert module._serialize_constraint_result({"kind": "cached"}) == {"kind": "cached"}
+    constraint = SimpleNamespace(
+        constraint_type="semantic_grounding",
+        description="needs review",
+        metadata={"satisfied": False},
+    )
+    assert module._serialize_constraint_result(constraint) == {
+        "constraint_type": "semantic_grounding",
+        "description": "needs review",
+        "metadata": {"satisfied": False},
+    }
+
+    trace = module._build_generation_trace(
+        tokenizer=FakeTokenizer(),
+        attempts=[
+            module._serialize_generation_attempt(
+                prompt="prompt one",
+                response="answer one",
+                tokenizer=FakeTokenizer(),
+                valid=True,
+                error="schema",
+            )
+        ],
+        fallback_record={"prompt": "retry prompt", "response": "retry answer"},
+    )
+
+    assert trace["fallback_used"] is True
+    assert trace["attempts"][0]["valid"] is True
+    assert trace["attempts"][0]["error"] == "schema"
+    assert trace["total_tokens"] == 8
 
 
 # REQ-VERIFY-026
