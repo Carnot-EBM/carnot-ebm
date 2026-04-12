@@ -1,5 +1,19 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 Exp 206 Z3 Live Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T03:52:14Z | 2026-04-12T04:31:34Z | Exp 206: added `z3_live_benchmark.py` + `experiment_206_z3_live.py`, wrote 9 tests with 100% `z3_live_benchmark.py` coverage, reran `.venv/bin/pytest tests/python -q` at 100% suite coverage, and completed the live Gemma4-E4B-it 100-question GSM8K benchmark; final live result: baseline 91%, Z3 verify-repair 91% (Δ 0.0pp), regex verify-repair 90% (Δ -1.0pp), Z3 false positives 3/91 vs regex 5/91, wrong-answer detection 0/9 for both; spec coverage still blocked by 11 pre-existing unrelated missing traces | TBD |
+
+### Session Summary
+
+*To be filled by `scripts/session-metrics.py` at session end.*
+
+---
+
 ## Session: 2026-04-12 Exp 205 LLM-as-Extractor
 
 ### Turn Log
