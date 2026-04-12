@@ -1305,3 +1305,5 @@
 +    assert correct1["failure_category" |
 | 2026-04-12 02:42 UTC | Exp 203: Extraction autopsy — why ArithmeticExtrac | OK | Deliverable already exists in repo |
 | 2026-04-12 03:08 UTC | Exp 204: Z3 SMT constraint extractor — formal veri | OK | Deliverable already exists in repo |
+| 2026-04-12 03:44 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | =========== 1845 passed, 1 skipped, 22 warnings in 164.79s (0:02:44) =========== |
+| 2026-04-12 03:45 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
