@@ -1,0 +1,259 @@
+# Carnot Research Roadmap — Milestone 2026.04.16
+# "Scale What Works: PBT Code Verification, FPGA Ising, Production Path"
+#
+# CONTEXT: Milestone 2026.04.15 established that:
+# - Code verification via execution is our ONLY positive live result (+3.3pp HumanEval)
+# - Arithmetic constraint extraction doesn't catch IT model errors (semantic gap)
+# - Free-form reasoning prompts are best for monitorability (100% parseable)
+# - Property-Based Testing shows 23-37% improvement on code benchmarks (arxiv 2506.18315)
+# - KV260 FPGA should have arrived — ready for Ising sampler prototype
+#
+# This milestone doubles down on what works (code verification) and adds hardware.
+
+milestone: "2026.04.16"
+milestone_title: "Scale What Works: PBT Code Verification, FPGA Ising, Production Path"
+milestone_doc: "openspec/change-proposals/research-roadmap-v21.md"
+
+tasks:
+  # ── Phase 70: Property-Based Code Verification (strongest result) ──
+  - id: exp224-pbt-code-extractor
+    milestone: "2026.04.16"
+    deliverable: results/experiment_224_results.json
+    title: "Exp 224: Property-based test generation for code verification"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Our best live result is Exp 208: HumanEval 16.7% -> 20.0% (+3.3pp)
+      using basic execution testing. The paper "Property-Generated Solver"
+      (arxiv 2506.18315) showed 23-37% improvement using property-based testing
+      instead of example-based testing. We should integrate PBT into our pipeline.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — CodeExtractor
+      - python/carnot/verify/property_test.py — existing property testing
+      - python/carnot/pipeline/humaneval_live_benchmark.py — Exp 208 harness
+
+      TASK: Create python/carnot/pipeline/pbt_code_verifier.py
+
+      CONCRETE STEPS:
+      1. Create PBTCodeVerifier that:
+         a. Takes LLM-generated code
+         b. Generates property-based tests (invariants, edge cases, type checks)
+         c. Uses hypothesis library for PBT test generation
+         d. Runs PBT tests against the generated code
+         e. Returns ConstraintResults with violation details
+      2. Integrate with VerifyRepairPipeline as a new code verification path
+      3. Test on 5 HumanEval problems to validate the approach
+      4. Compare: basic execution vs PBT on the same problems
+      5. Write tests achieving 100% coverage
+      6. Run: .venv/bin/pytest tests/python -q
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp225-pbt-humaneval-30
+    milestone: "2026.04.16"
+    deliverable: results/experiment_225_results.json
+    title: "Exp 225: PBT on 30 HumanEval problems — head-to-head vs Exp 208"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 224 created PBTCodeVerifier. Now run it on the SAME 30
+      HumanEval problems as Exp 208 for direct comparison.
+      Exp 208 baseline: 16.7% -> 20.0% (+3.3pp) with basic execution.
+      Target: PBT should show a larger improvement.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/pbt_code_verifier.py — Exp 224
+      - python/carnot/pipeline/humaneval_live_benchmark.py — benchmark harness
+      - results/experiment_208_results.json — baseline to compare against
+
+      TASK: Run PBT verification on 30 HumanEval with live Gemma4-E4B-it
+
+      CONCRETE STEPS:
+      1. Create scripts/experiment_225_pbt_humaneval.py
+      2. Load the same 30 seeded HumanEval problems as Exp 208
+      3. Run with PBTCodeVerifier instead of basic CodeExtractor
+      4. Compare: basic execution (Exp 208) vs PBT (this exp)
+      5. Report: baseline, verify-only, verify-repair, delta, CI
+      6. Write tests for the benchmark script
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp226-pbt-humaneval-full
+    milestone: "2026.04.16"
+    deliverable: results/experiment_226_results.json
+    title: "Exp 226: Full 164-problem HumanEval with PBT — publishable result"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: If Exp 225 shows improvement, run the FULL 164-problem
+      HumanEval benchmark for a publishable result with confidence intervals.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_225_results.json — 30-problem PBT results
+      - python/carnot/pipeline/pbt_code_verifier.py
+      - python/carnot/pipeline/humaneval_live_benchmark.py
+
+      TASK: Full 164-problem HumanEval PBT benchmark
+
+      CONCRETE STEPS:
+      1. Create scripts/experiment_226_pbt_humaneval_full.py
+      2. Run ALL 164 official HumanEval problems with live GPU
+      3. Use PBTCodeVerifier + up to 3 repair attempts
+      4. Checkpoint every 10 problems (long-running)
+      5. Bootstrap 95% CI for improvement delta
+      6. Compare against published baselines for Gemma4-E4B-it
+      7. Write summary suitable for technical report
+      8. Write tests
+      9. Run: .venv/bin/pytest tests/python -q
+      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 71: Multi-Model Code Verification ──
+  - id: exp227-multi-model-code
+    milestone: "2026.04.16"
+    deliverable: results/experiment_227_results.json
+    title: "Exp 227: PBT code verification on Qwen3.5-0.8B — cross-model validation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: All code verification so far used Gemma4-E4B-it. Test on
+      Qwen3.5-0.8B to validate the approach works across model families.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/pbt_code_verifier.py
+      - results/experiment_225_results.json — Gemma results
+
+      TASK: Run PBT HumanEval on Qwen3.5-0.8B (30 problems)
+
+      CONCRETE STEPS:
+      1. Create scripts/experiment_227_qwen_pbt.py
+      2. Same 30 seeded problems as Exp 225
+      3. Live GPU inference with Qwen3.5-0.8B
+      4. PBT verification + repair
+      5. Compare Qwen vs Gemma results
+      6. Write tests
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 72: FPGA Ising Prototype ──
+  - id: exp228-fpga-ising-design
+    milestone: "2026.04.16"
+    deliverable: results/experiment_228_results.json
+    title: "Exp 228: KV260 FPGA Ising sampler design and simulation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The Kria KV260 FPGA should have arrived. It has 256K LUTs,
+      enough for ~4K p-bits. Reference: arxiv 2512.24558 (6400-spin FPGA
+      Ising machine, 64 billion flips/second).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/parallel_ising.py — current CPU Ising sampler
+      - python/carnot/samplers/backend.py — SamplerBackend abstraction
+      - research-hardware-wishlist.md — KV260 specs
+
+      TASK: Design the FPGA Ising sampler architecture
+
+      CONCRETE STEPS:
+      1. Design the p-bit array architecture (target: 4K spins)
+      2. Define the AXI-Lite register map for coupling updates
+      3. Create python/carnot/samplers/fpga_ising.py with:
+         a. FPGAIsingSampler implementing SamplerBackend
+         b. Coupling matrix upload via PYNQ overlay
+         c. Sampling trigger and result readback
+         d. Fallback to CPU sampler if FPGA not detected
+      4. Simulate with software model first (no hardware needed)
+      5. Benchmark: simulated FPGA vs actual CPU sampler
+      6. Document the Verilog design in docs/fpga-ising-design.md
+      7. Write tests
+      8. Run: .venv/bin/pytest tests/python -q
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 73: Self-Learning from Code Traces ──
+  - id: exp229-code-trace-learning
+    milestone: "2026.04.16"
+    deliverable: results/experiment_229_results.json
+    title: "Exp 229: Self-learning from code verification traces"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Code verification produces rich traces: which tests fail,
+      what properties are violated, what repairs work. This is Tier 1-2
+      self-learning data. Use it to improve future verifications.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — ConstraintTracker
+      - python/carnot/pipeline/pbt_code_verifier.py
+      - results/experiment_225_results.json — verification traces
+
+      TASK: Build self-learning from code verification traces
+
+      CONCRETE STEPS:
+      1. Extract patterns from Exp 225/226 verification traces:
+         a. Which PBT properties catch the most bugs?
+         b. Which repair strategies succeed?
+         c. Which problem types benefit most from verification?
+      2. Create python/carnot/pipeline/code_learning.py:
+         a. TraceAnalyzer: extract patterns from verification history
+         b. PropertyRanker: rank PBT properties by effectiveness
+         c. RepairStrategy: learn which repairs work for which errors
+      3. Demonstrate: verification improves over time with accumulated traces
+      4. Write tests
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # ── Phase 74: Production Packaging ──
+  - id: exp230-code-verify-package
+    milestone: "2026.04.16"
+    deliverable: results/experiment_230_results.json
+    title: "Exp 230: Package code verification as standalone tool"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Code verification is our strongest live result. Package it
+      as a standalone tool users can actually use: CLI command, MCP tool,
+      and Python API.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/cli.py — existing CLI
+      - python/carnot/mcp/ — MCP server
+      - python/carnot/pipeline/pbt_code_verifier.py
+
+      TASK: Package code verification for end users
+
+      CONCRETE STEPS:
+      1. Add CLI command: carnot verify-code <file> --func <name> --pbt
+      2. Add MCP tool: verify_code_with_pbt
+      3. Add Python API: from carnot.pipeline import verify_code
+      4. Write usage examples in docs/
+      5. Test end-to-end: generate code with LLM, verify with PBT, repair
+      6. Write tests
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp231-honest-docs-update
+    milestone: "2026.04.16"
+    deliverable: results/experiment_231_results.json
+    title: "Exp 231: Update all documentation with PBT results and FPGA progress"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      TASK: Update README, technical report, and GitHub Pages with latest results.
+
+      CONCRETE STEPS:
+      1. Update docs/technical-report.md with PBT code verification results
+      2. Update docs/index.html with new experiment counts and PBT results
+      3. Update README.md with PBT verification section
+      4. Add FPGA Ising design to hardware section
+      5. Ensure all provenance labels are accurate
+      6. Render docs/technical-report.html from updated markdown
+      7. Write tests if any new modules were created
+      8. Run: .venv/bin/pytest tests/python -q
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.

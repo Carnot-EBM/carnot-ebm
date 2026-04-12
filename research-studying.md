@@ -322,3 +322,100 @@ Study runs check ALL of these sources:
   Hypothesis: Monitorability differs by model family and task, so Carnot should gate CoT extraction behind a measured trust score rather than assuming traces are faithful.
   Success criteria: Produce a per-model monitorability score, a pathology breakdown, and a simple policy that predicts when to trust CoT extraction versus prompt-answer-only verification.
 <!-- EXP210_STUDYING_END -->
+
+## Study Run 2026-04-12 — Post-Milestone 2026.04.14 + Early 2026.04.15
+
+**Updated:** 2026-04-12
+**Current Focus:** Semantic grounding gap (0/9 wrong answers detected on live GSM8K)
+
+### New Findings
+
+#### Property-Generated Solver (HIGH IMPACT — code verification)
+- **Source:** [arxiv 2506.18315](https://arxiv.org/abs/2506.18315)
+- **What:** Uses property-based testing to validate LLM-generated code. Properties
+  are simpler to define than exhaustive test oracles. **23-37% pass@1 improvement.**
+- **Relevance:** Directly applicable to Exp 217 (property code verifier) and our
+  HumanEval pipeline. Could multiply the +3.3pp we got in Exp 208.
+- **Score:** 5×5×5×5 = **625** — MAXIMUM. Implement immediately.
+- **Action:** Integrate PBT into CodeExtractor for Exp 217/220.
+
+#### Eidoku: Neuro-Symbolic Verification Gate
+- **Source:** [arxiv 2512.20664](https://arxiv.org/pdf/2512.20664)
+- **What:** Deterministic rejection gate for LLM reasoning hallucinations.
+  Neuro-symbolic sanity check that gates generative output.
+- **Relevance:** Exactly what our verify-repair pipeline does. Validate our
+  architecture against their design patterns.
+- **Score:** 5×4×4×4 = 320
+
+#### Neuro-Symbolic Compliance (LLM + SMT for Finance)
+- **Source:** [arxiv 2601.06181](https://arxiv.org/html/2601.06181v1)
+- **What:** LLM interprets regulations → generates SMT constraints → solver
+  enforces consistency. 86.2% SMT code gen accuracy, 100x reasoning speedup.
+- **Relevance:** Same pattern as our Z3 extractor but for legal/financial domain.
+  Validates LLM-as-SMT-generator approach.
+- **Score:** 4×4×4×3 = 192
+
+#### SCoRe: Multi-Turn RL Self-Correction (ICLR 2025)
+- **Source:** ICLR 2025 SuperCorrect
+- **What:** Multi-turn RL teaches LLMs to self-correct. +15.6% MATH, +9.1% HumanEval.
+- **Relevance:** Our verify-repair loop is external self-correction. SCoRe shows
+  internal self-correction can complement it. Could inform repair prompting.
+- **Score:** 4×4×3×4 = 192
+
+#### Learning to Self-Verify (CRITICAL INSIGHT)
+- **Source:** [arxiv 2602.07594](https://arxiv.org/html/2602.07594v1)
+- **What:** Self-verification doesn't improve with model scale. Needs explicit
+  training. Generation and verification are asymmetric capabilities.
+- **Relevance:** Validates Carnot's external verification approach. LLMs can't
+  self-verify — they need us.
+- **Score:** 5×3×1×5 = 75 — not actionable but validates thesis
+
+#### Thought Anchors (NeurIPS 2025 Workshop)
+- **Source:** [OpenReview](https://openreview.net/forum?id=VnSlfeRCaU)
+- **What:** Identifies which CoT reasoning steps have outsized impact on final
+  answers. Some steps are "anchors" that determine the trajectory.
+- **Relevance:** Could improve our CoT monitorability audit (Exp 213) — focus
+  verification on anchor steps, not all steps.
+- **Score:** 4×5×3×4 = 240
+
+#### Scientific Knowledge-Driven Decoding Constraints
+- **Source:** [arxiv 2604.06603](https://arxiv.org/html/2604.06603)
+- **What:** Hard constraints combined with LLM distributions during decoding
+  without interfering with normal reasoning.
+- **Relevance:** Directly applicable to our guided decoding (Exp 110). Better
+  constraint integration method.
+- **Score:** 4×4×3×3 = 144
+
+### Updated Rankings After 2026-04-12 Study Run
+
+| Rank | Idea | Score | Status |
+|------|------|-------|--------|
+| 1 | **Property-Based Testing for code verification** | **625** | NEW — integrate into Exp 217/220 |
+| 1 | Prompt-to-constraint IR with solver fallback | 625 | In progress (Exp 211-212) |
+| 3 | Confidence-calibrated constraints | 500 | Deferred |
+| 4 | Semantic constraint via CoT decomposition | 375 | In progress (Exp 215-216) |
+| 5 | Eidoku verification gate pattern | **320** | NEW — architecture validation |
+| 6 | Contrastive constraint learning | 256 | Partially explored |
+| 7 | Thought Anchors for CoT focus | **240** | NEW — improve Exp 213 |
+| 8 | FPGA p-bit cluster | 240 | KV260 arriving soon |
+| 9 | Neuro-Symbolic Compliance (SMT) | **192** | NEW — validates Z3 approach |
+| 9 | SCoRe self-correction | **192** | NEW — inform repair prompting |
+| 11 | ConstraintLLM scheduling | 192 | Noted |
+| 12 | Energy-aware beam search | 144 | Noted |
+| 12 | Scientific decoding constraints | **144** | NEW — guided decoding |
+| 14 | FPGA Ising real-time updates | 135 | KV260 arriving |
+
+### Implications for Milestone 2026.04.16
+
+The Property-Generated Solver finding is transformative for code verification.
+Our HumanEval result (+3.3pp) used only basic execution testing. PBT showed
+23-37% improvement on similar benchmarks — we should expect a much larger delta
+if we integrate property-based testing into our CodeExtractor + repair loop.
+
+**Proposed milestone 2026.04.16 theme: "Scale What Works"**
+1. Scale code verification with PBT (our strongest live result)
+2. FPGA Ising prototype (KV260 should have arrived)
+3. Full 164-problem HumanEval with PBT + repair (publishable result)
+4. Multi-model code verification (Qwen + Gemma + larger models)
+5. Self-learning from code verification traces (Tier 1-2)
+6. Bridge to production: package the code verification pipeline
