@@ -76,7 +76,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (187 experiments, 13 milestones)
+## Key Results (213+ experiments, 15 milestones)
 
 ### Headline results with provenance
 
@@ -92,7 +92,9 @@ The table keeps the strongest historical numbers in the research record while ma
 | Self-learning (Exp 134) | 67.6% -> 97.0% | Missing explicit inference provenance | Retained as a research result, but the artifact lacks explicit live inference provenance |
 | Factual coverage (Exp 158) | 96.0% claim coverage | Missing explicit inference provenance | Coverage study preserved as historical evidence; not a validated live end-to-end repair benchmark |
 
-Latest reporting and planning updates: Exp 209 audited 66 result artifacts into 5 validated live, 3 simulated, and 58 unverified results, and Exp 210 cataloged 10 core papers, 8 benchmark assets, and 5 monitorability-risk papers while recommending `EXP-211 -> EXP-213 -> EXP-212`.
+**Extractor comparison (Exp 206-207, 100 live GSM8K):** Regex: 5/91 FP | Z3: 3/91 FP | LLM: 1/91 FP. None detected 9/9 wrong answers — they were semantic errors (wrong problem setup), not arithmetic contradictions. This led to milestone 2026.04.15 "Semantic Grounding" — typed constraints, CoT verification, and self-learning from live traces.
+
+**Milestone 2026.04.15 in progress:** Exp 211 built an 81-example constraint IR benchmark. Exp 213 audited CoT monitorability across 66 responses — free-form reasoning prompts are best (100% parseable, 85% constraint coverage), structured JSON is worst (18% parseable). 78% of constraint types have no verifier yet — that's the gap being closed now.
 
 ### What works on test sets but fails in practice
 
@@ -106,11 +108,11 @@ Latest reporting and planning updates: Exp 209 audited 66 result artifacts into 
 
 **The core problem:** activation-based EBMs measure how confident the model is, not whether it's right. A model that confidently says "Neil Armstrong walked on Mars" produces activations indistinguishable from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.
 
-See the [technical report](docs/technical-report.md) for the full 187-experiment analysis.
+See the [technical report](docs/technical-report.md) for the full 213+ experiment analysis.
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a now-187-experiment program across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a now-213+ experiment program across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
