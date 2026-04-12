@@ -1309,3 +1309,5 @@
 | 2026-04-12 03:45 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
 | 2026-04-12 04:47 UTC | Exp 206: Z3 extractor on 100 live GSM8K (Gemma4-E4 | OK | =========== 1854 passed, 1 skipped, 22 warnings in 535.18s (0:08:55) =========== |
 | 2026-04-12 04:48 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
+| 2026-04-12 05:37 UTC | Exp 207: LLM extractor on 100 live GSM8K — compare | OK | =========== 1858 passed, 1 skipped, 22 warnings in 111.98s (0:01:51) =========== |
+| 2026-04-12 05:38 UTC | Exp 205: LLM-as-extractor — use a second LLM call  | OK | Deliverable already exists in repo |
