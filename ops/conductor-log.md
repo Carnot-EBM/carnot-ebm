@@ -1348,3 +1348,4 @@ E   ImportError: cannot impor |
 | 2026-04-12 20:40 UTC | Exp 224b: Dual-GPU parallel inference — run both m | OK | =========== 2077 passed, 1 skipped, 22 warnings in 81.68s (0:01:21) ============ |
 | 2026-04-12 20:41 UTC | Exp 225: PBT on 30 HumanEval problems — head-to-he | OK | Deliverable already exists in repo |
 | 2026-04-12 21:55 UTC | Exp 226: Full 164-problem HumanEval with PBT — pub | OK | =========== 2088 passed, 1 skipped, 22 warnings in 93.06s (0:01:33) ============ |
+| 2026-04-12 22:27 UTC | Exp 227: PBT code verification on Qwen3.5-0.8B — c | OK | =========== 2099 passed, 1 skipped, 22 warnings in 84.94s (0:01:24) ============ |
