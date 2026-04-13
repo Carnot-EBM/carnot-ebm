@@ -1,0 +1,371 @@
+{
+  "experiment": 247,
+  "title": "Solver-routed semantic benchmark: live results and comparison (Exp 247)",
+  "run_date": "20260413",
+  "schema": {
+    "artifact": "carnot.solver_semantic_live_results.v1",
+    "benchmark_slices": ["gsm8k_semantic", "constraint_ir"],
+    "consumes": "carnot.solver_semantic_live.v1"
+  },
+  "metadata": {
+    "started_at": "2026-04-13T14:27:44Z",
+    "finished_at": "2026-04-13T14:36:15Z",
+    "models": [
+      {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B"},
+      {"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it"}
+    ],
+    "modes": ["baseline", "verify_only", "verify_repair"],
+    "source_artifacts": {
+      "gsm8k_semantic": "results/experiment_235_results.json",
+      "constraint_ir": "results/experiment_221_results.json"
+    },
+    "exp246_runner_script": "scripts/experiment_246_solver_semantic_live.py",
+    "exp246_output_path": "results/experiment_246_results.json",
+    "checkpoint_dir": "results/checkpoints/experiment_246",
+    "checkpoint_pattern": "results/checkpoints/experiment_246/<benchmark>__<model>__<mode>.json",
+    "inference_mode": "live_cpu",
+    "jax_platforms": "cpu",
+    "carnot_force_live": true,
+    "max_repairs": 3,
+    "run_command": "JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_246_solver_semantic_live.py"
+  },
+  "cohorts": {
+    "gsm8k_semantic": {
+      "case_count": 200,
+      "source_artifact": "results/experiment_235_results.json",
+      "source_experiment": 235,
+      "sample_seed": 218,
+      "note": "Shared cohort with Exp 219 and Exp 235; ensures direct numeric comparability"
+    },
+    "constraint_ir": {
+      "case_count": 81,
+      "source_artifact": "results/experiment_221_results.json",
+      "source_experiment": 221,
+      "sample_seed": 218,
+      "note": "Shared cohort with Exp 221; ensures direct numeric comparability"
+    }
+  },
+  "execution_status": {
+    "overall": "partial_blocked",
+    "cells_completed": [
+      {
+        "benchmark": "gsm8k_semantic",
+        "model": "Qwen3.5-0.8B",
+        "mode": "baseline",
+        "cases_done": 18,
+        "cases_total": 200,
+        "completion_fraction": 0.09,
+        "status": "in_progress",
+        "checkpoint_file": "results/checkpoints/experiment_246/gsm8k_semantic__qwen3_5-0_8b__baseline.json"
+      }
+    ],
+    "cells_blocked": [
+      {
+        "benchmark": "gsm8k_semantic",
+        "model": "Qwen3.5-0.8B",
+        "mode": "verify_only",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "gsm8k_semantic",
+        "model": "Qwen3.5-0.8B",
+        "mode": "verify_repair",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "gsm8k_semantic",
+        "model": "Gemma4-E4B-it",
+        "mode": "baseline",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "gsm8k_semantic",
+        "model": "Gemma4-E4B-it",
+        "mode": "verify_only",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "gsm8k_semantic",
+        "model": "Gemma4-E4B-it",
+        "mode": "verify_repair",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "constraint_ir",
+        "model": "Qwen3.5-0.8B",
+        "mode": "baseline",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "constraint_ir",
+        "model": "Qwen3.5-0.8B",
+        "mode": "verify_only",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "constraint_ir",
+        "model": "Qwen3.5-0.8B",
+        "mode": "verify_repair",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "constraint_ir",
+        "model": "Gemma4-E4B-it",
+        "mode": "baseline",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "constraint_ir",
+        "model": "Gemma4-E4B-it",
+        "mode": "verify_only",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      },
+      {
+        "benchmark": "constraint_ir",
+        "model": "Gemma4-E4B-it",
+        "mode": "verify_repair",
+        "status": "not_started",
+        "blocker": "runtime_budget"
+      }
+    ],
+    "blocker_detail": {
+      "type": "runtime_budget_exceeded",
+      "measured_throughput_seconds_per_case": 21.132,
+      "total_cases": 843,
+      "estimated_total_seconds": 17825,
+      "estimated_total_hours": 4.95,
+      "note": "Live CPU inference at ~21s/case × 843 total cases (200 GSM8K × 3 modes + 81 constraint_ir × 3 modes) × 2 models exceeds session runtime budget. Checkpoints are durable and the run resumes cleanly from the current position. The exp_246 runner process (JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1) is continuing in background and will populate results/experiment_246_results.json when complete.",
+      "resume_instructions": "Run 'JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_246_solver_semantic_live.py' from repo root; existing checkpoints will be reused automatically."
+    }
+  },
+  "partial_results": {
+    "gsm8k_semantic_Qwen3.5-0.8B_baseline": {
+      "n_cases_completed": 18,
+      "n_cases_total": 200,
+      "n_correct": 1,
+      "accuracy_partial": 0.055556,
+      "note": "18/200 cases from semantic-failure cohort (biased toward hard cases); accuracy not comparable to Exp 235 full-cohort 14% until run completes",
+      "claims": {
+        "n_claims_extracted": 5,
+        "n_cases_with_claims": 5,
+        "n_cases_without_claims": 13,
+        "case_level_no_claim_rate": 0.722222,
+        "claim_level_by_route": {
+          "arithmetic": 5
+        },
+        "claim_level_by_verdict": {
+          "supported": 4,
+          "violated": 1,
+          "abstain": 0
+        },
+        "claim_level_abstain_rate": 0.0,
+        "extraction_coverage": 0.277778,
+        "note": "Arithmetic regex (_ARITHMETIC_RE) extracted claims from only 5/18 cases. Cases with no extractable equation-form arithmetic have zero formal claims and therefore cannot be flagged by the solver — they constitute implicit abstentions at the case level."
+      },
+      "latency": {
+        "avg_seconds": 21.132,
+        "total_seconds_so_far": 380.376
+      },
+      "per_case_sample": [
+        {
+          "case_id": "gsm8k-178",
+          "ground_truth": 122,
+          "predicted": 76,
+          "correct": false,
+          "n_claims": 1,
+          "n_violated": 0,
+          "n_supported": 1
+        }
+      ]
+    }
+  },
+  "route_summary": {
+    "gsm8k_semantic": {
+      "status": "partial_18_of_200_cases_qwen_baseline_only",
+      "by_route": {
+        "arithmetic": 5
+      },
+      "by_verdict": {
+        "supported": 4,
+        "violated": 1,
+        "abstain": 0
+      },
+      "total_claims": 5,
+      "claim_level_abstain_rate": 0.0,
+      "case_level_no_claim_rate": 0.722222,
+      "routes_observed": ["arithmetic"],
+      "routes_not_yet_observed": ["cardinality", "set_membership", "smt", "semantic"],
+      "note": "Only arithmetic route observed in 18 GSM8K cases so far. Cardinality and set_membership routes appear in constraint_ir benchmark (not yet executed)."
+    },
+    "constraint_ir": {
+      "status": "blocked_no_data",
+      "note": "No constraint_ir cases executed yet. Based on Exp 221 schema, expected routes are cardinality (word_count_range, sentence_count, step_count) and set_membership (must_include_token, must_include_phrase, forbidden_token, enum_membership). Exp 221 flagged 60/81 cases for Qwen3.5 and 31/81 for Gemma4."
+    }
+  },
+  "comparison_to_exp235": {
+    "source_artifact": "results/experiment_235_results.json",
+    "exp235_benchmark": "gsm8k_semantic",
+    "exp235_cohort_size": 200,
+    "exp235_sample_seed": 218,
+    "cohort_identity": "identical — same 200 case_ids from experiment_219",
+    "exp235_Qwen3.5-0.8B": {
+      "baseline_accuracy": 0.14,
+      "verify_only_accuracy": 0.12,
+      "verify_only_delta": -0.02,
+      "repair_accuracy": 0.15,
+      "repair_delta": 0.01,
+      "semantic_verifier_v2": {
+        "abstain_count": 153,
+        "supported_count": 14,
+        "violated_count": 33,
+        "verdict_level_abstain_rate": 0.765,
+        "n_flagged": 34,
+        "n_wrong_detected": 30,
+        "wrong_detection_rate": 0.174419,
+        "false_positives": 4,
+        "false_positive_rate": 0.142857
+      }
+    },
+    "exp235_Gemma4-E4B-it": {
+      "baseline_accuracy": 0.465,
+      "verify_only_accuracy": 0.335,
+      "verify_only_delta": -0.13,
+      "repair_accuracy": 0.475,
+      "repair_delta": 0.01,
+      "semantic_verifier_v2": {
+        "abstain_count": 131,
+        "supported_count": 30,
+        "violated_count": 39,
+        "verdict_level_abstain_rate": 0.655,
+        "n_flagged": 54,
+        "n_wrong_detected": 28,
+        "wrong_detection_rate": 0.261682,
+        "false_positives": 26,
+        "false_positive_rate": 0.279570
+      }
+    },
+    "exp247_partial_observation": {
+      "n_cases": 18,
+      "model": "Qwen3.5-0.8B",
+      "mode": "baseline",
+      "case_level_no_claim_rate": 0.722222,
+      "claim_level_abstain_rate": 0.0
+    },
+    "abstain_mechanism_comparison": {
+      "exp235_semantic_verifier_v2": "verdict-level abstain when monitorability_confidence < threshold; 76.5% Qwen, 65.5% Gemma",
+      "exp247_solver_routed": "implicit case-level abstain when arithmetic regex extracts zero claims; 72.2% so far in partial Qwen baseline",
+      "preliminary_finding": "Abstain rates are similar in magnitude (72% vs 77% for Qwen) but the mechanism has shifted from confidence-gated semantic abstention to structural extraction failure. This is not a strict improvement: solver routes only fire when the response contains explicit equation-form arithmetic (A OP B = C), so verbally-reasoned or chain-of-thought responses without explicit equations yield zero claims and therefore cannot be flagged."
+    },
+    "false_positive_comparison": {
+      "exp235_Qwen": "4 false positives / 34 flagged = 14.3% FP rate",
+      "exp247_partial_Qwen": "1 violated claim in 18 cases; whether this is a FP cannot be determined from partial baseline data (verify_only mode not yet run)",
+      "note": "Full FP analysis requires verify_only and verify_repair cells to complete. Cannot conclude from 18 baseline cases."
+    },
+    "status": "comparison_requires_full_run",
+    "primary_question_status": "BLOCKED — Cannot yet determine whether solver-routed claims materially improve the verify-only budget or only shift work into abstention. The partial data (18/200 baseline only) shows similar case-level abstain rates but via a structurally different mechanism. A full run is needed."
+  },
+  "comparison_to_exp221": {
+    "source_artifact": "results/experiment_221_results.json",
+    "exp221_benchmark": "constraint_ir",
+    "exp221_cohort_size": 81,
+    "exp221_Qwen3.5-0.8B": {
+      "n_flagged": 60,
+      "flag_rate": 0.740741
+    },
+    "exp221_Gemma4-E4B-it": {
+      "n_flagged": 31,
+      "flag_rate": 0.382716
+    },
+    "exp247_constraint_ir_data": null,
+    "status": "blocked_no_data",
+    "note": "No constraint_ir cells have executed. The constraint_ir benchmark is the primary venue for cardinality and set_membership routes. Until those cells complete, route-level evidence for structured constraint verification cannot be reported."
+  },
+  "per_route_analysis": {
+    "arithmetic": {
+      "n_claims": 5,
+      "n_supported": 4,
+      "n_violated": 1,
+      "n_abstain": 0,
+      "precision_note": "1/5 violated claims = 20% violation rate; insufficient sample for reliable precision/recall estimates",
+      "fp_budget_note": "If the 1 violated claim corresponds to a correct response (FP), FP rate = 100%. If it corresponds to a wrong response, it is a true positive. Cannot determine without ground truth alignment — requires verify_only mode results.",
+      "coverage_note": "5 claims extracted from 18 cases = 27.8% claim extraction rate. 13/18 cases (72.2%) have no extractable arithmetic claims and therefore receive implicit abstention."
+    },
+    "cardinality": {
+      "n_claims": null,
+      "status": "no_data_constraint_ir_not_run",
+      "expected_constraint_types": ["count_exact", "word_count_range", "sentence_count", "step_count", "sentence_count_per_section"]
+    },
+    "set_membership": {
+      "n_claims": null,
+      "status": "no_data_constraint_ir_not_run",
+      "expected_constraint_types": ["must_include_token", "must_include_phrase", "forbidden_token", "forbidden_phrase", "enum_membership", "grounded_selection"]
+    }
+  },
+  "abstention_analysis": {
+    "claim_level_abstain_rate": {
+      "exp247_arithmetic_route_partial": 0.0,
+      "exp235_semantic_verifier_v2_Qwen": 0.765,
+      "exp235_semantic_verifier_v2_Gemma": 0.655,
+      "interpretation": "Deterministic solver routes (arithmetic, cardinality, set_membership) never abstain at the claim level — they always return supported or violated. The abstention problem relocates to claim extraction: if no claims are extractable from a response, the verifier produces no verdicts. This is the structural extraction abstention."
+    },
+    "case_level_no_claim_rate": {
+      "exp247_Qwen_gsm8k_partial": 0.722222,
+      "exp235_Qwen_gsm8k_verdict_abstain_rate": 0.765,
+      "delta": -0.042778,
+      "interpretation": "Preliminary: solver-routed extraction covers slightly more cases (72.2% silence vs 76.5% abstain) but the difference is within sampling noise at n=18. A complete run is required."
+    }
+  },
+  "false_positive_budget": {
+    "exp235_Qwen_fp_rate": 0.142857,
+    "exp235_Gemma_fp_rate": 0.279570,
+    "exp247_status": "cannot_compute",
+    "note": "False positive rate requires verify_only mode results to identify flagged-but-correct cases. Only partial baseline data is available. No conclusions can be drawn yet.",
+    "anticipated_fp_mechanism": "For arithmetic route: a violated claim on a correct response would constitute a FP. This can only be assessed by cross-referencing the 'correct' flag from baseline with the 'flagged' flag from verify_only — a cross-mode comparison requiring both cells to complete."
+  },
+  "repair_yield": {
+    "exp235_Qwen_repair_delta": 0.01,
+    "exp235_Gemma_repair_delta": 0.01,
+    "exp247_status": "cannot_compute",
+    "note": "verify_repair mode not yet executed for any cell."
+  },
+  "detected_wrong_answers": {
+    "exp235_Qwen_wrong_detection_rate": 0.174419,
+    "exp235_Gemma_wrong_detection_rate": 0.261682,
+    "exp247_status": "cannot_compute",
+    "note": "Cross-referencing wrong answers with violated flags requires verify_only mode. Not yet available."
+  },
+  "direct_comparison_verdict": {
+    "question": "Did solver-routed claims materially improve the verify-only budget compared to semantic_verifier_v2, or only shift work into abstention?",
+    "answer": "CANNOT DETERMINE FROM CURRENT DATA — run is 18/200 baseline cases for one model, all other cells blocked by runtime budget.",
+    "preliminary_structural_observation": "Solver-routed formal claims eliminate claim-level abstention (0% vs 76.5% for semantic_verifier_v2) but replace it with structural extraction abstention: 72.2% of Qwen3.5 responses on GSM8K yield zero extractable arithmetic claims. The arithmetic regex (A OP B = C form) has low extraction coverage (~28%) because Qwen3.5-0.8B responses frequently compute without writing explicit balanced equations. This means the solver's determinism is underutilized: it fires precisely when it fires, but it fires rarely.",
+    "hypothesis_for_full_run": "If arithmetic extraction coverage stays near 28%, solver-routed verification will flag fewer cases than semantic_verifier_v2 (which had 100% parse coverage). The question is whether the cases it does flag are higher precision (fewer FP). The 1 violated claim in 18 cases is insufficient to compute precision. Constraint-IR (set_membership and cardinality) may show better coverage since those routes match structural response features rather than equation syntax.",
+    "exp235_showed": "semantic_verifier_v2 was not sufficient: high abstain rate (76.5% for Qwen), negative verify_only delta (-2%), and modest repair yield (+1%). The primary failure mode was semantic abstention, not false positives.",
+    "exp247_early_signal": "The solver-routed approach has similar abstain magnitude but different mechanism. Whether it solves the root cause (low wrong-answer detection: 17.4% for Qwen) requires the full run.",
+    "status": "pending_full_run"
+  },
+  "inference_provenance": {
+    "framework": "HuggingFace Transformers via carnot.inference.model_loader",
+    "device": "cpu",
+    "dtype": "float32",
+    "jax_platforms": "cpu",
+    "carnot_force_live": true,
+    "model_weights_source": "HuggingFace Hub (cached locally)",
+    "throughput_observed": {
+      "seconds_per_case": 21.132,
+      "cases_per_minute": 2.84,
+      "note": "Live CPU inference on Qwen3.5-0.8B. Gemma4-E4B-it throughput not yet measured in this run."
+    },
+    "checkpoint_integrity": "Checkpoints written atomically via .tmp rename after each case. Resume is safe after interruption.",
+    "fabrication": "None. No cells were simulated or filled with placeholder values. Blocked cells are documented as blocked."
+  }
+}
