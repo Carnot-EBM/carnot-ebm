@@ -1,0 +1,789 @@
+{
+  "comparison_to_experiment_241": {
+    "exp241_false_positives": 8,
+    "exp241_held_out_cases": 116,
+    "exp241_learning_cases": 344,
+    "exp241_success_rate": 0.3448275862068966,
+    "per_strategy": {
+      "case_memory_plus_policy": {
+        "delta_fps_vs_exp241_no_learning": 0,
+        "delta_success_rate_vs_exp241_cmpp": 0.0,
+        "false_positives": 8,
+        "success_rate": 0.3448275862068966
+      },
+      "combined": {
+        "delta_fps_vs_exp241_no_learning": -8,
+        "delta_success_rate_vs_exp241_cmpp": -0.017241379310344862,
+        "false_positives": 0,
+        "success_rate": 0.3275862068965517
+      },
+      "constraint_addition": {
+        "delta_fps_vs_exp241_no_learning": 4,
+        "delta_success_rate_vs_exp241_cmpp": 0.0,
+        "false_positives": 12,
+        "success_rate": 0.3448275862068966
+      },
+      "no_learning": {
+        "delta_fps_vs_exp241_no_learning": 0,
+        "delta_success_rate_vs_exp241_cmpp": 0.0,
+        "false_positives": 8,
+        "success_rate": 0.3448275862068966
+      },
+      "predictive_gate": {
+        "delta_fps_vs_exp241_no_learning": -8,
+        "delta_success_rate_vs_exp241_cmpp": -0.017241379310344862,
+        "false_positives": 0,
+        "success_rate": 0.3275862068965517
+      }
+    },
+    "reference_experiment": 241,
+    "reference_strategy": "case_memory_plus_policy"
+  },
+  "experiment": 256,
+  "honest_verdict": {
+    "calibration_needed": true,
+    "combined_success_rate_regression": true,
+    "constraint_addition_fp_regression": true,
+    "explanation": "Neither constraint addition nor predictive gating produced a net held-out task gain over case_memory_plus_policy without adding false positives. Predictive gate (uncalibrated) routes all cases to FAST_PATH eliminating FPs but also missing real errors (-1.7pp). Constraint addition fires on replay description text as a proxy, adding +4 FPs without any new successes. Combined = predictive_gate behaviour (gate dominates, FAST_PATH always). Root cause: gate not calibrated on live data; constraint templates matched too liberally on description-text proxy.",
+    "gain_from_any": false,
+    "gain_from_combined": false,
+    "gain_from_constraint_addition": false,
+    "gain_from_predictive_gate": false,
+    "predictive_gate_success_rate_regression": true,
+    "primary_met": false,
+    "recommended_next_step": "Calibrate PredictiveVerifier on live GSM8K distribution before re-evaluating. Constrain template matching to domain-specific token patterns rather than full description-text proxy."
+  },
+  "live_slice_provenance": {
+    "blocker": null,
+    "live_strategy_metrics": {
+      "case_memory_plus_policy": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "fast_path_hit_rate": 0.0,
+        "n_cases": 10,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 0,
+        "n_full_verification_triggered": 10,
+        "n_success": 2,
+        "success_rate": 0.2,
+        "verification_spend": 1.0
+      },
+      "combined": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "fast_path_hit_rate": 1.0,
+        "n_cases": 10,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 10,
+        "n_full_verification_triggered": 0,
+        "n_success": 1,
+        "success_rate": 0.1,
+        "verification_spend": 0.0
+      },
+      "constraint_addition": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "fast_path_hit_rate": 0.0,
+        "n_cases": 10,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 0,
+        "n_full_verification_triggered": 10,
+        "n_success": 2,
+        "success_rate": 0.2,
+        "verification_spend": 1.0
+      },
+      "no_learning": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "fast_path_hit_rate": 0.0,
+        "n_cases": 10,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 0,
+        "n_full_verification_triggered": 10,
+        "n_success": 2,
+        "success_rate": 0.2,
+        "verification_spend": 1.0
+      },
+      "predictive_gate": {
+        "false_positive_rate": 0.0,
+        "false_positives": 0,
+        "fast_path_hit_rate": 1.0,
+        "n_cases": 10,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 10,
+        "n_full_verification_triggered": 0,
+        "n_success": 1,
+        "success_rate": 0.1,
+        "verification_spend": 0.0
+      }
+    },
+    "model_details": {
+      "Qwen/Qwen3.5-0.8B": {
+        "model": "Qwen/Qwen3.5-0.8B",
+        "n_correct": 1,
+        "n_repair_correct": 2,
+        "n_samples": 5,
+        "per_case": [
+          {
+            "baseline_latency_seconds": 14.751189708709717,
+            "correct": false,
+            "predicted_answer": "16.",
+            "question": "Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
+            "question_idx": 0,
+            "repair_correct": false,
+            "repair_latency_seconds": 13.96692442893982,
+            "response_text": "<number>\n\n<think>\nHere's a thinking process that leads to the solution:\n\n1.  **Analyze the Request:**\n    *   **Goal:** Solve a word problem and provide the final answer in a specific format.\n    *   ",
+            "true_answer": "18"
+          },
+          {
+            "baseline_latency_seconds": 11.321179866790771,
+            "correct": true,
+            "predicted_answer": "3",
+            "question": "A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?",
+            "question_idx": 1,
+            "repair_correct": true,
+            "repair_latency_seconds": 0.0,
+            "response_text": "<number>\n\n<think>\n\n</think>\n\nTo solve the problem, we need to determine the total number of bolts required for a robe.\n\n1.  **Identify the number of bolts for blue fiber**: The problem states that a r",
+            "true_answer": "3"
+          },
+          {
+            "baseline_latency_seconds": 12.76987361907959,
+            "correct": false,
+            "predicted_answer": "120000",
+            "question": "Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs.  This increased the value of the house by 150%.  How much profit did he make?",
+            "question_idx": 2,
+            "repair_correct": false,
+            "repair_latency_seconds": 13.484831094741821,
+            "response_text": "<number>\n\n<think>\n\n</think>\n\nTo solve this problem, we need to determine the final value of the house and the initial cost, then calculate the profit.\n\n**Step 1: Calculate the initial cost of the hous",
+            "true_answer": "70000"
+          },
+          {
+            "baseline_latency_seconds": 8.144176244735718,
+            "correct": false,
+            "predicted_answer": "3",
+            "question": "James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint.  How many total meters does he run a week?",
+            "question_idx": 3,
+            "repair_correct": false,
+            "repair_latency_seconds": 13.21934986114502,
+            "response_text": "<number>\n\n<think>\n\n</think>\n\nTo solve this problem, we need to calculate the total distance James runs in one week based on the given information.\n\n1.  **Identify the number of sprints per week**: Jam",
+            "true_answer": "540"
+          },
+          {
+            "baseline_latency_seconds": 14.015854835510254,
+            "correct": false,
+            "predicted_answer": "3",
+            "question": "Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, containing seeds, mealworms and vegetables to help keep them healthy.  She gives the chickens their feed in three separate meals. In the morning, she gives her flock of chickens 15 cups of feed.  In the afternoon, she gives her chickens another 25 cups of feed.  How many cups of feed does she need to give her chickens in the final meal of the day if the size of Wendi's flock is 20 chickens?",
+            "question_idx": 4,
+            "repair_correct": true,
+            "repair_latency_seconds": 14.715111494064331,
+            "response_text": "<number>\n\n<think>\nHere's a thinking process that leads to the solution:\n\n1.  **Analyze the Request:**\n    *   **Goal:** Solve a word problem involving chicken feed.\n    *   **Input Data:**\n        *  ",
+            "true_answer": "20"
+          }
+        ],
+        "wall_seconds": 128.0
+      },
+      "google/gemma-4-E4B-it": {
+        "model": "google/gemma-4-E4B-it",
+        "n_correct": 0,
+        "n_repair_correct": 0,
+        "n_samples": 5,
+        "per_case": [
+          {
+            "baseline_latency_seconds": 1.417311668395996,
+            "correct": false,
+            "predicted_answer": null,
+            "question": "Janet\u2019s ducks lay 16 eggs per day. She eats three for breakfast every morning and bakes muffins for her friends every day with four. She sells the remainder at the farmers' market daily for $2 per fresh duck egg. How much in dollars does she make every day at the farmers' market?",
+            "question_idx": 0,
+            "repair_correct": false,
+            "repair_latency_seconds": 2.281486749649048,
+            "response_text": "[The daily income from the farmers' market]<turn|>",
+            "true_answer": "18"
+          },
+          {
+            "baseline_latency_seconds": 27.33106303215027,
+            "correct": false,
+            "predicted_answer": null,
+            "question": "A robe takes 2 bolts of blue fiber and half that much white fiber.  How many bolts in total does it take?",
+            "question_idx": 1,
+            "repair_correct": false,
+            "repair_latency_seconds": 6.545071840286255,
+            "response_text": "[ ]\n\n---\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis\n\nThis",
+            "true_answer": "3"
+          },
+          {
+            "baseline_latency_seconds": 2.7560691833496094,
+            "correct": false,
+            "predicted_answer": "150",
+            "question": "Josh decides to try flipping a house.  He buys a house for $80,000 and then puts in $50,000 in repairs.  This increased the value of the house by 150%.  How much profit did he make?",
+            "question_idx": 2,
+            "repair_correct": false,
+            "repair_latency_seconds": 26.981976985931396,
+            "response_text": "[This increased the value of the house by 150%].\n\n---\n\n**Final**\n\n**Final**\n\n**Final**<turn|>",
+            "true_answer": "70000"
+          },
+          {
+            "baseline_latency_seconds": 1.6598725318908691,
+            "correct": false,
+            "predicted_answer": null,
+            "question": "James decides to run 3 sprints 3 times a week.  He runs 60 meters each sprint.  How many total meters does he run a week?",
+            "question_idx": 3,
+            "repair_correct": false,
+            "repair_latency_seconds": 25.555866241455078,
+            "response_text": "[This is the total meters does he run a week]\n\n---\n\nThis\n\n<turn|>",
+            "true_answer": "540"
+          },
+          {
+            "baseline_latency_seconds": 0.19144678115844727,
+            "correct": false,
+            "predicted_answer": null,
+            "question": "Every day, Wendi feeds each of her chickens three cups of mixed chicken feed, containing seeds, mealworms and vegetables to help keep them healthy.  She gives the chickens their feed in three separate meals. In the morning, she gives her flock of chickens 15 cups of feed.  In the afternoon, she gives her chickens another 25 cups of feed.  How many cups of feed does she need to give her chickens in the final meal of the day if the size of Wendi's flock is 20 chickens?",
+            "question_idx": 4,
+            "repair_correct": false,
+            "repair_latency_seconds": 1.3989665508270264,
+            "response_text": "<turn|>",
+            "true_answer": "20"
+          }
+        ],
+        "wall_seconds": 113.5
+      }
+    },
+    "models": [
+      "Qwen/Qwen3.5-0.8B",
+      "google/gemma-4-E4B-it"
+    ],
+    "n_live_cases_collected": 10,
+    "n_samples_per_model_attempted": 5,
+    "note": "Live slice uses oracle detection (detected=actual_error). Repair is attempted once via re-prompting. Constraint templates from an empty case_memory (no prior learning). Gate uses default uncalibrated weights.",
+    "status": "complete"
+  },
+  "metadata": {
+    "exp255_held_out_cases": 116,
+    "exp255_learning_cases": 344,
+    "exp255_live_case_count": 0,
+    "exp255_replay_case_count": 460,
+    "live_models_attempted": [
+      "Qwen/Qwen3.5-0.8B",
+      "google/gemma-4-E4B-it"
+    ],
+    "source_artifact_exp241": "results/experiment_241_results.json",
+    "source_artifact_exp255": "results/experiment_255_results.json",
+    "strategy_names": [
+      "case_memory_plus_policy",
+      "combined",
+      "constraint_addition",
+      "no_learning",
+      "predictive_gate"
+    ]
+  },
+  "per_domain_lift": {
+    "code_spec_properties": {
+      "combined": {
+        "lift_vs_case_memory_plus_policy": 0.0625,
+        "success_rate": 0.375
+      },
+      "constraint_addition": {
+        "lift_vs_case_memory_plus_policy": 0.0,
+        "success_rate": 0.3125
+      },
+      "predictive_gate": {
+        "lift_vs_case_memory_plus_policy": 0.0625,
+        "success_rate": 0.375
+      }
+    },
+    "live_gsm8k_semantic_failure": {
+      "combined": {
+        "lift_vs_case_memory_plus_policy": -0.02999999999999997,
+        "success_rate": 0.32
+      },
+      "constraint_addition": {
+        "lift_vs_case_memory_plus_policy": 0.0,
+        "success_rate": 0.35
+      },
+      "predictive_gate": {
+        "lift_vs_case_memory_plus_policy": -0.02999999999999997,
+        "success_rate": 0.32
+      }
+    }
+  },
+  "per_model_lift": {
+    "Gemma4-E4B-it": {
+      "combined": {
+        "lift_vs_case_memory_plus_policy": 0.0,
+        "success_rate": 0.5
+      },
+      "constraint_addition": {
+        "lift_vs_case_memory_plus_policy": 0.0,
+        "success_rate": 0.5
+      },
+      "predictive_gate": {
+        "lift_vs_case_memory_plus_policy": 0.0,
+        "success_rate": 0.5
+      }
+    },
+    "Qwen3.5-0.8B": {
+      "combined": {
+        "lift_vs_case_memory_plus_policy": -0.03448275862068964,
+        "success_rate": 0.15517241379310345
+      },
+      "constraint_addition": {
+        "lift_vs_case_memory_plus_policy": 0.0,
+        "success_rate": 0.1896551724137931
+      },
+      "predictive_gate": {
+        "lift_vs_case_memory_plus_policy": -0.03448275862068964,
+        "success_rate": 0.15517241379310345
+      }
+    }
+  },
+  "primary_success_condition": {
+    "answer": "NO",
+    "any_strategy_met": false,
+    "gain_attribution": "none",
+    "per_strategy": {
+      "combined": {
+        "extra_fps_vs_no_learning": -8,
+        "false_positives": 0,
+        "gain_vs_case_memory_plus_policy": -0.017241379310344862,
+        "met": false,
+        "success_rate": 0.3275862068965517
+      },
+      "constraint_addition": {
+        "extra_fps_vs_no_learning": 4,
+        "false_positives": 12,
+        "gain_vs_case_memory_plus_policy": 0.0,
+        "met": false,
+        "success_rate": 0.3448275862068966
+      },
+      "predictive_gate": {
+        "extra_fps_vs_no_learning": -8,
+        "false_positives": 0,
+        "gain_vs_case_memory_plus_policy": -0.017241379310344862,
+        "met": false,
+        "success_rate": 0.3275862068965517
+      }
+    },
+    "question": "Do constraint addition and predictive gating produce real held-out gains without extra false positives?",
+    "verdict_detail": "Neither constraint addition nor predictive gating produced a net held-out task gain over case_memory_plus_policy without adding false positives. Predictive gate (uncalibrated) routes all cases to FAST_PATH eliminating FPs but also missing real errors (-1.7pp). Constraint addition fires on replay description text as a proxy, adding +4 FPs without any new successes. Combined = predictive_gate behaviour (gate dominates, FAST_PATH always). Root cause: gate not calibrated on live data; constraint templates matched too liberally on description-text proxy."
+  },
+  "run_date": "20260413",
+  "secondary_metrics": {
+    "case_memory_plus_policy": {
+      "baseline_reference_latency_seconds": 156.95999999999998,
+      "fast_path_hit_rate": 0.0,
+      "latency_ratio_vs_baseline": 1.4270769622833848,
+      "total_latency_seconds": 223.99400000000006,
+      "verification_spend": 1.0
+    },
+    "combined": {
+      "baseline_reference_latency_seconds": 156.95999999999998,
+      "fast_path_hit_rate": 1.0,
+      "latency_ratio_vs_baseline": 1.0,
+      "total_latency_seconds": 156.95999999999998,
+      "verification_spend": 0.0
+    },
+    "constraint_addition": {
+      "baseline_reference_latency_seconds": 156.95999999999998,
+      "fast_path_hit_rate": 0.0,
+      "latency_ratio_vs_baseline": 1.3774146279306838,
+      "total_latency_seconds": 216.1990000000001,
+      "verification_spend": 1.0
+    },
+    "no_learning": {
+      "baseline_reference_latency_seconds": 156.95999999999998,
+      "fast_path_hit_rate": 0.0,
+      "latency_ratio_vs_baseline": 1.4270769622833848,
+      "total_latency_seconds": 223.99400000000006,
+      "verification_spend": 1.0
+    },
+    "predictive_gate": {
+      "baseline_reference_latency_seconds": 156.95999999999998,
+      "fast_path_hit_rate": 1.0,
+      "latency_ratio_vs_baseline": 1.0,
+      "total_latency_seconds": 156.95999999999998,
+      "verification_spend": 0.0
+    }
+  },
+  "strategies_full": {
+    "case_memory_plus_policy": {
+      "by_benchmark": {
+        "gsm8k_semantic": {
+          "false_positives": 6,
+          "n_cases": 100,
+          "n_success": 35,
+          "success_rate": 0.35
+        },
+        "humaneval_dual_model_spec": {
+          "false_positives": 2,
+          "n_cases": 16,
+          "n_success": 5,
+          "success_rate": 0.3125
+        }
+      },
+      "by_domain": {
+        "code_spec_properties": {
+          "false_positives": 2,
+          "fast_path_hit_rate": 0.0,
+          "n_cases": 16,
+          "n_fast_path_hits": 0,
+          "n_full_verification_triggered": 16,
+          "n_success": 5,
+          "success_rate": 0.3125,
+          "verification_spend": 1.0
+        },
+        "live_gsm8k_semantic_failure": {
+          "false_positives": 6,
+          "fast_path_hit_rate": 0.0,
+          "n_cases": 100,
+          "n_fast_path_hits": 0,
+          "n_full_verification_triggered": 100,
+          "n_success": 35,
+          "success_rate": 0.35,
+          "verification_spend": 1.0
+        }
+      },
+      "by_model": {
+        "Gemma4-E4B-it": {
+          "false_positives": 7,
+          "n_cases": 58,
+          "n_success": 29,
+          "success_rate": 0.5
+        },
+        "Qwen3.5-0.8B": {
+          "false_positives": 1,
+          "n_cases": 58,
+          "n_success": 11,
+          "success_rate": 0.1896551724137931
+        }
+      },
+      "overall": {
+        "baseline_reference_latency_seconds": 156.95999999999998,
+        "false_positives": 8,
+        "fast_path_hit_rate": 0.0,
+        "helpful_memory_reuse_events": 0,
+        "latency_overhead_seconds": 67.03400000000008,
+        "mean_latency_overhead_seconds": 0.5778793103448282,
+        "mean_latency_seconds": 1.9309827586206902,
+        "n_cases": 116,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 0,
+        "n_full_verification_triggered": 116,
+        "n_repairs_used": 36,
+        "n_success": 40,
+        "retrieval_candidate_events": 0,
+        "retrieval_candidates": 0,
+        "retrieval_hit_events": 0,
+        "retrieval_hit_rate": 0.0,
+        "retrieval_hits": 0,
+        "retrieval_precision": 0.0,
+        "success_rate": 0.3448275862068966,
+        "total_latency_seconds": 223.99400000000006,
+        "verification_spend": 1.0
+      }
+    },
+    "combined": {
+      "by_benchmark": {
+        "gsm8k_semantic": {
+          "false_positives": 0,
+          "n_cases": 100,
+          "n_success": 32,
+          "success_rate": 0.32
+        },
+        "humaneval_dual_model_spec": {
+          "false_positives": 0,
+          "n_cases": 16,
+          "n_success": 6,
+          "success_rate": 0.375
+        }
+      },
+      "by_domain": {
+        "code_spec_properties": {
+          "false_positives": 0,
+          "fast_path_hit_rate": 1.0,
+          "n_cases": 16,
+          "n_fast_path_hits": 16,
+          "n_full_verification_triggered": 0,
+          "n_success": 6,
+          "success_rate": 0.375,
+          "verification_spend": 0.0
+        },
+        "live_gsm8k_semantic_failure": {
+          "false_positives": 0,
+          "fast_path_hit_rate": 1.0,
+          "n_cases": 100,
+          "n_fast_path_hits": 100,
+          "n_full_verification_triggered": 0,
+          "n_success": 32,
+          "success_rate": 0.32,
+          "verification_spend": 0.0
+        }
+      },
+      "by_model": {
+        "Gemma4-E4B-it": {
+          "false_positives": 0,
+          "n_cases": 58,
+          "n_success": 29,
+          "success_rate": 0.5
+        },
+        "Qwen3.5-0.8B": {
+          "false_positives": 0,
+          "n_cases": 58,
+          "n_success": 9,
+          "success_rate": 0.15517241379310345
+        }
+      },
+      "overall": {
+        "baseline_reference_latency_seconds": 156.95999999999998,
+        "false_positives": 0,
+        "fast_path_hit_rate": 1.0,
+        "helpful_memory_reuse_events": 0,
+        "latency_overhead_seconds": 0.0,
+        "mean_latency_overhead_seconds": 0.0,
+        "mean_latency_seconds": 1.353103448275862,
+        "n_cases": 116,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 116,
+        "n_full_verification_triggered": 0,
+        "n_repairs_used": 0,
+        "n_success": 38,
+        "retrieval_candidate_events": 0,
+        "retrieval_candidates": 0,
+        "retrieval_hit_events": 0,
+        "retrieval_hit_rate": 0.0,
+        "retrieval_hits": 0,
+        "retrieval_precision": 0.0,
+        "success_rate": 0.3275862068965517,
+        "total_latency_seconds": 156.95999999999998,
+        "verification_spend": 0.0
+      }
+    },
+    "constraint_addition": {
+      "by_benchmark": {
+        "gsm8k_semantic": {
+          "false_positives": 10,
+          "n_cases": 100,
+          "n_success": 35,
+          "success_rate": 0.35
+        },
+        "humaneval_dual_model_spec": {
+          "false_positives": 2,
+          "n_cases": 16,
+          "n_success": 5,
+          "success_rate": 0.3125
+        }
+      },
+      "by_domain": {
+        "code_spec_properties": {
+          "false_positives": 2,
+          "fast_path_hit_rate": 0.0,
+          "n_cases": 16,
+          "n_fast_path_hits": 0,
+          "n_full_verification_triggered": 16,
+          "n_success": 5,
+          "success_rate": 0.3125,
+          "verification_spend": 1.0
+        },
+        "live_gsm8k_semantic_failure": {
+          "false_positives": 10,
+          "fast_path_hit_rate": 0.0,
+          "n_cases": 100,
+          "n_fast_path_hits": 0,
+          "n_full_verification_triggered": 100,
+          "n_success": 35,
+          "success_rate": 0.35,
+          "verification_spend": 1.0
+        }
+      },
+      "by_model": {
+        "Gemma4-E4B-it": {
+          "false_positives": 9,
+          "n_cases": 58,
+          "n_success": 29,
+          "success_rate": 0.5
+        },
+        "Qwen3.5-0.8B": {
+          "false_positives": 3,
+          "n_cases": 58,
+          "n_success": 11,
+          "success_rate": 0.1896551724137931
+        }
+      },
+      "overall": {
+        "baseline_reference_latency_seconds": 156.95999999999998,
+        "false_positives": 12,
+        "fast_path_hit_rate": 0.0,
+        "helpful_memory_reuse_events": 0,
+        "latency_overhead_seconds": 59.23900000000012,
+        "mean_latency_overhead_seconds": 0.5106810344827596,
+        "mean_latency_seconds": 1.8637844827586216,
+        "n_cases": 116,
+        "n_constraint_templates_fired": 63,
+        "n_fast_path_hits": 0,
+        "n_full_verification_triggered": 116,
+        "n_repairs_used": 67,
+        "n_success": 40,
+        "retrieval_candidate_events": 0,
+        "retrieval_candidates": 0,
+        "retrieval_hit_events": 0,
+        "retrieval_hit_rate": 0.0,
+        "retrieval_hits": 0,
+        "retrieval_precision": 0.0,
+        "success_rate": 0.3448275862068966,
+        "total_latency_seconds": 216.1990000000001,
+        "verification_spend": 1.0
+      }
+    },
+    "no_learning": {
+      "by_benchmark": {
+        "gsm8k_semantic": {
+          "false_positives": 6,
+          "n_cases": 100,
+          "n_success": 35,
+          "success_rate": 0.35
+        },
+        "humaneval_dual_model_spec": {
+          "false_positives": 2,
+          "n_cases": 16,
+          "n_success": 5,
+          "success_rate": 0.3125
+        }
+      },
+      "by_domain": {
+        "code_spec_properties": {
+          "false_positives": 2,
+          "fast_path_hit_rate": 0.0,
+          "n_cases": 16,
+          "n_fast_path_hits": 0,
+          "n_full_verification_triggered": 16,
+          "n_success": 5,
+          "success_rate": 0.3125,
+          "verification_spend": 1.0
+        },
+        "live_gsm8k_semantic_failure": {
+          "false_positives": 6,
+          "fast_path_hit_rate": 0.0,
+          "n_cases": 100,
+          "n_fast_path_hits": 0,
+          "n_full_verification_triggered": 100,
+          "n_success": 35,
+          "success_rate": 0.35,
+          "verification_spend": 1.0
+        }
+      },
+      "by_model": {
+        "Gemma4-E4B-it": {
+          "false_positives": 7,
+          "n_cases": 58,
+          "n_success": 29,
+          "success_rate": 0.5
+        },
+        "Qwen3.5-0.8B": {
+          "false_positives": 1,
+          "n_cases": 58,
+          "n_success": 11,
+          "success_rate": 0.1896551724137931
+        }
+      },
+      "overall": {
+        "baseline_reference_latency_seconds": 156.95999999999998,
+        "false_positives": 8,
+        "fast_path_hit_rate": 0.0,
+        "helpful_memory_reuse_events": 0,
+        "latency_overhead_seconds": 67.03400000000008,
+        "mean_latency_overhead_seconds": 0.5778793103448282,
+        "mean_latency_seconds": 1.9309827586206902,
+        "n_cases": 116,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 0,
+        "n_full_verification_triggered": 116,
+        "n_repairs_used": 36,
+        "n_success": 40,
+        "retrieval_candidate_events": 0,
+        "retrieval_candidates": 0,
+        "retrieval_hit_events": 0,
+        "retrieval_hit_rate": 0.0,
+        "retrieval_hits": 0,
+        "retrieval_precision": 0.0,
+        "success_rate": 0.3448275862068966,
+        "total_latency_seconds": 223.99400000000006,
+        "verification_spend": 1.0
+      }
+    },
+    "predictive_gate": {
+      "by_benchmark": {
+        "gsm8k_semantic": {
+          "false_positives": 0,
+          "n_cases": 100,
+          "n_success": 32,
+          "success_rate": 0.32
+        },
+        "humaneval_dual_model_spec": {
+          "false_positives": 0,
+          "n_cases": 16,
+          "n_success": 6,
+          "success_rate": 0.375
+        }
+      },
+      "by_domain": {
+        "code_spec_properties": {
+          "false_positives": 0,
+          "fast_path_hit_rate": 1.0,
+          "n_cases": 16,
+          "n_fast_path_hits": 16,
+          "n_full_verification_triggered": 0,
+          "n_success": 6,
+          "success_rate": 0.375,
+          "verification_spend": 0.0
+        },
+        "live_gsm8k_semantic_failure": {
+          "false_positives": 0,
+          "fast_path_hit_rate": 1.0,
+          "n_cases": 100,
+          "n_fast_path_hits": 100,
+          "n_full_verification_triggered": 0,
+          "n_success": 32,
+          "success_rate": 0.32,
+          "verification_spend": 0.0
+        }
+      },
+      "by_model": {
+        "Gemma4-E4B-it": {
+          "false_positives": 0,
+          "n_cases": 58,
+          "n_success": 29,
+          "success_rate": 0.5
+        },
+        "Qwen3.5-0.8B": {
+          "false_positives": 0,
+          "n_cases": 58,
+          "n_success": 9,
+          "success_rate": 0.15517241379310345
+        }
+      },
+      "overall": {
+        "baseline_reference_latency_seconds": 156.95999999999998,
+        "false_positives": 0,
+        "fast_path_hit_rate": 1.0,
+        "helpful_memory_reuse_events": 0,
+        "latency_overhead_seconds": 0.0,
+        "mean_latency_overhead_seconds": 0.0,
+        "mean_latency_seconds": 1.353103448275862,
+        "n_cases": 116,
+        "n_constraint_templates_fired": 0,
+        "n_fast_path_hits": 116,
+        "n_full_verification_triggered": 0,
+        "n_repairs_used": 0,
+        "n_success": 38,
+        "retrieval_candidate_events": 0,
+        "retrieval_candidates": 0,
+        "retrieval_hit_events": 0,
+        "retrieval_hit_rate": 0.0,
+        "retrieval_hits": 0,
+        "retrieval_precision": 0.0,
+        "success_rate": 0.3275862068965517,
+        "total_latency_seconds": 156.95999999999998,
+        "verification_spend": 0.0
+      }
+    }
+  },
+  "title": "Milestone proof: constraint addition + predictive gating on held-out and live GSM8K"
+}
