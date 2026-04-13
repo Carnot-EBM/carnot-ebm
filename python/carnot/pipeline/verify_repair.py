@@ -352,10 +352,10 @@ class VerifyRepairPipeline:
             self._device = "cuda" if torch.cuda.is_available() else "cpu"
             logger.info("Loading model %s on %s...", model_name, self._device)
 
-            self._tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)
+            self._tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1")
             self._model = AutoModelForCausalLM.from_pretrained(
                 model_name,
-                trust_remote_code=True,
+                trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
                 torch_dtype=torch.float16 if self._device == "cuda" else None,
             )
             if self._device == "cuda":

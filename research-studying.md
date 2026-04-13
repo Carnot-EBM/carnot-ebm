@@ -505,6 +505,30 @@ if we integrate property-based testing into our CodeExtractor + repair loop.
 5. Self-learning from code verification traces (Tier 1-2)
 6. Bridge to production: package the code verification pipeline
 
+### Proposed Milestone: "Security Hardening" (after revalidation)
+
+**Theme:** Harden the autoresearch pipeline against adversarial inputs,
+supply chain attacks, and untrusted code execution.
+
+**Experiments:**
+1. **gvisor sandbox validation** — verify sandboxed_exec_function works
+   end-to-end on full HumanEval, measure overhead vs in-process exec
+2. **gpt-oss-safeguard-20b integration** — deploy as local content scanner
+   for arxiv/web ingestion, measure false positive rate on research papers
+3. **Model supply chain audit** — pin all HuggingFace model hashes, verify
+   no trust_remote_code=True calls exist, add pre-download hash check
+4. **Semgrep/Bandit for generated code** — scan LLM-generated code before
+   execution, integrate into the verify-repair loop
+5. **Conductor isolation** — run conductor in Firecracker microVM with
+   limited filesystem access, network filtering
+6. **Prompt injection detection** — add Rebuff or similar to detect injection
+   attempts in web-fetched content used by the study run
+
+**Dependencies:** gvisor already installed (runsc), Docker running,
+sandbox.py module created
+**Expected outcome:** Code execution fully sandboxed, external content
+scanned before ingestion, model supply chain verified
+
 ### Proposed Milestone: "Revalidation Sweep" (after 2026.04.16)
 
 **Theme:** Re-run the 10 most promising pre-provenance experiments with
