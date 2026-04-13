@@ -236,17 +236,64 @@ def run_agent(
         return False, str(e)
 
 
-def run_tests() -> tuple[bool, str]:
-    """Run the full test suite. Returns (passed, summary)."""
-    logger.info("Running test suite...")
+def run_tests(full: bool = False) -> tuple[bool, str]:
+    """Run tests. Uses smart subset by default, full suite when full=True.
+
+    Smart subset: runs only core tests + tests for recently changed files.
+    This takes ~30-60s instead of ~8 min for the full 2300+ test suite.
+    Full suite is used for post-commit validation.
+    """
+    logger.info("Running test suite%s...", " (FULL)" if full else " (smart subset)")
     venv_pytest = str(PROJECT_ROOT / ".venv" / "bin" / "pytest")
-    # Use pyproject.toml's addopts (includes coverage, parallelism, threshold).
-    # Only add -q and --no-header for concise output parsing.
-    rc, stdout, stderr = run_cmd(
-        [venv_pytest, "tests/python", "-q", "--no-header", "-n", "0",
-         "--no-cov", "-o", "addopts="],
-        timeout=600,
-    )
+
+    if full:
+        # Full suite — used after successful experiment commit
+        rc, stdout, stderr = run_cmd(
+            [venv_pytest, "tests/python", "-q", "--no-header", "-n", "0",
+             "--no-cov", "-o", "addopts="],
+            timeout=600,
+        )
+    else:
+        # Smart subset: core tests + tests for recently changed Python files
+        test_files = [
+            "tests/python/test_cli.py",
+            "tests/python/test_pipeline_extract.py",
+            "tests/python/test_docs.py",
+            "tests/integration/test_full_pipeline.py",
+        ]
+
+        # Add tests for any recently modified source files
+        try:
+            _, diff_out, _ = run_cmd(["git", "diff", "--name-only", "HEAD~1"])
+            changed = [f.strip() for f in diff_out.splitlines() if f.strip()]
+            for f in changed:
+                if f.startswith("python/carnot/") and f.endswith(".py"):
+                    # Map source file to likely test file
+                    module = f.replace("python/carnot/", "").replace("/", "_").replace(".py", "")
+                    candidates = [
+                        f"tests/python/test_{module}.py",
+                        f"tests/python/test_{module.split('_')[0]}.py",
+                    ]
+                    for c in candidates:
+                        if (PROJECT_ROOT / c).exists() and c not in test_files:
+                            test_files.append(c)
+                elif f.startswith("tests/python/") and f.endswith(".py"):
+                    if f not in test_files:
+                        test_files.append(f)
+        except Exception:
+            pass
+
+        # Filter to files that actually exist
+        existing = [f for f in test_files if (PROJECT_ROOT / f).exists()]
+        if not existing:
+            existing = ["tests/python/test_cli.py"]
+
+        rc, stdout, stderr = run_cmd(
+            [venv_pytest] + existing + ["-q", "--no-header", "-n", "0",
+             "--no-cov", "-o", "addopts="],
+            timeout=120,
+        )
+
     # Find the summary line
     summary = ""
     for line in (stdout or stderr).splitlines():
@@ -1688,7 +1735,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
 
     # Run tests after changes — retry up to 2 times if tests fail
     MAX_FIX_ATTEMPTS = 2
-    tests_ok, test_summary = run_tests()
+    tests_ok, test_summary = run_tests(full=True)
 
     for fix_attempt in range(MAX_FIX_ATTEMPTS):
         if tests_ok:
@@ -1713,7 +1760,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         if not fix_ok:
             logger.error("%s failed to fix tests", AGENT_DISPLAY)
             break
-        tests_ok, test_summary = run_tests()
+        tests_ok, test_summary = run_tests(full=True)
 
     if not tests_ok:
         logger.error("Tests still failing after %d fix attempts — committing as broken checkpoint", MAX_FIX_ATTEMPTS)
