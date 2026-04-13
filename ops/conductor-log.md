@@ -1403,3 +1403,4 @@ python/ |
 | 2026-04-13 17:41 UTC | Exp 252: Predictive verification corpus from parti | OK | Deliverable already exists in repo |
 | 2026-04-13 18:01 UTC | Exp 253: Memory-conditioned constraint addition | OK | 2452 passed, 2 skipped, 13 warnings in 513.57s (0:08:33) |
 | 2026-04-13 18:20 UTC | Exp 254: Predictive verifier gate with export-read | OK | 2500 passed, 2 skipped, 13 warnings in 518.65s (0:08:38) |
+| 2026-04-13 18:38 UTC | Exp 255: Self-learning A/B benchmark runner | OK | 2533 passed, 2 skipped, 13 warnings in 525.52s (0:08:45) |
