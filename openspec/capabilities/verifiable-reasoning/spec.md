@@ -1423,6 +1423,82 @@ runtime integration helpers, where:
   repair-prompt patches, and routing hints without replacing the original paths
 **And** callers can explain which sources drove the final policy context
 
+### REQ-VERIFY-054: Exp 241 Chronological Replay V2 Over Semantic And Code Artifacts
+
+The repository shall provide an Exp 241 replay workflow for continuous
+self-learning in `python/carnot/pipeline/self_learning_replay.py` plus
+`scripts/experiment_241_self_learning_replay_v2.py`, where:
+- the workflow replays checked-in semantic traces from
+  `results/experiment_235_results.json` and checked-in code traces from
+  `results/experiment_238_results.json`
+- the replay can normalize both the paired-run Exp 235 schema and the
+  model-run Exp 238 schema into a shared chronological replay case format
+- the workflow holds out the final chronological slice from each source
+  artifact so evaluation cases are never used to update tracker, case-memory,
+  accepted-repair, or compiled-policy state
+- the replay compares exactly four conditions on the same held-out cases:
+  `no_learning`, `tracker_only`, `case_memory`, and
+  `case_memory_plus_policy`
+- the `case_memory_plus_policy` condition compiles runtime policy updates only
+  from prior non-held-out live evidence, using additive case memory plus
+  accepted repairs rather than prebuilt full-corpus artifacts that include
+  held-out cases
+- Exp 223 callers and artifacts remain backward compatible without needing to
+  adopt the Exp 241 sources or strategy names
+
+### REQ-VERIFY-055: Exp 241 Artifact Summary, Comparison, And Success Decision
+
+The same workflow shall write `results/experiment_241_results.json`, where:
+- the artifact records the fixed Exp 241 run date `20260413`
+- the summary reports held-out task success, held-out false positives,
+  retrieval hit rate, retrieval precision, and latency overhead for every
+  replay condition
+- the summary includes a direct machine-readable comparison against
+  `results/experiment_223_results.json`, including success-rate and
+  false-positive deltas relative to Exp 223's comparable strategies
+- the artifact states the primary success condition explicitly as
+  `real_held_out_task_gain_with_no_extra_false_positives`
+- the artifact records whether that primary success condition was met and, when
+  it was not, says so clearly rather than implying success from secondary
+  metrics alone
+- re-running the workflow refreshes the artifact in place without duplicate
+  held-out decisions or order drift
+
+### SCENARIO-VERIFY-060: Final Chronological Slice Stays Honest Across Artifact Shapes
+
+**Given** Exp 235 semantic traces and Exp 238 code traces in their checked-in
+  artifact schemas
+**When** Exp 241 constructs replay cases and holds out the final chronological
+  slice from each source artifact
+**Then** the held-out replay mixes both semantic and code traces in one
+  evaluation stream
+**And** none of those held-out cases contribute tracker, case-memory, accepted
+  repair, or compiled-policy updates for later held-out decisions
+**And** the older Exp 223 replay artifact contract remains available for
+  callers that still use the pre-Exp-241 path
+
+### SCENARIO-VERIFY-061: Policy Updates Can Change Replay Decisions Beyond Raw Retrieval
+
+**Given** non-held-out live cases that produce repeated high-precision
+  case-memory support and accepted repair evidence
+**When** the Exp 241 replay evaluates the same held-out case under
+  `case_memory` and `case_memory_plus_policy`
+**Then** the policy-aware branch can make a different decision from raw
+  case-memory retrieval alone
+**And** the artifact records which compiled routing hints, threshold updates,
+  repair patches, or case matches were active for that held-out decision
+
+### SCENARIO-VERIFY-062: Exp 241 Summary States The Honest Outcome Relative To Exp 223
+
+**Given** the Exp 241 replay summary and the checked-in Exp 223 replay artifact
+**When** the Exp 241 artifact is written
+**Then** it reports retrieval, latency, task-success, and false-positive
+  comparisons against Exp 223 in machine-readable form
+**And** it states plainly whether the primary success condition
+  `real_held_out_task_gain_with_no_extra_false_positives` was met
+**And** a gain in secondary metrics alone does not get reported as the primary
+  milestone win when held-out task gain is absent
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1480,4 +1556,6 @@ runtime integration helpers, where:
 | REQ-VERIFY-051 | Not Started | Implemented | Case memory retrieval + replay integration tests |
 | REQ-VERIFY-052 | Not Started | Implemented | Self-learning policy compilation + provenance tests |
 | REQ-VERIFY-053 | Not Started | Implemented | Self-learning policy serialization + additive runtime-context tests |
+| REQ-VERIFY-054 | Not Started | Implemented | Exp 241 replay v2 tests + artifact refresh |
+| REQ-VERIFY-055 | Not Started | Implemented | Exp 241 summary/comparison tests + artifact refresh |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
