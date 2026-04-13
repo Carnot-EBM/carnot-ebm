@@ -1464,6 +1464,42 @@ The same workflow shall write `results/experiment_241_results.json`, where:
 - re-running the workflow refreshes the artifact in place without duplicate
   held-out decisions or order drift
 
+### REQ-VERIFY-056: Exp 244 Formal Claim Corpus From Live Semantic And Prompt-Side Traces
+
+The repository shall provide a deterministic Exp 244 workflow in
+`scripts/experiment_244_formal_claim_corpus.py`, where:
+- the workflow reads the checked-in live semantic traces from
+  `results/experiment_235_results.json` and the checked-in live prompt-side
+  traces from `results/experiment_221_results.json`
+- the workflow may enrich those live traces with checked-in source metadata
+  from `data/research/constraint_ir_benchmark_211.jsonl` and
+  `data/research/semantic_failure_corpus_214.jsonl`, but it does not invent a
+  fresh synthetic benchmark as the primary data source
+- the workflow writes `data/research/formal_claim_corpus_244.jsonl`
+- every corpus row records the source prompt, source response, typed claim
+  text, normalized relation type, operands or bound variables, target quantity
+  or entity, candidate solver route, gold verdict, and provenance back to the
+  source run or source artifact
+- rows that cannot be normalized safely preserve an explicit
+  `formalization_status` such as `abstain` or `not_formalizable` rather than
+  pretending every live claim is solver-ready
+- when the source trace already reveals a localized failure seed, the row also
+  records minimal-correction-subset-style metadata identifying the broken
+  premise, claim, or prompt-side constraint ids
+
+### REQ-VERIFY-057: Exp 244 Summary Artifact And Deterministic Regeneration
+
+The same workflow shall write `results/experiment_244_results.json`, where:
+- the artifact records the fixed Exp 244 run date `20260413`
+- the summary reports total claim rows, counts by candidate solver route,
+  counts by `formalization_status`, counts by gold verdict, and a source
+  breakdown by contributing artifact family
+- the summary reports formalizable-versus-abstain or
+  not-formalizable rates clearly enough to show how much of the checked-in
+  live trace inventory is already solver-routable
+- re-running the workflow refreshes both the JSONL corpus and the summary
+  artifact in place without duplicate rows, provenance drift, or order drift
+
 ### SCENARIO-VERIFY-060: Final Chronological Slice Stays Honest Across Artifact Shapes
 
 **Given** Exp 235 semantic traces and Exp 238 code traces in their checked-in
@@ -1498,6 +1534,33 @@ The same workflow shall write `results/experiment_241_results.json`, where:
   `real_held_out_task_gain_with_no_extra_false_positives` was met
 **And** a gain in secondary metrics alone does not get reported as the primary
   milestone win when held-out task gain is absent
+
+### SCENARIO-VERIFY-063: Live Claims Normalize Conservatively Instead Of Guessing
+
+**Given** checked-in live semantic and prompt-side traces from Exp 235 and
+  Exp 221
+**When** Exp 244 converts those traces into formal-claim rows
+**Then** rows that match deterministic arithmetic, comparison, cardinality,
+  set-membership, boolean-entailment, or execution-oracle patterns record the
+  narrowest candidate solver route that fits the source evidence
+**And** rows without a safe deterministic normalization are labeled
+  `abstain` or `not_formalizable` instead of receiving an invented route
+**And** every row preserves source prompt, response, and provenance back to
+  the originating checked-in artifact
+
+### SCENARIO-VERIFY-064: Provenance And Localization Stay Deterministic Across Regeneration
+
+**Given** the checked-in Exp 235 and Exp 221 artifacts plus the checked-in
+  Exp 211 and Exp 214 source metadata
+**When** Exp 244 is run multiple times with the same inputs
+**Then** `data/research/formal_claim_corpus_244.jsonl` and
+  `results/experiment_244_results.json` are rewritten deterministically with
+  the same row order and summary counts
+**And** prompt-side violated constraints and semantic missing-premise signals
+  preserve minimal-correction-subset-style localization metadata when the
+  source trace exposes it
+**And** the summary still reports route counts, formalizable-versus-abstain
+  rates, and source-family breakdowns from the regenerated corpus
 
 ## Implementation Status
 
@@ -1558,4 +1621,6 @@ The same workflow shall write `results/experiment_241_results.json`, where:
 | REQ-VERIFY-053 | Not Started | Implemented | Self-learning policy serialization + additive runtime-context tests |
 | REQ-VERIFY-054 | Not Started | Implemented | Exp 241 replay v2 tests + artifact refresh |
 | REQ-VERIFY-055 | Not Started | Implemented | Exp 241 summary/comparison tests + artifact refresh |
+| REQ-VERIFY-056 | Not Started | Implemented | Exp 244 formal-claim corpus tests |
+| REQ-VERIFY-057 | Not Started | Implemented | Exp 244 summary/provenance tests + artifact refresh |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
