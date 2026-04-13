@@ -278,6 +278,88 @@
       "accepted_correct": false,
       "repaired": false,
       "n_repairs": 0
+    },
+    "gsm8k-1184": {
+      "case_id": "gsm8k-1184",
+      "mode": "verify_repair",
+      "question": "To heat during the winter, Ali ordered 850 kilos of coal. The coal is delivered in 50 kg bags, costing $18 per unit. How much does his order cost?",
+      "ground_truth": 306,
+      "response": "To solve this problem, we need to calculate the total cost based on the number of bags ordered and the price per bag.\n\n### Step 1: Identify the given values\n*   **Total weight of coal ordered**: $850$ kilos\n*   **Weight of each bag**: $50$ kg\n*   **Cost per unit**: $\\$18$\n\n### Step 2: Calculate the number of bags\nFirst, determine how many bags are needed to hold the total weight of coal. We divide the total weight by the weight of a single bag.\n\n$$ \\text{Number of bags} = \\frac{\\text{Total weight}}{\\text{Weight per bag}} $$\n$$ \\text{Number of bags} = \\frac{850}{50} $$\n$$ \\text{Number of bags} = 17 $$\n\n### Step 3: Calculate the total cost\nNow, multiply the number of bags by the cost per unit to find the total cost.\n\n$$ \\text{Total Cost} = \\text{Number of bags} \\times \\text{Cost per unit} $$\n$$ \\text{Total Cost} = 17 \\times 18 $$\n\nPerforming",
+      "predicted": 18,
+      "correct": false,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.433,
+      "prompt_tokens": 38,
+      "response_tokens": 152,
+      "total_tokens": 190,
+      "flagged": false,
+      "accepted_correct": false,
+      "repaired": false,
+      "n_repairs": 0
+    },
+    "gsm8k-529": {
+      "case_id": "gsm8k-529",
+      "mode": "verify_repair",
+      "question": "Tom bought a CD for $4, and a headphone set. In total, he paid $48. How many more CDs would Tom have been able to buy if he had decided not to buy the headphone set?",
+      "ground_truth": 11,
+      "response": "To solve this problem, we need to determine the cost of the headphone set and then use that information to find the cost of a single CD.\n\n### Step 1: Determine the cost of the headphone set\nTom bought two items: a CD and a headphone set.\n*   Total cost of the CD + Headphone set = $48\n*   Cost of the CD = $4\n\nWe can find the cost of the headphone set by subtracting the cost of the CD from the total:\n$$ \\text{Cost of Headphone Set} = \\text{Total Cost} - \\text{Cost of CD} $$\n$$ \\text{Cost of Headphone Set} = 48 - 4 = 44 $$\n\n### Step 2: Calculate the cost of a single CD\nThe problem asks how many more CDs Tom would have been able to buy if he **did not** buy the headphone set.\n*   Total cost of CDs (without headphones) = $4\n*   Number of CDs = $4\n\nSince the cost is a fixed amount regardless of quantity, the cost of a single CD is:\n$$ \\text{Cost of One CD} = \\frac{\\text{Total Cost of CDs}}",
+      "predicted": 4,
+      "correct": false,
+      "formal_claims": [
+        {
+          "claim_id": "arith-0",
+          "failure_detail": null,
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.142,
+      "prompt_tokens": 45,
+      "response_tokens": 183,
+      "total_tokens": 228,
+      "flagged": false,
+      "accepted_correct": false,
+      "repaired": false,
+      "n_repairs": 0
+    },
+    "gsm8k-618": {
+      "case_id": "gsm8k-618",
+      "mode": "verify_repair",
+      "question": "The school auditorium has 4 rows of seats. There are 18 seats in each row. One-fourth of the seats were occupied by the administrators. One-third of the remaining seats were occupied by the parents and the rest were occupied by the students. How many students were there in the school auditorium?",
+      "ground_truth": 36,
+      "response": "Here is the step-by-step solution to the problem:\n\n### Step 1: Calculate the total number of seats\nThe school auditorium has 4 rows, and each row has 18 seats.\n$$ \\text{Total seats} = 4 \\times 18 = 72 \\text{ seats} $$\n\n### Step 2: Calculate the number of seats occupied by administrators\nOne-fourth of the seats were occupied by administrators.\n$$ \\text{Seats for administrators} = \\frac{1}{4} \\times 72 = 18 \\text{ seats} $$\n\n### Step 3: Calculate the number of remaining seats\nSubtract the seats occupied by administrators from the total number of seats.\n$$ \\text{Remaining seats} = 72 - 18 = 54 \\text{ seats} $$\n\n### Step 4: Calculate the number of seats occupied by parents\nOne-third of the remaining seats were occupied by parents.\n$$ \\text{Seats for parents} = \\frac{1}{3} \\times 54 = 18 \\text{ seats} $$\n\n### Step 5: Calculate the number of seats occupied by students\nSubtract the seats",
+      "predicted": 5,
+      "correct": false,
+      "formal_claims": [
+        {
+          "claim_id": "arith-0",
+          "failure_detail": null,
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 28.81,
+      "prompt_tokens": 60,
+      "response_tokens": 153,
+      "total_tokens": 213,
+      "flagged": false,
+      "accepted_correct": false,
+      "repaired": false,
+      "n_repairs": 0
     }
   }
 }
