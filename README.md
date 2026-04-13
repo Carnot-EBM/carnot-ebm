@@ -82,7 +82,7 @@ All benchmark results below are from **live GPU inference**. Simulated and softw
 
 ### Simulation vs Reality
 
-Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **73 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **74 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
 ## PBT Verification
 
