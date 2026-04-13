@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-04-13 (Exp 259: onnxruntime CUDA EP benchmark)
+
+- `pip install onnxruntime-gpu` — installed CUDA 12 ORT wheel; CUDAExecutionProvider + TensorrtExecutionProvider now in `ort.get_available_providers()`. (user instruction: Exp 259 CUDA ORT benchmark)
+- `scripts/experiment_259_onnxruntime_gpu.py` — CUDA ORT benchmark for PredictiveVerifier logistic gate. Exports fresh 9→1 ONNX model (not jepa_predictor_146.onnx which is a 256-D JEPA MLP). Runs CPU NumPy, CPU ORT, and CUDA ORT benchmarks (5000 timed calls, 100 warm-up). Records speedup_vs_cpu_ort and speedup_vs_cpu_numpy. Emits honest blocker if CUDA EP absent. (user instruction: Exp 259)
+- `tests/python/test_experiment_259_onnxruntime_gpu.py` — 14 tests (1 skipped without real GPU): CUDA EP detection mock path, CPU EP always present, ORT import, ONNX export+load, NumPy vs ORT output match (delta 8e-9), artifact schema validation (ok record fields, blocker record fields, no fabricated nulls). (SCENARIO-EXP259-A/B/C, REQ-PRED-003)
+- `results/experiment_259_results.json` — Benchmark results: CPU NumPy 5.1 µs/call (196,806 calls/s); ONNX CPU ORT 8.6 µs/call (115,978 calls/s); ONNX CUDA ORT 47.3 µs/call (21,142 calls/s, 5.49× SLOWER than CPU ORT). Finding: CUDA kernel launch overhead dominates for a 9→1 gate; GPU advantage appears at batch_size ≥ 32. No numbers fabricated.
+
 ## 2026-04-13 (Exp 258: dual-GPU benchmark harness)
 
 - `scripts/experiment_258_dual_gpu_harness.py` — `DualGPUBenchmarkHarness` class wiring `DualGPURunner` (Exp 224b) and warm `ModelServer` (Exp 224a) to the Exp 218 benchmark interface. Assigns Qwen/Qwen3.5-0.8B to GPU 0 and google/gemma-4-E4B-it to GPU 1. Configurable `batch_size` via `CARNOT_DUAL_GPU_BATCH_SIZE` env var (default 8). `empty_cache_between_runs()` calls `torch.cuda.empty_cache()` between benchmark suites. Checkpoint helpers (`checkpoint_path`, `load_checkpoint`, `save_checkpoint`, `run_mode`) have identical signatures to Exp 218 for drop-in compatibility. `ThroughputMeasurement` reports cases/sec per model and flags if ≤ 3 s/case target is not met. `GPUAssignmentVerifier` checks ≥ 20 GiB free VRAM on each GPU at startup. `write_harness_report()` writes `experiment_258_harness_report.json`. (user instruction: Exp 258 dual-GPU harness)

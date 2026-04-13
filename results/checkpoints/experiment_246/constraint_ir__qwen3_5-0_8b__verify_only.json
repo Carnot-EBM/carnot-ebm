@@ -716,6 +716,1013 @@
       "response_tokens": 59,
       "total_tokens": 76,
       "accepted_correct": true
+    },
+    "exp211-live-gsm8k-506": {
+      "case_id": "exp211-live-gsm8k-506",
+      "mode": "verify_only",
+      "response": "To calculate the total cost, we can break the problem down into two steps: determining the total number of snowshoes needed and then multiplying by the cost per pair.\n\n### Step 1: Calculate the total number of snowshoes\n*   **Number of dogs:** Mario has 6 sled dogs.\n*   **Legs per dog:** Each dog has 4 legs.\n*   **Total legs:** $6 \\text{ dogs} \\times 4 \\text{ legs/dog} = 24 \\text{ legs}$.\n*   **Snowshoes per leg:** Each pair of snowshoes supports two legs.\n*   **Total pairs of snowshoes:** $24 \\text{ legs} \\div 2 \\text{ legs/pair} = 12 \\text{ pairs}$.\n\n### Step 2: Calculate the total cost\n*   **Cost per pair:** $12.00 per pair.\n*   **Total cost:** $12 \\text{ pairs} \\times \\$12.00/\\text{pair} = \\$144.00$.\n\n### Conclusion\nIt will cost Mario **$144.00** to",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 32.328,
+      "prompt_tokens": 38,
+      "response_tokens": 129,
+      "total_tokens": 167,
+      "accepted_correct": true
+    },
+    "exp211-code-phone-2": {
+      "case_id": "exp211-code-phone-2",
+      "mode": "verify_only",
+      "response": "```python\ndef normalize_ext_phone(text: str) -> tuple[str, str | None]:\n    \"\"\"\n    Normalize a phone number by:\n      1. Removing any leading/trailing whitespace.\n      2. Removing any non-digit characters.\n      3. Removing any non-digit characters that are not digits (e.g., spaces, hyphens, underscores).\n      4. Converting the result to uppercase.\n      5. Removing any leading zeros.\n      6. Returning the normalized 10-digit number and an optional extension.\n    \"\"\"\n    # Step 1: Remove whitespace\n    text = text.strip()\n    if not text:\n        return \"\", None\n\n    # Step 2: Remove non-digit characters\n    text = ''.join(c for c in text if c.isdigit())\n\n    # Step 3: Remove non-digit characters that are not digits (e.g., spaces, hyphens, underscores)\n    text = ''.join(c for c in text if c.isdigit())\n\n    # Step 4: Convert to uppercase\n    text = text.upper()\n\n    # Step 5: Remove leading zeros\n    text = text.lstrip('0')",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 30.915,
+      "prompt_tokens": 21,
+      "response_tokens": 130,
+      "total_tokens": 151,
+      "accepted_correct": true
+    },
+    "exp211-instruction-grounded-2": {
+      "case_id": "exp211-instruction-grounded-2",
+      "mode": "verify_only",
+      "response": "B3",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 0.986,
+      "prompt_tokens": 51,
+      "response_tokens": 1,
+      "total_tokens": 52,
+      "accepted_correct": false
+    },
+    "exp211-live-gsm8k-515": {
+      "case_id": "exp211-live-gsm8k-515",
+      "mode": "verify_only",
+      "response": "To find the profit Tara earned, we need to calculate the total revenue and subtract the total cost.\n\n### Step 1: Calculate the Total Cost\nFirst, determine the total cost of the bags based on the price per bag and the number of bags.\n*   **Price per bag:** $4\n*   **Number of bags:** 8 packs $\\times$ 5 bags/pack = 40 bags\n*   **Total Cost:** $4 \\times 40 = \\$160$\n\n### Step 2: Calculate the Total Revenue\nNext, determine the total earnings from selling the bags.\n*   **Price per bag:** $8\n*   **Number of bags:** 40 bags\n*   **Total Revenue:** $8 \\times 40 = \\$320$\n\n### Step 3: Calculate the Profit\nFinally, subtract the total cost from the total revenue to find the profit.\n*   **Profit:** Total Revenue - Total Cost\n*   **Profit:** $\\$320 - \\$160 = \\$160$\n\n### Conclusion\nTara earned a profit of **$160**.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 28.947,
+      "prompt_tokens": 33,
+      "response_tokens": 145,
+      "total_tokens": 178,
+      "accepted_correct": true
+    },
+    "exp211-instruction-plan-1": {
+      "case_id": "exp211-instruction-plan-1",
+      "mode": "verify_only",
+      "response": "1. **Gather Baseline Metrics**\n   Establish current performance data, user engagement rates, and system load before any changes are introduced. This ensures that the rollout is grounded in existing data rather than assumptions.\n\n2. **Stage the Change**\n   Implement the new functionality or process incrementally, starting with a small subset of users or a specific department to minimize risk and allow for immediate feedback.\n\n3. **Validate the Result**\n   Monitor the new system or process closely to confirm it meets the defined goals and performance targets before full-scale deployment.\n\n4. **Rollback**\n   If validation fails or issues arise, immediately revert the change to the previous state to prevent potential data loss or service disruption.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=4.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 0,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 17.93,
+      "prompt_tokens": 34,
+      "response_tokens": 110,
+      "total_tokens": 144,
+      "accepted_correct": false
+    },
+    "exp211-live-gsm8k-814": {
+      "case_id": "exp211-live-gsm8k-814",
+      "mode": "verify_only",
+      "response": "To find the total money used, we need to calculate the cost for each friend individually and then sum them up.\n\n### Step 1: Calculate the cost for each friend\n\nThe cost is calculated as:\n$$ \\text{Cost} = \\text{Time} \\times \\text{Rate} $$\n\n**1. Jack's Friend (The \"Significantly Worse\" Friend)**\n*   **Time:** 20 minutes\n*   **Rate:** 1 quarter per 20 minutes\n*   **Calculation:**\n    $$ 1 \\text{ quarter} \\times 20 \\text{ minutes} = 1 \\text{ quarter} $$\n*   **Cost:** **1 quarter**\n\n**2. Jack's Friend (The \"Significantly Better\" Friend)**\n*   **Time:** 4 hours\n*   **Rate:** 1.5 times as long as the other friend\n*   **Calculation:**\n    First, convert the time to minutes:\n    $$ 4 \\text{ hours} \\times 60 \\text{ minutes/hour} = 240 \\text{ minutes} $$\n    Now, apply the multiplier:\n    $$ 240",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 32.988,
+      "prompt_tokens": 65,
+      "response_tokens": 127,
+      "total_tokens": 192,
+      "accepted_correct": true
+    },
+    "exp211-code-phone-1": {
+      "case_id": "exp211-code-phone-1",
+      "mode": "verify_only",
+      "response": "```python\ndef normalize_us_phone(text: str) -> str:\n    \"\"\"\n    Normalize a US phone number to the format 555-123-4567.\n\n    Raises ValueError if the input does not contain exactly 10 digits.\n    \"\"\"\n    if not text:\n        raise ValueError(\"Input must be a non-empty string.\")\n\n    # Check for exactly 10 digits\n    if len(text) != 10:\n        raise ValueError(\"Input must contain exactly 10 digits.\")\n\n    # Extract digits\n    digits = [int(c) for c in text]\n\n    # Split into groups of 3\n    groups = [digits[i:i+3] for i in range(0, len(digits), 3)]\n\n    # Convert each group to a string and join\n    return \"-\".join(str(x) for x in groups)\n\n\n# Example usage:\nif __name__ == \"__main__\":\n    print(normalize_us_phone(\"555-123-4567\"))  # Output: 555-123-4567\n    print(normalize_us_phone(\"555-1",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 32.271,
+      "prompt_tokens": 26,
+      "response_tokens": 107,
+      "total_tokens": 133,
+      "accepted_correct": true
+    },
+    "exp211-instruction-rewrite-1": {
+      "case_id": "exp211-instruction-rewrite-1",
+      "mode": "verify_only",
+      "response": "The API freeze remains active, and the Friday deploy remains unchanged.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "observed=0.0 not in [25.0, 32.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 2.024,
+      "prompt_tokens": 43,
+      "response_tokens": 11,
+      "total_tokens": 54,
+      "accepted_correct": false
+    },
+    "exp211-instruction-plan-2": {
+      "case_id": "exp211-instruction-plan-2",
+      "mode": "verify_only",
+      "response": "1. **Inventory Dependencies**\n   List all external systems, third-party integrations, and legacy data sources that the new application requires. Identify any critical business logic or data flows that must remain unchanged during the transition.\n\n2. **Create a Dry Run**\n   Simulate the migration by temporarily modifying the source code or configuration files without making any changes to the live environment. Execute the new logic and verify that it functions correctly in a controlled environment before applying it to production.\n\n3. **Execute the Change**\n   Roll out the updated code, configuration, and data pipelines to the production environment. Ensure that all critical services are active and that no manual intervention is required to complete the deployment.\n\n4. **Define Rollback**\n   Document the exact steps to revert the change if the migration fails or if a critical issue is detected. Include specific error codes, configuration keys, and data points that must be restored to the previous state.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=4.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 0,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 21.749,
+      "prompt_tokens": 33,
+      "response_tokens": 151,
+      "total_tokens": 184,
+      "accepted_correct": false
+    },
+    "exp211-code-csv-3": {
+      "case_id": "exp211-code-csv-3",
+      "mode": "verify_only",
+      "response": "```python\ndef parse_flag_row(row: str) -> dict[str, bool | str]:\n    \"\"\"\n    Parses a row string containing key order name, enabled, and owner.\n    Returns a dictionary mapping key names to their boolean values or strings.\n    \"\"\"\n    # Extract key order name\n    key_order_name = row.split()[0]\n    \n    # Extract enabled value\n    enabled = row.split()[1]\n    \n    # Extract owner\n    owner = row.split()[2]\n    \n    # Convert enabled to bool\n    enabled_bool = enabled.lower() == 'true'\n    \n    return {\n        key_order_name: enabled_bool,\n        owner: owner\n    }\n```\n\nThis function:\n- Splits the input string by whitespace to extract each field\n- Returns a dictionary with the parsed key order name and its boolean value (converted from \"true\"/\"false\")\n- Preserves the owner field as-is",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 22.789,
+      "prompt_tokens": 25,
+      "response_tokens": 109,
+      "total_tokens": 134,
+      "accepted_correct": true
+    },
+    "exp211-code-intervals-3": {
+      "case_id": "exp211-code-intervals-3",
+      "mode": "verify_only",
+      "response": "```python\ndef insert_interval(intervals: list[tuple[int, int]], new_interval: tuple[int, int]) -> list[tuple[int, int]]:\n    \"\"\"\n    Inserts one closed interval into a sorted non-overlapping list and merges as needed.\n\n    Parameters\n    ----------\n    intervals : list[tuple[int, int]]\n        List of closed intervals (start, end).\n    new_interval : tuple[int, int]\n        New interval to insert.\n\n    Returns\n    -------\n    list[tuple[int, int]]\n        New list with the new interval inserted and any necessary merges.\n    \"\"\"\n    if not intervals:\n        return [new_interval]\n\n    # Sort intervals by start time\n    sorted_intervals = sorted(intervals, key=lambda x: x[0])\n\n    # Find the position to insert\n    # We want to insert after the interval with the largest start time that is <= new_interval.start\n    # and before the interval with the smallest start time that is > new_interval.start.\n    # Since we need non-overlapping, we insert after the last interval with start <= new_interval.start.\n\n    # Find the last interval with start <= new_interval.start\n    last",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 28.458,
+      "prompt_tokens": 24,
+      "response_tokens": 140,
+      "total_tokens": 164,
+      "accepted_correct": true
+    },
+    "exp211-instruction-negation-1": {
+      "case_id": "exp211-instruction-negation-1",
+      "mode": "verify_only",
+      "response": "Based on the criteria provided (servers that are **NOT** in maintenance AND **NOT** in the eu-west region), here is the analysis:\n\n1.  **srv-a**: Active, us-east.\n    *   Status: Not in maintenance.\n    *   Region: Not eu-west.\n    *   **Match**: Yes.\n2.  **srv-b**: Maintenance, us-east.\n    *   Status: **In maintenance**.\n    *   **Match**: No.\n3.  **srv-c**: Active, eu-west.\n    *   Status: **In eu-west region**.\n    *   **Match**: No.\n4.  **srv-d**: Active, ap-south.\n    *   Status: Not in maintenance.\n    *   Region: Not eu-west.\n    *   **Match**: Yes.\n\nThe matching server IDs are:\n**srv-a, srv-d**",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 24.629,
+      "prompt_tokens": 42,
+      "response_tokens": 83,
+      "total_tokens": 125,
+      "accepted_correct": false
+    },
+    "exp211-code-rolling-1": {
+      "case_id": "exp211-code-rolling-1",
+      "mode": "verify_only",
+      "response": "```python\ndef rolling_average(values: list[float], window: int) -> list[float]:\n    \"\"\"\n    Returns the average of every full sliding window of size `window` in O(n) time.\n    \n    Time complexity: O(n)\n    Space complexity: O(n) for the result list (can be reduced to O(1) with a deque,\n                       but the problem asks for O(n) time, so we return the full list).\n    \n    Parameters:\n        values (list[float]): The input list of values.\n        window (int): The size of the sliding window.\n    \n    Returns:\n        list[float]: A list of averages for each window.\n    \"\"\"\n    if not values or window <= 0:\n        return []\n\n    n = len(values)\n    result = []\n\n    # Initialize first window\n    first_window = values[:window]\n    first_avg = sum(first_window) / window\n    result.append(first_avg)\n\n    # Process remaining windows\n    for i in range(window, n):\n        # Remove the element leaving the window\n        first_window.pop(0)\n        first_avg = sum(first_window) / window\n\n        # Add",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 35.377,
+      "prompt_tokens": 19,
+      "response_tokens": 132,
+      "total_tokens": 151,
+      "accepted_correct": true
+    },
+    "exp211-code-intervals-2": {
+      "case_id": "exp211-code-intervals-2",
+      "mode": "verify_only",
+      "response": "```python\ndef merge_touching_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:\n    \"\"\"\n    Merges intervals that overlap or touch at a boundary.\n    \n    Parameters:\n        intervals: list of (start, end) tuples\n    \n    Returns:\n        list of (start, end) tuples after merging overlapping/touching intervals.\n    \"\"\"\n    if not intervals:\n        return []\n\n    # Sort by start time\n    intervals.sort(key=lambda x: x[0])\n\n    merged = []\n    current_start, current_end = intervals[0]\n\n    for start, end in intervals[1:]:\n        # If this interval overlaps or touches the current merged interval\n        if start <= current_end:\n            # Extend current interval\n            current_end = max(current_end, end)\n        else:\n            # New merged interval\n            merged.append((current_start, current_end))\n            current_start, current_end = start, end\n\n    # Don't forget the last merged interval\n    merged.append((current_start, current_end))\n\n    return merged\n```\n\nExample usage:\n```python\nintervals = [(1,",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 30.098,
+      "prompt_tokens": 18,
+      "response_tokens": 114,
+      "total_tokens": 132,
+      "accepted_correct": true
+    },
+    "exp211-live-gsm8k-943": {
+      "case_id": "exp211-live-gsm8k-943",
+      "mode": "verify_only",
+      "response": "Here is the step-by-step breakdown to calculate the total money James spent.\n\n### Step 1: Calculate the Total Cost of the CDs\nFirst, determine the total cost of the 10 CDs before the discount.\n*   Number of CDs: 10\n*   Cost per CD: $\\$15$\n*   Total Cost = $10 \\times 15 = \\$150$\n\n### Step 2: Calculate the Discounted Price\nJames gets the CDs for 40% off.\n*   Discount Amount = $40\\% \\text{ of } \\$150$\n*   Discount Amount = $0.40 \\times 150 = \\$60$\n*   Discounted Price = Total Cost - Discount Amount\n*   Discounted Price = $\\$150 - \\$60 = \\$90$\n\n### Step 3: Calculate the Revenue from Selling\nJames sells the CDs for 40% of the discounted price.\n*   Revenue = $40\\% \\text{ of } \\$90$\n*   Revenue = $0.40 \\times 90 = \\$36$\n\n### Step 4",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 33.99,
+      "prompt_tokens": 34,
+      "response_tokens": 140,
+      "total_tokens": 174,
+      "accepted_correct": true
+    },
+    "exp211-instruction-grounded-1": {
+      "case_id": "exp211-instruction-grounded-1",
+      "mode": "verify_only",
+      "response": "P3, P1",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 1.39,
+      "prompt_tokens": 52,
+      "response_tokens": 2,
+      "total_tokens": 54,
+      "accepted_correct": false
+    },
+    "exp211-instruction-bullets-3": {
+      "case_id": "exp211-instruction-bullets-3",
+      "mode": "verify_only",
+      "response": "* We are seeking a senior software engineer to join our team.\n* The candidate will lead the frontend development team.\n* We are looking for a candidate with 5+ years of experience.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=3.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": "observed=0.0 not in [4.0, 7.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c6",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 6,
+      "n_supported": 3,
+      "n_violated": 2,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 5.492,
+      "prompt_tokens": 26,
+      "response_tokens": 33,
+      "total_tokens": 59,
+      "accepted_correct": false
+    },
+    "exp211-code-slugify-1": {
+      "case_id": "exp211-code-slugify-1",
+      "mode": "verify_only",
+      "response": "```python\ndef slugify(text: str) -> str:\n    \"\"\"\n    Convert a string to a slug by:\n    - Lowercasing ASCII letters\n    - Replacing whitespace with a single hyphen\n    - Removing all punctuation\n    - Collapsing repeated hyphens into a single one\n    \"\"\"\n    # Step 1: Lowercase ASCII letters\n    text = text.lower()\n    \n    # Step 2: Replace whitespace with a single hyphen\n    text = text.replace(\" \", \"-\")\n    \n    # Step 3: Remove all punctuation\n    text = re.sub(r\"[^\\w\\s]\", \"\", text)\n    \n    # Step 4: Collapse repeated hyphens into a single one\n    text = re.sub(r\"-+\", \"-\", text)\n    \n    return text\n```\n\n**Example usage:**\n```python\nprint(slugify(\"hello world! 123\"))  # Output: \"hello-world-123\"\nprint(slugify(\"Hello World! 123\"))  # Output: \"hello-world-123\"\nprint(slugify(\"hello world! 123\"))  # Output: \"hello-world-123\"",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 36.537,
+      "prompt_tokens": 20,
+      "response_tokens": 111,
+      "total_tokens": 131,
+      "accepted_correct": true
+    },
+    "exp211-instruction-decision-3": {
+      "case_id": "exp211-instruction-decision-3",
+      "mode": "verify_only",
+      "response": "{\n  \"choice\": \"R1\",\n  \"evidence\": \"R1 has a higher domain fit (high) compared to R2 (medium), which aligns with the preference for higher domain fit.\"\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 6.883,
+      "prompt_tokens": 63,
+      "response_tokens": 25,
+      "total_tokens": 88,
+      "accepted_correct": true
+    },
+    "exp211-live-gsm8k-796": {
+      "case_id": "exp211-live-gsm8k-796",
+      "mode": "verify_only",
+      "response": "To calculate the total amount of money the company pays to its employees after three months, we can break the problem down into two steps: first, determine the total number of employees hired, and second, multiply that by the monthly salary.\n\n### Step 1: Calculate the Total Number of Employees\nThe company hires 20 new employees every month for 3 months.\n$$ \\text{Total Employees} = \\text{Monthly Hires} \\times \\text{Number of Months} $$\n$$ \\text{Total Employees} = 20 \\times 3 = 60 \\text{ employees} $$\n\n### Step 2: Calculate the Total Salary\nEach employee is paid a salary of $4,000 per month.\n$$ \\text{Total Salary} = \\text{Total Employees} \\times \\text{Monthly Salary} $$\n$$ \\text{Total Salary} = 60 \\times 4,000 $$\n$$ \\text{Total Salary} = 240,000 $$\n\n### Conclusion\nThe company pays a total of **$240,000** to its employees after three months.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 33.895,
+      "prompt_tokens": 48,
+      "response_tokens": 140,
+      "total_tokens": 188,
+      "accepted_correct": true
+    },
+    "exp211-instruction-sections-3": {
+      "case_id": "exp211-instruction-sections-3",
+      "mode": "verify_only",
+      "response": "# Signal\nThe system detected a significant error spike during the initial data ingestion phase.\n\n# Risk\nA cache miss occurred while attempting to retrieve the latest configuration from the database.\n\n# Mitigation\nWe implemented a rollback switch to automatically revert the application to its previous state if the error persists.",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 3,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 8.884,
+      "prompt_tokens": 31,
+      "response_tokens": 51,
+      "total_tokens": 82,
+      "accepted_correct": false
+    },
+    "exp211-instruction-sections-2": {
+      "case_id": "exp211-instruction-sections-2",
+      "mode": "verify_only",
+      "response": "### Context\nThe migration window is critical to ensure a smooth transition without interruption.\n\n### Constraint\nNo downtime will occur during the execution of the migration process.\n\n### Action\nExecute the dry run first to validate the plan before proceeding.",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 3,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 7.547,
+      "prompt_tokens": 31,
+      "response_tokens": 40,
+      "total_tokens": 71,
+      "accepted_correct": false
+    },
+    "exp211-code-config-2": {
+      "case_id": "exp211-code-config-2",
+      "mode": "verify_only",
+      "response": "```python\nfrom typing import Any, Dict, Optional\n\ndef load_retry_config(env: Dict[str, str]) -> Dict[str, int]:\n    \"\"\"\n    Load retry configuration from environment variables.\n    \n    Parameters:\n    env (Dict[str, str]): Environment variables containing config keys\n    \n    Returns:\n    Dict[str, int]: Configuration dictionary with retry settings\n    \"\"\"\n    config = {}\n    \n    # Check for RETRIES environment variable\n    if \"RETRIES\" in env:\n        try:\n            retries = int(env[\"RETRIES\"])\n            config[\"RETRIES\"] = retries\n        except ValueError:\n            config[\"RETRIES\"] = 3  # Default to 3 if invalid\n    \n    # Check for TIMEOUT environment variable\n    if \"TIMEOUT\" in env:\n        try:\n            timeout = int(env[\"TIMEOUT\"])\n            config[\"TIMEOUT\"] = timeout\n        except ValueError:\n            config[\"TIMEOUT\"] = 30  # Default to 30 if invalid\n    \n    return config\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 28.169,
+      "prompt_tokens": 21,
+      "response_tokens": 101,
+      "total_tokens": 122,
+      "accepted_correct": true
+    },
+    "exp211-code-intervals-1": {
+      "case_id": "exp211-code-intervals-1",
+      "mode": "verify_only",
+      "response": "```python\ndef merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:\n    \"\"\"\n    Merges overlapping closed intervals and returns them sorted by start.\n\n    Args:\n        intervals: List of (start, end) tuples.\n\n    Returns:\n        List of (start, end) tuples merged and sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n\n    # Sort by start time\n    intervals.sort(key=lambda x: x[0])\n\n    merged = []\n    for start, end in intervals:\n        if not merged or end > merged[-1][1]:\n            # New interval starts after the last merged interval ends\n            merged.append((start, end))\n        else:\n            # Overlapping: extend the previous interval\n            merged[-1] = (merged[-1][0], max(merged[-1][1], end))\n\n    return merged\n```\n\nExample usage:\n\n```python\nintervals = [(1, 3), (2, 4), (5, 6)]\nprint(merge_intervals(intervals))  # [(1, 6)]\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 31.555,
+      "prompt_tokens": 18,
+      "response_tokens": 109,
+      "total_tokens": 127,
+      "accepted_correct": true
+    },
+    "exp211-instruction-yaml-2": {
+      "case_id": "exp211-instruction-yaml-2",
+      "mode": "verify_only",
+      "response": "```yaml\nservice: search\nteam: infra\nwindow_end: 14:20\nnow: 13:50\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 4.339,
+      "prompt_tokens": 16,
+      "response_tokens": 10,
+      "total_tokens": 26,
+      "accepted_correct": true
+    },
+    "exp211-live-gsm8k-1019": {
+      "case_id": "exp211-live-gsm8k-1019",
+      "mode": "verify_only",
+      "response": "To find the current number of guests at the hotel, let's break down the events chronologically and track the number of people entering the building.\n\n### Step 1: Initial State\n*   **Total guests initially:** 100.\n\n### Step 2: Early Checkout\n*   **Action:** 24 guests elected for an early checkout.\n*   **Calculation:** $100 - 24 = 76$ guests remain.\n\n### Step 3: Late Checkout\n*   **Action:** 15 guests elected for a late checkout.\n*   **Calculation:** $76 - 15 = 61$ guests remain.\n\n### Step 4: Check-ins in the Afternoon\n*   **Action:** Twice as many people checked in as those who opted for a late checkout.\n    *   Late checkouts = 15.\n    *   Calculation: $15 \\times 2 = 30$.\n*   **Calculation:** $61 + 30 = 91$ guests check in.\n\n### Step 5: Check-ins after Dinner\n*   **Action:** 7 more people checked in after dinner was served.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 31.738,
+      "prompt_tokens": 60,
+      "response_tokens": 143,
+      "total_tokens": 203,
+      "accepted_correct": true
+    },
+    "exp211-instruction-rewrite-3": {
+      "case_id": "exp211-instruction-rewrite-3",
+      "mode": "verify_only",
+      "response": "We are now in a calm state, with the staging fix completed and the customer pilot proceeding smoothly.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "observed=0.0 not in [25.0, 32.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 2.981,
+      "prompt_tokens": 42,
+      "response_tokens": 18,
+      "total_tokens": 60,
+      "accepted_correct": false
+    },
+    "exp211-code-toposort-2": {
+      "case_id": "exp211-code-toposort-2",
+      "mode": "verify_only",
+      "response": "```python\nfrom collections import deque\nfrom typing import List, Tuple\n\ndef topo_sort_nodes(nodes: list[str], edges: list[tuple[str, str]]) -> list[str]:\n    \"\"\"\n    Perform topological sort on a directed graph.\n    \n    Parameters:\n    nodes (list[str]): List of nodes in the graph.\n    edges (list[tuple[str, str]]): List of directed edges (u -> v).\n    \n    Returns:\n    list[str]: Topologically sorted order of nodes.\n    \n    Raises:\n    ValueError: If the graph contains cycles.\n    \"\"\"\n    # Build adjacency list\n    graph = {node: [] for node in nodes}\n    for u, v in edges:\n        graph[u].append(v)\n    \n    # Check for cycles using DFS\n    visited = set()\n    stack = []\n    \n    def dfs(node: str) -> bool:\n        visited.add(node)\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                if dfs(neighbor):\n                    return True\n            elif neighbor in visited:\n                # Found a cycle\n                return True\n        return False\n    \n    for node in nodes:",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 32.828,
+      "prompt_tokens": 17,
+      "response_tokens": 125,
+      "total_tokens": 142,
+      "accepted_correct": true
+    },
+    "exp211-code-toposort-3": {
+      "case_id": "exp211-code-toposort-3",
+      "mode": "verify_only",
+      "response": "```python\nfrom typing import List, Tuple, Set, Optional\nfrom collections import deque\n\ndef course_order(prereqs: List[Tuple[str, str]]) -> List[str]:\n    \"\"\"\n    Returns a valid topological sort of the prerequisite graph.\n    Raises ValueError if the graph is cyclic.\n    \"\"\"\n    if not prereqs:\n        return []\n\n    # Build adjacency list and in-degree count\n    graph = {}\n    in_degree = {node: 0 for node in prereqs}\n\n    for prereq, req in prereqs:\n        if prereq not in graph:\n            graph[prereq] = []\n        graph[prereq].append(req)\n        in_degree[req] += 1\n\n    # Kahn's algorithm for topological sort\n    queue = deque([node for node in prereqs if in_degree[node] == 0])\n    result = []\n\n    while queue:\n        node = queue.popleft()\n        result.append(node)\n\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    # If we",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 30.449,
+      "prompt_tokens": 21,
+      "response_tokens": 117,
+      "total_tokens": 138,
+      "accepted_correct": true
+    },
+    "exp211-code-dedupe-2": {
+      "case_id": "exp211-code-dedupe-2",
+      "mode": "verify_only",
+      "response": "```python\ndef dedupe_casefold(items: list[str]) -> list[str]:\n    \"\"\"\n    Remove duplicates case-insensitively while preserving the first original spelling\n    and input order.\n\n    Args:\n        items: A list of strings.\n\n    Returns:\n        A new list with duplicates removed, preserving the original order and spelling.\n    \"\"\"\n    seen = set()\n    result = []\n\n    for item in items:\n        # Convert to lowercase for case-insensitive comparison\n        key = item.lower()\n        if key not in seen:\n            seen.add(key)\n            result.append(item)\n\n    return result\n```\n\nExample usage:\n```python\nitems = [\"Hello\", \"hello\", \"HELLO\", \"hello\", \"Hello\"]\ndedupe_casefold(items)\n# Output: ['Hello', 'hello', 'HELLO']\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 21.931,
+      "prompt_tokens": 21,
+      "response_tokens": 86,
+      "total_tokens": 107,
+      "accepted_correct": true
+    },
+    "exp211-live-gsm8k-1309": {
+      "case_id": "exp211-live-gsm8k-1309",
+      "mode": "verify_only",
+      "response": "To find the total amount of money raised by all the girls, we need to calculate the individual amounts each person raised and then sum them up.\n\n**1. Identify the amounts raised by each person:**\n*   **Kim:** Raises $320 more than Alexandra.\n*   **Alexandra:** Raises $430.\n*   **Maryam:** Raises $400 more than Sarah.\n*   **Sarah:** Raises $300.\n\n**2. Calculate the amounts for each person:**\n*   **Alexandra:** $430\n*   **Kim:** $430 + $320 = **$750**\n*   **Sarah:** $300\n*   **Maryam:** $300 + $400 = **$700**\n\n**3. Calculate the total:**\n$$ \\text{Total} = \\text{Alexandra} + \\text{Kim} + \\text{Sarah} + \\text{Maryam} $$\n$$ \\text{Total} = 430 + 750 + 300 + 700 $$\n\nLet's add them step-by-step:\n*",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 31.22,
+      "prompt_tokens": 40,
+      "response_tokens": 115,
+      "total_tokens": 155,
+      "accepted_correct": true
+    },
+    "exp211-instruction-bullets-1": {
+      "case_id": "exp211-instruction-bullets-1",
+      "mode": "verify_only",
+      "response": "* The release handoff is completed by the owner.\n* The tokens risk is managed by the team.\n* The deadline is set for the final review.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=3.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": "observed=0.0 not in [4.0, 7.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c6",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 6,
+      "n_supported": 3,
+      "n_violated": 2,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 5.118,
+      "prompt_tokens": 32,
+      "response_tokens": 27,
+      "total_tokens": 59,
+      "accepted_correct": false
+    },
+    "exp211-code-config-1": {
+      "case_id": "exp211-code-config-1",
+      "mode": "verify_only",
+      "response": "```python\nfrom typing import Dict, Any, Optional\n\ndef load_config(env: Dict[str, str]) -> Dict[str, Any]:\n    \"\"\"\n    Load configuration from environment variables.\n    \n    Parameters:\n    env (Dict[str, str]): Environment variables dictionary\n    \n    Returns:\n    Dict[str, Any]: Configuration dictionary with optional defaults\n    \n    Raises:\n    ValueError: If required environment variables are missing\n    \"\"\"\n    config = {}\n    \n    # Required environment variables\n    if \"HOST\" not in env:\n        raise ValueError(\"HOST environment variable is required\")\n    if \"PORT\" not in env:\n        raise ValueError(\"PORT environment variable is required\")\n    \n    # Cast PORT to int\n    try:\n        port = int(env[\"PORT\"])\n    except ValueError:\n        raise ValueError(\"PORT must be a valid integer\")\n    \n    # Default mode to safe if missing\n    mode = \"safe\"\n    if \"MODE\" not in env:\n        mode = \"safe\"\n    \n    config[\"HOST\"] = env[\"HOST\"]\n    config[\"PORT\"] = port\n    config[\"MODE\"] = mode\n    \n    return config\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 32.404,
+      "prompt_tokens": 25,
+      "response_tokens": 121,
+      "total_tokens": 146,
+      "accepted_correct": true
+    },
+    "exp211-code-rolling-3": {
+      "case_id": "exp211-code-rolling-3",
+      "mode": "verify_only",
+      "response": "Here\u2019s a simple O(n) implementation using a sliding window with a deque (double-ended queue) to maintain the maximum in each window:\n\n```python\nfrom collections import deque\n\ndef rolling_max(values: list[int], window: int) -> list[int]:\n    \"\"\"\n    Returns the maximum of every full window of size `window` in O(n) time.\n    \"\"\"\n    if not values or window <= 0:\n        return []\n\n    n = len(values)\n    if n < window:\n        return [0] * n  # or handle appropriately\n\n    # deque stores (index, value) pairs, where value is the maximum seen so far\n    dq = deque()\n\n    # Initialize first window\n    for i in range(window):\n        idx = i\n        if idx in dq:\n            dq.popleft()  # remove outdated index\n        dq.append((idx, values[idx]))\n\n    result = []\n    for i in range(window, n):\n        # Remove indices out of current window\n        if i - window >= dq[0]:\n            dq.popleft()\n\n        # Add new element\n        dq.append((i, values[i]))\n\n        # Remove elements",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 31.831,
+      "prompt_tokens": 18,
+      "response_tokens": 142,
+      "total_tokens": 160,
+      "accepted_correct": true
+    },
+    "exp211-code-config-3": {
+      "case_id": "exp211-code-config-3",
+      "mode": "verify_only",
+      "response": "```python\nfrom typing import Dict, Any, Optional\n\ndef load_feature_config(env: dict[str, str]) -> Dict[str, Any]:\n    \"\"\"\n    Loads a feature configuration from environment variables.\n    \n    Parameters:\n    env (dict[str, str]): Environment variables containing feature settings.\n    \n    Returns:\n    dict[str, Any]: A dictionary containing feature configurations.\n    \"\"\"\n    config = {}\n    \n    # Parse OWNER from environment\n    owner = env.get(\"OWNER\", \"\")\n    if owner:\n        config[\"OWNER\"] = owner\n    \n    # Parse CHANNEL from environment\n    channel = env.get(\"CHANNEL\", \"\")\n    if channel:\n        config[\"CHANNEL\"] = channel\n    \n    # Parse ENABLED from environment\n    enabled = env.get(\"ENABLED\", \"\")\n    if enabled:\n        try:\n            config[\"ENABLED\"] = bool(eval(enabled))\n        except (ValueError, TypeError):\n            config[\"ENABLED\"] = False\n    \n    return config\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 27.362,
+      "prompt_tokens": 25,
+      "response_tokens": 95,
+      "total_tokens": 120,
+      "accepted_correct": true
+    },
+    "exp211-instruction-sections-1": {
+      "case_id": "exp211-instruction-sections-1",
+      "mode": "verify_only",
+      "response": "### Overview\nThe current API freeze is preventing new feature launches and requires immediate review of existing functionality.\n\n### Risks\nA staffing gap in the development team is creating delays and increasing the risk of technical debt.\n\n### Next Step\nWe are moving to a beta date to test the new features with a small group of users.",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 3,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 8.975,
+      "prompt_tokens": 36,
+      "response_tokens": 58,
+      "total_tokens": 94,
+      "accepted_correct": false
+    },
+    "exp211-instruction-negation-2": {
+      "case_id": "exp211-instruction-negation-2",
+      "mode": "verify_only",
+      "response": "Based on the provided table, here are the tasks that are **NOT blocked** and **NOT assigned to team-red**:\n\n*   **t1** (ready, team-blue)\n*   **t4** (ready, team-green)\n\n**Task IDs:** t1, t4",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 8.049,
+      "prompt_tokens": 40,
+      "response_tokens": 30,
+      "total_tokens": 70,
+      "accepted_correct": false
+    },
+    "exp211-instruction-json-1": {
+      "case_id": "exp211-instruction-json-1",
+      "mode": "verify_only",
+      "response": "{\n  \"action\": \"approve\",\n  \"reason\": \"Request approved based on current data\",\n  \"confidence\": \"high\"\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 2,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 4.705,
+      "prompt_tokens": 25,
+      "response_tokens": 13,
+      "total_tokens": 38,
+      "accepted_correct": true
+    },
+    "exp211-code-roman-1": {
+      "case_id": "exp211-code-roman-1",
+      "mode": "verify_only",
+      "response": "```python\ndef to_roman(value: int) -> str:\n    \"\"\"\n    Convert an integer from 1 to 3999 to Roman numerals.\n    Raises ValueError if the value is outside this range.\n    \"\"\"\n    if not isinstance(value, int):\n        raise TypeError(\"value must be an integer\")\n\n    if value < 1 or value > 3999:\n        raise ValueError(\"value must be between 1 and 3999\")\n\n    values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]\n    symbols = [\n        \"M\", \"CM\", \"D\", \"CD\",\n        \"C\", \"XC\",\n        \"L\", \"XL\",\n        \"X\", \"IX\",\n        \"V\", \"IV\",\n        \"I\", \"I\"\n    ]\n\n    result = []\n    for i in range(len(values)):\n        count = value // values[i]\n        value -= count * values[i",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 31.286,
+      "prompt_tokens": 21,
+      "response_tokens": 103,
+      "total_tokens": 124,
+      "accepted_correct": true
     }
   }
 }
