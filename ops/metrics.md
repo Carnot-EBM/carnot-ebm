@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 REQ-PRED-001-004 Predictive Verifier Module
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T18:02:56Z | 2026-04-13T18:09:46Z | Added REQ-PRED-001..004 to spec; implemented `predictive_verifier.py` (feature extraction, calibrated gate, ONNX export, safetensors serialisation, duck-type jepa_predictor compatibility); wrote 48 tests covering features, gate routing, calibration, export, serialisation, pipeline integration. All 48 pass. | TBD |
+
+### Session Summary
+
+- 48 tests written and passing; `python/carnot/pipeline/predictive_verifier.py` (FEATURE_DIM=9, NumPy logistic gate, ONNX export, safetensors save/load, calibrate() from Exp 252 corpus rows, predict_embedding() duck-type compat) created.
+
 ## Session: 2026-04-13 Exp 252 Predictive Verification Corpus
 
 ### Turn Log
