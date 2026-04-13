@@ -343,6 +343,76 @@
       "prompt_tokens": 58,
       "response_tokens": 2,
       "total_tokens": 60
+    },
+    "exp211-code-toposort-1": {
+      "case_id": "exp211-code-toposort-1",
+      "mode": "baseline",
+      "response": "```python\nfrom collections import deque\nfrom typing import List, Tuple\n\ndef topo_sort(edges: List[Tuple[str, str]]) -> List[str]:\n    \"\"\"\n    Returns a valid topological order for a directed acyclic graph.\n    Raises ValueError if the graph contains a cycle.\n\n    Parameters\n    ----------\n    edges : List[Tuple[str, str]]\n        List of directed edges (u -> v).\n\n    Returns\n    -------\n    List[str]\n        A topological ordering of the vertices.\n\n    Raises\n    ------\n    ValueError\n        If the graph contains a cycle.\n    \"\"\"\n    # Build adjacency list\n    adj = [[] for _ in range(len(edges[0]) + 1)]  # 1-based indexing for convenience\n    for u, v in edges:\n        adj[u].append(v)\n\n    # Kahn's algorithm for topological sort\n    in_degree = [0] * (len(edges[0]) + 1)\n    for u in range(len(edges[0]) + 1):\n        for v in adj[u]:\n            in_degree[v] += 1\n\n    queue = deque()\n    for u in range(len(edges[0",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 31.327,
+      "prompt_tokens": 22,
+      "response_tokens": 124,
+      "total_tokens": 146
+    },
+    "exp211-code-score-1": {
+      "case_id": "exp211-code-score-1",
+      "mode": "baseline",
+      "response": "```python\ndef score_keywords(text: str, weights: dict[str, int]) -> int:\n    \"\"\"\n    Returns the sum of weights for each keyword appearing at least once in the text.\n\n    Parameters\n    ----------\n    text : str\n        The input text to search.\n    weights : dict[str, int]\n        A dictionary mapping keywords to their weights.\n\n    Returns\n    -------\n    int\n        The sum of weights for all keywords that appear in the text.\n    \"\"\"\n    keyword_weights = {}\n    for keyword, weight in weights.items():\n        keyword_weights[keyword] = weight\n\n    total = 0\n    for keyword in keyword_weights:\n        if keyword in text:\n            total += keyword_weights[keyword]\n\n    return total\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 19.917,
+      "prompt_tokens": 24,
+      "response_tokens": 90,
+      "total_tokens": 114
+    },
+    "exp211-code-groupby-2": {
+      "case_id": "exp211-code-groupby-2",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import List, Dict\n\ndef group_by_priority(rows: List[Dict[str, str]]) -> Dict[str, List[str]]:\n    \"\"\"\n    Groups task IDs by priority and preserves the order of task IDs within each priority bucket.\n\n    Args:\n        rows: A list of dictionaries, each containing a 'task_id' key.\n\n    Returns:\n        A dictionary mapping priority strings to lists of task IDs,\n        preserving the order of task IDs within each priority bucket.\n    \"\"\"\n    priority_groups: Dict[str, List[str]] = {}\n\n    for row in rows:\n        task_id = row['task_id']\n        if task_id not in priority_groups:\n            priority_groups[task_id] = []\n        priority_groups[task_id].append(row['task_id'])\n\n    return priority_groups\n```\n\nExample usage:\n```python\nrows = [\n    {\"task_id\": \"t1\", \"priority\": \"high\"},\n    {\"task_id\": \"t2\", \"priority\": \"high\"},\n    {\"task_id\": \"t1\", \"priority\": \"medium\"},\n    {\"task_id\": \"t3\", \"priority\": \"low\"},\n]",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.501,
+      "prompt_tokens": 23,
+      "response_tokens": 110,
+      "total_tokens": 133
+    },
+    "exp211-code-groupby-3": {
+      "case_id": "exp211-code-groupby-3",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import List, Dict\n\ndef group_words_by_initial(words: List[str]) -> Dict[str, List[str]]:\n    \"\"\"\n    Groups words by their first lowercase letter and preserves the original order within each list.\n\n    Args:\n        words (List[str]): A list of strings to process.\n\n    Returns:\n        Dict[str, List[str]]: A dictionary where keys are the first lowercase letter of the word,\n                               and values are lists of words starting with that letter.\n    \"\"\"\n    result: Dict[str, List[str]] = {}\n\n    for word in words:\n        first_letter = word[0].lower()\n        if first_letter not in result:\n            result[first_letter] = []\n        result[first_letter].append(word)\n\n    return result\n```\n\nExample usage:\n```python\nwords = [\"apple\", \"banana\", \"cherry\", \"date\", \"elderberry\"]\nresult = group_words_by_initial(words)\nprint(result)\n# {'a': ['apple', 'cherry', 'date', 'elderberry'], 'b': ['banana'], 'c': ['cherry']}\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.963,
+      "prompt_tokens": 21,
+      "response_tokens": 112,
+      "total_tokens": 133
+    },
+    "exp211-code-csv-2": {
+      "case_id": "exp211-code-csv-2",
+      "mode": "baseline",
+      "response": "```python\ndef parse_metric_row(row: str) -> dict[str, int | None]:\n    \"\"\"\n    Parse a comma-separated row with keys: day, errors, latency_ms.\n    \n    - `day`: string, converted to int if present\n    - `errors`: string, converted to int if present\n    - `latency_ms`: string, converted to int if present\n    \n    Returns a dictionary mapping keys to their parsed values.\n    \"\"\"\n    result = {}\n    \n    # Parse day\n    day = row.split(\",\")[0]\n    if day:\n        try:\n            result[\"day\"] = int(day)\n        except ValueError:\n            result[\"day\"] = None\n    \n    # Parse errors\n    errors = row.split(\",\")[1]\n    if errors:\n        try:\n            result[\"errors\"] = int(errors)\n        except ValueError:\n            result[\"errors\"] = None\n    \n    # Parse latency_ms\n    latency = row.split(\",\")[2]\n    if latency:\n        try:\n            result[\"latency_ms\"] = int(latency)\n        except ValueError:\n            result[\"latency_ms\"] = None\n    \n    return result\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.694,
+      "prompt_tokens": 24,
+      "response_tokens": 110,
+      "total_tokens": 134
     }
   }
 }
