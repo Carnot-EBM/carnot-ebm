@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 213+ Experiments Across Fifteen Research Milestones
+## A Technical Report on 228+ Experiments Across Sixteen Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-12
@@ -10,13 +10,13 @@
 
 ## Abstract
 
-We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 226+ systematic experiments across 16 research milestones, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% code bug detection, and 86% false positive reduction via self-learning. All headline numbers are from live inference.
+We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 228+ systematic experiments across 16 research milestones, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% code bug detection, and 86% false positive reduction via self-learning. The latest same-cohort Qwen PBT check stays flat on pass@1 but still catches extra harness misses, and the FPGA path now has an explicitly labeled software-model control-plane artifact. All headline benchmark numbers remain live inference only.
 
 Our key findings span two phases. **Phase 1 (Activation-based, Experiments 1-38):** (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy), (2) structural test execution dominates for code verification (0% to 30% accuracy), (3) activation-space approaches show detectable signals but fail to improve output quality — activation EBMs detect confidence, not correctness, (4) instruction tuning compresses the hallucination signal (84.5% base vs 67.2% instruction-tuned), (5) chain-of-thought further compresses it (75.5% to 61.3%), (6) adversarial questions defeat post-hoc detection entirely, and (7) no internal signal — activations, logit lens, NLI, confidence — can distinguish factual truth from confident hallucination. These 14 systematic negative results are the project's primary contribution to the activation-based literature.
 
 **Phase 2 (Constraint-based, Experiments 39-210):** The paradigm shift from detection to verification initially produced results that appeared strongly positive, but a critical audit (Exp 203-209) revealed that ALL early positive numbers were simulation artifacts — the inference was calibrated to instruction-tuned benchmarks while loading base models. With honest live GPU inference, arithmetic extraction found 0 violations on instruction-tuned model errors because they are semantic (wrong problem setup), not arithmetic.
 
-**Phase 3 (Semantic Grounding + Code Verification, Experiments 211-226):** Rebuilding extraction for real models produced credible results. Code verification is the strongest domain: full 164-problem HumanEval with property-based testing shows +3.0pp [+0.6, +6.1] 95% CI (Exp 226), with PBT detecting 99.3% of wrong code. Typed IR constraints give +4.9pp on Gemma4 (Exp 221). Semantic grounding detects 22-23% of wrong math answers that arithmetic misses entirely (Exp 219). Self-learning reduces false positives by 86% (Exp 223). All results are from live GPU inference — no simulated runs are included in these numbers.
+**Phase 3 (Semantic Grounding + Code Verification, Experiments 211-228):** Rebuilding extraction for real models produced credible results. Code verification is the strongest domain: full 164-problem HumanEval with property-based testing shows +3.0pp [+0.6, +6.1] 95% CI (Exp 226), with PBT detecting 99.3% of wrong code. The seeded Qwen follow-up on the Exp 208 cohort (Exp 227) stays flat at 23.3% -> 23.3% but still catches 2 official-test misses beyond the harness, which is the honest cross-model readout. Typed IR constraints give +4.9pp on Gemma4 (Exp 221). Semantic grounding detects 22-23% of wrong math answers that arithmetic misses entirely (Exp 219). Self-learning reduces false positives by 86% (Exp 223). The FPGA hardware track (Exp 228) is now documented as a software simulation artifact rather than a live throughput result.
 
 We release the complete framework as `pip install carnot` with four energy tiers (Ising, KAN, Gibbs, Boltzmann), the VerifyRepairPipeline production API, five constraint extractors (arithmetic, code, logic, NL, auto-detection), self-learning verification, a constraint state machine for agentic workflows, an MCP server for Claude Code integration, a CLI tool, Rust core crates, and 16 per-token EBM research models on HuggingFace alongside newer guided-decoding and constraint-model artifacts.
 
@@ -29,12 +29,17 @@ All results below are from live GPU inference. Earlier milestones produced simul
 | Benchmark | Baseline | +Carnot | Delta | Experiment |
 |-----------|----------|---------|-------|------------|
 | HumanEval 164 (PBT) | 11.6% | 14.6% | **+3.0pp** [+0.6, +6.1] CI | Exp 226 |
+| HumanEval 30 (PBT, seeded Qwen cohort) | 23.3% | 23.3% | +0.0pp; 2 harness misses caught | Exp 227 |
 | HumanEval 50 (PBT, dual-model) | 18.0% / 10.0% | 20.0% / 12.0% | +2.0pp both | Exp 220 |
 | Typed IR constraints (81 tasks) | 61.7% | 66.7% | **+4.9pp** (Gemma4) | Exp 221 |
 | GSM8K semantic (200 questions) | 37.5% | 38.0% | +0.5pp (Gemma4) | Exp 219 |
 | PBT bug detection rate | — | 144/145 | **99.3%** | Exp 220 |
 | Self-learning FP reduction | 7 FP | 1 FP | **-86%** | Exp 223 |
 | Extractor comparison (100 GSM8K) | — | Regex 5, Z3 3, LLM 1 FP | LLM best | Exp 206-207 |
+
+### Simulation vs Reality
+
+Current provenance snapshot (2026-04-12): **11 live GPU artifacts**, **3 simulated artifacts**, **66 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
 
 ## 1. Introduction
 
@@ -106,10 +111,11 @@ LLM output -> parse -> ComposedEnergy.verify() -> if violated: repair() -> round
 
 The `repair()` function runs gradient descent on violated constraints only, with optional Langevin noise and randomized step sizes (from the EBT work, Hoover et al. 2025).
 
-### 2.4 GPU Compute
+### 2.4 GPU and Hardware Compute
 
 - **carnot-gpu**: wgpu-based Vulkan/Metal/DX12 compute for batch energy evaluation
 - **carnot-webgpu-gateway**: distributed browser GPU compute via WebSocket
+- **FPGA Ising backend (Exp 228)**: KV260-class sparse **4096-spin** design with AXI-Lite upload, trigger, and readback semantics exposed through `FPGAIsingSampler`. The current checked-in artifact is **software simulation** only: it validates the control-plane contract, not synthesized FPGA throughput.
 
 ### 2.5 Parallel Ising Sampler
 
@@ -450,7 +456,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 
 ## 7. Principles Learned
 
-From the activation-based phase of a now-213+ experiment, 15-milestone program, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a now-228+ experiment, 16-milestone program, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -492,7 +498,7 @@ The failure of Principles 4-14 establishes a fundamental limit: **you cannot det
 
 ## 8. The Production Architecture
 
-The architecture that emerged from 213+ experiments:
+The architecture that emerged from 228+ experiments:
 
 ```
 User Question
@@ -620,7 +626,7 @@ make research-loop
 
 ## 12. Conclusion
 
-Across 226+ experiments on 16 model families spanning 350M to 35B parameters, 16 research milestones, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.
+Across 228+ experiments on 16 model families spanning 350M to 35B parameters, 16 research milestones, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.
 
 ### Part 1: Activation-based detection fails
 
@@ -637,6 +643,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 - **Full HumanEval 164 + PBT (Exp 226):** 11.6% -> 14.6% (+3.0pp, 95% CI [+0.6, +6.1])
 - **PBT bug detection (Exp 220):** 99.3% of wrong code detected (144/145)
+- **Seeded Qwen cohort (Exp 227):** 23.3% -> 23.3%; PBT still catches 2 official-test misses and detects 17/23 wrong baselines
 - **Typed IR constraints (Exp 221):** Gemma4 61.7% -> 66.7% (+4.9pp)
 - **Self-learning FP reduction (Exp 223):** 7 -> 1 false positives (-86%)
 - **Semantic grounding (Exp 219):** 22-23% wrong math answers detected (vs 0% for arithmetic extraction)
@@ -646,7 +653,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, demonstrated self-learning reduces false positives by 86%, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,077+ tests at 100% coverage.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up, added a provenance-labeled FPGA software model, demonstrated self-learning reduces false positives by 86%, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,137 Python tests at 100% coverage.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
@@ -679,7 +686,7 @@ Beyond post-hoc verification, Carnot implements an automated research loop inspi
 5. **Plan.** When all tasks in a milestone complete, a planning agent reads `research-program.md` (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.
 6. **Repeat.** The loop runs until a circuit breaker halts it after N consecutive failures.
 
-In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor has autonomously completed 15 milestones (213+ experiments) with automatic milestone archival and transition.
+In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 16-milestone, 228+ experiment program with automatic milestone archival and transition.
 
 The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.
 
@@ -938,3 +945,19 @@ amplify, while being transparent about the 67% of errors that require richer sem
 **Result:** Exp 210 recorded **10** core papers, **8** benchmark assets, and **5** chain-of-thought monitorability-risk papers. The strongest direct fit is a prompt-to-constraint intermediate representation backed by solvers (for example `NSVIF`, `ConstraintLLM`, and `DeCRIM`), and the recommended execution order for the next milestone is **`EXP-211 -> EXP-213 -> EXP-212`**.
 
 **Finding:** Carnot's next constraint-extraction step should not rely on raw chain-of-thought as the only evidence channel. The most promising path is to extract a structured intermediate representation first, then verify or repair against that representation while treating chain-of-thought as optional supporting evidence.
+
+### 19.5 Property-Based Code Verification at Scale (Experiments 220, 226, and 227)
+
+**Setup:** Scale the additive Hypothesis-backed verifier from the paired **50**-problem dual-model slice (Exp 220) to the full **164**-problem Gemma4-E4B-it HumanEval contract (Exp 226), then rerun the same approach on live `Qwen/Qwen3.5-0.8B` while reusing the exact ordered **30**-problem Exp 208 cohort for an honest same-cohort comparison (Exp 227). All three artifacts stay in `live_gpu` mode.
+
+**Result:** Exp 220 shows that PBT detects **144/145 = 99.3%** of wrong code across the paired live slice and yields **+2.0pp** on both Qwen and Gemma. Exp 226 scales the path to full HumanEval: Gemma4-E4B-it improves from **19/164 = 11.6%** to **24/164 = 14.6%**, a paired delta of **+3.0pp** [**+0.6pp**, **+6.1pp**], with **6** official-test misses caught beyond the harness and **5/145** failing baselines repaired. Exp 227 is the honest cross-model follow-up: Qwen3.5-0.8B stays flat at **7/30 = 23.3%** before and after repair, but verify-only still detects **17/23** wrong baselines and catches **2** official-test misses that the weak harness alone would have accepted.
+
+**Finding:** PBT is now Carnot's strongest verified code path. The key value is not just repair delta; it is surfacing under-specified bugs that execution-only evaluation misses. Exp 227 matters because it shows the additive verifier signal survives cross-model transfer even when repair yield remains model- and prompt-quality-limited.
+
+### 19.6 KV260 FPGA Ising Design and Software-Model Benchmark (Experiment 228)
+
+**Setup:** Define a KV260-class sparse Ising backend with runtime coupling uploads, an AXI-Lite register map, and a software transport that exercises the same upload, trigger, and readback path as a future PYNQ overlay. The target contract is **32** tiles × **128** spins per tile = **4096** spins.
+
+**Result:** Exp 228 adds the checked-in design doc plus `FPGAIsingSampler`, `SoftwareFPGAOverlay`, sparse Q8.8 upload compilation, and CPU fallback. On the local software-model benchmark for a sparse **128**-spin problem, the control-path timing is **0.824549 s** for `fpga_sim` versus **0.288092 s** for the CPU backend. Provenance is **software simulation**: this validates the MMIO/control contract, not synthesized hardware throughput.
+
+**Finding:** The value of Exp 228 is interface and deployment readiness, not a premature speed claim. The software model proves that Carnot can preserve one host/backend contract across CPU fallback, simulated FPGA transport, and a future real KV260 overlay once the bitstream exists.
