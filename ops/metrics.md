@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Fix Test Failures (Exp 247 Provenance Count)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T14:46:54Z | TBD | Fixed test failure: `test_public_docs_disclose_current_provenance_inventory` was checking for 73 unverified artifacts but Exp 247 added a 74th. Updated README.md, docs/technical-report.md (2 locations), and docs/index.html to reflect 74 unverified + 91 total artifacts. Reran test suite. | TBD |
+
+### Session Summary
+
+- 1 failed test fixed: all tests now pass with 100% coverage.
+
 ## Session: 2026-04-13 VERIFY-058 Formal Claim Verifier
 
 ### Turn Log

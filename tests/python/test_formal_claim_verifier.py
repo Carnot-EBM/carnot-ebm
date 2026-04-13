@@ -796,3 +796,80 @@ class TestPipelineIntegration:
         result = pipeline.verify_formal_claims(raw_claims)
         j = result.to_json()
         assert json.loads(j)  # valid JSON
+
+
+# ---------------------------------------------------------------------------
+# Module-level API and edge cases
+# ---------------------------------------------------------------------------
+
+
+class TestModuleLevelAPI:
+    """Test the public module-level verify_formal_claims function."""
+
+    def test_verify_formal_claims_module_function(self) -> None:
+        """Test the public module-level function."""
+        raw_claims = [_arithmetic_claim("c1")]
+        result = fcv.verify_formal_claims(raw_claims)
+        assert isinstance(result, FormalClaimBatchResult)
+        assert len(result.verdicts) == 1
+        assert result.verdicts[0].verdict == "supported"
+
+    def test_comparison_between_with_insufficient_operands(self) -> None:
+        """Comparison 'between' route with <3 operands should abstain."""
+        claim = _comparison_claim(
+            relation_type="between",
+            operands=[1.0, 2.0],  # Only 2, need 3
+        )
+        normalized = normalize_claim(claim)
+        verifier = FormalClaimVerifier()
+        verdict = verifier.verify_claim(normalized)
+        assert verdict.verdict == "abstain"
+
+    def test_comparison_lt_with_insufficient_operands(self) -> None:
+        """Comparison 'less_than' route with <2 operands should abstain."""
+        claim = _comparison_claim(
+            relation_type="less_than",
+            operands=[1.0],  # Only 1, need 2
+        )
+        normalized = normalize_claim(claim)
+        verifier = FormalClaimVerifier()
+        verdict = verifier.verify_claim(normalized)
+        assert verdict.verdict == "abstain"
+
+    def test_comparison_gt_with_insufficient_operands(self) -> None:
+        """Comparison 'greater_than' route with <2 operands should abstain."""
+        claim = _comparison_claim(
+            relation_type="greater_than",
+            operands=[1.0],  # Only 1, need 2
+        )
+        normalized = normalize_claim(claim)
+        verifier = FormalClaimVerifier()
+        verdict = verifier.verify_claim(normalized)
+        assert verdict.verdict == "abstain"
+
+    def test_unknown_comparison_relation_abstains(self) -> None:
+        """Unknown comparison relation_type should abstain."""
+        claim = _comparison_claim(relation_type="unknown_op")
+        normalized = normalize_claim(claim)
+        verifier = FormalClaimVerifier()
+        verdict = verifier.verify_claim(normalized)
+        assert verdict.verdict == "abstain"
+
+    def test_cardinality_between_with_insufficient_operands(self) -> None:
+        """Cardinality 'between' route with <3 operands should abstain."""
+        claim = _cardinality_claim(
+            relation_type="between",
+            operands=[1.0, 2.0],  # Only 2, need 3
+        )
+        normalized = normalize_claim(claim)
+        verifier = FormalClaimVerifier()
+        verdict = verifier.verify_claim(normalized)
+        assert verdict.verdict == "abstain"
+
+    def test_set_membership_not_contains_abstains(self) -> None:
+        """Set membership 'not_contains' relation should abstain (cannot scan text)."""
+        claim = _set_membership_claim(relation_type="not_contains")
+        normalized = normalize_claim(claim)
+        verifier = FormalClaimVerifier()
+        verdict = verifier.verify_claim(normalized)
+        assert verdict.verdict == "abstain"
