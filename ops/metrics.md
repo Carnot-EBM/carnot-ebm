@@ -1,5 +1,18 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 VERIFY-039 Learned Self-Learning Policy Compiler
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T07:47:58Z | 2026-04-13T08:09:25Z | VERIFY-039: extended `verifiable-reasoning` with `REQ-VERIFY-052` / `REQ-VERIFY-053` plus `SCENARIO-VERIFY-056` through `SCENARIO-VERIFY-059`, wrote `tests/python/test_self_learning_policy.py` first, implemented `python/carnot/pipeline/self_learning_policy.py` plus the public pipeline exports, reconciled traceability/status/changelog, and reran targeted 100% module coverage, changed-file Ruff + mypy + spec coverage, the full Python suite, the standard E2E trio, and reconciliation validation. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
 ## Session: 2026-04-13 VERIFY-034 Exp 235 Live GSM8K Semantic Benchmark V2
 
 ### Turn Log

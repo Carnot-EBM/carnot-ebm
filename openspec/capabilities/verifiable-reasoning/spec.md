@@ -1352,6 +1352,77 @@ The same module and replay path shall support additive case retrieval, where:
 **And** the existing replay outputs remain backward compatible for callers that
   do not inspect the new case-memory details
 
+### REQ-VERIFY-052: Self-Learning Policy Compiler And Provenance-Bearing Update Schema
+
+The repository shall provide a learned self-learning policy compiler in
+`python/carnot/pipeline/self_learning_policy.py`, where:
+- accepted repair snippets and high-precision case-memory evidence are compiled
+  into deterministic policy updates rather than free-form prose advice
+- the compiled update types include at least verifier-threshold overrides,
+  property-budget updates, repair-prompt patches, and routing hints
+- every compiled update records explicit provenance back to the source repair
+  snippet, case-memory entry, or tracker snapshot that justified the update
+- compilation remains deterministic for the same case-memory entries, accepted
+  repairs, and tracker statistics, including stable update identifiers and
+  ordering
+- the module exposes deterministic serialization helpers so compiled policy
+  updates round-trip without losing evidence, support counts, or provenance
+
+### REQ-VERIFY-053: Machine-Readable Policy Artifact And Additive Runtime Context
+
+The same module shall expose a machine-readable policy artifact plus additive
+runtime integration helpers, where:
+- the compiled artifact records fixed run-date metadata `20260413`, summary
+  counts, and deterministic lists of the compiled update types
+- the artifact stays small and machine-readable so later replay or benchmark
+  workflows can load it without depending on raw benchmark result schemas
+- additive runtime helpers can combine compiled policy updates with the current
+  `ConstraintTracker` statistics and `CaseMemory` retrieval results without
+  replacing either path
+- the additive runtime context reports which tracker signals, case-memory
+  matches, and compiled policy updates were active for a given query shape
+- callers that ignore the new policy artifact or runtime helpers continue to
+  work unchanged
+
+### SCENARIO-VERIFY-056: High-Precision Cases Compile Into Deterministic Policy Updates
+
+**Given** a case memory containing high-confidence semantic and code cases with
+  repeated support
+**When** the self-learning policy compiler runs over those entries
+**Then** it emits deterministic verifier-threshold overrides, property-budget
+  updates, and routing hints keyed to the specific model and benchmark slice
+**And** each compiled update records the support, confidence, and source case
+  provenance that justified it
+
+### SCENARIO-VERIFY-057: Accepted Repairs Become Reusable Prompt Patches
+
+**Given** accepted repair snippets derived from repeated live repair histories
+**When** the self-learning policy compiler consolidates them
+**Then** it emits deterministic repair-prompt patches with support counts,
+  observed success rates, and provenance back to the source repair histories
+**And** the resulting patch artifact remains machine-readable for later replay
+  work
+
+### SCENARIO-VERIFY-058: Policy Artifact Serialization Round-Trips Deterministically
+
+**Given** a compiled self-learning policy containing all supported update types
+**When** it is serialized and loaded again
+**Then** the run-date metadata, update ordering, support counts, and provenance
+  records round-trip without duplication or order drift
+**And** later runtime lookups over the restored artifact yield the same matched
+  policy updates
+
+### SCENARIO-VERIFY-059: Runtime Policy Context Stays Additive To Tracker And Memory
+
+**Given** an existing `ConstraintTracker`, additive `CaseMemory`, and a compiled
+  self-learning policy artifact
+**When** runtime context is requested for a new query shape
+**Then** the returned context preserves the current tracker statistics and
+  case-memory matches
+**And** it adds any matching threshold overrides, property-budget updates,
+  repair-prompt patches, and routing hints without replacing the original paths
+**And** callers can explain which sources drove the final policy context
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1407,4 +1478,6 @@ The same module and replay path shall support additive case retrieval, where:
 | REQ-VERIFY-049 | Not Started | Implemented | Exp 235 comparison summary + blocker reporting tests |
 | REQ-VERIFY-050 | Not Started | Implemented | Case memory normalization + serialization tests |
 | REQ-VERIFY-051 | Not Started | Implemented | Case memory retrieval + replay integration tests |
+| REQ-VERIFY-052 | Not Started | Implemented | Self-learning policy compilation + provenance tests |
+| REQ-VERIFY-053 | Not Started | Implemented | Self-learning policy serialization + additive runtime-context tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
