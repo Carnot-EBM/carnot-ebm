@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-04-13 (docs provenance inventory sync)
+
+- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, `docs/index.html`, and `ops/status.md` — Synced the public provenance inventory to the checked-in `results/experiment_*_results.json` audit after the result set shifted again. The current public snapshot now reads **90** audited artifacts with **13** live GPU, **3** simulated, **73** unverified, and **1** software-model artifact, which fixes the stale `2 simulated / 74 unverified` copy that was breaking `tests/python/test_docs.py` under `REQ-REPORT-003` and `REQ-REPORT-004`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+- Validation — Focused docs regression passed via `JAX_PLATFORMS=cpu .venv/bin/pytest -o addopts='' tests/python/test_docs.py -q --no-cov -n 0` → `5 passed in 1.19s`. Required full-suite validation passed via `JAX_PLATFORMS=cpu .venv/bin/pytest tests/python --tb=short -q` → `2241 passed, 1 skipped, 22 warnings`, repo coverage `100.00%`. Spec coverage passed via `JAX_PLATFORMS=cpu .venv/bin/python scripts/check_spec_coverage.py` → `OK: All tests reference specification requirements.` Final reconciliation passed via `bash scripts/validate-reconciliation.sh` → `Reconciliation: all checks passed.` No item in `ops/e2e-test-plan.md` directly applies to this docs-only provenance-copy sync. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+
 ## 2026-04-13 (docs milestone count reconciliation)
 
 - `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, `docs/index.html`, and `ops/status.md` — Synced the public reporting copy to the current `research-complete.yaml` total of **23** milestones so the docs regression suite no longer compared against stale `22`-milestone text. This keeps the public README, landing page, rendered report, and operational handoff aligned under `REQ-REPORT-003` and `REQ-REPORT-004`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
