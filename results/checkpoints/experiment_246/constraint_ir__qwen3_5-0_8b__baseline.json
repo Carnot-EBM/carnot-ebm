@@ -413,6 +413,769 @@
       "prompt_tokens": 24,
       "response_tokens": 110,
       "total_tokens": 134
+    },
+    "exp211-instruction-two-sentence-2": {
+      "case_id": "exp211-instruction-two-sentence-2",
+      "mode": "baseline",
+      "response": "The owner of the property is Priya, and the specific location remains open question regarding the exact boundaries.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 3.478,
+      "prompt_tokens": 31,
+      "response_tokens": 18,
+      "total_tokens": 49
+    },
+    "exp211-code-slugify-2": {
+      "case_id": "exp211-code-slugify-2",
+      "mode": "baseline",
+      "response": "```python\ndef slugify_filename(name: str) -> str:\n    \"\"\"\n    Converts a filename to a slug by:\n    - Lowercasing ASCII letters\n    - Keeping digits\n    - Converting spaces to dashes\n    - Stripping leading and trailing dashes\n    - Dropping other punctuation\n    \"\"\"\n    # Convert to lowercase\n    name = name.lower()\n    \n    # Replace spaces with a single dash\n    name = name.replace(\" \", \"-\")\n    \n    # Strip leading and trailing dashes\n    name = name.strip(\"-\")\n    \n    # Drop other punctuation (keep only letters, digits, and hyphens)\n    name = re.sub(r\"[^a-z0-9-]\", \"\", name)\n    \n    return name\n```\n\n**Example usage:**\n```python\nprint(slugify_filename(\"my_file.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 36.761,
+      "prompt_tokens": 24,
+      "response_tokens": 105,
+      "total_tokens": 129
+    },
+    "exp211-instruction-rewrite-2": {
+      "case_id": "exp211-instruction-rewrite-2",
+      "mode": "baseline",
+      "response": "The vendor delay is a total mess, but we have a backup supplier ready.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "observed=0.0 not in [25.0, 32.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 2.647,
+      "prompt_tokens": 39,
+      "response_tokens": 14,
+      "total_tokens": 53
+    },
+    "exp211-code-dedupe-3": {
+      "case_id": "exp211-code-dedupe-3",
+      "mode": "baseline",
+      "response": "```python\ndef dedupe_tuples(items: list[tuple[int, int]]) -> list[tuple[int, int]]:\n    \"\"\"\n    Remove repeated tuples while keeping the first occurrence of each tuple in order.\n\n    Parameters\n    ----------\n    items : list[tuple[int, int]]\n        List of tuples to deduplicate.\n\n    Returns\n    -------\n    list[tuple[int, int]]\n        List of unique tuples, preserving the order of first appearance.\n    \"\"\"\n    seen = set()\n    result = []\n    for item in items:\n        key = tuple(item)\n        if key not in seen:\n            seen.add(key)\n            result.append(item)\n    return result\n```\n\nExample usage:\n\n```python\nitems = [(1, 2), (1, 2), (3, 4), (2, 3), (1, 2)]\ndeduped = dedupe_tuples(items)\nprint(deduped)\n# Output: [(1, 2), (3, 4), (2, 3)]\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 48.848,
+      "prompt_tokens": 24,
+      "response_tokens": 99,
+      "total_tokens": 123
+    },
+    "exp211-code-roman-3": {
+      "case_id": "exp211-code-roman-3",
+      "mode": "baseline",
+      "response": "```python\ndef is_valid_roman(text: str) -> bool:\n    \"\"\"\n    Returns True only for uppercase Roman numerals in canonical subtractive notation.\n    Examples:\n        is_valid_roman(\"I\")  -> True\n        is_valid_roman(\"II\") -> True\n        is_valid_roman(\"III\") -> True\n        is_valid_roman(\"IV\")  -> True\n        is_valid_roman(\"V\")   -> True\n        is_valid_roman(\"IX\")  -> True\n        is_valid_roman(\"X\")   -> True\n        is_valid_roman(\"L\")   -> True\n        is_valid_roman(\"C\")   -> True\n        is_valid_roman(\"D\")   -> True\n        is_valid_roman(\"M\")   -> True\n        is_valid_roman(\"XV\")  -> True\n        is_valid_roman(\"LX\")  -> True\n        is_valid_roman(\"XC\")  -> True\n        is_valid_roman(\"XL\")  -> True\n        is_valid_roman(\"CD\")  -> True\n        is_valid_roman(\"CM\")  -> True\n        is_valid_roman(\"IXI\") -> False  (",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 63.502,
+      "prompt_tokens": 17,
+      "response_tokens": 74,
+      "total_tokens": 91
+    },
+    "exp211-code-roman-2": {
+      "case_id": "exp211-code-roman-2",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import Union\n\ndef from_roman(text: str) -> int:\n    \"\"\"\n    Convert uppercase Roman numerals to an integer.\n    \n    Args:\n        text: A string containing only uppercase Roman numerals.\n        \n    Returns:\n        The integer value of the Roman numeral.\n        \n    Raises:\n        ValueError: If the input contains invalid Roman numerals.\n    \"\"\"\n    # Valid Roman numerals in order (descending)\n    ROMAN_VALUES = [\n        1000, 900, 500, 400, 100, 90, 50, 40, 10, 9,\n        5, 4, 3, 2, 1\n    ]\n    \n    # Mapping of Roman characters to their values\n    ROMAN_MAP = {\n        'I': 1, 'V': 5, 'X': 10, 'L': 50,\n        'C': 100, 'D': 500, 'M': 1000\n    }\n    \n    # Check if input is empty",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 55.913,
+      "prompt_tokens": 18,
+      "response_tokens": 103,
+      "total_tokens": 121
+    },
+    "exp211-instruction-negation-3": {
+      "case_id": "exp211-instruction-negation-3",
+      "mode": "baseline",
+      "response": "Based on the criteria provided, we need to filter vendors that are **NOT** provisional AND **NOT** missing security review.\n\nLet's analyze each vendor:\n*   **v1**: provisional (FAIL)\n*   **v2**: provisional (FAIL)\n*   **v3**: approved (PASS), review missing (FAIL)\n*   **v4**: approved (PASS), review done (PASS)\n\nThe only vendor that meets both conditions (approved AND review done) is **v4**.\n\n**v4**",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 22.935,
+      "prompt_tokens": 44,
+      "response_tokens": 59,
+      "total_tokens": 103
+    },
+    "exp211-code-groupby-1": {
+      "case_id": "exp211-code-groupby-1",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import List, Dict\n\ndef group_by_team(rows: List[Dict[str, str]]) -> Dict[str, List[Dict[str, str]]]:\n    \"\"\"\n    Groups rows by the team key while preserving input order within each group.\n\n    Args:\n        rows: A list of dictionaries, each containing a 'team' key.\n\n    Returns:\n        A dictionary mapping team names to lists of rows, preserving order within each team.\n    \"\"\"\n    return {team: rows_for_team(team) for team in rows}\n\ndef rows_for_team(team: str) -> List[Dict[str, str]]:\n    \"\"\"Helper to return rows for a given team.\"\"\"\n    return [row for row in rows if row.get('team') == team]\n```\n\nThis function:\n- Iterates over the input list `rows`.\n- Groups rows by the `'team'` key.\n- Preserves the original order of rows within each group.\n- Returns a dictionary where the keys are team names and the values are lists of rows for that team.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 33.428,
+      "prompt_tokens": 22,
+      "response_tokens": 133,
+      "total_tokens": 155
+    },
+    "exp211-instruction-grounded-3": {
+      "case_id": "exp211-instruction-grounded-3",
+      "mode": "baseline",
+      "response": "S1, S4",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.56,
+      "prompt_tokens": 58,
+      "response_tokens": 2,
+      "total_tokens": 60
+    },
+    "exp211-code-slugify-3": {
+      "case_id": "exp211-code-slugify-3",
+      "mode": "baseline",
+      "response": "```python\ndef slugify_tag(label: str) -> str:\n    \"\"\"\n    Convert a label to a lowercase ASCII slug using underscores.\n    \n    Args:\n        label (str): The input string to slugify.\n    \n    Returns:\n        str: A lowercase slug joined with underscores.\n    \"\"\"\n    return label.lower().replace('-', '_')\n```\n\nThis function:\n1. Converts the input to lowercase.\n2. Replaces any hyphens (`-`) with underscores (`_`).\n3. Returns the resulting slug.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 28.19,
+      "prompt_tokens": 17,
+      "response_tokens": 59,
+      "total_tokens": 76
+    },
+    "exp211-live-gsm8k-506": {
+      "case_id": "exp211-live-gsm8k-506",
+      "mode": "baseline",
+      "response": "To calculate the total cost, we can break the problem down into two steps: determining the total number of snowshoes needed and then multiplying by the cost per pair.\n\n### Step 1: Calculate the total number of snowshoes\n*   **Number of dogs:** Mario has 6 sled dogs.\n*   **Legs per dog:** Each dog has 4 legs.\n*   **Total legs:** $6 \\text{ dogs} \\times 4 \\text{ legs/dog} = 24 \\text{ legs}$.\n*   **Snowshoes per leg:** Each pair of snowshoes supports two legs.\n*   **Total pairs of snowshoes:** $24 \\text{ legs} \\div 2 \\text{ legs/pair} = 12 \\text{ pairs}$.\n\n### Step 2: Calculate the total cost\n*   **Cost per pair:** $12.00 per pair.\n*   **Total cost:** $12 \\text{ pairs} \\times \\$12.00/\\text{pair} = \\$144.00$.\n\n### Conclusion\nIt will cost Mario **$144.00** to",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 61.412,
+      "prompt_tokens": 38,
+      "response_tokens": 129,
+      "total_tokens": 167
+    },
+    "exp211-code-phone-2": {
+      "case_id": "exp211-code-phone-2",
+      "mode": "baseline",
+      "response": "```python\ndef normalize_ext_phone(text: str) -> tuple[str, str | None]:\n    \"\"\"\n    Normalize a phone number by:\n      1. Removing any leading/trailing whitespace.\n      2. Removing any non-digit characters.\n      3. Removing any non-digit characters that are not digits (e.g., spaces, hyphens, underscores).\n      4. Converting the result to uppercase.\n      5. Removing any leading zeros.\n      6. Returning the normalized 10-digit number and an optional extension.\n    \"\"\"\n    # Step 1: Remove whitespace\n    text = text.strip()\n    if not text:\n        return \"\", None\n\n    # Step 2: Remove non-digit characters\n    text = ''.join(c for c in text if c.isdigit())\n\n    # Step 3: Remove non-digit characters that are not digits (e.g., spaces, hyphens, underscores)\n    text = ''.join(c for c in text if c.isdigit())\n\n    # Step 4: Convert to uppercase\n    text = text.upper()\n\n    # Step 5: Remove leading zeros\n    text = text.lstrip('0')",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 56.946,
+      "prompt_tokens": 21,
+      "response_tokens": 130,
+      "total_tokens": 151
+    },
+    "exp211-instruction-grounded-2": {
+      "case_id": "exp211-instruction-grounded-2",
+      "mode": "baseline",
+      "response": "B3",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.542,
+      "prompt_tokens": 51,
+      "response_tokens": 1,
+      "total_tokens": 52
+    },
+    "exp211-live-gsm8k-515": {
+      "case_id": "exp211-live-gsm8k-515",
+      "mode": "baseline",
+      "response": "To find the profit Tara earned, we need to calculate the total revenue and subtract the total cost.\n\n### Step 1: Calculate the Total Cost\nFirst, determine the total cost of the bags based on the price per bag and the number of bags.\n*   **Price per bag:** $4\n*   **Number of bags:** 8 packs $\\times$ 5 bags/pack = 40 bags\n*   **Total Cost:** $4 \\times 40 = \\$160$\n\n### Step 2: Calculate the Total Revenue\nNext, determine the total earnings from selling the bags.\n*   **Price per bag:** $8\n*   **Number of bags:** 40 bags\n*   **Total Revenue:** $8 \\times 40 = \\$320$\n\n### Step 3: Calculate the Profit\nFinally, subtract the total cost from the total revenue to find the profit.\n*   **Profit:** Total Revenue - Total Cost\n*   **Profit:** $\\$320 - \\$160 = \\$160$\n\n### Conclusion\nTara earned a profit of **$160**.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 49.929,
+      "prompt_tokens": 33,
+      "response_tokens": 145,
+      "total_tokens": 178
+    },
+    "exp211-instruction-plan-1": {
+      "case_id": "exp211-instruction-plan-1",
+      "mode": "baseline",
+      "response": "1. **Gather Baseline Metrics**\n   Establish current performance data, user engagement rates, and system load before any changes are introduced. This ensures that the rollout is grounded in existing data rather than assumptions.\n\n2. **Stage the Change**\n   Implement the new functionality or process incrementally, starting with a small subset of users or a specific department to minimize risk and allow for immediate feedback.\n\n3. **Validate the Result**\n   Monitor the new system or process closely to confirm it meets the defined goals and performance targets before full-scale deployment.\n\n4. **Rollback**\n   If validation fails or issues arise, immediately revert the change to the previous state to prevent potential data loss or service disruption.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=4.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 0,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 20.997,
+      "prompt_tokens": 34,
+      "response_tokens": 110,
+      "total_tokens": 144
+    },
+    "exp211-live-gsm8k-814": {
+      "case_id": "exp211-live-gsm8k-814",
+      "mode": "baseline",
+      "response": "To find the total money used, we need to calculate the cost for each friend individually and then sum them up.\n\n### Step 1: Calculate the cost for each friend\n\nThe cost is calculated as:\n$$ \\text{Cost} = \\text{Time} \\times \\text{Rate} $$\n\n**1. Jack's Friend (The \"Significantly Worse\" Friend)**\n*   **Time:** 20 minutes\n*   **Rate:** 1 quarter per 20 minutes\n*   **Calculation:**\n    $$ 1 \\text{ quarter} \\times 20 \\text{ minutes} = 1 \\text{ quarter} $$\n*   **Cost:** **1 quarter**\n\n**2. Jack's Friend (The \"Significantly Better\" Friend)**\n*   **Time:** 4 hours\n*   **Rate:** 1.5 times as long as the other friend\n*   **Calculation:**\n    First, convert the time to minutes:\n    $$ 4 \\text{ hours} \\times 60 \\text{ minutes/hour} = 240 \\text{ minutes} $$\n    Now, apply the multiplier:\n    $$ 240",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 37.094,
+      "prompt_tokens": 65,
+      "response_tokens": 127,
+      "total_tokens": 192
+    },
+    "exp211-code-phone-1": {
+      "case_id": "exp211-code-phone-1",
+      "mode": "baseline",
+      "response": "```python\ndef normalize_us_phone(text: str) -> str:\n    \"\"\"\n    Normalize a US phone number to the format 555-123-4567.\n\n    Raises ValueError if the input does not contain exactly 10 digits.\n    \"\"\"\n    if not text:\n        raise ValueError(\"Input must be a non-empty string.\")\n\n    # Check for exactly 10 digits\n    if len(text) != 10:\n        raise ValueError(\"Input must contain exactly 10 digits.\")\n\n    # Extract digits\n    digits = [int(c) for c in text]\n\n    # Split into groups of 3\n    groups = [digits[i:i+3] for i in range(0, len(digits), 3)]\n\n    # Convert each group to a string and join\n    return \"-\".join(str(x) for x in groups)\n\n\n# Example usage:\nif __name__ == \"__main__\":\n    print(normalize_us_phone(\"555-123-4567\"))  # Output: 555-123-4567\n    print(normalize_us_phone(\"555-1",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.603,
+      "prompt_tokens": 26,
+      "response_tokens": 107,
+      "total_tokens": 133
+    },
+    "exp211-instruction-rewrite-1": {
+      "case_id": "exp211-instruction-rewrite-1",
+      "mode": "baseline",
+      "response": "The API freeze remains active, and the Friday deploy remains unchanged.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "observed=0.0 not in [25.0, 32.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 2.258,
+      "prompt_tokens": 43,
+      "response_tokens": 11,
+      "total_tokens": 54
+    },
+    "exp211-instruction-plan-2": {
+      "case_id": "exp211-instruction-plan-2",
+      "mode": "baseline",
+      "response": "1. **Inventory Dependencies**\n   List all external systems, third-party integrations, and legacy data sources that the new application requires. Identify any critical business logic or data flows that must remain unchanged during the transition.\n\n2. **Create a Dry Run**\n   Simulate the migration by temporarily modifying the source code or configuration files without making any changes to the live environment. Execute the new logic and verify that it functions correctly in a controlled environment before applying it to production.\n\n3. **Execute the Change**\n   Roll out the updated code, configuration, and data pipelines to the production environment. Ensure that all critical services are active and that no manual intervention is required to complete the deployment.\n\n4. **Define Rollback**\n   Document the exact steps to revert the change if the migration fails or if a critical issue is detected. Include specific error codes, configuration keys, and data points that must be restored to the previous state.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=4.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 0,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 23.585,
+      "prompt_tokens": 33,
+      "response_tokens": 151,
+      "total_tokens": 184
+    },
+    "exp211-code-csv-3": {
+      "case_id": "exp211-code-csv-3",
+      "mode": "baseline",
+      "response": "```python\ndef parse_flag_row(row: str) -> dict[str, bool | str]:\n    \"\"\"\n    Parses a row string containing key order name, enabled, and owner.\n    Returns a dictionary mapping key names to their boolean values or strings.\n    \"\"\"\n    # Extract key order name\n    key_order_name = row.split()[0]\n    \n    # Extract enabled value\n    enabled = row.split()[1]\n    \n    # Extract owner\n    owner = row.split()[2]\n    \n    # Convert enabled to bool\n    enabled_bool = enabled.lower() == 'true'\n    \n    return {\n        key_order_name: enabled_bool,\n        owner: owner\n    }\n```\n\nThis function:\n- Splits the input string by whitespace to extract each field\n- Returns a dictionary with the parsed key order name and its boolean value (converted from \"true\"/\"false\")\n- Preserves the owner field as-is",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 24.589,
+      "prompt_tokens": 25,
+      "response_tokens": 109,
+      "total_tokens": 134
+    },
+    "exp211-code-intervals-3": {
+      "case_id": "exp211-code-intervals-3",
+      "mode": "baseline",
+      "response": "```python\ndef insert_interval(intervals: list[tuple[int, int]], new_interval: tuple[int, int]) -> list[tuple[int, int]]:\n    \"\"\"\n    Inserts one closed interval into a sorted non-overlapping list and merges as needed.\n\n    Parameters\n    ----------\n    intervals : list[tuple[int, int]]\n        List of closed intervals (start, end).\n    new_interval : tuple[int, int]\n        New interval to insert.\n\n    Returns\n    -------\n    list[tuple[int, int]]\n        New list with the new interval inserted and any necessary merges.\n    \"\"\"\n    if not intervals:\n        return [new_interval]\n\n    # Sort intervals by start time\n    sorted_intervals = sorted(intervals, key=lambda x: x[0])\n\n    # Find the position to insert\n    # We want to insert after the interval with the largest start time that is <= new_interval.start\n    # and before the interval with the smallest start time that is > new_interval.start.\n    # Since we need non-overlapping, we insert after the last interval with start <= new_interval.start.\n\n    # Find the last interval with start <= new_interval.start\n    last",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 33.428,
+      "prompt_tokens": 24,
+      "response_tokens": 140,
+      "total_tokens": 164
+    },
+    "exp211-instruction-negation-1": {
+      "case_id": "exp211-instruction-negation-1",
+      "mode": "baseline",
+      "response": "Based on the criteria provided (servers that are **NOT** in maintenance AND **NOT** in the eu-west region), here is the analysis:\n\n1.  **srv-a**: Active, us-east.\n    *   Status: Not in maintenance.\n    *   Region: Not eu-west.\n    *   **Match**: Yes.\n2.  **srv-b**: Maintenance, us-east.\n    *   Status: **In maintenance**.\n    *   **Match**: No.\n3.  **srv-c**: Active, eu-west.\n    *   Status: **In eu-west region**.\n    *   **Match**: No.\n4.  **srv-d**: Active, ap-south.\n    *   Status: Not in maintenance.\n    *   Region: Not eu-west.\n    *   **Match**: Yes.\n\nThe matching server IDs are:\n**srv-a, srv-d**",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 25.576,
+      "prompt_tokens": 42,
+      "response_tokens": 83,
+      "total_tokens": 125
+    },
+    "exp211-code-rolling-1": {
+      "case_id": "exp211-code-rolling-1",
+      "mode": "baseline",
+      "response": "```python\ndef rolling_average(values: list[float], window: int) -> list[float]:\n    \"\"\"\n    Returns the average of every full sliding window of size `window` in O(n) time.\n    \n    Time complexity: O(n)\n    Space complexity: O(n) for the result list (can be reduced to O(1) with a deque,\n                       but the problem asks for O(n) time, so we return the full list).\n    \n    Parameters:\n        values (list[float]): The input list of values.\n        window (int): The size of the sliding window.\n    \n    Returns:\n        list[float]: A list of averages for each window.\n    \"\"\"\n    if not values or window <= 0:\n        return []\n\n    n = len(values)\n    result = []\n\n    # Initialize first window\n    first_window = values[:window]\n    first_avg = sum(first_window) / window\n    result.append(first_avg)\n\n    # Process remaining windows\n    for i in range(window, n):\n        # Remove the element leaving the window\n        first_window.pop(0)\n        first_avg = sum(first_window) / window\n\n        # Add",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.723,
+      "prompt_tokens": 19,
+      "response_tokens": 132,
+      "total_tokens": 151
+    },
+    "exp211-code-intervals-2": {
+      "case_id": "exp211-code-intervals-2",
+      "mode": "baseline",
+      "response": "```python\ndef merge_touching_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:\n    \"\"\"\n    Merges intervals that overlap or touch at a boundary.\n    \n    Parameters:\n        intervals: list of (start, end) tuples\n    \n    Returns:\n        list of (start, end) tuples after merging overlapping/touching intervals.\n    \"\"\"\n    if not intervals:\n        return []\n\n    # Sort by start time\n    intervals.sort(key=lambda x: x[0])\n\n    merged = []\n    current_start, current_end = intervals[0]\n\n    for start, end in intervals[1:]:\n        # If this interval overlaps or touches the current merged interval\n        if start <= current_end:\n            # Extend current interval\n            current_end = max(current_end, end)\n        else:\n            # New merged interval\n            merged.append((current_start, current_end))\n            current_start, current_end = start, end\n\n    # Don't forget the last merged interval\n    merged.append((current_start, current_end))\n\n    return merged\n```\n\nExample usage:\n```python\nintervals = [(1,",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 54.905,
+      "prompt_tokens": 18,
+      "response_tokens": 114,
+      "total_tokens": 132
+    },
+    "exp211-live-gsm8k-943": {
+      "case_id": "exp211-live-gsm8k-943",
+      "mode": "baseline",
+      "response": "Here is the step-by-step breakdown to calculate the total money James spent.\n\n### Step 1: Calculate the Total Cost of the CDs\nFirst, determine the total cost of the 10 CDs before the discount.\n*   Number of CDs: 10\n*   Cost per CD: $\\$15$\n*   Total Cost = $10 \\times 15 = \\$150$\n\n### Step 2: Calculate the Discounted Price\nJames gets the CDs for 40% off.\n*   Discount Amount = $40\\% \\text{ of } \\$150$\n*   Discount Amount = $0.40 \\times 150 = \\$60$\n*   Discounted Price = Total Cost - Discount Amount\n*   Discounted Price = $\\$150 - \\$60 = \\$90$\n\n### Step 3: Calculate the Revenue from Selling\nJames sells the CDs for 40% of the discounted price.\n*   Revenue = $40\\% \\text{ of } \\$90$\n*   Revenue = $0.40 \\times 90 = \\$36$\n\n### Step 4",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 68.321,
+      "prompt_tokens": 34,
+      "response_tokens": 140,
+      "total_tokens": 174
+    },
+    "exp211-instruction-grounded-1": {
+      "case_id": "exp211-instruction-grounded-1",
+      "mode": "baseline",
+      "response": "P3, P1",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 2.69,
+      "prompt_tokens": 52,
+      "response_tokens": 2,
+      "total_tokens": 54
+    },
+    "exp211-instruction-bullets-3": {
+      "case_id": "exp211-instruction-bullets-3",
+      "mode": "baseline",
+      "response": "* We are seeking a senior software engineer to join our team.\n* The candidate will lead the frontend development team.\n* We are looking for a candidate with 5+ years of experience.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=3.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": "observed=0.0 not in [4.0, 7.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c6",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 6,
+      "n_supported": 3,
+      "n_violated": 2,
+      "n_abstained": 1,
+      "latency_seconds": 11.419,
+      "prompt_tokens": 26,
+      "response_tokens": 33,
+      "total_tokens": 59
+    },
+    "exp211-code-slugify-1": {
+      "case_id": "exp211-code-slugify-1",
+      "mode": "baseline",
+      "response": "```python\ndef slugify(text: str) -> str:\n    \"\"\"\n    Convert a string to a slug by:\n    - Lowercasing ASCII letters\n    - Replacing whitespace with a single hyphen\n    - Removing all punctuation\n    - Collapsing repeated hyphens into a single one\n    \"\"\"\n    # Step 1: Lowercase ASCII letters\n    text = text.lower()\n    \n    # Step 2: Replace whitespace with a single hyphen\n    text = text.replace(\" \", \"-\")\n    \n    # Step 3: Remove all punctuation\n    text = re.sub(r\"[^\\w\\s]\", \"\", text)\n    \n    # Step 4: Collapse repeated hyphens into a single one\n    text = re.sub(r\"-+\", \"-\", text)\n    \n    return text\n```\n\n**Example usage:**\n```python\nprint(slugify(\"hello world! 123\"))  # Output: \"hello-world-123\"\nprint(slugify(\"Hello World! 123\"))  # Output: \"hello-world-123\"\nprint(slugify(\"hello world! 123\"))  # Output: \"hello-world-123\"",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 57.51,
+      "prompt_tokens": 20,
+      "response_tokens": 111,
+      "total_tokens": 131
+    },
+    "exp211-instruction-decision-3": {
+      "case_id": "exp211-instruction-decision-3",
+      "mode": "baseline",
+      "response": "{\n  \"choice\": \"R1\",\n  \"evidence\": \"R1 has a higher domain fit (high) compared to R2 (medium), which aligns with the preference for higher domain fit.\"\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 10.652,
+      "prompt_tokens": 63,
+      "response_tokens": 25,
+      "total_tokens": 88
+    },
+    "exp211-live-gsm8k-796": {
+      "case_id": "exp211-live-gsm8k-796",
+      "mode": "baseline",
+      "response": "To calculate the total amount of money the company pays to its employees after three months, we can break the problem down into two steps: first, determine the total number of employees hired, and second, multiply that by the monthly salary.\n\n### Step 1: Calculate the Total Number of Employees\nThe company hires 20 new employees every month for 3 months.\n$$ \\text{Total Employees} = \\text{Monthly Hires} \\times \\text{Number of Months} $$\n$$ \\text{Total Employees} = 20 \\times 3 = 60 \\text{ employees} $$\n\n### Step 2: Calculate the Total Salary\nEach employee is paid a salary of $4,000 per month.\n$$ \\text{Total Salary} = \\text{Total Employees} \\times \\text{Monthly Salary} $$\n$$ \\text{Total Salary} = 60 \\times 4,000 $$\n$$ \\text{Total Salary} = 240,000 $$\n\n### Conclusion\nThe company pays a total of **$240,000** to its employees after three months.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 37.981,
+      "prompt_tokens": 48,
+      "response_tokens": 140,
+      "total_tokens": 188
+    },
+    "exp211-instruction-sections-3": {
+      "case_id": "exp211-instruction-sections-3",
+      "mode": "baseline",
+      "response": "# Signal\nThe system detected a significant error spike during the initial data ingestion phase.\n\n# Risk\nA cache miss occurred while attempting to retrieve the latest configuration from the database.\n\n# Mitigation\nWe implemented a rollback switch to automatically revert the application to its previous state if the error persists.",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 3,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 9.459,
+      "prompt_tokens": 31,
+      "response_tokens": 51,
+      "total_tokens": 82
+    },
+    "exp211-instruction-sections-2": {
+      "case_id": "exp211-instruction-sections-2",
+      "mode": "baseline",
+      "response": "### Context\nThe migration window is critical to ensure a smooth transition without interruption.\n\n### Constraint\nNo downtime will occur during the execution of the migration process.\n\n### Action\nExecute the dry run first to validate the plan before proceeding.",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 3,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 8.033,
+      "prompt_tokens": 31,
+      "response_tokens": 40,
+      "total_tokens": 71
+    },
+    "exp211-code-config-2": {
+      "case_id": "exp211-code-config-2",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import Any, Dict, Optional\n\ndef load_retry_config(env: Dict[str, str]) -> Dict[str, int]:\n    \"\"\"\n    Load retry configuration from environment variables.\n    \n    Parameters:\n    env (Dict[str, str]): Environment variables containing config keys\n    \n    Returns:\n    Dict[str, int]: Configuration dictionary with retry settings\n    \"\"\"\n    config = {}\n    \n    # Check for RETRIES environment variable\n    if \"RETRIES\" in env:\n        try:\n            retries = int(env[\"RETRIES\"])\n            config[\"RETRIES\"] = retries\n        except ValueError:\n            config[\"RETRIES\"] = 3  # Default to 3 if invalid\n    \n    # Check for TIMEOUT environment variable\n    if \"TIMEOUT\" in env:\n        try:\n            timeout = int(env[\"TIMEOUT\"])\n            config[\"TIMEOUT\"] = timeout\n        except ValueError:\n            config[\"TIMEOUT\"] = 30  # Default to 30 if invalid\n    \n    return config\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.248,
+      "prompt_tokens": 21,
+      "response_tokens": 101,
+      "total_tokens": 122
     }
   }
 }
