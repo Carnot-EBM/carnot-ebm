@@ -25,7 +25,8 @@ The system shall encode Python function correctness constraints as energy terms:
 
 The system shall convert Python source code to a fixed-size embedding vector:
 - Uses stdlib `tokenize` to extract tokens from source
-- Maps token strings to indices via `hash(token) % vocab_size`
+- Maps token identities (token type + token string) to indices via
+  `hash(token_identity) % vocab_size`
 - Returns a frequency vector of shape `(vocab_size,)` with float32 dtype
 - Deterministic: same code always produces the same embedding
 - Different code produces different embeddings (with high probability)
@@ -358,6 +359,101 @@ and expose the spec-aware path additively:
   ranked repair hints, and the fixed corpus run-date metadata `20260413` when a
   checked-in explicit spec row is used
 
+### REQ-CODE-028: Identical-Stack Dual-Model HumanEval Cohort Reuse
+
+The repository shall provide an identical-stack dual-model HumanEval benchmark
+workflow for `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it`:
+- The workflow reuses one checked-in seeded 30-problem HumanEval cohort for
+  both models instead of sampling separate slices
+- The ordered case list, prompt text, official tests, entry point, and prompt
+  seeds are shared across both models so the paired comparison stays
+  apples-to-apples
+- Each model runs the same verifier stack in the same stage order: baseline,
+  official-tests verify-only, PBT verify-only, explicit-spec verify-only, and
+  verify-repair
+- The generation prompt format, repair prompt format, max token budget, and max
+  repair attempts stay identical across both model runs
+
+### REQ-CODE-029: Incremental Stage Summaries And Paired Model Comparison
+
+The identical-stack dual-model benchmark shall emit publishable per-model and
+cross-model summaries:
+- Each model summary reports baseline pass@1, official-tests verify-only
+  acceptance, PBT verify-only acceptance, explicit-spec verify-only
+  acceptance, verify-repair pass@1, and paired bootstrap confidence intervals
+  for the verify-repair minus baseline delta
+- The summary records official-test misses caught by PBT, explicit-spec
+  violations, and spec-only misses where the harness plus PBT still accepted
+  the candidate
+- The artifact includes an explicit same-cohort Gemma-vs-Qwen comparison block
+  with paired deltas and confidence intervals for baseline, verify-only, and
+  verify-repair outcomes plus paired outcome bucket counts
+- The comparison includes a concise methodology note stating that both models
+  used the same cohort, verifier stack, prompt formatting, and repair budget
+
+### REQ-CODE-030: Checkpointed Dual-Model Benchmark Artifact With Honest Blockers
+
+The identical-stack dual-model benchmark shall support resumable partial runs
+and honest blocker reporting:
+- Each model writes checkpointed per-case results often enough to preserve
+  completed work during long live runs
+- The final artifact includes the checkpoint location(s), run status, and any
+  blockers encountered while loading a model, running a stage, or finishing the
+  cohort
+- When one model finishes and the other is interrupted, the artifact still
+  preserves completed per-model results and marks the run as partial instead of
+  silently dropping work
+- New Exp 238 artifact metadata uses the fixed run-date `20260413`
+
+### REQ-CODE-028: Shared-Cohort Dual-Model Spec-Aware HumanEval Benchmark
+
+The repository shall provide one deterministic HumanEval benchmark workflow
+that runs `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` on the same ordered
+seeded cohort with the same verifier stack:
+- The workflow samples or loads one ordered HumanEval cohort once and reuses
+  the exact same case ids, task ids, prompts, official tests, and prompt seeds
+  for both models
+- Baseline prompt formatting, verify-only prompt formatting, repair prompt
+  formatting, `max_new_tokens`, and repair budget stay identical across both
+  models
+- Each case records baseline generation, official-tests-only verify-only,
+  additive PBT verify-only, additive explicit-spec verify-only, and
+  verify-repair traces under one stable per-case schema
+- The explicit-spec layer uses the checked-in code-spec corpus and the same
+  trace-ranked repair-hint path for both models
+
+### REQ-CODE-029: Publishable Stage-Wise And Cross-Model Comparison Summary
+
+The paired spec-aware HumanEval benchmark shall emit a publishable summary that
+shows the incremental value of each verifier layer and the apples-to-apples
+cross-model comparison:
+- Per-model summaries include baseline pass@1, official-tests-only verify-only
+  acceptance, PBT verify-only acceptance, explicit-spec verify-only acceptance,
+  and verify-repair pass@1
+- The artifact reports paired 95% confidence intervals for within-model deltas
+  such as PBT-over-official, spec-over-PBT, and verify-repair-over-baseline
+- The artifact includes a direct Gemma-vs-Qwen comparison block on the shared
+  cohort with paired outcome counts, per-stage pass@1 deltas, and paired
+  confidence intervals for the main stage comparisons
+- The technical-report-ready summary explicitly names the cohort size, shared
+  verifier stack, shared repair budget, and which stage gained or failed to
+  gain from the explicit spec layer
+
+### REQ-CODE-030: Resume-Aware Blocker Reporting For Paired Live Benchmarks
+
+The paired spec-aware HumanEval benchmark shall checkpoint progress and report
+interruptions honestly:
+- Checkpoints persist ordered cohort metadata plus per-model completed case
+  results often enough to resume long live runs without losing completed work
+- Resume logic reuses a checkpoint only when the expected ordered cohort still
+  matches
+- The final artifact reports `run_status`, completed and pending case counts,
+  and any blocker records when hardware, runtime, or model-loading failures
+  interrupt all or part of the benchmark
+- Completed case traces remain in the final artifact even when the overall run
+  is incomplete, and the comparison summary degrades cleanly to the completed
+  paired subset instead of silently fabricating missing results
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -533,6 +629,51 @@ spec-aware path disabled, then the default behavior stays unchanged; and when
 callers opt in, then the returned `VerificationResult.certificate` includes the
 official-test summary, explicit-spec summary, and ranked repair hints.
 
+### SCENARIO-CODE-026: Dual-Model Benchmark Reuses One Ordered Seeded Cohort
+
+Given the checked-in seeded 30-problem HumanEval cohort used for Exp 238, when
+the benchmark loads both model runs, then Qwen and Gemma receive the same
+ordered case ids, prompts, official tests, entry points, and prompt seeds for
+baseline and repair generation.
+
+### SCENARIO-CODE-027: Spec-Aware Stage Summary Shows Incremental Value Beyond PBT
+
+Given a shared-cohort dual-model benchmark run, when the per-model summary is
+built, then it reports official-tests verify-only, PBT verify-only,
+explicit-spec verify-only, and verify-repair side by side and records whether
+the explicit spec layer caught any harness-passing cases that PBT alone did not
+reject.
+
+### SCENARIO-CODE-028: Partial Dual-Model Run Preserves Completed Work And Blockers
+
+Given a dual-model benchmark run where one model finishes and the other
+interrupts after some completed cases, when the artifact is written, then it
+keeps the finished model's results, preserves the interrupted model's completed
+checkpointed cases, marks `run_status` as partial, and records the blocker with
+the failing model and stage.
+
+### SCENARIO-CODE-026: Shared Seeded Cohort Reuses The Exact Same Cases For Both Models
+
+Given the paired spec-aware benchmark workflow, when it builds the HumanEval
+cohort for one run, then both models receive the same ordered case ids, task
+ids, prompts, official tests, and prompt seeds instead of independently sampled
+ slices.
+
+### SCENARIO-CODE-027: Stage-Wise Summary Shows The Explicit Spec Increment
+
+Given paired per-case traces that include official-tests-only, additive PBT,
+ additive explicit-spec verification, and verify-repair outcomes, when the
+ artifact summary is built, then the per-model summary and the Gemma-vs-Qwen
+ comparison block both report stage-wise pass rates, paired outcome counts, and
+ paired confidence intervals that isolate the explicit spec layer's effect.
+
+### SCENARIO-CODE-028: Interrupted Run Preserves Completed Traces And Reports Blockers
+
+Given a paired live benchmark that fails partway through one model or stage,
+when the final artifact is written, then it keeps completed traces plus resume
+ checkpoint metadata, marks the run incomplete, and records the blocker without
+ claiming missing cases ran successfully.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -564,3 +705,9 @@ official-test summary, explicit-spec summary, and ranked repair hints.
 | REQ-CODE-025 | Implemented |
 | REQ-CODE-026 | Implemented |
 | REQ-CODE-027 | Implemented |
+| REQ-CODE-028 | Not Started |
+| REQ-CODE-029 | Not Started |
+| REQ-CODE-030 | Not Started |
+| REQ-CODE-028 | Implemented |
+| REQ-CODE-029 | Implemented |
+| REQ-CODE-030 | Implemented |
