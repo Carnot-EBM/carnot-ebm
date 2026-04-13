@@ -1,5 +1,23 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 260 GPU Solver-Semantic Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T21:05:37Z | TBD | Exp 260: GPU-accelerated solver-semantic benchmark extending Exp 246/247 via DualGPUBenchmarkHarness — 25 tests written, all pass; live run launched with CARNOT_FORCE_CPU=0 on CUDA GPU 0 (RTX 3090). | TBD |
+
+### Session Summary
+
+- `scripts/experiment_260_solver_semantic_gpu.py` created, extending Exp 246 with DualGPUBenchmarkHarness
+- 25 unit tests covering checkpoint resume, GPU harness integration, artifact schema, route summary aggregation
+- All 25 tests pass in 0.38s
+- Live run in progress: GPU verification passed (dual RTX 3090, ~24 GiB free each); CARNOT_FORCE_CPU=0 enables CUDA inference
+- Existing Exp 246 checkpoints reused: all 6 Qwen GSM8K cells (200 cases × 3 modes) complete; Qwen constraint_ir baseline + verify_only complete; verify_repair in progress
+- Observed: ~33s/case for constraint_ir verify_repair on GPU (multiple repair iterations per case)
+- Status: **in progress** — run will complete to results/experiment_260_results.json
+
 ## Session: 2026-04-13 Exp 259 CUDA ORT Benchmark
 
 ### Turn Log

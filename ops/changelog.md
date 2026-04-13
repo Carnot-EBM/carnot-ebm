@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-04-13 (Exp 260: GPU-accelerated solver-semantic benchmark — IN PROGRESS)
+
+- `scripts/experiment_260_solver_semantic_gpu.py` — Extends Exp 246 solver-semantic runner with `DualGPUBenchmarkHarness` from Exp 258. Resumes from Exp 246 checkpoints in `results/checkpoints/experiment_246/`. Covers 200 GSM8K × 3 modes × 2 models and 81 constraint_ir × 3 modes × 2 models. GPU fallback to CPU when CUDA unavailable or VRAM insufficient. Reports per-route solver evidence (arithmetic, cardinality, set_membership, smt, abstain), per-model false positive budget, abstain rates, and comparison against Exp 235 and Exp 247. (user instruction: Exp 260 primary milestone deliverable)
+- `tests/python/test_experiment_260_solver_semantic_gpu.py` — 25 tests covering: checkpoint resume (fresh/valid/stale/atomic), checkpoint path format matches Exp 246, route summary aggregation (empty, single claim, abstain rate, all routes, collect_claims), benchmark statistics (empty runs, perfect baseline, verify_only delta), artifact schema (required keys, experiment number, gpu_fallback flag), build_comparison_block keys, GPU harness integration (import, run_mode timing, resume skips completed). All 25 pass in 0.38 s. (user instruction: Exp 260 tests first)
+- **Status**: Live run in progress with CARNOT_FORCE_CPU=0 on GPU 0 (RTX 3090, 15690 MiB / 24576 MiB). All Qwen GSM8K and constraint_ir cells complete. Gemma GSM8K baseline running. Artifact will be at `results/experiment_260_results.json` when complete.
+
 ## 2026-04-13 (Exp 259: onnxruntime CUDA EP benchmark)
 
 - `pip install onnxruntime-gpu` — installed CUDA 12 ORT wheel; CUDAExecutionProvider + TensorrtExecutionProvider now in `ort.get_available_providers()`. (user instruction: Exp 259 CUDA ORT benchmark)
