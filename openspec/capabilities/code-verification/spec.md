@@ -307,6 +307,57 @@ the explicit code spec corpus:
   official-test misses, and repaired traces
 - The summary records the output paths and source artifact set honestly
 
+### REQ-CODE-025: Spec-Aware Code Spec Ingestion And Matching
+
+The system shall ingest the checked-in explicit code-spec corpus for
+verification-time use:
+- The verifier can load deterministic rows from
+  `data/research/code_spec_corpus_236.jsonl` or a caller-provided corpus path
+- Lookup may use the HumanEval-style task id directly and shall fall back to a
+  deterministic entry-point or signature match when the task id is absent
+- The loaded row preserves grouped clause families, oracle hints, trace
+  summary, provenance links, and fixed artifact metadata such as the checked-in
+  run date
+- Missing corpus matches do not crash the verifier; they degrade to a
+  structured “no explicit spec matched” result
+
+### REQ-CODE-026: Aggregated Official-Test, PBT, And Explicit-Spec Verification
+
+The system shall provide a structured spec-aware verifier for generated Python
+code:
+- Inputs include the candidate source code, prompt context, entry point,
+  official test harness, and optional task id
+- The verifier combines official harness execution, Hypothesis-backed PBT, and
+  explicit spec checks derived from the checked-in code-spec corpus into one
+  structured result
+- Explicit spec checks may validate deterministic examples, typed outputs,
+  immutability, ordering or reverse intent, no-exception behavior, and other
+  corpus-backed clauses without replacing the existing PBT path
+- Failures from the explicit-spec layer are convertible to
+  pipeline-compatible `ConstraintResult` records and keep enough metadata to
+  explain the violated clause, failing input, and observed result or error
+
+### REQ-CODE-027: Trace-Ranked Repair Guidance And Additive Pipeline Integration
+
+The system shall rank repair guidance using the checked-in code-learning path
+and expose the spec-aware path additively:
+- Ranking reuses the existing trace-learning logic from checked-in benchmark
+  artifacts such as Exp 225, Exp 226, and Exp 227
+- Observed PBT failures, explicit-spec failures, and official-harness outcomes
+  are mapped onto the learned property and repair-strategy families when
+  possible
+- The verifier returns ranked repair hints with structured evidence including
+  learned property support, recommended repair strategies, and supporting case
+  ids or trace counts, and ranking remains deterministic for the same checked-in
+  traces and failing candidate
+- `VerifyRepairPipeline.verify_generated_code(...)` accepts an explicit opt-in
+  for the spec-aware path, preserves the existing `VerificationResult`
+  surface, and keeps the default generated-code behavior backward compatible
+  unless the caller opts in
+- The structured certificate carries official-test and explicit-spec summaries,
+  ranked repair hints, and the fixed corpus run-date metadata `20260413` when a
+  checked-in explicit spec row is used
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -453,6 +504,35 @@ explicit code-spec corpus is built, then the task appears once in the corpus,
 its spec clauses preserve provenance links back to both source traces, and the
 summary counts still record both contributing traces.
 
+### SCENARIO-CODE-022: Spec Lookup Falls Back From Task Id To Entry Point
+
+Given a checked-in explicit code-spec corpus row, when the verifier is called
+without an explicit task id but with the matching entry point and signature
+context, then it resolves the same row deterministically and preserves the
+row’s fixed run-date metadata and grouped clause families.
+
+### SCENARIO-CODE-023: Aggregated Spec-Aware Verification Flags A Harness-Passing Bug
+
+Given a generated Python candidate that still passes the weak official
+HumanEval harness but violates a corpus-backed ordering or mutation clause,
+when the spec-aware verifier runs, then the structured result reports the
+official harness as passing while the combined PBT and explicit-spec layers
+still reject the candidate and expose pipeline-compatible failures.
+
+### SCENARIO-CODE-024: Trace-Learned Ranking Prioritizes The Higher-Yield Repair Family
+
+Given failing code whose observed verifier signals match a repair family with
+documented wins in the checked-in trace-learning corpus, when ranked repair
+guidance is produced, then the top hint prefers that empirically successful
+repair family ahead of lower-yield generic guidance.
+
+### SCENARIO-CODE-025: VerifyRepairPipeline Adds Spec Summaries Only On Opt-In
+
+Given the existing generated-code verification surface, when callers leave the
+spec-aware path disabled, then the default behavior stays unchanged; and when
+callers opt in, then the returned `VerificationResult.certificate` includes the
+official-test summary, explicit-spec summary, and ranked repair hints.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -481,3 +561,6 @@ summary counts still record both contributing traces.
 | REQ-CODE-022 | Implemented |
 | REQ-CODE-023 | Implemented |
 | REQ-CODE-024 | Implemented |
+| REQ-CODE-025 | Implemented |
+| REQ-CODE-026 | Implemented |
+| REQ-CODE-027 | Implemented |

@@ -63,6 +63,8 @@ from carnot.pipeline.structured_reasoning import StructuredReasoningController
 from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typed_reasoning_ir
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from carnot.pipeline.memory import ConstraintMemory
     from carnot.pipeline.semantic_grounding import SemanticGroundingResult
     from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2Result
@@ -525,6 +527,10 @@ class VerifyRepairPipeline:
         *,
         include_static: bool = True,
         include_pbt: bool = True,
+        include_specs: bool = False,
+        task_id: str | None = None,
+        spec_corpus_path: str | os.PathLike[str] | None = None,
+        trace_paths: Sequence[str | os.PathLike[str]] | None = None,
     ) -> VerificationResult:
         """Verify a generated Python candidate with static checks plus bounded PBT.
 
@@ -533,7 +539,8 @@ class VerifyRepairPipeline:
         while letting callers verify code directly with prompt context, the
         official harness, and the Hypothesis-backed property verifier.
 
-        Spec: REQ-CODE-010, SCENARIO-CODE-009
+        Spec: REQ-CODE-010, REQ-CODE-027, SCENARIO-CODE-009,
+              SCENARIO-CODE-025
         """
         constraints: list[ConstraintResult] = []
         pbt_summary: dict[str, object] = {"enabled": include_pbt}
@@ -541,7 +548,31 @@ class VerifyRepairPipeline:
         if include_static:
             constraints.extend(self.extract_constraints(code, domain="code"))
 
-        if include_pbt:
+        if include_specs:
+            from carnot.pipeline.spec_code_verifier import SpecCodeVerifier
+
+            verifier = SpecCodeVerifier(
+                spec_corpus_path=str(spec_corpus_path) if spec_corpus_path is not None else None,
+                learning_artifact_paths=(
+                    tuple(str(path) for path in trace_paths) if trace_paths is not None else None
+                ),
+                include_official_tests=bool(official_tests.strip()),
+                include_pbt=include_pbt,
+            )
+            aggregated = verifier.verify(
+                code,
+                prompt,
+                entry_point,
+                official_tests,
+                task_id=task_id,
+            )
+            constraints.extend(aggregated.to_constraint_results())
+            certificate = aggregated.to_certificate()
+            pbt_summary.update(certificate["pbt_summary"])
+            official_summary = certificate["official_test_summary"]
+            spec_summary = certificate["spec_summary"]
+            repair_hints = certificate["repair_ranking"]["hints"]
+        elif include_pbt:
             from carnot.pipeline.pbt_code_verifier import PBTCodeVerifier
 
             pbt_result = PBTCodeVerifier().verify(code, prompt, entry_point, official_tests)
@@ -568,7 +599,45 @@ class VerifyRepairPipeline:
 
         result = self._evaluate_constraints(constraints)
         result.certificate["pbt_summary"] = pbt_summary
+        if include_specs:
+            result.certificate["official_summary"] = official_summary
+            result.certificate["official_test_summary"] = official_summary
+            result.certificate["spec_summary"] = spec_summary
+            result.certificate["repair_hints"] = repair_hints
+            result.certificate["repair_ranking"] = {
+                "n_hints": len(repair_hints),
+                "hints": repair_hints,
+            }
         return result
+
+    def verify_generated_code_with_specs(
+        self,
+        code: str,
+        prompt: str,
+        entry_point: str,
+        official_tests: str,
+        *,
+        task_id: str | None = None,
+        case_id: str | None = None,
+        spec_corpus_path: str | os.PathLike[str] | None = None,
+        learning_artifact_paths: tuple[str | os.PathLike[str], ...] | None = None,
+        include_static: bool = True,
+        include_official_tests: bool = True,
+        include_pbt: bool = True,
+    ) -> VerificationResult:
+        """Verify generated code through the additive explicit spec-aware path."""
+        return self.verify_generated_code(
+            code,
+            prompt,
+            entry_point,
+            official_tests,
+            include_static=include_static,
+            include_pbt=include_pbt,
+            include_specs=True,
+            task_id=task_id,
+            spec_corpus_path=spec_corpus_path,
+            trace_paths=learning_artifact_paths,
+        )
 
     def verify_semantic_grounding(
         self,
