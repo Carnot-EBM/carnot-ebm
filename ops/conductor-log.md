@@ -1389,3 +1389,4 @@ python/ |
 | 2026-04-13 10:00 UTC | Exp 243: Sampler-guided repair reranking benchmark | OK | Deliverable already exists in repo |
 | 2026-04-13 10:35 UTC | Plan milestone 2026.04.18 | OK | 14 tasks proposed |
 | 2026-04-13 10:36 UTC | Milestone 2026.04.18 activated | OK | 14 tasks queued |
+| 2026-04-13 13:36 UTC | Exp 244: Formal claim-routing corpus from live rea | OK | Deliverable already exists in repo |
