@@ -1408,3 +1408,4 @@ python/ |
 | 2026-04-13 19:50 UTC | Exp 257: Predictive verifier hardware-readiness be | OK | 2533 passed, 1 skipped, 14 warnings in 511.83s (0:08:31) |
 | 2026-04-13 20:12 UTC | Plan milestone 2026.04.19 | OK | 13 tasks proposed |
 | 2026-04-13 20:13 UTC | Milestone 2026.04.19 activated | OK | 13 tasks queued |
+| 2026-04-13 20:47 UTC | Exp 258: Wire DualGPURunner to live benchmark harn | OK | 2567 passed, 2 skipped, 14 warnings in 505.40s (0:08:25) |
