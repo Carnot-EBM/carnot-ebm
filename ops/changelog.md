@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-04-13 (Exp 248: process integrity corpus from checked-in live traces)
+
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-060` and `SCENARIO-VERIFY-070` through `SCENARIO-VERIFY-073` for the process integrity corpus capability. (user instruction: Exp 248 process integrity corpus)
+- `tests/python/test_experiment_248_process_integrity_corpus.py` — Wrote 15 tests first covering schema shape, deterministic generation, all-five-labels coverage, provenance link to Exp 235 and 238, summary artifact shape, and all 10 classification unit tests (5 reasoning, 5 code). (REQ-VERIFY-060, SCENARIO-VERIFY-070 through -073)
+- `scripts/experiment_248_process_integrity_corpus.py` — Implemented corpus builder with pure `classify_reasoning` and `classify_code` functions, deterministic JSONL emission from Exp 235 verify_repair histories and Exp 238 per_problem_results histories, and JSON summary with label counts by source benchmark and model. (REQ-VERIFY-060)
+- `data/research/process_integrity_corpus_248.jsonl` — 849 rows covering all five process integrity labels: `right_answer_wrong_process` (64), `wrong_answer_partially_sound_process` (269), `unsupported_step` (132), `repair_fixed_outcome_only` (27), `repair_fixed_process_and_outcome` (8), plus `clean` (349). Provenance links to `results/experiment_235_results.json` and `results/experiment_238_results.json`. (user instruction: Exp 248 process integrity corpus)
+- `results/experiment_248_results.json` — Companion summary artifact with label counts by benchmark, by model, and process label definitions. (user instruction: Exp 248 process integrity corpus)
+- Validation — All 15 new tests pass: `JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_248_process_integrity_corpus.py --no-cov -q` → `15 passed in 6.84s`. (user instruction: Exp 248 process integrity corpus)
+
 ## 2026-04-13 (solver-routed semantic benchmark runner — Exp 246)
 
 - `scripts/experiment_246_solver_semantic_live.py` — Automated live semantic benchmark runner using the solver-routed formal claims from Exp 245 against the shared Exp 218 harness, writing `results/experiment_246_results.json` with fixed run-date metadata `20260413`. (automated by research conductor)

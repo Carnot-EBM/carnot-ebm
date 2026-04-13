@@ -1,0 +1,65 @@
+{
+  "by_model": {
+    "Gemma4-E4B-it": {
+      "clean": 152,
+      "repair_fixed_outcome_only": 23,
+      "repair_fixed_process_and_outcome": 5,
+      "right_answer_wrong_process": 50,
+      "unsupported_step": 69,
+      "wrong_answer_partially_sound_process": 162
+    },
+    "Qwen3.5-0.8B": {
+      "clean": 197,
+      "repair_fixed_outcome_only": 4,
+      "repair_fixed_process_and_outcome": 3,
+      "right_answer_wrong_process": 14,
+      "unsupported_step": 63,
+      "wrong_answer_partially_sound_process": 107
+    }
+  },
+  "by_source_benchmark": {
+    "gsm8k_semantic": {
+      "clean": 202,
+      "repair_fixed_outcome_only": 25,
+      "repair_fixed_process_and_outcome": 7,
+      "right_answer_wrong_process": 47,
+      "unsupported_step": 88,
+      "wrong_answer_partially_sound_process": 265
+    },
+    "humaneval_dual_model_spec": {
+      "clean": 147,
+      "repair_fixed_outcome_only": 2,
+      "repair_fixed_process_and_outcome": 1,
+      "right_answer_wrong_process": 17,
+      "unsupported_step": 44,
+      "wrong_answer_partially_sound_process": 4
+    }
+  },
+  "corpus_path": "data/research/process_integrity_corpus_248.jsonl",
+  "experiment": 248,
+  "label_counts": {
+    "clean": 349,
+    "repair_fixed_outcome_only": 27,
+    "repair_fixed_process_and_outcome": 8,
+    "right_answer_wrong_process": 64,
+    "unsupported_step": 132,
+    "wrong_answer_partially_sound_process": 269
+  },
+  "process_label_definitions": {
+    "clean": "Outcome is correct and the process is sound (no verifier violations).",
+    "repair_fixed_outcome_only": "A repair attempt produced a correct answer but left the underlying process unsound (verifier still flags issues).",
+    "repair_fixed_process_and_outcome": "A repair attempt produced a correct answer AND the process is now sound (all verifier checks pass).",
+    "right_answer_wrong_process": "Model produced the correct final answer but at least one reasoning step or code verification layer is unsound.",
+    "unsupported_step": "A reasoning claim or code behaviour has no grounding in the provided premises or spec clauses.",
+    "wrong_answer_partially_sound_process": "Model produced the wrong final answer but the majority of intermediate steps or code properties are valid."
+  },
+  "run_date": "20260413",
+  "schema": "carnot.process_integrity_corpus.v1",
+  "source_artifacts": [
+    "results/experiment_235_results.json",
+    "results/experiment_238_results.json",
+    "results/experiment_243_results.json"
+  ],
+  "title": "Process Integrity Corpus \u2014 outcome-vs-process labels from checked-in traces",
+  "total_rows": 849
+}

@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 248 Process Integrity Corpus
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T15:10:42Z | 2026-04-13T15:23:00Z | Exp 248: wrote 15 tests (schema shape, determinism, label coverage, provenance), implemented `scripts/experiment_248_process_integrity_corpus.py` with `classify_reasoning`/`classify_code` pure functions and deterministic JSONL builder. Corpus: 849 rows, all 5 process integrity labels covered across Exp 235 (reasoning) and Exp 238 (code). All 15 tests pass. | TBD |
+
+### Session Summary
+
+- 15 tests written and passing; `data/research/process_integrity_corpus_248.jsonl` (849 rows) and `results/experiment_248_results.json` produced.
+
 ## Session: 2026-04-13 Fix Test Failures (Exp 247 Provenance Count)
 
 ### Turn Log
