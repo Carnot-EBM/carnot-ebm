@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-04-13 (docs milestone count reconciliation)
+
+- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, `docs/index.html`, and `ops/status.md` — Synced the public reporting copy to the current `research-complete.yaml` total of **23** milestones so the docs regression suite no longer compared against stale `22`-milestone text. This keeps the public README, landing page, rendered report, and operational handoff aligned under `REQ-REPORT-003` and `REQ-REPORT-004`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+- Validation — Focused docs regression passed via `JAX_PLATFORMS=cpu .venv/bin/pytest -o addopts='' tests/python/test_docs.py -q --no-cov -n 0` → `5 passed in 0.72s`. Required full-suite validation passed via `JAX_PLATFORMS=cpu .venv/bin/pytest tests/python --tb=short -q` → `2234 passed, 1 skipped, 22 warnings`, repo coverage `100.00%`. Spec coverage passed via `JAX_PLATFORMS=cpu .venv/bin/python scripts/check_spec_coverage.py` → `OK: All tests reference specification requirements.` Applicable E2E checks passed via `JAX_PLATFORMS=cpu .venv/bin/pytest -n 0 tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q --no-cov` → `38 passed in 6.94s`. Final reconciliation passed via `bash scripts/validate-reconciliation.sh`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+
 ## 2026-04-13 (Exp 242: KV260 host / overlay round-trip validation)
 
 - `openspec/capabilities/training-inference/spec.md` and `epics/stories/SAMPLE-010.md` — Added `REQ-SAMPLE-007` and `SCENARIO-SAMPLE-012` through `SCENARIO-SAMPLE-014` for the blocker-aware KV260 round-trip artifact, then closed the new story after the bring-up script, honest blocker artifact, and reconciliation work landed. (user instruction: create `results/experiment_242_results.json`)
