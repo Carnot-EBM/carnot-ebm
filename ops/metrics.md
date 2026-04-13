@@ -1,5 +1,21 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 257 Hardware Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T19:34:29Z | 2026-04-13T19:39:55Z | Exp 257: predictive-verifier hardware benchmark — 29 tests written, experiment script created, CPU (41.8 µs, 23.9k calls/s) and ONNX-CPU (5.8 µs, 171k calls/s, 7.1× faster) benchmarked; honest blockers emitted for CUDA ORT and AMD XDNA NPU. | TBD |
+
+### Session Summary
+
+- CPU NumPy gate: 41.8 µs/call, 23,938 calls/s
+- ONNX CPU ORT: 5.8 µs/call, 171,032 calls/s (7.1× faster than full gate())
+- CUDA ORT: BLOCKED — pip onnxruntime lacks CUDAExecutionProvider (need onnxruntime-gpu)
+- AMD XDNA NPU: BLOCKED — VitisAI EP missing; Python 3.14 unsupported by AMD wheel
+- 29 tests covering artifact labeling, export-path branching, blocker handling
+
 ## Session: 2026-04-13 Verify Test Suite
 
 ### Turn Log
