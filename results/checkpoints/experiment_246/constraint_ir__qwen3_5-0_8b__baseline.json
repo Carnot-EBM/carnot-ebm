@@ -1,0 +1,348 @@
+{
+  "benchmark": "constraint_ir",
+  "model_name": "Qwen3.5-0.8B",
+  "mode": "baseline",
+  "case_ids": [
+    "exp211-code-score-2",
+    "exp211-instruction-json-3",
+    "exp211-instruction-yaml-1",
+    "exp211-instruction-schedule-1",
+    "exp211-live-gsm8k-923",
+    "exp211-code-score-3",
+    "exp211-instruction-schedule-2",
+    "exp211-instruction-plan-3",
+    "exp211-instruction-bullets-2",
+    "exp211-instruction-filter-1",
+    "exp211-code-toposort-1",
+    "exp211-code-score-1",
+    "exp211-code-groupby-2",
+    "exp211-code-groupby-3",
+    "exp211-code-csv-2",
+    "exp211-instruction-two-sentence-2",
+    "exp211-code-slugify-2",
+    "exp211-instruction-rewrite-2",
+    "exp211-code-dedupe-3",
+    "exp211-code-roman-3",
+    "exp211-code-roman-2",
+    "exp211-instruction-negation-3",
+    "exp211-code-groupby-1",
+    "exp211-instruction-grounded-3",
+    "exp211-code-slugify-3",
+    "exp211-live-gsm8k-506",
+    "exp211-code-phone-2",
+    "exp211-instruction-grounded-2",
+    "exp211-live-gsm8k-515",
+    "exp211-instruction-plan-1",
+    "exp211-live-gsm8k-814",
+    "exp211-code-phone-1",
+    "exp211-instruction-rewrite-1",
+    "exp211-instruction-plan-2",
+    "exp211-code-csv-3",
+    "exp211-code-intervals-3",
+    "exp211-instruction-negation-1",
+    "exp211-code-rolling-1",
+    "exp211-code-intervals-2",
+    "exp211-live-gsm8k-943",
+    "exp211-instruction-grounded-1",
+    "exp211-instruction-bullets-3",
+    "exp211-code-slugify-1",
+    "exp211-instruction-decision-3",
+    "exp211-live-gsm8k-796",
+    "exp211-instruction-sections-3",
+    "exp211-instruction-sections-2",
+    "exp211-code-config-2",
+    "exp211-code-intervals-1",
+    "exp211-instruction-yaml-2",
+    "exp211-live-gsm8k-1019",
+    "exp211-instruction-rewrite-3",
+    "exp211-code-toposort-2",
+    "exp211-code-toposort-3",
+    "exp211-code-dedupe-2",
+    "exp211-live-gsm8k-1309",
+    "exp211-instruction-bullets-1",
+    "exp211-code-config-1",
+    "exp211-code-rolling-3",
+    "exp211-code-config-3",
+    "exp211-instruction-sections-1",
+    "exp211-instruction-negation-2",
+    "exp211-instruction-json-1",
+    "exp211-code-roman-1",
+    "exp211-code-phone-3",
+    "exp211-instruction-decision-1",
+    "exp211-instruction-decision-2",
+    "exp211-code-chunks-1",
+    "exp211-code-dedupe-1",
+    "exp211-instruction-filter-2",
+    "exp211-code-csv-1",
+    "exp211-code-chunks-3",
+    "exp211-code-rolling-2",
+    "exp211-live-gsm8k-1077",
+    "exp211-instruction-filter-3",
+    "exp211-instruction-two-sentence-1",
+    "exp211-instruction-two-sentence-3",
+    "exp211-code-chunks-2",
+    "exp211-instruction-json-2",
+    "exp211-instruction-schedule-3",
+    "exp211-instruction-yaml-3"
+  ],
+  "results_by_case": {
+    "exp211-code-score-2": {
+      "case_id": "exp211-code-score-2",
+      "mode": "baseline",
+      "response": "```python\ndef score_casefold_keywords(text: str, weights: dict[str, int]) -> int:\n    \"\"\"\n    Score keywords in a text case-insensitively, applying the given weights.\n    \n    Parameters:\n        text (str): The input text to analyze.\n        weights (dict[str, int]): A dictionary mapping keyword names to their weights.\n    \n    Returns:\n        int: The total score based on keyword weights.\n    \"\"\"\n    # Normalize weights to a list of integers (optional but recommended for consistency)\n    normalized_weights = [w for w in weights.values() if w > 0]\n    \n    if not normalized_weights:\n        return 0\n    \n    # Calculate total weight\n    total_weight = sum(normalized_weights)\n    \n    if total_weight == 0:\n        return 0\n    \n    # Calculate score for each keyword\n    score = 0\n    for keyword, weight in weights.items():\n        if weight > 0:\n            score += weight * (len(text) // len(keyword))\n    \n    return score\n```\n\n**Note:** This implementation assumes that the `weights` dictionary contains only positive integer values. If weights can be zero or",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.693,
+      "prompt_tokens": 15,
+      "response_tokens": 138,
+      "total_tokens": 153
+    },
+    "exp211-instruction-json-3": {
+      "case_id": "exp211-instruction-json-3",
+      "mode": "baseline",
+      "response": "```json\n{\n  \"status\": \"green\",\n  \"channel\": \"general\",\n  \"escalation\": \"no\"\n}\n```",
+      "formal_claims": [
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 2,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 4.64,
+      "prompt_tokens": 22,
+      "response_tokens": 10,
+      "total_tokens": 32
+    },
+    "exp211-instruction-yaml-1": {
+      "case_id": "exp211-instruction-yaml-1",
+      "mode": "baseline",
+      "response": "```yaml\nowner: Jules\nregion: west\ndays_until_due: 3\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 2.897,
+      "prompt_tokens": 16,
+      "response_tokens": 8,
+      "total_tokens": 24
+    },
+    "exp211-instruction-schedule-1": {
+      "case_id": "exp211-instruction-schedule-1",
+      "mode": "baseline",
+      "response": "M1",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.036,
+      "prompt_tokens": 54,
+      "response_tokens": 1,
+      "total_tokens": 55
+    },
+    "exp211-live-gsm8k-923": {
+      "case_id": "exp211-live-gsm8k-923",
+      "mode": "baseline",
+      "response": "Here is the step-by-step logical deduction to solve the problem:\n\n### 1. Analyze the Initial Distribution\n*   **Total cups**: 27\n*   **Rows**: 3\n*   **Condition**: Each row has an equal amount of chamomile and mint tea.\n*   **Calculation**: Since there are 3 rows and the amounts are equal, each row contains:\n    $$ \\frac{27}{3} = 9 \\text{ cups} $$\n    So, each row has 9 cups of chamomile and 9 cups of mint tea.\n\n### 2. Analyze the Remaining Cups\n*   **Cups used for chamomile**: $9 \\times 3 = 27$\n*   **Cups used for mint tea**: $9 \\times 3 = 27$\n*   **Cups remaining**: $27 - 27 = 0$\n\n### 3. Analyze the Final Brew\n*   **Remaining cups**: 0\n*   **Total cups brewed**: 15\n*   **Condition**: The remaining 0 cups are used to brew a total of 15 cups of cinnamon tea.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 31.76,
+      "prompt_tokens": 59,
+      "response_tokens": 140,
+      "total_tokens": 199
+    },
+    "exp211-code-score-3": {
+      "case_id": "exp211-code-score-3",
+      "mode": "baseline",
+      "response": "```python\ndef score_tag_overlap(tags: list[str], weights: dict[str, int]) -> int:\n    \"\"\"\n    Returns the sum of weights for each distinct tag that appears in the list.\n\n    Parameters\n    ----------\n    tags : list[str]\n        List of tag names.\n    weights : dict[str, int]\n        Dictionary mapping tag names to their weights.\n\n    Returns\n    -------\n    int\n        Sum of weights for all distinct tags in `tags`.\n    \"\"\"\n    seen = set()\n    total = 0\n    for tag in tags:\n        if tag in seen:\n            continue\n        total += weights.get(tag, 0)\n        seen.add(tag)\n    return total\n```\n\nExample usage:\n\n```python\ntags = [\"a\", \"b\", \"a\", \"c\"]\nweights = {\"a\": 10, \"b\": 20, \"c\": 30}\n\nresult = score_tag_overlap(tags, weights)\n# result == 60\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 27.672,
+      "prompt_tokens": 23,
+      "response_tokens": 106,
+      "total_tokens": 129
+    },
+    "exp211-instruction-schedule-2": {
+      "case_id": "exp211-instruction-schedule-2",
+      "mode": "baseline",
+      "response": "W1",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.135,
+      "prompt_tokens": 56,
+      "response_tokens": 1,
+      "total_tokens": 57
+    },
+    "exp211-instruction-plan-3": {
+      "case_id": "exp211-instruction-plan-3",
+      "mode": "baseline",
+      "response": "1. **Gather Logs**\n   Collect all relevant system logs, error traces, and user interaction data to establish a baseline of current state and identify specific failure points.\n\n2. **Isolate Scope**\n   Define the exact scope of the issue by separating the problem from the rest of the system and ensuring no other critical components are affected.\n\n3. **Apply a Fix**\n   Implement the necessary changes to resolve the identified issue and restore the system to a stable operational state.\n\n4. **Document Rollback**\n   Create a detailed record of the fix and the rollback steps to ensure a clear path for future recovery if the issue reappears.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=4.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 0,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 17.221,
+      "prompt_tokens": 31,
+      "response_tokens": 102,
+      "total_tokens": 133
+    },
+    "exp211-instruction-bullets-2": {
+      "case_id": "exp211-instruction-bullets-2",
+      "mode": "baseline",
+      "response": "* System status is stable.\n* Blocker is resolved.\n* Next step is to review logs.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=3.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": "observed=0.0 not in [4.0, 7.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c6",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 6,
+      "n_supported": 3,
+      "n_violated": 2,
+      "n_abstained": 1,
+      "latency_seconds": 3.189,
+      "prompt_tokens": 29,
+      "response_tokens": 16,
+      "total_tokens": 45
+    },
+    "exp211-instruction-filter-1": {
+      "case_id": "exp211-instruction-filter-1",
+      "mode": "baseline",
+      "response": "A, D",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.141,
+      "prompt_tokens": 58,
+      "response_tokens": 2,
+      "total_tokens": 60
+    }
+  }
+}

@@ -1,290 +1,267 @@
-# Carnot Research Roadmap v23: Formal Claim Verification, Process Integrity, and Predictive Self-Learning
+# Carnot Research Roadmap v24: GPU-Accelerated Inference, Calibrated Verification, and Live Benchmark Completion
 
 **Created:** 2026-04-13
-**Milestone:** 2026.04.18
-**Status:** Planned (activates when milestone 2026.04.17 completes)
-**Supersedes:** Milestone 2026.04.17 - "Calibrated Verification, Spec-Grounded Code Repair, and Self-Learning"
-**Informed by:** Exp 235, Exp 238, Exp 241, Exp 242, Exp 243, VERIFY-038, VERIFY-039, VERIFY-040
-**External inputs:** VERGE (2601.20055), ReLoop (2602.15983), Scalable Connectivity for Ising Machines (2503.01177), Decomposing Large-Scale Ising Problems on FPGAs (2602.15985), OpenReview 2026 process-verification scan, Extropic writing / XTR-0 positioning, Kona architecture notes
+**Milestone:** 2026.04.19
+**Status:** Planned (activates when milestone 2026.04.18 completes)
+**Supersedes:** Milestone 2026.04.18 — "Formal Claim Verification, Process Integrity, and Predictive Self-Learning"
+**Informed by:** Exp 247, Exp 251, Exp 256, Exp 257, operational retrospective 2026-04-13
+**External inputs:** The 4/δ Bound (2512.02080), EORM (2505.14999), Self-Play Info Gain (2603.02218), PSV (2512.18160), TECP conformal prediction (MDPI 2025), DOMINO grammar decoding (ICML 2025), Sol-Ver (2502.14948), Sparse Ising Machines (Nature Comms 2024), Stochastic Ising Advantage (2504.18359)
 
-## What 2026.04.17 Proved
+---
+
+## What 2026.04.18 Proved
 
 | Approach | Experiments | Finding |
 |----------|-------------|---------|
-| Calibrated semantic verification | 232-235 | Claim isolation and abstention improved observability and cut Qwen false positives (**7 -> 4**), but verify-only remained harmful on both target models and Gemma false positives worsened (**23 -> 26**). |
-| Explicit spec grounding for code | 236-238 | Spec-aware verification now composes cleanly with official tests and PBT, but the identical-stack live comparison is still only a **30-case** paired cohort and the lift remains modest and model-dependent. |
-| Case-based self-learning | 239-241 | Case memory and policy compilation raised retrieval precision from Exp 223's **5.8%** to roughly **40%+**, but the milestone's primary held-out gain criterion still failed: all replay strategies stayed flat at **34.48%** held-out success. |
-| Hardware-adjacent reranking | 242-243 | The KV260 path is still blocked at bring-up time, and sampler-backed reranking improved replay latency economics but produced **0.0** quality lift on saved repair candidates. |
+| Solver-routed formal claim verification | 244-247 | FormalClaimVerifier built and integrated cleanly, but live benchmark **blocked** at 18/200 cases (21s/case × 843 total cases ≈ 5 hours on CPU — exceeds conductor session budget). Infrastructure is solid; throughput is the blocker. |
+| Process integrity verification | 248-251 | ProcessVerifier catches "right-for-wrong-reasons" defects (Qwen: 3 cases, Gemma: 2 cases in 30-case cohort) and produced one Gemma repair convergence that Exp 238 missed. But it adds **zero pass@1 lift** at the gating stage. Useful for audit/safety; not for accuracy improvement alone. |
+| Calibrated self-learning A/B | 252-256 | PredictiveVerifier gate routed **all cases to FAST_PATH** when uncalibrated on live data, eliminating FPs but also missing real errors (−1.7pp). Constraint addition matched description-text proxies instead of real inference tokens, adding +4 FPs with zero new successes. Root cause: gate never trained/calibrated on live GSM8K distribution; templates too liberal. |
+| PredictiveVerifier hardware path | 257 | CPU NumPy: 41.8 µs/call. ONNX CPU ORT: 5.8 µs/call (7.1× faster). CUDA ORT **blocked** — requires `pip install onnxruntime-gpu` (not default wheel). AMD XDNA NPU **blocked** — Python 3.14 unsupported by VitisAI EP. Both are solvable, not fundamental. |
 
-**The milestone-level conclusion:** Carnot has now exhausted the "better calibration, richer retrieval, same verifier" path. To move toward the PRD vision, the next milestone must upgrade the verifier substrate itself, check process integrity rather than only outcomes, and turn self-learning into proactive behavior changes instead of better replay bookkeeping.
+**The milestone-level conclusion:** Carnot has now built all the infrastructure layers — formal claim routing, process integrity, predictive gating, constraint addition, warm model server, DualGPURunner. The gap is not capability; it is calibration, throughput, and wiring. The formal claim benchmark that should prove Carnot's value was never able to complete because CPU inference is 7× too slow. The self-learning system failed because the gate was never calibrated on the inference distribution it needs to operate over. The next milestone fixes both.
+
+---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: Live verifiable reasoning is still too heuristic on real instruction-tuned outputs
+### Gap 1: The first credible positive verify-repair result on real IT models is still missing
 
-The semantic path can now parse and score live Qwen3.5-0.8B and Gemma4-E4B-it responses, but it still relies too heavily on scalar evidence aggregation over claims that were never fully formalized. Exp 235 showed that better calibration alone does not earn a safe verify-only path. Carnot still needs a stronger bridge from natural-language reasoning traces to deterministic checks.
+After 257 experiments across 18 milestones, Carnot has never produced a completed, statistically meaningful positive verify-repair improvement on a real instruction-tuned model. The solver-routed semantic benchmark (Exp 247) is the most principled attempt yet but ran out of runtime budget after 18/200 cases. The core enabler is throughput: going from 21s/case (CPU) to ~2-3s/case (GPU with batching) makes the full benchmark feasible in a single conductor session. **This is the primary deliverable of this milestone.**
 
-### Gap 2: Outcome correctness still hides invalid reasoning and repair processes
+### Gap 2: Self-learning produces no held-out gain because the gate was never calibrated on live data
 
-Spec-aware code verification is the strongest live lane, but it still mainly judges end states: official tests, PBT, and explicit specs. The current stack does not yet explicitly separate "correct answer by a valid process" from "correct answer for the wrong reason." The same problem applies to semantic reasoning traces. This is now the main credibility gap for small-model verification.
+Exp 256 showed the PredictiveVerifier routed everything to FAST_PATH (uncalibrated). The fix is conceptually simple: collect (partial_response → final_violation_label) pairs from live GPU inference and fit a calibrated threshold. The 4/δ bound (2512.02080) provides a formal framework for this calibration. The Self-Play Info Gain paper (2603.02218) explains why constraint templates matched proxy text (no real learnable signal) — the fix is mining live inference tokens, not description text. Both are actionable, bounded experiments.
 
-### Gap 3: Self-learning improves retrieval quality, not future task success
+### Gap 3: Hardware acceleration for the verification pipeline has known, unblocked solutions that have not been executed
 
-Exp 241 closed the loop on the current Tier 1 / Tier 2 design: better keys and compiled policies alone do not create held-out gains. To satisfy FR-11, Carnot needs a self-learning path that adds new constraints, predicts future violations early, and preserves a hardware acceleration story for repeated inference-speed updates.
+- **CUDA ORT:** one command (`pip install onnxruntime-gpu`) unblocks 10-100× speedup for PredictiveVerifier
+- **AMD XDNA NPU:** Python 3.12 venv with onnxruntime 1.20.1 already set up; VitisAI EP `.so` files already present in `~/github.com/amd/RyzenAI-SW/`; needs one linking/path experiment
+- **DualGPURunner:** built in Exp 224b, never wired to the benchmark harness; estimated +15% wall-time reduction per operational retrospective
+- **Inference batching:** 8-16 per pass; estimated +10% wall-time reduction; not implemented in any live harness
 
-## Promising 2025-2026 Inputs Adopted in v23
+Solving these moves from "infrastructure exists but blocked" to "infrastructure deployed and benchmarked."
 
-- **Formal claim routing over monolithic judging:** VERGE argues for typed symbolic claims, solver routing, and minimal correction subsets instead of coarse holistic reasoning scores. This directly motivates Exp 244-247.
-- **Process verification for small models:** the 2026 OpenReview process-verification thread reinforces that small models can land on correct answers with invalid intermediate reasoning. This motivates Exp 248-251.
-- **Behavioral verification instead of single-trace trust:** ReLoop shows that perturbation-based behavioral checks expose brittle but superficially correct solutions. This informs the next code-verification benchmark and process corpus.
-- **Hardware-friendly sparse connectivity, not dense wishful thinking:** recent FPGA Ising papers emphasize sparse copy-node compilation and hardware-aware decomposition. That supports shaping verifier workloads for sparse acceleration rather than spending another milestone on blocked overlay plumbing alone.
-- **Extropic and Kona still validate the direction, not the next bottleneck:** both continue to support Carnot's validity-layer architecture, but the immediate blocker is verifier quality on real traces, not a lack of yet another backend abstraction.
+---
 
-## v23 Hypothesis
+## Promising 2025-2026 Inputs Adopted in v24
 
-If Carnot replaces scalar semantic scoring with solver-routed formal claims, adds explicit process-integrity checks to both reasoning and code-repair paths, and upgrades self-learning from retrieval-only reuse to constraint addition plus predictive gating, it should be able to produce:
+- **4/δ Bound (2512.02080):** formal Markov chain model for multi-stage verification pipelines gives principled calibration strategy for the PredictiveVerifier. Identifies three operating zones and parameterized threshold selection. Directly informs Exp 262.
+- **TECP conformal prediction (MDPI 2025):** token-entropy conformal prediction gives finite-sample coverage guarantees without retraining. Candidate calibration backend for PredictiveVerifier to replace static thresholds.
+- **EORM (2505.14999):** lightweight 55M-parameter energy-based ranking verifier achieves 90.7% GSM8K with Llama 3 8B. Establishes a published EBM baseline that Carnot should compare against after calibration.
+- **Self-Play Info Gain (2603.02218):** root-cause analysis for why constraint templates failed — they provided no learnable information gain because they matched proxy text rather than real inference tokens. Prescribes live-token mining and asymmetric co-evolution.
+- **PSV (2512.18160):** formal verification as self-play signal (9.6× pass@1 improvement) — motivates using FormalClaimVerifier verdicts as the learning signal for constraint addition rather than loose templates.
+- **DOMINO grammar decoding (ICML 2025):** 17.71× faster grammar-constrained preprocessing with speculative decoding compatibility — long-term path to enforce formal claim templates during generation rather than post-hoc, eliminating the extraction bottleneck entirely.
+- **Sol-Ver (2502.14948):** bidirectional quality-gating for solver+verifier self-play prevents error propagation — informs mutual verification between constraint templates and live tokens.
+- **Sparse Ising + stochastic advantage papers:** confirm sparse constraint graph formulation is the right design for KV260/TSU hardware. The PredictiveVerifier energy gate maps to a sparse Ising problem class where hardware would win.
 
-1. its first non-harmful live verify-only reasoning result on at least one target small model,
-2. a stronger cross-model code-verification signal on Qwen3.5-0.8B and Gemma4-E4B-it, and
-3. its first honest held-out self-learning gain under a zero-extra-false-positive budget.
+---
 
-## v23 Architecture: Solver-Routed Claims Feeding Process Verification and Predictive Learning
+## v24 Hypothesis
+
+If Carnot (1) completes the solver-routed semantic benchmark with GPU inference, (2) calibrates the PredictiveVerifier gate on live GSM8K data, and (3) fixes constraint addition to use domain-specific live inference tokens rather than description-text proxies, it should be able to produce:
+
+1. the first **completed, statistically valid** solver-routed semantic benchmark result (Qwen3.5-0.8B and Gemma4-E4B-it, 200+ GSM8K cases, all three modes),
+2. a calibrated self-learning A/B result showing whether Tier 1/2/3 learning produces real held-out gain when the gate is properly tuned,
+3. a deployed CUDA ORT path for PredictiveVerifier (not just a CPU benchmark), and
+4. the first HuggingFace artifact publications from Carnot research.
+
+---
+
+## v24 Architecture: GPU Throughput → Calibrated Gate → Live Self-Learning
 
 ```
-Prompt / Benchmark Item
-        |
-        v
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Output Contract Policy                                                      │
-│  existing terse / minimal JSON / grammar-gated routing                      │
-│  goal: request only the structure needed for formal claim or process checks │
-└───────────────────────────────┬──────────────────────────────────────────────┘
-                                |
-                                v
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Typed Reasoning + Trace Emission                                             │
-│  existing typed reasoning IR, structured reasoning, code spec surfaces       │
-│  plus new formal claim corpus + process-integrity corpus                     │
-└───────────────┬───────────────────────────────┬──────────────────────────────┘
-                |                               |
-                v                               v
-┌──────────────────────────────┐   ┌──────────────────────────────────────────┐
-│ Formal Claim Verifier        │   │ Process Verifier                         │
-│  Exp 244-247                 │   │  Exp 248-251                            │
-│  normalize claims            │   │  right-for-wrong-reasons checks         │
-│  route to arithmetic / SMT   │   │  step integrity and repair integrity    │
-│  return MCS-style failures   │   │  additive semantic + code verdicts      │
-└───────────────┬──────────────┘   └────────────────────┬─────────────────────┘
-                |                                       |
-                └───────────────────┬───────────────────┘
+Benchmark Item
+      |
+      v
+┌──────────────────────────────────────────────────────────────────┐
+│ DualGPURunner (Exp 258)                                          │
+│  Qwen → GPU 0 (RTX 3090 #0)  |  Gemma → GPU 1 (RTX 3090 #1)    │
+│  Batched inference (8-16/pass)                                   │
+│  ~2-3s/case target (vs 21s/case CPU baseline)                    │
+└───────────────────────────────────┬──────────────────────────────┘
+                                    |
                                     v
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Shared Verify-Repair Harness                                                 │
-│  Exp 246-247: live solver-routed semantic benchmark                          │
-│  Exp 250-251: live process-aware code benchmark                              │
-│  Models: Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it only                    │
-└───────────────────────────────┬──────────────────────────────────────────────┘
-                                |
-                                v
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Continuous Self-Learning                                                     │
-│  Exp 252: predictive verification corpus                                     │
-│  Exp 253: memory-conditioned constraint addition                             │
-│  Exp 254: predictive verifier gate                                           │
-│  Exp 255-256: honest replay + live A/B evaluation                            │
-└───────────────────────────────┬──────────────────────────────────────────────┘
-                                |
-                                v
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Hardware Path                                                                │
-│  Exp 257: predictor latency benchmark on CPU / CUDA / NPU-ready export path │
-│  keep sparse-FPGA workload shaping as a design constraint, not a blocker     │
-└──────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────────┐
+│ Shared Benchmark Harness (Exp 258 upgrade)                       │
+│  resume Exp 247 checkpoints → complete 200 GSM8K + 81 ctir       │
+│  Exp 260: full solver-routed semantic benchmark (first complete) │
+│  Exp 261: full 164-problem HumanEval (Qwen via GPU)              │
+└───────────────────────────────────┬──────────────────────────────┘
+                                    |
+                                    v
+┌──────────────────────────────────────────────────────────────────┐
+│ PredictiveVerifier (Tier 3)                                      │
+│  Exp 259: install onnxruntime-gpu → CUDA ORT path                │
+│  Exp 262: collect live calibration corpus from GPU inference     │
+│  Exp 263: calibrate gate via conformal prediction (4/δ bound)    │
+│  Exp 269: AMD XDNA NPU path (Python 3.12 venv + VitisAI EP)     │
+└───────────────────────────────────┬──────────────────────────────┘
+                                    |
+                                    v
+┌──────────────────────────────────────────────────────────────────┐
+│ Self-Learning (Tier 1/2/3 combined)                              │
+│  Exp 264: domain constraint templates from live inference tokens │
+│  Exp 265: constraint addition wired to formal solver verdicts    │
+│  Exp 266: self-learning A/B v3 (calibrated gate + real templates)│
+└───────────────────────────────────┬──────────────────────────────┘
+                                    |
+                                    v
+┌──────────────────────────────────────────────────────────────────┐
+│ HuggingFace Publishing (research-program.md "NOW" priorities)    │
+│  Exp 267: update 16 model READMEs → point to pip install carnot │
+│  Exp 268: publish Exp 66 joint model + FormalClaimVerifier ONNX  │
+└──────────────────────────────────────────────────────────────────┘
 ```
 
-## Phase 79: Rebuild Live Semantic Verification with Formal Claims (Experiments 244-247)
+---
 
-This phase directly addresses the result from Exp 235: claim isolation without full formalization is still too weak. The goal is to move from calibrated semantic scoring to typed claim routing where deterministic verifiers can carry more of the load.
+## Phase 83: GPU Inference Pipeline and Benchmark Completion (Experiments 258-261)
 
-### Exp 244: Formal claim-routing corpus from live reasoning traces
+The operational retrospective identified sequential dual-model loading and missing inference batching as the top two bottlenecks (+25% estimated wall-time together). This phase addresses both, then applies them to complete the experiments blocked in 2026.04.18.
 
-**Deliverable:** `data/research/formal_claim_corpus_244.jsonl`
+### Exp 258: Wire DualGPURunner to live benchmark harness with batched inference
 
-Build a checked-in corpus from the current live semantic and prompt-side artifacts. Each row should preserve the prompt, response, typed claim text, normalized relation, bound variables, candidate solver route, gold verdict, minimal-correction-subset seed when known, and provenance back to the source run. The corpus must reflect real Qwen and Gemma traces, not fresh synthetic-only data.
+**Deliverable:** `scripts/experiment_258_dual_gpu_harness.py`
 
-### Exp 245: Solver-routed formal claim verifier
+Wire the DualGPURunner (built in Exp 224b at `python/carnot/inference/dual_gpu.py`) and warm model server (Exp 224a at `python/carnot/inference/model_server.py`) to the shared benchmark harness so that Qwen3.5-0.8B runs on GPU 0 and Gemma4-E4B-it runs on GPU 1 simultaneously for all dual-model experiments. Add inference batching at batch_size=8 or 16. Add automatic GPU memory cleanup (torch.cuda.empty_cache()) between runs. The harness should wrap the existing experiment_218_live_dual_model_suite.py interface so existing benchmark runners can opt in without full rewrites. Verify throughput reaches ≤3s/case target on both models. Write tests first for GPU assignment, batching, cleanup, and harness interface.
 
-**Deliverable:** `python/carnot/pipeline/formal_claim_verifier.py`
+### Exp 259: onnxruntime-gpu CUDA EP unlock and PredictiveVerifier benchmark
 
-Implement an additive verifier that translates typed claims into a normalized formal representation and routes each claim to the narrowest deterministic checker that can handle it. Arithmetic, comparison, cardinality, set-membership, and simple boolean entailment should be first-class routes. When a claim cannot be formalized safely, the verifier must abstain instead of inventing certainty.
+**Deliverable:** `results/experiment_259_results.json`
 
-### Exp 246: Live solver-routed semantic benchmark runner
+Install onnxruntime-gpu (`pip install onnxruntime-gpu --extra-index-url https://download.pytorch.org/whl/cu121`) in the project venv, verify that CUDAExecutionProvider is listed in ort.get_available_providers(), export or reload the PredictiveVerifier ONNX model (check `results/jepa_predictor_146.onnx`), and benchmark CUDA ORT vs CPU ORT (5.8 µs baseline from Exp 257). Report latency (µs/call), throughput (calls/s), GPU memory overhead (MB), and model export compatibility. If CUDA ORT requires re-export, regenerate from `python/carnot/pipeline/predictive_verifier.py`. Emit honest blocker artifact if GPU setup fails — do not fabricate numbers.
 
-**Deliverable:** `scripts/experiment_246_solver_semantic_live.py`
+### Exp 260: Complete solver-routed semantic benchmark with GPU inference
 
-Create the execution harness for the next live reasoning benchmark. It should reuse the paired-cohort discipline from Exp 218/235, support checkpointing, and preserve per-claim solver traces so the final artifact can explain exactly which routes helped or abstained.
+**Deliverable:** `results/experiment_260_results.json`
 
-### Exp 247: Live solver-routed semantic benchmark
+Execute the full solver-routed semantic benchmark using the Exp 258 DualGPURunner harness. Resume from Exp 247 checkpoints (18/200 Qwen baseline cases already complete at `results/checkpoints/experiment_246/`). Cover all cells: 200 GSM8K × {baseline, verify_only, verify_repair} × {Qwen/Qwen3.5-0.8B, google/gemma-4-E4B-it} and 81 constraint_ir × 3 modes × 2 models. Report route-level evidence (solver routes that fired, abstain rates), per-model false positive budget, and whether verify-only is non-harmful for at least one model. This is the **primary deliverable of the milestone** — the first statistically complete solver-routed benchmark. Keep checkpointing at 10-case granularity. Do not fabricate cells if any remain blocked — emit a partial artifact with honest status.
 
-**Deliverable:** `results/experiment_247_results.json`
+### Exp 261: Full 164-problem HumanEval benchmark with Qwen via GPU
 
-Run the new semantic stack on the shared small-model pair over a live reasoning slice that includes GSM8K-style semantic failures and prompt-side contract-following examples. The key comparison is against Exp 235 and Exp 221: did false positives drop materially, which solver routes carried the lift, and is verify-only finally non-harmful for at least one model?
+**Deliverable:** `results/experiment_261_results.json`
 
-**Phase 79 success target:** materially improve the false-positive budget versus Exp 235 and show route-level evidence that formalized claims are doing useful work rather than just shifting abstention patterns.
+Run the full 164-problem HumanEval benchmark using the GPU harness from Exp 258, for Qwen/Qwen3.5-0.8B only (Gemma 164-problem result already exists in Exp 226). Use the PBT + spec-aware + process-aware verifier stack from Exp 250. Report pass@1 at each stage: baseline, pbt_verify_only, spec_aware_verify_only, process_aware_verify_only, verify_repair. This generates the missing paired Qwen full-164 result alongside Exp 226 to enable a direct cross-model comparison at scale.
 
-## Phase 80: Add Process Integrity to Reasoning and Code (Experiments 248-251)
+---
 
-This phase targets the next credibility problem after formal claims: correct outcomes still do not prove valid reasoning. The goal is to make Carnot explicitly sensitive to process integrity in both semantic reasoning and code repair.
+## Phase 84: Predictive Verifier Calibration (Experiments 262-263)
 
-### Exp 248: Process-integrity corpus from live semantic and code traces
+The Exp 256 root cause: the PredictiveVerifier gate was never calibrated on the live GSM8K inference distribution. It routed 100% of cases to FAST_PATH because its internal confidence scores were uncalibrated. This phase collects a calibration corpus and fits a calibrated threshold using the 4/δ bound framework.
 
-**Deliverable:** `data/research/process_integrity_corpus_248.jsonl`
+### Exp 262: Live calibration corpus for PredictiveVerifier from GPU inference
 
-Construct a checked-in corpus of "right answer / wrong process," "wrong answer / partially sound process," unsupported step, and repair-integrity cases from Exp 235, Exp 238, Exp 243, and earlier live code traces where useful. Each row should include step structure or code-trace structure, gold process label, outcome label, and provenance.
+**Deliverable:** `data/research/predictive_calibration_corpus_262.jsonl`
 
-### Exp 249: Process verifier
+Using the GPU harness from Exp 258, run a targeted calibration collection pass over 200 GSM8K questions with Qwen/Qwen3.5-0.8B. For each question, capture: the first N-token prefix (partial response at 25%, 50%, 75% of final length), the full response, and the final violation label from FormalClaimVerifier (did it flag a violation?). Extract domain-specific token patterns (explicit equation tokens, arithmetic operator sequences, digit density) from the partial contexts, keyed by whether a final violation occurred. This creates a ground-truth (partial_context_features, full_violation_label) corpus with provenance to Exp 260 case IDs. Store as JSONL with schema: case_id, prefix_fraction, token_pattern_features, violation_label, provenance_exp.
 
-**Deliverable:** `python/carnot/pipeline/process_verifier.py`
+### Exp 263: Calibrate PredictiveVerifier and run calibrated self-learning A/B benchmark
 
-Implement an additive verifier that scores reasoning-integrity and repair-integrity rather than only end-state correctness. It should work over typed reasoning steps and over code-repair traces, expose a structured result object, and stay composable with the formal claim verifier instead of replacing it.
+**Deliverable:** `results/experiment_263_results.json`
 
-### Exp 250: Live process-aware code benchmark runner
+Use the Exp 262 corpus to calibrate the PredictiveVerifier threshold via isotonic regression. Target: fast-path hit rate ≥ 30%, true-violation detection rate ≥ 60%, FP rate ≤ 20% on held-out portion. Reference the 4/δ bound paper (arXiv 2512.02080) for operating zone identification. After calibration, run the full self-learning A/B benchmark (same structure as Exp 256: no_learning, case_memory_plus_policy, constraint_addition, predictive_gate, combined) using the calibrated gate and the Exp 260 result as the evaluation cohort. Primary success condition: any strategy achieves positive held-out gain with ≤ Exp 241 false positives. Report secondary metrics: verification spend, fast-path hit rate, per-domain lift, per-model lift.
 
-**Deliverable:** `scripts/experiment_250_process_code_live.py`
+---
 
-Create a runner for a live paired HumanEval benchmark on Qwen3.5-0.8B and Gemma4-E4B-it that layers process verification on top of the existing official-tests + PBT + explicit-spec stack. This should follow the milestone rule for large experiments: runner first, execution later.
+## Phase 85: Domain-Specific Constraint Templates and Tier 2 Self-Learning (Experiments 264-266)
 
-### Exp 251: Live process-aware code benchmark
+Exp 256 showed constraint templates matched description-text proxies (full English strings) not real inference tokens. The Self-Play Info Gain paper (2603.02218) prescribes live-token mining for learnable signal. This phase rebuilds constraint templates from GPU inference data and wires constraint addition to formal solver verdicts.
 
-**Deliverable:** `results/experiment_251_results.json`
+### Exp 264: Domain-specific constraint template extraction from live inference tokens
 
-Execute the new code benchmark on a shared official HumanEval slice. Report baseline, official-tests verify-only, PBT verify-only, spec-aware verify-only, process-aware verify-only, and verify-repair. The artifact must explicitly count cases that passed outcome checks but failed process-integrity checks.
+**Deliverable:** `data/research/domain_constraint_templates_264.jsonl`
 
-**Phase 80 success target:** identify a non-trivial set of right-for-wrong-reasons cases and either improve repair quality or reduce weak-harness acceptance on at least one target model without increasing false positives.
+Mine the Exp 262 calibration corpus and Exp 260 results for domain-specific token patterns that correlate with FormalClaimVerifier violations. For arithmetic: explicit equation tokens (digits, arithmetic operators, equals signs) and their positional context. For cardinality: count-word and quantity-noun patterns. For set-membership: list-enumeration and element-identification token sequences. Store templates as (domain, token_pattern_regex, associated_claim_route, corpus_precision, corpus_recall, model_specificity) rows. Use FormalClaimVerifier verdicts from Exp 260 as ground-truth labels (PSV approach: formal verification as the learning signal). Enforce minimum corpus_precision ≥ 0.50 before inclusion — no liberal matching allowed. Report template counts, precision distribution, and which models each template is specific to.
 
-## Phase 81: Build the Data and Modules for Predictive Self-Learning (Experiments 252-254)
+### Exp 265: Constraint addition module wired to formal solver verdicts
 
-Exp 241 proved the current self-learning loop is too passive. This phase turns existing traces into the data and modules needed for proactive adaptation at inference speed.
+**Deliverable:** `python/carnot/pipeline/constraint_addition.py` (updated)
 
-### Exp 252: Predictive verification corpus from partial responses and repairs
+Update constraint_addition.py to: (1) use Exp 264 domain templates as the source for new constraint candidates (replacing description-text proxy matching); (2) wire the addition decision to FormalClaimVerifier verdict history (from case_memory or Exp 260 checkpoints) — when memory detects a recurring violation type (e.g., arithmetic carry errors in Qwen3.5-0.8B multi-step addition), ADD a new FormalClaimVerifier route extension, not just a weight upward; (3) apply mutual verification gating (Sol-Ver approach): a template is only promoted if it fires on ≥ 3 known-violation cases AND fires on < 20% of known-correct cases in the calibration corpus. Write tests first covering template promotion logic, mutual verification gating, and integration with VerifyRepairPipeline.
 
-**Deliverable:** `data/research/predictive_verification_corpus_252.jsonl`
+### Exp 266: Self-learning replay v3 with calibrated gate and domain templates
 
-Build a corpus of partial responses, final verifier outcomes, process labels, accepted repairs, and case-memory hits from the checked-in live artifacts. The goal is to support two next-step learners: a fast "should we verify harder?" predictor and a memory-conditioned constraint-addition path.
+**Deliverable:** `results/experiment_266_results.json`
 
-### Exp 253: Memory-conditioned constraint addition
+Run the chronological self-learning replay (Exp 241/256 structure) using the calibrated PredictiveVerifier gate (Exp 263) and domain-specific constraint templates (Exp 264/265). Test four strategies: no_learning, case_memory_plus_policy, calibrated_constraint_addition, calibrated_predictive_gate_plus_addition. Primary success condition: positive held-out gain with ≤ Exp 241 (8) false positives on at least one strategy. Include direct numeric comparison blocks against Exp 241 and Exp 256. State clearly if the primary condition is not met. Preserve per-strategy fast-path hit rate, latency, and domain-level breakdown.
 
-**Deliverable:** `python/carnot/pipeline/constraint_addition.py`
+---
 
-Implement the missing self-learning step called out in `research-program.md`: when memory surfaces a recurring failure family, Carnot should be able to add a new lightweight constraint template or check budget rather than only reweight existing checks. This path must remain cheap enough for CPU-side deployment.
+## Phase 86: HuggingFace Publishing and Hardware Enablement (Experiments 267-270)
 
-### Exp 254: Predictive verifier gate with export-ready small model path
+Three of the six HuggingFace publishing milestones in research-program.md are marked "NOW" and have been deferred for multiple milestones. This phase executes them. Plus AMD XDNA NPU enablement (`.so` libraries are already present).
 
-**Deliverable:** `python/carnot/pipeline/predictive_verifier.py`
+### Exp 267: Update 16 HuggingFace model READMEs
 
-Implement a small predictive gate that estimates whether a partial response is likely to trigger a meaningful downstream violation. It should be export-ready for ONNX or similar runtimes so the hardware path for Tier 3 learning stays explicit from the start.
+**Deliverable:** `results/experiment_267_results.json`
 
-**Phase 81 success target:** create a self-learning substrate that changes future verification behavior through added constraints and fast-path / slow-path routing, not just better retrospective retrieval.
+Update the READMEs of all 16 existing Carnot-EBM models on huggingface.co/Carnot-EBM. Add a status banner clarifying: (1) the per-token activation EBMs are Phase 1 research artifacts that detect confidence, not correctness; (2) users should use `pip install carnot` for the production pipeline with FormalClaimVerifier, MCP server, and PBT code verification; (3) a brief "what's proven to work" section referencing verified capabilities. Do not delete existing content — prepend the status banner and append the updated context section. Use `huggingface-cli` to push each update. Log each model's HF repo URL and push status in the results artifact. Write a simple script to batch the updates.
 
-## Phase 82: Prove Self-Learning Lift and Hardware-Shaped Latency (Experiments 255-257)
+### Exp 268: Publish Exp 66 joint model and FormalClaimVerifier ONNX to HuggingFace
 
-This phase is the milestone's required continuous self-learning proof. It tests whether the new additive constraints and predictive gate actually help and whether the predictor can meet the repo's hardware-acceleration principle.
+**Deliverable:** `results/experiment_268_results.json`
 
-### Exp 255: Self-learning A/B runner
+Publish two new artifacts to huggingface.co/Carnot-EBM: (1) the Exp 66 differentiable constraint model (embedding + Ising → score, 1.0 AUROC) as a safetensors artifact with a README stating "proof-of-concept demonstrating the approach, not production quality"; (2) the FormalClaimVerifier exported as an ONNX model for the ONNX-compatible components (arithmetic and comparison routes), with a Python module bundle for the remaining routes, and a README explaining solver routing, abstention policy, and how to use it standalone. Tag the collection as release `v0.2.0-research`. Log HF artifact URLs and model card stats in the results artifact.
 
-**Deliverable:** `scripts/experiment_255_self_learning_ab.py`
+### Exp 269: AMD XDNA NPU enablement for PredictiveVerifier
 
-Create the benchmark runner that compares the current best baseline against four stronger settings: case-memory plus policy, constraint addition only, predictive gate only, and combined constraint addition plus predictive gate. It should support both honest chronological replay and a small live slice on the two target models.
+**Deliverable:** `results/experiment_269_results.json`
 
-### Exp 256: Self-learning A/B benchmark
+Attempt to enable the AMD XDNA NPU for PredictiveVerifier inference using the already-present VitisAI EP files in `~/github.com/amd/RyzenAI-SW/`. Steps: (1) activate `.venv-npu/` (Python 3.12); (2) configure LD_LIBRARY_PATH to include the VitisAI EP `.so` files and attempt to load `onnxruntime` with VitisAIExecutionProvider; (3) load `results/jepa_predictor_146.onnx`; (4) benchmark latency vs CPU ORT (5.8 µs Exp 257 baseline) and CUDA ORT (Exp 259). If NPU setup succeeds: report throughput (calls/s), power consumption (if measurable), and routing quality differences. If blocked: emit honest blocker naming the exact missing component and exact next action to unblock. Do not fabricate NPU numbers.
 
-**Deliverable:** `results/experiment_256_results.json`
+### Exp 270: Operational retrospective for milestone 2026.04.19
 
-Run the A/B benchmark. The primary success criterion is still honest: real held-out task gain with no extra false positives relative to the no-learning baseline. Secondary metrics should include verification spend, latency, fast-path hit rate, and per-domain gains.
+**Deliverable:** `results/operational_retro_2026_04_19.json`
 
-### Exp 257: Predictive verifier hardware-readiness benchmark
+Generate the process efficiency analysis for this milestone. Measure whether DualGPURunner wiring + inference batching achieved the predicted 25% wall-time reduction vs the 2026.04.18 baseline (3,889 minutes total, 14.2 min/experiment average). Enable continuous GPU monitoring (`gpu_monitor.py --loop`) at the start of this milestone to record actual GPU utilization rather than estimating it post-hoc. Document: total wall time, experiments/hour, slowest experiments, GPU utilization distribution, and whether the Exp 260 benchmark completion proves the throughput hypothesis. Generate updated recommendations for milestone 2026.04.20.
 
-**Deliverable:** `results/experiment_257_results.json`
+---
 
-Benchmark the predictive verifier on the available hardware tiers: CPU baseline, CUDA when beneficial, and an export-oriented NPU-ready path if the local AMD stack can exercise it. If the NPU path is still blocked, record the blocker artifact honestly rather than inflating hardware claims.
+## Phase Summary
 
-**Phase 82 success target:** first honest held-out self-learning gain plus a measured latency profile that keeps Tier 3 aligned with the repo's CPU/GPU/NPU acceleration principle.
+| Phase | Experiments | Theme | Key Success Criterion |
+|-------|-------------|-------|----------------------|
+| 83 | 258-261 | GPU inference pipeline + benchmark completion | Exp 260 completes: valid solver-routed results for both models |
+| 84 | 262-263 | PredictiveVerifier calibration | Calibrated gate: fast-path ≥30%, detection ≥60%, FP ≤20% |
+| 85 | 264-266 | Domain templates + Tier 2 self-learning | Any strategy: positive held-out gain vs Exp 241 baseline |
+| 86 | 267-270 | HuggingFace publishing + hardware | ≥2 new HF artifacts; 16 READMEs updated |
+
+---
+
+## Hardware Requirements
+
+| Hardware | Experiments | Status |
+|----------|-------------|--------|
+| 2× RTX 3090 (CUDA) | 258-266 | Available; DualGPURunner wiring needed |
+| onnxruntime-gpu pip wheel | 259, 263 | One `pip install onnxruntime-gpu` away |
+| AMD XDNA NPU (kernel module loaded) | 269 | VitisAI EP .so present in RyzenAI-SW; Python 3.12 venv ready |
+| HuggingFace CLI + account | 267-268 | May need `huggingface-cli login` at milestone start |
+| AMD KV260 FPGA | Retro mention | Available; overlay bring-up deferred to 2026.04.20 |
+
+---
 
 ## Dependency Graph
 
 ```
-Exp 244 (formal claim corpus) ───────────────▶ Exp 245 (formal claim verifier) ─▶ Exp 246 ─▶ Exp 247
-
-Exp 235 ─┐
-Exp 238 ─┼──────────────────────────────────▶ Exp 248 (process-integrity corpus) ─▶ Exp 249 ─▶ Exp 250 ─▶ Exp 251
-Exp 243 ─┘
-
-Exp 247 ─┐
-Exp 248 ─┼──────────────────────────────────▶ Exp 252 (predictive verification corpus)
-Exp 251 ─┘
-
-Exp 241 ─┐
-Exp 252 ─┴──────────────────────────────────▶ Exp 253 (constraint addition)
-Exp 252 ────────────────────────────────────▶ Exp 254 (predictive verifier gate)
-
-Exp 253 ─┐
-Exp 254 ─┼──────────────────────────────────▶ Exp 255 ─▶ Exp 256
-Exp 247 ─┤
-Exp 251 ─┘
-
-Exp 254 ────────────────────────────────────▶ Exp 257
+Exp 258 (DualGPURunner harness)
+    ├── Exp 260 (solver-routed semantic benchmark, complete)
+    │       └── Exp 262 (calibration corpus from GPU inference)
+    │               └── Exp 263 (calibrate gate + A/B v2)
+    │                       └── Exp 266 (self-learning v3)
+    └── Exp 261 (HumanEval 164-problem Qwen GPU)
+Exp 259 (onnxruntime-gpu) ──────────────────────────── Exp 263
+Exp 264 (domain templates) ── Exp 265 (constraint addition) ── Exp 266
+Exp 267 (HF READMEs) [independent]
+Exp 268 (HF publish) [independent, cite Exp 260 in README]
+Exp 269 (AMD XDNA NPU) [independent]
+Exp 270 (retro) [depends on all prior]
 ```
 
-## Execution Order
+---
 
-```
-1. exp244 -- Build the formal claim-routing corpus from checked-in live traces
-2. exp245 -- Implement the solver-routed formal claim verifier
-3. exp246 -- Create the live solver-routed semantic benchmark runner
-4. exp247 -- Execute the live solver-routed semantic benchmark
-5. exp248 -- Build the process-integrity corpus from semantic and code traces
-6. exp249 -- Implement the additive process verifier
-7. exp250 -- Create the live process-aware code benchmark runner
-8. exp251 -- Execute the live process-aware code benchmark
-9. exp252 -- Build the predictive verification corpus from partial responses and repairs
-10. exp253 -- Implement memory-conditioned constraint addition
-11. exp254 -- Implement the predictive verifier gate
-12. exp255 -- Create the self-learning A/B benchmark runner
-13. exp256 -- Execute the self-learning A/B benchmark
-14. exp257 -- Measure predictive-verifier latency across available hardware paths
-```
+## What This Milestone Does NOT Include
 
-## Hardware Requirements
-
-| Experiment | Compute | Memory | Time est. |
-|-----------|---------|--------|-----------|
-| 244 | CPU | 2-4GB | 30-60 min |
-| 245 | CPU | 4-8GB | 2-4 hours |
-| 246 | CPU | 2-4GB | 1-2 hours |
-| 247 | CPU + 1-2 GPUs | 24-48GB VRAM | 2-4 hours |
-| 248 | CPU | 2-4GB | 30-60 min |
-| 249 | CPU | 4-8GB | 2-4 hours |
-| 250 | CPU | 2-4GB | 1-2 hours |
-| 251 | CPU + 1-2 GPUs | 24-48GB VRAM | 2-4 hours |
-| 252 | CPU | 4-8GB | 30-60 min |
-| 253 | CPU | 4-8GB | 2-4 hours |
-| 254 | CPU + optional CUDA / NPU runtime | 8-24GB | 2-4 hours |
-| 255 | CPU | 4-8GB | 1-2 hours |
-| 256 | CPU + 1-2 GPUs for live slice | 24-48GB VRAM | 2-3 hours |
-| 257 | CPU + optional CUDA / AMD XDNA path | 8-24GB | 30-90 min |
-
-**Assumed local hardware for the milestone:**
-
-- `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` only for all live LLM work.
-- Dual RTX 3090-class CUDA GPUs for paired live benchmark execution.
-- AMD Ryzen AI host CPU for orchestration, replay, and CPU-fast-path self-learning.
-- AMD XDNA NPU only if a VitisAI-capable runtime is available; otherwise Exp 257 must emit an honest blocker note.
-- KV260 remains optional and non-blocking this milestone. The sparse-hardware papers inform workload design, but no task depends on live FPGA access.
-
-## Explicitly Deferred to 2026.04.19
-
-- **More KV260 overlay work:** Exp 242 already proved the blocker is setup, not another missing benchmark wrapper.
-- **Full 164-problem paired HumanEval rerun on both models:** defer until the 50-problem process-aware slice shows the new verifier path earns that spend.
-- **TSU-specific integration work:** keep the backend boundary clean, but do not consume milestone slots before the verifier workload is stronger.
-- **Full RL training from process-verifier labels:** first prove the data and additive verifier paths help in replay and live A/B.
-- **Older model families:** remain out of scope unless Qwen vs Gemma differences force an architecture-level explanation.
+- **KV260 FPGA overlay bring-up** — deferred to 2026.04.20; DualGPURunner and CUDA ORT deliver faster wins with lower risk. KV260 earmarked for a dedicated hardware phase.
+- **Gemma3 / Qwen4 model upgrades** — not yet available at HuggingFace at planning time; models stay as Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it per research-program.md.
+- **DOMINO / grammar-constrained generation** — long-term path, depends on completing the current autoregressive benchmark first.
+- **EB-JEPA / THRML integration** — depends on self-learning calibration being proven. Post-milestone 2026.04.20 at earliest.
