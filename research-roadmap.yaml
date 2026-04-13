@@ -135,7 +135,7 @@ tasks:
       1. Create scripts/experiment_260_solver_semantic_gpu.py that extends the Exp 246 runner
          to use the DualGPUBenchmarkHarness from Exp 258. Preserve all existing checkpoint
          compatibility: resume from results/checkpoints/experiment_246/ where cases exist.
-      2. Cover all cells: 200 GSM8K × {baseline, verify_only, verify_repair} × {Qwen, Gemma}
+      2. Cover all cells: 200 GSM8K × (baseline, verify_only, verify_repair) × (Qwen, Gemma)
          and 81 constraint_ir × 3 modes × 2 models. Checkpoint at 10-case granularity.
       3. Report per-route solver evidence (arithmetic, cardinality, set_membership, smt, abstain),
          per-model false positive budget, abstain rates, and whether verify-only is non-harmful

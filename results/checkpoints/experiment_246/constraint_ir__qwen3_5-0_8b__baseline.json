@@ -1176,6 +1176,733 @@
       "prompt_tokens": 21,
       "response_tokens": 101,
       "total_tokens": 122
+    },
+    "exp211-code-intervals-1": {
+      "case_id": "exp211-code-intervals-1",
+      "mode": "baseline",
+      "response": "```python\ndef merge_intervals(intervals: list[tuple[int, int]]) -> list[tuple[int, int]]:\n    \"\"\"\n    Merges overlapping closed intervals and returns them sorted by start.\n\n    Args:\n        intervals: List of (start, end) tuples.\n\n    Returns:\n        List of (start, end) tuples merged and sorted by start.\n    \"\"\"\n    if not intervals:\n        return []\n\n    # Sort by start time\n    intervals.sort(key=lambda x: x[0])\n\n    merged = []\n    for start, end in intervals:\n        if not merged or end > merged[-1][1]:\n            # New interval starts after the last merged interval ends\n            merged.append((start, end))\n        else:\n            # Overlapping: extend the previous interval\n            merged[-1] = (merged[-1][0], max(merged[-1][1], end))\n\n    return merged\n```\n\nExample usage:\n\n```python\nintervals = [(1, 3), (2, 4), (5, 6)]\nprint(merge_intervals(intervals))  # [(1, 6)]\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 32.665,
+      "prompt_tokens": 18,
+      "response_tokens": 109,
+      "total_tokens": 127
+    },
+    "exp211-instruction-yaml-2": {
+      "case_id": "exp211-instruction-yaml-2",
+      "mode": "baseline",
+      "response": "```yaml\nservice: search\nteam: infra\nwindow_end: 14:20\nnow: 13:50\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 4.871,
+      "prompt_tokens": 16,
+      "response_tokens": 10,
+      "total_tokens": 26
+    },
+    "exp211-live-gsm8k-1019": {
+      "case_id": "exp211-live-gsm8k-1019",
+      "mode": "baseline",
+      "response": "To find the current number of guests at the hotel, let's break down the events chronologically and track the number of people entering the building.\n\n### Step 1: Initial State\n*   **Total guests initially:** 100.\n\n### Step 2: Early Checkout\n*   **Action:** 24 guests elected for an early checkout.\n*   **Calculation:** $100 - 24 = 76$ guests remain.\n\n### Step 3: Late Checkout\n*   **Action:** 15 guests elected for a late checkout.\n*   **Calculation:** $76 - 15 = 61$ guests remain.\n\n### Step 4: Check-ins in the Afternoon\n*   **Action:** Twice as many people checked in as those who opted for a late checkout.\n    *   Late checkouts = 15.\n    *   Calculation: $15 \\times 2 = 30$.\n*   **Calculation:** $61 + 30 = 91$ guests check in.\n\n### Step 5: Check-ins after Dinner\n*   **Action:** 7 more people checked in after dinner was served.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 32.254,
+      "prompt_tokens": 60,
+      "response_tokens": 143,
+      "total_tokens": 203
+    },
+    "exp211-instruction-rewrite-3": {
+      "case_id": "exp211-instruction-rewrite-3",
+      "mode": "baseline",
+      "response": "We are now in a calm state, with the staging fix completed and the customer pilot proceeding smoothly.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "observed=0.0 not in [25.0, 32.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 2.943,
+      "prompt_tokens": 42,
+      "response_tokens": 18,
+      "total_tokens": 60
+    },
+    "exp211-code-toposort-2": {
+      "case_id": "exp211-code-toposort-2",
+      "mode": "baseline",
+      "response": "```python\nfrom collections import deque\nfrom typing import List, Tuple\n\ndef topo_sort_nodes(nodes: list[str], edges: list[tuple[str, str]]) -> list[str]:\n    \"\"\"\n    Perform topological sort on a directed graph.\n    \n    Parameters:\n    nodes (list[str]): List of nodes in the graph.\n    edges (list[tuple[str, str]]): List of directed edges (u -> v).\n    \n    Returns:\n    list[str]: Topologically sorted order of nodes.\n    \n    Raises:\n    ValueError: If the graph contains cycles.\n    \"\"\"\n    # Build adjacency list\n    graph = {node: [] for node in nodes}\n    for u, v in edges:\n        graph[u].append(v)\n    \n    # Check for cycles using DFS\n    visited = set()\n    stack = []\n    \n    def dfs(node: str) -> bool:\n        visited.add(node)\n        for neighbor in graph[node]:\n            if neighbor not in visited:\n                if dfs(neighbor):\n                    return True\n            elif neighbor in visited:\n                # Found a cycle\n                return True\n        return False\n    \n    for node in nodes:",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.952,
+      "prompt_tokens": 17,
+      "response_tokens": 125,
+      "total_tokens": 142
+    },
+    "exp211-code-toposort-3": {
+      "case_id": "exp211-code-toposort-3",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import List, Tuple, Set, Optional\nfrom collections import deque\n\ndef course_order(prereqs: List[Tuple[str, str]]) -> List[str]:\n    \"\"\"\n    Returns a valid topological sort of the prerequisite graph.\n    Raises ValueError if the graph is cyclic.\n    \"\"\"\n    if not prereqs:\n        return []\n\n    # Build adjacency list and in-degree count\n    graph = {}\n    in_degree = {node: 0 for node in prereqs}\n\n    for prereq, req in prereqs:\n        if prereq not in graph:\n            graph[prereq] = []\n        graph[prereq].append(req)\n        in_degree[req] += 1\n\n    # Kahn's algorithm for topological sort\n    queue = deque([node for node in prereqs if in_degree[node] == 0])\n    result = []\n\n    while queue:\n        node = queue.popleft()\n        result.append(node)\n\n        for neighbor in graph[node]:\n            in_degree[neighbor] -= 1\n            if in_degree[neighbor] == 0:\n                queue.append(neighbor)\n\n    # If we",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.731,
+      "prompt_tokens": 21,
+      "response_tokens": 117,
+      "total_tokens": 138
+    },
+    "exp211-code-dedupe-2": {
+      "case_id": "exp211-code-dedupe-2",
+      "mode": "baseline",
+      "response": "```python\ndef dedupe_casefold(items: list[str]) -> list[str]:\n    \"\"\"\n    Remove duplicates case-insensitively while preserving the first original spelling\n    and input order.\n\n    Args:\n        items: A list of strings.\n\n    Returns:\n        A new list with duplicates removed, preserving the original order and spelling.\n    \"\"\"\n    seen = set()\n    result = []\n\n    for item in items:\n        # Convert to lowercase for case-insensitive comparison\n        key = item.lower()\n        if key not in seen:\n            seen.add(key)\n            result.append(item)\n\n    return result\n```\n\nExample usage:\n```python\nitems = [\"Hello\", \"hello\", \"HELLO\", \"hello\", \"Hello\"]\ndedupe_casefold(items)\n# Output: ['Hello', 'hello', 'HELLO']\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 22.041,
+      "prompt_tokens": 21,
+      "response_tokens": 86,
+      "total_tokens": 107
+    },
+    "exp211-live-gsm8k-1309": {
+      "case_id": "exp211-live-gsm8k-1309",
+      "mode": "baseline",
+      "response": "To find the total amount of money raised by all the girls, we need to calculate the individual amounts each person raised and then sum them up.\n\n**1. Identify the amounts raised by each person:**\n*   **Kim:** Raises $320 more than Alexandra.\n*   **Alexandra:** Raises $430.\n*   **Maryam:** Raises $400 more than Sarah.\n*   **Sarah:** Raises $300.\n\n**2. Calculate the amounts for each person:**\n*   **Alexandra:** $430\n*   **Kim:** $430 + $320 = **$750**\n*   **Sarah:** $300\n*   **Maryam:** $300 + $400 = **$700**\n\n**3. Calculate the total:**\n$$ \\text{Total} = \\text{Alexandra} + \\text{Kim} + \\text{Sarah} + \\text{Maryam} $$\n$$ \\text{Total} = 430 + 750 + 300 + 700 $$\n\nLet's add them step-by-step:\n*",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.468,
+      "prompt_tokens": 40,
+      "response_tokens": 115,
+      "total_tokens": 155
+    },
+    "exp211-instruction-bullets-1": {
+      "case_id": "exp211-instruction-bullets-1",
+      "mode": "baseline",
+      "response": "* The release handoff is completed by the owner.\n* The tokens risk is managed by the team.\n* The deadline is set for the final review.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=3.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": "observed=0.0 not in [4.0, 7.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c6",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 6,
+      "n_supported": 3,
+      "n_violated": 2,
+      "n_abstained": 1,
+      "latency_seconds": 4.264,
+      "prompt_tokens": 32,
+      "response_tokens": 27,
+      "total_tokens": 59
+    },
+    "exp211-code-config-1": {
+      "case_id": "exp211-code-config-1",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import Dict, Any, Optional\n\ndef load_config(env: Dict[str, str]) -> Dict[str, Any]:\n    \"\"\"\n    Load configuration from environment variables.\n    \n    Parameters:\n    env (Dict[str, str]): Environment variables dictionary\n    \n    Returns:\n    Dict[str, Any]: Configuration dictionary with optional defaults\n    \n    Raises:\n    ValueError: If required environment variables are missing\n    \"\"\"\n    config = {}\n    \n    # Required environment variables\n    if \"HOST\" not in env:\n        raise ValueError(\"HOST environment variable is required\")\n    if \"PORT\" not in env:\n        raise ValueError(\"PORT environment variable is required\")\n    \n    # Cast PORT to int\n    try:\n        port = int(env[\"PORT\"])\n    except ValueError:\n        raise ValueError(\"PORT must be a valid integer\")\n    \n    # Default mode to safe if missing\n    mode = \"safe\"\n    if \"MODE\" not in env:\n        mode = \"safe\"\n    \n    config[\"HOST\"] = env[\"HOST\"]\n    config[\"PORT\"] = port\n    config[\"MODE\"] = mode\n    \n    return config\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.293,
+      "prompt_tokens": 25,
+      "response_tokens": 121,
+      "total_tokens": 146
+    },
+    "exp211-code-rolling-3": {
+      "case_id": "exp211-code-rolling-3",
+      "mode": "baseline",
+      "response": "Here\u2019s a simple O(n) implementation using a sliding window with a deque (double-ended queue) to maintain the maximum in each window:\n\n```python\nfrom collections import deque\n\ndef rolling_max(values: list[int], window: int) -> list[int]:\n    \"\"\"\n    Returns the maximum of every full window of size `window` in O(n) time.\n    \"\"\"\n    if not values or window <= 0:\n        return []\n\n    n = len(values)\n    if n < window:\n        return [0] * n  # or handle appropriately\n\n    # deque stores (index, value) pairs, where value is the maximum seen so far\n    dq = deque()\n\n    # Initialize first window\n    for i in range(window):\n        idx = i\n        if idx in dq:\n            dq.popleft()  # remove outdated index\n        dq.append((idx, values[idx]))\n\n    result = []\n    for i in range(window, n):\n        # Remove indices out of current window\n        if i - window >= dq[0]:\n            dq.popleft()\n\n        # Add new element\n        dq.append((i, values[i]))\n\n        # Remove elements",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.63,
+      "prompt_tokens": 18,
+      "response_tokens": 142,
+      "total_tokens": 160
+    },
+    "exp211-code-config-3": {
+      "case_id": "exp211-code-config-3",
+      "mode": "baseline",
+      "response": "```python\nfrom typing import Dict, Any, Optional\n\ndef load_feature_config(env: dict[str, str]) -> Dict[str, Any]:\n    \"\"\"\n    Loads a feature configuration from environment variables.\n    \n    Parameters:\n    env (dict[str, str]): Environment variables containing feature settings.\n    \n    Returns:\n    dict[str, Any]: A dictionary containing feature configurations.\n    \"\"\"\n    config = {}\n    \n    # Parse OWNER from environment\n    owner = env.get(\"OWNER\", \"\")\n    if owner:\n        config[\"OWNER\"] = owner\n    \n    # Parse CHANNEL from environment\n    channel = env.get(\"CHANNEL\", \"\")\n    if channel:\n        config[\"CHANNEL\"] = channel\n    \n    # Parse ENABLED from environment\n    enabled = env.get(\"ENABLED\", \"\")\n    if enabled:\n        try:\n            config[\"ENABLED\"] = bool(eval(enabled))\n        except (ValueError, TypeError):\n            config[\"ENABLED\"] = False\n    \n    return config\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 24.83,
+      "prompt_tokens": 25,
+      "response_tokens": 95,
+      "total_tokens": 120
+    },
+    "exp211-instruction-sections-1": {
+      "case_id": "exp211-instruction-sections-1",
+      "mode": "baseline",
+      "response": "### Overview\nThe current API freeze is preventing new feature launches and requires immediate review of existing functionality.\n\n### Risks\nA staffing gap in the development team is creating delays and increasing the risk of technical debt.\n\n### Next Step\nWe are moving to a beta date to test the new features with a small group of users.",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 3,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 8.122,
+      "prompt_tokens": 36,
+      "response_tokens": 58,
+      "total_tokens": 94
+    },
+    "exp211-instruction-negation-2": {
+      "case_id": "exp211-instruction-negation-2",
+      "mode": "baseline",
+      "response": "Based on the provided table, here are the tasks that are **NOT blocked** and **NOT assigned to team-red**:\n\n*   **t1** (ready, team-blue)\n*   **t4** (ready, team-green)\n\n**Task IDs:** t1, t4",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 7.311,
+      "prompt_tokens": 40,
+      "response_tokens": 30,
+      "total_tokens": 70
+    },
+    "exp211-instruction-json-1": {
+      "case_id": "exp211-instruction-json-1",
+      "mode": "baseline",
+      "response": "{\n  \"action\": \"approve\",\n  \"reason\": \"Request approved based on current data\",\n  \"confidence\": \"high\"\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 2,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 4.227,
+      "prompt_tokens": 25,
+      "response_tokens": 13,
+      "total_tokens": 38
+    },
+    "exp211-code-roman-1": {
+      "case_id": "exp211-code-roman-1",
+      "mode": "baseline",
+      "response": "```python\ndef to_roman(value: int) -> str:\n    \"\"\"\n    Convert an integer from 1 to 3999 to Roman numerals.\n    Raises ValueError if the value is outside this range.\n    \"\"\"\n    if not isinstance(value, int):\n        raise TypeError(\"value must be an integer\")\n\n    if value < 1 or value > 3999:\n        raise ValueError(\"value must be between 1 and 3999\")\n\n    values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]\n    symbols = [\n        \"M\", \"CM\", \"D\", \"CD\",\n        \"C\", \"XC\",\n        \"L\", \"XL\",\n        \"X\", \"IX\",\n        \"V\", \"IV\",\n        \"I\", \"I\"\n    ]\n\n    result = []\n    for i in range(len(values)):\n        count = value // values[i]\n        value -= count * values[i",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.748,
+      "prompt_tokens": 21,
+      "response_tokens": 103,
+      "total_tokens": 124
+    },
+    "exp211-code-phone-3": {
+      "case_id": "exp211-code-phone-3",
+      "mode": "baseline",
+      "response": "```python\ndef normalize_digits_only(text: str) -> str:\n    \"\"\"\n    Strips all non-digit characters and returns the last 10 digits.\n    Raises ValueError if fewer than 10 digits are present.\n    \"\"\"\n    if not text:\n        raise ValueError(\"Input text cannot be empty.\")\n\n    digits = [c for c in text if c.isdigit()]\n    if len(digits) < 10:\n        raise ValueError(\"Input text contains fewer than 10 digits.\")\n\n    return digits[-10:]\n\n\n# Example usage:\n# print(normalize_digits_only(\"12345678901234567890\"))  # \"12345678901234567890\"\n# print(normalize_digits_only(\"12345678901234567890abc\"))  # \"12345678901234567890\"\n# print(normalize_digits_only(\"12345678901234567890",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 32.65,
+      "prompt_tokens": 25,
+      "response_tokens": 72,
+      "total_tokens": 97
+    },
+    "exp211-instruction-decision-1": {
+      "case_id": "exp211-instruction-decision-1",
+      "mode": "baseline",
+      "response": "{\n  \"choice\": \"O3\",\n  \"evidence\": [\n    \"O3 has the lowest risk level (low), which aligns with the preference for lower risk.\",\n    \"O3 has the highest reach (5), which aligns with the preference for higher reach.\"\n  ]\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 8.803,
+      "prompt_tokens": 60,
+      "response_tokens": 36,
+      "total_tokens": 96
+    },
+    "exp211-instruction-decision-2": {
+      "case_id": "exp211-instruction-decision-2",
+      "mode": "baseline",
+      "response": "```json\n{\n  \"choice\": \"H2\",\n  \"evidence\": [\n    \"Health: green\",\n    \"Latency: 55\"\n  ]\n}\n```",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 6.031,
+      "prompt_tokens": 60,
+      "response_tokens": 13,
+      "total_tokens": 73
+    },
+    "exp211-code-chunks-1": {
+      "case_id": "exp211-code-chunks-1",
+      "mode": "baseline",
+      "response": "```python\ndef chunk_list(items: list[int], size: int) -> list[list[int]]:\n    \"\"\"\n    Splits a list into consecutive chunks of at most `size` elements.\n\n    Parameters\n    ----------\n    items : list[int]\n        The list to split.\n    size : int\n        The maximum number of elements in each chunk.\n\n    Returns\n    -------\n    list[list[int]]\n        A list of lists, where each inner list contains at most `size` elements.\n    \"\"\"\n    if not items:\n        return []\n\n    chunks = []\n    current_chunk = []\n\n    for i in range(0, len(items), size):\n        chunk = items[i:i + size]\n        current_chunk.extend(chunk)\n        chunks.append(current_chunk)\n\n    return chunks\n```\n\nExample:\n\n```python\nitems = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nchunks = chunk_list(items, size=3)\nprint(chunks)\n# [[1, 2, 3], [4, 5, 6], [7,",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 32.448,
+      "prompt_tokens": 18,
+      "response_tokens": 111,
+      "total_tokens": 129
+    },
+    "exp211-code-dedupe-1": {
+      "case_id": "exp211-code-dedupe-1",
+      "mode": "baseline",
+      "response": "```python\ndef dedupe_preserve_order(items: list[str]) -> list[str]:\n    \"\"\"\n    Returns a new list containing the first occurrence of each string in the input list,\n    preserving the original order.\n\n    Args:\n        items: A list of strings.\n\n    Returns:\n        A new list with unique strings in the same order as the input.\n    \"\"\"\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 18.718,
+      "prompt_tokens": 25,
+      "response_tokens": 67,
+      "total_tokens": 92
+    },
+    "exp211-instruction-filter-2": {
+      "case_id": "exp211-instruction-filter-2",
+      "mode": "baseline",
+      "response": "P3, P4",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.697,
+      "prompt_tokens": 61,
+      "response_tokens": 2,
+      "total_tokens": 63
+    },
+    "exp211-code-csv-1": {
+      "case_id": "exp211-code-csv-1",
+      "mode": "baseline",
+      "response": "```python\ndef parse_user_row(row: str) -> dict[str, str | None]:\n    \"\"\"\n    Parse a comma-separated user row and return a dictionary of fields.\n    \n    Args:\n        row: A string containing comma-separated user data.\n    \n    Returns:\n        A dictionary mapping field names to their values (str or None).\n        Returns None if the row is empty.\n    \"\"\"\n    if not row:\n        return None\n    \n    fields = {\n        \"id\": None,\n        \"name\": None,\n        \"email\": None\n    }\n    \n    # Split by comma and strip whitespace from each part\n    parts = row.split(\",\")\n    for part in parts:\n        if not part.strip():\n            continue\n        field_name, value = part.strip().split(\",\")\n        fields[field_name] = value\n    \n    return fields\n```\n\nExample usage:\n```python\nrow = \"id=1,name=John Doe,email=john@example.com\"\nresult = parse_user_row(row)\nprint(result)  # {'id': '1', 'name': 'John Doe', 'email': 'john@example.com'}\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 37.521,
+      "prompt_tokens": 24,
+      "response_tokens": 115,
+      "total_tokens": 139
+    },
+    "exp211-code-chunks-3": {
+      "case_id": "exp211-code-chunks-3",
+      "mode": "baseline",
+      "response": "```python\ndef chunk_pairs(items: list[tuple[int, int]], size: int) -> list[list[tuple[int, int]]]:\n    \"\"\"\n    Chunk a list of tuples into consecutive groups of at most `size` elements.\n\n    Parameters\n    ----------\n    items : list[tuple[int, int]]\n        List of tuples to be chunked.\n    size : int\n        Maximum number of elements per chunk.\n\n    Returns\n    -------\n    list[list[tuple[int, int]]]\n        List of lists, where each inner list contains at most `size` tuples.\n    \"\"\"\n    if not items:\n        return []\n\n    chunks = []\n    current_chunk = []\n\n    for item in items:\n        if len(current_chunk) >= size:\n            chunks.append(current_chunk)\n            current_chunk = []\n        current_chunk.append(item)\n\n    if current_chunk:\n        chunks.append(current_chunk)\n\n    return chunks\n```\n\nExample usage:\n\n```python\nitems = [(1, 2), (3, 4), (5, 6), (7, 8)]\nchunks = chunk_pairs(items, size=2)\n# Output: [[",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 38.717,
+      "prompt_tokens": 20,
+      "response_tokens": 112,
+      "total_tokens": 132
+    },
+    "exp211-code-rolling-2": {
+      "case_id": "exp211-code-rolling-2",
+      "mode": "baseline",
+      "response": "```python\ndef rolling_sum(values: list[int], window: int) -> list[int]:\n    \"\"\"\n    Returns every full sliding-window sum in O(n) time.\n    \n    Parameters:\n        values (list[int]): Input list of integers.\n        window (int): Size of the sliding window.\n    \n    Returns:\n        list[int]: List of sliding window sums.\n    \"\"\"\n    if not values or window <= 0:\n        return []\n    \n    n = len(values)\n    if n < window:\n        return []\n    \n    # Initialize the first window\n    first_window = [sum(values[i:i + window]) for i in range(window)]\n    \n    # Initialize a result list\n    result = []\n    \n    # Slide the window and compute sums\n    for i in range(window, n):\n        # Remove the element leaving the window\n        first_window.pop(0)\n        # Add the new element entering the window\n        first_window.append(values[i])\n        \n        # Compute the new sum\n        current_sum = sum(first_window)\n        \n        # Append to result\n        result.append(current_sum)\n    \n    return result\n```\n\nExample usage:",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 34.899,
+      "prompt_tokens": 16,
+      "response_tokens": 126,
+      "total_tokens": 142
+    },
+    "exp211-live-gsm8k-1077": {
+      "case_id": "exp211-live-gsm8k-1077",
+      "mode": "baseline",
+      "response": "To find the total time Paul will wait, we need to calculate the duration between the moment he leaves the station and the moment the fourth train arrives.\n\nHere is the step-by-step breakdown of the timeline:\n\n### 1. Define the Variables\nLet $T$ be the total time Paul waits.\nLet $T_{train}$ be the time it takes for a single train to travel from the station to the platform.\nLet $T_{stay}$ be the time the train stays in the station.\n\n### 2. Analyze the Trains\n\n**Train 1:**\n*   **Arrival Time:** 10 minutes.\n*   **Duration:** 20 minutes.\n*   **Departure Time:** $10 + 20 = 30$ minutes.\n*   **Stays in Station:** 20 minutes.\n\n**Train 2:**\n*   **Arrival Time:** Half an hour after Train 1 leaves.\n    *   Train 1 leaves at 30 minutes.\n    *   Train 2 arrives at $30 + 30 = 60$ minutes.\n*   **Duration:** $\\frac{1}{4}$ of the time",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 33.471,
+      "prompt_tokens": 164,
+      "response_tokens": 146,
+      "total_tokens": 310
+    },
+    "exp211-instruction-filter-3": {
+      "case_id": "exp211-instruction-filter-3",
+      "mode": "baseline",
+      "response": "S4, S2",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.348,
+      "prompt_tokens": 53,
+      "response_tokens": 2,
+      "total_tokens": 55
+    },
+    "exp211-instruction-two-sentence-1": {
+      "case_id": "exp211-instruction-two-sentence-1",
+      "mode": "baseline",
+      "response": "The region of East-2 is identified as the primary location for the proposed intervention.\n\nThe remaining risk remains high due to the complex and evolving nature of the current situation.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 5.018,
+      "prompt_tokens": 31,
+      "response_tokens": 30,
+      "total_tokens": 61
+    },
+    "exp211-instruction-two-sentence-3": {
+      "case_id": "exp211-instruction-two-sentence-3",
+      "mode": "baseline",
+      "response": "The release train r7 is scheduled to depart at 10:00 AM, though the exact arrival time remains uncertain due to an unresolved dependency on the current weather forecast.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "latency_seconds": 4.75,
+      "prompt_tokens": 31,
+      "response_tokens": 28,
+      "total_tokens": 59
+    },
+    "exp211-code-chunks-2": {
+      "case_id": "exp211-code-chunks-2",
+      "mode": "baseline",
+      "response": "```python\ndef chunk_text(text: str, size: int) -> list[str]:\n    \"\"\"\n    Splits a string into consecutive substrings of at most `size` characters.\n\n    Parameters\n    ----------\n    text : str\n        The input string to split.\n    size : int\n        Maximum length of each chunk.\n\n    Returns\n    -------\n    list[str]\n        A list of substrings, each of length at most `size`.\n    \"\"\"\n    if not isinstance(text, str):\n        raise TypeError(\"text must be a string\")\n    if not isinstance(size, int) or size < 0:\n        raise TypeError(\"size must be a non-negative integer\")\n\n    chunks = []\n    current_chunk = []\n\n    for char in text:\n        if current_chunk:\n            if len(current_chunk) + 1 <= size:\n                current_chunk.append(char)\n            else:\n                chunks.append(\"\".join(current_chunk))\n                current_chunk = []\n        else:\n            current_chunk.append(char)\n\n    # Don't forget the last chunk\n    if current_chunk:\n        chunks.append(\"\".join(current_chunk))\n\n    return chunks\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 32.171,
+      "prompt_tokens": 19,
+      "response_tokens": 115,
+      "total_tokens": 134
+    },
+    "exp211-instruction-json-2": {
+      "case_id": "exp211-instruction-json-2",
+      "mode": "baseline",
+      "response": "{\n  \"verdict\": \"pass\",\n  \"owner\": \"system\",\n  \"priority\": \"p0\"\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 2,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 4.068,
+      "prompt_tokens": 22,
+      "response_tokens": 8,
+      "total_tokens": 30
+    },
+    "exp211-instruction-schedule-3": {
+      "case_id": "exp211-instruction-schedule-3",
+      "mode": "baseline",
+      "response": "T1",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=1.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 1.07,
+      "prompt_tokens": 56,
+      "response_tokens": 1,
+      "total_tokens": 57
+    },
+    "exp211-instruction-yaml-3": {
+      "case_id": "exp211-instruction-yaml-3",
+      "mode": "baseline",
+      "response": "```yaml\nproject: atlas\nbudget: 90\nbudget_left: 35\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 3.216,
+      "prompt_tokens": 15,
+      "response_tokens": 8,
+      "total_tokens": 23
     }
   }
 }

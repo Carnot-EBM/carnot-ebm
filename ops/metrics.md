@@ -1,5 +1,20 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 258 Dual-GPU Harness
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T20:31:27Z | 2026-04-13T20:36:43Z | Exp 258: dual-GPU benchmark harness wiring DualGPURunner + ModelServer to Exp 218 interface — 35 tests written, all pass in 0.38 s. | TBD |
+
+### Session Summary
+
+- `scripts/experiment_258_dual_gpu_harness.py` created with `DualGPUBenchmarkHarness`, `ThroughputMeasurement`, `GPUAssignmentVerifier`, `write_harness_report`
+- 35 unit tests covering GPU assignment, batching, memory cleanup, checkpoint interface, throughput target reporting
+- All 35 tests pass; CARNOT_FORCE_LIVE=0 mock mode works without real GPU
+- Target: ≤ 3 s/case per model (from 21 s/case on CPU in Exp 247)
+
 ## Session: 2026-04-13 Exp 257 Hardware Benchmark
 
 ### Turn Log
