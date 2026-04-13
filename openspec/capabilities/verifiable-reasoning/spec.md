@@ -1258,6 +1258,43 @@ The same workflow shall write an explicit comparison block against
 - the comparison records any honest blockers or missing live cells rather than
   fabricating completed results
 
+### REQ-VERIFY-050: Additive Case-Memory Schema And Deterministic Normalization
+
+The repository shall provide a case-based memory module in
+`python/carnot/pipeline/case_memory.py`, where:
+- the module defines a reusable case schema that can represent semantic
+  verification traces, prompt-side constraint traces, and code-verification
+  traces without collapsing them into one vague domain-wide pattern bucket
+- each normalized case records model name, benchmark slice, violation types and
+  families, a deterministic prompt sketch, any normalized property names,
+  repair outcome, confidence, and explicit provenance
+- prompt sketches are derived with a deterministic text-normalization path that
+  stays cheap enough for CPU-side inference-speed use and can fall back to
+  verifier trace text when the original prompt is not available
+- repair outcome normalization distinguishes at least `improved`,
+  `regressed`, `unchanged_success`, `unchanged_failure`, and `unknown`
+- cases expose deterministic serialization helpers so the normalized schema can
+  round-trip without losing provenance or confidence fields
+
+### REQ-VERIFY-051: Cheap Case Retrieval And Additive Replay Integration
+
+The same module and replay path shall support additive case retrieval, where:
+- retrieval keys combine model name, benchmark slice, violation family, prompt
+  sketch, property names, and desired repair outcome rather than only coarse
+  domain-wide pattern names
+- retrieval ranking is deterministic, explainable, and CPU-cheap, using
+  exact-field matches and normalized token overlap rather than embeddings or
+  stochastic search
+- retrieval results preserve matched-field explanations, support counts,
+  confidence, and source provenance so later policy updates can explain why a
+  case was reused
+- `python/carnot/pipeline/self_learning_replay.py` can consult the case memory
+  additively when the older pattern-memory path has no exact match, without
+  breaking the existing pattern-memory decision path or the Exp 222 / Exp 223
+  artifact schema
+- existing replay callers that ignore the new case-memory data continue to work
+  unchanged
+
 ### SCENARIO-VERIFY-050: Exp 235 Reuses The Checked-In Exp 219 Cohort Exactly
 
 **Given** the checked-in `results/experiment_219_results.json` cohort manifest
@@ -1277,6 +1314,43 @@ The same workflow shall write an explicit comparison block against
   each model under the observed false-positive budget
 **And** any missing run cells are recorded as blockers instead of being
   represented as successful live results
+
+### SCENARIO-VERIFY-052: Semantic And Code Traces Normalize Into Specific Cases
+
+**Given** one semantic verification trace and one code-verification trace
+**When** the case-memory module normalizes them
+**Then** each case preserves its benchmark slice, violation families, prompt
+  sketch, repair outcome, confidence, and provenance
+**And** the code trace records any normalized property names while the semantic
+  trace does not collapse into the same case key
+
+### SCENARIO-VERIFY-053: Retrieval Prefers Specific Prompt And Property Matches
+
+**Given** multiple stored cases from the same benchmark slice
+**When** a query matches one case on model, violation family, prompt sketch,
+  and property names but only matches another case on the coarse slice
+**Then** retrieval ranks the more specific case first
+**And** the ranked result reports which fields matched and which source cases
+  supported the reuse
+
+### SCENARIO-VERIFY-054: Case Memory Serialization Round-Trips Deterministically
+
+**Given** a case memory containing aggregated support from multiple traces
+**When** it is serialized and loaded again
+**Then** the stored support counts, confidence values, and provenance records
+  round-trip without duplication or order drift
+**And** retrieval after the round-trip yields the same ranked case keys
+
+### SCENARIO-VERIFY-055: Replay Falls Back To Case Memory When Pattern Names Diverge
+
+**Given** the held-out replay has prior live support for a code or semantic
+  failure shape but the later held-out case uses a different coarse
+  `error_type` label
+**When** the older pattern-memory lookup misses the exact `error_type`
+**Then** the replay path can still reuse a more specific matching case from the
+  additive case memory
+**And** the existing replay outputs remain backward compatible for callers that
+  do not inspect the new case-memory details
 
 ## Implementation Status
 
@@ -1331,4 +1405,6 @@ The same workflow shall write an explicit comparison block against
 | REQ-VERIFY-047 | Not Started | Implemented | Semantic verifier v2 pipeline + serialization tests |
 | REQ-VERIFY-048 | Not Started | Implemented | Exp 235 cohort reuse + semantic-v2 artifact tests |
 | REQ-VERIFY-049 | Not Started | Implemented | Exp 235 comparison summary + blocker reporting tests |
+| REQ-VERIFY-050 | Not Started | Implemented | Case memory normalization + serialization tests |
+| REQ-VERIFY-051 | Not Started | Implemented | Case memory retrieval + replay integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
