@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-04-13 (solver-routed semantic benchmark runner — Exp 246)
+
+- `scripts/experiment_246_solver_semantic_live.py` — Automated live semantic benchmark runner using the solver-routed formal claims from Exp 245 against the shared Exp 218 harness, writing `results/experiment_246_results.json` with fixed run-date metadata `20260413`. (automated by research conductor)
+- `tests/python/test_experiment_246_solver_semantic_live.py` — Test coverage for Exp 246 script integration and result artifact schema validation.
+
 ## 2026-04-13 (formal claim verifier — REQ-VERIFY-058 / REQ-VERIFY-059)
 
 - `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-058` (solver-routed formal claim verification) and `REQ-VERIFY-059` (pipeline integration); updated implementation-status table. (user instruction: implement `formal_claim_verifier.py`)
