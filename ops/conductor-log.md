@@ -1399,3 +1399,5 @@ python/ |
 | 2026-04-13 16:14 UTC | Exp 249: Additive process verifier for reasoning a | OK | 2382 passed, 2 skipped, 13 warnings in 493.48s (0:08:13) |
 | 2026-04-13 16:42 UTC | Exp 250: Live process-aware code benchmark runner | OK | 2421 passed, 2 skipped, 13 warnings in 501.75s (0:08:21) |
 | 2026-04-13 17:30 UTC | Exp 251: Live process-aware code benchmark | OK | 2421 passed, 2 skipped, 13 warnings in 520.01s (0:08:40) |
+| 2026-04-13 17:40 UTC | Exp 252: Predictive verification corpus from parti | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-13 17:41 UTC | Exp 252: Predictive verification corpus from parti | OK | Deliverable already exists in repo |
