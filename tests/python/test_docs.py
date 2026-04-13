@@ -48,11 +48,14 @@ def _current_provenance_counts() -> dict[str, int]:
     return counts
 
 
-def _current_experiment_count() -> int:
+def _current_experiment_label() -> str:
     status = _read_repo_file("ops/status.md")
-    match = re.search(r"\*\*Last Updated:\*\*.*?—\s+(\d+)\s+EXPERIMENTS", status)
-    assert match is not None
-    return int(match.group(1))
+    public_match = re.search(r"Public-facing counts now read \*\*(\d+\+?)\*\* experiments", status)
+    if public_match is not None:
+        return public_match.group(1)
+    fallback_match = re.search(r"\*\*Last Updated:\*\*.*?—\s+(\d+)\s+EXPERIMENTS", status)
+    assert fallback_match is not None
+    return fallback_match.group(1)
 
 
 def _current_milestone_count() -> int:
@@ -100,7 +103,7 @@ def test_public_docs_disclose_current_provenance_inventory() -> None:
 
 def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     """REQ-REPORT-003, REQ-REPORT-004: docs mention the latest PBT and FPGA updates."""
-    exp_count = _current_experiment_count()
+    exp_label = _current_experiment_label()
     milestone_count = _current_milestone_count()
     readme = _read_repo_file("README.md")
     report = _read_repo_file("docs/technical-report.md")
@@ -118,17 +121,12 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     assert "Experiment 228" in report
     assert "software simulation" in report
 
-    assert f"{exp_count} completed experiments" in readme
+    assert f"{exp_label} experiments" in readme
     assert f"{milestone_count} completed milestones" in readme
-    assert f"{exp_count} completed experiments" in index
+    assert f"{exp_label} experiments" in index
     assert f"{milestone_count} completed milestones" in index
-    assert (
-        f"{exp_count} Completed Experiments Across {milestone_count} Research Milestones" in report
-    )
-    assert (
-        f"{exp_count} Completed Experiments Across {milestone_count} Research Milestones"
-        in report_html
-    )
+    assert f"{exp_label} Experiments Across {milestone_count} Research Milestones" in report
+    assert f"{exp_label} Experiments Across {milestone_count} Research Milestones" in report_html
 
     assert "Exp 227" in index
     assert "software-model" in index

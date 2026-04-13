@@ -4,7 +4,7 @@
 
 Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All headline benchmark results below are from **live GPU inference**. The repository also preserves simulated, unverified, and software-model artifacts for provenance, and labels them explicitly instead of folding them into headline claims.
 
-**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%** while still catching **2** official-test misses beyond the weak harness. Held-out replay keeps success flat at **32.74%** while cutting false positives **7 -> 1** (Exp 223). Trace learning distills **164** learnable PBT histories into property and repair rankings (VERIFY-030). Typed IR constraints give **+4.9pp** on Gemma4 (Exp 221).
+**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%**, still detects **17/23** wrong baselines, and catches **2** official-test misses beyond the weak harness. Held-out replay keeps success flat at **32.74%** while cutting false positives **7 -> 1** (Exp 223). Trace learning distills **164** learnable PBT histories into property and repair rankings (VERIFY-030). Typed IR constraints give **+4.9pp** on Gemma4 (Exp 221).
 
 **What ships today:** `VerifyRepairPipeline` plus standalone `verify_code()` for end-user code checks. CLI (`carnot pipeline verify`, `carnot verify-code`), a hardened **7-tool** MCP server for Claude Code, 5 integration examples, and full API docs. Constraint extraction spans arithmetic, code, logic, and natural language domains.
 
@@ -76,7 +76,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (206 completed experiments, 21 completed milestones)
+## Key Results (228+ experiments, 21 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -103,7 +103,7 @@ Carnot's strongest live evidence is now the Hypothesis-backed code-verification 
 | HumanEval 50 problems (PBT) | 18.0% / 10.0% | 20.0% / 12.0% | +2.0pp both models | Exp 220 |
 | HumanEval 30 problems (execution) | 16.7% | 20.0% | +3.3pp | Exp 208 |
 
-PBT detects 99.3% of wrong code (144/145) on the paired live slice and catches 6 official-test misses on the full Gemma run. Exp 227 shows the same verifier still adds signal cross-model even when the repair loop itself stays flat.
+PBT detects 99.3% of wrong code (144/145) on the full Gemma run and catches 6 official-test misses. Exp 227 shows the same verifier still adds signal cross-model even when the repair loop itself stays flat.
 On deterministic HumanEval-style probes, the same Hypothesis-backed verifier also catches **5/5** under-specified bugs that execution-only checks miss while preserving **5/5** matching correct solutions (Exp 224).
 
 ### Constraint verification (math/instruction)
@@ -129,6 +129,7 @@ On **168** held-out cases, tracker gating keeps held-out success flat at **32.74
 - **Live trace memory (Exp 222):** **662** live trace events ingest into **230** accepted memory entries, **43** learned patterns, **29** mature patterns, **14** reusable repair snippets, and **12** monitorability-policy updates; replay precision is still only **12.6%**.
 - **Hypothesis-backed verifier (Exp 224):** deterministic generated-code checks catch **5/5** under-specified bugs versus **0/5** for execution-only verification while preserving **5/5** matching correct solutions.
 - **Dual-GPU runner (Exp 225):** paired fresh-process generation on the local **2x RTX 3090** host improves from **37.371s** to **32.774s** on a **10**-question microbenchmark for a measured **1.14x** speedup.
+- **FPGA software model (Exp 228):** the KV260-class sparse **4,096-spin** backend now has a checked-in `FPGAIsingSampler` control-path design; the current **128**-spin benchmark is explicitly **software simulation** at **0.824549s** for `fpga_sim` versus **0.288092s** on CPU.
 - **Trace learning (VERIFY-030):** `TraceAnalyzer`, `PropertyRanker`, and `RepairStrategy` normalize **164** Exp 226 histories, with signature-derived checks covering **163** cases and accounting for **6** official-test misses beyond the weak harness.
 - **Packaged verification (VERIFY-031):** the strongest code path now ships as `verify_code()`, `carnot verify-code`, and `verify_code_with_pbt` on the hardened **7-tool** MCP surface.
 
@@ -154,11 +155,11 @@ On **168** held-out cases, tracker gating keeps held-out success flat at **32.74
 
 **The core problem:** activation-based EBMs measure how confident the model is, not whether it's right. A model that confidently says "Neil Armstrong walked on Mars" produces activations indistinguishable from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.
 
-See the [technical report](docs/technical-report.md) for the full 206-experiment analysis.
+See the [technical report](docs/technical-report.md) for the full research record.
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a now 206-experiment, 21-milestone program across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 228+ experiments across 21 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

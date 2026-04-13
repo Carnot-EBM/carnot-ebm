@@ -1,0 +1,47 @@
+{
+  "total_wall_time_minutes": 3502,
+  "experiments_completed": 246,
+  "slowest_experiments": [
+    {
+      "duration_minutes": 418,
+      "experiment": "Exp 53: Runtime constraint instrumentation",
+      "why_slow": "This is a development-heavy outlier, not a pure compute outlier. The checked-in Exp 53 script only compares 12 scenarios, so the 418-minute wall time was dominated by implementation, testing, and reconciliation around a new reusable instrumentation path."
+    },
+    {
+      "duration_minutes": 117,
+      "experiment": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma4-E4B-it",
+      "why_slow": "This was the largest live paired benchmark in the milestone: 200 GSM8K questions per model across baseline, verify_only, and verify_repair. The artifact itself reports 5364s of live runtime, and the remaining wall time was validation and documentation overhead."
+    },
+    {
+      "duration_minutes": 83,
+      "experiment": "Exp 184: 3B model verification — does verify-repair help large models?",
+      "why_slow": "This was a single-model live 4B run over 400 total GSM8K questions (200 standard + 200 adversarial) with up to 3 repair iterations. The artifact reports 4501s runtime on one RTX 3090, so this was genuinely compute-bound."
+    },
+    {
+      "duration_minutes": 78,
+      "experiment": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "why_slow": "The benchmark runtime itself was only 459s, so most of the 78-minute wall time came from process overhead: coding, full-suite validation, spec/reconciliation checks, and follow-up docs updates rather than GPU compute."
+    },
+    {
+      "duration_minutes": 78,
+      "experiment": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "why_slow": "This combined synthetic data generation, a 100-epoch-budget JAX training loop with early stopping at epoch 34, evaluation, artifact publication prep, and the usual validation/documentation cycle. It was moderately compute-heavy but still included substantial workflow overhead."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Timing attribution is too coarse. The conductor derives experiment durations from gaps between `[conductor]` git commits, so reported wall times mix coding, full-suite tests, doc sync, and idle gaps with the actual experiment runtime.",
+    "GPU utilization was suboptimal for paired small-model live runs. Exp 219 and Exp 221 were executed before the dual-GPU paired runner landed in Exp 225, so the two-model Qwen/Gemma workloads were effectively sequential on a 2x RTX 3090 host.",
+    "Pre-flight and post-flight validation are expensive because `run_tests()` always executes the full Python suite, and most experiment entries also rerun targeted coverage, spec coverage, integration checks, and reconciliation validation.",
+    "Documentation reconciliation is lightweight per pass but high-frequency in aggregate. Recent conductor history shows a second `Update docs for Exp ...` commit after nearly every experiment, plus extra `Update docs before planning` sync commits.",
+    "Warm-start infrastructure was not yet the default on the longest live runs. Exp 225's fresh-process dual-GPU microbenchmark only reached 1.14x speedup, which indicates cold-load and process startup overhead were still eating a large share of runtime."
+  ],
+  "improvements_suggested": [
+    "Add phase-level telemetry to the conductor: record separate timings for pre-flight tests, agent implementation, live experiment execution, post-flight validation, and doc reconciliation instead of inferring everything from commit timestamps.",
+    "Default paired Qwen/Gemma benchmarks to `--parallel` on 2-GPU hosts and keep both models warm through `DualGPURunner` plus `ModelServer` so Exp 219/220/221-style workloads use both RTX 3090s continuously.",
+    "Replace universal pre-flight full-suite runs with a tiered gate: fast smoke or changed-file checks before each task, then full Python suite/spec coverage/integration on framework-changing tasks or at milestone checkpoints.",
+    "Generate ops reconciliation from structured experiment metadata instead of separate append-only doc-sync passes. Changelog/status/traceability rows should be emitted automatically from the completed experiment artifact.",
+    "Preserve warm model state across long live benchmark batches and batch inference more aggressively to cut cold-start overhead and improve dual-GPU scaling beyond the current 1.14x fresh-process result.",
+    "Run `gpu_monitor` snapshots automatically before and after long live jobs, and log per-process occupancy so idle-device regressions are caught immediately even when no >1GB zombie process exists."
+  ],
+  "estimated_time_savings_pct": 30
+}
