@@ -21,6 +21,8 @@ Spec: REQ-CODE-001, REQ-SECURITY-001
 
 from __future__ import annotations
 
+import ast
+import builtins
 import json
 import logging
 import shutil
@@ -35,6 +37,7 @@ logger = logging.getLogger(__name__)
 _SANDBOX_IMAGE = "python:3.11-slim"
 _GVISOR_RUNTIME = "runsc"
 _CONTAINER_TIMEOUT_SECONDS = 10
+_CONTAINER_STARTUP_GRACE_SECONDS = 5.0
 _MAX_CODE_SIZE_BYTES = 100_000  # 100KB limit on code size
 
 
@@ -45,7 +48,9 @@ def _gvisor_available() -> bool:
     try:
         result = subprocess.run(
             ["docker", "info", "--format", "{{.Runtimes}}"],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         return _GVISOR_RUNTIME in result.stdout
     except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
@@ -60,22 +65,65 @@ def _build_harness(code: str, func_name: str, args: tuple[Any, ...]) -> str:
     error output so the caller can distinguish success from failure.
     """
     args_json = json.dumps(args)
+    code_json = json.dumps(code)
     return f"""\
 import json
-import sys
 
-# --- User code (untrusted) ---
-{code}
-# --- End user code ---
+USER_CODE = json.loads({code_json!r})
 
 try:
-    func = {func_name}
+    namespace = {{}}
+    exec(USER_CODE, namespace)
+    func = namespace.get({func_name!r})
+    if func is None:
+        raise NameError("Function {func_name!r} not found in code")
     args = json.loads({args_json!r})
     result = func(*args)
-    print(json.dumps({{"status": "ok", "result": repr(result)}}))
+    print(json.dumps({{
+        "status": "ok",
+        "result_repr": repr(result),
+        "args_repr": repr(args),
+    }}))
 except Exception as e:
     print(json.dumps({{"status": "error", "error_type": type(e).__name__, "error_msg": str(e)}}))
 """
+
+
+def _decode_payload(payload: object) -> Any:
+    """Decode a literal payload from sandbox JSON when possible."""
+    if not isinstance(payload, str):
+        return payload
+    try:
+        return ast.literal_eval(payload)
+    except (SyntaxError, ValueError):
+        return payload
+
+
+def _sync_mutable_value(target: Any, source: Any) -> None:
+    """Apply sandbox-side argument mutations back to caller-owned containers."""
+    if isinstance(target, list) and isinstance(source, list):
+        target[:] = source
+        return
+    if isinstance(target, dict) and isinstance(source, dict):
+        target.clear()
+        target.update(source)
+        return
+    if isinstance(target, set) and isinstance(source, (set, list, tuple)):
+        target.clear()
+        target.update(source)
+        return
+    if isinstance(target, tuple) and isinstance(source, (list, tuple)):
+        for child_target, child_source in zip(target, source, strict=False):
+            _sync_mutable_value(child_target, child_source)
+
+
+def _apply_mutated_args(args: tuple[Any, ...], payload: object) -> None:
+    """Mirror sandbox-side in-place mutations onto the original argument tuple."""
+    decoded_args = _decode_payload(payload)
+    if not isinstance(decoded_args, (list, tuple)):
+        return
+    for original, mutated in zip(args, decoded_args, strict=False):
+        _sync_mutable_value(original, mutated)
 
 
 def sandboxed_exec_function(
@@ -114,15 +162,14 @@ def sandboxed_exec_function(
         allow_fallback: If False, raise instead of falling back to exec.
 
     Returns:
-        Tuple of (result_repr, None) on success, or (None, exception) on failure.
+        Tuple of (result, None) on success, or (None, exception) on failure.
 
     Spec: REQ-CODE-001, REQ-SECURITY-001
     """
     # Size check — reject absurdly large code
     if len(code.encode("utf-8")) > _MAX_CODE_SIZE_BYTES:
         return None, ValueError(
-            f"Code exceeds {_MAX_CODE_SIZE_BYTES} byte limit "
-            f"({len(code.encode('utf-8'))} bytes)"
+            f"Code exceeds {_MAX_CODE_SIZE_BYTES} byte limit ({len(code.encode('utf-8'))} bytes)"
         )
 
     # Check sandbox availability
@@ -133,6 +180,7 @@ def sandboxed_exec_function(
                 "in-process exec. Set allow_fallback=False to enforce sandbox."
             )
             from carnot.verify.python_types import safe_exec_function
+
             return safe_exec_function(code, func_name, args, timeout=timeout)
         raise RuntimeError(
             "gvisor sandbox required but unavailable. "
@@ -150,18 +198,22 @@ def sandboxed_exec_function(
 
         # Run in gvisor container
         docker_cmd = [
-            "docker", "run",
+            "docker",
+            "run",
             "--rm",
             f"--runtime={_GVISOR_RUNTIME}",
-            "--network=none",           # No network access
-            "--read-only",              # Read-only root filesystem
-            "--tmpfs", "/tmp:size=10m", # Small writable /tmp
-            "--memory=256m",            # Memory limit
-            "--cpus=1",                 # CPU limit
-            "--pids-limit=50",          # Process limit
-            "-v", f"{tmpdir}:/code:ro", # Mount code read-only
+            "--network=none",  # No network access
+            "--read-only",  # Read-only root filesystem
+            "--tmpfs",
+            "/tmp:size=10m",  # Small writable /tmp
+            "--memory=256m",  # Memory limit
+            "--cpus=1",  # CPU limit
+            "--pids-limit=50",  # Process limit
+            "-v",
+            f"{tmpdir}:/code:ro",  # Mount code read-only
             _SANDBOX_IMAGE,
-            "python", "/code/harness.py",
+            "python",
+            "/code/harness.py",
         ]
 
         try:
@@ -169,12 +221,10 @@ def sandboxed_exec_function(
                 docker_cmd,
                 capture_output=True,
                 text=True,
-                timeout=timeout,
+                timeout=timeout + _CONTAINER_STARTUP_GRACE_SECONDS,
             )
         except subprocess.TimeoutExpired:
-            return None, TimeoutError(
-                f"Sandboxed execution timed out after {timeout}s"
-            )
+            return None, TimeoutError(f"Sandboxed execution timed out after {timeout}s")
 
         # Parse output
         stdout = result.stdout.strip()
@@ -187,17 +237,17 @@ def sandboxed_exec_function(
         try:
             output = json.loads(stdout)
         except json.JSONDecodeError:
-            return None, RuntimeError(
-                f"Sandbox output not valid JSON: {stdout[:200]}"
-            )
+            return None, RuntimeError(f"Sandbox output not valid JSON: {stdout[:200]}")
 
         if output.get("status") == "ok":
-            return output.get("result"), None
+            _apply_mutated_args(args, output.get("args_repr"))
+            result_payload = output.get("result_repr", output.get("result"))
+            return _decode_payload(result_payload), None
         elif output.get("status") == "error":
             error_type = output.get("error_type", "Exception")
             error_msg = output.get("error_msg", "unknown error")
             # Reconstruct the exception type if it's a builtin
-            exc_class = getattr(__builtins__, error_type, None)
+            exc_class = getattr(builtins, error_type, None)
             if exc_class is None or not isinstance(exc_class, type):
                 exc_class = RuntimeError
             return None, exc_class(error_msg)
