@@ -601,6 +601,121 @@
       "response_tokens": 74,
       "total_tokens": 91,
       "accepted_correct": true
+    },
+    "exp211-code-roman-2": {
+      "case_id": "exp211-code-roman-2",
+      "mode": "verify_only",
+      "response": "```python\nfrom typing import Union\n\ndef from_roman(text: str) -> int:\n    \"\"\"\n    Convert uppercase Roman numerals to an integer.\n    \n    Args:\n        text: A string containing only uppercase Roman numerals.\n        \n    Returns:\n        The integer value of the Roman numeral.\n        \n    Raises:\n        ValueError: If the input contains invalid Roman numerals.\n    \"\"\"\n    # Valid Roman numerals in order (descending)\n    ROMAN_VALUES = [\n        1000, 900, 500, 400, 100, 90, 50, 40, 10, 9,\n        5, 4, 3, 2, 1\n    ]\n    \n    # Mapping of Roman characters to their values\n    ROMAN_MAP = {\n        'I': 1, 'V': 5, 'X': 10, 'L': 50,\n        'C': 100, 'D': 500, 'M': 1000\n    }\n    \n    # Check if input is empty",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 30.47,
+      "prompt_tokens": 18,
+      "response_tokens": 103,
+      "total_tokens": 121,
+      "accepted_correct": true
+    },
+    "exp211-instruction-negation-3": {
+      "case_id": "exp211-instruction-negation-3",
+      "mode": "verify_only",
+      "response": "Based on the criteria provided, we need to filter vendors that are **NOT** provisional AND **NOT** missing security review.\n\nLet's analyze each vendor:\n*   **v1**: provisional (FAIL)\n*   **v2**: provisional (FAIL)\n*   **v3**: approved (PASS), review missing (FAIL)\n*   **v4**: approved (PASS), review done (PASS)\n\nThe only vendor that meets both conditions (approved AND review done) is **v4**.\n\n**v4**",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 13.39,
+      "prompt_tokens": 44,
+      "response_tokens": 59,
+      "total_tokens": 103,
+      "accepted_correct": false
+    },
+    "exp211-code-groupby-1": {
+      "case_id": "exp211-code-groupby-1",
+      "mode": "verify_only",
+      "response": "```python\nfrom typing import List, Dict\n\ndef group_by_team(rows: List[Dict[str, str]]) -> Dict[str, List[Dict[str, str]]]:\n    \"\"\"\n    Groups rows by the team key while preserving input order within each group.\n\n    Args:\n        rows: A list of dictionaries, each containing a 'team' key.\n\n    Returns:\n        A dictionary mapping team names to lists of rows, preserving order within each team.\n    \"\"\"\n    return {team: rows_for_team(team) for team in rows}\n\ndef rows_for_team(team: str) -> List[Dict[str, str]]:\n    \"\"\"Helper to return rows for a given team.\"\"\"\n    return [row for row in rows if row.get('team') == team]\n```\n\nThis function:\n- Iterates over the input list `rows`.\n- Groups rows by the `'team'` key.\n- Preserves the original order of rows within each group.\n- Returns a dictionary where the keys are team names and the values are lists of rows for that team.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 26.425,
+      "prompt_tokens": 22,
+      "response_tokens": 133,
+      "total_tokens": 155,
+      "accepted_correct": true
+    },
+    "exp211-instruction-grounded-3": {
+      "case_id": "exp211-instruction-grounded-3",
+      "mode": "verify_only",
+      "response": "S1, S4",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 1.29,
+      "prompt_tokens": 58,
+      "response_tokens": 2,
+      "total_tokens": 60,
+      "accepted_correct": false
+    },
+    "exp211-code-slugify-3": {
+      "case_id": "exp211-code-slugify-3",
+      "mode": "verify_only",
+      "response": "```python\ndef slugify_tag(label: str) -> str:\n    \"\"\"\n    Convert a label to a lowercase ASCII slug using underscores.\n    \n    Args:\n        label (str): The input string to slugify.\n    \n    Returns:\n        str: A lowercase slug joined with underscores.\n    \"\"\"\n    return label.lower().replace('-', '_')\n```\n\nThis function:\n1. Converts the input to lowercase.\n2. Replaces any hyphens (`-`) with underscores (`_`).\n3. Returns the resulting slug.",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 13.993,
+      "prompt_tokens": 17,
+      "response_tokens": 59,
+      "total_tokens": 76,
+      "accepted_correct": true
     }
   }
 }
