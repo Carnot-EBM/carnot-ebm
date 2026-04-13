@@ -4349,6 +4349,90 @@
       "prompt_tokens": 59,
       "response_tokens": 171,
       "total_tokens": 230
+    },
+    "gsm8k-130": {
+      "case_id": "gsm8k-130",
+      "mode": "baseline",
+      "question": "Nissa hires 60 seasonal workers to play elves in her department store's Santa village. A third of the elves quit after children vomit on them, then 10 of the remaining elves quit after kids kick their shins. How many elves are left?",
+      "ground_truth": 30,
+      "response": "To solve this problem, we will track the number of elves step-by-step, starting with the total number of workers and subtracting the ones who quit.\n\n**Step 1: Start with the total number of elves.**\nNissa hires 60 seasonal workers.\n$$60 \\text{ elves}$$\n\n**Step 2: Account for the first group of elves who quit.**\nA third of the elves quit.\n$$\\frac{1}{3} \\text{ of } 60 = \\frac{60}{3} = 20 \\text{ elves}$$\nThese 20 elves quit.\n$$60 - 20 = 40 \\text{ remaining elves}$$\n\n**Step 3: Account for the second group of elves who quit.**\n10 of the remaining elves quit.\nThe number of remaining elves is 40.\n$$10 \\text{ of } 40 = 40 \\text{ elves}$$\nThese 40 elves quit.\n$$40 - 10 = 30 \\text{ remaining elves}$$\n\n**Step 4: Calculate the final number of elves.**\nSubtract the number of",
+      "predicted": 4,
+      "correct": false,
+      "formal_claims": [
+        {
+          "claim_id": "arith-0",
+          "failure_detail": null,
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "arith-1",
+          "failure_detail": null,
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 2,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 30.458,
+      "prompt_tokens": 51,
+      "response_tokens": 139,
+      "total_tokens": 190
+    },
+    "gsm8k-498": {
+      "case_id": "gsm8k-498",
+      "mode": "baseline",
+      "question": "Brianne and Ashley make greek orange pie. Ashley brought five boxes with ten oranges in each box, while Brianne brought 20 more oranges than Ashley. If one greek orange pie needs three oranges, how many greek orange pies can they make?",
+      "ground_truth": 40,
+      "response": "To solve this problem, we need to determine the total number of oranges available and then divide that by the number of oranges required per pie.\n\n### Step 1: Calculate the number of oranges in Ashley's boxes\nAshley brought **five boxes**, and each box contains **ten oranges**.\n$$ \\text{Oranges from Ashley} = 5 \\times 10 = 50 \\text{ oranges} $$\n\n### Step 2: Calculate the total number of oranges\nBrianne brought **20 more oranges** than Ashley.\n$$ \\text{Oranges from Brianne} = 50 + 20 = 70 \\text{ oranges} $$\n$$ \\text{Total oranges} = \\text{Oranges from Ashley} + \\text{Oranges from Brianne} $$\n$$ \\text{Total oranges} = 50 + 70 = 120 \\text{ oranges} $$\n\n### Step 3: Calculate the number of greek orange pies\nEach greek orange pie requires **three** oranges.\n$$ \\text{Number of pies} = \\frac{\\text{Total oranges}}{\\text{Oranges per pie}} $$\n$$ \\text{Number of",
+      "predicted": 3,
+      "correct": false,
+      "formal_claims": [
+        {
+          "claim_id": "arith-0",
+          "failure_detail": null,
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "arith-1",
+          "failure_detail": null,
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 2,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.355,
+      "prompt_tokens": 50,
+      "response_tokens": 143,
+      "total_tokens": 193
+    },
+    "gsm8k-695": {
+      "case_id": "gsm8k-695",
+      "mode": "baseline",
+      "question": "There are 50 deer in a field.  50 percent of them are bucks.  20 percent of the bucks are 8 points.  How many 8 point bucks are there?",
+      "ground_truth": 5,
+      "response": "Here is the step-by-step solution to the problem:\n\n### Step 1: Determine the total number of deer\nThe problem states there are **50 deer** in total.\n\n### Step 2: Determine the number of bucks\nThe problem states that **50 percent** of the deer are bucks.\nTo find this number, we calculate 50% of 50:\n$$50 \\times 0.50 = 25$$\nSo, there are **25 bucks**.\n\n### Step 3: Determine the number of 8-point bucks\nThe problem states that **20 percent** of the bucks are 8 points.\nTo find this number, we calculate 20% of the number of bucks found in Step 2 (which is 25).\n$$25 \\times 0.20 = 5$$\nSo, there are **5** 8-point bucks.\n\n### Final Conclusion\nThere are **5** 8-point bucks.",
+      "predicted": 8,
+      "correct": false,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 23.878,
+      "prompt_tokens": 37,
+      "response_tokens": 123,
+      "total_tokens": 160
     }
   }
 }
