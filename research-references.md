@@ -617,3 +617,77 @@ Top 10 selected by relevance score.
 - **Extropic hardware direction (TSU / XTR-0)** - https://extropic.ai/
   Why it matters: Extropic is now explicitly positioning XTR-0 as the bridge between conventional processors and future thermodynamic chips, which makes software-side algorithm design on classical hardware more valuable right now.
   Carnot use: keep the TSU path alive, but do not block 2026.04.15 on new hardware; the next milestone should win on CUDA + CPU first, then hand cleaner verifier workloads to FPGA/TSU prototypes later.
+
+## 2026-04-12 - Milestone 2026.04.17 Planning Refresh
+
+### Calibrated Semantic Verification
+- **$V_1$: Unifying Generation and Self-Verification for Parallel Reasoners** (arXiv 2603.04304) - https://arxiv.org/abs/2603.04304
+  Why it matters: replaces weak pointwise scoring with pairwise self-verification and uncertainty-guided verification compute allocation.
+  Carnot use: build a pairwise verifier that compares baseline vs repaired candidates on GSM8K-style semantic failures and code repairs, instead of trusting scalar pointwise scores.
+- **MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination** (arXiv 2603.24579) - https://arxiv.org/abs/2603.24579
+  Why it matters: decomposes answers into atomic propositions and validates them with deliberate information asymmetry so the checker cannot simply echo the generator's mistakes.
+  Carnot use: implement a claim-isolated checker path for typed reasoning IR where the checker only sees the prompt, extracted claim, and evidence slice.
+- **Semantic Energy: Detecting LLM Hallucination Beyond Entropy** (arXiv 2508.14496) - https://arxiv.org/abs/2508.14496
+  Why it matters: uses a Boltzmann-style energy over clustered semantics rather than plain entropy, giving a stronger uncertainty signal.
+  Carnot use: add a cheap energy prior for semantic verifier calibration and false-positive suppression before full repair is triggered.
+- **Weaver: Shrinking the Generation-Verification Gap by Scaling Compute for Verification** (OpenReview, 2025) - https://openreview.net/forum?id=dRjt4vlYVQ
+  Why it matters: shows that weakly supervised verifier ensembles and repeated-sampling selection can materially improve reasoning accuracy.
+  Carnot use: treat tracker, semantic checker, and code-property verifier as an ensemble instead of a single verdict source.
+
+### Structured Outputs and Constrained Generation
+- **Generating Structured Outputs from Language Models: Benchmark and Studies / JSONSchemaBench** (arXiv 2501.10868) - https://arxiv.org/abs/2501.10868
+  Why it matters: gives a 10K real-world schema benchmark and explicitly measures efficiency, coverage, and output quality of structured generation systems.
+  Carnot use: use JSONSchemaBench-style coverage accounting for typed reasoning / monitorable-output paths instead of only measuring parse success.
+- **PSC: Efficient Grammar-Constrained Decoding via Parser Stack Classification** (OpenReview, ICLR 2026 submission) - https://openreview.net/forum?id=SEjxNfQTHN
+  Why it matters: computes the full token mask from a single parser-stack classification step, making grammar-constrained decoding much cheaper.
+  Carnot use: if structured reasoning remains helpful, PSC-style preprocessing is a plausible path to low-overhead typed emission for Qwen3.5-0.8B and Gemma4-E4B-it.
+- **Constrained Decoding of Diffusion LLMs with Context-Free Grammars** (arXiv 2508.10111) - https://arxiv.org/abs/2508.10111
+  Why it matters: generalizes constrained decoding to additive infilling and diffusion-style generation while keeping syntax guarantees practical.
+  Carnot use: informs future non-autoregressive or infilling-style constrained generation experiments, especially for code repair and structured IR completion.
+- **GitHub repo: guidance-ai/jsonschemabench** - https://github.com/guidance-ai/jsonschemabench
+  Why it matters: ready-to-run benchmark assets with ~9.6K real-world schemas and MaskBench for mask-computation timing.
+  Carnot use: practical external fixture source for measuring monitorable-output engines and schema-feature coverage.
+
+### Code Verification and Formalization
+- **Learning to Solve and Verify: A Self-Play Framework for Code and Test Generation** (arXiv 2502.14948) - https://arxiv.org/abs/2502.14948
+  Why it matters: solver-verifier self-play materially improves both code and test generation without a larger teacher model.
+  Carnot use: direct template for turning Exp 226/227 repair traces into better property generation and better repair prompts.
+- **Automatic Generation of Formal Specification and Verification Annotations Using LLMs and Test Oracles** (arXiv 2601.12845) - https://arxiv.org/abs/2601.12845
+  Why it matters: verifier feedback plus test-oracle signals produced correct Dafny annotations for 98.2% of 110 programs within 8 iterations.
+  Carnot use: motivates a lightweight formal-spec layer for code prompts, where natural-language intent is converted into explicit contracts before repair.
+- **Towards Formal Verification of LLM-Generated Code from Natural Language Prompts** (arXiv 2507.13290) - https://arxiv.org/abs/2507.13290
+  Why it matters: Astrogator introduces a formal query language plus symbolic verification against user intent, not just execution traces.
+  Carnot use: strong design reference for extracting typed code intent from HumanEval prompts and using that intent as a verifier target.
+
+### Continuous Self-Learning and Constraint Systems
+- **T-SKM-Net: Trainable Neural Network Framework for Linear Constraint Satisfaction via Sampling Kaczmarz-Motzkin Method** (arXiv 2512.10461) - https://arxiv.org/abs/2512.10461
+  Why it matters: integrates randomized SKM-style projection into neural constraint satisfaction with zero violations and practical inference speed.
+  Carnot use: candidate repair mechanism for linearized typed constraints and structured-output corrections where Langevin-style repair is too noisy.
+- **Matching Features, Not Tokens: Energy-Based Fine-Tuning of Language Models** (arXiv 2603.12248) - https://arxiv.org/abs/2603.12248
+  Why it matters: sequence-level energy-based fine-tuning supplies dense semantic feedback without requiring a task-specific verifier.
+  Carnot use: long-term training reference for turning live verifier traces into dense rollout-level objectives instead of sparse accept/reject labels only.
+
+### Semantic Scholar Sweep Around EBT / ARM-EBM
+- **Energy-Based Transformers are Scalable Learners and Thinkers** (Semantic Scholar paper page + citations) - https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b
+  Why it matters: Semantic Scholar already shows concrete follow-on work around EBTs rather than just the original paper.
+  Carnot use: the most relevant visible citation targets are:
+  1. **Transformers as Intrinsic Optimizers: Forward Inference through the Energy Principle** (arXiv 2511.00907) - https://arxiv.org/abs/2511.00907
+     Carnot use: theoretical support for treating transformer forward passes as energy minimization, useful for future guided-decoding or verifier-energy hybrids.
+  2. **A Pipeline for Assessing Metacognitive Reasoning in Energy-Based Transformers while Generating Code** (OpenReview, MetaGenAI 2025) - https://openreview.net/forum?id=FrY7CU3U3p
+     Carnot use: code-generation-specific EBT evaluation path that may become relevant if Carnot ever hosts a native EBT code verifier instead of only verifier sidecars.
+  3. **NRGPT: An Energy-based Alternative for GPT** (arXiv 2512.16762) - https://arxiv.org/abs/2512.16762
+     Carnot use: architectural follow-on showing how GPT-like decoding can be reframed as energy-landscape exploration.
+- **Autoregressive Language Models are Secretly Energy-Based Models** (arXiv 2512.15605) - https://arxiv.org/abs/2512.15605
+  Why it matters: the core ARM-EBM bridge remains strategically important, but the citation graph is still too young to be a reliable roadmap signal.
+  Carnot use: keep the paper as theory support for future lookahead-energy experiments, but prioritize experiments with clearer applied leverage this milestone.
+
+### Hardware and Architecture Watch
+- **Extropic: Thermodynamic Computing From Zero to One** (Oct 29, 2025) - https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+  Why it matters: Extropic now has a concrete TSU story, XTR-0 development platform, and a public claim that TSUs compile EBMs down to Gibbs-style local sampling on probabilistic circuits.
+  Carnot use: this makes the FPGA/TSU abstraction path more concrete; near-term work should focus on host-side interfaces, sparse couplings, and local-communication-friendly sampling graphs.
+- **Extropic hardware page (X0 / XTR-0 / Z1)** - https://extropic.ai/hardware
+  Why it matters: XTR-0 is framed as the research platform and Z1 as the production-scale chip with hundreds of thousands of probabilistic circuits per chip and early-access timing in 2026.
+  Carnot use: justifies a milestone that finishes KV260 bring-up and host integration now, so Carnot has a cleaner backend boundary before TSU-class hardware is accessible.
+- **Logical Intelligence / Kona 1.0** - https://logicalintelligence.com/kona-ebms-energy-based-models
+  Why it matters: Kona is now presented as an EBM layer beneath LLMs that enforces validity and safety across system states instead of generating likely text.
+  Carnot use: validates the overall product direction, but the immediate takeaway is architectural: keep Carnot focused on verifier-side certainty layers rather than trying to turn the verifier into a chatbot.
