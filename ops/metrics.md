@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 252 Predictive Verification Corpus
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T17:31:48Z | 2026-04-13T17:40:15Z | Exp 252: wrote 10 tests (schema shape, determinism, provenance completeness, semantic+code coverage, memory-hit metadata, accepted-repair population), implemented `scripts/experiment_252_predictive_verification_corpus.py` building 683-record corpus from Exp 241/235/238/246/250 artifacts. All 10 tests pass. | TBD |
+
+### Session Summary
+
+- 10 tests written and passing; `data/research/predictive_verification_corpus_252.jsonl` (683 rows: 563 reasoning, 120 code) and `results/experiment_252_results.json` produced; 36 memory hits, 54 accepted repairs, 85 rejected.
+
 ## Session: 2026-04-13 Exp 251 Process Verification Comparison
 
 ### Turn Log
