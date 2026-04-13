@@ -880,9 +880,9 @@ def logprob_rejection_sample(
 
         model_name = config.model  # pragma: no cover
         logger.info("Loading model %s for rejection sampling...", model_name)  # pragma: no cover
-        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=True)  # pragma: no cover
+        tokenizer = AutoTokenizer.from_pretrained(model_name, trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1")  # pragma: no cover
         model = AutoModelForCausalLM.from_pretrained(  # pragma: no cover
-            model_name, trust_remote_code=True  # pragma: no cover
+            model_name, trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1"  # pragma: no cover
         )  # pragma: no cover
         model.eval()  # pragma: no cover
 

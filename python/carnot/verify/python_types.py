@@ -66,39 +66,62 @@ def safe_exec_function(
     code: str,
     func_name: str,
     args: tuple[Any, ...],
-    timeout: float = 1.0,  # noqa: ARG001 — reserved for future use
+    timeout: float = 1.0,
 ) -> tuple[Any, Exception | None]:
     """Execute a Python function defined in ``code`` with the given arguments.
 
     **Researcher summary:**
-        Safely executes arbitrary Python code in an isolated namespace.
+        Safely executes arbitrary Python code. Prefers gvisor sandbox when
+        available (Docker + runsc), falls back to in-process exec otherwise.
         Returns (result, None) on success or (None, exception) on failure.
 
     **Detailed explanation for engineers:**
-        This function uses Python's ``exec()`` to define the function in a fresh
-        namespace, then calls it with the provided arguments. All exceptions
-        (including SyntaxError from bad code) are caught and returned rather
-        than raised.
+        Execution priority:
+        1. If gvisor sandbox is available (Docker + runsc runtime), runs
+           the code in an isolated container with no network, limited memory,
+           and a read-only filesystem. This is safe for untrusted code.
+        2. If gvisor is unavailable, falls back to Python's ``exec()`` in a
+           fresh namespace. This is NOT safe for untrusted code but keeps
+           the pipeline working on dev machines without Docker.
 
-        The ``timeout`` parameter is reserved for future use (e.g., signal-based
-        timeout or subprocess isolation). For the small template functions used
-        in code verification training, execution is effectively instant.
-
-        **Security note:** This is NOT a production sandbox. It runs code in the
-        same process. For untrusted code, use the autoresearch sandbox module
-        (``carnot.autoresearch.sandbox``).
+        Set CARNOT_REQUIRE_SANDBOX=1 to force sandbox mode (raises if
+        gvisor unavailable instead of falling back).
 
     Args:
         code: Python source code defining the function.
         func_name: Name of the function to call after exec.
         args: Positional arguments to pass to the function.
-        timeout: Reserved for future timeout support (currently unused).
+        timeout: Execution timeout in seconds (used by sandbox, ignored by fallback).
 
     Returns:
         Tuple of (result, None) on success, or (None, exception) on failure.
 
-    Spec: REQ-CODE-001
+    Spec: REQ-CODE-001, REQ-SECURITY-001
     """
+    import os
+
+    require_sandbox = os.environ.get("CARNOT_REQUIRE_SANDBOX", "") == "1"
+
+    # Try gvisor sandbox first
+    try:
+        from carnot.verify.sandbox import sandboxed_exec_function, _gvisor_available
+        if _gvisor_available():
+            return sandboxed_exec_function(
+                code, func_name, args,
+                timeout=timeout,
+                allow_fallback=not require_sandbox,
+            )
+    except ImportError:
+        pass
+
+    # Sandbox not available — enforce or fall back
+    if require_sandbox:
+        return None, RuntimeError(
+            "CARNOT_REQUIRE_SANDBOX=1 but gvisor sandbox unavailable. "
+            "Install Docker + gvisor runtime."
+        )
+
+    # Fallback: in-process exec (NOT safe for untrusted code)
     namespace: dict[str, Any] = {}
     try:
         exec(code, namespace)  # noqa: S102 — intentional exec for code verification

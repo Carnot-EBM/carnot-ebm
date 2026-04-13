@@ -388,10 +388,10 @@ def load_model(
         try:
             tokenizer = AutoTokenizer.from_pretrained(
                 model_name,
-                trust_remote_code=True,
+                trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
             )
             model_kwargs: dict[str, Any] = {
-                "trust_remote_code": True,
+                "trust_remote_code": os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
                 "torch_dtype": effective_dtype,
             }
             if device_map is not None and effective_device != "cpu":
