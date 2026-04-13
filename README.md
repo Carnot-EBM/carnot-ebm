@@ -4,7 +4,7 @@
 
 Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All headline benchmark results below are from **live GPU inference**. The repository also preserves simulated, unverified, and software-model artifacts for provenance, and labels them explicitly instead of folding them into headline claims.
 
-**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%** while still catching **2** official-test misses beyond the weak harness. Self-learning reduces false positives by 86% (Exp 223). Trace learning distills **164** learnable PBT histories into property and repair rankings (VERIFY-030). Typed IR constraints give +4.9pp on Gemma4 (Exp 221).
+**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%** while still catching **2** official-test misses beyond the weak harness. Held-out replay keeps success flat at **32.74%** while cutting false positives **7 -> 1** (Exp 223). Trace learning distills **164** learnable PBT histories into property and repair rankings (VERIFY-030). Typed IR constraints give **+4.9pp** on Gemma4 (Exp 221).
 
 **What ships today:** `VerifyRepairPipeline` plus standalone `verify_code()` for end-user code checks. CLI (`carnot pipeline verify`, `carnot verify-code`), a hardened **7-tool** MCP server for Claude Code, 5 integration examples, and full API docs. Constraint extraction spans arithmetic, code, logic, and natural language domains.
 
@@ -104,6 +104,7 @@ Carnot's strongest live evidence is now the Hypothesis-backed code-verification 
 | HumanEval 30 problems (execution) | 16.7% | 20.0% | +3.3pp | Exp 208 |
 
 PBT detects 99.3% of wrong code (144/145) on the paired live slice and catches 6 official-test misses on the full Gemma run. Exp 227 shows the same verifier still adds signal cross-model even when the repair loop itself stays flat.
+On deterministic HumanEval-style probes, the same Hypothesis-backed verifier also catches **5/5** under-specified bugs that execution-only checks miss while preserving **5/5** matching correct solutions (Exp 224).
 
 ### Constraint verification (math/instruction)
 
@@ -119,12 +120,15 @@ Semantic grounding detects 22-23% of wrong math answers (vs 0% for regex). The b
 
 | Metric | Without learning | With learning | Improvement | Experiment |
 |--------|-----------------|---------------|-------------|------------|
-| False positives | 7 | 1 | **-86%** | Exp 223 |
+| Held-out false positives | 7 | 1 | **-86%** at flat **32.74%** success | Exp 223 |
 
-Constraint tracker + memory reduces false positives by 86% on 168 held-out cases while maintaining accuracy gains. This is Tier 1-2 self-learning applied to the verification pipeline.
+On **168** held-out cases, tracker gating keeps held-out success flat at **32.74%** while reducing false positives **7 -> 1**. Memory reuse is not yet strong enough to add task gains under the stricter provenance gates: hit rate is **9.9%**, precision is **5.8%**, and the practical win is still false-positive control rather than higher task success.
 
 ### Latest follow-ons
 
+- **Live trace memory (Exp 222):** **662** live trace events ingest into **230** accepted memory entries, **43** learned patterns, **29** mature patterns, **14** reusable repair snippets, and **12** monitorability-policy updates; replay precision is still only **12.6%**.
+- **Hypothesis-backed verifier (Exp 224):** deterministic generated-code checks catch **5/5** under-specified bugs versus **0/5** for execution-only verification while preserving **5/5** matching correct solutions.
+- **Dual-GPU runner (Exp 225):** paired fresh-process generation on the local **2x RTX 3090** host improves from **37.371s** to **32.774s** on a **10**-question microbenchmark for a measured **1.14x** speedup.
 - **Trace learning (VERIFY-030):** `TraceAnalyzer`, `PropertyRanker`, and `RepairStrategy` normalize **164** Exp 226 histories, with signature-derived checks covering **163** cases and accounting for **6** official-test misses beyond the weak harness.
 - **Packaged verification (VERIFY-031):** the strongest code path now ships as `verify_code()`, `carnot verify-code`, and `verify_code_with_pbt` on the hardened **7-tool** MCP surface.
 

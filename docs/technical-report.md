@@ -7,17 +7,19 @@
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
+**Current headline live results:** HumanEval PBT **11.6% -> 14.6%** (+3.0pp, Exp 226), typed constraints **61.7% -> 66.7%** (+4.9pp, Exp 221), and held-out replay **32.74% -> 32.74%** with false positives **7 -> 1** (Exp 223).
+
 ---
 
 ## Abstract
 
-We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through **206 completed experiments** across **21 research milestones**, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% code bug detection, 86% false positive reduction via self-learning, a 164-trace PBT learning corpus, and packaged end-user code verification via Python API, CLI, and MCP. All headline benchmark numbers remain live inference only.
+We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through **206 completed experiments** across **21 research milestones**, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% wrong-code detection, held-out replay cutting false positives **7 -> 1** at flat **32.74%** success, a **662**-event live trace-memory corpus with **230** accepted patterns, a **164**-trace PBT learning corpus, and packaged end-user code verification via Python API, CLI, and MCP. All headline benchmark numbers remain live inference only.
 
 Our key findings span two phases. **Phase 1 (Activation-based, Experiments 1-38):** (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy), (2) structural test execution dominates for code verification (0% to 30% accuracy), (3) activation-space approaches show detectable signals but fail to improve output quality — activation EBMs detect confidence, not correctness, (4) instruction tuning compresses the hallucination signal (84.5% base vs 67.2% instruction-tuned), (5) chain-of-thought further compresses it (75.5% to 61.3%), (6) adversarial questions defeat post-hoc detection entirely, and (7) no internal signal — activations, logit lens, NLI, confidence — can distinguish factual truth from confident hallucination. These 14 systematic negative results are the project's primary contribution to the activation-based literature.
 
 **Phase 2 (Constraint-based, Experiments 39-210):** The paradigm shift from detection to verification initially produced results that appeared strongly positive, but a critical audit (Exp 203-209) revealed that ALL early positive numbers were simulation artifacts — the inference was calibrated to instruction-tuned benchmarks while loading base models. With honest live GPU inference, arithmetic extraction found 0 violations on instruction-tuned model errors because they are semantic (wrong problem setup), not arithmetic.
 
-**Phase 3 (Semantic Grounding + Code Verification, Experiments 211-228 plus VERIFY-030/031):** Rebuilding extraction for real models produced credible results. Code verification is the strongest domain: full 164-problem HumanEval with property-based testing shows +3.0pp [+0.6, +6.1] 95% CI (Exp 226), with PBT detecting 99.3% of wrong code. The seeded Qwen follow-up on the Exp 208 cohort (Exp 227) stays flat at 23.3% -> 23.3% but still catches 2 official-test misses beyond the harness, which is the honest cross-model readout. Typed IR constraints give +4.9pp on Gemma4 (Exp 221). Semantic grounding detects 22-23% of wrong math answers that arithmetic misses entirely (Exp 219). Self-learning reduces false positives by 86% (Exp 223). VERIFY-030 then normalizes Exp 226 into **164** learnable traces, showing that signature-derived checks account for the largest share of beyond-harness value, while VERIFY-031 packages the same PBT stack behind `verify_code()`, `carnot verify-code`, and `verify_code_with_pbt`. The FPGA hardware track (Exp 228) remains explicitly labeled as a software simulation artifact rather than a live throughput result.
+**Phase 3 (Semantic Grounding + Code Verification, Experiments 211-228 plus VERIFY-030/031):** Rebuilding extraction for real models produced credible results. Code verification is the strongest domain: full 164-problem HumanEval with property-based testing shows +3.0pp [+0.6, +6.1] 95% CI (Exp 226), with PBT detecting 99.3% of wrong code. The seeded Qwen follow-up on the Exp 208 cohort (Exp 227) stays flat at 23.3% -> 23.3% but still catches 2 official-test misses beyond the harness, which is the honest cross-model readout. Typed IR constraints give +4.9pp on Gemma4 (Exp 221). Semantic grounding detects 22-23% of wrong math answers that arithmetic misses entirely (Exp 219). Live trace memory ingests **662** events into **230** accepted patterns, but replay precision is still only **12.6%** (Exp 222). Held-out replay keeps success flat at **32.74%** while cutting false positives **7 -> 1**; memory hit rate **9.9%** and precision **5.8%** show tracker gating is ahead of reusable memory (Exp 223). The Hypothesis-backed verifier catches **5/5** under-specified bugs versus **0/5** for execution-only checks while preserving **5/5** correct solutions (Exp 224), and the paired dual-GPU runner reaches **1.14x** on a 10-question microbenchmark while TensorRT-LLM benchmarking remains blocked by missing toolchain pieces (Exp 224c/225). VERIFY-030 then normalizes Exp 226 into **164** learnable traces, showing that signature-derived checks account for the largest share of beyond-harness value, while VERIFY-031 packages the same PBT stack behind `verify_code()`, `carnot verify-code`, and `verify_code_with_pbt`. The FPGA hardware track (Exp 228) remains explicitly labeled as a software simulation artifact rather than a live throughput result.
 
 We release the complete framework as `pip install carnot` with four energy tiers (Ising, KAN, Gibbs, Boltzmann), the VerifyRepairPipeline production API, the standalone `verify_code()` wrapper, five constraint extractors (arithmetic, code, logic, NL, auto-detection), self-learning and trace-learning analytics, a constraint state machine for agentic workflows, a **7-tool** MCP server for Claude Code integration, a CLI including `carnot verify-code`, Rust core crates, and 16 per-token EBM research models on HuggingFace alongside newer guided-decoding and constraint-model artifacts.
 
@@ -25,7 +27,7 @@ We release the complete framework as `pip install carnot` with four energy tiers
 
 ## Headline Results (Live GPU Only)
 
-All results below are from live GPU inference. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines — those are documented in the history sections as negative findings but are not included in headline numbers.
+All primary benchmark rows below are from live GPU inference. The replay and trace-memory rows are follow-on analytics over those same live artifacts. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines — those are documented in the history sections as negative findings but are not included in headline numbers.
 
 | Benchmark | Baseline | +Carnot | Delta | Experiment |
 |-----------|----------|---------|-------|------------|
@@ -35,7 +37,8 @@ All results below are from live GPU inference. Earlier milestones produced simul
 | Typed IR constraints (81 tasks) | 61.7% | 66.7% | **+4.9pp** (Gemma4) | Exp 221 |
 | GSM8K semantic (200 questions) | 37.5% | 38.0% | +0.5pp (Gemma4) | Exp 219 |
 | PBT bug detection rate | — | 144/145 | **99.3%** | Exp 220 |
-| Self-learning FP reduction | 7 FP | 1 FP | **-86%** | Exp 223 |
+| Held-out replay (168 cases) | 32.74%, 7 FP | 32.74%, 1 FP | **-86% FP**, flat success | Exp 223 |
+| Live trace memory | — | 230/662 accepted | 43 patterns, 29 mature | Exp 222 |
 | Extractor comparison (100 GSM8K) | — | Regex 5, Z3 3, LLM 1 FP | LLM best | Exp 206-207 |
 
 ### Simulation vs Reality
@@ -71,7 +74,7 @@ This work began as an investigation of activation-based hallucination detection:
 
 This negative result forced a fundamental rethinking. Instead of asking "is this output correct?" (detection), we pivoted to asking "does this output satisfy known constraints?" (verification). The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints are encoded as spin couplings. Ising models can be solved via parallel Gibbs sampling (CPU), continuous relaxation (gradient descent), or eventually thermodynamic hardware (Extropic TSU).
 
-The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 226) and typed constraint verification (+4.9pp, Exp 221). Self-learning reduces false positives by 86% (Exp 223). All headline numbers are from live GPU inference.
+The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 226) and typed constraint verification (+4.9pp, Exp 221). Tracker-gated replay keeps held-out success flat while reducing false positives by 86% (Exp 223). All headline numbers are from live GPU inference.
 
 The narrative arc of this report is: tried activation approaches -> learned 14 principles about what doesn't work -> pivoted to constraint verification -> discovered early results were simulation artifacts -> rebuilt extraction for real models -> proved it works on live benchmarks -> shipped it as a product.
 
@@ -648,7 +651,10 @@ The 14 systematic negative results documented across 38 experiments are the proj
 - **PBT bug detection (Exp 220):** 99.3% of wrong code detected (144/145)
 - **Seeded Qwen cohort (Exp 227):** 23.3% -> 23.3%; PBT still catches 2 official-test misses and detects 17/23 wrong baselines
 - **Typed IR constraints (Exp 221):** Gemma4 61.7% -> 66.7% (+4.9pp)
-- **Self-learning FP reduction (Exp 223):** 7 -> 1 false positives (-86%)
+- **Held-out replay (Exp 223):** 32.74% -> 32.74%; false positives 7 -> 1 (-86%)
+- **Live trace memory (Exp 222):** 662 trace events -> 230 accepted memories, 43 learned patterns, 29 mature patterns
+- **Hypothesis-backed verifier (Exp 224):** 5/5 under-specified bugs caught vs 0/5 execution-only, with 5/5 correct solutions preserved
+- **Dual-GPU microbenchmark (Exp 225):** 37.371s -> 32.774s on 10 questions (1.14x)
 - **Semantic grounding (Exp 219):** 22-23% wrong math answers detected (vs 0% for arithmetic extraction)
 - **Extractor comparison (Exp 206-207):** LLM 1/91 FP, Z3 3/91 FP, Regex 5/91 FP
 - **HumanEval 30 problems (Exp 208):** 16.7% -> 20.0% (+3.3pp)
@@ -656,7 +662,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up, added a provenance-labeled FPGA software model, distilled the strongest code traces into reusable rankings, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at **2,137 passed, 1 skipped** with **100.00%** coverage.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up, measured that live self-learning currently helps false-positive control before it helps held-out task success, added a provenance-labeled FPGA software model, distilled the strongest code traces into reusable rankings, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at **2,137 passed, 1 skipped** with **100.00%** coverage.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
@@ -949,7 +955,55 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 **Finding:** Carnot's next constraint-extraction step should not rely on raw chain-of-thought as the only evidence channel. The most promising path is to extract a structured intermediate representation first, then verify or repair against that representation while treating chain-of-thought as optional supporting evidence.
 
-### 19.5 Property-Based Code Verification at Scale (Experiments 220, 226, and 227)
+### 19.5 Live GSM8K Semantic Benchmark (Experiment 219)
+
+**Setup:** Run the shared dual-model live harness on **200** GSM8K test questions per model with typed-reasoning traces, semantic-grounding checks, shared cohort seeds, and full per-question artifact logging.
+
+**Result:** Qwen3.5-0.8B lands at **21.5%** baseline and falls to **18.0%** in verify-only after flagging **35/157** wrong baselines but also **7** false positives; verify-repair returns to **21.5%** with **0** repaired cases. Gemma4-E4B-it lands at **37.5%** baseline and falls to **26.0%** in verify-only after flagging **29/125** wrong baselines but also **23** false positives; verify-repair reaches **38.0%** with **9** repaired cases for **+0.5pp**. Both models maintain **100%** typed parse coverage.
+
+**Finding:** Semantic grounding closes a real gap that arithmetic extraction misses, but the live small-model false-positive budget is still too high for verify-only to help accuracy consistently. Repair can recover a few cases on Gemma, yet better gating remains the main need.
+
+### 19.6 Live HumanEval Property Benchmark (Experiment 220)
+
+**Setup:** Extend the shared live harness to score official HumanEval problems with execution-only checks, additive prompt-derived properties, and preserved generation-plus-repair traces for later learning.
+
+**Result:** On **50** official problems per model, Qwen3.5-0.8B moves from **18.0%** baseline to **20.0%** after verify-repair, while Gemma4-E4B-it moves from **10.0%** to **12.0%**. The additive property path raises wrong-code detections beyond execution-only (**34/41** vs **29/41** for Qwen; **45/45** vs **44/45** for Gemma) and records **93** property violations across **25** Qwen problems plus **218** across **45** Gemma problems, but it catches **0** official-test-missed bugs on this live slice.
+
+**Finding:** Prompt-derived properties are useful for richer error signals and slightly better repair loops, but on this cohort they improve detection rather than surfacing new beyond-harness failures. That is why Exp 224 and then Exp 226 matter: the additive verifier needed a stronger generated-code path than prompt-side properties alone.
+
+### 19.7 Live Prompt-Side Constraint Benchmark (Experiment 221)
+
+**Setup:** Run the prompt-side constraint benchmark on the full **81-case** Exp 211 corpus per model, preserving output style metadata, parse/extraction coverage, exact-vs-partial satisfaction, and semantic violation counts.
+
+**Result:** Qwen3.5-0.8B reaches **25.9%** exact satisfaction with **79.0%** parse success, **97.2%** extraction coverage, and **57.8%** mean partial satisfaction; verify-repair nudges that to **27.2%** for **+1.2pp**. Gemma4-E4B-it reaches **61.7%** exact satisfaction with **90.1%** parse success, **99.0%** extraction coverage, and **81.9%** mean partial satisfaction; verify-repair lifts that to **66.7%** for **+4.9pp**. Qwen still misses mostly on literal (**62**) and search-limited (**48**) constraints, while Gemma's remaining miss budget is also dominated by literal (**33**) and search-limited (**23**) failures rather than semantic ones (**7**).
+
+**Finding:** By Exp 221, Carnot is no longer bottlenecked on reading prompt-side constraints. The remaining failures are mostly literal compliance and search problems, not extraction failure. Output style still matters materially, especially for Gemma, which is much stronger on terse and code-only surfaces than on structured JSON.
+
+### 19.8 Live Trace Memory and Repair Guidance (Experiment 222)
+
+**Setup:** Ingest the checked-in live Exp 219 / 220 / 221 artifacts into a provenance-aware trace-memory builder that accepts only high-confidence true positives, quarantines ambiguous traces, derives reusable repair snippets, and emits monitorability-policy updates.
+
+**Result:** Exp 222 normalizes **662** trace events, accepts **230** into memory, quarantines **266**, and yields **43** learned patterns with **29** mature patterns. It also produces **14** reusable repair snippets and **12** machine-readable policy updates. The most frequent learned failures are `humaneval_failure` (**73**), `official_test_failure` (**51**), and `question_grounding_failures:answer_target_mismatch` (**53**). Chronological replay records **237** helpful retrieval events, but reused-pattern precision is only **12.6%**.
+
+**Finding:** Live memory growth is real, but automatic reuse is not yet trustworthy enough to drive decisions broadly. The main value today is structured diagnosis and repair guidance, not fully automated memory-backed intervention.
+
+### 19.9 Held-Out Live Self-Learning Replay (Experiment 223)
+
+**Setup:** Replay the checked-in Exp 219 / 220 / 221 cohorts chronologically while holding out the final quarter of each experiment, so evaluation measures reusable learning rather than memorization. Compare `no_learning`, `tracker_only`, and `tracker_plus_memory`.
+
+**Result:** Across **168** held-out cases and **494** learning cases, `no_learning` reaches **32.74%** held-out success (**55/168**) with **7** false positives. `tracker_only` keeps held-out success flat at **32.74%** while reducing false positives to **1**. `tracker_plus_memory` stays at the same **32.74%** and **1** false positive. By task, held-out GSM8K accuracy is **26.0%** (**26/100**), HumanEval pass-rate is **19.2%** (**5/26**), and prompt-side exact satisfaction is **57.1%** (**24/42**) for all three strategies. Under the stricter mature-pattern gate, memory sees retrieval candidates on **142** held-out events with **9.9%** hit rate and **5.8%** precision.
+
+**Finding:** Tracker gating is already useful because it removes false positives without harming held-out task success. Reusable memory is not there yet: the current builder can trace patterns across runs, but it does not add an incremental held-out win over the tracker gate alone.
+
+### 19.10 Hypothesis-Backed Code Verification and Serving Infrastructure (Experiments 224, 224c, and 225)
+
+**Setup:** Add a Hypothesis-backed verifier for generated Python code, then build the serving infrastructure around it: an optional TensorRT-LLM warm-inference backend and a paired dual-GPU runner for the shared live harness.
+
+**Result:** Exp 224 shows the additive verifier catches **5/5** under-specified HumanEval-style bugs that execution-only checks miss, while keeping **5/5** matching correct solutions clean. Exp 224c adds optional TensorRT-LLM engine caching and warm-server preference, but live benchmarking is blocked in this environment because `tensorrt_llm`, `trtllm-build`, and `nvcc` are absent. Exp 225 then benchmarks the paired dual-GPU path on a local **2x RTX 3090** host: sequential fresh-process generation over **10** GSM8K questions takes **37.371s**, while parallel execution takes **32.774s** for a measured **1.14x** speedup.
+
+**Finding:** Carnot's verification path is ahead of its serving acceleration path. The new PBT verifier already adds clear value on under-specified code, while inference-side speedups remain modest and environment-dependent until the TensorRT stack is actually available.
+
+### 19.11 Property-Based Code Verification at Scale (Experiments 220, 226, and 227)
 
 **Setup:** Scale the additive Hypothesis-backed verifier from the paired **50**-problem dual-model slice (Exp 220) to the full **164**-problem Gemma4-E4B-it HumanEval contract (Exp 226), then rerun the same approach on live `Qwen/Qwen3.5-0.8B` while reusing the exact ordered **30**-problem Exp 208 cohort for an honest same-cohort comparison (Exp 227). All three artifacts stay in `live_gpu` mode.
 
@@ -957,7 +1011,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 **Finding:** PBT is now Carnot's strongest verified code path. The key value is not just repair delta; it is surfacing under-specified bugs that execution-only evaluation misses. Exp 227 matters because it shows the additive verifier signal survives cross-model transfer even when repair yield remains model- and prompt-quality-limited.
 
-### 19.6 KV260 FPGA Ising Design and Software-Model Benchmark (Experiment 228)
+### 19.12 KV260 FPGA Ising Design and Software-Model Benchmark (Experiment 228)
 
 **Setup:** Define a KV260-class sparse Ising backend with runtime coupling uploads, an AXI-Lite register map, and a software transport that exercises the same upload, trigger, and readback path as a future PYNQ overlay. The target contract is **32** tiles × **128** spins per tile = **4096** spins.
 
@@ -965,7 +1019,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 **Finding:** The value of Exp 228 is interface and deployment readiness, not a premature speed claim. The software model proves that Carnot can preserve one host/backend contract across CPU fallback, simulated FPGA transport, and a future real KV260 overlay once the bitstream exists.
 
-### 19.7 Code Verification Trace Learning (VERIFY-030)
+### 19.13 Code Verification Trace Learning (VERIFY-030)
 
 **Setup:** Ingest the checked-in Exp 225 and Exp 226 code-verification artifacts into analytics-only learners (`TraceAnalyzer`, `PropertyRanker`, `RepairStrategy`). Exp 225 is skipped honestly because it contains runner metadata but no per-problem verification histories; Exp 226 is normalized into full baseline-and-repair traces.
 
@@ -973,7 +1027,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 **Finding:** The current value of trace learning is prioritization rather than autonomous repair. The checked-in corpus says Carnot should spend PBT budget first on signature robustness and mutation safety, and should bias repair feedback toward syntax and contract issues before broader heuristics.
 
-### 19.8 Packaged Code Verification for End Users (VERIFY-031)
+### 19.14 Packaged Code Verification for End Users (VERIFY-031)
 
 **Setup:** Package the strongest code-verification path behind a standalone `verify_code()` Python API, a `carnot verify-code` CLI, and the `verify_code_with_pbt` MCP tool, then document a generate-verify-repair flow that uses the packaged surfaces instead of the research scripts.
 
