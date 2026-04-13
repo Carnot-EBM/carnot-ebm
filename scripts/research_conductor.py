@@ -148,6 +148,9 @@ def _build_agent_command(
                 "--color", "never",
                 "--model", model,
                 "--cd", str(PROJECT_ROOT),
+                "--ephemeral",  # Prevent session file accumulation (stall fix #3)
+                "-c", "agents.job_max_runtime_seconds=1200",  # 20 min cap (stall fix #2)
+                "-c", "model_providers.openai.stream_idle_timeout_ms=120000",  # 2 min idle (stall fix #2)
                 "-",
             ],
             prompt,
@@ -205,19 +208,50 @@ def run_agent(
         elif proc.stdin:
             proc.stdin.close()
 
-        # Stream output live to terminal while capturing it
+        # Stream output live with stall detection (Fix #1).
+        # If no output is received for STALL_TIMEOUT seconds, kill the process.
+        # This prevents infinite hangs when Codex stalls mid-stream.
+        import select
+        STALL_TIMEOUT = 180  # 3 minutes of silence = stalled
+
         output_lines = []
+        last_output_time = time.time()
+
         while True:
             if proc.stdout is None:
                 break
-            line = proc.stdout.readline()
-            if not line and proc.poll() is not None:
-                break
-            if line:
-                print(line, end="", flush=True)  # Live to terminal
-                output_lines.append(line)
 
-        proc.wait(timeout=timeout)
+            # Use select for non-blocking read with timeout
+            ready, _, _ = select.select([proc.stdout], [], [], 5.0)
+
+            if ready:
+                line = proc.stdout.readline()
+                if not line and proc.poll() is not None:
+                    break
+                if line:
+                    print(line, end="", flush=True)  # Live to terminal
+                    output_lines.append(line)
+                    last_output_time = time.time()
+            else:
+                # No output ready — check for stall
+                if proc.poll() is not None:
+                    break  # Process exited
+                elapsed_silence = time.time() - last_output_time
+                if elapsed_silence > STALL_TIMEOUT:
+                    logger.warning(
+                        "%s stalled — no output for %ds, killing process",
+                        AGENT_DISPLAY, int(elapsed_silence),
+                    )
+                    proc.kill()
+                    proc.wait(timeout=10)
+                    full_output = "".join(output_lines)
+                    return False, f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}"
+
+        try:
+            proc.wait(timeout=30)
+        except subprocess.TimeoutExpired:
+            proc.kill()
+
         full_output = "".join(output_lines)
 
         if proc.returncode != 0:
