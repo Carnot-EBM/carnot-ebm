@@ -1574,6 +1574,90 @@ The same module shall integrate additively into `VerifyRepairPipeline`, where:
   serialization with sort-key ordering so two runs on the same input produce
   bit-identical JSON output
 
+### REQ-VERIFY-061: Process-Integrity Verifier For Typed Reasoning And Code-Repair Traces
+
+The repository shall provide a process-integrity verifier in
+`python/carnot/pipeline/process_verifier.py`, where:
+- the verifier accepts a typed corpus row (reasoning or code-repair) and
+  returns a structured `ProcessVerificationResult` that is independent of
+  the outcome verdict so callers can detect "correct answer, invalid process"
+- supported defect kinds are `unsupported_step`, `missing_premise_jump`,
+  `contradictory_intermediate`, `outcome_correct_process_invalid`,
+  `repair_regression`, and `repair_stall`; each defect records a kind, a
+  human-readable detail string, an optional step reference, and machine-
+  readable evidence fields
+- unsupported_step is raised when `n_unsupported_claims > 0` in
+  `process_evidence`
+- missing_premise_jump is raised when `max_premise_support < 1.0` and at
+  least one unsupported claim exists
+- contradictory_intermediate is raised when `verifier_verdict == "violated"`
+  in `process_evidence`
+- outcome_correct_process_invalid is raised when `outcome_label == "correct"`
+  and `process_label` indicates an invalid process
+  (`"right_answer_wrong_process"`)
+- repair_regression is raised when the corpus row carries a `repair_context`
+  with `prior_outcome == "correct"` and the current `outcome_label ==
+  "incorrect"`
+- repair_stall is raised when `repair_context.prior_outcome == "incorrect"`
+  and `outcome_label == "incorrect"`
+- the verifier additionally accepts a `TypedReasoningIR` directly and
+  cross-references its claim-to-step grounding to surface unsupported and
+  missing-premise defects without requiring pre-computed corpus evidence
+- `process_valid` is `True` only when zero defects are detected
+- `run_date` is the fixed string `"20260413"` embedded in every result for
+  traceability
+- `to_dict()` / `to_json()` serialization is deterministic with sorted keys
+  so two runs on the same input produce bit-identical output
+
+### REQ-VERIFY-062: Process-Integrity Verifier Pipeline Integration
+
+The process-integrity verifier shall integrate additively into
+`VerifyRepairPipeline`, where:
+- `VerifyRepairPipeline` exposes a `verify_process_integrity` entry point
+  that accepts a corpus row dict and returns a `ProcessVerificationResult`
+- the entry point does not change the existing `verify()` behavior or break
+  any current caller
+- `VerificationResult` can optionally carry a `process_integrity` field
+  holding the `ProcessVerificationResult` when the entry point was invoked
+- existing verify and verify_and_repair callers that ignore the new field
+  continue to work unchanged
+
+### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
+
+**Given** a corpus row whose `process_label` is `"clean"` and whose
+  `process_evidence` has `n_unsupported_claims == 0`,
+  `max_premise_support == 1.0`, and `verifier_verdict != "violated"`
+**When** the process verifier runs on the row
+**Then** `process_valid` is `True` and `defects` is empty
+
+### SCENARIO-VERIFY-066: Unsupported Claim Triggers Defect Detection
+
+**Given** a corpus row with `n_unsupported_claims > 0` in `process_evidence`
+**When** the process verifier runs
+**Then** at least one defect with `kind == "unsupported_step"` is present and
+  `process_valid` is `False`
+
+### SCENARIO-VERIFY-067: Right-Answer Wrong-Process Pattern Is Flagged
+
+**Given** a corpus row with `outcome_label == "correct"` and
+  `process_label == "right_answer_wrong_process"`
+**When** the process verifier runs
+**Then** at least one defect with
+  `kind == "outcome_correct_process_invalid"` is present
+
+### SCENARIO-VERIFY-068: Repair Regression Detected In Code-Repair Trace
+
+**Given** a corpus row with `repair_context.prior_outcome == "correct"` and
+  `outcome_label == "incorrect"`
+**When** the process verifier runs
+**Then** a defect with `kind == "repair_regression"` is present
+
+### SCENARIO-VERIFY-069: Process Verification Serializes Deterministically
+
+**Given** a corpus row that produces one or more defects
+**When** `to_json()` is called twice on the same `ProcessVerificationResult`
+**Then** both calls produce the same byte-for-byte JSON output
+
 ### SCENARIO-VERIFY-063: Live Claims Normalize Conservatively Instead Of Guessing
 
 **Given** checked-in live semantic and prompt-side traces from Exp 235 and
@@ -1664,4 +1748,6 @@ The same module shall integrate additively into `VerifyRepairPipeline`, where:
 | REQ-VERIFY-057 | Not Started | Implemented | Exp 244 summary/provenance tests + artifact refresh |
 | REQ-VERIFY-058 | Not Started | Implemented | Formal claim verifier route + abstain + serialization tests |
 | REQ-VERIFY-059 | Not Started | Implemented | Formal claim verifier pipeline integration tests |
+| REQ-VERIFY-061 | Not Started | Implemented | Process verifier defect detection + serialization tests |
+| REQ-VERIFY-062 | Not Started | Implemented | Process verifier pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

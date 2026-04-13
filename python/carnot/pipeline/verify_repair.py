@@ -62,6 +62,7 @@ from carnot.pipeline.formal_claim_verifier import (
     FormalClaimVerifier,
     normalize_claim,
 )
+from carnot.pipeline.process_verifier import ProcessVerificationResult, ProcessVerifier
 from carnot.pipeline.semantic_grounding import SemanticGroundingVerifier
 from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2
 from carnot.pipeline.structured_reasoning import StructuredReasoningController
@@ -714,6 +715,33 @@ class VerifyRepairPipeline:
         verifier = FormalClaimVerifier()
         claims = [normalize_claim(raw) for raw in raw_claims]
         return verifier.verify_batch(claims)
+
+    def verify_process_integrity(
+        self,
+        corpus_row: dict[str, object],
+    ) -> ProcessVerificationResult:
+        """Verify a corpus row for process-integrity defects.
+
+        This is an additive entry point that does not affect ``verify()`` or
+        ``verify_and_repair()`` callers.  Pass any dict following the Exp 248
+        process-integrity corpus schema (or any reasoning / code-repair trace
+        that carries ``process_evidence``, ``outcome_label``,
+        ``process_label``, and optionally ``repair_context``).
+
+        Detects: unsupported_step, missing_premise_jump,
+        contradictory_intermediate, outcome_correct_process_invalid,
+        repair_regression, repair_stall.
+
+        Args:
+            corpus_row: One corpus row dict.
+
+        Returns:
+            ``ProcessVerificationResult`` with per-defect details and
+            deterministic ``to_dict()`` / ``to_json()`` serialization.
+
+        Spec: REQ-VERIFY-062
+        """
+        return ProcessVerifier().verify_reasoning_trace(corpus_row)
 
     def verify(
         self,
