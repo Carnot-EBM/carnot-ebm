@@ -1385,3 +1385,4 @@ python/ |
 | 2026-04-13 07:46 UTC | Exp 239: Case-based trace memory with richer retri | OK | Deliverable already exists in repo |
 | 2026-04-13 08:18 UTC | Exp 240: Learned repair-policy compiler from accep | OK | =========== 2216 passed, 1 skipped, 22 warnings in 87.52s (0:01:27) ============ |
 | 2026-04-13 08:56 UTC | Exp 241: Chronological self-learning replay v2 | OK | Deliverable already exists in repo |
+| 2026-04-13 09:21 UTC | Exp 242: KV260 host / overlay round-trip benchmark | OK | Deliverable already exists in repo |
