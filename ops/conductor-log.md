@@ -1431,3 +1431,4 @@ python/ |
 | 2026-04-13 23:22 UTC | Exp 267: Update 16 HuggingFace model READMEs | FAIL | Post-tests failed:  |
 | 2026-04-13 23:23 UTC | Exp 267: Update 16 HuggingFace model READMEs | OK | Deliverable already exists in repo |
 | 2026-04-13 23:26 UTC | Exp 268: Publish Exp 66 joint model and FormalClai | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
+| 2026-04-13 23:30 UTC | Exp 268: Publish Exp 66 joint model and FormalClai | SKIP | Pre-tests failing, self-heal failed: 17 failed, 81 passed, 5 skipped in 3.37s |
