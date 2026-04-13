@@ -100,28 +100,30 @@ def safe_exec_function(
     """
     import os
 
+    # Only use sandbox when explicitly requested — avoids Docker overhead
+    # during tests and development. Set CARNOT_USE_SANDBOX=1 for production.
+    use_sandbox = os.environ.get("CARNOT_USE_SANDBOX", "") == "1"
     require_sandbox = os.environ.get("CARNOT_REQUIRE_SANDBOX", "") == "1"
 
-    # Try gvisor sandbox first
-    try:
-        from carnot.verify.sandbox import sandboxed_exec_function, _gvisor_available
-        if _gvisor_available():
-            return sandboxed_exec_function(
-                code, func_name, args,
-                timeout=timeout,
-                allow_fallback=not require_sandbox,
+    if use_sandbox or require_sandbox:
+        try:
+            from carnot.verify.sandbox import sandboxed_exec_function, _gvisor_available
+            if _gvisor_available():
+                return sandboxed_exec_function(
+                    code, func_name, args,
+                    timeout=timeout,
+                    allow_fallback=not require_sandbox,
+                )
+        except ImportError:
+            pass
+
+        if require_sandbox:
+            return None, RuntimeError(
+                "CARNOT_REQUIRE_SANDBOX=1 but gvisor sandbox unavailable. "
+                "Install Docker + gvisor runtime."
             )
-    except ImportError:
-        pass
 
-    # Sandbox not available — enforce or fall back
-    if require_sandbox:
-        return None, RuntimeError(
-            "CARNOT_REQUIRE_SANDBOX=1 but gvisor sandbox unavailable. "
-            "Install Docker + gvisor runtime."
-        )
-
-    # Fallback: in-process exec (NOT safe for untrusted code)
+    # Default: in-process exec (fast, NOT safe for untrusted code)
     namespace: dict[str, Any] = {}
     try:
         exec(code, namespace)  # noqa: S102 — intentional exec for code verification
