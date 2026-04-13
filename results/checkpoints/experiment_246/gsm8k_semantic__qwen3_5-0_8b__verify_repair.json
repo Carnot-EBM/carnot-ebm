@@ -4279,6 +4279,58 @@
       "accepted_correct": false,
       "repaired": false,
       "n_repairs": 0
+    },
+    "gsm8k-719": {
+      "case_id": "gsm8k-719",
+      "mode": "verify_repair",
+      "question": "Goldy bought 20 sacks of rice and gave 3 sacks to her cousin and 4 sacks to her brother, if there are 25 kilograms of rice per sack, how many kilograms does she gave to her cousin and brother?",
+      "ground_truth": 175,
+      "response": "To solve this problem step-by-step, let's break down the information given and perform the calculations carefully.\n\n### 1. Identify the Given Information\n*   **Total sacks of rice**: 20\n*   **Sacks given to cousin**: 3\n*   **Sacks given to brother**: 4\n*   **Rice per sack**: 25 kg\n*   **Goal**: Calculate the total kilograms of rice given to the cousin and brother.\n\n### 2. Step-by-Step Calculation\n\n**Step 1: Calculate the total number of sacks given to the cousin and brother.**\nWe simply add the number of sacks given to each person.\n$$ \\text{Total sacks given} = 3 + 4 = 7 \\text{ sacks} $$\n\n**Step 2: Calculate the total weight of the rice given.**\nMultiply the total number of sacks by the weight of one sack.\n$$ \\text{Total weight} = 7 \\text{ sacks} \\times 25 \\text{ kg/sack} $$\n$$ 7 \\times 25 = 175 \\text{ kg} $$\n\n**Alternative Method (Step-by-Step Weight Calculation):**\n1",
+      "predicted": 1,
+      "correct": false,
+      "formal_claims": [
+        {
+          "claim_id": "arith-0",
+          "failure_detail": "claimed=27.0 but arithmetic on operands 3.0,4.0 does not match; expected one of [-1.0, 0.75, 1.0, 1.3333333333333333, 7.0, 12.0]",
+          "route": "arithmetic",
+          "run_date": "20260413",
+          "verdict": "violated"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 0,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "latency_seconds": 32.145,
+      "prompt_tokens": 48,
+      "response_tokens": 156,
+      "total_tokens": 204,
+      "flagged": true,
+      "accepted_correct": false,
+      "repaired": false,
+      "n_repairs": 3
+    },
+    "gsm8k-503": {
+      "case_id": "gsm8k-503",
+      "mode": "verify_repair",
+      "question": "The rug is 5 feet wider than the chair. The couch is 2 feet longer than twice the width of the rug. If the chair is 3 feet wide. How many feet long is the couch?",
+      "ground_truth": 18,
+      "response": "Here is the step-by-step solution to the problem:\n\n### Step 1: Identify the given information\n*   The width of the rug ($W_{rug}$) is 5 feet wider than the width of the chair ($W_{chair}$).\n*   The width of the chair ($W_{chair}$) is 3 feet.\n*   The length of the couch ($L_{couch}$) is 2 feet longer than twice the width of the rug ($2 \\times W_{rug}$).\n\n### Step 2: Calculate the width of the rug\nWe know the width of the chair is 3 feet.\n$$W_{rug} = W_{chair} + 5$$\n$$W_{rug} = 3 + 5$$\n$$W_{rug} = 8 \\text{ feet}$$\n\n### Step 3: Calculate the length of the couch\nFirst, find twice the width of the rug:\n$$2 \\times W_{rug} = 2 \\times 8 = 16 \\text{ feet}$$\n\nNext, add 2 feet to this result to find the length of the couch:\n$$L_{couch} = 16 + 2",
+      "predicted": 2,
+      "correct": false,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.143,
+      "prompt_tokens": 45,
+      "response_tokens": 145,
+      "total_tokens": 190,
+      "flagged": false,
+      "accepted_correct": false,
+      "repaired": false,
+      "n_repairs": 0
     }
   }
 }
