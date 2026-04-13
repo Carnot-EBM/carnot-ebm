@@ -9,8 +9,10 @@ REQ-REPORT-004: Report and Landing-Page Disclosure
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
+import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -46,8 +48,23 @@ def _current_provenance_counts() -> dict[str, int]:
     return counts
 
 
+def _current_experiment_count() -> int:
+    status = _read_repo_file("ops/status.md")
+    match = re.search(r"\*\*Last Updated:\*\*.*?—\s+(\d+)\s+EXPERIMENTS", status)
+    assert match is not None
+    return int(match.group(1))
+
+
+def _current_milestone_count() -> int:
+    payload = yaml.safe_load(_read_repo_file("research-complete.yaml"))
+    return len(payload["milestones"])
+
+
 def test_docs_have_premium_aesthetic():
-    """Verify that the docs/index.html uses glassmorphism and soft borders (REQ-DOCUI-001, REQ-DOCUI-002)."""
+    """Verify the landing page keeps the required premium UI affordances.
+
+    REQ-DOCUI-001, REQ-DOCUI-002
+    """
     docs_path = REPO_ROOT / "docs" / "index.html"
     assert docs_path.exists()
     content = docs_path.read_text(encoding="utf-8")
@@ -62,7 +79,7 @@ def test_docs_have_premium_aesthetic():
 
 
 def test_public_docs_disclose_current_provenance_inventory() -> None:
-    """REQ-REPORT-003, REQ-REPORT-004: public docs expose the current live/simulated/unverified/software-model counts."""
+    """REQ-REPORT-003, REQ-REPORT-004: public docs expose current provenance counts."""
     counts = _current_provenance_counts()
     expected_snippets = [
         f"{counts['live_gpu']} live GPU artifacts",
@@ -82,7 +99,9 @@ def test_public_docs_disclose_current_provenance_inventory() -> None:
 
 
 def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
-    """REQ-REPORT-003, REQ-REPORT-004: docs mention the latest live PBT results and the explicitly labeled FPGA software-model artifact."""
+    """REQ-REPORT-003, REQ-REPORT-004: docs mention the latest PBT and FPGA updates."""
+    exp_count = _current_experiment_count()
+    milestone_count = _current_milestone_count()
     readme = _read_repo_file("README.md")
     report = _read_repo_file("docs/technical-report.md")
     report_html = _read_repo_file("docs/technical-report.html")
@@ -99,9 +118,22 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     assert "Experiment 228" in report
     assert "software simulation" in report
 
-    assert "228+" in index
+    assert f"{exp_count} completed experiments" in readme
+    assert f"{milestone_count} completed milestones" in readme
+    assert f"{exp_count} completed experiments" in index
+    assert f"{milestone_count} completed milestones" in index
+    assert (
+        f"{exp_count} Completed Experiments Across {milestone_count} Research Milestones" in report
+    )
+    assert (
+        f"{exp_count} Completed Experiments Across {milestone_count} Research Milestones"
+        in report_html
+    )
+
     assert "Exp 227" in index
     assert "software-model" in index
 
-    assert "228+" in report_html
+    assert "VERIFY-030" in report
+    assert "VERIFY-031" in report
+    assert "verify_code_with_pbt" in readme
     assert "Experiment 228" in report_html

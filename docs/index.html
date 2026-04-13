@@ -287,17 +287,17 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. 228+ experiments, all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, 99.3% bug detection, and an honest seeded-Qwen follow-up where PBT still catches extra harness misses even when repair stays flat. Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. 206 completed experiments across 21 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, 99.3% bug detection, 164 learnable PBT traces, and packaged <code>verify_code()</code> surfaces for end users. Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">228+</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">16</div><div class="stat-label">Milestones</div></div>
+      <div class="stat"><div class="stat-num">206</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">21</div><div class="stat-label">Milestones</div></div>
       <div class="stat"><div class="stat-num">+3.0pp</div><div class="stat-label">HumanEval (live)</div></div>
-      <div class="stat"><div class="stat-num">2,137</div><div class="stat-label">Tests (100%)</div></div>
+      <div class="stat"><div class="stat-num">2,196</div><div class="stat-label">Py+Int Tests</div></div>
     </div>
   </div>
 </section>
@@ -337,7 +337,7 @@
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
         <h3 class="bento-title">Verify-Repair Pipeline</h3>
-        <p class="bento-text">VerifyRepairPipeline: extract constraints, verify via Ising, repair with LLM feedback. Three extractors available: regex (fast), Z3 SMT (formal, zero false positives), LLM-as-extractor (best precision, 1/91 FP). Live HumanEval: 16.7% &rarr; 20.0% (+3.3pp).</p>
+        <p class="bento-text">VerifyRepairPipeline now ships alongside standalone <code>verify_code()</code>, <code>carnot verify-code</code>, and <code>verify_code_with_pbt</code> on the hardened 7-tool MCP surface. Three extractor families remain available: regex (fast), Z3 SMT (formal), and LLM-as-extractor (best precision, 1/91 FP). Live HumanEval still improves from 16.7% &rarr; 20.0% on the execution-only cohort, and the full PBT path scales to 14.6% on 164 problems.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">⚡</div>
@@ -357,7 +357,7 @@
       <div class="bento-card">
         <div class="bento-icon">📈</div>
         <h3 class="bento-title">Self-Learning</h3>
-        <p class="bento-text">Constraint tracker + memory reduces false positives by 86% on 168 held-out cases (Exp 223). The system learns which constraints are reliable and downweights noisy ones automatically. Tier 1-2 self-learning applied to the verification pipeline.</p>
+        <p class="bento-text">Constraint tracker + memory reduces false positives by 86% on 168 held-out cases (Exp 223). The follow-on trace learner ingests 164 Exp 226 repair histories, ranks signature-robustness checks highest, and finds that syntax-heavy failures are still the only accepted repair wins. Tier 1-2 self-learning now informs future PBT budgets and repair prompting.</p>
       </div>
     </div>
   </div>
@@ -400,6 +400,11 @@
         <div class="r-stats"><span class="r-before">FP before: 7</span> <span class="r-after">FP after: 1 (-86%)</span></div>
       </div>
       <div class="r-card">
+        <span class="r-tag">Trace Learning</span>
+        <h3 class="r-title">PBT Trace Corpus (VERIFY-030)</h3>
+        <div class="r-stats"><span class="r-before">164 learnable traces</span> <span class="r-after">163 signature cases; 6 misses</span></div>
+      </div>
+      <div class="r-card">
         <span class="r-tag">Semantic Grounding</span>
         <h3 class="r-title">GSM8K Wrong Answer Detection (Exp 219)</h3>
         <div class="r-meter"><div class="r-bar" style="width: 23%; background: #f97316;"></div></div>
@@ -411,7 +416,7 @@
         <div class="r-stats"><span class="r-before">Regex: 5 FP | Z3: 3 FP</span> <span class="r-after">LLM: 1 FP (best)</span></div>
       </div>
     </div>
-    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is the strongest domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, while the same verifier on the seeded Qwen cohort (Exp 227) still catches extra weak-harness misses even with a flat repair delta. Hardware progress is tracked separately via Exp 228's software-model FPGA path.</p>
+    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is the strongest domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, the seeded Qwen cohort (Exp 227) still catches extra weak-harness misses even with a flat repair delta, and VERIFY-030 distills those runs into property and repair rankings for the next round. Hardware progress is tracked separately via Exp 228's software-model FPGA path.</p>
   </div>
 </section>
 

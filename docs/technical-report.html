@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technical Report - Carnot: Energy-Based Verification for LLM Output</title>
-  <meta name="description" content="Technical report: 228+ experiments, full HumanEval PBT +3.0pp on 164 live cases, seeded Qwen PBT follow-up, and a KV260 FPGA software-model design.">
+  <meta name="description" content="Technical report: 206 completed experiments, +3.0pp full HumanEval PBT, 164-trace code-learning analytics, and packaged code verification via API, CLI, and MCP.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
   <h1>Carnot: Energy-Based Verification for LLM Output</h1>
-  <div class="subtitle">A Technical Report on 228+ Experiments Across Sixteen Research Milestones</div>
+  <div class="subtitle">A Technical Report on 206 Completed Experiments Across 21 Research Milestones</div>
 
   <div class="meta">
     <strong>Author:</strong> Ian Blenke &nbsp;|&nbsp;
@@ -171,11 +171,11 @@
 
   <div class="abstract">
     <h3>Abstract</h3>
-    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through 228+ systematic experiments across 16 research milestones, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% code bug detection, and 86% false positive reduction via self-learning. The latest same-cohort Qwen PBT check stays flat on pass@1 but still catches extra harness misses, and the FPGA path now has an explicitly labeled software-model control-plane artifact. All headline benchmark numbers remain live inference only.</p>
+    <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through <strong>206 completed experiments</strong> across <strong>21 research milestones</strong>, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% code bug detection, 86% false positive reduction via self-learning, a 164-trace PBT learning corpus, and packaged end-user code verification via Python API, CLI, and MCP. All headline benchmark numbers remain live inference only.</p>
 <p>Our key findings span two phases. <strong>Phase 1 (Activation-based, Experiments 1-38):</strong> (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy), (2) structural test execution dominates for code verification (0% to 30% accuracy), (3) activation-space approaches show detectable signals but fail to improve output quality — activation EBMs detect confidence, not correctness, (4) instruction tuning compresses the hallucination signal (84.5% base vs 67.2% instruction-tuned), (5) chain-of-thought further compresses it (75.5% to 61.3%), (6) adversarial questions defeat post-hoc detection entirely, and (7) no internal signal — activations, logit lens, NLI, confidence — can distinguish factual truth from confident hallucination. These 14 systematic negative results are the project's primary contribution to the activation-based literature.</p>
 <p><strong>Phase 2 (Constraint-based, Experiments 39-210):</strong> The paradigm shift from detection to verification initially produced results that appeared strongly positive, but a critical audit (Exp 203-209) revealed that ALL early positive numbers were simulation artifacts — the inference was calibrated to instruction-tuned benchmarks while loading base models. With honest live GPU inference, arithmetic extraction found 0 violations on instruction-tuned model errors because they are semantic (wrong problem setup), not arithmetic.</p>
-<p><strong>Phase 3 (Semantic Grounding + Code Verification, Experiments 211-228):</strong> Rebuilding extraction for real models produced credible results. Code verification is the strongest domain: full 164-problem HumanEval with property-based testing shows +3.0pp [+0.6, +6.1] 95% CI (Exp 226), with PBT detecting 99.3% of wrong code. The seeded Qwen follow-up on the Exp 208 cohort (Exp 227) stays flat at 23.3% -&gt; 23.3% but still catches 2 official-test misses beyond the harness, which is the honest cross-model readout. Typed IR constraints give +4.9pp on Gemma4 (Exp 221). Semantic grounding detects 22-23% of wrong math answers that arithmetic misses entirely (Exp 219). Self-learning reduces false positives by 86% (Exp 223). The FPGA hardware track (Exp 228) is now documented as a software simulation artifact rather than a live throughput result.</p>
-<p>We release the complete framework as <code>pip install carnot</code> with four energy tiers (Ising, KAN, Gibbs, Boltzmann), the VerifyRepairPipeline production API, five constraint extractors (arithmetic, code, logic, NL, auto-detection), self-learning verification, a constraint state machine for agentic workflows, an MCP server for Claude Code integration, a CLI tool, Rust core crates, and 16 per-token EBM research models on HuggingFace alongside newer guided-decoding and constraint-model artifacts.</p>
+<p><strong>Phase 3 (Semantic Grounding + Code Verification, Experiments 211-228 plus VERIFY-030/031):</strong> Rebuilding extraction for real models produced credible results. Code verification is the strongest domain: full 164-problem HumanEval with property-based testing shows +3.0pp [+0.6, +6.1] 95% CI (Exp 226), with PBT detecting 99.3% of wrong code. The seeded Qwen follow-up on the Exp 208 cohort (Exp 227) stays flat at 23.3% -&gt; 23.3% but still catches 2 official-test misses beyond the harness, which is the honest cross-model readout. Typed IR constraints give +4.9pp on Gemma4 (Exp 221). Semantic grounding detects 22-23% of wrong math answers that arithmetic misses entirely (Exp 219). Self-learning reduces false positives by 86% (Exp 223). VERIFY-030 then normalizes Exp 226 into <strong>164</strong> learnable traces, showing that signature-derived checks account for the largest share of beyond-harness value, while VERIFY-031 packages the same PBT stack behind <code>verify_code()</code>, <code>carnot verify-code</code>, and <code>verify_code_with_pbt</code>. The FPGA hardware track (Exp 228) remains explicitly labeled as a software simulation artifact rather than a live throughput result.</p>
+<p>We release the complete framework as <code>pip install carnot</code> with four energy tiers (Ising, KAN, Gibbs, Boltzmann), the VerifyRepairPipeline production API, the standalone <code>verify_code()</code> wrapper, five constraint extractors (arithmetic, code, logic, NL, auto-detection), self-learning and trace-learning analytics, a constraint state machine for agentic workflows, a <strong>7-tool</strong> MCP server for Claude Code integration, a CLI including <code>carnot verify-code</code>, Rust core crates, and 16 per-token EBM research models on HuggingFace alongside newer guided-decoding and constraint-model artifacts.</p>
   </div>
 
   <h2>Headline Results (Live GPU Only)</h2>
@@ -255,10 +255,12 @@
 <h3>1.1 The Hallucination Problem</h3>
 <p>Large Language Models generate text by predicting the most probable next token. This produces fluent output but provides no mechanism to verify logical consistency, factual accuracy, or constraint satisfaction. When an LLM generates an incorrect early token, the error cascades irrecoverably through the remaining sequence.</p>
 <h3>1.2 The EBM Alternative</h3>
-<p>Energy-Based Models assign a scalar energy E(x) to complete configurations. Low energy = valid/consistent; high energy = invalid/contradictory. This enables:
-- <strong>Holistic evaluation</strong>: assess the entire output at once, not token-by-token
-- <strong>Gradient-based repair</strong>: when constraints are violated, gradient descent fixes the broken parts
-- <strong>Verifiable certification</strong>: energy = 0 mathematically proves all constraints are satisfied</p>
+<p>Energy-Based Models assign a scalar energy E(x) to complete configurations. Low energy = valid/consistent; high energy = invalid/contradictory. This enables:</p>
+<ul>
+<li><strong>Holistic evaluation</strong>: assess the entire output at once, not token-by-token</li>
+<li><strong>Gradient-based repair</strong>: when constraints are violated, gradient descent fixes the broken parts</li>
+<li><strong>Verifiable certification</strong>: energy = 0 mathematically proves all constraints are satisfied</li>
+</ul>
 <h3>1.3 Introspection, Not Fine-Tuning</h3>
 <p><strong>Carnot never modifies the target LLM's weights.</strong> The language model remains completely frozen. Our approach works by introspecting the model's existing internal representations:</p>
 <ul>
@@ -266,10 +268,10 @@
 <li><strong>Activation methods</strong> extract hidden state activations from a frozen forward pass, then train a small separate EBM classifier (a lightweight Gibbs model [1024-&gt;256-&gt;64-&gt;1]) on those features via NCE.</li>
 <li><strong>Structural verification</strong> executes generated output against domain constraints. No model weights involved.</li>
 </ul>
-<p>When we say "EBM training," we mean training the small classifier on features from a frozen LLM — not gradient descent on the language model itself. This is closer to probing/introspection than to fine-tuning, RLHF, or DPO.</p>
+<p>When we say &quot;EBM training,&quot; we mean training the small classifier on features from a frozen LLM — not gradient descent on the language model itself. This is closer to probing/introspection than to fine-tuning, RLHF, or DPO.</p>
 <h3>1.4 The Paradigm Shift: From Detection to Verification</h3>
 <p>This work began as an investigation of activation-based hallucination detection: can we train an EBM on transformer hidden states to distinguish correct from hallucinated output? After 38 experiments across 16 models, the answer was definitively no — not because the signal is absent, but because activation EBMs detect model confidence rather than factual correctness. Confident hallucinations are indistinguishable from confident correct answers in activation space.</p>
-<p>This negative result forced a fundamental rethinking. Instead of asking "is this output correct?" (detection), we pivoted to asking "does this output satisfy known constraints?" (verification). The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints are encoded as spin couplings. Ising models can be solved via parallel Gibbs sampling (CPU), continuous relaxation (gradient descent), or eventually thermodynamic hardware (Extropic TSU).</p>
+<p>This negative result forced a fundamental rethinking. Instead of asking &quot;is this output correct?&quot; (detection), we pivoted to asking &quot;does this output satisfy known constraints?&quot; (verification). The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints are encoded as spin couplings. Ising models can be solved via parallel Gibbs sampling (CPU), continuous relaxation (gradient descent), or eventually thermodynamic hardware (Extropic TSU).</p>
 <p>The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 226) and typed constraint verification (+4.9pp, Exp 221). Self-learning reduces false positives by 86% (Exp 223). All headline numbers are from live GPU inference.</p>
 <p>The narrative arc of this report is: tried activation approaches -&gt; learned 14 principles about what doesn't work -&gt; pivoted to constraint verification -&gt; discovered early results were simulation artifacts -&gt; rebuilt extraction for real models -&gt; proved it works on live benchmarks -&gt; shipped it as a product.</p>
 <hr />
@@ -428,10 +430,12 @@ result = pipeline.verify_and_repair(
 <p><strong>Finding:</strong> Statistical separation in activation space does NOT imply causal influence on generation. This is Principle #7.</p>
 <h3>3.7 Scaled Per-Token EBM (Experiments 19-22)</h3>
 <p><strong>Setup:</strong> Train per-token EBM on up to 52,296 tokens from Qwen3-0.6B (base) and Qwen3.5-0.8B (instruction-tuned) across QA and TruthfulQA datasets. Architecture search across linear, 2-layer MLP, 3-layer MLP, and residual network models.</p>
-<p><strong>Results:</strong>
-- Experiment 19: 71.8% test accuracy — first activation approach that generalizes
-- Experiment 21: 84.5% test accuracy on base model — all architectures plateau (data-bound)
-- Experiment 22: 67.2% test accuracy on instruction-tuned model</p>
+<p><strong>Results:</strong></p>
+<ul>
+<li>Experiment 19: 71.8% test accuracy — first activation approach that generalizes</li>
+<li>Experiment 21: 84.5% test accuracy on base model — all architectures plateau (data-bound)</li>
+<li>Experiment 22: 67.2% test accuracy on instruction-tuned model</li>
+</ul>
 <p><strong>Finding:</strong> Per-token features scale well, but instruction tuning compresses the hallucination signal. RLHF teaches the model to produce confident-sounding activations regardless of correctness.</p>
 <h3>3.8 Adversarial and Cross-Domain Failure Modes (Experiments 23-38)</h3>
 <table>
@@ -536,7 +540,7 @@ result = pipeline.verify_and_repair(
 </tr>
 </tbody>
 </table>
-<p><strong>The definitive finding from Phase 1:</strong> You cannot detect factual hallucination without access to factual knowledge. No internal signal — activations, logit lens, NLI, confidence — can distinguish "Neil Armstrong walked on Mars" from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.</p>
+<p><strong>The definitive finding from Phase 1:</strong> You cannot detect factual hallucination without access to factual knowledge. No internal signal — activations, logit lens, NLI, confidence — can distinguish &quot;Neil Armstrong walked on Mars&quot; from &quot;Neil Armstrong walked on the Moon.&quot; The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.</p>
 <hr />
 <h2>4. Phase 2: Constraint-Based Verification (Experiments 39-52)</h2>
 <p>The failure of activation-based detection forced a paradigm shift. Instead of trying to detect hallucination from internal signals (which capture confidence, not correctness), we encode external knowledge as constraints and verify whether the LLM's output satisfies them. The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints become spin couplings, and low-energy states are constraint-satisfying configurations.</p>
@@ -551,23 +555,25 @@ result = pipeline.verify_and_repair(
 <h3>4.3 LLM Propose, Ising Verify and Repair (Experiment 41)</h3>
 <p><strong>Setup:</strong> LLM generates candidate solutions. Ising model verifies constraint satisfaction. When violations are found, feed them back to the LLM for repair.</p>
 <p><strong>Result:</strong> 2 out of 6 problems repaired from 0% to 100% accuracy.</p>
-<p><strong>Finding:</strong> The "LLM proposes, Ising repairs" architecture works. This was the proof of concept for the paradigm shift — using EBMs not as classifiers (which failed) but as reasoning constraints that guide the LLM toward correct answers.</p>
+<p><strong>Finding:</strong> The &quot;LLM proposes, Ising repairs&quot; architecture works. This was the proof of concept for the paradigm shift — using EBMs not as classifiers (which failed) but as reasoning constraints that guide the LLM toward correct answers.</p>
 <h3>4.4 Arithmetic Verification (Experiments 42b-42c)</h3>
 <p><strong>Setup:</strong> Encode arithmetic operations as Quadratic Unconstrained Binary Optimization (QUBO) problems on Ising spins. Experiment 42b uses pure QUBO; Experiment 42c adds deterministic carry chain propagation.</p>
-<p><strong>Results:</strong>
-- Experiment 42b: 8/12 correct (carry chains fail in pure QUBO)
-- Experiment 42c: 16/16 perfect with deterministic carry propagation</p>
+<p><strong>Results:</strong></p>
+<ul>
+<li>Experiment 42b: 8/12 correct (carry chains fail in pure QUBO)</li>
+<li>Experiment 42c: 16/16 perfect with deterministic carry propagation</li>
+</ul>
 <p><strong>Finding:</strong> Arithmetic constraints are exactly verifiable via Ising. The key insight: use the Ising model for what it's good at (constraint satisfaction) and deterministic computation for what it's good at (carry chains). Hybrid approaches beat pure optimization.</p>
 <h3>4.5 Logical Consistency (Experiment 45)</h3>
 <p><strong>Setup:</strong> Encode logical statements as Ising constraints. Test contradiction detection on 8 logical reasoning problems.</p>
 <p><strong>Result:</strong> 8/8 perfect contradiction detection.</p>
-<p><strong>Finding:</strong> Logical consistency — "if A then B" combined with "A and not B" — maps naturally to Ising coupling terms. The energy is nonzero if and only if the statements are contradictory.</p>
+<p><strong>Finding:</strong> Logical consistency — &quot;if A then B&quot; combined with &quot;A and not B&quot; — maps naturally to Ising coupling terms. The energy is nonzero if and only if the statements are contradictory.</p>
 <h3>4.6 SAT at Scale (Experiment 46b)</h3>
 <p><strong>Setup:</strong> Scale Ising SAT solving to 5000 variables using the parallel Gibbs sampler.</p>
 <p><strong>Result:</strong> 93.7% satisfaction rate in 0.7 seconds. +5.5% improvement over random assignment at scale.</p>
 <p><strong>Finding:</strong> The parallel Ising sampler makes large-scale constraint verification practical in real-time. The 183x speedup over thrml (572x at 500 variables) comes from checkerboard updates and simulated annealing.</p>
 <h3>4.7 LLM Self-Constraint Extraction (Experiment 47)</h3>
-<p><strong>Setup:</strong> Ask the LLM to generate constraints about its own answer (e.g., "my answer should satisfy X, Y, Z"), then verify those self-reported constraints via Ising.</p>
+<p><strong>Setup:</strong> Ask the LLM to generate constraints about its own answer (e.g., &quot;my answer should satisfy X, Y, Z&quot;), then verify those self-reported constraints via Ising.</p>
 <p><strong>Result:</strong> 10/10 perfect — all hallucinations caught, all correct answers verified.</p>
 <p><strong>Finding:</strong> LLMs can extract their own constraints when prompted correctly. The LLM is better at generating constraints than at satisfying them. This is a complementary use of the LLM's language capabilities alongside the Ising model's constraint-satisfaction capabilities.</p>
 <h3>4.8 Code and NL Constraint Extraction (Experiments 48-49)</h3>
@@ -681,12 +687,12 @@ result = pipeline.verify_and_repair(
 <tr>
 <td>76</td>
 <td>Production MCP server</td>
-<td>6 tools, 30s timeout, 10K char limit, structured errors; <code>python -m carnot.mcp</code></td>
+<td>7 tools, 30s timeout, 10K char limit, structured errors; <code>python -m carnot.mcp</code></td>
 </tr>
 <tr>
 <td>77</td>
 <td>CLI overhaul</td>
-<td><code>carnot verify</code>, <code>carnot pipeline</code>, <code>carnot serve</code> subcommands</td>
+<td><code>carnot verify</code>, <code>carnot verify-code</code>, <code>carnot pipeline</code>, <code>carnot serve</code> subcommands</td>
 </tr>
 <tr>
 <td>78</td>
@@ -702,10 +708,10 @@ result = pipeline.verify_and_repair(
 <p><strong>Self-verification (Experiment 84):</strong> Carnot's constraint pipeline verifies Carnot's own Python source code. Surfaces constraint violations, docstring/signature mismatches, and correlates findings with test failures.</p>
 <p><strong>Beta release (Experiment 85):</strong> Carnot 0.1.0-beta1 release preparation with automated readiness checker, release notes, and README quick-start example.</p>
 <h3>6.7 Autoresearch Self-Verification (Experiment 72)</h3>
-<p>The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch evaluator. When the orchestrator evaluates a hypothesis, it extracts verifiable claims via the NL and code constraint extractors, then verifies them via Ising sampling. This catches bogus hypotheses that pass energy, time, and memory gates but make false claims about their results.</p>
+<p>The constraint pipeline dog-foods itself as a &quot;fourth gate&quot; in the autoresearch evaluator. When the orchestrator evaluates a hypothesis, it extracts verifiable claims via the NL and code constraint extractors, then verifies them via Ising sampling. This catches bogus hypotheses that pass energy, time, and memory gates but make false claims about their results.</p>
 <hr />
 <h2>7. Principles Learned</h2>
-<p>From the activation-based phase of a now-228+ experiment, 16-milestone program, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
+<p>From the activation-based phase of a now 206-experiment, 21-milestone program, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.</p>
 <h3>What works</h3>
 <ol>
 <li>
@@ -758,7 +764,7 @@ result = pipeline.verify_and_repair(
 <p>The failure of Principles 4-14 establishes a fundamental limit: <strong>you cannot detect factual hallucination without access to factual knowledge.</strong> No internal signal can distinguish true from false statements about the external world. The solution is to bring external knowledge into the verification loop — as constraints. This is the insight that drove the paradigm shift from Phase 1 to Phase 2, and the constraint pipeline's 100% detection rate (Experiment 56) vs activation EBMs' 50% practical rate validates it empirically.</p>
 <hr />
 <h2>8. The Production Architecture</h2>
-<p>The architecture that emerged from 228+ experiments:</p>
+<p>The architecture that emerged from 206 completed experiments:</p>
 <pre><code>User Question
      |
      v
@@ -783,10 +789,12 @@ result = pipeline.verify_and_repair(
      v
 Verified + Repaired Answer
 </code></pre>
-<p>This architecture works because it leverages each component for what it does best:
-- <strong>LLM</strong>: language understanding, constraint extraction, natural language repair
-- <strong>Ising model</strong>: formal constraint satisfaction, energy certification
-- <strong>Repair loop</strong>: iterative convergence toward constraint-satisfying solutions</p>
+<p>This architecture works because it leverages each component for what it does best:</p>
+<ul>
+<li><strong>LLM</strong>: language understanding, constraint extraction, natural language repair</li>
+<li><strong>Ising model</strong>: formal constraint satisfaction, energy certification</li>
+<li><strong>Repair loop</strong>: iterative convergence toward constraint-satisfying solutions</li>
+</ul>
 <p>The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (Experiment 46b), runs at 36,887 verifications/second on CPU (Experiment 83), and ships as <code>pip install carnot</code>.</p>
 <hr />
 <h2>9. Related Work</h2>
@@ -830,20 +838,32 @@ Verified + Repaired Answer
 <td>Production</td>
 </tr>
 <tr>
+<td>Packaged code verification</td>
+<td><code>verify_code()</code>, <code>carnot verify-code</code>, <code>verify_code_with_pbt</code></td>
+<td>Full coverage</td>
+<td>Production</td>
+</tr>
+<tr>
 <td>Constraint extractors</td>
 <td>Arithmetic, Code, Logic, NL, Auto</td>
 <td>Full coverage</td>
 <td>Production</td>
 </tr>
 <tr>
+<td>Code-verification learning</td>
+<td><code>TraceAnalyzer</code>, <code>PropertyRanker</code>, <code>RepairStrategy</code></td>
+<td>Full coverage</td>
+<td>Production analytics</td>
+</tr>
+<tr>
 <td>MCP server</td>
-<td><code>carnot.mcp</code> — 6 tools, hardened</td>
+<td><code>carnot.mcp</code> — 7 tools, hardened</td>
 <td>Full coverage</td>
 <td>Production</td>
 </tr>
 <tr>
 <td>CLI tool</td>
-<td><code>carnot verify</code>, <code>carnot pipeline</code>, <code>carnot serve</code></td>
+<td><code>carnot verify</code>, <code>carnot verify-code</code>, <code>carnot pipeline</code>, <code>carnot serve</code></td>
 <td>Full coverage</td>
 <td>Production</td>
 </tr>
@@ -909,7 +929,7 @@ Verified + Repaired Answer
 </tr>
 </tbody>
 </table>
-<p><strong>Total:</strong> 1,889 current repo tests (100% coverage) (1,940 Python/integration collected + 208 Rust listed). Latest documented validation remains 100.00% Python coverage with passing spec coverage.</p>
+<p><strong>Total:</strong> <strong>2,196</strong> Python/integration tests are currently collected in the repo. The latest documented full Python validation remains <strong>2,137 passed, 1 skipped</strong> with <strong>100.00%</strong> coverage, and the packaged-verification integration/E2E checks are also passing.</p>
 <hr />
 <h2>11. Reproduction</h2>
 <pre><code class="language-bash"># Clone and setup
@@ -960,7 +980,7 @@ make research-loop
 </code></pre>
 <hr />
 <h2>12. Conclusion</h2>
-<p>Across 228+ experiments on 16 model families spanning 350M to 35B parameters, 16 research milestones, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.</p>
+<p>Across <strong>206 completed experiments</strong> on 16 model families spanning 350M to 35B parameters, <strong>21 research milestones</strong>, and a complete arc from failed activation approaches through simulation artifact discovery to credible live results, we reached a clear three-part conclusion.</p>
 <h3>Part 1: Activation-based detection fails</h3>
 <p>Activation-based EBMs detect model confidence, not factual correctness. The 75-88% test-set accuracy is statistically real but practically misleading — in deployment, the EBM agrees with ground truth only 50% of the time. Four compounding effects defeat activation-based detection:</p>
 <ol>
@@ -983,7 +1003,7 @@ make research-loop
 <li><strong>HumanEval 50 dual-model (Exp 220):</strong> +2.0pp on both Qwen and Gemma</li>
 </ul>
 <h3>The story</h3>
-<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up, added a provenance-labeled FPGA software model, demonstrated self-learning reduces false positives by 86%, and shipped it as an installable library with a production API, MCP server, CLI tool, and 2,137 Python tests at 100% coverage.</p>
+<p>The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up, added a provenance-labeled FPGA software model, distilled the strongest code traces into reusable rankings, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at <strong>2,137 passed, 1 skipped</strong> with <strong>100.00%</strong> coverage.</p>
 <p>The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.</p>
 <hr />
 <h2>13. Pre-trained Models</h2>
@@ -1033,7 +1053,7 @@ make research-loop
 </table>
 <hr />
 <h2>14. The Autonomous Self-Improvement Loop</h2>
-<p>Beyond post-hoc verification, Carnot implements an automated research loop inspired by Karpathy's "autoresearch" concept, where an LLM proposes hypotheses and the energy function serves as the objective judge:</p>
+<p>Beyond post-hoc verification, Carnot implements an automated research loop inspired by Karpathy's &quot;autoresearch&quot; concept, where an LLM proposes hypotheses and the energy function serves as the objective judge:</p>
 <ol>
 <li><strong>Propose.</strong> An agent generates candidate improvements to EBM architecture, training, or hyperparameters.</li>
 <li><strong>Sandbox.</strong> Candidates execute in an isolated environment (process-level for development, Docker+gVisor for production).</li>
@@ -1042,7 +1062,7 @@ make research-loop
 <li><strong>Plan.</strong> When all tasks in a milestone complete, a planning agent reads <code>research-program.md</code> (human-written goals) and autonomously designs the next milestone — selecting experiments, ordering dependencies, and writing full conductor-ready prompts.</li>
 <li><strong>Repeat.</strong> The loop runs until a circuit breaker halts it after N consecutive failures.</li>
 </ol>
-<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 16-milestone, 228+ experiment program with automatic milestone archival and transition.</p>
+<p>In a 50-iteration run with Claude 3.5 Sonnet as the proposer, the loop achieved near-optimal energy on two benchmark functions (DoubleWell: 0.0001, Rosenbrock: 0.0092) before the circuit breaker engaged at iteration 18. The research conductor now drives a 21-milestone, 206-experiment program with automatic milestone archival and transition.</p>
 <p>The energy function serves as the objective judge — no human evaluation or LLM-as-judge is needed. This is a key advantage of the EBM paradigm: the mathematics provides ground truth.</p>
 <hr />
 <h2>15. Limitations</h2>
@@ -1051,7 +1071,7 @@ make research-loop
 <p><strong>Model scale.</strong> Live LLM experiments use Qwen3.5-0.8B and Gemma4-E4B (small models). Results may differ on larger models where hallucination rates are lower and constraint patterns differ.</p>
 </li>
 <li>
-<p><strong>Constraint coverage.</strong> The pipeline can only verify claims for which constraints exist. Semantic claims ("the logic is sound") and factual claims without a knowledge base escape verification. Experiment 73 quantifies this gap.</p>
+<p><strong>Constraint coverage.</strong> The pipeline can only verify claims for which constraints exist. Semantic claims (&quot;the logic is sound&quot;) and factual claims without a knowledge base escape verification. Experiment 73 quantifies this gap.</p>
 </li>
 <li>
 <p><strong>Historical simulation artifacts.</strong> Early milestones (Exp 39-184) used simulated inference calibrated to instruction-tuned benchmarks while loading base models. All headline numbers in this report are from live GPU inference; simulated results are documented only as negative findings.</p>
@@ -1427,7 +1447,7 @@ arithmetic errors; therefore the pipeline gains more headroom on those variants.
 <ul>
 <li><strong>Arithmetic errors (100% detection, 98.7% repair)</strong> — Every arithmetic constraint violation is flagged. The repair loop corrects 98.7% of detected violations, leaving only ~1% unresolved (usually edge cases where the repaired value drifts out of the valid domain before convergence).</li>
 <li><strong>Logic errors (0% detection)</strong> — Ising is scoped to arithmetic constraints; it cannot identify that the wrong operation was applied.  These require semantic reasoning beyond the scope of pairwise constraint checking.</li>
-<li><strong>Irrelevant-number errors (38.1% detection, 0% repair)</strong> — Ising sometimes flags these because the injected number appears in an extracted constraint, but it cannot distinguish "right answer using wrong number" from "wrong answer using right number".  Repair is undefined and is correctly skipped.</li>
+<li><strong>Irrelevant-number errors (38.1% detection, 0% repair)</strong> — Ising sometimes flags these because the injected number appears in an extracted constraint, but it cannot distinguish &quot;right answer using wrong number&quot; from &quot;wrong answer using right number&quot;.  Repair is undefined and is correctly skipped.</li>
 <li><strong>Overall structural ceiling:</strong> 33.2% of all errors are structurally catchable by arithmetic constraint verification; the remaining 66.8% require semantic understanding.</li>
 </ul>
 <p><strong>Energy as predictor:</strong> The <code>n_violations</code> signal (integer count of violated constraints) achieves
@@ -1443,11 +1463,11 @@ improvement-delta pattern in Section 18.3.</p>
 mistakenly include the injected irrelevant number in constraints?</p>
 <ul>
 <li><strong>61.9% of irrelevant-number errors are Ising-silent</strong> — no violation detected, no repair triggered.
-  This is the correct behavior: valid arithmetic using a semantically wrong number satisfies all
-  arithmetic constraints.</li>
+This is the correct behavior: valid arithmetic using a semantically wrong number satisfies all
+arithmetic constraints.</li>
 <li><strong>38.1% of irrelevant-number errors are Ising-flagged</strong> — these are cases where the extractor
-  includes the irrelevant number in a constraint and the answer does not satisfy that constraint.
-  These 16 cases represent false-positive flags worth investigating in future work.</li>
+includes the irrelevant number in a constraint and the answer does not satisfy that constraint.
+These 16 cases represent false-positive flags worth investigating in future work.</li>
 </ul>
 <p>The constraint extractor is therefore <strong>robust</strong> to irrelevant context injection in the majority of
 cases: 62% are correctly passed through without noise.</p>
@@ -1499,7 +1519,7 @@ cases: 62% are correctly passed through without noise.</p>
 it targets precisely the class of errors (arithmetic inconsistencies) that adversarial number perturbations
 amplify, while being transparent about the 67% of errors that require richer semantic machinery.</p>
 <hr />
-<h2>19. Live Validation and Research Reporting (Experiments 207–210)</h2>
+<h2>19. Live Validation, Reporting, and Productization (Experiments 207–228, VERIFY-030, VERIFY-031)</h2>
 <h3>19.1 Paired Live Extractor Benchmark (Experiment 207)</h3>
 <p><strong>Setup:</strong> Reuse the exact Exp 206 live Gemma4-E4B-it GSM8K responses for a perfectly paired comparison between <code>LLMConstraintExtractor</code> and the Z3-backed arithmetic extractor. Measure wrong-answer detection, false positives on correct answers, and verify-repair delta on the same 100-question cohort.</p>
 <p><strong>Result:</strong> Baseline accuracy stayed <strong>91/100 = 91.0%</strong> [85.0%, 96.0%]. The LLM extractor tied Z3 on live wrong-answer detection (<strong>0/9</strong> each) and tied on repair delta (<strong>+0.0pp</strong> each), but it reduced false positives from <strong>3/91</strong> to <strong>1/91</strong>.</p>
@@ -1524,6 +1544,14 @@ amplify, while being transparent about the 67% of errors that require richer sem
 <p><strong>Setup:</strong> Define a KV260-class sparse Ising backend with runtime coupling uploads, an AXI-Lite register map, and a software transport that exercises the same upload, trigger, and readback path as a future PYNQ overlay. The target contract is <strong>32</strong> tiles × <strong>128</strong> spins per tile = <strong>4096</strong> spins.</p>
 <p><strong>Result:</strong> Exp 228 adds the checked-in design doc plus <code>FPGAIsingSampler</code>, <code>SoftwareFPGAOverlay</code>, sparse Q8.8 upload compilation, and CPU fallback. On the local software-model benchmark for a sparse <strong>128</strong>-spin problem, the control-path timing is <strong>0.824549 s</strong> for <code>fpga_sim</code> versus <strong>0.288092 s</strong> for the CPU backend. Provenance is <strong>software simulation</strong>: this validates the MMIO/control contract, not synthesized hardware throughput.</p>
 <p><strong>Finding:</strong> The value of Exp 228 is interface and deployment readiness, not a premature speed claim. The software model proves that Carnot can preserve one host/backend contract across CPU fallback, simulated FPGA transport, and a future real KV260 overlay once the bitstream exists.</p>
+<h3>19.7 Code Verification Trace Learning (VERIFY-030)</h3>
+<p><strong>Setup:</strong> Ingest the checked-in Exp 225 and Exp 226 code-verification artifacts into analytics-only learners (<code>TraceAnalyzer</code>, <code>PropertyRanker</code>, <code>RepairStrategy</code>). Exp 225 is skipped honestly because it contains runner metadata but no per-problem verification histories; Exp 226 is normalized into full baseline-and-repair traces.</p>
+<p><strong>Result:</strong> VERIFY-030 extracts <strong>164</strong> learnable traces from Exp 226. The dominant property signals are signature-derived checks: <code>no_exception</code> and <code>deterministic</code> each fire on <strong>144</strong> failing baselines, <code>input_immutability</code> on <strong>62</strong>, <code>annotated_return_type</code> on <strong>24</strong>, <code>sorted_output</code> on <strong>14</strong>, and <code>reverse_output</code> on <strong>4</strong>. Signature-robustness checks appear in <strong>163</strong> cases, account for <strong>6</strong> official-test misses beyond the weak harness, and participate in <strong>5</strong> repaired outcomes. Mutation-safety signals appear in <strong>68</strong> cases with <strong>5</strong> official-test misses. Syntax-heavy failures remain the only repair states with accepted next-step wins.</p>
+<p><strong>Finding:</strong> The current value of trace learning is prioritization rather than autonomous repair. The checked-in corpus says Carnot should spend PBT budget first on signature robustness and mutation safety, and should bias repair feedback toward syntax and contract issues before broader heuristics.</p>
+<h3>19.8 Packaged Code Verification for End Users (VERIFY-031)</h3>
+<p><strong>Setup:</strong> Package the strongest code-verification path behind a standalone <code>verify_code()</code> Python API, a <code>carnot verify-code</code> CLI, and the <code>verify_code_with_pbt</code> MCP tool, then document a generate-verify-repair flow that uses the packaged surfaces instead of the research scripts.</p>
+<p><strong>Result:</strong> The packaged flow now ships in all three forms. The CLI accepts a source file plus <code>--func</code>, optional <code>--prompt-file</code> / <code>--tests-file</code>, and <code>--pbt</code>; the hardened MCP surface now exposes <strong>7</strong> discoverable tools; and the docs carry runnable Python API, CLI, MCP, and generate-verify-repair examples. The reference E2E case starts with a weak-harness <code>sort_numbers</code> candidate that returns <code>nums</code>, the packaged verifier flags <code>sorted_output</code>, and the repaired <code>sorted(nums)</code> candidate then verifies cleanly and passes the official harness. The final Python suite still reports <strong>100.00%</strong> coverage.</p>
+<p><strong>Finding:</strong> Carnot's strongest verified code path is no longer locked inside benchmark scripts. VERIFY-031 turns the live PBT stack into an end-user surface with the same additive verifier signals, repair feedback, and <code>pbt_summary</code> metadata that the research artifacts use.</p>
 </article>
 
 <footer>

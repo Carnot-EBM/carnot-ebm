@@ -4,9 +4,9 @@
 
 Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All headline benchmark results below are from **live GPU inference**. The repository also preserves simulated, unverified, and software-model artifacts for provenance, and labels them explicitly instead of folding them into headline claims.
 
-**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%** while still catching **2** official-test misses beyond the weak harness. Self-learning reduces false positives by 86% (Exp 223). Typed IR constraints give +4.9pp on Gemma4 (Exp 221).
+**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%** while still catching **2** official-test misses beyond the weak harness. Self-learning reduces false positives by 86% (Exp 223). Trace learning distills **164** learnable PBT histories into property and repair rankings (VERIFY-030). Typed IR constraints give +4.9pp on Gemma4 (Exp 221).
 
-**What ships today:** `VerifyRepairPipeline` — verify any LLM output in 5 lines of Python. CLI (`carnot pipeline verify`), MCP server for Claude Code, 5 integration examples, full API docs. Constraint extraction across arithmetic, code, logic, and natural language domains.
+**What ships today:** `VerifyRepairPipeline` plus standalone `verify_code()` for end-user code checks. CLI (`carnot pipeline verify`, `carnot verify-code`), a hardened **7-tool** MCP server for Claude Code, 5 integration examples, and full API docs. Constraint extraction spans arithmetic, code, logic, and natural language domains.
 
 **What we learned:** Activation-based EBMs detect confidence, not correctness (50% practical). The 14 principles from our systematic negative results save other researchers months of dead ends. Structural constraint verification is what actually works. See the [technical report](docs/technical-report.md) for full results.
 
@@ -76,7 +76,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (228+ experiments, 16 milestones)
+## Key Results (206 completed experiments, 21 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -123,6 +123,11 @@ Semantic grounding detects 22-23% of wrong math answers (vs 0% for regex). The b
 
 Constraint tracker + memory reduces false positives by 86% on 168 held-out cases while maintaining accuracy gains. This is Tier 1-2 self-learning applied to the verification pipeline.
 
+### Latest follow-ons
+
+- **Trace learning (VERIFY-030):** `TraceAnalyzer`, `PropertyRanker`, and `RepairStrategy` normalize **164** Exp 226 histories, with signature-derived checks covering **163** cases and accounting for **6** official-test misses beyond the weak harness.
+- **Packaged verification (VERIFY-031):** the strongest code path now ships as `verify_code()`, `carnot verify-code`, and `verify_code_with_pbt` on the hardened **7-tool** MCP surface.
+
 ### Infrastructure
 
 | Component | Result | Experiment |
@@ -145,11 +150,11 @@ Constraint tracker + memory reduces false positives by 86% on 168 held-out cases
 
 **The core problem:** activation-based EBMs measure how confident the model is, not whether it's right. A model that confidently says "Neil Armstrong walked on Mars" produces activations indistinguishable from "Neil Armstrong walked on the Moon." The EBM rewards confident hallucination and penalizes correct hedging — the exact opposite of what a hallucination detector should do.
 
-See the [technical report](docs/technical-report.md) for the full 213+ experiment analysis.
+See the [technical report](docs/technical-report.md) for the full 206-experiment analysis.
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a now-213+ experiment program across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a now 206-experiment, 21-milestone program across 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
@@ -182,7 +187,7 @@ carnot verify examples/math_funcs.py --func gcd --test "(12,8):4" --test "(7,13)
 
 ### MCP Server
 
-Configure with `cp .mcp.json.example .mcp.json` for Claude Code integration. Exposes `verify_code`, `verify_with_properties`, and `score_candidates` tools via stdio JSON-RPC. These tools perform **Python code verification** (structural tests, property-based testing, candidate ranking) — they do not implement the activation-based EBM hallucination detection described in the research sections.
+Configure with `cp .mcp.json.example .mcp.json` for Claude Code integration. The hardened stdio JSON-RPC server now exposes **7** tools: `verify_code`, `verify_with_properties`, `verify_code_with_pbt`, `verify_llm_output`, `verify_and_repair`, `list_domains`, and `health_check`. These tools perform **Python code verification** and pipeline checks — they do not implement the activation-based EBM hallucination detection described in the research sections.
 
 See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage instructions.
 
