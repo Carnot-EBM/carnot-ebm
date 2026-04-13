@@ -1,5 +1,18 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 VERIFY-033 Claim-Isolated Semantic Verifier V2
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T03:38:06Z | 2026-04-13T04:01:50Z | VERIFY-033: extended `verifiable-reasoning` with `REQ-VERIFY-046` / `REQ-VERIFY-047` plus `SCENARIO-VERIFY-047` / `SCENARIO-VERIFY-048` / `SCENARIO-VERIFY-049`, wrote `tests/python/test_semantic_verifier_v2.py` first, implemented `python/carnot/pipeline/semantic_verifier_v2.py` plus the additive `VerifyRepairPipeline` hook, reconciled spec/story/traceability/status/changelog, and reran targeted 100% module coverage, the full Python suite, lint/type/spec checks, E2E/integration checks, and reconciliation validation. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
 ## Session: 2026-04-12 VERIFY-031 Packaged Code Verification
 
 ### Turn Log
