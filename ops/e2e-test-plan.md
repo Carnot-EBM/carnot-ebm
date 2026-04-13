@@ -1,6 +1,6 @@
 # Carnot — E2E Test Plan
 
-**Last Updated:** 2026-04-03
+**Last Updated:** 2026-04-12
 
 ## E2E Test Strategy
 
@@ -41,3 +41,21 @@ Same as E2E-001 but using the Python/JAX implementation. Cross-validate that Rus
 1. Save model parameters from Rust via safetensors
 2. Load in Python via safetensors
 3. Verify identical energy computation
+
+### E2E-005: Packaged Code Verification Generate-Verify-Repair
+
+**Objective:** Verify that the packaged end-user code-verification surfaces can
+take an LLM-style generated Python candidate, detect a prompt-implied bug with
+PBT, and confirm the repaired candidate cleanly.
+
+**Steps:**
+1. Build a generated candidate function body from a HumanEval-style prompt
+2. Run the official weak harness to confirm the buggy candidate can still pass
+3. Verify the candidate through the packaged code-verification path with
+   additive Hypothesis-backed PBT
+4. Use the packaged repair feedback to produce a repaired candidate
+5. Re-run packaged verification and the official harness on the repaired code
+
+**Pass criteria:** The initial candidate passes the weak harness but fails the
+packaged verifier, and the repaired candidate passes both packaged verification
+and the official harness.

@@ -27,6 +27,7 @@ from carnot.pipeline.code_learning import (
     TraceAnalyzer,
     VerificationTraceStep,
 )
+from carnot.pipeline.code_verification import verify_code
 from carnot.pipeline.errors import (
     CarnotError,
     ExtractionError,
@@ -171,4 +172,5 @@ __all__ = [
     "extract_prompt_examples",
     "load_monitorability_policy",
     "verify_semantic_grounding",
+    "verify_code",
 ]

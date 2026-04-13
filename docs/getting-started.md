@@ -69,6 +69,9 @@ carnot verify examples/math_funcs.py --func gcd --test "(12,8):4" --test "(7,13)
 # Add property-based testing (random inputs)
 carnot verify examples/math_funcs.py --func gcd --test "(12,8):4" --properties
 
+# Packaged generate-verify-repair verification for generated code
+carnot verify-code examples/math_funcs.py --func gcd --pbt
+
 # Score activations with a pre-trained EBM
 carnot score --list-models
 carnot score --model per-token-ebm-qwen35-08b-nothink --activations-file data.safetensors
@@ -116,6 +119,7 @@ After restarting, these tools become available to the LLM:
 |------|-------------|
 | `verify_code` | Run structural tests on Python functions |
 | `verify_with_properties` | Property-based testing with random inputs |
+| `verify_code_with_pbt` | Packaged generated-code verification with additive PBT |
 | `verify_llm_output` | Verify LLM responses via constraint extraction |
 | `verify_and_repair` | Verify and get natural-language repair feedback |
 | `list_domains` | List available constraint extraction domains |
@@ -131,6 +135,31 @@ Claude: 347 + 258 = 605. (verified)
 ```
 
 When verification fails, Claude gets specific feedback about what went wrong and can self-correct.
+
+## Packaged Generate-Verify-Repair Workflow
+
+Carnot's packaged code-verification flow supports a lightweight
+generate-verify-repair loop for generated Python code:
+
+```python
+from carnot.pipeline import verify_code
+
+candidate = "def sort_numbers(nums: list[int]) -> list[int]:\n    return nums\n"
+result = verify_code(
+    candidate,
+    entry_point="sort_numbers",
+    prompt="def sort_numbers(nums: list[int]) -> list[int]:\n    \"\"\"Return numbers sorted in ascending order.\"\"\"\n",
+    official_tests="def check(candidate):\n    assert candidate([]) == []\n    assert candidate([1, 2, 3]) == [1, 2, 3]\n",
+)
+if not result.verified:
+    repaired = "def sort_numbers(nums: list[int]) -> list[int]:\n    return sorted(nums)\n"
+    repaired_result = verify_code(
+        repaired,
+        entry_point="sort_numbers",
+        prompt="def sort_numbers(nums: list[int]) -> list[int]:\n    \"\"\"Return numbers sorted in ascending order.\"\"\"\n",
+        official_tests="def check(candidate):\n    assert candidate([]) == []\n    assert candidate([1, 2, 3]) == [1, 2, 3]\n",
+    )
+```
 
 ## Next Steps
 

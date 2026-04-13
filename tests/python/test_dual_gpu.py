@@ -180,6 +180,45 @@ def test_runner_uses_model_loader_defaults_when_dependencies_not_injected(
     assert [result.payload for result in results] == ["Qwen3.5-0.8B", "Gemma4-E4B-it"]
 
 
+def test_runner_uses_model_server_context_when_one_is_registered() -> None:
+    """REQ-VERIFY-041: DualGPURunner reuses a warm model server when it serves the model."""
+
+    class _FakeModelServer:
+        def serves_model(self, hf_id: str) -> bool:
+            return hf_id == "Qwen/Qwen3.5-0.8B"
+
+    load_calls: list[tuple[str, str, str | None]] = []
+
+    def fake_load(
+        model_name: str,
+        *,
+        device: str = "cuda",
+        device_map: str | None = None,
+    ) -> tuple[SimpleNamespace, SimpleNamespace]:
+        load_calls.append((model_name, device, device_map))
+        return SimpleNamespace(name=model_name), SimpleNamespace(name=model_name)
+
+    runner = DualGPURunner(
+        MODEL_SPECS,
+        load_model_fn=fake_load,
+        unload_fn=lambda model, tokenizer: None,
+        torch_module=_FakeTorch(),
+        model_server=_FakeModelServer(),
+    )
+
+    results = runner.run_model_tasks(
+        {
+            "Qwen3.5-0.8B": lambda context: context.device_assignment,
+            "Gemma4-E4B-it": lambda context: context.device_assignment,
+        }
+    )
+
+    assert results[0].device_assignment == "model_server"
+    assert results[0].payload == "model_server"
+    assert results[1].device_assignment == "cuda:1"
+    assert load_calls == [("google/gemma-4-E4B-it", "cuda:1", None)]
+
+
 def test_large_model_falls_back_to_device_map_auto_and_sequential_execution() -> None:
     """REQ-VERIFY-041, SCENARIO-VERIFY-042: 7B+ models use device_map='auto'."""
     specs = [

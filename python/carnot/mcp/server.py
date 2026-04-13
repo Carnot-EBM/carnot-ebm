@@ -7,15 +7,17 @@
     responses on top of the existing verification logic.
 
 **Detailed explanation for engineers:**
-    This server exposes six tools over MCP (stdio JSON-RPC):
+    This server exposes seven tools over MCP (stdio JSON-RPC):
 
     1. ``verify_code`` -- Run structural tests on a Python function (from Exp 48).
     2. ``verify_with_properties`` -- Property-based testing with random inputs.
-    3. ``verify_llm_output`` -- Verify an LLM response via constraint extraction
+    3. ``verify_code_with_pbt`` -- Run packaged static + Hypothesis-backed code
+       verification for generated Python code.
+    4. ``verify_llm_output`` -- Verify an LLM response via constraint extraction
        using VerifyRepairPipeline (from Exp 75).
-    4. ``verify_and_repair`` -- Full verify-then-repair loop using the pipeline.
-    5. ``list_domains`` -- List available constraint extraction domains.
-    6. ``health_check`` -- Liveness probe returning server version and status.
+    5. ``verify_and_repair`` -- Full verify-then-repair loop using the pipeline.
+    6. ``list_domains`` -- List available constraint extraction domains.
+    7. ``health_check`` -- Liveness probe returning server version and status.
 
     Production safeguards:
     - All tool handlers run inside ``_guarded_call()`` which enforces a 30-second
@@ -32,19 +34,20 @@
 Usage:
     python -m carnot.mcp
 
-Spec: REQ-CODE-001, REQ-CODE-006, REQ-VERIFY-001, REQ-VERIFY-003
+Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-021, REQ-VERIFY-001, REQ-VERIFY-003
 """
 
 from __future__ import annotations
 
 import concurrent.futures
-import functools
 import logging
-import time
 import traceback
-from typing import Any, Callable, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from mcp.server.fastmcp import FastMCP
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 logger = logging.getLogger(__name__)
 
@@ -52,7 +55,7 @@ logger = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-SERVER_VERSION = "0.2.0"
+SERVER_VERSION = "0.3.0"
 MAX_INPUT_CHARS = 10_000
 EXECUTION_TIMEOUT_SECONDS = 30
 
@@ -134,8 +137,7 @@ def _validate_input(value: str, field_name: str) -> None:
     if len(value) > MAX_INPUT_CHARS:
         raise MCPError(
             "INPUT_TOO_LARGE",
-            f"Field '{field_name}' has {len(value)} characters, "
-            f"max allowed is {MAX_INPUT_CHARS}.",
+            f"Field '{field_name}' has {len(value)} characters, max allowed is {MAX_INPUT_CHARS}.",
         )
 
 
@@ -230,31 +232,37 @@ def _run_structural_tests(
 
         if error is not None:
             n_failed += 1
-            details.append({
-                "args": tc["args"],
-                "expected": expected,
-                "actual": None,
-                "passed": False,
-                "error": str(error),
-            })
+            details.append(
+                {
+                    "args": tc["args"],
+                    "expected": expected,
+                    "actual": None,
+                    "passed": False,
+                    "error": str(error),
+                }
+            )
         elif result != expected:
             n_failed += 1
-            details.append({
-                "args": tc["args"],
-                "expected": expected,
-                "actual": result,
-                "passed": False,
-                "error": None,
-            })
+            details.append(
+                {
+                    "args": tc["args"],
+                    "expected": expected,
+                    "actual": result,
+                    "passed": False,
+                    "error": None,
+                }
+            )
         else:
             n_passed += 1
-            details.append({
-                "args": tc["args"],
-                "expected": expected,
-                "actual": result,
-                "passed": True,
-                "error": None,
-            })
+            details.append(
+                {
+                    "args": tc["args"],
+                    "expected": expected,
+                    "actual": result,
+                    "passed": True,
+                    "error": None,
+                }
+            )
 
     n_total = n_passed + n_failed
     energy = n_failed / max(n_total, 1)
@@ -289,6 +297,82 @@ def verify_code(code: str, func_name: str, test_cases: list[dict[str, Any]]) -> 
     Spec: REQ-CODE-001
     """
     return _guarded_call(_run_structural_tests, code, func_name, test_cases)
+
+
+# ---------------------------------------------------------------------------
+# Tool: verify_code_with_pbt
+# ---------------------------------------------------------------------------
+
+
+def _run_verify_code_with_pbt(
+    code: str,
+    func_name: str,
+    prompt: str | None = None,
+    official_tests: str = "",
+) -> dict[str, Any]:
+    """Run packaged static + Hypothesis-backed verification on Python code.
+
+    Spec: REQ-CODE-021
+    """
+    from carnot.pipeline import VerifyRepairPipeline
+    from carnot.pipeline import verify_code as verify_code_api
+
+    _validate_input(code, "code")
+    if prompt is not None:
+        _validate_input(prompt, "prompt")
+    if official_tests:
+        _validate_input(official_tests, "official_tests")
+
+    vr = verify_code_api(
+        code,
+        entry_point=func_name,
+        prompt=prompt,
+        official_tests=official_tests,
+    )
+    repair_feedback = VerifyRepairPipeline._format_violations(vr.violations)
+    pbt_summary = vr.certificate.get("pbt_summary", {})
+
+    return {
+        "verified": vr.verified,
+        "energy": float(vr.energy),
+        "n_constraints": len(vr.constraints),
+        "n_violations": len(vr.violations),
+        "repair_feedback": repair_feedback,
+        "pbt_summary": pbt_summary,
+        "violations": [
+            {
+                "type": v.constraint_type,
+                "description": v.description,
+                "metadata": {k: str(val) for k, val in v.metadata.items() if k != "energy_term"},
+            }
+            for v in vr.violations
+        ],
+        "certificate": vr.certificate,
+    }
+
+
+@mcp_server.tool()
+def verify_code_with_pbt(
+    code: str,
+    func_name: str,
+    prompt: str | None = None,
+    official_tests: str = "",
+) -> dict[str, Any]:
+    """Verify generated Python code with the packaged static + PBT path.
+
+    Args:
+        code: Python source code defining the function.
+        func_name: Name of the function to verify.
+        prompt: Optional HumanEval-style prompt/signature context.
+        official_tests: Optional official ``check()`` harness or assert block.
+
+    Returns:
+        Dict with verification verdict, violations, repair feedback, and the
+        additive PBT summary.
+
+    Spec: REQ-CODE-021, SCENARIO-CODE-018
+    """
+    return _guarded_call(_run_verify_code_with_pbt, code, func_name, prompt, official_tests)
 
 
 # ---------------------------------------------------------------------------
@@ -329,7 +413,6 @@ def _run_property_tests(
     Spec: REQ-CODE-006
     """
     from carnot.verify.property_test import (
-        PropertyTestResult,
         gen_int,
         gen_list_int,
         gen_pair_int,
@@ -365,8 +448,7 @@ def _run_property_tests(
                 return builtin_generators[gen_spec]
             raise MCPError(
                 "INVALID_INPUT",
-                f"Unknown generator: {gen_spec}. "
-                f"Available: {list(builtin_generators.keys())}",
+                f"Unknown generator: {gen_spec}. Available: {list(builtin_generators.keys())}",
             )
         if isinstance(gen_spec, dict):
             gen_type = gen_spec.get("type", "")
@@ -390,8 +472,7 @@ def _run_property_tests(
             except Exception:
                 raise MCPError(
                     "INVALID_INPUT",
-                    f"Unknown check: {check_spec}. "
-                    f"Available: {list(builtin_checks.keys())}",
+                    f"Unknown check: {check_spec}. Available: {list(builtin_checks.keys())}",
                 ) from None
         if isinstance(check_spec, dict):
             if "lambda" in check_spec:
@@ -412,11 +493,13 @@ def _run_property_tests(
     for prop in properties:
         if "name" not in prop:
             raise MCPError("INVALID_INPUT", "Each property must have a 'name' key")
-        resolved_properties.append({
-            "name": prop["name"],
-            "gen_args": resolve_generator(prop["generator"]),
-            "check": resolve_check(prop["check"]),
-        })
+        resolved_properties.append(
+            {
+                "name": prop["name"],
+                "gen_args": resolve_generator(prop["generator"]),
+                "check": resolve_check(prop["check"]),
+            }
+        )
 
     result = property_test(
         code=code,
@@ -530,10 +613,7 @@ def _run_verify_llm_output(
             {
                 "type": v.constraint_type,
                 "description": v.description,
-                "metadata": {
-                    k: str(val) for k, val in v.metadata.items()
-                    if k != "energy_term"
-                },
+                "metadata": {k: str(val) for k, val in v.metadata.items() if k != "energy_term"},
             }
             for v in vr.violations
         ],
@@ -635,10 +715,7 @@ def _run_verify_and_repair(
             {
                 "type": v.constraint_type,
                 "description": v.description,
-                "metadata": {
-                    k: str(val) for k, val in v.metadata.items()
-                    if k != "energy_term"
-                },
+                "metadata": {k: str(val) for k, val in v.metadata.items() if k != "energy_term"},
             }
             for v in vr.violations
         ],
@@ -690,6 +767,7 @@ def list_domains() -> dict[str, Any]:
     Returns:
         Dict with list of domain names and descriptions.
     """
+
     def _inner() -> dict[str, Any]:
         from carnot.pipeline.extract import AutoExtractor
 
@@ -739,6 +817,7 @@ def health_check() -> dict[str, Any]:
         "tools": [
             "verify_code",
             "verify_with_properties",
+            "verify_code_with_pbt",
             "verify_llm_output",
             "verify_and_repair",
             "list_domains",

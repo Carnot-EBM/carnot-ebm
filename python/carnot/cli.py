@@ -12,8 +12,9 @@
 
 Usage:
     carnot verify examples/math_funcs.py --func gcd --test "(12,8):4"
+    carnot verify-code examples/math_funcs.py --func gcd --pbt
 
-Spec: REQ-CODE-001, REQ-CODE-006
+Spec: REQ-CODE-001, REQ-CODE-006, REQ-CODE-020
 """
 
 from __future__ import annotations
@@ -22,6 +23,7 @@ import argparse
 import ast
 import os
 import sys
+from typing import cast
 
 _TYPE_MAP: dict[str, type] = {
     "int": int,
@@ -45,7 +47,7 @@ def _find_separator_colon(s: str) -> int:
     for i in range(len(s) - 1, 0, -1):
         if s[i] == ":":
             left = s[:i].strip()
-            right = s[i + 1:].strip()
+            right = s[i + 1 :].strip()
             if not left or not right:
                 continue
             try:
@@ -57,7 +59,7 @@ def _find_separator_colon(s: str) -> int:
     return -1
 
 
-def _parse_test_pair(raw: str) -> tuple[tuple, object]:
+def _parse_test_pair(raw: str) -> tuple[tuple[object, ...], object]:
     """Parse 'input:expected' into (args_tuple, expected_value).
 
     Spec: REQ-CODE-006
@@ -65,12 +67,11 @@ def _parse_test_pair(raw: str) -> tuple[tuple, object]:
     colon_idx = _find_separator_colon(raw)
     if colon_idx == -1:
         raise ValueError(
-            f"Invalid test format: {raw!r}. Expected 'input:expected', "
-            f"e.g. '(12,8):4'."
+            f"Invalid test format: {raw!r}. Expected 'input:expected', e.g. '(12,8):4'."
         )
 
     input_str = raw[:colon_idx].strip()
-    expected_str = raw[colon_idx + 1:].strip()
+    expected_str = raw[colon_idx + 1 :].strip()
 
     try:
         input_val = ast.literal_eval(input_str)
@@ -95,9 +96,7 @@ def _resolve_type(name: str) -> type:
     """
     t = _TYPE_MAP.get(name)
     if t is None:
-        raise ValueError(
-            f"Unknown type {name!r}. Supported: {', '.join(sorted(_TYPE_MAP))}"
-        )
+        raise ValueError(f"Unknown type {name!r}. Supported: {', '.join(sorted(_TYPE_MAP))}")
     return t
 
 
@@ -120,7 +119,7 @@ def cmd_verify(args: argparse.Namespace) -> int:
     func_name = args.func
     expected_type = _resolve_type(args.type)
 
-    test_cases: list[tuple[tuple, object]] = []
+    test_cases: list[tuple[tuple[object, ...], object]] = []
     for raw in args.test or []:
         try:
             tc = _parse_test_pair(raw)
@@ -170,19 +169,24 @@ def cmd_verify(args: argparse.Namespace) -> int:
     if args.properties:
         import random  # noqa: TC003
 
-        def gen_single_int(rng: random.Random) -> tuple:
+        def gen_single_int(rng: random.Random) -> tuple[int]:
             return (rng.randint(-100, 100),)
 
-        properties = [{
-            "name": f"{func_name}_no_exception_on_int",
-            "gen_args": gen_single_int,
-            "check": lambda result, *args: result is not None or True,
-        }]
+        properties = [
+            {
+                "name": f"{func_name}_no_exception_on_int",
+                "gen_args": gen_single_int,
+                "check": lambda result, *args: result is not None or True,
+            }
+        ]
 
         print(f"\n--- Property-Based Tests ({args.prop_samples} samples) ---")
         prop_result = property_test(
-            code, func_name, properties,
-            n_samples=args.prop_samples, seed=args.prop_seed,
+            code,
+            func_name,
+            properties,
+            n_samples=args.prop_samples,
+            seed=args.prop_seed,
         )
         print(
             f"  Ran {prop_result.n_tests} tests: "
@@ -214,6 +218,90 @@ def cmd_verify(args: argparse.Namespace) -> int:
     print("  Verdict:      PASS")
     print(f"{'=' * 60}")
     return 0
+
+
+def _read_text_file(path: str, label: str) -> str:
+    """Read a required text file for packaged verification.
+
+    Spec: REQ-CODE-020
+    """
+    if not os.path.isfile(path):
+        raise FileNotFoundError(f"{label} file not found: {path}")
+    with open(path) as f:
+        return f.read()
+
+
+def cmd_verify_code(args: argparse.Namespace) -> int:
+    """Execute the packaged verify-code subcommand.
+
+    Spec: REQ-CODE-020, SCENARIO-CODE-017
+    """
+    from carnot.pipeline import VerifyRepairPipeline, verify_code
+
+    file_path = args.file
+    if not os.path.isfile(file_path):
+        print(f"Error: file not found: {file_path}", file=sys.stderr)
+        return 1
+
+    try:
+        code = _read_text_file(file_path, "source")
+        prompt = _read_text_file(args.prompt_file, "prompt") if args.prompt_file else None
+        official_tests = _read_text_file(args.tests_file, "tests") if args.tests_file else ""
+    except FileNotFoundError as exc:
+        print(f"Error: {exc}", file=sys.stderr)
+        return 1
+
+    result = verify_code(
+        code,
+        entry_point=args.func,
+        prompt=prompt,
+        official_tests=official_tests,
+        include_pbt=args.pbt,
+    )
+    pbt_summary_obj = result.certificate.get("pbt_summary", {})
+    pbt_summary = cast(
+        "dict[str, object]",
+        pbt_summary_obj if isinstance(pbt_summary_obj, dict) else {},
+    )
+    repair_feedback = VerifyRepairPipeline._format_violations(result.violations)
+
+    print("=" * 60)
+    print("CARNOT VERIFY-CODE")
+    print(f"  File:       {file_path}")
+    print(f"  Function:   {args.func}")
+    print("  Static:     on")
+    print(f"  PBT:        {'on' if args.pbt else 'off'}")
+    print("=" * 60)
+
+    print("\n--- Verification Summary ---")
+    print(f"  Verified:    {result.verified}")
+    print(f"  Constraints: {len(result.constraints)}")
+    print(f"  Violations:  {len(result.violations)}")
+    print(f"  Energy:      {float(result.energy):.4f}")
+
+    print("\n--- Violations ---")
+    if result.violations:
+        for violation in result.violations:
+            print(f"  - [{violation.constraint_type}] {violation.description}")
+    else:
+        print("  No violations found.")
+
+    print("\n--- PBT Summary ---")
+    print(f"  Enabled:     {pbt_summary.get('enabled', False)}")
+    print(f"  Properties:  {pbt_summary.get('n_properties', 0)}")
+    print(f"  Failures:    {pbt_summary.get('n_failures', 0)}")
+    property_names = pbt_summary.get("property_names", [])
+    if isinstance(property_names, list) and property_names:
+        print(f"  Names:       {', '.join(str(name) for name in property_names)}")
+
+    print("\n--- Repair Feedback ---")
+    for line in repair_feedback.splitlines():
+        print(f"  {line}")
+
+    print(f"\n{'=' * 60}")
+    print(f"  Verdict:      {'PASS' if result.verified else 'FAIL'}")
+    print(f"{'=' * 60}")
+    return 0 if result.verified else 1
 
 
 def cmd_score(args: argparse.Namespace) -> int:
@@ -269,19 +357,25 @@ def cmd_score(args: argparse.Namespace) -> int:
         if correct_mask.sum() > 0 and wrong_mask.sum() > 0:
             import jax.numpy as jnp
 
-            c_energies = [float(ebm.energy(jnp.array(activations[i])))
-                          for i in range(len(activations)) if labels[i] == 1]
-            w_energies = [float(ebm.energy(jnp.array(activations[i])))
-                          for i in range(len(activations)) if labels[i] == 0]
+            c_energies = [
+                float(ebm.energy(jnp.array(activations[i])))
+                for i in range(len(activations))
+                if labels[i] == 1
+            ]
+            w_energies = [
+                float(ebm.energy(jnp.array(activations[i])))
+                for i in range(len(activations))
+                if labels[i] == 0
+            ]
             n_eval = min(200, len(c_energies), len(w_energies))
             c_e = c_energies[:n_eval]
             w_e = w_energies[:n_eval]
             thresh = (np.mean(c_e) + np.mean(w_e)) / 2
             tp = sum(1 for e in w_e if e > thresh)
             tn = sum(1 for e in c_e if e <= thresh)
-            acc = (tp + tn) / (len(c_e) + len(w_e))
+            detection_acc = (tp + tn) / (len(c_e) + len(w_e))
             gap = np.mean(w_e) - np.mean(c_e)
-            print(f"  Detection:   {acc:.1%} (gap={gap:.4f})")
+            print(f"  Detection:   {detection_acc:.1%} (gap={gap:.4f})")
 
     print(f"{'=' * 60}")
     return 0
@@ -290,7 +384,7 @@ def cmd_score(args: argparse.Namespace) -> int:
 def main() -> int:
     """CLI entry point.
 
-    Spec: REQ-CODE-006, REQ-INFER-015
+    Spec: REQ-CODE-006, REQ-CODE-020, REQ-INFER-015
     """
     parser = argparse.ArgumentParser(
         prog="carnot",
@@ -306,24 +400,55 @@ def main() -> int:
     verify_parser.add_argument("file", help="Path to the Python source file")
     verify_parser.add_argument("--func", required=True, help="Function name to verify")
     verify_parser.add_argument(
-        "--test", action="append", metavar="INPUT:EXPECTED",
+        "--test",
+        action="append",
+        metavar="INPUT:EXPECTED",
         help="Test case in 'input:expected' format, e.g. '(12,8):4'. May be repeated.",
     )
     verify_parser.add_argument(
-        "--type", default="int",
+        "--type",
+        default="int",
         help="Expected return type (default: int)",
     )
     verify_parser.add_argument(
-        "--properties", action="store_true",
+        "--properties",
+        action="store_true",
         help="Also run property-based tests",
     )
     verify_parser.add_argument(
-        "--prop-samples", type=int, default=100,
+        "--prop-samples",
+        type=int,
+        default=100,
         help="Random samples per property (default: 100)",
     )
     verify_parser.add_argument(
-        "--prop-seed", type=int, default=42,
+        "--prop-seed",
+        type=int,
+        default=42,
         help="Random seed for property tests (default: 42)",
+    )
+
+    # --- verify-code subcommand ---
+    verify_code_parser = subparsers.add_parser(
+        "verify-code",
+        help="Verify a Python function with packaged static checks and optional PBT",
+    )
+    verify_code_parser.add_argument("file", help="Path to the Python source file")
+    verify_code_parser.add_argument("--func", required=True, help="Function name to verify")
+    verify_code_parser.add_argument(
+        "--prompt-file",
+        default=None,
+        help="Optional file containing HumanEval-style prompt/signature context",
+    )
+    verify_code_parser.add_argument(
+        "--tests-file",
+        default=None,
+        help="Optional file containing official tests/check() harness text",
+    )
+    verify_code_parser.add_argument(
+        "--pbt",
+        action="store_true",
+        help="Enable Hypothesis-backed packaged verification",
     )
 
     # --- score subcommand ---
@@ -332,15 +457,18 @@ def main() -> int:
         help="Score activations using a pre-trained EBM from HuggingFace",
     )
     score_parser.add_argument(
-        "--model", default="per-token-ebm-qwen35-08b-nothink",
+        "--model",
+        default="per-token-ebm-qwen35-08b-nothink",
         help="EBM model ID (default: per-token-ebm-qwen35-08b-nothink)",
     )
     score_parser.add_argument(
-        "--activations-file", default=None,
+        "--activations-file",
+        default=None,
         help="Path to safetensors file with 'activations' key",
     )
     score_parser.add_argument(
-        "--list-models", action="store_true",
+        "--list-models",
+        action="store_true",
         help="List available pre-trained EBM models",
     )
 
@@ -350,6 +478,8 @@ def main() -> int:
         return 1
     if parsed.command == "verify":
         return cmd_verify(parsed)
+    if parsed.command == "verify-code":
+        return cmd_verify_code(parsed)
     if parsed.command == "score":
         return cmd_score(parsed)
     parser.print_help()  # pragma: no cover
