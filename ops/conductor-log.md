@@ -1393,3 +1393,4 @@ python/ |
 | 2026-04-13 14:07 UTC | Exp 245: Solver-routed formal claim verifier | OK | 2300 passed, 1 skipped, 13 warnings in 172.44s (0:02:52) |
 | 2026-04-13 14:23 UTC | Exp 246: Live solver-routed semantic benchmark run | OK | 2332 passed, 1 skipped, 13 warnings in 172.48s (0:02:52) |
 | 2026-04-13 15:01 UTC | Exp 247: Live solver-routed semantic benchmark | OK | Deliverable already exists in repo |
+| 2026-04-13 15:21 UTC | Exp 248: Process-integrity corpus from live semant | FAIL | Claude Code error: Error: Reached max turns (50) |
