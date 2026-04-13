@@ -1586,6 +1586,62 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         date=timestamp.strftime("%Y%m%d"),
     )
 
+    # Inject focused AST context to save tokens.
+    # Instead of the agent reading entire files, we extract class/function
+    # signatures from files mentioned in the prompt's "EXISTING CODE TO READ"
+    # section. This gives the agent the API surface without full file contents.
+    try:
+        import ast as _ast
+        import re as _re2
+        # Find file paths mentioned in the prompt
+        file_refs = _re2.findall(
+            r'(?:python/carnot/[^\s]+\.py|scripts/[^\s]+\.py)',
+            prompt,
+        )
+        if file_refs:
+            outlines: list[str] = []
+            total_symbols = 0
+            for ref in file_refs[:6]:  # Limit to 6 files
+                path = PROJECT_ROOT / ref
+                if not path.exists():
+                    continue
+                try:
+                    tree = _ast.parse(path.read_text())
+                    sigs: list[str] = []
+                    for node in _ast.walk(tree):
+                        if isinstance(node, _ast.ClassDef):
+                            bases = ", ".join(
+                                _ast.dump(b) if not hasattr(b, 'id') else b.id
+                                for b in node.bases
+                            ) if node.bases else ""
+                            ds = _ast.get_docstring(node) or ""
+                            first_line = ds.split("\n")[0][:100] if ds else ""
+                            sigs.append(f"class {node.name}({bases}):  # {first_line}")
+                            for item in node.body:
+                                if isinstance(item, _ast.FunctionDef):
+                                    args = ", ".join(a.arg for a in item.args.args)
+                                    sigs.append(f"    def {item.name}({args})")
+                        elif isinstance(node, _ast.FunctionDef) and node.col_offset == 0:
+                            args = ", ".join(a.arg for a in node.args.args)
+                            ds = _ast.get_docstring(node) or ""
+                            first_line = ds.split("\n")[0][:100] if ds else ""
+                            sigs.append(f"def {node.name}({args}):  # {first_line}")
+                    if sigs:
+                        outlines.append(f"# {ref}\n" + "\n".join(sigs))
+                        total_symbols += len(sigs)
+                except Exception:
+                    pass
+            if outlines:
+                context_block = (
+                    "\n\nCODE SIGNATURES (AST-extracted — read full files only if needed):\n\n"
+                    + "\n\n".join(outlines)
+                )
+                prompt = prompt + context_block
+                logger.info("Injected %d symbol signatures from %d files (AST outlines)",
+                            total_symbols, len(outlines))
+    except Exception as e:
+        logger.debug("AST context injection skipped: %s", e)
+
     # Prepend mandatory workflow instructions for non-Claude agents.
     # Claude reads CLAUDE.md automatically; other agents need explicit
     # instructions to follow the spec-anchored development workflow.
