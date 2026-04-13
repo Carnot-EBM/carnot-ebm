@@ -1622,6 +1622,81 @@ The process-integrity verifier shall integrate additively into
 - existing verify and verify_and_repair callers that ignore the new field
   continue to work unchanged
 
+### REQ-VERIFY-060: Constraint Addition From Memory Patterns
+
+The repository shall provide a constraint-addition compiler in
+`python/carnot/pipeline/constraint_addition.py`, where:
+- the compiler accepts a `CaseMemory` instance and produces a
+  `ConstraintAdditionResult` that is independent of any existing policy
+  artifact — it adds new constraint templates rather than replacing
+  threshold or routing decisions already compiled by `SelfLearningPolicy`
+- the compiler qualifies entries by minimum support (`min_support`, default 3)
+  and minimum confidence (`min_confidence`, default 0.85) so only recurring,
+  high-confidence failure families generate templates
+- each `ConstraintTemplate` carries a `kind` drawn from three CPU-cheap
+  varieties: `text_pattern_guard` (substring presence/absence checks),
+  `budget_addition` (additional verifier passes for the failure family), and
+  `verifier_guard_clause` (a named gate the pipeline can check before invoking
+  the heavier verifier)
+- every `ConstraintTemplate` is provenance-bearing: it records the originating
+  case entry fingerprints, source experiment numbers, failure family, support
+  and confidence at compile time, and the fixed compile date `"20260413"`
+- the `ConstraintAdditionResult` serializes deterministically via `to_dict()`
+  and `from_dict()` such that two calls on the same `CaseMemory` produce
+  byte-identical JSON output when serialized with `json.dumps(..., sort_keys=True)`
+- a `ConstraintAdditionRegistry` class wraps a `ConstraintAdditionResult` and
+  exposes `lookup(model_name, benchmark_slice, failure_family)` returning the
+  sorted tuple of matching templates, and `apply(model_name, benchmark_slice,
+  violation_types, response_text)` returning the subset of templates whose
+  guard patterns match `response_text` or whose budget/guard kind applies
+- the compiler and registry have no dependency on JAX, PyTorch, or any
+  numerical library — they are pure Python dataclass and string operations
+  safe to import on any CPU-only deployment
+- the module integrates additively: `SelfLearningPolicyCompiler` callers need
+  not change, and `CaseMemory` is read-only inside the compiler
+
+### SCENARIO-VERIFY-070: Pattern-To-Constraint Compilation From Mature Failure Family
+
+**Given** a `CaseMemory` containing at least 3 entries for the same violation
+  family with support ≥ 3 and confidence ≥ 0.85
+**When** `ConstraintAdditionCompiler().compile(case_memory)` is called
+**Then** the result contains at least one `ConstraintTemplate` whose
+  `failure_family` matches the recurring family
+**And** the template `kind` is one of `text_pattern_guard`,
+  `budget_addition`, or `verifier_guard_clause`
+**And** `template.support >= 3` and `template.confidence >= 0.85`
+
+### SCENARIO-VERIFY-071: Every Template Is Provenance-Bearing
+
+**Given** a compiled `ConstraintAdditionResult` with at least one template
+**When** any `template.provenance` is inspected
+**Then** each `ConstraintProvenance` record carries non-empty
+  `source_case_ids`, a non-empty `failure_family`, `support > 0`,
+  `confidence > 0.0`, and `compiled_date == "20260413"`
+
+### SCENARIO-VERIFY-072: Serialization Is Deterministic Across Two Calls
+
+**Given** a `CaseMemory` with qualifying entries
+**When** the compiler runs twice and both results are serialized with
+  `json.dumps(result.to_dict(), sort_keys=True)`
+**Then** both serialized strings are byte-identical
+
+### SCENARIO-VERIFY-073: Additive Integration Does Not Modify Case Memory Or Policy
+
+**Given** a populated `CaseMemory` and a compiled `SelfLearningPolicy`
+**When** `ConstraintAdditionCompiler().compile(case_memory)` is called
+**Then** `len(case_memory)` is unchanged
+**And** the returned `ConstraintAdditionResult` contains no `ThresholdOverride`
+  or `RoutingHint` objects — it only contains `ConstraintTemplate` objects
+
+### SCENARIO-VERIFY-074: Registry Lookup Returns Only Matching Templates
+
+**Given** a `ConstraintAdditionRegistry` loaded from a compiled result
+  containing templates for two different failure families
+**When** `registry.lookup(model_name, benchmark_slice, "semantic")` is called
+**Then** only templates whose `failure_family == "semantic"` are returned
+**And** the returned tuple is sorted by `template_id`
+
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 
 **Given** a corpus row whose `process_label` is `"clean"` and whose
@@ -1748,6 +1823,7 @@ The process-integrity verifier shall integrate additively into
 | REQ-VERIFY-057 | Not Started | Implemented | Exp 244 summary/provenance tests + artifact refresh |
 | REQ-VERIFY-058 | Not Started | Implemented | Formal claim verifier route + abstain + serialization tests |
 | REQ-VERIFY-059 | Not Started | Implemented | Formal claim verifier pipeline integration tests |
+| REQ-VERIFY-060 | Not Started | Implemented | Constraint addition compilation + provenance + serialization + registry tests |
 | REQ-VERIFY-061 | Not Started | Implemented | Process verifier defect detection + serialization tests |
 | REQ-VERIFY-062 | Not Started | Implemented | Process verifier pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
