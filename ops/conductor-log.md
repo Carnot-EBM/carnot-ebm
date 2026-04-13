@@ -1360,3 +1360,4 @@ E   ImportError: cannot impor |
 python/ |
 | 2026-04-13 03:36 UTC | Exp 233: Structured-output policy refresh on a JSO | OK | Deliverable already exists in repo |
 | 2026-04-13 04:06 UTC | Exp 234: Calibrated semantic verifier v2 | OK | =========== 2163 passed, 1 skipped, 22 warnings in 87.04s (0:01:27) ============ |
+| 2026-04-13 05:02 UTC | Exp 235: Live GSM8K semantic benchmark v2 | OK | =========== 2169 passed, 1 skipped, 22 warnings in 87.35s (0:01:27) ============ |
