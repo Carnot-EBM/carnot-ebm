@@ -4,9 +4,9 @@
 
 Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All headline benchmark results below are from **live GPU inference**. The repository also preserves simulated, unverified, and software-model artifacts for provenance, and labels them explicitly instead of folding them into headline claims.
 
-**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%**, still detects **17/23** wrong baselines, and catches **2** official-test misses beyond the weak harness. Held-out replay keeps success flat at **32.74%** while cutting false positives **7 -> 1** (Exp 223). Trace learning distills **164** learnable PBT histories into property and repair rankings (VERIFY-030). Typed IR constraints give **+4.9pp** on Gemma4 (Exp 221).
+**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). Typed IR constraints still give **+4.9pp** on Gemma4 (Exp 221). The semantic-verifier-v2 rerun improves to **14.0% -> 15.0%** on Qwen3.5-0.8B and **46.5% -> 47.5%** on Gemma4-E4B-it while verify-only remains unjustified on both models (Exp 235). Chronological replay v2 keeps held-out success flat at **34.48%** with **8** false positives, but case memory lifts retrieval hit rate to **32.1%** and precision to **43.6%** without adding new false positives (Exp 241 / VERIFY-040).
 
-**What ships today:** `VerifyRepairPipeline` plus standalone `verify_code()` for end-user code checks. CLI (`carnot pipeline verify`, `carnot verify-code`), a hardened **7-tool** MCP server for Claude Code, 5 integration examples, and full API docs. Constraint extraction spans arithmetic, code, logic, and natural language domains.
+**What ships today:** `VerifyRepairPipeline` plus standalone `verify_code()` and additive `verify_generated_code_with_specs()` for end-user code checks. CLI (`carnot pipeline verify`, `carnot verify-code`), a hardened **7-tool** MCP server for Claude Code, 5 integration examples, and full API docs. Constraint extraction spans arithmetic, code, logic, and natural language domains.
 
 **What we learned:** Activation-based EBMs detect confidence, not correctness (50% practical). The 14 principles from our systematic negative results save other researchers months of dead ends. Structural constraint verification is what actually works. See the [technical report](docs/technical-report.md) for full results.
 
@@ -111,27 +111,27 @@ On deterministic HumanEval-style probes, the same Hypothesis-backed verifier als
 | Benchmark | Baseline | +Carnot | Delta | Experiment |
 |-----------|----------|---------|-------|------------|
 | Typed IR constraints (81 tasks) | 61.7% | 66.7% | **+4.9pp** (Gemma4) | Exp 221 |
-| GSM8K semantic (200 questions) | 37.5% | 38.0% | +0.5pp (Gemma4) | Exp 219 |
+| GSM8K semantic v2 (200 questions) | 46.5% | 47.5% | +1.0pp (Gemma4); verify-only still unjustified | Exp 235 |
 | GSM8K arithmetic (100 questions) | 91.0% | 91.0% | 0.0pp | Exp 206 |
 
-Semantic grounding detects 22-23% of wrong math answers (vs 0% for regex). The bottleneck is false positive rate (31% on Gemma4) — addressed by self-learning below.
+Semantic verifier v2 reuses the fixed Exp 219 cohort and trims Qwen false positives from **7** to **4**, but verify-only still hurts on both models and Gemma now carries **26** unnecessary repair triggers (Exp 235). The main win is better calibration and cleaner abstention, not a solved live semantic benchmark yet.
 
 ### Self-learning
 
 | Metric | Without learning | With learning | Improvement | Experiment |
 |--------|-----------------|---------------|-------------|------------|
-| Held-out false positives | 7 | 1 | **-86%** at flat **32.74%** success | Exp 223 |
+| Held-out success | 34.48% | 34.48% | Flat across all four strategies; primary success **not met** | Exp 241 |
+| Retrieval quality | 0.0% hit / 0.0% precision | 32.1% hit / 43.6% precision | Better case reuse without extra wins or false positives | Exp 241 |
 
-On **168** held-out cases, tracker gating keeps held-out success flat at **32.74%** while reducing false positives **7 -> 1**. Memory reuse is not yet strong enough to add task gains under the stricter provenance gates: hit rate is **9.9%**, precision is **5.8%**, and the practical win is still false-positive control rather than higher task success.
+On **116** held-out cases against **344** learning cases, `no_learning`, `tracker_only`, `case_memory`, and `case_memory_plus_policy` all finish at **34.48%** success with **8** false positives. The latest positive signal is narrower and more honest than Exp 223: `case_memory` materially improves retrieval hit rate and precision, but those better matches still do not convert into held-out task gains under the zero-additional-false-positive budget.
 
 ### Latest follow-ons
 
-- **Live trace memory (Exp 222):** **662** live trace events ingest into **230** accepted memory entries, **43** learned patterns, **29** mature patterns, **14** reusable repair snippets, and **12** monitorability-policy updates; replay precision is still only **12.6%**.
-- **Hypothesis-backed verifier (Exp 224):** deterministic generated-code checks catch **5/5** under-specified bugs versus **0/5** for execution-only verification while preserving **5/5** matching correct solutions.
-- **Dual-GPU runner (Exp 225):** paired fresh-process generation on the local **2x RTX 3090** host improves from **37.371s** to **32.774s** on a **10**-question microbenchmark for a measured **1.14x** speedup.
-- **FPGA software model (Exp 228):** the KV260-class sparse **4,096-spin** backend now has a checked-in `FPGAIsingSampler` control-path design; the current **128**-spin benchmark is explicitly **software simulation** at **0.824549s** for `fpga_sim` versus **0.288092s** on CPU.
-- **Trace learning (VERIFY-030):** `TraceAnalyzer`, `PropertyRanker`, and `RepairStrategy` normalize **164** Exp 226 histories, with signature-derived checks covering **163** cases and accounting for **6** official-test misses beyond the weak harness.
-- **Packaged verification (VERIFY-031):** the strongest code path now ships as `verify_code()`, `carnot verify-code`, and `verify_code_with_pbt` on the hardened **7-tool** MCP surface.
+- **Semantic calibration + live rerun (Exp 232 / Exp 235):** the new calibration corpus contains **568** rows (**155 TP / 33 FP / 221 FN / 159 TN**), and the semantic-verifier-v2 rerun keeps verify-only explicitly unjustified even after cleaner thresholds and abstention logic.
+- **Spec-aware code verification (Exp 236 / VERIFY-036):** the explicit code-spec corpus now covers **164** HumanEval tasks with **194** trace links, **8** official-test-miss traces, and **5** repaired traces, and the packaged verifier can now combine official tests, PBT, and explicit spec clauses through `verify_generated_code_with_specs()`.
+- **Chronological replay v2 (Exp 241 / VERIFY-038 / VERIFY-039 / VERIFY-040):** richer case keys plus compiled policy context improve held-out retrieval to **32.1%** hit rate and **43.6%** precision, but the primary task-gain success condition is still honestly **not met**.
+- **KV260 host / overlay round-trip (Exp 242):** the checked-in artifact is intentionally blocked in this environment because no `CARNOT_KV260_BITFILE` path was configured; `mode="auto"` still resolves to CPU fallback instead of fabricating board timings.
+- **Sampler-backed replay (Exp 243):** CPU reranking stays neutral across **460** saved semantic and code repair cases, while the KV260-backed path remains blocked by the same missing bitfile setup.
 
 ### Infrastructure
 
@@ -211,7 +211,7 @@ All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), 
 
 ### Hardware Path
 
-The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim. Exp 242 now attempts the real KV260 round trip and records the honest blocker in this environment: no `CARNOT_KV260_BITFILE` path was configured, so no board timings were fabricated. Exp 243 then replays **460** saved semantic and code repair cases through the sampler path: the CPU reranker stays neutral overall on top-1 quality and verifier precision, while the KV260-backed path remains blocked in the same environment.
+The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim. Exp 242 now attempts the real KV260 round trip and records the honest blocker in this environment: no `CARNOT_KV260_BITFILE` path was configured, so no board timings were fabricated. Exp 243 then replays **460** saved semantic and code repair cases through the sampler path: the CPU reranker leaves top-1 quality flat at **30.2%**, leaves verifier precision flat at **30.65%**, and keeps the KV260-backed path blocked in the same environment.
 
 ## Architecture
 
