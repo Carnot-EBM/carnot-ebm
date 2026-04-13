@@ -1419,3 +1419,4 @@ python/ |
 | 2026-04-13 22:42 UTC | Exp 262: Live calibration corpus for PredictiveVer | SKIP | Pre-tests failing, self-heal failed: 8 failed, 81 passed in 3.41s |
 | 2026-04-13 22:46 UTC | Exp 263: Calibrate PredictiveVerifier and run cali | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
 | 2026-04-13 22:47 UTC | Exp 262: Live calibration corpus for PredictiveVer | OK | Deliverable already exists in repo |
+| 2026-04-13 22:50 UTC | Exp 263: Calibrate PredictiveVerifier and run cali | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
