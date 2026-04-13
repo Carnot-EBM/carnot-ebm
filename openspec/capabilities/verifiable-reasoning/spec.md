@@ -1535,6 +1535,45 @@ The same workflow shall write `results/experiment_244_results.json`, where:
 **And** a gain in secondary metrics alone does not get reported as the primary
   milestone win when held-out task gain is absent
 
+### REQ-VERIFY-058: Solver-Routed Formal Claim Verification
+
+The repository shall provide a formal claim verifier in
+`python/carnot/pipeline/formal_claim_verifier.py`, where:
+- the verifier accepts a typed claim with at least `claim_id`, `claim_text`,
+  `candidate_solver_route`, `formalization_status`, `relation_type`,
+  `operands`, and `target` fields and routes it to a deterministic checker
+- supported solver routes are `arithmetic`, `comparison`, `cardinality`,
+  `set_membership`, and `boolean_entailment`; any other route or any claim
+  whose `formalization_status` is not `formalized` receives an explicit
+  `abstain` verdict rather than a heuristic guess
+- each route executes a deterministic, side-effect-free check using only the
+  normalized fields present in the claim; no hidden chain-of-thought or
+  external model calls are required
+- the verifier returns a structured `FormalClaimVerdict` for each claim
+  containing: `claim_id`, `verdict` (`supported`/`violated`/`abstain`),
+  `route` (the solver route selected or `abstain`), `failure_detail`
+  (machine-readable localization of the specific failed operand, bound, or
+  relation when `verdict == violated`), and `run_date`
+- the verifier supports batch input producing a `FormalClaimBatchResult` that
+  records all per-claim verdicts, aggregate counts by verdict and route, and
+  deterministic JSON serialization
+- all verdict, route, and failure-detail fields use string literals drawn from
+  a fixed closed vocabulary so downstream tools can rely on exact string
+  equality without fragile parsing
+
+### REQ-VERIFY-059: Formal Claim Verifier Pipeline Integration
+
+The same module shall integrate additively into `VerifyRepairPipeline`, where:
+- `VerifyRepairPipeline` exposes a `verify_formal_claims` entry point that
+  accepts a list of typed claim dicts and returns a `FormalClaimBatchResult`
+- the entry point does not change the existing `verify()` behavior or break
+  any current caller
+- `VerificationResult` optionally carries a `formal_claims` field holding the
+  `FormalClaimBatchResult` when the entry point was invoked
+- the `FormalClaimBatchResult` supports deterministic `to_dict()` / `to_json()`
+  serialization with sort-key ordering so two runs on the same input produce
+  bit-identical JSON output
+
 ### SCENARIO-VERIFY-063: Live Claims Normalize Conservatively Instead Of Guessing
 
 **Given** checked-in live semantic and prompt-side traces from Exp 235 and
@@ -1623,4 +1662,6 @@ The same workflow shall write `results/experiment_244_results.json`, where:
 | REQ-VERIFY-055 | Not Started | Implemented | Exp 241 summary/comparison tests + artifact refresh |
 | REQ-VERIFY-056 | Not Started | Implemented | Exp 244 formal-claim corpus tests |
 | REQ-VERIFY-057 | Not Started | Implemented | Exp 244 summary/provenance tests + artifact refresh |
+| REQ-VERIFY-058 | Not Started | Implemented | Formal claim verifier route + abstain + serialization tests |
+| REQ-VERIFY-059 | Not Started | Implemented | Formal claim verifier pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

@@ -57,6 +57,11 @@ from carnot.pipeline.errors import (
     VerificationError,
 )
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
+from carnot.pipeline.formal_claim_verifier import (
+    FormalClaimBatchResult,
+    FormalClaimVerifier,
+    normalize_claim,
+)
 from carnot.pipeline.semantic_grounding import SemanticGroundingVerifier
 from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2
 from carnot.pipeline.structured_reasoning import StructuredReasoningController
@@ -676,6 +681,39 @@ class VerifyRepairPipeline:
         except Exception as exc:
             logger.warning("Semantic verifier v2 degraded: %s", exc)
             return None
+
+    def verify_formal_claims(
+        self,
+        raw_claims: list[dict[str, object]],
+    ) -> FormalClaimBatchResult:
+        """Normalize and verify a list of raw formal-claim dicts.
+
+        This is an additive entry point that does not affect the existing
+        ``verify()`` or ``verify_and_repair()`` paths.  Callers that need
+        solver-routed verification of typed claims from the Exp 244 corpus
+        (or any corpus following the same schema) can call this method
+        independently.
+
+        Each claim dict is normalized into a typed FormalClaim and dispatched
+        to the narrowest deterministic checker covering its
+        ``candidate_solver_route``.  Claims that are not safely formalizable
+        receive an explicit ``'abstain'`` verdict.
+
+        Args:
+            raw_claims: List of claim dicts with at least ``claim_id``,
+                ``candidate_solver_route``, ``formalization_status``,
+                ``relation_type``, ``operands``, ``target``, and
+                ``bound_variables`` keys.
+
+        Returns:
+            FormalClaimBatchResult with per-claim verdicts, aggregate counts
+            by verdict and route, and deterministic JSON serialization.
+
+        Spec: REQ-VERIFY-059
+        """
+        verifier = FormalClaimVerifier()
+        claims = [normalize_claim(raw) for raw in raw_claims]
+        return verifier.verify_batch(claims)
 
     def verify(
         self,

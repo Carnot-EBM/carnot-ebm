@@ -1,5 +1,18 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 VERIFY-058 Formal Claim Verifier
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T13:54:03Z | 2026-04-13T14:01:34Z | Formal claim verifier: added REQ-VERIFY-058/059 to spec, wrote 59 tests (test-first), implemented `formal_claim_verifier.py` with arithmetic/comparison/cardinality/set_membership/boolean_entailment routes + explicit abstain, integrated `verify_formal_claims` into `VerifyRepairPipeline` additively. All 59 tests pass. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
 ## Session: 2026-04-13 VERIFY-039 Learned Self-Learning Policy Compiler
 
 ### Turn Log
