@@ -1387,3 +1387,5 @@ python/ |
 | 2026-04-13 08:56 UTC | Exp 241: Chronological self-learning replay v2 | OK | Deliverable already exists in repo |
 | 2026-04-13 09:21 UTC | Exp 242: KV260 host / overlay round-trip benchmark | OK | Deliverable already exists in repo |
 | 2026-04-13 10:00 UTC | Exp 243: Sampler-guided repair reranking benchmark | OK | Deliverable already exists in repo |
+| 2026-04-13 10:35 UTC | Plan milestone 2026.04.18 | OK | 14 tasks proposed |
+| 2026-04-13 10:36 UTC | Milestone 2026.04.18 activated | OK | 14 tasks queued |
