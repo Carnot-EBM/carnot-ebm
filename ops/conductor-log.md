@@ -1369,3 +1369,4 @@ python/ |
 | 2026-04-13 06:11 UTC | Exp 237: Spec-aware code verifier and repair polic | FAIL | Codex CLI error: e RuntimeError('boom')\n",
 +        _PROMPT,
 +        "sort_ |
+| 2026-04-13 06:11 UTC | Exp 237: Spec-aware code verifier and repair polic | OK | Deliverable already exists in repo |
