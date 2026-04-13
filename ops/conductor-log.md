@@ -1363,3 +1363,4 @@ python/ |
 | 2026-04-13 05:02 UTC | Exp 235: Live GSM8K semantic benchmark v2 | OK | =========== 2169 passed, 1 skipped, 22 warnings in 87.35s (0:01:27) ============ |
 | 2026-04-13 05:31 UTC | Exp 236: Code intent / spec corpus from live Human | FAIL | Codex CLI error:  sys.argv = argv_before
 +        monkeypatch.delenv("CARNOT_ |
+| 2026-04-13 05:31 UTC | Exp 236: Code intent / spec corpus from live Human | OK | Deliverable already exists in repo |
