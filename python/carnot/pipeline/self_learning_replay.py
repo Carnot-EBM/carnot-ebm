@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from carnot.pipeline.case_memory import CaseMemory, CaseQuery, CaseRecord
 from carnot.pipeline.live_trace_memory import (
     _extract_exp219_events,
     _extract_exp220_events,
@@ -107,6 +108,8 @@ class _Decision:
     support_models: tuple[str, ...] = ()
     candidate_error_types: tuple[str, ...] = ()
     matched_error_types: tuple[str, ...] = ()
+    candidate_case_keys: tuple[str, ...] = ()
+    matched_case_keys: tuple[str, ...] = ()
 
 
 def get_repo_root() -> Path:
@@ -329,6 +332,7 @@ def _memory_decision(
     tracker: ConstraintTracker,
     observed_types: dict[str, _ObservedTypeStats],
     observed_patterns: dict[tuple[str, str], _ObservedPatternStats],
+    case_memory: CaseMemory | None = None,
     memory_min_support: int,
 ) -> _Decision:
     candidates = _memory_candidates(
@@ -342,6 +346,12 @@ def _memory_decision(
     matched = tuple(
         error_type for error_type in candidate_error_types if error_type in case.error_types
     )
+    case_matches = _case_matches_for_replay_case(
+        case,
+        case_memory=case_memory,
+        min_support=memory_min_support,
+    )
+    candidate_case_keys = tuple(match.entry.key.fingerprint for match in case_matches)
     if tracker_decision.use_repair:
         return _Decision(
             use_repair=True,
@@ -349,24 +359,41 @@ def _memory_decision(
             support_models=tracker_decision.support_models,
             candidate_error_types=candidate_error_types,
             matched_error_types=matched,
+            candidate_case_keys=candidate_case_keys,
+            matched_case_keys=candidate_case_keys,
         )
     if not matched:
+        if candidate_case_keys:
+            case_support_models = tuple(
+                sorted({match.entry.key.model_name for match in case_matches})
+            )
+            return _Decision(
+                use_repair=True,
+                reason="case_memory_reuse",
+                support_models=case_support_models,
+                candidate_error_types=candidate_error_types,
+                candidate_case_keys=candidate_case_keys,
+                matched_case_keys=candidate_case_keys,
+            )
         return _Decision(
             use_repair=False,
             reason="no_memory_match",
             candidate_error_types=candidate_error_types,
+            candidate_case_keys=candidate_case_keys,
         )
-    support_models: set[str] = set()
+    matched_support_models: set[str] = set()
     for error_type in matched:
         stats = observed_patterns.get((case.domain, error_type))
         if stats is not None:
-            support_models.update(stats.source_models)
+            matched_support_models.update(stats.source_models)
     return _Decision(
         use_repair=True,
         reason="memory_reuse",
-        support_models=tuple(sorted(support_models)),
+        support_models=tuple(sorted(matched_support_models)),
         candidate_error_types=candidate_error_types,
         matched_error_types=matched,
+        candidate_case_keys=candidate_case_keys,
+        matched_case_keys=candidate_case_keys,
     )
 
 
@@ -382,7 +409,7 @@ def _record_strategy_outcome(
     overall["n_success"] += int(success)
     overall["false_positives"] += int(decision.use_repair and not case.actual_error)
     overall["n_repairs_used"] += int(decision.use_repair)
-    if decision.reason == "memory_reuse":
+    if decision.reason in {"memory_reuse", "case_memory_reuse"}:
         overall["helpful_memory_reuse_events"] += int(success and not case.baseline_success)
     if strategy["name"] == "tracker_plus_memory":
         overall["retrieval_candidate_events"] += int(bool(decision.candidate_error_types))
@@ -500,6 +527,39 @@ def _description_for_error_type(case: ReplayCase, error_type: str) -> str:
     return error_type
 
 
+def _case_record_for_replay_case(case: ReplayCase) -> CaseRecord:
+    confidence = 0.99 if case.actual_error and case.detected else 0.7 if case.detected else 0.45
+    return CaseRecord.normalize(
+        benchmark=case.benchmark,
+        benchmark_slice=f"{case.benchmark}/{case.domain}",
+        model_name=case.model_name,
+        case_id=case.case_id,
+        violation_types=case.error_types,
+        prompt_text="",
+        description_texts=case.descriptions,
+        baseline_success=case.baseline_success,
+        repair_success=case.repair_success,
+        confidence=confidence,
+        source_experiment=case.source_experiment,
+        verifier_path="self_learning_replay",
+    )
+
+
+def _case_matches_for_replay_case(
+    case: ReplayCase,
+    *,
+    case_memory: CaseMemory | None,
+    min_support: int,
+) -> list[Any]:
+    if case_memory is None or not case.detected:
+        return []
+    query = CaseQuery.from_record(
+        _case_record_for_replay_case(case),
+        preferred_repair_outcome="improved",
+    )
+    return case_memory.retrieve(query, limit=3, min_support=min_support)
+
+
 def run_replay_cases(
     cases: list[ReplayCase],
     *,
@@ -521,6 +581,7 @@ def run_replay_cases(
 
     tracker = ConstraintTracker()
     memory = ConstraintMemory()
+    case_memory = CaseMemory()
     observed_types: dict[str, _ObservedTypeStats] = {}
     observed_patterns: dict[tuple[str, str], _ObservedPatternStats] = {}
 
@@ -610,6 +671,7 @@ def run_replay_cases(
                 tracker=tracker,
                 observed_types=observed_types,
                 observed_patterns=observed_patterns,
+                case_memory=case_memory,
                 memory_min_support=memory_min_support,
             )
 
@@ -659,6 +721,8 @@ def run_replay_cases(
                                 tracker_plus_memory.candidate_error_types
                             ),
                             "matched_error_types": list(tracker_plus_memory.matched_error_types),
+                            "candidate_case_keys": list(tracker_plus_memory.candidate_case_keys),
+                            "matched_case_keys": list(tracker_plus_memory.matched_case_keys),
                             "final_success": case.success_for(tracker_plus_memory.use_repair),
                         },
                     },
@@ -695,6 +759,7 @@ def run_replay_cases(
                 )
                 pattern_stats.repair_harms += int(case.baseline_success and not case.repair_success)
                 pattern_stats.source_models.add(case.model_name)
+            case_memory.record(_case_record_for_replay_case(case))
 
     for strategy in strategies.values():
         _normalise_strategy(strategy)

@@ -13,6 +13,15 @@ from carnot.pipeline.agentic import (
     TrackedFact,
     propagate,
 )
+from carnot.pipeline.case_memory import (
+    CaseEntry,
+    CaseKey,
+    CaseMatch,
+    CaseMemory,
+    CaseProvenance,
+    CaseQuery,
+    CaseRecord,
+)
 from carnot.pipeline.code_learning import (
     CodeVerificationTrace,
     LearningCurvePoint,
@@ -113,6 +122,13 @@ __all__ = [
     "AtomicClaim",
     "AutoExtractor",
     "CarnotError",
+    "CaseEntry",
+    "CaseKey",
+    "CaseMatch",
+    "CaseMemory",
+    "CaseProvenance",
+    "CaseQuery",
+    "CaseRecord",
     "ConstraintMemory",
     "ConstraintState",
     "CodeVerificationTrace",
