@@ -1355,3 +1355,4 @@ E   ImportError: cannot impor |
 | 2026-04-13 00:32 UTC | Exp 231: Update all documentation with PBT results | OK | =========== 2137 passed, 1 skipped, 22 warnings in 92.42s (0:01:32) ============ |
 | 2026-04-13 01:51 UTC | Plan milestone 2026.04.17 | OK | 12 tasks proposed |
 | 2026-04-13 01:52 UTC | Milestone 2026.04.17 activated | OK | 12 tasks queued |
+| 2026-04-13 02:42 UTC | Exp 232: Semantic verifier calibration corpus from | OK | =========== 2144 passed, 1 skipped, 22 warnings in 88.89s (0:01:28) ============ |
