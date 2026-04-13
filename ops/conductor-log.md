@@ -1364,3 +1364,8 @@ python/ |
 | 2026-04-13 05:31 UTC | Exp 236: Code intent / spec corpus from live Human | FAIL | Codex CLI error:  sys.argv = argv_before
 +        monkeypatch.delenv("CARNOT_ |
 | 2026-04-13 05:31 UTC | Exp 236: Code intent / spec corpus from live Human | OK | Deliverable already exists in repo |
+| 2026-04-13 06:11 UTC | Exp 237: Spec-aware code verifier and repair polic | FAIL | Codex CLI error: ] is True
++    assert status_by_clause[("postconditions", "e |
+| 2026-04-13 06:11 UTC | Exp 237: Spec-aware code verifier and repair polic | FAIL | Codex CLI error: e RuntimeError('boom')\n",
++        _PROMPT,
++        "sort_ |
