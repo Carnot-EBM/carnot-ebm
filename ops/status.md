@@ -4,6 +4,11 @@
 
 ## What's Working
 
+### Public Documentation Refresh (Exp 231)
+- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, and `docs/index.html` now report the latest live PBT results and hardware progress with explicit provenance labels instead of implying every checked-in artifact is a live benchmark. Public-facing counts now read **228+** experiments, **11** live GPU artifacts, **3** simulated artifacts, **66** unverified artifacts, and **1** software-model artifact.
+- The code-verification story is now honest about both sides of the current PBT evidence: **Exp 226** remains the strongest live result at **11.6% -> 14.6%** on the full **164**-problem HumanEval benchmark, while **Exp 227** is the same-cohort Qwen transfer check that stays flat at **23.3% -> 23.3%** but still detects **17/23** wrong baselines and catches **2** weak-harness misses.
+- The hardware path is now visible in the public docs. The new copy links `docs/fpga-ising-design.md`, summarizes the KV260-class sparse **4096**-spin design, and labels **Exp 228** explicitly as **software simulation** rather than a synthesized FPGA throughput result.
+
 ### Packaged Code Verification For End Users (VERIFY-031)
 - `python/carnot/pipeline/code_verification.py` now provides the standalone `verify_code()` wrapper under `REQ-CODE-019`, and `python/carnot/pipeline/__init__.py` exports it directly from `carnot.pipeline`. The API reuses the additive generated-code path, falls back to source-as-prompt when no separate prompt is provided, and carries the additive `pbt_summary` in the returned `VerificationResult.certificate`.
 - `python/carnot/cli.py` now adds `carnot verify-code` under `REQ-CODE-020`. The packaged CLI accepts a source file plus `--func`, optional `--prompt-file` / `--tests-file`, and `--pbt`, then prints pass/fail, constraint counts, PBT summary fields, and repair feedback in terminal-friendly output.
@@ -98,8 +103,8 @@
 
 ### Research Reporting Provenance (Exp 209)
 - `scripts/experiment_209_cleanup.py` now audits every `results/experiment_*_results.json` artifact and adds a top-level `result_header` plus machine-readable `result_provenance` summary without deleting any historical data.
-- Current result inventory contains **80** `results/experiment_*_results.json` artifacts, with **11** explicit `live_gpu` artifacts, **3** simulation-mode artifacts, and **66** still missing explicit live inference provenance.
-- `README.md`, `docs/technical-report.md`, and `docs/index.html` now separate validated live evidence from simulated or unverified results. The strongest current live HumanEval code artifact is still **Exp 226** on the full **164**-problem Gemma4-E4B-it cohort, while **Exp 227** now adds the seeded **30**-problem Qwen3.5-0.8B transfer check on the same Exp 208 slice, **Exp 220** remains the paired two-model property-verifier comparison, and **Exp 208** remains the earlier Gemma single-model baseline. The large GSM8K / adversarial gains from **Exp 161** and **Exp 178** are still marked as simulated.
+- Current result inventory contains **81** `results/experiment_*_results.json` artifacts, with **11** explicit `live_gpu` artifacts, **3** simulation-mode artifacts, **66** still missing explicit live inference provenance, and **1** software-model artifact (`software_simulation`, Exp 228).
+- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, and `docs/index.html` now separate validated live evidence from simulated, unverified, or software-model results. The strongest current live HumanEval code artifact is still **Exp 226** on the full **164**-problem Gemma4-E4B-it cohort, **Exp 227** adds the seeded **30**-problem Qwen3.5-0.8B transfer check on the same Exp 208 slice, **Exp 220** remains the paired two-model property-verifier comparison, and **Exp 228** is preserved but labeled as a hardware software-model artifact rather than a live benchmark. The large GSM8K / adversarial gains from **Exp 161** and **Exp 178** are still marked as simulated.
 
 ### Constraint Extraction Research Scan (Exp 210)
 - `scripts/experiment_210_research_scan.py` now writes `results/experiment_210_results.json` and refreshes dated Exp 210 sections in `research-references.md` and `research-studying.md` without duplicating prior scan output.

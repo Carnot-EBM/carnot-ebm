@@ -2,9 +2,9 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All reported results are from **live GPU inference** — no simulated runs. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines; those have been removed from reporting.
+Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All headline benchmark results below are from **live GPU inference**. The repository also preserves simulated, unverified, and software-model artifacts for provenance, and labels them explicitly instead of folding them into headline claims.
 
-**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. Self-learning reduces false positives by 86% (Exp 223). Typed IR constraints give +4.9pp on Gemma4 (Exp 221).
+**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). PBT detects 99.3% of wrong code. The latest same-cohort cross-model check (Exp 227) keeps Qwen3.5-0.8B flat at **23.3% -> 23.3%** while still catching **2** official-test misses beyond the weak harness. Self-learning reduces false positives by 86% (Exp 223). Typed IR constraints give +4.9pp on Gemma4 (Exp 221).
 
 **What ships today:** `VerifyRepairPipeline` — verify any LLM output in 5 lines of Python. CLI (`carnot pipeline verify`), MCP server for Claude Code, 5 integration examples, full API docs. Constraint extraction across arithmetic, code, logic, and natural language domains.
 
@@ -76,19 +76,34 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (226+ experiments, 16 milestones)
+## Key Results (228+ experiments, 16 milestones)
 
-All results below are from **live GPU inference** — no simulated runs. Earlier milestones produced simulated results that appeared positive but were artifacts of unrealistic baselines; those have been removed from reporting. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
+All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
+
+### Simulation vs Reality
+
+Provenance snapshot: **11 live GPU artifacts**, **3 simulated artifacts**, **66 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+## PBT Verification
+
+Carnot's strongest live evidence is now the Hypothesis-backed code-verification path. The full Gemma run is positive and statistically significant; the seeded Qwen transfer check is intentionally honest about a flat repair delta while still showing additive verifier signal.
+
+| Live PBT artifact | Baseline | +Carnot | Added verifier signal | Experiment |
+|-------------------|----------|---------|-----------------------|------------|
+| Full HumanEval 164 (Gemma4) | 11.6% | 14.6% | 144/145 wrong baselines detected; 6 official-test misses caught; 5 repairs | Exp 226 |
+| Seeded HumanEval 30 (Qwen3.5-0.8B) | 23.3% | 23.3% | 17/23 wrong baselines detected; 2 official-test misses caught; 0 repairs | Exp 227 |
+| Dual-model HumanEval 50 | 18.0% / 10.0% | 20.0% / 12.0% | 144/145 wrong-code detections across the paired slice | Exp 220 |
 
 ### Code verification (strongest domain)
 
 | Benchmark | Baseline | +Carnot | Delta | Experiment |
 |-----------|----------|---------|-------|------------|
 | HumanEval 164 problems (PBT) | 11.6% | 14.6% | **+3.0pp** [+0.6, +6.1] CI | Exp 226 |
+| HumanEval 30 problems (PBT, seeded Qwen cohort) | 23.3% | 23.3% | +0.0pp; 2 harness misses caught | Exp 227 |
 | HumanEval 50 problems (PBT) | 18.0% / 10.0% | 20.0% / 12.0% | +2.0pp both models | Exp 220 |
 | HumanEval 30 problems (execution) | 16.7% | 20.0% | +3.3pp | Exp 208 |
 
-PBT detects 99.3% of wrong code (144/145). Property-based testing catches 6 bugs that execution-only misses.
+PBT detects 99.3% of wrong code (144/145) on the paired live slice and catches 6 official-test misses on the full Gemma run. Exp 227 shows the same verifier still adds signal cross-model even when the repair loop itself stays flat.
 
 ### Constraint verification (math/instruction)
 
@@ -183,6 +198,10 @@ See [docs/usage-guide.md](docs/usage-guide.md) for detailed setup and usage inst
 All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), so algorithms written against the interface work with any tier.
 
 **When to use which:** KAN is the default for constraint verification (most accurate per parameter). Ising is for real-time guided decoding and hardware deployment (fastest sampling, maps to physical p-bits). They complement each other — KAN for accuracy, Ising for speed.
+
+### Hardware Path
+
+The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim.
 
 ## Architecture
 
@@ -304,6 +323,7 @@ Papers and resources that have informed Carnot's design and direction.
 
 ### Hardware
 
+- [FPGA Ising design](docs/fpga-ising-design.md) — KV260-class sparse **4,096-spin** overlay contract with `FPGAIsingSampler`, `SoftwareFPGAOverlay`, and AXI-Lite upload/trigger/readback semantics. Provenance: **software simulation** (Exp 228), not a live hardware-speed claim.
 - [Extropic TSU/XTR-0](https://extropic.ai/writing/inside-x0-and-xtr-0) — Thermodynamic Sampling Unit for native EBM inference in hardware
 
 ## Pre-trained Models
