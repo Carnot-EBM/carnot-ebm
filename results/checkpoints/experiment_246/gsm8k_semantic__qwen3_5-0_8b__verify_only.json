@@ -1545,6 +1545,46 @@
       "total_tokens": 196,
       "flagged": false,
       "accepted_correct": false
+    },
+    "gsm8k-998": {
+      "case_id": "gsm8k-998",
+      "mode": "verify_only",
+      "question": "Dylan attended a wedding where there were 100 guests in the reception. Each guest brought a plate of 15 cookies. The bride decided to give 1/2 of the cookies to the church next door as a thank you for helping in the wedding reception. If each person in the church next door got 15 cookies, how many people were in the church next door?",
+      "ground_truth": 50,
+      "response": "To solve this problem, we will break it down into logical steps:\n\n### Step 1: Calculate the total number of cookies distributed\nThe bride gave 1/2 of the cookies to the church next door.\n*   Total cookies per guest = 15\n*   Number of guests = 100\n*   Total cookies distributed = $15 \\times 100 = 1,500$ cookies.\n\n### Step 2: Determine the number of cookies each person in the church next door received\nThe problem states that each person in the church next door got 15 cookies.\n*   Cookies per person = 15\n\n### Step 3: Calculate the number of people in the church next door\nWe need to find how many people received 15 cookies out of the total 1,500 cookies.\n*   Number of people = $\\frac{\\text{Total cookies distributed}}{\\text{Cookies per person}}$\n*   Number of people = $\\frac{1,500}{15}$\n\n### Step 4: Perform the division\n$$1,500 \\div 15 = 100$$\n\n### Conclusion\nThere were",
+      "predicted": 100,
+      "correct": false,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 29.232,
+      "prompt_tokens": 73,
+      "response_tokens": 154,
+      "total_tokens": 227,
+      "flagged": false,
+      "accepted_correct": false
+    },
+    "gsm8k-863": {
+      "case_id": "gsm8k-863",
+      "mode": "verify_only",
+      "question": "Gretchen has some coins. There are 30 more gold coins than silver coins. If she had 70 gold coins, how many coins did Gretchen have in total?",
+      "ground_truth": 110,
+      "response": "To solve this problem, we will break it down into logical steps based on the information provided.\n\n### Step 1: Identify the given values\n*   **Total number of coins**: 30\n*   **Difference in types**: There are 30 more gold coins than silver coins.\n*   **Number of gold coins**: 70\n\n### Step 2: Determine the number of silver coins\nWe know that the difference between the number of gold coins and silver coins is 30.\n*   Let $G$ be the number of gold coins.\n*   Let $S$ be the number of silver coins.\n*   We are given: $G = 70$ and $G - S = 30$.\n\nTo find $S$, we rearrange the equation:\n$$S = G - 30$$\n$$S = 70 - 30$$\n$$S = 40$$\n\nSo, Gretchen has 40 silver coins.\n\n### Step 3: Calculate the total number of coins\nThe total number of coins is the sum of the gold coins and the silver coins.\n*   Total = Gold + Silver\n*   Total = $7",
+      "predicted": 7,
+      "correct": false,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 27.55,
+      "prompt_tokens": 36,
+      "response_tokens": 166,
+      "total_tokens": 202,
+      "flagged": false,
+      "accepted_correct": false
     }
   }
 }
