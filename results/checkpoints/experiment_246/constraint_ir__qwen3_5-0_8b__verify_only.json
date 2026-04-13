@@ -504,6 +504,103 @@
       "response_tokens": 18,
       "total_tokens": 49,
       "accepted_correct": false
+    },
+    "exp211-code-slugify-2": {
+      "case_id": "exp211-code-slugify-2",
+      "mode": "verify_only",
+      "response": "```python\ndef slugify_filename(name: str) -> str:\n    \"\"\"\n    Converts a filename to a slug by:\n    - Lowercasing ASCII letters\n    - Keeping digits\n    - Converting spaces to dashes\n    - Stripping leading and trailing dashes\n    - Dropping other punctuation\n    \"\"\"\n    # Convert to lowercase\n    name = name.lower()\n    \n    # Replace spaces with a single dash\n    name = name.replace(\" \", \"-\")\n    \n    # Strip leading and trailing dashes\n    name = name.strip(\"-\")\n    \n    # Drop other punctuation (keep only letters, digits, and hyphens)\n    name = re.sub(r\"[^a-z0-9-]\", \"\", name)\n    \n    return name\n```\n\n**Example usage:**\n```python\nprint(slugify_filename(\"my_file.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'\nprint(slugify_filename(\"My File.pdf\"))  # 'my_file.pdf'",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 32.282,
+      "prompt_tokens": 24,
+      "response_tokens": 105,
+      "total_tokens": 129,
+      "accepted_correct": true
+    },
+    "exp211-instruction-rewrite-2": {
+      "case_id": "exp211-instruction-rewrite-2",
+      "mode": "verify_only",
+      "response": "The vendor delay is a total mess, but we have a backup supplier ready.",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "observed=0.0 not in [25.0, 32.0]",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c3",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c4",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        },
+        {
+          "claim_id": "c5",
+          "failure_detail": null,
+          "route": "abstain",
+          "run_date": "20260413",
+          "verdict": "abstain"
+        }
+      ],
+      "n_claims": 4,
+      "n_supported": 2,
+      "n_violated": 1,
+      "n_abstained": 1,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 3.225,
+      "prompt_tokens": 39,
+      "response_tokens": 14,
+      "total_tokens": 53,
+      "accepted_correct": false
+    },
+    "exp211-code-dedupe-3": {
+      "case_id": "exp211-code-dedupe-3",
+      "mode": "verify_only",
+      "response": "```python\ndef dedupe_tuples(items: list[tuple[int, int]]) -> list[tuple[int, int]]:\n    \"\"\"\n    Remove repeated tuples while keeping the first occurrence of each tuple in order.\n\n    Parameters\n    ----------\n    items : list[tuple[int, int]]\n        List of tuples to deduplicate.\n\n    Returns\n    -------\n    list[tuple[int, int]]\n        List of unique tuples, preserving the order of first appearance.\n    \"\"\"\n    seen = set()\n    result = []\n    for item in items:\n        key = tuple(item)\n        if key not in seen:\n            seen.add(key)\n            result.append(item)\n    return result\n```\n\nExample usage:\n\n```python\nitems = [(1, 2), (1, 2), (3, 4), (2, 3), (1, 2)]\ndeduped = dedupe_tuples(items)\nprint(deduped)\n# Output: [(1, 2), (3, 4), (2, 3)]\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 27.629,
+      "prompt_tokens": 24,
+      "response_tokens": 99,
+      "total_tokens": 123,
+      "accepted_correct": true
+    },
+    "exp211-code-roman-3": {
+      "case_id": "exp211-code-roman-3",
+      "mode": "verify_only",
+      "response": "```python\ndef is_valid_roman(text: str) -> bool:\n    \"\"\"\n    Returns True only for uppercase Roman numerals in canonical subtractive notation.\n    Examples:\n        is_valid_roman(\"I\")  -> True\n        is_valid_roman(\"II\") -> True\n        is_valid_roman(\"III\") -> True\n        is_valid_roman(\"IV\")  -> True\n        is_valid_roman(\"V\")   -> True\n        is_valid_roman(\"IX\")  -> True\n        is_valid_roman(\"X\")   -> True\n        is_valid_roman(\"L\")   -> True\n        is_valid_roman(\"C\")   -> True\n        is_valid_roman(\"D\")   -> True\n        is_valid_roman(\"M\")   -> True\n        is_valid_roman(\"XV\")  -> True\n        is_valid_roman(\"LX\")  -> True\n        is_valid_roman(\"XC\")  -> True\n        is_valid_roman(\"XL\")  -> True\n        is_valid_roman(\"CD\")  -> True\n        is_valid_roman(\"CM\")  -> True\n        is_valid_roman(\"IXI\") -> False  (",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 29.463,
+      "prompt_tokens": 17,
+      "response_tokens": 74,
+      "total_tokens": 91,
+      "accepted_correct": true
     }
   }
 }
