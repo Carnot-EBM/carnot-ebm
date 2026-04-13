@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Technical Report - Carnot: Energy-Based Verification for LLM Output</title>
-  <meta name="description" content="Technical report: 228+ experiments across 22 milestones, +3.0pp full HumanEval PBT, 81 audited artifacts, and packaged code verification via API, CLI, and MCP.">
+  <meta name="description" content="Technical report: 228+ experiments across 22 milestones, +3.0pp full HumanEval PBT, 85 audited artifacts, and packaged code verification via API, CLI, and MCP.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -166,7 +166,7 @@
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
 <strong>License:</strong> Apache 2.0</p>
 <p><strong>Current headline live results:</strong> HumanEval PBT <strong>11.6% -&gt; 14.6%</strong> (+3.0pp, Exp 226), seeded Qwen PBT <strong>23.3% -&gt; 23.3%</strong> with <strong>17/23</strong> wrong baselines detected and <strong>2</strong> harness misses caught (Exp 227), typed constraints <strong>61.7% -&gt; 66.7%</strong> (+4.9pp, Exp 221), and held-out replay <strong>32.74% -&gt; 32.74%</strong> with false positives <strong>7 -&gt; 1</strong> (Exp 223).</p>
-<p><strong>Current public snapshot:</strong> <strong>228+</strong> experiments across <strong>22</strong> research milestones, <strong>84</strong> audited result artifacts (<strong>13</strong> live GPU, <strong>3</strong> simulated, <strong>67</strong> unverified, <strong>1</strong> software-model), and <strong>2,196</strong> collected Python/integration tests. The latest documented full Python validation remains <strong>2,137 passed, 1 skipped</strong> at <strong>100.00%</strong> coverage.</p>
+<p><strong>Current public snapshot:</strong> <strong>228+</strong> experiments across <strong>22</strong> research milestones, <strong>85</strong> audited result artifacts (<strong>13</strong> live GPU, <strong>3</strong> simulated, <strong>68</strong> unverified, <strong>1</strong> software-model), and <strong>2,196</strong> collected Python/integration tests. The latest documented full Python validation remains <strong>2,137 passed, 1 skipped</strong> at <strong>100.00%</strong> coverage.</p>
 <hr />
 <h2>Abstract</h2>
 <p>We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through a public research record that now spans <strong>228+ experiments</strong> across <strong>22 research milestones</strong>, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% wrong-code detection, held-out replay cutting false positives <strong>7 -&gt; 1</strong> at flat <strong>32.74%</strong> success, a <strong>662</strong>-event live trace-memory corpus with <strong>230</strong> accepted patterns, a <strong>164</strong>-trace PBT learning corpus, a seeded Qwen transfer check that still detects <strong>17/23</strong> wrong baselines and catches <strong>2</strong> weak-harness misses at flat pass@1, and packaged end-user code verification via Python API, CLI, and MCP. All headline benchmark numbers remain live inference only.</p>
@@ -255,7 +255,7 @@
 </tbody>
 </table>
 <h3>Simulation vs Reality</h3>
-<p>Current provenance snapshot (2026-04-13): <strong>13 live GPU artifacts</strong>, <strong>3 simulated artifacts</strong>, <strong>67 unverified artifacts</strong>, and <strong>1 software-model artifact</strong>. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.</p>
+<p>Current provenance snapshot (2026-04-13): <strong>13 live GPU artifacts</strong>, <strong>3 simulated artifacts</strong>, <strong>68 unverified artifacts</strong>, and <strong>1 software-model artifact</strong>. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.</p>
 <h2>1. Introduction</h2>
 <h3>1.1 The Hallucination Problem</h3>
 <p>Large Language Models generate text by predicting the most probable next token. This produces fluent output but provides no mechanism to verify logical consistency, factual accuracy, or constraint satisfaction. When an LLM generates an incorrect early token, the error cascades irrecoverably through the remaining sequence.</p>

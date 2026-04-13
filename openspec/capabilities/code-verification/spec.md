@@ -277,6 +277,36 @@ users:
 - The examples use the packaged surfaces added by REQ-CODE-019,
   REQ-CODE-020, and REQ-CODE-021 rather than research-only scripts
 
+### REQ-CODE-023: Deterministic Explicit Code Spec Corpus From Benchmark Traces
+
+The repository shall provide a checked-in workflow that converts checked-in
+HumanEval-style benchmark cases into explicit code specs:
+- The corpus is generated from checked-in benchmark artifacts such as Exp 226
+  and Exp 227 rather than sampling live model outputs at generation time
+- Each row is keyed deterministically by task identity and carries explicit
+  `preconditions`, `postconditions`, `invariants`, `mutation_constraints`, and
+  `oracle_hints`
+- Derivation combines prompt intent, function signature, docstring examples,
+  official tests, and trace-backed verification evidence from the source
+  artifacts
+- When the same task appears in multiple source artifacts, the workflow merges
+  the task into one row while preserving per-trace provenance and observed
+  failure or repair evidence
+
+### REQ-CODE-024: Compact Schema And Provenance Summary For Code Specs
+
+The repository shall emit a compact, machine-readable schema and summary for
+the explicit code spec corpus:
+- Each corpus row includes the task id, entry point, grouped spec families,
+  normalized trace evidence, and provenance links back to the source benchmark
+  artifact(s)
+- The field layout and row ordering are deterministic for the same checked-in
+  inputs so later verifier code can consume the corpus directly
+- The workflow writes a companion summary artifact with counts by spec family
+  and by source trace, plus aggregate counts for observed failures,
+  official-test misses, and repaired traces
+- The summary records the output paths and source artifact set honestly
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -409,6 +439,20 @@ violates a prompt-implied property, when the packaged verification workflow
 verifies the candidate, applies a repair, and verifies again, then the initial
 candidate fails packaged verification and the repaired candidate verifies cleanly.
 
+### SCENARIO-CODE-020: Re-Running The Spec Corpus Generator Is Byte-Stable
+
+Given the same checked-in Exp 226 and Exp 227 source artifacts, when the
+explicit code-spec corpus workflow runs twice, then it emits the same ordered
+rows and the same summary counts without introducing nondeterministic field
+ordering or row ordering changes.
+
+### SCENARIO-CODE-021: Overlapping Traces Merge Into One Spec Row With Provenance
+
+Given a HumanEval task that appears in both Exp 226 and Exp 227, when the
+explicit code-spec corpus is built, then the task appears once in the corpus,
+its spec clauses preserve provenance links back to both source traces, and the
+summary counts still record both contributing traces.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -435,3 +479,5 @@ candidate fails packaged verification and the repaired candidate verifies cleanl
 | REQ-CODE-020 | Implemented |
 | REQ-CODE-021 | Implemented |
 | REQ-CODE-022 | Implemented |
+| REQ-CODE-023 | Implemented |
+| REQ-CODE-024 | Implemented |
