@@ -9,7 +9,7 @@
 
 **Current headline live results:** HumanEval PBT **11.6% -> 14.6%** (+3.0pp, Exp 226), seeded Qwen PBT **23.3% -> 23.3%** with **17/23** wrong baselines detected and **2** harness misses caught (Exp 227), typed constraints **61.7% -> 66.7%** (+4.9pp, Exp 221), and held-out replay **32.74% -> 32.74%** with false positives **7 -> 1** (Exp 223).
 
-**Current public snapshot:** **228+** experiments across **22** research milestones, **84** audited result artifacts (**13** live GPU, **3** simulated, **67** unverified, **1** software-model), and **2,196** collected Python/integration tests. The latest documented full Python validation remains **2,137 passed, 1 skipped** at **100.00%** coverage.
+**Current public snapshot:** **228+** experiments across **22** research milestones, **85** audited result artifacts (**13** live GPU, **3** simulated, **68** unverified, **1** software-model), and **2,196** collected Python/integration tests. The latest documented full Python validation remains **2,137 passed, 1 skipped** at **100.00%** coverage.
 
 ---
 
@@ -47,7 +47,7 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 
 ### Simulation vs Reality
 
-Current provenance snapshot (2026-04-13): **13 live GPU artifacts**, **3 simulated artifacts**, **67 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
+Current provenance snapshot (2026-04-13): **13 live GPU artifacts**, **3 simulated artifacts**, **68 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
 
 ## 1. Introduction
 
