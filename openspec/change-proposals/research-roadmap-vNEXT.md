@@ -1,50 +1,54 @@
-# Carnot Research Roadmap v22: Calibrated Verification, Spec-Grounded Code Repair, and Self-Learning
+# Carnot Research Roadmap v23: Formal Claim Verification, Process Integrity, and Predictive Self-Learning
 
-**Created:** 2026-04-12
-**Milestone:** 2026.04.17
-**Status:** Planned (activates when milestone 2026.04.16 completes)
-**Supersedes:** Milestone 2026.04.16 - "Scale What Works: PBT Code Verification, FPGA Ising, Production Path"
-**Informed by:** Exp 219, Exp 221, Exp 222, Exp 223, Exp 226, Exp 227, Exp 228, VERIFY-030, VERIFY-031, Exp 231
-**External inputs:** $V_1$ (2603.04304), MARCH (2603.24579), Semantic Energy (2508.14496), Weaver (OpenReview 2026), JSONSchemaBench (2501.10868), PSC grammar decoding (OpenReview 2026), solver-verifier self-play (2502.14948), formal spec synthesis (2601.12845), formal verification from prompts (2507.13290), T-SKM-Net (2512.10461), Matching Features, Not Tokens (2603.12248), Extropic hardware notes, Kona architecture notes
+**Created:** 2026-04-13
+**Milestone:** 2026.04.18
+**Status:** Planned (activates when milestone 2026.04.17 completes)
+**Supersedes:** Milestone 2026.04.17 - "Calibrated Verification, Spec-Grounded Code Repair, and Self-Learning"
+**Informed by:** Exp 235, Exp 238, Exp 241, Exp 242, Exp 243, VERIFY-038, VERIFY-039, VERIFY-040
+**External inputs:** VERGE (2601.20055), ReLoop (2602.15983), Scalable Connectivity for Ising Machines (2503.01177), Decomposing Large-Scale Ising Problems on FPGAs (2602.15985), OpenReview 2026 process-verification scan, Extropic writing / XTR-0 positioning, Kona architecture notes
 
-## What 2026.04.16 Proved
+## What 2026.04.17 Proved
 
 | Approach | Experiments | Finding |
 |----------|-------------|---------|
-| PBT code verification at full scale | 224, 226 | Code verification is still Carnot's strongest live result. On the full HumanEval contract, Gemma4-E4B-it improved from **19/164** to **24/164** (**+3.0pp**, 95% CI **+0.6pp** to **+6.1pp**) and PBT caught **6** official-test misses beyond the harness. |
-| Cross-model validation | 227 | The same verifier stack is not enough by itself. Qwen3.5-0.8B stayed flat at **7/30 -> 7/30** on the seeded Exp 208 cohort even while verify-only detected **17/23** wrong baselines and PBT found **2** weak-harness misses. |
-| Code-trace learning | VERIFY-030 / Exp 226 traces | There is real learning signal in live code traces, but it is concentrated in syntax and signature-robustness failures. Accepted repair transitions are sparse, so the next learning loop must target specific failure families rather than treating every violation equally. |
-| Packaging and product surface | VERIFY-031, 230, 231 | The code path is now productizable through API, CLI, MCP, and docs. That makes future verifier work on code doubly valuable: it advances research and improves a usable product surface. |
-| FPGA control plane | 228 | The KV260-oriented sampler contract, sparse upload format, and software overlay model are now stable enough to benchmark honestly, but there is still no board-level latency or throughput evidence. |
+| Calibrated semantic verification | 232-235 | Claim isolation and abstention improved observability and cut Qwen false positives (**7 -> 4**), but verify-only remained harmful on both target models and Gemma false positives worsened (**23 -> 26**). |
+| Explicit spec grounding for code | 236-238 | Spec-aware verification now composes cleanly with official tests and PBT, but the identical-stack live comparison is still only a **30-case** paired cohort and the lift remains modest and model-dependent. |
+| Case-based self-learning | 239-241 | Case memory and policy compilation raised retrieval precision from Exp 223's **5.8%** to roughly **40%+**, but the milestone's primary held-out gain criterion still failed: all replay strategies stayed flat at **34.48%** held-out success. |
+| Hardware-adjacent reranking | 242-243 | The KV260 path is still blocked at bring-up time, and sampler-backed reranking improved replay latency economics but produced **0.0** quality lift on saved repair candidates. |
 
-**The milestone-level conclusion:** Carnot now has one clearly working live lane: code verification. It also has the supporting pieces needed for the next step: a monitorable reasoning path, a live trace corpus, and a software-defined hardware interface. What it still lacks is precision on live semantic verification, spec grounding that transfers across both target models, and a self-learning loop that produces held-out task gains under a tight false-positive budget.
+**The milestone-level conclusion:** Carnot has now exhausted the "better calibration, richer retrieval, same verifier" path. To move toward the PRD vision, the next milestone must upgrade the verifier substrate itself, check process integrity rather than only outcomes, and turn self-learning into proactive behavior changes instead of better replay bookkeeping.
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: Live semantic verification is still not calibrated enough to trust
+### Gap 1: Live verifiable reasoning is still too heuristic on real instruction-tuned outputs
 
-Exp 219 solved parseability, not precision. Typed reasoning and structured output gave Carnot visibility into live GSM8K answers, but verify-only still harmed both target models because false positives outran the useful detections. Until Carnot can distinguish real semantic failures from harmless phrasing or decomposition variance, it does not satisfy the PRD's verifiable reasoning goal on instruction-tuned outputs.
+The semantic path can now parse and score live Qwen3.5-0.8B and Gemma4-E4B-it responses, but it still relies too heavily on scalar evidence aggregation over claims that were never fully formalized. Exp 235 showed that better calibration alone does not earn a safe verify-only path. Carnot still needs a stronger bridge from natural-language reasoning traces to deterministic checks.
 
-### Gap 2: Code verification works, but it is still weakly spec-grounded
+### Gap 2: Outcome correctness still hides invalid reasoning and repair processes
 
-PBT proved that code is the best current proving ground, but the current stack still leans on harness execution plus heuristically derived properties. The cross-model story is also not yet identical-stack: Gemma has the full positive result, Qwen has a seeded follow-up, and the next comparison needs a shared explicit spec layer so model differences are attributable instead of ambiguous.
+Spec-aware code verification is the strongest live lane, but it still mainly judges end states: official tests, PBT, and explicit specs. The current stack does not yet explicitly separate "correct answer by a valid process" from "correct answer for the wrong reason." The same problem applies to semantic reasoning traces. This is now the main credibility gap for small-model verification.
 
-### Gap 3: Continuous self-learning captures traces, but it does not yet improve future runs
+### Gap 3: Self-learning improves retrieval quality, not future task success
 
-Exp 222 and Exp 223 showed that Carnot can ingest live traces, mature patterns, and reduce false positives through tracker gating. They did not show held-out task improvement. The current memory is too coarse, retrieval is too weakly targeted, and the accelerator path for cheap repeated lookup is still only a software contract. The PRD's FR-11 requires more than remembering; it requires getting better from use.
+Exp 241 closed the loop on the current Tier 1 / Tier 2 design: better keys and compiled policies alone do not create held-out gains. To satisfy FR-11, Carnot needs a self-learning path that adds new constraints, predicts future violations early, and preserves a hardware acceleration story for repeated inference-speed updates.
 
-## Promising 2025-2026 Inputs Adopted in v22
+## Promising 2025-2026 Inputs Adopted in v23
 
-- **Claim-level self-verification over raw CoT trust**: $V_1$, MARCH, Semantic Energy, and Weaver all point toward small auditable claim sets, explicit self-check signals, and calibrated confidence rather than monolithic free-form reasoning judgments. That directly motivates Exp 232-235.
-- **Policy-gated structured output, not universal JSON**: JSONSchemaBench and PSC show that structured outputs help when the schema is minimal, the task fit is real, and retry cost is measured. That motivates Exp 233 rather than defaulting every task into strict JSON.
-- **Formal spec extraction as the bridge from code to reasoning**: recent work on solver-verifier self-play and formal spec generation suggests that Carnot should make prompt intent explicit before asking the verifier to reason about it. That motivates Exp 236-238.
-- **Case memory now, hardware-matched retrieval later**: T-SKM-Net plus the Extropic and Kona hardware updates reinforce a split design where retrieval and policy compilation are cheap on CPU today, but shaped so they can later map cleanly onto FPGA/TSU-style pattern matching. That motivates Exp 239-243.
+- **Formal claim routing over monolithic judging:** VERGE argues for typed symbolic claims, solver routing, and minimal correction subsets instead of coarse holistic reasoning scores. This directly motivates Exp 244-247.
+- **Process verification for small models:** the 2026 OpenReview process-verification thread reinforces that small models can land on correct answers with invalid intermediate reasoning. This motivates Exp 248-251.
+- **Behavioral verification instead of single-trace trust:** ReLoop shows that perturbation-based behavioral checks expose brittle but superficially correct solutions. This informs the next code-verification benchmark and process corpus.
+- **Hardware-friendly sparse connectivity, not dense wishful thinking:** recent FPGA Ising papers emphasize sparse copy-node compilation and hardware-aware decomposition. That supports shaping verifier workloads for sparse acceleration rather than spending another milestone on blocked overlay plumbing alone.
+- **Extropic and Kona still validate the direction, not the next bottleneck:** both continue to support Carnot's validity-layer architecture, but the immediate blocker is verifier quality on real traces, not a lack of yet another backend abstraction.
 
-## v22 Hypothesis
+## v23 Hypothesis
 
-If Carnot first calibrates live semantic verification, then grounds code verification in explicit specs, then compiles accepted fixes into case-based retrieval and policy updates, it should be able to produce its first honest held-out self-learning gain without changing model size or leaving the Qwen3.5-0.8B / Gemma4-E4B-it small-model regime.
+If Carnot replaces scalar semantic scoring with solver-routed formal claims, adds explicit process-integrity checks to both reasoning and code-repair paths, and upgrades self-learning from retrieval-only reuse to constraint addition plus predictive gating, it should be able to produce:
 
-## v22 Architecture: Calibrated Verifiers Feeding Case-Based Self-Learning
+1. its first non-harmful live verify-only reasoning result on at least one target small model,
+2. a stronger cross-model code-verification signal on Qwen3.5-0.8B and Gemma4-E4B-it, and
+3. its first honest held-out self-learning gain under a zero-extra-false-positive budget.
+
+## v23 Architecture: Solver-Routed Claims Feeding Process Verification and Predictive Learning
 
 ```
 Prompt / Benchmark Item
@@ -52,212 +56,235 @@ Prompt / Benchmark Item
         v
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ Output Contract Policy                                                      │
-│  Exp 233: free-form vs terse vs minimal JSON / grammar-gated JSON          │
-│  Goal: request only the structure that measurably helps verification       │
+│  existing terse / minimal JSON / grammar-gated routing                      │
+│  goal: request only the structure needed for formal claim or process checks │
 └───────────────────────────────┬──────────────────────────────────────────────┘
-                                │
-                 ┌──────────────┴──────────────┐
-                 v                             v
+                                |
+                                v
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ Typed Reasoning + Trace Emission                                             │
+│  existing typed reasoning IR, structured reasoning, code spec surfaces       │
+│  plus new formal claim corpus + process-integrity corpus                     │
+└───────────────┬───────────────────────────────┬──────────────────────────────┘
+                |                               |
+                v                               v
 ┌──────────────────────────────┐   ┌──────────────────────────────────────────┐
-│ Reasoning Claim Path         │   │ Code Intent / Spec Path                  │
-│  Exp 232 calibration corpus  │   │  Exp 236 code spec corpus               │
-│  existing Exp 212 / 216 IR   │   │  prompt -> pre/postconditions,          │
-│  prompt clauses + claims     │   │  invariants, oracle hints               │
+│ Formal Claim Verifier        │   │ Process Verifier                         │
+│  Exp 244-247                 │   │  Exp 248-251                            │
+│  normalize claims            │   │  right-for-wrong-reasons checks         │
+│  route to arithmetic / SMT   │   │  step integrity and repair integrity    │
+│  return MCS-style failures   │   │  additive semantic + code verdicts      │
 └───────────────┬──────────────┘   └────────────────────┬─────────────────────┘
-                │                                       │
-                v                                       v
-┌──────────────────────────────┐   ┌──────────────────────────────────────────┐
-│ Semantic Verifier v2         │   │ Spec-Aware Code Verifier                │
-│  Exp 234                     │   │  Exp 237                                │
-│  claim isolation, answer     │   │  official tests + PBT + explicit specs  │
-│  target coverage, calibrated │   │  ranked repair hints                    │
-│  confidence, abstain path    │   │                                          │
-└───────────────┬──────────────┘   └────────────────────┬─────────────────────┘
-                │                                       │
+                |                                       |
                 └───────────────────┬───────────────────┘
                                     v
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ Shared Verify-Repair Harness                                                 │
-│  Exp 235: live GSM8K semantic benchmark v2                                   │
-│  Exp 238: identical-stack dual-model HumanEval benchmark                     │
+│  Exp 246-247: live solver-routed semantic benchmark                          │
+│  Exp 250-251: live process-aware code benchmark                              │
 │  Models: Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it only                    │
 └───────────────────────────────┬──────────────────────────────────────────────┘
-                                │
+                                |
                                 v
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ Continuous Self-Learning                                                     │
-│  Exp 239: case memory with richer retrieval keys                             │
-│  Exp 240: learned repair-policy compiler                                     │
-│  Exp 241: chronological held-out replay v2                                   │
+│  Exp 252: predictive verification corpus                                     │
+│  Exp 253: memory-conditioned constraint addition                             │
+│  Exp 254: predictive verifier gate                                           │
+│  Exp 255-256: honest replay + live A/B evaluation                            │
 └───────────────────────────────┬──────────────────────────────────────────────┘
-                                │
+                                |
                                 v
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │ Hardware Path                                                                │
-│  Exp 242: KV260 host / overlay round-trip benchmark                          │
-│  Exp 243: sampler-guided repair reranking on CPU and, if present, FPGA       │
+│  Exp 257: predictor latency benchmark on CPU / CUDA / NPU-ready export path │
+│  keep sparse-FPGA workload shaping as a design constraint, not a blocker     │
 └──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Phase 75: Calibrate Live Semantic Verification (Experiments 232-235)
+## Phase 79: Rebuild Live Semantic Verification with Formal Claims (Experiments 244-247)
 
-This phase directly addresses the main live bottleneck from Exp 219: the verifier can now see semantic structure, but it still cannot score that evidence precisely enough to help both models. The goal here is not more parsing. It is better calibrated decisions.
+This phase directly addresses the result from Exp 235: claim isolation without full formalization is still too weak. The goal is to move from calibrated semantic scoring to typed claim routing where deterministic verifiers can carry more of the load.
 
-### Exp 232: Semantic calibration corpus from live false positives
+### Exp 244: Formal claim-routing corpus from live reasoning traces
 
-**Deliverable:** `data/research/semantic_calibration_corpus_232.jsonl`
+**Deliverable:** `data/research/formal_claim_corpus_244.jsonl`
 
-Build a calibration corpus from checked-in live artifacts instead of inventing a fresh synthetic benchmark. The corpus should include true positives, false positives, false negatives, and true negatives from the current semantic and prompt-side runs, plus targeted follow-up items only where coverage is missing. Each record must preserve provenance back to the original artifact, include claim-level annotations, and expose the fields needed for later threshold sweeps.
+Build a checked-in corpus from the current live semantic and prompt-side artifacts. Each row should preserve the prompt, response, typed claim text, normalized relation, bound variables, candidate solver route, gold verdict, minimal-correction-subset seed when known, and provenance back to the source run. The corpus must reflect real Qwen and Gemma traces, not fresh synthetic-only data.
 
-### Exp 233: Structured-output policy refresh on a JSONSchemaBench-style slice
+### Exp 245: Solver-routed formal claim verifier
 
-**Deliverable:** `results/experiment_233_results.json`
+**Deliverable:** `python/carnot/pipeline/formal_claim_verifier.py`
 
-Refresh the Exp 213 policy on a larger and more realistic mixed cohort. Compare free-form reasoning, terse answer-only output, minimal JSON, and grammar-gated JSON. Measure parse success, answer quality, claim coverage, retry cost, token cost, and repair usefulness. The expected outcome is not "JSON everywhere"; it is a narrower, better justified policy for when Carnot should ask the small models for structured outputs at all.
+Implement an additive verifier that translates typed claims into a normalized formal representation and routes each claim to the narrowest deterministic checker that can handle it. Arithmetic, comparison, cardinality, set-membership, and simple boolean entailment should be first-class routes. When a claim cannot be formalized safely, the verifier must abstain instead of inventing certainty.
 
-### Exp 234: Calibrated semantic verifier v2
+### Exp 246: Live solver-routed semantic benchmark runner
 
-**Deliverable:** `python/carnot/pipeline/semantic_verifier_v2.py`
+**Deliverable:** `scripts/experiment_246_solver_semantic_live.py`
 
-Implement a second-generation semantic verifier that operates on isolated claims, explicit answer-target coverage, and calibrated confidence. It should be able to abstain when the evidence is too weak rather than forcing a brittle binary verdict. This must stay additive to the current pipeline: the new verifier should consume the existing typed reasoning and structured output machinery instead of replacing it.
+Create the execution harness for the next live reasoning benchmark. It should reuse the paired-cohort discipline from Exp 218/235, support checkpointing, and preserve per-claim solver traces so the final artifact can explain exactly which routes helped or abstained.
 
-### Exp 235: Live GSM8K semantic benchmark v2
+### Exp 247: Live solver-routed semantic benchmark
 
-**Deliverable:** `results/experiment_235_results.json`
+**Deliverable:** `results/experiment_247_results.json`
 
-Re-run the live semantic benchmark on the shared small-model pair using the refreshed output policy and the calibrated verifier. The key comparison is against Exp 219: did false positives drop materially, did repair yield improve, and can Qwen avoid the previous verify-only regression?
+Run the new semantic stack on the shared small-model pair over a live reasoning slice that includes GSM8K-style semantic failures and prompt-side contract-following examples. The key comparison is against Exp 235 and Exp 221: did false positives drop materially, which solver routes carried the lift, and is verify-only finally non-harmful for at least one model?
 
-**Phase 75 success target:** materially lower false positives than Exp 219 while keeping semantic coverage high enough to preserve useful detections. A non-negative Qwen repair delta and a stronger Gemma repair yield would be enough to justify wider use.
+**Phase 79 success target:** materially improve the false-positive budget versus Exp 235 and show route-level evidence that formalized claims are doing useful work rather than just shifting abstention patterns.
 
-## Phase 76: Ground Code Verification in Explicit Specs (Experiments 236-238)
+## Phase 80: Add Process Integrity to Reasoning and Code (Experiments 248-251)
 
-This phase doubles down on the one lane that already works live: code. But it does so in a way that is useful beyond code by forcing Carnot to make prompt intent explicit and verifiable.
+This phase targets the next credibility problem after formal claims: correct outcomes still do not prove valid reasoning. The goal is to make Carnot explicitly sensitive to process integrity in both semantic reasoning and code repair.
 
-### Exp 236: Code intent / spec corpus from live HumanEval traces
+### Exp 248: Process-integrity corpus from live semantic and code traces
 
-**Deliverable:** `data/research/code_spec_corpus_236.jsonl`
+**Deliverable:** `data/research/process_integrity_corpus_248.jsonl`
 
-Create a checked-in corpus that renders HumanEval-style prompts into explicit preconditions, postconditions, invariants, mutation constraints, and oracle hints. Seed it with the checked-in Exp 226 and Exp 227 traces so the spec layer is tied to real failures and repairs rather than abstract prompt reading alone.
+Construct a checked-in corpus of "right answer / wrong process," "wrong answer / partially sound process," unsupported step, and repair-integrity cases from Exp 235, Exp 238, Exp 243, and earlier live code traces where useful. Each row should include step structure or code-trace structure, gold process label, outcome label, and provenance.
 
-### Exp 237: Spec-aware code verifier and repair policy
+### Exp 249: Process verifier
 
-**Deliverable:** `python/carnot/pipeline/spec_code_verifier.py`
+**Deliverable:** `python/carnot/pipeline/process_verifier.py`
 
-Extend the current PBT path into a spec-aware verifier. The new verifier should combine official tests, property-based checks, and explicit prompt-derived specs. It should also produce ranked repair guidance that reflects what the code-trace learner already knows about successful repairs, especially the current syntax-heavy accepted transitions.
+Implement an additive verifier that scores reasoning-integrity and repair-integrity rather than only end-state correctness. It should work over typed reasoning steps and over code-repair traces, expose a structured result object, and stay composable with the formal claim verifier instead of replacing it.
 
-### Exp 238: Identical-stack dual-model HumanEval benchmark
+### Exp 250: Live process-aware code benchmark runner
 
-**Deliverable:** `results/experiment_238_results.json`
+**Deliverable:** `scripts/experiment_250_process_code_live.py`
 
-Run the same seeded HumanEval cohort on both target models with the exact same verifier stack: official tests, PBT, spec-aware checks, and the same repair budget. This is the clean follow-on to Exp 226 and Exp 227. The result should tell us whether the code win is model-family-specific or whether explicit specs make it portable.
+Create a runner for a live paired HumanEval benchmark on Qwen3.5-0.8B and Gemma4-E4B-it that layers process verification on top of the existing official-tests + PBT + explicit-spec stack. This should follow the milestone rule for large experiments: runner first, execution later.
 
-**Phase 76 success target:** catch additional official-test misses or improve repair yield beyond the current PBT-only stack, while producing the first honest identical-stack Gemma-vs-Qwen code comparison in-tree.
+### Exp 251: Live process-aware code benchmark
 
-## Phase 77: Make Self-Learning Improve Future Runs (Experiments 239-241)
+**Deliverable:** `results/experiment_251_results.json`
 
-This phase activates the "Continuous Self-Learning" section of `research-program.md` in the narrowest useful way: Tier 1 and Tier 2 only, grounded in live traces, under a strict false-positive budget.
+Execute the new code benchmark on a shared official HumanEval slice. Report baseline, official-tests verify-only, PBT verify-only, spec-aware verify-only, process-aware verify-only, and verify-repair. The artifact must explicitly count cases that passed outcome checks but failed process-integrity checks.
 
-### Exp 239: Case-based trace memory with richer retrieval keys
+**Phase 80 success target:** identify a non-trivial set of right-for-wrong-reasons cases and either improve repair quality or reduce weak-harness acceptance on at least one target model without increasing false positives.
 
-**Deliverable:** `python/carnot/pipeline/case_memory.py`
+## Phase 81: Build the Data and Modules for Predictive Self-Learning (Experiments 252-254)
 
-Replace domain-wide pattern reuse with case-based retrieval. The new memory should key on model family, benchmark slice, violation family, prompt sketch, property names, and repair outcomes. It must remain cheap enough for CPU-side lookup today while preserving the structure needed for later FPGA-style pattern matching.
+Exp 241 proved the current self-learning loop is too passive. This phase turns existing traces into the data and modules needed for proactive adaptation at inference speed.
 
-### Exp 240: Learned repair-policy compiler from accepted fixes
+### Exp 252: Predictive verification corpus from partial responses and repairs
 
-**Deliverable:** `python/carnot/pipeline/self_learning_policy.py`
+**Deliverable:** `data/research/predictive_verification_corpus_252.jsonl`
 
-Compile the highest-precision live cases into reusable policy updates: verifier thresholds, property budgets, repair-prompt patches, and routing hints. This is the bridge between raw memory and actual behavior change. The output must remain provenance-bearing so the system can explain why a policy update was applied.
+Build a corpus of partial responses, final verifier outcomes, process labels, accepted repairs, and case-memory hits from the checked-in live artifacts. The goal is to support two next-step learners: a fast "should we verify harder?" predictor and a memory-conditioned constraint-addition path.
 
-### Exp 241: Chronological self-learning replay v2
+### Exp 253: Memory-conditioned constraint addition
 
-**Deliverable:** `results/experiment_241_results.json`
+**Deliverable:** `python/carnot/pipeline/constraint_addition.py`
 
-Replay live semantic and code traces in chronological order and compare four settings: no learning, tracker-only, case-memory retrieval, and case-memory plus learned policy updates. This is the milestone's required continuous self-learning experiment. The key success condition is an honest held-out task gain beyond the tracker-only baseline without breaking the no-additional-false-positive budget.
+Implement the missing self-learning step called out in `research-program.md`: when memory surfaces a recurring failure family, Carnot should be able to add a new lightweight constraint template or check budget rather than only reweight existing checks. This path must remain cheap enough for CPU-side deployment.
 
-**Phase 77 success target:** exceed Exp 223 by producing a real held-out task gain, not just better false-positive control.
+### Exp 254: Predictive verifier gate with export-ready small model path
 
-## Phase 78: Measure the Hardware Path, Not Just Simulate It (Experiments 242-243)
+**Deliverable:** `python/carnot/pipeline/predictive_verifier.py`
 
-This phase keeps the hardware story narrow and honest. The goal is not to claim TSU-like speedups. It is to replace "software-model ready" with measured round-trip evidence, then use that path on a verifier-adjacent task.
+Implement a small predictive gate that estimates whether a partial response is likely to trigger a meaningful downstream violation. It should be export-ready for ONNX or similar runtimes so the hardware path for Tier 3 learning stays explicit from the start.
 
-### Exp 242: KV260 host / overlay round-trip benchmark
+**Phase 81 success target:** create a self-learning substrate that changes future verification behavior through added constraints and fast-path / slow-path routing, not just better retrospective retrieval.
 
-**Deliverable:** `results/experiment_242_results.json`
+## Phase 82: Prove Self-Learning Lift and Hardware-Shaped Latency (Experiments 255-257)
 
-Attempt real board-level validation of the existing FPGA control-plane contract on the KV260. Measure upload, trigger, and readback latencies. If the hardware is still unavailable, produce a blocker artifact with the exact missing dependency rather than fabricating a result. Either way, the outcome must move the sampler path from abstract design to an executable bring-up checklist plus measured timing.
+This phase is the milestone's required continuous self-learning proof. It tests whether the new additive constraints and predictive gate actually help and whether the predictor can meet the repo's hardware-acceleration principle.
 
-### Exp 243: Sampler-guided repair reranking benchmark
+### Exp 255: Self-learning A/B runner
 
-**Deliverable:** `results/experiment_243_results.json`
+**Deliverable:** `scripts/experiment_255_self_learning_ab.py`
 
-Use the sampler path on a real Carnot task: rerank saved repair candidates from the semantic and code benchmarks. Compare CPU and, if available, FPGA-backed scoring on latency and top-1 repair quality. This is the smallest honest step from "hardware interface exists" toward "hardware meaningfully helps a verify-repair loop."
+Create the benchmark runner that compares the current best baseline against four stronger settings: case-memory plus policy, constraint addition only, predictive gate only, and combined constraint addition plus predictive gate. It should support both honest chronological replay and a small live slice on the two target models.
 
-**Phase 78 success target:** measured board-level round trips or an explicit blocker artifact from Exp 242, plus a clear latency / quality tradeoff report for sampler-guided reranking in Exp 243.
+### Exp 256: Self-learning A/B benchmark
+
+**Deliverable:** `results/experiment_256_results.json`
+
+Run the A/B benchmark. The primary success criterion is still honest: real held-out task gain with no extra false positives relative to the no-learning baseline. Secondary metrics should include verification spend, latency, fast-path hit rate, and per-domain gains.
+
+### Exp 257: Predictive verifier hardware-readiness benchmark
+
+**Deliverable:** `results/experiment_257_results.json`
+
+Benchmark the predictive verifier on the available hardware tiers: CPU baseline, CUDA when beneficial, and an export-oriented NPU-ready path if the local AMD stack can exercise it. If the NPU path is still blocked, record the blocker artifact honestly rather than inflating hardware claims.
+
+**Phase 82 success target:** first honest held-out self-learning gain plus a measured latency profile that keeps Tier 3 aligned with the repo's CPU/GPU/NPU acceleration principle.
 
 ## Dependency Graph
 
 ```
-Exp 232 (semantic calibration corpus) ───────────────▶ Exp 234 (semantic verifier v2) ─▶ Exp 235
-Exp 233 (output policy refresh) ─────────────────────▶ Exp 234
-Exp 233 (output policy refresh) ───────────────────────────────────────────────────────▶ Exp 235
-
-Exp 236 (code spec corpus) ──────────────────────────▶ Exp 237 (spec-aware code verifier) ─▶ Exp 238
+Exp 244 (formal claim corpus) ───────────────▶ Exp 245 (formal claim verifier) ─▶ Exp 246 ─▶ Exp 247
 
 Exp 235 ─┐
-         ├──────────────────────────────────────────▶ Exp 239 (case memory) ─▶ Exp 240 ─▶ Exp 241
-Exp 238 ─┘
+Exp 238 ─┼──────────────────────────────────▶ Exp 248 (process-integrity corpus) ─▶ Exp 249 ─▶ Exp 250 ─▶ Exp 251
+Exp 243 ─┘
 
-Existing Exp 228 (software overlay contract) ───────▶ Exp 242 (KV260 round-trip) ─▶ Exp 243
-Exp 235 ─────────────────────────────────────────────────────────────────────────────▶ Exp 243
-Exp 238 ─────────────────────────────────────────────────────────────────────────────▶ Exp 243
+Exp 247 ─┐
+Exp 248 ─┼──────────────────────────────────▶ Exp 252 (predictive verification corpus)
+Exp 251 ─┘
+
+Exp 241 ─┐
+Exp 252 ─┴──────────────────────────────────▶ Exp 253 (constraint addition)
+Exp 252 ────────────────────────────────────▶ Exp 254 (predictive verifier gate)
+
+Exp 253 ─┐
+Exp 254 ─┼──────────────────────────────────▶ Exp 255 ─▶ Exp 256
+Exp 247 ─┤
+Exp 251 ─┘
+
+Exp 254 ────────────────────────────────────▶ Exp 257
 ```
 
 ## Execution Order
 
 ```
-1. exp232  -- Build the semantic calibration corpus from checked-in live artifacts
-2. exp233  -- Refresh the structured-output policy on a realistic mixed slice
-3. exp234  -- Implement the calibrated semantic verifier v2
-4. exp235  -- Re-run the live semantic benchmark with the new verifier
-5. exp236  -- Build the explicit code intent / spec corpus
-6. exp237  -- Implement the spec-aware code verifier
-7. exp238  -- Run the identical-stack dual-model HumanEval benchmark
-8. exp239  -- Replace coarse memory reuse with case-based retrieval
-9. exp240  -- Compile accepted fixes into reusable policy updates
-10. exp241 -- Validate self-learning on a chronological held-out replay
-11. exp242 -- Measure KV260 host / overlay round-trip costs honestly
-12. exp243 -- Test sampler-guided repair reranking on saved candidate sets
+1. exp244 -- Build the formal claim-routing corpus from checked-in live traces
+2. exp245 -- Implement the solver-routed formal claim verifier
+3. exp246 -- Create the live solver-routed semantic benchmark runner
+4. exp247 -- Execute the live solver-routed semantic benchmark
+5. exp248 -- Build the process-integrity corpus from semantic and code traces
+6. exp249 -- Implement the additive process verifier
+7. exp250 -- Create the live process-aware code benchmark runner
+8. exp251 -- Execute the live process-aware code benchmark
+9. exp252 -- Build the predictive verification corpus from partial responses and repairs
+10. exp253 -- Implement memory-conditioned constraint addition
+11. exp254 -- Implement the predictive verifier gate
+12. exp255 -- Create the self-learning A/B benchmark runner
+13. exp256 -- Execute the self-learning A/B benchmark
+14. exp257 -- Measure predictive-verifier latency across available hardware paths
 ```
 
 ## Hardware Requirements
 
 | Experiment | Compute | Memory | Time est. |
 |-----------|---------|--------|-----------|
-| 232 | CPU | 2-4GB | 30-60 min |
-| 233 | CPU + 1 GPU for live inference | 24GB VRAM | 1-2 hours |
-| 234 | CPU + optional GPU for local checks | 4-8GB | 2-4 hours |
-| 235 | CPU + 1-2 GPUs | 24-48GB VRAM | 2-3 hours |
-| 236 | CPU | 2-4GB | 30-60 min |
-| 237 | CPU + optional GPU for spot checks | 4-8GB | 2-4 hours |
-| 238 | CPU + 1-2 GPUs | 24-48GB VRAM | 2-3 hours |
-| 239 | CPU + system memory | 4-8GB | 1-2 hours |
-| 240 | CPU | 4-8GB | 1-2 hours |
-| 241 | CPU + optional GPU for replay comparisons | 8-24GB | 1-2 hours |
-| 242 | CPU + KV260 if present | 4GB + board RAM | 1-3 hours |
-| 243 | CPU, optional GPU, KV260 optional | 8-24GB | 1-2 hours |
+| 244 | CPU | 2-4GB | 30-60 min |
+| 245 | CPU | 4-8GB | 2-4 hours |
+| 246 | CPU | 2-4GB | 1-2 hours |
+| 247 | CPU + 1-2 GPUs | 24-48GB VRAM | 2-4 hours |
+| 248 | CPU | 2-4GB | 30-60 min |
+| 249 | CPU | 4-8GB | 2-4 hours |
+| 250 | CPU | 2-4GB | 1-2 hours |
+| 251 | CPU + 1-2 GPUs | 24-48GB VRAM | 2-4 hours |
+| 252 | CPU | 4-8GB | 30-60 min |
+| 253 | CPU | 4-8GB | 2-4 hours |
+| 254 | CPU + optional CUDA / NPU runtime | 8-24GB | 2-4 hours |
+| 255 | CPU | 4-8GB | 1-2 hours |
+| 256 | CPU + 1-2 GPUs for live slice | 24-48GB VRAM | 2-3 hours |
+| 257 | CPU + optional CUDA / AMD XDNA path | 8-24GB | 30-90 min |
 
 **Assumed local hardware for the milestone:**
 
-- `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` only for all live LLM runs.
-- Dual RTX 3090-class CUDA GPUs when available for paired benchmark work.
-- AMD Ryzen AI host CPU for orchestration and replay.
-- Kria KV260 for Exp 242 / 243 if physically present; otherwise those experiments must emit blocker artifacts rather than pretend the hardware exists.
+- `Qwen/Qwen3.5-0.8B` and `google/gemma-4-E4B-it` only for all live LLM work.
+- Dual RTX 3090-class CUDA GPUs for paired live benchmark execution.
+- AMD Ryzen AI host CPU for orchestration, replay, and CPU-fast-path self-learning.
+- AMD XDNA NPU only if a VitisAI-capable runtime is available; otherwise Exp 257 must emit an honest blocker note.
+- KV260 remains optional and non-blocking this milestone. The sparse-hardware papers inform workload design, but no task depends on live FPGA access.
 
-## Explicitly Deferred to 2026.04.18
+## Explicitly Deferred to 2026.04.19
 
-- **Tier 3 JEPA-style predictive verification training**: only after Phase 77 shows a real Tier 1 / Tier 2 held-out gain.
-- **Full multi-turn agent benchmark**: still valuable, but the immediate bottleneck is single-turn verifier precision and learning quality.
-- **Older model families**: remain out of scope unless Qwen vs Gemma differences force an architecture-level explanation.
-- **TensorRT live benchmark completion**: useful for throughput, but still secondary to verifier precision and learning quality until the missing toolchain is installed.
-- **Direct Extropic / TSU integration**: the abstraction is worth preserving, but real TSU work stays blocked on hardware availability.
+- **More KV260 overlay work:** Exp 242 already proved the blocker is setup, not another missing benchmark wrapper.
+- **Full 164-problem paired HumanEval rerun on both models:** defer until the 50-problem process-aware slice shows the new verifier path earns that spend.
+- **TSU-specific integration work:** keep the backend boundary clean, but do not consume milestone slots before the verifier workload is stronger.
+- **Full RL training from process-verifier labels:** first prove the data and additive verifier paths help in replay and live A/B.
+- **Older model families:** remain out of scope unless Qwen vs Gemma differences force an architecture-level explanation.
