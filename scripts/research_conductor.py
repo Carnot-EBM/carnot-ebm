@@ -256,10 +256,10 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
     else:
         # Smart subset: core tests + tests for recently changed Python files
         test_files = [
-            "tests/python/test_cli.py",
             "tests/python/test_pipeline_extract.py",
             "tests/python/test_docs.py",
-            "tests/integration/test_full_pipeline.py",
+            # test_cli.py excluded: PBT tests hang due to hypothesis/Docker
+            # test_full_pipeline.py excluded: slow integration tests
         ]
 
         # Add tests for any recently modified source files
