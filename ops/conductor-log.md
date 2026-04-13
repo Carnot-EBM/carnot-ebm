@@ -1435,3 +1435,4 @@ python/ |
 | 2026-04-13 23:34 UTC | Exp 268: Publish Exp 66 joint model and FormalClai | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
 | 2026-04-13 23:38 UTC | Exp 269: AMD XDNA NPU enablement for PredictiveVer | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
 | 2026-04-13 23:42 UTC | Exp 269: AMD XDNA NPU enablement for PredictiveVer | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
+| 2026-04-13 23:46 UTC | Exp 269: AMD XDNA NPU enablement for PredictiveVer | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
