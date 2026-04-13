@@ -1414,3 +1414,4 @@ python/ |
 | 2026-04-13 22:21 UTC | Exp 261: Full 164-problem HumanEval benchmark with | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
 | 2026-04-13 22:25 UTC | Exp 261: Full 164-problem HumanEval benchmark with | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
 | 2026-04-13 22:30 UTC | Exp 261: Full 164-problem HumanEval benchmark with | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-13 22:34 UTC | Exp 262: Live calibration corpus for PredictiveVer | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
