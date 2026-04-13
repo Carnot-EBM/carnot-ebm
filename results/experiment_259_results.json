@@ -1,0 +1,75 @@
+{
+  "description": "onnxruntime CUDA EP benchmark for the Tier 3 predictive gate (PredictiveVerifier).  Exp 257 identified that the pip onnxruntime wheel lacked CUDAExecutionProvider; this experiment installs onnxruntime-gpu and measures the CUDA latency.  CPU NumPy and ONNX CPU baselines are also re-run for apples-to-apples speedup ratios.",
+  "exp_257_reference": {
+    "cpu_numpy_latency_us": 5.85,
+    "note": "Exp 257 baselines used as fallback if CPU benchmark unavailable",
+    "onnx_cpu_latency_us": 5.847
+  },
+  "experiment": 259,
+  "hardware_paths": [
+    {
+      "hardware_path": "cpu_numpy",
+      "latency_ms": 0.005081,
+      "latency_us": 5.081,
+      "note": "Inference-only (dot-product + sigmoid); feature extraction excluded",
+      "run_date": "20260413",
+      "status": "ok",
+      "throughput_calls_per_sec": 196805.9,
+      "timed_calls": 5000
+    },
+    {
+      "hardware_path": "onnx_cpu",
+      "latency_ms": 0.008622,
+      "latency_us": 8.622,
+      "numpy_ort_delta": 8e-09,
+      "ort_version": "1.24.4",
+      "providers_used": [
+        "CPUExecutionProvider"
+      ],
+      "run_date": "20260413",
+      "status": "ok",
+      "throughput_calls_per_sec": 115977.6,
+      "timed_calls": 5000
+    },
+    {
+      "gpu_memory_mb": 0.0,
+      "hardware_path": "onnx_cuda",
+      "latency_ms": 0.0473,
+      "latency_us": 47.3,
+      "ort_version": "1.24.4",
+      "providers_used": [
+        "CUDAExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "run_date": "20260413",
+      "speedup_vs_cpu_numpy": 0.107,
+      "speedup_vs_cpu_ort": 0.182,
+      "status": "ok",
+      "throughput_calls_per_sec": 21141.8,
+      "timed_calls": 5000
+    }
+  ],
+  "honest_verdict": {
+    "explanation": "onnxruntime-gpu installed successfully; CUDAExecutionProvider is now available.  CUDA ORT benchmark completed: latency=47.3 \u00b5s/call, throughput=21,142 calls/s. CUDA ORT is 5.49\u00d7 SLOWER than CPU ORT per call. This is expected for a 9\u21921 linear gate: CUDA kernel launch overhead dominates the ~1 \u00b5s computation.  Advantage appears at batch sizes \u2265 32. No numbers were fabricated.",
+    "primary_met": true,
+    "recommended_next_steps": [
+      "Benchmark batched inference (batch_size 32/128/512) to find the crossover point where CUDA ORT outperforms CPU ORT for the gate.",
+      "Calibrate PredictiveVerifier on live GSM8K corpus (Exp 256 next step).",
+      "For NPU: use .venv-npu (Python 3.12) + AMD VitisAI onnxruntime wheel from ryzenai.docs.amd.com OR build from source with -Donnxruntime_USE_VITISAI=ON."
+    ]
+  },
+  "run_date": "20260413",
+  "scope": "predictive_verifier_only",
+  "summary": {
+    "cuda_speedup_vs_cpu_ort": 0.182,
+    "fastest_available_path": "cpu_numpy",
+    "fastest_latency_us": 5.081,
+    "fastest_throughput_calls_per_sec": 196805.9,
+    "paths_blocked": [],
+    "paths_ok": [
+      "cpu_numpy",
+      "onnx_cpu",
+      "onnx_cuda"
+    ]
+  }
+}

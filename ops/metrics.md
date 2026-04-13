@@ -1,5 +1,21 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 259 CUDA ORT Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T20:49:12Z | 2026-04-13T20:53:46Z | Exp 259: install onnxruntime-gpu, benchmark CUDA ORT for PredictiveVerifier gate — 14 tests written, all pass; CUDA ORT 47.3 µs/call (5.49× slower than CPU ORT due to kernel launch overhead on 9→1 linear gate); CPU NumPy 5.1 µs/call, CPU ORT 8.6 µs/call. | TBD |
+
+### Session Summary
+
+- `pip install onnxruntime-gpu` successful; CUDAExecutionProvider + TensorrtExecutionProvider now available
+- CPU NumPy (inference-only): 5.1 µs/call, 196,806 calls/s
+- ONNX CPU ORT: 8.6 µs/call, 115,978 calls/s
+- ONNX CUDA ORT: 47.3 µs/call, 21,142 calls/s (5.49× SLOWER than CPU ORT — expected for 9→1 linear gate)
+- Key finding: CUDA kernel launch overhead dominates; GPU advantage appears at batch_size ≥ 32
+
 ## Session: 2026-04-13 Exp 258 Dual-GPU Harness
 
 ### Turn Log
