@@ -2,7 +2,7 @@
 # Autoresearch v6: Constraint-Based Reasoning via Ising/thrml
 # Runs experiments 42, 46, 45 unattended overnight
 set -euo pipefail
-cd /home/ianblenke/github.com/ianblenke/carnot
+cd "$(dirname "$0")/.."  # Use relative path
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
