@@ -1089,6 +1089,63 @@ The same workflow shall write `results/experiment_232_results.json`, where:
 **And** re-running the workflow does not change the follow-up ordering
   or duplicate them
 
+### REQ-VERIFY-044: Exp 233 Output-Policy Refresh Benchmark
+
+The repository shall provide a deterministic Exp 233 workflow that writes
+`results/experiment_233_results.json`, where:
+- the workflow evaluates exactly `Qwen/Qwen3.5-0.8B` and
+  `google/gemma-4-E4B-it`
+- the workflow evaluates at least the four response modes
+  `free_form_reasoning`, `answer_only_terse`, `minimal_json`, and
+  `grammar_gated_json`
+- the audited cohort includes a mixed slice covering semantic GSM8K cases,
+  prompt-side constraint cases from Exp 211, code-typed-property cases from
+  Exp 211, and deterministic spec-grounded cases derived from checked-in repo
+  files
+- the artifact records per-model, per-task-slice, and per-mode measurements
+  for parse success, retry rate, answer quality, exact satisfaction, partial
+  satisfaction, claim coverage, token cost, latency, and repair usefulness
+- the artifact preserves the fixed Exp 233 run date `20260413` and the exact
+  cohort composition used for the audit
+- re-running the workflow refreshes the artifact in place deterministically
+  without duplicate rows or order drift
+
+### REQ-VERIFY-045: Exp 233 Minimal-Schema Output Policy And Routing
+
+The same workflow shall write a refreshed machine-readable policy artifact,
+where:
+- the policy is derived from the measured Exp 233 benchmark metrics rather
+  than hard-coded preferences
+- the policy stays task-gated and prefers the smallest response contract that
+  still preserves verifier-visible evidence for that task slice
+- the policy may recommend `minimal_json` or `grammar_gated_json` only for
+  task slices where the measured evidence or parse trade-off justifies JSON
+- task slices where Exp 213 already showed structured output hurts remain able
+  to stay on `answer_only_terse` unless Exp 233 evidence materially changes
+  that conclusion
+- later experiments and pipeline helpers can consume the refreshed policy
+  directly for response-mode routing without requiring manual artifact edits
+
+### SCENARIO-VERIFY-045: Routing Prefers Minimal JSON Only On Supported Slices
+
+**Given** an Exp 233 policy artifact with per-task-slice recommendations
+**When** a later caller asks for the recommended response mode for a live
+  semantic, prompt-side, code, or spec-grounded task slice
+**Then** the caller receives the Exp 233 recommended mode for that slice
+**And** unsupported or unknown slices fall back deterministically to
+  `answer_only_terse`
+**And** JSON-oriented modes are not forced onto code or surface-only slices
+  when the policy recommends a non-JSON alternative
+
+### SCENARIO-VERIFY-046: Exp 233 Artifact Regeneration Is Deterministic
+
+**Given** a fixed benchmark cohort and deterministic mocked live responses
+**When** the Exp 233 workflow is run twice against the same temporary repo
+**Then** it rewrites the same results and policy artifacts in place
+**And** the recorded run date remains `20260413`
+**And** the ordered response rows and derived summary metrics remain stable
+**And** the policy artifact stays machine-readable for later consumers
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1136,4 +1193,6 @@ The same workflow shall write `results/experiment_232_results.json`, where:
 | REQ-VERIFY-041 | Not Started | Implemented | DualGPU runner + loader/harness dispatch tests |
 | REQ-VERIFY-042 | Not Started | Implemented | Exp 232 calibration corpus tests + artifact refresh |
 | REQ-VERIFY-043 | Not Started | Implemented | Exp 232 summary/coverage tests + artifact refresh |
+| REQ-VERIFY-044 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-045 | Not Started | Not Started | Not Started |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |

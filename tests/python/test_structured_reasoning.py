@@ -1,7 +1,8 @@
 """Tests for `carnot.pipeline.structured_reasoning`.
 
-Spec: REQ-VERIFY-022, REQ-VERIFY-023, REQ-VERIFY-024,
-SCENARIO-VERIFY-022, SCENARIO-VERIFY-023, SCENARIO-VERIFY-024
+Spec: REQ-VERIFY-022, REQ-VERIFY-023, REQ-VERIFY-024, REQ-VERIFY-045,
+SCENARIO-VERIFY-022, SCENARIO-VERIFY-023, SCENARIO-VERIFY-024,
+SCENARIO-VERIFY-045
 """
 
 from __future__ import annotations
@@ -29,7 +30,8 @@ def read_fixture(name: str) -> str:
 def policy_with_modes() -> dict[str, object]:
     return {
         "per_task_slice": {
-            "live_gsm8k_semantic_failure": {"recommended_mode": "structured_json"},
+            "live_gsm8k_semantic_failure": {"recommended_mode": "grammar_gated_json"},
+            "repo_spec_grounding": {"recommended_mode": "minimal_json"},
             "instruction_surface_only": {"recommended_mode": "answer_only_terse"},
             "code_typed_properties": {"recommended_mode": "answer_only_terse"},
         }
@@ -57,12 +59,12 @@ def test_prompt_helpers_request_minimal_schema_for_qwen_and_gemma() -> None:
 def test_policy_helpers_cover_supported_models_and_override_repo_root(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """REQ-VERIFY-024: Policy-gated structured mode uses task slice plus model support."""
+    """REQ-VERIFY-024, REQ-VERIFY-045: Policy routing honors task slice, mode, and override."""
     repo = tmp_path / "repo"
-    policy_path = repo / "results" / "monitorability_policy_213.json"
+    policy_path = repo / "results" / "output_policy_233.json"
     policy_path.parent.mkdir(parents=True, exist_ok=True)
     policy_path.write_text(
-        '{"per_task_slice":{"live_gsm8k_semantic_failure":{"recommended_mode":"structured_json"}}}',
+        '{"per_task_slice":{"live_gsm8k_semantic_failure":{"recommended_mode":"grammar_gated_json"},"repo_spec_grounding":{"recommended_mode":"minimal_json"}}}',
         encoding="utf-8",
     )
     monkeypatch.setenv("CARNOT_REPO_ROOT", str(repo))
@@ -71,7 +73,7 @@ def test_policy_helpers_cover_supported_models_and_override_repo_root(
     controller = StructuredReasoningController(policy=loaded)
 
     assert loaded["per_task_slice"]["live_gsm8k_semantic_failure"]["recommended_mode"] == (
-        "structured_json"
+        "grammar_gated_json"
     )
     assert (
         controller.should_use_structured_reasoning(
@@ -94,6 +96,7 @@ def test_policy_helpers_cover_supported_models_and_override_repo_root(
         )
         is False
     )
+    assert controller.recommended_mode("repo_spec_grounding") == "minimal_json"
     assert load_monitorability_policy(repo / "results" / "missing.json") == {}
 
 
@@ -165,8 +168,8 @@ def test_emit_retries_until_a_clean_structured_response_validates() -> None:
         )
 
     assert mock_generate.call_count == 2
-    assert emission.policy_mode == "structured_json"
-    assert emission.response_mode == "structured_json"
+    assert emission.policy_mode == "grammar_gated_json"
+    assert emission.response_mode == "grammar_gated_json"
     assert emission.fallback_used is False
     assert len(emission.attempts) == 2
     assert emission.attempts[0].valid is False
@@ -232,7 +235,7 @@ def test_emit_falls_back_after_exhausting_structured_attempts_and_handles_missin
     unavailable_emission = controller._fallback(
         question="What is the mint count?",
         task_slice="live_gsm8k_semantic_failure",
-        policy_mode="structured_json",
+        policy_mode="grammar_gated_json",
         attempts=[],
         fallback_generate=None,
         max_new_tokens=220,
@@ -300,6 +303,31 @@ def test_validate_response_covers_remaining_schema_type_guards(
         controller.validate_response(question="q", response=response)
 
 
+def test_minimal_mode_validation_covers_claims_checks_and_gemma_structured_prompt() -> None:
+    """REQ-VERIFY-045: Minimal-schema validation and Gemma prompt branches stay deterministic."""
+    controller = StructuredReasoningController(policy=policy_with_modes())
+
+    assert "single JSON object" in controller.build_prompt(
+        "What is the mint count?",
+        "google/gemma-4-E4B-it",
+        mode="structured_json",
+    )
+
+    with pytest.raises(ValueError, match="claims must be a list"):
+        controller.validate_response(
+            question="q",
+            response='{"final_answer": 2, "claims": "bad"}',
+            mode="minimal_json",
+        )
+
+    with pytest.raises(ValueError, match="checks must be a list"):
+        controller.validate_response(
+            question="q",
+            response='{"final_answer": 2, "checks": "bad"}',
+            mode="minimal_json",
+        )
+
+
 def test_validate_response_covers_direct_json_and_missing_final_answer_guards() -> None:
     """REQ-VERIFY-023: Patched extractor branches still reject invalid structured states."""
     controller = StructuredReasoningController(policy=policy_with_modes())
@@ -335,7 +363,7 @@ def test_fallback_covers_typed_reasoning_extraction_failure() -> None:
         emission = controller._fallback(
             question="What is the mint count?",
             task_slice="live_gsm8k_semantic_failure",
-            policy_mode="structured_json",
+            policy_mode="grammar_gated_json",
             attempts=[],
             fallback_generate=lambda prompt, max_new_tokens=256: "plain text",
             max_new_tokens=220,
@@ -343,6 +371,40 @@ def test_fallback_covers_typed_reasoning_extraction_failure() -> None:
 
     assert emission.response_mode == "fallback_text"
     assert emission.typed_reasoning is None
+
+
+def test_default_policy_path_prefers_exp233_then_falls_back_to_exp213(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """REQ-VERIFY-045, SCENARIO-VERIFY-045: Policy helpers prefer the refreshed Exp 233 artifact."""
+    repo = tmp_path / "repo"
+    results = repo / "results"
+    results.mkdir(parents=True)
+    monkeypatch.setenv("CARNOT_REPO_ROOT", str(repo))
+
+    legacy = results / "monitorability_policy_213.json"
+    legacy.write_text(
+        '{"per_task_slice":{"live_gsm8k_semantic_failure":{"recommended_mode":"structured_json"}}}',
+        encoding="utf-8",
+    )
+    assert (
+        load_monitorability_policy()["per_task_slice"]["live_gsm8k_semantic_failure"][
+            "recommended_mode"
+        ]
+        == "structured_json"
+    )
+
+    refreshed = results / "output_policy_233.json"
+    refreshed.write_text(
+        '{"per_task_slice":{"live_gsm8k_semantic_failure":{"recommended_mode":"grammar_gated_json"}}}',
+        encoding="utf-8",
+    )
+    assert (
+        load_monitorability_policy()["per_task_slice"]["live_gsm8k_semantic_failure"][
+            "recommended_mode"
+        ]
+        == "grammar_gated_json"
+    )
 
 
 def test_verify_pipeline_exposes_additive_structured_generation_entrypoint() -> None:

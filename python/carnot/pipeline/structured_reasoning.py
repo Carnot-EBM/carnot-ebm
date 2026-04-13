@@ -1,7 +1,8 @@
 """Structured reasoning emission helpers for monitorable typed verification.
 
-Spec: REQ-VERIFY-022, REQ-VERIFY-023, REQ-VERIFY-024,
-SCENARIO-VERIFY-022, SCENARIO-VERIFY-023, SCENARIO-VERIFY-024
+Spec: REQ-VERIFY-022, REQ-VERIFY-023, REQ-VERIFY-024, REQ-VERIFY-045,
+SCENARIO-VERIFY-022, SCENARIO-VERIFY-023, SCENARIO-VERIFY-024,
+SCENARIO-VERIFY-045
 """
 
 from __future__ import annotations
@@ -21,6 +22,8 @@ from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typ
 
 RUN_DATE = "20260412"
 _REQUIRED_KEYS = ("constraints", "steps", "claims", "final_answer")
+_MINIMAL_REQUIRED_KEYS = ("final_answer",)
+_STRUCTURED_MODES = {"structured_json", "minimal_json", "grammar_gated_json"}
 _MODEL_ALIASES = {
     "qwen/qwen3.5-0.8b": "qwen",
     "qwen3.5-0.8b": "qwen",
@@ -70,12 +73,16 @@ def get_repo_root() -> Path:
 
 
 def default_policy_path() -> Path:
-    """Return the Exp 213 monitorability policy path."""
-    return get_repo_root() / "results" / "monitorability_policy_213.json"
+    """Return the preferred output policy path for structured-routing decisions."""
+    results_dir = get_repo_root() / "results"
+    refreshed = results_dir / "output_policy_233.json"
+    if refreshed.exists():
+        return refreshed
+    return results_dir / "monitorability_policy_213.json"
 
 
 def load_monitorability_policy(path: Path | None = None) -> dict[str, object]:
-    """Load the Exp 213 policy, returning an empty dict when it is unavailable."""
+    """Load the latest checked-in output policy, returning {} when unavailable."""
     resolved = path or default_policy_path()
     if not resolved.exists():
         return {}
@@ -107,6 +114,40 @@ def build_gemma_structured_reasoning_prompt(question: str) -> str:
         "Use [] for empty lists and null when a normalized value is unknown. "
         "Do not add markdown or extra text.\n\n"
         f"Task:\n{question}\n"
+    )
+
+
+def build_qwen_minimal_json_prompt(question: str, *, grammar_gated: bool = False) -> str:
+    """Build the smaller JSON evidence prompt for Qwen3.5-0.8B."""
+    prefix = (
+        "Return a single-line JSON object only. Use strict key order "
+        '{"final_answer": ..., "claims": [...]} and no other top-level keys.\n'
+        if grammar_gated
+        else "Return strict JSON only with keys final_answer and claims.\n"
+    )
+    return (
+        prefix
+        + "final_answer must hold the task answer in the task's native format.\n"
+        + "claims must be a short JSON array of verifier-visible evidence strings.\n"
+        + "Use [] when there are no useful claims. No markdown.\n\n"
+        + f"Task:\n{question}\n"
+    )
+
+
+def build_gemma_minimal_json_prompt(question: str, *, grammar_gated: bool = False) -> str:
+    """Build the smaller JSON evidence prompt for Gemma4-E4B-it."""
+    prefix = (
+        "Return a single-line JSON object only. Use strict key order "
+        '{"final_answer": ..., "claims": [...]} and no other top-level keys.\n'
+        if grammar_gated
+        else "Return a single JSON object with keys final_answer and claims only.\n"
+    )
+    return (
+        prefix
+        + "final_answer must hold the task answer in the task's native format.\n"
+        + "claims must be a short JSON array of verifier-visible evidence strings.\n"
+        + "Use [] when there are no useful claims. Do not add prose outside the JSON.\n\n"
+        + f"Task:\n{question}\n"
     )
 
 
@@ -193,45 +234,82 @@ class StructuredReasoningController:
     def should_use_structured_reasoning(self, task_slice: str, model_name: str | None) -> bool:
         """Only use structured prompting when policy and model support both allow it."""
         return (
-            self.recommended_mode(task_slice) == "structured_json"
+            self.recommended_mode(task_slice) in _STRUCTURED_MODES
             and _normalize_model_name(model_name) is not None
         )
 
-    def build_prompt(self, question: str, model_name: str | None) -> str:
+    def build_prompt(
+        self,
+        question: str,
+        model_name: str | None,
+        mode: str = "structured_json",
+    ) -> str:
         """Build the model-specific structured reasoning prompt."""
         normalized = _normalize_model_name(model_name)
         if normalized == "qwen":
-            return build_qwen_structured_reasoning_prompt(question)
+            if mode == "structured_json":
+                return build_qwen_structured_reasoning_prompt(question)
+            return build_qwen_minimal_json_prompt(
+                question,
+                grammar_gated=mode == "grammar_gated_json",
+            )
         if normalized == "gemma":
-            return build_gemma_structured_reasoning_prompt(question)
+            if mode == "structured_json":
+                return build_gemma_structured_reasoning_prompt(question)
+            return build_gemma_minimal_json_prompt(
+                question,
+                grammar_gated=mode == "grammar_gated_json",
+            )
         raise ValueError(f"unsupported model for structured reasoning prompt: {model_name}")
 
-    def build_retry_prompt(self, question: str, model_name: str | None, error: str) -> str:
+    def build_retry_prompt(
+        self,
+        question: str,
+        model_name: str | None,
+        error: str,
+        mode: str = "structured_json",
+    ) -> str:
         """Request the same schema again while surfacing the last validation error."""
         return (
             f"Issue: {error}\n"
             "The previous response did not satisfy Carnot's structured reasoning schema.\n\n"
-            f"{self.build_prompt(question, model_name)}"
+            f"{self.build_prompt(question, model_name, mode=mode)}"
         )
 
-    def validate_response(self, question: str, response: str) -> TypedReasoningIR:
+    def validate_response(
+        self,
+        question: str,
+        response: str,
+        mode: str = "structured_json",
+    ) -> TypedReasoningIR:
         """Validate a structured response before it is trusted by later verifiers."""
         payload = _extract_json_payload(response)
         if payload is None:
             raise ValueError("structured reasoning payload is not valid JSON")
 
-        for key in _REQUIRED_KEYS:
-            if key not in payload:
-                raise ValueError(f"missing required top-level key: {key}")
+        if mode == "structured_json":
+            for key in _REQUIRED_KEYS:
+                if key not in payload:
+                    raise ValueError(f"missing required top-level key: {key}")
 
-        if not isinstance(payload["constraints"], list):
-            raise ValueError("constraints must be a list")
-        if not isinstance(payload["steps"], list):
-            raise ValueError("steps must be a list")
-        if not isinstance(payload["claims"], list):
-            raise ValueError("claims must be a list")
-        if not isinstance(payload["final_answer"], dict):
-            raise ValueError("final_answer must be an object")
+            if not isinstance(payload["constraints"], list):
+                raise ValueError("constraints must be a list")
+            if not isinstance(payload["steps"], list):
+                raise ValueError("steps must be a list")
+            if not isinstance(payload["claims"], list):
+                raise ValueError("claims must be a list")
+            if not isinstance(payload["final_answer"], dict):
+                raise ValueError("final_answer must be an object")
+        else:
+            for key in _MINIMAL_REQUIRED_KEYS:
+                if key not in payload:
+                    raise ValueError(f"missing required top-level key: {key}")
+            if "claims" in payload and not isinstance(payload["claims"], list):
+                raise ValueError("claims must be a list")
+            if "checks" in payload and not isinstance(payload["checks"], list):
+                raise ValueError("checks must be a list")
+            if "steps" in payload and not isinstance(payload["steps"], list):
+                raise ValueError("steps must be a list")
 
         ir = self._extractor.extract(question=question, response=response)
         if ir.provenance.extraction_method != "direct_json":
@@ -266,12 +344,16 @@ class StructuredReasoningController:
                 max_new_tokens=max_new_tokens,
             )
 
-        prompt = self.build_prompt(question, model_name)
+        prompt = self.build_prompt(question, model_name, mode=policy_mode or "structured_json")
         attempts: list[StructuredReasoningAttempt] = []
         for _ in range(max_attempts):
             raw_response = generate(model, tokenizer, prompt, max_new_tokens=max_new_tokens)
             try:
-                ir = self.validate_response(question=question, response=raw_response)
+                ir = self.validate_response(
+                    question=question,
+                    response=raw_response,
+                    mode=policy_mode or "structured_json",
+                )
             except ValueError as exc:
                 attempts.append(
                     StructuredReasoningAttempt(
@@ -281,7 +363,12 @@ class StructuredReasoningController:
                         error=str(exc),
                     )
                 )
-                prompt = self.build_retry_prompt(question, model_name, str(exc))
+                prompt = self.build_retry_prompt(
+                    question,
+                    model_name,
+                    str(exc),
+                    mode=policy_mode or "structured_json",
+                )
                 continue
 
             attempts.append(
@@ -293,7 +380,7 @@ class StructuredReasoningController:
             )
             return StructuredReasoningEmission(
                 policy_mode=policy_mode,
-                response_mode="structured_json",
+                response_mode=policy_mode or "structured_json",
                 response=raw_response,
                 typed_reasoning=ir,
                 attempts=attempts,
