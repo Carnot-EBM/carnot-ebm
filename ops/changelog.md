@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-13 (Exp 251: process verification comparison vs Exp 238)
+
+- `results/experiment_251_results.json` — Exp 251 analysis artifact: direct comparison of Exp 250 (process-aware, 4-layer verifier stack) vs Exp 238 (spec-aware, 3-layer stack) on the same 30-case HumanEval cohort for Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it. Built from completed Exp 250 checkpoints (30/30 cases per model). Key findings: (1) process verification added 0 rejections beyond spec_aware gate for both models; (2) caught 5 right-for-wrong-reasons cases across both models (Qwen=3, Gemma=2) via outcome_correct_process_invalid defects; (3) Gemma verify_repair improved +3.3pp vs Exp 238 (1 case, humaneval-40) attributed to process feedback in repair prompts; (4) combined 143 defect instances across 4 kinds: contradictory_intermediate=53, unsupported_step=49, missing_premise_jump=36, outcome_correct_process_invalid=5. Verdict: process verification improves integrity visibility but does not improve pass@1 at the gating stage. (user instruction: create results/experiment_251_results.json)
+
 ## 2026-04-13 (Exp 248: process integrity corpus from checked-in live traces)
 
 - `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-060` and `SCENARIO-VERIFY-070` through `SCENARIO-VERIFY-073` for the process integrity corpus capability. (user instruction: Exp 248 process integrity corpus)

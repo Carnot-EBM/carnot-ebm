@@ -1,0 +1,363 @@
+{
+  "experiment": 251,
+  "benchmark": "humaneval_process_verification_comparison",
+  "run_date": "20260413",
+  "schema": {
+    "artifact": "carnot.humaneval_process_verification_comparison.v1",
+    "description": "Direct comparison of Exp 250 (process-aware) vs Exp 238 (spec-aware) to determine whether process verification adds value beyond official tests, PBT, and explicit specs on the same 30-case HumanEval cohort."
+  },
+  "metadata": {
+    "started_at": "2026-04-13T17:17:00Z",
+    "finished_at": "2026-04-13T17:18:00Z",
+    "runtime_seconds": 60.0,
+    "reference_experiments": [
+      238,
+      250
+    ],
+    "source_artifacts": [
+      "results/experiment_238_results.json",
+      "results/experiment_250_results.json"
+    ],
+    "models": [
+      "Qwen/Qwen3.5-0.8B",
+      "google/gemma-4-E4B-it"
+    ],
+    "cohort_size": 30,
+    "repair_budget": 3,
+    "pbt_max_examples": 64,
+    "verifier_stack_exp238": [
+      "official_tests",
+      "pbt",
+      "explicit_specs"
+    ],
+    "verifier_stack_exp250": [
+      "official_tests",
+      "pbt",
+      "explicit_specs",
+      "process_integrity"
+    ],
+    "output_path": "results/experiment_251_results.json",
+    "provenance": {
+      "exp238_run_date": "20260413",
+      "exp238_cohort_size": 30,
+      "exp250_run_date": "20260413",
+      "exp250_run_status": "complete",
+      "exp250_started_at": "2026-04-13T16:47:48Z",
+      "exp250_finished_at": "2026-04-13T17:13:28Z"
+    }
+  },
+  "cohort": {
+    "case_count": 30,
+    "case_ids": [
+      "humaneval-106",
+      "humaneval-90",
+      "humaneval-140",
+      "humaneval-1",
+      "humaneval-29",
+      "humaneval-138",
+      "humaneval-79",
+      "humaneval-64",
+      "humaneval-92",
+      "humaneval-47",
+      "humaneval-26",
+      "humaneval-127",
+      "humaneval-150",
+      "humaneval-21",
+      "humaneval-40",
+      "humaneval-147",
+      "humaneval-8",
+      "humaneval-51",
+      "humaneval-149",
+      "humaneval-84",
+      "humaneval-135",
+      "humaneval-23",
+      "humaneval-145",
+      "humaneval-153",
+      "humaneval-28",
+      "humaneval-41",
+      "humaneval-105",
+      "humaneval-25",
+      "humaneval-75",
+      "humaneval-2"
+    ],
+    "task_ids": [
+      "HumanEval/106",
+      "HumanEval/90",
+      "HumanEval/140",
+      "HumanEval/1",
+      "HumanEval/29",
+      "HumanEval/138",
+      "HumanEval/79",
+      "HumanEval/64",
+      "HumanEval/92",
+      "HumanEval/47",
+      "HumanEval/26",
+      "HumanEval/127",
+      "HumanEval/150",
+      "HumanEval/21",
+      "HumanEval/40",
+      "HumanEval/147",
+      "HumanEval/8",
+      "HumanEval/51",
+      "HumanEval/149",
+      "HumanEval/84",
+      "HumanEval/135",
+      "HumanEval/23",
+      "HumanEval/145",
+      "HumanEval/153",
+      "HumanEval/28",
+      "HumanEval/41",
+      "HumanEval/105",
+      "HumanEval/25",
+      "HumanEval/75",
+      "HumanEval/2"
+    ],
+    "shared_across_experiments": true,
+    "reference_experiment": 238
+  },
+  "model_comparisons": {
+    "Qwen3.5-0.8B": {
+      "exp238_cohort_size": 30,
+      "exp250_cohort_size": 30,
+      "stage_comparison": {
+        "baseline": {
+          "exp238_pass_at_1": 0.2333,
+          "exp250_pass_at_1": 0.2333,
+          "delta_pp": 0.0
+        },
+        "official_tests_verify_only": {
+          "exp238_pass_at_1": 0.2333,
+          "exp250_pass_at_1": 0.2333,
+          "delta_pp": 0.0
+        },
+        "pbt_verify_only": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        },
+        "spec_aware_verify_only": {
+          "exp238_pass_at_1": 0.1333,
+          "exp250_pass_at_1": 0.1333,
+          "delta_pp": 0.0
+        },
+        "verify_repair": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        }
+      },
+      "exp250_process_aware_verify_only": {
+        "accepted_pass_at_1": 0.1333,
+        "ci_lower": 0.0333,
+        "ci_upper": 0.2667,
+        "added_rejections_over_spec": 0,
+        "right_for_wrong_reasons_count": 3
+      },
+      "right_for_wrong_reasons_cases": [
+        {
+          "case_id": "humaneval-29",
+          "task_id": "HumanEval/29",
+          "official_passed": true,
+          "defect_kinds": [
+            "contradictory_intermediate",
+            "outcome_correct_process_invalid"
+          ]
+        },
+        {
+          "case_id": "humaneval-47",
+          "task_id": "HumanEval/47",
+          "official_passed": true,
+          "defect_kinds": [
+            "unsupported_step",
+            "contradictory_intermediate",
+            "outcome_correct_process_invalid"
+          ]
+        },
+        {
+          "case_id": "humaneval-28",
+          "task_id": "HumanEval/28",
+          "official_passed": true,
+          "defect_kinds": [
+            "contradictory_intermediate",
+            "outcome_correct_process_invalid"
+          ]
+        }
+      ],
+      "verify_repair_changes_vs_exp238": [],
+      "process_integrity": {
+        "right_for_wrong_reasons_count_baseline": 3,
+        "right_for_wrong_reasons_count_final": 3,
+        "process_valid_baseline_count": 4,
+        "process_valid_final_count": 5,
+        "defect_kind_counts": {
+          "contradictory_intermediate": 26,
+          "missing_premise_jump": 11,
+          "outcome_correct_process_invalid": 3,
+          "unsupported_step": 24
+        },
+        "total_cases": 30
+      }
+    },
+    "Gemma4-E4B-it": {
+      "exp238_cohort_size": 30,
+      "exp250_cohort_size": 30,
+      "stage_comparison": {
+        "baseline": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        },
+        "official_tests_verify_only": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        },
+        "pbt_verify_only": {
+          "exp238_pass_at_1": 0.1,
+          "exp250_pass_at_1": 0.1,
+          "delta_pp": 0.0
+        },
+        "spec_aware_verify_only": {
+          "exp238_pass_at_1": 0.1,
+          "exp250_pass_at_1": 0.1,
+          "delta_pp": 0.0
+        },
+        "verify_repair": {
+          "exp238_pass_at_1": 0.1333,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 3.33
+        }
+      },
+      "exp250_process_aware_verify_only": {
+        "accepted_pass_at_1": 0.1,
+        "ci_lower": 0.0,
+        "ci_upper": 0.2333,
+        "added_rejections_over_spec": 0,
+        "right_for_wrong_reasons_count": 2
+      },
+      "right_for_wrong_reasons_cases": [
+        {
+          "case_id": "humaneval-29",
+          "task_id": "HumanEval/29",
+          "official_passed": true,
+          "defect_kinds": [
+            "contradictory_intermediate",
+            "outcome_correct_process_invalid"
+          ]
+        },
+        {
+          "case_id": "humaneval-28",
+          "task_id": "HumanEval/28",
+          "official_passed": true,
+          "defect_kinds": [
+            "contradictory_intermediate",
+            "outcome_correct_process_invalid"
+          ]
+        }
+      ],
+      "verify_repair_changes_vs_exp238": [
+        {
+          "case_id": "humaneval-40",
+          "task_id": "HumanEval/40",
+          "exp238_accepted": false,
+          "exp250_accepted": true,
+          "exp238_n_repairs": 3,
+          "exp250_n_repairs": 3,
+          "note": "repair_loop_with_process_feedback_converged"
+        }
+      ],
+      "process_integrity": {
+        "right_for_wrong_reasons_count_baseline": 2,
+        "right_for_wrong_reasons_count_final": 1,
+        "process_valid_baseline_count": 3,
+        "process_valid_final_count": 5,
+        "defect_kind_counts": {
+          "contradictory_intermediate": 27,
+          "missing_premise_jump": 25,
+          "outcome_correct_process_invalid": 2,
+          "unsupported_step": 25
+        },
+        "total_cases": 30
+      }
+    }
+  },
+  "combined_defect_taxonomy": {
+    "total_defect_instances_across_both_models": 143,
+    "defect_kind_counts": {
+      "contradictory_intermediate": 53,
+      "missing_premise_jump": 36,
+      "outcome_correct_process_invalid": 5,
+      "unsupported_step": 49
+    },
+    "notes": {
+      "outcome_correct_process_invalid": "right-for-wrong-reasons cases: code passed harness but reasoning is invalid",
+      "contradictory_intermediate": "intermediate reasoning steps contradict each other",
+      "missing_premise_jump": "conclusion jumps without sufficient premises",
+      "unsupported_step": "reasoning step lacks supporting evidence in prior steps"
+    }
+  },
+  "exp238_vs_exp250_summary": {
+    "description": "Exp 238 used official_tests + PBT + explicit_specs as verifier stack. Exp 250 adds process_integrity as a 4th additive layer. Both experiments ran on the identical 30-case cohort with the same model pair, identical repair budget (3), and byte-identical prompt formats.",
+    "key_differences": [
+      "Exp 250 adds process_aware_verify_only stage (spec_aware AND process_valid)",
+      "Exp 250 repair prompts include process-integrity findings as non-blocking context",
+      "Exp 250 tracks right_for_wrong_reasons flag per case"
+    ],
+    "stage_pass_at_1_comparison": {
+      "Qwen3.5-0.8B": {
+        "baseline": {
+          "exp238_pass_at_1": 0.2333,
+          "exp250_pass_at_1": 0.2333,
+          "delta_pp": 0.0
+        },
+        "pbt_verify_only": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        },
+        "spec_aware_verify_only": {
+          "exp238_pass_at_1": 0.1333,
+          "exp250_pass_at_1": 0.1333,
+          "delta_pp": 0.0
+        },
+        "verify_repair": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        }
+      },
+      "Gemma4-E4B-it": {
+        "baseline": {
+          "exp238_pass_at_1": 0.1667,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 0.0
+        },
+        "pbt_verify_only": {
+          "exp238_pass_at_1": 0.1,
+          "exp250_pass_at_1": 0.1,
+          "delta_pp": 0.0
+        },
+        "spec_aware_verify_only": {
+          "exp238_pass_at_1": 0.1,
+          "exp250_pass_at_1": 0.1,
+          "delta_pp": 0.0
+        },
+        "verify_repair": {
+          "exp238_pass_at_1": 0.1333,
+          "exp250_pass_at_1": 0.1667,
+          "delta_pp": 3.33
+        }
+      }
+    }
+  },
+  "verdict": {
+    "process_verification_rejected_beyond_spec": false,
+    "process_verification_caught_rfwr_cases": true,
+    "verify_repair_outcome_changed_vs_exp238": true,
+    "conclusion": "Process verification added NO rejections beyond explicit spec checks at the process_aware_verify_only gate (0 cases across both models). However, it DID surface right-for-wrong-reasons integrity defects: Qwen=3 cases, Gemma=2 cases. These are cases where official tests pass but process reasoning is contradictory or unsupported (outcome_correct_process_invalid defect). Process feedback in repair prompts contributed to 1 Gemma case converging that did not converge under Exp 238 spec-only repair prompts. Verdict: process verification improved INTEGRITY VISIBILITY (rfwr detection) but did not improve pass@1 OUTCOMES at the gating stage. The process layer is additive for audit/safety use-cases but not for pass@1 lift.",
+    "addendum_weak_harness_analysis": {
+      "cases_official_pass_pbt_fail": 4,
+      "note": "Cases where official harness passes but PBT finds counterexamples represent weak-harness scenarios. Process verification catches a subset of these as outcome_correct_process_invalid defects when the reasoning is also contradictory."
+    }
+  }
+}
