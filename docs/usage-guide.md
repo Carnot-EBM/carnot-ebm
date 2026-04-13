@@ -17,6 +17,37 @@ carnot verify --help
 carnot verify-code --help
 ```
 
+## System Requirements
+
+### Code verification (CPU only — no GPU needed)
+
+The code verification pipeline (`carnot verify-code`, `verify_code_with_pbt` MCP tool, `verify_code()` API) runs entirely on CPU:
+
+- **Python:** 3.11+
+- **Install:** `pip install carnot` (~50MB with JAX CPU)
+- **RAM:** ~200MB for the verification pipeline
+- **No GPU required** — PBT runs via `hypothesis`, static analysis via AST, execution via subprocess
+
+This is Carnot's strongest and most practical feature. It verifies LLM-generated code by running property-based tests and static analysis without any GPU resources.
+
+### With LLM verify-repair loop (GPU recommended)
+
+To auto-repair violations by feeding them back to an LLM:
+
+- **Small models (0.8B-4B):** 2-8GB VRAM on one GPU
+- **Larger models (7B+):** `device_map="auto"` splits across multiple GPUs
+- **Optional:** TensorRT-LLM for 2-4x inference speedup (`pip install carnot[cuda]`)
+- **RAM:** ~4GB for model + pipeline
+
+### With warm model server (production benchmarks)
+
+For sustained inference (benchmarks, batch verification):
+
+- **ModelServer** keeps models warm on GPU — eliminates 3s cold-load per question
+- **Batched inference** (8-16 questions per forward pass) for 4-8x throughput
+- **Dual-GPU parallel** runs two models simultaneously when 2 GPUs available
+- See `python/carnot/inference/model_server.py` for API
+
 ## CLI: `carnot verify`
 
 The CLI verifies Python functions against test cases and optional property-based tests.
