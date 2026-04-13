@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 REQ-VERIFY-061/062 Process Verifier
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T15:58:23Z | 2026-04-13T16:03:39Z | Added REQ-VERIFY-061/062 to spec, implemented `process_verifier.py` with 6 defect kinds, added `verify_process_integrity` to `VerifyRepairPipeline`, wrote 29 tests covering reasoning/code-repair/IR/serialization/pipeline paths. All 29 pass. | TBD |
+
+### Session Summary
+
+- 29 tests written and passing; `python/carnot/pipeline/process_verifier.py` implemented; `VerifyRepairPipeline.verify_process_integrity` added additively.
+
 ## Session: 2026-04-13 Exp 248 Process Integrity Corpus
 
 ### Turn Log
