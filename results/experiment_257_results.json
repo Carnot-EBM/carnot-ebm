@@ -1,0 +1,170 @@
+{
+  "description": "Hardware latency/throughput benchmark for the Tier 3 predictive gate (PredictiveVerifier).  Reports CPU baseline, ONNX-CPU path, and honest blocker artifacts for CUDA ORT and AMD XDNA NPU.",
+  "experiment": 257,
+  "hardware_paths": [
+    {
+      "hardware_path": "cpu_numpy",
+      "latency_gate_us": 41.775,
+      "latency_inference_only_us": 5.85,
+      "latency_ms": 0.041775,
+      "note": "gate() includes Python feature-extraction; inference-only omits it",
+      "run_date": "20260413",
+      "status": "ok",
+      "throughput_calls_per_sec": 23937.6,
+      "timed_calls": 5000
+    },
+    {
+      "hardware_path": "onnx_cpu",
+      "latency_ms": 0.005847,
+      "latency_us": 5.847,
+      "note": "ORT CPUExecutionProvider; CUDA EP absent from this pip ORT build (see onnx_cuda record)",
+      "numpy_ort_delta": 8e-09,
+      "ort_version": "1.24.4",
+      "providers_used": [
+        "CPUExecutionProvider"
+      ],
+      "run_date": "20260413",
+      "status": "ok",
+      "throughput_calls_per_sec": 171031.8,
+      "timed_calls": 5000
+    },
+    {
+      "available_providers": [
+        "AzureExecutionProvider",
+        "CPUExecutionProvider"
+      ],
+      "gpu_inventory": {
+        "gpu_0": "NVIDIA GeForce RTX 3090 (24 GB VRAM)",
+        "gpu_1": "NVIDIA GeForce RTX 3090 (24 GB VRAM)",
+        "note": "GPUs are available (verified via PyTorch torch.cuda) but ORT CUDA EP requires the GPU-enabled onnxruntime wheel"
+      },
+      "hardware_path": "onnx_cuda",
+      "install_hint": "pip install onnxruntime-gpu  # CUDA 12 build; replaces onnxruntime",
+      "latency_ms": null,
+      "missing_component": "onnxruntime CUDAExecutionProvider",
+      "run_date": "20260413",
+      "status": "blocker",
+      "throughput_calls_per_sec": null
+    },
+    {
+      "driver_status": {
+        "amd_supported_python_versions": [
+          "3.9",
+          "3.10",
+          "3.11",
+          "3.12"
+        ],
+        "amdxdna_loaded": true,
+        "current_python_version": "3.14",
+        "python_wheel_has_vitisai_ep": false,
+        "vitisai_ep_so_present": false,
+        "xrt_path_present": true,
+        "xrt_version": "2.20.0"
+      },
+      "hardware_path": "npu_xdna",
+      "install_hint": "Option A: Download AMD custom onnxruntime wheel from ryzenai.docs.amd.com/en/latest/inst.html (requires AMD account + EULA; supports Python 3.9-3.12 only). Option B: Build onnxruntime 1.20.1 from source with -Donnxruntime_USE_VITISAI=ON and Python 3.12 venv.",
+      "latency_ms": null,
+      "missing_component": "onnxruntime VitisAI EP (pip wheel lacks VitisAI)",
+      "note": "ONNX model is already exported (export_onnx() works). NPU inference would be the last step once VitisAI EP is available.",
+      "onnx_model_ready": true,
+      "run_date": "20260413",
+      "status": "blocker",
+      "throughput_calls_per_sec": null
+    }
+  ],
+  "honest_verdict": {
+    "explanation": "CPU NumPy gate and ONNX CPUExecutionProvider both ran successfully and produced matching outputs.  CUDA ORT is blocked because the pip onnxruntime wheel does not include CUDAExecutionProvider (two RTX 3090 GPUs are available but require onnxruntime-gpu).  AMD XDNA NPU is blocked because VitisAI EP is not compiled into the pip wheel and AMD only distributes it for Python 3.9-3.12 (current: 3.14). No numbers were fabricated for blocked paths.",
+    "primary_met": true,
+    "recommended_next_steps": [
+      "Install onnxruntime-gpu (CUDA 12) to enable CUDA EP benchmark: pip install onnxruntime-gpu",
+      "For NPU: use .venv-npu (Python 3.12) + AMD VitisAI onnxruntime wheel from ryzenai.docs.amd.com OR build from source with -Donnxruntime_USE_VITISAI=ON",
+      "Calibrate PredictiveVerifier on live GSM8K corpus (Exp 256 next step)"
+    ]
+  },
+  "model_metadata": {
+    "b_value": -1.5,
+    "export_format": "onnx + safetensors",
+    "feature_dim": 9,
+    "parameter_count": 10,
+    "safetensors_size_bytes": 160,
+    "w_l2_norm": 1.754993
+  },
+  "routing_quality": [
+    {
+      "confidence": 0.58967,
+      "domain_probs": {
+        "arithmetic": 0.58967,
+        "code": 0.353802,
+        "logic": 0.412769
+      },
+      "label": "high_risk",
+      "route": "FULL"
+    },
+    {
+      "confidence": 0.518858,
+      "domain_probs": {
+        "arithmetic": 0.518858,
+        "code": 0.311315,
+        "logic": 0.3632
+      },
+      "label": "arithmetic_chain",
+      "route": "FULL"
+    },
+    {
+      "confidence": 0.370152,
+      "domain_probs": {
+        "arithmetic": 0.370152,
+        "code": 0.222091,
+        "logic": 0.259107
+      },
+      "label": "code",
+      "route": "FAST_PATH"
+    },
+    {
+      "confidence": 0.220217,
+      "domain_probs": {
+        "arithmetic": 0.220217,
+        "code": 0.13213,
+        "logic": 0.154152
+      },
+      "label": "low_risk_reasoning",
+      "route": "FAST_PATH"
+    },
+    {
+      "confidence": 0.668941,
+      "domain_probs": {
+        "arithmetic": 0.668941,
+        "code": 0.401365,
+        "logic": 0.468259
+      },
+      "label": "trivial",
+      "route": "FULL"
+    },
+    {
+      "confidence": 0.191545,
+      "domain_probs": {
+        "arithmetic": 0.191545,
+        "code": 0.114927,
+        "logic": 0.134082
+      },
+      "label": "empty",
+      "route": "FAST_PATH"
+    }
+  ],
+  "run_date": "20260413",
+  "scope": "predictive_verifier_only",
+  "summary": {
+    "fastest_available_path": "cpu_numpy",
+    "fastest_latency_us": 41.775,
+    "fastest_throughput_calls_per_sec": 23937.6,
+    "onnx_cpu_speedup_vs_gate": 7.145,
+    "paths_blocked": [
+      "onnx_cuda",
+      "npu_xdna"
+    ],
+    "paths_ok": [
+      "cpu_numpy",
+      "onnx_cpu"
+    ]
+  }
+}

@@ -1,5 +1,11 @@
 # Carnot — Changelog
 
+## 2026-04-13 (Exp 257: predictive-verifier hardware benchmark)
+
+- `scripts/experiment_257_predictive_verifier_hardware.py` — Hardware-path benchmark for the Tier 3 `PredictiveVerifier`. Measures CPU NumPy gate and ONNX CPUExecutionProvider; emits honest blocker artifacts for CUDA ORT and AMD XDNA NPU. (user instruction: Exp 257 hardware benchmark)
+- `tests/python/test_experiment_257_hardware_benchmark.py` — 29 tests covering: artifact labeling (SCENARIO-EXP257-A), ONNX export-path branching (SCENARIO-EXP257-B), blocker handling (SCENARIO-EXP257-C). All 29 pass. (REQ-PRED-003)
+- `results/experiment_257_results.json` — Benchmark results: CPU NumPy 41.8 µs/call (23,938 calls/s); ONNX CPU ORT 5.8 µs/call (171,032 calls/s, 7.1× faster); CUDA ORT blocked (no CUDAExecutionProvider in pip wheel — install onnxruntime-gpu); AMD XDNA NPU blocked (VitisAI EP absent, Python 3.14 unsupported by AMD). No numbers fabricated for blocked paths.
+
 ## 2026-04-13 (Exp 251: process verification comparison vs Exp 238)
 
 - `results/experiment_251_results.json` — Exp 251 analysis artifact: direct comparison of Exp 250 (process-aware, 4-layer verifier stack) vs Exp 238 (spec-aware, 3-layer stack) on the same 30-case HumanEval cohort for Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it. Built from completed Exp 250 checkpoints (30/30 cases per model). Key findings: (1) process verification added 0 rejections beyond spec_aware gate for both models; (2) caught 5 right-for-wrong-reasons cases across both models (Qwen=3, Gemma=2) via outcome_correct_process_invalid defects; (3) Gemma verify_repair improved +3.3pp vs Exp 238 (1 case, humaneval-40) attributed to process feedback in repair prompts; (4) combined 143 defect instances across 4 kinds: contradictory_intermediate=53, unsupported_step=49, missing_premise_jump=36, outcome_correct_process_invalid=5. Verdict: process verification improves integrity visibility but does not improve pass@1 at the gating stage. (user instruction: create results/experiment_251_results.json)
