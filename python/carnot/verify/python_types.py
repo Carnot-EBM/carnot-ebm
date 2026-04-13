@@ -71,21 +71,20 @@ def safe_exec_function(
     """Execute a Python function defined in ``code`` with the given arguments.
 
     **Researcher summary:**
-        Safely executes arbitrary Python code. Prefers gvisor sandbox when
-        available (Docker + runsc), falls back to in-process exec otherwise.
-        Returns (result, None) on success or (None, exception) on failure.
+        Safely executes arbitrary Python code. Uses the gvisor sandbox when
+        explicitly requested, otherwise runs in-process for speed. Returns
+        (result, None) on success or (None, exception) on failure.
 
     **Detailed explanation for engineers:**
         Execution priority:
-        1. If gvisor sandbox is available (Docker + runsc runtime), runs
-           the code in an isolated container with no network, limited memory,
-           and a read-only filesystem. This is safe for untrusted code.
-        2. If gvisor is unavailable, falls back to Python's ``exec()`` in a
-           fresh namespace. This is NOT safe for untrusted code but keeps
-           the pipeline working on dev machines without Docker.
-
-        Set CARNOT_REQUIRE_SANDBOX=1 to force sandbox mode (raises if
-        gvisor unavailable instead of falling back).
+        1. If ``CARNOT_USE_SANDBOX=1`` or ``CARNOT_REQUIRE_SANDBOX=1``,
+           attempts to run the code in an isolated gvisor container with no
+           network, limited memory, and a read-only filesystem.
+        2. If sandboxing is optional and unavailable, falls back to Python's
+           ``exec()`` in a fresh namespace. This is NOT safe for untrusted
+           code but keeps the pipeline working on dev machines without Docker.
+        3. If ``CARNOT_REQUIRE_SANDBOX=1`` and the runtime is unavailable,
+           returns a RuntimeError instead of executing locally.
 
     Args:
         code: Python source code defining the function.
@@ -100,17 +99,20 @@ def safe_exec_function(
     """
     import os
 
-    # Only use sandbox when explicitly requested — avoids Docker overhead
-    # during tests and development. Set CARNOT_USE_SANDBOX=1 for production.
+    # Sandbox use is opt-in to avoid Docker overhead during routine test runs
+    # and local development. Set CARNOT_USE_SANDBOX=1 when isolation is wanted.
     use_sandbox = os.environ.get("CARNOT_USE_SANDBOX", "") == "1"
     require_sandbox = os.environ.get("CARNOT_REQUIRE_SANDBOX", "") == "1"
 
     if use_sandbox or require_sandbox:
         try:
-            from carnot.verify.sandbox import sandboxed_exec_function, _gvisor_available
+            from carnot.verify.sandbox import _gvisor_available, sandboxed_exec_function
+
             if _gvisor_available():
                 return sandboxed_exec_function(
-                    code, func_name, args,
+                    code,
+                    func_name,
+                    args,
                     timeout=timeout,
                     allow_fallback=not require_sandbox,
                 )

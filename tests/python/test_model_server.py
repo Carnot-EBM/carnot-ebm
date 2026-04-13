@@ -269,16 +269,17 @@ class TestModelLoaderServerIntegration:
             batch_generate_fn=_make_batch_generate([]),
         ) as server:
             register_model_server(server)
+            monkeypatch.delenv("CARNOT_TRUST_REMOTE_CODE", raising=False)
             monkeypatch.setattr(model_loader, "_available_ram_bytes", lambda: 3 * 1024**3)
 
             class _DummyAutoTokenizer:
                 @staticmethod
                 def from_pretrained(
                     model_name: str,
-                    trust_remote_code: bool = True,
+                    trust_remote_code: bool = False,
                 ) -> dict[str, str]:
                     assert model_name == "google/gemma-4-E4B-it"
-                    assert trust_remote_code is True
+                    assert trust_remote_code is False
                     return {"tokenizer_name": model_name}
 
             class _DummyModel:
@@ -294,11 +295,11 @@ class TestModelLoaderServerIntegration:
                 @staticmethod
                 def from_pretrained(
                     model_name: str,
-                    trust_remote_code: bool = True,
+                    trust_remote_code: bool = False,
                     torch_dtype: Any = None,
                 ) -> _DummyModel:
                     assert model_name == "google/gemma-4-E4B-it"
-                    assert trust_remote_code is True
+                    assert trust_remote_code is False
                     assert torch_dtype is not None
                     return dummy_model
 
