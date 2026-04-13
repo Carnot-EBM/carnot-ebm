@@ -1425,3 +1425,5 @@ python/ |
 | 2026-04-13 23:02 UTC | Exp 264: Domain-specific constraint template extra | SKIP | Pre-tests failing, self-heal failed: 81 passed, 12 errors in 3.35s |
 | 2026-04-13 23:07 UTC | Exp 264: Domain-specific constraint template extra | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
 | 2026-04-13 23:08 UTC | Exp 265: Constraint addition module wired to forma | OK | Deliverable already exists in repo |
+| 2026-04-13 23:11 UTC | Exp 266: Self-learning replay v3 with calibrated g | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
+| 2026-04-13 23:12 UTC | Exp 266: Self-learning replay v3 with calibrated g | OK | Deliverable already exists in repo |
