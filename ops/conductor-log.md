@@ -1383,3 +1383,4 @@ python/ |
 +   |
 | 2026-04-13 06:56 UTC | Exp 238: Identical-stack dual-model HumanEval benc | OK | Deliverable already exists in repo |
 | 2026-04-13 07:46 UTC | Exp 239: Case-based trace memory with richer retri | OK | Deliverable already exists in repo |
+| 2026-04-13 08:18 UTC | Exp 240: Learned repair-policy compiler from accep | OK | =========== 2216 passed, 1 skipped, 22 warnings in 87.52s (0:01:27) ============ |
