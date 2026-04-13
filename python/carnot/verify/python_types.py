@@ -370,10 +370,11 @@ def code_to_embedding(code: str, vocab_size: int = 256) -> jax.Array:
            source into tokens (keywords, identifiers, operators, literals).
            This gives us syntactically meaningful units, not just characters.
 
-        2. **Hash to index**: For each token string, compute
-           ``hash(token_string) % vocab_size``. This maps an unbounded vocabulary
-           to a fixed-size vector. Collisions are possible but rare for small
-           codebases.
+        2. **Hash to index**: For each token identity, compute a hash over the
+           token type plus token string and take ``% vocab_size``. This maps an
+           unbounded vocabulary to a fixed-size vector while reducing trivial
+           collisions between operators that would otherwise share the same
+           string-only bucket.
 
         3. **Count frequencies**: Increment the count at the hashed index.
            The result is a bag-of-tokens: it captures *which* tokens appear
@@ -412,7 +413,7 @@ def code_to_embedding(code: str, vocab_size: int = 256) -> jax.Array:
                 tokenize.COMMENT,
             ):
                 continue
-            idx = hash(tok.string) % vocab_size
+            idx = hash(f"{tok.type}:{tok.string}") % vocab_size
             counts[idx] += 1
     except tokenize.TokenError:
         # Malformed code — return the partial tokenization we got
@@ -441,10 +442,15 @@ def _compute_nesting_depth(node: ast.AST, current: int = 0) -> list[int]:
     """
     depths: list[int] = []
     nesting_types = (
-        ast.FunctionDef, ast.AsyncFunctionDef,
-        ast.For, ast.AsyncFor,
-        ast.While, ast.If,
-        ast.Try, ast.With, ast.AsyncWith,
+        ast.FunctionDef,
+        ast.AsyncFunctionDef,
+        ast.For,
+        ast.AsyncFor,
+        ast.While,
+        ast.If,
+        ast.Try,
+        ast.With,
+        ast.AsyncWith,
     )
     for child in ast.iter_child_nodes(node):
         if isinstance(child, nesting_types):

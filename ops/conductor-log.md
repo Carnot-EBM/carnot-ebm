@@ -1370,3 +1370,14 @@ python/ |
 +        _PROMPT,
 +        "sort_ |
 | 2026-04-13 06:11 UTC | Exp 237: Spec-aware code verifier and repair polic | OK | Deliverable already exists in repo |
+| 2026-04-13 06:56 UTC | Exp 238: Identical-stack dual-model HumanEval benc | FAIL | Codex CLI error:    assert written["blockers"] == blockers
+ 
+-    module_path |
+| 2026-04-13 06:56 UTC | Exp 238: Identical-stack dual-model HumanEval benc | FAIL | Codex CLI error: ilable"
++    assert payload["run_status"] == "partial"
++
++   |
+| 2026-04-13 06:56 UTC | Exp 238: Identical-stack dual-model HumanEval benc | FAIL | Codex CLI error: ilable"
++    assert payload["run_status"] == "partial"
++
++   |
