@@ -1359,3 +1359,4 @@ E   ImportError: cannot impor |
 | 2026-04-13 03:36 UTC | Exp 233: Structured-output policy refresh on a JSO | FAIL | Codex CLI error: /python_types.py                   178      0   100%
 python/ |
 | 2026-04-13 03:36 UTC | Exp 233: Structured-output policy refresh on a JSO | OK | Deliverable already exists in repo |
+| 2026-04-13 04:06 UTC | Exp 234: Calibrated semantic verifier v2 | OK | =========== 2163 passed, 1 skipped, 22 warnings in 87.04s (0:01:27) ============ |
