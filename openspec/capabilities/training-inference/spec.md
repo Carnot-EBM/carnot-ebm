@@ -114,6 +114,24 @@ plane, where:
 - the artifact records whether `FPGAIsingSampler(mode="auto")` would remain on
   the FPGA path or fall back to CPU in the same environment
 
+### REQ-SAMPLE-008: Sampler-Backed Repair Reranking Replay Benchmark
+
+The system shall provide a deterministic replay benchmark for sampler-backed
+repair reranking, where:
+- saved semantic and code repair attempts are normalized into recorded
+  candidate sets with stable ordering, per-candidate verifier metadata, and
+  source-artifact provenance
+- candidate-set scoring uses the existing Carnot scorer path to produce a
+  replayable energy score for each saved candidate without regenerating model
+  outputs
+- candidate selection can be executed through the CPU sampler path and through
+  the KV260 path when a real or software-model transport is available
+- the artifact labels the sampler execution path honestly as `hardware`,
+  `software_model`, `cpu`, or `blocked`
+- the artifact reports top-1 repair quality, verifier precision, repair yield,
+  and reranking latency deltas versus the original saved repair outcome for
+  both the semantic and code slices
+
 ## Scenarios
 
 ### SCENARIO-TRAIN-001: CD-1 Training Step
@@ -237,6 +255,35 @@ hardware
 **And** it preserves the distinction between software-model timings and live
 hardware validation
 
+### SCENARIO-SAMPLE-015: Saved Repair Histories Become Deterministic Candidate Sets
+
+**Given** the checked-in Exp 235 semantic verify-repair artifact and Exp 238
+spec-aware code artifact
+**When** the Exp 243 replay benchmark is built
+**Then** each replay case records the ordered saved candidates from the source
+repair history without regenerating outputs
+**And** each candidate preserves the saved verifier evidence and source
+iteration needed for deterministic reranking
+
+### SCENARIO-SAMPLE-016: CPU Sampler Reranks Candidate Sets From Saved Scores
+
+**Given** a replay case with two or more saved candidates and replayable
+candidate energy scores
+**When** the Exp 243 benchmark executes the CPU sampler-backed reranker
+**Then** it returns one top-1 candidate per case through the existing sampler
+backend interface
+**And** the artifact reports the selected candidate, selection latency, and
+quality deltas versus the original saved repair outcome
+
+### SCENARIO-SAMPLE-017: Hardware Mode Is Reported Honestly For Exp 243
+
+**Given** the same KV260 transport conditions used for Exp 242
+**When** the Exp 243 reranking benchmark is executed
+**Then** the artifact labels the sampler path as `hardware`,
+`software_model`, or `blocked`
+**And** blocked runs preserve the setup blocker instead of fabricating
+hardware-backed reranking timings
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -259,3 +306,4 @@ hardware validation
 | REQ-SAMPLE-005 | Not Started | Implemented | 6 Python |
 | REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |
 | REQ-SAMPLE-007 | Not Started | Implemented | 5 Python |
+| REQ-SAMPLE-008 | Not Started | Implemented | 8 Python |
