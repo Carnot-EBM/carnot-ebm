@@ -1410,3 +1410,4 @@ python/ |
 | 2026-04-13 20:13 UTC | Milestone 2026.04.19 activated | OK | 13 tasks queued |
 | 2026-04-13 20:47 UTC | Exp 258: Wire DualGPURunner to live benchmark harn | OK | 2567 passed, 2 skipped, 14 warnings in 505.40s (0:08:25) |
 | 2026-04-13 21:04 UTC | Exp 259: onnxruntime-gpu CUDA EP unlock and Predic | OK | 2579 passed, 5 skipped, 13 warnings in 487.77s (0:08:07) |
+| 2026-04-13 22:18 UTC | Exp 260: Complete solver-routed semantic benchmark | OK | Deliverable already exists in repo |
