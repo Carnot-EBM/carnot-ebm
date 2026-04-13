@@ -27,7 +27,8 @@
 - `tests/python/test_semantic_verifier_v2.py` holds the new module at **100%** targeted coverage. The focused regression set covering semantic grounding, typed reasoning, and pipeline integration still passes, and the full Python suite stayed green after the new gating path landed.
 
 ### Public Documentation Refresh (Exp 231)
-- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, and `docs/index.html` now report the latest live PBT results and hardware progress with explicit provenance labels instead of implying every checked-in artifact is a live benchmark. Public-facing counts now read **228+** experiments, **13** live GPU artifacts, **3** simulated artifacts, **68** unverified artifacts, and **1** software-model artifact.
+- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, and `docs/index.html` now report the latest live PBT results and hardware progress with explicit provenance labels instead of implying every checked-in artifact is a live benchmark. Public-facing counts now read **228+** experiments, **13** live GPU artifacts, **3** simulated artifacts, **69** unverified artifacts, and **1** software-model artifact.
+- `tests/python/test_docs.py` now also covers the fallback `**Last Updated:** ... EXPERIMENTS` banner parsing path used by `_current_experiment_label()`, so the docs regression suite keeps the status-label helper honest and the final Python suite returns to **100.00%** coverage again.
 - The code-verification story is now honest about both sides of the current PBT evidence: **Exp 226** remains the strongest live result at **11.6% -> 14.6%** on the full **164**-problem HumanEval benchmark, while **Exp 227** is the same-cohort Qwen transfer check that stays flat at **23.3% -> 23.3%** but still detects **17/23** wrong baselines and catches **2** weak-harness misses.
 - The hardware path is now visible in the public docs. The new copy links `docs/fpga-ising-design.md`, summarizes the KV260-class sparse **4096**-spin design, and labels **Exp 228** explicitly as **software simulation** rather than a synthesized FPGA throughput result.
 
@@ -137,7 +138,7 @@
 
 ### Research Reporting Provenance (Exp 209)
 - `scripts/experiment_209_cleanup.py` now audits every `results/experiment_*_results.json` artifact and adds a top-level `result_header` plus machine-readable `result_provenance` summary without deleting any historical data.
-- Current result inventory contains **85** `results/experiment_*_results.json` artifacts, with **13** explicit `live_gpu` artifacts, **3** simulation-mode artifacts, **68** still missing explicit live inference provenance, and **1** software-model artifact (`software_simulation`, Exp 228).
+- Current result inventory contains **86** `results/experiment_*_results.json` artifacts, with **13** explicit `live_gpu` artifacts, **3** simulation-mode artifacts, **69** still missing explicit live inference provenance, and **1** software-model artifact (`software_simulation`, Exp 228).
 - `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, and `docs/index.html` now separate validated live evidence from simulated, unverified, or software-model results. The strongest current live HumanEval code artifact is still **Exp 226** on the full **164**-problem Gemma4-E4B-it cohort, **Exp 227** adds the seeded **30**-problem Qwen3.5-0.8B transfer check on the same Exp 208 slice, **Exp 220** remains the paired two-model property-verifier comparison, and **Exp 228** is preserved but labeled as a hardware software-model artifact rather than a live benchmark. The large GSM8K / adversarial gains from **Exp 161** and **Exp 178** are still marked as simulated.
 
 ### Constraint Extraction Research Scan (Exp 210)

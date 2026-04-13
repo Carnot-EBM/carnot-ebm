@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-04-13 (docs regression coverage restoration)
+
+- `tests/python/test_docs.py` and `ops/status.md` — Added a focused regression for the `_current_experiment_label()` fallback branch that still reads the `**Last Updated:** ... EXPERIMENTS` banner when the newer public-counts sentence is absent. This closes the last uncovered lines in the docs regression helper under `REQ-REPORT-003` and `REQ-REPORT-004`, and records in the operational handoff that the full Python suite is back to **100.00%** coverage. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+- Validation — Focused docs regression passed via `JAX_PLATFORMS=cpu .venv/bin/pytest -o addopts='' tests/python/test_docs.py -q --no-cov -n 0` → `4 passed`. Required full-suite validation passed via `JAX_PLATFORMS=cpu .venv/bin/pytest tests/python --tb=short -q` → `2205 passed, 1 skipped, 22 warnings`, `99.97%` repo coverage before the new test and `100.00%` after it. Spec coverage passed via `JAX_PLATFORMS=cpu .venv/bin/python scripts/check_spec_coverage.py`. Applicable E2E checks passed via `JAX_PLATFORMS=cpu .venv/bin/pytest -n 0 tests/python/test_e2e_training_sampling.py tests/python/test_e2e_serialization.py tests/python/test_pyo3_integration.py -q --no-cov` → `38 passed`. Reconciliation passed via `bash scripts/validate-reconciliation.sh`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+
+## 2026-04-13 (docs provenance inventory reconciliation)
+
+- `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, `docs/index.html`, and `ops/status.md` — Reconciled the public provenance inventory after the checked-in result set grew again. The current audited inventory is now **86** `results/experiment_*_results.json` artifacts: **13** live GPU, **3** simulated, **69** unverified, and **1** software-model artifact. This fixes the stale `68 unverified` public snapshot that was breaking `tests/python/test_docs.py` under `REQ-REPORT-003` and `REQ-REPORT-004`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+- Validation — Focused docs regression passed via `JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_docs.py -q -n 0 --tb=short`. Required full-suite validation, spec coverage, reconciliation, and applicable E2E checks were rerun after the docs fix. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
+
 ## 2026-04-13 (VERIFY-034 / Exp 235: live GSM8K semantic benchmark v2)
 
 - `openspec/capabilities/verifiable-reasoning/spec.md` and `epics/stories/VERIFY-034.md` — Added `REQ-VERIFY-048`, `REQ-VERIFY-049`, `SCENARIO-VERIFY-050`, and `SCENARIO-VERIFY-051` for the Exp 235 live GSM8K semantic-verifier-v2 rerun, then closed the new story after the artifact, comparison block, and reconciliation work landed. (user instruction: create `results/experiment_235_results.json`)

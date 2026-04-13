@@ -10,8 +10,10 @@ from __future__ import annotations
 
 import json
 import re
+import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -61,6 +63,18 @@ def _current_experiment_label() -> str:
 def _current_milestone_count() -> int:
     payload = yaml.safe_load(_read_repo_file("research-complete.yaml"))
     return len(payload["milestones"])
+
+
+def test_current_experiment_label_supports_last_updated_fallback(monkeypatch) -> None:
+    """REQ-REPORT-003, REQ-REPORT-004: docs label fallback stays parseable."""
+
+    monkeypatch.setattr(
+        sys.modules[__name__],
+        "_read_repo_file",
+        lambda _: "**Last Updated:** 2026-04-13 — 209 EXPERIMENTS",
+    )
+
+    assert _current_experiment_label() == "209"
 
 
 def test_docs_have_premium_aesthetic():
@@ -135,3 +149,17 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     assert "VERIFY-031" in report
     assert "verify_code_with_pbt" in readme
     assert "Experiment 228" in report_html
+
+
+def test_current_experiment_label_falls_back_to_last_updated_banner(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-REPORT-003, REQ-REPORT-004: fallback status banner still drives docs labels."""
+
+    def fake_read_repo_file(relative_path: str) -> str:
+        assert relative_path == "ops/status.md"
+        return "**Last Updated:** 2026-04-13 — 209 EXPERIMENTS"
+
+    monkeypatch.setattr(sys.modules[__name__], "_read_repo_file", fake_read_repo_file)
+
+    assert _current_experiment_label() == "209"
