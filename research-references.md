@@ -730,3 +730,59 @@ Top 10 selected by relevance score.
 - **Logical Intelligence / Kona architecture update** - https://logicalintelligence.com/kona-ebms-energy-based-models
   Why it matters: Kona continues to frame EBMs as a validity layer beneath generators rather than another generator.
   Carnot use: supports a milestone centered on external verification, process integrity, and self-learning sidecars rather than on replacing the target LLMs.
+
+## 2026-04-13 - Milestone 2026.04.19 Planning Refresh
+
+### Predictive Verifier Calibration and Formal Guarantees
+
+- **The 4/δ Bound: Designing Predictable LLM-Verifier Systems for Formal Method Guarantees** (arXiv 2512.02080) - https://arxiv.org/abs/2512.02080
+  Why it matters: First formal framework with convergence theorems for multi-stage verification pipelines. Models verification as an absorbing Markov chain with guaranteed termination (the 4/δ bound). Identifies three operating zones — marginal, practical, high-performance — with dynamic calibration strategies and over 90K trial validation.
+  Carnot use: Critical for diagnosing the Exp 256 calibration failure where the PredictiveVerifier gate routed everything to FAST_PATH on live data. The Markov chain model directly maps to FormalClaimVerifier → ProcessVerifier → PredictiveVerifier pipeline structure. Provides parameterized calibration strategies for threshold drift handling.
+
+- **TECP: Token-Entropy Conformal Prediction for LLMs** (MDPI Mathematics 2025) - https://www.mdpi.com/2227-7390/13/20/3351
+  Why it matters: Uses log-probability token-entropy as a nonconformity score with split conformal prediction, giving finite-sample coverage guarantees on QA benchmarks without live-data retraining. Outperforms self-UQ methods on 6 LLMs.
+  Carnot use: Addresses the PredictiveVerifier calibration gap. Token-entropy conformal approach could replace the current static gate threshold with provable constraint satisfaction bounds that adapt to each model's output distribution.
+
+### Self-Play and Verifier Improvement
+
+- **Learning to Rank Chain-of-Thought: Energy Outcome Reward Model (EORM)** (arXiv 2505.14999) - https://arxiv.org/abs/2505.14999
+  Why it matters: Lightweight 55M-parameter post-hoc verifier using an energy-based framework for ranking reasoning solutions. Achieves 90.7% on GSM8K with Llama 3 8B, demonstrating practical EBM scaling for solution ranking at inference time.
+  Carnot use: Direct parallel to Carnot's PredictiveVerifier. EORM's energy-based ranking at inference time mirrors constraint-energy scoring. Could inform faster ranking strategies for repair candidate selection and provide a published baseline to compare against.
+
+- **Self-Play Only Evolves When Self-Synthetic Pipeline Ensures Learnable Information Gain** (arXiv 2603.02218) - https://arxiv.org/abs/2603.02218
+  Why it matters: Diagnoses why naive self-play fails — the loop synthesizes data without increasing learnable information. Proposes asymmetric co-evolution (weak-to-strong-to-weak), capacity growth matching, and proactive info seeking via external context as remedies.
+  Carnot use: Root-cause analysis for the Exp 256 self-learning A/B test failure (constraint templates matched description-text proxies, not real inference tokens). The "proactive info seeking" prescription maps to mining live inference tokens rather than replay description text for constraint template extraction.
+
+- **Propose, Solve, Verify: Self-Play Through Formal Verification (PSV)** (arXiv 2512.18160) - https://arxiv.org/abs/2512.18160
+  Why it matters: Uses formal verification (not unit tests) as the self-play training signal. PSV-Verus improves pass@1 by 9.6x over expert-iteration baselines. Formal verification enables robust exploratory data generation, avoiding brittleness of loose test-based supervision.
+  Carnot use: Supports upgrading the constraint addition module (Exp 265) to mine formal solver verdicts rather than description-text proximity as the learning signal. Pairs well with the existing FormalClaimVerifier substrate.
+
+### GPU Inference Acceleration
+
+- **Flexible and Efficient Grammar-Constrained Decoding (DOMINO)** (ICML 2025) - https://icml.cc/virtual/2025/poster/43675
+  Why it matters: Grammar-constrained decoding with 17.71x faster preprocessing than prior work while maintaining online efficiency. Fully subword-aligned with speculative decoding integration. Enforces CFG rules during generation rather than post-hoc.
+  Carnot use: Potential path to encode formal claim templates as grammar constraints, enforcing them during generation rather than in a separate verify step. Speculative decoding compatibility enables pipelining with main generation — relevant for reducing the 21s/case solver bottleneck.
+
+- **Accelerating LLM Inference with Lossless Speculative Decoding** (ICML 2025) - https://icml.cc/virtual/2025/poster/44892
+  Why it matters: Speculative decoding for heterogeneous token distributions with lossless speedup. Draft-and-verify enables batch generation with quality guarantees.
+  Carnot use: Architecture guidance for pipelining PredictiveVerifier with main generation. A small verifier draft model could propose violations while the main model generates, hiding verification latency. Relevant to the batched inference improvements planned for the DualGPURunner harness.
+
+### Online Constraint Learning and Repair
+
+- **Learning to Solve and Verify: Sol-Ver Self-Play Framework** (arXiv 2502.14948) - https://arxiv.org/abs/2502.14948
+  Why it matters: Jointly improving code generation (19.63% relative improvement) and test generation (17.49%) without human annotations via quality-gated mutual verification. Error accumulation prevention via bidirectional quality checks.
+  Carnot use: Template for the constraint addition module improvement — mutual verification between constraint templates and live inference tokens prevents the "too liberal matching" failure seen in Exp 256. Already cited in prior milestones but its quality-gating mechanism is directly actionable.
+
+- **Towards Efficient Constraint Handling in Neural Solvers** (arXiv 2602.16012) - https://arxiv.org/abs/2602.16012
+  Why it matters: Learning-based feasibility refinement that refines infeasible solutions in a few post-construction steps while preserving optimality. General, simple, efficient neural constraint handling.
+  Carnot use: Online constraint refinement applicable to the constraint_addition module. Rather than adding entirely new templates, this suggests refining existing templates toward feasibility on live inference outputs — complementary to domain-specific token pattern extraction.
+
+### Hardware Acceleration: Ising Machines and NPU
+
+- **All-to-All Reconfigurability with Sparse and Higher-Order Ising Machines** (Nature Communications 2024) - https://www.nature.com/articles/s41467-024-53270-w
+  Why it matters: Sparse Ising machines operate at constant frequency on ASIC/FPGA with vanishing overhead for inherently sparse problems. Achieves accurate ground states on 80×80 lattices (6,400 spins) via multi-FPGA cluster.
+  Carnot use: Confirms that sparse constraint graph formulation (from Scalable Connectivity paper) is the right design for KV260 bring-up. Constraint checking graphs are naturally sparse — this is a signal to shape future FPGA workloads as sparse Ising problems rather than dense fully-connected ones.
+
+- **Predicting Sampling Advantage of Stochastic Ising Machines** (arXiv 2504.18359) - https://arxiv.org/abs/2504.18359
+  Why it matters: Framework for predicting when stochastic Ising machines offer speedup over classical sampling. Identifies problem classes where Ising hardware wins and where classical MCMC is competitive.
+  Carnot use: Theoretical guide for which constraint satisfaction workloads should be routed to KV260/TSU hardware vs. CPU MCMC. The PredictiveVerifier's sampling-based gate may or may not benefit from Ising acceleration — this framework provides the analysis tools to predict before investing in hardware integration.
