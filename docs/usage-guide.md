@@ -14,6 +14,7 @@ pip install -e ".[dev]"
 
 # Verify installation
 carnot verify --help
+carnot verify-code --help
 ```
 
 ## CLI: `carnot verify`
@@ -72,6 +73,57 @@ CARNOT VERIFY
 ```
 
 Exit code 0 = all tests pass. Exit code 1 = failures found.
+
+## CLI: `carnot verify-code`
+
+The packaged verifier reuses Carnot's generated-code verification path. It can
+run static checks alone or add Hypothesis-backed PBT with `--pbt`.
+
+### Basic Usage
+
+```bash
+# Packaged static + PBT verification from a source file alone
+carnot verify-code your_project/list_ops.py --func increment_all --pbt
+
+# Add HumanEval-style prompt and official tests for stronger prompt-implied checks
+carnot verify-code your_project/sort_impl.py \
+  --func sort_numbers \
+  --prompt-file prompts/sort_numbers.txt \
+  --tests-file tests/humaneval_sort_numbers.py \
+  --pbt
+```
+
+### Output
+
+```
+============================================================
+CARNOT VERIFY-CODE
+  File:       your_project/list_ops.py
+  Function:   increment_all
+  Static:     on
+  PBT:        on
+============================================================
+
+--- Verification Summary ---
+  Verified:    False
+  Constraints: 2
+  Violations:  1
+
+--- Violations ---
+  - [pbt_code] input_immutability (signature) failed for input=([1],): returned [2]
+
+--- PBT Summary ---
+  Enabled:     True
+  Properties:  4
+  Failures:    1
+
+--- Repair Feedback ---
+  1. [pbt_code] input_immutability (signature) failed for input=([1],): returned [2]
+
+============================================================
+  Verdict:      FAIL
+============================================================
+```
 
 ### CI Integration
 
@@ -178,6 +230,20 @@ Built-in generators: `int`, `pos_int`, `string`, `list_int`, `pair_int`
 Built-in checks: `returns_int`, `returns_float`, `returns_str`, `returns_list`, `returns_bool`, `non_negative`
 
 Custom checks: any lambda expression string like `"lambda result, a, b: result == a + b"`
+
+#### `verify_code_with_pbt`
+
+Run the packaged generated-code verifier with additive static checks and
+Hypothesis-backed PBT.
+
+```json
+{
+  "code": "def sort_numbers(nums: list[int]) -> list[int]:\n    return nums\n",
+  "func_name": "sort_numbers",
+  "prompt": "def sort_numbers(nums: list[int]) -> list[int]:\n    \"\"\"Return numbers sorted in ascending order.\"\"\"\n",
+  "official_tests": "def check(candidate):\n    assert candidate([]) == []\n    assert candidate([1, 2, 3]) == [1, 2, 3]\n"
+}
+```
 
 #### `score_candidates`
 

@@ -23,6 +23,7 @@ from carnot.cli import (
     _resolve_type,
     cmd_score,
     cmd_verify,
+    cmd_verify_code,
     main,
 )
 
@@ -264,7 +265,8 @@ def test_parse_test_pair_bad_expected() -> None:
 
 
 def test_verify_exception_detail(
-    capsys: pytest.CaptureFixture[str], tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+    tmp_path: Path,
 ) -> None:
     """Execution errors show error detail.
 
@@ -302,13 +304,96 @@ def test_main_verify_subcommand(monkeypatch: pytest.MonkeyPatch) -> None:
 
     Spec: REQ-CODE-001, REQ-CODE-006
     """
-    monkeypatch.setattr("sys.argv", [
-        "carnot", "verify", MATH_FILE,
-        "--func", "factorial",
-        "--test", "5:120",
-        "--test", "0:1",
-    ])
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "carnot",
+            "verify",
+            MATH_FILE,
+            "--func",
+            "factorial",
+            "--test",
+            "5:120",
+            "--test",
+            "0:1",
+        ],
+    )
     assert main() == 0
+
+
+def test_verify_code_with_pbt_reports_property_failure(
+    capsys: pytest.CaptureFixture[str],
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-CODE-017: verify-code reports packaged PBT failures from source files."""
+    code_file = tmp_path / "mutating_increment.py"
+    code_file.write_text(
+        "def increment_all(nums: list[int]) -> list[int]:\n"
+        "    for index, value in enumerate(nums):\n"
+        "        nums[index] = value + 1\n"
+        "    return nums\n"
+    )
+    args = argparse.Namespace(
+        file=str(code_file),
+        func="increment_all",
+        prompt_file=None,
+        tests_file=None,
+        pbt=True,
+    )
+
+    exit_code = cmd_verify_code(args)
+    captured = capsys.readouterr()
+
+    assert exit_code == 1
+    assert "CARNOT VERIFY-CODE" in captured.out
+    assert "input_immutability" in captured.out
+
+
+def test_main_verify_code_subcommand(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """REQ-CODE-020: main() routes verify-code to the packaged verifier."""
+    code_file = tmp_path / "copy_values.py"
+    code_file.write_text("def copy_values(nums: list[int]) -> list[int]:\n    return list(nums)\n")
+    monkeypatch.setattr(
+        "sys.argv",
+        [
+            "carnot",
+            "verify-code",
+            str(code_file),
+            "--func",
+            "copy_values",
+            "--pbt",
+        ],
+    )
+
+    assert main() == 0
+
+
+def test_verify_code_missing_source_file() -> None:
+    """REQ-CODE-020: verify-code returns 1 when the source file is missing."""
+    args = argparse.Namespace(
+        file="/nonexistent/source.py",
+        func="missing",
+        prompt_file=None,
+        tests_file=None,
+        pbt=True,
+    )
+
+    assert cmd_verify_code(args) == 1
+
+
+def test_verify_code_missing_prompt_file(tmp_path: Path) -> None:
+    """REQ-CODE-020: verify-code returns 1 when an optional prompt file is missing."""
+    code_file = tmp_path / "copy_values.py"
+    code_file.write_text("def copy_values(nums: list[int]) -> list[int]:\n    return list(nums)\n")
+    args = argparse.Namespace(
+        file=str(code_file),
+        func="copy_values",
+        prompt_file=str(tmp_path / "missing_prompt.txt"),
+        tests_file=None,
+        pbt=True,
+    )
+
+    assert cmd_verify_code(args) == 1
 
 
 # --- Score subcommand tests ---

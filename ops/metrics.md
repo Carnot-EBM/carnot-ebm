@@ -1,5 +1,18 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-12 VERIFY-031 Packaged Code Verification
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-12T23:32:39Z | 2026-04-12T23:59:24Z | VERIFY-031: extended `code-verification` with `REQ-CODE-019` through `REQ-CODE-022` and `SCENARIO-CODE-016` through `SCENARIO-CODE-019`, wrote tests first for the packaged `verify_code()` API, `carnot verify-code`, `verify_code_with_pbt`, docs examples, and the generate-verify-repair E2E flow, implemented the new Python API/CLI/MCP surfaces plus docs, restored the final Python suite to `100.00%` coverage, reconciled traceability/status/changelog/test-results/e2e-plan, and reran the required validations. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
 ## Session: 2026-04-12 VERIFY-030 Code Verification Trace Learning
 
 ### Turn Log

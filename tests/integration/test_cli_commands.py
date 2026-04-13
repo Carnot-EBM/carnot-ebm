@@ -70,6 +70,13 @@ class TestCLIHelp:
         assert "--func" in result.stdout
         assert "--test" in result.stdout
 
+    def test_verify_code_help(self) -> None:
+        """REQ-CODE-020: verify-code --help shows packaged code-verification usage."""
+        result = run_carnot("verify-code", "--help")
+        assert result.returncode == 0
+        assert "--func" in result.stdout
+        assert "--pbt" in result.stdout
+
 
 # ---------------------------------------------------------------------------
 # Verify subcommand — passing cases
@@ -89,10 +96,14 @@ class TestCLIVerifyPass:
     def test_gcd_correct(self) -> None:
         """REQ-CODE-001: GCD with correct test cases passes."""
         result = run_carnot(
-            "verify", MATH_FUNCS,
-            "--func", "gcd",
-            "--test", "(12,8):4",
-            "--test", "(15,10):5",
+            "verify",
+            MATH_FUNCS,
+            "--func",
+            "gcd",
+            "--test",
+            "(12,8):4",
+            "--test",
+            "(15,10):5",
         )
         assert "CARNOT VERIFY" in result.stdout
         assert "PASS" in result.stdout
@@ -105,10 +116,14 @@ class TestCLIVerifyPass:
     def test_factorial_correct(self) -> None:
         """REQ-CODE-001: Factorial with correct test cases passes."""
         result = run_carnot(
-            "verify", MATH_FUNCS,
-            "--func", "factorial",
-            "--test", "(5,):120",
-            "--test", "(0,):1",
+            "verify",
+            MATH_FUNCS,
+            "--func",
+            "factorial",
+            "--test",
+            "(5,):120",
+            "--test",
+            "(0,):1",
         )
         assert "PASS" in result.stdout
         assert result.returncode == 0
@@ -120,9 +135,12 @@ class TestCLIVerifyPass:
     def test_fibonacci_correct(self) -> None:
         """REQ-CODE-001: Fibonacci with correct test cases passes."""
         result = run_carnot(
-            "verify", MATH_FUNCS,
-            "--func", "fibonacci",
-            "--test", "(10,):55",
+            "verify",
+            MATH_FUNCS,
+            "--func",
+            "fibonacci",
+            "--test",
+            "(10,):55",
         )
         assert "PASS" in result.stdout
         assert result.returncode == 0
@@ -146,9 +164,12 @@ class TestCLIVerifyFail:
     def test_buggy_add_fails(self) -> None:
         """REQ-CODE-001: Deliberately buggy function fails verification."""
         result = run_carnot(
-            "verify", MATH_FUNCS,
-            "--func", "buggy_add",
-            "--test", "(2,3):5",
+            "verify",
+            MATH_FUNCS,
+            "--func",
+            "buggy_add",
+            "--test",
+            "(2,3):5",
         )
         assert "FAIL" in result.stdout
         assert result.returncode == 1
@@ -160,9 +181,12 @@ class TestCLIVerifyFail:
     def test_gcd_wrong_expected(self) -> None:
         """REQ-CODE-001: Correct function with wrong expected value fails."""
         result = run_carnot(
-            "verify", MATH_FUNCS,
-            "--func", "gcd",
-            "--test", "(12,8):3",
+            "verify",
+            MATH_FUNCS,
+            "--func",
+            "gcd",
+            "--test",
+            "(12,8):3",
         )
         assert "FAIL" in result.stdout
         assert result.returncode == 1
@@ -182,9 +206,12 @@ class TestCLIVerifyErrors:
     def test_missing_file(self) -> None:
         """REQ-CODE-006: Non-existent file produces error."""
         result = run_carnot(
-            "verify", "/nonexistent/file.py",
-            "--func", "foo",
-            "--test", "(1,):1",
+            "verify",
+            "/nonexistent/file.py",
+            "--func",
+            "foo",
+            "--test",
+            "(1,):1",
         )
         assert result.returncode == 1
         assert "not found" in result.stderr.lower() or "error" in result.stderr.lower()
@@ -192,8 +219,10 @@ class TestCLIVerifyErrors:
     def test_no_test_cases(self) -> None:
         """REQ-CODE-006: No --test args produces error."""
         result = run_carnot(
-            "verify", MATH_FUNCS,
-            "--func", "gcd",
+            "verify",
+            MATH_FUNCS,
+            "--func",
+            "gcd",
         )
         assert result.returncode == 1
         assert "at least one --test" in result.stderr.lower()
@@ -201,17 +230,53 @@ class TestCLIVerifyErrors:
     def test_inline_python_file(self, tmp_path) -> None:
         """REQ-CODE-006: Verify works with a temp file."""
         src = tmp_path / "add.py"
-        src.write_text(textwrap.dedent("""\
+        src.write_text(
+            textwrap.dedent("""\
             def add(a: int, b: int) -> int:
                 return a + b
-        """))
+        """)
+        )
         result = run_carnot(
-            "verify", str(src),
-            "--func", "add",
-            "--test", "(1,2):3",
+            "verify",
+            str(src),
+            "--func",
+            "add",
+            "--test",
+            "(1,2):3",
         )
         assert "PASS" in result.stdout
         assert result.returncode == 0
+
+
+class TestCLIVerifyCode:
+    """Test the packaged verify-code subcommand via subprocess.
+
+    Spec: REQ-CODE-020, SCENARIO-CODE-017
+    """
+
+    def test_verify_code_with_pbt(self, tmp_path) -> None:
+        """SCENARIO-CODE-017: verify-code exits non-zero on packaged PBT failures."""
+        src = tmp_path / "increment_all.py"
+        src.write_text(
+            textwrap.dedent("""\
+            def increment_all(nums: list[int]) -> list[int]:
+                for index, value in enumerate(nums):
+                    nums[index] = value + 1
+                return nums
+        """)
+        )
+
+        result = run_carnot(
+            "verify-code",
+            str(src),
+            "--func",
+            "increment_all",
+            "--pbt",
+        )
+
+        assert "CARNOT VERIFY-CODE" in result.stdout
+        assert "input_immutability" in result.stdout
+        assert result.returncode == 1
 
 
 # ---------------------------------------------------------------------------

@@ -21,7 +21,6 @@ from unittest.mock import patch
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Fixtures
 # ---------------------------------------------------------------------------
@@ -52,7 +51,8 @@ class TestHealthCheck:
         assert result["status"] == "ok"
         assert "version" in result
         assert "tools" in result
-        assert len(result["tools"]) == 6
+        assert len(result["tools"]) == 7
+        assert "verify_code_with_pbt" in result["tools"]
 
     def test_reports_limits(self, server_module: Any) -> None:
         """REQ-CODE-001: health_check reports configured limits."""
@@ -165,9 +165,7 @@ class TestVerifyWithProperties:
         properties = [
             {"name": "test", "generator": "nonexistent", "check": "returns_int"},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
 
@@ -177,9 +175,52 @@ class TestVerifyWithProperties:
         properties = [
             {"name": "test", "generator": "int", "check": "returns_int"},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=1, seed=42
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=1, seed=42)
+        assert result.get("error") is True
+        assert result["error_code"] == "INPUT_TOO_LARGE"
+
+
+# ---------------------------------------------------------------------------
+# Tests: verify_code_with_pbt
+# ---------------------------------------------------------------------------
+
+
+class TestVerifyCodeWithPBT:
+    """Tests for the packaged Hypothesis-backed MCP tool."""
+
+    def test_returns_structured_pbt_feedback(self, server_module: Any) -> None:
+        """SCENARIO-CODE-018: verify_code_with_pbt returns repair feedback and PBT summary."""
+        prompt = (
+            "def sort_numbers(nums: list[int]) -> list[int]:\n"
+            '    """Return numbers sorted in ascending order."""\n'
         )
+        official_tests = (
+            "def check(candidate):\n"
+            "    assert candidate([]) == []\n"
+            "    assert candidate([1, 2, 3]) == [1, 2, 3]\n"
+        )
+        code = "def sort_numbers(nums: list[int]) -> list[int]:\n    return nums\n"
+
+        result = server_module.verify_code_with_pbt(
+            code=code,
+            func_name="sort_numbers",
+            prompt=prompt,
+            official_tests=official_tests,
+        )
+
+        assert result["verified"] is False
+        assert result["n_violations"] >= 1
+        assert "sorted_output" in result["repair_feedback"]
+        assert result["pbt_summary"]["enabled"] is True
+        assert result["pbt_summary"]["n_failures"] >= 1
+
+    def test_rejects_oversized_code_input(self, server_module: Any) -> None:
+        """REQ-CODE-021: verify_code_with_pbt preserves MCP input-size guards."""
+        result = server_module.verify_code_with_pbt(
+            code="x" * 11_000,
+            func_name="f",
+        )
+
         assert result.get("error") is True
         assert result["error_code"] == "INPUT_TOO_LARGE"
 
@@ -260,7 +301,9 @@ class TestVerifyAndRepair:
         )
         assert result["verified"] is False
         assert result["n_violations"] > 0
-        assert "arithmetic" in result["repair_feedback"].lower() or "10" in result["repair_feedback"]
+        assert (
+            "arithmetic" in result["repair_feedback"].lower() or "10" in result["repair_feedback"]
+        )
 
     def test_input_too_large(self, server_module: Any) -> None:
         """REQ-VERIFY-003: rejects oversized question input."""
@@ -433,9 +476,7 @@ class TestResolveGeneratorDict:
         properties = [
             {"name": "test", "generator": {"type": "nonexistent"}, "check": "returns_int"},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
 
@@ -445,9 +486,7 @@ class TestResolveGeneratorDict:
         properties = [
             {"name": "test", "generator": 42, "check": "returns_int"},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
         assert "int" in result["detail"]
@@ -467,9 +506,7 @@ class TestResolveCheckEdgeCases:
         properties = [
             {"name": "test", "generator": "int", "check": "not_a_valid_check!!!"},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
 
@@ -498,9 +535,7 @@ class TestResolveCheckEdgeCases:
                 "check": {"lambda": "not valid python!!!"},
             },
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
         assert "Failed to eval lambda" in result["detail"]
@@ -511,9 +546,7 @@ class TestResolveCheckEdgeCases:
         properties = [
             {"name": "test", "generator": "int", "check": {"other_key": "value"}},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
         assert "lambda" in result["detail"].lower()
@@ -524,9 +557,7 @@ class TestResolveCheckEdgeCases:
         properties = [
             {"name": "test", "generator": "int", "check": 42},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
         assert "int" in result["detail"]
@@ -546,9 +577,7 @@ class TestPropertyMissingName:
         properties = [
             {"generator": "int", "check": "returns_int"},
         ]
-        result = server_module.verify_with_properties(
-            code, "f", properties, n_samples=5, seed=42
-        )
+        result = server_module.verify_with_properties(code, "f", properties, n_samples=5, seed=42)
         assert result.get("error") is True
         assert result["error_code"] == "INVALID_INPUT"
         assert "name" in result["detail"].lower()
@@ -566,6 +595,7 @@ class TestEntryPoints:
         """REQ-CODE-001: python -m carnot.mcp calls mcp_server.run(transport='stdio')."""
         with patch("carnot.mcp.server.mcp_server") as mock_server:
             import importlib
+
             import carnot.mcp.__main__  # noqa: F401
 
             importlib.reload(importlib.import_module("carnot.mcp.__main__"))

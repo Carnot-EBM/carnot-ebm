@@ -234,6 +234,49 @@ error families:
   accumulated trace history changes property or repair recommendations over
   time
 
+### REQ-CODE-019: Standalone Python Code Verification API
+
+The system shall expose a standalone Python API for packaged code
+verification:
+- Users can import `verify_code` directly from `carnot.pipeline`
+- The API accepts Python source code, an entry-point function name, and
+  optional prompt and official-test context
+- When prompt context is omitted, the API falls back to the provided source
+  code so signature-derived PBT checks still run
+- The API returns a pipeline-compatible `VerificationResult` whose certificate
+  includes additive PBT summary metadata
+
+### REQ-CODE-020: User-Facing CLI Command For Packaged Code Verification
+
+The system shall expose packaged code verification through the CLI:
+- The `carnot` CLI includes a `verify-code` subcommand
+- The command accepts a Python source file plus `--func` to select the entry
+  point
+- The command can enable Hypothesis-backed verification with `--pbt`
+- The command reports pass/fail, constraint counts, and PBT findings in
+  terminal-friendly output
+
+### REQ-CODE-021: MCP Tool For Hypothesis-Backed Code Verification
+
+The system shall expose packaged code verification through MCP:
+- The production MCP server registers a `verify_code_with_pbt` tool
+- The tool accepts source code, entry point, and optional prompt or
+  official-test context
+- The tool returns structured verification results, repair feedback, and the
+  additive PBT summary without crashing on bad input
+- The server health response lists the new tool so MCP clients can discover it
+
+### REQ-CODE-022: End-User Verification Workflow Documentation
+
+The repository shall document the packaged code-verification workflow for end
+users:
+- Docs include runnable examples for the CLI command, the MCP tool, and the
+  Python API
+- Docs include a generate-verify-repair example showing how a buggy candidate
+  is verified and then re-checked after repair
+- The examples use the packaged surfaces added by REQ-CODE-019,
+  REQ-CODE-020, and REQ-CODE-021 rather than research-only scripts
+
 ## Scenarios
 
 ### SCENARIO-CODE-001: Correct Function Passes Verification
@@ -338,6 +381,34 @@ reliably succeed and others do not, when the learner recomputes its rankings on
 larger and larger prefixes, then the recommended property and repair strategy
 for the matching error family moves toward the empirically successful choice.
 
+### SCENARIO-CODE-016: Packaged Python API Flags A PBT Violation From Source Alone
+
+Given a Python function with enough signature information to derive bounded
+PBT checks, when the standalone `carnot.pipeline.verify_code()` API verifies
+the source without separate prompt files, then it returns a failing
+`VerificationResult` whose certificate includes the additive PBT summary.
+
+### SCENARIO-CODE-017: CLI verify-code Reports A Property Failure
+
+Given a Python source file whose function violates a signature-implied
+property, when a user runs `carnot verify-code <file> --func <name> --pbt`,
+then the CLI exits non-zero and reports the failing packaged verification
+finding in terminal output.
+
+### SCENARIO-CODE-018: MCP Packaged Verification Returns Repair Feedback
+
+Given buggy generated Python code plus the prompt or official-test context that
+implies stronger properties than the visible examples, when an MCP client calls
+`verify_code_with_pbt`, then the result includes `verified=False`, structured
+violations, repair feedback, and the additive PBT summary.
+
+### SCENARIO-CODE-019: Generated Code Is Verified, Repaired, And Re-Verified
+
+Given an LLM-style generated function body that passes weak official tests but
+violates a prompt-implied property, when the packaged verification workflow
+verifies the candidate, applies a repair, and verifies again, then the initial
+candidate fails packaged verification and the repaired candidate verifies cleanly.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -360,3 +431,7 @@ for the matching error family moves toward the empirically successful choice.
 | REQ-CODE-016 | Implemented |
 | REQ-CODE-017 | Implemented |
 | REQ-CODE-018 | Implemented |
+| REQ-CODE-019 | Implemented |
+| REQ-CODE-020 | Implemented |
+| REQ-CODE-021 | Implemented |
+| REQ-CODE-022 | Implemented |

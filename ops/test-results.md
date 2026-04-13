@@ -1,6 +1,6 @@
 # Carnot — Test Results
 
-**Last Updated:** 2026-04-06
+**Last Updated:** 2026-04-12
 
 ## Current Test Suite (2026-04-06)
 
@@ -83,6 +83,16 @@ Instance 1: Haiku proposed an assignment violating 2 clauses (energy=2.0). Gradi
 **Total: 408 tests (100 Rust + 284 Python + 24 PyO3), 100% code coverage, 100% spec coverage**
 
 ## E2E Test Evidence
+
+### E2E-005: Packaged Code Verification Generate-Verify-Repair (PASS)
+- `tests/python/test_code_verification_packaging.py::test_generate_verify_repair_workflow_reverifies_cleanly`
+- The generated `sort_numbers` identity candidate still passes the weak
+  official harness, proving the harness alone is under-specified for this case.
+- The packaged `verify_code()` path surfaces the prompt-implied
+  `sorted_output` violation and returns repair feedback that names the failing
+  property.
+- The repaired `sorted(nums)` candidate then passes both packaged verification
+  and the official harness.
 
 ### E2E-003: PyO3 Binding Round-Trip (PASS)
 - `tests/python/test_pyo3_integration.py` — 24 tests

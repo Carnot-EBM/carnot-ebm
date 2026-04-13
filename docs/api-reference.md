@@ -307,6 +307,35 @@ carnot verify FILE --func NAME --test INPUT:EXPECTED [--test ...] [--type TYPE]
 | `--prop-samples` | Samples per property (default: 100). |
 | `--prop-seed` | Random seed (default: 42). |
 
+### `carnot verify-code`
+
+```
+carnot verify-code FILE --func NAME [--prompt-file PATH] [--tests-file PATH] [--pbt]
+```
+
+| Flag | Description |
+|------|-------------|
+| `FILE` | Path to Python source file. |
+| `--func` | Function name to verify. |
+| `--prompt-file` | Optional HumanEval-style prompt/signature context file. |
+| `--tests-file` | Optional official `check()` harness or asserts file. |
+| `--pbt` | Enable Hypothesis-backed packaged verification. |
+
+### Packaged Code Verification API
+
+```python
+from carnot.pipeline import verify_code
+
+result = verify_code(
+    code,
+    entry_point="sort_numbers",
+    prompt=prompt,
+    official_tests=official_tests,
+)
+print(result.verified)
+print(result.certificate["pbt_summary"])
+```
+
 ### `carnot score`
 
 ```
