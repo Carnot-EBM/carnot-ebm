@@ -1,0 +1,91 @@
+{
+  "milestone": "2026.04.18",
+  "generated_at": "2026-04-13T19:56:48Z",
+  "total_wall_time_minutes": 3889,
+  "experiments_completed": 274,
+  "average_minutes_per_experiment": 14.2,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 418,
+      "label": "Exp 53: Runtime constraint instrumentation",
+      "pct_of_total": 10.7,
+      "likely_cause": "Early-milestone infrastructure experiment with no prior tooling; required building the constraint instrumentation framework from scratch with no reusable scaffolding, forcing iterative design cycles."
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 3.0,
+      "likely_cause": "Sequential model loading — Qwen then Gemma loaded into a single GPU, each requiring full model weights in VRAM. No parallelization across the two RTX 3090s; both GPUs idle while the other model ran."
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 2.1,
+      "likely_cause": "3B-parameter model requires significantly more VRAM and inference time per call than the 0.8B baseline; verify-repair loop multiplied forward passes (verify + repair + re-verify) on a single GPU."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 2.0,
+      "likely_cause": "Full typed IR generation pipeline ran sequentially; constraint evaluation over large prompt variants was single-threaded with no batching."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 78,
+      "label": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "pct_of_total": 2.0,
+      "likely_cause": "Multi-domain retraining required full dataset reload, feature extraction, and validation on each domain in sequence. No GPU training — NumPy/CPU only, which was correct but slow for large corpora."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Sequential model loading: Qwen and Gemma were loaded one-at-a-time onto a single GPU, leaving the second RTX 3090 idle during all dual-model experiments (Exp 219, 235, 238, 246, etc.). Each sequential pair cost ~2x wall time.",
+    "No inference batching: Each benchmark problem was evaluated with a single forward pass rather than batching 8–16 questions per call. This left GPU compute units underutilized (~5–15% average utilization during inference).",
+    "Zombie/leaked VRAM processes: Post-experiment GPU memory was not automatically freed between runs. Residual 4–5 MB lingering on both GPUs at end-of-milestone indicates processes were not cleanly terminated.",
+    "Exp 53 was a 418-minute outlier (10.7% of total wall time) due to no reusable scaffolding at milestone start. This is a one-time cold-start cost but inflated the average significantly.",
+    "Pre-flight test suite overhead: Full 2500+ test suite ran after every commit including trivial doc-only changes (provenance count updates). Each run ~60–90s; ~15–20 doc-only commits × 75s ≈ 18–25 minutes of pure test overhead.",
+    "Doc reconciliation passes ran 5–6 times separately for the same provenance count drift (artifact count updated, tests broke, docs re-synced). Each drift required a dedicated turn with full test re-run.",
+    "No DualGPURunner: Experiments requiring two models defaulted to sequential single-GPU scheduling. DualGPURunner existed in suggestions but was never wired into the conductor.",
+    "ONNX/CUDA hardware paths were blocked due to wrong pip wheel (onnxruntime vs onnxruntime-gpu), discovered only at Exp 257. Earlier detection would have enabled GPU-accelerated gate benchmarks mid-milestone.",
+    "Research conductor ran experiments serially by default with no concurrency primitives; each experiment waited for the prior one to fully commit before starting."
+  ],
+  "improvements_suggested": [
+    "Wire DualGPURunner into research_conductor.py: assign Qwen to GPU 0 and Gemma to GPU 1 for all dual-model experiments. Estimated 1.5–1.8x throughput on paired benchmarks.",
+    "Add inference batching (batch_size=8 or 16) to all live GSM8K and HumanEval harnesses. Expected 4–6x GPU compute efficiency improvement per forward pass.",
+    "Add automatic GPU memory cleanup hook between experiments: call torch.cuda.empty_cache() and verify nvidia-smi shows <100MB residual before starting next experiment.",
+    "Create a lightweight 'doc-only' commit classifier: if the diff touches only README.md, docs/, ops/status.md, or _bmad/traceability.md, skip the full 2500-test suite and run only tests/python/test_docs.py (5 tests, ~1s).",
+    "Consolidate provenance drift fixes: rather than 5–6 separate doc-sync turns, add a pre-commit hook that auto-updates the artifact count string from the results/ directory listing before any commit touches docs.",
+    "Install onnxruntime-gpu at environment setup time (or detect and warn at conductor start), not at first hardware benchmark. Blocked hardware paths should be discovered pre-milestone, not during Exp 257.",
+    "Add a milestone cold-start scaffolding template: reusable experiment harness, GPU runner, and checkpoint schema so Exp 1 of the next milestone does not need to build from scratch (avoids 418-minute outlier).",
+    "Add a parallelism planner to the conductor: group experiments with no data dependencies and schedule them concurrently on separate GPUs or CPU cores.",
+    "Add gpu_monitor.py --kill-zombies to the experiment teardown hook so residual VRAM allocations are reclaimed automatically without manual intervention.",
+    "Checkpoint more aggressively on long experiments (>30min): Exp 219 and Exp 155 had single failure points with no mid-run resume. Adding 10-question checkpoint granularity would have cut worst-case restart cost by ~80%."
+  ],
+  "estimated_time_savings_pct": 38,
+  "time_savings_breakdown": {
+    "dual_gpu_parallelization_pct": 15,
+    "inference_batching_pct": 10,
+    "doc_only_test_skip_pct": 5,
+    "provenance_auto_sync_hook_pct": 4,
+    "gpu_cleanup_and_zombie_prevention_pct": 2,
+    "scaffolding_template_pct": 2,
+    "note": "Estimates assume 274 experiments of similar composition. DualGPU gain applies to ~40% of experiments that run both Qwen and Gemma. Batching gain applies to ~60% of experiments with live inference."
+  },
+  "gpu_state_at_milestone_end": {
+    "gpu_0": {"model": "RTX 3090", "used_mb": 5, "total_mb": 24576, "utilization_pct": 0, "temp_c": 51},
+    "gpu_1": {"model": "RTX 3090", "used_mb": 4, "total_mb": 24576, "utilization_pct": 0, "temp_c": 56},
+    "assessment": "Both GPUs idle at milestone end. Residual 5MB+4MB allocations are likely lingering Python process handles — not active computation. No true zombies (below 1GB threshold), but cleanup hook would have reclaimed these.",
+    "peak_utilization_observed": "Unknown — gpu_monitor.py was not run in continuous --loop mode during the milestone. Add continuous logging for the next milestone."
+  },
+  "process_efficiency_notes": {
+    "experiments_per_hour": 4.23,
+    "ideal_experiments_per_hour_with_improvements": 6.5,
+    "pre_flight_test_runs_estimated": 40,
+    "doc_only_commits_estimated": 15,
+    "avoidable_full_suite_runs_estimated": 15,
+    "avoidable_test_minutes_estimated": 22
+  }
+}

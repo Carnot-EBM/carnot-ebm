@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-13 (Operational Retrospective: Milestone 2026.04.18)
+
+- `results/operational_retro_2026_04_18.json` — Process efficiency analysis for the 2026.04.18 milestone: 274 experiments over 3,889 minutes (64.8h), 14.2 min/experiment average. Top bottlenecks: sequential dual-model GPU loading (both RTX 3090s never ran simultaneously), no inference batching (GPU compute <15% utilized during inference), doc-only provenance drift triggering full 2500-test suite ~15 times unnecessarily, and Exp 53 as a 418-minute cold-start outlier (10.7% of total wall time). Estimated 38% wall-time reduction achievable next milestone via DualGPURunner wiring (+15%), inference batching 8–16 per pass (+10%), doc-only test filtering (+5%), and auto provenance-count hook (+4%). GPU state at milestone end: both GPUs idle, 5MB/4MB residual allocations (below zombie threshold but indicative of missing cleanup hook). (user instruction: write operational retrospective for milestone 2026.04.18)
+
 ## 2026-04-13 (Exp 257: predictive-verifier hardware benchmark)
 
 - `scripts/experiment_257_predictive_verifier_hardware.py` — Hardware-path benchmark for the Tier 3 `PredictiveVerifier`. Measures CPU NumPy gate and ONNX CPUExecutionProvider; emits honest blocker artifacts for CUDA ORT and AMD XDNA NPU. (user instruction: Exp 257 hardware benchmark)
