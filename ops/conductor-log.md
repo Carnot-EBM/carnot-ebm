@@ -1351,3 +1351,4 @@ E   ImportError: cannot impor |
 | 2026-04-12 22:27 UTC | Exp 227: PBT code verification on Qwen3.5-0.8B — c | OK | =========== 2099 passed, 1 skipped, 22 warnings in 84.94s (0:01:24) ============ |
 | 2026-04-12 22:59 UTC | Exp 228: KV260 FPGA Ising sampler design and simul | OK | =========== 2120 passed, 1 skipped, 22 warnings in 85.01s (0:01:25) ============ |
 | 2026-04-12 23:29 UTC | Exp 229: Self-learning from code verification trac | OK | =========== 2125 passed, 1 skipped, 22 warnings in 86.64s (0:01:26) ============ |
+| 2026-04-13 00:10 UTC | Exp 230: Package code verification as standalone t | OK | =========== 2135 passed, 1 skipped, 22 warnings in 92.56s (0:01:32) ============ |
