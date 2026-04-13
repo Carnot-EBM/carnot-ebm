@@ -736,9 +736,9 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     )
 
     logger.info("Calling agent for operational retrospective...")
-    exit_code, stdout, stderr = run_agent(retro_prompt, max_turns=15)
+    success, output = run_agent(retro_prompt, max_turns=15)
 
-    if exit_code == 0:
+    if success:
         logger.info("Operational retrospective complete")
         if git_has_changes():
             run_cmd(["git", "add", "-A"])
@@ -748,7 +748,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
                 _git_push()
         return True
     else:
-        logger.warning("Operational retrospective failed (exit %d) — continuing", exit_code)
+        logger.warning("Operational retrospective failed — continuing")
         # Clean up any partial changes
         if git_has_changes():
             run_cmd(["git", "checkout", "."])
