@@ -1395,3 +1395,4 @@ python/ |
 | 2026-04-13 15:01 UTC | Exp 247: Live solver-routed semantic benchmark | OK | Deliverable already exists in repo |
 | 2026-04-13 15:21 UTC | Exp 248: Process-integrity corpus from live semant | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-13 15:22 UTC | Exp 248: Process-integrity corpus from live semant | OK | Deliverable already exists in repo |
+| 2026-04-13 15:36 UTC | Exp 249: Additive process verifier for reasoning a | SKIP | Pre-tests failing, self-heal failed: 1 failed, 2352 passed, 2 skipped, 13 warnin |
