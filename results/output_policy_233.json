@@ -1,0 +1,367 @@
+{
+  "experiment": "Exp 233",
+  "run_date": "20260413",
+  "title": "Output policy derived from Exp 233 refresh benchmark",
+  "derived_from": "results/experiment_233_results.json",
+  "mode_defaults": {
+    "fallback_mode": "answer_only_terse",
+    "retry_budgets": {
+      "free_form_reasoning": 0,
+      "answer_only_terse": 0,
+      "minimal_json": 1,
+      "grammar_gated_json": 2
+    }
+  },
+  "global_policy": {
+    "request_json_when": [
+      "Request minimal_json for instruction_grounded when measured claim coverage or exact satisfaction materially exceeds answer_only_terse.",
+      "Request minimal_json for instruction_surface_only when measured claim coverage or exact satisfaction materially exceeds answer_only_terse.",
+      "Request grammar_gated_json for live_gsm8k_semantic_failure when measured claim coverage or exact satisfaction materially exceeds answer_only_terse.",
+      "Request grammar_gated_json for repo_spec_grounding when measured claim coverage or exact satisfaction materially exceeds answer_only_terse."
+    ],
+    "accept_terse_when": [
+      "Accept answer_only_terse for code_typed_properties when it stays within the measured exact/partial satisfaction envelope of the JSON alternatives."
+    ],
+    "avoid_free_form_when": [
+      "free_form_reasoning",
+      "Avoid free_form_reasoning on instruction_grounded when terse or JSON modes provide a clearer verifier-visible state.",
+      "Avoid free_form_reasoning on instruction_surface_only when terse or JSON modes provide a clearer verifier-visible state."
+    ]
+  },
+  "per_task_slice": {
+    "code_typed_properties": {
+      "recommended_mode": "answer_only_terse",
+      "retry_budget": 0,
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 8,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.75,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 0.75,
+          "claim_coverage_mean": 0.5208,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 113.75,
+          "mean_completion_tokens": 175.5,
+          "mean_total_tokens": 289.25,
+          "mean_latency_seconds": 3.2587
+        },
+        "answer_only_terse": {
+          "n_records": 8,
+          "parse_success_rate": 0.75,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.75,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 0.75,
+          "claim_coverage_mean": 0.4375,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 91.75,
+          "mean_completion_tokens": 101.875,
+          "mean_total_tokens": 193.625,
+          "mean_latency_seconds": 1.9646
+        },
+        "minimal_json": {
+          "n_records": 8,
+          "parse_success_rate": 0.375,
+          "retry_rate": 0.625,
+          "mean_retries_used": 0.625,
+          "answer_quality_mean": 0.375,
+          "exact_satisfaction_rate": 0.375,
+          "partial_satisfaction_mean": 0.375,
+          "claim_coverage_mean": 0.8438,
+          "repair_usefulness_rate": 0.25,
+          "mean_prompt_tokens": 254.875,
+          "mean_completion_tokens": 337.25,
+          "mean_total_tokens": 592.125,
+          "mean_latency_seconds": 5.9515
+        },
+        "grammar_gated_json": {
+          "n_records": 8,
+          "parse_success_rate": 0.375,
+          "retry_rate": 0.625,
+          "mean_retries_used": 1.25,
+          "answer_quality_mean": 0.375,
+          "exact_satisfaction_rate": 0.375,
+          "partial_satisfaction_mean": 0.375,
+          "claim_coverage_mean": 0.8333,
+          "repair_usefulness_rate": 0.125,
+          "mean_prompt_tokens": 366.25,
+          "mean_completion_tokens": 413.5,
+          "mean_total_tokens": 779.75,
+          "mean_latency_seconds": 7.289
+        }
+      }
+    },
+    "instruction_grounded": {
+      "recommended_mode": "minimal_json",
+      "retry_budget": 1,
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 6,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.6111,
+          "exact_satisfaction_rate": 0.5,
+          "partial_satisfaction_mean": 1.0,
+          "claim_coverage_mean": 0.9167,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 163.8333,
+          "mean_completion_tokens": 94.5,
+          "mean_total_tokens": 258.3333,
+          "mean_latency_seconds": 1.7752
+        },
+        "answer_only_terse": {
+          "n_records": 6,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.5,
+          "exact_satisfaction_rate": 0.3333,
+          "partial_satisfaction_mean": 0.575,
+          "claim_coverage_mean": 0.2667,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 140.3333,
+          "mean_completion_tokens": 10.8333,
+          "mean_total_tokens": 151.1667,
+          "mean_latency_seconds": 0.2666
+        },
+        "minimal_json": {
+          "n_records": 6,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.3333,
+          "mean_retries_used": 0.3333,
+          "answer_quality_mean": 0.8333,
+          "exact_satisfaction_rate": 0.6667,
+          "partial_satisfaction_mean": 0.9028,
+          "claim_coverage_mean": 0.8,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 259.1667,
+          "mean_completion_tokens": 122.1667,
+          "mean_total_tokens": 381.3333,
+          "mean_latency_seconds": 2.4177
+        },
+        "grammar_gated_json": {
+          "n_records": 6,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.5,
+          "mean_retries_used": 1.0,
+          "answer_quality_mean": 0.7778,
+          "exact_satisfaction_rate": 0.6667,
+          "partial_satisfaction_mean": 0.7778,
+          "claim_coverage_mean": 0.6333,
+          "repair_usefulness_rate": 0.1667,
+          "mean_prompt_tokens": 405.6667,
+          "mean_completion_tokens": 83.0,
+          "mean_total_tokens": 488.6667,
+          "mean_latency_seconds": 1.7216
+        }
+      }
+    },
+    "instruction_surface_only": {
+      "recommended_mode": "minimal_json",
+      "retry_budget": 1,
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 4,
+          "parse_success_rate": 0.75,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.75,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 0.75,
+          "claim_coverage_mean": 1.0,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 121.5,
+          "mean_completion_tokens": 83.0,
+          "mean_total_tokens": 204.5,
+          "mean_latency_seconds": 1.5605
+        },
+        "answer_only_terse": {
+          "n_records": 4,
+          "parse_success_rate": 0.75,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.75,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 0.75,
+          "claim_coverage_mean": 0.9167,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 98.0,
+          "mean_completion_tokens": 26.5,
+          "mean_total_tokens": 124.5,
+          "mean_latency_seconds": 0.5706
+        },
+        "minimal_json": {
+          "n_records": 4,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.25,
+          "mean_retries_used": 0.25,
+          "answer_quality_mean": 0.9167,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 0.9167,
+          "claim_coverage_mean": 0.9167,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 190.25,
+          "mean_completion_tokens": 110.75,
+          "mean_total_tokens": 301.0,
+          "mean_latency_seconds": 2.0137
+        },
+        "grammar_gated_json": {
+          "n_records": 4,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.5,
+          "mean_retries_used": 1.0,
+          "answer_quality_mean": 0.7708,
+          "exact_satisfaction_rate": 0.5,
+          "partial_satisfaction_mean": 0.7708,
+          "claim_coverage_mean": 0.9167,
+          "repair_usefulness_rate": 0.25,
+          "mean_prompt_tokens": 316.5,
+          "mean_completion_tokens": 127.0,
+          "mean_total_tokens": 443.5,
+          "mean_latency_seconds": 2.2301
+        }
+      }
+    },
+    "live_gsm8k_semantic_failure": {
+      "recommended_mode": "grammar_gated_json",
+      "retry_budget": 2,
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 8,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.25,
+          "exact_satisfaction_rate": 0.25,
+          "partial_satisfaction_mean": 0.6667,
+          "claim_coverage_mean": 0.5834,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 182.75,
+          "mean_completion_tokens": 116.5,
+          "mean_total_tokens": 299.25,
+          "mean_latency_seconds": 2.1019
+        },
+        "answer_only_terse": {
+          "n_records": 8,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.25,
+          "exact_satisfaction_rate": 0.25,
+          "partial_satisfaction_mean": 0.25,
+          "claim_coverage_mean": 0.0,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 153.75,
+          "mean_completion_tokens": 5.75,
+          "mean_total_tokens": 159.5,
+          "mean_latency_seconds": 0.1625
+        },
+        "minimal_json": {
+          "n_records": 8,
+          "parse_success_rate": 0.75,
+          "retry_rate": 0.75,
+          "mean_retries_used": 0.75,
+          "answer_quality_mean": 0.0,
+          "exact_satisfaction_rate": 0.0,
+          "partial_satisfaction_mean": 0.7917,
+          "claim_coverage_mean": 0.7917,
+          "repair_usefulness_rate": 0.375,
+          "mean_prompt_tokens": 393.625,
+          "mean_completion_tokens": 193.0,
+          "mean_total_tokens": 586.625,
+          "mean_latency_seconds": 4.0135
+        },
+        "grammar_gated_json": {
+          "n_records": 8,
+          "parse_success_rate": 0.875,
+          "retry_rate": 0.875,
+          "mean_retries_used": 1.375,
+          "answer_quality_mean": 0.125,
+          "exact_satisfaction_rate": 0.125,
+          "partial_satisfaction_mean": 0.8854,
+          "claim_coverage_mean": 0.8438,
+          "repair_usefulness_rate": 0.5,
+          "mean_prompt_tokens": 536.875,
+          "mean_completion_tokens": 203.875,
+          "mean_total_tokens": 740.75,
+          "mean_latency_seconds": 4.1299
+        }
+      }
+    },
+    "repo_spec_grounding": {
+      "recommended_mode": "grammar_gated_json",
+      "retry_budget": 2,
+      "rationale": {
+        "free_form_reasoning": {
+          "n_records": 4,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.75,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 0.875,
+          "claim_coverage_mean": 0.875,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 423.75,
+          "mean_completion_tokens": 106.5,
+          "mean_total_tokens": 530.25,
+          "mean_latency_seconds": 2.0496
+        },
+        "answer_only_terse": {
+          "n_records": 4,
+          "parse_success_rate": 1.0,
+          "retry_rate": 0.0,
+          "mean_retries_used": 0.0,
+          "answer_quality_mean": 0.5,
+          "exact_satisfaction_rate": 0.5,
+          "partial_satisfaction_mean": 0.75,
+          "claim_coverage_mean": 0.6875,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 400.25,
+          "mean_completion_tokens": 24.25,
+          "mean_total_tokens": 424.5,
+          "mean_latency_seconds": 0.5587
+        },
+        "minimal_json": {
+          "n_records": 4,
+          "parse_success_rate": 0.75,
+          "retry_rate": 0.25,
+          "mean_retries_used": 0.25,
+          "answer_quality_mean": 0.5,
+          "exact_satisfaction_rate": 0.5,
+          "partial_satisfaction_mean": 1.0,
+          "claim_coverage_mean": 1.0,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 530.75,
+          "mean_completion_tokens": 148.5,
+          "mean_total_tokens": 679.25,
+          "mean_latency_seconds": 2.7052
+        },
+        "grammar_gated_json": {
+          "n_records": 4,
+          "parse_success_rate": 0.75,
+          "retry_rate": 0.25,
+          "mean_retries_used": 0.5,
+          "answer_quality_mean": 0.75,
+          "exact_satisfaction_rate": 0.75,
+          "partial_satisfaction_mean": 1.0,
+          "claim_coverage_mean": 1.0,
+          "repair_usefulness_rate": 0.0,
+          "mean_prompt_tokens": 614.25,
+          "mean_completion_tokens": 80.0,
+          "mean_total_tokens": 694.25,
+          "mean_latency_seconds": 1.5619
+        }
+      }
+    }
+  },
+  "mode_guidance": {
+    "Gemma4-E4B-it": "Prefer minimal_json before grammar_gated_json when JSON is warranted; keep answer_only_terse as the default elsewhere.",
+    "Qwen3.5-0.8B": "Use grammar_gated_json only on the highest-stakes JSON slices; it outperformed minimal_json for this model."
+  }
+}

@@ -119,6 +119,7 @@ _CONSTRAINT_IR_OUTPUT_STYLES = (
     "code_only",
     "other_unstructured",
 )
+_STRUCTURED_RESPONSE_MODES = {"structured_json", "minimal_json", "grammar_gated_json"}
 _PLAN_ROLE_KEYWORDS: dict[str, tuple[str, ...]] = {
     "baseline_metrics": ("baseline", "metric"),
     "stage_change": ("stage", "change"),
@@ -488,8 +489,15 @@ def _build_generation_trace(
 
 
 def load_monitorability_policy(path: Path | None = None) -> dict[str, Any]:
-    """Load the Exp 213 monitorability policy when it is present."""
-    policy_path = path or (get_repo_root() / "results" / "monitorability_policy_213.json")
+    """Load the preferred checked-in output policy when it is present."""
+    if path is None:
+        results_dir = get_repo_root() / "results"
+        refreshed = results_dir / "output_policy_233.json"
+        policy_path = (
+            refreshed if refreshed.exists() else (results_dir / "monitorability_policy_213.json")
+        )
+    else:
+        policy_path = path
     if not policy_path.exists():
         return {}
     payload = json.loads(policy_path.read_text(encoding="utf-8"))
@@ -1865,10 +1873,11 @@ def _build_constraint_ir_prompt(
     case: dict[str, Any],
     response_mode: str,
 ) -> tuple[str, int]:  # pragma: no cover
-    module = _load_script_module(
-        "experiment_213_monitorability_audit",
-        "scripts/experiment_213_monitorability_audit.py",
-    )
+    script_path = "scripts/experiment_213_monitorability_audit.py"
+    refreshed_path = get_repo_root() / "scripts" / "experiment_233_output_policy_refresh.py"
+    if refreshed_path.exists() and response_mode in {"minimal_json", "grammar_gated_json"}:
+        script_path = "scripts/experiment_233_output_policy_refresh.py"
+    module = _load_script_module("experiment_output_policy_prompt_builder", script_path)
     return (
         str(module.build_mode_prompt(case, response_mode)),
         int(module.max_new_tokens_for(case, response_mode)),
@@ -1984,11 +1993,11 @@ def _run_gsm8k_baseline(
     task = f"Question: {case['question']}\nSolve the problem and give the final answer as a number."
     prompt = (
         task + "\nReturn only the final numeric answer. No explanation."
-        if response_mode != "structured_json"
+        if response_mode not in _STRUCTURED_RESPONSE_MODES
         else task
     )
     started = time.perf_counter()
-    if response_mode == "structured_json":
+    if response_mode in _STRUCTURED_RESPONSE_MODES:
         from carnot.pipeline.structured_reasoning import (  # type: ignore[import-untyped]
             StructuredReasoningController,
         )
@@ -2187,7 +2196,7 @@ def _run_gsm8k_verify_repair(
     total_response_tokens = 0
     for repair_idx in range(1, max_repairs + 1):
         response_mode = str(baseline["response_mode"])
-        if response_mode == "structured_json":
+        if response_mode in _STRUCTURED_RESPONSE_MODES:
             from carnot.pipeline.structured_reasoning import StructuredReasoningController
 
             controller = StructuredReasoningController(policy=policy)
@@ -3345,7 +3354,13 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
     benchmark = str(args.benchmark)
     started_at = utc_now()
     started = time.perf_counter()
-    policy_path = get_repo_root() / "results" / "monitorability_policy_213.json"
+    results_dir = get_repo_root() / "results"
+    refreshed_policy = results_dir / "output_policy_233.json"
+    policy_path = (
+        refreshed_policy
+        if refreshed_policy.exists()
+        else (results_dir / "monitorability_policy_213.json")
+    )
     policy = load_monitorability_policy(policy_path)
     records = _load_benchmark_records(benchmark)
     cohort = build_cohort_manifest(
@@ -3376,6 +3391,7 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
         _model_server = None
         try:
             from carnot.inference.model_server import ModelServer
+
             hf_ids = [spec["hf_id"] for spec in MODEL_SPECS]
             _model_server = ModelServer(hf_ids, batch_size=8)
             _model_server.start()

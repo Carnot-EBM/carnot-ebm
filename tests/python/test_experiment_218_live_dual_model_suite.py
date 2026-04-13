@@ -1,7 +1,7 @@
 """Spec: REQ-VERIFY-025, REQ-VERIFY-026, REQ-VERIFY-027, REQ-VERIFY-028,
-REQ-VERIFY-029, REQ-VERIFY-041, SCENARIO-VERIFY-025,
+REQ-VERIFY-029, REQ-VERIFY-041, REQ-VERIFY-045, SCENARIO-VERIFY-025,
 SCENARIO-VERIFY-026, SCENARIO-VERIFY-027, SCENARIO-VERIFY-028,
-SCENARIO-VERIFY-029, SCENARIO-VERIFY-042.
+SCENARIO-VERIFY-029, SCENARIO-VERIFY-042, SCENARIO-VERIFY-045.
 """
 
 from __future__ import annotations
@@ -153,11 +153,44 @@ def test_build_cohort_manifest_is_deterministic_and_reuses_prompt_seed_across_mo
         assert prompt_seeds["verify_only"] == prompt_seeds["verify_repair"]
 
 
-# REQ-VERIFY-025
-def test_recommended_response_mode_uses_exp213_policy_defaults():
+# REQ-VERIFY-025, REQ-VERIFY-045, SCENARIO-VERIFY-045
+def test_recommended_response_mode_prefers_exp233_policy_when_present(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+):
     module = load_module()
+    repo = make_repo(tmp_path)
+    results = repo / "results"
+    results.mkdir(parents=True)
+    monkeypatch.setenv("CARNOT_REPO_ROOT", str(repo))
 
+    (results / "monitorability_policy_213.json").write_text(
+        json.dumps(
+            {
+                "per_task_slice": {
+                    "live_gsm8k_semantic_failure": {"recommended_mode": "structured_json"},
+                    "code_typed_properties": {"recommended_mode": "answer_only_terse"},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
     assert module.recommended_response_mode("live_gsm8k_semantic_failure") == "structured_json"
+
+    (results / "output_policy_233.json").write_text(
+        json.dumps(
+            {
+                "per_task_slice": {
+                    "live_gsm8k_semantic_failure": {"recommended_mode": "grammar_gated_json"},
+                    "repo_spec_grounding": {"recommended_mode": "minimal_json"},
+                    "code_typed_properties": {"recommended_mode": "answer_only_terse"},
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    assert module.recommended_response_mode("live_gsm8k_semantic_failure") == ("grammar_gated_json")
+    assert module.recommended_response_mode("repo_spec_grounding") == "minimal_json"
     assert module.recommended_response_mode("code_typed_properties") == "answer_only_terse"
     assert module.recommended_response_mode("unknown-task-slice") == "answer_only_terse"
 

@@ -47,7 +47,7 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 
 ### Simulation vs Reality
 
-Current provenance snapshot (2026-04-13): **11 live GPU artifacts**, **3 simulated artifacts**, **67 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
+Current provenance snapshot (2026-04-13): **12 live GPU artifacts**, **3 simulated artifacts**, **67 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
 
 ## 1. Introduction
 
