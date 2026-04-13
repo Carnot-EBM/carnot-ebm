@@ -180,3 +180,6 @@
 | SCENARIO-VERIFY-255-C | Not Started | Implemented | Replay-vs-live compatibility (chronological replay + optional live-slice path) |
 | SCENARIO-VERIFY-255-D | Not Started | Implemented | False-positive regression budget (zero-additional-false-positive constraint) |
 | SCENARIO-VERIFY-255-E | Not Started | Implemented | Artifact schema stability (deterministic serialization + machine-readable comparison) |
+| SCENARIO-EXP259-A | Not Started | Implemented | CUDA EP detection and availability check via ort.get_available_providers() |
+| SCENARIO-EXP259-B | Not Started | Implemented | Artifact schema with hardware_paths (cpu_numpy, onnx_cpu, onnx_cuda), latency/throughput metrics, speedup ratios, and run_date tracking |
+| SCENARIO-EXP259-C | Not Started | Implemented | Honest blocker handling when CUDAExecutionProvider unavailable; no GPU numbers fabricated |

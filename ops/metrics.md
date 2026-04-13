@@ -6,7 +6,8 @@
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-13T20:49:12Z | 2026-04-13T20:53:46Z | Exp 259: install onnxruntime-gpu, benchmark CUDA ORT for PredictiveVerifier gate — 14 tests written, all pass; CUDA ORT 47.3 µs/call (5.49× slower than CPU ORT due to kernel launch overhead on 9→1 linear gate); CPU NumPy 5.1 µs/call, CPU ORT 8.6 µs/call. | TBD |
+| 1 | 2026-04-13T20:49:12Z | 2026-04-13T20:53:46Z | Exp 259: install onnxruntime-gpu, benchmark CUDA ORT for PredictiveVerifier gate — 14 tests written, all pass; CUDA ORT 47.3 µs/call (5.49× slower than CPU ORT due to kernel launch overhead on 9→1 linear gate); CPU NumPy 5.1 µs/call, CPU ORT 8.6 µs/call. | ~4.2k |
+| 2 | 2026-04-13T21:02:59Z | 2026-04-13T21:03:54Z | Minimal doc sync for Exp 259 — appended 1-line changelog entry, ops/status.md experiment row, and 3 new SCENARIO-* rows to traceability.md; no content removed, only appended per doc-sync rules. | ~1.2k |
 
 ### Session Summary
 
