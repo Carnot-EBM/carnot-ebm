@@ -3443,6 +3443,46 @@
       "total_tokens": 196,
       "flagged": false,
       "accepted_correct": false
+    },
+    "gsm8k-1260": {
+      "case_id": "gsm8k-1260",
+      "mode": "verify_only",
+      "question": "Jade bought a new cell phone with an incredible camera, so she spent all week taking pictures of her daily life. At the end of the week, she had taken 210 photos. She wants to upload all her photos on her Instagram. If she uploads 7 photos in one batch and she uploads 6 batches each day, how many days will she need to upload all of her photos?",
+      "ground_truth": 5,
+      "response": "To solve this problem, we need to determine the total number of photos Jade needs to upload and then divide that by the number of photos she can upload per day.\n\n**Step 1: Calculate the total number of photos.**\nJade has taken 210 photos in total.\n\n**Step 2: Determine the number of photos per day.**\nThe problem states she uploads 6 batches each day. Since each batch contains 7 photos, we multiply the number of batches by the photos per batch:\n$$6 \\text{ batches/day} \\times 7 \\text{ photos/batch} = 42 \\text{ photos/day}$$\n\n**Step 3: Calculate the number of days required.**\nTo find out how many days it takes to upload all 210 photos, we divide the total number of photos by the daily upload rate:\n$$210 \\text{ photos} \\div 42 \\text{ photos/day} = 5 \\text{ days}$$\n\n**Conclusion:**\nJade will need **5** days to upload all of her photos.",
+      "predicted": 5,
+      "correct": true,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 26.711,
+      "prompt_tokens": 78,
+      "response_tokens": 148,
+      "total_tokens": 226,
+      "flagged": false,
+      "accepted_correct": true
+    },
+    "gsm8k-887": {
+      "case_id": "gsm8k-887",
+      "mode": "verify_only",
+      "question": "Jerry counts six birds nesting in the bushes, 2/3rd of that number of birds flying overhead, and 3 groups of eight birds each feeding. How many birds does he count in total?",
+      "ground_truth": 34,
+      "response": "To solve this problem, we will break it down into two distinct parts: calculating the number of birds flying overhead and the number of birds feeding.\n\n### Step 1: Calculate the number of birds flying overhead\nThe problem states that Jerry counts **six birds** nesting in the bushes.\nIt also states that **2/3rd** of that number of birds are flying overhead.\n\n*   Number of birds flying overhead = $6 \\times \\frac{2}{3}$\n*   Calculation:\n    $$6 \\times \\frac{2}{3} = \\frac{12}{3} = 4$$\n\nSo, there are **4** birds flying overhead.\n\n### Step 2: Calculate the number of birds feeding\nThe problem states that there are **3 groups** of eight birds each feeding.\n\n*   Number of birds feeding = $3 \\times 8$\n*   Calculation:\n    $$3 \\times 8 = 24$$\n\nSo, there are **24** birds feeding.\n\n### Step 3: Calculate the total number of birds\nTo find the total count, we add the number of birds flying overhead and the number of birds feeding.\n\n*   Total birds = (",
+      "predicted": 3,
+      "correct": false,
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "latency_seconds": 27.95,
+      "prompt_tokens": 41,
+      "response_tokens": 164,
+      "total_tokens": 205,
+      "flagged": false,
+      "accepted_correct": false
     }
   }
 }
