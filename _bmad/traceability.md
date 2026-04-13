@@ -174,3 +174,9 @@
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |
 | REQ-PRED-004 | Not Started | Implemented | Additive pipeline integration tests |
+| REQ-VERIFY-255 | Not Started | Implemented | Self-learning A/B benchmark runner comparing five strategies |
+| SCENARIO-VERIFY-255-A | Not Started | Implemented | Strategy branching (no_learning, case_memory_plus_policy, constraint_addition, predictive_gate, combined) |
+| SCENARIO-VERIFY-255-B | Not Started | Implemented | Metric aggregation (task success, false positives, spend, fast-path hits, latency, domain splits) |
+| SCENARIO-VERIFY-255-C | Not Started | Implemented | Replay-vs-live compatibility (chronological replay + optional live-slice path) |
+| SCENARIO-VERIFY-255-D | Not Started | Implemented | False-positive regression budget (zero-additional-false-positive constraint) |
+| SCENARIO-VERIFY-255-E | Not Started | Implemented | Artifact schema stability (deterministic serialization + machine-readable comparison) |
