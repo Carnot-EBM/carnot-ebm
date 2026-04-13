@@ -34,7 +34,7 @@ class TestSafeExecFunctionSandbox:
         self,
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
-        """SCENARIO-CODE-005: missing sandbox import still executes safely."""
+        """SCENARIO-CODE-005: opt-in sandbox import failures fall back safely."""
 
         original_import = builtins.__import__
 
@@ -49,6 +49,7 @@ class TestSafeExecFunctionSandbox:
                 raise ImportError("sandbox unavailable")
             return original_import(name, globalns, localns, fromlist, level)
 
+        monkeypatch.setenv("CARNOT_USE_SANDBOX", "1")
         monkeypatch.setattr(builtins, "__import__", fake_import)
 
         result, error = safe_exec_function(CORRECT_ADD, "add", (1, 2))
@@ -75,7 +76,7 @@ class TestSafeExecFunctionSandbox:
         self,
         monkeypatch: pytest.MonkeyPatch,
     ) -> None:
-        """REQ-CODE-001: sandbox path is used when gVisor is available."""
+        """REQ-CODE-001: opt-in sandbox mode delegates when gVisor is available."""
 
         calls: list[tuple[str, str, tuple[object, ...], float, bool]] = []
 
@@ -90,6 +91,7 @@ class TestSafeExecFunctionSandbox:
             calls.append((code, func_name, args, timeout, allow_fallback))
             return ["ok"], None
 
+        monkeypatch.setenv("CARNOT_USE_SANDBOX", "1")
         monkeypatch.delenv("CARNOT_REQUIRE_SANDBOX", raising=False)
         monkeypatch.setattr(sandbox, "_gvisor_available", lambda: True)
         monkeypatch.setattr(sandbox, "sandboxed_exec_function", fake_sandbox_exec)
