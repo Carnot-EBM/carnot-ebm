@@ -1723,6 +1723,90 @@
       "response_tokens": 103,
       "total_tokens": 124,
       "accepted_correct": true
+    },
+    "exp211-code-phone-3": {
+      "case_id": "exp211-code-phone-3",
+      "mode": "verify_only",
+      "response": "```python\ndef normalize_digits_only(text: str) -> str:\n    \"\"\"\n    Strips all non-digit characters and returns the last 10 digits.\n    Raises ValueError if fewer than 10 digits are present.\n    \"\"\"\n    if not text:\n        raise ValueError(\"Input text cannot be empty.\")\n\n    digits = [c for c in text if c.isdigit()]\n    if len(digits) < 10:\n        raise ValueError(\"Input text contains fewer than 10 digits.\")\n\n    return digits[-10:]\n\n\n# Example usage:\n# print(normalize_digits_only(\"12345678901234567890\"))  # \"12345678901234567890\"\n# print(normalize_digits_only(\"12345678901234567890abc\"))  # \"12345678901234567890\"\n# print(normalize_digits_only(\"12345678901234567890",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 30.666,
+      "prompt_tokens": 25,
+      "response_tokens": 72,
+      "total_tokens": 97,
+      "accepted_correct": true
+    },
+    "exp211-instruction-decision-1": {
+      "case_id": "exp211-instruction-decision-1",
+      "mode": "verify_only",
+      "response": "{\n  \"choice\": \"O3\",\n  \"evidence\": [\n    \"O3 has the lowest risk level (low), which aligns with the preference for lower risk.\",\n    \"O3 has the highest reach (5), which aligns with the preference for higher reach.\"\n  ]\n}",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 8.374,
+      "prompt_tokens": 60,
+      "response_tokens": 36,
+      "total_tokens": 96,
+      "accepted_correct": true
+    },
+    "exp211-instruction-decision-2": {
+      "case_id": "exp211-instruction-decision-2",
+      "mode": "verify_only",
+      "response": "```json\n{\n  \"choice\": \"H2\",\n  \"evidence\": [\n    \"Health: green\",\n    \"Latency: 55\"\n  ]\n}\n```",
+      "formal_claims": [
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 1,
+      "n_supported": 1,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 5.707,
+      "prompt_tokens": 60,
+      "response_tokens": 13,
+      "total_tokens": 73,
+      "accepted_correct": true
+    },
+    "exp211-code-chunks-1": {
+      "case_id": "exp211-code-chunks-1",
+      "mode": "verify_only",
+      "response": "```python\ndef chunk_list(items: list[int], size: int) -> list[list[int]]:\n    \"\"\"\n    Splits a list into consecutive chunks of at most `size` elements.\n\n    Parameters\n    ----------\n    items : list[int]\n        The list to split.\n    size : int\n        The maximum number of elements in each chunk.\n\n    Returns\n    -------\n    list[list[int]]\n        A list of lists, where each inner list contains at most `size` elements.\n    \"\"\"\n    if not items:\n        return []\n\n    chunks = []\n    current_chunk = []\n\n    for i in range(0, len(items), size):\n        chunk = items[i:i + size]\n        current_chunk.extend(chunk)\n        chunks.append(current_chunk)\n\n    return chunks\n```\n\nExample:\n\n```python\nitems = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]\nchunks = chunk_list(items, size=3)\nprint(chunks)\n# [[1, 2, 3], [4, 5, 6], [7,",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 29.748,
+      "prompt_tokens": 18,
+      "response_tokens": 111,
+      "total_tokens": 129,
+      "accepted_correct": true
     }
   }
 }
