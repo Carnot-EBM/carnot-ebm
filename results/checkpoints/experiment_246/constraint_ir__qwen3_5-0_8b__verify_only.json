@@ -1807,6 +1807,89 @@
       "response_tokens": 111,
       "total_tokens": 129,
       "accepted_correct": true
+    },
+    "exp211-code-dedupe-1": {
+      "case_id": "exp211-code-dedupe-1",
+      "mode": "verify_only",
+      "response": "```python\ndef dedupe_preserve_order(items: list[str]) -> list[str]:\n    \"\"\"\n    Returns a new list containing the first occurrence of each string in the input list,\n    preserving the original order.\n\n    Args:\n        items: A list of strings.\n\n    Returns:\n        A new list with unique strings in the same order as the input.\n    \"\"\"\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 15.177,
+      "prompt_tokens": 25,
+      "response_tokens": 67,
+      "total_tokens": 92,
+      "accepted_correct": true
+    },
+    "exp211-instruction-filter-2": {
+      "case_id": "exp211-instruction-filter-2",
+      "mode": "verify_only",
+      "response": "P3, P4",
+      "formal_claims": [
+        {
+          "claim_id": "c1",
+          "failure_detail": "required=2.0 but observed=0.0",
+          "route": "cardinality",
+          "run_date": "20260413",
+          "verdict": "violated"
+        },
+        {
+          "claim_id": "c2",
+          "failure_detail": null,
+          "route": "set_membership",
+          "run_date": "20260413",
+          "verdict": "supported"
+        }
+      ],
+      "n_claims": 2,
+      "n_supported": 1,
+      "n_violated": 1,
+      "n_abstained": 0,
+      "flagged": true,
+      "accepted": false,
+      "latency_seconds": 1.33,
+      "prompt_tokens": 61,
+      "response_tokens": 2,
+      "total_tokens": 63,
+      "accepted_correct": false
+    },
+    "exp211-code-csv-1": {
+      "case_id": "exp211-code-csv-1",
+      "mode": "verify_only",
+      "response": "```python\ndef parse_user_row(row: str) -> dict[str, str | None]:\n    \"\"\"\n    Parse a comma-separated user row and return a dictionary of fields.\n    \n    Args:\n        row: A string containing comma-separated user data.\n    \n    Returns:\n        A dictionary mapping field names to their values (str or None).\n        Returns None if the row is empty.\n    \"\"\"\n    if not row:\n        return None\n    \n    fields = {\n        \"id\": None,\n        \"name\": None,\n        \"email\": None\n    }\n    \n    # Split by comma and strip whitespace from each part\n    parts = row.split(\",\")\n    for part in parts:\n        if not part.strip():\n            continue\n        field_name, value = part.strip().split(\",\")\n        fields[field_name] = value\n    \n    return fields\n```\n\nExample usage:\n```python\nrow = \"id=1,name=John Doe,email=john@example.com\"\nresult = parse_user_row(row)\nprint(result)  # {'id': '1', 'name': 'John Doe', 'email': 'john@example.com'}\n```",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 28.741,
+      "prompt_tokens": 24,
+      "response_tokens": 115,
+      "total_tokens": 139,
+      "accepted_correct": true
+    },
+    "exp211-code-chunks-3": {
+      "case_id": "exp211-code-chunks-3",
+      "mode": "verify_only",
+      "response": "```python\ndef chunk_pairs(items: list[tuple[int, int]], size: int) -> list[list[tuple[int, int]]]:\n    \"\"\"\n    Chunk a list of tuples into consecutive groups of at most `size` elements.\n\n    Parameters\n    ----------\n    items : list[tuple[int, int]]\n        List of tuples to be chunked.\n    size : int\n        Maximum number of elements per chunk.\n\n    Returns\n    -------\n    list[list[tuple[int, int]]]\n        List of lists, where each inner list contains at most `size` tuples.\n    \"\"\"\n    if not items:\n        return []\n\n    chunks = []\n    current_chunk = []\n\n    for item in items:\n        if len(current_chunk) >= size:\n            chunks.append(current_chunk)\n            current_chunk = []\n        current_chunk.append(item)\n\n    if current_chunk:\n        chunks.append(current_chunk)\n\n    return chunks\n```\n\nExample usage:\n\n```python\nitems = [(1, 2), (3, 4), (5, 6), (7, 8)]\nchunks = chunk_pairs(items, size=2)\n# Output: [[",
+      "formal_claims": [],
+      "n_claims": 0,
+      "n_supported": 0,
+      "n_violated": 0,
+      "n_abstained": 0,
+      "flagged": false,
+      "accepted": true,
+      "latency_seconds": 28.914,
+      "prompt_tokens": 20,
+      "response_tokens": 112,
+      "total_tokens": 132,
+      "accepted_correct": true
     }
   }
 }
