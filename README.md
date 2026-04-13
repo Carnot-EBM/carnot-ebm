@@ -76,13 +76,13 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (229+ experiments, 22 completed milestones)
+## Key Results (230+ experiments, 22 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
-Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **70 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **71 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
 ## PBT Verification
 
@@ -159,7 +159,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 229+ experiments across 22 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 230+ experiments across 22 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
@@ -211,7 +211,7 @@ All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), 
 
 ### Hardware Path
 
-The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim.
+The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim. Exp 242 now attempts the real KV260 round trip and records the honest blocker in this environment: no `CARNOT_KV260_BITFILE` path was configured, so no board timings were fabricated.
 
 ## Architecture
 

@@ -1,0 +1,71 @@
+{
+  "experiment": 242,
+  "benchmark": "kv260_host_overlay_roundtrip",
+  "title": "KV260 host / overlay round-trip benchmark",
+  "run_date": "20260413",
+  "schema": {
+    "artifact": "carnot.kv260_roundtrip.v1"
+  },
+  "metadata": {
+    "hardware_target": "AMD/Xilinx Kria KV260",
+    "execution_path": "blocked",
+    "hardware_detected": false,
+    "started_at": "2026-04-13T09:10:01Z",
+    "finished_at": "2026-04-13T09:10:01Z",
+    "runtime_seconds": 0.135871,
+    "output_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_242_results.json",
+    "bitfile_path": null,
+    "overlay_ip_name": "carnot_ising_0",
+    "module": "python/carnot/samplers/fpga_ising.py",
+    "script": "scripts/experiment_242_kv260_roundtrip.py",
+    "source_artifacts": [
+      "results/experiment_228_results.json",
+      "docs/fpga-ising-design.md"
+    ],
+    "spec_requirements": [
+      "REQ-SAMPLE-005",
+      "REQ-SAMPLE-006",
+      "REQ-SAMPLE-007",
+      "SCENARIO-SAMPLE-012",
+      "SCENARIO-SAMPLE-013",
+      "SCENARIO-SAMPLE-014"
+    ],
+    "auto_backend_probe": {
+      "backend_name": "cpu_fallback",
+      "using_cpu_fallback": true
+    },
+    "notes": [
+      "Hardware validation remained blocked, so no latency numbers were fabricated.",
+      "No KV260 overlay bitfile path was configured."
+    ]
+  },
+  "problem": {
+    "n_spins": 128,
+    "topology": "symmetric sparse ring with 4 neighbors on each side",
+    "n_samples": 4,
+    "warmup_steps": 40,
+    "steps_per_sample": 10,
+    "beta": 6.0,
+    "seed": 242
+  },
+  "bring_up": {
+    "required_env_var": "CARNOT_KV260_BITFILE",
+    "overlay_path_checked": null,
+    "checklist": [
+      "Set CARNOT_KV260_BITFILE to the KV260 bitfile path on the board host.",
+      "Load the overlay and expose `carnot_ising_0.mmio` through PYNQ.",
+      "Verify the STATUS register raises DONE after CONTROL.START."
+    ]
+  },
+  "round_trip": null,
+  "blockers": [
+    {
+      "code": "missing_bitfile_config",
+      "stage": "overlay_config",
+      "message": "No KV260 overlay bitfile path was configured.",
+      "setup_step": "Set CARNOT_KV260_BITFILE=/path/to/carnot_ising.bit on the KV260 host before rerunning Exp 242.",
+      "overlay_path": null
+    }
+  ],
+  "run_status": "blocked"
+}

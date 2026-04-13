@@ -97,6 +97,23 @@ The system shall provide an `FPGAIsingSampler` backend in
 - the backend exposes a small benchmark helper comparing the simulated FPGA
   control path against the CPU sampler on the same Ising problem
 
+### REQ-SAMPLE-007: KV260 Hardware Round-Trip Validation Artifact
+
+The system shall provide a bring-up script for the KV260 FPGA Ising control
+plane, where:
+- the script attempts a real PYNQ overlay / MMIO interaction using the
+  existing AXI-Lite register-map contract
+- when hardware is available, the script measures and records upload,
+  trigger, and sample-readback latencies for one round trip
+- when hardware is missing or incomplete, the script emits a blocker artifact
+  that names the missing dependency, setup step, or overlay path instead of
+  reporting fabricated timings
+- the artifact labels the execution path explicitly as `hardware`,
+  `software_model`, or `blocked` so fallback or simulated transports do not
+  masquerade as live board validation
+- the artifact records whether `FPGAIsingSampler(mode="auto")` would remain on
+  the FPGA path or fall back to CPU in the same environment
+
 ## Scenarios
 
 ### SCENARIO-TRAIN-001: CD-1 Training Step
@@ -191,6 +208,35 @@ CPU backend
 **Then** it returns elapsed-time metrics for both paths
 **And** it reports the compared backend names, problem size, and sample shape
 
+### SCENARIO-SAMPLE-012: KV260 Hardware Round-Trip Timing
+
+**Given** a reachable KV260 PYNQ overlay exposing `carnot_ising_0.mmio`
+**When** the Exp 242 bring-up script uploads a sparse Ising problem, triggers
+one sampling run, and reads back the sample window
+**Then** the artifact records measured upload, trigger, and readback
+latencies
+**And** it labels the execution path as `hardware`
+
+### SCENARIO-SAMPLE-013: Blocker Artifact For Missing Hardware Bring-Up
+
+**Given** an environment without the KV260 bitfile, PYNQ install, or MMIO
+endpoint required for `carnot_ising_0`
+**When** the Exp 242 bring-up script is executed
+**Then** it writes a blocker artifact naming the exact missing dependency,
+setup step, or overlay path
+**And** it does not label the run as `hardware` or report fabricated latency
+measurements
+
+### SCENARIO-SAMPLE-014: Software-Model Bring-Up Is Labeled Honestly
+
+**Given** the Exp 242 bring-up flow is exercised against the software overlay
+for contract validation
+**When** the upload, trigger, and readback path completes without real board
+hardware
+**Then** the artifact labels the execution path as `software_model`
+**And** it preserves the distinction between software-model timings and live
+hardware validation
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -212,3 +258,4 @@ CPU backend
 | REQ-SAMPLE-004 | Not Started | Implemented | 8 Python |
 | REQ-SAMPLE-005 | Not Started | Implemented | 6 Python |
 | REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |
+| REQ-SAMPLE-007 | Not Started | Implemented | 5 Python |
