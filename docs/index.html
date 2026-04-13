@@ -332,7 +332,7 @@
       <div class="bento-card span-2 row-2">
         <div class="bento-icon">🧠</div>
         <h3 class="bento-title">Four Energy Tiers</h3>
-        <p class="bento-text"><strong>KAN</strong> (default): learnable splines, 0.994 AUROC, 8.7x fewer params &mdash; best for verification. <strong>Ising</strong>: fastest sampling, maps to FPGA/TSU hardware, and now has a KV260-class sparse <strong>4,096-spin</strong> control-plane design with a software-model backend (Exp 228). On the checked-in sparse <strong>128</strong>-spin benchmark, `fpga_sim` runs in <strong>0.824549s</strong> versus <strong>0.288092s</strong> on CPU, which is explicitly a software-model artifact rather than a live throughput claim. <strong>Gibbs</strong>: MLP for complex patterns. <strong>Boltzmann</strong>: deep residual for research. KAN for accuracy, Ising for speed.</p>
+        <p class="bento-text"><strong>KAN</strong> (default): learnable splines, 0.994 AUROC, 8.7x fewer params &mdash; best for verification. <strong>Ising</strong>: fastest sampling, maps to FPGA/TSU hardware, and now has a KV260-class sparse <strong>4,096-spin</strong> control-plane design with a software-model backend (Exp 228). On the checked-in sparse <strong>128</strong>-spin benchmark, `fpga_sim` runs in <strong>0.824549s</strong> versus <strong>0.288092s</strong> on CPU, which is explicitly a software-model artifact rather than a live throughput claim. Exp 242 keeps the board path honest by recording the missing-bitfile blocker, and Exp 243 keeps sampler-backed replay honest by reporting a neutral CPU rerank result while the KV260 path stays blocked. <strong>Gibbs</strong>: MLP for complex patterns. <strong>Boltzmann</strong>: deep residual for research. KAN for accuracy, Ising for speed.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
@@ -367,7 +367,7 @@
   <div class="container">
     <span class="section-label">Evidence</span>
     <h2 class="section-title">Live GPU Results Only</h2>
-    <p class="section-desc">Every card below is anchored to live GPU artifacts on real models, even when the card itself summarizes a follow-on analytic over those artifacts. Provenance snapshot: 13 live GPU artifacts, 3 simulated artifacts, 71 unverified artifacts, and 1 software-model artifact. Only the live subset feeds these summaries.</p>
+    <p class="section-desc">Every card below is anchored to live GPU artifacts on real models, even when the card itself summarizes a follow-on analytic over those artifacts. Provenance snapshot: 13 live GPU artifacts, 3 simulated artifacts, 72 unverified artifacts, and 1 software-model artifact. Only the live subset feeds these summaries.</p>
     <div class="results-grid">
       <div class="r-card">
         <span class="r-tag">Code Verification</span>

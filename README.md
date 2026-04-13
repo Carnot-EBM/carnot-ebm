@@ -82,7 +82,7 @@ All benchmark results below are from **live GPU inference**. Simulated and softw
 
 ### Simulation vs Reality
 
-Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **71 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **72 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
 ## PBT Verification
 
@@ -211,7 +211,7 @@ All tiers implement the same `EnergyFunction` trait (Rust) / protocol (Python), 
 
 ### Hardware Path
 
-The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim. Exp 242 now attempts the real KV260 round trip and records the honest blocker in this environment: no `CARNOT_KV260_BITFILE` path was configured, so no board timings were fabricated.
+The current hardware track is the [FPGA Ising design](docs/fpga-ising-design.md) for a KV260-class sparse **4,096-spin** backend. Exp 228 validates the AXI-Lite upload/trigger/readback contract in **software simulation** with the new `FPGAIsingSampler` backend; the checked-in `fpga_sim` timing (`0.824549s` on a 128-spin sparse problem) is explicitly a software-model artifact, not a synthesized FPGA throughput claim. Exp 242 now attempts the real KV260 round trip and records the honest blocker in this environment: no `CARNOT_KV260_BITFILE` path was configured, so no board timings were fabricated. Exp 243 then replays **460** saved semantic and code repair cases through the sampler path: the CPU reranker stays neutral overall on top-1 quality and verifier precision, while the KV260-backed path remains blocked in the same environment.
 
 ## Architecture
 
