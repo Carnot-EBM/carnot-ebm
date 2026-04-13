@@ -287,17 +287,17 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. 206 completed experiments across 21 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, +4.9pp on typed constraints, held-out replay flat at 32.74% while false positives drop 7 &rarr; 1, and packaged <code>verify_code()</code> surfaces for end users. Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. 228+ experiments across 21 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, +4.9pp on typed constraints, held-out replay flat at 32.74% while false positives drop 7 &rarr; 1, and Exp 227 still detects 17/23 wrong baselines while catching 2 weak-harness misses. Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">206</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">228+</div><div class="stat-label">Experiments</div></div>
       <div class="stat"><div class="stat-num">21</div><div class="stat-label">Milestones</div></div>
       <div class="stat"><div class="stat-num">+3.0pp</div><div class="stat-label">HumanEval (live)</div></div>
-      <div class="stat"><div class="stat-num">2,196</div><div class="stat-label">Py+Int Tests</div></div>
+      <div class="stat"><div class="stat-num">2,196</div><div class="stat-label">Collected Tests</div></div>
     </div>
   </div>
 </section>
@@ -332,7 +332,7 @@
       <div class="bento-card span-2 row-2">
         <div class="bento-icon">🧠</div>
         <h3 class="bento-title">Four Energy Tiers</h3>
-        <p class="bento-text"><strong>KAN</strong> (default): learnable splines, 0.994 AUROC, 8.7x fewer params &mdash; best for verification. <strong>Ising</strong>: fastest sampling, maps to FPGA/TSU hardware, and now has a KV260-class sparse control-plane design with a software-model backend (Exp 228). That hardware note is explicitly a software-model artifact, not a live throughput claim. <strong>Gibbs</strong>: MLP for complex patterns. <strong>Boltzmann</strong>: deep residual for research. KAN for accuracy, Ising for speed.</p>
+        <p class="bento-text"><strong>KAN</strong> (default): learnable splines, 0.994 AUROC, 8.7x fewer params &mdash; best for verification. <strong>Ising</strong>: fastest sampling, maps to FPGA/TSU hardware, and now has a KV260-class sparse <strong>4,096-spin</strong> control-plane design with a software-model backend (Exp 228). On the checked-in sparse <strong>128</strong>-spin benchmark, `fpga_sim` runs in <strong>0.824549s</strong> versus <strong>0.288092s</strong> on CPU, which is explicitly a software-model artifact rather than a live throughput claim. <strong>Gibbs</strong>: MLP for complex patterns. <strong>Boltzmann</strong>: deep residual for research. KAN for accuracy, Ising for speed.</p>
       </div>
       <div class="bento-card">
         <div class="bento-icon">🛠️</div>
@@ -377,9 +377,9 @@
       </div>
       <div class="r-card">
         <span class="r-tag">Code Verification</span>
-        <h3 class="r-title">PBT Bug Detection (Exp 220)</h3>
+        <h3 class="r-title">PBT Bug Detection (Exp 226)</h3>
         <div class="r-meter"><div class="r-bar" style="width: 99.3%; background: #22c55e;"></div></div>
-        <div class="r-stats"><span class="r-before">144/145 wrong detected</span> <span class="r-after">99.3% detection rate</span></div>
+        <div class="r-stats"><span class="r-before">144/145 wrong baselines detected</span> <span class="r-after">6 harness misses caught</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Cross-Model PBT</span>
@@ -417,7 +417,7 @@
         <div class="r-stats"><span class="r-before">230/662 traces accepted</span> <span class="r-after">43 patterns; 29 mature</span></div>
       </div>
     </div>
-    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is the strongest domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, the seeded Qwen cohort (Exp 227) still catches extra weak-harness misses even with a flat repair delta, and the next self-learning win is false-positive control rather than hidden task gain. Exp 222 and Exp 223 make that read explicit: live memory ingestion is real, but automatic reuse still needs tighter gating.</p>
+    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is the strongest domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, the seeded Qwen cohort (Exp 227) still catches extra weak-harness misses even with a flat repair delta, and the next self-learning win is false-positive control rather than hidden task gain. Exp 222 and Exp 223 make that read explicit: live memory ingestion is real, but automatic reuse still needs tighter gating. Outside the live-only table, VERIFY-031 packages the same PBT stack as <code>verify_code()</code>, <code>carnot verify-code</code>, and <code>verify_code_with_pbt</code>, while Exp 228 extends the hardware path through a KV260-class software model.</p>
   </div>
 </section>
 
