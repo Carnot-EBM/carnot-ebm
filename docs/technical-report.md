@@ -9,7 +9,7 @@
 
 **Current headline live results:** HumanEval PBT **11.6% -> 14.6%** (+3.0pp, Exp 226), seeded Qwen PBT **23.3% -> 23.3%** with **17/23** wrong baselines detected and **2** harness misses caught (Exp 227), typed constraints **61.7% -> 66.7%** (+4.9pp, Exp 221), and held-out replay **32.74% -> 32.74%** with false positives **7 -> 1** (Exp 223).
 
-**Current public snapshot:** **228+** experiments across **22** research milestones, **85** audited result artifacts (**13** live GPU, **3** simulated, **68** unverified, **1** software-model), and **2,196** collected Python/integration tests. The latest documented full Python validation remains **2,137 passed, 1 skipped** at **100.00%** coverage.
+**Current public snapshot:** **228+** experiments across **22** research milestones, **86** audited result artifacts (**13** live GPU, **3** simulated, **69** unverified, **1** software-model), and **2,263** collected Python/integration tests. The latest documented full Python validation remains **2,204 passed, 1 skipped** at **100.00%** coverage.
 
 ---
 
@@ -17,7 +17,7 @@
 
 We present Carnot, an open-source framework that combines Energy-Based Models (EBMs) with Large Language Models (LLMs) to reduce hallucinations in generated output. Through a public research record that now spans **228+ experiments** across **22 research milestones**, 16 model families spanning 350M to 35B parameters, and both dense and MoE architectures, we document a complete research arc: from activation-based hallucination detection (which failed) through constraint-based verification via Ising models, a critical discovery that early positive results were simulation artifacts, and a rebuild for real instruction-tuned models — culminating in live GPU results showing +3.0pp on HumanEval (statistically significant), +4.9pp on typed constraints, 99.3% wrong-code detection, held-out replay cutting false positives **7 -> 1** at flat **32.74%** success, a **662**-event live trace-memory corpus with **230** accepted patterns, a **164**-trace PBT learning corpus, a seeded Qwen transfer check that still detects **17/23** wrong baselines and catches **2** weak-harness misses at flat pass@1, and packaged end-user code verification via Python API, CLI, and MCP. All headline benchmark numbers remain live inference only.
 
-As of **2026-04-13**, the public reporting snapshot covers **84** audited result artifacts (**13** live GPU, **3** simulated, **67** unverified, **1** software-model) and **2,196** collected Python/integration tests, with the latest documented full Python validation at **2,137 passed, 1 skipped** and **100.00%** coverage.
+As of **2026-04-13**, the public reporting snapshot covers **86** audited result artifacts (**13** live GPU, **3** simulated, **69** unverified, **1** software-model) and **2,263** collected Python/integration tests, with the latest documented full Python validation at **2,204 passed, 1 skipped** and **100.00%** coverage.
 
 Our key findings span two phases. **Phase 1 (Activation-based, Experiments 1-38):** (1) the model's own per-token log-probabilities are the most effective energy signal for candidate selection (+10% accuracy), (2) structural test execution dominates for code verification (0% to 30% accuracy), (3) activation-space approaches show detectable signals but fail to improve output quality — activation EBMs detect confidence, not correctness, (4) instruction tuning compresses the hallucination signal (84.5% base vs 67.2% instruction-tuned), (5) chain-of-thought further compresses it (75.5% to 61.3%), (6) adversarial questions defeat post-hoc detection entirely, and (7) no internal signal — activations, logit lens, NLI, confidence — can distinguish factual truth from confident hallucination. These 14 systematic negative results are the project's primary contribution to the activation-based literature.
 
@@ -47,7 +47,7 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 
 ### Simulation vs Reality
 
-Current provenance snapshot (2026-04-13): **13 live GPU artifacts**, **3 simulated artifacts**, **68 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
+Current provenance snapshot (2026-04-13): **13 live GPU artifacts**, **3 simulated artifacts**, **69 unverified artifacts**, and **1 software-model artifact**. Only the live GPU subset informs the headline benchmark table above. The software-model artifact is Exp 228, which validates the FPGA control path in software simulation rather than claiming synthesized hardware throughput.
 
 ## 1. Introduction
 
@@ -578,7 +578,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | `pip install carnot`, extras for rust/mcp/cuda/llm | Integration tests | Beta |
 
-**Total:** **2,196** Python/integration tests are currently collected in the repo. The latest documented full Python validation remains **2,137 passed, 1 skipped** with **100.00%** coverage, and the packaged-verification integration/E2E checks are also passing.
+**Total:** **2,263** Python/integration tests are currently collected in the repo. The latest documented full Python validation remains **2,204 passed, 1 skipped** with **100.00%** coverage, and the packaged-verification integration/E2E checks are also passing.
 
 ---
 
@@ -666,7 +666,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### The story
 
-The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, measured that live self-learning currently helps false-positive control before it helps held-out task success, added a provenance-labeled FPGA software model, distilled the strongest code traces into reusable rankings, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at **2,137 passed, 1 skipped** with **100.00%** coverage.
+The trajectory of this project is: we tried the obvious approach (train an EBM on activations to detect hallucination), learned through 38 experiments that it fundamentally cannot work for factual verification, identified the root cause (internal signals capture confidence, not truth), pivoted to encoding external knowledge as formal constraints, discovered that early constraint results were simulation artifacts, rebuilt extraction for real instruction-tuned models, proved that code verification (+3.0pp HumanEval) and typed constraint verification (+4.9pp) work on live GPU inference, documented the honest flat-delta Qwen PBT follow-up plus its **17/23** wrong-baseline detections and **2** weak-harness misses, measured that live self-learning currently helps false-positive control before it helps held-out task success, added a provenance-labeled FPGA software model, distilled the strongest code traces into reusable rankings, and packaged the PBT path as a standalone API, CLI, and 7-tool MCP surface while preserving a Python suite that most recently validated at **2,204 passed, 1 skipped** with **100.00%** coverage.
 
 The LLM handles language. The Ising model handles logic. Each does what it's best at. And someday, the Ising model runs on thermodynamic hardware.
 
