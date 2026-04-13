@@ -1,0 +1,49 @@
+{
+  "total_wall_time_minutes": 3658,
+  "experiments_completed": 254,
+  "slowest_experiments": [
+    {
+      "duration_minutes": 418,
+      "experiment": "Exp 53: Runtime constraint instrumentation",
+      "why_slow": "This is a development-heavy outlier, not a pure compute outlier. The 418-minute conductor gap mostly reflects implementation, testing, and reconciliation around a new reusable instrumentation path rather than 418 minutes of live experiment runtime."
+    },
+    {
+      "duration_minutes": 117,
+      "experiment": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma4-E4B-it",
+      "why_slow": "This was the largest paired live benchmark in the milestone: 200 GSM8K questions per model across baseline, verify_only, and verify_repair. The checked-in artifact reports 5364.309 seconds of live runtime, and it ran before the dual-GPU runner landed, so one RTX 3090 was effectively idle while validation and documentation added the remaining wall time."
+    },
+    {
+      "duration_minutes": 83,
+      "experiment": "Exp 184: 3B model verification — does verify-repair help large models?",
+      "why_slow": "This was genuinely compute-heavy: a live Qwen3-4B run over 400 GSM8K questions (200 standard plus 200 adversarial) with up to 3 repair iterations. The artifact reports 4501.1 seconds on a single GPU, so most of the wall time came from real model execution, with the rest from the usual validation and reconciliation passes."
+    },
+    {
+      "duration_minutes": 78,
+      "experiment": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "why_slow": "The live run itself was short. The artifact reports only 459.355 seconds of runtime, so most of the 78-minute wall time came from process overhead: test-first implementation, targeted coverage, full-suite validation, spec coverage, and manual reconciliation."
+    },
+    {
+      "duration_minutes": 78,
+      "experiment": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "why_slow": "This mixed real training work with orchestration overhead. The experiment generated a 1200-pair dataset, ran a 100-epoch-budget training loop with early stopping at epoch 34, evaluated per-domain metrics, published artifacts, and still paid the normal test and documentation costs."
+    }
+  ],
+  "bottlenecks_identified": [
+    "Timing attribution is still too coarse. Milestone durations are inferred from `[conductor]` commit gaps, and frequent `Checkpoint: preserve uncommitted work from interrupted run` commits blur actual experiment runtime versus coding, retries, idle gaps, and documentation work.",
+    "Paired live GPU work was under-utilized. Exp 219, Exp 220, and Exp 221 were completed before Exp 225 introduced `DualGPURunner`, and the checked-in later live artifacts do not record default parallel execution, so the 2x RTX 3090 host was not used consistently.",
+    "The validation loop is a material bottleneck. Most experiments reran targeted coverage, `pytest tests/python -q`, `scripts/check_spec_coverage.py`, E2E or integration checks, and `validate-reconciliation.sh`; the full Python suite alone was roughly 77 to 98 seconds per run in conductor logs.",
+    "Manual doc reconciliation remained high-frequency and error-prone. Git history shows a dedicated `Update docs for Exp ...` commit after nearly every experiment plus extra `Update docs before planning` sync passes, and stale provenance text triggered additional 2026-04-13 docs repair work.",
+    "Retry and queue churn cost time. The conductor log shows repeated self-heal passes for pre-existing test failures, multiple failed attempts on Exp 233, Exp 236, Exp 237, and Exp 238, and repeated `Deliverable already exists in repo` executions that should have been pruned earlier.",
+    "Operational telemetry is incomplete. `ops/metrics.md` still records `Tokens (est)` as `TBD` because `scripts/session-metrics.py` is missing, and the live benchmark artifacts do not capture per-phase timings or parallel-execution metadata."
+  ],
+  "improvements_suggested": [
+    "Record phase-level timings in the conductor and in experiment artifacts: pre-flight, agent implementation, live run, post-flight validation, doc reconciliation, and retry or resume time.",
+    "Make paired Qwen and Gemma benchmarks default to dual-GPU warm execution on 2-GPU hosts: `--parallel` by default, `ModelServer` warm loads, and artifact fields for `parallel_requested`, `parallel_enabled`, `parallel_execution_mode`, and per-GPU occupancy.",
+    "Replace always-on full-suite pre-flight validation with a tiered gate: fast changed-file smoke checks for most tasks, full Python or spec or E2E sweeps for framework changes, milestone boundaries, and externally visible API changes.",
+    "Generate `ops/changelog.md`, `ops/status.md`, `_bmad/traceability.md`, and provenance-count updates from structured experiment metadata so reconciliation becomes one automated step instead of a second manual commit after every experiment.",
+    "Prune duplicate roadmap tasks before launch and auto-skip tasks whose deliverables already exist and validate cleanly. Keep checkpoint-resume state out of milestone timing totals so interrupted runs do not look like productive wall time.",
+    "Run `gpu_monitor` automatically before and after long live jobs and log detected processes, but keep zombie reaping conservative. The current snapshot shows harmless 2MB idle CUDA contexts, not the greater-than-1GB zombie class the monitor is designed to catch.",
+    "Restore the missing session-metrics extraction script or replace it so milestone retrospectives can separate token and cost burn from experiment and runtime burn."
+  ],
+  "estimated_time_savings_pct": 25
+}
