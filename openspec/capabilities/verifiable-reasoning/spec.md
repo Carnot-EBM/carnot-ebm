@@ -1028,6 +1028,67 @@ The repository shall provide a dual-GPU paired benchmark helper in
   larger, that model is loaded with `device_map="auto"` instead of a fixed
   single-GPU assignment
 
+### REQ-VERIFY-042: Exp 232 Semantic Calibration Corpus
+
+The repository shall provide a deterministic Exp 232 workflow that writes
+`data/research/semantic_calibration_corpus_232.jsonl`, where:
+- the corpus is built primarily from checked-in verify-only live artifacts
+  `results/experiment_219_results.json` and
+  `results/experiment_221_results.json`
+- the live portion preserves true-positive, false-positive, false-negative,
+  and true-negative rows from the semantic artifact, and preserves the
+  available true-positive and true-negative rows from the prompt-side artifact
+- targeted follow-up rows are added only where the checked-in prompt-side
+  artifact lacks outcome coverage needed for calibration analysis, rather than
+  replacing the live rows with synthetic-only examples
+- every record includes prompt and response text, gold error label,
+  verifier-detected label, outcome bucket, violation-family labeling,
+  answer-target alignment, premise coverage, claim granularity, repairability
+  hint, threshold-sweep fields, and provenance back to the source artifact or
+  the follow-up gap it fills
+- the threshold-sweep fields include at least one deterministic numeric score
+  plus the raw signal features needed for later precision-recall analysis
+- re-running the workflow refreshes the JSONL artifact deterministically
+  without duplicate rows or order drift
+
+### REQ-VERIFY-043: Exp 232 Calibration Summary And Coverage Checks
+
+The same workflow shall write `results/experiment_232_results.json`, where:
+- the artifact records the fixed Exp 232 run date `20260413`
+- the summary reports counts by source type, source artifact, benchmark,
+  task slice, model, outcome bucket, and violation family
+- the summary reports the live-versus-follow-up breakdown and the score-range
+  metadata needed to sanity-check later threshold sweeps
+- the summary records coverage checks confirming that the live semantic slice
+  contributed all four confusion buckets and that any prompt-side missing
+  buckets were filled only by targeted follow-up rows
+- re-running the workflow refreshes the summary artifact in place without
+  appending duplicate runs
+
+### SCENARIO-VERIFY-043: Live Calibration Rows Preserve Provenance And Scores
+
+**Given** the checked-in Exp 219 and Exp 221 verify-only artifacts
+**When** the Exp 232 workflow rebuilds the calibration corpus
+**Then** every live row carries stable provenance to the source experiment,
+  case identifier, model, and source artifact
+**And** every row includes the deterministic score and raw signal features
+  needed for threshold sweeps
+**And** the confusion-bucket label for each live row matches the checked-in
+  artifact verdict versus the checked-in gold outcome
+
+### SCENARIO-VERIFY-044: Prompt-Side Gap Follow-Ups Stay Minimal And Traceable
+
+**Given** the checked-in Exp 221 prompt-side artifact lacks one or more
+  confusion buckets needed for calibration
+**When** the Exp 232 workflow adds follow-up rows
+**Then** the added rows cover only the missing prompt-side buckets
+**And** each follow-up row records the gap it fills and the checked-in prompt
+  artifact it was derived from
+**And** the summary artifact reports the follow-up count separately from the
+  live-artifact count
+**And** re-running the workflow does not change the follow-up ordering
+  or duplicate them
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1073,4 +1134,6 @@ The repository shall provide a dual-GPU paired benchmark helper in
 | REQ-VERIFY-039 | Not Started | Implemented | TensorRT backend cache/build/fallback tests |
 | REQ-VERIFY-040 | Not Started | Implemented | Warm-server preference + HF-vs-TRT benchmark tests |
 | REQ-VERIFY-041 | Not Started | Implemented | DualGPU runner + loader/harness dispatch tests |
+| REQ-VERIFY-042 | Not Started | Implemented | Exp 232 calibration corpus tests + artifact refresh |
+| REQ-VERIFY-043 | Not Started | Implemented | Exp 232 summary/coverage tests + artifact refresh |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
