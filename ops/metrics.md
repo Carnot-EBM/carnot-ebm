@@ -1,5 +1,13 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 Exp 251 Process Verification Comparison
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T17:13:59Z | 2026-04-13T17:18:22Z | Create results/experiment_251_results.json: process-verification comparison vs Exp 238 using completed Exp 250 checkpoints (30/30 cases, both models). Verdict: process adds rfwr detection but no pass@1 lift at gating stage. | TBD |
+
 ## Session: 2026-04-13 REQ-VERIFY-061/062 Process Verifier
 
 ### Turn Log
