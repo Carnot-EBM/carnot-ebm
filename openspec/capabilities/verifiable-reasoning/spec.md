@@ -1222,6 +1222,62 @@ serialization, where:
 **And** only `violated` v2 results become failing pipeline constraints
   automatically
 
+### REQ-VERIFY-048: Exp 235 Live GSM8K Semantic V2 Artifact
+
+The repository shall provide a live Exp 235 workflow in
+`scripts/experiment_235_gsm8k_semantic_v2.py`, where:
+- the workflow writes `results/experiment_235_results.json`
+- the workflow evaluates exactly `Qwen/Qwen3.5-0.8B` and
+  `google/gemma-4-E4B-it`
+- the workflow reuses the checked-in Exp 219 GSM8K cohort manifest, including
+  the ordered case identifiers and shared prompt seeds, so the comparison stays
+  paired to the original live benchmark
+- the artifact preserves run-date metadata `20260413` and records the refreshed
+  Exp 233 policy source plus the semantic-verifier-v2 path used for the run
+- each model summary reports baseline, verify-only, and verify-repair accuracy
+  together with detected wrong answers, false positives, repair yield, and
+  calibrated semantic confidence summaries
+- each verify-only and verify-repair case preserves the raw response plus
+  verifier-visible semantic traces, including the structured semantic-verifier-v2
+  result, per-case false-positive labeling, and repair history when repairs occur
+- the workflow uses checkpointed execution so resumed runs do not duplicate
+  already completed case results or scramble the paired cohort order
+
+### REQ-VERIFY-049: Exp 235 Direct Comparison Against Exp 219
+
+The same workflow shall write an explicit comparison block against
+`results/experiment_219_results.json`, where:
+- the comparison records whether the Exp 235 cohort exactly matches the checked-in
+  Exp 219 cohort
+- the comparison reports per-model deltas for verify-only and verify-repair
+  accuracy, false positives, wrong-answer detections, repair yield, and
+  calibrated semantic confidence summaries relative to Exp 219
+- the comparison makes an explicit machine-readable judgment about whether the
+  false-positive budget improved enough to justify the new verify-only path for
+  each model
+- the comparison records any honest blockers or missing live cells rather than
+  fabricating completed results
+
+### SCENARIO-VERIFY-050: Exp 235 Reuses The Checked-In Exp 219 Cohort Exactly
+
+**Given** the checked-in `results/experiment_219_results.json` cohort manifest
+**When** the Exp 235 workflow rebuilds its live benchmark payload
+**Then** the Exp 235 cohort reuses the same ordered case identifiers and prompt
+  seeds from Exp 219
+**And** the artifact records that the comparison stayed on the paired Exp 219
+  cohort rather than sampling a fresh GSM8K slice
+
+### SCENARIO-VERIFY-051: Exp 235 Comparison Summary States Whether False Positives Improved Enough
+
+**Given** Exp 235 model summaries and the checked-in Exp 219 model summaries
+**When** the comparison block is built
+**Then** the artifact reports the per-model false-positive and accuracy deltas
+  directly against Exp 219
+**And** the artifact states whether the new verify-only path is justified for
+  each model under the observed false-positive budget
+**And** any missing run cells are recorded as blockers instead of being
+  represented as successful live results
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1273,4 +1329,6 @@ serialization, where:
 | REQ-VERIFY-045 | Not Started | Implemented | Structured reasoning policy + Exp 233 routing tests |
 | REQ-VERIFY-046 | Not Started | Implemented | Semantic verifier v2 claim-isolation tests |
 | REQ-VERIFY-047 | Not Started | Implemented | Semantic verifier v2 pipeline + serialization tests |
+| REQ-VERIFY-048 | Not Started | Implemented | Exp 235 cohort reuse + semantic-v2 artifact tests |
+| REQ-VERIFY-049 | Not Started | Implemented | Exp 235 comparison summary + blocker reporting tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
