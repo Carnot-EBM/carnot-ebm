@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-04-13 (formal claim verifier — REQ-VERIFY-058 / REQ-VERIFY-059)
+
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added `REQ-VERIFY-058` (solver-routed formal claim verification) and `REQ-VERIFY-059` (pipeline integration); updated implementation-status table. (user instruction: implement `formal_claim_verifier.py`)
+- `tests/python/test_formal_claim_verifier.py` — Wrote 59 tests first covering normalization, route selection, arithmetic/comparison/cardinality/set_membership/boolean_entailment checkers, abstention paths, closed-vocabulary verdicts, batch aggregation, and deterministic serialization, plus pipeline integration. (REQ-VERIFY-058, REQ-VERIFY-059)
+- `python/carnot/pipeline/formal_claim_verifier.py` — Implemented typed `FormalClaim` representation, `normalize_claim`, per-route checker functions, explicit `abstain` path for non-formalized or unsupported-route claims, `FormalClaimVerifier` with `verify_claim` / `verify_batch`, and `FormalClaimBatchResult` with deterministic `to_json()`. (REQ-VERIFY-058)
+- `python/carnot/pipeline/verify_repair.py` — Added `verify_formal_claims` method to `VerifyRepairPipeline` as an additive entry point; imported `FormalClaimVerifier` and helpers. Existing `verify()` and `verify_and_repair()` paths are unchanged. (REQ-VERIFY-059)
+- Validation — Targeted test run passed: `JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_formal_claim_verifier.py -q --no-cov -n0` → `59 passed in 2.32s`. (user instruction: implement `formal_claim_verifier.py`)
+
 ## 2026-04-13 (docs provenance inventory sync)
 
 - `README.md`, `docs/technical-report.md`, `docs/technical-report.html`, `docs/index.html`, and `ops/status.md` — Synced the public provenance inventory to the checked-in `results/experiment_*_results.json` audit after the result set shifted again. The current public snapshot now reads **90** audited artifacts with **13** live GPU, **3** simulated, **73** unverified, and **1** software-model artifact, which fixes the stale `2 simulated / 74 unverified` copy that was breaking `tests/python/test_docs.py` under `REQ-REPORT-003` and `REQ-REPORT-004`. (user instruction: fix the failing tests without touching `scripts/research_conductor.py` or `research-roadmap.yaml`)
