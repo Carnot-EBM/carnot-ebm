@@ -243,7 +243,8 @@ def run_tests() -> tuple[bool, str]:
     # Use pyproject.toml's addopts (includes coverage, parallelism, threshold).
     # Only add -q and --no-header for concise output parsing.
     rc, stdout, stderr = run_cmd(
-        [venv_pytest, "tests/python", "-q", "--no-header", "-n", "0", "-o", "addopts="],
+        [venv_pytest, "tests/python", "-q", "--no-header", "-n", "0",
+         "--no-cov", "-o", "addopts="],
         timeout=600,
     )
     # Find the summary line
