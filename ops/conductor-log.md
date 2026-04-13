@@ -1412,3 +1412,4 @@ python/ |
 | 2026-04-13 21:04 UTC | Exp 259: onnxruntime-gpu CUDA EP unlock and Predic | OK | 2579 passed, 5 skipped, 13 warnings in 487.77s (0:08:07) |
 | 2026-04-13 22:18 UTC | Exp 260: Complete solver-routed semantic benchmark | OK | Deliverable already exists in repo |
 | 2026-04-13 22:21 UTC | Exp 261: Full 164-problem HumanEval benchmark with | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
+| 2026-04-13 22:25 UTC | Exp 261: Full 164-problem HumanEval benchmark with | FAIL | Claude Code error: Stalled after 180s silence. Last output:  |
