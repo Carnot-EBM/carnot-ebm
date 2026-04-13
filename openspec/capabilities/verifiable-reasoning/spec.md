@@ -1697,6 +1697,102 @@ The repository shall provide a constraint-addition compiler in
 **Then** only templates whose `failure_family == "semantic"` are returned
 **And** the returned tuple is sorted by `template_id`
 
+### REQ-PRED-001: Predictive Verifier Feature Extraction
+
+The repository shall provide a predictive verifier module in
+`python/carnot/pipeline/predictive_verifier.py`, where:
+- a `PredictiveFeatures` dataclass holds structured scalar features extracted
+  from a partial response: `token_count`, `char_count`, `numeric_density`,
+  `operator_density`, `json_parseable`, `n_claims`, `has_final_answer`,
+  `domain_code` (0.0/1.0), and `prior_confidence` (float in [0,1])
+- `extract_features(partial_response, domain, prior_confidence)` returns a
+  `PredictiveFeatures` instance deterministically without calling any LLM or
+  external service
+- the feature vector exported via `PredictiveFeatures.to_array()` is a 1-D
+  NumPy float32 array of fixed length so downstream ONNX or NPU runtimes
+  receive a stable input shape
+- extraction is purely rule-based and safe to call on any CPU-only deployment
+  without JAX, PyTorch, or any numerical library
+- `run_date` is the fixed string `"20260413"` embedded in every result record
+
+### REQ-PRED-002: Calibrated Predictive Gate Decision
+
+The same module shall expose a calibrated gate that produces a routing
+decision from extracted features, where:
+- a `GateDecision` dataclass carries `should_skip` (bool), `confidence`
+  (float in [0,1]), `threshold` (float), `route` (one of `"FAST_PATH"` or
+  `"FULL"`), `domain_probs` (dict mapping domain name to float), and
+  `feature_summary` (dict of feature name to value) plus `run_date`
+- `PredictiveVerifier.predict(features, threshold)` returns a `GateDecision`
+  using a deterministic NumPy logistic gate whose weights can be updated via
+  `calibrate(corpus_rows)` without touching the JAX MLP in `jepa_predictor.py`
+- when `confidence < threshold` the gate returns `should_skip=True` and
+  `route="FAST_PATH"` (low-risk optimistic assumption)
+- when `confidence >= threshold` the gate returns `should_skip=False` and
+  `route="FULL"` (take the expensive verification path)
+- `GateDecision.to_dict()` and `GateDecision.to_json()` serialize
+  deterministically with sorted keys for audit-trail reproducibility
+
+### REQ-PRED-003: ONNX Export Readiness
+
+The same module shall expose an ONNX-compatible export path, where:
+- `PredictiveVerifier.export_onnx(path)` writes a self-contained ONNX model
+  file whose single input is the feature vector produced by
+  `PredictiveFeatures.to_array()` and whose single output is a scalar
+  violation-probability float32
+- when the `onnx` package is not installed the helper raises `ImportError`
+  with a clear installation hint rather than crashing silently
+- the gate weights (bias and coefficients) are serializable to / from a
+  `.safetensors` file via `save(path)` / `load(path)` so parameters trained
+  from a live corpus can be checkpointed and replayed deterministically
+- the module itself has no hard dependency on `onnx` at import time; the
+  dependency is deferred to the `export_onnx` call so the module remains safe
+  to import on every deployment
+
+### REQ-PRED-004: Additive Pipeline Integration
+
+The predictive verifier shall integrate additively into
+`VerifyRepairPipeline`, where:
+- `VerifyRepairPipeline` can accept a `PredictiveVerifier` instance via its
+  `verify()` call or as a drop-in for the existing `jepa_predictor` parameter
+  by satisfying the same `predict(embedding) -> dict[str, float]` duck-type
+  interface
+- passing `predictive_verifier=None` (the default) leaves the existing
+  verification behavior completely unchanged
+- `VerificationResult` returned through the fast path preserves
+  `mode="FAST_PATH"`, `skipped=True`, and includes a `predictive_gate`
+  key in the certificate dict carrying the serialized `GateDecision`
+- the `PredictiveVerifier` is additive: it does not change the behavior of
+  the existing `JEPAViolationPredictor`, the constraint extractor, or any
+  other pipeline component
+
+### SCENARIO-PRED-001: Low-Confidence Partial Response Takes Fast Path
+
+**Given** a partial response with very few tokens and no numeric content
+**When** `PredictiveVerifier().gate(partial_response, threshold=0.5)` is called
+**Then** `decision.confidence` is below 0.5 and `decision.should_skip` is True
+**And** `decision.route == "FAST_PATH"`
+**And** `decision.feature_summary` contains all extracted feature names
+
+### SCENARIO-PRED-002: High-Confidence Violation Triggers Full Path
+
+**Given** a partial response with dense numeric content and arithmetic operators
+**When** `PredictiveVerifier().gate(partial_response, threshold=0.5)` is called
+**Then** `decision.route == "FULL"` and `decision.should_skip` is False
+
+### SCENARIO-PRED-003: Gate Decision Serializes Deterministically
+
+**Given** a `GateDecision` with any field values
+**When** `to_json()` is called twice
+**Then** both calls produce byte-identical JSON output
+
+### SCENARIO-PRED-004: Calibration Updates Gate Without Breaking Defaults
+
+**Given** a list of corpus rows from `predictive_verification_corpus_252.jsonl`
+**When** `PredictiveVerifier().calibrate(corpus_rows)` is called
+**Then** subsequent calls to `gate()` use the updated weights
+**And** the calibration does not change the module's public API
+
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 
 **Given** a corpus row whose `process_label` is `"clean"` and whose
@@ -1827,3 +1923,7 @@ The repository shall provide a constraint-addition compiler in
 | REQ-VERIFY-061 | Not Started | Implemented | Process verifier defect detection + serialization tests |
 | REQ-VERIFY-062 | Not Started | Implemented | Process verifier pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
+| REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
+| REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
+| REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |
+| REQ-PRED-004 | Not Started | Implemented | Additive pipeline integration tests |
