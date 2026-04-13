@@ -736,7 +736,7 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     )
 
     logger.info("Calling agent for operational retrospective...")
-    exit_code, stdout, stderr = _call_agent(retro_prompt, max_turns=15)
+    exit_code, stdout, stderr = run_agent(retro_prompt, max_turns=15)
 
     if exit_code == 0:
         logger.info("Operational retrospective complete")
