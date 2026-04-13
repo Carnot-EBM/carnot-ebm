@@ -1381,3 +1381,4 @@ python/ |
 +    assert payload["run_status"] == "partial"
 +
 +   |
+| 2026-04-13 06:56 UTC | Exp 238: Identical-stack dual-model HumanEval benc | OK | Deliverable already exists in repo |
