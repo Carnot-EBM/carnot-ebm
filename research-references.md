@@ -691,3 +691,42 @@ Top 10 selected by relevance score.
 - **Logical Intelligence / Kona 1.0** - https://logicalintelligence.com/kona-ebms-energy-based-models
   Why it matters: Kona is now presented as an EBM layer beneath LLMs that enforces validity and safety across system states instead of generating likely text.
   Carnot use: validates the overall product direction, but the immediate takeaway is architectural: keep Carnot focused on verifier-side certainty layers rather than trying to turn the verifier into a chatbot.
+
+## 2026-04-13 - Milestone 2026.04.18 Planning Refresh
+
+### Formal claim verification and solver routing
+- **VERGE: Formal Refinement and Guidance Engine for Verifiable LLM Reasoning** (arXiv 2601.20055) - https://arxiv.org/abs/2601.20055
+  Why it matters: turns natural-language reasoning into typed symbolic claims, routes them through formal solvers, and uses minimal correction sets to localize which assumptions failed.
+  Carnot use: strongest direct template for replacing the current claim-isolated semantic verifier with a solver-routed path over typed claims instead of a calibrated scalar-only decision.
+- **OpenReview scan outcome: process-verification papers are now explicitly separating final-answer correctness from reasoning integrity** - https://openreview.net/
+  Why it matters: the 2026 workshop and submission thread around trustworthy agents reinforces that small models can land on the right answer for the wrong internal process, so process supervision should be treated as a first-class verifier target.
+  Carnot use: motivates a reusable process-integrity corpus and additive process verifier for both semantic traces and code-repair traces before trusting apparently correct outputs.
+
+### Code and behavioral verification
+- **ReLoop: Structured Modeling and Behavioral Verification for Reliable LLM-Based Optimization** (arXiv 2602.15983) - https://arxiv.org/abs/2602.15983
+  Why it matters: uses behavioral verification under perturbations to catch solutions that look plausible but fail under slightly altered conditions.
+  Carnot use: natural bridge from explicit HumanEval specs to process-aware code verification, especially for detecting "passes one path, breaks nearby paths" repairs on Qwen3.5-0.8B and Gemma4-E4B-it.
+- **OpenReview scan outcome: vericoding and formally verified program-synthesis benchmarks are converging on proof-oriented evaluation** - https://openreview.net/
+  Why it matters: the benchmark trend is moving toward formal specification fidelity rather than execution success alone.
+  Carnot use: useful design pressure for expanding beyond prompt-derived properties into explicitly stated code intent and proof-oriented evaluation slices.
+
+### Constrained generation and structured reasoning
+- **OpenReview scan outcome: context-sensitive constrained-decoding work is pushing beyond plain CFG masks** - https://openreview.net/
+  Why it matters: newer constrained-decoding work is starting to model obligations that depend on earlier decoded structure rather than only local syntax validity.
+  Carnot use: strengthens the case for typed reasoning outputs where later fields depend on earlier commitments, such as claim references, premise bindings, and code-spec clause IDs.
+
+### Hardware-accelerated sampling and sparse connectivity
+- **Scalable Connectivity for Ising Machines: From Dense to Sparse** (arXiv 2503.01177) - https://arxiv.org/abs/2503.01177
+  Why it matters: shows how dense logical couplings can be compiled into sparse hardware-friendly graphs using copy-node constructions without losing the optimization target.
+  Carnot use: direct design input for the next honest FPGA step after Exp 242/243: prepare sparse, partitionable verifier workloads instead of spending milestone slots on more overlay plumbing alone.
+- **Decomposing Large-Scale Ising Problems on FPGAs: A Hybrid Hardware Approach** (arXiv 2602.15985) - https://arxiv.org/abs/2602.15985
+  Why it matters: argues that host-side decomposition latency can dominate accelerator wins unless the partitioning path is hardware-aware from the start.
+  Carnot use: reinforces a milestone design where sparse decomposition and replay-friendly candidate packaging happen in software first, so later KV260 or TSU work accelerates a clean workload rather than an ad hoc one.
+
+### Secondary-source scan outcomes worth tracking
+- **Extropic writing / XTR-0 positioning** - https://extropic.ai/writing/
+  Why it matters: the current public story emphasizes XTR-0 as a development bridge, not a production replacement for host-side verifier design.
+  Carnot use: keep TSU compatibility as a constraint, but prioritize verifier quality and hardware-friendly workload shaping over additional blocked board-bringup tasks next milestone.
+- **Logical Intelligence / Kona architecture update** - https://logicalintelligence.com/kona-ebms-energy-based-models
+  Why it matters: Kona continues to frame EBMs as a validity layer beneath generators rather than another generator.
+  Carnot use: supports a milestone centered on external verification, process integrity, and self-learning sidecars rather than on replacing the target LLMs.

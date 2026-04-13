@@ -1,0 +1,491 @@
+# Carnot Research Roadmap - Milestone 2026.04.18
+# "Formal Claim Verification, Process Integrity, and Predictive Self-Learning"
+#
+# CONTEXT: Milestone 2026.04.17 established that:
+# - semantic_verifier_v2 improved observability but still did not justify verify-only on either target model
+# - spec-aware code verification composes cleanly, but the paired cross-model signal is still small and only on a 30-case cohort
+# - case memory plus policy compilation improved retrieval precision, not held-out task success
+# - KV260 bring-up is still blocked and sampler-backed reranking stayed flat on quality
+#
+# This milestone rebuilds live reasoning verification around formal claims,
+# adds explicit process-integrity checks, then turns self-learning from replay
+# bookkeeping into proactive constraint addition and predictive verification.
+
+milestone: "2026.04.18"
+milestone_title: "Formal Claim Verification, Process Integrity, and Predictive Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  # -- Phase 79: Rebuild Live Semantic Verification with Formal Claims --
+  - id: exp244-formal-claim-corpus
+    milestone: "2026.04.18"
+    deliverable: data/research/formal_claim_corpus_244.jsonl
+    title: "Exp 244: Formal claim-routing corpus from live reasoning traces"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Exp 235 proved that calibrated semantic scoring alone still leaves
+      verify-only harmful on both Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it.
+      VERGE and the current research-program both point toward the same next
+      move: typed claims routed to the narrowest deterministic checker instead of
+      one scalar semantic verdict. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_235_results.json
+      - results/experiment_221_results.json
+      - data/research/constraint_ir_benchmark_211.jsonl
+      - data/research/semantic_failure_corpus_214.jsonl
+      - python/carnot/pipeline/typed_reasoning.py
+      - python/carnot/pipeline/semantic_verifier_v2.py
+
+      TASK: Create data/research/formal_claim_corpus_244.jsonl
+
+      CONCRETE STEPS:
+      1. Create a checked-in script that converts existing live semantic and prompt-side traces into a formal-claim corpus rather than generating a synthetic benchmark from scratch.
+      2. For each claim, store normalized relation type, operands or bound variables, target quantity or entity, candidate solver route, gold verdict, and provenance back to the source artifact.
+      3. Include an explicit abstain or not_formalizable label for claims that cannot be safely normalized so later verifier code does not guess.
+      4. Add fields for minimal-correction-subset style localization when source traces already reveal which premise or claim is broken.
+      5. Write or update tests first for schema shape, deterministic generation, and provenance coverage.
+      6. Write a short results artifact summarizing route counts, formalizable-vs-abstain rates, and source breakdown.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_244_formal_claim_corpus.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp245-formal-claim-verifier
+    milestone: "2026.04.18"
+    deliverable: python/carnot/pipeline/formal_claim_verifier.py
+    title: "Exp 245: Solver-routed formal claim verifier"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: The current semantic verifier is still too heuristic. This task
+      upgrades the verifier substrate itself: typed claims should be normalized
+      and routed to arithmetic, comparison, cardinality, set-membership, or
+      boolean-entailment checkers where possible, with abstention rather than
+      brittle guesses when not formalizable. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - data/research/formal_claim_corpus_244.jsonl
+      - python/carnot/pipeline/typed_reasoning.py
+      - python/carnot/pipeline/semantic_grounding.py
+      - python/carnot/pipeline/semantic_verifier_v2.py
+      - python/carnot/pipeline/verify_repair.py
+
+      TASK: Create python/carnot/pipeline/formal_claim_verifier.py
+
+      CONCRETE STEPS:
+      1. Add or update the relevant verifiable-reasoning spec requirements before implementation if solver-routed claim verification is not already covered.
+      2. Implement a typed formal-claim representation plus route selection for at least arithmetic, comparison, cardinality, set-membership, and simple boolean-entailment claims.
+      3. Return structured claim-level verdicts, route metadata, and localized failure detail instead of a monolithic semantic score.
+      4. Preserve an explicit abstain path for unsafe or ambiguous formalizations.
+      5. Integrate the verifier additively into VerifyRepairPipeline behind a clear entry point and structured result field.
+      6. Write tests first for normalization, route selection, abstention, deterministic serialization, and pipeline integration.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_formal_claim_verifier.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp246-solver-semantic-runner
+    milestone: "2026.04.18"
+    deliverable: scripts/experiment_246_solver_semantic_live.py
+    title: "Exp 246: Live solver-routed semantic benchmark runner"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Large live benchmarks must now be split into runner-first and
+      execution-second tasks so the conductor does not burn turns in test-fix
+      loops. This task creates the runner only. The execution happens in Exp 247.
+      Use only Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_235_results.json
+      - results/experiment_221_results.json
+      - scripts/experiment_218_live_dual_model_suite.py
+      - python/carnot/pipeline/formal_claim_verifier.py
+      - python/carnot/pipeline/verify_repair.py
+
+      TASK: Create scripts/experiment_246_solver_semantic_live.py
+
+      CONCRETE STEPS:
+      1. Create a benchmark runner that reuses the paired-cohort and checkpointing discipline from Exp 218 and Exp 235.
+      2. Cover both live GSM8K semantic failures and a prompt-side constraint-following slice so route quality is measured on more than one reasoning shape.
+      3. Record per-claim route decisions, abstentions, localized failure details, and final baseline / verify_only / verify_repair outcomes for both target models.
+      4. Preserve a stable artifact schema so Exp 247 can focus on honest execution rather than post-hoc reshaping.
+      5. Write or update tests first for cohort reuse, artifact schema, checkpoint compatibility, and route-summary aggregation.
+      6. Do not execute the full live benchmark in this task; stop after the script and tests are green.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_246_solver_semantic_live.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp247-solver-semantic-live
+    milestone: "2026.04.18"
+    deliverable: results/experiment_247_results.json
+    title: "Exp 247: Live solver-routed semantic benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Exp 235 showed that semantic_verifier_v2 was not enough. Exp 246
+      should now exist and this task is the actual live run. Use only
+      Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it. Treat route-level evidence,
+      abstention rates, and false-positive budget as first-class results. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_235_results.json
+      - results/experiment_221_results.json
+      - scripts/experiment_246_solver_semantic_live.py
+      - python/carnot/pipeline/formal_claim_verifier.py
+      - python/carnot/pipeline/verify_repair.py
+
+      TASK: Create results/experiment_247_results.json
+
+      CONCRETE STEPS:
+      1. Execute the live benchmark runner with checkpointing and honest blocker handling.
+      2. Reuse a shared seeded cohort so comparison against Exp 235 and Exp 221 is direct rather than approximate.
+      3. Report baseline, verify_only, and verify_repair for both models plus per-route counts, abstain counts, false positives, detected wrong answers, and repair yield.
+      4. Include a direct comparison block that explains whether solver-routed claims materially improved the verify-only budget or only shifted work into abstention.
+      5. Record exact live inference provenance and do not fabricate missing cells if a run blocks.
+      6. Keep the results honest even if the primary success condition is not met.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_246_solver_semantic_live.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # -- Phase 80: Add Process Integrity to Reasoning and Code --
+  - id: exp248-process-integrity-corpus
+    milestone: "2026.04.18"
+    deliverable: data/research/process_integrity_corpus_248.jsonl
+    title: "Exp 248: Process-integrity corpus from live semantic and code traces"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: The next credibility gap after Exp 247 is process integrity.
+      Small models can still be right for the wrong reasons, and current Carnot
+      artifacts do not make those cases explicit enough for training or
+      benchmarking. This task builds that corpus from checked-in live traces. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/code-verification/spec.md
+      - results/experiment_235_results.json
+      - results/experiment_238_results.json
+      - results/experiment_243_results.json
+      - python/carnot/pipeline/typed_reasoning.py
+      - python/carnot/pipeline/spec_code_verifier.py
+
+      TASK: Create data/research/process_integrity_corpus_248.jsonl
+
+      CONCRETE STEPS:
+      1. Build a checked-in corpus of outcome-vs-process labels from existing semantic and code traces instead of inventing a new benchmark.
+      2. Include at least these process labels: right_answer_wrong_process, wrong_answer_partially_sound_process, unsupported_step, repair_fixed_outcome_only, and repair_fixed_process_and_outcome.
+      3. Preserve step structure or code-trace structure, gold process label, outcome label, and provenance to the source artifact.
+      4. Keep the schema compact enough that both reasoning and code verifiers can consume it later.
+      5. Write or update tests first for schema shape, deterministic generation, and provenance coverage.
+      6. Write a short summary artifact that reports label counts by source benchmark and model.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_248_process_integrity_corpus.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp249-process-verifier
+    milestone: "2026.04.18"
+    deliverable: python/carnot/pipeline/process_verifier.py
+    title: "Exp 249: Additive process verifier for reasoning and code repair"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Outcome-only verification is no longer enough. This task adds an
+      explicit process-integrity verifier that can flag "correct answer, invalid
+      process" patterns in typed reasoning traces and in code-repair traces
+      without breaking the current public surfaces. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - openspec/capabilities/code-verification/spec.md
+      - data/research/process_integrity_corpus_248.jsonl
+      - python/carnot/pipeline/typed_reasoning.py
+      - python/carnot/pipeline/formal_claim_verifier.py
+      - python/carnot/pipeline/spec_code_verifier.py
+      - python/carnot/pipeline/verify_repair.py
+
+      TASK: Create python/carnot/pipeline/process_verifier.py
+
+      CONCRETE STEPS:
+      1. Add or update the relevant specs before implementation if process-integrity verification is not already covered.
+      2. Implement a structured process-verification result that works over typed reasoning steps and code-repair traces.
+      3. Detect at least unsupported steps, missing-premise jumps, contradictory intermediate states, and outcome-correct but process-invalid traces.
+      4. Keep the module additive so existing semantic and code verifiers can consume it instead of being replaced by it.
+      5. Expose clear integration points in VerifyRepairPipeline and the generated-code verification path.
+      6. Write tests first for reasoning-trace cases, code-trace cases, deterministic serialization, and additive pipeline integration.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_process_verifier.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp250-process-code-runner
+    milestone: "2026.04.18"
+    deliverable: scripts/experiment_250_process_code_live.py
+    title: "Exp 250: Live process-aware code benchmark runner"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Exp 238 proved that the spec-aware code stack is composable, but
+      the paired comparison is still too small and still outcome-centered. This
+      runner prepares a larger live benchmark that adds process-integrity checks
+      on top of official tests, PBT, and explicit specs. Use only
+      Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/code-verification/spec.md
+      - results/experiment_238_results.json
+      - data/research/code_spec_corpus_236.jsonl
+      - python/carnot/pipeline/spec_code_verifier.py
+      - python/carnot/pipeline/process_verifier.py
+      - scripts/experiment_238_dual_model_spec_code.py
+
+      TASK: Create scripts/experiment_250_process_code_live.py
+
+      CONCRETE STEPS:
+      1. Create a live paired HumanEval runner that reuses the shared-cohort and checkpoint discipline from the existing code benchmarks.
+      2. Measure baseline, official-tests verify_only, PBT verify_only, spec-aware verify_only, process-aware verify_only, and verify_repair under one artifact schema.
+      3. Keep repair budget and prompt formatting identical across Qwen and Gemma so cross-model differences stay attributable.
+      4. Record process-integrity flags and right-for-wrong-reasons counts alongside outcome metrics.
+      5. Write or update tests first for artifact schema, cohort reuse, and comparison-summary generation.
+      6. Do not execute the full live benchmark in this task; stop after the runner and tests are green.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_250_process_code_live.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp251-process-code-live
+    milestone: "2026.04.18"
+    deliverable: results/experiment_251_results.json
+    title: "Exp 251: Live process-aware code benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: This is the live execution half of the process-aware code work.
+      The result must tell us whether process verification adds anything beyond
+      official tests, PBT, and explicit specs on the same target models. Use only
+      Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/code-verification/spec.md
+      - results/experiment_238_results.json
+      - scripts/experiment_250_process_code_live.py
+      - python/carnot/pipeline/spec_code_verifier.py
+      - python/carnot/pipeline/process_verifier.py
+      - python/carnot/inference/dual_gpu.py
+
+      TASK: Create results/experiment_251_results.json
+
+      CONCRETE STEPS:
+      1. Execute the live paired HumanEval benchmark with checkpointing and honest blocker reporting.
+      2. Reuse a shared official-problem cohort so the comparison is directly attributable to the new verifier layer.
+      3. Report outcome metrics and process-integrity metrics for both models under the same repair budget.
+      4. Include a direct comparison block against Exp 238 that explains whether process verification caught any right-for-wrong-reasons or weak-harness cases.
+      5. Preserve live inference provenance and do not fabricate missing model cells.
+      6. Keep the artifact explicit about whether process verification improved outcomes, integrity, or neither.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu CARNOT_FORCE_LIVE=1 .venv/bin/python scripts/experiment_250_process_code_live.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # -- Phase 81: Build the Data and Modules for Predictive Self-Learning --
+  - id: exp252-predictive-verification-corpus
+    milestone: "2026.04.18"
+    deliverable: data/research/predictive_verification_corpus_252.jsonl
+    title: "Exp 252: Predictive verification corpus from partial responses and repairs"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Exp 241 proved the current self-learning loop is too passive.
+      The next step is to build the data needed for proactive behavior changes:
+      partial responses, final violations, process labels, accepted repairs, and
+      case-memory hits in one checked-in corpus. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_241_results.json
+      - results/experiment_247_results.json
+      - results/experiment_251_results.json
+      - python/carnot/pipeline/self_learning_replay.py
+      - python/carnot/pipeline/case_memory.py
+      - python/carnot/pipeline/self_learning_policy.py
+
+      TASK: Create data/research/predictive_verification_corpus_252.jsonl
+
+      CONCRETE STEPS:
+      1. Build a checked-in corpus of partial responses, final verifier outcomes, process labels, accepted repairs, and memory-hit metadata from existing live artifacts.
+      2. Include both semantic and code traces so the predictor and constraint-addition paths are not benchmark-specific.
+      3. Preserve exact provenance to the source artifact, model, benchmark slice, and sample position.
+      4. Add fields that support both classification and calibration: violation family, confidence, latency, and downstream repair outcome.
+      5. Write or update tests first for schema shape, deterministic generation, and provenance completeness.
+      6. Write a short summary artifact with label counts and source breakdown.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_252_predictive_verification_corpus.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp253-constraint-addition
+    milestone: "2026.04.18"
+    deliverable: python/carnot/pipeline/constraint_addition.py
+    title: "Exp 253: Memory-conditioned constraint addition"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: research-program.md now says the missing Tier 1 fix is
+      constraint ADDITION from memory patterns, not more scalar reweighting.
+      This task implements that missing path. It must stay cheap enough for
+      CPU-side deployment and remain additive to the existing verifier stack. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - data/research/predictive_verification_corpus_252.jsonl
+      - python/carnot/pipeline/case_memory.py
+      - python/carnot/pipeline/self_learning_policy.py
+      - python/carnot/pipeline/verify_repair.py
+      - research-program.md
+
+      TASK: Create python/carnot/pipeline/constraint_addition.py
+
+      CONCRETE STEPS:
+      1. Add or update the relevant spec requirements before implementation if additive constraint generation from memory is not already covered.
+      2. Implement a deterministic path that turns mature recurring failure families into new lightweight constraint templates, added check budgets, or verifier-side guard clauses.
+      3. Keep every added constraint provenance-bearing so later replay and live runs can explain why the addition occurred.
+      4. Preserve additive integration with the current case-memory and policy-compiler paths rather than replacing them.
+      5. Keep runtime cost small enough for inference-speed CPU use.
+      6. Write tests first for pattern-to-constraint compilation, provenance, deterministic serialization, and additive integration.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_constraint_addition.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp254-predictive-verifier
+    milestone: "2026.04.18"
+    deliverable: python/carnot/pipeline/predictive_verifier.py
+    title: "Exp 254: Predictive verifier gate with export-ready small-model path"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Tier 3 predictive verification now needs an actual module, not
+      just a design note. The predictor should estimate whether a partial
+      response is likely to trigger meaningful downstream violations, and it must
+      keep an explicit hardware path via export-ready lightweight inference. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - data/research/predictive_verification_corpus_252.jsonl
+      - python/carnot/pipeline/formal_claim_verifier.py
+      - python/carnot/pipeline/process_verifier.py
+      - python/carnot/pipeline/verify_repair.py
+      - research-hardware-wishlist.md
+
+      TASK: Create python/carnot/pipeline/predictive_verifier.py
+
+      CONCRETE STEPS:
+      1. Add or update the relevant spec requirements before implementation if predictive verifier gating is not already covered.
+      2. Implement a small predictive gate that consumes partial-response features and outputs a calibrated decision about whether to take the full verification path.
+      3. Keep the module export-ready for ONNX or an equivalent lightweight runtime so later CUDA or NPU acceleration remains straightforward.
+      4. Integrate the predictor additively with the current verify-repair pipeline and self-learning paths instead of forcing a breaking API change.
+      5. Surface confidence, threshold, and routing metadata in the structured result.
+      6. Write tests first for feature extraction, calibration thresholds, export helpers, deterministic serialization, and additive integration.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_predictive_verifier.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  # -- Phase 82: Prove Self-Learning Lift and Hardware-Shaped Latency --
+  - id: exp255-self-learning-ab-runner
+    milestone: "2026.04.18"
+    deliverable: scripts/experiment_255_self_learning_ab.py
+    title: "Exp 255: Self-learning A/B benchmark runner"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Exp 241 already proved that passive replay is not enough. This
+      task creates the benchmark runner that will compare stronger learning
+      variants: current best baseline, constraint addition, predictive gate, and
+      the combined path. Split runner and execution so the live work stays
+      bounded. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_241_results.json
+      - python/carnot/pipeline/constraint_addition.py
+      - python/carnot/pipeline/predictive_verifier.py
+      - python/carnot/pipeline/self_learning_replay.py
+      - python/carnot/pipeline/verify_repair.py
+
+      TASK: Create scripts/experiment_255_self_learning_ab.py
+
+      CONCRETE STEPS:
+      1. Create a benchmark runner that compares no_learning, case_memory_plus_policy, constraint_addition, predictive_gate, and combined constraint_addition_plus_predictive_gate.
+      2. Support both honest chronological replay and a small live slice on Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it.
+      3. Preserve per-strategy metrics for held-out task success, false positives, verification spend, fast-path hit rate, latency, and domain breakdowns.
+      4. Keep the artifact schema stable so Exp 256 can focus on execution and analysis.
+      5. Write or update tests first for strategy branching, metric aggregation, and replay-vs-live compatibility.
+      6. Do not execute the full benchmark in this task; stop after the runner and tests are green.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_255_self_learning_ab.py -q --no-cov -n0
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp256-self-learning-ab
+    milestone: "2026.04.18"
+    deliverable: results/experiment_256_results.json
+    title: "Exp 256: Self-learning A/B benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: This is the milestone's required continuous self-learning proof.
+      The artifact must answer one question honestly: do constraint addition and
+      predictive gating produce real held-out gains without extra false positives?
+      Use only Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it for any live slice. Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_241_results.json
+      - results/experiment_247_results.json
+      - results/experiment_251_results.json
+      - scripts/experiment_255_self_learning_ab.py
+      - python/carnot/pipeline/constraint_addition.py
+      - python/carnot/pipeline/predictive_verifier.py
+
+      TASK: Create results/experiment_256_results.json
+
+      CONCRETE STEPS:
+      1. Execute the A/B benchmark runner with honest chronological replay and the planned small live slice.
+      2. Treat "real held-out task gain with no extra false positives" as the primary success condition and say clearly if it is not met.
+      3. Report secondary metrics: verification spend, fast-path hit rate, latency, per-domain lift, and per-model lift.
+      4. Include a direct comparison block against Exp 241 so the delta is unambiguous.
+      5. Preserve live inference provenance and record blockers honestly if any live slice is unavailable.
+      6. Keep the artifact explicit about whether gains come from constraint addition, predictive gating, the combination, or none of them.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_255_self_learning_ab.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp257-predictive-verifier-hardware
+    milestone: "2026.04.18"
+    deliverable: results/experiment_257_results.json
+    title: "Exp 257: Predictive verifier hardware-readiness benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CODEX.md and CLAUDE.md for workflow, project context, and code style requirements.
+
+      CONTEXT: Every self-learning tier needs a hardware path. This task does
+      not claim a deployed accelerator win; it measures what is actually
+      available now for the predictive verifier: CPU baseline, CUDA when useful,
+      and an export-oriented NPU-ready path if the local AMD stack can run it.
+      Use {date} as the run date for any new artifact metadata.
+
+      EXISTING CODE TO READ FIRST:
+      - openspec/capabilities/verifiable-reasoning/spec.md
+      - results/experiment_256_results.json
+      - python/carnot/pipeline/predictive_verifier.py
+      - research-hardware-wishlist.md
+      - research-program.md
+
+      TASK: Create results/experiment_257_results.json
+
+      CONCRETE STEPS:
+      1. Benchmark predictive-verifier latency and throughput on CPU first, then CUDA if beneficial, and an export-oriented lightweight runtime path if available.
+      2. If the AMD XDNA NPU path is still blocked, emit an honest blocker artifact that names the missing runtime component rather than fabricating NPU numbers.
+      3. Report model size, feature size, export format, latency, throughput, and any routing-quality differences across hardware paths.
+      4. Keep the benchmark scoped to the predictive verifier only; do not turn this into a general model-serving benchmark.
+      5. Write or update tests first for artifact labeling, export-path branching, and blocker handling.
+      Run command: cd {project_root} && JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_257_predictive_verifier_hardware.py
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
