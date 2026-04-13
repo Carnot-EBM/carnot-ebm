@@ -41,7 +41,7 @@
     "Replace universal pre-flight full-suite runs with a tiered gate: fast smoke or changed-file checks before each task, then full Python suite/spec coverage/integration on framework-changing tasks or at milestone checkpoints.",
     "Generate ops reconciliation from structured experiment metadata instead of separate append-only doc-sync passes. Changelog/status/traceability rows should be emitted automatically from the completed experiment artifact.",
     "Preserve warm model state across long live benchmark batches and batch inference more aggressively to cut cold-start overhead and improve dual-GPU scaling beyond the current 1.14x fresh-process result.",
-    "Run `gpu_monitor` snapshots automatically before and after long live jobs, and log per-process occupancy so idle-device regressions are caught immediately even when no >1GB zombie process exists."
+    "Run `gpu_monitor` snapshots automatically before and after long live jobs, and log per-process occupancy so idle-device regressions are caught immediately. The reported 2MB idle allocations look like harmless CUDA contexts, not the >1GB zombie-process class that would justify automatic reaping."
   ],
   "estimated_time_savings_pct": 30
 }
