@@ -75,6 +75,13 @@ from carnot.pipeline.semantic_grounding import (
     SemanticGroundingViolation,
     verify_semantic_grounding,
 )
+from carnot.pipeline.semantic_verifier_v2 import (
+    SemanticClaimResult,
+    SemanticVerifierV2,
+    SemanticVerifierV2Result,
+    SemanticVerifierV2Thresholds,
+    verify_semantic_verifier_v2,
+)
 from carnot.pipeline.structured_reasoning import (
     StructuredReasoningAttempt,
     StructuredReasoningController,
@@ -146,9 +153,13 @@ __all__ = [
     "ReasoningStep",
     "RepairStrategy",
     "SemanticClaim",
+    "SemanticClaimResult",
     "SemanticGroundingResult",
     "SemanticGroundingVerifier",
     "SemanticGroundingViolation",
+    "SemanticVerifierV2",
+    "SemanticVerifierV2Result",
+    "SemanticVerifierV2Thresholds",
     "StrategyRecommendation",
     "StructuredReasoningAttempt",
     "StructuredReasoningController",
@@ -172,5 +183,6 @@ __all__ = [
     "extract_prompt_examples",
     "load_monitorability_policy",
     "verify_semantic_grounding",
+    "verify_semantic_verifier_v2",
     "verify_code",
 ]

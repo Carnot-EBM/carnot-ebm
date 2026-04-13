@@ -1146,6 +1146,82 @@ where:
 **And** the ordered response rows and derived summary metrics remain stable
 **And** the policy artifact stays machine-readable for later consumers
 
+### REQ-VERIFY-046: Claim-Isolated Semantic Verification With Calibrated Confidence
+
+The repository shall provide a second-generation semantic verifier in
+`python/carnot/pipeline/semantic_verifier_v2.py`, where:
+- the verifier reuses typed reasoning extraction when it is available and
+  falls back to the existing deterministic semantic-grounding claim
+  decomposition when it is not
+- the verifier isolates answer-bearing claims rather than collapsing the full
+  response into one coarse response-level verdict
+- each isolated claim records answer-target coverage, premise-support
+  coverage, monitorability evidence, and a calibrated semantic-error
+  probability
+- the calibration thresholds are derived from the checked-in Exp 232 corpus
+  `data/research/semantic_calibration_corpus_232.jsonl`
+- the verifier consults the refreshed Exp 233 policy artifact
+  `results/output_policy_233.json` so structured evidence can raise
+  monitorability confidence only on task slices where the measured policy says
+  JSON evidence is actually useful
+- the overall semantic verdict is one of `supported`, `violated`, or
+  `abstain` rather than forcing every weak-evidence case into a hard yes/no
+  label
+
+### REQ-VERIFY-047: Additive Pipeline Hook And Deterministic Serialization For Semantic Verifier V2
+
+The same capability shall expose additive pipeline integration and stable
+serialization, where:
+- `VerifyRepairPipeline` exposes a dedicated
+  `verify_semantic_verifier_v2()` entry point and surfaces the structured v2
+  result on `VerificationResult` without breaking current callers that ignore
+  the new field
+- the pipeline only turns semantic-verifier-v2 findings into failing
+  `ConstraintResult` objects when the v2 verdict is `violated`
+- when the v2 verdict is `abstain`, legacy semantic-grounding detail remains
+  inspectable but the weak-evidence case does not automatically become a live
+  semantic false positive
+- the structured v2 result supports deterministic `to_dict()` and `to_json()`
+  helpers with fixed run-date metadata `20260413`
+- later audits and benchmark serializers can consume the v2 result without
+  depending on raw prose parsing
+
+### SCENARIO-VERIFY-047: Strong Semantic Mismatch Produces A Calibrated Violation
+
+**Given** a grounded arithmetic-style word problem whose response solves a
+  related sub-problem but misses the requested answer target
+**And** the response exposes enough claim-level evidence for Carnot to align
+  the focus claim and its supporting premises
+**When** `semantic_verifier_v2.py` evaluates the question-response pair
+**Then** the focus claim is isolated explicitly
+**And** the result records high answer-target or premise-miss probability for
+  that focus claim
+**And** the overall verdict is `violated`
+**And** the result converts that finding into pipeline-compatible failing
+  `ConstraintResult` objects
+
+### SCENARIO-VERIFY-048: Weak Semantic Evidence Produces Abstain Instead Of A Forced Failure
+
+**Given** a semantic question whose response is a terse bare answer with weak
+  claim-level grounding evidence
+**When** `semantic_verifier_v2.py` evaluates the pair
+**Then** the result records low monitorability confidence
+**And** the overall verdict is `abstain`
+**And** the pipeline does not convert that weak-evidence case into a failing
+  semantic verifier constraint automatically
+
+### SCENARIO-VERIFY-049: Semantic Verifier V2 Serialization And Pipeline Wiring Are Deterministic
+
+**Given** a fixed question-response pair and the checked-in Exp 232 and
+  Exp 233 artifacts
+**When** the v2 semantic verifier is run twice with the same inputs
+**Then** it produces the same deterministic `to_dict()` and `to_json()`
+  payloads
+**And** `VerifyRepairPipeline` exposes the same structured v2 result through
+  its additive entry point and on the final `VerificationResult`
+**And** only `violated` v2 results become failing pipeline constraints
+  automatically
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1193,6 +1269,8 @@ where:
 | REQ-VERIFY-041 | Not Started | Implemented | DualGPU runner + loader/harness dispatch tests |
 | REQ-VERIFY-042 | Not Started | Implemented | Exp 232 calibration corpus tests + artifact refresh |
 | REQ-VERIFY-043 | Not Started | Implemented | Exp 232 summary/coverage tests + artifact refresh |
-| REQ-VERIFY-044 | Not Started | Not Started | Not Started |
-| REQ-VERIFY-045 | Not Started | Not Started | Not Started |
+| REQ-VERIFY-044 | Not Started | Implemented | Exp 233 artifact + policy refresh tests |
+| REQ-VERIFY-045 | Not Started | Implemented | Structured reasoning policy + Exp 233 routing tests |
+| REQ-VERIFY-046 | Not Started | Implemented | Semantic verifier v2 claim-isolation tests |
+| REQ-VERIFY-047 | Not Started | Implemented | Semantic verifier v2 pipeline + serialization tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
