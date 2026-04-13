@@ -1401,3 +1401,4 @@ python/ |
 | 2026-04-13 17:30 UTC | Exp 251: Live process-aware code benchmark | OK | 2421 passed, 2 skipped, 13 warnings in 520.01s (0:08:40) |
 | 2026-04-13 17:40 UTC | Exp 252: Predictive verification corpus from parti | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-13 17:41 UTC | Exp 252: Predictive verification corpus from parti | OK | Deliverable already exists in repo |
+| 2026-04-13 18:01 UTC | Exp 253: Memory-conditioned constraint addition | OK | 2452 passed, 2 skipped, 13 warnings in 513.57s (0:08:33) |
