@@ -1,5 +1,18 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-13 VERIFY-034 Exp 235 Live GSM8K Semantic Benchmark V2
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-13T04:19:42Z | 2026-04-13T04:49:26Z | VERIFY-034 / Exp 235: extended `verifiable-reasoning` with `REQ-VERIFY-048` / `REQ-VERIFY-049` plus `SCENARIO-VERIFY-050` / `SCENARIO-VERIFY-051`, wrote `tests/python/test_experiment_235_gsm8k_semantic_v2.py` first, implemented `scripts/experiment_235_gsm8k_semantic_v2.py`, reran targeted 100% script coverage, the full Python suite, spec coverage, Ruff, and the standard E2E trio, then completed the live Exp 235 GSM8K semantic rerun to `results/experiment_235_results.json` and reconciled traceability/status/changelog. | TBD |
+
+### Session Summary
+
+- Authoritative token and cost extraction is currently blocked because the documented script `scripts/session-metrics.py` is not present in this checkout.
+- Turn timing is recorded above; `Tokens (est)` remains `TBD` until the missing script or an equivalent replacement exists.
+
 ## Session: 2026-04-13 VERIFY-033 Claim-Isolated Semantic Verifier V2
 
 ### Turn Log
