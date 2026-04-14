@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 293: HuggingFace Publish — Exp 66 Joint EBM + FormalClaimVerifier)
+
+- `scripts/experiment_293_huggingface_publish.py` — Full HF publishing pipeline. Credential check
+  first via `subprocess.run(["huggingface-cli", "whoami"])`; emits blocked artifact JSON with login
+  instructions on failure. Publishes two artifacts:
+  1. `Carnot-EBM/carnot-joint-constraint-v1` — Exp 66 joint EBM+Ising (embed_dim=384, 8 Ising
+     nodes, hidden_dim=64), Phase 1 research prototype, 1.0 AUROC on held-out validation (simulated
+     training, not live GPU). Safetensors + config.json + model card.
+  2. `Carnot-EBM/carnot-formal-claim-verifier-v1` — FormalClaimVerifier ONNX exports for arithmetic
+     (3-input, |a−b−result|<0.5) and comparison (2-input, x<y) routes (opset 13); standalone
+     verifier.py for set_membership + boolean_entailment; model card with solver routing table and
+     abstention policy. Both repos tagged v0.2.0-research.
+  Results written to `results/experiment_293_results.json` in all paths (blocked or uploaded).
+  REQ-VERIFY-058, REQ-VERIFY-059. (user instruction: Exp 293 HF publish carry-forward from 268)
+- `tests/python/test_experiment_293_huggingface_publish.py` — 42 tests covering:
+  credential check pass/fail/missing-CLI/blocked-artifact/login-command (5 tests),
+  Exp 66 model card phase1-banner/auroc-claim/not-production/pip-install/arch-details/hyperparams/code-block (7 tests),
+  FCV model card all-routes/abstention/onnx/FCV-import/pip-install (5 tests),
+  Exp 66 safetensors keys/shapes (2 tests),
+  ONNX arithmetic valid/comparison valid/opset/arith-inference-supported/arith-inference-violated/cmp-inference-supported/cmp-inference-violated (7 tests),
+  upload dry-run/repo-IDs/no-HF-calls/create-tag-called (4 tests),
+  safetensors-skip path: skip-exp66-missing/fcv-continues-after-skip (2 tests),
+  results written to disk: dry-run/blocked/has-repo-ids/blocked-has-repo-ids (4 tests),
+  results JSON experiment-id/run-date/artifacts/no-fabricated-upload/honest-verdict/v02-tag (6 tests).
+  All 42 pass. Full suite: 3484 passed, 39 skipped, 99.11% coverage.
+- `README.md` — Added "HuggingFace Published Models (Exp 293 / v0.2.0-research)" section with links
+  to both HF repos and provenance caveats. (user instruction: Exp 293 README reconcile)
+
 ## 2026-04-14 (Exp 292: AMD XDNA NPU VitisAI EP Benchmark — Blocked Artifact)
 
 - `scripts/experiment_292_amd_xdna_npu.py` — Attempts AMD XDNA NPU benchmark via two paths:

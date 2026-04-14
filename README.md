@@ -137,6 +137,17 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **Process-aware verification comparison (Exp 251):** process verification added **0** rejections beyond the spec-aware gate on both models, but caught **5** `outcome_correct_process_invalid` cases (Qwen=3, Gemma=2) across **143** combined defect instances.
 - **Predictive verifier hardware benchmark (Exp 257):** ONNX CPUExecutionProvider runs at **5.8 µs/call** (**7.1×** faster than CPU NumPy at **41.8 µs/call**); CUDA ORT and AMD XDNA NPU paths remain blocked by missing toolchain.
 
+### HuggingFace Published Models (Exp 293 / v0.2.0-research)
+
+Two Phase 1 research artifacts are published to [Carnot-EBM](https://huggingface.co/Carnot-EBM) on HuggingFace Hub:
+
+| Artifact | Repo | Format | Notes |
+|----------|------|--------|-------|
+| Exp 66 joint EBM + Ising | [Carnot-EBM/carnot-joint-constraint-v1](https://huggingface.co/Carnot-EBM/carnot-joint-constraint-v1) | safetensors | Phase 1 prototype. 1.0 AUROC on held-out validation (simulated training). |
+| FormalClaimVerifier | [Carnot-EBM/carnot-formal-claim-verifier-v1](https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1) | ONNX + Python | Arithmetic and comparison routes as ONNX (opset 13); set_membership + boolean_entailment as pure Python. |
+
+> ⚠️ Both are tagged `v0.2.0-research`. Phase 1 research prototypes — not production quality.
+
 ### Revalidation Sweep (Exp 271-279)
 
 Re-ran 9 promising pre-provenance experiments with live or live-representative data and modern extractors. 6 CONFIRMED, 2 INCONCLUSIVE, 0 definitively ruled out.

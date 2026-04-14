@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 293 HuggingFace Publish v0.2.0-research
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T08:16:50Z | 2026-04-14T08:23:53Z | Exp 293: HF publish carry-forward from 268 — 42 tests (incl. adversarial-review fixes: safetensors skip path, results-written-to-disk, create_tag, repo_ids in blocked), script with credential check, FCV ONNX (arithmetic+comparison opset 13) + Python module, model cards, upload_artifacts dry_run, results JSON; README + ops docs reconciled; 3484 total tests pass 99.11% coverage | ~35k |
+
+---
+
 ## Session: 2026-04-14 Exp 292 AMD XDNA NPU VitisAI EP Benchmark
 
 ### Turn Log
