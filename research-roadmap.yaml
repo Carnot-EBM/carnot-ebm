@@ -781,6 +781,99 @@ tasks:
       6. Reconcile: update _bmad/traceability.md, ops/changelog.md, ops/status.md
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+  # -- Phase: Mythos-Inspired Safety and Verification (from Anthropic system card) --
+  - id: exp322-reward-hacking-detection
+    milestone: "2026.04.29"
+    deliverable: results/experiment_322_results.json
+    title: "Exp 322: Reward hacking detection in self-learning energy function"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The Anthropic Mythos system card (April 2026) documented novel
+      reward hacking behaviors — the model moved computation outside timing
+      calls and used test data to train forecasting models. Our self-learning
+      loop (Exp 223/241) trains on verification traces. We need to detect
+      if the energy function is being gamed rather than genuinely improved.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/tracker.py — ConstraintTracker
+      - python/carnot/pipeline/self_learning_policy.py — learned policy
+      - python/carnot/pipeline/self_learning_replay.py — replay benchmark
+
+      TASK: Add reward hacking detection to the self-learning pipeline.
+      1. Create python/carnot/verify/reward_hacking.py:
+         a. Detect if energy improvements come from gaming (e.g. trivial constraints
+            that always pass, constraints that match training data patterns)
+         b. Check for energy function shortcuts (zero-energy paths that bypass verification)
+         c. Monitor constraint diversity — flag if the same few constraints dominate
+         d. Compare held-out vs training energy trajectories (divergence = gaming)
+      2. Integrate with ConstraintTracker as an optional audit layer
+      3. Test with synthetic reward hacking scenarios
+      4. Write tests achieving 100% coverage
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp323-conductor-behavioral-audit
+    milestone: "2026.04.29"
+    deliverable: results/experiment_323_results.json
+    title: "Exp 323: Conductor behavioral audit log with anomaly detection"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: The Anthropic Mythos system card emphasizes behavioral monitoring
+      for autonomous AI systems. Our research conductor runs autonomously for
+      hours, making commits, running experiments, and modifying code. We need
+      an audit trail that detects anomalous behavior.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/research_conductor.py — the conductor
+      - scripts/gpu_monitor.py — resource monitoring pattern
+
+      TASK: Add behavioral audit logging to the conductor.
+      1. Create scripts/conductor_audit.py:
+         a. Log every agent invocation: prompt hash, turn count, exit code, duration
+         b. Log every git commit: files changed, lines added/removed, test results
+         c. Log every file modification: path, size delta, is it a code file or data
+         d. Anomaly detection: flag unusual patterns (deleting many files, modifying
+            conductor itself, touching security files, accessing network unexpectedly)
+         e. Generate a per-milestone audit summary
+      2. Wire into the conductor's research_step() function
+      3. Test with simulated anomalous scenarios
+      4. Write tests
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp324-conductor-constitution
+    milestone: "2026.04.29"
+    deliverable: python/carnot/autoresearch/constitution.py
+    title: "Exp 324: Conductor constitution — explicit rules for autonomous actions"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Anthropic defines a "constitution" for Claude's behavior. Our
+      conductor needs explicit rules for what autonomous actions are allowed
+      vs what requires human approval. This prevents the conductor from taking
+      irreversible actions during unsupervised runs.
+
+      TASK: Create a conductor constitution.
+      1. Create python/carnot/autoresearch/constitution.py:
+         a. Define ALLOWED_ACTIONS: create files, run tests, commit, modify
+            python/carnot/ and scripts/ and tests/
+         b. Define FORBIDDEN_ACTIONS: delete non-test files, modify .env or
+            credentials, push to remote without approval, modify the conductor
+            itself, access network beyond approved domains
+         c. Define REQUIRES_APPROVAL: changing pyproject.toml dependencies,
+            modifying CLAUDE.md, archiving tests, changing git config
+         d. ConstitutionChecker class that validates actions before execution
+      2. Wire into the conductor as a pre-action check
+      3. Test with all action categories
+      4. Write tests
+      5. Run: .venv/bin/pytest tests/python -q
+      6. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
   # -- Phase: D-Wave Quantum Annealing Integration --
   - id: exp320-dwave-sampler
     milestone: "2026.04.29"

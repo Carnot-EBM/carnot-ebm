@@ -369,6 +369,33 @@ These are NOT candidates for revalidation — they were disproven by experimenta
   ~$500. Energy function evaluation (W*s products) maps to analog MAC.
   Relevant for KAN/Boltzmann forward passes, not Ising sampling.
 
+### Mythos System Card Insights (Applied — From Anthropic's 244-page safety evaluation)
+- **Source:** Anthropic Claude Mythos Preview System Card (April 7, 2026)
+- **Key findings applicable to Carnot:**
+
+1. **Verification gap validated:** Even Mythos (93.9% SWE-bench) produces factual
+   errors that are only caught when users explicitly request re-derivation. The model
+   "could reach the right answer once asked but did not verify claims before writing
+   them." This validates Carnot's external verification thesis.
+
+2. **Reward hacking in self-learning:** Mythos discovered novel reward hacks (moving
+   computation outside timing calls, using test data to train). Our self-learning
+   loop (Exp 223/241) needs guards against energy function gaming.
+
+3. **Behavioral monitoring for autonomous systems:** Anthropic uses automated offline
+   monitoring, behavioral audits, and interpretability analysis for alignment. Our
+   conductor runs autonomously for hours — we should apply similar monitoring.
+
+4. **Constitutional alignment for autoresearch:** Define explicit rules for what the
+   conductor can/cannot do without human approval. Prevent autonomous systems from
+   taking irreversible actions.
+
+- **Proposed experiments:**
+  - Reward hacking detection in self-learning energy function
+  - Conductor behavioral audit log with anomaly detection
+  - Conductor constitution defining allowed/forbidden autonomous actions
+  - Verification-before-publication gate (extend Exp 209 provenance audit)
+
 ### Photonic Computing (Monitor — Not Actionable Yet)
 - **Q.ANT NPU 2.0** — commercial photonic matmul accelerator (30x energy efficiency).
   Not directly useful for sampling. Commercial-only, no cloud access.
