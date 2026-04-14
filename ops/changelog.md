@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 314: AMD XDNA NPU Prereq Retry)
+
+Re-runs the Exp 303 NPU unblock workflow to check whether ninja and openblas have
+been installed since Exp 303 was blocked. Adds `prereq_changes` field (delta vs
+Exp 303: `now_available` or `still_missing` per package). Adds `timeout` as a
+distinct honest_verdict to distinguish timeout from compile-error failures.
+Reuses all Exp 303 detection helpers, source build, wheel install, and inference
+benchmark functions unchanged.
+
+Result on this machine: `honest_verdict=blocked_prereq` — ninja and openblas are
+still both missing. No change since Exp 303.
+
+- `scripts/experiment_314_npu_prereq_install.py` (new):
+  - `_compute_prereq_changes(current_check, prior_check)` — delta vs Exp 303 state.
+  - `_attempt_source_build_314()` — same ORT 1.20.1 cmake build, BUILD_DIR=/tmp/ort_build_314.
+  - `_build_next_steps(prereq_check, prereq_changes, honest_verdict)` — human-readable actions.
+  - `_update_hardware_wishlist(honest_verdict, prereq_changes, details)` — additive wishlist update.
+  - `main()` — prereq check → build → install wheel → benchmark → honest artifact.
+  - Artifact: `results/experiment_314_npu_prereq_install.json` with `experiment=314`,
+    `honest_verdict`, `prereq_changes`, `build_outcome`, `inference_result`.
+  - honest_verdict values: `blocked_prereq` / `blocked_build` / `timeout` / `npu_working`.
+- `tests/python/test_experiment_314_npu_prereq_install.py` (new):
+  - 41 tests (15 skipped on blocked paths per SCENARIO-EXP303-D).
+  - Covers: schema (9), prereq_check (6), prereq_changes (5), build_outcome (7),
+    inference_result (6), no fabricated latency (2). 26 passed, 15 skipped.
+  - Spec: REQ-PRED-003, SCENARIO-EXP303-A/B/C/D.
+- `research-hardware-wishlist.md`: appended Exp 314 findings block (additive).
+- User instruction: retry NPU unblock after prereqs reportedly installed.
+
 ## 2026-04-14 (Exp 313: KV260 FPGA Hardware Bring-Up — REQ-SAMPLE-012)
 
 Attempts actual KV260 FPGA hardware bring-up following the honest_verdict pattern

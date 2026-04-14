@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 314 NPU Prereq Retry
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T19:53:23Z | 2026-04-14T20:07:19Z | Exp 314 NPU prereq retry: read Exp 303 script/results, hardware-wishlist; write 41 tests (TestExp314Schema 9, TestPrereqCheck314 6, TestPrereqChanges 5, TestBuildOutcome314 7, TestInferenceResult314 6, TestNoFabricatedLatency314 2); implement experiment_314_npu_prereq_install.py (_compute_prereq_changes, _attempt_source_build_314, _build_next_steps, _update_hardware_wishlist, main); run experiment→blocked_prereq; 4316 passed 99.45% coverage; update ops/changelog + status | ~16k |
+
+---
+
 ## Session: 2026-04-14 Exp 313 KV260 Hardware Bring-Up
 
 ### Turn Log
