@@ -4,6 +4,20 @@
 
 ## What's Working
 
+### ConstraintGenerator from CaseMemory (REQ-LEARN-010, REQ-LEARN-011)
+
+- `python/carnot/pipeline/constraint_generator.py` — Converts CaseMemory error patterns into
+  new constraint types using the soundness bound from arXiv 2603.03538.
+  - Reads Tier 3 CaseMemory (live-trace case-based memory), groups by violation_family,
+    computes observed_precision = improved_repairs / total_flagged per family.
+  - Soundness gate: only patterns with observed_precision >= 0.85 are promoted to constraints.
+  - Three first-class constraint types: carry_error → carry-propagation check; sign_error →
+    sign-consistency check; magnitude_error → order-of-magnitude check.
+  - Purely additive: `add_to_extractor` never removes existing constraints.
+  - `ConstraintGenerator.generation_log` records every pattern's outcome:
+    "added", "rejected_soundness", or "already_exists".
+- 41 tests at 100% module coverage. Full suite: **3741 passed**, 39 skipped.
+
 ### PrefillUncertaintyProbe — Pre-Generation Hallucination Gate (REQ-VERIFY-080)
 
 - `python/carnot/pipeline/prefill_uncertainty_probe.py` — Entropy-based prefill gate
