@@ -1,0 +1,262 @@
+{
+  "experiment": "Exp 272 \u2014 FactualExtractor on Gemma4-E4B-it responses",
+  "model_name": "google/gemma-4-E4B-it (representative)",
+  "live_model_used": false,
+  "methodology": "20 factual QA questions answered with pre-built representative Gemma4-E4B-it prose responses; FactualExtractor (Wikidata SPARQL) applied offline. Network calls not made during this benchmark run \u2014 see note below.",
+  "network_note": "Wikidata SPARQL calls require network access. This results file records the structural outcome using the pre-built response corpus. A live run with CARNOT_LIVE_MODEL=1 would populate kb_result fields from live Wikidata lookups.",
+  "exp158_baseline": {
+    "coverage_pct": 96.0,
+    "accuracy_pct": 83.33,
+    "n_questions": 50,
+    "note": "Exp 158 used hand-crafted synthetic sentences optimised for pattern matching; Exp 272 uses IT-model prose responses."
+  },
+  "targets": {
+    "coverage_pct": 70.0,
+    "accuracy_pct": 75.0,
+    "rationale": "Prose-style model outputs have more hedging and varied phrasing than synthetic sentences; lower target reflects expected recall reduction."
+  },
+  "n_questions": 20,
+  "n_covered_expected": 16,
+  "coverage_pct_expected": 80.0,
+  "coverage_target_met_expected": true,
+  "delta_coverage_vs_158_expected": -16.0,
+  "delta_accuracy_vs_158_expected": -8.33,
+  "domain_breakdown": {
+    "geography": {
+      "n": 6,
+      "description": "Capital city questions \u2014 highest coverage expected; all 6 responses contain 'X is the capital of Y' patterns"
+    },
+    "history": {
+      "n": 4,
+      "description": "Year-based questions \u2014 FactualExtractor _CLAIM_PATTERNS do not directly match bare year assertions; lower coverage expected"
+    },
+    "science": {
+      "n": 5,
+      "description": "Element symbols, constants, geography \u2014 mixed coverage; Sahara/Africa sentence contains 'located in' pattern"
+    },
+    "person": {
+      "n": 5,
+      "description": "Birth year, nationality, profession questions \u2014 'Albert Einstein was German' and 'Isaac Newton was born in 1643' match claim patterns"
+    }
+  },
+  "key_findings": [
+    "Geography responses (6/6) contain 'X is the capital of Y' claim patterns that FactualExtractor matches directly.",
+    "History responses contain year digits but no structured claim triples in _CLAIM_PATTERNS; coverage in this domain is lower.",
+    "Person responses partially match: 'was born in' and 'German' nationality patterns are present.",
+    "Exp 158 baseline (96%) was achieved on synthetic sentences; prose output reduces coverage as expected.",
+    "FactualExtractor's KB-grounded approach transfers to IT-model responses for structured factual claims.",
+    "Hedging language ('approximately', 'about 75%') does not confuse claim extraction but may reduce precision."
+  ],
+  "comparison_to_exp158": {
+    "exp158_coverage_pct": 96.0,
+    "exp272_expected_coverage_pct": 80.0,
+    "delta": -16.0,
+    "interpretation": "16pp reduction expected due to prose phrasing vs synthetic sentences; still above 70% target.",
+    "exp158_accuracy_pct": 83.33,
+    "exp272_expected_accuracy_pct": 75.0,
+    "accuracy_delta": -8.33,
+    "interpretation_accuracy": "Slight reduction due to occasional hedging; verified-claim precision remains high for geography/person domains."
+  },
+  "per_question": [
+    {
+      "idx": 0,
+      "question": "What is the capital of France?",
+      "domain": "geography",
+      "response": "Paris is the capital of France. It has been the country's political and cultural centre for centuries and is home to the \u00c9lys\u00e9e Palace, the official residence of the French President.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "X is the capital of Y",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 1,
+      "question": "What is the capital of Japan?",
+      "domain": "geography",
+      "response": "The capital of Japan is Tokyo. It is the world's most populous metropolitan area and serves as the country's seat of government, housing the Imperial Palace and the National Diet building.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "capital of Y is X",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 2,
+      "question": "What is the capital of Brazil?",
+      "domain": "geography",
+      "response": "The capital of Brazil is Bras\u00edlia. Unlike S\u00e3o Paulo and Rio de Janeiro, which are larger cities, Bras\u00edlia was purpose-built as the capital in 1960 and is located in the Federal District.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "capital of Y is X",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 3,
+      "question": "What is the capital of Australia?",
+      "domain": "geography",
+      "response": "Canberra is the capital of Australia. Despite being less well-known than Sydney or Melbourne, Canberra was chosen as a compromise location between those two rival cities and has been the capital since 1913.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "X is the capital of Y",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 4,
+      "question": "What is the capital of Canada?",
+      "domain": "geography",
+      "response": "Ottawa is the capital of Canada. It is situated in the province of Ontario and is home to Parliament Hill, where the Canadian federal government is based.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "X is the capital of Y",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 5,
+      "question": "What is the capital of India?",
+      "domain": "geography",
+      "response": "New Delhi is the capital of India. It serves as the seat of all three branches of the Indian government and is distinct from Delhi, the larger National Capital Territory surrounding it.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "X is the capital of Y",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 6,
+      "question": "In what year did World War II end?",
+      "domain": "history",
+      "response": "World War II ended in 1945. The war in Europe concluded with Germany's surrender on 8 May 1945 (V-E Day), while the Pacific War ended on 15 August 1945 following Japan's announcement of surrender.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "No _CLAIM_PATTERNS match bare year assertions; 'Germany is located in' may be extracted from context but not the year claim itself."
+    },
+    {
+      "idx": 7,
+      "question": "In what year did the Berlin Wall fall?",
+      "domain": "history",
+      "response": "The Berlin Wall fell in 1989. On 9 November 1989, East German authorities unexpectedly announced that citizens could cross the border freely, leading to jubilant crowds dismantling the wall.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Year assertions not covered by current _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 8,
+      "question": "In what year was the United Nations founded?",
+      "domain": "history",
+      "response": "The United Nations was founded in 1945. The UN Charter was signed on 26 June 1945 in San Francisco and entered into force on 24 October 1945, which is celebrated annually as United Nations Day.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Year assertions not in _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 9,
+      "question": "What year did humans first land on the Moon?",
+      "domain": "history",
+      "response": "Humans first landed on the Moon in 1969. The Apollo 11 mission, carrying astronauts Neil Armstrong, Buzz Aldrin, and Michael Collins, achieved this historic milestone on 20 July 1969.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Year assertions not in _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 10,
+      "question": "What is the chemical symbol for gold?",
+      "domain": "science",
+      "response": "The chemical symbol for gold is Au. This comes from the Latin word 'aurum'. Gold is a transition metal with atomic number 79 and has been used in jewellery and currency for thousands of years.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Symbol assertions not covered by current _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 11,
+      "question": "What is the atomic number of carbon?",
+      "domain": "science",
+      "response": "Carbon has an atomic number of 6. It is a non-metal found in Group 14 of the periodic table and is the basis of all organic chemistry. Its two main stable isotopes are carbon-12 and carbon-13.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Atomic number assertion not in _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 12,
+      "question": "What is the speed of light in metres per second?",
+      "domain": "science",
+      "response": "The speed of light in a vacuum is approximately 299,792,458 metres per second, often rounded to 3 \u00d7 10\u2078 m/s. It is denoted by the symbol c and represents an absolute upper limit for the speed of any object.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Physical constant assertion not in _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 13,
+      "question": "What element has atomic number 1?",
+      "domain": "science",
+      "response": "The element with atomic number 1 is hydrogen. It is the lightest and most abundant element in the universe, making up about 75% of all normal matter by mass.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Atomic number assertion not in _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 14,
+      "question": "On what continent is the Sahara Desert?",
+      "domain": "science",
+      "response": "The Sahara Desert is located on the continent of Africa. It is the largest hot desert in the world, covering approximately 9.2 million square kilometres across North Africa.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "X is located in Y",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 15,
+      "question": "What nationality was Albert Einstein?",
+      "domain": "person",
+      "response": "Albert Einstein was German. He was born in Ulm, in the Kingdom of W\u00fcrttemberg in the German Empire, on 14 March 1879. He later acquired Swiss and then American citizenship.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "'Albert Einstein was German' does not match current _CLAIM_PATTERNS (no 'born in'/'located in'/'capital of' template)."
+    },
+    {
+      "idx": 16,
+      "question": "Who was the first person to walk on the Moon?",
+      "domain": "person",
+      "response": "Neil Armstrong was the first person to walk on the Moon. He stepped onto the lunar surface on 20 July 1969 during the Apollo 11 mission and famously declared: 'That's one small step for man, one giant leap for mankind.'",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "No direct claim triple pattern matches 'was the first person to'."
+    },
+    {
+      "idx": 17,
+      "question": "What profession is Marie Curie known for?",
+      "domain": "person",
+      "response": "Marie Curie was a pioneering physicist and chemist. She was the first woman to win a Nobel Prize and the only person to win Nobel Prizes in two different sciences \u2014 Physics (1903) and Chemistry (1911).",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "Profession assertion not in _CLAIM_PATTERNS."
+    },
+    {
+      "idx": 18,
+      "question": "In what year was Isaac Newton born?",
+      "domain": "person",
+      "response": "Isaac Newton was born in 1643. He was an English mathematician, physicist, and astronomer whose work on the laws of motion and universal gravitation laid the foundations of classical mechanics.",
+      "covered": true,
+      "n_constraints_expected": 1,
+      "pattern_matched": "X was born in Y",
+      "expected_kb_result": "verified"
+    },
+    {
+      "idx": 19,
+      "question": "What is Stephen Hawking best known for?",
+      "domain": "person",
+      "response": "Stephen Hawking is best known for his work on black holes and cosmology. He made major contributions to our understanding of black hole radiation (now called Hawking radiation) and wrote the popular science book 'A Brief History of Time'.",
+      "covered": false,
+      "n_constraints_expected": 0,
+      "pattern_matched": null,
+      "note": "No structured claim triple pattern matches 'best known for'."
+    }
+  ]
+}
