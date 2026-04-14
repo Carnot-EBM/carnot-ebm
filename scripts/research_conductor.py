@@ -211,8 +211,9 @@ def run_agent(
         # Stream output live with stall detection (Fix #1).
         # If no output is received for STALL_TIMEOUT seconds, kill the process.
         # This prevents infinite hangs when Codex stalls mid-stream.
+        # Claude legitimately thinks for longer periods, so use a higher threshold.
         import select
-        STALL_TIMEOUT = 180  # 3 minutes of silence = stalled
+        STALL_TIMEOUT = 600 if AGENT_TYPE == "claude" else 180  # 10 min Claude, 3 min Codex
 
         output_lines = []
         last_output_time = time.time()
