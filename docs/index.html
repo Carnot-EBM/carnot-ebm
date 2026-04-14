@@ -287,17 +287,17 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. 293+ experiments across 26 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, +4.9pp on typed constraints, semantic v2 still leaves verify-only unjustified on both models (Exp 235), and chronological replay v2 stays flat at 34.48% while case memory lifts retrieval hit rate to 32.1% and precision to 43.6% (Exp 241). Revalidation sweep confirms 6/9 pre-provenance approaches on live data: GlobalConsistencyChecker (100% detection, 0% FP), Z3+LLM extractors (80% detection, 0% FP on GSM8K), cross-session memory (100% warm hit rate), KAN AUROC 0.991. FpgaBackend quantum-inspired sparse Ising (Exp 289–290), Apple adversarial analysis (Exp 281–284), JEPA isotonic calibration with conformal bounds (Exp 291), and HuggingFace publish v0.2.0-research (Exp 293). Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. 306+ experiments across 27 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, +4.9pp on typed constraints, semantic v2 still leaves verify-only unjustified on both models (Exp 235), and chronological replay v2 stays flat at 34.48% while case memory lifts retrieval hit rate to 32.1% and precision to 43.6% (Exp 241). Revalidation sweep confirms 6/9 pre-provenance approaches on live data: GlobalConsistencyChecker (100% detection, 0% FP), Z3+LLM extractors (80% detection, 0% FP on GSM8K), cross-session memory (100% warm hit rate), KAN AUROC 0.991. FpgaBackend quantum-inspired sparse Ising (Exp 289–290), JEPA isotonic calibration with conformal bounds (Exp 291), FCV artifact LIVE on HuggingFace (Exp 304), confidence-weighted repair gating (Exp 301), integrated self-learning benchmark Tier 1+2 (Exp 302), and experiment template + batching harness (Exp 306). Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">293+</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">26</div><div class="stat-label">Milestones</div></div>
+      <div class="stat"><div class="stat-num">306+</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">27</div><div class="stat-label">Milestones</div></div>
       <div class="stat"><div class="stat-num">+3.0pp</div><div class="stat-label">HumanEval (live)</div></div>
-      <div class="stat"><div class="stat-num">3,484</div><div class="stat-label">Collected Tests</div></div>
+      <div class="stat"><div class="stat-num">3,975</div><div class="stat-label">Collected Tests</div></div>
     </div>
   </div>
 </section>
@@ -357,7 +357,7 @@
       <div class="bento-card">
         <div class="bento-icon">📈</div>
         <h3 class="bento-title">Self-Learning</h3>
-        <p class="bento-text">Chronological replay v2 compares <code>no_learning</code>, <code>tracker_only</code>, <code>case_memory</code>, and <code>case_memory_plus_policy</code> across semantic and code traces. All four strategies finish at 34.48% held-out success with 8 false positives, so the primary success condition is honestly not met, but case memory improves retrieval hit rate to 32.1% and precision to 43.6% without adding new false positives (Exp 241 / VERIFY-040).</p>
+        <p class="bento-text">Chronological replay v2 compares <code>no_learning</code>, <code>tracker_only</code>, <code>case_memory</code>, and <code>case_memory_plus_policy</code> across semantic and code traces. All four strategies finish at 34.48% held-out success with 8 false positives; primary success not met, but case memory improves retrieval hit rate to 32.1% and precision to 43.6% (Exp 241 / VERIFY-040). Exp 302 (Tier 1+2 live benchmark) runs the full memory→ConstraintGenerator→confidence-weighted verify-repair pipeline across 100 questions, measuring honest improvement_delta between warmup and enriched batches.</p>
       </div>
     </div>
   </div>
@@ -417,7 +417,7 @@
         <div class="r-stats"><span class="r-before">230/662 traces accepted</span> <span class="r-after">43 patterns; 29 mature</span></div>
       </div>
     </div>
-    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is still the strongest live domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, while semantic-verifier-v2 yields only modest repair gains and still does not justify verify-only on either small model. Exp 241 makes the current self-learning read explicit: richer retrieval is real, but better matches still have not become held-out task wins. FpgaBackend (Exp 289–290) adds quantum-inspired sparse Ising sampling with a geometric β-schedule confirmed to win 3/3 problem sizes. Apple adversarial analysis (Exp 281–284) is INCONCLUSIVE pending GPU logit artifacts; JEPA isotonic calibration (Exp 291) meets TARGETS_MET on synthetic training (tp=1.000, fp=0.000). Two Phase 1 research artifacts published to HuggingFace (Exp 293, v0.2.0-research). Full suite: 3,484 tests passing at 99.11% coverage.</p>
+    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is still the strongest live domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, while semantic-verifier-v2 yields only modest repair gains and still does not justify verify-only on either small model. Exp 241 makes the current self-learning read explicit: richer retrieval is real, but better matches still have not become held-out task wins. FpgaBackend (Exp 289–290) adds quantum-inspired sparse Ising sampling with a geometric β-schedule confirmed to win 3/3 problem sizes. JEPA isotonic calibration (Exp 291) meets TARGETS_MET on synthetic training (tp=1.000, fp=0.000). FCV artifact is now LIVE on HuggingFace (Exp 304, v0.2.0-research). Confidence-weighted repair gating (Exp 301) blocks low-confidence false-positive repairs. Integrated Tier 1+2 self-learning benchmark (Exp 302) runs the full memory→constraint→verify-repair pipeline end-to-end. Experiment template + batching harness (Exp 306) reduces per-experiment cold-start by 15–20 min. Full suite: 3,975 tests passing.</p>
   </div>
 </section>
 

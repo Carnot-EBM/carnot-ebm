@@ -1539,3 +1539,6 @@ python/ |
 | 2026-04-14 12:22 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
 | 2026-04-14 12:22 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | Deliverable already exists in repo |
 | 2026-04-14 12:22 UTC | Exp 305: KV260 Verilog Ising sampler — first synth | OK | Deliverable already exists in repo |
+| 2026-04-14 12:42 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
+| 2026-04-14 12:42 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | Deliverable already exists in repo |
+| 2026-04-14 12:42 UTC | Exp 306: Operational efficiency — scaffolding temp | OK | Deliverable already exists in repo |
