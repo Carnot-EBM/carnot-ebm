@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 318 Four-Tier Self-Learning Relay Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T21:02:57Z | 2026-04-14T21:15:49Z | Exp 318 four-tier relay: read Exps 302/309/312 code + results; add REQ-LEARN-013 + SCENARIO-LEARN-021/022 to spec; write 58 tests (TestConstants 2, TestRelayBatchResult 14, TestComputeRelayImprovement 6, TestSimulateGsm8kQuestions 6, TestRunRelayBatch 7, TestBuildRelayArtifact 20, TestConstraintDelta 3); implement experiment_318_self_learning_relay.py; run --simulated: B1=0.697 B2=0.545 B3=0.636 imp_1to3=-0.0606; 58 tests pass; update ops/changelog + status + traceability | ~15k |
+
+---
+
 ## Session: 2026-04-14 Exp 317 HuggingFace README Accuracy Audit
 
 ### Turn Log
