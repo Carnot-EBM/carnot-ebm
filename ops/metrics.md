@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 284 Apple Analysis
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T05:44:59Z | 2026-04-14T05:52:13Z | Exp 284: Apple adversarial analysis and classification — spec (REQ-VERIFY-073–075, SCENARIO-VERIFY-088–092), 31 tests, analysis script with compute_delta/classify_result/compare_vs_exp235/answer_five_questions/build_artifact, INCONCLUSIVE (Exp 282/283 results missing), 3182 total tests pass | ~25k |
+
+---
+
 ## Session: 2026-04-14 Exp 283 Apple Verify-Repair
 
 ### Turn Log
