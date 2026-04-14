@@ -1,5 +1,35 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 303: AMD XDNA NPU Unblock — prereq check, source build path, honest blocker)
+
+Experiment 303 extends Exp 292's blocked artifact with a full unblock workflow. Prereq check
+confirms ninja and openblas are still missing (blocked_prereq). All infrastructure is in place
+for when prereqs are installed: the source build, wheel install, and NPU inference benchmark
+paths are fully implemented and will auto-advance on next run with prereqs satisfied.
+
+- `scripts/experiment_303_npu_unblock.py` (new):
+  - `_collect_prereq_check()`: detects ninja, openblas, cmake version, RyzenAI-SW, VitisAI .so;
+    emits install_command strings for each missing item.
+  - `_attempt_source_build()`: clones onnxruntime 1.20.1, cmake -DONNXRUNTIME_USE_VITISAI=ON,
+    cmake --build with 45-min hard timeout; returns build_outcome with success, duration,
+    error_summary, build_log_tail (last 50 lines), timeout_exceeded flag.
+  - `_install_wheel_into_venv(whl_path)`: pip-installs built wheel into .venv-npu.
+  - `_run_inference_benchmark(onnx_model)`: subprocess benchmark inside .venv-npu — VitisAI EP
+    + CPU sessions, WARMUP_CALLS=20, TIMED_CALLS=100; detects blocked_abi if VitisAI not loaded.
+  - `_update_hardware_wishlist(honest_verdict, details)`: appends dated findings block to
+    research-hardware-wishlist.md without removing existing content.
+  - honest_verdict: "npu_working" / "blocked_build" / "blocked_prereq" / "blocked_abi".
+- `tests/python/test_experiment_303_npu_unblock.py` (new): 30 tests across 6 test classes.
+  - TestExp303Schema, TestPrereqCheck, TestBuildOutcome, TestInferenceResult,
+    TestNoFabricatedLatency — all hardware/build/inference classes auto-skip on blocked paths.
+- `results/experiment_303_npu_results.json` (new): honest_verdict="blocked_prereq".
+  - prereq_check: ninja=False, openblas=False, cmake=4.3.1 (OK), RyzenAI-SW=present.
+  - next_steps: exact install commands for ninja and openblas.
+- `research-hardware-wishlist.md`: Exp 303 findings block appended to AMD XDNA section.
+- Full suite: **3862 passed**, 53 skipped (coverage pre-existing at 98.86%).
+- Triggered by: user instruction (AMD XDNA NPU unblock attempt, Exp 292 continuation).
+- Spec: REQ-PRED-003, SCENARIO-EXP303-A/B/C/D.
+
 ## 2026-04-14 (Exp 302: Integrated Self-Learning Benchmark — Tier 1+2 live)
 
 First integrated live benchmark combining Exp 301 confidence-weighted repair gating and Exp 300
