@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Milestone Planning 2026.04.22
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T08:56:34Z | 2026-04-14T09:07:07Z | Plan milestone 2026.04.22 — read 10 project files, arxiv research (9 new papers), update research-references.md, create research-roadmap-v28.md (13 experiments across 4 phases), create research-roadmap-next.yaml | ~35k |
+
+---
+
 ## Session: 2026-04-14 Exp 294 Operational Retro 2026.04.21
 
 ### Turn Log

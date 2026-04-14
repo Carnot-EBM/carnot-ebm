@@ -262,6 +262,60 @@ should read this file when designing new milestones.
 
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
+### Neural Uncertainty Principle — Prefill-Stage Hallucination Detection (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2603.19562 (2026-03)
+- **What:** Adversarial vulnerability and hallucination share a geometric origin — input and loss-gradient are conjugate observables with an irreducible uncertainty bound (analogous to Heisenberg's principle). A prefill-stage probe detects hallucination risk BEFORE any tokens are generated, using only the input representation — no decoding required. ConjMask and LogitReg are actionable techniques.
+- **Relevance:** Strongest new theoretical paper for Carnot. The prefill-stage energy probe maps directly onto Carnot's Ising/EBM scoring pipeline. Gives theoretical grounding for why energy scores predict hallucination. Could serve as the fast-path gate before the expensive Ising verification: if the prefill uncertainty is below threshold, skip full verification.
+- **When to pursue:** Next milestone. Add PrefillUncertaintyProbe to pipeline. Pairs with SpilledEnergyExtractor (post-generation) for full coverage — pre-generation + post-generation.
+
+### LogitScope — Varentropy-Based Hallucination Detection
+- **Paper:** arxiv.org/abs/2603.24929 (2026-03)
+- **What:** Token-level entropy and varentropy computed from logit distributions identify hallucination-prone decision points without labeled data. Model-agnostic, works with any HuggingFace model. Varentropy measures variance of entropy across tokens — high varentropy = high uncertainty about uncertainty = likely hallucination.
+- **Relevance:** Directly operationalizable as a lightweight Carnot probe layer. Varentropy complements Spilled Energy (2602.18671) and Semantic Energy (2508.14496) — forms a three-signal extraction-free detection ensemble. Include as baseline comparison in upcoming extraction-free experiments.
+- **When to pursue:** Next milestone. Add varentropy signal to SemanticEnergyExtractor module.
+
+### SciDC — Multi-Layer Formal Constraints for LLM Decoding (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2604.06603 (2026-04)
+- **What:** Converts domain knowledge into multi-layered formal rules that constrain LLM decoding at generation time. +12% accuracy on scientific tasks (retrosynthesis, clinical diagnosis). Multi-layer rule hierarchy: hard constraints (must satisfy), soft constraints (prefer), and domain-specific axioms.
+- **Relevance:** Demonstrates energy-guided constrained decoding at production scale in hard scientific domains. The multi-layer rule hierarchy maps directly onto Carnot's constraint satisfaction tiers (Ising for hard, KAN for soft, Gibbs for domain-specific). This is the closest published system to Carnot's Goal #6 (energy-guided decoding). Study the rule hierarchy design for the guided decoding adapter.
+- **When to pursue:** Guided decoding milestone. Borrow the multi-layer constraint hierarchy design.
+
+### Talking with Verifiers — Auto-Generate Z3 Specs from NL (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2603.02235 (2026-02)
+- **What:** Natural language requirements are automatically translated into formal verification queries compatible with existing NN verifiers. Bridges human-readable ↔ machine-verifiable gap. Auto-generates Z3/SMT specs from natural language descriptions.
+- **Relevance:** Directly addresses Carnot's constraint extraction bottleneck. Auto-generating Z3/SMT specs from natural language is the missing front-end for the NSVIF pipeline (2601.17789). Could replace the manual constraint specification step entirely — user describes constraints in NL, system generates Z3 specs automatically.
+- **When to pursue:** Z3 extraction milestone. Use as front-end for FormalClaimVerifier.
+
+### Digitally Optimized Thermodynamic Initializations
+- **Paper:** arxiv.org/abs/2603.24183 (2026-03)
+- **What:** Hybrid digital-thermodynamic algorithm suppresses slow relaxation modes via Mpemba-effect-inspired initialization, yielding analytic speedups for matrix inversion on thermodynamic hardware.
+- **Relevance:** Applicable to Carnot's FPGA/thermodynamic hardware path. Fast thermalization of the Ising sampler is a known bottleneck (slow mixing chains). Mpemba-effect initialization could reduce the burn-in period for FpgaBackend from O(n²) to O(n log n). Directly applicable to the KV260 Verilog sampler design.
+- **When to pursue:** FPGA hardware milestone. Incorporate into FpgaBackend annealing schedule.
+
+### Predicting Sampling Advantage of Stochastic Ising Machines
+- **Paper:** arxiv.org/abs/2504.18359 (2026-04)
+- **What:** Analyzes computational advantage regimes for stochastic Ising machines vs. GPU-based MCMC; identifies problem classes where Ising hardware wins. Defines a "hardness metric" for constraint graphs that predicts whether the Ising machine will outperform GPU sampling.
+- **Relevance:** Grounds the Carnot hardware roadmap. Defines which constraint graphs benefit from Ising accelerator vs. GPU sampling, informing FPGA tier selection strategy. Can be used to decide when to route a query to FpgaBackend vs CPU/GPU sampler.
+- **When to pursue:** FPGA benchmark milestone. Use hardness metric to predict routing advantage.
+
+### Online Learnability of CoT Verifiers: Soundness/Completeness Trade-offs
+- **Paper:** arxiv.org/abs/2603.03538 (2026-03)
+- **What:** Formal analysis of what CoT verifiers can and cannot learn online. Characterizes soundness/completeness trade-off as a function of verifier expressivity. Proves bounds on which constraint types are online-learnable and which require offline training data.
+- **Relevance:** Provides theoretical bounds for Carnot's verify-repair loop. The soundness/completeness framing maps directly onto Carnot's coverage guarantees. Informs how aggressive the repair cycle should be — over-aggressive repair can break sound correct answers. Directly relevant to the constraint addition approach (Tier 2 → Tier 1).
+- **When to pursue:** Self-learning milestone. Use bounds to design constraint addition with soundness guarantees.
+
+### Likelihood-Based Reward Designs for LLM Reasoning (EBM Reward Signal)
+- **Paper:** arxiv.org/abs/2602.03979 (2026-02)
+- **What:** Log-probability of reference answer as RL reward outperforms binary verifier rewards in both verifiable and non-verifiable settings. Bridges CoT fine-tuning across domains. The log-prob reward is more informative than binary correct/incorrect.
+- **Relevance:** Carnot's EBM energy score is itself a log-probability proxy. This paper validates using energy/log-prob as the training signal for Carnot's online learning component (Tier 1), without requiring hard binary labels. Could improve the self-learning tracker by using continuous energy signals instead of binary violation flags.
+- **When to pursue:** Self-learning Tier 1 improvement. Replace binary violation signal with continuous log-prob energy signal.
+
+### Hardware Acceleration of Frustrated Lattice Systems via Convolutional RBM
+- **Paper:** arxiv.org/abs/2511.20911 (2025-11)
+- **What:** FPGA implementation of convolutional Restricted Boltzmann Machine achieves 3–5 orders of magnitude speedup over GPU sampling for Shastry-Sutherland frustrated lattice thermodynamics. Achieves ~10^4x speedup at moderate problem sizes.
+- **Relevance:** Most concrete FPGA speedup benchmark directly applicable to Carnot's FPGA Ising tier. Convolutional RBM on FPGA is architecturally close to Carnot's Boltzmann crate. The 10^3–10^5x speedup figure is a concrete planning target for the KV260 hardware path. The convolution structure also applies to Carnot's sparse Ising coupling (Exp 61).
+- **When to pursue:** FPGA KV260 milestone. Use convolutional RBM architecture as a target benchmark.
+
 ### Semantic Energy — Hallucination Beyond Entropy
 - **Paper:** arxiv.org/abs/2508.14496 (2025-08)
 - **What:** Combines semantic clustering with a Boltzmann-inspired energy distribution operating
