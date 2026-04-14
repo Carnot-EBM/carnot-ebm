@@ -1558,3 +1558,5 @@ python/ |
 | 2026-04-14 18:24 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 19:11 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 19:11 UTC | Exp 312: Z3-gated repair — only repair when Z3 say | OK | Deliverable already exists in repo |
+| 2026-04-14 19:53 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-14 19:53 UTC | Exp 313: KV260 FPGA actual bring-up — PYNQ overlay | OK | Deliverable already exists in repo |
