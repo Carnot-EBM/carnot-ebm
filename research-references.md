@@ -869,3 +869,150 @@ Top 10 selected by relevance score.
 - **Predicting Sampling Advantage of Stochastic Ising Machines** (arXiv 2504.18359) - https://arxiv.org/abs/2504.18359
   Why it matters: Framework for predicting when stochastic Ising machines offer speedup over classical sampling. Identifies problem classes where Ising hardware wins and where classical MCMC is competitive.
   Carnot use: Theoretical guide for which constraint satisfaction workloads should be routed to KV260/TSU hardware vs. CPU MCMC. The PredictiveVerifier's sampling-based gate may or may not benefit from Ising acceleration — this framework provides the analysis tools to predict before investing in hardware integration.
+
+## Revalidation Sweep Insights — Exp 271-280 (2026-04-14)
+
+**CRITICAL FINDING FOR EXTRACTION:** Exp 279 (adversarial semantic grounding) definitively
+scoped the current semantic grounding capability:
+- **100% stale-answer detection** (model reuses original numbers on a swapped question)
+- **0% fresh-wrong detection** (model computes a new wrong answer with correct question numbers)
+- **20% FP rate** on correct originals
+- **+40pp lift** on stale variants
+
+**This is actionable.** The Apple adversarial GSM8K (arXiv 2410.05229) number-swap variant
+generates stale errors: a model that memorized the original answer will use original numbers on
+the swapped question. Semantic grounding should achieve **high recall on number-swap variants**
+because this is exactly the stale-answer pattern it detects at 100%.
+
+**Prediction for milestone 2026.04.21:** Running Apple adversarial with semantic grounding
+should show verify-repair improvement LARGER on number-swap than on standard GSM8K.
+This is the first data-driven prediction made from a prior confirmed result.
+
+**What the extraction-free path covers:**
+- Spilled energy (arXiv 2602.18671): covers uncertain outputs (high logit/output energy gap)
+- AR-EBM lookahead energy (arXiv 2512.15605): covers continuation-level incoherence
+- Semantic energy (arXiv 2508.14496): covers confident-but-wrong outputs (low entropy, wrong answer)
+- Together: cover the classes that semantic grounding misses (fresh-wrong, uncertain errors)
+
+**Confirmed capabilities from revalidation sweep:**
+- Global consistency: 100% contradiction detection on live multi-turn chains (Exp 271, CONFIRMED)
+- Agent rollback: 100% success on live Gemma4 workflows (Exp 273, CONFIRMED)
+- Semantic grounding stale detection: 100% (Exp 279, CONFIRMED + SCOPED)
+- Code PBT verify-repair: +3pp on HumanEval (Exp 226-227, pre-revalidation, CONFIRMED)
+
+### LoRA Continual Learning for Constraint Models — arXiv 2504.13407
+- **What:** Orthogonal LoRA tuning with critical parameter freezing prevents catastrophic
+  forgetting in continual learning settings. Simple modification to LoRA that preserves
+  pre-task performance while adapting to new tasks.
+- **Relevance:** Multi-turn agentic verification requires accumulating constraint knowledge
+  across sessions without forgetting domain-specific constraint patterns. The orthogonal
+  LoRA approach could apply to Carnot's constraint model updates in the self-learning loop.
+- **When to pursue:** When Tier 2 constraint memory is proven insufficient and a parametric
+  approach to constraint retention is needed.
+
+### Πnet — Hard-Constrained NNs via Orthogonal Projection — arXiv 2508.10480
+- **What:** Output layer using operator splitting to guarantee convex constraint satisfaction.
+  Maps any unconstrained output onto the feasible constraint set via orthogonal projection.
+- **Relevance:** More principled than Langevin repair in VerifyRepairPipeline — would guarantee
+  constraint satisfaction rather than just reduce energy. Could replace the "random restart"
+  fallback strategy.
+- **When to pursue:** Repair pipeline improvement milestone. Add ProjectionRepair strategy
+  alongside existing Langevin repair.
+
+### T-SKM-Net — Neural Constraint Satisfaction via Kaczmarz-Motzkin — arXiv 2512.10461
+- **What:** Trainable neural network framework for linear constraint satisfaction using a
+  differentiable Sampling Kaczmarz-Motzkin method. Handles large-scale linear inequality systems
+  with favorable convergence, eliminates non-differentiable argmax operations.
+- **Relevance:** Could serve as an alternative to Ising for linear constraint checking —
+  faster convergence on purely linear systems (e.g., arithmetic bounds), while Ising remains
+  the tool for combinatorial/SAT-style constraints.
+- **When to pursue:** When the constraint types are predominantly linear inequalities.
+
+### Sol-Ver Self-Play — Mutual Verification for Constraint Templates — arXiv 2502.14948
+- **What:** Jointly improves code generation and test generation without human annotations
+  via quality-gated mutual verification (sol verifies ver's tests, ver verifies sol's code).
+  19.63% relative improvement on code, 17.49% on tests.
+- **Relevance:** Template for the constraint addition module — mutual verification between
+  constraint templates and live inference tokens prevents liberal matching failures.
+  The quality-gating mechanism is directly applicable to Exp 141 (constraint generation from memory).
+- **When to pursue:** When rebuilding constraint generation pipeline.
+
+### Efficient Constraint Handling in Neural Solvers — arXiv 2602.16012
+- **What:** Learning-based feasibility refinement that refines infeasible solutions post-construction.
+  Simple, efficient, general — works across multiple constraint types.
+- **Relevance:** Online constraint refinement applicable to VerifyRepairPipeline's repair step.
+  Rather than always restarting from scratch, refine the near-feasible LLM output toward
+  feasibility using learned refinement operators.
+- **When to pursue:** Repair quality improvement milestone.
+
+## ArXiv Scan — Planning for Milestone 2026.04.21 (2026-04-14)
+
+Queries: EBM verification/reasoning, hallucination detection EBM energy, Ising constraint ML,
+KAN FPGA hardware, constrained decoding LLM, continual learning constraints, LLM formal verification,
+thermodynamic computing Ising FPGA
+
+### EDLM — Energy-Based Diffusion Language Models (ICLR 2025)
+- **ArXiv:** [2410.21357](https://arxiv.org/abs/2410.21357) (2024-10, ICLR 2025)
+- **What:** Full sequence-level EBM operating at each diffusion step using parallel importance
+  sampling. Achieves 1.3× sampling speedup over existing diffusion LMs and approaches autoregressive
+  perplexity. Provides a blueprint for constrained generation that scores entire candidate sequences.
+- **Relevance to Carnot:** Maps to Carnot's Boltzmann (large) tier. The sequence-level EBM
+  formulation enables constrained generation over entire output sequences, not just token-by-token.
+  Relevant for the long-term guided decoding path (Kona parity).
+- **When to pursue:** Boltzmann tier redesign milestone. Add sequence-level EBM scoring as an
+  alternative to token-level energy in the guided decoding adapter.
+
+### Emergent Formal Verification — Z3 SMT Across 6 Domains (arXiv 2603.21149)
+- **ArXiv:** [2603.21149](https://arxiv.org/abs/2603.21149) (2026-03)
+- **What:** Documents an AI system (SUBSTRATE S3) that independently discovered Z3 SMT-based
+  verification across LLM code safety, agent tool safety, reasoning validation, CLI commands,
+  hardware assembly, and smart contracts. Achieved 100% classification accuracy on 181 test cases.
+- **Relevance to Carnot:** Provides the strongest existence proof that EBM-guided reasoning
+  naturally converges on formal verification as a correctness signal. Six-domain coverage
+  suggests Z3 can be a universal hard constraint layer alongside Carnot's soft energy scoring.
+  The code + agent tool + reasoning domains all overlap with Carnot's current scope.
+- **When to pursue:** Z3 SMT constraint extraction milestone. Use as existence proof that
+  Z3-backed verification generalizes across the domains Carnot targets.
+
+### Loop Invariant Generation via LLM + Z3 (arXiv 2508.00419)
+- **ArXiv:** [2508.00419](https://arxiv.org/abs/2508.00419) (2025-08)
+- **What:** Integrates O1/O3-mini with Z3 in a generate-and-check loop, achieving 100% on
+  Code2Inv (133/133), surpassing prior best of 107/133. Only 1-2 LLM calls per task,
+  14-55 seconds per instance.
+- **Relevance to Carnot:** Demonstrates the efficient LLM+SMT loop architecture that Carnot's
+  constraint verification pipeline should adopt. The minimal call count (1-2 per task) is
+  directly achievable with the FormalClaimVerifier's current routing approach.
+- **When to pursue:** Z3 constraint extraction milestone. Use as blueprint for LLM+SMT call efficiency.
+
+### Ising Inverse Temperature Learning under Hard Constraints (arXiv 2509.20993)
+- **ArXiv:** [2509.20993](https://arxiv.org/abs/2509.20993) (2025-09, revised 2026-02)
+- **What:** Estimates inverse temperature β for truncated Ising models from a single sample using
+  pseudolikelihood maximization, achieving O(Δ³/√n)-consistency. Constraints expressed as k-SAT
+  formulas, enabling interoperability with SMT-style constraint specification.
+- **Relevance to Carnot:** Direct application to Ising tier parameter estimation. The k-SAT
+  constraint expression enables interoperability with FormalClaimVerifier's SMT-style constraints.
+  Single-sample β estimation could enable online calibration of the Ising sampler per query.
+- **When to pursue:** Ising parameter learning milestone. Single-sample β estimation is cheap
+  enough to run at inference time.
+
+### Mpemba-Effect Langevin Initialization for Faster MCMC (arXiv 2603.24183)
+- **ArXiv:** [2603.24183](https://arxiv.org/abs/2603.24183) (2026-03)
+- **What:** Exploits the Mpemba effect to suppress slow relaxation modes in Langevin-dynamics
+  thermodynamic computing. Digitally computed optimal initializations dramatically reduce
+  time-to-equilibration.
+- **Relevance to Carnot:** Directly applicable to Carnot's Langevin-based repair in
+  VerifyRepairPipeline. The initialization trick can substantially cut MCMC wall-clock time
+  for the continuous relaxation repair path (Exp 64). Also relevant to FPGA Ising bring-up:
+  optimal initialization reduces time to first valid sample.
+- **When to pursue:** Sampling performance milestone. Add as initialization option to
+  ParallelIsingSampler and FpgaBackend.
+
+### SciDC — Scientific Knowledge-Driven Decoding Constraints (arXiv 2604.06603)
+- **ArXiv:** [2604.06603](https://arxiv.org/abs/2604.06603) (2026-04)
+- **What:** Automatic framework converting flexible scientific knowledge into multi-layered
+  formalized decoding constraints. Qwen3-14B + SciDC scores 86.46% on LegalBench, surpassing
+  Claude Sonnet (86.17%) and GPT-4 (85.11%).
+- **Relevance to Carnot:** Demonstrates that externally supplied constraint specs can be compiled
+  into decoding-time enforcement — the guided decoding path Carnot is targeting. The LegalBench
+  result also provides a concrete benchmark target for Carnot's constrained generation approach.
+- **When to pursue:** Guided decoding milestone. Use LegalBench as evaluation benchmark.
