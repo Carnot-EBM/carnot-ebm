@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 283 Apple Verify-Repair
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T05:29:11Z | 2026-04-14T05:39:13Z | Exp 283: verify-repair 12-cell benchmark on Apple adversarial corpus — spec (REQ-VERIFY-068–072, SCENARIO-VERIFY-084–087), 23 tests, VerifyRepairRunner with DualGPURunner at start, logits at 25/50/75/100% for JEPA, checkpoint every 10q, 60s timeout → partial artifact, primary criterion Δ(vr,ns)>Δ(vr,std), 3151 total tests pass | ~22k |
+
+---
+
 ## Session: 2026-04-14 Exp 282 Apple Baseline GPU
 
 ### Turn Log

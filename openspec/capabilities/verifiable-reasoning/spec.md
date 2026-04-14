@@ -1743,6 +1743,112 @@ The repository shall provide a deterministic adversarial dataset generator
 **And** the inserted sentence contains a numeric value that does not appear in
   the original question (to maximize distractor potential)
 
+### REQ-VERIFY-064: Apple Adversarial GSM8K GPU Baseline Inference With Logit Saving
+
+The repository shall provide `scripts/experiment_282_apple_baseline_gpu.py` that runs
+baseline (no-verification) inference on the Exp 281 adversarial corpus, where:
+- two models (Qwen3.5-0.8B on GPU 0, Gemma4-E4B-it on GPU 1) are dispatched via DualGPURunner
+- three question variants are evaluated per model: `standard`, `number_swap`, `irrelevant_sentence`
+- logit tensors are saved at 25/50/75/100% prefix fractions as `.npy` files under `data/research/`
+- checkpoints are written every 10 questions (REQ-VERIFY-065)
+- a 60 s hard timeout fires per inference call (REQ-VERIFY-066)
+- results are written to `results/experiment_282_results.json` with `ARTIFACT_SCHEMA` fields
+
+### REQ-VERIFY-065: Checkpoint-Resume Support For Long Inference Runs
+
+The repository shall support resuming interrupted inference runs by:
+- writing a checkpoint every `CHECKPOINT_INTERVAL` (10) questions to a per-(model, variant) JSON file
+- on restart, loading the checkpoint and skipping already-completed question IDs
+- never re-calling the model for a question_id that already has a result in the checkpoint
+
+### REQ-VERIFY-066: 60-Second Hard Timeout Per Inference Call With Partial Artifact
+
+The repository shall enforce a 60-second hard timeout per inference call, where:
+- if `generate_fn` raises `TimeoutError`, a partial artifact is written with `partial=True`
+  and a `stall_at` field identifying `"model_name:variant_type:question_id"`
+- a completed run writes `partial=False` and `stall_at=None`
+
+### REQ-VERIFY-067: Logit Tensors Saved At Prefix Fractions For JEPA Training
+
+The repository shall save logit tensors at prefix fractions 25/50/75/100% of each
+(model, variant_type) combination as NumPy `.npy` files where each file stores a
+1-D object array of per-question `(seq_len, vocab_size)` tensors.
+
+### REQ-VERIFY-068: Verify-Repair 12-Cell Benchmark On Apple Adversarial Corpus
+
+The repository shall provide `scripts/experiment_283_apple_verify_repair.py` that runs
+three inference modes on the Exp 281 adversarial corpus, where:
+- modes: `baseline` (no verification), `verify_only`, `verify_repair`
+- variant types: `number_swap`, `irrelevant_sentence` (both from the adversarial corpus)
+- models: Qwen3.5-0.8B (GPU 0), Gemma4-E4B-it (GPU 1) — dispatched via DualGPURunner at startup
+- this produces 12 benchmark cells: 3 modes × 2 variant_types × 2 models
+- per-question record fields: `mode`, `variant_type`, `model`, `correct`,
+  `violation_detected`, `repaired`, `logit_path`, `semantic_grounding_fired`,
+  `formal_claim_fired`
+- logit tensors are saved at 25/50/75/100% prefix fractions to
+  `data/research/logits_283_{model_slug}_{variant}_{pct}pct.npy`
+- checkpoints are written every 10 questions; 60 s hard timeout per inference call
+- a partial artifact with `stall_at` is emitted on timeout
+- `inference_mode` is `"live_gpu"` when `CARNOT_FORCE_LIVE=1`, else `"mock"`
+
+### REQ-VERIFY-069: Verify-Repair Improvement Delta Computation And Primary Criterion
+
+The artifact produced by Exp 283 shall include an `improvement_deltas` field where:
+- `delta(mode, variant)` = `accuracy(mode, variant)` − `accuracy(baseline, variant)` for each model
+- the primary criterion `larger_improvement_on_number_swap` is `True` when
+  `delta(verify_repair, number_swap) > delta(verify_repair, standard)` for at least one model,
+  where `standard` accuracy is read from the Exp 282 baseline artifact
+- comparison references: Exp 260 (standard GSM8K), Exp 235 (semantic v2 cohort),
+  Exp 282 (Apple adversarial baseline)
+
+### REQ-VERIFY-070: Logit Saving Hook For Verify-Repair Pipeline (Exp 291 JEPA Training)
+
+The Exp 283 runner shall capture logits at the initial `baseline` generation step of each
+question and save them at the standard prefix fractions so they are compatible with the
+Exp 291 JEPA training pipeline.
+
+### REQ-VERIFY-071: Partial Artifact With stall_at On 60-Second Timeout
+
+Identical semantics to REQ-VERIFY-066, applied to the Exp 283 verify-repair runner:
+a `TimeoutError` from any inference call (baseline generation or repair generation)
+causes a partial artifact to be emitted with `stall_at = "model:mode:variant:question_id"`.
+
+### REQ-VERIFY-072: DualGPU Dispatch At Startup For Exp 283
+
+The Exp 283 runner shall wire DualGPUBenchmarkHarness at object construction time
+(before any data loading) so GPU slots are reserved immediately, matching the
+Exp 282 pattern (SCENARIO-VERIFY-082).
+
+### SCENARIO-VERIFY-084: 12-Cell Result Structure Contains All Required Fields
+
+**Given** a completed (or partial) Exp 283 run
+**When** the artifact JSON is loaded
+**Then** `results` contains entries for every combination of (model, mode, variant_type)
+**And** each entry has keys `correct`, `total`, `accuracy`, `violation_detected_count`,
+  `repaired_count`
+**And** `improvement_deltas` contains per-model delta values for each (mode, variant_type) pair
+
+### SCENARIO-VERIFY-085: Verify-Repair Improvement Is Larger On number_swap Than Standard
+
+**Given** baseline and verify_repair accuracy for both number_swap and standard variants
+**When** improvement deltas are computed as `accuracy(verify_repair) − accuracy(baseline)`
+**Then** `delta(verify_repair, number_swap) > delta(verify_repair, standard)` shall hold
+  for at least one model in a successful experiment
+**And** the artifact records this as `primary_criterion_met: True`
+
+### SCENARIO-VERIFY-086: DualGPU Dispatch Assigns Qwen GPU 0 Gemma GPU 1
+
+**Given** Exp 283 MODEL_SPECS
+**When** the runner is constructed
+**Then** Qwen3.5-0.8B is assigned to GPU 0 and Gemma4-E4B-it to GPU 1
+
+### SCENARIO-VERIFY-087: Logit Files Saved At Each Prefix Fraction For Exp 283
+
+**Given** an Exp 283 run with at least 4 questions per (model, variant_type) pair
+**When** the run completes
+**Then** `.npy` files exist at 25/50/75/100% prefix fractions in `data/research/`
+**And** each file stores a 1-D object array of per-question `(seq_len, vocab_size)` tensors
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
@@ -1969,6 +2075,15 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-061 | Not Started | Implemented | Process verifier defect detection + serialization tests |
 | REQ-VERIFY-062 | Not Started | Implemented | Process verifier pipeline integration tests |
 | REQ-VERIFY-063 | Not Started | Implemented | Apple adversarial GSM8K dataset generation tests |
+| REQ-VERIFY-064 | Not Started | Implemented | Apple adversarial baseline inference + logit saving tests (Exp 282) |
+| REQ-VERIFY-065 | Not Started | Implemented | Checkpoint-resume support tests (Exp 282) |
+| REQ-VERIFY-066 | Not Started | Implemented | 60s hard timeout + partial artifact tests (Exp 282) |
+| REQ-VERIFY-067 | Not Started | Implemented | Logit fraction saving tests (Exp 282) |
+| REQ-VERIFY-068 | Not Started | Implemented | 12-cell verify-repair benchmark tests (Exp 283) |
+| REQ-VERIFY-069 | Not Started | Implemented | Improvement delta computation + primary criterion tests (Exp 283) |
+| REQ-VERIFY-070 | Not Started | Implemented | Logit saving hook for verify-repair pipeline tests (Exp 283) |
+| REQ-VERIFY-071 | Not Started | Implemented | Partial artifact stall_at tests (Exp 283) |
+| REQ-VERIFY-072 | Not Started | Implemented | DualGPU dispatch at startup tests (Exp 283) |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
