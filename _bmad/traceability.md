@@ -215,3 +215,6 @@
 | SCENARIO-OPS-004 | Not Started | Implemented | Compute GPU utilization distribution (0GPU / 1GPU / 2GPU binning) |
 | SCENARIO-OPS-005 | Not Started | Implemented | Action item audit with binary completion verdicts and carry-over rate computation |
 | SCENARIO-OPS-006 | Not Started | Implemented | Deterministic results/operational_retro_2026_04_21.json schema with run_date and milestone_number |
+| REQ-VERIFY-079 | Not Started | Implemented | GPU pre-warm health-check for live inference (Exp 294) |
+| SCENARIO-VERIFY-101 | Not Started | Implemented | Pre-warm returns True on fast mock load (<1 s) |
+| SCENARIO-VERIFY-102 | Not Started | Implemented | Pre-warm returns False on timeout |
