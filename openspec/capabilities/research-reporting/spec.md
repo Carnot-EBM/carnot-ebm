@@ -148,6 +148,41 @@ missing provenance rather than as a validated live result
 **Then** the Exp 210 section bodies are replaced in place
 **And** the docs do not accumulate duplicate Exp 210 blocks
 
+### REQ-PUBLISH-003: HuggingFace README Accuracy Audit
+
+All HuggingFace model READMEs for Phase 1 per-token activation EBMs shall
+be audited and updated to:
+
+- Include a Phase 1 disclaimer stating that the models detect model confidence,
+  not factual correctness.
+- Point users to `pip install carnot` for production use.
+- Include a link to the latest full-scale benchmark results (Exp 316) where
+  available.
+
+The update operation shall be idempotent: re-running against a README that
+already contains the Phase 1 patch shall skip that repo without error.
+
+The carnot-joint-constraint-v1 model card shall include an honest
+"RESEARCH PROTOTYPE — weights not published" label when the trained weights
+artifact is absent.
+
+### SCENARIO-PUBLISH-005: Phase 1 Patch Is Idempotent
+
+**Given** a model README that already contains the Phase 1 disclaimer section
+**When** `model_card_update(repo_id, patch)` is called
+**Then** the README is not modified
+**And** the repo is recorded in `models_skipped` (not `models_updated`)
+**And** no HuggingFace API upload is made for that repo
+
+### SCENARIO-PUBLISH-006: Blocked When Credentials Absent
+
+**Given** HuggingFace credentials are not available (CLI and Python API both fail)
+**When** `run_experiment_317()` is called
+**Then** the function returns an artifact with `blocked == True`
+**And** the artifact includes `exp_317_next_action` with login instructions
+**And** `models_updated` is empty
+**And** no HuggingFace API calls are made
+
 ## Implementation Status
 
 | Requirement | Implementation | Tests | Status |
@@ -160,3 +195,4 @@ missing provenance rather than as a validated live result
 | REQ-REPORT-006 | `scripts/experiment_210_research_scan.py`, `research-references.md` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-007 | `scripts/experiment_210_research_scan.py`, `research-studying.md` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-008 | `scripts/experiment_210_research_scan.py` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
+| REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
