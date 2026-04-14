@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Operational Retrospective: Milestone 2026.04.21)
+
+- `results/operational_retro_2026_04_21.json` — Process efficiency analysis for the 2026.04.21 milestone: 312 experiments over 4,261 minutes (71.0h), 13.7 min/experiment average (4.40 exp/hour). Critical finding: all 5 slowest experiments are IDENTICAL to those in four consecutive prior retros — Exp 53 (418 min, 9.8% of wall time) now flagged in 5 consecutive milestones without resolution. Action item carry-over for new experiments improved from 100% to 50% (DualGPURunner wired from Exp 282, per-question checkpointing implemented) but all historical slow experiments remain un-revisited. Apple adversarial benchmark remains INCONCLUSIVE for 2nd consecutive milestone (live GPU stall in Exps 282/283). Both RTX 3090s idle at milestone end (2MB residual, 0% utilization) — 5th consecutive milestone with identical GPU cleanup pattern. Estimated 40% wall-time reduction achievable next milestone via: scaffolding template eliminating cold-start (+9%), re-running top-5 slow experiments with current infrastructure (+9%), DualGPURunner from Exp 1 (+10%), inference batching 8–16 per pass (+6%), parallel conductor dispatch (+4%), doc-only test classifier (+3%), live GPU stall diagnosis (+3%), provenance auto-sync hook (+2%), GPU cleanup hook (+2%). (user instruction: write operational retrospective for milestone 2026.04.21)
+
 ## 2026-04-14 (Exp 293: HuggingFace Publish — Exp 66 Joint EBM + FormalClaimVerifier)
 
 - `scripts/experiment_293_huggingface_publish.py` — Full HF publishing pipeline. Credential check
