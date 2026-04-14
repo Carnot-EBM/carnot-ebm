@@ -109,20 +109,23 @@ The built-in extractors cover arithmetic, code, logic, and natural language. But
 
 See the [custom extractor example](https://github.com/Carnot-EBM/carnot-ebm/tree/main/examples/custom_extractor.py) for a units-of-measure checker that flags mixed metric/imperial without conversion.
 
-## The Three Model Tiers
+## The Four Model Tiers
 
-Carnot includes three tiers of energy-based models, each with different capacity and speed:
+Carnot includes four tiers of energy-based models, each with different capacity and speed:
 
 | Tier | Name | Architecture | Use case |
 |------|------|-------------|----------|
-| Small | Ising | Quadratic energy (like a spin glass) | Fast, simple constraints |
-| Medium | Gibbs | MLP-based energy | Moderate complexity |
-| Large | Boltzmann | Deep residual network | High-dimensional verification |
+| Hardware | **Ising** | Quadratic energy (pairwise spin couplings) | Real-time sampling, maps to FPGA/TSU hardware |
+| Efficient | **KAN** | Learnable B-spline edges (Kolmogorov-Arnold Networks) | **Default for verification** -- best accuracy per parameter (0.994 AUROC with 2.3K params, 8.7x fewer than Ising at same accuracy) |
+| Medium | **Gibbs** | Multi-layer MLP energy | Complex pattern learning |
+| Large | **Boltzmann** | Deep residual network with attention | Research frontiers, large-scale generation |
 
-Each tier is implemented in both Rust (for production speed) and Python/JAX (for research flexibility). Models trained in one language can be loaded in the other via the safetensors format.
+**When to use which:** KAN is the default for constraint verification -- it achieves the highest accuracy with the fewest parameters. Ising is for real-time guided decoding and hardware deployment (fastest sampling, maps directly to physical p-bits on FPGA/TSU hardware). They complement each other: KAN for accuracy, Ising for speed.
+
+Each tier implements the same `EnergyFunction` trait (Rust) / protocol (Python), so algorithms written against the interface work with any tier. Models trained in one language can be loaded in the other via the safetensors format.
 
 ## Next Steps
 
 - [Getting Started](getting-started.md) -- install and run your first verification
 - [API Reference](api-reference.md) -- all public classes and methods
-- [Technical Writeup](technical-writeup.html) -- the research behind Carnot
+- [Technical Report](technical-report.html) -- the full research report (300+ experiments)
