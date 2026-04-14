@@ -1305,3 +1305,61 @@ milestones:
     title: 'Exp 257: Predictive verifier hardware-readiness benchmark'
     deliverable: results/experiment_257_results.json
     result: OK (conductor)
+- id: 2026.04.19
+  title: GPU-Accelerated Inference, Calibrated Verification, and Live Benchmark Completion
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-14'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp258-dual-gpu-harness
+    title: 'Exp 258: Wire DualGPURunner to live benchmark harness with batched inference'
+    deliverable: scripts/experiment_258_dual_gpu_harness.py
+    result: OK (conductor)
+  - id: exp259-onnxruntime-gpu
+    title: 'Exp 259: onnxruntime-gpu CUDA EP unlock and PredictiveVerifier benchmark'
+    deliverable: results/experiment_259_results.json
+    result: OK (conductor)
+  - id: exp260-solver-semantic-gpu
+    title: 'Exp 260: Complete solver-routed semantic benchmark with GPU inference'
+    deliverable: results/experiment_260_results.json
+    result: OK (conductor)
+  - id: exp261-humaneval-qwen-gpu
+    title: 'Exp 261: Full 164-problem HumanEval benchmark with Qwen via GPU'
+    deliverable: results/experiment_261_results.json
+    result: OK (conductor)
+  - id: exp262-predictive-calibration-corpus
+    title: 'Exp 262: Live calibration corpus for PredictiveVerifier from GPU inference'
+    deliverable: data/research/predictive_calibration_corpus_262.jsonl
+    result: OK (conductor)
+  - id: exp263-predictive-verifier-calibration
+    title: 'Exp 263: Calibrate PredictiveVerifier and run calibrated self-learning A/B'
+    deliverable: results/experiment_263_results.json
+    result: OK (conductor)
+  - id: exp264-domain-constraint-templates
+    title: 'Exp 264: Domain-specific constraint template extraction from live inference tokens'
+    deliverable: data/research/domain_constraint_templates_264.jsonl
+    result: OK (conductor)
+  - id: exp265-constraint-addition-live
+    title: 'Exp 265: Constraint addition module wired to formal solver verdicts'
+    deliverable: python/carnot/pipeline/constraint_addition.py
+    result: OK (conductor)
+  - id: exp266-self-learning-replay-v3
+    title: 'Exp 266: Self-learning replay v3 with calibrated gate and domain templates'
+    deliverable: results/experiment_266_results.json
+    result: OK (conductor)
+  - id: exp267-huggingface-readme-update
+    title: 'Exp 267: Update 16 HuggingFace model READMEs'
+    deliverable: results/experiment_267_results.json
+    result: OK (conductor)
+  - id: exp268-huggingface-publish
+    title: 'Exp 268: Publish Exp 66 joint model and FormalClaimVerifier ONNX to HuggingFace'
+    deliverable: results/experiment_268_results.json
+    result: OK (conductor)
+  - id: exp269-xdna-npu-enablement
+    title: 'Exp 269: AMD XDNA NPU enablement for PredictiveVerifier'
+    deliverable: results/experiment_269_results.json
+    result: OK (conductor)
+  - id: exp270-operational-retrospective
+    title: 'Exp 270: Operational retrospective for milestone 2026.04.19'
+    deliverable: results/operational_retro_2026_04_19.json
+    result: OK (conductor)
