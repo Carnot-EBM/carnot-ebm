@@ -4,6 +4,21 @@
 
 ## What's Working
 
+### Confidence-Weighted Constraint Verification (REQ-VERIFY-081, REQ-VERIFY-082)
+
+- `python/carnot/pipeline/confidence_verifier.py` — Converts binary violated/not-violated
+  flags into continuous EBM energy-derived confidence scores (arXiv 2602.03979).
+  - `confidence_from_energy(energy_score, temperature)`: sigmoid([0,1]), numerically stable.
+  - `repair_gate(confidence, threshold=0.8)`: blocks repair for low-confidence violations.
+  - `ViolationConfidence` dataclass: confidence_class HIGH(≥0.8)/MEDIUM(0.5–0.8)/LOW(<0.5).
+  - `ConfidenceVerifier.verify_with_confidence()`: returns ViolationConfidence list; repair
+    count always ≤ violations detected.
+- `VerifyRepairPipeline.verify_and_repair_confident(threshold=0.8)`: additive method that
+  gates the repair loop on confidence ≥ threshold; returns repaired=False when all violations
+  are low-confidence (fixes Exp 184's 0% net improvement from false-positive repairs).
+- 38 tests pass. Full suite: **3779 passed**, 39 skipped.
+  REQ-VERIFY-081, REQ-VERIFY-082, SCENARIO-VERIFY-105–108.
+
 ### ConstraintGenerator from CaseMemory (REQ-LEARN-010, REQ-LEARN-011)
 
 - `python/carnot/pipeline/constraint_generator.py` — Converts CaseMemory error patterns into

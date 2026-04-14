@@ -2275,6 +2275,81 @@ The predictive verifier shall integrate additively into
 **And** `variant_type_encoded` equals 0 for "standard", 1 for "number_swap", 2 for "irrelevant"
 **And** synthetic fallback data includes `"synthetic_training": true` in its metadata record
 
+### REQ-VERIFY-081: Confidence-Weighted Violation Scoring
+
+The system shall provide a `ConfidenceVerifier` in
+`python/carnot/pipeline/confidence_verifier.py` that converts binary
+violated/not-violated flags into continuous confidence scores, where:
+
+- `ViolationConfidence`: dataclass with fields:
+  - `constraint_id` (str): identifier matching the source ConstraintResult description
+  - `energy_delta` (float): absolute energy contribution from this violation
+  - `confidence_score` (float in [0, 1]): sigmoid-normalised confidence that this
+    is a real violation, derived from `energy_delta / temperature`
+  - `confidence_class` (str): `"HIGH"` when score ≥ 0.8, `"MEDIUM"` when 0.5 ≤ score < 0.8,
+    `"LOW"` when score < 0.5
+  - `repair_recommended` (bool): True only when `confidence_score ≥ repair_threshold`
+  - `evidence` (dict): metadata from the source constraint (e.g. claimed vs. correct result)
+- `confidence_from_energy(energy_score, temperature=1.0)`: sigmoid normalisation
+  `1 / (1 + exp(-energy_score / temperature))` → [0, 1] confidence value; never
+  raises on inf or NaN inputs — clamps to [0, 1]
+- `ConfidenceVerifier.verify_with_confidence(response, extractor, threshold=0.8)`:
+  runs `extractor.extract(response, "auto")`, computes a `ViolationConfidence` for
+  each violated constraint, and returns a list of `ViolationConfidence` objects
+- The number of items with `repair_recommended=True` is always ≤ the total number of
+  detected violations
+- For arithmetic violations, `|operand_sum - claimed_result| > 2 * temperature`
+  maps to confidence_class `"HIGH"` (error larger than 2σ is definitively wrong)
+
+Theoretical basis (arXiv 2602.03979, Likelihood-Based Reward Designs):
+log-probability (EBM energy score) is a continuous signal for repair decisions,
+more informative than binary correct/incorrect, and correlates with error severity.
+
+Spec: REQ-VERIFY-081
+
+### REQ-VERIFY-082: Repair Gate With Confidence Threshold
+
+The `VerifyRepairPipeline` shall expose a confidence-aware repair method where:
+
+- `verify_and_repair_confident(question, response=None, domain=None, threshold=0.8)`:
+  runs the standard verify pass, then filters violations to only those with
+  `confidence_score ≥ threshold` before entering the repair loop
+- When no violations exceed the threshold, returns immediately with
+  `repaired=False` even if binary violations exist (high-confidence gate blocks
+  false-positive repairs that plagued Exp 184)
+- The method is additive: it does NOT change `verify_and_repair()` behaviour
+
+Spec: REQ-VERIFY-082
+
+### SCENARIO-VERIFY-105: HIGH-Confidence Arithmetic Violation Triggers Repair
+
+**Given** a response containing `"47 + 28 = 76"` (off by 1 — unambiguous error)
+**When** `ConfidenceVerifier().verify_with_confidence(response, extractor, threshold=0.8)` is called
+**Then** exactly one `ViolationConfidence` is returned
+**And** `confidence_class == "HIGH"` and `repair_recommended == True`
+**And** `confidence_score >= 0.8`
+
+### SCENARIO-VERIFY-106: LOW-Confidence Violation Does Not Trigger Repair
+
+**Given** a response with a tiny arithmetic deviation (energy_delta near zero)
+**When** `ConfidenceVerifier().verify_with_confidence(response, extractor, threshold=0.8)` is called
+**Then** the returned `ViolationConfidence` has `confidence_class == "LOW"` or `"MEDIUM"`
+**And** `repair_recommended == False`
+
+### SCENARIO-VERIFY-107: repair_gate Blocks Repair Below Threshold
+
+**Given** `confidence_score = 0.65` and `threshold = 0.8`
+**When** `repair_gate(0.65, threshold=0.8)` is called
+**Then** the result is `False` (do not repair)
+
+### SCENARIO-VERIFY-108: verify_and_repair_confident Skips Repair On Low-Confidence Violations
+
+**Given** a pipeline with no model and a response that has binary violations but all
+  with `confidence_score < threshold`
+**When** `pipeline.verify_and_repair_confident(question, response, threshold=0.8)` is called
+**Then** the result has `repaired == False` and `verified == False`
+**And** the low-confidence violations were not passed to the repair loop
+
 ### SCENARIO-JEPA-007: Calibrated Gate Meets Targets on Held-Out Set
 
 **Given** the PredictiveVerifier retrained on Apple adversarial features (Exp 291)
@@ -2436,3 +2511,5 @@ The predictive verifier shall integrate additively into
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |
 | REQ-PRED-004 | Not Started | Implemented | Additive pipeline integration tests |
+| REQ-VERIFY-081 | Not Started | Implemented | Confidence-weighted violation scoring + ConfidenceVerifier tests (SCENARIO-105/106/107/108) |
+| REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |

@@ -1247,6 +1247,156 @@ class VerifyRepairPipeline:
             history=history,
         )
 
+    def verify_and_repair_confident(
+        self,
+        question: str,
+        response: str | None = None,
+        domain: str | None = None,
+        threshold: float = 0.8,
+    ) -> RepairResult:
+        """Verify and repair using confidence-weighted violation filtering.
+
+        **Detailed explanation for engineers:**
+            This is the Exp 184 fix: binary verify-repair had 0% net improvement
+            because false positives (repair breaks correct answers) cancelled out
+            true fixes.  This method adds a confidence gate:
+
+            1. Runs the standard ``verify()`` pass to detect violations.
+            2. For each violation, computes a ``ViolationConfidence`` score via
+               ``ConfidenceVerifier`` (sigmoid of EBM energy delta).
+            3. Only violations with ``confidence_score ≥ threshold`` proceed to
+               the repair loop.  Low-confidence violations are silently skipped.
+            4. If NO violations exceed the threshold, returns immediately with
+               ``repaired=False`` -- even if binary violations exist.
+
+            The method is strictly additive: it does not change ``verify_and_repair()``
+            behaviour (REQ-VERIFY-082).
+
+        Args:
+            question:  The original question.
+            response:  Initial response text. If None and model is loaded, generates one.
+            domain:    Optional domain hint.
+            threshold: Minimum confidence_score to pass a violation to the repair loop.
+                       Default 0.8 (HIGH confidence only).
+
+        Returns:
+            RepairResult with full repair trajectory.
+
+        Spec: REQ-VERIFY-082, SCENARIO-VERIFY-108
+        """
+        from carnot.pipeline.confidence_verifier import ConfidenceVerifier
+
+        deadline = self._make_deadline()
+
+        # Step 1: Get initial response (same as verify_and_repair).
+        if response is None:
+            if not self.has_model:
+                raise ValueError(
+                    "No response provided and no model loaded. Either pass a "
+                    "response string or initialize with model='...'."
+                )
+            try:
+                response = self._generate(question)
+            except (CarnotError, PipelineTimeoutError):
+                raise
+            except Exception as exc:
+                raise RepairError(
+                    f"Initial generation failed: {exc}",
+                    details={"question": question[:200]},
+                ) from exc
+
+        initial_response = response
+        history: list[VerificationResult] = []
+
+        # Step 2: Verify.
+        self._check_deadline(deadline)
+        vr = self.verify(question, response, domain)
+        history.append(vr)
+
+        if vr.verified:
+            return RepairResult(
+                initial_response=initial_response,
+                final_response=response,
+                verified=True,
+                repaired=False,
+                iterations=0,
+                history=history,
+            )
+
+        # Step 3: Confidence gate — filter violations.
+        cv = ConfidenceVerifier()
+        confident_violations = [
+            vc
+            for vc in cv.verify_with_confidence(response, self._extractor, threshold=threshold)
+            if vc.repair_recommended
+        ]
+
+        # If no violations exceed the threshold, skip repair entirely.
+        if not confident_violations:
+            return RepairResult(
+                initial_response=initial_response,
+                final_response=response,
+                verified=False,
+                repaired=False,
+                iterations=0,
+                history=history,
+            )
+
+        # Step 4: Repair loop (only if model is available).
+        if not self.has_model:
+            return RepairResult(
+                initial_response=initial_response,
+                final_response=response,
+                verified=False,
+                repaired=False,
+                iterations=0,
+                history=history,
+            )
+
+        for i in range(self._max_repairs):
+            self._check_deadline(deadline)
+
+            feedback = self._format_violations(vr.violations)
+            repair_prompt = (
+                f"Question: {question}\n\n"
+                f"Your previous answer:\n{response}\n\n"
+                f"The following issues were found:\n{feedback}\n\n"
+                f"Please provide a corrected answer that fixes these issues."
+            )
+
+            try:
+                response = self._generate(repair_prompt)
+            except (CarnotError, PipelineTimeoutError):
+                raise
+            except Exception as exc:
+                raise RepairError(
+                    f"Repair generation failed at iteration {i + 1}: {exc}",
+                    details={"iteration": i + 1},
+                ) from exc
+
+            self._check_deadline(deadline)
+            vr = self.verify(question, response, domain)
+            history.append(vr)
+
+            if vr.verified:
+                return RepairResult(
+                    initial_response=initial_response,
+                    final_response=response,
+                    verified=True,
+                    repaired=response != initial_response,
+                    iterations=i + 1,
+                    history=history,
+                )
+
+        return RepairResult(
+            initial_response=initial_response,
+            final_response=response,
+            verified=False,
+            repaired=False,
+            iterations=self._max_repairs,
+            history=history,
+        )
+
     # -------------------------------------------------------------------
     # Internal helpers
     # -------------------------------------------------------------------
