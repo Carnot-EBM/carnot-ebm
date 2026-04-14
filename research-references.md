@@ -298,6 +298,48 @@ should read this file when designing new milestones.
 - **Relevance:** Grounds the Carnot hardware roadmap. Defines which constraint graphs benefit from Ising accelerator vs. GPU sampling, informing FPGA tier selection strategy. Can be used to decide when to route a query to FpgaBackend vs CPU/GPU sampler.
 - **When to pursue:** FPGA benchmark milestone. Use hardness metric to predict routing advantage.
 
+### LLM-JEPA — Joint Embedding Predictive Architecture for Language Models
+- **Paper:** arxiv.org/abs/2509.14252 (2025-09)
+- **What:** JEPA-based architecture applicable to both finetuning and pretraining of LLMs. Outperforms standard LLM training objectives with robustness to overfitting. Predicts future token embeddings from context using energy minimization.
+- **Relevance:** Direct architecture for Carnot's Tier 3 JEPA predictive verification. Training the predictor on (partial_response, final_violation) pairs can borrow the LLM-JEPA training objective. Also provides a path to train the JEPA predictor ON TOP of an existing LLM embedding layer rather than from scratch.
+- **When to pursue:** JEPA real-data training milestone (Milestone 2026.04.29 Phase 1).
+
+### Emergent Formal Verification — Z3 SMT for Multi-Domain AI Safety
+- **Paper:** arxiv.org/abs/2603.21149 (2026-03)
+- **What:** Autonomous AI ecosystem independently discovers Z3 SMT-based verification across 6 safety domains (code, API safety, reasoning correctness, CLI validation, hardware, smart contracts). Achieves 100% accuracy with zero false positives by formalizing natural language requirements as SMT assertions.
+- **Relevance:** Validates the NSVIF/Z3 approach for constraint extraction (research-program.md Goal #1b). The "NL → Z3 spec" pipeline is the same pattern Carnot needs. The 100% accuracy / 0% FP claim directly addresses the ArithmeticExtractor's false positive problem. Key technique: use LLM to generate Z3 code from chain-of-thought, then run Z3 to check satisfiability.
+- **When to pursue:** Z3 extraction milestone. Use as implementation blueprint for NL→Z3 auto-spec.
+
+### Correctness-Guaranteed Code Generation via Constrained Decoding
+- **Paper:** arxiv.org/abs/2508.15866 (2025-08)
+- **What:** Constrained decoding algorithm using a context-sensitive parser that outputs regular expressions constraining each generation step. Dynamic tree of parsers with variable scopes and type constraints. Guarantees structural correctness of generated code.
+- **Relevance:** Most direct published work for Carnot's guided decoding capability (FR-12). The context-sensitive parser approach is more principled than Carnot's current logit-adjustment approach. The dynamic constraint tree maps onto Carnot's ConstraintStateMachine (Exp 125). Applicable to HumanEval code generation verification.
+- **When to pursue:** Guided decoding improvement milestone. Borrow the parser-tree constraint architecture.
+
+### Hybrid FPGA Ising Decomposition with COBI Chip
+- **Paper:** arxiv.org/abs/2602.15985 (2026-02)
+- **What:** Hybrid FPGA-based decomposer co-located with COBI Ising chip (50 coupled ring oscillators, 28nm CMOS). Solves sub-problems in 77.5 microseconds with <10mW power. Uses graph decomposition to partition large Ising problems across COBI chips.
+- **Relevance:** Directly applicable to KV260 FPGA bring-up (FpgaBackend). The graph decomposition strategy (split large Ising problems into FPGA-solvable sub-problems) can be implemented in software on the KV260 before physical Ising chips are available. The 77.5μs convergence time is the target for KV260 overlay implementation.
+- **When to pursue:** KV260 FPGA bring-up. Use decomposition strategy for large constraint graphs.
+
+### A Theoretical Lens for RL-Tuned LLMs via EBMs
+- **Paper:** arxiv.org/abs/2512.18730 (2025-12)
+- **What:** Analyzes optimal policy in KL-regularized RL; shows natural emergence of EBM form. The optimal RL-tuned LLM IS an EBM over its base model distribution, with the reward as the energy function. Provides theoretical grounding for EBM-based policy learning.
+- **Relevance:** Theoretical foundation connecting Carnot's constraint energy to RLHF. If the optimal policy is an EBM, then Carnot's energy-based verification is not just post-hoc checking — it's defining the training objective. Opens a path to RL-based constraint learning (train the LLM to minimize Carnot's energy function). Also validates the EBM-RL connection for the guided decoding adapter.
+- **When to pursue:** Long-term guided decoding + self-learning. Informs Tier 4 adaptive structure.
+
+### Security Vulnerability Detection in LLM-Generated Code via Z3
+- **Paper:** arxiv.org/abs/2604.05292 (2026-04)
+- **What:** Formal verification of 3,500 code artifacts across 7 LLMs using Z3 SMT solver. Mean vulnerability rate: 55.8%. Demonstrates practical Z3 application to LLM output verification at scale. Maps code patterns to security predicates that Z3 can solve.
+- **Relevance:** Validates Z3 for code verification at scale (3,500 artifacts). The vulnerability predicate approach is directly applicable to Carnot's code constraint extraction: map HumanEval solutions to Z3 safety predicates (null dereference, buffer overflow, integer overflow) and run Z3. Could replace or complement PBT-based code verification.
+- **When to pursue:** Z3 extraction milestone. Use as implementation reference for code constraint Z3 specs.
+
+### Energy Matching — Unifying Flow Matching and EBMs
+- **Paper:** arxiv.org/abs/2504.10612 (2025-04)
+- **What:** Unifies flow matching with EBMs. Shows that EBMs handle additional priors and partial observations elegantly. Proposes energy matching objective that trains EBMs without MCMC samples. Efficient training without the sampling bottleneck.
+- **Relevance:** Training efficiency for Carnot's EBMs. Current CD training requires MCMC samples (slow). Energy matching avoids this by using flow-matching-inspired objectives. Could enable faster iteration on constraint EBM training (Tier 2 memory consolidation, Tier 3 JEPA training).
+- **When to pursue:** EBM training efficiency milestone. Evaluate energy matching vs CD for constraint model training.
+
 ### Online Learnability of CoT Verifiers: Soundness/Completeness Trade-offs
 - **Paper:** arxiv.org/abs/2603.03538 (2026-03)
 - **What:** Formal analysis of what CoT verifiers can and cannot learn online. Characterizes soundness/completeness trade-off as a function of verifier expressivity. Proves bounds on which constraint types are online-learnable and which require offline training data.
