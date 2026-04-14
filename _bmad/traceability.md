@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-14 (reconciled with codebase — Exp 302: Integrated self-learning benchmark Tier 1+2 live; REQ-LEARN-010, REQ-LEARN-011, REQ-VERIFY-081, REQ-VERIFY-082; 62 new tests; 3841 total passed)
+**Last Updated:** 2026-04-14 (reconciled with codebase — Exp 318: Four-tier relay benchmark; REQ-LEARN-013, SCENARIO-LEARN-021/022; 58 new tests; schema="carnot.self_learning_relay.v1")
 
 ## Functional Requirements → Implementation Status
 
@@ -248,3 +248,6 @@
 | SCENARIO-BENCH-001 | Not Started | Executed (simulated) | 100 GSM8K (adversarial corpus) run; Wilson CIs validated; live GPU run needed for 400q credible result |
 | SCENARIO-BENCH-002 | Not Started | Executed (simulated) | 20 HumanEval problems run in simulated mode; live GPU run needed for 50q credible result |
 | SCENARIO-SAMPLE-026 | Not Started | Implemented | CPU fallback always measured regardless of hardware status; kv260_detected=False when env var unset |
+| REQ-LEARN-013 | Not Started | Implemented | Four-tier relay benchmark: RelayBatchResult + compute_relay_improvement + build_relay_artifact (Exp 318); 58 tests PASS |
+| SCENARIO-LEARN-021 | Not Started | Implemented | RelayBatchResult tiers_active list: ["tier1"] / ["tier1","tier2"] / ["tier1","tier2","tier3","z3"] |
+| SCENARIO-LEARN-022 | Not Started | Implemented | improvement_1to3 is honest signed delta (can be negative); never clamped |

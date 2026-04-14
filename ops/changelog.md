@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 318: Four-Tier Continuous Self-Learning Relay)
+
+First integrated four-tier relay benchmark running Tier 1 (ConfidenceVerifier),
+Tier 2 (ConstraintGenerator), Tier 3 (JEPA gate), and Z3 gate in sequence on
+3 batches of 33 questions (99 total). Demonstrates the full continuous self-learning
+loop. Primary metric: honest signed improvement_1to3 (never clamped).
+
+- `scripts/experiment_318_self_learning_relay.py` (new):
+  - BATCH_SIZE=33 (3-batch relay design).
+  - `RelayBatchResult` dataclass: batch_id, accuracy, n_questions, tiers_active,
+    constraint_delta, per_question. tiers_active encodes which tier stack ran.
+  - `compute_relay_improvement(batch1, batch_n)` — signed delta, no clamping.
+  - `simulate_gsm8k_questions(n, seed)` — exp318_q_NNNN deterministic questions.
+  - `run_relay_batch(questions, batch_id, tiers_active, ...)` — processes each question
+    through tier stack: JEPA gate (energy < 0.55 → skip); Z3 gate (SAT → skip Ising);
+    Tier 1 confidence repair.
+  - `build_relay_artifact(...)` — schema="carnot.self_learning_relay.v1".
+- `tests/python/test_experiment_318_self_learning_relay.py` (new, 58 tests):
+  - TestConstants, TestRelayBatchResult, TestComputeRelayImprovement,
+    TestSimulateGsm8kQuestions, TestRunRelayBatch, TestBuildRelayArtifact.
+- `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-LEARN-013,
+  SCENARIO-LEARN-021, SCENARIO-LEARN-022, and implementation status row.
+- `results/experiment_318_self_learning_relay.json` (new): Simulated run artifact.
+- Simulated result: B1=0.697, B2=0.545, B3=0.636; imp_1to2=-0.1515, imp_1to3=-0.0606.
+  Honest: improvement is negative in simulation without live GPU; JEPA gate not yet
+  trained on arithmetic logits (threshold from Exp 309, simulated energy).
+- REQ-LEARN-013, SCENARIO-LEARN-021, SCENARIO-LEARN-022.
+
 ## 2026-04-14 (Exp 317: HuggingFace README Accuracy Audit)
 
 Audits and updates all 16 per-token activation EBM model READMEs on HuggingFace
@@ -2058,3 +2086,4 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-14: Exp 291: 128-spin Ising sampler Verilog RTL prototype — hardware/kv260/ising_sampler_v1.v (module ising_sampler_128, N_SPINS=128, MAX_DEGREE=32, N_STEPS=1000), AXI-Lite slave (17-bit address, adj_ram 0x2000–0x5FFC, coupl_ram 0x6000–0x9FFC, spin_out 0xA010+), Q8.8 fixed-point, 16-bit Fibonacci LFSR (x^16+x^14+x^13+x^11+1), Mpemba hot-start (10% at β=0, arXiv 2603.24183), linear β ramp approximation, checkerboard update; Python behavioral simulation scripts/simulate_ising_sampler.py (IsingSimulator class, LFSR16, Q8.8 helpers, AXI register model); 36 passing tests in tests/python/test_ising_sampler_rtl.py covering register map, local field, energy, schedule, Mpemba init, halt, LFSR; hardware/kv260/README.md with port list, register map, synthesis steps; REQ-SAMPLE-011, SCENARIO-SAMPLE-023, SCENARIO-SAMPLE-024
 - 2026-04-14: Exp 316: Full-scale benchmark execution — run Exp 315 script (400 GSM8K Apple adversarial + 50 HumanEval), capture results with dual-GPU harness, validate 95% Wilson CIs on accuracy/FP rates/latency across four modes; REQ-BENCH-001, SCENARIO-BENCH-001, SCENARIO-BENCH-002
 - 2026-04-14: Exp 317: HuggingFace publish — update all model READMEs, honest Phase 1 framing — refreshed model card READMEs across Carnot-EBM/carnot-joint-constraint-v1, carnot-formal-claim-verifier-v1, carnot-gibbs-v1, carnot-ising-v1 with Phase 1 capability statements, architecture overview, usage examples, and research-vs-production positioning; no new REQ-*/SCENARIO-* (documentation-only iteration)
+- 2026-04-14: Exp 318: Four-tier continuous self-learning relay benchmark — first integrated benchmark of Tier 1 (ConfidenceVerifier) + Tier 2 (ConstraintGenerator) + Tier 3 (JEPA gate, threshold=0.55 from Exp 309) + Z3 gate (from Exp 312) running in sequence on 3 batches of 33 questions; scripts/experiment_318_self_learning_relay.py + tests/python/test_experiment_318_self_learning_relay.py (58 tests) + results/experiment_318_self_learning_relay.json; simulated result: B1=0.697, B2=0.545, B3=0.636, improvement_1to3=-0.0606 (honest signed delta, no live GPU), jepa_skip_rate=0.182, z3_sat_rate=0.667; REQ-LEARN-013, SCENARIO-LEARN-021, SCENARIO-LEARN-022

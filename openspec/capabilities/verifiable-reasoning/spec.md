@@ -2442,6 +2442,53 @@ Spec: REQ-LEARN-012, SCENARIO-LEARN-019, SCENARIO-LEARN-020
 **Then** the returned threshold is `0.45` (decreased by 0.05)
 **And** `adapter.threshold == 0.45`
 
+### REQ-LEARN-013: Four-Tier Continuous Self-Learning Relay Benchmark
+
+The system shall provide a four-tier relay benchmark (Exp 318) that runs all four
+self-learning tiers in sequence on a single 100-question benchmark, demonstrating
+the full continuous self-learning loop:
+
+- **Tier 1:** Per-constraint precision tracker (online weight updates via `ConfidenceVerifier`)
+- **Tier 2:** `CaseMemory` → `ConstraintGenerator` (constraint addition from violation patterns)
+- **Tier 3:** JEPA fast-path gate (predict violations, skip Ising if low energy)
+- **Z3 gate:** `NL2Z3Extractor` → UNSAT triggers Ising; SAT skips
+
+The relay design uses 3 batches of 33 questions each:
+- **Batch 1 (warmup):** All tiers passive, collect data, record `batch1_accuracy`
+- **Batch 2 (Tier 1+2 active):** Constraint adaptation enabled, record `batch2_accuracy`
+- **Batch 3 (all tiers):** Full relay — JepaGate → Z3GatedRepair → Ising if UNSAT,
+  record `batch3_accuracy`, `jepa_skip_rate`, `z3_sat_rate`
+
+Primary metric: `improvement_1to3 = batch3_accuracy - batch1_accuracy` (honest signed delta).
+
+Artifact schema: `experiment=318`, `schema="carnot.self_learning_relay.v1"`.
+
+Data structures:
+- `RelayBatchResult(batch_id, accuracy, n_questions, tiers_active, constraint_delta)`
+  where `tiers_active` is `["tier1"]` / `["tier1","tier2"]` / `["tier1","tier2","tier3","z3"]`
+  and `constraint_delta` is `n_constraints_after - n_constraints_before` for that batch.
+- `RelayArtifact` containing `batch1`, `batch2`, `batch3`, `improvement_1to2`,
+  `improvement_1to3` — all signed floats, never clamped.
+
+Honest reporting invariants:
+- Any batch may have negative improvement versus batch1; no fabrication.
+- `improvement_1to2` and `improvement_1to3` reflect raw signed deltas.
+
+### SCENARIO-LEARN-021: Relay Batch Tiers Active List
+
+**Given** a `RelayBatchResult` for batch 1 (warmup)
+**Then** `tiers_active == ["tier1"]`
+**Given** a `RelayBatchResult` for batch 2 (Tier 1+2)
+**Then** `tiers_active == ["tier1", "tier2"]`
+**Given** a `RelayBatchResult` for batch 3 (all tiers)
+**Then** `tiers_active == ["tier1", "tier2", "tier3", "z3"]`
+
+### SCENARIO-LEARN-022: Relay Artifact Honest Signed Improvement
+
+**Given** a `RelayArtifact` where batch3_accuracy < batch1_accuracy
+**Then** `improvement_1to3 < 0.0` (negative improvement is reported, not clamped)
+**And** `improvement_1to3 == batch3_accuracy - batch1_accuracy` exactly
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -2833,6 +2880,7 @@ Spec: REQ-BENCH-001, SCENARIO-BENCH-001, SCENARIO-BENCH-002
 | REQ-VERIFY-081 | Not Started | Implemented | Confidence-weighted violation scoring + ConfidenceVerifier tests (SCENARIO-105/106/107/108) |
 | REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |
 | REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
+| REQ-LEARN-013 | Not Started | In Progress | Four-tier relay benchmark — RelayBatchResult + RelayArtifact (SCENARIO-LEARN-021/022, Exp 318) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
