@@ -190,4 +190,7 @@
 | SCENARIO-VERIFY-080 | Not Started | Implemented | Artifact schema validation (schema=carnot.apple_baseline.v1, all required fields) |
 | SCENARIO-VERIFY-081 | Not Started | Implemented | Checkpoint resume skips already-processed questions with ≤1 generate call |
 | SCENARIO-VERIFY-082 | Not Started | Implemented | Logit tensor shape and file persistence (object array of (seq_len, vocab_size) tensors) |
+| REQ-SAMPLE-009 | Not Started | Implemented | FPGA overlay bring-up validation with 60-second hard timeout on KV260 |
+| SCENARIO-SAMPLE-018 | Not Started | Implemented | Register-map round-trip (AXI-Lite CONTROL → STATUS) validates register contract |
+| SCENARIO-SAMPLE-019 | Not Started | Implemented | Spin-state checksumming confirms all samples are ±1 after overlay execution |
 | SCENARIO-VERIFY-083 | Not Started | Implemented | Variant type breakdown and accuracy drop detection across standard/number_swap/irrelevant_sentence |
