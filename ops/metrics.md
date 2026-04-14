@@ -1398,3 +1398,4 @@
 | 6 | 2026-04-11T20:36:12Z | 2026-04-11T20:37:59Z | Minimal doc updates for Exp 178 (append entries to changelog.md, status.md, traceability.md); Goal #5 ACHIEVED | 1m47s |
 | planning | 2026-04-13T19:58:08Z | 2026-04-13T20:11:45Z | Plan milestone 2026.04.19: read all context files, arxiv research, wrote research-roadmap-vNEXT.md + research-roadmap-next.yaml + research-references.md update | 13m37s |
 | exp281 | 2026-04-14T05:01:31Z | 2026-04-14T05:09:44Z | Exp 281: Apple adversarial GSM8K dataset generator — spec (REQ-VERIFY-063, SCENARIO-VERIFY-078/079), 12 tests, dataset generator (400 rows, number_swap+irrelevant_sentence), 3112 tests pass | 8m13s |
+| exp296 | 2026-04-14T09:57:16Z | 2026-04-14T10:04:18Z | Exp 296: Apple adversarial analysis v2 — tests, script, artifact; classification INCONCLUSIVE (Exps 294/295 missing); 45 tests added, 3609 total pass, 99.11% coverage | 6m62s |
