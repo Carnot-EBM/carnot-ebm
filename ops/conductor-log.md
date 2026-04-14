@@ -1547,3 +1547,4 @@ python/ |
 | 2026-04-14 13:01 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
 | 2026-04-14 13:01 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | Deliverable already exists in repo |
 | 2026-04-14 13:01 UTC | Milestone 2026.04.29 activated | OK | 13 tasks queued |
+| 2026-04-14 13:45 UTC | Exp 307: JEPA train on real Apple adversarial logi | OK | Deliverable already exists in repo |
