@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Operational Retrospective — Milestone 2026.04.22)
+
+Written by conductor retrospective pass; no code changed.
+
+**Milestone summary:** 330 experiments in 4430 minutes (73.8h), avg 13.4 min/exp.
+
+**Top bottlenecks identified:**
+1. **Sequential GPU execution** (~280/330 exps ran single-GPU while the second RTX 3090 sat idle) — estimated 12% wall-time waste.
+2. **Unbatched inference** (single-question forward passes; BatchedInferenceRunner not available until Exp 306) — estimated 8% waste.
+3. **Exp 53 debugging spiral** (418 min, 31× avg; no hard timeout/escalation path) — consumed 9.4% of milestone alone.
+4. **Missing checkpoint resume** in early training runs (Exps 155, 184) — full restarts on interruption.
+5. **False-positive repair loops** (binary verify-repair before confidence_verifier.py gating).
+
+**Estimated next-milestone speedup:** 28% (from ~4430 min → ~3190 min equivalent) assuming adoption of all RETRO-001–005 action items.
+
+**Carry-over action items from 2026.04.21 retro:** 3/5 resolved (ExperimentTemplate, DualGPURunner pre-warm, BatchedInferenceRunner). 2 carried forward: conductor 45-min timeout + GPU monitor conductor integration.
+
+- `results/operational_retro_2026_04_22.json` (new): full retro artifact with slowest_experiments, bottlenecks_identified (8 items), improvements_suggested (9 items), action_items (5 items), estimated_time_savings_pct=28.
+- Triggered by: user instruction (milestone 2026.04.22 operational retrospective).
+
 ## 2026-04-14 (Exp 306: Experiment template + batching harness — process improvements from 2026.04.21 retro)
 
 Implements the top-3 wall-time reductions from the 2026.04.21 operational retrospective:

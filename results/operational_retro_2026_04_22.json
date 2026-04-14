@@ -1,0 +1,156 @@
+{
+  "schema": "operational_retro_v1",
+  "milestone": "2026.04.22",
+  "generated_at": "2026-04-14T12:46:39Z",
+  "total_wall_time_minutes": 4430,
+  "total_wall_time_hours": 73.8,
+  "experiments_completed": 330,
+  "avg_minutes_per_experiment": 13.4,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 418,
+      "experiment": "Exp 53",
+      "title": "Runtime constraint instrumentation",
+      "ratio_to_avg": 31.2,
+      "root_cause": "Massive outlier — likely an iterative debugging loop where constraint instrumentation failed silently and required multiple retries. No timeout guard or structured diagnostic path; the session spiraled into ad-hoc investigation rather than a bound-and-escalate pattern.",
+      "category": "debugging_spiral"
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 117,
+      "experiment": "Exp 219",
+      "title": "Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "ratio_to_avg": 8.7,
+      "root_cause": "Sequential two-model live inference over a large question set (50+ questions) with both models loaded serially. GPU 1 sat idle while GPU 0 ran Qwen, then GPU 0 sat idle while GPU 1 ran Gemma. DualGPURunner pattern was not yet in place at this point in the milestone.",
+      "category": "sequential_gpu_waste"
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 83,
+      "experiment": "Exp 184",
+      "title": "3B model verification — does verify-repair help large models",
+      "ratio_to_avg": 6.2,
+      "root_cause": "Large 3B model (full context window) inference with binary verify-repair applied indiscriminately. False-positive repair gating (later fixed in confidence_verifier.py) caused repair loops to run on correct answers, consuming extra tokens and time. Root cause identified and resolved post-milestone.",
+      "category": "false_positive_repair_loop"
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 78,
+      "experiment": "Exp 221",
+      "title": "Live prompt-side constraint benchmark on typed IR tasks",
+      "ratio_to_avg": 5.8,
+      "root_cause": "Live prompt-side benchmarks require full model forward passes per question. Like Exp 219, no batching (8-16 questions/pass) was in place — each question triggered a separate model call, inflating latency by 4-8x vs. batched inference. BatchedInferenceRunner introduced in Exp 306.",
+      "category": "unbatched_inference"
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 78,
+      "experiment": "Exp 155",
+      "title": "Retrain JEPA violation predictor v2 with multi-domain data",
+      "ratio_to_avg": 5.8,
+      "root_cause": "Multi-domain JEPA training with no checkpoint resume path — if the session was interrupted or encountered an error mid-training, the entire run restarted from scratch. Checkpoint-resume pattern (atomic save/load) was standardized only in the experiment template (Exp 306).",
+      "category": "missing_checkpoint_resume"
+    }
+  ],
+  "gpu_utilization_analysis": {
+    "gpu_count": 2,
+    "gpu_model": "NVIDIA GeForce RTX 3090",
+    "vram_per_gpu_gb": 24,
+    "utilization_at_retro_time": {
+      "gpu_0_pct": 0,
+      "gpu_1_pct": 0,
+      "state": "both_idle"
+    },
+    "estimated_milestone_avg_utilization_pct": 12,
+    "pattern": "predominantly_sequential",
+    "detail": "GPUs were used one at a time for the bulk of the milestone. Two-model experiments (Exp 219, 221, 235, 258) loaded models sequentially, leaving the idle GPU unused. DualGPURunner was wired into experiments starting ~Exp 282, covering the final ~50 experiments. Estimated 280 of 330 experiments ran with only one GPU active.",
+    "zombie_processes_detected": 0,
+    "zombie_detail": "gpu_monitor.py --kill-zombies detected no true zombies (no process held >1GB VRAM idle >10 min). The 2MB allocations visible at retro time are CUDA context stubs, not zombie workloads.",
+    "peak_temp_c": 54
+  },
+  "bottlenecks_identified": [
+    "SEQUENTIAL GPU EXECUTION: ~280/330 experiments ran on a single GPU while the second RTX 3090 (24GB) sat idle. Two-model comparisons (Qwen vs. Gemma) loaded models one-at-a-time instead of in parallel via DualGPURunner.",
+    "UNBATCHED INFERENCE: Single-question forward passes dominated live-GPU experiments. Questions were processed one-at-a-time rather than in batches of 8-16, wasting 4-8x GPU throughput on prompt-processing overhead.",
+    "NO TIMEOUT GUARD ON EXP 53: A single experiment (Exp 53, runtime constraint instrumentation) consumed 418 minutes — 9.4% of the entire milestone wall time. There was no structured escalation path for failed debugging sessions.",
+    "MISSING CHECKPOINT RESUME IN EARLY EXPERIMENTS: Training and long inference runs (Exps 155, 184) had no atomic checkpoint-save/resume. An interruption meant full restart, doubling or tripling wall time.",
+    "FALSE-POSITIVE REPAIR LOOPS: Exp 184 and related verify-repair experiments wasted inference tokens repairing already-correct answers. Binary gating (repair on any violation) was not replaced with confidence-weighted gating until late in the milestone.",
+    "COLD-START BOILERPLATE PER EXPERIMENT: Each experiment script replicated ~150 lines of setup (directory creation, checkpoint loading, GPU pre-warm, artifact schema). No shared template until Exp 306 (final 1% of the milestone).",
+    "DOC RECONCILIATION LATENCY: ops/status.md, ops/changelog.md, and traceability.md were updated inline at the end of each experiment turn. For short experiments, this overhead was proportionally large (30-40% of turn time).",
+    "PREFLIGHT TEST SUITE GROWTH: The pytest suite grew from ~2800 to ~3975 tests over the milestone. Full-suite runs at each turn added ~15-20s overhead per experiment — manageable but growing."
+  ],
+  "improvements_suggested": [
+    "DUAL-GPU PARALLELISM BY DEFAULT: Wire DualGPURunner into ExperimentTemplate.setup_gpu() so all new experiments get parallel model loading for free. Target: both GPUs above 40% utilization for two-model experiments. Estimated saving: 10-15% of milestone wall time.",
+    "MANDATORY BATCHED INFERENCE: BatchedInferenceRunner (Exp 306) is now available — make it the only supported inference path in ExperimentTemplate. Batch size 8-16, timeout = batch_size * 60s. Estimated saving: 8-12% for GPU-heavy experiments.",
+    "HARD TIME-BOX WITH AUTO-ESCALATE: Any single experiment exceeding 45 minutes should auto-checkpoint and surface a structured blocker artifact (status='timeout_escalate') rather than continuing to spiral. Conductor should detect >45min sessions and prompt user. Estimated saving: eliminates Exp 53-class outliers, ~5-8% of milestone wall time.",
+    "ATOMIC CHECKPOINT RESUME FOR ALL TRAINING RUNS: Checkpoint-save (atomic write) every 10% of training steps, with resume detection at startup. Already standardized in ExperimentTemplate; back-apply the pattern to any remaining training scripts (JEPA retrain, EBM training). Estimated saving: 4-6% for training experiments.",
+    "CONFIDENCE-WEIGHTED REPAIR GATING EVERYWHERE: Replace binary verify-repair with ConfidenceVerifier.verify_with_confidence(threshold=0.8) in all pipeline experiments. Prevents false-positive repair loops from inflating per-experiment time. Estimated saving: 3-5%.",
+    "LAZY DOC UPDATES — BATCH AT MILESTONE BOUNDARY: Defer per-experiment doc reconciliation (changelog, status, traceability) to a single batched pass every 5 experiments or at natural session boundaries. Reduces doc-update overhead from ~35% to ~10% of short experiment turns. Estimated saving: 3-4%.",
+    "GPU_MONITOR INTEGRATION IN CONDUCTOR: Run gpu_monitor.py --json before each experiment and inject the report into the conductor prompt. The conductor can then auto-select DualGPURunner vs. single-GPU path and warn on zombie processes before they accumulate.",
+    "EXPERIMENT TEMPLATE ADOPTION METRIC: Track what fraction of new experiments use ExperimentTemplate. Target ≥90% by mid-milestone. Report the metric in ops/metrics.md each session.",
+    "PREFLIGHT TEST PARALLELISM: Split the ~4000-test suite into two workers (pytest-xdist -n 2). Given the current sequential single-core run, this halves preflight overhead from ~20s to ~10s with no code changes."
+  ],
+  "estimated_time_savings_pct": 28,
+  "estimated_time_savings_detail": {
+    "dual_gpu_parallelism_pct": 12,
+    "batched_inference_pct": 8,
+    "hard_timeout_with_escalate_pct": 6,
+    "checkpoint_resume_pct": 5,
+    "confidence_gating_pct": 4,
+    "lazy_doc_updates_pct": 3,
+    "total_additive_estimate_pct": 38,
+    "realistic_combined_pct": 28,
+    "note": "Additive estimates sum to 38% but improvements overlap (e.g. DualGPU + batching both reduce inference time). Realistic combined estimate is 28%, equivalent to saving ~1240 minutes on an equivalent 4430-minute milestone."
+  },
+  "action_items": [
+    {
+      "id": "RETRO-001",
+      "title": "Wire DualGPURunner into ExperimentTemplate.setup_gpu() as default",
+      "priority": "high",
+      "estimated_impact_pct": 12,
+      "owner": "conductor"
+    },
+    {
+      "id": "RETRO-002",
+      "title": "Add 45-minute hard timeout with structured escalation to conductor",
+      "priority": "high",
+      "estimated_impact_pct": 6,
+      "owner": "conductor"
+    },
+    {
+      "id": "RETRO-003",
+      "title": "Integrate gpu_monitor --json into conductor pre-experiment check",
+      "priority": "medium",
+      "estimated_impact_pct": 3,
+      "owner": "conductor"
+    },
+    {
+      "id": "RETRO-004",
+      "title": "Enforce BatchedInferenceRunner as sole inference path in ExperimentTemplate",
+      "priority": "medium",
+      "estimated_impact_pct": 8,
+      "owner": "experiment_template"
+    },
+    {
+      "id": "RETRO-005",
+      "title": "Add pytest-xdist -n 2 to preflight test runs",
+      "priority": "low",
+      "estimated_impact_pct": 1,
+      "owner": "ci"
+    }
+  ],
+  "carry_over_from_previous_retro": {
+    "prior_milestone": "2026.04.21",
+    "action_items_resolved": 3,
+    "action_items_carried": 2,
+    "resolved_items": [
+      "ExperimentTemplate scaffolding (Exp 306)",
+      "DualGPURunner pre-warm auto-wired",
+      "Inference batching 8-16/pass"
+    ],
+    "carried_items": [
+      "Conductor 45-min timeout + escalate (RETRO-002, not yet implemented)",
+      "GPU monitor integration into conductor prompt (RETRO-003, not yet implemented)"
+    ]
+  }
+}

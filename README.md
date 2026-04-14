@@ -76,7 +76,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (293+ experiments, 26 completed milestones)
+## Key Results (306+ experiments, 27 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -136,6 +136,13 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **Process integrity corpus (Exp 248):** **849** rows across five labels (`right_answer_wrong_process`, `wrong_answer_partially_sound_process`, `unsupported_step`, `repair_fixed_outcome_only`, `repair_fixed_process_and_outcome`, `clean`), built from Exp 235 and Exp 238 live traces.
 - **Process-aware verification comparison (Exp 251):** process verification added **0** rejections beyond the spec-aware gate on both models, but caught **5** `outcome_correct_process_invalid` cases (Qwen=3, Gemma=2) across **143** combined defect instances.
 - **Predictive verifier hardware benchmark (Exp 257):** ONNX CPUExecutionProvider runs at **5.8 µs/call** (**7.1×** faster than CPU NumPy at **41.8 µs/call**); CUDA ORT and AMD XDNA NPU paths remain blocked by missing toolchain.
+- **PrefillUncertaintyProbe (Exp 295 / REQ-VERIFY-080):** entropy-based pre-generation hallucination gate (arXiv 2603.19562). High entropy → `high_risk=True` → trigger full verification before any tokens are generated. Black-box, no gradient access required.
+- **ConstraintGenerator from CaseMemory (Exp 300 / REQ-LEARN-010/011):** converts CaseMemory violation patterns into new constraints when observed_precision ≥ 0.85 (soundness bound, arXiv 2603.03538). Purely additive — never removes existing constraints.
+- **Confidence-weighted repair gating (Exp 301 / REQ-VERIFY-081/082):** EBM energy-derived confidence scores gate the repair loop. Violations below threshold=0.8 are suppressed, fixing Exp 184's 0% net improvement from false-positive repairs.
+- **Integrated Tier 1+2 self-learning benchmark (Exp 302):** first end-to-end run combining Exp 301 confidence-weighted gating and Exp 300 ConstraintGenerator on 100 questions (2 × 50 batches). Reports honest signed `improvement_delta`; negative values not hidden.
+- **AMD XDNA NPU Unblock (Exp 303):** full source-build + inference benchmark path ready. Currently `blocked_prereq` (ninja + openblas missing). Run `sudo pacman -S ninja openblas` then re-run Exp 303 to auto-advance.
+- **FCV LIVE on HuggingFace (Exp 304):** `Carnot-EBM/carnot-formal-claim-verifier-v1` is now live. Python API credential fallback resolved the Exp 293 CLI blocker.
+- **Experiment template + batching harness (Exp 306 / REQ-VERIFY-083/084):** `ExperimentTemplate` + `BatchedInferenceRunner` eliminate 15–20 min cold-start per experiment. Template overhead validated at **0.0001 s** (target < 0.5 s).
 
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
@@ -194,7 +201,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 257+ experiments across 23 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 306+ experiments across 27 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
