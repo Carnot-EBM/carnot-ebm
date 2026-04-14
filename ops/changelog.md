@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-04-14 (PrefillUncertaintyProbe — REQ-VERIFY-080)
+
+- `python/carnot/pipeline/prefill_uncertainty_probe.py` — Pre-generation hallucination
+  risk gate based on arXiv 2603.19562 (Neural Uncertainty Principle, Mar 2026).
+  Fires BEFORE any tokens are generated using entropy of the first-pass logit distribution
+  (black-box friendly — no gradient access required).
+  - `PrefillUncertaintyResult`: dataclass with uncertainty_score, conjugate_bound,
+    high_risk, threshold_exceeded, n_tokens, computation_method.
+  - `compute_input_uncertainty(embeddings)`: white-box variance of embedding L2 norms.
+  - `compute_conjugate_bound(input_norm, gradient_norm)`: Cauchy-Schwarz factor.
+  - `compute_prompt_uncertainty(logits, threshold)`: entropy-based black-box probe.
+  - `PrefillUncertaintyProbe.probe()`: main entry point.
+- `python/carnot/pipeline/verify_repair.py` — Added additive
+  `VerifyRepairPipeline.check_prefill_uncertainty(logits, threshold=0.5)`:
+  returns `{skip_verification, reason, result}`. Low uncertainty → fast-path skip with
+  `reason="low_uncertainty"`. High uncertainty → `skip_verification=False`.
+- `python/carnot/pipeline/__init__.py` — Exported PrefillUncertaintyProbe,
+  PrefillUncertaintyResult, compute_conjugate_bound, compute_input_uncertainty,
+  compute_prompt_uncertainty.
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added REQ-VERIFY-080,
+  SCENARIO-VERIFY-103 (high-entropy → high risk), SCENARIO-VERIFY-104 (low-entropy
+  → fast-path skip). Updated Implementation Status table.
+- `tests/python/test_prefill_uncertainty_probe.py` — 35 tests covering: dataclass
+  fields, compute_input_uncertainty (variance proxy), compute_conjugate_bound (Cauchy-Schwarz
+  product), compute_prompt_uncertainty (entropy, normalisation, threshold boundary,
+  1-D and 2-D shapes), PrefillUncertaintyProbe.probe(), pipeline integration
+  (check_prefill_uncertainty), and edge cases (single-vocab, all-same embeddings,
+  two-token vocab, very large peak, negative logits).
+- Full suite: **3644 passed**, 39 skipped, 0 failures. Coverage: **99.12%**.
+  REQ-VERIFY-080, SCENARIO-VERIFY-103/104.
+  (user instruction: implement PrefillUncertaintyProbe — prefill-stage hallucination gate)
+
 ## 2026-04-14 (Exp 295: Verify-Repair Benchmark — Pre-Warm Fix)
 
 - `scripts/experiment_295_apple_verify_repair.py` — Pre-warm-fixed re-run of Exp 283.

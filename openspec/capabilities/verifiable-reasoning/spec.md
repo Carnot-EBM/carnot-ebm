@@ -2107,6 +2107,69 @@ The root cause for the recurring GPU stall in Exps 282/283 is lazy model loading
 **Then** `PrewarmResult.health_ok` is `False`
 **And** `PrewarmResult.stall_root_cause` is `"lazy_load_stall"`
 
+### REQ-VERIFY-080: Prefill Uncertainty Probe
+
+The system shall provide a `PrefillUncertaintyProbe` in
+`python/carnot/pipeline/prefill_uncertainty_probe.py` that detects hallucination
+RISK before any tokens are generated, using only the first-pass logit distribution
+(black-box friendly — no gradient access required):
+
+- `PrefillUncertaintyResult`: dataclass with fields:
+  - `uncertainty_score` (float): entropy-based uncertainty measure over the first-token
+    distribution (Shannon entropy normalised to [0, 1] by dividing by log(V))
+  - `conjugate_bound` (float): Cauchy-Schwarz upper bound approximated from input norm
+    and gradient norm proxies (both derived from logit magnitude statistics)
+  - `high_risk` (bool): True when `uncertainty_score > threshold`
+  - `threshold_exceeded` (bool): alias for `high_risk` (explicit name for pipeline routing)
+  - `n_tokens` (int): number of vocabulary tokens in the logit distribution
+  - `computation_method` (str): `"entropy_approximation"` (black-box) or
+    `"embedding_variance"` (white-box embedding variance)
+- `compute_input_uncertainty(embeddings)`: accepts a 2-D float64 array of shape
+  (T, D) (token embeddings), returns the variance of per-token L2 norms as an
+  uncertainty proxy (high variance → model "stretched" over diverse representations)
+- `compute_conjugate_bound(input_norm, gradient_norm)`: returns
+  `input_norm * gradient_norm` (Cauchy-Schwarz factor; the squared inner product
+  is bounded by this product of norms)
+- `compute_prompt_uncertainty(logits_first_pass, threshold)`: accepts a 1-D or 2-D
+  float64 logit array for the first-pass token distribution (shape (V,) or (1, V)),
+  computes normalised Shannon entropy of the softmax distribution as the uncertainty
+  score, and returns a `PrefillUncertaintyResult`
+- `PrefillUncertaintyProbe.probe(logits_first_pass, threshold)` → `PrefillUncertaintyResult`
+- `VerifyRepairPipeline.check_prefill_uncertainty(logits_first_pass, threshold=0.5)`
+  returns a dict with keys `skip_verification` (bool), `reason` (str),
+  and `result` (PrefillUncertaintyResult); when `high_risk` is False it sets
+  `skip_verification=True` and `reason="low_uncertainty"` (fast-path skip)
+
+Theoretical basis (arXiv 2603.19562, Neural Uncertainty Principle, Mar 2026):
+adversarial vulnerability and hallucination share a geometric origin — input and
+loss-gradient are conjugate observables with an irreducible uncertainty bound
+(Heisenberg analogue). High normalised entropy of the first-token distribution
+correlates with high gradient-norm uncertainty, making it a viable prefill-stage
+hallucination gate.
+
+### SCENARIO-VERIFY-103: PrefillUncertaintyProbe Flags High-Entropy Logits As High Risk
+
+**Given** a logit array of shape (1, V) with near-uniform distribution (all logits equal)
+**When** `PrefillUncertaintyProbe().probe(logits, threshold=0.5)` is called
+**Then** `result.uncertainty_score` is close to 1.0 (maximum entropy → max uncertainty)
+**And** `result.high_risk` is True
+**And** `result.threshold_exceeded` is True
+**And** `result.computation_method` is `"entropy_approximation"`
+**And** `VerifyRepairPipeline.check_prefill_uncertainty(logits, threshold=0.5)` returns
+  `skip_verification=False` (high risk — do NOT skip)
+
+### SCENARIO-VERIFY-104: PrefillUncertaintyProbe Fast-Path Skip For Low-Entropy Logits
+
+**Given** a logit array of shape (1, V) with a highly peaked distribution (one token dominates)
+**When** `PrefillUncertaintyProbe().probe(logits, threshold=0.5)` is called
+**Then** `result.uncertainty_score` is close to 0.0 (near-zero entropy → low uncertainty)
+**And** `result.high_risk` is False
+**And** `result.threshold_exceeded` is False
+**And** `VerifyRepairPipeline.check_prefill_uncertainty(logits, threshold=0.5)` returns
+  `skip_verification=True` and `reason="low_uncertainty"`
+**And** edge cases (empty logits, single-vocab, all-same embeddings) return valid results
+  without raising exceptions
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
@@ -2366,6 +2429,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-077 | Not Started | Implemented | Semantic energy extractor + DualEnergyGate + pipeline integration tests |
 | REQ-VERIFY-078 | Not Started | Implemented | Dual-energy gate benchmark on Apple adversarial corpus (Exp 287) |
 | REQ-VERIFY-079 | Not Started | Not Started | GPU pre-warm health-check for live inference (Exp 294) |
+| REQ-VERIFY-080 | Not Started | Implemented | PrefillUncertaintyProbe + pipeline integration + 35 Python tests (SCENARIO-103/104) |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291 Apple adversarial retrain + conformal calibration |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |

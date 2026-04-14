@@ -132,6 +132,13 @@ from carnot.pipeline.semantic_energy_extractor import (
     SemanticEnergyResult,
     compute_semantic_energy,
 )
+from carnot.pipeline.prefill_uncertainty_probe import (
+    PrefillUncertaintyProbe,
+    PrefillUncertaintyResult,
+    compute_conjugate_bound,
+    compute_input_uncertainty,
+    compute_prompt_uncertainty,
+)
 from carnot.pipeline.spilled_energy_extractor import (
     SpilledEnergyExtractor,
     SpilledEnergyResult,
@@ -173,6 +180,8 @@ __all__ = [
     "ModelLoadError",
     "NLExtractor",
     "PATTERN_THRESHOLD",
+    "PrefillUncertaintyProbe",
+    "PrefillUncertaintyResult",
     "PBTCodeVerificationResult",
     "PBTCodeVerifier",
     "PBTDerivedProperty",
@@ -230,7 +239,10 @@ __all__ = [
     "SpilledEnergyExtractor",
     "SpilledEnergyResult",
     "Z3ArithmeticExtractor",
+    "compute_conjugate_bound",
+    "compute_input_uncertainty",
     "compute_lookahead_energy",
+    "compute_prompt_uncertainty",
     "compute_semantic_energy",
     "compute_spilled_energy",
     "extract_typed_reasoning",
