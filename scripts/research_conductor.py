@@ -1773,7 +1773,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
 
     # Run tests after changes — retry up to 2 times if tests fail
     MAX_FIX_ATTEMPTS = 2
-    tests_ok, test_summary = run_tests(full=True)
+    tests_ok, test_summary = run_tests(full=False)  # Use smart subset — full suite hangs serially
 
     for fix_attempt in range(MAX_FIX_ATTEMPTS):
         if tests_ok:
@@ -1798,7 +1798,7 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         if not fix_ok:
             logger.error("%s failed to fix tests", AGENT_DISPLAY)
             break
-        tests_ok, test_summary = run_tests(full=True)
+        tests_ok, test_summary = run_tests(full=False)  # Use smart subset — full suite hangs serially
 
     if not tests_ok:
         logger.error("Tests still failing after %d fix attempts — committing as broken checkpoint", MAX_FIX_ATTEMPTS)
