@@ -194,3 +194,7 @@
 | SCENARIO-SAMPLE-018 | Not Started | Implemented | Blocked artifact emitted immediately when CARNOT_KV260_BITFILE unset; FpgaBackend backend_name/dispatch/protocol tests |
 | SCENARIO-SAMPLE-019 | Not Started | Implemented | Spin ±1 validity check (Exp 288) + Q8.8 round-trip, sparsification, LagONN penalty, serialize_to_axi tests (Exp 289) |
 | SCENARIO-VERIFY-083 | Not Started | Implemented | Variant type breakdown and accuracy drop detection across standard/number_swap/irrelevant_sentence |
+| REQ-SAMPLE-010 | Not Started | Implemented | FpgaBackend vs CPU performance benchmark on n=100/500/1000 spin problems (Exp 290) |
+| SCENARIO-SAMPLE-020 | Not Started | Implemented | Benchmark geometric vs linear β-schedule (arXiv 2604.04606 6× SA speedup claim): samples/second, energy convergence, honest labeling (hardware/software_model/timeout) |
+| SCENARIO-SAMPLE-021 | Not Started | Implemented | LagONN penalty effectiveness on 3-SAT frustrated instance (n=100): energy/convergence with/without penalty |
+| SCENARIO-SAMPLE-022 | Not Started | Implemented | Hard 60 s timeout per config with partial artifact emission; no fabricated hardware labels in software simulation |
