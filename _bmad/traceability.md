@@ -253,3 +253,7 @@
 | SCENARIO-LEARN-002 | Not Started | Implemented | Reward hacking metrics: gini coefficient edge cases, constraint ranking stability, signal-integrity drift detection |
 | SCENARIO-LEARN-021 | Not Started | Implemented | RelayBatchResult tiers_active list: ["tier1"] / ["tier1","tier2"] / ["tier1","tier2","tier3","z3"] |
 | SCENARIO-LEARN-022 | Not Started | Implemented | improvement_1to3 is honest signed delta (can be negative); never clamped |
+| REQ-AUDIT-006 | Not Started | Implemented | Conductor dispatch authority rules — explicit approval gates for agent spawn, experiment scheduling, resource allocation |
+| REQ-AUDIT-007 | Not Started | Implemented | Commit and rollback policies — autonomous commit gating with constitutional constraints, rollback authority model (Exp 324) |
+| SCENARIO-AUDIT-005 | Not Started | Implemented | Conductor constitution enforcement via integration with Exp 323 behavioral audit log |
+| SCENARIO-AUDIT-006 | Not Started | Implemented | Constitutional rule violations logged and surfaced in milestone audit summaries |
