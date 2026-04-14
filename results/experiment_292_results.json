@@ -1,0 +1,35 @@
+{
+  "experiment": 292,
+  "description": "AMD XDNA NPU VitisAI EP \u2014 blocked: source build prerequisites missing",
+  "run_date": "20260414",
+  "execution_path": "blocked",
+  "cpu_ort_baseline_us": 5.847,
+  "onnx_model_used": "jepa_predictor_291.onnx",
+  "npu_hardware_info": {
+    "amdxdna_driver_loaded": true,
+    "xrt_version": "2.20.0",
+    "ryzen_ai_sw_present": true,
+    "vitisai_so_dir": "/home/ianblenke/github.com/amd/RyzenAI-SW/Ryzen-AI-CVML-Library/linux/onnx/ryzen14",
+    "vitisai_so_present": true,
+    "vaip_config_present": true,
+    "venv_npu_present": true
+  },
+  "result": {
+    "missing_prereqs": [
+      "ninja: not found (install via: sudo pacman -S ninja OR sudo apt install ninja-build)",
+      "openblas: not found (install via: sudo pacman -S openblas OR sudo apt install libopenblas-dev)"
+    ],
+    "next_action": "Install ninja first: sudo pacman -S ninja  (Arch) or  sudo apt install ninja-build  (Debian/Ubuntu), then re-run this script.",
+    "path_a_error": "VitisAIExecutionProvider not in available providers even with LD_LIBRARY_PATH set. ort version: 1.20.1. Available: ['AzureExecutionProvider', 'CPUExecutionProvider']",
+    "npu_latency_us": null,
+    "speedup_vs_cpu_ort": null
+  },
+  "honest_verdict": {
+    "npu_ep_loaded": false,
+    "explanation": "Pre-built .so path failed (VitisAIExecutionProvider not in available providers even with LD_LIBRARY_PATH set. ort version: 1.20.1. Available: ['AzureExecutionProvider', 'CPUExecutionProvider']). Source build path blocked by missing prerequisites: ninja: not found (install via: sudo pacman -S ninja OR sudo apt install ninja-build); openblas: not found (install via: sudo pacman -S openblas OR sudo apt install libopenblas-dev)",
+    "recommended_next_steps": [
+      "Install ninja first: sudo pacman -S ninja  (Arch) or  sudo apt install ninja-build  (Debian/Ubuntu), then re-run this script.",
+      "Alternatively: download AMD custom onnxruntime wheel from ryzenai.docs.amd.com/en/latest/inst.html (requires AMD account + EULA; Python 3.9-3.12 only)"
+    ]
+  }
+}

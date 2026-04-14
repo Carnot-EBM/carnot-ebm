@@ -81,20 +81,28 @@ production goals. Updated as new needs emerge from experiments.
   - **Current workaround:** `.venv-npu/` (Python 3.12) created with
     onnxruntime 1.20.1, but pip's build lacks VitisAI EP. Need AMD's
     custom onnxruntime wheel from their Ryzen AI Software installer.
+  - **Exp 292 findings (20260414):**
+    - LD_LIBRARY_PATH approach does NOT work — VitisAI EP must be compiled
+      INTO onnxruntime (not loadable at runtime via LD_LIBRARY_PATH).
+    - Pre-built AMD .so files are ABI-incompatible with ORT 1.24.x (segfault).
+    - ORT 1.20.1 + LD_LIBRARY_PATH: VitisAI EP still not in available_providers.
+    - Source build blocked by: `ninja` not installed, `openblas` not found.
   - **What we have:**
     - `/opt/xilinx/xrt/` — XRT 2.20.0 driver stack ✅
     - `~/github.com/amd/RyzenAI-SW/` — includes `libonnxruntime_providers_vitisai.so`
       and `libonnxruntime_vitisai_ep.so` (built for onnxruntime 1.20.1) ✅
-    - `.venv-npu/` — Python 3.12 venv with onnxruntime 1.20.1 (CPU only) ✅
+    - `.venv-npu/` — Python 3.12 venv with onnxruntime **1.20.1** (CPU only) ✅
     - `amdxdna` kernel module loaded ✅
-    - ONNX model exported by Exp 146 (`results/jepa_predictor_146.onnx`) ✅
-  - **What's missing:**
-    - AMD's custom `onnxruntime` Python wheel with VitisAI EP compiled in
-    - Download from: ryzenai.docs.amd.com/en/latest/inst.html (requires
-      AMD account + EULA agreement)
-    - Or build onnxruntime 1.20.1 from source with `-Donnxruntime_USE_VITISAI=ON`
+    - ONNX models: `results/jepa_predictor_291.onnx` and `146.onnx` ✅
+    - `vaip_config_npu_2_3.json` in RyzenAI-SW dir ✅
+  - **What's missing (to unblock Exp 293):**
+    - `ninja` — install: `sudo pacman -S ninja` (Arch) or `sudo apt install ninja-build`
+    - `openblas` — install: `sudo pacman -S openblas` or `sudo apt install libopenblas-dev`
+    - Then: `scripts/experiment_292_amd_xdna_npu.py` will auto-run source build
+    - Or: download AMD custom onnxruntime wheel from ryzenai.docs.amd.com/en/latest/inst.html
+      (requires AMD account + EULA; Python 3.9-3.12 only)
   - **Status:** ONNX model ready, driver ready, Python 3.12 venv ready.
-    Just need the VitisAI-enabled onnxruntime wheel to unlock NPU inference.
+    Two missing packages (ninja + openblas) block the source build path.
 - **Intel Core Ultra (Lunar Lake/Arrow Lake)**
   - Integrated NPU, well-documented SDK
   - Could be a comparison platform for edge constraint verification
