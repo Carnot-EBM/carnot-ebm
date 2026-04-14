@@ -1522,3 +1522,5 @@ python/ |
 | 2026-04-14 10:08 UTC | Exp 297: SemanticEnergyExtractor + VarEntropyProbe | OK | Deliverable already exists in repo |
 | 2026-04-14 10:30 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | 3649 passed, 39 skipped, 13 warnings in 212.11s (0:03:32) |
 | 2026-04-14 10:31 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
+| 2026-04-14 10:42 UTC | Exp 299: JEPA retrain on real Apple adversarial lo | OK | 3700 passed, 39 skipped, 13 warnings in 210.20s (0:03:30) |
+| 2026-04-14 10:43 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
