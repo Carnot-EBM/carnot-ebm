@@ -213,7 +213,10 @@ def run_agent(
         # This prevents infinite hangs when Codex stalls mid-stream.
         # Claude legitimately thinks for longer periods, so use a higher threshold.
         import select
-        STALL_TIMEOUT = 600 if AGENT_TYPE == "claude" else 180  # 10 min Claude, 3 min Codex
+        # Stall detection: only for Codex (which has a known infinite-hang bug).
+        # Claude doesn't stall — it either completes or hits the turn limit.
+        # Setting to 0 disables the stall detector.
+        STALL_TIMEOUT = 0 if AGENT_TYPE == "claude" else 180  # disabled for Claude, 3 min Codex
 
         output_lines = []
         last_output_time = time.time()
@@ -238,7 +241,7 @@ def run_agent(
                 if proc.poll() is not None:
                     break  # Process exited
                 elapsed_silence = time.time() - last_output_time
-                if elapsed_silence > STALL_TIMEOUT:
+                if STALL_TIMEOUT > 0 and elapsed_silence > STALL_TIMEOUT:
                     logger.warning(
                         "%s stalled — no output for %ds, killing process",
                         AGENT_DISPLAY, int(elapsed_silence),
