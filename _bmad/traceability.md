@@ -201,3 +201,7 @@
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291: Apple adversarial retrain — spilled/semantic energy features, isotonic calibration (arXiv 2511.07124), conformal intervals (arXiv 2603.22966, α=0.1), 50-case A/B, ONNX export, targets fast-path≥30%/TP≥60%/FP≤20% |
 | SCENARIO-JEPA-006 | Not Started | Implemented | Feature extraction from adversarial logits — 8 features per prefix-fraction, variant_type_encoded, synthetic fallback with synthetic_training=true |
 | SCENARIO-JEPA-007 | Not Started | Implemented | Calibrated gate on held-out set — targets_verdict explicitly TARGETS_MET/TARGETS_NOT_MET, conformal CI reported, ONNX exported |
+| SCENARIO-EXP292-A | Not Started | Implemented | Path A (pre-built RyzenAI-SW .so + LD_LIBRARY_PATH) with onnxruntime 1.20.1 baseline latency measurement |
+| SCENARIO-EXP292-B | Not Started | Implemented | Path B (onnxruntime 1.20.1 source build with -DONNXRUNTIME_USE_VITISAI=ON) compilation and NPU EP registration |
+| SCENARIO-EXP292-C | Not Started | Implemented | VitisAI EP must be compiled into ORT — LD_LIBRARY_PATH alone does not register the execution provider |
+| SCENARIO-EXP292-D | Not Started | Implemented | Blocked artifact with missing_prereqs list (ninja, openblas) and next_action for source build completion |
