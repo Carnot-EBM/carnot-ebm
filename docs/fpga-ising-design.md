@@ -228,6 +228,18 @@ Primary prediction from arXiv 2604.04606: geometric β-schedule ≥ 6× faster S
 convergence.  Operationalized as: geometric schedule achieves lower energy for
 ≥ 2 of 3 problem sizes at equal step count.
 
+**Software-model run results (2026-04-14, JAX_PLATFORMS=cpu):**
+
+| n_spins | FPGA backend (sps) | CPU baseline (sps) | geo_wins | LagONN |
+|---------|-------------------|-------------------|----------|--------|
+| 100     | 18.1              | 57.0              | True     | penalty_improves=False (frustrated attractor) |
+| 500     | 34.2              | 61.0              | True     | skipped |
+| 1000    | 27.9              | 60.2              | True     | skipped |
+
+Primary prediction: **CONFIRMED** — geometric β-schedule wins 3/3 problem sizes.
+Note: CPU is faster in software-model (no FPGA hardware); these numbers validate
+the annealing schedule quality claim, not raw throughput.
+
 Result artifact: `results/experiment_290_results.json`
 
 ## Next Hardware Step

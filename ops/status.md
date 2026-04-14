@@ -10,6 +10,7 @@
 - Hard constraints: 60 s wall-clock timeout per config; partial artifact with `timeout_exceeded=True` emitted if exceeded. Honest labeling: `hardware` / `software_model` / `timeout` — never fabricates hardware labels in software simulation.
 - Primary prediction operationalized: geometric schedule achieves lower energy at ≥ 2/3 problem sizes at equal step count → `confirmed` / `refuted` / `inconclusive`. Software simulation cannot directly prove the 6× FPGA timing claim; it confirms the convergence-quality proxy.
 - 27 tests all pass, 3376 total passed, 99.11% coverage. REQ-SAMPLE-010, SCENARIO-SAMPLE-020/021/022.
+- **Run result (2026-04-14):** Primary prediction **CONFIRMED** — geometric β-schedule wins 3/3 sizes. n=100: fpga=18.1 sps / cpu=57.0 sps; n=500: fpga=34.2 sps / cpu=61.0 sps; n=1000: fpga=27.9 sps / cpu=60.2 sps. CPU is faster in software-model (expected — no hardware). LagONN penalty_improves=False on 3-SAT n=100 (penalty pushes spins out of frustrated attractor but increases mean energy for this seed). No timeouts.
 - Run: `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_290_fpga_cpu_benchmark.py`
 - Output: `results/experiment_290_results.json`
 

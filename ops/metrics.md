@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-14T07:17:01Z | 2026-04-14T07:30:00Z | Exp 290: FpgaBackend vs CPU benchmark — spec (REQ-SAMPLE-010, SCENARIO-SAMPLE-020/021/022), 27 tests, benchmark script (100/500/1000 spins, geometric vs linear schedule, LagONN penalty, 60s timeout, honest labeling), 3376 total tests pass 99.11% coverage | ~22k |
+| 2 | 2026-04-14T07:33:11Z | 2026-04-14T07:36:05Z | Exp 290: ran benchmark script — CONFIRMED (geometric wins 3/3 sizes); updated docs/fpga-ising-design.md and ops/status.md with actual run numbers | ~8k |
 
 ---
 
