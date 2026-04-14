@@ -230,3 +230,9 @@
 | REQ-VERIFY-080 | Not Started | Implemented | PrefillUncertaintyProbe + pipeline integration (Exp 298) |
 | SCENARIO-VERIFY-103 | Not Started | Implemented | PrefillUncertaintyProbe flags high-entropy logits as high risk |
 | SCENARIO-VERIFY-104 | Not Started | Implemented | PrefillUncertaintyProbe fast-path skip for low-entropy logits |
+| REQ-LEARN-010 | Not Started | Implemented | Constraint Addition from CaseMemory Patterns (Exp 300) |
+| REQ-LEARN-011 | Not Started | Implemented | Soundness Bound for Constraint Addition (Exp 300) |
+| SCENARIO-LEARN-015 | Not Started | Implemented | extract_patterns Groups CaseMemory by Violation Family |
+| SCENARIO-LEARN-016 | Not Started | Implemented | soundness_filter Rejects Low-Precision Patterns |
+| SCENARIO-LEARN-017 | Not Started | Implemented | generate_arithmetic_constraint Maps Families to Constraint Types |
+| SCENARIO-LEARN-018 | Not Started | Implemented | ConstraintGenerator orchestrates pattern extraction through soundness filtering to constraint generation |
