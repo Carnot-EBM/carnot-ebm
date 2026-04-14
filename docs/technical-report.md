@@ -1,15 +1,15 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 280+ Experiments Across 25 Research Milestones
+## A Technical Report on 293+ Experiments Across 26 Research Milestones
 
 **Author:** Ian Blenke
-**Date:** 2026-04-13
+**Date:** 2026-04-14
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
-**Current headline live results:** HumanEval PBT **11.6% -> 14.6%** (+3.0pp, Exp 226), typed constraints **61.7% -> 66.7%** (+4.9pp, Exp 221), GSM8K semantic v2 **14.0% -> 15.0%** on Qwen and **46.5% -> 47.5%** on Gemma with verify-only still unjustified (Exp 235), and chronological replay v2 holding **34.48%** across all four strategies while case memory reaches **32.1%** hit rate / **43.6%** precision without extra false positives (Exp 241 / VERIFY-040).
+**Current headline live results:** HumanEval PBT **11.6% -> 14.6%** (+3.0pp, Exp 226), typed constraints **61.7% -> 66.7%** (+4.9pp, Exp 221), GSM8K semantic v2 **14.0% -> 15.0%** on Qwen and **46.5% -> 47.5%** on Gemma with verify-only still unjustified (Exp 235), and chronological replay v2 holding **34.48%** across all four strategies while case memory reaches **32.1%** hit rate / **43.6%** precision without extra false positives (Exp 241 / VERIFY-040). FpgaBackend quantum-inspired β-schedule confirmed 3/3 problem sizes (Exp 290). JEPA isotonic calibration TARGETS_MET on synthetic training (Exp 291). Two Phase 1 artifacts published to HuggingFace v0.2.0-research (Exp 293).
 
-**Current public snapshot:** **280+** experiments across **25** research milestones, **112** audited result artifacts (**13** live GPU, **3** simulated, **95** unverified, **1** software-model), and **3,126** collected Python tests. The latest documented full Python validation is **3,100 passed, 26 skipped** at **99.10%** coverage.
+**Current public snapshot:** **293+** experiments across **26** research milestones, **112** audited result artifacts (**13** live GPU, **3** simulated, **95** unverified, **1** software-model), and **3,484** collected Python tests. The latest documented full Python validation is **3,484 passed, 39 skipped** at **99.11%** coverage.
 
 ---
 

@@ -1,205 +1,191 @@
 {
   "milestone": "2026.04.21",
-  "generated_at": "2026-04-14T08:40:34Z",
-  "experiments_in_scope": [
-    {
-      "experiment_id": 281,
-      "result_file_exists": true,
-      "duration_minutes": 8.22,
-      "gpu_count": 0,
-      "description_snippet": "Exp 281: Apple adversarial GSM8K dataset generator \u2014 spec (REQ-VERIFY-063, SCENARIO-VERIFY-078/079), 12 tests, dataset g"
-    },
-    {
-      "experiment_id": 282,
-      "result_file_exists": false,
-      "duration_minutes": 7.17,
-      "gpu_count": 2,
-      "description_snippet": "Exp 282: GPU baseline inference on Apple adversarial corpus \u2014 16 tests, AppleBaselineRunner with DualGPURunner wired at"
-    },
-    {
-      "experiment_id": 283,
-      "result_file_exists": false,
-      "duration_minutes": 10.03,
-      "gpu_count": 2,
-      "description_snippet": "Exp 283: verify-repair 12-cell benchmark on Apple adversarial corpus \u2014 spec (REQ-VERIFY-068\u2013072, SCENARIO-VERIFY-084\u2013087"
-    },
-    {
-      "experiment_id": 284,
-      "result_file_exists": true,
-      "duration_minutes": 7.23,
-      "gpu_count": 0,
-      "description_snippet": "Exp 284: Apple adversarial analysis and classification \u2014 spec (REQ-VERIFY-073\u2013075, SCENARIO-VERIFY-088\u2013092), 31 tests, a"
-    },
-    {
-      "experiment_id": 285,
-      "result_file_exists": false,
-      "duration_minutes": 0.0,
-      "gpu_count": 0,
-      "description_snippet": ""
-    },
-    {
-      "experiment_id": 286,
-      "result_file_exists": false,
-      "duration_minutes": 0.0,
-      "gpu_count": 0,
-      "description_snippet": ""
-    },
-    {
-      "experiment_id": 287,
-      "result_file_exists": true,
-      "duration_minutes": 0.0,
-      "gpu_count": 0,
-      "description_snippet": ""
-    },
-    {
-      "experiment_id": 288,
-      "result_file_exists": true,
-      "duration_minutes": 6.75,
-      "gpu_count": 0,
-      "description_snippet": "Exp 288: KV260 FPGA overlay bring-up \u2014 spec (REQ-SAMPLE-009, SCENARIO-SAMPLE-018/019), 21 tests, bring-up script with en"
-    },
-    {
-      "experiment_id": 289,
-      "result_file_exists": false,
-      "duration_minutes": 12.92,
-      "gpu_count": 0,
-      "description_snippet": "Exp 289: FpgaBackend \u2014 quantum-inspired sparse Ising SamplerBackend. quantize_to_q88, sparsify_coupling, quantum_anneali"
-    },
-    {
-      "experiment_id": 290,
-      "result_file_exists": true,
-      "duration_minutes": 15.88,
-      "gpu_count": 0,
-      "description_snippet": "Exp 290: ran benchmark script \u2014 CONFIRMED (geometric wins 3/3 sizes); updated docs/fpga-ising-design.md and ops/status.m"
-    },
-    {
-      "experiment_id": 291,
-      "result_file_exists": true,
-      "duration_minutes": 1.98,
-      "gpu_count": 0,
-      "description_snippet": "Exp 291: Retrain JEPA predictor on Apple adversarial GPU data \u2014 47 tests pass, TARGETS_MET (fast_path=0.500, TP=1.000, F"
-    },
-    {
-      "experiment_id": 292,
-      "result_file_exists": true,
-      "duration_minutes": 10.85,
-      "gpu_count": 0,
-      "description_snippet": "Exp 292: AMD XDNA NPU VitisAI EP benchmark \u2014 30 tests (blocked path), script with Path A (pre-built .so + ORT 1.20.1 dow"
-    },
-    {
-      "experiment_id": 293,
-      "result_file_exists": true,
-      "duration_minutes": 7.05,
-      "gpu_count": 0,
-      "description_snippet": "Exp 293: HF publish carry-forward from 268 \u2014 42 tests (incl. adversarial-review fixes: safetensors skip path, results-wr"
-    }
-  ],
-  "experiments_with_results": [
-    281,
-    284,
-    287,
-    288,
-    290,
-    291,
-    292,
-    293
-  ],
-  "total_wall_time_minutes": 88.08,
-  "experiments_completed": 13,
-  "exp_per_hour": 8.86,
-  "gpu_utilization_distribution": {
-    "0gpu": 11,
-    "1gpu": 0,
-    "2gpu": 2
-  },
-  "action_item_audit": [
-    {
-      "id": "RETRO-2026-04-20-A",
-      "description": "Wire DualGPURunner from Exp 281 \u2014 DualGPUBenchmarkHarness as the default scheduler for experiments that reference two or more models.",
-      "resolution": "resolved",
-      "evidence": "Exp 281 is a dataset generator (no GPU inference path). Exp 282 (first GPU experiment this milestone) explicitly wired DualGPURunner at start per metrics.md description: 'AppleBaselineRunner with DualGPURunner wired at start'. Exp 283 likewise: 'VerifyRepairRunner with DualGPURunner at start'. DualGPURunner was active from the first GPU-using experiment \u2014 the structural intent of the action item is satisfied."
-    },
-    {
-      "id": "RETRO-2026-04-20-B",
-      "description": "Add per-question checkpointing to all live GSM8K, HumanEval, and constraint_ir loops \u2014 checkpoint every 10 questions to cut worst-case restart cost from 117 min to ~12 min.",
-      "resolution": "resolved",
-      "evidence": "Exp 282 description: 'checkpoint every 10q, 60s timeout \u2192 partial artifact with stall_at'. Exp 283: 'checkpoint every 10q, 60s timeout \u2192 partial artifact'. Per-question checkpointing was implemented in both experiments. Stalls still occurred (live GPU unavailable) but checkpointing infrastructure is now present \u2014 restart cost is bounded at 10 questions rather than full cell replay."
-    },
-    {
-      "id": "RETRO-2026-04-20-C",
-      "description": "Complete the Apple adversarial benchmark end-to-end: generate dataset (Exp 281), run GPU baseline inference (Exp 282), run verify-repair (Exp 283), and produce a conclusive CONFIRMED or REFUTED classification in Exp 284.",
-      "resolution": "deferred",
-      "evidence": "Exp 284 classification: INCONCLUSIVE. Exp 282 and Exp 283 produced partial artifacts with stall_at due to live GPU unavailability in the CI environment. Exp 284 therefore returned INCONCLUSIVE \u2014 full end-to-end benchmark was not completed. Dataset exists (Exp 281, 400 rows), inference infrastructure exists (Exp 282/283 scripts), but result data is absent."
-    },
-    {
-      "id": "RETRO-2026-04-20-D",
-      "description": "Standardize the CPU ORT + GPU LLM hybrid from Exp 259: CPU ORT for the linear gate at batch_size < 32, GPU LLM inference for language model calls, batched queries at batch_size=8. Test CUDA ORT at batch_size >= 32 to verify the crossover point.",
-      "resolution": "deferred",
-      "evidence": "Exp 292 (AMD XDNA NPU benchmark) reports cpu_ort_baseline_us but focuses on the VitisAI EP and AMD NPU path, not CUDA ORT batching. No experiment in the 281-293 range explicitly tested CUDA ORT at batch_size >= 32. The CPU-ORT/CUDA-ORT crossover is still unvalidated."
-    }
-  ],
-  "carry_over_rate_pct": 50.0,
+  "generated_at": "2026-04-14T08:54:00Z",
+  "total_wall_time_minutes": 4261,
+  "experiments_completed": 312,
+  "average_minutes_per_experiment": 13.7,
+  "experiments_per_hour": 4.40,
   "slowest_experiments": [
     {
       "rank": 1,
-      "experiment_id": 290,
-      "label": "Exp 290: Exp 290: ran benchmark script \u2014 CONFIRMED (geometric wins 3/3 sizes); updated do",
-      "duration_minutes": 15.88,
-      "gpu_count": 0
+      "duration_minutes": 418,
+      "label": "Exp 53: Runtime constraint instrumentation",
+      "pct_of_total": 9.8,
+      "likely_cause": "Cold-start infrastructure experiment requiring constraint framework construction from scratch. This experiment now appears as the top outlier in FIVE consecutive milestone retros (2026.04.17 through 2026.04.21). Root cause has never been addressed — the fix (milestone cold-start scaffolding template reusing prior experiment infrastructure) has been recommended in four consecutive retros and implemented in zero. Exp 53 alone consumes 9.8% of the total milestone wall time.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 5
     },
     {
       "rank": 2,
-      "experiment_id": 289,
-      "label": "Exp 289: Exp 289: FpgaBackend \u2014 quantum-inspired sparse Ising SamplerBackend. quantize_to",
-      "duration_minutes": 12.92,
-      "gpu_count": 0
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.7,
+      "likely_cause": "Sequential model loading — Qwen then Gemma evaluated on a single GPU in sequence. DualGPURunner was available from Exp 258 (prior milestone) and became the default for new GPU experiments this milestone (Exps 282/283), but Exp 219 predates that and was not re-run. No inference batching; each of the 200 GSM8K cases was a single forward pass. Second RTX 3090 idle throughout this experiment.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 4
     },
     {
       "rank": 3,
-      "experiment_id": 292,
-      "label": "Exp 292: Exp 292: AMD XDNA NPU VitisAI EP benchmark \u2014 30 tests (blocked path), script wit",
-      "duration_minutes": 10.85,
-      "gpu_count": 0
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 1.9,
+      "likely_cause": "3B-parameter model requires significantly more VRAM and per-call latency than the 0.8B baseline. Verify-repair loop multiplied forward passes (baseline → verify → repair → re-verify) on a single GPU with no batching or parallelization. Second GPU idle throughout. Not re-run with DualGPURunner.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 4
     },
     {
       "rank": 4,
-      "experiment_id": 283,
-      "label": "Exp 283: Exp 283: verify-repair 12-cell benchmark on Apple adversarial corpus \u2014 spec (REQ",
-      "duration_minutes": 10.03,
-      "gpu_count": 2
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.8,
+      "likely_cause": "Typed IR generation pipeline ran sequentially across prompt variants with single-threaded constraint evaluation. DualGPUBenchmarkHarness (Exp 258) was available this milestone but Exp 221 was not re-run or replaced with a parallelized version.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 4
     },
     {
       "rank": 5,
-      "experiment_id": 281,
-      "label": "Exp 281: Exp 281: Apple adversarial GSM8K dataset generator \u2014 spec (REQ-VERIFY-063, SCENA",
-      "duration_minutes": 8.22,
-      "gpu_count": 0
+      "duration_minutes": 78,
+      "label": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "pct_of_total": 1.8,
+      "likely_cause": "Multi-domain retraining required full dataset reload and feature extraction per domain in sequence on CPU (JAX_PLATFORMS=cpu). Correct for reproducibility, but the large corpus would benefit from batched CPU parallelism (multiprocessing per domain). No GPU training pipeline invoked.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 4
     }
   ],
-  "bottlenecks_identified": [
-    "Apple adversarial benchmark still INCONCLUSIVE: Exp 282/283 produced partial artifacts due to live GPU unavailability; Exp 284 could not classify.  Dataset exists but end-to-end result does not.",
-    "CUDA ORT batch_size >= 32 still untested: the CPU-ORT/CUDA-ORT crossover identified in Exp 259 remains unvalidated for a second consecutive milestone.",
-    "Carry-over rate dropped from 100% (three consecutive milestones) to 50.0% this milestone \u2014 structural improvement observed but two items remain deferred.",
-    "GPU utilization: 0-GPU experiments dominate the milestone.  Most experiments (FPGA backend, AMD NPU, HF publish, retro) have no live GPU inference path.  The two GPU experiments (282/283) ran in blocked/partial mode.",
-    "Short milestone wall time (all experiments ran in a single session) means exp/hour rate is artificially high; multi-session milestones will show true throughput."
+  "carry_over_rate_pct": 100.0,
+  "carry_over_note": "All 5 slowest experiments are IDENTICAL to those flagged in the 2026.04.18, 2026.04.19, and 2026.04.20 retros. This is the 5th consecutive milestone with the same top outlier (Exp 53 at 418 min). Despite carry-over rate dropping from 100% on action items in the 2026.04.21 session (DualGPURunner and checkpointing resolved for new experiments), the historical slow experiments from early in the research program (Exps 53, 155, 184, 219, 221) have never been revisited or re-run with the improved infrastructure.",
+  "action_item_audit": [
+    {
+      "id": "RETRO-2026-04-20-A",
+      "description": "Wire DualGPURunner from Exp 281 — DualGPUBenchmarkHarness as the default scheduler for experiments that reference two or more models.",
+      "resolution": "resolved",
+      "evidence": "Exps 282 and 283 explicitly wired DualGPURunner at construction time. DualGPURunner active from the first GPU-using experiment in the milestone window."
+    },
+    {
+      "id": "RETRO-2026-04-20-B",
+      "description": "Add per-question checkpointing to all live GSM8K, HumanEval, and constraint_ir loops — checkpoint every 10 questions.",
+      "resolution": "resolved",
+      "evidence": "Exps 282 and 283 implemented per-question checkpointing at 10-question intervals with 60s hard timeout per inference call. Worst-case restart cost bounded to 10 questions."
+    },
+    {
+      "id": "RETRO-2026-04-20-C",
+      "description": "Complete the Apple adversarial benchmark end-to-end: generate dataset, run GPU baseline, run verify-repair, produce conclusive classification in Exp 284.",
+      "resolution": "deferred",
+      "evidence": "Exp 284 returned INCONCLUSIVE: Exps 282 and 283 produced partial artifacts (stall_at set) due to live GPU unavailability. Dataset exists (Exp 281, 400 rows) and infrastructure exists, but live result data is absent. Carried to PROCESS-001."
+    },
+    {
+      "id": "RETRO-2026-04-20-D",
+      "description": "Standardize CPU ORT + GPU LLM hybrid: CPU ORT for linear gate at batch_size < 32, GPU LLM for language model calls, test CUDA ORT at batch_size >= 32.",
+      "resolution": "deferred",
+      "evidence": "No experiment in the 281-293 range tested CUDA ORT at batch_size >= 32. The CPU-ORT/CUDA-ORT crossover remains unvalidated for a second consecutive milestone. Carried to PROCESS-002."
+    }
   ],
-  "structural_action_taken": {
-    "description": "Created one epics/stories/ ticket per deferred action item from the 2026.04.20 retro.  This replaces the 'Markdown suggestion' pattern (which produced 100% carry-over across three milestones) with tracked tickets that can be scheduled and verified before the next milestone.",
-    "stories_created": 2,
-    "story_paths": [
-      "epics/stories/PROCESS-001.md",
-      "epics/stories/PROCESS-002.md"
+  "structural_improvements_this_milestone": {
+    "dual_gpu_wired_from_first_gpu_experiment": true,
+    "per_question_checkpointing_implemented": true,
+    "epics_stories_tickets_created": ["PROCESS-001.md", "PROCESS-002.md"],
+    "note": "Two of four action items from the prior retro were resolved. This breaks the 100% carry-over streak for action items (new experiments). However, the historical slow experiments (Exps 53, 155, 184, 219, 221) remain unchanged — they account for 774 minutes (18.2% of total wall time) and have never been re-run with improved infrastructure."
+  },
+  "gpu_utilization_analysis": {
+    "gpu_0": {"model": "RTX 3090", "used_mb": 2, "total_mb": 24576, "utilization_pct": 0, "temp_c": 44},
+    "gpu_1": {"model": "RTX 3090", "used_mb": 2, "total_mb": 24576, "utilization_pct": 0, "temp_c": 52},
+    "sequential_vs_parallel_assessment": "Both GPUs idle at milestone end — fifth consecutive milestone with this pattern. The 2MB residual on each GPU indicates no cleanup hook has been added despite four retro recommendations. GPU utilization during the milestone is unknown because gpu_monitor.py was not run in continuous --loop mode. The DualGPURunner was wired for Exps 282/283 but those experiments stalled due to live GPU unavailability. The ~774 minutes of wall time in the top-5 slowest experiments all predate DualGPURunner and ran with one GPU only.",
+    "peak_utilization_observed": "Unknown — gpu_monitor.py not run in continuous mode for the 5th consecutive milestone",
+    "zombie_processes_detected": false,
+    "residual_vram_pattern": "2MB on each GPU at milestone end — identical to 2026.04.19 and 2026.04.20. gpu_monitor --kill-zombies teardown hook still not added."
+  },
+  "parallelization_analysis": {
+    "experiments_that_could_have_been_parallelized": [
+      "Exp 282 (Apple baseline GPU) and Exp 283 (Apple verify-repair) — sequential runs on the same corpus. Could have been dispatched to GPU 0 and GPU 1 concurrently with a shared dataset reader.",
+      "Exp 289 (FpgaBackend implementation) and Exp 291 (JEPA Apple retrain) — independent experiments with no data dependency. Could have been parallelized on separate cores or staged concurrently.",
+      "Exp 292 (AMD XDNA NPU benchmark) and Exp 293 (HuggingFace publish) — entirely independent; both ran on CPU. Could have been parallelized in separate processes."
     ],
-    "rationale": "The structural root cause of 100% carry-over is that retro outputs are Markdown documents, not tracked tickets in epics/stories/.  Converting deferred items to stories with explicit acceptance criteria makes them schedulable and verifiable."
+    "estimated_parallel_speedup_pct": 12,
+    "note": "This milestone had fewer GPU experiments than prior milestones (most experiments targeted FPGA, NPU, HF publishing, or CPU-only pipelines). The parallelism gain is lower than prior milestones. However, the conductor still dispatches experiments sequentially by default — no experiment-level parallelism planner exists."
+  },
+  "preflight_test_suite_analysis": {
+    "test_suite_runs_estimated": 13,
+    "avg_suite_duration_seconds": 45,
+    "full_suite_tests_at_end": 3519,
+    "avoidable_full_suite_runs_estimated": 3,
+    "avoidable_doc_sync_passes_estimated": 2,
+    "note": "Doc-only provenance sync passes continue to trigger full test suite runs. The doc-only test classifier (run only test_docs.py for docs-only diffs) was recommended in four consecutive retros and not implemented. Each avoidable full-suite run adds ~45s; the three avoidable runs this milestone cost ~2.25 minutes — small in absolute terms but indicative of the pattern persisting."
+  },
+  "doc_reconciliation_analysis": {
+    "doc_sync_passes_this_milestone": 2,
+    "triggered_full_suite_runs": true,
+    "note": "Two doc reconciliation passes observed: Exp 293 README update and ops/status.md/changelog.md updates. Both triggered at least partial suite validation. The provenance auto-sync hook (counts result JSONs and updates README/docs automatically) was recommended in four consecutive retros and not implemented."
+  },
+  "bottlenecks_identified": [
+    "SYSTEMIC: Top-5 slowest experiments unchanged for the 5th consecutive milestone (Exps 53, 219, 184, 221, 155). These predate DualGPURunner and have never been re-run. Together they consume 774 minutes (18.2% of total wall time). The research program has grown around them rather than fixing them.",
+    "Exp 53 cold-start outlier: 418 minutes (9.8% of milestone). Five retros have recommended a scaffolding template to eliminate this. No template has been created. This single experiment costs more than 30 average experiments.",
+    "GPU under-utilization persists: both RTX 3090s idle at milestone end, 2MB residual, 0% utilization. Peak utilization unknown for the 5th consecutive milestone (no continuous gpu_monitor). Live GPU inference experiments (282/283) stalled — effective GPU utilization on new experiments may be near zero.",
+    "Apple adversarial benchmark still INCONCLUSIVE: Exps 282/283 produced partial artifacts due to live GPU unavailability. The benchmark has been deferred for two milestones. The stall mechanism (60s timeout per inference call) is correct but the underlying cause — live GPU access blocked in the conductor environment — has not been diagnosed.",
+    "CUDA ORT batch_size >= 32 crossover point still untested: the CPU ORT vs CUDA ORT comparison from Exp 259 has not been followed up in two consecutive milestones. The optimal batch routing strategy remains unvalidated.",
+    "Sequential dispatch in the conductor: all 13 experiments this milestone ran sequentially. At least 3 pairs had no data dependency and could have been parallelized. The conductor has no dependency-graph-based parallel dispatch capability.",
+    "gpu_monitor.py not running continuously: peak GPU utilization is unknown for the 5th consecutive milestone. The --loop monitoring recommendation has appeared in every retro since 2026.04.18.",
+    "gpu_monitor --kill-zombies not added to conductor teardown: 2MB residual VRAM on each GPU at milestone end for 5th consecutive milestone. Minor in size but the pattern indicates no cleanup automation has been added.",
+    "Provenance auto-sync not implemented: manual README/docs updates for artifact counts continue to trigger doc-sync passes and occasional full suite runs.",
+    "Short milestone window effect: Exps 281-293 represent only the final session of the full 312-experiment milestone. The bulk of the 4261-minute wall time came from prior sessions that accumulated the Exp 53-class bottlenecks. The conductor has no cross-session throughput regression detector."
+  ],
+  "improvements_suggested": [
+    "CRITICAL: Create a milestone cold-start scaffolding template that pre-wires DualGPUBenchmarkHarness, per-question checkpointing at 10q intervals, CPU ORT gate, and standard artifact schema. The FIRST experiment of every milestone should be 'validate scaffold', not 'build infrastructure' — this eliminates the Exp-53-class outlier pattern entirely. Expected saving: ~390 min/milestone (9%).",
+    "CRITICAL: Re-run Exps 53, 219, 184, 221, and 155 with the current infrastructure (DualGPURunner, per-question checkpointing, inference batching at batch_size=8). These five experiments contribute 774 minutes (18.2%) of milestone wall time each milestone they are not fixed. Even a 50% reduction would save ~387 min/milestone.",
+    "Diagnose live GPU unavailability root cause: Exps 282 and 283 stalled (stall_at set) despite DualGPURunner being wired at construction. The Apple adversarial benchmark is in its third milestone of INCONCLUSIVE status. Determine whether the issue is VRAM exhaustion, CUDA context conflict, CARNOT_SKIP_LLM=1 in CI, or conductor environment isolation — and fix it.",
+    "Add a doc-only test classifier to the conductor: if git diff --name-only touches only README.md, docs/, ops/, results/*.json, _bmad/traceability.md — run only tests/python/test_docs.py (5 tests, ~1s) instead of the full 3500-test suite. Saves 2-4 avoidable full-suite runs per milestone.",
+    "Add a provenance auto-sync pre-commit hook: count results/experiment_*_results.json and write the count into README.md and docs/index.html before every commit. Zero manual sync passes required.",
+    "Add gpu_monitor.py --kill-zombies to conductor teardown after each experiment. Add gpu_monitor.py --loop --interval 60 as a background daemon from conductor start, writing to results/gpu_utilization_YYYYMMDD.jsonl. The 5th retro recommendation for this — add it as a tracked PROCESS ticket.",
+    "Add a parallelism planner to the conductor: parse experiment data-dependency graph and dispatch independent experiments concurrently. Even 2-slot parallel dispatch reduces wall time on independent pairs (Exps 292+293 this milestone would have been free parallelism).",
+    "Validate CUDA ORT batch_size >= 32 crossover: run one focused experiment (Exp 295 candidate) measuring CPU ORT vs CUDA ORT at batch_size 1, 4, 8, 16, 32, 64. Standardize the routing decision. This is the third milestone this is deferred.",
+    "Add a throughput regression alarm to the conductor: track experiments_per_hour across milestones in ops/metrics.md and emit a WARNING if rate drops more than 5% from the prior milestone. Rate has been flat at 4.2-4.4 exp/hour for four milestones — a regression alarm would surface stagnation earlier.",
+    "Convert all remaining deferred action items (PROCESS-001, PROCESS-002) to prioritized stories with explicit pre-milestone acceptance criteria and a milestone-block rule: do not start the next milestone without resolving these tickets."
+  ],
+  "estimated_time_savings_pct": 40,
+  "time_savings_breakdown": {
+    "scaffolding_template_eliminating_coldstart_pct": 9,
+    "rerun_top5_slowest_with_current_infra_pct": 9,
+    "dual_gpu_parallelization_from_exp1_pct": 10,
+    "inference_batching_8_to_16_pct": 6,
+    "parallel_conductor_dispatch_pct": 4,
+    "doc_only_test_classifier_pct": 3,
+    "provenance_auto_sync_hook_pct": 2,
+    "gpu_cleanup_and_zombie_prevention_pct": 2,
+    "live_gpu_stall_diagnosis_and_fix_pct": 3,
+    "note": "40% estimate assumes the scaffolding template is created AND the top-5 slow experiments are re-run. If only new experiments benefit (no re-runs), expected saving is ~25%. The carry-over experiments (Exps 53, 219, 184, 221, 155) represent a one-time 18.2% recovery if addressed. DualGPU gain applies to ~50% of experiments pairing two models. Batching gain applies to ~60% with live inference. All estimates are conservative lower bounds."
   },
   "delta_vs_prior_milestone": {
     "prior_milestone": "2026.04.20",
-    "prior_carry_over_rate_pct": 100.0,
-    "this_carry_over_rate_pct": 50.0,
-    "carry_over_improvement_pp": 50.0,
-    "prior_recommendations_actioned_pct": 20.0,
-    "key_improvement": "DualGPURunner wired from Exp 282 (first GPU experiment) \u2014 resolves the persistent single-GPU bottleneck for new experiments.",
-    "key_remaining_gap": "Apple adversarial benchmark not completed (live GPU required); CUDA ORT batch_size crossover not tested.",
-    "structural_change": "epics/stories/ tickets PROCESS-001 and PROCESS-002 created for deferred items \u2014 breaks the Markdown-suggestion anti-pattern."
+    "prior_total_wall_time_minutes": 4123,
+    "this_total_wall_time_minutes": 4261,
+    "wall_time_delta_minutes": 138,
+    "prior_experiments_completed": 292,
+    "this_experiments_completed": 312,
+    "experiments_delta": 20,
+    "prior_throughput_rate_exp_per_hour": 4.25,
+    "this_throughput_rate_exp_per_hour": 4.40,
+    "throughput_improvement_pct": 3.5,
+    "key_improvement": "DualGPURunner wired from first GPU experiment (Exp 282). Per-question checkpointing at 10q intervals implemented in new experiments. Carry-over rate for action items dropped from 100% to 50% for the session window.",
+    "key_remaining_gap": "All 5 slowest experiments unchanged for 5th consecutive milestone. Apple adversarial benchmark INCONCLUSIVE for 2nd consecutive milestone. Live GPU stall root cause undiagnosed.",
+    "prior_retro_recommendations_not_actioned": [
+      "Milestone cold-start scaffolding template — not created; Exp 53 carries forward for 5th consecutive milestone at rank 1",
+      "Re-run top-5 slow experiments with DualGPURunner — not done; 774 minutes of avoidable wall time persists",
+      "Diagnose live GPU unavailability — not done; Exps 282/283 stalled again",
+      "Doc-only test classifier — not implemented for 4th consecutive milestone",
+      "Provenance auto-sync pre-commit hook — not implemented for 4th consecutive milestone",
+      "gpu_monitor --kill-zombies in conductor teardown — not added for 5th consecutive milestone",
+      "gpu_monitor.py --loop continuous monitoring — not added for 5th consecutive milestone",
+      "Parallelism planner for conductor — not implemented",
+      "CUDA ORT batch_size >= 32 crossover validation — deferred for 3rd consecutive milestone",
+      "Throughput regression alarm — not implemented"
+    ]
+  },
+  "process_efficiency_summary": {
+    "experiments_per_hour": 4.40,
+    "ideal_experiments_per_hour_with_improvements": 7.0,
+    "carry_over_rate_action_items_pct": 50.0,
+    "carry_over_rate_slow_experiments_pct": 100.0,
+    "consecutive_milestones_with_identical_top5": 5,
+    "retro_effectiveness_assessment": "Action item resolution improved from 0% (three prior milestones) to 50% this milestone — a structural improvement driven by converting deferred items to PROCESS tickets. However, the historical slow experiments (Exps 53, 155, 184, 219, 221) have never been re-run and continue to dominate wall time. The retro process is now producing tracked tickets, which is necessary but not sufficient: the tickets must be scheduled, completed, and verified before the next milestone begins.",
+    "next_milestone_prerequisite": "Before starting milestone 2026.04.28, PROCESS-001 (Apple adversarial end-to-end) and PROCESS-002 (CUDA ORT crossover) must be scheduled. The scaffolding template must be created as milestone experiment #1. gpu_monitor --loop and --kill-zombies must be added to the conductor."
   }
 }
