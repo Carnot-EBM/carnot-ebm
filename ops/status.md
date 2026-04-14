@@ -143,6 +143,28 @@
 - **Run result (2026-04-14):** Synthetic training (Exp 282/283 GPU logits not yet available). **TARGETS_MET**: fast_path_rate=0.500 (≥0.30), tp_rate=1.000 (≥0.60), fp_rate=0.000 (≤0.20). TP 90% CI [0.939, 1.000], FP 90% CI [0.000, 0.061].
 - Next: Re-run with real Exp 282/283 GPU logits when available.
 
+### 128-Spin Ising Sampler Verilog RTL (REQ-SAMPLE-011 / Exp 291 FPGA)
+
+- `hardware/kv260/ising_sampler_v1.v` — Synthesizable Verilog RTL for KV260 FPGA:
+  - Module: `ising_sampler_128` (N_SPINS=128, MAX_DEGREE=32, N_STEPS=1000)
+  - AXI-Lite slave (17-bit address): CONTROL/STATUS/SPIN_COUNT/BETA_FINAL registers;
+    bias_ram (0x1000+), adj_ram (0x2000–0x5FFC), coupl_ram (0x6000–0x9FFC), spin_out (0xA010+)
+  - Q8.8 fixed-point throughout (bias, coupling, β)
+  - 16-bit Fibonacci LFSR (x^16+x^14+x^13+x^11+1, seed 0xACE1, period 65535)
+  - 256-entry sigmoid LUT (covers ±8 in β·h_eff, steps of 1/16)
+  - Mpemba hot-start: first 10% of N_STEPS at β=0 (arXiv 2603.24183)
+  - Linear β ramp (log-linear planned for v2 with ROM-based geometric schedule)
+  - Checkerboard even/odd update; sequential pipeline in v1 (parallel planned for v2)
+- `scripts/simulate_ising_sampler.py` — Python behavioral simulation (IsingSimulator, LFSR16,
+  Q8.8 helpers, AXI register model); matches Verilog logic exactly for test validation
+- `hardware/kv260/README.md` — Port list, register map, Q8.8 encoding, synthesis steps (Vivado 2023.x)
+- `tests/python/test_ising_sampler_rtl.py` — **36 tests passing**: register map coverage,
+  local field computation, energy calculation, annealing schedule (Mpemba + log-linear ramp),
+  hot-start randomization, Mpemba convergence, halt condition, LFSR period/determinism, Q8.8 arithmetic
+- Status: **RTL COMPLETE — BITFILE NOT YET SYNTHESIZED**. Run Vivado to produce bitfile;
+  set `CARNOT_KV260_BITFILE` and rerun `scripts/experiment_288_kv260_bringup.py`.
+- Spec: REQ-SAMPLE-011, SCENARIO-SAMPLE-023, SCENARIO-SAMPLE-024
+
 ### FpgaBackend vs CPU Benchmark — Quantum-Inspired Speedup Validation (REQ-SAMPLE-010 / Exp 290)
 
 - `scripts/experiment_290_fpga_cpu_benchmark.py` — Full benchmark pipeline: n=100/500/1000 spins, measures samples/second (FpgaBackend and CPU), energy convergence vs 10-restart best energy, geometric vs linear β-schedule (arXiv 2604.04606 6× SA speedup claim), LagONN penalty with/without on 3-SAT frustrated instance (n=100 only).
