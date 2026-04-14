@@ -20,6 +20,26 @@ Written by conductor retrospective pass; no code changed.
 - `results/operational_retro_2026_04_22.json` (new): full retro artifact with slowest_experiments, bottlenecks_identified (8 items), improvements_suggested (9 items), action_items (5 items), estimated_time_savings_pct=28.
 - Triggered by: user instruction (milestone 2026.04.22 operational retrospective).
 
+## 2026-04-14 (Exp 307: JEPA MLP Retrain on Real Apple Adversarial Logits)
+
+Implements REQ-JEPA-004: trains a 3-layer MLP JEPA violation predictor directly on raw mean-logit
+vectors from Exp 294/295 logit files, replacing the hand-crafted 8-feature representation.
+
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added **REQ-JEPA-004**: JEPA MLP retrain on real Apple adversarial logits (Exp 307).
+  - Added **SCENARIO-JEPA-008**: pair extraction from real Apple adversarial files.
+  - Added **SCENARIO-JEPA-009**: MLP convergence and ONNX export.
+  - Updated Implementation Status table.
+- `scripts/experiment_307_jepa_real_training.py` (new):
+  - `extract_training_pairs(logit_dir, results_json)` — scans logits_294/295_*.npy, builds (mean_logit_vec, violation_label) pairs; labels from Exp 295 violation_detected; raises ValueError if < 50 pairs.
+  - `train_jepa_on_pairs(pairs, epochs, lr, onnx_path)` — 80/20 split, 3-layer MLP (V→128 ReLU→1), Adam, per-epoch train/val BCE + TP/FP metrics; checkpoints every 10 epochs.
+  - `_export_onnx(params, input_dim, onnx_path)` — builds ONNX graph via onnx.helper (Gemm→ReLU→Gemm→Sigmoid); avoids torch.onnx.export (onnxscript not installed).
+  - `run_experiment(output_dir, data_dir, results_json)` — full pipeline; emits blocked artifact with missing_paths when logit files absent.
+  - Artifact schema: experiment=307, training_source, n_pairs, split, val_tp, val_fp, skip_rate, onnx_path, convergence dict.
+- `tests/python/test_experiment_307_jepa_real_training.py` (new): 51 tests covering all branches.
+- Full suite: **4061 passed**, 54 skipped (expected); module coverage: **100%**.
+- Triggered by: user instruction (Exp 307 JEPA MLP real-logit retrain).
+
 ## 2026-04-14 (Exp 306: Experiment template + batching harness — process improvements from 2026.04.21 retro)
 
 Implements the top-3 wall-time reductions from the 2026.04.21 operational retrospective:
