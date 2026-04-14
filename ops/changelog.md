@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 315: Full-Scale Credible Benchmark — Script Authoring)
+
+Writes the full-scale benchmark script for Exp 316 execution (per lessons-learned rule
+"Break large benchmarks into phases"). Script is the deliverable; no execution or tests
+required at this stage.
+
+Benchmark design:
+- 400 GSM8K questions (Apple adversarial corpus + HuggingFace standard + synthetic fallback)
+- 50 HumanEval problems (execution-based pass@1)
+- Two models: Qwen3.5-0.8B (GPU 0), Gemma4-E4B-it (GPU 1)
+- Four modes: baseline, verify_only, verify_repair (ConfidenceVerifier threshold=0.8), z3_gated
+- 95% Wilson confidence intervals on all accuracy numbers
+- Published baselines embedded: Qwen3.5-0.8B ~25%, Gemma4-E4B-it ~80%
+- Artifact schema: carnot.fullscale_benchmark.v1
+
+- `scripts/experiment_315_fullscale_benchmark.py` (new):
+  - `wilson_interval(n_correct, n_total)` — 95% Wilson CI; SCENARIO-BENCH-001.
+  - `AccuracyRecord` — per (model, mode, variant) cell with accuracy + CI + counts.
+  - Corpus loaders: adversarial JSONL → HuggingFace GSM8K → synthetic fallback chain.
+  - `run_gsm8k_benchmark()` — all modes over full GSM8K corpus with checkpoint every 50.
+  - `run_humaneval_benchmark()` — execution-based pass@1 with checkpoint every 10.
+  - `build_artifact()` — carnot.fullscale_benchmark.v1 schema with per_model_results,
+    per_variant_results, summary_table, published_baselines.
+  - CLI: `--n_gsm8k`, `--n_humaneval`, `--modes`, `--batch_size`, `--seed`, `--output_path`, `--simulated`.
+  - Output target: `results/experiment_316_fullscale_results.json` (written by Exp 316).
+  - Import verified: `JAX_PLATFORMS=cpu python -c "import scripts.experiment_315_fullscale_benchmark"` OK.
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added REQ-BENCH-001 (full-scale benchmark with 95% CI).
+  - Added SCENARIO-BENCH-001 (Wilson CI bounds) and SCENARIO-BENCH-002 (simulated artifact).
+  - Added REQ-BENCH-001 to Implementation Status table.
+- User instruction: write full-scale benchmark script (no execution, no tests yet).
+
 ## 2026-04-14 (Exp 314: AMD XDNA NPU Prereq Retry)
 
 Re-runs the Exp 303 NPU unblock workflow to check whether ninja and openblas have
