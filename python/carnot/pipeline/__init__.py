@@ -125,6 +125,12 @@ from carnot.pipeline.verify_repair import (
     VerificationResult,
     VerifyRepairPipeline,
 )
+from carnot.pipeline.spilled_energy_extractor import (
+    SpilledEnergyExtractor,
+    SpilledEnergyResult,
+    compute_lookahead_energy,
+    compute_spilled_energy,
+)
 from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
 
 __all__ = [
@@ -210,7 +216,11 @@ __all__ = [
     "VerifyRepairPipeline",
     "SelfLearningPolicy",
     "SelfLearningPolicyCompiler",
+    "SpilledEnergyExtractor",
+    "SpilledEnergyResult",
     "Z3ArithmeticExtractor",
+    "compute_lookahead_energy",
+    "compute_spilled_energy",
     "extract_typed_reasoning",
     "propagate",
     "build_gemma_structured_reasoning_prompt",

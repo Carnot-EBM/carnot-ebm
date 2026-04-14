@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-04-14 (SpilledEnergy hallucination detector — REQ-VERIFY-076)
+
+- `python/carnot/pipeline/spilled_energy_extractor.py` — Implements `SpilledEnergyResult`, `compute_spilled_energy()`, `compute_lookahead_energy()`, and `SpilledEnergyExtractor` class. Spilled energy per token = entropy(softmax(logit)) + max(log_softmax(logit)); lookahead energy = −mean(max log-prob) (AR-EBM bijection arXiv 2512.15605). Detects hallucinations with no constraint extraction. (user instruction: SpilledEnergyExtractor)
+- `python/carnot/pipeline/verify_repair.py` — Added additive `verify_spilled_energy(logits_path, threshold)` method to `VerifyRepairPipeline`; accepts numpy array or .npy file path. (user instruction: SpilledEnergyExtractor)
+- `python/carnot/pipeline/__init__.py` — Exported `SpilledEnergyExtractor`, `SpilledEnergyResult`, `compute_spilled_energy`, `compute_lookahead_energy`. (user instruction: SpilledEnergyExtractor)
+- `tests/python/test_spilled_energy_extractor.py` — 28 tests (1 skipped when Exp 282 logits absent) covering: uniform logits → near-zero spill, peaked logits → positive spill, threshold firing, single-token edge case, lookahead energy, to_dict() JSON round-trip, extract_from_file, FileNotFoundError, pipeline integration, __init__ exports. 100% coverage on new module. (user instruction: SpilledEnergyExtractor)
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added REQ-VERIFY-076, SCENARIO-VERIFY-093, SCENARIO-VERIFY-094; updated Implementation Status table.
+
 ## 2026-04-14 (Exp 284: Apple adversarial GSM8K analysis and classification)
 
 - `scripts/experiment_284_apple_analysis.py` — Analyses Exp 282 (baseline) and Exp 283 (verify-repair) result artifacts to classify the overall research outcome (CONFIRMED / PARTIAL / RULED_OUT / INCONCLUSIVE) and answer five key questions: (1) Did number_swap cause ≥15 pp accuracy drop? (2) Was verify-repair Δ(number_swap) > Δ(standard)? (3) Did Carnot ignore irrelevant-sentence distractors? (4) Which extractors fired? (5) Were Qwen and Gemma consistent? Result: **INCONCLUSIVE** — `results/experiment_282_results.json` and `results/experiment_283_results.json` were not produced (GPU inference stalled in conductor run). Docs NOT updated (as required when Exp 283 did not complete). Output: `results/experiment_284_results.json`. REQ-VERIFY-073–075, SCENARIO-VERIFY-088–092. (user instruction: Exp 284 Apple adversarial analysis)

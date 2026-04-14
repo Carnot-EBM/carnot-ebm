@@ -74,6 +74,9 @@ if TYPE_CHECKING:
     from carnot.pipeline.memory import ConstraintMemory
     from carnot.pipeline.semantic_grounding import SemanticGroundingResult
     from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2Result
+    import numpy as np
+
+    from carnot.pipeline.spilled_energy_extractor import SpilledEnergyResult
     from carnot.pipeline.tracker import ConstraintTracker
     from carnot.pipeline.typed_reasoning import TypedReasoningIR
 
@@ -742,6 +745,46 @@ class VerifyRepairPipeline:
         Spec: REQ-VERIFY-062
         """
         return ProcessVerifier().verify_reasoning_trace(corpus_row)
+
+    def verify_spilled_energy(
+        self,
+        logits_path: str | np.ndarray,
+        threshold: float = 1.0,
+    ) -> SpilledEnergyResult:
+        """Detect hallucinations via spilled energy from raw LLM logits.
+
+        **Detailed explanation for engineers:**
+            This is an additive entry point — it does not affect ``verify()``
+            or ``verify_and_repair()`` callers.  Pass either a path to a
+            saved .npy logit file (as produced by Exp 282/283 logit hooks) or
+            a (T, V) numpy array directly.
+
+            The spilled energy signal (ICLR 2026, arXiv 2602.18671) detects
+            hallucinations from the logit distribution itself, bypassing the
+            constraint-extraction bottleneck that limited prior experiments.
+
+        Args:
+            logits_path: Either a string/Path pointing to a .npy file of shape
+                (T, V), or a numpy array of shape (T, V) directly.
+            threshold: Mean spilled energy (nats) above which
+                ``suspected_hallucination`` is True.  Default 1.0.
+
+        Returns:
+            SpilledEnergyResult with per_token_spilled, mean/max/p95 statistics,
+            lookahead_energy, and suspected_hallucination verdict.
+
+        Spec: REQ-VERIFY-076
+        """
+        import numpy as np
+
+        from carnot.pipeline.spilled_energy_extractor import (
+            SpilledEnergyExtractor,
+        )
+
+        extractor = SpilledEnergyExtractor()
+        if isinstance(logits_path, np.ndarray):
+            return extractor.extract_from_array(logits_path, threshold=threshold)
+        return extractor.extract_from_file(logits_path, threshold=threshold)
 
     def verify(
         self,
