@@ -227,3 +227,6 @@
 | REQ-VERIFY-079 | Not Started | Implemented | GPU pre-warm health-check for live inference (Exp 294) |
 | SCENARIO-VERIFY-101 | Not Started | Implemented | Pre-warm returns True on fast mock load (<1 s) |
 | SCENARIO-VERIFY-102 | Not Started | Implemented | Pre-warm returns False on timeout |
+| REQ-VERIFY-080 | Not Started | Implemented | PrefillUncertaintyProbe + pipeline integration (Exp 298) |
+| SCENARIO-VERIFY-103 | Not Started | Implemented | PrefillUncertaintyProbe flags high-entropy logits as high risk |
+| SCENARIO-VERIFY-104 | Not Started | Implemented | PrefillUncertaintyProbe fast-path skip for low-entropy logits |
