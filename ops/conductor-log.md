@@ -1445,3 +1445,4 @@ python/ |
 | 2026-04-14 00:36 UTC | Plan next milestone | FAIL | Claude Code error: Stalled after 600s silence. Last output:  |
 | 2026-04-14 00:52 UTC | Plan next milestone | FAIL | Claude Code error: Stalled after 600s silence. Last output:  |
 | 2026-04-14 00:56 UTC | Milestone 2026.04.20 activated | OK | 10 tasks queued |
+| 2026-04-14 01:07 UTC | Exp 271: Global consistency checker on live multi- | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 3.20s |
