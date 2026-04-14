@@ -348,4 +348,4 @@ array
 | REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |
 | REQ-SAMPLE-007 | Not Started | Implemented | 5 Python |
 | REQ-SAMPLE-008 | Not Started | Implemented | 8 Python |
-| REQ-SAMPLE-009 | Not Started | Implemented | 6 Python |
+| REQ-SAMPLE-009 | Not Started | Implemented | 68 Python (21 Exp 288 bringup + 47 Exp 289 FpgaBackend) |

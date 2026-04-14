@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 289 FpgaBackend Quantum-Inspired Sparse Ising
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T07:01:20Z | 2026-04-14T07:14:15Z | Exp 289: FpgaBackend — quantum-inspired sparse Ising SamplerBackend. quantize_to_q88, sparsify_coupling, quantum_annealing_schedule, serialize_to_axi, _apply_lagrangian_penalty, FpgaBackend (PYNQ dispatch + geometric CPU fallback + LagONN), get_backend("fpga")→FpgaBackend, 47 tests 100% coverage fpga_backend.py, mypy clean, ruff clean, updated changelog/status/traceability | ~18k |
+
+---
+
 ## Session: 2026-04-14 Exp 288 KV260 Bringup
 
 ### Turn Log

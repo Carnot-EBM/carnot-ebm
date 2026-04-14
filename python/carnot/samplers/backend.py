@@ -395,9 +395,9 @@ def get_backend(name: str | None = None) -> SamplerBackend:
         name = os.environ.get("CARNOT_BACKEND", "cpu")
 
     if name == "fpga":
-        from carnot.samplers.fpga_ising import FPGAIsingSampler
+        from carnot.samplers.fpga_backend import FpgaBackend
 
-        fpga_backend: SamplerBackend = FPGAIsingSampler()
+        fpga_backend: SamplerBackend = FpgaBackend()
         return fpga_backend
 
     if name not in _BACKENDS:

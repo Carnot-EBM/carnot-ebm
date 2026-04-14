@@ -261,9 +261,16 @@ class TestFPGAIsingSampler:
             FPGAIsingSampler(mode="quantum")
 
     def test_sampler_factory_exposes_fpga_backend(self) -> None:
-        """REQ-SAMPLE-003, REQ-SAMPLE-006: get_backend resolves the FPGA backend."""
+        """REQ-SAMPLE-003, REQ-SAMPLE-006, REQ-SAMPLE-009: get_backend('fpga') resolves.
+
+        As of Exp 289, get_backend('fpga') returns FpgaBackend (quantum-inspired
+        sparse Ising with log-linear schedule), which wraps FPGAIsingSampler
+        internally when CARNOT_KV260_BITFILE is set.
+        """
+        from carnot.samplers.fpga_backend import FpgaBackend
+
         backend = get_backend("fpga")
-        assert isinstance(backend, FPGAIsingSampler)
+        assert isinstance(backend, FpgaBackend)
 
     def test_hardware_mode_reports_fpga_when_transport_exists(self) -> None:
         """SCENARIO-SAMPLE-010: A live transport keeps the backend on the FPGA path."""
