@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-14 (reconciled with codebase — added REQ-VERIFY-073–075, SCENARIO-VERIFY-088–092 to FR-12 for Exp 284 Apple adversarial analysis)
+**Last Updated:** 2026-04-14 (reconciled with codebase — Exp 291: REQ-JEPA-003, SCENARIO-JEPA-006, SCENARIO-JEPA-007; JEPA retrain on Apple adversarial GPU data with energy features, isotonic calibration, conformal bounds)
 
 ## Functional Requirements → Implementation Status
 
@@ -198,3 +198,6 @@
 | SCENARIO-SAMPLE-020 | Not Started | Implemented | Benchmark geometric vs linear β-schedule (arXiv 2604.04606 6× SA speedup claim): samples/second, energy convergence, honest labeling (hardware/software_model/timeout) |
 | SCENARIO-SAMPLE-021 | Not Started | Implemented | LagONN penalty effectiveness on 3-SAT frustrated instance (n=100): energy/convergence with/without penalty |
 | SCENARIO-SAMPLE-022 | Not Started | Implemented | Hard 60 s timeout per config with partial artifact emission; no fabricated hardware labels in software simulation |
+| REQ-JEPA-003 | Not Started | Implemented | Exp 291: Apple adversarial retrain — spilled/semantic energy features, isotonic calibration (arXiv 2511.07124), conformal intervals (arXiv 2603.22966, α=0.1), 50-case A/B, ONNX export, targets fast-path≥30%/TP≥60%/FP≤20% |
+| SCENARIO-JEPA-006 | Not Started | Implemented | Feature extraction from adversarial logits — 8 features per prefix-fraction, variant_type_encoded, synthetic fallback with synthetic_training=true |
+| SCENARIO-JEPA-007 | Not Started | Implemented | Calibrated gate on held-out set — targets_verdict explicitly TARGETS_MET/TARGETS_NOT_MET, conformal CI reported, ONNX exported |
