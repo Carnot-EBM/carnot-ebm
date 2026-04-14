@@ -1039,6 +1039,10 @@ fixing real ones.  This change gates repair on EBM energy-derived confidence sco
 
 - **2026-04-09 00:20 UTC** [orchestrator] Sprint started for epic 'Epic: UI-001 - Modernize Documentation Aesthetic' (run_id=b6ec974e, stories=2)
 
+## 2026-04-14
+
+- Exp 302: Self-learning integrated benchmark — constraint addition + confidence weighting
+
 ## 2026-04-08: Extropic thrml integration, LLM→Ising→repair pipeline (experiments 36-41)
 
 ### The Pivot
