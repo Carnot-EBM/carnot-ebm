@@ -1,5 +1,38 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 317: HuggingFace README Accuracy Audit)
+
+Audits and updates all 16 per-token activation EBM model READMEs on HuggingFace
+to clarify Phase 1 research artifact status (finding from Exp 184/203: these models
+detect model confidence, not factual correctness).  Updates FCV README with Exp 316
+benchmark results.  Creates honest placeholder card for carnot-joint-constraint-v1.
+
+- `scripts/experiment_317_hf_publish.py` (new):
+  - `check_hf_credentials_317()` — CLI → Python API fallback (Exp 304 pattern).
+  - `build_phase1_readme_patch(exp316_results)` — Phase 1 disclaimer block with
+    optional Exp 316 benchmark summary table; idempotency sentinel comment.
+  - `model_card_update(repo_id, patch, hf_api, dry_run)` — idempotent README patch;
+    skips repos already containing `_PHASE1_SENTINEL`.
+  - `build_fcv_readme_with_exp316(existing, exp316_results)` — appends Exp 316
+    results section to FCV README; idempotent via own sentinel.
+  - `placeholder_card(repo_id)` — honest "RESEARCH PROTOTYPE — weights not published"
+    card for carnot-joint-constraint-v1; includes 1.0 AUROC methodology note.
+  - `run_experiment_317(dry_run, results_path, hf_api)` — full pipeline:
+    credential check → load Exp 316 → patch 16 per-token EBMs → update FCV →
+    update joint-constraint placeholder → write results JSON.
+  - Blocked artifact on credential failure: exp_317_next_action with login command.
+  - Output: `results/experiment_317_hf_publish.json`
+- `tests/python/test_experiment_317_hf_publish.py` (new): 46 tests pass.
+  TestBuildPhase1ReadmePatch (7), TestPlaceholderCard (6), TestModelCardUpdateIdempotent (5),
+  TestBuildFcvReadmeWithExp316 (4), TestCredentialCheck317 (4), TestBlockedArtifact317 (6),
+  TestRunExperiment317Schema (10), TestNoFakeUploads (2), TestPerTokenEbmRepoList (3),
+  TestResultsJsonSchema317 (7 — skip when file absent).
+- `openspec/capabilities/research-reporting/spec.md`: added REQ-PUBLISH-003
+  (README accuracy audit), SCENARIO-PUBLISH-005 (idempotency), SCENARIO-PUBLISH-006
+  (blocked when credentials absent).
+- Full test suite: 4390 pass, 79 skip, 2 pre-existing failures, 99.43% coverage.
+- User instruction: update HuggingFace model READMEs; publish any new models.
+
 ## 2026-04-14 (Exp 316: Full-Scale Credible Benchmark — Execution)
 
 Executes `scripts/experiment_315_fullscale_benchmark.py` (written in Exp 315).

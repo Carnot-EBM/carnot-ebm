@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 317 HuggingFace README Accuracy Audit
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T20:31:22Z | 2026-04-14T20:52:17Z | Exp 317 HF README audit: read Exp 304/293/316 code + results; add REQ-PUBLISH-003/SCENARIO-PUBLISH-005/006 to spec; write 46 tests (TestBuildPhase1ReadmePatch 7, TestPlaceholderCard 6, TestModelCardUpdateIdempotent 5, TestBuildFcvReadmeWithExp316 4, TestCredentialCheck317 4, TestBlockedArtifact317 6, TestRunExperiment317Schema 10, TestNoFakeUploads 2, TestPerTokenEbmRepoList 3, TestResultsJsonSchema317 7); implement experiment_317_hf_publish.py; 46 tests pass, 4390 total, 99.43% coverage; update ops/changelog + status | ~12k |
+
+---
+
 ## Session: 2026-04-14 Exp 316 Full-Scale Benchmark Execution
 
 ### Turn Log
