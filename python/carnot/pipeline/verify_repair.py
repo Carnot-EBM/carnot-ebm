@@ -855,6 +855,60 @@ class VerifyRepairPipeline:
         )
         return gate.fire(spilled_result, semantic_result)
 
+    def check_prefill_uncertainty(
+        self,
+        logits_first_pass: np.ndarray,
+        threshold: float = 0.5,
+    ) -> dict[str, object]:
+        """Gate pre-generation: detect hallucination risk from the first-pass logits.
+
+        **Detailed explanation for engineers:**
+            Implements the fast-path gate from arXiv 2603.19562 (Neural Uncertainty
+            Principle, Mar 2026).  Fires BEFORE any output tokens are generated,
+            using only the logit distribution of the model's first forward pass on
+            the input prompt.  Low uncertainty → skip full Ising verification.
+
+            This is additive — it does not affect existing ``verify()`` or
+            ``verify_and_repair()`` callers.
+
+            Return dict keys:
+            - ``skip_verification`` (bool): True when the probe reports low risk,
+              meaning full Ising verification can be skipped (fast-path).
+            - ``reason`` (str): Human-readable explanation:
+                - ``"low_uncertainty"`` when skip_verification is True
+                - ``"high_uncertainty"`` when skip_verification is False
+            - ``result`` (PrefillUncertaintyResult): full probe output with
+              uncertainty_score, conjugate_bound, high_risk, n_tokens, etc.
+
+        Args:
+            logits_first_pass: Raw logit array from the model's first forward
+                pass on the input prompt.  Shape (V,) or (1, V).
+            threshold: Normalised entropy threshold in (0, 1).  Default 0.5.
+
+        Returns:
+            Dict with keys ``skip_verification``, ``reason``, ``result``.
+
+        Spec: REQ-VERIFY-080, SCENARIO-VERIFY-103, SCENARIO-VERIFY-104
+        """
+        from carnot.pipeline.prefill_uncertainty_probe import PrefillUncertaintyProbe
+
+        probe = PrefillUncertaintyProbe()
+        result = probe.probe(logits_first_pass, threshold=threshold)
+
+        if result.high_risk:
+            # High uncertainty → do NOT skip; run full verification.
+            return {
+                "skip_verification": False,
+                "reason": "high_uncertainty",
+                "result": result,
+            }
+        # Low uncertainty → safe to skip full Ising verification (fast path).
+        return {
+            "skip_verification": True,
+            "reason": "low_uncertainty",
+            "result": result,
+        }
+
     def verify(
         self,
         question: str,

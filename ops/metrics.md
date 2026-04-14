@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 PrefillUncertaintyProbe
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T10:12:57Z | 2026-04-14T10:20:44Z | Implement PrefillUncertaintyProbe (REQ-VERIFY-080): read spilled_energy_extractor, verify_repair, __init__; add spec entries SCENARIO-VERIFY-103/104; write 35 tests; implement prefill_uncertainty_probe.py (compute_input_uncertainty, compute_conjugate_bound, compute_prompt_uncertainty, PrefillUncertaintyProbe); add VerifyRepairPipeline.check_prefill_uncertainty(); export from __init__; 3644 total passed 99.12% coverage; update ops/changelog + status | ~12k |
+
+---
+
 ## Session: 2026-04-14 Exp 294 GPU Stall Diagnosis + Apple Adversarial Baseline
 
 ### Turn Log
