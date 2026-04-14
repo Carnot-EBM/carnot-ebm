@@ -9,6 +9,7 @@
 | 1 | 2026-04-14T02:31:13Z | 2026-04-14T02:41:43Z | Exp 274: FactualKBExtractor (embedded KB) on Gemma4-E4B-it responses — 66 tests pass, results JSON written; coverage 45% (target 40%), accuracy 100%. | ~18k |
 | 2 | 2026-04-14T02:31:13Z | 2026-04-14T02:46:51Z | Fix failing tests: add 3 tests for generate_responses_with_gemma4 function (lines 668-675); 69 total tests pass, 100% coverage for exp274_kb_factual_live.py module. | ~8k |
 | 3 | 2026-04-14T03:22:31Z | 2026-04-14T03:34:12Z | Exp 276: Full GSM8K with Z3+LLM+semantic extractors — script + 50 tests written; CI mode: Z3/LLM detect 4/5 wrong (80%), 0% FP; semantic 0% detection, 20% FP on arithmetic; combined 80% detection; all 3001/3002 suite tests pass. | ~22k |
+| 4 | 2026-04-14T03:39:50Z | 2026-04-14T03:48:56Z | Exp 277: Combined signal benchmark — 30 HumanEval + 50 GSM8K (CI: 5+10); code+Z3+semantic for HE, Z3+LLM+semantic for GSM8K; interference_score computed; 66 new tests pass, 3067 total, 99.10% coverage. | ~28k |
 
 ---
 
