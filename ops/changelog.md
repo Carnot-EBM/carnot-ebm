@@ -1,5 +1,39 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 302: Integrated Self-Learning Benchmark — Tier 1+2 live)
+
+First integrated live benchmark combining Exp 301 confidence-weighted repair gating and Exp 300
+memory-to-constraint generation.  Design: 100 simulated GSM8K questions in two batches of 50.
+Batch 1 = warmup + CaseMemory accumulation. Between batches: ConstraintGenerator enriches extractor
+from high-precision (≥0.85) violation patterns. Batch 2 = verify-repair with enriched constraint set.
+Primary metric: improvement_delta = batch2_accuracy − batch1_accuracy (honest; negative is valid).
+
+- `scripts/experiment_302_self_learning_benchmark.py` (new):
+  - `PerQuestionRecord`: per-question fields — correct, violation_detected, confidence_class
+    (HIGH/MEDIUM/LOW/NONE), repair_triggered, repaired.
+  - `BatchResult`: validates exactly 50 records; computes accuracy; to_dict with per_question list.
+  - `ConstraintGenerationSummary`: constraint_count_before/after, n_new_constraints,
+    memory_patterns_found, generation_log, generated_constraint_log (pattern_type/constraint_id/confidence).
+  - `compute_improvement_delta(batch1_acc, batch2_acc)`: signed float; never clamped.
+  - `count_dynamic_constraints(extractor)`: safe duck-typed count of _dynamic_constraints.
+  - `simulate_gsm8k_questions(n, seed)`: deterministic synthetic arithmetic word problems
+    (fallback when real GSM8K unavailable; CI-safe).
+  - `run_batch(questions, pipeline, batch_index)`: confidence-weighted verify-repair per question;
+    live GPU path (verify_and_repair_confident) + simulated arithmetic parsing fallback.
+  - `_accumulate_case_memory(batch_result, questions)`: builds CaseMemory from Batch 1 traces.
+  - `run_constraint_generation(memory, extractor)`: wraps ConstraintGenerator, returns full summary.
+  - `build_artifact(batch1, batch2, constraint_summary, inference_mode)`: JSON-serializable artifact.
+  - `run_experiment(output_path, seed, force_simulated)`: end-to-end pipeline.
+  - inference_mode: "live_gpu" when GPU available, "simulated" with explicit label otherwise.
+- `tests/python/test_experiment_302_self_learning_benchmark.py` (new): 62 tests.
+  - TestConstants, TestPerQuestionRecord, TestBatchResult, TestConstraintGenerationSummary,
+    TestComputeImprovementDelta, TestCountDynamicConstraints, TestSimulateGsm8kQuestions,
+    TestRunBatch, TestRunConstraintGeneration, TestBuildArtifact.
+- Full suite: **3841 passed**, 39 skipped, 0 failures.
+- Triggered by: user instruction (first integrated Tier 1+2 live self-learning benchmark).
+- Spec: REQ-LEARN-010, REQ-LEARN-011, REQ-VERIFY-081, REQ-VERIFY-082,
+  SCENARIO-LEARN-015–018, SCENARIO-VERIFY-105–108.
+
 ## 2026-04-14 (Confidence-Weighted Constraint Verification — REQ-VERIFY-081, REQ-VERIFY-082)
 
 Root cause of Exp 184's 0% net improvement: binary verify-repair sends low-confidence
