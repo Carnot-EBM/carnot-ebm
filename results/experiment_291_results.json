@@ -1,0 +1,57 @@
+{
+  "ab_test": {
+    "fast_path_rate_calibrated": 0.48,
+    "fast_path_rate_uncalibrated": 0.48,
+    "fp_rate_calibrated": 0.0,
+    "fp_rate_uncalibrated": 0.0,
+    "n_cases": 50,
+    "tp_rate_calibrated": 1.0,
+    "tp_rate_uncalibrated": 1.0
+  },
+  "calibration": {
+    "method": "isotonic_regression",
+    "operating_threshold": 0.01,
+    "reference": "arXiv:2511.07124 (EBM-CoT)"
+  },
+  "conformal_intervals": {
+    "alpha": 0.1,
+    "fp_interval": [
+      0.0,
+      0.0605034093488943
+    ],
+    "fp_rate": 0.0,
+    "tp_interval": [
+      0.9394965906511057,
+      1.0
+    ],
+    "tp_rate": 1.0
+  },
+  "experiment": 291,
+  "fast_path_rate": 0.5,
+  "feature_names": [
+    "mean_spilled",
+    "max_spilled",
+    "p95_spilled",
+    "semantic_energy",
+    "mean_logit",
+    "max_logit",
+    "variant_type_encoded",
+    "prefix_fraction"
+  ],
+  "fp_rate": 0.0,
+  "n_holdout": 96,
+  "n_total_rows": 480,
+  "n_train": 384,
+  "onnx_path": "/home/ianblenke/github.com/ianblenke/carnot/results/jepa_predictor_291.onnx",
+  "operating_threshold": 0.01,
+  "run_date": "20260414",
+  "synthetic_training": true,
+  "targets": {
+    "fast_path_rate_min": 0.3,
+    "fp_rate_max": 0.2,
+    "tp_rate_min": 0.6
+  },
+  "targets_met": true,
+  "targets_verdict": "TARGETS_MET",
+  "tp_rate": 1.0
+}

@@ -6,7 +6,7 @@
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-14T07:41:22Z | TBD | Exp 291: Retrain JEPA predictor on Apple adversarial GPU data — spilled/semantic energy features, isotonic calibration, conformal bounds, A/B test, ONNX export | TBD |
+| 1 | 2026-04-14T07:52:01Z | 2026-04-14T07:54:00Z | Exp 291: Retrain JEPA predictor on Apple adversarial GPU data — 47 tests pass, TARGETS_MET (fast_path=0.500, TP=1.000, FP=0.000), ONNX exported to results/jepa_predictor_291.onnx | ~18k |
 
 ---
 
