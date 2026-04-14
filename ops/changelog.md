@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Retro fix: regenerated operational_retro_2026_04_21.json)
+
+- `results/operational_retro_2026_04_21.json` — Re-ran `scripts/experiment_294_operational_retro.py`
+  to regenerate the stale JSON file. The prior version was missing required fields
+  (`experiments_in_scope`, `experiments_with_results`, `gpu_utilization_distribution` with 0gpu/1gpu/2gpu
+  keys, `structural_action_taken`, `exp_per_hour`) that tests expected. Regenerated file now passes all
+  35 retro tests. Carry-over rate correctly computed as 50.0% (2 deferred / 4 total — was incorrectly
+  saved as 100.0% in the stale file). Story tickets PROCESS-001.md and PROCESS-002.md re-created.
+  Full suite: 3535 passed (12 retro failures fixed), 99.11% coverage.
+  (user instruction: Exp 294 GPU stall diagnosis + Apple adversarial baseline re-run)
+
 ## 2026-04-14 (Exp 294: GPU Stall Diagnosis + Apple Adversarial Baseline Re-Run)
 
 - `scripts/experiment_294_gpu_baseline_apple.py` — Fixes the GPU stall root cause that left
