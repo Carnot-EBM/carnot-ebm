@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 295: Verify-Repair Benchmark — Pre-Warm Fix)
+
+- `scripts/experiment_295_apple_verify_repair.py` — Pre-warm-fixed re-run of Exp 283.
+  Combines the 12-cell verify-repair benchmark (Exp 283: 3 modes × 2 variants × 2 models)
+  with the GPU pre-warm fix diagnosed in Exp 294 (`model_prewarm()` before the timed loop).
+  Core hypothesis: Δ(verify_repair, number_swap) > Δ(verify_repair, standard) — the
+  credibility benchmark that was INCONCLUSIVE for 2 consecutive milestones due to GPU stall.
+  New vs Exp 283: (1) `pre_warm_status` / `pre_warm_time_s` fields in artifact schema
+  (SCENARIO-VERIFY-107), (2) `pre_warm_verified` field in every per-question record
+  (SCENARIO-VERIFY-108), (3) `logit_path` field in every per-question record pointing to
+  the fraction file that covers that question's logits (SCENARIO-VERIFY-106), (4) logit
+  filenames use `295` prefix, (5) comparison refs load Exp 294 (not 282) as baseline.
+  Schema bumped to `carnot.apple_verify_repair.v2`. REQ-VERIFY-079, REQ-VERIFY-068–072,
+  SCENARIO-VERIFY-103–108.
+  (user instruction: Exp 295 Apple adversarial verify-repair with pre-warm fix)
+- `tests/python/test_experiment_295_apple_verify_repair.py` — 29 tests covering:
+  12-cell result structure (all 3 modes × 2 variants × 2 models present),
+  cell accuracy in [0,1], improvement delta computation, primary criterion Δ(vr,ns)>Δ(vr,std),
+  artifact schema fields (all ARTIFACT_SCHEMA keys including pre_warm_status),
+  experiment=295, schema=v2, pre_warm_status field, pre_warm_time_s field,
+  pre_warm_verified field in per-question records (False in mock mode),
+  logit_path field in per-question records, partial artifact on TimeoutError (stall_at set),
+  clean run has partial=False/stall_at=None, INFERENCE_TIMEOUT_SECONDS=60,
+  CHECKPOINT_INTERVAL=10, checkpoint resume skips completed questions,
+  LOGIT_FRACTIONS=[0.25,0.50,0.75,1.00], logit files contain '295' prefix,
+  logit array object dtype with 2-D elements, logit_paths in artifact keyed by model.
+  All 29 pass. Full suite: **3564 passed**, 39 skipped, 0 failures.
+
 ## 2026-04-14 (Retro fix: regenerated operational_retro_2026_04_21.json)
 
 - `results/operational_retro_2026_04_21.json` — Re-ran `scripts/experiment_294_operational_retro.py`
