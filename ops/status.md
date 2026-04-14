@@ -4,6 +4,11 @@
 
 ## What's Working
 
+### Spilled Energy Hallucination Detector (REQ-VERIFY-076)
+- `python/carnot/pipeline/spilled_energy_extractor.py` — logit-only hallucination detection bypassing the constraint-extraction bottleneck (Exp 279 found 0% fresh-wrong detection). Implements ICLR 2026 arXiv 2602.18671 spilled energy and AR-EBM lookahead energy (arXiv 2512.15605). `SpilledEnergyExtractor.extract_from_file()` loads `.npy` logit files saved by Exp 282/283 hooks.
+- `VerifyRepairPipeline.verify_spilled_energy(logits_path, threshold)` — additive entry point; existing `verify()` / `verify_and_repair()` paths unchanged.
+- 28 tests, 100% coverage on new module. Skipped Exp 282 logit test (logits not yet produced — GPU stall). Next: run Exp 282/283 to produce logit files and validate on real model outputs.
+
 ### Apple Adversarial Analysis And Classification (REQ-VERIFY-073–075 / Exp 284)
 - `scripts/experiment_284_apple_analysis.py` loads Exp 282 (baseline) and Exp 283 (verify-repair) result files, answers five key research questions, and classifies the outcome as CONFIRMED / PARTIAL / RULED_OUT / INCONCLUSIVE.
 - Result: **INCONCLUSIVE** — Exp 282 and Exp 283 GPU inference stalled; results files were not produced by the conductor. Docs were deliberately NOT updated (per task requirement: only update docs if Exp 283 ran successfully).

@@ -1469,3 +1469,5 @@ python/ |
 | 2026-04-14 05:28 UTC | Exp 282: Apple adversarial GSM8K GPU baseline (sav | OK | 3128 passed, 26 skipped, 13 warnings in 176.25s (0:02:56) |
 | 2026-04-14 05:43 UTC | Exp 283: Apple adversarial GSM8K + verify-repair — | OK | 3151 passed, 26 skipped, 13 warnings in 178.98s (0:02:58) |
 | 2026-04-14 05:56 UTC | Exp 284: Apple adversarial results analysis and do | OK | 3182 passed, 26 skipped, 13 warnings in 179.22s (0:02:59) |
+| 2026-04-14 06:06 UTC | Exp 285: SpilledEnergyExtractor implementation (ar | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 06:07 UTC | Exp 285: SpilledEnergyExtractor implementation (ar | OK | Deliverable already exists in repo |

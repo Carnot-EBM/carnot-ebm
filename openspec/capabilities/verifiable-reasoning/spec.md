@@ -1875,6 +1875,50 @@ float rounded to four decimal places.  Both inputs must be floats in [0, 1].
 - `"PARTIAL"` when `partial_improvement` is True and `primary_met` is False
 - `"RULED_OUT"` otherwise
 
+### REQ-VERIFY-076: Spilled Energy Hallucination Detector
+
+The system shall provide a `SpilledEnergyExtractor` in
+`python/carnot/pipeline/spilled_energy_extractor.py` that detects hallucinations
+from raw LLM logit arrays without any constraint extraction, where:
+- `SpilledEnergyResult` dataclass holds `per_token_spilled` (1-D float64 array),
+  `mean_spilled`, `max_spilled`, `p95_spilled`, `lookahead_energy` (float),
+  `suspected_hallucination` (bool), `threshold_used` (float), and a
+  `to_dict()` method that serializes all fields to JSON-compatible types
+- `compute_spilled_energy(logits: np.ndarray) -> SpilledEnergyResult` accepts a
+  2-D float64 array of shape `(T, V)` (T tokens, V vocab size) and computes
+  per-token spilled energy as `H(softmax(logit_t)) − max(log_softmax(logit_t))`
+  (entropy minus max log-probability contribution), then aggregates mean, max,
+  and 95th-percentile statistics
+- `compute_lookahead_energy(logits: np.ndarray) -> float` returns the
+  AR-EBM lookahead energy `−mean(log P(token_t | prefix_t))` over all response
+  tokens, computed as `−mean(max(log_softmax(logit_t)))` as an approximation
+  when ground-truth token indices are unavailable
+- `SpilledEnergyExtractor` class exposes `extract_from_array(logits, threshold)`
+  and `extract_from_file(path, threshold)` where the file is a `.npy` binary;
+  both return `SpilledEnergyResult` with `suspected_hallucination=True` when
+  `mean_spilled > threshold`
+- `VerifyRepairPipeline.verify_spilled_energy(logits_path)` is an additive
+  entry point that accepts either a file path string or a numpy array and
+  returns `SpilledEnergyResult`; it does not affect existing `verify()` or
+  `verify_and_repair()` callers
+
+### SCENARIO-VERIFY-093: Spilled Energy Detects Peaked Logits
+
+**Given** a logit array where one vocab token dominates with high probability
+**When** `compute_spilled_energy(logits)` is called
+**Then** `per_token_spilled` values are positive (entropy exceeds max contribution
+  only modestly for peaked distributions, but non-zero spill is present)
+**And** `mean_spilled` and `max_spilled` are positive floats
+**And** `SpilledEnergyResult.to_dict()` round-trips to JSON without error
+
+### SCENARIO-VERIFY-094: Uniform Logits Produce Near-Zero Spill
+
+**Given** a logit array where all vocab entries are equal (uniform distribution)
+**When** `compute_spilled_energy(logits)` is called
+**Then** `per_token_spilled` values are near zero (entropy ≈ max log-prob magnitude)
+**And** `suspected_hallucination` is False when threshold is the default 1.0
+**And** `compute_lookahead_energy(logits)` returns `log(vocab_size)` approximately
+
 ### SCENARIO-VERIFY-088: Five Key Questions Answered In Exp 284
 
 **Given** Exp 282 and Exp 283 result artifacts (or their absence)
@@ -2150,6 +2194,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-070 | Not Started | Implemented | Logit saving hook for verify-repair pipeline tests (Exp 283) |
 | REQ-VERIFY-071 | Not Started | Implemented | Partial artifact stall_at tests (Exp 283) |
 | REQ-VERIFY-072 | Not Started | Implemented | DualGPU dispatch at startup tests (Exp 283) |
+| REQ-VERIFY-076 | Not Started | Implemented | Spilled energy extractor + pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
