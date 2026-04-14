@@ -242,15 +242,42 @@ the annealing schedule quality claim, not raw throughput.
 
 Result artifact: `results/experiment_290_results.json`
 
+### Exp 291 (2026-04-14) — 128-Spin Verilog RTL Prototype
+
+Module: `hardware/kv260/ising_sampler_v1.v`
+Behavioral simulation: `scripts/simulate_ising_sampler.py`
+Tests: `tests/python/test_ising_sampler_rtl.py` (36 tests, all passing)
+
+Implements the full synthesizable Verilog RTL for the 128-spin Ising sampler:
+
+- AXI-Lite slave interface with Exp 289 register map (updated address layout
+  to avoid RAM window overlap: adj_ram 0x2000–0x5FFC, coupl_ram 0x6000–0x9FFC,
+  spin_out 0xA010+; requires 17-bit AXI address width)
+- Q8.8 fixed-point throughout (bias, coupling, β)
+- Sparse adjacency RAM: max_degree=32 directed neighbours per spin
+- Gibbs update: local field h_eff = Σ_j J_ij s_j + h_i, flip probability
+  p = sigmoid(2·β·h_eff) via 256-entry LUT, LFSR random threshold comparison
+- 16-bit Fibonacci LFSR (polynomial x^16+x^14+x^13+x^11+1, seed 0xACE1)
+- Mpemba initialization: first 10% of N_STEPS at β=0 (arXiv 2603.24183)
+- Log-linear β ramp (linear approximation in v1; exact CORDIC planned for v2)
+- Checkerboard even/odd update order (two half-sweeps per full sweep)
+
+Known v1 limitations:
+1. β ramp is linear (not exact log-linear); v2 will use ROM-based geometric schedule
+2. Sequential pipeline (one spin per clock group); parallelism planned for v2
+3. N_STEPS is synthesis-time constant; runtime control planned for v2
+4. No sample batching; v2 will add FIFO readback
+
 ## Next Hardware Step
 
 1. Connect the KV260 to the build network and set `CARNOT_KV260_BITFILE` to
    the synthesized bitstream path.
-2. Synthesize `carnot_ising_top` with the register map above and export it as
-   `carnot_ising_0` in the PYNQ overlay.
-3. Re-run `scripts/experiment_288_kv260_bringup.py` — it will record
+2. Synthesize `hardware/kv260/ising_sampler_v1.v` in Vivado 2023.x targeting
+   xck26-sfvc784-2LV-c; see `hardware/kv260/README.md` for synthesis steps.
+3. Export as `ising_sampler_128_0` in the PYNQ block design and generate the overlay.
+4. Re-run `scripts/experiment_288_kv260_bringup.py` — it will record
    `overlay_load_ms`, `register_roundtrip_us`, and `spin_state_valid` on first
    successful hardware path.
-4. Re-run `scripts/experiment_290_fpga_cpu_benchmark.py` — it will re-label
+5. Re-run `scripts/experiment_290_fpga_cpu_benchmark.py` — it will re-label
    entries as `hardware` and record true FPGA throughput numbers.
-5. Replace software-model timing in this doc with on-board throughput numbers.
+6. Replace software-model timing in this doc with on-board throughput numbers.

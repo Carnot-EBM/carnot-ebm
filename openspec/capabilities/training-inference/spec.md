@@ -377,6 +377,44 @@ of sizes where geometric ≤ linear
 **And** the energy with penalty is ≤ the energy without penalty (confirming
   LagONN escapes infeasible local minima)
 
+### REQ-SAMPLE-011: Verilog RTL for 128-Spin Ising Sampler (Exp 291)
+
+The system shall provide synthesizable Verilog RTL for a 128-spin Ising sampler
+targeting the KV260 FPGA (hardware/kv260/ising_sampler_v1.v), implementing:
+
+- AXI-Lite slave interface with the Exp 289 register map: CONTROL (0x0000),
+  STATUS (0x0004), SPIN_COUNT (0x0008), BETA_FINAL (0x001C), bias_ram
+  (0x1000+), adj_ram (0x2000+), coupl_ram (0x4000+), spin_out (0x8010+)
+- Q8.8 fixed-point (16-bit signed, 8 fractional bits) for all weights and β
+- Sparse connectivity: max_degree=32 adjacency and coupling RAMs per spin
+- Gibbs update: local field h_eff = Σ_j J_ij s_j + h_i, flip probability
+  p = sigmoid(2 * h_eff * β), LFSR random comparison
+- 16-bit Fibonacci LFSR pseudo-random number generator
+- Log-linear β schedule: β(t) = β_min × (β_max/β_min)^(t/T), fixed-point
+- Mpemba initialization: first 10% of N_STEPS run at β=0 (maximum temperature),
+  then ramp from β_min per arXiv 2603.24183 to suppress slow relaxation modes
+- Checkerboard (even/odd) spin update order for parallel correctness
+- Halt after N_STEPS sweeps; expose final spin state via AXI read of spin_out
+
+A companion Python behavioral simulation (scripts/simulate_ising_sampler.py)
+implements identical logic in numpy for test validation without physical FPGA.
+
+### SCENARIO-SAMPLE-023: AXI Register Map Fully Addressable
+
+**Given** the Verilog module ising_sampler_128 with the Exp 289 AXI-Lite map
+**When** all control and memory registers are written and read via AXI-Lite
+**Then** CONTROL, STATUS, SPIN_COUNT, BETA_FINAL, bias_ram[0..127],
+  adj_ram[0..127*32-1], coupl_ram[0..127*32-1], spin_out[0..3] are all
+  accessible at their documented offsets with correct read-back
+
+### SCENARIO-SAMPLE-024: Gibbs Update Produces Correct Energy on 4-Spin Graph
+
+**Given** a 4-spin Ising ring (J=1.0, h=0.0) with initial state [+1,-1,+1,-1]
+**When** one Gibbs sweep is executed by the behavioral simulation matching Verilog
+**Then** the computed local field h_eff for each spin matches the Python reference
+  (h_eff_i = Σ_j J_ij s_j) to within Q8.8 quantization error (< 0.01)
+**And** the total energy E = -Σ_ij J_ij s_i s_j matches the Python reference
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -402,3 +440,4 @@ of sizes where geometric ≤ linear
 | REQ-SAMPLE-008 | Not Started | Implemented | 8 Python |
 | REQ-SAMPLE-009 | Not Started | Implemented | 68 Python (21 Exp 288 bringup + 47 Exp 289 FpgaBackend) |
 | REQ-SAMPLE-010 | Not Started | Implemented | 27 Python (Exp 290 benchmark + tests) |
+| REQ-SAMPLE-011 | Not Started | Implemented | 30 Python (Exp 291 RTL behavioral sim + tests) |

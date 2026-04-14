@@ -1535,3 +1535,7 @@ python/ |
 | 2026-04-14 12:05 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | 3886 passed, 54 skipped, 13 warnings in 211.34s (0:03:31) |
 | 2026-04-14 12:06 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
 | 2026-04-14 12:06 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | Deliverable already exists in repo |
+| 2026-04-14 12:21 UTC | Exp 305: KV260 Verilog Ising sampler — first synth | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 12:22 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
+| 2026-04-14 12:22 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | Deliverable already exists in repo |
+| 2026-04-14 12:22 UTC | Exp 305: KV260 Verilog Ising sampler — first synth | OK | Deliverable already exists in repo |
