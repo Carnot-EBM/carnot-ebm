@@ -87,6 +87,11 @@ production goals. Updated as new needs emerge from experiments.
     - Pre-built AMD .so files are ABI-incompatible with ORT 1.24.x (segfault).
     - ORT 1.20.1 + LD_LIBRARY_PATH: VitisAI EP still not in available_providers.
     - Source build blocked by: `ninja` not installed, `openblas` not found.
+  - **Exp 303 findings (20260414):**
+    - Still blocked by missing prerequisites:
+      - `ninja`: not found. Install: `sudo pacman -S ninja  (Arch)  OR  sudo apt install ninja-build  (Debian/Ubuntu)`
+      - `openblas`: not found. Install: `sudo pacman -S openblas  (Arch)  OR  sudo apt install libopenblas-dev  (Debian/Ubuntu)`
+    - **Status:** BLOCKED — install prerequisites, then re-run Exp 303.
   - **What we have:**
     - `/opt/xilinx/xrt/` — XRT 2.20.0 driver stack ✅
     - `~/github.com/amd/RyzenAI-SW/` — includes `libonnxruntime_providers_vitisai.so`
