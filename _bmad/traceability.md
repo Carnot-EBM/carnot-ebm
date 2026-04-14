@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-13 (reconciled with codebase)
+**Last Updated:** 2026-04-14 (reconciled with codebase — added REQ-VERIFY-063, SCENARIO-VERIFY-078, SCENARIO-VERIFY-079 to FR-12)
 
 ## Functional Requirements → Implementation Status
 
