@@ -1,219 +1,222 @@
-# Carnot Research Roadmap v24: GPU-Accelerated Inference, Calibrated Verification, and Live Benchmark Completion
+# Carnot Research Roadmap v26: FPGA Hardware Bring-up, Apple Adversarial GSM8K, and Spilled-Energy Hallucination Detection
 
-**Created:** 2026-04-13
-**Milestone:** 2026.04.19
-**Status:** Planned (activates when milestone 2026.04.18 completes)
-**Supersedes:** Milestone 2026.04.18 — "Formal Claim Verification, Process Integrity, and Predictive Self-Learning"
-**Informed by:** Exp 247, Exp 251, Exp 256, Exp 257, operational retrospective 2026-04-13
-**External inputs:** The 4/δ Bound (2512.02080), EORM (2505.14999), Self-Play Info Gain (2603.02218), PSV (2512.18160), TECP conformal prediction (MDPI 2025), DOMINO grammar decoding (ICML 2025), Sol-Ver (2502.14948), Sparse Ising Machines (Nature Comms 2024), Stochastic Ising Advantage (2504.18359)
+**Created:** 2026-04-14
+**Milestone:** 2026.04.20
+**Status:** Active (milestone 2026.04.19 complete)
+**Supersedes:** Milestone 2026.04.19 — "GPU-Accelerated Inference, Calibrated Verification, and Live Benchmark Completion"
+**Informed by:** Exp 258-270, operational retrospectives 2026-04-13 (×2), Exp 259 CUDA ORT inversion finding, Exp 260 cpu_only_blocked result, v25 pre-plan
+**External inputs:** Spilled Energy (2602.18671, ICLR 2026), Semantic Energy (2508.14496), FactNet (2602.03417), Quantum-FPGA Ising (2604.04606), LagONN (2505.07179), Apple adversarial (2410.05229), KAEM (2506.14167), Hybrid FPGA Decomposition (2602.15985), VERGE (2601.20055), Z3 Policy Verification (2603.20449), Probabilistic NS Layer (2503.19466), Conformal LLM (2603.22966), Denoising Thermodynamic (2510.23972), KANELÉ (2512.12850), EBM-CoT (2511.07124)
 
 ---
 
-## What 2026.04.18 Proved
+## What 2026.04.19 Proved
 
 | Approach | Experiments | Finding |
 |----------|-------------|---------|
-| Solver-routed formal claim verification | 244-247 | FormalClaimVerifier built and integrated cleanly, but live benchmark **blocked** at 18/200 cases (21s/case × 843 total cases ≈ 5 hours on CPU — exceeds conductor session budget). Infrastructure is solid; throughput is the blocker. |
-| Process integrity verification | 248-251 | ProcessVerifier catches "right-for-wrong-reasons" defects (Qwen: 3 cases, Gemma: 2 cases in 30-case cohort) and produced one Gemma repair convergence that Exp 238 missed. But it adds **zero pass@1 lift** at the gating stage. Useful for audit/safety; not for accuracy improvement alone. |
-| Calibrated self-learning A/B | 252-256 | PredictiveVerifier gate routed **all cases to FAST_PATH** when uncalibrated on live data, eliminating FPs but also missing real errors (−1.7pp). Constraint addition matched description-text proxies instead of real inference tokens, adding +4 FPs with zero new successes. Root cause: gate never trained/calibrated on live GSM8K distribution; templates too liberal. |
-| PredictiveVerifier hardware path | 257 | CPU NumPy: 41.8 µs/call. ONNX CPU ORT: 5.8 µs/call (7.1× faster). CUDA ORT **blocked** — requires `pip install onnxruntime-gpu` (not default wheel). AMD XDNA NPU **blocked** — Python 3.14 unsupported by VitisAI EP. Both are solvable, not fundamental. |
+| DualGPURunner wiring | 258 | Harness built and tested (35 tests), but only 2 of 280 experiments (0.7%) actually invoked it — both RTX 3090s idle for 99% of the milestone. |
+| CUDA ORT for PredictiveVerifier | 259 | **INVERTED:** CUDA ORT is 5.49× SLOWER than CPU ORT for the 9→1 gate at batch_size=1 (47.3 µs vs 8.6 µs). Kernel launch overhead dominates. GPU advantage only appears at batch_size ≥ 32. |
+| Solver-routed semantic benchmark | 260 | **Still blocked:** `inference_mode: "cpu_only_blocked"`. Despite DualGPURunner available, benchmark ran on CPU only — 180s stall timeout killed every long inference experiment. |
+| Calibration corpus | 262 | 450 rows collected, but prefix_fraction feature importance ≈ 0.507 (near-random). CPU-inference token patterns don't predict violations. Corpus not discriminative for calibration. |
+| Self-learning replay v3 | 266 | Deliverable shows Exp 255 metadata — pass-through of prior work because Exp 263 and 264 both SKIP'd. Constraint addition still uses description-text proxies. |
+| HuggingFace README updates | 267 | **Completed:** 16 per-token EBM model READMEs updated with Phase 1 status banner. |
+| AMD XDNA NPU | 269 | **Failed 3 times** with 180s silence stall. VitisAI EP `.so` files present but onnxruntime handshake blocked. |
+| HF joint model publish | 268 | SKIP'd 3 times — carry-forward to Exp 282. |
 
-**The milestone-level conclusion:** Carnot has now built all the infrastructure layers — formal claim routing, process integrity, predictive gating, constraint addition, warm model server, DualGPURunner. The gap is not capability; it is calibration, throughput, and wiring. The formal claim benchmark that should prove Carnot's value was never able to complete because CPU inference is 7× too slow. The self-learning system failed because the gate was never calibrated on the inference distribution it needs to operate over. The next milestone fixes both.
+**Milestone-level conclusion:** Every infrastructure layer is now built (DualGPU, CUDA ORT, formal claim verifier, process integrity, predictive gate, FPGA design, calibration corpus). The gap is execution quality: long-running inference experiments stall at 180s because the GPU was never wired as the DEFAULT, and the self-learning calibration experiments were SKIP'd because their dependencies were also SKIP'd. The next milestone must wire GPU from experiment 1 and use per-question checkpointing on every experiment that touches live inference.
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: The first credible positive verify-repair result on real IT models is still missing
+### Gap 1: No credible positive verify-repair result on real GPU inference after 260 experiments
 
-After 257 experiments across 18 milestones, Carnot has never produced a completed, statistically meaningful positive verify-repair improvement on a real instruction-tuned model. The solver-routed semantic benchmark (Exp 247) is the most principled attempt yet but ran out of runtime budget after 18/200 cases. The core enabler is throughput: going from 21s/case (CPU) to ~2-3s/case (GPU with batching) makes the full benchmark feasible in a single conductor session. **This is the primary deliverable of this milestone.**
+The core product claim — "EBM-verified LLM outputs, structurally correct by design" — has no supporting evidence from a complete live benchmark. Exp 260 `inference_mode: "cpu_only_blocked"` is the symptom. The Apple adversarial GSM8K benchmark (arXiv 2410.05229) has been identified as the most credible possible demonstration since Exp 139 research scan, and still has never been run. This is the single most important outstanding experiment.
 
-### Gap 2: Self-learning produces no held-out gain because the gate was never calibrated on live data
+### Gap 2: FPGA hardware path deferred 2 milestones — KV260 is in hand with no bitfile
 
-Exp 256 showed the PredictiveVerifier routed everything to FAST_PATH (uncalibrated). The fix is conceptually simple: collect (partial_response → final_violation_label) pairs from live GPU inference and fit a calibrated threshold. The 4/δ bound (2512.02080) provides a formal framework for this calibration. The Self-Play Info Gain paper (2603.02218) explains why constraint templates matched proxy text (no real learnable signal) — the fix is mining live inference tokens, not description text. Both are actionable, bounded experiments.
+Exp 228 (software design), Exp 242 (blocker artifact, no bitfile) — both completed. The quantum-inspired sparse Ising paper (arXiv 2604.04606) provides a directly applicable design. KANELÉ (arXiv 2512.12850) shows KANs on FPGAs are hardware-efficient via LUT evaluation. The hardware path is the long-term differentiator (TSU abstraction, Tier 2 FPGA pattern matching). Every milestone deferred costs real research time.
 
-### Gap 3: Hardware acceleration for the verification pipeline has known, unblocked solutions that have not been executed
+### Gap 3: Spilled energy is a fast, extraction-free hallucination signal that doesn't require regex or SMT
 
-- **CUDA ORT:** one command (`pip install onnxruntime-gpu`) unblocks 10-100× speedup for PredictiveVerifier
-- **AMD XDNA NPU:** Python 3.12 venv with onnxruntime 1.20.1 already set up; VitisAI EP `.so` files already present in `~/github.com/amd/RyzenAI-SW/`; needs one linking/path experiment
-- **DualGPURunner:** built in Exp 224b, never wired to the benchmark harness; estimated +15% wall-time reduction per operational retrospective
-- **Inference batching:** 8-16 per pass; estimated +10% wall-time reduction; not implemented in any live harness
-
-Solving these moves from "infrastructure exists but blocked" to "infrastructure deployed and benchmarked."
+Spilled Energy (ICLR 2026, arXiv 2602.18671) reframes autoregressive LLMs as EBMs and detects factual errors from logit discrepancy alone — no extraction required. This directly addresses the bottleneck that has blocked every positive result: ArithmeticExtractor found 0 violations on Gemma4-E4B-it, FormalClaimVerifier abstains on "not_formalizable" claims. Spilled energy reads from the model's own logits. Semantic Energy (arXiv 2508.14496) catches a complementary class of confident-but-wrong errors. Together they form a fast, extraction-free first-pass filter. EBM-CoT (arXiv 2511.07124) shows energy-based calibration improves chain-of-thought consistency — directly applicable to the JEPA self-learning tier.
 
 ---
 
-## Promising 2025-2026 Inputs Adopted in v24
+## Promising 2025-2026 Inputs Adopted in v26
 
-- **4/δ Bound (2512.02080):** formal Markov chain model for multi-stage verification pipelines gives principled calibration strategy for the PredictiveVerifier. Identifies three operating zones and parameterized threshold selection. Directly informs Exp 262.
-- **TECP conformal prediction (MDPI 2025):** token-entropy conformal prediction gives finite-sample coverage guarantees without retraining. Candidate calibration backend for PredictiveVerifier to replace static thresholds.
-- **EORM (2505.14999):** lightweight 55M-parameter energy-based ranking verifier achieves 90.7% GSM8K with Llama 3 8B. Establishes a published EBM baseline that Carnot should compare against after calibration.
-- **Self-Play Info Gain (2603.02218):** root-cause analysis for why constraint templates failed — they provided no learnable information gain because they matched proxy text rather than real inference tokens. Prescribes live-token mining and asymmetric co-evolution.
-- **PSV (2512.18160):** formal verification as self-play signal (9.6× pass@1 improvement) — motivates using FormalClaimVerifier verdicts as the learning signal for constraint addition rather than loose templates.
-- **DOMINO grammar decoding (ICML 2025):** 17.71× faster grammar-constrained preprocessing with speculative decoding compatibility — long-term path to enforce formal claim templates during generation rather than post-hoc, eliminating the extraction bottleneck entirely.
-- **Sol-Ver (2502.14948):** bidirectional quality-gating for solver+verifier self-play prevents error propagation — informs mutual verification between constraint templates and live tokens.
-- **Sparse Ising + stochastic advantage papers:** confirm sparse constraint graph formulation is the right design for KV260/TSU hardware. The PredictiveVerifier energy gate maps to a sparse Ising problem class where hardware would win.
-
----
-
-## v24 Hypothesis
-
-If Carnot (1) completes the solver-routed semantic benchmark with GPU inference, (2) calibrates the PredictiveVerifier gate on live GSM8K data, and (3) fixes constraint addition to use domain-specific live inference tokens rather than description-text proxies, it should be able to produce:
-
-1. the first **completed, statistically valid** solver-routed semantic benchmark result (Qwen3.5-0.8B and Gemma4-E4B-it, 200+ GSM8K cases, all three modes),
-2. a calibrated self-learning A/B result showing whether Tier 1/2/3 learning produces real held-out gain when the gate is properly tuned,
-3. a deployed CUDA ORT path for PredictiveVerifier (not just a CPU benchmark), and
-4. the first HuggingFace artifact publications from Carnot research.
+- **Spilled Energy (2602.18671, ICLR 2026):** Detects hallucinations via logit_energy − output_energy discrepancy. No extraction required. Fast first-pass signal before Ising verification. Directly informs Exp 274.
+- **Semantic Energy (2508.14496):** Boltzmann energy from logit distributions; catches confident-but-wrong outputs that spilled energy misses. Complementary signal. Informs Exp 275.
+- **FactNet (2602.03417):** 1.7B atomic assertions, 92.1% grounding precision. Each triple maps to a Carnot ConstraintTerm. Informs Exp 276.
+- **Quantum-inspired FPGA Ising (2604.04606):** Sparse spin connectivity, 6× faster than simulated annealing, 1600-spin vs 400-spin baseline. Directly applicable to KV260 FpgaBackend. Informs Exp 278.
+- **LagONN (2505.07179):** Lagrangian oscillatory NNs escape infeasible local minima in Ising problems. Addresses Exp 46b failure mode. Informs FPGA backend.
+- **KANELÉ (2512.12850):** KANs on FPGAs via LUT evaluation. Hardware path for `carnot-kan` tier. Informs KV260 FpgaBackend extension for KAN energy.
+- **Denoising Thermodynamic (2510.23972):** DTM architecture more hardware-efficient than raw EBMs for FPGA. Alternative to pure Ising for KV260.
+- **EBM-CoT (2511.07124):** Energy-based calibration for implicit chain-of-thought. Informs JEPA training design (Exp 280).
+- **VERGE (2601.20055):** Z3-based iterative LLM reasoning refinement. Feedback loop architecture informs Carnot's self-learning design.
+- **Z3 Policy Verification (2603.20449):** NL→SMT-LIB-2.0 for tool-call constraints using Z3. Addresses constraint extraction bottleneck directly.
+- **Conformal LLM (2603.22966):** Set-valued prediction with statistical coverage guarantees. Informs PredictiveVerifier threshold calibration.
+- **Apple adversarial GSM8K (2410.05229):** 65% accuracy drop with irrelevant sentences + number swaps. "This is our thesis" (research-program.md). Still unrun.
 
 ---
 
-## v24 Architecture: GPU Throughput → Calibrated Gate → Live Self-Learning
+## v26 Hypothesis
+
+If Carnot (1) wires DualGPURunner as the DEFAULT from experiment 1, (2) runs the Apple adversarial GSM8K benchmark with live GPU inference, (3) implements SpilledEnergyExtractor as an extraction-free hallucination signal, (4) brings up the KV260 FPGA overlay for the first real hardware Ising sample, and (5) trains a JEPA predictor on GPU-inference calibration data and deploys it as a calibrated Tier 3 gate, then the milestone will produce:
+
+1. The first **external-benchmark-backed evidence** that Carnot catches errors that break all other approaches
+2. A **logit-based hallucination signal** that works on any IT model without regex or SMT extraction
+3. The first **real FPGA Ising sample**, validated against the CPU baseline
+4. A **calibrated JEPA Tier 3 gate** with measured fast-path hit rate and TP/FP rates on real GPU inference
+
+---
+
+## v26 Architecture: GPU-First → Fast Signal → FPGA Hardware
 
 ```
-Benchmark Item
+Benchmark Item (Apple adversarial GSM8K, 1,319 problems)
       |
       v
 ┌──────────────────────────────────────────────────────────────────┐
-│ DualGPURunner (Exp 258)                                          │
+│ DualGPURunner — DEFAULT from Exp 271                             │
 │  Qwen → GPU 0 (RTX 3090 #0)  |  Gemma → GPU 1 (RTX 3090 #1)    │
-│  Batched inference (8-16/pass)                                   │
-│  ~2-3s/case target (vs 21s/case CPU baseline)                    │
+│  Batched inference 8-16/pass, per-question checkpointing         │
+│  180s hard timeout per inference call (emit partial, not stall)  │
+│  Target: ≤ 3s/case (validated in Exp 258 harness)               │
 └───────────────────────────────────┬──────────────────────────────┘
                                     |
-                                    v
+                    ┌───────────────┴──────────────────┐
+                    v                                  v
+┌───────────────────────────┐          ┌───────────────────────────┐
+│ SpilledEnergyExtractor    │          │ SemanticEnergyExtractor    │
+│  (Exp 274)                │          │  (Exp 275)                 │
+│  logit_energy-output_energy│         │  Boltzmann logit energy    │
+│  Fast: no KB, no regex    │          │  Catches confident+wrong   │
+│  AUROC target: ≥ 0.65     │          │  Complementary to spill    │
+└──────────────┬────────────┘          └──────────────┬────────────┘
+               └────────────────┬──────────────────────┘
+                                v
 ┌──────────────────────────────────────────────────────────────────┐
-│ Shared Benchmark Harness (Exp 258 upgrade)                       │
-│  resume Exp 247 checkpoints → complete 200 GSM8K + 81 ctir       │
-│  Exp 260: full solver-routed semantic benchmark (first complete) │
-│  Exp 261: full 164-problem HumanEval (Qwen via GPU)              │
+│ FormalClaimVerifier (existing) — only invoked when fast gate fires│
+│  Route: arithmetic / cardinality / boolean-entailment / abstain  │
 └───────────────────────────────────┬──────────────────────────────┘
                                     |
-                                    v
-┌──────────────────────────────────────────────────────────────────┐
-│ PredictiveVerifier (Tier 3)                                      │
-│  Exp 259: install onnxruntime-gpu → CUDA ORT path                │
-│  Exp 262: collect live calibration corpus from GPU inference     │
-│  Exp 263: calibrate gate via conformal prediction (4/δ bound)    │
-│  Exp 269: AMD XDNA NPU path (Python 3.12 venv + VitisAI EP)     │
-└───────────────────────────────────┬──────────────────────────────┘
-                                    |
-                                    v
-┌──────────────────────────────────────────────────────────────────┐
-│ Self-Learning (Tier 1/2/3 combined)                              │
-│  Exp 264: domain constraint templates from live inference tokens │
-│  Exp 265: constraint addition wired to formal solver verdicts    │
-│  Exp 266: self-learning A/B v3 (calibrated gate + real templates)│
-└───────────────────────────────────┬──────────────────────────────┘
-                                    |
-                                    v
-┌──────────────────────────────────────────────────────────────────┐
-│ HuggingFace Publishing (research-program.md "NOW" priorities)    │
-│  Exp 267: update 16 model READMEs → point to pip install carnot │
-│  Exp 268: publish Exp 66 joint model + FormalClaimVerifier ONNX  │
-└──────────────────────────────────────────────────────────────────┘
+                      Apple adversarial result (Exp 273)
+                      Spilled energy benchmark (Exp 276)
+
+Hardware Path:                 Self-Learning Path:
+KV260 + PYNQ                  JEPA training on GPU data
+      |                              |
+FpgaBackend (Exp 278)         Exp 280 (calibrated gate)
+      |                              |
+FPGA Ising benchmark          A/B held-out validation
+(Exp 279)                     Tier 3 fast-path ≥ 30%
 ```
 
 ---
 
-## Phase 83: GPU Inference Pipeline and Benchmark Completion (Experiments 258-261)
+## Phase 87: GPU Benchmark Completion — Deferred Carry-Forwards (Experiments 271-273)
 
-The operational retrospective identified sequential dual-model loading and missing inference batching as the top two bottlenecks (+25% estimated wall-time together). This phase addresses both, then applies them to complete the experiments blocked in 2026.04.18.
+**Process mandate for this phase:** The 180s stall timeout killed Exp 261-269. Every experiment that touches live inference MUST: (a) wire DualGPURunner at the start (not as a separate harness setup step), (b) checkpoint every 10 questions, (c) emit a partial artifact with `stall_at` field on timeout rather than blocking the conductor indefinitely.
 
-### Exp 258: Wire DualGPURunner to live benchmark harness with batched inference
+### Exp 271: Full 164-problem HumanEval with Qwen via GPU (carry-forward from Exp 261)
 
-**Deliverable:** `scripts/experiment_258_dual_gpu_harness.py`
+**Deliverable:** `results/experiment_271_results.json`
 
-Wire the DualGPURunner (built in Exp 224b at `python/carnot/inference/dual_gpu.py`) and warm model server (Exp 224a at `python/carnot/inference/model_server.py`) to the shared benchmark harness so that Qwen3.5-0.8B runs on GPU 0 and Gemma4-E4B-it runs on GPU 1 simultaneously for all dual-model experiments. Add inference batching at batch_size=8 or 16. Add automatic GPU memory cleanup (torch.cuda.empty_cache()) between runs. The harness should wrap the existing experiment_218_live_dual_model_suite.py interface so existing benchmark runners can opt in without full rewrites. Verify throughput reaches ≤3s/case target on both models. Write tests first for GPU assignment, batching, cleanup, and harness interface.
+Complete the full 164-problem HumanEval benchmark for Qwen/Qwen3.5-0.8B using the GPU harness from Exp 258. Carry-forward from Exp 261 (failed 3 times with 180s stalls). Wire DualGPURunner at the start of this experiment, not as a harness-setup prerequisite. Use the PBT + spec-aware + process-aware verifier stack (Exp 250). Checkpoint every 10 problems. If inference stalls on any problem, emit a partial honest artifact with `completed_problems`, `stall_at_problem_idx`, and the completed results. Do not stall the conductor. Report pass@1 at each stage: baseline, pbt_verify_only, spec_aware_verify_only, verify_repair. Include cross-model comparison against Exp 226 (Gemma full 164-problem). Use Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it on GPU only — CPU fallback is permitted if VRAM unavailable but must be labeled `inference_mode: "cpu_fallback"` in the artifact.
 
-### Exp 259: onnxruntime-gpu CUDA EP unlock and PredictiveVerifier benchmark
+### Exp 272: Apple adversarial GSM8K dataset preparation and GPU baseline
 
-**Deliverable:** `results/experiment_259_results.json`
+**Deliverable:** `data/research/gsm8k_adversarial_272.jsonl`
 
-Install onnxruntime-gpu (`pip install onnxruntime-gpu --extra-index-url https://download.pytorch.org/whl/cu121`) in the project venv, verify that CUDAExecutionProvider is listed in ort.get_available_providers(), export or reload the PredictiveVerifier ONNX model (check `results/jepa_predictor_146.onnx`), and benchmark CUDA ORT vs CPU ORT (5.8 µs baseline from Exp 257). Report latency (µs/call), throughput (calls/s), GPU memory overhead (MB), and model export compatibility. If CUDA ORT requires re-export, regenerate from `python/carnot/pipeline/predictive_verifier.py`. Emit honest blocker artifact if GPU setup fails — do not fabricate numbers.
+Implement the Apple adversarial GSM8K generator (arXiv 2410.05229): (1) number substitution — same logical structure, swapped operands; (2) irrelevant-sentence injection — one contextually plausible but mathematically irrelevant sentence inserted. Create adversarial variants of the 200 Exp 219 cohort questions. Run GPU baseline (no verification) on both variants with Qwen3.5-0.8B and Gemma4-E4B-it via the Exp 258 GPU harness. Checkpoint every 10 questions. Deliverable is the JSONL corpus of adversarial variants plus the baseline accuracy numbers. Primary check: does adding an irrelevant sentence cause ≥15pp accuracy drop, replicating Apple's finding? Report both adversarial variant types separately.
 
-### Exp 260: Complete solver-routed semantic benchmark with GPU inference
+### Exp 273: Apple adversarial GSM8K with verify-repair — the credibility benchmark
 
-**Deliverable:** `results/experiment_260_results.json`
+**Deliverable:** `results/experiment_273_results.json`
 
-Execute the full solver-routed semantic benchmark using the Exp 258 DualGPURunner harness. Resume from Exp 247 checkpoints (18/200 Qwen baseline cases already complete at `results/checkpoints/experiment_246/`). Cover all cells: 200 GSM8K × {baseline, verify_only, verify_repair} × {Qwen/Qwen3.5-0.8B, google/gemma-4-E4B-it} and 81 constraint_ir × 3 modes × 2 models. Report route-level evidence (solver routes that fired, abstain rates), per-model false positive budget, and whether verify-only is non-harmful for at least one model. This is the **primary deliverable of the milestone** — the first statistically complete solver-routed benchmark. Keep checkpointing at 10-case granularity. Do not fabricate cells if any remain blocked — emit a partial artifact with honest status.
-
-### Exp 261: Full 164-problem HumanEval benchmark with Qwen via GPU
-
-**Deliverable:** `results/experiment_261_results.json`
-
-Run the full 164-problem HumanEval benchmark using the GPU harness from Exp 258, for Qwen/Qwen3.5-0.8B only (Gemma 164-problem result already exists in Exp 226). Use the PBT + spec-aware + process-aware verifier stack from Exp 250. Report pass@1 at each stage: baseline, pbt_verify_only, spec_aware_verify_only, process_aware_verify_only, verify_repair. This generates the missing paired Qwen full-164 result alongside Exp 226 to enable a direct cross-model comparison at scale.
+Run the full verify-repair pipeline on the Exp 272 adversarial corpus. Test both adversarial variant types × both models × all three modes (baseline, verify_only, verify_repair). Wire DualGPURunner from the start. Checkpoint every 10 questions. Primary hypothesis (research-program.md): Carnot's verify-repair improvement should be LARGER on adversarial variants than on standard GSM8K (Exp 260), because adversarial variants contain more real arithmetic errors for Ising to catch. Secondary hypothesis: the irrelevant-sentence variant shows less verify-only degradation because FormalClaimVerifier extracts only verifiable arithmetic claims and ignores irrelevant context. Report: accuracy delta adversarial vs standard per mode, whether verify-repair improvement is larger on adversarial (primary criterion), and comparison against Exp 260. This is the single most important credibility experiment in Carnot's research history.
 
 ---
 
-## Phase 84: Predictive Verifier Calibration (Experiments 262-263)
+## Phase 88: Spilled Energy and Semantic Energy Hallucination Detection (Experiments 274-276)
 
-The Exp 256 root cause: the PredictiveVerifier gate was never calibrated on the live GSM8K inference distribution. It routed 100% of cases to FAST_PATH because its internal confidence scores were uncalibrated. This phase collects a calibration corpus and fits a calibrated threshold using the 4/δ bound framework.
+The ICLR 2026 paper (arXiv 2602.18671) detects hallucinations via "spilled energy" — the discrepancy between logit energy (pre-softmax) and output energy (post-softmax) — without requiring any external knowledge base or regex extraction. Factually incorrect outputs have systematically higher spilled energy because the model distributes probability mass across incorrect alternatives. Semantic Energy (arXiv 2508.14496) catches a complementary class: confident-but-wrong outputs where entropy is low but the top prediction is wrong.
 
-### Exp 262: Live calibration corpus for PredictiveVerifier from GPU inference
+Both signals read directly from LLM generation logits. Together they form a two-stage fast filter: spilled energy catches uncertain outputs, semantic energy catches overconfident wrong outputs. Only when either gate fires does the expensive FormalClaimVerifier run. This directly addresses the extraction bottleneck: no regex, no SMT, no KB required.
 
-**Deliverable:** `data/research/predictive_calibration_corpus_262.jsonl`
+### Exp 274: SpilledEnergyExtractor implementation
 
-Using the GPU harness from Exp 258, run a targeted calibration collection pass over 200 GSM8K questions with Qwen/Qwen3.5-0.8B. For each question, capture: the first N-token prefix (partial response at 25%, 50%, 75% of final length), the full response, and the final violation label from FormalClaimVerifier (did it flag a violation?). Extract domain-specific token patterns (explicit equation tokens, arithmetic operator sequences, digit density) from the partial contexts, keyed by whether a final violation occurred. This creates a ground-truth (partial_context_features, full_violation_label) corpus with provenance to Exp 260 case IDs. Store as JSONL with schema: case_id, prefix_fraction, token_pattern_features, violation_label, provenance_exp.
+**Deliverable:** `python/carnot/pipeline/spilled_energy_extractor.py`
 
-### Exp 263: Calibrate PredictiveVerifier and run calibrated self-learning A/B benchmark
+Implement `SpilledEnergyExtractor` as an additive ConstraintExtractor that reads from LLM generation logits. Compute per-token spilled energy = sum(softmax_probs * log_softmax_probs) − max(log_softmax_probs): this is the discrepancy between entropy and max-logit energy. Aggregate over response tokens: mean, max, p95. Expose as `SpilledEnergyResult` with: per_token_spilled (list), mean_spilled, max_spilled, p95_spilled, suspected_hallucination (bool, threshold configurable). Add `verify_spilled_energy()` method to `VerifyRepairPipeline` as opt-in entry point — does not replace existing `verify()` path. Write tests first covering spilled energy computation, thresholding, pipeline integration, edge cases (empty, single-token, uniform logits, saved logits from file). 100% targeted module coverage required. References: arXiv 2602.18671.
 
-**Deliverable:** `results/experiment_263_results.json`
+### Exp 275: SemanticEnergyExtractor implementation
 
-Use the Exp 262 corpus to calibrate the PredictiveVerifier threshold via isotonic regression. Target: fast-path hit rate ≥ 30%, true-violation detection rate ≥ 60%, FP rate ≤ 20% on held-out portion. Reference the 4/δ bound paper (arXiv 2512.02080) for operating zone identification. After calibration, run the full self-learning A/B benchmark (same structure as Exp 256: no_learning, case_memory_plus_policy, constraint_addition, predictive_gate, combined) using the calibrated gate and the Exp 260 result as the evaluation cohort. Primary success condition: any strategy achieves positive held-out gain with ≤ Exp 241 false positives. Report secondary metrics: verification spend, fast-path hit rate, per-domain lift, per-model lift.
+**Deliverable:** `python/carnot/pipeline/semantic_energy_extractor.py`
 
----
+Implement `SemanticEnergyExtractor` based on Boltzmann energy from logit distributions (arXiv 2508.14496). The semantic energy is: E_semantic = -log sum_i(exp(logit_i / T)) where T is a temperature parameter. High semantic energy = the model's top prediction is anomalously confident relative to context. Combine with spilled energy in a `DualEnergyGate` that fires if EITHER signal exceeds its threshold. Add `verify_dual_energy()` to `VerifyRepairPipeline`. Benchmark both extractors on the Exp 273 adversarial and Exp 260 standard results (retrospectively from saved logits). Report: AUROC for each signal separately and combined, precision/recall at optimal threshold, and which error categories each catches that FormalClaimVerifier misses. Key question: does the dual-energy gate identify cases where FormalClaimVerifier abstains? Write tests first. 100% coverage.
 
-## Phase 85: Domain-Specific Constraint Templates and Tier 2 Self-Learning (Experiments 264-266)
+### Exp 276: FactNet knowledge-grounded constraint extraction prototype
 
-Exp 256 showed constraint templates matched description-text proxies (full English strings) not real inference tokens. The Self-Play Info Gain paper (2603.02218) prescribes live-token mining for learnable signal. This phase rebuilds constraint templates from GPU inference data and wires constraint addition to formal solver verdicts.
+**Deliverable:** `python/carnot/pipeline/factnet_extractor.py`
 
-### Exp 264: Domain-specific constraint template extraction from live inference tokens
-
-**Deliverable:** `data/research/domain_constraint_templates_264.jsonl`
-
-Mine the Exp 262 calibration corpus and Exp 260 results for domain-specific token patterns that correlate with FormalClaimVerifier violations. For arithmetic: explicit equation tokens (digits, arithmetic operators, equals signs) and their positional context. For cardinality: count-word and quantity-noun patterns. For set-membership: list-enumeration and element-identification token sequences. Store templates as (domain, token_pattern_regex, associated_claim_route, corpus_precision, corpus_recall, model_specificity) rows. Use FormalClaimVerifier verdicts from Exp 260 as ground-truth labels (PSV approach: formal verification as the learning signal). Enforce minimum corpus_precision ≥ 0.50 before inclusion — no liberal matching allowed. Report template counts, precision distribution, and which models each template is specific to.
-
-### Exp 265: Constraint addition module wired to formal solver verdicts
-
-**Deliverable:** `python/carnot/pipeline/constraint_addition.py` (updated)
-
-Update constraint_addition.py to: (1) use Exp 264 domain templates as the source for new constraint candidates (replacing description-text proxy matching); (2) wire the addition decision to FormalClaimVerifier verdict history (from case_memory or Exp 260 checkpoints) — when memory detects a recurring violation type (e.g., arithmetic carry errors in Qwen3.5-0.8B multi-step addition), ADD a new FormalClaimVerifier route extension, not just a weight upward; (3) apply mutual verification gating (Sol-Ver approach): a template is only promoted if it fires on ≥ 3 known-violation cases AND fires on < 20% of known-correct cases in the calibration corpus. Write tests first covering template promotion logic, mutual verification gating, and integration with VerifyRepairPipeline.
-
-### Exp 266: Self-learning replay v3 with calibrated gate and domain templates
-
-**Deliverable:** `results/experiment_266_results.json`
-
-Run the chronological self-learning replay (Exp 241/256 structure) using the calibrated PredictiveVerifier gate (Exp 263) and domain-specific constraint templates (Exp 264/265). Test four strategies: no_learning, case_memory_plus_policy, calibrated_constraint_addition, calibrated_predictive_gate_plus_addition. Primary success condition: positive held-out gain with ≤ Exp 241 (8) false positives on at least one strategy. Include direct numeric comparison blocks against Exp 241 and Exp 256. State clearly if the primary condition is not met. Preserve per-strategy fast-path hit rate, latency, and domain-level breakdown.
+Implement `FactNetExtractor` prototype querying a local slice of FactNet (arXiv 2602.03417, 1.7B atomic assertions, 92.1% grounding precision). Use the top 10K most-cited triples for common GSM8K entities (numeric values, units, math facts). Each (subject, predicate, object) triple becomes a Carnot `ConstraintTerm`. Implement `verify_factual_claims(response_text) → List[ConstraintTerm]` using entity extraction + local KB lookup. Write tests covering triple parsing, entity extraction, constraint generation, pipeline integration. Research prototype: report precision on a 30-case sample from Exp 273 adversarial corpus; production-quality recall not required. Label all results `prototype_quality: true`.
 
 ---
 
-## Phase 86: HuggingFace Publishing and Hardware Enablement (Experiments 267-270)
+## Phase 89: FPGA Hardware Bring-up (Experiments 277-279)
 
-Three of the six HuggingFace publishing milestones in research-program.md are marked "NOW" and have been deferred for multiple milestones. This phase executes them. Plus AMD XDNA NPU enablement (`.so` libraries are already present).
+The Kria KV260 was ordered in milestone 2026.04.18, arrived, and has been deferred from two prior milestones. Exp 228 designed the 4096-spin sparse Ising sampler and AXI-Lite register map. Exp 242 produced a blocker artifact (no bitfile configured). This phase closes the hardware gap.
 
-### Exp 267: Update 16 HuggingFace model READMEs
+The quantum-inspired sparse Ising paper (arXiv 2604.04606) provides a directly applicable design: sparse connectivity matching Carnot's clause-graph masking (Exp 61), quantum-inspired annealing schedule (6× faster than simulated annealing, 4× scale increase to 1600 spins). KANELÉ (arXiv 2512.12850) shows KAN splines are hardware-efficient via FPGA LUT evaluation — relevant to a future `carnot-kan` hardware tier. Denoising Thermodynamic Models (arXiv 2510.23972) suggest an alternative to pure Ising that may be more FPGA-efficient.
 
-**Deliverable:** `results/experiment_267_results.json`
+### Exp 277: KV260 FPGA overlay bring-up validation
 
-Update the READMEs of all 16 existing Carnot-EBM models on huggingface.co/Carnot-EBM. Add a status banner clarifying: (1) the per-token activation EBMs are Phase 1 research artifacts that detect confidence, not correctness; (2) users should use `pip install carnot` for the production pipeline with FormalClaimVerifier, MCP server, and PBT code verification; (3) a brief "what's proven to work" section referencing verified capabilities. Do not delete existing content — prepend the status banner and append the updated context section. Use `huggingface-cli` to push each update. Log each model's HF repo URL and push status in the results artifact. Write a simple script to batch the updates.
+**Deliverable:** `results/experiment_277_results.json`
 
-### Exp 268: Publish Exp 66 joint model and FormalClaimVerifier ONNX to HuggingFace
+Attempt KV260 FPGA overlay bring-up. Steps: (1) configure `CARNOT_KV260_BITFILE` to the Carnot Ising bitstream (if synthesized) or PYNQ base overlay (to validate the stack); (2) load overlay via PYNQ Python API; (3) exercise the AXI-Lite register map (write/read coupling matrix fields, verify round-trip latency); (4) trigger one Ising Gibbs sweep and readback sampled spin state. Report: overlay load latency, register round-trip latency, whether sampled state is valid (all spins ∈ {+1,-1}), and execution_path ("hardware", "software_model", or "blocked"). If bitstream not yet synthesized, use PYNQ base overlay to validate the stack and report as "software_model" with exact next steps. Do NOT fabricate hardware timing numbers. Do NOT stall: set a 60s timeout and emit blocker on timeout.
 
-**Deliverable:** `results/experiment_268_results.json`
+### Exp 278: FpgaBackend implementation with quantum-inspired sparse Ising schedule
 
-Publish two new artifacts to huggingface.co/Carnot-EBM: (1) the Exp 66 differentiable constraint model (embedding + Ising → score, 1.0 AUROC) as a safetensors artifact with a README stating "proof-of-concept demonstrating the approach, not production quality"; (2) the FormalClaimVerifier exported as an ONNX model for the ONNX-compatible components (arithmetic and comparison routes), with a Python module bundle for the remaining routes, and a README explaining solver routing, abstention policy, and how to use it standalone. Tag the collection as release `v0.2.0-research`. Log HF artifact URLs and model card stats in the results artifact.
+**Deliverable:** `python/carnot/samplers/fpga_backend.py`
 
-### Exp 269: AMD XDNA NPU enablement for PredictiveVerifier
+Implement `FpgaBackend` as a concrete `SamplerBackend` (Exp 71 protocol). Steps: (1) load coupling matrix J and bias vector h from an `IsingEBM` instance; (2) quantize to KV260 Q8.8 fixed-point (from Exp 228 design); (3) apply quantum-inspired sparse connectivity (arXiv 2604.04606): keep top-K couplings by magnitude, matching Exp 61 clause-graph masking; (4) serialize to AXI-Lite register map schema from Exp 228; (5) if CARNOT_KV260_BITFILE set, send over PYNQ AXI and readback; else invoke `ParallelIsingSampler` as software-model fallback. Include optional `use_lagrangian_penalty` flag (LagONN, arXiv 2505.07179) to escape infeasible local minima. Write tests first for quantization, sparse connectivity, register serialization, hardware/software dispatch, and LagONN penalty. 100% targeted module coverage. Note the KANELÉ approach (arXiv 2512.12850) as future extension comment in the code (KAN LUT evaluation for the `carnot-kan` tier).
 
-**Deliverable:** `results/experiment_269_results.json`
+### Exp 279: FPGA vs CPU Ising benchmark (hardware or software-model)
 
-Attempt to enable the AMD XDNA NPU for PredictiveVerifier inference using the already-present VitisAI EP files in `~/github.com/amd/RyzenAI-SW/`. Steps: (1) activate `.venv-npu/` (Python 3.12); (2) configure LD_LIBRARY_PATH to include the VitisAI EP `.so` files and attempt to load `onnxruntime` with VitisAIExecutionProvider; (3) load `results/jepa_predictor_146.onnx`; (4) benchmark latency vs CPU ORT (5.8 µs Exp 257 baseline) and CUDA ORT (Exp 259). If NPU setup succeeds: report throughput (calls/s), power consumption (if measurable), and routing quality differences. If blocked: emit honest blocker naming the exact missing component and exact next action to unblock. Do not fabricate NPU numbers.
+**Deliverable:** `results/experiment_279_results.json`
 
-### Exp 270: Operational retrospective for milestone 2026.04.19
+Benchmark `FpgaBackend` against `ParallelIsingSampler` (CPU) on three problem sizes: 100 spins, 500 spins, 1000 spins. For each: measure samples/second, energy convergence quality (final energy vs ground truth), and whether the quantum-inspired sparse schedule improves convergence vs dense CPU sampling. If KV260 hardware available (CARNOT_KV260_BITFILE set): report hardware latency explicitly labeled `execution_path: "hardware"`. Otherwise: software-model timing labeled `execution_path: "software_model"`. Compare against Exp 228 software-model baseline. Report whether the sparse Ising design from arXiv 2604.04606 reproduces its claimed 6× speedup in software simulation. Include a LagONN penalty convergence comparison (with vs without penalty on a known-infeasible problem). Do NOT stall: 60s timeout per benchmark configuration.
 
-**Deliverable:** `results/operational_retro_2026_04_19.json`
+---
 
-Generate the process efficiency analysis for this milestone. Measure whether DualGPURunner wiring + inference batching achieved the predicted 25% wall-time reduction vs the 2026.04.18 baseline (3,889 minutes total, 14.2 min/experiment average). Enable continuous GPU monitoring (`gpu_monitor.py --loop`) at the start of this milestone to record actual GPU utilization rather than estimating it post-hoc. Document: total wall time, experiments/hour, slowest experiments, GPU utilization distribution, and whether the Exp 260 benchmark completion proves the throughput hypothesis. Generate updated recommendations for milestone 2026.04.20.
+## Phase 90: JEPA Self-Training, NPU, HuggingFace Publishing, and Retro (Experiments 280-283)
+
+### Exp 280: JEPA predictor training on GPU-inference data — Tier 3 self-learning
+
+**Deliverable:** `results/experiment_280_results.json`
+
+**This is the required continuous self-learning experiment for this milestone.** Train the JEPA predictor on GPU-inference calibration data from the Exp 273 Apple adversarial run (logits must be saved during Exp 273 at 25/50/75% prefix fractions, enriched with Exp 273's adversarial structure which is more violation-dense than standard GSM8K). The Exp 262 corpus (CPU inference, near-random feature importance) is insufficient. New data from Exp 273 GPU inference should be more discriminative because: (a) GPU inference is faster and more consistent; (b) adversarial variants have higher violation density; (c) richer token features (spilled energy and semantic energy from Exp 274-275 added as features).
+
+Implement via EBM-CoT approach (arXiv 2511.07124): train an EBM that refines latent thought representations. Apply isotonic regression calibration. Target operating zone: fast-path hit rate ≥ 30%, true-violation detection rate ≥ 60%, FP rate ≤ 20% (4/δ bound framework, arXiv 2512.02080). Deploy calibrated gate as default `PredictiveVerifier`. Run a 50-case A/B test on Exp 273 held-out questions: calibrated vs uncalibrated gate. Apply conformal coverage bounds (arXiv 2603.22966) to report statistically valid confidence intervals on the gate's precision/recall. Report: calibrated fast-path rate, TP/FP rates, net accuracy delta on A/B held-out, and conformal coverage intervals. State clearly if fast-path ≥ 30% is not achieved.
+
+### Exp 281: AMD XDNA NPU enablement — onnxruntime source build approach
+
+**Deliverable:** `results/experiment_281_results.json`
+
+Third and final structured attempt at AMD XDNA NPU (previous 3 all stalled at 180s). Take a different approach: build onnxruntime 1.20.1 from source with `-Donnxruntime_USE_VITISAI=ON` using the VitisAI EP source in `~/github.com/amd/RyzenAI-SW/`. Steps: (1) install cmake, ninja, openblas build dependencies; (2) configure onnxruntime 1.20.1 with VitisAI EP; (3) build in `.venv-npu/` Python 3.12; (4) if build succeeds, load `results/jepa_predictor_146.onnx` with VitisAIExecutionProvider and benchmark vs CPU ORT (8.6 µs Exp 257 baseline). **Hard constraint: 45-minute build timeout.** If exceeded, emit blocker artifact immediately with exact step, error log, and next action. Do NOT let the build stall the conductor silently.
+
+### Exp 282: Publish Exp 66 joint model and FormalClaimVerifier to HuggingFace
+
+**Deliverable:** `results/experiment_282_results.json`
+
+Carry-forward from Exp 268 (SKIP'd 3 times). Publish to huggingface.co/Carnot-EBM: (1) the Exp 66 differentiable constraint model (embedding + Ising → score, 1.0 AUROC) as `safetensors` with README: "proof-of-concept, not production quality"; (2) the FormalClaimVerifier as ONNX (arithmetic + comparison routes) + Python bundle (remaining routes), README explaining solver routing, abstention policy, standalone usage. Tag as release `v0.2.0-research`. Use `huggingface_hub` Python library. Log HF artifact URLs and push status in results artifact. If credentials not configured, emit clear blocker with `huggingface-cli login` instructions. Do NOT stall silently — check credentials first.
+
+### Exp 283: Operational retrospective for milestone 2026.04.20
+
+**Deliverable:** `results/operational_retro_2026_04_20.json`
+
+Generate the process efficiency analysis for milestone 2026.04.20. Specifically audit whether the 2026.04.19 retro action items were resolved — the 2026.04.19 retro showed 100% carry-over from the 2026.04.18 retro (zero action items resolved). Track: (1) was DualGPURunner wired from Exp 1? (2) did per-question checkpointing prevent stall losses? (3) was CUDA ORT batch_size ≥ 32 tested? (4) did the Apple adversarial benchmark complete? (5) did the carry-over rate from 2026.04.19 retro improve below 100%? Report: total wall time, experiments/hour, GPU utilization per-experiment (not just milestone-end), and updated action items for 2026.04.21 with explicit "resolved/deferred/new" tracking.
 
 ---
 
@@ -221,10 +224,10 @@ Generate the process efficiency analysis for this milestone. Measure whether Dua
 
 | Phase | Experiments | Theme | Key Success Criterion |
 |-------|-------------|-------|----------------------|
-| 83 | 258-261 | GPU inference pipeline + benchmark completion | Exp 260 completes: valid solver-routed results for both models |
-| 84 | 262-263 | PredictiveVerifier calibration | Calibrated gate: fast-path ≥30%, detection ≥60%, FP ≤20% |
-| 85 | 264-266 | Domain templates + Tier 2 self-learning | Any strategy: positive held-out gain vs Exp 241 baseline |
-| 86 | 267-270 | HuggingFace publishing + hardware | ≥2 new HF artifacts; 16 READMEs updated |
+| 87 | 271-273 | GPU benchmark completion + Apple adversarial | Exp 273: adversarial verify-repair Δ > standard GSM8K Δ |
+| 88 | 274-276 | Spilled energy + semantic energy + FactNet | Exp 275: dual-energy AUROC ≥ 0.65 on Exp 273 adversarial |
+| 89 | 277-279 | FPGA hardware bring-up | Exp 277: first non-"blocked" KV260 execution_path result |
+| 90 | 280-283 | Tier 3 JEPA + NPU + HuggingFace + retro | Exp 280: calibrated gate fast-path ≥ 30%, FP ≤ 20% |
 
 ---
 
@@ -232,36 +235,49 @@ Generate the process efficiency analysis for this milestone. Measure whether Dua
 
 | Hardware | Experiments | Status |
 |----------|-------------|--------|
-| 2× RTX 3090 (CUDA) | 258-266 | Available; DualGPURunner wiring needed |
-| onnxruntime-gpu pip wheel | 259, 263 | One `pip install onnxruntime-gpu` away |
-| AMD XDNA NPU (kernel module loaded) | 269 | VitisAI EP .so present in RyzenAI-SW; Python 3.12 venv ready |
-| HuggingFace CLI + account | 267-268 | May need `huggingface-cli login` at milestone start |
-| AMD KV260 FPGA | Retro mention | Available; overlay bring-up deferred to 2026.04.20 |
+| 2× RTX 3090 (CUDA) | 271, 272, 273, 275, 276, 280 | Available; must wire from Exp 1, not just harness setup |
+| Kria KV260 FPGA | 277, 278, 279 | Available; CARNOT_KV260_BITFILE path must be configured at milestone start |
+| AMD XDNA NPU (kernel module loaded) | 281 | VitisAI EP .so present; needs onnxruntime source build with VitisAI |
+| HuggingFace CLI + credentials | 282 | May need `huggingface-cli login` at milestone start |
+| ONNX export (Exp 66) | 282 | Exp 66 safetensors artifact exists in results/ |
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 258 (DualGPURunner harness)
-    ├── Exp 260 (solver-routed semantic benchmark, complete)
-    │       └── Exp 262 (calibration corpus from GPU inference)
-    │               └── Exp 263 (calibrate gate + A/B v2)
-    │                       └── Exp 266 (self-learning v3)
-    └── Exp 261 (HumanEval 164-problem Qwen GPU)
-Exp 259 (onnxruntime-gpu) ──────────────────────────── Exp 263
-Exp 264 (domain templates) ── Exp 265 (constraint addition) ── Exp 266
-Exp 267 (HF READMEs) [independent]
-Exp 268 (HF publish) [independent, cite Exp 260 in README]
-Exp 269 (AMD XDNA NPU) [independent]
-Exp 270 (retro) [depends on all prior]
+Exp 271 (HumanEval Qwen GPU)          [GPU required, carry-forward]
+Exp 272 (Apple adversarial dataset)   [GPU required, independent]
+    └── Exp 273 (Apple adversarial + verify-repair, saves logits)
+              ├── Exp 275 (dual-energy benchmark — uses Exp 273 logits)
+              └── Exp 280 (JEPA training — uses Exp 273 GPU-inference data)
+Exp 274 (SpilledEnergyExtractor) ─────── Exp 275 (dual-energy benchmark)
+Exp 275 (SemanticEnergyExtractor) ───── Exp 275 (same deliverable, extend Exp 274)
+Exp 276 (FactNetExtractor)             [independent prototype]
+Exp 277 (KV260 bring-up) ─────────── Exp 278 (FpgaBackend) ── Exp 279 (benchmark)
+Exp 281 (AMD XDNA NPU)                [independent, 45min build timeout]
+Exp 282 (HF publish)                  [independent]
+Exp 283 (retro)                       [depends on all prior]
 ```
 
 ---
 
 ## What This Milestone Does NOT Include
 
-- **KV260 FPGA overlay bring-up** — deferred to 2026.04.20; DualGPURunner and CUDA ORT deliver faster wins with lower risk. KV260 earmarked for a dedicated hardware phase.
-- **Gemma3 / Qwen4 model upgrades** — not yet available at HuggingFace at planning time; models stay as Qwen/Qwen3.5-0.8B and google/gemma-4-E4B-it per research-program.md.
-- **DOMINO / grammar-constrained generation** — long-term path, depends on completing the current autoregressive benchmark first.
-- **EB-JEPA / THRML integration** — depends on self-learning calibration being proven. Post-milestone 2026.04.20 at earliest.
+- **PredictiveVerifier CUDA ORT batched benchmark** — Exp 259 proved CUDA is slower at batch_size=1. A batched benchmark (batch_size ≥ 32) would require inference pipeline changes. Defer to 2026.04.21 when Tier 3 is proven useful.
+- **DOMINO grammar-constrained generation** — long-term path, depends on completing the current autoregressive benchmark first.
+- **Conformal prediction (TECP)** — incorporated into Exp 280 as coverage bounds; not a separate experiment.
+- **ΠNet projection repair** — valid future direction (arXiv 2508.10480); Langevin repair sufficient for now.
+- **Z3/SMT constraint extraction (VERGE, NSVIF)** — deferred to 2026.04.21; spilled energy is a faster win for the extraction problem and must be proven first.
+- **Contrastive Decoding** — deferred; no benchmark infrastructure for it yet.
+
+---
+
+## Key Lessons from 2026.04.19 to Apply Immediately
+
+1. **Wire DualGPURunner from Exp 1** — not as a separate harness setup step. The retro showed 99% GPU idle.
+2. **Per-question checkpointing on every long benchmark** — stall at 180s killed Exp 261-269. Checkpoint every 10 questions, resume gracefully.
+3. **Hard timeout on build/inference** — Exp 281 NPU build: 45-minute timeout; emit blocker immediately.
+4. **GPU cleanup hook between experiments** — `torch.cuda.empty_cache()` after every experiment that loads a model.
+5. **Credential check at milestone start** — Exp 282 HF publish: check `huggingface-cli whoami` before attempting any uploads.
+6. **Save logits during Exp 273** — SpilledEnergyExtractor (Exp 274) and JEPA training (Exp 280) both need logit data from Exp 273. This must be explicit in the Exp 273 prompt.
