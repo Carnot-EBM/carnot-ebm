@@ -1456,3 +1456,4 @@
 | exp298 | 2026-04-14T10:29:25Z | 2026-04-14T10:30:16Z | Minimal doc updates for Exp 298 (PrefillUncertaintyProbe): verified changelog + status already updated by commit, appended 3 rows to traceability.md (REQ-VERIFY-080, SCENARIO-VERIFY-103/104) | 0m51s |
 | exp291-fpga | 2026-04-14T12:06:46Z | 2026-04-14T12:20:21Z | Exp 291 FPGA RTL: 128-spin Verilog RTL (ising_sampler_v1.v), Python behavioral sim (simulate_ising_sampler.py), 36 tests passing, hardware/kv260/README.md; REQ-SAMPLE-011, SCENARIO-SAMPLE-023/024 | 13m35s |
 | exp308 | 2026-04-14T15:31:56Z | 2026-04-14T15:40:13Z | Exp 308: JEPA gate benchmark — all code pre-written; fixed logit_mean dim (32→8 for Exp291 ONNX); ran 28 tests (pass); ran benchmark (TARGET NOT MET: skip_rate=0.0, Exp307 model missing); updated ops docs | 8m17s |
+| exp316 | 2026-04-14T20:29:35Z | 2026-04-14T20:29:55Z | Minimal doc updates for Exp 316: append changelog entry (execution status) and status row (in progress) | 0m20s |
