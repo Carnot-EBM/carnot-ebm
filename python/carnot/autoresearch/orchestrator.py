@@ -52,6 +52,7 @@ if TYPE_CHECKING:
 
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
 from carnot.autoresearch.consolidator import ConsolidatorConfig, consolidate_lessons
+from carnot.autoresearch.constitution import ActionCategory, ConstitutionChecker
 from carnot.autoresearch.evaluator import evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
 from carnot.autoresearch.sandbox import SandboxConfig, run_in_sandbox
@@ -105,6 +106,10 @@ class AutoresearchConfig:
     consolidation_batch_size: int = 32
     consolidation_interval: int = 5
     analyst_config: Any = None
+    # Constitution checker guards what the conductor is allowed to do autonomously.
+    # None means no checking (backwards compatible); supply a ConstitutionChecker
+    # instance to enforce the three-tier policy during unsupervised runs.
+    constitution_checker: ConstitutionChecker | None = None
 
 
 @dataclass
@@ -243,6 +248,31 @@ def run_loop(
             continue
 
         logger.info("Evaluating hypothesis %s: %s", exp_id, description)
+
+        # --- Constitution check (REQ-AUTO-015) ---
+        # Verify the conductor is allowed to run a sandbox before proceeding.
+        # This guards against a rogue hypothesis generator trying to trigger
+        # forbidden operations by embedding them in the action description.
+        if config.constitution_checker is not None:
+            verdict = config.constitution_checker.check("run_sandbox")
+            if verdict.category == ActionCategory.FORBIDDEN:
+                logger.error(
+                    "Constitution: sandbox execution FORBIDDEN for %s — %s",
+                    exp_id,
+                    verdict.reason,
+                )
+                result.rejected += 1
+                result.iterations += 1
+                continue
+            if verdict.category != ActionCategory.ALLOWED:
+                logger.warning(
+                    "Constitution: sandbox execution requires approval for %s — "
+                    "skipping (REQUIRES_APPROVAL not auto-handled in run_loop).",
+                    exp_id,
+                )
+                result.pending_review += 1
+                result.iterations += 1
+                continue
 
         # --- Stage 1: Sandbox execution (REQ-AUTO-004) ---
         sandbox_result = run_in_sandbox(code, benchmark_data, config.sandbox_config)

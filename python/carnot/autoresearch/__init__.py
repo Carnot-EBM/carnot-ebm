@@ -25,6 +25,14 @@ Spec: REQ-AUTO-001 through REQ-AUTO-014
 """
 
 from carnot.autoresearch.baselines import BaselineRecord, BenchmarkMetrics
+from carnot.autoresearch.constitution import (
+    ActionCategory,
+    ALLOWED_ACTIONS,
+    ConstitutionChecker,
+    ConstitutionVerdict,
+    FORBIDDEN_ACTIONS,
+    REQUIRES_APPROVAL_ACTIONS,
+)
 from carnot.autoresearch.consolidator import ConsolidatorConfig, consolidate_lessons
 from carnot.autoresearch.evaluator import EvalResult, evaluate_hypothesis
 from carnot.autoresearch.experiment_log import ExperimentEntry, ExperimentLog
@@ -55,8 +63,14 @@ from carnot.autoresearch.transpile import (
 )
 
 __all__ = [
+    "ActionCategory",
+    "ALLOWED_ACTIONS",
     "AnalystConfig",
     "AutoresearchConfig",
+    "ConstitutionChecker",
+    "ConstitutionVerdict",
+    "FORBIDDEN_ACTIONS",
+    "REQUIRES_APPROVAL_ACTIONS",
     "BaselineRecord",
     "BenchmarkMetrics",
     "ConformanceResult",
