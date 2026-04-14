@@ -1185,6 +1185,55 @@ class VerifyRepairPipeline:
         result.certificate["ising_skipped"] = False
         return result
 
+    def verify_with_z3(
+        self,
+        question: str,
+        response: str,
+        timeout_s: float = 2.0,
+    ) -> "Z3Result":
+        """Check a chain-of-thought response for internal inconsistency via Z3.
+
+        **Detailed explanation for engineers:**
+            Additive integration point for NL2Z3Extractor.  Does not modify
+            ``verify()`` or ``verify_and_repair()``; safe to call in parallel
+            with the Ising pipeline.
+
+            In CI mode (CARNOT_FORCE_LIVE not set) this always returns a
+            Z3Result with sat_status="unknown" without making any LLM call.
+
+            In production mode (CARNOT_FORCE_LIVE=1) this makes one extra LLM
+            call via NL2Z3Extractor, runs the generated Z3 code in a sandboxed
+            subprocess, and returns the solver verdict.
+
+        Args:
+            question:  The original question posed to the LLM (passed through
+                       to NL2Z3Extractor for prompt context).
+            response:  The chain-of-thought response to check.
+            timeout_s: Subprocess timeout for Z3 execution (default 2.0 s).
+
+        Returns:
+            Z3Result with sat_status in {sat, unsat, unknown, error}.
+            Call result.violations_found to check whether a violation was found.
+
+        Spec: REQ-EXTRACT-010, SCENARIO-EXTRACT-020, SCENARIO-EXTRACT-021,
+              SCENARIO-EXTRACT-024
+        """
+        from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor, Z3Result
+
+        # Lazily create the extractor instance on first use, or update timeout
+        # if the cached extractor's timeout doesn't match the requested timeout.
+        if not hasattr(self, "_nl2z3_extractor") or self._nl2z3_extractor is None:
+            self._nl2z3_extractor = NL2Z3Extractor(timeout_s=timeout_s)
+        elif self._nl2z3_extractor._timeout_s != timeout_s:
+            # If timeout_s changed, recreate the extractor with the new timeout.
+            self._nl2z3_extractor = NL2Z3Extractor(timeout_s=timeout_s)
+
+        self._nl2z3_extractor.extract(question, response)
+        result = self._nl2z3_extractor.last_z3_result
+        if result is None:
+            return Z3Result(sat_status="unknown", z3_code="", runtime_ms=0.0)
+        return result
+
     def verify_and_repair(
         self,
         question: str,

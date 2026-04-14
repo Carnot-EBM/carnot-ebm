@@ -593,7 +593,7 @@ tasks:
          g. [CI COMPUTATION] wilson_interval(correct, n_total) → (lower, upper) at 95%
          h. [CHECKPOINT] checkpoint_save() every 50 questions
          i. [ARTIFACT SCHEMA] Flat result with:
-            - per_model_results: (model_name: (mode: {accuracy, ci_lower, ci_upper, n_total))}
+            - per_model_results: (model_name: (mode: (accuracy, ci_lower, ci_upper, n_total)))
             - per_variant_results: (standard, number_swap, irrelevant_sentence) for GSM8K
             - published_baselines: (Qwen3.5-0.8B: 0.25, Gemma4-E4B-it: 0.80)
             - inference_mode: "live_gpu" or "simulated"

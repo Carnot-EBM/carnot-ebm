@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 310: NL2Z3Extractor — LLM-to-Z3 Chain-of-Thought Verification)
+
+Implements REQ-EXTRACT-010 and REQ-EXTRACT-011: NL2Z3Extractor translates
+chain-of-thought reasoning into Z3 Python assertions via a second LLM call,
+runs Z3 in a sandboxed subprocess, and surfaces internal contradictions
+(UNSAT → violation).  Addresses the #1 constraint-extraction bottleneck from
+Exps 203/207.
+
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added **REQ-EXTRACT-010**: NL2Z3 chain-of-thought constraint extraction.
+  - Added **REQ-EXTRACT-011**: Z3 UNSAT violation detection via Z3Result dataclass.
+  - Added **SCENARIO-EXTRACT-020** through **SCENARIO-EXTRACT-024**.
+  - Added traceability rows for REQ-EXTRACT-010 and REQ-EXTRACT-011.
+- `python/carnot/pipeline/nl2z3_extractor.py` (new):
+  - `Z3Result(sat_status, z3_code, runtime_ms, violations_found, error_message)`.
+  - `build_z3_prompt(response) → (system, user)` — messages for LLM Z3 codegen.
+  - `run_z3_code(code, timeout_s=2.0) → Z3Result` — sandboxed subprocess runner.
+  - `NL2Z3Extractor` — implements ConstraintExtractor protocol; CI guard via
+    `CARNOT_FORCE_LIVE`; injectable `generate_fn` for testing.
+- `python/carnot/pipeline/verify_repair.py`:
+  - Added `VerifyRepairPipeline.verify_with_z3(question, response, timeout_s=2.0) → Z3Result`.
+- `python/carnot/pipeline/__init__.py`:
+  - Exported `NL2Z3Extractor` and `Z3Result`.
+- `tests/python/test_nl2z3_extractor.py` (new): 37 tests; all pass.
+- `scripts/experiment_310_nl2z3_results.py` (new): 50-record benchmark; CI mode ~0 s.
+- Triggered by: user instruction (NL2Z3Extractor implementation).
+
 ## 2026-04-14 (Operational Retrospective — Milestone 2026.04.22)
 
 Written by conductor retrospective pass; no code changed.
