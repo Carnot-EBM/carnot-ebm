@@ -1572,3 +1572,7 @@ python/ |
 | 2026-04-14 20:59 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 20:59 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
 | 2026-04-14 20:59 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
+| 2026-04-14 21:01 UTC | Exp 317: HuggingFace publish — update all model RE | OK | 81 passed in 3.19s |
+| 2026-04-14 21:02 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-14 21:02 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
+| 2026-04-14 21:02 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
