@@ -1,0 +1,8 @@
+ When you boot back up with the eGPU attached, here's the checklist:
+
+  1. rocminfo | grep gfx — verify RX 7900 XTX (gfx1100) detected
+  2. python -c "import torch; print(torch.cuda.get_device_name(0))" — PyTorch sees it
+  3. python -c "import jax; print(jax.devices())" — JAX sees it (this is the big test)
+  4. If JAX works on gfx1100: update research-program.md to remove JAX_PLATFORMS=cpu requirement
+  5. Restart the conductor: AGENT_TYPE=claude .venv/bin/python scripts/research_conductor.py --loop --interval 1 --no-push
+

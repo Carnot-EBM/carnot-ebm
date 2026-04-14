@@ -1451,3 +1451,5 @@ python/ |
 | 2026-04-14 01:43 UTC | Exp 272: Self-learning Tier 1 retrained on live tr | FAIL | Post-tests failed:  |
 | 2026-04-14 01:53 UTC | Exp 272: Self-learning Tier 1 retrained on live tr | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-14 01:54 UTC | Exp 272: Self-learning Tier 1 retrained on live tr | OK | Deliverable already exists in repo |
+| 2026-04-14 02:05 UTC | Exp 273: Agent rollback verification on live model | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 02:06 UTC | Exp 273: Agent rollback verification on live model | OK | Deliverable already exists in repo |
