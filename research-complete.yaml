@@ -1471,3 +1471,61 @@ milestones:
     title: 'Exp 294: Operational retrospective for milestone 2026.04.21'
     deliverable: results/operational_retro_2026_04_21.json
     result: OK (conductor)
+- id: 2026.04.22
+  title: Apple Adversarial Completion, Dual-Energy Gate, Constraint Addition, and NPU Hardware
+  doc: openspec/change-proposals/research-roadmap-v28.md
+  completed: '2026-04-14'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp294-gpu-stall-diagnosis-apple-baseline
+    title: 'Exp 294: GPU stall diagnosis + Apple adversarial baseline re-run'
+    deliverable: results/experiment_294_results.json
+    result: OK (conductor)
+  - id: exp295-apple-adversarial-verify-repair-rerun
+    title: 'Exp 295: Apple adversarial verify-repair re-run (with pre-warm fix)'
+    deliverable: results/experiment_295_results.json
+    result: OK (conductor)
+  - id: exp296-apple-adversarial-analysis-docs
+    title: 'Exp 296: Apple adversarial analysis, classification, and docs update'
+    deliverable: results/experiment_296_results.json
+    result: OK (conductor)
+  - id: exp297-semantic-energy-varentropy
+    title: 'Exp 297: SemanticEnergyExtractor + VarEntropyProbe (confident-wrong + entropy variance)'
+    deliverable: python/carnot/pipeline/semantic_energy_extractor.py
+    result: OK (conductor)
+  - id: exp298-prefill-uncertainty-probe
+    title: "Exp 298: PrefillUncertaintyProbe \u2014 pre-generation hallucination risk (arXiv 2603.19562)"
+    deliverable: python/carnot/pipeline/prefill_uncertainty_probe.py
+    result: OK (conductor)
+  - id: exp299-jepa-retrain-real-logits
+    title: 'Exp 299: JEPA retrain on real Apple adversarial logits from Exp 294/295'
+    deliverable: results/experiment_299_results.json
+    result: OK (conductor)
+  - id: exp300-memory-to-constraint-generator
+    title: "Exp 300: Memory-to-Constraint Generator \u2014 Tier 2 patterns to new constraint types"
+    deliverable: python/carnot/pipeline/constraint_generator.py
+    result: OK (conductor)
+  - id: exp301-confidence-weighted-constraints
+    title: "Exp 301: Confidence-weighted constraint violations \u2014 only repair high-confidence errors"
+    deliverable: python/carnot/pipeline/confidence_verifier.py
+    result: OK (conductor)
+  - id: exp302-self-learning-benchmark-constraint-addition
+    title: "Exp 302: Self-learning integrated benchmark \u2014 constraint addition + confidence weighting"
+    deliverable: results/experiment_302_results.json
+    result: OK (conductor)
+  - id: exp303-amd-xdna-npu-unblock
+    title: "Exp 303: AMD XDNA NPU VitisAI unblock \u2014 install ninja+openblas, source ORT build"
+    deliverable: results/experiment_303_npu_results.json
+    result: OK (conductor)
+  - id: exp304-huggingface-actual-publish
+    title: "Exp 304: HuggingFace actual publish \u2014 run Exp 293 script with credentials"
+    deliverable: results/experiment_304_hf_results.json
+    result: OK (conductor)
+  - id: exp305-kv260-verilog-ising-synthesis
+    title: "Exp 305: KV260 Verilog Ising sampler \u2014 first synthesis pass with quantum-inspired schedule"
+    deliverable: hardware/kv260/ising_sampler_v1.v
+    result: OK (conductor)
+  - id: exp306-operational-efficiency-improvements
+    title: "Exp 306: Operational efficiency \u2014 scaffolding template, GPU pre-warm, inference batching"
+    deliverable: scripts/experiment_template.py
+    result: OK (conductor)
