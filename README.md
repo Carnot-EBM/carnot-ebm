@@ -76,13 +76,13 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (257+ experiments, 24 completed milestones)
+## Key Results (267+ experiments, 24 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
-Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **81 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+Provenance snapshot: **13 live GPU artifacts**, **3 simulated artifacts**, **85 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
 ## PBT Verification
 
