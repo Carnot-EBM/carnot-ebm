@@ -327,6 +327,17 @@ These are NOT candidates for revalidation — they were disproven by experimenta
 - **LNN adaptive couplings** (Exp 116): -90% vs static Ising. Worse in every metric.
 - **Precision-based constraint reweighting** (Exp 134 original): 0% improvement on the specific reweighting approach (though the self-learning architecture was validated by Exp 223).
 
+### Photonic Computing (Monitor — Not Actionable Yet)
+- **Q.ANT NPU 2.0** — commercial photonic matmul accelerator (30x energy efficiency).
+  Not directly useful for sampling. Commercial-only, no cloud access.
+- **Photonic Ising Machines (SPIMs)** — encode spins as phase patterns, compute
+  Hamiltonians optically in a single pass. Currently ~32 spins experimentally.
+  - [arxiv 2508.17440](https://arxiv.org/abs/2508.17440) — k-local Ising + optical KANs on same platform (maps to Carnot tiers!)
+  - [arxiv 2502.18918](https://arxiv.org/abs/2502.18918) — parallel SPIM via spatial multiplexing
+  - [arxiv 2410.10689](https://arxiv.org/abs/2410.10689) — fully programmable SPIM
+- **When to act:** When SPIMs scale past ~100 spins or Q.ANT opens cloud access.
+  Our SamplerBackend abstraction is ready for a photonic adapter.
+
 ## Archived (Investigated, Not Promising)
 
 - LNN adaptive couplings within chains: -90% vs static Ising (Exp 116)
