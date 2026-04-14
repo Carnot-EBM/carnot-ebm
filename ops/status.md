@@ -4,6 +4,21 @@
 
 ## What's Working
 
+### Exp 302: Integrated Self-Learning Benchmark — Tier 1+2 Live (REQ-LEARN-010, REQ-LEARN-011, REQ-VERIFY-081, REQ-VERIFY-082)
+
+- `scripts/experiment_302_self_learning_benchmark.py` — First end-to-end benchmark combining
+  Exp 301 confidence-weighted repair gating (threshold=0.8) and Exp 300 memory-to-constraint
+  generation (soundness bound 0.85 per arXiv 2603.03538).
+  - Design: 100 questions in 2 × 50 batches. Batch 1 warms up CaseMemory; ConstraintGenerator
+    enriches the extractor between batches; Batch 2 runs with enriched constraints.
+  - Primary metric: improvement_delta = batch2_accuracy − batch1_accuracy (honest signed float;
+    negative values are reported, not hidden).
+  - inference_mode: "live_gpu" when GPU available, "simulated" (arithmetic parsing) otherwise.
+  - All 62 tests pass. Full suite: **3841 passed**, 39 skipped.
+- **Run (simulated):** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_302_self_learning_benchmark.py --simulated`
+- **Run (GPU):** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_302_self_learning_benchmark.py`
+- **Output:** `results/experiment_302_results.json`
+
 ### Confidence-Weighted Constraint Verification (REQ-VERIFY-081, REQ-VERIFY-082)
 
 - `python/carnot/pipeline/confidence_verifier.py` — Converts binary violated/not-violated
