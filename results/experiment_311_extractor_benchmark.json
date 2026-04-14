@@ -1,0 +1,53 @@
+{
+  "experiment": 311,
+  "title": "Exp 311: Head-to-head extractor benchmark (ArithmeticExtractor vs LLMExtractor vs NL2Z3Extractor)",
+  "run_date": "20260414",
+  "started_at": "2026-04-14T17:55:27Z",
+  "finished_at": "2026-04-14T17:55:30Z",
+  "duration_s": 2.683,
+  "status": "success",
+  "extractors": [
+    "ArithmeticExtractor",
+    "NL2Z3Extractor"
+  ],
+  "fp_tp_table": [
+    {
+      "extractor": "ArithmeticExtractor",
+      "fp_rate": 0.0,
+      "tp_rate": 0.4667,
+      "mean_runtime_ms": 0.01,
+      "n_total": 30
+    },
+    {
+      "extractor": "NL2Z3Extractor",
+      "fp_rate": 0.0,
+      "tp_rate": 0.0,
+      "mean_runtime_ms": 0.0,
+      "n_total": 30
+    }
+  ],
+  "winner": "ArithmeticExtractor",
+  "recommendation": "Deploy ArithmeticExtractor: FP=0.0%, TP=46.7%. FP < 5% threshold \u2014 acceptable.",
+  "inference_mode": "simulated",
+  "corpus_size": 30,
+  "n_correct": 15,
+  "n_incorrect": 15,
+  "schema": [
+    "corpus_size",
+    "duration_s",
+    "experiment",
+    "extractors",
+    "finished_at",
+    "fp_tp_table",
+    "inference_mode",
+    "n_correct",
+    "n_incorrect",
+    "recommendation",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title",
+    "winner"
+  ]
+}

@@ -2596,6 +2596,44 @@ Spec: REQ-EXTRACT-011, SCENARIO-EXTRACT-022, SCENARIO-EXTRACT-023, SCENARIO-EXTR
 **And** the returned list is empty
 **And** the internal `Z3Result` has `sat_status="unknown"` and `z3_code=""`
 
+### REQ-EXTRACT-012: Extractor Head-to-Head Benchmark
+
+The repository shall provide a deterministic benchmark comparing all three
+extractor implementations (ArithmeticExtractor, LLMExtractor, NL2Z3Extractor)
+on a labeled corpus, where:
+- The corpus contains at least 30 responses: at least 15 correct (no errors)
+  and at least 15 incorrect (known arithmetic or reasoning errors), labeled
+  deterministically so the benchmark is reproducible in CI without GPU access
+- For each extractor and each response, the benchmark records:
+  `violation_detected` (bool), `runtime_ms`, and `error` (if any)
+- **False Positive (FP):** `violation_detected=True` on a CORRECT response
+- **True Positive (TP):** `violation_detected=True` on an INCORRECT response
+- FP rate = n_fp / n_correct_responses; TP rate = n_tp / n_incorrect_responses
+- The winner is the extractor with the lowest FP rate while TP rate > 0;
+  if all extractors have TP rate = 0, the extractor with the lowest FP rate wins
+- Results are written to `results/experiment_311_extractor_benchmark.json`
+  with keys: `experiment`, `extractors`, `fp_tp_table`, `winner`,
+  `recommendation`, `inference_mode`
+- Any extractor with TP rate = 0 is reported truthfully — never suppressed
+
+Spec: REQ-EXTRACT-012, SCENARIO-EXTRACT-025, SCENARIO-EXTRACT-026
+
+### SCENARIO-EXTRACT-025: Benchmark Correctly Classifies FP and TP
+
+**Given** a corpus of 15 correct and 15 incorrect labeled responses
+**And** an extractor that flags 2 correct responses and 5 incorrect responses
+**When** `compute_fp_rate(rows)` and `compute_tp_rate(rows)` are called
+**Then** `fp_rate = 2/15` and `tp_rate = 5/15`
+**And** `BenchmarkResult` records these rates with `n_total = 30`
+
+### SCENARIO-EXTRACT-026: Benchmark Reports Extractor with TP=0 Truthfully
+
+**Given** a benchmark run where ArithmeticExtractor detects zero violations
+  on all 15 incorrect responses
+**When** the benchmark selects the winner
+**Then** ArithmeticExtractor is reported with `tp_rate = 0.0` without suppression
+**And** the winner selection prefers any extractor with TP > 0 over one with TP = 0
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2690,3 +2728,4 @@ Spec: REQ-EXTRACT-011, SCENARIO-EXTRACT-022, SCENARIO-EXTRACT-023, SCENARIO-EXTR
 | REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
+| REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
