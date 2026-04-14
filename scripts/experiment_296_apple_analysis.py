@@ -238,8 +238,10 @@ def answer_five_questions(
             model_d.get("verify_repair_number_swap_delta", 0.0) > 0
             for model_d in improvement_deltas_295.values()
         ]
-        # Consistent if all models positive or all models non-positive
-        dual_model_consistent = (all(model_signs) or not any(model_signs))
+        # Consistent if all models positive or all models non-positive,
+        # AND primary_criterion_met is present (both models contributed a summary flag).
+        sign_consistent = all(model_signs) or not any(model_signs)
+        dual_model_consistent = sign_consistent and "primary_criterion_met" in exp295
     else:
         # Fall back: joint flag presence implies both models contributed data
         dual_model_consistent = "primary_criterion_met" in exp295
