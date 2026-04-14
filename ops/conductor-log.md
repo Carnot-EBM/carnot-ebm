@@ -1465,3 +1465,4 @@ python/ |
 | 2026-04-14 04:37 UTC | Exp 280: Revalidation sweep summary and docs updat | OK | 3100 passed, 26 skipped, 13 warnings in 175.33s (0:02:55) |
 | 2026-04-14 04:59 UTC | Plan milestone 2026.04.21 | OK | 14 tasks proposed |
 | 2026-04-14 05:00 UTC | Milestone 2026.04.21 activated | OK | 14 tasks queued |
+| 2026-04-14 05:13 UTC | Exp 281: Apple adversarial GSM8K dataset generator | OK | 3112 passed, 26 skipped, 13 warnings in 171.92s (0:02:51) |
