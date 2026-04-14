@@ -1,0 +1,50 @@
+{
+  "experiment": 275,
+  "title": "KAN adaptive verification on live Exp 219-221 traces",
+  "source_experiments": [
+    219,
+    220,
+    221
+  ],
+  "data": {
+    "total_traces": 486,
+    "n_train": 388,
+    "n_test": 98,
+    "n_train_correct": 179,
+    "n_train_wrong": 179,
+    "n_test_correct": 39,
+    "n_test_wrong": 59
+  },
+  "static_kan": {
+    "auroc": 0.9908735332464146,
+    "n_params": 728,
+    "n_epochs": 80,
+    "final_loss": 171.50503516859087
+  },
+  "adaptive_kan": {
+    "auroc_after_amr": 0.9908735332464146,
+    "auroc_improvement": 0.0,
+    "n_params_before_amr": 728,
+    "n_params_after_amr": 711,
+    "param_delta": -17,
+    "restructure_events": 1,
+    "curvature_history": [
+      {
+        "timestamp": "2026-04-14T03:12:58.127626Z",
+        "verification_count": 50,
+        "n_params_before": 728,
+        "n_params_after": 711,
+        "param_delta": -17,
+        "knots_added": 17,
+        "knots_removed": 34,
+        "curvature_mean": 0.0006364897275582338,
+        "curvature_std": 0.0008381589659461035,
+        "n_recent_inputs": 50
+      }
+    ],
+    "n_epochs_pretrain": 80,
+    "n_epochs_finetune": 5,
+    "final_loss": 171.50503516859087
+  },
+  "feature_dim": 13
+}

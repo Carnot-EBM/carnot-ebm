@@ -113,13 +113,11 @@ def fit_calibration(
     x_array = np.array(x_list, dtype=np.float32)  # shape: (n_samples, 9)
     y_array = np.array(y_list, dtype=np.float32)  # shape: (n_samples,)
 
-    # Compute raw logistic scores using hardcoded default weights
-    # (in a real scenario, these would come from PredictiveVerifier training).
-    default_w = np.array(
-        [0.1, 0.05, 0.3, 0.2, 0.15, 0.1, 0.2, 0.0, 0.1],
-        dtype=np.float32,
-    )
-    raw_scores = np.dot(x_array, default_w) + 0.1  # shape: (n_samples,)
+    # Compute raw logistic scores using the same weights as PredictiveVerifier
+    # so that the x_thresholds are in the same domain as apply_calibration.
+    from carnot.pipeline.predictive_verifier import _DEFAULT_W, _DEFAULT_B  # noqa: PLC0415
+
+    raw_scores = np.dot(x_array, _DEFAULT_W.astype(np.float32)) + float(_DEFAULT_B)  # shape: (n_samples,)
 
     # Apply sigmoid to convert to [0,1]
     probs = 1.0 / (1.0 + np.exp(-raw_scores))
