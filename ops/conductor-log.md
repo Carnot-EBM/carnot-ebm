@@ -1517,3 +1517,6 @@ python/ |
 | 2026-04-14 09:28 UTC | Exp 294: GPU stall diagnosis + Apple adversarial b | FAIL | Post-tests failed: 12 failed, 3523 passed, 39 skipped, 13 warnings in 202.05s (0 |
 | 2026-04-14 09:40 UTC | Exp 294: GPU stall diagnosis + Apple adversarial b | OK | 3535 passed, 39 skipped, 13 warnings in 207.71s (0:03:27) |
 | 2026-04-14 09:56 UTC | Exp 295: Apple adversarial verify-repair re-run (w | OK | 3564 passed, 39 skipped, 13 warnings in 209.77s (0:03:29) |
+| 2026-04-14 10:07 UTC | Exp 296: Apple adversarial analysis, classificatio | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 10:08 UTC | Exp 296: Apple adversarial analysis, classificatio | OK | Deliverable already exists in repo |
+| 2026-04-14 10:08 UTC | Exp 297: SemanticEnergyExtractor + VarEntropyProbe | OK | Deliverable already exists in repo |
