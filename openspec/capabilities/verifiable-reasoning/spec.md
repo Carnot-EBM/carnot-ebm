@@ -2007,6 +2007,67 @@ T controls confidence sensitivity
   fires, `"semantic"` when only semantic fires, and `"none"` when neither fires
 **And** `DualEnergyResult.to_dict()` round-trips through JSON without error
 
+### REQ-VERIFY-078: Dual-Energy Gate Benchmark On Apple Adversarial Corpus
+
+The repository shall provide `scripts/experiment_287_dual_energy_benchmark.py` that:
+- Loads `data/research/gsm8k_adversarial_281.jsonl` (400 rows: 200 number_swap + 200
+  irrelevant_sentence)
+- If `data/research/logits_282_*.npy` files are present, loads real GPU logits; otherwise
+  generates synthetic logits labelled `synthetic_logits: true`, calibrated to the Exp 219
+  accuracy distribution (Qwen 21.5% / Gemma 37.5%)
+- Calibrates the `DualEnergyGate` semantic threshold from a held-out calibration corpus
+  before applying it to the adversarial benchmark
+- Computes `SpilledEnergyResult` and `SemanticEnergyResult` for every response in the
+  adversarial corpus
+- Runs a threshold sweep (101 steps) recording precision, recall, and F1 for the spilled
+  signal, semantic signal, and combined gate at every cut-point
+- Computes scikit-learn AUROC for: spilled-only, semantic-only, and dual-energy combined
+- **Primary criterion**: dual-energy combined AUROC ≥ 0.65 on the adversarial corpus
+- Reports per-variant-type breakdown (number_swap vs. irrelevant_sentence) showing which
+  signal fires predominantly on which error class
+- Reports signal attribution counts: "spilled", "semantic", "both", "none"
+- Gap-filler analysis: at the threshold achieving ≥ 0.65 precision on the adversarial
+  corpus, reports what fraction of the 1302 not_formalizable Exp 244 claims would be
+  covered by the gate
+- Writes `results/experiment_287_results.json` with `primary_criterion_met` bool and all
+  computed metrics
+- `run_date` is the fixed string `"20260414"` embedded in every result record
+
+### SCENARIO-VERIFY-097: AUROC Computation Is Correct
+
+**Given** a list of binary error labels and a list of continuous scores
+**When** `compute_auroc(scores, labels)` is called
+**Then** perfect predictions (all errors scored above all non-errors) return AUROC = 1.0
+**And** random predictions (all scores identical) return AUROC ≈ 0.5
+**And** the function delegates to `sklearn.metrics.roc_auc_score` without data leakage
+
+### SCENARIO-VERIFY-098: Threshold Sweep Monotonicity
+
+**Given** a threshold sweep over 101 steps from min to max score on the adversarial corpus
+**When** the threshold increases from 0.0 toward max
+**Then** precision is non-decreasing and recall is non-increasing across sweep steps
+**And** every step record contains `threshold`, `precision`, `recall`, and `f1` keys
+**And** at least one threshold achieves precision ≥ 0.65 for the combined gate
+
+### SCENARIO-VERIFY-099: Per-Variant-Type Signal Attribution
+
+**Given** the dual-energy gate applied to 200 number_swap variants and 200 irrelevant_sentence variants
+**When** trigger_signal is recorded for each fired result
+**Then** number_swap errors produce a higher fraction of "semantic" or "both" trigger signals
+  than irrelevant_sentence errors
+**And** irrelevant_sentence errors produce a higher fraction of "spilled" or "both" trigger signals
+  than number_swap errors
+
+### SCENARIO-VERIFY-100: Gap-Filler Coverage Analysis
+
+**Given** the 1302 not_formalizable rows in `data/research/formal_claim_corpus_244.jsonl`
+  where FCV abstains
+**When** the dual-energy gate is applied at the threshold achieving ≥ 0.65 precision on
+  the adversarial corpus
+**Then** `gap_filler_coverage_fraction` is a float in [0.0, 1.0]
+**And** the result reports `n_not_formalizable` = 1302 and `coverage_at_target_precision`
+  as the fraction of those rows that the gate would flag
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
@@ -2244,6 +2305,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-072 | Not Started | Implemented | DualGPU dispatch at startup tests (Exp 283) |
 | REQ-VERIFY-076 | Not Started | Implemented | Spilled energy extractor + pipeline integration tests |
 | REQ-VERIFY-077 | Not Started | Implemented | Semantic energy extractor + DualEnergyGate + pipeline integration tests |
+| REQ-VERIFY-078 | Not Started | Implemented | Dual-energy gate benchmark on Apple adversarial corpus (Exp 287) |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |

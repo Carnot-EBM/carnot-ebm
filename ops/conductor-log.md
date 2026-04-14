@@ -1473,3 +1473,6 @@ python/ |
 | 2026-04-14 06:07 UTC | Exp 285: SpilledEnergyExtractor implementation (ar | OK | Deliverable already exists in repo |
 | 2026-04-14 06:19 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-14 06:20 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 06:47 UTC | Exp 287: Dual-energy benchmark on Apple adversaria | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 06:48 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 06:48 UTC | Exp 287: Dual-energy benchmark on Apple adversaria | OK | Deliverable already exists in repo |
