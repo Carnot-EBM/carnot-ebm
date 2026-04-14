@@ -1,0 +1,366 @@
+{
+  "experiment": "Exp 274 \u2014 FactualKBExtractor (embedded KB) on Gemma4-E4B-it responses",
+  "extractor": "FactualKBExtractor",
+  "model_name": "google/gemma-4-E4B-it (representative)",
+  "live_model_used": false,
+  "exp158_baseline": {
+    "coverage_pct": 96.0,
+    "accuracy_pct": 83.33,
+    "n_questions": 50
+  },
+  "exp272_baseline": {
+    "coverage_pct": 70.0,
+    "accuracy_pct": 75.0
+  },
+  "n_questions": 20,
+  "n_covered": 9,
+  "coverage_pct": 45.0,
+  "target_coverage_pct": 40.0,
+  "coverage_target_met": true,
+  "n_verified": 9,
+  "n_contradicted": 0,
+  "n_covered_verified_only": 9,
+  "accuracy_pct": 100.0,
+  "target_accuracy_pct": 75.0,
+  "accuracy_target_met": true,
+  "delta_coverage_vs_158": -51.0,
+  "delta_coverage_vs_272": -25.0,
+  "delta_accuracy_vs_158": 16.67,
+  "domain_breakdown": {
+    "geography": {
+      "n": 6,
+      "n_covered": 5,
+      "coverage_pct": 83.33333333333333,
+      "n_verified": 5
+    },
+    "history": {
+      "n": 4,
+      "n_covered": 0,
+      "coverage_pct": 0.0,
+      "n_verified": 0
+    },
+    "person": {
+      "n": 5,
+      "n_covered": 1,
+      "coverage_pct": 20.0,
+      "n_verified": 1
+    },
+    "science": {
+      "n": 5,
+      "n_covered": 3,
+      "coverage_pct": 60.0,
+      "n_verified": 3
+    }
+  },
+  "per_question": [
+    {
+      "idx": 0,
+      "question": "What is the capital of France?",
+      "domain": "geography",
+      "response": "Paris is the capital of France. It has served as the country's political and cultural heart for centuries, hosting the \u00c9lys\u00e9e Palace and the French government ministries.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "france",
+          "relation": "capital",
+          "claimed_value": "Paris",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 1,
+      "question": "What is the capital of Japan?",
+      "domain": "geography",
+      "response": "Tokyo is the capital of Japan. It is the country's seat of government, home to the Imperial Palace and the National Diet, and one of the world's most densely populated metropolitan areas.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "japan",
+          "relation": "capital",
+          "claimed_value": "Tokyo",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 2,
+      "question": "What is the capital of Brazil?",
+      "domain": "geography",
+      "response": "The capital of Brazil is Bras\u00edlia. Purpose-built and inaugurated in 1960, Bras\u00edlia replaced Rio de Janeiro as the capital and is located in the Federal District in the country's interior.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 3,
+      "question": "What is the capital of Australia?",
+      "domain": "geography",
+      "response": "The capital of Australia is Canberra. Chosen as a compromise between Sydney and Melbourne, Canberra has been the capital since 1913 and houses the Australian Parliament and major federal institutions.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "australia",
+          "relation": "capital",
+          "claimed_value": "Canberra",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 4,
+      "question": "What is the capital of Canada?",
+      "domain": "geography",
+      "response": "The capital of Canada is Ottawa. Ottawa is situated in the province of Ontario and is home to Parliament Hill and the federal government of Canada.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "canada",
+          "relation": "capital",
+          "claimed_value": "Ottawa",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 5,
+      "question": "What is the capital of India?",
+      "domain": "geography",
+      "response": "New Delhi is the capital of India. It serves as the seat of all three branches of the government and is located within the larger National Capital Territory of Delhi.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.002,
+      "constraints": [
+        {
+          "entity": "india",
+          "relation": "capital",
+          "claimed_value": "New Delhi",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 6,
+      "question": "In what year did World War II end?",
+      "domain": "history",
+      "response": "World War II ended in 1945. Germany surrendered on 8 May 1945 (V-E Day) and Japan announced its surrender on 15 August 1945, formally signing the surrender documents on 2 September 1945.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 7,
+      "question": "In what year did the Berlin Wall fall?",
+      "domain": "history",
+      "response": "The Berlin Wall fell in 1989. On the night of 9 November 1989, East German authorities unexpectedly opened the border crossings, allowing crowds to pass freely and begin dismantling the wall.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 8,
+      "question": "In what year was the United Nations founded?",
+      "domain": "history",
+      "response": "The United Nations was founded in 1945. The UN Charter was signed in San Francisco on 26 June 1945 and came into force on 24 October 1945.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 9,
+      "question": "What year did humans first land on the Moon?",
+      "domain": "history",
+      "response": "Humans first landed on the Moon in 1969. The Apollo 11 mission carried Neil Armstrong and Buzz Aldrin to the lunar surface on 20 July 1969 while Michael Collins orbited above.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 10,
+      "question": "What is the chemical symbol for gold?",
+      "domain": "science",
+      "response": "Au is the chemical symbol for gold. The symbol comes from the Latin word 'aurum'. Gold has atomic number 79 and is a highly valued transition metal used in jewellery and electronics.",
+      "covered": true,
+      "n_constraints": 2,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "gold",
+          "relation": "symbol",
+          "claimed_value": "Au",
+          "kb_result": "verified"
+        },
+        {
+          "entity": "gold",
+          "relation": "atomic_number",
+          "claimed_value": "79",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 11,
+      "question": "What is the atomic number of carbon?",
+      "domain": "science",
+      "response": "Carbon has atomic number 6. It is a non-metal that forms the backbone of all organic molecules. Its stable isotopes include carbon-12 and carbon-13, and it occurs naturally as diamond and graphite.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "carbon",
+          "relation": "atomic_number",
+          "claimed_value": "6",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 12,
+      "question": "What is the speed of light in metres per second?",
+      "domain": "science",
+      "response": "The speed of light in a vacuum is approximately 299,792,458 metres per second, conventionally denoted by c. This is an exact defined value under the SI unit system and represents the universal speed limit.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 13,
+      "question": "What element has atomic number 1?",
+      "domain": "science",
+      "response": "Hydrogen has atomic number 1. It is the lightest and most abundant element in the universe, making up roughly 75 percent of all ordinary matter by mass, and its symbol is H.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "hydrogen",
+          "relation": "atomic_number",
+          "claimed_value": "1",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 14,
+      "question": "On what continent is the Sahara Desert?",
+      "domain": "science",
+      "response": "The Sahara Desert is located in Africa. It is the world's largest hot desert, covering approximately 9.2 million square kilometres across North Africa from the Atlantic Ocean to the Red Sea.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 15,
+      "question": "What nationality was Albert Einstein?",
+      "domain": "person",
+      "response": "Albert Einstein was German by birth, born in Ulm in the Kingdom of W\u00fcrttemberg on 14 March 1879. He later held Swiss and American citizenship and is best known for the theory of relativity.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 16,
+      "question": "Who was the first person to walk on the Moon?",
+      "domain": "person",
+      "response": "Neil Armstrong was the first person to walk on the Moon. He set foot on the lunar surface on 20 July 1969 during the Apollo 11 mission and delivered his famous 'one small step' speech.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 17,
+      "question": "What profession is Marie Curie known for?",
+      "domain": "person",
+      "response": "Marie Curie was a pioneering physicist and chemist. She was the first woman to win a Nobel Prize, and the only person to win Nobel Prizes in two different sciences \u2014 Physics in 1903 and Chemistry in 1911.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    },
+    {
+      "idx": 18,
+      "question": "In what year was Isaac Newton born?",
+      "domain": "person",
+      "response": "Isaac Newton was born in 1643 in Woolsthorpe, Lincolnshire, England. He was a mathematician, physicist, and astronomer whose laws of motion and universal gravitation defined classical mechanics for centuries.",
+      "covered": true,
+      "n_constraints": 1,
+      "has_verified": true,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": [
+        {
+          "entity": "isaac newton",
+          "relation": "birth_year",
+          "claimed_value": "1643",
+          "kb_result": "verified"
+        }
+      ]
+    },
+    {
+      "idx": 19,
+      "question": "What is Stephen Hawking best known for?",
+      "domain": "person",
+      "response": "Stephen Hawking is best known for his theoretical work on black holes and cosmology, in particular Hawking radiation. He also wrote the popular science book 'A Brief History of Time', which became an international bestseller.",
+      "covered": false,
+      "n_constraints": 0,
+      "has_verified": false,
+      "has_contradicted": false,
+      "elapsed_s": 0.001,
+      "constraints": []
+    }
+  ]
+}

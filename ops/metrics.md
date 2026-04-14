@@ -1,5 +1,16 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 274 KB Factual Live
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T02:31:13Z | 2026-04-14T02:41:43Z | Exp 274: FactualKBExtractor (embedded KB) on Gemma4-E4B-it responses — 66 tests pass, results JSON written; coverage 45% (target 40%), accuracy 100%. | ~18k |
+| 2 | 2026-04-14T02:31:13Z | 2026-04-14T02:46:51Z | Fix failing tests: add 3 tests for generate_responses_with_gemma4 function (lines 668-675); 69 total tests pass, 100% coverage for exp274_kb_factual_live.py module. | ~8k |
+
+---
+
 ## Session: 2026-04-14 arxiv Research Survey
 
 ### Turn Log
