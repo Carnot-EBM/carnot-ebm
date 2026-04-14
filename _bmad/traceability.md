@@ -190,7 +190,7 @@
 | SCENARIO-VERIFY-080 | Not Started | Implemented | Artifact schema validation (schema=carnot.apple_baseline.v1, all required fields) |
 | SCENARIO-VERIFY-081 | Not Started | Implemented | Checkpoint resume skips already-processed questions with ≤1 generate call |
 | SCENARIO-VERIFY-082 | Not Started | Implemented | Logit tensor shape and file persistence (object array of (seq_len, vocab_size) tensors) |
-| REQ-SAMPLE-009 | Not Started | Implemented | FPGA overlay bring-up validation with 60-second hard timeout on KV260 |
-| SCENARIO-SAMPLE-018 | Not Started | Implemented | Register-map round-trip (AXI-Lite CONTROL → STATUS) validates register contract |
-| SCENARIO-SAMPLE-019 | Not Started | Implemented | Spin-state checksumming confirms all samples are ±1 after overlay execution |
+| REQ-SAMPLE-009 | Not Started | Implemented | FPGA overlay bring-up with 60s timeout (Exp 288) + FpgaBackend quantum-inspired sparse Ising (Exp 289): quantize_to_q88, sparsify_coupling, quantum_annealing_schedule, serialize_to_axi, LagONN penalty, PYNQ dispatch, CPU fallback with geometric schedule |
+| SCENARIO-SAMPLE-018 | Not Started | Implemented | Blocked artifact emitted immediately when CARNOT_KV260_BITFILE unset; FpgaBackend backend_name/dispatch/protocol tests |
+| SCENARIO-SAMPLE-019 | Not Started | Implemented | Spin ±1 validity check (Exp 288) + Q8.8 round-trip, sparsification, LagONN penalty, serialize_to_axi tests (Exp 289) |
 | SCENARIO-VERIFY-083 | Not Started | Implemented | Variant type breakdown and accuracy drop detection across standard/number_swap/irrelevant_sentence |

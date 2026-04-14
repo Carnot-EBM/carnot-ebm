@@ -1478,3 +1478,6 @@ python/ |
 | 2026-04-14 06:48 UTC | Exp 287: Dual-energy benchmark on Apple adversaria | OK | Deliverable already exists in repo |
 | 2026-04-14 07:00 UTC | Exp 288: KV260 FPGA overlay bring-up validation | OK | 3302 passed, 28 skipped, 13 warnings in 180.01s (0:03:00) |
 | 2026-04-14 07:01 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 07:15 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 07:16 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 07:16 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
