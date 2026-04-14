@@ -2079,6 +2079,34 @@ The repository shall provide `scripts/experiment_287_dual_energy_benchmark.py` t
 **And** the result reports `n_not_formalizable` = 1302 and `coverage_at_target_precision`
   as the fraction of those rows that the gate would flag
 
+### REQ-VERIFY-079: GPU Pre-Warm Health-Check For Live Inference
+
+The repository shall provide a `model_prewarm(model_name, hf_id, gpu_id, *, health_prompt, timeout_seconds)` function in `scripts/experiment_294_gpu_baseline_apple.py` that:
+- Loads the specified model onto `cuda:{gpu_id}` (or CPU fallback) with a configurable timeout
+- Runs a single health-check prompt (default `"What is 2+2?"`) and checks that the response is non-empty
+- Returns a `PrewarmResult` dataclass with fields: `model_name`, `gpu_id`, `load_time_s` (float), `health_ok` (bool), `stall_root_cause` (str: `"lazy_load_stall"` / `"cuda_oom"` / `"unknown"` / `None`)
+- If the load stalls beyond `timeout_seconds` (default 15 s), sets `health_ok=False` and `stall_root_cause="lazy_load_stall"`
+- If a `torch.cuda.OutOfMemoryError` is raised during load, sets `stall_root_cause="cuda_oom"`
+- If an unknown exception is raised, sets `stall_root_cause="unknown"`
+- Records `pre_warm_time_s` and `pre_warm_status` fields in the final artifact
+
+The root cause for the recurring GPU stall in Exps 282/283 is lazy model loading: `AutoModelForCausalLM.from_pretrained()` is called inside the per-question inference closure, so the first question triggers a full model load (several seconds) inside the 60 s inference timeout. By pre-warming both models before the timed benchmark loop, the stall is eliminated.
+
+### SCENARIO-VERIFY-101: Pre-Warm Health-Check Returns True On Fast Mock Load
+
+**Given** a `model_prewarm()` call with a mock load function that returns in <1 s
+**When** the health prompt produces a non-empty response
+**Then** `PrewarmResult.health_ok` is `True`
+**And** `PrewarmResult.stall_root_cause` is `None`
+**And** `PrewarmResult.load_time_s` is a non-negative float
+
+### SCENARIO-VERIFY-102: Pre-Warm Health-Check Returns False On Timeout
+
+**Given** a `model_prewarm()` call with a mock load function that sleeps beyond `timeout_seconds`
+**When** the timeout fires before the model responds
+**Then** `PrewarmResult.health_ok` is `False`
+**And** `PrewarmResult.stall_root_cause` is `"lazy_load_stall"`
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
@@ -2337,6 +2365,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-076 | Not Started | Implemented | Spilled energy extractor + pipeline integration tests |
 | REQ-VERIFY-077 | Not Started | Implemented | Semantic energy extractor + DualEnergyGate + pipeline integration tests |
 | REQ-VERIFY-078 | Not Started | Implemented | Dual-energy gate benchmark on Apple adversarial corpus (Exp 287) |
+| REQ-VERIFY-079 | Not Started | Not Started | GPU pre-warm health-check for live inference (Exp 294) |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291 Apple adversarial retrain + conformal calibration |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |

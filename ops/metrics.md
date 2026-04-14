@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 294 GPU Stall Diagnosis + Apple Adversarial Baseline
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T09:09:51Z | 2026-04-14T09:18:54Z | Exp 294: GPU stall diagnosis + Apple adversarial baseline re-run — read exp_282/258 scripts, spec.md, add REQ-VERIFY-079/SCENARIO-101/102; 16 tests (prewarm health-check, timeout, artifact schema, accuracy bounds, logit saving, checkpoint resume, stall_at); implement model_prewarm() with concurrent.futures timeout, AppleBaselineRunner294 with pre-warm phase, 60s per-call timeout enforcement; adversarial review found missing timeout enforcement → fixed; 3523 total (16 new pass); ops/changelog + status updated | ~18k |
+
+---
+
 ## Session: 2026-04-14 Milestone Planning 2026.04.22
 
 ### Turn Log

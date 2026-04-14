@@ -88,7 +88,7 @@ tasks:
          c. [BASELINE BENCHMARK] Re-run the Exp 282 benchmark:
             - Load gsm8k_adversarial_281.jsonl (200 questions × 2 variant types + standard)
             - Run baseline inference (no verification): standard, number_swap, irrelevant_sentence
-            - SAVE LOGITS at 25/50/75/100% prefix fractions → data/research/logits_294_{model}_{variant}_{pct}pct.npy
+            - SAVE LOGITS at 25/50/75/100% prefix fractions → data/research/logits_294_(model)_(variant)_(pct)pct.npy
             - Checkpoint every 10 questions: results/checkpoints/experiment_294/
             - 60s per-call hard timeout; emit partial artifact with stall_at on timeout
          d. Report: stall_diagnosis, pre_warm_status, baseline accuracy per variant/model
@@ -143,7 +143,7 @@ tasks:
             - baseline: standard inference (no verification)
             - verify_only: run verification, record violations, do NOT repair
             - verify_repair: run verification, repair if violation detected
-         c. SAVE LOGITS at 25/50/75/100% → data/research/logits_295_{model}_{mode}_{variant}_{pct}pct.npy
+         c. SAVE LOGITS at 25/50/75/100% → data/research/logits_295_(model)_(mode)_(variant)_(pct)pct.npy
          d. Per-question record: mode, variant_type, model, correct, violation_detected, repaired,
             logit_path, semantic_grounding_fired, formal_claim_fired, pre_warm_verified
          e. Checkpoint every 10 questions; 60s per-call timeout with stall_at on stall
@@ -434,7 +434,7 @@ tasks:
            for "sign_error" family → sign-consistency term; for "magnitude_error" → order-of-magnitude term
          - ConstraintGenerator class with generate_from_memory(case_memory, extractor) method
            that orchestrates extract → filter → generate → add pipeline
-         - generation_log: dict of {pattern_type: "added"/"rejected_soundness"/"already_exists"}
+         - generation_log: dict of (pattern_type: "added"/"rejected_soundness"/"already_exists")
       5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
       6. Reconcile: update ops/changelog.md and ops/status.md
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -524,7 +524,7 @@ tasks:
       1. Read CLAUDE.md spec-first workflow
       2. Write tests first for:
          - artifact schema: batch1_accuracy, batch2_accuracy, improvement_delta, n_new_constraints
-         - generated_constraint_log: list of {pattern_type, constraint_id, confidence}
+         - generated_constraint_log: list of (pattern_type, constraint_id, confidence)
          - constraint_count_before and constraint_count_after fields
          - batch split: exactly 50 questions per batch
          - n_new_constraints ≥ 0 (0 is valid if no high-precision patterns found)
