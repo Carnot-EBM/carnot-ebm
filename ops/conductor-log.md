@@ -1548,3 +1548,5 @@ python/ |
 | 2026-04-14 13:01 UTC | Exp 304: HuggingFace actual publish — run Exp 293  | OK | Deliverable already exists in repo |
 | 2026-04-14 13:01 UTC | Milestone 2026.04.29 activated | OK | 13 tasks queued |
 | 2026-04-14 13:45 UTC | Exp 307: JEPA train on real Apple adversarial logi | OK | Deliverable already exists in repo |
+| 2026-04-14 16:02 UTC | Exp 308: JEPA fast-path gate integration and laten | FAIL | Post-tests failed:  |
+| 2026-04-14 16:03 UTC | Exp 308: JEPA fast-path gate integration and laten | OK | Deliverable already exists in repo |
