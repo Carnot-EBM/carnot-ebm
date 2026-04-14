@@ -4,6 +4,23 @@
 
 ## What's Working
 
+### Exp 309: Tier 3 Continuous Self-Learning Pipeline (REQ-LEARN-012, SCENARIO-LEARN-019/020)
+
+- `scripts/experiment_309_tier3_pipeline.py` — full Tier 3 end-to-end benchmark.
+  - `ThresholdAdapter` — adapt(fp_rate, skip_rate) adjusts gate threshold per 10-question sub-batch.
+    - Increases by 0.05 when fp_rate > fp_threshold (gate too aggressive).
+    - Decreases by 0.05 when skip_rate < min_skip (gate too conservative).
+    - Clamped to [0.1, 0.9].
+  - `run_baseline_batch()` — 50 questions, no gate, records accuracy + latency.
+  - `run_tier3_batch()` — 50 questions, JEPA gate + ThresholdAdapter every 10 questions; records threshold_history (5 entries).
+  - `build_artifact_309()` — includes threshold_history, improvement_delta (signed), latency_reduction (signed).
+  - Loads best_threshold from Exp 308 artifact; falls back to 0.5.
+  - inference_mode: "simulated" (GPU logits from Exps 294/295 not yet available).
+- 58 new tests; all pass.
+- **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_309_tier3_pipeline.py`
+- **Output:** `results/experiment_309_tier3_pipeline.json`
+- Spec: REQ-LEARN-012, SCENARIO-LEARN-019, SCENARIO-LEARN-020.
+
 ### Exp 308: JEPA Gate Benchmark + Fast-Path Integration (REQ-JEPA-005, SCENARIO-JEPA-010/011)
 
 - `python/carnot/pipeline/jepa_fast_path.py` — `JepaGate` dataclass with lazy ONNX load.

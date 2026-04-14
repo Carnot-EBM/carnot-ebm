@@ -20,6 +20,28 @@ Written by conductor retrospective pass; no code changed.
 - `results/operational_retro_2026_04_22.json` (new): full retro artifact with slowest_experiments, bottlenecks_identified (8 items), improvements_suggested (9 items), action_items (5 items), estimated_time_savings_pct=28.
 - Triggered by: user instruction (milestone 2026.04.22 operational retrospective).
 
+## 2026-04-14 (Exp 309: Tier 3 Continuous Self-Learning Pipeline)
+
+Implements REQ-LEARN-012: ThresholdAdapter online gate threshold adaptation +
+full Tier 3 end-to-end benchmark (baseline vs gated, with per-sub-batch adaptation).
+
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added **REQ-LEARN-012**: Tier 3 online threshold adaptation.
+  - Added **SCENARIO-LEARN-019**: ThresholdAdapter increases threshold when FP rate exceeds limit.
+  - Added **SCENARIO-LEARN-020**: ThresholdAdapter decreases threshold when skip rate below minimum.
+  - Added traceability row for REQ-LEARN-012.
+- `scripts/experiment_309_tier3_pipeline.py` — full Tier 3 benchmark:
+  - `ThresholdAdapter(initial, fp_threshold, min_skip)` — online adapt() method.
+  - `GateDecisionRecord` — per-question gate audit trail.
+  - `Tier3BatchResult` — aggregated 50-question gated result with accuracy + skip_rate.
+  - `run_baseline_batch()` — no-gate 50-question baseline.
+  - `run_tier3_batch()` — gated batch + ThresholdAdapter called every 10 questions.
+  - `build_artifact_309()` — artifact with threshold_history, improvement_delta, latency_reduction.
+  - `compute_latency_reduction()` — honest signed fraction (negative = gated was slower).
+  - `simulate_gsm8k_questions()` — reproducible synthetic GSM8K questions.
+- `tests/python/test_experiment_309_tier3_pipeline.py` — 58 new tests (all pass).
+- Triggered by: user instruction (Exp 309 Tier 3 continuous self-learning benchmark).
+
 ## 2026-04-14 (Exp 308: JEPA Gate Benchmark + JepaGate Fast-Path Integration)
 
 Implements REQ-JEPA-005: wires the Exp 307 ONNX JEPA predictor as a fast-path

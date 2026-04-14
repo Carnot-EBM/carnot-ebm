@@ -2409,6 +2409,39 @@ Spec: REQ-VERIFY-082
 **And** the ONNX file is loadable with onnxruntime
 **And** if logit files are absent the script emits a `blocked` artifact with exact missing paths
 
+### REQ-LEARN-012: Tier 3 Online Threshold Adaptation
+
+The system shall provide a `ThresholdAdapter` class that adjusts the JEPA gate threshold
+after each batch of questions based on observed false-positive rate and skip rate, so the
+gate self-corrects during a live benchmark without manual tuning:
+
+- `ThresholdAdapter(initial, fp_threshold, min_skip)` — construct with initial threshold,
+  FP-rate trigger (e.g. 0.05), and minimum skip-rate target (e.g. 0.10).
+- `adapt(fp_rate, skip_rate) → float` — returns a new threshold value:
+  - If `fp_rate > fp_threshold`: **increase** threshold by 0.05 (gate is too aggressive).
+  - Elif `skip_rate < min_skip`: **decrease** threshold by 0.05 (gate is too conservative).
+  - Else: no change.
+  - Result is clamped to `[0.1, 0.9]`.
+- The `ThresholdAdapter` instance persists across batches and exposes the current threshold
+  via `self.threshold`.
+- The Tier 3 benchmark records a `threshold_history` list of per-batch threshold values.
+
+Spec: REQ-LEARN-012, SCENARIO-LEARN-019, SCENARIO-LEARN-020
+
+### SCENARIO-LEARN-019: ThresholdAdapter Increases Threshold When FP Rate Exceeds Limit
+
+**Given** a `ThresholdAdapter(initial=0.5, fp_threshold=0.05, min_skip=0.10)`
+**When** `adapt(fp_rate=0.10, skip_rate=0.30)` is called (FP rate above limit)
+**Then** the returned threshold is `0.55` (increased by 0.05)
+**And** `adapter.threshold == 0.55`
+
+### SCENARIO-LEARN-020: ThresholdAdapter Decreases Threshold When Skip Rate Below Minimum
+
+**Given** a `ThresholdAdapter(initial=0.5, fp_threshold=0.05, min_skip=0.10)`
+**When** `adapt(fp_rate=0.02, skip_rate=0.05)` is called (skip rate below minimum, FP OK)
+**Then** the returned threshold is `0.45` (decreased by 0.05)
+**And** `adapter.threshold == 0.45`
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -2582,3 +2615,4 @@ Spec: REQ-VERIFY-082
 | REQ-PRED-004 | Not Started | Implemented | Additive pipeline integration tests |
 | REQ-VERIFY-081 | Not Started | Implemented | Confidence-weighted violation scoring + ConfidenceVerifier tests (SCENARIO-105/106/107/108) |
 | REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |
+| REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
