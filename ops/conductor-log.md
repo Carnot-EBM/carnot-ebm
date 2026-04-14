@@ -1500,3 +1500,7 @@ python/ |
 | 2026-04-14 08:16 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
 | 2026-04-14 08:16 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
 | 2026-04-14 08:16 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
+| 2026-04-14 08:34 UTC | Exp 293: HuggingFace — Exp 66 joint model and Form | OK | 3484 passed, 39 skipped, 13 warnings in 191.16s (0:03:11) |
+| 2026-04-14 08:35 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 08:35 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
+| 2026-04-14 08:35 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
