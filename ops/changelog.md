@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Confidence-Weighted Constraint Verification — REQ-VERIFY-081, REQ-VERIFY-082)
+
+Root cause of Exp 184's 0% net improvement: binary verify-repair sends low-confidence
+(false-positive) violations into the repair loop, breaking correct answers as often as
+fixing real ones.  This change gates repair on EBM energy-derived confidence scores
+(arXiv 2602.03979, Likelihood-Based Reward Designs).
+
+- `python/carnot/pipeline/confidence_verifier.py` (new module):
+  - `confidence_from_energy(energy_score, temperature=1.0)`: sigmoid normalisation of raw
+    EBM energy delta → [0, 1] confidence.  Numerically stable: clamps ±inf and NaN.
+  - `repair_gate(confidence, threshold=0.8)`: returns True only when confidence ≥ threshold
+    (SCENARIO-VERIFY-107).
+  - `ViolationConfidence` dataclass: constraint_id, energy_delta, confidence_score,
+    confidence_class (HIGH/MEDIUM/LOW), repair_recommended, evidence dict.
+  - `ConfidenceVerifier.verify_with_confidence(response, extractor, threshold=0.8)`:
+    runs extractor, converts each violation to ViolationConfidence; repair_recommended count
+    is always ≤ violations_detected count.
+- `python/carnot/pipeline/verify_repair.py`:
+  - `VerifyRepairPipeline.verify_and_repair_confident(question, response, domain, threshold=0.8)`:
+    additive method that gates the repair loop on confidence_score ≥ threshold.  When no
+    violations exceed the threshold, returns repaired=False immediately — preventing
+    false-positive repairs (SCENARIO-VERIFY-108).  Does not change verify_and_repair().
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added REQ-VERIFY-081 (confidence-weighted violations), REQ-VERIFY-082 (repair gate),
+    SCENARIO-VERIFY-105–108.
+- 38 tests in `tests/python/test_confidence_verifier.py`.
+- Full suite: **3779 passed**, 39 skipped, 0 failures.
+- Triggered by: user instruction (Exp 184 false-positive root-cause fix).
+
 ## 2026-04-14 (ConstraintGenerator from CaseMemory — REQ-LEARN-010, REQ-LEARN-011)
 
 - `python/carnot/pipeline/constraint_generator.py` (new module) — ConstraintGenerator converts
