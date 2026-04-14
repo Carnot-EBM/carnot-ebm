@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-14T10:12:57Z | 2026-04-14T10:20:44Z | Implement PrefillUncertaintyProbe (REQ-VERIFY-080): read spilled_energy_extractor, verify_repair, __init__; add spec entries SCENARIO-VERIFY-103/104; write 35 tests; implement prefill_uncertainty_probe.py (compute_input_uncertainty, compute_conjugate_bound, compute_prompt_uncertainty, PrefillUncertaintyProbe); add VerifyRepairPipeline.check_prefill_uncertainty(); export from __init__; 3644 total passed 99.12% coverage; update ops/changelog + status | ~12k |
+| 2 | 2026-04-14T10:31:51Z | 2026-04-14T10:37:31Z | Exp 299 JEPA real logits retrain: read Exp 291 script, Exp 291 results, semantic_energy_extractor, existing tests; check for 294/295 logit files (absent); write 51 tests covering real logit loading/fallback, training_source, semantic_energy feature, isotonic calibration, conformal α=0.1, ONNX export/loadability, comparison_vs_exp291; implement experiment_299_jepa_real_logits.py; 51 passed; update ops/changelog + status | ~15k |
 
 ---
 
