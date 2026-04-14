@@ -1565,3 +1565,7 @@ python/ |
 | 2026-04-14 20:22 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | 81 passed in 3.24s |
 | 2026-04-14 20:23 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 20:23 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
+| 2026-04-14 20:30 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | 81 passed in 3.23s |
+| 2026-04-14 20:31 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-14 20:31 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
+| 2026-04-14 20:31 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
