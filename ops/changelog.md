@@ -20,6 +20,39 @@ Written by conductor retrospective pass; no code changed.
 - `results/operational_retro_2026_04_22.json` (new): full retro artifact with slowest_experiments, bottlenecks_identified (8 items), improvements_suggested (9 items), action_items (5 items), estimated_time_savings_pct=28.
 - Triggered by: user instruction (milestone 2026.04.22 operational retrospective).
 
+## 2026-04-14 (Exp 308: JEPA Gate Benchmark + JepaGate Fast-Path Integration)
+
+Implements REQ-JEPA-005: wires the Exp 307 ONNX JEPA predictor as a fast-path
+energy gate in VerifyRepairPipeline, benchmarks latency vs accuracy trade-off.
+
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added **REQ-JEPA-005**: JEPA gate reduces Ising invocations (fast-path spec).
+  - Added **SCENARIO-JEPA-010**: gate below threshold skips Ising.
+  - Added **SCENARIO-JEPA-011**: gate above threshold runs full Ising.
+  - Added impl status row for REQ-JEPA-005.
+- `python/carnot/pipeline/jepa_fast_path.py` (new):
+  - `JepaGate(onnx_path, threshold=0.5, enabled=True)` dataclass.
+  - `predict(logit_mean)` — lazy ONNX load, returns sigmoid(raw_output).
+  - `should_skip(logit_mean)` — True when energy < threshold.
+  - `to_dict()` — JSON-serialisable config.
+- `python/carnot/pipeline/verify_repair.py`:
+  - Added `verify_with_gate(question, response, domain, jepa_gate, logit_mean)`.
+  - Returns VerificationResult with `gate_decision`, `gate_energy`, `ising_skipped` in certificate.
+- `python/carnot/pipeline/__init__.py`:
+  - Added `JepaGate` import and `__all__` entry.
+- `tests/python/test_jepa_fast_path.py` (new):
+  - 28 tests covering all branches: construction, predict (enabled/disabled/lazy),
+    should_skip (below/above/at threshold/disabled), to_dict, verify_with_gate
+    (gate=None, skip, verify), and latency benchmark structural tests.
+  - Coverage: 100% for jepa_fast_path.py.
+- `scripts/experiment_308_jepa_gate_benchmark.py` (new):
+  - 50-question simulated corpus with ~30% violation rate.
+  - Threshold sweep [0.3, 0.5, 0.7] measuring skip_rate, TP_rate, speedup_factor.
+  - Baseline (no gate) timing for comparison.
+  - Blocked artifact if neither jepa_predictor_307.onnx nor 291.onnx present.
+  - Output: `results/experiment_308_jepa_gate_benchmark.json`.
+- Triggered by: user instruction (Exp 308 JEPA gate integration).
+
 ## 2026-04-14 (Exp 307: JEPA MLP Retrain on Real Apple Adversarial Logits)
 
 Implements REQ-JEPA-004: trains a 3-layer MLP JEPA violation predictor directly on raw mean-logit

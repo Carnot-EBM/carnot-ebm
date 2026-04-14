@@ -146,6 +146,7 @@ from carnot.pipeline.spilled_energy_extractor import (
     compute_spilled_energy,
 )
 from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
+from carnot.pipeline.jepa_fast_path import JepaGate
 
 __all__ = [
     "AgentStep",
@@ -239,6 +240,7 @@ __all__ = [
     "SpilledEnergyExtractor",
     "SpilledEnergyResult",
     "Z3ArithmeticExtractor",
+    "JepaGate",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",
