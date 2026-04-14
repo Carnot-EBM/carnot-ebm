@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-14T09:09:51Z | 2026-04-14T09:18:54Z | Exp 294: GPU stall diagnosis + Apple adversarial baseline re-run — read exp_282/258 scripts, spec.md, add REQ-VERIFY-079/SCENARIO-101/102; 16 tests (prewarm health-check, timeout, artifact schema, accuracy bounds, logit saving, checkpoint resume, stall_at); implement model_prewarm() with concurrent.futures timeout, AppleBaselineRunner294 with pre-warm phase, 60s per-call timeout enforcement; adversarial review found missing timeout enforcement → fixed; 3523 total (16 new pass); ops/changelog + status updated | ~18k |
+| 2 | 2026-04-14T09:29:18Z | 2026-04-14T09:35:06Z | Fix 12 retro test failures: stale operational_retro_2026_04_21.json missing experiments_in_scope/gpu_utilization_distribution/structural_action_taken/exp_per_hour fields; re-ran experiment_294_operational_retro.py to regenerate JSON; all 35 retro tests pass; 3535 total passed 99.11% coverage | ~8k |
 
 ---
 

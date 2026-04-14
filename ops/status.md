@@ -12,7 +12,7 @@
   `stall_root_cause` field: `"lazy_load_stall"` / `"cuda_oom"` / `"unknown"` / `None`.
   GPU diagnostics (nvidia-smi free VRAM) captured at startup. Benchmarks gsm8k_adversarial_281.jsonl.
   Output: `results/experiment_294_results.json`. Schema v2.
-- 16 tests pass. REQ-VERIFY-079, SCENARIO-VERIFY-101/102.
+- 16 tests pass. REQ-VERIFY-079, SCENARIO-VERIFY-101/102. Full suite: **3535 passed**, 99.11% coverage.
 - **Run:** `CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_294_gpu_baseline_apple.py`
 
 ### Exp 293: HuggingFace Publish — v0.2.0-research (REQ-VERIFY-058, REQ-VERIFY-059)
