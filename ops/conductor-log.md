@@ -1462,3 +1462,4 @@ python/ |
 | 2026-04-14 04:06 UTC | Exp 278: Cross-session constraint memory with live | OK | 3084 passed, 26 skipped, 13 warnings in 176.58s (0:02:56) |
 | 2026-04-14 04:22 UTC | Exp 279: Adversarial number-swapped GSM8K with sem | OK | 3100 passed, 26 skipped, 13 warnings in 174.95s (0:02:54) |
 | 2026-04-14 04:30 UTC | Exp 280: Revalidation sweep summary and docs updat | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 04:37 UTC | Exp 280: Revalidation sweep summary and docs updat | OK | 3100 passed, 26 skipped, 13 warnings in 175.33s (0:02:55) |
