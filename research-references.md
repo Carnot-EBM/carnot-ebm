@@ -262,6 +262,89 @@ should read this file when designing new milestones.
 
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
+### Semantic Energy — Hallucination Beyond Entropy
+- **Paper:** arxiv.org/abs/2508.14496 (2025-08)
+- **What:** Combines semantic clustering with a Boltzmann-inspired energy distribution operating
+  directly on logits to detect hallucinations where semantic entropy alone fails. Works where
+  output logit uncertainty is low but factual content is wrong.
+- **Relevance:** Boltzmann energy formulation maps directly onto Carnot's `carnot-boltzmann` tier.
+  Complementary signal to Spilled Energy (2602.18671): spilled energy fires on high-entropy
+  outputs; semantic energy fires on confident-but-wrong outputs.
+- **When to pursue:** Implement alongside SpilledEnergyExtractor. May catch different error classes.
+
+### EBM-CoT — Energy-Based Calibration for Chain-of-Thought
+- **Paper:** arxiv.org/abs/2511.07124 (2025-11)
+- **What:** Refines latent thought representations through an EBM to improve consistency and
+  efficiency of implicit chain-of-thought reasoning. Energy function calibrates which reasoning
+  paths are consistent with the initial premise.
+- **Relevance:** Direct use-case for Carnot's Gibbs/Boltzmann tiers as a calibration layer on
+  top of LLM reasoning chains. Informs the self-learning loop and the JEPA predictor design.
+- **When to pursue:** After JEPA training (Tier 3) is proven. Could improve predictor training.
+
+### Solver-Aided Policy Verification for Tool-Augmented LLMs
+- **Paper:** arxiv.org/abs/2603.20449 (2026-03)
+- **What:** Translates natural-language policies into SMT-LIB-2.0 constraints and checks planned
+  tool calls against them using Z3. Natural-language-to-SMT pipeline with 100%+ efficiency gain.
+- **Relevance:** Exactly addresses Carnot's constraint extraction bottleneck — the NL→SMT
+  translation pipeline is the missing piece between EBM scoring and hard logical constraints.
+  More principled than NSVIF (2601.17789) for tool-call verification specifically.
+- **When to pursue:** Next milestone. Inform the Z3/SMT extraction experiments.
+
+### VERGE — Z3-Based Formal Refinement for LLM Reasoning
+- **Paper:** arxiv.org/abs/2601.20055 (2026-01)
+- **What:** Uses Z3 to verify and iteratively refine logical reasoning in LLM outputs. Feedback
+  loop between symbolic verification and neural generation. First architecture to prove Z3 can
+  serve as the correction oracle in an LLM reasoning pipeline.
+- **Relevance:** The feedback loop maps to Carnot's self-learning loop — EBM scores could
+  replace or augment Z3 for soft/probabilistic constraints. Directly informs Z3-based extraction.
+- **When to pursue:** Z3 extraction milestone. Use VERGE's feedback loop as a model.
+
+### Probabilistic Neuro-Symbolic Layer for Algebraic Constraint Satisfaction
+- **Paper:** arxiv.org/abs/2503.19466 (2025-03)
+- **What:** Differentiable probabilistic layer guaranteeing satisfaction of non-convex algebraic
+  constraints, pluggable into any neural architecture with maximum likelihood training.
+- **Relevance:** Could serve as a hard-constraint satisfaction layer on top of Carnot's EBM tiers.
+  Enforces algebraic constraints while preserving differentiability for the self-learning loop.
+  More general than Πnet (2508.10480).
+- **When to pursue:** After continuous relaxation (Exp 64) is extended; plug into repair pathway.
+
+### Set-Valued Prediction with Conformal Coverage for LLMs
+- **Paper:** arxiv.org/abs/2603.22966 (2026-03)
+- **What:** Risk-controlled set-valued prediction using split conformal prediction for LLMs.
+  Establishes statistical reliability guarantees on verification scores without retraining.
+- **Relevance:** Provides calibrated verification thresholds — conformal coverage bounds give
+  statistically valid confidence intervals on EBM-based verification scores. Directly applicable
+  to calibrating the PredictiveVerifier gate (Tier 3).
+- **When to pursue:** Calibrated verification milestone. Complement JEPA training with conformal bounds.
+
+### Denoising Thermodynamic Models for Probabilistic Hardware
+- **Paper:** arxiv.org/abs/2510.23972 (2025-10)
+- **What:** First scalable method for applying probabilistic hardware to ML. Runs Denoising
+  Thermodynamic Models (DTMs) on probabilistic hardware instead of monolithic EBMs.
+  More hardware-efficient than raw EBMs for sampling acceleration.
+- **Relevance:** Most directly relevant to Carnot's FPGA/TSU hardware tier. The DTM architecture
+  may be more hardware-efficient than raw Ising for the FPGA sampling acceleration goal.
+  Connect to the KV260 FpgaBackend design.
+- **When to pursue:** FPGA hardware milestone. Consider DTM architecture alongside Ising for KV260.
+
+### KANELÉ — KANs on FPGAs via LUT Evaluation
+- **Paper:** arxiv.org/abs/2512.12850 (2025-12)
+- **What:** KANs evaluated via look-up tables (LUTs) on FPGAs. Orders-of-magnitude more
+  hardware-efficient than floating-point KAN evaluation. LUT-based spline evaluation maps
+  naturally to FPGA synthesis.
+- **Relevance:** Critical for `carnot-kan` hardware deployment. KAN energy tier + FPGA =
+  hardware-accelerated nonlinear constraint verification without full reconfiguration.
+  Hardware path for Tier 4 adaptive structure (KAN splines as reprogrammable LUTs).
+- **When to pursue:** After KV260 FPGA baseline is proven. Add KAN LUT evaluation to FpgaBackend.
+
+### Generative Thermodynamic Computing
+- **Paper:** arxiv.org/abs/2506.15121 (2025-06)
+- **What:** Generative modeling framework for thermodynamic hardware. Structured data synthesized
+  by Langevin dynamics time-evolution of a physical system. Connects to hardware Ising sampling.
+- **Relevance:** Connects Carnot's Langevin-based repair to the physical hardware path. The
+  framework bridges software Langevin dynamics (Exp 64) and hardware thermodynamic sampling (TSU).
+- **When to pursue:** Hardware tier milestone. Conceptual bridge between Carnot repair and TSU.
+
 ## ArXiv Scan — Exp 139 (2026-04-11)
 
 Queries: ebm_verification, ising_language, constraint_neural, kan_energy, guided_decoding, fpga_ising, continual_constraint, thermodynamic_sampling  
