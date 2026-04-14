@@ -1515,3 +1515,4 @@ python/ |
 | 2026-04-14 09:08 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
 | 2026-04-14 09:08 UTC | Milestone 2026.04.22 activated | OK | 13 tasks queued |
 | 2026-04-14 09:28 UTC | Exp 294: GPU stall diagnosis + Apple adversarial b | FAIL | Post-tests failed: 12 failed, 3523 passed, 39 skipped, 13 warnings in 202.05s (0 |
+| 2026-04-14 09:40 UTC | Exp 294: GPU stall diagnosis + Apple adversarial b | OK | 3535 passed, 39 skipped, 13 warnings in 207.71s (0:03:27) |
