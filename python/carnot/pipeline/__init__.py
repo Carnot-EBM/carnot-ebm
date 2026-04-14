@@ -125,6 +125,13 @@ from carnot.pipeline.verify_repair import (
     VerificationResult,
     VerifyRepairPipeline,
 )
+from carnot.pipeline.semantic_energy_extractor import (
+    DualEnergyGate,
+    DualEnergyResult,
+    SemanticEnergyExtractor,
+    SemanticEnergyResult,
+    compute_semantic_energy,
+)
 from carnot.pipeline.spilled_energy_extractor import (
     SpilledEnergyExtractor,
     SpilledEnergyResult,
@@ -216,10 +223,15 @@ __all__ = [
     "VerifyRepairPipeline",
     "SelfLearningPolicy",
     "SelfLearningPolicyCompiler",
+    "DualEnergyGate",
+    "DualEnergyResult",
+    "SemanticEnergyExtractor",
+    "SemanticEnergyResult",
     "SpilledEnergyExtractor",
     "SpilledEnergyResult",
     "Z3ArithmeticExtractor",
     "compute_lookahead_energy",
+    "compute_semantic_energy",
     "compute_spilled_energy",
     "extract_typed_reasoning",
     "propagate",

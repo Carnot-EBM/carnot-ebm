@@ -76,6 +76,7 @@ if TYPE_CHECKING:
     from carnot.pipeline.semantic_verifier_v2 import SemanticVerifierV2Result
     import numpy as np
 
+    from carnot.pipeline.semantic_energy_extractor import DualEnergyResult
     from carnot.pipeline.spilled_energy_extractor import SpilledEnergyResult
     from carnot.pipeline.tracker import ConstraintTracker
     from carnot.pipeline.typed_reasoning import TypedReasoningIR
@@ -785,6 +786,74 @@ class VerifyRepairPipeline:
         if isinstance(logits_path, np.ndarray):
             return extractor.extract_from_array(logits_path, threshold=threshold)
         return extractor.extract_from_file(logits_path, threshold=threshold)
+
+    def verify_dual_energy(
+        self,
+        logits_path: str | np.ndarray,
+        spilled_threshold: float = 1.0,
+        semantic_threshold: float = -5.0,
+        temperature: float = 1.0,
+    ) -> DualEnergyResult:
+        """Detect hallucinations via the DualEnergyGate (spilled + semantic energy).
+
+        **Detailed explanation for engineers:**
+            Runs both energy signals on the same logit array and combines them via
+            DualEnergyGate.fire():
+
+            - Spilled energy (REQ-VERIFY-076): fires on UNCERTAIN outputs (high entropy).
+            - Semantic energy (REQ-VERIFY-077): fires on OVERCONFIDENT outputs (very
+              low entropy, model may be confidently wrong).
+
+            Together they form an extraction-free first-pass filter.  This entry point
+            is additive — it does not affect existing verify() or verify_and_repair()
+            callers.
+
+        Args:
+            logits_path: Either a string/Path pointing to a .npy file of shape
+                (n_tokens, vocab_size), or a numpy array of shape (n_tokens, vocab_size).
+            spilled_threshold: Mean spilled energy (nats) above which
+                suspected_hallucination fires.  Default 1.0.
+            semantic_threshold: Semantic energy below which overconfident_flag fires.
+                Default −5.0.
+            temperature: Temperature for semantic energy computation.  Default 1.0.
+
+        Returns:
+            DualEnergyResult with spilled_result, semantic_result, gate_fired,
+            trigger_signal, and calibration_threshold_used.
+
+        Spec: REQ-VERIFY-077
+        """
+        import numpy as np
+
+        from carnot.pipeline.semantic_energy_extractor import (
+            DualEnergyGate,
+            SemanticEnergyExtractor,
+        )
+        from carnot.pipeline.spilled_energy_extractor import SpilledEnergyExtractor
+
+        if isinstance(logits_path, np.ndarray):
+            logits_arr = logits_path
+        else:
+            from pathlib import Path
+
+            logits_arr = np.load(Path(logits_path))
+
+        spilled_extractor = SpilledEnergyExtractor()
+        spilled_result = spilled_extractor.extract_from_array(
+            logits_arr, threshold=spilled_threshold
+        )
+
+        semantic_extractor = SemanticEnergyExtractor(
+            threshold=semantic_threshold, temperature=temperature
+        )
+        semantic_result = semantic_extractor.extract(logits_arr)
+
+        gate = DualEnergyGate(
+            spilled_threshold=spilled_threshold,
+            semantic_threshold=semantic_threshold,
+            temperature=temperature,
+        )
+        return gate.fire(spilled_result, semantic_result)
 
     def verify(
         self,

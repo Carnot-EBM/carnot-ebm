@@ -1959,6 +1959,54 @@ from raw LLM logit arrays without any constraint extraction, where:
 **Then** it contains: `experiment`, `run_date`, `classification`, `missing_artifacts`,
   `five_questions`, `exp235_comparison`, `exp279_comparison`, and `analysis_notes`
 
+### REQ-VERIFY-077: Semantic Energy Extractor And Dual Energy Gate
+
+The system shall provide a `SemanticEnergyExtractor` and `DualEnergyGate` in
+`python/carnot/pipeline/semantic_energy_extractor.py` that detect overconfident-wrong
+outputs via the semantic energy signal from arXiv 2508.14496, where:
+- `SemanticEnergyResult` dataclass holds `semantic_energy` (float), `temperature` (float),
+  `overconfident_flag` (bool), `threshold_used` (float), `per_token_semantic` (1-D float64
+  array), and a `to_dict()` method serializing all fields to JSON-compatible types
+- `compute_semantic_energy(logits: np.ndarray, T: float = 1.0) -> float` accepts a 2-D
+  float64 array of shape `(T, V)` and computes the mean negative log-partition function
+  as `mean_t(−log(∑_i exp(logit_t_i / T)))` using the log-sum-exp trick for numerical
+  stability; raises `ValueError` for non-2-D input, empty token count, or `T <= 0`
+- `SemanticEnergyExtractor` class holds a `threshold` and `temperature`; its `extract(logits)`
+  method returns `SemanticEnergyResult` with `overconfident_flag=True` when
+  `semantic_energy < threshold`; its `calibrate(logits_corpus, labels)` method fits an
+  isotonic regression (decreasing: lower energy → higher P(wrong)) and sets `self.threshold`
+  to the crossing energy where P(wrong) drops below 0.5
+- `DualEnergyResult` dataclass holds `spilled_result`, `semantic_result`,
+  `gate_fired` (bool), `trigger_signal` (Literal["spilled","semantic","both","none"]),
+  and `calibration_threshold_used` (float)
+- `DualEnergyGate` class exposes `calibrate(logits_corpus, labels)` (delegates to
+  its internal `SemanticEnergyExtractor`) and `fire(spilled_result, semantic_result)
+  → DualEnergyResult` where `gate_fired = spilled.suspected_hallucination OR
+  semantic.overconfident_flag` and `trigger_signal` reflects which signal(s) fired
+- `VerifyRepairPipeline.verify_dual_energy(logits)` is an additive entry point accepting
+  a numpy array or .npy file path, running both extractors and returning `DualEnergyResult`;
+  it does not affect existing `verify()` or `verify_and_repair()` callers
+
+### SCENARIO-VERIFY-095: Semantic Energy Fires On Overconfident Logits
+
+**Given** a logit array where one vocab token dominates with an extreme logit value
+(very peaked, very low entropy)
+**When** `SemanticEnergyExtractor(threshold=-0.5).extract(logits)` is called
+**Then** `overconfident_flag` is True (semantic_energy < −0.5 for highly peaked logits)
+**And** `semantic_energy` is a large negative float (high confidence = low partition energy)
+**And** higher temperature T produces a less negative (higher) semantic_energy, showing
+T controls confidence sensitivity
+
+### SCENARIO-VERIFY-096: DualEnergyGate Fires When Either Signal Triggers
+
+**Given** a `DualEnergyGate` with calibrated spilled and semantic thresholds
+**When** `gate.fire(spilled_result, semantic_result)` is called with various combinations
+**Then** `gate_fired` is True if EITHER `spilled_result.suspected_hallucination` or
+  `semantic_result.overconfident_flag` is True
+**And** `trigger_signal` equals `"both"` when both fire, `"spilled"` when only spilled
+  fires, `"semantic"` when only semantic fires, and `"none"` when neither fires
+**And** `DualEnergyResult.to_dict()` round-trips through JSON without error
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
@@ -2195,6 +2243,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-071 | Not Started | Implemented | Partial artifact stall_at tests (Exp 283) |
 | REQ-VERIFY-072 | Not Started | Implemented | DualGPU dispatch at startup tests (Exp 283) |
 | REQ-VERIFY-076 | Not Started | Implemented | Spilled energy extractor + pipeline integration tests |
+| REQ-VERIFY-077 | Not Started | Implemented | Semantic energy extractor + DualEnergyGate + pipeline integration tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
