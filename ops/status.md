@@ -4,6 +4,19 @@
 
 ## What's Working
 
+### Exp 304: HuggingFace Actual Upload — FCV Live on Hub (REQ-VERIFY-058, REQ-VERIFY-059)
+
+- `scripts/experiment_304_hf_publish.py` — Resolves Exp 293 credential blocker.
+  - Credential check: CLI-first, Python API fallback; `check_hf_credentials_304()`.
+  - Artifact staging: calls Exp 293 sub-functions directly (bypasses Exp 293's internal CLI check).
+  - Injects validated HfApi instance so no second auth round-trip.
+- **Upload outcome:**
+  - `Carnot-EBM/carnot-formal-claim-verifier-v1` — **LIVE**. Arithmetic + comparison ONNX (opset 13) + pure-Python verifier.
+  - `Carnot-EBM/carnot-joint-constraint-v1` — SKIPPED (experiment_66_model.safetensors absent).
+- **Run:** `PYTHONPATH=. JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_304_hf_publish.py`
+- **Output:** `results/experiment_304_hf_results.json`
+- 24 tests pass. Full suite: **3886 passed**, 54 skipped, 98.86% coverage.
+
 ### Exp 303: AMD XDNA NPU Unblock — Prereq Check + Source Build Path (REQ-PRED-003)
 
 - `scripts/experiment_303_npu_unblock.py` — Full unblock workflow for Exp 292's blocked state.

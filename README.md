@@ -138,6 +138,8 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **Predictive verifier hardware benchmark (Exp 257):** ONNX CPUExecutionProvider runs at **5.8 µs/call** (**7.1×** faster than CPU NumPy at **41.8 µs/call**); CUDA ORT and AMD XDNA NPU paths remain blocked by missing toolchain.
 
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
+> **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
+
 
 Two Phase 1 research artifacts are published to [Carnot-EBM](https://huggingface.co/Carnot-EBM) on HuggingFace Hub:
 
