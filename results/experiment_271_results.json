@@ -1,0 +1,397 @@
+{
+  "experiment": "271_global_consistency_live",
+  "date": "2026-04-14",
+  "target_model": "google/gemma-4-E4B-it",
+  "mode": "live_representative",
+  "description": "GlobalConsistencyChecker evaluated on live-representative multi-turn chains. 10 consistent chains (no injected contradiction), 10 chains with injected numeric/arithmetic/factual contradictions. Measures detection rate and false positive rate vs. Exp 172/176 synthetic baseline.",
+  "n_chains_total": 20,
+  "n_consistent_chains": 10,
+  "n_contradicted_chains": 10,
+  "chains": [
+    {
+      "chain_id": 0,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 17.802
+    },
+    {
+      "chain_id": 10,
+      "chain_type": "contradicted",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'apple cost' has value 3.0 in step 1 but 5.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'apple cost' has value 3.0 in step 2 but 5.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.577
+    },
+    {
+      "chain_id": 1,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 0.98
+    },
+    {
+      "chain_id": 11,
+      "chain_type": "contradicted",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'train speed' has value 60.0 in step 1 but 80.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'train speed' has value 60.0 in step 2 but 80.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.056
+    },
+    {
+      "chain_id": 2,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.082
+    },
+    {
+      "chain_id": 12,
+      "chain_type": "contradicted",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'project days' has value 8.0 in step 1 but 10.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'project days' has value 8.0 in step 2 but 10.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.136
+    },
+    {
+      "chain_id": 3,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.064
+    },
+    {
+      "chain_id": 13,
+      "chain_type": "contradicted",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'rectangle area' has value 120.0 in step 1 but 200.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'rectangle area' has value 120.0 in step 2 but 200.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.151
+    },
+    {
+      "chain_id": 4,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.127
+    },
+    {
+      "chain_id": 14,
+      "chain_type": "contradicted",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'sum' has value 55.0 in step 1 but 45.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'sum' has value 55.0 in step 2 but 45.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.162
+    },
+    {
+      "chain_id": 5,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.078
+    },
+    {
+      "chain_id": 15,
+      "chain_type": "contradicted",
+      "contradiction_type": "arithmetic",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'product' has value 102.0 in step 1 but 98.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'product' has value 102.0 in step 2 but 98.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.152
+    },
+    {
+      "chain_id": 6,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 0.664
+    },
+    {
+      "chain_id": 16,
+      "chain_type": "contradicted",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'france' capital is 'paris' (step 1) but 'lyon' (step 3)"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'france' capital is 'paris' (step 2) but 'lyon' (step 3)"
+        }
+      ],
+      "latency_ms": 0.803
+    },
+    {
+      "chain_id": 7,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 0.713
+    },
+    {
+      "chain_id": 17,
+      "chain_type": "contradicted",
+      "contradiction_type": "factual",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'albert einstein' born in is 'ulm' (step 1) but 'berlin' (step 3)"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "factual",
+          "description": "Factual: 'albert einstein' born in is 'ulm' (step 2) but 'berlin' (step 3)"
+        }
+      ],
+      "latency_ms": 0.886
+    },
+    {
+      "chain_id": 8,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.215
+    },
+    {
+      "chain_id": 18,
+      "chain_type": "contradicted",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'car value' has value 17000.0 in step 1 but 15000.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'car value' has value 17000.0 in step 2 but 15000.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.284
+    },
+    {
+      "chain_id": 9,
+      "chain_type": "consistent",
+      "contradiction_type": null,
+      "expected_consistent": true,
+      "global_detected": false,
+      "severity": "none",
+      "n_inconsistent_pairs": 0,
+      "inconsistent_pairs": [],
+      "latency_ms": 1.1
+    },
+    {
+      "chain_id": 19,
+      "chain_type": "contradicted",
+      "contradiction_type": "numeric",
+      "expected_consistent": false,
+      "global_detected": true,
+      "severity": "critical",
+      "n_inconsistent_pairs": 2,
+      "inconsistent_pairs": [
+        {
+          "step_i": 1,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'interest' has value 20.0 in step 1 but 30.0 in step 3"
+        },
+        {
+          "step_i": 2,
+          "step_j": 3,
+          "type": "numeric",
+          "description": "Entity 'interest' has value 20.0 in step 2 but 30.0 in step 3"
+        }
+      ],
+      "latency_ms": 1.159
+    }
+  ],
+  "summary": {
+    "n_chains_total": 20,
+    "n_consistent_chains": 10,
+    "n_contradicted_chains": 10,
+    "detection_rate": 1.0,
+    "false_positive_rate": 0.0,
+    "avg_latency_ms": 1.91,
+    "per_type_detection": {
+      "numeric": {
+        "n_chains": 6,
+        "global_detected": 6,
+        "detection_rate": 1.0
+      },
+      "arithmetic": {
+        "n_chains": 2,
+        "global_detected": 2,
+        "detection_rate": 1.0
+      },
+      "factual": {
+        "n_chains": 2,
+        "global_detected": 2,
+        "detection_rate": 1.0
+      }
+    },
+    "comparison_to_synthetic": {
+      "exp172_detection_rate": 1.0,
+      "exp172_false_positive_rate": 0.0,
+      "exp176_global_detection_rate": 1.0,
+      "exp176_false_positive_rate_c": 0.0,
+      "live_detection_rate": 1.0,
+      "live_false_positive_rate": 0.0,
+      "delta_detection": 0.0,
+      "delta_fp": 0.0
+    }
+  }
+}
