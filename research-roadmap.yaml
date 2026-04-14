@@ -94,7 +94,7 @@ tasks:
          - Wire DualGPURunner at start (NOT as a separate harness setup)
          - Load gsm8k_adversarial_281.jsonl — 200 questions × 3 variants × 2 models
          - Run baseline inference (no verification): standard, number_swap, irrelevant_sentence
-         - SAVE LOGITS at prefix fractions 25/50/75/100% → data/research/logits_282_{model}_{variant}.npy
+         - SAVE LOGITS at prefix fractions 25/50/75/100% → data/research/logits_282_(model)_(variant).npy
          - Checkpoint every 10 questions: results/checkpoints/experiment_282/
          - 60s hard timeout per call; emit partial artifact with stall_at on timeout
          - Report: baseline accuracy per variant_type per model, accuracy drop from standard
@@ -139,7 +139,7 @@ tasks:
       3. Implement scripts/experiment_283_apple_verify_repair.py:
          - Wire DualGPURunner at start
          - Run three modes on all variants: baseline, verify_only, verify_repair
-         - SAVE LOGITS at 25/50/75/100% prefix fractions → data/research/logits_283_{model}_{variant}.npy
+         - SAVE LOGITS at 25/50/75/100% prefix fractions → data/research/logits_283_(model)_(variant).npy
          - Record per-question: mode, variant_type, model, correct, violation_detected, repaired,
            logit_path, semantic_grounding_fired, formal_claim_fired
          - Checkpoint every 10 questions
@@ -365,10 +365,10 @@ tasks:
       2. Add REQ-SAMPLE-008 and SCENARIO-SAMPLE-015 to openspec/capabilities/training-inference/spec.md
       3. Write tests first for: hardware labeling (execution_path field validation),
          software_model labeling, blocked labeling with required fields, register round-trip
-         shape validation, spin state validity check (all ∈ {+1,-1}), 60s timeout handling
+         shape validation, spin state validity check (all ∈ (+1,-1)), 60s timeout handling
       4. Implement scripts/experiment_288_kv260_bringup.py:
          - Check CARNOT_KV260_BITFILE env var FIRST; if unset, emit blocked artifact immediately:
-           {execution_path: "blocked", missing: "CARNOT_KV260_BITFILE", next_step: "..."}
+           (execution_path: "blocked", missing: "CARNOT_KV260_BITFILE", next_step: "...")
          - If set, attempt PYNQ overlay load with 60s timeout:
            from pynq import Overlay; ol = Overlay(os.environ["CARNOT_KV260_BITFILE"])
          - If load succeeds, exercise AXI-Lite register map from Exp 228:
