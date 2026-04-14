@@ -4,6 +4,19 @@
 
 ## What's Working
 
+### Exp 307: JEPA MLP Retrain on Real Logits (REQ-JEPA-004, SCENARIO-JEPA-008/009)
+
+- `scripts/experiment_307_jepa_real_training.py` — 3-layer MLP JEPA predictor on raw mean-logit vectors.
+  - `extract_training_pairs(logit_dir, results_json)` — builds (mean_logit_vec, label) pairs; raises ValueError if < 50.
+  - `train_jepa_on_pairs(pairs, epochs=50, lr=1e-3, onnx_path)` — Adam, per-epoch train/val metrics, checkpoint every 10 epochs.
+  - ONNX export via `onnx.helper` (avoids torch.onnx.export which requires onnxscript).
+  - Blocked artifact with `missing_paths` when logits_294/295 absent.
+- **Current state:** logits_294_*.npy and logits_295_*.npy not yet in data/research/ → run_experiment emits blocked artifact. Script is ready to train once real GPU logit files are produced by Exps 294/295.
+- **Next:** Run Exps 294+295 on GPU to generate logit files, then: `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_307_jepa_real_training.py`
+- **Output:** `results/experiment_307_jepa_real_training.json` + `results/jepa_predictor_307.onnx`
+- 51 tests pass; module coverage: 100%.
+- Spec: REQ-JEPA-004, SCENARIO-JEPA-008, SCENARIO-JEPA-009.
+
 ### Exp 306: Experiment Template + Batched Inference Harness (REQ-VERIFY-083, REQ-VERIFY-084)
 
 - `scripts/experiment_template.py` — Reusable scaffolding eliminating 15-20 min cold-start per experiment.

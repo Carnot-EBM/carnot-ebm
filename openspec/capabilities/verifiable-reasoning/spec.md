@@ -493,6 +493,20 @@ The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predic
 - **Targets**: fast-path ≥ 30%, TP ≥ 60%, FP ≤ 20%. Must report clearly if targets are not met.
 - **ONNX export**: Save retrained model as `results/jepa_predictor_291.onnx` for Exp 292 NPU testing.
 
+### REQ-JEPA-004: JEPA MLP Retrain on Real Apple Adversarial Logits
+
+`experiment_307_jepa_real_training.py` shall retrain a 3-layer MLP JEPA violation predictor directly on real logit arrays from Exps 294/295, replacing synthetic training data:
+
+- **Pair extraction**: `extract_training_pairs(logit_dir, results_json)` reads `logits_294_*.npy` and `logits_295_*.npy` files and the Exp 295 results JSON to produce `(partial_logit_mean, violation_label)` pairs where `violation_label=1` when `violation_detected=True` in the Exp 295 results for that question.
+- **Minimum pair count**: Raises `ValueError` if fewer than 50 pairs are found (insufficient data guard).
+- **Train/val split**: 80/20 random split; val set is held out and never seen during training.
+- **MLP architecture**: Input = mean logit vector (vocab_size-dim); Hidden = 128-dim ReLU; Output = single energy scalar. Loss = BCE(sigmoid(energy), violation_label). Optimizer = Adam, lr=1e-3, 50 epochs.
+- **Training metrics**: `train_jepa_on_pairs(pairs, epochs, lr)` returns dict with `train_loss`, `val_loss`, `val_tp`, `val_fp` per epoch.
+- **Convergence requirement**: `val_loss` at epoch N < `val_loss` at epoch 1 (model must improve).
+- **ONNX export**: Saved to `results/jepa_predictor_307.onnx`, loadable with onnxruntime.
+- **Honest fallback**: If logit files are missing, emit a `blocked` artifact listing exact missing paths.
+- **Artifact schema**: `experiment=307`, `training_source="real_logits"`, `n_pairs`, `split` description, `val_tp`, `val_fp`, `skip_rate`, `onnx_path`.
+
 ## Scenarios
 
 ### SCENARIO-VERIFY-001: Sudoku Constraint Satisfaction
@@ -2361,6 +2375,26 @@ Spec: REQ-VERIFY-082
 **And** the result clearly states TARGETS_MET or TARGETS_NOT_MET
 **And** the model is exported to `results/jepa_predictor_291.onnx`
 
+### SCENARIO-JEPA-008: Real Logit Pairs Extracted From Apple Adversarial Files
+
+**Given** `logits_294_*.npy` and `logits_295_*.npy` files exist in `data/research/`
+**And** Exp 295 results JSON contains `violation_detected` per question
+**When** `extract_training_pairs(logit_dir, results_json)` is called
+**Then** each returned pair has a mean logit vector as input and a 0/1 violation label
+**And** at least 50 pairs are returned (else `ValueError` is raised)
+**And** labels are sourced from Exp 295 `violation_detected` field, not synthetic logic
+**And** 80% of pairs are used for training and 20% for validation (held out)
+
+### SCENARIO-JEPA-009: MLP JEPA Predictor Converges and Exports to ONNX
+
+**Given** at least 50 (partial_logit_mean, violation_label) pairs
+**When** `train_jepa_on_pairs(pairs, epochs=50, lr=1e-3)` is run
+**Then** `val_loss` at epoch 50 < `val_loss` at epoch 1 (model improves)
+**And** training metrics dict contains `train_loss`, `val_loss`, `val_tp`, `val_fp` per epoch
+**And** the trained model is exported to `results/jepa_predictor_307.onnx`
+**And** the ONNX file is loadable with onnxruntime
+**And** if logit files are absent the script emits a `blocked` artifact with exact missing paths
+
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 
 **Given** a corpus row whose `process_label` is `"clean"` and whose
@@ -2507,6 +2541,7 @@ Spec: REQ-VERIFY-082
 | REQ-VERIFY-080 | Not Started | Implemented | PrefillUncertaintyProbe + pipeline integration + 35 Python tests (SCENARIO-103/104) |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291 Apple adversarial retrain + conformal calibration |
+| REQ-JEPA-004 | Not Started | Implemented | Exp 307 JEPA MLP real-logit retrain; blocked until logits_294/295 files present |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |
