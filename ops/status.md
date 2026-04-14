@@ -4,6 +4,25 @@
 
 ## What's Working
 
+### Exp 308: JEPA Gate Benchmark + Fast-Path Integration (REQ-JEPA-005, SCENARIO-JEPA-010/011)
+
+- `python/carnot/pipeline/jepa_fast_path.py` — `JepaGate` dataclass with lazy ONNX load.
+  - `predict(logit_mean)` → sigmoid(ONNX output); returns 1.0 when disabled.
+  - `should_skip(logit_mean)` → True when energy < threshold.
+  - `to_dict()` → JSON-serialisable config for artifact embedding.
+- `VerifyRepairPipeline.verify_with_gate()` — additive, no regressions to verify().
+  - Gate=None: behaves identically to verify().
+  - Gate skip: VerificationResult with gate_decision="skip", ising_skipped=True.
+  - Gate verify: full Ising + gate metadata in certificate.
+- `scripts/experiment_308_jepa_gate_benchmark.py` — threshold sweep [0.3, 0.5, 0.7].
+  - Loads jepa_predictor_307.onnx (fallback: 291.onnx); blocked artifact if neither found.
+  - Reports skip_rate, TP_rate, speedup_factor per threshold.
+  - Primary target: skip_rate ≥ 0.30 AND TP_rate ≥ 0.85 at some threshold.
+- **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_308_jepa_gate_benchmark.py`
+- **Output:** `results/experiment_308_jepa_gate_benchmark.json`
+- 28 new tests pass; jepa_fast_path.py: 100% coverage.
+- Spec: REQ-JEPA-005, SCENARIO-JEPA-010, SCENARIO-JEPA-011.
+
 ### Exp 307: JEPA MLP Retrain on Real Logits (REQ-JEPA-004, SCENARIO-JEPA-008/009)
 
 - `scripts/experiment_307_jepa_real_training.py` — 3-layer MLP JEPA predictor on raw mean-logit vectors.

@@ -1101,6 +1101,90 @@ class VerifyRepairPipeline:
 
         return result
 
+    def verify_with_gate(
+        self,
+        question: str,
+        response: str,
+        domain: str | None = None,
+        jepa_gate: Any = None,
+        logit_mean: Any = None,
+    ) -> VerificationResult:
+        """Verify a response using the JEPA fast-path gate before Ising.
+
+        **Detailed explanation for engineers:**
+            Additive entry point — does not change ``verify()`` or
+            ``verify_and_repair()`` callers.  Accepts an optional
+            ``JepaGate`` instance (from ``carnot.pipeline.jepa_fast_path``).
+            When the gate is provided and ``should_skip()`` returns True, we
+            skip full Ising verification and return a lightweight result with
+            ``gate_decision="skip"`` and ``ising_skipped=True``.
+
+            When the gate says "verify" (or no gate is supplied), the full
+            ``verify()`` pipeline runs normally, and the result is tagged
+            with ``gate_decision="verify"`` and ``ising_skipped=False``.
+
+            The ``logit_mean`` parameter should be the mean logit vector from
+            the LLM's generation pass (shape (V,) numpy array).  If it is
+            None and a gate is supplied, a zero vector of length 1 is used as
+            a fallback — callers should pass real logits for meaningful gating.
+
+        Args:
+            question: The original question (passed through to ``verify()``).
+            response: The response text to check.
+            domain: Optional domain hint for constraint extraction.
+            jepa_gate: Optional ``JepaGate`` instance.  If None, the method
+                behaves identically to ``verify()`` with no gate metadata.
+            logit_mean: Optional 1-D numpy array of mean logit values for this
+                response.  If None, falls back to a zero vector.
+
+        Returns:
+            VerificationResult.  When gate skips: ``violations=[]``,
+            ``certificate["gate_decision"]="skip"``, ``ising_skipped=True``,
+            ``certificate["gate_energy"]`` = energy scalar.  When gate verifies
+            or no gate: full Ising result tagged with ``gate_decision="verify"``
+            and ``ising_skipped=False``.
+
+        Spec: REQ-JEPA-005, SCENARIO-JEPA-010, SCENARIO-JEPA-011
+        """
+        import numpy as np
+
+        if jepa_gate is None:
+            # No gate — normal full verification, no gate metadata added.
+            return self.verify(question, response, domain)
+
+        # Normalise the logit mean vector.
+        lm: np.ndarray
+        if logit_mean is None:
+            lm = np.zeros(1, dtype=np.float32)
+        else:
+            lm = np.asarray(logit_mean, dtype=np.float32)
+
+        energy = jepa_gate.predict(lm)
+        skip = jepa_gate.should_skip(lm)
+
+        if skip:
+            return VerificationResult(
+                verified=True,
+                constraints=[],
+                energy=0.0,
+                violations=[],
+                certificate={
+                    "gate_decision": "skip",
+                    "gate_energy": energy,
+                    "ising_skipped": True,
+                    "n_violations": 0,
+                },
+                mode="FAST_PATH",
+                skipped=True,
+            )
+
+        # Gate says verify — run full Ising pipeline.
+        result = self.verify(question, response, domain)
+        result.certificate["gate_decision"] = "verify"
+        result.certificate["gate_energy"] = energy
+        result.certificate["ising_skipped"] = False
+        return result
+
     def verify_and_repair(
         self,
         question: str,

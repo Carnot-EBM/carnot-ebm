@@ -507,6 +507,20 @@ The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predic
 - **Honest fallback**: If logit files are missing, emit a `blocked` artifact listing exact missing paths.
 - **Artifact schema**: `experiment=307`, `training_source="real_logits"`, `n_pairs`, `split` description, `val_tp`, `val_fp`, `skip_rate`, `onnx_path`.
 
+### REQ-JEPA-005: JEPA Gate Reduces Ising Invocations
+
+`JepaGate` shall serve as a fast-path filter before full Ising verification in
+`VerifyRepairPipeline.verify_with_gate()`, where:
+
+- **Interface**: `JepaGate(onnx_path, threshold=0.5, enabled=True)` — dataclass-style constructor.
+- **Lazy ONNX load**: The ONNX Runtime `InferenceSession` is created on the first call to `predict()`, not at construction time (avoids load overhead when gate is disabled).
+- **predict(logit_mean)**: Accepts a 1-D numpy array of mean logit values, runs the ONNX session, and returns `sigmoid(raw_output)` as a float in [0, 1]. When `enabled=False`, returns 1.0 unconditionally (always run Ising).
+- **should_skip(logit_mean)**: Returns `True` when `predict(logit_mean) < threshold` (energy low — safe to skip Ising); otherwise `False`.
+- **to_dict()**: Returns `{"onnx_path": str, "threshold": float, "enabled": bool}` for artifact serialization.
+- **verify_with_gate()**: Additive method on `VerifyRepairPipeline` accepting `jepa_gate=None` kwarg. When gate is provided and `should_skip()` is True, returns a `VerificationResult` with `violations=[]`, `gate_decision="skip"`, `gate_energy=<float>`, `ising_skipped=True`. When gate says verify, runs full Ising and tags the result with `gate_decision="verify"`.
+- **Skip rate**: The benchmark (Exp 308) must report `skip_rate = n_skipped / n_total` per threshold.
+- **TP rate target**: At least one threshold in `[0.3, 0.5, 0.7]` must achieve `skip_rate ≥ 0.30` AND `TP_rate ≥ 0.85` on the 50-question benchmark corpus.
+
 ## Scenarios
 
 ### SCENARIO-VERIFY-001: Sudoku Constraint Satisfaction
@@ -2395,6 +2409,25 @@ Spec: REQ-VERIFY-082
 **And** the ONNX file is loadable with onnxruntime
 **And** if logit files are absent the script emits a `blocked` artifact with exact missing paths
 
+### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
+
+**Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
+**And** a logit mean vector whose ONNX-predicted energy is 0.3
+**When** `verify_with_gate(question, response, domain, jepa_gate=gate)` is called
+**Then** the returned `VerificationResult` has `ising_skipped=True`
+**And** `gate_decision == "skip"`
+**And** `gate_energy == 0.3`
+**And** `violations == []`
+
+### SCENARIO-JEPA-011: Gate Above Threshold Runs Full Ising
+
+**Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
+**And** a logit mean vector whose ONNX-predicted energy is 0.8
+**When** `verify_with_gate(question, response, domain, jepa_gate=gate)` is called
+**Then** the returned `VerificationResult` has `ising_skipped=False`
+**And** `gate_decision == "verify"`
+**And** the full Ising pipeline ran
+
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 
 **Given** a corpus row whose `process_label` is `"clean"` and whose
@@ -2542,6 +2575,7 @@ Spec: REQ-VERIFY-082
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291 Apple adversarial retrain + conformal calibration |
 | REQ-JEPA-004 | Not Started | Implemented | Exp 307 JEPA MLP real-logit retrain; blocked until logits_294/295 files present |
+| REQ-JEPA-005 | Not Started | Implemented | JepaGate fast-path + verify_with_gate() + Exp 308 benchmark |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |
