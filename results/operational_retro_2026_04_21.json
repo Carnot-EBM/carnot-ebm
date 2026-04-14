@@ -1,0 +1,205 @@
+{
+  "milestone": "2026.04.21",
+  "generated_at": "2026-04-14T08:40:34Z",
+  "experiments_in_scope": [
+    {
+      "experiment_id": 281,
+      "result_file_exists": true,
+      "duration_minutes": 8.22,
+      "gpu_count": 0,
+      "description_snippet": "Exp 281: Apple adversarial GSM8K dataset generator \u2014 spec (REQ-VERIFY-063, SCENARIO-VERIFY-078/079), 12 tests, dataset g"
+    },
+    {
+      "experiment_id": 282,
+      "result_file_exists": false,
+      "duration_minutes": 7.17,
+      "gpu_count": 2,
+      "description_snippet": "Exp 282: GPU baseline inference on Apple adversarial corpus \u2014 16 tests, AppleBaselineRunner with DualGPURunner wired at"
+    },
+    {
+      "experiment_id": 283,
+      "result_file_exists": false,
+      "duration_minutes": 10.03,
+      "gpu_count": 2,
+      "description_snippet": "Exp 283: verify-repair 12-cell benchmark on Apple adversarial corpus \u2014 spec (REQ-VERIFY-068\u2013072, SCENARIO-VERIFY-084\u2013087"
+    },
+    {
+      "experiment_id": 284,
+      "result_file_exists": true,
+      "duration_minutes": 7.23,
+      "gpu_count": 0,
+      "description_snippet": "Exp 284: Apple adversarial analysis and classification \u2014 spec (REQ-VERIFY-073\u2013075, SCENARIO-VERIFY-088\u2013092), 31 tests, a"
+    },
+    {
+      "experiment_id": 285,
+      "result_file_exists": false,
+      "duration_minutes": 0.0,
+      "gpu_count": 0,
+      "description_snippet": ""
+    },
+    {
+      "experiment_id": 286,
+      "result_file_exists": false,
+      "duration_minutes": 0.0,
+      "gpu_count": 0,
+      "description_snippet": ""
+    },
+    {
+      "experiment_id": 287,
+      "result_file_exists": true,
+      "duration_minutes": 0.0,
+      "gpu_count": 0,
+      "description_snippet": ""
+    },
+    {
+      "experiment_id": 288,
+      "result_file_exists": true,
+      "duration_minutes": 6.75,
+      "gpu_count": 0,
+      "description_snippet": "Exp 288: KV260 FPGA overlay bring-up \u2014 spec (REQ-SAMPLE-009, SCENARIO-SAMPLE-018/019), 21 tests, bring-up script with en"
+    },
+    {
+      "experiment_id": 289,
+      "result_file_exists": false,
+      "duration_minutes": 12.92,
+      "gpu_count": 0,
+      "description_snippet": "Exp 289: FpgaBackend \u2014 quantum-inspired sparse Ising SamplerBackend. quantize_to_q88, sparsify_coupling, quantum_anneali"
+    },
+    {
+      "experiment_id": 290,
+      "result_file_exists": true,
+      "duration_minutes": 15.88,
+      "gpu_count": 0,
+      "description_snippet": "Exp 290: ran benchmark script \u2014 CONFIRMED (geometric wins 3/3 sizes); updated docs/fpga-ising-design.md and ops/status.m"
+    },
+    {
+      "experiment_id": 291,
+      "result_file_exists": true,
+      "duration_minutes": 1.98,
+      "gpu_count": 0,
+      "description_snippet": "Exp 291: Retrain JEPA predictor on Apple adversarial GPU data \u2014 47 tests pass, TARGETS_MET (fast_path=0.500, TP=1.000, F"
+    },
+    {
+      "experiment_id": 292,
+      "result_file_exists": true,
+      "duration_minutes": 10.85,
+      "gpu_count": 0,
+      "description_snippet": "Exp 292: AMD XDNA NPU VitisAI EP benchmark \u2014 30 tests (blocked path), script with Path A (pre-built .so + ORT 1.20.1 dow"
+    },
+    {
+      "experiment_id": 293,
+      "result_file_exists": true,
+      "duration_minutes": 7.05,
+      "gpu_count": 0,
+      "description_snippet": "Exp 293: HF publish carry-forward from 268 \u2014 42 tests (incl. adversarial-review fixes: safetensors skip path, results-wr"
+    }
+  ],
+  "experiments_with_results": [
+    281,
+    284,
+    287,
+    288,
+    290,
+    291,
+    292,
+    293
+  ],
+  "total_wall_time_minutes": 88.08,
+  "experiments_completed": 13,
+  "exp_per_hour": 8.86,
+  "gpu_utilization_distribution": {
+    "0gpu": 11,
+    "1gpu": 0,
+    "2gpu": 2
+  },
+  "action_item_audit": [
+    {
+      "id": "RETRO-2026-04-20-A",
+      "description": "Wire DualGPURunner from Exp 281 \u2014 DualGPUBenchmarkHarness as the default scheduler for experiments that reference two or more models.",
+      "resolution": "resolved",
+      "evidence": "Exp 281 is a dataset generator (no GPU inference path). Exp 282 (first GPU experiment this milestone) explicitly wired DualGPURunner at start per metrics.md description: 'AppleBaselineRunner with DualGPURunner wired at start'. Exp 283 likewise: 'VerifyRepairRunner with DualGPURunner at start'. DualGPURunner was active from the first GPU-using experiment \u2014 the structural intent of the action item is satisfied."
+    },
+    {
+      "id": "RETRO-2026-04-20-B",
+      "description": "Add per-question checkpointing to all live GSM8K, HumanEval, and constraint_ir loops \u2014 checkpoint every 10 questions to cut worst-case restart cost from 117 min to ~12 min.",
+      "resolution": "resolved",
+      "evidence": "Exp 282 description: 'checkpoint every 10q, 60s timeout \u2192 partial artifact with stall_at'. Exp 283: 'checkpoint every 10q, 60s timeout \u2192 partial artifact'. Per-question checkpointing was implemented in both experiments. Stalls still occurred (live GPU unavailable) but checkpointing infrastructure is now present \u2014 restart cost is bounded at 10 questions rather than full cell replay."
+    },
+    {
+      "id": "RETRO-2026-04-20-C",
+      "description": "Complete the Apple adversarial benchmark end-to-end: generate dataset (Exp 281), run GPU baseline inference (Exp 282), run verify-repair (Exp 283), and produce a conclusive CONFIRMED or REFUTED classification in Exp 284.",
+      "resolution": "deferred",
+      "evidence": "Exp 284 classification: INCONCLUSIVE. Exp 282 and Exp 283 produced partial artifacts with stall_at due to live GPU unavailability in the CI environment. Exp 284 therefore returned INCONCLUSIVE \u2014 full end-to-end benchmark was not completed. Dataset exists (Exp 281, 400 rows), inference infrastructure exists (Exp 282/283 scripts), but result data is absent."
+    },
+    {
+      "id": "RETRO-2026-04-20-D",
+      "description": "Standardize the CPU ORT + GPU LLM hybrid from Exp 259: CPU ORT for the linear gate at batch_size < 32, GPU LLM inference for language model calls, batched queries at batch_size=8. Test CUDA ORT at batch_size >= 32 to verify the crossover point.",
+      "resolution": "deferred",
+      "evidence": "Exp 292 (AMD XDNA NPU benchmark) reports cpu_ort_baseline_us but focuses on the VitisAI EP and AMD NPU path, not CUDA ORT batching. No experiment in the 281-293 range explicitly tested CUDA ORT at batch_size >= 32. The CPU-ORT/CUDA-ORT crossover is still unvalidated."
+    }
+  ],
+  "carry_over_rate_pct": 50.0,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": 290,
+      "label": "Exp 290: Exp 290: ran benchmark script \u2014 CONFIRMED (geometric wins 3/3 sizes); updated do",
+      "duration_minutes": 15.88,
+      "gpu_count": 0
+    },
+    {
+      "rank": 2,
+      "experiment_id": 289,
+      "label": "Exp 289: Exp 289: FpgaBackend \u2014 quantum-inspired sparse Ising SamplerBackend. quantize_to",
+      "duration_minutes": 12.92,
+      "gpu_count": 0
+    },
+    {
+      "rank": 3,
+      "experiment_id": 292,
+      "label": "Exp 292: Exp 292: AMD XDNA NPU VitisAI EP benchmark \u2014 30 tests (blocked path), script wit",
+      "duration_minutes": 10.85,
+      "gpu_count": 0
+    },
+    {
+      "rank": 4,
+      "experiment_id": 283,
+      "label": "Exp 283: Exp 283: verify-repair 12-cell benchmark on Apple adversarial corpus \u2014 spec (REQ",
+      "duration_minutes": 10.03,
+      "gpu_count": 2
+    },
+    {
+      "rank": 5,
+      "experiment_id": 281,
+      "label": "Exp 281: Exp 281: Apple adversarial GSM8K dataset generator \u2014 spec (REQ-VERIFY-063, SCENA",
+      "duration_minutes": 8.22,
+      "gpu_count": 0
+    }
+  ],
+  "bottlenecks_identified": [
+    "Apple adversarial benchmark still INCONCLUSIVE: Exp 282/283 produced partial artifacts due to live GPU unavailability; Exp 284 could not classify.  Dataset exists but end-to-end result does not.",
+    "CUDA ORT batch_size >= 32 still untested: the CPU-ORT/CUDA-ORT crossover identified in Exp 259 remains unvalidated for a second consecutive milestone.",
+    "Carry-over rate dropped from 100% (three consecutive milestones) to 50.0% this milestone \u2014 structural improvement observed but two items remain deferred.",
+    "GPU utilization: 0-GPU experiments dominate the milestone.  Most experiments (FPGA backend, AMD NPU, HF publish, retro) have no live GPU inference path.  The two GPU experiments (282/283) ran in blocked/partial mode.",
+    "Short milestone wall time (all experiments ran in a single session) means exp/hour rate is artificially high; multi-session milestones will show true throughput."
+  ],
+  "structural_action_taken": {
+    "description": "Created one epics/stories/ ticket per deferred action item from the 2026.04.20 retro.  This replaces the 'Markdown suggestion' pattern (which produced 100% carry-over across three milestones) with tracked tickets that can be scheduled and verified before the next milestone.",
+    "stories_created": 2,
+    "story_paths": [
+      "epics/stories/PROCESS-001.md",
+      "epics/stories/PROCESS-002.md"
+    ],
+    "rationale": "The structural root cause of 100% carry-over is that retro outputs are Markdown documents, not tracked tickets in epics/stories/.  Converting deferred items to stories with explicit acceptance criteria makes them schedulable and verifiable."
+  },
+  "delta_vs_prior_milestone": {
+    "prior_milestone": "2026.04.20",
+    "prior_carry_over_rate_pct": 100.0,
+    "this_carry_over_rate_pct": 50.0,
+    "carry_over_improvement_pp": 50.0,
+    "prior_recommendations_actioned_pct": 20.0,
+    "key_improvement": "DualGPURunner wired from Exp 282 (first GPU experiment) \u2014 resolves the persistent single-GPU bottleneck for new experiments.",
+    "key_remaining_gap": "Apple adversarial benchmark not completed (live GPU required); CUDA ORT batch_size crossover not tested.",
+    "structural_change": "epics/stories/ tickets PROCESS-001 and PROCESS-002 created for deferred items \u2014 breaks the Markdown-suggestion anti-pattern."
+  }
+}

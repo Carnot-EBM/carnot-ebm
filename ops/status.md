@@ -664,6 +664,15 @@
 - **LLM constraint extraction**: parse natural language into Ising-encodable constraints
 - **Extropic hardware testing**: when TSU is available, run thrml code natively
 
+### Milestone 2026.04.21: Operational Retro — Exp 294
+- **Exp 294 Operational Retro (2026-04-14)**: Process efficiency analysis for milestone 2026.04.21. 13 experiments in scope (281–293), 8 result files found, 88.1 min total wall time (8.86 exp/hour). GPU distribution: 11×0GPU / 0×1GPU / 2×2GPU (Exp 282/283 wired DualGPURunner). Action item audit from 2026.04.20 retro — **2/4 resolved** (carry-over rate 50%, down from 100% for three consecutive milestones):
+  - ✅ RETRO-2026-04-20-A: DualGPURunner wired from Exp 282 (first GPU experiment of milestone)
+  - ✅ RETRO-2026-04-20-B: Per-question checkpointing (every 10q) implemented in Exp 282/283
+  - ⬜ RETRO-2026-04-20-C: Apple adversarial benchmark — INCONCLUSIVE (Exp 282/283 GPU stall) → **PROCESS-001** story created
+  - ⬜ RETRO-2026-04-20-D: CUDA ORT batch_size >= 32 crossover — not tested → **PROCESS-002** story created
+- Story tickets `epics/stories/PROCESS-001.md` and `epics/stories/PROCESS-002.md` created with acceptance criteria — breaks the Markdown-suggestion anti-pattern that caused 100% carry-over for three consecutive milestones.
+- Results: `results/operational_retro_2026_04_21.json`. Tests: 3519 passed, 99.11% coverage.
+
 ### Milestone 2026.04.2: Toward Kona
 - Milestone 2026.04.2: Toward Kona — live LLM + Ising end-to-end
 - ~~Exp 53: Runtime constraint instrumentation~~: ✅ DONE (2026-04-09)
