@@ -1509,3 +1509,8 @@ python/ |
 | 2026-04-14 08:49 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
 | 2026-04-14 08:49 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
 | 2026-04-14 08:49 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
+| 2026-04-14 09:07 UTC | Plan milestone 2026.04.22 | OK | 13 tasks proposed |
+| 2026-04-14 09:08 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 09:08 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
+| 2026-04-14 09:08 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
+| 2026-04-14 09:08 UTC | Milestone 2026.04.22 activated | OK | 13 tasks queued |
