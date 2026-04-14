@@ -1530,6 +1530,52 @@ class VerifyRepairPipeline:
             history=history,
         )
 
+    def verify_repair_z3_gated(
+        self,
+        question: str,
+        response: str,
+        domain: str | None = None,
+        nl2z3_extractor: object | None = None,
+        confidence_threshold: float = 0.8,
+    ) -> "Z3GatedRepairResult":
+        """Run Z3-gated repair: Z3 first-pass gate, Ising repair only on UNSAT/unknown.
+
+        **Detailed explanation for engineers:**
+            This is the additive integration point for Z3GatedRepair inside the
+            VerifyRepairPipeline.  It does NOT change verify() or
+            verify_and_repair() — calling it is purely opt-in.
+
+            The gate logic (see z3_gated_repair.py for full details):
+            - SAT    → skip Ising (cheap path, most common for correct responses)
+            - UNSAT  → trigger full Ising + LLM repair (Z3 proved a contradiction)
+            - unknown/error → confidence-weighted Ising fallback (conservative)
+
+        Args:
+            question:             The original question.
+            response:             The response to evaluate and potentially repair.
+            domain:               Optional domain hint for NL2Z3Extractor.
+            nl2z3_extractor:      Optional pre-configured NL2Z3Extractor instance.
+                                  When None, a fresh NL2Z3Extractor() is created.
+            confidence_threshold: Passed to verify_and_repair_confident when Ising
+                                  is triggered.  Default 0.8.
+
+        Returns:
+            Z3GatedRepairResult capturing Z3 verdict, Ising trigger, and repair outcome.
+
+        Spec: REQ-REPAIR-010, REQ-REPAIR-011, SCENARIO-REPAIR-020,
+              SCENARIO-REPAIR-021, SCENARIO-REPAIR-022
+        """
+        from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor
+        from carnot.pipeline.z3_gated_repair import Z3GatedRepair, Z3GatedRepairResult
+
+        extractor = nl2z3_extractor if nl2z3_extractor is not None else NL2Z3Extractor()
+        gate = Z3GatedRepair(
+            nl2z3_extractor=extractor,
+            ising_pipeline=self,
+            confidence_threshold=confidence_threshold,
+        )
+        return gate.repair(question, response, domain)
+
     # -------------------------------------------------------------------
     # Internal helpers
     # -------------------------------------------------------------------

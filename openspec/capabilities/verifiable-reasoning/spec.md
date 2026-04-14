@@ -2634,6 +2634,75 @@ Spec: REQ-EXTRACT-012, SCENARIO-EXTRACT-025, SCENARIO-EXTRACT-026
 **Then** ArithmeticExtractor is reported with `tp_rate = 0.0` without suppression
 **And** the winner selection prefers any extractor with TP > 0 over one with TP = 0
 
+### REQ-REPAIR-010: Z3-Gated Repair Pipeline
+
+The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
+cheap first-pass gate before invoking the expensive Ising repair loop, where:
+- The gate runs NL2Z3Extractor on every (question, response, domain) triple
+- When Z3 returns `sat`, the Ising repair loop is SKIPPED (response is presumed correct)
+- When Z3 returns `unsat`, the Ising repair loop is TRIGGERED (contradiction confirmed)
+- When Z3 returns `unknown` or `error`, the pipeline falls back to confidence-weighted
+  Ising repair (existing path from REQ-VERIFY-082)
+- Results are captured in a `Z3GatedRepairResult` dataclass with fields:
+  `z3_status`, `z3_code`, `ising_triggered`, `ising_violations`,
+  `repair_attempted`, `repaired`, `improvement`, `runtime_ms`
+- The `skip_rate` (fraction of questions where Z3 SAT skipped Ising) is computable
+  from a collection of `Z3GatedRepairResult` records
+
+Spec: REQ-REPAIR-010, SCENARIO-REPAIR-020, SCENARIO-REPAIR-021
+
+### REQ-REPAIR-011: Z3 SAT Skip Path
+
+The Z3-gated pipeline shall implement a fast-exit path when Z3 returns `sat`, where:
+- `ising_triggered` is `False`
+- `repair_attempted` is `False`
+- `repaired` is `False`
+- `improvement` is `0`
+- The result is returned immediately without calling ConfidenceVerifier or the LLM
+
+This path is the primary cost-reduction mechanism: Z3 SAT questions consume only the
+Z3 gate overhead, not the full Ising + LLM repair cost.
+
+Spec: REQ-REPAIR-011, SCENARIO-REPAIR-022
+
+### SCENARIO-REPAIR-020: Z3 UNSAT Triggers Ising Repair
+
+**Given** a response with internally inconsistent arithmetic
+**And** NL2Z3Extractor returns `sat_status="unsat"` for that response
+**When** `Z3GatedRepair.repair(question, response, domain)` is called
+**Then** `result.z3_status == "unsat"`
+**And** `result.ising_triggered is True`
+**And** `result.repair_attempted is True`
+
+### SCENARIO-REPAIR-021: Z3 Unknown Falls Back to Confidence-Weighted Ising
+
+**Given** a response where NL2Z3Extractor returns `sat_status="unknown"`
+  (e.g., CI mode with no LLM available)
+**When** `Z3GatedRepair.repair(question, response, domain)` is called
+**Then** `result.z3_status == "unknown"`
+**And** `result.ising_triggered is True`
+**And** the confidence-weighted ConfidenceVerifier path is invoked as fallback
+
+### SCENARIO-REPAIR-022: Z3 SAT Skips Ising
+
+**Given** a response that NL2Z3Extractor evaluates as consistent (`sat_status="sat"`)
+**When** `Z3GatedRepair.repair(question, response, domain)` is called
+**Then** `result.z3_status == "sat"`
+**And** `result.ising_triggered is False`
+**And** `result.repair_attempted is False`
+**And** `result.repaired is False`
+**And** the result is returned in under 1 ms (no Ising or LLM calls)
+
+### SCENARIO-REPAIR-023: 30-Question Benchmark Reports Honest net_improvement
+
+**Given** a 30-question corpus (at least 10 correct + at least 10 incorrect responses)
+**When** `experiment_312_z3_gated_benchmark.py` is run in CI mode (no live LLM)
+**Then** the artifact is written to `results/experiment_312_z3_gated_results.json`
+**And** the artifact includes `z3_gate_skip_rate`, `ising_trigger_rate`,
+  `net_accuracy_improvement` (which may be `0` — reported honestly)
+**And** `z3_gate_skip_rate + ising_trigger_rate == 1.0` (every question takes exactly one path)
+**And** the artifact schema includes `experiment=312`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2729,3 +2798,5 @@ Spec: REQ-EXTRACT-012, SCENARIO-EXTRACT-025, SCENARIO-EXTRACT-026
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
+| REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
+| REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
