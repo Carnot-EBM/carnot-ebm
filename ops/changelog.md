@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 292: AMD XDNA NPU VitisAI EP Benchmark — Blocked Artifact)
+
+- `scripts/experiment_292_amd_xdna_npu.py` — Attempts AMD XDNA NPU benchmark via two paths:
+  Path A (pre-built .so): installs onnxruntime==1.20.1 in .venv-npu, sets LD_LIBRARY_PATH to
+  RyzenAI-SW .so dir — VitisAI EP not registered (EP must be compiled into ORT at build time).
+  Path B (source build): cmake -DONNXRUNTIME_USE_VITISAI=ON with 45-minute wall-clock timeout —
+  blocked by missing `ninja` and `openblas`. Emits honest blocked artifact with specific missing
+  prereqs and next_action. Baseline anchored to Exp 257 CPU ORT 5.847 µs/call.
+  `results/experiment_292_results.json` — execution_path: blocked, missing_prereqs: [ninja, openblas].
+  Next step: `sudo pacman -S ninja openblas` then re-run. REQ-PRED-003, SCENARIO-EXP292-A,
+  SCENARIO-EXP292-B, SCENARIO-EXP292-C, SCENARIO-EXP292-D. (user instruction: Exp 292 XDNA NPU)
+- `tests/python/test_experiment_292_amd_xdna_npu.py` — 30 tests covering: top-level schema (8),
+  hardware artifact path (6, skipped when blocked), blocked artifact path (5), build_failed path
+  (6, skipped when not build_failed), NPU hardware info (5). All 30 pass (19 passed, 11 skipped).
+
 ## 2026-04-14 (Exp 291: JEPA Apple Adversarial Retrain — Energy Features + Isotonic Calibration + Conformal Bounds)
 
 - `scripts/experiment_291_jepa_apple_retrain.py` — Full Tier 3 JEPA retrain pipeline. Feature extraction: per prefix fraction (25/50/75/100%) extracts mean_spilled, max_spilled, p95_spilled (SpilledEnergyExtractor), semantic_energy (SemanticEnergyExtractor), mean_logit, max_logit, variant_type_encoded (standard=0, number_swap=1, irrelevant=2), prefix_fraction. Training: LogisticRegression on 8-feature energy matrix; chronological 80/20 train/holdout split; isotonic regression calibration (EBM-CoT, arXiv 2511.07124); conformal Clopper-Pearson intervals at α=0.1 (arXiv 2603.22966); operating threshold sweep maximizing fast-path rate at TP≥0.60, FP≤0.20; 50-case A/B calibrated vs uncalibrated gate. Synthetic fallback generates discriminative corpus when Exp 282/283 logit files absent (label: synthetic_training=True). ONNX export: `results/jepa_predictor_291.onnx` (MatMul+Add+Sigmoid graph, input (1,8), output (1)). REQ-JEPA-003, SCENARIO-JEPA-006, SCENARIO-JEPA-007. (user instruction: Exp 291 JEPA Apple retrain)

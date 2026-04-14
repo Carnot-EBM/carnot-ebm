@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 292 AMD XDNA NPU VitisAI EP Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T08:00:14Z | 2026-04-14T08:11:05Z | Exp 292: AMD XDNA NPU VitisAI EP benchmark — 30 tests (blocked path), script with Path A (pre-built .so + ORT 1.20.1 downgrade) and Path B (source build, 45 min timeout); key finding: VitisAI EP must be compiled into ORT; blocked by ninja+openblas; reconciled docs; 3442 total tests pass 99.11% coverage | ~25k |
+
+---
+
 ## Session: 2026-04-14 Exp 291 JEPA Apple Adversarial Retrain
 
 ### Turn Log
