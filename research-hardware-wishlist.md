@@ -121,7 +121,27 @@ production goals. Updated as new needs emerge from experiments.
 - Edge deployment: constraint verification on device, not cloud
 - The current machine's XDNA NPU is FREE to experiment with
 
-## Priority 4: Extropic TSU (When Available)
+## Priority 4: D-Wave Quantum Annealing (Cloud Access Available Now)
+
+- **D-Wave Advantage** (cloud via Leap)
+  - 5,000+ qubits, Pegasus topology (15-way connectivity)
+  - Native Ising/QUBO solver — maps 1:1 to Carnot's IsingEBM
+  - **Free tier**: 1 min QPU/month (~1000 small constraint problems)
+  - Pay-as-you-go: ~$2000/hr QPU time (hybrid solvers cheaper)
+  - **Local simulation**: `pip install dwave-ocean-sdk` includes `neal` simulated annealer
+  - Sign up: cloud.dwavesys.com
+- **D-Wave Advantage2** (cloud via Leap, prototype)
+  - 1,200+ qubits now, targeting 7,000+ (Zephyr topology, 20-way connectivity)
+  - Higher connectivity = better embedding for dense constraint graphs
+
+### D-Wave Justification
+- Carnot's Ising constraint verification is literally what D-Wave solves
+- 128-4,096 spin problems fit within Advantage's capacity for sparse graphs
+- `dwave-ocean-sdk` (Apache 2.0) provides same API for local sim and real QPU
+- Validates quantum advantage for constraint verification before investing in custom hardware
+- SamplerBackend abstraction already designed for pluggable backends
+
+## Priority 5: Extropic TSU (When Available)
 
 - **Extropic Z1** (not yet available, ~2026-2027?)
   - 256k p-bits, native thermodynamic sampling

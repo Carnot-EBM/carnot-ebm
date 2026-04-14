@@ -327,6 +327,20 @@ These are NOT candidates for revalidation — they were disproven by experimenta
 - **LNN adaptive couplings** (Exp 116): -90% vs static Ising. Worse in every metric.
 - **Precision-based constraint reweighting** (Exp 134 original): 0% improvement on the specific reweighting approach (though the self-learning architecture was validated by Exp 223).
 
+### D-Wave Quantum Annealing (ACTIONABLE — Add Now)
+- **D-Wave Advantage**: 5,000+ qubits (Pegasus topology, 15-way connectivity).
+  Advantage2: 7,000+ target (Zephyr, 20-way). Solves Ising/QUBO natively.
+- **Ocean SDK**: Apache 2.0, `pip install dwave-ocean-sdk`. `dimod` for BQM,
+  `neal` for local simulated annealing, `dwave-system` for real QPU.
+- **Carnot fit**: Perfect — D-Wave literally solves Ising problems. Our
+  SamplerBackend abstraction + IsingEBM coupling matrix maps 1:1 to dimod BQM.
+- **Local simulation**: `neal.SimulatedAnnealingSampler()` runs locally, same
+  API as hardware. Prove the approach works without QPU access.
+- **Free tier**: 1 min QPU/month via D-Wave Leap (enough for ~1000 problems).
+- **Score**: 5x5x5x4 = **500** — high relevance, high feasibility, proven technology
+- **Action**: Add `dwave-ocean-sdk` as optional dep, create `DWaveSampler`
+  implementing `SamplerBackend`, benchmark local sim vs CPU Ising sampler.
+
 ### Photonic Computing (Monitor — Not Actionable Yet)
 - **Q.ANT NPU 2.0** — commercial photonic matmul accelerator (30x energy efficiency).
   Not directly useful for sampling. Commercial-only, no cloud access.
