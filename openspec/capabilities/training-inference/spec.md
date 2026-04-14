@@ -284,6 +284,47 @@ quality deltas versus the original saved repair outcome
 **And** blocked runs preserve the setup blocker instead of fabricating
 hardware-backed reranking timings
 
+### REQ-SAMPLE-009: KV260 FPGA Overlay Bring-Up With 60s Timeout
+
+The system shall provide a bring-up script for the KV260 FPGA Ising overlay
+(Exp 288) that enforces a hard 60-second wall-clock timeout, where:
+- the script checks the `CARNOT_KV260_BITFILE` environment variable as its
+  first action and emits a blocked artifact immediately if the variable is unset
+- the blocked artifact must include `execution_path: "blocked"`, the name of
+  the missing environment variable, and the exact next step needed to proceed
+- when the env var is set, the script attempts `pynq.Overlay(bitfile)` with a
+  60-second timeout and emits a blocked artifact if the load does not complete
+  within that window
+- when the overlay loads, the script exercises the AXI-Lite register map from
+  the Exp 228 design: write CONTROL, read STATUS, verify the STATUS round-trip
+- the script writes a minimal coupling matrix into the bias window, issues
+  `CONTROL_START`, reads back the spin state, and converts the boolean result
+  to a ±1 signed integer array for validity checking
+- the artifact records `overlay_load_ms`, `register_roundtrip_us`, and
+  `spin_state_valid` when hardware or software-model path completes
+- the artifact labels the execution path as `hardware`, `software_model`, or
+  `blocked` — a software-model transport must never be labeled `hardware`
+
+## Scenarios
+
+### SCENARIO-SAMPLE-018: Blocked Artifact Emitted Immediately When Env Var Is Missing
+
+**Given** `CARNOT_KV260_BITFILE` is not set in the environment
+**When** the Exp 288 bring-up script is invoked
+**Then** it writes a blocked artifact without attempting any PYNQ import
+**And** the artifact contains `execution_path: "blocked"`, `missing:
+  "CARNOT_KV260_BITFILE"`, and `next_step` describing how to set the variable
+**And** `overlay_load_ms` is absent or null in the artifact
+
+### SCENARIO-SAMPLE-019: Spin State Validity Check After Bring-Up Round-Trip
+
+**Given** the Exp 288 bring-up script completed the upload/trigger/readback
+cycle on either a hardware or software-model transport
+**When** the packed boolean spin words are converted to a ±1 signed integer
+array
+**Then** every element of the array is exactly +1 or −1
+**And** the artifact records `spin_state_valid: true`
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -307,3 +348,4 @@ hardware-backed reranking timings
 | REQ-SAMPLE-006 | Not Started | Implemented | 10 Python |
 | REQ-SAMPLE-007 | Not Started | Implemented | 5 Python |
 | REQ-SAMPLE-008 | Not Started | Implemented | 8 Python |
+| REQ-SAMPLE-009 | Not Started | Implemented | 6 Python |

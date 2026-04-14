@@ -166,11 +166,37 @@ The real success criterion for the first overlay is not beating the CPU in the
 Python software model. It is preserving the host/overlay contract so the same
 backend can switch from `fpga_sim` to real PYNQ MMIO once the bitstream exists.
 
+## Bring-Up History
+
+### Exp 242 (2026-04-13) — Blocked: no bitfile configured
+
+Result: `blocked` — `CARNOT_KV260_BITFILE` was not set.  No overlay load
+was attempted.  See `results/experiment_242_results.json`.
+
+### Exp 288 (2026-04-14) — Bring-up attempt with 60 s hard timeout
+
+Script: `scripts/experiment_288_kv260_bringup.py`
+
+The script:
+1. Checks `CARNOT_KV260_BITFILE` first; emits blocked immediately if unset.
+2. Attempts `pynq.Overlay(bitfile)` within a 60-second wall-clock timeout.
+3. Exercises the AXI-Lite register map: writes CONTROL, reads STATUS.
+4. Uploads the sparse ring coupling matrix, triggers sampling, reads back
+   packed spin words.
+5. Converts boolean spins to ±1 and records `spin_state_valid`.
+6. Labels the path as `hardware`, `software_model`, or `blocked`.
+
+Result: `blocked` — `CARNOT_KV260_BITFILE` was not set on the development
+host (KV260 not yet networked to the build machine).
+See `results/experiment_288_results.json`.
+
 ## Next Hardware Step
 
-The next concrete milestone after this software-backed design is:
-
-1. synthesize `carnot_ising_top` with the register map above
-2. expose it as `carnot_ising_0` in the PYNQ overlay
-3. validate `FPGAIsingSampler(mode="hardware")` on the KV260
-4. replace the software-model timing with on-board sweep/sampling throughput
+1. Connect the KV260 to the build network and set `CARNOT_KV260_BITFILE` to
+   the synthesized bitstream path.
+2. Synthesize `carnot_ising_top` with the register map above and export it as
+   `carnot_ising_0` in the PYNQ overlay.
+3. Re-run `scripts/experiment_288_kv260_bringup.py` — it will record
+   `overlay_load_ms`, `register_roundtrip_us`, and `spin_state_valid` on first
+   successful hardware path.
+4. Replace software-model timing in this doc with on-board throughput numbers.

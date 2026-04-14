@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 288 KV260 Bringup
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T06:49:07Z | 2026-04-14T06:55:52Z | Exp 288: KV260 FPGA overlay bring-up — spec (REQ-SAMPLE-009, SCENARIO-SAMPLE-018/019), 21 tests, bring-up script with env-var-first blocked path, spin ±1 validation, 60s hard timeout, 3302 total tests pass 99.11% coverage | ~20k |
+
+---
+
 ## Session: 2026-04-14 Exp 284 Apple Analysis
 
 ### Turn Log
