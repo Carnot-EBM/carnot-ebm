@@ -1550,3 +1550,5 @@ python/ |
 | 2026-04-14 13:45 UTC | Exp 307: JEPA train on real Apple adversarial logi | OK | Deliverable already exists in repo |
 | 2026-04-14 16:02 UTC | Exp 308: JEPA fast-path gate integration and laten | FAIL | Post-tests failed:  |
 | 2026-04-14 16:03 UTC | Exp 308: JEPA fast-path gate integration and laten | OK | Deliverable already exists in repo |
+| 2026-04-14 17:08 UTC | Exp 309: Tier 3 end-to-end self-learning — real lo | FAIL | Post-tests failed:  |
+| 2026-04-14 17:09 UTC | Exp 309: Tier 3 end-to-end self-learning — real lo | OK | Deliverable already exists in repo |
