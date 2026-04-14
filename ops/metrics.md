@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 291 JEPA Apple Adversarial Retrain
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T07:41:22Z | TBD | Exp 291: Retrain JEPA predictor on Apple adversarial GPU data — spilled/semantic energy features, isotonic calibration, conformal bounds, A/B test, ONNX export | TBD |
+
+---
+
 ## Session: 2026-04-14 Exp 290 FpgaBackend vs CPU Benchmark
 
 ### Turn Log

@@ -482,6 +482,17 @@ The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predic
 - When no predictor is provided, behaves identically to the original full-pipeline path (backward compatible)
 - `VerificationResult` shall include `mode: str = "FULL"` and `skipped: bool = False` fields (defaulting to full-path semantics for all existing callers)
 
+### REQ-JEPA-003: Apple Adversarial Retrain with Energy Features and Conformal Calibration
+
+`experiment_291_jepa_apple_retrain.py` shall retrain the `PredictiveVerifier` gate on Apple adversarial GPU data (Exp 282/283) with the following requirements:
+
+- **Feature extraction**: For each logit array (real or synthetic fallback), extract per-prefix-fraction (25/50/75/100%) features: `mean_spilled`, `max_spilled`, `p95_spilled` (via `SpilledEnergyExtractor`), `semantic_energy` (via `SemanticEnergyExtractor`), `mean_logit`, `max_logit`, `variant_type_encoded` (standard=0, number_swap=1, irrelevant=2). Synthetic fallback records shall include `"synthetic_training": true` in their metadata.
+- **Isotonic calibration**: Apply EBM-CoT isotonic regression calibration (arXiv 2511.07124) to the trained model's raw scores.
+- **Conformal prediction intervals**: Compute conformal intervals at α=0.1 (arXiv 2603.22966) providing a 90% coverage guarantee on TP/FP rate estimates.
+- **Evaluation**: Chronological 80/20 train/held-out split. Measure fast-path hit rate (gate predicts safe → skip Ising), TP rate (gate fires on real violations), FP rate (gate fires on correct outputs). Run 50-case A/B comparison (calibrated vs uncalibrated gate).
+- **Targets**: fast-path ≥ 30%, TP ≥ 60%, FP ≤ 20%. Must report clearly if targets are not met.
+- **ONNX export**: Save retrained model as `results/jepa_predictor_291.onnx` for Exp 292 NPU testing.
+
 ## Scenarios
 
 ### SCENARIO-VERIFY-001: Sudoku Constraint Satisfaction
@@ -2164,6 +2175,26 @@ The predictive verifier shall integrate additively into
 **Then** subsequent calls to `gate()` use the updated weights
 **And** the calibration does not change the module's public API
 
+### SCENARIO-JEPA-006: Feature Extraction From Adversarial Logits
+
+**Given** a (T, V) logit array from an Apple adversarial GPU run (or synthetic fallback)
+**When** `extract_apple_features(logits, prefix_fraction, variant_type)` is called
+**Then** it returns a dict with keys: `mean_spilled`, `max_spilled`, `p95_spilled`,
+  `semantic_energy`, `mean_logit`, `max_logit`, `variant_type_encoded`, `prefix_fraction`
+**And** `variant_type_encoded` equals 0 for "standard", 1 for "number_swap", 2 for "irrelevant"
+**And** synthetic fallback data includes `"synthetic_training": true` in its metadata record
+
+### SCENARIO-JEPA-007: Calibrated Gate Meets Targets on Held-Out Set
+
+**Given** the PredictiveVerifier retrained on Apple adversarial features (Exp 291)
+**When** applied to the chronological 20% held-out set with isotonic calibration
+**Then** fast-path hit rate ≥ 30% (gate says "probably fine", skip Ising)
+**And** TP rate ≥ 60% (gate fires on real violations)
+**And** FP rate ≤ 20% (gate fires on correct outputs)
+**And** conformal intervals at α=0.1 are reported for TP and FP rates
+**And** the result clearly states TARGETS_MET or TARGETS_NOT_MET
+**And** the model is exported to `results/jepa_predictor_291.onnx`
+
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 
 **Given** a corpus row whose `process_label` is `"clean"` and whose
@@ -2307,6 +2338,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-077 | Not Started | Implemented | Semantic energy extractor + DualEnergyGate + pipeline integration tests |
 | REQ-VERIFY-078 | Not Started | Implemented | Dual-energy gate benchmark on Apple adversarial corpus (Exp 287) |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
+| REQ-JEPA-003 | Not Started | Implemented | Exp 291 Apple adversarial retrain + conformal calibration |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |

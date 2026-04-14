@@ -1488,3 +1488,7 @@ python/ |
 | 2026-04-14 07:41 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
 | 2026-04-14 07:41 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
 | 2026-04-14 07:41 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
+| 2026-04-14 07:50 UTC | Exp 291: JEPA predictor retrained on Apple adversa | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 07:51 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 07:51 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
+| 2026-04-14 07:51 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
