@@ -1,5 +1,34 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 299: JEPA Real Logits Retrain — REQ-JEPA-003)
+
+- `scripts/experiment_299_jepa_real_logits.py` — JEPA predictor retrained on real
+  logits from Exps 294/295 when available; explicit synthetic fallback with honest
+  `training_source` label when logit files are absent.
+  - Loads `data/research/logits_294_*.npy` (Apple baseline) +
+    `data/research/logits_295_*.npy` (verify-repair).  Variant type and violation
+    label inferred from filename stem.  `_load_logits_from_exp294_295()` returns
+    `None` gracefully if no valid files found.
+  - `training_source` field: `"real_logits"` or `"synthetic_fallback"`.
+  - Same 8-feature vector as Exp 291: mean_spilled, max_spilled, p95_spilled,
+    semantic_energy (SemanticEnergyExtractor, Exp 297), mean_logit, max_logit,
+    variant_type_encoded, prefix_fraction.
+  - LogisticRegression + isotonic calibration (arXiv 2511.07124) + conformal
+    Clopper-Pearson bounds α=0.1 (arXiv 2603.22966).
+  - Operating threshold sweep: maximize fast_path_rate at TP≥0.60, FP≤0.20.
+  - `comparison_vs_exp291` dict: Exp 291 synthetic baseline (TP=1.0, FP=0.0) vs
+    Exp 299 metrics, with training source noted.
+  - ONNX export: `results/jepa_predictor_299.onnx`.
+  - Output: `results/experiment_299_results.json`.
+- `tests/python/test_experiment_299_jepa_real_logits.py` — 51 tests covering:
+  experiment ID constant (299), 8-feature set including semantic_energy, real logit
+  loading from 294/295 files with graceful fallback, training_source field validation,
+  semantic_energy discriminates peaked vs flat logits, isotonic calibration, conformal
+  Clopper-Pearson α=0.1, ONNX export and onnxruntime loadability, comparison_vs_exp291
+  dict structure and value types, end-to-end run_experiment result keys.
+- **Run result (2026-04-14):** 51 passed. Exp 294/295 logits absent → synthetic_fallback.
+  (user instruction: Exp 299 JEPA retrain on real logits from Exps 294/295)
+
 ## 2026-04-14 (PrefillUncertaintyProbe — REQ-VERIFY-080)
 
 - `python/carnot/pipeline/prefill_uncertainty_probe.py` — Pre-generation hallucination
