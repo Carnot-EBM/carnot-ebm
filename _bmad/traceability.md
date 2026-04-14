@@ -205,3 +205,13 @@
 | SCENARIO-EXP292-B | Not Started | Implemented | Path B (onnxruntime 1.20.1 source build with -DONNXRUNTIME_USE_VITISAI=ON) compilation and NPU EP registration |
 | SCENARIO-EXP292-C | Not Started | Implemented | VitisAI EP must be compiled into ORT — LD_LIBRARY_PATH alone does not register the execution provider |
 | SCENARIO-EXP292-D | Not Started | Implemented | Blocked artifact with missing_prereqs list (ninja, openblas) and next_action for source build completion |
+| REQ-OPS-001 | Not Started | Implemented | Load and parse milestone experiment results (281–293) from results/ and ops/metrics.md |
+| REQ-OPS-002 | Not Started | Implemented | Compute aggregate wall-time and throughput statistics across milestone experiments |
+| REQ-OPS-003 | Not Started | Implemented | Audit prior retrospective action items (RETRO-2026-04-20-{A,B,C,D}) for completion status |
+| REQ-OPS-004 | Not Started | Implemented | Classify deferred action items and create persistent epics/stories/ tickets with provenance |
+| SCENARIO-OPS-001 | Not Started | Implemented | Parse ops/metrics.md table with ISO-8601 timestamps and duration extraction |
+| SCENARIO-OPS-002 | Not Started | Implemented | Derive per-experiment wall-time from conductor session log |
+| SCENARIO-OPS-003 | Not Started | Implemented | Load 13 result artifacts (Exp 281–293) with graceful skip on missing/corrupted files |
+| SCENARIO-OPS-004 | Not Started | Implemented | Compute GPU utilization distribution (0GPU / 1GPU / 2GPU binning) |
+| SCENARIO-OPS-005 | Not Started | Implemented | Action item audit with binary completion verdicts and carry-over rate computation |
+| SCENARIO-OPS-006 | Not Started | Implemented | Deterministic results/operational_retro_2026_04_21.json schema with run_date and milestone_number |
