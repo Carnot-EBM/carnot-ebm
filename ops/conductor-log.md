@@ -1562,3 +1562,6 @@ python/ |
 | 2026-04-14 19:53 UTC | Exp 313: KV260 FPGA actual bring-up — PYNQ overlay | OK | Deliverable already exists in repo |
 | 2026-04-14 20:14 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 20:14 UTC | Exp 314: NPU prereq install + unblock retry (ninja | OK | Deliverable already exists in repo |
+| 2026-04-14 20:22 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | 81 passed in 3.24s |
+| 2026-04-14 20:23 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-14 20:23 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
