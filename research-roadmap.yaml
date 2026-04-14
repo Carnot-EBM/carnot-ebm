@@ -781,6 +781,78 @@ tasks:
       6. Reconcile: update _bmad/traceability.md, ops/changelog.md, ops/status.md
       7. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+  # -- Phase: D-Wave Quantum Annealing Integration --
+  - id: exp320-dwave-sampler
+    milestone: "2026.04.29"
+    deliverable: python/carnot/samplers/dwave_sampler.py
+    title: "Exp 320: D-Wave sampler backend with local Neal simulation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: D-Wave's quantum annealers solve Ising/QUBO problems natively.
+      Their Ocean SDK (Apache 2.0) provides both a local simulated annealer
+      (dwave-neal) and a cloud QPU interface (dwave-system), with the same
+      API. Carnot's SamplerBackend abstraction is designed for pluggable
+      backends. This experiment adds D-Wave as a sampler backend.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/backend.py -- SamplerBackend abstraction
+      - python/carnot/samplers/fpga_ising.py -- FPGAIsingSampler (reference)
+      - python/carnot/samplers/parallel_ising.py -- ParallelIsingSampler
+
+      TASK: Create python/carnot/samplers/dwave_sampler.py
+
+      CONCRETE STEPS:
+      1. Add dwave-ocean-sdk to pyproject.toml optional dependencies as [dwave]
+      2. Create DWaveSampler implementing SamplerBackend:
+         a. Convert Carnot IsingEBM (h_vec, J_matrix) to dimod.BinaryQuadraticModel
+         b. Support three backends via constructor parameter:
+            - "neal": local SimulatedAnnealingSampler (default, no hardware needed)
+            - "tabu": local TabuSampler (from dwave-samplers)
+            - "qpu": real D-Wave QPU via DWaveSampler + EmbeddingComposite (requires Leap token)
+         c. Return samples in Carnot SampleSet format
+         d. Report timing, num_reads, chain_break_fraction (for QPU)
+      3. Add health_check() that reports backend type, connectivity, problem size limits
+      4. Test with a 128-spin constraint verification problem from Exp 46b SAT data
+      5. Benchmark: neal sim vs Carnot ParallelIsingSampler on same problems
+      6. Write tests achieving 100% coverage (mock D-Wave for CI)
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp321-dwave-constraint-benchmark
+    milestone: "2026.04.29"
+    deliverable: results/experiment_321_results.json
+    title: "Exp 321: D-Wave Neal vs CPU Ising on constraint verification problems"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: Exp 320 created DWaveSampler. Now benchmark it against our
+      CPU ParallelIsingSampler on real constraint verification problems
+      to determine if quantum-inspired annealing improves solution quality
+      or speed for Carnot's use case.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/dwave_sampler.py -- Exp 320
+      - python/carnot/samplers/parallel_ising.py -- CPU baseline
+      - results/experiment_290_results.json -- FPGA benchmark for comparison
+
+      TASK: Benchmark D-Wave Neal vs CPU Ising on constraint problems.
+
+      CONCRETE STEPS:
+      1. Create scripts/experiment_321_dwave_benchmark.py
+      2. Test problems: 128-spin, 512-spin, 2048-spin constraint verification
+      3. Run each with:
+         a. ParallelIsingSampler (CPU baseline)
+         b. DWaveSampler(backend="neal") (simulated annealing)
+         c. DWaveSampler(backend="tabu") (tabu search)
+      4. Measure per problem: solution energy, time to solution, success rate
+      5. Report: does quantum-inspired annealing find better solutions?
+      6. Write tests and results JSON
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
   - id: exp319-operational-retro
     milestone: "2026.04.29"
     deliverable: results/operational_retro_2026_04_29.json
