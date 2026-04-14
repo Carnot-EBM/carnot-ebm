@@ -4,6 +4,25 @@
 
 ## What's Working
 
+### Exp 306: Experiment Template + Batched Inference Harness (REQ-VERIFY-083, REQ-VERIFY-084)
+
+- `scripts/experiment_template.py` — Reusable scaffolding eliminating 15-20 min cold-start per experiment.
+  - `ExperimentTemplate(exp_id, title, deliverable, requires_gpu)` — setup, checkpoint, result schema.
+  - `setup()` — creates dirs, auto-resumes checkpoint if present.
+  - `setup_gpu(model_specs, prewarm_fn)` — wraps Exp 294 pre-warm + health-check; returns `all_healthy` dict.
+  - `checkpoint_save(results, step)` / `checkpoint_resume()` — atomic write via `.tmp` rename.
+  - `build_result(data, status, **extra)` — auto-populates all `REQUIRED_RESULT_FIELDS`.
+  - `run_with_timeout(fn, timeout_s)` — thread-based timeout, returns `{"timed_out": True, "partial": True}`.
+  - `BatchedInferenceRunner(runner, batch_size=8)` — groups questions into batches; `batch_timeout_s = batch_size * 60`.
+  - `batch_log` — per-batch `{batch_id, batch_size, batch_time_s}` records.
+- `scripts/experiment_benchmark.py` — Exp 306 overhead benchmark (20 arithmetic questions).
+  - Template setup overhead: **0.0001 s** (target < 0.5 s). ✓
+  - Batch speedup vs sequential (simulation): ~0.9× (ThreadPoolExecutor overhead dominates at 5ms/q; real LLM inference yields 3-6× per retro estimate).
+- **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_benchmark.py`
+- **Output:** `results/experiment_306_results.json`
+- 54 new tests pass. Full suite: **3975 passed**, 54 skipped.
+- Spec: REQ-VERIFY-083, REQ-VERIFY-084, SCENARIO-VERIFY-109–116.
+
 ### Exp 304: HuggingFace Actual Upload — FCV Live on Hub (REQ-VERIFY-058, REQ-VERIFY-059)
 
 - `scripts/experiment_304_hf_publish.py` — Resolves Exp 293 credential blocker.
