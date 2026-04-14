@@ -341,6 +341,34 @@ These are NOT candidates for revalidation — they were disproven by experimenta
 - **Action**: Add `dwave-ocean-sdk` as optional dep, create `DWaveSampler`
   implementing `SamplerBackend`, benchmark local sim vs CPU Ising sampler.
 
+### Intel Loihi 2 Neuromorphic (Track — Cloud Access Available)
+- **Intel Loihi 2**: 1M spiking neurons, on-chip learning. Free academic access
+  via Intel Neuromorphic Research Community (INRC). Natively implements
+  energy-minimization via spiking dynamics. Demonstrated Ising solving via
+  neural annealing (Intel labs 2023-2024). Relevant to Boltzmann tier sampling.
+- **Action:** Apply for INRC access. Could implement a `LoihiSampler` backend.
+
+### Oscillator-Based Ising Machines (Track — CMOS Scalable)
+- **Purdue/Cornell coupled CMOS oscillator networks**: Phase-encoded spins via
+  injection-locked LC oscillators. 240-spin chip demonstrated (2024). CMOS-native
+  means it could scale to millions of spins on standard foundries.
+- **Purdue p-bit MRAM** (Camsari group): MRAM-based stochastic magnetic tunnel
+  junctions. 8-p-bit ASIC demonstrated, 50K designs published. Same p-bit
+  abstraction as Extropic but magnetic rather than thermodynamic.
+- **Action:** Monitor for ASIC availability (2025-2027). Our SamplerBackend
+  abstraction is ready for both approaches.
+
+### NTT Coherent Ising Machine (Track — Largest Demonstrated)
+- **NTT/Stanford CIM**: Optical parametric oscillator pulses, 100,000+ spins
+  demonstrated. Time-multiplexed (vs SPIM's spatial). NTT offers cloud access
+  for research collaborations. Largest Ising machine demonstrated to date.
+- **Action:** Explore NTT research collaboration for cloud CIM access.
+
+### Analog In-Memory Computing (Monitor)
+- **Mythic M1076**: Analog matrix-multiply in flash memory, 25 TOPS. Dev kit
+  ~$500. Energy function evaluation (W*s products) maps to analog MAC.
+  Relevant for KAN/Boltzmann forward passes, not Ising sampling.
+
 ### Photonic Computing (Monitor — Not Actionable Yet)
 - **Q.ANT NPU 2.0** — commercial photonic matmul accelerator (30x energy efficiency).
   Not directly useful for sampling. Commercial-only, no cloud access.
