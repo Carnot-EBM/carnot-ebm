@@ -325,6 +325,58 @@ array
 **Then** every element of the array is exactly +1 or −1
 **And** the artifact records `spin_state_valid: true`
 
+### REQ-SAMPLE-010: FpgaBackend vs CPU Benchmark With 6× Quantum-Inspired Speedup Validation
+
+The system shall provide a benchmark script (Exp 290) that compares FpgaBackend
+against the CPU baseline (ParallelIsingSampler) across three problem sizes
+(100, 500, 1000 spins) and validates the 6× SA-convergence speedup claimed in
+arXiv 2604.04606 for the quantum-inspired geometric β-schedule, where:
+- Each benchmark configuration enforces a hard 60-second wall-clock timeout and
+  emits a partial artifact if the timeout is exceeded
+- The artifact labels each run as `hardware` (when `CARNOT_KV260_BITFILE` is set
+  and hardware is live) or `software_model` (CPU fallback) — never fabricates
+  hardware labels in software simulation
+- The benchmark measures samples/second for both FpgaBackend and CPU baseline
+- Energy convergence is measured against the best energy found across 10
+  independent restarts (used as a proxy for ground truth)
+- The geometric (quantum-inspired) β-schedule is compared against a uniform
+  (linear) β-schedule at identical step count; the artifact reports whether the
+  geometric schedule achieves strictly lower or equal final energy
+- LagONN penalty (arXiv 2505.07179) is tested with and without on a known
+  highly-frustrated 3-SAT-derived Ising instance; the artifact reports energy
+  difference (with_penalty − without_penalty) per problem size
+- The primary prediction from arXiv 2604.04606 — that the quantum-inspired
+  sparse β-schedule achieves ≥ 6× faster SA convergence — is recorded as
+  `confirmed`, `refuted`, or `inconclusive` in the artifact
+
+### SCENARIO-SAMPLE-020: Geometric Schedule Achieves Lower Energy Than Uniform Schedule
+
+**Given** an Ising problem of 100, 500, or 1000 spins
+**When** FpgaBackend geometric schedule and a CPU linear schedule are run for
+the same number of annealing steps
+**Then** the geometric schedule's best final energy is ≤ the linear schedule's
+best final energy for at least 2 of 3 problem sizes
+**And** the artifact records `schedule_comparison.geometric_wins` as a count
+of sizes where geometric ≤ linear
+
+### SCENARIO-SAMPLE-021: Benchmark Artifact Has Required Keys at All Problem Sizes
+
+**Given** Exp 290 runs to completion (with or without timeout)
+**When** the JSON artifact is written to `results/experiment_290_results.json`
+**Then** the artifact contains a `results` list with one entry per problem size
+**And** each entry contains: `n_spins`, `fpga_samples_per_sec`,
+  `cpu_samples_per_sec`, `execution_path`, `schedule_comparison`,
+  `lagonn_comparison`, and `timeout_exceeded`
+**And** `execution_path` is one of `hardware`, `software_model`, or `timeout`
+
+### SCENARIO-SAMPLE-022: LagONN Penalty Reduces Energy on Highly-Frustrated Instance
+
+**Given** a highly-frustrated Ising instance derived from a 3-SAT problem
+**When** FpgaBackend is run with `use_lagrangian_penalty=True` and `False`
+**Then** the artifact records the mean final energy for both penalty modes
+**And** the energy with penalty is ≤ the energy without penalty (confirming
+  LagONN escapes infeasible local minima)
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -349,3 +401,4 @@ array
 | REQ-SAMPLE-007 | Not Started | Implemented | 5 Python |
 | REQ-SAMPLE-008 | Not Started | Implemented | 8 Python |
 | REQ-SAMPLE-009 | Not Started | Implemented | 68 Python (21 Exp 288 bringup + 47 Exp 289 FpgaBackend) |
+| REQ-SAMPLE-010 | Not Started | Implemented | 27 Python (Exp 290 benchmark + tests) |

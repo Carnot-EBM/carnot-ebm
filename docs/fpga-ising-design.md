@@ -190,6 +190,46 @@ Result: `blocked` — `CARNOT_KV260_BITFILE` was not set on the development
 host (KV260 not yet networked to the build machine).
 See `results/experiment_288_results.json`.
 
+### Exp 289 (2026-04-14) — FpgaBackend: quantum-inspired sparse Ising SamplerBackend
+
+Module: `python/carnot/samplers/fpga_backend.py`
+
+Implements the full `SamplerBackend` protocol for the KV260 overlay:
+
+- `sparsify_coupling(coupling, max_degree=32)` — top-K pruning per spin
+- `quantum_annealing_schedule(n_steps, beta_min, beta_max)` — geometric β(t),
+  the log-linear schedule from arXiv 2604.04606 (6× SA speedup)
+- `_apply_lagrangian_penalty(coupling, h, strength)` — LagONN frustration-escape
+  (arXiv 2505.07179)
+- `FpgaBackend.dispatch()` — routes to `FPGAIsingSampler` when
+  `CARNOT_KV260_BITFILE` is set, else falls back to `ParallelIsingSampler`
+  with `schedule_type="geometric"` to preserve the speedup in software.
+
+Backend name: `"fpga"` (hardware) or `"fpga_cpu_fallback"` (no bitfile).
+
+### Exp 290 (2026-04-14) — FpgaBackend vs CPU Benchmark, 6× Speedup Validation
+
+Script: `scripts/experiment_290_fpga_cpu_benchmark.py`
+
+Benchmarks FpgaBackend vs CPU baseline (ParallelIsingSampler) at three problem
+sizes: 100, 500, 1000 spins.  Measures:
+
+- samples/second for each backend
+- energy convergence quality relative to 10-restart best energy (proxy ground truth)
+- geometric vs linear β-schedule comparison (quantum-inspired 6× speedup claim)
+- LagONN penalty comparison on a 3-SAT frustrated instance (n=100 only)
+
+Hard constraints:
+- 60 s wall-clock timeout per benchmark configuration
+- Honest labeling: `hardware` / `software_model` / `timeout`
+- Never fabricate hardware labels in software simulation
+
+Primary prediction from arXiv 2604.04606: geometric β-schedule ≥ 6× faster SA
+convergence.  Operationalized as: geometric schedule achieves lower energy for
+≥ 2 of 3 problem sizes at equal step count.
+
+Result artifact: `results/experiment_290_results.json`
+
 ## Next Hardware Step
 
 1. Connect the KV260 to the build network and set `CARNOT_KV260_BITFILE` to
@@ -199,4 +239,6 @@ See `results/experiment_288_results.json`.
 3. Re-run `scripts/experiment_288_kv260_bringup.py` — it will record
    `overlay_load_ms`, `register_roundtrip_us`, and `spin_state_valid` on first
    successful hardware path.
-4. Replace software-model timing in this doc with on-board throughput numbers.
+4. Re-run `scripts/experiment_290_fpga_cpu_benchmark.py` — it will re-label
+   entries as `hardware` and record true FPGA throughput numbers.
+5. Replace software-model timing in this doc with on-board throughput numbers.

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 290 FpgaBackend vs CPU Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T07:17:01Z | 2026-04-14T07:30:00Z | Exp 290: FpgaBackend vs CPU benchmark — spec (REQ-SAMPLE-010, SCENARIO-SAMPLE-020/021/022), 27 tests, benchmark script (100/500/1000 spins, geometric vs linear schedule, LagONN penalty, 60s timeout, honest labeling), 3376 total tests pass 99.11% coverage | ~22k |
+
+---
+
 ## Session: 2026-04-14 Exp 289 FpgaBackend Quantum-Inspired Sparse Ising
 
 ### Turn Log
