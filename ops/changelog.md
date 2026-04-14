@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 306: Experiment template + batching harness — process improvements from 2026.04.21 retro)
+
+Implements the top-3 wall-time reductions from the 2026.04.21 operational retrospective:
+1. **Scaffolding template (+9%)**: `ExperimentTemplate` eliminates cold-start boilerplate per experiment.
+2. **DualGPURunner pre-warm auto-wired (+10%)**: `setup_gpu()` wraps Exp 294 pre-warm pattern so new experiments get it for free.
+3. **Inference batching 8-16/pass (+6%)**: `BatchedInferenceRunner` groups questions; timeout is `batch_size * 60s` (not per-question).
+
+- `scripts/experiment_template.py` (new):
+  - `ExperimentTemplate` — setup, checkpoint save/resume (atomic), GPU pre-warm, standardised result builder, thread-based timeout.
+  - `BatchedInferenceRunner` — batch grouping, per-batch timeout, `batch_log` with `{batch_id, batch_size, batch_time_s}`.
+  - `InferenceResult` — dataclass with prompt, response, batch_id, timed_out.
+  - `REQUIRED_RESULT_FIELDS` — constant listing all mandatory artifact keys.
+- `scripts/experiment_benchmark.py` (new): Exp 306 benchmark validating template overhead < 0.5s on 20-question arithmetic test.
+- `tests/python/test_experiment_template.py` (new): 54 tests across ExperimentTemplate, BatchedInferenceRunner, InferenceResult.
+- `results/experiment_306_results.json` (new): overhead_s=0.0001, overhead_ok=true, batch_speedup_vs_sequential=0.937, status="success".
+- `CLAUDE.md`: Added "Experiment Template" section with usage example and contract.
+- Full suite: **3975 passed**, 54 skipped.
+- Triggered by: user instruction (2026.04.21 operational retrospective process improvements, Exp 306).
+
 ## 2026-04-14 (Exp 304: HuggingFace actual upload — Python API credential fallback, FCV live)
 
 Experiment 304 resolves the Exp 293 credential blocker. `huggingface-cli` is absent from PATH

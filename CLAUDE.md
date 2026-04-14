@@ -154,6 +154,48 @@ Every user instruction must be captured and traceable to outcomes:
 | Rust crates | `crates/carnot-*/` |
 | Python package | `python/carnot/` |
 
+## Experiment Template (New Experiments)
+
+When writing a new experiment script, use `scripts/experiment_template.py` to eliminate
+cold-start boilerplate.  This cuts 15-20 min of repetitive setup per experiment.
+
+```python
+from scripts.experiment_template import ExperimentTemplate, BatchedInferenceRunner
+
+# 1. Instantiate and setup (creates dirs, loads checkpoint if present)
+tmpl = ExperimentTemplate(307, "My experiment title",
+                           "results/experiment_307_results.json",
+                           requires_gpu=True)
+tmpl.setup()
+
+# 2. (If GPU needed) Pre-warm + health-check — Exp 294 pattern.
+#    ALWAYS call this before timed inference to avoid lazy-load GPU stalls.
+MODEL_SPECS = [{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]
+gpu_status = tmpl.setup_gpu(MODEL_SPECS)
+if not gpu_status["all_healthy"]:
+    artifact = tmpl.build_result({}, status="blocked",
+                                  stall_details=gpu_status["models"])
+    # write artifact and exit
+
+# 3. Batch inference (8-16 questions per batch for throughput; timeout=batch_size*60s)
+bir = BatchedInferenceRunner(my_inference_fn, batch_size=8)
+results = bir.run_batch(questions)   # InferenceResult list in original order
+print(bir.batch_log)                 # [{batch_id, batch_size, batch_time_s}, ...]
+
+# 4. Save checkpoint periodically
+tmpl.checkpoint_save({"done": [r.response for r in results[:50]]}, step=50)
+
+# 5. Build standardised artifact (auto-populates experiment, run_date, schema, duration_s)
+artifact = tmpl.build_result({"responses": [...], "batch_log": bir.batch_log},
+                              status="success")
+```
+
+Key contract:
+- `setup_gpu()` must be called before any timed inference when `requires_gpu=True`.
+- `BatchedInferenceRunner.batch_timeout_s = batch_size * 60` (per-batch, not per-question).
+- `build_result()` always emits all `REQUIRED_RESULT_FIELDS`; add extras via `**kwargs`.
+- Template setup overhead: < 0.5 s (validated by Exp 306 benchmark).
+
 ## When to Read Deeper
 
 - **Before starting a new capability**: First review all documents in `_bmad/` and determine if the new capability is already implemented or if there are any relevant change proposals, or if the new capability implies an evolution of the architecture. Read the relevant `openspec/capabilities/*/spec.md` and `design.md`
