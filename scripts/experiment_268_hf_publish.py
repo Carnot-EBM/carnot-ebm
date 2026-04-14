@@ -7,7 +7,6 @@ Spec: REQ-VERIFY-058, REQ-VERIFY-059
 
 from __future__ import annotations
 
-import tempfile
 from pathlib import Path
 from typing import Any
 
@@ -183,96 +182,106 @@ def export_fcv_onnx(out_dir: Path | str) -> tuple[Path, Path]:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    # Create arithmetic route ONNX (3 inputs: a, b, result)
+    # ---------------------------------------------------------------------------
+    # Arithmetic verifier: checks a - b == result (within tolerance 0.5)
+    # Input:  operands [batch, 3] columns = [a, b, result]
+    # Output: verdict  [batch, 1]  1.0 = supported, 0.0 = violated
+    # ---------------------------------------------------------------------------
     arith_inputs = [
         helper.make_tensor_value_info("operands", TensorProto.FLOAT, [None, 3]),
     ]
+    # Output is 1-D [batch] so that verdict[i] is a plain scalar
     arith_outputs = [
-        helper.make_tensor_value_info("verdict", TensorProto.FLOAT, [None, 1]),
+        helper.make_tensor_value_info("verdict", TensorProto.FLOAT, [None]),
     ]
 
-    # Simple constant output for testing
-    const_verdict = helper.make_tensor(
-        name="const_1",
-        data_type=TensorProto.FLOAT,
-        dims=[1],
-        vals=[1.0],
-    )
+    # INT64 slice index constants — distinct names, no type conflicts
+    arith_initializers = [
+        helper.make_tensor("s0", TensorProto.INT64, [1], [0]),
+        helper.make_tensor("s1", TensorProto.INT64, [1], [1]),
+        helper.make_tensor("s2", TensorProto.INT64, [1], [2]),
+        helper.make_tensor("s3", TensorProto.INT64, [1], [3]),
+        helper.make_tensor("ax1", TensorProto.INT64, [1], [1]),
+        # Tolerance constant (shape [1,1] broadcasts over [batch,1])
+        helper.make_tensor("tol", TensorProto.FLOAT, [1, 1], [0.5]),
+        # Squeeze axis=1 to collapse [batch,1] → [batch]
+        helper.make_tensor("sq_ax", TensorProto.INT64, [1], [1]),
+    ]
 
-    # Create a simple identity-like node that outputs verdict
     arith_nodes = [
-        helper.make_node(
-            "Identity",
-            inputs=["operands"],
-            outputs=["operands_out"],
-            name="identity",
-        ),
-        helper.make_node(
-            "Slice",
-            inputs=["operands_out", "const_0", "const_1", "const_2"],
-            outputs=["verdict"],
-            name="extract_first",
-        ),
+        # Extract column 0 → a  [batch, 1]
+        helper.make_node("Slice", ["operands", "s0", "s1", "ax1"], ["col_a"], "get_a"),
+        # Extract column 1 → b  [batch, 1]
+        helper.make_node("Slice", ["operands", "s1", "s2", "ax1"], ["col_b"], "get_b"),
+        # Extract column 2 → declared result  [batch, 1]
+        helper.make_node("Slice", ["operands", "s2", "s3", "ax1"], ["col_r"], "get_r"),
+        # Compute a - b  [batch, 1]
+        helper.make_node("Sub", ["col_a", "col_b"], ["a_minus_b"], "sub_ab"),
+        # Compute (a - b) - result  [batch, 1]
+        helper.make_node("Sub", ["a_minus_b", "col_r"], ["diff"], "sub_diff"),
+        # |diff|  [batch, 1]
+        helper.make_node("Abs", ["diff"], ["abs_diff"], "abs_op"),
+        # abs_diff < 0.5  → bool [batch, 1]
+        helper.make_node("Less", ["abs_diff", "tol"], ["bool_v"], "less_op"),
+        # Cast bool → float  [batch, 1]
+        helper.make_node("Cast", ["bool_v"], ["verdict_2d"], "cast_op",
+                         to=int(TensorProto.FLOAT)),
+        # Squeeze axis=1 → [batch]
+        helper.make_node("Squeeze", ["verdict_2d", "sq_ax"], ["verdict"], "squeeze_op"),
     ]
 
-    # Add constant tensors for slicing
     arith_graph = helper.make_graph(
-        arith_nodes,
-        "arithmetic_verifier",
-        arith_inputs,
-        arith_outputs,
-        [
-            helper.make_tensor("const_0", TensorProto.INT64, [1], [0]),
-            helper.make_tensor("const_1", TensorProto.INT64, [1], [1]),
-            helper.make_tensor("const_2", TensorProto.INT64, [1], [1]),
-            const_verdict,
-        ],
+        arith_nodes, "arithmetic_verifier",
+        arith_inputs, arith_outputs, arith_initializers,
     )
-
     arith_model = helper.make_model(
-        arith_graph, producer_name="carnot", opset_imports=[helper.make_opsetid("", 13)]
+        arith_graph, producer_name="carnot",
+        opset_imports=[helper.make_opsetid("", 13)],
     )
     arith_path = out_dir / "arithmetic_route.onnx"
     onnx.save(arith_model, str(arith_path))
 
-    # Create comparison route ONNX (2 inputs: x, y)
+    # ---------------------------------------------------------------------------
+    # Comparison verifier: checks x < y (less-than)
+    # Input:  operands [batch, 2] columns = [x, y]
+    # Output: verdict  [batch]    1.0 = x < y (supported), 0.0 = violated
+    # ---------------------------------------------------------------------------
     cmp_inputs = [
         helper.make_tensor_value_info("operands", TensorProto.FLOAT, [None, 2]),
     ]
     cmp_outputs = [
-        helper.make_tensor_value_info("verdict", TensorProto.FLOAT, [None, 1]),
+        helper.make_tensor_value_info("verdict", TensorProto.FLOAT, [None]),
+    ]
+
+    cmp_initializers = [
+        helper.make_tensor("c0", TensorProto.INT64, [1], [0]),
+        helper.make_tensor("c1", TensorProto.INT64, [1], [1]),
+        helper.make_tensor("c2", TensorProto.INT64, [1], [2]),
+        helper.make_tensor("cax1", TensorProto.INT64, [1], [1]),
+        helper.make_tensor("csq_ax", TensorProto.INT64, [1], [1]),
     ]
 
     cmp_nodes = [
-        helper.make_node(
-            "Identity",
-            inputs=["operands"],
-            outputs=["operands_out"],
-            name="identity",
-        ),
-        helper.make_node(
-            "Slice",
-            inputs=["operands_out", "const_0", "const_1", "const_2"],
-            outputs=["verdict"],
-            name="extract_first",
-        ),
+        # Extract column 0 → x  [batch, 1]
+        helper.make_node("Slice", ["operands", "c0", "c1", "cax1"], ["col_x"], "get_x"),
+        # Extract column 1 → y  [batch, 1]
+        helper.make_node("Slice", ["operands", "c1", "c2", "cax1"], ["col_y"], "get_y"),
+        # x < y → bool [batch, 1]
+        helper.make_node("Less", ["col_x", "col_y"], ["bool_cmp"], "cmp_op"),
+        # Cast bool → float  [batch, 1]
+        helper.make_node("Cast", ["bool_cmp"], ["verdict_2d"], "cast_cmp",
+                         to=int(TensorProto.FLOAT)),
+        # Squeeze axis=1 → [batch]
+        helper.make_node("Squeeze", ["verdict_2d", "csq_ax"], ["verdict"], "squeeze_cmp"),
     ]
 
     cmp_graph = helper.make_graph(
-        cmp_nodes,
-        "comparison_verifier",
-        cmp_inputs,
-        cmp_outputs,
-        [
-            helper.make_tensor("const_0", TensorProto.INT64, [1], [0]),
-            helper.make_tensor("const_1", TensorProto.INT64, [1], [1]),
-            helper.make_tensor("const_2", TensorProto.INT64, [1], [1]),
-            const_verdict,
-        ],
+        cmp_nodes, "comparison_verifier",
+        cmp_inputs, cmp_outputs, cmp_initializers,
     )
-
     cmp_model = helper.make_model(
-        cmp_graph, producer_name="carnot", opset_imports=[helper.make_opsetid("", 13)]
+        cmp_graph, producer_name="carnot",
+        opset_imports=[helper.make_opsetid("", 13)],
     )
     cmp_path = out_dir / "comparison_route.onnx"
     onnx.save(cmp_model, str(cmp_path))
@@ -281,36 +290,51 @@ def export_fcv_onnx(out_dir: Path | str) -> tuple[Path, Path]:
 
 
 def upload_artifacts(
-    exp66_path: Path | str | None = None,
-    fcv_arithmetic_path: Path | str | None = None,
-    fcv_comparison_path: Path | str | None = None,
-    repo_id: str = "Carnot-EBM/exp66-joint",
+    exp66_dir: Path | str | None = None,
+    fcv_dir: Path | str | None = None,
+    tag: str = "latest",
     dry_run: bool = False,
+    hf_api: Any | None = None,
+    exp66_repo_id: str = "Carnot-EBM/exp66-joint",
+    fcv_repo_id: str = "Carnot-EBM/formal-claim-verifier",
 ) -> dict[str, str]:
-    """Upload artifacts to HuggingFace Hub.
+    """Upload artifact directories to HuggingFace Hub.
 
     Args:
-        exp66_path: Path to safetensors file
-        fcv_arithmetic_path: Path to arithmetic route ONNX
-        fcv_comparison_path: Path to comparison route ONNX
-        repo_id: Target HuggingFace repo
+        exp66_dir: Directory containing Exp 66 model files
+        fcv_dir: Directory containing FCV ONNX model files
+        tag: Version tag string for the release
         dry_run: If True, don't actually upload (just simulate)
+        hf_api: Optional HuggingFace API instance (injected for testing)
+        exp66_repo_id: Target HuggingFace repo for Exp 66 artifacts
+        fcv_repo_id: Target HuggingFace repo for FCV artifacts
 
     Returns:
-        Dict mapping artifact names to URLs
+        Dict with keys: exp66_repo, fcv_repo, tag
     """
     if dry_run:
-        # Simulate successful upload
+        # Simulate successful upload without touching the HF API
         return {
-            "exp66": f"https://huggingface.co/{repo_id}/resolve/main/exp66.safetensors",
-            "arithmetic": f"https://huggingface.co/{repo_id}/resolve/main/arithmetic_route.onnx",
-            "comparison": f"https://huggingface.co/{repo_id}/resolve/main/comparison_route.onnx",
+            "exp66_repo": f"https://huggingface.co/{exp66_repo_id}",
+            "fcv_repo": f"https://huggingface.co/{fcv_repo_id}",
+            "tag": tag,
         }
 
-    # In a real implementation, this would use huggingface_hub.upload_file
-    # For now, just return the expected URLs
+    # Real upload path: use the provided or real HF API
+    if hf_api is None:
+        from huggingface_hub import HfApi  # type: ignore[import-untyped]
+        hf_api = HfApi()
+
+    hf_api.create_repo(repo_id=exp66_repo_id, exist_ok=True)
+    hf_api.create_repo(repo_id=fcv_repo_id, exist_ok=True)
+
+    if exp66_dir is not None:
+        hf_api.upload_folder(folder_path=str(exp66_dir), repo_id=exp66_repo_id)
+    if fcv_dir is not None:
+        hf_api.upload_folder(folder_path=str(fcv_dir), repo_id=fcv_repo_id)
+
     return {
-        "exp66": f"https://huggingface.co/{repo_id}/resolve/main/exp66.safetensors",
-        "arithmetic": f"https://huggingface.co/{repo_id}/resolve/main/arithmetic_route.onnx",
-        "comparison": f"https://huggingface.co/{repo_id}/resolve/main/comparison_route.onnx",
+        "exp66_repo": f"https://huggingface.co/{exp66_repo_id}",
+        "fcv_repo": f"https://huggingface.co/{fcv_repo_id}",
+        "tag": tag,
     }
