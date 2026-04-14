@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Revalidation Sweep Summary
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T04:23:36Z | 2026-04-14T04:30:19Z | Revalidation sweep Exp 271-279: read all result JSONs, classified 6 CONFIRMED / 2 INCONCLUSIVE / 0 ruled out, wrote summary JSON, updated README/technical-report/index.html/research-studying.md, 3100 tests pass 99.10% coverage | ~20k |
+
+---
+
 ## Session: 2026-04-14 Exp 278 Cross-Session Memory
 
 ### Turn Log
