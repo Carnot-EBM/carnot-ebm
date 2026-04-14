@@ -236,3 +236,9 @@
 | SCENARIO-LEARN-016 | Not Started | Implemented | soundness_filter Rejects Low-Precision Patterns |
 | SCENARIO-LEARN-017 | Not Started | Implemented | generate_arithmetic_constraint Maps Families to Constraint Types |
 | SCENARIO-LEARN-018 | Not Started | Implemented | ConstraintGenerator orchestrates pattern extraction through soundness filtering to constraint generation |
+| REQ-VERIFY-081 | Not Started | Implemented | Continuous confidence scores for constraint violations (Exp 301) |
+| REQ-VERIFY-082 | Not Started | Implemented | Repair gate filters low-confidence violations (Exp 301) |
+| SCENARIO-VERIFY-105 | Not Started | Implemented | confidence_from_energy sigmoid maps energy delta to [0, 1] |
+| SCENARIO-VERIFY-106 | Not Started | Implemented | ViolationConfidence carries score, class, recommendation, evidence |
+| SCENARIO-VERIFY-107 | Not Started | Implemented | repair_gate returns bool for confidence threshold check |
+| SCENARIO-VERIFY-108 | Not Started | Implemented | VerifyRepairPipeline.verify_and_repair_confident gates on confidence threshold |
