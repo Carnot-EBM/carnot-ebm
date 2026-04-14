@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 313: KV260 FPGA Hardware Bring-Up — REQ-SAMPLE-012)
+
+Attempts actual KV260 FPGA hardware bring-up following the honest_verdict pattern
+from Exp 303. Checks each prerequisite in sequence: CARNOT_KV260_BITFILE env var,
+pynq importability, overlay load, AXI register round-trip. Measures CPU fallback
+latency on every run regardless of hardware status. On this machine (no bitfile
+set), emits `honest_verdict=blocked_no_bitfile` with `cpu_fallback_latency_us`
+populated for comparison.
+
+- `openspec/capabilities/training-inference/spec.md`:
+  - Added **REQ-SAMPLE-012**: KV260 hardware round-trip ≤100μs for 100-spin Ising.
+  - Added **SCENARIO-SAMPLE-025**: Hardware latency within 100μs for 100-spin Ising.
+  - Added **SCENARIO-SAMPLE-026**: CPU fallback always measured for comparison.
+  - Added REQ-SAMPLE-012 row to implementation status table.
+- `scripts/experiment_313_kv260_bringup.py` (new):
+  - `detect_kv260_hardware(overlay_factory)` — checks env var, pynq, overlay in sequence.
+  - `spin_validity_check(spins, expected_n)` — validates all spins ∈ {+1, -1}.
+  - `_measure_cpu_fallback_latency(n_trials)` — always-run CPU reference timing.
+  - `_run_hardware_roundtrip(transport, timeout_seconds)` — AXI round-trip with 100-trial latency.
+  - `run_experiment(...)` — detects hardware, runs round-trip, CPU fallback, assembles artifact.
+  - Artifact: `results/experiment_313_kv260_bringup.json` with `experiment=313`, `honest_verdict`, `kv260_detected`, `bringup_steps_passed`, `hardware_latency_us` (null if not working), `cpu_fallback_latency_us`.
+- `tests/python/test_experiment_313_kv260_bringup.py` (new):
+  - 37 tests (3 hardware-path auto-skip when CARNOT_KV260_BITFILE unset).
+  - Covers detect_kv260_hardware (7 tests), spin_validity_check (6 tests),
+    CPU fallback (3 tests), latency measurement (5 tests), honest_verdict (6 tests),
+    artifact schema (8 tests), hardware-path (3 skip).
+  - 37 passed, 3 skipped.
+
 ## 2026-04-14 (Exp 312: Z3-Gated Repair Pipeline — REQ-REPAIR-010/011)
 
 Implements Z3 as a cheap first-gate before the Ising repair loop, wiring

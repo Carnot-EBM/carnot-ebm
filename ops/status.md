@@ -4,6 +4,20 @@
 
 ## What's Working
 
+### Exp 313: KV260 FPGA Hardware Bring-Up (REQ-SAMPLE-012)
+
+- `scripts/experiment_313_kv260_bringup.py` (new):
+  - `detect_kv260_hardware(overlay_factory)` — sequential prereq check (env var, pynq, overlay).
+  - `spin_validity_check(spins, expected_n)` — validates all spins ∈ {+1, -1}.
+  - `_measure_cpu_fallback_latency(n_trials)` — always-run reference timing for comparison.
+  - `run_experiment(...)` — honest_verdict pattern, CPU fallback always populated.
+- 37 new tests in `tests/python/test_experiment_313_kv260_bringup.py`; 37 passed, 3 skipped (HW).
+- **Current result:** `honest_verdict=blocked_no_bitfile` — CARNOT_KV260_BITFILE not set.
+- `cpu_fallback_latency_us` ≈ 358ms (JAX first-call JIT overhead included).
+- **To unblock:** Set `CARNOT_KV260_BITFILE=/path/to/carnot_ising.bit` on the KV260 host.
+- **Output:** `results/experiment_313_kv260_bringup.json`
+- Spec: REQ-SAMPLE-012, SCENARIO-SAMPLE-025, SCENARIO-SAMPLE-026.
+
 ### Exp 312: Z3-Gated Repair Pipeline (REQ-REPAIR-010/011)
 
 - `python/carnot/pipeline/z3_gated_repair.py` (new):
