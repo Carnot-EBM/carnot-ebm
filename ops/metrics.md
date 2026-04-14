@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 278 Cross-Session Memory
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T03:54:42Z | 2026-04-14T04:02:45Z | Exp 278: Cross-session CaseMemory with live traces — 16 tests, populate from Exp 219-221 (94 entries), save/load session boundary, warm hit rate 100% vs cold 0%, FP rate 0%, 3084 total tests pass, 99.10% coverage. | ~18k |
+
+---
+
 ## Session: 2026-04-14 Exp 274 KB Factual Live
 
 ### Turn Log

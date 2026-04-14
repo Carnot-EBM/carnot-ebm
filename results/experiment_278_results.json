@@ -1,0 +1,53 @@
+{
+  "experiment": 278,
+  "title": "Cross-session constraint memory with live traces",
+  "run_date": "20260414",
+  "schema": "exp278_cross_session_memory_v1",
+  "metadata": {
+    "source_experiments": [
+      219,
+      220,
+      221
+    ],
+    "probe_experiments": [
+      278
+    ],
+    "benchmarks": [
+      "gsm8k_semantic",
+      "humaneval_property",
+      "constraint_ir"
+    ]
+  },
+  "session1": {
+    "description": "Populate CaseMemory from Exp 219-221 verified TP traces",
+    "ingest_stats": {
+      "total_entries": 94,
+      "by_source": {
+        "exp219_gsm8k_semantic": 18,
+        "exp220_humaneval_property": 43,
+        "exp221_constraint_ir": 33
+      }
+    }
+  },
+  "session_boundary": {
+    "saved_to_disk": true,
+    "loaded_from_disk": true,
+    "entries_preserved": true
+  },
+  "measurements": {
+    "cold_start_hit_rate": 0.0,
+    "warm_gsm8k_hit_rate": 1.0,
+    "warm_humaneval_hit_rate": 1.0,
+    "warm_constraint_hit_rate": 1.0,
+    "warm_overall_hit_rate": 1.0,
+    "accuracy_gain": 1.0,
+    "warm_fp_rate_unseen_slice": 0.0,
+    "avg_top_match_score": 95.67
+  },
+  "summary": {
+    "session_boundary_verified": true,
+    "warm_beats_cold": true,
+    "fp_rate_acceptable": true,
+    "outcome": "pass"
+  }
+}
