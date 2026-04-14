@@ -400,8 +400,15 @@ def get_backend(name: str | None = None) -> SamplerBackend:
         fpga_backend: SamplerBackend = FpgaBackend()
         return fpga_backend
 
+    if name in {"dwave_neal", "dwave_tabu", "dwave_qpu"}:
+        from carnot.samplers.dwave_sampler import DWaveSampler
+
+        mode = name[len("dwave_"):]  # strips "dwave_" prefix → "neal", "tabu", "qpu"
+        dwave_backend: SamplerBackend = DWaveSampler(mode=mode)
+        return dwave_backend
+
     if name not in _BACKENDS:
-        available = ", ".join(sorted([*_BACKENDS.keys(), "fpga"]))
+        available = ", ".join(sorted([*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu"]))
         raise ValueError(f"Unknown sampler backend {name!r}. Available backends: {available}")
 
     return _BACKENDS[name]()

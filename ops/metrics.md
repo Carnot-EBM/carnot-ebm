@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 D-Wave Sampler Backend
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T22:59:00Z | 2026-04-14T23:18:07Z | D-Wave sampler: add [dwave] optional dep; create dwave_sampler.py (neal/tabu/qpu modes, BQM conversion, health_check, benchmark); register in get_backend factory; 41 tests, 74 sampler tests total pass | ~8k |
+
+---
+
 ## Session: 2026-04-14 Conductor Audit Logging
 
 ### Turn Log
