@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-14T21:02:57Z | 2026-04-14T21:15:49Z | Exp 318 four-tier relay: read Exps 302/309/312 code + results; add REQ-LEARN-013 + SCENARIO-LEARN-021/022 to spec; write 58 tests (TestConstants 2, TestRelayBatchResult 14, TestComputeRelayImprovement 6, TestSimulateGsm8kQuestions 6, TestRunRelayBatch 7, TestBuildRelayArtifact 20, TestConstraintDelta 3); implement experiment_318_self_learning_relay.py; run --simulated: B1=0.697 B2=0.545 B3=0.636 imp_1to3=-0.0606; 58 tests pass; update ops/changelog + status + traceability | ~15k |
+| 2 | 2026-04-14T21:26:46Z | 2026-04-14T21:27:54Z | Minimal doc update: append Exp 318 row to ops/status.md (complete status, 4-tier relay detail); changelog/traceability already updated by commit | ~2k |
 
 ---
 
