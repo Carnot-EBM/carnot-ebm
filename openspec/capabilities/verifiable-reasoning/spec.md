@@ -2524,6 +2524,78 @@ Spec: REQ-LEARN-012, SCENARIO-LEARN-019, SCENARIO-LEARN-020
 **And** the summary still reports route counts, formalizable-versus-abstain
   rates, and source-family breakdowns from the regenerated corpus
 
+### REQ-EXTRACT-010: NL2Z3 Chain-of-Thought Constraint Extraction
+
+The system shall provide an `NL2Z3Extractor` that detects internal inconsistencies in
+chain-of-thought responses by translating natural-language arithmetic reasoning into Z3
+Python assertions and running the SMT solver, where:
+
+- A second LLM call prompts a small auxiliary model to generate self-contained Z3 Python
+  code that checks the arithmetic consistency of the response's reasoning steps.
+- The generated code is executed in a sandboxed subprocess with a 2-second timeout.
+- If Z3 reports `unsat`, the response contains an internally inconsistent reasoning chain
+  and a `ConstraintViolation` of type `"z3_unsat"` is returned.
+- If the LLM is unavailable (CI environment where `CARNOT_FORCE_LIVE` is not set),
+  the extractor returns a `Z3Result` with `sat_status="unknown"` without crashing.
+- The extractor implements the `ConstraintExtractor` protocol and integrates with the
+  existing `VerifyRepairPipeline`.
+
+Spec: REQ-EXTRACT-010, SCENARIO-EXTRACT-020, SCENARIO-EXTRACT-021
+
+### REQ-EXTRACT-011: Z3 UNSAT Violation Detection
+
+The system shall represent the result of an NL2Z3 check as a `Z3Result` dataclass with:
+- `sat_status`: one of `"sat"`, `"unsat"`, `"unknown"`, or `"error"`.
+- `z3_code`: the generated Z3 Python code (empty string if LLM unavailable).
+- `runtime_ms`: wall-clock time in milliseconds for subprocess execution.
+- `violations_found`: `True` if and only if `sat_status == "unsat"`.
+- `error_message`: optional string describing any execution error.
+
+A `Z3Result` with `sat_status="unsat"` is the sole trigger for a `z3_unsat`
+constraint violation in the pipeline. `sat`, `unknown`, and `error` do not
+generate violations.
+
+Spec: REQ-EXTRACT-011, SCENARIO-EXTRACT-022, SCENARIO-EXTRACT-023, SCENARIO-EXTRACT-024
+
+### SCENARIO-EXTRACT-020: NL2Z3 Detects Internally Inconsistent Reasoning
+
+**Given** a chain-of-thought response that contains an arithmetic contradiction
+  (for example, "There are 10 apples. We eat 3. There are 8 left.")
+**When** `NL2Z3Extractor.extract(question, response)` is called with a live LLM
+**Then** the extractor emits Z3 Python code that encodes the contradiction
+**And** Z3 returns `unsat`
+**And** the returned list contains one `ConstraintViolation` with `type="z3_unsat"`
+
+### SCENARIO-EXTRACT-021: NL2Z3 Returns Empty List for Consistent Reasoning
+
+**Given** a chain-of-thought response whose arithmetic is internally consistent
+**When** `NL2Z3Extractor.extract(question, response)` is called
+**Then** Z3 returns `sat`
+**And** the returned list is empty
+
+### SCENARIO-EXTRACT-022: Z3Result is_violation True Only for UNSAT
+
+**Given** a `Z3Result` with `sat_status="unsat"`
+**When** `result.violations_found` is checked
+**Then** it is `True`
+**And** for `sat_status` values of `"sat"`, `"unknown"`, or `"error"`,
+  `violations_found` is `False`
+
+### SCENARIO-EXTRACT-023: run_z3_code Handles Subprocess Timeout
+
+**Given** Z3 Python code that contains an infinite loop or very long computation
+**When** `run_z3_code(code, timeout_s=2.0)` is called
+**Then** the subprocess is killed after 2 seconds
+**And** the returned `Z3Result` has `sat_status="unknown"` and `runtime_ms >= 2000`
+
+### SCENARIO-EXTRACT-024: NL2Z3Extractor Degrades Gracefully Without LLM
+
+**Given** an environment where `CARNOT_FORCE_LIVE` is not set (CI mode)
+**When** `NL2Z3Extractor.extract(question, response)` is called
+**Then** no LLM call is made
+**And** the returned list is empty
+**And** the internal `Z3Result` has `sat_status="unknown"` and `z3_code=""`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2616,3 +2688,5 @@ Spec: REQ-LEARN-012, SCENARIO-LEARN-019, SCENARIO-LEARN-020
 | REQ-VERIFY-081 | Not Started | Implemented | Confidence-weighted violation scoring + ConfidenceVerifier tests (SCENARIO-105/106/107/108) |
 | REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |
 | REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
+| REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
+| REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |

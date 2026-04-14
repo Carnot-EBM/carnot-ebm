@@ -4,6 +4,21 @@
 
 ## What's Working
 
+### Exp 310: NL2Z3Extractor — LLM-to-Z3 Chain-of-Thought Verification (REQ-EXTRACT-010/011)
+
+- `python/carnot/pipeline/nl2z3_extractor.py` (new):
+  - `Z3Result(sat_status, z3_code, runtime_ms, violations_found, error_message)` — UNSAT only triggers violation.
+  - `build_z3_prompt(response) → (system, user)` — Z3 code generation prompt.
+  - `run_z3_code(code, timeout_s=2.0) → Z3Result` — subprocess sandbox, 2 s hard timeout.
+  - `NL2Z3Extractor` — ConstraintExtractor protocol; CI guard (`CARNOT_FORCE_LIVE`); injectable generate_fn.
+- `VerifyRepairPipeline.verify_with_z3(question, response, timeout_s=2.0) → Z3Result` (additive).
+- `carnot.pipeline` exports: `NL2Z3Extractor`, `Z3Result`.
+- 37 new tests; all pass. Full test suite: 4122/4123 pass (1 pre-existing flaky test unrelated to Exp 310).
+- **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_310_nl2z3_results.py`
+- **Output:** `results/experiment_310_nl2z3_results.json` (CI mode: 50 unknown, 0 s LLM time).
+- **Next:** Run with `CARNOT_FORCE_LIVE=1` on GPU to get real sat/unsat counts from Exp 211 corpus.
+- Spec: REQ-EXTRACT-010, REQ-EXTRACT-011, SCENARIO-EXTRACT-020 through SCENARIO-EXTRACT-024.
+
 ### Exp 309: Tier 3 Continuous Self-Learning Pipeline (REQ-LEARN-012, SCENARIO-LEARN-019/020)
 
 - `scripts/experiment_309_tier3_pipeline.py` — full Tier 3 end-to-end benchmark.
