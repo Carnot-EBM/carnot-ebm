@@ -4,6 +4,22 @@
 
 ## What's Working
 
+### Exp 311: Head-to-Head Extractor Benchmark (REQ-EXTRACT-012)
+
+- `scripts/experiment_311_extractor_benchmark.py` (new):
+  - `ExtractorBenchmarkRow` — per-response result with FP/TP/runtime fields.
+  - `BenchmarkResult` — per-extractor aggregate (fp_rate, tp_rate, mean_runtime_ms).
+  - `build_labeled_corpus()` — deterministic 30-entry CI-safe corpus (15 correct, 15 incorrect).
+  - `compute_fp_rate(rows)` / `compute_tp_rate(rows)` — honest metric computation.
+  - `select_winner(results)` — prefer TP > 0 then lowest FP.
+- 27 new tests in `tests/python/test_extractor_benchmark.py`; all pass.
+- Full test suite: 4228/4229 pass (1 pre-existing flaky timeout test unrelated to Exp 311).
+- **CI result:** ArithmeticExtractor wins — FP=0.0%, TP=46.7% on corpus. NL2Z3Extractor: FP=0.0%, TP=0.0% (expected in CI without GPU).
+- **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_311_extractor_benchmark.py`
+- **Output:** `results/experiment_311_extractor_benchmark.json`
+- **Next:** Run with `CARNOT_FORCE_LIVE=1` on GPU to get real NL2Z3 TP numbers.
+- Spec: REQ-EXTRACT-012, SCENARIO-EXTRACT-025, SCENARIO-EXTRACT-026.
+
 ### Exp 310: NL2Z3Extractor — LLM-to-Z3 Chain-of-Thought Verification (REQ-EXTRACT-010/011)
 
 - `python/carnot/pipeline/nl2z3_extractor.py` (new):

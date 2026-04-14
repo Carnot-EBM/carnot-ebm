@@ -1,5 +1,29 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 311: Head-to-Head Extractor Benchmark)
+
+Implements REQ-EXTRACT-012: head-to-head FP/TP benchmark comparing
+ArithmeticExtractor, LLMExtractor, and NL2Z3Extractor on a 30-entry labeled
+corpus (15 correct, 15 incorrect).  CI result: ArithmeticExtractor wins with
+FP=0.0%, TP=46.7%; NL2Z3Extractor degrades to TP=0% in CI (expected, no GPU).
+
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added **REQ-EXTRACT-012**: extractor benchmark corpus + FP/TP metrics.
+  - Added **SCENARIO-EXTRACT-025**: FP/TP rate computation contracts.
+  - Added **SCENARIO-EXTRACT-026**: honest TP=0 reporting.
+  - Added traceability row for REQ-EXTRACT-012.
+- `scripts/experiment_311_extractor_benchmark.py` (new):
+  - `ExtractorBenchmarkRow(question, response, correct, extractor_name, fp, tp, runtime_ms, error)`.
+  - `BenchmarkResult(extractor, fp_rate, tp_rate, mean_runtime_ms, n_total)`.
+  - `build_labeled_corpus()` — deterministic 30-entry CI-safe corpus.
+  - `compute_fp_rate(rows)` — n_fp / n_correct_responses.
+  - `compute_tp_rate(rows)` — n_tp / n_incorrect_responses.
+  - `select_winner(results)` — prefer TP > 0, then lowest FP.
+  - `main()` — ExperimentTemplate-based runner; writes artifact.
+- `tests/python/test_extractor_benchmark.py` (new): 27 tests; all pass.
+- `results/experiment_311_extractor_benchmark.json` (new): CI benchmark artifact.
+- Triggered by: user instruction (Exp 311 extractor benchmark).
+
 ## 2026-04-14 (Exp 310: NL2Z3Extractor — LLM-to-Z3 Chain-of-Thought Verification)
 
 Implements REQ-EXTRACT-010 and REQ-EXTRACT-011: NL2Z3Extractor translates
