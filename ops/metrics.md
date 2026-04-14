@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 294 Operational Retro 2026.04.21
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T08:35:13Z | 2026-04-14T10:05:00Z | Exp 294: Operational retro milestone 2026.04.21 — 35 tests (retro artifact schema, carry-over computation, action item resolution, GPU utilization fields, structural root-cause), retro script (load 8 result files, wall-time from metrics.md, GPU distribution 11/0/2, 2/4 action items resolved, carry-over 50% ↓ from 100%), PROCESS-001 + PROCESS-002 story tickets created, results JSON written; 3519 total tests pass 99.11% coverage | ~30k |
+
+---
+
 ## Session: 2026-04-14 Exp 293 HuggingFace Publish v0.2.0-research
 
 ### Turn Log
