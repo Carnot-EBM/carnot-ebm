@@ -51,6 +51,10 @@ loop) executes the current experiments.
 - **Path forward:** Either (a) use instruction-tuned models, (b) improve
   prompt engineering for base models, or (c) acknowledge constraint
   verification helps simulated/ideal scenarios but not raw base model outputs.
+- **Exp 316 update (2026-04-14):** Full-scale benchmark ran in simulated mode
+  (no live GPU). Schema and CI tests pass (28/28). Simulated results show no
+  mode-to-mode improvement as expected — simulation is not live inference.
+  Live GPU run still required to resolve the open question.
 - **Why #0:** This is the most important finding of the entire project.
 
 ### Rank 1: Confidence-Calibrated Constraint Verification

@@ -1,6 +1,35 @@
 # Carnot — Test Results
 
-**Last Updated:** 2026-04-12
+**Last Updated:** 2026-04-14
+
+## Exp 316 Full-Scale Benchmark Results (2026-04-14)
+
+**inference_mode: simulated** (no live GPU in this session; results labeled explicitly)
+
+Script: `scripts/experiment_315_fullscale_benchmark.py`
+Artifact: `results/experiment_316_fullscale_results.json`
+Command: `PYTHONPATH=. JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_315_fullscale_benchmark.py --n_gsm8k 100 --n_humaneval 20 --batch_size 8 --simulated`
+
+| Model | Mode | Variant | Accuracy | 95% CI | n |
+|-------|------|---------|----------|--------|---|
+| Qwen3.5-0.8B | baseline | all | 34.0% | [25.5%, 43.7%] | 100 |
+| Qwen3.5-0.8B | verify_only | all | 34.0% | [25.5%, 43.7%] | 100 |
+| Qwen3.5-0.8B | verify_repair | all | 34.0% | [25.5%, 43.7%] | 100 |
+| Qwen3.5-0.8B | z3_gated | all | 34.0% | [25.5%, 43.7%] | 100 |
+| Gemma4-E4B-it | baseline | all | 30.0% | [21.9%, 39.6%] | 100 |
+| Gemma4-E4B-it | verify_only | all | 30.0% | [21.9%, 39.6%] | 100 |
+| Gemma4-E4B-it | verify_repair | all | 30.0% | [21.9%, 39.6%] | 100 |
+| Gemma4-E4B-it | z3_gated | all | 30.0% | [21.9%, 39.6%] | 100 |
+
+Published baselines: Qwen3.5-0.8B ~25%, Gemma4-E4B-it ~80%
+
+**Key findings:**
+- Simulated mode produces equal accuracy across all modes (expected — simulation is not live inference).
+- Z3/NL2Z3 was unavailable (not installed); z3_gated falls back to baseline accuracy.
+- No README update warranted: inference_mode must be "live_gpu" for headline claims.
+- Schema, CI bounds, and n_total all validated: 28 tests PASS in `tests/python/test_experiment_316_results.py`.
+
+**Next step:** Re-run with live GPU to get `inference_mode=live_gpu` results for credible comparison.
 
 ## Current Test Suite (2026-04-06)
 

@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 316: Full-Scale Credible Benchmark — Execution)
+
+Executes `scripts/experiment_315_fullscale_benchmark.py` (written in Exp 315).
+Inference mode: **simulated** (no live GPU available this session).
+All 28 result-validation tests pass.
+
+- `tests/python/test_experiment_316_results.py` (new): 28 tests validating the
+  `carnot.fullscale_benchmark.v1` artifact schema, CI bounds, n_total >= 50,
+  inference_mode label, published_baselines range, accuracy consistency.
+  Includes `load_fullscale_results()` helper with FileNotFoundError / ValueError
+  on missing keys. Spec: REQ-BENCH-001, SCENARIO-BENCH-001, SCENARIO-BENCH-002.
+- `results/experiment_316_fullscale_results.json` (new): simulated artifact;
+  100 GSM8K (adversarial corpus), 20 HumanEval, 4 modes, 2 models.
+  Qwen3.5-0.8B baseline 34.0% [25.5%-43.7%], Gemma4-E4B-it 30.0% [21.9%-39.6%].
+  Z3 not available — z3_gated falls back to baseline. No README update (not live_gpu).
+- `ops/test-results.md`: added Exp 316 results section.
+- `ops/status.md`, `_bmad/traceability.md`: updated REQ-BENCH-001 impl status.
+- `research-studying.md`: added Rank 0 update noting simulated execution complete.
+- User instruction: execute full-scale benchmark, write tests, document results.
+
 ## 2026-04-14 (Exp 315: Full-Scale Credible Benchmark — Script Authoring)
 
 Writes the full-scale benchmark script for Exp 316 execution (per lessons-learned rule

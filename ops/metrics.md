@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 316 Full-Scale Benchmark Execution
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T20:23:53Z | 2026-04-14T20:28:50Z | Exp 316 full-scale benchmark execution: read Exp 315 script, write 28 tests (TestSchemaValidation 7, TestInferenceMode 2, TestCIBounds 2, TestSampleSize 3, TestPublishedBaselines 2, TestAccuracyRange 2, TestArtifactMetadata 5, TestLoadFullscaleResults 4); run benchmark --simulated 100 GSM8K + 20 HumanEval; 28 tests PASS; update ops/test-results + research-studying + ops/changelog + ops/status + _bmad/traceability | ~8k |
+
+---
+
 ## Session: 2026-04-14 Exp 314 NPU Prereq Retry
 
 ### Turn Log
