@@ -2,6 +2,7 @@
 
 | Timestamp | Task | Status |
 |-----------|------|--------|
+| 2026-04-14 12:59 UTC | Plan next milestone (2026.04.29) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-vNEXT.md (v29) created; 13 experiments across 4 phases; 8 new papers added to research-references.md; 3 gaps identified: JEPA synthetic-only, Z3 extraction missing, no full-scale CI benchmarks |
 | 2026-04-14 09:07 UTC | Plan next milestone (2026.04.22) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-v28.md created; 13 experiments across 4 phases; 9 new papers added to research-references.md |
 | 2026-04-11 15:52 UTC | Plan next milestone (2026.04.12) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-vNEXT.md created; 14 experiments across 4 phases |
 | 2026-04-04 22:00 UTC | Run 50-iteration autoresearch with latest improvem | OK |
