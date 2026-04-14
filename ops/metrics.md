@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 arxiv Research Survey
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T00:28:28Z | 2026-04-14T00:29:54Z | arxiv survey: search 10 topics for recent 2025-2026 papers relevant to Carnot EBM milestone planning. | ~8k |
+
+---
+
 ## Session: 2026-04-13 Exp 260 GPU Solver-Semantic Benchmark
 
 ### Turn Log
