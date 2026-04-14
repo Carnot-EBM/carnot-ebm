@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 312: Z3-Gated Repair Pipeline — REQ-REPAIR-010/011)
+
+Implements Z3 as a cheap first-gate before the Ising repair loop, wiring
+the Exp 311 NL2Z3Extractor benchmark result into production: Z3 SAT → skip
+Ising; Z3 UNSAT → trigger full repair; Z3 unknown/error → fallback to
+confidence-weighted Ising path.
+
+- `openspec/capabilities/verifiable-reasoning/spec.md`:
+  - Added **REQ-REPAIR-010**: Z3-gated repair pipeline with Z3GatedRepairResult fields.
+  - Added **REQ-REPAIR-011**: Z3 SAT fast-exit path.
+  - Added **SCENARIO-REPAIR-020**: UNSAT triggers Ising repair.
+  - Added **SCENARIO-REPAIR-021**: unknown falls back to confidence-weighted Ising.
+  - Added **SCENARIO-REPAIR-022**: SAT skips Ising entirely.
+  - Added **SCENARIO-REPAIR-023**: 30-question benchmark artifact schema.
+  - Added traceability rows for REQ-REPAIR-010, REQ-REPAIR-011.
+- `python/carnot/pipeline/z3_gated_repair.py` (new):
+  - `Z3GatedRepairResult(z3_status, z3_code, ising_triggered, ising_violations, repair_attempted, repaired, improvement, runtime_ms)`.
+  - `compute_skip_rate(results) → float` — fraction of SAT skips.
+  - `Z3GatedRepair(nl2z3_extractor, ising_pipeline, confidence_threshold=0.8)` — gate orchestrator.
+  - `repair(question, response, domain) → Z3GatedRepairResult` — three-path gate logic.
+- `python/carnot/pipeline/verify_repair.py`:
+  - Added **additive** `verify_repair_z3_gated(question, response, domain, nl2z3_extractor, confidence_threshold) → Z3GatedRepairResult`.
+- `python/carnot/pipeline/__init__.py`:
+  - Exports: `Z3GatedRepair`, `Z3GatedRepairResult`, `compute_skip_rate`.
+- `scripts/experiment_312_z3_gated_benchmark.py` (new):
+  - 30-question deterministic corpus (15 correct + 15 incorrect).
+  - `build_corpus()`, `run_benchmark()`, `compute_metrics()`, `main()`.
+  - Artifact: `results/experiment_312_z3_gated_results.json` with `experiment=312`,
+    `z3_gate_skip_rate`, `ising_trigger_rate`, `net_accuracy_improvement`.
+- `tests/python/test_z3_gated_repair.py` (new): 26 tests; all pass; z3_gated_repair.py 100% coverage.
+- Triggered by: user instruction (Exp 312 Z3-gated repair benchmark).
+
 ## 2026-04-14 (Exp 311: Head-to-Head Extractor Benchmark)
 
 Implements REQ-EXTRACT-012: head-to-head FP/TP benchmark comparing

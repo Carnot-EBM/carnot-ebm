@@ -4,6 +4,21 @@
 
 ## What's Working
 
+### Exp 312: Z3-Gated Repair Pipeline (REQ-REPAIR-010/011)
+
+- `python/carnot/pipeline/z3_gated_repair.py` (new):
+  - `Z3GatedRepairResult` — full gate outcome with z3_status, ising_triggered, improvement.
+  - `Z3GatedRepair` — injectable gate orchestrator (NL2Z3Extractor + Ising pipeline).
+  - `compute_skip_rate(results)` — aggregate skip fraction.
+- `VerifyRepairPipeline.verify_repair_z3_gated()` — additive pipeline integration.
+- `carnot.pipeline` exports: `Z3GatedRepair`, `Z3GatedRepairResult`, `compute_skip_rate`.
+- 26 new tests in `tests/python/test_z3_gated_repair.py`; all pass; 100% z3_gated_repair.py coverage.
+- **CI result:** All 30 questions take the unknown→Ising fallback path (skip_rate=0.0 in CI; expected — gate fires on SAT in production with CARNOT_FORCE_LIVE=1).
+- **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_312_z3_gated_benchmark.py`
+- **Output:** `results/experiment_312_z3_gated_results.json`
+- **Next:** Run with `CARNOT_FORCE_LIVE=1` on GPU to see real SAT skip rates from arithmetic corpus.
+- Spec: REQ-REPAIR-010, REQ-REPAIR-011, SCENARIO-REPAIR-020 through SCENARIO-REPAIR-023.
+
 ### Exp 311: Head-to-Head Extractor Benchmark (REQ-EXTRACT-012)
 
 - `scripts/experiment_311_extractor_benchmark.py` (new):
