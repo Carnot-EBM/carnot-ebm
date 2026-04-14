@@ -248,6 +248,8 @@
 | SCENARIO-BENCH-001 | Not Started | Executed (simulated) | 100 GSM8K (adversarial corpus) run; Wilson CIs validated; live GPU run needed for 400q credible result |
 | SCENARIO-BENCH-002 | Not Started | Executed (simulated) | 20 HumanEval problems run in simulated mode; live GPU run needed for 50q credible result |
 | SCENARIO-SAMPLE-026 | Not Started | Implemented | CPU fallback always measured regardless of hardware status; kv260_detected=False when env var unset |
+| REQ-LEARN-002 | Not Started | Implemented | Reward hacking detection in self-learning: gini_coefficient, constraint ranking stability, signal integrity validation (Exp 322); 607-line test module PASS |
 | REQ-LEARN-013 | Not Started | Implemented | Four-tier relay benchmark: RelayBatchResult + compute_relay_improvement + build_relay_artifact (Exp 318); 58 tests PASS |
+| SCENARIO-LEARN-002 | Not Started | Implemented | Reward hacking metrics: gini coefficient edge cases, constraint ranking stability, signal-integrity drift detection |
 | SCENARIO-LEARN-021 | Not Started | Implemented | RelayBatchResult tiers_active list: ["tier1"] / ["tier1","tier2"] / ["tier1","tier2","tier3","z3"] |
 | SCENARIO-LEARN-022 | Not Started | Implemented | improvement_1to3 is honest signed delta (can be negative); never clamped |
