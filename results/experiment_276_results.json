@@ -1,0 +1,557 @@
+{
+  "experiment": 276,
+  "benchmark": "gsm8k_modern_extractors",
+  "title": "Exp 276: Full GSM8K with Z3+LLM+semantic extractors",
+  "run_date": "20260414",
+  "metadata": {
+    "model": "google/gemma-4-E4B-it",
+    "n_cases": 10,
+    "live_mode": false,
+    "cohort_source": "canned_ci_cases",
+    "extractors": [
+      "z3",
+      "llm",
+      "semantic"
+    ],
+    "started_at": "2026-04-14T03:29:39Z",
+    "finished_at": "2026-04-14T03:29:41Z",
+    "runtime_seconds": 2.54,
+    "source_artifacts": [
+      "python/carnot/pipeline/z3_extractor.py",
+      "python/carnot/pipeline/llm_extractor.py",
+      "python/carnot/pipeline/semantic_grounding.py"
+    ]
+  },
+  "statistics": {
+    "n_cases": 10,
+    "n_correct": 5,
+    "n_wrong": 5,
+    "baseline_accuracy": 0.5,
+    "z3": {
+      "n_flagged": 4,
+      "n_flagged_wrong": 4,
+      "n_flagged_correct": 0,
+      "detection_rate": 0.8,
+      "fp_rate": 0.0,
+      "theoretical_repaired_accuracy": 0.9,
+      "repair_delta": 0.4
+    },
+    "llm": {
+      "n_flagged": 4,
+      "n_flagged_wrong": 4,
+      "n_flagged_correct": 0,
+      "detection_rate": 0.8,
+      "fp_rate": 0.0,
+      "theoretical_repaired_accuracy": 0.9,
+      "repair_delta": 0.4
+    },
+    "semantic": {
+      "n_flagged": 1,
+      "n_flagged_wrong": 0,
+      "n_flagged_correct": 1,
+      "detection_rate": 0.0,
+      "fp_rate": 0.2,
+      "theoretical_repaired_accuracy": 0.5,
+      "repair_delta": 0.0
+    },
+    "combined": {
+      "n_flagged": 5,
+      "n_flagged_wrong": 4,
+      "n_flagged_correct": 1,
+      "detection_rate": 0.8,
+      "fp_rate": 0.2,
+      "theoretical_repaired_accuracy": 0.9,
+      "repair_delta": 0.4
+    },
+    "extractor_overlap": {
+      "z3_only": 0,
+      "llm_only": 0,
+      "semantic_only": 1,
+      "z3_and_llm": 4,
+      "z3_and_semantic": 0,
+      "llm_and_semantic": 0,
+      "all_three": 0
+    }
+  },
+  "cases": [
+    {
+      "case_id": "ci-0",
+      "question": "If 3 apples cost $6, how much do 5 apples cost?",
+      "ground_truth": 10,
+      "extracted_answer": 10.0,
+      "correct": true,
+      "combined_flagged": false,
+      "latency_seconds": 2.5404,
+      "extractors": {
+        "z3": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 2,
+          "n_total": 2,
+          "details": [
+            {
+              "expression": "6 / 3",
+              "claimed_result": 2,
+              "correct_result": 2,
+              "satisfied": true,
+              "approximate": false
+            },
+            {
+              "expression": "5 * 2",
+              "claimed_result": 10,
+              "correct_result": 10,
+              "satisfied": true,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 2,
+          "n_total": 2,
+          "details": [
+            {
+              "raw_claim": "6 / 3 = 2",
+              "claimed_result": 2,
+              "correct_result": 2,
+              "satisfied": true
+            },
+            {
+              "raw_claim": "5 * 2 = 10",
+              "claimed_result": 10,
+              "correct_result": 10,
+              "satisfied": true
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-1",
+      "question": "A box holds 12 eggs. How many eggs are in 7 boxes?",
+      "ground_truth": 84,
+      "extracted_answer": 85.0,
+      "correct": false,
+      "combined_flagged": true,
+      "latency_seconds": 0.0005,
+      "extractors": {
+        "z3": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "expression": "12 * 7",
+              "claimed_result": 85,
+              "correct_result": 84,
+              "satisfied": false,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "raw_claim": "12 * 7 = 85",
+              "claimed_result": 85,
+              "correct_result": 84,
+              "satisfied": false
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-2",
+      "question": "Sue has 20 candies. She eats 8. How many remain?",
+      "ground_truth": 12,
+      "extracted_answer": 12.0,
+      "correct": true,
+      "combined_flagged": false,
+      "latency_seconds": 0.0004,
+      "extractors": {
+        "z3": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 1,
+          "n_total": 1,
+          "details": [
+            {
+              "expression": "20 - 8",
+              "claimed_result": 12,
+              "correct_result": 12,
+              "satisfied": true,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 1,
+          "n_total": 1,
+          "details": [
+            {
+              "raw_claim": "20 - 8 = 12",
+              "claimed_result": 12,
+              "correct_result": 12,
+              "satisfied": true
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-3",
+      "question": "A store sells 4 items at $7 each. What is the total cost?",
+      "ground_truth": 28,
+      "extracted_answer": 30.0,
+      "correct": false,
+      "combined_flagged": true,
+      "latency_seconds": 0.0004,
+      "extractors": {
+        "z3": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "expression": "4 * 7",
+              "claimed_result": 30,
+              "correct_result": 28,
+              "satisfied": false,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "raw_claim": "4 * 7 = 30",
+              "claimed_result": 30,
+              "correct_result": 28,
+              "satisfied": false
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-4",
+      "question": "Tom has 15 books. He gives 6 to a friend. How many remain?",
+      "ground_truth": 9,
+      "extracted_answer": 9.0,
+      "correct": true,
+      "combined_flagged": true,
+      "latency_seconds": 0.0001,
+      "extractors": {
+        "z3": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        },
+        "llm": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        },
+        "semantic": {
+          "flagged": true,
+          "n_violations": 2,
+          "n_satisfied": 0,
+          "n_total": 2,
+          "details": [
+            {
+              "violation_type": "missing_quantity_coverage",
+              "description": "Prompt clause is not grounded in the response: 'He gives 6 to a friend.'",
+              "clause_id": "p2",
+              "taxonomy_hint": "omitted_premises"
+            },
+            {
+              "violation_type": "answer_target_mismatch",
+              "description": "The response answers a related quantity but misses the requested target keywords: remain.",
+              "clause_id": null,
+              "taxonomy_hint": "question_grounding_failures"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case_id": "ci-5",
+      "question": "Maria buys 3 pens at $4 each. What does she pay in total?",
+      "ground_truth": 12,
+      "extracted_answer": 14.0,
+      "correct": false,
+      "combined_flagged": false,
+      "latency_seconds": 0.0001,
+      "extractors": {
+        "z3": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        },
+        "llm": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-6",
+      "question": "A train travels 60 mph for 3 hours. How far does it go?",
+      "ground_truth": 180,
+      "extracted_answer": 180.0,
+      "correct": true,
+      "combined_flagged": false,
+      "latency_seconds": 0.0003,
+      "extractors": {
+        "z3": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 1,
+          "n_total": 1,
+          "details": [
+            {
+              "expression": "60 * 3",
+              "claimed_result": 180,
+              "correct_result": 180,
+              "satisfied": true,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 1,
+          "n_total": 1,
+          "details": [
+            {
+              "raw_claim": "60 * 3 = 180",
+              "claimed_result": 180,
+              "correct_result": 180,
+              "satisfied": true
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-7",
+      "question": "How many minutes are in 5 hours?",
+      "ground_truth": 300,
+      "extracted_answer": 5.0,
+      "correct": false,
+      "combined_flagged": true,
+      "latency_seconds": 0.0003,
+      "extractors": {
+        "z3": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "expression": "5 * 60",
+              "claimed_result": 290,
+              "correct_result": 300,
+              "satisfied": false,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "raw_claim": "5 * 60 = 290",
+              "claimed_result": 290,
+              "correct_result": 300,
+              "satisfied": false
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-8",
+      "question": "A baker makes 48 rolls per batch and bakes 3 batches. 10 are burned. How many good rolls are there?",
+      "ground_truth": 134,
+      "extracted_answer": 134.0,
+      "correct": true,
+      "combined_flagged": false,
+      "latency_seconds": 0.0006,
+      "extractors": {
+        "z3": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 2,
+          "n_total": 2,
+          "details": [
+            {
+              "expression": "48 * 3",
+              "claimed_result": 144,
+              "correct_result": 144,
+              "satisfied": true,
+              "approximate": false
+            },
+            {
+              "expression": "144 - 10",
+              "claimed_result": 134,
+              "correct_result": 134,
+              "satisfied": true,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 2,
+          "n_total": 2,
+          "details": [
+            {
+              "raw_claim": "48 * 3 = 144",
+              "claimed_result": 144,
+              "correct_result": 144,
+              "satisfied": true
+            },
+            {
+              "raw_claim": "144 - 10 = 134",
+              "claimed_result": 134,
+              "correct_result": 134,
+              "satisfied": true
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    },
+    {
+      "case_id": "ci-9",
+      "question": "Jack earns $200 per day. He works 5 days. How much does he earn?",
+      "ground_truth": 1000,
+      "extracted_answer": 950.0,
+      "correct": false,
+      "combined_flagged": true,
+      "latency_seconds": 0.0003,
+      "extractors": {
+        "z3": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "expression": "200 * 5",
+              "claimed_result": 950,
+              "correct_result": 1000,
+              "satisfied": false,
+              "approximate": false
+            }
+          ]
+        },
+        "llm": {
+          "flagged": true,
+          "n_violations": 1,
+          "n_satisfied": 0,
+          "n_total": 1,
+          "details": [
+            {
+              "raw_claim": "200 * 5 = 950",
+              "claimed_result": 950,
+              "correct_result": 1000,
+              "satisfied": false
+            }
+          ]
+        },
+        "semantic": {
+          "flagged": false,
+          "n_violations": 0,
+          "n_satisfied": 0,
+          "n_total": 0,
+          "details": []
+        }
+      }
+    }
+  ]
+}
