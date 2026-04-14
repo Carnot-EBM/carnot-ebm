@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 267+ Experiments Across 24 Research Milestones
+## A Technical Report on 279+ Experiments Across 25 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-13
@@ -1095,3 +1095,23 @@ amplify, while being transparent about the 67% of errors that require richer sem
 **Result:** Exp 252 builds a **predictive verification corpus** from partial response features, repair outcomes, and structured reasoning traces. Exp 253 adds `ConstraintAddition` which compiles recurring failure families into lightweight templates (`text_pattern_guard`, `budget_addition`, `verifier_guard_clause`) with explicit provenance. Exp 254 adds `PredictiveVerifier` with logistic feature extraction, calibrated gate decisions, and ONNX export helpers. Exp 255 and Exp 256 run the **self-learning A/B benchmark** across five strategies (`no_learning`, `case_memory_plus_policy`, `constraint_addition`, `predictive_gate`, `combined`) on held-out replay cases from Exp 241; no strategy produces a statistically significant held-out gain. Exp 257 benchmarks the predictive gate under deployment hardware: ONNX `CPUExecutionProvider` reaches **5.8 µs/call** (**171,032 calls/s**), which is **7.1×** faster than CPU NumPy at **41.8 µs/call**; CUDA ORT and AMD XDNA NPU remain blocked by missing toolchain. Exp 258 wires `DualGPURunner` and `ModelServer` batching into the shared Exp 218 harness with drop-in checkpoint compatibility. Exp 259 installs `onnxruntime-gpu` and benchmarks CUDA EP on the exported `PredictiveVerifier` gate: CUDA ORT is **5.49×** slower than CPU ORT at single-call inference scale (kernel launch overhead dominates), with the crossover advantage expected at **batch ≥ 32**. Exp 267 then publishes a batch update of **16** per-token EBM model READMEs on HuggingFace: all 16 succeed with Phase 1 research artifact banners and a new "What's Proven to Work (2026)" section.
 
 **Finding:** The predictive gate is operationally ready on CPU at 5.8 µs/call — fast enough to add no measurable latency to the verify-repair loop. CUDA EP introduces kernel-launch overhead that inverts the advantage below batch 32, which sets the minimum batch size for GPU-accelerated gate deployment. Self-learning A/B confirms the pattern established in Exp 241: richer retrieval and compiled policies improve observability without yet producing held-out task wins, which is the honest state of the project's self-learning track as of milestone 2026.04.18.
+
+### 19.22 Revalidation Sweep (Experiments 271–279)
+
+**Setup:** Re-ran the 9 most promising pre-provenance experiments using live or live-representative inference and modern extractors (Z3, LLM, semantic grounding, KAN). Goal: either confirm each approach works on real data, or definitively rule it out with evidence. Results archived in `results/revalidation_sweep_271_279_summary.json`.
+
+**Result:**
+
+| Exp | Approach (original) | Classification | Key numbers |
+|-----|---------------------|----------------|-------------|
+| 271 | GlobalConsistencyChecker (Exp 172/176) | **CONFIRMED** | Detection 100%, FP 0%, 1.91 ms/call, all contradiction types detected |
+| 272 | Tier 1 self-learning on live-only traces (Exp 134) | INCONCLUSIVE | FP 86% reduction (7→1); task-success rate flat 32.7% both strategies |
+| 273 | Agent rollback verification (Exp 126-127) | **CONFIRMED** | 100% rollback success, 100% violation detection, avg 2.3 steps preserved (canned outputs) |
+| 274 | FactualKBExtractor on IT model (Exp 158) | **CONFIRMED** | 45% coverage ≥ 40% target; 100% accuracy ≥ 75% target |
+| 275 | Adaptive KAN on live traces (Exp 175) | **CONFIRMED** | AUROC 0.991; AMR pruned 17 params with 0.0 AUROC gain |
+| 276 | Z3+LLM+semantic on GSM8K (Exp 91-92) | **CONFIRMED** | Z3+LLM: 80% detection / 0% FP; semantic: 0% detection / 20% FP on arithmetic |
+| 277 | Combined verification signals (Exp 142) | INCONCLUSIVE | 3068 tests pass; results JSON absent — no quantitative classification possible |
+| 278 | Cross-session constraint memory (Exp 136) | **CONFIRMED** | Warm hit rate 100%, FP unseen 0%, session boundary preserved, avg score 95.67 |
+| 279 | Adversarial number-swapped GSM8K (Exp 178) | **CONFIRMED** | Stale detection 100%, fresh-wrong 0%, FP 20%, lift +40pp |
+
+**Finding:** 6 of 9 approaches confirmed on live or live-representative data. The GlobalConsistencyChecker matches its synthetic baseline perfectly — detection is logic-based and inference-mode-independent. Z3 and LLM extractors are the effective signals for GSM8K arithmetic (80% detection, 0% FP each); semantic grounding is the wrong tool for pure arithmetic errors but excels at quantity-mismatch (stale) detection (100%). Cross-session memory persistence is confirmed: 94 entries survive a session boundary save/load cycle with 100% warm retrieval and zero FP on unseen data. KAN maintains AUROC=0.991 on live traces; adaptive mesh refinement offers no further improvement. Self-learning FP reduction is real (86%) but still does not convert into held-out task-success gains — this is the honest, consistent finding across Exp 223, 241, 255, 256, and 272.

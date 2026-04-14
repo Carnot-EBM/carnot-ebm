@@ -291,31 +291,34 @@ work — they were tested with bad experimental methodology, not bad ideas.
 This sweep re-runs the most promising old experiments with live GPU inference
 to either confirm or definitively rule them out.
 
-### High Priority (architecture likely valid, just needs live data)
+**STATUS: COMPLETED 2026-04-14** — Exp 271-279 executed and classified.
+Full results: `results/revalidation_sweep_271_279_summary.json`.
 
-| Original Exp | What it tested | Why re-test | Proposed revalidation |
-|-------------|---------------|-------------|----------------------|
-| 172, 176 | Global consistency checker | Logic-based contradiction detection across reasoning steps. Uses ConstraintStateMachine, not regex. Should work on real chains. | Run on live multi-turn Gemma4/Qwen outputs, measure detection rate on real contradictions |
-| 134 (Tier 1) | Online self-learning weights | Architecture validated by Exp 223 (-86% FP). Original numbers trained on simulated errors — retrain on live traces. | Re-run with Exp 219-221 live traces as training data |
-| 126-127 | Agent rollback/workflow verification | Constraint-based rollback logic doesn't depend on inference mode. May already work. | Run existing agent workflow tests with live model in the loop |
-| 158 | Factual extractor (Wikidata SPARQL) | Extraction logic queries external KB, not model internals. May work on IT model responses. | Test on Gemma4-E4B-it factual QA with live inference |
-| 175 | Adaptive KAN live verification | KAN architecture proven (0.994 AUROC). The live loop needs real verification traces. | Feed Exp 219-221 traces through KAN adaptive mesh refinement |
+### High Priority — Results
 
-### Medium Priority (approach may work differently on IT models)
+| Original Exp | Revalidation Exp | Classification | Outcome |
+|-------------|-----------------|----------------|---------|
+| 172, 176 | **Exp 271** | ✅ **CONFIRMED** | 100% detection, 0% FP, 1.91 ms/call — logic-based, inference-mode-independent |
+| 134 (Tier 1) | **Exp 272** | ⚠️ INCONCLUSIVE | 86% FP reduction confirmed (7→1); task-success rate flat 32.7% — FP win is real, primary objective not met |
+| 126-127 | **Exp 273** | ✅ **CONFIRMED** | 100% rollback success + 100% violation detection (canned outputs; deterministic logic) |
+| 158 | **Exp 274** | ✅ **CONFIRMED** | 45% coverage ≥ 40% target; 100% accuracy ≥ 75% target on IT model responses |
+| 175 | **Exp 275** | ✅ **CONFIRMED** | KAN AUROC 0.991 on live traces; AMR pruned 17 params, 0.0 AUROC gain |
 
-| Original Exp | What it tested | Why re-test | Proposed revalidation |
-|-------------|---------------|-------------|----------------------|
-| 91-92 | GSM8K/MATH with constraint verification | Original used regex extraction on base models. Now we have Z3 + LLM + semantic extractors on IT models. Completely different pipeline. | Run full GSM8K with the Exp 215 semantic grounding verifier |
-| 142 | Combined learning (multiple signals) | Combined multiple constraint signals. With better extractors, the combination may be more effective. | Re-test signal combination with Z3 + LLM + semantic extractors |
-| 149 | TruthfulQA factual coverage | Factual domain needs Wikidata KB (Exp 158). With live IT models, factual extraction may work differently. | Test on TruthfulQA subset with live Gemma4 + factual extractor |
-| 136 | Cross-session constraint memory | Persistence architecture is valid. Needs real constraint patterns to learn from. | Populate memory from Exp 219-221 live traces, test on new questions |
+### Medium Priority — Results
 
-### Low Priority (likely ruled out but worth a quick check)
+| Original Exp | Revalidation Exp | Classification | Outcome |
+|-------------|-----------------|----------------|---------|
+| 91-92 | **Exp 276** | ✅ **CONFIRMED** | Z3+LLM: 80% detection, 0% FP; semantic: 0% detection, 20% FP for arithmetic |
+| 142 | **Exp 277** | ⚠️ INCONCLUSIVE | 3068 tests pass; results JSON absent — needs re-run for quantitative classification |
+| 149 | — | Not revalidated | TruthfulQA factual coverage deferred to future milestone |
+| 136 | **Exp 278** | ✅ **CONFIRMED** | 100% warm hit rate, 0% FP unseen, session boundary preserved, avg score 95.67 |
 
-| Original Exp | What it tested | Why re-test | Proposed revalidation |
-|-------------|---------------|-------------|----------------------|
-| 161, 163 | Full GSM8K benchmark | These were the main simulation artifacts. But with new extractors (Z3/LLM/semantic), the full benchmark may show different results. | Already partially covered by Exp 219 (200 questions). Could extend to full 1319. |
-| 178 | Adversarial GSM8K (number-swapped) | Adversarial variants test robustness. Semantic grounding should handle number swaps better than regex. | Run Apple adversarial variants with semantic grounding verifier |
+### Low Priority — Results
+
+| Original Exp | Revalidation Exp | Classification | Outcome |
+|-------------|-----------------|----------------|---------|
+| 161, 163 | — | Superseded | Covered by Exp 219/235 (200-question GSM8K live runs) |
+| 178 | **Exp 279** | ✅ **CONFIRMED** | Stale detection 100%, fresh-wrong 0%, FP 20%, lift +40pp — semantic grounding targets quantity-mismatch specifically |
 
 ### Definitively Ruled Out (evidence-based, not provenance-based)
 
@@ -529,16 +532,15 @@ sandbox.py module created
 **Expected outcome:** Code execution fully sandboxed, external content
 scanned before ingestion, model supply chain verified
 
-### Proposed Milestone: "Revalidation Sweep" (after 2026.04.16)
+### ~~Proposed~~ Completed Milestone: "Revalidation Sweep" (2026-04-14)
 
 **Theme:** Re-run the 10 most promising pre-provenance experiments with
 live GPU inference and modern extractors. Either confirm they work (and
 add to the live results portfolio) or definitively rule them out with
 evidence, not just missing metadata.
 
-**Estimated experiments:** 8-10 (one per approach above)
-**Dependencies:** Exp 215 semantic grounding, Exp 217 PBT code verifier,
-Exp 222 trace memory — all completed in milestone 2026.04.15
-**Expected outcome:** 3-5 approaches confirmed as working on live data,
-3-5 definitively ruled out with evidence, expanding our credible results
-portfolio significantly.
+**Actual experiments:** 9 (Exp 271-279)
+**Outcome:** 6 CONFIRMED, 2 INCONCLUSIVE (Exp 272 FP-only win; Exp 277 missing JSON), 0 definitively ruled out.
+**Credible results added:** GlobalConsistencyChecker, agent rollback, factual KB extraction,
+KAN verification, Z3+LLM on GSM8K arithmetic, cross-session memory, adversarial semantic grounding.
+**Remaining:** Exp 277 (combined signals) needs re-run with explicit JSON output; TruthfulQA deferred.

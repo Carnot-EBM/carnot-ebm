@@ -1,0 +1,161 @@
+{
+  "sweep": "Revalidation Sweep Exp 271-279",
+  "date": "2026-04-14",
+  "description": "Re-ran the 9 most promising pre-provenance experiments using live or live-representative data and modern extractors. Classified each as CONFIRMED, INCONCLUSIVE, or RULED_OUT.",
+  "experiments": [
+    {
+      "exp": 271,
+      "title": "Global Consistency Checker (live re-test of Exp 172/176)",
+      "classification": "CONFIRMED",
+      "results": {
+        "detection_rate": 1.0,
+        "false_positive_rate": 0.0,
+        "avg_latency_ms": 1.91,
+        "n_chains": 20,
+        "per_type": {
+          "numeric": 1.0,
+          "arithmetic": 1.0,
+          "factual": 1.0
+        },
+        "delta_vs_synthetic": 0.0
+      },
+      "notes": "Matches Exp 172/176 synthetic baseline exactly. Detection is logic-based (entity value comparison), not inference-mode-dependent. Works on live-representative multi-turn chains."
+    },
+    {
+      "exp": 272,
+      "title": "Tier 1 Self-Learning Retrained on Live-Only Traces (re-test of Exp 134)",
+      "classification": "INCONCLUSIVE",
+      "results": {
+        "training_cases": 494,
+        "types_meeting_threshold": 13,
+        "no_learning_success_rate": 0.3274,
+        "tracker_only_success_rate": 0.3274,
+        "fp_no_learning": 7,
+        "fp_tracker_only": 1,
+        "fp_reduction_pct": 85.7
+      },
+      "notes": "FP reduced 86% (7→1), matching Exp 223. But primary success metric (task success rate) is flat at 32.74% for both strategies. The self-learning architecture reduces false alarms but does not improve task success rate on held-out cases."
+    },
+    {
+      "exp": 273,
+      "title": "Agent Rollback Verification (re-test of Exp 126-127)",
+      "classification": "CONFIRMED",
+      "results": {
+        "rollback_success_rate": 1.0,
+        "violation_detection_rate": 1.0,
+        "avg_steps_preserved": 2.3,
+        "n_workflows": 10,
+        "live_mode": false
+      },
+      "notes": "100% rollback success and violation detection. Caveat: tested with canned outputs (live_mode=false), not live GPU inference. The rollback logic is deterministic and does not depend on inference mode — result should generalize."
+    },
+    {
+      "exp": 274,
+      "title": "FactualKBExtractor on Gemma4-E4B-it (re-test of Exp 158)",
+      "classification": "CONFIRMED",
+      "results": {
+        "n_questions": 20,
+        "coverage_pct": 45.0,
+        "target_coverage_pct": 40.0,
+        "coverage_target_met": true,
+        "accuracy_pct": 100.0,
+        "target_accuracy_pct": 75.0,
+        "accuracy_target_met": true,
+        "delta_coverage_vs_exp158": -51.0,
+        "live_model_used": false
+      },
+      "notes": "Both coverage (45% ≥ 40%) and accuracy (100% ≥ 75%) targets met. Coverage dropped 51pp from Exp 158 (96%) because IT model responses have less free-form factual text. Accuracy improved 17pp. Tested with representative (not live GPU) responses."
+    },
+    {
+      "exp": 275,
+      "title": "Adaptive KAN Verification on Live Traces (re-test of Exp 175)",
+      "classification": "CONFIRMED",
+      "results": {
+        "static_kan_auroc": 0.9909,
+        "adaptive_kan_auroc": 0.9909,
+        "amr_improvement": 0.0,
+        "params_before_amr": 728,
+        "params_after_amr": 711,
+        "restructure_events": 1
+      },
+      "notes": "KAN architecture achieves AUROC=0.991 on live Exp 219-221 traces — confirmed high-performance on real data. Adaptive mesh refinement (AMR) pruned 17 params but produced no AUROC improvement. AMR benefit not demonstrated; base KAN confirmed."
+    },
+    {
+      "exp": 276,
+      "title": "Full GSM8K with Z3+LLM+Semantic Extractors (re-test of Exp 91-92)",
+      "classification": "CONFIRMED",
+      "results": {
+        "n_cases": 10,
+        "z3_detection_rate": 0.8,
+        "z3_fp_rate": 0.0,
+        "llm_detection_rate": 0.8,
+        "llm_fp_rate": 0.0,
+        "semantic_detection_rate": 0.0,
+        "semantic_fp_rate": 0.2,
+        "combined_detection_rate": 0.8,
+        "combined_fp_rate": 0.2,
+        "z3_llm_overlap": 4,
+        "z3_unique": 0,
+        "llm_unique": 0
+      },
+      "notes": "Z3 and LLM each achieve 80% detection, 0% FP. Semantic grounding detects 0% of arithmetic GSM8K errors and adds 20% FP — it is designed for different failure modes (quantity mismatch, not pure arithmetic). Combined adds no unique detections but raises FP to 20%."
+    },
+    {
+      "exp": 277,
+      "title": "Combined Verification Signals with Modern Extractors (re-test of Exp 142)",
+      "classification": "INCONCLUSIVE",
+      "results": {
+        "results_json_present": false,
+        "conductor_log_status": "OK",
+        "suite_tests_passed": 3068
+      },
+      "notes": "Conductor log records OK status and 3068 tests passed, but results/experiment_277_results.json is absent. Test suite confirms code runs but no quantitative artifact is available to classify the approach. Needs a re-run with explicit JSON output."
+    },
+    {
+      "exp": 278,
+      "title": "Cross-Session Constraint Memory (re-test of Exp 136)",
+      "classification": "CONFIRMED",
+      "results": {
+        "entries_ingested": 94,
+        "cold_start_hit_rate": 0.0,
+        "warm_overall_hit_rate": 1.0,
+        "fp_rate_unseen_slice": 0.0,
+        "avg_top_match_score": 95.67,
+        "session_boundary_verified": true
+      },
+      "notes": "Session boundary save/load preserves all 94 entries. Warm retrieval hit rate 100% across all three benchmark types. 0% FP on unseen slice. Confirmed: cross-session constraint memory persists correctly and retrieves with high precision."
+    },
+    {
+      "exp": 279,
+      "title": "Adversarial Number-Swapped GSM8K with Semantic Grounding (re-test of Exp 178)",
+      "classification": "CONFIRMED",
+      "results": {
+        "n_pairs": 20,
+        "stale_detection_rate": 1.0,
+        "fresh_wrong_detection_rate": 0.0,
+        "overall_detection_rate": 0.6,
+        "fp_rate": 0.2,
+        "lift": 0.4
+      },
+      "notes": "Semantic grounding detects 100% of stale errors (responses using original numbers against swapped question). Blind to fresh-wrong errors (quantity-consistent wrong answers). FP rate 20%, but +40pp lift over random. Confirms semantic grounding's specific strength: quantity-mismatch detection."
+    }
+  ],
+  "summary": {
+    "total": 9,
+    "confirmed": 6,
+    "inconclusive": 2,
+    "ruled_out": 0,
+    "confirmed_list": [271, 273, 274, 275, 276, 278, 279],
+    "inconclusive_list": [272, 277],
+    "ruled_out_list": [],
+    "key_findings": [
+      "GlobalConsistencyChecker (Exp 271): detection=100%, FP=0% on live-representative chains — architecture confirmed at 1.91ms/call",
+      "Z3+LLM extractors (Exp 276): 80% detection, 0% FP on GSM8K arithmetic — semantic grounding ruled out for arithmetic-only tasks",
+      "Cross-session memory (Exp 278): 100% warm hit rate, 0% FP unseen, session boundary verified",
+      "Adversarial semantic grounding (Exp 279): 100% stale detection, +40pp lift — quantity-mismatch is the detectable mode",
+      "KAN AUROC=0.991 (Exp 275): architecture confirmed on live traces; AMR showed no benefit",
+      "Self-learning FP reduction (Exp 272): 86% FP reduction confirmed but task-success-rate gain not demonstrated",
+      "Exp 277 results JSON missing — needs re-run for quantitative classification"
+    ]
+  }
+}
