@@ -1530,3 +1530,5 @@ python/ |
 | 2026-04-14 11:15 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
 | 2026-04-14 11:35 UTC | Exp 302: Self-learning integrated benchmark — cons | OK | 3846 passed, 39 skipped, 13 warnings in 213.23s (0:03:33) |
 | 2026-04-14 11:36 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
+| 2026-04-14 11:51 UTC | Exp 303: AMD XDNA NPU VitisAI unblock — install ni | OK | 3862 passed, 53 skipped, 13 warnings in 212.78s (0:03:32) |
+| 2026-04-14 11:52 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
