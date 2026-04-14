@@ -8,6 +8,34 @@ Never claim 'all tests pass' when output shows failures.
 Keep text between tool calls to <=25 words.
 Spawn an adversarial sub-agent to review non-trivial changes before reporting completion.
 
+## Documentation and Communication Standards
+
+- **No emojis in public documentation.** README, landing page, technical report, and usage guide must be emoji-free. Professional presentation is critical for community credibility.
+- **Verbose layman explanations in code.** All docstrings and comments should explain WHY, not just WHAT. Write for engineers who are not EBM specialists.
+- **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
+- **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
+
+## Security Requirements
+
+- **All embedded secrets must use SOPS encryption** at rest. Never commit plaintext API keys, tokens, or credentials.
+- **Code execution sandbox:** Use `CARNOT_USE_SANDBOX=1` for gvisor-sandboxed execution of untrusted code. Default is in-process exec for development speed.
+- **trust_remote_code is gated:** HuggingFace model loading requires `CARNOT_TRUST_REMOTE_CODE=1` to enable remote code execution. Default is False (safe).
+- **Production autoresearch:** Use Firecracker microVMs for sandbox isolation when running autonomous experiments in production.
+
+## Project Vision (Three Phases)
+
+1. **Phase 1 (current):** Verify and repair LLM outputs using constraint-based energy models. Ship a useful product.
+2. **Phase 2 (medium-term):** Hardware acceleration via Extropic TSU, FPGA Ising machines, and potentially photonic computing.
+3. **Phase 3 (long-term):** Evolve into an open-source foundation model based on hardware-acceleratable EBM/EBT. Functional parity with Kona — continuous latent space, non-autoregressive reasoning, self-correcting. Apache 2.0, hardware-portable.
+
+The verify-repair pipeline is Phase 1, not the endgame. Every architectural decision should ask: "does this move us toward the foundation model?"
+
+## Operational Principles
+
+- **Meta-reflection:** After milestones, evaluate HOW work was executed, not just WHAT was produced. Feed operational improvements back into the process.
+- **Continuous improvement:** Domain (verification accuracy), process (experiment speed), and strategy (research direction) all improve together as a unified self-learning system.
+- **The energy function is ground truth.** It cannot be gamed. This is the invariant across all three phases.
+
 ## Development Workflow (MANDATORY)
 
 This project uses **spec-anchored development** (BMAD + OpenSpec). Every code change follows:
