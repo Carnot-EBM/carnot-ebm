@@ -1598,3 +1598,7 @@ python/ |
 | 2026-04-14 22:58 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 22:58 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
 | 2026-04-14 22:58 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
+| 2026-04-14 23:30 UTC | Exp 320: D-Wave sampler backend with local Neal si | OK | 97 passed in 4.99s |
+| 2026-04-14 23:31 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-14 23:31 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
+| 2026-04-14 23:31 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
