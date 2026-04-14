@@ -1,0 +1,31 @@
+{
+  "experiment": 314,
+  "description": "AMD XDNA NPU prereq retry \u2014 blocked: source build prerequisites still missing",
+  "run_date": "20260414",
+  "execution_path": "blocked_prereq",
+  "prereq_check": {
+    "ninja_installed": false,
+    "openblas_installed": false,
+    "cmake_version": "4.3.1",
+    "cmake_sufficient": true,
+    "ryzen_ai_sw_present": true,
+    "vitisai_so_present": true,
+    "vaip_config_present": true,
+    "venv_npu_present": true,
+    "ninja_install_command": "sudo pacman -S ninja  (Arch)  OR  sudo apt install ninja-build  (Debian/Ubuntu)",
+    "openblas_install_command": "sudo pacman -S openblas  (Arch)  OR  sudo apt install libopenblas-dev  (Debian/Ubuntu)"
+  },
+  "prereq_changes": {
+    "ninja": "still_missing",
+    "openblas": "still_missing"
+  },
+  "build_outcome": null,
+  "inference_result": null,
+  "honest_verdict": "blocked_prereq",
+  "onnx_model_considered": "/home/ianblenke/github.com/ianblenke/carnot/results/jepa_predictor_291.onnx",
+  "next_steps": [
+    "Install ninja: sudo pacman -S ninja  (Arch)  OR  sudo apt install ninja-build  (Debian/Ubuntu)",
+    "Install openblas: sudo pacman -S openblas  (Arch)  OR  sudo apt install libopenblas-dev  (Debian/Ubuntu)",
+    "Then re-run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_314_npu_prereq_install.py"
+  ]
+}
