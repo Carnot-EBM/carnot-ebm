@@ -1849,6 +1849,72 @@ Exp 282 pattern (SCENARIO-VERIFY-082).
 **Then** `.npy` files exist at 25/50/75/100% prefix fractions in `data/research/`
 **And** each file stores a 1-D object array of per-question `(seq_len, vocab_size)` tensors
 
+### REQ-VERIFY-073: Apple Adversarial Analysis And Classification (Exp 284)
+
+The repository shall provide `scripts/experiment_284_apple_analysis.py` that:
+- loads `results/experiment_282_results.json` (baseline) and
+  `results/experiment_283_results.json` (verify-repair) when available
+- answers the five key questions defined in SCENARIO-VERIFY-088
+- classifies the overall result as one of: `CONFIRMED` (primary criterion met),
+  `PARTIAL` (some improvement but primary criterion not met), `RULED_OUT`
+  (no improvement on number_swap), or `INCONCLUSIVE` (results files missing,
+  stall detected, or insufficient data)
+- writes `results/experiment_284_results.json` with the analysis
+
+### REQ-VERIFY-074: compute_delta Function
+
+`compute_delta(baseline_acc, mode_acc)` shall return `mode_acc - baseline_acc` as a
+float rounded to four decimal places.  Both inputs must be floats in [0, 1].
+
+### REQ-VERIFY-075: classify_result Function
+
+`classify_result(primary_met, partial_improvement, stall_detected)` shall return:
+- `"INCONCLUSIVE"` when `stall_detected` is True or both booleans are False
+  with no positive delta present
+- `"CONFIRMED"` when `primary_met` is True
+- `"PARTIAL"` when `partial_improvement` is True and `primary_met` is False
+- `"RULED_OUT"` otherwise
+
+### SCENARIO-VERIFY-088: Five Key Questions Answered In Exp 284
+
+**Given** Exp 282 and Exp 283 result artifacts (or their absence)
+**When** `experiment_284_apple_analysis.py` runs
+**Then** the output JSON contains answers to all five key questions:
+  1. `apple_drop_replicated` — True iff number_swap caused ≥15 pp accuracy drop vs standard
+  2. `verify_repair_delta_larger_on_swap` — True iff Δ(verify_repair, number_swap) > Δ(verify_repair, standard) for at least one model
+  3. `irrelevant_sentence_ignored` — True iff irrelevant_sentence accuracy drop < 5 pp vs standard
+  4. `extractor_firing_summary` — dict mapping extractor name to fire count across all questions
+  5. `dual_model_consistent` — True iff Qwen and Gemma produce the same classification for the overall result
+
+### SCENARIO-VERIFY-089: INCONCLUSIVE Classification When Results Files Missing
+
+**Given** `results/experiment_282_results.json` or `results/experiment_283_results.json`
+  does not exist
+**When** `experiment_284_apple_analysis.py` runs
+**Then** `classification` equals `"INCONCLUSIVE"`
+**And** `missing_artifacts` lists the missing file names
+**And** docs are NOT updated (no file writes to docs/)
+
+### SCENARIO-VERIFY-090: compare_vs_exp235 Returns Comparison Dict
+
+**Given** `number_swap_acc` (float in [0,1]) and `exp235_gemma_verify_repair_acc=0.475`
+**When** `compare_vs_exp235(number_swap_acc, exp235_acc)` is called
+**Then** the returned dict contains `delta`, `better_than_exp235` (bool), and
+  `exp235_reference_acc` (float)
+
+### SCENARIO-VERIFY-091: compute_delta Rounds To Four Decimal Places
+
+**Given** baseline_acc=0.4650 and mode_acc=0.4750
+**When** `compute_delta(0.465, 0.475)` is called
+**Then** the result equals `0.01` (rounded to four decimal places)
+
+### SCENARIO-VERIFY-092: Artifact Schema For Exp 284
+
+**Given** a completed Exp 284 analysis run
+**When** the artifact JSON is loaded
+**Then** it contains: `experiment`, `run_date`, `classification`, `missing_artifacts`,
+  `five_questions`, `exp235_comparison`, `exp279_comparison`, and `analysis_notes`
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
