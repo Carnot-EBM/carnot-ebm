@@ -1594,3 +1594,7 @@ python/ |
 | 2026-04-14 22:49 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
 | 2026-04-14 22:49 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
 | 2026-04-14 22:49 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
+| 2026-04-14 22:57 UTC | Exp 324: Conductor constitution — explicit rules f | OK | 100 passed in 3.39s |
+| 2026-04-14 22:58 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-14 22:58 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
+| 2026-04-14 22:58 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
