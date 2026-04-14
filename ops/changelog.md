@@ -1,5 +1,38 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 294: GPU Stall Diagnosis + Apple Adversarial Baseline Re-Run)
+
+- `scripts/experiment_294_gpu_baseline_apple.py` — Fixes the GPU stall root cause that left
+  Exps 282/283 INCONCLUSIVE for 2 consecutive milestones. Root cause diagnosed: Exp 282's
+  `_default_generate_fn` loaded models lazily inside the per-question closure; on a cold filesystem
+  cache (conductor runs start clean) `AutoModelForCausalLM.from_pretrained()` took 30–120 s, exhausting
+  the 60 s inference timeout on the very first question and leaving both RTX 3090s idle.
+  Fix: `model_prewarm()` explicitly loads each model onto its assigned GPU *before* the timed
+  benchmark loop, runs a health-check prompt to confirm the model responds, and records load time +
+  stall_root_cause ("lazy_load_stall" / "cuda_oom" / "unknown" / None) in the artifact.
+  GPU diagnostics (nvidia-smi free VRAM) are captured at startup. The benchmark re-runs the full
+  Exp 282 baseline: 400-row gsm8k_adversarial_281.jsonl, 3 variants (standard / number_swap /
+  irrelevant_sentence), 2 models (Qwen3.5-0.8B GPU 0, Gemma4-E4B-it GPU 1), logits at
+  25/50/75/100% fractions, checkpoint every 10 questions, 60 s hard timeout → partial artifact.
+  Artifact: `results/experiment_294_results.json`. Schema v2 adds `stall_diagnosis`,
+  `pre_warm_status`, `pre_warm_time_s` fields. REQ-VERIFY-079, SCENARIO-VERIFY-101/102.
+  (user instruction: Exp 294 GPU stall diagnosis + Apple adversarial baseline re-run)
+- `tests/python/test_experiment_294_gpu_baseline_apple.py` — 16 tests covering:
+  PrewarmResult/model_prewarm success (health_ok=True, stall_root_cause=None, load_time_s≥0),
+  load_time_s reflects actual duration,
+  model_prewarm timeout (health_ok=False, stall_root_cause="lazy_load_stall") for both load and
+  generate stalls,
+  artifact schema (all ARTIFACT_SCHEMA fields present, experiment=294, partial flags),
+  baseline accuracy in [0.0, 1.0] for all-correct and all-wrong mock runs,
+  logit .npy files created at prefix fractions (1-D object array, variable seq_len),
+  checkpoint resume (generate_fn not called for completed questions on second run),
+  stall_at field set on TimeoutError (format: "model:variant:question_id"),
+  Apple 2410.05229 hypothesis check (hypothesis_confirmed=True when drop≥15pp, False otherwise).
+  All 16 pass. Full suite: 3523 passed (my new 16 pass; 12 pre-existing retro failures unrelated).
+- `openspec/capabilities/verifiable-reasoning/spec.md` — Added REQ-VERIFY-079 (GPU pre-warm
+  health-check for live inference), SCENARIO-VERIFY-101 (pre-warm returns True on fast mock load),
+  SCENARIO-VERIFY-102 (pre-warm returns False on timeout). Updated traceability table.
+
 ## 2026-04-14 (Operational Retrospective: Milestone 2026.04.21)
 
 - `results/operational_retro_2026_04_21.json` — Process efficiency analysis for the 2026.04.21 milestone: 312 experiments over 4,261 minutes (71.0h), 13.7 min/experiment average (4.40 exp/hour). Critical finding: all 5 slowest experiments are IDENTICAL to those in four consecutive prior retros — Exp 53 (418 min, 9.8% of wall time) now flagged in 5 consecutive milestones without resolution. Action item carry-over for new experiments improved from 100% to 50% (DualGPURunner wired from Exp 282, per-question checkpointing implemented) but all historical slow experiments remain un-revisited. Apple adversarial benchmark remains INCONCLUSIVE for 2nd consecutive milestone (live GPU stall in Exps 282/283). Both RTX 3090s idle at milestone end (2MB residual, 0% utilization) — 5th consecutive milestone with identical GPU cleanup pattern. Estimated 40% wall-time reduction achievable next milestone via: scaffolding template eliminating cold-start (+9%), re-running top-5 slow experiments with current infrastructure (+9%), DualGPURunner from Exp 1 (+10%), inference batching 8–16 per pass (+6%), parallel conductor dispatch (+4%), doc-only test classifier (+3%), live GPU stall diagnosis (+3%), provenance auto-sync hook (+2%), GPU cleanup hook (+2%). (user instruction: write operational retrospective for milestone 2026.04.21)
