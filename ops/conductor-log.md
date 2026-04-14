@@ -1492,3 +1492,7 @@ python/ |
 | 2026-04-14 07:51 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
 | 2026-04-14 07:51 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
 | 2026-04-14 07:51 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
+| 2026-04-14 07:59 UTC | Exp 291: JEPA predictor retrained on Apple adversa | OK | 3423 passed, 28 skipped, 13 warnings in 188.84s (0:03:08) |
+| 2026-04-14 08:00 UTC | Exp 286: SemanticEnergyExtractor + DualEnergyGate  | OK | Deliverable already exists in repo |
+| 2026-04-14 08:00 UTC | Exp 289: FpgaBackend with quantum-inspired sparse  | OK | Deliverable already exists in repo |
+| 2026-04-14 08:00 UTC | Exp 290: FPGA vs CPU Ising benchmark (hardware or  | OK | Deliverable already exists in repo |
