@@ -1552,3 +1552,5 @@ python/ |
 | 2026-04-14 16:03 UTC | Exp 308: JEPA fast-path gate integration and laten | OK | Deliverable already exists in repo |
 | 2026-04-14 17:08 UTC | Exp 309: Tier 3 end-to-end self-learning — real lo | FAIL | Post-tests failed:  |
 | 2026-04-14 17:09 UTC | Exp 309: Tier 3 end-to-end self-learning — real lo | OK | Deliverable already exists in repo |
+| 2026-04-14 17:48 UTC | Exp 310: NL2Z3Extractor — LLM-translated Z3 SMT as | FAIL | Post-tests failed:  |
+| 2026-04-14 17:49 UTC | Exp 310: NL2Z3Extractor — LLM-translated Z3 SMT as | OK | Deliverable already exists in repo |
