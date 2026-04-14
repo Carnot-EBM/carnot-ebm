@@ -48,6 +48,11 @@ POLICY_MIN_CASE_SUPPORT = 2
 POLICY_MIN_CASE_CONFIDENCE = 0.9
 POLICY_MIN_PATCH_SUPPORT = 2
 
+# Exp 224 — Tier 1 live-only retrain constants
+RUN_DATE_224 = "20260413"
+RESULT_OUTPUT_224 = Path("results/experiment_224_results.json")
+WEIGHTS_OUTPUT_224 = Path("results/tier1_live_weights.json")
+
 
 @dataclass(frozen=True)
 class ReplayCase:
@@ -1521,6 +1526,357 @@ def build_self_learning_replay_v2_payload(
     }
 
 
+def train_tier1_weights(
+    cases: list[ReplayCase],
+) -> tuple["ConstraintTracker", dict[str, "_ObservedTypeStats"]]:
+    """Train a ConstraintTracker on the non-held-out (learning) live cases.
+
+    **Researcher summary:**
+        Separates the training phase from evaluation. Iterates over every
+        non-held-out case and accumulates fired/caught counters per error
+        type, then returns the trained tracker so it can be saved to disk
+        and evaluated on the held-out partition.
+
+    **Detailed explanation for engineers:**
+        This is the explicit, replayable training step for Exp 224.
+        Unlike ``run_replay_cases()`` (which trains and evaluates in one
+        online pass), this function only does the training pass, returning
+        both the ConstraintTracker and the observed-type stats dict so the
+        caller can save the weights and run evaluation separately.
+
+        Training uses ONLY live traces — no simulated patterns, no
+        constraint_memory_live_222.json.  Every learning case where the
+        extractor detected an error type contributes:
+          - fired=True always (extractor produced a result)
+          - caught_error=True iff the verification found an actual error
+          - any_error_in_batch mirrors caught_error (one error type per call)
+
+    Spec: REQ-LEARN-001, SCENARIO-LEARN-001
+
+    Args:
+        cases: Full list of ReplayCase objects from build_replay_cases().
+               Held-out cases (held_out=True) are skipped.
+
+    Returns:
+        Tuple of (trained ConstraintTracker, observed_types dict).
+    """
+    tracker = ConstraintTracker()
+    observed_types: dict[str, _ObservedTypeStats] = {}
+    for case in cases:
+        if case.held_out:
+            continue
+        if not case.detected or not case.error_types:
+            continue
+        for error_type in case.error_types:
+            tracker.record(
+                error_type,
+                fired=True,
+                caught_error=case.actual_error,
+                any_error_in_batch=case.actual_error,
+            )
+            stats = observed_types.setdefault(error_type, _ObservedTypeStats())
+            stats.fired += 1
+            stats.true_positives += int(case.actual_error)
+            stats.repair_improvements += int(case.repair_success and not case.baseline_success)
+            stats.repair_harms += int(case.baseline_success and not case.repair_success)
+            stats.source_models.add(case.model_name)
+    return tracker, observed_types
+
+
+def evaluate_tier1_on_held_out(
+    cases: list[ReplayCase],
+    tracker: "ConstraintTracker",
+    observed_types: dict[str, "_ObservedTypeStats"],
+    *,
+    tracker_min_support: int = TRACKER_MIN_SUPPORT,
+    tracker_min_precision: float = TRACKER_MIN_PRECISION,
+) -> dict[str, Any]:
+    """Evaluate a trained ConstraintTracker on the held-out live cases.
+
+    **Researcher summary:**
+        Uses the tracker weights trained in ``train_tier1_weights()`` to
+        make repair-or-not decisions on the held-out partition and reports
+        per-strategy accuracy and false-positive counts.
+
+    **Detailed explanation for engineers:**
+        Two strategies are compared side by side:
+          - ``no_learning``: always repair when the extractor detected
+            something (the baseline that ignores learned weights).
+          - ``tracker_only_live``: use repair only when the learned
+            tracker says the error type has enough support and precision.
+
+        The held-out decisions list records each case outcome so results
+        can be audited or replayed.  False-positive budget is computed the
+        same way as Exp 223 for direct comparability.
+
+    Spec: REQ-VERIFY-033, REQ-VERIFY-034, SCENARIO-VERIFY-033
+
+    Args:
+        cases: Full case list; only held-out cases are evaluated.
+        tracker: Trained ConstraintTracker from train_tier1_weights().
+        observed_types: Observed-type stats from train_tier1_weights().
+        tracker_min_support: Minimum fired count to trust an error type.
+        tracker_min_precision: Minimum precision to trust an error type.
+
+    Returns:
+        Dict with held_out_cases count, strategies, held_out_decisions,
+        and false_positive_regression_budget.
+    """
+    strategies: dict[str, dict[str, Any]] = {
+        "no_learning": _empty_strategy("no_learning"),
+        "tracker_only_live": _empty_strategy("tracker_only_live"),
+    }
+    held_out_decisions: list[dict[str, Any]] = []
+    held_out_cases = 0
+
+    for case in sorted(
+        cases,
+        key=lambda c: (c.source_experiment, c.sample_position, c.model_name, c.case_id),
+    ):
+        if not case.held_out:
+            continue
+        held_out_cases += 1
+        no_learning = _Decision(
+            use_repair=case.detected,
+            reason="detected" if case.detected else "baseline_only",
+        )
+        tracker_decision = _tracker_decision(
+            case,
+            tracker=tracker,
+            observed_types=observed_types,
+            tracker_min_support=tracker_min_support,
+            tracker_min_precision=tracker_min_precision,
+        )
+        _record_strategy_outcome(strategies["no_learning"], case, decision=no_learning)
+        _record_strategy_outcome(strategies["tracker_only_live"], case, decision=tracker_decision)
+        held_out_decisions.append(
+            {
+                **case.to_dict(),
+                "strategies": {
+                    "no_learning": {
+                        "use_repair": no_learning.use_repair,
+                        "reason": no_learning.reason,
+                        "final_success": case.success_for(no_learning.use_repair),
+                    },
+                    "tracker_only_live": {
+                        "use_repair": tracker_decision.use_repair,
+                        "reason": tracker_decision.reason,
+                        "support_models": list(tracker_decision.support_models),
+                        "matched_error_types": list(tracker_decision.matched_error_types),
+                        "final_success": case.success_for(tracker_decision.use_repair),
+                    },
+                },
+            }
+        )
+
+    for strategy in strategies.values():
+        _normalise_strategy(strategy)
+
+    no_learning_fp = strategies["no_learning"]["overall"]["false_positives"]
+    live_fp = strategies["tracker_only_live"]["overall"]["false_positives"]
+    additional = live_fp - no_learning_fp
+
+    return {
+        "held_out_cases": held_out_cases,
+        "strategies": strategies,
+        "held_out_decisions": held_out_decisions,
+        "false_positive_regression_budget": {
+            "policy": "zero_additional_false_positives_vs_no_learning",
+            "tracker_only_live": {
+                "baseline_false_positives": no_learning_fp,
+                "strategy_false_positives": live_fp,
+                "additional_false_positives": additional,
+                "within_budget": additional <= 0,
+            },
+        },
+    }
+
+
+def build_tier1_live_retrain_payload(
+    *,
+    exp219: dict[str, Any],
+    exp220: dict[str, Any],
+    exp221: dict[str, Any],
+    exp223_reference: dict[str, Any],
+    holdout_fraction: float = HOLDOUT_FRACTION,
+    tracker_min_support: int = TRACKER_MIN_SUPPORT,
+    tracker_min_precision: float = TRACKER_MIN_PRECISION,
+) -> tuple[dict[str, Any], "ConstraintTracker"]:
+    """Build the Exp 224 payload: live-only Tier 1 retrain with held-out evaluation.
+
+    **Researcher summary:**
+        Trains the Tier 1 ConstraintTracker on ONLY the live traces from
+        Exp 219-221 (first 75% of each experiment), then evaluates on the
+        held-out 25%.  Produces the results JSON and the trained weights
+        (returned as a ConstraintTracker so the caller can save them).
+
+    **Detailed explanation for engineers:**
+        Pipeline:
+          1. build_replay_cases() — extract events from Exp 219/220/221,
+             assign held_out flags using the same 75/25 split as Exp 223.
+          2. train_tier1_weights() — accumulate tracker counters on
+             learning cases only (no simulated data, no external memory).
+          3. evaluate_tier1_on_held_out() — apply the trained tracker
+             to the held-out partition, reporting no_learning vs
+             tracker_only_live strategies.
+          4. Build comparison dict against Exp 223 tracker_only results.
+
+    Spec: REQ-VERIFY-033, REQ-VERIFY-034, REQ-LEARN-001
+
+    Args:
+        exp219/220/221: Loaded JSON payloads from the live experiments.
+        exp223_reference: Loaded Exp 223 JSON for comparison.
+        holdout_fraction: Fraction held out (default 0.25, same as Exp 223).
+        tracker_min_support: Minimum fired count threshold.
+        tracker_min_precision: Minimum precision threshold.
+
+    Returns:
+        Tuple of (payload dict, trained ConstraintTracker).
+    """
+    cases = build_replay_cases(
+        exp219=exp219,
+        exp220=exp220,
+        exp221=exp221,
+        holdout_fraction=holdout_fraction,
+    )
+
+    # Step 1: Train tracker weights on live learning cases only.
+    tracker, observed_types = train_tier1_weights(cases)
+
+    # Step 2: Evaluate on held-out partition.
+    eval_results = evaluate_tier1_on_held_out(
+        cases,
+        tracker,
+        observed_types,
+        tracker_min_support=tracker_min_support,
+        tracker_min_precision=tracker_min_precision,
+    )
+
+    # Step 3: Build comparison to Exp 223 tracker_only baseline.
+    exp223_tracker_overall = (
+        exp223_reference.get("strategies", {})
+        .get("tracker_only", {})
+        .get("overall", {})
+    )
+    live_overall = eval_results["strategies"]["tracker_only_live"]["overall"]
+    comparison = {
+        "reference_experiment": 223,
+        "reference_strategy": "tracker_only",
+        "note": (
+            "Exp 224 trains on ONLY live traces from Exp 219-221 with an "
+            "explicit separate training phase; weights are persisted. "
+            "Exp 223 tracker_only also used live traces but in an online "
+            "pass without saving weights."
+        ),
+        "exp223_success_rate": exp223_tracker_overall.get("success_rate", 0.0),
+        "exp224_success_rate": live_overall.get("success_rate", 0.0),
+        "success_rate_delta": (
+            live_overall.get("success_rate", 0.0)
+            - exp223_tracker_overall.get("success_rate", 0.0)
+        ),
+        "exp223_false_positives": exp223_tracker_overall.get("false_positives", 0),
+        "exp224_false_positives": live_overall.get("false_positives", 0),
+        "false_positive_delta": (
+            int(live_overall.get("false_positives", 0))
+            - int(exp223_tracker_overall.get("false_positives", 0))
+        ),
+        "within_fp_budget": (
+            int(live_overall.get("false_positives", 0))
+            <= int(exp223_tracker_overall.get("false_positives", 0))
+        ),
+    }
+
+    # Training summary derived from tracker stats.
+    tracker_stats = tracker.stats()
+    types_meeting_threshold = sum(
+        1
+        for s in tracker_stats.values()
+        if s["fired"] >= tracker_min_support and s["precision"] >= tracker_min_precision
+    )
+    training_cases = sum(1 for c in cases if not c.held_out)
+
+    _, case_count_219 = _sample_positions(exp219)
+    _, case_count_220 = _sample_positions(exp220)
+    _, case_count_221 = _sample_positions(exp221)
+
+    payload: dict[str, Any] = {
+        "experiment": 224,
+        "run_date": RUN_DATE_224,
+        "title": "Tier 1 live-only retrain — ConstraintTracker on Exp 219-221 live traces",
+        "metadata": {
+            "source_artifacts": [str(path) for path in SOURCE_ARTIFACTS],
+            "output_path": str(RESULT_OUTPUT_224),
+            "weights_path": str(WEIGHTS_OUTPUT_224),
+            "held_out_policy": {
+                "name": "final_quarter_per_experiment",
+                "fraction": holdout_fraction,
+                "case_counts": {
+                    "219": case_count_219,
+                    "220": case_count_220,
+                    "221": case_count_221,
+                },
+            },
+            "tracker_policy": {
+                "min_support": tracker_min_support,
+                "min_precision": tracker_min_precision,
+            },
+            "training_data": "live_only_exp_219_220_221",
+            "no_simulated_data": True,
+        },
+        "training_summary": {
+            "training_cases": training_cases,
+            "constraint_types_observed": len(tracker_stats),
+            "types_meeting_threshold": types_meeting_threshold,
+            "tracker_stats": tracker_stats,
+        },
+        "held_out_summary": {
+            "held_out_cases": eval_results["held_out_cases"],
+            "strategies": eval_results["strategies"],
+            "false_positive_regression_budget": eval_results[
+                "false_positive_regression_budget"
+            ],
+        },
+        "comparison_to_exp223": comparison,
+        "held_out_decisions": eval_results["held_out_decisions"],
+    }
+    return payload, tracker
+
+
+def run_experiment_224(
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Load Exp 219-221 and Exp 223 artifacts, write Exp 224 results + weights.
+
+    **Detailed explanation for engineers:**
+        Convenience entry point for the experiment script. Loads all source
+        artifacts from the repo, calls build_tier1_live_retrain_payload(),
+        writes the results JSON and the tracker weights JSON, and returns
+        the payload dict.
+
+        Output files:
+          - results/experiment_224_results.json — full evaluation artifact
+          - results/tier1_live_weights.json — trained tracker (ConstraintTracker format)
+
+    Spec: REQ-VERIFY-033, REQ-LEARN-001
+    """
+    resolved_repo = (repo_root or get_repo_root()).resolve()
+    exp219 = load_json(resolved_repo / SOURCE_ARTIFACTS[0])
+    exp220 = load_json(resolved_repo / SOURCE_ARTIFACTS[1])
+    exp221 = load_json(resolved_repo / SOURCE_ARTIFACTS[2])
+    exp223 = load_json(resolved_repo / EXP223_REFERENCE)
+    payload, tracker = build_tier1_live_retrain_payload(
+        exp219=exp219,
+        exp220=exp220,
+        exp221=exp221,
+        exp223_reference=exp223,
+    )
+    result_path = resolved_repo / RESULT_OUTPUT_224
+    weights_path = resolved_repo / WEIGHTS_OUTPUT_224
+    write_json(result_path, payload)
+    tracker.save(str(weights_path))
+    return payload
+
+
 def run_experiment(
     repo_root: Path | None = None,
     result_path: Path | None = None,
@@ -1572,21 +1928,28 @@ __all__ = [
     "POLICY_MIN_CASE_SUPPORT",
     "POLICY_MIN_PATCH_SUPPORT",
     "RESULT_OUTPUT",
+    "RESULT_OUTPUT_224",
     "RESULT_OUTPUT_V2",
     "RUN_DATE",
+    "RUN_DATE_224",
     "RUN_DATE_V2",
     "ReplayCase",
     "SOURCE_ARTIFACTS",
     "SOURCE_ARTIFACTS_V2",
     "TRACKER_MIN_PRECISION",
     "TRACKER_MIN_SUPPORT",
+    "WEIGHTS_OUTPUT_224",
     "build_exp241_replay_cases",
     "build_replay_cases",
     "build_self_learning_replay_payload",
     "build_self_learning_replay_v2_payload",
+    "build_tier1_live_retrain_payload",
+    "evaluate_tier1_on_held_out",
     "get_repo_root",
     "run_experiment",
+    "run_experiment_224",
     "run_experiment_v2",
     "run_replay_cases",
     "run_replay_cases_v2",
+    "train_tier1_weights",
 ]
