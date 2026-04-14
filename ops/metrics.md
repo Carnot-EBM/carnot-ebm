@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 313 KV260 Hardware Bring-Up
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T19:11:27Z | 2026-04-14T19:44:20Z | Exp 313 KV260 hardware bring-up: add REQ-SAMPLE-012+SCENARIO-SAMPLE-025/026 to training-inference/spec.md; write 40 tests (37 pass, 3 skip HW); implement experiment_313_kv260_bringup.py (detect_kv260_hardware, spin_validity_check, CPU fallback, AXI round-trip, honest_verdict); run experiment→blocked_no_bitfile; update ops/changelog, status, traceability, hardware-wishlist | ~18k |
+
+---
+
 ## Session: 2026-04-14 PrefillUncertaintyProbe
 
 ### Turn Log

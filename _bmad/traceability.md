@@ -242,3 +242,6 @@
 | SCENARIO-VERIFY-106 | Not Started | Implemented | ViolationConfidence carries score, class, recommendation, evidence |
 | SCENARIO-VERIFY-107 | Not Started | Implemented | repair_gate returns bool for confidence threshold check |
 | SCENARIO-VERIFY-108 | Not Started | Implemented | VerifyRepairPipeline.verify_and_repair_confident gates on confidence threshold |
+| REQ-SAMPLE-012 | Not Started | Implemented | KV260 hardware bring-up with honest_verdict pattern (Exp 313): detect_kv260_hardware, spin_validity_check, _measure_cpu_fallback_latency, _run_hardware_roundtrip, run_experiment |
+| SCENARIO-SAMPLE-025 | Not Started | Implemented | Hardware latency ≤100μs for 100-spin Ising — tested on real HW only (auto-skip in CI) |
+| SCENARIO-SAMPLE-026 | Not Started | Implemented | CPU fallback always measured regardless of hardware status; kv260_detected=False when env var unset |

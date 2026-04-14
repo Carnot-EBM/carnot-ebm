@@ -32,6 +32,21 @@ production goals. Updated as new needs emerge from experiments.
   - Latest Intel FPGA, competitive with Xilinx
   - Supplier: intel.com/fpga
 
+### KV260 Bring-Up Status (Exp 313 — 20260414)
+
+- **Exp 313 result:** `honest_verdict=blocked_no_bitfile`
+  - CARNOT_KV260_BITFILE env var not set on this machine
+  - KV260 hardware should have arrived — bring-up blocked by missing bitfile path
+  - CPU fallback latency measured: ≈358ms/call (JAX JIT first-compile overhead)
+- **To resume bring-up on the KV260:**
+  1. Boot KV260 to Ubuntu/PetaLinux image with PYNQ installed
+  2. Build or flash the Carnot Ising bitfile (see `hardware/kv260/ising_sampler_v1.v`)
+  3. Set `export CARNOT_KV260_BITFILE=/path/to/carnot_ising.bit`
+  4. Run: `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_313_kv260_bringup.py`
+  5. Expected on real HW: `honest_verdict=hardware_working`, `mean_latency_us ≤ 100μs`
+- **Prior bring-up experiments:** Exp 228 (AXI design), Exp 288 (blocked/SW model), Exp 289 (FpgaBackend), Exp 290 (simulation benchmark), Exp 291 (Verilog RTL)
+- **Target (arXiv 2602.15985):** 77.5μs convergence for small problems ≤100 spins
+
 ### FPGA Justification
 - Exp 102: constraint check is 0.005ms on CPU. FPGA would be <1μs.
 - Exp 46b: 5000-var SAT in 0.7s on CPU. FPGA target: <1ms.
@@ -185,9 +200,9 @@ production goals. Updated as new needs emerge from experiments.
 | Item | Est. Cost | Impact | Unblocks |
 |------|-----------|--------|----------|
 | AMD XDNA NPU SDK install | $0 | Medium | Tier 3 self-learning, edge deployment |
-| Kria KV260 FPGA | $250 | High | TSU path, FPGA sampling prototype |
+| ~~Kria KV260 FPGA~~ | $250 | High | **ARRIVED — bitfile needed to complete bring-up (Exp 313)** |
 | 128GB DDR5 RAM | $300 | Medium | Larger models, batch benchmarks |
 | ~~RX 7900 XTX GPU~~ | ~~$900~~ | ~~Very High~~ | **REPLACED: 2x RTX 3090 connected via CUDA** |
-| ~~Kria KV260 FPGA~~ | $249 | High | **ORDERED — arriving in 4 business days** |
+| ~~Kria KV260 FPGA~~ | $249 | High | **ARRIVED — see Exp 313 bring-up status above** |
 | Alveo U250 FPGA | $6,000 | Very High | Production-scale Ising, 256k p-bits |
 | Extropic Z1 TSU | TBD | Transformative | Native thermodynamic sampling |

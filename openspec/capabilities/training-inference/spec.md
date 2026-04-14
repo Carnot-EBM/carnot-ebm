@@ -415,6 +415,41 @@ implements identical logic in numpy for test validation without physical FPGA.
   (h_eff_i = Σ_j J_ij s_j) to within Q8.8 quantization error (< 0.01)
 **And** the total energy E = -Σ_ij J_ij s_i s_j matches the Python reference
 
+### REQ-SAMPLE-012: KV260 Hardware Round-Trip Latency ≤100μs for 100-Spin Ising (Exp 313)
+
+The system shall attempt actual KV260 FPGA hardware bring-up and, when the hardware
+is available, demonstrate a 100-spin Ising sampling round-trip within 100μs:
+
+- Detect hardware availability via CARNOT_KV260_BITFILE env var, pynq import, and
+  overlay load; each detection step is recorded as a named check
+- When hardware is not available, emit an honest_verdict from the set:
+  "blocked_no_bitfile", "blocked_pynq", "blocked_overlay", "blocked_timeout"
+- When hardware is available, measure 100 trials of 100-spin sampling and record
+  mean_latency_us and p99_latency_us
+- CPU fallback latency is always measured (100 trials) for comparison, regardless
+  of hardware status
+- Artifact schema: experiment=313, honest_verdict, kv260_detected, bringup_steps_passed,
+  hardware_latency_us (null if not working), cpu_fallback_latency_us
+- honest_verdict="hardware_working" only when: overlay loads, AXI register round-trip
+  succeeds, all returned spins are ±1, and mean_latency_us ≤ 100μs
+
+### SCENARIO-SAMPLE-025: Hardware Latency Within 100μs For 100-Spin Ising
+
+**Given** the KV260 overlay loads and AXI-Lite register map is accessible
+**When** 100 trials of 100-spin Ising sampling are measured end-to-end
+**Then** mean_latency_us ≤ 100 and p99_latency_us ≤ 200
+**And** all returned spin values are exactly +1 or −1
+**And** honest_verdict = "hardware_working" is recorded in the artifact
+
+### SCENARIO-SAMPLE-026: CPU Fallback Always Measured For Comparison
+
+**Given** any execution path (hardware working or blocked)
+**When** the experiment completes
+**Then** cpu_fallback_latency_us is present and non-negative in the artifact
+**And** the artifact records honest_verdict (never fabricated as "hardware_working"
+  when hardware was not exercised)
+**And** kv260_detected is False when CARNOT_KV260_BITFILE is unset or pynq is absent
+
 ### SCENARIO-TRAIN-003: Checkpoint Round-Trip
 
 **Given** a model trained for N steps
@@ -441,3 +476,4 @@ implements identical logic in numpy for test validation without physical FPGA.
 | REQ-SAMPLE-009 | Not Started | Implemented | 68 Python (21 Exp 288 bringup + 47 Exp 289 FpgaBackend) |
 | REQ-SAMPLE-010 | Not Started | Implemented | 27 Python (Exp 290 benchmark + tests) |
 | REQ-SAMPLE-011 | Not Started | Implemented | 30 Python (Exp 291 RTL behavioral sim + tests) |
+| REQ-SAMPLE-012 | Not Started | Not Started | Not Started |
