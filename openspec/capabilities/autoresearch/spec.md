@@ -139,6 +139,31 @@ The system shall support transfer of optimization knowledge across model tiers:
 - The `to_prompt_context()` method accepts a target model tier and includes relevant lessons from other tiers
 - Tier-specific edge cases are stored in the references subdirectory, not propagated as general lessons
 
+### REQ-LEARN-010: Constraint Addition from CaseMemory Patterns
+
+When CaseMemory has accumulated error patterns for a violation family with support ≥ 3, the
+system shall generate and add new IsingConstraint types to the active extractor set:
+- `extract_patterns(case_memory, min_support=3)` groups CaseMemory entries by violation_family,
+  computes observed_precision = improved_repairs / total_flagged per family, returns ConstraintPattern
+  objects for families meeting the support threshold.
+- `generate_arithmetic_constraint(pattern)` maps families to targeted constraint types:
+  "carry_error" → carry-propagation check; "sign_error" → sign-consistency check;
+  "magnitude_error" → order-of-magnitude check; unknown families → generic learned check.
+- `add_to_extractor(extractor, constraint)` appends the generated constraint to the extractor's
+  `_dynamic_constraints` list without removing or modifying any existing constraints.
+- `constraint_already_exists(extractor, constraint_id)` prevents duplicate insertion.
+
+### REQ-LEARN-011: Soundness Bound for Constraint Addition
+
+Constraint addition shall be gated by a soundness bound derived from arXiv 2603.03538
+(CoT Verifier Online Learnability):
+- `soundness_filter(patterns, min_precision=0.85)` returns only patterns where
+  observed_precision ≥ min_precision (85% of flagged cases were confirmed real errors).
+- Patterns below min_precision are explicitly logged as "rejected_soundness" in the
+  `ConstraintGenerator.generation_log`, not silently dropped.
+- The 0.85 threshold ensures that generated constraints have high precision — they rarely
+  flag correct answers — preserving the soundness of downstream verification.
+
 ## Scenarios
 
 ### SCENARIO-AUTO-001: Successful Self-Improvement Cycle
@@ -240,6 +265,41 @@ The system shall support transfer of optimization knowledge across model tiers:
 **And** the generator's prompt contains this cross-tier knowledge
 **And** the generated hypothesis tries HMC on the Gibbs tier
 
+### SCENARIO-LEARN-015: extract_patterns Groups CaseMemory by Violation Family
+
+**Given** a CaseMemory with 5 entries for violation_family "carry_error" (3 "improved", 2 "unchanged_failure")
+**When** `extract_patterns(case_memory, min_support=3)` is called
+**Then** one ConstraintPattern is returned for family "carry_error"
+**And** observed_precision = 3/5 = 0.60
+**And** support_count = 5
+**And** families below min_support=3 are absent from the result
+
+### SCENARIO-LEARN-016: soundness_filter Rejects Low-Precision Patterns
+
+**Given** two ConstraintPatterns: one with observed_precision=0.90 and one with 0.60
+**When** `soundness_filter(patterns, min_precision=0.85)` is called
+**Then** only the pattern with precision 0.90 is returned
+**And** the rejected pattern is NOT silently dropped — it must be tracked by the caller
+
+### SCENARIO-LEARN-017: generate_arithmetic_constraint Maps Families to Constraint Types
+
+**Given** ConstraintPatterns for families "carry_error", "sign_error", "magnitude_error"
+**When** `generate_arithmetic_constraint(pattern)` is called for each
+**Then** "carry_error" yields a LearnedConstraint with constraint_id "learned:carry_error"
+**And** "sign_error" yields constraint_id "learned:sign_error"
+**And** "magnitude_error" yields constraint_id "learned:magnitude_error"
+**And** each LearnedConstraint has a human-readable description of what it checks
+
+### SCENARIO-LEARN-018: ConstraintGenerator Orchestrates and Logs All Outcomes
+
+**Given** a CaseMemory with high-precision carry_error (precision=0.92), low-precision sign_error (0.60),
+and an already-existing magnitude_error constraint in the extractor
+**When** `ConstraintGenerator().generate_from_memory(case_memory, extractor)` is called
+**Then** generation_log["carry_check:carry_error"] == "added"
+**And** generation_log["sign_consistency:sign_error"] == "rejected_soundness"
+**And** generation_log["magnitude_check:magnitude_error"] == "already_exists"
+**And** only carry_error is added to extractor._dynamic_constraints
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -258,3 +318,5 @@ The system shall support transfer of optimization knowledge across model tiers:
 | REQ-AUTO-012 | N/A | Implemented | 11+ Python |
 | REQ-AUTO-013 | N/A | Implemented | 9+ Python |
 | REQ-AUTO-014 | N/A | Implemented | Integration |
+| REQ-LEARN-010 | N/A | Implemented | 22 Python |
+| REQ-LEARN-011 | N/A | Implemented | 22 Python |

@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-14 (ConstraintGenerator from CaseMemory — REQ-LEARN-010, REQ-LEARN-011)
+
+- `python/carnot/pipeline/constraint_generator.py` (new module) — ConstraintGenerator converts
+  high-precision CaseMemory failure patterns into new IsingConstraint types and adds them to
+  the active extractor set.  Implements soundness bound from arXiv 2603.03538 (CoT Verifier
+  Online Learnability).
+  - `ConstraintPattern` dataclass: pattern_type, violation_family, observed_precision,
+    support_count, example_violations, constraint_template, source_memory_keys.
+  - `extract_patterns(case_memory, min_support=3)`: groups CaseMemory entries by
+    violation_family, computes observed_precision = improved_repairs / total_flagged per
+    family, returns patterns with total_support >= min_support.
+  - `soundness_filter(patterns, min_precision=0.85)`: keeps only patterns where
+    observed_precision >= 0.85 (arXiv 2603.03538 bound).
+  - `generate_arithmetic_constraint(pattern)`: maps families to LearnedConstraint objects —
+    "carry_error" → carry propagation check; "sign_error" → sign consistency check;
+    "magnitude_error" → order-of-magnitude check; unknown families → generic fallback.
+  - `LearnedConstraint`: stable constraint_id ("learned:{family}"), description, pattern ref.
+  - `constraint_already_exists(extractor, constraint_id)`: duck-typed deduplication guard.
+  - `add_to_extractor(extractor, constraint)`: purely additive; never removes existing constraints.
+  - `ConstraintGenerator.generate_from_memory(case_memory, extractor)`: orchestrates
+    extract → filter → generate → add pipeline; `generation_log` records each pattern outcome
+    as "added", "rejected_soundness", or "already_exists".
+- `openspec/capabilities/autoresearch/spec.md`: added REQ-LEARN-010, REQ-LEARN-011,
+  SCENARIO-LEARN-015, SCENARIO-LEARN-016, SCENARIO-LEARN-017, SCENARIO-LEARN-018.
+- 41 tests in `tests/python/test_constraint_generator.py` at 100% module coverage.
+- Full suite: **3741 passed**, 39 skipped, 0 failures.
+- REQ-LEARN-010, REQ-LEARN-011, SCENARIO-LEARN-015–018.
+
 ## 2026-04-14 (Exp 299: JEPA Real Logits Retrain — REQ-JEPA-003)
 
 - `scripts/experiment_299_jepa_real_logits.py` — JEPA predictor retrained on real
