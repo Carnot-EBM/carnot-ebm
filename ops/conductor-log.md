@@ -1449,3 +1449,5 @@ python/ |
 | 2026-04-14 01:22 UTC | Exp 271: Global consistency checker on live multi- | FAIL | Claude Code error: Stalled after 600s silence. Last output:  |
 | 2026-04-14 01:23 UTC | Exp 271: Global consistency checker on live multi- | OK | Deliverable already exists in repo |
 | 2026-04-14 01:43 UTC | Exp 272: Self-learning Tier 1 retrained on live tr | FAIL | Post-tests failed:  |
+| 2026-04-14 01:53 UTC | Exp 272: Self-learning Tier 1 retrained on live tr | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-14 01:54 UTC | Exp 272: Self-learning Tier 1 retrained on live tr | OK | Deliverable already exists in repo |
