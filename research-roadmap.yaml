@@ -460,7 +460,7 @@ tasks:
          - detect_kv260_hardware(): checks CARNOT_KV260_BITFILE env, pynq import, overlay load
          - honest_verdict: one of "hardware_working"/"blocked_no_bitfile"/"blocked_pynq"/
            "blocked_overlay"/"blocked_timeout"
-         - spin_validity_check(spins): all spins ∈ {-1, +1}, array shape matches n_spins
+         - spin_validity_check(spins): all spins ∈ (-1, +1), array shape matches n_spins
          - latency_measurement: n_trials=100, reports mean_latency_us, p99_latency_us
          - artifact schema: experiment=313, honest_verdict, kv260_detected, latency_us if working
          - hardware not available: all HW tests auto-skip (same pattern as Exp 303)
@@ -593,9 +593,9 @@ tasks:
          g. [CI COMPUTATION] wilson_interval(correct, n_total) → (lower, upper) at 95%
          h. [CHECKPOINT] checkpoint_save() every 50 questions
          i. [ARTIFACT SCHEMA] Flat result with:
-            - per_model_results: {model_name: {mode: {accuracy, ci_lower, ci_upper, n_total}}}
-            - per_variant_results: {standard, number_swap, irrelevant_sentence} for GSM8K
-            - published_baselines: {Qwen3.5-0.8B: 0.25, Gemma4-E4B-it: 0.80}
+            - per_model_results: (model_name: {mode: {accuracy, ci_lower, ci_upper, n_total)}}
+            - per_variant_results: (standard, number_swap, irrelevant_sentence) for GSM8K
+            - published_baselines: (Qwen3.5-0.8B: 0.25, Gemma4-E4B-it: 0.80)
             - inference_mode: "live_gpu" or "simulated"
             - schema: "carnot.fullscale_benchmark.v1"
          j. Output path: results/experiment_316_fullscale_results.json (executed by Exp 316)

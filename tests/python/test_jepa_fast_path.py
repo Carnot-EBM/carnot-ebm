@@ -114,7 +114,7 @@ class TestPredictEnabled:
         mock_session = _make_mock_session(raw)
         gate._session = mock_session  # inject pre-built session
 
-        dummy = np.zeros(16, dtype=np.float32)
+        dummy = np.zeros(8, dtype=np.float32)
         result = gate.predict(dummy)
         expected = 1.0 / (1.0 + math.exp(-raw))
         assert abs(result - expected) < 1e-6
@@ -123,7 +123,7 @@ class TestPredictEnabled:
         """sigmoid(0) = 0.5."""
         gate = JepaGate(onnx_path="dummy.onnx")
         gate._session = _make_mock_session(0.0)
-        dummy = np.ones(16, dtype=np.float32)
+        dummy = np.ones(8, dtype=np.float32)
         assert abs(gate.predict(dummy) - 0.5) < 1e-6
 
     def test_predict_large_negative_gives_near_zero(self) -> None:
@@ -141,7 +141,7 @@ class TestPredictEnabled:
         assert gate.predict(dummy) > 1.0 - 1e-6
 
     def test_session_called_with_reshaped_input(self) -> None:
-        """REQ-JEPA-005: Input is reshaped to (1, N) before ONNX call."""
+        """REQ-JEPA-005: Input is reshaped to (1, 8) before ONNX call."""
         gate = JepaGate(onnx_path="dummy.onnx")
         mock_session = _make_mock_session(0.0)
         gate._session = mock_session
@@ -300,7 +300,7 @@ class TestVerifyWithGate:
         raw = math.log(0.2 / 0.8)  # sigmoid^-1(0.2) — energy ≈ 0.2
         gate._session = _make_mock_session(raw)
 
-        dummy_logits = np.zeros(16, dtype=np.float32)
+        dummy_logits = np.zeros(8, dtype=np.float32)
         result = self.pipeline.verify_with_gate(
             question="Is 7 prime?",
             response="Yes, 7 is prime.",
@@ -323,7 +323,7 @@ class TestVerifyWithGate:
         raw = math.log(0.9 / 0.1)  # sigmoid^-1(0.9) — energy ≈ 0.9
         gate._session = _make_mock_session(raw)
 
-        dummy_logits = np.zeros(16, dtype=np.float32)
+        dummy_logits = np.zeros(8, dtype=np.float32)
         result = self.pipeline.verify_with_gate(
             question="What is 2 + 2?",
             response="2 + 2 = 4.",
@@ -397,7 +397,7 @@ class TestLatencyBenchmark:
                 response=f"A{i}",
                 domain="arithmetic",
                 jepa_gate=gate,
-                logit_mean=np.zeros(4, dtype=np.float32),
+                logit_mean=np.zeros(8, dtype=np.float32),
             )
             if result.certificate.get("gate_decision") == "skip":
                 n_skipped += 1
@@ -415,7 +415,7 @@ class TestLatencyBenchmark:
                 response=f"A{i}",
                 domain="arithmetic",
                 jepa_gate=gate,
-                logit_mean=np.zeros(4, dtype=np.float32),
+                logit_mean=np.zeros(8, dtype=np.float32),
             )
             if result.certificate.get("gate_decision") == "skip":
                 n_skipped += 1

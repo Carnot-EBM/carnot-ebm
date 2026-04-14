@@ -116,9 +116,10 @@ def build_corpus(n: int, violation_rate: float, seed: int = 42) -> list[dict[str
             response = f"The answer is {a} + {b} = {wrong}."
         else:
             response = f"The answer is {a} + {b} = {correct}."
-        # Simulated logit mean: random normal, shape (32,).
-        # In a live run these would be the actual mean logit values from the LLM.
-        logit_mean: list[float] = np_rng.randn(32).astype(np.float32).tolist()
+        # Simulated logit mean: random normal, shape (8,) — matching the JEPA
+        # ONNX model input dimension.  In a live run these would be the actual
+        # mean logit values projected to the model's feature dimension.
+        logit_mean: list[float] = np_rng.randn(8).astype(np.float32).tolist()
         corpus.append(
             {
                 "question": f"What is {a} + {b}?",

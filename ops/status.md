@@ -21,6 +21,11 @@
 - **Run:** `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_308_jepa_gate_benchmark.py`
 - **Output:** `results/experiment_308_jepa_gate_benchmark.json`
 - 28 new tests pass; jepa_fast_path.py: 100% coverage.
+- **Benchmark result (2026-04-14):** TARGET NOT MET — Exp 291 model emits energy ~0.73 for all
+  simulated arithmetic logit vectors; skip_rate=0.0 at all thresholds [0.3, 0.5, 0.7].
+  Exp 307 ONNX model (`jepa_predictor_307.onnx`) not yet produced — blocked on real GPU logits
+  from Exps 294/295. Fix: run Exps 294+295, then retrain via Exp 307 script, then rerun Exp 308.
+  logit_mean feature dimension corrected to 8 (matching Exp 291 ONNX input shape).
 - Spec: REQ-JEPA-005, SCENARIO-JEPA-010, SCENARIO-JEPA-011.
 
 ### Exp 307: JEPA MLP Retrain on Real Logits (REQ-JEPA-004, SCENARIO-JEPA-008/009)
