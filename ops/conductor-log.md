@@ -1457,3 +1457,4 @@ python/ |
 | 2026-04-14 02:46 UTC | Exp 274: Factual extractor (Wikidata) on live IT m | FAIL | Post-tests failed:  |
 | 2026-04-14 02:47 UTC | Exp 274: Factual extractor (Wikidata) on live IT m | OK | Deliverable already exists in repo |
 | 2026-04-14 03:22 UTC | Exp 275: Adaptive KAN verification with live trace | OK | Deliverable already exists in repo |
+| 2026-04-14 03:38 UTC | Exp 276: Full GSM8K with Z3+LLM+semantic extractor | OK | 3002 passed, 26 skipped, 13 warnings in 172.75s (0:02:52) |
