@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Exp 282 Apple Baseline GPU
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T05:15:06Z | 2026-04-14T05:22:16Z | Exp 282: GPU baseline inference on Apple adversarial corpus — 16 tests, AppleBaselineRunner with DualGPURunner wired at start, logits at 25/50/75/100%, checkpoint every 10q, 60s timeout → partial artifact with stall_at, 3128 total tests pass | ~18k |
+
+---
+
 ## Session: 2026-04-14 Milestone 2026.04.21 Planning
 
 ### Turn Log
