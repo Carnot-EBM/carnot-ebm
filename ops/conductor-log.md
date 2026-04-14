@@ -1520,3 +1520,5 @@ python/ |
 | 2026-04-14 10:07 UTC | Exp 296: Apple adversarial analysis, classificatio | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-14 10:08 UTC | Exp 296: Apple adversarial analysis, classificatio | OK | Deliverable already exists in repo |
 | 2026-04-14 10:08 UTC | Exp 297: SemanticEnergyExtractor + VarEntropyProbe | OK | Deliverable already exists in repo |
+| 2026-04-14 10:30 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | 3649 passed, 39 skipped, 13 warnings in 212.11s (0:03:32) |
+| 2026-04-14 10:31 UTC | Exp 298: PrefillUncertaintyProbe — pre-generation  | OK | Deliverable already exists in repo |
