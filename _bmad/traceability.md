@@ -183,3 +183,11 @@
 | SCENARIO-EXP259-A | Not Started | Implemented | CUDA EP detection and availability check via ort.get_available_providers() |
 | SCENARIO-EXP259-B | Not Started | Implemented | Artifact schema with hardware_paths (cpu_numpy, onnx_cpu, onnx_cuda), latency/throughput metrics, speedup ratios, and run_date tracking |
 | SCENARIO-EXP259-C | Not Started | Implemented | Honest blocker handling when CUDAExecutionProvider unavailable; no GPU numbers fabricated |
+| REQ-VERIFY-064 | Not Started | Implemented | GPU-based baseline inference on Apple adversarial corpus (Exp 281) with dual-model evaluation |
+| REQ-VERIFY-065 | Not Started | Implemented | Logit tensor persistence at multiple prefix fractions (25/50/75/100%) |
+| REQ-VERIFY-066 | Not Started | Implemented | Checkpoint and resume support for inference runs with partial artifact handling |
+| REQ-VERIFY-067 | Not Started | Implemented | Apple adversarial hypothesis testing (number_swap accuracy drop ≥15pp) |
+| SCENARIO-VERIFY-080 | Not Started | Implemented | Artifact schema validation (schema=carnot.apple_baseline.v1, all required fields) |
+| SCENARIO-VERIFY-081 | Not Started | Implemented | Checkpoint resume skips already-processed questions with ≤1 generate call |
+| SCENARIO-VERIFY-082 | Not Started | Implemented | Logit tensor shape and file persistence (object array of (seq_len, vocab_size) tensors) |
+| SCENARIO-VERIFY-083 | Not Started | Implemented | Variant type breakdown and accuracy drop detection across standard/number_swap/irrelevant_sentence |
