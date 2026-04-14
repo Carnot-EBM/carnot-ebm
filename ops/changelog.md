@@ -1,5 +1,31 @@
 # Carnot — Changelog
 
+## 2026-04-14 (Exp 304: HuggingFace actual upload — Python API credential fallback, FCV live)
+
+Experiment 304 resolves the Exp 293 credential blocker. `huggingface-cli` is absent from PATH
+but `huggingface_hub` Python API is installed with a valid write token (user: ianblenke, org: Carnot-EBM).
+Exp 304 adds a Python API fallback in `check_hf_credentials_304()` and drives the Exp 293
+sub-functions directly (bypassing Exp 293's internal CLI check) to complete the upload.
+
+**Upload outcome:**
+- `Carnot-EBM/carnot-formal-claim-verifier-v1` — LIVE on HuggingFace Hub. Arithmetic and
+  comparison ONNX (opset 13) + pure-Python set_membership+boolean_entailment verifier.
+- `Carnot-EBM/carnot-joint-constraint-v1` — SKIPPED: `results/experiment_66_model.safetensors`
+  absent (not synthesized; publishing random weights under a 1.0 AUROC claim would be dishonest).
+
+- `scripts/experiment_304_hf_publish.py` (new):
+  - `check_hf_credentials_304()`: tries CLI first; falls back to `HfApi().whoami()`.
+  - `run_experiment_304()`: imports Exp 293 sub-functions directly; injects validated HfApi instance.
+  - `_update_readme_hf_section()`: appends Exp 304 note to README HF section on live upload.
+  - Blocked path: `exp_304_next_action` field with `huggingface-cli login --token <token>` hint.
+- `tests/python/test_experiment_304_hf_publish.py` (new): 24 tests across 5 test classes.
+  - TestCredentialCheck304, TestBlockedArtifact304, TestSuccessfulCredentialPath304,
+    TestResultsJsonSchema304 (on-disk file).
+- `results/experiment_304_hf_results.json` (new): credentials_available=true, upload_status=uploaded.
+- Full suite: **3886 passed**, 54 skipped (coverage 98.86%, pre-existing gap).
+- Triggered by: user instruction (HF publish attempt, Exp 293 credential unblock).
+- README.md updated: Exp 304 note appended under HuggingFace section.
+
 ## 2026-04-14 (Exp 303: AMD XDNA NPU Unblock — prereq check, source build path, honest blocker)
 
 Experiment 303 extends Exp 292's blocked artifact with a full unblock workflow. Prereq check
