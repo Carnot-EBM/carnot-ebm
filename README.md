@@ -155,7 +155,7 @@ Two Phase 1 research artifacts are published to [Carnot-EBM](https://huggingface
 | Exp 66 joint EBM + Ising | [Carnot-EBM/carnot-joint-constraint-v1](https://huggingface.co/Carnot-EBM/carnot-joint-constraint-v1) | safetensors | Phase 1 prototype. 1.0 AUROC on held-out validation (simulated training). |
 | FormalClaimVerifier | [Carnot-EBM/carnot-formal-claim-verifier-v1](https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1) | ONNX + Python | Arithmetic and comparison routes as ONNX (opset 13); set_membership + boolean_entailment as pure Python. |
 
-> ⚠️ Both are tagged `v0.2.0-research`. Phase 1 research prototypes — not production quality.
+> Both are tagged `v0.2.0-research`. Phase 1 research prototypes — not production quality.
 
 ### Revalidation Sweep (Exp 271-279)
 
@@ -166,7 +166,7 @@ Re-ran 9 promising pre-provenance experiments with live or live-representative d
 | 271 | GlobalConsistencyChecker multi-turn | **CONFIRMED** | 100% detection, 0% FP, 1.91ms/call — matches synthetic baseline |
 | 272 | Tier 1 self-learning on live traces | INCONCLUSIVE | 86% FP reduction (7→1) confirmed; task-success rate flat at 32.7% |
 | 273 | Agent rollback verification | **CONFIRMED** | 100% rollback success + 100% violation detection (canned outputs) |
-| 274 | FactualKBExtractor on IT model | **CONFIRMED** | 45% coverage (target 40% ✓), 100% accuracy (target 75% ✓) |
+| 274 | FactualKBExtractor on IT model | **CONFIRMED** | 45% coverage (target 40%), 100% accuracy (target 75%) |
 | 275 | Adaptive KAN on live traces | **CONFIRMED** | AUROC 0.991 on Exp 219-221 traces; AMR pruned 17 params, 0 AUROC gain |
 | 276 | Z3+LLM+semantic on GSM8K | **CONFIRMED** | Z3+LLM: 80% detection / 0% FP; semantic: 0% detection / 20% FP for arithmetic |
 | 277 | Combined verification signals | INCONCLUSIVE | Conductor OK, 3068 tests pass, but results JSON absent — needs re-run |

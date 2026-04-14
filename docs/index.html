@@ -310,12 +310,12 @@
     
     <div class="problem-grid">
       <div class="p-card error">
-        <div class="p-icon">⚠️</div>
+        <div class="p-icon" style="font-size:1.5rem;color:var(--accent-energy);">!</div>
         <h3 class="p-title">Autoregressive Failure</h3>
         <p class="p-text">Token-by-token generation has no global consistency check. One wrong token poisons the entire sequence with no way to backtrack.</p>
       </div>
       <div class="p-card success">
-        <div class="p-icon">✨</div>
+        <div class="p-icon" style="font-size:1.5rem;color:var(--accent-verify);">+</div>
         <h3 class="p-title">Energy-Based Repair</h3>
         <p class="p-text">Energy-Based Models (EBMs) assign energy to the whole output. Low energy = valid. High energy = violation. Repair is done via gradient descent.</p>
       </div>
@@ -330,32 +330,32 @@
 
     <div class="bento-grid">
       <div class="bento-card span-2 row-2">
-        <div class="bento-icon">🧠</div>
+        <div class="bento-icon">E</div>
         <h3 class="bento-title">Four Energy Tiers</h3>
         <p class="bento-text"><strong>KAN</strong> (default): learnable splines, 0.994 AUROC, 8.7x fewer params &mdash; best for verification. <strong>Ising</strong>: fastest sampling, maps to FPGA/TSU hardware. The new <strong>FpgaBackend</strong> (Exp 289) implements the full <code>SamplerBackend</code> protocol with Q8.8 quantization, sparse top-K coupling (max_degree=32), log-linear quantum annealing schedule (6&times; SA speedup claim, arXiv 2604.04606), and LagONN penalty for frustrated instances. Exp 290 benchmark confirms geometric &beta;-schedule wins 3/3 problem sizes. KV260-class sparse <strong>4,096-spin</strong> design with AXI-Lite upload (Exp 228, software-model artifact). Exp 242 keeps the board path honest with the missing-bitfile blocker. <strong>Gibbs</strong>: MLP for complex patterns. <strong>Boltzmann</strong>: deep residual for research. KAN for accuracy, Ising for speed.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">🛠️</div>
+        <div class="bento-icon">V</div>
         <h3 class="bento-title">Verify-Repair Pipeline</h3>
         <p class="bento-text">VerifyRepairPipeline now ships alongside standalone <code>verify_code()</code>, additive <code>verify_generated_code_with_specs()</code>, <code>carnot verify-code</code>, and <code>verify_code_with_pbt</code> on the hardened 7-tool MCP surface. The Hypothesis-backed verifier catches 5/5 under-specified generated-code bugs that execution-only checks miss while preserving 5/5 matching correct solutions (Exp 224), and the spec-aware path now layers official tests, PBT, and explicit spec clauses on one result.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">⚡</div>
+        <div class="bento-icon">G</div>
         <h3 class="bento-title">Energy-Guided Decoding</h3>
         <p class="bento-text">Constraint energy steers token generation in real-time. 0.006ms per check &mdash; 100x faster than a single token generation step. Kona-style reasoning.</p>
       </div>
       <div class="bento-card span-2">
-        <div class="bento-icon">🛡️</div>
+        <div class="bento-icon">R</div>
         <h3 class="bento-title">Adversarial Robust</h3>
         <p class="bento-text">Full 164-problem HumanEval: +3.0pp with 95% CI excluding zero. PBT detects 99.3% of wrong code. The latest seeded Qwen cohort (Exp 227) stays flat at 23.3% &rarr; 23.3% but still catches 2 official-test misses beyond the harness. Typed constraint verification: +4.9pp on Gemma4. All benchmark numbers here are from live GPU inference on real models.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">🤖</div>
+        <div class="bento-icon">A</div>
         <h3 class="bento-title">Agentic Verification</h3>
         <p class="bento-text">ConstraintStateMachine tracks verified facts across multi-step agent workflows. Rollback to last consistent state on violation. Catches logical contradictions that span multiple reasoning steps.</p>
       </div>
       <div class="bento-card">
-        <div class="bento-icon">📈</div>
+        <div class="bento-icon">S</div>
         <h3 class="bento-title">Self-Learning</h3>
         <p class="bento-text">Chronological replay v2 compares <code>no_learning</code>, <code>tracker_only</code>, <code>case_memory</code>, and <code>case_memory_plus_policy</code> across semantic and code traces. All four strategies finish at 34.48% held-out success with 8 false positives; primary success not met, but case memory improves retrieval hit rate to 32.1% and precision to 43.6% (Exp 241 / VERIFY-040). Exp 302 (Tier 1+2 live benchmark) runs the full memory→ConstraintGenerator→confidence-weighted verify-repair pipeline across 100 questions, measuring honest improvement_delta between warmup and enriched batches.</p>
       </div>
