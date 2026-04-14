@@ -1467,3 +1467,4 @@ python/ |
 | 2026-04-14 05:00 UTC | Milestone 2026.04.21 activated | OK | 14 tasks queued |
 | 2026-04-14 05:13 UTC | Exp 281: Apple adversarial GSM8K dataset generator | OK | 3112 passed, 26 skipped, 13 warnings in 171.92s (0:02:51) |
 | 2026-04-14 05:28 UTC | Exp 282: Apple adversarial GSM8K GPU baseline (sav | OK | 3128 passed, 26 skipped, 13 warnings in 176.25s (0:02:56) |
+| 2026-04-14 05:43 UTC | Exp 283: Apple adversarial GSM8K + verify-repair — | OK | 3151 passed, 26 skipped, 13 warnings in 178.98s (0:02:58) |
