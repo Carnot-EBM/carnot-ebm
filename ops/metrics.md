@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-14 Conductor Audit Logging
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-14T22:29:32Z | 2026-04-14T22:36:11Z | Behavioral audit logging: read existing conductor_audit.py + test file; confirmed 52 tests pass; ran full suite: 4619 passed, 2 pre-existing failures (z3_gated_repair, experiment_template timeout), 99.45% coverage | ~5k |
+
+---
+
 ## Session: 2026-04-14 Exp 318 Four-Tier Self-Learning Relay Benchmark
 
 ### Turn Log
