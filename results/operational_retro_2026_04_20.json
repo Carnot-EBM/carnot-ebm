@@ -1,0 +1,131 @@
+{
+  "milestone": "2026.04.20",
+  "generated_at": "2026-04-14T04:43:04Z",
+  "total_wall_time_minutes": 4123,
+  "experiments_completed": 292,
+  "average_minutes_per_experiment": 14.1,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 418,
+      "label": "Exp 53: Runtime constraint instrumentation",
+      "pct_of_total": 10.1,
+      "likely_cause": "Cold-start infrastructure experiment requiring constraint framework construction from scratch. This experiment now appears as the top outlier in FOUR consecutive milestone retros (2026.04.17, .18, .19, .20). Root cause has never been addressed — the fix (milestone cold-start scaffolding template reusing prior Exp infrastructure) was recommended in all three prior retros and implemented in none. At 418 minutes this single experiment consumes 10.1% of the total milestone wall time.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 4
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.8,
+      "likely_cause": "Sequential model loading — Qwen then Gemma loaded into a single GPU in sequence. DualGPURunner is available (wired at Exp 258 in the prior milestone) but was not applied retroactively to re-run Exp 219. No inference batching; each of the 200 GSM8K cases was a single forward pass. Second RTX 3090 idle throughout this experiment.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 3
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 2.0,
+      "likely_cause": "3B-parameter model requires significantly more VRAM and per-call latency than the 0.8B baseline. Verify-repair loop multiplied forward passes (baseline → verify → repair → re-verify) on a single GPU with no batching or parallelization. Second GPU idle throughout.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 3
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.9,
+      "likely_cause": "Typed IR generation pipeline ran sequentially across prompt variants with single-threaded constraint evaluation. DualGPUBenchmarkHarness (Exp 258) was available this milestone but not applied to re-run Exp 221 or future experiments of this class.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 3
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 78,
+      "label": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "pct_of_total": 1.9,
+      "likely_cause": "Multi-domain retraining required full dataset reload and feature extraction per domain in sequence on CPU (JAX_PLATFORMS=cpu). Correct for reproducibility, but the large corpus would benefit from batched CPU parallelism (multiprocessing per domain). No GPU training pipeline invoked.",
+      "carry_over_from_prior_retro": true,
+      "consecutive_retros_flagged": 3
+    }
+  ],
+  "bottlenecks_identified": [
+    "SYSTEMIC: Four consecutive retros with identical top-5 slowest experiments and 100% carry-over rate. This is no longer a per-experiment problem — it is a process failure. Retro recommendations are written as suggestions, never converted to tracked tickets in epics/stories/, and zero are completed before the next milestone begins. The retro process is producing reports but not change.",
+    "DualGPURunner adoption rate remains near zero: wired at Exp 258 of the prior milestone (out of 280), applied to Exp 260 GPU harness, but both RTX 3090s are idle at this milestone's end (2MB each, 0% utilization). Experiments 1-257 of the prior milestone and all new experiments that loaded two models sequentially still ran single-GPU.",
+    "Wall time increased despite similar experiment count: 4001 min for 280 experiments (prior) vs 4123 min for 292 experiments (this milestone). Net rate held at ~14 min/experiment — no throughput improvement. Three milestones of retro recommendations have not moved the average.",
+    "Sequential GPU model loading persists across all non-Exp-258 experiments: both RTX 3090s never ran simultaneously in the experiments that account for 99%+ of wall time. The ~117-minute Exp-219 GSM8K benchmark is the canonical example — Qwen then Gemma, one GPU, sequentially.",
+    "Inference batching still absent: Exp 260 showed ~33s/case for verify_repair on GPU. Batching at batch_size=8-16 would reduce this to ~4-6s/case. No experiment script outside Exp 258/260 uses the DualGPUBenchmarkHarness batch interface.",
+    "CUDA ORT finding from Exp 259 not yet applied: CPU ORT outperforms CUDA ORT 5.49× for the 9→1 linear gate at batch_size=1. The correct hybrid strategy (CPU ORT gate + GPU LLM inference + batched queries) was identified but has not been standardized across experiment scripts.",
+    "Doc provenance drift continues triggering full test suite runs: changelog shows at least 4 separate doc-sync passes (provenance counts, milestone counts, README updates) each triggering the 2500-3100 test suite. Estimated 4-6 conductor turns consumed on avoidable full-suite executions.",
+    "Zombie/residual VRAM not cleaned up: both GPUs show 2MB at 0% utilization at milestone end — same pattern as 2026.04.18 (5MB) and 2026.04.19 (2MB). The gpu_monitor --kill-zombies teardown hook was recommended in two prior retros and not added.",
+    "gpu_monitor.py not running continuously: peak GPU utilization during the milestone is unknown for the third consecutive milestone. The continuous monitoring recommendation appeared in the 2026.04.18 and 2026.04.19 retros and was not implemented.",
+    "Per-question checkpointing still absent on long experiments: Exp 219-class experiments (117 min) checkpoint at cell boundaries, not per-question. Mid-run failure requires full-cell replay instead of 10-question resume."
+  ],
+  "improvements_suggested": [
+    "URGENT: Convert all retro action items to epics/stories/ tickets before the next milestone starts. Create one story per action item with acceptance criteria. Do not start the next milestone until the prior retro's top-3 tickets have been scheduled. The current pattern — write retro, take no action — produces reports, not improvement.",
+    "Assign DualGPUBenchmarkHarness as the default scheduler for any experiment that references two or more models. Update the cold-start experiment template to import DualGPUBenchmarkHarness. Target: dual-GPU parallelization active from experiment 1, not experiment 258.",
+    "Add per-question checkpointing to all live GSM8K, HumanEval, and constraint_ir loops: checkpoint every 10 questions within each cell. Cuts worst-case restart cost for Exp-219-class experiments from 117 min to ~12 min.",
+    "Add a doc-only test classifier to the conductor: if git diff --name-only HEAD touches only README.md, docs/, ops/, results/*.json, _bmad/traceability.md — run only tests/python/test_docs.py (5 tests, ~1s) instead of the full 3100-test suite. This saves ~4-6 full-suite runs per milestone.",
+    "Add a provenance auto-sync pre-commit hook: script counts results/experiment_*_results.json and writes the count into README.md and docs/index.html before every commit. Zero manual provenance-sync passes required.",
+    "Add gpu_monitor.py --kill-zombies to the conductor teardown after each experiment. Add gpu_monitor.py --loop --interval 60 as a background daemon from conductor start, writing timestamped JSON logs to results/gpu_utilization_YYYYMMDD.jsonl.",
+    "Standardize the CPU ORT + GPU LLM hybrid pattern from Exp 259 across all PredictiveVerifier usages: CPU ORT for the linear gate at batch_size<32, GPU LLM inference for the language model calls, batched queries at batch_size=8. Document this in the scaffold template.",
+    "Create a milestone cold-start scaffolding template that pre-wires DualGPUBenchmarkHarness, per-question checkpointing, CPU ORT gate, and artifact schema. Exp 1 of every milestone should be 'configure and validate scaffold', not 'build infrastructure from scratch' — eliminating the Exp-53 pattern entirely.",
+    "Add a parallelism planner to the conductor: parse experiment data-dependency graph and dispatch independent experiments concurrently on separate GPUs. Even a 2-slot parallel dispatch would reduce wall time on independent experiment pairs.",
+    "Replace wall-time estimate in retro with throughput regression: track experiments_per_hour across milestones and flag when it decreases. The current 4.25 exp/hour rate has been flat for 3 milestones — a regression alarm would have surfaced this earlier."
+  ],
+  "estimated_time_savings_pct": 38,
+  "time_savings_breakdown": {
+    "dual_gpu_parallelization_from_exp1_pct": 15,
+    "per_question_checkpointing_pct": 3,
+    "inference_batching_8_to_16_pct": 9,
+    "doc_only_test_classifier_pct": 3,
+    "provenance_auto_sync_hook_pct": 3,
+    "gpu_cleanup_and_zombie_prevention_pct": 2,
+    "scaffolding_template_for_coldstart_pct": 2,
+    "cpu_ort_gpu_llm_hybrid_standardization_pct": 1,
+    "note": "Estimates assume 292 experiments of similar composition. DualGPU gain applies to ~40% of experiments running paired models. Batching gain applies to ~60% with live inference. Checkpoint granularity saves restart cost on long experiments (~5% of count, ~15% of wall time). Savings are additive lower bounds — actual gain is multiplicative, so 38% is conservative. The bottleneck is now the retro-to-ticket conversion process: if the top 5 tickets from this retro are tracked and completed, 38% is achievable; if carry-over repeats, expected gain is 0% (as demonstrated by milestones 2026.04.18-2026.04.20)."
+  },
+  "delta_vs_prior_milestone": {
+    "prior_milestone": "2026.04.19",
+    "wall_time_delta_minutes": 122,
+    "experiments_delta": 12,
+    "throughput_rate_exp_per_hour": 4.25,
+    "prior_throughput_rate_exp_per_hour": 4.20,
+    "throughput_improvement_pct": 1.2,
+    "improvements_implemented_from_prior_retro": [
+      "Exp 273 agent rollback verification — new experiment class using ConstraintStateMachine.rollback()",
+      "Exp 274-279 breadth increase — 6 new experiment classes across semantic grounding, factual KB, and combined benchmarks"
+    ],
+    "prior_retro_recommendations_not_actioned": [
+      "Convert retro action items to tracked tickets — not done; same 5 slowest experiments carry over for 3rd consecutive milestone",
+      "Wire DualGPURunner from experiment 1 — DualGPUBenchmarkHarness available but not used as default scheduler; both GPUs idle at milestone end",
+      "Per-question checkpointing — not implemented; long experiments still checkpoint at cell boundaries only",
+      "Doc-only test classifier — not implemented; provenance sync passes triggered full 3100-test suite multiple times",
+      "Provenance auto-sync pre-commit hook — not implemented; 4+ manual sync passes required this milestone",
+      "GPU cleanup hook (--kill-zombies in teardown) — not added to conductor; 2MB residual on each GPU at milestone end",
+      "Continuous gpu_monitor.py --loop logging — not added; peak utilization unknown for third consecutive milestone",
+      "Milestone cold-start scaffolding template — not created; Exp 53 outlier persists at rank 1 for 4th consecutive milestone",
+      "Parallelism planner for conductor — not implemented",
+      "Inference batching (batch_size=8-16) — still absent outside Exp 258/260 harness"
+    ],
+    "key_new_finding": "Three consecutive milestones of retro recommendations with 100% carry-over rate means the retro process itself is the primary bottleneck. No amount of good suggestions will improve throughput unless there is a mechanism to convert suggestions into tracked, committed tickets before the next milestone starts."
+  },
+  "gpu_state_at_milestone_end": {
+    "gpu_0": {"model": "RTX 3090", "used_mb": 2, "total_mb": 24576, "utilization_pct": 0, "temp_c": 47},
+    "gpu_1": {"model": "RTX 3090", "used_mb": 2, "total_mb": 24576, "utilization_pct": 0, "temp_c": 53},
+    "assessment": "Both GPUs idle at milestone end. 2MB residual on each GPU — identical to 2026.04.19 (2MB) and similar to 2026.04.18 (4-5MB). Pattern is consistent across three milestones: residual handles are never cleaned up. The gpu_monitor --kill-zombies teardown hook was recommended in both prior retros and not implemented. No continuous utilization log was collected, so peak GPU use is unknown for the third consecutive milestone.",
+    "peak_utilization_observed": "Unknown — gpu_monitor.py was not run in continuous --loop mode. Spot check at milestone end shows 0% on both GPUs."
+  },
+  "process_efficiency_notes": {
+    "experiments_per_hour": 4.25,
+    "ideal_experiments_per_hour_with_improvements": 6.5,
+    "estimated_doc_sync_passes": 4,
+    "avoidable_full_suite_runs_estimated": 4,
+    "avoidable_test_minutes_estimated": 6,
+    "retro_carry_over_rate": "5 of 5 slowest experiments unchanged from prior retro — 100% carry-over for 3rd consecutive milestone",
+    "recommendations_actioned_from_prior_retro_pct": 20,
+    "retro_effectiveness_assessment": "Retros are generating accurate diagnoses but producing zero operational change. The root cause is structural: retro outputs are Markdown documents, not tracked tickets. Until retro action items are converted to epics/stories/ issues with acceptance criteria and assigned priority, carry-over will continue."
+  }
+}
