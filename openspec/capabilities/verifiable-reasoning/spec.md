@@ -1697,6 +1697,52 @@ The repository shall provide a constraint-addition compiler in
 **Then** only templates whose `failure_family == "semantic"` are returned
 **And** the returned tuple is sorted by `template_id`
 
+### REQ-VERIFY-063: Apple Adversarial GSM8K Dataset Generation
+
+The repository shall provide a deterministic adversarial dataset generator
+`scripts/experiment_281_apple_adversarial_dataset.py`, where:
+- the generator loads exactly 200 cohort questions from
+  `results/experiment_219_results.json` (the live GSM8K semantic benchmark cohort)
+- for each cohort question two adversarial variants are generated:
+  - `number_swap`: numeric operands in the original question text are replaced
+    with different values drawn from a seeded RNG (seed base `281_000 + i`),
+    producing a question with the same logical structure but a different correct
+    answer; the swap must change at least one number
+  - `irrelevant_sentence`: one contextually plausible but mathematically
+    irrelevant sentence is inserted at a random position in the original
+    question; the correct answer is unchanged
+- each output row carries the fields: `question_id`, `original_question`,
+  `original_answer`, `variant_type`, `variant_question`, `variant_answer`,
+  `provenance`
+- the generator writes 400 rows (200 questions × 2 variants) to
+  `data/research/gsm8k_adversarial_281.jsonl` (one JSON object per line)
+- results metadata is written to `results/experiment_281_results.json`
+  including row count, seed, variant-type counts, and a coverage summary
+- no live model inference is performed — the module is pure dataset generation
+- seeds are drawn from the `281_000+` range to avoid collision with Exp 119
+  seeds (`119`) and Exp 279 seeds (`279_000+`)
+- the generator is reproducible: running it twice with the same inputs produces
+  byte-identical output files
+
+### SCENARIO-VERIFY-078: Number-Swap Variant Changes The Answer
+
+**Given** a cohort question with a known ground-truth answer
+**When** the `number_swap` variant is generated with seed `281_000 + i`
+**Then** at least one numeric value in `variant_question` differs from
+  `original_question`
+**And** `variant_answer != original_answer` for the majority of cohort rows
+  (the swap produces a genuinely different arithmetic result in most cases)
+
+### SCENARIO-VERIFY-079: Irrelevant-Sentence Variant Preserves The Answer
+
+**Given** a cohort question with a known ground-truth answer
+**When** the `irrelevant_sentence` variant is generated
+**Then** the `variant_answer` equals `original_answer` for every row
+**And** `variant_question` contains at least one sentence not present in
+  `original_question`
+**And** the inserted sentence contains a numeric value that does not appear in
+  the original question (to maximize distractor potential)
+
 ### REQ-PRED-001: Predictive Verifier Feature Extraction
 
 The repository shall provide a predictive verifier module in
@@ -1922,6 +1968,7 @@ The predictive verifier shall integrate additively into
 | REQ-VERIFY-060 | Not Started | Implemented | Constraint addition compilation + provenance + serialization + registry tests |
 | REQ-VERIFY-061 | Not Started | Implemented | Process verifier defect detection + serialization tests |
 | REQ-VERIFY-062 | Not Started | Implemented | Process verifier pipeline integration tests |
+| REQ-VERIFY-063 | Not Started | Implemented | Apple adversarial GSM8K dataset generation tests |
 | REQ-JEPA-002 | Not Started | Implemented | 8 Python |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
