@@ -2703,6 +2703,44 @@ Spec: REQ-REPAIR-011, SCENARIO-REPAIR-022
 **And** `z3_gate_skip_rate + ising_trigger_rate == 1.0` (every question takes exactly one path)
 **And** the artifact schema includes `experiment=312`
 
+### REQ-BENCH-001: Full-Scale Credible Benchmark With 95% Confidence Intervals
+
+The system shall provide a full-scale benchmark script (`experiment_315_fullscale_benchmark.py`)
+that measures Carnot verify-repair accuracy against published baselines with statistical rigor:
+
+- GSM8K corpus: 400 questions from Apple adversarial dataset (number_swap, irrelevant_sentence
+  variants) plus standard HuggingFace GSM8K; deterministic synthetic fallback when unavailable
+- HumanEval corpus: 50 problems; PBT execution-based pass@1 evaluation
+- Models: Qwen3.5-0.8B (GPU 0) and Gemma4-E4B-it (GPU 1); DualGPURunner pattern
+- Modes: baseline (no verification), verify_only (violations recorded, no repair),
+  verify_repair (ConfidenceVerifier threshold=0.8), z3_gated (Z3GatedRepair; skipped if unavailable)
+- Confidence intervals: 95% Wilson CI on all accuracy numbers
+- Published baselines recorded in artifact: Qwen3.5-0.8B ~25%, Gemma4-E4B-it ~80% on GSM8K
+- BatchedInferenceRunner(batch_size=8) per Exp 306 pattern; checkpoint every 50 questions
+- Artifact schema: `carnot.fullscale_benchmark.v1` with per_model_results,
+  per_variant_results, published_baselines, inference_mode fields
+- Results written to `results/experiment_316_fullscale_results.json` (executed in Exp 316)
+
+Spec: REQ-BENCH-001, SCENARIO-BENCH-001, SCENARIO-BENCH-002
+
+### SCENARIO-BENCH-001: Wilson CI Bounds Accuracy Numbers
+
+**Given** a benchmark run with N=400 GSM8K questions and n_correct correct answers
+**When** `wilson_interval(n_correct, 400)` is called at 95% confidence
+**Then** the result is a tuple `(lower, upper)` with `0 <= lower <= accuracy <= upper <= 1.0`
+**And** width `(upper - lower) <= 0.05` for any accuracy between 0.3 and 0.7 at N=400
+**And** the interval is narrower than a Wald interval at small n (CI property)
+
+### SCENARIO-BENCH-002: Benchmark Emits Simulated Artifact When GPU Unavailable
+
+**Given** no GPU is available (or `--simulated` flag is set)
+**When** `experiment_315_fullscale_benchmark.py` is run with `--n_gsm8k 10 --n_humaneval 5`
+**Then** the artifact is written to the output path with `inference_mode="simulated"`
+**And** all four modes (baseline, verify_only, verify_repair, z3_gated) are recorded
+**And** the artifact contains `per_model_results` for both Qwen3.5-0.8B and Gemma4-E4B-it
+**And** all accuracy values have `ci_lower` and `ci_upper` fields
+**And** `schema` equals `"carnot.fullscale_benchmark.v1"`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2800,3 +2838,4 @@ Spec: REQ-REPAIR-011, SCENARIO-REPAIR-022
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
+| REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
