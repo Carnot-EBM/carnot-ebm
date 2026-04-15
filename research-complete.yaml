@@ -1665,3 +1665,61 @@ milestones:
     title: 'Exp 337: Operational retrospective for milestone 2026.05.06'
     deliverable: results/operational_retro_2026_05_06.json
     result: OK (conductor)
+- id: 2026.05.13
+  title: Live E2E Precision Pipeline, Constraint Addition from Memory, and EORM Predictive Verification
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp338-host-prereqs-dual-gpu-default
+    title: 'Exp 338: Host prereqs registry + DualGPURunner as default for two-model benchmarks (RETRO-004 + RETRO-006)'
+    deliverable: ops/host-prereqs.md
+    result: OK (conductor)
+  - id: exp339-session-startup-automation
+    title: 'Exp 339: Pre-session GPU health + zombie cleanup automation (RETRO-007 + RETRO-008)'
+    deliverable: scripts/session_startup.sh
+    result: OK (conductor)
+  - id: exp340-live-full-precision-benchmark
+    title: "Exp 340: Live full precision pipeline benchmark \u2014 VERGE + CRV + confidence + adaptive on RTX 3090"
+    deliverable: results/experiment_340_live_precision_benchmark.json
+    result: OK (conductor)
+  - id: exp341-live-humaneval-code-verification
+    title: "Exp 341: Live HumanEval code verification \u2014 CodeExtractor + execution on RTX 3090"
+    deliverable: results/experiment_341_live_humaneval.json
+    result: OK (conductor)
+  - id: exp342-live-extractor-comparison
+    title: "Exp 342: Live extractor comparison \u2014 ArithmeticExtractor vs NL2Z3 vs VERGE vs CRV on same live responses"
+    deliverable: results/experiment_342_live_extractor_comparison.json
+    result: OK (conductor)
+  - id: exp343-constraint-template-library
+    title: "Exp 343: ConstraintTemplateLibrary \u2014 error patterns generate NEW constraint types (Tier 1+2 fusion)"
+    deliverable: python/carnot/pipeline/constraint_template_library.py
+    result: OK (conductor)
+  - id: exp344-constraint-addition-benchmark
+    title: "Exp 344: Constraint addition benchmark \u2014 CaseMemory-to-ConstraintTemplateLibrary wiring + Exp 134 comparison"
+    deliverable: results/experiment_344_constraint_addition_benchmark.json
+    result: OK (conductor)
+  - id: exp345-session-memory-persistence
+    title: "Exp 345: Multi-session memory persistence \u2014 CaseMemory + ConstraintTemplateLibrary across sessions"
+    deliverable: python/carnot/pipeline/session_memory.py
+    result: OK (conductor)
+  - id: exp346-eorm-cot-reward-model
+    title: "Exp 346: EORM-style energy reward model \u2014 train 55M-param CoT ranker on live benchmark data (arXiv 2505.14999)"
+    deliverable: python/carnot/models/eorm.py
+    result: OK (conductor)
+  - id: exp347-jepa-real-retrain
+    title: 'Exp 347: JEPA predictor retraining on real violation pairs from Exp 340 live benchmark'
+    deliverable: results/experiment_347_jepa_real_retrain.json
+    result: OK (conductor)
+  - id: exp348-sink-probe-hallucination-signal
+    title: 'Exp 348: SinkProbe attention-sink hallucination pre-filter (arXiv 2604.10697)'
+    deliverable: python/carnot/pipeline/sink_probe.py
+    result: OK (conductor)
+  - id: exp349-kv260-fpga-synthesis
+    title: 'Exp 349: KV260 FPGA bitfile synthesis via open-source toolchain (yosys + nextpnr)'
+    deliverable: results/experiment_349_kv260_synthesis.json
+    result: OK (conductor)
+  - id: exp350-operational-retro
+    title: 'Exp 350: Operational retrospective for milestone 2026.05.13'
+    deliverable: results/operational_retro_2026_05_13.json
+    result: OK (conductor)
