@@ -1615,3 +1615,8 @@ python/ |
 | 2026-04-15 01:04 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
 | 2026-04-15 01:04 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
 | 2026-04-15 01:04 UTC | Exp 319: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |
+| 2026-04-15 01:26 UTC | Plan milestone 2026.05.06 | OK | 13 tasks proposed |
+| 2026-04-15 01:27 UTC | Exp 311: Extractor benchmark — regex vs LLM vs Z3  | OK | Deliverable already exists in repo |
+| 2026-04-15 01:27 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
+| 2026-04-15 01:27 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
+| 2026-04-15 01:27 UTC | Milestone 2026.05.06 activated | OK | 13 tasks queued |
