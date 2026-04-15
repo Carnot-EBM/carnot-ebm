@@ -184,6 +184,7 @@ from carnot.pipeline.cot_circuit_verifier import (
     extract_cot_steps,
     find_broken_links,
 )
+from carnot.pipeline.session_memory import SessionMemory
 
 __all__ = [
     "AgentStep",
@@ -309,6 +310,7 @@ __all__ = [
     "build_circuit",
     "extract_cot_steps",
     "find_broken_links",
+    "SessionMemory",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",

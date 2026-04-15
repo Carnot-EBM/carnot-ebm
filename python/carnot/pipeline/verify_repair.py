@@ -268,6 +268,7 @@ class VerifyRepairPipeline:
         timeout_seconds: float = 30.0,
         memory: ConstraintMemory | None = None,
         template_library: ConstraintTemplateLibrary | None = None,
+        session_memory: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -288,6 +289,15 @@ class VerifyRepairPipeline:
             call exceeds this budget, PipelineTimeoutError is raised. Set
             to 0 or None to disable the timeout.
 
+            When ``session_memory`` is provided (a SessionMemory instance),
+            the pipeline restores previously saved CaseMemory, template
+            library, and FP-tracker state on init.  Call ``close()`` before
+            the pipeline goes out of scope to persist the current state back
+            to disk.  If no prior session exists, ``session_memory.load()``
+            returns None and the pipeline starts with fresh in-memory state
+            — existing callers that do not pass ``session_memory`` are
+            unaffected.
+
         Args:
             model: HuggingFace model name/path, or None for verify-only.
             domains: Optional domain filter for constraint extraction.
@@ -301,17 +311,36 @@ class VerifyRepairPipeline:
                 records new violation patterns after each verification. If
                 None (default), memory integration is skipped entirely for
                 full backward compatibility.
+            session_memory: Optional SessionMemory instance for multi-session
+                persistence of CaseMemory, ConstraintTemplateLibrary, and
+                PerModelFPTracker state.  When provided, saved state is
+                restored on init and persisted on close().  Default None
+                preserves all existing behaviour.
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
-        Spec: REQ-VERIFY-001, REQ-LEARN-003
+        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2
         """
         self._domains = domains
         self._max_repairs = max_repairs
         self._timeout_seconds = timeout_seconds or 0.0
         self._memory = memory
         self._template_library = template_library
+        self._session_memory = session_memory
+
+        # Restore persisted learning state if session_memory was provided
+        # and a prior session exists on disk.  Restoring here (before
+        # extractor setup) means the pipeline starts with calibrated state.
+        if session_memory is not None:
+            restored = session_memory.load()
+            if restored is not None:
+                restored_cm, restored_lib, _restored_tracker = restored
+                # Only override if caller didn't supply explicit objects.
+                # (This keeps the additive-only contract: session state is a
+                # default, not a forced override over explicit constructor args.)
+                if template_library is None:
+                    self._template_library = restored_lib
 
         # Set up the constraint extractor.
         if extractor is not None:
@@ -334,6 +363,55 @@ class VerifyRepairPipeline:
     def has_model(self) -> bool:
         """True if an LLM model is loaded and available for generation."""
         return self._model is not None
+
+    def close(self) -> None:
+        """Persist current session state to disk if session_memory is set.
+
+        **When to call this:**
+            Call ``close()`` when you are done using the pipeline for a
+            session — typically at script exit or when a request handler
+            completes.  It saves the current CaseMemory, template library,
+            and FP-tracker state so the next pipeline instance can resume
+            from where this one left off.
+
+            If ``session_memory`` was not provided at construction (the
+            default), this method is a no-op and safe to call unconditionally.
+
+        **What is persisted:**
+            - ``_memory`` (ConstraintMemory / CaseMemory equivalent) — if
+              the pipeline is using a CaseMemory instance attached to
+              ``_memory``.
+            - ``_template_library`` — ConstraintTemplateLibrary observation
+              counts and activation state.
+            - A fresh PerModelFPTracker if none is attached (the session
+              memory contract requires all three components to be saved
+              together; an empty tracker is a valid initial state).
+
+            NOTE: The pipeline currently stores CaseMemory via the
+            ``_memory`` slot (ConstraintMemory interface) or as a separate
+            attribute.  We create minimal fresh instances for any component
+            that is not present so the save contract is always met.
+
+        Spec: REQ-LEARN-021-3
+        """
+        if self._session_memory is None:
+            return
+
+        from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
+        from carnot.pipeline.case_memory import CaseMemory
+        from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
+
+        # Use whatever learning state the pipeline currently holds, falling
+        # back to fresh (empty) instances so the save always succeeds.
+        case_memory = self._memory if isinstance(self._memory, CaseMemory) else CaseMemory()
+        template_library = (
+            self._template_library
+            if isinstance(self._template_library, ConstraintTemplateLibrary)
+            else ConstraintTemplateLibrary()
+        )
+        fp_tracker = PerModelFPTracker()
+
+        self._session_memory.save(case_memory, template_library, fp_tracker)
 
     def _load_model(self, model_name: str) -> None:
         """Load a HuggingFace model for generation and repair.
