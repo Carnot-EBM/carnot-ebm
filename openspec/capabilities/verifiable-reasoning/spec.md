@@ -3588,6 +3588,43 @@ experiments continued to run sequentially on GPU 0.
 **And** `model_specs[1]['gpu']` is 1
 **And** the returned dict has `dual_gpu_auto_assigned=True`
 
+### REQ-INFRA-008: Pre-Session Startup Health Check
+
+**Status:** Implemented (Exp 339)
+
+Before launching a research session or experiment run, a startup health check must:
+- Detect how many NVIDIA GPUs are visible via `nvidia-smi`.
+- Identify zombie GPU processes (0% utilisation, >100 MiB VRAM) via `DualGPUMonitor`.
+- Optionally kill zombie processes (only when `--kill-zombies` flag is passed).
+- Print a single-line summary: `SESSION STARTUP: n_gpus=X zombies=Y killed=Z all_healthy=T/F`.
+- Degrade gracefully when `nvidia-smi` is absent (CI environments): report `n_gpus=0`.
+- Exit 0 always (health check, not a blocking requirement).
+
+**Acceptance criteria:**
+- `scripts/session_startup.sh --dry-run` prints the summary line without killing any process.
+- `parse_session_startup_output(output)` returns a dict with keys:
+  `n_gpus_detected`, `n_zombies_found`, `n_zombies_killed`, `all_healthy`.
+- `all_healthy` is `True` iff `n_gpus_detected >= 2` AND `n_zombies_found == 0`.
+- When `nvidia-smi` is absent, `n_gpus_detected=0`, `all_healthy=False`, no exception raised.
+- `run_session_startup(dry_run=True)` never kills any process.
+
+### SCENARIO-INFRA-012: Dry-Run Reports GPUs and Zombies Without Killing
+
+**Given** `scripts/session_startup.sh` exists and is executable
+**And** the system has 0, 1, or 2 GPUs (including CI with no GPUs)
+**When** `run_session_startup(dry_run=True)` is called
+**Then** the returned dict contains keys `n_gpus_detected`, `n_zombies_found`, `n_zombies_killed`, `all_healthy`
+**And** `n_zombies_killed` is 0 (dry-run never kills)
+**And** no `kill -9` command is issued
+
+### SCENARIO-INFRA-013: CI-Safe Degradation When nvidia-smi Absent
+
+**Given** `nvidia-smi` is not installed on the system
+**When** `run_session_startup(dry_run=True)` is called
+**Then** `n_gpus_detected` is 0
+**And** `all_healthy` is `False`
+**And** no exception is raised
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -3798,3 +3835,4 @@ conductor log timestamps for Exps 325–336
 | REQ-RETRO-003 | N/A | Implemented | operational_retro_2026_05_06.json + retro_001_resolved + actual_speedup_pct tests (SCENARIO-RETRO-005/006, Exp 337) |
 | REQ-INFRA-006 | N/A | Implemented | HostPrereqRegistry + ops/host-prereqs.md + check_prereqs() tests (SCENARIO-INFRA-009/010, Exp 338) |
 | REQ-INFRA-007 | N/A | Implemented | DualGPU auto-assignment in setup_gpu() + dual_gpu_auto_assigned key tests (SCENARIO-INFRA-011, Exp 338) |
+| REQ-INFRA-008 | N/A | Implemented | session_startup.sh + session_startup.py + parse_session_startup_output + run_session_startup tests (SCENARIO-INFRA-012/013, Exp 339) |
