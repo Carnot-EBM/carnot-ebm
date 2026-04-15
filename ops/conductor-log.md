@@ -1703,3 +1703,5 @@ python/ |
 | 2026-04-15 07:15 UTC | Milestone 2026.05.13 activated | OK | 13 tasks queued |
 | 2026-04-15 07:46 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 08:10 UTC | Exp 339: Pre-session startup health check (RETRO-007/008) | OK | 63 tests pass; session_startup.sh + session_startup.py; parse_session_startup_output + run_session_startup; RETRO-007 + RETRO-008 implemented; REQ-INFRA-008 |
+| 2026-04-15 08:18 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 08:18 UTC | Exp 339: Pre-session GPU health + zombie cleanup a | OK | Deliverable already exists in repo |
