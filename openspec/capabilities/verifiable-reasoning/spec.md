@@ -4612,6 +4612,60 @@ were idle throughout.  Silent fallback is a correctness bug, not a usability fea
 **Then** no exception is raised
 **And** the returned dict has `all_healthy=False`
 
+### REQ-INFRA-015: Conductor GPU Environment Propagation
+
+The project shall provide a shell environment script at `scripts/conductor_gpu_env.sh`
+that propagates `CARNOT_FORCE_LIVE=1` into conductor subprocess environments for all
+GPU-tagged experiments, where:
+- The script is sourced (not executed) before launching any experiment tagged `requires_gpu=True`
+- The script contains `export CARNOT_FORCE_LIVE=1` as an unconditional top-level export
+- The script contains a comment identifying it as the RETRO-012 fix
+- A `ConductorEnvFix` dataclass records `env_script_path`, `exports` (dict of variable names
+  to values), `apply_cmd` (the shell source command), and `is_documented` (bool)
+- `build_conductor_env_fix(project_root)` creates the script and returns the dataclass
+- `verify_env_script_exports(path)` returns `True` iff the script contains
+  `export CARNOT_FORCE_LIVE=1`
+
+### SCENARIO-INFRA-016: Env Script Created and Contains Correct Export
+
+**Given** `build_conductor_env_fix(project_root)` is called with a valid project root
+**When** the function completes
+**Then** `scripts/conductor_gpu_env.sh` exists under `project_root`
+**And** the file contains `export CARNOT_FORCE_LIVE=1`
+**And** the returned `ConductorEnvFix.exports` dict maps `"CARNOT_FORCE_LIVE"` to `"1"`
+**And** `ConductorEnvFix.apply_cmd` is `"source scripts/conductor_gpu_env.sh"`
+**And** `verify_env_script_exports(path)` returns `True` for the created script
+
+### SCENARIO-INFRA-017: verify_env_script_exports Detects Missing Export
+
+**Given** a file that does NOT contain `export CARNOT_FORCE_LIVE=1`
+**When** `verify_env_script_exports(path)` is called
+**Then** the function returns `False`
+
+**Given** a path that does not exist
+**When** `verify_env_script_exports(path)` is called
+**Then** the function returns `False`
+
+### REQ-INFRA-016: Mandatory Result JSON Per Experiment
+
+Every experiment script shall produce a result JSON at
+`results/experiment_NNN_<slug>.json` before exiting, where:
+- `RetroJSONEnforcer.check_result_json_exists(exp_id, results_dir)` returns `True` iff
+  at least one file matching `experiment_NNN_*.json` exists in `results_dir`
+- `RetroJSONEnforcer.audit_missing_jsons(exp_ids, results_dir)` returns the list of
+  experiment IDs (as ints) for which no matching result JSON exists
+- This enforcer is used in the RETRO-014 close to document the gap for experiments
+  357, 358, and 362 and to prevent recurrence in future experiments
+
+### SCENARIO-INFRA-018: audit_missing_jsons Reports Missing and Present Correctly
+
+**Given** a results directory containing `experiment_357_llm_z3_formalizer.json`
+**And** no file for experiment 358 or 362
+**When** `RetroJSONEnforcer().audit_missing_jsons([357, 358, 362], results_dir)` is called
+**Then** the returned list is `[358, 362]`
+**And** `check_result_json_exists(357, results_dir)` returns `True`
+**And** `check_result_json_exists(358, results_dir)` returns `False`
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -4876,6 +4930,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-007 | N/A | Implemented | DualGPU auto-assignment in setup_gpu() + dual_gpu_auto_assigned key tests (SCENARIO-INFRA-011, Exp 338) |
 | REQ-INFRA-008 | N/A | Implemented | session_startup.sh + session_startup.py + parse_session_startup_output + run_session_startup tests (SCENARIO-INFRA-012/013, Exp 339) |
 | REQ-INFRA-014 | N/A | Implemented | LiveGPUDiagnostic + diagnose_live_gpu() + setup_gpu() RuntimeError on CARNOT_FORCE_LIVE=1 failure (SCENARIO-INFRA-014/015, Exp 352) |
+| REQ-INFRA-015 | N/A | Implemented | ConductorEnvFix + build_conductor_env_fix + verify_env_script_exports + scripts/conductor_gpu_env.sh (SCENARIO-INFRA-016/017, Exp 365). Closes RETRO-012. |
+| REQ-INFRA-016 | N/A | Implemented | RetroJSONEnforcer + check_result_json_exists + audit_missing_jsons (SCENARIO-INFRA-018, Exp 365). Closes RETRO-014. |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360) |

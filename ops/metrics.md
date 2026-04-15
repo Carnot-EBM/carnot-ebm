@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 365 RETRO Close
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T21:58:43Z | TBD | Exp 365: Close RETRO-012/013/014 — build ConductorEnvFix + conductor_gpu_env.sh, RetroJSONEnforcer, RetroItemTracker; spec REQ-INFRA-015/016 + SCENARIO-INFRA-016/017/018; 100% test coverage | TBD |
+
+---
+
 ## Session: 2026-04-15 Milestone 2026.05.27 Planning
 
 ### Turn Log
