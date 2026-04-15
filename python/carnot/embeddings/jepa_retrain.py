@@ -251,16 +251,13 @@ def _text_to_embedding(text: str, embed_dim: int = 64) -> jax.Array:
         return jnp.zeros(embed_dim)
 
     words = text.split()
-    if not words:
-        return jnp.zeros(embed_dim)
 
     # Compute per-word scalar: mean char code / 128
-    word_scalars: list[float] = []
-    for w in words:
-        if w:
-            word_scalars.append(sum(ord(c) for c in w) / (len(w) * 128.0))
-        else:
-            word_scalars.append(0.0)
+    # str.split() on a non-empty string always yields at least one non-empty token,
+    # so we iterate directly without guarding for empty words.
+    word_scalars: list[float] = [
+        sum(ord(c) for c in w) / (len(w) * 128.0) for w in words
+    ]
 
     # Aggregate: mean of per-word scalars
     mean_val = sum(word_scalars) / len(word_scalars)
