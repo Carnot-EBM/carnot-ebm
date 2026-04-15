@@ -1730,3 +1730,5 @@ python/ |
 | 2026-04-15 13:30 UTC | Exp 346: EORM-style energy reward model — train 55 | OK | 81 passed in 23.38s |
 | 2026-04-15 13:31 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 13:31 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 13:56 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 13:56 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
