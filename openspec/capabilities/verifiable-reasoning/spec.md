@@ -3127,6 +3127,41 @@ Spec: REQ-EXTRACT-016, SCENARIO-EXTRACT-033, SCENARIO-EXTRACT-034, SCENARIO-EXTR
 **And** the `description` field names both the downstream and upstream step IDs
 **And** a consistent response returns an empty list
 
+### REQ-EXTRACT-017: Live Extractor Comparison Benchmark
+
+The system shall support a live extractor comparison that runs all four extractor types
+(ArithmeticExtractor, NL2Z3Extractor, VergeRefiner-as-extractor, CoTCircuitVerifier) on
+the same set of live IT model responses and computes:
+- Per-extractor violation_rate, estimated_precision, fp_category_distribution
+- Pairwise agreement matrix: which extractor pairs flag the same responses
+- A recommended_extractor: the extractor with highest estimated_precision (tie: first)
+
+The comparison shall use the Exp 331 FP taxonomy (VALID_INTERMEDIATE, CORRECT_STEP,
+PRECISION_LIMIT, REGEX_ARTIFACT, REPAIR_DEGRADATION) as the reference for precision
+estimation. When live responses are unavailable, synthetic fallback responses are used
+with inference_mode="simulated" clearly recorded in the artifact.
+
+Spec: REQ-EXTRACT-017, SCENARIO-EXTRACT-036, SCENARIO-EXTRACT-037
+
+### SCENARIO-EXTRACT-036: ExtractorResult Captures Per-Extractor Violation Statistics
+
+**Given** a list of 50 responses and a set of four extractors
+**When** `compare_extractors(responses, extractors)` is called
+**Then** one `ExtractorResult` is returned per extractor
+**And** each `ExtractorResult` has `extractor_name`, `n_responses_checked`,
+  `n_violations_found`, `violation_rate`, `estimated_precision`, `fp_categories` (dict)
+**And** `violation_rate` equals `n_violations_found / n_responses_checked`
+**And** `estimated_precision` is in [0.0, 1.0]
+
+### SCENARIO-EXTRACT-037: build_comparison_artifact Selects Recommended Extractor
+
+**Given** a list of `ExtractorResult` objects with varying `estimated_precision` values
+**When** `build_comparison_artifact(results)` is called
+**Then** the artifact has `comparison_schema == "carnot.extractor_comparison.v1"`
+**And** `best_precision` equals the maximum `estimated_precision` across all results
+**And** `recommended_extractor` names the extractor with the highest `estimated_precision`
+**And** when two extractors tie, the first one in the input list is chosen
+
 ### REQ-REPAIR-010: Z3-Gated Repair Pipeline
 
 The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
@@ -3940,6 +3975,7 @@ conductor log timestamps for Exps 325–336
 | REQ-EXTRACT-014 | Not Started | Implemented | FP autopsy experiment + inconclusive artifact + recommended_fix mapping (SCENARIO-EXTRACT-029/030, Exp 331) |
 | REQ-EXTRACT-015 | Not Started | Implemented | CoTCircuitVerifier + CoTStep + extract_cot_steps (SCENARIO-EXTRACT-031/032, Exp 336) |
 | REQ-EXTRACT-016 | Not Started | Implemented | CoTCircuit + build_circuit + find_broken_links + broken link detection (SCENARIO-EXTRACT-033/034/035, Exp 336) |
+| REQ-EXTRACT-017 | Not Started | Implemented | ExtractorResult + compare_extractors + build_comparison_artifact; live 4-way extractor comparison on IT model responses (SCENARIO-EXTRACT-036/037, Exp 342) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
