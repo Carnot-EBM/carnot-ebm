@@ -318,4 +318,9 @@
 | REQ-LEARN-024 | Not Started | Implemented | JEPA real-data fine-tuning — ContextPredictionEnergy retrainer accepts real (partial_response, violation_flag) pairs from live GPU benchmark data (Exp 340) and improves predictor accuracy on unseen test set (Exp 347) |
 | SCENARIO-LEARN-041 | Not Started | Implemented | Extract 50 violation pairs from Exp 340 live GPU data (2 models × ~25 violations each), split 40/10 train/test, verify pair count and schema compliance (Exp 347) |
 | SCENARIO-LEARN-042 | Not Started | Implemented | Retrain JEPA ContextPredictionEnergy on 40 train pairs for 10 epochs, record before/after AUC, save model to safetensors, artifact records inference_mode={simulated|live} (Exp 347) |
+| REQ-VERIFY-086 | Not Started | Implemented | Attention-sink pre-filter module (SinkProbe) detects high concentration on BOS/period tokens, skips Ising verification for confident responses (Exp 348) |
+| REQ-VERIFY-087 | Not Started | Implemented | Ensemble comparison: measure skip_rate, false_negative_rate, true_negative_rate of SinkProbe pre-filter vs Ising-only baseline (Exp 348) |
+| SCENARIO-VERIFY-113 | Not Started | Implemented | SinkProbe correctly identifies 30 synthetic correct responses (high BOS concentration ≈0.6–0.85) and skips verification at threshold=0.3 (Exp 348) |
+| SCENARIO-VERIFY-114 | Not Started | Implemented | SinkProbe correctly identifies 20 synthetic wrong responses (uniform-ish attention, BOS ≈1/seq_len) and does not skip verification at threshold=0.3 (Exp 348) |
+| SCENARIO-VERIFY-115 | Not Started | Implemented | Ensemble improvement measured: fraction of Ising calls saved by SinkProbe pre-filter without increasing false_negative_rate (Exp 348) |
 | SCENARIO-LEARN-040 | Not Started | Implemented | EORMTrainer contrastive_loss is 0 when margin already met; positive (hinge) when violated (Exp 346) |
