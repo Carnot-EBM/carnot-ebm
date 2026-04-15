@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 334: VERGE-Style Iterative Z3 Refinement)
+
+Implemented VERGE-style (arXiv 2601.20055) step-level SMT-guided repair that identifies
+the specific assertion that triggered Z3 UNSAT and repairs only that step, rather than
+rewriting the whole response (Exp 312 approach). Addresses research-program.md direction.
+
+- `python/carnot/pipeline/verge_refiner.py` (new):
+  - `VergeIteration`: dataclass logging one iteration's evidence — `iteration_n`,
+    `assertion_failed`, `step_text`, `repair_prompt`, `repaired_step`, `new_z3_result`, `resolved`.
+  - `extract_failed_assertion(z3_result)`: parses z3_code for first `s.add(...)` body on UNSAT;
+    balanced-paren walk handles nested calls; returns None for SAT/unknown/error.
+  - `build_step_repair_prompt(assertion_failed, full_response)`: targeted prompt asking LLM
+    to fix only the specific step; graceful fallback when assertion_failed is None.
+  - `VergeRefiner(nl2z3_extractor, llm_caller, max_iterations=3)`:
+    `refine(question, response) → (final_response, list[VergeIteration])`.
+    SAT fast-path returns empty log; UNSAT loop patches response and re-verifies.
+- `python/carnot/pipeline/verify_repair.py`: additive `verify_repair_verge()` integration.
+  CI-safe: creates NL2Z3Extractor and no-op llm stub when args are None.
+- `python/carnot/pipeline/__init__.py`: exported `VergeIteration`, `VergeRefiner`,
+  `build_step_repair_prompt`, `extract_failed_assertion`.
+- `tests/python/test_verge_refiner.py` (new): 30 tests, 100% verge_refiner.py coverage.
+  Covers all dataclass fields, all extract_failed_assertion branches (SAT/unknown/error/
+  empty/no-s.add/nested-parens/unbalanced-parens), all build_step_repair_prompt paths,
+  VergeRefiner (SAT fast-path, single-iteration convergence, max-iterations exhaustion,
+  sequential numbering, repaired_step storage, default max_iterations=3, max_iterations=0,
+  None last_z3_result fallback), and pipeline integration.
+- `scripts/experiment_334_verge_refinement.py` (new): 30-question synthetic benchmark.
+  Compares n_resolved/mean_iterations against Exp 312 baseline if present.
+- `openspec/capabilities/verifiable-reasoning/spec.md`: added REQ-REPAIR-012, REQ-REPAIR-013,
+  SCENARIO-REPAIR-024, SCENARIO-REPAIR-025, SCENARIO-REPAIR-026, SCENARIO-REPAIR-027.
+- User instruction: implement VERGE-style iterative Z3 refinement and benchmark vs Exp 312.
+
 ## 2026-04-15 (Exp 333: Model-Adaptive Constraint Thresholds + Selective CaseMemory Consolidation)
 
 Implemented per-model FP/TP tracker that auto-disables noisy constraint types when fp_rate > tp_rate,

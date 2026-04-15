@@ -1577,6 +1577,62 @@ class VerifyRepairPipeline:
         )
         return gate.repair(question, response, domain)
 
+    def verify_repair_verge(
+        self,
+        question: str,
+        response: str,
+        nl2z3_extractor: object | None = None,
+        llm_caller: object | None = None,
+        max_iterations: int = 3,
+    ) -> "tuple[str, list]":
+        """Run VERGE-style iterative Z3 refinement on a chain-of-thought response.
+
+        **Detailed explanation for engineers:**
+            This is the additive integration point for VergeRefiner inside the
+            VerifyRepairPipeline.  It does NOT change verify() or
+            verify_and_repair() — calling it is purely opt-in.
+
+            The VERGE loop (see verge_refiner.py for full details):
+            - Initial Z3 check: SAT → return unchanged response with empty iterations.
+            - UNSAT: extract failed assertion → targeted LLM repair → re-verify.
+            - Repeat up to max_iterations.
+
+        Args:
+            question:         The original question.
+            response:         The response to evaluate and potentially repair.
+            nl2z3_extractor:  Optional pre-configured NL2Z3Extractor instance.
+                              When None, a fresh NL2Z3Extractor() is created.
+            llm_caller:       Optional callable(prompt) -> str for LLM repair.
+                              When None, a no-op stub is used (CI-safe: always
+                              returns "no repair" and never calls a real LLM).
+            max_iterations:   Maximum repair iterations.  Default 3.
+
+        Returns:
+            (final_response, iteration_log) — see VergeRefiner.refine().
+
+        Spec: REQ-REPAIR-012, SCENARIO-REPAIR-024, SCENARIO-REPAIR-025
+        """
+        from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor
+        from carnot.pipeline.verge_refiner import VergeRefiner
+
+        extractor = nl2z3_extractor if nl2z3_extractor is not None else NL2Z3Extractor()
+
+        # CI-safe stub: if no llm_caller provided, use a no-op that returns a
+        # generic "no repair" string without calling a real LLM.
+        if llm_caller is None:
+            def _noop_llm(prompt: str) -> str:  # noqa: ANN001
+                return "[no repair — CI mode]"
+            caller = _noop_llm
+        else:
+            caller = llm_caller  # type: ignore[assignment]
+
+        refiner = VergeRefiner(
+            nl2z3_extractor=extractor,
+            llm_caller=caller,
+            max_iterations=max_iterations,
+        )
+        return refiner.refine(question, response)
+
     def verify_repair_confidence_weighted(
         self,
         question: str,

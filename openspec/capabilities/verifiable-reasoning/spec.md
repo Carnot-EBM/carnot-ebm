@@ -3057,6 +3057,68 @@ Spec: REQ-REPAIR-011, SCENARIO-REPAIR-022
 **And** `z3_gate_skip_rate + ising_trigger_rate == 1.0` (every question takes exactly one path)
 **And** the artifact schema includes `experiment=312`
 
+### REQ-REPAIR-012: VERGE-Style Iterative Z3 Refinement
+
+The system shall provide a `VergeRefiner` component that implements iterative SMT-guided
+step-level repair of chain-of-thought responses, inspired by VERGE (arXiv 2601.20055):
+
+- Initial Z3 check: if SAT, return immediately with no iterations (response is consistent).
+- On UNSAT: extract the specific failed assertion from the Z3 code using
+  `extract_failed_assertion(z3_result)`.
+- Build a targeted repair prompt asking the LLM to correct ONLY the step that produced the
+  failed assertion (`build_step_repair_prompt`).
+- Patch the response with the repaired step and re-run Z3 on the patched response.
+- Repeat until SAT or `max_iterations` reached.
+- Each iteration is recorded as a `VergeIteration` dataclass capturing: `iteration_n`,
+  `assertion_failed`, `step_text`, `repair_prompt`, `repaired_step`, `new_z3_result`,
+  `resolved` (bool — True when Z3 reached SAT on this iteration).
+- Return `(final_response, iteration_log)` from `refine(question, response)`.
+
+Spec: REQ-REPAIR-012, SCENARIO-REPAIR-024, SCENARIO-REPAIR-025
+
+### REQ-REPAIR-013: Step Isolation for Targeted Repair
+
+The system shall provide `extract_failed_assertion(z3_result: Z3Result) -> str | None`
+that identifies the specific assertion in the Z3 code that caused UNSAT:
+
+- Parse z3_code for `s.add(...)` calls using regex; return the first match.
+- Fallback: if no `s.add(...)` found, scan for any `assert` keyword or `z3.solve(...)` args.
+- If z3_code is empty or no assertion found, return `None`.
+- When called with a SAT or non-unsat result, return `None` (no failure to report).
+- The returned string is the assertion body text (what was inside `s.add(...)`).
+
+Spec: REQ-REPAIR-013, SCENARIO-REPAIR-026, SCENARIO-REPAIR-027
+
+### SCENARIO-REPAIR-024: VERGE SAT Fast Path
+
+**Given** a question and response where the Z3 check immediately returns SAT
+**When** `VergeRefiner.refine(question, response)` is called
+**Then** the returned iteration log is empty (no refinement iterations needed)
+**And** the returned final response is identical to the input response
+
+### SCENARIO-REPAIR-025: VERGE Iterative Repair Converges to SAT
+
+**Given** a question and a response whose Z3 check returns UNSAT on the first check
+**And** a mock LLM caller that returns a corrected step
+**And** the re-verification of the patched response returns SAT
+**When** `VergeRefiner.refine(question, response)` is called
+**Then** exactly one `VergeIteration` is returned
+**And** `iteration.resolved == True`
+**And** `iteration.new_z3_result.sat_status == "sat"`
+**And** the returned final response contains the repaired step text
+
+### SCENARIO-REPAIR-026: extract_failed_assertion Returns First s.add() Body
+
+**Given** a Z3Result with `sat_status="unsat"` and `z3_code` containing `s.add(x + y == 10)`
+**When** `extract_failed_assertion(z3_result)` is called
+**Then** the returned string is `"x + y == 10"` (the assertion body)
+
+### SCENARIO-REPAIR-027: extract_failed_assertion Returns None for SAT
+
+**Given** a Z3Result with `sat_status="sat"` (no contradiction)
+**When** `extract_failed_assertion(z3_result)` is called
+**Then** `None` is returned (no failed assertion to surface)
+
 ### REQ-BENCH-001: Full-Scale Credible Benchmark With 95% Confidence Intervals
 
 The system shall provide a full-scale benchmark script (`experiment_315_fullscale_benchmark.py`)

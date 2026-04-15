@@ -280,3 +280,9 @@
 | SCENARIO-VERIFY-110 | Not Started | Implemented | Approximate Language Gets Low Expression Confidence — when response uses "roughly", "about", or vague quantifiers, expression_confidence≤0.5 (Exp 332) |
 | SCENARIO-VERIFY-111 | Not Started | Implemented | Low Variance Energies Give High Variance Confidence — when EBM partition variance≤0.1, variance_confidence≥0.75 (Exp 332) |
 | SCENARIO-VERIFY-112 | Not Started | Implemented | High Variance Energies Give Low Variance Confidence — when EBM partition variance≥0.5, variance_confidence≤0.4 (Exp 332) |
+| REQ-REPAIR-012 | Not Started | Implemented | VERGE-style iterative Z3 refinement — VergeIteration dataclass, VergeRefiner.refine(), SAT fast-path, UNSAT iterative loop; 30 tests 100% coverage (SCENARIO-REPAIR-024/025, Exp 334) |
+| REQ-REPAIR-013 | Not Started | Implemented | Step isolation for targeted repair — extract_failed_assertion() balanced-paren parser, None for non-unsat, first s.add() body on UNSAT (SCENARIO-REPAIR-026/027, Exp 334) |
+| SCENARIO-REPAIR-024 | Not Started | Implemented | VERGE SAT fast path — initial SAT returns empty iteration log, response unchanged |
+| SCENARIO-REPAIR-025 | Not Started | Implemented | VERGE iterative repair converges — UNSAT then SAT produces one iteration with resolved=True |
+| SCENARIO-REPAIR-026 | Not Started | Implemented | extract_failed_assertion returns first s.add() body on UNSAT |
+| SCENARIO-REPAIR-027 | Not Started | Implemented | extract_failed_assertion returns None for SAT |
