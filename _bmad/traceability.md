@@ -24,7 +24,7 @@
 | FR-18 | MCP Server + CLI | `openspec/capabilities/llm-ebm-inference/spec.md` | 49+ Python + integration | MCP verify_code, verify_with_properties, verify_code_with_pbt, verify_llm_output, verify_and_repair, list_domains, health_check, score_candidates; CLI carnot verify + verify-code | Implemented |
 | FR-16 | GPU Compute | N/A | 4 Rust | wgpu Vulkan backend, WebGPU gateway, ROCm 7.2 native gfx1150 | Implemented |
 | FR-17 | Documentation UI | `openspec/capabilities/documentation-ui/spec.md` | 1 Python | Premium aesthetic, glassmorphism, animations | Implemented |
-| FR-19 | Research Reporting Provenance | `openspec/capabilities/research-reporting/spec.md` | 9 Python | `scripts/experiment_209_cleanup.py`, `scripts/experiment_210_research_scan.py`, provenance headers on result artifacts, research scan outputs in docs/results | Implemented |
+| FR-19 | Research Reporting Provenance | `openspec/capabilities/research-reporting/spec.md` | 31 Python | `scripts/experiment_209_cleanup.py`, `scripts/experiment_210_research_scan.py`, `scripts/experiment_317_hf_publish.py`, `scripts/experiment_330_hf_live_publish.py`; provenance headers on result artifacts, research scan outputs in docs/results, HuggingFace model card updates with Phase 1 disclaimers and live-GPU benchmark embedding | Implemented |
 
 ## Non-Functional Requirements
 
@@ -267,3 +267,9 @@
 | SCENARIO-INFRA-004 | Not Started | Implemented | DualGPUMonitor.check_dual_gpu_health() detects zombie processes and returns n_zombies count |
 | SCENARIO-INFRA-005 | Not Started | Implemented | DualGPUMonitor.check_dual_gpu_health() detects idle GPUs and returns idle_gpus list with GPU indices |
 | SCENARIO-INFRA-006 | Not Started | Implemented | ExperimentTemplate.setup_gpu() integrates DualGPUMonitor results in additive gpu_monitor_results key without changing existing behavior |
+| REQ-PUBLISH-003 | Not Started | Implemented | HuggingFace README Accuracy Audit — audit and update all Phase 1 per-token EBM model READMEs with Phase 1 disclaimers and live benchmark links (Exp 317) |
+| SCENARIO-PUBLISH-005 | Not Started | Implemented | Phase 1 patch is idempotent — models already containing Phase 1 disclaimer are skipped without re-upload |
+| SCENARIO-PUBLISH-006 | Not Started | Implemented | Blocked when HF credentials absent — returns artifact with blocked=True, exp_317_next_action with login instructions |
+| REQ-PUBLISH-004 | Not Started | Implemented | Live HF Publish with Live-GPU Benchmarks Embedded — embed Exp 328 live-GPU benchmark results into model READMEs with idempotent patching (Exp 330) |
+| SCENARIO-PUBLISH-007 | Not Started | Implemented | Exp 328 live results embedded in model cards — Phase 1 patch embeds live-GPU accuracy numbers with inference_mode=live_gpu label |
+| SCENARIO-PUBLISH-008 | Not Started | Implemented | Blocked when HF credentials absent (Exp 330) — artifact has status=blocked with next_action containing huggingface-cli login instructions |
