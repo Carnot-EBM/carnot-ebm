@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Milestone 2026.04.29 Full Operational Retrospective)
+
+Full retrospective for the complete 2026.04.29 milestone: 359 experiments, 5093 minutes
+(84.9 hours) total wall time, 14.2 min average per experiment.
+
+Key findings:
+- Slowest experiment: Exp 53 (Runtime constraint instrumentation, 418 min, 8.2% of milestone
+  wall time). No experiment template was available at that point; a 45-min conductor timeout
+  (RETRO-001) would have saved ~373 min on this experiment alone.
+- Sequential GPU execution: Exp 219 (117 min) and Exp 221 (78 min) ran two models one-at-a-time
+  on GPU 0 with GPU 1 idle throughout. DualGPURunner enforcement (RETRO-003) would cut combined
+  wall time from 195 min to ~90 min for that experiment class.
+- Zombie GPU processes: PIDs 2592400 and 2595103 hold ~1050 MB VRAM at 0% utilization.
+  Not blocking but waste allocatable VRAM and should be cleared pre-session.
+- Post-test failure rate: estimated 15-20% for Exp 100-300 era, dropping to ~6% for
+  Exp 300+ after ExperimentTemplate adoption. Test-first enforcement (NEW-001) targets residual.
+- RETRO-001 and RETRO-002 carried forward from 2026.04.22 without implementation for the
+  second consecutive milestone — promoting to blocking story for 2026.05.06.
+
+Estimated speedup for next milestone: 27% (dominated by RETRO-001 timeout, NEW-001 test-first,
+RETRO-003 DualGPU enforcement).
+
+Deliverables:
+- `results/operational_retro_2026_04_29.json` (updated): full v2 retrospective artifact with
+  359 experiments, 5 slowest experiments analyzed, 8 improvements suggested, 27% savings estimate.
+- User instruction: write operational retrospective for milestone 2026.04.29.
+
 ## 2026-04-15 (Exp 319: Operational Retrospective for Milestone 2026.04.29)
 
 Retrospective for the 2026.04.29 milestone (Exp 307–324, 17 experiments).
