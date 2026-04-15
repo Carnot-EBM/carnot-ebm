@@ -813,6 +813,47 @@ tasks:
       8. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md.
       9. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
+  # -- Phase: Wire GPU acceleration end-to-end --
+  - id: exp364-gpu-acceleration-e2e
+    milestone: "2026.05.20"
+    deliverable: results/experiment_364_gpu_acceleration_e2e.json
+    title: "Exp 364: Wire ModelServer + TensorRT + DualGPU into all benchmark harnesses"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+
+      CONTEXT: We built three GPU acceleration pieces but they are not
+      wired end-to-end into all benchmarks:
+      - ModelServer (Exp 224a): warm cache + batched inference + TRT preference
+      - TensorRT backend (Exp 224c): 2-4x per-query speedup
+      - DualGPURunner (Exp 224b): parallel model execution on 2x RTX 3090
+      Currently many experiments still cold-load models and run single-threaded.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/model_server.py -- ModelServer with TRT
+      - python/carnot/inference/dual_gpu.py -- DualGPURunner with model_server param
+      - python/carnot/inference/tensorrt_backend.py -- TRT backend
+      - scripts/experiment_template.py -- ExperimentTemplate with setup_gpu()
+
+      TASK: Wire GPU acceleration into the default experiment pipeline.
+
+      CONCRETE STEPS:
+      1. Update ExperimentTemplate.setup_gpu() to:
+         a. Start a ModelServer with both models (warm cache + TRT)
+         b. Create DualGPURunner with model_server parameter
+         c. Make this the DEFAULT for any experiment with requires_gpu=True
+         d. Add graceful CPU fallback: if no CUDA GPUs detected, fall back
+            to CPU inference with a warning (never fail just because GPU
+            is unavailable -- every experiment must run on CPU-only machines)
+         e. Add a --no-server flag to disable for debugging
+      2. Update the Exp 218 live benchmark harness to use ModelServer by default
+      3. Add a benchmark: measure cold-load vs warm-server vs warm+TRT on 10 questions
+      4. Test the CPU fallback path explicitly (mock torch.cuda.is_available=False)
+      5. Expected result: 3-5x end-to-end speedup on GPU, graceful degradation on CPU
+      6. Write tests
+      7. Run: .venv/bin/pytest tests/python -q
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
   - id: exp363-operational-retrospective
     milestone: "2026.05.20"
     deliverable: results/operational_retro_2026_05_20.json
