@@ -262,3 +262,8 @@
 | SCENARIO-INFRA-001 | Not Started | Implemented | Timeout wrapper executable, has bash shebang, uses timeout command with kill signal, default is 45 minutes, exits code 124 on timeout |
 | SCENARIO-INFRA-002 | Not Started | Implemented | Test stub includes REQ-INFRA-002 comment, autogen header, test class, placeholder test with assert_true, module import, passes ast.parse() |
 | SCENARIO-INFRA-003 | Not Started | Implemented | Test stub generation is idempotent — same path returns same path, never overwrites existing stub |
+| REQ-INFRA-003 | Not Started | Implemented | Dual-GPU process health monitoring — zombie process detection, idle GPU detection, process state enumeration |
+| REQ-INFRA-004 | Not Started | Implemented | ExperimentTemplate.setup_gpu() GPU enforcement — additive gpu_monitor_results key carrying DualGPUMonitor output |
+| SCENARIO-INFRA-004 | Not Started | Implemented | DualGPUMonitor.check_dual_gpu_health() detects zombie processes and returns n_zombies count |
+| SCENARIO-INFRA-005 | Not Started | Implemented | DualGPUMonitor.check_dual_gpu_health() detects idle GPUs and returns idle_gpus list with GPU indices |
+| SCENARIO-INFRA-006 | Not Started | Implemented | ExperimentTemplate.setup_gpu() integrates DualGPUMonitor results in additive gpu_monitor_results key without changing existing behavior |
