@@ -1718,3 +1718,6 @@ python/ |
 | 2026-04-15 10:31 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 10:31 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
 | 2026-04-15 10:31 UTC | Exp 342: Live extractor comparison — ArithmeticExt | OK | Deliverable already exists in repo |
+| 2026-04-15 11:08 UTC | Exp 343: ConstraintTemplateLibrary — error pattern | OK | 145 passed in 25.97s |
+| 2026-04-15 11:09 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 11:09 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
