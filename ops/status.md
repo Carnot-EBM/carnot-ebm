@@ -1047,6 +1047,7 @@
 | 35 | Activation normalization | Z-score/L2/PCA all hurt | ❌ Normalization destroys signal |
 | 36 | **Logit lens divergence** | **50.6% = chance** | **❌ Dynamics identical for correct/wrong** |
 | 37 | EBT in sentence embedding space | 57.5%, loss never decreased | ❌ Sentence encoders embed topic, not truth |
+| 343 | ConstraintTemplateLibrary (Tier 1+2 fusion) | 4 builtin templates, 42 tests 100% coverage | ✅ Constraint type discovery from error patterns |
 | 38 | NLI-based EBM | 70.8% test, 50% practical | ⚠️ NLI detects consistency, not facts |
 | 39 | **thrml Ising SAT solver** | **Beats random at 50+ vars** | **✅ First Extropic-compatible experiment** |
 | 40 | thrml graph coloring | Perfect on 3/6 problems | ✅ Constraint satisfaction via sampling |
