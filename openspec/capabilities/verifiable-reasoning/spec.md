@@ -2858,6 +2858,66 @@ development (NEW-001 action item), where:
 **And** the file contains the string "REQ-INFRA-002"
 **And** the file contains a class whose name starts with "TestExp"
 
+### REQ-INFRA-003: GPU Zombie Process Detection
+
+**Status:** Implemented (Exp 326)
+
+At experiment start, the monitoring subsystem must detect GPU processes that hold VRAM but
+show zero compute utilisation ("zombie" processes).  These processes were observed in the
+2026.04.29 retrospective (PIDs 2592400/2595103, ~1050 MB VRAM each, 0% utilisation) and
+caused downstream experiments to fail silently or stall.
+
+**Acceptance criteria:**
+- A process is classified as a zombie when `utilization_pct == 0` AND `vram_mb > 100`.
+- `DualGPUMonitor.detect_zombies()` returns only zombie processes.
+- When `nvidia-smi` is absent (CI environments), `list_gpu_processes()` returns `[]`
+  without raising an exception.
+
+### REQ-INFRA-004: Dual-GPU Utilisation Check
+
+**Status:** Implemented (Exp 326)
+
+`ExperimentTemplate.setup_gpu()` must verify that both GPUs are active before timed
+inference begins.  Exp 219/221 ran two models sequentially on GPU 0 while GPU 1 sat idle
+(195 min vs ~90 min estimated for parallel execution).
+
+**Acceptance criteria:**
+- `DualGPUMonitor.check_dual_gpu_health()` returns a dict with keys:
+  `n_gpus_detected`, `n_zombies`, `idle_gpus` (list of gpu indices with 0 active processes),
+  `all_healthy` (bool).
+- `all_healthy` is `True` only when `n_gpus_detected >= 2`, `n_zombies == 0`, and
+  `len(idle_gpus) == 0`.
+- `ExperimentTemplate.setup_gpu()` adds `gpu_monitor_results` to its returned dict.
+  Existing callers are unaffected (additive change only).
+- When `CARNOT_FORCE_LIVE=0` (CI mode), `check_dual_gpu_health()` returns a synthetic
+  healthy dict without running `nvidia-smi`.
+
+### SCENARIO-INFRA-004: Zombie Detection from nvidia-smi Output
+
+**Given** `nvidia-smi` reports two processes on GPU 0 with 600 MB VRAM each at 0% utilisation
+**And** one process on GPU 1 with 50 MB VRAM at 15% utilisation (not a zombie)
+**When** `DualGPUMonitor.detect_zombies()` is called
+**Then** exactly the two 0%-utilisation, >100 MB processes are returned
+**And** the 50 MB / 15% process is excluded
+
+### SCENARIO-INFRA-005: Healthy Dual-GPU Configuration
+
+**Given** two GPUs are detected
+**And** each GPU has at least one active process (utilisation > 0 or vram_mb <= 100)
+**And** no zombies are present
+**When** `DualGPUMonitor.check_dual_gpu_health()` is called
+**Then** `all_healthy` is `True`
+**And** `idle_gpus` is `[]`
+**And** `n_zombies` is `0`
+
+### SCENARIO-INFRA-006: CI-Safe Fallback When nvidia-smi is Absent
+
+**Given** `nvidia-smi` is not installed on the system
+**When** `DualGPUMonitor.list_gpu_processes()` is called
+**Then** an empty list is returned without raising an exception
+**And** `check_dual_gpu_health()` returns `{"all_healthy": False, "n_gpus_detected": 0,
+"n_zombies": 0, "idle_gpus": []}`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2959,3 +3019,5 @@ development (NEW-001 action item), where:
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
+| REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
+| REQ-INFRA-004 | N/A | Implemented | check_dual_gpu_health() + setup_gpu() integration tests (SCENARIO-INFRA-005/006, Exp 326) |

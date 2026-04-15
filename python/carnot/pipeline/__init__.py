@@ -149,6 +149,7 @@ from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
 from carnot.pipeline.jepa_fast_path import JepaGate
 from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor, Z3Result
 from carnot.pipeline.z3_gated_repair import Z3GatedRepair, Z3GatedRepairResult, compute_skip_rate
+from carnot.pipeline.dual_gpu_monitor import DualGPUMonitor, GPUProcessInfo
 
 __all__ = [
     "AgentStep",
@@ -248,6 +249,8 @@ __all__ = [
     "JepaGate",
     "NL2Z3Extractor",
     "compute_skip_rate",
+    "DualGPUMonitor",
+    "GPUProcessInfo",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",

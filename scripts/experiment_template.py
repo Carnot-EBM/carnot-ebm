@@ -297,11 +297,45 @@ class ExperimentTemplate:
             if not result.health_ok:
                 all_healthy = False
 
-        return {
+        gpu_status: dict[str, Any] = {
             "all_healthy": all_healthy,
             "models": model_statuses,
             "prewarm_time_s": round(time.perf_counter() - t_start, 3),
         }
+
+        # --- REQ-INFRA-003 / REQ-INFRA-004: GPU zombie + idle-GPU check ---
+        # Run DualGPUMonitor after model pre-warm so any new processes are visible.
+        # Result is additive: existing callers that only check all_healthy/models
+        # are unaffected.  If CARNOT_FORCE_LIVE=1 and the monitor finds problems,
+        # we log a warning but never fail — the caller decides whether to abort.
+        try:
+            from carnot.pipeline.dual_gpu_monitor import DualGPUMonitor  # noqa: PLC0415
+
+            monitor = DualGPUMonitor()
+            gpu_monitor_results = monitor.check_dual_gpu_health()
+            gpu_status["gpu_monitor_results"] = gpu_monitor_results
+
+            if not gpu_monitor_results["all_healthy"]:
+                force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
+                if force_live:
+                    _log.warning(
+                        "DualGPUMonitor: unhealthy GPU state detected — "
+                        "n_gpus=%d, n_zombies=%d, idle_gpus=%s",
+                        gpu_monitor_results["n_gpus_detected"],
+                        gpu_monitor_results["n_zombies"],
+                        gpu_monitor_results["idle_gpus"],
+                    )
+        except Exception as exc:  # pragma: no cover — import failures are non-fatal
+            _log.warning("DualGPUMonitor unavailable: %s", exc)
+            gpu_status["gpu_monitor_results"] = {
+                "n_gpus_detected": 0,
+                "n_zombies": 0,
+                "idle_gpus": [],
+                "all_healthy": False,
+                "error": str(exc),
+            }
+
+        return gpu_status
 
     # ------------------------------------------------------------------
     # checkpoint_save / checkpoint_resume
