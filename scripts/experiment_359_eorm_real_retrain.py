@@ -194,8 +194,18 @@ def _pairs_to_contrastive_triples(
     correct_by_q: dict[str, list[str]] = defaultdict(list)
     incorrect_by_q: dict[str, list[str]] = defaultdict(list)
 
+    # Synthetic and "unknown" pairs are pooled into a shared bucket so that
+    # cross-product contrastive triples can be formed even when each pair has a
+    # unique question_id (which is always true for _make_synthetic_pairs output).
+    _SYNTHETIC_POOL = "_synthetic_pool"
+
     for p in pairs:
-        q_key = p.question_id
+        q_id = p.question_id
+        # Route synthetic and unknown question IDs to the shared pool
+        if q_id == "unknown" or q_id.startswith("synthetic_"):
+            q_key = _SYNTHETIC_POOL
+        else:
+            q_key = q_id
         if p.has_violation:
             incorrect_by_q[q_key].append(p.full_response)
         else:
@@ -211,7 +221,7 @@ def _pairs_to_contrastive_triples(
         incorrects = incorrect_by_q.get(q_id, [])
 
         if not corrects or not incorrects:
-            # Cannot form a contrastive pair without both labels
+            # Cannot form a contrastive pair without both labels for this question
             continue
 
         # Round-robin pairing: avoids O(n^2) explosion for large question groups
@@ -219,7 +229,6 @@ def _pairs_to_contrastive_triples(
         for i in range(n_pairs):
             c = corrects[i % len(corrects)]
             ic = incorrects[i % len(incorrects)]
-            # Use question_id as the question text proxy (full question not available)
             triples.append((c, ic, q_id))
 
     return triples

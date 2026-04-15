@@ -4701,7 +4701,7 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-022 | Not Started | Implemented | EORM CoT energy reward model — EORMModel + CoTEnergyInput + energy/rank/save/load/n_params (SCENARIO-LEARN-038/039, Exp 346) |
 | REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss + train_step + train_epoch (SCENARIO-LEARN-040, Exp 346) |
 | REQ-LEARN-024 | Not Started | Implemented | JEPA real-data retrain — ViolationPair + extract_violation_pairs + JEPARetrainer + build_retrain_artifact (SCENARIO-LEARN-041/042, Exp 347) |
-| REQ-LEARN-025 | Not Started | Implemented | EORM real-data retrain — load_real_cot_pairs + merge_cot_corpora + EORMRetrainResult + build_retrain_artifact (SCENARIO-LEARN-043/044, Exp 359) |
+| REQ-LEARN-025 | Implemented | Verified | EORM real-data retrain — load_real_cot_pairs + merge_cot_corpora + EORMRetrainResult + build_retrain_artifact (SCENARIO-LEARN-043/044, Exp 359). Run 20260415: retrain_mode=synthetic_only (5 real pairs from Exp 341 HumanEval; Exps 340/355 still simulated), before_auc=0.500, after_auc=0.500, honest_verdict=synthetic_only. Live GPU required for real_data_improvement verdict. |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
