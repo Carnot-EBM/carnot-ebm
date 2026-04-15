@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-15T05:32:03Z | 2026-04-15T05:39:16Z | Exp 334: VERGE iterative Z3 refinement; REQ-REPAIR-012/013 + SCENARIO-REPAIR-024–027 to spec; verge_refiner.py; 30 tests 100% coverage; verify_repair_verge(); experiment_334 script; traceability+changelog+status updated | ~7m |
+| 2 | 2026-04-15T05:40:45Z | 2026-04-15T05:57:07Z | Verification turn: confirmed 30 verge_refiner tests pass, verge_refiner.py 100% coverage, VergeRefiner exported from pipeline __init__.py, all docs already reconciled by Turn 1 | ~16m |
 
 ---
 
