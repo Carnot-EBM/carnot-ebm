@@ -183,6 +183,40 @@ artifact is absent.
 **And** `models_updated` is empty
 **And** no HuggingFace API calls are made
 
+### REQ-PUBLISH-004: Live HF Publish with Live-GPU Benchmarks Embedded
+
+All HuggingFace model READMEs updated under REQ-PUBLISH-003 shall additionally
+embed live-GPU benchmark results from Exp 328 when available.
+
+- The publish wrapper (Exp 330) shall load `results/experiment_328_live_fullscale_results.json`
+  and adapt its `first_live_run_evidence` and `baseline_deviation` fields into a
+  `per_variant_results`-compatible structure for embedding.
+- If Exp 328 results are absent, the wrapper shall fall back to Exp 316 simulated
+  results, labeling them clearly as simulated.
+- The wrapper artifact shall record `live_benchmark_embedded: true/false` to
+  distinguish live from simulated benchmark embedding.
+- The operation shall be idempotent: if the Phase 1 sentinel is already present,
+  the repo is skipped without re-upload.
+- If HF credentials are absent, the artifact shall have `status="blocked"` with
+  `next_action="huggingface-cli login"`.
+
+### SCENARIO-PUBLISH-007: Exp 328 Live Results Embedded in Model Cards
+
+**Given** `results/experiment_328_live_fullscale_results.json` exists with `status="success"`
+**And** HuggingFace credentials are available
+**When** `run_experiment_330()` is called
+**Then** the Phase 1 README patch embeds live-GPU accuracy numbers from Exp 328
+**And** the patch labels the numbers as `inference_mode=live_gpu`
+**And** `live_benchmark_embedded == True` in the artifact
+
+### SCENARIO-PUBLISH-008: Blocked When HF Credentials Absent (Exp 330)
+
+**Given** HuggingFace credentials are not available
+**When** `run_experiment_330()` is called
+**Then** the artifact has `status="blocked"`
+**And** `next_action` contains `"huggingface-cli login"`
+**And** no HuggingFace API calls are made
+
 ## Implementation Status
 
 | Requirement | Implementation | Tests | Status |
@@ -196,3 +230,4 @@ artifact is absent.
 | REQ-REPORT-007 | `scripts/experiment_210_research_scan.py`, `research-studying.md` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-REPORT-008 | `scripts/experiment_210_research_scan.py` | `tests/python/test_experiment_210_research_scan.py` | Implemented |
 | REQ-PUBLISH-003 | `scripts/experiment_317_hf_publish.py` | `tests/python/test_experiment_317_hf_publish.py` | Implemented |
+| REQ-PUBLISH-004 | `scripts/experiment_330_hf_live_publish.py` | `tests/python/test_experiment_330_hf_live_publish.py` | Implemented |

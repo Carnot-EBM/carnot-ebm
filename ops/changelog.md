@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 330: Live HuggingFace Publish with Exp 328 Live-GPU Benchmarks)
+
+Published all 16 per-token activation EBM model READMEs to HuggingFace live,
+embedding Exp 328 live-GPU benchmark results (replaces Exp 316 simulated values).
+
+- `scripts/experiment_330_hf_live_publish.py` (new):
+  - `load_publish_results(path)` — validates required schema keys; raises FileNotFoundError / ValueError.
+  - `validate_live_publish(result)` — raises ValueError if status != "success".
+  - `adapt_exp328_to_per_variant(exp328)` — converts first_live_run_evidence to per_variant_results format.
+  - `run_experiment_330(dry_run, results_path, exp328_results_path, hf_api)` — full live publish wrapper.
+- **Live publish result:** 16 per-token EBM repos updated, FCV README updated, joint-constraint
+  placeholder created, live_benchmark_embedded=True.
+- Live-GPU numbers embedded: Qwen3.5-0.8B 27.5%, Gemma4-E4B-it 26.3% (adversarial GSM8K all-variant).
+- 33 tests pass in `tests/python/test_experiment_330_hf_live_publish.py`.
+- Spec: REQ-PUBLISH-004, SCENARIO-PUBLISH-007, SCENARIO-PUBLISH-008.
+- Output: `results/experiment_330_hf_publish_results.json` (schema=carnot.hf_publish.v1, status=success).
+- User instruction: execute HuggingFace live publish (Exp 330).
+
 ## 2026-04-15 (Exp 325: Conductor Hardening — RETRO-001 + NEW-001)
 
 Implemented two RETRO action items carried forward from two consecutive milestones (2026.04.22 and 2026.04.29).
