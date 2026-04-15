@@ -457,6 +457,52 @@ is available, demonstrate a 100-spin Ising sampling round-trip within 100μs:
 **Then** training can resume from step N with identical optimizer state
 **And** the next gradient step produces identical results
 
+### REQ-HW-003: Open-Source FPGA Synthesis of Ising Sampler (Exp 349)
+
+The system shall attempt open-source synthesis of the KV260 Ising sampler RTL using
+yosys and nextpnr-xilinx, proving the open-source path is viable before investing in
+a Vivado license:
+
+- check_yosys_available() checks subprocess yosys --version, returns False gracefully
+  when yosys is not installed
+- check_nextpnr_available() checks subprocess nextpnr-xilinx --version, returns False
+  gracefully when nextpnr-xilinx is not installed
+- check_verilog_source_exists(path) checks os.path.exists on the RTL source path
+- parse_synthesis_output(stdout) extracts LUT count, FF count, and timing info from
+  yosys synthesis report via regex on "Number of cells:" style lines
+- SynthesisResult dataclass records: yosys_available, nextpnr_available,
+  verilog_found, synthesis_attempted, synthesis_success, lut_count, ff_count,
+  and honest_verdict
+- honest_verdict options: "synthesis_success", "synthesis_partial" (netlist only,
+  no place-and-route), "blocked_missing_yosys", "blocked_missing_verilog",
+  "synthesis_failed"
+- When yosys is available and Verilog source exists: run synthesis, capture output,
+  parse LUT/FF counts from report
+- When nextpnr-xilinx is also available: attempt place-and-route for KV260
+  (xczu5ev-sfvc784-2-e device); if successful, write bitfile to
+  hardware/kv260/carnot_ising.bit
+- Artifact schema: experiment=349, schema="carnot.fpga_synthesis.v1",
+  prereqs_checked, synthesis_result, lut_count, ff_count, bitfile_generated (bool),
+  honest_verdict
+
+### SCENARIO-HW-005: Yosys Synthesis Reports LUT/FF Utilization
+
+**Given** yosys is installed and hardware/kv260/ising_sampler_v1.v exists
+**When** synthesis is run with synth_xilinx targeting the Ising sampler top module
+**Then** synthesis completes without error
+**And** parse_synthesis_output extracts a non-zero lut_count from the report
+**And** honest_verdict is "synthesis_success" or "synthesis_partial"
+**And** the SynthesisResult is serialized to results/experiment_349_kv260_synthesis.json
+
+### SCENARIO-HW-006: Graceful Blocked Verdict When Prerequisites Missing
+
+**Given** yosys is not installed OR hardware/kv260/ising_sampler_v1.v is not present
+**When** the experiment runs
+**Then** no synthesis is attempted
+**And** honest_verdict is "blocked_missing_yosys" or "blocked_missing_verilog"
+**And** synthesis_attempted is False in the artifact
+**And** lut_count and ff_count are None in the artifact
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -477,3 +523,4 @@ is available, demonstrate a 100-spin Ising sampling round-trip within 100μs:
 | REQ-SAMPLE-010 | Not Started | Implemented | 27 Python (Exp 290 benchmark + tests) |
 | REQ-SAMPLE-011 | Not Started | Implemented | 30 Python (Exp 291 RTL behavioral sim + tests) |
 | REQ-SAMPLE-012 | Not Started | Not Started | Not Started |
+| REQ-HW-003 | N/A | Not Started | Not Started |
