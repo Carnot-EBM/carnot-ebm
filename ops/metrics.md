@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 367 Live Extraction Comparison Verification
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T22:44:31Z | 2026-04-15T23:03:55Z | Exp 367: Verified all implementation files exist (extractor_comparison.py, experiment_367_extraction_live.py, test_experiment_367_extraction_live.py). REQ-EXTRACT-023 + SCENARIO-EXTRACT-047/048 confirmed in spec. Ran full test suite: 6577 passed, 80 pre-existing failures in test_experiment_319_retro.py (unrelated). Exp 367 + Exp 358 tests: 75 passed. Updated ops. | ~4k |
+
+---
+
 ## Session: 2026-04-15 Exp 365 RETRO Close
 
 ### Turn Log
