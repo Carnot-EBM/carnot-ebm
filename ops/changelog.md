@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 339: Pre-session startup health check — RETRO-007 + RETRO-008)
+
+- 2026-04-15: Exp 339: Pre-session startup health check (RETRO-007 + RETRO-008) — python/carnot/pipeline/session_startup.py (parse_session_startup_output, run_session_startup); scripts/session_startup.sh (--dry-run / --kill-zombies, CI-safe, nvidia-smi absent → n_gpus=0 exit 0); canonical summary line "SESSION STARTUP: n_gpus=X zombies=Y killed=Z all_healthy=T/F"; DualGPUMonitor Python fallback + nvidia-smi CSV fallback for zombie detection; 63 tests in tests/python/test_session_startup.py + tests/python/test_experiment_339_session_startup.py at 100% targeted coverage; scripts/experiment_339_session_startup.py (dry-run artifact with n_gpus_detected, n_zombies_found, n_zombies_killed, all_healthy, retro_items_implemented); REQ-INFRA-008, SCENARIO-INFRA-012, SCENARIO-INFRA-013; RETRO-007 + RETRO-008 closed
+
 ## 2026-04-15 (Milestone 2026.05.13 Planning — v31 Roadmap)
 
 Planned next research milestone 2026.05.13: "Live E2E Precision Pipeline, Constraint Addition

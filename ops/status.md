@@ -4,6 +4,23 @@
 
 ## What's Working
 
+### Exp 339: Pre-Session Startup Health Check (REQ-INFRA-008) — RETRO-007 + RETRO-008 CLOSED
+
+- **RETRO-007 closed:** `scripts/session_startup.sh` detects zombie GPU processes (0% util,
+  >100 MiB VRAM) via `DualGPUMonitor` before session launch. Falls back to nvidia-smi CSV
+  parse if Python import fails. With `--kill-zombies`, sends SIGKILL to zombie PIDs. CI-safe:
+  when `nvidia-smi` absent, prints "nvidia-smi not found" and exits 0 with `n_gpus=0`.
+- **RETRO-008 closed:** `scripts/session_startup.sh` verifies both RTX 3090s are visible and
+  prints a single summary line: `SESSION STARTUP: n_gpus=X zombies=Y killed=Z all_healthy=T/F`.
+  `python/carnot/pipeline/session_startup.py` provides `parse_session_startup_output()` and
+  `run_session_startup(dry_run=True)` for programmatic use. `all_healthy=True` iff
+  `n_gpus_detected >= 2` AND `n_zombies_found == 0`.
+- 63 tests in `tests/python/test_session_startup.py` + `test_experiment_339_session_startup.py`;
+  100% targeted coverage.
+- `scripts/experiment_339_session_startup.py`: dry-run artifact with `artifact_schema=carnot.session_startup.v1`,
+  `n_gpus_detected`, `n_zombies_found`, `n_zombies_killed`, `all_healthy`, `retro_items_implemented`.
+- Spec: REQ-INFRA-008, SCENARIO-INFRA-012, SCENARIO-INFRA-013.
+
 ### Exp 338: Host Prerequisites Registry + DualGPU Auto-Assignment (REQ-INFRA-006/007)
 
 - **RETRO-006 closed:** `ops/host-prereqs.md` markdown table (6 entries: ninja, openblas,
