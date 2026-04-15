@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-15 (Exp 334: VERGE-style iterative Z3 refinement — targeted step repair from UNSAT assertion; REQ-REPAIR-012/013, SCENARIO-REPAIR-024–027; 30 tests; VergeRefiner/extract_failed_assertion/build_step_repair_prompt; verify_repair_verge() integration)
+**Last Updated:** 2026-04-15 (Exp 354: Apple adversarial GSM8K harness — AdversarialGSMQuestion + build_adversarial_questions + AdversarialBenchmarkResult; REQ-BENCH-006/007, SCENARIO-BENCH-014/015/016; 63 tests; scripts/experiment_354_adversarial_gsm8k_harness.py)
 
 ## Functional Requirements → Implementation Status
 
@@ -327,3 +327,8 @@
 | SCENARIO-INFRA-014 | Not Started | Implemented | diagnose_live_gpu() checks nvidia-smi, torch.cuda.is_available(), and model tokenizer load within 30s timeout; returns structured diagnostics with failure_reason (Exp 352) |
 | SCENARIO-INFRA-015 | Not Started | Implemented | Live GPU diagnostic is CI-safe (never raises) and runs on both Qwen3.5-0.8B and Gemma4-E4B-it models with honest failure reporting (Exp 352) |
 | SCENARIO-LEARN-040 | Not Started | Implemented | EORMTrainer contrastive_loss is 0 when margin already met; positive (hinge) when violated (Exp 346) |
+| REQ-BENCH-006 | Not Started | Implemented | Apple adversarial GSM8K benchmark harness — AdversarialGSMQuestion dataclass + build_adversarial_questions + AdversarialBenchmarkResult + compute_adversarial_results + build_adversarial_artifact with honest_verdict and robustness_invariant_holds; 20-distractor pool seeded at 42 (Exp 354) |
+| REQ-BENCH-007 | Not Started | Implemented | Adversarial benchmark evaluation infrastructure — SYNTHETIC_CI_RESULTS sentinel for CI safety + ExperimentTemplate(354) loads GSM8K, generates adversarial variants, validates round-trip, writes artifact with harness_ready flag (Exp 354) |
+| SCENARIO-BENCH-014 | Not Started | Implemented | AdversarialGSMQuestion round-trip — load 50 GSM8K questions, build_adversarial_questions(seed=42), verify same seed produces identical adversarial_question values for all 50 rows (Exp 354) |
+| SCENARIO-BENCH-015 | Not Started | Implemented | Distractor diversity — verify DISTRACTOR_SENTENCES includes numerals to probe ArithmeticExtractor robustness, none are math problems, 20-sentence pool selected deterministically per question (Exp 354) |
+| SCENARIO-BENCH-016 | Not Started | Implemented | Adversarial accuracy invariant — standard/adversarial/repaired results computed with compute_adversarial_results (ValueError on mismatch, no clamping), robustness_invariant_holds iff adversarial >= standard - 0.05 (Exp 354) |
