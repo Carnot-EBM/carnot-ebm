@@ -1798,3 +1798,6 @@ python/ |
 | 2026-04-15 17:21 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 17:21 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
 | 2026-04-15 17:21 UTC | Exp 356: LLMExtractor — second LLM call extracts s | OK | Deliverable already exists in repo |
+| 2026-04-15 17:46 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 17:46 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
+| 2026-04-15 17:46 UTC | Exp 357: LLM-guided Z3 formalization — arXiv 2601. | OK | Deliverable already exists in repo |
