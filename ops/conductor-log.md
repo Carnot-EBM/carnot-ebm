@@ -1691,3 +1691,5 @@ python/ |
 | 2026-04-15 05:59 UTC | Exp 334: VERGE-style iterative Z3 refinement — tar | OK | 175 passed in 3.77s |
 | 2026-04-15 06:09 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | 81 passed in 3.22s |
 | 2026-04-15 06:10 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
+| 2026-04-15 06:20 UTC | Exp 336: CoTCircuitVerifier — CRV-style chain-of-t | OK | 145 passed in 3.74s |
+| 2026-04-15 06:21 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
