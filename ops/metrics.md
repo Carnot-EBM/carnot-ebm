@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-15T15:45:25Z | 2026-04-15T15:48:16Z | Exp 352: Diagnose + fix silent simulated fallback; verified all files exist; 37 tests pass, 100% module coverage; updated conductor-log/changelog | ~3m |
+| 2 | 2026-04-15T15:49:35Z | 2026-04-15T15:50:05Z | Verify Exp 352 docs complete — changelog (2 entries), status.md row, traceability.md REQ-INFRA-014/SCENARIO-INFRA-014/015 all present; no appends needed | ~1m |
 
 ---
 
