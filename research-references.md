@@ -260,6 +260,56 @@ should read this file when designing new milestones.
 - **When to pursue:** Repair pipeline improvement milestone. Add ProjectionRepair strategy
   alongside existing Langevin repair.
 
+### ARM-EBM Bijection — Autoregressive LLMs Are Secretly EBMs
+- **Paper:** arxiv.org/abs/2512.15605 (2025-12)
+- **What:** Proves a formal bijection between autoregressive language models and energy-based models
+  via the chain rule of probability. Every ARM implicitly defines an EBM over complete sequences.
+  Derives soft Bellman equation connecting ARM generation to energy minimization.
+- **Relevance:** Theoretical grounding for why constraint-based energy verification works. The ARM
+  generates tokens that implicitly minimize an energy; Carnot's Ising sampler explicitly minimizes
+  a complementary constraint energy. Together they form a dual verification architecture.
+  Also the original source for the "spilled energy" concept (arXiv 2602.18671 extends this).
+- **When to pursue:** Use as theoretical justification in milestone docs. Informs SpilledEnergy
+  extractor design.
+
+### SAVeR — Self-Auditing for Faithful Multi-Turn Reasoning
+- **Paper:** arxiv.org/abs/2604.08401 (2026-04)
+- **What:** Self-Auditing Verification and Repair framework enforces verification over agent beliefs
+  with constraint-guided repair before action commitment. Two-turn structure: (1) agent proposes
+  action, (2) auditor checks action against propagated constraint state, (3) if fails, repair and
+  recommit. Achieves high faithfulness on multi-step reasoning benchmarks.
+- **Relevance:** Direct implementation target for Carnot's multi-turn agentic verification goal
+  (research-program.md Goal #4). SAVeR's "constraint state propagation" maps onto Carnot's
+  ConstraintStateMachine (Exp 125). The repair-before-commit loop is Carnot's verify-repair
+  loop applied inside the agent action step.
+- **When to pursue:** Next milestone. Implement SAVeR-style two-turn verification wrapper around
+  VerifyRepairPipeline for multi-turn agentic contexts.
+
+### MathAgent — Constraint Graph Blueprints for Mathematical Reasoning
+- **Paper:** arxiv.org/abs/2604.11188 (2026-04)
+- **What:** Legislator-Executor paradigm where a "Legislator" agent synthesizes a constraint graph
+  as a generation blueprint; an "Executor" agent generates text that must satisfy the graph.
+  Constraint graph encodes: variable types, value ranges, logical dependencies between steps.
+  Seed-free synthesis — no human-written examples needed.
+- **Relevance:** The constraint graph structure is a formal version of what ConstraintTemplateLibrary
+  (Exp 343) generates. MathAgent's "Legislator" is what Carnot's LLMExtractor should become:
+  a small model that produces explicit constraint graphs from problem statements. The graph then
+  drives Ising verification directly (constraint graph → Ising coupling matrix).
+- **When to pursue:** LLM-as-extractor milestone. Implement MathAgent-style constraint graph
+  generation as the output format of LLMExtractor.
+
+### T-SKM-Net — Trainable Neural Constraint Satisfaction
+- **Paper:** arxiv.org/abs/2512.10461 (2025-12)
+- **What:** Neural framework integrating Sampling Kaczmarz-Motzkin (SKM) method as a differentiable
+  layer for linear constraint satisfaction. Combines learned embeddings with algebraic projection
+  onto constraint hyperplanes. Trains end-to-end; better than softmax-based constraint enforcement.
+- **Relevance:** Alternative to Langevin MCMC for Carnot's repair step. SKM projection is more
+  principled than random-walk repair — it steps directly toward the constraint boundary rather than
+  exploring randomly. Could replace the current repair loop in VerifyRepairPipeline with guaranteed
+  convergence in fewer steps.
+- **When to pursue:** Repair pipeline improvement milestone. Compare SKM projection vs Langevin
+  repair vs Πnet orthogonal projection (arXiv 2508.10480) on the same constraint satisfaction tasks.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
 ### EORM — Energy-Based Outcome Reward Model for CoT Ranking (HIGH PRIORITY)
