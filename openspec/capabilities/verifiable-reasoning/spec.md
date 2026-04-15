@@ -3818,6 +3818,49 @@ Spec: REQ-BENCH-004, SCENARIO-BENCH-010, SCENARIO-BENCH-011
 **Then** the artifact contains `inference_mode="simulated"`
 **And** every result uses synthetic code snippets without calling any LLM
 
+### REQ-BENCH-005: Live GPU Smoke Test Gate
+
+Before running any benchmark experiment, the system SHALL provide a minimal live
+GPU smoke test that:
+- Runs N questions (default 5) through a specified model with `CARNOT_FORCE_LIVE=1`
+- Returns a `SmokeTestResult` dataclass recording `inference_mode`, `n_questions`,
+  `n_answered`, `elapsed_s`, `model_id`, `is_live`, and `blocked_reason`
+- Raises `RuntimeError` if `CARNOT_FORCE_LIVE=1` and `inference_mode != "live_gpu"`
+  (explicit fail, not silent fallback to simulated)
+- Returns `SmokeTestResult(is_live=False, inference_mode="ci_skip",
+  blocked_reason="CARNOT_FORCE_LIVE not set")` when `CARNOT_FORCE_LIVE` is not set
+- Produces a `build_smoke_test_artifact(result)` with `schema="carnot.smoke_test.v1"`
+  and `honest_verdict` of `"live_confirmed"`, `"blocked_simulated"`, or
+  `"blocked_error"`
+
+Spec: REQ-BENCH-005, SCENARIO-BENCH-012, SCENARIO-BENCH-013
+
+### SCENARIO-BENCH-012: SmokeTestResult Dataclass And CI-Skip Path
+
+**Given** `CARNOT_FORCE_LIVE` is not set in the environment
+**When** `run_smoke_test("google/gemma-4-E4B-it", n_questions=5)` is called
+**Then** it returns a `SmokeTestResult` with `is_live=False`
+**And** `inference_mode="ci_skip"`
+**And** `blocked_reason="CARNOT_FORCE_LIVE not set"`
+**And** no `RuntimeError` is raised
+
+**Given** a `SmokeTestResult` with `is_live=False` and `inference_mode="ci_skip"`
+**When** `build_smoke_test_artifact(result)` is called
+**Then** the artifact has `schema="carnot.smoke_test.v1"`
+**And** `honest_verdict="blocked_simulated"`
+
+### SCENARIO-BENCH-013: Live GPU Smoke Test Raises On Simulated Fallback
+
+**Given** `CARNOT_FORCE_LIVE=1` is set in the environment
+**And** the model pre-warm fails (GPU unavailable or model not loadable)
+**When** `run_smoke_test("google/gemma-4-E4B-it", n_questions=5)` is called
+**Then** a `RuntimeError` is raised
+**And** the error message describes the failure layer
+
+**Given** a `SmokeTestResult` with `is_live=True` and `inference_mode="live_gpu"`
+**When** `build_smoke_test_artifact(result)` is called
+**Then** the artifact has `honest_verdict="live_confirmed"`
+
 ### SCENARIO-BENCH-007: PrecisionStackResult Dataclass And compute_signed_improvement
 
 **Given** `baseline_accuracy=0.50` and `precision_stack_accuracy=0.65`
@@ -4416,6 +4459,7 @@ conductor log timestamps for Exps 325–336
 | REQ-BENCH-002 | Not Started | Implemented (Exp 328) | Live GPU benchmark result with inference_mode="live_gpu"; wrapper artifact with simulation_divergence + baseline_deviation; honest blocked artifact when GPU unavailable |
 | REQ-BENCH-003 | Not Started | Implemented (Exp 340) | PrecisionStackResult + PipelineVariant + compute_signed_improvement + build_precision_benchmark_artifact; live full precision stack benchmark (SCENARIO-BENCH-007/008/009) |
 | REQ-BENCH-004 | Not Started | Implemented (Exp 341) | HumanEvalResult + compute_pass_at_1 + compute_pass_at_1_after_repair + build_humaneval_artifact; live HumanEval code verification benchmark (SCENARIO-BENCH-010/011) |
+| REQ-BENCH-005 | Not Started | Implemented (Exp 353) | SmokeTestResult + run_smoke_test + build_smoke_test_artifact; live GPU smoke test gate with CI-skip path and RuntimeError on simulated fallback (SCENARIO-BENCH-012/013) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
