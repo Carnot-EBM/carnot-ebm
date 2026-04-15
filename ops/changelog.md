@@ -217,6 +217,10 @@ embedding Exp 328 live-GPU benchmark results (replaces Exp 316 simulated values)
 - Output: `results/experiment_330_hf_publish_results.json` (schema=carnot.hf_publish.v1, status=success).
 - User instruction: execute HuggingFace live publish (Exp 330).
 
+## 2026-04-15 (Exp 341: Live HumanEval Code Verification)
+
+Live benchmark on 50 HumanEval-style problems using Gemma4-E4B-it + CodeExtractor + VerifyRepairPipeline on RTX 3090. REQ-BENCH-004, SCENARIO-BENCH-010/011. Output: results/experiment_341_live_humaneval.json
+
 ## 2026-04-15 (Exp 325: Conductor Hardening — RETRO-001 + NEW-001)
 
 Implemented two RETRO action items carried forward from two consecutive milestones (2026.04.22 and 2026.04.29).
