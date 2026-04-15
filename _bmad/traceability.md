@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-14 (reconciled with codebase — Exp 318: Four-tier relay benchmark; REQ-LEARN-013, SCENARIO-LEARN-021/022; 58 new tests; schema="carnot.self_learning_relay.v1")
+**Last Updated:** 2026-04-15 (Exp 334: VERGE-style iterative Z3 refinement — targeted step repair from UNSAT assertion; REQ-REPAIR-012/013, SCENARIO-REPAIR-024–027; 30 tests; VergeRefiner/extract_failed_assertion/build_step_repair_prompt; verify_repair_verge() integration)
 
 ## Functional Requirements → Implementation Status
 
