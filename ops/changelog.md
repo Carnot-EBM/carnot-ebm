@@ -1,5 +1,35 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Operational Retrospective — Milestone 2026.05.13)
+
+Full-milestone operational retrospective for milestone 2026.05.13 written to
+`results/operational_retro_2026_05_13.json`. Covers 399 experiments (21 new: Exps 338–350),
+5818 minutes (97.0 hours) cumulative wall time, mean 14.6 min/experiment overall.
+Incremental batch (21 experiments): 426 minutes, 20.3 min/exp — regression driven by
+high-complexity experiments (Exp 346 EORM: 56 min, Exp 334 VERGE two-turn: 24 min).
+
+Key findings:
+
+- **RETRO-003 still open (second milestone)**: run_experiment_with_timeout.sh exists but
+  conductor wiring not enforced. Exp 53 (418 min) remains #1 cumulative bottleneck. Must be
+  closed before milestone 2026.05.20 begins — highest-priority action, zero implementation
+  work required.
+- **RETRO-004/006/007/008 closed**: DualGPU auto-assignment, HostPrereqRegistry,
+  test stub pre-generation, and BatchedInferenceRunner default all closed by Exps 338/339.
+- **RETRO-005 partial**: GPU state at retro shows 4MB allocated per RTX 3090 at 0% utilization
+  (up from 2MB prior milestone) — slow VRAM accumulation. gpu_monitor.py --kill-zombies not
+  yet wired into conductor inter-experiment loop.
+- **Simulated-mode fallback dominance (new)**: All four live-GPU experiments (Exps 340, 341,
+  346, 347) ran in simulated mode. Both RTX 3090s idle. RETRO-009 (live GPU smoke test at
+  session startup) opened to prevent future milestone-wide simulated fallback.
+- **Estimated time savings next milestone**: 32%, reducing ~5818 minutes to ~3955 minutes
+  for the same experiment count. Rises to 35-40% if RETRO-003 is closed.
+
+Three new RETRO items opened: RETRO-009 (live GPU smoke test), RETRO-010 (presplit complex
+experiments), RETRO-011 (batch doc reconciliation every 5 experiments).
+
+User instruction: write operational retrospective for milestone 2026.05.13.
+
 ## 2026-04-15 (Exp 348: SinkProbe Attention-Sink Hallucination Pre-Filter — REQ-VERIFY-086/087)
 
 - 2026-04-15: Exp 348: SinkProbe attention-sink pre-filter — implements arXiv 2604.10697 as first gate in three-tier pipeline (SinkProbe → EORM → Ising). Added `python/carnot/pipeline/sink_probe.py`: `SinkTokenType` enum (BOS, EOS, PERIOD, COMMA); `SinkConcentration` dataclass (per_head_sink_scores, mean_sink_score, max_sink_score); `compute_sink_concentration(attention_matrix, sink_positions)` — accepts (n_heads, seq_len, seq_len) jnp array, sums attention mass at sink column indices, averages over query positions per head; `SinkProbeResult` dataclass (sink_concentration, is_uncertain, should_skip_verification); `SinkProbe(threshold=0.3, sink_token_types=(BOS, PERIOD))` — `score()` wraps compute_sink_concentration; `decide()` applies strict-less-than threshold (is_uncertain = mean_sink_score < threshold, should_skip = not is_uncertain); `benchmark(responses_with_attention, correctness_labels)` computes skip_rate/FNR/TNR with zero-division safety. CI-safe: operates on arbitrary jnp arrays. Exported from `python/carnot/pipeline/__init__.py`. `scripts/experiment_348_sink_probe.py` (ExperimentTemplate(348), 50 synthetic responses [30 correct high-sink, 20 wrong low-sink], checks Exp 340 for live attention tensors [absent — simulated mode], skip_rate=60% FNR=0% TNR=100%, ensemble improvement 60% fewer Ising calls, schema "carnot.sink_probe.v1"). 43 tests in `tests/python/test_sink_probe.py` (all pass). REQ-VERIFY-086/087, SCENARIO-VERIFY-113/114/115 added to spec. (User-requested)

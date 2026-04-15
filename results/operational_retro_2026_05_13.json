@@ -1,0 +1,229 @@
+{
+  "schema": "carnot.operational_retro.v1",
+  "milestone": "2026.05.13",
+  "generated_at": "2026-04-15T15:06:41Z",
+  "retro_type": "full_milestone",
+  "note": "Cumulative retrospective covering all 399 experiments through milestone 2026.05.13 (Exps 338–350 = 21 new experiments closing RETRO-003 through RETRO-008 carry-forwards from 2026.05.06). Prior milestone retro is preserved in results/operational_retro_2026_05_06.json.",
+
+  "summary": {
+    "total_wall_time_minutes": 5818,
+    "total_wall_time_hours": 97.0,
+    "experiments_completed": 399,
+    "avg_minutes_per_experiment": 14.6,
+    "median_minutes_per_experiment_est": 10,
+    "throughput_experiments_per_hour": 4.1,
+    "prior_milestone_total_minutes": 5392,
+    "incremental_wall_time_minutes": 426,
+    "incremental_experiments": 21,
+    "incremental_avg_minutes_per_experiment": 20.3,
+    "prior_milestone_avg_minutes_per_experiment": 14.3,
+    "incremental_avg_regression_pct": 42,
+    "note_on_regression": "The 21 new experiments in this milestone averaged 20.3 min/exp vs 14.3 min/exp for the prior 378. The regression is driven by high-complexity experiments: Exp 346 (EORM transformer, 56 min) and Exp 334 (VERGE with two-turn verification, ~24 min combined). Complex multi-deliverable experiments inflate the mean when the batch is small."
+  },
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 418,
+      "label": "Exp 53: Runtime constraint instrumentation",
+      "pct_of_total": 7.2,
+      "root_cause": "Persistent outlier from milestone 2026.05.06 still dominating the cumulative histogram. run_experiment_with_timeout.sh (Exp 325) exists but RETRO-003 (wiring it as mandatory for all conductor-launched experiments) was NOT closed during this milestone. The timeout infrastructure was implemented but never enforced by the conductor. Exp 53 would cost at most ~43 minutes under a 3x-average hard timeout; the remaining ~375 minutes is pure unrecoverable waste.",
+      "category": "no_timeout_guard_enforcement",
+      "retro_status": "RETRO-003 remains open — tooling built (Exp 325) but not wired into conductor"
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.0,
+      "root_cause": "Sequential single-GPU inference for two-model comparison. RETRO-004 was closed in Exp 338 (DualGPU auto-assignment now default in ExperimentTemplate). This experiment predates Exp 338 so the fix was not retroactive. Future two-model benchmarks should not reproduce this pattern.",
+      "category": "sequential_single_gpu",
+      "retro_status": "RETRO-004 closed by Exp 338 — mitigated for future experiments"
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 105,
+      "label": "Exp 308: JEPA fast-path gate integration (checkpoint — tests failing)",
+      "pct_of_total": 1.8,
+      "root_cause": "Checkpoint resume with failing tests — conductor allowed continuation despite non-zero pytest exit. The session_startup.sh fail-fast behavior (Exp 339 / RETRO-007) addresses pre-session health; however, mid-experiment fail-fast (refusing to checkpoint on test failure) requires conductor-side enforcement that was not confirmed wired during this milestone.",
+      "category": "checkpoint_resume_with_failing_tests",
+      "retro_status": "RETRO-007 closed by Exp 338/339 (pre-session checks), but conductor mid-experiment fail-fast needs explicit wiring"
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 1.4,
+      "root_cause": "Large-model sequential single-GPU inference before BatchedInferenceRunner standardization. RETRO-008 (BatchedInferenceRunner as ExperimentTemplate default) was closed by Exp 338 for future experiments. This is a historical record item.",
+      "category": "sequential_single_gpu_large_model",
+      "retro_status": "RETRO-008 closed by Exp 338 — mitigated for future experiments"
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.3,
+      "root_cause": "Sequential single-GPU two-model inference. Addressed by RETRO-004 / Exp 338. Historical record.",
+      "category": "sequential_single_gpu",
+      "retro_status": "RETRO-004 closed by Exp 338 — mitigated for future experiments"
+    }
+  ],
+
+  "retro_items_status": {
+    "RETRO-003": {
+      "description": "Wire run_experiment_with_timeout.sh as mandatory conductor wrapper",
+      "status": "OPEN — highest priority carry-forward",
+      "note": "Tooling built in Exp 325; session_startup.sh built in Exp 339. Conductor wiring not confirmed. Exp 53 (418 min) is still the #1 cumulative bottleneck. Until this is enforced, every future milestone risks a repeat outlier."
+    },
+    "RETRO-004": {
+      "description": "DualGPURunner as default for two-model inference benchmarks",
+      "status": "CLOSED by Exp 338",
+      "note": "ExperimentTemplate.setup_gpu() now auto-assigns dual_gpu_auto_assigned=True when both GPUs are available and experiment names two models."
+    },
+    "RETRO-005": {
+      "description": "Auto zombie kill between experiments",
+      "status": "OPEN — partial",
+      "note": "GPU monitor at retro time shows GPU 0 and GPU 1 each holding 4MB allocated but 0% utilization — consistent with idle driver processes or lingering Python handles. Zombie kill is available via gpu_monitor.py --kill-zombies but not yet wired into the conductor inter-experiment loop. The 4MB residual (up from 2MB in the prior retro) suggests slight memory accumulation across sessions."
+    },
+    "RETRO-006": {
+      "description": "Host prereq registry (ops/host-prereqs.md) with BLOCKED_PREREQ logic",
+      "status": "CLOSED by Exp 338",
+      "note": "HostPrereqRegistry implemented in host_prereq_registry.py; ops/host-prereqs.md written with 6 entries (ninja, openblas, amdxdna, XRT, ROCm, CUDA 12). Future AMD XDNA experiments will emit BLOCKED_PREREQ immediately."
+    },
+    "RETRO-007": {
+      "description": "Pre-generate test stubs for all planned experiments at milestone planning time",
+      "status": "CLOSED by Exp 338/339",
+      "note": "generate_test_stub() wired into ExperimentTemplate; session_startup.sh pre-generates stubs for roadmap experiments."
+    },
+    "RETRO-008": {
+      "description": "BatchedInferenceRunner (batch_size=8) as ExperimentTemplate default",
+      "status": "CLOSED by Exp 338",
+      "note": "BatchedInferenceRunner is now the required default. ExperimentTemplate.setup_gpu() enforces batching; single-question mode requires explicit override."
+    }
+  },
+
+  "bottlenecks_identified": [
+    "RETRO_003_STILL_OPEN — TIMEOUT_NOT_ENFORCED: The single largest bottleneck from the prior milestone (Exp 53, 418 min) persists at the top of the cumulative histogram because RETRO-003 was not closed. run_experiment_with_timeout.sh exists but the conductor does not invoke it for all experiments. Every future milestone risks a repeat 418-minute outlier until this is wired as mandatory.",
+    "RETRO_005_STILL_OPEN — ZOMBIE_RESIDUAL_VRAM: GPU state at retro time shows 4MB allocated on each RTX 3090 at 0% utilization (up from 2MB in prior retro). No active processes, but VRAM is not fully released between sessions. gpu_monitor.py --kill-zombies is available but not invoked automatically between experiments. Accumulation will worsen with more sessions.",
+    "SIMULATED_MODE_FALLBACK_DOMINANCE: All live-GPU experiments in this milestone (Exps 340, 347, 346, 341) fell back to simulated mode. Exp 340 had no 'responses' key in its JSON; Exp 347 found no live violation pairs. Both RTX 3090s are confirmed idle (0% util, 4MB VRAM) — the hardware is available but the pipeline from conductor → ExperimentTemplate → model load → live inference is not end-to-end verified for autonomous runs. Simulated fallbacks produce correctly-structured artifacts but zero real GPU provenance.",
+    "INCREMENTAL_MILESTONE_PER_EXPERIMENT_REGRESSION: The 21 new experiments in this milestone averaged 20.3 min/exp vs 14.3 min/exp for the prior 378. The regression is not random: complex experiments (EORM transformer Exp 346 = 56 min; two-turn verification Exp 334 = ~24 min) inflate the mean. The milestone batch was intentionally heavy on infrastructure and complex algorithmic work. No alarm, but worth monitoring.",
+    "EORM_AND_JEPA_TRAIN_ON_SYNTHETIC_ONLY: Exp 346 (EORM, 56 min) and Exp 347 (JEPA retrain, 17 min) trained on 100% synthetic data because live GPU inference fallback triggered. AUC-ROC of 0.5 for both (random baseline) confirms no signal learned. The training infrastructure is correct but produces no value until live pairs are available. This creates a dependency: live inference must succeed before model learning produces real results.",
+    "MULTI_DELIVERABLE_COMPLEXITY_WITHOUT_PRESPLIT: Exp 346 (EORM) required a full JAX transformer implementation, contrastive training loop, safetensors save/load, AUC-ROC evaluation, and full test suite — all in one experiment. Despite existing RETRO guidance to presplit high-complexity experiments into Phase A (implementation + tests) and Phase B (integration + artifact + docs), this was not applied. The 56-minute duration reflects the cost.",
+    "DOC_RECONCILIATION_PER_EXPERIMENT_PERSISTS: Changelog, traceability, status.md, and spec reconciliation were still performed after every individual experiment in this milestone. No batching was adopted despite the prior retro recommendation. For 21 experiments this adds moderate overhead; at 378 experiments it was the dominant context-switching cost."
+  ],
+
+  "improvements_suggested": [
+    "ENFORCE_RETRO_003_TIMEOUT_NOW — HIGHEST PRIORITY: Wire run_experiment_with_timeout.sh as the mandatory conductor wrapper before milestone 2026.05.20 begins. Set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=45 (3x current 15-min average). This is the single change with the highest ROI — Exp 53 (418 min) alone justifies it. The tooling already exists; the conductor config change is a one-line environment variable.",
+    "CLOSE_RETRO_005_ZOMBIE_KILL: Add gpu_monitor.py --kill-zombies (without --dry-run) to the conductor inter-experiment cleanup step. Call it after each experiment artifact is written, before starting the next. Also call it at session startup via session_startup.sh --kill-zombies. The 4MB residual VRAM is growing; auto-kill prevents accumulation.",
+    "LIVE_GPU_INFERENCE_INTEGRATION_TEST: Write a single 5-minute smoke test that loads Qwen3.5-0.8B on GPU 0, runs 5 GSM8K questions via BatchedInferenceRunner, and writes a results JSON. Gate every GPU-dependent experiment on this smoke test passing (checked once per session by session_startup.sh). This will prevent all four live-inference experiments from falling back to simulated mode in the next milestone.",
+    "PRESPLIT_HIGH_COMPLEXITY_EXPERIMENTS_AT_PLAN_TIME: When writing the milestone plan (research-roadmap-next.yaml), add expected_complexity: high to experiments with >3 deliverables. The conductor should automatically split these into Phase A (implementation + unit tests) and Phase B (integration + artifact + docs). EORM (Exp 346) should have been two separate experiments. Prevents 56-minute single-experiment blocks and reduces max-turn-limit risk.",
+    "BATCH_DOC_RECONCILIATION_EVERY_5_EXPERIMENTS: Run changelog, traceability, status.md, and spec reconciliation in a single pass after every 5-experiment batch, not after each individual experiment. Final full reconciliation at milestone end. Reduces context-switching overhead and keeps individual experiment turns focused on implementation.",
+    "TRACK_LIVE_VS_SIMULATED_MODE_PER_EXPERIMENT: Add inference_mode: live|simulated|blocked to every experiment artifact at time of writing. The conductor should emit a warning at end-of-milestone if >25% of GPU-tagged experiments ran in simulated mode. This makes silent fallback visible in the milestone summary.",
+    "CONDUCTOR_FAIL_FAST_ON_FAILING_TESTS: Extend session_startup.sh's fail-fast behavior to mid-experiment operation: if pytest exits non-zero during an in-progress experiment, the conductor must mark it FAILED (not checkpointed) and pause for human review before proceeding. RETRO-007 closed the pre-session check but Exp 308's pattern (checkpoint with failing tests) can still recur.",
+    "ROLLING_AVERAGE_TIMEOUT_RECALCULATION: Update CARNOT_CONDUCTOR_TIMEOUT_MINUTES every 50 experiments using the rolling 50-experiment median. As the codebase matures and experiments get faster, the timeout should tighten. Current 15-min average suggests a 45-min timeout (3x). In 50 experiments, if average drops to 12 min, timeout should auto-adjust to 36 min."
+  ],
+
+  "time_distribution_estimate": {
+    "live_inference_experiments_pct": 30,
+    "algorithm_implementation_pct": 45,
+    "doc_reconciliation_pct": 10,
+    "preflight_and_lint_pct": 8,
+    "checkpoint_and_resume_overhead_pct": 4,
+    "prereq_detection_waste_pct": 1,
+    "note": "Prereq waste reduced from 3% to ~1% after RETRO-006 (HostPrereqRegistry) closed in Exp 338. Algorithm implementation share increased due to complex EORM/JEPA/SinkProbe experiments. Live inference share decreased because all four GPU experiments fell back to simulated mode (no GPU wall time consumed)."
+  },
+
+  "estimated_time_savings_pct": 32,
+  "estimated_time_savings_rationale": "Four of six RETRO items (004, 006, 007, 008) are now closed. These were estimated at ~30% collective savings in the prior retro. RETRO-003 (timeout) and RETRO-005 (zombie kill) remain open, representing ~13% of theoretical savings. With RETRO-003 enforced, Exp 53 alone saves ~375 minutes (~7% of 5392 baseline). DualGPU default (RETRO-004 closed) applies to future experiments. BatchedInferenceRunner default (RETRO-008 closed) applies to future experiments. Live GPU smoke test (new recommendation) enables real inference data, enabling EORM/JEPA to produce meaningful results rather than synthetic-only baselines. Combined: 32% improvement estimate for next milestone, slightly below the prior retro's 38% prediction because RETRO-003 was not closed as planned. If RETRO-003 is closed before 2026.05.20, the savings should reach 35-40%.",
+
+  "estimated_next_milestone_wall_time_minutes": 3955,
+  "estimated_next_milestone_rationale": "5818 minutes baseline × (1 - 0.32) ≈ 3955 minutes for the same experiment count. If Exp 53 is excluded from the baseline (as it would be under a timeout regime), the calculation is (5818 - 375) × (1 - 0.25) ≈ 4085 minutes — comparable. The 32% estimate is conservative; if live GPU inference is successfully unlocked, EORM/JEPA experiments will generate real learning signal and may complete faster per experiment.",
+
+  "gpu_state_at_retro": {
+    "gpu_0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "vram_total_mb": 24576,
+      "vram_used_mb": 4,
+      "utilization_pct": 0,
+      "temp_c": 49
+    },
+    "gpu_1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "vram_total_mb": 24576,
+      "vram_used_mb": 4,
+      "utilization_pct": 0,
+      "temp_c": 51
+    },
+    "assessment": "Both GPUs idle, 4MB VRAM allocated each (up from 2MB at end of prior milestone). The 4MB is consistent with driver overhead or lingering Python process handles not fully released. No active compute. RETRO-005 (auto zombie kill) is still open; the increase from 2MB to 4MB suggests slow VRAM accumulation across sessions. DualGPURunner is now the default (RETRO-004 closed) but had no opportunity to run live during this milestone because all GPU experiments fell back to simulated mode."
+  },
+
+  "carry_forward_action_items": [
+    {
+      "id": "RETRO-003",
+      "description": "Wire run_experiment_with_timeout.sh as mandatory wrapper for all conductor-launched experiments. Set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=45 (3x rolling 15-min average). Experiments exceeding timeout receive status=TIMEOUT and escalate to human review queue.",
+      "status": "OPEN — critical carry-forward for second consecutive milestone",
+      "priority": "critical",
+      "estimated_savings_pct": 10,
+      "note": "This RETRO item was open at end of 2026.05.06 and is still open at end of 2026.05.13. The tooling exists. The only missing piece is conductor configuration. Must be closed before 2026.05.20 begins."
+    },
+    {
+      "id": "RETRO-005",
+      "description": "Add gpu_monitor.py --kill-zombies (not --dry-run) to conductor inter-experiment cleanup. Also invoke at session startup via session_startup.sh --kill-zombies.",
+      "status": "OPEN — partial, VRAM accumulation detected",
+      "priority": "high",
+      "estimated_savings_pct": 3
+    },
+    {
+      "id": "RETRO-009",
+      "description": "Add live GPU inference smoke test to session_startup.sh. Load Qwen3.5-0.8B on GPU 0, run 5 questions via BatchedInferenceRunner, verify results JSON is written. Gate all GPU-tagged experiments on this test. Prevents silent simulated-mode fallback for the entire milestone.",
+      "status": "NEW — opened this milestone",
+      "priority": "high",
+      "estimated_savings_pct": 5,
+      "rationale": "All four live GPU experiments this milestone ran in simulated mode. Real GPU inference is the source of truth for EORM, JEPA, and precision stack benchmarks. Without it, 30% of the milestone's algorithmic work (Exps 340, 346, 347, 341) produced synthetic-only results with no provenance value."
+    },
+    {
+      "id": "RETRO-010",
+      "description": "Enforce experiment presplitting for high-complexity tasks. Add expected_complexity field to research-roadmap-next.yaml entries. Conductor auto-splits complexity=high into Phase A (implementation + unit tests) and Phase B (integration + artifact + docs). Prevents 56-minute single-experiment blocks.",
+      "status": "NEW — opened this milestone",
+      "priority": "medium",
+      "estimated_savings_pct": 4,
+      "rationale": "Exp 346 (EORM) ran 56 minutes — nearly 4x the milestone average — due to requiring a full transformer, training loop, serialization, evaluation, and test suite in one experiment. Presplitting reduces max-turn risk and improves throughput on complex work."
+    },
+    {
+      "id": "RETRO-011",
+      "description": "Batch doc reconciliation: run changelog + traceability + status.md + spec in a single pass after every 5-experiment batch. Final full reconciliation at milestone end. Remove per-experiment reconciliation from the conductor loop.",
+      "status": "NEW — carried from prior retro recommendation not yet implemented",
+      "priority": "medium",
+      "estimated_savings_pct": 4
+    }
+  ],
+
+  "top_3_highest_leverage_actions": [
+    {
+      "rank": 1,
+      "action": "Enforce RETRO-003 timeout before 2026.05.20 begins",
+      "effort": "very low — set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=45 in conductor config",
+      "expected_savings_minutes_lower": 375,
+      "expected_savings_minutes_upper": 600,
+      "rationale": "Exp 53 (418 min, second consecutive milestone at #1) would have cost at most 45 minutes under the timeout. The lower bound is the Exp 53 saving alone (~375 min). The upper bound accounts for one additional outlier experiment per milestone at similar magnitude. This is the highest-ROI change available for zero implementation work."
+    },
+    {
+      "rank": 2,
+      "action": "Live GPU smoke test in session_startup.sh (RETRO-009)",
+      "effort": "low — 30-line addition to session_startup.sh using existing ExperimentTemplate + BatchedInferenceRunner",
+      "expected_savings_minutes_lower": 200,
+      "expected_savings_minutes_upper": 400,
+      "rationale": "Four experiments (Exps 340, 341, 346, 347) ran in simulated mode and produced zero GPU-provenance results despite 2 idle RTX 3090s. A single 5-minute smoke test at session start would have caught this before any experiment ran, redirecting effort to fixing the inference path. The savings estimate is conservative: preventing four do-over experiments at ~20 min each + the value of actual live results enabling EORM/JEPA learning."
+    },
+    {
+      "rank": 3,
+      "action": "Close RETRO-005 zombie kill + enforce conductor inter-experiment cleanup",
+      "effort": "very low — one-line conductor addition calling gpu_monitor.py --kill-zombies",
+      "expected_savings_minutes_lower": 30,
+      "expected_savings_minutes_upper": 80,
+      "rationale": "Zombie VRAM accumulation (4MB and growing) causes memory contention on subsequent experiments. The kill logic is already written; the conductor just needs to call it. Low effort, preventive action before VRAM accumulation causes actual experiment failures."
+    }
+  ],
+
+  "meta_reflection": "Milestone 2026.05.13 closed 4 of 6 carry-forward RETRO items from the prior milestone — a good closure rate. The 21 new experiments averaged 20.3 min/exp, a 42% regression vs the prior 14.3 min/exp baseline. This regression is explainable: the milestone was deliberately front-loaded with infrastructure (Exp 338, 339) and high-complexity algorithmic work (Exp 346 EORM at 56 min). The more concerning finding is that RETRO-003 (timeout guard) was not closed for the second consecutive milestone. The tooling exists in run_experiment_with_timeout.sh; the conductor config change has been recommended twice. This represents a process failure: a known high-ROI improvement is being repeatedly deferred. A rule for the next milestone: RETRO items that survive two consecutive milestones must be addressed in the first experiment of the following milestone, before any new work begins. The second structural finding is that all four live GPU experiments fell back to simulated mode — the hardware is available and idle, but the inference pipeline from conductor to model is not autonomously verified at session start. RETRO-009 (live GPU smoke test) is the fix. Both findings share a pattern: the infrastructure to solve the problem exists, but it is not wired into the automated path. The next milestone's first priority should be closing the gap between 'tooling exists' and 'tooling runs automatically.'"
+}
