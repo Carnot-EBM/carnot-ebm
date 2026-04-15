@@ -2705,6 +2705,88 @@ on a labeled corpus, where:
 
 Spec: REQ-EXTRACT-012, SCENARIO-EXTRACT-025, SCENARIO-EXTRACT-026
 
+### REQ-EXTRACT-013: FP Categorization for Broken Verify-Repair Cases
+
+The system shall support systematic categorization of false-positive violations that
+caused verify-repair to hurt (produce a worse answer than baseline), where:
+- A `FPCategory` enum defines exactly five categories:
+  - `VALID_INTERMEDIATE`: the extractor flagged an arithmetic step that is correct
+    in context (e.g. an intermediate result, not the final answer)
+  - `PRECISION_LIMIT`: a correct computation was flagged because of rounding or
+    floating-point approximation (e.g. `1/3 ≈ 0.33`)
+  - `REGEX_ARTIFACT`: `ArithmeticExtractor` matched a wrong substring (e.g. a date,
+    a phone number, or an incidental numeral that is not an arithmetic claim)
+  - `REPAIR_DEGRADATION`: the violation was real but the repair step made the answer
+    worse than leaving the original response unchanged
+  - `UNCATEGORIZED`: none of the above patterns apply
+- An `AutopsyCase` dataclass captures: `question`, `baseline_answer`,
+  `vr_answer`, `correct_answer`, `violations_flagged` (list[str]),
+  `fp_category` (FPCategory), `evidence` (str)
+- `categorize_fp(case: AutopsyCase) -> FPCategory` inspects `violations_flagged`
+  and `evidence` to assign one of the five categories deterministically
+- `load_broken_cases(results_path: str) -> list[AutopsyCase]` loads cases where
+  `vr_answer != correct_answer AND baseline_answer == correct_answer` from a
+  fullscale benchmark result file; returns an empty list (not an error) when the
+  file has no per-question data
+- `compute_category_distribution(cases: list[AutopsyCase]) -> dict[FPCategory, int]`
+  returns a count of cases per category
+
+Spec: REQ-EXTRACT-013, SCENARIO-EXTRACT-027, SCENARIO-EXTRACT-028
+
+### REQ-EXTRACT-014: FP Autopsy Corpus and Experiment Artifact
+
+The system shall provide a deterministic FP autopsy workflow (`experiment_331`) that:
+- Loads broken cases from Exp 328 live results (primary) or Exp 316 simulated
+  fallback (when per-question data is absent from Exp 328)
+- For each broken case, re-runs all three extractors (ArithmeticExtractor,
+  LLMExtractor, NL2Z3Extractor) and records violation text and extractor output
+- Emits an honest `inconclusive` artifact (not a failure) when `n_broken_cases < 5`
+- Computes `primary_fp_type` as the most common FPCategory across all broken cases
+- Maps `primary_fp_type` to a `recommended_fix`:
+  - `VALID_INTERMEDIATE` → `"Confidence-weighted repair: add expression confidence filter"`
+  - `PRECISION_LIMIT` → `"Model-adaptive threshold: increase ArithmeticExtractor tolerance"`
+  - `REGEX_ARTIFACT` → `"NL2Z3 as primary: regex causes false positives on IT responses"`
+  - `REPAIR_DEGRADATION` → `"Constrain repair: only accept if repaired energy < violation energy"`
+  - `UNCATEGORIZED` → `"Manual review required: insufficient signal for automated fix"`
+- Writes artifact to `results/experiment_331_fp_autopsy.json` with schema:
+  `experiment=331`, `n_broken_cases`, `category_distribution`, `primary_fp_type`,
+  `recommended_fix`, `sample_cases` (first 5, anonymized), `status`
+
+Spec: REQ-EXTRACT-014, SCENARIO-EXTRACT-029, SCENARIO-EXTRACT-030
+
+### SCENARIO-EXTRACT-027: FP Categorization Assigns VALID_INTERMEDIATE
+
+**Given** an `AutopsyCase` where `violations_flagged` contains an expression that
+  evaluates to a value that appears verbatim in the response as an intermediate step
+  (e.g. "step 1: 10 - 3 = 7") and `correct_answer` is a different final value
+**When** `categorize_fp(case)` is called
+**Then** it returns `FPCategory.VALID_INTERMEDIATE`
+**And** the `evidence` field records which expression triggered the flag
+
+### SCENARIO-EXTRACT-028: FP Categorization Assigns REGEX_ARTIFACT
+
+**Given** an `AutopsyCase` where `violations_flagged` contains a match whose
+  `a`, `b`, `claimed_result` do not correspond to any arithmetic step in the
+  question or response (e.g. a year like "2024 - 3 = 2021" matched incidentally)
+**When** `categorize_fp(case)` is called
+**Then** it returns `FPCategory.REGEX_ARTIFACT`
+
+### SCENARIO-EXTRACT-029: Autopsy Emits Inconclusive When n < 5
+
+**Given** a results file from which `load_broken_cases()` returns fewer than 5 cases
+**When** `experiment_331_fp_autopsy.py` is executed
+**Then** the artifact has `status="inconclusive"` and `n_broken_cases < 5`
+**And** the artifact still contains `category_distribution` and `primary_fp_type`
+  (which may be `UNCATEGORIZED`) rather than omitting these fields
+
+### SCENARIO-EXTRACT-030: Autopsy Recommends Fix Matching Primary FP Type
+
+**Given** an autopsy corpus where the majority of broken cases are `REGEX_ARTIFACT`
+**When** `experiment_331_fp_autopsy.py` computes `recommended_fix`
+**Then** `recommended_fix` equals
+  `"NL2Z3 as primary: regex causes false positives on IT responses"`
+**And** the artifact records `primary_fp_type="REGEX_ARTIFACT"`
+
 ### SCENARIO-EXTRACT-025: Benchmark Correctly Classifies FP and TP
 
 **Given** a corpus of 15 correct and 15 incorrect labeled responses
@@ -3143,6 +3225,8 @@ result files from prior experiments that were never completed.
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
+| REQ-EXTRACT-013 | Not Started | Implemented | FPCategory enum + AutopsyCase + categorize_fp + load_broken_cases + compute_category_distribution (SCENARIO-EXTRACT-027/028, Exp 331) |
+| REQ-EXTRACT-014 | Not Started | Implemented | FP autopsy experiment + inconclusive artifact + recommended_fix mapping (SCENARIO-EXTRACT-029/030, Exp 331) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
