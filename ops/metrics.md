@@ -1672,3 +1672,4 @@
 | 2026-04-15T06:21:22Z | 2026-04-15T06:43:30Z | Exp 337 retro: milestone 2026.05.06 operational retrospective | 22m | — |
 | exp355 | 2026-04-15T17:17:54Z | 2026-04-15T17:19:43Z | Exp 355: Adversarial GSM8K benchmark — live GPU execution harness; run tests (51 pass); run script (simulated mode, honest_verdict=blocked_simulated); update ops docs | 1m49s |
 | exp358 | 2026-04-15T17:46:53Z | 2026-04-15T17:58:27Z | Exp 358: Comparative extraction benchmark — extraction_benchmark.py + test (33 pass) + experiment script + spec/traceability/ops docs | 11m34s |
+| 2026-04-15T19:54:06Z | 2026-04-15T19:55:16Z | Doc updates for Exp 361 (changelog, status) | 1 min 10 sec | — |
