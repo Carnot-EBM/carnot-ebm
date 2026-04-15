@@ -3976,6 +3976,41 @@ Spec: REQ-BENCH-007, SCENARIO-BENCH-014, SCENARIO-BENCH-016
 **When** `build_adversarial_artifact(result)` is called
 **Then** `honest_verdict="degradation_positive"`
 
+### SCENARIO-BENCH-017: run_adversarial_benchmark CI-Safe Mode
+
+**Given** `CARNOT_FORCE_LIVE` is not set (or set to any value other than `"1"`)
+**When** `run_adversarial_benchmark(model_id, questions, pipeline, batch_size=8)` is called
+**Then** it returns an `AdversarialBenchmarkResult` with `inference_mode="simulated"`
+**And** `honest_verdict` in the resulting artifact is `"blocked_simulated"`
+**And** no live model loading or GPU inference is attempted
+
+### SCENARIO-BENCH-018: run_adversarial_benchmark honest_verdict Logic
+
+**Given** a completed `AdversarialBenchmarkResult` with `inference_mode="live_gpu"` and
+  `repair_improvement > 0`
+**When** `build_adversarial_artifact(result)` is called
+**Then** `honest_verdict` is `"improvement_positive"`
+
+**Given** a completed `AdversarialBenchmarkResult` with `inference_mode` other than `"live_gpu"`
+**When** `build_adversarial_artifact(result)` is called
+**Then** `honest_verdict` is `"blocked_simulated"` (never `"improvement_positive"`)
+
+**Given** a completed `AdversarialBenchmarkResult` with `inference_mode="live_gpu"` and
+  `repair_improvement <= 0` and `accuracy_drop <= 0`
+**When** `build_adversarial_artifact(result)` is called
+**Then** `honest_verdict` is `"neutral"`
+
+### SCENARIO-BENCH-019: Exp 355 Per-Model Results And Headline Artifact
+
+**Given** Exp 355 runs with N questions per model across standard + adversarial + repair conditions
+**When** the artifact is built with `schema="carnot.adversarial_gsm8k.v1"`
+**Then** the artifact contains a `per_model_results` list with one entry per model
+**And** each entry contains `model_id`, `standard_accuracy`, `adversarial_accuracy`,
+  `accuracy_drop`, `repaired_adversarial_accuracy`, `repair_improvement`, `n_questions`
+**And** the artifact contains a `headline_result` dict with aggregate `honest_verdict`
+**And** `honest_verdict` at top level is `"improvement_positive"` only when
+  `repair_improvement > 0` AND `inference_mode == "live_gpu"` for at least one model
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script

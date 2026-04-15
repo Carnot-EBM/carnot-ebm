@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 355 Adversarial GSM8K Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T16:49:59Z | 2026-04-15T17:01:43Z | Exp 355: adversarial GSM8K benchmark — SCENARIO-BENCH-017/018/019 added to spec; run_adversarial_benchmark + _compute_top_level_verdict + main() written in experiment_355; 51 tests pass (100% targeted coverage); ops/conductor-log/changelog/status updated | ~12m |
+
+---
+
 ## Session: 2026-04-15 Exp 352 Live GPU Diagnostic Root-Cause Fix
 
 ### Turn Log
