@@ -1697,3 +1697,6 @@ python/ |
 | 2026-04-15 06:29 UTC | Exp 337: Operational retrospective for milestone 2026.05.06 | OK | operational_retro_2026_05_06.json written; n=12 experiments, total=293 min, mean=24.4 min/exp, top bottleneck=Exp 325 (35.0 min); all 4 RETRO items resolved; NEW-003/004 added; actual speedup ~39.9%; estimated next speedup ~4.0% |
 | 2026-04-15 06:52 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
 | 2026-04-15 06:52 UTC | Exp 337: Operational retrospective for milestone 2 | OK | Deliverable already exists in repo |
+| 2026-04-15 07:14 UTC | Plan milestone 2026.05.13 | OK | 13 tasks proposed |
+| 2026-04-15 07:15 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
+| 2026-04-15 07:15 UTC | Milestone 2026.05.13 activated | OK | 13 tasks queued |
