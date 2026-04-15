@@ -1,0 +1,85 @@
+{
+  "experiment": 341,
+  "title": "Live HumanEval code verification",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T09:24:17Z",
+  "finished_at": "2026-04-15T09:24:19Z",
+  "duration_s": 2.506,
+  "status": "success",
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "headline_improvement",
+    "headline_label",
+    "inference_mode",
+    "n_problems",
+    "n_repair_attempted",
+    "n_repair_succeeded",
+    "pass_at_1_after_repair",
+    "pass_at_1_before_repair",
+    "per_problem_results",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title",
+    "total_violations_found"
+  ],
+  "inference_mode": "simulated",
+  "n_problems": 5,
+  "pass_at_1_before_repair": 0.4,
+  "pass_at_1_after_repair": 0.4,
+  "headline_improvement": 0.0,
+  "headline_label": "no_improvement",
+  "n_repair_attempted": 3,
+  "n_repair_succeeded": 0,
+  "total_violations_found": 1,
+  "per_problem_results": [
+    {
+      "problem_id": "HumanEval/0",
+      "generated_code": "def has_close_elements(numbers: list, threshold: float) -> bool:\n    \"\"\"Check if any two numbers in list are closer than threshold.\"\"\"\n    for i in range(len(numbers)):\n        for j in range(i+1, len(numbers)):\n            if abs(numbers[i]-numbers[j]) < threshold:\n                return True\n    return False\n",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def has_close_elements(numbers: list, threshold: float) -> bool:\n    \"\"\"Check if any two numbers in list are closer than threshold.\"\"\"\n    for i in range(len(numbers)):\n        for j in range(i+1, len(numbers)):\n            if abs(numbers[i]-numbers[j]) < threshold:\n                return True\n    return False\n",
+      "final_passed_tests": false
+    },
+    {
+      "problem_id": "HumanEval/1",
+      "generated_code": "def separate_paren_groups(paren_string: str) -> list:\n    \"\"\"Separate groups of nested parentheses.\"\"\"\n    result, depth, current = [], 0, ''\n    for c in paren_string:\n        if c == '(':\n            depth += 1\n            current += c\n        elif c == ')':\n            current += c\n            depth -= 1\n            if depth == 0:\n                result.append(current)\n                current = ''\n    return 1 + (result)\n",
+      "passed_tests": false,
+      "violations_found": 1,
+      "repair_attempted": true,
+      "final_code": "def separate_paren_groups(paren_string: str) -> list:\n    \"\"\"Separate groups of nested parentheses.\"\"\"\n    result, depth, current = [], 0, ''\n    for c in paren_string:\n        if c == '(':\n            depth += 1\n            current += c\n        elif c == ')':\n            current += c\n            depth -= 1\n            if depth == 0:\n                result.append(current)\n                current = ''\n    return result\n",
+      "final_passed_tests": false
+    },
+    {
+      "problem_id": "HumanEval/2",
+      "generated_code": "def truncate_number(number: float) -> float:\n    \"\"\"Return the decimal part of a float.\"\"\"\n    return 1 + (number % 1.0)\n",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def truncate_number(number: float) -> float:\n    \"\"\"Return the decimal part of a float.\"\"\"\n    return 1 + (number % 1.0)\n",
+      "final_passed_tests": false
+    },
+    {
+      "problem_id": "HumanEval/3",
+      "generated_code": "def below_zero(operations: list) -> bool:\n    \"\"\"Return True if account balance ever goes below zero.\"\"\"\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False\n",
+      "passed_tests": true,
+      "violations_found": 0,
+      "repair_attempted": false,
+      "final_code": "def below_zero(operations: list) -> bool:\n    \"\"\"Return True if account balance ever goes below zero.\"\"\"\n    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False\n",
+      "final_passed_tests": true
+    },
+    {
+      "problem_id": "HumanEval/4",
+      "generated_code": "def mean_absolute_deviation(numbers: list) -> float:\n    \"\"\"Return mean absolute deviation from the mean.\"\"\"\n    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)\n",
+      "passed_tests": true,
+      "violations_found": 0,
+      "repair_attempted": false,
+      "final_code": "def mean_absolute_deviation(numbers: list) -> float:\n    \"\"\"Return mean absolute deviation from the mean.\"\"\"\n    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)\n",
+      "final_passed_tests": true
+    }
+  ]
+}

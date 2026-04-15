@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 341 Live HumanEval Code Verification Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T09:18:33Z | 2026-04-15T09:46:51Z | Exp 341: Live HumanEval code verification benchmark; REQ-BENCH-004 + SCENARIO-BENCH-010/011 to spec; HumanEvalResult dataclass + compute_pass_at_1 + compute_pass_at_1_after_repair + build_humaneval_artifact; experiment_341_live_humaneval.py (50 problems, CI-safe simulated mode, CodeExtractor+VerifyRepairPipeline); 49 tests all pass; fixed 4 test-case bugs (HumanEval/0 args format, HumanEval/1 string tuple, HumanEval/20 unsorted list, HumanEval/36 wrong expected value); ops/changelog.md + ops/status.md updated | ~28m |
+
+---
+
 ## Session: 2026-04-15 Exp 338 Host Prereqs + DualGPU Auto-Assignment
 
 ### Turn Log

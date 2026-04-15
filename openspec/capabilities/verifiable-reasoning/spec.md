@@ -3364,6 +3364,63 @@ from instruction-tuned models on GSM8K, where:
 
 Spec: REQ-BENCH-003, SCENARIO-BENCH-007, SCENARIO-BENCH-008, SCENARIO-BENCH-009
 
+### REQ-BENCH-004: Live HumanEval Code Verification Benchmark
+
+The system shall provide a live benchmark script (`experiment_341`) that measures
+Carnot's code verification pipeline on HumanEval-style problems with Gemma4-E4B-it,
+where:
+
+- **HumanEvalResult** dataclass captures per-problem benchmark data with fields:
+  `problem_id`, `generated_code`, `passed_tests`, `violations_found`,
+  `repair_attempted`, `final_code`, `final_passed_tests`
+- **compute_pass_at_1(results: list[HumanEvalResult]) → float**: returns the fraction
+  of problems where `passed_tests=True` before any repair (baseline pass@1)
+- **compute_pass_at_1_after_repair(results: list[HumanEvalResult]) → float**: returns the
+  fraction of problems where `final_passed_tests=True` after the verify-repair loop
+- **build_humaneval_artifact(results: list[HumanEvalResult], inference_mode: str) → dict**:
+  produces `humaneval_schema="carnot.humaneval_benchmark.v1"`, a `headline_improvement` field
+  (pass@1_after_repair − pass@1_before_repair), and `headline_label`
+- **headline_label**: if `headline_improvement > 0`, set to `"code_verification_positive"`;
+  otherwise `"no_improvement"`
+- **CI-safe simulated mode**: when `CARNOT_FORCE_LIVE=0`, use synthetic code snippets
+  (no LLM call); every result has `inference_mode="simulated"` in the artifact
+- **Live mode**: when `CARNOT_FORCE_LIVE=1`, use Gemma4-E4B-it for code generation
+  and run the full CodeExtractor + VerifyRepairPipeline on each problem
+
+Spec: REQ-BENCH-004, SCENARIO-BENCH-010, SCENARIO-BENCH-011
+
+### SCENARIO-BENCH-010: HumanEvalResult Dataclass And compute_pass_at_1
+
+**Given** a `HumanEvalResult` is constructed with `passed_tests=True` and
+  `final_passed_tests=True`
+**When** `compute_pass_at_1([result])` is called
+**Then** the result is `1.0`
+
+**Given** two results where one has `passed_tests=True` and one has `passed_tests=False`
+**When** `compute_pass_at_1(results)` is called
+**Then** the result is `0.5`
+
+**Given** a result with `passed_tests=False` and `final_passed_tests=True`
+**When** `compute_pass_at_1_after_repair([result])` is called
+**Then** the result is `1.0`
+
+### SCENARIO-BENCH-011: build_humaneval_artifact Headline And CI-Safe Mode
+
+**Given** results where pass@1_before=0.5 and pass@1_after=0.6
+**When** `build_humaneval_artifact(results, "live_gpu")` is called
+**Then** the artifact has `humaneval_schema="carnot.humaneval_benchmark.v1"`
+**And** `headline_improvement` is approximately `0.1`
+**And** `headline_label == "code_verification_positive"`
+
+**Given** results where pass@1_before=0.6 and pass@1_after=0.5
+**When** `build_humaneval_artifact(results, "live_gpu")` is called
+**Then** `headline_label != "code_verification_positive"`
+
+**Given** `CARNOT_FORCE_LIVE` is not set (or set to `"0"`)
+**When** the experiment runs all problems
+**Then** the artifact contains `inference_mode="simulated"`
+**And** every result uses synthetic code snippets without calling any LLM
+
 ### SCENARIO-BENCH-007: PrecisionStackResult Dataclass And compute_signed_improvement
 
 **Given** `baseline_accuracy=0.50` and `precision_stack_accuracy=0.65`
@@ -3888,6 +3945,7 @@ conductor log timestamps for Exps 325–336
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
 | REQ-BENCH-002 | Not Started | Implemented (Exp 328) | Live GPU benchmark result with inference_mode="live_gpu"; wrapper artifact with simulation_divergence + baseline_deviation; honest blocked artifact when GPU unavailable |
 | REQ-BENCH-003 | Not Started | Implemented (Exp 340) | PrecisionStackResult + PipelineVariant + compute_signed_improvement + build_precision_benchmark_artifact; live full precision stack benchmark (SCENARIO-BENCH-007/008/009) |
+| REQ-BENCH-004 | Not Started | Implemented (Exp 341) | HumanEvalResult + compute_pass_at_1 + compute_pass_at_1_after_repair + build_humaneval_artifact; live HumanEval code verification benchmark (SCENARIO-BENCH-010/011) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
