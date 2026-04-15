@@ -1,362 +1,303 @@
-# Carnot Research Roadmap v31: Live E2E Precision Pipeline, Constraint Addition from Memory, and EORM Predictive Verification
+# Carnot Research Roadmap v32: Live GPU Unblock, Apple Adversarial GSM8K, and LLM-as-Extractor
 
 **Created:** 2026-04-15
-**Milestone:** 2026.05.13
-**Status:** Planned (activates when milestone 2026.05.06 completes)
-**Supersedes:** Milestone 2026.05.06 — "Live GPU Benchmarks, Constraint Precision Analysis, Hardware Unblock, and Conductor Hardening"
-**Informed by:** Exps 325-337, operational retrospective 2026.05.06, v30 carry-forwards
-**External inputs (new in v31):**
-- EORM (2505.14999) — 55M-param energy reward model for CoT ranking, near-perfect accuracy
-- SinkProbe (2604.10697) — attention sink analysis as fast hallucination pre-filter
-- Eidoku (2512.20664) — neuro-symbolic CSP verification gate for structured LLM reasoning
-- LLM-guided SMT (2601.04675) — LLM guidance improves Z3 performance 80%
-- Energy-guided decoding for VLMs (2507.07731) — energy layer selection reduces hallucination
-- Scalable Ising connectivity (2503.01177) — dense-to-sparse FPGA Ising connectivity analysis
-- Online CoT verifier learnability bounds (2603.03538) — soundness/completeness trade-offs
+**Milestone:** 2026.05.20
+**Status:** Planned (activates when milestone 2026.05.13 completes)
+**Supersedes:** Milestone 2026.05.13 — "Live E2E Precision Pipeline, Constraint Addition from Memory, and EORM Predictive Verification"
+**Informed by:** Exps 338-350, operational retrospective 2026.05.13, v31 carry-forwards
+**External inputs (new in v32):**
+- ARM-EBM Bijection (2512.15605) — formal proof that ARMs are secretly EBMs; grounds spilled energy
+- SAVeR (2604.08401) — self-auditing multi-turn verification with constraint-guided repair-before-commit
+- MathAgent (2604.11188) — legislator-executor constraint graph generation as LLM extraction blueprint
+- T-SKM-Net (2512.10461) — trainable neural constraint satisfaction via algebraic projection
+- Online CoT verifier learnability bounds (2603.03538) — soundness/completeness trade-offs for online verification
 
 ---
 
-## What 2026.05.06 Proved
+## What 2026.05.13 Proved
 
 | Approach | Experiments | Verdict | Key Number |
 |----------|-------------|---------|-----------|
-| Conductor timeout wrapper + test-first stub | 325 | **COMPLETE** | RETRO-001 + NEW-001 implemented; 27% speedup est |
-| DualGPUMonitor + GPU zombie detection | 326 | **COMPLETE** | RETRO-002 + RETRO-003 implemented |
-| Pre-experiment dependency audit | 327 | **COMPLETE** | NEW-002 implemented; dependency audit CLI ready |
-| Live GPU full-scale benchmark (Exp 315 script) | 328 | **COMPLETE** | inference_mode=live_gpu; first real numbers |
-| Four-tier self-learning relay on live GPU | 329 | **COMPLETE** | Live relay benchmark established |
-| HuggingFace live publish | 330 | **COMPLETE** | 16 EBM READMEs updated; live GPU numbers embedded |
-| FP autopsy — broken verify-repair case analysis | 331 | **COMPLETE** | VALID_INTERMEDIATE as dominant FP category |
-| Confidence-weighted repair | 332 | **COMPLETE** | 86.7% FP avoided, 100% TP preserved (GATE_EFFECTIVE) |
-| Model-adaptive constraint thresholds + selective CaseMemory | 333 | **COMPLETE** | ADAPTIVE_PASS_ATLAS_PARTIAL; range_check auto-disabled |
-| VERGE-style iterative Z3 refinement | 334 | **COMPLETE** | Targeted step repair implemented; n_resolved benchmark |
-| AMD XDNA NPU build (attempt 5) | 335 | **BLOCKED** | ninja + openblas still missing (4 consecutive milestones) |
-| CoTCircuitVerifier — CRV structural verification | 336 | **COMPLETE** | TP/FP benchmark vs Exp 311 complete |
-| Operational retrospective 2026.05.06 | 337 | **COMPLETE** | 6 carry-forwards (RETRO-003–008); 38% savings estimate |
+| Host prereqs registry + DualGPURunner default | 338 | **COMPLETE** | RETRO-004 + RETRO-006 closed |
+| Pre-session startup health check | 339 | **COMPLETE** | RETRO-007 + RETRO-008 closed |
+| Live full precision pipeline benchmark | 340 | **SIMULATED** | inference_mode=simulated; live GPU unused |
+| Live HumanEval code verification | 341 | **SIMULATED** | inference_mode=simulated; live GPU unused |
+| ConstraintTemplateLibrary — Tier 2 constraint addition | 343 | **COMPLETE** | 4 built-in templates; positive improvement_delta |
+| CaseMemory → ConstraintTemplateLibrary wiring | 344 | **COMPLETE** | constraint addition shows positive delta vs Exp 134 reweighting |
+| SessionMemory — cross-session persistence | 345 | **COMPLETE** | save/load round-trip verified; carnot.session_memory.v1 |
+| EORM CoT energy reward model | 346 | **SIMULATED** | inference_mode=simulated; trained on synthetic pairs |
+| JEPA real-data retrain | 347 | **SIMULATED** | Exp 340 had no "responses" key; fallback to synthetic |
+| SinkProbe attention-sink pre-filter | 348 | **COMPLETE** | 60% skip rate, FNR=0%, TNR=100% on synthetic |
+| KV260 FPGA open-source bitfile synthesis | 349 | **COMPLETE/PARTIAL** | yosys synthesis attempted; bitfile status in results |
+| Operational retrospective 2026.05.13 | 350 | **COMPLETE** | 399 experiments; RETRO-009/010/011 opened |
 
 **Milestone-level conclusion:**
-2026.05.06 delivered the full precision pipeline stack: confidence-weighted repair (86.7% FP
-reduction), model-adaptive thresholds, VERGE iterative Z3 refinement, and CoT circuit verification.
-DualGPURunner and dependency audit are implemented. First live GPU benchmark numbers exist.
+2026.05.13 delivered the full Tier 2 self-learning stack (ConstraintTemplateLibrary, CaseMemory wiring,
+SessionMemory), the SinkProbe pre-filter, and infrastructure closes for RETRO-004/006/007/008.
 
-However, the new precision components (Exps 332-336) were benchmarked SYNTHETICALLY. They have
-not been tested end-to-end on live RTX 3090 output. We do not know whether the combined precision
-pipeline makes verify-repair helpful vs harmful at 1B-3B scale under live conditions.
+However, the fundamental credibility problem persists: **all four live-GPU experiments ran in simulated
+mode.** Both RTX 3090s were idle for the entire milestone. EORM and JEPA trained on synthetic data.
+RETRO-003 remains open for a second consecutive milestone. Without live GPU inference, every benchmark
+number is unverified.
 
-Additionally, the self-learning loop still does not ADD constraints from memory — it only
-reweights existing ones, which Exp 134 proved ineffective. This is research-program.md's #1
-priority and it has not been addressed.
+Additionally, constraint extraction is still broken for instruction-tuned models: ArithmeticExtractor
+found zero violations on Gemma4-E4B-it (0/20 questions, including 4 wrong answers). The LLM-as-extractor
+approach (research-program.md Goal #1b) has not been implemented.
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: New precision components unverified on live GPU data
+### Gap 1: Live GPU inference never works — all benchmarks are simulated artifacts
 
-The confidence-weighted repair (Exp 332), model-adaptive thresholds (Exp 333), VERGE (Exp 334),
-and CoT circuit verifier (Exp 336) were all implemented and benchmarked against synthetic/simulated
-responses. The live GPU benchmark (Exp 328) ran against the OLD pipeline (no VERGE, no CRV,
-no confidence weighting). We have no measurement of whether the combined precision stack moves
-verify-repair from "harmful" to "helpful" on live IT model output.
+Two consecutive milestones (2026.05.06 and 2026.05.13) produced zero live GPU inference results.
+The RTX 3090s sit idle while the conductor falls through to simulated fallback. This is not a hardware
+problem — it is a software path problem. Something in the `CARNOT_FORCE_LIVE=1` + model-loading path
+triggers simulated mode rather than raising an explicit error.
 
-The comparison we need: baseline (ArithmeticExtractor only) vs precision stack (confidence-weighted
-+ adaptive thresholds + VERGE + CRV) on the SAME 200 live GSM8K questions with Gemma4-E4B-it.
-If the precision stack shows net positive improvement on live GPU, that is Carnot's first credible
-positive result on instruction-tuned models.
+Root cause is unknown because no experiment has traced the failure path. Exp 340 shows
+`inference_mode=simulated` in results but does not report WHY the live path failed. The conductor
+retries and gets the same result. This wastes experiment slots on simulated benchmarks that cannot
+produce credible numbers.
 
-**This milestone's priority #1: Run live E2E precision pipeline benchmark with both models,
-all new components active. Measure signed improvement vs baseline. If positive, file as
+**This milestone's priority #1: Trace the live GPU inference failure path, fix the root cause,
+and verify with a live smoke test before any benchmark experiments run. RETRO-003 must also close
+(timeout wiring) — both are prerequisites for every subsequent experiment.**
+
+### Gap 2: Constraint extraction broken for IT models — no credible verification results
+
+ArithmeticExtractor finds zero violations on Gemma4-E4B-it. The regex pattern (`a + b = c`) does not
+match instruction-tuned output formats. This means verify-repair cannot fix errors on the models users
+actually deploy. The pipeline infrastructure is solid but the extraction layer is the bottleneck.
+
+Two approaches are available (research-program.md Goal #1):
+1. **LLM-as-extractor**: A second small LLM call extracts verifiable claims from the response in a
+   structured format that ArithmeticExtractor can parse. More flexible, handles any response format.
+2. **LLM-guided Z3** (arXiv 2601.04675): An LLM rewrites ambiguous arithmetic as explicit Z3 assertions,
+   then Z3 verifies. 80% improvement in Z3 success rate on previously-failing inputs.
+
+Both must be tested on live instruction-tuned models (Gemma4-E4B-it). No more simulated extraction.
+
+**This milestone's priority #2: Implement LLMExtractor and LLM-guided Z3 formalization, benchmark
+both against ArithmeticExtractor on live IT model output. Measure violation detection rate directly.**
+
+### Gap 3: Apple adversarial GSM8K — the credibility experiment — still untested
+
+Research-references.md labels the Apple adversarial GSM8K test as "Carnot's most compelling result"
+and "the credibility experiment." The adversarial variant (arXiv 2410.05229) adds irrelevant sentences
+to identical math problems, causing models to drop up to 65% accuracy. Carnot's arithmetic verifier
+should be immune because it extracts and verifies arithmetic regardless of irrelevant context.
+
+This experiment has been deferred for multiple milestones because live GPU inference was broken.
+With Gap 1 fixed, this becomes the primary benchmark target for the milestone.
+
+**This milestone's priority #3: Run the Apple adversarial GSM8K benchmark on live GPU with
+Gemma4-E4B-it. Measure: (a) accuracy drop on adversarial variants, (b) verify-repair recovery rate.
+If verify-repair maintains accuracy on adversarial inputs where the model fails, that is Carnot's
 headline result.**
-
-### Gap 2: Self-learning loop adds no new constraints — only reweights existing ones
-
-Research-program.md item #1 (highest priority): "constraint ADDITION from memory patterns, not
-just weight changes." Exp 134 proved precision-based reweighting does not improve accuracy.
-The Tier 2 CaseMemory has pattern data (which error types are common per model, per domain).
-The ConstraintStateMachine (Exp 125) can update which constraint types are active.
-
-The missing piece: a ConstraintTemplateLibrary that CaseMemory can populate with NEW constraint
-types based on observed error patterns. When memory detects "carry errors appear in 40% of
-Qwen3.5-0.8B arithmetic responses," the library should generate a carry-check constraint template
-and ADD it to the active constraint set. This is fundamentally different from upweighting an
-existing carry constraint.
-
-**This milestone's priority #2: Implement ConstraintTemplateLibrary, wire CaseMemory into
-it, and benchmark constraint addition vs constraint reweighting on 200 questions.**
-
-### Gap 3: JEPA/EORM predictor trained on simulated data — real training pairs now available
-
-The JEPA predictor (Tier 3) was trained on synthetic error patterns from simulated inference.
-The live GPU benchmarks (Exps 328-330) now provide real (response, correctness) pairs. EORM
-(arXiv 2505.14999) provides a proven 55M-parameter architecture for energy-based CoT ranking
-that directly matches Tier 3's goal. SinkProbe (arXiv 2604.10697) provides a fast pre-filter
-signal that could replace expensive Ising verification on the fast path.
-
-The combination: SinkProbe (fast, zero-cost signal) → EORM (55M energy ranking) → Ising (slow,
-high-accuracy) creates a three-tier fast/medium/slow verification chain that is both faster and
-more accurate than any single-tier approach.
-
-**This milestone's priority #3: Train EORM on real live benchmark data, retrain JEPA on
-real violation pairs, implement SinkProbe as fast pre-filter.**
 
 ---
 
-## Architecture: v31 Additions
+## Architecture: v32 Additions
 
 ```
 [Input Query]
     │
-    ├─[SinkProbe]──────────────────── attention sink signal   (NEW: Exp 348)
+    ├─[SinkProbe]──────────────────── attention sink signal   (EXISTING: Exp 348)
     │  arXiv 2604.10697               fast pre-filter; if sink score < threshold, skip Ising
     │
     ▼
-[LLM Generation — RTX 3090 x2, CARNOT_FORCE_LIVE=1]         (ESTABLISHED Exp 328)
+[LLM Generation — RTX 3090 x2, CARNOT_FORCE_LIVE=1]         (UNBLOCKED: Exps 352-353)
+    │   ← live GPU inference finally working
     │
-    ├─[EORM Energy Ranker]──────────── CoT ranking score       (NEW: Exp 346)
-    │  arXiv 2505.14999               55M-param; ranks multiple responses by energy
+    ├─[LLMExtractor]──────────────── structured claims        (NEW: Exp 356)
+    │   second LLM call: "what arithmetic claims does this make?"
+    │   output: JSON list of (lhs, op, rhs, result) triples
+    │       ↓
+    │  [LLM-guided Z3]───────────── explicit Z3 assertions    (NEW: Exp 357)
+    │   arXiv 2601.04675             LLM rewrites claims as z3.add() statements
+    │   80% improvement in Z3 success rate on ambiguous inputs
     │
-    ├─[JEPA Fast-Path Gate]──────────── violation predicted?   (RETRAINED: Exp 347)
-    │  arXiv 2509.14252               now trained on real violation pairs
+    ├─[EORM Energy Ranker]──────────── CoT ranking score      (RETRAINED: Exp 359)
+    │  arXiv 2505.14999               retrained on real (CoT, correctness) pairs
+    │                                 from Exps 340/341/355
+    │
+    ├─[JEPA Fast-Path Gate]──────────── violation predicted?  (EXISTING: Exp 347)
     │       ↓ if high energy
     │
-    ├─[NL2Z3Extractor]──────────────── Z3 SMT assertions       (EXISTING, Exp 310)
-    │       ↓ UNSAT
-    │  [VERGE Iterative Loop] ──────── targeted step repair    (EXISTING, Exp 334)
-    │       repair only broken step → re-verify
-    │
-    ├─[CoTCircuitVerifier] ──────────── structural CoT graph   (EXISTING, Exp 336)
+    ├─[CoTCircuitVerifier] ──────────── structural CoT graph  (EXISTING: Exp 336)
     │  arXiv 2510.09312               broken circuit → flag
     │
     ▼
 [Ising Verification — CPU fast path]
     │
-    ├─[ConfidenceWeightedRepair] ──── score × confidence       (EXISTING, Exp 332)
-    │   only repair violations ≥ 0.8
-    │
-    └─[ModelAdaptiveThresholds] ──── per-model FP tracking     (EXISTING, Exp 333)
+    ├─[ConfidenceWeightedRepair] ──── score × confidence      (EXISTING: Exp 332)
+    ├─[ModelAdaptiveThresholds] ──── per-model FP tracking    (EXISTING: Exp 333)
+    └─[VERGE Iterative Loop] ──────── targeted step repair    (EXISTING: Exp 334)
     │
     ▼
-[Tier 1: Online constraint weight updates]                     (EXISTING)
-[Tier 2: CaseMemory → ConstraintTemplateLibrary]              (NEW: Exps 343-345)
-    │   error pattern detected → ADD new constraint type
-[Tier 3: EORM + JEPA gate + ThresholdAdapter]                 (UPGRADED: Exps 346-347)
-    │   real-data trained; 3-tier fast/medium/slow chain
-[Tier 4: Adaptive structure — KAN splines]                    (FUTURE)
+[Three-Tier Fast/Medium/Slow Pipeline]                        (BENCHMARKED: Exp 360)
+    ├─[SinkProbe] → fast gate (0ms)
+    ├─[EORM] → medium gate (real-data trained)
+    └─[Ising] → slow gate (accurate)
+    │
+    ▼
+[Tier 1: Online constraint weight updates]                    (EXISTING)
+[Tier 2: CaseMemory → ConstraintTemplateLibrary]             (EXISTING: Exps 343-345)
+[Tier 3: EORM + JEPA gate on real data]                      (UPGRADED: Exps 359-360)
+[Tier 1+2+3 Relay — real models, real data]                  (NEW: Exp 361)
+    │   continuous self-learning experiment — satisfies FR-11
+    │
+    ▼
+[Multi-Turn Agentic Verification — SAVeR]                     (NEW: Exp 362)
+    │  arXiv 2604.08401
+    │  constraint state persists across agent steps
+    └─[ConstraintStateMachine] ── propagation across turns
     │
     ▼
 [Hardware backends]
-    ├─[FpgaBackend] ─── KV260 open-source bitfile synthesis    (NEW: Exp 349)
-    │   yosys + nextpnr synthesis of Exp 291 Verilog RTL
-    └─[AMD XDNA NPU] ── still blocked (ninja + openblas)       (CARRY-FORWARD)
-```
-
-**New infrastructure (this milestone):**
-```
-[ops/host-prereqs.md] ────────────── system package registry   (NEW: Exp 338)
-    ninja, openblas, CARNOT_FORCE_LIVE entries catalogued
-[DualGPURunner default wiring] ───── RETRO-004 fix             (NEW: Exp 338)
-    two-model benchmarks auto-assign to separate GPUs
-[scripts/session_startup.sh] ─────── pre-session health check  (NEW: Exp 339)
-    GPU zombie cleanup, health summary before conductor starts
+    ├─[FpgaBackend] ─── KV260 bitfile bring-up                (CARRY-FORWARD)
+    └─[AMD XDNA NPU] ── blocked (ninja + openblas — human install required)
 ```
 
 ---
 
-## Phase Breakdown
+## Phase Design
 
-### Phase 1: Infrastructure Carry-Forwards (Exps 338-339)
+### Phase 1: Critical Infrastructure (Exps 351-353)
 
-**Goal:** Close RETRO-003 through RETRO-008 from the 2026.05.06 retrospective.
-These have been carried forward; the retro estimates 38% savings if implemented.
+Close RETRO-003/005/009/010/011. Diagnose and fix the live GPU inference failure path.
+Verify live GPU with a smoke test before any benchmark work. These are prerequisites
+for every subsequent experiment.
 
-- **Exp 338:** Host prereqs registry + DualGPURunner as default (RETRO-004 + RETRO-006)
-  - Create `ops/host-prereqs.md` cataloguing all required system packages per experiment class
-  - Wire `DualGPURunner` as default for any experiment with two LLM models
-  - Add CARNOT_FORCE_LIVE=1 to host-prereqs as a required env var for live benchmark class
+**RETRO-003** (highest priority, must close before any benchmark): wire
+`run_experiment_with_timeout.sh` as mandatory wrapper in conductor invocation. Zero
+implementation work required — it is already written.
 
-- **Exp 339:** Pre-session GPU health + zombie cleanup automation (RETRO-007 + RETRO-008)
-  - Write `scripts/session_startup.sh` — zombie GPU process detection and cleanup
-  - Integrate into ExperimentTemplate pre-flight check (additive, warn-only)
+**RETRO-005**: wire `gpu_monitor.py --kill-zombies` into conductor inter-experiment cleanup.
 
-**Expected outcome:** 38% estimated reduction in milestone wall time (retro estimate).
+**RETRO-009/010/011**: add live GPU smoke test at session start (RETRO-009); document
+presplit guidance for complex experiments >30 min estimated (RETRO-010); add batch doc
+reconciliation every 5 experiments to conductor runner (RETRO-011).
 
-### Phase 2: Live E2E Precision Benchmark (Exps 340-342)
+### Phase 2: Apple Adversarial GSM8K (Exps 354-355)
 
-**Goal:** Benchmark the FULL new precision stack (VERGE + CRV + confidence-weighted + adaptive
-thresholds) on live GPU. First credible measurement of whether the combined stack helps.
+Implement the Apple adversarial GSM8K harness (script + tests, no GPU) then execute
+on live GPU. Two-part split per research-program.md "Large Benchmark Experiments" rule.
 
-- **Exp 340:** Live full precision pipeline benchmark
-  - Two models on two GPUs (DualGPURunner): Gemma4-E4B-it + Qwen3.5-0.8B
-  - 200 GSM8K questions per model (live RTX 3090, CARNOT_FORCE_LIVE=1)
-  - Compare: (1) baseline ArithmeticExtractor, (2) +confidence-weighted, (3) +adaptive thresholds,
-    (4) +VERGE, (5) full stack (VERGE + CRV + confidence + adaptive)
-  - Primary metric: signed net improvement (positive = helpful, negative = harmful)
-  - Deliverable: results/experiment_340_live_precision_benchmark.json
+Target: Gemma4-E4B-it on 100 standard + 100 adversarial GSM8K questions.
+Measure: accuracy drop (standard → adversarial) and verify-repair recovery on adversarial.
+If verify-repair is immune to irrelevant-sentence perturbation, report as headline result.
 
-- **Exp 341:** Live HumanEval code verification
-  - CodeExtractor + runtime execution (most likely domain to still work — no regex extraction)
-  - 50 HumanEval questions with Gemma4-E4B-it on live RTX 3090
-  - Primary metric: pass@1 improvement with vs without Ising-guided repair
-  - Deliverable: results/experiment_341_live_humaneval.json
+### Phase 3: LLM-as-Extractor (Exps 356-358)
 
-- **Exp 342:** Live extractor comparison on same responses
-  - ArithmeticExtractor vs NL2Z3 vs VERGE vs CoTCircuit on 50 live Gemma4-E4B-it responses
-  - Measure per-extractor: violation rate, FP rate, precision (vs ground truth from Exp 331 taxonomy)
-  - Deliverable: results/experiment_342_live_extractor_comparison.json
+Implement two new extraction approaches (both must run on live IT model output):
+1. **LLMExtractor**: small LLM call that converts free-form reasoning into parseable claim triples.
+2. **LLM-guided Z3**: LLM rewrites ambiguous arithmetic into explicit Z3 assertion code.
 
-**Expected outcome:** First credible data on precision stack effectiveness. If combined stack
-shows positive signed improvement, report as first headline-quality result on live IT models.
+Both informed by MathAgent's constraint graph generation (arXiv 2604.11188): the LLMExtractor
+output format is a constraint graph (variable bindings + arithmetic assertions), not just a
+list of regex patterns. This format maps directly to Ising coupling matrices.
 
-### Phase 3: Constraint Addition from Memory (Tier 1/2 Fusion) (Exps 343-345)
+Benchmark experiment (Exp 358) compares ArithmeticExtractor vs LLMExtractor vs LLM-guided Z3
+on 50 live questions from Gemma4-E4B-it. Primary metric: violation detection rate on known-wrong
+answers (the Gemma4 questions where it answers incorrectly).
 
-**Goal:** Address research-program.md priority #1. Move from constraint reweighting to
-constraint addition based on observed error patterns.
+### Phase 4: Real-Data EORM + Three-Tier Pipeline (Exps 359-360)
 
-- **Exp 343:** ConstraintTemplateLibrary
-  - New module: maps observed error patterns to NEW constraint type templates
-  - Template API: `add_template(pattern_key, constraint_fn)` → adds to active constraint set
-  - Key templates: carry-check, range-check, sign-check, unit-consistency, comparison-direction
-  - Addresses Exp 134 finding: reweighting failed; addition must succeed
-  - Deliverable: python/carnot/pipeline/constraint_template_library.py
+EORM and JEPA need to retrain on real (question, CoT, correctness) pairs — these are now
+available from Exps 340/341/355 (if live GPU works). EORM retrain on 200+ real pairs,
+compare AUC-ROC before/after. Three-tier benchmark measures throughput and accuracy for
+the combined SinkProbe → EORM → Ising chain vs Ising-alone baseline.
 
-- **Exp 344:** CaseMemory-to-ConstraintTemplateLibrary wiring
-  - Wire CaseMemory into ConstraintTemplateLibrary: when pattern threshold met → add template
-  - Benchmark: run 200 simulated questions; compare accuracy (reweighting only vs addition)
-  - Hypothesis: constraint addition shows improvement where reweighting showed 0% (Exp 134)
-  - Deliverable: results/experiment_344_constraint_addition_benchmark.json
+### Phase 5: Self-Learning Relay + Multi-Turn (Exps 361-363)
 
-- **Exp 345:** Multi-session memory persistence
-  - CaseMemory + ConstraintTemplateLibrary persist to disk and reload across sessions
-  - Session fingerprinting: track which model was active to load per-model templates
-  - Deliverable: python/carnot/pipeline/session_memory.py
+**Exp 361** is the mandatory continuous self-learning experiment (research-program.md requirement).
+Full Tier 1+2+3 relay: run 100 questions, after each batch update constraint weights (Tier 1),
+accumulate patterns into ConstraintTemplateLibrary (Tier 2), evaluate JEPA gate accuracy (Tier 3).
+Measure whether accuracy improves across batches.
 
-**Expected outcome:** Constraint addition from memory showing measurable improvement on simulated
-benchmark. Self-learning loop advances from Tier 1 (reweighting) to Tier 1+2 (addition).
+**Exp 362** implements SAVeR-style multi-turn agentic verification (arXiv 2604.08401): a two-turn
+agent loop where the constraint state from step N gates action commitment at step N+1.
 
-### Phase 4: EORM + SinkProbe Predictive Verification (Exps 346-348)
-
-**Goal:** Upgrade Tier 3 with real-data training and a fast pre-filter signal.
-EORM (arXiv 2505.14999) + SinkProbe (arXiv 2604.10697) form the fast/medium/slow chain.
-
-- **Exp 346:** EORM-style CoT energy reward model (arXiv 2505.14999)
-  - Train 55M-param energy model on (CoT, correctness) pairs from Exp 340 live benchmark
-  - Architecture: small transformer encoder → scalar energy → ranking loss
-  - Compare vs JEPA gate accuracy on same held-out data
-  - Deliverable: python/carnot/models/eorm.py + results/experiment_346_eorm_training.json
-
-- **Exp 347:** JEPA predictor retraining on real violation pairs
-  - Collect (partial_response[first N tokens], final_violation_flag) pairs from Exp 340
-  - Retrain JEPA on real pairs; compare gate accuracy vs Exp 307/308 simulated baseline
-  - Primary metric: AUC-ROC on held-out live benchmark responses
-  - Deliverable: results/experiment_347_jepa_real_retrain.json
-
-- **Exp 348:** SinkProbe attention-sink hallucination pre-filter (arXiv 2604.10697)
-  - Implement attention sink analysis: compute per-head sink token attention concentration
-  - Threshold: if SinkProbe score < τ, skip expensive Ising verification (fast path)
-  - Benchmark: SinkProbe FPR/FNR on 50 live responses from Exp 340
-  - Multi-signal ensemble: SinkProbe + SpilledEnergy + EORM + Ising
-  - Deliverable: python/carnot/pipeline/sink_probe.py + results/experiment_348_sink_probe.json
-
-**Expected outcome:** EORM trained on first real (CoT, correctness) pairs. JEPA retrained on
-real violation pairs. SinkProbe provides fast-path skip for low-risk responses.
-
-### Phase 5: Hardware + Operational (Exps 349-350)
-
-**Goal:** Advance KV260 FPGA path and capture operational lessons.
-
-- **Exp 349:** KV260 FPGA bitfile synthesis via open-source toolchain
-  - Attempt yosys + nextpnr synthesis of Ising sampler Verilog (Exp 291 RTL)
-  - Use sparsification strategy from arXiv 2503.01177 (Scalable Ising connectivity)
-  - Incorporate Mpemba-effect annealing from arXiv 2603.24183
-  - Success criteria: synthesis script runs, reports LUT/FF utilization (even if not placed)
-  - Deliverable: hardware/kv260/carnot_ising_synthesis.sh + results/experiment_349_kv260_synthesis.json
-
-- **Exp 350:** Operational retrospective for milestone 2026.05.13
-  - Wall time analysis, per-experiment duration, bottleneck identification
-  - Action items for next milestone
-  - Deliverable: results/operational_retro_2026_05_13.json
+**Exp 363** is the operational retrospective.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 338 (host prereqs + DualGPURunner default)  ──────────────────────────────┐
-Exp 339 (session startup + zombie cleanup)       ──────────────────────────────┤
-                                                                                ↓
-Exp 340 (live full precision benchmark)  ──[uses Exps 332-336 pipeline]───────┐
-         [DualGPURunner: Gemma4 on GPU0, Qwen3.5 on GPU1]                     │
-                                                                                │
-Exp 341 (live HumanEval code verification) ─[uses CodeExtractor]──────────────┤
-                                                                                │
-Exp 342 (live extractor comparison) ─[uses Exp 340 responses]──────────────────┤
-                                                                                ↓
-Exp 343 (ConstraintTemplateLibrary) ─[new module]──────────────────────────────┐
-                                                                                │
-Exp 344 (CaseMemory → template wiring) ─[uses Exp 343 + CaseMemory]───────────┤
-                                                                                │
-Exp 345 (session memory persistence) ─[uses Exp 343 + 344]─────────────────────┤
-                                                                                │
-Exp 346 (EORM training) ─[uses Exp 340 live pairs]─────────────────────────────┤
-                                                                                │
-Exp 347 (JEPA real retrain) ─[uses Exp 340 partial responses]──────────────────┤
-                                                                                │
-Exp 348 (SinkProbe) ─[uses Exp 340 attention tensors]──────────────────────────┘
-
-Exp 349 (KV260 synthesis) ─[independent; uses hardware/kv260/ising_sampler_v1.v]
-Exp 350 (retro) ─[uses all Exp 338-349 results]
+[Exp 351: RETRO-003/005 closes]
+    │
+    └──► [Exp 352: Live GPU diagnostic]
+              │
+              └──► [Exp 353: Live GPU smoke test]
+                        │
+              ┌─────────┴────────────────────────────┐
+              │                                       │
+    [Exp 354: Adversarial dataset]         [Exp 356: LLMExtractor impl]
+              │                                       │
+    [Exp 355: Adversarial benchmark]       [Exp 357: LLM-guided Z3]
+              │                                       │
+              └──────────────┬────────────────────────┘
+                             │
+                   [Exp 358: Extraction benchmark]
+                             │
+                   [Exp 359: EORM retrain on real data]
+                             │
+                   [Exp 360: Three-tier pipeline benchmark]
+                             │
+                   [Exp 361: Tier 1+2+3 self-learning relay]
+                             │
+                   [Exp 362: SAVeR multi-turn verification]
+                             │
+                   [Exp 363: Operational retrospective]
 ```
+
+---
+
+## Open RETRO Items Coming In
+
+| Item | Source | Status | Action |
+|------|---------|--------|--------|
+| RETRO-003 | 2026.05.06 retro | OPEN (2nd milestone) | Wire timeout.sh — Exp 351 |
+| RETRO-005 | 2026.05.06 retro | PARTIAL | Wire kill-zombies — Exp 351 |
+| RETRO-009 | 2026.05.13 retro | NEW | Live GPU smoke test — Exp 351 |
+| RETRO-010 | 2026.05.13 retro | NEW | Presplit complex experiments — Exp 351 |
+| RETRO-011 | 2026.05.13 retro | NEW | Batch doc reconciliation — Exp 351 |
+| AMD XDNA NPU | Exps 292/303/314/335 | BLOCKED | Human install: ninja + openblas |
+| KV260 bitfile | Exp 313 | BLOCKED | Set CARNOT_KV260_BITFILE after synthesis |
 
 ---
 
 ## Hardware Requirements
 
 | Experiment | Hardware | Notes |
-|-----------|----------|-------|
-| Exp 340 (live precision benchmark) | 2x RTX 3090 | CARNOT_FORCE_LIVE=1; DualGPURunner; Gemma4 on GPU0, Qwen3.5 on GPU1 |
-| Exp 341 (live HumanEval) | 1x RTX 3090 | Single model, CodeExtractor + execution |
-| Exp 342 (extractor comparison) | 1x RTX 3090 | Reuses live responses from Exp 340 |
-| Exps 338-339 (infra) | CPU | No GPU needed |
-| Exps 343-345 (constraint addition) | CPU | Simulation; no live GPU needed |
-| Exp 346 (EORM training) | 1x RTX 3090 | 55M-param model training; JAX on GPU |
-| Exp 347 (JEPA retrain) | 1x RTX 3090 | JEPA predictor fine-tuning |
-| Exp 348 (SinkProbe) | 1x RTX 3090 | Attention tensor analysis on live responses |
-| Exp 349 (KV260 synthesis) | CPU | yosys + nextpnr synthesis; no GPU needed |
-| Exp 350 (retro) | CPU | Analysis only |
+|------------|----------|-------|
+| Exp 353: live smoke test | 2x RTX 3090 | CARNOT_FORCE_LIVE=1 required |
+| Exp 355: adversarial benchmark | 2x RTX 3090 | DualGPURunner for 2 models |
+| Exp 358: extraction benchmark | 2x RTX 3090 | LLM inference needed |
+| Exp 359: EORM retrain | 1x RTX 3090 | 200+ real pairs, GPU training |
+| Exp 360: three-tier benchmark | 2x RTX 3090 | Full pipeline benchmark |
+| Exp 361: self-learning relay | 2x RTX 3090 | 100 questions real inference |
+| Exp 362: SAVeR multi-turn | 2x RTX 3090 | Two-turn agent loop |
 
-**Hardware actions needed before this milestone:**
-1. Ensure both RTX 3090s are visible: `nvidia-smi -L` should show two GPU entries
-2. Install ninja+openblas for NPU: `sudo pacman -S ninja openblas` (or apt equivalent)
-   — unblocks eventual NPU experiment but does NOT block this milestone
+**RETRO-009 enforcement**: Exp 351 must wire a live GPU smoke test into the session startup
+procedure. Subsequent experiments should fail fast (blocked artifact) rather than running in
+simulated mode silently. The smoke test is: load Gemma4-E4B-it, run 2 questions, verify
+inference_mode=live_gpu in output.
 
 ---
 
-## Self-Learning Progress Tracker
+## Success Criteria for This Milestone
 
-| Tier | Status | Experiments |
-|------|--------|-------------|
-| Tier 1: Online weight updates | IMPLEMENTED (Exp 132-134) | Reweighting proven ineffective |
-| Tier 1+2 Fusion: Constraint addition | **NEW THIS MILESTONE** | Exps 343-345 |
-| Tier 2: Constraint memory | IMPLEMENTED (Exp 135) | CaseMemory, selective consolidation |
-| Tier 3: Predictive verification | UPGRADED THIS MILESTONE | EORM (346) + JEPA real-retrain (347) |
-| Tier 4: Adaptive structure | FUTURE | KAN adaptive mesh; depends on Tier 3 |
-
-**Tier 3 fast/medium/slow chain (this milestone):**
-```
-SinkProbe (fast, 0ms overhead) → EORM ranker (medium, 55M GPU) → Ising (slow, 0.006ms/check)
-Each layer gates the next. SinkProbe reduces Ising calls by estimated 40-60%.
-```
-
----
-
-## New Papers to Incorporate
-
-| Paper | Exp | What it enables |
-|-------|-----|-----------------|
-| EORM (2505.14999) | 346 | Energy reward model for CoT ranking trained on real data |
-| SinkProbe (2604.10697) | 348 | Fast attention-based pre-filter replacing expensive Ising on easy queries |
-| Eidoku (2512.20664) | 343 | Constraint type taxonomy for ConstraintTemplateLibrary |
-| LLM-guided SMT (2601.04675) | 342 | Z3 performance improvement via LLM-guided quantifier elimination |
-| Energy-guided decoding (2507.07731) | 348 (future) | Layer selection insight for token probability adjustment |
-| Scalable Ising connectivity (2503.01177) | 349 | Sparsification strategy for KV260 FPGA bitfile |
-| CoT verifier learnability (2603.03538) | 343-344 | Soundness/completeness bounds for constraint addition |
+1. **Live GPU confirmed working**: at least one experiment reports `inference_mode=live_gpu`
+2. **Apple adversarial result**: Exp 355 reports accuracy drop + verify-repair recovery,
+   signed improvement > 0 on adversarial variant
+3. **LLMExtractor beats regex**: Exp 358 shows LLMExtractor detects violations on
+   instruction-tuned model output where ArithmeticExtractor found zero
+4. **EORM trained on real data**: Exp 359 shows AUC-ROC improvement after retrain on
+   real (CoT, correctness) pairs vs synthetic-only baseline
+5. **Self-learning relay runs**: Exp 361 runs end-to-end with real models, reports
+   constraint weight updates across batches
+6. **RETRO-003 closed**: conductor timeout wiring confirmed in ops/conductor-log.md

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Research Planning Milestone 2026.05.20
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T15:10:04Z | 2026-04-15T15:20:06Z | Plan next milestone 2026.05.20 — arxiv scan + design; 13 experiments (Exps 351-363) across 5 phases; 4 new papers added to research-references.md (ARM-EBM bijection 2512.15605, SAVeR 2604.08401, MathAgent 2604.11188, T-SKM-Net 2512.10461); 3 gaps: live GPU never works, constraint extraction broken for IT models, Apple adversarial GSM8K untested | ~10m |
+
+---
+
 ## Session: 2026-04-15 Exp 347 JEPA Real-Data Retrain
 
 ### Turn Log
