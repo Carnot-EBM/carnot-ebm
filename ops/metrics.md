@@ -8,6 +8,7 @@
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-15T15:45:25Z | 2026-04-15T15:48:16Z | Exp 352: Diagnose + fix silent simulated fallback; verified all files exist; 37 tests pass, 100% module coverage; updated conductor-log/changelog | ~3m |
 | 2 | 2026-04-15T15:49:35Z | 2026-04-15T15:50:05Z | Verify Exp 352 docs complete — changelog (2 entries), status.md row, traceability.md REQ-INFRA-014/SCENARIO-INFRA-014/015 all present; no appends needed | ~1m |
+| 3 | 2026-04-15T15:51:37Z | 2026-04-15T15:57:00Z | Exp 352: Full end-to-end run — read all key files, ran tests (37 pass 100% module coverage), ran experiment_352 script; ROOT CAUSE CONFIRMED: carnot_force_live_set=False (CARNOT_FORCE_LIVE=1 not in conductor subprocess env); GPU hardware fully capable (cuda_visible=True, torch_available=True, model_loadable=True); updated conductor-log + changelog with diagnostic findings | ~6m |
 
 ---
 
