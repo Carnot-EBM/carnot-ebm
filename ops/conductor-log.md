@@ -1814,3 +1814,5 @@ python/ |
 | 2026-04-15 18:45 UTC | Exp 359: EORM retrain on real (CoT, correctness) p | OK | 129 passed in 3.32s |
 | 2026-04-15 18:46 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 18:46 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
+| 2026-04-15 19:22 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 19:22 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
