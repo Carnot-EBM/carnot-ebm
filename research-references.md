@@ -1112,3 +1112,93 @@ thermodynamic computing Ising FPGA
   into decoding-time enforcement — the guided decoding path Carnot is targeting. The LegalBench
   result also provides a concrete benchmark target for Carnot's constrained generation approach.
 - **When to pursue:** Guided decoding milestone. Use LegalBench as evaluation benchmark.
+
+---
+
+## New Papers — Filed 2026-04-15 (Milestone v30 Planning)
+
+### VERGE — Formal Refinement and Guidance Engine for LLM Verification (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2601.20055 — "VERGE: Formal Refinement and Guidance Engine for Verifiable LLM Reasoning" (2026-01)
+- **What:** Combines LLMs with SMT solvers (Z3) in an iterative refinement loop. Instead of
+  one-shot Z3 checking, VERGE iterates: detect which assertion failed, ask the LLM to fix
+  that specific step, re-verify until SAT or max iterations reached. Achieved near-perfect
+  accuracy on multi-step math benchmarks via this targeted repair loop.
+- **Relevance to Carnot:** Directly extends Carnot's NL2Z3Extractor (Exp 310) and Z3-gated
+  repair (Exp 312). The iterative refinement design is the natural next step: instead of
+  flagging the whole response as violated, identify which atomic step failed Z3 and prompt
+  the LLM to repair only that step. This is more surgical than Carnot's current whole-response
+  repair approach and should reduce false positives dramatically.
+- **When to pursue:** Next milestone (2026.05.06). Implement VERGE-style iterative loop on top
+  of NL2Z3Extractor + Z3GatedRepair.
+
+### CRV — Chain-of-Thought Circuit Verification (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2510.09312 — "Verifying Chain-of-Thought Reasoning via Its Computational Graph" (2025-10)
+- **What:** Extracts the computational dependency graph (circuit) from a CoT response — which
+  intermediate values depend on which others. Uses structural fingerprints of this graph to
+  detect reasoning errors. A "broken" circuit (where a downstream value doesn't follow from
+  upstream values) indicates an error. Model-agnostic, no external KB required.
+- **Relevance to Carnot:** Complementary to Z3 (which checks arithmetic consistency) — CRV
+  checks STRUCTURAL consistency of the reasoning chain. Combined with NL2Z3Extractor: Z3
+  checks arithmetic, CRV checks logical flow. Together they cover both types of IT model errors:
+  arithmetic mistakes (Z3) and reasoning chain errors (CRV). The circuit extraction maps
+  naturally onto Carnot's ConstraintIR — each node is a constraint.
+- **When to pursue:** Next milestone. Implement CRV-style CoT graph extractor as a new
+  ConstraintExtractor variant: CoTCircuitVerifier.
+
+### Typed CoT — Curry-Howard Framework for LLM Verification (RESEARCH FRONTIER)
+- **Paper:** arxiv.org/abs/2510.01069 — "Typed Chain-of-Thought: A Curry-Howard Framework for Verifying LLM Reasoning" (2025-10)
+- **What:** Maps informal CoT traces to formally typed proof structures using the Curry-Howard
+  correspondence (proofs = programs). Each reasoning step must have a type; a type mismatch
+  indicates an error. Enables computational verification of reasoning faithfulness without
+  a domain-specific KB.
+- **Relevance to Carnot:** Provides a formal type-theoretic foundation for constraint
+  verification. The type system could be used to validate that each reasoning step's output
+  type matches the input type expected by the next step (e.g., "a number" → "a count" →
+  "a percentage"). Long-term: integrate into Carnot's ConstraintIR as a type-checking layer.
+- **When to pursue:** Research frontier. Study for Kona parity milestone. Near-term: may inform
+  CRV-style CoTCircuitVerifier design.
+
+### Solver-Aided Agent Policy Compliance (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2603.20449 — "Solver-Aided Verification of Policy Compliance in Tool-Augmented LLM Agents" (2026-03)
+- **What:** Uses SMT solvers (Z3) to enforce policy constraints in LLM agent tool calls at
+  runtime. Intercepts tool invocations, checks that parameters satisfy policy assertions, and
+  blocks non-compliant calls. Prevents agents from taking harmful actions that satisfy surface-
+  level instructions but violate deeper constraints.
+- **Relevance to Carnot:** Operational validation of Carnot's multi-turn agentic verification
+  (Goal #4). This paper shows SMT-based constraint enforcement for agent tool calls is
+  production-viable. Connects to Carnot's ConstraintStateMachine (Exp 125) and
+  AgentRollback (Exp 126) — the policy compliance framing is more principled than
+  Carnot's current violation-triggered rollback. Also: provides a new benchmark domain
+  (agent tool calls) for evaluating Carnot's constraint extraction.
+- **When to pursue:** Next milestone — add agent policy compliance as a benchmark mode in
+  the extractor benchmark. Long-term: wire into VerifyRepairPipeline as a tool-call gate.
+
+### EBM Reward Models — Energy-Based LLM Alignment (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2504.13134 — "Energy-Based Reward Models for Robust Language Model Alignment" (2025-04)
+- **What:** Proposes EBMs explicitly for reward modeling in LLM alignment. Key insight:
+  EBMs' partition function acts as a natural uncertainty quantifier — high partition function
+  variance = uncertain reward = lower confidence in that training signal. Demonstrated more
+  robust alignment than scalar reward models on OOD inputs.
+- **Relevance to Carnot:** Validates the EBM-for-evaluation architectural direction. The
+  partition function uncertainty idea maps onto Carnot's energy landscape — high energy
+  variance across Gibbs samples = uncertain constraint satisfaction = lower confidence
+  in repair. Could improve Carnot's ConfidenceVerifier by using partition function variance
+  as the confidence signal rather than raw energy.
+- **When to pursue:** Constraint precision milestone. Experiment: replace ConfidenceVerifier's
+  scalar energy with partition function variance. Requires computing multiple Ising samples.
+
+### ATLAS — Continual Learning for Deployed Agents (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2511.01093 — "Continual Learning, Not Training: Online Adaptation For Agents" (2025-11)
+- **What:** Dual-agent system (ATLAS) with persistent learning memory for gradient-free online
+  adaptation. One agent handles current queries; a second "learning agent" distills experience
+  into a persistent memory store (similar to Carnot's CaseMemory). The key contribution:
+  selective memory consolidation — not all experience is worth saving, only "surprising" or
+  "high-contrast" interactions.
+- **Relevance to Carnot:** Directly applicable to Tier 2 self-learning (constraint memory /
+  Trace2Skill). The selective memory consolidation idea addresses a gap in Carnot's
+  CaseMemory (Exp 222) — currently all traces are stored, but only high-contrast cases
+  (where verification disagreed with LLM confidence) should be retained. This would reduce
+  memory footprint and improve per-pattern precision.
+- **When to pursue:** Self-learning architecture milestone. Add selective consolidation to
+  CaseMemory: only store traces where verified_violation != model_confidence_direction.
+  Target: reduce CaseMemory size by 60% while maintaining or improving pattern precision.

@@ -1,281 +1,285 @@
-# Carnot Research Roadmap v29: JEPA Real Training, Z3 Formal Extraction, KV260 FPGA, and Credible Full-Scale Benchmarks
+# Carnot Research Roadmap v30: Live GPU Benchmarks, Constraint Precision Analysis, Hardware Unblock, and Conductor Hardening
 
-**Created:** 2026-04-14
-**Milestone:** 2026.04.29
-**Status:** Planned (activates when milestone 2026.04.22 completes)
-**Supersedes:** Milestone 2026.04.22 — "Apple Adversarial Completion, Dual-Energy Gate, Constraint Addition, and NPU Hardware"
-**Informed by:** Exps 294-306, operational retrospective 2026.04.22, v28 carry-forwards
-**External inputs (new in v29):**
-- LLM-JEPA (2509.14252) — JEPA applied to LLMs, outperforms standard training objectives
-- Emergent Formal Verification (2603.21149) — Z3 SMT across 6 domains, 100% accuracy, 0% FP
-- Correctness-Guaranteed Code Gen via Constrained Decoding (2508.15866) — dynamic parser tree for guided decoding
-- Hybrid FPGA Ising Decomposition with COBI (2602.15985) — 77.5μs convergence, <10mW, graph decomposition
-- RL-Tuned LLMs as EBMs (2512.18730) — optimal RL policy = EBM over base distribution
-- Z3 Security Vulnerability Verification (2604.05292) — 3,500 LLM artifacts, 55.8% vulnerability rate
-- Energy Matching (2504.10612) — unifies flow matching + EBMs, eliminates MCMC sampling bottleneck
+**Created:** 2026-04-15
+**Milestone:** 2026.05.06
+**Status:** Planned (activates when milestone 2026.04.29 completes)
+**Supersedes:** Milestone 2026.04.29 — "JEPA Real Training, Z3 Formal Extraction, KV260 FPGA, and Credible Full-Scale Benchmarks"
+**Informed by:** Exps 307-324, operational retrospective 2026.04.29, v29 carry-forwards
+**External inputs (new in v30):**
+- VERGE (2601.20055) — Z3 SMT + LLM iterative refinement loop, near-perfect accuracy on multi-step math
+- CRV (2510.09312) — CoT circuit verification via computational graphs, structural consistency checking
+- Typed CoT (2510.01069) — Curry-Howard proof-typing for LLM reasoning verification
+- Solver-aided agent policy compliance (2603.20449) — Z3 enforcement of tool-call constraints at runtime
+- EBM Reward Models (2504.13134) — partition function variance as alignment uncertainty signal
+- ATLAS continual learning (2511.01093) — selective memory consolidation for deployed agents
 
 ---
 
-## What 2026.04.22 Proved
+## What 2026.04.29 Proved
 
 | Approach | Experiments | Verdict | Key Number |
 |----------|-------------|---------|-----------|
-| GPU stall diagnosis + Apple baseline | 294 | **COMPLETE** | pre_warm_fix confirmed; logits produced |
-| Apple adversarial verify-repair | 295 | **COMPLETE** | 12-cell benchmark with pre-warm |
-| Apple adversarial analysis | 296 | **COMPLETE** | Result classified |
-| SemanticEnergyExtractor + VarEntropyProbe | 297 | **IMPLEMENTED** | 3-signal extraction-free detection system |
-| PrefillUncertaintyProbe | 298 | **IMPLEMENTED** | Pre-generation hallucination gate live |
-| JEPA retrain on synthetic | 299 | **TARGETS_MET (synthetic)** | TP=1.0/FP=0.0 but training_source=synthetic_fallback |
-| ConstraintGenerator from CaseMemory | 300 | **IMPLEMENTED** | Tier 2→Tier 1 constraint addition with soundness bounds |
-| Confidence-weighted repair gating | 301 | **IMPLEMENTED** | REQ-VERIFY-081/082, gates repair on confidence≥0.8 |
-| Integrated self-learning benchmark | 302 | **COMPLETE** | Tier 1+2 integrated; improvement_delta measured |
-| AMD XDNA NPU unblock | 303 | **BLOCKED** | blocked_prereq: ninja+openblas still missing |
-| HuggingFace FCV upload | 304 | **FCV LIVE** | carnot-formal-claim-verifier-v1 published |
-| ExperimentTemplate + BatchedInferenceRunner | 306 | **COMPLETE** | <0.5s overhead; 3975 tests pass |
+| JEPA trained on real Apple adversarial logits | 307 | **COMPLETE** | Real-logit training path established |
+| JEPA fast-path gate + latency benchmark | 308 | **COMPLETE** | Gate architecture implemented, threshold sweep done |
+| Tier 3 end-to-end pipeline | 309 | **COMPLETE** | ThresholdAdapter + online Tier 3 loop wired |
+| NL2Z3Extractor | 310 | **IMPLEMENTED** | Z3 UNSAT detection from CoT responses |
+| Extractor benchmark (regex vs LLM vs Z3) | 311 | **COMPLETE** | ArithmeticExtractor wins CI corpus; NL2Z3 needs live GPU |
+| Z3-gated repair pipeline | 312 | **COMPLETE** | skip_rate=0 in CI (expected); needs CARNOT_FORCE_LIVE=1 |
+| KV260 FPGA hardware bring-up | 313 | **BLOCKED** | blocked_no_bitfile; CPU fallback ≈358ms |
+| AMD XDNA NPU prereq retry | 314 | **BLOCKED** | blocked_prereq: ninja+openblas still missing |
+| Full-scale benchmark script | 315 | **SCRIPT READY** | 400 GSM8K + 50 HumanEval script written |
+| Full-scale benchmark execution | 316 | **SIMULATED** | inference_mode=simulated; live GPU run pending |
+| HuggingFace README audit | 317 | **CREDENTIAL-BLOCKED** | Needs HF_TOKEN; 46 tests pass; script ready |
+| Four-tier self-learning relay | 318 | **SIMULATED** | improvement_1to3=-0.0606 (honest signed delta, simulated) |
+| Operational retrospective | 319 | **COMPLETE** | 27% speedup estimate; RETRO-001/002 promoted to blocking |
 
 **Milestone-level conclusion:**
-2026.04.22 fixed the GPU stall, completed the Apple adversarial benchmark, implemented the 3-signal
-extraction-free detection system, and deployed Tier 1+2 self-learning infrastructure. The critical
-remaining gaps are: (1) JEPA trained only on synthetic data — real logits now exist from Exps
-294/295 and must be used; (2) Z3 formal extraction pipeline is not yet implemented — constraint
-extraction remains the #1 accuracy bottleneck; (3) no full-scale benchmark with confidence
-intervals exists — all results are on small cohorts (50-200 questions).
+2026.04.29 delivered the NL2Z3Extractor, Z3-gated repair, JEPA fast-path gate, and full-pipeline
+architecture. However, ALL benchmark results are simulated — the 2x RTX 3090 GPUs (48GB VRAM) are
+now available via CUDA but no experiment ran with inference_mode="live_gpu". Additionally, RETRO-001
+(45-minute conductor timeout) has been carried forward for two consecutive milestones without
+implementation, costing an estimated 27% of milestone wall time. This milestone must close both gaps.
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: Tier 3 JEPA is synthetic-only — no real training data path
+### Gap 1: All benchmark results are simulated — live GPU is available but unused
 
-The JEPA predictive verification architecture is correct (Exp 291: TP=1.0/FP=0.0), but it was
-trained on synthetic data. Real logits from the Apple adversarial benchmark now exist:
-`data/research/logits_294_*.npy` and `data/research/logits_295_*.npy` (produced by Exps 294/295).
+The 2x RTX 3090 GPUs are now available via CUDA (48GB VRAM total). The full-scale benchmark
+script (Exp 315) is written and validated. The self-learning relay (Exp 318) is implemented.
+The HuggingFace publish script (Exp 317) is ready. None of these ran with real model inference.
 
-The training objective from LLM-JEPA (2509.14252) provides the right architecture: encode the
-partial response (first N tokens), predict the embedding of the final response, measure energy
-between prediction and actual. High energy = violation likely. The (partial_response,
-final_violation) pairs are extractable from Apple adversarial logit files right now.
+The research program explicitly states: "All future experiments MUST use LIVE GPU inference
+(CARNOT_FORCE_LIVE=1, no simulation fallback) and report inference_mode='live_gpu' in all results."
+Without live GPU results, no improvement claim can be reported as headline. The simulated benchmark
+showed Qwen3.5-0.8B at 34% and Gemma4-E4B-it at 30% — these numbers are not credible because the
+published baselines are 25% and 80% respectively. Something is wrong with the simulation.
 
-Without real training, the JEPA fast-path gate cannot reliably route queries — it would skip
-expensive Ising verification for queries that actually need it. This is the key Tier 3 gap.
+**This milestone's priority #1: Run Exp 315/318/317 scripts on live RTX 3090. Get
+inference_mode="live_gpu" in all benchmark artifacts. If live results differ from simulation,
+diagnose and document the divergence.**
 
-**This milestone's priority #1: Train JEPA on real Apple adversarial logits, then measure
-whether the fast-path gate reduces pipeline latency without hurting accuracy.**
+### Gap 2: Constraint extraction FP rate makes verify-repair harmful above 1B parameters
 
-### Gap 2: Constraint extraction is still regex-based for IT models
+Exp 184 showed 0% net improvement at 3B (6 fixed, 6 broken — false positives canceling true
+fixes). The NL2Z3Extractor (Exp 310) and Z3-gated repair (Exp 312) were implemented but only
+benchmarked in CI (simulated mode where Z3 receives no LLM-generated code and always returns
+"unknown"). We do not know whether Z3-gated repair actually reduces FP rate on live IT model
+responses versus baseline ArithmeticExtractor.
 
-The `ArithmeticExtractor` detected 0 violations on Gemma4-E4B-it (Exp 203). The LLM extractor
-(Exp 207) has better FP rate (1/91) but still misses real errors (0/9 wrong answers detected).
-The FormalClaimVerifier (Exp 293/304) works for arithmetic/comparison claims but requires
-manually formatted claims.
+The two concrete actions: (1) FP autopsy — for each broken case from Exp 316/328, determine
+whether the extractor flagged a real error or a valid intermediate step, categorize the FP
+type, and find a pattern; (2) confidence-weighted repair — instead of binary violated/not-violated,
+score each violation by confidence and only repair high-confidence violations. This should
+decouple the FP problem from the TP problem.
 
-Emergent Formal Verification (2603.21149) demonstrates that using an LLM to translate chain-of-
-thought responses into Z3 SMT assertions achieves 100% accuracy with 0% FP across 6 domains.
-Z3 Security Verification (2604.05292) extends this to code, finding 55.8% vulnerability rate
-across 3,500 LLM artifacts.
+**This milestone's priority #2: FP autopsy on broken verify-repair cases from live benchmark.
+Implement confidence-weighted constraints and model-adaptive thresholds. Measure whether
+these reduce FP rate to below TP rate at the 1B-3B scale.**
 
-The missing piece: an `NL2Z3Extractor` that takes a chain-of-thought response and uses a second
-LLM call to generate Z3 Python code that verifies each reasoning step. Unlike regex (catches only
-`a+b=c` patterns), Z3 can verify logical entailment, range constraints, type invariants, and
-semantic consistency.
+### Gap 3: Hardware acceleration path has been blocked for 3+ milestones
 
-**This milestone's priority #2: Implement NL2Z3Extractor and benchmark it against ArithmeticExtractor
-and LLMExtractor on the same IT-model corpus. Goal: FP < 5%, TP > 25%.**
+The KV260 FPGA has been in the lab since Exp 288 but has never run real hardware — blocked
+by missing bitfile. The AMD XDNA NPU has been blocked by missing ninja+openblas prerequisites
+since Exp 292. These two blockers have consumed 3 milestone slots of carry-forward overhead
+with zero hardware progress.
 
-### Gap 3: No published full-scale benchmark with confidence intervals
+The two concrete actions: (1) NPU: install ninja+openblas (two system packages) and attempt
+the ORT VitisAI source build — this is a one-time 30-minute install that unblocks all NPU
+experiments; (2) KV260: generate the bitfile using open-source synthesis (yosys + nextpnr
+for the Arty/KV260 fabric) rather than waiting for a proprietary Vivado license.
 
-Carnot's verify-repair results are all on small cohorts (20-200 questions). No confidence intervals.
-No comparison to published baselines. The research program explicitly requires:
-- 200+ GSM8K + 50 HumanEval on LIVE GPU with inference_mode="live_gpu"
-- Error bars at 95% CI using bootstrap or Wilson interval
-- Comparison to published Qwen3.5-0.8B and Gemma4-E4B-it baselines
-
-Correctness-Guaranteed Code Gen (2508.15866) provides a benchmark comparison point for HumanEval.
-The Apple adversarial results (Exp 295) can be extended to full-corpus analysis.
-
-**This milestone's priority #3: Run full 400-question Apple adversarial + 200-question standard
-GSM8K + 50 HumanEval with bootstrap confidence intervals. Report inference_mode="live_gpu".**
+**This milestone's priority #3: Unblock NPU prerequisites and generate KV260 bitfile using
+open-source toolchain. Even a partial bring-up (bitfile generated, synthesis script ready)
+advances the hardware path.**
 
 ---
 
-## Architecture: v29 Additions
+## Architecture: v30 Additions
 
 ```
 [Input Query]
     │
-    ├─[PrefillUncertaintyProbe]─── prefill uncertainty (EXISTING, Exp 298)
-    │      arXiv 2603.19562       ↓
-    │                          [SKIP if low uncertainty — fast path]
+    ├─[PrefillUncertaintyProbe]─── prefill uncertainty   (EXISTING, Exp 298)
     │
     ▼
-[LLM Generation]
+[LLM Generation — RTX 3090, CARNOT_FORCE_LIVE=1]         (LIVE GPU, this milestone)
     │
-    ├─[JEPA Fast-Path Gate]──────── violation predicted? (NEW: trained on real logits)
-    │  arXiv 2509.14252            ↓ if "high energy likely"
-    │                          [TRIGGER full Ising verification]
-    │                          [SKIP Ising if "low energy" — 10x faster]
+    ├─[JEPA Fast-Path Gate]──────── violation predicted?  (EXISTING, Exp 307-309)
+    │  arXiv 2509.14252            ↓ if high energy
     │
-    ├─[SpilledEnergyExtractor]─── spilled energy  (EXISTING, Exp 285)
+    ├─[NL2Z3Extractor]──────────── Z3 SMT assertions      (EXISTING, Exp 310)
+    │  arXiv 2603.21149
+    │       ↓ UNSAT
+    │  [VERGE Iterative Loop] ──── targeted step repair    (NEW: Exp 334)
+    │  arXiv 2601.20055              repair only broken step → re-verify
     │
-    ├─[SemanticEnergyExtractor]── confident-wrong  (EXISTING, Exp 297)
+    ├─[CoTCircuitVerifier] ──────── structural CoT graph   (NEW: Exp 336)
+    │  arXiv 2510.09312             broken circuit → flag
     │
-    ├─[VarEntropyProbe]──────────── entropy variance (EXISTING, Exp 297)
-    │
-    └─[NL2Z3Extractor]──────────── Z3 SMT assertions  (NEW: this milestone)
-           arXiv 2603.21149        ↓
-                               [Z3 SAT/UNSAT check]
-                               └─[UNSAT → trigger Ising repair]
-                               └─[SAT + low confidence → Ising verify anyway]
-    │
-    ▼
-[Ising Verification] ← routed from JEPA gate or high-confidence extractors
-    │
-    ├─[ConfidenceVerifier]─────── energy → confidence ≥ 0.8 → repair (EXISTING)
-    │      arXiv 2602.03979
-    │
-    └─[Repair if needed]
+    ├─[SpilledEnergyExtractor]──── spilled energy          (EXISTING, Exp 157)
+    ├─[SemanticEnergyExtractor]─── confident-wrong         (EXISTING, Exp 297)
+    └─[VarEntropyProbe]──────────── entropy variance       (EXISTING, Exp 297)
     │
     ▼
-[Tier 1: Online constraint weights updated] ← per-constraint precision (EXISTING)
-[Tier 2: CaseMemory → ConstraintGenerator] ← constraint addition (EXISTING, Exp 300)
-[Tier 3: JEPA trained on accumulated logs] ← (NEW: this milestone, real logits)
+[Ising Verification — CPU (EXISTING fast path)]
+    │
+    ├─[ConfidenceWeightedRepair] ── score × confidence    (NEW: Exp 332)
+    │   only repair violations with confidence ≥ 0.8
+    │
+    └─[ModelAdaptiveThresholds] ─── per-model FP tracking (NEW: Exp 333)
+        disable constraint type when FP rate > TP rate
+    │
+    ▼
+[Tier 1: Online constraint weight updates]                 (EXISTING)
+[Tier 2: CaseMemory → ConstraintGenerator (selective)]    (NEW: ATLAS consolidation, Exp 333)
+[Tier 3: JEPA gate + ThresholdAdapter]                    (LIVE GPU benchmark, Exp 329)
+    │
+    ▼
+[Hardware backends]
+    ├─[FpgaBackend] ─── KV260 bitfile generation attempt  (NEW: Exp 336)
+    └─[AMD XDNA NPU] ── VitisAI ORT source build attempt  (NEW: Exp 335)
 ```
 
-**New hardware path (KV260 FPGA — this milestone):**
+**New conductor hardening (this milestone):**
 ```
-[Ising Verification]
-    │
-    └─[FpgaBackend.sample()]
-           ↓
-    [KV260 PYNQ overlay] ← if CARNOT_KV260_BITFILE set (EXISTING design, Exp 289)
-           ↓
-    [AXI-Lite → spin states] ← 77.5μs target (arXiv 2602.15985)
-           ↓
-    [CPU fallback] ← if overlay not loaded (always works)
+[scripts/run_experiment_with_timeout.sh] ─── 45-min hard timeout wrapper (NEW: Exp 325)
+[ExperimentTemplate.generate_test_stub()] ── test-first skeleton generator (NEW: Exp 325)
+[DualGPUMonitor] ────────────────────────── GPU health check + zombie cleanup (NEW: Exp 326)
+[experiment_dependency_audit.py] ────────── prereq file existence check (NEW: Exp 327)
 ```
 
 ---
 
-## Phase Descriptions
+## Phase Breakdown
 
-### Phase 1: JEPA Real Training + Tier 3 Integration (Exps 307-309)
+### Phase 1: Infrastructure Hardening (Exps 325-327)
 
-Train the JEPA violation predictor on real Apple adversarial logits from Exps 294/295. Wire it as
-a live fast-path gate in `VerifyRepairPipeline`. Measure whether the gate reduces latency while
-maintaining accuracy.
+**Goal:** Implement RETRO-001, RETRO-002, NEW-001, and NEW-002 from the operational retrospective.
+These were carried forward for two milestones — they now block further velocity gains.
 
-**Deliverables:**
-- `results/experiment_307_jepa_real_training.json` — training metrics on real logits
-- `results/jepa_predictor_307.onnx` — updated JEPA model trained on real data
-- `python/carnot/pipeline/jepa_fast_path.py` — live gate integration (additive to pipeline)
-- `results/experiment_308_jepa_gate_benchmark.json` — latency with/without gate
-- `results/experiment_309_tier3_pipeline.json` — Tier 3 end-to-end results
+- **Exp 325:** Conductor timeout wrapper + ExperimentTemplate test-first stub (RETRO-001 + NEW-001)
+- **Exp 326:** DualGPUMonitor in ExperimentTemplate + GPU process monitor (RETRO-002 + RETRO-003)
+- **Exp 327:** Pre-experiment dependency audit (NEW-002)
 
-**Success criteria:**
-- JEPA trained on ≥500 (partial, violation) pairs from real logit files
-- Fast-path skip rate ≥ 30% at TP ≥ 0.85 on held-out set (or honest report if not met)
-- Pipeline latency reduction ≥ 15% on 50-question batch when gate enabled (or honest report)
+**Expected outcome:** 27% estimated reduction in milestone wall time from retrospective analysis.
 
-### Phase 2: Z3 Formal Extraction (Exps 310-312)
+### Phase 2: Live GPU Benchmarks (Exps 328-330)
 
-Implement `NL2Z3Extractor` using a second LLM call to translate chain-of-thought into Z3 Python
-assertions. Benchmark against existing extractors on the same IT-model corpus.
+**Goal:** Convert all simulated results to live GPU results. Every benchmark that ran in simulation
+in v29 must produce inference_mode="live_gpu" results this milestone.
 
-**Deliverables:**
-- `python/carnot/pipeline/nl2z3_extractor.py` — NL→Z3 extractor
-- `results/experiment_310_nl2z3_results.json` — extraction results on 50 IT-model responses
-- `results/experiment_311_extractor_benchmark.json` — FP/TP comparison: regex vs LLM vs Z3
-- `python/carnot/pipeline/z3_gated_repair.py` — Z3 UNSAT → repair gate
+- **Exp 328:** Live GPU full-scale benchmark — run Exp 315 script on RTX 3090
+- **Exp 329:** Four-tier self-learning relay on live GPU — run Exp 318 on RTX 3090
+- **Exp 330:** HuggingFace live publish — run Exp 317 with real HF credentials
 
-**Success criteria:**
-- FP rate ≤ 5% on correct IT-model responses (vs regex 3/20=15% false positives)
-- TP rate > 0% on wrong IT-model responses (any improvement over current 0/9=0%)
-- Z3 verification completes in < 2s per response
+**Expected outcome:** First headline-quality benchmark numbers with live inference. Published
+HuggingFace models with accurate Phase 1 disclaimers.
 
-### Phase 3: KV260 FPGA Bring-up + NPU Retry (Exps 313-314)
+### Phase 3: Constraint Precision Analysis (Exps 331-334)
 
-Bring up the KV260 FPGA board. Test PYNQ overlay loading and AXI-Lite Ising sampling using the
-design from Exp 228. Retry AMD XDNA NPU after installing missing prerequisites.
+**Goal:** Diagnose why verify-repair is harmful at 1B+ models and fix the FP problem.
 
-**Deliverables:**
-- `results/experiment_313_kv260_bringup.json` — PYNQ overlay status, spin sampling result
-- `results/experiment_314_npu_prereq_install.json` — NPU status post-prereq install
+- **Exp 331:** FP autopsy — categorize broken verify-repair cases by failure mode
+- **Exp 332:** Confidence-weighted constraint violations — only repair high-confidence violations
+- **Exp 333:** Model-adaptive constraint thresholds — learn per-model FP rates, disable constraint
+  types that hurt; integrate ATLAS-style selective CaseMemory consolidation
+- **Exp 334:** VERGE-style iterative Z3 refinement — targeted step repair from UNSAT assertion
 
-**Success criteria:**
-- KV260: overlay loads OR honest blocked artifact with specific blocker
-- At least 1 AXI-Lite spin-state round-trip OR honest timeout artifact
-- NPU: blocked_prereq resolved OR new specific blocker documented with install steps
+**Expected outcome:** Reduced FP rate at 1B-3B. The hypothesis: confidence-weighted repair +
+model-adaptive thresholds will move verify-repair from -6 to +6 improvement at 3B.
 
-### Phase 4: Full-Scale Benchmarks + HuggingFace + Self-Learning + Retro (Exps 315-319)
+### Phase 4: Hardware & Research Integration (Exps 335-337)
 
-Phased full-scale benchmark per lessons-learned (script first, execute second). HuggingFace
-publish. End-to-end Tier 1+2+3 self-learning relay. Operational retrospective.
+**Goal:** Unblock hardware prerequisites, implement CRV-style verification, and capture
+operational lessons.
 
-**Deliverables:**
-- `scripts/experiment_315_fullscale_script.py` — benchmark script (deliverable = script only)
-- `results/experiment_316_fullscale_results.json` — execution with 95% CI
-- `results/experiment_317_hf_publish.json` — updated HF model READMEs + any new models
-- `results/experiment_318_self_learning_relay.json` — Tiers 1+2+3 relay
-- `results/operational_retro_2026_04_29.json` — retrospective
+- **Exp 335:** AMD XDNA NPU build — install ninja+openblas, attempt ORT VitisAI source build
+- **Exp 336:** CoTCircuitVerifier — CRV-style chain-of-thought computational graph verification
+- **Exp 337:** Operational retrospective for milestone 2026.05.06
+
+**Expected outcome:** At least one hardware path unblocked. New ConstraintExtractor variant
+(CoTCircuitVerifier) covering structural reasoning errors that Z3 misses.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 307 → Exp 308 → Exp 309 ──────────────────────────────────┐
-                                                                │
-Exp 310 → Exp 311 → Exp 312 ──────────────────────────────────┤
-                                                                ▼
-Exp 313 (parallel, hardware)                          Exp 315 → Exp 316
-Exp 314 (parallel, hardware)                                    │
-                                                       Exp 317 (parallel)
-                                                       Exp 318 → after Exp 309+312
-                                                                │
-                                                       Exp 319 (retro, runs last)
-```
+Exp 325 (timeout wrapper)  ─────────────────────────────────┐
+Exp 326 (GPU monitor)      ─────────────────────────────────┤
+Exp 327 (dep audit)        ─────────────────────────────────┤
+                                                             ↓
+Exp 328 (live full-scale) ──[uses Exp 315 script]──────────┐
+                                                             │
+Exp 329 (live relay)  ──────[uses Exp 318 script]──────────┤
+                                                             │
+Exp 330 (HF publish) ───────[uses Exp 317 script]──────────┤
+                                                             ↓
+Exp 331 (FP autopsy) ───────[uses Exp 328 live results]────┐
+                                                             │
+Exp 332 (confidence repair) ─[uses Exp 331 FP categories]─┤
+                                                             │
+Exp 333 (adaptive thresholds)─[uses Exp 332 confidence fn]─┤
+                                                             │
+Exp 334 (VERGE iteration) ──[uses NL2Z3 from Exp 310]──────┘
 
-Phases 1-3 can run in parallel with each other. Exp 318 (self-learning relay) depends on Exps
-309 (JEPA gate live) and 312 (Z3 extractor live). Exp 319 (retro) runs last.
+Exp 335 (NPU build)     ─[independent]
+Exp 336 (CoT circuit)   ─[uses pipeline/extract.py]
+Exp 337 (retro)         ─[uses all Exp 325-336 results]
+```
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | Hardware | Required | Notes |
-|------------|----------|----------|-------|
-| Exps 307-309 | 2x RTX 3090 | YES | JEPA training + real LLM inference |
-| Exps 310-312 | CPU only | NO | LLM extraction + Z3 on CPU |
-| Exp 313 | KV260 FPGA | DESIRABLE | Emit blocked artifact if not arrived |
-| Exp 314 | CPU + sudo | NO | System package install required |
-| Exps 315-316 | 2x RTX 3090 | YES | Live LLM inference for 400+ questions |
-| Exps 317-319 | CPU | NO | Publishing + retrospective |
+| Experiment | Hardware | Notes |
+|-----------|----------|-------|
+| Exp 328 (live benchmark) | 2x RTX 3090 | CARNOT_FORCE_LIVE=1; DualGPURunner |
+| Exp 329 (live relay) | 2x RTX 3090 | CARNOT_FORCE_LIVE=1 |
+| Exp 330 (HF publish) | CPU | Requires HF_TOKEN env var |
+| Exp 331-334 (precision) | CPU + RTX 3090 | FP autopsy uses live results from Exp 328 |
+| Exp 335 (NPU) | AMD XDNA NPU | Requires: sudo pacman -S ninja openblas |
+| Exp 336 (CoT circuit) | CPU | No GPU needed; CoT graph extraction is lightweight |
+| Exp 337 (retro) | CPU | Analysis only |
 
-**KV260 note:** If the KV260 hasn't arrived by Exp 313, emit a `blocked_shipping` honest artifact.
-Do not block the milestone on hardware arrival — continue with Exp 314.
+**Hardware actions needed before this milestone:**
+1. Ensure both RTX 3090s are visible: `nvidia-smi -L` should show two GPU entries
+2. Install ninja+openblas: `sudo pacman -S ninja openblas` (unblocks NPU)
+3. HF credentials: `huggingface-cli login` with write-access token
+4. KV260 bitfile: needed for full FPGA bring-up (Exp 313 status: blocked_no_bitfile)
 
 ---
 
-## Carry-Forward Items from 2026.04.22
+## Success Criteria
+
+| Metric | Target | Experiment |
+|--------|--------|-----------|
+| Full-scale benchmark with live GPU | inference_mode="live_gpu" in artifact | Exp 328 |
+| Self-learning relay on live GPU | improvement_1to3 computed on real data | Exp 329 |
+| HuggingFace models updated | ≥16 model READMEs patched | Exp 330 |
+| FP autopsy coverage | ≥20 broken cases categorized | Exp 331 |
+| Confidence-weighted FP reduction | FP rate lower than baseline | Exp 332 |
+| Model-adaptive thresholds | FP/TP crossover moved to larger models | Exp 333 |
+| VERGE iteration improvement | Net improvement > 0 at 3B | Exp 334 |
+| NPU unblocked | ninja+openblas installed OR ORT built | Exp 335 |
+| CoT circuit verifier | TP rate > 0 on structural reasoning errors | Exp 336 |
+| Conductor speedup | Wall time per experiment < 35 min avg | Exp 337 |
+
+---
+
+## Carry-Forwards from v29
 
 | Item | Status | Action |
 |------|--------|--------|
-| AMD XDNA NPU (Exp 303) | blocked_prereq | Retry in Exp 314: `sudo pacman -S ninja openblas` |
-| carnot-joint-constraint-v1 HF model | skipped (no .safetensors) | Create honest placeholder in Exp 317 |
-| RETRO-001 conductor 45-min timeout | not resolved | Add to 2026.04.29 retro action items |
-| RETRO-002 GPU monitor in conductor | not resolved | Add to 2026.04.29 retro action items |
-| research-roadmap-vNEXT.md | superseded | This document supersedes it |
-
----
-
-## Papers Added to research-references.md This Milestone
-
-| Paper | ArXiv ID | Priority | Experiment |
-|-------|----------|----------|-----------|
-| LLM-JEPA | 2509.14252 | HIGH | Exps 307-309 |
-| Emergent Formal Verification (Z3) | 2603.21149 | HIGH | Exps 310-312 |
-| Correctness-Guaranteed Code Gen | 2508.15866 | HIGH | Exps 315-316 |
-| Hybrid FPGA Ising Decomposition | 2602.15985 | MEDIUM | Exp 313 |
-| RL-Tuned LLMs as EBMs | 2512.18730 | MEDIUM | Long-term |
-| Z3 Security Verification | 2604.05292 | MEDIUM | Exps 310-312 |
-| Energy Matching (flow + EBM) | 2504.10612 | LOW | Future training efficiency |
+| RETRO-001: 45-min conductor timeout | **BLOCKING** | Exp 325: implement wrapper script |
+| RETRO-002: GPU monitor in conductor | **BLOCKING** | Exp 326: implement DualGPUMonitor |
+| RETRO-003: DualGPU enforcement | Carry-forward | Exp 326: add to ExperimentTemplate |
+| NEW-001: test-first stub | Carry-forward | Exp 325: add generate_test_stub() |
+| NEW-002: pre-experiment dep audit | New | Exp 327: implement audit tool |
+| KV260 bitfile (Exp 313) | Blocked | Exp 336: attempt open-source synthesis |
+| NPU ninja+openblas (Exp 314) | Blocked | Exp 335: install then build |
+| Full-scale benchmark live GPU | Pending | Exp 328: run with CARNOT_FORCE_LIVE=1 |
+| HF publish credentials (Exp 317) | Pending | Exp 330: run with HF_TOKEN |
+| Self-learning relay live GPU (Exp 318) | Pending | Exp 329: run with live inference |
