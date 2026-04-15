@@ -1724,3 +1724,6 @@ python/ |
 | 2026-04-15 11:55 UTC | Exp 344: Constraint addition benchmark — CaseMemor | OK | 171 passed in 20.08s |
 | 2026-04-15 11:56 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 11:56 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 12:30 UTC | Exp 345: Multi-session memory persistence — CaseMe | OK | 145 passed in 27.53s |
+| 2026-04-15 12:31 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 12:31 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
