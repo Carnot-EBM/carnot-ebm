@@ -2957,6 +2957,84 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-035, SCENARIO-LEARN-036, SCENARIO-LEARN-037
 **Then** `library._observations[("range_check", "model_a")]` is incremented by 1
 **And** `violation_type_to_pattern_key("range_check")` returns `"range_check"` unchanged
 
+### REQ-LEARN-022: EORM CoT Energy Reward Model
+
+The system shall provide an `EORMModel` class in `python/carnot/models/eorm.py`
+that scores complete chain-of-thought (CoT) responses by energy, enabling
+best-of-N selection by choosing the lowest-energy candidate.
+
+Architecture follows arXiv 2505.14999: a small transformer encoder that reads
+the full (question, CoT response) pair and outputs a scalar energy — lower
+energy signals higher-quality reasoning.
+
+- REQ-LEARN-022-1: A `CoTEnergyInput` dataclass MUST hold `response_text: str`
+  and `question_text: str`.
+- REQ-LEARN-022-2: `EORMModel.__init__(embed_dim=128, n_heads=4, n_layers=2,
+  max_seq_len=512, vocab_size=4096)` MUST initialize a JAX transformer encoder
+  whose parameter count is at most 100 million.
+- REQ-LEARN-022-3: `EORMModel.energy(cot_input: CoTEnergyInput) -> float` MUST
+  return a finite scalar.  Lower energy means the model considers the CoT
+  response more correct.
+- REQ-LEARN-022-4: `EORMModel.rank(responses: list[str], question: str) ->
+  list[int]` MUST return index positions sorted ascending by energy (lowest
+  energy = best response = first in the returned list).
+- REQ-LEARN-022-5: `EORMModel.save(path)` / `EORMModel.load(path)` MUST
+  serialize and restore all parameters using safetensors, with architecture
+  config stored in an adjacent `_config.json` sidecar file.
+- REQ-LEARN-022-6: `EORMModel.n_params` property MUST return the total
+  trainable parameter count as an integer.
+
+Spec: REQ-LEARN-022, SCENARIO-LEARN-038, SCENARIO-LEARN-039
+
+### REQ-LEARN-023: EORM Contrastive Ranking Loss and Trainer
+
+The system shall provide an `EORMTrainer` class in `python/carnot/models/eorm.py`
+that trains `EORMModel` via contrastive (hinge) loss on (correct, incorrect)
+response pairs derived from live benchmark data.
+
+- REQ-LEARN-023-1: `EORMTrainer.__init__(model: EORMModel, lr: float = 1e-4)`
+  MUST store the model and learning rate.
+- REQ-LEARN-023-2: `EORMTrainer.contrastive_loss(correct_energy: float,
+  incorrect_energy: float, margin: float = 1.0) -> float` MUST implement hinge
+  loss: `max(0, correct_energy - incorrect_energy + margin)`.  Loss is zero
+  when the incorrect response has energy at least `margin` higher than the
+  correct response.
+- REQ-LEARN-023-3: `EORMTrainer.train_step(correct_response: str,
+  incorrect_response: str, question: str) -> float` MUST compute contrastive
+  loss, compute parameter gradients via `jax.value_and_grad`, apply a gradient
+  descent update to `model.params`, and return the scalar loss value.
+- REQ-LEARN-023-4: `EORMTrainer.train_epoch(pairs: list[tuple[str, str, str]],
+  batch_size: int = 16) -> float` MUST iterate over the pairs list in
+  `batch_size` chunks, call `train_step` for each pair, and return the mean
+  loss over all pairs in the epoch.
+
+Spec: REQ-LEARN-023, SCENARIO-LEARN-040
+
+### SCENARIO-LEARN-038: EORMModel Energy Is Finite for CoTEnergyInput
+
+**Given** an `EORMModel` with default parameters (embed_dim=128, n_heads=4,
+  n_layers=2)
+**And** a `CoTEnergyInput(question_text="What is 2+2?", response_text="It is 4.")`
+**When** `model.energy(cot_input)` is called
+**Then** the returned value is a finite float
+**And** `model.n_params` is a positive integer no greater than 100_000_000
+
+### SCENARIO-LEARN-039: EORMModel rank Returns Indices Sorted by Energy
+
+**Given** an `EORMModel` with default parameters
+**And** responses `["bad answer", "good answer", "mediocre answer"]`
+**When** `model.rank(responses, question="2+2?")` is called
+**Then** the returned list contains exactly the indices [0, 1, 2] in some order
+**And** the energies at those indices are non-decreasing
+
+### SCENARIO-LEARN-040: EORMTrainer Contrastive Loss Is Zero When Margin Already Met
+
+**Given** an `EORMTrainer` with default `margin=1.0`
+**When** `contrastive_loss(correct_energy=2.0, incorrect_energy=4.0)` is called
+**Then** the returned loss is 0.0 (incorrect has energy > correct + margin)
+**When** `contrastive_loss(correct_energy=4.0, incorrect_energy=2.0)` is called
+**Then** the returned loss is 3.0 (hinge: max(0, 4.0 - 2.0 + 1.0))
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -4157,6 +4235,8 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-019 | Not Started | Implemented | CaseMemory to ConstraintTemplateLibrary wiring — CaseMemoryTemplateWiring [violation_type_to_pattern_key + on_violation_recorded]; constraint addition benchmark shows improvement_delta>0 (SCENARIO-LEARN-033/034, Exp 344) |
 | REQ-LEARN-020 | Not Started | Implemented | Session state persistence — SessionMemory save/load/exists/clear/list_sessions + JSON schema v1 (SCENARIO-LEARN-035/036/037, Exp 345) |
 | REQ-LEARN-021 | Not Started | Implemented | Per-model session isolation — scoped subdirs + VerifyRepairPipeline session_memory param + close() (SCENARIO-LEARN-035/036/037, Exp 345) |
+| REQ-LEARN-022 | Not Started | Implemented | EORM CoT energy reward model — EORMModel + CoTEnergyInput + energy/rank/save/load/n_params (SCENARIO-LEARN-038/039, Exp 346) |
+| REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss + train_step + train_epoch (SCENARIO-LEARN-040, Exp 346) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |

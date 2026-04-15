@@ -311,3 +311,8 @@
 | SCENARIO-LEARN-035 | Not Started | Implemented | CaseMemory round-trip — save 10 synthetic arithmetic patterns, load, verify all 10 entries present (Exp 345) |
 | SCENARIO-LEARN-036 | Not Started | Implemented | ConstraintTemplateLibrary observations round-trip — persist active template state, restore from disk (Exp 345) |
 | SCENARIO-LEARN-037 | Not Started | Implemented | PerModelFPTracker round-trip — persist model-specific false-positive tracking state, restore across sessions (Exp 345) |
+| REQ-LEARN-022 | Not Started | Implemented | EORM CoT energy reward model — EORMModel + CoTEnergyInput + energy/rank/save/load/n_params; hash-based tokenizer, pure JAX transformer, safetensors serialization (Exp 346) |
+| REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss (hinge: max(0, E_correct - E_incorrect + margin)) + train_step (jax.value_and_grad) + train_epoch (Exp 346) |
+| SCENARIO-LEARN-038 | Not Started | Implemented | EORMModel energy is finite and n_params ≤ 100M for default config (Exp 346) |
+| SCENARIO-LEARN-039 | Not Started | Implemented | EORMModel rank returns permutation of [0..n-1] sorted by energy ascending (Exp 346) |
+| SCENARIO-LEARN-040 | Not Started | Implemented | EORMTrainer contrastive_loss is 0 when margin already met; positive (hinge) when violated (Exp 346) |

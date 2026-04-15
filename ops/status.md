@@ -4,6 +4,25 @@
 
 ## What's Working
 
+### Exp 346: EORM CoT Energy Reward Model — Training and AUC-ROC Evaluation (REQ-LEARN-022/023)
+
+- **EORMModel:** `python/carnot/models/eorm.py` — pure JAX transformer encoder for scoring CoT responses.
+  - Hash-based word tokenizer (no HuggingFace, no external deps, CPU-safe).
+  - `energy(CoTEnergyInput) → float`: lower = model considers CoT more correct.
+  - `rank(responses, question) → list[int]`: argsort by energy (lowest first).
+  - `save(path) / load(path)`: safetensors + `_config.json` sidecar.
+  - `n_params` property: counts all trainable scalar parameters.
+- **EORMTrainer:** contrastive hinge loss `max(0, E_correct - E_incorrect + margin)` via `jax.value_and_grad`.
+  - `train_step`: single gradient update step.
+  - `train_epoch`: iterates over (correct, incorrect, question) pairs in batch_size chunks.
+- **Exported:** `CoTEnergyInput`, `EORMModel`, `EORMTrainer` from `carnot.models.__init__`.
+- **Experiment:** `scripts/experiment_346_eorm_training.py` — loads Exp 340 live pairs or 100 synthetic fallback;
+  trains 10 epochs (CI) / 50 epochs (live GPU); evaluates AUC-ROC; saves `results/eorm_model_346.safetensors`;
+  artifact schema "carnot.eorm.v1".
+- **52 tests pass** in `tests/python/test_eorm.py` (100% eorm.py coverage).
+- Spec: REQ-LEARN-022, REQ-LEARN-023, SCENARIO-LEARN-038, SCENARIO-LEARN-039, SCENARIO-LEARN-040.
+- **What's next:** Train on full Exp 340 live GPU benchmark pairs; evaluate AUC-ROC against live data.
+
 ### Exp 345: SessionMemory — Multi-Session Persistence of Learned Pipeline State (REQ-LEARN-020/021)
 
 - **SessionMemory class:** `python/carnot/pipeline/session_memory.py` — `SessionMemory(storage_dir, model_id)`:

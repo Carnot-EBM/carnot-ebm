@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 346 EORM CoT Energy Reward Model
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T12:32:27Z | 2026-04-15T13:28:29Z | Exp 346: EORM CoT energy reward model; REQ-LEARN-022/023 + SCENARIO-LEARN-038/039/040 to spec; EORMModel + EORMTrainer + CoTEnergyInput in eorm.py (pure JAX transformer, hash tokenizer, safetensors save/load); experiment_346_eorm_training.py; 52 tests 100% eorm.py coverage; ops docs + traceability updated | ~56m |
+
+---
+
 ## Session: 2026-04-15 Exp 343 ConstraintTemplateLibrary
 
 ### Turn Log
