@@ -1688,3 +1688,4 @@ python/ |
 | 2026-04-15 04:59 UTC | Exp 332: Confidence-weighted constraint violations | OK | 177 passed in 3.67s |
 | 2026-04-15 05:30 UTC | Exp 333: Model-adaptive constraint thresholds + se | OK | 81 passed in 3.18s |
 | 2026-04-15 05:39 UTC | Exp 334: VERGE-style iterative Z3 refinement — tar | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-15 05:59 UTC | Exp 334: VERGE-style iterative Z3 refinement — tar | OK | 175 passed in 3.77s |
