@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 352 Live GPU Diagnostic Root-Cause Fix
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T15:45:25Z | 2026-04-15T15:48:16Z | Exp 352: Diagnose + fix silent simulated fallback; verified all files exist; 37 tests pass, 100% module coverage; updated conductor-log/changelog | ~3m |
+
+---
+
 ## Session: 2026-04-15 Research Planning Milestone 2026.05.20
 
 ### Turn Log
