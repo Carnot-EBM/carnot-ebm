@@ -2250,6 +2250,65 @@ The same module shall expose an ONNX-compatible export path, where:
   dependency is deferred to the `export_onnx` call so the module remains safe
   to import on every deployment
 
+### SCENARIO-EXP303-A: Prereq Check Detects Missing Packages With Install Command
+
+**Given** a system where ninja and/or openblas are not installed
+**When** `prereq_status()` is called
+**Then** the returned dict contains `ninja_installed`, `openblas_installed`,
+  `cmake_version`, `cmake_sufficient`, `ryzen_ai_sw_present`, and `vitisai_so_present`
+**And** when a package is missing, the corresponding `*_install_command` key
+  provides the exact install command for the detected distro (Arch or Debian/Ubuntu)
+**And** `all_met` is False when any required package is absent
+
+### SCENARIO-EXP303-B: Source Build Path Attempts Build With Timeout And Log Tail
+
+**Given** all prereqs are available (ninja, openblas, cmake >= 3.26, XRT, VitisAI)
+**When** `attempt_ort_source_build(build_dir, timeout_s=600)` is called
+**Then** the returned dict contains `success`, `duration_seconds`, and either
+  `whl_path` (on success) or `error_summary` + `build_log_tail` + `timeout_exceeded`
+  (on failure)
+**And** `timeout_exceeded` is True only when the subprocess exceeded the timeout
+  (not on compile errors), allowing the researcher to distinguish the two failure modes
+
+### SCENARIO-EXP303-C: Inference Benchmark Reports NPU vs CPU Latency
+
+**Given** a successful ORT build with VitisAI EP available and a valid ONNX model
+**When** the inference benchmark runs WARMUP_CALLS=20 + TIMED_CALLS=100
+**Then** the artifact records `npu_latency_us`, `cpu_latency_us`, `speedup_factor`,
+  `provider_used` (containing "VitisAI"), and `timed_calls >= 100`
+**And** `speedup_factor` equals `cpu_latency_us / npu_latency_us` within 5% tolerance
+
+### SCENARIO-EXP303-D: Honest Labeling — Null Inference Result On All Blocked Paths
+
+**Given** any execution path other than `npu_working`
+**When** the artifact is written
+**Then** `inference_result` is null (not a dict with fabricated latency values)
+**And** `build_outcome` is null when `execution_path == "blocked_prereq"`
+  (no build was attempted, so no build result should appear)
+
+### SCENARIO-EXP303-E: Exp 335 Still Blocked — Prereq State Unchanged From Exp 314
+
+**Given** Exp 335 runs and ninja and/or openblas are still not installed
+**When** `prereq_status()` returns `all_met=False`
+**Then** `honest_verdict` is `"blocked_prereq"`
+**And** `prereq_changes_vs_exp314` maps each missing package to `"still_missing"`
+**And** `blocked_reason` names the exact install command(s) needed
+**And** the artifact is written to `results/experiment_335_npu_build.json` with no
+  `build_attempt_result` key (no build was attempted)
+
+### SCENARIO-EXP303-F: Exp 335 Build Attempted — Prereqs Now Met
+
+**Given** Exp 335 runs and all required prereqs (ninja, openblas, cmake, XRT, VitisAI)
+  are present
+**When** `attempt_ort_source_build("/tmp/ort_build_335", timeout_s=600)` is called
+**Then** `honest_verdict` is one of `"build_failed"`, `"inference_success"`, or `"timeout"`
+  (never `"blocked_prereq"` when prereqs are met)
+**And** `prereq_changes_vs_exp314` maps each newly available package to `"now_available"`
+**And** `build_attempt_result` is present in the artifact and contains `success`,
+  `duration_seconds`, and either `whl_path` (success) or `error_summary` (failure)
+**And** `npu_inference_result` is present and non-null only when `honest_verdict ==
+  "inference_success"`
+
 ### REQ-PRED-004: Additive Pipeline Integration
 
 The predictive verifier shall integrate additively into

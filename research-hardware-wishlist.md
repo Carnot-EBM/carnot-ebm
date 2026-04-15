@@ -215,3 +215,12 @@ production goals. Updated as new needs emerge from experiments.
   - Both were also missing in Exp 303 — packages have NOT been installed yet.
   - Install ninja: `sudo pacman -S ninja  (Arch)  OR  sudo apt install ninja-build  (Debian/Ubuntu)`
   - Install openblas: `sudo pacman -S openblas  (Arch)  OR  sudo apt install libopenblas-dev  (Debian/Ubuntu)`
+
+### AMD XDNA NPU Status (Exp 335 — 20260415)
+
+- **Exp 335 result:** `honest_verdict=blocked_prereq`
+  - ninja: still_missing (was missing in Exp 314)
+  - openblas: still_missing (was missing in Exp 314)
+  - Install ninja: `sudo pacman -S ninja  OR  sudo apt install ninja-build`
+  - Install openblas: `sudo pacman -S openblas  OR  sudo apt install libopenblas-dev`
+  - Blocked for 4 milestones (Exps 292, 303, 314, 335). Human install required before next attempt.
