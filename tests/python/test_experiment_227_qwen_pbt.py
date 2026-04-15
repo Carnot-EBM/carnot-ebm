@@ -869,6 +869,13 @@ def test_runtime_helper_branches_cover_seeding_gpu_selection_and_live_model_load
         ),
     )
 
+    # Pre-register CARNOT_FORCE_LIVE and CARNOT_FORCE_CPU with monkeypatch using
+    # setenv so monkeypatch records "was not set" and will DELETE the variable
+    # during teardown.  Without this, _load_live_model() sets these permanently,
+    # breaking subsequent tests that rely on the CI guard.
+    monkeypatch.setenv("CARNOT_FORCE_LIVE", "1")
+    monkeypatch.setenv("CARNOT_FORCE_CPU", "0")
+
     module._seed_runtime(7)
     assert numpy_calls == [7]
     assert torch_calls == [("manual_seed", 7), ("manual_seed_all", 7)]
