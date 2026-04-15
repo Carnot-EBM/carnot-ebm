@@ -1607,3 +1607,61 @@ milestones:
     title: "Exp 319: Operational retrospective \u2014 milestone 2026.04.29"
     deliverable: results/operational_retro_2026_04_29.json
     result: OK (conductor)
+- id: 2026.05.06
+  title: Live GPU Benchmarks, Constraint Precision Analysis, Hardware Unblock, and Conductor Hardening
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp325-conductor-timeout-wrapper
+    title: 'Exp 325: Conductor timeout wrapper + ExperimentTemplate test-first stub (RETRO-001 + NEW-001)'
+    deliverable: scripts/run_experiment_with_timeout.sh
+    result: OK (conductor)
+  - id: exp326-dual-gpu-monitor
+    title: 'Exp 326: DualGPUMonitor + ExperimentTemplate GPU enforcement (RETRO-002 + RETRO-003)'
+    deliverable: python/carnot/pipeline/dual_gpu_monitor.py
+    result: OK (conductor)
+  - id: exp327-dependency-audit
+    title: 'Exp 327: Pre-experiment dependency audit tool (NEW-002)'
+    deliverable: scripts/experiment_dependency_audit.py
+    result: OK (conductor)
+  - id: exp328-live-fullscale-benchmark
+    title: "Exp 328: Live GPU full-scale benchmark \u2014 run Exp 315 script on RTX 3090"
+    deliverable: results/experiment_328_live_fullscale_results.json
+    result: OK (conductor)
+  - id: exp329-live-relay-benchmark
+    title: 'Exp 329: Four-tier self-learning relay on live GPU'
+    deliverable: results/experiment_329_live_relay_results.json
+    result: OK (conductor)
+  - id: exp330-hf-live-publish
+    title: "Exp 330: HuggingFace live publish \u2014 run Exp 317 script with real credentials"
+    deliverable: results/experiment_330_hf_publish_results.json
+    result: OK (conductor)
+  - id: exp331-fp-autopsy
+    title: "Exp 331: False positive autopsy \u2014 categorize broken verify-repair cases"
+    deliverable: results/experiment_331_fp_autopsy.json
+    result: OK (conductor)
+  - id: exp332-confidence-weighted-repair
+    title: "Exp 332: Confidence-weighted constraint violations \u2014 only repair high-confidence"
+    deliverable: python/carnot/pipeline/confidence_weighted_repair.py
+    result: OK (conductor)
+  - id: exp333-model-adaptive-thresholds
+    title: 'Exp 333: Model-adaptive constraint thresholds + selective CaseMemory consolidation'
+    deliverable: python/carnot/pipeline/adaptive_thresholds.py
+    result: OK (conductor)
+  - id: exp334-verge-iterative-z3
+    title: "Exp 334: VERGE-style iterative Z3 refinement \u2014 targeted step repair from UNSAT assertion"
+    deliverable: results/experiment_334_verge_refinement.json
+    result: OK (conductor)
+  - id: exp335-npu-build
+    title: "Exp 335: AMD XDNA NPU build \u2014 install prereqs and attempt VitisAI ORT source build"
+    deliverable: results/experiment_335_npu_build.json
+    result: OK (conductor)
+  - id: exp336-cot-circuit-verifier
+    title: "Exp 336: CoTCircuitVerifier \u2014 CRV-style chain-of-thought computational graph verification"
+    deliverable: python/carnot/pipeline/cot_circuit_verifier.py
+    result: OK (conductor)
+  - id: exp337-operational-retro
+    title: 'Exp 337: Operational retrospective for milestone 2026.05.06'
+    deliverable: results/operational_retro_2026_05_06.json
+    result: OK (conductor)
