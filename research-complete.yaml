@@ -1529,3 +1529,81 @@ milestones:
     title: "Exp 306: Operational efficiency \u2014 scaffolding template, GPU pre-warm, inference batching"
     deliverable: scripts/experiment_template.py
     result: OK (conductor)
+- id: 2026.04.29
+  title: JEPA Real Training, Z3 Formal Extraction, KV260 FPGA, and Credible Full-Scale Benchmarks
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp307-jepa-real-training
+    title: 'Exp 307: JEPA train on real Apple adversarial logits from Exps 294/295'
+    deliverable: results/experiment_307_jepa_real_training.json
+    result: OK (conductor)
+  - id: exp308-jepa-fast-path-gate
+    title: 'Exp 308: JEPA fast-path gate integration and latency benchmark'
+    deliverable: results/experiment_308_jepa_gate_benchmark.json
+    result: OK (conductor)
+  - id: exp309-tier3-pipeline-endtoend
+    title: "Exp 309: Tier 3 end-to-end self-learning \u2014 real logits \u2192 JEPA gate \u2192 verify/skip \u2192 accuracy"
+    deliverable: results/experiment_309_tier3_pipeline.json
+    result: OK (conductor)
+  - id: exp310-nl2z3-extractor
+    title: "Exp 310: NL2Z3Extractor \u2014 LLM-translated Z3 SMT assertions from chain-of-thought"
+    deliverable: python/carnot/pipeline/nl2z3_extractor.py
+    result: OK (conductor)
+  - id: exp311-extractor-benchmark
+    title: "Exp 311: Extractor benchmark \u2014 regex vs LLM vs Z3 FP/TP on IT-model responses"
+    deliverable: results/experiment_311_extractor_benchmark.json
+    result: OK (conductor)
+  - id: exp312-z3-gated-repair
+    title: "Exp 312: Z3-gated repair \u2014 only repair when Z3 says UNSAT"
+    deliverable: python/carnot/pipeline/z3_gated_repair.py
+    result: OK (conductor)
+  - id: exp313-kv260-fpga-bringup
+    title: "Exp 313: KV260 FPGA actual bring-up \u2014 PYNQ overlay load and first spin sampling"
+    deliverable: results/experiment_313_kv260_bringup.json
+    result: OK (conductor)
+  - id: exp314-npu-prereq-install
+    title: 'Exp 314: NPU prereq install + unblock retry (ninja + openblas)'
+    deliverable: results/experiment_314_npu_prereq_install.json
+    result: OK (conductor)
+  - id: exp315-fullscale-benchmark-script
+    title: "Exp 315: Full-scale benchmark script \u2014 GSM8K 400q + HumanEval 50q with 95% CI"
+    deliverable: scripts/experiment_315_fullscale_benchmark.py
+    result: OK (conductor)
+  - id: exp316-fullscale-benchmark-execute
+    title: "Exp 316: Full-scale benchmark execution \u2014 run Exp 315 script, capture results"
+    deliverable: results/experiment_316_fullscale_results.json
+    result: OK (conductor)
+  - id: exp317-huggingface-publish
+    title: "Exp 317: HuggingFace publish \u2014 update all model READMEs, honest Phase 1 framing"
+    deliverable: results/experiment_317_hf_publish.json
+    result: OK (conductor)
+  - id: exp318-self-learning-relay
+    title: "Exp 318: Continuous self-learning relay \u2014 Tiers 1+2+3 working in sequence"
+    deliverable: results/experiment_318_self_learning_relay.json
+    result: OK (conductor)
+  - id: exp322-reward-hacking-detection
+    title: 'Exp 322: Reward hacking detection in self-learning energy function'
+    deliverable: results/experiment_322_results.json
+    result: OK (conductor)
+  - id: exp323-conductor-behavioral-audit
+    title: 'Exp 323: Conductor behavioral audit log with anomaly detection'
+    deliverable: results/experiment_323_results.json
+    result: OK (conductor)
+  - id: exp324-conductor-constitution
+    title: "Exp 324: Conductor constitution \u2014 explicit rules for autonomous actions"
+    deliverable: python/carnot/autoresearch/constitution.py
+    result: OK (conductor)
+  - id: exp320-dwave-sampler
+    title: 'Exp 320: D-Wave sampler backend with local Neal simulation'
+    deliverable: python/carnot/samplers/dwave_sampler.py
+    result: OK (conductor)
+  - id: exp321-dwave-constraint-benchmark
+    title: 'Exp 321: D-Wave Neal vs CPU Ising on constraint verification problems'
+    deliverable: results/experiment_321_results.json
+    result: OK (conductor)
+  - id: exp319-operational-retro
+    title: "Exp 319: Operational retrospective \u2014 milestone 2026.04.29"
+    deliverable: results/operational_retro_2026_04_29.json
+    result: OK (conductor)
