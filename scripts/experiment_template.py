@@ -64,11 +64,11 @@
     ```
 
 Spec: REQ-VERIFY-083, REQ-VERIFY-084,
-      REQ-INFRA-007,
+      REQ-INFRA-007, REQ-INFRA-014,
       SCENARIO-VERIFY-109, SCENARIO-VERIFY-110, SCENARIO-VERIFY-111,
       SCENARIO-VERIFY-112, SCENARIO-VERIFY-113, SCENARIO-VERIFY-114,
       SCENARIO-VERIFY-115, SCENARIO-VERIFY-116,
-      SCENARIO-INFRA-011
+      SCENARIO-INFRA-011, SCENARIO-INFRA-015
 """
 
 from __future__ import annotations
@@ -346,6 +346,22 @@ class ExperimentTemplate:
             )
             if not result.health_ok:
                 all_healthy = False
+
+        # --- REQ-INFRA-014: Explicit failure when CARNOT_FORCE_LIVE=1 and GPU unavailable ---
+        # Silent fallback to simulated mode is a correctness bug: it produces artifacts
+        # labelled "live_gpu" that actually contain synthetic answers.  Exps 340, 341,
+        # 346, 347 all fell into this trap.  If live mode is required and setup failed,
+        # raise immediately so the researcher knows — never continue silently.
+        if force_live and not all_healthy:
+            from carnot.pipeline.live_gpu_diagnostic import (  # noqa: PLC0415
+                diagnose_live_gpu,
+            )
+
+            model_ids = [s["hf_id"] for s in model_specs]
+            diag = diagnose_live_gpu(model_ids)
+            raise RuntimeError(
+                f"Live GPU required but unavailable: {diag.failure_reason or 'model prewarm failed'}"
+            )
 
         gpu_status: dict[str, Any] = {
             "all_healthy": all_healthy,
