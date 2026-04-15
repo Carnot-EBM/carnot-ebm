@@ -1682,3 +1682,4 @@ python/ |
 | 2026-04-15 02:57 UTC | Exp 327: Pre-experiment dependency audit tool (NEW | OK | Deliverable already exists in repo |
 | 2026-04-15 03:24 UTC | Exp 328: Live GPU full-scale benchmark — run Exp 3 | OK | Deliverable already exists in repo |
 | 2026-04-15 03:52 UTC | Exp 329: Four-tier self-learning relay on live GPU | OK | Deliverable already exists in repo |
+| 2026-04-15 04:17 UTC | Exp 330: HuggingFace live publish — run Exp 317 sc | OK | 81 passed in 3.76s |
