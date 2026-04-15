@@ -323,4 +323,7 @@
 | SCENARIO-VERIFY-113 | Not Started | Implemented | SinkProbe correctly identifies 30 synthetic correct responses (high BOS concentration ≈0.6–0.85) and skips verification at threshold=0.3 (Exp 348) |
 | SCENARIO-VERIFY-114 | Not Started | Implemented | SinkProbe correctly identifies 20 synthetic wrong responses (uniform-ish attention, BOS ≈1/seq_len) and does not skip verification at threshold=0.3 (Exp 348) |
 | SCENARIO-VERIFY-115 | Not Started | Implemented | Ensemble improvement measured: fraction of Ising calls saved by SinkProbe pre-filter without increasing false_negative_rate (Exp 348) |
+| REQ-INFRA-014 | Not Started | Implemented | Live GPU diagnostic module detects CARNOT_FORCE_LIVE inference failures at three layers: CUDA visibility, PyTorch availability, model loadability (Exp 352) |
+| SCENARIO-INFRA-014 | Not Started | Implemented | diagnose_live_gpu() checks nvidia-smi, torch.cuda.is_available(), and model tokenizer load within 30s timeout; returns structured diagnostics with failure_reason (Exp 352) |
+| SCENARIO-INFRA-015 | Not Started | Implemented | Live GPU diagnostic is CI-safe (never raises) and runs on both Qwen3.5-0.8B and Gemma4-E4B-it models with honest failure reporting (Exp 352) |
 | SCENARIO-LEARN-040 | Not Started | Implemented | EORMTrainer contrastive_loss is 0 when margin already met; positive (hinge) when violated (Exp 346) |
