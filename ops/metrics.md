@@ -1659,3 +1659,4 @@
 | exp348 | 2026-04-15T14:34:35Z | 2026-04-15T14:35:30Z | Minimal doc updates for Exp 348 (SinkProbe attention-sink pre-filter): appended 1 changelog entry, 1 status row, 5 traceability rows (REQ-VERIFY-086/087, SCENARIO-VERIFY-113/114/115) | 0m55s |
 
 | 2026-04-15T06:21:22Z | 2026-04-15T06:43:30Z | Exp 337 retro: milestone 2026.05.06 operational retrospective | 22m | — |
+| exp355 | 2026-04-15T17:17:54Z | 2026-04-15T17:19:43Z | Exp 355: Adversarial GSM8K benchmark — live GPU execution harness; run tests (51 pass); run script (simulated mode, honest_verdict=blocked_simulated); update ops docs | 1m49s |

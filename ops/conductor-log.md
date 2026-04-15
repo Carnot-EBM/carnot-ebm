@@ -1791,3 +1791,5 @@ python/ |
 | 2026-04-15 16:49 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 17:16 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | 81 passed in 9.24s |
 | 2026-04-15 17:17 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+
+| 2026-04-15 17:19 UTC | Exp 355: Apple adversarial GSM8K benchmark — live GPU execution on Gemma4-E4B-it + Qwen3.5-0.5B | OK | honest_verdict=blocked_simulated (CARNOT_FORCE_LIVE not set); 51 tests pass; artifact: results/experiment_355_adversarial_gsm8k_benchmark.json; live GPU execution requires CARNOT_FORCE_LIVE=1 with pre-warmed models |
