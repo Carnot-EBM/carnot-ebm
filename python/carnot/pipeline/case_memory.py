@@ -619,6 +619,47 @@ class CaseMemory:
             raise ValueError("Case memory payload must be a JSON object")
         return cls.from_dict(payload)
 
+    def add_trace_selective(
+        self,
+        record: CaseRecord,
+        *,
+        violation_energy: float,
+        model_confidence: float,
+        min_contrast: float = 0.5,
+    ) -> bool:
+        """Store a trace only when violation_energy and model_confidence disagree.
+
+        **Detailed explanation for engineers:**
+            Implements the ATLAS (arXiv 2511.01093) selective consolidation
+            strategy: only high-contrast interactions are worth retaining
+            because they represent surprising disagreements between the EBM
+            and the model's apparent confidence.
+
+            Contrast is defined as ``abs(violation_energy - model_confidence)``.
+            The comparison is strict (``>``) so a trace at exactly min_contrast
+            is NOT retained.
+
+            This method is purely additive — it does not modify or remove any
+            existing entries.  The underlying ``record()`` path is unchanged.
+
+        Args:
+            record:            The normalised CaseRecord to potentially store.
+            violation_energy:  EBM verification energy (higher = stronger violation).
+            model_confidence:  Model's self-reported confidence in [0, 1].
+            min_contrast:      Minimum contrast required to retain the trace.
+                               Default 0.5 (target: ~40% retention per ATLAS).
+
+        Returns:
+            True if the trace was stored, False if discarded as low-contrast.
+
+        Spec: REQ-LEARN-016-3, REQ-LEARN-016-4, SCENARIO-LEARN-028
+        """
+        contrast = abs(violation_energy - model_confidence)
+        if contrast <= min_contrast:
+            return False
+        self.record(record)
+        return True
+
     def __len__(self) -> int:
         return len(self._entries)
 
@@ -633,3 +674,4 @@ __all__ = [
     "CaseRecord",
     "VERSION",
 ]
+# Note: CaseMemory.add_trace_selective is a method, not a module-level symbol.

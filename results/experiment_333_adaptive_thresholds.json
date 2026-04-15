@@ -1,0 +1,80 @@
+{
+  "experiment": 333,
+  "title": "Exp 333: Model-Adaptive Constraint Thresholds + Selective CaseMemory Consolidation",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T05:12:27Z",
+  "finished_at": "2026-04-15T05:12:27Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "model_id": "qwen3.5-0.8b",
+  "fp_tracker_simulation": {
+    "model_id": "qwen3.5-0.8b",
+    "n_queries": 50,
+    "min_observations": 10,
+    "constraint_type_summaries": [
+      {
+        "constraint_type": "arithmetic",
+        "n_observations": 19,
+        "fp_count": 1,
+        "tp_count": 18,
+        "fp_rate": 0.053,
+        "tp_rate": 0.947,
+        "disabled": false
+      },
+      {
+        "constraint_type": "nl2z3_equality",
+        "n_observations": 13,
+        "fp_count": 6,
+        "tp_count": 7,
+        "fp_rate": 0.462,
+        "tp_rate": 0.538,
+        "disabled": false
+      },
+      {
+        "constraint_type": "range_check",
+        "n_observations": 18,
+        "fp_count": 14,
+        "tp_count": 4,
+        "fp_rate": 0.778,
+        "tp_rate": 0.222,
+        "disabled": true
+      }
+    ],
+    "n_constraint_types_observed": 3,
+    "n_constraint_types_disabled": 1,
+    "active_constraint_types": [
+      "arithmetic",
+      "nl2z3_equality"
+    ]
+  },
+  "selective_consolidation": {
+    "strategy": "selective_consolidation_atlas",
+    "min_contrast": 0.5,
+    "n_total_traces": 50,
+    "n_retained_traces": 30,
+    "n_discarded_traces": 20,
+    "consolidation_ratio": 0.6,
+    "all_retain_memory_size": 22,
+    "selective_memory_size": 13,
+    "memory_reduction_pct": 40.0,
+    "atlas_target_achieved": false
+  },
+  "tracker_persistence_ok": true,
+  "verdict": "ADAPTIVE_PASS_ATLAS_PARTIAL",
+  "notes": "Simulated run: no live GPU. FP/TP rates derived from Exp 331 autopsy categories. range_check systematically noisy on small models (Exp 331 finding). ATLAS selective consolidation target: 0.30\u20130.50 ratio.",
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "fp_tracker_simulation",
+    "model_id",
+    "notes",
+    "run_date",
+    "selective_consolidation",
+    "started_at",
+    "status",
+    "title",
+    "tracker_persistence_ok",
+    "verdict"
+  ]
+}

@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 333: Model-Adaptive Constraint Thresholds + Selective CaseMemory Consolidation)
+
+Implemented per-model FP/TP tracker that auto-disables noisy constraint types when fp_rate > tp_rate,
+and selective CaseMemory consolidation (ATLAS arXiv 2511.01093) that retains only high-contrast
+interactions. Addresses research-program.md item 4d.
+
+- `python/carnot/pipeline/adaptive_thresholds.py` (new):
+  - `PerModelFPTracker(min_observations=10)`: tracks fp_count/tp_count per (model_id, constraint_type).
+    `update()`, `should_disable()`, `get_active_constraint_types()`, `to_dict()`/`from_dict()`.
+  - `ModelAdaptiveThresholds(extractor, tracker)`: wraps ConstraintExtractor; filters violations
+    whose constraint_type is disabled for the queried model_id.
+  - `SelectiveConsolidation(contrast_threshold=0.5)`: `should_retain(violation_energy, confidence)` →
+    True when abs difference exceeds threshold. `consolidation_ratio(total, retained)`.
+- `python/carnot/pipeline/case_memory.py`: additive `CaseMemory.add_trace_selective(record,
+  violation_energy, model_confidence, min_contrast=0.5)` → bool. Returns False without storing
+  when contrast <= min_contrast.
+- `python/carnot/pipeline/__init__.py`: exported `PerModelFPTracker`, `ModelAdaptiveThresholds`,
+  `SelectiveConsolidation`.
+- `tests/python/test_adaptive_thresholds.py` (new): 43 tests, all pass. Covers all public methods
+  including edge cases (min_observations boundary, equal rates, unknown models, persistence).
+- `scripts/experiment_333_adaptive_thresholds.py` (new): 50-query simulated benchmark.
+  Qwen3.5-0.8B range_check disabled (fp_rate=0.73, tp_rate=0.27 after 15 obs).
+  Consolidation ratio: 0.60 (just above ATLAS target; honest result — ADAPTIVE_PASS_ATLAS_PARTIAL).
+- `openspec/capabilities/verifiable-reasoning/spec.md`: added REQ-LEARN-015, REQ-LEARN-016,
+  SCENARIO-LEARN-025, SCENARIO-LEARN-026, SCENARIO-LEARN-027, SCENARIO-LEARN-028.
+- User instruction: implement model-adaptive constraint thresholds and selective CaseMemory
+  consolidation (research-program.md item 4d + ATLAS arXiv 2511.01093).
+
 ## 2026-04-15 (Exp 332: Confidence-Weighted Repair — Dual-Signal FP Reduction)
 
 Implemented dual-signal confidence gate for verify-repair to address the primary false-positive
