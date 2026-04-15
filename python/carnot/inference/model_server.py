@@ -442,8 +442,164 @@ def benchmark_cold_load_vs_warm_server(
     )
 
 
+@dataclass(frozen=True)
+class ThreeWayBenchmarkResult:
+    """Cold-load vs warm-server vs warm-server-with-TRT timing comparison.
+
+    Why three tiers instead of two: Exp 224a proved warm caching alone gives
+    2-3x speedup; Exp 224c showed TRT adds another 2-4x on top.  Tracking all
+    three lets researchers confirm each tier is contributing independently and
+    identify which bottleneck to address next.
+
+    Fields
+    ------
+    model_name : str
+        HuggingFace model identifier.
+    n_questions : int
+        Number of questions each tier was evaluated on.
+    cold_elapsed_seconds : float
+        Wall-clock time for N cold-load + generate cycles.
+    warm_elapsed_seconds : float
+        Wall-clock time for N questions through a warm ModelServer (no TRT).
+    trt_elapsed_seconds : float
+        Wall-clock time for N questions through a warm ModelServer with TRT.
+        Equals ``warm_elapsed_seconds`` when TRT is unavailable.
+    warm_speedup : float
+        ``cold / warm`` ratio — purely from warm caching + batching.
+    trt_speedup : float
+        ``cold / trt`` ratio — full pipeline speedup including TRT.
+    trt_available : bool
+        True iff TensorRT-LLM was used for the TRT tier.
+    """
+
+    model_name: str
+    n_questions: int
+    cold_elapsed_seconds: float
+    warm_elapsed_seconds: float
+    trt_elapsed_seconds: float
+    warm_speedup: float
+    trt_speedup: float
+    trt_available: bool
+
+
+def benchmark_three_way(
+    model_name: str,
+    questions: Sequence[str],
+    *,
+    batch_size: int = 8,
+    load_model_fn: LoaderFn = load_model,
+    generate_fn: Callable[[Any, Any, str, int], str] = generate,
+    hf_server_factory: Callable[[], ModelServer] | None = None,
+    trt_server_factory: Callable[[], ModelServer] | None = None,
+    clock: Callable[[], float] = perf_counter,
+    max_new_tokens: int = 256,
+) -> ThreeWayBenchmarkResult:
+    """Benchmark cold-load, warm-server, and warm-server-with-TRT on *questions*.
+
+    This implements the three-tier measurement recommended after Exps 224a/b/c:
+    - **Cold-load tier**: reload the model from disk before every question.
+    - **Warm-server tier**: a running ``ModelServer`` with HuggingFace backend.
+    - **TRT tier**: a ``ModelServer`` that prefers a TensorRT-LLM engine when one
+      is available; falls back to the HuggingFace server when TRT is absent so the
+      result is always valid.
+
+    The returned ``trt_available`` flag distinguishes the two TRT cases so callers
+    know whether they measured real TRT or just measured the HF server twice.
+
+    Parameters
+    ----------
+    model_name : str
+        HuggingFace model ID to benchmark.
+    questions : Sequence[str]
+        Prompts to run through each tier.  Typically 10 questions is sufficient
+        to measure steady-state throughput without a long wall-clock run.
+    batch_size : int
+        Server batch size (default 8, matching Exp 218 defaults).
+    load_model_fn : callable
+        Override for the cold-load step (injected in tests).
+    generate_fn : callable
+        Override for the cold-load generate step (injected in tests).
+    hf_server_factory : callable | None
+        Factory that returns a warm ``ModelServer`` using the HuggingFace backend.
+        Defaults to a plain ``ModelServer([model_name])``.
+    trt_server_factory : callable | None
+        Factory that returns a ``ModelServer`` with TRT preferred.  Defaults to
+        the same as *hf_server_factory* (TRT will be auto-detected at load time
+        via ``_default_loader``).
+    clock : callable
+        Monotonic clock (injected in tests for determinism).
+    max_new_tokens : int
+        Token budget per generation.
+
+    Returns
+    -------
+    ThreeWayBenchmarkResult
+    """
+    # --- Tier 1: Cold-load ---
+    # Each question triggers a fresh model load from disk.  This is the worst-case
+    # baseline that experiments ran before the Exp 224a/b/c GPU-acceleration work.
+    cold_start = clock()
+    for question in questions:
+        model, tokenizer = load_model_fn(model_name)
+        generate_fn(model, tokenizer, question, max_new_tokens)
+    cold_elapsed = clock() - cold_start
+
+    # --- Tier 2: Warm server (HuggingFace backend) ---
+    # Model loaded once; all questions routed through the batching worker.
+    hf_factory = hf_server_factory or (
+        lambda: ModelServer([model_name], batch_size=batch_size)
+    )
+    warm_start = clock()
+    with hf_factory() as hf_server:
+        hf_server.generate_batch(
+            list(questions),
+            model=model_name,
+            max_new_tokens=max_new_tokens,
+        )
+    warm_elapsed = clock() - warm_start
+
+    # --- Tier 3: Warm server with TRT preference ---
+    # The default ModelServer loader tries TRT first (_default_loader).  When TRT
+    # is not installed the factory degrades to plain HuggingFace, making the TRT
+    # tier identical to warm but always producing a valid result.
+    trt_factory = trt_server_factory or hf_factory
+    trt_start = clock()
+    trt_available = False
+    with trt_factory() as trt_server:
+        # Check whether TRT actually loaded (server stores (backend, backend) tuples
+        # when TRT succeeds — the backend object has generate_batch but is not a
+        # (model, tokenizer) pair).
+        with trt_server._state_lock:
+            for _model_obj, _tok_obj in trt_server._loaded_models.values():
+                if _model_obj is _tok_obj and hasattr(_model_obj, "generate_batch"):
+                    trt_available = True
+                    break
+        trt_server.generate_batch(
+            list(questions),
+            model=model_name,
+            max_new_tokens=max_new_tokens,
+        )
+    trt_elapsed = clock() - trt_start
+
+    warm_speedup = cold_elapsed / warm_elapsed if warm_elapsed > 0 else float("inf")
+    trt_speedup = cold_elapsed / trt_elapsed if trt_elapsed > 0 else float("inf")
+
+    return ThreeWayBenchmarkResult(
+        model_name=model_name,
+        n_questions=len(questions),
+        cold_elapsed_seconds=cold_elapsed,
+        warm_elapsed_seconds=warm_elapsed,
+        trt_elapsed_seconds=trt_elapsed,
+        warm_speedup=warm_speedup,
+        trt_speedup=trt_speedup,
+        trt_available=trt_available,
+    )
+
+
 __all__ = [
     "ModelServer",
+    "ThreeWayBenchmarkResult",
     "WarmServerBenchmarkResult",
     "benchmark_cold_load_vs_warm_server",
+    "benchmark_three_way",
 ]

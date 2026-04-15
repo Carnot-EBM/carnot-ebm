@@ -1706,6 +1706,17 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Run the paired model suites through DualGPURunner when 2 GPUs are available.",
     )
+    parser.add_argument(
+        "--no-server",
+        action="store_true",
+        dest="no_server",
+        default=False,
+        help=(
+            "Disable ModelServer warm-cache startup and fall back to per-model cold loads. "
+            "Useful for debugging cold-load vs warm-server performance differences. "
+            "Equivalent to setting CARNOT_NO_SERVER=1."
+        ),
+    )
     return parser
 
 
@@ -3372,12 +3383,47 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
     paired_runs: list[dict[str, Any]] = []
     statistics: dict[str, Any] = {}
     parallel_requested = bool(getattr(args, "parallel", False))
+    no_server = bool(getattr(args, "no_server", False))
     parallel_enabled = False
     parallel_execution_mode = "sequential"
     used_dual_gpu_runner = False
 
+    # --- Start ModelServer by default (Exp 224a integration) ---
+    # ModelServer provides warm model caching, deterministic batching, and TensorRT
+    # backend (2-4x per-query speedup).  It is started here so both the parallel
+    # DualGPURunner path AND the sequential fallback path benefit from warm inference.
+    # Disable with --no-server (or CARNOT_NO_SERVER=1) for cold-load debugging.
+    _model_server = None
+    if not no_server:
+        try:
+            import torch as _torch  # noqa: PLC0415
+
+            _cuda_ok = _torch.cuda.is_available()
+        except Exception:
+            _cuda_ok = False
+
+        if _cuda_ok:
+            try:
+                from carnot.inference.model_server import ModelServer  # noqa: PLC0415
+
+                hf_ids = [spec["hf_id"] for spec in MODEL_SPECS]
+                _model_server = ModelServer(hf_ids, batch_size=8)
+                _model_server.start()
+                print(f"  ModelServer started: warm cache + batching + TRT for {hf_ids}")
+
+                # Register with the model-loader so sequential _load_live_model() calls
+                # transparently route through the warm server (REQ-VERIFY-038).
+                from carnot.inference.model_loader import register_model_server  # noqa: PLC0415
+
+                register_model_server(_model_server)
+            except Exception as e:
+                print(f"  ModelServer unavailable ({e}), falling back to cold loads")
+                _model_server = None
+        else:
+            print("  No CUDA GPUs detected — skipping ModelServer (CPU-only mode)")
+
     if parallel_requested:
-        from carnot.inference.dual_gpu import DualGPURunner
+        from carnot.inference.dual_gpu import DualGPURunner  # noqa: PLC0415
 
         def load_model_fn(
             model_name: str,
@@ -3386,19 +3432,6 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
             device_map: str | None = None,
         ) -> tuple[Any, Any]:
             return _load_live_model(model_name, device=device, device_map=device_map)
-
-        # Try to use ModelServer for warm caching + batching + TensorRT
-        _model_server = None
-        try:
-            from carnot.inference.model_server import ModelServer
-
-            hf_ids = [spec["hf_id"] for spec in MODEL_SPECS]
-            _model_server = ModelServer(hf_ids, batch_size=8)
-            _model_server.start()
-            print(f"  ModelServer started: warm cache + batching for {hf_ids}")
-        except Exception as e:
-            print(f"  ModelServer unavailable ({e}), falling back to cold loads")
-            _model_server = None
 
         runner = DualGPURunner(
             MODEL_SPECS,
@@ -3434,14 +3467,11 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
                 statistics[result.model_name] = suite["model_summary"]
                 paired_runs.extend(suite["paired_runs"])
 
-            # Shut down ModelServer if we started one
-            if _model_server is not None:
-                _model_server.shutdown()
-                print("  ModelServer shut down, GPU memory freed")
-
     if not used_dual_gpu_runner:
         for model_spec in MODEL_SPECS:
             print(f"Running {benchmark} on {model_spec['name']} ({model_spec['hf_id']})")
+            # _load_live_model() → load_model() → transparently uses the registered
+            # ModelServer when available, falling back to cold-load if not.
             model, tokenizer = _load_live_model(model_spec)
             try:
                 suite = _run_model_suite(
@@ -3459,6 +3489,17 @@ def _run_live_benchmark(args: argparse.Namespace) -> dict[str, Any]:  # pragma: 
 
             statistics[model_spec["name"]] = suite["model_summary"]
             paired_runs.extend(suite["paired_runs"])
+
+    # Shut down ModelServer after all inference is complete, freeing GPU memory.
+    if _model_server is not None:
+        try:
+            from carnot.inference.model_loader import clear_model_server  # noqa: PLC0415
+
+            clear_model_server()
+        except Exception:
+            pass
+        _model_server.shutdown()
+        print("  ModelServer shut down, GPU memory freed")
 
     finished_at = utc_now()
     return build_artifact_payload(
