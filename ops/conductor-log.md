@@ -1766,3 +1766,9 @@ python/ |
 | 2026-04-15 14:59 UTC | Exp 350: Operational retrospective for milestone 2 | FAIL | Claude Code error: API Error: 500 {"type":"error","error":{"type":"api_error"," |
 | 2026-04-15 15:00 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 15:00 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 15:20 UTC | Plan milestone 2026.05.20 | OK | 13 tasks proposed |
+| 2026-04-15 15:21 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 15:21 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 15:21 UTC | Exp 350: Operational retrospective for milestone 2 | OK | Deliverable already exists in repo |
+| 2026-04-15 15:21 UTC | Milestone 2026.05.20 activated | OK | 13 tasks queued |
+| 2026-04-15 15:22 UTC | Exp 351: Close RETRO-003/005/009/010/011 — conduct | OK | Deliverable already exists in repo |
