@@ -1631,8 +1631,27 @@ python/ |
 - **Evidence:** Exp 308 consumed 138 min; 45-min cap saves ≥93 min per stuck experiment
 - **Usage:** `CARNOT_CONDUCTOR_TIMEOUT_MINUTES=30 ./scripts/run_experiment_with_timeout.sh python scripts/research_conductor.py`
 
-### RETRO-002: Post-step test loop detection
-- **Status:** Carried forward (not yet implemented)
+### RETRO-002: GPU monitor integration (gpu_monitor_results in setup_gpu)
+- **Status:** IMPLEMENTED (Exp 326, 2026-04-15)
+- **Root cause:** `ExperimentTemplate.setup_gpu()` pre-warmed models but never checked for zombie processes
+  holding VRAM at 0% utilisation (PIDs 2592400/2595103, ~1050 MB each, observed in 2026.04.29 retro).
+- **Fix:** `DualGPUMonitor` (`python/carnot/pipeline/dual_gpu_monitor.py`) runs `nvidia-smi` queries at
+  experiment start; `setup_gpu()` now returns an additive `gpu_monitor_results` key with
+  `n_gpus_detected`, `n_zombies`, `idle_gpus`, `all_healthy`.  Warnings logged when
+  `CARNOT_FORCE_LIVE=1`.  CI-safe: FileNotFoundError returns `[]` without raising.
+- **Evidence:** Zombie processes silently consumed ~1050 MB and were invisible to the scaffolding.
+- **Spec:** REQ-INFRA-003, SCENARIO-INFRA-004, SCENARIO-INFRA-006
+
+### RETRO-003: DualGPURunner enforcement (idle GPU detection)
+- **Status:** IMPLEMENTED (Exp 326, 2026-04-15)
+- **Root cause:** Exp 219/221 ran two models sequentially on GPU 0 while GPU 1 sat idle for the entire
+  run (~195 min; estimated ~90 min if both GPUs used in parallel — ~105 min wasted).
+- **Fix:** `DualGPUMonitor.check_dual_gpu_health()` identifies idle GPU indices (GPUs with zero active
+  processes) and includes them in the artifact.  `all_healthy=True` only when `n_gpus_detected≥2`,
+  `n_zombies==0`, and `idle_gpus==[]`.
+- **Evidence:** `results/operational_retro_2026_04_29.json` `items_carried_forward` field confirms
+  this was carried forward from the 2026.04.22 milestone.
+- **Spec:** REQ-INFRA-004, SCENARIO-INFRA-005, SCENARIO-INFRA-006
 
 ### NEW-001: Test-first stub generation
 - **Status:** IMPLEMENTED (Exp 325, 2026-04-15)
@@ -1643,3 +1662,4 @@ python/ |
 ### NEW-002: Experiment duration histogram
 - **Status:** Carried forward (not yet implemented)
 | 2026-04-15 02:02 UTC | Exp 325: Conductor timeout wrapper + ExperimentTem | OK | 81 passed in 3.28s |
+| 2026-04-15 02:04 UTC | Exp 326: DualGPUMonitor — RETRO-002 + RETRO-003    | OK | 32 tests pass; DualGPUMonitor + GPUProcessInfo in pipeline; setup_gpu() additive gpu_monitor_results key; RETRO-002/003 implemented |
