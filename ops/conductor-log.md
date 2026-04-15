@@ -1786,3 +1786,5 @@ python/ |
 | 2026-04-15 15:57 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 16:34 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 16:34 UTC | Exp 353: Live GPU smoke test — 5 questions, verify | OK | Deliverable already exists in repo |
+| 2026-04-15 16:48 UTC | Exp 354: Apple adversarial GSM8K harness — dataset | OK | 81 passed in 8.73s |
+| 2026-04-15 16:49 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
