@@ -1778,3 +1778,4 @@ python/ |
 | 2026-04-15 15:37 UTC | Exp 352: Live GPU diagnostic — diagnostic findings review | OK | Confirmed: live_gpu_diagnostic.py 100% coverage (37 tests pass); setup_gpu() raises RuntimeError when CARNOT_FORCE_LIVE=1+prewarm fails; root-cause fix for silent simulated fallback in Exps 340/341/346/347; experiment_352 script + spec REQ-INFRA-014/SCENARIO-INFRA-014/015 all in place |
 | 2026-04-15 15:39 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | 118 passed in 19.86s |
 | 2026-04-15 15:43 UTC | Exp 352: Live GPU inference root-cause diagnostic  | FAIL | No file changes produced |
+| 2026-04-15 15:50 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | 81 passed in 10.62s |
