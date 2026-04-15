@@ -257,3 +257,8 @@
 | REQ-AUDIT-007 | Not Started | Implemented | Commit and rollback policies — autonomous commit gating with constitutional constraints, rollback authority model (Exp 324) |
 | SCENARIO-AUDIT-005 | Not Started | Implemented | Conductor constitution enforcement via integration with Exp 323 behavioral audit log |
 | SCENARIO-AUDIT-006 | Not Started | Implemented | Constitutional rule violations logged and surfaced in milestone audit summaries |
+| REQ-INFRA-001 | Not Started | Implemented | Conductor timeout wrapper — run_experiment_with_timeout.sh enforces hard timeout via `timeout -k 60s ${CARNOT_CONDUCTOR_TIMEOUT_MINUTES:-45}m "$@"` (Exp 325) |
+| REQ-INFRA-002 | Not Started | Implemented | Test-first stub generation — ExperimentTemplate.generate_test_stub(test_file_path, module_to_test) writes pytest skeleton with passing placeholder, idempotent (Exp 325) |
+| SCENARIO-INFRA-001 | Not Started | Implemented | Timeout wrapper executable, has bash shebang, uses timeout command with kill signal, default is 45 minutes, exits code 124 on timeout |
+| SCENARIO-INFRA-002 | Not Started | Implemented | Test stub includes REQ-INFRA-002 comment, autogen header, test class, placeholder test with assert_true, module import, passes ast.parse() |
+| SCENARIO-INFRA-003 | Not Started | Implemented | Test stub generation is idempotent — same path returns same path, never overwrites existing stub |
