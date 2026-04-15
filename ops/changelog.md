@@ -1,5 +1,27 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 336: CoT Circuit Verifier — CRV Implementation)
+
+Implemented CoTCircuitVerifier (arXiv 2510.09312): circuit-based reasoning verification that
+extracts a computational dependency graph from a chain-of-thought response and checks
+structural consistency. Complements Z3 (arithmetic) and ArithmeticExtractor (regex):
+CRV catches wrong-value-carryover errors that the other extractors miss.
+
+- `python/carnot/pipeline/cot_circuit_verifier.py` (new):
+  - `CoTStep(step_id, text, input_refs, output_value, is_final_answer)` — one reasoning step.
+  - `CoTCircuit(steps, has_cycle, broken_links)` — full dependency graph + consistency findings.
+  - `extract_cot_steps(response)` — splits by "Step N:", numbered lines, discourse markers.
+  - `find_broken_links(steps, tolerance)` — detects value-carryover mismatches.
+  - `build_circuit(steps, tolerance)` — constructs CoTCircuit with cycle detection.
+  - `CoTCircuitVerifier(tolerance)` — implements ConstraintExtractor protocol; no LLM calls.
+- `python/carnot/pipeline/verify_repair.py`: added `verify_cot_circuit()` additive integration.
+- `python/carnot/pipeline/__init__.py`: exported CoTCircuit, CoTCircuitVerifier, CoTStep,
+  build_circuit, extract_cot_steps, find_broken_links.
+- `tests/python/test_cot_circuit_verifier.py` (new): 51 tests, 100% module coverage.
+- `scripts/experiment_336_cot_circuit_benchmark.py` (new): 20-response synthetic corpus,
+  TP/FP measurement, Exp 311 comparison table.
+- Spec: REQ-EXTRACT-015, REQ-EXTRACT-016, SCENARIO-EXTRACT-031–035.
+
 ## 2026-04-15 (Exp 335: AMD XDNA NPU Build — 4th Prereq Retry)
 
 Fourth attempt to bring up the AMD XDNA NPU via a VitisAI-enabled onnxruntime source
