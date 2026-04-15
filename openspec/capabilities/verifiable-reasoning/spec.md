@@ -3900,6 +3900,82 @@ Spec: REQ-BENCH-005, SCENARIO-BENCH-012, SCENARIO-BENCH-013
 **When** `build_precision_benchmark_artifact(results)` is called
 **Then** the artifact's `inference_mode` is `"simulated"`
 
+### REQ-BENCH-006: Adversarial GSM8K Benchmark Harness
+
+The repository shall provide a harness for the Apple adversarial GSM8K benchmark
+(arXiv 2410.05229) that:
+- Loads or synthesizes a set of GSM8K math questions
+- Appends one irrelevant distractor sentence per question from a fixed pool of 20
+  distractors, using a seeded PRNG for reproducibility
+- Runs each question through Carnot's ArithmeticExtractor-based verify-repair pipeline
+  under both standard (original) and adversarial (distractor-appended) conditions
+- Reports standard_accuracy, adversarial_accuracy, accuracy_drop, and
+  repaired_adversarial_accuracy to measure whether structural parsing is robust to
+  irrelevant-sentence noise
+
+The hypothesis: because ArithmeticExtractor parses explicit equation tokens — not
+context words — the Ising energy should be invariant to appended irrelevant text,
+making Carnot immune to the ≤65% accuracy drop observed in frontier LLMs.
+
+Spec: REQ-BENCH-006, SCENARIO-BENCH-014, SCENARIO-BENCH-015, SCENARIO-BENCH-016
+
+### REQ-BENCH-007: Irrelevant-Sentence Robustness Invariant
+
+The adversarial GSM8K result artifact shall include a boolean
+`robustness_invariant_holds` field that is `True` when
+`adversarial_accuracy >= standard_accuracy - 0.05`, indicating that Carnot's
+structural parsing did not degrade meaningfully under distractor-sentence injection.
+This invariant is the primary research claim for the Apple adversarial GSM8K result.
+
+Spec: REQ-BENCH-007, SCENARIO-BENCH-014, SCENARIO-BENCH-016
+
+### SCENARIO-BENCH-014: AdversarialGSMQuestion Dataclass And build_adversarial_questions
+
+**Given** a list of `n` GSM8K question strings and a fixed `seed=42`
+**When** `build_adversarial_questions(original_questions, seed=42)` is called
+**Then** it returns a list of `n` `AdversarialGSMQuestion` objects
+**And** each `adversarial_question` contains the original question text
+**And** each `adversarial_question` ends with one sentence from `DISTRACTOR_SENTENCES`
+**And** the same seed always produces the same assignment of distractors to questions
+
+**Given** `AdversarialGSMQuestion` is constructed with all five required fields
+**When** `dataclasses.asdict()` is called on the result
+**Then** a dict is returned with keys `question_id`, `original_question`,
+  `adversarial_question`, `ground_truth_answer`, and `irrelevant_sentence`
+
+### SCENARIO-BENCH-015: AdversarialBenchmarkResult And compute_adversarial_results
+
+**Given** `standard_results` with 8/10 correct, `adversarial_results` with 6/10 correct,
+  `repaired_results` with 7/10 correct
+**When** `compute_adversarial_results(standard_results, adversarial_results, repaired_results)`
+  is called
+**Then** the returned `AdversarialBenchmarkResult` has
+  `standard_accuracy=0.80`, `adversarial_accuracy=0.60`, `accuracy_drop=0.20`,
+  `repaired_adversarial_accuracy=0.70`, `repair_improvement=0.10`
+
+**Given** `AdversarialBenchmarkResult` constructed with all required fields
+**When** `dataclasses.asdict()` is called
+**Then** a dict is returned with all six fields present
+
+### SCENARIO-BENCH-016: build_adversarial_artifact Schema And Honest Verdict
+
+**Given** an `AdversarialBenchmarkResult` with `inference_mode="simulated"`
+**When** `build_adversarial_artifact(result)` is called
+**Then** the artifact has `schema="carnot.adversarial_gsm8k.v1"`
+**And** `honest_verdict` is one of `"improvement_positive"`, `"degradation_positive"`,
+  or `"blocked_simulated"`
+**And** when `inference_mode="simulated"` the `honest_verdict` is `"blocked_simulated"`
+
+**Given** an `AdversarialBenchmarkResult` with `inference_mode="live_gpu"` and
+  `repair_improvement > 0`
+**When** `build_adversarial_artifact(result)` is called
+**Then** `honest_verdict="improvement_positive"`
+
+**Given** an `AdversarialBenchmarkResult` with `inference_mode="live_gpu"` and
+  `repair_improvement <= 0` and `accuracy_drop > 0`
+**When** `build_adversarial_artifact(result)` is called
+**Then** `honest_verdict="degradation_positive"`
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -4460,6 +4536,8 @@ conductor log timestamps for Exps 325–336
 | REQ-BENCH-003 | Not Started | Implemented (Exp 340) | PrecisionStackResult + PipelineVariant + compute_signed_improvement + build_precision_benchmark_artifact; live full precision stack benchmark (SCENARIO-BENCH-007/008/009) |
 | REQ-BENCH-004 | Not Started | Implemented (Exp 341) | HumanEvalResult + compute_pass_at_1 + compute_pass_at_1_after_repair + build_humaneval_artifact; live HumanEval code verification benchmark (SCENARIO-BENCH-010/011) |
 | REQ-BENCH-005 | Not Started | Implemented (Exp 353) | SmokeTestResult + run_smoke_test + build_smoke_test_artifact; live GPU smoke test gate with CI-skip path and RuntimeError on simulated fallback (SCENARIO-BENCH-012/013) |
+| REQ-BENCH-006 | Not Started | Implemented (Exp 354) | AdversarialGSMQuestion + build_adversarial_questions + AdversarialBenchmarkResult + compute_adversarial_results + build_adversarial_artifact; adversarial GSM8K harness with 20-distractor pool and CI-safe synthetic mode (SCENARIO-BENCH-014/015/016) |
+| REQ-BENCH-007 | Not Started | Implemented (Exp 354) | robustness_invariant_holds field in build_adversarial_artifact; invariant is True when adversarial_accuracy >= standard_accuracy - 0.05 (SCENARIO-BENCH-014/016) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
