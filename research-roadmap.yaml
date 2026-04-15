@@ -125,8 +125,8 @@ tasks:
       approach from research-program.md Goal #1b and MathAgent (arXiv 2604.11188) "Legislator" pattern.
 
       The structured claim format:
-        [{"lhs": "47", "rhs": "28+19", "op": "+",
-          "claim_text": "the total is 47 (28+19)", "confidence": 0.9}]
+        [("lhs": "47", "rhs": "28+19", "op": "+",
+          "claim_text": "the total is 47 (28+19)", "confidence": 0.9)]
       Each claim becomes one IsingConstraint: lhs value == arithmetic(rhs).
 
       EXISTING CODE TO READ FIRST:
@@ -156,8 +156,8 @@ tasks:
          - ExtractedClaim dataclass with __post_init__ validation
          - build_llm_extraction_prompt(question, response) → str:
            Prompt instructs the LLM to output ONLY a JSON array of claims, no prose.
-           Each claim: {"lhs": "...", "rhs": "...", "op": "+" or "-" or "*" or "/",
-                        "claim_text": "...", "confidence": 0.0-1.0}
+           Each claim: ("lhs": "...", "rhs": "...", "op": "+" or "-" or "*" or "/",
+                        "claim_text": "...", "confidence": 0.0-1.0)
            Include 3 few-shot examples in the prompt.
          - parse_claim_json(llm_output) → list[ExtractedClaim]: robust JSON extraction
          - _claim_to_constraint(claim) → ConstraintTerm | None: converts claim to IsingConstraint
@@ -391,8 +391,8 @@ tasks:
         repaired_adversarial: adversarial + verify-repair
 
       IMPORTANT: CARNOT_FORCE_LIVE=1 must be set. This experiment MUST produce honest_verdict
-      from the four-branch logic in Exp 355: {improvement_positive, degradation_positive,
-      neutral, blocked_simulated}. Only blocked_simulated is unacceptable.
+      from the four-branch logic in Exp 355: (improvement_positive, degradation_positive,
+      neutral, blocked_simulated). Only blocked_simulated is unacceptable.
 
       EXISTING CODE TO READ FIRST:
       - python/carnot/pipeline/adversarial_gsm8k.py — AdversarialGSMQuestion, harness (Exp 354)

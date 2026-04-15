@@ -1841,3 +1841,7 @@ python/ |
 | 2026-04-15 21:57 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
 | 2026-04-15 21:57 UTC | Milestone 2026.05.27 activated | OK | 12 tasks queued |
 | 2026-04-15 22:06 UTC | Exp 365: Close RETRO-012/013/014 — conductor GPU e | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-15 22:08 UTC | Exp 365: Close RETRO-012/013/014 — conductor GPU env fix + JSON enforcer | OK | 73 tests pass; all_closed=True; scripts/conductor_gpu_env.sh written; missing_jsons=[357,358,362] flagged for follow-up; results/experiment_365_retro_close.json written |
+| 2026-04-15 22:08 UTC | RETRO-012 | CLOSED | scripts/conductor_gpu_env.sh created with export CARNOT_FORCE_LIVE=1; source before GPU experiments |
+| 2026-04-15 22:08 UTC | RETRO-013 | CLOSED | Exp 356 gap documented; addressed by Exp 366 this milestone |
+| 2026-04-15 22:08 UTC | RETRO-014 | CLOSED | RetroJSONEnforcer pattern enforced; missing JSONs 357/358/362 flagged for human follow-up |

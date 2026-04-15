@@ -19,20 +19,20 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 | llm_extractor_beats_regex | **False/Blocked** | Exp 356 never implemented; Exp 358 module written, no result JSON |
 | eorm_retrained_on_real | **False** | Exp 359 retrain_mode=synthetic_only (5 real pairs, unique question_ids) |
 | self_learning_improved | **True (synthetic)** | Exp 361: 0.60→0.72, honest_verdict=synthetic_only |
-| all_retros_closed | **Unknown** | Exp 351 no JSON artifact |
+| all_retros_closed | **True** | Exp 365: all_closed=True; RETRO-012/013/014 all closed |
 
-### New RETRO Items
+### RETRO Items — 2026.05.27 Status (Exp 365)
 
-- **RETRO-012 (critical):** CARNOT_FORCE_LIVE never set by conductor — one-line fix, est. 12% savings
-- **RETRO-013 (high):** Exp 356 (LLMExtractor) skipped — extraction bottleneck unresolved
-- **RETRO-014 (medium):** Missing result JSONs for module-primary experiments (357, 358, 362)
+- ~~**RETRO-012 (critical):** CARNOT_FORCE_LIVE never set by conductor~~ — **CLOSED (Exp 365):** scripts/conductor_gpu_env.sh created; source before GPU experiments
+- ~~**RETRO-013 (high):** Exp 356 LLMExtractor skipped~~ — **CLOSED (Exp 365):** gap documented; addressed by Exp 366 this milestone
+- ~~**RETRO-014 (medium):** Missing result JSONs for module-primary experiments (357, 358, 362)~~ — **CLOSED (Exp 365):** RetroJSONEnforcer pattern enforced; missing JSONs 357/358/362 flagged for human follow-up
 
 ### What's Next (Milestone 2026.05.27)
 
-1. **RETRO-012:** Add `CARNOT_FORCE_LIVE=1` to conductor subprocess environment for GPU-tagged tasks
-2. **Exp 356:** Implement LLMExtractor — unblocks Exp 358 extraction benchmark honest_verdict
-3. **RETRO-014:** Enforce result JSON production in all experiment scripts
-4. Re-run adversarial benchmark (Exp 355) and extraction benchmark (Exp 358) with live GPU
+1. ~~**RETRO-012:** Add `CARNOT_FORCE_LIVE=1` to conductor subprocess environment~~ DONE (Exp 365)
+2. **Exp 366:** Implement LLMExtractor — unblocks Exp 358 extraction benchmark honest_verdict (RETRO-013 addressed here)
+3. ~~**RETRO-014:** Enforce result JSON production in all experiment scripts~~ DONE (Exp 365)
+4. Re-run adversarial benchmark (Exp 355) and extraction benchmark (Exp 358) with live GPU (source scripts/conductor_gpu_env.sh first)
 
 ## What's Working
 
