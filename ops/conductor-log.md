@@ -1715,3 +1715,6 @@ python/ |
 | 2026-04-15 09:48 UTC | Exp 341: Live HumanEval code verification — CodeEx | OK | 81 passed in 3.21s |
 | 2026-04-15 09:49 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 09:49 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 10:31 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 10:31 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 10:31 UTC | Exp 342: Live extractor comparison — ArithmeticExt | OK | Deliverable already exists in repo |
