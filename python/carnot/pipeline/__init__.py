@@ -148,6 +148,12 @@ from carnot.pipeline.spilled_energy_extractor import (
 from carnot.pipeline.z3_extractor import Z3ArithmeticExtractor
 from carnot.pipeline.jepa_fast_path import JepaGate
 from carnot.pipeline.nl2z3_extractor import NL2Z3Extractor, Z3Result
+from carnot.pipeline.llm_z3_formalizer import (
+    LLMz3Formalizer,
+    Z3FormalizationResult,
+    build_z3_formalization_prompt,
+    parse_z3_snippet,
+)
 from carnot.pipeline.z3_gated_repair import Z3GatedRepair, Z3GatedRepairResult, compute_skip_rate
 from carnot.pipeline.dual_gpu_monitor import DualGPUMonitor, GPUProcessInfo
 from carnot.pipeline.confidence_weighted_repair import (
@@ -290,6 +296,10 @@ __all__ = [
     "Z3Result",
     "JepaGate",
     "NL2Z3Extractor",
+    "LLMz3Formalizer",
+    "Z3FormalizationResult",
+    "build_z3_formalization_prompt",
+    "parse_z3_snippet",
     "compute_skip_rate",
     "ConfidenceRepairResult",
     "ConfidenceWeightedRepair",

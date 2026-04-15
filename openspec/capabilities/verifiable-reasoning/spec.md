@@ -3524,6 +3524,76 @@ Spec: REQ-EXTRACT-017, SCENARIO-EXTRACT-036, SCENARIO-EXTRACT-037
 **And** `recommended_extractor` names the extractor with the highest `estimated_precision`
 **And** when two extractors tie, the first one in the input list is chosen
 
+### REQ-EXTRACT-018: LLM Extractor for Instruction-Tuned Format Responses
+
+The system shall support an `LLMExtractor` that uses an auxiliary LLM call to canonicalize
+arithmetic claims from instruction-tuned (IT) format responses (markdown, numbered steps,
+mixed prose), where NL2Z3Extractor's single-pass approach fails due to format ambiguity.
+
+Spec: REQ-EXTRACT-018, SCENARIO-EXTRACT-036, SCENARIO-EXTRACT-037
+
+### REQ-EXTRACT-019: LLM-Guided Z3 Formalization
+
+The system shall support an `LLMz3Formalizer` that separates the formalization step from
+the extraction step, where:
+- The LLM receives the raw response text and outputs ONLY Python z3-syntax assertion strings
+  (not prose, not explanations)
+- A second pass runs the Z3 snippet via `exec()` in a restricted sandbox
+- The sandbox allows ONLY the `z3` module; attempts to import `os`, `sys`, `subprocess`
+  or any other module raise `NameError`
+- Results are captured in a `Z3FormalizationResult` dataclass with fields:
+  `z3_code`, `z3_result`, `n_assertions`, `is_sat`, `formalization_mode`,
+  `source_response_length`
+- When `llm_caller` is `None` (CI mode), a hardcoded stub Z3 snippet is used for testing
+  without any LLM call
+- `formalization_mode` is `"llm"` when a real LLM caller is used, `"ci_stub"` otherwise
+
+Inspired by arXiv 2601.04675 (LLM-guided SMT): 80% improvement in Z3 success rate when
+an LLM rewrites ambiguous arithmetic into explicit Z3 assertion syntax.
+
+Spec: REQ-EXTRACT-019, SCENARIO-EXTRACT-039, SCENARIO-EXTRACT-040, SCENARIO-EXTRACT-041
+
+### REQ-EXTRACT-020: Zero-False-Positive Z3 Path
+
+The system shall support a zero-false-positive verification path where:
+- `LLMz3Formalizer` only reports a violation when Z3 returns `unsat`
+- `sat` and `unknown` and `error` results do NOT produce violations
+- This ensures FP rate is bounded by Z3 soundness (zero by design for correct Z3 models)
+- The `fp_rate` field in the experiment artifact reflects this property
+
+Spec: REQ-EXTRACT-020, SCENARIO-EXTRACT-039, SCENARIO-EXTRACT-041
+
+### SCENARIO-EXTRACT-039: Z3FormalizationResult Captures Full Formalization Metadata
+
+**Given** a `LLMz3Formalizer` with `llm_caller=None` (CI stub mode)
+**When** `formalizer.formalize(question, response)` is called
+**Then** the result is a `Z3FormalizationResult` instance
+**And** `z3_code` is a non-empty Python string
+**And** `z3_result` is one of `"sat"`, `"unsat"`, `"unknown"`, `"error"`
+**And** `n_assertions` is a non-negative integer counting `s.add(...)` calls
+**And** `is_sat` is `True` iff `z3_result == "sat"`
+**And** `formalization_mode` is `"ci_stub"`
+**And** `source_response_length` equals `len(response)`
+
+### SCENARIO-EXTRACT-040: LLMz3Formalizer Sandbox Blocks Forbidden Imports
+
+**Given** a `LLMz3Formalizer` with an `llm_caller` that returns code containing
+  `import os` or `import sys` or `import subprocess`
+**When** `formalizer.formalize(question, response)` is called
+**Then** the exec sandbox raises `NameError` for the forbidden import
+**And** the result has `z3_result == "error"` (sandbox blocked the code)
+**And** no exception propagates to the caller
+
+### SCENARIO-EXTRACT-041: LLMz3Formalizer Detects Arithmetic Contradiction
+
+**Given** a `LLMz3Formalizer` with an `llm_caller` that returns Z3 code asserting
+  `x == 5` and `x == 6` simultaneously
+**When** `formalizer.formalize(question, "The answer is 5. Also the answer is 6.")` is called
+**Then** `z3_result == "unsat"`
+**And** `is_sat` is `False`
+**And** `n_assertions >= 2`
+**And** `formalization_mode == "llm"`
+
 ### REQ-REPAIR-010: Z3-Gated Repair Pipeline
 
 The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
@@ -4564,6 +4634,8 @@ conductor log timestamps for Exps 325–336
 | REQ-EXTRACT-015 | Not Started | Implemented | CoTCircuitVerifier + CoTStep + extract_cot_steps (SCENARIO-EXTRACT-031/032, Exp 336) |
 | REQ-EXTRACT-016 | Not Started | Implemented | CoTCircuit + build_circuit + find_broken_links + broken link detection (SCENARIO-EXTRACT-033/034/035, Exp 336) |
 | REQ-EXTRACT-017 | Not Started | Implemented | ExtractorResult + compare_extractors + build_comparison_artifact; live 4-way extractor comparison on IT model responses (SCENARIO-EXTRACT-036/037, Exp 342) |
+| REQ-EXTRACT-019 | Not Started | Implemented | LLMz3Formalizer + Z3FormalizationResult + exec sandbox + CI stub mode (SCENARIO-EXTRACT-039/040/041, Exp 357) |
+| REQ-EXTRACT-020 | Not Started | Implemented | Zero-FP Z3 path: only unsat raises violation; fp_rate in experiment artifact (SCENARIO-EXTRACT-039/041, Exp 357) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
