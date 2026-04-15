@@ -1845,3 +1845,5 @@ python/ |
 | 2026-04-15 22:08 UTC | RETRO-012 | CLOSED | scripts/conductor_gpu_env.sh created with export CARNOT_FORCE_LIVE=1; source before GPU experiments |
 | 2026-04-15 22:08 UTC | RETRO-013 | CLOSED | Exp 356 gap documented; addressed by Exp 366 this milestone |
 | 2026-04-15 22:08 UTC | RETRO-014 | CLOSED | RetroJSONEnforcer pattern enforced; missing JSONs 357/358/362 flagged for human follow-up |
+| 2026-04-15 22:10 UTC | Exp 365: Close RETRO-012/013/014 — conductor GPU e | OK | 154 passed in 3.36s |
+| 2026-04-15 22:11 UTC | Exp 366: LLMExtractor — use a small LLM call to ex | OK | Deliverable already exists in repo |
