@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 368: Live Precision Pipeline Benchmark — First Credible Headline Number)
+
+- 2026-04-15 23:52: Exp 368 verified present and correct.
+  - `scripts/experiment_368_precision_live.py` — Hard CARNOT_FORCE_LIVE=1 gate (no simulated fallback). diagnose_live_gpu() blocks immediately with blocked artifact if is_live_capable=False. ExperimentTemplate.setup_gpu() + DualGPURunner wiring. LLMConstraintExtractor (Exp 366) used for IT-format extraction in non-BASELINE variants. Checkpoints every 50 questions. honest_verdict="live_improvement" ONLY when inference_mode=="live_gpu" AND signed_improvement>0.
+  - `build_exp368_artifact()` — schema="carnot.precision_benchmark.v2", explicit inference_mode, SCENARIO-BENCH-020 honest_verdict rules enforced.
+  - `tests/python/test_experiment_368_precision_live.py` — 74 tests pass, 100% new-function coverage. All main() paths: CARNOT_FORCE_LIVE not set, diagnose_live_gpu blocked, setup_gpu unhealthy, model load fails, success path (live_gpu_confirmed=True, all_results=10, schema=v2).
+  - SCENARIO-BENCH-020 confirmed in spec (openspec/capabilities/verifiable-reasoning/spec.md).
+  - Live run pending: will produce Carnot's first credible precision-stack headline number when CARNOT_FORCE_LIVE=1 is set with GPU available.
+  (User-requested execution)
+
 ## 2026-04-15 (Exp 367: Live Extraction Comparison — Verification Run)
 
 - 2026-04-15 23:03: Human-requested verification of Exp 367 implementation.
