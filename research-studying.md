@@ -373,6 +373,24 @@ These are NOT candidates for revalidation — they were disproven by experimenta
   ~$500. Energy function evaluation (W*s products) maps to analog MAC.
   Relevant for KAN/Boltzmann forward passes, not Ising sampling.
 
+### EBM Safety Classifier (Distilled from gpt-oss-safeguard) — HIGH PRIORITY
+- **Concept:** Train Carnot's KAN tier as a lightweight safety classifier using
+  gpt-oss-safeguard (Apache 2.0, 20B/120B) as teacher. The KAN model (2.3K params,
+  0.994 AUROC) could classify inputs as safe/unsafe at a fraction of the compute.
+- **How it works:**
+  1. Run gpt-oss-safeguard-20b on a corpus of safe + unsafe prompts
+  2. Collect (input, safety_label, reasoning) pairs
+  3. Train KAN energy model: low energy = safe, high energy = unsafe
+  4. Deploy as a pre-filter in VerifyRepairPipeline for input sanitization
+- **Advantages over gpt-oss-safeguard alone:**
+  - 2.3K params vs 5.1B active params (2000x smaller)
+  - Runs on CPU in <1ms (vs GPU inference for the teacher)
+  - Integrates natively with Carnot's energy pipeline
+  - Hardware-acceleratable (Ising/FPGA/D-Wave for the safety energy landscape)
+- **Score:** 5x5x4x5 = **500** — high impact, feasible, proven teacher model
+- **Action:** Add to next milestone. Requires downloading gpt-oss-safeguard-20b
+  weights from HuggingFace and running distillation pipeline.
+
 ### Mythos System Card Insights (Applied — From Anthropic's 244-page safety evaluation)
 - **Source:** Anthropic Claude Mythos Preview System Card (April 7, 2026)
 - **Key findings applicable to Carnot:**
