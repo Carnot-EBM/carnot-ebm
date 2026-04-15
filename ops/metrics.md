@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 338 Host Prereqs + DualGPU Auto-Assignment
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T07:16:43Z | 2026-04-15T07:43:28Z | Exp 338: HostPrereqRegistry (RETRO-006) + DualGPU auto-assignment (RETRO-004); REQ-INFRA-006/007 + SCENARIO-INFRA-009/010/011 to spec; ops/host-prereqs.md (6 entries); host_prereq_registry.py; setup_gpu() dual_gpu_auto_assigned key; 75 tests all pass; results/experiment_338_host_prereqs.json; ops docs updated | ~27m |
+
+---
+
 ## Session: 2026-04-15 Milestone 2026.05.13 Planning
 
 ### Turn Log

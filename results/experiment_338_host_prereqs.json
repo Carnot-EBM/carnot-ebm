@@ -1,0 +1,68 @@
+{
+  "experiment": 338,
+  "title": "Host prerequisites registry + DualGPU auto-assignment default (RETRO-004/006)",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T07:25:04Z",
+  "finished_at": "2026-04-15T07:25:07Z",
+  "duration_s": 2.688,
+  "status": "success",
+  "n_packages_registered": 6,
+  "n_classes_checked": 3,
+  "classes_checked": [
+    "npu",
+    "fpga",
+    "live_gpu"
+  ],
+  "class_results": {
+    "npu": [
+      "ninja",
+      "openblas",
+      "CARNOT_FORCE_LIVE"
+    ],
+    "fpga": [
+      "ninja",
+      "CARNOT_FORCE_LIVE",
+      "yosys",
+      "nextpnr-xilinx"
+    ],
+    "live_gpu": [
+      "CARNOT_FORCE_LIVE"
+    ]
+  },
+  "registry_loaded": true,
+  "dual_gpu_auto_assign_enabled": true,
+  "assigned_gpu_model_a": 0,
+  "assigned_gpu_model_b": 1,
+  "setup_gpu_keys": [
+    "all_healthy",
+    "dual_gpu_auto_assigned",
+    "gpu_monitor_results",
+    "models",
+    "prewarm_time_s"
+  ],
+  "retro_items_implemented": [
+    "RETRO-004",
+    "RETRO-006"
+  ],
+  "artifact_schema": "carnot.host_prereqs.v1",
+  "schema": [
+    "artifact_schema",
+    "assigned_gpu_model_a",
+    "assigned_gpu_model_b",
+    "class_results",
+    "classes_checked",
+    "dual_gpu_auto_assign_enabled",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "n_classes_checked",
+    "n_packages_registered",
+    "registry_loaded",
+    "retro_items_implemented",
+    "run_date",
+    "setup_gpu_keys",
+    "started_at",
+    "status",
+    "title"
+  ]
+}

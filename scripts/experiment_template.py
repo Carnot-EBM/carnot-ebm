@@ -64,9 +64,11 @@
     ```
 
 Spec: REQ-VERIFY-083, REQ-VERIFY-084,
+      REQ-INFRA-007,
       SCENARIO-VERIFY-109, SCENARIO-VERIFY-110, SCENARIO-VERIFY-111,
       SCENARIO-VERIFY-112, SCENARIO-VERIFY-113, SCENARIO-VERIFY-114,
-      SCENARIO-VERIFY-115, SCENARIO-VERIFY-116
+      SCENARIO-VERIFY-115, SCENARIO-VERIFY-116,
+      SCENARIO-INFRA-011
 """
 
 from __future__ import annotations
@@ -256,10 +258,19 @@ class ExperimentTemplate:
         If any model fails, the caller should emit a blocked artifact rather than
         running inference with a cold/stalled GPU.
 
+        **DualGPU auto-assignment (REQ-INFRA-007, RETRO-004):**
+        When ``len(model_specs) >= 2`` and ``CARNOT_FORCE_LIVE=1``, this method
+        automatically assigns ``model_specs[i]['gpu'] = i`` so that each model
+        runs on its own GPU.  If only 1 GPU is detected, all models are assigned
+        to GPU 0 with a logged RETRO-004 warning.  When ``CARNOT_FORCE_LIVE=0``
+        (CI mode), auto-assignment is skipped and the caller's ``gpu`` values
+        are used unchanged.
+
         Parameters
         ----------
         model_specs : list[dict]
             Each entry must have ``"name"``, ``"hf_id"``, and ``"gpu"`` (device index).
+            When auto-assignment is active, ``"gpu"`` values are mutated in-place.
         prewarm_fn : callable | None
             Override the default ``model_prewarm`` from Exp 294 (injected in tests).
 
@@ -270,6 +281,9 @@ class ExperimentTemplate:
             - ``models`` (list[dict]): Per-model status
               (name, gpu_id, health_ok, load_time_s, stall_root_cause).
             - ``prewarm_time_s`` (float): Total wall-clock time for all pre-warms.
+            - ``gpu_monitor_results`` (dict): DualGPUMonitor health summary.
+            - ``dual_gpu_auto_assigned`` (bool): True iff GPU indices were
+              auto-assigned by this method (REQ-INFRA-007).
         """
         if prewarm_fn is None:
             # Import the real pre-warm function from Exp 294 when running live
@@ -278,6 +292,42 @@ class ExperimentTemplate:
             )
 
             prewarm_fn = _real_prewarm
+
+        # --- REQ-INFRA-007: DualGPU auto-assignment (RETRO-004) ---
+        # When running live with >=2 models, assign each model to its own GPU index
+        # so they execute in parallel rather than sequentially on GPU 0.
+        force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
+        dual_gpu_auto_assigned = False
+
+        if force_live and len(model_specs) >= 2:
+            # Detect GPU count before assigning — we need to know if 1 or 2 GPUs exist.
+            try:
+                from carnot.pipeline.dual_gpu_monitor import DualGPUMonitor  # noqa: PLC0415
+
+                _monitor_early = DualGPUMonitor()
+                n_gpus = _monitor_early._get_gpu_count()
+            except Exception:
+                n_gpus = 1  # conservative fallback
+
+            if n_gpus >= 2:
+                for i, spec in enumerate(model_specs):
+                    spec["gpu"] = i
+                dual_gpu_auto_assigned = True
+                _log.info(
+                    "REQ-INFRA-007: DualGPU auto-assignment active — "
+                    "assigned %d models to GPUs 0..%d",
+                    len(model_specs),
+                    len(model_specs) - 1,
+                )
+            else:
+                # Only 1 GPU available — assign all to GPU 0, log RETRO-004 warning
+                for spec in model_specs:
+                    spec["gpu"] = 0
+                dual_gpu_auto_assigned = False
+                _log.warning(
+                    "RETRO-004 warning: DualGPU auto-assignment requested but only "
+                    "1 GPU detected; running sequentially on GPU 0"
+                )
 
         t_start = time.perf_counter()
         model_statuses: list[dict[str, Any]] = []
@@ -301,6 +351,7 @@ class ExperimentTemplate:
             "all_healthy": all_healthy,
             "models": model_statuses,
             "prewarm_time_s": round(time.perf_counter() - t_start, 3),
+            "dual_gpu_auto_assigned": dual_gpu_auto_assigned,
         }
 
         # --- REQ-INFRA-003 / REQ-INFRA-004: GPU zombie + idle-GPU check ---
@@ -316,7 +367,6 @@ class ExperimentTemplate:
             gpu_status["gpu_monitor_results"] = gpu_monitor_results
 
             if not gpu_monitor_results["all_healthy"]:
-                force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
                 if force_live:
                     _log.warning(
                         "DualGPUMonitor: unhealthy GPU state detected — "
