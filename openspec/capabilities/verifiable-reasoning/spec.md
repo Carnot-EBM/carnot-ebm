@@ -3035,6 +3035,41 @@ Spec: REQ-LEARN-023, SCENARIO-LEARN-040
 **When** `contrastive_loss(correct_energy=4.0, incorrect_energy=2.0)` is called
 **Then** the returned loss is 3.0 (hinge: max(0, 4.0 - 2.0 + 1.0))
 
+### REQ-LEARN-024: JEPA Real-Data Retrain on Live Violation Pairs
+
+Given live GPU inference data (real model responses with ground-truth correctness labels),
+the system shall retrain the JEPA predictor on real `(partial_response, violation_flag)` pairs
+to enable preemptive verification — predicting whether a response will contain a constraint
+violation from only its first N tokens, before generation completes.
+
+- REQ-LEARN-024-1: A `ViolationPair` dataclass SHALL carry `partial_response` (first N tokens of a response as a string), `full_response` (complete response), `has_violation` (bool), `model_id` (str), and `question_id` (str).
+- REQ-LEARN-024-2: `extract_violation_pairs(live_results: dict, prefix_fraction: float = 0.5) -> list[ViolationPair]` SHALL split each response at `prefix_fraction * len(tokens)` (word-tokenized) to produce the partial prefix; `has_violation = not correct` where `correct` is the ground-truth label from the live results dict.
+- REQ-LEARN-024-3: When `live_results` is `None` or empty, `extract_violation_pairs` SHALL return 50 synthetic pairs (deterministic, seed-based) so CI can exercise all code paths without GPU data.
+- REQ-LEARN-024-4: `JEPARetrainer.__init__(jepa_model, lr: float = 1e-4)` SHALL accept a `ContextPredictionEnergy` model and a scalar learning rate.
+- REQ-LEARN-024-5: `JEPARetrainer.binary_ce_loss(predicted_energy: float, has_violation: bool) -> float` SHALL return the binary cross-entropy loss treating high energy as predicting a violation.
+- REQ-LEARN-024-6: `JEPARetrainer.train_epoch(pairs: list[ViolationPair], batch_size: int = 8) -> float` SHALL train for one epoch over the pairs in mini-batches and return the mean loss.
+- REQ-LEARN-024-7: `JEPARetrainer.evaluate_auc_roc(pairs: list[ViolationPair]) -> float` SHALL return the AUC-ROC of the model's violation predictions on the given pairs (using sklearn or a pure-numpy trapezoidal approximation).
+- REQ-LEARN-024-8: `build_retrain_artifact(before_auc: float, after_auc: float, n_pairs: int) -> dict` SHALL return a dict with keys `before_auc`, `after_auc`, `auc_improvement` (signed float), `n_pairs`, `schema_version="carnot.jepa_retrain.v1"`.
+
+Spec: REQ-LEARN-024, SCENARIO-LEARN-041, SCENARIO-LEARN-042
+
+### SCENARIO-LEARN-041: extract_violation_pairs Splits at prefix_fraction
+
+**Given** a live results dict with 10 responses, each 20 words long, and `prefix_fraction=0.5`
+**When** `extract_violation_pairs(live_results, prefix_fraction=0.5)` is called
+**Then** each `ViolationPair.partial_response` contains exactly the first 10 words
+**And** `has_violation` equals `not correct` for each pair
+**And** the returned list has exactly 10 entries
+
+### SCENARIO-LEARN-042: extract_violation_pairs Returns Synthetic Pairs When No Live Data
+
+**Given** `live_results=None`
+**When** `extract_violation_pairs(None)` is called
+**Then** a list of exactly 50 `ViolationPair` objects is returned
+**And** each pair has a non-empty `partial_response`, a valid `has_violation` bool,
+  a non-empty `model_id`, and a non-empty `question_id`
+**And** the function is deterministic (same output on repeated calls)
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -4237,6 +4272,7 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-021 | Not Started | Implemented | Per-model session isolation — scoped subdirs + VerifyRepairPipeline session_memory param + close() (SCENARIO-LEARN-035/036/037, Exp 345) |
 | REQ-LEARN-022 | Not Started | Implemented | EORM CoT energy reward model — EORMModel + CoTEnergyInput + energy/rank/save/load/n_params (SCENARIO-LEARN-038/039, Exp 346) |
 | REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss + train_step + train_epoch (SCENARIO-LEARN-040, Exp 346) |
+| REQ-LEARN-024 | Not Started | Implemented | JEPA real-data retrain — ViolationPair + extract_violation_pairs + JEPARetrainer + build_retrain_artifact (SCENARIO-LEARN-041/042, Exp 347) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |

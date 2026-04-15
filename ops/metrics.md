@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 347 JEPA Real-Data Retrain
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T13:31:45Z | 2026-04-15T13:48:36Z | Exp 347: JEPA real-data retrain on live violation pairs; REQ-LEARN-024 + SCENARIO-LEARN-041/042 to spec; ViolationPair + extract_violation_pairs + JEPARetrainer + build_retrain_artifact in jepa_retrain.py; 48 tests; experiment_347_jepa_real_retrain.py; ops docs updated | ~17m |
+
+---
+
 ## Session: 2026-04-15 Exp 346 EORM CoT Energy Reward Model
 
 ### Turn Log
