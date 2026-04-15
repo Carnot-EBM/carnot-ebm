@@ -1783,3 +1783,5 @@ python/ |
 | 2026-04-15 15:54 UTC | Exp 352: Live GPU diagnostic RUN — root cause confirmed | OK | RESULT: is_live_capable=True. All layers pass: cuda_visible=True, torch_cuda=True, model_loadable=True (Qwen3.5-0.8B + gemma-4-E4B-it). ROOT CAUSE: carnot_force_live_set=False — CARNOT_FORCE_LIVE=1 was NOT propagated into conductor subprocess environment when Exps 340/341/346/347 ran. GPU hardware is fine. Fix: conductor must pass CARNOT_FORCE_LIVE=1 in subprocess env when launching live GPU experiments. artifact: results/experiment_352_live_gpu_diagnostic.json |
 | 2026-04-15 15:56 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | 81 passed in 8.72s |
 | 2026-04-15 15:57 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 16:34 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 16:34 UTC | Exp 353: Live GPU smoke test — 5 questions, verify | OK | Deliverable already exists in repo |
