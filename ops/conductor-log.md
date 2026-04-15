@@ -1642,3 +1642,4 @@ python/ |
 
 ### NEW-002: Experiment duration histogram
 - **Status:** Carried forward (not yet implemented)
+| 2026-04-15 02:02 UTC | Exp 325: Conductor timeout wrapper + ExperimentTem | OK | 81 passed in 3.28s |
