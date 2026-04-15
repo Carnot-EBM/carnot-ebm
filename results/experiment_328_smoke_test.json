@@ -1,0 +1,251 @@
+{
+  "experiment": 315,
+  "title": "Full-Scale Credible Benchmark",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T03:04:31Z",
+  "finished_at": "2026-04-15T03:05:07Z",
+  "duration_s": 35.572,
+  "status": "success",
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "inference_mode",
+    "modes_run",
+    "n_gsm8k",
+    "n_humaneval",
+    "per_model_results",
+    "per_variant_results",
+    "published_baselines",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "summary_table",
+    "title"
+  ],
+  "per_model_results": {
+    "Qwen3.5-0.8B": {
+      "baseline": {
+        "irrelevant_sentence": {
+          "model_name": "Qwen3.5-0.8B",
+          "mode": "baseline",
+          "corpus_variant": "irrelevant_sentence",
+          "accuracy": 0.5,
+          "ci_lower": 0.094529,
+          "ci_upper": 0.905471,
+          "n_correct": 1,
+          "n_total": 2
+        },
+        "all": {
+          "model_name": "Qwen3.5-0.8B",
+          "mode": "baseline",
+          "corpus_variant": "all",
+          "accuracy": 0.4,
+          "ci_lower": 0.117618,
+          "ci_upper": 0.76928,
+          "n_correct": 2,
+          "n_total": 5
+        },
+        "number_swap": {
+          "model_name": "Qwen3.5-0.8B",
+          "mode": "baseline",
+          "corpus_variant": "number_swap",
+          "accuracy": 0.333333,
+          "ci_lower": 0.06149,
+          "ci_upper": 0.792345,
+          "n_correct": 1,
+          "n_total": 3
+        }
+      },
+      "humaneval": {
+        "baseline": {
+          "model_name": "Qwen3.5-0.8B",
+          "mode": "baseline",
+          "corpus_variant": "humaneval",
+          "accuracy": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.657628,
+          "n_correct": 0,
+          "n_total": 2
+        }
+      }
+    },
+    "Gemma4-E4B-it": {
+      "baseline": {
+        "irrelevant_sentence": {
+          "model_name": "Gemma4-E4B-it",
+          "mode": "baseline",
+          "corpus_variant": "irrelevant_sentence",
+          "accuracy": 0.5,
+          "ci_lower": 0.094529,
+          "ci_upper": 0.905471,
+          "n_correct": 1,
+          "n_total": 2
+        },
+        "all": {
+          "model_name": "Gemma4-E4B-it",
+          "mode": "baseline",
+          "corpus_variant": "all",
+          "accuracy": 0.4,
+          "ci_lower": 0.117618,
+          "ci_upper": 0.76928,
+          "n_correct": 2,
+          "n_total": 5
+        },
+        "number_swap": {
+          "model_name": "Gemma4-E4B-it",
+          "mode": "baseline",
+          "corpus_variant": "number_swap",
+          "accuracy": 0.333333,
+          "ci_lower": 0.06149,
+          "ci_upper": 0.792345,
+          "n_correct": 1,
+          "n_total": 3
+        }
+      },
+      "humaneval": {
+        "baseline": {
+          "model_name": "Gemma4-E4B-it",
+          "mode": "baseline",
+          "corpus_variant": "humaneval",
+          "accuracy": 1.0,
+          "ci_lower": 0.342372,
+          "ci_upper": 1.0,
+          "n_correct": 2,
+          "n_total": 2
+        }
+      }
+    }
+  },
+  "per_variant_results": {
+    "irrelevant_sentence": {
+      "Qwen3.5-0.8B": {
+        "accuracy": 0.5,
+        "ci_lower": 0.094529,
+        "ci_upper": 0.905471,
+        "n_total": 2
+      },
+      "Gemma4-E4B-it": {
+        "accuracy": 0.5,
+        "ci_lower": 0.094529,
+        "ci_upper": 0.905471,
+        "n_total": 2
+      }
+    },
+    "all": {
+      "Qwen3.5-0.8B": {
+        "accuracy": 0.4,
+        "ci_lower": 0.117618,
+        "ci_upper": 0.76928,
+        "n_total": 5
+      },
+      "Gemma4-E4B-it": {
+        "accuracy": 0.4,
+        "ci_lower": 0.117618,
+        "ci_upper": 0.76928,
+        "n_total": 5
+      }
+    },
+    "number_swap": {
+      "Qwen3.5-0.8B": {
+        "accuracy": 0.333333,
+        "ci_lower": 0.06149,
+        "ci_upper": 0.792345,
+        "n_total": 3
+      },
+      "Gemma4-E4B-it": {
+        "accuracy": 0.333333,
+        "ci_lower": 0.06149,
+        "ci_upper": 0.792345,
+        "n_total": 3
+      }
+    }
+  },
+  "published_baselines": {
+    "Qwen3.5-0.8B": 0.25,
+    "Gemma4-E4B-it": 0.8
+  },
+  "summary_table": [
+    {
+      "model": "Gemma4-E4B-it",
+      "mode": "baseline",
+      "variant": "all",
+      "accuracy": 0.4,
+      "ci_lower": 0.117618,
+      "ci_upper": 0.76928,
+      "n_total": 5,
+      "vs_published_baseline": -0.4
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "mode": "baseline",
+      "variant": "irrelevant_sentence",
+      "accuracy": 0.5,
+      "ci_lower": 0.094529,
+      "ci_upper": 0.905471,
+      "n_total": 2
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "mode": "baseline",
+      "variant": "number_swap",
+      "accuracy": 0.333333,
+      "ci_lower": 0.06149,
+      "ci_upper": 0.792345,
+      "n_total": 3
+    },
+    {
+      "model": "Gemma4-E4B-it",
+      "mode": "humaneval",
+      "variant": "baseline",
+      "accuracy": 1.0,
+      "ci_lower": 0.342372,
+      "ci_upper": 1.0,
+      "n_total": 2
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "mode": "baseline",
+      "variant": "all",
+      "accuracy": 0.4,
+      "ci_lower": 0.117618,
+      "ci_upper": 0.76928,
+      "n_total": 5,
+      "vs_published_baseline": 0.15
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "mode": "baseline",
+      "variant": "irrelevant_sentence",
+      "accuracy": 0.5,
+      "ci_lower": 0.094529,
+      "ci_upper": 0.905471,
+      "n_total": 2
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "mode": "baseline",
+      "variant": "number_swap",
+      "accuracy": 0.333333,
+      "ci_lower": 0.06149,
+      "ci_upper": 0.792345,
+      "n_total": 3
+    },
+    {
+      "model": "Qwen3.5-0.8B",
+      "mode": "humaneval",
+      "variant": "baseline",
+      "accuracy": 0.0,
+      "ci_lower": 0.0,
+      "ci_upper": 0.657628,
+      "n_total": 2
+    }
+  ],
+  "inference_mode": "live_gpu",
+  "n_gsm8k": 5,
+  "n_humaneval": 2,
+  "modes_run": [
+    "baseline"
+  ]
+}

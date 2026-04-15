@@ -2788,6 +2788,51 @@ Spec: REQ-BENCH-001, SCENARIO-BENCH-001, SCENARIO-BENCH-002
 **And** all accuracy values have `ci_lower` and `ci_upper` fields
 **And** `schema` equals `"carnot.fullscale_benchmark.v1"`
 
+### REQ-BENCH-002: Live GPU Benchmark Result With Provenance
+
+The system shall provide a live GPU benchmark execution wrapper (`experiment_328`) that:
+
+- Executes `experiment_315_fullscale_benchmark.py` with `CARNOT_FORCE_LIVE=1` and records
+  results with `inference_mode="live_gpu"` only — results with any other mode are rejected
+- Validates loaded results via `validate_live_result(result)` which raises `ValueError`
+  if `inference_mode != "live_gpu"`
+- Computes simulation divergence: `compare_to_simulated(live, simulated)` → per-model,
+  per-mode accuracy delta between live result and Exp 316 simulated result
+- Computes baseline deviation: `compare_to_published_baseline(result, baselines)` →
+  per-model deviation from published accuracy (Qwen3.5-0.8B: 0.25, Gemma4-E4B-it: 0.80)
+- Assesses whether each model is within acceptable range via
+  `within_expected_range(accuracy, baseline, tolerance=0.15)` → bool
+- Emits a wrapper artifact with schema `carnot.live_fullscale_benchmark.v1` containing:
+  `experiment=328`, `inference_mode="live_gpu"`, `simulation_divergence`,
+  `baseline_deviation`, `primary_result_path`
+- If GPU is unavailable (OOM, driver error, insufficient VRAM), emits an honest
+  `status="blocked"` artifact with `gpu_diagnostics` dict — does NOT fall back to
+  simulation and label it as live
+- Results written to `results/experiment_328_live_fullscale_results.json`
+
+### SCENARIO-BENCH-003: Live Result Rejected If Not Live GPU
+
+**Given** a benchmark artifact with `inference_mode="simulated"`
+**When** `validate_live_result(result)` is called
+**Then** a `ValueError` is raised with a message indicating the mode is not "live_gpu"
+
+**Given** a benchmark artifact with `inference_mode="live_gpu"`
+**When** `validate_live_result(result)` is called
+**Then** no exception is raised
+
+### SCENARIO-BENCH-004: Simulation Divergence And Baseline Deviation Computed Correctly
+
+**Given** a live result with Qwen3.5-0.8B baseline accuracy 0.27 and a simulated
+  result with Qwen3.5-0.8B baseline accuracy 0.34
+**When** `compare_to_simulated(live, simulated)` is called
+**Then** the returned dict contains `Qwen3.5-0.8B.baseline.all.delta == 0.27 - 0.34 == -0.07`
+
+**Given** a live result with Qwen3.5-0.8B baseline accuracy 0.27 and
+  `published_baselines = {"Qwen3.5-0.8B": 0.25}`
+**When** `compare_to_published_baseline(live, published_baselines)` is called
+**Then** the returned dict contains `Qwen3.5-0.8B.deviation == 0.02`
+**And** `within_expected_range(0.27, 0.25, tolerance=0.15)` returns `True`
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -3060,6 +3105,7 @@ result files from prior experiments that were never completed.
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
+| REQ-BENCH-002 | Not Started | Implemented (Exp 328) | Live GPU benchmark result with inference_mode="live_gpu"; wrapper artifact with simulation_divergence + baseline_deviation; honest blocked artifact when GPU unavailable |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
