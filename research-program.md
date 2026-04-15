@@ -171,6 +171,59 @@ right — it just needs to operate at the right timescale:
 - **Across domains:** Predictive verification (Tier 3) — transfer learning
 - **Across architectures:** Adaptive structure (Tier 4) — evolution
 
+## Product Roadmap (Energy Function Applications)
+
+The energy function architecture — "score any configuration, low = valid,
+high = violated" — supports multiple products beyond verification. Each
+product listed here must meet two criteria:
+
+1. **Genuine value proposition** — solves a real problem better than alternatives
+2. **Path to Phase 3** — builds infrastructure, data, or market position toward
+   the open-source EBM/EBT foundation model. No scope creep.
+
+Products are ordered by commercial viability. Each reuses the same KAN/Ising/
+Boltzmann tiers, the same hardware acceleration paths (D-Wave, FPGA, TSU),
+and the same self-learning pipeline.
+
+### Tier A: Ship Now (infrastructure exists)
+
+| Product | Energy Mapping | Phase 3 Value | Status |
+|---------|---------------|---------------|--------|
+| **LLM Output Verification** | Low = correct, high = hallucination | Core competency — directly becomes the EBT verification layer | Shipping (pip install carnot) |
+| **Code Quality Scorer** | Low = clean, high = bugs/smells | Code verification is our strongest result (+3.0pp HumanEval) | Built (Exp 217/224/226) |
+| **Candidate Ranker** | Rank N completions by energy | API middleware — every LLM provider needs this. Generates training data for Phase 3 | Built (score_candidates MCP tool) |
+
+### Tier B: Build Next (high commercial value, clear Phase 3 path)
+
+| Product | Energy Mapping | Phase 3 Value | Effort |
+|---------|---------------|---------------|--------|
+| **Safety/Jailbreak Classifier** | Low = safe, high = unsafe/jailbreak | Safety layer for the foundation model. Distill from gpt-oss-safeguard into KAN (2000x smaller) | 2-3 experiments |
+| **Compliance Checker** | Energy encodes regulatory constraints | Regulated industries (finance, healthcare, legal) need verifiable compliance. Same constraint extraction pipeline | 3-4 experiments |
+| **Multi-agent Arbiter** | Score competing agent outputs, pick lowest energy | Foundation model will need to arbitrate between its own reasoning paths. Growing agent market | 2-3 experiments |
+
+### Tier C: Build Later (strong value, needs Phase 2 hardware)
+
+| Product | Energy Mapping | Phase 3 Value | Dependency |
+|---------|---------------|---------------|------------|
+| **Factual Grounding Gate** | Energy spike = ungrounded claim | RAG pipelines need real-time fact-checking. Requires fast energy evaluation (FPGA/TSU) | Hardware acceleration |
+| **Anomaly Detector** | High energy = anomalous behavior | Security/monitoring market. Energy landscape naturally detects out-of-distribution inputs | Hardware for real-time |
+| **Prompt Quality Scorer** | Score prompt clarity before sending to LLM | Prompt engineering tools market. Reduces wasted API spend on bad prompts | Needs calibration data |
+
+### Tier D: Phase 3 Only (foundation model products)
+
+| Product | Energy Mapping | Why Wait |
+|---------|---------------|----------|
+| **Data Quality Filter** | High energy = noisy/mislabeled training data | Needs the foundation model's own energy landscape, not a wrapper |
+| **Synthetic Data Validator** | Verify generated data meets constraints | Same — needs native energy evaluation, not post-hoc |
+| **Test Oracle** | Energy function as property-based test oracle | Partially built (PBT), but full oracle needs continuous reasoning |
+
+### Explicitly NOT Pursuing
+
+These sound related but diverge from the Phase 3 path:
+- **Chatbot/assistant products** — Carnot verifies, it doesn't chat. Leave generation to LLMs.
+- **Search/retrieval** — Energy functions score configurations, not documents. Leave to RAG frameworks.
+- **Image/audio verification** — Our energy tiers are text/code-native. Multimodal is a different architecture.
+
 ## Completed Goals
 
 - ~~**Ship a usable product**~~ — ✅ DONE (2026.04.4). pip install carnot,
