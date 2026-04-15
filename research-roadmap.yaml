@@ -93,8 +93,8 @@ tasks:
          a. Shebang: #!/usr/bin/env bash
          b. Usage: run_experiment_with_timeout.sh <conductor_command...>
          c. Read CARNOT_CONDUCTOR_TIMEOUT_MINUTES (default 45)
-         d. Run: timeout -k 60s ${TIMEOUT_MINUTES}m "$@"
-         e. Capture exit code; if 124: echo "CONDUCTOR TIMEOUT after ${TIMEOUT_MINUTES} min"
+         d. Run: timeout -k 60s $(TIMEOUT_MINUTES)m "$@"
+         e. Capture exit code; if 124: echo "CONDUCTOR TIMEOUT after $(TIMEOUT_MINUTES) min"
          f. Exit with original exit code (or 124 on timeout)
          g. chmod +x scripts/run_experiment_with_timeout.sh
       6. Write tests/python/test_experiment_325_hardening.py (100% coverage required).
@@ -239,7 +239,7 @@ tasks:
             - Load YAML, find task with id containing exp_id
             - Return prompt string
          d. CLI: argparse with --exp-id, --prompt-file (or --yaml-path for YAML loading)
-         e. On all_present: print "All {n} dependencies found."
+         e. On all_present: print "All (n) dependencies found."
          f. On missing: print each missing path, exit code 1
       5. Write scripts/experiment_327_dep_audit_results.py using ExperimentTemplate(327, ...):
          a. Run check_dependencies() on the first 3 prompts in research-roadmap-next.yaml
@@ -292,7 +292,7 @@ tasks:
          - validate_live_result(result): raises ValueError if inference_mode != "live_gpu"
          - compare_to_simulated(live, simulated) → dict: delta per model per mode
          - compare_to_published_baseline(result, baselines) → dict: deviation from known values
-         - published_baselines: {"Qwen3.5-0.8B": 0.25, "gemma-4-E4B-it": 0.80}
+         - published_baselines: ("Qwen3.5-0.8B": 0.25, "gemma-4-E4B-it": 0.80)
          - within_expected_range(accuracy, baseline, tolerance=0.15) → bool
          - artifact schema: experiment=328, inference_mode="live_gpu", n_total >= 100,
            per_model results with baseline_deviation, 95% Wilson CI per mode
@@ -696,7 +696,7 @@ tasks:
            use regex to find "model is: [...]" or "(declare-fun ..." in UNSAT proof output
            fallback: return first assertion in z3_code if UNSAT but no specific assertion found
          - build_step_repair_prompt(assertion_failed, full_response) → str:
-           "The following step in your reasoning is arithmetically inconsistent:\n{assertion}\n
+           "The following step in your reasoning is arithmetically inconsistent:\n(assertion)\n
            Please correct only that specific step and rewrite the corrected step."
          - VergeRefiner(nl2z3_extractor, llm_caller, max_iterations=3):
            refine(question, response) → tuple[str, list[VergeIteration]]:
@@ -835,7 +835,7 @@ tasks:
          - extract_cot_steps(response: str) → list[CoTStep]:
            Use regex to detect step boundaries: r"(?:step\s*\d+|^\d+\.|first[,:]|then[,:]|next[,:]|finally[,:])"
            For each step: scan for numeric results (last float/int in the step text)
-           For each step: detect forward references ("from step N", "the {N} we computed")
+           For each step: detect forward references ("from step N", "the (N) we computed")
          - build_circuit(steps) → CoTCircuit:
            check_cycle: detect if any step references a later step (impossible in valid CoT)
            find_broken_links: for each (downstream_ref → upstream step): compare expected vs actual value
@@ -890,7 +890,7 @@ tasks:
          - load_retro_artifact(path) → dict: validates schema
          - n_experiments: int in [10, 20] for milestone 2026.05.06
          - bottlenecks_identified: list with at least 1 entry
-         - action_items: list with at least 1 entry (format: {id, description, estimated_impact_pct})
+         - action_items: list with at least 1 entry (format: (id, description, estimated_impact_pct))
          - carry_over: list of items from 2026.04.29 retro and whether they were resolved
          - estimated_next_milestone_speedup_pct: float, honest (can be 0 or negative)
          - retro_001_resolved: bool — was RETRO-001 timeout wrapper actually used?

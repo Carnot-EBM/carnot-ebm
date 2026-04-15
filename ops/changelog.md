@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 325: Conductor Hardening — RETRO-001 + NEW-001)
+
+Implemented two RETRO action items carried forward from two consecutive milestones (2026.04.22 and 2026.04.29).
+
+**RETRO-001 — Conductor timeout wrapper:**
+- Wrote `scripts/run_experiment_with_timeout.sh` — enforces hard timeout via `timeout -k 60s ${CARNOT_CONDUCTOR_TIMEOUT_MINUTES:-45}m "$@"`
+- Default 45 minutes; configurable via env var; exits code 124 on timeout
+- Does NOT modify `scripts/research_conductor.py`
+- Estimated savings: 93 min on Exp 308-class stuck experiments
+
+**NEW-001 — Test-first stub generation:**
+- Added `ExperimentTemplate.generate_test_stub(test_file_path, module_to_test)` to `scripts/experiment_template.py`
+- Writes pytest skeleton with one passing placeholder test; idempotent (never overwrites)
+- Skeleton includes REQ-INFRA-002 traceability comment; passes `ast.parse()`
+
+**Spec:** REQ-INFRA-001, REQ-INFRA-002, SCENARIO-INFRA-001/002/003 added to verifiable-reasoning spec.
+**Tests:** 23 new tests in `tests/python/test_experiment_325_hardening.py`, all passing.
+**Artifact:** `results/experiment_325_hardening.json` — all checks passed, estimated_speedup_pct=27.0
+User instruction: implement conductor timeout wrapper and test-first stub (Exp 325).
+
 ## 2026-04-15 (Milestone 2026.04.29 Full Operational Retrospective)
 
 Full retrospective for the complete 2026.04.29 milestone: 359 experiments, 5093 minutes

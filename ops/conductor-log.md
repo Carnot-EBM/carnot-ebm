@@ -1620,3 +1620,25 @@ python/ |
 | 2026-04-15 01:27 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
 | 2026-04-15 01:27 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
 | 2026-04-15 01:27 UTC | Milestone 2026.05.06 activated | OK | 13 tasks queued |
+| 2026-04-15 01:51 UTC | Exp 325: Conductor hardening — RETRO-001 + NEW-001 | OK | run_experiment_with_timeout.sh written (45 min default, CARNOT_CONDUCTOR_TIMEOUT_MINUTES); generate_test_stub() added to ExperimentTemplate; 23 tests pass; RETRO-001 implemented (carried forward 2× milestones); NEW-001 implemented; estimated speedup 27% |
+
+## Retrospective Action Items
+
+### RETRO-001: Conductor timeout ≤ 45 min
+- **Status:** IMPLEMENTED (Exp 325, 2026-04-15)
+- **Root cause:** `claude -p` called with no timeout; stuck experiments run to max 50 turns (~2+ hours)
+- **Fix:** `scripts/run_experiment_with_timeout.sh` wraps any command with `timeout -k 60s ${CARNOT_CONDUCTOR_TIMEOUT_MINUTES:-45}m`
+- **Evidence:** Exp 308 consumed 138 min; 45-min cap saves ≥93 min per stuck experiment
+- **Usage:** `CARNOT_CONDUCTOR_TIMEOUT_MINUTES=30 ./scripts/run_experiment_with_timeout.sh python scripts/research_conductor.py`
+
+### RETRO-002: Post-step test loop detection
+- **Status:** Carried forward (not yet implemented)
+
+### NEW-001: Test-first stub generation
+- **Status:** IMPLEMENTED (Exp 325, 2026-04-15)
+- **Root cause:** 23.5% post-test failure rate in 2026.04.29 milestone partly from tests written after implementation
+- **Fix:** `ExperimentTemplate.generate_test_stub(test_file_path, module_to_test)` writes a pytest skeleton before implementation; idempotent
+- **Usage:** Call `tmpl.generate_test_stub("tests/python/test_exp_NNN.py", "scripts.my_module")` at start of experiment setup
+
+### NEW-002: Experiment duration histogram
+- **Status:** Carried forward (not yet implemented)
