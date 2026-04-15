@@ -1,0 +1,197 @@
+{
+  "schema": "operational_retro_v1",
+  "milestone": "2026.04.29",
+  "generated_at": "2026-04-15T00:39:07Z",
+  "n_experiments": 17,
+  "total_wall_time_minutes": 691.0,
+  "avg_minutes_per_experiment": 40.6,
+  "bottlenecks_identified": [
+    {
+      "name": "Exp 308: JEPA fast-path gate integration and latency benchmark",
+      "duration_min": 138.0,
+      "pct_total": 20.0,
+      "root_cause": "Post-test failures on the first attempt due to a dimension mismatch in logit_mean (32\u21928 for the Exp 291 ONNX model). The test suite expected a 32-dimensional logit vector but the Exp 307 training produced an 8-feature energy vector. Required a repair loop to fix the feature dimension and re-run tests before the experiment could be marked OK. With a 45-minute hard timeout (RETRO-001), the first attempt would have been auto-escalated at 45 min rather than continuing to 138 min.",
+      "category": "post_test_failure_repair_loop",
+      "fix_implemented_this_milestone": false
+    },
+    {
+      "name": "Exp 309: Tier 3 end-to-end self-learning \u2014 real logit pipeline",
+      "duration_min": 66.0,
+      "pct_total": 9.6,
+      "root_cause": "Post-test failures on the first attempt due to integration-level test failures after wiring the new Tier 3 JEPA gate into the existing Tier 1 and Tier 2 pipeline. Tests were not written test-first before the integration; they were added as the integration was developed, leading to incomplete coverage of edge cases that only manifested when the full stack ran. Retry required re-running all tests after the fix.",
+      "category": "post_test_failure_integration",
+      "fix_implemented_this_milestone": false
+    },
+    {
+      "name": "Exp 321: D-Wave Neal vs CPU Ising on constraint verification",
+      "duration_min": 62.0,
+      "pct_total": 9.0,
+      "root_cause": "The dwave-ocean-sdk was not installed in the project virtualenv. The conductor committed code and tests in Exp 320 but the benchmark script (Exp 321) could not run until the SDK was installed. The install step added ~20 minutes of overhead before any benchmarking could begin. A pre-flight dependency check (RETRO-002 covers conda/pip pre-checks, but GPU monitor alone does not catch missing optional SDKs) would have surfaced this at the Exp 320 planning step.",
+      "category": "missing_dependency",
+      "fix_implemented_this_milestone": false
+    }
+  ],
+  "improvements_implemented": [
+    {
+      "name": "JEPA real-data training pipeline",
+      "experiment": 307,
+      "description": "Trained the JEPA violation predictor (Exp 291 architecture) on real Apple adversarial logit data from Exp 295/282/283. Produces an 8-feature energy vector for use as a fast-path gate. First training run using real (not synthetic) logits \u2014 the Exp 291 model was trained on simulated data. Enables honest JEPA gate benchmarks in Exp 308."
+    },
+    {
+      "name": "JEPA fast-path gate integration",
+      "experiment": 308,
+      "description": "Integrated the trained JEPA predictor as a fast-path gate in the verify-repair pipeline. Gate skips Ising sampling when JEPA energy < threshold (0.55). Benchmarks latency on simulated data. First integration of JEPA gating into the live pipeline (prior Exp 145 was a prototype)."
+    },
+    {
+      "name": "Tier 3 end-to-end self-learning pipeline",
+      "experiment": 309,
+      "description": "Wired Tier 3 (JEPA gate) into the four-tier self-learning stack alongside Tier 1 (ConfidenceVerifier) and Tier 2 (ConstraintGenerator). End-to-end pipeline where each tier's output gates the next tier's invocation."
+    },
+    {
+      "name": "NL2Z3Extractor \u2014 LLM-translated SMT assertions",
+      "experiment": 310,
+      "description": "New NL2Z3Extractor class that translates natural-language constraint descriptions into Z3 SMT assertions via an LLM call. Enables constraint extraction for domains where regex and AST-based extractors fail to find structured constraints."
+    },
+    {
+      "name": "Extractor benchmark \u2014 regex vs LLM vs Z3",
+      "experiment": 311,
+      "description": "Head-to-head benchmark comparing the three extraction strategies (regex, LLM-based, Z3 SMT) on GSM8K and HumanEval. Establishes precision/recall baselines for each extractor to guide routing policy."
+    },
+    {
+      "name": "Z3-gated repair pipeline",
+      "experiment": 312,
+      "description": "Z3GatedRepair class: only invokes the Ising repair sampler when Z3 formally confirms a constraint violation (SAT \u2192 repair needed; UNSAT \u2192 skip). Replaces binary violation gating with a formal certificate. Reduces false-positive repair invocations compared to the prior confidence-threshold-only gate. Integrated into VerifyRepairPipeline as verify_repair_z3_gated()."
+    },
+    {
+      "name": "KV260 FPGA hardware bring-up",
+      "experiment": 313,
+      "description": "Formal hardware bring-up experiment for the KV260 FPGA with PYNQ overlay. Implements detect_kv260_hardware() with sequential prereq checks and honest_verdict pattern. CPU fallback always populated for comparison. Currently blocked (CARNOT_KV260_BITFILE not set) but infrastructure ready."
+    },
+    {
+      "name": "AMD XDNA NPU prereq retry",
+      "experiment": 314,
+      "description": "Re-ran the Exp 303 NPU unblock workflow to check whether ninja and openblas were installed since Exp 303. Adds prereq_changes field (delta vs Exp 303). Blocked: ninja and openblas still missing. Infrastructure tracks the delta so future reruns surface changes."
+    },
+    {
+      "name": "Full-scale credible benchmark script",
+      "experiment": 315,
+      "description": "Wrote the full-scale benchmark script (executed in Exp 316): 400 GSM8K questions, 50 HumanEval, two models, four modes, 95% Wilson confidence intervals. Breaks the large benchmark into script-authoring (Exp 315) and execution (Exp 316) phases per lessons-learned rule."
+    },
+    {
+      "name": "Full-scale benchmark execution (simulated)",
+      "experiment": 316,
+      "description": "Executed the Exp 315 benchmark script in simulated mode (no live GPU available). Produces carnot.fullscale_benchmark.v1 artifact with per-model, per-mode, per-variant accuracy records and Wilson CIs. Live GPU run pending for headline claims."
+    },
+    {
+      "name": "HuggingFace README accuracy audit",
+      "experiment": 317,
+      "description": "Audited and patched all 16 per-token activation EBM READMEs to clarify Phase 1 status (detects confidence, not factual correctness). Updated FCV README with Exp 316 results. Idempotent: sentinel comment prevents double-patching."
+    },
+    {
+      "name": "Four-tier continuous self-learning relay",
+      "experiment": 318,
+      "description": "First integrated four-tier relay benchmark: Tier 1 (ConfidenceVerifier), Tier 2 (ConstraintGenerator), Tier 3 (JEPA gate), Z3 gate. Runs 3 batches of 33 questions. Reports honest signed improvement_1to3 (never clamped). Primary metric for the autonomous self-learning loop."
+    },
+    {
+      "name": "D-Wave sampler backend with Neal simulation",
+      "experiment": 320,
+      "description": "New DWaveSamplerBackend class implementing the SamplerBackend protocol. Uses dwave-ocean-sdk's SimulatedAnnealingSampler (Neal) as a local simulation of D-Wave hardware. Enables benchmarking quantum-inspired annealing on the constraint verification workload without physical D-Wave access."
+    },
+    {
+      "name": "D-Wave Neal vs CPU Ising benchmark",
+      "experiment": 321,
+      "description": "Head-to-head benchmark comparing DWaveSamplerBackend (Neal simulation) against the CPU Ising backend on the constraint verification task. Establishes relative throughput and energy-function agreement for use in selecting the backend routing policy."
+    },
+    {
+      "name": "Reward hacking detection in self-learning relay",
+      "experiment": 322,
+      "description": "Detects and logs reward hacking signals in the self-learning replay: policy updates that increase recorded performance without genuine improvement (e.g., gaming the constraint satisfaction metric). Emits reward_hacking_detected flag in the relay artifact."
+    },
+    {
+      "name": "Conductor behavioral audit log",
+      "experiment": 323,
+      "description": "New conductor_audit.py module that logs every conductor action (experiment selection, skip, retry, push) to a structured JSONL audit trail. Enables anomaly detection over conductor behavior across milestones."
+    },
+    {
+      "name": "Conductor constitution \u2014 explicit governance rules",
+      "experiment": 324,
+      "description": "Wrote a machine-readable conductor constitution: explicit rules for experiment selection, skip criteria, max-retry policy, push gating, and anomaly escalation. The constitution is loaded by the conductor at startup and enforced as a runtime policy, replacing ad-hoc heuristics."
+    }
+  ],
+  "action_items": [
+    {
+      "id": "RETRO-001",
+      "description": "Add 45-minute hard timeout with structured auto-escalation to the conductor. When an experiment exceeds 45 minutes, the conductor should checkpoint the partial artifact and surface a status='timeout_escalate' result rather than allowing the session to spiral. Exp 308 ran for 138 minutes \u2014 more than 3\u00d7 the threshold \u2014 and a timeout would have saved ~93 minutes of milestone wall time.",
+      "status": "carried_forward",
+      "owner": "conductor",
+      "priority": "high",
+      "estimated_impact_pct": 8,
+      "evidence_this_milestone": "Exp 308 (JEPA gate): 138 min (20% of milestone). Exp 309 (Tier 3 self-learning): 66 min (9.6%). Both exceeded 45 min due to post-test failure repair loops."
+    },
+    {
+      "id": "RETRO-002",
+      "description": "Integrate gpu_monitor.py --json output into the conductor's pre-experiment check. Inject the GPU state report into the experiment prompt so the conductor can auto-select DualGPURunner vs single-GPU, warn on zombie processes, and detect idle GPUs before they accumulate. Also catches missing optional SDKs (e.g. dwave-ocean-sdk) if the check is extended to a pre-experiment environment audit.",
+      "status": "carried_forward",
+      "owner": "conductor",
+      "priority": "medium",
+      "estimated_impact_pct": 4,
+      "evidence_this_milestone": "Exp 321 (D-Wave Neal benchmark): 62 min partly due to missing dwave-ocean-sdk install time. A pre-experiment environment audit would have surfaced this at Exp 320 planning."
+    },
+    {
+      "id": "NEW-001",
+      "description": "Enforce test-first development in ExperimentTemplate. Add a write_tests_first() stub to ExperimentTemplate that prompts the agent to draft test skeletons before writing implementation code. This milestone had 4/17 experiments (24%) fail their post-tests on the first attempt due to integration issues discovered only after implementation. Test-first would reduce the retry rate and eliminate ~60 min of repair-loop overhead per milestone.",
+      "status": "new",
+      "owner": "experiment_template",
+      "priority": "high",
+      "estimated_impact_pct": 10,
+      "evidence_this_milestone": "Exp 308, 309, 310, 311 all had post-test failures on first attempt. Combined retry overhead: ~60 min = 8.7% of milestone wall time. Root cause: tests were added during implementation, not before."
+    },
+    {
+      "id": "NEW-002",
+      "description": "Add a pre-experiment optional-dependency audit to the conductor. Before running an experiment that requires an optional package (dwave-ocean-sdk, pynq, onnxruntime-vitisai), verify it is importable in the virtualenv and surface a status='blocked_prereq' artifact immediately rather than discovering the gap mid-experiment. Reduces 'install overhead' from consuming wall-time allocated to actual benchmarking.",
+      "status": "new",
+      "owner": "conductor",
+      "priority": "medium",
+      "estimated_impact_pct": 5,
+      "evidence_this_milestone": "Exp 321: D-Wave SDK not installed, discovered at runtime. Exp 313/314: CARNOT_KV260_BITFILE / ninja / openblas missing, still discovered at runtime rather than at planning time."
+    }
+  ],
+  "carry_over_from_previous_retro": {
+    "prior_milestone": "2026.04.22",
+    "items_carried_forward": [
+      "RETRO-001",
+      "RETRO-002"
+    ],
+    "items_resolved": [
+      "RETRO-004 (BatchedInferenceRunner as standard inference path \u2014 adopted throughout Exp 307\u2013321 via ExperimentTemplate)",
+      "RETRO-001 (DualGPURunner wired into ExperimentTemplate.setup_gpu() \u2014 used in Exp 307/308 for GPU experiments; 2026.04.22 RETRO-001 is now resolved; the 2026.04.29 RETRO-001 refers to the hard-timeout action item originally listed as 2026.04.22 RETRO-002)"
+    ],
+    "carry_over_rate_pct": 40.0,
+    "note": "The 2026.04.22 retro listed 5 action items (RETRO-001 through RETRO-005). RETRO-001 (DualGPURunner) and RETRO-004 (BatchedInferenceRunner) are now resolved. RETRO-002 (45-min timeout) and RETRO-003 (gpu_monitor) are carried forward as RETRO-001 and RETRO-002 respectively in this retro. RETRO-005 (pytest-xdist) is dropped: the test suite now runs in ~3s after the scope reduction; parallelism is no longer needed."
+  },
+  "estimated_next_milestone_speedup_pct": 15.1,
+  "post_test_failure_rate_pct": 23.5,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "name": "Exp 308: JEPA fast-path gate integration and latency benchmark",
+      "duration_min": 138.0,
+      "pct_total": 20.0,
+      "category": "post_test_failure_repair_loop"
+    },
+    {
+      "rank": 2,
+      "name": "Exp 309: Tier 3 end-to-end self-learning \u2014 real logit pipeline",
+      "duration_min": 66.0,
+      "pct_total": 9.6,
+      "category": "post_test_failure_integration"
+    },
+    {
+      "rank": 3,
+      "name": "Exp 321: D-Wave Neal vs CPU Ising on constraint verification",
+      "duration_min": 62.0,
+      "pct_total": 9.0,
+      "category": "missing_dependency"
+    }
+  ]
+}

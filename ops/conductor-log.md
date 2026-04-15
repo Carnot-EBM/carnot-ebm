@@ -1609,3 +1609,4 @@ python/ |
 | 2026-04-15 00:32 UTC | Exp 315: Full-scale benchmark script — GSM8K 400q  | OK | Deliverable already exists in repo |
 | 2026-04-15 00:32 UTC | Exp 316: Full-scale benchmark execution — run Exp  | OK | Deliverable already exists in repo |
 | 2026-04-15 00:32 UTC | Exp 321: D-Wave Neal vs CPU Ising on constraint ve | OK | Deliverable already exists in repo |
+| 2026-04-15 00:39 UTC | Exp 319: Operational retrospective for milestone 2026.04.29 | OK | operational_retro_2026_04_29.json written; n=17 experiments, total=691 min, top bottleneck=Exp 308 (138.0 min); RETRO-001/002 carried forward; NEW-001/002 added; estimated next-milestone speedup ~15% |
