@@ -1829,3 +1829,6 @@ python/ |
 | 2026-04-15 20:09 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 20:09 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
 | 2026-04-15 20:09 UTC | Exp 362: SAVeR multi-turn verification — constrain | OK | Deliverable already exists in repo |
+| 2026-04-15 20:55 UTC | Exp 364: Wire ModelServer + TensorRT + DualGPU int | OK | 112 passed in 3.30s |
+| 2026-04-15 20:56 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 20:56 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
