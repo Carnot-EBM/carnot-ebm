@@ -1,0 +1,79 @@
+{
+  "experiment": 331,
+  "title": "Exp 331: Systematic FP Autopsy on Broken Verify-Repair Cases",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T04:26:07Z",
+  "finished_at": "2026-04-15T04:26:07Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "n_broken_cases": 6,
+  "source": "synthetic_exp184_patterns",
+  "category_distribution": {
+    "VALID_INTERMEDIATE": 2,
+    "PRECISION_LIMIT": 1,
+    "REGEX_ARTIFACT": 1,
+    "REPAIR_DEGRADATION": 2,
+    "UNCATEGORIZED": 0
+  },
+  "primary_fp_type": "VALID_INTERMEDIATE",
+  "recommended_fix": "Confidence-weighted repair: add expression confidence filter",
+  "sample_cases": [
+    {
+      "case_index": 0,
+      "violations_flagged": [
+        "step result: 10 - 3 = 7 (intermediate \u2014 then add 4)"
+      ],
+      "fp_category": "VALID_INTERMEDIATE",
+      "evidence": "Violation text contains intermediate-step language (e.g. 'step', 'then', 'so'), suggesting the extractor flagged a correct intermediate result rather than the final answer."
+    },
+    {
+      "case_index": 1,
+      "violations_flagged": [
+        "20 - 8 = 12, so the answer is 12 (then later step contradicts)"
+      ],
+      "fp_category": "VALID_INTERMEDIATE",
+      "evidence": "Violation text contains intermediate-step language (e.g. 'step', 'then', 'so'), suggesting the extractor flagged a correct intermediate result rather than the final answer."
+    },
+    {
+      "case_index": 2,
+      "violations_flagged": [
+        "2024 - 4 = 2020 (correct: 2020)"
+      ],
+      "fp_category": "REGEX_ARTIFACT",
+      "evidence": "Violation text contains year-like 4-digit numbers, suggesting ArithmeticExtractor matched a calendar expression rather than a genuine arithmetic claim."
+    },
+    {
+      "case_index": 3,
+      "violations_flagged": [
+        "10 / 3 approximately 3.33, rounded to 3 \u2014 flagged as 0.33 discrepancy"
+      ],
+      "fp_category": "PRECISION_LIMIT",
+      "evidence": "Violation text mentions approximation or decimal values, suggesting ArithmeticExtractor's integer-only matching flagged a correct rounded result as an error."
+    },
+    {
+      "case_index": 4,
+      "violations_flagged": [
+        "5 + 3 = 9 (correct: 8)"
+      ],
+      "fp_category": "REPAIR_DEGRADATION",
+      "evidence": "Violations were flagged and appear genuine, but the repair step produced a worse answer than the original baseline response."
+    }
+  ],
+  "inconclusive_reason": null,
+  "schema": [
+    "category_distribution",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "inconclusive_reason",
+    "n_broken_cases",
+    "primary_fp_type",
+    "recommended_fix",
+    "run_date",
+    "sample_cases",
+    "source",
+    "started_at",
+    "status",
+    "title"
+  ]
+}
