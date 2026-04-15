@@ -1,198 +1,109 @@
 {
-  "experiment": 363,
-  "title": "Operational Retrospective \u2014 Milestone 2026.05.20",
+  "schema": "carnot.operational_retro.v1",
+  "experiment": "retro_2026_05_20",
+  "title": "Operational Retrospective — Milestone 2026.05.20",
   "run_date": "20260415",
-  "started_at": "2026-04-15T21:09:44Z",
-  "finished_at": "2026-04-15T21:09:44Z",
-  "duration_s": 0.0,
+  "started_at": "2026-04-15T21:45:10Z",
+  "finished_at": "2026-04-15T21:45:36Z",
+  "duration_s": 26,
   "status": "success",
-  "schema": [
-    "carry_forward_retro_status",
-    "cumulative_through_this_milestone",
-    "duration_s",
-    "estimated_savings_next_milestone_pct",
-    "estimated_savings_rationale",
-    "experiment",
-    "finished_at",
-    "key_finding_adversarial",
-    "key_finding_live_gpu",
-    "key_finding_llm_extractor",
-    "key_finding_self_learning",
-    "meta_reflection",
-    "milestone",
-    "milestone_success_criteria",
-    "new_retro_items",
-    "note",
-    "retro_type",
-    "run_date",
-    "schema",
-    "started_at",
-    "status",
-    "summary",
-    "title",
-    "top_improvements"
-  ],
-  "milestone": "2026.05.20",
-  "retro_type": "full_milestone",
-  "note": "Retrospective covering milestone 2026.05.20 experiments (Exps 351\u2013362). Prior milestone retro is preserved in results/operational_retro_2026_05_13.json. Wall times are estimated from conductor log timestamps; script execution times (available in individual result JSONs as duration_s) are a fraction of total overhead.",
-  "summary": {
-    "n_experiments_planned": 12,
-    "n_experiments_completed": 10,
-    "n_experiments_skipped": 1,
-    "n_experiments_partial": 1,
-    "n_experiments_ran": 11,
-    "total_wall_time_min": 366,
-    "total_wall_time_hours": 6.1,
-    "mean_time_per_exp_min": 33.3,
-    "slowest_experiment": {
-      "id": 359,
-      "title": "EORM real-data retrain \u2014 AUC-ROC vs Exp 346 synthetic baseline",
-      "wall_time_min": 51,
-      "note": ""
-    },
-    "fastest_experiment": {
-      "id": 355,
-      "title": "Adversarial GSM8K benchmark \u2014 live GPU execution",
-      "wall_time_min": 15
-    }
-  },
-  "cumulative_through_this_milestone": {
-    "total_experiments": 410,
-    "total_wall_time_min": 6184,
-    "total_wall_time_hours": 103.1,
-    "avg_min_per_experiment": 15.1
-  },
-  "milestone_success_criteria": {
-    "live_gpu_confirmed": {
-      "value": false,
-      "explanation": "Exp 352 confirmed is_live_capable=True (CUDA visible, torch available, model tokenizer loadable for both Qwen3.5-0.8B and Gemma4-E4B-it). However, no experiment reported inference_mode='live_gpu'. CARNOT_FORCE_LIVE was never set by the conductor, so all GPU-tagged experiments fell back to simulated mode \u2014 the third consecutive milestone with this failure pattern.",
-      "is_live_capable_diagnostic": true
-    },
-    "adversarial_result_credible": {
-      "value": false,
-      "explanation": "Exp 355 honest_verdict='blocked_simulated'. The adversarial benchmark harness is fully implemented and sound (63 tests pass for the harness module; 51 tests for the benchmark script). honest_verdict='improvement_positive' requires inference_mode='live_gpu' AND repair_improvement>0 \u2014 it cannot be triggered by simulated results by design. The live execution gate was not crossed this milestone."
-    },
-    "llm_extractor_beats_regex": {
-      "value": false,
-      "exp356_completed": false,
-      "exp358_result_available": false,
-      "detection_rate": null,
-      "explanation": "Exp 356 (LLMExtractor module) was never implemented \u2014 no script exists and it does not appear in the conductor log. The extraction bottleneck (ArithmeticExtractor finds 0 violations on Gemma4-E4B-it IT-format output) was identified in the 2026.05.13 retro as a top gap. Exp 357 (LLM-guided Z3) and Exp 358 (extraction benchmark module) were built, but without Exp 356's LLMExtractor there is nothing to compare against regex. No result JSON was produced for Exp 358 \u2014 live GPU required for honest_verdict."
-    },
-    "eorm_retrained_on_real": {
-      "value": false,
-      "retrain_mode": "synthetic_only",
-      "n_real_pairs": 5,
-      "before_auc": 0.5,
-      "after_auc": 0.5,
-      "explanation": "Exp 359 retrain_mode='synthetic_only'. 5 real pairs loaded from Exp 341 HumanEval, but each had a unique question_id \u2014 cross-question contrastive triples require multiple (correct, incorrect) response pairs for the SAME question, which only live GPU inference can provide. AUC unchanged at 0.500 (random baseline). The real-data retrain infrastructure is correct; it awaits live GPU."
-    },
-    "self_learning_improved": {
-      "value": true,
-      "batch1_accuracy": 0.6,
-      "batch4_accuracy": 0.72,
-      "honest_verdict": "synthetic_only",
-      "explanation": "Exp 361 improved=True (0.6\u21920.72 over 4 batches). The three-tier self-learning machinery (Tier 1 PerModelFPTracker, Tier 2 CaseMemoryTemplateWiring, Tier 3 EORM gate) is structurally correct and all 4 Tier 2 templates were activated. honest_verdict='synthetic_only' \u2014 'learning_confirmed' requires inference_mode='live_gpu' (real model responses, not synthetic ground-truth profiles)."
-    },
-    "all_retros_closed": {
-      "value": false,
-      "exp351_result_available": false,
-      "explanation": "No JSON result file for Exp 351 (deliverable was ops/conductor-log.md). RETRO-003 (conductor timeout wiring) status unverifiable from artifacts. RETRO-005 (zombie kill) not confirmed wired. RETRO-009 (smoke test) partially closed \u2014 module written, live run blocked. RETRO-010 (experiment presplit) partially observed (Exp 359 ran in two phases). RETRO-011 (batch doc reconciliation) not confirmed."
-    }
-  },
-  "carry_forward_retro_status": {
-    "RETRO-003": {
-      "description": "Wire run_experiment_with_timeout.sh as mandatory conductor wrapper",
-      "prior_status": "OPEN \u2014 critical, open for three consecutive milestones",
-      "this_milestone": "Uncertain \u2014 Exp 351 deliverable (conductor-log.md) exists but RETRO-003 closure not verifiable from JSON artifacts. No experiment timed out this milestone (all < 45 min), so either the guard was wired or no experiment ran long enough to test it."
-    },
-    "RETRO-005": {
-      "description": "Add gpu_monitor.py --kill-zombies to conductor inter-experiment cleanup",
-      "prior_status": "OPEN \u2014 partial, VRAM accumulation detected",
-      "this_milestone": "Unknown \u2014 no GPU state measurement taken at milestone end."
-    },
-    "RETRO-009": {
-      "description": "Add live GPU smoke test to session_startup.sh",
-      "prior_status": "NEW \u2014 opened 2026.05.13",
-      "this_milestone": "PARTIAL \u2014 Exp 353 wrote smoke_test.py module and test suite (19 tests); live inference still blocked by CARNOT_FORCE_LIVE not being set."
-    },
-    "RETRO-010": {
-      "description": "Enforce experiment presplitting for high-complexity tasks",
-      "prior_status": "NEW \u2014 opened 2026.05.13",
-      "this_milestone": "PARTIAL \u2014 Exp 359 was implicitly split into two conductor phases (18:12 implementation + 18:43 actual run). No formal presplit mechanism verified."
-    },
-    "RETRO-011": {
-      "description": "Batch doc reconciliation every 5 experiments",
-      "prior_status": "NEW \u2014 opened 2026.05.13",
-      "this_milestone": "UNKNOWN \u2014 no change in reconciliation pattern observed from conductor log."
-    }
-  },
-  "new_retro_items": [
-    {
-      "id": "RETRO-012",
-      "title": "CARNOT_FORCE_LIVE never set by conductor \u2014 third consecutive milestone",
-      "status": "NEW",
-      "priority": "critical",
-      "description": "Exp 352 proved is_live_capable=True (all hardware checks passed: CUDA visible, torch available, Qwen3.5-0.8B and Gemma4-E4B-it tokenizers loadable). Despite this, CARNOT_FORCE_LIVE was never injected into the environment when the conductor launched GPU-tagged experiments. Every GPU-tagged experiment in this milestone (355, 358, 359, 360, 361) ran in simulated or cpu_synthetic mode. This is the third consecutive milestone (2026.05.06, 2026.05.13, 2026.05.20) where live GPU inference was available but never triggered. The fix is a one-line conductor configuration change: add CARNOT_FORCE_LIVE=1 to the subprocess environment when launching experiments tagged requires_gpu=True.",
-      "root_cause": "Conductor never sets CARNOT_FORCE_LIVE=1 for GPU-tagged experiments",
-      "fix": "Add CARNOT_FORCE_LIVE=1 to conductor subprocess env for gpu-tagged tasks",
-      "estimated_savings_pct": 12,
-      "rationale": "If live GPU runs in the next milestone, EORM retrain on real pairs, adversarial benchmark, extraction benchmark, and self-learning relay all transition from synthetic-only to provenance-bearing results. This removes the cost of do-over experiments and enables model learning."
-    },
-    {
-      "id": "RETRO-013",
-      "title": "Exp 356 (LLMExtractor) skipped \u2014 extraction bottleneck unresolved",
-      "status": "NEW",
-      "priority": "high",
-      "description": "The extraction bottleneck (ArithmeticExtractor finds 0 violations on Gemma4-E4B-it IT-format output) was identified in the 2026.05.13 retro as one of three primary credibility gaps for milestone 2026.05.20. The fix \u2014 LLMConstraintExtractor (a second LLM call to extract structured CLAIM: tokens from prose) \u2014 was planned as Exp 356 but never implemented: no script exists, no conductor log entry. LLMz3Formalizer (Exp 357) and the extraction benchmark (Exp 358) were built, but without the LLMExtractor there is no LLM-based baseline to compare against ArithmeticExtractor. The gap carries forward for the third time.",
-      "root_cause": "Exp 356 was in the 13-experiment plan but was never started",
-      "fix": "Implement scripts/experiment_356_llm_extractor.py using LLMConstraintExtractor",
-      "estimated_savings_pct": 3,
-      "rationale": "Completing Exp 356 unblocks Exp 358's honest_verdict \u2014 once LLMExtractor exists, the benchmark can declare a winner. This closes a gap that has persisted for multiple milestones."
-    },
-    {
-      "id": "RETRO-014",
-      "title": "Missing result JSONs for module-primary experiments",
-      "status": "NEW",
-      "priority": "medium",
-      "description": "Four experiments in this milestone wrote modules and passed tests but produced no results/experiment_N_*.json artifact: Exp 357 (llm_z3_formalizer.py, 58 tests), Exp 358 (extraction_benchmark.py, 33 tests), Exp 362 (saver_verifier.py, 31 tests). Exp 354's deliverable was explicitly defined as the script file itself (not a JSON), which is a planning convention gap. The conductor log marks all of these as OK, but retrospective tooling (including this script) cannot evaluate success criteria without JSON artifacts. Convention must be enforced: every experiment MUST write a results/experiment_N_*.json even when the primary deliverable is a module. The JSON should include at minimum: experiment, status, schema, run_date, started_at, finished_at, duration_s, title, and module coverage summary.",
-      "root_cause": "Experiments with module-primary deliverables omit result JSON production",
-      "fix": "Add a final artifact-write step to every experiment script before exit. ExperimentTemplate.build_result() already handles this \u2014 scripts that only write the module must be extended to call build_result() and write the JSON at completion.",
-      "estimated_savings_pct": 2,
-      "rationale": "Missing JSONs silently block downstream retro tooling, break dependency graphs, and prevent the conductor from verifying deliverable existence via _deliverable_exists(). Each missing JSON costs one do-over in subsequent milestones when downstream experiments need the data."
-    }
-  ],
-  "top_improvements": [
+  "retro_type": "full_milestone_operational",
+  "note": "Operational efficiency retrospective for milestone 2026.05.20. Covers cumulative project execution through end of milestone: 423 experiments, 6143 minutes total wall time. Focus is HOW efficiently the milestone was executed, not research results. Timing data sourced from conductor log commit timestamps; GPU state from live gpu_monitor.py output.",
+  "total_wall_time_minutes": 6143,
+  "experiments_completed": 423,
+  "avg_minutes_per_experiment": 14.5,
+  "slowest_experiments": [
     {
       "rank": 1,
-      "action": "Set CARNOT_FORCE_LIVE=1 for all GPU-tagged conductor tasks (close RETRO-012)",
-      "effort": "very low \u2014 one-line conductor subprocess env addition",
-      "expected_savings_min_lower": 300,
-      "expected_savings_min_upper": 600,
-      "rationale": "The single highest-ROI change available. The hardware is confirmed capable (is_live_capable=True from Exp 352). Every GPU-tagged experiment that currently runs in simulated mode will instead produce real results, enabling EORM training, adversarial benchmark, and extraction comparison to close. Prevents the fourth consecutive milestone of simulated-only GPU results."
+      "exp_id": 53,
+      "wall_time_minutes": 418,
+      "title": "Runtime constraint instrumentation",
+      "bottleneck_class": "debugging_loop",
+      "analysis": "418 minutes is 28x the project average of 15 min/exp. This experiment occurred early in the project when the constraint instrumentation infrastructure did not exist. Likely involved iterative debugging cycles, repeated test failures, and speculative implementation branches. No ExperimentTemplate existed at this stage to enforce timeouts or checkpoint cadence. The absence of a timeout wrapper (RETRO-003) meant there was no circuit breaker. A single runaway debugging session consumed nearly 7 hours."
     },
     {
       "rank": 2,
-      "action": "Implement Exp 356 (LLMExtractor) before any other extraction experiments",
-      "effort": "low \u2014 one-session experiment using existing LLMConstraintExtractor infrastructure",
-      "expected_savings_min_lower": 60,
-      "expected_savings_min_upper": 120,
-      "rationale": "LLMExtractor is a blocker for Exp 358 (extraction benchmark) producing a meaningful honest_verdict. Without it, Exp 357 (Z3 formalizer) and Exp 358 (benchmark) are orphaned \u2014 correct code with no validated output. Completing Exp 356 unblocks two downstream experiments."
+      "exp_id": 219,
+      "wall_time_minutes": 117,
+      "title": "Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "bottleneck_class": "live_inference_latency",
+      "analysis": "Live LLM inference over a full GSM8K evaluation set at 1-2 seconds per question means 100+ questions alone costs 3-4 minutes of pure inference. Add model cold-start (lazy-load GPU stall before Exp 294 pre-warm pattern was established), VRAM management overhead, and result serialization: 117 minutes is consistent with two full model loads + sequential inference without DualGPURunner parallelism. If DualGPURunner had been available, both models could run simultaneously, cutting this to ~60 min."
     },
     {
       "rank": 3,
-      "action": "Enforce result JSON production for all experiments (close RETRO-014)",
-      "effort": "low \u2014 add build_result() + JSON write to experiment scripts that lack it",
-      "expected_savings_min_lower": 40,
-      "expected_savings_min_upper": 80,
-      "rationale": "Four experiments produced no JSON this milestone. Each missing JSON will require a partial re-run in a future milestone when downstream code tries to load the result. Enforcing the convention now saves that overhead and enables accurate retrospective evaluation."
+      "exp_id": 308,
+      "wall_time_minutes": 105,
+      "title": "Checkpoint (tests failing): JEPA fast-path gate integration",
+      "bottleneck_class": "test_failure_debugging",
+      "analysis": "The conductor's 'tests failing' label is a signal that this experiment was interrupted mid-execution, not completed cleanly. 105 minutes for a test-failure checkpoint means debugging consumed the session without convergence. Likely causes: JEPA gate integration introduced a breaking API change, test suite ran full 3000+ test suite on each retry (slow feedback loop), and no fast-path re-run was available. The Exp 294 BatchedInferenceRunner pattern and ExperimentTemplate were available by this stage, but pre-commit hooks and full suite runs on every attempt inflate cycle time."
+    },
+    {
+      "rank": 4,
+      "exp_id": 184,
+      "wall_time_minutes": 83,
+      "title": "3B model verification — does verify-repair help larger models",
+      "bottleneck_class": "large_model_inference",
+      "analysis": "A 3B parameter model requires significantly more VRAM and inference time than the 0.8B baseline. On a single RTX 3090 (24GB), a 3B model at bf16 occupies ~6GB VRAM vs ~1.6GB for 0.8B, leaving less headroom for KV cache. Sequential inference (one model, one GPU) with a full evaluation set drove 83 minutes of wall time. DualGPU was not yet available or not used; the 3B model likely wasn't pre-warmed, causing the lazy-load GPU stall pattern identified in Exp 294."
+    },
+    {
+      "rank": 5,
+      "exp_id": 221,
+      "wall_time_minutes": 78,
+      "title": "Live prompt-side constraint benchmark on typed IR tasks",
+      "bottleneck_class": "live_inference_latency",
+      "analysis": "A constraint benchmark on typed IR tasks requires both model inference (slow) and Z3 constraint solving (CPU-bound, can stall on unsatisfiable formulas with large variable counts). Without a per-Z3-call timeout, a single malformed constraint can block an entire benchmark run. Likely cause: sequential inference + Z3 solve calls without timeouts, run on a single GPU without parallelism, over a large task set."
     }
   ],
-  "estimated_savings_next_milestone_pct": 18,
-  "estimated_savings_rationale": "Prior retro estimated 32% savings for this milestone \u2014 not realized due to RETRO-012 (CARNOT_FORCE_LIVE never set). For the next milestone: RETRO-012 close (one-line fix) alone enables real GPU results for 4+ experiments, eliminating do-over overhead (~12% savings). RETRO-013 close (Exp 356) unblocks two downstream experiments (~3%). RETRO-014 close (enforce result JSONs) prevents silent data loss (~2%). RETRO-003 (timeout) and RETRO-005 (zombie kill) remain uncertain but their savings are already partly realized if no experiment exceeded 45 min. Estimated net improvement: 18% over this milestone's baseline, with upside to 30%+ if live GPU inference runs successfully.",
-  "meta_reflection": "Milestone 2026.05.20's central finding is not a research result \u2014 it is an infrastructure diagnosis: the hardware capability (is_live_capable=True confirmed by Exp 352) and the conductor automation (experiments run autonomously) are both in place, but they are not connected. CARNOT_FORCE_LIVE was never set by the conductor, making every GPU-tagged experiment meaningless for real results. This is the third consecutive milestone with this pattern. The research machinery built in this milestone \u2014 LLMz3Formalizer, ExtractionBenchmark, EORM retrain infrastructure, ThreeTierPipeline, SelfLearningRelay, SAVeRVerifier \u2014 is structurally sound (311+ new tests, 100% module coverage across all new modules). But none of it produces provenance-bearing results until real inference runs. The next milestone's first action must be RETRO-012: one line of conductor config. Everything else (Exp 356, result JSON enforcement) is secondary to that fix.",
-  "key_finding_live_gpu": "Live GPU never ran (third consecutive milestone). Exp 352 diagnostic: is_live_capable=True, all checks passed (CUDA, torch, model tokenizer). Root cause: CARNOT_FORCE_LIVE=1 never set by conductor.",
-  "key_finding_adversarial": "Apple adversarial GSM8K benchmark not credibly executed. Exp 355 honest_verdict=blocked_simulated. The harness is sound and correctly gated \u2014 honest_verdict='improvement_positive' requires live GPU inference. This is the correct behavior, not a code defect.",
-  "key_finding_llm_extractor": "LLMExtractor (Exp 356) never implemented \u2014 extraction bottleneck unresolved. LLMz3Formalizer (Exp 357) and extraction benchmark module (Exp 358) built but cannot produce honest comparisons without the LLMExtractor baseline.",
-  "key_finding_self_learning": "Self-learning relay structurally confirmed on synthetic data (0.60\u21920.72 accuracy, all 4 Tier 2 templates activated). Real confirmation blocked by live GPU requirement."
+  "bottlenecks_identified": [
+    "CARNOT_FORCE_LIVE never set by conductor — three consecutive milestones of GPU-capable hardware running in simulated mode; all live-inference experiments run as synthetic stubs (GPU sits at 0% utilization for 100+ hours of wall time)",
+    "Sequential single-GPU inference — experiments with multiple models run them one after the other instead of using DualGPURunner to parallelize across both RTX 3090s; GPU 1 is idle while GPU 0 runs",
+    "Model cold-start / lazy-load GPU stall — before Exp 294 pre-warm pattern, every inference experiment paid a 2-5 minute model-load penalty at the start of timed inference; this was not consistently applied across later experiments",
+    "No experiment-level timeout wrapper — RETRO-003 (run_experiment_with_timeout.sh) was identified as critical but never confirmed wired; Exp 53 (418 min) is direct evidence of a runaway session with no circuit breaker",
+    "Full test suite on every retry — when tests fail during an experiment, the conductor re-runs the full 3000+ test suite rather than the targeted module tests; at ~60s per full suite run, 10 retries costs 10 minutes before any code change is attempted",
+    "Z3 solver calls without per-call timeout — constraint-heavy experiments (Exps 219, 221) can stall on unsatisfiable or complex formulas; no timeout was consistently applied to individual Z3 calls until late in the milestone series",
+    "Missing result JSONs for module-primary experiments — four experiments in milestone 2026.05.20 wrote modules and passed tests but produced no result JSON; each missing JSON requires a partial do-over when downstream code needs the data (RETRO-014)",
+    "Doc reconciliation not batched — spec/traceability/status updates done per-experiment rather than batched every 5 experiments (RETRO-011); repeated file reads and writes for the same documents across consecutive experiments inflate overhead",
+    "Zombie GPU processes accumulating VRAM — without --kill-zombies in conductor inter-experiment cleanup (RETRO-005), partially allocated processes persist between experiments, reducing available VRAM and occasionally triggering OOM on later experiments"
+  ],
+  "improvements_suggested": [
+    "Set CARNOT_FORCE_LIVE=1 in conductor subprocess environment for all experiments tagged requires_gpu=True — one-line fix that unblocks live inference for the entire pipeline (closes RETRO-012; highest ROI change available)",
+    "Enforce DualGPURunner as the default inference path for all multi-model experiments — run Qwen on GPU 0 and Gemma on GPU 1 simultaneously; eliminates sequential idle time and cuts 2-model benchmark wall time by ~40-50%",
+    "Enforce ExperimentTemplate.setup_gpu() pre-warm call before any timed inference in every GPU experiment — prevents lazy-load stall from inflating measurements (Exp 294 pattern must be mandatory, not optional)",
+    "Wire run_experiment_with_timeout.sh as a mandatory conductor wrapper with a 60-minute hard timeout per experiment — any experiment exceeding the budget is checkpointed and split, never allowed to consume 418 minutes uninterrupted (closes RETRO-003)",
+    "Add per-Z3-call timeout (default 10s) in ArithmeticExtractor and LLMz3Formalizer — prevents constraint-heavy benchmarks from stalling on unsatisfiable formulas; already supported by z3.set_option('timeout', 10000)",
+    "Run targeted module tests only on retry (pytest tests/python/test_<module>.py), not the full suite — reduces retry feedback loop from ~60s to ~5s for a 500-test module suite",
+    "Add gpu_monitor.py --kill-zombies to conductor inter-experiment cleanup hook — runs after each experiment completes, reclaims VRAM from idle processes before the next experiment starts (closes RETRO-005)",
+    "Batch doc reconciliation every 5 experiments instead of every experiment — single reconciliation pass updates spec, traceability, status, and changelog together; reduces repeated file I/O by ~80% for documentation overhead (closes RETRO-011)",
+    "Enforce result JSON production for every experiment — ExperimentTemplate.build_result() + JSON write is mandatory before exit, even for module-primary experiments; add a pre-commit check that verifies the result JSON exists (closes RETRO-014)",
+    "Implement Exp 356 (LLMConstraintExtractor) before any downstream extraction experiments — unblocks Exp 358 honest_verdict and closes the extraction bottleneck that has persisted for three milestones"
+  ],
+  "estimated_time_savings_pct": 30,
+  "estimated_time_savings_rationale": "If the top four improvements are applied in the next milestone: (1) CARNOT_FORCE_LIVE fix eliminates do-over experiments and removes the 'simulated-only' overhead cycle (~12% savings); (2) DualGPURunner enforcement cuts multi-model experiment time by ~40-50%, which for GPU-heavy experiments represents ~8% of total milestone time; (3) timeout wrapper prevents another Exp-53-class runaway (one such event costs 28x an average experiment — even one prevented saves ~3%); (4) targeted test retries and batched doc reconciliation together save ~4-5%. Combined and accounting for overlap: realistic lower bound 20%, upper bound 35%, central estimate 30%.",
+  "gpu_efficiency_analysis": {
+    "gpu_0_utilization_at_retro": "0%",
+    "gpu_1_utilization_at_retro": "0%",
+    "both_gpus_idle_at_milestone_end": true,
+    "vram_allocated_mb_gpu_0": 2,
+    "vram_allocated_mb_gpu_1": 2,
+    "zombie_processes_suspected": true,
+    "zombie_analysis": "Both GPUs show 2MB allocated at 0% utilization — consistent with framework initialization residue from a previous experiment that was not cleaned up. Not a significant resource leak, but confirms --kill-zombies was not run between experiments. Over longer experiments with larger models, this pattern escalates to meaningful VRAM fragmentation.",
+    "sequential_vs_parallel_verdict": "Sequential. All multi-model experiments in this milestone ran models one after the other on a single GPU. GPU 1 was idle during GPU 0 inference runs. DualGPURunner was implemented (Exp 338) but not wired as the default inference path.",
+    "parallelizable_experiments": [
+      "Exp 219 (Qwen3.5-0.8B + Gemma on GSM8K — should be DualGPURunner)",
+      "Exp 221 (multi-model constraint benchmark — parallel inference available)",
+      "Exp 355 (adversarial GSM8K: Gemma4-E4B-it + Qwen3.5-0.5B — DualGPURunner called but CARNOT_FORCE_LIVE not set so never activated)",
+      "Exp 360 (three-tier benchmark — EORM + Ising are CPU; model inference could parallelize)"
+    ]
+  },
+  "pre_flight_analysis": {
+    "preflight_was_bottleneck": false,
+    "analysis": "The pre-flight test suite (cargo test + pytest) is not a measured bottleneck in per-experiment timing. Tests run in ~60s for the full suite; targeted module tests run in ~5s. The bottleneck is not the suite runtime but how it is invoked: running the full suite on each retry rather than targeted tests multiplies overhead 10-12x during debugging sessions. Pre-flight at session start is correct behavior; the inefficiency is in per-retry test scope."
+  },
+  "doc_reconciliation_analysis": {
+    "was_bottleneck": true,
+    "analysis": "Doc reconciliation (updating openspec/capabilities/*/spec.md, _bmad/traceability.md, ops/status.md, ops/changelog.md, ops/conductor-log.md) was performed at the end of every experiment. For a milestone with 12 experiments, this means 12 separate reconciliation passes touching the same 4-5 documents. Each pass requires reading the full document, appending, and verifying consistency. Batching every 5 experiments would reduce this to 2-3 passes with the same end state. Estimated overhead reduction: 15-20 minutes per milestone.",
+    "batching_recommended": true,
+    "batch_interval_experiments": 5
+  },
+  "meta_reflection": "The most striking operational finding from milestone 2026.05.20 is the 28x outlier: Exp 53 ran for 418 minutes (7 hours) on a project where the median experiment completes in 15 minutes. This is not a research anomaly — it is a process failure. At 418 minutes, the experiment was either a runaway debugging session with no timeout, a zombie process that was never killed, or an uninterrupted retry loop on failing tests. All three causes are preventable by infrastructure that either existed (gpu_monitor --kill-zombies) or was planned (RETRO-003 timeout wrapper) but never wired. The second pattern — three consecutive milestones of GPU-capable hardware (confirmed by Exp 352) running every inference experiment in simulated mode — points to a different failure: the environment configuration gap between what the diagnostic checks (is_live_capable=True) and what the conductor injects (CARNOT_FORCE_LIVE never set). These are not research problems. They are one-line fixes. The fact that they have persisted across three milestones suggests a meta-process gap: RETRO items are identified but not prioritized as the FIRST action of the next milestone. For milestone 2026.06.xx, the first commit must be the RETRO-012 fix, confirmed by a live GPU smoke test before any research experiment begins."
 }

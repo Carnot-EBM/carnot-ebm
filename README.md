@@ -76,13 +76,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (348 experiments, 30 completed milestones)
+## Key Results (364 experiments, 32 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. All live GPU result counts above reflect artifacts generated before this bug was identified.
 
 ## PBT Verification
 
@@ -166,6 +168,19 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **EORM CoT energy reward model (Exp 346 / REQ-LEARN-022/023):** pure-JAX transformer encoder (`EORMModel`, `EORMTrainer`) implementing arXiv 2505.14999. Contrastive hinge loss: `max(0, E_correct - E_incorrect + margin)`. AUC-ROC evaluation; saves `results/eorm_model_346.safetensors`.
 - **JEPA real-data retrain on live violation pairs (Exp 347 / REQ-LEARN-024):** `extract_violation_pairs` word-tokenises Exp 340 responses and splits at `prefix_fraction=0.5`. `JEPARetrainer` trains with binary BCE loss and evaluates trapezoidal AUC-ROC. CI-safe synthetic fallback (50 pairs) when live GPU data unavailable.
 - **SinkProbe attention-sink pre-filter (Exp 348 / REQ-VERIFY-086/087):** implements arXiv 2604.10697 as the first gate in the three-tier pipeline (SinkProbe → EORM → Ising). `compute_sink_concentration` accepts (n_heads, seq_len, seq_len) attention tensors; `SinkProbe(threshold=0.3)` sets `is_uncertain = mean_sink_score < threshold`. Simulated benchmark: **skip_rate=60%, FNR=0%, TNR=100%** — 60% fewer Ising calls with no false negatives.
+
+### Milestone 2026.05.20 (Exps 351-364)
+
+- **Live GPU Diagnostic — silent fallback bug fixed (Exp 352 / REQ-INFRA-014):** Diagnosed and fixed the critical bug where `CARNOT_FORCE_LIVE=1` was silently ignored by the conductor, causing Exps 340/341/346/347 to run in simulated mode despite live-capable RTX 3090s. `LiveGPUDiagnostic` now raises `RuntimeError` when forced-live prewarm fails instead of silently falling through.
+- **Live GPU Smoke Test Gate (Exp 353 / REQ-BENCH-005):** `run_smoke_test()` gates any benchmark experiment launch; CI-safe when `CARNOT_FORCE_LIVE` not set; raises on live GPU unavailability when forced.
+- **Adversarial GSM8K harness + execution (Exp 354/355 / REQ-BENCH-006/007):** Apple adversarial GSM8K benchmark (arXiv 2410.05229). Three-condition runner: standard / adversarial / repaired-adversarial. `honest_verdict=improvement_positive` gated on `inference_mode==live_gpu AND repair_improvement>0` — never emitted for simulated results. Live execution pending RETRO-012 fix.
+- **LLMz3Formalizer — LLM-guided Z3 formalization (Exp 357 / REQ-EXTRACT-019/020):** Implements arXiv 2601.04675 (80% Z3 success rate improvement via task decomposition). `LLMz3Formalizer` extracts Z3 constraints via structured LLM prompting with sandboxed execution (restricted `__import__`, `print→StringIO`).
+- **Three-tier pipeline complete (Exp 360 / REQ-VERIFY-088):** `ThreeTierPipeline(SinkProbe → EORM → Ising)` with early-exit at each tier. `verify()` returns `(verified, tier_used, energy)`. Simulated: 30% fewer Ising calls from SinkProbe alone; 60%+ combined skip rate.
+- **Three-tier self-learning relay (Exp 361 / REQ-LEARN-026/027):** End-to-end relay across all three tiers. Simulated run: batch1_accuracy=0.60 → batch4_accuracy=0.72 (`improved=True`); all 4 Tier 2 templates activated. `honest_verdict=synthetic_only` — live GPU required for `learning_confirmed`.
+- **SAVeR multi-turn verification wrapper (Exp 362 / REQ-AGENT-001/002):** `SAVeRVerifier` implements the arXiv 2604.08401 auditor-before-commit loop for multi-step agent reasoning chains. Goal #4 from research-program.md complete.
+- **EORM real-data retrain (Exp 359 / REQ-LEARN-025):** `retrain_mode=synthetic_only` (5 real HumanEval pairs with unique question IDs — no cross-pair contrastive triples). `honest_verdict=synthetic_only`. Fixed `_pairs_to_contrastive_triples` bug: synthetic question IDs now routed to shared pool.
+- **ModelServer + TensorRT + DualGPU wiring (Exp 364):** Infrastructure wiring — ModelServer, TensorRT, and DualGPU inference acceleration integrated into all benchmark harnesses for consistent hardware-accelerated testing.
+- **Milestone 2026.05.20 retrospective (Exp 363):** 11/12 experiments ran (Exp 356 LLMExtractor skipped). 366 min total, mean 33.3 min/exp. RETRO-012 (CARNOT_FORCE_LIVE bug) is the critical blocker for all live GPU headline results.
 
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.

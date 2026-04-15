@@ -1833,3 +1833,6 @@ python/ |
 | 2026-04-15 20:55 UTC | Exp 364: Wire ModelServer + TensorRT + DualGPU int | OK | 112 passed in 3.30s |
 | 2026-04-15 20:56 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 20:56 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
+| 2026-04-15 21:40 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 21:40 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
+| 2026-04-15 21:40 UTC | Exp 363: Operational retrospective for milestone 2 | OK | Deliverable already exists in repo |

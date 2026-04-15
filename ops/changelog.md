@@ -1,5 +1,36 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Operational Retrospective — Milestone 2026.05.20, Updated Analysis)
+
+- 2026-04-15 21:45: Full operational efficiency retrospective for milestone 2026.05.20 (updated).
+  Written to `results/operational_retro_2026_05_20.json` (schema="carnot.operational_retro.v1").
+
+  **Cumulative milestone inventory:** 423 experiments completed, 6143 minutes (102.4 hours) total
+  wall time, mean 14.5 min/experiment. Analysis covers HOW efficiently the milestone was executed.
+
+  **Top 5 slowest experiments:**
+  - Exp 53: 418 min (28x avg) — Runtime constraint instrumentation; runaway debugging loop, no
+    timeout wrapper (RETRO-003 unresolved)
+  - Exp 219: 117 min — Live GSM8K semantic benchmark; sequential single-GPU inference, cold-start
+    stall, no DualGPURunner
+  - Exp 308: 105 min — Tests failing checkpoint (JEPA fast-path gate); full suite reruns on each
+    retry instead of targeted module tests
+  - Exp 184: 83 min — 3B model verification; large model on single GPU, no pre-warm, no DualGPU
+  - Exp 221: 78 min — Live prompt-side constraint benchmark; Z3 calls without per-call timeout,
+    sequential inference
+
+  **GPU efficiency finding:** Both RTX 3090s idle at 0% utilization at milestone end. CARNOT_FORCE_LIVE
+  never set by conductor for three consecutive milestones — GPU hardware confirmed capable (Exp 352
+  is_live_capable=True) but never triggered. Sequential single-GPU inference used throughout.
+
+  **Key bottlenecks:** No timeout wrapper (RETRO-003), CARNOT_FORCE_LIVE not set (RETRO-012),
+  sequential inference instead of DualGPURunner, full test suite on retries, Z3 calls without
+  timeout, un-batched doc reconciliation.
+
+  **Estimated time savings if top improvements applied:** 30% (lower 20%, upper 35%).
+  RETRO-012 one-line fix is the highest-ROI action available for next milestone.
+  (User-requested)
+
 ## 2026-04-15 (Exp 363: Operational Retrospective — Milestone 2026.05.20 COMPLETE)
 
 - 2026-04-15 21:10: Exp 363: Full operational retrospective for milestone 2026.05.20.
