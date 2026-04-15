@@ -315,4 +315,7 @@
 | REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss (hinge: max(0, E_correct - E_incorrect + margin)) + train_step (jax.value_and_grad) + train_epoch (Exp 346) |
 | SCENARIO-LEARN-038 | Not Started | Implemented | EORMModel energy is finite and n_params ≤ 100M for default config (Exp 346) |
 | SCENARIO-LEARN-039 | Not Started | Implemented | EORMModel rank returns permutation of [0..n-1] sorted by energy ascending (Exp 346) |
+| REQ-LEARN-024 | Not Started | Implemented | JEPA real-data fine-tuning — ContextPredictionEnergy retrainer accepts real (partial_response, violation_flag) pairs from live GPU benchmark data (Exp 340) and improves predictor accuracy on unseen test set (Exp 347) |
+| SCENARIO-LEARN-041 | Not Started | Implemented | Extract 50 violation pairs from Exp 340 live GPU data (2 models × ~25 violations each), split 40/10 train/test, verify pair count and schema compliance (Exp 347) |
+| SCENARIO-LEARN-042 | Not Started | Implemented | Retrain JEPA ContextPredictionEnergy on 40 train pairs for 10 epochs, record before/after AUC, save model to safetensors, artifact records inference_mode={simulated|live} (Exp 347) |
 | SCENARIO-LEARN-040 | Not Started | Implemented | EORMTrainer contrastive_loss is 0 when margin already met; positive (hinge) when violated (Exp 346) |
