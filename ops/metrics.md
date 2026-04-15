@@ -1531,3 +1531,4 @@
 | exp308 | 2026-04-14T15:31:56Z | 2026-04-14T15:40:13Z | Exp 308: JEPA gate benchmark — all code pre-written; fixed logit_mean dim (32→8 for Exp291 ONNX); ran 28 tests (pass); ran benchmark (TARGET NOT MET: skip_rate=0.0, Exp307 model missing); updated ops docs | 8m17s |
 | exp316 | 2026-04-14T20:29:35Z | 2026-04-14T20:29:55Z | Minimal doc updates for Exp 316: append changelog entry (execution status) and status row (in progress) | 0m20s |
 | exp326 | 2026-04-15T02:03:56Z | 2026-04-15T02:27:12Z | Exp 326: DualGPUMonitor (RETRO-002 + RETRO-003) — dual_gpu_monitor.py, GPUProcessInfo dataclass, check_dual_gpu_health(), setup_gpu() additive gpu_monitor_results key, 32 tests pass, 0 regressions (4784+79 pre-existing pass/skip), REQ-INFRA-003/004 | 23m16s |
+| exp327 | 2026-04-15T02:29:40Z | 2026-04-15T02:54:55Z | Exp 327: Pre-experiment dependency audit (NEW-002) | TBD |
