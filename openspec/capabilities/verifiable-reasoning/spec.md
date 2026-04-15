@@ -3514,6 +3514,80 @@ result files from prior experiments that were never completed.
 **And** `build_blocked_artifact(audit)` returns a dict with key `missing_files`
 **And** the dict contains a `next_action` field with remediation advice
 
+### REQ-INFRA-006: Host Prerequisites Registry
+
+**Status:** Implemented (Exp 338)
+
+The repository must maintain a machine-readable registry of host-level prerequisites
+(`ops/host-prereqs.md`) so that experiments blocked by missing system packages can
+be diagnosed immediately without repeating independent discovery.
+
+Root cause (RETRO-006): AMD XDNA NPU experiments (Exps 292, 303, 314, 335) each
+independently discovered the same two missing packages (`ninja`, `openblas`), wasting
+approximately 4 experiment slots.
+
+**Acceptance criteria:**
+- `ops/host-prereqs.md` exists and contains a markdown table with columns:
+  `Package`, `Check Command`, `Install (Arch)`, `Install (Debian)`, `Required For`.
+- `HostPrereqRegistry` loads the table from `ops/host-prereqs.md` at construction time.
+- `HostPrereqRegistry.check_prereqs(experiment_class)` returns a `list[str]` of package
+  names whose check commands fail (non-zero exit or command not found) and that are
+  required for the given experiment class.
+- `HostPrereqRegistry.check_prereqs()` (no class filter) checks all registered packages.
+- Check commands are run via `subprocess.run` with `timeout=5`; `FileNotFoundError` and
+  non-zero returncode both count as "missing".
+- The registry never raises when a check command is absent — it logs a warning and marks
+  the package as missing gracefully.
+- At minimum, the registry includes: `ninja`, `openblas`, `nvidia-smi`, `yosys`,
+  `nextpnr-xilinx`, and the `CARNOT_FORCE_LIVE` environment variable check.
+
+### REQ-INFRA-007: DualGPU Auto-Assignment as Default
+
+**Status:** Implemented (Exp 338)
+
+`ExperimentTemplate.setup_gpu()` must automatically assign models to separate GPU
+indices when two or more model specs are provided and `CARNOT_FORCE_LIVE=1`.
+This closes RETRO-004: `DualGPURunner` was implemented in Exp 326 but two-model
+experiments continued to run sequentially on GPU 0.
+
+**Acceptance criteria:**
+- When `len(model_specs) >= 2` and `CARNOT_FORCE_LIVE=1`:
+  - `model_specs[i]['gpu']` is set to `i` (zero-based, up to n_gpus_detected).
+  - If only 1 GPU is detected, all models are assigned to GPU 0 and a warning is logged
+    with the text "RETRO-004 warning".
+- `setup_gpu()` returns `dual_gpu_auto_assigned: bool` as an additional key.
+  Existing keys (`all_healthy`, `models`, `prewarm_time_s`, `gpu_monitor_results`) are
+  preserved without modification.
+- When `CARNOT_FORCE_LIVE=0` (CI mode), auto-assignment is skipped and
+  `dual_gpu_auto_assigned` is `False`.
+- When `len(model_specs) < 2`, auto-assignment is skipped and
+  `dual_gpu_auto_assigned` is `False`.
+
+### SCENARIO-INFRA-009: Registry Loads ops/host-prereqs.md
+
+**Given** `ops/host-prereqs.md` exists with a valid markdown table
+**When** `HostPrereqRegistry()` is constructed
+**Then** at least 4 package entries are loaded
+**And** each entry has `package`, `check_command`, `required_for` fields
+**And** construction does not raise
+
+### SCENARIO-INFRA-010: Missing Package Detected by Check Command
+
+**Given** a package whose check command exits non-zero (or is not found on the system)
+**When** `HostPrereqRegistry().check_prereqs(experiment_class="npu")` is called
+**Then** the package name appears in the returned list
+**And** no exception is raised
+
+### SCENARIO-INFRA-011: DualGPU Auto-Assignment with Two Model Specs
+
+**Given** `CARNOT_FORCE_LIVE=1`
+**And** `model_specs` has exactly two entries, both with `gpu=0`
+**And** `DualGPUMonitor._get_gpu_count()` returns 2
+**When** `ExperimentTemplate.setup_gpu(model_specs)` is called (with mock prewarm_fn)
+**Then** `model_specs[0]['gpu']` is 0
+**And** `model_specs[1]['gpu']` is 1
+**And** the returned dict has `dual_gpu_auto_assigned=True`
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -3722,3 +3796,5 @@ conductor log timestamps for Exps 325–336
 | REQ-RETRO-001 | N/A | Implemented | operational_retro_2026_04_29.json schema + action items + carry_over tests (SCENARIO-RETRO-001/002, Exp 319) |
 | REQ-RETRO-002 | N/A | Implemented | operational_retro_2026_04_29.json v2 + gpu_utilization_analysis tests (SCENARIO-RETRO-003/004, Exp 319) |
 | REQ-RETRO-003 | N/A | Implemented | operational_retro_2026_05_06.json + retro_001_resolved + actual_speedup_pct tests (SCENARIO-RETRO-005/006, Exp 337) |
+| REQ-INFRA-006 | N/A | Implemented | HostPrereqRegistry + ops/host-prereqs.md + check_prereqs() tests (SCENARIO-INFRA-009/010, Exp 338) |
+| REQ-INFRA-007 | N/A | Implemented | DualGPU auto-assignment in setup_gpu() + dual_gpu_auto_assigned key tests (SCENARIO-INFRA-011, Exp 338) |

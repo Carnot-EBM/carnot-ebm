@@ -4,6 +4,23 @@
 
 ## What's Working
 
+### Exp 338: Host Prerequisites Registry + DualGPU Auto-Assignment (REQ-INFRA-006/007)
+
+- **RETRO-006 closed:** `ops/host-prereqs.md` markdown table (6 entries: ninja, openblas,
+  CARNOT_FORCE_LIVE, nvidia-smi, yosys, nextpnr-xilinx).
+  `python/carnot/pipeline/host_prereq_registry.py` (`HostPrereqRegistry`, `PrereqEntry`,
+  `_parse_registry`): loads table at construction, `check_prereqs(experiment_class)` runs
+  each check command via subprocess (5 s timeout; graceful on FileNotFoundError,
+  TimeoutExpired); `env:VAR_NAME` prefix for environment-variable checks.
+- **RETRO-004 closed:** `ExperimentTemplate.setup_gpu()` now auto-assigns `model_specs[i]['gpu']=i`
+  when `len(model_specs) >= 2` and `CARNOT_FORCE_LIVE=1`. Single-GPU fallback assigns all to
+  GPU 0 and logs "RETRO-004 warning". `dual_gpu_auto_assigned: bool` added to all `setup_gpu()`
+  return dicts (additive — existing callers unaffected).
+- 75 tests in `tests/python/test_experiment_338_host_prereqs.py`; 100% targeted coverage.
+- `results/experiment_338_host_prereqs.json`: n_packages_registered=6, n_classes_checked=3,
+  dual_gpu_auto_assign_enabled=True, retro_items_implemented=["RETRO-004","RETRO-006"].
+- Spec: REQ-INFRA-006, REQ-INFRA-007, SCENARIO-INFRA-009, SCENARIO-INFRA-010, SCENARIO-INFRA-011.
+
 ### Exp 337: Operational Retrospective — Milestone 2026.05.06 (REQ-RETRO-003)
 
 - `scripts/experiment_337_retro.py` + `tests/python/test_experiment_337_retro.py` (58 tests pass).
