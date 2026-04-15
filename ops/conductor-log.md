@@ -1710,3 +1710,5 @@ python/ |
 | 2026-04-15 09:14 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | 81 passed in 3.36s |
 | 2026-04-15 09:15 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 09:16 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 09:18 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 09:18 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
