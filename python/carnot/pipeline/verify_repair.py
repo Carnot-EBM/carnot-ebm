@@ -80,6 +80,7 @@ if TYPE_CHECKING:
     from carnot.pipeline.spilled_energy_extractor import SpilledEnergyResult
     from carnot.pipeline.tracker import ConstraintTracker
     from carnot.pipeline.typed_reasoning import TypedReasoningIR
+    from carnot.pipeline.confidence_weighted_repair import ConfidenceRepairResult
 
 logger = logging.getLogger(__name__)
 
@@ -1575,6 +1576,64 @@ class VerifyRepairPipeline:
             confidence_threshold=confidence_threshold,
         )
         return gate.repair(question, response, domain)
+
+    def verify_repair_confidence_weighted(
+        self,
+        question: str,
+        response: str,
+        domain: str | None = None,
+        min_confidence: float = 0.8,
+        n_samples: int = 5,
+    ) -> "ConfidenceRepairResult":
+        """Dual-signal confidence-weighted repair gate (expression + Ising variance).
+
+        **Detailed explanation for engineers:**
+            Additive integration point for ConfidenceWeightedRepair inside the
+            VerifyRepairPipeline.  Does NOT change verify() or verify_and_repair().
+
+            Unlike verify_and_repair_confident() (which uses a single energy-delta
+            signal from ConfidenceVerifier), this method uses TWO independent signals:
+
+            1. Expression specificity (REQ-VERIFY-083): regex patterns on the
+               violation text — exact arithmetic expressions score high; approximate
+               or intermediate-step language scores low.
+
+            2. Ising variance (REQ-VERIFY-084): multiple independent Ising samples
+               per violation — low variance means the sampler consistently agrees
+               the configuration is high-energy (violation is real, not noise).
+
+            Only violations whose combined_confidence (geometric mean of both signals)
+            exceeds min_confidence are forwarded to the LLM repair loop.
+
+            This directly addresses the Exp 331 finding: VALID_INTERMEDIATE FPs
+            come from approximate/intermediate language that scores low on signal 1,
+            so they are blocked before invoking the expensive LLM repair.
+
+        Args:
+            question:       The original question.
+            response:       The response to evaluate and potentially repair.
+            domain:         Optional domain hint for the extractor.
+            min_confidence: Minimum combined_confidence to trigger repair. Default 0.8.
+            n_samples:      Number of independent Ising samples for variance. Default 5.
+
+        Returns:
+            ConfidenceRepairResult with violations_found, violations_above_threshold,
+            repair_triggered, and improvement.
+
+        Spec: REQ-VERIFY-085, SCENARIO-VERIFY-109, SCENARIO-VERIFY-110,
+              SCENARIO-VERIFY-111, SCENARIO-VERIFY-112
+        """
+        from carnot.pipeline.confidence_weighted_repair import (
+            ConfidenceRepairResult,
+            ConfidenceWeightedRepair,
+        )
+
+        cwr = ConfidenceWeightedRepair(
+            pipeline=self,
+            n_samples=n_samples,
+            min_confidence=min_confidence,
+        )
+        return cwr.repair(question, response, domain)
 
     # -------------------------------------------------------------------
     # Internal helpers

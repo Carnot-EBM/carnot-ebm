@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 332 Confidence-Weighted Repair
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T04:27:22Z | 2026-04-15T04:46:31Z | Exp 332: dual-signal confidence-weighted repair; REQ-VERIFY-083/084/085 + SCENARIO-109–112 to spec; 38 tests pass; confidence_weighted_repair.py; verify_repair_confidence_weighted(); Exp 332 benchmark FPs avoided 86.7%, TPs preserved 100%, GATE_EFFECTIVE | ~19m |
+
+---
+
 ## Session: 2026-04-15 Exp 325 Conductor Hardening
 
 ### Turn Log
