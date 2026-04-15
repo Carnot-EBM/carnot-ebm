@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 335: AMD XDNA NPU Build — 4th Prereq Retry)
+
+Fourth attempt to bring up the AMD XDNA NPU via a VitisAI-enabled onnxruntime source
+build (prior blocked attempts: Exps 292, 303, 314).  Result: `honest_verdict=blocked_prereq`
+— ninja and openblas packages are still not installed on the host system.
+
+- `scripts/experiment_335_npu_build.py` (new):
+  - `check_ninja_available()` — subprocess `ninja --version`, clean False fallback.
+  - `check_openblas_available()` — pkg-config with ldconfig fallback.
+  - `check_xrt_available()` — filesystem check of /opt/xilinx/xrt/.
+  - `check_amdxdna_module_loaded()` — parses `lsmod` output.
+  - `prereq_status()` — aggregates all four into dict with `all_met`.
+  - `prereq_changes_vs_exp314()` — delta vs Exp 314 (ninja=still_missing, openblas=still_missing).
+  - `attempt_ort_source_build(build_dir, timeout_s=600)` — git clone + cmake configure + build.
+- `tests/python/test_experiment_335_npu_build.py` (new): 61 tests; 50 pass, 11 skip.
+- `results/experiment_335_npu_build.json` (generated): blocked_prereq artifact.
+- Added SCENARIO-EXP303-E and SCENARIO-EXP303-F to `openspec/capabilities/verifiable-reasoning/spec.md`.
+- Updated `research-hardware-wishlist.md` AMD XDNA section with Exp 335 findings.
+- Spec: REQ-PRED-003, SCENARIO-EXP303-A/B/C/D/E/F.
+
+**Human action required:** `sudo pacman -S ninja openblas` (Arch) or
+`sudo apt install ninja-build libopenblas-dev` (Debian/Ubuntu) to unblock Exp 336.
+
 ## 2026-04-15 (Exp 334: VERGE-Style Iterative Z3 Refinement)
 
 Implemented VERGE-style (arXiv 2601.20055) step-level SMT-guided repair that identifies

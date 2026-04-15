@@ -1,0 +1,24 @@
+{
+  "experiment": 335,
+  "description": "AMD XDNA NPU build \u2014 blocked: source build prerequisites still missing (same as Exp 314)",
+  "run_date": "20260415",
+  "honest_verdict": "blocked_prereq",
+  "prereq_status": {
+    "ninja_available": false,
+    "openblas_available": false,
+    "xrt_available": true,
+    "amdxdna_module_loaded": true,
+    "all_met": false
+  },
+  "prereq_changes_vs_exp314": {
+    "ninja": "still_missing",
+    "openblas": "still_missing"
+  },
+  "build_attempt_result": null,
+  "npu_inference_result": null,
+  "next_steps": [
+    "Install ninja: sudo pacman -S ninja  (Arch)  OR  sudo apt install ninja-build  (Debian/Ubuntu)",
+    "Install openblas: sudo pacman -S openblas  (Arch)  OR  sudo apt install libopenblas-dev  (Debian/Ubuntu)",
+    "Then re-run: JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_335_npu_build.py"
+  ]
+}

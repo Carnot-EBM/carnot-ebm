@@ -1553,3 +1553,4 @@
 | exp316 | 2026-04-14T20:29:35Z | 2026-04-14T20:29:55Z | Minimal doc updates for Exp 316: append changelog entry (execution status) and status row (in progress) | 0m20s |
 | exp326 | 2026-04-15T02:03:56Z | 2026-04-15T02:27:12Z | Exp 326: DualGPUMonitor (RETRO-002 + RETRO-003) — dual_gpu_monitor.py, GPUProcessInfo dataclass, check_dual_gpu_health(), setup_gpu() additive gpu_monitor_results key, 32 tests pass, 0 regressions (4784+79 pre-existing pass/skip), REQ-INFRA-003/004 | 23m16s |
 | exp327 | 2026-04-15T02:29:40Z | 2026-04-15T02:54:55Z | Exp 327: Pre-experiment dependency audit (NEW-002) | TBD |
+| exp335 | 2026-04-15T06:01:06Z | 2026-04-15T06:08:22Z | Exp 335: AMD XDNA NPU build 4th retry — spec (SCENARIO-EXP303-E/F), 4 check fns, prereq_status(), prereq_changes_vs_exp314(), attempt_ort_source_build(); 50 tests pass, 11 skip; blocked_prereq (ninja+openblas still missing) | 7m16s |
