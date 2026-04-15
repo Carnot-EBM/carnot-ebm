@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 359 EORM Real-Data Retrain
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T18:23:15Z | 2026-04-15T18:44:36Z | Exp 359: verified all implementation files exist; ran 48 tests (pass, 100% eorm_retrain.py coverage); fixed _pairs_to_contrastive_triples bug (synthetic_* IDs now routed to shared pool); ran full experiment: 50 epochs, 60 triples, before_auc=0.500, after_auc=0.500, honest_verdict=synthetic_only; saved model; updated spec traceability, conductor-log, changelog, status.md | ~21m |
+
+---
+
 ## Session: 2026-04-15 Exp 355 Adversarial GSM8K Benchmark
 
 ### Turn Log
