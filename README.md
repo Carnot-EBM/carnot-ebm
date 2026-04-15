@@ -76,7 +76,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (337 experiments, 29 completed milestones)
+## Key Results (348 experiments, 30 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -154,6 +154,19 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **CoT Circuit Verifier (Exp 336 / REQ-EXTRACT-015/016):** `CoTCircuitVerifier` extracts a computational dependency graph from chain-of-thought responses and checks structural consistency (value-carryover mismatches, cycles). Catches error classes that arithmetic regex and Z3 miss.
 - **Milestone 2026.05.06 retrospective (Exp 337):** 12 experiments, 293 total min, mean 24.4 min/exp. **Actual speedup: 39.9%** vs prior milestone baseline (exceeds 27% estimate). All 4 prior action items resolved.
 
+### Milestone 2026.05.13 (Exps 338-348)
+
+- **Host prereqs registry + DualGPU auto-assignment (Exp 338 / REQ-INFRA-006/007):** `HostPrereqsRegistry` checks packages before experiment launch; `DualGPURunner` selects the idle GPU automatically. Closes RETRO-005/006.
+- **Pre-session startup health check (Exp 339 / REQ-INFRA-008):** `scripts/session_startup.sh` (--dry-run / --kill-zombies) detects GPU count and zombie processes before any experiment. Closes RETRO-007/008.
+- **Live full-precision pipeline benchmark (Exp 340 / REQ-BENCH-003):** first honest measurement of combined precision stack (5 variants × 2 models × 200 GSM8K). `PipelineVariant` enum: BASELINE, CONFIDENCE_ONLY, CONFIDENCE_ADAPTIVE, CONFIDENCE_ADAPTIVE_VERGE, FULL_STACK. `compute_signed_improvement` (honest signed delta, no clamping). CI-safe simulated mode; blocked on GPU failure.
+- **HumanEval code verification benchmark (Exp 341 / REQ-BENCH-004):** `CodeExtractor + VerifyRepairPipeline` on 50 HumanEval-style problems. `compute_pass_at_1`, `compute_pass_at_1_after_repair`, `build_humaneval_artifact` (schema `carnot.humaneval_benchmark.v1`).
+- **ConstraintTemplateLibrary — Tier 2 constraint addition (Exp 343 / REQ-LEARN-017/018):** 4 built-in Eidoku-taxonomy templates (`carry_check`, `sign_check`, `unit_consistency`, `comparison_direction`). Patterns observed above `min_frequency` threshold activate the template and inject new constraints additively into the pipeline.
+- **CaseMemory → ConstraintTemplateLibrary wiring + benchmark (Exp 344 / REQ-LEARN-019):** `CaseMemoryTemplateWiring.on_violation_recorded()` fires `observe_pattern()` on every recorded violation. Constraint-addition benchmark (200 simulated questions, seed=42): Control group shows 0% detection; Treatment group confirms **positive improvement_delta** after `carry_check` activates at 5 violations. Hypothesis confirmed.
+- **SessionMemory — multi-session persistence (Exp 345 / REQ-LEARN-020/021):** `SessionMemory(storage_dir, model_id)` serialises `CaseMemory`, `ConstraintTemplateLibrary`, and `PerModelFPTracker` to disk across process restarts. `VerifyRepairPipeline` gains optional `session_memory` param and `close()` save method.
+- **EORM CoT energy reward model (Exp 346 / REQ-LEARN-022/023):** pure-JAX transformer encoder (`EORMModel`, `EORMTrainer`) implementing arXiv 2505.14999. Contrastive hinge loss: `max(0, E_correct - E_incorrect + margin)`. AUC-ROC evaluation; saves `results/eorm_model_346.safetensors`.
+- **JEPA real-data retrain on live violation pairs (Exp 347 / REQ-LEARN-024):** `extract_violation_pairs` word-tokenises Exp 340 responses and splits at `prefix_fraction=0.5`. `JEPARetrainer` trains with binary BCE loss and evaluates trapezoidal AUC-ROC. CI-safe synthetic fallback (50 pairs) when live GPU data unavailable.
+- **SinkProbe attention-sink pre-filter (Exp 348 / REQ-VERIFY-086/087):** implements arXiv 2604.10697 as the first gate in the three-tier pipeline (SinkProbe → EORM → Ising). `compute_sink_concentration` accepts (n_heads, seq_len, seq_len) attention tensors; `SinkProbe(threshold=0.3)` sets `is_uncertain = mean_sink_score < threshold`. Simulated benchmark: **skip_rate=60%, FNR=0%, TNR=100%** — 60% fewer Ising calls with no false negatives.
+
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
 
@@ -211,7 +224,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 249 experiments across 28 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 348 experiments across 30 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
