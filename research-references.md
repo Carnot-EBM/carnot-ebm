@@ -310,6 +310,50 @@ should read this file when designing new milestones.
 - **When to pursue:** Repair pipeline improvement milestone. Compare SKM projection vs Langevin
   repair vs Πnet orthogonal projection (arXiv 2508.10480) on the same constraint satisfaction tasks.
 
+### CIKAN — Constraint-Informed Kolmogorov-Arnold Networks
+- **Paper:** arxiv.org/abs/2412.03710 (2024-12, CIKAN)
+- **What:** Extends KAN with hard physics/constraint priors embedded directly into spline activations.
+  Constraint-informed splines have their knot placement and activation shapes shaped by known constraint
+  boundaries — any output that violates constraints has infinite energy in the constrained subspace.
+  Applied to autonomous spacecraft rendezvous with safety constraints; eliminates constraint violation
+  entirely without post-hoc repair.
+- **Relevance:** Carnot's KAN energy tier (Exp 96) uses standard KANs. CIKAN adds hard constraint
+  priors directly into the spline structure: constraints become embedded in the energy landscape's
+  topology rather than being checked after the fact. This would be the "Tier 4: Adaptive Structure"
+  mechanism — the KAN's spline edges encode which constraint subspaces are valid.
+- **Concrete experiment:** CIKANEnergy subclass of KANEnergy where each spline activation is seeded
+  with known constraint boundaries (e.g., carry-check, range-check). Violation energy is infinite
+  at the constraint boundary. Compare CIKAN vs standard KAN on constraint satisfaction tasks.
+- **When to pursue:** Next milestone. Implement CIKANEnergy as new energy tier subclass.
+
+### Digitally Optimized Initializations for Fast Thermodynamic Computing
+- **Paper:** arxiv.org/abs/2603.24183 (2026-03)
+- **What:** Shows that clever digital initialization of thermodynamic (analog) computing substrates
+  dramatically accelerates convergence — analogous to warm-starting Ising annealing. Presents a
+  framework for finding good initial spin configurations via classical preprocessing, then handing off
+  to the thermodynamic substrate for final low-energy resolution. Reports 3-10x speedup on real
+  thermodynamic hardware with optimal initialization.
+- **Relevance:** Carnot's FpgaBackend (Exp 289) and future TSU integration (Exp 71 abstraction) can
+  use this pattern: run a fast classical greedy initialization, pass the partially-solved spin
+  configuration to FPGA/TSU for final annealing. This hybridizes CPU preprocessing with hardware
+  sampling. The CPU preprocessor is the digital optimizer; FPGA/TSU does final minimization.
+- **When to pursue:** FPGA hardware milestone. Add WarmStartSchedule to FpgaBackend that computes
+  initial spin assignments via greedy descent before submitting to hardware.
+
+### RLVR — Reinforcement Learning with Verifiable Rewards for Reasoning
+- **Paper:** arxiv.org/abs/2506.14245 (2025-06)
+- **What:** Shows that RLVR (RL with verifiable reward signals) on base LLMs implicitly teaches
+  correct reasoning structure, not just answer accuracy. The verifiable reward acts as an external
+  energy signal that guides the policy away from invalid reasoning chains. Base models (no SFT)
+  trained on RLVR outperform instruction-tuned models on reasoning benchmarks without reward hacking.
+- **Relevance:** Carnot's SelfLearningRelay (Exp 361) currently only updates constraint weights
+  (Tier 1) and activates templates (Tier 2). RLVR suggests a Tier 3 path: use EORM energy scores
+  as verifiable rewards to fine-tune the pipeline's constraint generation policy. The EORM model
+  IS the verifiable reward signal. This connects Carnot's energy model directly to the LLM training loop.
+- **When to pursue:** Self-learning milestone. Experiment with EORM-as-reward for online fine-tuning
+  of constraint extraction policy (LLMExtractor). The LLMExtractor generates constraint graphs;
+  EORM scores whether the constrained output is better; gradient flows back to extractor.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
 ### EORM — Energy-Based Outcome Reward Model for CoT Ranking (HIGH PRIORITY)
