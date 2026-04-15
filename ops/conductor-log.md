@@ -1679,3 +1679,4 @@ python/ |
 | 2026-04-15 02:04 UTC | Exp 326: DualGPUMonitor — RETRO-002 + RETRO-003    | OK | 32 tests pass; DualGPUMonitor + GPUProcessInfo in pipeline; setup_gpu() additive gpu_monitor_results key; RETRO-002/003 implemented |
 | 2026-04-15 02:28 UTC | Exp 326: DualGPUMonitor + ExperimentTemplate GPU e | OK | 81 passed in 3.53s |
 | 2026-04-15 02:29 UTC | Exp 327: Pre-experiment dependency audit (NEW-002)  | OK | 34 tests pass; DependencyAudit + extract_required_files + check_dependencies + build_blocked_artifact + load_experiment_prompt + CLI; artifact: results/experiment_327_dep_audit_results.json; REQ-INFRA-005 implemented |
+| 2026-04-15 02:57 UTC | Exp 327: Pre-experiment dependency audit tool (NEW | OK | Deliverable already exists in repo |
