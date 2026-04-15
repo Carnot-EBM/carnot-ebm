@@ -1685,3 +1685,4 @@ python/ |
 | 2026-04-15 04:17 UTC | Exp 330: HuggingFace live publish — run Exp 317 sc | OK | 81 passed in 3.76s |
 | 2026-04-15 04:26 UTC | Exp 331: False positive autopsy — categorize broke | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-15 04:27 UTC | Exp 331: False positive autopsy — categorize broke | OK | Deliverable already exists in repo |
+| 2026-04-15 04:59 UTC | Exp 332: Confidence-weighted constraint violations | OK | 177 passed in 3.67s |
