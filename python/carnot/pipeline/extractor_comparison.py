@@ -44,6 +44,25 @@
     - All tests run with CARNOT_FORCE_LIVE=0.
 
 Spec: REQ-EXTRACT-017, SCENARIO-EXTRACT-036, SCENARIO-EXTRACT-037
+
+---
+
+**Exp 367 additions (REQ-EXTRACT-023):**
+    `ExtractorComparisonResult`, `run_extractor_comparison`, and
+    `build_extractor_comparison_artifact` were added in Exp 367 to support the live GPU
+    extraction comparison benchmark on Gemma4-E4B-it output.  These structures share the
+    same module to keep all extractor-comparison logic in one place and avoid proliferating
+    thin pipeline modules.
+
+    Key difference from ExtractionBenchmarkResult (Exp 358):
+    - `n_correct_questions` and `n_wrong_questions` are explicit (not implicit).
+    - `fp_rate` is the field name (not `false_positive_rate`) for alignment with Exp 367 docs.
+    - `build_extractor_comparison_artifact` uses schema `"carnot.extraction_comparison.v1"`.
+    - `honest_verdict` is `"live_gpu_winner"` only when ALL results are live_gpu; stricter
+      than Exp 358's per-extractor live_gpu check.
+
+Spec: REQ-EXTRACT-017, SCENARIO-EXTRACT-036, SCENARIO-EXTRACT-037,
+      REQ-EXTRACT-023, SCENARIO-EXTRACT-047, SCENARIO-EXTRACT-048
 """
 
 from __future__ import annotations
@@ -368,4 +387,214 @@ def build_comparison_artifact(
             }
             for r in results
         ],
+    }
+
+
+# ===========================================================================
+# Exp 367: Live GPU extraction comparison (REQ-EXTRACT-023)
+# ===========================================================================
+# The classes and functions below were added in Exp 367.  They are separate
+# from the Exp 342 structures above and use a different schema version.
+# ===========================================================================
+
+
+@dataclass
+class ExtractorComparisonResult:
+    """Per-extractor metrics from a live extraction comparison run (Exp 367).
+
+    **Detailed explanation for engineers:**
+        This dataclass mirrors ExtractionBenchmarkResult (Exp 358) but:
+        1. Splits n_questions into n_correct_questions + n_wrong_questions explicitly,
+           making per-extractor tables self-explanatory without a separate key.
+        2. Uses `fp_rate` (not `false_positive_rate`) to match Exp 367 documentation.
+        3. Carries inference_mode="live_gpu" only when CARNOT_FORCE_LIVE=1 was set for
+           the outer inference loop, enabling the honest_verdict gate in the artifact.
+
+        detection_rate = n_true_positives / (n_true_positives + n_false_negatives)
+            where n_false_negatives = n_wrong_questions - n_true_positives.
+        fp_rate = n_false_positives / (n_false_positives + n_true_negatives)
+            where n_true_negatives = n_correct_questions - n_false_positives.
+        Both are 0.0 when denominator is zero.
+
+    Attributes:
+        extractor_name:      Short identifier (e.g. "arithmetic", "llm", "z3").
+        n_questions:         Total (question, response) pairs evaluated.
+        n_correct_questions: Pairs labelled as correct (ground truth).
+        n_wrong_questions:   Pairs labelled as wrong (ground truth).
+        n_true_positives:    Extractor fired on a known-wrong response.
+        n_false_positives:   Extractor fired on a known-correct response.
+        detection_rate:      TP / (TP + FN).
+        fp_rate:             FP / (FP + TN).
+        inference_mode:      "live_gpu" or "simulated".
+
+    Spec: REQ-EXTRACT-023, SCENARIO-EXTRACT-047
+    """
+
+    extractor_name: str
+    n_questions: int
+    n_correct_questions: int
+    n_wrong_questions: int
+    n_true_positives: int
+    n_false_positives: int
+    detection_rate: float
+    fp_rate: float
+    inference_mode: str
+
+
+def run_extractor_comparison(
+    extractor_name: str,
+    detector_fn: Callable[[str, str], bool],
+    questions: list[dict],
+    ground_truth_wrong: list[bool],
+    inference_mode: str,
+) -> "ExtractorComparisonResult":
+    """Run one extractor over a labelled set of (question, response) pairs (Exp 367).
+
+    **Detailed explanation for engineers:**
+        Each entry in `questions` must have "question" (str) and "response" (str).
+        `ground_truth_wrong[i] == True` means the i-th response is known-incorrect.
+
+        detector_fn(question, response) -> bool:
+        - True AND wrong   -> True Positive (TP)
+        - True AND correct -> False Positive (FP)
+        - False AND wrong  -> False Negative (implicit, in denominator)
+        - False AND correct -> True Negative (implicit)
+
+        Both rates are 0.0 when denominator is zero.  Rounded to 6 decimal places.
+
+    Args:
+        extractor_name:     Short identifier (e.g. "arithmetic").
+        detector_fn:        Callable (question, response) -> bool.
+        questions:          List of dicts with "question" and "response" keys.
+        ground_truth_wrong: Parallel bool list; True means response is known-wrong.
+        inference_mode:     "live_gpu" or "simulated".
+
+    Returns:
+        ExtractorComparisonResult with all counts and rates populated.
+
+    Raises:
+        ValueError: When questions and ground_truth_wrong have different lengths.
+
+    Spec: REQ-EXTRACT-023, SCENARIO-EXTRACT-047
+    """
+    if len(questions) != len(ground_truth_wrong):
+        raise ValueError(
+            f"questions length ({len(questions)}) must equal "
+            f"ground_truth_wrong length ({len(ground_truth_wrong)})"
+        )
+
+    n_questions = len(questions)
+    n_wrong_questions = sum(1 for g in ground_truth_wrong if g)
+    n_correct_questions = n_questions - n_wrong_questions
+
+    n_true_positives = 0
+    n_false_positives = 0
+
+    for item, is_wrong in zip(questions, ground_truth_wrong):
+        violated = detector_fn(item["question"], item["response"])
+        if violated:
+            if is_wrong:
+                n_true_positives += 1
+            else:
+                n_false_positives += 1
+
+    n_false_negatives = n_wrong_questions - n_true_positives
+    n_true_negatives = n_correct_questions - n_false_positives
+
+    detection_rate = (
+        n_true_positives / (n_true_positives + n_false_negatives)
+        if (n_true_positives + n_false_negatives) > 0
+        else 0.0
+    )
+    fp_rate_val = (
+        n_false_positives / (n_false_positives + n_true_negatives)
+        if (n_false_positives + n_true_negatives) > 0
+        else 0.0
+    )
+
+    return ExtractorComparisonResult(
+        extractor_name=extractor_name,
+        n_questions=n_questions,
+        n_correct_questions=n_correct_questions,
+        n_wrong_questions=n_wrong_questions,
+        n_true_positives=n_true_positives,
+        n_false_positives=n_false_positives,
+        detection_rate=round(detection_rate, 6),
+        fp_rate=round(fp_rate_val, 6),
+        inference_mode=inference_mode,
+    )
+
+
+def build_extractor_comparison_artifact(
+    results: list["ExtractorComparisonResult"],
+) -> dict:
+    """Combine Exp 367 per-extractor results into a schema-versioned summary dict.
+
+    **Detailed explanation for engineers:**
+        Winner selection: highest detection_rate; tiebreak: lowest fp_rate;
+        final tiebreak: lexicographic extractor_name for determinism.
+
+        honest_verdict contract (REQ-EXTRACT-023) -- stricter than Exp 358:
+        - "live_gpu_winner": ALL results have inference_mode=="live_gpu".
+        - "simulated_no_verdict": ANY result has inference_mode!="live_gpu".
+          Simulated runs CANNOT claim a headline result.
+        - "insufficient_data": empty results list.
+
+        Schema "carnot.extraction_comparison.v1" distinguishes this from
+        Exp 342's "carnot.extractor_comparison.v1".
+
+    Args:
+        results: List of ExtractorComparisonResult (one per extractor).
+
+    Returns:
+        dict with keys: schema, per_extractor_results, winner_extractor,
+        honest_verdict, n_extractors.
+
+    Spec: REQ-EXTRACT-023, SCENARIO-EXTRACT-048
+    """
+    if not results:
+        return {
+            "schema": "carnot.extraction_comparison.v1",
+            "per_extractor_results": [],
+            "winner_extractor": None,
+            "honest_verdict": "insufficient_data",
+            "n_extractors": 0,
+        }
+
+    per_extractor = [
+        {
+            "extractor_name": r.extractor_name,
+            "n_questions": r.n_questions,
+            "n_correct_questions": r.n_correct_questions,
+            "n_wrong_questions": r.n_wrong_questions,
+            "n_true_positives": r.n_true_positives,
+            "n_false_positives": r.n_false_positives,
+            "detection_rate": r.detection_rate,
+            "fp_rate": r.fp_rate,
+            "inference_mode": r.inference_mode,
+        }
+        for r in results
+    ]
+
+    # Winner: highest detection_rate; tiebreak: lowest fp_rate; final tiebreak:
+    # lexicographically smallest name for determinism ("arithmetic" before "z3").
+    # Using sorted()[0] with negated detection_rate to get highest-first ascending
+    # sort while keeping fp_rate and name in natural ascending order.
+    winner_result = sorted(
+        results,
+        key=lambda r: (-r.detection_rate, r.fp_rate, r.extractor_name),
+    )[0]
+
+    # honest_verdict: ALL must be live_gpu for a win claim
+    if any(r.inference_mode != "live_gpu" for r in results):
+        honest_verdict = "simulated_no_verdict"
+    else:
+        honest_verdict = "live_gpu_winner"
+
+    return {
+        "schema": "carnot.extraction_comparison.v1",
+        "per_extractor_results": per_extractor,
+        "winner_extractor": winner_result.extractor_name,
+        "honest_verdict": honest_verdict,
+        "n_extractors": len(results),
     }

@@ -1847,3 +1847,4 @@ python/ |
 | 2026-04-15 22:08 UTC | RETRO-014 | CLOSED | RetroJSONEnforcer pattern enforced; missing JSONs 357/358/362 flagged for human follow-up |
 | 2026-04-15 22:10 UTC | Exp 365: Close RETRO-012/013/014 — conductor GPU e | OK | 154 passed in 3.36s |
 | 2026-04-15 22:11 UTC | Exp 366: LLMExtractor — use a small LLM call to ex | OK | Deliverable already exists in repo |
+| 2026-04-15 22:39 UTC | Exp 367: Live extraction comparison — ArithmeticExtractor vs LLMConstraintExtractor vs LLMz3Formalizer on Gemma4-E4B-it GSM8K output | OK | 42 tests pass; ExtractorComparisonResult + run_extractor_comparison + build_extractor_comparison_artifact added to python/carnot/pipeline/extractor_comparison.py; experiment script + tests written; honest_verdict=live_gpu_winner only when CARNOT_FORCE_LIVE=1 + all extractors live_gpu; blocked artifact when CARNOT_FORCE_LIVE not set |

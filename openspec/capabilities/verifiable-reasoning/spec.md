@@ -3777,6 +3777,44 @@ Spec: REQ-EXTRACT-021, SCENARIO-EXTRACT-042, SCENARIO-EXTRACT-043
 **When** `build_extraction_comparison_artifact(results)` is called
 **Then** `honest_verdict == "live_gpu_llm_extractor_wins"`
 
+### REQ-EXTRACT-023: Live Extraction Comparison Benchmark
+
+The system shall support a live GPU extraction comparison benchmark that:
+- Runs all three extractors (ArithmeticExtractor, LLMConstraintExtractor, LLMz3Formalizer)
+  on live Gemma4-E4B-it responses to GSM8K questions
+- Uses `inference_mode="live_gpu"` exclusively when `CARNOT_FORCE_LIVE=1`; produces a
+  blocked artifact and stops if live GPU is unavailable
+- Captures per-extractor metrics in `ExtractorComparisonResult` (extractor_name,
+  n_questions, n_correct_questions, n_wrong_questions, n_true_positives, n_false_positives,
+  detection_rate, fp_rate, inference_mode)
+- Determines an `honest_verdict`:
+  - `"live_gpu_winner"` only when ALL results have `inference_mode="live_gpu"`
+  - `"simulated_no_verdict"` when ANY result has `inference_mode != "live_gpu"`
+- Uses `build_extractor_comparison_artifact(results)` to produce a dict with
+  schema `"carnot.extraction_comparison.v1"`, winner selected by highest detection_rate
+  with fp_rate as tiebreak
+
+Spec: REQ-EXTRACT-023, SCENARIO-EXTRACT-047, SCENARIO-EXTRACT-048
+
+### SCENARIO-EXTRACT-047: ExtractorComparisonResult Captures Live Per-Extractor Metrics
+
+**Given** an extraction run in `inference_mode="live_gpu"` on 30 GSM8K questions
+**When** `run_extractor_comparison()` produces an `ExtractorComparisonResult` per extractor
+**Then** each result has `n_questions`, `n_correct_questions`, `n_wrong_questions`,
+  `n_true_positives`, `n_false_positives`, `detection_rate`, `fp_rate`, `inference_mode`
+**And** `n_correct_questions + n_wrong_questions == n_questions`
+**And** `inference_mode == "live_gpu"`
+
+### SCENARIO-EXTRACT-048: build_extractor_comparison_artifact Enforces Live Honest Verdict
+
+**Given** a list of `ExtractorComparisonResult` objects
+**When** all results have `inference_mode="live_gpu"`
+**Then** `build_extractor_comparison_artifact(results)["honest_verdict"]` may be
+  `"live_gpu_winner"` if a clear winner exists, or `"live_gpu_no_winner"` if tied
+**When** any result has `inference_mode != "live_gpu"`
+**Then** `honest_verdict == "simulated_no_verdict"` (simulated mode cannot claim a win)
+**And** `schema == "carnot.extraction_comparison.v1"`
+
 ### REQ-REPAIR-010: Z3-Gated Repair Pipeline
 
 The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
