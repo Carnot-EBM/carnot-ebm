@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 325 Conductor Hardening
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T01:28:11Z | 2026-04-15T01:53:08Z | Exp 325: conductor timeout wrapper (RETRO-001) + test-first stub (NEW-001); spec REQ-INFRA-001/002 + SCENARIO-INFRA-001/002/003; 23 tests pass; run_experiment_with_timeout.sh; generate_test_stub(); artifact all_checks_passed | ~25m |
+
+---
+
 ## Session: 2026-04-15 Milestone 2026.05.06 Planning
 
 ### Turn Log
