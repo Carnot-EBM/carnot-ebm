@@ -2349,6 +2349,107 @@ The `VerifyRepairPipeline` shall expose a confidence-aware repair method where:
 
 Spec: REQ-VERIFY-082
 
+### REQ-VERIFY-083: Expression Specificity Confidence Signal
+
+The system shall provide `compute_expression_confidence(violation_text: str) → float`
+in `python/carnot/pipeline/confidence_weighted_repair.py`, where:
+
+- The function returns a float in [0, 1] representing how specifically the violation
+  text indicates a real arithmetic error (as opposed to an approximate or intermediate result)
+- Exact arithmetic expressions (e.g. `"47+28=76"`) → score ≥ 0.90
+- Integer mismatch with specific values present → score ≥ 0.75
+- Approximate/qualitative language (e.g. `"approximately 150"`) → score ≤ 0.40
+- No numeric content → score ≤ 0.15
+- The score is determined by regex patterns detecting: explicit arithmetic operators with
+  two operands and a stated result; approximate language markers (approximately, about,
+  roughly, ~); intermediate-step language (step, then, so, later); and numeric specificity
+- The function never raises on any string input — unknown patterns return a conservative low score
+
+Theoretical basis: Exp 331 identified VALID_INTERMEDIATE as the primary FP category.
+Approximate and intermediate-step violations have lower expression specificity and should
+be deprioritised before invoking expensive LLM repair.
+
+Spec: REQ-VERIFY-083
+
+### REQ-VERIFY-084: Partition Function Variance Confidence Signal
+
+The system shall provide `compute_energy_variance_confidence(energies: list[float]) → float`
+in `python/carnot/pipeline/confidence_weighted_repair.py`, where:
+
+- The function accepts a list of scalar energies from multiple Ising sampler runs
+- Low variance (samples agree) → high confidence (violation is stable / not noise)
+- High variance (samples disagree) → low confidence (may be sampling noise)
+- Implemented via coefficient of variation: `cv = std(energies) / (mean(energies) + 1e-8)`
+  and `confidence = 1 / (1 + cv)`
+- Empty list or single-element list → returns 0.5 (uninformative prior)
+- All-zero energies → returns 0.5 (division by near-zero handled via the 1e-8 guard)
+
+Theoretical basis: arXiv 2504.13134 proposes partition function variance as a confidence
+signal — high variance across Gibbs samples means uncertain constraint (high temperature or
+degenerate energy landscape). Low variance means the Ising model consistently agrees the
+configuration is wrong.
+
+Spec: REQ-VERIFY-084
+
+### REQ-VERIFY-085: Confidence-Weighted Repair With Dual Signals
+
+The system shall provide `ConfidenceWeightedRepair` in
+`python/carnot/pipeline/confidence_weighted_repair.py`, where:
+
+- `ViolationConfidence` dataclass with fields:
+  - `expression_confidence` (float): score from REQ-VERIFY-083
+  - `energy_variance_confidence` (float): score from REQ-VERIFY-084
+  - `combined_confidence` (float): geometric mean of the two signals
+  - `is_high_confidence` (bool): True when `combined_confidence >= min_confidence`
+  - `min_confidence` (float): threshold used for the is_high_confidence predicate
+- `ConfidenceRepairResult` dataclass with fields:
+  - `violations_found` (int): total violations extracted
+  - `violations_above_threshold` (int): violations with combined_confidence >= threshold
+  - `repair_triggered` (bool): True when at least one violation exceeded the threshold
+  - `improvement` (int): 1 if repair succeeded and improved the response, 0 otherwise
+- `ConfidenceWeightedRepair(pipeline, n_samples=5, min_confidence=0.8)`:
+  - `repair(question, response, domain) → ConfidenceRepairResult`:
+    1. Run extractor to get all violations
+    2. For each violation: compute expression_confidence from violation text
+    3. Run Ising n_samples times to get energy distribution → energy_variance_confidence
+    4. Compute combined_confidence = geometric mean of both signals
+    5. Only trigger repair if combined_confidence >= min_confidence for at least one violation
+    6. Returns ConfidenceRepairResult with full accounting
+- `VerifyRepairPipeline.verify_repair_confidence_weighted(question, response, domain,
+  min_confidence=0.8, n_samples=5) → ConfidenceRepairResult`: additive integration method;
+  delegates to ConfidenceWeightedRepair; does NOT modify verify_and_repair() behaviour
+
+Spec: REQ-VERIFY-085
+
+### SCENARIO-VERIFY-109: Exact Arithmetic Expression Gets High Expression Confidence
+
+**Given** violation_text = `"47+28=76"` (explicit arithmetic with wrong result)
+**When** `compute_expression_confidence("47+28=76")` is called
+**Then** the returned score is >= 0.90
+**And** the score reflects high specificity — an exact arithmetic expression with two
+  operands, an operator, and a stated result
+
+### SCENARIO-VERIFY-110: Approximate Language Gets Low Expression Confidence
+
+**Given** violation_text = `"the intermediate result is approximately 150"`
+**When** `compute_expression_confidence("the intermediate result is approximately 150")` is called
+**Then** the returned score is <= 0.40
+**And** the score reflects low specificity — approximate/qualitative language deprioritises repair
+
+### SCENARIO-VERIFY-111: Low Variance Energies Give High Variance Confidence
+
+**Given** energies = [2.0, 2.1, 1.9, 2.05, 1.95] (low coefficient of variation)
+**When** `compute_energy_variance_confidence([2.0, 2.1, 1.9, 2.05, 1.95])` is called
+**Then** the returned confidence is > 0.8
+**And** the score reflects that samples consistently agree the violation is real
+
+### SCENARIO-VERIFY-112: High Variance Energies Give Low Variance Confidence
+
+**Given** energies = [0.1, 5.0, 0.2, 8.0, 0.05] (high coefficient of variation)
+**When** `compute_energy_variance_confidence([0.1, 5.0, 0.2, 8.0, 0.05])` is called
+**Then** the returned confidence is < 0.5
+**And** the score reflects that samples disagree — violation may be sampling noise
+
 ### SCENARIO-VERIFY-105: HIGH-Confidence Arithmetic Violation Triggers Repair
 
 **Given** a response containing `"47 + 28 = 76"` (off by 1 — unambiguous error)
@@ -3219,6 +3320,9 @@ result files from prior experiments that were never completed.
 | REQ-PRED-004 | Not Started | Implemented | Additive pipeline integration tests |
 | REQ-VERIFY-081 | Not Started | Implemented | Confidence-weighted violation scoring + ConfidenceVerifier tests (SCENARIO-105/106/107/108) |
 | REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |
+| REQ-VERIFY-083 | Not Started | Implemented | Expression specificity confidence signal (SCENARIO-109/110, Exp 332) |
+| REQ-VERIFY-084 | Not Started | Implemented | Partition function variance confidence signal (SCENARIO-111/112, Exp 332) |
+| REQ-VERIFY-085 | Not Started | Implemented | Dual-signal confidence-weighted repair + ConfidenceRepairResult (SCENARIO-109–112, Exp 332) |
 | REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
 | REQ-LEARN-013 | Not Started | In Progress | Four-tier relay benchmark — RelayBatchResult + RelayArtifact (SCENARIO-LEARN-021/022, Exp 318) |
 | REQ-LEARN-014 | Not Started | In Progress | Four-tier relay live GPU validation — wrapper artifact with simulation_comparison + jepa_skip_rate_live (SCENARIO-LEARN-023/024, Exp 329) |

@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 332: Confidence-Weighted Repair — Dual-Signal FP Reduction)
+
+Implemented dual-signal confidence gate for verify-repair to address the primary false-positive
+category (VALID_INTERMEDIATE) identified by Exp 331. Fixes the Exp 184 failure mode where binary
+verify-repair broke correct responses by repairing intermediate arithmetic steps.
+
+- `python/carnot/pipeline/confidence_weighted_repair.py` (new):
+  - `compute_expression_confidence(violation_text)` → float [0,1]: regex heuristic scoring
+    how specifically a violation text identifies a real arithmetic error. Exact expressions
+    ("47+28=76") → ≥0.90; approximate/intermediate language → ≤0.40. Never raises.
+  - `compute_energy_variance_confidence(energies)` → float [0,1]: coefficient-of-variation
+    approach (arXiv 2504.13134). Low variance = samples agree = high confidence. Empty/single
+    list → 0.5 (uninformative prior).
+  - `ViolationConfidence` dataclass: expression_confidence + energy_variance_confidence +
+    combined_confidence (geometric mean) + is_high_confidence (combined >= min_confidence).
+  - `ConfidenceRepairResult` dataclass: violations_found, violations_above_threshold,
+    repair_triggered, improvement.
+  - `ConfidenceWeightedRepair(pipeline, n_samples=5, min_confidence=0.8)`: dual-signal gate;
+    only calls verify_and_repair_confident when combined_confidence >= threshold.
+- `python/carnot/pipeline/verify_repair.py`: additive `verify_repair_confidence_weighted()`.
+- `python/carnot/pipeline/__init__.py`: exported 5 new symbols.
+- `tests/python/test_confidence_weighted_repair.py` (new): 38 tests, all pass.
+- `scripts/experiment_332_confidence_repair.py` (new): 30-question benchmark.
+- **Exp 332 result:** FPs avoided: 13/15 (86.7%), TPs preserved: 15/15 (100.0%), GATE_EFFECTIVE.
+- Spec: REQ-VERIFY-083, REQ-VERIFY-084, REQ-VERIFY-085, SCENARIO-VERIFY-109–112 (added to spec.md).
+- User instruction: implement confidence-weighted constraint violations (Exp 332).
+
 ## 2026-04-15 (Exp 330: Live HuggingFace Publish with Exp 328 Live-GPU Benchmarks)
 
 Published all 16 per-token activation EBM model READMEs to HuggingFace live,
