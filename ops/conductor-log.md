@@ -1802,3 +1802,6 @@ python/ |
 | 2026-04-15 17:46 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
 | 2026-04-15 17:46 UTC | Exp 357: LLM-guided Z3 formalization — arXiv 2601. | OK | Deliverable already exists in repo |
 | 2026-04-15 17:57 UTC | Exp 358: Comparative extraction benchmark — ArithmeticExtractor vs LLMConstraintExtractor vs LLMz3Formalizer on 50 Gemma4-E4B-it responses | OK | scripts/experiment_358_extraction_benchmark.py + python/carnot/pipeline/extraction_benchmark.py + 33 tests all pass |
+| 2026-04-15 18:11 UTC | Exp 358: Extraction benchmark — ArithmeticExtracto | OK | 81 passed in 7.26s |
+| 2026-04-15 18:12 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 18:12 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
