@@ -1663,3 +1663,4 @@ python/ |
 - **Status:** Carried forward (not yet implemented)
 | 2026-04-15 02:02 UTC | Exp 325: Conductor timeout wrapper + ExperimentTem | OK | 81 passed in 3.28s |
 | 2026-04-15 02:04 UTC | Exp 326: DualGPUMonitor — RETRO-002 + RETRO-003    | OK | 32 tests pass; DualGPUMonitor + GPUProcessInfo in pipeline; setup_gpu() additive gpu_monitor_results key; RETRO-002/003 implemented |
+| 2026-04-15 02:28 UTC | Exp 326: DualGPUMonitor + ExperimentTemplate GPU e | OK | 81 passed in 3.53s |
