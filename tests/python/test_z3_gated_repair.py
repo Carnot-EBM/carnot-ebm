@@ -426,8 +426,12 @@ class TestVerifyRepairPipelineZ3Gated:
         assert result.z3_status == "sat"
         assert result.ising_triggered is False
 
-    def test_verify_repair_z3_gated_unknown_ci(self) -> None:
+    def test_verify_repair_z3_gated_unknown_ci(self, monkeypatch: pytest.MonkeyPatch) -> None:
         """Pipeline verify_repair_z3_gated falls back to Ising in CI mode (unknown)."""
+        # Explicitly unset CARNOT_FORCE_LIVE to ensure CI mode (guards against parallel test
+        # interference where other tests may have set it)
+        monkeypatch.delenv("CARNOT_FORCE_LIVE", raising=False)
+
         pipeline = self._make_pipeline()
         # CI mode: no injected extractor, no CARNOT_FORCE_LIVE → unknown
         result = pipeline.verify_repair_z3_gated(

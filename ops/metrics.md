@@ -1,5 +1,16 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 319 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T00:32:57Z | 2026-04-15T00:43:21Z | Exp 319: Operational retrospective for milestone 2026.04.29 — 59 tests, script, artifact; 4800 pass, 99.43% coverage | ~10m24s |
+
+---
+
+
 ## Session: 2026-04-14 D-Wave Sampler Backend
 
 ### Turn Log

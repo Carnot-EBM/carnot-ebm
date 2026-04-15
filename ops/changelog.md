@@ -1,5 +1,31 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 319: Operational Retrospective for Milestone 2026.04.29)
+
+Retrospective for the 2026.04.29 milestone (Exp 307–324, 17 experiments).
+
+Key findings:
+- Total milestone wall time: 691 minutes; avg 40.6 min/experiment.
+- Top bottleneck: Exp 308 (JEPA fast-path gate, 138 min, 20% of milestone) due to
+  post-test failure repair loop. A 45-min hard timeout (RETRO-001) would have saved
+  ~93 min on this experiment alone.
+- Post-test failure rate: 4/17 experiments (23.5%) required a retry — Exp 308, 309,
+  310, 311 all had test failures on first attempt, adding ~60 min of repair overhead.
+- RETRO-001 (45-min conductor timeout) and RETRO-002 (GPU monitor in conductor):
+  both carried forward — neither was implemented this milestone.
+- New action items: NEW-001 (enforce test-first via ExperimentTemplate stub, ~10%
+  estimated impact) and NEW-002 (pre-experiment dependency audit, ~5% impact).
+- Estimated next-milestone speedup: 15.1% from implementing RETRO-001/002 + NEW-001/002.
+
+Deliverables:
+- `scripts/experiment_319_retro.py` (new): retrospective script.
+- `tests/python/test_experiment_319_retro.py` (new): 59 tests — load_retro_artifact()
+  schema validation, n_experiments, bottlenecks_identified, action_items, carry_over,
+  estimated_next_milestone_speedup_pct. All pass.
+- `results/operational_retro_2026_04_29.json` (new): artifact.
+- `ops/conductor-log.md`: retro entry appended.
+- User instruction: write operational retrospective for milestone 2026.04.29.
+
 ## 2026-04-14 (Exp 318: Four-Tier Continuous Self-Learning Relay)
 
 First integrated four-tier relay benchmark running Tier 1 (ConfidenceVerifier),
