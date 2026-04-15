@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Milestone 2026.05.13 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T07:02:07Z | 2026-04-15T07:13:47Z | Plan next milestone 2026.05.13 — arxiv scan (28 papers found, 6 new added to references); 3 gaps identified: new precision components not live-benchmarked, self-learning adds no new constraints, EORM/SinkProbe not yet integrated; 13 experiments (Exps 338-350) across 5 phases; research-roadmap-vNEXT.md (v31) + research-roadmap-next.yaml created | ~11m |
+
+---
+
 ## Session: 2026-04-15 Exp 336 CoT Circuit Verifier
 
 ### Turn Log

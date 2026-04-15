@@ -1,0 +1,890 @@
+# Carnot Research Roadmap - Milestone 2026.05.13
+# "Live E2E Precision Pipeline, Constraint Addition from Memory, and EORM Predictive Verification"
+#
+# CONTEXT: Milestone 2026.05.06 completed with:
+#   - Conductor timeout wrapper + test-first stub (Exp 325)
+#   - DualGPUMonitor + dual GPU enforcement (Exp 326)
+#   - Pre-experiment dependency audit (Exp 327)
+#   - Live GPU full-scale benchmark — first real numbers (Exp 328)
+#   - Four-tier self-learning relay on live GPU (Exp 329)
+#   - HuggingFace live publish (Exp 330)
+#   - FP autopsy: VALID_INTERMEDIATE as dominant FP category (Exp 331)
+#   - Confidence-weighted repair: 86.7% FP avoided (Exp 332)
+#   - Model-adaptive thresholds + selective CaseMemory (Exp 333)
+#   - VERGE-style iterative Z3 refinement (Exp 334)
+#   - AMD XDNA NPU still BLOCKED: ninja+openblas missing (Exp 335)
+#   - CoTCircuitVerifier: CRV structural verification (Exp 336)
+#   - Operational retro: 6 carry-forwards (RETRO-003–008) (Exp 337)
+#
+# This milestone's primary theme:
+#   Phase 1: Infrastructure carry-forwards — host prereqs registry, DualGPURunner default,
+#            session startup automation (RETRO-004 + RETRO-006 + RETRO-007/008)
+#   Phase 2: Live E2E precision benchmark — full new precision stack on live RTX 3090
+#            (first credible measurement of combined VERGE+CRV+confidence+adaptive stack)
+#   Phase 3: Constraint addition from memory — ConstraintTemplateLibrary (research-program.md #1)
+#   Phase 4: EORM + SinkProbe predictive verification — real-data trained Tier 3
+#   Phase 5: KV260 FPGA synthesis + operational retrospective
+#
+# New arxiv papers informing v31:
+#   2505.14999 (EORM — 55M-param energy reward model for CoT ranking)
+#   2604.10697 (SinkProbe — attention sinks as hallucination pre-filter)
+#   2512.20664 (Eidoku — neuro-symbolic CSP verification gate)
+#   2601.04675 (LLM-guided SMT — 80% Z3 improvement via LLM guidance)
+#   2507.07731 (Energy-guided decoding for VLM hallucination mitigation)
+#   2503.01177 (Scalable Ising machine connectivity — dense to sparse)
+#   2603.03538 (Online CoT verifier learnability bounds)
+#
+# Design doc: openspec/change-proposals/research-roadmap-vNEXT.md
+# Previous milestone: research-roadmap.yaml (2026.05.06)
+
+milestone: "2026.05.13"
+milestone_title: "Live E2E Precision Pipeline, Constraint Addition from Memory, and EORM Predictive Verification"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp338-host-prereqs-dual-gpu-default
+    milestone: "2026.05.13"
+    deliverable: ops/host-prereqs.md
+    title: "Exp 338: Host prereqs registry + DualGPURunner as default for two-model benchmarks (RETRO-004 + RETRO-006)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: RETRO-006 (host prereqs registry) and RETRO-004 (DualGPURunner default for
+      two-model benchmarks) were identified in the milestone 2026.05.06 retrospective.
+      RETRO-006 root cause: AMD XDNA NPU experiments (Exps 292, 303, 314, 335) each
+      independently discovered the same two missing packages (ninja, openblas), wasting
+      ~4 experiment slots. A host-prereqs registry would short-circuit these retries.
+      RETRO-004 root cause: DualGPURunner was implemented in Exp 326 but is NOT the
+      default for experiments running two LLM models — they still run sequentially on GPU 0.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/dual_gpu_monitor.py — DualGPUMonitor (Exp 326 implementation)
+      - scripts/experiment_template.py — ExperimentTemplate.setup_gpu() (to update)
+      - results/operational_retro_2026_05_06.json — RETRO-004, RETRO-006 details
+      - research-hardware-wishlist.md — AMD XDNA NPU blocked packages listed
+
+      TASK: Create host prereqs registry and wire DualGPURunner as default.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-INFRA-006 (host prereqs registry), REQ-INFRA-007 (dual GPU default),
+         SCENARIO-INFRA-009/010/011 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - HostPrereqRegistry: loads ops/host-prereqs.md, parses YAML front-matter or
+           markdown table of (package_name, install_command, required_for_class) entries
+         - HostPrereqRegistry.check_prereqs(experiment_class) → list[str] missing packages
+         - HostPrereqRegistry.check_prereqs(): subprocess check for each package (graceful)
+         - DualGPURunner default: ExperimentTemplate.setup_gpu(model_specs) detects when
+           len(model_specs) >= 2 and automatically assigns models to separate GPU indices
+         - Auto-assignment: model_specs[0] → gpu_index=0, model_specs[1] → gpu_index=1
+         - Auto-assignment: if only 1 GPU available, log warning and assign both to gpu_index=0
+         - CARNOT_FORCE_LIVE guard: auto-assignment only active when CARNOT_FORCE_LIVE=1
+      4. Create ops/host-prereqs.md — system package registry:
+         Format as a markdown table:
+         | Package | Check Command | Install (Arch) | Install (Debian) | Required For |
+         Add entries for:
+           - ninja (ninja --version) — AMD XDNA NPU source build
+           - openblas (pkg-config --libs openblas) — AMD XDNA NPU source build
+           - CARNOT_FORCE_LIVE=1 (env var, not package) — all live GPU experiments
+           - nvidia-smi (nvidia-smi --version) — all GPU experiments
+           - yosys (yosys --version) — FPGA synthesis experiments
+           - nextpnr-xilinx (nextpnr-xilinx --version) — KV260 bitfile generation
+         Add human-action note: these are host-level prerequisites that must be installed
+         BEFORE the relevant experiment class will succeed. Check this file when an
+         experiment is blocked by a missing dependency.
+      5. Update ExperimentTemplate.setup_gpu() in scripts/experiment_template.py (additive):
+         a. When len(model_specs) >= 2 and CARNOT_FORCE_LIVE=1:
+            - Assign model_specs[i]['gpu'] = i (up to n_gpus_detected)
+            - If n_gpus_detected == 1: assign all to gpu 0, log "RETRO-004 warning: DualGPU
+              auto-assignment requested but only 1 GPU detected; running sequentially"
+         b. Add dual_gpu_auto_assigned: bool to returned setup_gpu() dict
+         c. Preserve all existing return keys (no regressions)
+      6. Write scripts/experiment_338_host_prereqs.py using ExperimentTemplate(338, ...):
+         a. Instantiate HostPrereqRegistry, check prereqs for ["npu", "fpga", "live_gpu"]
+         b. Check DualGPURunner auto-assignment (with mock model_specs for 2 models)
+         c. Build artifact: schema="carnot.host_prereqs.v1", n_packages_registered,
+            n_classes_checked, dual_gpu_auto_assign_enabled, retro_items_implemented
+         d. Output: results/experiment_338_host_prereqs.json
+      7. Write tests/python/test_experiment_338_host_prereqs.py (100% coverage required).
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      9. Reconcile: update ops/conductor-log.md (RETRO-004, RETRO-006 implemented),
+         ops/changelog.md, ops/status.md.
+      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp339-session-startup-automation
+    milestone: "2026.05.13"
+    deliverable: scripts/session_startup.sh
+    title: "Exp 339: Pre-session GPU health + zombie cleanup automation (RETRO-007 + RETRO-008)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: RETRO-007 and RETRO-008 from the 2026.05.06 retro call for automating
+      pre-session health checks. The retro found zombie GPU processes consuming VRAM at
+      session start and no standardized pre-flight check before conductor launches.
+      The DualGPUMonitor (Exp 326) detects zombies but isn't called before experiments.
+      A session_startup.sh would: (1) detect and optionally kill zombie GPU processes,
+      (2) verify both RTX 3090s are visible and healthy, (3) print a summary report.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/dual_gpu_monitor.py — DualGPUMonitor, detect_zombies()
+      - scripts/run_experiment_with_timeout.sh — timeout wrapper pattern (Exp 325)
+      - results/operational_retro_2026_05_06.json — RETRO-007, RETRO-008 details
+      - results/experiment_326_dual_gpu_config.json — DualGPUMonitor output schema
+
+      TASK: Implement pre-session startup automation.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-INFRA-008 (session startup health check), SCENARIO-INFRA-012/013 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - parse_session_startup_output(output: str) → dict: parses stdout of session_startup.sh
+           Expected keys: n_gpus_detected, n_zombies_found, n_zombies_killed, all_healthy
+         - run_session_startup(dry_run=True) → dict: calls session_startup.sh, parses output
+         - run_session_startup(dry_run=True): never kills processes when dry_run=True
+         - all_healthy: True when n_gpus_detected >= 2 AND n_zombies_found == 0
+         - CI-safe: when nvidia-smi not available, reports n_gpus_detected=0, all_healthy=False
+           without raising exceptions
+      4. Write scripts/session_startup.sh:
+         a. Shebang: #!/usr/bin/env bash
+         b. Args: [--dry-run] [--kill-zombies]
+         c. Check nvidia-smi availability; if absent print "nvidia-smi not found" and exit 0
+         d. List GPUs: nvidia-smi -L; count detected GPUs
+         e. Detect zombie processes: run DualGPUMonitor via python (CI-safe import)
+            `python -c "from carnot.pipeline.dual_gpu_monitor import DualGPUMonitor; ..."`
+            Fallback: parse nvidia-smi --query-compute-apps=pid,used_memory --format=csv
+         f. If --kill-zombies and zombies found: kill -9 each zombie PID (with sudo warning)
+            If --dry-run: print zombie PIDs but do NOT kill
+         g. Print summary: "SESSION STARTUP: n_gpus=X zombies=Y killed=Z all_healthy=T/F"
+         h. Exit 0 always (health check, not a blocking requirement)
+         i. chmod +x scripts/session_startup.sh
+      5. Write scripts/experiment_339_session_startup.py using ExperimentTemplate(339, ...):
+         a. Call run_session_startup(dry_run=True); record results in artifact
+         b. Build artifact: schema="carnot.session_startup.v1", n_gpus_detected, n_zombies_found,
+            all_healthy, retro_items_implemented=["RETRO-007", "RETRO-008"]
+         c. Output: results/experiment_339_session_startup.json
+      6. Write tests/python/test_experiment_339_session_startup.py (100% coverage required).
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      8. Reconcile: update ops/conductor-log.md (RETRO-007, RETRO-008 implemented),
+         ops/changelog.md, ops/status.md.
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp340-live-full-precision-benchmark
+    milestone: "2026.05.13"
+    deliverable: results/experiment_340_live_precision_benchmark.json
+    title: "Exp 340: Live full precision pipeline benchmark — VERGE + CRV + confidence + adaptive on RTX 3090"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Experiments 332-336 (confidence-weighted repair, model-adaptive thresholds,
+      VERGE iterative Z3 refinement, CoTCircuitVerifier) were all implemented and benchmarked
+      SYNTHETICALLY. Exp 328 ran the live GPU benchmark but used the OLD pipeline (pre-332).
+      We have never measured the combined precision stack on real LLM output. This is the
+      experiment that tells us whether the 2026.05.06 precision work actually helped.
+
+      The hypothesis: confidence-weighted repair (86.7% synthetic FP reduction) + model-adaptive
+      thresholds (auto-disabling high-FP constraint types) + VERGE (targeted step repair) +
+      CRV (structural graph check) in combination will move verify-repair from "harmful" to
+      "helpful" on live Gemma4-E4B-it output. If the hypothesis is correct, this is Carnot's
+      first credible positive result on instruction-tuned models.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline, verify_repair_confidence_weighted(),
+        verify_repair_verge(), verify_cot_circuit()
+      - python/carnot/pipeline/confidence_weighted_repair.py — ConfidenceWeightedRepair (Exp 332)
+      - python/carnot/pipeline/adaptive_thresholds.py — ModelAdaptiveThresholds (Exp 333)
+      - python/carnot/pipeline/verge_refiner.py — VergeRefiner (Exp 334)
+      - python/carnot/pipeline/cot_circuit_verifier.py — CoTCircuitVerifier (Exp 336)
+      - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner, BatchedInferenceRunner
+      - results/experiment_328_live_benchmark.json — Exp 328 live GPU baseline results
+      - results/experiment_331_fp_autopsy.json — FP taxonomy (VALID_INTERMEDIATE dominates)
+      - scripts/experiment_315_full_scale_benchmark.py — script from Exp 315 (if present)
+
+      TASK: Run live full precision pipeline benchmark with both models on two RTX 3090s.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-BENCH-003 (precision stack live benchmark), SCENARIO-BENCH-007/008/009 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - PrecisionStackResult dataclass: model_id, n_questions, baseline_accuracy,
+           precision_stack_accuracy, signed_improvement, pipeline_variant, inference_mode
+         - compute_signed_improvement(baseline_acc, stack_acc) → float (no clamping; honest)
+         - PipelineVariant enum: BASELINE, CONFIDENCE_ONLY, CONFIDENCE_ADAPTIVE,
+           CONFIDENCE_ADAPTIVE_VERGE, FULL_STACK (all five ablation conditions)
+         - build_precision_benchmark_artifact(results: list[PrecisionStackResult]) → dict:
+           schema="carnot.precision_benchmark.v1", headline_result, inference_mode
+         - headline_result: signed_improvement of FULL_STACK on Gemma4-E4B-it
+         - CI-safe: when CARNOT_FORCE_LIVE=0, all pipeline variants produce
+           inference_mode="simulated" with honesty flag honest_verdict="simulated_only"
+      4. Write scripts/experiment_340_live_precision_benchmark.py using
+         ExperimentTemplate(340, "Live full precision pipeline benchmark", requires_gpu=True):
+         a. MODEL_SPECS = [
+              {"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0},
+              {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}
+            ]
+         b. Call tmpl.setup_gpu(MODEL_SPECS); if not all_healthy → blocked artifact
+         c. Load 200 GSM8K questions (use same subset as Exp 328 for comparability)
+         d. For each model, run 5 pipeline variants on 200 questions:
+            - BASELINE: ArithmeticExtractor only (no confidence weighting, no adaptive)
+            - CONFIDENCE_ONLY: +ConfidenceWeightedRepair (min_confidence=0.8)
+            - CONFIDENCE_ADAPTIVE: +ModelAdaptiveThresholds
+            - CONFIDENCE_ADAPTIVE_VERGE: +VergeRefiner
+            - FULL_STACK: +CoTCircuitVerifier (all components active)
+            Use BatchedInferenceRunner with batch_size=8, timeout=8*60s
+         e. Record: accuracy per variant, n_violations_found, n_repairs_attempted,
+            n_repairs_improved, n_repairs_broken, signed_improvement vs baseline
+         f. Build artifact with headline_result (FULL_STACK signed_improvement on Gemma4-E4B-it)
+         g. If signed_improvement > 0: mark headline_label="first_positive_live_it_result"
+         h. Output: results/experiment_340_live_precision_benchmark.json
+      5. Write tests/python/test_experiment_340_live_precision_benchmark.py (100% coverage required).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/changelog.md, ops/status.md with live benchmark results.
+         Update _bmad/traceability.md implementation status.
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp341-live-humaneval-code-verification
+    milestone: "2026.05.13"
+    deliverable: results/experiment_341_live_humaneval.json
+    title: "Exp 341: Live HumanEval code verification — CodeExtractor + execution on RTX 3090"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Research-program.md item #3: "Code verification (HumanEval) — MOST LIKELY
+      TO STILL WORK." Code verification uses structural tests (execute code, check output),
+      NOT regex extraction. The CodeExtractor + runtime instrumentation + Ising-guided fuzzing
+      pipeline may show improvement because it verifies via EXECUTION, not pattern matching.
+
+      This is the domain where Carnot is most likely to show positive results on live IT
+      model output. ArithmeticExtractor fails on IT models (0 violations found on Gemma4).
+      CodeExtractor finds violations by RUNNING the code — no regex needed.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — CodeExtractor, AutoExtractor
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+      - results/experiment_328_live_benchmark.json — baseline live results for context
+      - scripts/experiment_68_humaneval_benchmark.py — prior HumanEval script (if present)
+
+      TASK: Run live HumanEval code verification benchmark with Gemma4-E4B-it.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-BENCH-004 (HumanEval live benchmark), SCENARIO-BENCH-010/011 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - HumanEvalResult dataclass: problem_id, generated_code, passed_tests,
+           violations_found, repair_attempted, final_code, final_passed_tests
+         - compute_pass_at_1(results: list[HumanEvalResult]) → float: fraction with
+           passed_tests=True before any repair
+         - compute_pass_at_1_after_repair(results) → float: fraction with
+           final_passed_tests=True
+         - build_humaneval_artifact(results, inference_mode) → dict:
+           schema="carnot.humaneval_benchmark.v1"
+         - CI-safe: when CARNOT_FORCE_LIVE=0, use synthetic code snippets (no LLM call)
+      4. Write scripts/experiment_341_live_humaneval.py using
+         ExperimentTemplate(341, "Live HumanEval code verification", requires_gpu=True):
+         a. MODEL_SPECS = [{"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0}]
+         b. Load 50 HumanEval problems (use subset with clear test cases)
+         c. For each problem: generate code with Gemma4-E4B-it, run test suite, record pass/fail
+         d. For failed code: run CodeExtractor → VerifyRepairPipeline → re-run tests
+         e. Record: pass@1 before repair, pass@1 after repair, n_violations_found
+         f. Use BatchedInferenceRunner with batch_size=8, timeout=8*60s
+         g. Build artifact: headline = pass@1 improvement (after − before)
+         h. If improvement > 0: mark headline_label="code_verification_positive"
+         i. Output: results/experiment_341_live_humaneval.json
+      5. Write tests/python/test_experiment_341_live_humaneval.py (100% coverage required).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/changelog.md, ops/status.md with HumanEval results.
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp342-live-extractor-comparison
+    milestone: "2026.05.13"
+    deliverable: results/experiment_342_live_extractor_comparison.json
+    title: "Exp 342: Live extractor comparison — ArithmeticExtractor vs NL2Z3 vs VERGE vs CRV on same live responses"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Experiment 311 benchmarked extractors on a SYNTHETIC corpus.
+      ArithmeticExtractor won on the CI corpus but the synthetic corpus doesn't match real
+      IT model responses. Exp 340 produced 200 live Gemma4-E4B-it responses. This experiment
+      runs ALL four extractors on the SAME 50 of those live responses and compares:
+      - Violation rate (how many responses does each extractor flag?)
+      - Precision (what fraction of flagged responses actually contained errors?)
+      - False positive rate (from the Exp 331 FP taxonomy: VALID_INTERMEDIATE, CORRECT_STEP, etc.)
+      - Agreement rate (which violations did two or more extractors agree on?)
+
+      The goal: determine which extractor combination provides the best precision on live IT
+      model output. This informs the default extractor chain for production.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — ArithmeticExtractor, NL2Z3Extractor, AutoExtractor
+      - python/carnot/pipeline/verge_refiner.py — VergeRefiner (as VERGE extractor)
+      - python/carnot/pipeline/cot_circuit_verifier.py — CoTCircuitVerifier (as CRV extractor)
+      - results/experiment_340_live_precision_benchmark.json — live responses to use (if present)
+      - results/experiment_331_fp_autopsy.json — FP taxonomy (VALID_INTERMEDIATE, CORRECT_STEP, etc.)
+      - results/experiment_311_extractor_benchmark.json — Exp 311 synthetic results for comparison
+
+      TASK: Run extractor comparison on live IT model responses.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-EXTRACT-017 (live extractor benchmark), SCENARIO-EXTRACT-036/037 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - ExtractorResult dataclass: extractor_name, n_responses_checked, n_violations_found,
+           violation_rate, estimated_precision, fp_categories (dict)
+         - compare_extractors(responses, extractors) → list[ExtractorResult]
+         - build_comparison_artifact(results: list[ExtractorResult]) → dict:
+           schema="carnot.extractor_comparison.v1", best_precision, recommended_extractor
+         - recommended_extractor: extractor with highest estimated_precision (tie: first)
+         - CI-safe: synthetic responses when CARNOT_FORCE_LIVE=0
+      4. Write scripts/experiment_342_live_extractor_comparison.py using
+         ExperimentTemplate(342, "Live extractor comparison"):
+         a. Load 50 live Gemma4-E4B-it responses from Exp 340 results; if missing, generate
+            50 synthetic responses (honest fallback with inference_mode="simulated")
+         b. For each response, run:
+            - ArithmeticExtractor: extract violations (regex)
+            - NL2Z3Extractor: extract Z3 assertions, check SAT/UNSAT
+            - VergeRefiner (as extractor): UNSAT assertion extraction only (no repair)
+            - CoTCircuitVerifier: structural circuit check
+         c. Estimate precision per extractor using Exp 331 FP taxonomy as reference
+         d. Compute agreement matrix: which extractor pairs agree on violations?
+         e. Build artifact: per-extractor violation_rate, estimated_precision, fp_category_distribution
+         f. Recommend extractor chain based on precision
+         g. Output: results/experiment_342_live_extractor_comparison.json
+      5. Write tests/python/test_experiment_342_live_extractor_comparison.py (100% coverage required).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/changelog.md, ops/status.md with extractor comparison findings.
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp343-constraint-template-library
+    milestone: "2026.05.13"
+    deliverable: python/carnot/pipeline/constraint_template_library.py
+    title: "Exp 343: ConstraintTemplateLibrary — error patterns generate NEW constraint types (Tier 1+2 fusion)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Research-program.md priority #1: "constraint ADDITION from memory patterns,
+      not just weight changes." Exp 134 proved that precision-based REWEIGHTING (upweighting
+      existing constraint types when they fire) does NOT improve accuracy — fixed=adaptive
+      across all 500 questions. The root cause: if the existing constraint set doesn't cover
+      the real error type, upweighting existing constraints just increases noise.
+
+      The fix: when CaseMemory detects that a specific ERROR PATTERN is common (e.g.,
+      "carry errors appear in 40% of Qwen3.5-0.8B arithmetic responses"), ADD a new
+      constraint template that checks carry propagation — rather than upweighting the
+      existing range_check constraint which doesn't catch this error.
+
+      ConstraintTemplateLibrary maps observed error patterns to callable constraint templates.
+      Each template is a function that takes a response string and returns a list of
+      Constraint objects. When a pattern crosses a frequency threshold in CaseMemory,
+      the library instantiates the template and adds it to the active constraint set.
+
+      This implements research-program.md Tier 2 → Tier 1 feedback loop, informed by
+      arXiv 2603.03538 (Online CoT verifier learnability bounds) and Eidoku (2512.20664)
+      constraint type taxonomy.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — ConstraintExtractor protocol, existing extractor types
+      - python/carnot/pipeline/case_memory.py — CaseMemory, constraint pattern tracking
+      - python/carnot/pipeline/adaptive_thresholds.py — PerModelFPTracker (Exp 333)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline integration pattern
+      - python/carnot/pipeline/__init__.py — exports to extend
+      - research-references.md — Eidoku (2512.20664), Online CoT learnability (2603.03538)
+
+      TASK: Implement ConstraintTemplateLibrary for Tier 1+2 constraint addition.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-LEARN-017 (constraint template addition), REQ-LEARN-018 (template threshold),
+         SCENARIO-LEARN-029/030/031/032 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - ConstraintTemplate dataclass: pattern_key, description, min_frequency, template_fn,
+           is_active bool, activation_count int
+         - ConstraintTemplateLibrary():
+           - add_template(template: ConstraintTemplate): registers template
+           - observe_pattern(pattern_key, model_id, count=1): increments pattern count
+           - get_active_templates(model_id) → list[ConstraintTemplate]:
+             returns templates where observed_count >= min_frequency
+           - apply_active_templates(response, model_id) → list[Constraint]:
+             calls template_fn for each active template; collects all constraints
+           - to_dict() / from_dict(): serialization for persistence
+           - register_builtin_templates(): registers standard templates:
+             carry_check (min_freq=5), sign_check (min_freq=5),
+             unit_consistency (min_freq=3), comparison_direction (min_freq=5)
+         - carry_check_template(response) → list[Constraint]:
+           checks multi-digit carry propagation (a * 10 + carry == next_step_value)
+         - sign_check_template(response) → list[Constraint]:
+           checks that negative × negative = positive, etc.
+         - unit_consistency_template(response) → list[Constraint]:
+           checks that units in intermediate steps are consistent
+         - comparison_direction_template(response) → list[Constraint]:
+           checks that "X > Y" comparisons are consistent with subsequent "X−Y=Z"
+         - CI-safe: when response has no parseable arithmetic, returns []
+      4. Implement python/carnot/pipeline/constraint_template_library.py:
+         Follow the test spec exactly. All templates must implement ConstraintExtractor
+         protocol (or return Constraint-compatible objects).
+      5. Wire ConstraintTemplateLibrary into VerifyRepairPipeline (additive):
+         Add optional `template_library: ConstraintTemplateLibrary | None = None` param
+         to VerifyRepairPipeline.__init__; when provided, call apply_active_templates()
+         and merge returned constraints into the active constraint set.
+      6. Export from python/carnot/pipeline/__init__.py.
+      7. Write scripts/experiment_343_constraint_templates.py using
+         ExperimentTemplate(343, "ConstraintTemplateLibrary"):
+         a. Register all 4 builtin templates
+         b. Simulate 20 observations of "carry_check" pattern (exceed min_frequency=5)
+         c. Apply active templates to 5 synthetic arithmetic responses
+         d. Build artifact: schema="carnot.constraint_template_lib.v1", n_templates_registered,
+            n_active_after_observations, n_constraints_generated, templates_names
+         e. Output: results/experiment_343_constraint_templates.json
+      8. Write tests/python/test_constraint_template_library.py (100% coverage required).
+      9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      10. Reconcile: update openspec, ops/changelog.md, ops/status.md.
+      11. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp344-constraint-addition-benchmark
+    milestone: "2026.05.13"
+    deliverable: results/experiment_344_constraint_addition_benchmark.json
+    title: "Exp 344: Constraint addition benchmark — CaseMemory-to-ConstraintTemplateLibrary wiring + Exp 134 comparison"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Exp 134 showed precision-based REWEIGHTING produces 0% improvement (fixed=adaptive
+      on all 500 questions). Exp 343 implements ConstraintTemplateLibrary that ADDS new constraints
+      from memory patterns. This experiment wires CaseMemory into ConstraintTemplateLibrary and
+      benchmarks the two approaches side-by-side on 200 simulated questions:
+        - Control: reweighting only (Exp 134 approach)
+        - Treatment: constraint addition (Exp 343 + this experiment's wiring)
+      Hypothesis: constraint addition will show >0% improvement where reweighting showed 0%.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/constraint_template_library.py — ConstraintTemplateLibrary (Exp 343)
+      - python/carnot/pipeline/case_memory.py — CaseMemory, add_trace_selective()
+      - python/carnot/pipeline/adaptive_thresholds.py — PerModelFPTracker (Exp 333)
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+      - scripts/experiment_template.py — ExperimentTemplate
+      - results/experiment_343_constraint_templates.json — Exp 343 results (if present)
+      - results/experiment_134_self_learning_reweighting.json — Exp 134 baseline (if present)
+
+      TASK: Wire CaseMemory into ConstraintTemplateLibrary and benchmark.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-LEARN-019 (CaseMemory → template wiring), SCENARIO-LEARN-033/034 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - CaseMemoryTemplateWiring: adapts CaseMemory events to ConstraintTemplateLibrary
+           observe_pattern() calls
+           - on_violation_recorded(violation_type, model_id): maps violation_type to pattern_key
+             and calls observe_pattern(pattern_key, model_id)
+           - violation_type_to_pattern_key(violation_type) → str: e.g. "carry_error" → "carry_check"
+         - run_constraint_addition_experiment(questions, model_id, reweight=False, add=True):
+           simulates verify-repair loop; if add=True, activates ConstraintTemplateLibrary
+         - compute_improvement_delta(reweight_acc, addition_acc) → float (signed, no clamping)
+         - build_addition_benchmark_artifact(reweight_result, addition_result) → dict
+      4. Implement the wiring in python/carnot/pipeline/constraint_template_library.py (additive):
+         - Add CaseMemoryTemplateWiring class
+         - Wire: when CaseMemory records a violation, call observe_pattern on library
+         - This is the Tier 2 → Tier 1 feedback loop
+      5. Write scripts/experiment_344_constraint_addition_benchmark.py using
+         ExperimentTemplate(344, "Constraint addition benchmark"):
+         a. Generate 200 simulated GSM8K questions (same seed as Exp 134 for comparability)
+         b. Run Control condition (reweighting only, PerModelFPTracker weight adjustments):
+            Record accuracy on 200 questions; compare to Exp 134 baseline
+         c. Run Treatment condition (constraint addition + reweighting):
+            Initialize CaseMemoryTemplateWiring; run 200 questions; let CaseMemory
+            accumulate patterns; check if carry_check / sign_check templates activate;
+            record accuracy improvement
+         d. Compute signed improvement delta (no clamping, honest)
+         e. Build artifact: schema="carnot.constraint_addition.v1", control_accuracy,
+            treatment_accuracy, improvement_delta, n_templates_activated,
+            n_new_constraints_generated, comparison_to_exp134
+         f. Output: results/experiment_344_constraint_addition_benchmark.json
+      6. Write tests/python/test_experiment_344_constraint_addition.py (100% coverage required).
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      8. Reconcile: update ops/changelog.md, ops/status.md with constraint addition results.
+         If improvement_delta > 0: update research-program.md Tier 1+2 status.
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp345-session-memory-persistence
+    milestone: "2026.05.13"
+    deliverable: python/carnot/pipeline/session_memory.py
+    title: "Exp 345: Multi-session memory persistence — CaseMemory + ConstraintTemplateLibrary across sessions"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: CaseMemory (Exp 135) and ConstraintTemplateLibrary (Exp 343) currently exist
+      in-memory only — they reset every time the pipeline restarts. For the self-learning
+      loop to improve over time, constraint patterns must accumulate across sessions.
+      SessionMemory provides a disk-backed persistence layer using safetensors for numeric
+      state and JSON for metadata, with session fingerprinting by model_id.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/case_memory.py — CaseMemory, to_dict(), from_dict()
+      - python/carnot/pipeline/constraint_template_library.py — ConstraintTemplateLibrary,
+        to_dict(), from_dict() (Exp 343)
+      - python/carnot/pipeline/adaptive_thresholds.py — PerModelFPTracker, to_dict()
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline init pattern
+      - results/experiment_344_constraint_addition_benchmark.json — constraint state for seeding
+
+      TASK: Implement multi-session memory persistence.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-LEARN-020 (session persistence), REQ-LEARN-021 (per-model session state),
+         SCENARIO-LEARN-035/036/037 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - SessionMemory(storage_dir: str, model_id: str):
+           - save(case_memory, template_library, fp_tracker): serializes all three to disk
+           - load() → tuple[CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker] | None:
+             returns None if no saved state exists for model_id
+           - exists() → bool: True when saved state file exists
+           - clear(): deletes saved state for model_id
+           - list_sessions(storage_dir) → list[str]: lists model_ids with saved state
+         - Storage format: {storage_dir}/{model_id}/session_state.json
+         - JSON schema: {"case_memory": ..., "template_library": ..., "fp_tracker": ...,
+           "saved_at": ISO8601, "schema": "carnot.session_memory.v1"}
+         - save() is idempotent: overwrites existing state
+         - load() is CI-safe: returns None rather than raising when file is corrupt/missing
+         - list_sessions() returns [] when storage_dir does not exist
+      4. Implement python/carnot/pipeline/session_memory.py (follow test spec exactly).
+      5. Add optional session_memory: SessionMemory | None param to VerifyRepairPipeline
+         (additive only — never breaks existing callers):
+         - If provided: call session_memory.load() on init; call session_memory.save() on close()
+         - Add close() method to VerifyRepairPipeline: saves session state if session_memory set
+      6. Export SessionMemory from python/carnot/pipeline/__init__.py.
+      7. Write scripts/experiment_345_session_memory.py using ExperimentTemplate(345, ...):
+         a. Create SessionMemory(storage_dir=".carnot_sessions", model_id="Gemma4-E4B-it")
+         b. Create fresh CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker
+         c. Record 10 synthetic violation patterns to CaseMemory
+         d. Save session; verify file exists at expected path
+         e. Load session; verify all pattern counts are restored
+         f. Build artifact: schema="carnot.session_memory.v1", save_restore_verified,
+            n_patterns_saved, n_patterns_restored, storage_path
+         g. Output: results/experiment_345_session_memory.json
+      8. Write tests/python/test_session_memory.py (100% coverage required).
+      9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      10. Reconcile: update ops/changelog.md, ops/status.md.
+      11. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp346-eorm-cot-reward-model
+    milestone: "2026.05.13"
+    deliverable: python/carnot/models/eorm.py
+    title: "Exp 346: EORM-style energy reward model — train 55M-param CoT ranker on live benchmark data (arXiv 2505.14999)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: arXiv 2505.14999 (EORM) trains a 55M-parameter energy-based reward model
+      that ranks chain-of-thought solutions by correctness. It achieves near-perfect accuracy
+      on math reasoning benchmarks with a model small enough to run alongside the LLM.
+      Architecture: encode full CoT with a small transformer → scalar energy → ranking loss.
+
+      This is Carnot's Tier 3 predictive verification (JEPA predictor) upgraded: instead of
+      predicting violations from PARTIAL responses (JEPA gate), EORM scores COMPLETE responses
+      by energy and selects the lowest-energy solution when the LLM generates multiple candidates.
+
+      Training data: (CoT response, correctness label) pairs from Exp 340 live benchmark
+      (200 GSM8K questions x 2 models = 400 pairs minimum; more if prior live benchmarks exist).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/ — existing model implementations (boltzmann.py, kan.py)
+      - python/carnot/core/ — EnergyFunction base class and traits
+      - results/experiment_340_live_precision_benchmark.json — live (response, correctness) pairs
+      - results/experiment_328_live_benchmark.json — additional live pairs if present
+      - research-references.md — EORM entry (2505.14999), EBM-CoT (2511.07124)
+      - scripts/experiment_template.py — ExperimentTemplate, setup_gpu()
+
+      TASK: Implement and train EORM-style CoT energy reward model.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-LEARN-022 (EORM CoT reward model), REQ-LEARN-023 (EORM ranking loss),
+         SCENARIO-LEARN-038/039/040 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - CoTEnergyInput dataclass: response_text, question_text
+         - EORMModel (implements EnergyFunction protocol):
+           - __init__(embed_dim=128, n_heads=4, n_layers=2, max_seq_len=512)
+           - energy(cot_input: CoTEnergyInput) → float: scalar energy (lower = better CoT)
+           - rank(responses: list[str], question: str) → list[int]:
+             argsort by energy; lowest energy first
+           - save(path) / load(path): safetensors serialization
+         - EORMTrainer:
+           - __init__(model: EORMModel, lr=1e-4)
+           - contrastive_loss(correct_energy, incorrect_energy) → float:
+             hinge loss: max(0, correct_energy - incorrect_energy + margin)
+           - train_step(correct_response, incorrect_response, question) → float (loss)
+           - train_epoch(pairs: list[tuple[str, str, str]], batch_size=16) → float (mean loss)
+         - CI-safe: EORMModel works with CPU-only JAX (no GPU required for unit tests)
+         - n_params property: returns parameter count (≤100M for 55M-param target)
+      4. Implement python/carnot/models/eorm.py using JAX/Flax NNX:
+         a. Simple transformer encoder (n_layers=2, embed_dim=128, 4 heads) for CPU
+         b. Linear head: → scalar energy
+         c. Tokenize by whitespace + punctuation (no HuggingFace tokenizer needed for CI tests)
+         d. Export EORMModel, EORMTrainer, CoTEnergyInput
+      5. Write scripts/experiment_346_eorm_training.py using ExperimentTemplate(346, ...):
+         a. Load live (response, correctness) pairs from Exp 340 results; if missing,
+            generate 100 synthetic pairs (honest fallback, inference_mode="simulated")
+         b. Construct (correct, incorrect) contrastive pairs
+         c. Train EORMModel for 10 epochs (CI) or 50 epochs (live GPU)
+         d. Evaluate: AUC-ROC on held-out pairs; compare vs JEPA gate AUC from Exp 308
+         e. Save model to results/eorm_model_346.safetensors
+         f. Build artifact: schema="carnot.eorm.v1", n_train_pairs, n_test_pairs,
+            auc_roc, mean_loss_final, n_params, training_mode, vs_jepa_auc
+         g. Output: results/experiment_346_eorm_training.json
+      6. Write tests/python/test_eorm.py (100% coverage required).
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      8. Reconcile: update ops/changelog.md, ops/status.md, _bmad/traceability.md.
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp347-jepa-real-retrain
+    milestone: "2026.05.13"
+    deliverable: results/experiment_347_jepa_real_retrain.json
+    title: "Exp 347: JEPA predictor retraining on real violation pairs from Exp 340 live benchmark"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: The JEPA fast-path gate (Exp 307-309) was trained on Apple adversarial logit
+      data and evaluated with simulated predictions. Exp 340 now provides real live GPU
+      inference data: complete responses from Gemma4-E4B-it and Qwen3.5-0.8B on 200 GSM8K
+      questions with ground-truth correctness labels. This is the first opportunity to
+      retrain the JEPA predictor on real (partial_response, violation_flag) pairs.
+
+      The retraining objective: given the first N tokens of a response, predict whether
+      the FINAL response will contain a constraint violation. This enables preemptive
+      verification — trigger expensive Ising check only when the predictor says "high energy
+      likely" — rather than always running Ising after generation completes.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/embeddings/jepa_energy.py — JEPA predictor architecture (existing)
+      - python/carnot/pipeline/verify_repair.py — JEPA gate integration
+      - results/experiment_340_live_precision_benchmark.json — live pairs (if present)
+      - results/experiment_308_jepa_gate.json — prior JEPA gate accuracy for comparison
+      - results/experiment_309_tier3_pipeline.json — Tier 3 pipeline results
+      - scripts/experiment_template.py — ExperimentTemplate, setup_gpu()
+
+      TASK: Retrain JEPA predictor on real live violation pairs.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-LEARN-024 (JEPA real-data retrain), SCENARIO-LEARN-041/042 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - ViolationPair dataclass: partial_response (first N tokens), full_response,
+           has_violation bool, model_id, question_id
+         - extract_violation_pairs(live_results: dict, prefix_fraction=0.5)
+           → list[ViolationPair]: splits each response at prefix_fraction * len(tokens)
+         - JEPARetrainer:
+           - __init__(jepa_model, lr=1e-4)
+           - binary_ce_loss(predicted_energy, has_violation) → float
+           - train_epoch(pairs: list[ViolationPair], batch_size=8) → float (mean loss)
+           - evaluate_auc_roc(pairs: list[ViolationPair]) → float
+         - build_retrain_artifact(before_auc, after_auc, n_pairs) → dict
+         - CI-safe: extract_violation_pairs() returns synthetic pairs when live_results is None
+      4. Write scripts/experiment_347_jepa_real_retrain.py using ExperimentTemplate(347, ...):
+         a. Load live results from Exp 340; extract_violation_pairs(); if missing, generate
+            50 synthetic pairs (honest fallback, inference_mode="simulated")
+         b. Load existing JEPA model (from results/jepa_predictor_*.safetensors or rebuild)
+         c. Split pairs 80/20 train/test; record before_auc on test split
+         d. Train JEPARetrainer for 10 epochs (CI) or 30 epochs (live GPU)
+         e. Record after_auc; compute AUC improvement (signed, honest)
+         f. Save retrained model to results/jepa_predictor_347_real.safetensors
+         g. Build artifact: schema="carnot.jepa_retrain.v1", n_real_pairs, before_auc,
+            after_auc, auc_improvement, training_mode, vs_simulated_baseline_auc
+         h. Output: results/experiment_347_jepa_real_retrain.json
+      5. Write tests/python/test_experiment_347_jepa_real_retrain.py (100% coverage required).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/changelog.md, ops/status.md with JEPA real-data results.
+      8. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp348-sink-probe-hallucination-signal
+    milestone: "2026.05.13"
+    deliverable: python/carnot/pipeline/sink_probe.py
+    title: "Exp 348: SinkProbe attention-sink hallucination pre-filter (arXiv 2604.10697)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: arXiv 2604.10697 (SinkProbe) detects hallucination via attention sink analysis.
+      Specific attention heads concentrate probability mass on "sink" tokens ([BOS], period, etc.)
+      when the model is generating factually uncertain content. This is detectable via a single
+      forward pass with attention output capture — no auxiliary model needed.
+
+      For Carnot, SinkProbe is a FAST PRE-FILTER: if sink concentration is below a threshold,
+      skip the expensive Ising verification entirely (fast path). This reduces Ising calls on
+      responses the LLM is confident about while preserving full verification on uncertain ones.
+      Estimated fast-path rate: 40-60% of responses (those below threshold).
+
+      Combined three-tier pipeline:
+        SinkProbe (fast, 0ms overhead except attention capture) →
+        EORM ranker (55M GPU, ~10ms) →
+        Ising verification (CPU, 0.006ms per constraint)
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/extract.py — ConstraintExtractor protocol
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline integration pattern
+      - python/carnot/pipeline/__init__.py — exports
+      - research-references.md — SinkProbe entry (2604.10697)
+      - results/experiment_340_live_precision_benchmark.json — live responses with attention
+        tensors (if present; check artifact schema for attention_tensors key)
+
+      TASK: Implement SinkProbe as fast hallucination pre-filter.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-VERIFY-086 (SinkProbe pre-filter), REQ-VERIFY-087 (sink concentration threshold),
+         SCENARIO-VERIFY-113/114/115 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - SinkTokenType enum: BOS, EOS, PERIOD, COMMA (common sink tokens)
+         - SinkConcentration dataclass: per_head_sink_scores (list[float]),
+           mean_sink_score float, max_sink_score float
+         - compute_sink_concentration(attention_matrix: jnp.ndarray, sink_positions: list[int])
+           → SinkConcentration:
+           attention_matrix shape: (n_heads, seq_len, seq_len); compute concentration of
+           attention mass at sink_positions for each head
+         - SinkProbeResult dataclass: sink_concentration, is_uncertain bool,
+           should_skip_verification bool
+         - SinkProbe(threshold=0.3, sink_token_types=(BOS, PERIOD)):
+           - score(attention_matrix, sink_positions) → SinkConcentration
+           - decide(sink_concentration) → SinkProbeResult:
+             is_uncertain = mean_sink_score < threshold (low sink = uncertainty)
+             should_skip_verification = not is_uncertain
+           - benchmark(responses_with_attention, correctness_labels) → dict:
+             skip_rate, false_negative_rate (skipped a response that was wrong),
+             true_negative_rate (correctly skipped a response that was right)
+         - CI-safe: compute_sink_concentration works on random jnp arrays (no real model needed)
+      4. Implement python/carnot/pipeline/sink_probe.py (follow test spec exactly).
+      5. Export SinkProbe, SinkConcentration, SinkProbeResult from python/carnot/pipeline/__init__.py.
+      6. Write scripts/experiment_348_sink_probe.py using ExperimentTemplate(348, ...):
+         a. Generate 50 synthetic attention matrices (random jnp arrays, CI-safe)
+         b. If live results from Exp 340 contain attention tensors, use those instead
+         c. Run SinkProbe with threshold=0.3 on all responses
+         d. Compute skip_rate, FNR, TNR on synthetic corpus
+         e. Compare multi-signal ensemble (SinkProbe + Ising) vs Ising-only on 50 questions
+         f. Build artifact: schema="carnot.sink_probe.v1", skip_rate, fnr, tnr,
+            ensemble_improvement_vs_ising_only, inference_mode
+         g. Output: results/experiment_348_sink_probe.json
+      7. Write tests/python/test_sink_probe.py (100% coverage required).
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      9. Reconcile: update ops/changelog.md, ops/status.md.
+      10. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp349-kv260-fpga-synthesis
+    milestone: "2026.05.13"
+    deliverable: results/experiment_349_kv260_synthesis.json
+    title: "Exp 349: KV260 FPGA bitfile synthesis via open-source toolchain (yosys + nextpnr)"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: The KV260 FPGA has been physically present since Exp 288 but has never run
+      real hardware — blocked by missing bitfile. The previous approach (Exp 313) assumed a
+      pre-built bitfile via CARNOT_KV260_BITFILE env var. The alternative: generate the
+      bitfile via open-source synthesis (yosys + nextpnr-xilinx) from the Ising sampler
+      Verilog RTL written in Exp 291.
+
+      Research-hardware-wishlist.md KV260 status: "bitfile needed to complete bring-up."
+      The Ising sampler RTL (hardware/kv260/ising_sampler_v1.v from Exp 291) contains the
+      design. Key paper references: arXiv 2503.01177 (sparsified connectivity for reduced
+      LUT count) and arXiv 2602.15985 (77.5μs target convergence time).
+
+      Success criteria: synthesis script generates netlist (even without place-and-route);
+      reports estimated LUT/FF utilization. This proves the open-source path is viable
+      before investing in Vivado license.
+
+      EXISTING CODE TO READ FIRST:
+      - hardware/kv260/ising_sampler_v1.v — Ising sampler RTL from Exp 291 (if present)
+      - results/experiment_313_kv260_bringup.json — prior blocked bring-up status
+      - results/experiment_291_kv260_verilog.json — Verilog generation results
+      - research-hardware-wishlist.md — KV260 bring-up status and context
+      - research-references.md — FPGA Ising machine papers (2604.04606, 2503.01177, 2602.15985)
+
+      TASK: Attempt open-source synthesis of KV260 Ising sampler bitfile.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-HW-003 (open-source FPGA synthesis), SCENARIO-HW-005/006 to
+         openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - check_yosys_available() → bool: subprocess yosys --version, graceful False fallback
+         - check_nextpnr_available() → bool: subprocess nextpnr-xilinx --version, graceful fallback
+         - check_verilog_source_exists(path) → bool: os.path.exists check
+         - parse_synthesis_output(stdout: str) → dict: extract LUT count, FF count, timing info
+           from yosys synthesis report (regex on "Number of cells:" lines)
+         - SynthesisResult dataclass: yosys_available, nextpnr_available, verilog_found,
+           synthesis_attempted, synthesis_success, lut_count, ff_count, honest_verdict
+         - honest_verdict options: "synthesis_success", "synthesis_partial" (netlist only),
+           "blocked_missing_yosys", "blocked_missing_verilog", "synthesis_failed"
+      4. Write hardware/kv260/carnot_ising_synthesis.sh synthesis script:
+         a. Check yosys and nextpnr-xilinx availability; exit with error if missing
+         b. Run: yosys -p "synth_xilinx -top ising_sampler -flatten; write_json /tmp/netlist.json"
+            hardware/kv260/ising_sampler_v1.v
+         c. Parse output for LUT/FF counts
+         d. If nextpnr available: run nextpnr-xilinx for KV260 (xczu5ev-sfvc784-2-e) device
+         e. If synthesis succeeds and place-and-route passes: generate .bit file to
+            hardware/kv260/carnot_ising.bit
+         f. chmod +x hardware/kv260/carnot_ising_synthesis.sh
+      5. Write scripts/experiment_349_kv260_synthesis.py using ExperimentTemplate(349, ...):
+         a. check_yosys_available(), check_nextpnr_available(), check_verilog_source_exists()
+         b. If yosys available and verilog exists: run synthesis script, capture output
+         c. parse_synthesis_output() to extract LUT/FF counts
+         d. Set honest_verdict based on what was achieved
+         e. Build artifact: schema="carnot.fpga_synthesis.v1", prereqs_checked, synthesis_result,
+            lut_count, ff_count, bitfile_generated (bool), honest_verdict
+         f. Update research-hardware-wishlist.md KV260 section with experiment results
+         g. Output: results/experiment_349_kv260_synthesis.json
+      6. Write tests/python/test_experiment_349_kv260_synthesis.py (100% coverage required).
+      7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      8. Reconcile: update ops/changelog.md, ops/status.md, research-hardware-wishlist.md.
+      9. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp350-operational-retro
+    milestone: "2026.05.13"
+    deliverable: results/operational_retro_2026_05_13.json
+    title: "Exp 350: Operational retrospective for milestone 2026.05.13"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Every milestone ends with an operational retrospective (Exps 319, 337) that
+      captures execution speed, per-experiment wall time, and action items for process
+      improvement. The retro is the mechanism by which the research process itself improves.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_319_retro.py — prior retro script (pattern to follow)
+      - scripts/experiment_337_retro.py — most recent retro (if present)
+      - ops/conductor-log.md — per-experiment timestamps for this milestone (Exps 338-350)
+      - results/operational_retro_2026_05_06.json — prior retro artifact schema
+      - results/experiment_340_live_precision_benchmark.json — key result: live precision
+      - results/experiment_344_constraint_addition_benchmark.json — key result: constraint addition
+      - results/experiment_346_eorm_training.json — key result: EORM training
+
+      TASK: Write operational retrospective for milestone 2026.05.13.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Write tests FIRST (100% coverage required) for:
+         - load_retro_artifact(path) → dict: validates required schema keys
+         - required keys: milestone, n_experiments, total_wall_time_min, mean_wall_time_min,
+           slowest_experiment, bottlenecks_identified, action_items, carry_forward,
+           estimated_next_milestone_speedup_pct, headline_results
+         - headline_results: list of dicts with experiment_id, result_summary, is_positive
+         - action_items: list of dicts with retro_id (RETRO-NNN), description, estimated_impact_pct
+         - compute_mean_wall_time(experiment_durations: list[float]) → float
+         - identify_bottlenecks(durations: dict[str, float], top_n=3) → list[str]
+      3. Write scripts/experiment_350_retro.py using ExperimentTemplate(350, ...):
+         a. Load conductor-log.md; parse Exp 338-350 rows; compute wall times
+         b. Compute: n_experiments, total_wall_time_min, mean_wall_time_min
+         c. Identify 3 slowest experiments
+         d. Collect headline_results from key experiment artifacts:
+            - Exp 340: live precision stack signed improvement (positive/negative)
+            - Exp 341: HumanEval pass@1 improvement
+            - Exp 344: constraint addition vs reweighting delta
+            - Exp 346: EORM AUC-ROC vs JEPA baseline
+         e. Identify bottlenecks; write action items (RETRO-009 onwards)
+         f. Estimate next-milestone speedup from implemented improvements
+         g. Build artifact: schema="carnot.operational_retro.v1", all required keys
+         h. Output: results/operational_retro_2026_05_13.json
+         i. Update ops/conductor-log.md with retro entry
+      4. Write tests/python/test_experiment_350_retro.py (100% coverage required).
+      5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      6. Update ops/changelog.md, ops/status.md with retro summary and next steps.
+         Capture headline results clearly: what worked, what didn't, what's next.
+      7. Do NOT push. Do NOT modify scripts/research_conductor.py.

@@ -262,6 +262,76 @@ should read this file when designing new milestones.
 
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
+### EORM — Energy-Based Outcome Reward Model for CoT Ranking (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2505.14999 (2025-05)
+- **What:** Trains a 55M-parameter energy-based reward model that ranks chain-of-thought solutions
+  by correctness without binary labels. Uses contrastive training on (correct, incorrect) CoT pairs.
+  Small model size — 55M params — outperforms larger discriminative reward models on math reasoning.
+- **Relevance:** This IS Carnot's Tier 3 JEPA predictive verification, spelled out. Instead of
+  predicting constraint violations from partial responses, EORM ranks full CoT solutions by energy.
+  The 55M-parameter scale fits on GPU alongside the LLM. Architecture: encode full CoT → scalar
+  energy → rank by energy → select lowest-energy response. Replace or augment JEPA gate with EORM.
+- **When to pursue:** Next milestone. Train EORM on accumulated live benchmark (CoT, correctness)
+  pairs from Exp 340. Compare against JEPA gate accuracy on same held-out data.
+
+### SinkProbe — Attention Sinks as Hallucination Detection Signal
+- **Paper:** arxiv.org/abs/2604.10697 (2026-04)
+- **What:** Hallucination detection via attention sink analysis — specific attention head activations
+  cluster at "sink" tokens (like [BOS]) in a way that correlates with factual confidence.
+  Model-agnostic, no auxiliary model needed. Low latency (single forward pass).
+- **Relevance:** Complementary detection signal to Carnot's energy-based verification. SinkProbe
+  fires on factually-uncertain outputs; Carnot's Ising/Z3 checks fire on structurally-wrong outputs.
+  Ensemble of SinkProbe + SpilledEnergy + Ising gives multi-signal coverage across error types.
+  SinkProbe is fast (no sampling), making it a good pre-filter before expensive Ising verification.
+- **When to pursue:** Next milestone. Add SinkProbe as a fast pre-filter in the pipeline.
+
+### Eidoku — Neuro-Symbolic CSP Verification Gate for LLM Reasoning
+- **Paper:** arxiv.org/abs/2512.20664 (2025-12)
+- **What:** Reformulates LLM reasoning verification as a Constraint Satisfaction Problem (CSP).
+  Structural constraints (type consistency, value range, logical dependency) are verified via a
+  neural-symbolic gate before accepting LLM outputs. Achieves near-perfect accuracy on structured
+  reasoning tasks.
+- **Relevance:** Validates Carnot's approach of expressing verification as constraint satisfaction.
+  The "structural constraint" layer (type consistency, value range) maps onto Carnot's
+  ArithmeticExtractor + NL2Z3 pipeline. Eidoku's gate design could improve the CoT circuit
+  verifier (Exp 336) with more principled structural constraint types.
+- **When to pursue:** Constraint extraction improvement milestone. Study Eidoku's constraint type
+  taxonomy for new constraint categories to add to ConstraintTemplateLibrary.
+
+### LLM-Guided Quantified SMT Solving
+- **Paper:** arxiv.org/abs/2601.04675 (2026-01)
+- **What:** Uses LLM guidance to improve Z3 performance on quantified SMT problems. Achieves 80%
+  improvement in Z3 and 183.6% improvement in CVC5. LLM proposes instantiation candidates
+  that guide quantifier elimination in the solver.
+- **Relevance:** Reverse complement to Carnot's NL2Z3 approach (LLM→Z3 instead of Z3→repair).
+  Suggests a bidirectional pipeline: Carnot extracts Z3 constraints from LLM responses, while
+  this technique uses LLMs to help Z3 solve those constraints faster. Could speed up Z3 verification
+  on complex quantified arithmetic constraints that NL2Z3 generates.
+- **When to pursue:** Z3 extraction + performance milestone. Combine with VERGE loop.
+
+### Energy-Guided Decoding for VLM Object Hallucination Mitigation
+- **Paper:** arxiv.org/abs/2507.07731 (2025-07)
+- **What:** Energy-based layer selection during decoding reduces object hallucinations in vision-language
+  models. Energy function computed over token generation steps — high-energy transitions trigger
+  guided decoding to steer away from hallucination. Plug-and-play, no retraining.
+- **Relevance:** Most direct published application of energy-guided decoding to hallucination
+  mitigation. The token-level energy computation maps onto Carnot's guided decoding goal (FR-12).
+  The layer selection insight — energy guides which hidden layer drives token probabilities — is
+  directly applicable to Carnot's LLM integration. Study as implementation blueprint for the
+  guided decoding adapter.
+- **When to pursue:** Guided decoding milestone. Use layer-selection insight for token probability adjustment.
+
+### Scalable Connectivity for Ising Machines: Dense to Sparse
+- **Paper:** arxiv.org/abs/2503.01177 (2026-03)
+- **What:** Systematic study of sparse connectivity in FPGA Ising machines. Analyzes how connectivity
+  reduction (dense → sparse) affects solution quality and hardware efficiency. Identifies which
+  constraint graph topologies are robust to sparsification and which require dense coupling.
+- **Relevance:** Directly applicable to Carnot's FPGA Ising backend design (FpgaBackend, SamplerBackend).
+  Carnot's sparse Ising work (Exp 61, clause-graph masking) already uses sparse coupling. This paper
+  provides principled guidelines for choosing sparsity level for the KV260 implementation —
+  specifically whether Carnot's constraint graphs can be solved at 4x reduced connectivity.
+- **When to pursue:** KV260 FPGA hardware milestone. Use to choose coupling sparsity for bitfile.
+
 ### Neural Uncertainty Principle — Prefill-Stage Hallucination Detection (HIGH PRIORITY)
 - **Paper:** arxiv.org/abs/2603.19562 (2026-03)
 - **What:** Adversarial vulnerability and hallucination share a geometric origin — input and loss-gradient are conjugate observables with an irreducible uncertainty bound (analogous to Heisenberg's principle). A prefill-stage probe detects hallucination risk BEFORE any tokens are generated, using only the input representation — no decoding required. ConjMask and LogitReg are actionable techniques.

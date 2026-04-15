@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Milestone 2026.05.13 Planning — v31 Roadmap)
+
+Planned next research milestone 2026.05.13: "Live E2E Precision Pipeline, Constraint Addition
+from Memory, and EORM Predictive Verification." 13 experiments (Exps 338-350) across 5 phases.
+
+Key design decisions:
+- Phase 1 (Exps 338-339): Close RETRO-003 through RETRO-008 carry-forwards; host prereqs
+  registry, DualGPURunner default, session startup automation.
+- Phase 2 (Exps 340-342): Run full precision stack (VERGE + CRV + confidence-weighted +
+  adaptive thresholds) end-to-end on live RTX 3090 with Gemma4-E4B-it + Qwen3.5-0.8B.
+  First credible measurement of whether combined precision stack helps.
+- Phase 3 (Exps 343-345): ConstraintTemplateLibrary — error patterns ADD new constraint
+  types (not just reweight existing ones). Addresses research-program.md priority #1.
+- Phase 4 (Exps 346-348): EORM (arXiv 2505.14999) CoT energy reward model trained on
+  live data; JEPA predictor retrained on real violation pairs; SinkProbe pre-filter.
+- Phase 5 (Exps 349-350): KV260 FPGA bitfile synthesis via yosys; operational retro.
+
+6 new papers added to research-references.md:
+- 2505.14999 (EORM), 2604.10697 (SinkProbe), 2512.20664 (Eidoku),
+- 2601.04675 (LLM-guided SMT), 2507.07731 (energy-guided decoding), 2503.01177 (scalable Ising)
+
+Deliverables:
+- openspec/change-proposals/research-roadmap-vNEXT.md (updated to v31, milestone 2026.05.13)
+- research-roadmap-next.yaml (new, 13 experiments Exps 338-350)
+- research-references.md (6 new papers appended)
+
+User instruction: plan next research milestone (post-2026.05.06).
+
 ## 2026-04-15 (Operational Retrospective — Milestone 2026.05.06 Full)
 
 Full-milestone operational retrospective for milestone 2026.05.06 written to
