@@ -1,0 +1,72 @@
+{
+  "experiment": 355,
+  "title": "Adversarial GSM8K Benchmark \u2014 Live GPU (Gemma4-E4B-it + Qwen3.5-0.5B)",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T17:18:55Z",
+  "finished_at": "2026-04-15T17:18:57Z",
+  "duration_s": 1.74,
+  "status": "simulated",
+  "schema": [
+    "batch_logs",
+    "duration_s",
+    "exp353_live_gpu_status",
+    "experiment",
+    "finished_at",
+    "gpu_setup",
+    "headline_result",
+    "honest_verdict",
+    "inference_mode",
+    "n_models",
+    "n_questions",
+    "per_model_results",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "inference_mode": "simulated",
+  "honest_verdict": "blocked_simulated",
+  "per_model_results": [
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 100,
+      "standard_accuracy": 0.8,
+      "adversarial_accuracy": 0.65,
+      "accuracy_drop": 0.15,
+      "repaired_adversarial_accuracy": 0.68,
+      "repair_improvement": 0.03,
+      "inference_mode": "simulated"
+    },
+    {
+      "model_id": "Qwen3.5-0.5B",
+      "n_questions": 100,
+      "standard_accuracy": 0.8,
+      "adversarial_accuracy": 0.65,
+      "accuracy_drop": 0.15,
+      "repaired_adversarial_accuracy": 0.68,
+      "repair_improvement": 0.03,
+      "inference_mode": "simulated"
+    }
+  ],
+  "headline_result": {
+    "honest_verdict": "blocked_simulated",
+    "inference_mode": "simulated",
+    "n_models": 2,
+    "n_questions_per_model": 100,
+    "avg_accuracy_drop": 0.15,
+    "avg_repair_improvement": 0.03,
+    "improvement_positive": false
+  },
+  "batch_logs": [],
+  "exp353_live_gpu_status": "GPU smoke test script created. Extended inference needed for full results.",
+  "gpu_setup": {
+    "all_healthy": false,
+    "models": [],
+    "prewarm_time_s": 0.0,
+    "dual_gpu_auto_assigned": false,
+    "note": "CARNOT_FORCE_LIVE not set \u2014 simulated mode"
+  },
+  "n_questions": 100,
+  "n_models": 2
+}
