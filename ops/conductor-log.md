@@ -1701,3 +1701,4 @@ python/ |
 | 2026-04-15 07:14 UTC | Plan milestone 2026.05.13 | OK | 13 tasks proposed |
 | 2026-04-15 07:15 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
 | 2026-04-15 07:15 UTC | Milestone 2026.05.13 activated | OK | 13 tasks queued |
+| 2026-04-15 07:46 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
