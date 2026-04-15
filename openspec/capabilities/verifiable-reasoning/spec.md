@@ -3594,6 +3594,51 @@ Spec: REQ-EXTRACT-020, SCENARIO-EXTRACT-039, SCENARIO-EXTRACT-041
 **And** `n_assertions >= 2`
 **And** `formalization_mode == "llm"`
 
+### REQ-EXTRACT-021: Comparative Extraction Benchmark
+
+The system shall support a comparative extraction benchmark that:
+- Runs multiple extractors (ArithmeticExtractor, LLMConstraintExtractor, LLMz3Formalizer)
+  against the same set of LLM responses from a live instruction-tuned model
+- For each response labelled as wrong: records whether the extractor detected a violation (TP)
+- For each response labelled as correct: records whether the extractor raised a false alarm (FP)
+- Computes `detection_rate = TP / (TP + FN)` and `false_positive_rate = FP / (FP + TN)`
+  for each extractor
+- Returns an `ExtractionBenchmarkResult` per extractor and a comparison artifact with:
+  `winner`, `improvement_over_arithmetic_extractor`, `honest_verdict`
+- `honest_verdict == "live_gpu_llm_extractor_wins"` only when `inference_mode == "live_gpu"`
+  AND LLMConstraintExtractor detection_rate > ArithmeticExtractor detection_rate
+- All other conditions yield a non-winning verdict string (e.g. `"simulated_no_verdict"`,
+  `"live_gpu_no_improvement"`)
+
+Spec: REQ-EXTRACT-021, SCENARIO-EXTRACT-042, SCENARIO-EXTRACT-043
+
+### SCENARIO-EXTRACT-042: ExtractionBenchmarkResult Captures Per-Extractor Metrics
+
+**Given** a set of 10 LLM responses (5 wrong, 5 correct) with known ground truth
+**When** `run_extraction_benchmark(extractor, questions, ground_truth_wrong, inference_fn)`
+  is called
+**Then** the result is an `ExtractionBenchmarkResult` instance
+**And** `n_questions == 10`
+**And** `n_violations_found` is a non-negative integer <= `n_questions`
+**And** `n_true_positives` is a non-negative integer <= 5
+**And** `n_false_positives` is a non-negative integer <= 5
+**And** `detection_rate` is a float in [0.0, 1.0]
+**And** `inference_mode` is one of `"live_gpu"`, `"simulated"`
+**And** `extractor_name` is a non-empty string
+
+### SCENARIO-EXTRACT-043: build_extraction_comparison_artifact Enforces Honest Verdict
+
+**Given** three `ExtractionBenchmarkResult` objects with `inference_mode="simulated"`
+**When** `build_extraction_comparison_artifact(results)` is called
+**Then** the returned dict has keys `winner`, `improvement_over_arithmetic_extractor`,
+  `honest_verdict`, `per_extractor_results`
+**And** `honest_verdict != "live_gpu_llm_extractor_wins"` (simulated mode cannot claim a win)
+
+**Given** three `ExtractionBenchmarkResult` objects with `inference_mode="live_gpu"` and
+  LLMConstraintExtractor having strictly higher detection_rate than ArithmeticExtractor
+**When** `build_extraction_comparison_artifact(results)` is called
+**Then** `honest_verdict == "live_gpu_llm_extractor_wins"`
+
 ### REQ-REPAIR-010: Z3-Gated Repair Pipeline
 
 The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
