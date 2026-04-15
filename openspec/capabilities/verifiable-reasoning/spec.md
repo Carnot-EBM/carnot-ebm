@@ -4302,6 +4302,20 @@ Spec: REQ-BENCH-007, SCENARIO-BENCH-014, SCENARIO-BENCH-016
 **And** `honest_verdict` at top level is `"improvement_positive"` only when
   `repair_improvement > 0` AND `inference_mode == "live_gpu"` for at least one model
 
+### SCENARIO-BENCH-020: Exp 368 Live GPU Confirmed Criterion
+
+**Given** Exp 368 runs the precision pipeline benchmark with `CARNOT_FORCE_LIVE=1`
+  and `diagnose_live_gpu` returns `is_live_capable=True`
+**When** the artifact is built
+**Then** `inference_mode == "live_gpu"` in the artifact
+**And** `honest_verdict == "live_improvement"` iff `signed_improvement > 0`
+  AND `inference_mode == "live_gpu"` for the headline FULL_STACK Gemma4-E4B-it result
+**And** if `diagnose_live_gpu` returns `is_live_capable=False`, a blocked artifact
+  is emitted immediately with `status="blocked"` and `inference_mode` set to the
+  first failure layer name — the experiment MUST NOT fall through to simulated mode
+
+Spec: REQ-BENCH-003, SCENARIO-BENCH-020
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script

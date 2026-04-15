@@ -1854,3 +1854,5 @@ python/ |
 | 2026-04-15 23:05 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | 81 passed in 3.31s |
 | 2026-04-15 23:29 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | 81 passed in 3.26s |
 | 2026-04-15 23:36 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-15 23:50 UTC | Exp 368: Live precision pipeline benchmark — 200 G | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-15 23:51 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
