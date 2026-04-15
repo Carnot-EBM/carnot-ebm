@@ -1741,3 +1741,6 @@ python/ |
 | 2026-04-15 14:41 UTC | Exp 349: KV260 FPGA bitfile synthesis via open-sou | FAIL | Claude Code error: API Error: 500 {"type":"error","error":{"type":"api_error"," |
 | 2026-04-15 14:42 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
 | 2026-04-15 14:42 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
+| 2026-04-15 14:43 UTC | Exp 349: KV260 FPGA bitfile synthesis via open-sou | FAIL | Claude Code error: API Error: 500 {"type":"error","error":{"type":"api_error"," |
+| 2026-04-15 14:44 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 14:44 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | Deliverable already exists in repo |
