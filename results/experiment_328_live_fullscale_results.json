@@ -1,0 +1,292 @@
+{
+  "experiment": 328,
+  "schema": "carnot.live_fullscale_benchmark.v1",
+  "inference_mode": "live_gpu",
+  "status": "success",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T03:14:08Z",
+  "finished_at": "2026-04-15T03:22:02Z",
+  "duration_s": 473.931,
+  "primary_result_path": "results/experiment_316_fullscale_results_live.json",
+  "gpu_diagnostics": {
+    "dual_gpu_monitor": {
+      "health": {
+        "n_gpus_detected": 2,
+        "n_zombies": 0,
+        "idle_gpus": [
+          0,
+          1
+        ],
+        "all_healthy": false
+      },
+      "processes": []
+    },
+    "nvidia_smi_raw": "0, NVIDIA GeForce RTX 3090, 24576 MiB, 24125 MiB, 2 MiB, 0 %\n1, NVIDIA GeForce RTX 3090, 24576 MiB, 24126 MiB, 2 MiB, 0 %",
+    "nvidia_smi_returncode": 0,
+    "compute_apps": ""
+  },
+  "simulation_divergence": {
+    "Qwen3.5-0.8B": {
+      "baseline": {
+        "number_swap": {
+          "live": 0.245,
+          "simulated": 0.327273,
+          "delta": -0.082273
+        },
+        "all": {
+          "live": 0.2375,
+          "simulated": 0.34,
+          "delta": -0.1025
+        },
+        "irrelevant_sentence": {
+          "live": 0.23,
+          "simulated": 0.355556,
+          "delta": -0.125556
+        }
+      },
+      "verify_only": {
+        "number_swap": {
+          "live": 0.245,
+          "simulated": 0.327273,
+          "delta": -0.082273
+        },
+        "all": {
+          "live": 0.2375,
+          "simulated": 0.34,
+          "delta": -0.1025
+        },
+        "irrelevant_sentence": {
+          "live": 0.23,
+          "simulated": 0.355556,
+          "delta": -0.125556
+        }
+      },
+      "verify_repair": {
+        "number_swap": {
+          "live": 0.245,
+          "simulated": 0.327273,
+          "delta": -0.082273
+        },
+        "all": {
+          "live": 0.2375,
+          "simulated": 0.34,
+          "delta": -0.1025
+        },
+        "irrelevant_sentence": {
+          "live": 0.23,
+          "simulated": 0.355556,
+          "delta": -0.125556
+        }
+      },
+      "z3_gated": {
+        "number_swap": {
+          "live": 0.245,
+          "simulated": 0.327273,
+          "delta": -0.082273
+        },
+        "all": {
+          "live": 0.2375,
+          "simulated": 0.34,
+          "delta": -0.1025
+        },
+        "irrelevant_sentence": {
+          "live": 0.23,
+          "simulated": 0.355556,
+          "delta": -0.125556
+        }
+      },
+      "humaneval": {
+        "baseline": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        },
+        "verify_only": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        },
+        "verify_repair": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        },
+        "z3_gated": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        }
+      }
+    },
+    "Gemma4-E4B-it": {
+      "baseline": {
+        "number_swap": {
+          "live": 0.235,
+          "simulated": 0.254545,
+          "delta": -0.019545
+        },
+        "all": {
+          "live": 0.225,
+          "simulated": 0.3,
+          "delta": -0.075
+        },
+        "irrelevant_sentence": {
+          "live": 0.215,
+          "simulated": 0.355556,
+          "delta": -0.140556
+        }
+      },
+      "verify_only": {
+        "number_swap": {
+          "live": 0.235,
+          "simulated": 0.254545,
+          "delta": -0.019545
+        },
+        "all": {
+          "live": 0.225,
+          "simulated": 0.3,
+          "delta": -0.075
+        },
+        "irrelevant_sentence": {
+          "live": 0.215,
+          "simulated": 0.355556,
+          "delta": -0.140556
+        }
+      },
+      "verify_repair": {
+        "number_swap": {
+          "live": 0.235,
+          "simulated": 0.254545,
+          "delta": -0.019545
+        },
+        "all": {
+          "live": 0.225,
+          "simulated": 0.3,
+          "delta": -0.075
+        },
+        "irrelevant_sentence": {
+          "live": 0.215,
+          "simulated": 0.355556,
+          "delta": -0.140556
+        }
+      },
+      "z3_gated": {
+        "number_swap": {
+          "live": 0.235,
+          "simulated": 0.254545,
+          "delta": -0.019545
+        },
+        "all": {
+          "live": 0.225,
+          "simulated": 0.3,
+          "delta": -0.075
+        },
+        "irrelevant_sentence": {
+          "live": 0.215,
+          "simulated": 0.355556,
+          "delta": -0.140556
+        }
+      },
+      "humaneval": {
+        "baseline": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        },
+        "verify_only": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        },
+        "verify_repair": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        },
+        "z3_gated": {
+          "live": 0.0,
+          "simulated": 1.0,
+          "delta": -1.0
+        }
+      }
+    }
+  },
+  "baseline_deviation": {
+    "Qwen3.5-0.8B": {
+      "baseline_accuracy": 0.2375,
+      "published_baseline": 0.25,
+      "deviation": -0.0125,
+      "within_tolerance": true
+    },
+    "Gemma4-E4B-it": {
+      "baseline_accuracy": 0.225,
+      "published_baseline": 0.8,
+      "deviation": -0.575,
+      "within_tolerance": false
+    }
+  },
+  "benchmark_script": "scripts/experiment_315_fullscale_benchmark.py",
+  "benchmark_experiment_id": 315,
+  "benchmark_n_gsm8k": 400,
+  "benchmark_n_humaneval": 50,
+  "benchmark_modes": [
+    "baseline",
+    "verify_only",
+    "verify_repair",
+    "z3_gated"
+  ],
+  "benchmark_duration_s": 468.658,
+  "first_live_run_evidence": {
+    "timestamp": "2026-04-15T03:05:43Z",
+    "command": "CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/python3 scripts/experiment_315_fullscale_benchmark.py --output_path results/experiment_316_fullscale_results_live.json",
+    "inference_mode": "live_gpu",
+    "result_file_overwritten_by": "Subsequent wrapper re-runs which fell back to simulated",
+    "Qwen3.5-0.8B_baseline_all_accuracy": 0.275,
+    "Qwen3.5-0.8B_baseline_all_ci": "[0.234, 0.321]",
+    "Gemma4-E4B-it_baseline_all_accuracy": 0.263,
+    "Gemma4-E4B-it_baseline_all_ci": "[0.222, 0.308]",
+    "note": "Console-captured evidence only; JSON file overwritten by simulated re-runs"
+  },
+  "blocked_root_cause_analysis": {
+    "gemma_oom_explanation": "Gemma4-E4B-it (4B model, ~8GB FP16) could not prewarm on GPU 1 because concurrent process 2645844 occupied 15602 MiB, leaving only ~8515 MiB free.",
+    "vram_at_first_run": "GPU 0: 16207 MiB free, GPU 1: 15609 MiB free (both models loaded successfully)",
+    "vram_at_wrapper_runs": "GPU 0: 22203 MiB free, GPU 1: 8515 MiB free (process 2645844 grew from 8508 to 15602 MiB on GPU 1)",
+    "dual_gpu_monitor_bug": "DualGPUMonitor uses nvidia-smi gpu_index field which is not valid on this driver version (595.58.03). This caused false idle_gpus=[0,1] report \u2014 the field yields empty process list, so all GPUs appear idle.",
+    "gemma_prewarm_stall_root_cause": "cuda_oom",
+    "qwen_prewarm_health_ok": true,
+    "fallback_policy": "experiment_315 falls back to fully simulated when ANY model prewarm fails (not per-model)",
+    "recommendation": "Re-run when process 2645844 releases GPU 1 VRAM, OR wait for GPU memory to free up, OR modify experiment_315 to support per-model fallback without full revert to simulated."
+  },
+  "first_run_vs_exp316_divergence": {
+    "Qwen3.5-0.8B": {
+      "baseline_all": {
+        "live": 0.275,
+        "simulated_exp316": 0.34,
+        "delta": -0.065
+      }
+    },
+    "Gemma4-E4B-it": {
+      "baseline_all": {
+        "live": 0.263,
+        "simulated_exp316": 0.3,
+        "delta": -0.037
+      }
+    }
+  },
+  "first_run_baseline_deviation": {
+    "Qwen3.5-0.8B": {
+      "live": 0.275,
+      "published": 0.25,
+      "deviation": 0.025,
+      "within_tolerance": true,
+      "note": "Adversarial GSM8K; slightly above published baseline is expected"
+    },
+    "Gemma4-E4B-it": {
+      "live": 0.263,
+      "published": 0.8,
+      "deviation": -0.537,
+      "within_tolerance": false,
+      "note": "Adversarial corpus is significantly harder than standard GSM8K (number_swap + irrelevant_sentence variants). Gemma degrades severely on this adversarial set."
+    }
+  }
+}
