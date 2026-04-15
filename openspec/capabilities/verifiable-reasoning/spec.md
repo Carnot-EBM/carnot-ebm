@@ -3047,6 +3047,86 @@ Spec: REQ-EXTRACT-014, SCENARIO-EXTRACT-029, SCENARIO-EXTRACT-030
 **Then** ArithmeticExtractor is reported with `tp_rate = 0.0` without suppression
 **And** the winner selection prefers any extractor with TP > 0 over one with TP = 0
 
+### REQ-EXTRACT-015: CoT Circuit Extraction
+
+The system shall support a circuit-based reasoning verifier (CoTCircuitVerifier, arXiv 2510.09312)
+that extracts a computational dependency graph from a chain-of-thought response and checks
+structural consistency, where:
+- The response is parsed into a list of `CoTStep` objects: each step has a `step_id` (int),
+  `text` (the raw step text), `input_refs` (list of step IDs this step depends on), and
+  `output_value` (the last numeric result extracted from the step, as float or None)
+- `is_final_answer` is True for the last step detected
+- Step boundaries are detected via regex matching: "Step N:", numbered lines ("1."), and
+  discourse markers ("First,", "Then,", "Next,", "Finally,")
+- `input_refs` are populated by scanning each step for back-references ("from step N",
+  "the result from step N", "(N)", "step N") pointing to earlier steps
+- `output_value` is the last float/int found in the step text; None if no numeric result
+  is present in the step
+
+Spec: REQ-EXTRACT-015, SCENARIO-EXTRACT-031, SCENARIO-EXTRACT-032
+
+### REQ-EXTRACT-016: CoT Structural Consistency Verification
+
+The system shall detect structural inconsistencies (broken links) in a CoT dependency graph,
+where:
+- A `CoTCircuit` aggregates `steps` (list[CoTStep]), `has_cycle` (bool), and
+  `broken_links` (list of (downstream_step_id, upstream_step_id, expected_value, actual_value))
+- `has_cycle` is True when any step references a later step (logically impossible in a valid
+  CoT — downstream steps cannot be inputs to upstream steps)
+- A "broken link" exists when step i declares `input_refs=[j, ...]` and step j's `output_value`
+  is not None but does not equal the value that step i uses for it (within `tolerance`)
+- `find_broken_links(steps, tolerance)` returns a list of 4-tuples for each broken link:
+  `(downstream_step_id, upstream_step_id, expected_value_str, actual_value_str)`
+- `CoTCircuitVerifier(tolerance=0.01).verify(response)` returns a `CoTCircuit`
+- `CoTCircuitVerifier.extract(question, response)` implements the `ConstraintExtractor`
+  protocol: returns one `ConstraintResult(constraint_type="circuit_broken_link", ...)` per
+  broken link; returns empty list when the circuit has no broken links
+- Single-step responses produce a circuit with no broken links
+- Steps with no numeric output_value are skipped in link checking
+
+Spec: REQ-EXTRACT-016, SCENARIO-EXTRACT-033, SCENARIO-EXTRACT-034, SCENARIO-EXTRACT-035
+
+### SCENARIO-EXTRACT-031: CoT Step Extraction Detects Step Boundaries
+
+**Given** a multi-step response with boundaries marked "Step 1:", "Step 2:", "Step 3:"
+**When** `extract_cot_steps(response)` is called
+**Then** three `CoTStep` objects are returned, one per step
+**And** `steps[2].is_final_answer` is True (last step)
+**And** each step's `text` contains only the content of that step
+
+### SCENARIO-EXTRACT-032: CoT Step Extraction Captures output_value and input_refs
+
+**Given** a step containing "from step 1, we get 15. Adding 20 gives us 35."
+  and step 1 had output_value=15.0
+**When** `extract_cot_steps` parses this step
+**Then** `output_value` is 35.0 (last numeric result in step)
+**And** `input_refs` contains 1 (reference to step 1)
+
+### SCENARIO-EXTRACT-033: Broken Link Detected When Step Uses Wrong Upstream Value
+
+**Given** step 1 with output_value=10.0
+**And** step 2 with input_refs=[1] and text using "from step 1 (12)"
+  where 12 != 10 (outside tolerance)
+**When** `build_circuit(steps)` is called
+**Then** `circuit.broken_links` contains one entry:
+  `(2, 1, "12", "10.0")` (downstream=2, upstream=1, expected=12, actual=10.0)
+
+### SCENARIO-EXTRACT-034: Single-Step Response Produces Empty Broken Links
+
+**Given** a response with only one step
+**When** `CoTCircuitVerifier.verify(response)` is called
+**Then** `circuit.broken_links` is empty
+**And** `circuit.has_cycle` is False
+
+### SCENARIO-EXTRACT-035: CoTCircuitVerifier.extract Returns ConstraintResult Per Broken Link
+
+**Given** a response with two broken links
+**When** `CoTCircuitVerifier.extract(question, response)` is called
+**Then** two `ConstraintResult` objects are returned
+**And** each has `constraint_type == "circuit_broken_link"`
+**And** the `description` field names both the downstream and upstream step IDs
+**And** a consistent response returns an empty list
+
 ### REQ-REPAIR-010: Z3-Gated Repair Pipeline
 
 The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
@@ -3538,6 +3618,8 @@ result files from prior experiments that were never completed.
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
 | REQ-EXTRACT-013 | Not Started | Implemented | FPCategory enum + AutopsyCase + categorize_fp + load_broken_cases + compute_category_distribution (SCENARIO-EXTRACT-027/028, Exp 331) |
 | REQ-EXTRACT-014 | Not Started | Implemented | FP autopsy experiment + inconclusive artifact + recommended_fix mapping (SCENARIO-EXTRACT-029/030, Exp 331) |
+| REQ-EXTRACT-015 | Not Started | Implemented | CoTCircuitVerifier + CoTStep + extract_cot_steps (SCENARIO-EXTRACT-031/032, Exp 336) |
+| REQ-EXTRACT-016 | Not Started | Implemented | CoTCircuit + build_circuit + find_broken_links + broken link detection (SCENARIO-EXTRACT-033/034/035, Exp 336) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 336 CoT Circuit Verifier
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T06:10:50Z | 2026-04-15T06:18:14Z | Exp 336: CoTCircuitVerifier (CRV arXiv 2510.09312); REQ-EXTRACT-015/016 + SCENARIO-EXTRACT-031–035 to spec; cot_circuit_verifier.py; 51 tests 100% module coverage; verify_cot_circuit() additive integration; experiment_336 benchmark script; all docs reconciled | ~7m |
+
+---
+
 ## Session: 2026-04-15 Exp 334 VERGE-Style Iterative Z3 Refinement
 
 ### Turn Log

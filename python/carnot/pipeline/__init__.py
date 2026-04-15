@@ -168,6 +168,14 @@ from carnot.pipeline.verge_refiner import (
     build_step_repair_prompt,
     extract_failed_assertion,
 )
+from carnot.pipeline.cot_circuit_verifier import (
+    CoTCircuit,
+    CoTCircuitVerifier,
+    CoTStep,
+    build_circuit,
+    extract_cot_steps,
+    find_broken_links,
+)
 
 __all__ = [
     "AgentStep",
@@ -281,6 +289,12 @@ __all__ = [
     "VergeRefiner",
     "build_step_repair_prompt",
     "extract_failed_assertion",
+    "CoTCircuit",
+    "CoTCircuitVerifier",
+    "CoTStep",
+    "build_circuit",
+    "extract_cot_steps",
+    "find_broken_links",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",

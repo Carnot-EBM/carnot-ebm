@@ -81,6 +81,7 @@ if TYPE_CHECKING:
     from carnot.pipeline.tracker import ConstraintTracker
     from carnot.pipeline.typed_reasoning import TypedReasoningIR
     from carnot.pipeline.confidence_weighted_repair import ConfidenceRepairResult
+    from carnot.pipeline.cot_circuit_verifier import CoTCircuit
 
 logger = logging.getLogger(__name__)
 
@@ -1234,6 +1235,49 @@ class VerifyRepairPipeline:
         if result is None:
             return Z3Result(sat_status="unknown", z3_code="", runtime_ms=0.0)
         return result
+
+    def verify_cot_circuit(
+        self,
+        question: str,
+        response: str,
+        tolerance: float = 0.01,
+    ) -> "CoTCircuit":
+        """Check a chain-of-thought response for structural (circuit) consistency.
+
+        **Detailed explanation for engineers:**
+            Additive integration point for CoTCircuitVerifier (arXiv 2510.09312).
+            Does not modify ``verify()`` or ``verify_and_repair()``; safe to call
+            in parallel with the Ising or Z3 pipelines.
+
+            Unlike ``verify_with_z3``, this method makes NO LLM calls — it is
+            purely regex/string-based and always runs in CI without GPU access.
+
+            A broken link indicates a downstream step uses a value that does not
+            match the upstream step's actual output.  This catches wrong-variable
+            substitution and step-skipping errors that Z3 and regex miss.
+
+        Args:
+            question:  The original question (unused; kept for API symmetry with
+                       verify_with_z3 and future protocol compatibility).
+            response:  The chain-of-thought response to check.
+            tolerance: Relative tolerance for value comparison (default 0.01).
+
+        Returns:
+            CoTCircuit with steps, has_cycle, and broken_links populated.
+            Inspect ``circuit.broken_links`` for structural violations.
+
+        Spec: REQ-EXTRACT-015, REQ-EXTRACT-016,
+              SCENARIO-EXTRACT-031, SCENARIO-EXTRACT-032, SCENARIO-EXTRACT-033,
+              SCENARIO-EXTRACT-034, SCENARIO-EXTRACT-035
+        """
+        from carnot.pipeline.cot_circuit_verifier import CoTCircuit, CoTCircuitVerifier
+
+        if not hasattr(self, "_cot_circuit_verifier") or self._cot_circuit_verifier is None:
+            self._cot_circuit_verifier = CoTCircuitVerifier(tolerance=tolerance)
+        elif self._cot_circuit_verifier.tolerance != tolerance:
+            self._cot_circuit_verifier = CoTCircuitVerifier(tolerance=tolerance)
+
+        return self._cot_circuit_verifier.verify(response)
 
     def verify_and_repair(
         self,
