@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-15T18:23:15Z | 2026-04-15T18:44:36Z | Exp 359: verified all implementation files exist; ran 48 tests (pass, 100% eorm_retrain.py coverage); fixed _pairs_to_contrastive_triples bug (synthetic_* IDs now routed to shared pool); ran full experiment: 50 epochs, 60 triples, before_auc=0.500, after_auc=0.500, honest_verdict=synthetic_only; saved model; updated spec traceability, conductor-log, changelog, status.md | ~21m |
+| 2 | 2026-04-15T19:27:00Z | 2026-04-15T19:40:26Z | Exp 361: three-tier self-learning relay (FR-11 mandatory). Read 6 existing files; added REQ-LEARN-026/027 + SCENARIO-LEARN-045/046/047 to spec; created self_learning_relay.py (SelfLearningBatchResult, SelfLearningRelay, _compute_auc_roc, compute_learning_improvement, build_relay_artifact); 54 tests pass, 100% new-module coverage; experiment_361 ran: batch1=0.600→batch4=0.720, improved=True, all 4 Tier 2 templates activated; honest_verdict=synthetic_only; updated conductor-log, changelog, status.md, traceability | ~13m |
 
 ---
 

@@ -203,6 +203,12 @@ from carnot.pipeline.three_tier_pipeline import (
     ThreeTierPipelineResult,
     build_three_tier_artifact,
 )
+from carnot.pipeline.self_learning_relay import (
+    SelfLearningBatchResult,
+    SelfLearningRelay,
+    build_relay_artifact,
+    compute_learning_improvement,
+)
 
 __all__ = [
     "AgentStep",
@@ -337,9 +343,13 @@ __all__ = [
     "SinkProbe",
     "SinkProbeResult",
     "SinkTokenType",
+    "SelfLearningBatchResult",
+    "SelfLearningRelay",
     "ThreeTierPipeline",
     "ThreeTierPipelineResult",
+    "build_relay_artifact",
     "build_three_tier_artifact",
+    "compute_learning_improvement",
     "compute_sink_concentration",
     "compute_conjugate_bound",
     "compute_input_uncertainty",

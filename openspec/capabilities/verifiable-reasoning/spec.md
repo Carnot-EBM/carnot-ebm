@@ -3196,6 +3196,54 @@ Spec: REQ-LEARN-025, SCENARIO-LEARN-043, SCENARIO-LEARN-044
 **And** up to 100 synthetic pairs are appended to fill the corpus
 **And** the total length is 130 (30 real + 100 synthetic)
 
+### REQ-LEARN-026: Tier 1+2+3 Self-Learning Relay
+
+The system SHALL implement a `SelfLearningRelay` that runs all three self-learning tiers
+in concert on real (or synthetic) model outputs and measures whether accuracy improves
+across batches.
+
+- REQ-LEARN-026-1: A `SelfLearningBatchResult` dataclass SHALL carry `batch_id` (int), `n_questions` (int), `accuracy` (float), `n_tier1_updates` (int), `n_tier2_templates_active` (int), `tier3_gate_auc` (float), and `cumulative_accuracy` (float).
+- REQ-LEARN-026-2: `SelfLearningRelay.__init__(pipeline, template_library, fp_tracker, eorm_model)` SHALL accept a `ThreeTierPipeline`, a `ConstraintTemplateLibrary`, a `PerModelFPTracker`, and an `EORMModel`.
+- REQ-LEARN-026-3: `SelfLearningRelay.run_batch(questions: list[str], ground_truth: list[bool], model_id: str) -> SelfLearningBatchResult` SHALL: (a) score each (question, response) pair with the EORM model; (b) update the `PerModelFPTracker` after each question (Tier 1 online weight updates); (c) call `CaseMemoryTemplateWiring.on_violation_recorded()` for each incorrect response (Tier 2 pattern accumulation); (d) compute EORM gate AUC-ROC on the batch (Tier 3 gate accuracy); (e) append the result to the internal trajectory.
+- REQ-LEARN-026-4: `SelfLearningRelay.learning_trajectory() -> list[SelfLearningBatchResult]` SHALL return a copy of all batch results accumulated so far.
+- REQ-LEARN-026-5: `cumulative_accuracy` in each `SelfLearningBatchResult` SHALL be computed as total correct across all batches so far (including the current batch) divided by total questions.
+
+Spec: REQ-LEARN-026, SCENARIO-LEARN-045, SCENARIO-LEARN-046
+
+### REQ-LEARN-027: Cross-Batch Learning Improvement Measurement
+
+The system SHALL provide utilities to measure whether the self-learning relay improves
+accuracy across batches.
+
+- REQ-LEARN-027-1: `compute_learning_improvement(trajectory: list[SelfLearningBatchResult]) -> tuple[float, float, bool]` SHALL return `(batch1_accuracy, batch4_accuracy, improved)` where `improved` is True when `batch4_accuracy > batch1_accuracy`. When the trajectory has fewer than 4 batches, the last available batch is used as the final batch. When the trajectory is empty, all values are 0.0 and `improved` is False.
+- REQ-LEARN-027-2: `build_relay_artifact(trajectory: list[SelfLearningBatchResult], learning_improvement: tuple[float, float, bool], *, inference_mode: str = "cpu_synthetic") -> dict` SHALL return a dict with `schema="carnot.self_learning_relay.v1"`, a `trajectory` list (each batch serialized as a dict), `batch1_accuracy`, `batch4_accuracy`, `improved` (bool), `inference_mode`, and `honest_verdict` — where `honest_verdict` is `"learning_confirmed"` only when `improved=True` AND `inference_mode=="live_gpu"`, otherwise `"synthetic_only"` or `"no_improvement"` as appropriate.
+
+Spec: REQ-LEARN-027, SCENARIO-LEARN-047
+
+### SCENARIO-LEARN-045: SelfLearningRelay Accumulates Tier 1 Updates Per Question
+
+**Given** a `SelfLearningRelay` with a stub `ThreeTierPipeline`
+**And** a batch of 25 synthetic questions with 15 correct and 10 incorrect answers
+**When** `run_batch(questions, ground_truth, model_id)` is called
+**Then** the returned `SelfLearningBatchResult` has `n_tier1_updates == 25`
+**And** `accuracy == 0.6` (15/25)
+**And** `n_questions == 25`
+
+### SCENARIO-LEARN-046: SelfLearningRelay Tier 2 Templates Activate After Pattern Threshold
+
+**Given** a `SelfLearningRelay` with a `ConstraintTemplateLibrary` that has the carry_check template (min_frequency=5)
+**And** 6 incorrect responses have been processed with violation_type "carry_error"
+**When** `run_batch()` is called and we query `n_tier2_templates_active`
+**Then** `n_tier2_templates_active >= 1` (the carry_check template has crossed its threshold)
+
+### SCENARIO-LEARN-047: compute_learning_improvement Returns Improved When Batch4 > Batch1
+
+**Given** a trajectory of 4 `SelfLearningBatchResult` objects with accuracies [0.60, 0.65, 0.70, 0.75]
+**When** `compute_learning_improvement(trajectory)` is called
+**Then** `batch1_accuracy == 0.60`
+**And** `batch4_accuracy == 0.75`
+**And** `improved == True`
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -4733,6 +4781,8 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss + train_step + train_epoch (SCENARIO-LEARN-040, Exp 346) |
 | REQ-LEARN-024 | Not Started | Implemented | JEPA real-data retrain — ViolationPair + extract_violation_pairs + JEPARetrainer + build_retrain_artifact (SCENARIO-LEARN-041/042, Exp 347) |
 | REQ-LEARN-025 | Implemented | Verified | EORM real-data retrain — load_real_cot_pairs + merge_cot_corpora + EORMRetrainResult + build_retrain_artifact (SCENARIO-LEARN-043/044, Exp 359). Run 20260415: retrain_mode=synthetic_only (5 real pairs from Exp 341 HumanEval; Exps 340/355 still simulated), before_auc=0.500, after_auc=0.500, honest_verdict=synthetic_only. Live GPU required for real_data_improvement verdict. |
+| REQ-LEARN-026 | Not Started | Implemented | Tier 1+2+3 self-learning relay — SelfLearningBatchResult + SelfLearningRelay + _compute_auc_roc + run_batch + learning_trajectory (SCENARIO-LEARN-045/046, Exp 361). Tier 1: PerModelFPTracker.update() per question. Tier 2: CaseMemoryTemplateWiring.on_violation_recorded() per incorrect response, all 4 templates activated (carry/sign/unit/comparison). Tier 3: EORM gate AUC-ROC per batch. 54 tests, 100% module coverage. |
+| REQ-LEARN-027 | Not Started | Implemented | Cross-batch learning improvement — compute_learning_improvement + build_relay_artifact with honest_verdict gate (SCENARIO-LEARN-047, Exp 361). Run 20260415: batch1=0.600, batch4=0.720, improved=True, honest_verdict=synthetic_only. "learning_confirmed" requires live_gpu + improved=True. |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
