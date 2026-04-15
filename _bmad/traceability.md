@@ -286,3 +286,10 @@
 | SCENARIO-REPAIR-025 | Not Started | Implemented | VERGE iterative repair converges — UNSAT then SAT produces one iteration with resolved=True |
 | SCENARIO-REPAIR-026 | Not Started | Implemented | extract_failed_assertion returns first s.add() body on UNSAT |
 | SCENARIO-REPAIR-027 | Not Started | Implemented | extract_failed_assertion returns None for SAT |
+| REQ-EXTRACT-015 | Not Started | Implemented | CoTCircuitVerifier dataclass contracts — CoTStep (step_id, text, input_refs, output_value, is_final_answer) and CoTCircuit (steps, has_cycle, broken_links) with extraction and circuit-building protocols (Exp 336) |
+| REQ-EXTRACT-016 | Not Started | Implemented | Broken-link detection and CoTCircuitVerifier ConstraintExtractor integration — find_broken_links() identifies value-carryover mismatches, build_circuit() constructs dependency graph with cycle detection, CoTCircuitVerifier implements ConstraintExtractor for pipeline use (Exp 336) |
+| SCENARIO-EXTRACT-031 | Not Started | Implemented | Step Boundary Detection — 'Step N:' markers, numbered lines (1., 2)), and discourse markers (First, Then, Next, Finally) correctly split response into multiple discrete steps (Exp 336) |
+| SCENARIO-EXTRACT-032 | Not Started | Implemented | Numeric Output Extraction & Input Reference Resolution — output_value is the last number in each step; input_refs populated from 'from step N' and backref patterns (Exp 336) |
+| SCENARIO-EXTRACT-033 | Not Started | Implemented | Broken-Link Detection — mismatch within same order of magnitude between step's declared input and upstream output correctly identified as broken link (Exp 336) |
+| SCENARIO-EXTRACT-034 | Not Started | Implemented | Edge Cases — empty response returns empty list; no markers → single step; single step with no refs → clean circuit with no violations (Exp 336) |
+| SCENARIO-EXTRACT-035 | Not Started | Implemented | CoTCircuitVerifier Constraint Mapping — consistent response → empty ConstraintResult list; broken links map to ConstraintResult objects with violation details (Exp 336) |
