@@ -2740,6 +2740,48 @@ reduction with no precision loss when only high-contrast cases are retained.
 
 Spec: REQ-LEARN-016, SCENARIO-LEARN-027, SCENARIO-LEARN-028
 
+### REQ-LEARN-017: Constraint Template Addition from Memory Patterns
+
+When CaseMemory detects that a specific error pattern is common for a given model
+(e.g., "carry errors appear in 40% of Qwen3.5-0.8B arithmetic responses"), the
+system shall ADD a new constraint template that checks that error type — rather than
+upweighting existing constraints that do not cover the error.
+
+Rationale: Exp 134 proved that precision-based reweighting (upweighting existing
+constraint types when they fire) does NOT improve accuracy — fixed vs. adaptive
+strategies are equivalent across 500 questions. Root cause: if the existing
+constraint set doesn't cover the real error type, upweighting amplifies noise.
+The fix is constraint ADDITION, not reweighting. (arXiv 2603.03538, arXiv 2512.20664)
+
+- REQ-LEARN-017-1: `ConstraintTemplateLibrary.observe_pattern(pattern_key, model_id,
+  count=1)` MUST increment the per-(pattern_key, model_id) observation count.
+- REQ-LEARN-017-2: `ConstraintTemplateLibrary.get_active_templates(model_id)` MUST
+  return only templates where cumulative observed count >= template.min_frequency.
+- REQ-LEARN-017-3: `ConstraintTemplateLibrary.apply_active_templates(response, model_id)`
+  MUST call template_fn for each active template and merge all returned constraints.
+  Each called template's `is_active` is set True and `activation_count` is incremented.
+
+Spec: REQ-LEARN-017, SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031,
+      SCENARIO-LEARN-032
+
+### REQ-LEARN-018: Constraint Template Persistence and Built-in Templates
+
+The system shall support serialization and built-in template registration for the
+ConstraintTemplateLibrary, enabling persistence of learned observation counts across
+experiment runs.
+
+- REQ-LEARN-018-1: `ConstraintTemplateLibrary.to_dict()` / `from_dict()` MUST
+  serialize/restore observation counts. Template functions (callables) are NOT
+  serialized; the caller calls `register_builtin_templates()` after `from_dict()`.
+- REQ-LEARN-018-2: `register_builtin_templates()` MUST register four standard
+  templates from the Eidoku taxonomy: `carry_check` (min_freq=5), `sign_check`
+  (min_freq=5), `unit_consistency` (min_freq=3), `comparison_direction` (min_freq=5).
+- REQ-LEARN-018-3: All built-in template functions MUST be CI-safe: return [] when
+  the response contains no parseable arithmetic of the relevant type.
+
+Spec: REQ-LEARN-018, SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031,
+      SCENARIO-LEARN-032
+
 ### SCENARIO-LEARN-025: PerModelFPTracker Disables High-FP Constraint Type
 
 **Given** a `PerModelFPTracker(min_observations=10)`
@@ -2772,6 +2814,34 @@ Spec: REQ-LEARN-016, SCENARIO-LEARN-027, SCENARIO-LEARN-028
   (contrast = 0.05 < 0.5)
 **When** `add_trace_selective(trace, min_contrast=0.5)` is called
 **Then** the method returns `False` and the memory length is unchanged
+
+### SCENARIO-LEARN-029: carry_check_template Detects Carry Error
+
+**Given** a response string `"24 × 3 = 62"` (correct answer is 72)
+**When** `carry_check_template("24 × 3 = 62")` is called
+**Then** the result contains one ConstraintResult with `constraint_type="carry_check"`,
+  `metadata["satisfied"]=False`, `metadata["correct"]=72`, `metadata["claimed"]=62`
+
+### SCENARIO-LEARN-030: sign_check_template Detects Sign Error
+
+**Given** a response string `"(-3) × (-4) = -12"` (should be positive)
+**When** `sign_check_template("(-3) × (-4) = -12")` is called
+**Then** the result contains one ConstraintResult with `constraint_type="sign_check"`,
+  `metadata["satisfied"]=False`, `metadata["claimed"]=-12.0`
+
+### SCENARIO-LEARN-031: unit_consistency_template Detects Incompatible Units
+
+**Given** a response string containing both "5 kg" and "200 g"
+**When** `unit_consistency_template(response)` is called
+**Then** the result contains a ConstraintResult with `constraint_type="unit_consistency"`,
+  `metadata["satisfied"]=False`, and `metadata["inconsistent_pair"]` containing "kg" and "g"
+
+### SCENARIO-LEARN-032: comparison_direction_template Detects Direction Inconsistency
+
+**Given** a response string `"Since 50 > 30, we compute 50 - 30 = -20."`
+**When** `comparison_direction_template(response)` is called
+**Then** the result contains one ConstraintResult with `constraint_type="comparison_direction"`,
+  `metadata["satisfied"]=False` (z = -20 is not positive)
 
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
@@ -3968,6 +4038,8 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-014 | Not Started | In Progress | Four-tier relay live GPU validation — wrapper artifact with simulation_comparison + jepa_skip_rate_live (SCENARIO-LEARN-023/024, Exp 329) |
 | REQ-LEARN-015 | Not Started | Implemented | Model-adaptive constraint thresholds — PerModelFPTracker + ModelAdaptiveThresholds + 43 tests (SCENARIO-LEARN-025/026, Exp 333) |
 | REQ-LEARN-016 | Not Started | Implemented | Selective CaseMemory consolidation — SelectiveConsolidation + add_trace_selective + 43 tests (SCENARIO-LEARN-027/028, Exp 333) |
+| REQ-LEARN-017 | Not Started | Implemented | Constraint template addition from memory patterns — ConstraintTemplateLibrary + 4 builtin templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
+| REQ-LEARN-018 | Not Started | Implemented | Constraint template persistence + builtin registry — to_dict/from_dict + register_builtin_templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |

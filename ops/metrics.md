@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 343 ConstraintTemplateLibrary
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T10:32:30Z | 2026-04-15T10:59:13Z | Exp 343: ConstraintTemplateLibrary — Tier 2 constraint addition from memory patterns; REQ-LEARN-017/018 + SCENARIO-LEARN-029/030/031/032 to spec; ConstraintTemplate dataclass + ConstraintTemplateLibrary (6 methods); 4 builtin template functions (carry_check, sign_check, unit_consistency, comparison_direction); wired into VerifyRepairPipeline; 66 tests all pass; experiment_343_constraint_templates.py + artifact written; ops docs updated | ~27m |
+
+---
+
 ## Session: 2026-04-15 Exp 341 Live HumanEval Code Verification Benchmark
 
 ### Turn Log
