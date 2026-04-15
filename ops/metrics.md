@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-15T22:44:31Z | 2026-04-15T23:03:55Z | Exp 367: Verified all implementation files exist (extractor_comparison.py, experiment_367_extraction_live.py, test_experiment_367_extraction_live.py). REQ-EXTRACT-023 + SCENARIO-EXTRACT-047/048 confirmed in spec. Ran full test suite: 6577 passed, 80 pre-existing failures in test_experiment_319_retro.py (unrelated). Exp 367 + Exp 358 tests: 75 passed. Updated ops. | ~4k |
+| 2 | 2026-04-15T23:07:03Z | 2026-04-15T23:17:29Z | User-requested re-run: read all Exp 367 implementation files; confirmed all already complete; ran test_experiment_367_extraction_live.py (42 pass) + full suite (2912 pass, 1 pre-existing failure in test_experiment_319_retro.py unrelated to 367); reconciled spec (REQ-EXTRACT-023/SCENARIO-EXTRACT-047/048 confirmed present); honest_verdict=live_gpu_winner gated on ALL results live_gpu (stricter than Exp 358). | ~6k |
 
 ---
 

@@ -4947,6 +4947,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-EXTRACT-017 | Not Started | Implemented | ExtractorResult + compare_extractors + build_comparison_artifact; live 4-way extractor comparison on IT model responses (SCENARIO-EXTRACT-036/037, Exp 342) |
 | REQ-EXTRACT-019 | Not Started | Implemented | LLMz3Formalizer + Z3FormalizationResult + exec sandbox + CI stub mode (SCENARIO-EXTRACT-039/040/041, Exp 357) |
 | REQ-EXTRACT-020 | Not Started | Implemented | Zero-FP Z3 path: only unsat raises violation; fp_rate in experiment artifact (SCENARIO-EXTRACT-039/041, Exp 357) |
+| REQ-EXTRACT-021 | Not Started | Implemented | ExtractionBenchmarkResult + run_extraction_benchmark + build_extraction_comparison_artifact; comparative benchmark with honest_verdict gate (SCENARIO-EXTRACT-042/043, Exp 358) |
+| REQ-EXTRACT-023 | Not Started | Implemented | ExtractorComparisonResult + run_extractor_comparison + build_extractor_comparison_artifact (schema=carnot.extraction_comparison.v1); honest_verdict=live_gpu_winner gated on ALL results live_gpu; 42 tests 100% coverage (SCENARIO-EXTRACT-047/048, Exp 367) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
