@@ -185,6 +185,13 @@ from carnot.pipeline.cot_circuit_verifier import (
     find_broken_links,
 )
 from carnot.pipeline.session_memory import SessionMemory
+from carnot.pipeline.sink_probe import (
+    SinkConcentration,
+    SinkProbe,
+    SinkProbeResult,
+    SinkTokenType,
+    compute_sink_concentration,
+)
 
 __all__ = [
     "AgentStep",
@@ -311,6 +318,11 @@ __all__ = [
     "extract_cot_steps",
     "find_broken_links",
     "SessionMemory",
+    "SinkConcentration",
+    "SinkProbe",
+    "SinkProbeResult",
+    "SinkTokenType",
+    "compute_sink_concentration",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",

@@ -2480,6 +2480,71 @@ The system shall provide `ConfidenceWeightedRepair` in
 
 Spec: REQ-VERIFY-085
 
+### REQ-VERIFY-086: SinkProbe Attention-Sink Pre-Filter
+
+The system shall provide a SinkProbe component that detects factual uncertainty
+via attention-sink concentration analysis (arXiv 2604.10697), where:
+- A SinkTokenType enum identifies common sink tokens: BOS, EOS, PERIOD, COMMA
+- A SinkConcentration dataclass records per-head sink scores, mean, and max over
+  a captured attention matrix
+- compute_sink_concentration(attention_matrix, sink_positions) accepts an
+  attention tensor of shape (n_heads, seq_len, seq_len) and a list of sink
+  token positions, and returns a SinkConcentration by computing the fraction
+  of attention mass each head places on the sink positions
+- A SinkProbeResult dataclass records the sink_concentration, an is_uncertain
+  boolean, and a should_skip_verification boolean
+- SinkProbe(threshold, sink_token_types) exposes:
+  - score(attention_matrix, sink_positions) → SinkConcentration
+  - decide(sink_concentration) → SinkProbeResult, where
+    is_uncertain = mean_sink_score < threshold (low sink = uncertain output)
+    should_skip_verification = not is_uncertain
+  - benchmark(responses_with_attention, correctness_labels) → dict with keys
+    skip_rate, false_negative_rate, true_negative_rate
+- The component is CI-safe: compute_sink_concentration operates on arbitrary
+  jnp arrays without requiring a real language model
+
+Spec: REQ-VERIFY-086
+
+### REQ-VERIFY-087: SinkProbe Threshold Configuration
+
+The system shall support configurable sink-concentration thresholds for the
+SinkProbe pre-filter, where:
+- The default threshold is 0.3 (responses with mean_sink_score >= 0.3 are
+  considered confident and skip expensive Ising verification)
+- The threshold can be overridden at construction time for calibration
+- A benchmark helper returns skip_rate, false_negative_rate, and
+  true_negative_rate so the threshold can be tuned empirically
+- The threshold is documented as a calibration parameter, not a fixed constant
+
+Spec: REQ-VERIFY-087
+
+### SCENARIO-VERIFY-113: High Sink Concentration Indicates Confident Response
+
+**Given** an attention matrix where every head places >= 0.5 of its mass on
+  a BOS sink token at position 0
+**When** `SinkProbe(threshold=0.3).decide(concentration)` is called
+**Then** `is_uncertain == False`
+**And** `should_skip_verification == True`
+**And** the expensive Ising verification step is bypassed on the fast path
+
+### SCENARIO-VERIFY-114: Low Sink Concentration Triggers Full Verification
+
+**Given** an attention matrix where heads distribute attention nearly uniformly
+  (mean_sink_score < 0.1)
+**When** `SinkProbe(threshold=0.3).decide(concentration)` is called
+**Then** `is_uncertain == True`
+**And** `should_skip_verification == False`
+**And** Ising verification proceeds for this response
+
+### SCENARIO-VERIFY-115: SinkProbe Benchmark Reports Accurate Skip And Error Rates
+
+**Given** 10 synthetic responses: 6 correct (high sink) and 4 incorrect (low sink)
+**When** `SinkProbe(threshold=0.3).benchmark(responses_with_attention,
+  correctness_labels)` is called with matching labels
+**Then** skip_rate is in [0.0, 1.0]
+**And** false_negative_rate is in [0.0, 1.0]  (skipped wrong responses / total wrong)
+**And** true_negative_rate is in [0.0, 1.0]   (skipped correct responses / total correct)
+
 ### SCENARIO-VERIFY-109: Exact Arithmetic Expression Gets High Expression Confidence
 
 **Given** violation_text = `"47+28=76"` (explicit arithmetic with wrong result)
@@ -4298,3 +4363,5 @@ conductor log timestamps for Exps 325–336
 | REQ-INFRA-006 | N/A | Implemented | HostPrereqRegistry + ops/host-prereqs.md + check_prereqs() tests (SCENARIO-INFRA-009/010, Exp 338) |
 | REQ-INFRA-007 | N/A | Implemented | DualGPU auto-assignment in setup_gpu() + dual_gpu_auto_assigned key tests (SCENARIO-INFRA-011, Exp 338) |
 | REQ-INFRA-008 | N/A | Implemented | session_startup.sh + session_startup.py + parse_session_startup_output + run_session_startup tests (SCENARIO-INFRA-012/013, Exp 339) |
+| REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
+| REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
