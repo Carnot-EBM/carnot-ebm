@@ -1,5 +1,41 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 363: Operational Retrospective — Milestone 2026.05.20 COMPLETE)
+
+- 2026-04-15 21:10: Exp 363: Full operational retrospective for milestone 2026.05.20.
+  Written to `results/operational_retro_2026_05_20.json` (schema="carnot.operational_retro.v1").
+
+  **Milestone 2026.05.20 inventory:** 12 experiments planned (Exps 351–362), 11 ran, 1 skipped
+  (Exp 356 LLMExtractor never implemented). Total wall time: 366 min, mean 33.3 min/exp.
+  Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases). Fastest: Exp 355 (15 min).
+
+  **Success criteria:**
+  - live_gpu_confirmed: **False** — Exp 352 confirmed is_live_capable=True (all hardware checks
+    passed: CUDA, torch, model tokenizer loadable), but CARNOT_FORCE_LIVE was never set by the
+    conductor. Third consecutive milestone with this failure pattern.
+  - adversarial_result_credible: **False** — Exp 355 honest_verdict=blocked_simulated. Harness
+    is sound; live execution blocked by CARNOT_FORCE_LIVE not set.
+  - llm_extractor_beats_regex: **False/Blocked** — Exp 356 never implemented; Exp 358 module
+    written (33 tests pass) but no result JSON.
+  - eorm_retrained_on_real: **False** — Exp 359 retrain_mode=synthetic_only (5 real pairs, each
+    with unique question_id; no cross-pair contrastive triples possible without live GPU).
+  - self_learning_improved: **True (synthetic)** — Exp 361 accuracy 0.60→0.72, all 4 Tier 2
+    templates activated; honest_verdict=synthetic_only.
+  - all_retros_closed: **Unknown** — Exp 351 has no JSON artifact.
+
+  **New RETRO items:**
+  - RETRO-012 (critical): CARNOT_FORCE_LIVE never set by conductor — one-line fix; est. 12% savings
+  - RETRO-013 (high): Exp 356 (LLMExtractor) skipped — extraction bottleneck unresolved
+  - RETRO-014 (medium): Missing result JSONs for module-primary experiments (357, 358, 362)
+
+  **Top improvements for next milestone:**
+  1. Set CARNOT_FORCE_LIVE=1 in conductor for GPU-tagged experiments (RETRO-012)
+  2. Implement Exp 356 (LLMExtractor) — unblocks Exp 358 honest_verdict
+  3. Enforce result JSON production for all experiments (RETRO-014)
+
+  **57 tests pass** in `tests/python/test_experiment_363_retro.py` (100% targeted coverage).
+  (User-requested)
+
 ## 2026-04-15 (Exp 364: Wire ModelServer + TensorRT + DualGPU into all benchmark harnesses)
 
 - 2026-04-15: Exp 364: Infrastructure wiring — ModelServer + TensorRT + DualGPU inference acceleration integrated into all benchmark harnesses for consistent hardware-accelerated testing pipeline.
