@@ -1816,3 +1816,4 @@ python/ |
 | 2026-04-15 18:46 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
 | 2026-04-15 19:22 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 19:22 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
+| 2026-04-15 19:23 UTC | Exp 360: Three-Tier Pipeline Benchmark — SinkProbe+EORM+Ising vs Ising-alone | OK | 54 tests pass; total_skip_rate=0.80, fn_rate=0.71 (EORM AUC=0.5); results/experiment_360_three_tier_benchmark.json written; cpu_synthetic mode |
