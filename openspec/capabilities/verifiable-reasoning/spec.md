@@ -3135,6 +3135,36 @@ Spec: REQ-LEARN-024, SCENARIO-LEARN-041, SCENARIO-LEARN-042
   a non-empty `model_id`, and a non-empty `question_id`
 **And** the function is deterministic (same output on repeated calls)
 
+### REQ-LEARN-025: EORM Real-Data Retrain on Live CoT Pairs
+
+Given experiment result files that may contain real (question, response, correctness) triples
+from live GPU inference runs, the system shall load those pairs, merge them with any available
+synthetic corpus from the Exp 346 EORM training, retrain the EORM model, and report AUC-ROC
+before and after retrain to measure improvement from real data.
+
+- REQ-LEARN-025-1: `load_real_cot_pairs(result_files: list[str]) -> list[ViolationPair]` SHALL read each JSON file, extract entries with a `response` (or equivalent) field and a `correct` (or `passed_tests`) boolean, and return a flat list of `ViolationPair` objects. Missing files, missing keys, and empty lists SHALL be handled gracefully (skip silently, return empty list).
+- REQ-LEARN-025-2: `merge_cot_corpora(real_pairs: list[ViolationPair], synthetic_pairs: list[ViolationPair], max_real: int = 300, max_synthetic: int = 100) -> list[ViolationPair]` SHALL prefer real pairs; use up to `max_real` real pairs first, then fill with up to `max_synthetic` synthetic pairs if fewer than `max_real` real pairs are available.
+- REQ-LEARN-025-3: An `EORMRetrainResult` dataclass SHALL carry `n_real_pairs` (int), `n_synthetic_pairs` (int), `before_auc` (float), `after_auc` (float), `auc_improvement` (float), `retrain_mode` (str: "real_data" or "synthetic_only"), and `model_path` (str).
+- REQ-LEARN-025-4: `build_retrain_artifact(result: EORMRetrainResult) -> dict` SHALL return a dict with `schema="carnot.eorm_retrain.v1"`, `retrain_mode`, `auc_improvement`, and `honest_verdict` ("real_data_improvement" when `retrain_mode="real_data"` and `auc_improvement > 0`, "real_data_no_improvement" when `retrain_mode="real_data"` and `auc_improvement <= 0`, or "synthetic_only" when `retrain_mode="synthetic_only"`).
+
+Spec: REQ-LEARN-025, SCENARIO-LEARN-043, SCENARIO-LEARN-044
+
+### SCENARIO-LEARN-043: load_real_cot_pairs Handles Missing Files and Keys Gracefully
+
+**Given** a list of file paths where some do not exist and others exist but lack a `responses` key
+**When** `load_real_cot_pairs(result_files)` is called
+**Then** no exception is raised
+**And** only valid (response, correctness) entries from files that exist and have the key are returned
+**And** the returned list may be empty if no valid data is found
+
+### SCENARIO-LEARN-044: merge_cot_corpora Prefers Real Pairs and Fills with Synthetic
+
+**Given** 30 real pairs and 100 synthetic pairs, with `max_real=300` and `max_synthetic=100`
+**When** `merge_cot_corpora(real_pairs, synthetic_pairs, max_real=300, max_synthetic=100)` is called
+**Then** all 30 real pairs appear in the result (real count is below max_real)
+**And** up to 100 synthetic pairs are appended to fill the corpus
+**And** the total length is 130 (30 real + 100 synthetic)
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -4671,6 +4701,7 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-022 | Not Started | Implemented | EORM CoT energy reward model — EORMModel + CoTEnergyInput + energy/rank/save/load/n_params (SCENARIO-LEARN-038/039, Exp 346) |
 | REQ-LEARN-023 | Not Started | Implemented | EORM contrastive ranking loss — EORMTrainer + contrastive_loss + train_step + train_epoch (SCENARIO-LEARN-040, Exp 346) |
 | REQ-LEARN-024 | Not Started | Implemented | JEPA real-data retrain — ViolationPair + extract_violation_pairs + JEPARetrainer + build_retrain_artifact (SCENARIO-LEARN-041/042, Exp 347) |
+| REQ-LEARN-025 | Not Started | Implemented | EORM real-data retrain — load_real_cot_pairs + merge_cot_corpora + EORMRetrainResult + build_retrain_artifact (SCENARIO-LEARN-043/044, Exp 359) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
