@@ -2918,6 +2918,49 @@ inference begins.  Exp 219/221 ran two models sequentially on GPU 0 while GPU 1 
 **And** `check_dual_gpu_health()` returns `{"all_healthy": False, "n_gpus_detected": 0,
 "n_zombies": 0, "idle_gpus": []}`
 
+### REQ-INFRA-005: Pre-Experiment Dependency Audit
+
+**Status:** Implemented (Exp 327)
+
+Before an experiment begins, the infrastructure must verify that all files listed under
+"EXISTING CODE TO READ FIRST" in the experiment prompt actually exist on disk.  Missing
+files were identified in the 2026.04.29 retrospective (NEW-002) as a root cause of ~5%
+wall-time overhead from retry loops — experiments fail mid-run when they try to read
+result files from prior experiments that were never completed.
+
+**Acceptance criteria:**
+- `extract_required_files(prompt, project_root)` parses lines between
+  "EXISTING CODE TO READ FIRST:" and the next blank-line-or-TASK: boundary.
+- Each bullet line is stripped of its `- ` prefix and any explanatory comment
+  (text after ` — ` or ` # `).
+- `{project_root}` placeholder in paths is substituted with the actual repo root.
+- Relative paths are resolved to absolute paths using `project_root`.
+- `check_dependencies(prompt, project_root)` returns a `DependencyAudit` dataclass with
+  `required_files`, `missing_files`, and `all_present` (bool).
+- `build_blocked_artifact(audit)` returns a dict including `missing_files` and
+  `next_action` advice for the conductor.
+- When invoked as a CLI, exits with code 0 (all present) or code 1 (missing files).
+- `load_experiment_prompt(yaml_path, exp_id)` loads a prompt from a roadmap YAML by
+  matching `exp_id` in the task `id` field.
+
+### SCENARIO-INFRA-007: All Dependencies Present
+
+**Given** a prompt with an "EXISTING CODE TO READ FIRST:" section listing two files
+**And** both files exist on disk
+**When** `check_dependencies(prompt, project_root)` is called
+**Then** `audit.all_present` is `True`
+**And** `audit.missing_files` is `[]`
+**And** `audit.required_files` has length 2
+
+### SCENARIO-INFRA-008: Missing Dependency Detected Before Experiment Runs
+
+**Given** a prompt listing a file that does not exist (e.g. `results/experiment_999_results.json`)
+**When** `check_dependencies(prompt, project_root)` is called
+**Then** `audit.all_present` is `False`
+**And** the missing path appears in `audit.missing_files`
+**And** `build_blocked_artifact(audit)` returns a dict with key `missing_files`
+**And** the dict contains a `next_action` field with remediation advice
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -3021,3 +3064,4 @@ inference begins.  Exp 219/221 ran two models sequentially on GPU 0 while GPU 1 
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
 | REQ-INFRA-004 | N/A | Implemented | check_dual_gpu_health() + setup_gpu() integration tests (SCENARIO-INFRA-005/006, Exp 326) |
+| REQ-INFRA-005 | N/A | Implemented | DependencyAudit + extract_required_files + check_dependencies + CLI tests (SCENARIO-INFRA-007/008, Exp 327) |

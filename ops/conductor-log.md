@@ -1659,8 +1659,23 @@ python/ |
 - **Fix:** `ExperimentTemplate.generate_test_stub(test_file_path, module_to_test)` writes a pytest skeleton before implementation; idempotent
 - **Usage:** Call `tmpl.generate_test_stub("tests/python/test_exp_NNN.py", "scripts.my_module")` at start of experiment setup
 
-### NEW-002: Experiment duration histogram
-- **Status:** Carried forward (not yet implemented)
+### NEW-002: Pre-experiment dependency audit
+- **Status:** IMPLEMENTED (Exp 327, 2026-04-15)
+- **Root cause:** Experiments fail mid-run when they assume prior experiment results exist
+  but those files are missing (e.g., "load results/experiment_307_jepa_real_training.json").
+  ~5% wall-time overhead observed from retry loops across the 2026.04.29 milestone.
+- **Fix:** `scripts/experiment_dependency_audit.py` — parses "EXISTING CODE TO READ FIRST:"
+  section from any research prompt, resolves each file path, and reports missing files before
+  the experiment begins.  Exit code 0 = all present; code 1 = missing files (with list).
+  `check_dependencies(prompt, project_root)` returns `DependencyAudit` dataclass; conductor
+  can call `build_blocked_artifact(audit)` to emit a blocked artifact without spending any
+  inference tokens.  `load_experiment_prompt(yaml_path, exp_id)` loads a prompt from a
+  roadmap YAML by matching exp_id substring in the task id field.
+- **Evidence:** `results/experiment_327_dep_audit_results.json` — validated against first 3
+  prompts in research-roadmap.yaml; correctly detected research-roadmap-next.yaml as missing
+  from Exp 327's own dependency list.
+- **Spec:** REQ-INFRA-005, SCENARIO-INFRA-007, SCENARIO-INFRA-008
 | 2026-04-15 02:02 UTC | Exp 325: Conductor timeout wrapper + ExperimentTem | OK | 81 passed in 3.28s |
 | 2026-04-15 02:04 UTC | Exp 326: DualGPUMonitor — RETRO-002 + RETRO-003    | OK | 32 tests pass; DualGPUMonitor + GPUProcessInfo in pipeline; setup_gpu() additive gpu_monitor_results key; RETRO-002/003 implemented |
 | 2026-04-15 02:28 UTC | Exp 326: DualGPUMonitor + ExperimentTemplate GPU e | OK | 81 passed in 3.53s |
+| 2026-04-15 02:29 UTC | Exp 327: Pre-experiment dependency audit (NEW-002)  | OK | 34 tests pass; DependencyAudit + extract_required_files + check_dependencies + build_blocked_artifact + load_experiment_prompt + CLI; artifact: results/experiment_327_dep_audit_results.json; REQ-INFRA-005 implemented |

@@ -1,0 +1,52 @@
+{
+  "experiment": 327,
+  "title": "Exp 327: Pre-experiment dependency audit tool (NEW-002)",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T02:37:12Z",
+  "finished_at": "2026-04-15T02:37:12Z",
+  "duration_s": 0.018,
+  "status": "success",
+  "schema_name": "carnot.dependency_audit.v1",
+  "n_prompts_checked": 3,
+  "n_all_present": 2,
+  "n_missing_found": 1,
+  "sample_audits": [
+    {
+      "task_id": "exp325-conductor-timeout-wrapper",
+      "n_required": 3,
+      "n_missing": 0,
+      "all_present": true,
+      "missing_files": []
+    },
+    {
+      "task_id": "exp326-dual-gpu-monitor",
+      "n_required": 4,
+      "n_missing": 0,
+      "all_present": true,
+      "missing_files": []
+    },
+    {
+      "task_id": "exp327-dependency-audit",
+      "n_required": 3,
+      "n_missing": 1,
+      "all_present": false,
+      "missing_files": [
+        "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml"
+      ]
+    }
+  ],
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "n_all_present",
+    "n_missing_found",
+    "n_prompts_checked",
+    "run_date",
+    "sample_audits",
+    "schema_name",
+    "started_at",
+    "status",
+    "title"
+  ]
+}
