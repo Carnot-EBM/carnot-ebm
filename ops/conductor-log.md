@@ -1707,3 +1707,5 @@ python/ |
 | 2026-04-15 08:18 UTC | Exp 339: Pre-session GPU health + zombie cleanup a | OK | Deliverable already exists in repo |
 | 2026-04-15 08:52 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | 81 passed in 3.25s |
 | 2026-04-15 08:53 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
+| 2026-04-15 09:14 UTC | Exp 340: Live full precision pipeline benchmark —  | OK | 81 passed in 3.36s |
+| 2026-04-15 09:15 UTC | Exp 338: Host prereqs registry + DualGPURunner as  | OK | Deliverable already exists in repo |
