@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Exp 367: Live Extraction Comparison — Verification Run)
+
+- 2026-04-15 23:03: Human-requested verification of Exp 367 implementation.
+  All files confirmed present:
+  - `python/carnot/pipeline/extractor_comparison.py` — ExtractorComparisonResult, run_extractor_comparison, build_extractor_comparison_artifact (schema="carnot.extraction_comparison.v1")
+  - `scripts/experiment_367_extraction_live.py` — Live Gemma4-E4B-it + Qwen3.5-0.8B comparison; blocked artifact when CARNOT_FORCE_LIVE not set
+  - `tests/python/test_experiment_367_extraction_live.py` — 42 targeted tests for Exp 367 module and script
+  - REQ-EXTRACT-023 + SCENARIO-EXTRACT-047/048 confirmed in spec
+
+  Full test suite: **6577 passed, 80 pre-existing failures in test_experiment_319_retro.py (unrelated to Exp 367)**.
+  Exp 367 + Exp 358 tests: **75 passed** in 11.93s.
+  honest_verdict="live_gpu_winner" gated correctly: only fires when ALL results have inference_mode="live_gpu".
+  (User-requested verification)
+
 ## 2026-04-15 (Operational Retrospective — Milestone 2026.05.20, Updated Analysis)
 
 - 2026-04-15 21:45: Full operational efficiency retrospective for milestone 2026.05.20 (updated).
