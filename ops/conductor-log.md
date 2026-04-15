@@ -1840,3 +1840,4 @@ python/ |
 | 2026-04-15 21:57 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 21:57 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
 | 2026-04-15 21:57 UTC | Milestone 2026.05.27 activated | OK | 12 tasks queued |
+| 2026-04-15 22:06 UTC | Exp 365: Close RETRO-012/013/014 — conductor GPU e | FAIL | Claude Code error: Error: Reached max turns (50) |
