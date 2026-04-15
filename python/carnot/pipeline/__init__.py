@@ -157,6 +157,11 @@ from carnot.pipeline.confidence_weighted_repair import (
     compute_energy_variance_confidence,
     compute_expression_confidence,
 )
+from carnot.pipeline.adaptive_thresholds import (
+    ModelAdaptiveThresholds,
+    PerModelFPTracker,
+    SelectiveConsolidation,
+)
 
 __all__ = [
     "AgentStep",
@@ -263,6 +268,9 @@ __all__ = [
     "compute_expression_confidence",
     "DualGPUMonitor",
     "GPUProcessInfo",
+    "ModelAdaptiveThresholds",
+    "PerModelFPTracker",
+    "SelectiveConsolidation",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",

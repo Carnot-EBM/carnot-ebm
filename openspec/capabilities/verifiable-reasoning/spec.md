@@ -2630,6 +2630,90 @@ Requirements:
 **And** each value equals `live[key] - simulated[key]` (signed, not absolute)
 **And** negative deltas are preserved without clamping
 
+### REQ-LEARN-015: Model-Adaptive Constraint Thresholds
+
+The system shall track false-positive (FP) and true-positive (TP) rates per
+(model_id, constraint_type) pair and disable constraint types for a given model
+when their FP rate exceeds their TP rate, provided a minimum observation count
+has been reached. This self-calibration ensures the verify-repair pipeline
+improves accuracy over time without manual per-model tuning.
+
+Rationale: Exp 331 FP autopsy showed that certain constraint types (e.g.,
+NL2Z3 range checks) have systematically high FP rates on small models like
+Qwen3.5-0.8B but low FP rates on larger models. Disabling noisy constraint
+types per-model recovers the net positive gain of the repair pipeline.
+
+- REQ-LEARN-015-1: `PerModelFPTracker.update(model_id, constraint_type, was_fp, was_tp)` MUST
+  update running counts for the (model_id, constraint_type) pair atomically.
+- REQ-LEARN-015-2: `PerModelFPTracker.should_disable(model_id, constraint_type)` MUST
+  return True when fp_rate > tp_rate AND n_observations >= min_observations.
+- REQ-LEARN-015-3: `PerModelFPTracker.get_active_constraint_types(model_id)` MUST
+  return a frozenset of constraint types not currently disabled.
+- REQ-LEARN-015-4: `ModelAdaptiveThresholds.extract(question, response, model_id)` MUST
+  call the wrapped extractor and filter out violations whose constraint_type is
+  disabled for model_id.
+- REQ-LEARN-015-5: `PerModelFPTracker` MUST support `to_dict()` / `from_dict()` for
+  persistence across experiment runs.
+
+Spec: REQ-LEARN-015, SCENARIO-LEARN-025, SCENARIO-LEARN-026
+
+### REQ-LEARN-016: Selective CaseMemory Consolidation
+
+Following ATLAS (arXiv 2511.01093) selective memory consolidation, the system
+shall retain only high-contrast interactions in CaseMemory — those where the
+verified violation energy disagrees with the model's confidence direction. This
+reduces memory footprint while maximising the information value of retained cases.
+
+Rationale: Low-contrast traces (where verification agreed with the model's
+apparent confidence) provide weak learning signal. ATLAS shows ~60% memory
+reduction with no precision loss when only high-contrast cases are retained.
+
+- REQ-LEARN-016-1: `SelectiveConsolidation.should_retain(verified_violation_energy,
+  model_confidence_score)` MUST return True when the two signals disagree
+  (high energy + low confidence, or low energy + high confidence indicates
+  a surprising interaction worth retaining).
+- REQ-LEARN-016-2: `SelectiveConsolidation.consolidation_ratio(all_traces, retained)` MUST
+  return the fraction of traces retained (target 0.3–0.5).
+- REQ-LEARN-016-3: `CaseMemory.add_trace_selective(trace, min_contrast)` MUST only
+  store the trace when `abs(violation_energy - model_confidence) > min_contrast`.
+- REQ-LEARN-016-4: `add_trace_selective` MUST return True when the trace was stored,
+  False when it was discarded.
+
+Spec: REQ-LEARN-016, SCENARIO-LEARN-027, SCENARIO-LEARN-028
+
+### SCENARIO-LEARN-025: PerModelFPTracker Disables High-FP Constraint Type
+
+**Given** a `PerModelFPTracker(min_observations=10)`
+**And** 12 observations for model "qwen3.5-0.8b" / constraint_type "range_check"
+  where 9 are FP and 3 are TP (fp_rate=0.75, tp_rate=0.25)
+**When** `should_disable("qwen3.5-0.8b", "range_check")` is called
+**Then** the result is `True`
+
+### SCENARIO-LEARN-026: PerModelFPTracker Keeps Low-FP Constraint Type Active
+
+**Given** a `PerModelFPTracker(min_observations=10)`
+**And** 12 observations for model "qwen3.5-0.8b" / constraint_type "arithmetic"
+  where 3 are FP and 9 are TP (fp_rate=0.25, tp_rate=0.75)
+**When** `should_disable("qwen3.5-0.8b", "arithmetic")` is called
+**Then** the result is `False`
+**And** `get_active_constraint_types("qwen3.5-0.8b")` includes "arithmetic"
+
+### SCENARIO-LEARN-027: SelectiveConsolidation Retains High-Contrast Trace
+
+**Given** a `SelectiveConsolidation()` instance
+**And** a trace with `verified_violation_energy=0.9` and `model_confidence_score=0.1`
+  (high energy but model was not confident — surprising disagreement)
+**When** `should_retain(0.9, 0.1)` is called
+**Then** the result is `True` (contrast = 0.8 > default threshold 0.5)
+
+### SCENARIO-LEARN-028: CaseMemory add_trace_selective Discards Low-Contrast Trace
+
+**Given** a `CaseMemory` instance and `min_contrast=0.5`
+**And** a trace with `violation_energy=0.6` and `model_confidence=0.55`
+  (contrast = 0.05 < 0.5)
+**When** `add_trace_selective(trace, min_contrast=0.5)` is called
+**Then** the method returns `False` and the memory length is unchanged
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -3326,6 +3410,8 @@ result files from prior experiments that were never completed.
 | REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
 | REQ-LEARN-013 | Not Started | In Progress | Four-tier relay benchmark — RelayBatchResult + RelayArtifact (SCENARIO-LEARN-021/022, Exp 318) |
 | REQ-LEARN-014 | Not Started | In Progress | Four-tier relay live GPU validation — wrapper artifact with simulation_comparison + jepa_skip_rate_live (SCENARIO-LEARN-023/024, Exp 329) |
+| REQ-LEARN-015 | Not Started | Implemented | Model-adaptive constraint thresholds — PerModelFPTracker + ModelAdaptiveThresholds + 43 tests (SCENARIO-LEARN-025/026, Exp 333) |
+| REQ-LEARN-016 | Not Started | Implemented | Selective CaseMemory consolidation — SelectiveConsolidation + add_trace_selective + 43 tests (SCENARIO-LEARN-027/028, Exp 333) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
