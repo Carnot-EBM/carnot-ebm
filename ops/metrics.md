@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Milestone 2026.05.27 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T21:47:22Z | 2026-04-15T21:56:02Z | Plan next milestone 2026.05.27: read 10 project files, arxiv research (4 new papers added to research-references.md: CIKAN 2412.03710, Thermodynamic init 2603.24183, RLVR 2506.14245, StructEval 2505.20139), identified 3 gaps (RETRO-012/live GPU, LLMExtractor, real-data self-learning), designed 12 experiments (365-376) across 5 phases, wrote research-roadmap-vNEXT.md (v33) + research-roadmap-next.yaml | ~9m |
+
+---
+
 ## Session: 2026-04-15 Exp 359 EORM Real-Data Retrain
 
 ### Turn Log
