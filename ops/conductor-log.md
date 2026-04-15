@@ -2,6 +2,7 @@
 
 | Timestamp | Task | Status |
 |-----------|------|--------|
+| 2026-04-15 01:12 UTC | Plan next milestone (2026.05.06) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-vNEXT.md (v30) created; 13 experiments (Exps 325-337) across 4 phases; 6 new papers added to research-references.md (VERGE 2601.20055, CRV 2510.09312, Typed CoT 2510.01069, Solver-aided agents 2603.20449, EBM Reward 2504.13134, ATLAS 2511.01093); 3 gaps identified: all benchmarks simulated (live GPU unused), constraint extraction FP rate harmful at 1B+, hardware blocked for 3+ milestones |
 | 2026-04-14 12:59 UTC | Plan next milestone (2026.04.29) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-vNEXT.md (v29) created; 13 experiments across 4 phases; 8 new papers added to research-references.md; 3 gaps identified: JEPA synthetic-only, Z3 extraction missing, no full-scale CI benchmarks |
 | 2026-04-14 09:07 UTC | Plan next milestone (2026.04.22) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-v28.md created; 13 experiments across 4 phases; 9 new papers added to research-references.md |
 | 2026-04-11 15:52 UTC | Plan next milestone (2026.04.12) — ArXiv scan + milestone design | OK | research-roadmap-next.yaml + openspec/change-proposals/research-roadmap-vNEXT.md created; 14 experiments across 4 phases |
