@@ -1723,3 +1723,67 @@ milestones:
     title: 'Exp 350: Operational retrospective for milestone 2026.05.13'
     deliverable: results/operational_retro_2026_05_13.json
     result: OK (conductor)
+- id: 2026.05.20
+  title: Live GPU Unblock, Apple Adversarial GSM8K, and LLM-as-Extractor
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-15'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp351-retro-infrastructure-close
+    title: "Exp 351: Close RETRO-003/005/009/010/011 \u2014 conductor timeout wiring, GPU kill-zombies, doc reconciliation\
+      \ automation"
+    deliverable: ops/conductor-log.md
+    result: OK (conductor)
+  - id: exp352-live-gpu-inference-diagnostic
+    title: "Exp 352: Live GPU inference root-cause diagnostic \u2014 trace why CARNOT_FORCE_LIVE=1 falls back to simulated"
+    deliverable: results/experiment_352_live_gpu_diagnostic.json
+    result: OK (conductor)
+  - id: exp353-live-gpu-smoke-test
+    title: "Exp 353: Live GPU smoke test \u2014 5 questions, verify inference_mode=live_gpu"
+    deliverable: results/experiment_353_live_gpu_smoke_test.json
+    result: OK (conductor)
+  - id: exp354-apple-adversarial-gsm8k-harness
+    title: "Exp 354: Apple adversarial GSM8K harness \u2014 dataset + evaluation script (no GPU)"
+    deliverable: scripts/experiment_354_adversarial_gsm8k_harness.py
+    result: OK (conductor)
+  - id: exp355-apple-adversarial-gsm8k-benchmark
+    title: "Exp 355: Apple adversarial GSM8K benchmark \u2014 live GPU execution on Gemma4-E4B-it + Qwen3.5-0.8B"
+    deliverable: results/experiment_355_adversarial_gsm8k_benchmark.json
+    result: OK (conductor)
+  - id: exp356-llm-as-extractor
+    title: "Exp 356: LLMExtractor \u2014 second LLM call extracts structured arithmetic claims from free-form IT model output"
+    deliverable: python/carnot/pipeline/llm_extractor.py
+    result: OK (conductor)
+  - id: exp357-llm-guided-z3-formalization
+    title: "Exp 357: LLM-guided Z3 formalization \u2014 arXiv 2601.04675 approach for 80% improvement on ambiguous arithmetic"
+    deliverable: python/carnot/pipeline/llm_z3_formalizer.py
+    result: OK (conductor)
+  - id: exp358-extraction-benchmark-live
+    title: "Exp 358: Extraction benchmark \u2014 ArithmeticExtractor vs LLMExtractor vs LLMz3Formalizer on live IT model output"
+    deliverable: results/experiment_358_extraction_benchmark.json
+    result: OK (conductor)
+  - id: exp359-eorm-real-data-retrain
+    title: "Exp 359: EORM retrain on real (CoT, correctness) pairs from Exps 340/341/355 \u2014 measure AUC-ROC improvement"
+    deliverable: results/eorm_model_359_real.safetensors
+    result: OK (conductor)
+  - id: exp360-three-tier-pipeline-benchmark
+    title: "Exp 360: Three-tier pipeline benchmark \u2014 SinkProbe \u2192 EORM \u2192 Ising throughput and accuracy vs Ising-alone"
+    deliverable: results/experiment_360_three_tier_benchmark.json
+    result: OK (conductor)
+  - id: exp361-self-learning-relay-real-data
+    title: "Exp 361: Tier 1+2+3 online self-learning relay \u2014 real models, real data, constraint weight updates across\
+      \ batches (FR-11)"
+    deliverable: results/experiment_361_self_learning_relay.json
+    result: OK (conductor)
+  - id: exp362-saver-multi-turn-verification
+    title: "Exp 362: SAVeR multi-turn verification \u2014 constraint state propagation across agent steps (arXiv 2604.08401)"
+    deliverable: python/carnot/pipeline/saver_verifier.py
+    result: OK (conductor)
+  - id: exp364-gpu-acceleration-e2e
+    title: 'Exp 364: Wire ModelServer + TensorRT + DualGPU into all benchmark harnesses'
+    deliverable: results/experiment_364_gpu_acceleration_e2e.json
+    result: OK (conductor)
+  - id: exp363-operational-retrospective
+    title: 'Exp 363: Operational retrospective for milestone 2026.05.20'
+    deliverable: results/operational_retro_2026_05_20.json
+    result: OK (conductor)
