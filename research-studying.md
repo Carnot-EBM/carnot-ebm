@@ -418,6 +418,22 @@ These are NOT candidates for revalidation — they were disproven by experimenta
   - Conductor constitution defining allowed/forbidden autonomous actions
   - Verification-before-publication gate (extend Exp 209 provenance audit)
 
+### Vulkan Compute Backend for Universal GPU Support (Phase 2 — Plan Now)
+- **Why:** CUDA locks us to NVIDIA. ROCm is unstable (broke on our iGPU).
+  Vulkan works on every modern GPU: NVIDIA, AMD, Intel, mobile.
+- **What to build:** Vulkan compute shaders for energy function evaluation
+  (E = -0.5 x^T J x), Ising sampling (parallel spin flips), and KAN
+  forward pass (B-spline evaluation).
+- **Tools:** `vulkano` (Rust, our production language), `kompute` (Python bridge),
+  or `wgpu` (Rust, WebGPU API over Vulkan/Metal/DX12).
+- **Architecture:** Vulkan for energy computation, CUDA/ROCm for LLM inference
+  (PyTorch/JAX still need vendor backends for model loading).
+- **When:** Phase 2 — after core verification pipeline is stable. The Rust
+  crates (`carnot-ising`, `carnot-kan`) are the natural place to add Vulkan.
+- **Score:** 4x4x3x4 = 192 — important for portability, medium effort
+- **Action:** Add Vulkan compute experiment to Phase 2 milestone. Start with
+  Ising energy evaluation (simplest kernel), then KAN forward pass.
+
 ### Photonic Computing (Monitor — Not Actionable Yet)
 - **Q.ANT NPU 2.0** — commercial photonic matmul accelerator (30x energy efficiency).
   Not directly useful for sampling. Commercial-only, no cloud access.
