@@ -1772,3 +1772,5 @@ python/ |
 | 2026-04-15 15:21 UTC | Exp 350: Operational retrospective for milestone 2 | OK | Deliverable already exists in repo |
 | 2026-04-15 15:21 UTC | Milestone 2026.05.20 activated | OK | 13 tasks queued |
 | 2026-04-15 15:22 UTC | Exp 351: Close RETRO-003/005/009/010/011 — conduct | OK | Deliverable already exists in repo |
+| 2026-04-15 15:33 UTC | Exp 352: Live GPU diagnostic — identify failure layer | OK | LiveGPUDiagnostic implemented; diagnose_live_gpu() 100% coverage; setup_gpu() now raises RuntimeError on CARNOT_FORCE_LIVE=1 failure |
+| 2026-04-15 15:33 UTC | Exp 352: Live GPU inference root-cause diagnostic  | FAIL | Claude Code error: Error: Reached max turns (50) |

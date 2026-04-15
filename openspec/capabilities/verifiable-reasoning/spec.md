@@ -4143,6 +4143,70 @@ Before launching a research session or experiment run, a startup health check mu
 
 ---
 
+### REQ-INFRA-014: Live GPU Failure Must Be Explicit, Not Silent Fallback
+
+When `CARNOT_FORCE_LIVE=1` is set in the environment, the inference pipeline MUST NOT
+silently fall back to simulated mode if GPU inference cannot be established.  A silent
+fallback produces artifacts that appear to contain live GPU measurements but are actually
+synthetic, invalidating every benchmark result without any signal to the researcher.
+
+Instead:
+
+- `diagnose_live_gpu(model_ids)` must inspect each failure layer in sequence
+  (CUDA visibility, PyTorch CUDA availability, `CARNOT_FORCE_LIVE` env var, model loadability)
+  and return a `LiveGPUDiagnostic` dataclass with `is_live_capable: bool` and
+  `failure_reason: str` identifying the first failed layer.
+- `ExperimentTemplate.setup_gpu()` must call `diagnose_live_gpu()` when
+  `CARNOT_FORCE_LIVE=1` and any model pre-warm fails.  If `not is_live_capable`, it
+  must raise `RuntimeError("Live GPU required but unavailable: <failure_reason>")`.
+- `diagnose_live_gpu()` is CI-safe: it never raises; it returns a diagnostic even when
+  no GPU is present.
+
+Rationale: Exps 340, 341, 346, 347 all ran in simulated mode despite `CARNOT_FORCE_LIVE=1`,
+producing four consecutive milestones of meaningless benchmark results.  Both RTX 3090s
+were idle throughout.  Silent fallback is a correctness bug, not a usability feature.
+
+### SCENARIO-INFRA-014: Live GPU Diagnostic Reports First Failure Layer
+
+**Given** `CARNOT_FORCE_LIVE=1` is set
+**And** `nvidia-smi` is absent (or reports 0 GPUs)
+**When** `diagnose_live_gpu(["Qwen/Qwen3.5-0.8B"])` is called
+**Then** `result.is_live_capable` is `False`
+**And** `result.cuda_visible` is `False`
+**And** `result.failure_reason` contains `"cuda_visible"`
+**And** no exception is raised
+
+**Given** `CARNOT_FORCE_LIVE=1` is set
+**And** CUDA is visible but `torch.cuda.is_available()` returns `False`
+**When** `diagnose_live_gpu(["Qwen/Qwen3.5-0.8B"])` is called
+**Then** `result.is_live_capable` is `False`
+**And** `result.torch_available` is `False`
+**And** `result.failure_reason` contains `"torch_cuda"`
+
+**Given** `CARNOT_FORCE_LIVE=1` is set, CUDA visible, torch CUDA available,
+**And** model `"nonexistent/model-xyz"` is not cached and cannot be downloaded
+**When** `diagnose_live_gpu(["nonexistent/model-xyz"])` is called
+**Then** `result.is_live_capable` is `False`
+**And** `result.model_loadable` is `False`
+**And** `result.failure_reason` contains `"model_loadable"`
+
+### SCENARIO-INFRA-015: setup_gpu Raises When CARNOT_FORCE_LIVE=1 and GPU Unavailable
+
+**Given** `CARNOT_FORCE_LIVE=1` is set
+**And** all model pre-warms fail (`health_ok=False` for every model)
+**When** `ExperimentTemplate.setup_gpu(model_specs)` is called
+**Then** a `RuntimeError` is raised
+**And** the error message starts with `"Live GPU required but unavailable:"`
+**And** the message contains the `failure_reason` from `diagnose_live_gpu()`
+
+**Given** `CARNOT_FORCE_LIVE=0` (CI mode)
+**And** all model pre-warms fail
+**When** `ExperimentTemplate.setup_gpu(model_specs)` is called
+**Then** no exception is raised
+**And** the returned dict has `all_healthy=False`
+
+---
+
 ## Operational Retrospective Requirements (REQ-RETRO-*)
 
 These requirements govern the per-milestone operational retrospectives produced by
@@ -4363,5 +4427,6 @@ conductor log timestamps for Exps 325–336
 | REQ-INFRA-006 | N/A | Implemented | HostPrereqRegistry + ops/host-prereqs.md + check_prereqs() tests (SCENARIO-INFRA-009/010, Exp 338) |
 | REQ-INFRA-007 | N/A | Implemented | DualGPU auto-assignment in setup_gpu() + dual_gpu_auto_assigned key tests (SCENARIO-INFRA-011, Exp 338) |
 | REQ-INFRA-008 | N/A | Implemented | session_startup.sh + session_startup.py + parse_session_startup_output + run_session_startup tests (SCENARIO-INFRA-012/013, Exp 339) |
+| REQ-INFRA-014 | N/A | Implemented | LiveGPUDiagnostic + diagnose_live_gpu() + setup_gpu() RuntimeError on CARNOT_FORCE_LIVE=1 failure (SCENARIO-INFRA-014/015, Exp 352) |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
