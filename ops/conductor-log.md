@@ -1852,3 +1852,4 @@ python/ |
 | 2026-04-15 22:43 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | 81 passed in 3.30s |
 | 2026-04-15 23:03 UTC | Exp 367: Human-requested verification — Exp 367 + Exp 358 tests | OK | 75 passed in 11.93s; full suite 6577 passed (80 pre-existing failures in test_experiment_319_retro.py unrelated); REQ-EXTRACT-023 + SCENARIO-EXTRACT-047/048 confirmed in spec; all ops docs updated |
 | 2026-04-15 23:05 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | 81 passed in 3.31s |
+| 2026-04-15 23:29 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | 81 passed in 3.26s |
