@@ -1,0 +1,47 @@
+{
+  "experiment": 329,
+  "schema": "carnot.live_relay_benchmark.v1",
+  "title": "Live GPU Four-Tier Relay Benchmark (Exp 318 re-run)",
+  "inference_mode": "live_gpu",
+  "status": "success",
+  "run_date": "20260415",
+  "started_at": "2026-04-15T03:30:07Z",
+  "finished_at": "2026-04-15T03:30:17Z",
+  "duration_s": 9.532,
+  "improvement_1to3": -0.060606,
+  "jepa_skip_rate_live": 0.181818,
+  "jepa_skip_rate_simulated": 0.181818,
+  "simulation_comparison": {
+    "batch1_accuracy_delta": 0.0,
+    "batch3_accuracy_delta": 0.0,
+    "improvement_delta": 0.0
+  },
+  "primary_result_path": "results/experiment_318_live_relay.json",
+  "simulated_result_path": "results/experiment_318_self_learning_relay.json",
+  "live_result": {
+    "batch1_accuracy": 0.69697,
+    "batch2_accuracy": 0.545455,
+    "batch3_accuracy": 0.636364,
+    "improvement_1to2": -0.151515,
+    "improvement_1to3": -0.060606,
+    "jepa_skip_rate": 0.181818,
+    "z3_sat_rate": 0.666667
+  },
+  "gpu_diagnostics": {
+    "dual_gpu_monitor": {
+      "health": {
+        "n_gpus_detected": 2,
+        "n_zombies": 0,
+        "idle_gpus": [
+          0,
+          1
+        ],
+        "all_healthy": false
+      },
+      "processes": []
+    },
+    "nvidia_smi_raw": "0, NVIDIA GeForce RTX 3090, 24576 MiB, 24123 MiB, 4 MiB, 0 %\n1, NVIDIA GeForce RTX 3090, 24576 MiB, 24123 MiB, 4 MiB, 0 %",
+    "nvidia_smi_returncode": 0,
+    "compute_apps": ""
+  }
+}

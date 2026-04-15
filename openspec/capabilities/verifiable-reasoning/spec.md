@@ -2489,6 +2489,46 @@ Honest reporting invariants:
 **Then** `improvement_1to3 < 0.0` (negative improvement is reported, not clamped)
 **And** `improvement_1to3 == batch3_accuracy - batch1_accuracy` exactly
 
+### REQ-LEARN-014: Four-Tier Relay Live GPU Validation
+
+**Priority:** High
+**Experiment:** Exp 329
+
+The system MUST re-run the Exp 318 four-tier continuous self-learning relay benchmark
+with live GPU inference (`CARNOT_FORCE_LIVE=1`) to determine whether the relay stack
+produces `improvement_1to3 > 0` on real model outputs.
+
+Requirements:
+- REQ-LEARN-014-1: The wrapper script (Exp 329) MUST invoke `experiment_318_self_learning_relay.py`
+  with `CARNOT_FORCE_LIVE=1` to obtain live model outputs.
+- REQ-LEARN-014-2: The resulting artifact MUST have `inference_mode="live_gpu"`.
+  If the GPU is unavailable the wrapper MUST emit `status="blocked"` and never silently
+  fall back to simulated results.
+- REQ-LEARN-014-3: `improvement_1to3` MUST be reported as a signed float (not clamped).
+  Negative results are valid and must appear in the artifact.
+- REQ-LEARN-014-4: The artifact MUST include a `simulation_comparison` dict with keys
+  `batch1_accuracy_delta`, `batch3_accuracy_delta`, and `improvement_delta` computed
+  against the Exp 318 simulated baseline.
+- REQ-LEARN-014-5: `jepa_skip_rate_live` MUST be captured from the live run and included
+  in the wrapper artifact alongside `jepa_skip_rate_simulated` for comparison.
+
+### SCENARIO-LEARN-023: Live Relay Artifact Rejected If Not Live GPU
+
+**Given** a result artifact loaded from an Exp 318 re-run
+**When** `validate_relay_live(result)` is called
+**And** `result["inference_mode"] != "live_gpu"`
+**Then** a `ValueError` is raised describing the rejected mode and instructing the caller
+  to re-run with `CARNOT_FORCE_LIVE=1`
+
+### SCENARIO-LEARN-024: Simulation Comparison Keys Present And Signed
+
+**Given** a live relay result and a simulated relay result (Exp 318 baseline)
+**When** `compare_relay_to_simulated(live, simulated)` is called
+**Then** the returned dict contains keys `batch1_accuracy_delta`, `batch3_accuracy_delta`,
+  and `improvement_delta`
+**And** each value equals `live[key] - simulated[key]` (signed, not absolute)
+**And** negative deltas are preserved without clamping
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
@@ -3099,6 +3139,7 @@ result files from prior experiments that were never completed.
 | REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |
 | REQ-LEARN-012 | Not Started | Implemented | ThresholdAdapter online adaptation + Tier 3 benchmark (SCENARIO-LEARN-019/020, Exp 309) |
 | REQ-LEARN-013 | Not Started | In Progress | Four-tier relay benchmark — RelayBatchResult + RelayArtifact (SCENARIO-LEARN-021/022, Exp 318) |
+| REQ-LEARN-014 | Not Started | In Progress | Four-tier relay live GPU validation — wrapper artifact with simulation_comparison + jepa_skip_rate_live (SCENARIO-LEARN-023/024, Exp 329) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
