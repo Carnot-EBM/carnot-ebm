@@ -607,7 +607,112 @@ def comparison_direction_template(response: str) -> list[ConstraintResult]:
     return results
 
 
+# ---------------------------------------------------------------------------
+# CaseMemoryTemplateWiring
+# ---------------------------------------------------------------------------
+
+
+class CaseMemoryTemplateWiring:
+    """Bridge CaseMemory violation events to ConstraintTemplateLibrary.observe_pattern().
+
+    **Researcher summary:**
+        This class is the Tier 2 → Tier 1 feedback loop: when CaseMemory records a
+        violation, we call observe_pattern() on the library so that repeated error
+        patterns eventually activate new constraint templates. The wiring is additive
+        and read-only with respect to CaseMemory — it never modifies the memory.
+
+    **Detailed explanation for engineers:**
+        When the verify-repair pipeline detects a violation and records it in CaseMemory,
+        it should also call ``on_violation_recorded(violation_type, model_id)`` on this
+        wiring object. The wiring translates the raw violation_type string into a
+        canonical pattern_key (e.g., "carry_error" → "carry_check") and increments
+        the observation count in the library for that model. Once enough violations of
+        the same type accumulate, the corresponding template activates and the pipeline
+        starts generating additional constraints of that type.
+
+        The mapping is intentionally permissive: any violation type that contains a
+        recognized keyword in its name is mapped, and unrecognized types pass through
+        unchanged. This lets experiment code use domain-specific violation names while
+        still wiring into the template library's canonical keys.
+
+        Case-insensitive matching ensures consistency across different naming conventions
+        (e.g., "CARRY_ERROR", "carry_error", "Carry_Error" all map to "carry_check").
+
+    Spec: REQ-LEARN-019, REQ-LEARN-019-1, REQ-LEARN-019-2, REQ-LEARN-019-3, REQ-LEARN-019-4,
+          SCENARIO-LEARN-033, SCENARIO-LEARN-034
+    """
+
+    # Maps substring keywords (lowercase) to canonical pattern_keys.
+    # Ordered from most-specific to least-specific so that multi-keyword types
+    # like "carry_sign_error" match "carry" before "sign".
+    _KEYWORD_MAP: list[tuple[str, str]] = [
+        ("carry", "carry_check"),
+        ("sign", "sign_check"),
+        ("unit", "unit_consistency"),
+        ("comparison", "comparison_direction"),
+    ]
+
+    def __init__(self, library: ConstraintTemplateLibrary) -> None:
+        """Initialize the wiring with the library to notify.
+
+        Args:
+            library: The ConstraintTemplateLibrary to call observe_pattern() on.
+
+        Spec: REQ-LEARN-019-1
+        """
+        self._library = library
+
+    def violation_type_to_pattern_key(self, violation_type: str) -> str:
+        """Map a violation_type string to a canonical pattern_key.
+
+        **Detailed explanation for engineers:**
+            Checks whether the lowercased violation_type contains any of the
+            recognized keyword substrings. The first match wins. If no keyword
+            matches, the original violation_type is returned unchanged (pass-through).
+
+            This design keeps the mapping DRY: experiment code can use descriptive
+            violation names ("carry_error_in_step_3") and the wiring still finds
+            the canonical key ("carry_check"). Unrecognized types flow through
+            without error — they accumulate observation counts but only become
+            actionable if a template with that pattern_key is registered.
+
+        Args:
+            violation_type: The raw violation type string from the pipeline.
+
+        Returns:
+            Canonical pattern_key string for use in observe_pattern().
+
+        Spec: REQ-LEARN-019-3, REQ-LEARN-019-4
+        """
+        lowered = violation_type.lower()
+        for keyword, pattern_key in self._KEYWORD_MAP:
+            if keyword in lowered:
+                return pattern_key
+        return violation_type
+
+    def on_violation_recorded(self, violation_type: str, model_id: str) -> None:
+        """Notify the library that a violation of the given type was observed.
+
+        **Detailed explanation for engineers:**
+            Translates violation_type → pattern_key via violation_type_to_pattern_key()
+            then calls library.observe_pattern(pattern_key, model_id, count=1).
+
+            This is the single entry point that experiment code should call for each
+            violation detected in the verify-repair loop. Repeated calls accumulate
+            counts in the library until a template's min_frequency threshold is crossed.
+
+        Args:
+            violation_type: The raw violation type string (e.g., "carry_error").
+            model_id:        The model that produced the violating response.
+
+        Spec: REQ-LEARN-019-2
+        """
+        pattern_key = self.violation_type_to_pattern_key(violation_type)
+        self._library.observe_pattern(pattern_key, model_id, count=1)
+
+
 __all__ = [
+    "CaseMemoryTemplateWiring",
     "ConstraintTemplate",
     "ConstraintTemplateLibrary",
     "carry_check_template",

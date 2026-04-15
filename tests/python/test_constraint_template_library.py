@@ -21,6 +21,7 @@ from __future__ import annotations
 import pytest
 
 from carnot.pipeline.constraint_template_library import (
+    CaseMemoryTemplateWiring,
     ConstraintTemplate,
     ConstraintTemplateLibrary,
     carry_check_template,
@@ -613,6 +614,203 @@ class TestComparisonDirectionTemplate:
 # ---------------------------------------------------------------------------
 # VerifyRepairPipeline integration
 # ---------------------------------------------------------------------------
+
+
+# ---------------------------------------------------------------------------
+# CaseMemoryTemplateWiring
+# ---------------------------------------------------------------------------
+
+
+class TestCaseMemoryTemplateWiring:
+    """Tests for CaseMemoryTemplateWiring — the Tier 2 → Tier 1 feedback bridge.
+
+    Spec: REQ-LEARN-019, SCENARIO-LEARN-033, SCENARIO-LEARN-034
+    """
+
+    # --- violation_type_to_pattern_key ---
+
+    def test_carry_error_maps_to_carry_check(self):
+        """'carry_error' maps to 'carry_check'.
+
+        Spec: SCENARIO-LEARN-033
+        """
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("carry_error") == "carry_check"
+
+    def test_sign_error_maps_to_sign_check(self):
+        """'sign_error' maps to 'sign_check'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("sign_error") == "sign_check"
+
+    def test_unit_error_maps_to_unit_consistency(self):
+        """'unit_error' maps to 'unit_consistency'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("unit_error") == "unit_consistency"
+
+    def test_comparison_error_maps_to_comparison_direction(self):
+        """'comparison_error' maps to 'comparison_direction'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("comparison_error") == "comparison_direction"
+
+    def test_substring_carry_in_type_maps_to_carry_check(self):
+        """Any type containing 'carry' maps to 'carry_check' (substring match)."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("multi_carry_propagation") == "carry_check"
+
+    def test_substring_sign_in_type_maps_to_sign_check(self):
+        """Any type containing 'sign' maps to 'sign_check'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("wrong_sign_result") == "sign_check"
+
+    def test_substring_unit_in_type_maps_to_unit_consistency(self):
+        """Any type containing 'unit' maps to 'unit_consistency'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("unit_mismatch") == "unit_consistency"
+
+    def test_substring_comparison_in_type_maps_to_comparison_direction(self):
+        """Any type containing 'comparison' maps to 'comparison_direction'."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("numeric_comparison_error") == "comparison_direction"
+
+    def test_unknown_type_passes_through(self):
+        """An unrecognized violation_type is returned unchanged (pass-through).
+
+        Spec: SCENARIO-LEARN-034
+        """
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("range_check") == "range_check"
+
+    def test_unknown_type_with_no_keyword_passes_through(self):
+        """A type with none of the keyword substrings passes through unchanged."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("semantic_grounding") == "semantic_grounding"
+
+    def test_case_insensitive_carry(self):
+        """Mapping is case-insensitive: 'CARRY_ERROR' maps to 'carry_check'.
+
+        Spec: REQ-LEARN-019-4
+        """
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("CARRY_ERROR") == "carry_check"
+
+    def test_case_insensitive_sign(self):
+        """'SIGN_ERROR' maps to 'sign_check' (case-insensitive)."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("Sign_Error") == "sign_check"
+
+    def test_case_insensitive_unit(self):
+        """'UNIT_MISMATCH' maps to 'unit_consistency' (case-insensitive)."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("UNIT_MISMATCH") == "unit_consistency"
+
+    def test_case_insensitive_comparison(self):
+        """'COMPARISON_FAILURE' maps to 'comparison_direction' (case-insensitive)."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring.violation_type_to_pattern_key("COMPARISON_FAILURE") == "comparison_direction"
+
+    # --- on_violation_recorded ---
+
+    def test_on_violation_recorded_increments_carry_check(self):
+        """on_violation_recorded('carry_error', model) increments carry_check count.
+
+        Spec: SCENARIO-LEARN-033
+        """
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("carry_error", "qwen3.5-0.8b")
+        assert lib._observations[("carry_check", "qwen3.5-0.8b")] == 1
+
+    def test_on_violation_recorded_increments_sign_check(self):
+        """on_violation_recorded('sign_error', model) increments sign_check count."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("sign_error", "model_a")
+        assert lib._observations[("sign_check", "model_a")] == 1
+
+    def test_on_violation_recorded_increments_unit_consistency(self):
+        """on_violation_recorded('unit_error', model) increments unit_consistency count."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("unit_error", "model_a")
+        assert lib._observations[("unit_consistency", "model_a")] == 1
+
+    def test_on_violation_recorded_increments_comparison_direction(self):
+        """on_violation_recorded('comparison_error', model) increments comparison_direction."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("comparison_error", "model_a")
+        assert lib._observations[("comparison_direction", "model_a")] == 1
+
+    def test_on_violation_recorded_unknown_passes_through(self):
+        """on_violation_recorded with unknown type increments that type's count directly.
+
+        Spec: SCENARIO-LEARN-034
+        """
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("range_check", "model_a")
+        assert lib._observations[("range_check", "model_a")] == 1
+
+    def test_on_violation_recorded_accumulates(self):
+        """Repeated calls to on_violation_recorded accumulate the count."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        for _ in range(7):
+            wiring.on_violation_recorded("carry_error", "qwen3.5-0.8b")
+        assert lib._observations[("carry_check", "qwen3.5-0.8b")] == 7
+
+    def test_on_violation_recorded_independent_per_model(self):
+        """Violations for different models are tracked independently."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        wiring.on_violation_recorded("carry_error", "model_a")
+        wiring.on_violation_recorded("carry_error", "model_b")
+        wiring.on_violation_recorded("carry_error", "model_b")
+        assert lib._observations[("carry_check", "model_a")] == 1
+        assert lib._observations[("carry_check", "model_b")] == 2
+
+    def test_wiring_activates_template_after_threshold(self):
+        """After enough on_violation_recorded calls, the corresponding template activates."""
+        lib = ConstraintTemplateLibrary()
+        lib.register_builtin_templates()
+        wiring = CaseMemoryTemplateWiring(lib)
+        # carry_check needs min_frequency=5
+        for _ in range(5):
+            wiring.on_violation_recorded("carry_error", "test-model")
+        active = lib.get_active_templates("test-model")
+        keys = {t.pattern_key for t in active}
+        assert "carry_check" in keys
+
+    def test_wiring_does_not_activate_below_threshold(self):
+        """Template stays inactive if on_violation_recorded has not crossed min_frequency."""
+        lib = ConstraintTemplateLibrary()
+        lib.register_builtin_templates()
+        wiring = CaseMemoryTemplateWiring(lib)
+        # carry_check needs 5; only 4 calls
+        for _ in range(4):
+            wiring.on_violation_recorded("carry_error", "test-model")
+        active = lib.get_active_templates("test-model")
+        assert active == []
+
+    def test_wiring_stores_library_reference(self):
+        """CaseMemoryTemplateWiring stores the library it was given."""
+        lib = ConstraintTemplateLibrary()
+        wiring = CaseMemoryTemplateWiring(lib)
+        assert wiring._library is lib
 
 
 class TestVerifyRepairPipelineIntegration:
