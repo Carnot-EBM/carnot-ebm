@@ -220,8 +220,8 @@ tasks:
       4. Write scripts/experiment_340_live_precision_benchmark.py using
          ExperimentTemplate(340, "Live full precision pipeline benchmark", requires_gpu=True):
          a. MODEL_SPECS = [
-              {"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0},
-              {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}
+              ("name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0),
+              ("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1)
             ]
          b. Call tmpl.setup_gpu(MODEL_SPECS); if not all_healthy → blocked artifact
          c. Load 200 GSM8K questions (use same subset as Exp 328 for comparability)
@@ -284,7 +284,7 @@ tasks:
          - CI-safe: when CARNOT_FORCE_LIVE=0, use synthetic code snippets (no LLM call)
       4. Write scripts/experiment_341_live_humaneval.py using
          ExperimentTemplate(341, "Live HumanEval code verification", requires_gpu=True):
-         a. MODEL_SPECS = [{"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0}]
+         a. MODEL_SPECS = [("name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0)]
          b. Load 50 HumanEval problems (use subset with clear test cases)
          c. For each problem: generate code with Gemma4-E4B-it, run test suite, record pass/fail
          d. For failed code: run CodeExtractor → VerifyRepairPipeline → re-run tests
@@ -542,9 +542,9 @@ tasks:
            - exists() → bool: True when saved state file exists
            - clear(): deletes saved state for model_id
            - list_sessions(storage_dir) → list[str]: lists model_ids with saved state
-         - Storage format: {storage_dir}/{model_id}/session_state.json
-         - JSON schema: {"case_memory": ..., "template_library": ..., "fp_tracker": ...,
-           "saved_at": ISO8601, "schema": "carnot.session_memory.v1"}
+         - Storage format: (storage_dir)/(model_id)/session_state.json
+         - JSON schema: ("case_memory": ..., "template_library": ..., "fp_tracker": ...,
+           "saved_at": ISO8601, "schema": "carnot.session_memory.v1")
          - save() is idempotent: overwrites existing state
          - load() is CI-safe: returns None rather than raising when file is corrupt/missing
          - list_sessions() returns [] when storage_dir does not exist

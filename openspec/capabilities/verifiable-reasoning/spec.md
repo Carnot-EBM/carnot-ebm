@@ -3341,6 +3341,68 @@ The system shall provide a live GPU benchmark execution wrapper (`experiment_328
 **Then** the returned dict contains `Qwen3.5-0.8B.deviation == 0.02`
 **And** `within_expected_range(0.27, 0.25, tolerance=0.15)` returns `True`
 
+### REQ-BENCH-003: Live Full Precision Pipeline Benchmark
+
+The system shall provide a live benchmark script (`experiment_340`) that measures the
+combined effect of the full precision stack (Exp 332–336 components) on real LLM output
+from instruction-tuned models on GSM8K, where:
+
+- **PrecisionStackResult** dataclass captures per-variant benchmark data with fields:
+  `model_id`, `n_questions`, `baseline_accuracy`, `precision_stack_accuracy`,
+  `signed_improvement`, `pipeline_variant`, `inference_mode`
+- **compute_signed_improvement(baseline_acc, stack_acc) → float**: returns the honest
+  signed delta (stack_acc − baseline_acc) without clamping — negative values are preserved
+- **PipelineVariant** enum has five members: `BASELINE`, `CONFIDENCE_ONLY`,
+  `CONFIDENCE_ADAPTIVE`, `CONFIDENCE_ADAPTIVE_VERGE`, `FULL_STACK`
+- **build_precision_benchmark_artifact(results: list[PrecisionStackResult]) → dict**:
+  produces `precision_schema="carnot.precision_benchmark.v1"`, `headline_result` from the
+  FULL_STACK result for Gemma4-E4B-it, and `inference_mode` from the result list
+- **headline_result**: the `signed_improvement` of `FULL_STACK` on Gemma4-E4B-it;
+  if `signed_improvement > 0`, `headline_label` is set to `"first_positive_live_it_result"`
+- **CI-safe simulated mode**: when `CARNOT_FORCE_LIVE=0`, all pipeline variants produce
+  `inference_mode="simulated"` with `honest_verdict="simulated_only"` in the artifact
+
+Spec: REQ-BENCH-003, SCENARIO-BENCH-007, SCENARIO-BENCH-008, SCENARIO-BENCH-009
+
+### SCENARIO-BENCH-007: PrecisionStackResult Dataclass And compute_signed_improvement
+
+**Given** `baseline_accuracy=0.50` and `precision_stack_accuracy=0.65`
+**When** `compute_signed_improvement(0.50, 0.65)` is called
+**Then** the result is `0.15` (positive improvement)
+
+**Given** `baseline_accuracy=0.65` and `precision_stack_accuracy=0.60`
+**When** `compute_signed_improvement(0.65, 0.60)` is called
+**Then** the result is `-0.05` (negative — no clamping; honest)
+
+**Given** a `PrecisionStackResult` is constructed with all required fields
+**When** `signed_improvement` is set to `0.10`
+**Then** the dataclass is accessible and serializable to dict via `dataclasses.asdict()`
+
+### SCENARIO-BENCH-008: build_precision_benchmark_artifact Headline And Schema
+
+**Given** a list of `PrecisionStackResult` objects including one with
+  `pipeline_variant=PipelineVariant.FULL_STACK`, `model_id="Gemma4-E4B-it"`,
+  and `signed_improvement=0.08`
+**When** `build_precision_benchmark_artifact(results)` is called
+**Then** the artifact has `precision_schema="carnot.precision_benchmark.v1"`
+**And** `headline_result.signed_improvement == 0.08`
+**And** `headline_result.headline_label == "first_positive_live_it_result"`
+
+**Given** a `FULL_STACK` result for Gemma4-E4B-it with `signed_improvement=-0.03`
+**When** `build_precision_benchmark_artifact(results)` is called
+**Then** `headline_result` does NOT contain `headline_label == "first_positive_live_it_result"`
+
+### SCENARIO-BENCH-009: CI-Safe Simulated Mode With Honest Verdict
+
+**Given** `CARNOT_FORCE_LIVE` is not set (or set to `"0"`)
+**When** the experiment runs all five pipeline variants
+**Then** every `PrecisionStackResult` has `inference_mode="simulated"`
+**And** the artifact contains `honest_verdict="simulated_only"`
+
+**Given** a list of results all with `inference_mode="simulated"`
+**When** `build_precision_benchmark_artifact(results)` is called
+**Then** the artifact's `inference_mode` is `"simulated"`
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -3825,6 +3887,7 @@ conductor log timestamps for Exps 325–336
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
 | REQ-BENCH-002 | Not Started | Implemented (Exp 328) | Live GPU benchmark result with inference_mode="live_gpu"; wrapper artifact with simulation_divergence + baseline_deviation; honest blocked artifact when GPU unavailable |
+| REQ-BENCH-003 | Not Started | Implemented (Exp 340) | PrecisionStackResult + PipelineVariant + compute_signed_improvement + build_precision_benchmark_artifact; live full precision stack benchmark (SCENARIO-BENCH-007/008/009) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
