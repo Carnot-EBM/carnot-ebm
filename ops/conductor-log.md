@@ -1821,3 +1821,6 @@ python/ |
 | 2026-04-15 19:25 UTC | Exp 360: Three-tier pipeline benchmark — SinkProbe | OK | 81 passed in 3.07s |
 | 2026-04-15 19:26 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
 | 2026-04-15 19:26 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
+| 2026-04-15 19:55 UTC | Exp 361: Tier 1+2+3 online self-learning relay — r | OK | 81 passed in 3.34s |
+| 2026-04-15 19:56 UTC | Exp 352: Live GPU inference root-cause diagnostic  | OK | Deliverable already exists in repo |
+| 2026-04-15 19:56 UTC | Exp 355: Apple adversarial GSM8K benchmark — live  | OK | Deliverable already exists in repo |
