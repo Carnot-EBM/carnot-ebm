@@ -2576,6 +2576,35 @@ SCENARIO-VERIFY-116, SCENARIO-VERIFY-117
 **And** `result.ising_calls_saved_pct` equals `total_skip_rate * 100`
 **And** `result.throughput_qps` is > 0.0
 
+### SCENARIO-AGENT-001: SAVeR Commits Clean Steps And Propagates Facts
+
+**Given** a SAVeRVerifier with a stub pipeline (no violations)
+**And** a 3-step chain: compute subtotal → apply discount → compute final price
+**When** `verifier.run_chain(steps, initial_state)` is called
+**Then** all 3 `AgentStep` objects have `committed=True`
+**And** `constraint_state.accumulated_facts` contains 3 entries after the chain
+**And** `verifier.compute_faithfulness(steps)` returns 1.0
+
+### SCENARIO-AGENT-002: SAVeR Blocks A Step That Violates Accumulated Constraints After Max Repairs
+
+**Given** a SAVeRVerifier with `max_repair_attempts=2` and a mock pipeline
+**And** the mock pipeline returns violations on every call for step 2 (even after repair)
+**When** `verifier.propose_step(question, action_cot, constraint_state)` is called for step 2
+**Then** the returned `AgentStep` has `committed=False`
+**And** `repair_attempts` equals 2 (the maximum)
+**And** `constraint_state.accumulated_facts` is NOT updated (blocked step does not add facts)
+**And** `compute_faithfulness([step])` returns 0.0
+
+### SCENARIO-AGENT-003: SAVeR Repairs A Violating Step Before Committing
+
+**Given** a SAVeRVerifier with `max_repair_attempts=3` and a mock pipeline
+**And** the mock pipeline returns violations on first verify, then passes on repair
+**When** `verifier.propose_step(question, action_cot, constraint_state)` is called
+**Then** the returned `AgentStep` has `committed=True`
+**And** `repaired_action` is set (not None) reflecting the repaired response
+**And** `constraint_violations` captured the initial violation descriptions
+**And** `repair_attempts` is >= 1
+
 ### SCENARIO-VERIFY-109: Exact Arithmetic Expression Gets High Expression Confidence
 
 **Given** violation_text = `"47+28=76"` (explicit arithmetic with wrong result)
@@ -4671,6 +4700,39 @@ conductor log timestamps for Exps 325–336
 **Then** the value equals `(40.6 − mean_time_per_exp_min) / 40.6 × 100` rounded to 1 dp
 **And** `actual_speedup_pct` is positive (this milestone ran faster than the prior one)
 
+### REQ-AGENT-001: Multi-Turn Constraint State Propagation
+
+The system shall propagate constraint state across multiple agent reasoning steps, where:
+- Each step produces an `AgentStep` record capturing: `step_id`, `question`,
+  `proposed_action`, `action_cot`, `constraint_violations`, `repaired_action`,
+  `committed`, and `repair_attempts`
+- A `ConstraintState` dataclass carries `step_id`, `active_constraints` (list of
+  constraint descriptions from prior committed steps), `accumulated_facts` (list of
+  action strings committed so far), `facts_established` (count of committed facts),
+  and `model_id` (chain identifier)
+- When a step commits, its final action is appended to `accumulated_facts` and
+  `facts_established` is incremented
+- When a step is blocked (committed=False), `accumulated_facts` is NOT updated
+
+### REQ-AGENT-002: Commit-Gate Via SAVeR Auditor Loop
+
+The system shall gate each agent action behind a SAVeR auditor loop, where:
+- `SAVeRVerifier(pipeline, max_repair_attempts=3)` wraps a `VerifyRepairPipeline`
+- `propose_step(question, action_cot, constraint_state)` runs
+  `VerifyRepairPipeline.verify_and_repair()` on the action's chain-of-thought
+- If verification succeeds immediately: `committed=True`, `repair_attempts=0`
+- If violations exist but repair succeeds within `max_repair_attempts`:
+  `committed=True`, `repaired_action` set, `repair_attempts >= 1`
+- If violations persist after all repair attempts: `committed=False`,
+  `repaired_action=None`, the step is blocked
+- When `pipeline` is `None` (CI-safe mode): all steps are approved immediately
+  (`committed=True`, `repair_attempts=0`) without any verification calls
+- `run_chain(steps, initial_state)` runs a full multi-step reasoning chain,
+  propagating `ConstraintState` across steps
+- `compute_faithfulness(steps)` returns the fraction of steps where `committed=True`
+- `build_saver_artifact(steps, faithfulness)` serializes results with
+  `schema="carnot.saver_verifier.v1"`
+
 ---
 
 ## Implementation Status
@@ -4817,3 +4879,5 @@ conductor log timestamps for Exps 325–336
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360) |
+| REQ-AGENT-001 | Not Started | Implemented | SAVeR multi-turn constraint state propagation — ConstraintState dataclass carrying accumulated_facts, active_constraints, facts_established, model_id across steps (SCENARIO-AGENT-001/002/003, Exp 362) |
+| REQ-AGENT-002 | Not Started | Implemented | SAVeR commit-gate — propose_step() blocks action when constraint violations survive max_repair_attempts; committed=False prevents fact accumulation (SCENARIO-AGENT-001/002/003, Exp 362) |
