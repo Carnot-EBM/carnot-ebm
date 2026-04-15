@@ -3514,6 +3514,96 @@ result files from prior experiments that were never completed.
 **And** `build_blocked_artifact(audit)` returns a dict with key `missing_files`
 **And** the dict contains a `next_action` field with remediation advice
 
+---
+
+## Operational Retrospective Requirements (REQ-RETRO-*)
+
+These requirements govern the per-milestone operational retrospectives produced by
+the research conductor.  Each retro summarises wall-time data, identifies bottlenecks,
+audits whether prior action items were resolved, and proposes new improvements.
+
+### REQ-RETRO-001: Milestone 2026.04.29 Retrospective
+
+The conductor must produce `results/operational_retro_2026_04_29.json` with schema
+`operational_retro_v1`.  The artifact must record `n_experiments`, `total_wall_time_minutes`,
+`avg_minutes_per_experiment`, `bottlenecks_identified` (≥ 1 entry), `action_items`
+(≥ 1 entry), `carry_over_from_previous_retro`, and `estimated_next_milestone_speedup_pct`.
+
+### SCENARIO-RETRO-001: Retro Artifact Schema Conforms to Contract
+
+**Given** a completed milestone with ≥ 10 experiments
+**When** the retro script runs
+**Then** the artifact is valid JSON with all required top-level keys present and correctly typed
+**And** `schema` is a non-empty string
+**And** `milestone` identifies the correct date label
+
+### SCENARIO-RETRO-002: Action Items Carry Forward Unresolved Items
+
+**Given** action items RETRO-001 and RETRO-002 were not implemented in the prior milestone
+**When** the 2026.04.29 retro runs
+**Then** both items appear in `action_items` with `status == "carried_forward"`
+**And** at least one NEW-* item appears with `status == "new"`
+
+---
+
+### REQ-RETRO-002: Milestone 2026.04.29 (v2) Full-History Retrospective
+
+An extended version of the 2026.04.29 retro that covers the full 359-experiment history.
+The artifact uses schema `operational_retro_v2` and adds `gpu_utilization_analysis`,
+`meta_reflection`, and `post_test_failure_rate_assessment` fields.
+
+### SCENARIO-RETRO-003: GPU Utilisation Analysis Included
+
+**Given** nvidia-smi data captured at retro time
+**When** the v2 retro artifact is loaded
+**Then** `gpu_utilization_analysis.current_state_at_retro` is present
+**And** `zombie_process_assessment` is a non-empty string
+
+### SCENARIO-RETRO-004: Speedup Estimate Reflects Action Item Impact
+
+**Given** action items with `estimated_impact_pct` fields
+**When** the retro computes `estimated_time_savings_pct`
+**Then** the value equals the sum of individual item impacts (capped at 100)
+**And** a `savings_breakdown` dict maps each item ID to its individual estimate
+
+---
+
+### REQ-RETRO-003: Milestone 2026.05.06 Retrospective
+
+The conductor must produce `results/operational_retro_2026_05_06.json` with schema
+`carnot.operational_retro.v1`.  The artifact must record:
+
+- `n_experiments`: int in [10, 20]
+- `total_wall_time_min`: positive float
+- `mean_time_per_exp_min`: total / n (consistent)
+- `slowest_experiment`: string identifying the highest-duration experiment
+- `retro_001_resolved`: bool — was the 45-min timeout wrapper (RETRO-001) actually
+  shipped and active this milestone?
+- `retro_002_resolved`: bool — was DualGPUMonitor (RETRO-002) shipped and active?
+- `actual_speedup_pct`: float — measured wall-time improvement vs prior milestone
+  (40.6 min/exp baseline); negative values are valid and mean regression
+- `estimated_next_milestone_speedup_pct`: float ≥ 0 — forward-looking estimate; can be 0
+- `carry_over`: list of dicts `{id, description, resolved: bool}` from the 2026.04.29 retro
+- `action_items`: list of dicts with `{id, description, estimated_impact_pct}`
+
+### SCENARIO-RETRO-005: All Prior Action Items Resolved Flag Correctly
+
+**Given** RETRO-001 was implemented in Exp 325 and RETRO-002 in Exp 326
+**When** the 2026.05.06 retro artifact is loaded
+**Then** `retro_001_resolved` is `True`
+**And** `retro_002_resolved` is `True`
+**And** every entry in `carry_over` has `resolved: True`
+
+### SCENARIO-RETRO-006: Actual Speedup Reflects Measured Data
+
+**Given** prior milestone mean was 40.6 min/exp and this milestone mean is derived from
+conductor log timestamps for Exps 325–336
+**When** `actual_speedup_pct` is computed
+**Then** the value equals `(40.6 − mean_time_per_exp_min) / 40.6 × 100` rounded to 1 dp
+**And** `actual_speedup_pct` is positive (this milestone ran faster than the prior one)
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -3629,3 +3719,6 @@ result files from prior experiments that were never completed.
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
 | REQ-INFRA-004 | N/A | Implemented | check_dual_gpu_health() + setup_gpu() integration tests (SCENARIO-INFRA-005/006, Exp 326) |
 | REQ-INFRA-005 | N/A | Implemented | DependencyAudit + extract_required_files + check_dependencies + CLI tests (SCENARIO-INFRA-007/008, Exp 327) |
+| REQ-RETRO-001 | N/A | Implemented | operational_retro_2026_04_29.json schema + action items + carry_over tests (SCENARIO-RETRO-001/002, Exp 319) |
+| REQ-RETRO-002 | N/A | Implemented | operational_retro_2026_04_29.json v2 + gpu_utilization_analysis tests (SCENARIO-RETRO-003/004, Exp 319) |
+| REQ-RETRO-003 | N/A | Implemented | operational_retro_2026_05_06.json + retro_001_resolved + actual_speedup_pct tests (SCENARIO-RETRO-005/006, Exp 337) |
