@@ -23,6 +23,8 @@
   never set by conductor for three consecutive milestones — GPU hardware confirmed capable (Exp 352
   is_live_capable=True) but never triggered. Sequential single-GPU inference used throughout.
 
+- 2026-04-15: Exp 367: Live extraction benchmark — LLMExtractor vs ArithmeticExtractor vs LLMz3Formalizer on Gemma4-E4B-it. ExtractorComparisonResult + run_extractor_comparison added to python/carnot/pipeline/extractor_comparison.py; scripts/experiment_367_extraction_live.py; live GPU run with CARNOT_FORCE_LIVE=1; 42 tests pass.
+
   **Key bottlenecks:** No timeout wrapper (RETRO-003), CARNOT_FORCE_LIVE not set (RETRO-012),
   sequential inference instead of DualGPURunner, full test suite on retries, Z3 calls without
   timeout, un-batched doc reconciliation.
