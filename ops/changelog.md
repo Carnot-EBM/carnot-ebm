@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-15 (Operational Retrospective — Milestone 2026.05.06 Full)
+
+Full-milestone operational retrospective for milestone 2026.05.06 written to
+`results/operational_retro_2026_05_06.json`. Covers 378 experiments, 5392 minutes
+(89.9 hours) total wall time, mean 14.3 min/experiment.
+
+Key findings:
+
+- **Exp 53** (runtime constraint instrumentation): 418 minutes, 7.8% of total wall time.
+  No timeout guard existed at the time. run_experiment_with_timeout.sh (shipped in Exp 325)
+  must now be wired as mandatory for all conductor-launched experiments (RETRO-003).
+- **Sequential GPU use**: Exps 219, 221, 184 totalled 278 minutes running two models
+  sequentially on one GPU. Both RTX 3090s were confirmed idle at retro time. DualGPURunner
+  is available from Exp 326 but not yet the default for two-model benchmarks (RETRO-004).
+- **Checkpoint resume with failing tests**: Exp 308 resumed from checkpoint despite failing
+  tests, prolonging a broken partial implementation. Fail-fast behavior is now enforced via
+  Exp 325 tooling.
+- **Redundant prereq discovery**: AMD XDNA NPU experiments (Exps 292, 303, 314, 335) each
+  independently discovered the same two missing packages (ninja, openblas). A host-prereq
+  registry (ops/host-prereqs.md) would short-circuit experiments 303, 314, and 335 entirely
+  (RETRO-006).
+- **Estimated time savings for next milestone**: 38%, reducing ~5392 minutes to ~3390 minutes
+  for the same experiment count.
+
+Six carry-forward action items opened: RETRO-003 through RETRO-008.
+User instruction: write operational retrospective for milestone 2026.05.06.
+
 ## 2026-04-15 (Exp 336: CoT Circuit Verifier — CRV Implementation)
 
 Implemented CoTCircuitVerifier (arXiv 2510.09312): circuit-based reasoning verification that

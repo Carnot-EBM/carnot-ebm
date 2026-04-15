@@ -76,13 +76,13 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (249 experiments, 28 completed milestones)
+## Key Results (337 experiments, 29 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
-Provenance snapshot: **13 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
 ## PBT Verification
 
@@ -143,6 +143,16 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **AMD XDNA NPU Unblock (Exp 303):** full source-build + inference benchmark path ready. Currently `blocked_prereq` (ninja + openblas missing). Run `sudo pacman -S ninja openblas` then re-run Exp 303 to auto-advance.
 - **FCV LIVE on HuggingFace (Exp 304):** `Carnot-EBM/carnot-formal-claim-verifier-v1` is now live. Python API credential fallback resolved the Exp 293 CLI blocker.
 - **Experiment template + batching harness (Exp 306 / REQ-VERIFY-083/084):** `ExperimentTemplate` + `BatchedInferenceRunner` eliminate 15–20 min cold-start per experiment. Template overhead validated at **0.0001 s** (target < 0.5 s).
+- **Conductor hardening (Exp 325 / REQ-INFRA-001/002):** 45-min hard timeout wrapper (`run_experiment_with_timeout.sh`) and test-first stub generation (`generate_test_stub()`). Estimated 27% wall-time speedup per milestone.
+- **DualGPUMonitor (Exp 326 / REQ-INFRA-003/004):** zombie process detection + idle-GPU checks wired into `setup_gpu()`; CI-safe.
+- **Live GPU full-scale benchmark (Exp 328):** Qwen3.5-0.8B 27.5%, Gemma4-E4B-it 26.3% on adversarial GSM8K all-variant (`inference_mode=live_gpu`). Live accuracy ~10% below simulated baseline (honest divergence).
+- **Live relay benchmark (Exp 329):** four-tier self-learning relay on live GPU; `improvement_1to3 = -6.1%` (negative relay signal, research concern; honest signed delta).
+- **Live HuggingFace publish (Exp 330 / REQ-PUBLISH-004):** 16 per-token EBM READMEs updated with live-GPU benchmark numbers. FCV README updated. Joint-constraint placeholder created.
+- **Confidence-weighted repair — dual-signal FP reduction (Exp 332 / REQ-VERIFY-083/084/085):** expression specificity + Ising variance gate. FPs avoided: **86.7%** (13/15), TPs preserved: **100.0%** (15/15), `GATE_EFFECTIVE`.
+- **Model-adaptive constraint thresholds + selective CaseMemory (Exp 333 / REQ-LEARN-015/016):** `PerModelFPTracker` auto-disables range_check for qwen3.5-0.8b (fp_rate=0.73 > tp_rate=0.27 after 15 obs). `SelectiveConsolidation` (ATLAS arXiv 2511.01093) at consolidation_ratio=0.60 (`ADAPTIVE_PASS_ATLAS_PARTIAL`).
+- **VERGE-style iterative Z3 refinement (Exp 334 / REQ-REPAIR-012/013):** `VergeRefiner` identifies the specific failed Z3 assertion and repairs only that step; 3-iteration max loop.
+- **CoT Circuit Verifier (Exp 336 / REQ-EXTRACT-015/016):** `CoTCircuitVerifier` extracts a computational dependency graph from chain-of-thought responses and checks structural consistency (value-carryover mismatches, cycles). Catches error classes that arithmetic regex and Z3 miss.
+- **Milestone 2026.05.06 retrospective (Exp 337):** 12 experiments, 293 total min, mean 24.4 min/exp. **Actual speedup: 39.9%** vs prior milestone baseline (exceeds 27% estimate). All 4 prior action items resolved.
 
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.

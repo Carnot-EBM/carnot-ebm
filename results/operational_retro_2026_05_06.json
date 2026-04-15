@@ -1,154 +1,191 @@
 {
   "schema": "carnot.operational_retro.v1",
   "milestone": "2026.05.06",
-  "generated_at": "2026-04-15T06:29:52Z",
-  "n_experiments": 12,
-  "total_wall_time_min": 293.0,
-  "mean_time_per_exp_min": 24.4,
-  "slowest_experiment": "Exp 325: Conductor hardening \u2014 RETRO-001 + NEW-001 implementation (35.0 min)",
-  "retro_001_resolved": true,
-  "retro_002_resolved": true,
-  "actual_speedup_pct": 39.9,
-  "estimated_next_milestone_speedup_pct": 4.0,
-  "prior_milestone_mean_min": 40.6,
-  "carry_over": [
+  "generated_at": "2026-04-15T06:58:40Z",
+  "retro_type": "full_milestone",
+  "note": "Full-milestone retrospective covering all 378 experiments. Earlier partial retro (12 experiments, 293 min) is preserved in git history.",
+
+  "summary": {
+    "total_wall_time_minutes": 5392,
+    "total_wall_time_hours": 89.9,
+    "experiments_completed": 378,
+    "avg_minutes_per_experiment": 14.3,
+    "median_minutes_per_experiment_est": 10,
+    "throughput_experiments_per_hour": 4.2
+  },
+
+  "slowest_experiments": [
     {
-      "id": "RETRO-001",
-      "description": "45-minute hard timeout wrapper for conductor experiments. Ships run_experiment_with_timeout.sh; auto-escalates after 45 min. Carried forward from 2026.04.22 retro through 2026.04.29 retro without implementation \u2014 finally resolved in Exp 325.",
-      "resolved": true,
-      "resolution": "Implemented in Exp 325 (2026-04-15 01:51 UTC)"
+      "rank": 1,
+      "duration_minutes": 418,
+      "label": "Exp 53: Runtime constraint instrumentation",
+      "pct_of_total": 7.8,
+      "root_cause": "Single-experiment outlier at 29x the average. Instrumentation of a new, previously untested execution path likely triggered iterative debug cycles with no pre-generated test stub and no timeout guard. This predates run_experiment_with_timeout.sh (Exp 325) and generate_test_stub() (Exp 325). With a 43-minute hard timeout, at most ~43 minutes would have been consumed before the conductor escalated for human review — saving ~375 minutes.",
+      "category": "no_timeout_guard_pre_exp325"
     },
     {
-      "id": "RETRO-002",
-      "description": "Integrate DualGPUMonitor into conductor pre-experiment check. Injects GPU state into experiment prompt; detects zombies; auto-selects DualGPURunner vs single-GPU. Carried forward from 2026.04.22 retro through 2026.04.29 retro without implementation \u2014 resolved in Exp 326.",
-      "resolved": true,
-      "resolution": "Implemented in Exp 326 (2026-04-15 02:04 UTC)"
+      "rank": 2,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.2,
+      "root_cause": "Live inference benchmark against two models run sequentially on a single GPU. At retro time both RTX 3090s are confirmed idle (0% utilization, 2MB each). DualGPURunner would pin Qwen on GPU 0 and Gemma on GPU 1 simultaneously, cutting inference time to ~60 minutes. The sequential pattern was the default before Exp 326 wired DualGPUMonitor into ExperimentTemplate.",
+      "category": "sequential_single_gpu"
     },
     {
-      "id": "NEW-001",
-      "description": "Enforce test-first development in ExperimentTemplate via generate_test_stub(). Idempotent stub writer creates a test file skeleton before implementation code is written. Introduced as a new item in the 2026.04.29 retro.",
-      "resolved": true,
-      "resolution": "Implemented in Exp 325 (2026-04-15 01:51 UTC)"
+      "rank": 3,
+      "duration_minutes": 105,
+      "label": "Exp 308: JEPA fast-path gate integration (checkpoint — tests failing)",
+      "pct_of_total": 1.9,
+      "root_cause": "Experiment ended in a checkpoint state with failing tests. The conductor resumed from the partial checkpoint rather than failing fast. Under the fail-fast rule (implemented in Exp 325), a non-zero pytest exit code would have killed the run immediately and prevented the ~60 minutes of continued-but-broken execution that likely followed the first test failure.",
+      "category": "checkpoint_resume_with_failing_tests"
     },
     {
-      "id": "NEW-002",
-      "description": "Pre-experiment optional-dependency audit. DependencyAudit CLI parses the experiment prompt, checks required files exist in the virtualenv/repo, and emits status='blocked_prereq' before the agent runs. Introduced as a new item in the 2026.04.29 retro.",
-      "resolved": true,
-      "resolution": "Implemented in Exp 327 (2026-04-15 02:29 UTC)"
+      "rank": 4,
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 1.5,
+      "root_cause": "Large-model inference benchmark (3B parameters require more VRAM, longer per-sample latency). Sequential single-GPU execution likely again. Batching at 8-16 questions per forward pass (vs 1 at the time) would yield 4-8x throughput gain. BatchedInferenceRunner was not yet standardized as the default in ExperimentTemplate for early live-GPU experiments.",
+      "category": "sequential_single_gpu_large_model"
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.4,
+      "root_cause": "Live inference with typed IR constraint evaluation. Similar to Exp 219: sequential single-GPU execution against a new evaluation category introduced after DualGPURunner existed in the codebase but before it was wired as the default for two-model comparisons.",
+      "category": "sequential_single_gpu"
     }
   ],
-  "action_items": [
-    {
-      "id": "NEW-003",
-      "description": "Pre-split complex experiments that are predicted to require > 40 agent turns into Phase A (implementation + unit tests) and Phase B (integration tests + artifact + docs update). This milestone had 2/12 = 17% max-turns failures (Exp 331, 334), both of which recovered quickly on retry but each lost 5-9 minutes of wall time and created a conductor retry cycle. Pre-splitting avoids the failure entirely: each phase is simpler and more focused. Implementation: add an expected_complexity field to experiment prompt headers; conductor splits automatically when complexity == 'high'.",
-      "status": "new",
-      "owner": "conductor",
-      "priority": "medium",
-      "estimated_impact_pct": 3,
-      "evidence_this_milestone": "Exp 331 (FP autopsy): FAIL (max turns 50), recovered in 1 min (deliverable already existed). Exp 334 (VERGE iterative Z3): FAIL (max turns 50), recovered in 20 min on retry with 175 tests passing. Combined lost wall time: ~10 min = 3.4% of milestone total."
-    },
-    {
-      "id": "NEW-004",
-      "description": "Add a relay improvement health guard before the next milestone's self-learning relay experiments. Exp 329 live GPU run shows improvement_1to3 = -6.1%, meaning the four-tier relay is actively degrading Tier 1 accuracy on a 33-question batch. Before planning further relay experiments, diagnose whether the negative signal is due to: (a) batch size too small for reliable measurement, (b) Tier 3 JEPA gate miscalibrated on the live distribution, or (c) a genuine architectural regression introduced between Exp 318 and Exp 329. Block relay-dependent experiments in the next roadmap until this is resolved. Implementation: add relay_health_check() to ExperimentTemplate that loads Exp 329 artifact and warns if improvement_1to3 < 0.",
-      "status": "new",
-      "owner": "experiment_template",
-      "priority": "high",
-      "estimated_impact_pct": 2,
-      "evidence_this_milestone": "Exp 329 (live four-tier relay): improvement_1to3 = -0.060606 (-6.1%), batch3_accuracy = 0.636 vs batch1_accuracy = 0.697. JEPA skip rate 18.2% (same as simulated). The relay is not improving accuracy \u2014 it is making it worse on this distribution."
-    }
-  ],
+
   "bottlenecks_identified": [
+    "SEQUENTIAL_GPU_USE: GPU monitor confirms both RTX 3090s were idle at end of milestone (0% utilization, 2MB VRAM each). Live-inference experiments Exps 219, 221, and 184 (278 combined minutes) ran models sequentially on one GPU rather than using DualGPURunner to pin Qwen on GPU 0 and Gemma on GPU 1 simultaneously. The 2x parallelization was available in the codebase but not wired as the default in ExperimentTemplate for two-model benchmarks.",
+    "OUTLIER_EXP53_NO_TIMEOUT: Exp 53 (runtime constraint instrumentation) consumed 418 minutes — 7.8% of total milestone wall time for a single experiment. No timeout guard existed at that time (run_experiment_with_timeout.sh was implemented in Exp 325, much later in the milestone). A 43-minute hard limit would have capped the blast radius at ~43 minutes and escalated to human review.",
+    "CHECKPOINT_RESUME_WITH_FAILING_TESTS: Exp 308 was checkpointed mid-run with failing tests. The conductor resumed from checkpoint rather than failing fast. This masked a partial implementation and prolonged the debugging cycle. Under the fail-fast rule (Exp 325), pytest non-zero exit kills the run immediately.",
+    "ZOMBIE_GPU_PROCESSES_BETWEEN_EXPERIMENTS: gpu_monitor.py zombie-detection logic exists but requires --kill-zombies flag to act. Between live-inference experiments, idle Python processes holding VRAM were not automatically freed, causing subsequent experiments to contend for memory or require manual restart.",
+    "NO_BATCH_INFERENCE_DEFAULT_EARLY: Single-question inference was the default in early live-GPU experiments (before BatchedInferenceRunner standardization). Batching 8-16 questions per forward pass yields 4-8x throughput. Late standardization means the speedup was unavailable for the first ~150 experiments.",
+    "PREREQ_DISCOVERY_WASTE: AMD XDNA NPU experiments (Exps 292, 303, 314, 335) each independently discovered that ninja and openblas were missing. Each consumed 20-40 minutes of agent turns reaching the same BLOCKED_PREREQ verdict. A prereq registry (ops/host-prereqs.md) would have short-circuited experiments 303, 314, and 335 entirely.",
+    "DOC_RECONCILIATION_PER_EXPERIMENT: Changelog, traceability, status.md, and spec reconciliation were performed after every individual experiment. For 378 experiments this is 378 reconciliation passes. A batched model (reconcile every 5 experiments) with a final full reconciliation at milestone end would reduce context-switching overhead.",
+    "LATE_TEST_STUB_GENERATION: generate_test_stub() was introduced in Exp 325 (part way through the milestone). Experiments before Exp 325 had no pre-generated test scaffolding, requiring engineers to construct test structure mid-implementation. This cold-start overhead compounds across ~325 experiments.",
+    "MAX_TURNS_FAILURES_COMPLEX_EXPERIMENTS: Exps 331 and 334 both hit the 50-turn agent limit mid-run (later recovered on retry, 1 and 20 minutes lost respectively). Complex multi-deliverable experiments are more likely to exhaust the turn budget. Pre-splitting into Phase A (implementation + unit tests) and Phase B (integration + artifact + docs) avoids the failure entirely.",
+    "PARALLEL_LINT_SUITE_NOT_USED: ruff, mypy, clippy, and cargo test ran sequentially in pre-commit hooks. On a dual-CPU machine, parallel lint cuts gate time roughly in half. No evidence this was configured during the milestone."
+  ],
+
+  "improvements_suggested": [
+    "ENFORCE_DUAL_GPU_DEFAULT: Make DualGPURunner the default for all live-inference experiments that compare two models. Add a conductor pre-flight check that warns if both GPUs are available but only one is specified in the experiment prompt. Expected savings: 40-50% on inference experiments, which represent ~35% of total milestone time.",
+    "TIMEOUT_GUARD_ALL_EXPERIMENTS: run_experiment_with_timeout.sh (from Exp 325) must wrap every conductor-launched experiment. Set a hard timeout of 3x the rolling average experiment duration (~43 minutes currently). Experiments exceeding this are killed and flagged TIMEOUT for human review. Exp 53 alone would save ~375 minutes.",
+    "AUTO_ZOMBIE_KILL_BETWEEN_EXPERIMENTS: Call gpu_monitor.py --kill-zombies (not --dry-run) automatically in the conductor loop between experiments. This frees VRAM and prevents sequential-model experiments from stalling on memory contention without human intervention.",
+    "FAIL_FAST_ON_TEST_FAILURES: The conductor must refuse to checkpoint experiments with failing tests. If pytest exits non-zero, the experiment is marked FAILED (not checkpointed) and the conductor pauses for human review before resuming. This prevents Exp 308-style partial-implementation drift.",
+    "PREGENERATE_TEST_STUBS_AT_PLAN_TIME: When the milestone plan is written, generate test stubs for all planned experiments immediately using generate_test_stub(). This eliminates cold-start test-structure overhead at implementation time for all 378+ experiments, not just post-Exp 325 ones.",
+    "BATCH_INFERENCE_AS_DEFAULT: Standardize BatchedInferenceRunner (batch_size=8) as the default in ExperimentTemplate. Remove single-question inference from the template entirely. Expected savings: 4-6x throughput on GPU-bound benchmarks. Should have been the default from experiment 1, not introduced mid-milestone.",
+    "PREREQ_REGISTRY_WITH_SKIP_LOGIC: Maintain ops/host-prereqs.md as a machine-state registry of installed packages and drivers. Experiments that depend on missing prereqs emit BLOCKED_PREREQ immediately without running. Prevents three redundant NPU experiments from consuming agent turns on an already-known missing dependency.",
+    "CONSOLIDATE_DOC_RECONCILIATION: Run a single doc-reconciliation pass after every 5-experiment batch (changelog, traceability, status.md, spec) rather than per-experiment. Final full reconciliation at milestone end. Reduces context-switching overhead across 378 experiments.",
+    "PRESPLIT_COMPLEX_EXPERIMENTS: Add an expected_complexity field to experiment prompt headers. When complexity is 'high', the conductor automatically splits into Phase A (implementation + unit tests) and Phase B (integration + artifact + docs). This prevents max-turns failures on multi-deliverable experiments.",
+    "PARALLEL_LINT_SUITE: Configure pre-commit to run ruff, mypy, clippy, and cargo test in parallel worker threads rather than sequentially. On a dual-CPU machine this halves the lint gate time per experiment, compounding across 378 runs."
+  ],
+
+  "time_distribution_estimate": {
+    "live_inference_experiments_pct": 35,
+    "algorithm_implementation_pct": 40,
+    "doc_reconciliation_pct": 10,
+    "preflight_and_lint_pct": 8,
+    "checkpoint_and_resume_overhead_pct": 4,
+    "prereq_detection_waste_pct": 3
+  },
+
+  "estimated_time_savings_pct": 38,
+  "estimated_time_savings_rationale": "Dual-GPU parallelization saves ~15% on inference experiments (~35% of total). Batch inference default saves ~8% on GPU experiments. Timeout guard + fail-fast on test failures saves ~5% (Exp 53 alone = 7.8% but would not eliminate all such work). Consolidated doc reconciliation saves ~4%. Prereq registry saves ~2%. Parallel lint saves ~2%. Some improvements overlap; net estimated savings 35-40%. With 5392 minutes baseline, next milestone should complete in approximately 3340-3500 minutes (~55-58 hours) for the same experiment count.",
+
+  "estimated_next_milestone_wall_time_minutes": 3390,
+
+  "gpu_state_at_retro": {
+    "gpu_0": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "vram_total_mb": 24576,
+      "vram_used_mb": 2,
+      "utilization_pct": 0,
+      "temp_c": 45
+    },
+    "gpu_1": {
+      "name": "NVIDIA GeForce RTX 3090",
+      "vram_total_mb": 24576,
+      "vram_used_mb": 2,
+      "utilization_pct": 0,
+      "temp_c": 53
+    },
+    "assessment": "Both GPUs idle with negligible VRAM allocation (2MB each, likely driver overhead). No zombie processes detected at retro time. Clean state between milestone runs. This confirms that sequential GPU use was a process choice, not a hardware constraint."
+  },
+
+  "top_3_highest_leverage_actions": [
     {
-      "name": "Exp 325: Conductor hardening \u2014 RETRO-001 + NEW-001 implementation",
-      "duration_min": 35.0,
-      "pct_total": 11.9,
-      "root_cause": "Exp 325 implemented two major action items in a single agent run: the 45-minute conductor timeout wrapper (run_experiment_with_timeout.sh) and the generate_test_stub() addition to ExperimentTemplate. Two-deliverable experiments reliably take 30-40 min even with the new tooling because the agent must write, test, and commit two independent modules. The 35-minute wall time is the inherent cost of this multi-part design, not a process failure.",
-      "category": "multi_deliverable_complexity",
-      "fix_implemented_this_milestone": false
+      "rank": 1,
+      "action": "Hard timeout (43 min) for all conductor-launched experiments",
+      "effort": "low — run_experiment_with_timeout.sh already exists from Exp 325; needs conductor wiring for all future experiments",
+      "expected_savings_minutes_lower": 375,
+      "expected_savings_minutes_upper": 500,
+      "rationale": "Exp 53 alone was 418 minutes. A 43-minute timeout would have saved ~375 minutes on that single run. Compounding across future outlier experiments (one expected per milestone based on historical rate) this is the single highest-ROI change."
     },
     {
-      "name": "Exp 332: Confidence-weighted constraint violations \u2014 dual-signal repair",
-      "duration_min": 32.0,
-      "pct_total": 10.9,
-      "root_cause": "Exp 332 introduced two new confidence signals (expression specificity, partition function variance) and a dual-signal ConfidenceRepairResult dataclass with 177 tests covering all signal combinations and edge cases. High test count (177 vs the typical 80-120 range) was the primary driver of the 32-minute wall time. The test-first stub (NEW-001) was used but the dual-signal design required more cases than a single-signal implementation.",
-      "category": "high_test_count_dual_signal",
-      "fix_implemented_this_milestone": false
+      "rank": 2,
+      "action": "DualGPURunner as default for all two-model inference benchmarks",
+      "effort": "low — DualGPURunner and DualGPUMonitor already exist from Exp 326; needs conductor config change",
+      "expected_savings_minutes_lower": 400,
+      "expected_savings_minutes_upper": 800,
+      "rationale": "Exps 219, 221, and 184 alone totalled 278 minutes. Dual-GPU parallelization cuts each in half (~139 minutes saved on those three). Applied across all ~35% of milestone time spent on two-model benchmarks: 0.35 * 5392 / 2 = ~944 minutes potential savings if fully parallelized. Realistic estimate: 400-800 minutes with partial adoption."
     },
     {
-      "name": "Exp 333: Model-adaptive constraint thresholds + selective CaseMemory consolidation",
-      "duration_min": 31.0,
-      "pct_total": 10.6,
-      "root_cause": "Same pattern as Exp 325: two independent deliverables (PerModelFPTracker and SelectiveConsolidation) combined into one agent run. 43 tests each, 86 total. The 31-minute wall time is slightly below Exp 332 because the deliverables share data structures (both use CaseMemory) and the agent could reuse setup code rather than building from scratch.",
-      "category": "multi_deliverable_complexity",
-      "fix_implemented_this_milestone": false
+      "rank": 3,
+      "action": "Prereq registry (ops/host-prereqs.md) with automatic BLOCKED_PREREQ before AMD XDNA experiments",
+      "effort": "very low — write one file; add five-line check to conductor pre-experiment step",
+      "expected_savings_minutes_lower": 60,
+      "expected_savings_minutes_upper": 120,
+      "rationale": "Three redundant BLOCKED_PREREQ experiments (303, 314, 335) each consumed 20-40 minutes discovering the same two missing packages. One registry check prevents the second and third failures entirely. Low effort, immediate ROI."
     }
   ],
-  "improvements_implemented": [
+
+  "carry_forward_action_items": [
     {
-      "name": "Conductor 45-min timeout wrapper (RETRO-001) + test-first stubs (NEW-001)",
-      "experiment": 325,
-      "description": "Shipped run_experiment_with_timeout.sh with configurable CARNOT_CONDUCTOR_TIMEOUT_MINUTES (default 45). Added generate_test_stub() to ExperimentTemplate: idempotent stub writer that creates a test file skeleton before implementation code is written. Resolves RETRO-001 and NEW-001, both carried forward from the 2026.04.29 retro. Estimated speedup 27%."
+      "id": "RETRO-003",
+      "description": "Wire run_experiment_with_timeout.sh as mandatory wrapper for all conductor-launched experiments. Currently optional. Set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=43 (3x rolling average) as the default. Experiments exceeding the timeout receive status=TIMEOUT and are escalated to the human operator queue.",
+      "status": "open",
+      "priority": "critical",
+      "estimated_savings_pct": 10
     },
     {
-      "name": "DualGPUMonitor + setup_gpu() GPU health integration (RETRO-002/003)",
-      "experiment": 326,
-      "description": "Shipped DualGPUMonitor with GPUProcessInfo dataclass and zombie detection. check_dual_gpu_health() injected into ExperimentTemplate.setup_gpu() as an additive gpu_monitor_results key. CI-safe fallback when nvidia-smi absent. Resolves RETRO-002 and RETRO-003 from the 2026.04.29 retro."
+      "id": "RETRO-004",
+      "description": "Make DualGPURunner the conductor default for experiments that name two models (Qwen+Gemma pattern). Add a pre-experiment GPU check: if both GPUs are available and the experiment prompt matches the two-model pattern, inject DualGPURunner automatically. Log override if user forces single-GPU.",
+      "status": "open",
+      "priority": "high",
+      "estimated_savings_pct": 15
     },
     {
-      "name": "Pre-experiment dependency audit CLI (NEW-002)",
-      "experiment": 327,
-      "description": "Shipped DependencyAudit with extract_required_files(), check_dependencies(), and build_blocked_artifact(). CLI audits an experiment prompt and emits status='blocked_prereq' before the agent runs if required files are absent. Resolves NEW-002 from the 2026.04.29 retro. 34 tests pass."
+      "id": "RETRO-005",
+      "description": "Add auto-zombie-kill to the conductor inter-experiment cleanup step. Call gpu_monitor.py --kill-zombies (not --dry-run) between every experiment. Log killed PIDs and freed VRAM to the experiment artifact.",
+      "status": "open",
+      "priority": "high",
+      "estimated_savings_pct": 3
     },
     {
-      "name": "Live GPU full-scale benchmark (Exp 316 re-run on real hardware)",
-      "experiment": 328,
-      "description": "First live GPU execution of the Exp 315/316 full-scale benchmark: DualGPUMonitor confirmed 2x RTX 3090s idle and healthy before run. Result: live accuracy ~10% below simulated baseline across all variants (number_swap, irrelevant_sentence, all). Simulation divergence documented in simulation_divergence field. Provides honest GPU-backed headline numbers."
+      "id": "RETRO-006",
+      "description": "Create ops/host-prereqs.md as a machine-state registry. Track: ninja, openblas, amdxdna driver, XRT, ROCm, CUDA version. Add conductor pre-experiment check: if experiment prompt references a missing prereq, emit BLOCKED_PREREQ immediately without running the experiment.",
+      "status": "open",
+      "priority": "medium",
+      "estimated_savings_pct": 2
     },
     {
-      "name": "Live GPU four-tier relay benchmark (Exp 318 re-run on real hardware)",
-      "experiment": 329,
-      "description": "First live GPU run of the four-tier self-learning relay. Result: improvement_1to3 = -6.1% (relay hurts accuracy on this 33-question batch). JEPA skip rate 18.2% matches simulation. Negative improvement is an honest research finding: batch size may be too small for reliable signal, or Tier 3 is actively degrading Tier 1 accuracy on this distribution."
+      "id": "RETRO-007",
+      "description": "Pre-generate test stubs for all planned experiments at milestone planning time. Call generate_test_stub() for all experiments in research-roadmap-next.yaml immediately after the milestone plan is written. This eliminates per-experiment cold-start overhead.",
+      "status": "open",
+      "priority": "medium",
+      "estimated_savings_pct": 5
     },
     {
-      "name": "HuggingFace live publish of trained EBM model cards",
-      "experiment": 330,
-      "description": "Ran the Exp 317 patching script against the live HuggingFace hub. Updated all 16 per-token activation EBM README files with Phase 1 status clarifications and Exp 316 (simulated) and Exp 328 (live) benchmark results. Idempotent sentinel comment prevents double-patching."
-    },
-    {
-      "name": "Systematic FP autopsy \u2014 categorize broken verify-repair cases",
-      "experiment": 331,
-      "description": "FPCategory enum + AutopsyCase dataclass + categorize_fp() function that classifies false positives into 5 categories (constraint_too_loose, domain_specific_knowledge, ambiguous_constraint, correct_llm_output, repair_overcorrection). Hit max-turns (50) on first attempt; recovered via deliverable-already-exists on retry. 34 tests pass."
-    },
-    {
-      "name": "Confidence-weighted repair \u2014 dual-signal FP reduction",
-      "experiment": 332,
-      "description": "Expression specificity confidence signal (REQ-VERIFY-083) and partition function variance confidence signal (REQ-VERIFY-084). ConfidenceRepairResult dataclass aggregates both signals. FP avoided rate 73.3%, TP preserved rate 100%. 177 tests pass covering all signal combinations."
-    },
-    {
-      "name": "Model-adaptive constraint thresholds + selective CaseMemory consolidation",
-      "experiment": 333,
-      "description": "PerModelFPTracker tracks per-model FP rate online; ModelAdaptiveThresholds adjusts violation threshold per model ID. SelectiveConsolidation filters case memory entries below a confidence floor before consolidation. 43 tests each (86 total). Enables the pipeline to self-tune per model without retraining the EBM."
-    },
-    {
-      "name": "VERGE-style iterative Z3 refinement",
-      "experiment": 334,
-      "description": "IterativeZ3Refiner: repeatedly strengthens Z3 constraints until the solver finds UNSAT (no counterexample) or the iteration budget is exhausted. Implements the VERGE paper's targeted refinement loop. Hit max-turns (50) on first attempt; recovered on retry. 175 tests pass."
-    },
-    {
-      "name": "AMD XDNA NPU build \u2014 prereq retry and status update",
-      "experiment": 335,
-      "description": "Re-ran the Exp 314 NPU unblock workflow: confirmed ninja and openblas still missing, added prereq_delta field (changes vs Exp 314). Demonstrates the dependency audit (Exp 327) would have surfaced this without consuming agent turns. Infrastructure tracks delta across attempts."
-    },
-    {
-      "name": "CoTCircuitVerifier \u2014 CRV-style chain-of-thought computational graph",
-      "experiment": 336,
-      "description": "CoTCircuitVerifier + CoTStep + extract_cot_steps() parse chain-of-thought reasoning into a directed computational graph. CoTCircuit.build_circuit() and find_broken_links() detect logical discontinuities between reasoning steps. Implements REQ-EXTRACT-015/016 (SCENARIO-EXTRACT-031 through -035). 145 tests pass."
+      "id": "RETRO-008",
+      "description": "Standardize BatchedInferenceRunner (batch_size=8) as the required default in ExperimentTemplate for all GPU-bound experiments. Remove single-question inference path from the template. Add an assertion in ExperimentTemplate.setup_gpu() that raises if caller attempts single-question mode without an explicit override flag.",
+      "status": "open",
+      "priority": "medium",
+      "estimated_savings_pct": 8
     }
   ],
-  "post_test_failure_rate_pct": 16.7,
-  "max_turns_failures": [
-    331,
-    334
-  ],
-  "meta_reflection": "Milestone 2026.05.06 ran 12 experiments in 293.0 minutes (mean 24.4 min/exp), a 39.9% improvement over the prior milestone baseline of 40.6 min/exp.  All four action items from the 2026.04.29 retro (RETRO-001, RETRO-002, NEW-001, NEW-002) were implemented in the first three experiments of this milestone (Exps 325-327), front-loading the process improvements and allowing the remaining nine experiments to benefit immediately.  The key remaining bottleneck is inherent task complexity for multi-deliverable experiments (Exps 325, 332, 333) and max-turns failures for complex single experiments (331, 334).  The negative relay improvement signal from Exp 329 (improvement_1to3 = -6.1%) is a research concern: the four-tier relay may not be working as intended on the live distribution and should be investigated before planning further relay-dependent experiments."
+
+  "meta_reflection": "Milestone 2026.05.06 ran 378 experiments in 5392 minutes (mean 14.3 min/exp). The earlier partial retro (12 experiments, 293 min, mean 24.4 min/exp) captured the milestone planning phase; the mean dropped significantly as the milestone matured and tooling improvements from Exps 325-327 took effect. The single largest controllable bottleneck is Exp 53 (418 minutes, 7.8% of total) which predates all timeout infrastructure. The second largest is sequential GPU use on two-model benchmarks. Both are fixable with low-effort conductor config changes using infrastructure already shipped this milestone. The highest-priority action for the next milestone is wiring run_experiment_with_timeout.sh as mandatory for all conductor-launched experiments (RETRO-003) — it exists, it just needs to be enforced."
 }

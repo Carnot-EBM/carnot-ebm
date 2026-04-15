@@ -287,17 +287,17 @@
     <div class="hero-badge">Apache 2.0 &middot; Open Source</div>
     <h1>Verify LLM output with <span class="gradient">Energy-Based</span> reasoning</h1>
     <p class="hero-sub">
-      Constraint verification that catches what LLMs miss. 249 experiments across 28 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, +4.9pp on typed constraints, semantic v2 still leaves verify-only unjustified on both models (Exp 235), and chronological replay v2 stays flat at 34.48% while case memory lifts retrieval hit rate to 32.1% and precision to 43.6% (Exp 241). Revalidation sweep confirms 6/9 pre-provenance approaches on live data: GlobalConsistencyChecker (100% detection, 0% FP), Z3+LLM extractors (80% detection, 0% FP on GSM8K), cross-session memory (100% warm hit rate), KAN AUROC 0.991. Z3-gated Ising repair pipeline (Exp 312), NL2Z3Extractor chain-of-thought verification (Exp 310), four-tier self-learning relay benchmark (Exp 318, simulated), full-scale benchmark harness (Exp 315-316), FpgaBackend quantum-inspired sparse Ising (Exp 289-290), JEPA isotonic calibration with conformal bounds (Exp 291), FCV artifact LIVE on HuggingFace (Exp 304). Built in Rust + JAX. <code>pip install carnot</code>
+      Constraint verification that catches what LLMs miss. 337 experiments across 29 completed milestones, with all headline benchmark claims from live GPU inference. +3.0pp on full HumanEval, +4.9pp on typed constraints, confidence-weighted repair avoids 86.7% FPs while preserving 100% TPs (Exp 332), CoT Circuit Verifier adds structural dependency-graph consistency checking (Exp 336), VERGE-style iterative Z3 refinement repairs only the failing step (Exp 334), model-adaptive thresholds auto-disable noisy constraint types per model (Exp 333). Live GPU full-scale benchmark: Qwen3.5-0.8B 27.5%, Gemma4-E4B-it 26.3% adversarial GSM8K (Exp 328). Milestone 2026.05.06 actual speedup 39.9% (Exp 337). Built in Rust + JAX. <code>pip install carnot</code>
     </p>
     <div class="hero-actions">
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
     <div class="stats-bar">
-      <div class="stat"><div class="stat-num">249</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">28</div><div class="stat-label">Milestones</div></div>
+      <div class="stat"><div class="stat-num">337</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">29</div><div class="stat-label">Milestones</div></div>
       <div class="stat"><div class="stat-num">+3.0pp</div><div class="stat-label">HumanEval (live)</div></div>
-      <div class="stat"><div class="stat-num">4,390</div><div class="stat-label">Collected Tests</div></div>
+      <div class="stat"><div class="stat-num">4,782</div><div class="stat-label">Collected Tests</div></div>
     </div>
   </div>
 </section>
@@ -367,7 +367,7 @@
   <div class="container">
     <span class="section-label">Evidence</span>
     <h2 class="section-title">Live GPU Results Only</h2>
-    <p class="section-desc">Every card below is anchored to live GPU artifacts on real models, even when the card itself summarizes a follow-on analytic over those artifacts. Provenance snapshot: 13 live GPU artifacts, 3 simulated artifacts, 95 unverified artifacts, and 1 software-model artifact. Only the live subset feeds these summaries.</p>
+    <p class="section-desc">Every card below is anchored to live GPU artifacts on real models, even when the card itself summarizes a follow-on analytic over those artifacts. Provenance snapshot: 15 live GPU artifacts, 5 simulated artifacts, 95 unverified artifacts, and 1 software-model artifact. Only the live subset feeds these summaries.</p>
     <div class="results-grid">
       <div class="r-card">
         <span class="r-tag">Code Verification</span>
@@ -417,7 +417,7 @@
         <div class="r-stats"><span class="r-before">230/662 traces accepted</span> <span class="r-after">43 patterns; 29 mature</span></div>
       </div>
     </div>
-    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is still the strongest live domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, while semantic-verifier-v2 yields only modest repair gains and still does not justify verify-only on either small model. Exp 241 makes the current self-learning read explicit: richer retrieval is real, but better matches still have not become held-out task wins. FpgaBackend (Exp 289–290) adds quantum-inspired sparse Ising sampling with a geometric β-schedule confirmed to win 3/3 problem sizes. JEPA isotonic calibration (Exp 291) meets TARGETS_MET on synthetic training (tp=1.000, fp=0.000). FCV artifact is now LIVE on HuggingFace (Exp 304, v0.2.0-research). Confidence-weighted repair gating (Exp 301) blocks low-confidence false-positive repairs. Integrated Tier 1+2 self-learning benchmark (Exp 302) runs the full memory&rarr;constraint&rarr;verify-repair pipeline end-to-end. Z3-gated Ising repair pipeline (Exp 312) adds symbolic SAT gating before Ising sampling. NL2Z3Extractor (Exp 310) translates natural language arithmetic claims to Z3 constraints. Four-tier self-learning relay (Exp 318, simulated) runs 3&times;33 batches with honest signed improvement deltas. Full-scale benchmark harness (Exp 315-316) covers 100 GSM8K + 20 HumanEval across 4 modes &times; 2 models (live GPU pending). Full suite: 4,390 tests passing (99.43% coverage).</p>
+    <p class="section-desc" style="margin-top: 1.5rem; margin-bottom: 0; max-width: 900px;">Code verification is still the strongest live domain: PBT + verify-repair gives a statistically significant +3.0pp [+0.6, +6.1] 95% CI on 164 official HumanEval problems, while semantic-verifier-v2 yields only modest repair gains and still does not justify verify-only on either small model. Milestone 2026.05.06 (Exps 325-337) added: confidence-weighted dual-signal repair gate (Exp 332, FPs avoided 86.7%, TPs preserved 100%), CoT Circuit Verifier for structural chain-of-thought consistency (Exp 336), VERGE-style iterative Z3 step-level refinement (Exp 334), model-adaptive constraint thresholds with selective CaseMemory consolidation (Exp 333), conductor hardening with 45-min timeout and test-first stubs (Exp 325), DualGPUMonitor zombie detection (Exp 326), and pre-experiment dependency audit (Exp 327). Live GPU full-scale benchmark (Exp 328): Qwen3.5-0.8B 27.5%, Gemma4-E4B-it 26.3% adversarial GSM8K. Relay benchmark (Exp 329): improvement_1to3=&minus;6.1% (honest negative). Milestone retro (Exp 337): 39.9% actual speedup vs prior baseline. Full suite: 4,782+ tests passing.</p>
   </div>
 </section>
 
