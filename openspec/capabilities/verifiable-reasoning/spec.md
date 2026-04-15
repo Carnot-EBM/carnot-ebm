@@ -2782,6 +2782,30 @@ experiment runs.
 Spec: REQ-LEARN-018, SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031,
       SCENARIO-LEARN-032
 
+### REQ-LEARN-019: CaseMemory to ConstraintTemplateLibrary Wiring
+
+The system shall provide a `CaseMemoryTemplateWiring` class that bridges CaseMemory
+violation events to `ConstraintTemplateLibrary.observe_pattern()` calls, forming
+the Tier 2 → Tier 1 feedback loop.
+
+- REQ-LEARN-019-1: `CaseMemoryTemplateWiring.__init__(library)` MUST accept a
+  `ConstraintTemplateLibrary` instance and store it for use in event handlers.
+- REQ-LEARN-019-2: `CaseMemoryTemplateWiring.on_violation_recorded(violation_type,
+  model_id)` MUST map the violation_type string to a pattern_key via
+  `violation_type_to_pattern_key()` and call `library.observe_pattern(pattern_key,
+  model_id)` with count=1.
+- REQ-LEARN-019-3: `CaseMemoryTemplateWiring.violation_type_to_pattern_key(
+  violation_type)` MUST implement the canonical mapping:
+    - "carry_error" or any type containing "carry" → "carry_check"
+    - "sign_error" or any type containing "sign" → "sign_check"
+    - "unit_error" or any type containing "unit" → "unit_consistency"
+    - "comparison_error" or any type containing "comparison" → "comparison_direction"
+    - All other types → the violation_type unchanged (pass-through)
+- REQ-LEARN-019-4: The mapping MUST be case-insensitive (e.g., "CARRY_ERROR"
+  maps to "carry_check").
+
+Spec: REQ-LEARN-019, SCENARIO-LEARN-033, SCENARIO-LEARN-034
+
 ### SCENARIO-LEARN-025: PerModelFPTracker Disables High-FP Constraint Type
 
 **Given** a `PerModelFPTracker(min_observations=10)`
@@ -2842,6 +2866,21 @@ Spec: REQ-LEARN-018, SCENARIO-LEARN-029, SCENARIO-LEARN-030, SCENARIO-LEARN-031,
 **When** `comparison_direction_template(response)` is called
 **Then** the result contains one ConstraintResult with `constraint_type="comparison_direction"`,
   `metadata["satisfied"]=False` (z = -20 is not positive)
+
+### SCENARIO-LEARN-033: CaseMemoryTemplateWiring Maps carry_error to carry_check
+
+**Given** a `CaseMemoryTemplateWiring` wrapping a `ConstraintTemplateLibrary`
+**When** `on_violation_recorded("carry_error", "qwen3.5-0.8b")` is called
+**Then** `library._observations[("carry_check", "qwen3.5-0.8b")]` is incremented by 1
+**And** `violation_type_to_pattern_key("carry_error")` returns `"carry_check"`
+
+### SCENARIO-LEARN-034: CaseMemoryTemplateWiring Unknown Type Passes Through
+
+**Given** a `CaseMemoryTemplateWiring` wrapping a `ConstraintTemplateLibrary`
+**When** `on_violation_recorded("range_check", "model_a")` is called
+  (a type with no canonical mapping)
+**Then** `library._observations[("range_check", "model_a")]` is incremented by 1
+**And** `violation_type_to_pattern_key("range_check")` returns `"range_check"` unchanged
 
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
@@ -4040,6 +4079,7 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-016 | Not Started | Implemented | Selective CaseMemory consolidation — SelectiveConsolidation + add_trace_selective + 43 tests (SCENARIO-LEARN-027/028, Exp 333) |
 | REQ-LEARN-017 | Not Started | Implemented | Constraint template addition from memory patterns — ConstraintTemplateLibrary + 4 builtin templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
 | REQ-LEARN-018 | Not Started | Implemented | Constraint template persistence + builtin registry — to_dict/from_dict + register_builtin_templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
+| REQ-LEARN-019 | Not Started | Implemented | CaseMemory to ConstraintTemplateLibrary wiring — CaseMemoryTemplateWiring [violation_type_to_pattern_key + on_violation_recorded]; constraint addition benchmark shows improvement_delta>0 (SCENARIO-LEARN-033/034, Exp 344) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
