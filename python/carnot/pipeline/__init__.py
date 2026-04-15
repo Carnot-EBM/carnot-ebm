@@ -162,6 +162,12 @@ from carnot.pipeline.adaptive_thresholds import (
     PerModelFPTracker,
     SelectiveConsolidation,
 )
+from carnot.pipeline.verge_refiner import (
+    VergeIteration,
+    VergeRefiner,
+    build_step_repair_prompt,
+    extract_failed_assertion,
+)
 
 __all__ = [
     "AgentStep",
@@ -271,6 +277,10 @@ __all__ = [
     "ModelAdaptiveThresholds",
     "PerModelFPTracker",
     "SelectiveConsolidation",
+    "VergeIteration",
+    "VergeRefiner",
+    "build_step_repair_prompt",
+    "extract_failed_assertion",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
     "compute_lookahead_energy",

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-15 Exp 334 VERGE-Style Iterative Z3 Refinement
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-15T05:32:03Z | 2026-04-15T05:39:16Z | Exp 334: VERGE iterative Z3 refinement; REQ-REPAIR-012/013 + SCENARIO-REPAIR-024–027 to spec; verge_refiner.py; 30 tests 100% coverage; verify_repair_verge(); experiment_334 script; traceability+changelog+status updated | ~7m |
+
+---
+
 ## Session: 2026-04-15 Exp 332 Confidence-Weighted Repair
 
 ### Turn Log
