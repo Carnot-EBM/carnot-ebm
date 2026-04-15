@@ -56,6 +56,7 @@ from carnot.pipeline.errors import (
     RepairError,
     VerificationError,
 )
+from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
 from carnot.pipeline.extract import AutoExtractor, ConstraintExtractor, ConstraintResult
 from carnot.pipeline.formal_claim_verifier import (
     FormalClaimBatchResult,
@@ -266,6 +267,7 @@ class VerifyRepairPipeline:
         semantic_verifier_v2: SemanticVerifierV2 | None = None,
         timeout_seconds: float = 30.0,
         memory: ConstraintMemory | None = None,
+        template_library: ConstraintTemplateLibrary | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -309,6 +311,7 @@ class VerifyRepairPipeline:
         self._max_repairs = max_repairs
         self._timeout_seconds = timeout_seconds or 0.0
         self._memory = memory
+        self._template_library = template_library
 
         # Set up the constraint extractor.
         if extractor is not None:
@@ -1062,6 +1065,17 @@ class VerifyRepairPipeline:
                 learned = self._memory.suggest_constraints(response, effective_domain)
                 if learned:
                     constraints = learned + constraints
+
+            # Tier 2 template addition: prepend constraints from active templates.
+            # When CaseMemory observes a pattern crossing its frequency threshold,
+            # the template library adds a NEW constraint type (not just reweighting).
+            # This is the Tier 2 → Tier 1 feedback loop (Exp 134 / REQ-LEARN-017).
+            if self._template_library is not None and self._model_name is not None:
+                template_constraints = self._template_library.apply_active_templates(
+                    response, self._model_name
+                )
+                if template_constraints:
+                    constraints = template_constraints + constraints
 
             self._check_deadline(deadline)
             result = self._evaluate_constraints(constraints)
