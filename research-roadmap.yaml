@@ -164,7 +164,7 @@ tasks:
            failure_reason instead of silently falling back to simulated.
       5. Update scripts/experiment_template.py (additive): in setup_gpu(), when
          CARNOT_FORCE_LIVE=1 and setup fails, call diagnose_live_gpu() and raise
-         RuntimeError("Live GPU required but unavailable: {failure_reason}") instead
+         RuntimeError("Live GPU required but unavailable: (failure_reason)") instead
          of falling through to simulated mode.
       6. Write scripts/experiment_352_live_gpu_diagnostic.py using ExperimentTemplate(352):
          a. Call diagnose_live_gpu(model_ids=["Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it"])
@@ -413,8 +413,8 @@ tasks:
          - LLMExtractor.extract: on JSON parse failure, fallback_to_regex=True calls
            ArithmeticExtractor.extract()
          - LLMExtractor: CI-safe — when llm_caller is None, returns hardcoded test extractions
-         - EXTRACTION_PROMPT_TEMPLATE: "{response}\n\nList all arithmetic claims above as JSON:
-           [{\"lhs\": \"...\", \"op\": \"+\", \"rhs\": \"...\", \"result\": \"...\"}]"
+         - EXTRACTION_PROMPT_TEMPLATE: "(response)\n\nList all arithmetic claims above as JSON:
+           [(\"lhs\": \"...\", \"op\": \"+\", \"rhs\": \"...\", \"result\": \"...\")]"
          - parse_extraction_response(json_str) → list[ArithmeticClaimTriple]
          - parse_extraction_response: handles empty JSON, malformed JSON, missing keys
          - claim_triple_to_constraint(triple) → Constraint: builds arithmetic equality constraint

@@ -1774,3 +1774,4 @@ python/ |
 | 2026-04-15 15:22 UTC | Exp 351: Close RETRO-003/005/009/010/011 — conduct | OK | Deliverable already exists in repo |
 | 2026-04-15 15:33 UTC | Exp 352: Live GPU diagnostic — identify failure layer | OK | LiveGPUDiagnostic implemented; diagnose_live_gpu() 100% coverage; setup_gpu() now raises RuntimeError on CARNOT_FORCE_LIVE=1 failure |
 | 2026-04-15 15:33 UTC | Exp 352: Live GPU inference root-cause diagnostic  | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-15 15:37 UTC | Exp 352: Live GPU diagnostic — diagnostic findings review | OK | Confirmed: live_gpu_diagnostic.py 100% coverage (37 tests pass); setup_gpu() raises RuntimeError when CARNOT_FORCE_LIVE=1+prewarm fails; root-cause fix for silent simulated fallback in Exps 340/341/346/347; experiment_352 script + spec REQ-INFRA-014/SCENARIO-INFRA-014/015 all in place |
