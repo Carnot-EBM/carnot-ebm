@@ -2545,6 +2545,37 @@ Spec: REQ-VERIFY-087
 **And** false_negative_rate is in [0.0, 1.0]  (skipped wrong responses / total wrong)
 **And** true_negative_rate is in [0.0, 1.0]   (skipped correct responses / total correct)
 
+### REQ-VERIFY-088: Three-Tier Pipeline Benchmark
+
+The system shall provide a combined three-tier verification pipeline that:
+- Applies SinkProbe (attention-sink pre-filter, ~0 ms) as the first gate
+- Applies EORM (energy-based CoT ranker, ~10 ms) as the second gate
+- Falls back to Ising constraint verification (full accuracy) for remaining responses
+- Exposes `verify(response, attention_matrix=None, question=None)` returning `(verified: bool, tier_used: str, energy: float)`
+- Exposes `benchmark(responses, ground_truth)` returning a `ThreeTierPipelineResult`
+- When `attention_matrix=None`, the SinkProbe gate is bypassed (all responses proceed to EORM)
+
+Spec: REQ-VERIFY-088
+SCENARIO-VERIFY-116, SCENARIO-VERIFY-117
+
+### SCENARIO-VERIFY-116: Three-Tier Pipeline Routes High-Sink Responses Directly To Fast Path
+
+**Given** a `ThreeTierPipeline` with `sink_threshold=0.3` and `eorm_threshold=0.5`
+**And** a response with an attention matrix where mean_sink_score >= 0.3
+**When** `pipeline.verify(response, attention_matrix=attn)` is called
+**Then** `tier_used == "sink_probe"`
+**And** `verified == True`
+**And** the EORM and Ising stages are NOT called for this response
+
+### SCENARIO-VERIFY-117: Three-Tier Pipeline Benchmark Measures Skip Rate And Accuracy
+
+**Given** 100 synthetic responses (30% correct with high sink concentration, 70% wrong)
+**When** `pipeline.benchmark(responses, ground_truth)` is called
+**Then** `result.total_skip_rate` is in [0.0, 1.0]
+**And** `result.fn_rate` is in [0.0, 1.0]  (wrong responses incorrectly cleared)
+**And** `result.ising_calls_saved_pct` equals `total_skip_rate * 100`
+**And** `result.throughput_qps` is > 0.0
+
 ### SCENARIO-VERIFY-109: Exact Arithmetic Expression Gets High Expression Confidence
 
 **Given** violation_text = `"47+28=76"` (explicit arithmetic with wrong result)
@@ -4735,3 +4766,4 @@ conductor log timestamps for Exps 325–336
 | REQ-INFRA-014 | N/A | Implemented | LiveGPUDiagnostic + diagnose_live_gpu() + setup_gpu() RuntimeError on CARNOT_FORCE_LIVE=1 failure (SCENARIO-INFRA-014/015, Exp 352) |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
+| REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360) |

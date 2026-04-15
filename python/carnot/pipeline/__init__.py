@@ -198,6 +198,11 @@ from carnot.pipeline.sink_probe import (
     SinkTokenType,
     compute_sink_concentration,
 )
+from carnot.pipeline.three_tier_pipeline import (
+    ThreeTierPipeline,
+    ThreeTierPipelineResult,
+    build_three_tier_artifact,
+)
 
 __all__ = [
     "AgentStep",
@@ -332,6 +337,9 @@ __all__ = [
     "SinkProbe",
     "SinkProbeResult",
     "SinkTokenType",
+    "ThreeTierPipeline",
+    "ThreeTierPipelineResult",
+    "build_three_tier_artifact",
     "compute_sink_concentration",
     "compute_conjugate_bound",
     "compute_input_uncertainty",
