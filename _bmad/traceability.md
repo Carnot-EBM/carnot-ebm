@@ -306,3 +306,8 @@
 | SCENARIO-LEARN-030 | Not Started | Implemented | Logic error template matches ∧/∨/¬ → generates LOGIC_PRECEDENCE, NEGATION_SCOPE constraint types (Exp 343) |
 | SCENARIO-LEARN-031 | Not Started | Implemented | Code error template matches syntax/type issues → generates INDEX_BOUNDS, TYPE_MISMATCH constraint types (Exp 343) |
 | SCENARIO-LEARN-032 | Not Started | Implemented | Template persistence round-trip via to_dict/from_dict preserves all templates in ConstraintTemplateLibrary state; register_builtin_templates idempotent (Exp 343) |
+| REQ-LEARN-020 | Not Started | Implemented | Multi-session memory persistence — SessionMemory class with save/load/restore methods enabling CaseMemory, ConstraintTemplateLibrary, and PerModelFPTracker persistence across process restarts (Exp 345) |
+| REQ-LEARN-021 | Not Started | Implemented | SessionMemory storage contract — disk persistence at .carnot_sessions/{model_id}, round-trip validation with zero information loss (Exp 345) |
+| SCENARIO-LEARN-035 | Not Started | Implemented | CaseMemory round-trip — save 10 synthetic arithmetic patterns, load, verify all 10 entries present (Exp 345) |
+| SCENARIO-LEARN-036 | Not Started | Implemented | ConstraintTemplateLibrary observations round-trip — persist active template state, restore from disk (Exp 345) |
+| SCENARIO-LEARN-037 | Not Started | Implemented | PerModelFPTracker round-trip — persist model-specific false-positive tracking state, restore across sessions (Exp 345) |
