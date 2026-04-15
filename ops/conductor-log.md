@@ -1693,3 +1693,4 @@ python/ |
 | 2026-04-15 06:10 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
 | 2026-04-15 06:20 UTC | Exp 336: CoTCircuitVerifier — CRV-style chain-of-t | OK | 145 passed in 3.74s |
 | 2026-04-15 06:21 UTC | Exp 335: AMD XDNA NPU build — install prereqs and  | OK | Deliverable already exists in repo |
+| 2026-04-15 06:29 UTC | Exp 337: Operational retrospective for milestone 2026.05.06 | OK | operational_retro_2026_05_06.json written; n=12 experiments, total=293 min, mean=24.4 min/exp, top bottleneck=Exp 325 (35.0 min); all 4 RETRO items resolved; NEW-003/004 added; actual speedup ~39.9%; estimated next speedup ~4.0% |

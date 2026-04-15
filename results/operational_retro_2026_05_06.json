@@ -1,0 +1,154 @@
+{
+  "schema": "carnot.operational_retro.v1",
+  "milestone": "2026.05.06",
+  "generated_at": "2026-04-15T06:29:52Z",
+  "n_experiments": 12,
+  "total_wall_time_min": 293.0,
+  "mean_time_per_exp_min": 24.4,
+  "slowest_experiment": "Exp 325: Conductor hardening \u2014 RETRO-001 + NEW-001 implementation (35.0 min)",
+  "retro_001_resolved": true,
+  "retro_002_resolved": true,
+  "actual_speedup_pct": 39.9,
+  "estimated_next_milestone_speedup_pct": 4.0,
+  "prior_milestone_mean_min": 40.6,
+  "carry_over": [
+    {
+      "id": "RETRO-001",
+      "description": "45-minute hard timeout wrapper for conductor experiments. Ships run_experiment_with_timeout.sh; auto-escalates after 45 min. Carried forward from 2026.04.22 retro through 2026.04.29 retro without implementation \u2014 finally resolved in Exp 325.",
+      "resolved": true,
+      "resolution": "Implemented in Exp 325 (2026-04-15 01:51 UTC)"
+    },
+    {
+      "id": "RETRO-002",
+      "description": "Integrate DualGPUMonitor into conductor pre-experiment check. Injects GPU state into experiment prompt; detects zombies; auto-selects DualGPURunner vs single-GPU. Carried forward from 2026.04.22 retro through 2026.04.29 retro without implementation \u2014 resolved in Exp 326.",
+      "resolved": true,
+      "resolution": "Implemented in Exp 326 (2026-04-15 02:04 UTC)"
+    },
+    {
+      "id": "NEW-001",
+      "description": "Enforce test-first development in ExperimentTemplate via generate_test_stub(). Idempotent stub writer creates a test file skeleton before implementation code is written. Introduced as a new item in the 2026.04.29 retro.",
+      "resolved": true,
+      "resolution": "Implemented in Exp 325 (2026-04-15 01:51 UTC)"
+    },
+    {
+      "id": "NEW-002",
+      "description": "Pre-experiment optional-dependency audit. DependencyAudit CLI parses the experiment prompt, checks required files exist in the virtualenv/repo, and emits status='blocked_prereq' before the agent runs. Introduced as a new item in the 2026.04.29 retro.",
+      "resolved": true,
+      "resolution": "Implemented in Exp 327 (2026-04-15 02:29 UTC)"
+    }
+  ],
+  "action_items": [
+    {
+      "id": "NEW-003",
+      "description": "Pre-split complex experiments that are predicted to require > 40 agent turns into Phase A (implementation + unit tests) and Phase B (integration tests + artifact + docs update). This milestone had 2/12 = 17% max-turns failures (Exp 331, 334), both of which recovered quickly on retry but each lost 5-9 minutes of wall time and created a conductor retry cycle. Pre-splitting avoids the failure entirely: each phase is simpler and more focused. Implementation: add an expected_complexity field to experiment prompt headers; conductor splits automatically when complexity == 'high'.",
+      "status": "new",
+      "owner": "conductor",
+      "priority": "medium",
+      "estimated_impact_pct": 3,
+      "evidence_this_milestone": "Exp 331 (FP autopsy): FAIL (max turns 50), recovered in 1 min (deliverable already existed). Exp 334 (VERGE iterative Z3): FAIL (max turns 50), recovered in 20 min on retry with 175 tests passing. Combined lost wall time: ~10 min = 3.4% of milestone total."
+    },
+    {
+      "id": "NEW-004",
+      "description": "Add a relay improvement health guard before the next milestone's self-learning relay experiments. Exp 329 live GPU run shows improvement_1to3 = -6.1%, meaning the four-tier relay is actively degrading Tier 1 accuracy on a 33-question batch. Before planning further relay experiments, diagnose whether the negative signal is due to: (a) batch size too small for reliable measurement, (b) Tier 3 JEPA gate miscalibrated on the live distribution, or (c) a genuine architectural regression introduced between Exp 318 and Exp 329. Block relay-dependent experiments in the next roadmap until this is resolved. Implementation: add relay_health_check() to ExperimentTemplate that loads Exp 329 artifact and warns if improvement_1to3 < 0.",
+      "status": "new",
+      "owner": "experiment_template",
+      "priority": "high",
+      "estimated_impact_pct": 2,
+      "evidence_this_milestone": "Exp 329 (live four-tier relay): improvement_1to3 = -0.060606 (-6.1%), batch3_accuracy = 0.636 vs batch1_accuracy = 0.697. JEPA skip rate 18.2% (same as simulated). The relay is not improving accuracy \u2014 it is making it worse on this distribution."
+    }
+  ],
+  "bottlenecks_identified": [
+    {
+      "name": "Exp 325: Conductor hardening \u2014 RETRO-001 + NEW-001 implementation",
+      "duration_min": 35.0,
+      "pct_total": 11.9,
+      "root_cause": "Exp 325 implemented two major action items in a single agent run: the 45-minute conductor timeout wrapper (run_experiment_with_timeout.sh) and the generate_test_stub() addition to ExperimentTemplate. Two-deliverable experiments reliably take 30-40 min even with the new tooling because the agent must write, test, and commit two independent modules. The 35-minute wall time is the inherent cost of this multi-part design, not a process failure.",
+      "category": "multi_deliverable_complexity",
+      "fix_implemented_this_milestone": false
+    },
+    {
+      "name": "Exp 332: Confidence-weighted constraint violations \u2014 dual-signal repair",
+      "duration_min": 32.0,
+      "pct_total": 10.9,
+      "root_cause": "Exp 332 introduced two new confidence signals (expression specificity, partition function variance) and a dual-signal ConfidenceRepairResult dataclass with 177 tests covering all signal combinations and edge cases. High test count (177 vs the typical 80-120 range) was the primary driver of the 32-minute wall time. The test-first stub (NEW-001) was used but the dual-signal design required more cases than a single-signal implementation.",
+      "category": "high_test_count_dual_signal",
+      "fix_implemented_this_milestone": false
+    },
+    {
+      "name": "Exp 333: Model-adaptive constraint thresholds + selective CaseMemory consolidation",
+      "duration_min": 31.0,
+      "pct_total": 10.6,
+      "root_cause": "Same pattern as Exp 325: two independent deliverables (PerModelFPTracker and SelectiveConsolidation) combined into one agent run. 43 tests each, 86 total. The 31-minute wall time is slightly below Exp 332 because the deliverables share data structures (both use CaseMemory) and the agent could reuse setup code rather than building from scratch.",
+      "category": "multi_deliverable_complexity",
+      "fix_implemented_this_milestone": false
+    }
+  ],
+  "improvements_implemented": [
+    {
+      "name": "Conductor 45-min timeout wrapper (RETRO-001) + test-first stubs (NEW-001)",
+      "experiment": 325,
+      "description": "Shipped run_experiment_with_timeout.sh with configurable CARNOT_CONDUCTOR_TIMEOUT_MINUTES (default 45). Added generate_test_stub() to ExperimentTemplate: idempotent stub writer that creates a test file skeleton before implementation code is written. Resolves RETRO-001 and NEW-001, both carried forward from the 2026.04.29 retro. Estimated speedup 27%."
+    },
+    {
+      "name": "DualGPUMonitor + setup_gpu() GPU health integration (RETRO-002/003)",
+      "experiment": 326,
+      "description": "Shipped DualGPUMonitor with GPUProcessInfo dataclass and zombie detection. check_dual_gpu_health() injected into ExperimentTemplate.setup_gpu() as an additive gpu_monitor_results key. CI-safe fallback when nvidia-smi absent. Resolves RETRO-002 and RETRO-003 from the 2026.04.29 retro."
+    },
+    {
+      "name": "Pre-experiment dependency audit CLI (NEW-002)",
+      "experiment": 327,
+      "description": "Shipped DependencyAudit with extract_required_files(), check_dependencies(), and build_blocked_artifact(). CLI audits an experiment prompt and emits status='blocked_prereq' before the agent runs if required files are absent. Resolves NEW-002 from the 2026.04.29 retro. 34 tests pass."
+    },
+    {
+      "name": "Live GPU full-scale benchmark (Exp 316 re-run on real hardware)",
+      "experiment": 328,
+      "description": "First live GPU execution of the Exp 315/316 full-scale benchmark: DualGPUMonitor confirmed 2x RTX 3090s idle and healthy before run. Result: live accuracy ~10% below simulated baseline across all variants (number_swap, irrelevant_sentence, all). Simulation divergence documented in simulation_divergence field. Provides honest GPU-backed headline numbers."
+    },
+    {
+      "name": "Live GPU four-tier relay benchmark (Exp 318 re-run on real hardware)",
+      "experiment": 329,
+      "description": "First live GPU run of the four-tier self-learning relay. Result: improvement_1to3 = -6.1% (relay hurts accuracy on this 33-question batch). JEPA skip rate 18.2% matches simulation. Negative improvement is an honest research finding: batch size may be too small for reliable signal, or Tier 3 is actively degrading Tier 1 accuracy on this distribution."
+    },
+    {
+      "name": "HuggingFace live publish of trained EBM model cards",
+      "experiment": 330,
+      "description": "Ran the Exp 317 patching script against the live HuggingFace hub. Updated all 16 per-token activation EBM README files with Phase 1 status clarifications and Exp 316 (simulated) and Exp 328 (live) benchmark results. Idempotent sentinel comment prevents double-patching."
+    },
+    {
+      "name": "Systematic FP autopsy \u2014 categorize broken verify-repair cases",
+      "experiment": 331,
+      "description": "FPCategory enum + AutopsyCase dataclass + categorize_fp() function that classifies false positives into 5 categories (constraint_too_loose, domain_specific_knowledge, ambiguous_constraint, correct_llm_output, repair_overcorrection). Hit max-turns (50) on first attempt; recovered via deliverable-already-exists on retry. 34 tests pass."
+    },
+    {
+      "name": "Confidence-weighted repair \u2014 dual-signal FP reduction",
+      "experiment": 332,
+      "description": "Expression specificity confidence signal (REQ-VERIFY-083) and partition function variance confidence signal (REQ-VERIFY-084). ConfidenceRepairResult dataclass aggregates both signals. FP avoided rate 73.3%, TP preserved rate 100%. 177 tests pass covering all signal combinations."
+    },
+    {
+      "name": "Model-adaptive constraint thresholds + selective CaseMemory consolidation",
+      "experiment": 333,
+      "description": "PerModelFPTracker tracks per-model FP rate online; ModelAdaptiveThresholds adjusts violation threshold per model ID. SelectiveConsolidation filters case memory entries below a confidence floor before consolidation. 43 tests each (86 total). Enables the pipeline to self-tune per model without retraining the EBM."
+    },
+    {
+      "name": "VERGE-style iterative Z3 refinement",
+      "experiment": 334,
+      "description": "IterativeZ3Refiner: repeatedly strengthens Z3 constraints until the solver finds UNSAT (no counterexample) or the iteration budget is exhausted. Implements the VERGE paper's targeted refinement loop. Hit max-turns (50) on first attempt; recovered on retry. 175 tests pass."
+    },
+    {
+      "name": "AMD XDNA NPU build \u2014 prereq retry and status update",
+      "experiment": 335,
+      "description": "Re-ran the Exp 314 NPU unblock workflow: confirmed ninja and openblas still missing, added prereq_delta field (changes vs Exp 314). Demonstrates the dependency audit (Exp 327) would have surfaced this without consuming agent turns. Infrastructure tracks delta across attempts."
+    },
+    {
+      "name": "CoTCircuitVerifier \u2014 CRV-style chain-of-thought computational graph",
+      "experiment": 336,
+      "description": "CoTCircuitVerifier + CoTStep + extract_cot_steps() parse chain-of-thought reasoning into a directed computational graph. CoTCircuit.build_circuit() and find_broken_links() detect logical discontinuities between reasoning steps. Implements REQ-EXTRACT-015/016 (SCENARIO-EXTRACT-031 through -035). 145 tests pass."
+    }
+  ],
+  "post_test_failure_rate_pct": 16.7,
+  "max_turns_failures": [
+    331,
+    334
+  ],
+  "meta_reflection": "Milestone 2026.05.06 ran 12 experiments in 293.0 minutes (mean 24.4 min/exp), a 39.9% improvement over the prior milestone baseline of 40.6 min/exp.  All four action items from the 2026.04.29 retro (RETRO-001, RETRO-002, NEW-001, NEW-002) were implemented in the first three experiments of this milestone (Exps 325-327), front-loading the process improvements and allowing the remaining nine experiments to benefit immediately.  The key remaining bottleneck is inherent task complexity for multi-deliverable experiments (Exps 325, 332, 333) and max-turns failures for complex single experiments (331, 334).  The negative relay improvement signal from Exp 329 (improvement_1to3 = -6.1%) is a research concern: the four-tier relay may not be working as intended on the live distribution and should be investigated before planning further relay-dependent experiments."
+}

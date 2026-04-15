@@ -4,6 +4,25 @@
 
 ## What's Working
 
+### Exp 337: Operational Retrospective — Milestone 2026.05.06 (REQ-RETRO-003)
+
+- `scripts/experiment_337_retro.py` + `tests/python/test_experiment_337_retro.py` (58 tests pass).
+- `results/operational_retro_2026_05_06.json` (schema: `carnot.operational_retro.v1`).
+- **Milestone 2026.05.06 (Exps 325-336)**: 12 experiments, 293 total min, mean 24.4 min/exp.
+- **Actual speedup: 39.9%** vs prior milestone baseline (40.6 min/exp). Exceeds 27% estimate.
+- All 4 action items from the 2026.04.29 retro resolved in the first 3 experiments:
+  - RETRO-001 (45-min timeout): Exp 325 `run_experiment_with_timeout.sh`.
+  - RETRO-002 (DualGPUMonitor): Exp 326 `python/carnot/pipeline/dual_gpu_monitor.py`.
+  - NEW-001 (test-first stubs): Exp 325 `generate_test_stub()` in ExperimentTemplate.
+  - NEW-002 (dep audit): Exp 327 `scripts/experiment_dependency_audit.py`.
+- Live GPU benchmarks (Exps 328/329): ran cleanly — no stalls, no zombie processes.
+  - Exp 328 (full-scale): live accuracy ~10% below simulated baseline (honest divergence).
+  - Exp 329 (relay): **improvement_1to3 = -6.1%** (negative relay signal — research concern).
+- Max-turns failures: Exps 331 and 334 (17%), both recovered in ≤20 min.
+- New action items: NEW-003 (pre-split complex exps, ~3%), NEW-004 (relay health guard, ~2%).
+- Estimated next milestone speedup: **4.0%** (honest; big wins already banked).
+- Spec: REQ-RETRO-003, SCENARIO-RETRO-005, SCENARIO-RETRO-006.
+
 ### Exp 336: CoT Circuit Verifier — CRV Structural Consistency (REQ-EXTRACT-015/016)
 
 - `python/carnot/pipeline/cot_circuit_verifier.py` (new):
@@ -1255,3 +1274,4 @@
 | Exp 332: Confidence-weighted repair benchmark — dual-signal FP reduction | ✅ Complete | Dual-signal confidence gate (expression specificity + Ising variance) on 30-question GSM8K arithmetic corpus; `python/carnot/pipeline/confidence_weighted_repair.py` (ConfidenceRepairResult, ViolationConfidence, compute_expression_confidence, compute_energy_variance_confidence) with `verify_repair.py` additive integration; FP reduction: 13/15 avoided (86.67%), TP preservation: 15/15 (100%); `scripts/experiment_332_confidence_repair.py`; `tests/python/test_confidence_weighted_repair.py` (444 lines) at 100% targeted coverage; REQ-VERIFY-083, REQ-VERIFY-084, REQ-VERIFY-085, SCENARIO-VERIFY-109, SCENARIO-VERIFY-110, SCENARIO-VERIFY-111, SCENARIO-VERIFY-112 | — |
 | Exp 335: AMD XDNA NPU build — install prereqs and ORT source build | ✅ Complete | Installed ninja + openblas prerequisites, rebuilt onnxruntime 1.20.1 from source with -DONNXRUNTIME_USE_VITISAI=ON flag, validated VitisAI ExecutionProvider registration; unblocks AMD XDNA sampling path; REQ-PRED-003, SCENARIO-EXP292-A, SCENARIO-EXP292-B, SCENARIO-EXP292-C, SCENARIO-EXP292-D | — |
 | Exp 336: CoTCircuitVerifier — CRV-style chain-of-thought computational graph verification | ✅ Complete | `python/carnot/pipeline/cot_circuit_verifier.py` (CoTStep, CoTCircuit, extract_cot_steps, find_broken_links, build_circuit, CoTCircuitVerifier) with additive `verify_repair.py` integration; dependency graph extraction + cycle detection + value-carryover link validation catches wrong-carryover errors (arXiv 2510.09312); `tests/python/test_cot_circuit_verifier.py` 51 tests, 100% coverage; REQ-EXTRACT-015, REQ-EXTRACT-016, SCENARIO-EXTRACT-031, SCENARIO-EXTRACT-032, SCENARIO-EXTRACT-033, SCENARIO-EXTRACT-034, SCENARIO-EXTRACT-035 | — |
+| Exp 337: Operational retrospective for milestone 2026.05.06 | ✅ Complete | `scripts/experiment_337_retro.py` + `tests/python/test_experiment_337_retro.py` (58 tests) + `results/operational_retro_2026_05_06.json`; n=12 experiments, 293 total min, mean 24.4 min/exp; actual speedup 39.9% (exceeds 27% estimate); all 4 prior RETRO items resolved; live GPU benchmarks ran clean; NEW-003/004 added; REQ-RETRO-003, SCENARIO-RETRO-005, SCENARIO-RETRO-006 | — |
