@@ -2806,6 +2806,81 @@ the Tier 2 → Tier 1 feedback loop.
 
 Spec: REQ-LEARN-019, SCENARIO-LEARN-033, SCENARIO-LEARN-034
 
+### REQ-LEARN-020: Session State Persistence
+
+The system shall provide a `SessionMemory` class that serialises and restores
+`CaseMemory`, `ConstraintTemplateLibrary`, and `PerModelFPTracker` across
+process restarts so that learned patterns accumulate over time.
+
+- REQ-LEARN-020-1: `SessionMemory(storage_dir: str, model_id: str)` MUST accept
+  a filesystem directory and a model identifier as construction parameters.
+- REQ-LEARN-020-2: `SessionMemory.save(case_memory, template_library, fp_tracker)`
+  MUST serialise all three components to `(storage_dir)/(model_id)/session_state.json`
+  as a single JSON document conforming to schema `"carnot.session_memory.v1"` with
+  keys `"case_memory"`, `"template_library"`, `"fp_tracker"`, and `"saved_at"`
+  (ISO 8601 UTC timestamp).
+- REQ-LEARN-020-3: `save()` MUST be idempotent: calling it multiple times
+  overwrites the existing file rather than appending.
+- REQ-LEARN-020-4: `SessionMemory.load()` MUST return a tuple
+  `(CaseMemory, ConstraintTemplateLibrary, PerModelFPTracker)` when saved state
+  exists, or `None` when no state file is present for the given `model_id`.
+- REQ-LEARN-020-5: `load()` MUST be CI-safe: return `None` (not raise) when the
+  state file is missing, empty, or contains malformed JSON.
+- REQ-LEARN-020-6: `SessionMemory.exists()` MUST return `True` if and only if the
+  expected state file is present on disk.
+- REQ-LEARN-020-7: `SessionMemory.clear()` MUST delete the state file for the
+  given `model_id` if it exists, and be a no-op if the file does not exist.
+- REQ-LEARN-020-8: `SessionMemory.list_sessions(storage_dir)` (static/class method)
+  MUST return a sorted list of `model_id` strings for which a
+  `session_state.json` file exists under `storage_dir`; return `[]` when
+  `storage_dir` does not exist.
+
+Spec: REQ-LEARN-020, SCENARIO-LEARN-035, SCENARIO-LEARN-036, SCENARIO-LEARN-037
+
+### REQ-LEARN-021: Per-Model Session State Isolation
+
+Each model's session state MUST be stored in its own subdirectory so that
+saving state for model A never overwrites or corrupts state for model B.
+
+- REQ-LEARN-021-1: The storage path for a given `model_id` MUST be
+  `(storage_dir)/(model_id)/session_state.json`.  Slashes in `model_id` (e.g.
+  `"org/model-name"`) MUST be escaped to a safe filesystem character (`"__"`)
+  so that no nested directories are created unintentionally.
+- REQ-LEARN-021-2: `VerifyRepairPipeline` MUST accept an optional
+  `session_memory: SessionMemory | None = None` constructor parameter.  When
+  provided, the pipeline MUST call `session_memory.load()` during `__init__`
+  and restore whichever components were returned.
+- REQ-LEARN-021-3: `VerifyRepairPipeline.close()` MUST save current state via
+  `session_memory.save(...)` when `session_memory` is set, and be a no-op
+  otherwise.
+
+Spec: REQ-LEARN-021, SCENARIO-LEARN-035, SCENARIO-LEARN-036, SCENARIO-LEARN-037
+
+### SCENARIO-LEARN-035: SessionMemory Save and Load Round-Trip
+
+**Given** a `SessionMemory(storage_dir="/tmp/test_sessions", model_id="test-model")`
+**And** a `CaseMemory` with 3 recorded cases
+**And** a `ConstraintTemplateLibrary` with 1 observation recorded
+**And** a `PerModelFPTracker` with 1 FP recorded
+**When** `save(case_memory, template_library, fp_tracker)` is called
+**Then** `exists()` returns `True`
+**And** `load()` returns a tuple whose `CaseMemory` has the same number of entries
+**And** the loaded `PerModelFPTracker` has the same stats
+
+### SCENARIO-LEARN-036: SessionMemory Returns None When No State Exists
+
+**Given** a `SessionMemory(storage_dir="/tmp/no_such_dir", model_id="missing-model")`
+**When** `load()` is called
+**Then** the result is `None`
+**And** `exists()` returns `False`
+
+### SCENARIO-LEARN-037: SessionMemory list_sessions Returns All Saved Model IDs
+
+**Given** saved states for model_ids `["model-a", "model-b"]` under the same `storage_dir`
+**When** `SessionMemory.list_sessions(storage_dir)` is called
+**Then** the result is `["model-a", "model-b"]` (sorted)
+**And** `list_sessions` returns `[]` when `storage_dir` does not exist
+
 ### SCENARIO-LEARN-025: PerModelFPTracker Disables High-FP Constraint Type
 
 **Given** a `PerModelFPTracker(min_observations=10)`
@@ -4080,6 +4155,8 @@ conductor log timestamps for Exps 325–336
 | REQ-LEARN-017 | Not Started | Implemented | Constraint template addition from memory patterns — ConstraintTemplateLibrary + 4 builtin templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
 | REQ-LEARN-018 | Not Started | Implemented | Constraint template persistence + builtin registry — to_dict/from_dict + register_builtin_templates (SCENARIO-LEARN-029/030/031/032, Exp 343) |
 | REQ-LEARN-019 | Not Started | Implemented | CaseMemory to ConstraintTemplateLibrary wiring — CaseMemoryTemplateWiring [violation_type_to_pattern_key + on_violation_recorded]; constraint addition benchmark shows improvement_delta>0 (SCENARIO-LEARN-033/034, Exp 344) |
+| REQ-LEARN-020 | Not Started | Implemented | Session state persistence — SessionMemory save/load/exists/clear/list_sessions + JSON schema v1 (SCENARIO-LEARN-035/036/037, Exp 345) |
+| REQ-LEARN-021 | Not Started | Implemented | Per-model session isolation — scoped subdirs + VerifyRepairPipeline session_memory param + close() (SCENARIO-LEARN-035/036/037, Exp 345) |
 | REQ-EXTRACT-010 | Not Started | Implemented | NL2Z3Extractor + Z3Result + pipeline integration tests (SCENARIO-EXTRACT-020/021, Exp 310) |
 | REQ-EXTRACT-011 | Not Started | Implemented | Z3Result dataclass + is_violation + subprocess timeout tests (SCENARIO-EXTRACT-022/023/024, Exp 310) |
 | REQ-EXTRACT-012 | Not Started | Implemented | Extractor benchmark corpus + FP/TP metrics + winner selection (SCENARIO-EXTRACT-025/026, Exp 311) |
