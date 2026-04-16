@@ -827,11 +827,9 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     if success:
         logger.info("Operational retrospective complete")
         if git_has_changes():
-            run_cmd(["git", "add", "-A"])
-            run_cmd(["git", "commit", "-m",
-                     f"[conductor] Operational retrospective for milestone {current}"])
-            if push:
-                _git_push()
+            git_commit_and_push(
+                f"[conductor] Operational retrospective for milestone {current}",
+                push=push)
         return True
     else:
         logger.warning("Operational retrospective failed — continuing")
