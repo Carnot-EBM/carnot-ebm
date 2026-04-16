@@ -1911,3 +1911,7 @@ python/ |
 | 2026-04-16 07:43 UTC | Plan milestone 2026.06.10 | OK | 14 tasks proposed |
 | 2026-04-16 07:44 UTC | Exp 386: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
 | 2026-04-16 07:44 UTC | Milestone 2026.06.10 activated | OK | 14 tasks queued |
+| 2026-04-16 08:21 UTC | Exp 390: GPU node preflight — confirm live GPU bef | OK | Deliverable already exists in repo |
+| 2026-04-16 08:21 UTC | Exp 391: Fix RETRO-020 — CIKANEnergy proper Python | OK | Deliverable already exists in repo |
+| 2026-04-16 08:21 UTC | Exp 392: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
+| 2026-04-16 08:21 UTC | Exp 393: Safety/Jailbreak KAN Classifier — first T | OK | Deliverable already exists in repo |
