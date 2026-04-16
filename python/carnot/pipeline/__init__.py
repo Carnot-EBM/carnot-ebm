@@ -226,6 +226,11 @@ from carnot.pipeline.deliverable_validator import (  # noqa: E402
     build_cloud_gpu_instructions,
     generate_cloud_gpu_script,
 )
+from carnot.pipeline.env_autofix import (  # noqa: E402
+    EnvironmentAutoFix,
+    apply_env_autofix,
+    build_env_autofix_artifact,
+)
 
 __all__ = [
     "AgentStep",
@@ -395,4 +400,7 @@ __all__ = [
     "DeliverableContentValidator",
     "build_cloud_gpu_instructions",
     "generate_cloud_gpu_script",
+    "EnvironmentAutoFix",
+    "apply_env_autofix",
+    "build_env_autofix_artifact",
 ]

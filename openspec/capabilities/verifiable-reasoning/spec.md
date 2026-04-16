@@ -4916,6 +4916,70 @@ Spec: SCENARIO-INFRA-024 (Exp 404)
   provisioning commands
 **And** `cloud_gpu_script_generated=True` appears in the result artifact
 
+### REQ-INFRA-021: EnvironmentAutoFix Self-Injects CARNOT_FORCE_LIVE=1 When GPU Hardware is Detected
+
+When GPU hardware is present (as detected by `torch.cuda.is_available()`) and
+`CARNOT_FORCE_LIVE` is absent from `os.environ`, the `apply_env_autofix()` function
+must set `os.environ['CARNOT_FORCE_LIVE'] = '1'` before returning.  This allows each
+experiment script to self-configure without requiring the human shell to propagate the
+var through the conductor's `subprocess.run()` call — the root cause of RETRO-022 (seven
+consecutive milestones with blocked live GPU experiments).
+
+**Acceptance criteria:**
+- `apply_env_autofix()` returns an `EnvironmentAutoFix` dataclass with fields:
+  `gpu_detected`, `carnot_force_live_was_set`, `auto_fix_applied`, `final_env_value`.
+- When GPU is detected and var was absent: `auto_fix_applied=True`,
+  `final_env_value='1'`, `os.environ['CARNOT_FORCE_LIVE'] == '1'` after the call.
+- When GPU is not detected: `auto_fix_applied=False`, no env mutation.
+- When var was already set: `auto_fix_applied=False`, `carnot_force_live_was_set=True`.
+
+Spec: SCENARIO-INFRA-025, SCENARIO-INFRA-026, SCENARIO-INFRA-027 (Exp 413)
+
+### REQ-INFRA-022: EnvironmentAutoFix Logs a Warning When Applied
+
+When `apply_env_autofix()` applies the fix (sets `CARNOT_FORCE_LIVE=1`), it must emit a
+`WARNING`-level log message via the standard Python `logging` module so the human
+operator can observe that env propagation is still broken and the workaround was
+activated.  Silent auto-fix would mask the underlying infrastructure problem.
+
+**Acceptance criteria:**
+- Log message contains the string `"EnvironmentAutoFix applied CARNOT_FORCE_LIVE=1"`.
+- Log message is emitted at `logging.WARNING` level.
+- No warning is emitted when `auto_fix_applied=False`.
+
+Spec: SCENARIO-INFRA-026 (Exp 413)
+
+### SCENARIO-INFRA-025: EnvironmentAutoFix No-Op When No GPU
+
+**Given** `torch.cuda.is_available()` returns `False` (or torch is not importable)
+**When** `apply_env_autofix()` is called
+**Then** `auto_fix_applied=False`
+**And** `os.environ` is not mutated
+**And** `honest_verdict` in the artifact is `'gpu_not_detected'`
+**And** `retro_022_resolved=False` in the artifact
+
+### SCENARIO-INFRA-026: EnvironmentAutoFix Applies Fix and Logs Warning
+
+**Given** `torch.cuda.is_available()` returns `True`
+**And** `CARNOT_FORCE_LIVE` is absent from `os.environ`
+**When** `apply_env_autofix()` is called
+**Then** `auto_fix_applied=True`
+**And** `os.environ['CARNOT_FORCE_LIVE'] == '1'`
+**And** a WARNING log containing `"EnvironmentAutoFix applied CARNOT_FORCE_LIVE=1"` is emitted
+**And** `honest_verdict` in the artifact is `'auto_fix_applied'`
+**And** `retro_022_resolved=True` in the artifact
+
+### SCENARIO-INFRA-027: EnvironmentAutoFix No-Op When Var Already Set
+
+**Given** `torch.cuda.is_available()` returns `True`
+**And** `CARNOT_FORCE_LIVE=1` is already in `os.environ`
+**When** `apply_env_autofix()` is called
+**Then** `auto_fix_applied=False`
+**And** `carnot_force_live_was_set=True`
+**And** no warning is emitted
+**And** `honest_verdict` in the artifact is `'gpu_detected_env_was_correct'`
+**And** `retro_022_resolved=True` in the artifact
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
