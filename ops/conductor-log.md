@@ -1860,3 +1860,5 @@ python/ |
 | 2026-04-15 23:51 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
 | 2026-04-15 23:54 UTC | Exp 368: Live precision pipeline benchmark — 200 G | OK | 155 passed in 3.31s |
 | 2026-04-15 23:55 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-16 00:22 UTC | Exp 369: Live HumanEval code verification — 50 pro | OK | 81 passed in 3.36s |
+| 2026-04-16 00:23 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
