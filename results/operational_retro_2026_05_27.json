@@ -1,1 +1,135 @@
-{"experiment": 376, "milestone": "2026.05.27", "status": "complete", "finding": "14th milestone operational retrospective."}
+{
+  "schema": "carnot.operational_retro.v3",
+  "experiment": 376,
+  "milestone": "2026.05.27",
+  "retro_date": "2026-04-16",
+  "status": "complete",
+  "authored_by": "operational-retrospective-agent",
+
+  "timing_summary": {
+    "total_wall_time_minutes": 6365,
+    "total_wall_time_hours": 106.1,
+    "experiments_completed": 439,
+    "mean_minutes_per_experiment": 14.5,
+    "median_estimate_minutes": 8,
+    "note": "Cumulative totals across all milestones through 2026.05.27. Milestone 2026.05.27 itself added 16 experiments (365-376) in ~222 minutes over previous milestone 2026.05.20 (423 exp / 6143 min)."
+  },
+
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "experiment_id": 53,
+      "wall_time_minutes": 418,
+      "title": "Runtime constraint instrumentation",
+      "root_cause": "Runaway debugging loop with no timeout wrapper. A single failing assertion triggered repeated full-suite reruns and manual intervention cycles. No per-experiment wall-clock hard stop was enforced by the conductor. Debugging proceeded interactively rather than in a structured bisect-or-abort pattern.",
+      "category": "runaway_debug_loop",
+      "retro_item": "RETRO-003 (unresolved as of this milestone)"
+    },
+    {
+      "rank": 2,
+      "experiment_id": 219,
+      "wall_time_minutes": 117,
+      "title": "Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "root_cause": "Sequential single-GPU inference with no DualGPURunner. Cold-start model load stall (no pre-warm call before timed inference, violating Exp 294 pattern). Both RTX 3090s available but only one used. Full GSM8K pass without per-batch checkpointing meant a failure required restarting from zero.",
+      "category": "sequential_gpu_no_parallelism",
+      "retro_item": "RETRO-004"
+    },
+    {
+      "rank": 3,
+      "experiment_id": 308,
+      "wall_time_minutes": 105,
+      "title": "JEPA fast-path gate integration (checkpoint: tests failing)",
+      "root_cause": "Failing tests triggered full test suite reruns on each fix attempt rather than targeted module-only test runs. At ~6500 tests total, each full-suite run costs 3-5 minutes; with 10+ retry cycles the overhead dominates. Conductor checkpoint preserved state but the fix-rerun cycle was not short-circuited to the affected module.",
+      "category": "inefficient_test_retry_strategy",
+      "retro_item": "RETRO-005"
+    },
+    {
+      "rank": 4,
+      "experiment_id": 184,
+      "wall_time_minutes": 83,
+      "title": "3B model verification — does verify-repair help large models",
+      "root_cause": "Large (3B) model on single GPU with no pre-warm and no DualGPU parallelism. Cold model load dominated experiment time. No setup_gpu() health-check before inference. Sequential prompt-response loop without batching.",
+      "category": "large_model_no_prewarm",
+      "retro_item": "RETRO-006"
+    },
+    {
+      "rank": 5,
+      "experiment_id": 221,
+      "wall_time_minutes": 78,
+      "title": "Live prompt-side constraint benchmark on typed IR tasks",
+      "root_cause": "Z3 SMT solver calls without per-call timeout. A single pathological constraint expression could block the process indefinitely. Sequential inference (no batching), no DualGPURunner, no per-question timeout guard.",
+      "category": "solver_timeout_missing",
+      "retro_item": "RETRO-007"
+    }
+  ],
+
+  "gpu_utilization_analysis": {
+    "current_state": "Both RTX 3090s idle: GPU 0 at 0% util / 5 MB allocated, GPU 1 at 0% util / 5 MB allocated.",
+    "pattern_observed": "GPU utilization was consistently sequential throughout the milestone. Experiments loaded one model on one GPU, ran to completion, then released. DualGPURunner existed in the codebase (referenced in conductor suggestions) but was not used in the 5 slowest experiments.",
+    "idle_time_estimate_pct": 60,
+    "idle_time_note": "Estimated 60% of GPU wall time was wasted on: model cold-start loads (no pre-warm), sequential experiment queuing (GPU 1 fully idle while GPU 0 ran inference), and blocked-experiment overhead (experiments that hard-fail on CARNOT_FORCE_LIVE gate still consume conductor time).",
+    "zombie_processes_detected": false,
+    "zombie_note": "Current GPU state shows 5 MB allocated with 0% utilization on both GPUs, suggesting lingering CUDA context handles from a previous run. Not classified as zombies (below 1 GB threshold) but indicative of incomplete process teardown.",
+    "parallel_gpu_utilization_achieved": false
+  },
+
+  "bottlenecks_identified": [
+    "BOTTLENECK-01: No per-experiment hard wall-clock timeout in conductor. Exp 53 at 418 min (29x average) exemplifies a runaway debugging loop that should have been aborted and flagged after 2x mean (30 min). The conductor log shows it proceeded interactively with no automated circuit-breaker.",
+    "BOTTLENECK-02: Sequential GPU inference — DualGPURunner infrastructure exists but was not automatically wired by conductor. Experiments that benchmark two models (Exp 219: Qwen + Gemma) ran them sequentially on one GPU instead of concurrently on GPU 0 and GPU 1. Estimated 40-50% of inference wall time wasted.",
+    "BOTTLENECK-03: Cold-start model load penalty not amortized. The ExperimentTemplate.setup_gpu() pre-warm pattern (Exp 294) was defined but not consistently enforced. Model loads for 3B+ parameter models take 45-90 seconds; repeated across experiments this compounds to hours.",
+    "BOTTLENECK-04: Full test suite reruns on targeted module failures. During Exp 308 and similar blocked-checkpoint experiments, 6500+ tests were rerun on each fix attempt. Targeted `pytest tests/python/test_experiment_NNN*.py` reruns would reduce per-cycle cost from ~4 min to ~15 sec.",
+    "BOTTLENECK-05: Z3/SMT solver calls without timeout guards. Pathological constraint expressions in Exps 221 and related benchmarks blocked the Python process with no watchdog. A 30-second per-call timeout would have bounded worst-case cost.",
+    "BOTTLENECK-06: CARNOT_FORCE_LIVE gate not propagated to conductor subprocesses. Root cause confirmed in Exp 352 diagnostic: the env var was not forwarded into subprocess environments, causing every live-GPU experiment to silently fall back to simulated mode across 4 consecutive milestones. This wasted substantial conductor time running experiments that produced no new live GPU data.",
+    "BOTTLENECK-07: Doc reconciliation passes (changelog, status.md, traceability.md) ran as serial post-steps within each experiment session rather than as a batched async pass. Each doc update required re-reading the same files multiple times across closely-spaced experiments.",
+    "BOTTLENECK-08: Pre-flight test suite (full 6500-test run) was executed at session start and after each significant change. For non-library experiments (new experiment scripts with isolated test files), the full suite adds 3-5 min of overhead with zero signal about the new code."
+  ],
+
+  "improvements_suggested": [
+    "IMPROVEMENT-01 [HIGH IMPACT]: Add conductor hard wall-clock timeout per experiment — default 2x rolling mean, configurable per-experiment. Auto-abort and log RETRO item when exceeded. Estimated savings: eliminates outliers like Exp 53; cap worst-case at ~30 min instead of 418 min.",
+    "IMPROVEMENT-02 [HIGH IMPACT]: Auto-wire DualGPURunner in conductor for multi-model experiments. When an experiment spec declares two model_ids, conductor should automatically assign GPU 0 and GPU 1 and run inference concurrently. Estimated savings: 40-50% reduction in inference wall time for dual-model benchmarks.",
+    "IMPROVEMENT-03 [HIGH IMPACT]: Fix CARNOT_FORCE_LIVE env propagation — add conductor_gpu_env.sh to subprocess env by default (Exp 365 RETRO-012 fix). This is the single most impactful correctness fix: 4 consecutive milestones produced no live GPU results due to this bug.",
+    "IMPROVEMENT-04 [MEDIUM IMPACT]: Enforce setup_gpu() pre-warm as a mandatory conductor gate before any timed inference. Fail-fast with a structured warning if skipped. Estimated savings: 45-90 sec per GPU experiment, ~1-2 hours across a milestone.",
+    "IMPROVEMENT-05 [MEDIUM IMPACT]: Switch failing-test retry strategy from full suite to targeted module run. When a conductor checkpoint detects test failures, rerun only `tests/python/test_experiment_NNN*.py` and the directly modified module. Escalate to full suite only after module tests pass. Estimated savings: 3-4 min per retry cycle, ~1 hour per blocked-checkpoint experiment.",
+    "IMPROVEMENT-06 [MEDIUM IMPACT]: Add per-call timeout wrapper (30 sec default) around all Z3/SMT solver invocations. Raise TimeoutError and record as constraint_timeout in results rather than hanging. Estimated savings: prevents unbounded stalls in constraint-heavy benchmarks.",
+    "IMPROVEMENT-07 [LOW IMPACT]: Batch doc reconciliation passes. After a sequence of tightly-coupled experiments (e.g., 365-376 in this milestone), run a single doc-reconcile pass that updates changelog, status.md, and traceability.md in one read-modify-write cycle rather than once per experiment.",
+    "IMPROVEMENT-08 [LOW IMPACT]: Replace full pre-flight suite with a tiered check: (a) fast smoke test of directly modified modules (~15 sec), (b) full suite only when shared infrastructure (pipeline/, models/) is modified. Saves 3-5 min per experiment session open/close.",
+    "IMPROVEMENT-09 [OPERATIONAL]: Add conductor metrics dashboard — record per-experiment wall time, GPU utilization sampled every 60 sec, and blocked vs. live outcome. Surface slowest experiments and idle GPU time as a post-milestone summary. This retrospective was constructed manually; automation would make it O(1) effort."
+  ],
+
+  "parallelization_opportunities": {
+    "experiments_that_could_run_concurrently": [
+      "Exp 219 + Exp 221: Both are benchmark experiments on independent model/constraint dimensions. Could run simultaneously on GPU 0 and GPU 1.",
+      "Exp 368 + Exp 369: HumanEval and Precision Pipeline benchmarks use different models (Qwen vs. CodeLLM). Independent data paths — parallelizable with DualGPURunner.",
+      "Doc reconciliation passes for Exps 365-376: All modify non-overlapping spec sections. Could be batched into a single parallel write pass."
+    ],
+    "estimated_parallel_speedup_pct": 35
+  },
+
+  "pre_flight_test_analysis": {
+    "was_a_bottleneck": true,
+    "full_suite_size": 6500,
+    "full_suite_duration_min": 4,
+    "recommended_strategy": "Tiered: smoke (15 sec) → module (30 sec) → full suite (4 min, only on shared infra changes)",
+    "estimated_savings_min_per_milestone": 60
+  },
+
+  "doc_reconciliation_analysis": {
+    "was_a_bottleneck": true,
+    "pattern_observed": "Each experiment session updated changelog.md, status.md, conductor-log.md, and traceability.md independently. For Milestone 2026.05.27 (16 experiments), this means 64+ individual file read-modify-write operations that could be batched into 4.",
+    "estimated_savings_min_per_milestone": 30
+  },
+
+  "estimated_time_savings_pct": 38,
+  "estimated_time_savings_rationale": "Based on: (1) hard timeout eliminating Exp-53-style outliers (-5%), (2) DualGPURunner auto-wiring cutting inference time on dual-model experiments (-15%), (3) targeted test reruns cutting blocked-checkpoint cycles (-8%), (4) pre-warm enforcement cutting cold-start overhead (-5%), (5) Z3 timeout guards preventing solver hangs (-3%), (6) batched doc passes (-2%). Compounded, this estimates 38% reduction in total milestone wall time. The most impactful single change is IMPROVEMENT-02 (DualGPURunner auto-wiring).",
+
+  "retro_items_carried_forward": [
+    {"id": "RETRO-003", "status": "unresolved", "title": "No per-experiment conductor timeout — allows runaway debug loops"},
+    {"id": "RETRO-012", "status": "addressed_in_exp_365", "title": "CARNOT_FORCE_LIVE not propagated to conductor subprocesses — all live-GPU experiments ran simulated"},
+    {"id": "RETRO-015", "status": "open", "title": "Live GPU never confirmed across 4 consecutive milestones — escalation required"},
+    {"id": "RETRO-016", "status": "open", "title": "LLMExtractor broken for IT-format models"},
+    {"id": "RETRO-017", "status": "open", "title": "FR-11 relay uses synthetic data only"},
+    {"id": "RETRO-018", "status": "open", "title": "CIKAN implementation corrupt (JSON not Python)"}
+  ],
+
+  "headline_finding": "The milestone completed 439 experiments in 106.1 hours at 14.5 min/experiment average. The dominant efficiency losses were: (1) a single 418-minute runaway debug session (Exp 53) that distorts the average and represents ~7% of all milestone time, (2) sequential GPU inference when two GPUs were available, and (3) the CARNOT_FORCE_LIVE propagation bug that rendered all live-GPU experiments as simulated across multiple milestones. Fixing just these three issues is estimated to reduce next-milestone wall time by 25-38%."
+}
