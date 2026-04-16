@@ -1965,3 +1965,9 @@ python/ |
 | 2026-04-16 13:46 UTC | Exp 416: Safety KAN classifier — first Tier B prod | OK | Deliverable already exists in repo |
 | 2026-04-16 13:46 UTC | Exp 417: Semantic Energy Scorer — logit-space Bolt | OK | Deliverable already exists in repo |
 | 2026-04-16 13:46 UTC | Exp 418: CRANE extraction gate — 1x-cost prompt-si | OK | Deliverable already exists in repo |
+| 2026-04-16 15:36 UTC | Exp 419: Live precision pipeline — 200 GSM8K, 5 va | OK | Deliverable already exists in repo |
+| 2026-04-16 15:36 UTC | Exp 420: Live HumanEval code verification — 50 pro | OK | Deliverable already exists in repo |
+| 2026-04-16 15:36 UTC | Exp 421: Live adversarial GSM8K — Carnot's headlin | OK | Deliverable already exists in repo |
+| 2026-04-16 15:36 UTC | Exp 422: VPRM training via FOVER — Z3-annotated GS | OK | Deliverable already exists in repo |
+| 2026-04-16 15:36 UTC | Exp 423: EORM + JEPA retrain on live data + FR-11  | OK | Deliverable already exists in repo |
+| 2026-04-16 15:36 UTC | Exp 424: Operational retrospective milestone 2026. | OK | Deliverable already exists in repo |
