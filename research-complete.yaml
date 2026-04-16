@@ -1787,3 +1787,57 @@ milestones:
     title: 'Exp 363: Operational retrospective for milestone 2026.05.20'
     deliverable: results/operational_retro_2026_05_20.json
     result: OK (conductor)
+- id: 2026.05.27
+  title: First Live GPU Results, LLMExtractor, and Real-Data Self-Learning
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp365-retro-close-conductor-env
+    title: "Exp 365: Close RETRO-012/013/014 \u2014 conductor GPU env fix, JSON enforcement, env script"
+    deliverable: results/experiment_365_retro_close.json
+    result: OK (conductor)
+  - id: exp366-llm-extractor
+    title: "Exp 366: LLMExtractor \u2014 use a small LLM call to extract verifiable claims from IT model responses"
+    deliverable: python/carnot/pipeline/llm_extractor.py
+    result: OK (conductor)
+  - id: exp367-live-extraction-benchmark
+    title: "Exp 367: Live extraction benchmark \u2014 LLMExtractor vs ArithmeticExtractor vs LLMz3Formalizer on Gemma4-E4B-it"
+    deliverable: results/experiment_367_extraction_live.json
+    result: OK (conductor)
+  - id: exp368-live-precision-pipeline
+    title: "Exp 368: Live precision pipeline benchmark \u2014 200 GSM8K, 5 variants, 2 models, first real numbers"
+    deliverable: results/experiment_368_precision_live.json
+    result: OK (conductor)
+  - id: exp369-live-humaneval
+    title: "Exp 369: Live HumanEval code verification \u2014 50 problems, CodeExtractor + PBT, Gemma4-E4B-it"
+    deliverable: results/experiment_369_humaneval_live.json
+    result: OK (conductor)
+  - id: exp370-live-adversarial-gsm8k
+    title: "Exp 370: Live adversarial GSM8K \u2014 Apple arXiv 2410.05229, first credibility result"
+    deliverable: results/experiment_370_adversarial_live.json
+    result: OK (conductor)
+  - id: exp371-eorm-real-retrain
+    title: "Exp 371: EORM real-data retrain \u2014 train on live pairs from Exps 368/369/370"
+    deliverable: results/experiment_371_eorm_real_retrain.json
+    result: OK (conductor)
+  - id: exp372-jepa-real-retrain
+    title: "Exp 372: JEPA real-data retrain \u2014 train violation predictor on live response pairs"
+    deliverable: results/experiment_372_jepa_real_retrain.json
+    result: OK (conductor)
+  - id: exp373-three-tier-live
+    title: "Exp 373: Three-tier pipeline on live GPU \u2014 SinkProbe + EORM + Ising with real attention matrices"
+    deliverable: results/experiment_373_three_tier_live.json
+    result: OK (conductor)
+  - id: exp374-self-learning-relay-live
+    title: "Exp 374: Self-learning relay on live GPU \u2014 FR-11 first learning_confirmed verdict"
+    deliverable: results/experiment_374_self_learning_relay_live.json
+    result: OK (conductor)
+  - id: exp375-cikan-energy-tier
+    title: "Exp 375: CIKAN constraint-informed KAN energy tier \u2014 hard constraint priors in splines"
+    deliverable: python/carnot/models/cikan_energy.py
+    result: OK (conductor)
+  - id: exp376-operational-retro
+    title: "Exp 376: Operational retrospective \u2014 milestone 2026.05.27 complete"
+    deliverable: results/operational_retro_2026_05_27.json
+    result: OK (conductor)
