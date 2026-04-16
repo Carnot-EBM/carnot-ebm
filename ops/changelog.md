@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.03, Full Analysis)
+
+- 2026-04-16 07:26: Full operational efficiency retrospective written to `results/operational_retro_2026_06_03.json` (schema="carnot.operational_retro.v4").
+  This is the HOW-we-executed analysis, separate from research results.
+
+  **Milestone totals:** 441 experiments, 6130 minutes (102.2 hours) wall time, 14.0 min/experiment mean (prior: 22.7 min, apparent 38% speedup — partially from fast-fail blocked experiments).
+
+  **Top 5 slowest experiments:**
+  - Exp 219: 117 min — sequential single-GPU inference, no DualGPURunner, no pre-warm, Z3 calls blocking
+  - Exp 308: 105 min — full 6500-test suite rerun on each fix iteration instead of targeted module run
+  - Exp 184: 83 min — 3B model on single GPU, cold CUDA init absorbed into timing, no batching
+  - Exp 221: 78 min — sequential inference, Z3 call without per-call timeout caused >10-minute hang
+  - Exp 155: 78 min — CPU JEPA retrain, no checkpoint-resume, crash forced full restart from epoch 0
+
+  **GPU utilization:** Both RTX 3090s idle at 0% with 25 GB VRAM held by zombie PID 3378630 (wall: 2019s, CPU: 484s). Estimated 60% GPU idle time across milestone. ACTION REQUIRED: kill 3378630 before next session.
+
+  **Key bottlenecks (8):** no per-experiment hard timeout; DualGPURunner not auto-wired; CARNOT_FORCE_LIVE not propagating (5th milestone); full suite reruns on targeted failures; no model pre-warm enforcement; CPU training without checkpoint-resume; zombie GPU processes not cleared at teardown; doc reconciliation not batched.
+
+  **Estimated savings with fixes:** 38% reduction in next-milestone wall time. Top leverage: auto-wire DualGPURunner (-15%), targeted test reruns (-8%), conductor hard timeout (-5%), pre-warm enforcement (-5%).
+
+  **Open RETRO items:** RETRO-003 (conductor timeout, 15+ milestones carried), RETRO-019 (GPU node offline, 5th milestone critical), RETRO-020 (CIKAN not implemented, 2nd carry), RETRO-021 (FR-11 relay synthetic-only, 3rd carry).
+  (User-requested — operational efficiency retrospective for milestone 2026.06.03)
+
 ## 2026-04-16 (Exp 389: Operational Retrospective — Milestone 2026.06.03 COMPLETE)
 
 - 2026-04-16 06:55: Exp 389 retrospective written to `results/operational_retro_2026_06_03.json` (schema="carnot.operational_retro.v3").

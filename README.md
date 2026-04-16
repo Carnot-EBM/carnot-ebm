@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 376+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 389+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -74,7 +74,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (376 experiments, 33 completed milestones)
+## Key Results (389 experiments, 15 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -82,7 +82,7 @@ All benchmark results below are from **live GPU inference**. Simulated and softw
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
-Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.05.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). All live GPU result counts above reflect artifacts generated before this bug was identified.
+Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.05.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). Milestone 2026.06.03 (Exps 377-389) fixed the infrastructure (Exp 377: LiveGPUGate + session_startup.sh export), but the GPU node was offline during the conductor session — live GPU unconfirmed for a fifth consecutive milestone (RETRO-019 critical). All live GPU result counts above reflect artifacts generated before this bug was identified.
 
 ## PBT Verification
 
@@ -194,6 +194,13 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **CIKAN energy layer (Exp 375):** Clifford-Informed KAN-Ising hybrid energy model (`CIKANEnergy`) for geometric constraint representation. Note: `cikan_energy.py` delivered as JSON not Python — RETRO-018 opened for reimplementation.
 - **Milestone 2026.05.27 retrospective (Exp 376):** 11 experiments (Exps 365-375), mean=22.7 min/exp (apparent speedup from fast-fail blocked experiments, not genuine GPU work). `live_gpu_confirmed=False` for FOURTH consecutive milestone — RETRO-015 (critical) opened. New RETRO-015/016/017/018. 78 tests pass. `results/operational_retro_2026_05_27.json`.
 
+### Milestone 2026.06.03 (Exps 377-389) — 15th Milestone
+
+- **Live GPU infrastructure fix (Exp 377):** `LiveGPUGate` class + `session_startup.sh` export of `CARNOT_FORCE_LIVE=1`. Formally closes RETRO-015 at the infrastructure level. GPU node was offline during session — RETRO-019 escalation opened for execution-environment failure.
+- **Combined EORM+JEPA retrain (Exp 383):** Trains EORM on contrastive triples and JEPA on binary violation pairs from live CoT pairs (Exps 379-382). `schema=carnot.combined_retrain.v1`; `honest_verdict=insufficient_pairs` (Exps 379-382 live files empty — RETRO-015 upstream). `eorm_model_383_real.safetensors` + `jepa_predictor_383_real.safetensors` written when pairs available. 41 tests pass.
+- **Precision / HumanEval / adversarial / extraction harnesses (Exps 379-382):** Scripts created with hard `CARNOT_FORCE_LIVE=1` gates; all returned `status='partial'` because GPU node was offline. Live run pending once GPU is confirmed online.
+- **Milestone 2026.06.03 retrospective (Exp 389):** 12 experiments (Exps 377-388, with Exps 378/386/387 missing due to session interruption), mean=19.9 min/exp. `live_gpu_confirmed=False` for FIFTH consecutive milestone. RETRO-019 (GPU node offline), RETRO-020 (CIKAN not implemented), RETRO-021 (FR-11 relay third carry) opened. RETRO-015 closed at infrastructure level. 115 tests pass. `results/operational_retro_2026_06_03.json`.
+
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
 
@@ -251,7 +258,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 376 experiments across 33 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 389 experiments across 15 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

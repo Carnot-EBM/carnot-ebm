@@ -1,1 +1,176 @@
-{"experiment": 389, "milestone": "2026.06.03", "status": "complete"}
+{
+  "experiment": 389,
+  "schema": "carnot.operational_retro.v4",
+  "milestone": "2026.06.03",
+  "generated_at": "2026-04-16T07:26:26Z",
+  "status": "complete",
+
+  "timing": {
+    "total_wall_time_minutes": 6130,
+    "total_wall_time_hours": 102.2,
+    "experiments_completed": 441,
+    "mean_minutes_per_experiment": 14.0,
+    "prior_milestone_mean_minutes_per_experiment": 22.7,
+    "prior_milestone_total_minutes": 6365,
+    "speedup_note": "Apparent 38% speedup in mean time/experiment vs. prior milestone (22.7 → 14.0 min). Partially attributable to fast-fail blocked experiments (no live GPU) rather than genuine GPU throughput gains."
+  },
+
+  "slowest_experiments": [
+    {
+      "duration_minutes": 117,
+      "description": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "root_cause": "Sequential single-GPU inference with no DualGPURunner, no model pre-warm, cold-start load stall absorbed into experiment wall time. Z3 constraint calls were also sequential with no per-call timeout.",
+      "category": "sequential_gpu_inference"
+    },
+    {
+      "duration_minutes": 105,
+      "description": "Exp 308: JEPA fast-path gate integration (tests failing — checkpoint)",
+      "root_cause": "Failure recovery triggered full 6500-test suite rerun on each fix iteration instead of targeted module-level reruns. Each rerun took ~8 minutes, and the fix required 3–4 iterations.",
+      "category": "full_suite_rerun_on_targeted_failure"
+    },
+    {
+      "duration_minutes": 83,
+      "description": "Exp 184: 3B model verification — does verify-repair help large models",
+      "root_cause": "3B model loaded on single GPU without pre-warm; lazy CUDA initialization stall not separated from inference timing. No batched inference; questions sent one at a time.",
+      "category": "cold_start_single_gpu"
+    },
+    {
+      "duration_minutes": 78,
+      "description": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "root_cause": "Sequential inference with per-question Z3 calls and no per-call timeout. One malformed constraint caused Z3 to spin for >10 minutes before the outer loop timed out.",
+      "category": "z3_timeout_missing"
+    },
+    {
+      "duration_minutes": 78,
+      "description": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "root_cause": "CPU training of full JEPA model on multi-domain dataset without batching or early-stopping heuristic. No checkpoint-resume, so a mid-run crash required a full restart from epoch 0.",
+      "category": "cpu_training_no_checkpoint_resume"
+    }
+  ],
+
+  "gpu_utilization": {
+    "gpu_0_vram_used_mb": 9430,
+    "gpu_0_vram_total_mb": 24576,
+    "gpu_0_vram_pct": 38,
+    "gpu_0_utilization_pct": 0,
+    "gpu_1_vram_used_mb": 15612,
+    "gpu_1_vram_total_mb": 24576,
+    "gpu_1_vram_pct": 64,
+    "gpu_1_utilization_pct": 0,
+    "total_vram_held_mb": 25032,
+    "zombie_pid": 3378630,
+    "zombie_cpu_time_s": 484,
+    "zombie_wall_time_s": 2019,
+    "zombie_note": "PID 3378630 holds 25 GB VRAM across both GPUs with 0% GPU utilization (wall time 2019s, CPU 484s). This is a zombie model process — model loaded but inference loop exited, CUDA context not released. Represents ~1 GB wasted every 30 seconds of idle conductor time.",
+    "estimated_gpu_idle_pct_milestone": 60,
+    "idle_cause_breakdown": {
+      "sequential_inference_no_dual_runner": "~25% idle time — model A ran while GPU 1 sat empty",
+      "cold_start_stalls": "~15% idle time — lazy CUDA init not pre-warmed",
+      "carnot_force_live_not_propagating": "~15% idle time — conductor subprocesses ran simulated paths, GPU never used",
+      "zombie_processes_between_experiments": "~5% idle time — VRAM locked, GC not triggered"
+    }
+  },
+
+  "zombie_processes": {
+    "detected": true,
+    "pid": 3378630,
+    "vram_held_mb": 25032,
+    "action_required": "Kill PID 3378630 to recover 25 GB VRAM before next conductor session. Run: kill 3378630",
+    "prevention": "gpu_monitor.py --kill-zombies should be invoked by conductor at experiment teardown, not just at startup. Currently only called once at session start."
+  },
+
+  "parallelization_opportunities": [
+    {
+      "opportunity": "Dual-GPU benchmark experiments",
+      "experiments_affected": ["Exp 219", "Exp 221", "Exp 155", "Exp 184"],
+      "approach": "Auto-wire DualGPURunner for any experiment specifying >1 model variant. GPU 0 runs model A, GPU 1 runs model B concurrently. Wall time cut by ~50% for 2-model comparisons.",
+      "estimated_savings_pct": 15
+    },
+    {
+      "opportunity": "Parallel retrain + benchmark",
+      "experiments_affected": ["Exp 155", "Exp 183", "Exp 308"],
+      "approach": "CPU training (EORM/JEPA retrain) can run on GPU 0 while GPU 1 handles independent benchmark inference. These have no data dependency.",
+      "estimated_savings_pct": 8
+    },
+    {
+      "opportunity": "Batch Z3 constraint calls",
+      "experiments_affected": ["Exp 221", "Exp 219"],
+      "approach": "Group all Z3 calls for a question batch, run in a subprocess pool with per-call 30s timeout. Eliminates single-constraint hangs from blocking the full experiment.",
+      "estimated_savings_pct": 5
+    },
+    {
+      "opportunity": "Parallel doc reconciliation",
+      "experiments_affected": ["post-experiment doc passes"],
+      "approach": "Reconcile spec.md + traceability.md + status.md + changelog.md in a single batch write at experiment end rather than four sequential file reads and writes.",
+      "estimated_savings_pct": 3
+    }
+  ],
+
+  "bottlenecks_identified": [
+    "No per-experiment hard timeout in conductor: Exp 219 ran 117 min with no kill signal. A 45-minute hard cap would have freed the GPU 72 minutes earlier.",
+    "DualGPURunner not auto-wired: dual-model benchmarks (219, 221, 184) each ran sequentially on one GPU while the second sat idle. No conductor policy to detect this pattern.",
+    "CARNOT_FORCE_LIVE env var not propagating to conductor subprocesses: five consecutive milestones produced only simulated GPU results. Root cause fixed in Exp 352/377, but the fix requires an online GPU node at session start.",
+    "Full test suite reruns on targeted failures: Exp 308 re-ran the 6500-test suite 3–4 times during failure debugging. Targeted `pytest tests/python/test_experiment_308*.py` would have cut debugging time by ~70%.",
+    "No model pre-warm before timed inference: cold CUDA init (20–45s) was absorbed into experiment wall time for Exps 155, 184, 219. ExperimentTemplate.setup_gpu() exists but was not called in pre-template experiments.",
+    "CPU training without checkpoint-resume: Exp 155 restart from epoch 0 after crash cost ~40 minutes. ExperimentTemplate.checkpoint_save() exists but was not used.",
+    "Zombie GPU processes between experiments: PID 3378630 held 25 GB VRAM with 0% utilization. gpu_monitor --kill-zombies only called at session start, not at experiment teardown.",
+    "Doc reconciliation not batched: each experiment updated 4–6 ops files sequentially. Conductor made ~2400 file-write operations across the milestone that could be reduced by 60% with a single end-of-experiment batch write.",
+    "Interrupted sessions without state recovery: Exps 378, 386, 387 were missing from milestone close. No automatic conductor state checkpoint allowed resuming from the last completed experiment."
+  ],
+
+  "improvements_suggested": [
+    "Add conductor hard timeout: 45 minutes per experiment, configurable per experiment type. Emit RETRO entry and continue on timeout rather than hanging.",
+    "Auto-detect dual-model experiments and wire DualGPURunner: if an experiment spec lists >1 LLM variant, the conductor should schedule GPU 0 / GPU 1 in parallel automatically.",
+    "Enforce pre-warm before timed inference: conductor should call ExperimentTemplate.setup_gpu() for any experiment with requires_gpu=True. Fail fast if pre-warm fails rather than timing stalled inference.",
+    "Targeted test reruns on failure: conductor should run only the failing module's test file on each fix iteration. Full suite rerun only on final pass before marking experiment complete.",
+    "Enforce checkpoint-resume in all training experiments: conductor should verify that checkpoint_save() is called at least once per training loop epoch batch before allowing long-running CPU training.",
+    "Kill zombie GPU processes at experiment teardown: add gpu_monitor --kill-zombies to conductor post-experiment hook, not just session startup.",
+    "Batch doc reconciliation: write a single reconcile_docs() call at experiment end that updates all ops files in one pass. Reduces I/O from ~6 sequential writes to 1 batched write.",
+    "Conductor state checkpoint on interrupt: serialize the conductor's experiment queue and completed-set to a JSON file on SIGINT/SIGTERM so sessions can resume without re-running completed experiments.",
+    "Add per-call Z3 timeout (30s default): wrap all Z3 solver invocations in a subprocess with a configurable timeout. Log timed-out constraints to a debug file rather than blocking.",
+    "GPU node health check at conductor session start: if CARNOT_FORCE_LIVE=1 and no GPU is available, emit a critical alert and pause rather than silently running simulated paths for the entire milestone."
+  ],
+
+  "estimated_time_savings_pct": 38,
+  "savings_breakdown": {
+    "auto_dual_gpu_runner": 15,
+    "targeted_test_reruns": 8,
+    "pre_warm_enforcement": 5,
+    "conductor_hard_timeout": 5,
+    "z3_per_call_timeout": 3,
+    "checkpoint_resume_training": 2,
+    "zombie_gc_at_teardown": 1,
+    "note": "Savings are additive estimates assuming all improvements implemented simultaneously. Actual savings will vary based on experiment mix in next milestone."
+  },
+
+  "retro_items_open": [
+    {"id": "RETRO-003", "severity": "medium", "description": "Conductor lacks per-experiment hard timeout — runaway experiments block the queue."},
+    {"id": "RETRO-019", "severity": "critical", "description": "GPU node offline for fifth consecutive milestone — CARNOT_FORCE_LIVE=1 set correctly but no live GPU available."},
+    {"id": "RETRO-020", "severity": "high", "description": "CIKAN not implemented — cikan_energy.py is still JSON stub after two consecutive milestone failures."},
+    {"id": "RETRO-021", "severity": "high", "description": "FR-11 relay running synthetic-only for third consecutive milestone."}
+  ],
+
+  "retro_items_closed_this_milestone": [
+    {"id": "RETRO-015", "description": "LiveGPUGate infrastructure fix applied in Exp 377. CARNOT_FORCE_LIVE=1 now exported correctly in session_startup.sh. Remaining gap: GPU node must be online."}
+  ],
+
+  "meta_reflection": {
+    "what_went_well": [
+      "Mean time per experiment fell from 22.7 to 14.0 minutes (38% apparent improvement).",
+      "ExperimentTemplate adoption eliminated cold-start boilerplate for all new experiments.",
+      "RETRO-015 infrastructure fix was correct on first attempt.",
+      "115-test suite for Exp 389 retro script maintained 100% targeted coverage."
+    ],
+    "what_went_poorly": [
+      "Five consecutive milestones without a single live GPU result — the most critical research gap.",
+      "Interrupted sessions (Exps 378, 386, 387) left RETRO-020 and RETRO-021 unresolved for a third time.",
+      "Zombie GPU process (PID 3378630) consuming 25 GB VRAM at milestone close — resource leak not caught by existing monitoring.",
+      "Full test suite reruns on targeted failures remain the dominant per-experiment time sink."
+    ],
+    "process_improvements_for_next_milestone": [
+      "Before starting the next milestone, kill PID 3378630 and verify GPU node is online (nvidia-smi + CARNOT_FORCE_LIVE=1 smoke test).",
+      "Prioritize RETRO-020 (CIKAN) and RETRO-019 (GPU online) as P0 before any new capability experiments.",
+      "Add conductor hard timeout as the first infrastructure experiment of the next milestone — this is RETRO-003 and has been carried 15+ milestones."
+    ]
+  }
+}

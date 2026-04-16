@@ -1905,3 +1905,5 @@ python/ |
 | 2026-04-16 06:45 UTC | Exp 386: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
 | 2026-04-16 06:45 UTC | Exp 387: Safety/Jailbreak KAN Classifier — first T | OK | Deliverable already exists in repo |
 | 2026-04-16 06:45 UTC | Exp 388: SAVeR live multi-turn verification — fait | OK | Deliverable already exists in repo |
+| 2026-04-16 07:22 UTC | Exp 386: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
+| 2026-04-16 07:22 UTC | Exp 389: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |
