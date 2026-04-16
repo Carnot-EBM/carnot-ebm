@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 426: DualGPU Fix + Temp Guard — RETRO-025 CLOSED)
+
+- 2026-04-16 20:52 UTC: Implemented DualGPUHealthCheck and temperature guard, closing RETRO-025.
+  Triggered by: user instruction to implement REQ-INFRA-025/026 as Exp 426.
+
+  **Root cause context (RETRO-025):** PID 3509070 held 1786 MB on GPU1 at 0% utilization while
+  GPU0 ran at 88% for 144+ minutes.  GPU0 reached 82C (within 1-3C of RTX 3090 throttle threshold).
+
+  **Two fixes implemented:**
+  1. `DualGPUHealthResult` + `check_dual_gpu_health()` — snapshots GPU util/temp/VRAM via pynvml
+     (preferred) or nvidia-smi subprocess (fallback).  CI-safe: returns all-zero safe defaults when
+     neither is available, never raises.  `gpu1_is_zombie=True` when vram>500MB AND util<1%.
+  2. `setup_gpu()` temperature guard — calls `check_dual_gpu_health()` after pre-warm; logs WARNING
+     and embeds `recommended_batch_size_factor=0.75` when any GPU > 80C.
+
+  **Files written:**
+  - `python/carnot/pipeline/dual_gpu_health.py` — DualGPUHealthResult, check_dual_gpu_health,
+    build_gpu_fix_artifact, _derive_flags, _check_via_pynvml, _check_via_nvidia_smi.
+  - `scripts/experiment_426_dual_gpu_fix.py` — Exp 426 script; reads RETRO-025 retro JSON;
+    honest_verdict: zombie_detected / gpu1_healthy; artifact at results/experiment_426_dual_gpu_fix.json.
+  - `scripts/experiment_template.py` — setup_gpu() Step 9 added: calls check_dual_gpu_health(),
+    embeds dual_gpu_health key, logs zombie and temperature WARNINGs.
+  - `tests/python/test_dual_gpu_health.py` — 35 tests: pynvml/smi happy-paths, zombie boundary,
+    temperature boundary, CI safe defaults, build_gpu_fix_artifact verdicts.
+  - `tests/python/test_experiment_426_dual_gpu_fix.py` — run_experiment + main() coverage.
+  - `python/carnot/pipeline/__init__.py` — exported DualGPUHealthResult, check_dual_gpu_health,
+    build_gpu_fix_artifact.
+  - `openspec/capabilities/verifiable-reasoning/spec.md` — REQ-INFRA-025, REQ-INFRA-026,
+    SCENARIO-INFRA-031, SCENARIO-INFRA-032, SCENARIO-INFRA-033 added.
+
+  **Test results:** 35 passed, 0 failed.
+
 ## 2026-04-16 (Exp 425: ExperimentTimeoutWatchdog — RETRO-003 CLOSED)
 
 - 2026-04-16 17:16 UTC: Implemented ExperimentTimeoutWatchdog, closing RETRO-003 after 17+ consecutive
