@@ -1,5 +1,45 @@
 # Carnot — Changelog
 
+## 2026-04-16 — Exp 419: Live Precision Pipeline with CRANE Extractor (IMPLEMENTED — awaiting live GPU run)
+
+- 2026-04-16 13:48–14:XX UTC: Implemented `scripts/experiment_419_precision_live.py`,
+  `python/carnot/pipeline/crane_extractor.py`, and
+  `tests/python/test_experiment_419_precision_live.py` (73 tests, 100% coverage of new functions).
+  Triggered by: user instruction to implement Exp 419 live precision benchmark with CRANE extractor.
+
+  **What was built:**
+
+  - `CRANEExtractionGate` (Exp 418, `python/carnot/pipeline/crane_extractor.py`): CPU-only,
+    regex + deterministic-math constraint extractor with a structural confidence gate.  No LLM
+    call, no GPU dependency.  CRANE is the PRIMARY extractor for FULL_STACK variant in Exp 419.
+    - Two regex patterns: `_INLINE_EQ` (N OP N = N) and `_IS_EQ` (N OP N is/gives/equals N).
+    - `_claim_confidence()`: 0.3 base (parseable operands) + 0.4 (correct arithmetic) + 0.3
+      (numbered reasoning step).  Only violations (wrong arithmetic) are returned.
+    - `_CRANEConstraint`: `BaseConstraint` adapter; energy=1.0 violated, 0.0 satisfied.
+    - Deduplication: same (a, op, b, c) tuple not reported twice.
+
+  - `scripts/experiment_419_precision_live.py`:
+    - `apply_env_autofix()` called FIRST (before any CUDA import) per RETRO-022 fix.
+    - Gate 0: loads `results/experiment_413_env_autofix.json`; requires `honest_verdict` in
+      `{gpu_confirmed_live, auto_fix_applied, gpu_detected_env_was_correct}`; writes blocked
+      artifact and exits if not.
+    - Gate 1: `LiveGPUGate.require_live_or_blocked()`.
+    - Gate 2: `tmpl.setup_gpu()` health check.
+    - Gate 3: model load for Gemma4-E4B-it (GPU 0) and Qwen3.5-0.8B (GPU 1).
+    - `_apply_variant_with_crane()`: FULL_STACK uses CRANE primary → LLM fallback (when CRANE
+      returns zero violations); non-FULL_STACK variants delegate to Exp 368 `_apply_variant`.
+    - `build_exp419_artifact()`: schema="carnot.precision_benchmark.v2"; honest_verdict rules
+      per SCENARIO-BENCH-020 (`live_improvement` / `live_no_improvement` / `blocked`).
+    - Checkpoint every 50 questions per model via `tmpl.checkpoint_save()`.
+
+  **Gate result (at implementation time):**
+  Exp 413 `honest_verdict="auto_fix_applied"` ✓ (in approved set).
+  Live GPU run NOT executed yet — requires live GPU session.
+
+  **Pending:**
+  Exp 419 live run will produce Carnot's first credible precision-stack numbers when
+  `inference_mode='live_gpu'` and `signed_improvement > 0` for FULL_STACK/Gemma4-E4B-it.
+
 ## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.17, Full Analysis)
 
 - 2026-04-16 12:41 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_06_17.json` (schema="carnot.operational_retro.v5").
