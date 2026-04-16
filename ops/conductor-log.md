@@ -1883,3 +1883,7 @@ python/ |
 | 2026-04-16 02:56 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
 | 2026-04-16 02:56 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
 | 2026-04-16 02:56 UTC | Exp 376: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |
+| 2026-04-16 03:19 UTC | Plan milestone 2026.06.03 | OK | 13 tasks proposed |
+| 2026-04-16 03:20 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-16 03:20 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
+| 2026-04-16 03:20 UTC | Milestone 2026.06.03 activated | OK | 13 tasks queued |
