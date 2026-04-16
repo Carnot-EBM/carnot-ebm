@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 370+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 376+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -74,7 +74,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (364 experiments, 32 completed milestones)
+## Key Results (376 experiments, 33 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -82,7 +82,7 @@ All benchmark results below are from **live GPU inference**. Simulated and softw
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
-Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. All live GPU result counts above reflect artifacts generated before this bug was identified.
+Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.05.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). All live GPU result counts above reflect artifacts generated before this bug was identified.
 
 ## PBT Verification
 
@@ -180,6 +180,20 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **ModelServer + TensorRT + DualGPU wiring (Exp 364):** Infrastructure wiring — ModelServer, TensorRT, and DualGPU inference acceleration integrated into all benchmark harnesses for consistent hardware-accelerated testing.
 - **Milestone 2026.05.20 retrospective (Exp 363):** 11/12 experiments ran (Exp 356 LLMExtractor skipped). 366 min total, mean 33.3 min/exp. RETRO-012 (CARNOT_FORCE_LIVE bug) is the critical blocker for all live GPU headline results.
 
+### Milestone 2026.05.27 (Exps 365-376)
+
+- **RETRO-012/013/014 close (Exp 365):** `scripts/conductor_gpu_env.sh` created with `CARNOT_FORCE_LIVE=1`; RetroJSONEnforcer pattern established for mandatory result JSON production; LLMExtractor gap documented. RETRO-012/013/014 formally closed.
+- **LLMConstraintExtractor (Exp 366):** Second LLM call extracts structured arithmetic claims from free-form IT model output. `LLMConstraintExtractor` added to `python/carnot/pipeline/llm_extractor.py`; prompted extraction with fallback to regex; 100% module coverage.
+- **Live extraction comparison harness (Exp 367):** Three-way head-to-head: `ArithmeticExtractor` vs `LLMConstraintExtractor` vs `LLMz3Formalizer` on 30 GSM8K questions with Gemma4-E4B-it (GPU0) + Qwen3.5-0.8B (GPU1). Hard `CARNOT_FORCE_LIVE=1` gate; `honest_verdict=live_gpu_winner` only when all results confirmed live. Live run pending.
+- **Live precision pipeline benchmark v2 (Exp 368):** Hard CARNOT_FORCE_LIVE gate; schema=`carnot.precision_benchmark.v2`; `honest_verdict=live_improvement` only when `inference_mode==live_gpu AND signed_improvement>0`. First credible precision-stack headline number pending live run. 74 tests pass.
+- **Live HumanEval benchmark v2 (Exp 369):** Hard CARNOT_FORCE_LIVE gate (3-stage: env + diagnose_live_gpu + model_load); `CodeExtractor + VerifyRepairPipeline`; PBT via determinism/idempotency checks; `honest_verdict=code_verification_positive` only on live GPU with positive signed improvement. 69 tests pass.
+- **Live adversarial GSM8K benchmark v2 (Exp 370):** Hard CARNOT_FORCE_LIVE gate (`diagnose_live_gpu_or_raise()` — raises RuntimeError, NO simulated fallback); three conditions (standard/adversarial/repaired-adversarial) with LLMConstraintExtractor for repair; `honest_verdict=improvement_positive` gated on `inference_mode==live_gpu`. 23 tests pass; `SCENARIO-BENCH-022` added to spec.
+- **EORM retrain on real pairs v2 (Exp 371):** Retrains EORM model on real CoT pairs from Exp 368/369/370; `eorm_model_371_real.safetensors` when live GPU available; priority fallback: 371_real → 346_synthetic in downstream experiments.
+- **Three-tier pipeline live benchmark v2 (Exp 373):** Hard `CARNOT_FORCE_LIVE=1` gate via `diagnose_live_gpu()`; Beta-mixture approximate attention (realistic sink distribution vs Exp 360 binary); `compute_honest_verdict()` with 4-branch conservative reporting; `artifact_type=carnot.three_tier_benchmark.v2`. 80 tests pass; `SCENARIO-VERIFY-118/119` added to spec.
+- **FR-11 self-learning relay live run (Exp 374):** Three-tier online self-learning relay with real models; `learning_confirmed` verdict gated on `inference_mode==live_gpu`; honest_verdict=synthetic_only without live GPU.
+- **CIKAN energy layer (Exp 375):** Clifford-Informed KAN-Ising hybrid energy model (`CIKANEnergy`) for geometric constraint representation. Note: `cikan_energy.py` delivered as JSON not Python — RETRO-018 opened for reimplementation.
+- **Milestone 2026.05.27 retrospective (Exp 376):** 11 experiments (Exps 365-375), mean=22.7 min/exp (apparent speedup from fast-fail blocked experiments, not genuine GPU work). `live_gpu_confirmed=False` for FOURTH consecutive milestone — RETRO-015 (critical) opened. New RETRO-015/016/017/018. 78 tests pass. `results/operational_retro_2026_05_27.json`.
+
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
 
@@ -237,7 +251,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 348 experiments across 30 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 376 experiments across 33 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.

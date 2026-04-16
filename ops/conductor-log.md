@@ -1879,3 +1879,6 @@ python/ |
 | 2026-04-16 02:37 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
 | 2026-04-16 02:37 UTC | Exp 374: Self-learning relay on live GPU — FR-11 f | OK | Deliverable already exists in repo |
 | 2026-04-16 02:37 UTC | Exp 375: CIKAN constraint-informed KAN energy tier | OK | Deliverable already exists in repo |
+| 2026-04-16 02:56 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-16 02:56 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
+| 2026-04-16 02:56 UTC | Exp 376: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |

@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.05.27, Extended Analysis)
+
+- 2026-04-16 03:01: Full operational efficiency retrospective written to `results/operational_retro_2026_05_27.json` (schema="carnot.operational_retro.v3").
+  This is the HOW-we-executed analysis, not a research results summary.
+
+  **Cumulative milestone inventory:** 439 experiments, 6365 minutes (106.1 hours) total wall time, 14.5 min/experiment mean.
+
+  **Top 5 slowest experiments (all historical outliers):**
+  - Exp 53: 418 min (29x avg) — runaway debug loop, no conductor timeout (RETRO-003 unresolved)
+  - Exp 219: 117 min — sequential single-GPU inference, no DualGPURunner, no pre-warm
+  - Exp 308: 105 min — blocked checkpoint; full 6500-test suite rerun on each fix instead of targeted module runs
+  - Exp 184: 83 min — 3B model on single GPU, no pre-warm, no batching
+  - Exp 221: 78 min — Z3 calls without per-call timeout, sequential inference
+
+  **GPU utilization:** Both RTX 3090s idle at milestone close. Estimated 60% GPU idle time across milestone due to sequential inference, cold-start stalls, and CARNOT_FORCE_LIVE not propagating to conductor subprocesses (root cause: Exp 352).
+
+  **Key bottlenecks:** (1) no per-experiment hard timeout, (2) DualGPURunner not auto-wired for dual-model benchmarks, (3) CARNOT_FORCE_LIVE env propagation bug (4 consecutive milestones of simulated-only GPU results), (4) full test suite reruns on targeted failures.
+
+  **Estimated time savings with fixes:** 38% reduction in next-milestone wall time. Top leverage: auto-wire DualGPURunner (-15%), conductor hard timeout (-5%), targeted test reruns (-8%), pre-warm enforcement (-5%).
+
+  **RETRO items carried forward:** RETRO-003 (conductor timeout), RETRO-015 (live GPU escalation), RETRO-016 (LLMExtractor IT-format), RETRO-017 (FR-11 relay synthetic-only), RETRO-018 (CIKAN corrupt).
+  (Agent-initiated — post-milestone operational retrospective)
+
 ## 2026-04-16 (Exp 376: Operational Retrospective — Milestone 2026.05.27 COMPLETE)
 
 - 2026-04-16 02:38: Exp 376 operational retrospective written. Milestone 2026.05.27 marked COMPLETE.
