@@ -21,14 +21,14 @@ tasks:
     \  returns blocked artifact dict if not live (for experiments that prefer blocked to raising)\n   - verify_subprocess_env_propagation(env_var=\"CARNOT_FORCE_LIVE\") → bool:\n     spawns subprocess with\
     \ current env, checks var is present\n   - build_session_startup_script(project_root) → str: returns the shell script content\n   - check_session_startup_exists(project_root) → bool\n4. Implement scripts/session_startup.sh:\n\
     \   #!/usr/bin/env bash\n   # Source this at the start of a conductor session to propagate GPU env variables.\n   # RETRO-015 fix: ensures CARNOT_FORCE_LIVE=1 is inherited by all subprocesses.\n   set\
-    \ -euo pipefail\n   SCRIPT_DIR=\"$(cd \"$(dirname \"${{BASH_SOURCE[0]}}\")\" && pwd)\"\n   if [ -f \"$SCRIPT_DIR/conductor_gpu_env.sh\" ]; then\n     source \"$SCRIPT_DIR/conductor_gpu_env.sh\"\n  \
+    \ -euo pipefail\n   SCRIPT_DIR=\"$(cd \"$(dirname \"$({BASH_SOURCE[0])}\")\" && pwd)\"\n   if [ -f \"$SCRIPT_DIR/conductor_gpu_env.sh\" ]; then\n     source \"$SCRIPT_DIR/conductor_gpu_env.sh\"\n  \
     \ fi\n   export CARNOT_FORCE_LIVE=1\n   echo \"[session_startup] CARNOT_FORCE_LIVE=1 exported at $(date -u +%Y-%m-%dT%H:%M:%SZ)\"\n5. Implement python/carnot/pipeline/live_gpu_gate.py:\n   - LiveGPUGate\
     \ dataclass or class (stateless — all methods are static/class methods)\n   - check_env_var() → bool: returns True iff os.environ.get(\"CARNOT_FORCE_LIVE\") == \"1\"\n   - check_gpu_live() → bool: calls\
     \ diagnose_live_gpu() from Exp 352; returns is_live_capable\n   - require_live(model_ids=[]) → None: calls check_env_var() + check_gpu_live(); raises\n     RuntimeError(\"LiveGPUGate: CARNOT_FORCE_LIVE\
     \ not set — source scripts/session_startup.sh\")\n     if env var missing; RuntimeError(\"LiveGPUGate: GPU not live — is_live_capable=False\") if GPU\n     not ready. model_ids optionally used by check_gpu_live\
-    \ for model-loadability check.\n   - require_live_or_blocked(tmpl, model_ids) → dict | None: calls require_live();\n     on RuntimeError, returns tmpl.build_result({{}}, status=\"blocked\",\n     blocked_reason=str(e))\
+    \ for model-loadability check.\n   - require_live_or_blocked(tmpl, model_ids) → dict | None: calls require_live();\n     on RuntimeError, returns tmpl.build_result(({)}, status=\"blocked\",\n     blocked_reason=str(e))\
     \ so the caller can write the artifact and exit cleanly.\n   - verify_subprocess_env_propagation(env_var=\"CARNOT_FORCE_LIVE\") → bool:\n     runs subprocess.run([\"python3\", \"-c\", f\"import os;\
-    \ print(os.environ.get('{{env_var}}', ''))\"],\n     env=os.environ, capture_output=True, text=True); returns \"1\" in result.stdout\n6. Export LiveGPUGate from carnot.pipeline.__init__.\n7. Write scripts/experiment_377_gpu_session_fix.py\
+    \ print(os.environ.get('({env_var)}', ''))\"],\n     env=os.environ, capture_output=True, text=True); returns \"1\" in result.stdout\n6. Export LiveGPUGate from carnot.pipeline.__init__.\n7. Write scripts/experiment_377_gpu_session_fix.py\
     \ using ExperimentTemplate(377):\n   a. CPU-only experiment. No GPU needed (testing env propagation, not inference).\n   b. Read scripts/conductor_gpu_env.sh — verify CARNOT_FORCE_LIVE=1 present.\n\
     \   c. Read scripts/session_startup.sh — verify it sources conductor_gpu_env.sh.\n   d. Call LiveGPUGate.check_env_var() — records whether var is currently set.\n   e. Call LiveGPUGate.verify_subprocess_env_propagation()\
     \ — subprocess inherits env.\n   f. Call diagnose_live_gpu() — records is_live_capable (hardware state, not this fix).\n   g. Record: env_var_set, subprocess_inherits_env, session_startup_exists,\n\
@@ -86,8 +86,8 @@ tasks:
     \ Exp 340\n   cover this; SCENARIO-BENCH-020 from Exp 368 covers the live_gpu_confirmed criterion).\n3. Write tests FIRST (100% coverage required) for any NEW helper functions in this script.\n   Do\
     \ not rewrite Exp 368 tests. Test the wrapper functions only.\n4. Implement scripts/experiment_379_precision_execute.py:\n   a. ExperimentTemplate(379, \"Live precision pipeline execution\",\n     \
     \ \"results/experiment_379_precision_execute.json\", requires_gpu=True)\n   b. tmpl.setup()\n   c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, [\"google/gemma-4-E4B-it\",\n      \"Qwen/Qwen3.5-0.8B\"\
-    ])\n      If blocked is not None: write blocked artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([{{\"name\": \"Gemma4-E4B-it\", \"hf_id\": \"google/gemma-4-E4B-it\",\n      \"gpu\": 0}}, {{\"name\"\
-    : \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\", \"gpu\": 1}}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Import and call the precision benchmark pipeline\
+    ])\n      If blocked is not None: write blocked artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([({\"name\": \"Gemma4-E4B-it\", \"hf_id\": \"google/gemma-4-E4B-it\",\n      \"gpu\": 0)}, ({\"name\"\
+    : \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\", \"gpu\": 1)}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Import and call the precision benchmark pipeline\
     \ code from experiment_368 modules\n      (do NOT call subprocess — import the functions directly):\n      - from python.carnot.pipeline.precision_benchmark import (\n          PipelineVariant, PrecisionStackResult,\
     \ build_precision_benchmark_artifact)\n      - Run 200 GSM8K questions per model per variant (BatchedInferenceRunner, batch_size=8)\n      - Checkpoint every 50 questions via tmpl.checkpoint_save()\n\
     \   f. Use LLMExtractor (from Exp 366) with live Qwen3.5-0.8B as extractor for IT-format\n      variants (replaces ArithmeticExtractor for Gemma4-E4B-it outputs)\n   g. Build artifact: schema=\"carnot.precision_benchmark.v2\"\
@@ -109,8 +109,8 @@ tasks:
     \ — ExperimentTemplate.setup_gpu()\n- results/experiment_369_humaneval_live.json — prior blocked result (for schema reference)\n\nTASK: Execute live HumanEval code verification benchmark.\n1. Read CLAUDE.md\
     \ spec-first workflow.\n2. No new spec changes needed (SCENARIO-BENCH-021 from Exp 369 covers this).\n3. Write tests FIRST (100% coverage) for any NEW helper functions only.\n4. Implement scripts/experiment_380_humaneval_execute.py:\n\
     \   a. ExperimentTemplate(380, \"Live HumanEval code verification\",\n      \"results/experiment_380_humaneval_execute.json\", requires_gpu=True)\n   b. tmpl.setup()\n   c. blocked = LiveGPUGate.require_live_or_blocked(tmpl,\
-    \ [\"google/gemma-4-E4B-it\"])\n      If blocked is not None: write blocked artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([{{\"name\": \"Gemma4-E4B-it\",\n      \"hf_id\": \"google/gemma-4-E4B-it\"\
-    , \"gpu\": 0}}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Load 50 HumanEval problems (official human_eval package → 50-problem manual fallback)\n   f. Generate\
+    \ [\"google/gemma-4-E4B-it\"])\n      If blocked is not None: write blocked artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([({\"name\": \"Gemma4-E4B-it\",\n      \"hf_id\": \"google/gemma-4-E4B-it\"\
+    , \"gpu\": 0)}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Load 50 HumanEval problems (official human_eval package → 50-problem manual fallback)\n   f. Generate\
     \ code with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8)\n   g. For each solution: run official tests (subprocess, 10s timeout)\n   h. For FAILED solutions: run CodeExtractor + VerifyRepairPipeline\n\
     \   i. Re-run tests on repaired solutions; also run PBT on solutions that pass official tests\n   j. pass_at_1_before = fraction passing before repair\n      pass_at_1_after = fraction passing after\
     \ repair\n      signed_improvement = pass_at_1_after - pass_at_1_before (no clamping)\n   k. Build artifact: schema=\"carnot.humaneval_benchmark.v2\",\n      inference_mode=\"live_gpu\", n_problems=50,\
@@ -133,8 +133,8 @@ tasks:
     2. No new spec changes needed (SCENARIO-BENCH-022 from Exp 370 covers this).\n3. Write tests FIRST (100% coverage) for any NEW helper functions only.\n4. Implement scripts/experiment_381_adversarial_execute.py:\n\
     \   a. ExperimentTemplate(381, \"Live adversarial GSM8K — Carnot credibility\",\n      \"results/experiment_381_adversarial_execute.json\", requires_gpu=True)\n   b. tmpl.setup()\n   c. blocked = LiveGPUGate.require_live_or_blocked(tmpl,\
     \ [\"google/gemma-4-E4B-it\",\n      \"Qwen/Qwen3.5-0.8B\"])\n      If blocked is not None: write blocked artifact, exit.\n      This experiment MUST NOT silently fall back to simulated mode.\n   d.\
-    \ gpu_status = tmpl.setup_gpu([{{\"name\": \"Gemma4-E4B-it\",\n      \"hf_id\": \"google/gemma-4-E4B-it\", \"gpu\": 0}},\n      {{\"name\": \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\", \"gpu\"\
-    : 1}}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Load 50 GSM8K questions (HuggingFace gsm8k test split → synthetic fallback)\n   f. build_adversarial_questions(original_questions,\
+    \ gpu_status = tmpl.setup_gpu([({\"name\": \"Gemma4-E4B-it\",\n      \"hf_id\": \"google/gemma-4-E4B-it\", \"gpu\": 0)},\n      ({\"name\": \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\", \"gpu\"\
+    : 1)}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Load 50 GSM8K questions (HuggingFace gsm8k test split → synthetic fallback)\n   f. build_adversarial_questions(original_questions,\
     \ seed=42) → adversarial variants\n   g. Run three conditions with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8):\n      - standard: original questions\n      - adversarial: adversarial questions\
     \ (no repair)\n      - repaired: adversarial + LLMExtractor(live Qwen3.5-0.8B) + VerifyRepairPipeline\n   h. Compute per-condition accuracy, accuracy_drop (adversarial vs standard),\n      repair_improvement\
     \ (repaired vs adversarial), robustness_invariant_holds\n      (adversarial_accuracy >= standard_accuracy - 0.05 after repair)\n   i. Checkpoint every 25 questions\n   j. Build artifact: schema=\"carnot.adversarial_gsm8k.v2\"\
@@ -156,8 +156,8 @@ tasks:
     \ — LLMz3Formalizer (Exp 357)\n- python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)\n\nTASK: Execute live extraction comparison with all three extractors.\n1. Read CLAUDE.md spec-first\
     \ workflow.\n2. No new spec changes needed (REQ-EXTRACT-023, SCENARIO-EXTRACT-047/048 from Exp 367).\n3. Write tests FIRST (100% coverage) for any NEW helper functions only.\n4. Implement scripts/experiment_382_extraction_execute.py:\n\
     \   a. ExperimentTemplate(382, \"Live extraction comparison\",\n      \"results/experiment_382_extraction_execute.json\", requires_gpu=True)\n   b. tmpl.setup()\n   c. blocked = LiveGPUGate.require_live_or_blocked(tmpl,\
-    \ [\"google/gemma-4-E4B-it\",\n      \"Qwen/Qwen3.5-0.8B\"])\n      If blocked is not None: write blocked artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([{{\"name\": \"Gemma4-E4B-it\",\n      \"\
-    hf_id\": \"google/gemma-4-E4B-it\", \"gpu\": 0}},\n      {{\"name\": \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\", \"gpu\": 1}}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact,\
+    \ [\"google/gemma-4-E4B-it\",\n      \"Qwen/Qwen3.5-0.8B\"])\n      If blocked is not None: write blocked artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([({\"name\": \"Gemma4-E4B-it\",\n      \"\
+    hf_id\": \"google/gemma-4-E4B-it\", \"gpu\": 0)},\n      ({\"name\": \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\", \"gpu\": 1)}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact,\
     \ exit.\n   e. Load 30 GSM8K questions (HuggingFace → synthetic fallback)\n   f. Run live inference with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8)\n   g. Label each response: is_correct (compare\
     \ to ground truth answer)\n   h. For each extractor [ArithmeticExtractor, LLMExtractor(llm_caller=live_qwen),\n      LLMz3Formalizer(llm_caller=live_qwen)]:\n      - Run extractor on each response\n\
     \      - Count TP (extractor fires on wrong answer), FP (extractor fires on correct answer)\n      - Compute detection_rate = TP/(TP+FN), fp_rate = FP/(FP+TN)\n   i. Build ExtractorComparisonResult\
@@ -310,8 +310,8 @@ tasks:
     \ multi-turn verification with live GPU.\n1. Read CLAUDE.md spec-first workflow.\n2. Add SCENARIO-AGENT-004 (live SAVeR faithfulness confirmed) if not in spec.\n3. Write tests FIRST (100% coverage)\
     \ for any NEW helper functions.\n4. Implement scripts/experiment_388_saver_live.py:\n   a. ExperimentTemplate(388, \"SAVeR live multi-turn verification\",\n      \"results/experiment_388_saver_live.json\"\
     , requires_gpu=True)\n   b. tmpl.setup()\n   c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, [\"google/gemma-4-E4B-it\",\n      \"Qwen/Qwen3.5-0.8B\"])\n      If blocked is not None: write blocked\
-    \ artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([{{\"name\": \"Gemma4-E4B-it\",\n      \"hf_id\": \"google/gemma-4-E4B-it\", \"gpu\": 0}},\n      {{\"name\": \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\"\
-    , \"gpu\": 1}}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Create VerifyRepairPipeline with LLMExtractor(llm_caller=live_qwen)\n   f. Create SAVeRVerifier(pipeline=live_pipeline,\
+    \ artifact, exit.\n   d. gpu_status = tmpl.setup_gpu([({\"name\": \"Gemma4-E4B-it\",\n      \"hf_id\": \"google/gemma-4-E4B-it\", \"gpu\": 0)},\n      ({\"name\": \"Qwen3.5-0.8B\", \"hf_id\": \"Qwen/Qwen3.5-0.8B\"\
+    , \"gpu\": 1)}])\n      If not gpu_status[\"all_healthy\"]: write blocked artifact, exit.\n   e. Create VerifyRepairPipeline with LLMExtractor(llm_caller=live_qwen)\n   f. Create SAVeRVerifier(pipeline=live_pipeline,\
     \ max_repair_attempts=3)\n   g. Define 5 reasoning chains with step prompts (questions to Gemma4-E4B-it)\n   h. For each chain: run SAVeRVerifier.run_chain(steps, initial_state=ConstraintState())\n\
     \      Each step: Gemma4-E4B-it generates chain-of-thought → SAVeR verifies → commit/block\n   i. Compute per-chain: faithfulness (fraction committed), n_repairs, n_blocked_steps\n   j. Compute overall:\
     \ mean_faithfulness, comparison to CI-safe mode (Exp 362: 1.0 faithfulness\n      expected with empty pipeline, but now with real verification it may be <1.0 when errors found)\n   k. Build artifact:\
