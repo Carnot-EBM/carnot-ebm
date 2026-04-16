@@ -1907,3 +1907,6 @@ python/ |
 | 2026-04-16 06:45 UTC | Exp 388: SAVeR live multi-turn verification — fait | OK | Deliverable already exists in repo |
 | 2026-04-16 07:22 UTC | Exp 386: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
 | 2026-04-16 07:22 UTC | Exp 389: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |
+| 2026-04-16 07:43 UTC | Plan milestone 2026.06.10 | OK | 14 tasks proposed |
+| 2026-04-16 07:44 UTC | Exp 386: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
+| 2026-04-16 07:44 UTC | Milestone 2026.06.10 activated | OK | 14 tasks queued |
