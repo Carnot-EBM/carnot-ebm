@@ -222,10 +222,14 @@ def run_agent(
         # inside experiment scripts, but run_agent spawns the Claude CLI which
         # itself can hang past its turn limit (observed Exp 426: 90+ min with
         # no output, still alive). This is the orchestrator-level counterpart.
-        # Default 45 min matches ExperimentTimeoutWatchdog, configurable via
-        # CARNOT_CONDUCTOR_TIMEOUT_MINUTES.
+        # Default 60 min is a compromise: long enough for scaffolding-heavy
+        # experiments that write specs + tests + implementation in one pass,
+        # short enough to bound silent hangs. Experiments that legitimately
+        # require >60 min of inference should be split: subagent writes the
+        # script (under 60 min), a separate long-running executor runs it.
+        # Configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES.
         WALL_CLOCK_TIMEOUT = int(os.environ.get(
-            "CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "45")) * 60
+            "CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "60")) * 60
         start_time = time.time()
 
         output_lines = []

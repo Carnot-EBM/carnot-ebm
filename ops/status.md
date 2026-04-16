@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-16 17:16 UTC — EXP 425: EXPERIMENT TIMEOUT WATCHDOG — RETRO-003 CLOSED (17+ milestones carried; ExperimentTimeoutWatchdog ships 45-min hard cap; PID 3509070 would have been killed at 45 min, saving 99 min of GPU time) — 35 new tests pass — REQ-INFRA-023/024 + SCENARIO-INFRA-028/029/030 added to spec
+**Last Updated:** 2026-04-16 21:55 UTC — EXP 427: PRECISION BENCHMARK CONFIRM/RERUN HARNESS — Exp 419 status='partial' → re-run harness implemented with ExperimentTimeoutWatchdog(90 min), check_dual_gpu_health() zombie/thermal gates, crane_detection_rate metric; 35 new tests pass; output: results/experiment_427_precision_live_confirmed.json; will produce FIRST LIVE IMPROVEMENT NUMBER when GPU is live
 
 ---
 

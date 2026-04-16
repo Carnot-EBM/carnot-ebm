@@ -1,5 +1,39 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 427: Precision Benchmark Confirm/Re-run — RETRO-024 upstream unblock)
+
+- 2026-04-16 21:55 UTC: Implemented Exp 427 confirm/re-run harness for Exp 419 live precision benchmark.
+  Triggered by: user instruction to confirm Exp 419 results or re-run if partial.
+
+  **Context:** Exp 419 ran 144+ minutes on GPU0, then was interrupted. results/experiment_419_precision_live.json
+  contains only `{"experiment": 419, "status": "partial"}` — no usable results.
+
+  **Design:** Two-path script:
+  - CONFIRM path: If Exp 419 shows status='success' AND inference_mode='live_gpu' AND honest_verdict
+    in ('live_improvement', 'live_no_improvement') → copy artifact with experiment=427, confirmed_from=419,
+    rerun=False.
+  - RERUN path (active today): Full 5×2×200 GSM8K benchmark re-run with:
+    - Gate 0: Exp 413 honest_verdict check (passes: auto_fix_applied)
+    - Gate 1: LiveGPUGate.require_live_or_blocked()
+    - Gate 2: check_dual_gpu_health() — WARNING if gpu1_is_zombie or temperature_warning; non-blocking
+    - Gate 3: tmpl.setup_gpu() health check
+    - Gate 4: Model load (Gemma4-E4B-it GPU0, Qwen3.5-0.8B GPU1)
+    - ExperimentTimeoutWatchdog(427, timeout_minutes=90)
+    - crane_detection_rate metric: fraction of FULL_STACK questions where CRANE found violations
+    - Checkpoint every 50 questions
+
+  **New helper:** compute_crane_detection_rate(crane_hits: list[bool]) -> float
+
+  **Files written:**
+  - scripts/experiment_427_precision_live_confirmed.py — Exp 427 script
+  - tests/python/test_experiment_427_precision_live_confirmed.py — 35 tests (100% new-function coverage)
+
+  **Test results:** 35 new tests pass; 2541 total pass; 2 pre-existing failures unchanged
+    (test_experiment_319_retro.py, test_code_verification_packaging.py)
+
+  **Status:** LIVE RUN PENDING — harness ready; will produce Carnot's first credible headline number
+  when GPU is live. RETRO-024 upstream dependency status: harness exists, blocked on live GPU.
+
 ## 2026-04-16 (Exp 426: DualGPU Fix + Temp Guard — RETRO-025 CLOSED)
 
 - 2026-04-16 20:52 UTC: Implemented DualGPUHealthCheck and temperature guard, closing RETRO-025.
