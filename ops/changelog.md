@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.31, Updated Snapshot)
+
+- 2026-04-16 16:24 UTC: Retro updated with fresh GPU snapshot (16:23 UTC).
+  Triggered by: user instruction to write operational retro for milestone 2026.04.31.
+
+  **Snapshot update:** PID 3509070 wall time grew from 120.7 min to 144.65 min (+24 min).
+  GPU 0 utilization dropped 91% → 88% at constant 82C — early thermal management signal.
+  GPU 1 cooled 51C → 47C at persistent 0% utilization — zombie allocation confirmed for full window.
+  GPU 0 is now 3.2x over the proposed 45-minute RETRO-003 timeout budget.
+
+  **RETRO-003 criticality upgraded to critical:** PID 3509070 at 144 minutes and climbing, GPU 0 at thermal limit.
+  All other findings and recommendations unchanged from 16:00 UTC retro.
+  `results/operational_retro_2026_04_31.json` updated (schema="carnot.operational_retro.v5").
+
 ## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.31)
 
 - 2026-04-16 16:00 UTC: Full operational efficiency retrospective written to

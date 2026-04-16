@@ -434,6 +434,30 @@ These are NOT candidates for revalidation — they were disproven by experimenta
 - **Action:** Add Vulkan compute experiment to Phase 2 milestone. Start with
   Ising energy evaluation (simplest kernel), then KAN forward pass.
 
+### CUDA Megakernel Fusion Techniques (Study — Transferable Optimizations)
+- **Source:** [luce-megakernel](https://github.com/Luce-Org/luce-megakernel) (MIT)
+- **What it is:** A single-dispatch CUDA megakernel that runs the entire Qwen 3.5-0.8B
+  forward pass (24 layers) without returning to CPU. Eliminates ~100 kernel launches
+  per token, achieving 413 tok/s on RTX 3090 at 1.87 tok/J.
+- **Why study:** The kernel fusion pattern — running an entire compute graph in one
+  dispatch with cooperative grid sync between stages — is transferable beyond LLM
+  inference. Relevant techniques for Carnot:
+  - **Fused Ising sampling:** Multiple spin-flip rounds + energy evaluation in one
+    kernel launch, avoiding host round-trips between sampling iterations.
+  - **Fused verify-repair pipeline:** Chain constraint extraction, energy evaluation,
+    and repair candidate scoring in a single GPU dispatch.
+  - **Register-resident state:** Keep Ising spin vectors in registers across iterations
+    instead of writing to global memory — directly applicable to our RTX 3090 setup.
+  - **DVFS power tuning:** Their 1.87 tok/J efficiency comes partly from GPU clock
+    management — useful for extended conductor runs to avoid thermal throttle (GPU 0
+    already hitting 82C per RETRO-025).
+- **Limitations:** CUDA-only (no Vulkan path), batch-1 only, single-model specific.
+  The code itself is not reusable, but the patterns are.
+- **Score:** 3x4x3x3 = 108 — novel fusion patterns, medium relevance, medium effort
+  to study and adapt, not urgent.
+- **Action:** Study cooperative grid sync and register-resident state patterns. Consider
+  applying to Ising sampling kernel if we write custom CUDA (before Vulkan port).
+
 ### Photonic Computing (Monitor — Not Actionable Yet)
 - **Q.ANT NPU 2.0** — commercial photonic matmul accelerator (30x energy efficiency).
   Not directly useful for sampling. Commercial-only, no cloud access.

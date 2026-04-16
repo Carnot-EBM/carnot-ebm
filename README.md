@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 419+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 429+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -74,7 +74,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (419 experiments, 16 completed milestones, 17th in progress)
+## Key Results (429 experiments, 18 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -82,7 +82,7 @@ All benchmark results below are from **live GPU inference**. Simulated and softw
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
-Note: Milestone 2026.04.26 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.04.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). Milestone 2026.04.28 (Exps 377-389) fixed the infrastructure (Exp 377: LiveGPUGate + session_startup.sh export), but the GPU node was offline during the conductor session — live GPU unconfirmed for a fifth consecutive milestone (RETRO-019 critical). Milestone 2026.04.29 (Exps 390-402, 16th milestone) ran entirely in "deliverable already exists" fast-path mode — GPU node offline for a SIXTH consecutive milestone; RETRO-022 critical human escalation opened (cloud GPU or power on RTX 3090 node required). Milestone 2026.04.30 (17th, in progress): Exp 404 confirmed GPU hardware IS present (`is_live_capable=True`) — the only remaining blocker is running `source scripts/session_startup.sh` before the next conductor session to propagate `CARNOT_FORCE_LIVE=1`. Exps 410-411 live harnesses implemented and blocked correctly (no simulated fallback). All live GPU result counts above reflect artifacts generated before this bug was identified.
+Note: Milestone 2026.04.26 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.04.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). Milestone 2026.04.28 (Exps 377-389) fixed the infrastructure (Exp 377: LiveGPUGate + session_startup.sh export), but the GPU node was offline during the conductor session — live GPU unconfirmed for a fifth consecutive milestone (RETRO-019 critical). Milestone 2026.04.29 (Exps 390-402, 16th milestone) ran entirely in "deliverable already exists" fast-path mode — GPU node offline for a SIXTH consecutive milestone; RETRO-022 critical human escalation opened (cloud GPU or power on RTX 3090 node required). Milestone 2026.04.30 (17th, complete): Exp 404 confirmed GPU hardware IS present (`is_live_capable=True`); Exp 413 EnvironmentAutoFix resolved RETRO-022 via `apply_env_autofix()` self-injecting `CARNOT_FORCE_LIVE=1`; Exp 419 CRANE extractor implemented as primary extraction path for FULL_STACK variant — live run pending. Milestone 2026.04.31 (18th, complete): operational retrospective written; 429 cumulative experiments, 103.0 hours total; GPU 0 at 91% utilization at retro time — first milestone retro with a live inference process in-flight (positive trend); RETRO-025 opened (GPU 1 idle VRAM); RETRO-022 partially closed. All live GPU result counts above reflect artifacts generated before this bug was identified.
 
 ## PBT Verification
 

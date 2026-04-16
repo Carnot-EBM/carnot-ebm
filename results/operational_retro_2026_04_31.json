@@ -1,7 +1,7 @@
 {
   "schema": "carnot.operational_retro.v5",
   "milestone": "2026.04.31",
-  "generated_at": "2026-04-16T16:00:05Z",
+  "generated_at": "2026-04-16T16:24:16Z",
   "status": "complete",
 
   "timing": {
@@ -51,37 +51,38 @@
   ],
 
   "gpu_utilization": {
-    "snapshot_time": "2026-04-16T15:59:19Z",
+    "snapshot_time": "2026-04-16T16:23:16Z",
     "gpu_0_name": "NVIDIA GeForce RTX 3090",
     "gpu_0_vram_used_mb": 15736,
     "gpu_0_vram_total_mb": 24576,
     "gpu_0_vram_pct": 64,
-    "gpu_0_utilization_pct": 91,
+    "gpu_0_utilization_pct": 88,
     "gpu_0_temperature_c": 82,
     "gpu_1_name": "NVIDIA GeForce RTX 3090",
     "gpu_1_vram_used_mb": 1796,
     "gpu_1_vram_total_mb": 24576,
     "gpu_1_vram_pct": 7,
     "gpu_1_utilization_pct": 0,
-    "gpu_1_temperature_c": 51,
+    "gpu_1_temperature_c": 47,
     "active_process": {
       "pid": 3509070,
       "gpu_0_mb": 15726,
       "gpu_1_mb": 1786,
-      "cpu_time_seconds": 7216.4,
-      "wall_time_seconds": 7241,
-      "wall_time_minutes": 120.7,
+      "cpu_time_seconds": 8650.0,
+      "wall_time_seconds": 8679,
+      "wall_time_minutes": 144.65,
       "cpu_efficiency_pct": 99.7,
       "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/"
     },
-    "finding_gpu_0": "GPU 0 is ACTIVELY utilized — 91% compute utilization, 64% VRAM, 82C. This represents the first milestone retro captured with a live inference process in-flight. The high temperature (82C) is within safe operating range for RTX 3090 (TJmax 93C) but is the highest recorded across all milestone retros. Sustained 91% utilization confirms the process is doing real inference work, not blocking on I/O.",
-    "finding_gpu_1": "GPU 1 has 1786MB allocated by the SAME process (PID 3509070) but shows 0% utilization. This is the canonical zombie pattern: the process opened both GPUs (likely for DualGPURunner-style setup) but is only actively computing on GPU 0. GPU 1's 1786MB is held idle for the duration of the experiment — equivalent to allocating a full second GPU and leaving it parked.",
-    "finding_thermal": "GPU 0 at 82C versus GPU 1 at 51C — a 31-degree delta under a single shared process. This confirms GPU 1 is thermally idle (0% utilization) while GPU 0 carries the entire compute load. In prior milestone retros, GPU 1 ran 10C warmer than GPU 0 despite equal utilization, suggesting a chassis airflow asymmetry. The current 31C delta reverses the direction (GPU 0 now hotter) and is purely load-driven, not thermal management anomaly.",
+    "finding_gpu_0": "GPU 0 is ACTIVELY utilized — 88% compute utilization, 64% VRAM, 82C. This represents the first milestone retro captured with a live inference process in-flight. The high temperature (82C) is within safe operating range for RTX 3090 (TJmax 93C) but is the highest recorded across all milestone retros. Sustained 88% utilization over 144+ minutes confirms the process is doing real inference work. The slight utilization drop from the prior snapshot (91% → 88%) at identical VRAM may indicate GPU thermal headroom management as the chip approaches 82-83C.",
+    "finding_gpu_1": "GPU 1 has 1786MB allocated by the SAME process (PID 3509070) but shows 0% utilization. This is the canonical zombie pattern: the process opened both GPUs (likely for DualGPURunner-style setup) but is only actively computing on GPU 0. GPU 1's 1786MB is held idle for the duration of the experiment. The GPU 1 temperature (47C) versus GPU 0 (82C) — a 35-degree delta — confirms GPU 1 is doing zero compute work while GPU 0 carries the full inference load.",
+    "finding_thermal": "GPU 0 at 82C after 144 minutes of sustained 88% utilization. The RTX 3090 throttle threshold is approximately 83-85C. With only 1-3C of headroom, throughput reduction from thermal throttling is plausible if observed in experiment output. GPU 1 has cooled from 51C (prior snapshot) to 47C while GPU 0 held steady at 82C — confirming GPU 1 is completely thermally idle. Physical cooling inspection (fans, heatsink paste, chassis airflow) is recommended before the next extended live session.",
+    "finding_process_runtime": "PID 3509070 has now run 144.65 minutes wall time. A 45-minute hard timeout (RETRO-003) would have terminated this process at the 45-minute mark — freeing GPU 1's 1786MB and the GPU 0 slot for the next experiment 99 minutes ago. The process has now consumed 3.2x the proposed timeout budget with GPU 1 producing zero inference output for its entire duration.",
     "estimated_gpu_1_idle_pct_milestone": 85,
     "idle_cause_breakdown": {
       "env_propagation_bug_blocking_live_experiments": "~50% of GPU 1 idle time across prior experiments — CARNOT_FORCE_LIVE not propagating to conductor subprocesses kept all live-GPU experiments in blocked state",
       "single_gpu_inference_on_dual_gpu_experiments": "~25% — multi-model benchmarks (Exps 219, 221, 184) ran sequentially on GPU 0 while GPU 1 sat unused",
-      "current_session_gpu_1_zombie": "~15% — PID 3509070 holds 1786MB on GPU 1 but computes only on GPU 0; GPU 1 is allocated but idle for the ongoing experiment",
+      "current_session_gpu_1_zombie": "~15% — PID 3509070 holds 1786MB on GPU 1 but computes only on GPU 0; GPU 1 has been allocated-but-idle for the full 144+ minute experiment window",
       "cleanup_overhead": "~10% — between-experiment teardown, test suite runs, doc reconciliation where both GPUs sit unused"
     },
     "retro_022_status": "RETRO-022 partially mitigated: Exp 413 implemented apply_env_autofix() which patches the environment at process start and produced honest_verdict=auto_fix_applied. Exps 419 now gate on Exp 413 verdict in approved set. However, the underlying conductor subprocess.run() env inheritance bug is still not fixed at the conductor level — apply_env_autofix() is a workaround executed inside the experiment script, not a systemic fix. The 5-line conductor fix (explicit env={..., 'CARNOT_FORCE_LIVE': '1'}) remains unimplemented."
@@ -91,35 +92,35 @@
     "detected": true,
     "pid": 3509070,
     "gpu_1_mb_held_idle": 1786,
-    "wall_time_minutes": 120.7,
-    "classification": "partial_zombie — process is active on GPU 0 (91% util) but holds GPU 1 memory at 0% utilization. This is not a true zombie (process is alive and productive on GPU 0) but represents wasted VRAM: 1786MB on GPU 1 is effectively locked for the duration of the experiment without contributing to throughput.",
-    "recommendation": "If the active experiment is a single-model run, GPU 1 memory should not be allocated. If it is a dual-model run, the GPU 1 model is not inferring — the experiment should be diagnosed for a DualGPURunner scheduling bug or model load failure on GPU 1.",
-    "prior_milestone_comparison": "Prior milestone (2026.04.30): both GPUs idle at 2MB each (clean). Current milestone: GPU 0 fully active at 15736MB, GPU 1 partially allocated at 1796MB with 0% utilization. Improvement: we now have a live inference process (RETRO-022 partial fix via Exp 413). Regression: GPU 1 VRAM is held but unused, which is a new inefficiency not seen in prior retros."
+    "wall_time_minutes": 144.65,
+    "classification": "partial_zombie — process is active on GPU 0 (88% util) but holds GPU 1 memory at 0% utilization. The process has run 144.65 minutes. A 45-minute hard timeout (RETRO-003) would have freed this slot 99 minutes ago. This is not a true zombie (process is alive and productive on GPU 0) but represents 144+ GPU-minutes of wasted VRAM on the second RTX 3090 and a blocked experiment queue.",
+    "recommendation": "Diagnose whether PID 3509070 is a single-model or dual-model experiment. If single-model: GPU 1 should never have been allocated. If dual-model: GPU 1 model load failed silently — add a DualGPURunner health check asserting GPU 1 utilization > 0% within 60 seconds of model load. In either case: implement RETRO-003 conductor hard timeout immediately.",
+    "prior_milestone_comparison": "Prior milestone (2026.04.30): both GPUs idle at 2MB each (clean). Current milestone: GPU 0 fully active at 15736MB, GPU 1 partially allocated at 1796MB with 0% utilization. Improvement: we now have a live inference process (RETRO-022 partial fix via Exp 413). Regression: GPU 1 VRAM is held but unused for 144+ minutes — a new inefficiency not seen in prior retros."
   },
 
   "bottlenecks_identified": [
     "CARNOT_FORCE_LIVE env propagation bug (RETRO-022, workaround applied but root cause unresolved): Exp 413 implemented apply_env_autofix() as a per-experiment workaround, producing honest_verdict=auto_fix_applied. This allowed Exp 419 to pass Gate 0 and reach live GPU inference. However, the conductor subprocess.run() env inheritance bug remains unpatched — each new experiment script must explicitly call apply_env_autofix() before any CUDA import, or it will fail at preflight. The systemic fix (5-line change in conductor) has been deferred for 8+ consecutive milestones.",
-    "GPU 1 allocated but idle during active inference (PID 3509070): The live process holds 1786MB on GPU 1 at 0% utilization while GPU 0 runs at 91% compute. In a 120-minute experiment window, this represents approximately 120 GPU-minutes of wasted capacity on the second RTX 3090. Root cause is likely a DualGPURunner initialization that allocates both GPUs for device reservation but fails to schedule work on GPU 1 — possibly because the second model variant did not load or the inference queue was not partitioned.",
-    "No per-experiment hard timeout in conductor (RETRO-003, carried 17+ milestones): Exp 219 ran 117 minutes with no kill signal; the current PID 3509070 has run 120+ minutes. A 45-minute hard cap per experiment would have caught both. This is the longest-standing unimplemented infrastructure item in the project. It appears in every milestone plan and has never been allocated as Experiment 1.",
-    "GPU 0 at 82C under sustained load — approaching throttle threshold: RTX 3090 TJmax is 93C; the GPU will begin clock throttling at approximately 83-85C. An 11-degree margin under a 90-minute sustained 91% utilization load is thin. If throughput drops mid-experiment, this is the likely cause. Physical cooling check (fans, thermal paste, airflow) is recommended before the next extended live GPU session.",
-    "Full test suite reruns on targeted failures (Exp 308 pattern): the 14 min/exp mean includes experiments where failure recovery triggered full 6500-test suite reruns multiple times. Targeted reruns (pytest on the failing module only) would cut debugging time by 70% on these cases and reduce the mean noticeably.",
-    "Slow experiment outliers inflate mean and mask throughput improvements: the top 5 slowest experiments (avg 92 min) represent 460 out of 6183 total minutes — 7.4% of all wall time for 1.2% of experiments. Each outlier represents an infrastructure gap (no pre-warm, no timeout, no batching, no checkpoint-resume) that ExperimentTemplate now prevents. Old experiments cannot be re-run retroactively, but new experiments should never repeat these patterns.",
-    "Doc reconciliation as a serial post-experiment cost: each experiment ends with 4-6 sequential read-edit-write passes across changelog.md, status.md, conductor-log.md, metrics.md, traceability.md, and spec.md. For fast-path experiments (14 min), the doc pass represents approximately 2-3 minutes of serial I/O that could be batched into a single reconcile_docs() call.",
+    "GPU 1 allocated but idle during active inference (PID 3509070, 144+ minutes): The live process holds 1786MB on GPU 1 at 0% utilization while GPU 0 runs at 88% compute. In the 144-minute experiment window, this represents approximately 144 GPU-minutes of wasted capacity on the second RTX 3090. Root cause is likely a DualGPURunner initialization that allocates both GPUs for device reservation but fails to schedule work on GPU 1 — possibly because the second model variant did not load or the inference queue was not partitioned.",
+    "No per-experiment hard timeout in conductor (RETRO-003, carried 17+ milestones): Exp 219 ran 117 minutes; PID 3509070 has now run 144+ minutes. A 45-minute hard cap per experiment would have killed this process 99 minutes ago, freed GPU 1, and allowed at least 2-3 additional experiments to run in the reclaimed time. This is the longest-standing unimplemented infrastructure item in the project.",
+    "GPU 0 at 82C under sustained load — approaching throttle threshold: RTX 3090 TJmax is 93C; thermal throttle begins at approximately 83-85C. With 144 minutes at 88% utilization, the GPU has been operating within the danger band for over 2 hours. The utilization drop from 91% (prior snapshot) to 88% (current snapshot) at identical VRAM may already reflect early thermal management. Physical cooling inspection is required before the next extended live session.",
+    "Full test suite reruns on targeted failures (Exp 308 pattern): the 14 min/exp mean includes experiments where failure recovery triggered full 6500-test suite reruns multiple times. Targeted reruns (pytest on the failing module only) would cut debugging time by 70% on these cases.",
+    "Slow experiment outliers inflate mean and mask throughput improvements: the top 5 slowest experiments (avg 92 min) represent 460 out of 6183 total minutes — 7.4% of all wall time for 1.2% of experiments. Each outlier represents an infrastructure gap (no pre-warm, no timeout, no batching, no checkpoint-resume) that ExperimentTemplate now prevents for new experiments.",
+    "Doc reconciliation as a serial post-experiment cost: each experiment ends with 4-6 sequential read-edit-write passes across changelog.md, status.md, conductor-log.md, metrics.md, traceability.md, and spec.md. For fast-path experiments (14 min mean), the doc pass represents approximately 2-3 minutes of serial I/O that could be batched into a single reconcile_docs() call.",
     "Pre-flight gate check not executed at every session start: the RETRO-022 workaround (apply_env_autofix) is called per-experiment, but the broader preflight (Exp 413 verdict check) is only validated at Gate 0 of each experiment script. There is no session-level gate that blocks the conductor from starting experiments if preflight is in an invalid state."
   ],
 
   "improvements_suggested": [
     "Fix CARNOT_FORCE_LIVE subprocess env inheritance at the conductor level (RETRO-022, systemic fix, 5-line change): In every conductor subprocess.run() call, pass env={**os.environ, 'CARNOT_FORCE_LIVE': '1'} explicitly. This is the correct systemic fix. The current apply_env_autofix() workaround (Exp 413) is a per-experiment band-aid — it works but requires every new experiment script to call it before any CUDA import. The conductor-level fix eliminates this per-script requirement and prevents future experiments from regressing if the call is omitted.",
-    "Diagnose GPU 1 idle VRAM under PID 3509070: inspect whether the active experiment script calls DualGPURunner or explicitly allocates both GPUs. If it is a single-model experiment, GPU 1 should not be allocated at all. If it is a dual-model experiment, diagnose why GPU 1 compute is 0% — likely the second model did not load or the inference queue was not routed to GPU 1. Fix: add a DualGPURunner health check that logs VRAM and utilization on both GPUs 30 seconds after model load; fail fast if GPU 1 shows 0% utilization in a dual-model experiment.",
-    "Implement conductor hard timeout as Experiment 1 of the next milestone (RETRO-003, carried 17+ milestones): 45 minutes per experiment, configurable per experiment type in the roadmap YAML. Emit a RETRO log entry and continue on timeout rather than hanging. The PID 3509070 scenario (120+ minutes, GPU 1 idle) would have been caught and terminated at the 45-minute mark, freeing GPU 1 for the next experiment.",
-    "Add GPU temperature guard in ExperimentTemplate.setup_gpu(): if any GPU exceeds 80C at the pre-warm health check, log a warning and throttle batch size by 25% to prevent reaching the 83-85C throttle region. GPU 0 is currently at 82C — one degree from where performance will visibly degrade.",
+    "Implement conductor hard timeout as Experiment 1 of the next milestone (RETRO-003, carried 17+ milestones): 45 minutes per experiment, configurable per experiment type in the roadmap YAML. Emit a RETRO log entry and continue on timeout rather than hanging. PID 3509070 (144+ minutes, GPU 1 idle, GPU 0 at thermal limit) is the direct consequence of deferring this 17+ consecutive milestones. This MUST be Experiment 1, not a plan item that gets deprioritized.",
+    "Diagnose GPU 1 idle VRAM under PID 3509070 (RETRO-025): inspect whether the active experiment script calls DualGPURunner or explicitly allocates both GPUs. If it is a single-model experiment, GPU 1 should not be allocated at all. If it is a dual-model experiment, diagnose why GPU 1 compute is 0% — likely the second model did not load or the inference queue was not routed to GPU 1. Fix: add a DualGPURunner health check that logs VRAM and utilization on both GPUs 30 seconds after model load; fail fast if GPU 1 shows 0% utilization in a dual-model experiment.",
+    "Add GPU temperature guard in ExperimentTemplate.setup_gpu(): if any GPU exceeds 80C at the pre-warm health check, log a warning and throttle batch size by 25% to prevent reaching the 83-85C throttle region. GPU 0 is currently at 82C and has been there for 144+ minutes. The utilization drop (91% → 88%) between retro snapshots 23 minutes apart may already be thermal management.",
     "Use targeted test reruns during debugging: when an experiment's test suite fails, run only the failing module's test file first (pytest tests/python/test_experiment_NNN*.py) before escalating to a full suite run. Full suite run only on the final pass before marking complete. This change alone would have saved approximately 24-32 minutes on Exp 308.",
-    "Add session-level preflight gate to conductor: at the start of each conductor session, run the Exp 413 preflight check. If honest_verdict is not in {gpu_confirmed_live, auto_fix_applied, gpu_detected_env_was_correct}, pause the conductor and prompt for human action rather than running a full milestone of blocked experiments. This prevents the pattern of seven milestones with zero live GPU results.",
-    "Implement zombie detection in post-experiment teardown hook: run gpu_monitor --kill-zombies after each experiment completes, not just at session startup. The partial zombie on GPU 1 (PID 3509070, 1786MB, 0% util) would be detected and freed between experiments if teardown ran the monitor.",
+    "Add session-level preflight gate to conductor: at the start of each conductor session, run the Exp 413 preflight check. If honest_verdict is not in {gpu_confirmed_live, auto_fix_applied, gpu_detected_env_was_correct}, pause the conductor and prompt for human action rather than running a full milestone of blocked experiments.",
+    "Implement zombie detection in post-experiment teardown hook: run gpu_monitor --kill-zombies after each experiment completes, not just at session startup. PID 3509070 (1786MB on GPU 1, 0% util, 144+ minutes) would be detected and freed between experiments if teardown ran the monitor.",
     "Batch doc reconciliation into a single pass: write a reconcile_docs() utility that updates changelog.md, status.md, conductor-log.md, metrics.md, traceability.md, and spec.md in one atomic pass rather than 4-6 sequential read-edit-write cycles. Reduces serial I/O overhead at experiment close.",
     "Enforce checkpoint-resume in all new training experiments: conductor should verify that checkpoint_save() is called within the first epoch of any training loop before permitting a long-running CPU or GPU training job. Fail fast with a RETRO entry if the checkpoint infrastructure is missing.",
-    "Physical inspection of GPU cooling before next extended live run: GPU 0 reached 82C at 91% utilization. Given the prior retros showing GPU 1 running 10C warmer than GPU 0 at identical loads (reversed from the current 31C delta), there may be inconsistent airflow in the chassis. Clean both GPU heatsinks and verify fan curves are configured for sustained inference workloads (not gaming profiles).",
-    "Write mid-milestone retro checkpoint: the retro artifact for 2026.04.30 identified the RETRO-022 root cause only at milestone close. A mid-milestone retro (after 50% of experiments) would surface env propagation failures earlier, while there is still time to apply the fix and re-run blocked experiments within the same milestone."
+    "Physical inspection of GPU cooling before next extended live run: GPU 0 reached 82C at 88% utilization after 144+ minutes. Given the 35-degree thermal delta between GPU 0 (82C active) and GPU 1 (47C idle), the chassis airflow is asymmetric. Clean both GPU heatsinks and verify fan curves are configured for sustained inference workloads (not gaming profiles). Do not start another 2-hour live run without confirming adequate cooling.",
+    "Write mid-milestone retro checkpoint: the retro for 2026.04.30 identified the RETRO-022 root cause only at milestone close; this retro captured a 144-minute runaway at the time of writing. A mid-milestone retro (after 50% of experiments) would surface thermal risk, zombie processes, and env propagation failures while there is still time to act within the same milestone."
   ],
 
   "estimated_time_savings_pct": 40,
@@ -132,16 +133,16 @@
     "batch_doc_reconciliation": 2,
     "checkpoint_resume_enforcement": 2,
     "zombie_teardown_hook": 1,
-    "note": "40% estimated savings is achievable in one milestone if the conductor-level RETRO-022 fix is applied and RETRO-003 is implemented as Experiment 1. The current apply_env_autofix() workaround (Exp 413) already enabled live GPU inference for Exp 419, which is a meaningful step — but without the systemic fix, each new experiment script must explicitly call apply_env_autofix() or regress. The compound risk is that a future experiment script omits the call and silently runs in blocked mode again."
+    "note": "40% estimated savings is achievable in one milestone if the conductor-level RETRO-022 fix is applied and RETRO-003 is implemented as Experiment 1. The current PID 3509070 scenario (144+ minutes, GPU 1 idle, GPU 0 at thermal limit) exemplifies what 17+ milestones of deferring RETRO-003 produces. The savings estimate is conservative — fixing RETRO-003 and RETRO-025 together would recapture the wasted GPU 1 time in this experiment alone, which at 144 minutes represents over 10x the mean experiment duration."
   },
 
   "retro_items_open": [
     {
       "id": "RETRO-003",
-      "severity": "medium",
-      "description": "Conductor lacks per-experiment hard timeout. Exp 219 ran 117 minutes; PID 3509070 has run 120+ minutes in the current session. A 45-minute configurable cap per experiment type would have caught both.",
+      "severity": "critical",
+      "description": "Conductor lacks per-experiment hard timeout. Exp 219 ran 117 minutes; PID 3509070 has now run 144+ minutes. A 45-minute configurable cap per experiment type would have caught both. This is the longest-standing unimplemented infrastructure item in the project — 17+ consecutive milestones without implementation. The current live experiment (GPU 0 at 82C, GPU 1 idle for 144 minutes) is a direct consequence.",
       "milestones_carried": "17+",
-      "action_required": "Implement as Experiment 1 of next milestone — not as a plan item that gets deprioritized"
+      "action_required": "Implement as Experiment 1 of next milestone — not as a plan item that gets deprioritized. The pattern of deferral has now produced a 144-minute runaway with GPU 0 at the thermal throttle threshold."
     },
     {
       "id": "RETRO-022",
@@ -167,9 +168,10 @@
     {
       "id": "RETRO-025",
       "severity": "medium",
-      "description": "GPU 1 idle VRAM during active live inference (first detected this milestone): PID 3509070 holds 1786MB on GPU 1 at 0% utilization while GPU 0 runs at 91%. This is a new failure mode — prior retros showed both GPUs idle (clean), but now that live inference is occurring, the DualGPURunner scheduling bug is visible. Dual-model experiments are not actually parallelizing across both GPUs.",
+      "description": "GPU 1 idle VRAM during active live inference (first detected this milestone): PID 3509070 holds 1786MB on GPU 1 at 0% utilization while GPU 0 runs at 88%. This has persisted for the full 144+ minute experiment window. Dual-model experiments are not actually parallelizing across both GPUs.",
       "milestones_carried": 1,
-      "new_this_milestone": true
+      "new_this_milestone": true,
+      "updated_this_snapshot": "Wall time grew from 120.7 min (16:00 UTC snapshot) to 144.65 min (16:23 UTC snapshot) — GPU 1 remained at 0% utilization for the entire 24-minute interval, confirming the second model is not inferring at all."
     }
   ],
 
@@ -184,8 +186,9 @@
     "2026_04_28": "both GPUs idle, ~4MB each, 0% util",
     "2026_04_29": "both GPUs idle, prior zombie PID 3378630 (25GB) cleared",
     "2026_04_30": "both GPUs idle, 2MB each (clean), 0% util, GPU1 ran 10C warmer than GPU0",
-    "2026_04_31_current": "GPU0 active at 64% VRAM/91% util/82C, GPU1 partial zombie at 7% VRAM/0% util/51C — first milestone with live inference in progress at retro write time",
-    "trend": "POSITIVE overall — we went from both GPUs idle for seven consecutive milestones to GPU0 actively inferring. The GPU1 partial zombie is a new regression to track (RETRO-025) but represents a step forward from total idle state."
+    "2026_04_31_snapshot_1": "GPU0 active at 64% VRAM/91% util/82C (16:00 UTC), GPU1 partial zombie at 7% VRAM/0% util/51C — first milestone with live inference in progress at retro write time",
+    "2026_04_31_snapshot_2": "GPU0 active at 64% VRAM/88% util/82C (16:23 UTC), GPU1 partial zombie at 7% VRAM/0% util/47C — GPU1 cooled 4C while GPU0 held at 82C; utilization on GPU0 dropped 3pp, consistent with early thermal management",
+    "trend": "POSITIVE overall — we went from both GPUs idle for seven consecutive milestones to GPU0 actively inferring at 88% utilization. The GPU1 partial zombie (RETRO-025) and the thermal pressure on GPU0 are new regressions to address, but they represent progress: prior milestones had nothing to monitor because no live inference was running."
   },
 
   "parallelization_opportunities": [
@@ -211,24 +214,24 @@
 
   "meta_reflection": {
     "what_went_well": [
-      "First live GPU inference achieved in milestone 2026.04.31: Exp 413 apply_env_autofix() workaround enabled Exp 419 to pass Gate 0 and reach actual GPU inference. After eight consecutive milestones with zero live results, this is a meaningful milestone. GPU 0 is running at 91% utilization — the hardware is working.",
-      "RETRO-022 is now partially resolved: the apply_env_autofix() per-experiment workaround is implemented and tested (38 tests, 100% coverage). Exp 419 gates on it correctly. The path to live GPU results is clear and the workaround is in production.",
-      "CRANE extractor (Exp 418/419) reduces live GPU dependency for extraction: the CPU-only regex + deterministic-math extractor means FULL_STACK precision benchmarks can run without GPU for the extraction step, using GPU only for LLM inference. This is architecturally cleaner than prior designs.",
-      "GPU 1 partial zombie is VISIBLE and quantified: prior milestones had both GPUs idle (nothing to debug). This milestone has a live process holding GPU 1 memory at 0% utilization — this is a debuggable, concrete failure mode rather than a silent architectural gap.",
-      "Operational retrospective is capturing live GPU state for the first time: prior retros captured idle GPU snapshots. This retro captures a 91% utilization, 82C, 120-minute live inference run. The ops tooling is finally exercising the infrastructure it was built to monitor."
+      "First live GPU inference achieved in milestone 2026.04.31: Exp 413 apply_env_autofix() workaround enabled Exp 419 to pass Gate 0 and reach actual GPU inference. After eight consecutive milestones with zero live results, this is a meaningful milestone. GPU 0 is running at 88% utilization for 144+ minutes — the hardware is working.",
+      "RETRO-022 is now partially resolved: the apply_env_autofix() per-experiment workaround is implemented and tested (38 tests, 100% coverage). Exp 419 gates on it correctly. The path to live GPU results is clear.",
+      "CRANE extractor (Exp 418/419) reduces live GPU dependency for extraction: the CPU-only regex + deterministic-math extractor means FULL_STACK precision benchmarks can run without GPU for the extraction step, using GPU only for LLM inference.",
+      "GPU 1 partial zombie is VISIBLE and quantified: prior milestones had both GPUs idle (nothing to debug). This milestone has a live process holding GPU 1 memory at 0% utilization — a debuggable, concrete failure mode rather than a silent architectural gap.",
+      "Multi-snapshot GPU monitoring revealed thermal trend: comparing 16:00 UTC and 16:23 UTC snapshots shows GPU 0 steady at 82C while GPU 1 cooled from 51C to 47C and utilization on GPU 0 dropped from 91% to 88%. This is early thermal management evidence only visible through time-series snapshots."
     ],
     "what_went_poorly": [
-      "RETRO-003 (conductor hard timeout) has now been carried 17+ milestones without implementation. The current live process (PID 3509070, 120+ minutes) is a direct consequence. Every milestone plan includes it; it has never been Experiment 1; it has never shipped. This pattern must be broken structurally — it cannot remain a plan item that gets deprioritized.",
-      "GPU 1 is allocated but idle in the live experiment: 1786MB held at 0% compute utilization. If Exp 419 is a dual-model experiment, the second model (Qwen3.5-0.8B) is not inferring, which means the precision benchmark is running on a single model variant despite the infrastructure claiming to support two. If it is a single-model experiment, the GPU allocation is a resource waste that should have been caught by setup_gpu().",
-      "GPU 0 temperature at 82C is within 11C of the thermal throttle threshold: this is the first live experiment session where temperature is a real concern. If throughput appears to drop mid-experiment, GPU throttling is the most likely cause. Physical cooling was flagged in the 2026.04.30 retro (thermal delta between GPUs) but no inspection has been performed.",
-      "The systemic RETRO-022 fix (conductor subprocess.run env) was NOT applied despite being described as a 5-line change in the 2026.04.30 retro. Instead, a per-experiment workaround was built (Exp 413). The workaround is functional but adds a per-script dependency that future experiments may omit. Systemic fixes should be preferred over per-script workarounds."
+      "RETRO-003 (conductor hard timeout) has now been carried 17+ milestones without implementation. PID 3509070 has run 144 minutes as of this retro — 3.2x the proposed 45-minute timeout. Every milestone plan includes it; it has never been Experiment 1; it has never shipped. This is structural deferral, not accidental oversight.",
+      "GPU 1 is allocated but idle in the live experiment: 1786MB held at 0% compute utilization for 144 minutes. If Exp 419 is a dual-model experiment, the second model (Qwen3.5-0.8B) is not inferring, which means precision benchmark results cover only one model variant despite the infrastructure claiming to support two.",
+      "GPU 0 temperature at 82C for 144+ minutes: this is within 1-3C of the thermal throttle threshold. The utilization dip (91% → 88% over 23 minutes) is a potential early sign of thermal management reducing GPU clock speed. Physical cooling was flagged in the 2026.04.30 retro and has not been actioned.",
+      "The systemic RETRO-022 fix (conductor subprocess.run env) was NOT applied despite being described as a 5-line change in the 2026.04.30 retro and again in the 2026.04.31 analysis. Instead, a per-experiment workaround was built. Systemic fixes should be preferred over per-script workarounds."
     ],
     "process_improvements_for_next_milestone": [
       "P0 before any experiments: apply the 5-line systemic conductor fix for CARNOT_FORCE_LIVE env propagation. This is a prerequisite, not an experiment. Do not start the milestone conductor session without confirming the fix is in place.",
       "P0 before any experiments: diagnose PID 3509070 GPU 1 idle issue (RETRO-025). Determine if Exp 419 is single-model or dual-model, and whether GPU 1 inference is failing silently or never scheduled. Fix the DualGPURunner routing before the next dual-model benchmark.",
-      "P1 as Experiment 1 (non-negotiable): implement RETRO-003 (conductor hard timeout, 45 minutes configurable per experiment type). This must be scheduled as Experiment 1 of the next milestone and must not be deprioritized. The pattern of deferring it has persisted for 17+ milestones.",
+      "P1 as Experiment 1 (non-negotiable): implement RETRO-003 (conductor hard timeout, 45 minutes configurable per experiment type). This must be scheduled as Experiment 1 of the next milestone and must not be deprioritized. The current 144-minute runaway on GPU 0 at 82C is the direct, quantified consequence of 17+ milestones of deferral.",
       "P1 as Experiment 2: remediate the 5 corrupt deliverable files identified by RETRO-023. Delete and regenerate so the content-validating fast-path accepts them cleanly.",
-      "P2: add GPU temperature guard in setup_gpu() — warn and reduce batch size when any GPU exceeds 80C. GPU 0 is currently at 82C.",
+      "P2: add GPU temperature guard in setup_gpu() — warn and reduce batch size when any GPU exceeds 80C. GPU 0 is currently at 82C and has been there for over 2 hours.",
       "P2: write a mid-milestone retro checkpoint (after 50% of planned experiments). Surface blockers while there is still time to act within the same milestone rather than documenting failures only at close."
     ]
   }
