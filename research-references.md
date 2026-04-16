@@ -24,6 +24,28 @@ should read this file when designing new milestones.
 
 ## EBM Ecosystem
 
+### Kona / Logical Intelligence (Primary Competitor and North Star)
+- **Creator:** Eve Bodnia (PhD quantum information, UC Santa Barbara)
+- **Architecture:** Non-autoregressive EBM reasoning in continuous latent space.
+  Language-free. Maps answers onto energy landscapes (valleys = correct, peaks = wrong).
+- **Results:** 76% Putnam benchmark, 96.2% Sudoku in 313ms, ~$4 vs ~$15K for complex reasoning.
+- **Board:** Yann LeCun (founding Technical Research Board), Michael Freedman (Fields Medalist collaborator)
+- **Key paper:** "Compression is all you need: Modeling Mathematics" (arXiv 2603.20396, March 2026)
+  -- with Freedman. Models math compressibility via monoids, tested against Lean 4's MathLib.
+  The monoid-based compressibility framework could inform how Carnot structures constraint
+  spaces in Phase 3.
+- **Blog:** logicalintelligence.com/blog/energy-based-models-for-reasoning
+- **Talk:** "WTF is a Reasoning EBM?" (Neuron Daily interview with Eve Bodnia)
+- **Relevance to Carnot Phase 3:**
+  - Kona generates reasoning via energy minimization; Carnot currently verifies reasoning
+  - Kona is continuous latent space; Carnot is discrete constraints (Ising/Z3)
+  - Kona is language-free; Carnot is language-dependent extraction
+  - Kona is closed-source; Carnot is Apache 2.0
+  - The compression paper's monoid framework could bridge Carnot's discrete constraints
+    to continuous energy landscapes
+- **Action:** Read arXiv 2603.20396 in detail for Phase 3 architecture planning.
+  Monitor Kona updates. Our unique advantage: open-source + hardware-portable.
+
 ### Extropic / thrml
 - **Repo:** github.com/extropic-ai/thrml
 - **What:** Thermodynamic sampling framework targeting Extropic TSU hardware
