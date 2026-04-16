@@ -1700,3 +1700,92 @@ thermodynamic computing Ising FPGA
   that could be formalized as Carnot constraint templates.
 - **When to pursue:** Compliance checker product milestone. Start with a simple domain:
   encode 10 HIPAA rules as ConstraintTemplates, verify GPT/Gemma outputs for compliance.
+
+### Verifiable Process Reward Models (VPRM) — Step Verification via Deterministic Rules (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2601.17223 — "Beyond Outcome Verification: Verifiable Process Reward Models
+  for Structured Reasoning" (January 2026)
+- **What:** Trains a PRM where EVERY intermediate reasoning step is checked by a deterministic,
+  rule-based verifier — not a neural judge. The reward is fully computable via rule-based checks,
+  making all components of the reasoning trajectory verifiable. Applied to medical evidence synthesis;
+  achieves up to 20% higher F1 than state-of-the-art models. Avoids neural judge opacity, bias, and
+  reward hacking.
+- **Relevance to Carnot:** Carnot's Ising/KAN constraint verification IS a VPRM. The energy function
+  scores each reasoning step deterministically. This paper provides the formal framing Carnot was
+  missing: we should train and describe our pipeline as a VPRM, not just a "verifier." The
+  deterministic-rules framing also validates our Z3-based extraction (arXiv 2601.17789) as producing
+  the verifiable labels needed to train a VPRM. Carnot's advantage: our rules are hardware-acceleratable
+  (Ising/KAN vs neural scoring).
+- **When to pursue:** Next milestone. Implement VPRM training loop: use Z3-verified step labels from
+  FOVER approach (arXiv 2505.15960) to train IsingEBM as a step-level process reward model.
+
+### FOVER — Formally Verified Training Data for Process Reward Models (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2505.15960 — "Generalizable Process Reward Models via Formally Verified
+  Training Data" (May 2025)
+- **What:** Synthesizes PRM training data with accurate step-level error labels automatically annotated
+  by formal verification tools (Z3 and Isabelle), without human annotation. Generates 80K steps in
+  reasoning traces with error labels from Llama 3.1 8B and Qwen 2.5 7B. PRMs trained on FOVER data
+  generalize significantly better than those trained on human-annotated data.
+- **Relevance to Carnot:** FOVER is the upstream data pipeline for VPRM training. Carnot already has
+  Z3 formalization (LLMz3Formalizer, Exp 357) and step extraction (CIKANEnergy, Exp 405). The FOVER
+  approach: take GSM8K responses, parse CoT steps, send each step to Z3, annotate correct/incorrect,
+  use those labels to train IsingEBM as a step-level PRM. This closes the loop: Z3 generates labels,
+  Ising learns from them, Ising checks future steps without Z3.
+- **When to pursue:** Immediately after live GPU benchmarks produce real CoT traces. FOVER's Z3
+  annotation pipeline is already partially built (Exp 357); extend it to step-level annotation.
+
+### ThinkPRM — Process Reward Models That Generate Verification CoT (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2504.16828 — "Process Reward Models That Think" (April 2025, ICLR 2026)
+- **What:** Trains a PRM that GENERATES a verification chain-of-thought for every step it scores,
+  rather than producing a scalar score. Surpasses discriminative verifiers trained on full PRM800K
+  by 8% and outperforms LLM-as-a-Judge by 7.2% on ProcessBench. Data-efficient: the CoT verifier
+  learns general reasoning patterns that transfer across domains.
+- **Relevance to Carnot:** An alternative to energy-based step scoring. ThinkPRM's verification CoT
+  could be used to GENERATE ground-truth step labels for training Carnot's IsingEBM. The model-generated
+  verification reasoning could replace human annotation AND Z3 annotation for domains where formal
+  verification is too coarse. Particularly valuable for semantic reasoning steps (not just arithmetic).
+- **When to pursue:** After FOVER/VPRM experiments. Use ThinkPRM-style verification CoT to extend
+  label generation beyond Z3's arithmetic domain to natural language reasoning steps.
+
+### AMD NPU Bare-Metal IRON Toolflow — Skip VitisAI (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2504.03083 — "Unlocking the AMD Neural Processing Unit for ML Training
+  on the Client Using Bare-Metal-Programming Tools" (April 2025)
+- **What:** Uses IRON (Infrastructure for Research on NPUs) bare-metal toolflow to program AMD XDNA
+  NPU directly, bypassing the VitisAI EP (which requires custom onnxruntime build and blocked by
+  missing ninja/openblas). Achieves 2.8x GEMM speedup and 1.7x end-to-end speedup for GPT-2 fine-tuning.
+  Works with Python 3.11+, standard packages. Does NOT require VitisAI EP or AMD's custom onnxruntime.
+- **Relevance to Carnot:** This UNBLOCKS the NPU experiments (Exps 292, 303, 314, 335) that have been
+  blocked for 5 milestones by the VitisAI EP build requirement. IRON toolflow provides direct NPU
+  programming without the VitisAI dependency chain. The AMD XDNA NPU in our Ryzen AI 9 HX 370 is
+  accessible via this path. Target: run JEPA predictor model on NPU while LLM runs on GPU (Tier 3
+  self-learning).
+- **When to pursue:** Next milestone. Implement NPU backend using IRON toolflow. Install: pip install
+  mlir-aie (IRON dependency). No VitisAI EP needed. See github.com/Xilinx/mlir-aie for IRON tools.
+
+### Digitally Optimized Initializations for Fast Thermodynamic Computing (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2603.24183 — "Digitally Optimized Initializations for Fast Thermodynamic
+  Computing" (March 2026)
+- **What:** Pre-computes near-optimal spin configurations as starting points for thermodynamic sampling,
+  dramatically reducing the number of thermodynamic steps needed to reach the ground state. The
+  initialization is computed digitally (fast, exact) and handed to the hardware sampler as a warm start.
+  Results: 5-10x reduction in convergence time on Ising problems up to 10,000 spins.
+- **Relevance to Carnot:** Directly applicable to Carnot's Ising sampler and planned FPGA/TSU hardware.
+  Currently, every Carnot sampling run starts from a random spin configuration. Adding a digital
+  pre-optimizer (deterministic heuristic or greedy initialization) would give the same speedup benefit
+  for both CPU and FPGA sampling. Pairs with the KV260 FPGA backend (Exp 289): warm-start the FPGA
+  sampler with a digitally-computed near-optimal configuration.
+- **When to pursue:** FPGA hardware milestone. Implement DigitalInitializer that computes warm-start
+  spin configurations via greedy descent, then hands to Ising sampler. Benchmark vs random init.
+
+### Self-Certainty Best-of-N — Reward-Free Output Selection (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2502.18581 — "Scalable Best-of-N Selection for Large Language Models via
+  Self-Certainty" (February 2025)
+- **What:** Self-certainty measures divergence of predicted token distribution from uniform, used as
+  a proxy for response quality WITHOUT an external reward model. Best-of-N selection using self-certainty
+  is computationally cheap (no additional model call) and competitive with reward-model-based selection.
+- **Relevance to Carnot:** The candidate ranker (score_candidates MCP tool) currently uses energy
+  scoring (low energy = higher rank). Self-certainty offers a COMPLEMENTARY signal: select for both
+  low energy (constraint satisfaction) AND high certainty (confident generation). Combining Carnot's
+  energy score with self-certainty could beat either alone for the candidate ranking product (Tier A,
+  research-program.md).
+- **When to pursue:** Candidate ranker improvement milestone. Add SelfCertaintyScorer alongside
+  energy scorer in score_candidates. Benchmark combined score vs energy-only and certainty-only.

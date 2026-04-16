@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Milestone 2026.06.24 Research Planning (v37)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T12:44:07Z | 2026-04-16T12:56:17Z | Read 10 project files (research-program.md, prd.md, architecture.md, status.md, changelog.md, research-complete.yaml, research-roadmap.yaml, conductor-log.md, research-references.md, hardware-wishlist.md); 8 arxiv web searches (EBMs, KANs, Ising machines, process reward models, VPRM, AMD NPU, thermodynamic computing, continual self-learning); appended 6 new papers to research-references.md (VPRM 2601.17223, FOVER 2505.15960, ThinkPRM 2504.16828, AMD NPU IRON 2504.03083, Thermodynamic Init 2603.24183, Self-Certainty BoN 2502.18581); wrote openspec/change-proposals/research-roadmap-vNEXT.md v37 (milestone 2026.06.24, 12 exps 413-424); wrote research-roadmap-next.yaml (12 experiments, 4 phases) | ~35k |
+
+---
+
 ## Session: 2026-04-16 Exp 411 Live HumanEval Code Verification
 
 ### Turn Log
