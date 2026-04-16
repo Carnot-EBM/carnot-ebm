@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 389: Operational Retrospective — Milestone 2026.06.03 COMPLETE)
+
+- 2026-04-16 06:55: Exp 389 retrospective written to `results/operational_retro_2026_06_03.json` (schema="carnot.operational_retro.v3").
+  (User instruction: write operational retrospective for milestone 2026.06.03)
+
+  **12 experiments (Exps 377-388).** Session was interrupted — Exps 378, 386, 387 missing. mean=19.9 min/exp (prev: 22.7 min).
+
+  **Milestone question — first live GPU results:** NO. Fifth consecutive milestone with live_gpu_confirmed=False. GPU node offline during conductor session. Exp 377 infrastructure fix is CORRECT (LiveGPUGate + session_startup.sh CARNOT_FORCE_LIVE=1 export); the bottleneck shifted from "env var not set" to "GPU node not online".
+
+  **Success criteria results:**
+  - retro_015_closed=True (Exp 377 infra fix applied)
+  - retro_018_closed=False (Exp 378 interrupted, cikan_energy.py still JSON)
+  - live_gpu_confirmed=False (all experiments returned status='partial')
+  - precision/HumanEval/adversarial/extraction/relay/SAVeR: all False (partial)
+  - jitrl_memory_works=False, safety_kan_works=False (Exps 386-387 missing)
+  - cikan_implemented=False (second consecutive failure — RETRO-020)
+
+  **New RETRO items:** RETRO-019 (critical — GPU node offline, fifth milestone), RETRO-020 (high — CIKAN still missing), RETRO-021 (high — FR-11 relay third carry).
+
+  **Closed:** RETRO-015 (infra) — infrastructure fix is correct; execution environment is the remaining gap.
+
+  **Implementation:** `scripts/experiment_389_retro_2026_06_03.py`, `tests/python/test_experiment_389_retro.py` (115 tests pass, 100% targeted coverage).
+
 ## 2026-04-16 (Exp 383: Combined EORM+JEPA Retrain on Live GPU Pairs)
 
 - 2026-04-16 06:13: Exp 383 implemented — combined EORM + JEPA retrain script targeting live GPU pairs from Exps 379-382.
