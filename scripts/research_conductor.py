@@ -1653,23 +1653,18 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     except Exception as e:
         logger.debug("GPU monitor skipped: %s", e)
 
-    # Auto-fix brace escaping before formatting (dogfooding: prevent recurring bug)
-    import re as _re
+    # Format the prompt with project root.
+    # NOTE: Prompts in YAML must use {{...}} to escape literal braces.
+    # The old auto-fixer was removed because it conflicted with proper escaping.
     raw_prompt = task["prompt"]
-    def _fix_braces(m):
-        inner = m.group(1)
-        if inner in ('project_root', 'date'):
-            return m.group(0)
-        return '(' + inner + ')'
-    safe_prompt = _re.sub(r'\{([^}]+)\}', _fix_braces, raw_prompt)
-    if safe_prompt != raw_prompt:
-        logger.info("DOGFOOD: Auto-fixed brace escaping in task %s prompt", task.get("id", "?"))
-
-    # Format the prompt with project root
-    prompt = safe_prompt.format(
-        project_root=PROJECT_ROOT,
-        date=timestamp.strftime("%Y%m%d"),
-    )
+    try:
+        prompt = raw_prompt.format(
+            project_root=PROJECT_ROOT,
+            date=timestamp.strftime("%Y%m%d"),
+        )
+    except (KeyError, IndexError) as e:
+        logger.warning("Prompt format error in %s: %s — using raw prompt", task.get("id", "?"), e)
+        prompt = raw_prompt.replace("{project_root}", str(PROJECT_ROOT)).replace("{date}", timestamp.strftime("%Y%m%d"))
 
     # Inject focused AST context to save tokens.
     # Instead of the agent reading entire files, we extract class/function
