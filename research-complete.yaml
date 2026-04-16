@@ -1961,3 +1961,65 @@ milestones:
     title: "Exp 403: Operational retrospective \u2014 milestone 2026.06.10 complete"
     deliverable: results/operational_retro_2026_06_10.json
     result: OK (conductor)
+- id: 2026.06.17
+  title: "Purge, Implement, Execute \u2014 First Credible Live Numbers"
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp404-deliverable-validator-gpu-preflight-v2
+    title: 'Exp 404: DeliverableContentValidator + GPU preflight v2 + cloud GPU path (RETRO-022/023)'
+    deliverable: results/experiment_404_preflight_v2.json
+    result: OK (conductor)
+  - id: exp405-cikan-energy-final-attempt
+    title: "Exp 405: CIKANEnergy \u2014 third and final attempt with content validator guard (RETRO-023)"
+    deliverable: python/carnot/models/cikan_energy.py
+    result: OK (conductor)
+  - id: exp406-jitrl-constraint-memory
+    title: "Exp 406: JitRL constraint memory \u2014 correct Tier 1 self-learning algorithm (purge corrupt file)"
+    deliverable: python/carnot/pipeline/jitrl_memory.py
+    result: OK (conductor)
+  - id: exp407-safety-kan-classifier
+    title: "Exp 407: Safety KAN classifier \u2014 first Tier B product (purge corrupt file)"
+    deliverable: python/carnot/models/safety_kan.py
+    result: OK (conductor)
+  - id: exp408-semantic-energy-scorer
+    title: "Exp 408: Semantic Energy scorer \u2014 logit-space Boltzmann hallucination detection (purge corrupt file)"
+    deliverable: python/carnot/pipeline/semantic_energy_scorer.py
+    result: OK (conductor)
+  - id: exp409-crane-extraction-gate
+    title: "Exp 409: CRANE extraction gate \u2014 1x-cost prompt-side constrained extraction (purge corrupt file)"
+    deliverable: python/carnot/pipeline/crane_extractor.py
+    result: OK (conductor)
+  - id: exp410-live-precision-pipeline
+    title: "Exp 410: Live precision pipeline \u2014 200 GSM8K, 5 variants, 2 models (GPU required)"
+    deliverable: results/experiment_410_precision_live.json
+    result: OK (conductor)
+  - id: exp411-live-humaneval
+    title: "Exp 411: Live HumanEval code verification \u2014 50 problems, CodeExtractor + PBT (GPU required)"
+    deliverable: results/experiment_411_humaneval_live.json
+    result: OK (conductor)
+  - id: exp412-live-adversarial-gsm8k
+    title: "Exp 412: Live adversarial GSM8K \u2014 Carnot's headline credibility test (GPU required)"
+    deliverable: results/experiment_412_adversarial_live.json
+    result: OK (conductor)
+  - id: exp413-live-extraction-comparison
+    title: "Exp 413: Live extraction comparison \u2014 CRANE vs LLMExtractor vs regex on IT models (GPU required, RETRO-016)"
+    deliverable: results/experiment_413_extraction_live.json
+    result: OK (conductor)
+  - id: exp414-eorm-jepa-retrain-live-pairs
+    title: 'Exp 414: EORM+JEPA retrain on live pairs from Exps 410-413 (CPU training)'
+    deliverable: results/experiment_414_retrain_live.json
+    result: OK (conductor)
+  - id: exp415-fr11-relay-live
+    title: "Exp 415: FR-11 self-learning relay live \u2014 close RETRO-024, confirm autonomous learning (GPU required)"
+    deliverable: results/experiment_415_relay_live.json
+    result: OK (conductor)
+  - id: exp416-constraint-graph-builder
+    title: "Exp 416: MathAgent constraint graph builder \u2014 LLMExtractor \u2192 formal constraint graph (arXiv 2604.11188)"
+    deliverable: python/carnot/pipeline/constraint_graph_builder.py
+    result: OK (conductor)
+  - id: exp417-operational-retro-2026-06-17
+    title: "Exp 417: Operational retrospective \u2014 milestone 2026.06.17 complete"
+    deliverable: results/operational_retro_2026_06_17.json
+    result: OK (conductor)

@@ -1,649 +1,743 @@
-milestone: 2026.06.17
-milestone_title: Purge, Implement, Execute — First Credible Live Numbers
+milestone: 2026.06.24
+milestone_title: EnvironmentAutoFix, Complete Purge, First Live Numbers, VPRM Architecture
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
-- id: exp404-deliverable-validator-gpu-preflight-v2
-  milestone: 2026.06.17
-  deliverable: results/experiment_404_preflight_v2.json
-  title: 'Exp 404: DeliverableContentValidator + GPU preflight v2 + cloud GPU path (RETRO-022/023)'
+- id: exp413-env-autofix-gpu-confirmed
+  milestone: 2026.06.24
+  deliverable: results/experiment_413_env_autofix.json
+  title: 'Exp 413: EnvironmentAutoFix — self-configuring CARNOT_FORCE_LIVE + GPU preflight v3 (RETRO-022 final workaround)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-022 (CRITICAL) — GPU node has been\
-    \ offline for SIX consecutive milestones. RETRO-023 (HIGH) — five Python modules contain\
-    \ JSON artifact data instead of Python code; the conductor's \"deliverable already exists\" fast-path\
-    \ fires on file existence without validating Python content via ast.parse().\n\nThis is the\
-    \ FIRST experiment of the milestone. It has two jobs:\n1. Fix RETRO-023 at the root: implement\
-    \ DeliverableContentValidator as a reusable utility module that every future experiment\
-    \ can import to guard against corrupt deliverables.\n2. GPU preflight v2: confirm GPU state\
-    \ and generate cloud GPU setup instructions if local GPU is offline.\n\nThis experiment is\
-    \ CPU-only. Regardless of GPU state, it MUST complete and produce a result JSON.\n\nEXISTING\
-    \ CODE TO READ FIRST:\n- python/carnot/pipeline/gpu_preflight.py — GPUPreflightResult,\
-    \ run_gpu_preflight (Exp 390)\n- python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate\
-    \ (Exp 377)\n- python/carnot/pipeline/live_gpu_diagnostic.py — diagnose_live_gpu() (Exp 352)\n\
-    - scripts/session_startup.sh — GPU env setup\n- scripts/experiment_template.py — ExperimentTemplate\
-    \ patterns\n- results/experiment_390_gpu_preflight.json — prior preflight result (if exists)\n\n\
-    TASK: Implement DeliverableContentValidator and GPU preflight v2.\n1. Read CLAUDE.md spec-first\
-    \ workflow.\n2. Add REQ-INFRA-019 (DeliverableContentValidator verifies Python deliverables\
-    \ contain valid Python via ast.parse before conductor fast-path can accept them),\n   REQ-INFRA-020\
-    \ (cloud GPU setup script generated when local GPU unavailable),\n   SCENARIO-INFRA-022/023/024\
-    \ to openspec/capabilities/verifiable-reasoning/spec.md.\n3. Write tests FIRST (100% coverage\
-    \ required) for ALL of the following:\n   - DeliverableContentValidator: utility class\n   \
-    \  - DeliverableContentValidator.is_valid_python(path: str) -> bool:\n     Reads file, calls\
-    \ ast.parse(content). Returns True only if parse succeeds without SyntaxError\
-    \ or UnicodeDecodeError. Returns False for JSON files, empty files, missing files.\n\
-    \   - DeliverableContentValidator.validate_and_clear(path: str) -> bool:\n     If is_valid_python(path)\
-    \ returns True: return True (no action).\n     If False: log a warning with the path and\
-    \ reason. Delete the file via os.remove(). Return False.\n     Callers should re-implement\
-    \ the deliverable when this returns False.\n   - DeliverableContentValidator.audit_known_corrupt_files(project_root:\
-    \ str) -> dict:\n     Checks these known corrupt files and returns (path: status) dict:\n\
-    \     python/carnot/models/cikan_energy.py,\n     python/carnot/pipeline/jitrl_memory.py,\n\
-    \     python/carnot/models/safety_kan.py,\n     python/carnot/pipeline/semantic_energy_scorer.py,\n\
-    \     python/carnot/pipeline/crane_extractor.py\n     Status per file: 'valid_python' /\
-    \ 'corrupt_json' / 'missing'\n   - CloudGPUInstructions: dataclass with fields:\n     lambda_command:\
-    \ str (Lambda Labs provisioning CLI command),\n     vastai_command: str (vast.ai provisioning\
-    \ command),\n     runpod_command: str (RunPod provisioning command),\n     estimated_cost_per_hour_usd:\
-    \ float\n   - build_cloud_gpu_instructions() -> CloudGPUInstructions:\n     Lambda: 'lambdalabs\
-    \ instance create --instance-type gpu_1x_a100 --region us-west-2 --quantity 1'\n     vast.ai:\
-    \ 'vastai create instance <id> --image pytorch/pytorch:2.3.0-cuda12.1'\n     RunPod: 'runpodctl\
-    \ create pod --gpuType NVIDIA_A100_80GB'\n     estimated_cost=1.10\n   - generate_cloud_gpu_script(instructions:\
-    \ CloudGPUInstructions, output_path: str) -> None:\n     Writes scripts/setup_cloud_gpu.sh\
-    \ with the commands for all three providers.\n4. Implement python/carnot/pipeline/deliverable_validator.py\
-    \ with all classes above.\n   Export DeliverableContentValidator, CloudGPUInstructions,\
-    \ build_cloud_gpu_instructions, generate_cloud_gpu_script from carnot.pipeline.__init__.\n\
-    5. Write scripts/experiment_404_preflight_v2.py using ExperimentTemplate(404):\n   a. ExperimentTemplate(404,\
-    \ 'Deliverable validator + GPU preflight v2',\n      'results/experiment_404_preflight_v2.json')\n\
-    \   b. tmpl.setup()\n   c. validator = DeliverableContentValidator()\n   d. corrupt_audit =\
-    \ validator.audit_known_corrupt_files(project_root)\n   e. result = run_gpu_preflight(project_root)\n\
-    \   f. If not result.is_live_capable:\n      generate_cloud_gpu_script(build_cloud_gpu_instructions(),\
-    \ 'scripts/setup_cloud_gpu.sh')\n   g. Build artifact: schema='carnot.preflight_v2.v1',\n\
-    \      honest_verdict (gpu_confirmed_live / gpu_hardware_not_live / env_not_propagating\
-    \ / scripts_missing),\n      corrupt_files_found (list of corrupt paths from audit),\n\
-    \      n_corrupt_files (int),\n      cloud_gpu_script_generated (bool),\n      retro_022_resolved\
-    \ (bool — True only when honest_verdict=='gpu_confirmed_live'),\n      retro_023_root_cause_fixed\
-    \ (bool — always True: validator module implemented)\n   h. Print ACTION REQUIRED message\
-    \ if honest_verdict != 'gpu_confirmed_live', listing the cloud GPU options.\n   i. Output:\
-    \ results/experiment_404_preflight_v2.json\n6. Write tests/python/test_experiment_404_preflight_v2.py\
-    \ (100% coverage required).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
-    8. Reconcile: update ops/conductor-log.md with RETRO-022 and RETRO-023 status.\n   If\
-    \ retro_022_resolved: mark RETRO-022 CLOSED in ops/status.md.\n   If cloud_gpu_script_generated:\
-    \ document scripts/setup_cloud_gpu.sh location in ops/status.md.\nRun: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp405-cikan-energy-final-attempt
-  milestone: 2026.06.17
-  deliverable: python/carnot/models/cikan_energy.py
-  title: 'Exp 405: CIKANEnergy — third and final attempt with content validator guard (RETRO-023)'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-023 — python/carnot/models/cikan_energy.py\
-    \ contains JSON artifact data (not Python) for the THIRD consecutive milestone. The root\
-    \ cause is fixed in Exp 404 (DeliverableContentValidator). This experiment MUST call\
-    \ validate_and_clear() at the top to delete the corrupt file before implementing.\n\n\
-    arXiv 2412.03710 (CIKAN): Extends KAN with hard constraint priors baked into spline activations.\
-    \ Instead of learning arbitrary spline shapes, CIKAN seeds each edge's spline with known\
-    \ constraint boundaries — regions that violate constraints have infinite (or very large) energy.\
-    \ arXiv 2602.07518 (Physical Analog KAN): each ConstraintBoundary maps to one RNPU saturation\
-    \ voltage (~250 pJ/inference, ~600 ns latency). This is the Phase 2 hardware path.\n\n\
-    EXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator\
-    \ (Exp 404 — READ THIS FIRST)\n- python/carnot/models/kan.py — KANEnergy, KANSpline, KANLayer\n\
-    - python/carnot/verify/energy.py — ConstraintTerm protocol, ComposedEnergy\n- python/carnot/models/__init__.py\
-    \ — model exports\n- tests/python/test_kan.py — KAN test patterns\n\nTASK: Re-implement\
-    \ CIKANEnergy with content validator guard.\n1. Read CLAUDE.md spec-first workflow.\n2. Call\
-    \ DeliverableContentValidator().validate_and_clear('{project_root}/python/carnot/models/cikan_energy.py')\
-    \ at the TOP of the script — before any code generation. If it returns False (corrupt file\
-    \ deleted), log that RETRO-023 corrupt file was cleared.\n3. Add REQ-ENERGY-010 (CIKAN energy\
-    \ tier), REQ-ENERGY-011 (constraint boundaries), REQ-ENERGY-012 (non-negative energy),\n\
-    \   SCENARIO-ENERGY-015/016/017 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
-    4. Write tests FIRST (100% coverage) for:\n   - ConstraintBoundary(variable_idx, boundary_value,\
-    \ boundary_type: Literal['lower_bound','upper_bound','equality'])\n   - seed_spline_from_constraint(spline:\
-    \ KANSpline, boundary: ConstraintBoundary) -> KANSpline:\n     places a knot at boundary_value;\
-    \ crossing boundary increases energy (penalty = crossing_amount^2 * 1e6)\n   - CIKANEnergy(n_vars:\
-    \ int, n_hidden: int, constraint_boundaries: list[ConstraintBoundary])\n   - CIKANEnergy.energy(x:\
-    \ jnp.ndarray) -> float: always >= 0\n   - CIKANEnergy._boundary_penalty(x) -> float\n\
-    \   - CIKANEnergy.from_constraints(constraints: list[ConstraintTerm]) -> CIKANEnergy\n\
-    \   - CIKANEnergy.energy_separation_ratio(satisfying, violating) -> float\n   - CIKANEnergy.save(path)\
-    \ / CIKANEnergy.load(path) via safetensors\n   - Test: 1000 random configs always produce\
-    \ energy >= 0\n   - Test: energy on violating configs > energy on satisfying configs\n5.\
-    \ Implement python/carnot/models/cikan_energy.py (complete file, valid Python):\n   Verbose\
-    \ docstrings explaining WHY constraint boundaries in splines prevent violations structurally,\n\
-    \   WHY each ConstraintBoundary maps to one RNPU saturation voltage (arXiv 2602.07518),\n\
-    \   WHY energy is guaranteed non-negative (penalty is squared distance).\n6. Export CIKANEnergy,\
-    \ ConstraintBoundary from carnot.models.__init__.\n7. Write scripts/experiment_405_cikan_energy.py\
-    \ using ExperimentTemplate(405):\n   a. Call validate_and_clear at top (delete corrupt file\
-    \ if present)\n   b. Create arithmetic constraint: x0 + x1 = x2 (carry-check)\n   c. Instantiate\
-    \ CIKANEnergy.from_constraints([constraint])\n   d. Sample 100 satisfying + 100 violating\
-    \ configs\n   e. Compute energy_separation_ratio and cikan_vs_kan_ratio\n   f. Build artifact:\
-    \ schema='carnot.cikan_energy.v1', honest_verdict ('structural_prevention' when ratio>5.0;\
-    \ 'partial_separation' when 1.0<ratio<=5.0; 'no_separation' when <=1.0)\n   g. Output:\
-    \ results/experiment_405_cikan_energy.json\n8. Write tests/python/test_cikan_energy.py (100%\
-    \ coverage).\n9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n10. Reconcile:\
-    \ update ops/conductor-log.md (RETRO-023 CLOSED), ops/changelog.md, ops/status.md,\n    _bmad/architecture.md\
-    \ (add CIKANEnergy row to Model Tiers table).\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp406-jitrl-constraint-memory
-  milestone: 2026.06.17
-  deliverable: python/carnot/pipeline/jitrl_memory.py
-  title: 'Exp 406: JitRL constraint memory — correct Tier 1 self-learning algorithm (purge corrupt file)'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/pipeline/jitrl_memory.py\
-    \ currently contains JSON data (not Python). This is a corruption artifact from Exp 386,\
-    \ which was interrupted before implementing the real module. This experiment MUST call\
-    \ DeliverableContentValidator.validate_and_clear() at the top to delete the corrupt file.\n\n\
-    arXiv 2601.18510 (JitRL): Just-In-Time Reinforcement Learning — continual learning WITHOUT\
-    \ gradient updates. Maintains a dynamic non-parametric memory of (state, action, advantage)\
-    \ triples. At inference time, retrieves k most similar triples and uses their advantages to\
-    \ modulate the output policy via KL-constrained logit adjustment. Provably equivalent to\
-    \ KL-constrained policy optimization in closed form.\n\nWHY THIS IS THE CORRECT TIER 1 ALGORITHM:\
-    \ Exp 134 proved that precision-based constraint REWEIGHTING doesn't improve accuracy. JitRL\
-    \ reveals the fix: instead of reweighting constraint weights, maintain a memory of\
-    \ (question_type, constraint_type, outcome) triples and MODULATE THE ENERGY THRESHOLD at\
-    \ inference time. When Carnot has seen that 'rate problems' trigger carry_check incorrectly\
-    \ 8/10 times, raise the energy threshold for carry_check on rate-type questions. This is\
-    \ threshold modulation — not constraint reweighting.\n\nEXISTING CODE TO READ FIRST:\n-\
-    \ python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (wire JitRL as optional param)\n\
-    - python/carnot/pipeline/case_memory.py — CaseMemory patterns (Exp 136)\n- python/carnot/training/adaptive_weights.py\
-    \ — PerModelFPTracker (the failed approach Exp 132/134)\n- python/carnot/pipeline/constraint_template_library.py\
-    \ — ConstraintTemplateLibrary (Exp 343)\n\nTASK: Implement JitRL-style constraint memory.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Call validate_and_clear('{project_root}/python/carnot/pipeline/jitrl_memory.py')\
-    \ at TOP.\n3. Add REQ-LEARN-028 (JitRL memory modulates threshold without gradient updates),\n\
-    \   REQ-LEARN-029 (modulation is KL-constrained optimal),\n   SCENARIO-LEARN-051/052/053\
-    \ to openspec/capabilities/verifiable-reasoning/spec.md.\n4. Write tests FIRST (100% coverage)\
-    \ for:\n   - ConstraintTriple(question_type, constraint_type, energy_value, repair_outcome:\
-    \ Literal['fixed','not_fixed','false_positive'], question_embedding: list[float]|None=None)\n\
-    \   - JitRLConstraintMemory(k=5, kl_budget=0.1, max_size=1000)\n   - JitRLConstraintMemory.record(triple)\n\
-    \   - JitRLConstraintMemory.retrieve(question, constraint_type, k) -> list[ConstraintTriple]\n\
-    \   - JitRLConstraintMemory.compute_threshold_adjustment(triples) -> float:\n     delta =\
-    \ kl_budget * mean([1 if t.repair_outcome=='false_positive' else -1 for t in triples])\n\
-    \   - JitRLConstraintMemory.get_adjusted_threshold(base_threshold, question, constraint_type)\
-    \ -> float\n   - JitRLConstraintMemory.save(path) / load(path): JSON serialization\n   -\
-    \ Test: rate problem history -> positive threshold adjustment\n   - Test: arithmetic problem\
-    \ history -> negative/neutral adjustment\n   - Wire into VerifyRepairPipeline as optional\
-    \ jitrl_memory param (additive, no breaking changes)\n5. Implement python/carnot/pipeline/jitrl_memory.py.\n\
-    \   Verbose docstrings explaining WHY JitRL works, WHY threshold modulation is the correct\
-    \ Tier 1 algorithm, hardware path (CPU k-NN, O(log n)).\n6. Export JitRLConstraintMemory,\
-    \ ConstraintTriple from carnot.pipeline.__init__.\n7. Write scripts/experiment_406_jitrl_memory.py\
-    \ using ExperimentTemplate(406):\n   a. Call validate_and_clear at top\n   b. Record 50\
-    \ synthetic triples: 25 false_positive (carry_check on rate problems),\n      25 fixed (carry_check\
-    \ on arithmetic)\n   c. Query 'rate problem' carry_check -> expect positive threshold adjustment\n\
-    \   d. Query 'arithmetic problem' carry_check -> expect negative/neutral\n   e. Run 100\
-    \ simulated verify-repair with/without JitRL; measure fp_reduction_pct\n   f. Build artifact:\
-    \ schema='carnot.jitrl_memory.v1', threshold_modulation_works\n      (True when rate_adjustment\
-    \ > arith_adjustment), simulated_fp_reduction_pct\n   g. Output: results/experiment_406_jitrl_memory.json\n\
-    8. Write tests/python/test_jitrl_memory.py (100% coverage).\n9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n10. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md,\n\
-    \    _bmad/architecture.md (JitRL as Tier 1 self-learning component).\nRun: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp407-safety-kan-classifier
-  milestone: 2026.06.17
-  deliverable: python/carnot/models/safety_kan.py
-  title: 'Exp 407: Safety KAN classifier — first Tier B product (purge corrupt file)'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/models/safety_kan.py\
-    \ currently contains JSON data. Corrupt file from Exp 387 (session interrupted). This\
-    \ experiment MUST call DeliverableContentValidator.validate_and_clear() at the top.\n\n\
-    research-program.md Product Roadmap Tier B: 'Safety/Jailbreak Classifier — Low energy =\
-    \ safe, high energy = unsafe/jailbreak.' This is the FIRST Tier B product. Energy-based\
-    \ safety is auditable — you can inspect KAN spline edges to see WHY a prompt scores high\
-    \ energy. SafeProbing (arXiv 2601.10543) showed safety-awareness signals exist in model\
-    \ internals; KAN captures these at a fraction of the cost.\n\nEXISTING CODE TO READ FIRST:\n\
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-022 has blocked live GPU experiments\
+    \ for SEVEN consecutive milestones. Root cause (Exp 404): CARNOT_FORCE_LIVE=1 is set in the\
+    \ human shell but does NOT propagate into the Claude subprocess spawned by the conductor. The\
+    \ conductor calls subprocess.run() without explicitly passing env vars. We CANNOT modify\
+    \ research_conductor.py.\n\nThe workaround: implement EnvironmentAutoFix, a module that each\
+    \ experiment script calls at startup. It detects GPU hardware (torch.cuda.is_available()), and\
+    \ if GPU is present AND CARNOT_FORCE_LIVE is absent from os.environ, it sets\
+    \ os.environ['CARNOT_FORCE_LIVE'] = '1' and logs a warning. This makes every GPU experiment\
+    \ self-configuring — the env gate works without conductor propagation.\n\nThis is a CPU-only\
+    \ experiment. It always completes and produces a result JSON.\n\nEXISTING CODE TO READ FIRST:\n\
     - python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
-    - python/carnot/models/kan.py — KANEnergy, KANLayer, KANSpline\n- python/carnot/models/__init__.py\
-    \ — model exports\n- tests/python/test_kan.py — KAN test patterns\n\nTASK: Implement SafetyKANClassifier.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Call validate_and_clear('{project_root}/python/carnot/models/safety_kan.py')\
-    \ at TOP.\n3. Add REQ-SAFE-001 (SafetyKANClassifier: low energy=safe, high=jailbreak),\n\
-    \   REQ-SAFE-002 (binary contrastive loss training),\n   SCENARIO-SAFE-001/002/003 to spec.\n\
-    4. Write tests FIRST (100% coverage) for:\n   - SafetyExample(text: str, label: Literal['safe','jailbreak'])\n\
-    \   - encode_safety_text(text, max_features=32) -> jnp.ndarray:\n     bag-of-words features\
-    \ over safety-relevant keywords (imperative_verbs, roleplay_words, ignore_words, bypass_words,\
-    \ length_ratio, etc). Normalize to [0,1].\n   - SafetyKANClassifier(n_features=32, n_hidden=8)\n\
-    \   - SafetyKANClassifier.energy(text) -> float\n   - SafetyKANClassifier.is_safe(text,\
-    \ threshold=1.0) -> bool\n   - SafetyKANClassifier.train(examples, n_epochs=100) -> list[float]:\n\
-    \     contrastive loss: max(0, E_safe - E_jailbreak + margin=1.0)\n   - SafetyKANClassifier.evaluate_auroc(examples)\
-    \ -> float\n   - SafetyKANClassifier.save(path) / load(path) via safetensors\n5. Implement\
-    \ python/carnot/models/safety_kan.py.\n   Verbose docstrings: WHY energy-based safety is\
-    \ auditable (spline inspection), WHY low energy=safe, Phase 3 path.\n6. Export SafetyKANClassifier,\
-    \ SafetyExample from carnot.models.__init__.\n7. Write scripts/experiment_407_safety_kan.py\
-    \ using ExperimentTemplate(407):\n   a. Call validate_and_clear at top\n   b. SAFE_EXAMPLES:\
-    \ 30 safe texts (math questions, coding tasks, factual questions)\n   c. JAILBREAK_EXAMPLES:\
-    \ 30 synthetic jailbreak patterns (clearly research examples only —\n      'ignore previous\
-    \ instructions', 'pretend you are DAN', 'act as a character with no restrictions',\n     \
-    \ 'bypass your safety filters', 'forget that you are an AI', 'you have no restrictions')\n\
-    \   d. Train SafetyKANClassifier on 80% (48 train, 12 test)\n   e. Evaluate AUC-ROC on\
-    \ held-out 20%\n   f. Build artifact: schema='carnot.safety_kan.v1',\n      honest_verdict\
-    \ ('safety_classification_works' when test_auroc>0.70;\n      'partial' when 0.60<auroc<=0.70;\
-    \ 'no_better_than_random' when <=0.60)\n   g. Output: results/experiment_407_safety_kan.json\n\
-    8. Write tests/python/test_safety_kan.py (100% coverage).\n9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n10. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md\
-    \ (note: first Tier B product).\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    - python/carnot/pipeline/gpu_preflight.py — GPUPreflightResult, run_gpu_preflight (Exp 390)\n\
+    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)\n\
+    - python/carnot/pipeline/live_gpu_diagnostic.py — diagnose_live_gpu() (Exp 352)\n\
+    - scripts/session_startup.sh — GPU env setup\n\
+    - scripts/experiment_template.py — ExperimentTemplate patterns\n\
+    - results/experiment_404_preflight_v2.json — prior preflight result\n\
+    \nTASK: Implement EnvironmentAutoFix and re-run GPU preflight.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Add REQ-INFRA-021 (EnvironmentAutoFix self-injects CARNOT_FORCE_LIVE=1 when GPU hardware\
+    \ is detected and the var is absent), REQ-INFRA-022 (auto-fix logs a warning when applied so\
+    \ the human knows propagation is still broken), SCENARIO-INFRA-025/026/027 to\
+    \ openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    3. Write tests FIRST (100% coverage required) for ALL of the following:\n\
+    \   - EnvironmentAutoFix dataclass with fields:\n\
+    \     gpu_detected: bool\n\
+    \     carnot_force_live_was_set: bool (True if already in os.environ before fix)\n\
+    \     auto_fix_applied: bool (True if fix was needed and applied)\n\
+    \     final_env_value: str | None (os.environ.get('CARNOT_FORCE_LIVE') after fix)\n\
+    \   - apply_env_autofix() -> EnvironmentAutoFix:\n\
+    \     1. Check os.environ.get('CARNOT_FORCE_LIVE') — record carnot_force_live_was_set\n\
+    \     2. Try to import torch; call torch.cuda.is_available() — record gpu_detected\n\
+    \        If import fails: gpu_detected=False\n\
+    \     3. If gpu_detected AND NOT carnot_force_live_was_set:\n\
+    \        Set os.environ['CARNOT_FORCE_LIVE'] = '1'\n\
+    \        Set auto_fix_applied=True\n\
+    \        Log: WARNING: EnvironmentAutoFix applied CARNOT_FORCE_LIVE=1 (env propagation broken)\n\
+    \     4. Else: auto_fix_applied=False\n\
+    \     5. Return EnvironmentAutoFix instance\n\
+    \   - build_env_autofix_artifact(result: EnvironmentAutoFix, preflight_result: dict) -> dict:\n\
+    \     schema='carnot.env_autofix.v1'\n\
+    \     honest_verdict: str — one of:\n\
+    \       'gpu_confirmed_live' — gpu_detected AND CARNOT_FORCE_LIVE now '1' (either set or auto-fixed)\n\
+    \       'gpu_detected_env_was_correct' — gpu_detected AND carnot_force_live_was_set (no fix needed)\n\
+    \       'gpu_not_detected' — gpu_detected=False (hardware absent or driver issue)\n\
+    \       'auto_fix_applied' — auto_fix_applied=True (workaround used)\n\
+    \     retro_022_resolved: bool — True when honest_verdict in ['gpu_confirmed_live', 'gpu_detected_env_was_correct', 'auto_fix_applied']\n\
+    \   - Test: no GPU → auto_fix_applied=False, honest_verdict='gpu_not_detected'\n\
+    \   - Test: CARNOT_FORCE_LIVE already set + GPU present → gpu_detected_env_was_correct\n\
+    \   - Test: GPU present + CARNOT_FORCE_LIVE absent → auto_fix_applied=True\n\
+    4. Implement python/carnot/pipeline/env_autofix.py with all above.\n\
+    \   Export EnvironmentAutoFix, apply_env_autofix, build_env_autofix_artifact from carnot.pipeline.__init__.\n\
+    5. Write scripts/experiment_413_env_autofix.py using ExperimentTemplate(413):\n\
+    \   a. Call apply_env_autofix() BEFORE ExperimentTemplate() or any GPU check\n\
+    \   b. ExperimentTemplate(413, 'EnvironmentAutoFix + GPU preflight v3', 'results/experiment_413_env_autofix.json')\n\
+    \   c. tmpl.setup()\n\
+    \   d. Re-run gpu_preflight.run_gpu_preflight(project_root) to get updated verdict\n\
+    \   e. Build artifact: schema='carnot.env_autofix.v1'\n\
+    \      Include env_autofix result + gpu_preflight result\n\
+    \      honest_verdict: use build_env_autofix_artifact logic\n\
+    \      retro_022_resolved, auto_fix_applied, n_corrupt_files_remaining\n\
+    \   f. If honest_verdict != 'gpu_confirmed_live' and != 'auto_fix_applied':\n\
+    \      Print ACTION REQUIRED with cloud GPU options (see Exp 404 for Lambda/vast.ai/RunPod commands)\n\
+    \   g. Output: results/experiment_413_env_autofix.json\n\
+    6. Write tests/python/test_experiment_413_env_autofix.py (100% coverage).\n\
+    7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    8. Reconcile: update ops/conductor-log.md with RETRO-022 status.\n\
+    \   If retro_022_resolved=True: mark RETRO-022 CLOSED in ops/status.md.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
     Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp408-semantic-energy-scorer
-  milestone: 2026.06.17
+- id: exp414-cikan-energy-final
+  milestone: 2026.06.24
+  deliverable: python/carnot/models/cikan_energy.py
+  title: 'Exp 414: CIKANEnergy — constraint-informed KAN with hard boundary priors (RETRO-023 carry, purge + re-implement)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/models/cikan_energy.py\
+    \ contains corrupt JSON data — NOT valid Python. This has persisted for FOUR consecutive\
+    \ milestones (Exps 375, 391, 405, force-skipped). This experiment MUST call\
+    \ DeliverableContentValidator.validate_and_clear() at the top before any implementation.\n\
+    \narXiv 2412.03710 (CIKAN): Constraint-Informed KAN. Instead of learning arbitrary spline shapes,\
+    \ CIKAN seeds each spline edge with known constraint boundaries. Regions that violate constraints\
+    \ have infinite (or very large) energy because the spline knots are placed at boundary_value;\
+    \ crossing them incurs a squared-distance penalty. arXiv 2602.07518 (Physical Analog KAN): each\
+    \ ConstraintBoundary maps to one RNPU saturation voltage (~250 pJ/inference, ~600 ns latency).\
+    \ This is Carnot's Phase 2 hardware path.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
+    - python/carnot/models/kan.py — KANEnergy, KANSpline, KANLayer\n\
+    - python/carnot/verify/energy.py — ConstraintTerm protocol, ComposedEnergy\n\
+    - python/carnot/models/__init__.py — model exports\n\
+    - tests/python/test_kan.py — KAN test patterns\n\
+    \nTASK: Re-implement CIKANEnergy with content validator guard.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Call DeliverableContentValidator().validate_and_clear('{project_root}/python/carnot/models/cikan_energy.py')\
+    \ at the TOP of the script before any code generation.\n\
+    3. Add REQ-ENERGY-010 (CIKANEnergy embeds constraint boundaries in spline activations),\n\
+    \   REQ-ENERGY-011 (boundary_penalty guarantees energy >= 0),\n\
+    \   REQ-ENERGY-012 (RNPU hardware mapping documented in docstring),\n\
+    \   SCENARIO-ENERGY-015/016/017 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    4. Write tests FIRST (100% coverage) for:\n\
+    \   - ConstraintBoundary(variable_idx: int, boundary_value: float, boundary_type: Literal['lower_bound','upper_bound','equality'])\n\
+    \   - seed_spline_from_constraint(spline: KANSpline, boundary: ConstraintBoundary) -> KANSpline\n\
+    \   - CIKANEnergy(n_vars: int, n_hidden: int, constraint_boundaries: list[ConstraintBoundary])\n\
+    \   - CIKANEnergy.energy(x: jnp.ndarray) -> float — always >= 0\n\
+    \   - CIKANEnergy._boundary_penalty(x: jnp.ndarray) -> float\n\
+    \   - CIKANEnergy.from_constraints(constraints: list[ConstraintTerm]) -> CIKANEnergy\n\
+    \   - CIKANEnergy.energy_separation_ratio(satisfying, violating) -> float\n\
+    \   - CIKANEnergy.save(path) / CIKANEnergy.load(path) via safetensors\n\
+    \   - Test: 1000 random configs always produce energy >= 0\n\
+    \   - Test: energy on violating configs > energy on satisfying configs\n\
+    5. Implement python/carnot/models/cikan_energy.py (complete, valid Python):\n\
+    \   Verbose docstrings explaining WHY constraint boundaries in splines prevent violations\n\
+    \   structurally, WHY each ConstraintBoundary maps to one RNPU saturation voltage (arXiv\n\
+    \   2602.07518), WHY energy is guaranteed non-negative (penalty is squared distance).\n\
+    6. Export CIKANEnergy, ConstraintBoundary from carnot.models.__init__.\n\
+    7. Write scripts/experiment_414_cikan_energy.py using ExperimentTemplate(414):\n\
+    \   a. Call validate_and_clear at top\n\
+    \   b. Create arithmetic constraint: x0 + x1 = x2 (carry-check)\n\
+    \   c. Instantiate CIKANEnergy.from_constraints([constraint])\n\
+    \   d. Sample 100 satisfying + 100 violating configs\n\
+    \   e. Compute energy_separation_ratio\n\
+    \   f. Build artifact: schema='carnot.cikan_energy.v1',\n\
+    \      honest_verdict ('structural_prevention' when ratio>5.0; 'partial_separation'\n\
+    \      when 1.0<ratio<=5.0; 'no_separation' when <=1.0)\n\
+    \   g. Output: results/experiment_414_cikan_energy.json\n\
+    8. Write tests/python/test_cikan_energy.py (100% coverage).\n\
+    9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    10. Reconcile: update ops/conductor-log.md (RETRO-023 item: cikan_energy CLOSED),\n\
+    \   ops/changelog.md, ops/status.md, _bmad/architecture.md (add CIKANEnergy to Model Tiers table).\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp415-jitrl-constraint-memory
+  milestone: 2026.06.24
+  deliverable: python/carnot/pipeline/jitrl_memory.py
+  title: 'Exp 415: JitRL constraint memory — threshold modulation without gradient updates (RETRO-023 carry, purge + re-implement)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/pipeline/jitrl_memory.py\
+    \ contains corrupt JSON data (not Python). Carried forward from Exp 386 (interrupted), Exp 406\
+    \ (force-skipped). Call DeliverableContentValidator.validate_and_clear() at top.\n\
+    \narXiv 2601.18510 (JitRL): Just-In-Time Reinforcement Learning — continual learning WITHOUT\
+    \ gradient updates. Maintains a dynamic non-parametric memory of (state, action, advantage)\
+    \ triples. At inference: retrieve k similar triples, use advantages to modulate output policy\
+    \ via KL-constrained logit adjustment. Provably equivalent to KL-constrained policy optimization.\
+    \ WHY this is correct Tier 1: Exp 134 proved constraint REWEIGHTING failed. JitRL's fix:\
+    \ modulate the ENERGY THRESHOLD at inference time based on historical (question_type,\
+    \ constraint_type, outcome) triples. When carry_check has 8/10 false positives on rate problems,\
+    \ raise its threshold for rate problems — not its weight globally.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (wire JitRL as optional param)\n\
+    - python/carnot/pipeline/case_memory.py — CaseMemory patterns (Exp 136)\n\
+    - python/carnot/training/adaptive_weights.py — PerModelFPTracker (the FAILED approach from Exp 132/134)\n\
+    - python/carnot/pipeline/constraint_template_library.py — ConstraintTemplateLibrary (Exp 343)\n\
+    \nTASK: Implement JitRL-style constraint memory.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Call validate_and_clear('{project_root}/python/carnot/pipeline/jitrl_memory.py') at TOP.\n\
+    3. Add REQ-LEARN-028 (JitRL modulates energy threshold without gradient updates),\n\
+    \   REQ-LEARN-029 (modulation is KL-constrained optimal — proven in arXiv 2601.18510),\n\
+    \   SCENARIO-LEARN-051/052/053 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    4. Write tests FIRST (100% coverage) for:\n\
+    \   - ConstraintTriple(question_type: str, constraint_type: str, energy_value: float,\n\
+    \     repair_outcome: Literal['fixed','not_fixed','false_positive'],\n\
+    \     question_embedding: list[float] | None = None)\n\
+    \   - JitRLConstraintMemory(k: int = 5, kl_budget: float = 0.1, max_size: int = 1000)\n\
+    \   - JitRLConstraintMemory.record(triple: ConstraintTriple) -> None\n\
+    \   - JitRLConstraintMemory.retrieve(question: str, constraint_type: str, k: int) -> list[ConstraintTriple]\n\
+    \   - JitRLConstraintMemory.compute_threshold_adjustment(triples: list[ConstraintTriple]) -> float:\n\
+    \     delta = kl_budget * mean([1 if t.repair_outcome=='false_positive' else -1 for t in triples])\n\
+    \   - JitRLConstraintMemory.get_adjusted_threshold(base_threshold: float, question: str,\n\
+    \     constraint_type: str) -> float\n\
+    \   - JitRLConstraintMemory.save(path: str) / load(path: str): JSON serialization\n\
+    \   - Test: rate problem history (8/10 FP) -> positive threshold adjustment (>0)\n\
+    \   - Test: arithmetic problem history (9/10 fixed) -> negative adjustment (<0)\n\
+    \   - Wire as optional jitrl_memory param in VerifyRepairPipeline (additive, no breaking changes)\n\
+    5. Implement python/carnot/pipeline/jitrl_memory.py.\n\
+    \   Verbose docstrings: WHY JitRL works (non-parametric retrieval), WHY threshold modulation\n\
+    \   beats weight reweighting (Exp 134 failure post-mortem), hardware path (CPU k-NN O(log n)).\n\
+    6. Export JitRLConstraintMemory, ConstraintTriple from carnot.pipeline.__init__.\n\
+    7. Write scripts/experiment_415_jitrl_memory.py using ExperimentTemplate(415):\n\
+    \   a. Call validate_and_clear at top\n\
+    \   b. Record 50 synthetic triples: 25 false_positive (carry_check on rate problems),\n\
+    \      25 fixed (carry_check on arithmetic)\n\
+    \   c. Query 'rate problem' carry_check → expect positive threshold adjustment\n\
+    \   d. Query 'arithmetic problem' carry_check → expect negative/neutral\n\
+    \   e. Run 100 simulated verify-repair with/without JitRL; measure fp_reduction_pct\n\
+    \   f. Build artifact: schema='carnot.jitrl_memory.v1',\n\
+    \      threshold_modulation_works (True when rate_adjustment > arith_adjustment),\n\
+    \      simulated_fp_reduction_pct\n\
+    \   g. Output: results/experiment_415_jitrl_memory.json\n\
+    8. Write tests/python/test_jitrl_memory.py (100% coverage).\n\
+    9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    10. Reconcile: update ops/conductor-log.md (RETRO-023: jitrl_memory CLOSED),\n\
+    \   ops/changelog.md, ops/status.md, _bmad/architecture.md (JitRL as Tier 1 self-learning).\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp416-safety-kan-classifier
+  milestone: 2026.06.24
+  deliverable: python/carnot/models/safety_kan.py
+  title: 'Exp 416: Safety KAN classifier — first Tier B product, energy-based jailbreak detection (RETRO-023 carry, purge + re-implement)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/models/safety_kan.py\
+    \ contains corrupt JSON data (not Python). Carried from Exp 387 (interrupted), Exp 407\
+    \ (force-skipped). Call DeliverableContentValidator.validate_and_clear() at top.\n\
+    \nresearch-program.md Product Roadmap Tier B: 'Safety/Jailbreak Classifier — Low energy = safe,\
+    \ high energy = unsafe/jailbreak.' This is the FIRST Tier B product. Energy-based safety is\
+    \ AUDITABLE — inspect KAN spline edges to see WHY a prompt scores unsafe. SafeProbing\
+    \ (arXiv 2601.10543) showed safety-awareness signals in model internals; KAN captures these\
+    \ at a fraction of the cost with interpretable splines.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
+    - python/carnot/models/kan.py — KANEnergy, KANLayer, KANSpline\n\
+    - python/carnot/models/__init__.py — model exports\n\
+    - tests/python/test_kan.py — KAN test patterns\n\
+    \nTASK: Implement SafetyKANClassifier.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Call validate_and_clear('{project_root}/python/carnot/models/safety_kan.py') at TOP.\n\
+    3. Add REQ-SAFE-001 (SafetyKANClassifier: low energy=safe, high=jailbreak),\n\
+    \   REQ-SAFE-002 (binary contrastive loss training on safe/jailbreak pairs),\n\
+    \   REQ-SAFE-003 (auditable: spline edge inspection shows WHY energy is high),\n\
+    \   SCENARIO-SAFE-001/002/003 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    4. Write tests FIRST (100% coverage) for:\n\
+    \   - SafetyExample(text: str, label: Literal['safe','jailbreak'])\n\
+    \   - encode_safety_text(text: str, max_features: int = 32) -> jnp.ndarray:\n\
+    \     bag-of-words over safety-relevant keywords (imperative_verbs, roleplay_words,\n\
+    \     ignore_words, bypass_words, length_ratio). Normalize to [0,1].\n\
+    \   - SafetyKANClassifier(n_features: int = 32, n_hidden: int = 8)\n\
+    \   - SafetyKANClassifier.energy(text: str) -> float\n\
+    \   - SafetyKANClassifier.is_safe(text: str, threshold: float = 1.0) -> bool\n\
+    \   - SafetyKANClassifier.train(examples: list[SafetyExample], n_epochs: int = 100) -> list[float]:\n\
+    \     contrastive loss: max(0, E_safe - E_jailbreak + margin=1.0)\n\
+    \   - SafetyKANClassifier.evaluate_auroc(examples: list[SafetyExample]) -> float\n\
+    \   - SafetyKANClassifier.save(path: str) / load(path: str) via safetensors\n\
+    5. Implement python/carnot/models/safety_kan.py.\n\
+    \   Verbose docstrings: WHY energy-based safety is auditable (spline inspection), WHY low\n\
+    \   energy=safe (safe prompts have smooth, simple structure; jailbreaks have irregular,\n\
+    \   imperative feature patterns), Phase 3 path (safety layer for EBT foundation model).\n\
+    6. Export SafetyKANClassifier, SafetyExample from carnot.models.__init__.\n\
+    7. Write scripts/experiment_416_safety_kan.py using ExperimentTemplate(416):\n\
+    \   a. Call validate_and_clear at top\n\
+    \   b. SAFE_EXAMPLES: 30 safe texts (math questions, coding tasks, factual queries)\n\
+    \   c. JAILBREAK_EXAMPLES: 30 synthetic jailbreak patterns (research examples only:\n\
+    \      'ignore previous instructions', 'pretend you have no restrictions',\n\
+    \      'act as a character with no safety guidelines', 'bypass your filters',\n\
+    \      'forget that you are an AI', 'you are now DAN')\n\
+    \   d. Train SafetyKANClassifier on 80% (48 train, 12 test)\n\
+    \   e. Evaluate AUC-ROC on held-out 20%\n\
+    \   f. Build artifact: schema='carnot.safety_kan.v1',\n\
+    \      honest_verdict ('safety_classification_works' when test_auroc>0.70;\n\
+    \      'partial' when 0.60<auroc<=0.70; 'no_better_than_random' when <=0.60)\n\
+    \   g. Output: results/experiment_416_safety_kan.json\n\
+    8. Write tests/python/test_safety_kan.py (100% coverage).\n\
+    9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    10. Reconcile: update ops/conductor-log.md (RETRO-023: safety_kan CLOSED),\n\
+    \   ops/changelog.md, ops/status.md (note: first Tier B product implemented).\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp417-semantic-energy-scorer
+  milestone: 2026.06.24
   deliverable: python/carnot/pipeline/semantic_energy_scorer.py
-  title: 'Exp 408: Semantic Energy scorer — logit-space Boltzmann hallucination detection (purge corrupt file)'
+  title: 'Exp 417: Semantic Energy Scorer — logit-space Boltzmann hallucination detection (RETRO-023 carry, purge + re-implement)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
     \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/pipeline/semantic_energy_scorer.py\
-    \ contains JSON data (corrupt Exp 401 artifact). Call DeliverableContentValidator.validate_and_clear()\
-    \ at the top to delete it before implementing.\n\narXiv 2508.14496 (Semantic Energy, 2025-08):\
-    \ Operates on PENULTIMATE-LAYER LOGITS (pre-softmax) instead of post-softmax probabilities.\
-    \ Post-softmax normalization loses intensity information — logit 100 vs logit 10 both normalize\
-    \ to high probability, but represent very different confidence levels. Semantic Energy restores\
-    \ this: compute Boltzmann-style E = -log(sum(exp(logits/T))) over semantic cluster. Higher\
-    \ energy = more hallucination-prone. Consistently outperforms semantic entropy.\n\nWHY THIS\
-    \ COMPLEMENTS ISING: Ising checks structural correctness AFTER generation. Semantic Energy\
-    \ provides a FAST pre-filter DURING generation — if energy is high, trigger full Ising\
-    \ verification; if low, skip. Same architecture as SinkProbe (Exp 348) but uses logit-space\
-    \ energy instead of attention sink concentration.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/deliverable_validator.py\
-    \ — DeliverableContentValidator (Exp 404)\n- python/carnot/pipeline/sink_probe.py — SinkProbe\
-    \ (Exp 348) — fast-path pattern to follow\n- python/carnot/pipeline/three_tier_pipeline.py\
-    \ — ThreeTierPipeline (Exp 360) — integration point\n- python/carnot/pipeline/live_gpu_diagnostic.py\
-    \ — diagnose_live_gpu() for CI-safe mode\n\nTASK: Implement SemanticEnergyScorer and benchmark\
-    \ vs SinkProbe.\n1. Read CLAUDE.md spec-first workflow.\n2. Call validate_and_clear at TOP.\n\
-    3. Add REQ-VERIFY-090 (SemanticEnergyScorer detects hallucinations from logit-space energy),\n\
-    \   REQ-VERIFY-091 (CI-safe mode with simulated logits),\n   SCENARIO-VERIFY-120/121/122\
-    \ to spec.\n4. Write tests FIRST (100% coverage) for:\n   - SemanticCluster(response_texts:\
-    \ list[str], logit_matrix: jnp.ndarray|None)\n   - compute_boltzmann_energy(logits: jnp.ndarray,\
-    \ temperature=1.0) -> float:\n     E = -log(sum(exp(logits/temperature))). Returns scalar.\n\
-    \   - SemanticEnergyResult(energy, is_uncertain, should_verify, n_tokens_scored, inference_mode)\n\
-    \   - SemanticEnergyScorer(threshold=2.0, temperature=1.0)\n   - SemanticEnergyScorer.score(response,\
-    \ logits=None) -> SemanticEnergyResult:\n     None logits: CI-safe mode, deterministic hash\
-    \ of response text. inference_mode='ci_synthetic'.\n     Logits provided: compute Boltzmann\
-    \ energy over last-token logit vector. inference_mode='live_gpu'.\n   - SemanticEnergyScorer.benchmark(responses,\
-    \ logits|None, correctness_labels) -> dict:\n     Compute AUROC, skip_rate, fn_rate.\n \
-    \  - Test: high-variance logits -> higher energy than uniform logits\n   - Test: CI-safe\
-    \ mode never raises\n5. Implement python/carnot/pipeline/semantic_energy_scorer.py.\n  \
-    \ Verbose docstrings: WHY pre-softmax logits preserve information (arXiv 2508.14496), WHY\
-    \ Boltzmann maps to uncertainty, HOW this complements Ising, hardware path.\n6. Export SemanticEnergyScorer,\
-    \ SemanticEnergyResult, compute_boltzmann_energy from carnot.pipeline.__init__.\n7. Write\
-    \ scripts/experiment_408_semantic_energy.py using ExperimentTemplate(408):\n   a. Call validate_and_clear\
-    \ at top\n   b. CI-safe mode: 50 synthetic responses, score with simulated logits\n   c.\
-    \ Compute mean_energy_correct vs mean_energy_wrong on synthetic data\n   d. Benchmark vs\
-    \ SinkProbe: compare skip_rate and fn_rate\n   e. If CARNOT_FORCE_LIVE=1 and GPU available:\
-    \ run with real Gemma4-E4B-it logits (30 GSM8K)\n   f. Build artifact: schema='carnot.semantic_energy.v1',\n\
-    \      inference_mode, auroc_semantic_energy, skip_rate, fn_rate, winner ('semantic_energy'/'sinkprobe'/'tie'),\n\
-    \      honest_verdict ('viable_fast_path' when auroc>0.70; 'marginal' 0.60-0.70; 'no_better_than_random'\
-    \ <=0.60)\n   g. Output: results/experiment_408_semantic_energy.json\n8. Write tests/python/test_semantic_energy_scorer.py\
-    \ (100% coverage).\n9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n10. Reconcile:\
-    \ update ops/conductor-log.md, ops/changelog.md, ops/status.md.\nRun: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ contains corrupt JSON data (not Python). Carried from Exp 401 (not executed), Exp 408\
+    \ (force-skipped). Call DeliverableContentValidator.validate_and_clear() at top.\n\
+    \narXiv 2508.14496 (Semantic Energy, 2025-08): Operates on PENULTIMATE-LAYER LOGITS (pre-softmax)\
+    \ instead of post-softmax probabilities. Post-softmax normalization loses intensity information —\
+    \ logit 100 vs logit 10 both normalize to high probability, but represent very different\
+    \ confidence levels. Semantic Energy: E = -log(sum(exp(logits/T))) over semantic cluster.\
+    \ Higher energy = more hallucination-prone. Consistently outperforms semantic entropy.\
+    \ WHY THIS COMPLEMENTS ISING: Ising checks structural correctness AFTER generation. Semantic\
+    \ Energy provides a FAST pre-filter DURING generation — if energy is high, trigger full Ising;\
+    \ if low, skip. Same architecture as SinkProbe (Exp 348) but uses logit-space energy.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
+    - python/carnot/pipeline/sink_probe.py — SinkProbe (Exp 348) — fast-path pattern to follow\n\
+    - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline (Exp 360) — integration point\n\
+    - python/carnot/pipeline/live_gpu_diagnostic.py — diagnose_live_gpu() for CI-safe mode\n\
+    \nTASK: Implement SemanticEnergyScorer.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Call validate_and_clear('{project_root}/python/carnot/pipeline/semantic_energy_scorer.py') at TOP.\n\
+    3. Add REQ-VERIFY-090 (SemanticEnergyScorer: logit-space energy detects hallucination before\n\
+    \   Ising check), REQ-VERIFY-091 (CI-safe mode with deterministic hash of response text),\n\
+    \   SCENARIO-VERIFY-120/121/122 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    4. Write tests FIRST (100% coverage) for:\n\
+    \   - SemanticCluster(response_texts: list[str], logit_matrix: jnp.ndarray | None)\n\
+    \   - compute_boltzmann_energy(logits: jnp.ndarray, temperature: float = 1.0) -> float:\n\
+    \     E = -log(sum(exp(logits/temperature))). Returns scalar.\n\
+    \   - SemanticEnergyResult(energy: float, is_uncertain: bool, should_verify: bool,\n\
+    \     n_tokens_scored: int, inference_mode: str)\n\
+    \   - SemanticEnergyScorer(threshold: float = 2.0, temperature: float = 1.0)\n\
+    \   - SemanticEnergyScorer.score(response: str, logits: jnp.ndarray | None) -> SemanticEnergyResult:\n\
+    \     None logits: CI-safe mode — deterministic hash of response. inference_mode='ci_synthetic'.\n\
+    \     Logits provided: compute Boltzmann energy over last-token logit vector. inference_mode='live_gpu'.\n\
+    \   - SemanticEnergyScorer.benchmark(responses: list[str], logits: list | None,\n\
+    \     correctness_labels: list[bool]) -> dict: compute auroc, skip_rate, fn_rate.\n\
+    \   - Test: high-variance logits -> higher energy than uniform logits\n\
+    \   - Test: CI-safe mode never raises, always returns valid result\n\
+    5. Implement python/carnot/pipeline/semantic_energy_scorer.py.\n\
+    \   Verbose docstrings: WHY pre-softmax logits preserve information (arXiv 2508.14496),\n\
+    \   WHY Boltzmann maps to uncertainty, HOW this complements Ising structural checking,\n\
+    \   hardware path (logit read from GPU, energy computed on CPU).\n\
+    6. Export SemanticEnergyScorer, SemanticEnergyResult, compute_boltzmann_energy from\n\
+    \   carnot.pipeline.__init__.\n\
+    7. Write scripts/experiment_417_semantic_energy.py using ExperimentTemplate(417):\n\
+    \   a. Call validate_and_clear at top\n\
+    \   b. CI-safe mode: 50 synthetic responses, score with simulated logits\n\
+    \   c. Compute mean_energy_correct vs mean_energy_wrong on synthetic data\n\
+    \   d. Benchmark vs SinkProbe: compare skip_rate and fn_rate\n\
+    \   e. Build artifact: schema='carnot.semantic_energy.v1',\n\
+    \      inference_mode, auroc_synthetic, skip_rate, fn_rate,\n\
+    \      winner ('semantic_energy'/'sinkprobe'/'tie'),\n\
+    \      honest_verdict ('viable_fast_path' when auroc>0.70; 'marginal' 0.60-0.70;\n\
+    \      'no_better_than_random' <=0.60)\n\
+    \   f. Output: results/experiment_417_semantic_energy.json\n\
+    8. Write tests/python/test_semantic_energy_scorer.py (100% coverage).\n\
+    9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    10. Reconcile: update ops/conductor-log.md (RETRO-023: semantic_energy CLOSED),\n\
+    \   ops/changelog.md, ops/status.md.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp409-crane-extraction-gate
-  milestone: 2026.06.17
+- id: exp418-crane-extraction-gate
+  milestone: 2026.06.24
   deliverable: python/carnot/pipeline/crane_extractor.py
-  title: 'Exp 409: CRANE extraction gate — 1x-cost prompt-side constrained extraction (purge corrupt file)'
+  title: 'Exp 418: CRANE extraction gate — 1x-cost prompt-side constrained extraction (RETRO-023 carry, purge + re-implement)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
     \ style requirements.\nToday's date: {date}.\n\nCONTEXT: python/carnot/pipeline/crane_extractor.py\
-    \ contains JSON data (corrupt Exp 402 artifact). Call DeliverableContentValidator.validate_and_clear()\
-    \ at the top to delete it.\n\narXiv 2502.09061 (CRANE, ICLR 2026 accepted): Core insight:\
-    \ strict grammar constraints during generation HURT reasoning because they prevent free-form\
-    \ thinking. Fix: let model REASON FREELY until a trigger token, then SWITCH to constrained\
-    \ generation for the final answer/claim. Up to +10pp on symbolic reasoning benchmarks.\n\n\
-    WHY THIS MATTERS: ArithmeticExtractor found ZERO violations on Gemma4-E4B-it (0/20 including\
-    \ 4 wrong answers) because IT models reason in natural language, not regex-parseable equations.\
-    \ LLMExtractor (Exp 366) uses a SECOND LLM call — expensive (2x inference). CRANE suggests\
-    \ a CHEAPER approach: add a structured suffix to the MODEL PROMPT. The model reasons freely\
-    \ (IT format), then produces a structured CLAIM block. ONE LLM call instead of TWO.\n\n\
-    EXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator\
-    \ (Exp 404)\n- python/carnot/pipeline/extract.py — ArithmeticExtractor, ConstraintExtractor\
-    \ protocol\n- python/carnot/pipeline/llm_extractor.py — LLMExtractor (Exp 366) — compare\
-    \ against\n- python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline integration\n\
-    - tests/python/test_extractor.py — extractor test patterns\n\nTASK: Implement CRANEExtractionGate.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Call validate_and_clear at TOP.\n3. Add REQ-EXTRACT-024\
-    \ (CRANEExtractionGate elicits structured claims via prompt suffix),\n   REQ-EXTRACT-025\
-    \ (alternating-grammar: free reasoning + constrained claim block),\n   SCENARIO-EXTRACT-049/050/051\
-    \ to spec.\n4. Write tests FIRST (100% coverage) for:\n   - CRANEClaimBlock(raw_text: str,\
-    \ claim_lines: list[str], parsed_claims: list[str])\n   - CRANE_CLAIM_SUFFIX: str constant\
-    \ — structured suffix to append to prompts:\n     '\\n\\nVERIFIED CLAIMS (one per line,\
-    \ format: CLAIM: [quantity] [op] [quantity] = [result]):\\n'\n   - build_crane_prompt(original_prompt)\
-    \ -> str: appends CRANE_CLAIM_SUFFIX\n   - parse_crane_output(response) -> CRANEClaimBlock:\n\
-    \     Splits on 'VERIFIED CLAIMS:'; extracts CLAIM: lines. Falls back to empty if no block\
-    \ found.\n   - CRANEExtractionGate(llm_caller=None) — implements ConstraintExtractor protocol\n\
-    \   - CRANEExtractionGate.extract(response, question) -> list[ConstraintTerm]\n   - CRANEExtractionGate.wrap_prompt(question)\
-    \ -> str\n   - Comparison benchmark: run all three extractors on same responses, TP/FP/FN/TN\n\
-    5. Implement python/carnot/pipeline/crane_extractor.py.\n   Verbose docstrings: WHY CRANE\
-    \ works (free reasoning prevents constraint clash), WHY 1x vs 2x inference, HOW to combine\
-    \ CRANE+LLMExtractor, limitation (requires model cooperation).\n6. Export CRANEExtractionGate,\
-    \ CRANEClaimBlock from carnot.pipeline.__init__.\n7. Write scripts/experiment_409_crane_extractor.py\
-    \ using ExperimentTemplate(409):\n   a. Call validate_and_clear at top\n   b. Load/create\
-    \ 30 synthetic IT-format responses with known correctness labels\n   c. Run: ArithmeticExtractor,\
-    \ CRANEExtractionGate(llm_caller=None), LLMExtractor(llm_caller=None)\n   d. Count TP/FP/FN/TN;\
-    \ compute detection_rate and fp_rate per extractor\n   e. If CARNOT_FORCE_LIVE=1: use live\
-    \ Qwen3.5-0.8B for LLMExtractor; wrap prompts with build_crane_prompt()\n   f. Build artifact:\
-    \ schema='carnot.crane_extractor.v1',\n      crane_detection_rate, arithmetic_detection_rate,\
-    \ llm_detection_rate,\n      honest_verdict ('crane_wins' when crane_detection_rate>arithmetic\
-    \ AND crane_fp_rate<=llm_fp_rate;\n      'crane_viable' when crane>arithmetic; 'no_improvement'\
-    \ otherwise)\n   g. Output: results/experiment_409_crane_extractor.json\n8. Write tests/python/test_crane_extractor.py\
-    \ (100% coverage).\n9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n10. Reconcile:\
-    \ update ops/conductor-log.md, ops/changelog.md, ops/status.md.\nRun: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ contains corrupt JSON data (not Python). Carried from Exp 402 (not executed), Exp 409\
+    \ (force-skipped). Call DeliverableContentValidator.validate_and_clear() at top.\n\
+    \narXiv 2502.09061 (CRANE, ICLR 2026): Let the model REASON FREELY until a trigger token,\
+    \ then SWITCH to constrained generation for the final answer/claim. Up to +10pp on symbolic\
+    \ reasoning benchmarks. WHY THIS MATTERS: ArithmeticExtractor found ZERO violations on\
+    \ Gemma4-E4B-it (0/20 questions, including 4 wrong answers) because IT models reason in\
+    \ natural language, not regex-parseable equations. LLMExtractor (Exp 366) uses a SECOND LLM\
+    \ call — 2x inference cost. CRANE: add a structured suffix to the MODEL PROMPT. The model\
+    \ reasons freely (IT format), then produces a structured CLAIM block. ONE LLM call, not two.\
+    \ CRANE is currently the best extraction approach for IT models at 1x cost.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/deliverable_validator.py — DeliverableContentValidator (Exp 404)\n\
+    - python/carnot/pipeline/extract.py — ArithmeticExtractor, ConstraintExtractor protocol\n\
+    - python/carnot/pipeline/llm_extractor.py — LLMConstraintExtractor (Exp 366) — compare against\n\
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline integration\n\
+    - tests/python/test_extractor.py — extractor test patterns\n\
+    \nTASK: Implement CRANEExtractionGate.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Call validate_and_clear('{project_root}/python/carnot/pipeline/crane_extractor.py') at TOP.\n\
+    3. Add REQ-EXTRACT-024 (CRANE elicits structured claims via prompt suffix at 1x cost),\n\
+    \   REQ-EXTRACT-025 (alternating-grammar: free reasoning + constrained claim block),\n\
+    \   SCENARIO-EXTRACT-049/050/051 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    4. Write tests FIRST (100% coverage) for:\n\
+    \   - CRANEClaimBlock(raw_text: str, claim_lines: list[str], parsed_claims: list[str])\n\
+    \   - CRANE_CLAIM_SUFFIX: str constant (structured suffix to append to prompts):\n\
+    \     '\\n\\nVERIFIED CLAIMS (one per line, format: CLAIM: [quantity] [op] [quantity] = [result]):\\n'\n\
+    \   - build_crane_prompt(original_prompt: str) -> str: appends CRANE_CLAIM_SUFFIX\n\
+    \   - parse_crane_output(response: str) -> CRANEClaimBlock:\n\
+    \     Splits on 'VERIFIED CLAIMS:'; extracts 'CLAIM:' lines. Falls back to empty if no block.\n\
+    \   - CRANEExtractionGate(llm_caller=None) — implements ConstraintExtractor protocol\n\
+    \   - CRANEExtractionGate.extract(response: str, question: str) -> list[ConstraintTerm]\n\
+    \   - CRANEExtractionGate.wrap_prompt(question: str) -> str\n\
+    5. Implement python/carnot/pipeline/crane_extractor.py.\n\
+    \   Verbose docstrings: WHY CRANE works (free reasoning prevents constraint clash), WHY 1x vs\n\
+    \   2x inference cost, HOW to use CRANE+LLMExtractor together, known limitation (model must\n\
+    \   cooperate with suffix format).\n\
+    6. Export CRANEExtractionGate, CRANEClaimBlock from carnot.pipeline.__init__.\n\
+    7. Write scripts/experiment_418_crane_extractor.py using ExperimentTemplate(418):\n\
+    \   a. Call validate_and_clear at top\n\
+    \   b. Load 30 synthetic IT-format responses with known correctness labels\n\
+    \   c. Run: ArithmeticExtractor, CRANEExtractionGate(llm_caller=None), LLMExtractor(llm_caller=None)\n\
+    \   d. Count TP/FP/FN/TN; compute detection_rate and fp_rate per extractor\n\
+    \   e. Build artifact: schema='carnot.crane_extractor.v1',\n\
+    \      crane_detection_rate, arithmetic_detection_rate, llm_detection_rate,\n\
+    \      honest_verdict ('crane_wins' when crane_detection_rate>arithmetic AND\n\
+    \      crane_fp_rate<=llm_fp_rate; 'crane_viable' when crane>arithmetic; 'no_improvement' otherwise)\n\
+    \   f. Output: results/experiment_418_crane_extractor.json\n\
+    8. Write tests/python/test_crane_extractor.py (100% coverage).\n\
+    9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    10. Reconcile: update ops/conductor-log.md (RETRO-023: crane_extractor CLOSED — ALL 5 FILES DONE),\n\
+    \   ops/changelog.md, ops/status.md (RETRO-023 CLOSED if all 5 files valid).\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp410-live-precision-pipeline
-  milestone: 2026.06.17
-  deliverable: results/experiment_410_precision_live.json
-  title: 'Exp 410: Live precision pipeline — 200 GSM8K, 5 variants, 2 models (GPU required)'
+- id: exp419-live-precision-pipeline
+  milestone: 2026.06.24
+  deliverable: results/experiment_419_precision_live.json
+  title: 'Exp 419: Live precision pipeline — 200 GSM8K, 5 variants, 2 models — Carnot first headline number (GPU required)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
     \ style requirements.\nToday's date: {date}.\n\nCONTEXT: This is Carnot's headline metric\
-    \ experiment. Prior scripts exist with passing tests but were blocked for six milestones\
-    \ by GPU node offline. Exp 404 (this milestone) must have returned honest_verdict='gpu_confirmed_live'\
-    \ for this experiment to proceed.\n\nThe 5 pipeline variants × 2 models × 200 GSM8K produce\
-    \ Carnot's first credible precision-stack numbers. The LLMExtractor (Exp 366) and\
-    \ CRANEExtractionGate (Exp 409) are now both available — use CRANE for the FULL_STACK variant.\n\
-    \nEXISTING CODE TO READ FIRST:\n- results/experiment_404_preflight_v2.json — GPU state (MUST\
-    \ CHECK FIRST)\n- scripts/experiment_379_precision_execute.py — prior execution script\n\
-    - python/carnot/pipeline/precision_benchmark.py — PipelineVariant, PrecisionStackResult\
-    \ (Exp 340)\n- python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)\n- python/carnot/pipeline/llm_extractor.py\
-    \ — LLMExtractor (Exp 366)\n- python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate\
-    \ (Exp 409)\n\nTASK: Execute live precision pipeline benchmark.\n1. Read CLAUDE.md spec-first\
-    \ workflow.\n2. No new spec changes needed (SCENARIO-BENCH-020 covers this).\n3. Write tests\
-    \ FIRST (100% coverage) for any NEW helper functions only.\n4. Implement scripts/experiment_410_precision_live.py:\n\
-    \   a. Load results/experiment_404_preflight_v2.json.\n      If honest_verdict != 'gpu_confirmed_live':\
-    \ write blocked artifact, exit immediately. No simulated fallback.\n   b. ExperimentTemplate(410,\
-    \ 'Live precision pipeline', 'results/experiment_410_precision_live.json', requires_gpu=True)\n\
-    \   c. tmpl.setup()\n   d. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it',\
-    \ 'Qwen/Qwen3.5-0.8B'])\n   e. tmpl.setup_gpu([(name: Gemma4-E4B-it, hf_id: google/gemma-4-E4B-it,\
-    \ gpu: 0),\n      (name: Qwen3.5-0.8B, hf_id: Qwen/Qwen3.5-0.8B, gpu: 1)])\n   f. Run\
-    \ 200 GSM8K x 5 variants x 2 models (BatchedInferenceRunner, batch_size=8)\n   g. FULL_STACK\
-    \ variant uses CRANEExtractionGate (1x inference) then LLMExtractor fallback\n   h. Checkpoint\
-    \ every 50 questions via tmpl.checkpoint_save()\n   i. Build artifact: schema='carnot.precision_benchmark.v2',\n\
-    \      inference_mode='live_gpu', n_questions=200, per_variant_results,\n      honest_verdict\
-    \ ('live_improvement' when inference_mode=='live_gpu' AND signed_improvement>0;\n      'live_no_improvement'\
-    \ when live but <=0; 'blocked' otherwise)\n   j. Output: results/experiment_410_precision_live.json\n\
-    5. Write tests/python/test_experiment_410_precision_live.py (100% coverage).\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: if live_improvement: document headline\
-    \ number in ops/status.md and ops/changelog.md. This is Carnot's first credible precision\
-    \ metric.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
-    \ modify scripts/research_conductor.py.\n"
+    \ experiment. Exp 413 (this milestone) must have produced honest_verdict in\
+    \ ['gpu_confirmed_live','auto_fix_applied','gpu_detected_env_was_correct'] for this experiment\
+    \ to proceed. CRANE extractor (Exp 418) must be implemented for FULL_STACK variant.\
+    \ This has been blocked since Exp 340 (8 milestones ago). The EnvironmentAutoFix from Exp 413\
+    \ handles the env propagation — call apply_env_autofix() FIRST.\n\
+    \n5 pipeline variants x 2 models x 200 GSM8K produces Carnot's first credible\
+    \ precision-stack numbers. The CRANE extractor (1x cost) is the primary extractor for\
+    \ FULL_STACK; LLMConstraintExtractor is the fallback.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - results/experiment_413_env_autofix.json — GPU state AND env-fix status (CHECK FIRST)\n\
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix() (Exp 413) — call at top\n\
+    - scripts/experiment_379_precision_execute.py — prior execution script (import helpers)\n\
+    - python/carnot/pipeline/precision_benchmark.py — PipelineVariant, PrecisionStackResult (Exp 340)\n\
+    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)\n\
+    - python/carnot/pipeline/llm_extractor.py — LLMConstraintExtractor (Exp 366)\n\
+    - python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate (Exp 418)\n\
+    \nTASK: Execute live precision pipeline benchmark.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. No new spec changes needed (SCENARIO-BENCH-020 covers this).\n\
+    3. Write tests FIRST (100% coverage) for any NEW helper functions only.\n\
+    4. Implement scripts/experiment_419_precision_live.py:\n\
+    \   a. Call apply_env_autofix() FIRST (before any import that touches CUDA)\n\
+    \   b. Load results/experiment_413_env_autofix.json.\n\
+    \      If honest_verdict not in ['gpu_confirmed_live','auto_fix_applied','gpu_detected_env_was_correct']:\n\
+    \      write blocked artifact, exit immediately. No simulated fallback.\n\
+    \   c. ExperimentTemplate(419, 'Live precision pipeline', 'results/experiment_419_precision_live.json',\n\
+    \      requires_gpu=True)\n\
+    \   d. tmpl.setup()\n\
+    \   e. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it', 'Qwen/Qwen3.5-0.8B'])\n\
+    \   f. tmpl.setup_gpu([(name:'Gemma4-E4B-it', hf_id:'google/gemma-4-E4B-it', gpu:0),\n\
+    \      (name:'Qwen3.5-0.8B', hf_id:'Qwen/Qwen3.5-0.8B', gpu:1)])\n\
+    \   g. Run 200 GSM8K x 5 variants x 2 models (BatchedInferenceRunner, batch_size=8)\n\
+    \   h. FULL_STACK variant: CRANEExtractionGate primary, LLMConstraintExtractor fallback\n\
+    \   i. Checkpoint every 50 questions via tmpl.checkpoint_save()\n\
+    \   j. Build artifact: schema='carnot.precision_benchmark.v2',\n\
+    \      inference_mode='live_gpu', n_questions=200, per_variant_results,\n\
+    \      honest_verdict ('live_improvement' when inference_mode=='live_gpu' AND signed_improvement>0;\n\
+    \      'live_no_improvement' when live but <=0; 'blocked' otherwise)\n\
+    \   k. Output: results/experiment_419_precision_live.json\n\
+    5. Write tests/python/test_experiment_419_precision_live.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    7. Reconcile: if honest_verdict='live_improvement': document headline number in ops/status.md\n\
+    \   and ops/changelog.md. This is Carnot's first credible precision metric.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp411-live-humaneval
-  milestone: 2026.06.17
-  deliverable: results/experiment_411_humaneval_live.json
-  title: 'Exp 411: Live HumanEval code verification — 50 problems, CodeExtractor + PBT (GPU required)'
+- id: exp420-live-humaneval
+  milestone: 2026.06.24
+  deliverable: results/experiment_420_humaneval_live.json
+  title: 'Exp 420: Live HumanEval code verification — 50 problems, CodeExtractor + PBT + CRANE augmented prompts (GPU required)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
     \ style requirements.\nToday's date: {date}.\n\nCONTEXT: Code verification uses EXECUTION\
-    \ not regex — this is Carnot's MOST RELIABLE result domain. Exp 226 showed +3.0pp (19/164\
-    \ -> 24/164) on a live run. This experiment confirms that number with CRANE-augmented prompts.\n\
-    Check results/experiment_404_preflight_v2.json first. If GPU not confirmed, write blocked\
-    \ artifact immediately.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_404_preflight_v2.json\
-    \ — GPU state\n- scripts/experiment_380_humaneval_execute.py — prior execution script\n\
-    - python/carnot/pipeline/extract.py — CodeExtractor\n- python/carnot/pipeline/live_gpu_gate.py\
-    \ — LiveGPUGate\n- python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate (Exp\
-    \ 409)\n\nTASK: Execute live HumanEval code verification.\n1. Read CLAUDE.md spec-first workflow.\n\
-    2. No new spec changes needed (SCENARIO-BENCH-021 from Exp 369).\n3. Write tests FIRST (100%\
-    \ coverage) for any NEW helpers only.\n4. Implement scripts/experiment_411_humaneval_live.py:\n\
-    \   a. Load results/experiment_404_preflight_v2.json.\n      If honest_verdict != 'gpu_confirmed_live':\
-    \ blocked artifact, exit.\n   b. ExperimentTemplate(411, 'Live HumanEval', 'results/experiment_411_humaneval_live.json',\
-    \ requires_gpu=True)\n   c. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it'])\n\
-    \   d. tmpl.setup_gpu([(name: Gemma4-E4B-it, hf_id: google/gemma-4-E4B-it, gpu: 0)])\n\
-    \   e. Load 50 HumanEval problems; generate code with Gemma4-E4B-it\n   f. Run official\
-    \ tests (subprocess, 10s timeout) per solution\n   g. For FAILED solutions: CodeExtractor\
-    \ + VerifyRepairPipeline repair\n   h. Re-run tests on repaired; run PBT on passing solutions\n\
-    \   i. Build artifact: schema='carnot.humaneval_benchmark.v2',\n      inference_mode='live_gpu',\
-    \ pass_at_1_before, pass_at_1_after, signed_improvement,\n      pbt_bugs_found, honest_verdict\
-    \ ('code_verification_positive' when live AND signed_improvement>0)\n   j. Output: results/experiment_411_humaneval_live.json\n\
-    5. Write tests/python/test_experiment_411_humaneval_live.py (100% coverage).\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: update ops/conductor-log.md. Compare vs\
-    \ Exp 226 (+3.0pp baseline) in ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ not regex — this is Carnot's MOST RELIABLE result domain. Exp 226 showed +3.0pp\
+    \ (19/164 -> 24/164) on a live run. This experiment confirms that number and adds\
+    \ CRANE-augmented prompts. Gate on Exp 413 GPU preflight. Call apply_env_autofix() first.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - results/experiment_413_env_autofix.json — GPU state (MUST CHECK FIRST)\n\
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix() (Exp 413)\n\
+    - scripts/experiment_380_humaneval_execute.py — prior execution script (import helpers)\n\
+    - python/carnot/pipeline/extract.py — CodeExtractor\n\
+    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate\n\
+    - python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate (Exp 418)\n\
+    \nTASK: Execute live HumanEval code verification.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. No new spec changes needed (SCENARIO-BENCH-021 from Exp 369).\n\
+    3. Write tests FIRST (100% coverage) for any NEW helpers only.\n\
+    4. Implement scripts/experiment_420_humaneval_live.py:\n\
+    \   a. Call apply_env_autofix() FIRST\n\
+    \   b. Load results/experiment_413_env_autofix.json.\n\
+    \      If honest_verdict not in gpu-confirmed variants: blocked artifact, exit.\n\
+    \   c. ExperimentTemplate(420, 'Live HumanEval', 'results/experiment_420_humaneval_live.json',\n\
+    \      requires_gpu=True)\n\
+    \   d. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it'])\n\
+    \   e. tmpl.setup_gpu([(name:'Gemma4-E4B-it', hf_id:'google/gemma-4-E4B-it', gpu:0)])\n\
+    \   f. Load 50 HumanEval problems; generate code with Gemma4-E4B-it\n\
+    \   g. Run official tests (subprocess, 10s timeout) per solution\n\
+    \   h. For FAILED solutions: CodeExtractor + VerifyRepairPipeline repair\n\
+    \   i. Re-run tests on repaired; run PBT on passing solutions\n\
+    \   j. Build artifact: schema='carnot.humaneval_benchmark.v2',\n\
+    \      inference_mode='live_gpu', pass_at_1_before, pass_at_1_after, signed_improvement,\n\
+    \      pbt_bugs_found,\n\
+    \      honest_verdict ('code_verification_positive' when live AND signed_improvement>0)\n\
+    \   k. Output: results/experiment_420_humaneval_live.json\n\
+    5. Write tests/python/test_experiment_420_humaneval_live.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    7. Reconcile: update ops/conductor-log.md. Compare vs Exp 226 (+3.0pp baseline) in\n\
+    \   ops/changelog.md. Document headline result if positive.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp412-live-adversarial-gsm8k
-  milestone: 2026.06.17
-  deliverable: results/experiment_412_adversarial_live.json
-  title: "Exp 412: Live adversarial GSM8K — Carnot's headline credibility test (GPU required)"
+- id: exp421-live-adversarial-gsm8k
+  milestone: 2026.06.24
+  deliverable: results/experiment_421_adversarial_live.json
+  title: "Exp 421: Live adversarial GSM8K — Carnot's headline credibility test vs Apple benchmark (GPU required)"
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
     \ style requirements.\nToday's date: {date}.\n\nCONTEXT: THIS IS CARNOT'S HEADLINE CREDIBILITY\
     \ EXPERIMENT. Apple (arXiv 2410.05229) showed frontier LLMs drop up to 65% accuracy when\
-    \ one irrelevant sentence is appended to GSM8K math problems. Even o1-preview drops 92.7%\
-    \ -> 77.4%. Carnot's thesis: constraint verification is INVARIANT to irrelevant context —\
-    \ the verify-repair loop checks arithmetic, not keyword patterns.\n\nNow using CRANEExtractionGate\
-    \ (Exp 409) as the primary extractor — prompt-side suffix elicits structured claims at 1x\
-    \ inference cost. Check results/experiment_404_preflight_v2.json first.\n\nEXISTING CODE\
-    \ TO READ FIRST:\n- results/experiment_404_preflight_v2.json — GPU state\n- scripts/experiment_381_adversarial_execute.py\
-    \ — prior execution script\n- python/carnot/pipeline/adversarial_gsm8k.py — AdversarialGSMQuestion,\
-    \ harness\n- python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate (Exp 409 —\
-    \ use for repair)\n- python/carnot/pipeline/llm_extractor.py — LLMExtractor fallback\n-\
-    \ python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate\n\nTASK: Execute live adversarial\
-    \ GSM8K benchmark.\n1. Read CLAUDE.md spec-first workflow.\n2. No new spec changes needed\
-    \ (SCENARIO-BENCH-022 from Exp 370).\n3. Write tests FIRST (100% coverage) for any NEW\
-    \ helpers only.\n4. Implement scripts/experiment_412_adversarial_live.py:\n   a. Load results/experiment_404_preflight_v2.json.\n\
-    \      If honest_verdict != 'gpu_confirmed_live': blocked artifact, exit. Do NOT simulate.\n\
-    \   b. ExperimentTemplate(412, 'Live adversarial GSM8K', 'results/experiment_412_adversarial_live.json',\
-    \ requires_gpu=True)\n   c. LiveGPUGate.require_live_or_blocked (no simulated fallback)\n\
-    \   d. tmpl.setup_gpu([Gemma4-E4B-it GPU0, Qwen3.5-0.8B GPU1])\n   e. Load 50 GSM8K questions;\
-    \ build adversarial variants (seed=42)\n   f. Run three conditions with Gemma4-E4B-it (BatchedInferenceRunner,\
-    \ batch_size=8):\n      standard / adversarial / repaired_adversarial (CRANEExtractionGate\
-    \ primary + LLMExtractor fallback + Ising energy)\n   g. Compute accuracy_drop, repair_improvement,\n\
-    \      robustness_invariant_holds (adversarial_accuracy >= standard_accuracy - 0.05 after\
-    \ repair)\n   h. Checkpoint every 25 questions\n   i. Build artifact: schema='carnot.adversarial_gsm8k.v2',\n\
-    \      inference_mode='live_gpu', standard_accuracy, adversarial_accuracy, accuracy_drop,\n\
-    \      repaired_adversarial_accuracy, repair_improvement, robustness_invariant_holds,\n\
-    \      honest_verdict (improvement_positive/degradation_positive/neutral/blocked)\n   j.\
-    \ Output: results/experiment_412_adversarial_live.json\n5. Write tests/python/test_experiment_412_adversarial_live.py\
-    \ (100% coverage).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile:\
-    \ if improvement_positive: document prominently in ops/status.md — validates Carnot's core\
-    \ thesis.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
-    \ modify scripts/research_conductor.py.\n"
+    \ one irrelevant sentence is appended to GSM8K problems. Even o1-preview drops 92.7% -> 77.4%.\
+    \ Carnot's thesis: constraint verification is INVARIANT to irrelevant context — the verify-repair\
+    \ loop checks arithmetic, not keyword patterns. CRANEExtractionGate (Exp 418) is the primary\
+    \ extractor — 1x inference, prompts the model to output structured claim blocks regardless\
+    \ of the irrelevant sentence noise. Gate on Exp 413. Call apply_env_autofix() first.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - results/experiment_413_env_autofix.json — GPU state (MUST CHECK FIRST)\n\
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix() (Exp 413)\n\
+    - python/carnot/pipeline/adversarial_gsm8k.py — AdversarialGSMQuestion, build_adversarial_questions\n\
+    \  (Exp 354) — the 20-distractor pool and irrelevant-sentence variants\n\
+    - scripts/experiment_355_adversarial_gsm8k_benchmark.py — prior benchmark script (import helpers)\n\
+    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate\n\
+    - python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate (Exp 418)\n\
+    \nTASK: Execute live adversarial GSM8K benchmark.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. No new spec changes needed (SCENARIO-BENCH-017/018/019 from Exp 354/355).\n\
+    3. Write tests FIRST (100% coverage) for any NEW helpers only.\n\
+    4. Implement scripts/experiment_421_adversarial_gsm8k_live.py:\n\
+    \   a. Call apply_env_autofix() FIRST\n\
+    \   b. Load results/experiment_413_env_autofix.json.\n\
+    \      If honest_verdict not in gpu-confirmed variants: blocked artifact, exit.\n\
+    \   c. ExperimentTemplate(421, 'Live adversarial GSM8K', 'results/experiment_421_adversarial_live.json',\n\
+    \      requires_gpu=True)\n\
+    \   d. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it', 'Qwen/Qwen3.5-0.8B'])\n\
+    \   e. DualGPURunner: Gemma4-E4B-it on GPU 0, Qwen3.5-0.8B on GPU 1\n\
+    \   f. Run 3 conditions × 2 models:\n\
+    \      Condition 1: standard GSM8K (no adversarial noise) — baseline accuracy\n\
+    \      Condition 2: adversarial GSM8K (irrelevant-sentence variant) — measures drop\n\
+    \      Condition 3: adversarial + Carnot verify-repair (CRANE extractor) — measures recovery\n\
+    \   g. Primary criterion: delta(VR, adversarial) > delta(VR, standard)\n\
+    \      i.e., Carnot recovers MORE accuracy on adversarial than it adds on standard\n\
+    \   h. Build artifact: schema='carnot.adversarial_gsm8k.v2',\n\
+    \      inference_mode='live_gpu', per_model_results, headline_result,\n\
+    \      honest_verdict ('improvement_positive' when live AND repair_improvement>0 on adversarial;\n\
+    \      'degradation' when repair_improvement<0; 'neutral' when <=0; 'blocked' when not live)\n\
+    \   i. Output: results/experiment_421_adversarial_live.json\n\
+    5. Write tests/python/test_experiment_421_adversarial_gsm8k_live.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    7. Reconcile: if honest_verdict='improvement_positive': document as Carnot's headline\n\
+    \   credibility result in ops/status.md and ops/changelog.md. Compare vs Apple paper baseline.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp413-live-extraction-comparison
-  milestone: 2026.06.17
-  deliverable: results/experiment_413_extraction_live.json
-  title: 'Exp 413: Live extraction comparison — CRANE vs LLMExtractor vs regex on IT models (GPU required, RETRO-016)'
+- id: exp422-vprm-fover-step-labels
+  milestone: 2026.06.24
+  deliverable: results/experiment_422_vprm_step_labels.json
+  title: 'Exp 422: VPRM training via FOVER — Z3-annotated GSM8K step labels train IsingEBM as process reward model'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-016 — Which extractor is\
-    \ best for instruction-tuned models? ArithmeticExtractor found ZERO violations on Gemma4-E4B-it\
-    \ (0/20 including 4 wrong answers). LLMExtractor (Exp 366) and CRANEExtractionGate (Exp\
-    \ 409) are designed to fix this. This experiment definitively answers the question on live\
-    \ GPU data.\n\nThree extractors: ArithmeticExtractor (regex, base models), LLMExtractor (2x\
-    \ inference, any format), CRANEExtractionGate (1x inference, prompt-side).\nCheck results/experiment_404_preflight_v2.json\
-    \ first.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_404_preflight_v2.json — GPU\
-    \ state\n- scripts/experiment_382_extraction_execute.py — prior execution script\n- python/carnot/pipeline/extractor_comparison.py\
-    \ — ExtractorComparisonResult (Exp 367)\n- python/carnot/pipeline/llm_extractor.py — LLMExtractor\
-    \ (Exp 366)\n- python/carnot/pipeline/crane_extractor.py — CRANEExtractionGate (Exp 409)\n\
-    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate\n\nTASK: Execute live extraction\
-    \ comparison.\n1. Read CLAUDE.md spec-first workflow.\n2. No new spec changes needed (REQ-EXTRACT-023,\
-    \ SCENARIO-EXTRACT-047/048 from Exp 367).\n3. Write tests FIRST (100% coverage) for any\
-    \ NEW helpers only.\n4. Implement scripts/experiment_413_extraction_live.py:\n   a. Load\
-    \ results/experiment_404_preflight_v2.json.\n      If honest_verdict != 'gpu_confirmed_live':\
-    \ blocked artifact, exit.\n   b. ExperimentTemplate(413, 'Live extraction comparison',\
-    \ 'results/experiment_413_extraction_live.json', requires_gpu=True)\n   c. LiveGPUGate.require_live_or_blocked\n\
-    \   d. Load 30 GSM8K questions; run live Gemma4-E4B-it inference\n   e. Label responses:\
-    \ is_correct (compare to GSM8K ground truth)\n   f. Run three extractors: ArithmeticExtractor,\
-    \ CRANEExtractionGate(llm_caller=live_qwen), LLMExtractor(llm_caller=live_qwen)\n   g.\
-    \ Count TP/FP/FN/TN per extractor; compute detection_rate and fp_rate\n   h. Build artifact:\
-    \ schema='carnot.extraction_comparison.v1',\n      n_questions=30, inference_mode='live_gpu',\n\
-    \      per_extractor_results, winner_extractor (by detection_rate, fp_rate tiebreak),\n\
-    \      honest_verdict ('live_gpu_winner' when ALL results live_gpu; 'blocked' otherwise)\n\
-    \   i. Output: results/experiment_413_extraction_live.json\n5. Write tests/python/test_experiment_413_extraction_live.py\
-    \ (100% coverage).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile:\
-    \ if live_gpu_winner: document winner in ops/changelog.md. Mark RETRO-016 CLOSED in ops/status.md.\nRun:\
-    \ JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: New research direction derived from\
+    \ two recent papers:\n\
+    - arXiv 2601.17223 (VPRM): Verifiable Process Reward Models use deterministic, rule-based\
+    \ verifiers to score EACH REASONING STEP — not just the final answer. Achieves up to 20%\
+    \ higher F1 than neural judges, zero reward hacking. Carnot's Ising/KAN IS a VPRM: energy\
+    \ IS the deterministic verifier.\n\
+    - arXiv 2505.15960 (FOVER): Synthesizes PRM training data via Z3/Isabelle annotations.\
+    \ Take a reasoning trace, split into steps, send each step to Z3, get correct/incorrect labels.\
+    \ Train PRM on those labels. No human annotation needed.\n\
+    \nWHY THIS CLOSES FR-11: The self-learning loop was blocked because we had no REAL training\
+    \ signal. FOVER provides it: Z3 annotates each GSM8K reasoning step as correct or incorrect.\
+    \ IsingEBM trains on those labels via CD. After training, Ising can evaluate step correctness\
+    \ WITHOUT Z3. This is genuine learning from real data — the energy function becomes the process\
+    \ reward model.\n\
+    \nIMPORTANT: This experiment can run on CPU (CD training is CPU-fast). If live GPU results\
+    \ are available from Exp 419 (CoT traces), use them; otherwise generate synthetic reasoning\
+    \ traces with known step errors.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/llm_z3_formalizer.py — LLMz3Formalizer, _exec_z3_snippet (Exp 357)\n\
+    - python/carnot/models/ising.py or python/carnot/models/ — IsingEBM\n\
+    - python/carnot/training/ — contrastive divergence training\n\
+    - results/experiment_419_precision_live.json — live CoT traces if available\n\
+    - python/carnot/pipeline/extract.py — ArithmeticExtractor for step parsing\n\
+    \nTASK: Implement VPRM training pipeline using FOVER-style Z3 step annotation.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Add REQ-LEARN-030 (VPRM: IsingEBM trained on Z3-annotated step labels),\n\
+    \   REQ-LEARN-031 (FOVER annotation: each step verified by Z3 without human labels),\n\
+    \   REQ-LEARN-032 (VPRM generalizes: after training, evaluates steps without Z3),\n\
+    \   SCENARIO-LEARN-054/055/056 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    3. Write tests FIRST (100% coverage) for:\n\
+    \   - ReasoningStep(step_text: str, step_index: int, parent_question: str,\n\
+    \     z3_label: Literal['correct','incorrect','not_formalizable'] | None = None)\n\
+    \   - parse_cot_into_steps(response_text: str) -> list[ReasoningStep]:\n\
+    \     Split on sentence boundaries and 'Step N:' markers.\n\
+    \     Each step is one arithmetic statement or logical claim.\n\
+    \   - annotate_step_with_z3(step: ReasoningStep, llm_caller=None) -> ReasoningStep:\n\
+    \     Use LLMz3Formalizer (or CI stub) to formalize the step into Z3.\n\
+    \     Run Z3. Label as 'correct' (sat), 'incorrect' (unsat), 'not_formalizable'.\n\
+    \   - build_vprm_training_pairs(steps: list[ReasoningStep]) -> list[tuple[ReasoningStep, ReasoningStep]]:\n\
+    \     Contrastive pairs: (correct step, incorrect step) from same question.\n\
+    \   - VPRMTrainingResult(n_steps_annotated: int, n_correct: int, n_incorrect: int,\n\
+    \     n_not_formalizable: int, before_auroc: float, after_auroc: float,\n\
+    \     honest_verdict: str)\n\
+    \   - train_ising_as_vprm(pairs: list, n_epochs: int = 50) -> tuple[IsingEBM, float]:\n\
+    \     Train IsingEBM via CD on (correct_step, incorrect_step) pairs.\n\
+    \     Return (trained_model, after_auroc).\n\
+    \   - Test: parsing splits 'Step 1: ... Step 2: ...' correctly\n\
+    \   - Test: Z3 stub labels arithmetic equalities as correct, inequalities as incorrect\n\
+    \   - Test: CD training increases AUROC from 0.5 baseline\n\
+    4. Implement python/carnot/pipeline/vprm_training.py with all above.\n\
+    \   Verbose docstrings: WHY VPRM framing matters (hardware-acceleratable process reward),\n\
+    \   WHY Z3 labels are superior to human annotation (deterministic, no bias),\n\
+    \   HOW this closes FR-11 (energy function IS the reward model after training).\n\
+    5. Export ReasoningStep, VPRMTrainingResult, train_ising_as_vprm from carnot.pipeline.__init__.\n\
+    6. Write scripts/experiment_422_vprm_step_labels.py using ExperimentTemplate(422):\n\
+    \   a. Load Exp 419 CoT traces if available (results/experiment_419_precision_live.json);\n\
+    \      else generate 50 synthetic GSM8K-style reasoning traces with deliberate step errors\n\
+    \   b. parse_cot_into_steps on each trace\n\
+    \   c. annotate_step_with_z3 on each step (CI stub if llm_caller unavailable)\n\
+    \   d. build_vprm_training_pairs from annotated steps\n\
+    \   e. train_ising_as_vprm on pairs (50 epochs CPU CD)\n\
+    \   f. Evaluate AUROC on held-out 20% of annotated steps\n\
+    \   g. Build artifact: schema='carnot.vprm_training.v1',\n\
+    \      n_real_traces (from Exp 419) vs n_synthetic,\n\
+    \      n_steps_annotated, n_correct, n_incorrect, before_auroc, after_auroc,\n\
+    \      honest_verdict ('vprm_trained_on_real' when n_real_traces>0 AND after_auroc>before_auroc;\n\
+    \      'vprm_trained_on_synthetic' when n_real_traces==0 AND after_auroc>before_auroc;\n\
+    \      'no_improvement' when after_auroc<=before_auroc)\n\
+    \   h. Save trained model to results/vprm_ising_422.safetensors\n\
+    \   i. Output: results/experiment_422_vprm_step_labels.json\n\
+    7. Write tests/python/test_vprm_training.py (100% coverage).\n\
+    8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    9. Reconcile: if vprm_trained_on_real: document as FR-11 research contribution in\n\
+    \   ops/status.md and ops/changelog.md. Update _bmad/traceability.md FR-11 row.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp414-eorm-jepa-retrain-live-pairs
-  milestone: 2026.06.17
-  deliverable: results/experiment_414_retrain_live.json
-  title: 'Exp 414: EORM+JEPA retrain on live pairs from Exps 410-413 (CPU training)'
+- id: exp423-eorm-jepa-retrain-live-fr11
+  milestone: 2026.06.24
+  deliverable: results/experiment_423_retrain_live.json
+  title: 'Exp 423: EORM + JEPA retrain on live data + FR-11 self-learning relay validation (GPU preferred)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: Exps 410-413 (this milestone)\
-    \ should have produced live GPU inference results with real (question, response, is_correct)\
-    \ pairs. This experiment retrains EORM and JEPA on those real pairs via CPU training.\
-    \ Previous retrain attempts (Exps 347, 359, 383, 398) all returned insufficient_pairs\
-    \ because live GPU experiments were blocked. If any of 410-413 produced live data, this\
-    \ is the first genuine retrain.\n\nEORM (Exp 346): predicts CoT correctness. Target:\
-    \ AUC-ROC >= 0.65 (vs 0.500 synthetic baseline).\nJEPA (Exp 147): predicts violations\
-    \ from partial responses. Target: AUC-ROC improvement.\n\nEXISTING CODE TO READ FIRST:\n\
-    - python/carnot/models/eorm.py — EORMModel, EORMTrainer\n- python/carnot/models/eorm_retrain.py\
-    \ — load_real_cot_pairs, merge_cot_corpora (Exp 359)\n- python/carnot/embeddings/jepa_retrain.py\
-    \ — JEPARetrainer (Exp 347)\n- scripts/experiment_383_models_retrain.py — prior combined\
-    \ retrain script (READ CAREFULLY)\n- results/experiment_410_precision_live.json — live\
-    \ pairs (if exists and not blocked)\n- results/experiment_411_humaneval_live.json — live\
-    \ pairs (if exists)\n- results/experiment_412_adversarial_live.json — live pairs (if exists)\n\
-    \nTASK: Retrain EORM and JEPA on real live pairs from this milestone.\n1. Read CLAUDE.md\
-    \ spec-first workflow.\n2. No new spec changes needed if SCENARIO-LEARN-048 already in\
-    \ spec; add if missing.\n3. Write tests FIRST (100% coverage) for any NEW helpers only.\n\
-    4. Implement scripts/experiment_414_retrain_live.py:\n   a. ExperimentTemplate(414, 'EORM+JEPA\
-    \ retrain on live pairs', 'results/experiment_414_retrain_live.json') — CPU, no GPU required\n\
-    \   b. tmpl.setup()\n   c. Load real pairs from Exps 410-413 result files\n      (graceful\
-    \ load: skip files with status='blocked' or inference_mode!='live_gpu')\n   d. EORM retrain:\n\
-    \      If len(eorm_pairs) < 50: eorm_verdict = 'insufficient_real_pairs'\n      Else: train\
-    \ 200 epochs on 80% split; evaluate AUC-ROC on 20%\n      Save: results/eorm_model_414_live.safetensors\n\
-    \   e. JEPA retrain:\n      If len(jepa_pairs) < 30: jepa_verdict = 'insufficient_real_pairs'\n\
-    \      Else: train 30 epochs; save results/jepa_predictor_414_live.safetensors\n   f.\
-    \ Build artifact: schema='carnot.combined_retrain.v2',\n      retrain_mode ('real_data'\
-    \ if any live pairs, 'synthetic_only' if all blocked),\n      honest_verdict ('both_improved'\
-    \ / 'eorm_only' / 'jepa_only' / 'neither' / 'insufficient_pairs')\n   g. Output: results/experiment_414_retrain_live.json\n\
-    5. Write tests/python/test_experiment_414_retrain_live.py (100% coverage).\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: update ops/conductor-log.md, ops/changelog.md.\nRun:\
-    \ JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: For the FIRST TIME, Carnot may have\
+    \ real (response, violation) pairs from live GPU experiments (Exps 419-421). This experiment\
+    \ retrains EORM (attention-based outcome ranker) and JEPA predictor on those live pairs,\
+    \ then runs the full FR-11 self-learning relay. If live data is available:\n\
+    - EORM retrain: compare AUC-ROC before vs after training on real pairs\n\
+    - JEPA retrain: compare prediction accuracy before vs after on real (partial, violation) pairs\n\
+    - FR-11 relay: run 4 batches of live questions through SelfLearningRelay, compare batch 1 vs 4\n\
+    \nIf live data is NOT available (Exps 419-421 blocked): use synthetic fallback but report\n\
+    honest_verdict='synthetic_only'. This experiment always completes.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - results/experiment_419_precision_live.json — live CoT pairs (if available)\n\
+    - results/experiment_420_humaneval_live.json — live code pairs (if available)\n\
+    - results/experiment_421_adversarial_live.json — live adversarial pairs (if available)\n\
+    - python/carnot/models/eorm_retrain.py — EORMRetrainResult, load_real_cot_pairs (Exp 359)\n\
+    - python/carnot/embeddings/jepa_energy.py — JEPAViolationPredictor (Exp 144/347)\n\
+    - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay, build_relay_artifact (Exp 361)\n\
+    - scripts/experiment_383_models_retrain.py — prior combined retrain script\n\
+    \nTASK: Retrain EORM + JEPA on live data and run FR-11 relay.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. No new spec changes (REQ-LEARN-025/026/027 from Exps 359/361 cover this).\n\
+    3. Write tests FIRST (100% coverage) for any NEW helpers only.\n\
+    4. Implement scripts/experiment_423_retrain_live.py:\n\
+    \   a. Load Exps 419/420/421 result JSONs; extract (response, violation) pairs\n\
+    \      n_real_gsm8k_pairs = count of real pairs from Exp 419\n\
+    \      n_real_humaneval_pairs = count of real pairs from Exp 420\n\
+    \      n_real_adversarial_pairs = count of real pairs from Exp 421\n\
+    \   b. EORM retrain:\n\
+    \      If n_real_gsm8k_pairs >= 10: retrain on real; record before_auc, after_auc, verdict='real_data'\n\
+    \      Else: synthetic fallback; verdict='synthetic_only'\n\
+    \   c. JEPA retrain:\n\
+    \      Extract (partial_response, violation_flag) pairs from live data\n\
+    \      If n_pairs >= 10: retrain JEPA; record before_auc, after_auc\n\
+    \      Else: synthetic fallback\n\
+    \   d. FR-11 relay:\n\
+    \      Run SelfLearningRelay on available live data (4 batches if n_real >= 40;\n\
+    \      else synthetic batches)\n\
+    \      Record batch_1_accuracy vs batch_4_accuracy, relay_improved\n\
+    \   e. Build artifact: schema='carnot.retrain_live.v1',\n\
+    \      n_real_pairs_total, eorm_verdict, jepa_verdict,\n\
+    \      eorm_before_auc, eorm_after_auc, jepa_before_auc, jepa_after_auc,\n\
+    \      relay_improved, honest_verdict:\n\
+    \        'real_data_improvement' when n_real_pairs_total>0 AND\n\
+    \          (eorm_after_auc>eorm_before_auc OR jepa_after_auc>jepa_before_auc)\n\
+    \        'real_data_no_improvement' when n_real_pairs_total>0 AND both flat\n\
+    \        'synthetic_only' when n_real_pairs_total==0\n\
+    \   f. Save models: results/eorm_model_423_real.safetensors,\n\
+    \      results/jepa_predictor_423_real.safetensors\n\
+    \   g. Output: results/experiment_423_retrain_live.json\n\
+    5. Write tests/python/test_experiment_423_retrain_live.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    7. Reconcile: if honest_verdict='real_data_improvement': mark FR-11 as CLOSED in\n\
+    \   ops/status.md and _bmad/traceability.md (long-awaited closure). Otherwise mark\n\
+    \   FR-11 as 'partial — real data available but no improvement yet'.\n\
+    \   Update ops/changelog.md with result.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp415-fr11-relay-live
-  milestone: 2026.06.17
-  deliverable: results/experiment_415_relay_live.json
-  title: 'Exp 415: FR-11 self-learning relay live — close RETRO-024, confirm autonomous learning (GPU required)'
+- id: exp424-retro-npu-iron
+  milestone: 2026.06.24
+  deliverable: results/experiment_424_retro_and_npu.json
+  title: 'Exp 424: Operational retrospective milestone 2026.06.24 + AMD NPU via IRON bare-metal (5-milestone NPU unblock attempt)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-024 (HIGH) — FR-11 (PRD\
-    \ requirement: Autonomous Self-Learning Loop) has never been confirmed on live data. Four\
-    \ consecutive milestones of honest_verdict='synthetic_only'. This is the MANDATORY SELF-LEARNING\
-    \ EXPERIMENT for this milestone (research-program.md requirement).\n\nTHE TARGET: honest_verdict='learning_confirmed'\
-    \ — run 4 live batches with Gemma4-E4B-it, each building on learning from the previous.\
-    \ batch4_accuracy > batch1_accuracy with inference_mode='live_gpu'.\n\nNEW IN THIS MILESTONE:\
-    \ JitRL (Exp 406) is now available for threshold modulation. EORM (Exp 414) may be retrained\
-    \ on real pairs. Use both.\n\nCheck results/experiment_404_preflight_v2.json first.\
-    \ If GPU not confirmed, write blocked artifact.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_404_preflight_v2.json\
-    \ — GPU state\n- python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay (Exp 361)\n\
-    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)\n- python/carnot/pipeline/jitrl_memory.py\
-    \ — JitRLConstraintMemory (Exp 406 — NEW)\n- results/experiment_414_retrain_live.json —\
-    \ EORM retrain status\n- results/eorm_model_414_live.safetensors — retrained EORM (if exists)\n\
-    - scripts/experiment_384_relay_live.py — prior relay script\n\nTASK: Execute FR-11 self-learning\
-    \ relay with live GPU.\n1. Read CLAUDE.md spec-first workflow.\n2. Add SCENARIO-LEARN-050\
-    \ (live self-learning improvement confirmed) if not in spec.\n3. Write tests FIRST (100%\
-    \ coverage) for any NEW helpers only.\n4. Implement scripts/experiment_415_relay_live.py:\n\
-    \   a. Load results/experiment_404_preflight_v2.json.\n      If honest_verdict != 'gpu_confirmed_live':\
-    \ blocked artifact, exit.\n   b. ExperimentTemplate(415, 'FR-11 self-learning relay live',\
-    \ 'results/experiment_415_relay_live.json', requires_gpu=True)\n   c. LiveGPUGate.require_live_or_blocked\
-    \ — NO simulated fallback\n   d. Load retrained EORM: try eorm_model_414_live.safetensors,\n\
-    \      then eorm_model_383_real.safetensors, then eorm_model_346.safetensors\n   e. Create\
-    \ JitRLConstraintMemory() (from Exp 406) — wire into SelfLearningRelay\n   f. Run 4 batches\
-    \ of 25 GSM8K with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8):\n      Batch 1:\
-    \ baseline (no learned state)\n      Batch 2: Tier 1 JitRL threshold modulation + PerModelFPTracker\n\
-    \      Batch 3: Batch 2 + Tier 2 template addition (CaseMemoryTemplateWiring)\n      Batch\
-    \ 4: all tiers including EORM gate\n   g. Record per-batch: accuracy, n_tier1_updates,\
-    \ n_tier2_activated, tier3_auc\n   h. improved = batch4_accuracy > batch1_accuracy\n  \
-    \ i. Build artifact: schema='carnot.self_learning_relay.v2',\n      inference_mode='live_gpu',\
-    \ learning_trajectory, batch1_accuracy, batch4_accuracy, improved,\n      honest_verdict\
-    \ ('learning_confirmed' when improved AND live_gpu;\n      'live_no_improvement' when live\
-    \ but not improved; 'blocked' otherwise)\n   j. Output: results/experiment_415_relay_live.json\n\
-    5. Write tests/python/test_experiment_415_relay_live.py (100% coverage).\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile:\n   If learning_confirmed: mark FR-11\
-    \ CLOSED in _bmad/traceability.md; update ops/status.md prominently.\n   Mark RETRO-024\
-    \ CLOSED in ops/status.md.\n   Document in ops/changelog.md: FR-11 CLOSED — autonomous\
-    \ self-learning confirmed on live GPU data.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
-    \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp416-constraint-graph-builder
-  milestone: 2026.06.17
-  deliverable: python/carnot/pipeline/constraint_graph_builder.py
-  title: 'Exp 416: MathAgent constraint graph builder — LLMExtractor → formal constraint graph (arXiv 2604.11188)'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: arXiv 2604.11188 (MathAgent, 2026-04):\
-    \ 'Legislator-Executor paradigm where a Legislator agent synthesizes a constraint graph as a\
-    \ generation blueprint; an Executor agent generates text that must satisfy the graph. Constraint\
-    \ graph encodes: variable types, value ranges, logical dependencies between steps. Seed-free\
-    \ synthesis — no human-written examples needed.'\n\nWHY THIS MATTERS: The current LLMExtractor\
-    \ (Exp 366) extracts free-form claims from model outputs. A ConstraintGraphBuilder instead\
-    \ generates a FORMAL CONSTRAINT GRAPH from the problem statement itself — before generation\
-    \ even starts. The graph then drives Ising verification directly: constraint graph → Ising\
-    \ coupling matrix. This is what LLMExtractor should evolve into: a structured Legislator\
-    \ that pre-computes the verification space for any problem.\n\nThis is also the first step\
-    \ toward Phase 3 (Kona parity): instead of pattern-matching after generation, pre-compute\
-    \ the constraint space and guide generation toward it.\n\nThis is CPU-only and independent\
-    \ of GPU state.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/llm_extractor.py\
-    \ — LLMExtractor (Exp 366) — what ConstraintGraphBuilder extends\n- python/carnot/pipeline/constraint_template_library.py\
-    \ — ConstraintTemplateLibrary (Exp 343)\n- python/carnot/verify/energy.py — ConstraintTerm\
-    \ protocol\n- python/carnot/models/ising.py — IsingEBM (coupling matrix structure)\n\n\
-    TASK: Implement ConstraintGraphBuilder.\n1. Read CLAUDE.md spec-first workflow.\n2. Add\
-    \ REQ-EXTRACT-026 (ConstraintGraphBuilder generates formal constraint graphs from problem\
-    \ statements before generation),\n   REQ-EXTRACT-027 (constraint graph converts to Ising\
-    \ coupling matrix),\n   SCENARIO-EXTRACT-052/053/054 to spec.\n3. Write tests FIRST (100%\
-    \ coverage) for:\n   - ConstraintVariable(name: str, var_type: Literal['integer','float','boolean'],\
-    \ lower_bound: float|None, upper_bound: float|None, description: str)\n   - ConstraintEdge(var_a:\
-    \ str, var_b: str, relation: Literal['equal','less_than','greater_than','sum','product'],\n\
-    \     coefficient_a: float = 1.0, coefficient_b: float = 1.0, rhs: float|None = None)\n\
-    \   - ConstraintGraph(variables: list[ConstraintVariable], edges: list[ConstraintEdge],\
-    \ problem_description: str)\n   - ConstraintGraph.to_ising_coupling_matrix() -> jnp.ndarray:\n\
-    \     Returns n_vars x n_vars symmetric matrix. Equality edge (a+b=c): J[a][b]=1, J[b][c]=-1,\
-    \ etc.\n     Range constraints become local bias terms (single-variable energy).\n   -\
-    \ ConstraintGraphBuilder(llm_caller=None)\n   - ConstraintGraphBuilder.build_from_problem(problem_text:\
-    \ str) -> ConstraintGraph:\n     CI-safe mode (llm_caller=None): parse simple 'what is\
-    \ X+Y?' patterns deterministically.\n     LLM mode: prompt LLM to extract variables, bounds,\
-    \ and relations in JSON format.\n   - ConstraintGraphBuilder.graph_to_constraint_terms(graph)\
-    \ -> list[ConstraintTerm]:\n     Converts graph edges to ConstraintTerms usable by VerifyRepairPipeline.\n\
-    4. Implement python/carnot/pipeline/constraint_graph_builder.py.\n   Verbose docstrings\
-    \ explaining WHY constraint graphs pre-compute the verification space, WHY this is the\
-    \ Legislator role (arXiv 2604.11188), HOW the coupling matrix maps to IsingEBM, the Phase\
-    \ 3 path (constraint graph = Kona's energy landscape specification).\n5. Export ConstraintGraphBuilder,\
-    \ ConstraintGraph, ConstraintVariable, ConstraintEdge from carnot.pipeline.__init__.\n6.\
-    \ Write scripts/experiment_416_constraint_graph.py using ExperimentTemplate(416):\n   a.\
-    \ CPU-only, no GPU required\n   b. Create 5 synthetic math problems (shopping totals, distance,\
-    \ percentage, mixture, rate)\n   c. For each: ConstraintGraphBuilder().build_from_problem(problem)\n\
-    \   d. Convert each graph to coupling matrix and constraint terms\n   e. Verify coupling\
-    \ matrix is symmetric and non-trivial (has non-zero off-diagonal entries)\n   f. Run IsingEBM\
-    \ with coupling matrix on satisfying vs violating configurations\n   g. Build artifact:\
-    \ schema='carnot.constraint_graph.v1',\n      n_problems=5, graphs_generated, mean_n_variables,\
-    \ mean_n_edges,\n      coupling_matrices_valid, ising_separation_ratio,\n      honest_verdict\
-    \ ('graphs_viable' when all graphs generated AND coupling_matrices_valid AND ising_separation_ratio>1.0;\n\
-    \      'partial' when some work; 'no_separation' otherwise)\n   h. Output: results/experiment_416_constraint_graph.json\n\
-    7. Write tests/python/test_constraint_graph_builder.py (100% coverage).\n8. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n9. Reconcile: update ops/conductor-log.md, ops/changelog.md,\
-    \ ops/status.md.\n   Note: ConstraintGraphBuilder is the first step toward Phase 3 Kona-parity\
-    \ architecture.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push.\
-    \ Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp417-operational-retro-2026-06-17
-  milestone: 2026.06.17
-  deliverable: results/operational_retro_2026_06_17.json
-  title: 'Exp 417: Operational retrospective — milestone 2026.06.17 complete'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
-    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: Milestone 2026.06.17 is complete.\
-    \ Primary success criteria:\n- retro_022_resolved: Did GPU node confirm live? (Exp 404)\n\
-    - retro_023_closed: Did content validator clear corrupt files + CIKANEnergy is valid Python?\
-    \ (Exp 405)\n- jitrl_works: threshold_modulation_works=True? (Exp 406)\n- safety_kan_works:\
-    \ test_auroc > 0.70? (Exp 407)\n- semantic_energy_viable: auroc > 0.70? (Exp 408)\n- crane_detection_improved:\
-    \ detection_rate > ArithmeticExtractor? (Exp 409)\n- live_gpu_confirmed: Did ANY experiment\
-    \ produce inference_mode='live_gpu'? (Exps 410-413)\n- precision_result_credible: honest_verdict='live_improvement'?\
-    \ (Exp 410)\n- humaneval_result_credible: honest_verdict='code_verification_positive'? (Exp\
-    \ 411)\n- adversarial_result_credible: honest_verdict='improvement_positive'? (Exp 412)\n\
-    - extraction_winner_known: honest_verdict='live_gpu_winner'? (Exp 413 — closes RETRO-016)\n\
-    - eorm_retrained_on_real: retrain_mode='real_data'? (Exp 414)\n- fr11_learning_confirmed:\
-    \ honest_verdict='learning_confirmed'? (Exp 415 — closes RETRO-024, FR-11)\n- constraint_graph_viable:\
-    \ graphs_viable? (Exp 416)\n\nThe milestone question: After SEVEN milestones and 417 experiments,\
-    \ did Carnot produce its first credible live GPU results?\n\nEXISTING CODE TO READ FIRST:\n\
-    - ops/conductor-log.md — all experiment results for this milestone\n- results/experiment_404_preflight_v2.json\
-    \ through results/experiment_416_constraint_graph.json\n- ops/status.md — carry-forward\
-    \ RETRO items\n\nTASK: Write operational retrospective for milestone 2026.06.17.\n1. Read\
-    \ CLAUDE.md spec-first workflow.\n2. No new spec changes needed.\n3. Write tests FIRST (100%\
-    \ coverage) for:\n   - MilestoneRetro2026_06_17: dataclass with ALL success criteria fields\
-    \ (bool),\n     mean_exp_duration_min (float), n_experiments_blocked (int),\n     retro_items_opened\
-    \ (list[str]), retro_items_closed (list[str]), headline_results (dict)\n   - compute_retro_2026_06_17(result_files)\
-    \ -> MilestoneRetro2026_06_17\n   - build_retro_artifact(retro) -> dict: schema='carnot.operational_retro.v5'\n\
-    \   - estimate_speedup_pct(prev_mean, curr_mean) -> float\n4. Implement scripts/experiment_417_retro_2026_06_17.py:\n\
-    \   a. ExperimentTemplate(417) — CPU only\n   b. Load all result JSONs for Exps 404-416\n\
-    \   c. Evaluate each success criterion\n   d. Compute mean_exp_duration_min from ops/conductor-log.md\n\
-    \   e. New RETRO items:\n      - RETRO-025 (CRITICAL) if live_gpu_confirmed=False after 7\
-    \ milestones:\n        'Conductor must use pre-provisioned cloud GPU account. Human must\
-    \ create a persistent\n        cloud GPU instance (Lambda Labs / vast.ai) and store credentials\
-    \ in SOPS-encrypted\
-    \ secrets/cloud_gpu.enc.yaml before milestone 2026.06.24 begins.'\n      - RETRO-026 if\
-    \ fr11_learning_confirmed=False (fifth consecutive miss, FR-11 still open)\n      - CLOSE\
-    \ RETRO-016 if extraction_winner_known=True\n      - CLOSE RETRO-023 if retro_023_closed=True\n\
-    \      - CLOSE RETRO-024 if fr11_learning_confirmed=True\n   f. Build artifact: schema='carnot.operational_retro.v5',\n\
-    \      milestone='2026.06.17', success_criteria (dict), timing_analysis,\n      retro_items_opened,\
-    \ retro_items_closed, estimated_savings_next_pct,\n      first_live_gpu_results_achieved\
-    \ (bool), headline_results (dict)\n   g. Output: results/operational_retro_2026_06_17.json\n\
-    5. Write tests/python/test_experiment_417_retro.py (100% coverage).\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: update ops/status.md (What's Working +\
-    \ What's Next for 2026.06.24),\n   ops/changelog.md, ops/conductor-log.md. Mark milestone\
-    \ 2026.06.17 COMPLETE.\n   If first_live_gpu_results_achieved=True: document ALL headline\
-    \ numbers in ops/status.md\n   with inference_mode='live_gpu' label.\n   If still False:\
-    \ RETRO-025 must be prominently marked as requiring HUMAN ACTION — permanent\n   cloud GPU\
-    \ account setup before the next conductor session.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: This is the final experiment of\
+    \ milestone 2026.06.24. It has two jobs:\n\
+    1. Write the operational retrospective for this milestone.\n\
+    2. Attempt AMD NPU via IRON bare-metal toolflow (arXiv 2504.03083), bypassing the VitisAI EP\n\
+    \   dependency that has blocked NPU experiments for 5 milestones (Exps 292, 303, 314, 335, 424).\n\
+    \nThe IRON approach: instead of VitisAI EP for onnxruntime (requires custom build, missing\n\
+    ninja/openblas), use the mlir-aie IRON toolflow to directly program the XDNA NPU. IRON is\n\
+    the open-source infrastructure from AMD/Xilinx for NPU programming. Install via:\n\
+    pip install mlir-aie  (in .venv-npu/ with Python 3.12)\n\
+    See arXiv 2504.03083 for the IRON-based GPT-2 fine-tuning example.\n\
+    \nEXISTING CODE TO READ FIRST:\n\
+    - ops/status.md — full milestone 2026.06.24 status\n\
+    - ops/conductor-log.md — all Exp 413-423 results\n\
+    - results/experiment_413_env_autofix.json — GPU preflight\n\
+    - results/experiment_419_precision_live.json — live precision results (if available)\n\
+    - results/experiment_420_humaneval_live.json — live HumanEval results (if available)\n\
+    - results/experiment_421_adversarial_live.json — live adversarial results (if available)\n\
+    - results/experiment_422_vprm_step_labels.json — VPRM training results\n\
+    - results/experiment_423_retrain_live.json — EORM+JEPA retrain results\n\
+    - research-hardware-wishlist.md — NPU status and IRON toolflow notes\n\
+    \nTASK: Write retrospective + attempt NPU via IRON.\n\
+    1. Part A: Write scripts/experiment_424_retro_npu.py that:\n\
+    \   a. Loads all Exps 413-423 result JSONs\n\
+    \   b. Computes: n_experiments (should be 12), mean_duration_min, live_gpu_achieved,\n\
+    \      retro_022_resolved, retro_023_closed (all 5 files valid Python),\n\
+    \      fr11_relay_confirmed (from Exp 423)\n\
+    \   c. Success criteria table (see milestone doc)\n\
+    \   d. RETRO items:\n\
+    \      - RETRO-025: if env_autofix_applied=True (conductor still not propagating env)\n\
+    \      - RETRO-026: if fr11_relay_confirmed=False (still synthetic)\n\
+    \   e. Estimated savings for next milestone\n\
+    2. Part B: NPU via IRON attempt:\n\
+    \   a. Check if mlir-aie is installable: try pip install mlir-aie in .venv-npu/\n\
+    \   b. If installable: attempt to run JEPA predictor (results/jepa_predictor_291.onnx)\n\
+    \      via IRON MLIRContext (see arXiv 2504.03083 pattern)\n\
+    \   c. Record: iron_installable, npu_inference_attempted, npu_inference_succeeded,\n\
+    \      npu_latency_ms (or null), honest_verdict:\n\
+    \      'npu_working' when npu_inference_succeeded=True\n\
+    \      'npu_install_ok_inference_failed' when iron_installable but inference failed\n\
+    \      'npu_install_failed' when pip install mlir-aie fails\n\
+    3. Build combined artifact: schema='carnot.retro_and_npu.v1'\n\
+    \   Include both retrospective fields and NPU fields.\n\
+    \   Output: results/experiment_424_retro_and_npu.json\n\
+    4. Update research-hardware-wishlist.md with IRON toolflow status (append to NPU section).\n\
+    5. Write tests FIRST (100% coverage) for new helper functions.\n\
+    6. Write tests/python/test_experiment_424_retro_npu.py (100% coverage).\n\
+    7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    8. Reconcile:\n\
+    \   - Update ops/status.md with milestone 2026.06.24 complete status\n\
+    \   - Update ops/changelog.md with full milestone summary\n\
+    \   - Update _bmad/traceability.md for all new REQ-* added this milestone\n\
+    \   - Mark MILESTONE 2026.06.24 COMPLETE in ops/conductor-log.md\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
