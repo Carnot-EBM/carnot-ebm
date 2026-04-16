@@ -1937,3 +1937,9 @@ python/ |
 | 2026-04-16 10:03 UTC | Exp 398: Combined EORM+JEPA retrain on live pairs  | OK | Deliverable already exists in repo |
 | 2026-04-16 10:03 UTC | Exp 402: CRANE extraction gate — alternating free  | OK | Deliverable already exists in repo |
 | 2026-04-16 10:03 UTC | Milestone 2026.06.17 activated | OK | 14 tasks queued |
+| 2026-04-16 10:46 UTC | Exp 404: DeliverableContentValidator + GPU preflig | OK | Deliverable already exists in repo |
+| 2026-04-16 10:46 UTC | Exp 405: CIKANEnergy — third and final attempt wit | OK | Deliverable already exists in repo |
+| 2026-04-16 10:46 UTC | Exp 406: JitRL constraint memory — correct Tier 1  | OK | Deliverable already exists in repo |
+| 2026-04-16 10:46 UTC | Exp 407: Safety KAN classifier — first Tier B prod | OK | Deliverable already exists in repo |
+| 2026-04-16 10:46 UTC | Exp 408: Semantic Energy scorer — logit-space Bolt | OK | Deliverable already exists in repo |
+| 2026-04-16 10:46 UTC | Exp 409: CRANE extraction gate — 1x-cost prompt-si | OK | Deliverable already exists in repo |
