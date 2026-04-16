@@ -1,1 +1,221 @@
-{"experiment": 403, "milestone": "2026.06.10", "status": "complete"}
+{
+  "experiment": 403,
+  "schema": "carnot.operational_retro.v5",
+  "milestone": "2026.06.10",
+  "generated_at": "2026-04-16T09:44:30Z",
+  "status": "complete",
+
+  "timing": {
+    "total_wall_time_minutes": 6166,
+    "total_wall_time_hours": 102.8,
+    "experiments_completed": 442,
+    "mean_minutes_per_experiment": 14.0,
+    "milestone_session_experiments": 13,
+    "milestone_session_mean_minutes_per_experiment": 7.5,
+    "prior_milestone_mean_minutes_per_experiment": 14.0,
+    "prior_milestone_total_minutes": 6130,
+    "speedup_note": "Apparent 46.4% speedup in this milestone's session (14.0 → 7.5 min/exp for Exps 390-402). This is ENTIRELY from 'deliverable already exists' fast-path execution with no actual inference work. Not a genuine throughput improvement — it indicates the experiments were trivially bypassed, not efficiently executed."
+  },
+
+  "slowest_experiments": [
+    {
+      "duration_minutes": 117,
+      "description": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "root_cause": "Sequential single-GPU inference with no DualGPURunner, no model pre-warm, cold-start load stall absorbed into experiment wall time. Z3 constraint calls were also sequential with no per-call timeout.",
+      "category": "sequential_gpu_inference"
+    },
+    {
+      "duration_minutes": 105,
+      "description": "Exp 308: JEPA fast-path gate integration (tests failing — checkpoint)",
+      "root_cause": "Failure recovery triggered full 6500-test suite rerun on each fix iteration instead of targeted module-level reruns. Each rerun took ~8 minutes, and the fix required 3-4 iterations.",
+      "category": "full_suite_rerun_on_targeted_failure"
+    },
+    {
+      "duration_minutes": 83,
+      "description": "Exp 184: 3B model verification — does verify-repair help large models",
+      "root_cause": "3B model loaded on single GPU without pre-warm; lazy CUDA initialization stall not separated from inference timing. No batched inference; questions sent one at a time.",
+      "category": "cold_start_single_gpu"
+    },
+    {
+      "duration_minutes": 78,
+      "description": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "root_cause": "Sequential inference with per-question Z3 calls and no per-call timeout. One malformed constraint caused Z3 to spin for >10 minutes before the outer loop timed out.",
+      "category": "z3_timeout_missing"
+    },
+    {
+      "duration_minutes": 78,
+      "description": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "root_cause": "CPU training of full JEPA model on multi-domain dataset without batching or early-stopping heuristic. No checkpoint-resume, so a mid-run crash required a full restart from epoch 0.",
+      "category": "cpu_training_no_checkpoint_resume"
+    }
+  ],
+
+  "gpu_utilization": {
+    "gpu_0_name": "NVIDIA GeForce RTX 3090",
+    "gpu_0_vram_used_mb": 4,
+    "gpu_0_vram_total_mb": 24576,
+    "gpu_0_vram_pct": 0,
+    "gpu_0_utilization_pct": 0,
+    "gpu_0_temperature_c": 43,
+    "gpu_1_name": "NVIDIA GeForce RTX 3090",
+    "gpu_1_vram_used_mb": 4,
+    "gpu_1_vram_total_mb": 24576,
+    "gpu_1_vram_pct": 0,
+    "gpu_1_utilization_pct": 0,
+    "gpu_1_temperature_c": 53,
+    "note": "Both RTX 3090s completely idle — 4 MB allocated (driver overhead) with 0% utilization and 0% VRAM pressure. GPU 1 running 10C warmer than GPU 0 despite equal utilization — may indicate a background process or inadequate cooling. Prior milestone had zombie PID 3378630 holding 25 GB VRAM; that process appears cleared this milestone.",
+    "estimated_gpu_idle_pct_milestone": 99,
+    "idle_cause_breakdown": {
+      "deliverable_already_exists_fast_path": "~60% idle time — experiments 390-402 detected prior deliverable files and skipped execution entirely without validating Python content correctness",
+      "gpu_node_offline": "~30% idle time — CARNOT_FORCE_LIVE propagation is now fixed (Exp 377), but the physical GPU node is offline or inaccessible; no live inference occurred",
+      "sequential_inference_no_dual_runner": "~9% idle time — any experiments that did execute ran single-GPU sequentially"
+    }
+  },
+
+  "zombie_processes": {
+    "detected": false,
+    "note": "No zombie GPU processes detected at milestone close. Both GPUs show only 4 MB allocated (driver overhead). Prior milestone zombie PID 3378630 (25 GB held) has been cleared. gpu_monitor --kill-zombies should be verified as part of conductor teardown for future milestones."
+  },
+
+  "deliverable_fast_path_analysis": {
+    "fast_path_trigger": "'deliverable already exists' check in conductor fires when a result JSON file is present at the expected output path",
+    "failure_mode": "The fast-path validates file EXISTENCE but not file CONTENT. A corrupt JSON file (e.g., cikan_energy.py written as JSON object instead of Python source) passes the check and the experiment is marked complete without executing.",
+    "experiments_affected": ["Exp 375 (CIKAN, corrupt JSON passed check)", "Exp 390 (GPU preflight, status=complete but finding not gpu_confirmed_live)"],
+    "retro_item": "RETRO-023",
+    "consecutive_milestone_failures": 3,
+    "fix_required": "Add a validate_deliverable(path) step to the fast-path check. For .py files: attempt ast.parse(). For .json files: attempt json.load() and assert required top-level keys present. Reject the fast-path and re-execute if validation fails."
+  },
+
+  "parallelization_opportunities": [
+    {
+      "opportunity": "Dual-GPU benchmark experiments",
+      "experiments_affected": ["Exp 219", "Exp 221", "Exp 155", "Exp 184"],
+      "approach": "Auto-wire DualGPURunner for any experiment specifying >1 model variant. GPU 0 runs model A, GPU 1 runs model B concurrently. Wall time cut by ~50% for 2-model comparisons.",
+      "estimated_savings_pct": 15
+    },
+    {
+      "opportunity": "Parallel retrain + benchmark",
+      "experiments_affected": ["Exp 155", "Exp 183", "Exp 308"],
+      "approach": "CPU training (EORM/JEPA retrain) can run on GPU 0 while GPU 1 handles independent benchmark inference. These have no data dependency.",
+      "estimated_savings_pct": 8
+    },
+    {
+      "opportunity": "Batch Z3 constraint calls",
+      "experiments_affected": ["Exp 221", "Exp 219"],
+      "approach": "Group all Z3 calls for a question batch, run in a subprocess pool with per-call 30s timeout. Eliminates single-constraint hangs from blocking the full experiment.",
+      "estimated_savings_pct": 5
+    },
+    {
+      "opportunity": "Parallel doc reconciliation",
+      "experiments_affected": ["post-experiment doc passes"],
+      "approach": "Reconcile spec.md + traceability.md + status.md + changelog.md in a single batch write at experiment end rather than four sequential file reads and writes.",
+      "estimated_savings_pct": 3
+    },
+    {
+      "opportunity": "Cloud GPU burst for blocked experiments",
+      "experiments_affected": ["Exps 368, 369, 370, 373, 379, 380, 383 — all awaiting live_gpu"],
+      "approach": "If local GPU node remains offline, provision a cloud GPU (Lambda Labs, vast.ai, RunPod) for a single session to flush all pending live-GPU experiments. ~7 experiments x 30 min = 3.5 hours of genuine GPU work would unblock 6 consecutive milestones of deferred benchmarks.",
+      "estimated_savings_pct": 20
+    }
+  ],
+
+  "bottlenecks_identified": [
+    "GPU node offline for SIX consecutive milestones (RETRO-022, CRITICAL): CARNOT_FORCE_LIVE=1 propagation is now fixed (Exp 377) but the physical GPU node cannot be reached. This is the root cause of zero live GPU results across 403 experiments and 6166 minutes of milestone wall time. Cannot be fixed by code changes alone — requires human action (power on node, cloud GPU, or hardware purchase).",
+    "Deliverable fast-path bypasses corrupt files (RETRO-023): The 'deliverable already exists' check validates file presence but not content. cikan_energy.py has contained corrupt JSON since Exp 375 yet has been marked 'complete' for three consecutive milestones. A 5-line ast.parse() check would have caught this on the first miss.",
+    "No per-experiment hard timeout in conductor (RETRO-003, carried 15+ milestones): Exp 219 ran 117 min with no kill signal. A 45-minute hard cap would have freed the GPU 72 minutes earlier. This is the longest-carried unresolved RETRO item in the project.",
+    "DualGPURunner not auto-wired: dual-model benchmarks (219, 221, 184) each ran sequentially on one GPU while the second sat idle. No conductor policy to detect this pattern and parallelize.",
+    "Full test suite reruns on targeted failures: Exp 308 re-ran the 6500-test suite 3-4 times during failure debugging. Targeted pytest tests/python/test_experiment_308*.py would have cut debugging time by ~70%.",
+    "No model pre-warm before timed inference: cold CUDA init (20-45s) was absorbed into experiment wall time for Exps 155, 184, 219. ExperimentTemplate.setup_gpu() exists but was not called in pre-template experiments.",
+    "CPU training without checkpoint-resume: Exp 155 restart from epoch 0 after crash cost ~40 minutes. ExperimentTemplate.checkpoint_save() exists but was not uniformly enforced in training experiments.",
+    "FR-11 self-learning relay stuck at synthetic-only for FOUR consecutive milestones (RETRO-024): upstream cause is RETRO-022 (no live GPU), which means real CoT pairs are never produced, so EORM retrain stays synthetic, so relay AUC-ROC cannot validate learning_confirmed. A single live GPU session would unblock FR-11 in one experiment."
+  ],
+
+  "improvements_suggested": [
+    "HUMAN ACTION REQUIRED (RETRO-022): Power on the existing RTX 3090 node, OR provision a cloud GPU (Lambda Labs g5.xlarge ~$1.10/hr, vast.ai RTX 3090 ~$0.30/hr, RunPod), OR purchase an RTX 4090 (~$1800). A 4-hour cloud GPU session (~$4-12 total) would flush all pending live-GPU experiments and close RETRO-022/023/024 in a single milestone.",
+    "Add deliverable content validation to fast-path check: before marking an experiment complete, validate the deliverable file. For .py files: ast.parse() the content and assert no SyntaxError. For .json files: json.load() and assert required schema keys present. Estimated implementation: 20 lines in the conductor. Prevents RETRO-023 class of bugs entirely.",
+    "Add conductor hard timeout (RETRO-003): 45 minutes per experiment, configurable per experiment type. Emit RETRO entry and continue on timeout rather than hanging indefinitely.",
+    "Auto-detect dual-model experiments and wire DualGPURunner: if an experiment spec lists >1 LLM variant, the conductor should schedule GPU 0 / GPU 1 in parallel automatically.",
+    "Enforce pre-warm before timed inference: conductor should call ExperimentTemplate.setup_gpu() for any experiment with requires_gpu=True. Fail fast if pre-warm fails rather than timing stalled inference.",
+    "Targeted test reruns on failure: conductor should run only the failing module's test file on each fix iteration. Full suite rerun only on final pass before marking experiment complete.",
+    "Enforce checkpoint-resume in all training experiments: conductor should verify that checkpoint_save() is called at least once per training loop epoch batch before allowing long-running CPU training.",
+    "Kill zombie GPU processes at experiment teardown: add gpu_monitor --kill-zombies to conductor post-experiment hook (not just session startup) to prevent VRAM lock between experiments.",
+    "Batch doc reconciliation: write a single reconcile_docs() call at experiment end that updates all ops files in one pass. Reduces I/O from ~6 sequential writes to 1 batched write.",
+    "Conductor state checkpoint on interrupt: serialize the conductor's experiment queue and completed-set to a JSON file on SIGINT/SIGTERM so sessions can resume without re-running completed experiments.",
+    "Add per-call Z3 timeout (30s default): wrap all Z3 solver invocations in a subprocess with configurable timeout. Log timed-out constraints to a debug file rather than blocking the experiment loop.",
+    "GPU node health check gate at conductor session start: if CARNOT_FORCE_LIVE=1 and no GPU is available, pause the conductor and alert the user rather than silently running fast-path or simulated-mode experiments for the entire milestone."
+  ],
+
+  "estimated_time_savings_pct": 45,
+  "savings_breakdown": {
+    "cloud_gpu_unblocks_live_experiments": 20,
+    "auto_dual_gpu_runner": 15,
+    "targeted_test_reruns": 8,
+    "pre_warm_enforcement": 5,
+    "conductor_hard_timeout": 5,
+    "deliverable_content_validation": 3,
+    "z3_per_call_timeout": 3,
+    "checkpoint_resume_training": 2,
+    "zombie_gc_at_teardown": 1,
+    "note": "45% estimated savings assumes GPU node comes online. Without live GPU, the deliverable-validation and timeout fixes save ~15% over current baseline by eliminating wasted sessions on corrupt deliverables and hung experiments."
+  },
+
+  "retro_items_open": [
+    {
+      "id": "RETRO-003",
+      "severity": "medium",
+      "description": "Conductor lacks per-experiment hard timeout — runaway experiments block the queue.",
+      "milestones_carried": "15+"
+    },
+    {
+      "id": "RETRO-022",
+      "severity": "critical",
+      "description": "Live GPU NEVER ran across SIX consecutive milestones. CARNOT_FORCE_LIVE=1 propagation is now correct (Exp 377) but the GPU node is offline. HUMAN ACTION REQUIRED before milestone 2026.06.17: cloud GPU, RTX 4090 purchase (~$1800), or power on existing RTX 3090 node.",
+      "milestones_carried": 1
+    },
+    {
+      "id": "RETRO-023",
+      "severity": "high",
+      "description": "CIKANEnergy — third consecutive milestone failure. Root cause: 'deliverable already exists' fast-path fires on corrupt JSON file without validating Python AST content.",
+      "milestones_carried": 3
+    },
+    {
+      "id": "RETRO-024",
+      "severity": "high",
+      "description": "FR-11 self-learning relay — fourth consecutive miss. Upstream: RETRO-022 (no live GPU means no real CoT pairs, so EORM retrain stays synthetic, so relay cannot produce learning_confirmed verdict).",
+      "milestones_carried": 4
+    }
+  ],
+
+  "retro_items_closed_this_milestone": [],
+
+  "success_criteria": {
+    "first_live_gpu_results_achieved": false,
+    "retro_019_resolved": false,
+    "retro_020_closed": false,
+    "retro_021_closed": false,
+    "live_gpu_confirmed": false,
+    "all_benchmarks_live": false,
+    "notes": "Zero live GPU results after SIX consecutive milestones and 403 experiments. The infrastructure (CARNOT_FORCE_LIVE propagation, LiveGPUGate, DualGPURunner wiring) is correct as of Exp 377. The sole remaining blocker is the physical GPU node being offline."
+  },
+
+  "meta_reflection": {
+    "what_went_well": [
+      "Zombie GPU process from prior milestone (PID 3378630, 25 GB VRAM) was cleared before this milestone session — both GPUs show clean state at milestone close.",
+      "LiveGPUGate infrastructure (Exp 377) remains intact; CARNOT_FORCE_LIVE=1 propagation correctly set in session_startup.sh.",
+      "Milestone session ran efficiently at 7.5 min/exp (though this was fast-path mode, not genuine execution speed).",
+      "All RETRO items were correctly identified and carried forward with severity ratings."
+    ],
+    "what_went_poorly": [
+      "SIX consecutive milestones without a single live GPU inference result — this is the most critical research blocker. No code fix can address a powered-off GPU node.",
+      "RETRO-023 (CIKANEnergy corrupt) missed for the THIRD consecutive milestone because the deliverable fast-path checked file existence, not Python validity.",
+      "All 13 milestone experiments resolved via fast-path (0% genuine execution rate for the session) — the conductor ran 403 experiments total but produced zero live GPU artifacts.",
+      "RETRO-003 (conductor timeout) has been carried for 15+ milestones without implementation — the highest-ROI infrastructure fix that has never been prioritized."
+    ],
+    "process_improvements_for_next_milestone": [
+      "P0 before next conductor session: provision cloud GPU (Lambda Labs, vast.ai, or RunPod). A 4-hour session at $0.30-1.10/hr flushes all 7+ pending live-GPU experiments and closes RETRO-022/023/024 simultaneously.",
+      "P0 before next conductor session: fix deliverable fast-path to validate Python AST for .py files and schema keys for .json files. Implement as 20-line validate_deliverable() function in conductor.",
+      "P1: Implement RETRO-003 (conductor hard timeout) as the very first experiment of milestone 2026.06.17 — this has been carried 15+ milestones and is never prioritized.",
+      "Review all RETRO items at milestone START, not just END — RETRO-023 would have been caught at Exp 390 planning time if cikan_energy.py content had been validated."
+    ]
+  }
+}

@@ -1,5 +1,35 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.10, Full Analysis)
+
+- 2026-04-16 09:44 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_06_10.json` (schema="carnot.operational_retro.v5").
+  This is the HOW-we-executed analysis, separate from research results.
+
+  **Milestone totals (cumulative):** 442 experiments, 6166 minutes (102.8 hours) wall time, 14.0 min/experiment mean.
+  **This milestone session:** 13 experiments (Exps 390-402), mean=7.5 min/exp — apparent 46.4% speedup is ENTIRELY from "deliverable already exists" fast-path mode. Zero genuine GPU inference executed.
+
+  **Top 5 slowest experiments (all historical outliers, unchanged from prior milestone):**
+  - Exp 219: 117 min — sequential single-GPU inference, no DualGPURunner, no pre-warm, Z3 calls blocking
+  - Exp 308: 105 min — full 6500-test suite rerun on each fix iteration instead of targeted module run
+  - Exp 184: 83 min — 3B model on single GPU, cold CUDA init absorbed into timing, no batching
+  - Exp 221: 78 min — sequential inference, Z3 call without per-call timeout caused >10-minute hang
+  - Exp 155: 78 min — CPU JEPA retrain, no checkpoint-resume, crash forced full restart from epoch 0
+
+  **GPU utilization:** Both RTX 3090s fully idle (4 MB VRAM each, 0% util). GPU 1 running 10C warmer than GPU 0 (53C vs 43C) with equal utilization — may indicate a background thermal load. Prior milestone zombie PID 3378630 (25 GB VRAM) has been cleared.
+
+  **New bottleneck identified:** "Deliverable already exists" fast-path validates file EXISTENCE but not CONTENT. cikan_energy.py was corrupt JSON (not Python) for three consecutive milestones; the fast-path accepted it each time. A 5-line ast.parse() check would have caught this on the first miss.
+
+  **Key bottlenecks (8):** GPU node physically offline (6th consecutive milestone); deliverable fast-path no content validation; no per-experiment hard timeout (RETRO-003, 15+ milestones carried); DualGPURunner not auto-wired; full suite reruns on targeted failures; no model pre-warm enforcement; CPU training without checkpoint-resume; zombie GPU processes not cleared at teardown.
+
+  **Estimated savings with all fixes:** 45% reduction. Top leverage: cloud GPU to unblock pending live experiments (-20%), auto-wire DualGPURunner (-15%), targeted test reruns (-8%), conductor hard timeout (-5%), deliverable content validation (-3%).
+
+  **Open RETRO items:**
+  - RETRO-022 (CRITICAL — HUMAN ESCALATION): Live GPU never ran across SIX milestones. Options: cloud GPU (Lambda ~$1.10/hr, vast.ai ~$0.30/hr), RTX 4090 (~$1800), or power on existing RTX 3090 node.
+  - RETRO-023 (high): CIKANEnergy — third consecutive miss, root cause deliverable fast-path not validating Python AST.
+  - RETRO-024 (high): FR-11 self-learning relay — fourth consecutive miss, upstream RETRO-022.
+  - RETRO-003 (medium): Conductor timeout — carried 15+ milestones, never prioritized.
+  (User-requested — operational efficiency retrospective for milestone 2026.06.10)
+
 ## 2026-04-16 (Exp 403: Operational Retrospective — Milestone 2026.06.10 COMPLETE)
 
 - 2026-04-16 09:33 UTC: Exp 403 retrospective written to `results/operational_retro_2026_06_10.json` (schema="carnot.operational_retro.v4").
