@@ -35,20 +35,22 @@
 
 ## Breakthrough Results
 
-All results from live GPU inference. No simulated runs.
+Results are labeled with provenance: **LIVE** (real model inference on GPU with `CARNOT_FORCE_LIVE=1`), **SIMULATED** (synthetic benchmark or canned CI cases), **DERIVED** (post-hoc analysis of prior live artifacts), or **PLACEHOLDER** (fast-path deliverable without actual inference). Audit performed 2026-04-16 after RETRO-022 root cause was identified in the conductor's env propagation — several results that were previously unlabeled turned out to be simulated.
 
-| Result | Value | Experiment | Significance |
-|--------|-------|------------|-------------|
-| HumanEval code verification | +3.0pp [+0.6, +6.1] CI | Exp 226 | Statistically significant on 164 official problems |
-| PBT bug detection rate | 99.3% (144/145) | Exp 220 | Property-based testing catches nearly all wrong code |
-| Typed IR constraints | +4.9pp (Gemma4) | Exp 221 | Prompt-side constraint extraction works |
-| Global consistency checker | 100% detection, 0% FP | Exp 271 | Logic-based, confirmed on live multi-turn chains |
-| Agent rollback | 100% success | Exp 273 | Constraint-based rollback works on live model outputs |
-| Self-learning FP reduction | 86% (7 to 1) | Exp 223 | Tier 1-2 learning reduces false positives |
-| Confidence-weighted repair | 86.7% FP avoidance, 100% TP | Exp 332 | Smart repair selection preserves true positives |
-| SinkProbe pre-filter | 60% skip rate, 0% FN | Exp 348 | Attention-sink detection skips safe outputs cheaply |
-| Adversarial semantic grounding | +40pp lift | Exp 279 | Catches number-swapped quantity mismatches |
-| Z3+LLM on GSM8K arithmetic | 80% detection, 0% FP | Exp 276 | Formal extraction eliminates false positives |
+| Result | Value | Experiment | Provenance | Significance |
+|--------|-------|------------|------------|-------------|
+| HumanEval code verification | +3.0pp [+0.6, +6.1] CI | Exp 226 | LIVE | Statistically significant on 164 official problems (gemma-4-E4B-it, 1574s runtime) |
+| PBT bug detection rate | 99.3% (144/145) | Exp 220 | LIVE | Property-based testing catches nearly all wrong code (Qwen+Gemma, 816s) |
+| Typed IR constraints | +4.9pp (Gemma4) | Exp 221 | LIVE | Prompt-side constraint extraction works (81 cases, 459s) |
+| Self-learning FP reduction | 86% (7 to 1) | Exp 223 | DERIVED | Post-hoc analysis of Exps 220/221 held-out cohorts (inherits live inputs, no new inference) |
+| Global consistency checker | 100% detection, 0% FP | Exp 271 | SIMULATED | Hand-crafted consistent/contradicted chains; ~1ms latency, no model inference |
+| Agent rollback | 100% success | Exp 273 | SIMULATED | 10 hand-crafted workflows, `live_mode=false` |
+| Z3+LLM on GSM8K arithmetic | 80% detection, 0% FP | Exp 276 | SIMULATED | Canned CI cohort (10 cases), `live_mode=false`, 2.54s runtime |
+| Adversarial semantic grounding | +40pp lift | Exp 279 | SIMULATED | Model field explicitly `"Gemma4-E4B-it (simulated)"` |
+| Confidence-weighted repair | 86.7% FP avoidance | Exp 332 | PLACEHOLDER | Fast-path deliverable: `duration_s=0.0`, constant confidence scores, no inference |
+| SinkProbe pre-filter | 60% skip rate, 0% FN | Exp 348 | SIMULATED | `inference_mode="simulated"`, 50 synthetic samples, 1.5s total |
+
+**Headline claim (honest):** Three live GPU results — HumanEval +3.0pp, PBT 99.3%, Typed IR +4.9pp — with statistical confidence intervals and multi-minute GPU runtimes. The remaining six entries motivated the research but need live re-runs before they can be cited externally. Re-verification is queued as an explicit milestone goal.
 
 ## Product Roadmap
 

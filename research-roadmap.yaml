@@ -671,6 +671,44 @@ tasks:
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
     Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
+- id: exp435a-kona-continuous-energy-toy
+  milestone: 2026.04.32
+  deliverable: results/experiment_435a_kona_continuous_energy.json
+  title: 'Exp 435a: Kona-adjacent continuous energy landscape toy (Phase 3 seed)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md for code\
+    \ style requirements.\nToday's date: {date}.\n\nCONTEXT: Phase 3 North Star is functional parity\
+    \ with Kona (Logical Intelligence) — a continuous-latent, non-autoregressive reasoning model.\
+    \ Every recent milestone has been pure infrastructure; no Phase 3 seed work. This experiment\
+    \ plants a small, concrete seed that bridges discrete Ising (our current sweet spot) to\
+    \ continuous energy landscapes (Kona's domain). CPU-only, <30 min, no GPU.\n\nTASK: Train a\
+    \ tiny continuous-valued EBM on a 10-variable constraint problem and compare minimum recovery\
+    \ against the Ising baseline.\n\n1. Call apply_env_autofix() FIRST.\n\
+    2. Add REQ-KONA-001 (continuous EBM recovers same minimum as Ising on a matching 10-var problem\n\
+    \   within 0.1 L2 distance on the satisfying assignment) and SCENARIO-KONA-001/002 to\n\
+    \   openspec/capabilities/verifiable-reasoning/spec.md. Explicitly label this as Phase 3 seed\n\
+    \   work, not production.\n\
+    3. Write tests FIRST (100% coverage) in tests/python/test_experiment_435a_kona_toy.py:\n\
+    \   - ContinuousEBM dataclass: variables:int, coupling:np.ndarray, bias:np.ndarray\n\
+    \   - fit_continuous_ebm(ising_model) -> ContinuousEBM: reuse Ising J/h as init\n\
+    \   - sample_continuous(model, n_steps:int=1000, lr:float=0.01) -> np.ndarray: gradient descent\n\
+    \     on E(x) = -0.5*x^T*J*x - h^T*x with tanh squashing so x in [-1,1]\n\
+    \   - compare_minima(ising_sample, continuous_sample) -> dict with 'l2_distance' and\n\
+    \     'sign_agreement' (fraction of coordinates with same sign)\n\
+    \   - build_kona_artifact(): schema='carnot.kona_seed.v1', honest_verdict one of\n\
+    \     'continuous_matches_ising' (L2<0.1 AND sign_agreement>0.9), 'partial_match'\n\
+    \     (sign_agreement>0.7), 'failed_to_match' (otherwise)\n\
+    4. Implement python/carnot/phase3/continuous_ebm.py with those functions. Use JAX/numpy,\n\
+    \   NOT torch (phase3 is meant to be portable to future hardware).\n\
+    5. Implement scripts/experiment_435a_kona_continuous_energy.py that:\n\
+    \   - builds a random 10-var Ising with sparse couplings (density ~0.3)\n\
+    \   - samples an approximate ground state via simulated annealing (reuse any existing sampler)\n\
+    \   - fits the ContinuousEBM, samples, compares\n\
+    \   - writes results/experiment_435a_kona_continuous_energy.json with the artifact\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python/test_experiment_435a_kona_toy.py -q\n\
+    7. Run the experiment script and verify it writes the deliverable JSON.\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py (it was modified separately to fix\n\
+    RETRO-022 — leave those changes alone).\n"
+
 - id: exp436-milestone-retrospective
   milestone: 2026.04.32
   deliverable: results/operational_retro_2026_04_32.json
