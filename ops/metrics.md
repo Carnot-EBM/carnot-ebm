@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Exp 413 EnvironmentAutoFix + RETRO-022
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T12:59:06Z | 2026-04-16T13:10:27Z | Exp 413: implemented EnvironmentAutoFix (apply_env_autofix, build_env_autofix_artifact); REQ-INFRA-021/022 + SCENARIO-INFRA-025/026/027 added to spec; exported from carnot.pipeline.__init__; experiment_413_env_autofix.py; 38 tests pass (100% targeted coverage); results/experiment_413_env_autofix.json written — honest_verdict=auto_fix_applied, retro_022_resolved=True; RETRO-022 CLOSED (workaround); conductor-log.md updated | ~28k |
+
+---
+
 ## Session: 2026-04-16 Milestone 2026.06.24 Research Planning (v37)
 
 ### Turn Log
