@@ -1959,3 +1959,9 @@ python/ |
 | 2026-04-16 12:56 UTC | Plan milestone 2026.06.24 | OK | 12 tasks proposed |
 | 2026-04-16 12:57 UTC | Exp 406: JitRL constraint memory — correct Tier 1  | OK | Deliverable already exists in repo |
 | 2026-04-16 12:57 UTC | Milestone 2026.06.24 activated | OK | 12 tasks queued |
+| 2026-04-16 13:45 UTC | Exp 413: EnvironmentAutoFix — self-configuring CAR | OK | 81 passed in 3.39s |
+| 2026-04-16 13:46 UTC | Exp 414: CIKANEnergy — constraint-informed KAN wit | OK | Deliverable already exists in repo |
+| 2026-04-16 13:46 UTC | Exp 415: JitRL constraint memory — threshold modul | OK | Deliverable already exists in repo |
+| 2026-04-16 13:46 UTC | Exp 416: Safety KAN classifier — first Tier B prod | OK | Deliverable already exists in repo |
+| 2026-04-16 13:46 UTC | Exp 417: Semantic Energy Scorer — logit-space Bolt | OK | Deliverable already exists in repo |
+| 2026-04-16 13:46 UTC | Exp 418: CRANE extraction gate — 1x-cost prompt-si | OK | Deliverable already exists in repo |
