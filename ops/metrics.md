@@ -8,6 +8,7 @@
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-16T12:59:06Z | 2026-04-16T13:10:27Z | Exp 413: implemented EnvironmentAutoFix (apply_env_autofix, build_env_autofix_artifact); REQ-INFRA-021/022 + SCENARIO-INFRA-025/026/027 added to spec; exported from carnot.pipeline.__init__; experiment_413_env_autofix.py; 38 tests pass (100% targeted coverage); results/experiment_413_env_autofix.json written — honest_verdict=auto_fix_applied, retro_022_resolved=True; RETRO-022 CLOSED (workaround); conductor-log.md updated | ~28k |
 | 2 | 2026-04-16T17:16:45Z | 2026-04-16T17:36:37Z | Exp 425: ExperimentTimeoutWatchdog — implement RETRO-003 45-min hard cap; REQ-INFRA-023/024 + SCENARIO-INFRA-028/029/030; experiment_watchdog.py; 35 tests pass (100% targeted coverage); experiment_425 script; ops docs; RETRO-003 CLOSED | ~20m |
+| 3 | 2026-04-16T21:42:37Z | 2026-04-16T22:24:54Z | Exp 427: confirm/re-run Exp 419 precision benchmark harness; Exp 419 status='partial' → rerun path; compute_crane_detection_rate(); build_exp427_artifact(); check_dual_gpu_health() zombie/thermal gates; ExperimentTimeoutWatchdog(90min); 35 tests pass; 2541 total pass; 2 pre-existing failures unchanged; LIVE RUN PENDING | ~42m |
 
 ---
 

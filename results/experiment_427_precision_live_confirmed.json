@@ -1,0 +1,24 @@
+{
+  "experiment": 427,
+  "schema": "carnot.benchmark_confirmation.v1",
+  "run_date": "2026-04-16",
+  "status": "scaffolding_only",
+  "honest_verdict": "live_benchmark_needs_human_triggered_run",
+  "confirmed_from": null,
+  "rerun": false,
+  "reason": "Exp 419 status='partial' (from earlier conductor iteration). Exp 427 attempted to re-run the full 5-variant x 2-model x 200-question GSM8K benchmark, which legitimately needs >45 min on live GPU. The conductor subagent hit the 45-min wall-clock timeout producing only scaffolding (script + 38 passing tests). The actual benchmark run is deferred: a human (or a dedicated long-running executor, not the conductor) must invoke scripts/experiment_427_precision_live_confirmed.py on a node with both RTX 3090s healthy.",
+  "scaffolding_complete": {
+    "script_path": "scripts/experiment_427_precision_live_confirmed.py",
+    "test_path": "tests/python/test_experiment_427_precision_live_confirmed.py",
+    "tests_passing": 38,
+    "internal_watchdog_minutes": 90
+  },
+  "dependencies": {
+    "gpu0_healthy": true,
+    "gpu1_healthy": false,
+    "gpu1_zombie_confirmed": "results/experiment_426_dual_gpu_fix.json",
+    "recommendation": "Fix RETRO-025 (DualGPURunner GPU1 scheduling) before running Exp 427, otherwise only GPU0 does useful work and the benchmark takes ~2x longer."
+  },
+  "duration_s": 0.0,
+  "notes": "Written by outer-loop Claude Opus 4.7 after the conductor's wall-clock timeout fired at 45 min. This is an honest scaffolding-only deliverable, not a live result. Headline numbers must not be cited from this file."
+}
