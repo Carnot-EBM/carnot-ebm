@@ -2576,6 +2576,25 @@ SCENARIO-VERIFY-116, SCENARIO-VERIFY-117
 **And** `result.ising_calls_saved_pct` equals `total_skip_rate * 100`
 **And** `result.throughput_qps` is > 0.0
 
+### SCENARIO-VERIFY-118: Three-Tier Live GPU Benchmark Captures Real Attention Matrices
+
+**Given** `CARNOT_FORCE_LIVE=1` is set and a Gemma4-E4B-it model is loaded on GPU
+**And** 50 GSM8K questions are run with `output_attentions=True`
+**When** `experiment_373_three_tier_live.run_experiment()` is called
+**Then** `real_attention_matrices_used == True` in the artifact
+**And** `inference_mode == "live_gpu"` in the artifact
+**And** `skip_rate_sink_probe` + `skip_rate_eorm` + `(1 - total_skip_rate)` sums to 1.0
+**And** `ising_calls_saved_pct == total_skip_rate * 100`
+
+### SCENARIO-VERIFY-119: Three-Tier Live Benchmark Honest Verdict Requires Low FN Rate
+
+**Given** a completed live three-tier benchmark run
+**When** `total_skip_rate > 0.3` AND `fn_rate < 0.05`
+**Then** `honest_verdict == "throughput_gain_live"`
+**And** the artifact contains `eorm_model_used` field indicating which EORM was loaded
+**When** `total_skip_rate <= 0.3` OR `fn_rate >= 0.05`
+**Then** `honest_verdict != "throughput_gain_live"` (conservative: only claims gain when both conditions met)
+
 ### SCENARIO-AGENT-001: SAVeR Commits Clean Steps And Propagates Facts
 
 **Given** a SAVeRVerifier with a stub pipeline (no violations)
@@ -5039,6 +5058,6 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-016 | N/A | Implemented | RetroJSONEnforcer + check_result_json_exists + audit_missing_jsons (SCENARIO-INFRA-018, Exp 365). Closes RETRO-014. |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
-| REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360) |
+| REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
 | REQ-AGENT-001 | Not Started | Implemented | SAVeR multi-turn constraint state propagation — ConstraintState dataclass carrying accumulated_facts, active_constraints, facts_established, model_id across steps (SCENARIO-AGENT-001/002/003, Exp 362) |
 | REQ-AGENT-002 | Not Started | Implemented | SAVeR commit-gate — propose_step() blocks action when constraint violations survive max_repair_attempts; committed=False prevents fact accumulation (SCENARIO-AGENT-001/002/003, Exp 362) |

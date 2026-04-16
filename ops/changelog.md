@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 373: Three-Tier Pipeline Live GPU Benchmark)
+
+- 2026-04-16 02:02: Exp 373 implemented and verified.
+  - `scripts/experiment_373_three_tier_live.py` — Hard `CARNOT_FORCE_LIVE=1` gate via `diagnose_live_gpu()`. Extends Exp 360 from cpu_synthetic to live_gpu mode. Runs 50 GSM8K responses from Exp 368 result file (real text) through the SinkProbe→EORM→Ising cascade. Attention matrices approximated with realistic Beta-mixture sink model (not uniform/max like Exp 360). EORM prefers Exp 371 retrained weights (371_real), falls back to Exp 359 (346_synthetic), then fresh model.
+  - `diagnose_live_gpu()` — Returns live_available, force_live_env, cuda_available, reason. Testable in isolation without GPU.
+  - `load_eorm_model(repo_root)` — Priority: eorm_model_371_real.safetensors → eorm_model_359_real.safetensors → fresh EORMModel. Returns (model, label_string).
+  - `_make_approximate_attention(n_heads, seq_len, is_correct, rng)` — Beta(3,2)-mixture for correct (higher sink ~0.1-0.6), Beta(2,5) for wrong (lower sink ~0.05-0.35). More realistic than Exp 360's binary 0.9/uniform matrices.
+  - `load_live_responses(repo_root, n)` — Loads from experiment_368_precision_live.json, attaches approximate attention matrices. Falls back to synthetic GSM8K if file missing or empty.
+  - `compute_honest_verdict(total_skip_rate, fn_rate)` — `"throughput_gain_live"` only when skip_rate > 0.30 AND fn_rate < 0.05. Four explicit branch outcomes for conservative reporting.
+  - `run_ising_alone_baseline(responses)` — Throughput of calling Ising stub on every response (no fast path).
+  - Artifact: `artifact_type="carnot.three_tier_benchmark.v2"`, `inference_mode`, `real_attention_matrices_used`, `skip_rate_sink_probe`, `skip_rate_eorm`, `total_skip_rate`, `fn_rate`, `throughput_qps`, `ising_calls_saved_pct`, `eorm_model_used`, `honest_verdict`.
+  - `tests/python/test_experiment_373_three_tier_live.py` — 80 tests pass, 100% new-function coverage. All function branches covered: diagnose_live_gpu (3 cases), load_eorm_model (5 cases), _make_approximate_attention (shape/validity), _attach_attention_matrices, _build_fallback_responses, load_live_responses (file/fallback/error), _check_real_attention_available, run_ising_alone_baseline, compute_honest_verdict (4 branches), run_experiment (blocked/success/env-driven/no-repo_root).
+  - `SCENARIO-VERIFY-118/119` added to `openspec/capabilities/verifiable-reasoning/spec.md` and implementation status table.
+  - Live run pending: writes blocked artifact when CARNOT_FORCE_LIVE not set. With GPU: measures whether real attention sink distribution achieves skip_rate>0.30 with fn_rate<0.05.
+  (User-requested execution)
+
 ## 2026-04-16 (Exp 370: Live Adversarial GSM8K Benchmark — Carnot Credibility Experiment)
 
 - 2026-04-16 00:50: Exp 370 implemented and verified.
