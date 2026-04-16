@@ -1,4 +1,4 @@
-"""Tests for Exp 319: operational retrospective for milestone 2026.04.29.
+"""Tests for Exp 319: operational retrospective for milestone 2026.04.23.
 
 Spec coverage: REQ-OPS-001, REQ-OPS-002, REQ-OPS-003, REQ-OPS-004, REQ-OPS-005,
                SCENARIO-OPS-001, SCENARIO-OPS-002, SCENARIO-OPS-003,
@@ -19,7 +19,7 @@ import pytest
 SCRIPTS_DIR = Path(__file__).parent.parent.parent / "scripts"
 RESULTS_DIR = Path(__file__).parent.parent.parent / "results"
 RETRO_SCRIPT = SCRIPTS_DIR / "experiment_319_retro.py"
-RETRO_RESULT = RESULTS_DIR / "operational_retro_2026_04_29.json"
+RETRO_RESULT = RESULTS_DIR / "operational_retro_2026_04_23.json"
 
 
 # ---------------------------------------------------------------------------
@@ -31,7 +31,7 @@ RETRO_RESULT = RESULTS_DIR / "operational_retro_2026_04_29.json"
 
 
 def load_retro_artifact(path: Path) -> dict[str, Any]:
-    """Load and schema-validate the 2026.04.29 retro artifact.
+    """Load and schema-validate the 2026.04.23 retro artifact.
 
     Raises FileNotFoundError if the file does not exist.
     Raises ValueError if the file is not valid JSON or is missing required keys.
@@ -123,9 +123,9 @@ class TestRetroArtifactSchema:
             )
 
     def test_milestone_value(self) -> None:
-        """SCENARIO-OPS-001: milestone must identify 2026.04.29."""
+        """SCENARIO-OPS-001: milestone must identify 2026.04.23."""
         data = json.loads(RETRO_RESULT.read_text())
-        assert data["milestone"] == "2026.04.29"
+        assert data["milestone"] == "2026.04.23"
 
     def test_generated_at_is_iso8601(self) -> None:
         """SCENARIO-OPS-001: generated_at must be an ISO-8601 timestamp."""
@@ -173,7 +173,7 @@ class TestLoadRetroArtifact:
     def test_load_raises_value_error_for_missing_keys(self, tmp_path: Path) -> None:
         """SCENARIO-OPS-001: raises ValueError when required keys are absent."""
         sparse = tmp_path / "sparse.json"
-        sparse.write_text(json.dumps({"milestone": "2026.04.29"}))
+        sparse.write_text(json.dumps({"milestone": "2026.04.23"}))
         with pytest.raises(ValueError, match="missing required keys"):
             load_retro_artifact(sparse)
 
@@ -201,7 +201,7 @@ class TestNExperimentsField:
         assert isinstance(n, int) and n > 0, f"n_experiments={n!r} not a positive int"
 
     def test_n_experiments_reasonable_range(self) -> None:
-        """SCENARIO-OPS-002: milestone 2026.04.29 had 13–20 experiments."""
+        """SCENARIO-OPS-002: milestone 2026.04.23 had 13–20 experiments."""
         data = load_retro_artifact(RETRO_RESULT)
         n = data["n_experiments"]
         assert 13 <= n <= 20, (

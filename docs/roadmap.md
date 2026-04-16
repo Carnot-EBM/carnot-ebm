@@ -4,7 +4,7 @@
 
 ## Current Milestone
 
-**2026.06.17: "Purge, Implement, Execute — First Credible Live Numbers"**
+**2026.04.30: "Purge, Implement, Execute — First Credible Live Numbers"**
 
 | # | Experiment | Status |
 |---|-----------|--------|
@@ -25,13 +25,13 @@
 | 2026.04.20 | Revalidation Sweep | 271-280 | 6 approaches confirmed live (consistency, rollback, factual, KAN, Z3+LLM, memory) |
 | 2026.04.21 | Apple Adversarial + FPGA | 281-294 | Apple adversarial benchmark, SpilledEnergy + SemanticEnergy extractors, FPGA Verilog |
 | 2026.04.22 | Adversarial Completion | 294-306 | Confidence-weighted repair (86.7% FP avoidance), experiment template |
-| 2026.04.29 | JEPA + Z3 + D-Wave | 307-324 | D-Wave quantum sampler, NL-to-Z3 extractor, reward hacking detection, conductor constitution |
-| 2026.05.06 | GPU Benchmarks + Hardening | 325-337 | SinkProbe pre-filter (60% skip, 0% FN), CoT circuit verifier, EORM energy reward model |
-| 2026.05.13 | E2E Precision + EORM | 338-350 | Three-tier pipeline (SinkProbe, EORM, Ising), constraint template library |
-| 2026.05.20 | Apple Adversarial + Z3 | 351-364 | LLM-guided Z3 formalization, GPU acceleration end-to-end |
-| 2026.05.27 | LLMExtractor + Self-Learning | 365-376 | CIKAN energy tier, live adversarial GSM8K |
-| 2026.06.03 | Break Simulated Barrier | 377-389 | JitRL self-learning, live precision pipeline |
-| 2026.06.10 | Live Results At Last | 390-403 | GPU confirmed, CIKAN, FR-11 closed |
+| 2026.04.23 | JEPA + Z3 + D-Wave | 307-324 | D-Wave quantum sampler, NL-to-Z3 extractor, reward hacking detection, conductor constitution |
+| 2026.04.24 | GPU Benchmarks + Hardening | 325-337 | SinkProbe pre-filter (60% skip, 0% FN), CoT circuit verifier, EORM energy reward model |
+| 2026.04.25 | E2E Precision + EORM | 338-350 | Three-tier pipeline (SinkProbe, EORM, Ising), constraint template library |
+| 2026.04.26 | Apple Adversarial + Z3 | 351-364 | LLM-guided Z3 formalization, GPU acceleration end-to-end |
+| 2026.04.27 | LLMExtractor + Self-Learning | 365-376 | CIKAN energy tier, live adversarial GSM8K |
+| 2026.04.28 | Break Simulated Barrier | 377-389 | JitRL self-learning, live precision pipeline |
+| 2026.04.29 | Live Results At Last | 390-403 | GPU confirmed, CIKAN, FR-11 closed |
 
 ## Breakthrough Results
 

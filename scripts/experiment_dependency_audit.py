@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Pre-experiment dependency audit tool — REQ-INFRA-005.
 
-**Why this exists (NEW-002 from the 2026.04.29 retrospective):**
+**Why this exists (NEW-002 from the 2026.04.23 retrospective):**
     Experiments frequently fail mid-run because they try to read result files from
     prior experiments that were never completed (e.g., "load results/experiment_307_
     jepa_real_training.json").  The failure happens *inside* the experiment turn, not

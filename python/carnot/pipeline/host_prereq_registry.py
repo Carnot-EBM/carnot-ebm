@@ -1,7 +1,7 @@
 """Host prerequisite registry for Carnot research experiments.
 
 **Why this module exists:**
-    RETRO-006 (2026.05.06 retrospective): AMD XDNA NPU experiments (Exps 292, 303,
+    RETRO-006 (2026.04.24 retrospective): AMD XDNA NPU experiments (Exps 292, 303,
     314, 335) each independently discovered the same two missing system packages
     (``ninja``, ``openblas``).  This wasted approximately 4 experiment slots — each
     experiment had to rediscover the same missing packages from scratch.

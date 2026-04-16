@@ -1,4 +1,4 @@
-"""Tests for Exp 337: operational retrospective for milestone 2026.05.06.
+"""Tests for Exp 337: operational retrospective for milestone 2026.04.24.
 
 Spec coverage: REQ-RETRO-003,
                SCENARIO-RETRO-005, SCENARIO-RETRO-006
@@ -12,7 +12,7 @@ Key properties under test:
 - n_experiments is an int in [10, 20] for this milestone (Exps 325-336 = 12)
 - bottlenecks_identified is a non-empty list
 - action_items is a non-empty list; each entry has id, description, estimated_impact_pct
-- carry_over is a list of items from the 2026.04.29 retro with resolved booleans
+- carry_over is a list of items from the 2026.04.23 retro with resolved booleans
 - estimated_next_milestone_speedup_pct is a float (can be 0 or negative, but honest)
 - retro_001_resolved: bool — was the 45-min timeout wrapper actually shipped?
 - actual_speedup_pct: float — measured speedup vs prior milestone 40.6 min/exp
@@ -33,7 +33,7 @@ import pytest
 SCRIPTS_DIR = Path(__file__).parent.parent.parent / "scripts"
 RESULTS_DIR = Path(__file__).parent.parent.parent / "results"
 RETRO_SCRIPT = SCRIPTS_DIR / "experiment_337_retro.py"
-RETRO_RESULT = RESULTS_DIR / "operational_retro_2026_05_06.json"
+RETRO_RESULT = RESULTS_DIR / "operational_retro_2026_04_24.json"
 
 # Prior milestone baseline for speedup computation.
 # Derived from experiment_319_retro.py: 691 total min / 17 experiments = 40.647...
@@ -50,7 +50,7 @@ PRIOR_MILESTONE_MEAN_MIN = 40.6
 
 
 def load_retro_artifact(path: Path) -> dict[str, Any]:
-    """Load and schema-validate the 2026.05.06 retro artifact.
+    """Load and schema-validate the 2026.04.24 retro artifact.
 
     Raises FileNotFoundError if the path does not exist.
     Raises ValueError for invalid JSON, non-dict root, or missing required keys.
@@ -105,7 +105,7 @@ def _validate_schema(data: dict[str, Any]) -> None:
 
 
 class TestRetroArtifactSchema:
-    """REQ-RETRO-003: the 2026.05.06 retro artifact must conform to its schema."""
+    """REQ-RETRO-003: the 2026.04.24 retro artifact must conform to its schema."""
 
     REQUIRED_FIELDS: dict[str, Any] = {
         "schema": str,
@@ -148,9 +148,9 @@ class TestRetroArtifactSchema:
             )
 
     def test_milestone_value(self) -> None:
-        """SCENARIO-RETRO-005: milestone must identify 2026.05.06."""
+        """SCENARIO-RETRO-005: milestone must identify 2026.04.24."""
         data = json.loads(RETRO_RESULT.read_text())
-        assert data["milestone"] == "2026.05.06"
+        assert data["milestone"] == "2026.04.24"
 
     def test_schema_field_is_string(self) -> None:
         """SCENARIO-RETRO-005: schema field must be a non-empty string."""
@@ -203,7 +203,7 @@ class TestLoadRetroArtifact:
     def test_load_raises_value_error_for_missing_keys(self, tmp_path: Path) -> None:
         """SCENARIO-RETRO-005: raises ValueError when required keys are absent."""
         sparse = tmp_path / "sparse.json"
-        sparse.write_text(json.dumps({"milestone": "2026.05.06"}))
+        sparse.write_text(json.dumps({"milestone": "2026.04.24"}))
         with pytest.raises(ValueError, match="missing required keys"):
             load_retro_artifact(sparse)
 
@@ -230,11 +230,11 @@ class TestNExperimentsField:
         assert isinstance(n, int) and n > 0
 
     def test_n_experiments_in_range(self) -> None:
-        """SCENARIO-RETRO-005: milestone 2026.05.06 had 10-20 experiments."""
+        """SCENARIO-RETRO-005: milestone 2026.04.24 had 10-20 experiments."""
         data = load_retro_artifact(RETRO_RESULT)
         n = data["n_experiments"]
         assert 10 <= n <= 20, (
-            f"n_experiments={n} outside expected range [10, 20] for milestone 2026.05.06"
+            f"n_experiments={n} outside expected range [10, 20] for milestone 2026.04.24"
         )
 
     def test_mean_consistent_with_total(self) -> None:
@@ -370,12 +370,12 @@ class TestActionItems:
 
 # ---------------------------------------------------------------------------
 # REQ-RETRO-003: carry_over field
-# carry_over is a list of {id, description, resolved: bool} from 2026.04.29 retro
+# carry_over is a list of {id, description, resolved: bool} from 2026.04.23 retro
 # ---------------------------------------------------------------------------
 
 
 class TestCarryOver:
-    """REQ-RETRO-003: carry_over must document 2026.04.29 retro items with resolved flags."""
+    """REQ-RETRO-003: carry_over must document 2026.04.23 retro items with resolved flags."""
 
     REQUIRED_KEYS = {"id", "description", "resolved"}
 

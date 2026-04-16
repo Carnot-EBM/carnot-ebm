@@ -1,7 +1,7 @@
 """Dual-GPU health monitoring for Carnot experiment scaffolding.
 
 **Why this module exists:**
-    The 2026.04.29 retrospective (RETRO-002/RETRO-003) identified two GPU pathologies
+    The 2026.04.23 retrospective (RETRO-002/RETRO-003) identified two GPU pathologies
     that silently degraded experiment performance:
 
     1. **Zombie GPU processes** (RETRO-002): processes holding ~1050 MB VRAM at 0%

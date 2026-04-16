@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Exp 363: Operational Retrospective — Milestone 2026.05.20.
+"""Exp 363: Operational Retrospective — Milestone 2026.04.26.
 
 **Researcher summary:**
-    Milestone 2026.05.20 targeted three primary credibility gaps identified at the
-    end of milestone 2026.05.13: (1) live GPU inference had never run successfully
+    Milestone 2026.04.26 targeted three primary credibility gaps identified at the
+    end of milestone 2026.04.25: (1) live GPU inference had never run successfully
     for two consecutive milestones despite both RTX 3090s sitting idle, (2) the
     Apple adversarial GSM8K benchmark (arXiv 2410.05229) remained unexecuted, and
     (3) ArithmeticExtractor found zero violations on IT-format model output
@@ -13,7 +13,7 @@
     milestone-level statistics, evaluates the six primary success criteria, identifies
     new RETRO items, and estimates time savings for the next milestone.
 
-**Milestone 2026.05.20 experiment inventory (Exps 351–362):**
+**Milestone 2026.04.26 experiment inventory (Exps 351–362):**
 
     Exp 351: Close RETRO-003/005/009/010/011 (deliverable = ops/conductor-log.md)
     Exp 352: Live GPU diagnostic — is_live_capable confirmed True
@@ -33,7 +33,7 @@
     from consecutive conductor log timestamps, which include code-writing, test-running,
     spec-reconciliation, and git-commit overhead — not just script execution time.
 
-**Output:** results/operational_retro_2026_05_20.json
+**Output:** results/operational_retro_2026_04_26.json
 
 Spec: REQ-INFRA-014 (live GPU gating), REQ-BENCH-006/007 (adversarial),
       REQ-EXTRACT-021 (LLMExtractor), REQ-LEARN-025 (EORM retrain)
@@ -62,8 +62,8 @@ _log = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-MILESTONE = "2026.05.20"
-DELIVERABLE = "results/operational_retro_2026_05_20.json"
+MILESTONE = "2026.04.26"
+DELIVERABLE = "results/operational_retro_2026_04_26.json"
 
 # Experiments in this milestone, with their result file paths (relative to repo root)
 # and conductor-log-derived wall-time estimates in minutes.
@@ -414,7 +414,7 @@ def evaluate_success_criteria(
             "Exp 356 (LLMExtractor module) was never implemented — no script exists "
             "and it does not appear in the conductor log. The extraction bottleneck "
             "(ArithmeticExtractor finds 0 violations on Gemma4-E4B-it IT-format output) "
-            "was identified in the 2026.05.13 retro as a top gap. "
+            "was identified in the 2026.04.25 retro as a top gap. "
             "Exp 357 (LLM-guided Z3) and Exp 358 (extraction benchmark module) were built, "
             "but without Exp 356's LLMExtractor there is nothing to compare against regex. "
             "No result JSON was produced for Exp 358 — live GPU required for honest_verdict."
@@ -497,7 +497,7 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "Despite this, CARNOT_FORCE_LIVE was never injected into the environment "
             "when the conductor launched GPU-tagged experiments. Every GPU-tagged experiment "
             "in this milestone (355, 358, 359, 360, 361) ran in simulated or cpu_synthetic mode. "
-            "This is the third consecutive milestone (2026.05.06, 2026.05.13, 2026.05.20) "
+            "This is the third consecutive milestone (2026.04.24, 2026.04.25, 2026.04.26) "
             "where live GPU inference was available but never triggered. "
             "The fix is a one-line conductor configuration change: add "
             "CARNOT_FORCE_LIVE=1 to the subprocess environment when launching "
@@ -520,8 +520,8 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
         "priority": "high",
         "description": (
             "The extraction bottleneck (ArithmeticExtractor finds 0 violations on "
-            "Gemma4-E4B-it IT-format output) was identified in the 2026.05.13 retro "
-            "as one of three primary credibility gaps for milestone 2026.05.20. "
+            "Gemma4-E4B-it IT-format output) was identified in the 2026.04.25 retro "
+            "as one of three primary credibility gaps for milestone 2026.04.26. "
             "The fix — LLMConstraintExtractor (a second LLM call to extract structured "
             "CLAIM: tokens from prose) — was planned as Exp 356 but never implemented: "
             "no script exists, no conductor log entry. "
@@ -663,22 +663,22 @@ def compute_retro(repo_root: Path) -> dict[str, Any]:
         },
         "RETRO-009": {
             "description": "Add live GPU smoke test to session_startup.sh",
-            "prior_status": "NEW — opened 2026.05.13",
+            "prior_status": "NEW — opened 2026.04.25",
             "this_milestone": "PARTIAL — Exp 353 wrote smoke_test.py module and test suite (19 tests); live inference still blocked by CARNOT_FORCE_LIVE not being set.",
         },
         "RETRO-010": {
             "description": "Enforce experiment presplitting for high-complexity tasks",
-            "prior_status": "NEW — opened 2026.05.13",
+            "prior_status": "NEW — opened 2026.04.25",
             "this_milestone": "PARTIAL — Exp 359 was implicitly split into two conductor phases (18:12 implementation + 18:43 actual run). No formal presplit mechanism verified.",
         },
         "RETRO-011": {
             "description": "Batch doc reconciliation every 5 experiments",
-            "prior_status": "NEW — opened 2026.05.13",
+            "prior_status": "NEW — opened 2026.04.25",
             "this_milestone": "UNKNOWN — no change in reconciliation pattern observed from conductor log.",
         },
     }
 
-    # Cumulative stats (this milestone adds to prior 2026.05.13 total)
+    # Cumulative stats (this milestone adds to prior 2026.04.25 total)
     prior_total_experiments = 399
     prior_total_minutes = 5818
     this_milestone_ran = stats["n_experiments_ran"]
@@ -693,7 +693,7 @@ def compute_retro(repo_root: Path) -> dict[str, Any]:
         "retro_type": "full_milestone",
         "note": (
             f"Retrospective covering milestone {MILESTONE} experiments (Exps 351–362). "
-            "Prior milestone retro is preserved in results/operational_retro_2026_05_13.json. "
+            "Prior milestone retro is preserved in results/operational_retro_2026_04_25.json. "
             "Wall times are estimated from conductor log timestamps; script execution times "
             "(available in individual result JSONs as duration_s) are a fraction of total overhead."
         ),
@@ -722,7 +722,7 @@ def compute_retro(repo_root: Path) -> dict[str, Any]:
             "with upside to 30%+ if live GPU inference runs successfully."
         ),
         "meta_reflection": (
-            "Milestone 2026.05.20's central finding is not a research result — it is an "
+            "Milestone 2026.04.26's central finding is not a research result — it is an "
             "infrastructure diagnosis: the hardware capability (is_live_capable=True confirmed "
             "by Exp 352) and the conductor automation (experiments run autonomously) are both "
             "in place, but they are not connected. CARNOT_FORCE_LIVE was never set by the "

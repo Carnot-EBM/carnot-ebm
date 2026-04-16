@@ -1,0 +1,120 @@
+{
+  "schema": "operational_retro_v2",
+  "milestone": "2026.04.23",
+  "generated_at": "2026-04-15T01:11:06Z",
+  "total_wall_time_minutes": 5093,
+  "total_wall_time_hours": 84.9,
+  "experiments_completed": 359,
+  "avg_minutes_per_experiment": 14.2,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "name": "Exp 53: Runtime constraint instrumentation",
+      "duration_min": 418,
+      "pct_total": 8.2,
+      "root_cause": "Early-milestone experiment with no experiment template, no batching harness, and no pre-flight test skeleton. Likely hit a deep redesign loop: runtime constraint instrumentation requires hooking into the Carnot pipeline at multiple points (sampler, verifier, and energy function), and without a prior scaffold the first implementation attempt probably failed integration tests, triggering a repair-then-retest spiral. At 418 minutes this single experiment consumed 8.2% of the entire milestone wall time. The ExperimentTemplate and BatchedInferenceRunner introduced in Exp 306 eliminate most of this cold-start overhead for later experiments.",
+      "category": "cold_start_no_template",
+      "fix_implemented_this_milestone": true,
+      "fix_description": "Exp 306 introduced ExperimentTemplate + BatchedInferenceRunner. Experiments after Exp 306 averaged ~12 min vs ~18 min before. Template setup overhead < 0.5 s (validated by Exp 306 benchmark)."
+    },
+    {
+      "rank": 2,
+      "name": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "duration_min": 117,
+      "pct_total": 2.3,
+      "root_cause": "Live GPU inference over a full GSM8K sample set using two models sequentially on a single GPU. GPU utilization was effectively serial: Qwen3.5-0.8B ran to completion on GPU 0, then Gemma ran on GPU 0. GPU 1 was idle throughout. A DualGPURunner configuration (Qwen on GPU 0, Gemma on GPU 1 concurrently) would have cut wall time roughly in half. Additionally, the pre-warm step (Exp 294 pattern) may not have been applied, causing lazy-load stalls on the first batch.",
+      "category": "sequential_gpu_when_parallel_possible",
+      "fix_implemented_this_milestone": false,
+      "fix_description": "DualGPURunner exists (wired into ExperimentTemplate.setup_gpu()) but was not used here. Carry forward as RETRO-003."
+    },
+    {
+      "rank": 3,
+      "name": "Exp 308: JEPA fast-path gate integration and latency benchmark",
+      "duration_min": 105,
+      "pct_total": 2.1,
+      "root_cause": "Post-test failure on the first attempt due to a dimension mismatch in logit_mean (32->8 for the Exp 291 ONNX model). The test suite expected a 32-dimensional logit vector but the Exp 307 training produced an 8-feature energy vector. Required a repair loop to fix the feature dimension and re-run all 4800 tests before the experiment could be marked complete. A 45-minute hard timeout (RETRO-001) would have auto-escalated this rather than allowing a 105-minute spiral.",
+      "category": "post_test_failure_repair_loop",
+      "fix_implemented_this_milestone": false,
+      "fix_description": "RETRO-001 (45-min conductor timeout) still not implemented. Carried forward again."
+    },
+    {
+      "rank": 4,
+      "name": "Exp 184: 3B model verification — does verify-repair help large models",
+      "duration_min": 83,
+      "pct_total": 1.6,
+      "root_cause": "Live GPU inference at 3B parameter scale. The 3B model may not have fit in a single RTX 3090's 24 GB VRAM without quantization, requiring fallback to CPU offloading or sequential layer execution, both of which inflate wall time significantly. Additionally, no pre-warm step recorded — the first inference batch likely included GPU lazy-load latency. Sequential single-GPU execution with a large model is the dominant cost.",
+      "category": "large_model_vram_pressure",
+      "fix_implemented_this_milestone": false,
+      "fix_description": "device_map='auto' or bitsandbytes 4-bit quantization would distribute the 3B model across both GPUs and reduce wall time. Carry forward as RETRO-004."
+    },
+    {
+      "rank": 5,
+      "name": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "duration_min": 78,
+      "pct_total": 1.5,
+      "root_cause": "Live GPU inference combined with typed IR constraint evaluation, which is CPU-bound and single-threaded. The experiment likely alternated between GPU inference waits and CPU-bound Z3/constraint evaluation in a serial loop, with neither resource fully saturated. A pipelined design — inference on GPU, constraint evaluation on CPU concurrently — would reduce wall time. Also likely run sequentially after Exp 219 with both GPUs already hot, leaving GPU 1 idle.",
+      "category": "sequential_gpu_cpu_interleaving",
+      "fix_implemented_this_milestone": false,
+      "fix_description": "Async pipelining of GPU inference + CPU constraint evaluation. Carry forward as RETRO-005."
+    }
+  ],
+  "gpu_utilization_analysis": {
+    "current_state_at_retro": {
+      "gpu_0_used_mb": 543,
+      "gpu_0_util_pct": 0,
+      "gpu_0_temp_c": 52,
+      "gpu_1_used_mb": 531,
+      "gpu_1_util_pct": 0,
+      "gpu_1_temp_c": 43,
+      "active_processes": 4,
+      "zombie_candidate_pids": [2592400, 2595103]
+    },
+    "zombie_process_assessment": "PIDs 2592400 and 2595103 appear on both GPUs with 260+ MB VRAM allocated and 0% utilization. Each process has CPU time << wall time (261s CPU / 1124s wall = 23% ratio for PID 2592400; 204s / 909s = 22% for PID 2595103). These are likely idle inference servers or result-collection workers that completed their work but were not killed. They are not technically zombies by the gpu_monitor.py definition (< 1% CPU ratio threshold) but are wasting ~1050 MB of VRAM across both GPUs that could be reclaimed for inference experiments.",
+    "sequential_vs_parallel": "The two slowest live-GPU experiments (Exp 219 at 117 min, Exp 221 at 78 min) were run sequentially and only used GPU 0. If parallelized via DualGPURunner (Qwen on GPU 0, Gemma on GPU 1), combined wall time drops from 195 min to ~90 min — a 54% reduction for those two experiments.",
+    "recommended_action": "Run gpu_monitor.py --kill-zombies before each live-GPU experiment session to reclaim idle VRAM. Integrate into conductor pre-experiment check (RETRO-002)."
+  },
+  "bottlenecks_identified": [
+    "Early experiments (Exp 1-100) lacked ExperimentTemplate: no checkpoint, no batch timing, no standard artifact schema. Average duration for Exp 1-100 was ~22 min vs ~10 min for Exp 300+.",
+    "Sequential GPU execution: two-model benchmarks (Exp 219, Exp 221) ran models one-at-a-time on GPU 0 with GPU 1 idle. Parallelizing would have saved ~100 min across the milestone.",
+    "No conductor hard-timeout: long experiments (Exp 53 at 418 min, Exp 308 at 105 min) were allowed to spiral. A 45-min ceiling with auto-escalation would have saved ~280 min on Exp 53 alone.",
+    "Missing pre-experiment dependency audit: Exp 321 lost ~20 min to dwave-ocean-sdk install; Exp 313/314 lost time to missing hardware prereqs discovered at runtime.",
+    "Post-test failure repair loops: experiments that failed tests on first attempt (Exp 308, 309, 310, 311 confirmed; likely others in Exp 100-200 range) required full re-runs, adding 20-40 min per failure. Tests were written during implementation, not before.",
+    "Zombie GPU processes between sessions: idle processes holding 260+ MB VRAM on each GPU were not cleared, occasionally conflicting with new inference sessions and delaying GPU memory allocation.",
+    "Pre-flight test suite cost: running the full 4800-test suite takes ~3 seconds after Exp 306 scope reduction, which is acceptable. Before Exp 200, the suite was larger and slower — estimated 30-60 s per run, amplified by the high post-test-failure retry rate in that era.",
+    "Doc reconciliation overhead: each experiment updates ops/changelog.md, ops/status.md, and traceability.md. When these files grew large (changelog exceeded 373 KB by this milestone), read-then-append cycles became slower. Large file I/O added cumulative latency."
+  ],
+  "improvements_suggested": [
+    "RETRO-001 (HIGH, ~8% impact): Add 45-minute hard timeout to the conductor. When an experiment exceeds 45 min, auto-checkpoint and emit status='timeout_escalate'. Exp 53 alone would have saved ~373 min. Implementation: add ExperimentTemplate.check_timeout() called every 5 min from the main loop.",
+    "RETRO-002 (MEDIUM, ~4% impact): Integrate gpu_monitor.py --json into the conductor pre-experiment check. Inject GPU state into the experiment prompt so the conductor auto-selects DualGPURunner vs single-GPU and warns on zombie processes before they cause allocation conflicts.",
+    "RETRO-003 (HIGH, ~5% impact): Enforce DualGPURunner for all two-model benchmarks. When an experiment requires comparing two LLMs, the conductor should default to running them in parallel on GPU 0 and GPU 1 rather than sequentially. Saves ~100 min for this milestone class of experiments.",
+    "RETRO-004 (MEDIUM, ~3% impact): Enable device_map='auto' and optional bitsandbytes 4-bit quantization for models >= 3B parameters. This distributes load across both GPUs and eliminates VRAM pressure that causes CPU offloading slowdowns (Exp 184 pattern).",
+    "RETRO-005 (LOW, ~2% impact): Pipeline GPU inference and CPU constraint evaluation concurrently using asyncio or thread-pool overlap. Currently the pattern is serial: wait for GPU inference result, then run Z3/constraint eval. Overlap cuts dead time.",
+    "NEW-001 (HIGH, ~10% impact): Enforce test-first development in ExperimentTemplate. Add a write_tests_first() stub that generates test skeletons before the implementation is written. This milestone had post-test-failure repair loops across multiple experiments; test-first would surface integration issues before they accumulate.",
+    "NEW-002 (MEDIUM, ~5% impact): Add pre-experiment optional-dependency audit. Before running any experiment that imports an optional package, the conductor should verify importability in the virtualenv and surface a status='blocked_prereq' artifact immediately rather than mid-experiment.",
+    "NEW-003 (LOW, ~2% impact): Trim ops/changelog.md when it exceeds 200 KB by archiving entries older than 60 days to ops/changelog-archive-YYYY-MM.md. Large changelog files slow every doc-update cycle."
+  ],
+  "estimated_time_savings_pct": 27,
+  "savings_breakdown": {
+    "RETRO_001_hard_timeout": 8,
+    "RETRO_002_gpu_monitor_integration": 4,
+    "RETRO_003_dual_gpu_enforcement": 5,
+    "RETRO_004_large_model_quantization": 3,
+    "RETRO_005_async_pipeline": 2,
+    "NEW_001_test_first_enforcement": 10,
+    "NEW_002_prereq_audit": 5,
+    "NEW_003_changelog_archival": 2,
+    "note": "Items are partially overlapping; combined realistic savings estimated at 27% (not sum of parts) due to correlation between repair-loop and test-first improvements."
+  },
+  "carry_over_from_previous_retro": {
+    "prior_milestone": "2026.04.22",
+    "items_carried_forward": ["RETRO-001 (45-min timeout)", "RETRO-002 (gpu_monitor integration)"],
+    "items_resolved": [
+      "BatchedInferenceRunner standard pattern — adopted via ExperimentTemplate Exp 306",
+      "DualGPURunner wired into ExperimentTemplate.setup_gpu() — available but not enforced for two-model benchmarks"
+    ],
+    "carry_over_rate_pct": 40,
+    "note": "RETRO-001 and RETRO-002 were carried forward from 2026.04.22 without implementation. They are now carried forward again into 2026.04.24. The pattern of carrying these without implementation suggests they need to be promoted to a blocking story in the next epic."
+  },
+  "post_test_failure_rate_assessment": "Estimated 15-20% of experiments in the Exp 100-300 range experienced post-test failures on the first attempt based on commit message patterns ([conductor] Checkpoint (tests failing)). This rate drops to ~6% for Exp 300+ after ExperimentTemplate adoption. Test-first enforcement (NEW-001) targets this residual rate.",
+  "meta_reflection": "This milestone ran 359 experiments in 84.9 hours (avg 14.2 min/experiment), a throughput improvement over the prior milestone's 40.6 min/experiment average. The improvement is largely attributable to ExperimentTemplate (Exp 306), BatchedInferenceRunner standardization, and the DualGPURunner integration in setup_gpu(). However, the long tail (Exp 53 at 418 min = 8.2% of all wall time alone) shows that a single runaway experiment can dominate the milestone budget. The conductor timeout (RETRO-001) is the highest-leverage single action item remaining, followed by test-first enforcement (NEW-001). Both should be treated as blocking for the 2026.04.24 milestone."
+}

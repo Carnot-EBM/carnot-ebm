@@ -4,7 +4,7 @@
 **Researcher summary:**
     Exp 368 built and tested a complete precision benchmark pipeline (5 variants ×
     2 models × 200 GSM8K questions) with CARNOT_FORCE_LIVE=1 hard-gate logic.
-    However, it was blocked in milestone 2026.05.27 because the session startup never
+    However, it was blocked in milestone 2026.04.27 because the session startup never
     set CARNOT_FORCE_LIVE=1 in conductor subprocesses.
 
     Exp 377 fixed the session startup by writing ``scripts/session_startup.sh`` and

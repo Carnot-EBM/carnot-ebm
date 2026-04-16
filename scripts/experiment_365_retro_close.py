@@ -2,8 +2,8 @@
 """Experiment 365 — Close RETRO-012, RETRO-013, RETRO-014.
 
 **What this experiment does:**
-    Three retrospective action items carried into milestone 2026.05.27 from
-    the 2026.05.20 operational retrospective (results/operational_retro_2026_05_20.json).
+    Three retrospective action items carried into milestone 2026.04.27 from
+    the 2026.04.26 operational retrospective (results/operational_retro_2026_04_26.json).
     This experiment closes all three items with verifiable artifacts and rationale.
 
     RETRO-012 (critical): CARNOT_FORCE_LIVE never set by conductor — three
@@ -121,8 +121,8 @@ def run_experiment(repo_root: Path) -> dict:
         closed_by_exp=EXP_ID,
         rationale=(
             "Exp 356 (LLMExtractor) was planned but never implemented in milestone "
-            "2026.05.20.  The gap is addressed by Exp 366 (LLMExtractor) in milestone "
-            "2026.05.27.  This RETRO item is closed here as the tracking record; "
+            "2026.04.26.  The gap is addressed by Exp 366 (LLMExtractor) in milestone "
+            "2026.04.27.  This RETRO item is closed here as the tracking record; "
             "Exp 366 provides the implementation artifact."
         ),
     )

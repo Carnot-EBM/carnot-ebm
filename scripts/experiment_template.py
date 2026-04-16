@@ -665,7 +665,7 @@ class ExperimentTemplate:
         The skeleton contains a single passing placeholder test so that the
         test runner stays green while the real tests are being written.
 
-        **Why this exists:** The 2026.04.29 milestone retrospective measured a
+        **Why this exists:** The 2026.04.23 milestone retrospective measured a
         23.5% post-test failure rate.  A root-cause was tests being written
         after (or skipped during) implementation.  Generating the skeleton
         upfront creates a file that CI will execute, making it impossible to

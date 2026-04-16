@@ -10,13 +10,13 @@
 
 ---
 
-## Session: 2026-04-16 Milestone 2026.06.24 Research Planning (v37)
+## Session: 2026-04-16 Milestone 2026.04.31 Research Planning (v37)
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-16T12:44:07Z | 2026-04-16T12:56:17Z | Read 10 project files (research-program.md, prd.md, architecture.md, status.md, changelog.md, research-complete.yaml, research-roadmap.yaml, conductor-log.md, research-references.md, hardware-wishlist.md); 8 arxiv web searches (EBMs, KANs, Ising machines, process reward models, VPRM, AMD NPU, thermodynamic computing, continual self-learning); appended 6 new papers to research-references.md (VPRM 2601.17223, FOVER 2505.15960, ThinkPRM 2504.16828, AMD NPU IRON 2504.03083, Thermodynamic Init 2603.24183, Self-Certainty BoN 2502.18581); wrote openspec/change-proposals/research-roadmap-vNEXT.md v37 (milestone 2026.06.24, 12 exps 413-424); wrote research-roadmap-next.yaml (12 experiments, 4 phases) | ~35k |
+| 1 | 2026-04-16T12:44:07Z | 2026-04-16T12:56:17Z | Read 10 project files (research-program.md, prd.md, architecture.md, status.md, changelog.md, research-complete.yaml, research-roadmap.yaml, conductor-log.md, research-references.md, hardware-wishlist.md); 8 arxiv web searches (EBMs, KANs, Ising machines, process reward models, VPRM, AMD NPU, thermodynamic computing, continual self-learning); appended 6 new papers to research-references.md (VPRM 2601.17223, FOVER 2505.15960, ThinkPRM 2504.16828, AMD NPU IRON 2504.03083, Thermodynamic Init 2603.24183, Self-Certainty BoN 2502.18581); wrote openspec/change-proposals/research-roadmap-vNEXT.md v37 (milestone 2026.04.31, 12 exps 413-424); wrote research-roadmap-next.yaml (12 experiments, 4 phases) | ~35k |
 
 ---
 
@@ -40,24 +40,24 @@
 
 ---
 
-## Session: 2026-04-16 Milestone 2026.06.17 Research Planning
+## Session: 2026-04-16 Milestone 2026.04.30 Research Planning
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-16T05:00:00Z | 2026-04-16T05:59:00Z | (prior context) Read 11 project files; arxiv research background agent; appended 7 new papers to research-references.md; wrote openspec/change-proposals/research-roadmap-vNEXT.md v36 (395 lines, milestone 2026.06.17 design); wrote research-roadmap-next.yaml (649 lines, 14 experiments Exp 404-417) | ~80k |
+| 1 | 2026-04-16T05:00:00Z | 2026-04-16T05:59:00Z | (prior context) Read 11 project files; arxiv research background agent; appended 7 new papers to research-references.md; wrote openspec/change-proposals/research-roadmap-vNEXT.md v36 (395 lines, milestone 2026.04.30 design); wrote research-roadmap-next.yaml (649 lines, 14 experiments Exp 404-417) | ~80k |
 | 2 | 2026-04-16T10:00:49Z | 2026-04-16T10:01:02Z | Context compaction resume: verified both output files exist and contain correct content; logged metrics | ~2k |
 
 ---
 
-## Session: 2026-04-16 Exp 389 Milestone 2026.06.03 Retrospective
+## Session: 2026-04-16 Exp 389 Milestone 2026.04.28 Retrospective
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-16T06:45:14Z | 2026-04-16T07:02:16Z | Exp 389: wrote experiment_389_retro_2026_06_03.py (MilestoneRetro2026_06_03 dataclass, compute_retro_2026_06_03, build_retro_artifact v3, estimate_speedup_pct, load_milestone_results, compute_timing_stats, _check_cikan_implemented, main); wrote test_experiment_389_retro.py (115 tests); ran script to produce results/operational_retro_2026_06_03.json; updated ops/status.md + ops/changelog.md + ops/conductor-log.md; 4 pre-existing failures in full suite (unrelated: tests 319, 337, 295) | ~22k |
+| 1 | 2026-04-16T06:45:14Z | 2026-04-16T07:02:16Z | Exp 389: wrote experiment_389_retro_2026_04_28.py (MilestoneRetro2026_04_28 dataclass, compute_retro_2026_04_28, build_retro_artifact v3, estimate_speedup_pct, load_milestone_results, compute_timing_stats, _check_cikan_implemented, main); wrote test_experiment_389_retro.py (115 tests); ran script to produce results/operational_retro_2026_04_28.json; updated ops/status.md + ops/changelog.md + ops/conductor-log.md; 4 pre-existing failures in full suite (unrelated: tests 319, 337, 295) | ~22k |
 
 ---
 
@@ -102,33 +102,33 @@
 
 ---
 
-## Session: 2026-04-16 Milestone 2026.06.03 Planning
+## Session: 2026-04-16 Milestone 2026.04.28 Planning
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-16T03:03:23Z | 2026-04-16T03:19:11Z | Plan next milestone 2026.06.03: read 11 project files, arxiv research (6 new papers: Physical Analog KAN 2602.07518, BiKA 2602.23455, JitRL 2601.18510, Ising↔NN 2511.00746, Adaptive Rejection Sampling 2504.05410, REGREACT 2604.12054), identified 3 gaps (RETRO-015 live GPU 4th milestone, RETRO-018 CIKAN corrupt, JitRL reveals correct Tier 1 algorithm), designed 13 experiments (377-389) across 5 phases, wrote research-roadmap-vNEXT.md (v34) + research-roadmap-next.yaml | ~10k |
+| 1 | 2026-04-16T03:03:23Z | 2026-04-16T03:19:11Z | Plan next milestone 2026.04.28: read 11 project files, arxiv research (6 new papers: Physical Analog KAN 2602.07518, BiKA 2602.23455, JitRL 2601.18510, Ising↔NN 2511.00746, Adaptive Rejection Sampling 2504.05410, REGREACT 2604.12054), identified 3 gaps (RETRO-015 live GPU 4th milestone, RETRO-018 CIKAN corrupt, JitRL reveals correct Tier 1 algorithm), designed 13 experiments (377-389) across 5 phases, wrote research-roadmap-vNEXT.md (v34) + research-roadmap-next.yaml | ~10k |
 
 ---
 
-## Session: 2026-04-16 Milestone 2026.06.10 Planning
+## Session: 2026-04-16 Milestone 2026.04.29 Planning
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-16T07:00:00Z | 2026-04-16T07:42:31Z | Plan next milestone 2026.06.10: read 11 project files, arxiv research (5 new papers: Semantic Energy 2508.14496, CRANE 2502.09061, DSP/Feasibility Channels 2604.02350, Potts MFC 2602.04200, LLM-QUBO 2509.00099), added papers to research-references.md, identified 3 gaps (RETRO-019 GPU offline 5th milestone, RETRO-020 CIKAN+JitRL+SafetyKAN missing, RETRO-021 FR-11 unconfirmed), designed 14 experiments (390-403) across 5 phases + mandatory GPU preflight gate, wrote openspec/change-proposals/research-roadmap-vNEXT.md (v35) + research-roadmap-next.yaml | ~18k |
+| 1 | 2026-04-16T07:00:00Z | 2026-04-16T07:42:31Z | Plan next milestone 2026.04.29: read 11 project files, arxiv research (5 new papers: Semantic Energy 2508.14496, CRANE 2502.09061, DSP/Feasibility Channels 2604.02350, Potts MFC 2602.04200, LLM-QUBO 2509.00099), added papers to research-references.md, identified 3 gaps (RETRO-019 GPU offline 5th milestone, RETRO-020 CIKAN+JitRL+SafetyKAN missing, RETRO-021 FR-11 unconfirmed), designed 14 experiments (390-403) across 5 phases + mandatory GPU preflight gate, wrote openspec/change-proposals/research-roadmap-vNEXT.md (v35) + research-roadmap-next.yaml | ~18k |
 
 ---
 
-## Session: 2026-04-15 Milestone 2026.05.27 Planning
+## Session: 2026-04-15 Milestone 2026.04.27 Planning
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-15T21:47:22Z | 2026-04-15T21:56:02Z | Plan next milestone 2026.05.27: read 10 project files, arxiv research (4 new papers added to research-references.md: CIKAN 2412.03710, Thermodynamic init 2603.24183, RLVR 2506.14245, StructEval 2505.20139), identified 3 gaps (RETRO-012/live GPU, LLMExtractor, real-data self-learning), designed 12 experiments (365-376) across 5 phases, wrote research-roadmap-vNEXT.md (v33) + research-roadmap-next.yaml | ~9m |
+| 1 | 2026-04-15T21:47:22Z | 2026-04-15T21:56:02Z | Plan next milestone 2026.04.27: read 10 project files, arxiv research (4 new papers added to research-references.md: CIKAN 2412.03710, Thermodynamic init 2603.24183, RLVR 2506.14245, StructEval 2505.20139), identified 3 gaps (RETRO-012/live GPU, LLMExtractor, real-data self-learning), designed 12 experiments (365-376) across 5 phases, wrote research-roadmap-vNEXT.md (v33) + research-roadmap-next.yaml | ~9m |
 
 ---
 
@@ -165,13 +165,13 @@
 
 ---
 
-## Session: 2026-04-15 Research Planning Milestone 2026.05.20
+## Session: 2026-04-15 Research Planning Milestone 2026.04.26
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-15T15:10:04Z | 2026-04-15T15:20:06Z | Plan next milestone 2026.05.20 — arxiv scan + design; 13 experiments (Exps 351-363) across 5 phases; 4 new papers added to research-references.md (ARM-EBM bijection 2512.15605, SAVeR 2604.08401, MathAgent 2604.11188, T-SKM-Net 2512.10461); 3 gaps: live GPU never works, constraint extraction broken for IT models, Apple adversarial GSM8K untested | ~10m |
+| 1 | 2026-04-15T15:10:04Z | 2026-04-15T15:20:06Z | Plan next milestone 2026.04.26 — arxiv scan + design; 13 experiments (Exps 351-363) across 5 phases; 4 new papers added to research-references.md (ARM-EBM bijection 2512.15605, SAVeR 2604.08401, MathAgent 2604.11188, T-SKM-Net 2512.10461); 3 gaps: live GPU never works, constraint extraction broken for IT models, Apple adversarial GSM8K untested | ~10m |
 
 ---
 
@@ -225,13 +225,13 @@
 
 ---
 
-## Session: 2026-04-15 Milestone 2026.05.13 Planning
+## Session: 2026-04-15 Milestone 2026.04.25 Planning
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-15T07:02:07Z | 2026-04-15T07:13:47Z | Plan next milestone 2026.05.13 — arxiv scan (28 papers found, 6 new added to references); 3 gaps identified: new precision components not live-benchmarked, self-learning adds no new constraints, EORM/SinkProbe not yet integrated; 13 experiments (Exps 338-350) across 5 phases; research-roadmap-vNEXT.md (v31) + research-roadmap-next.yaml created | ~11m |
+| 1 | 2026-04-15T07:02:07Z | 2026-04-15T07:13:47Z | Plan next milestone 2026.04.25 — arxiv scan (28 papers found, 6 new added to references); 3 gaps identified: new precision components not live-benchmarked, self-learning adds no new constraints, EORM/SinkProbe not yet integrated; 13 experiments (Exps 338-350) across 5 phases; research-roadmap-vNEXT.md (v31) + research-roadmap-next.yaml created | ~11m |
 
 ---
 
@@ -276,13 +276,13 @@
 
 ---
 
-## Session: 2026-04-15 Milestone 2026.05.06 Planning
+## Session: 2026-04-15 Milestone 2026.04.24 Planning
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-15T01:12:49Z | 2026-04-15T01:25:30Z | Plan milestone 2026.05.06 — arxiv research (6 new papers), research-references.md updated, research-roadmap-vNEXT.md (v30) + research-roadmap-next.yaml created; 13 experiments (Exps 325-337) across 4 phases | ~12m41s |
+| 1 | 2026-04-15T01:12:49Z | 2026-04-15T01:25:30Z | Plan milestone 2026.04.24 — arxiv research (6 new papers), research-references.md updated, research-roadmap-vNEXT.md (v30) + research-roadmap-next.yaml created; 13 experiments (Exps 325-337) across 4 phases | ~12m41s |
 
 ---
 
@@ -292,7 +292,7 @@
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-15T00:32:57Z | 2026-04-15T00:43:21Z | Exp 319: Operational retrospective for milestone 2026.04.29 — 59 tests, script, artifact; 4800 pass, 99.43% coverage | ~10m24s |
+| 1 | 2026-04-15T00:32:57Z | 2026-04-15T00:43:21Z | Exp 319: Operational retrospective for milestone 2026.04.23 — 59 tests, script, artifact; 4800 pass, 99.43% coverage | ~10m24s |
 
 ---
 
@@ -396,13 +396,13 @@
 
 ---
 
-## Session: 2026-04-14 Milestone Planning 2026.04.29
+## Session: 2026-04-14 Milestone Planning 2026.04.23
 
 ### Turn Log
 
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
-| 1 | 2026-04-14T12:48:38Z | 2026-04-14T12:59:40Z | Plan milestone 2026.04.29 — read 11 project files (research-program, prd, architecture, status, changelog, research-complete, research-roadmap, change-proposals, conductor-log, research-references, hardware-wishlist), arxiv research (7 new papers via Explore agent), update research-references.md (8 new entries), create research-roadmap-vNEXT.md v29 (13 experiments across 4 phases, 3 gaps analysis, architecture diagram), create research-roadmap-next.yaml | ~40k |
+| 1 | 2026-04-14T12:48:38Z | 2026-04-14T12:59:40Z | Plan milestone 2026.04.23 — read 11 project files (research-program, prd, architecture, status, changelog, research-complete, research-roadmap, change-proposals, conductor-log, research-references, hardware-wishlist), arxiv research (7 new papers via Explore agent), update research-references.md (8 new entries), create research-roadmap-vNEXT.md v29 (13 experiments across 4 phases, 3 gaps analysis, architecture diagram), create research-roadmap-next.yaml | ~40k |
 
 ## Session: 2026-04-14 Milestone Planning 2026.04.22
 
@@ -1801,7 +1801,7 @@
 | exp335 | 2026-04-15T06:01:06Z | 2026-04-15T06:08:22Z | Exp 335: AMD XDNA NPU build 4th retry — spec (SCENARIO-EXP303-E/F), 4 check fns, prereq_status(), prereq_changes_vs_exp314(), attempt_ort_source_build(); 50 tests pass, 11 skip; blocked_prereq (ninja+openblas still missing) | 7m16s |
 | exp348 | 2026-04-15T14:34:35Z | 2026-04-15T14:35:30Z | Minimal doc updates for Exp 348 (SinkProbe attention-sink pre-filter): appended 1 changelog entry, 1 status row, 5 traceability rows (REQ-VERIFY-086/087, SCENARIO-VERIFY-113/114/115) | 0m55s |
 
-| 2026-04-15T06:21:22Z | 2026-04-15T06:43:30Z | Exp 337 retro: milestone 2026.05.06 operational retrospective | 22m | — |
+| 2026-04-15T06:21:22Z | 2026-04-15T06:43:30Z | Exp 337 retro: milestone 2026.04.24 operational retrospective | 22m | — |
 | exp355 | 2026-04-15T17:17:54Z | 2026-04-15T17:19:43Z | Exp 355: Adversarial GSM8K benchmark — live GPU execution harness; run tests (51 pass); run script (simulated mode, honest_verdict=blocked_simulated); update ops docs | 1m49s |
 | exp358 | 2026-04-15T17:46:53Z | 2026-04-15T17:58:27Z | Exp 358: Comparative extraction benchmark — extraction_benchmark.py + test (33 pass) + experiment script + spec/traceability/ops docs | 11m34s |
 | 2026-04-15T19:54:06Z | 2026-04-15T19:55:16Z | Doc updates for Exp 361 (changelog, status) | 1 min 10 sec | — |

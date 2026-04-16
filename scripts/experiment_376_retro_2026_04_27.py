@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Exp 376: Operational Retrospective — Milestone 2026.05.27.
+"""Exp 376: Operational Retrospective — Milestone 2026.04.27.
 
 **Researcher summary:**
-    Milestone 2026.05.27 targeted the three RETRO items carried from 2026.05.20:
+    Milestone 2026.04.27 targeted the three RETRO items carried from 2026.04.26:
     (1) RETRO-012: CARNOT_FORCE_LIVE never set — conductor_gpu_env.sh created as the
     minimal-impact fix (scripts/conductor_gpu_env.sh, sourced before GPU experiments);
     (2) RETRO-013: LLMExtractor (Exp 356) skipped — addressed by Exp 366 (LLMExtractor
@@ -19,14 +19,14 @@
     GPU inference STILL did not run — the conductor subprocess environment was not updated
     (research_conductor.py is frozen), and the shell hook was not sourced automatically.
     This is the FOURTH consecutive milestone with idle GPUs. A new RETRO-015 (critical)
-    is opened to escalate: live GPU must be wired before milestone 2026.06.03.
+    is opened to escalate: live GPU must be wired before milestone 2026.04.28.
 
     Wall-time improvement: Many experiments in this milestone returned fast (blocked state,
     3–5 min) because the CARNOT_FORCE_LIVE gate fails fast. This reduced mean experiment
     duration from 33.3 min/exp to ~23.4 min/exp — a 29.7% speedup, but for the wrong
     reason. Blocked experiments complete quickly because they do no useful work.
 
-**Milestone 2026.05.27 experiment inventory (Exps 365–375):**
+**Milestone 2026.04.27 experiment inventory (Exps 365–375):**
 
     Exp 365: Close RETRO-012/013/014 — conductor_gpu_env.sh + JSON enforcer (SUCCESS)
     Exp 366: LLMConstraintExtractor module — (module exists, no result JSON)
@@ -45,11 +45,11 @@
     consecutive conductor log timestamps, covering code-writing, test-running, spec
     reconciliation, and git-commit overhead — not just script execution time.
 
-**Output:** results/operational_retro_2026_05_27.json
+**Output:** results/operational_retro_2026_04_27.json
 
 Spec: REQ-INFRA-014 (live GPU gating), REQ-BENCH-006/007 (adversarial GSM8K),
       REQ-EXTRACT-023 (LLM extractor comparison), REQ-LEARN-026/027 (self-learning relay)
-SCENARIO: RETRO-2026.05.27
+SCENARIO: RETRO-2026.04.27
 """
 
 from __future__ import annotations
@@ -76,10 +76,10 @@ _log = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-MILESTONE = "2026.05.27"
-DELIVERABLE = "results/operational_retro_2026_05_27.json"
+MILESTONE = "2026.04.27"
+DELIVERABLE = "results/operational_retro_2026_04_27.json"
 
-# Mean experiment duration from the previous milestone (2026.05.20 retro).
+# Mean experiment duration from the previous milestone (2026.04.26 retro).
 # This is the baseline against which RETRO-012 speedup is measured.
 PREV_MEAN_EXP_DURATION_MIN: float = 33.3
 
@@ -202,8 +202,8 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
 
 
 @dataclasses.dataclass
-class MilestoneRetro2026_05_27:
-    """All measurable success criteria for milestone 2026.05.27.
+class MilestoneRetro2026_04_27:
+    """All measurable success criteria for milestone 2026.04.27.
 
     Each boolean field corresponds to a primary goal stated in the milestone plan.
     False does NOT mean "failed completely" — it means the criterion was not met
@@ -286,8 +286,8 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "updated — research_conductor.py is frozen — and the shell hook was not sourced "
             "automatically. Every GPU-tagged experiment in this milestone (368, 369, 370, 371, "
             "372, 373, 374) ran in blocked or partial mode with zero live inference. "
-            "This is the FOURTH consecutive milestone (2026.05.06, 2026.05.13, 2026.05.20, "
-            "2026.05.27) where live GPU inference was confirmed capable but never triggered. "
+            "This is the FOURTH consecutive milestone (2026.04.24, 2026.04.25, 2026.04.26, "
+            "2026.04.27) where live GPU inference was confirmed capable but never triggered. "
             "The workaround (shell script) is insufficient without a mechanism to auto-source "
             "it before each conductor task. Escalation: this is now blocking all credibility "
             "claims. Next milestone MUST produce at least one experiment with inference_mode="
@@ -324,7 +324,7 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "live extraction comparison requires CARNOT_FORCE_LIVE=1 to run actual Gemma4-E4B-it "
             "inference and compare LLMExtractor vs ArithmeticExtractor on real IT-format output. "
             "The extraction bottleneck (0 violations detected on IT-format responses by "
-            "ArithmeticExtractor) has been open since the 2026.05.13 milestone retrospective. "
+            "ArithmeticExtractor) has been open since the 2026.04.25 milestone retrospective. "
             "Once live GPU runs, Exp 367 will produce an honest_verdict within minutes."
         ),
         "root_cause": "RETRO-015 (live GPU) is the upstream blocker for this criterion.",
@@ -491,7 +491,7 @@ def estimate_speedup_pct(prev_mean: float, curr_mean: float) -> float:
     Parameters
     ----------
     prev_mean : float
-        Previous milestone's mean experiment duration in minutes (33.3 for 2026.05.20).
+        Previous milestone's mean experiment duration in minutes (33.3 for 2026.04.26).
     curr_mean : float
         This milestone's mean experiment duration in minutes.
 
@@ -557,7 +557,7 @@ def _check_cikan_implemented(repo_root: Path, results: dict[str, Any | None]) ->
 # ---------------------------------------------------------------------------
 
 
-def compute_retro_2026_05_27(repo_root: Path) -> MilestoneRetro2026_05_27:
+def compute_retro_2026_04_27(repo_root: Path) -> MilestoneRetro2026_04_27:
     """Load all milestone results, evaluate success criteria, build the retro dataclass.
 
     Separated from main() so it can be unit-tested with a controlled temporary repo root
@@ -570,8 +570,8 @@ def compute_retro_2026_05_27(repo_root: Path) -> MilestoneRetro2026_05_27:
 
     Returns
     -------
-    MilestoneRetro2026_05_27
-        Evaluated success criteria for milestone 2026.05.27.
+    MilestoneRetro2026_04_27
+        Evaluated success criteria for milestone 2026.04.27.
     """
     results = load_milestone_results(repo_root, RESULT_FILE_MAP)
 
@@ -646,7 +646,7 @@ def compute_retro_2026_05_27(repo_root: Path) -> MilestoneRetro2026_05_27:
     if not cikan_implemented:
         retro_items_opened.append("RETRO-018")
 
-    return MilestoneRetro2026_05_27(
+    return MilestoneRetro2026_04_27(
         live_gpu_confirmed=live_gpu_confirmed,
         llm_extractor_beats_regex=llm_extractor_beats_regex,
         adversarial_result_credible=adversarial_result_credible,
@@ -667,8 +667,8 @@ def compute_retro_2026_05_27(repo_root: Path) -> MilestoneRetro2026_05_27:
 # ---------------------------------------------------------------------------
 
 
-def build_retro_artifact(retro: MilestoneRetro2026_05_27) -> dict[str, Any]:
-    """Convert a MilestoneRetro2026_05_27 dataclass into the output artifact dict.
+def build_retro_artifact(retro: MilestoneRetro2026_04_27) -> dict[str, Any]:
+    """Convert a MilestoneRetro2026_04_27 dataclass into the output artifact dict.
 
     Schema is "carnot.operational_retro.v2" — upgraded from v1 (Exp 363) to reflect
     the new success_criteria structure with explicit n_experiments_total and
@@ -676,7 +676,7 @@ def build_retro_artifact(retro: MilestoneRetro2026_05_27) -> dict[str, Any]:
 
     Parameters
     ----------
-    retro : MilestoneRetro2026_05_27
+    retro : MilestoneRetro2026_04_27
         Evaluated success criteria.
 
     Returns
@@ -776,7 +776,7 @@ def build_retro_artifact(retro: MilestoneRetro2026_05_27) -> dict[str, Any]:
             f"Retrospective covering milestone {MILESTONE} experiments (Exps 365–375). "
             "Schema v2 adds n_experiments_blocked and explicit explanations per criterion. "
             "Wall times estimated from conductor log timestamps (code + tests + spec + commit). "
-            "Prior milestone retro: results/operational_retro_2026_05_20.json."
+            "Prior milestone retro: results/operational_retro_2026_04_26.json."
         ),
         "success_criteria": success_criteria,
         "explanations": explanations,
@@ -791,11 +791,11 @@ def build_retro_artifact(retro: MilestoneRetro2026_05_27) -> dict[str, Any]:
             "produces honest_verdict within minutes (~3% savings). RETRO-017 (FR-11 relay): "
             "live relay confirms or refutes self-learning (~5% savings from eliminating re-runs). "
             "RETRO-018 (CIKAN): re-implement cikan_energy.py correctly (~2% savings). "
-            "If live GPU runs for the first time in milestone 2026.06.03, cumulative benefit "
+            "If live GPU runs for the first time in milestone 2026.04.28, cumulative benefit "
             "could reach 40% as the backlog of blocked experiments finally produces results."
         ),
         "meta_reflection": (
-            "Milestone 2026.05.27 reveals a systemic gap between available infrastructure "
+            "Milestone 2026.04.27 reveals a systemic gap between available infrastructure "
             "and operational wiring. The hardware is confirmed capable (Exp 352). The software "
             "gate (CARNOT_FORCE_LIVE=1) is correctly implemented. conductor_gpu_env.sh provides "
             "the environment variable. But none of these components are connected to each other "
@@ -841,7 +841,7 @@ def build_retro_artifact(retro: MilestoneRetro2026_05_27) -> dict[str, Any]:
 
 
 def main() -> None:
-    """Run the retrospective, write the artifact, mark milestone 2026.05.27 COMPLETE."""
+    """Run the retrospective, write the artifact, mark milestone 2026.04.27 COMPLETE."""
     logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 
     tmpl = ExperimentTemplate(
@@ -851,7 +851,7 @@ def main() -> None:
     )
     tmpl.setup()
 
-    retro = compute_retro_2026_05_27(tmpl._repo_root)
+    retro = compute_retro_2026_04_27(tmpl._repo_root)
     artifact_data = build_retro_artifact(retro)
 
     artifact = tmpl.build_result(artifact_data, status="success")

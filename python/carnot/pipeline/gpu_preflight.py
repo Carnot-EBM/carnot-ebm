@@ -1,7 +1,7 @@
 """GPU node preflight check — RETRO-019 operational blocker resolution.
 
 **Researcher summary (RETRO-019):**
-    For FIVE consecutive milestones (2026.05.06 through 2026.06.03), the GPU node
+    For FIVE consecutive milestones (2026.04.24 through 2026.04.28), the GPU node
     was offline or unavailable during conductor sessions, producing zero live results.
     The infrastructure fix (LiveGPUGate + session_startup.sh) was delivered in Exp 377.
     The remaining gap is OPERATIONAL: the GPU node must be physically powered on and

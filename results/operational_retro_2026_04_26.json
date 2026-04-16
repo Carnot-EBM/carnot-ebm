@@ -1,14 +1,14 @@
 {
   "schema": "carnot.operational_retro.v1",
-  "experiment": "retro_2026_05_20",
-  "title": "Operational Retrospective — Milestone 2026.05.20",
+  "experiment": "retro_2026_04_26",
+  "title": "Operational Retrospective — Milestone 2026.04.26",
   "run_date": "20260415",
   "started_at": "2026-04-15T21:45:10Z",
   "finished_at": "2026-04-15T21:45:36Z",
   "duration_s": 26,
   "status": "success",
   "retro_type": "full_milestone_operational",
-  "note": "Operational efficiency retrospective for milestone 2026.05.20. Covers cumulative project execution through end of milestone: 423 experiments, 6143 minutes total wall time. Focus is HOW efficiently the milestone was executed, not research results. Timing data sourced from conductor log commit timestamps; GPU state from live gpu_monitor.py output.",
+  "note": "Operational efficiency retrospective for milestone 2026.04.26. Covers cumulative project execution through end of milestone: 423 experiments, 6143 minutes total wall time. Focus is HOW efficiently the milestone was executed, not research results. Timing data sourced from conductor log commit timestamps; GPU state from live gpu_monitor.py output.",
   "total_wall_time_minutes": 6143,
   "experiments_completed": 423,
   "avg_minutes_per_experiment": 14.5,
@@ -61,7 +61,7 @@
     "No experiment-level timeout wrapper — RETRO-003 (run_experiment_with_timeout.sh) was identified as critical but never confirmed wired; Exp 53 (418 min) is direct evidence of a runaway session with no circuit breaker",
     "Full test suite on every retry — when tests fail during an experiment, the conductor re-runs the full 3000+ test suite rather than the targeted module tests; at ~60s per full suite run, 10 retries costs 10 minutes before any code change is attempted",
     "Z3 solver calls without per-call timeout — constraint-heavy experiments (Exps 219, 221) can stall on unsatisfiable or complex formulas; no timeout was consistently applied to individual Z3 calls until late in the milestone series",
-    "Missing result JSONs for module-primary experiments — four experiments in milestone 2026.05.20 wrote modules and passed tests but produced no result JSON; each missing JSON requires a partial do-over when downstream code needs the data (RETRO-014)",
+    "Missing result JSONs for module-primary experiments — four experiments in milestone 2026.04.26 wrote modules and passed tests but produced no result JSON; each missing JSON requires a partial do-over when downstream code needs the data (RETRO-014)",
     "Doc reconciliation not batched — spec/traceability/status updates done per-experiment rather than batched every 5 experiments (RETRO-011); repeated file reads and writes for the same documents across consecutive experiments inflate overhead",
     "Zombie GPU processes accumulating VRAM — without --kill-zombies in conductor inter-experiment cleanup (RETRO-005), partially allocated processes persist between experiments, reducing available VRAM and occasionally triggering OOM on later experiments"
   ],
@@ -105,5 +105,5 @@
     "batching_recommended": true,
     "batch_interval_experiments": 5
   },
-  "meta_reflection": "The most striking operational finding from milestone 2026.05.20 is the 28x outlier: Exp 53 ran for 418 minutes (7 hours) on a project where the median experiment completes in 15 minutes. This is not a research anomaly — it is a process failure. At 418 minutes, the experiment was either a runaway debugging session with no timeout, a zombie process that was never killed, or an uninterrupted retry loop on failing tests. All three causes are preventable by infrastructure that either existed (gpu_monitor --kill-zombies) or was planned (RETRO-003 timeout wrapper) but never wired. The second pattern — three consecutive milestones of GPU-capable hardware (confirmed by Exp 352) running every inference experiment in simulated mode — points to a different failure: the environment configuration gap between what the diagnostic checks (is_live_capable=True) and what the conductor injects (CARNOT_FORCE_LIVE never set). These are not research problems. They are one-line fixes. The fact that they have persisted across three milestones suggests a meta-process gap: RETRO items are identified but not prioritized as the FIRST action of the next milestone. For milestone 2026.06.xx, the first commit must be the RETRO-012 fix, confirmed by a live GPU smoke test before any research experiment begins."
+  "meta_reflection": "The most striking operational finding from milestone 2026.04.26 is the 28x outlier: Exp 53 ran for 418 minutes (7 hours) on a project where the median experiment completes in 15 minutes. This is not a research anomaly — it is a process failure. At 418 minutes, the experiment was either a runaway debugging session with no timeout, a zombie process that was never killed, or an uninterrupted retry loop on failing tests. All three causes are preventable by infrastructure that either existed (gpu_monitor --kill-zombies) or was planned (RETRO-003 timeout wrapper) but never wired. The second pattern — three consecutive milestones of GPU-capable hardware (confirmed by Exp 352) running every inference experiment in simulated mode — points to a different failure: the environment configuration gap between what the diagnostic checks (is_live_capable=True) and what the conductor injects (CARNOT_FORCE_LIVE never set). These are not research problems. They are one-line fixes. The fact that they have persisted across three milestones suggests a meta-process gap: RETRO items are identified but not prioritized as the FIRST action of the next milestone. For milestone 2026.06.xx, the first commit must be the RETRO-012 fix, confirmed by a live GPU smoke test before any research experiment begins."
 }

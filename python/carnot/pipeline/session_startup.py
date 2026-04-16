@@ -1,7 +1,7 @@
 """Pre-session startup health check for Carnot research sessions.
 
 **Why this module exists:**
-    The 2026.05.06 retrospective (RETRO-007/RETRO-008) found two recurring issues
+    The 2026.04.24 retrospective (RETRO-007/RETRO-008) found two recurring issues
     at session start:
 
     1. **Zombie GPU processes** (RETRO-007): orphaned processes holding VRAM from

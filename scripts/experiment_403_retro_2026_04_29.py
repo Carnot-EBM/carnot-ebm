@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Exp 403: Operational Retrospective — Milestone 2026.06.10.
+"""Exp 403: Operational Retrospective — Milestone 2026.04.29.
 
 **Researcher summary:**
-    Milestone 2026.06.10 targeted "Credible Live GPU Results — Break the Simulated Barrier
+    Milestone 2026.04.29 targeted "Credible Live GPU Results — Break the Simulated Barrier
     Once and For All." It opened with RETRO-019 (CRITICAL): after five consecutive milestones
     without live GPU inference, the GPU node had to be confirmed online before any other
     work began.
@@ -28,7 +28,7 @@
     node already in the rack. This is the last conductor-automated retro before requiring
     manual intervention.
 
-**Milestone 2026.06.10 experiment inventory (Exps 390-402):**
+**Milestone 2026.04.29 experiment inventory (Exps 390-402):**
 
     Exp 390: GPU node preflight — RETRO-019 action (COMPLETE — but not gpu_confirmed_live)
     Exp 391: Fix RETRO-020 — CIKANEnergy Python class (PARTIAL — deliverable already exists)
@@ -45,7 +45,7 @@
     Exp 402: CRANE extraction gate (MISSING result JSON)
 
 **Wall-time estimates (from conductor log timestamps, 2026-04-16 session):**
-    07:44 UTC: Milestone 2026.06.10 activated.
+    07:44 UTC: Milestone 2026.04.29 activated.
     08:21 UTC: Exps 390-393 batch done (~37 min / 4 experiments ≈ 9 min/exp).
     09:22 UTC: Exps 394-402 batch done (~61 min / 9 experiments ≈ 7 min/exp).
     Total: ~98 min for 13 experiments, mean ≈ 7.5 min/exp.
@@ -56,14 +56,14 @@
     credible live GPU results? NO. first_live_gpu_results_achieved=False.
     RETRO-022 is a HUMAN ACTION ESCALATION — the conductor cannot resolve GPU availability.
 
-**Output:** results/operational_retro_2026_06_10.json
+**Output:** results/operational_retro_2026_04_29.json
 
 Spec: REQ-INFRA-017/018/019 (LiveGPUGate, preflight),
       REQ-LEARN-025/026/027 (EORM/relay retrain),
       REQ-BENCH-003/004/006/007 (precision/HumanEval/adversarial benchmarks),
       REQ-EXTRACT-023 (extraction comparison), REQ-AGENT-001/002 (SAVeR),
       REQ-EBM-031 (semantic energy), REQ-EXTRACT-025 (CRANE)
-SCENARIO: RETRO-2026.06.10
+SCENARIO: RETRO-2026.04.29
 """
 
 from __future__ import annotations
@@ -90,10 +90,10 @@ _log = logging.getLogger(__name__)
 # Constants
 # ---------------------------------------------------------------------------
 
-MILESTONE = "2026.06.10"
-DELIVERABLE = "results/operational_retro_2026_06_10.json"
+MILESTONE = "2026.04.29"
+DELIVERABLE = "results/operational_retro_2026_04_29.json"
 
-# Mean experiment duration from the previous milestone (2026.06.03 retro, Exp 389).
+# Mean experiment duration from the previous milestone (2026.04.28 retro, Exp 389).
 # Includes fast-failed blocked experiments.
 PREV_MEAN_EXP_DURATION_MIN: float = 14.0
 
@@ -254,8 +254,8 @@ MILESTONE_EXPERIMENTS: list[dict[str, Any]] = [
 
 
 @dataclasses.dataclass
-class MilestoneRetro2026_06_10:
-    """All measurable success criteria for milestone 2026.06.10.
+class MilestoneRetro2026_04_29:
+    """All measurable success criteria for milestone 2026.04.29.
 
     Each boolean field corresponds to a primary goal stated in the milestone plan.
     False does NOT mean "failed completely" — it means the criterion was not met
@@ -370,8 +370,8 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "Exp 390 ran as the RETRO-019 preflight gate for this milestone. Its result "
             "shows status='complete' but finding='GPU preflight script created.' — NOT "
             "'gpu_confirmed_live'. The GPU node was again not online during the conductor "
-            "session. This is the SIXTH consecutive milestone (2026.05.06, 2026.05.13, "
-            "2026.05.20, 2026.05.27, 2026.06.03, 2026.06.10) with zero live GPU inference. "
+            "session. This is the SIXTH consecutive milestone (2026.04.24, 2026.04.25, "
+            "2026.04.26, 2026.04.27, 2026.04.28, 2026.04.29) with zero live GPU inference. "
             "After 403 experiments, Carnot has no publishable live GPU results. "
             "The infrastructure is correct: CARNOT_FORCE_LIVE=1 propagation (Exp 377), "
             "LiveGPUGate (Exp 352), GPU preflight (Exp 390), conductor_gpu_env.sh (Exp 365) "
@@ -424,7 +424,7 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "{\"experiment\": 375, \"status\": \"partial\", ...}. "
             "No valid Python class CIKANEnergy exists anywhere in the codebase. "
             "This is the THIRD consecutive milestone where CIKAN was targeted (Exp 375 "
-            "in 2026.05.27, Exp 378 in 2026.06.03, Exp 391 in 2026.06.10) and not delivered. "
+            "in 2026.04.27, Exp 378 in 2026.04.28, Exp 391 in 2026.04.29) and not delivered. "
             "The constraint-informed KAN energy tier (arXiv 2412.03710) remains unimplemented. "
             "Energy separation ratio vs standard KAN cannot be measured."
         ),
@@ -455,9 +455,9 @@ NEW_RETRO_ITEMS: list[dict[str, Any]] = [
             "Exp 399 (FR-11 relay live) returned status='partial'. honest_verdict="
             "'learning_confirmed' NOT achieved. FR-11 is a mandatory functional requirement: "
             "the self-learning relay must produce learning_confirmed on live GPU inference. "
-            "This has been the target since milestone 2026.05.20 (Exp 361 confirmed synthetic, "
-            "honest_verdict=synthetic_only). FOUR consecutive milestones (2026.05.27, "
-            "2026.06.03, 2026.06.10, and the underlying 2026.05.20 miss) have failed to "
+            "This has been the target since milestone 2026.04.26 (Exp 361 confirmed synthetic, "
+            "honest_verdict=synthetic_only). FOUR consecutive milestones (2026.04.27, "
+            "2026.04.28, 2026.04.29, and the underlying 2026.04.26 miss) have failed to "
             "produce a live relay verdict. "
             "The relay machinery is sound (54 tests, 100% module coverage, Exp 361 ran "
             "0.60→0.72 accuracy on synthetic data). The relay script (Exp 384/399) already "
@@ -591,7 +591,7 @@ def estimate_speedup_pct(prev_mean: float, curr_mean: float) -> float:
     Parameters
     ----------
     prev_mean : float
-        Previous milestone mean experiment duration in minutes (14.0 for 2026.06.03).
+        Previous milestone mean experiment duration in minutes (14.0 for 2026.04.28).
     curr_mean : float
         This milestone's mean experiment duration in minutes.
 
@@ -658,11 +658,11 @@ def _check_cikan_implemented(repo_root: Path, results: dict[str, Any | None]) ->
 # ---------------------------------------------------------------------------
 
 
-def compute_retro_2026_06_10(
+def compute_retro_2026_04_29(
     result_files: dict[str, dict[str, Any] | None],
     repo_root: Path,
-) -> MilestoneRetro2026_06_10:
-    """Evaluate all success criteria for milestone 2026.06.10.
+) -> MilestoneRetro2026_04_29:
+    """Evaluate all success criteria for milestone 2026.04.29.
 
     Each criterion is evaluated independently from the result file data.
     Criteria that require live GPU inference are False when any upstream result
@@ -677,7 +677,7 @@ def compute_retro_2026_06_10(
 
     Returns
     -------
-    MilestoneRetro2026_06_10
+    MilestoneRetro2026_04_29
         Populated dataclass with all criteria evaluated.
     """
     def get(key: str) -> dict[str, Any]:
@@ -816,7 +816,7 @@ def compute_retro_2026_06_10(
                 "accuracy_improvement": p399.get("accuracy_improvement"),
             }
 
-    return MilestoneRetro2026_06_10(
+    return MilestoneRetro2026_04_29(
         retro_019_resolved=retro_019_resolved,
         retro_020_closed=retro_020_closed,
         retro_021_closed=retro_021_closed,
@@ -843,8 +843,8 @@ def compute_retro_2026_06_10(
 # ---------------------------------------------------------------------------
 
 
-def build_retro_artifact(retro: MilestoneRetro2026_06_10) -> dict[str, Any]:
-    """Build the final JSON artifact for milestone 2026.06.10 retrospective.
+def build_retro_artifact(retro: MilestoneRetro2026_04_29) -> dict[str, Any]:
+    """Build the final JSON artifact for milestone 2026.04.29 retrospective.
 
     The artifact documents every success criterion, all new RETRO items,
     the timing analysis, and — critically — whether live GPU results were
@@ -852,7 +852,7 @@ def build_retro_artifact(retro: MilestoneRetro2026_06_10) -> dict[str, Any]:
 
     Parameters
     ----------
-    retro : MilestoneRetro2026_06_10
+    retro : MilestoneRetro2026_04_29
         Evaluated milestone success criteria.
 
     Returns
@@ -929,7 +929,7 @@ def build_retro_artifact(retro: MilestoneRetro2026_06_10) -> dict[str, Any]:
             ),
             (
                 "RETRO-022 is a HUMAN ESCALATION item. The conductor cannot power on "
-                "a GPU node. Human action is mandatory before milestone 2026.06.17."
+                "a GPU node. Human action is mandatory before milestone 2026.04.30."
             ),
             (
                 "CIKANEnergy has failed three consecutive times (Exps 375, 378, 391). "
@@ -1003,12 +1003,12 @@ def build_retro_artifact(retro: MilestoneRetro2026_06_10) -> dict[str, Any]:
 
 
 def main() -> None:
-    """Run the Exp 403 operational retrospective for milestone 2026.06.10."""
+    """Run the Exp 403 operational retrospective for milestone 2026.04.29."""
     logging.basicConfig(level=logging.INFO)
 
     tmpl = ExperimentTemplate(
         403,
-        "Operational Retrospective — Milestone 2026.06.10",
+        "Operational Retrospective — Milestone 2026.04.29",
         DELIVERABLE,
         requires_gpu=False,
     )
@@ -1018,7 +1018,7 @@ def main() -> None:
     result_files = load_milestone_results(_REPO_ROOT, RESULT_FILE_MAP)
 
     _log.info("Evaluating success criteria...")
-    retro = compute_retro_2026_06_10(result_files, _REPO_ROOT)
+    retro = compute_retro_2026_04_29(result_files, _REPO_ROOT)
 
     _log.info("Building artifact...")
     artifact = build_retro_artifact(retro)
@@ -1044,7 +1044,7 @@ def main() -> None:
             "After SIX consecutive milestones and 403 experiments, Carnot still "
             "has zero live GPU results.\n"
             "The conductor CANNOT fix a powered-off GPU node.\n"
-            "Before milestone 2026.06.17 begins, a human operator MUST:\n"
+            "Before milestone 2026.04.30 begins, a human operator MUST:\n"
             "  Option A: Rent cloud GPU (Lambda Labs, vast.ai, RunPod)\n"
             "  Option B: Purchase RTX 4090 (~$1800 USD)\n"
             "  Option C: Power on the existing RTX 3090 node and verify reachability\n"

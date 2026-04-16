@@ -4421,7 +4421,7 @@ The research conductor SHALL be invokable via a wrapper shell script
 timeout on every `claude -p` invocation, where:
 
 - **Hard cap**: Timeout defaults to 45 minutes (RETRO-001 action item carried
-  forward from milestones 2026.04.22 and 2026.04.29).
+  forward from milestones 2026.04.22 and 2026.04.23).
 - **Configurability**: The limit is read from the environment variable
   `CARNOT_CONDUCTOR_TIMEOUT_MINUTES` (integer); if unset, defaults to 45.
 - **Kill signal**: Uses `timeout -k 60s <N>m "$@"` so that if the grace-kill
@@ -4453,7 +4453,7 @@ development (NEW-001 action item), where:
 - **Valid Python**: The skeleton MUST parse without error via `ast.parse()`.
 - **Permissions**: Written with mode 0o644.
 - **Return value**: The path string to the written (or existing) file.
-- **Rationale**: 23.5% post-test failure rate observed in 2026.04.29 milestone
+- **Rationale**: 23.5% post-test failure rate observed in 2026.04.23 milestone
   was driven partly by tests being written after (or skipped during) implementation.
 
 ## Scenarios
@@ -4490,7 +4490,7 @@ development (NEW-001 action item), where:
 
 At experiment start, the monitoring subsystem must detect GPU processes that hold VRAM but
 show zero compute utilisation ("zombie" processes).  These processes were observed in the
-2026.04.29 retrospective (PIDs 2592400/2595103, ~1050 MB VRAM each, 0% utilisation) and
+2026.04.23 retrospective (PIDs 2592400/2595103, ~1050 MB VRAM each, 0% utilisation) and
 caused downstream experiments to fail silently or stall.
 
 **Acceptance criteria:**
@@ -4550,7 +4550,7 @@ inference begins.  Exp 219/221 ran two models sequentially on GPU 0 while GPU 1 
 
 Before an experiment begins, the infrastructure must verify that all files listed under
 "EXISTING CODE TO READ FIRST" in the experiment prompt actually exist on disk.  Missing
-files were identified in the 2026.04.29 retrospective (NEW-002) as a root cause of ~5%
+files were identified in the 2026.04.23 retrospective (NEW-002) as a root cause of ~5%
 wall-time overhead from retry loops — experiments fail mid-run when they try to read
 result files from prior experiments that were never completed.
 
@@ -4988,9 +4988,9 @@ These requirements govern the per-milestone operational retrospectives produced 
 the research conductor.  Each retro summarises wall-time data, identifies bottlenecks,
 audits whether prior action items were resolved, and proposes new improvements.
 
-### REQ-RETRO-001: Milestone 2026.04.29 Retrospective
+### REQ-RETRO-001: Milestone 2026.04.23 Retrospective
 
-The conductor must produce `results/operational_retro_2026_04_29.json` with schema
+The conductor must produce `results/operational_retro_2026_04_23.json` with schema
 `operational_retro_v1`.  The artifact must record `n_experiments`, `total_wall_time_minutes`,
 `avg_minutes_per_experiment`, `bottlenecks_identified` (≥ 1 entry), `action_items`
 (≥ 1 entry), `carry_over_from_previous_retro`, and `estimated_next_milestone_speedup_pct`.
@@ -5006,15 +5006,15 @@ The conductor must produce `results/operational_retro_2026_04_29.json` with sche
 ### SCENARIO-RETRO-002: Action Items Carry Forward Unresolved Items
 
 **Given** action items RETRO-001 and RETRO-002 were not implemented in the prior milestone
-**When** the 2026.04.29 retro runs
+**When** the 2026.04.23 retro runs
 **Then** both items appear in `action_items` with `status == "carried_forward"`
 **And** at least one NEW-* item appears with `status == "new"`
 
 ---
 
-### REQ-RETRO-002: Milestone 2026.04.29 (v2) Full-History Retrospective
+### REQ-RETRO-002: Milestone 2026.04.23 (v2) Full-History Retrospective
 
-An extended version of the 2026.04.29 retro that covers the full 359-experiment history.
+An extended version of the 2026.04.23 retro that covers the full 359-experiment history.
 The artifact uses schema `operational_retro_v2` and adds `gpu_utilization_analysis`,
 `meta_reflection`, and `post_test_failure_rate_assessment` fields.
 
@@ -5034,9 +5034,9 @@ The artifact uses schema `operational_retro_v2` and adds `gpu_utilization_analys
 
 ---
 
-### REQ-RETRO-003: Milestone 2026.05.06 Retrospective
+### REQ-RETRO-003: Milestone 2026.04.24 Retrospective
 
-The conductor must produce `results/operational_retro_2026_05_06.json` with schema
+The conductor must produce `results/operational_retro_2026_04_24.json` with schema
 `carnot.operational_retro.v1`.  The artifact must record:
 
 - `n_experiments`: int in [10, 20]
@@ -5049,13 +5049,13 @@ The conductor must produce `results/operational_retro_2026_05_06.json` with sche
 - `actual_speedup_pct`: float — measured wall-time improvement vs prior milestone
   (40.6 min/exp baseline); negative values are valid and mean regression
 - `estimated_next_milestone_speedup_pct`: float ≥ 0 — forward-looking estimate; can be 0
-- `carry_over`: list of dicts `{id, description, resolved: bool}` from the 2026.04.29 retro
+- `carry_over`: list of dicts `{id, description, resolved: bool}` from the 2026.04.23 retro
 - `action_items`: list of dicts with `{id, description, estimated_impact_pct}`
 
 ### SCENARIO-RETRO-005: All Prior Action Items Resolved Flag Correctly
 
 **Given** RETRO-001 was implemented in Exp 325 and RETRO-002 in Exp 326
-**When** the 2026.05.06 retro artifact is loaded
+**When** the 2026.04.24 retro artifact is loaded
 **Then** `retro_001_resolved` is `True`
 **And** `retro_002_resolved` is `True`
 **And** every entry in `carry_over` has `resolved: True`
@@ -5239,9 +5239,9 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
 | REQ-INFRA-004 | N/A | Implemented | check_dual_gpu_health() + setup_gpu() integration tests (SCENARIO-INFRA-005/006, Exp 326) |
 | REQ-INFRA-005 | N/A | Implemented | DependencyAudit + extract_required_files + check_dependencies + CLI tests (SCENARIO-INFRA-007/008, Exp 327) |
-| REQ-RETRO-001 | N/A | Implemented | operational_retro_2026_04_29.json schema + action items + carry_over tests (SCENARIO-RETRO-001/002, Exp 319) |
-| REQ-RETRO-002 | N/A | Implemented | operational_retro_2026_04_29.json v2 + gpu_utilization_analysis tests (SCENARIO-RETRO-003/004, Exp 319) |
-| REQ-RETRO-003 | N/A | Implemented | operational_retro_2026_05_06.json + retro_001_resolved + actual_speedup_pct tests (SCENARIO-RETRO-005/006, Exp 337) |
+| REQ-RETRO-001 | N/A | Implemented | operational_retro_2026_04_23.json schema + action items + carry_over tests (SCENARIO-RETRO-001/002, Exp 319) |
+| REQ-RETRO-002 | N/A | Implemented | operational_retro_2026_04_23.json v2 + gpu_utilization_analysis tests (SCENARIO-RETRO-003/004, Exp 319) |
+| REQ-RETRO-003 | N/A | Implemented | operational_retro_2026_04_24.json + retro_001_resolved + actual_speedup_pct tests (SCENARIO-RETRO-005/006, Exp 337) |
 | REQ-INFRA-006 | N/A | Implemented | HostPrereqRegistry + ops/host-prereqs.md + check_prereqs() tests (SCENARIO-INFRA-009/010, Exp 338) |
 | REQ-INFRA-007 | N/A | Implemented | DualGPU auto-assignment in setup_gpu() + dual_gpu_auto_assigned key tests (SCENARIO-INFRA-011, Exp 338) |
 | REQ-INFRA-008 | N/A | Implemented | session_startup.sh + session_startup.py + parse_session_startup_output + run_session_startup tests (SCENARIO-INFRA-012/013, Exp 339) |

@@ -4,7 +4,7 @@
 **Researcher summary:**
     Experiments 368 and 379 built and gated the full precision benchmark pipeline (5
     pipeline variants × 2 models × 200 GSM8K questions) but were blocked in milestones
-    2026.05.27 and 2026.06.03 because the GPU node was offline.
+    2026.04.27 and 2026.04.28 because the GPU node was offline.
 
     Exp 390 ran a GPU preflight that confirmed the hardware state for this milestone.
     This experiment (394) is gated on that preflight result: if Exp 390 did NOT return
