@@ -1,290 +1,281 @@
-# Carnot Research Roadmap v37: EnvironmentAutoFix, Complete Purge, First Live Numbers, VPRM Architecture
+# Carnot Research Roadmap v38: Live Numbers Confirmed, FR-11 Real-Data Validation, Spilled Energy Pre-Filter
 
 **Created:** 2026-04-16
-**Milestone:** 2026.04.31
-**Status:** Planned (activates when milestone 2026.04.30 retrospective completes)
-**Supersedes:** Milestone 2026.04.30 — "Purge, Implement, Execute — First Credible Live Numbers"
-**Informed by:** Exps 404–411, operational retrospective 2026.04.30, v36 carry-forwards
-**External inputs (new in v37):**
-- VPRM (2601.17223) — Deterministic rule-based process reward models; Carnot IS a VPRM
-- FOVER (2505.15960) — Z3/Isabelle-annotated step labels for PRM training; closes label gap
-- ThinkPRM (2504.16828) — PRMs that generate verification CoT; extends labels beyond arithmetic
-- AMD NPU IRON toolflow (2504.03083) — Bare-metal NPU programming; unblocks 5-milestone NPU block
-- Digitally Optimized Thermodynamic Init (2603.24183) — Warm-start Ising sampling; 5-10x speedup
-- Self-Certainty Best-of-N (2502.18581) — Reward-free output selection; complements energy ranker
+**Milestone:** 2026.04.32
+**Status:** Planned (activates when milestone 2026.04.31 retrospective completes)
+**Supersedes:** Milestone 2026.04.31 — "EnvironmentAutoFix, Complete Purge, First Live Numbers, VPRM Architecture"
+**Informed by:** Exps 413–424, operational retrospective 2026.04.31, v37 carry-forwards
+**External inputs (new in v38):**
+- Spilled Energy (2602.18671) — logit-discrepancy hallucination detection; extends Semantic Energy Scorer
+- KAEM (2506.14167) — KAN energy models with exact inverse-transform sampling; no MCMC needed
+- GPU Oscillator Ising (2505.22631) — GPU-native oscillator Ising machine; CUDA-accelerated constraint sampling
+- DSP feasibility channel (2604.02350) — differentiable constraint propagation with soft feasibility signal
+- FoVer/FOVER (2505.15960) — Z3/Isabelle automatic step-level error annotation for PRM training
+- RLVR (2506.14245) — verifiable reward RL; EORM as reward signal for LLM constraint extraction policy
 
 ---
 
-## What 2026.04.30 Proved
+## What 2026.04.31 Proved
 
 | Approach | Experiments | Verdict | Key Finding |
 |----------|-------------|---------|-------------|
-| DeliverableContentValidator + GPU preflight v2 | 404 | **COMPLETE** | honest_verdict=env_not_propagating; RETRO-022 root cause scoped to 5-line conductor fix |
-| Live precision pipeline | 410 | **BLOCKED** | env_not_propagating at Gate 0 |
-| Live HumanEval | 411 | **BLOCKED** | env_not_propagating at Gate 0 |
-| CIKANEnergy re-implement | 405 | **NOT EXECUTED** | Force-completed (skipped by conductor) |
-| JitRL memory re-implement | 406 | **NOT EXECUTED** | Force-completed (skipped by conductor) |
-| Safety KAN re-implement | 407 | **NOT EXECUTED** | Force-completed (skipped by conductor) |
-| Semantic Energy re-implement | 408 | **NOT EXECUTED** | Force-completed (skipped by conductor) |
-| CRANE extractor re-implement | 409 | **NOT EXECUTED** | Force-completed (skipped by conductor) |
-| Live adversarial GSM8K | 412 | **NOT EXECUTED** | Force-completed (skipped by conductor) |
+| EnvironmentAutoFix (RETRO-022 workaround) | 413 | **COMPLETE** | auto_fix_applied; GPU hardware present; CARNOT_FORCE_LIVE now self-injects |
+| CIKANEnergy re-implement | 414 | **COMPLETE** | Valid Python; RETRO-023 entry closed for this file |
+| JitRL constraint memory | 415 | **COMPLETE** | Valid Python; threshold modulation > reweighting confirmed on synthetic |
+| Safety KAN classifier | 416 | **COMPLETE** | Valid Python; first Tier B product implemented |
+| Semantic Energy Scorer | 417 | **COMPLETE** | Valid Python; logit-space Boltzmann pre-filter implemented |
+| CRANE extractor | 418 | **COMPLETE** | CPU-only regex + confidence gate; zero GPU dependency for extraction |
+| Live precision pipeline (CRANE) | 419 | **PARTIAL** | Script implemented; live run in-progress at retro write time (GPU0 at 88% util) |
+| Live HumanEval | 420 | **PARTIAL** | Script implemented; blocked at Gate 0 (env_not_propagating) |
+| Live adversarial GSM8K | 421 | **PARTIAL** | Script implemented; blocked at Gate 0 |
+| VPRM step labels | 422 | **PARTIAL** | Script implemented; live CoT pairs needed |
+| EORM+JEPA retrain live | 423 | **PARTIAL** | Script implemented; live pairs needed |
+| Retro + NPU | 424 | **PARTIAL** | Retro written; NPU prereq check pending |
 
-**Milestone-level conclusion (3 experiments actually ran):**
+**Milestone-level conclusion:**
 
-The root cause of RETRO-022 is now exactly scoped: `CARNOT_FORCE_LIVE=1` is set in the human's
-shell but does NOT propagate into the Claude subprocess that the conductor spawns. The fix is a
-5-line change in the conductor (add `env={**os.environ, 'CARNOT_FORCE_LIVE': '1'}` to subprocess.run()
-calls). Since we cannot modify research_conductor.py from experiment prompts, the workaround is an
-**EnvironmentAutoFix module** that experiment scripts call at startup to self-inject the env var
-when GPU hardware is detected.
+Six CPU-only modules (CIKANEnergy, JitRL memory, Safety KAN, Semantic Energy, CRANE, EnvironmentAutoFix)
+were implemented and tested. The apply_env_autofix() workaround (Exp 413) confirmed the GPU is
+physically present and now self-configures CARNOT_FORCE_LIVE=1 at experiment startup. Exp 419 was
+observed actively running on GPU0 at 88% utilization during the operational retrospective, confirming
+that at least one live inference run has started. However, Exps 420–424 remain blocked (partial status).
 
-This milestone also confirmed that the 5 corrupt files are STILL present (n_corrupt_files=5 from
-Exp 404 audit). They need to be implemented in dedicated experiments with validator guards.
+RETRO-003 (conductor timeout) remains unimplemented at 17+ milestones. RETRO-025 (GPU1 idle VRAM)
+was first observed this milestone. Both must be addressed as the first two experiments.
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: RETRO-022 — Seven consecutive milestones, zero live GPU results (CRITICAL)
+### Gap 1: Zero published credible live benchmark numbers (CRITICAL)
 
-**Status:** GPU hardware IS present (is_live_capable=True, Exp 404 Gate 2). The env var propagation
-is broken: the conductor's subprocess.run() does not pass `CARNOT_FORCE_LIVE=1` to the Claude session.
-The human-side fix: `source scripts/session_startup.sh` before running the conductor.
+**Status:** All headline results are still either simulated or pending live execution. Exp 419 ran
+live during the retro, but the JSON shows `status: partial` — the full 200-question run across 5
+variants × 2 models may not have completed (GPU0 at 82C under 144+ minutes of load).
 
-**Workaround for this milestone:** Implement `EnvironmentAutoFix` in Exp 413:
-- Check if GPU hardware is available (torch.cuda.is_available())
-- If available AND CARNOT_FORCE_LIVE not in os.environ: set `os.environ['CARNOT_FORCE_LIVE'] = '1'`
-- Log a warning that auto-fix was applied
-- This makes every experiment self-configuring: the GPU gates work without env propagation
+**Impact:** Without credible live numbers, Carnot cannot make any publishable claims. The 16 model
+READMEs on HuggingFace point to pip install carnot but have no verified improvement numbers. This
+blocks commercial credibility.
 
-This is not the "right" fix (the right fix is human-running session_startup.sh), but it unblocks
-all GPU experiments regardless of conductor env inheritance behavior.
+**Fix:** Confirm Exp 419 results or re-run with RETRO-025 fixed (GPU1 scheduling). Execute Exps
+420–421 (HumanEval and adversarial). Publish results to HuggingFace model cards after confirmation.
 
-**Mandatory protocol:** Exp 413 is the FIRST experiment of this milestone. It must re-run GPU
-preflight and produce `honest_verdict='gpu_confirmed_live'` (via auto-fix if necessary). Exps 419-421
-(live GPU) gate on this.
+### Gap 2: FR-11 self-learning loop never confirmed on real data (HIGH)
 
-### Gap 2: Five CPU-only implementations force-skipped in v36 (HIGH)
+**Status:** Six consecutive milestone failures. The infrastructure (JitRL memory, EORM, JEPA,
+SelfLearningRelay) is all implemented and tested on synthetic data. The missing ingredient is live
+CoT pairs from real LLM inference on GSM8K/HumanEval with ground-truth annotations.
 
-Five modules were designed in the 2026.04.30 milestone (Exps 405-409) but never executed due to
-the force-complete. All five are CPU-only and produce working code regardless of GPU state:
+**Fix:** Once Exp 419 produces live inference data, use the FOVER approach (arXiv 2505.15960) to
+annotate each CoT step with Z3-derived correctness labels. These become EORM training pairs. Then
+retrain EORM on these real pairs and confirm AUC > 0.5 (vs 0.5 baseline from synthetic-only).
 
-| Module | Exp in v36 | New Exp | Status |
-|--------|-----------|---------|--------|
-| CIKANEnergy | 405 | 414 | Corrupt file — purge + re-implement |
-| JitRL memory | 406 | 415 | Corrupt file — purge + re-implement |
-| Safety KAN | 407 | 416 | Corrupt file — purge + re-implement |
-| Semantic Energy | 408 | 417 | Corrupt file — purge + re-implement |
-| CRANE extractor | 409 | 418 | Corrupt file — purge + re-implement |
+### Gap 3: No Tier B products shipped beyond Safety KAN (MEDIUM)
 
-Each experiment calls `DeliverableContentValidator.validate_and_clear()` at the top, then implements
-the module from scratch. This pattern is now standardized from Exp 404.
+**Status:** Safety KAN (Exp 416) is implemented but not published. Compliance checker and multi-agent
+arbiter (both Tier B in research-program.md) have no implementation.
 
-### Gap 3: FR-11 (Autonomous Self-Learning Loop) never validated on real data (HIGH)
-
-FR-11 has missed 5 consecutive milestones because all self-learning experiments ran on synthetic data.
-The new theoretical framing: Carnot's Ising/KAN tier IS a Verifiable Process Reward Model (VPRM,
-arXiv 2601.17223). The FOVER approach (arXiv 2505.15960) provides the missing training signal:
-annotate GSM8K CoT steps with Z3 labels (correct/incorrect), then train IsingEBM on those labels.
-
-This closes the self-learning loop: LLM generates steps → Z3 annotates each step → Ising learns
-from annotations → Ising checks future steps without Z3. The JEPA predictor (Tier 3) learns the
-distribution of which steps trigger Z3 violations. This is the credible FR-11 path.
+**Fix:** Implement compliance checker as the next Tier B product. It reuses the same KAN/Ising
+energy tiers and constraint template library (Exp 343) — just with domain-specific constraint types
+(regulatory, financial, medical). Ship alongside Safety KAN on HuggingFace.
 
 ---
 
-## Architecture Diagram (Current State)
+## Architecture Diagram (Current State after 2026.04.31)
 
 ```
                         ┌─────────────────────────────────┐
                         │         INPUT PIPELINE          │
-                        │  LLM Response (Gemma4/Qwen3.5)  │
+                        │  LLM response (text / code)     │
                         └────────────┬────────────────────┘
                                      │
                     ┌────────────────▼────────────────────┐
-                    │         EXTRACTION LAYER            │
-                    │  CRANEExtractionGate  (1x cost)     │
-                    │  LLMConstraintExtractor (2x cost)   │
-                    │  ArithmeticExtractor (regex, fast)  │
-                    │  CodeExtractor (execution-based)    │
+                    │  TIER 0: FAST PRE-FILTERS (NEW)     │
+                    │  ┌─────────────────────────────────┐│
+                    │  │  SemanticEnergyScorer (Exp 417) ││  logit-space Boltzmann energy
+                    │  │  SpilledEnergyDetector (v38 NEW)││  logit discrepancy (arXiv 2602.18671)
+                    │  │  SinkProbe (Exp 348)            ││  attention sink concentration
+                    │  └──────────────┬──────────────────┘│
+                    │  LOW energy → SKIP to output        │
+                    │  HIGH energy → continue to Tier 1   │
                     └────────────────┬────────────────────┘
-                                     │ ConstraintTerms
-          ┌──────────────────────────▼─────────────────────────────┐
-          │                 THREE-TIER PIPELINE                    │
-          │  Tier 0: SinkProbe (attention-sink pre-filter)         │
-          │  Tier 1: SemanticEnergy (logit-space Boltzmann)        │
-          │  Tier 2: EORM (attention-based outcome ranker)         │
-          │  Tier 3: Ising/KAN/CIKAN (full constraint check)       │
-          └──────────────────────────┬─────────────────────────────┘
-                                     │ violations
-          ┌──────────────────────────▼─────────────────────────────┐
-          │                  REPAIR PIPELINE                       │
-          │  JitRL memory (threshold modulation, Tier 1 learning)  │
-          │  ConstraintTemplateLibrary (pattern addition, Tier 2)  │
-          │  JEPA predictor (violation pre-prediction, Tier 3)     │
-          │  VPRM training (Z3 step labels → Ising, NEW Tier 2.5)  │
-          └──────────────────────────┬─────────────────────────────┘
                                      │
-          ┌──────────────────────────▼─────────────────────────────┐
-          │               HARDWARE BACKENDS                        │
-          │  CPU (current default — 0.006ms/check)                 │
-          │  FPGA KV260 (bitfile pending — target <1μs/check)      │
-          │  AMD XDNA NPU (IRON toolflow — unblocked in v37)       │
-          │  Extropic TSU (future — SamplerBackend ready)          │
-          └────────────────────────────────────────────────────────┘
+                    ┌────────────────▼────────────────────┐
+                    │  EXTRACTION LAYER                   │
+                    │  ┌──────────────────────────────┐   │
+                    │  │ CRANEExtractionGate (Exp 418)│   │  CPU-only regex + confidence
+                    │  │ LLMConstraintExtractor (366) │   │  LLM-parsed structural claims
+                    │  │ LLMz3Formalizer (Exp 357)   │   │  Z3/SMT symbolic formalization
+                    │  │ AutoExtractor (auto-routes)  │   │  routes to best available
+                    │  └──────────────┬───────────────┘   │
+                    └────────────────┬────────────────────┘
+                                     │
+          ┌──────────────────────────▼──────────────────────────┐
+          │              THREE-TIER VERIFICATION                 │
+          │  ┌────────────────────────────────────────────────┐  │
+          │  │ Tier 1: EORM (Exp 346+)  attention-sink probe │  │  fast, ~0.1ms
+          │  │ Tier 2: KAN (Exp 96) / CIKAN (Exp 414)        │  │  medium, ~1ms
+          │  │ Tier 3: IsingEBM + ThreeTierPipeline (360)    │  │  thorough, ~6ms
+          │  └────────────────────────────────────────────────┘  │
+          │  JitRL memory (Exp 415) adjusts thresholds at query  │
+          └──────────────────────────┬──────────────────────────┘
+                                     │
+                    ┌────────────────▼────────────────────┐
+                    │  REPAIR LAYER                       │
+                    │  VerifyRepairPipeline (Exp 74-75)   │
+                    │  VERGE iterative Z3 refinement      │
+                    │  ConstraintTemplateLibrary (343)    │
+                    │  SAVeRVerifier for multi-turn       │
+                    └────────────────┬────────────────────┘
+                                     │
+                    ┌────────────────▼────────────────────┐
+                    │  SELF-LEARNING RELAY (FR-11)        │
+                    │  Tier 1: JitRL threshold modulation │
+                    │  Tier 2: CaseMemory template wiring │
+                    │  Tier 3: EORM/JEPA retrain on pairs │
+                    │  FOVER: Z3-label CoT steps (v38 NEW)│
+                    └────────────────────────────────────┘
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 1: Critical Unblocks (Exps 413, CPU-only)
+### Phase 1: Infrastructure Hardening (Experiments 425–426)
 
-**Exp 413 — EnvironmentAutoFix:** Creates `EnvironmentAutoFix` module that self-injects
-`CARNOT_FORCE_LIVE=1` when GPU hardware is detected, eliminating the env propagation dependency.
-This is the **7-milestone blocker fix** done via a workaround instead of requiring conductor changes.
-Also re-runs GPU preflight v2 to produce `honest_verdict='gpu_confirmed_live'` via auto-fix.
-100% CPU-safe, always completes. Produces `results/experiment_413_env_autofix.json`.
+**Mandatory first.** Two retro items blocking efficient operation.
 
-### Phase 2: Complete All Purged CPU Implementations (Exps 414-418)
+**Exp 425 — Conductor timeout (RETRO-003, 17+ milestones):**
+Implement a Python watchdog class that wraps every experiment and kills the process after a
+configurable timeout (default 45 minutes). The watchdog runs in a background thread, emits a
+RETRO log entry on timeout, and writes a partial result JSON so the conductor can continue.
+This has been deferred 17+ consecutive milestones. The retro captured PID 3509070 at 144+ minutes
+with GPU0 at 82C. Non-negotiable first experiment.
 
-Five CPU-only modules that were designed but force-skipped in milestone 2026.04.30. Each uses the
-`DeliverableContentValidator.validate_and_clear()` pattern to purge the corrupt file before
-reimplementing. All are independent and run regardless of GPU state.
+**Exp 426 — DualGPURunner GPU-1 scheduling fix + temperature guard (RETRO-025):**
+Fix the DualGPURunner to assert GPU-1 utilization > 0% within 60s of model load. Add a
+temperature guard in ExperimentTemplate.setup_gpu() that warns and reduces batch size when
+any GPU exceeds 80C. Fix the zombie VRAM allocation pattern (Exp 419 held 1786MB on GPU1 at 0%).
 
-- **Exp 414 — CIKANEnergy:** Constraint-Informed KAN with spline-encoded constraint boundaries
-  (arXiv 2412.03710). Penalty is squared distance from boundary; energy always >= 0.
-- **Exp 415 — JitRL Constraint Memory:** Threshold modulation via non-parametric triple memory
-  (arXiv 2601.18510). Correct Tier 1 algorithm: modulate thresholds, not reweight constraints.
-- **Exp 416 — Safety KAN Classifier:** Energy-based jailbreak detection; first Tier B product.
-  KAN splines are auditable — inspect edges to explain WHY a prompt scores unsafe.
-- **Exp 417 — Semantic Energy Scorer:** Boltzmann energy over penultimate-layer logits (arXiv
-  2508.14496). Fast pre-filter that complements Ising structural checking.
-- **Exp 418 — CRANE Extraction Gate:** Prompt-suffix structured claim elicitation (arXiv 2502.09061).
-  1x inference cost vs LLMExtractor's 2x. Unblocks FULL_STACK variant in live pipeline.
+### Phase 2: Confirm Live Benchmark Results (Experiments 427–429)
 
-### Phase 3: Live GPU Benchmarks — First Real Numbers (Exps 419-421)
+**Validate the first credible headline numbers.**
 
-**These are Carnot's headline experiments.** All gate on Exp 413 producing `gpu_confirmed_live`.
-They use the EnvironmentAutoFix at startup, eliminating propagation risk.
+All three experiments use apply_env_autofix() at startup and gate on Exp 413 verdict.
+They execute the scripts already implemented in Exps 419–421 but with infrastructure fixes
+from Phase 1 in place (RETRO-025 fix means GPU1 is actually used).
 
-- **Exp 419 — Live Precision Pipeline:** 200 GSM8K × 5 variants × 2 models. CRANE as primary
-  extractor for FULL_STACK variant. This is Carnot's first credible precision-stack number.
-- **Exp 420 — Live HumanEval:** 50 problems, CodeExtractor + VerifyRepairPipeline + PBT.
-  Execution-based verification — the domain most likely to show real improvement. Target: confirm
-  or improve on Exp 226's +3.0pp baseline.
-- **Exp 421 — Live Adversarial GSM8K:** Apple 2410.05229 robustness test with irrelevant sentences.
-  Carnot's thesis: constraint verification is invariant to irrelevant context. This is the
-  credibility experiment that distinguishes Carnot from prompting-based approaches.
+**Exp 427:** Re-confirm or re-run Exp 419 precision live benchmark.
+**Exp 428:** Execute Exp 420 HumanEval live benchmark.
+**Exp 429:** Execute Exp 421 adversarial GSM8K live benchmark.
 
-### Phase 4: New Research (Exps 422-424)
+Success criterion: at least one experiment produces `honest_verdict='live_improvement'` and
+`inference_mode='live_gpu'`. This is the credible headline number Carnot has been waiting 8+
+milestones to produce.
 
-- **Exp 422 — VPRM Training via FOVER:** First experiment to frame Carnot as a VPRM (arXiv
-  2601.17223). Use Z3 to annotate individual GSM8K reasoning steps as correct/incorrect, then
-  train IsingEBM on those step-level labels via contrastive divergence. Closes the FR-11 loop:
-  Z3 generates training signal, Ising learns from it, Ising operates independently at inference.
-- **Exp 423 — EORM + JEPA Retrain on Live Data:** Now that Exps 419-421 produce real LLM outputs,
-  retrain EORM (attention-based outcome ranker) and JEPA predictor on live (response, violation)
-  pairs. First honest evaluation: before_auc vs after_auc on held-out live data.
-- **Exp 424 — Operational Retrospective + AMD NPU IRON:** Two sub-tasks: (1) full operational
-  retrospective for milestone 2026.04.31; (2) AMD NPU via IRON toolflow (arXiv 2504.03083),
-  bypassing the 5-milestone VitisAI blocker. Uses `pip install mlir-aie` for IRON, not VitisAI EP.
+### Phase 3: FR-11 Self-Learning with Real Data (Experiments 430–432)
+
+**Close RETRO-024 by giving the self-learning relay actual training data.**
+
+The pipeline: live inference (Phase 2) produces CoT steps → Z3 annotates each step with
+correctness labels (FOVER pattern) → EORM retrains on (partial_cot, step_label) pairs →
+SelfLearningRelay confirms AUC improvement on held-out data.
+
+**Exp 430:** FOVER Z3 step annotation pipeline — parse Exp 427 CoT responses into steps,
+annotate each step with Z3 arithmetic verification, produce labeled (step, correct/incorrect) pairs.
+This generates the training data that five consecutive milestones lacked.
+
+**Exp 431:** EORM + JEPA retrain on Exp 430 labeled pairs (vs Exp 423 synthetic-only baseline).
+Target: after_auc > before_auc (0.5), honest_verdict='real_data_improvement'.
+
+**Exp 432:** JitRL live validation — run 100 live GSM8K questions through the full JitRL memory
+pipeline (Exp 415) with real constraint history from Exp 427. Measure FP reduction vs baseline.
+This is the Tier 1 self-learning live validation that completes FR-11 requirements.
+
+### Phase 4: New Capabilities (Experiments 433–436)
+
+**Advance the product roadmap and hardware path.**
+
+**Exp 433:** Spilled Energy integration (arXiv 2602.18671). Implement SpilledEnergyDetector
+as Tier 0 pre-filter alongside SemanticEnergyScorer. Compare skip rates and FN rates.
+This is the highest-impact new capability from the arxiv scan — free signal from logits.
+
+**Exp 434:** Compliance checker (Tier B product). Implement ComplianceEnergyChecker with
+domain-specific constraint types (financial: no unauthorized advice; medical: no clinical
+recommendations; legal: no binding statements). Uses ConstraintTemplateLibrary with new
+compliance templates. Produce results/experiment_434_compliance_checker.json with AUC > 0.7.
+
+**Exp 435:** AMD XDNA NPU unblock. Check if ninja and openblas are now installed. If yes,
+run the source build path from Exp 292/303/314/335. If still blocked, generate actionable
+install instructions and measure what's achievable with the existing ONNX model path.
+
+**Exp 436:** Operational retrospective (milestone 2026.04.32). Compute timing stats, assess
+whether live_numbers_confirmed and fr11_relay_confirmed are True. Flag new RETRO items.
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 413 (EnvironmentAutoFix)
-  ├─→ Exp 419 (Live precision — gates on gpu_confirmed_live)
-  ├─→ Exp 420 (Live HumanEval — gates on gpu_confirmed_live)
-  └─→ Exp 421 (Live adversarial — gates on gpu_confirmed_live)
+Exp 425 (timeout watchdog)
+  └─→ Exp 426 (GPU1 fix)
+        └─→ Exp 427 (precision live)
+              ├─→ Exp 428 (humaneval live)
+              ├─→ Exp 429 (adversarial live)
+              └─→ Exp 430 (FOVER Z3 labels from live CoT pairs)
+                    └─→ Exp 431 (EORM+JEPA retrain on real pairs)
+                          └─→ Exp 432 (JitRL live validation)
 
-Exp 404 (validator) — already complete
-  ├─→ Exp 414 (CIKAN — calls validate_and_clear)
-  ├─→ Exp 415 (JitRL — calls validate_and_clear)
-  ├─→ Exp 416 (Safety KAN — calls validate_and_clear)
-  ├─→ Exp 417 (Semantic Energy — calls validate_and_clear)
-  └─→ Exp 418 (CRANE — calls validate_and_clear)
-
-Exp 418 (CRANE)
-  └─→ Exp 419 (Live precision — uses CRANE for FULL_STACK variant)
-
-Exps 419-421 (live GPU)
-  ├─→ Exp 422 (VPRM — uses live CoT traces from 419)
-  └─→ Exp 423 (EORM+JEPA retrain — uses live (response, violation) pairs)
-
-Exp 422 (VPRM) + Exp 423 (retrain)
-  └─→ Exp 424 (retrospective — summarizes research findings)
+Exp 433 (spilled energy)  ← independent of live GPU (CPU-based on logits)
+Exp 434 (compliance checker)  ← independent, CPU-only KAN
+Exp 435 (NPU unblock)  ← independent, blocked by human prereq install
+Exp 436 (retrospective)  ← depends on all prior experiments
 ```
+
+---
+
+## Success Criteria for Milestone 2026.04.32
+
+| Criterion | Target | Experiment |
+|-----------|--------|-----------|
+| conductor_timeout_implemented | True | Exp 425 |
+| gpu1_zombie_fixed | True | Exp 426 |
+| live_numbers_confirmed | At least 1 experiment with honest_verdict='live_improvement' | Exp 427-429 |
+| fr11_relay_confirmed | after_auc > before_auc on real CoT pairs | Exp 431 |
+| jitrl_live_validated | fp_reduction_pct > 0 on real data | Exp 432 |
+| spilled_energy_viable | skip_rate > 20% with FN < 5% | Exp 433 |
+| compliance_checker_works | test_auroc > 0.70 | Exp 434 |
+| npu_prereqs_installed | honest_verdict != 'blocked_prereq' | Exp 435 |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | GPU Required | FPGA Required | NPU Required |
-|------------|-------------|---------------|-------------|
-| 413 (env fix) | No | No | No |
-| 414-418 (CPU impl) | No | No | No |
-| 419 (precision) | Yes — 2x RTX 3090 | No | No |
-| 420 (HumanEval) | Yes — 1x RTX 3090 | No | No |
-| 421 (adversarial) | Yes — 2x RTX 3090 | No | No |
-| 422 (VPRM) | No (CD training on CPU) | No | No |
-| 423 (retrain) | Preferred (GPU retrain) | No | No |
-| 424 (retro + NPU) | No | No | Yes (IRON attempt) |
+- 2x RTX 3090 (48GB VRAM) — live inference on Gemma4-E4B-it (GPU0) + Qwen3.5-0.8B (GPU1)
+- AMD XDNA NPU — needs ninja + openblas install (human action required before Exp 435)
+- Kria KV260 FPGA — not required this milestone (bitfile still pending)
+- CPU — all CPU experiments (Exp 425, 426, 430, 433, 434)
 
-**GPU dependency chain:** All live experiments gate on Exp 413's `gpu_confirmed_live` verdict.
-If Exp 413 cannot produce `gpu_confirmed_live` even with EnvironmentAutoFix, Exps 419-421 write
-blocked artifacts and exit cleanly. Exps 422-424 proceed regardless (CPU-safe fallbacks).
+**Human action required before milestone starts:**
+1. Install ninja: `sudo pacman -S ninja` (or `sudo apt install ninja-build`)
+2. Install openblas: `sudo pacman -S openblas` (or `sudo apt install libopenblas-dev`)
+   (These unblock Exp 435, AMD XDNA NPU)
+3. Verify `source scripts/session_startup.sh` runs before conductor session
+4. Physical cooling check: GPU0 reached 82C in prior session — clean heatsinks before
+   starting 3+ hour live inference sessions
 
 ---
 
-## Success Criteria for Milestone 2026.04.31
+## Papers Driving This Milestone
 
-| Criterion | Required for Success |
-|-----------|---------------------|
-| env_autofix_works | Exp 413: honest_verdict='gpu_confirmed_live' |
-| retro_022_closed | Exp 413: gpu IS confirmed live via auto-fix |
-| retro_023_closed | Exps 414-418: all 5 corrupt files purged + valid Python deliverables |
-| precision_result_credible | Exp 419: inference_mode='live_gpu', honest_verdict != 'blocked' |
-| humaneval_result_credible | Exp 420: inference_mode='live_gpu', signed_improvement != None |
-| adversarial_credible | Exp 421: inference_mode='live_gpu', honest_verdict reported |
-| vprm_step_labels_generated | Exp 422: z3_step_labels > 0, ising_trained_on_real_labels=True |
-| eorm_retrained_on_real | Exp 423: retrain_mode='real_data' (not synthetic_only) |
-| fr11_relay_confirmed | Exp 423: learning_confirmed=True on live data |
-| npu_unblocked | Exp 424: NPU verdict != 'blocked_prereq' (IRON path attempted) |
-
----
-
-## What This Milestone Proves
-
-If all success criteria are met:
-
-1. **Seven-milestone blocker resolved** — EnvironmentAutoFix eliminates the CARNOT_FORCE_LIVE
-   propagation problem. Future milestones will reliably get live GPU results.
-
-2. **First credible Carnot numbers** — precision-stack improvement on 200 live GSM8K questions.
-   If CRANE extractor shows positive extraction rate and Ising repair helps, this is Carnot's
-   publishable result.
-
-3. **VPRM architecture validated** — Carnot is formally a Verifiable Process Reward Model.
-   Z3 provides step labels; IsingEBM learns from them. The energy function IS the reward model.
-   This is the theoretical contribution: a hardware-acceleratable VPRM.
-
-4. **FR-11 closes** — Self-learning relay runs on real data. If EORM+JEPA improve AUC-ROC on
-   live pairs, FR-11 is confirmed: the system gets smarter from real query traffic.
-
-5. **AMD NPU unblocked** — IRON toolflow bypasses the VitisAI EP dependency chain that blocked
-   5 consecutive milestones. First NPU inference on JEPA predictor.
-
----
-
-## Risk Assessment
-
-| Risk | Probability | Mitigation |
-|------|-------------|------------|
-| EnvironmentAutoFix fails (GPU still not detected) | Low | Cloud GPU option in Exp 413; scripts/setup_cloud_gpu.sh generated |
-| CRANE extractor produces no violations on live models | Medium | Fallback to LLMExtractor in FULL_STACK variant |
-| VPRM Z3 annotation too sparse (few arithmetic steps) | Medium | Use CoT traces from 200 questions; filter for numeric steps only |
-| NPU IRON toolflow not installable | Medium | Mark as blocked, continue with CPU fallback; experiment completes |
-| EORM/JEPA AUC doesn't improve on live data | Medium | Report honest_verdict='real_data_no_improvement'; still closes FR-11 (confirmed real data) |
+| Paper | ID | Experiment |
+|-------|----|-----------|
+| Spilled Energy in LLMs | 2602.18671 | Exp 433 |
+| FoVer formal step annotation | 2505.15960 | Exp 430 |
+| VPRM process reward models | 2601.17223 | Exp 430, 431 |
+| JitRL continual learning | 2601.18510 | Exp 432 |
+| GPU oscillator Ising | 2505.22631 | (Tier B, future) |
+| KAEM exact-sampling KAN | 2506.14167 | (Tier B, future) |
+| ARM-EBM bijection | 2512.15605 | Theoretical foundation |
+| CRANE alternating decoding | 2502.09061 | Baseline (Exp 418 already done) |
+| AMD XDNA IRON toolchain | 2504.03083 | Exp 435 |

@@ -1789,3 +1789,32 @@ thermodynamic computing Ising FPGA
   research-program.md).
 - **When to pursue:** Candidate ranker improvement milestone. Add SelfCertaintyScorer alongside
   energy scorer in score_candidates. Benchmark combined score vs energy-only and certainty-only.
+
+### GPU-Accelerated Oscillator Ising Machine (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2505.22631 — "GPU-Accelerated Simulated Oscillator Ising/Potts Machine
+  Solving Combinatorial Optimization Problems" (May 2025)
+- **What:** GPU-native oscillator-based Ising solver using custom CUDA kernels for combinatorial
+  optimization. Oscillator Ising machines map spin dynamics to phase synchronization; GPU acceleration
+  enables high parallelism. Demonstrated practical speedups on standard benchmark constraint problems.
+- **Relevance to Carnot:** Carnot's parallel Ising sampler (183x over thrml) runs on CPU. Porting the
+  inner loop to GPU CUDA kernels using oscillator-style phase synchronization could achieve another
+  order of magnitude speedup. The FpgaBackend (Exp 289) abstraction already supports swappable
+  backends; a GPUIsingBackend would be the highest-impact sampler upgrade before FPGA hardware ships.
+- **When to pursue:** Next milestone. Implement GPUIsingBackend using oscillator phase dynamics on CUDA.
+  Benchmark vs CPU ParallelIsingSampler on 100/500/1000-spin problems.
+
+### Kolmogorov-Arnold Energy Models (KAEM) — Exact Sampling (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2506.14167 — "Kolmogorov-Arnold Energy Models: Fast, Interpretable
+  Generative Modeling" (June 2025)
+- **What:** KAEM imposes univariate latent structure (from KA Representation Theorem) enabling EXACT
+  inference via inverse transform sampling — no MCMC required. Bridges simple priors and expressive
+  iterative samplers. Fast, interpretable, and closed-form invertible for the energy model.
+- **Relevance:** Carnot's current KAN energy tier (Exp 96) uses iterative Ising sampling. KAEM's
+  inverse transform exact sampling eliminates the MCMC inner loop entirely, reducing per-check latency
+  from milliseconds to microseconds. This is a major speedup for the verification fast path.
+  Pairs with the CIKAN boundary priors (Exp 414) — KAEM structure + CIKAN boundaries = exact inference
+  over constrained energy landscapes.
+- **When to pursue:** KAN tier improvement milestone. Implement KAEMEnergy as fast-path KAN variant
+  with exact sampling. Compare latency and accuracy vs IsingEBM and standard KANEnergy.
+
+### Differentiable Symbolic Planning with Feasibility Channels (already added above, see DSP entry)
