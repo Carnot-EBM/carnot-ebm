@@ -47,7 +47,7 @@ Slowest: Exp 383 (combined EORM+JEPA retrain, ~85 min — code + 41 tests + spec
 
 ### What's Next (Milestone 2026.06.10)
 
-1. **PRE-FLIGHT (MANDATORY):** Run `nvidia-smi` before starting the session. Verify GPU node is online. If no GPU shown, fix GPU availability FIRST — do not write experiment code until Exp 353 smoke test passes with inference_mode='live_gpu'.
+1. **PRE-FLIGHT (MANDATORY — Exp 390):** Run `python scripts/experiment_390_gpu_preflight.py`. If honest_verdict != 'gpu_confirmed_live', fix GPU node FIRST (power on, `source scripts/session_startup.sh`, verify `nvidia-smi`). DO NOT proceed to Exps 394-400 if Exp 390 exits with code 1. Exp 390 implemented: 31 tests pass, 6-layer preflight, ACTION REQUIRED messages per verdict. RETRO-019 status: BLOCKED in this session — GPU node offline. LIVE RUN PENDING.
 2. **RETRO-020 (CRITICAL):** Implement CIKANEnergy as Experiment 1 — write proper Python CIKANEnergy class to python/carnot/models/cikan_energy.py. Run tests. Write results/experiment_378_cikan_energy.json with status='success'.
 3. **RETRO-021 + RETRO-016:** Once live GPU confirmed, re-run Exp 384 (FR-11 relay) and Exp 367 (extraction comparison).
 4. Re-run Exps 379 (precision), 380 (HumanEval), 381 (adversarial), 382 (extraction) with live GPU for first credible headline numbers.
