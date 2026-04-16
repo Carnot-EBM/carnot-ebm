@@ -334,7 +334,7 @@ tasks:
     \     annotate_response(response: str, question_id: str) -> list[CoTStep]\n\
     \     annotate_corpus(responses: list[dict]) -> list[list[CoTStep]]\n\
     \     to_training_pairs(annotated: list[list[CoTStep]]) -> list[dict]:\n\
-    \       Each pair: {'question_id', 'step_text', 'label', 'confidence'}\n\
+    \       Each pair: ('question_id', 'step_text', 'label', 'confidence')\n\
     \       Filter: only include z3_label in ('correct', 'incorrect'), confidence >= 0.3\n\
     \   - Test: numbered step parsing detects 3 steps in a 3-step CoT\n\
     \   - Test: equation '2 + 3 = 5' → z3_label='correct'\n\
