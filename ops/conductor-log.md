@@ -1866,3 +1866,5 @@ python/ |
 | 2026-04-16 00:52 UTC | Exp 370: Live adversarial GSM8K — Apple arXiv 2410 | OK | 81 passed in 3.37s |
 | 2026-04-16 00:53 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
 | 2026-04-16 01:17 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-16 01:46 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-16 01:46 UTC | Exp 371: EORM real-data retrain — train on live pa | OK | Deliverable already exists in repo |
