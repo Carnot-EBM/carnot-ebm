@@ -1,5 +1,16 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Milestone 2026.06.17 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T05:00:00Z | 2026-04-16T05:59:00Z | (prior context) Read 11 project files; arxiv research background agent; appended 7 new papers to research-references.md; wrote openspec/change-proposals/research-roadmap-vNEXT.md v36 (395 lines, milestone 2026.06.17 design); wrote research-roadmap-next.yaml (649 lines, 14 experiments Exp 404-417) | ~80k |
+| 2 | 2026-04-16T10:00:49Z | 2026-04-16T10:01:02Z | Context compaction resume: verified both output files exist and contain correct content; logged metrics | ~2k |
+
+---
+
 ## Session: 2026-04-16 Exp 389 Milestone 2026.06.03 Retrospective
 
 ### Turn Log
