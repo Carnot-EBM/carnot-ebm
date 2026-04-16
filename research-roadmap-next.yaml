@@ -1,0 +1,1008 @@
+# Carnot Research Roadmap - Milestone 2026.06.03
+# "Break the Simulated Barrier — First Live Numbers and JitRL Self-Learning"
+#
+# CONTEXT: Milestone 2026.05.27 completed with:
+#   - RETRO-012/013/014 closed (Exp 365): conductor_gpu_env.sh created
+#   - LLMExtractor implemented (Exp 366): module complete, live test pending
+#   - Precision pipeline: script + 74 tests complete, blocked (Exp 368)
+#   - HumanEval live: script + 69 tests complete, blocked (Exp 369)
+#   - Adversarial GSM8K live: script + 23 tests complete, blocked (Exp 370)
+#   - Three-tier live: script + 80 tests complete, blocked (Exp 373)
+#   - FR-11 relay: script + tests complete, blocked (Exp 374)
+#   - CIKAN: cikan_energy.py contains JSON not Python — RETRO-018 (Exp 375)
+#   - Operational retrospective: RETRO-015/016/017/018 opened (Exp 376)
+#
+# This milestone's primary theme:
+#   Phase 1: Fix RETRO-015 (GPU env propagation) and RETRO-018 (CIKAN corrupt)
+#   Phase 2: Execute 4 blocked live experiments now that GPU env is fixed
+#   Phase 3: Build on live results — retrain EORM/JEPA, run relay + three-tier
+#   Phase 4: New capabilities — JitRL memory, Safety KAN classifier, SAVeR live
+#   Phase 5: Operational retrospective
+#
+# New arxiv papers informing v34:
+#   2602.07518 (Physical Analog KAN: RNPU silicon, 250 pJ/inference, hardware path for CIKAN)
+#   2602.23455 (BiKA: KAN-inspired ultra-lightweight hardware accelerator for FPGA/NPU)
+#   2601.18510 (JitRL: continual RL without gradients; non-parametric memory for Tier 1 fix)
+#   2511.00746 (Ising↔NN correspondence: compile NNs to Ising hardware directly)
+#   2504.05410 (Adaptive rejection sampling: fewer constraint evaluations for guided decoding)
+#   2604.12054 (REGREACT: regulatory constraint extraction, multi-agent compliance pipeline)
+#
+# Design doc: openspec/change-proposals/research-roadmap-vNEXT.md (v34)
+# Previous milestone: research-roadmap.yaml (2026.05.27)
+
+milestone: "2026.06.03"
+milestone_title: "Break the Simulated Barrier — First Live Numbers and JitRL Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp377-fix-retro015-gpu-session-startup
+    milestone: "2026.06.03"
+    deliverable: results/experiment_377_gpu_session_fix.json
+    title: "Exp 377: Fix RETRO-015 — session_startup.sh auto-sources GPU env, LiveGPUGate"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: RETRO-015 is the highest-priority item in Carnot history — FOUR consecutive
+      milestones (2026.05.06, 2026.05.13, 2026.05.20, 2026.05.27) produced zero live GPU
+      results because CARNOT_FORCE_LIVE=1 was never exported into conductor subprocess
+      environments. The hardware has been confirmed ready since Exp 352 (is_live_capable=True).
+      Exp 365 created scripts/conductor_gpu_env.sh with "export CARNOT_FORCE_LIVE=1" but never
+      wired it into the conductor launch sequence.
+
+      The fix strategy:
+      1. Create scripts/session_startup.sh — sourced at conductor session start. This script:
+         - Sources scripts/conductor_gpu_env.sh (which exports CARNOT_FORCE_LIVE=1)
+         - Exports CARNOT_FORCE_LIVE=1 directly as a belt-and-suspenders measure
+         - Prints a human-readable confirmation line: "[session_startup] CARNOT_FORCE_LIVE=1 exported"
+      2. Implement LiveGPUGate in python/carnot/pipeline/live_gpu_gate.py — a hard gate that
+         ALL GPU experiments call at their start. If CARNOT_FORCE_LIVE != "1" or GPU is not
+         confirmed live, it raises RuntimeError immediately. This makes failures loud and fast.
+      3. Implement a subprocess propagation test: spawn a subprocess, verify the env var inherits.
+         This is the PROOF that the fix actually works, not just that the script exists.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/conductor_gpu_env.sh — the env script from Exp 365
+      - python/carnot/pipeline/live_gpu_diagnostic.py — diagnose_live_gpu() (Exp 352)
+      - python/carnot/pipeline/smoke_test.py — SmokeTestResult (Exp 353)
+      - scripts/experiment_template.py — ExperimentTemplate patterns
+      - results/experiment_365_retro_close.json — RETRO-012 close status
+
+      TASK: Fix RETRO-015 by creating session_startup.sh and LiveGPUGate.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-INFRA-017 (session startup must export CARNOT_FORCE_LIVE=1 before GPU experiments),
+         REQ-INFRA-018 (LiveGPUGate must be called at start of any GPU experiment),
+         SCENARIO-INFRA-019/020/021 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - LiveGPUGate: check_env_var() → bool; check_gpu_live() → bool;
+           require_live(model_ids=[]) → None (raises RuntimeError if either check fails)
+         - LiveGPUGate.require_live_or_blocked(tmpl, model_ids) → dict | None:
+           returns blocked artifact dict if not live (for experiments that prefer blocked to raising)
+         - verify_subprocess_env_propagation(env_var="CARNOT_FORCE_LIVE") → bool:
+           spawns subprocess with current env, checks var is present
+         - build_session_startup_script(project_root) → str: returns the shell script content
+         - check_session_startup_exists(project_root) → bool
+      4. Implement scripts/session_startup.sh:
+         #!/usr/bin/env bash
+         # Source this at the start of a conductor session to propagate GPU env variables.
+         # RETRO-015 fix: ensures CARNOT_FORCE_LIVE=1 is inherited by all subprocesses.
+         set -euo pipefail
+         SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+         if [ -f "$SCRIPT_DIR/conductor_gpu_env.sh" ]; then
+           source "$SCRIPT_DIR/conductor_gpu_env.sh"
+         fi
+         export CARNOT_FORCE_LIVE=1
+         echo "[session_startup] CARNOT_FORCE_LIVE=1 exported at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      5. Implement python/carnot/pipeline/live_gpu_gate.py:
+         - LiveGPUGate dataclass or class (stateless — all methods are static/class methods)
+         - check_env_var() → bool: returns True iff os.environ.get("CARNOT_FORCE_LIVE") == "1"
+         - check_gpu_live() → bool: calls diagnose_live_gpu() from Exp 352; returns is_live_capable
+         - require_live(model_ids=[]) → None: calls check_env_var() + check_gpu_live(); raises
+           RuntimeError("LiveGPUGate: CARNOT_FORCE_LIVE not set — source scripts/session_startup.sh")
+           if env var missing; RuntimeError("LiveGPUGate: GPU not live — is_live_capable=False") if GPU
+           not ready. model_ids optionally used by check_gpu_live for model-loadability check.
+         - require_live_or_blocked(tmpl, model_ids) → dict | None: calls require_live();
+           on RuntimeError, returns tmpl.build_result({}, status="blocked",
+           blocked_reason=str(e)) so the caller can write the artifact and exit cleanly.
+         - verify_subprocess_env_propagation(env_var="CARNOT_FORCE_LIVE") → bool:
+           runs subprocess.run(["python3", "-c", f"import os; print(os.environ.get('{env_var}', ''))"],
+           env=os.environ, capture_output=True, text=True); returns "1" in result.stdout
+      6. Export LiveGPUGate from carnot.pipeline.__init__.
+      7. Write scripts/experiment_377_gpu_session_fix.py using ExperimentTemplate(377):
+         a. CPU-only experiment. No GPU needed (testing env propagation, not inference).
+         b. Read scripts/conductor_gpu_env.sh — verify CARNOT_FORCE_LIVE=1 present.
+         c. Read scripts/session_startup.sh — verify it sources conductor_gpu_env.sh.
+         d. Call LiveGPUGate.check_env_var() — records whether var is currently set.
+         e. Call LiveGPUGate.verify_subprocess_env_propagation() — subprocess inherits env.
+         f. Call diagnose_live_gpu() — records is_live_capable (hardware state, not this fix).
+         g. Record: env_var_set, subprocess_inherits_env, session_startup_exists,
+            conductor_gpu_env_exists, is_live_capable, retro_015_infrastructure_fixed.
+         h. retro_015_infrastructure_fixed = env_var_set AND subprocess_inherits_env
+            AND session_startup_exists AND conductor_gpu_env_exists
+            (Note: is_live_capable may be False in CI — that is not a failure of this fix)
+         i. Build artifact: schema="carnot.gpu_session_fix.v1", all fields above, honest_verdict:
+            "infrastructure_fixed" when retro_015_infrastructure_fixed=True;
+            "env_propagation_failed" when subprocess_inherits_env=False;
+            "scripts_missing" when session_startup_exists=False or conductor_gpu_env_exists=False
+         j. Output: results/experiment_377_gpu_session_fix.json
+      8. Write tests/python/test_experiment_377_gpu_session_fix.py (100% coverage required).
+      9. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      10. Reconcile: update ops/conductor-log.md with RETRO-015 status,
+          ops/changelog.md, ops/status.md. Mark RETRO-015 CLOSED if infrastructure_fixed=True.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp378-cikan-reimplementation
+    milestone: "2026.06.03"
+    deliverable: python/carnot/models/cikan_energy.py
+    title: "Exp 378: Fix RETRO-018 — CIKANEnergy proper Python implementation"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: RETRO-018 — Exp 375 created python/carnot/models/cikan_energy.py but it contains
+      JSON artifact data, not Python code. The file must be completely replaced with a proper
+      Python implementation of the CIKAN (Constraint-Informed KAN) energy tier.
+
+      arXiv 2412.03710 (CIKAN): Extends KAN with hard constraint priors baked into spline
+      activations. Instead of learning arbitrary spline shapes, CIKAN seeds each edge's spline
+      with known constraint boundaries — regions that violate constraints have infinite energy.
+
+      arXiv 2602.07518 (Physical Analog KAN): Shows that KAN spline activations can be
+      implemented in silicon using Reconfigurable Nonlinear-Processing Units (RNPUs). Each
+      ConstraintBoundary maps to one RNPU saturation voltage: crossing the boundary drives output
+      to saturation (effectively infinite energy). System-level result: ~250 pJ/inference,
+      ~600 ns latency — 10^2-10^3x cheaper than GPU MLP.
+
+      WHY THIS MATTERS: CIKAN is the first Carnot energy tier with a documented path from
+      Python → FPGA LUT saturation points → aKAN silicon RNPU. This is the Phase 2 hardware
+      path and the Tier 4 adaptive structure mechanism.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan.py — KANEnergy, KANSpline, KANLayer (existing KAN tier)
+      - python/carnot/verify/energy.py — ConstraintTerm protocol, ComposedEnergy
+      - python/carnot/models/__init__.py — model exports
+      - tests/python/test_kan.py — KAN test patterns to follow
+      - python/carnot/models/cikan_energy.py — CURRENT FILE (contains JSON, must be rewritten)
+
+      TASK: Re-implement CIKANEnergy as a constrained KAN subclass.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-ENERGY-010 (CIKAN energy tier with constraint-seeded splines),
+         REQ-ENERGY-011 (constraint boundaries produce infinite energy barrier at boundary crossing),
+         REQ-ENERGY-012 (CIKANEnergy.energy() is always non-negative),
+         SCENARIO-ENERGY-015/016/017 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - ConstraintBoundary: dataclass (variable_idx: int, boundary_value: float,
+           boundary_type: Literal["lower_bound", "upper_bound", "equality"])
+         - seed_spline_from_constraint(spline: KANSpline, boundary: ConstraintBoundary) → KANSpline:
+           places a knot at boundary_value; energy approaches +inf as activation crosses boundary
+           (saturation behavior); returns modified spline with same interface
+         - CIKANEnergy(n_vars: int, n_hidden: int, constraint_boundaries: list[ConstraintBoundary])
+         - CIKANEnergy inherits KANEnergy OR wraps it (pick the approach with less coupling)
+         - CIKANEnergy.energy(x) → float: always >= 0 (test: energy on 1000 random configs >= 0)
+         - CIKANEnergy.from_constraints(constraints: list[ConstraintTerm]) → CIKANEnergy:
+           classmethod that extracts variable indices and boundary values from arithmetic constraints
+         - CIKANEnergy._boundary_penalty(x: jnp.ndarray) → float: returns sum of penalties for
+           each boundary crossing: penalty = (crossing_amount)^2 * 1e6 (large but finite)
+         - CIKANEnergy.energy_separation_ratio(satisfying, violating) → float:
+           mean_energy(violating) / max(mean_energy(satisfying), 1e-6)
+         - CIKANEnergy.save(path) / load(path) via safetensors
+         - HARDWARE DOCSTRING: Each ConstraintBoundary maps to one RNPU saturation voltage in
+           Physical Analog KAN silicon (arXiv 2602.07518). FPGA compilation: each boundary
+           becomes a LUT saturation point. Hardware cannot output configurations crossing boundaries.
+      4. Implement python/carnot/models/cikan_energy.py (complete rewrite):
+         - ConstraintBoundary dataclass with validation
+         - seed_spline_from_constraint — modifies KANSpline knot placement
+         - CIKANEnergy class with energy(), from_constraints(), _boundary_penalty(), save(), load()
+         - energy_separation_ratio() convenience method
+         - Verbose docstrings explaining WHY (not just what)
+         - Do NOT preserve any of the existing JSON content
+      5. Export CIKANEnergy, ConstraintBoundary from carnot.models.__init__.
+      6. Write scripts/experiment_378_cikan_energy.py using ExperimentTemplate(378):
+         a. Create arithmetic constraint: x0 + x1 = x2 (carry-check style, boundary at exact sum)
+         b. Instantiate CIKANEnergy.from_constraints([arithmetic_constraint])
+         c. Sample 100 satisfying configs (x0+x1 == x2) and 100 violating (x0+x1 != x2)
+         d. Compute mean_energy_satisfying, mean_energy_violating, energy_separation_ratio
+         e. Instantiate standard KANEnergy with same n_vars, n_hidden, compare separation ratio
+         f. cikan_vs_kan_ratio = cikan_separation / max(kan_separation, 1e-6)
+         g. Build artifact: schema="carnot.cikan_energy.v1",
+            n_satisfying=100, n_violating=100, mean_energy_satisfying, mean_energy_violating,
+            energy_separation_ratio, cikan_vs_kan_ratio, n_constraint_boundaries_used,
+            hardware_path_note="Each ConstraintBoundary → 1 RNPU saturation point (arXiv 2602.07518)"
+         h. honest_verdict="structural_prevention" when separation_ratio > 5.0;
+            "partial_separation" when 1.0 < ratio <= 5.0; "no_separation" when ratio <= 1.0
+         i. Output: results/experiment_378_cikan_energy.json
+      7. Write tests/python/test_cikan_energy.py (100% coverage required).
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      9. Reconcile: update ops/conductor-log.md with CIKAN status (RETRO-018 CLOSED),
+         ops/changelog.md, ops/status.md, _bmad/architecture.md (CIKANEnergy in model tiers).
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp379-precision-pipeline-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_379_precision_execute.json
+    title: "Exp 379: Live precision pipeline execution — 200 GSM8K, 5 variants, 2 models"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: scripts/experiment_368_precision_live.py is a complete, tested benchmark script
+      (74 tests pass) that runs 200 GSM8K questions across 5 pipeline variants × 2 models with
+      a hard CARNOT_FORCE_LIVE=1 gate. It was blocked in milestone 2026.05.27 because the env
+      var was never set. Exp 377 (this milestone) fixed the session startup to set the env var.
+
+      This experiment EXECUTES the Exp 368 pipeline logic as a new experiment with a new
+      deliverable path. It does NOT rewrite the script — it reads the existing code, creates a
+      thin wrapper that sources the GPU env and runs the existing pipeline modules, then validates
+      the output.
+
+      The 5 pipeline variants: BASELINE, CONFIDENCE_ONLY, CONFIDENCE_ADAPTIVE,
+      CONFIDENCE_ADAPTIVE_VERGE, FULL_STACK.
+      Models: Gemma4-E4B-it (GPU0), Qwen3.5-0.8B (GPU1).
+
+      IMPORTANT: If CARNOT_FORCE_LIVE=1 is not set, produce a blocked artifact and stop.
+      Do not fall through to simulated mode. Blocked is better than fake numbers.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_368_precision_live.py — the existing pipeline script (READ CAREFULLY)
+      - python/carnot/pipeline/precision_benchmark.py — PrecisionStackResult, PipelineVariant
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (from Exp 377)
+      - python/carnot/pipeline/live_gpu_diagnostic.py — diagnose_live_gpu()
+      - scripts/experiment_template.py — ExperimentTemplate.setup_gpu()
+      - results/experiment_377_gpu_session_fix.json — confirms env fix status
+
+      TASK: Execute the precision pipeline benchmark with live GPU.
+      1. Read CLAUDE.md spec-first workflow.
+      2. No new spec changes needed (REQ-BENCH-003, SCENARIO-BENCH-007/008/009 from Exp 340
+         cover this; SCENARIO-BENCH-020 from Exp 368 covers the live_gpu_confirmed criterion).
+      3. Write tests FIRST (100% coverage required) for any NEW helper functions in this script.
+         Do not rewrite Exp 368 tests. Test the wrapper functions only.
+      4. Implement scripts/experiment_379_precision_execute.py:
+         a. ExperimentTemplate(379, "Live precision pipeline execution",
+            "results/experiment_379_precision_execute.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it",
+            "Qwen/Qwen3.5-0.8B"])
+            If blocked is not None: write blocked artifact, exit.
+         d. gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it",
+            "gpu": 0}, {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}])
+            If not gpu_status["all_healthy"]: write blocked artifact, exit.
+         e. Import and call the precision benchmark pipeline code from experiment_368 modules
+            (do NOT call subprocess — import the functions directly):
+            - from python.carnot.pipeline.precision_benchmark import (
+                PipelineVariant, PrecisionStackResult, build_precision_benchmark_artifact)
+            - Run 200 GSM8K questions per model per variant (BatchedInferenceRunner, batch_size=8)
+            - Checkpoint every 50 questions via tmpl.checkpoint_save()
+         f. Use LLMExtractor (from Exp 366) with live Qwen3.5-0.8B as extractor for IT-format
+            variants (replaces ArithmeticExtractor for Gemma4-E4B-it outputs)
+         g. Build artifact: schema="carnot.precision_benchmark.v2",
+            n_questions=200, n_models=2, n_variants=5,
+            per_variant_results (list of PrecisionStackResult),
+            headline_result (FULL_STACK on Gemma4-E4B-it: baseline_accuracy, stack_accuracy,
+            signed_improvement), inference_mode (must be "live_gpu"),
+            honest_verdict: "live_improvement" only when inference_mode=="live_gpu" AND
+            signed_improvement > 0; "live_no_improvement" when live but improvement <= 0;
+            "blocked" when not live
+         h. Output: results/experiment_379_precision_execute.json
+      5. Write tests/python/test_experiment_379_precision_execute.py (100% coverage required).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md with live result or blocked status.
+         If honest_verdict="live_improvement": document the headline number in ops/status.md
+         and ops/changelog.md. This is Carnot's first credible precision stack number.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp380-humaneval-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_380_humaneval_execute.json
+    title: "Exp 380: Live HumanEval code verification execution — 50 problems, CodeExtractor + PBT"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: scripts/experiment_369_humaneval_live.py is a complete, tested benchmark script
+      (69 tests pass) for HumanEval code verification with CodeExtractor + PBT. It was blocked
+      in milestone 2026.05.27 because CARNOT_FORCE_LIVE was never set. Exp 226 showed +3.0pp
+      (19/164 → 24/164) on a prior live run. Code verification uses EXECUTION not regex — it
+      should work on instruction-tuned models (unlike arithmetic extraction).
+
+      This is Carnot's most reliable result domain: CodeExtractor verifies via execution, not
+      pattern matching. The PBT pass catches bugs that official tests miss.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_369_humaneval_live.py — the existing benchmark script (READ CAREFULLY)
+      - python/carnot/pipeline/extract.py — CodeExtractor
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)
+      - scripts/experiment_template.py — ExperimentTemplate.setup_gpu()
+      - results/experiment_369_humaneval_live.json — prior blocked result (for schema reference)
+
+      TASK: Execute live HumanEval code verification benchmark.
+      1. Read CLAUDE.md spec-first workflow.
+      2. No new spec changes needed (SCENARIO-BENCH-021 from Exp 369 covers this).
+      3. Write tests FIRST (100% coverage) for any NEW helper functions only.
+      4. Implement scripts/experiment_380_humaneval_execute.py:
+         a. ExperimentTemplate(380, "Live HumanEval code verification",
+            "results/experiment_380_humaneval_execute.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it"])
+            If blocked is not None: write blocked artifact, exit.
+         d. gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it",
+            "hf_id": "google/gemma-4-E4B-it", "gpu": 0}])
+            If not gpu_status["all_healthy"]: write blocked artifact, exit.
+         e. Load 50 HumanEval problems (official human_eval package → 50-problem manual fallback)
+         f. Generate code with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8)
+         g. For each solution: run official tests (subprocess, 10s timeout)
+         h. For FAILED solutions: run CodeExtractor + VerifyRepairPipeline
+         i. Re-run tests on repaired solutions; also run PBT on solutions that pass official tests
+         j. pass_at_1_before = fraction passing before repair
+            pass_at_1_after = fraction passing after repair
+            signed_improvement = pass_at_1_after - pass_at_1_before (no clamping)
+         k. Build artifact: schema="carnot.humaneval_benchmark.v2",
+            inference_mode="live_gpu", n_problems=50, pass_at_1_before, pass_at_1_after,
+            signed_improvement, pbt_bugs_found,
+            honest_verdict: "code_verification_positive" only when inference_mode=="live_gpu"
+            AND signed_improvement > 0
+         l. Output: results/experiment_380_humaneval_execute.json
+      5. Write tests/python/test_experiment_380_humaneval_execute.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md. If positive: document improvement vs Exp 226
+         baseline (+3.0pp) in ops/changelog.md and ops/status.md.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp381-adversarial-gsm8k-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_381_adversarial_execute.json
+    title: "Exp 381: Live adversarial GSM8K execution — Carnot's headline credibility experiment"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: THIS IS CARNOT'S HEADLINE CREDIBILITY EXPERIMENT. Apple researchers (arXiv
+      2410.05229) showed frontier LLMs drop up to 65% accuracy when one irrelevant sentence
+      is appended to GSM8K math problems. Even o1-preview drops 92.7% → 77.4%.
+
+      Carnot's hypothesis: constraint verification (LLMExtractor + Ising energy) is INVARIANT
+      to irrelevant context — it parses verifiable claims regardless of surrounding text. So
+      verify-repair should maintain accuracy on adversarial variants, showing improvement LARGER
+      than on standard variants.
+
+      scripts/experiment_370_adversarial_live.py is a complete, tested script (23 tests pass)
+      with a hard CARNOT_FORCE_LIVE=1 gate. It was blocked in milestone 2026.05.27 because the
+      env var was never set. Exp 377 fixed this.
+
+      The three conditions: standard (original GSM8K), adversarial (original + irrelevant sentence),
+      repaired_adversarial (adversarial + verify-repair with LLMExtractor).
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_370_adversarial_live.py — the existing benchmark script (READ CAREFULLY)
+      - python/carnot/pipeline/adversarial_gsm8k.py — AdversarialGSMQuestion, harness (Exp 354)
+      - python/carnot/pipeline/llm_extractor.py — LLMExtractor (Exp 366)
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)
+      - results/experiment_354_adversarial_gsm8k_harness.json — harness validation
+
+      TASK: Execute the live adversarial GSM8K benchmark.
+      1. Read CLAUDE.md spec-first workflow.
+      2. No new spec changes needed (SCENARIO-BENCH-022 from Exp 370 covers this).
+      3. Write tests FIRST (100% coverage) for any NEW helper functions only.
+      4. Implement scripts/experiment_381_adversarial_execute.py:
+         a. ExperimentTemplate(381, "Live adversarial GSM8K — Carnot credibility",
+            "results/experiment_381_adversarial_execute.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it",
+            "Qwen/Qwen3.5-0.8B"])
+            If blocked is not None: write blocked artifact, exit.
+            This experiment MUST NOT silently fall back to simulated mode.
+         d. gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it",
+            "hf_id": "google/gemma-4-E4B-it", "gpu": 0},
+            {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}])
+            If not gpu_status["all_healthy"]: write blocked artifact, exit.
+         e. Load 50 GSM8K questions (HuggingFace gsm8k test split → synthetic fallback)
+         f. build_adversarial_questions(original_questions, seed=42) → adversarial variants
+         g. Run three conditions with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8):
+            - standard: original questions
+            - adversarial: adversarial questions (no repair)
+            - repaired: adversarial + LLMExtractor(live Qwen3.5-0.8B) + VerifyRepairPipeline
+         h. Compute per-condition accuracy, accuracy_drop (adversarial vs standard),
+            repair_improvement (repaired vs adversarial), robustness_invariant_holds
+            (adversarial_accuracy >= standard_accuracy - 0.05 after repair)
+         i. Checkpoint every 25 questions
+         j. Build artifact: schema="carnot.adversarial_gsm8k.v2",
+            inference_mode="live_gpu", standard_accuracy, adversarial_accuracy,
+            accuracy_drop, repaired_adversarial_accuracy, repair_improvement,
+            robustness_invariant_holds, per_model_results, headline_result,
+            honest_verdict (four branches: improvement_positive/degradation_positive/
+            neutral/blocked — never blocked if live GPU works)
+         k. Output: results/experiment_381_adversarial_execute.json
+      5. Write tests/python/test_experiment_381_adversarial_execute.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md.
+         If honest_verdict="improvement_positive": this is Carnot's headline result — document
+         it prominently in ops/status.md and ops/changelog.md. This validates the entire thesis.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp382-extraction-comparison-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_382_extraction_execute.json
+    title: "Exp 382: Live extraction comparison — LLMExtractor vs ArithmeticExtractor vs LLMz3Formalizer"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: scripts/experiment_367_extraction_live.py is a complete, tested script (42 tests)
+      that compares three extractors on live Gemma4-E4B-it output. It was blocked in 2026.05.27.
+      Exp 366 implemented LLMConstraintExtractor — now we test whether it actually finds violations
+      that ArithmeticExtractor misses (0/20 questions found by regex on IT models).
+
+      The three extractors:
+        ArithmeticExtractor — regex-based, works on base models, 0% on IT models
+        LLMExtractor — uses Qwen3.5-0.8B to extract claims as structured JSON (Exp 366)
+        LLMz3Formalizer — uses LLM to generate Z3 code, verifies via Z3 solver (Exp 357)
+
+      Ground truth: questions where Gemma4-E4B-it is WRONG are TP opportunities.
+      Questions where it is CORRECT are FP opportunities.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_367_extraction_live.py — existing script (READ CAREFULLY)
+      - python/carnot/pipeline/extractor_comparison.py — ExtractorComparisonResult (Exp 367)
+      - python/carnot/pipeline/llm_extractor.py — LLMExtractor (Exp 366)
+      - python/carnot/pipeline/llm_z3_formalizer.py — LLMz3Formalizer (Exp 357)
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)
+
+      TASK: Execute live extraction comparison with all three extractors.
+      1. Read CLAUDE.md spec-first workflow.
+      2. No new spec changes needed (REQ-EXTRACT-023, SCENARIO-EXTRACT-047/048 from Exp 367).
+      3. Write tests FIRST (100% coverage) for any NEW helper functions only.
+      4. Implement scripts/experiment_382_extraction_execute.py:
+         a. ExperimentTemplate(382, "Live extraction comparison",
+            "results/experiment_382_extraction_execute.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it",
+            "Qwen/Qwen3.5-0.8B"])
+            If blocked is not None: write blocked artifact, exit.
+         d. gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it",
+            "hf_id": "google/gemma-4-E4B-it", "gpu": 0},
+            {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}])
+            If not gpu_status["all_healthy"]: write blocked artifact, exit.
+         e. Load 30 GSM8K questions (HuggingFace → synthetic fallback)
+         f. Run live inference with Gemma4-E4B-it (BatchedInferenceRunner, batch_size=8)
+         g. Label each response: is_correct (compare to ground truth answer)
+         h. For each extractor [ArithmeticExtractor, LLMExtractor(llm_caller=live_qwen),
+            LLMz3Formalizer(llm_caller=live_qwen)]:
+            - Run extractor on each response
+            - Count TP (extractor fires on wrong answer), FP (extractor fires on correct answer)
+            - Compute detection_rate = TP/(TP+FN), fp_rate = FP/(FP+TN)
+         i. Build ExtractorComparisonResult per extractor
+         j. Build artifact: schema="carnot.extraction_comparison.v1",
+            n_questions=30, inference_mode="live_gpu",
+            per_extractor_results (list), winner_extractor (by detection_rate with fp_rate tiebreak),
+            honest_verdict: "live_gpu_winner" only when inference_mode=="live_gpu" for ALL results;
+            "blocked" otherwise
+         k. Output: results/experiment_382_extraction_execute.json
+      5. Write tests/python/test_experiment_382_extraction_execute.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md.
+         If honest_verdict="live_gpu_winner": document the winning extractor and why
+         (detection_rate and fp_rate comparison) in ops/changelog.md and ops/status.md.
+         This resolves RETRO-016 (LLMExtractor never tested live).
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp383-combined-models-retrain
+    milestone: "2026.06.03"
+    deliverable: results/experiment_383_models_retrain.json
+    title: "Exp 383: Combined EORM + JEPA retrain on live pairs from Exps 379-382"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Exps 371 (EORM real retrain) and 372 (JEPA real retrain) were blocked in
+      milestone 2026.05.27 because Exps 368-370 never produced live pairs (RETRO-015).
+      Now that Exps 379-382 have run with live GPU, real (question, response, is_correct)
+      pairs are available. This experiment retrains both models in a single combined experiment
+      to minimize overhead.
+
+      EORM (EnergyRewardModel): predicts whether a chain-of-thought response is correct.
+      Trained on contrastive pairs: (correct_response, incorrect_response, question).
+      Target: AUC-ROC improvement from 0.500 (random) to >= 0.65 on held-out live pairs.
+
+      JEPA predictor: predicts constraint violations from partial responses (first 50% of words).
+      Trained on binary (partial_response, has_violation) pairs.
+      Target: AUC-ROC improvement that enables the SinkProbe fast-path in the three-tier pipeline.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/eorm.py — EORMModel, EORMTrainer (Exp 346)
+      - python/carnot/models/eorm_retrain.py — load_real_cot_pairs, merge_cot_corpora (Exp 359)
+      - python/carnot/embeddings/jepa_retrain.py — JEPARetrainer, extract_violation_pairs (Exp 347)
+      - results/experiment_379_precision_execute.json — GSM8K live pairs (if exists)
+      - results/experiment_380_humaneval_execute.json — HumanEval live pairs (if exists)
+      - results/experiment_381_adversarial_execute.json — Adversarial live pairs (if exists)
+      - results/eorm_model_346.safetensors — EORM baseline model
+
+      TASK: Retrain EORM and JEPA on real live GPU pairs.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add SCENARIO-LEARN-048 (EORM real_data_improvement) and SCENARIO-LEARN-049
+         (JEPA real auc_improvement) if not already present in spec.
+      3. Write tests FIRST (100% coverage) for any NEW helper functions.
+      4. Implement scripts/experiment_383_models_retrain.py:
+         a. ExperimentTemplate(383, "Combined EORM+JEPA retrain",
+            "results/experiment_383_models_retrain.json") — CPU training, no GPU required
+         b. tmpl.setup()
+         c. Load real pairs from all available live result files:
+            live_files = [
+              "results/experiment_379_precision_execute.json",
+              "results/experiment_380_humaneval_execute.json",
+              "results/experiment_381_adversarial_execute.json"
+            ]
+            eorm_pairs = load_real_cot_pairs(live_files)  # from eorm_retrain.py
+            jepa_pairs = extract_violation_pairs(live_files)  # from jepa_retrain.py
+         d. EORM retrain:
+            If len(eorm_pairs) < 50: eorm_verdict = "insufficient_real_pairs"
+            Else: train 200 epochs on 80% split; evaluate AUC-ROC on 20%
+            Save to results/eorm_model_383_real.safetensors
+         e. JEPA retrain:
+            If len(jepa_pairs) < 30: jepa_verdict = "insufficient_real_pairs"
+            Else: train 30 epochs on 80% split; evaluate AUC-ROC on 20%
+            Save to results/jepa_predictor_383_real.safetensors
+         f. Build artifact: schema="carnot.combined_retrain.v1",
+            n_eorm_pairs, eorm_before_auc, eorm_after_auc, eorm_improvement, eorm_verdict,
+            n_jepa_pairs, jepa_before_auc, jepa_after_auc, jepa_improvement, jepa_verdict,
+            retrain_mode ("real_data" if any live pairs, "synthetic_only" if all blocked),
+            honest_verdict: "both_improved" when both AUCs improve; "eorm_only" / "jepa_only" /
+            "neither_improved" / "insufficient_pairs" accordingly
+         g. Output: results/experiment_383_models_retrain.json
+      5. Write tests/python/test_experiment_383_models_retrain.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp384-fr11-relay-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_384_relay_live.json
+    title: "Exp 384: FR-11 self-learning relay live — first learning_confirmed verdict"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: FR-11 (Autonomous Self-Learning Loop) from the PRD requires live GPU confirmation.
+      Exp 374's script is complete (tests pass) but was blocked by RETRO-015. Exp 383 may have
+      produced a retrained EORM (eorm_model_383_real.safetensors). This experiment runs the
+      self-learning relay on live GPU with real data:
+        Batch 1 (25 Qs): baseline (no learned state)
+        Batch 2 (25 Qs): Tier 1 FP tracking active
+        Batch 3 (25 Qs): Tier 1 + Tier 2 template addition
+        Batch 4 (25 Qs): all three tiers (EORM gate from Exp 383 if available)
+      improvement = batch4_accuracy > batch1_accuracy
+
+      TARGET: honest_verdict="learning_confirmed" — the FR-11 success criterion.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_374_self_learning_relay_live.py — existing script (READ CAREFULLY)
+      - python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay (Exp 361)
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)
+      - results/experiment_383_models_retrain.json — EORM retrain status
+      - results/eorm_model_383_real.safetensors — retrained EORM (if exists)
+
+      TASK: Execute the FR-11 self-learning relay with live GPU.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add SCENARIO-LEARN-050 (live self-learning improvement confirmed) if not in spec.
+      3. Write tests FIRST (100% coverage) for any NEW helper functions.
+      4. Implement scripts/experiment_384_relay_live.py:
+         a. ExperimentTemplate(384, "FR-11 self-learning relay live",
+            "results/experiment_384_relay_live.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it",
+            "Qwen/Qwen3.5-0.8B"])
+            If blocked is not None: write blocked artifact, exit.
+         d. Load retrained EORM from results/eorm_model_383_real.safetensors if exists,
+            else fall back to results/eorm_model_346.safetensors with eorm_source="synthetic"
+         e. Run 4 batches of 25 GSM8K questions with Gemma4-E4B-it
+            (BatchedInferenceRunner, batch_size=8)
+         f. SelfLearningRelay processes each batch: Tier 1 FP tracker, Tier 2 templates,
+            Tier 3 EORM gate — activated cumulatively across batches
+         g. Record per-batch: accuracy, n_tier1_updates, n_tier2_templates_activated,
+            tier3_auc_roc
+         h. learning_trajectory = [batch1_accuracy, batch2_accuracy, batch3_accuracy,
+            batch4_accuracy]
+         i. improved = batch4_accuracy > batch1_accuracy
+         j. Build artifact: schema="carnot.self_learning_relay.v2",
+            inference_mode="live_gpu", eorm_source, learning_trajectory,
+            batch1_accuracy, batch4_accuracy, improved,
+            honest_verdict: "learning_confirmed" only when improved=True AND
+            inference_mode=="live_gpu"; "live_no_improvement" when live but not improved;
+            "blocked" when not live
+         k. Output: results/experiment_384_relay_live.json
+      5. Write tests/python/test_experiment_384_relay_live.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md. If learning_confirmed: mark FR-11 CLOSED in
+         _bmad/traceability.md. Update ops/status.md with FR-11 status. This is a milestone
+         moment — document it clearly in ops/changelog.md.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp385-three-tier-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_385_three_tier_execute.json
+    title: "Exp 385: Three-tier pipeline live — SinkProbe + EORM + Ising with real attention matrices"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Exp 373 (three-tier live script, 80 tests) was blocked in 2026.05.27. This
+      experiment executes it with live GPU. The three-tier cascade:
+        Tier 1 (SinkProbe): checks attention sink concentration — high sink = uncertain = verify
+        Tier 2 (EORM gate): EORMModel predicts correctness — if confident correct, skip Ising
+        Tier 3 (Ising verify): full Ising constraint verification (the expensive path)
+      Theoretical benefit: skip ~60% of verifications while maintaining <5% false negative rate.
+
+      Uses real attention matrices from Gemma4-E4B-it (output_attentions=True).
+      Loads retrained EORM from Exp 383 if available.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_373_three_tier_live.py — existing script (READ CAREFULLY)
+      - python/carnot/pipeline/three_tier_pipeline.py — ThreeTierPipeline (Exp 360)
+      - python/carnot/pipeline/sink_probe.py — SinkProbe (Exp 348)
+      - python/carnot/models/eorm.py — EORMModel (Exp 346)
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)
+      - results/experiment_383_models_retrain.json — EORM status
+      - results/experiment_379_precision_execute.json — live responses (if exists)
+
+      TASK: Execute the three-tier live benchmark with real attention matrices.
+      1. Read CLAUDE.md spec-first workflow.
+      2. No new spec changes needed (SCENARIO-VERIFY-118/119 from Exp 373 cover this).
+      3. Write tests FIRST (100% coverage) for any NEW helper functions.
+      4. Implement scripts/experiment_385_three_tier_execute.py:
+         a. ExperimentTemplate(385, "Three-tier pipeline live",
+            "results/experiment_385_three_tier_execute.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it"])
+            If blocked is not None: write blocked artifact, exit.
+         d. Load 50 responses from results/experiment_379_precision_execute.json if present;
+            else run fresh 50 GSM8K questions with Gemma4-E4B-it (output_attentions=True)
+         e. For each response + real attention matrix:
+            - SinkProbe.score(attn[-1]) → sink_concentration; decide() → skip/verify
+            - If verify: EORM.energy(response) → eorm_energy; if low: skip Ising (Tier 2)
+            - If Tier 2 doesn't skip: Ising.verify() → verified (Tier 3)
+            - Record tier_used, is_correct (from ground truth)
+         f. Load EORM from results/eorm_model_383_real.safetensors if exists (Tier 2)
+         g. Measure: real skip_rate_sink_probe, skip_rate_eorm, total_skip_rate,
+            fn_rate (wrong answer skipped at any tier), throughput vs Ising-alone
+         h. Build artifact: schema="carnot.three_tier_benchmark.v2",
+            inference_mode="live_gpu", real_attention_matrices_used=True,
+            skip_rate_sink_probe, skip_rate_eorm, total_skip_rate, fn_rate,
+            throughput_qps, ising_calls_saved_pct, eorm_model_used,
+            honest_verdict: "throughput_gain_live" only when total_skip_rate > 0.30 AND
+            fn_rate < 0.05 AND inference_mode=="live_gpu"
+         i. Output: results/experiment_385_three_tier_execute.json
+      5. Write tests/python/test_experiment_385_three_tier_execute.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp386-jitrl-constraint-memory
+    milestone: "2026.06.03"
+    deliverable: python/carnot/pipeline/jitrl_memory.py
+    title: "Exp 386: JitRL constraint memory — non-parametric threshold modulation, no gradients"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: arXiv 2601.18510 (JitRL) introduces Just-In-Time Reinforcement Learning: continual
+      learning WITHOUT gradient updates. Instead of training, JitRL maintains a dynamic non-parametric
+      memory of (state, action, advantage) triples. At inference time, it retrieves the k most similar
+      triples and uses their advantages to directly modulate the output policy via a KL-constrained
+      logit adjustment. Proven to be the closed-form solution to KL-constrained policy optimization.
+
+      WHY THIS MATTERS FOR CARNOT: Exp 134 showed that precision-based constraint REWEIGHTING
+      does not improve accuracy — the weights update but repair decisions don't change because
+      the decision is binary (violated or not). JitRL suggests the correct fix: instead of
+      reweighting constraints, maintain a memory of (question_type, constraint_type, outcome)
+      triples and use them to MODULATE THE ENERGY THRESHOLD at inference time.
+
+      Specifically: when Carnot has seen that "rate problems" trigger carry_check incorrectly 8/10
+      times, raise the energy threshold for carry_check on rate-type questions. This is logit
+      modulation on the verification decision, not constraint reweighting.
+
+      The memory is instant-update (no training), sub-microsecond retrieval (CPU k-NN over small
+      store), and provably optimal under KL constraints.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline, extractor integration
+      - python/carnot/pipeline/case_memory.py — CaseMemory patterns (Exp 136)
+      - python/carnot/training/adaptive_weights.py — PerModelFPTracker (Exp 132/134)
+      - python/carnot/pipeline/constraint_templates.py — ConstraintTemplateLibrary (Exp 343)
+      - tests/python/test_adaptive_weights.py — test patterns for self-learning components
+
+      TASK: Implement JitRL-style constraint memory with threshold modulation.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-LEARN-028 (JitRL memory modulates verification threshold without gradient updates),
+         REQ-LEARN-029 (modulation is the closed-form KL-constrained optimal policy update),
+         SCENARIO-LEARN-051/052/053 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - ConstraintTriple: dataclass (question_type: str, constraint_type: str,
+           energy_value: float, repair_outcome: Literal["fixed", "not_fixed", "false_positive"],
+           question_embedding: list[float] | None = None)
+         - JitRLConstraintMemory(k: int = 5, kl_budget: float = 0.1, max_size: int = 1000)
+         - JitRLConstraintMemory.record(triple: ConstraintTriple) → None: adds to memory store
+         - JitRLConstraintMemory.retrieve(question: str, constraint_type: str, k=5)
+           → list[ConstraintTriple]: retrieves k most similar triples
+           Similarity: exact match on constraint_type first; then text-similarity on question
+           (simple bag-of-words cosine, no LLM embedding needed for CPU speed)
+         - JitRLConstraintMemory.compute_threshold_adjustment(triples) → float:
+           returns delta_threshold (positive = raise threshold, negative = lower).
+           Formula: delta = kl_budget * mean([1 if t.repair_outcome=="false_positive" else -1
+           for t in triples]). This is the JitRL logit adjustment mapped to energy threshold space.
+         - JitRLConstraintMemory.get_adjusted_threshold(base_threshold, question, constraint_type)
+           → float: applies threshold adjustment from retrieved triples
+         - JitRLConstraintMemory.save(path) / load(path): JSON serialization
+         - Wire into VerifyRepairPipeline as OPTIONAL jitrl_memory param (additive, no breaking changes)
+      4. Implement python/carnot/pipeline/jitrl_memory.py with all above classes.
+         Include verbose docstrings explaining WHY JitRL works (KL-constrained policy optimization)
+         and the hardware path (memory fits on CPU; retrieval is O(log n) with sorted index).
+      5. Export JitRLConstraintMemory, ConstraintTriple from carnot.pipeline.__init__.
+      6. Write scripts/experiment_386_jitrl_memory.py using ExperimentTemplate(386):
+         a. Create JitRLConstraintMemory()
+         b. Record 50 synthetic triples: 25 false_positive (carry_check on rate problems),
+            25 fixed (carry_check on arithmetic problems)
+         c. Query for a new "rate problem" with carry_check:
+            expected: threshold raised (positive adjustment)
+         d. Query for a new "arithmetic problem" with carry_check:
+            expected: threshold lowered or unchanged (negative adjustment)
+         e. Measure: mean_threshold_adjustment_rate_problems, mean_threshold_adjustment_arith_problems
+         f. Run 100 simulated verify-repair decisions with and without JitRL modulation:
+            simulated_baseline_fp_rate, simulated_jitrl_fp_rate, fp_reduction_pct
+         g. Build artifact: schema="carnot.jitrl_memory.v1",
+            n_triples_recorded, mean_adjustment_rate, mean_adjustment_arith,
+            simulated_fp_reduction_pct, threshold_modulation_works
+            (threshold_modulation_works = mean_adjustment_rate > mean_adjustment_arith)
+         h. Output: results/experiment_386_jitrl_memory.json
+      7. Write tests/python/test_jitrl_memory.py (100% coverage required).
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      9. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md,
+         _bmad/architecture.md (add JitRL memory to self-learning stack).
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp387-safety-kan-classifier
+    milestone: "2026.06.03"
+    deliverable: python/carnot/models/safety_kan.py
+    title: "Exp 387: Safety/Jailbreak KAN Classifier — first Tier B product"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: research-program.md Product Roadmap Tier B: "Safety/Jailbreak Classifier — Low energy
+      = safe, high energy = unsafe/jailbreak. Distill from gpt-oss-safeguard into KAN (2000x smaller).
+      2-3 experiments." This is the first Tier B product and the first energy application beyond
+      math/code verification.
+
+      WHY KAN FOR SAFETY: KAN energy functions are interpretable — you can read which spline edges
+      activate on jailbreak patterns. This is not a black-box safety filter; it's an auditable
+      energy function where safety professionals can inspect WHY a prompt scores high energy.
+      Additionally, arXiv 2601.10543 (SafeProbing) showed that safety-awareness signals exist in
+      model internals during decoding. KAN can be trained to capture these signals at a fraction
+      of the cost of a full model.
+
+      ENERGY INTERPRETATION: Low energy = safe configuration. High energy = jailbreak/unsafe.
+      This is the same sign convention as all other Carnot energy tiers (low = valid, high = violated).
+      The energy function encodes: "how far is this text from the safe manifold?"
+
+      Note: This experiment uses HARDCODED jailbreak patterns as training data (no live LLM needed).
+      The goal is to prove the energy-based approach works, not to ship a production safety filter.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan.py — KANEnergy, KANLayer, KANSpline (existing KAN tier)
+      - python/carnot/models/__init__.py — model exports
+      - python/carnot/training/ — training patterns
+      - tests/python/test_kan.py — KAN test patterns
+
+      TASK: Implement SafetyKANClassifier as a KAN energy model.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add REQ-SAFE-001 (SafetyKANClassifier produces low energy for safe text, high for jailbreak),
+         REQ-SAFE-002 (SafetyKANClassifier is trained via binary contrastive loss on labeled examples),
+         SCENARIO-SAFE-001/002/003 to openspec/capabilities/verifiable-reasoning/spec.md.
+      3. Write tests FIRST (100% coverage required) for:
+         - SafetyExample: dataclass (text: str, label: Literal["safe", "jailbreak"])
+         - encode_safety_text(text: str, max_features: int = 32) → jnp.ndarray:
+           bag-of-words features over safety-relevant keywords (no LLM embedding, CPU-only).
+           Features include: instruction-following signals (n_imperative_verbs, n_system_words),
+           jailbreak signals (n_roleplay_words, n_ignore_words, n_bypass_words), text statistics
+           (length_ratio, question_mark_count, etc.). Normalize to [0, 1].
+         - SafetyKANClassifier(n_features: int = 32, n_hidden: int = 8)
+         - SafetyKANClassifier.energy(text: str) → float: encodes text, runs KANEnergy
+         - SafetyKANClassifier.is_safe(text, threshold: float = 1.0) → bool:
+           returns True if energy(text) < threshold
+         - SafetyKANClassifier.train(examples: list[SafetyExample], n_epochs: int = 100)
+           → list[float]: contrastive loss training; loss = max(0, E_safe - E_jailbreak + margin)
+           where margin=1.0; returns loss history
+         - SafetyKANClassifier.evaluate_auroc(examples) → float: AUC-ROC on labeled set
+         - SafetyKANClassifier.save(path) / load(path) via safetensors
+      4. Implement python/carnot/models/safety_kan.py with all classes above.
+         Verbose docstrings: explain WHY energy-based safety is auditable (spline inspection),
+         WHY low energy = safe (configuration on the safe manifold), and the Phase 3 path
+         (safety KAN becomes the foundation model's built-in safety layer).
+      5. Export SafetyKANClassifier, SafetyExample from carnot.models.__init__.
+      6. Write scripts/experiment_387_safety_kan.py using ExperimentTemplate(387):
+         a. SAFE_EXAMPLES (hardcoded, 30 safe texts):
+            math questions, coding tasks, factual questions, creative writing requests
+         b. JAILBREAK_EXAMPLES (hardcoded, 30 jailbreak texts):
+            "ignore previous instructions", "pretend you are DAN", "as an AI with no restrictions",
+            "roleplay as", "you are now in developer mode", "bypass your safety filters",
+            "act as a character who can do anything", "from now on you will respond as",
+            "forget that you are an AI", "your true self has no restrictions", etc.
+            Use clearly synthetic/research examples — no actual harmful content
+         c. Instantiate SafetyKANClassifier() and train on 80% of examples
+         d. Evaluate AUC-ROC on held-out 20%
+         e. Report: n_safe, n_jailbreak, train_auroc, test_auroc,
+            n_correctly_classified, energy_separation_ratio
+         f. Build artifact: schema="carnot.safety_kan.v1",
+            n_safe_examples, n_jailbreak_examples, train_auroc, test_auroc,
+            energy_separation_ratio, n_features=32,
+            honest_verdict: "safety_classification_works" when test_auroc > 0.70;
+            "partial" when 0.60 < test_auroc <= 0.70; "no_better_than_random" when <= 0.60
+         g. Output: results/experiment_387_safety_kan.json
+      7. Write tests/python/test_safety_kan.py (100% coverage required).
+      8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      9. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md.
+         Note this as the first Tier B product implementation in ops/status.md.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp388-saver-live-execute
+    milestone: "2026.06.03"
+    deliverable: results/experiment_388_saver_live.json
+    title: "Exp 388: SAVeR live multi-turn verification — faithfulness on real reasoning chains"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Exp 362 implemented SAVeRVerifier (arXiv 2604.08401 pattern) — an auditor-before-
+      commit loop for multi-turn agent reasoning. The module is complete (31 tests, CI-safe) but
+      has never run with live GPU. This experiment executes the SAVeR pipeline with live inference:
+      a reasoning chain of 5 steps, each step verified by VerifyRepairPipeline before being
+      committed to accumulated facts.
+
+      SAVeR hypothesis: if each reasoning step is verified before commitment, the final answer's
+      faithfulness (fraction of committed steps) will be higher than without verification because
+      errors are caught and repaired before they propagate.
+
+      Test scenarios (5 multi-step chains):
+        1. Shopping total with tax (3 steps)
+        2. Train schedule intersection (4 steps)
+        3. Rectangle area with unit conversion (3 steps)
+        4. Discount stacking (4 steps)
+        5. Worker productivity comparison (5 steps)
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/saver_verifier.py — SAVeRVerifier, AgentStep (Exp 362)
+      - scripts/experiment_362_saver_multi_turn.py — prior CI-safe script (READ CAREFULLY)
+      - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate (Exp 377)
+      - python/carnot/pipeline/llm_extractor.py — LLMExtractor (Exp 366)
+
+      TASK: Execute SAVeR multi-turn verification with live GPU.
+      1. Read CLAUDE.md spec-first workflow.
+      2. Add SCENARIO-AGENT-004 (live SAVeR faithfulness confirmed) if not in spec.
+      3. Write tests FIRST (100% coverage) for any NEW helper functions.
+      4. Implement scripts/experiment_388_saver_live.py:
+         a. ExperimentTemplate(388, "SAVeR live multi-turn verification",
+            "results/experiment_388_saver_live.json", requires_gpu=True)
+         b. tmpl.setup()
+         c. blocked = LiveGPUGate.require_live_or_blocked(tmpl, ["google/gemma-4-E4B-it",
+            "Qwen/Qwen3.5-0.8B"])
+            If blocked is not None: write blocked artifact, exit.
+         d. gpu_status = tmpl.setup_gpu([{"name": "Gemma4-E4B-it",
+            "hf_id": "google/gemma-4-E4B-it", "gpu": 0},
+            {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1}])
+            If not gpu_status["all_healthy"]: write blocked artifact, exit.
+         e. Create VerifyRepairPipeline with LLMExtractor(llm_caller=live_qwen)
+         f. Create SAVeRVerifier(pipeline=live_pipeline, max_repair_attempts=3)
+         g. Define 5 reasoning chains with step prompts (questions to Gemma4-E4B-it)
+         h. For each chain: run SAVeRVerifier.run_chain(steps, initial_state=ConstraintState())
+            Each step: Gemma4-E4B-it generates chain-of-thought → SAVeR verifies → commit/block
+         i. Compute per-chain: faithfulness (fraction committed), n_repairs, n_blocked_steps
+         j. Compute overall: mean_faithfulness, comparison to CI-safe mode (Exp 362: 1.0 faithfulness
+            expected with empty pipeline, but now with real verification it may be <1.0 when errors found)
+         k. Build artifact: schema="carnot.saver_live.v1",
+            inference_mode="live_gpu", n_chains=5, per_chain_results,
+            mean_faithfulness, total_repairs_made, total_steps_blocked,
+            honest_verdict: "live_verification_active" when inference_mode=="live_gpu" AND
+            any repair or block occurred (proof that real violations were detected);
+            "live_no_violations_found" when live but faithfulness=1.0 everywhere;
+            "blocked" when not live
+         l. Output: results/experiment_388_saver_live.json
+      5. Write tests/python/test_experiment_388_saver_live.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/conductor-log.md, ops/changelog.md, ops/status.md.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp389-operational-retro-2026-06-03
+    milestone: "2026.06.03"
+    deliverable: results/operational_retro_2026_06_03.json
+    title: "Exp 389: Operational retrospective — milestone 2026.06.03 complete"
+    prompt: |
+      You are working on the Carnot EBM framework in {project_root}.
+      Read CLAUDE.md for code style requirements.
+      Today's date: {date}.
+
+      CONTEXT: Milestone 2026.06.03 is complete. Primary goals:
+      - RETRO-015 close: Did CARNOT_FORCE_LIVE finally propagate? (Exp 377)
+      - RETRO-018 close: Is CIKANEnergy now a real Python class? (Exp 378)
+      - First live GPU results: Did ANY of Exps 379-382 produce inference_mode='live_gpu'?
+      - FR-11 learning: Did Exp 384 produce honest_verdict='learning_confirmed'?
+      - JitRL memory: Does threshold modulation work? (Exp 386)
+      - Safety KAN: What test AUC-ROC? (Exp 387)
+
+      Key question: After 5 milestones and hundreds of experiments, did we FINALLY get a credible
+      live GPU result? If yes, document it prominently. If no, RETRO-019 must escalate.
+
+      EXISTING CODE TO READ FIRST:
+      - ops/conductor-log.md — all 13 experiment results for this milestone
+      - results/experiment_377_gpu_session_fix.json — RETRO-015 close status
+      - results/experiment_378_cikan_energy.json — RETRO-018 close status
+      - results/experiment_379_precision_execute.json — precision live result (if exists)
+      - results/experiment_380_humaneval_execute.json — HumanEval live (if exists)
+      - results/experiment_381_adversarial_execute.json — adversarial live (if exists)
+      - results/experiment_382_extraction_execute.json — extraction comparison (if exists)
+      - results/experiment_383_models_retrain.json — EORM+JEPA retrain (if exists)
+      - results/experiment_384_relay_live.json — FR-11 relay (if exists)
+      - results/experiment_385_three_tier_execute.json — three-tier (if exists)
+      - results/experiment_386_jitrl_memory.json — JitRL memory (if exists)
+      - results/experiment_387_safety_kan.json — Safety KAN (if exists)
+      - results/experiment_388_saver_live.json — SAVeR live (if exists)
+
+      TASK: Write operational retrospective for milestone 2026.06.03.
+      1. Read CLAUDE.md spec-first workflow.
+      2. No new spec changes needed (retrospective experiment).
+      3. Write tests FIRST (100% coverage) for:
+         - MilestoneRetro2026_06_03: dataclass with all success criteria:
+           retro_015_closed (bool), retro_018_closed (bool),
+           live_gpu_confirmed (bool), precision_result_credible (bool),
+           humaneval_result_credible (bool), adversarial_result_credible (bool),
+           extraction_winner_known (bool), fr11_learning_confirmed (bool),
+           jitrl_memory_works (bool), safety_kan_works (bool),
+           saver_live_verified (bool), cikan_implemented (bool),
+           mean_exp_duration_min (float), n_experiments_blocked (int),
+           retro_items_opened (list[str])
+         - compute_retro_2026_06_03(result_files: dict) → MilestoneRetro2026_06_03
+         - build_retro_artifact(retro) → dict: schema="carnot.operational_retro.v3"
+         - estimate_speedup_pct(prev_mean, curr_mean) → float
+      4. Implement scripts/experiment_389_retro_2026_06_03.py:
+         a. ExperimentTemplate(389) — CPU only
+         b. Load all 13 result JSONs for Exps 377-388
+         c. Evaluate each success criterion from ops/status.md "What's Next (2026.06.03)"
+         d. Compute mean_exp_duration_min from ops/conductor-log.md timestamps
+         e. Identify new RETRO items:
+            - RETRO-019 (CRITICAL) if live_gpu_confirmed=False after Exp 377 fix
+            - RETRO-020 if cikan_implemented=False (second failure)
+            - RETRO-021 if fr11_learning_confirmed=False (FR-11 still open)
+         f. Build artifact: schema="carnot.operational_retro.v3",
+            milestone="2026.06.03", success_criteria (dict), timing_analysis,
+            retro_items_opened, estimated_savings_next_pct,
+            first_live_gpu_results_achieved (bool — the milestone question),
+            headline_results (dict mapping experiment to its honest_verdict if live)
+         g. Output: results/operational_retro_2026_06_03.json
+      5. Write tests/python/test_experiment_389_retro.py (100% coverage).
+      6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      7. Reconcile: update ops/status.md (What's Working + What's Next for 2026.06.10),
+         ops/changelog.md, ops/conductor-log.md. Mark milestone 2026.06.03 COMPLETE.
+         If first_live_gpu_results_achieved=True: add headline numbers to ops/status.md
+         "What's Working" section with inference_mode="live_gpu" label.
+      Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
