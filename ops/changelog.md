@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Milestone 2026.04.32 Planning — v38 Roadmap)
+
+- 2026-04-16 16:37 UTC: Planned milestone 2026.04.32 — "Live Numbers Confirmed, FR-11 Real-Data
+  Validation, Spilled Energy Pre-Filter".
+  Triggered by: user instruction to plan next milestone after 2026.04.31 completion.
+
+  **Files written:**
+  - `openspec/change-proposals/research-roadmap-vNEXT.md` (v38) — milestone design doc: 4 phases,
+    12 experiments (Exps 425-436), dependency graph, success criteria, hardware requirements.
+  - `research-roadmap-next.yaml` — conductor-ready YAML, 12 experiments in execution order.
+  - `research-references.md` — added 3 new papers: GPU oscillator Ising (2505.22631), KAEM
+    exact-sampling KAN (2506.14167), and cross-reference note for DSP entry.
+
+  **3 biggest gaps addressed:**
+  1. Zero credible live headline numbers (Exps 427-429 re-confirm or re-run all pending live benchmarks)
+  2. FR-11 never confirmed on real data — 6 misses (Exps 430-432: FOVER labels → EORM retrain → JitRL validation)
+  3. No Tier B products beyond Safety KAN (Exp 434: Compliance checker)
+
+  **Infrastructure fixes (non-negotiable first):**
+  - Exp 425: RETRO-003 conductor timeout (17+ milestones, must ship this milestone)
+  - Exp 426: RETRO-025 DualGPURunner GPU-1 zombie fix + temperature guard
+
+  **New arxiv findings incorporated:**
+  - arXiv 2602.18671 (Spilled Energy) → Exp 433
+  - arXiv 2505.15960 (FOVER step annotation) → Exp 430
+  - arXiv 2601.17223 (VPRM) → Exp 430, 431
+
 ## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.31, Updated Snapshot)
 
 - 2026-04-16 16:24 UTC: Retro updated with fresh GPU snapshot (16:23 UTC).
