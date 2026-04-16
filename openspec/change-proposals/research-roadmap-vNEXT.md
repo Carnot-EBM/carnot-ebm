@@ -1,110 +1,113 @@
-# Carnot Research Roadmap v34: Break the Simulated Barrier — First Live Numbers and JitRL Self-Learning
+# Carnot Research Roadmap v35: Live Results At Last — GPU Confirmed, CIKAN, FR-11 Closed
 
 **Created:** 2026-04-16
-**Milestone:** 2026.06.03
-**Status:** Planned (activates when milestone 2026.05.27 completes)
-**Supersedes:** Milestone 2026.05.27 — "First Live GPU Results, LLMExtractor, and Real-Data Self-Learning"
-**Informed by:** Exps 365–376, operational retrospective 2026.05.27, v33 carry-forwards
-**External inputs (new in v34):**
-- Physical Analog KAN (2602.07518) — hardware-native KAN via RNPU silicon; 250 pJ/inference
-- BiKA (2602.23455) — KAN-inspired ultra-lightweight FPGA/NPU hardware accelerator
-- JitRL (2601.18510) — continual RL without gradient updates; non-parametric memory modulates logits
-- Ising↔NN correspondence (2511.00746) — compile trained NNs to Ising hardware directly
-- Adaptive rejection sampling (2504.05410) — orders-of-magnitude fewer constraint evaluations
-- REGREACT (2604.12054) — regulatory constraint extraction, multi-agent compliance pipeline
+**Milestone:** 2026.06.10
+**Status:** Planned (activates when milestone 2026.06.03 retrospective completes)
+**Supersedes:** Milestone 2026.06.03 — "Break the Simulated Barrier — First Live Numbers and JitRL Self-Learning"
+**Informed by:** Exps 377–389, operational retrospective 2026.06.03, v34 carry-forwards
+**External inputs (new in v35):**
+- Semantic Energy (2508.14496) — Boltzmann-inspired logit-space hallucination detection; outperforms semantic entropy
+- CRANE (2502.09061) — Alternating unconstrained + constrained decoding; +10pp on symbolic benchmarks; ICLR 2026
+- DSP / Feasibility Channels (2604.02350) — Differentiable symbolic planning; continuous feasibility signal for multi-step constraint propagation
+- Potts Mean-Field Constraints (2602.04200) — Sparse constraint embedding for hardware; MFC keeps coupling graph FPGA-friendly
+- LLM-QUBO (2509.00099) — LLM-as-constraint-translator to QUBO; prompt engineering pattern for structured constraint extraction
 
 ---
 
-## What 2026.05.27 Proved
+## What 2026.06.03 Proved
 
 | Approach | Experiments | Verdict | Key Number |
 |----------|-------------|---------|-----------|
-| RETRO-012/013/014 close | 365 | **COMPLETE** | conductor_gpu_env.sh created; JSON enforcer added |
-| LLMConstraintExtractor | 366 | **COMPLETE** | Module implemented; live test pending |
-| Extraction comparison (live) | 367 | **BLOCKED** | Module complete; 42 tests; live GPU required |
-| Precision pipeline (live) | 368 | **BLOCKED** | Script complete; 74 tests; live GPU required |
-| HumanEval (live) | 369 | **BLOCKED** | Script complete; 69 tests; live GPU required |
-| Adversarial GSM8K (live) | 370 | **BLOCKED** | Script complete; 23 tests; live GPU required |
-| EORM real retrain | 371 | **BLOCKED** | Insufficient real pairs (Exps 368-370 never ran) |
-| JEPA real retrain | 372 | **BLOCKED** | Insufficient real violation pairs |
-| Three-tier live benchmark | 373 | **BLOCKED** | Script complete; 80 tests; live GPU required |
-| FR-11 self-learning relay | 374 | **BLOCKED** | Synthetic only; live GPU required |
-| CIKAN energy tier | 375 | **CORRUPT** | cikan_energy.py contains JSON not Python — RETRO-018 |
-| Operational retrospective | 376 | **COMPLETE** | RETRO-015/016/017/018 opened |
+| RETRO-015 infra fix | 377 | **COMPLETE** | session_startup.sh + LiveGPUGate — infrastructure CORRECT |
+| CIKANEnergy (2nd attempt) | 378 | **MISSING** | Session interrupted before implementation |
+| Live precision pipeline | 379 | **BLOCKED** | Script exists; GPU node offline |
+| Live HumanEval | 380 | **BLOCKED** | Script exists; GPU node offline |
+| Live adversarial GSM8K | 381 | **BLOCKED** | Script exists; GPU node offline |
+| Live extraction comparison | 382 | **BLOCKED** | Script exists; GPU node offline |
+| Combined EORM+JEPA retrain | 383 | **INCOMPLETE** | insufficient_pairs — upstream blocked |
+| FR-11 relay (live) | 384 | **BLOCKED** | Script exists; GPU node offline |
+| Three-tier live benchmark | 385 | **BLOCKED** | Script exists; GPU node offline |
+| JitRL constraint memory | 386 | **MISSING** | Session interrupted before implementation |
+| Safety KAN classifier | 387 | **MISSING** | Session interrupted before implementation |
+| SAVeR live execution | 388 | **BLOCKED** | Script exists; GPU node offline |
+| Operational retrospective | 389 | **COMPLETE** | RETRO-019/020/021 opened |
 
 **Milestone-level conclusion:**
-2026.05.27 achieved all infrastructure goals but zero live GPU results for the FOURTH consecutive
-milestone. conductor_gpu_env.sh was created (RETRO-012 closed) but is not auto-sourced in the
-conductor subprocess environment (RETRO-015). Every benchmark experiment produced a blocked artifact.
+2026.06.03 fixed the infrastructure (RETRO-015 CLOSED: LiveGPUGate + session_startup.sh are correct)
+but the GPU NODE ITSELF was offline during the conductor session. Zero live results for the FIFTH
+consecutive milestone. Three interrupted experiments (378, 386, 387) left implementation gaps.
+The session also hit its turn limit partway through, leaving 8 experiments in BLOCKED state.
 
-CIKAN's deliverable is corrupt: cikan_energy.py contains JSON instead of Python code (RETRO-018).
-LLMExtractor is implemented but never tested live. Seven experiments are ready to run and will
-produce real results the moment CARNOT_FORCE_LIVE=1 propagates correctly.
-
-The root cause of RETRO-015 is that conductor_gpu_env.sh needs to be sourced BEFORE the conductor
-launches experiment subprocesses. This requires a session_startup.sh that runs at conductor session
-start. The conductor itself cannot be modified, but the session initialization script can.
+The single most important operational change for 2026.06.10: **run `nvidia-smi` before starting
+the conductor session.** If the GPU node is not online, fix GPU availability FIRST. Do not write
+a single line of experiment code until Exp 390 smoke test returns inference_mode='live_gpu'.
 
 ---
 
 ## The 3 Biggest Gaps vs PRD Vision
 
-### Gap 1: Live GPU never fires — four consecutive milestones (RETRO-015, CRITICAL)
+### Gap 1: GPU node offline — five consecutive milestones of zero live results (RETRO-019, CRITICAL)
 
-Every benchmark experiment since Exp 340 has been blocked or simulated. Seven complete, tested
-experiment scripts are waiting to produce real results. The hardware is healthy (2x RTX 3090, 48GB
-VRAM, CUDA visible, models loadable). The failure is environmental: CARNOT_FORCE_LIVE=1 must be
-exported into the subprocess environment BEFORE the conductor is launched.
+The infrastructure is now correct (RETRO-015 closed). The LiveGPUGate raises immediately if
+CARNOT_FORCE_LIVE=1 is not set. session_startup.sh exports the env var. The remaining gap is
+OPERATIONAL: the GPU node (2x RTX 3090, CUDA) must be physically powered on and connected
+before the conductor session starts.
 
-The fix requires:
-1. Create scripts/session_startup.sh that exports CARNOT_FORCE_LIVE=1 and sources conductor_gpu_env.sh
-2. Add a LiveGPUGate class that experiments call at their start — raises RuntimeError immediately if
-   live GPU is not confirmed, so failures are loud and fast (no silent simulated fallback)
-3. Test environment propagation explicitly: spawn a subprocess and verify CARNOT_FORCE_LIVE=1 inherits
+Eight complete, tested experiment scripts exist and will produce real results the moment the GPU
+is online:
+- experiment_379_precision_execute.py (74 tests passing)
+- experiment_380_humaneval_execute.py (24 tests passing)
+- experiment_381_adversarial_execute.py (23 tests passing)
+- experiment_382_extraction_execute.py (tests passing)
+- experiment_384_relay_live.py (tests passing)
+- experiment_385_three_tier_execute.py (tests passing)
+- experiment_388_saver_live.py (tests passing)
 
-If RETRO-015 is fixed, Exps 379-385 will produce Carnot's first seven credible real results in a
-single milestone. This changes the entire research trajectory.
+PRE-FLIGHT PROTOCOL (mandatory): Exp 390 runs first. If it cannot confirm inference_mode='live_gpu',
+the conductor MUST stop and escalate rather than writing more blocked experiment code.
 
-### Gap 2: CIKAN energy tier corrupt (RETRO-018, MEDIUM)
+### Gap 2: Three missing implementations — CIKANEnergy, JitRL, Safety KAN (RETRO-020, HIGH)
 
-arXiv 2412.03710 (CIKAN) and arXiv 2602.07518 (Physical Analog KAN) together describe a hardware
-path for constraint-informed energy functions. CIKAN seeds KAN splines with constraint boundaries;
-Physical Analog KAN shows that each boundary maps to one RNPU saturation voltage in silicon.
+Session interruption in 2026.06.03 left three experiments unimplemented:
+- **CIKANEnergy** (RETRO-020): python/carnot/models/cikan_energy.py still contains JSON not Python.
+  This is the second consecutive milestone where CIKAN fails. The implementation is well-specified;
+  the file just needs to be rewritten from scratch.
+- **JitRL Constraint Memory**: The correct Tier 1 algorithm (threshold modulation, not weight
+  reweighting). Exp 134 proved reweighting does not work. JitRL's non-parametric memory is the fix.
+  arXiv 2601.18510 specifies the algorithm precisely.
+- **Safety KAN Classifier**: First Tier B product. Energy-based jailbreak detection, interpretable
+  splines, CPU-only with contrastive training on hardcoded examples. 2-3 days of implementation.
 
-The CIKANEnergy implementation from Exp 375 must be re-implemented from scratch (the deliverable
-file contains JSON). Once working, CIKAN becomes the first energy tier with a documented path from
-Python → FPGA LUT → silicon RNPU. This is the Tier 4 adaptive structure mechanism and the Phase 2
-hardware acceleration seed.
+These three are CPU-only (no GPU needed) and must complete in Phase 1 regardless of GPU state.
 
-### Gap 3: Tier 1 self-learning has wrong algorithm — JitRL reveals the fix
+### Gap 3: FR-11 self-learning relay unconfirmed — third consecutive milestone (RETRO-021, HIGH)
 
-Exp 134 proved that precision-based constraint REWEIGHTING does not improve accuracy (fixed=adaptive
-across 500 questions). The weights update correctly but behavior does not change because Carnot's
-repair decision is binary: either a constraint fires or it does not.
+The SelfLearningRelay (Exp 361) showed 0.60→0.72 accuracy improvement on SYNTHETIC data. The
+live version (Exp 374/384) was blocked by GPU unavailability in two consecutive milestones.
+FR-11 (PRD requirement: "Autonomous Self-Learning Loop") cannot be marked CLOSED until
+learning_confirmed is produced from live GPU inference.
 
-arXiv 2601.18510 (JitRL) reveals the correct algorithm: instead of reweighting constraints, maintain
-a non-parametric memory of (question_type, constraint_outcome) triples and use them to MODULATE THE
-VERIFICATION THRESHOLD at inference time. This is the closed-form solution to KL-constrained policy
-optimization with no gradient updates. Applied to Carnot: when a question type has historically
-produced false positives (e.g., "rate problems" trigger carry_check incorrectly), raise the energy
-threshold for that question type — effectively a per-question-type softmax temperature adjustment.
+The target: run 4 batches of 25 live GSM8K questions with Gemma4-E4B-it. Batch 4 accuracy must
+exceed batch 1 accuracy (improved=True AND inference_mode="live_gpu") to produce
+honest_verdict="learning_confirmed" and close FR-11.
 
-This is instant (sub-microsecond, pure CPU), provably optimal under KL constraints, and requires no
-retraining. It is the correct Tier 1 implementation that Exp 134 was trying (but failing) to do.
+Once FR-11 closes, update _bmad/traceability.md to mark FR-11 COMPLETE. This is the single
+most impactful PRD milestone remaining open.
 
 ---
 
-## Architecture Snapshot (Post-v34)
+## Architecture Snapshot (Post-v35)
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    CARNOT ARCHITECTURE v34                                  │
+│                    CARNOT ARCHITECTURE v35                                  │
 │                                                                             │
 │  LLM Output                                                                 │
 │      │                                                                      │
-│      ▼                                                                      │
+│  SemanticEnergyScorer ──── (new: logit-space plausibility gate)             │
+│      │                                                                      │
 │  ConstraintExtractor ──────────────────────────────────────────────────┐   │
-│  (ArithmeticExtractor | LLMExtractor | LLMz3Formalizer | CodeExtractor) │   │
+│  (CRANE Gate | LLMExtractor | LLMz3Formalizer | CodeExtractor)         │   │
 │      │                                                                  │   │
 │      ▼                                                                  │   │
 │  VerifyRepairPipeline                                                   │   │
@@ -118,146 +121,172 @@ retraining. It is the correct Tier 1 implementation that Exp 134 was trying (but
 │      │    JitRL Memory ─ (modulate threshold from prior outcomes)       │   │
 │      │         │                                                        │   │
 │      │    CIKAN Energy ─ (spline boundaries as structural prevention)   │   │
-│      ▼         │                                                        │   │
-│  RepairLoop    │                                                        │   │
-│  (LLMExtractor + Ising + VERGE Z3)                                     │   │
 │      │         │                                                        │   │
 │      ▼         ▼                                                        │   │
-│  SessionMemory ──────────────────────────────────────────────────────┘   │
-│  (CaseMemory + JitRL triple store + ConstraintTemplateLibrary)            │
-│                                                                           │
-│  Energy Tiers: Ising → KAN → CIKAN → Gibbs → Boltzmann                   │
-│  Hardware Path: CPU → FPGA LUT → CIKAN splines → aKAN silicon → TSU      │
-│  Self-Learning: JitRL threshold modulation → Template addition → JEPA     │
-└───────────────────────────────────────────────────────────────────────────┘
+│  Self-Learning Relay                                                    │   │
+│      Tier 1: PerModelFPTracker (JitRL threshold modulation)             │   │
+│      Tier 2: ConstraintTemplateWiring (carry/sign/unit/comparison)      │   │
+│      Tier 3: EORM gate (energy-ranked repair candidates)                │   │
+│           │                                                             │   │
+│      SAVeR Verifier (multi-turn faithfulness audit)                     │   │
+│           │                                                                 │
+│  Safety KAN (Tier B: jailbreak/unsafe energy classifier)                    │
+│                                                                             │
+│  Hardware Path:                                                             │
+│      CPU: JitRL memory, Ising sampling, CIKAN boundary penalties            │
+│      GPU: LLM inference, EORM scorer, JEPA predictor                        │
+│      FPGA: Sparse Ising (KV260 — bitfile pending), CIKAN LUT boundaries     │
+│      TSU (future): Native thermodynamic sampling (Extropic Z1)              │
+└─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
 ## Phase Descriptions
 
-### Phase 1: Close RETRO Items (Exps 377–378)
+### Phase 0: GPU Preflight (Exp 390) — MANDATORY GATE
 
-**Theme:** Fix what's broken before building new things. Two concrete RETRO items.
+Run `nvidia-smi` and execute the Exp 353 smoke test. If inference_mode is not 'live_gpu', write a
+blocked artifact and STOP. Do not proceed with any Phase 2+ experiments until GPU is confirmed.
 
-**Exp 377 — Fix RETRO-015: Session startup auto-sources GPU env**
-The conductor must inherit CARNOT_FORCE_LIVE=1. The fix: create scripts/session_startup.sh
-that sources conductor_gpu_env.sh before any experiments run. Additionally, implement a
-LiveGPUGate class that all GPU experiments call at startup — this raises RuntimeError immediately
-if the env var is not set or GPU is not live. Makes failures loud and fast.
+Phase 0 produces a preflight report that all subsequent experiments reference. It resolves
+RETRO-019 if GPU is confirmed online. If not, RETRO-019 escalates further.
 
-**Exp 378 — Fix RETRO-018: CIKANEnergy re-implementation**
-Re-implement the CIKAN energy tier properly. Reference arXiv 2602.07518 for the hardware path:
-each ConstraintBoundary maps to one RNPU saturation point in silicon. The docstrings must explain
-WHY constraint boundaries are baked into splines (structural prevention vs post-hoc detection)
-and what the FPGA/aKAN compilation path looks like.
+### Phase 1: Missing Implementations (Exps 391-393) — CPU-only, no GPU required
 
-### Phase 2: Execute Blocked Live Experiments (Exps 379–382)
+Implement the three experiments interrupted in 2026.06.03. All are CPU-only so they run
+regardless of GPU state (the preflight may show GPU offline — these still proceed):
 
-**Theme:** Seven experiments are written and tested. They just need to run with live GPU.
+- **Exp 391**: CIKANEnergy — complete Python implementation, RETRO-020 close
+- **Exp 392**: JitRL Constraint Memory — threshold modulation implementation
+- **Exp 393**: Safety KAN Classifier — first Tier B product, hardcoded training examples
 
-Four high-priority experiments run with CARNOT_FORCE_LIVE=1 (sourced from session_startup.sh):
+### Phase 2: Live Benchmark Execution (Exps 394-397) — GPU required
 
-- **Exp 379**: Precision pipeline (Exp 368 logic) — 200 GSM8K, 5 variants × 2 models
-- **Exp 380**: HumanEval code verification (Exp 369 logic) — 50 problems, CodeExtractor + PBT
-- **Exp 381**: Adversarial GSM8K (Exp 370 logic) — Carnot's headline credibility experiment
-- **Exp 382**: Extraction comparison (Exp 367 logic) — LLMExtractor vs regex vs Z3 on live output
+Execute the blocked benchmark scripts using live GPU (confirmed by Exp 390). Each execution
+experiment has an existing, tested script (from prior milestones) and simply wraps the core
+pipeline with LiveGPUGate and runs it:
 
-Each produces a new results JSON (379/380/381/382) and a new deliverable, so the conductor does
-not skip them due to prior blocked artifacts.
+- **Exp 394**: Precision pipeline (200 GSM8K, 5 variants, 2 models) — Carnot's headline metric
+- **Exp 395**: HumanEval code verification (50 problems, CodeExtractor + PBT) — strongest result domain
+- **Exp 396**: Adversarial GSM8K (standard + adversarial + repaired) — Carnot's credibility claim
+- **Exp 397**: Extraction comparison (regex vs LLMExtractor vs LLMz3Formalizer) — RETRO-016 close
 
-**Expected outcome if GPU fires:** First seven credible real numbers in Carnot's history.
+### Phase 3: Self-Learning Confirmation (Exps 398-400) — depends on Phase 2
 
-### Phase 3: Build on Live Results (Exps 383–385)
+Use real data from Phase 2 to train and validate the self-learning stack:
 
-**Theme:** Use real data to train real models. All three training experiments depend on Phase 2.
+- **Exp 398**: Combined EORM+JEPA retrain on live pairs from Exps 394-397
+- **Exp 399**: FR-11 relay (4 live batches) — RETRO-021 close attempt
+- **Exp 400**: SAVeR live multi-turn verification (5 reasoning chains)
 
-- **Exp 383**: Combined EORM + JEPA retrain — loads live pairs from 379-381, retrains both models
-- **Exp 384**: FR-11 self-learning relay live — runs relay with live GPU + retrained EORM from 383
-- **Exp 385**: Three-tier pipeline live — captures real attention matrices from Gemma4-E4B-it
+### Phase 4: New Research Experiments (Exps 401-402) — arxiv findings
 
-**Dependency note:** Exps 383-385 produce blocked artifacts if no real pairs are available from
-Phase 2 (i.e., if Phase 2 is still blocked). This is correct behavior — honest reporting.
+Implement promising recent papers that directly address Carnot's extraction bottleneck:
 
-### Phase 4: New Capabilities (Exps 386–388)
+- **Exp 401**: Semantic Energy Scorer (arXiv 2508.14496) — logit-space hallucination gating
+- **Exp 402**: CRANE Extraction Gate (arXiv 2502.09061) — alternating free + constrained extraction
 
-**Theme:** Advance research beyond "make existing things run." Three new capabilities.
+### Phase 5: Retrospective (Exp 403)
 
-- **Exp 386**: JitRL-style constraint logit modulation — non-parametric memory, no gradients
-- **Exp 387**: Safety/Jailbreak KAN Classifier — first Tier B product
-- **Exp 388**: SAVeR live multi-turn verification — faithfulness measurement on real chains
+Evaluate all success criteria, close resolved RETRO items, open new ones, update ops docs.
 
-### Phase 5: Retrospective (Exp 389)
+---
 
-Standard operational retrospective evaluating all success criteria and opening new RETRO items.
+## Success Criteria
+
+| Criterion | Target | Experiment |
+|-----------|--------|-----------|
+| retro_019_resolved | GPU node online at session start | Exp 390 |
+| retro_020_closed | CIKANEnergy is Python, not JSON | Exp 391 |
+| retro_021_closed | FR-11 learning_confirmed on live GPU | Exp 399 |
+| live_gpu_confirmed | Any experiment with inference_mode='live_gpu' | Exps 394-400 |
+| precision_result_credible | signed_improvement (live GPU) | Exp 394 |
+| humaneval_result_credible | code_verification_positive (live GPU) | Exp 395 |
+| adversarial_result_credible | improvement_positive (live GPU) | Exp 396 |
+| extraction_winner_known | live_gpu_winner verdict | Exp 397 |
+| jitrl_memory_works | threshold_modulation_works=True | Exp 392 |
+| safety_kan_works | test_auroc > 0.70 | Exp 393 |
+| saver_live_verified | live_verification_active | Exp 400 |
+| semantic_energy_viable | auroc > 0.70 vs SinkProbe | Exp 401 |
+| crane_extraction_improved | detection_rate > ArithmeticExtractor | Exp 402 |
 
 ---
 
 ## Dependency Graph
 
 ```
-377 (GPU fix) ──────────────────────────────────────────────────────────────┐
-378 (CIKAN) ────────────────────────────────────────────────────────────────┤
-                                                                            │
-[sourced by 377] ──► 379 (precision live)  ──────────────────────────────► 383 (models retrain)
-                ──► 380 (humaneval live)   ──────────────────────────────► 383
-                ──► 381 (adversarial live) ──────────────────────────────► 383 ──► 384 (relay)
-                ──► 382 (extraction live)  ──────────────────────────────► 383 ──► 385 (3-tier)
-
-386 (JitRL)    — independent new capability
-387 (Safety)   — independent new capability
-388 (SAVeR)    — depends on [sourced by 377]
-389 (retro)    — depends on all
+Exp 390 (GPU preflight)
+├── [if GPU online] → Exp 394 (precision live)
+│                  → Exp 395 (HumanEval live)
+│                  → Exp 396 (adversarial live)
+│                  → Exp 397 (extraction comparison live)
+│                  → [Phase 2 complete] → Exp 398 (retrain)
+│                                       → Exp 399 (FR-11 relay)
+│                                       → Exp 400 (SAVeR live)
+├── [always, CPU-only] → Exp 391 (CIKANEnergy)
+│                     → Exp 392 (JitRL)
+│                     → Exp 393 (Safety KAN)
+│                     → Exp 401 (Semantic Energy Scorer)
+│                     → Exp 402 (CRANE Extraction Gate)
+└── [all phases complete] → Exp 403 (retrospective)
 ```
-
----
-
-## Success Criteria for Milestone 2026.06.03
-
-| Criterion | Target | Failure mode |
-|-----------|--------|-------------|
-| live_gpu_confirmed | True (Exp 377+379 verify) | RETRO-019: FIFTH consecutive milestone |
-| precision_result_credible | True (Exp 379 inference_mode='live_gpu') | blocked artifact |
-| humaneval_result_credible | True (Exp 380 inference_mode='live_gpu') | blocked artifact |
-| adversarial_result_credible | True (Exp 381 honest_verdict='improvement_positive') | blocked artifact |
-| extraction_winner_known | True (Exp 382 honest_verdict='live_gpu_winner') | blocked artifact |
-| cikan_implemented | True (Exp 378 produces real Python class) | RETRO-020 |
-| jitrl_memory_implemented | True (Exp 386 deliverable exists) | not critical |
-| safety_kan_implemented | True (Exp 387 deliverable exists) | not critical |
-| fr11_learning_confirmed | True (Exp 384 honest_verdict='learning_confirmed') | upstream: live GPU |
-| all_result_jsons_present | True (RetroJSONEnforcer passes) | RETRO (medium) |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | Hardware | VRAM | Notes |
-|------------|----------|------|-------|
-| 379 (precision) | GPU0: Gemma4-E4B-it, GPU1: Qwen3.5-0.8B | 16+8 GB | DualGPURunner |
-| 380 (HumanEval) | GPU0: Gemma4-E4B-it | 16 GB | Single GPU |
-| 381 (adversarial) | GPU0: Gemma4-E4B-it, GPU1: Qwen3.5-0.8B | 16+8 GB | DualGPURunner |
-| 382 (extraction) | GPU0: Gemma4-E4B-it, GPU1: Qwen3.5-0.8B | 16+8 GB | LLMExtractor |
-| 384 (relay) | GPU0: Gemma4-E4B-it, GPU1: Qwen3.5-0.8B | 16+8 GB | 4 batches 25 Qs |
-| 385 (3-tier) | GPU0: Gemma4-E4B-it (output_attentions=True) | 16 GB | Real attention matrices |
-| 388 (SAVeR) | GPU0: Gemma4-E4B-it, GPU1: Qwen3.5-0.8B | 16+8 GB | 5 reasoning chains |
-| 377,378,383,386,387,389 | CPU only | 0 | Training/analysis only |
+| Experiment | GPU Required | Notes |
+|-----------|-------------|-------|
+| Exp 390 | Yes | GPU preflight — confirms GPU available |
+| Exps 391-393 | No | CPU-only implementations |
+| Exps 394-400 | Yes | Live inference with Gemma4-E4B-it + Qwen3.5-0.8B |
+| Exps 401-402 | Preferred | Semantic Energy needs logits (GPU model); CRANE needs live inference |
+| Exp 403 | No | CPU-only retrospective |
 
-**KV260 FPGA:** Not targeted this milestone. Bring-up still requires CARNOT_KV260_BITFILE.
-**AMD NPU:** Still blocked by ninja+openblas prereqs. Human install required.
-**RTX 3090 x2:** Primary inference hardware. Should be available via CUDA.
+**GPU dependency note:** If Exp 390 shows GPU offline, Exps 394-400 will produce blocked artifacts.
+Exps 391-393 and 401-402 (CPU-only implementations) proceed regardless. The milestone's
+learning and retrospective experiments still produce useful infrastructure and analysis even
+without live inference.
+
+**Hardware wishlist reference:**
+- KV260 FPGA (arrived): bitfile needed for CIKAN LUT boundary mapping (Exp 391 design)
+- AMD XDNA NPU: requires ninja + openblas installation (system admin action)
+- 2x RTX 3090 (48GB VRAM, CUDA): PRIMARY GPU — must be powered on before session start
 
 ---
 
-## Estimated Timing
+## New Papers Incorporated (v35)
 
-| Phase | Experiments | Est. Minutes | Notes |
-|-------|-------------|-------------|-------|
-| Phase 1 (RETRO) | 2 | 30 | CPU only, code + tests |
-| Phase 2 (Live exec) | 4 | 40 | GPU batch, pre-existing scripts |
-| Phase 3 (Retrain) | 3 | 50 | CPU training, load GPU pairs |
-| Phase 4 (New caps) | 3 | 60 | Code + tests, medium complexity |
-| Phase 5 (Retro) | 1 | 15 | CPU only |
-| **TOTAL** | **13** | **195** | ~15 min/exp target |
+| Paper | arXiv | Contribution to v35 |
+|-------|-------|---------------------|
+| Semantic Energy | 2508.14496 | Exp 401: logit-space hallucination scorer |
+| CRANE | 2502.09061 | Exp 402: alternating-grammar extraction gate |
+| DSP / Feasibility Channels | 2604.02350 | Future: continuous feasibility in SAVeR |
+| Potts MFC | 2602.04200 | Future: sparse constraint embedding for FPGA |
+| LLM-QUBO | 2509.00099 | Future: LLMExtractor prompt pattern reference |
 
-If GPU fires in Phase 2: actual timing for 379-382 will be 20-40 min/exp due to real inference.
-If GPU fails: Phase 2-3 will fast-fail (< 5 min/exp), Phase 4 unaffected.
+---
+
+## What the Experiments Prove
+
+By the end of milestone 2026.06.10, assuming live GPU is online, Carnot will have:
+
+1. **First credible benchmark numbers** — 200 GSM8K, 50 HumanEval, adversarial robustness,
+   all with inference_mode='live_gpu'. These are the numbers we can report publicly.
+
+2. **FR-11 CLOSED** — The PRD's autonomous self-learning requirement met on real data.
+   Batch 1 → Batch 4 accuracy improvement with live Gemma4-E4B-it.
+
+3. **Extraction winner known** — LLMExtractor vs CRANE vs regex comparison on live IT model
+   output. This resolves the single most critical technical question (RETRO-016).
+
+4. **Two new energy products** — Safety KAN (Tier B: jailbreak classifier) and Semantic Energy
+   Scorer (Tier A enhancement: logit-space gating).
+
+5. **CIKAN deployed** — The Phase 2 hardware path's Python implementation, testable before
+   FPGA bitfile is available.
+
+If GPU is still offline: Phase 1 and Phase 4 implementations (Exps 391-393, 401-402) advance
+the codebase, and RETRO-022 must escalate GPU access to the user's immediate attention with
+a concrete action plan (physical connection, cloud GPU, etc.).

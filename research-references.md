@@ -376,6 +376,93 @@ should read this file when designing new milestones.
   of constraint extraction policy (LLMExtractor). The LLMExtractor generates constraint graphs;
   EORM scores whether the constrained output is better; gradient flows back to extractor.
 
+### Semantic Energy — Detecting LLM Hallucination Beyond Entropy (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2508.14496 (2025-08, updated 2025-12)
+- **What:** Introduces Semantic Energy, a hallucination detection framework that operates directly
+  on penultimate-layer logits (pre-softmax) using a Boltzmann-inspired energy distribution.
+  Combines semantic clustering with energy scoring: cluster semantically equivalent outputs, then
+  compute energy of each cluster. Higher energy = more hallucination-prone generation.
+  Consistently outperforms semantic entropy on uncertainty estimation benchmarks.
+- **Relevance:** Direct energy-based signal complementing Carnot's constraint verification.
+  Where Ising verifies logical constraints AFTER generation, Semantic Energy scores the generation's
+  reliability DURING output via logit intensity. Together they form a dual-signal pipeline:
+  Semantic Energy for quick plausibility gating, Ising for structural constraint verification.
+  The "logit intensity lost during softmax" insight directly applies to Carnot's SpilledEnergy
+  concept (arXiv 2602.18671) — both tap the same pre-softmax signal.
+- **Concrete experiment:** SemanticEnergyScorer class wrapping the penultimate-layer logit energy.
+  Integrate as a fast-path pre-filter in VerifyRepairPipeline: high semantic energy → trigger full
+  Ising verification; low semantic energy → skip. Compare vs SinkProbe for skip rate and FN rate.
+- **When to pursue:** Next milestone. Implement SemanticEnergyScorer and benchmark vs SinkProbe.
+
+### CRANE — Constrained Reasoning via Alternating Decoding (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2502.09061 (2025-02, ICLR 2026 accepted)
+- **What:** CRANE (Constrained Reasoning with Alternating N-gram Extension) solves the fundamental
+  tension between constrained generation (enforces structure, kills reasoning) and free generation
+  (allows reasoning, loses structure). Key insight: augment the output grammar with "reasoning
+  escape" rules that allow unconstrained text until a trigger token, then re-enter constrained
+  mode for the final answer. Results: up to +10pp on GSM-symbolic and FOLIO vs both constrained
+  and unconstrained baselines.
+- **Relevance:** Directly applicable to Carnot's constraint extraction problem on IT models.
+  The root cause of ArithmeticExtractor's 0% detection on Gemma4-E4B-it is that IT models reason
+  freely and produce claims in natural language format, not regex-parseable equations. CRANE
+  suggests the fix: instead of post-hoc extraction, add a constrained extraction suffix to the
+  prompt grammar — let the model reason freely (IT format), then force a structured CLAIM: block
+  at the end (constrained format). This eliminates the free-form extraction problem entirely.
+- **Concrete experiment:** CRANEExtractionGate class that appends a constrained suffix prompt
+  ("State all verifiable numerical claims as: CLAIM: [quantity] [op] [quantity] = [result]") and
+  parses the structured suffix. Compare detection rate vs LLMExtractor and ArithmeticExtractor.
+- **When to pursue:** Next milestone. Implement as alternative extraction front-end.
+
+### Differentiable Symbolic Planning with Feasibility Channels (DSP)
+- **Paper:** arxiv.org/abs/2604.02350 (2026-04)
+- **What:** DSP is a neural architecture that performs discrete symbolic constraint reasoning while
+  remaining fully differentiable end-to-end. Key component: "feasibility channel" (phi) that tracks
+  constraint satisfaction evidence at each reasoning node and aggregates into a global feasibility
+  signal via learned rule-weighted combination. Integrated into Universal Cognitive Kernel (UCK)
+  with graph attention + iterative constraint propagation.
+  Results: 97.4% on planning feasibility under 4x size generalization, 96.4% on SAT.
+- **Relevance:** The feasibility channel concept maps directly onto Carnot's multi-step constraint
+  propagation (SAVeR, ConstraintStateMachine). Instead of binary constraint state per step, DSP
+  tracks a continuous feasibility signal that degrades smoothly as constraints are violated.
+  This is the Tier 2 constraint memory architecture done right: phi encodes accumulated constraint
+  satisfaction evidence across steps, feeds into the next step's prior. DSP's "rule-weighted
+  combination" is the differentiable version of Carnot's template wiring (Exp 343/344).
+- **When to pursue:** SAVeR/multi-turn milestone. Replace binary ConstraintState with continuous
+  feasibility channel from DSP. Enables soft constraint propagation across reasoning steps.
+
+### Restoring Sparsity in Potts Machines via Mean-Field Constraints
+- **Paper:** arxiv.org/abs/2602.04200 (2026-02)
+- **What:** Addresses constraint-induced graph density in Potts machines (multi-state Ising
+  machines). Dense pairwise constraint couplings make hardware embedding NP-hard. Solution:
+  Mean-Field Constraints (MFC) replaces dense pairwise couplings with dynamically updated
+  single-node biases, achieving comparable solution quality while maintaining sparsity.
+  Validates p-dit (probabilistic digit) dynamics with nearest-neighbor selection; proves
+  detailed balance for correct stationary distribution.
+- **Relevance:** Carnot's FpgaBackend (Exp 289) and CIKAN energy tier both face the density
+  problem — adding constraint boundaries increases coupling density, making FPGA embedding harder.
+  MFC's technique of replacing pairwise couplings with single-node bias updates is directly
+  applicable: encode constraint satisfaction as bias corrections rather than additional couplings.
+  This keeps the Ising graph sparse (FPGA-friendly) while preserving constraint semantics.
+- **When to pursue:** FPGA hardware milestone. Add MFC bias correction to FpgaBackend to
+  maintain sparse coupling structure when constraint boundaries are added.
+
+### LLM-QUBO: LLMs as Constraint-to-QUBO Translators
+- **Paper:** arxiv.org/abs/2509.00099 (2025-08)
+- **What:** End-to-end framework where an LLM translates natural language problem descriptions
+  into QUBO format for quantum annealing. The LLM acts as an expert rule-based conversion engine:
+  identifies variables, objectives, constraints, then synthesizes a Python QUBO class separating
+  objective function from constraint penalty terms. Handles hybrid quantum-classical decomposition
+  (Benders' decomposition) for problems exceeding quantum hardware capacity.
+- **Relevance:** Exact same goal as Carnot's LLMExtractor, but targeting quantum hardware.
+  LLM-QUBO's NL-to-constraint-graph pipeline is the extraction pipeline Carnot needs:
+  natural language problem → formal constraint representation. The output format (QUBO Python class)
+  is structurally equivalent to Carnot's ConstraintTerm protocol. LLM-QUBO's template for
+  separating objective from penalty is a clean pattern for LLMExtractor's output format.
+  Could use LLM-QUBO's prompt templates as starting point for LLMExtractor's constraint
+  graph generation.
+- **When to pursue:** LLMExtractor improvement milestone. Study LLM-QUBO's prompt engineering
+  for structured constraint extraction. Adapt for Carnot's ConstraintTerm output format.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
 ### EORM — Energy-Based Outcome Reward Model for CoT Ranking (HIGH PRIORITY)

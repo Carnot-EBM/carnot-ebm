@@ -61,6 +61,16 @@
 
 ---
 
+## Session: 2026-04-16 Milestone 2026.06.10 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T07:00:00Z | 2026-04-16T07:42:31Z | Plan next milestone 2026.06.10: read 11 project files, arxiv research (5 new papers: Semantic Energy 2508.14496, CRANE 2502.09061, DSP/Feasibility Channels 2604.02350, Potts MFC 2602.04200, LLM-QUBO 2509.00099), added papers to research-references.md, identified 3 gaps (RETRO-019 GPU offline 5th milestone, RETRO-020 CIKAN+JitRL+SafetyKAN missing, RETRO-021 FR-11 unconfirmed), designed 14 experiments (390-403) across 5 phases + mandatory GPU preflight gate, wrote openspec/change-proposals/research-roadmap-vNEXT.md (v35) + research-roadmap-next.yaml | ~18k |
+
+---
+
 ## Session: 2026-04-15 Milestone 2026.05.27 Planning
 
 ### Turn Log
