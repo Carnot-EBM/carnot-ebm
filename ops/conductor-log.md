@@ -1894,3 +1894,6 @@ python/ |
 | 2026-04-16 04:09 UTC | Exp 377: Fix RETRO-015 — session_startup.sh auto-s | OK | Deliverable already exists in repo |
 | 2026-04-16 04:09 UTC | Exp 378: Fix RETRO-018 — CIKANEnergy proper Python | OK | Deliverable already exists in repo |
 | 2026-04-16 04:41 UTC | Exp 379: Live precision pipeline execution — 200 G | OK | Deliverable already exists in repo |
+| 2026-04-16 05:42 UTC | Exp 380: Live HumanEval code verification executio | OK | Deliverable already exists in repo |
+| 2026-04-16 05:42 UTC | Exp 381: Live adversarial GSM8K execution — Carnot | OK | Deliverable already exists in repo |
+| 2026-04-16 05:42 UTC | Exp 382: Live extraction comparison — LLMExtractor | OK | Deliverable already exists in repo |
