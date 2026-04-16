@@ -1916,3 +1916,13 @@ python/ |
 | 2026-04-16 08:21 UTC | Exp 391: Fix RETRO-020 — CIKANEnergy proper Python | OK | Deliverable already exists in repo |
 | 2026-04-16 08:21 UTC | Exp 392: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
 | 2026-04-16 08:21 UTC | Exp 393: Safety/Jailbreak KAN Classifier — first T | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 392: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 394: Live precision pipeline — 200 GSM8K, 5 va | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 395: Live HumanEval code verification — 50 pro | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 396: Live adversarial GSM8K — Carnot's headlin | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 397: Live extraction comparison — LLMExtractor | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 398: Combined EORM+JEPA retrain on live pairs  | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 399: FR-11 self-learning relay live — first le | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 400: SAVeR live multi-turn verification — fait | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 401: Semantic Energy hallucination scorer — lo | OK | Deliverable already exists in repo |
+| 2026-04-16 09:22 UTC | Exp 402: CRANE extraction gate — alternating free  | OK | Deliverable already exists in repo |
