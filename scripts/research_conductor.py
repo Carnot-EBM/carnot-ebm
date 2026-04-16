@@ -218,6 +218,16 @@ def run_agent(
         # Setting to 0 disables the stall detector.
         STALL_TIMEOUT = 0 if AGENT_TYPE == "claude" else 180  # disabled for Claude, 3 min Codex
 
+        # Wall-clock timeout: the Exp 425 ExperimentTimeoutWatchdog guards
+        # inside experiment scripts, but run_agent spawns the Claude CLI which
+        # itself can hang past its turn limit (observed Exp 426: 90+ min with
+        # no output, still alive). This is the orchestrator-level counterpart.
+        # Default 45 min matches ExperimentTimeoutWatchdog, configurable via
+        # CARNOT_CONDUCTOR_TIMEOUT_MINUTES.
+        WALL_CLOCK_TIMEOUT = int(os.environ.get(
+            "CARNOT_CONDUCTOR_TIMEOUT_MINUTES", "45")) * 60
+        start_time = time.time()
+
         output_lines = []
         last_output_time = time.time()
 
@@ -250,6 +260,26 @@ def run_agent(
                     proc.wait(timeout=10)
                     full_output = "".join(output_lines)
                     return False, f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}"
+
+            # Wall-clock timeout (applies to all agents, including Claude):
+            # prevents the kind of 90+ min silent hang we saw on Exp 426 where
+            # the subprocess was alive but making no detectable progress.
+            elapsed_total = time.time() - start_time
+            if WALL_CLOCK_TIMEOUT > 0 and elapsed_total > WALL_CLOCK_TIMEOUT:
+                logger.warning(
+                    "%s exceeded wall-clock timeout (%d min), killing process",
+                    AGENT_DISPLAY, WALL_CLOCK_TIMEOUT // 60,
+                )
+                proc.kill()
+                try:
+                    proc.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    pass
+                full_output = "".join(output_lines)
+                return False, (
+                    f"Wall-clock timeout after {int(elapsed_total)}s. "
+                    f"Last output: {full_output[-300:]}"
+                )
 
         try:
             proc.wait(timeout=30)
@@ -1880,6 +1910,25 @@ def main() -> int:
 
     os.chdir(str(PROJECT_ROOT))
 
+    # RETRO-022 ROOT-CAUSE FIX: call env_autofix at conductor startup so that
+    # CARNOT_FORCE_LIVE propagates into every subagent spawned by run_agent().
+    # The env={**os.environ,...} dict built for Popen inherits from the
+    # conductor process; setting it here means all children see it.
+    # Previously each experiment script had to call apply_env_autofix() itself,
+    # which only worked if the conductor had already given it CPU-mode hints.
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "python"))
+        from carnot.pipeline.env_autofix import apply_env_autofix
+        autofix = apply_env_autofix()
+        if autofix.auto_fix_applied:
+            logger.warning(
+                "CARNOT_FORCE_LIVE auto-injected at conductor startup "
+                "(gpu_detected=%s, final_env_value=%s)",
+                autofix.gpu_detected, autofix.final_env_value,
+            )
+    except Exception as exc:
+        logger.warning("env_autofix unavailable at startup: %s", exc)
+
     print("=" * 60)
     print("  Carnot Research Conductor")
     print(f"  Autonomous research via {AGENT_DISPLAY}")
@@ -1887,6 +1936,7 @@ def main() -> int:
     print(f"  Agent: {AGENT_TYPE} ({AGENT_BIN})")
     print(f"  Model: {AGENT_MODEL}")
     print(f"  Project: {PROJECT_ROOT}")
+    print(f"  CARNOT_FORCE_LIVE: {os.environ.get('CARNOT_FORCE_LIVE', '<unset>')}")
     if args.loop:
         print(f"  Mode: continuous (every {args.interval} min)")
     else:
@@ -1917,8 +1967,22 @@ def main() -> int:
         if not args.loop:
             return 0 if progress else 1
 
-        logger.info("Sleeping %d minutes...", args.interval)
-        time.sleep(args.interval * 60)
+        # Chunked sleep: survive background-harness hibernation. A single
+        # time.sleep(1800) gets suspended by some schedulers and never resumes,
+        # losing hours of wall clock. Chunking into 60s tick bursts lets the
+        # OS scheduler re-page us promptly and lets us log progress so a stuck
+        # sleep is visible from the output file.
+        total_seconds = args.interval * 60
+        logger.info("Sleeping %d minutes (chunked 60s ticks)...", args.interval)
+        slept = 0
+        while slept < total_seconds:
+            chunk = min(60, total_seconds - slept)
+            time.sleep(chunk)
+            slept += chunk
+            if slept % 300 == 0 and slept < total_seconds:
+                logger.info("...sleeping, %d/%d min elapsed",
+                            slept // 60, args.interval)
+        logger.info("Sleep complete — resuming")
 
     return 0
 

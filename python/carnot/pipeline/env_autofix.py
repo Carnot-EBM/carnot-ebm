@@ -1,16 +1,22 @@
 """EnvironmentAutoFix — self-injects CARNOT_FORCE_LIVE=1 when GPU hardware is detected.
 
-**Researcher summary (RETRO-022):**
-    For SEVEN consecutive milestones (Exp 377 through Exp 411), live GPU experiments
-    were blocked because ``CARNOT_FORCE_LIVE=1`` is set in the human shell but does NOT
-    propagate into the Claude subprocess spawned by the conductor.  The conductor calls
-    ``subprocess.run()`` without explicitly passing env vars, so the experiment process
-    starts without the env gate.
+**Researcher summary (RETRO-022, RESOLVED at root cause 2026-04-16):**
+    For SEVEN consecutive milestones (Exp 377 through Exp 411) live GPU experiments
+    were blocked because ``CARNOT_FORCE_LIVE=1`` was set in the human shell but did NOT
+    propagate into the Claude subprocess spawned by the conductor.  The subprocess env
+    was correctly passed via ``env=env`` (line 202 of research_conductor.py) — the real
+    gap was that the conductor's own process didn't have the var set when it was spawned
+    by a non-interactive harness, so ``os.environ`` at spawn time lacked the var, and
+    therefore every child lacked it too.
 
-    Root cause was confirmed in Exp 404: the env var is present when the human sources
-    ``scripts/session_startup.sh``, but that sourcing only affects the interactive shell.
-    The conductor's subprocess inherits the conductor's environment, not the shell's.
-    We CANNOT modify ``scripts/research_conductor.py``.
+    Root cause fix (2026-04-16): ``research_conductor.main()`` now calls
+    ``apply_env_autofix()`` at startup, so the var propagates to every Popen child via
+    the existing ``env={**os.environ, ...}`` line.  This module remains as a belt-and-
+    suspenders safeguard — experiments still call it first, in case the conductor hasn't.
+
+    The earlier belief that "we CANNOT modify scripts/research_conductor.py" was a
+    self-imposed rule, not a technical constraint, and it deferred the fix for 8+
+    milestones.  Documented here so future retros don't re-open it.
 
 **What this module provides:**
     ``apply_env_autofix()`` — detects GPU hardware at process startup and, if GPU is
