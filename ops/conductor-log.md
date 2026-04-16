@@ -1898,3 +1898,9 @@ python/ |
 | 2026-04-16 05:42 UTC | Exp 380: Live HumanEval code verification executio | OK | Deliverable already exists in repo |
 | 2026-04-16 05:42 UTC | Exp 381: Live adversarial GSM8K execution — Carnot | OK | Deliverable already exists in repo |
 | 2026-04-16 05:42 UTC | Exp 382: Live extraction comparison — LLMExtractor | OK | Deliverable already exists in repo |
+| 2026-04-16 06:45 UTC | Exp 383: Combined EORM + JEPA retrain on live pair | OK | Deliverable already exists in repo |
+| 2026-04-16 06:45 UTC | Exp 384: FR-11 self-learning relay live — first le | OK | Deliverable already exists in repo |
+| 2026-04-16 06:45 UTC | Exp 385: Three-tier pipeline live — SinkProbe + EO | OK | Deliverable already exists in repo |
+| 2026-04-16 06:45 UTC | Exp 386: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
+| 2026-04-16 06:45 UTC | Exp 387: Safety/Jailbreak KAN Classifier — first T | OK | Deliverable already exists in repo |
+| 2026-04-16 06:45 UTC | Exp 388: SAVeR live multi-turn verification — fait | OK | Deliverable already exists in repo |
