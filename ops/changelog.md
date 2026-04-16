@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 370: Live Adversarial GSM8K Benchmark — Carnot Credibility Experiment)
+
+- 2026-04-16 00:50: Exp 370 implemented and verified.
+  - `scripts/experiment_370_adversarial_live.py` — Hard `CARNOT_FORCE_LIVE=1` gate via `diagnose_live_gpu_or_raise()` (raises RuntimeError; NO silent simulated fallback). Three-condition benchmark: standard / adversarial / repaired_adversarial. LLMConstraintExtractor (Exp 366) used for repair condition with live Qwen3.5-0.8B. Checkpoints every model loop. `honest_verdict` is never `"blocked_simulated"` when live GPU confirmed.
+  - `diagnose_live_gpu_or_raise(model_ids)` — new hard gate: raises RuntimeError if CARNOT_FORCE_LIVE not "1" OR if diagnose_live_gpu() returns is_live_capable=False. Testable in isolation from artifact-building logic.
+  - `_write_artifact(tmpl, artifact)` — isolated artifact-writing helper for testability.
+  - Artifact schema: `adversarial_schema="carnot.adversarial_gsm8k.v2"`, `inference_mode`, `honest_verdict`, `standard_accuracy`, `adversarial_accuracy`, `accuracy_drop`, `repaired_adversarial_accuracy`, `repair_improvement`, `robustness_invariant_holds`, `per_model_results`, `headline_result`.
+  - `tests/python/test_experiment_370_adversarial_live.py` — 23 tests pass, 100% new-function coverage. All blocked paths (CARNOT_FORCE_LIVE not set, GPU not live, setup_gpu unhealthy) and success path tested.
+  - `SCENARIO-BENCH-022` added to `openspec/capabilities/verifiable-reasoning/spec.md` — live-confirmed criterion, no blocked_simulated, LLMExtractor for repair, robustness_invariant_holds definition.
+  - Full test suite: 6742 pass + pre-existing failures unchanged (test_experiment_319_retro.py etc. unrelated). Exp 370 tests: 23 all pass.
+  - Live run pending: will produce Carnot's headline credibility result when `CARNOT_FORCE_LIVE=1` with GPU available. Expected honest_verdict="improvement_positive" if repair loop helps under adversarial distractor injection.
+  (User-requested execution)
+
 ## 2026-04-16 (Exp 369: Live HumanEval Code Verification Benchmark — Full Stack Re-Run)
 
 - 2026-04-16 00:08: Exp 369 implemented and verified.

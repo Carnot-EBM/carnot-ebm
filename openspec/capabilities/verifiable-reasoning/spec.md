@@ -4334,6 +4334,25 @@ Spec: REQ-BENCH-003, SCENARIO-BENCH-020
 
 Spec: REQ-BENCH-004, SCENARIO-BENCH-021
 
+### SCENARIO-BENCH-022: Exp 370 Live-Confirmed Adversarial GSM8K Criterion
+
+**Given** Exp 370 runs the adversarial GSM8K benchmark with `CARNOT_FORCE_LIVE=1`
+  and `diagnose_live_gpu()` confirms at least one GPU is live-capable
+**When** the artifact is built with `schema="carnot.adversarial_gsm8k.v2"`
+**Then** `inference_mode == "live_gpu"` in the artifact
+**And** `honest_verdict` is one of `"improvement_positive"`, `"degradation_positive"`,
+  or `"neutral"` — never `"blocked_simulated"`
+**And** if `diagnose_live_gpu()` raises `RuntimeError` (GPU not live), the experiment
+  raises immediately — it MUST NOT silently fall through to simulated mode
+**And** the artifact contains `per_model_results` with at minimum one entry for
+  Gemma4-E4B-it and one for Qwen3.5-0.8B
+**And** the repair condition uses `LLMConstraintExtractor` with live Qwen3.5-0.8B
+  rather than regex-only `ArithmeticExtractor`
+**And** `robustness_invariant_holds` is `True` iff
+  `adversarial_accuracy >= standard_accuracy - 0.05`
+
+Spec: REQ-BENCH-006, REQ-BENCH-007, SCENARIO-BENCH-022
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
