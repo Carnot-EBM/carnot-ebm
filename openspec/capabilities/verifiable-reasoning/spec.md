@@ -3273,6 +3273,20 @@ Spec: REQ-LEARN-027, SCENARIO-LEARN-047
 **And** `batch4_accuracy == 0.75`
 **And** `improved == True`
 
+### SCENARIO-LEARN-048: EORM Real-Data Retrain Achieves AUC Improvement Over Synthetic Baseline
+
+**Given** an `EORMModel` loaded or freshly initialized as the baseline
+**And** at least 50 real (question, response, correctness) pairs loaded from live experiment result files
+**When** `run_experiment()` for Exp 371 is executed with those pairs
+**Then** the artifact has `retrain_mode == "real_data"`
+**And** `n_real_pairs >= 50`
+**And** `auc_improvement == after_auc - before_auc` (signed, no clamping)
+**And** `honest_verdict == "real_data_improvement"` when `auc_improvement > 0`
+**And** `honest_verdict == "real_data_no_improvement"` when `auc_improvement <= 0`
+**And** `honest_verdict == "insufficient_real_pairs"` when `n_real_pairs < 50`
+
+Spec: REQ-LEARN-025, SCENARIO-LEARN-048
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
