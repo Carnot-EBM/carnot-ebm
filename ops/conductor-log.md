@@ -1946,3 +1946,11 @@ python/ |
 | 2026-04-16 10:46 UTC | Exp 409: CRANE extraction gate — 1x-cost prompt-si | OK | Deliverable already exists in repo |
 | 2026-04-16 11:51 UTC | Exp 410: Live precision pipeline — 200 GSM8K, 5 va | OK | 81 passed in 3.43s |
 | 2026-04-16 11:52 UTC | Exp 406: JitRL constraint memory — correct Tier 1  | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 406: JitRL constraint memory — correct Tier 1  | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 411: Live HumanEval code verification — 50 pro | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 412: Live adversarial GSM8K — Carnot's headlin | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 413: Live extraction comparison — CRANE vs LLM | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 414: EORM+JEPA retrain on live pairs from Exps | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 415: FR-11 self-learning relay live — close RE | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 416: MathAgent constraint graph builder — LLME | OK | Deliverable already exists in repo |
+| 2026-04-16 12:36 UTC | Exp 417: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |

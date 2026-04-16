@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 403+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 411+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -74,7 +74,7 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (403 experiments, 16 completed milestones)
+## Key Results (411 experiments, 16 completed milestones, 17th in progress)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
@@ -82,7 +82,7 @@ All benchmark results below are from **live GPU inference**. Simulated and softw
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
 
-Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.05.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). Milestone 2026.06.03 (Exps 377-389) fixed the infrastructure (Exp 377: LiveGPUGate + session_startup.sh export), but the GPU node was offline during the conductor session — live GPU unconfirmed for a fifth consecutive milestone (RETRO-019 critical). Milestone 2026.06.10 (Exps 390-402, 16th milestone) ran entirely in "deliverable already exists" fast-path mode — GPU node offline for a SIXTH consecutive milestone; RETRO-022 critical human escalation opened (cloud GPU or power on RTX 3090 node required). All live GPU result counts above reflect artifacts generated before this bug was identified.
+Note: Milestone 2026.05.20 (Exps 351-364) discovered that `CARNOT_FORCE_LIVE` was never being set by the conductor (RETRO-012), which caused three consecutive milestones of silent simulated fallback despite both RTX 3090s being live-capable. Milestone 2026.05.27 (Exps 365-376) closed RETRO-012/013/014 but live GPU remained unconfirmed for a fourth consecutive milestone (RETRO-015 critical). Milestone 2026.06.03 (Exps 377-389) fixed the infrastructure (Exp 377: LiveGPUGate + session_startup.sh export), but the GPU node was offline during the conductor session — live GPU unconfirmed for a fifth consecutive milestone (RETRO-019 critical). Milestone 2026.06.10 (Exps 390-402, 16th milestone) ran entirely in "deliverable already exists" fast-path mode — GPU node offline for a SIXTH consecutive milestone; RETRO-022 critical human escalation opened (cloud GPU or power on RTX 3090 node required). Milestone 2026.06.17 (17th, in progress): Exp 404 confirmed GPU hardware IS present (`is_live_capable=True`) — the only remaining blocker is running `source scripts/session_startup.sh` before the next conductor session to propagate `CARNOT_FORCE_LIVE=1`. Exps 410-411 live harnesses implemented and blocked correctly (no simulated fallback). All live GPU result counts above reflect artifacts generated before this bug was identified.
 
 ## PBT Verification
 
@@ -209,6 +209,13 @@ On **116** held-out cases against **344** learning cases, `no_learning`, `tracke
 - **FR-11 self-learning relay (Exp 399):** Partial — `honest_verdict='learning_confirmed'` NOT achieved; FOURTH consecutive miss (RETRO-024 opened).
 - **Milestone 2026.06.10 retrospective (Exp 403):** 13 experiments (Exps 390-402), mean=7.5 min/exp. All experiments ran in "deliverable already exists" fast-path mode — no actual inference work. `live_gpu_confirmed=False` for SIXTH consecutive milestone. RETRO-022 (CRITICAL HUMAN ESCALATION: GPU node must be powered on or cloud GPU rented before next milestone), RETRO-023 (CIKANEnergy third consecutive failure — corrupt JSON fast-path), RETRO-024 (FR-11 relay fourth carry) opened. 138 tests pass. `results/operational_retro_2026_06_10.json`.
 
+### Milestone 2026.06.17 (Exps 404-411, in progress) — 17th Milestone
+
+- **Deliverable content validator + GPU preflight v2 (Exp 404):** `DeliverableContentValidator` implemented in `python/carnot/pipeline/deliverable_validator.py` with `ast.parse()` + `json.loads()` pre-check. Root cause of RETRO-023 (corrupt JSON fast-path) formally fixed. Preflight v2 result: `honest_verdict=env_not_propagating` — GPU hardware IS present (`is_live_capable=True`), but `source scripts/session_startup.sh` was not run before the conductor session. 53 tests pass.
+- **Live precision pipeline v3 harness (Exp 410):** Preflight gate detected `env_not_propagating` and correctly blocked without simulation fallback. 34 tests pass. No inference executed.
+- **Live HumanEval v3 harness (Exp 411):** Same preflight gate path as Exp 410. 44 tests pass; 4-gate sequence implemented (preflight JSON check → LiveGPUGate → setup_gpu → model load). Full suite: **3,058 passed, 2 pre-existing failures**.
+- **Path to first live results:** Run `source scripts/session_startup.sh` before the next conductor session. Exp 404 confirms the GPU hardware is present and will be live-capable once the env variable propagates.
+
 ### HuggingFace Published Models (Exp 293 / v0.2.0-research)
 > **Exp 304 (2026-04-14):** Upload confirmed. Credentials verified via Python API. FCV artifact live at https://huggingface.co/Carnot-EBM/carnot-formal-claim-verifier-v1.
 
@@ -266,7 +273,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 389 experiments across 15 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 411 experiments across 17 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
