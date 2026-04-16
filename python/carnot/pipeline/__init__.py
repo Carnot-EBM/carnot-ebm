@@ -215,6 +215,11 @@ from carnot.pipeline.saver_verifier import (
     SAVeRVerifier,
     build_saver_artifact,
 )
+from carnot.pipeline.live_gpu_gate import (  # noqa: E402
+    LiveGPUGate,
+    build_session_startup_script,
+    check_session_startup_exists,
+)
 
 __all__ = [
     "AgentStep",
@@ -377,4 +382,7 @@ __all__ = [
     "verify_semantic_grounding",
     "verify_semantic_verifier_v2",
     "verify_code",
+    "LiveGPUGate",
+    "build_session_startup_script",
+    "check_session_startup_exists",
 ]

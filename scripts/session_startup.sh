@@ -1,27 +1,49 @@
 #!/usr/bin/env bash
-# session_startup.sh — Pre-session GPU health check for Carnot research sessions.
+# session_startup.sh — Pre-session GPU health check + CARNOT_FORCE_LIVE propagation.
 #
 # RETRO-007: zombie GPU processes from prior sessions consume VRAM at session start.
 # RETRO-008: no standardised pre-flight check before the research conductor launches.
+# RETRO-015: CARNOT_FORCE_LIVE=1 was never exported into conductor subprocess environments,
+#            causing four consecutive milestones of idle GPUs. This script now exports
+#            CARNOT_FORCE_LIVE=1 so all child processes inherit it when this script is
+#            sourced before the conductor runs.
 #
 # What this script does:
-#   1. Checks nvidia-smi availability; exits cleanly if absent (CI environments).
-#   2. Lists all CUDA GPUs; counts how many are detected.
-#   3. Detects zombie GPU processes via DualGPUMonitor (0% utilisation, >100 MiB VRAM).
+#   1. Exports CARNOT_FORCE_LIVE=1 (RETRO-015 fix — belt-and-suspenders: also sources
+#      conductor_gpu_env.sh which sets the same variable).
+#   2. Checks nvidia-smi availability; exits cleanly if absent (CI environments).
+#   3. Lists all CUDA GPUs; counts how many are detected.
+#   4. Detects zombie GPU processes via DualGPUMonitor (0% utilisation, >100 MiB VRAM).
 #      Falls back to nvidia-smi --query-compute-apps parsing if Python import fails.
-#   4. If --kill-zombies is set: sends SIGKILL to each zombie PID.
+#   5. If --kill-zombies is set: sends SIGKILL to each zombie PID.
 #      If --dry-run is set: prints PIDs but does NOT kill.
-#   5. Prints a single canonical summary line:
+#   6. Prints a single canonical summary line:
 #        SESSION STARTUP: n_gpus=X zombies=Y killed=Z all_healthy=True/False
-#   6. Exits 0 always (health check, not a blocking gate).
+#   7. Exits 0 always (health check, not a blocking gate).
 #
 # Usage:
-#   ./scripts/session_startup.sh [--dry-run] [--kill-zombies]
+#   source scripts/session_startup.sh              # env propagation (RETRO-015 fix)
+#   ./scripts/session_startup.sh [--dry-run] [--kill-zombies]  # health check mode
 #
-# Spec: REQ-INFRA-008, SCENARIO-INFRA-012, SCENARIO-INFRA-013
+# Spec: REQ-INFRA-008, REQ-INFRA-017,
+#       SCENARIO-INFRA-012, SCENARIO-INFRA-013, SCENARIO-INFRA-021
 
 set -uo pipefail
 # Note: -e is intentionally omitted — this script must exit 0 even on errors.
+
+# ---------------------------------------------------------------------------
+# RETRO-015 fix: export CARNOT_FORCE_LIVE=1 into all child processes.
+# This MUST come first, before any nvidia-smi calls or zombie detection,
+# so that even if the health-check section fails the env var is already set.
+# ---------------------------------------------------------------------------
+
+_SESSION_SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ -f "$_SESSION_SCRIPT_DIR/conductor_gpu_env.sh" ]; then
+    # shellcheck source=scripts/conductor_gpu_env.sh
+    source "$_SESSION_SCRIPT_DIR/conductor_gpu_env.sh"
+fi
+export CARNOT_FORCE_LIVE=1
+echo "[session_startup] CARNOT_FORCE_LIVE=1 exported at $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 
 # ---------------------------------------------------------------------------
 # Argument parsing

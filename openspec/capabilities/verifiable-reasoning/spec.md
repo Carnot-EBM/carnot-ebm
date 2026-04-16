@@ -4816,6 +4816,47 @@ Every experiment script shall produce a result JSON at
 **And** `check_result_json_exists(357, results_dir)` returns `True`
 **And** `check_result_json_exists(358, results_dir)` returns `False`
 
+### REQ-INFRA-017: Session Startup Must Export CARNOT_FORCE_LIVE=1
+
+`scripts/session_startup.sh` must exist at repo root and, when sourced, must:
+- Source `scripts/conductor_gpu_env.sh` if the file exists
+- Export `CARNOT_FORCE_LIVE=1` directly as a belt-and-suspenders measure
+- Print a human-readable confirmation: `[session_startup] CARNOT_FORCE_LIVE=1 exported at <ISO-timestamp>`
+
+`build_session_startup_script(project_root)` returns the shell script content as a string.
+`check_session_startup_exists(project_root)` returns `True` iff the file exists.
+
+### REQ-INFRA-018: LiveGPUGate Must Be Called at Start of Any GPU Experiment
+
+A `LiveGPUGate` class in `python/carnot/pipeline/live_gpu_gate.py` provides a hard gate:
+- `LiveGPUGate.check_env_var()` returns `True` iff `CARNOT_FORCE_LIVE == "1"` in environment
+- `LiveGPUGate.check_gpu_live()` returns `True` iff `diagnose_live_gpu().is_live_capable`
+- `LiveGPUGate.require_live(model_ids=[])` raises `RuntimeError` if env var missing or GPU not ready
+- `LiveGPUGate.require_live_or_blocked(tmpl, model_ids)` returns blocked artifact dict on failure,
+  `None` on success — for experiments that prefer a blocked result to an exception
+- `LiveGPUGate.verify_subprocess_env_propagation(env_var)` spawns a subprocess and verifies
+  the env var is inherited; returns `True` iff the var is present in subprocess env
+
+### SCENARIO-INFRA-019: LiveGPUGate Raises When Env Var Missing
+
+**Given** `CARNOT_FORCE_LIVE` is not set in the environment
+**When** `LiveGPUGate.require_live()` is called
+**Then** a `RuntimeError` is raised containing "CARNOT_FORCE_LIVE not set"
+
+### SCENARIO-INFRA-020: LiveGPUGate Raises When GPU Not Live
+
+**Given** `CARNOT_FORCE_LIVE=1` is set
+**And** `diagnose_live_gpu()` returns `is_live_capable=False`
+**When** `LiveGPUGate.require_live()` is called
+**Then** a `RuntimeError` is raised containing "is_live_capable=False"
+
+### SCENARIO-INFRA-021: Subprocess Inherits CARNOT_FORCE_LIVE from Parent
+
+**Given** `CARNOT_FORCE_LIVE=1` is set in the current process environment
+**When** `LiveGPUGate.verify_subprocess_env_propagation("CARNOT_FORCE_LIVE")` is called
+**Then** the function returns `True`
+**And** the spawned subprocess's environment contains `CARNOT_FORCE_LIVE=1`
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -5084,6 +5125,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-014 | N/A | Implemented | LiveGPUDiagnostic + diagnose_live_gpu() + setup_gpu() RuntimeError on CARNOT_FORCE_LIVE=1 failure (SCENARIO-INFRA-014/015, Exp 352) |
 | REQ-INFRA-015 | N/A | Implemented | ConductorEnvFix + build_conductor_env_fix + verify_env_script_exports + scripts/conductor_gpu_env.sh (SCENARIO-INFRA-016/017, Exp 365). Closes RETRO-012. |
 | REQ-INFRA-016 | N/A | Implemented | RetroJSONEnforcer + check_result_json_exists + audit_missing_jsons (SCENARIO-INFRA-018, Exp 365). Closes RETRO-014. |
+| REQ-INFRA-017 | N/A | Implemented | session_startup.sh + build_session_startup_script + check_session_startup_exists (SCENARIO-INFRA-019/020/021, Exp 377). Part of RETRO-015 fix. |
+| REQ-INFRA-018 | N/A | Implemented | LiveGPUGate + check_env_var + check_gpu_live + require_live + require_live_or_blocked + verify_subprocess_env_propagation (SCENARIO-INFRA-019/020/021, Exp 377). Closes RETRO-015. |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
