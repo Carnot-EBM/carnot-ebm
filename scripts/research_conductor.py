@@ -908,6 +908,15 @@ Add any promising findings to research-references.md before designing experiment
 This research phase ensures we stay current and don't miss accelerating ideas.
 
 THEN DESIGN THE MILESTONE:
+
+MILESTONE NAMING: Use CalVer format YYYY.MM.XX where:
+- YYYY = current year (2026)
+- MM = current month (use the ACTUAL current month, NOT a projected future month)
+- XX = sequential number starting from 01, incrementing within the month
+- Example: if current month is April and last milestone was 2026.04.18,
+  the next is 2026.04.19 (NOT 2026.05.xx or 2026.06.xx)
+- Only increment MM when the calendar month actually changes
+
 1. Identify the 3 biggest gaps between current state and PRD vision
 2. Incorporate any promising arxiv findings as experiments
 3. Determine the natural next experiments based on completed work
