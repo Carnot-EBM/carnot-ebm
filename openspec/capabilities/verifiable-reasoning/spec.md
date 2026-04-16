@@ -3306,6 +3306,34 @@ Spec: REQ-LEARN-027, SCENARIO-LEARN-047
 
 Spec: REQ-LEARN-025, SCENARIO-LEARN-048
 
+### SCENARIO-LEARN-049: SelfLearningRelay Live GPU Run Emits honest_verdict=no_improvement When Batch4 <= Batch1
+
+**Given** a `SelfLearningRelay` running with `inference_mode="live_gpu"`
+**And** batch4 accuracy is not strictly greater than batch1 accuracy
+**When** `build_relay_artifact(trajectory, improvement, inference_mode="live_gpu")` is called
+**Then** `honest_verdict == "no_improvement"`
+**And** `inference_mode == "live_gpu"`
+
+Spec: REQ-LEARN-027, SCENARIO-LEARN-047
+
+### SCENARIO-LEARN-050: Live Self-Learning Relay Confirms Accuracy Improvement on Real GPU Inference
+
+**Given** `CARNOT_FORCE_LIVE=1` is set in the environment
+**And** Gemma4-E4B-it is loaded and healthy on GPU 0
+**And** 100 GSM8K questions are loaded in 4 batches of 25
+**And** the EORM model is loaded (from Exp 371 if available, else Exp 359 or fresh)
+**When** `scripts/experiment_374_self_learning_relay_live.py` is executed
+**Then** the artifact has `schema == "carnot.self_learning_relay.v2"`
+**And** `inference_mode == "live_gpu"`
+**And** `learning_trajectory` has 4 entries, one per batch
+**And** each trajectory entry has `batch_id`, `n_questions==25`, `accuracy`, `n_tier1_updates==25`, `n_tier2_templates_active`, `tier3_gate_auc`
+**And** `improved == (batch4_accuracy > batch1_accuracy)`
+**And** `honest_verdict == "learning_confirmed"` when `improved==True AND inference_mode=="live_gpu"`
+**And** `honest_verdict == "no_improvement"` when `improved==False`
+**And** `eorm_source` is one of `["exp371_real", "exp359_real", "synthetic_fallback"]`
+
+Spec: REQ-LEARN-026, REQ-LEARN-027, SCENARIO-LEARN-050
+
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 
 **Given** a `JepaGate` with `threshold=0.5` and `enabled=True`
