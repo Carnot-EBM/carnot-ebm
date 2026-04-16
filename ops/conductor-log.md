@@ -1981,3 +1981,6 @@ python/ |
 | 2026-04-16 18:46 UTC | Exp 426: DualGPU Fix + Temp Guard — RETRO-025    | OK | 35 passed in 9.26s |
 | 2026-04-16 18:46 UTC | RETRO-025: GPU1 zombie detection implemented       | OK | check_dual_gpu_health + temp guard in setup_gpu() |
 | 2026-04-16 20:35 UTC | Exp 426: DualGPURunner GPU-1 scheduling fix + temp | FAIL | Claude Code error: Full suite result: **7734 passed** (up from 7733 in the prev |
+| 2026-04-16 20:52 UTC | Exp 426: DualGPU Fix + Temp Guard — RETRO-025 verified | OK | 35 passed in 10.82s — RETRO-025 CLOSED |
+| 2026-04-16 21:37 UTC | Exp 426: DualGPURunner GPU-1 scheduling fix + temp | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
+| 2026-04-16 21:42 UTC | Exp 426: DualGPURunner GPU-1 scheduling fix + temp | OK | Deliverable already exists in repo |
