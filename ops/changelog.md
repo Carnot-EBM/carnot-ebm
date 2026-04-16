@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 376: Operational Retrospective — Milestone 2026.05.27 COMPLETE)
+
+- 2026-04-16 02:38: Exp 376 operational retrospective written. Milestone 2026.05.27 marked COMPLETE.
+  - `scripts/experiment_376_retro_2026_05_27.py` — CPU-only retrospective. Loads Exps 365–375 result JSONs, evaluates 8 success criteria, computes timing statistics, identifies new RETRO items.
+  - `MilestoneRetro2026_05_27` dataclass — 12 fields capturing all success criteria plus timing and RETRO tracking.
+  - `compute_retro_2026_05_27(repo_root)` — Evaluates all criteria from result files. Honest: False when files missing or partial.
+  - `build_retro_artifact(retro)` — schema="carnot.operational_retro.v2", adds explanations per criterion and timing_analysis with speedup interpretation.
+  - `estimate_speedup_pct(prev_mean, curr_mean)` — 33.3→22.7 = 31.8% apparent speedup, but caveat: speedup is from fast-fail blocked experiments, not genuine GPU batch inference.
+  - `load_milestone_results(repo_root, file_map)` — Graceful load, None for missing/invalid files.
+  - `compute_timing_stats(experiments)` — Wall time across milestone; n_blocked tracked separately.
+  - Results: live_gpu_confirmed=False (4th consecutive milestone), retro_012_closed=True, cikan_implemented=False (cikan_energy.py is JSON not Python).
+  - New RETRO items: RETRO-015 (live GPU escalation — critical), RETRO-016 (LLMExtractor), RETRO-017 (FR-11 relay), RETRO-018 (CIKAN corrupt).
+  - `tests/python/test_experiment_376_retro.py` — 78 tests pass, 100% targeted coverage.
+  - Output: `results/operational_retro_2026_05_27.json`
+  (User-requested — milestone 2026.05.27 retrospective)
+
 ## 2026-04-16 (Exp 373: Three-Tier Pipeline Live GPU Benchmark)
 
 - 2026-04-16 02:02: Exp 373 implemented and verified.
