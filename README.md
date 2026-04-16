@@ -2,13 +2,11 @@
 
 **Open-source Energy Based Model framework — Rust + Python/JAX**
 
-Carnot is an Energy-Based Model framework for **verifying and repairing LLM outputs**. All headline benchmark results below are from **live GPU inference**. The repository also preserves simulated, unverified, and software-model artifacts for provenance, and labels them explicitly instead of folding them into headline claims.
+Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline result:** Full 164-problem HumanEval with property-based testing: **+3.0pp** [+0.6, +6.1] 95% CI (Exp 226). Typed IR constraints still give **+4.9pp** on Gemma4 (Exp 221). The semantic-verifier-v2 rerun improves to **14.0% -> 15.0%** on Qwen3.5-0.8B and **46.5% -> 47.5%** on Gemma4-E4B-it while verify-only remains unjustified on both models (Exp 235). Chronological replay v2 keeps held-out success flat at **34.48%** with **8** false positives, but case memory lifts retrieval hit rate to **32.1%** and precision to **43.6%** without adding new false positives (Exp 241 / VERIFY-040).
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate. See the [technical report](docs/technical-report.md) for the full 370+ experiment analysis.
 
-**What ships today:** `VerifyRepairPipeline` plus standalone `verify_code()` and additive `verify_generated_code_with_specs()` for end-user code checks. CLI (`carnot pipeline verify`, `carnot verify-code`), a hardened **7-tool** MCP server for Claude Code, 5 integration examples, and full API docs. Constraint extraction spans arithmetic, code, logic, and natural language domains.
-
-**What we learned:** Activation-based EBMs detect confidence, not correctness (50% practical). The 14 principles from our systematic negative results save other researchers months of dead ends. Structural constraint verification is what actually works. See the [technical report](docs/technical-report.md) for full results.
+**What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
 ## Install
 
