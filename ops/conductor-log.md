@@ -1889,3 +1889,5 @@ python/ |
 | 2026-04-16 03:20 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
 | 2026-04-16 03:20 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
 | 2026-04-16 03:20 UTC | Milestone 2026.06.03 activated | OK | 13 tasks queued |
+| 2026-04-16 04:09 UTC | Exp 377: Fix RETRO-015 — session_startup.sh auto-s | OK | Deliverable already exists in repo |
+| 2026-04-16 04:09 UTC | Exp 378: Fix RETRO-018 — CIKANEnergy proper Python | OK | Deliverable already exists in repo |
