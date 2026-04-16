@@ -4980,6 +4980,74 @@ Spec: SCENARIO-INFRA-026 (Exp 413)
 **And** `honest_verdict` in the artifact is `'gpu_detected_env_was_correct'`
 **And** `retro_022_resolved=True` in the artifact
 
+### REQ-INFRA-023: ExperimentTimeoutWatchdog Kills Experiment After Configurable Timeout
+
+The `ExperimentTimeoutWatchdog` class must monitor an experiment's wall-clock runtime
+and, when the elapsed time exceeds the configured timeout, call `sys.exit(1)` after
+writing a partial result JSON to disk.  This closes RETRO-003: PID 3509070 ran 144+
+minutes with GPU0 at 82C when a 45-minute cap would have freed the GPU 99 minutes early.
+
+**Acceptance criteria:**
+- `ExperimentTimeoutWatchdog(experiment_id, timeout_minutes, result_path)` starts a
+  background thread timer that calls `_on_timeout()` after `timeout_minutes` wall-clock
+  minutes.
+- `start()` activates the timer and records `_start_time`.
+- `stop()` cancels the timer before it fires (normal completion path).
+- `is_active()` returns `True` while running and not yet timed out.
+- `elapsed_minutes()` returns float wall-clock minutes since `start()`.
+- `_on_timeout()` writes a partial result JSON (if `result_path` is set) then calls
+  `sys.exit(1)`.
+- Context manager: `__enter__` calls `start()`, `__exit__` calls `stop()`.
+- `ExperimentTimeoutResult` dataclass has fields: `experiment_id`, `timeout_minutes`,
+  `elapsed_minutes`, `timed_out`, `partial_result_path`.
+
+Spec: SCENARIO-INFRA-028, SCENARIO-INFRA-029, SCENARIO-INFRA-030 (Exp 425)
+
+### REQ-INFRA-024: ExperimentTimeoutWatchdog Default Timeout Is 45 Minutes
+
+The default timeout for `ExperimentTimeoutWatchdog` must be 45 minutes.  This value
+was derived from the PID 3509070 case: the experiment ran 144 minutes (3.2x over budget)
+and GPU0 reached 82C.  A 45-minute cap would have freed the GPU 99 minutes early.
+
+`get_timeout_minutes()` reads `CARNOT_CONDUCTOR_TIMEOUT_MINUTES` from the environment.
+When the env var is absent or empty, it returns 45.  When present, it returns the integer
+value of the env var.
+
+**Acceptance criteria:**
+- `get_timeout_minutes()` returns 45 when `CARNOT_CONDUCTOR_TIMEOUT_MINUTES` is unset.
+- `get_timeout_minutes()` returns the integer value of `CARNOT_CONDUCTOR_TIMEOUT_MINUTES`
+  when set.
+- `ExperimentTimeoutWatchdog` default `timeout_minutes` parameter is 45.
+
+Spec: SCENARIO-INFRA-030 (Exp 425)
+
+### SCENARIO-INFRA-028: Watchdog Fires After Timeout
+
+**Given** an `ExperimentTimeoutWatchdog` is created with `timeout_minutes=0.01` (0.6 s)
+**And** `start()` is called
+**When** 0.6 s elapses without `stop()` being called
+**Then** `_on_timeout()` fires
+**And** if `result_path` is set, a JSON file is written at that path with `timed_out=True`
+**And** `sys.exit(1)` is called
+
+### SCENARIO-INFRA-029: Stop Before Timeout Prevents Firing
+
+**Given** an `ExperimentTimeoutWatchdog` is created with `timeout_minutes=0.1`
+**And** `start()` is called
+**When** `stop()` is called before the timeout elapses
+**Then** `_on_timeout()` is never called
+**And** no `sys.exit` is invoked
+
+### SCENARIO-INFRA-030: get_timeout_minutes Reads Env Var
+
+**Given** `CARNOT_CONDUCTOR_TIMEOUT_MINUTES` is not set
+**When** `get_timeout_minutes()` is called
+**Then** the return value is `45`
+
+**Given** `CARNOT_CONDUCTOR_TIMEOUT_MINUTES=30` is in the environment
+**When** `get_timeout_minutes()` is called
+**Then** the return value is `30`
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -5252,6 +5320,10 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-018 | N/A | Implemented | LiveGPUGate + check_env_var + check_gpu_live + require_live + require_live_or_blocked + verify_subprocess_env_propagation (SCENARIO-INFRA-019/020/021, Exp 377). Closes RETRO-015. |
 | REQ-INFRA-019 | N/A | Implemented | DeliverableContentValidator + is_valid_python + validate_and_clear + audit_known_corrupt_files (SCENARIO-INFRA-022/023, Exp 404). Closes RETRO-023. |
 | REQ-INFRA-020 | N/A | Implemented | CloudGPUInstructions + build_cloud_gpu_instructions + generate_cloud_gpu_script + scripts/setup_cloud_gpu.sh (SCENARIO-INFRA-024, Exp 404). |
+| REQ-INFRA-021 | N/A | Implemented | EnvironmentAutoFix + apply_env_autofix + build_env_autofix_artifact (SCENARIO-INFRA-025/026/027, Exp 413). Closes RETRO-022 (workaround). |
+| REQ-INFRA-022 | N/A | Implemented | apply_env_autofix() logs WARNING when fix applied (SCENARIO-INFRA-026, Exp 413). |
+| REQ-INFRA-023 | N/A | Implemented | ExperimentTimeoutWatchdog + ExperimentTimeoutResult + build_timeout_artifact (SCENARIO-INFRA-028/029, Exp 425). Closes RETRO-003 (17+ milestones). |
+| REQ-INFRA-024 | N/A | Implemented | get_timeout_minutes() — default 45 min, configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES (SCENARIO-INFRA-030, Exp 425). |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |

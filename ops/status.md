@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-16 10:28 UTC — EXP 404: DELIVERABLE VALIDATOR + GPU PREFLIGHT V2 — RETRO-023 ROOT CAUSE FIXED (validator module implemented) — RETRO-022 OPEN (env_not_propagating: is_live_capable=True but source scripts/session_startup.sh not run) — cloud GPU script at scripts/setup_cloud_gpu.sh NOT generated this run (GPU hardware is present, env vars are the issue) — n_corrupt_files=5 confirmed — 53 new tests pass
+**Last Updated:** 2026-04-16 17:16 UTC — EXP 425: EXPERIMENT TIMEOUT WATCHDOG — RETRO-003 CLOSED (17+ milestones carried; ExperimentTimeoutWatchdog ships 45-min hard cap; PID 3509070 would have been killed at 45 min, saving 99 min of GPU time) — 35 new tests pass — REQ-INFRA-023/024 + SCENARIO-INFRA-028/029/030 added to spec
 
 ---
 

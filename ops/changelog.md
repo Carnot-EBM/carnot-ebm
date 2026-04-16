@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 425: ExperimentTimeoutWatchdog — RETRO-003 CLOSED)
+
+- 2026-04-16 17:16 UTC: Implemented ExperimentTimeoutWatchdog, closing RETRO-003 after 17+ consecutive
+  milestones without implementation.
+  Triggered by: user instruction to implement RETRO-003 (conductor timeout watchdog) as Exp 425.
+
+  **Root cause context:** PID 3509070 (Exp 219) ran 144+ minutes with GPU0 at 82C.  A 45-minute
+  hard cap would have freed GPU0 99 minutes early.
+
+  **Files written:**
+  - `python/carnot/pipeline/experiment_watchdog.py` — ExperimentTimeoutWatchdog, ExperimentTimeoutResult,
+    get_timeout_minutes, build_timeout_artifact; 45-min default; configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES;
+    background threading.Timer; partial result JSON on timeout; sys.exit(1).
+  - `scripts/experiment_425_conductor_timeout.py` — Exp 425 demonstration script; 2-min demo watchdog;
+    10 synthetic constraint checks; stops normally; honest_verdict=watchdog_implemented.
+  - `tests/python/test_experiment_watchdog.py` — 100% targeted coverage (35 tests total).
+  - `tests/python/test_experiment_425_conductor_timeout.py` — 100% targeted coverage.
+  - `openspec/capabilities/verifiable-reasoning/spec.md` — REQ-INFRA-023, REQ-INFRA-024,
+    SCENARIO-INFRA-028, SCENARIO-INFRA-029, SCENARIO-INFRA-030 added.
+  - `python/carnot/pipeline/__init__.py` — exported ExperimentTimeoutWatchdog, ExperimentTimeoutResult,
+    get_timeout_minutes, build_timeout_artifact.
+  - `ops/conductor-log.md` — RETRO-003 CLOSED entry added.
+  - `ops/status.md` — updated Last Updated.
+  - `ops/metrics.md` — Turn 2 logged.
+
+  **Test results:** 35 passed, 0 failed.
+
 ## 2026-04-16 (Milestone 2026.04.32 Planning — v38 Roadmap)
 
 - 2026-04-16 16:37 UTC: Planned milestone 2026.04.32 — "Live Numbers Confirmed, FR-11 Real-Data

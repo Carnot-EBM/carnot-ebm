@@ -231,6 +231,12 @@ from carnot.pipeline.env_autofix import (  # noqa: E402
     apply_env_autofix,
     build_env_autofix_artifact,
 )
+from carnot.pipeline.experiment_watchdog import (  # noqa: E402
+    ExperimentTimeoutResult,
+    ExperimentTimeoutWatchdog,
+    build_timeout_artifact,
+    get_timeout_minutes,
+)
 
 __all__ = [
     "AgentStep",
@@ -403,4 +409,8 @@ __all__ = [
     "EnvironmentAutoFix",
     "apply_env_autofix",
     "build_env_autofix_artifact",
+    "ExperimentTimeoutResult",
+    "ExperimentTimeoutWatchdog",
+    "build_timeout_artifact",
+    "get_timeout_minutes",
 ]
