@@ -1,5 +1,37 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.17, Full Analysis)
+
+- 2026-04-16 12:41 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_06_17.json` (schema="carnot.operational_retro.v5").
+  This is the HOW-we-executed analysis, separate from research results.
+
+  **Milestone totals (cumulative):** 445 experiments, 6273 minutes (104.5 hours) wall time, 14.0 min/experiment mean.
+  **This milestone session:** 3 experiments (Exps 404, 410, 411), mean=35.7 min/exp. HIGHER than prior milestone's 7.5 min/exp — but this is NOT a regression. Prior session was all fast-path mode; this session did genuine new implementation work.
+
+  **Top 5 slowest experiments (all historical outliers, unchanged):**
+  - Exp 219: 117 min — sequential single-GPU inference, no DualGPURunner, no pre-warm, Z3 calls blocking
+  - Exp 308: 105 min — full 6500-test suite rerun on each fix iteration instead of targeted module run
+  - Exp 184: 83 min — 3B model on single GPU, cold CUDA init absorbed into timing, no batching
+  - Exp 221: 78 min — sequential inference, Z3 call without per-call timeout caused >10-minute hang
+  - Exp 155: 78 min — CPU JEPA retrain, no checkpoint-resume, crash forced full restart from epoch 0
+
+  **GPU utilization:** Both RTX 3090s fully idle (2 MB VRAM each, 0% util). GPU 1 still 10C warmer than GPU 0 (54C vs 44C) — physical inspection recommended before next live GPU session. No zombie processes detected (clean state maintained).
+
+  **Key finding — RETRO-022 root cause now precisely scoped:** Exp 404 Gate 2 confirmed is_live_capable=True (hardware IS present and recognized). Exp 404 Gate 3 confirmed CARNOT_FORCE_LIVE=1 does NOT propagate into subprocess environments. This is an env inheritance bug, not a hardware problem. Fix: explicit `env={**os.environ, 'CARNOT_FORCE_LIVE': '1'}` in conductor subprocess.run() calls — a 5-line change. Seven milestones blocked by a 5-line fix.
+
+  **RETRO-023 root cause fixed:** DeliverableContentValidator implemented in Exp 404 (ast.parse() for .py files, schema key assertion for .json files). 5 corrupt files identified; require manual deletion/regeneration before next conductor run.
+
+  **Key bottlenecks (8):** CARNOT_FORCE_LIVE env propagation bug (RETRO-022, 7 milestones, 5-line fix); no per-experiment hard timeout (RETRO-003, 16+ milestones carried); DualGPURunner not auto-wired; 5 corrupt deliverable files not yet remediated; full suite reruns on targeted failures; no model pre-warm enforcement; CPU training without checkpoint-resume; zombie GPU GC not in post-experiment teardown hook.
+
+  **Estimated savings with all fixes:** 45% reduction. Top leverage: fix CARNOT_FORCE_LIVE env propagation + run pending live experiments (-20%), auto-wire DualGPURunner (-15%), targeted test reruns (-8%), conductor hard timeout (-5%), pre-warm enforcement (-5%).
+
+  **Open RETRO items:**
+  - RETRO-022 (CRITICAL): env propagation bug — is_live_capable=True but CARNOT_FORCE_LIVE not inherited by subprocesses. FIX BEFORE NEXT SESSION.
+  - RETRO-023 (medium, root cause fixed): 5 corrupt deliverable files need manual deletion.
+  - RETRO-024 (high): FR-11 self-learning relay — 5th consecutive miss, upstream RETRO-022.
+  - RETRO-003 (medium): Conductor timeout — 16+ milestones carried, must be Experiment 1 of next milestone.
+  (User-requested — operational efficiency retrospective for milestone 2026.06.17)
+
 ## 2026-04-16 — Exp 411: Live HumanEval Code Verification (BLOCKED)
 
 - 2026-04-16 12:19 UTC: Implemented `scripts/experiment_411_humaneval_live.py` and

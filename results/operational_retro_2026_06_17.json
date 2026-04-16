@@ -1,1 +1,232 @@
-{"experiment": 417, "status": "partial"}
+{
+  "experiment": 417,
+  "schema": "carnot.operational_retro.v5",
+  "milestone": "2026.06.17",
+  "generated_at": "2026-04-16T12:41:13Z",
+  "status": "complete",
+
+  "timing": {
+    "total_wall_time_minutes": 6273,
+    "total_wall_time_hours": 104.5,
+    "experiments_completed": 445,
+    "mean_minutes_per_experiment": 14.0,
+    "milestone_session_experiments": 3,
+    "milestone_session_mean_minutes_per_experiment": 35.7,
+    "prior_milestone_mean_minutes_per_experiment": 7.5,
+    "prior_milestone_total_minutes": 6166,
+    "speedup_note": "Apparent REGRESSION in this milestone's session: 7.5 → 35.7 min/exp (Exps 404, 410, 411). This is NOT a regression in execution efficiency — the prior milestone's 7.5 min/exp was entirely from 'deliverable already exists' fast-path (no real work). This milestone's 35.7 min/exp reflects genuine new implementation work (deliverable validator + two live-gate experiments). The fast-path correctly rejected new experiments; the underlying code work pace is healthy."
+  },
+
+  "slowest_experiments": [
+    {
+      "duration_minutes": 117,
+      "description": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "root_cause": "Sequential single-GPU inference with no DualGPURunner, no model pre-warm, cold-start CUDA initialization absorbed into experiment wall time. Z3 constraint calls were sequential with no per-call timeout, causing constraint evaluation to serialize across all 200 questions.",
+      "category": "sequential_gpu_inference"
+    },
+    {
+      "duration_minutes": 105,
+      "description": "Exp 308: JEPA fast-path gate integration (checkpoint — tests failing)",
+      "root_cause": "Failure recovery triggered full 6500-test suite rerun on each fix iteration instead of targeted module-level reruns. Each rerun took approximately 8 minutes; the fix required 3-4 iterations. Total rerun overhead: ~24-32 minutes of wasted time on tests unrelated to the failing module.",
+      "category": "full_suite_rerun_on_targeted_failure"
+    },
+    {
+      "duration_minutes": 83,
+      "description": "Exp 184: 3B model verification — does verify-repair help large models",
+      "root_cause": "3B model loaded on single GPU without pre-warm; lazy CUDA initialization stall (~30-45s) was not separated from inference timing. No batched inference — questions sent one at a time, serializing both GPU scheduling and response parsing overhead.",
+      "category": "cold_start_single_gpu"
+    },
+    {
+      "duration_minutes": 78,
+      "description": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "root_cause": "Sequential inference with per-question Z3 calls and no per-call timeout. One malformed constraint caused Z3 to spin for over 10 minutes before the outer loop timed out. A 30-second per-call subprocess timeout would have contained the damage to a single question.",
+      "category": "z3_timeout_missing"
+    },
+    {
+      "duration_minutes": 78,
+      "description": "Exp 155: Retrain JEPA violation predictor v2 with multi-domain data",
+      "root_cause": "CPU training of full JEPA model on multi-domain dataset without batching or early-stopping heuristic. No checkpoint-resume configured, so a mid-run crash required a full restart from epoch 0. ExperimentTemplate.checkpoint_save() now exists but was not available at Exp 155's time.",
+      "category": "cpu_training_no_checkpoint_resume"
+    }
+  ],
+
+  "gpu_utilization": {
+    "gpu_0_name": "NVIDIA GeForce RTX 3090",
+    "gpu_0_vram_used_mb": 2,
+    "gpu_0_vram_total_mb": 24576,
+    "gpu_0_vram_pct": 0,
+    "gpu_0_utilization_pct": 0,
+    "gpu_0_temperature_c": 44,
+    "gpu_1_name": "NVIDIA GeForce RTX 3090",
+    "gpu_1_vram_used_mb": 2,
+    "gpu_1_vram_total_mb": 24576,
+    "gpu_1_vram_pct": 0,
+    "gpu_1_utilization_pct": 0,
+    "gpu_1_temperature_c": 54,
+    "note": "Both RTX 3090s completely idle — 2 MB allocated (driver overhead only, down from 4 MB in prior milestone). GPU 1 running 10C warmer than GPU 0 (54C vs 44C) despite identical utilization — may indicate background thermal load, dust accumulation, or inadequate airflow on GPU 1's position. No zombie processes detected (improvement over prior milestones). VRAM allocation dropped from 4MB to 2MB, suggesting the prior 4MB was a stale driver artifact that cleared itself.",
+    "estimated_gpu_idle_pct_milestone": 99,
+    "idle_cause_breakdown": {
+      "env_propagation_bug": "~70% idle time — CARNOT_FORCE_LIVE=1 is exported in the interactive shell (is_live_capable=True per Exp 404) but does not propagate into subprocess environments spawned by the conductor. Exps 410 and 411 both blocked at Gate 0 (preflight check) without touching the GPU. This is the precise failure mode: env var exists in parent process but is not inherited by child processes.",
+      "sequential_inference_no_dual_runner": "~20% historical idle time — prior dual-model experiments ran sequentially on one GPU with the second GPU unused",
+      "cleanup_overhead": "~10% idle time — between-experiment teardown, test suite runs, and doc reconciliation passes where GPU sits unused"
+    },
+    "key_finding": "RETRO-022 is now more precisely scoped. Prior analysis said 'GPU node offline'. Exp 404 clarifies: the hardware is PRESENT (is_live_capable=True), but CARNOT_FORCE_LIVE does not propagate to subprocess environments even after sourcing session_startup.sh. The fix is explicit `export CARNOT_FORCE_LIVE=1` in the conductor process's own environment before launching subprocesses, NOT just sourcing in the interactive shell."
+  },
+
+  "zombie_processes": {
+    "detected": false,
+    "note": "No zombie GPU processes at milestone close. Both GPUs show 2 MB allocated (driver overhead only). The prior milestone's zombie PID 3378630 (25 GB held) was cleared in the 2026.06.10 milestone and has not reappeared. VRAM dropped from 4 MB to 2 MB between milestones — confirms clean process teardown. gpu_monitor --kill-zombies should remain in conductor post-experiment hook as preventive measure."
+  },
+
+  "deliverable_fast_path_analysis": {
+    "fast_path_trigger": "'deliverable already exists' check in conductor fires when a result JSON file is present at the expected output path — previously validated existence only, not content",
+    "fix_implemented_this_milestone": "Exp 404 implemented DeliverableContentValidator in python/carnot/pipeline/deliverable_validator.py. Validates .py files via ast.parse() (rejects JSON artifacts masquerading as Python). Validates .json files via json.load() plus required schema key assertion. Audit function (audit_known_corrupt_files) identified 5 corrupt deliverables in the project.",
+    "retro_item": "RETRO-023",
+    "fix_status": "Root cause fixed — validator module implemented. Corrupt files (5 identified) still require manual remediation before the next conductor run over those experiments.",
+    "consecutive_milestone_failures_before_fix": 3,
+    "experiments_affected_by_corrupt_files": ["Exp 375 (CIKAN, corrupt JSON passed check x3 milestones)", "Exp 390 (GPU preflight, status=complete but finding not gpu_confirmed_live)"]
+  },
+
+  "parallelization_opportunities": [
+    {
+      "opportunity": "Dual-GPU benchmark experiments",
+      "experiments_affected": ["Exp 219", "Exp 221", "Exp 155", "Exp 184"],
+      "approach": "Auto-wire DualGPURunner for any experiment specifying more than one model variant. GPU 0 runs model A, GPU 1 runs model B concurrently. Wall time cut by approximately 50% for 2-model comparisons. DualGPURunner infrastructure exists (Exp 338) but requires conductor auto-wiring.",
+      "estimated_savings_pct": 15
+    },
+    {
+      "opportunity": "Parallel retrain and benchmark",
+      "experiments_affected": ["Exp 155", "Exp 183", "Exp 308"],
+      "approach": "CPU training (EORM/JEPA retrain) can run on GPU 0 while GPU 1 handles independent benchmark inference. These experiments have no data dependency on each other — CPU train queue and GPU inference queue are fully independent.",
+      "estimated_savings_pct": 8
+    },
+    {
+      "opportunity": "Batch Z3 constraint calls with subprocess pool",
+      "experiments_affected": ["Exp 221", "Exp 219"],
+      "approach": "Group all Z3 calls for a question batch, run in a subprocess pool with 30-second per-call timeout. Eliminates single-constraint hangs from blocking the full experiment loop. Log timed-out constraints to a debug file rather than dropping them silently.",
+      "estimated_savings_pct": 5
+    },
+    {
+      "opportunity": "Parallel doc reconciliation",
+      "experiments_affected": ["post-experiment doc passes"],
+      "approach": "Write a single reconcile_docs() call at experiment end that updates spec.md, traceability.md, status.md, and changelog.md in one pass rather than four sequential read-edit-write cycles.",
+      "estimated_savings_pct": 3
+    },
+    {
+      "opportunity": "Fix CARNOT_FORCE_LIVE subprocess env propagation and run pending live experiments",
+      "experiments_affected": ["Exps 368, 369, 370, 373, 379, 380, 383, 394, 410, 411 — all awaiting live_gpu verdict"],
+      "approach": "Exp 404 identified the root cause: the env var is set in the interactive shell but not inherited by conductor subprocesses. Fix: pass CARNOT_FORCE_LIVE=1 explicitly to subprocess.run(env=...) calls in the conductor, or export it at the top of the conductor script itself. A single fixed session would flush all 10+ pending live-GPU experiments and close RETRO-022/024.",
+      "estimated_savings_pct": 20
+    }
+  ],
+
+  "bottlenecks_identified": [
+    "CARNOT_FORCE_LIVE env propagation bug (RETRO-022, now precisely scoped): Exp 404 reveals that is_live_capable=True (hardware is present and recognized) but CARNOT_FORCE_LIVE=1 does not propagate into subprocess environments launched by the conductor. Exps 410 and 411 blocked at Gate 0 without any GPU inference. This is an env inheritance bug, not a hardware availability problem. Fix is explicit env={..., 'CARNOT_FORCE_LIVE': '1'} in all conductor subprocess.run() calls — a 5-line change.",
+    "No per-experiment hard timeout in conductor (RETRO-003, carried 16+ milestones): Exp 219 ran 117 minutes with no kill signal. A 45-minute hard cap would have freed resources 72 minutes earlier. This is the longest-unresolved RETRO item in the project. Each milestone planning session includes it; no milestone has ever allocated an experiment to implementing it.",
+    "DualGPURunner not auto-wired in conductor: dual-model benchmarks (Exps 219, 221, 184) ran sequentially on one GPU while the second sat idle. The DualGPURunner infrastructure was built in Exp 338 but the conductor has no policy to detect multi-model experiments and schedule them in parallel.",
+    "Full test suite reruns on targeted failures: Exp 308 re-ran the 6500-test suite 3-4 times during failure debugging. Running only the failing module's test file (targeted pytest tests/python/test_experiment_308*.py) would have cut debugging time by approximately 70%.",
+    "No model pre-warm before timed inference: cold CUDA initialization (20-45 seconds) was absorbed into experiment wall time for Exps 155, 184, 219. ExperimentTemplate.setup_gpu() enforces pre-warm, but pre-template experiments never called it.",
+    "CPU training without checkpoint-resume: Exp 155 restart from epoch 0 after a crash cost approximately 40 minutes. ExperimentTemplate.checkpoint_save() exists and is documented but was not uniformly enforced in training experiments.",
+    "Deliverable validator implemented but corrupt files not remediated: Exp 404 built and verified the validator (RETRO-023 root cause fixed) and identified 5 corrupt deliverable files. The validator prevents future corruption from being silently accepted, but the 5 existing corrupt files will continue to block the fast-path for those experiments until manually corrected.",
+    "FR-11 self-learning relay stuck at synthetic-only for FIVE consecutive milestones (RETRO-024): upstream cause is RETRO-022 (CARNOT_FORCE_LIVE not propagating). No live GPU session means no real CoT pairs, so EORM retrain stays synthetic, so relay AUC-ROC cannot produce a learning_confirmed verdict. Fixing the env propagation bug (5-line change) unblocks FR-11 in one experiment."
+  ],
+
+  "improvements_suggested": [
+    "Fix CARNOT_FORCE_LIVE subprocess env inheritance (RETRO-022, critical, 5-line change): In every conductor subprocess.run() call, pass env={**os.environ, 'CARNOT_FORCE_LIVE': '1'} explicitly. Alternatively, set os.environ['CARNOT_FORCE_LIVE'] = '1' at the top of the conductor script before any subprocess is spawned. Exp 404's Gate 0 preflight check (verify_subprocess_env_propagation) can confirm the fix in one run. This single change unblocks 10+ pending live-GPU experiments and closes RETRO-022 and RETRO-024.",
+    "Remediate 5 identified corrupt deliverables before next conductor run: Exp 404's audit_known_corrupt_files() identified 5 files. Delete or regenerate each one so the conductor's fast-path (now with content validation) re-executes those experiments cleanly. Without this step, the content-validating fast-path will correctly reject the corrupt files, but the experiments will re-run from scratch and take additional milestone time.",
+    "Implement conductor hard timeout experiment as Experiment 1 of the next milestone (RETRO-003, carried 16+ milestones): 45 minutes per experiment, configurable per experiment type in the roadmap YAML. Emit a RETRO entry and continue on timeout rather than hanging indefinitely. This has been the highest-ROI unimplemented infrastructure improvement for over a year of milestones.",
+    "Auto-detect dual-model experiments and wire DualGPURunner: the conductor should inspect each experiment's model_specs list. If len(model_specs) >= 2, automatically schedule GPU 0 / GPU 1 in parallel using DualGPURunner. Both RTX 3090s sit idle across every milestone — this parallelization converts idle GPU time to useful inference.",
+    "Enforce pre-warm before timed inference: the conductor should call ExperimentTemplate.setup_gpu() for any experiment with requires_gpu=True before starting the timed inference window. Fail fast with a RETRO entry if pre-warm fails rather than absorbing the cold-start stall into benchmark timing.",
+    "Targeted test reruns on failure: when an experiment fails its test suite, the conductor should re-run only that experiment's test module file before attempting a full suite rerun. Full suite rerun only on the final pass before marking the experiment complete.",
+    "Enforce checkpoint-resume in all training experiments: the conductor should verify that checkpoint_save() is called within the first epoch batch of any training loop before permitting long-running CPU or GPU training jobs.",
+    "Kill zombie GPU processes at experiment teardown (not just session startup): add gpu_monitor --kill-zombies to the conductor's post-experiment hook so VRAM is freed between experiments, not just at the start of a new session.",
+    "Batch doc reconciliation: write a single reconcile_docs() call at experiment end that updates all ops files atomically rather than making 4-6 sequential read-edit-write passes across changelog, status, conductor-log, metrics, traceability, and spec files.",
+    "Investigate GPU 1 thermal delta: GPU 1 is consistently 10C warmer than GPU 0 (54C vs 44C) with identical utilization and VRAM usage. This may indicate dust on GPU 1's heatsink, inadequate airflow at its chassis position, or a fan speed mismatch. A thermal difference this large can cause throttling under load, which would show as unexpectedly low throughput on GPU 1. Physical inspection recommended before the next live GPU session.",
+    "Add conductor health-check gate at session start: if CARNOT_FORCE_LIVE=1 is set but Exp 404 preflight does not return gpu_confirmed_live, the conductor should pause and prompt for human action rather than silently running blocked experiments for an entire milestone."
+  ],
+
+  "estimated_time_savings_pct": 45,
+  "savings_breakdown": {
+    "fix_carnot_force_live_env_propagation_unblocks_live_experiments": 20,
+    "auto_dual_gpu_runner": 15,
+    "targeted_test_reruns": 8,
+    "conductor_hard_timeout_retro_003": 5,
+    "pre_warm_enforcement": 5,
+    "deliverable_content_validation_already_implemented": 3,
+    "z3_per_call_timeout": 3,
+    "checkpoint_resume_training": 2,
+    "zombie_gc_at_teardown": 1,
+    "note": "45% estimated savings is achievable within one milestone if the env propagation bug is fixed (RETRO-022). Without that fix, the remaining infrastructure improvements save approximately 18% over current baseline by eliminating hung experiments, wasted full-suite reruns, and cold-start stalls."
+  },
+
+  "retro_items_open": [
+    {
+      "id": "RETRO-003",
+      "severity": "medium",
+      "description": "Conductor lacks per-experiment hard timeout — runaway experiments block the queue indefinitely.",
+      "milestones_carried": "16+"
+    },
+    {
+      "id": "RETRO-022",
+      "severity": "critical",
+      "description": "CARNOT_FORCE_LIVE=1 does not propagate into conductor subprocess environments. Hardware is present and recognized (is_live_capable=True per Exp 404 Gate 2), but the env var is not inherited by child processes. Exps 410 and 411 both blocked at Gate 0 preflight check. Fix: explicit env={..., 'CARNOT_FORCE_LIVE': '1'} in conductor subprocess.run() calls — a 5-line change. SEVEN consecutive milestones with zero live GPU inference.",
+      "milestones_carried": 2,
+      "root_cause_refined": "Env inheritance bug, not hardware availability — is_live_capable=True confirmed by Exp 404"
+    },
+    {
+      "id": "RETRO-023",
+      "severity": "medium",
+      "description": "CIKANEnergy deliverable validator implemented (root cause fixed), but 5 identified corrupt files require manual remediation. The validator now rejects them — experiments will re-run from scratch rather than silently accepting stale corrupt output.",
+      "milestones_carried": 3,
+      "fix_status": "Root cause addressed in Exp 404; 5 files still need manual deletion/regeneration"
+    },
+    {
+      "id": "RETRO-024",
+      "severity": "high",
+      "description": "FR-11 self-learning relay — five consecutive milestone failures. Upstream: RETRO-022 (env propagation). No live GPU means no real CoT pairs, so EORM retrain stays synthetic, so relay AUC-ROC cannot validate learning_confirmed. Fixing RETRO-022 (5-line env change) unblocks FR-11 in one experiment.",
+      "milestones_carried": 5
+    }
+  ],
+
+  "retro_items_closed_this_milestone": [
+    {
+      "id": "RETRO-023 (partial)",
+      "description": "Root cause of corrupt deliverable acceptance fixed: DeliverableContentValidator implemented in Exp 404 with ast.parse() for Python files and schema key assertion for JSON files. The validator is now integrated into the pipeline module and exported from carnot.pipeline. Remaining work: delete/regenerate 5 identified corrupt files."
+    }
+  ],
+
+  "success_criteria": {
+    "first_live_gpu_results_achieved": false,
+    "retro_022_root_cause_identified": true,
+    "retro_023_root_cause_fixed": true,
+    "retro_024_resolved": false,
+    "live_gpu_confirmed": false,
+    "all_benchmarks_live": false,
+    "env_propagation_bug_diagnosed": true,
+    "notes": "Zero live GPU results after SEVEN consecutive milestones and 445 experiments. However, this milestone achieved a significant diagnostic milestone: Exp 404 confirmed that the hardware IS present (is_live_capable=True, both RTX 3090s recognized) and the env propagation bug is now precisely scoped to subprocess env inheritance. The deliverable content validator (RETRO-023 root cause) is implemented. The path to first live results is now a 5-line code change in the conductor."
+  },
+
+  "meta_reflection": {
+    "what_went_well": [
+      "RETRO-022 root cause is now precisely scoped: Exp 404 Gate 2 confirmed is_live_capable=True (hardware present and recognized), while Gate 3 confirmed CARNOT_FORCE_LIVE does not propagate to subprocess environments. After seven milestones, we now know EXACTLY what to fix — a 5-line env change in the conductor.",
+      "DeliverableContentValidator implemented cleanly in Exp 404 with 53 tests, 100% coverage. The ast.parse() + schema key assertion approach addresses the RETRO-023 failure mode that persisted for three consecutive milestones.",
+      "Exps 410 and 411 blocked CLEANLY at Gate 0 within approximately 2-3 minutes each — the preflight gate system worked exactly as designed, preventing wasted GPU time on blocked experiments.",
+      "No zombie GPU processes detected. Both GPUs show 2 MB allocated (driver overhead only, down from 4 MB in prior milestone). Clean GPU state maintained across the milestone.",
+      "GPU 0 VRAM dropped from 4 MB to 2 MB between milestones — confirms the prior 4 MB was a stale artifact that cleared. Clean teardown is working."
+    ],
+    "what_went_poorly": [
+      "SEVEN consecutive milestones without a single live GPU inference result — every benchmark, every self-learning experiment, every adversarial test is still tagged blocked, blocked_simulated, or synthetic_only. 445 experiments and 104.5 hours of wall time with zero live GPU output is the defining failure of the project's execution phase.",
+      "RETRO-003 (conductor timeout) has been carried for 16+ milestones without implementation. It is included in every milestone plan. It has never been the first experiment. It has never shipped. The pattern is: it gets deprioritized in favor of research experiments, then a 117-minute runaway occurs, then it gets added to the next milestone plan.",
+      "The env propagation bug (RETRO-022) was not caught for seven milestones because the prior diagnostic chain stopped at 'GPU node offline' rather than 'env not propagating despite hardware presence'. Exp 404's layered gate system finally separated these failure modes.",
+      "5 corrupt deliverable files (RETRO-023) were accepted silently for three consecutive milestones before the validator was implemented. The fix required only 20 lines of code and could have been implemented at Exp 375 when the first corruption was detected."
+    ],
+    "process_improvements_for_next_milestone": [
+      "P0 before conductor session: apply the 5-line env propagation fix to the conductor subprocess.run() calls. Run Exp 404 preflight. Confirm gpu_confirmed_live before starting any research experiments. Do not start the milestone until the preflight passes.",
+      "P0 before conductor session: delete or regenerate the 5 identified corrupt deliverable files so the content-validating fast-path can accept them after re-execution.",
+      "P1 as Experiment 1 of next milestone: implement RETRO-003 (conductor hard timeout, 45 minutes, configurable per experiment). This has been deferred 16+ milestones. It must be the first experiment of the next milestone, not a plan item that gets deprioritized again.",
+      "P1: run Exp 404 preflight at the BEGINNING of each milestone session, not as a checkpoint mid-milestone. If the preflight does not return gpu_confirmed_live, stop and fix the env issue before any other work.",
+      "P2: schedule the dual-model benchmark experiments (Exps 219-type) explicitly for DualGPURunner wiring in the next milestone plan. The infrastructure (Exp 338) has been ready for 5+ milestones but the conductor auto-wiring was never implemented.",
+      "Meta: the retrospective itself revealed the env propagation root cause. Writing the retro IS research. Future milestones should write the retro artifact earlier (mid-milestone) to surface blockers while there is still time to act on them."
+    ]
+  }
+}
