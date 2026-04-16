@@ -1989,3 +1989,4 @@ python/ |
 | 2026-04-16 22:27 UTC | Exp 427: Live precision benchmark — confirm or re- | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
 | 2026-04-16 22:32 UTC | Exp 427: Live precision benchmark — confirm or re- | OK | Deliverable already exists in repo |
 | 2026-04-16 23:17 UTC | Exp 428: Live HumanEval code verification — confir | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
+| 2026-04-16 23:22 UTC | Exp 428: Live HumanEval code verification — confir | OK | Deliverable already exists in repo |
