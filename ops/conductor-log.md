@@ -1943,3 +1943,5 @@ python/ |
 | 2026-04-16 10:46 UTC | Exp 407: Safety KAN classifier — first Tier B prod | OK | Deliverable already exists in repo |
 | 2026-04-16 10:46 UTC | Exp 408: Semantic Energy scorer — logit-space Bolt | OK | Deliverable already exists in repo |
 | 2026-04-16 10:46 UTC | Exp 409: CRANE extraction gate — 1x-cost prompt-si | OK | Deliverable already exists in repo |
+| 2026-04-16 11:51 UTC | Exp 410: Live precision pipeline — 200 GSM8K, 5 va | OK | 81 passed in 3.43s |
+| 2026-04-16 11:52 UTC | Exp 406: JitRL constraint memory — correct Tier 1  | OK | Deliverable already exists in repo |
