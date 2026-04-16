@@ -1954,3 +1954,6 @@ python/ |
 | 2026-04-16 12:36 UTC | Exp 415: FR-11 self-learning relay live — close RE | OK | Deliverable already exists in repo |
 | 2026-04-16 12:36 UTC | Exp 416: MathAgent constraint graph builder — LLME | OK | Deliverable already exists in repo |
 | 2026-04-16 12:36 UTC | Exp 417: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |
+| 2026-04-16 12:56 UTC | Plan milestone 2026.06.24 | OK | 12 tasks proposed |
+| 2026-04-16 12:57 UTC | Exp 406: JitRL constraint memory — correct Tier 1  | OK | Deliverable already exists in repo |
+| 2026-04-16 12:57 UTC | Milestone 2026.06.24 activated | OK | 12 tasks queued |
