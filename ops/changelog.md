@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 383: Combined EORM+JEPA Retrain on Live GPU Pairs)
+
+- 2026-04-16 06:13: Exp 383 implemented — combined EORM + JEPA retrain script targeting live GPU pairs from Exps 379-382.
+  - `scripts/experiment_383_models_retrain.py` — CPU training, no GPU required. Loads real CoT pairs from Exps 379-382 result files.
+  - New helpers: `_evaluate_eorm_auc`, `_pairs_to_contrastive_triples`, `_load_jepa_pairs_from_files`, `_combined_honest_verdict`.
+  - EORM: trains on contrastive triples (200 epochs if ≥50 real pairs). Saves `results/eorm_model_383_real.safetensors`.
+  - JEPA: trains on binary violation pairs (30 epochs if ≥30 real pairs). Saves `results/jepa_predictor_383_real.safetensors`.
+  - Combined `honest_verdict`: both_improved / eorm_only / jepa_only / neither_improved / insufficient_pairs.
+  - `schema = "carnot.combined_retrain.v1"`.
+  - 41 tests pass (`tests/python/test_experiment_383_models_retrain.py`), 100% targeted coverage.
+  - Current verdict: `insufficient_pairs` — Exps 379-382 files contain no real response data (RETRO-015 upstream; CARNOT_FORCE_LIVE=1 required for live run).
+  - SCENARIO-LEARN-048 already present in spec (verifiable-reasoning). No new spec entries required.
+  (User instruction: implement Exp 383 combined EORM+JEPA retrain)
+
 ## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.05.27, Extended Analysis)
 
 - 2026-04-16 03:01: Full operational efficiency retrospective written to `results/operational_retro_2026_05_27.json` (schema="carnot.operational_retro.v3").
