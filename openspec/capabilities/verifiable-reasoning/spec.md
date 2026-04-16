@@ -5048,6 +5048,87 @@ Spec: SCENARIO-INFRA-030 (Exp 425)
 **When** `get_timeout_minutes()` is called
 **Then** the return value is `30`
 
+### REQ-INFRA-025: DualGPUHealthCheck Asserts GPU1 Utilization Within 60 Seconds of Model Load
+
+After models are loaded in a dual-GPU experiment, `check_dual_gpu_health()` must detect
+whether GPU1 is a "zombie" — a GPU that has allocated VRAM (>500 MB) but is doing zero
+compute (util < 1%).  This pattern was observed in RETRO-025: PID 3509070 held 1786 MB on
+GPU1 at 0% utilization for 144+ minutes while GPU0 ran at 88%.
+
+`DualGPUHealthResult` carries structured fields:
+- `gpu0_util_pct`, `gpu1_util_pct`: utilization percentages from nvidia-smi or pynvml
+- `gpu0_temp_c`, `gpu1_temp_c`: temperature in Celsius
+- `gpu1_is_zombie`: `True` when `gpu1_vram_mb > 500` AND `gpu1_util_pct < 1`
+- `temperature_warning`: `True` when any GPU temperature exceeds 80C
+- `recommended_batch_size_factor`: `0.75` when `temperature_warning=True`, else `1.0`
+
+`check_dual_gpu_health(timeout_seconds=60)` uses pynvml (preferred) or falls back to
+`nvidia-smi` subprocess.  When neither is available (CI), it returns safe mock defaults
+(all zeros, no zombie, no temperature warning) and never raises.
+
+`build_gpu_fix_artifact(health, prior_retro_path)` builds a JSON-serializable dict with:
+- `schema='carnot.dual_gpu_fix.v1'`
+- `honest_verdict`: `'zombie_detected'` if `gpu1_is_zombie` else `'gpu1_healthy'`
+- `retro_025_status`: `'zombie_confirmed'` if `gpu1_is_zombie` else `'zombie_cleared'`
+- All fields from `DualGPUHealthResult`
+
+**Acceptance criteria:**
+- When `gpu1_util_pct=0` and `gpu1_vram_mb>500`: `gpu1_is_zombie=True`
+- When pynvml and nvidia-smi are both unavailable: returns safe mock defaults, no exception
+- `build_gpu_fix_artifact` sets `honest_verdict='zombie_detected'` when `gpu1_is_zombie=True`
+
+Spec: SCENARIO-INFRA-031, SCENARIO-INFRA-032 (Exp 426)
+
+### REQ-INFRA-026: ExperimentTemplate.setup_gpu() Reduces Batch Size When GPU Temperature Exceeds 80C
+
+After pre-warm completes, `ExperimentTemplate.setup_gpu()` must call
+`check_dual_gpu_health()` and include the result under the `'dual_gpu_health'` key in
+its return dict.
+
+When `temperature_warning=True` (any GPU > 80C at pre-warm time):
+- Log a WARNING: `'GPU temp > 80C — reducing batch_size by 25%'`
+- The `dual_gpu_health` result's `recommended_batch_size_factor` will be `0.75`
+
+When `gpu1_is_zombie=True`:
+- Log a WARNING: `'GPU1 allocated but idle — DualGPURunner may not be scheduling GPU1.'`
+
+This requirement was motivated by GPU0 reaching 82C (within 1-3C of RTX 3090 throttle
+threshold 83-85C) during the RETRO-025 incident.  The 25% batch reduction gives the GPU
+thermal headroom to avoid the throttle boundary.
+
+**Acceptance criteria:**
+- `setup_gpu()` return dict always contains `'dual_gpu_health'` key after call
+- When `temperature_warning=True`: WARNING logged, `recommended_batch_size_factor=0.75`
+- When `gpu1_is_zombie=True`: WARNING logged identifying zombie
+- CI fallback (no nvidia-smi): `dual_gpu_health` still present with safe defaults
+
+Spec: SCENARIO-INFRA-033 (Exp 426)
+
+### SCENARIO-INFRA-031: GPU1 Zombie Detected When VRAM High and Utilization Zero
+
+**Given** a `DualGPUHealthResult` with `gpu1_vram_mb=1786` and `gpu1_util_pct=0`
+**When** `gpu1_is_zombie` is evaluated
+**Then** `gpu1_is_zombie=True`
+**And** `build_gpu_fix_artifact` produces `honest_verdict='zombie_detected'`
+**And** `retro_025_status='zombie_confirmed'`
+
+### SCENARIO-INFRA-032: CI Mode Returns Safe Defaults When nvidia-smi Unavailable
+
+**Given** pynvml is not installed and nvidia-smi is not found on PATH
+**When** `check_dual_gpu_health()` is called
+**Then** it returns a `DualGPUHealthResult` with all utilization/temperature at 0
+**And** `gpu1_is_zombie=False`
+**And** `temperature_warning=False`
+**And** no exception is raised
+
+### SCENARIO-INFRA-033: Temperature Warning Triggers Batch Size Reduction
+
+**Given** any GPU temperature exceeds 80C at pre-warm time
+**When** `check_dual_gpu_health()` is evaluated
+**Then** `temperature_warning=True`
+**And** `recommended_batch_size_factor=0.75`
+**And** `setup_gpu()` logs a WARNING about temperature and batch reduction
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -5324,6 +5405,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-022 | N/A | Implemented | apply_env_autofix() logs WARNING when fix applied (SCENARIO-INFRA-026, Exp 413). |
 | REQ-INFRA-023 | N/A | Implemented | ExperimentTimeoutWatchdog + ExperimentTimeoutResult + build_timeout_artifact (SCENARIO-INFRA-028/029, Exp 425). Closes RETRO-003 (17+ milestones). |
 | REQ-INFRA-024 | N/A | Implemented | get_timeout_minutes() — default 45 min, configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES (SCENARIO-INFRA-030, Exp 425). |
+| REQ-INFRA-025 | N/A | Implemented | DualGPUHealthResult + check_dual_gpu_health + build_gpu_fix_artifact (SCENARIO-INFRA-031/032, Exp 426). Closes RETRO-025 (GPU1 zombie detection). |
+| REQ-INFRA-026 | N/A | Implemented | setup_gpu() calls check_dual_gpu_health() + dual_gpu_health key + temp-guard WARNING + batch_size_factor=0.75 (SCENARIO-INFRA-033, Exp 426). |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |

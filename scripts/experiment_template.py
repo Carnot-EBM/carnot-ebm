@@ -555,6 +555,66 @@ class ExperimentTemplate:
                 "error": "cpu_fallback",
             }
 
+        # --- Step 9: REQ-INFRA-025/026: DualGPUHealthCheck + temperature guard ---
+        # Call check_dual_gpu_health() after pre-warm so any newly-loaded models
+        # are visible in GPU VRAM.  The result is additive — callers that do not
+        # read 'dual_gpu_health' are unaffected.  This is CI-safe: the function
+        # returns safe defaults when no GPU hardware is present.
+        #
+        # RETRO-025 context: PID 3509070 held 1786 MB on GPU1 at 0% utilization
+        # while GPU0 ran at 88% for 144+ minutes.  GPU0 also hit 82C.  These two
+        # checks directly address both failure modes.
+        try:
+            from carnot.pipeline.dual_gpu_health import (  # noqa: PLC0415
+                check_dual_gpu_health,
+            )
+
+            dual_health = check_dual_gpu_health(timeout_seconds=60)
+            gpu_status["dual_gpu_health"] = {
+                "gpu0_util_pct": dual_health.gpu0_util_pct,
+                "gpu1_util_pct": dual_health.gpu1_util_pct,
+                "gpu0_temp_c": dual_health.gpu0_temp_c,
+                "gpu1_temp_c": dual_health.gpu1_temp_c,
+                "gpu0_vram_mb": dual_health.gpu0_vram_mb,
+                "gpu1_vram_mb": dual_health.gpu1_vram_mb,
+                "gpu1_is_zombie": dual_health.gpu1_is_zombie,
+                "temperature_warning": dual_health.temperature_warning,
+                "recommended_batch_size_factor": dual_health.recommended_batch_size_factor,
+            }
+
+            # RETRO-025 fix 1: GPU1 zombie detection
+            if dual_health.gpu1_is_zombie:
+                _log.warning(
+                    "RETRO-025: GPU1 allocated but idle — DualGPURunner may not be "
+                    "scheduling GPU1. Check model loading in dual-model experiments. "
+                    "(gpu1_vram_mb=%.0f, gpu1_util=%.0f%%)",
+                    dual_health.gpu1_vram_mb,
+                    dual_health.gpu1_util_pct,
+                )
+
+            # RETRO-025 fix 2: temperature guard
+            if dual_health.temperature_warning:
+                _log.warning(
+                    "RETRO-025: GPU temp > 80C — reducing batch_size by 25%% "
+                    "(gpu0_temp=%.0fC, gpu1_temp=%.0fC, recommended_factor=%.2f). "
+                    "RTX 3090 throttle threshold is 83-85C.",
+                    dual_health.gpu0_temp_c,
+                    dual_health.gpu1_temp_c,
+                    dual_health.recommended_batch_size_factor,
+                )
+
+        except Exception as exc:  # pragma: no cover — safety net for import/runtime failures
+            _log.warning(
+                "check_dual_gpu_health failed (%s); dual_gpu_health omitted from status",
+                exc,
+            )
+            gpu_status["dual_gpu_health"] = {
+                "error": str(exc),
+                "gpu1_is_zombie": False,
+                "temperature_warning": False,
+                "recommended_batch_size_factor": 1.0,
+            }
+
         return gpu_status
 
     # ------------------------------------------------------------------
