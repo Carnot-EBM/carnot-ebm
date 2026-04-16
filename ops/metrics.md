@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Exp 380 Live HumanEval Execute
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T04:41:21Z | 2026-04-16T04:55:00Z | Exp 380: wrote experiment_380_humaneval_execute.py (uses LiveGPUGate.require_live_or_blocked + imports all helpers from Exp 369, no duplication); wrote 24 tests covering all 4 gate paths; 115 pass (Exp 379+380+369 combined); updated conductor-log.md + metrics.md | ~14k |
+
+---
+
 ## Session: 2026-04-16 Exp 379 Live Precision Pipeline Execution
 
 ### Turn Log
