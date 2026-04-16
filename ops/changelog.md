@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 403: Operational Retrospective — Milestone 2026.06.10 COMPLETE)
+
+- 2026-04-16 09:33 UTC: Exp 403 retrospective written to `results/operational_retro_2026_06_10.json` (schema="carnot.operational_retro.v4").
+  (User instruction: write operational retrospective for milestone 2026.06.10)
+
+  **Milestone 2026.06.10 answer: first_live_gpu_results_achieved=False.**
+  After SIX consecutive milestones and 403 experiments, Carnot still has zero live GPU results.
+
+  **13 experiments (Exps 390-402), mean=7.5 min/exp (prev: 14.0 min).**
+  Apparent speedup (+46.4%) is entirely from "deliverable already exists" fast-path mode — no actual inference work. NOT a genuine throughput improvement.
+
+  **Success criteria (all False):**
+  - retro_019_resolved: False — Exp 390 has status='complete' but finding='GPU preflight script created.' NOT 'gpu_confirmed_live'.
+  - retro_020_closed: False — cikan_energy.py still contains corrupt JSON from Exp 375; 'class CIKANEnergy' absent. THIRD consecutive miss.
+  - retro_021_closed: False — Exp 399 status='partial'; honest_verdict='learning_confirmed' NOT achieved. FOURTH consecutive miss.
+  - live_gpu_confirmed: False — no experiment in 390-402 produced inference_mode='live_gpu'.
+  - All benchmark criteria (precision/humaneval/adversarial/extraction/relay/SAVeR/semantic/CRANE): False.
+
+  **RETRO items opened:**
+  - **RETRO-022 (CRITICAL — HUMAN ESCALATION):** Live GPU NEVER ran across SIX consecutive milestones. The conductor CANNOT fix a powered-off GPU node. HUMAN ACTION REQUIRED before milestone 2026.06.17. Options: cloud GPU (Lambda/vast.ai/RunPod), RTX 4090 purchase (~$1800), or power on the existing RTX 3090 node.
+  - **RETRO-023 (high):** CIKANEnergy — third consecutive milestone failure. Root cause: 'deliverable already exists' fast-path fires on corrupt JSON file without validating Python content.
+  - **RETRO-024 (high):** FR-11 self-learning relay — fourth consecutive miss. Upstream: RETRO-022.
+
+  **138 tests pass (test_experiment_403_retro.py, 100% targeted coverage).**
+
 ## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.03, Full Analysis)
 
 - 2026-04-16 07:26: Full operational efficiency retrospective written to `results/operational_retro_2026_06_03.json` (schema="carnot.operational_retro.v4").
