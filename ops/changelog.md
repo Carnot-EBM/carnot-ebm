@@ -1,5 +1,40 @@
 # Carnot — Changelog
 
+## 2026-04-16 — Exp 411: Live HumanEval Code Verification (BLOCKED)
+
+- 2026-04-16 12:19 UTC: Implemented `scripts/experiment_411_humaneval_live.py` and
+  `tests/python/test_experiment_411_humaneval_live.py` (44 tests, 100% coverage of new functions).
+
+  **Blocked reason:** Exp 404 preflight `honest_verdict='env_not_propagating'` (required
+  `'gpu_confirmed_live'`). Gate 0 — the new upfront preflight check added in Exp 411 — detected
+  the condition, wrote a blocked artifact to `results/experiment_411_humaneval_live.json`, and
+  exited before creating any ExperimentTemplate or touching the GPU. No simulated fallback used.
+
+  **What was built:**
+  - `_load_preflight(repo_root)` — reads Exp 404 preflight JSON; returns
+    `{"honest_verdict": "missing"}` or `{"honest_verdict": "corrupt"}` on failure (new in Exp 411;
+    not present in Exp 380)
+  - `_write_artifact(tmpl, artifact)` — JSON artifact writer (same pattern as Exp 380)
+  - `_utc_now()` / `_utc_date()` — minimal timestamp helpers for the preflight-blocked artifact
+    written before ExperimentTemplate is created
+  - `main()` — 4-gate sequence: Gate 0 (preflight JSON check, new) → Gate 1 (LiveGPUGate) →
+    Gate 2 (setup_gpu health) → Gate 3 (model load)
+  - All core HumanEval helpers re-imported from Exp 369 (no duplication)
+  - 44 tests covering all gate paths + timestamp helpers + preflight loader edge cases
+
+  **Comparison vs Exp 226 baseline (+3.0pp):**
+  Exp 226 produced `pass@1_before=0.116` (19/164) → `pass@1_after=0.146` (24/164) on a live run.
+  Exp 411 is BLOCKED — GPU env propagation is not fixed (RETRO-022 still open). The +3.0pp
+  result from Exp 226 is the target to confirm. `honest_verdict="code_verification_positive"`
+  can only be claimed once `results/experiment_404_preflight_v2.json` shows
+  `honest_verdict="gpu_confirmed_live"`.
+
+  **Full test suite:** 3058 passed, 2 pre-existing failures (test_319_retro, test_337_retro —
+  unchanged since Exp 380).
+
+  **LIVE RUN PENDING** — requires `source scripts/session_startup.sh` + Exp 404 re-run to
+  produce `honest_verdict="gpu_confirmed_live"`.
+
 ## 2026-04-16 — Exp 410: Live Precision Pipeline Benchmark (BLOCKED)
 
 - 2026-04-16 11:01 UTC: Implemented `scripts/experiment_410_precision_live.py` and
