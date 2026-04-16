@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Exp 410 Live Precision Pipeline Benchmark
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T10:46:18Z | 2026-04-16T11:01:02Z | Exp 410: read Exp 404 preflight (honest_verdict=env_not_propagating, not gpu_confirmed_live); implemented experiment_410_precision_live.py (load_preflight_verdict, build_exp410_artifact, _write_artifact, main with 4-gate sequence + CRANE→LLM fallback); wrote 34 tests covering all new functions; ran 56 tests pass; produced blocked artifact; updated changelog + metrics | ~18k |
+
+---
+
 ## Session: 2026-04-16 Milestone 2026.06.17 Research Planning
 
 ### Turn Log

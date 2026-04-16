@@ -34,7 +34,7 @@ tasks:
     \ returns True: return True (no action).\n     If False: log a warning with the path and\
     \ reason. Delete the file via os.remove(). Return False.\n     Callers should re-implement\
     \ the deliverable when this returns False.\n   - DeliverableContentValidator.audit_known_corrupt_files(project_root:\
-    \ str) -> dict:\n     Checks these known corrupt files and returns {path: status} dict:\n\
+    \ str) -> dict:\n     Checks these known corrupt files and returns (path: status) dict:\n\
     \     python/carnot/models/cikan_energy.py,\n     python/carnot/pipeline/jitrl_memory.py,\n\
     \     python/carnot/models/safety_kan.py,\n     python/carnot/pipeline/semantic_energy_scorer.py,\n\
     \     python/carnot/pipeline/crane_extractor.py\n     Status per file: 'valid_python' /\
@@ -341,8 +341,8 @@ tasks:
     \ write blocked artifact, exit immediately. No simulated fallback.\n   b. ExperimentTemplate(410,\
     \ 'Live precision pipeline', 'results/experiment_410_precision_live.json', requires_gpu=True)\n\
     \   c. tmpl.setup()\n   d. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it',\
-    \ 'Qwen/Qwen3.5-0.8B'])\n   e. tmpl.setup_gpu([{name: Gemma4-E4B-it, hf_id: google/gemma-4-E4B-it,\
-    \ gpu: 0},\n      {name: Qwen3.5-0.8B, hf_id: Qwen/Qwen3.5-0.8B, gpu: 1}])\n   f. Run\
+    \ 'Qwen/Qwen3.5-0.8B'])\n   e. tmpl.setup_gpu([(name: Gemma4-E4B-it, hf_id: google/gemma-4-E4B-it,\
+    \ gpu: 0),\n      (name: Qwen3.5-0.8B, hf_id: Qwen/Qwen3.5-0.8B, gpu: 1)])\n   f. Run\
     \ 200 GSM8K x 5 variants x 2 models (BatchedInferenceRunner, batch_size=8)\n   g. FULL_STACK\
     \ variant uses CRANEExtractionGate (1x inference) then LLMExtractor fallback\n   h. Checkpoint\
     \ every 50 questions via tmpl.checkpoint_save()\n   i. Build artifact: schema='carnot.precision_benchmark.v2',\n\
@@ -374,7 +374,7 @@ tasks:
     \   a. Load results/experiment_404_preflight_v2.json.\n      If honest_verdict != 'gpu_confirmed_live':\
     \ blocked artifact, exit.\n   b. ExperimentTemplate(411, 'Live HumanEval', 'results/experiment_411_humaneval_live.json',\
     \ requires_gpu=True)\n   c. LiveGPUGate.require_live_or_blocked(tmpl, ['google/gemma-4-E4B-it'])\n\
-    \   d. tmpl.setup_gpu([{name: Gemma4-E4B-it, hf_id: google/gemma-4-E4B-it, gpu: 0}])\n\
+    \   d. tmpl.setup_gpu([(name: Gemma4-E4B-it, hf_id: google/gemma-4-E4B-it, gpu: 0)])\n\
     \   e. Load 50 HumanEval problems; generate code with Gemma4-E4B-it\n   f. Run official\
     \ tests (subprocess, 10s timeout) per solution\n   g. For FAILED solutions: CodeExtractor\
     \ + VerifyRepairPipeline repair\n   h. Re-run tests on repaired; run PBT on passing solutions\n\
