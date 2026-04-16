@@ -220,6 +220,12 @@ from carnot.pipeline.live_gpu_gate import (  # noqa: E402
     build_session_startup_script,
     check_session_startup_exists,
 )
+from carnot.pipeline.deliverable_validator import (  # noqa: E402
+    CloudGPUInstructions,
+    DeliverableContentValidator,
+    build_cloud_gpu_instructions,
+    generate_cloud_gpu_script,
+)
 
 __all__ = [
     "AgentStep",
@@ -385,4 +391,8 @@ __all__ = [
     "LiveGPUGate",
     "build_session_startup_script",
     "check_session_startup_exists",
+    "CloudGPUInstructions",
+    "DeliverableContentValidator",
+    "build_cloud_gpu_instructions",
+    "generate_cloud_gpu_script",
 ]
