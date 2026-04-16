@@ -4857,6 +4857,65 @@ A `LiveGPUGate` class in `python/carnot/pipeline/live_gpu_gate.py` provides a ha
 **Then** the function returns `True`
 **And** the spawned subprocess's environment contains `CARNOT_FORCE_LIVE=1`
 
+### REQ-INFRA-019: DeliverableContentValidator Must Guard Conductor Fast-Path
+
+The conductor fast-path must not accept a deliverable file unless it contains valid Python
+source code.  A file that exists but contains JSON or other non-Python content must be
+detected, logged as corrupt, and deleted so that the producing experiment re-runs.
+
+**Acceptance criteria:**
+- `DeliverableContentValidator.is_valid_python(path)` returns `True` only when `ast.parse()`
+  succeeds on the file contents.
+- `DeliverableContentValidator.validate_and_clear(path)` deletes the file and returns `False`
+  when `is_valid_python()` returns `False`.
+- `DeliverableContentValidator.audit_known_corrupt_files(project_root)` returns a
+  `{path: status}` dict with `status` in `{'valid_python', 'corrupt_json', 'missing'}` for
+  each of the five known corrupt modules (RETRO-023 affected files).
+
+Spec: SCENARIO-INFRA-022, SCENARIO-INFRA-023 (Exp 404)
+
+### REQ-INFRA-020: Cloud GPU Setup Script Generated When Local GPU Unavailable
+
+When the local GPU is not live-capable, the preflight experiment must generate a shell
+script at `scripts/setup_cloud_gpu.sh` containing provisioning commands for Lambda Labs,
+vast.ai, and RunPod so the operator has a one-step path to cloud GPU.
+
+**Acceptance criteria:**
+- `build_cloud_gpu_instructions()` returns a `CloudGPUInstructions` dataclass with
+  `lambda_command`, `vastai_command`, `runpod_command`, and `estimated_cost_per_hour_usd`.
+- `generate_cloud_gpu_script(instructions, output_path)` writes a shell script containing
+  all three provider commands.
+- The generated script is referenced in the experiment artifact and the ops status document.
+
+Spec: SCENARIO-INFRA-024 (Exp 404)
+
+### SCENARIO-INFRA-022: DeliverableContentValidator Rejects JSON File as Invalid Python
+
+**Given** a file exists on disk containing only JSON (e.g. `{"experiment": 375}`)
+**When** `DeliverableContentValidator.is_valid_python(path)` is called
+**Then** the function returns `False`
+
+**Given** the same JSON file
+**When** `DeliverableContentValidator.validate_and_clear(path)` is called
+**Then** the function logs a warning, deletes the file, and returns `False`
+
+### SCENARIO-INFRA-023: DeliverableContentValidator Accepts Valid Python Module
+
+**Given** a file exists on disk containing syntactically correct Python source code
+**When** `DeliverableContentValidator.is_valid_python(path)` is called
+**Then** the function returns `True`
+
+**When** `DeliverableContentValidator.validate_and_clear(path)` is called
+**Then** the function returns `True` and does NOT delete the file
+
+### SCENARIO-INFRA-024: Cloud GPU Script Generated on Preflight Failure
+
+**Given** `run_gpu_preflight()` returns `is_live_capable=False`
+**When** Exp 404 preflight v2 runs
+**Then** `scripts/setup_cloud_gpu.sh` is written containing Lambda Labs, vast.ai, and RunPod
+  provisioning commands
+**And** `cloud_gpu_script_generated=True` appears in the result artifact
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -5127,6 +5186,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-016 | N/A | Implemented | RetroJSONEnforcer + check_result_json_exists + audit_missing_jsons (SCENARIO-INFRA-018, Exp 365). Closes RETRO-014. |
 | REQ-INFRA-017 | N/A | Implemented | session_startup.sh + build_session_startup_script + check_session_startup_exists (SCENARIO-INFRA-019/020/021, Exp 377). Part of RETRO-015 fix. |
 | REQ-INFRA-018 | N/A | Implemented | LiveGPUGate + check_env_var + check_gpu_live + require_live + require_live_or_blocked + verify_subprocess_env_propagation (SCENARIO-INFRA-019/020/021, Exp 377). Closes RETRO-015. |
+| REQ-INFRA-019 | N/A | Implemented | DeliverableContentValidator + is_valid_python + validate_and_clear + audit_known_corrupt_files (SCENARIO-INFRA-022/023, Exp 404). Closes RETRO-023. |
+| REQ-INFRA-020 | N/A | Implemented | CloudGPUInstructions + build_cloud_gpu_instructions + generate_cloud_gpu_script + scripts/setup_cloud_gpu.sh (SCENARIO-INFRA-024, Exp 404). |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
