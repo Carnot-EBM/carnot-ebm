@@ -4316,6 +4316,24 @@ Spec: REQ-BENCH-007, SCENARIO-BENCH-014, SCENARIO-BENCH-016
 
 Spec: REQ-BENCH-003, SCENARIO-BENCH-020
 
+### SCENARIO-BENCH-021: Exp 369 Live HumanEval Code Verification Pass@1 After Repair
+
+**Given** Exp 369 runs with `CARNOT_FORCE_LIVE=1` and `diagnose_live_gpu` returns
+  `is_live_capable=True`
+**When** Gemma4-E4B-it generates solutions for 50 HumanEval problems and the
+  CodeExtractor + VerifyRepairPipeline runs on all initially-failing solutions
+**Then** the artifact has `schema="carnot.humaneval_benchmark.v2"` and
+  `inference_mode="live_gpu"`
+**And** `honest_verdict == "code_verification_positive"` iff
+  `inference_mode == "live_gpu"` AND `signed_improvement > 0`
+**And** if `diagnose_live_gpu` returns `is_live_capable=False`, a blocked artifact
+  is emitted immediately with `status="blocked"` — the experiment MUST NOT fall
+  through to simulated mode
+**And** `pbt_bugs_found` is an integer recording how many solutions that passed
+  official tests were subsequently found buggy by property-based testing
+
+Spec: REQ-BENCH-004, SCENARIO-BENCH-021
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script

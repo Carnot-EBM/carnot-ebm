@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 369: Live HumanEval Code Verification Benchmark — Full Stack Re-Run)
+
+- 2026-04-16 00:08: Exp 369 implemented and verified.
+  - `scripts/experiment_369_humaneval_live.py` — Hard CARNOT_FORCE_LIVE=1 gate (no simulated fallback). diagnose_live_gpu() blocks immediately with blocked artifact if is_live_capable=False. Three-stage gates: env var check → diagnose_live_gpu → _load_model_pipeline. CodeExtractor + VerifyRepairPipeline repair loop. PBT (_run_pbt) via determinism+idempotency checks on solutions that pass official tests. Subprocess test execution with 10s timeout (_run_tests_subprocess). honest_verdict="code_verification_positive" ONLY when inference_mode=="live_gpu" AND signed_improvement>0.
+  - `build_humaneval_artifact_v2()` — schema="carnot.humaneval_benchmark.v2", pbt_bugs_found field, signed_improvement (no clamping). SCENARIO-BENCH-021 honest verdict rules enforced.
+  - `tests/python/test_experiment_369_humaneval_live.py` — 69 tests pass, 100% new-function coverage. All main() paths tested via monkeypatch: CARNOT_FORCE_LIVE not set, diagnose_live_gpu blocked, model load fails, success path (schema=v2, inference_mode=live_gpu, status=success). All helpers: HumanEvalResult369, compute_pass_at_1, compute_pass_at_1_after_repair, build_humaneval_artifact_v2, _extract_code, _parse_official_tests, _run_tests, _run_tests_subprocess, _run_pbt, _write_artifact, _process_problem.
+  - SCENARIO-BENCH-021 added to openspec/capabilities/verifiable-reasoning/spec.md.
+  - Full test suite: 3089 passed + 2 pre-existing failures (test_experiment_319_retro.py, test_experiment_337_retro.py — unrelated). Exp 369 tests: 69 all pass.
+  - Live run pending: will measure current stack's improvement over Exp 226 baseline (+3.0pp) when CARNOT_FORCE_LIVE=1 is set with GPU available.
+  (User-requested execution)
+
 ## 2026-04-15 (Exp 368: Live Precision Pipeline Benchmark — First Credible Headline Number)
 
 - 2026-04-15 23:52: Exp 368 verified present and correct.
