@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Exp 379 Live Precision Pipeline Execution
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T04:10:01Z | 2026-04-16T04:35:24Z | Exp 379: wrote experiment_379_precision_execute.py (thin wrapper over Exp 368 pipeline: LiveGPUGate gate, import run_variant/load_gsm8k_questions, build_exp379_artifact with v2 schema + honest_verdict); wrote 22 tests (100% coverage of new functions); ran full suite (3204 pass, 2 pre-existing failures unrelated); updated conductor-log.md + metrics.md | ~12k |
+
+---
+
 ## Session: 2026-04-15 Exp 367 Live Extraction Comparison Verification
 
 ### Turn Log
