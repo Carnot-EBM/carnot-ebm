@@ -1,0 +1,24 @@
+{
+  "experiment": 428,
+  "schema": "carnot.benchmark_confirmation.v1",
+  "run_date": "2026-04-16",
+  "status": "scaffolding_only",
+  "honest_verdict": "live_benchmark_needs_human_triggered_run",
+  "confirmed_from": null,
+  "rerun": false,
+  "reason": "Exp 420 was a live HumanEval verification run (50 problems). Exp 428 was tasked with confirming or re-running. The conductor subagent produced full scaffolding — 24 passing tests + script — but hit the 45-min wall-clock timeout before executing the actual benchmark. HumanEval inference on 50 problems across 2 models takes >45 min on the live GPU path.",
+  "scaffolding_complete": {
+    "script_path": "scripts/experiment_428_humaneval_live_confirmed.py",
+    "test_path": "tests/python/test_experiment_428_humaneval_live_confirmed.py",
+    "tests_passing": 24
+  },
+  "dependencies": {
+    "gpu0_healthy": true,
+    "gpu1_healthy": false,
+    "gpu1_zombie_confirmed": "results/experiment_426_dual_gpu_fix.json",
+    "prior_live_result": "results/experiment_420_humaneval_live.json",
+    "recommendation": "Run scripts/experiment_428_humaneval_live_confirmed.py on a node with both GPUs healthy (RETRO-025 fixed) for a proper confirmation."
+  },
+  "duration_s": 0.0,
+  "notes": "Written by outer-loop Claude Opus 4.7 after the conductor wall-clock timeout fired at 45 min. This is an honest scaffolding-only deliverable; headline HumanEval numbers must not be cited from this file. Exp 226 (which IS live and cited on the roadmap) is the authoritative HumanEval result until Exp 428 runs live."
+}

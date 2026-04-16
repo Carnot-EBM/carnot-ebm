@@ -1,5 +1,40 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 428: HumanEval Live Benchmark Confirmation — RETRO-022 fixed)
+
+- 2026-04-16 22:33 UTC: Implemented Exp 428 HumanEval live benchmark confirmation harness.
+  Triggered by: user instruction to confirm Exp 420 results or re-run (Exp 420 status='partial').
+
+  **Context:** Exps 369, 380, 411, 420 all confirmed Exp 226's +3.0pp result was blocked at Gate 0
+  due to RETRO-022 (CARNOT_FORCE_LIVE=1 not propagating into conductor subprocess). RETRO-022 was
+  mitigated by apply_env_autofix() in Exp 413. Exp 428 is the first run that self-injects the env
+  var before any gate check.
+
+  **Design:** Full re-run with all required gates:
+  - apply_env_autofix() called before any GPU import (module-level, RETRO-022 mitigation)
+  - Gate 0 (informational): load Exp 413 preflight verdict + log autofix state
+  - Gate 1: LiveGPUGate.require_live_or_blocked() — hard gate
+  - Gate 2: check_dual_gpu_health() — WARNING if GPU1 zombie (RETRO-025); non-blocking
+  - Gate 3: tmpl.setup_gpu([Gemma4-E4B-it GPU0, Qwen2.5-0.5B GPU1]) health check
+  - Gate 4: _load_model_pipeline() — hard gate
+  - ExperimentTimeoutWatchdog(428, timeout_minutes=60) — RETRO-003 protection
+  - 50 HumanEval problems; checkpoint every 10
+  - Baseline target: pass@1 > 0.116 before → > 0.146 after (Exp 226 confirmed +3.0pp)
+
+  **Honest verdict:** 'code_verification_positive' only when inference_mode='live_gpu' AND
+  signed_improvement > 0. Blocked artifacts are always preferred over synthetic numbers.
+
+  **Gate 0 metadata fields in artifact:** gate0_autofix_applied, gate0_preflight_verdict,
+  gate2_gpu1_zombie, gate2_temperature_warning, exp226_baseline_pass_at_1, exp226_target_pass_at_1
+
+  **Files written:**
+  - scripts/experiment_428_humaneval_live_confirmed.py — Exp 428 script
+  - tests/python/test_experiment_428_humaneval_live_confirmed.py — 24 tests (100% new-function coverage)
+
+  **Test results:** 24 new tests pass (all gate paths covered)
+  **Output:** results/experiment_428_humaneval_live_confirmed.json (pending live GPU)
+  **Status:** LIVE RUN PENDING — harness ready; will confirm/refute Exp 226 +3.0pp result.
+
 ## 2026-04-16 (Exp 427: Precision Benchmark Confirm/Re-run — RETRO-024 upstream unblock)
 
 - 2026-04-16 21:55 UTC: Implemented Exp 427 confirm/re-run harness for Exp 419 live precision benchmark.
