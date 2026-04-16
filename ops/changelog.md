@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-16 — Exp 410: Live Precision Pipeline Benchmark (BLOCKED)
+
+- 2026-04-16 11:01 UTC: Implemented `scripts/experiment_410_precision_live.py` and
+  `tests/python/test_experiment_410_precision_live.py` (34 tests, 100% coverage of new functions).
+
+  **Blocked reason:** Exp 404 preflight `honest_verdict='env_not_propagating'` (required
+  `'gpu_confirmed_live'`). Script correctly detected the condition, wrote blocked artifact at
+  `results/experiment_410_precision_live.json`, and exited without any inference.
+  No simulated fallback was used.
+
+  **What was built:**
+  - `load_preflight_verdict()` — reads Exp 404 preflight JSON; returns 'missing' on any failure
+  - `build_exp410_artifact()` — v2 schema artifact builder with honest_verdict rules
+    (live_improvement / live_no_improvement / blocked per SCENARIO-BENCH-020)
+  - `main()` — hard gate sequence: preflight verdict → LiveGPUGate → setup_gpu → model load
+  - FULL_STACK variant wired: CRANEExtractionGate primary, LLMConstraintExtractor fallback
+    (CRANE import fails gracefully since crane_extractor.py is corrupt per Exp 404 audit)
+  - 34 tests: 5 preflight tests, 9 artifact builder tests, 2 write tests, 6 GPU-blocked tests,
+    7 success-path tests
+
+  **56 tests pass** (Exp 410 + Exp 379 combined).
+  Headline result: NONE — blocked by RETRO-022 (env propagation not fixed).
+
 ## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.10, Full Analysis)
 
 - 2026-04-16 09:44 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_06_10.json` (schema="carnot.operational_retro.v5").
