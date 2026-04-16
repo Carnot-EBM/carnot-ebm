@@ -237,6 +237,11 @@ from carnot.pipeline.experiment_watchdog import (  # noqa: E402
     build_timeout_artifact,
     get_timeout_minutes,
 )
+from carnot.pipeline.dual_gpu_health import (  # noqa: E402
+    DualGPUHealthResult,
+    build_gpu_fix_artifact,
+    check_dual_gpu_health,
+)
 
 __all__ = [
     "AgentStep",
@@ -413,4 +418,7 @@ __all__ = [
     "ExperimentTimeoutWatchdog",
     "build_timeout_artifact",
     "get_timeout_minutes",
+    "DualGPUHealthResult",
+    "build_gpu_fix_artifact",
+    "check_dual_gpu_health",
 ]
