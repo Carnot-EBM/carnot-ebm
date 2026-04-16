@@ -1871,3 +1871,6 @@ python/ |
 | 2026-04-16 01:46 UTC | Exp 371: EORM real-data retrain — train on live pa | OK | Deliverable already exists in repo |
 | 2026-04-16 02:01 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
 | 2026-04-16 02:01 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
+| 2026-04-16 02:21 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
+| 2026-04-16 02:21 UTC | Exp 372: JEPA real-data retrain — train violation  | OK | Deliverable already exists in repo |
+| 2026-04-16 02:21 UTC | Exp 373: Three-tier pipeline on live GPU — SinkPro | OK | Deliverable already exists in repo |
