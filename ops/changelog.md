@@ -1,5 +1,39 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.31)
+
+- 2026-04-16 16:00 UTC: Full operational efficiency retrospective written to
+  `results/operational_retro_2026_04_31.json` (schema="carnot.operational_retro.v5").
+  Triggered by: user instruction to write operational retro for milestone 2026.04.31.
+
+  **Milestone totals:** 429 experiments, 6183 minutes (103.0 hours) wall time, 14.0 min/experiment mean.
+
+  **Live GPU status at retro time:** GPU 0 active at 91% utilization / 82C / 15736MB (PID 3509070).
+  GPU 1 partial zombie: 1786MB allocated, 0% utilization (new RETRO-025 opened).
+  First milestone retro captured with a live inference process in-flight — positive trend.
+
+  **Top 5 slowest experiments (unchanged historical outliers):**
+  - Exp 219: 117 min — sequential single-GPU inference, no DualGPURunner, Z3 calls blocking
+  - Exp 308: 105 min — full 6500-test suite reruns on each fix iteration
+  - Exp 184: 83 min — cold CUDA init on 3B model, no batching, GPU 1 idle
+  - Exp 221: 78 min — Z3 call without per-call timeout caused 10-minute hang
+  - Exp 155: 78 min — CPU JEPA retrain, no checkpoint-resume, crash forced epoch-0 restart
+
+  **GPU state:** GPU 0 at 82C — within 11C of RTX 3090 throttle threshold (TJmax 93C).
+  Physical cooling inspection recommended before next extended live session.
+
+  **Key bottlenecks (8):** GPU 1 idle VRAM under live process (RETRO-025, new); conductor env
+  propagation workaround not yet systemic (RETRO-022, per-script apply_env_autofix in place);
+  no per-experiment hard timeout (RETRO-003, 17+ milestones); DualGPURunner scheduling not
+  parallelizing GPU 1; full suite reruns on targeted failures; no mid-session preflight gate;
+  5 corrupt deliverables still unremediated (RETRO-023); GPU 0 temperature risk under sustained load.
+
+  **Retro items opened:** RETRO-025 (GPU 1 idle VRAM in live experiment — DualGPURunner scheduling).
+  **Retro items closed:** RETRO-022 (partial — apply_env_autofix workaround operational, systemic fix pending).
+
+  **Estimated savings with all fixes:** 40% reduction. Top leverage: conductor-level RETRO-022 fix
+  (-18%), RETRO-003 hard timeout (-7%), DualGPURunner GPU 1 scheduling fix (-6%), targeted reruns (-5%).
+
 ## 2026-04-16 — Exp 419: Live Precision Pipeline with CRANE Extractor (IMPLEMENTED — awaiting live GPU run)
 
 - 2026-04-16 13:48–14:XX UTC: Implemented `scripts/experiment_419_precision_live.py`,
