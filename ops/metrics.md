@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Exp 389 Milestone 2026.06.03 Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T06:45:14Z | 2026-04-16T07:02:16Z | Exp 389: wrote experiment_389_retro_2026_06_03.py (MilestoneRetro2026_06_03 dataclass, compute_retro_2026_06_03, build_retro_artifact v3, estimate_speedup_pct, load_milestone_results, compute_timing_stats, _check_cikan_implemented, main); wrote test_experiment_389_retro.py (115 tests); ran script to produce results/operational_retro_2026_06_03.json; updated ops/status.md + ops/changelog.md + ops/conductor-log.md; 4 pre-existing failures in full suite (unrelated: tests 319, 337, 295) | ~22k |
+
+---
+
 ## Session: 2026-04-16 Exp 380 Live HumanEval Execute
 
 ### Turn Log

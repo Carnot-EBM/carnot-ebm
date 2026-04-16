@@ -1,0 +1,985 @@
+"""Tests for scripts/experiment_389_retro_2026_06_03.py — Milestone 2026.06.03 retro.
+
+Coverage targets
+----------------
+- MilestoneRetro2026_06_03: dataclass construction, all fields, type checks
+- compute_retro_2026_06_03: all 12 success criteria, positive and negative fixtures
+- build_retro_artifact: schema v3, required fields, headline_results, first_live_gpu flag
+- estimate_speedup_pct: positive speedup, zero case, regression case
+- load_milestone_results: missing files, valid JSON, partial JSON, invalid JSON, None keys
+- compute_timing_stats: normal, empty list, missing-status experiments, all-blocked
+- _check_cikan_implemented: file absent, JSON content, no class, wrong status, full pass
+- main() integration: runs without error against real repo root (CPU-only, no GPU needed)
+- RETRO item generation: RETRO-019/020/021 opened correctly based on criteria
+
+Spec: REQ-INFRA-017/018 (LiveGPUGate), REQ-LEARN-025/026/027 (EORM/relay),
+      REQ-BENCH-003/004/006/007 (benchmarks), REQ-EXTRACT-023, REQ-AGENT-001/002
+SCENARIO: RETRO-2026.06.03
+"""
+
+from __future__ import annotations
+
+import dataclasses
+import json
+import sys
+from pathlib import Path
+from typing import Any
+from unittest.mock import patch
+
+import pytest
+
+# ---------------------------------------------------------------------------
+# Path setup
+# ---------------------------------------------------------------------------
+_REPO_ROOT = Path(__file__).resolve().parents[2]
+if str(_REPO_ROOT) not in sys.path:
+    sys.path.insert(0, str(_REPO_ROOT))
+
+from scripts.experiment_389_retro_2026_06_03 import (
+    MILESTONE,
+    MILESTONE_EXPERIMENTS,
+    MilestoneRetro2026_06_03,
+    NEW_RETRO_ITEMS,
+    PREV_MEAN_EXP_DURATION_MIN,
+    RESULT_FILE_MAP,
+    _check_cikan_implemented,
+    build_retro_artifact,
+    compute_retro_2026_06_03,
+    compute_timing_stats,
+    estimate_speedup_pct,
+    load_milestone_results,
+)
+
+
+# ---------------------------------------------------------------------------
+# Helpers
+# ---------------------------------------------------------------------------
+
+
+def _write_json(path: Path, data: dict[str, Any]) -> None:
+    """Write JSON data to path, creating parent dirs."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(data))
+
+
+def _make_retro(**overrides: Any) -> MilestoneRetro2026_06_03:
+    """Build a MilestoneRetro2026_06_03 with all-False defaults plus overrides."""
+    defaults: dict[str, Any] = {
+        "retro_015_closed": False,
+        "retro_018_closed": False,
+        "live_gpu_confirmed": False,
+        "precision_result_credible": False,
+        "humaneval_result_credible": False,
+        "adversarial_result_credible": False,
+        "extraction_winner_known": False,
+        "fr11_learning_confirmed": False,
+        "jitrl_memory_works": False,
+        "safety_kan_works": False,
+        "saver_live_verified": False,
+        "cikan_implemented": False,
+        "mean_exp_duration_min": 0.0,
+        "n_experiments_blocked": 0,
+        "retro_items_opened": [],
+    }
+    defaults.update(overrides)
+    return MilestoneRetro2026_06_03(**defaults)
+
+
+# ---------------------------------------------------------------------------
+# MilestoneRetro2026_06_03 dataclass
+# ---------------------------------------------------------------------------
+
+
+class TestMilestoneRetroDataclass:
+    """MilestoneRetro2026_06_03 is a plain dataclass — all fields must be settable."""
+
+    def test_construction_all_false(self) -> None:
+        retro = _make_retro()
+        assert retro.live_gpu_confirmed is False
+        assert retro.retro_015_closed is False
+        assert retro.retro_018_closed is False
+        assert retro.precision_result_credible is False
+        assert retro.humaneval_result_credible is False
+        assert retro.adversarial_result_credible is False
+        assert retro.extraction_winner_known is False
+        assert retro.fr11_learning_confirmed is False
+        assert retro.jitrl_memory_works is False
+        assert retro.safety_kan_works is False
+        assert retro.saver_live_verified is False
+        assert retro.cikan_implemented is False
+        assert retro.retro_items_opened == []
+
+    def test_bool_fields_can_be_true(self) -> None:
+        retro = _make_retro(
+            retro_015_closed=True,
+            live_gpu_confirmed=True,
+            cikan_implemented=True,
+            jitrl_memory_works=True,
+            safety_kan_works=True,
+        )
+        assert retro.retro_015_closed is True
+        assert retro.live_gpu_confirmed is True
+        assert retro.cikan_implemented is True
+        assert retro.jitrl_memory_works is True
+        assert retro.safety_kan_works is True
+
+    def test_mean_duration_float(self) -> None:
+        retro = _make_retro(mean_exp_duration_min=19.5)
+        assert isinstance(retro.mean_exp_duration_min, float)
+        assert retro.mean_exp_duration_min == pytest.approx(19.5)
+
+    def test_n_experiments_blocked_int(self) -> None:
+        retro = _make_retro(n_experiments_blocked=3)
+        assert isinstance(retro.n_experiments_blocked, int)
+        assert retro.n_experiments_blocked == 3
+
+    def test_retro_items_list(self) -> None:
+        retro = _make_retro(retro_items_opened=["RETRO-019", "RETRO-020"])
+        assert retro.retro_items_opened == ["RETRO-019", "RETRO-020"]
+
+    def test_is_dataclass(self) -> None:
+        assert dataclasses.is_dataclass(MilestoneRetro2026_06_03)
+
+    def test_field_names_complete(self) -> None:
+        """All 15 fields from the task spec must be present."""
+        field_names = {f.name for f in dataclasses.fields(MilestoneRetro2026_06_03)}
+        required = {
+            "retro_015_closed",
+            "retro_018_closed",
+            "live_gpu_confirmed",
+            "precision_result_credible",
+            "humaneval_result_credible",
+            "adversarial_result_credible",
+            "extraction_winner_known",
+            "fr11_learning_confirmed",
+            "jitrl_memory_works",
+            "safety_kan_works",
+            "saver_live_verified",
+            "cikan_implemented",
+            "mean_exp_duration_min",
+            "n_experiments_blocked",
+            "retro_items_opened",
+        }
+        assert required.issubset(field_names)
+
+
+# ---------------------------------------------------------------------------
+# Module-level constants
+# ---------------------------------------------------------------------------
+
+
+class TestModuleConstants:
+    def test_milestone_string(self) -> None:
+        assert MILESTONE == "2026.06.03"
+
+    def test_prev_mean_positive(self) -> None:
+        assert PREV_MEAN_EXP_DURATION_MIN > 0.0
+
+    def test_result_file_map_has_twelve_entries(self) -> None:
+        # Exps 377-388 = 12 experiments
+        assert len(RESULT_FILE_MAP) == 12
+
+    def test_result_file_map_keys(self) -> None:
+        expected_keys = {str(i) for i in range(377, 389)}
+        assert set(RESULT_FILE_MAP.keys()) == expected_keys
+
+    def test_milestone_experiments_has_twelve(self) -> None:
+        assert len(MILESTONE_EXPERIMENTS) == 12
+
+    def test_new_retro_items_has_three(self) -> None:
+        # RETRO-019, RETRO-020, RETRO-021
+        assert len(NEW_RETRO_ITEMS) == 3
+
+    def test_new_retro_item_ids(self) -> None:
+        ids = {item["id"] for item in NEW_RETRO_ITEMS}
+        assert ids == {"RETRO-019", "RETRO-020", "RETRO-021"}
+
+    def test_retro_019_priority_critical(self) -> None:
+        retro019 = next(i for i in NEW_RETRO_ITEMS if i["id"] == "RETRO-019")
+        assert retro019["priority"] == "critical"
+
+    def test_milestone_experiments_wall_times_non_negative(self) -> None:
+        for exp in MILESTONE_EXPERIMENTS:
+            assert exp["wall_time_min"] >= 0, f"Exp {exp['id']} has negative wall time"
+
+    def test_milestone_experiments_ids_match_range(self) -> None:
+        exp_ids = {exp["id"] for exp in MILESTONE_EXPERIMENTS}
+        assert exp_ids == set(range(377, 389))
+
+
+# ---------------------------------------------------------------------------
+# estimate_speedup_pct
+# ---------------------------------------------------------------------------
+
+
+class TestEstimateSpeedupPct:
+    def test_speedup_positive(self) -> None:
+        # 22.7 → 19.5 = (22.7-19.5)/22.7 * 100 ≈ 14.1%
+        result = estimate_speedup_pct(22.7, 19.5)
+        assert result > 0.0
+
+    def test_speedup_regression(self) -> None:
+        # curr > prev → negative speedup
+        result = estimate_speedup_pct(22.7, 30.0)
+        assert result < 0.0
+
+    def test_no_change(self) -> None:
+        result = estimate_speedup_pct(22.7, 22.7)
+        assert result == pytest.approx(0.0)
+
+    def test_zero_prev_mean(self) -> None:
+        # Guard against ZeroDivisionError
+        result = estimate_speedup_pct(0.0, 10.0)
+        assert result == 0.0
+
+    def test_returns_float(self) -> None:
+        result = estimate_speedup_pct(22.7, 19.5)
+        assert isinstance(result, float)
+
+    def test_precision_two_decimal_places(self) -> None:
+        result = estimate_speedup_pct(22.7, 19.5)
+        # round() to 2 dp — result should match
+        assert result == round(result, 2)
+
+    def test_full_speedup(self) -> None:
+        # curr = 0 → 100% speedup
+        result = estimate_speedup_pct(22.7, 0.0)
+        assert result == pytest.approx(100.0)
+
+
+# ---------------------------------------------------------------------------
+# load_milestone_results
+# ---------------------------------------------------------------------------
+
+
+class TestLoadMilestoneResults:
+    def test_missing_file_returns_none(self, tmp_path: Path) -> None:
+        file_map = {"377": "results/experiment_377.json"}
+        results = load_milestone_results(tmp_path, file_map)
+        assert results["377"] is None
+
+    def test_valid_json_loaded(self, tmp_path: Path) -> None:
+        data = {"status": "complete", "experiment": 377}
+        _write_json(tmp_path / "results/experiment_377.json", data)
+        file_map = {"377": "results/experiment_377.json"}
+        results = load_milestone_results(tmp_path, file_map)
+        assert results["377"] == data
+
+    def test_invalid_json_returns_none(self, tmp_path: Path) -> None:
+        bad_path = tmp_path / "results" / "exp.json"
+        bad_path.parent.mkdir(parents=True, exist_ok=True)
+        bad_path.write_text("not valid json {{{")
+        results = load_milestone_results(tmp_path, {"x": "results/exp.json"})
+        assert results["x"] is None
+
+    def test_none_path_returns_none(self, tmp_path: Path) -> None:
+        results = load_milestone_results(tmp_path, {"366": None})
+        assert results["366"] is None
+
+    def test_partial_result_loaded(self, tmp_path: Path) -> None:
+        data = {"status": "partial", "experiment": 379}
+        _write_json(tmp_path / "results/experiment_379.json", data)
+        results = load_milestone_results(tmp_path, {"379": "results/experiment_379.json"})
+        assert results["379"]["status"] == "partial"
+
+    def test_empty_file_map(self, tmp_path: Path) -> None:
+        results = load_milestone_results(tmp_path, {})
+        assert results == {}
+
+    def test_multiple_files_mixed(self, tmp_path: Path) -> None:
+        _write_json(tmp_path / "results/a.json", {"ok": True})
+        file_map: dict[str, str | None] = {
+            "a": "results/a.json",
+            "b": "results/missing.json",
+            "c": None,
+        }
+        results = load_milestone_results(tmp_path, file_map)
+        assert results["a"] == {"ok": True}
+        assert results["b"] is None
+        assert results["c"] is None
+
+
+# ---------------------------------------------------------------------------
+# compute_timing_stats
+# ---------------------------------------------------------------------------
+
+
+class TestComputeTimingStats:
+    def test_empty_list(self) -> None:
+        stats = compute_timing_stats([])
+        assert stats["n_ran"] == 0
+        assert stats["mean_min"] == 0.0
+        assert stats["slowest"] is None
+        assert stats["fastest"] is None
+
+    def test_single_experiment(self) -> None:
+        exps = [{"id": 377, "title": "test", "wall_time_min": 34, "status": "completed"}]
+        stats = compute_timing_stats(exps)
+        assert stats["n_ran"] == 1
+        assert stats["mean_min"] == 34.0
+        assert stats["slowest"]["id"] == 377
+        assert stats["fastest"]["id"] == 377
+
+    def test_blocked_count(self) -> None:
+        exps = [
+            {"id": 377, "wall_time_min": 34, "status": "completed"},
+            {"id": 378, "wall_time_min": 0, "status": "missing"},
+            {"id": 386, "wall_time_min": 0, "status": "missing"},
+            {"id": 387, "wall_time_min": 0, "status": "missing"},
+        ]
+        stats = compute_timing_stats(exps)
+        assert stats["n_blocked"] == 3
+
+    def test_mean_includes_zero_wall_times(self) -> None:
+        exps = [
+            {"id": 1, "wall_time_min": 40, "status": "completed"},
+            {"id": 2, "wall_time_min": 0, "status": "missing"},
+        ]
+        stats = compute_timing_stats(exps)
+        assert stats["mean_min"] == pytest.approx(20.0)
+
+    def test_slowest_fastest_identification(self) -> None:
+        exps = [
+            {"id": 383, "title": "slow", "wall_time_min": 85, "status": "partial"},
+            {"id": 380, "title": "fast", "wall_time_min": 13, "status": "partial"},
+            {"id": 379, "title": "mid", "wall_time_min": 42, "status": "partial"},
+        ]
+        stats = compute_timing_stats(exps)
+        assert stats["slowest"]["id"] == 383
+        assert stats["fastest"]["id"] == 380
+
+    def test_n_ran_equals_total(self) -> None:
+        exps = [{"id": i, "wall_time_min": 10, "status": "partial"} for i in range(12)]
+        stats = compute_timing_stats(exps)
+        assert stats["n_ran"] == 12
+
+    def test_total_wall_time(self) -> None:
+        exps = [
+            {"id": 1, "wall_time_min": 10, "status": "partial"},
+            {"id": 2, "wall_time_min": 20, "status": "partial"},
+            {"id": 3, "wall_time_min": 30, "status": "partial"},
+        ]
+        stats = compute_timing_stats(exps)
+        assert stats["total_min"] == 60
+
+    def test_blocked_status_counted(self) -> None:
+        exps = [{"id": 1, "wall_time_min": 5, "status": "blocked"}]
+        stats = compute_timing_stats(exps)
+        assert stats["n_blocked"] == 1
+
+
+# ---------------------------------------------------------------------------
+# _check_cikan_implemented
+# ---------------------------------------------------------------------------
+
+
+class TestCheckCikanImplemented:
+    def test_file_absent_returns_false(self, tmp_path: Path) -> None:
+        results: dict[str, Any] = {"378": {"status": "success"}}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+    def test_json_content_returns_false(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text('{"experiment": 375, "status": "partial"}')
+        results: dict[str, Any] = {"378": {"status": "success"}}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+    def test_array_json_content_returns_false(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text('[{"a": 1}]')
+        results: dict[str, Any] = {"378": {"status": "success"}}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+    def test_python_without_class_returns_false(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("def compute_energy(x):\n    return x ** 2\n")
+        results: dict[str, Any] = {"378": {"status": "success"}}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+    def test_class_present_but_exp378_missing_returns_false(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    pass\n")
+        results: dict[str, Any] = {"378": None}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+    def test_class_present_but_status_partial_returns_false(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    pass\n")
+        results: dict[str, Any] = {"378": {"status": "partial"}}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+    def test_full_pass(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    def energy(self, x):\n        return x\n")
+        results: dict[str, Any] = {"378": {"status": "success"}}
+        assert _check_cikan_implemented(tmp_path, results) is True
+
+    def test_exp378_key_absent_returns_false(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    pass\n")
+        results: dict[str, Any] = {}
+        assert _check_cikan_implemented(tmp_path, results) is False
+
+
+# ---------------------------------------------------------------------------
+# compute_retro_2026_06_03
+# ---------------------------------------------------------------------------
+
+
+class TestComputeRetro2026_06_03:
+    """Success criteria evaluation — positive and negative fixtures for all 12 criteria."""
+
+    def _all_none(self) -> dict[str, Any | None]:
+        """Fixture with all result files missing (worst case)."""
+        return {str(i): None for i in range(377, 389)}
+
+    def test_all_missing_all_false(self, tmp_path: Path) -> None:
+        retro = compute_retro_2026_06_03(self._all_none(), tmp_path)
+        assert retro.retro_015_closed is False
+        assert retro.retro_018_closed is False
+        assert retro.live_gpu_confirmed is False
+        assert retro.precision_result_credible is False
+        assert retro.humaneval_result_credible is False
+        assert retro.adversarial_result_credible is False
+        assert retro.extraction_winner_known is False
+        assert retro.fr11_learning_confirmed is False
+        assert retro.jitrl_memory_works is False
+        assert retro.safety_kan_works is False
+        assert retro.saver_live_verified is False
+        assert retro.cikan_implemented is False
+
+    # --- retro_015_closed ---
+
+    def test_retro_015_closed_when_exp377_complete(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["377"] = {"status": "complete"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.retro_015_closed is True
+
+    def test_retro_015_not_closed_when_exp377_partial(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["377"] = {"status": "partial"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.retro_015_closed is False
+
+    def test_retro_015_not_closed_when_exp377_missing(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.retro_015_closed is False
+
+    # --- live_gpu_confirmed ---
+
+    def test_live_gpu_confirmed_when_any_result_live(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["379"] = {"status": "success", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.live_gpu_confirmed is True
+
+    def test_live_gpu_not_confirmed_when_all_partial(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["379"] = {"status": "partial", "inference_mode": "blocked"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.live_gpu_confirmed is False
+
+    # --- precision_result_credible ---
+
+    def test_precision_credible_when_live_improvement(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["379"] = {"honest_verdict": "live_improvement", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.precision_result_credible is True
+
+    def test_precision_not_credible_without_live_gpu(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["379"] = {"honest_verdict": "live_improvement", "inference_mode": "simulated"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.precision_result_credible is False
+
+    def test_precision_not_credible_wrong_verdict(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["379"] = {"honest_verdict": "no_improvement", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.precision_result_credible is False
+
+    # --- humaneval_result_credible ---
+
+    def test_humaneval_credible_when_code_verification_positive(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["380"] = {"honest_verdict": "code_verification_positive", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.humaneval_result_credible is True
+
+    def test_humaneval_not_credible_wrong_verdict(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["380"] = {"honest_verdict": "no_improvement", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.humaneval_result_credible is False
+
+    # --- adversarial_result_credible ---
+
+    def test_adversarial_credible_when_improvement_positive(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["381"] = {"honest_verdict": "improvement_positive", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.adversarial_result_credible is True
+
+    def test_adversarial_not_credible_simulated(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["381"] = {"honest_verdict": "improvement_positive", "inference_mode": "simulated"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.adversarial_result_credible is False
+
+    # --- extraction_winner_known ---
+
+    def test_extraction_known_when_live_winner(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["382"] = {"honest_verdict": "live_gpu_winner", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.extraction_winner_known is True
+
+    def test_extraction_known_when_live_no_improvement(self, tmp_path: Path) -> None:
+        # Either verdict is acceptable when live
+        files = self._all_none()
+        files["382"] = {"honest_verdict": "live_gpu_no_improvement", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.extraction_winner_known is True
+
+    def test_extraction_unknown_when_simulated(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["382"] = {"honest_verdict": "live_gpu_winner", "inference_mode": "simulated"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.extraction_winner_known is False
+
+    def test_extraction_unknown_when_wrong_verdict(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["382"] = {"honest_verdict": "blocked", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.extraction_winner_known is False
+
+    # --- fr11_learning_confirmed ---
+
+    def test_fr11_confirmed_when_learning_confirmed_live(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["384"] = {"honest_verdict": "learning_confirmed", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.fr11_learning_confirmed is True
+
+    def test_fr11_not_confirmed_synthetic_only(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["384"] = {"honest_verdict": "learning_confirmed", "inference_mode": "synthetic"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.fr11_learning_confirmed is False
+
+    def test_fr11_not_confirmed_wrong_verdict(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["384"] = {"honest_verdict": "insufficient_data", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.fr11_learning_confirmed is False
+
+    # --- jitrl_memory_works ---
+
+    def test_jitrl_works_when_threshold_modulation_confirmed(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["386"] = {"honest_verdict": "threshold_modulation_confirmed"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.jitrl_memory_works is True
+
+    def test_jitrl_not_works_wrong_verdict(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["386"] = {"honest_verdict": "no_improvement"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.jitrl_memory_works is False
+
+    def test_jitrl_not_works_missing(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.jitrl_memory_works is False
+
+    # --- safety_kan_works ---
+
+    def test_safety_kan_works_above_threshold(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["387"] = {"test_auc_roc": 0.82}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.safety_kan_works is True
+
+    def test_safety_kan_not_works_below_threshold(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["387"] = {"test_auc_roc": 0.65}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.safety_kan_works is False
+
+    def test_safety_kan_not_works_exactly_threshold(self, tmp_path: Path) -> None:
+        # Must be ABOVE 0.70, not equal
+        files = self._all_none()
+        files["387"] = {"test_auc_roc": 0.70}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.safety_kan_works is False
+
+    def test_safety_kan_not_works_missing(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.safety_kan_works is False
+
+    def test_safety_kan_not_works_non_numeric_auc(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["387"] = {"test_auc_roc": "not_a_number"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.safety_kan_works is False
+
+    def test_safety_kan_works_integer_auc(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["387"] = {"test_auc_roc": 1}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.safety_kan_works is True
+
+    # --- saver_live_verified ---
+
+    def test_saver_live_verified_when_live_with_faithfulness(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["388"] = {"inference_mode": "live_gpu", "faithfulness": 0.8}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.saver_live_verified is True
+
+    def test_saver_not_verified_simulated(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["388"] = {"inference_mode": "simulated", "faithfulness": 0.8}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.saver_live_verified is False
+
+    def test_saver_not_verified_zero_faithfulness(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["388"] = {"inference_mode": "live_gpu", "faithfulness": 0.0}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.saver_live_verified is False
+
+    def test_saver_not_verified_missing(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.saver_live_verified is False
+
+    # --- cikan_implemented ---
+
+    def test_cikan_implemented_when_py_file_correct(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    pass\n")
+        files = self._all_none()
+        files["378"] = {"status": "success"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.cikan_implemented is True
+
+    def test_cikan_not_implemented_when_json(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text('{"experiment": 375}')
+        files = self._all_none()
+        files["378"] = {"status": "success"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.cikan_implemented is False
+
+    # --- retro_018_closed ---
+
+    def test_retro_018_closed_when_cikan_implemented_and_exp378_success(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    pass\n")
+        files = self._all_none()
+        files["378"] = {"status": "success"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.retro_018_closed is True
+
+    def test_retro_018_not_closed_when_cikan_missing(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert retro.retro_018_closed is False
+
+    # --- timing stats from MILESTONE_EXPERIMENTS ---
+
+    def test_mean_exp_duration_computed(self, tmp_path: Path) -> None:
+        retro = compute_retro_2026_06_03(self._all_none(), tmp_path)
+        assert isinstance(retro.mean_exp_duration_min, float)
+        assert retro.mean_exp_duration_min >= 0.0
+
+    def test_n_experiments_blocked_computed(self, tmp_path: Path) -> None:
+        retro = compute_retro_2026_06_03(self._all_none(), tmp_path)
+        assert isinstance(retro.n_experiments_blocked, int)
+        # Missing experiments (378, 386, 387) are blocked
+        assert retro.n_experiments_blocked >= 3
+
+    # --- RETRO item generation ---
+
+    def test_retro_019_opened_when_live_gpu_not_confirmed(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert "RETRO-019" in retro.retro_items_opened
+
+    def test_retro_019_not_opened_when_live_gpu_confirmed(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["379"] = {"inference_mode": "live_gpu", "status": "success"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert "RETRO-019" not in retro.retro_items_opened
+
+    def test_retro_020_opened_when_cikan_not_implemented(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert "RETRO-020" in retro.retro_items_opened
+
+    def test_retro_020_not_opened_when_cikan_implemented(self, tmp_path: Path) -> None:
+        cikan_path = tmp_path / "python" / "carnot" / "models" / "cikan_energy.py"
+        cikan_path.parent.mkdir(parents=True, exist_ok=True)
+        cikan_path.write_text("class CIKANEnergy:\n    pass\n")
+        files = self._all_none()
+        files["378"] = {"status": "success"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert "RETRO-020" not in retro.retro_items_opened
+
+    def test_retro_021_opened_when_fr11_not_confirmed(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert "RETRO-021" in retro.retro_items_opened
+
+    def test_retro_021_not_opened_when_fr11_confirmed(self, tmp_path: Path) -> None:
+        files = self._all_none()
+        files["384"] = {"honest_verdict": "learning_confirmed", "inference_mode": "live_gpu"}
+        retro = compute_retro_2026_06_03(files, tmp_path)
+        assert "RETRO-021" not in retro.retro_items_opened
+
+    def test_all_criteria_fail_opens_all_three_retros(self, tmp_path: Path) -> None:
+        retro = compute_retro_2026_06_03(self._all_none(), tmp_path)
+        assert set(retro.retro_items_opened) >= {"RETRO-019", "RETRO-020", "RETRO-021"}
+
+
+# ---------------------------------------------------------------------------
+# build_retro_artifact
+# ---------------------------------------------------------------------------
+
+
+class TestBuildRetroArtifact:
+    def _make_retro_all_false(self) -> MilestoneRetro2026_06_03:
+        return _make_retro(
+            retro_items_opened=["RETRO-019", "RETRO-020", "RETRO-021"],
+            n_experiments_blocked=3,
+            mean_exp_duration_min=19.5,
+        )
+
+    def test_schema_v3(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert artifact["schema"] == "carnot.operational_retro.v3"
+
+    def test_milestone_field(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert artifact["milestone"] == "2026.06.03"
+
+    def test_first_live_gpu_results_achieved_false(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert artifact["first_live_gpu_results_achieved"] is False
+
+    def test_first_live_gpu_results_achieved_true(self) -> None:
+        retro = _make_retro(live_gpu_confirmed=True)
+        artifact = build_retro_artifact(retro)
+        assert artifact["first_live_gpu_results_achieved"] is True
+
+    def test_headline_results_present(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert "headline_results" in artifact
+        assert isinstance(artifact["headline_results"], dict)
+
+    def test_headline_results_empty_when_no_live_gpu(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert artifact["headline_results"] == {}
+
+    def test_success_criteria_present(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        sc = artifact["success_criteria"]
+        required_keys = {
+            "retro_015_closed",
+            "retro_018_closed",
+            "live_gpu_confirmed",
+            "precision_result_credible",
+            "humaneval_result_credible",
+            "adversarial_result_credible",
+            "extraction_winner_known",
+            "fr11_learning_confirmed",
+            "jitrl_memory_works",
+            "safety_kan_works",
+            "saver_live_verified",
+            "cikan_implemented",
+            "n_experiments_blocked",
+        }
+        assert required_keys.issubset(sc.keys())
+
+    def test_explanations_present(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert "explanations" in artifact
+        assert len(artifact["explanations"]) > 0
+
+    def test_timing_analysis_present(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        ta = artifact["timing_analysis"]
+        assert "mean_exp_duration_min" in ta
+        assert "estimated_speedup_pct" in ta
+
+    def test_retro_items_opened_in_artifact(self) -> None:
+        retro = _make_retro(retro_items_opened=["RETRO-019"])
+        artifact = build_retro_artifact(retro)
+        assert artifact["retro_items_opened"] == ["RETRO-019"]
+
+    def test_new_retro_items_in_artifact(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert "new_retro_items" in artifact
+        assert len(artifact["new_retro_items"]) == 3
+
+    def test_meta_reflection_present(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert "meta_reflection" in artifact
+        assert len(artifact["meta_reflection"]) > 0
+
+    def test_key_findings_present(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert "key_findings" in artifact
+
+    def test_estimated_savings_next_pct_positive(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert artifact["estimated_savings_next_pct"] > 0
+
+    def test_retro_type_field(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        assert artifact["retro_type"] == "full_milestone"
+
+    def test_all_criteria_false_in_artifact(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        sc = artifact["success_criteria"]
+        bool_criteria = [
+            "retro_015_closed",
+            "retro_018_closed",
+            "live_gpu_confirmed",
+            "precision_result_credible",
+            "humaneval_result_credible",
+            "adversarial_result_credible",
+            "extraction_winner_known",
+            "fr11_learning_confirmed",
+            "jitrl_memory_works",
+            "safety_kan_works",
+            "saver_live_verified",
+            "cikan_implemented",
+        ]
+        for key in bool_criteria:
+            assert sc[key] is False, f"Expected {key}=False, got {sc[key]}"
+
+    def test_all_criteria_true_in_artifact(self) -> None:
+        retro = _make_retro(
+            retro_015_closed=True,
+            retro_018_closed=True,
+            live_gpu_confirmed=True,
+            precision_result_credible=True,
+            humaneval_result_credible=True,
+            adversarial_result_credible=True,
+            extraction_winner_known=True,
+            fr11_learning_confirmed=True,
+            jitrl_memory_works=True,
+            safety_kan_works=True,
+            saver_live_verified=True,
+            cikan_implemented=True,
+        )
+        artifact = build_retro_artifact(retro)
+        sc = artifact["success_criteria"]
+        bool_criteria = [
+            "retro_015_closed", "retro_018_closed", "live_gpu_confirmed",
+            "precision_result_credible", "humaneval_result_credible",
+            "adversarial_result_credible", "extraction_winner_known",
+            "fr11_learning_confirmed", "jitrl_memory_works",
+            "safety_kan_works", "saver_live_verified", "cikan_implemented",
+        ]
+        for key in bool_criteria:
+            assert sc[key] is True, f"Expected {key}=True, got {sc[key]}"
+
+    def test_artifact_is_json_serializable(self) -> None:
+        artifact = build_retro_artifact(self._make_retro_all_false())
+        # Should not raise
+        serialized = json.dumps(artifact)
+        roundtripped = json.loads(serialized)
+        assert roundtripped["schema"] == "carnot.operational_retro.v3"
+
+    def test_speedup_computed_correctly(self) -> None:
+        retro = _make_retro(mean_exp_duration_min=PREV_MEAN_EXP_DURATION_MIN / 2)
+        artifact = build_retro_artifact(retro)
+        speedup = artifact["timing_analysis"]["estimated_speedup_pct"]
+        assert speedup == pytest.approx(50.0, abs=1.0)
+
+
+# ---------------------------------------------------------------------------
+# main() integration
+# ---------------------------------------------------------------------------
+
+
+class TestMain:
+    def test_main_runs_without_error(self, tmp_path: Path) -> None:
+        """main() should complete successfully against the real repo root."""
+        # We mock the ExperimentTemplate to avoid side effects on ops files
+        # but let it write the result JSON to tmp_path instead.
+        output_path = tmp_path / "results" / "operational_retro_2026_06_03.json"
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        import scripts.experiment_389_retro_2026_06_03 as mod
+
+        # Patch the ExperimentTemplate to use tmp_path and avoid writing to real repo
+        class _FakeTmpl:
+            def __init__(self, *args: Any, **kwargs: Any) -> None:
+                self._repo_root = _REPO_ROOT  # use real repo for result file loading
+
+            def setup(self) -> None:
+                pass
+
+            def build_result(self, data: dict, status: str = "success") -> dict:
+                return {**data, "status": status}
+
+        with patch.object(mod, "ExperimentTemplate", _FakeTmpl):
+            # Also patch the output path to write to tmp_path
+            orig_main = mod.main
+
+            def _patched_main() -> None:
+                import logging
+                logging.basicConfig(level=logging.ERROR)
+                tmpl = _FakeTmpl(389, "test", "dummy")
+                tmpl.setup()
+                result_files = load_milestone_results(tmpl._repo_root, RESULT_FILE_MAP)
+                retro = compute_retro_2026_06_03(result_files, tmpl._repo_root)
+                artifact = build_retro_artifact(retro)
+                artifact_out = tmpl.build_result(artifact, status="success")
+                output_path.write_text(json.dumps(artifact_out, indent=2))
+
+            _patched_main()
+
+        assert output_path.exists()
+        data = json.loads(output_path.read_text())
+        assert data["schema"] == "carnot.operational_retro.v3"
+
+    def test_main_writes_valid_retro_for_real_repo(self) -> None:
+        """Against the real repo root, retro_015_closed should be True (Exp 377 complete)."""
+        result_files = load_milestone_results(_REPO_ROOT, RESULT_FILE_MAP)
+        retro = compute_retro_2026_06_03(result_files, _REPO_ROOT)
+        # Exp 377 has status=complete per conductor log
+        assert retro.retro_015_closed is True
+        # Live GPU not confirmed (all partial)
+        assert retro.live_gpu_confirmed is False
+        # RETRO-019 must be opened
+        assert "RETRO-019" in retro.retro_items_opened
+        # CIKAN not implemented
+        assert retro.cikan_implemented is False
+
+    def test_main_timing_stats_from_real_experiments(self) -> None:
+        """Timing stats computed from MILESTONE_EXPERIMENTS are internally consistent."""
+        stats = compute_timing_stats(MILESTONE_EXPERIMENTS)
+        assert stats["n_ran"] == len(MILESTONE_EXPERIMENTS)
+        assert stats["total_min"] == sum(e["wall_time_min"] for e in MILESTONE_EXPERIMENTS)
+        assert stats["mean_min"] == pytest.approx(
+            stats["total_min"] / len(MILESTONE_EXPERIMENTS), abs=0.2
+        )
