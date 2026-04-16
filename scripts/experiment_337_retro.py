@@ -1,4 +1,4 @@
-"""Experiment 337: Operational Retrospective for milestone 2026.05.06.
+"""Experiment 337: Operational Retrospective for milestone 2026.04.24.
 
 Spec coverage: REQ-RETRO-003,
                SCENARIO-RETRO-005, SCENARIO-RETRO-006
@@ -26,7 +26,7 @@ This script:
      Recommendation: pre-split experiments predicted to require > 40 turns into
      Phase A (implementation) + Phase B (tests + verification).
 
-6. [ARTIFACT] Writes results/operational_retro_2026_05_06.json with schema
+6. [ARTIFACT] Writes results/operational_retro_2026_04_24.json with schema
    "carnot.operational_retro.v1".
 
 Usage:
@@ -46,7 +46,7 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).parent.parent
 RESULTS_DIR = REPO_ROOT / "results"
 CONDUCTOR_LOG = REPO_ROOT / "ops" / "conductor-log.md"
-OUTPUT_FILE = RESULTS_DIR / "operational_retro_2026_05_06.json"
+OUTPUT_FILE = RESULTS_DIR / "operational_retro_2026_04_24.json"
 
 # ---------------------------------------------------------------------------
 # Milestone experiment wall times (minutes), derived from ops/conductor-log.md.
@@ -143,7 +143,7 @@ _IMPROVEMENTS_IMPLEMENTED: list[dict] = [
             "CARNOT_CONDUCTOR_TIMEOUT_MINUTES (default 45). Added generate_test_stub() "
             "to ExperimentTemplate: idempotent stub writer that creates a test file "
             "skeleton before implementation code is written. Resolves RETRO-001 and NEW-001, "
-            "both carried forward from the 2026.04.29 retro. Estimated speedup 27%."
+            "both carried forward from the 2026.04.23 retro. Estimated speedup 27%."
         ),
     },
     {
@@ -153,7 +153,7 @@ _IMPROVEMENTS_IMPLEMENTED: list[dict] = [
             "Shipped DualGPUMonitor with GPUProcessInfo dataclass and zombie detection. "
             "check_dual_gpu_health() injected into ExperimentTemplate.setup_gpu() as an "
             "additive gpu_monitor_results key. CI-safe fallback when nvidia-smi absent. "
-            "Resolves RETRO-002 and RETRO-003 from the 2026.04.29 retro."
+            "Resolves RETRO-002 and RETRO-003 from the 2026.04.23 retro."
         ),
     },
     {
@@ -163,7 +163,7 @@ _IMPROVEMENTS_IMPLEMENTED: list[dict] = [
             "Shipped DependencyAudit with extract_required_files(), check_dependencies(), "
             "and build_blocked_artifact(). CLI audits an experiment prompt and emits "
             "status='blocked_prereq' before the agent runs if required files are absent. "
-            "Resolves NEW-002 from the 2026.04.29 retro. 34 tests pass."
+            "Resolves NEW-002 from the 2026.04.23 retro. 34 tests pass."
         ),
     },
     {
@@ -285,7 +285,7 @@ def load_wall_times() -> dict[int, float]:
 
 
 def build_retro_resolved_flags() -> dict[str, bool]:
-    """Return resolved flags for each 2026.04.29 action item.
+    """Return resolved flags for each 2026.04.23 action item.
 
     Evidence (conductor log lines):
     - RETRO-001: 2026-04-15 01:51 UTC — Exp 325: "run_experiment_with_timeout.sh written
@@ -307,7 +307,7 @@ def build_retro_resolved_flags() -> dict[str, bool]:
 
 
 def build_carry_over() -> list[dict]:
-    """Build the carry_over list documenting 2026.04.29 retro items and their resolution.
+    """Build the carry_over list documenting 2026.04.23 retro items and their resolution.
 
     Each entry: {id, description, resolved: bool}
 
@@ -321,7 +321,7 @@ def build_carry_over() -> list[dict]:
             "description": (
                 "45-minute hard timeout wrapper for conductor experiments. "
                 "Ships run_experiment_with_timeout.sh; auto-escalates after 45 min. "
-                "Carried forward from 2026.04.22 retro through 2026.04.29 retro "
+                "Carried forward from 2026.04.22 retro through 2026.04.23 retro "
                 "without implementation — finally resolved in Exp 325."
             ),
             "resolved": resolved["RETRO-001"],
@@ -333,7 +333,7 @@ def build_carry_over() -> list[dict]:
                 "Integrate DualGPUMonitor into conductor pre-experiment check. "
                 "Injects GPU state into experiment prompt; detects zombies; "
                 "auto-selects DualGPURunner vs single-GPU. "
-                "Carried forward from 2026.04.22 retro through 2026.04.29 retro "
+                "Carried forward from 2026.04.22 retro through 2026.04.23 retro "
                 "without implementation — resolved in Exp 326."
             ),
             "resolved": resolved["RETRO-002"],
@@ -345,7 +345,7 @@ def build_carry_over() -> list[dict]:
                 "Enforce test-first development in ExperimentTemplate via "
                 "generate_test_stub(). Idempotent stub writer creates a test file "
                 "skeleton before implementation code is written. Introduced as a "
-                "new item in the 2026.04.29 retro."
+                "new item in the 2026.04.23 retro."
             ),
             "resolved": resolved["NEW-001"],
             "resolution": "Implemented in Exp 325 (2026-04-15 01:51 UTC)",
@@ -356,7 +356,7 @@ def build_carry_over() -> list[dict]:
                 "Pre-experiment optional-dependency audit. DependencyAudit CLI "
                 "parses the experiment prompt, checks required files exist in the "
                 "virtualenv/repo, and emits status='blocked_prereq' before the agent "
-                "runs. Introduced as a new item in the 2026.04.29 retro."
+                "runs. Introduced as a new item in the 2026.04.23 retro."
             ),
             "resolved": resolved["NEW-002"],
             "resolution": "Implemented in Exp 327 (2026-04-15 02:29 UTC)",
@@ -422,9 +422,9 @@ def build_bottlenecks(wall_times: dict[int, float]) -> list[dict]:
 
 
 def build_action_items() -> list[dict]:
-    """Build new action items for the 2026.05.06 milestone.
+    """Build new action items for the 2026.04.24 milestone.
 
-    All four items from the 2026.04.29 retro (RETRO-001, RETRO-002, NEW-001, NEW-002)
+    All four items from the 2026.04.23 retro (RETRO-001, RETRO-002, NEW-001, NEW-002)
     were resolved this milestone.  New items address patterns discovered in Exps 325-336.
 
     NEW-003 addresses the max-turns (50) failures in Exp 331 and Exp 334.  Both
@@ -541,7 +541,7 @@ def append_conductor_log_entry(artifact_path: Path, speedup_pct: float) -> None:
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     entry = (
         f"| {timestamp} | Exp 337: Operational retrospective for milestone "
-        f"2026.05.06 | OK | {artifact_path.name} written; "
+        f"2026.04.24 | OK | {artifact_path.name} written; "
         f"n={n} experiments, total={round(total)} min, "
         f"mean={round(total/n, 1)} min/exp, "
         f"top bottleneck=Exp {slowest_id} ({wall_times[slowest_id]} min); "
@@ -559,7 +559,7 @@ def append_conductor_log_entry(artifact_path: Path, speedup_pct: float) -> None:
 
 
 def main() -> None:
-    """Generate the operational retrospective for milestone 2026.05.06."""
+    """Generate the operational retrospective for milestone 2026.04.24."""
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     wall_times = load_wall_times()
@@ -584,7 +584,7 @@ def main() -> None:
 
     output: dict = {
         "schema": "carnot.operational_retro.v1",
-        "milestone": "2026.05.06",
+        "milestone": "2026.04.24",
         "generated_at": now,
         "n_experiments": n_experiments,
         "total_wall_time_min": total_wall_time,
@@ -604,11 +604,11 @@ def main() -> None:
         ),
         "max_turns_failures": [331, 334],
         "meta_reflection": (
-            f"Milestone 2026.05.06 ran {n_experiments} experiments in "
+            f"Milestone 2026.04.24 ran {n_experiments} experiments in "
             f"{total_wall_time} minutes (mean {mean_min} min/exp), a "
             f"{actual_speedup}% improvement over the prior milestone baseline of "
             f"{_PRIOR_MILESTONE_MEAN_MIN} min/exp.  All four action items from the "
-            f"2026.04.29 retro (RETRO-001, RETRO-002, NEW-001, NEW-002) were "
+            f"2026.04.23 retro (RETRO-001, RETRO-002, NEW-001, NEW-002) were "
             f"implemented in the first three experiments of this milestone (Exps 325-327), "
             f"front-loading the process improvements and allowing the remaining nine "
             f"experiments to benefit immediately.  The key remaining bottleneck is "

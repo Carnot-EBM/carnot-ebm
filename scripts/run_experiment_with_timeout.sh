@@ -3,7 +3,7 @@
 # the research conductor (or any other long-running command).
 #
 # REQ-INFRA-001: conductor timeout ≤ 45 min (default).
-# RETRO-001 carried forward from milestones 2026.04.22 and 2026.04.29.
+# RETRO-001 carried forward from milestones 2026.04.22 and 2026.04.23.
 # Exp 308 post-test failure loop consumed 138 min; a 45-min cap saves 93 min.
 #
 # Usage:

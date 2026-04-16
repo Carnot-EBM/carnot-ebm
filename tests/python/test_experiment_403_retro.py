@@ -1,9 +1,9 @@
-"""Tests for scripts/experiment_403_retro_2026_06_10.py — Milestone 2026.06.10 retro.
+"""Tests for scripts/experiment_403_retro_2026_04_29.py — Milestone 2026.04.29 retro.
 
 Coverage targets
 ----------------
-- MilestoneRetro2026_06_10: dataclass construction, all 18 fields, type checks
-- compute_retro_2026_06_10: all 14 success criteria, positive and negative fixtures
+- MilestoneRetro2026_04_29: dataclass construction, all 18 fields, type checks
+- compute_retro_2026_04_29: all 14 success criteria, positive and negative fixtures
 - build_retro_artifact: schema v4, required fields, headline_results, first_live_gpu flag
 - estimate_speedup_pct: positive speedup, zero case, regression case
 - load_milestone_results: missing files, valid JSON, partial JSON, invalid JSON, None keys
@@ -16,7 +16,7 @@ Spec: REQ-INFRA-017/018/019 (LiveGPUGate, preflight),
       REQ-LEARN-025/026/027 (EORM/relay retrain),
       REQ-BENCH-003/004/006/007 (benchmarks), REQ-EXTRACT-023/025, REQ-AGENT-001/002,
       REQ-EBM-031 (semantic energy)
-SCENARIO: RETRO-2026.06.10
+SCENARIO: RETRO-2026.04.29
 """
 
 from __future__ import annotations
@@ -37,16 +37,16 @@ _REPO_ROOT = Path(__file__).resolve().parents[2]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.experiment_403_retro_2026_06_10 import (
+from scripts.experiment_403_retro_2026_04_29 import (
     MILESTONE,
     MILESTONE_EXPERIMENTS,
-    MilestoneRetro2026_06_10,
+    MilestoneRetro2026_04_29,
     NEW_RETRO_ITEMS,
     PREV_MEAN_EXP_DURATION_MIN,
     RESULT_FILE_MAP,
     _check_cikan_implemented,
     build_retro_artifact,
-    compute_retro_2026_06_10,
+    compute_retro_2026_04_29,
     compute_timing_stats,
     estimate_speedup_pct,
     load_milestone_results,
@@ -64,8 +64,8 @@ def _write_json(path: Path, data: dict[str, Any]) -> None:
     path.write_text(json.dumps(data))
 
 
-def _make_retro(**overrides: Any) -> MilestoneRetro2026_06_10:
-    """Build a MilestoneRetro2026_06_10 with all-False defaults plus overrides."""
+def _make_retro(**overrides: Any) -> MilestoneRetro2026_04_29:
+    """Build a MilestoneRetro2026_04_29 with all-False defaults plus overrides."""
     defaults: dict[str, Any] = {
         "retro_019_resolved": False,
         "retro_020_closed": False,
@@ -87,16 +87,16 @@ def _make_retro(**overrides: Any) -> MilestoneRetro2026_06_10:
         "headline_results": {},
     }
     defaults.update(overrides)
-    return MilestoneRetro2026_06_10(**defaults)
+    return MilestoneRetro2026_04_29(**defaults)
 
 
 # ---------------------------------------------------------------------------
-# MilestoneRetro2026_06_10 dataclass
+# MilestoneRetro2026_04_29 dataclass
 # ---------------------------------------------------------------------------
 
 
 class TestMilestoneRetroDataclass:
-    """MilestoneRetro2026_06_10 is a plain dataclass — all fields must be settable."""
+    """MilestoneRetro2026_04_29 is a plain dataclass — all fields must be settable."""
 
     def test_construction_all_false(self) -> None:
         retro = _make_retro()
@@ -153,11 +153,11 @@ class TestMilestoneRetroDataclass:
         assert retro.headline_results == hr
 
     def test_is_dataclass(self) -> None:
-        assert dataclasses.is_dataclass(MilestoneRetro2026_06_10)
+        assert dataclasses.is_dataclass(MilestoneRetro2026_04_29)
 
     def test_field_names_complete(self) -> None:
         """All 18 fields from the task spec must be present."""
-        field_names = {f.name for f in dataclasses.fields(MilestoneRetro2026_06_10)}
+        field_names = {f.name for f in dataclasses.fields(MilestoneRetro2026_04_29)}
         required = {
             "retro_019_resolved",
             "retro_020_closed",
@@ -188,13 +188,13 @@ class TestMilestoneRetroDataclass:
 
 class TestModuleConstants:
     def test_milestone_string(self) -> None:
-        assert MILESTONE == "2026.06.10"
+        assert MILESTONE == "2026.04.29"
 
     def test_prev_mean_positive(self) -> None:
         assert PREV_MEAN_EXP_DURATION_MIN > 0.0
 
     def test_prev_mean_value(self) -> None:
-        # Previous milestone (2026.06.03) had mean of 14.0 min/exp
+        # Previous milestone (2026.04.28) had mean of 14.0 min/exp
         assert PREV_MEAN_EXP_DURATION_MIN == pytest.approx(14.0)
 
     def test_result_file_map_has_thirteen_entries(self) -> None:
@@ -451,11 +451,11 @@ class TestCheckCikanImplemented:
 
 
 # ---------------------------------------------------------------------------
-# compute_retro_2026_06_10
+# compute_retro_2026_04_29
 # ---------------------------------------------------------------------------
 
 
-class TestComputeRetro2026_06_10:
+class TestComputeRetro2026_04_29:
     """Success criteria evaluation — positive and negative fixtures for all 14 criteria."""
 
     def _all_none(self) -> dict[str, Any | None]:
@@ -463,7 +463,7 @@ class TestComputeRetro2026_06_10:
         return {str(i): None for i in range(390, 403)}
 
     def test_all_missing_all_false(self, tmp_path: Path) -> None:
-        retro = compute_retro_2026_06_10(self._all_none(), tmp_path)
+        retro = compute_retro_2026_04_29(self._all_none(), tmp_path)
         assert retro.retro_019_resolved is False
         assert retro.retro_020_closed is False
         assert retro.retro_021_closed is False
@@ -484,19 +484,19 @@ class TestComputeRetro2026_06_10:
     def test_retro_019_resolved_when_gpu_confirmed_live(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["390"] = {"honest_verdict": "gpu_confirmed_live", "status": "complete"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_019_resolved is True
 
     def test_retro_019_not_resolved_when_status_complete_only(self, tmp_path: Path) -> None:
         # "complete" status without gpu_confirmed_live verdict is NOT resolved
         files = self._all_none()
         files["390"] = {"status": "complete", "finding": "GPU preflight script created."}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_019_resolved is False
 
     def test_retro_019_not_resolved_when_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_019_resolved is False
 
     # --- live_gpu_confirmed ---
@@ -504,19 +504,19 @@ class TestComputeRetro2026_06_10:
     def test_live_gpu_confirmed_when_any_result_live(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["394"] = {"status": "success", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.live_gpu_confirmed is True
 
     def test_live_gpu_not_confirmed_when_all_partial(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["394"] = {"status": "partial", "inference_mode": "blocked"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.live_gpu_confirmed is False
 
     def test_live_gpu_confirmed_from_exp390(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["390"] = {"honest_verdict": "gpu_confirmed_live", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.live_gpu_confirmed is True
 
     # --- precision_result_credible ---
@@ -524,19 +524,19 @@ class TestComputeRetro2026_06_10:
     def test_precision_credible_when_live_improvement(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["394"] = {"honest_verdict": "live_improvement", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.precision_result_credible is True
 
     def test_precision_not_credible_without_live_gpu(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["394"] = {"honest_verdict": "live_improvement", "inference_mode": "simulated"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.precision_result_credible is False
 
     def test_precision_not_credible_wrong_verdict(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["394"] = {"honest_verdict": "no_improvement", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.precision_result_credible is False
 
     # --- humaneval_result_credible ---
@@ -544,19 +544,19 @@ class TestComputeRetro2026_06_10:
     def test_humaneval_credible_when_code_verification_positive(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["395"] = {"honest_verdict": "code_verification_positive", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.humaneval_result_credible is True
 
     def test_humaneval_not_credible_wrong_verdict(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["395"] = {"honest_verdict": "no_improvement", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.humaneval_result_credible is False
 
     def test_humaneval_not_credible_simulated(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["395"] = {"honest_verdict": "code_verification_positive", "inference_mode": "simulated"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.humaneval_result_credible is False
 
     # --- adversarial_result_credible ---
@@ -564,13 +564,13 @@ class TestComputeRetro2026_06_10:
     def test_adversarial_credible_when_improvement_positive(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["396"] = {"honest_verdict": "improvement_positive", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.adversarial_result_credible is True
 
     def test_adversarial_not_credible_simulated(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["396"] = {"honest_verdict": "improvement_positive", "inference_mode": "simulated"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.adversarial_result_credible is False
 
     # --- extraction_winner_known ---
@@ -578,25 +578,25 @@ class TestComputeRetro2026_06_10:
     def test_extraction_known_when_live_winner(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["397"] = {"honest_verdict": "live_gpu_winner", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.extraction_winner_known is True
 
     def test_extraction_known_when_live_no_improvement(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["397"] = {"honest_verdict": "live_gpu_no_improvement", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.extraction_winner_known is True
 
     def test_extraction_unknown_when_simulated(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["397"] = {"honest_verdict": "live_gpu_winner", "inference_mode": "simulated"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.extraction_winner_known is False
 
     def test_extraction_unknown_when_blocked(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["397"] = {"honest_verdict": "blocked", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.extraction_winner_known is False
 
     # --- fr11_learning_confirmed (and retro_021_closed alias) ---
@@ -604,32 +604,32 @@ class TestComputeRetro2026_06_10:
     def test_fr11_confirmed_when_learning_confirmed_live(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["399"] = {"honest_verdict": "learning_confirmed", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.fr11_learning_confirmed is True
 
     def test_fr11_not_confirmed_synthetic_only(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["399"] = {"honest_verdict": "learning_confirmed", "inference_mode": "synthetic"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.fr11_learning_confirmed is False
 
     def test_fr11_not_confirmed_wrong_verdict(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["399"] = {"honest_verdict": "insufficient_data", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.fr11_learning_confirmed is False
 
     def test_retro_021_closed_matches_fr11_confirmed(self, tmp_path: Path) -> None:
         # retro_021_closed is the same as fr11_learning_confirmed
         files = self._all_none()
         files["399"] = {"honest_verdict": "learning_confirmed", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_021_closed == retro.fr11_learning_confirmed
 
     def test_retro_021_not_closed_when_partial(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["399"] = {"status": "partial"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_021_closed is False
 
     # --- jitrl_memory_works ---
@@ -637,24 +637,24 @@ class TestComputeRetro2026_06_10:
     def test_jitrl_works_when_threshold_modulation_works_true(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["392"] = {"threshold_modulation_works": True}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.jitrl_memory_works is True
 
     def test_jitrl_not_works_false_value(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["392"] = {"threshold_modulation_works": False}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.jitrl_memory_works is False
 
     def test_jitrl_not_works_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.jitrl_memory_works is False
 
     def test_jitrl_not_works_wrong_key(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["392"] = {"honest_verdict": "threshold_modulation_confirmed"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.jitrl_memory_works is False
 
     # --- safety_kan_works ---
@@ -662,37 +662,37 @@ class TestComputeRetro2026_06_10:
     def test_safety_kan_works_above_threshold(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["393"] = {"test_auroc": 0.82}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.safety_kan_works is True
 
     def test_safety_kan_not_works_below_threshold(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["393"] = {"test_auroc": 0.65}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.safety_kan_works is False
 
     def test_safety_kan_not_works_exactly_threshold(self, tmp_path: Path) -> None:
         # Must be ABOVE 0.70, not equal
         files = self._all_none()
         files["393"] = {"test_auroc": 0.70}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.safety_kan_works is False
 
     def test_safety_kan_not_works_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.safety_kan_works is False
 
     def test_safety_kan_not_works_non_numeric_auroc(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["393"] = {"test_auroc": "not_a_number"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.safety_kan_works is False
 
     def test_safety_kan_works_integer_auroc(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["393"] = {"test_auroc": 1}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.safety_kan_works is True
 
     # --- saver_live_verified ---
@@ -700,24 +700,24 @@ class TestComputeRetro2026_06_10:
     def test_saver_verified_when_live_with_active(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["400"] = {"inference_mode": "live_gpu", "live_verification_active": True}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.saver_live_verified is True
 
     def test_saver_not_verified_simulated(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["400"] = {"inference_mode": "simulated", "live_verification_active": True}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.saver_live_verified is False
 
     def test_saver_not_verified_inactive(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["400"] = {"inference_mode": "live_gpu", "live_verification_active": False}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.saver_live_verified is False
 
     def test_saver_not_verified_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.saver_live_verified is False
 
     # --- semantic_energy_viable ---
@@ -725,30 +725,30 @@ class TestComputeRetro2026_06_10:
     def test_semantic_viable_above_threshold(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["401"] = {"auroc": 0.80}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.semantic_energy_viable is True
 
     def test_semantic_not_viable_below_threshold(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["401"] = {"auroc": 0.65}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.semantic_energy_viable is False
 
     def test_semantic_not_viable_exactly_threshold(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["401"] = {"auroc": 0.70}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.semantic_energy_viable is False
 
     def test_semantic_not_viable_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.semantic_energy_viable is False
 
     def test_semantic_not_viable_non_numeric(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["401"] = {"auroc": "not_a_number"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.semantic_energy_viable is False
 
     # --- crane_extraction_improved ---
@@ -756,18 +756,18 @@ class TestComputeRetro2026_06_10:
     def test_crane_improved_when_beats_arithmetic(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["402"] = {"crane_beats_arithmetic": True}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.crane_extraction_improved is True
 
     def test_crane_not_improved_false_value(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["402"] = {"crane_beats_arithmetic": False}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.crane_extraction_improved is False
 
     def test_crane_not_improved_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.crane_extraction_improved is False
 
     # --- retro_020_closed ---
@@ -778,7 +778,7 @@ class TestComputeRetro2026_06_10:
         cikan_path.write_text("class CIKANEnergy:\n    pass\n")
         files = self._all_none()
         files["391"] = {"status": "success"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_020_closed is True
 
     def test_retro_020_not_closed_when_cikan_json(self, tmp_path: Path) -> None:
@@ -787,23 +787,23 @@ class TestComputeRetro2026_06_10:
         cikan_path.write_text('{"experiment": 375, "status": "partial"}')
         files = self._all_none()
         files["391"] = {"status": "success"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_020_closed is False
 
     def test_retro_020_not_closed_when_missing(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.retro_020_closed is False
 
     # --- timing stats ---
 
     def test_mean_exp_duration_computed(self, tmp_path: Path) -> None:
-        retro = compute_retro_2026_06_10(self._all_none(), tmp_path)
+        retro = compute_retro_2026_04_29(self._all_none(), tmp_path)
         assert isinstance(retro.mean_exp_duration_min, float)
         assert retro.mean_exp_duration_min >= 0.0
 
     def test_n_experiments_blocked_computed(self, tmp_path: Path) -> None:
-        retro = compute_retro_2026_06_10(self._all_none(), tmp_path)
+        retro = compute_retro_2026_04_29(self._all_none(), tmp_path)
         assert isinstance(retro.n_experiments_blocked, int)
         # Exps 392, 393, 401, 402 have status="missing"
         assert retro.n_experiments_blocked >= 4
@@ -812,18 +812,18 @@ class TestComputeRetro2026_06_10:
 
     def test_retro_022_opened_when_live_gpu_not_confirmed(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-022" in retro.retro_items_opened
 
     def test_retro_022_not_opened_when_live_gpu_confirmed(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["394"] = {"inference_mode": "live_gpu", "status": "success"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-022" not in retro.retro_items_opened
 
     def test_retro_023_opened_when_cikan_not_implemented(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-023" in retro.retro_items_opened
 
     def test_retro_023_not_opened_when_cikan_implemented(self, tmp_path: Path) -> None:
@@ -832,40 +832,40 @@ class TestComputeRetro2026_06_10:
         cikan_path.write_text("class CIKANEnergy:\n    pass\n")
         files = self._all_none()
         files["391"] = {"status": "success"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-023" not in retro.retro_items_opened
 
     def test_retro_024_opened_when_fr11_not_confirmed(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-024" in retro.retro_items_opened
 
     def test_retro_024_not_opened_when_fr11_confirmed(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["399"] = {"honest_verdict": "learning_confirmed", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-024" not in retro.retro_items_opened
 
     def test_retro_016_close_opened_when_extraction_known(self, tmp_path: Path) -> None:
         files = self._all_none()
         files["397"] = {"honest_verdict": "live_gpu_winner", "inference_mode": "live_gpu"}
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-016_CLOSE" in retro.retro_items_opened
 
     def test_retro_016_close_not_opened_when_extraction_unknown(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "RETRO-016_CLOSE" not in retro.retro_items_opened
 
     def test_all_criteria_fail_opens_all_three_retros(self, tmp_path: Path) -> None:
-        retro = compute_retro_2026_06_10(self._all_none(), tmp_path)
+        retro = compute_retro_2026_04_29(self._all_none(), tmp_path)
         assert set(retro.retro_items_opened) >= {"RETRO-022", "RETRO-023", "RETRO-024"}
 
     # --- headline_results empty when no live GPU ---
 
     def test_headline_results_empty_when_no_live_gpu(self, tmp_path: Path) -> None:
         files = self._all_none()
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert retro.headline_results == {}
 
     def test_headline_results_populated_when_live_and_credible(self, tmp_path: Path) -> None:
@@ -875,7 +875,7 @@ class TestComputeRetro2026_06_10:
             "inference_mode": "live_gpu",
             "signed_improvement": 0.12,
         }
-        retro = compute_retro_2026_06_10(files, tmp_path)
+        retro = compute_retro_2026_04_29(files, tmp_path)
         assert "exp_394_precision" in retro.headline_results
         assert retro.headline_results["exp_394_precision"]["honest_verdict"] == "live_improvement"
 
@@ -886,7 +886,7 @@ class TestComputeRetro2026_06_10:
 
 
 class TestBuildRetroArtifact:
-    def _make_retro_all_false(self) -> MilestoneRetro2026_06_10:
+    def _make_retro_all_false(self) -> MilestoneRetro2026_04_29:
         return _make_retro(
             retro_items_opened=["RETRO-022", "RETRO-023", "RETRO-024"],
             n_experiments_blocked=4,
@@ -899,7 +899,7 @@ class TestBuildRetroArtifact:
 
     def test_milestone_field(self) -> None:
         artifact = build_retro_artifact(self._make_retro_all_false())
-        assert artifact["milestone"] == "2026.06.10"
+        assert artifact["milestone"] == "2026.04.29"
 
     def test_first_live_gpu_results_achieved_false(self) -> None:
         artifact = build_retro_artifact(self._make_retro_all_false())
@@ -1078,10 +1078,10 @@ class TestBuildRetroArtifact:
 class TestMain:
     def test_main_runs_without_error(self, tmp_path: Path) -> None:
         """main() should complete successfully against the real repo root."""
-        output_path = tmp_path / "results" / "operational_retro_2026_06_10.json"
+        output_path = tmp_path / "results" / "operational_retro_2026_04_29.json"
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        import scripts.experiment_403_retro_2026_06_10 as mod
+        import scripts.experiment_403_retro_2026_04_29 as mod
 
         class _FakeTmpl:
             def __init__(self, *args: Any, **kwargs: Any) -> None:
@@ -1095,7 +1095,7 @@ class TestMain:
 
         with patch.object(mod, "ExperimentTemplate", _FakeTmpl):
             result_files = load_milestone_results(_REPO_ROOT, RESULT_FILE_MAP)
-            retro = compute_retro_2026_06_10(result_files, _REPO_ROOT)
+            retro = compute_retro_2026_04_29(result_files, _REPO_ROOT)
             artifact = build_retro_artifact(retro)
             artifact_out = _FakeTmpl().build_result(artifact, status="complete")
             output_path.write_text(json.dumps(artifact_out, indent=2))
@@ -1107,7 +1107,7 @@ class TestMain:
     def test_main_writes_valid_retro_for_real_repo(self) -> None:
         """Against the real repo root, evaluate actual milestone state."""
         result_files = load_milestone_results(_REPO_ROOT, RESULT_FILE_MAP)
-        retro = compute_retro_2026_06_10(result_files, _REPO_ROOT)
+        retro = compute_retro_2026_04_29(result_files, _REPO_ROOT)
         # Exp 390 has status=complete but NOT gpu_confirmed_live — not resolved
         assert retro.retro_019_resolved is False
         # Live GPU not confirmed (all partial/missing)
@@ -1135,6 +1135,6 @@ class TestMain:
     def test_first_live_gpu_results_achieved_is_false_for_real_repo(self) -> None:
         """The milestone question: live GPU results NOT achieved."""
         result_files = load_milestone_results(_REPO_ROOT, RESULT_FILE_MAP)
-        retro = compute_retro_2026_06_10(result_files, _REPO_ROOT)
+        retro = compute_retro_2026_04_29(result_files, _REPO_ROOT)
         artifact = build_retro_artifact(retro)
         assert artifact["first_live_gpu_results_achieved"] is False

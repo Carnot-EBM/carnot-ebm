@@ -3,7 +3,7 @@
 
 **Purpose:**
     Implement RETRO-002 (GPU zombie detection) and RETRO-003 (dual-GPU utilisation
-    enforcement) from the 2026.04.29 operational retrospective.
+    enforcement) from the 2026.04.23 operational retrospective.
 
     Exp 219/221 wasted ~105 minutes because two models ran sequentially on GPU 0
     while GPU 1 sat idle.  Zombie GPU processes (PIDs 2592400/2595103) held ~1050 MB

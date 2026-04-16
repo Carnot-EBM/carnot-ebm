@@ -2,7 +2,7 @@
 """Experiment 404 — Deliverable validator + GPU preflight v2.
 
 **Researcher summary:**
-    This is the first experiment of milestone 2026.06.17.  It has two jobs:
+    This is the first experiment of milestone 2026.04.30.  It has two jobs:
 
     1. **Fix RETRO-023 at the root:** Implement and exercise ``DeliverableContentValidator``
        as a reusable utility module that every future experiment can import to guard against

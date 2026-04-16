@@ -1,9 +1,9 @@
 {
   "schema": "carnot.operational_retro.v1",
-  "milestone": "2026.05.13",
+  "milestone": "2026.04.25",
   "generated_at": "2026-04-15T15:06:41Z",
   "retro_type": "full_milestone",
-  "note": "Cumulative retrospective covering all 399 experiments through milestone 2026.05.13 (Exps 338–350 = 21 new experiments closing RETRO-003 through RETRO-008 carry-forwards from 2026.05.06). Prior milestone retro is preserved in results/operational_retro_2026_05_06.json.",
+  "note": "Cumulative retrospective covering all 399 experiments through milestone 2026.04.25 (Exps 338–350 = 21 new experiments closing RETRO-003 through RETRO-008 carry-forwards from 2026.04.24). Prior milestone retro is preserved in results/operational_retro_2026_04_24.json.",
 
   "summary": {
     "total_wall_time_minutes": 5818,
@@ -27,7 +27,7 @@
       "duration_minutes": 418,
       "label": "Exp 53: Runtime constraint instrumentation",
       "pct_of_total": 7.2,
-      "root_cause": "Persistent outlier from milestone 2026.05.06 still dominating the cumulative histogram. run_experiment_with_timeout.sh (Exp 325) exists but RETRO-003 (wiring it as mandatory for all conductor-launched experiments) was NOT closed during this milestone. The timeout infrastructure was implemented but never enforced by the conductor. Exp 53 would cost at most ~43 minutes under a 3x-average hard timeout; the remaining ~375 minutes is pure unrecoverable waste.",
+      "root_cause": "Persistent outlier from milestone 2026.04.24 still dominating the cumulative histogram. run_experiment_with_timeout.sh (Exp 325) exists but RETRO-003 (wiring it as mandatory for all conductor-launched experiments) was NOT closed during this milestone. The timeout infrastructure was implemented but never enforced by the conductor. Exp 53 would cost at most ~43 minutes under a 3x-average hard timeout; the remaining ~375 minutes is pure unrecoverable waste.",
       "category": "no_timeout_guard_enforcement",
       "retro_status": "RETRO-003 remains open — tooling built (Exp 325) but not wired into conductor"
     },
@@ -113,7 +113,7 @@
   ],
 
   "improvements_suggested": [
-    "ENFORCE_RETRO_003_TIMEOUT_NOW — HIGHEST PRIORITY: Wire run_experiment_with_timeout.sh as the mandatory conductor wrapper before milestone 2026.05.20 begins. Set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=45 (3x current 15-min average). This is the single change with the highest ROI — Exp 53 (418 min) alone justifies it. The tooling already exists; the conductor config change is a one-line environment variable.",
+    "ENFORCE_RETRO_003_TIMEOUT_NOW — HIGHEST PRIORITY: Wire run_experiment_with_timeout.sh as the mandatory conductor wrapper before milestone 2026.04.26 begins. Set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=45 (3x current 15-min average). This is the single change with the highest ROI — Exp 53 (418 min) alone justifies it. The tooling already exists; the conductor config change is a one-line environment variable.",
     "CLOSE_RETRO_005_ZOMBIE_KILL: Add gpu_monitor.py --kill-zombies (without --dry-run) to the conductor inter-experiment cleanup step. Call it after each experiment artifact is written, before starting the next. Also call it at session startup via session_startup.sh --kill-zombies. The 4MB residual VRAM is growing; auto-kill prevents accumulation.",
     "LIVE_GPU_INFERENCE_INTEGRATION_TEST: Write a single 5-minute smoke test that loads Qwen3.5-0.8B on GPU 0, runs 5 GSM8K questions via BatchedInferenceRunner, and writes a results JSON. Gate every GPU-dependent experiment on this smoke test passing (checked once per session by session_startup.sh). This will prevent all four live-inference experiments from falling back to simulated mode in the next milestone.",
     "PRESPLIT_HIGH_COMPLEXITY_EXPERIMENTS_AT_PLAN_TIME: When writing the milestone plan (research-roadmap-next.yaml), add expected_complexity: high to experiments with >3 deliverables. The conductor should automatically split these into Phase A (implementation + unit tests) and Phase B (integration + artifact + docs). EORM (Exp 346) should have been two separate experiments. Prevents 56-minute single-experiment blocks and reduces max-turn-limit risk.",
@@ -134,7 +134,7 @@
   },
 
   "estimated_time_savings_pct": 32,
-  "estimated_time_savings_rationale": "Four of six RETRO items (004, 006, 007, 008) are now closed. These were estimated at ~30% collective savings in the prior retro. RETRO-003 (timeout) and RETRO-005 (zombie kill) remain open, representing ~13% of theoretical savings. With RETRO-003 enforced, Exp 53 alone saves ~375 minutes (~7% of 5392 baseline). DualGPU default (RETRO-004 closed) applies to future experiments. BatchedInferenceRunner default (RETRO-008 closed) applies to future experiments. Live GPU smoke test (new recommendation) enables real inference data, enabling EORM/JEPA to produce meaningful results rather than synthetic-only baselines. Combined: 32% improvement estimate for next milestone, slightly below the prior retro's 38% prediction because RETRO-003 was not closed as planned. If RETRO-003 is closed before 2026.05.20, the savings should reach 35-40%.",
+  "estimated_time_savings_rationale": "Four of six RETRO items (004, 006, 007, 008) are now closed. These were estimated at ~30% collective savings in the prior retro. RETRO-003 (timeout) and RETRO-005 (zombie kill) remain open, representing ~13% of theoretical savings. With RETRO-003 enforced, Exp 53 alone saves ~375 minutes (~7% of 5392 baseline). DualGPU default (RETRO-004 closed) applies to future experiments. BatchedInferenceRunner default (RETRO-008 closed) applies to future experiments. Live GPU smoke test (new recommendation) enables real inference data, enabling EORM/JEPA to produce meaningful results rather than synthetic-only baselines. Combined: 32% improvement estimate for next milestone, slightly below the prior retro's 38% prediction because RETRO-003 was not closed as planned. If RETRO-003 is closed before 2026.04.26, the savings should reach 35-40%.",
 
   "estimated_next_milestone_wall_time_minutes": 3955,
   "estimated_next_milestone_rationale": "5818 minutes baseline × (1 - 0.32) ≈ 3955 minutes for the same experiment count. If Exp 53 is excluded from the baseline (as it would be under a timeout regime), the calculation is (5818 - 375) × (1 - 0.25) ≈ 4085 minutes — comparable. The 32% estimate is conservative; if live GPU inference is successfully unlocked, EORM/JEPA experiments will generate real learning signal and may complete faster per experiment.",
@@ -164,7 +164,7 @@
       "status": "OPEN — critical carry-forward for second consecutive milestone",
       "priority": "critical",
       "estimated_savings_pct": 10,
-      "note": "This RETRO item was open at end of 2026.05.06 and is still open at end of 2026.05.13. The tooling exists. The only missing piece is conductor configuration. Must be closed before 2026.05.20 begins."
+      "note": "This RETRO item was open at end of 2026.04.24 and is still open at end of 2026.04.25. The tooling exists. The only missing piece is conductor configuration. Must be closed before 2026.04.26 begins."
     },
     {
       "id": "RETRO-005",
@@ -201,7 +201,7 @@
   "top_3_highest_leverage_actions": [
     {
       "rank": 1,
-      "action": "Enforce RETRO-003 timeout before 2026.05.20 begins",
+      "action": "Enforce RETRO-003 timeout before 2026.04.26 begins",
       "effort": "very low — set CARNOT_CONDUCTOR_TIMEOUT_MINUTES=45 in conductor config",
       "expected_savings_minutes_lower": 375,
       "expected_savings_minutes_upper": 600,
@@ -225,5 +225,5 @@
     }
   ],
 
-  "meta_reflection": "Milestone 2026.05.13 closed 4 of 6 carry-forward RETRO items from the prior milestone — a good closure rate. The 21 new experiments averaged 20.3 min/exp, a 42% regression vs the prior 14.3 min/exp baseline. This regression is explainable: the milestone was deliberately front-loaded with infrastructure (Exp 338, 339) and high-complexity algorithmic work (Exp 346 EORM at 56 min). The more concerning finding is that RETRO-003 (timeout guard) was not closed for the second consecutive milestone. The tooling exists in run_experiment_with_timeout.sh; the conductor config change has been recommended twice. This represents a process failure: a known high-ROI improvement is being repeatedly deferred. A rule for the next milestone: RETRO items that survive two consecutive milestones must be addressed in the first experiment of the following milestone, before any new work begins. The second structural finding is that all four live GPU experiments fell back to simulated mode — the hardware is available and idle, but the inference pipeline from conductor to model is not autonomously verified at session start. RETRO-009 (live GPU smoke test) is the fix. Both findings share a pattern: the infrastructure to solve the problem exists, but it is not wired into the automated path. The next milestone's first priority should be closing the gap between 'tooling exists' and 'tooling runs automatically.'"
+  "meta_reflection": "Milestone 2026.04.25 closed 4 of 6 carry-forward RETRO items from the prior milestone — a good closure rate. The 21 new experiments averaged 20.3 min/exp, a 42% regression vs the prior 14.3 min/exp baseline. This regression is explainable: the milestone was deliberately front-loaded with infrastructure (Exp 338, 339) and high-complexity algorithmic work (Exp 346 EORM at 56 min). The more concerning finding is that RETRO-003 (timeout guard) was not closed for the second consecutive milestone. The tooling exists in run_experiment_with_timeout.sh; the conductor config change has been recommended twice. This represents a process failure: a known high-ROI improvement is being repeatedly deferred. A rule for the next milestone: RETRO items that survive two consecutive milestones must be addressed in the first experiment of the following milestone, before any new work begins. The second structural finding is that all four live GPU experiments fell back to simulated mode — the hardware is available and idle, but the inference pipeline from conductor to model is not autonomously verified at session start. RETRO-009 (live GPU smoke test) is the fix. Both findings share a pattern: the infrastructure to solve the problem exists, but it is not wired into the automated path. The next milestone's first priority should be closing the gap between 'tooling exists' and 'tooling runs automatically.'"
 }

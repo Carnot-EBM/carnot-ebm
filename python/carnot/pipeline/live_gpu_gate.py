@@ -1,7 +1,7 @@
 """LiveGPUGate — hard gate that ALL GPU experiments must call at their start.
 
 **Researcher summary (RETRO-015):**
-    Four consecutive milestones (2026.05.06, 2026.05.13, 2026.05.20, 2026.05.27)
+    Four consecutive milestones (2026.04.24, 2026.04.25, 2026.04.26, 2026.04.27)
     produced zero live GPU results because ``CARNOT_FORCE_LIVE=1`` was never exported
     into conductor subprocess environments.  ``scripts/conductor_gpu_env.sh`` was
     created in Exp 365 (RETRO-012 fix) to export the variable, but it was never

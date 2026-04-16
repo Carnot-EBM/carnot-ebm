@@ -40,9 +40,9 @@
   Exp 419 live run will produce Carnot's first credible precision-stack numbers when
   `inference_mode='live_gpu'` and `signed_improvement > 0` for FULL_STACK/Gemma4-E4B-it.
 
-## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.17, Full Analysis)
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.30, Full Analysis)
 
-- 2026-04-16 12:41 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_06_17.json` (schema="carnot.operational_retro.v5").
+- 2026-04-16 12:41 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_04_30.json` (schema="carnot.operational_retro.v5").
   This is the HOW-we-executed analysis, separate from research results.
 
   **Milestone totals (cumulative):** 445 experiments, 6273 minutes (104.5 hours) wall time, 14.0 min/experiment mean.
@@ -70,7 +70,7 @@
   - RETRO-023 (medium, root cause fixed): 5 corrupt deliverable files need manual deletion.
   - RETRO-024 (high): FR-11 self-learning relay — 5th consecutive miss, upstream RETRO-022.
   - RETRO-003 (medium): Conductor timeout — 16+ milestones carried, must be Experiment 1 of next milestone.
-  (User-requested — operational efficiency retrospective for milestone 2026.06.17)
+  (User-requested — operational efficiency retrospective for milestone 2026.04.30)
 
 ## 2026-04-16 — Exp 411: Live HumanEval Code Verification (BLOCKED)
 
@@ -130,9 +130,9 @@
   **56 tests pass** (Exp 410 + Exp 379 combined).
   Headline result: NONE — blocked by RETRO-022 (env propagation not fixed).
 
-## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.10, Full Analysis)
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.29, Full Analysis)
 
-- 2026-04-16 09:44 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_06_10.json` (schema="carnot.operational_retro.v5").
+- 2026-04-16 09:44 UTC: Full operational efficiency retrospective written to `results/operational_retro_2026_04_29.json` (schema="carnot.operational_retro.v5").
   This is the HOW-we-executed analysis, separate from research results.
 
   **Milestone totals (cumulative):** 442 experiments, 6166 minutes (102.8 hours) wall time, 14.0 min/experiment mean.
@@ -158,14 +158,14 @@
   - RETRO-023 (high): CIKANEnergy — third consecutive miss, root cause deliverable fast-path not validating Python AST.
   - RETRO-024 (high): FR-11 self-learning relay — fourth consecutive miss, upstream RETRO-022.
   - RETRO-003 (medium): Conductor timeout — carried 15+ milestones, never prioritized.
-  (User-requested — operational efficiency retrospective for milestone 2026.06.10)
+  (User-requested — operational efficiency retrospective for milestone 2026.04.29)
 
-## 2026-04-16 (Exp 403: Operational Retrospective — Milestone 2026.06.10 COMPLETE)
+## 2026-04-16 (Exp 403: Operational Retrospective — Milestone 2026.04.29 COMPLETE)
 
-- 2026-04-16 09:33 UTC: Exp 403 retrospective written to `results/operational_retro_2026_06_10.json` (schema="carnot.operational_retro.v4").
-  (User instruction: write operational retrospective for milestone 2026.06.10)
+- 2026-04-16 09:33 UTC: Exp 403 retrospective written to `results/operational_retro_2026_04_29.json` (schema="carnot.operational_retro.v4").
+  (User instruction: write operational retrospective for milestone 2026.04.29)
 
-  **Milestone 2026.06.10 answer: first_live_gpu_results_achieved=False.**
+  **Milestone 2026.04.29 answer: first_live_gpu_results_achieved=False.**
   After SIX consecutive milestones and 403 experiments, Carnot still has zero live GPU results.
 
   **13 experiments (Exps 390-402), mean=7.5 min/exp (prev: 14.0 min).**
@@ -179,15 +179,15 @@
   - All benchmark criteria (precision/humaneval/adversarial/extraction/relay/SAVeR/semantic/CRANE): False.
 
   **RETRO items opened:**
-  - **RETRO-022 (CRITICAL — HUMAN ESCALATION):** Live GPU NEVER ran across SIX consecutive milestones. The conductor CANNOT fix a powered-off GPU node. HUMAN ACTION REQUIRED before milestone 2026.06.17. Options: cloud GPU (Lambda/vast.ai/RunPod), RTX 4090 purchase (~$1800), or power on the existing RTX 3090 node.
+  - **RETRO-022 (CRITICAL — HUMAN ESCALATION):** Live GPU NEVER ran across SIX consecutive milestones. The conductor CANNOT fix a powered-off GPU node. HUMAN ACTION REQUIRED before milestone 2026.04.30. Options: cloud GPU (Lambda/vast.ai/RunPod), RTX 4090 purchase (~$1800), or power on the existing RTX 3090 node.
   - **RETRO-023 (high):** CIKANEnergy — third consecutive milestone failure. Root cause: 'deliverable already exists' fast-path fires on corrupt JSON file without validating Python content.
   - **RETRO-024 (high):** FR-11 self-learning relay — fourth consecutive miss. Upstream: RETRO-022.
 
   **138 tests pass (test_experiment_403_retro.py, 100% targeted coverage).**
 
-## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.06.03, Full Analysis)
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.28, Full Analysis)
 
-- 2026-04-16 07:26: Full operational efficiency retrospective written to `results/operational_retro_2026_06_03.json` (schema="carnot.operational_retro.v4").
+- 2026-04-16 07:26: Full operational efficiency retrospective written to `results/operational_retro_2026_04_28.json` (schema="carnot.operational_retro.v4").
   This is the HOW-we-executed analysis, separate from research results.
 
   **Milestone totals:** 441 experiments, 6130 minutes (102.2 hours) wall time, 14.0 min/experiment mean (prior: 22.7 min, apparent 38% speedup — partially from fast-fail blocked experiments).
@@ -206,12 +206,12 @@
   **Estimated savings with fixes:** 38% reduction in next-milestone wall time. Top leverage: auto-wire DualGPURunner (-15%), targeted test reruns (-8%), conductor hard timeout (-5%), pre-warm enforcement (-5%).
 
   **Open RETRO items:** RETRO-003 (conductor timeout, 15+ milestones carried), RETRO-019 (GPU node offline, 5th milestone critical), RETRO-020 (CIKAN not implemented, 2nd carry), RETRO-021 (FR-11 relay synthetic-only, 3rd carry).
-  (User-requested — operational efficiency retrospective for milestone 2026.06.03)
+  (User-requested — operational efficiency retrospective for milestone 2026.04.28)
 
-## 2026-04-16 (Exp 389: Operational Retrospective — Milestone 2026.06.03 COMPLETE)
+## 2026-04-16 (Exp 389: Operational Retrospective — Milestone 2026.04.28 COMPLETE)
 
-- 2026-04-16 06:55: Exp 389 retrospective written to `results/operational_retro_2026_06_03.json` (schema="carnot.operational_retro.v3").
-  (User instruction: write operational retrospective for milestone 2026.06.03)
+- 2026-04-16 06:55: Exp 389 retrospective written to `results/operational_retro_2026_04_28.json` (schema="carnot.operational_retro.v3").
+  (User instruction: write operational retrospective for milestone 2026.04.28)
 
   **12 experiments (Exps 377-388).** Session was interrupted — Exps 378, 386, 387 missing. mean=19.9 min/exp (prev: 22.7 min).
 
@@ -229,7 +229,7 @@
 
   **Closed:** RETRO-015 (infra) — infrastructure fix is correct; execution environment is the remaining gap.
 
-  **Implementation:** `scripts/experiment_389_retro_2026_06_03.py`, `tests/python/test_experiment_389_retro.py` (115 tests pass, 100% targeted coverage).
+  **Implementation:** `scripts/experiment_389_retro_2026_04_28.py`, `tests/python/test_experiment_389_retro.py` (115 tests pass, 100% targeted coverage).
 
 ## 2026-04-16 (Exp 383: Combined EORM+JEPA Retrain on Live GPU Pairs)
 
@@ -245,9 +245,9 @@
   - SCENARIO-LEARN-048 already present in spec (verifiable-reasoning). No new spec entries required.
   (User instruction: implement Exp 383 combined EORM+JEPA retrain)
 
-## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.05.27, Extended Analysis)
+## 2026-04-16 (Operational Efficiency Retrospective — Milestone 2026.04.27, Extended Analysis)
 
-- 2026-04-16 03:01: Full operational efficiency retrospective written to `results/operational_retro_2026_05_27.json` (schema="carnot.operational_retro.v3").
+- 2026-04-16 03:01: Full operational efficiency retrospective written to `results/operational_retro_2026_04_27.json` (schema="carnot.operational_retro.v3").
   This is the HOW-we-executed analysis, not a research results summary.
 
   **Cumulative milestone inventory:** 439 experiments, 6365 minutes (106.1 hours) total wall time, 14.5 min/experiment mean.
@@ -268,12 +268,12 @@
   **RETRO items carried forward:** RETRO-003 (conductor timeout), RETRO-015 (live GPU escalation), RETRO-016 (LLMExtractor IT-format), RETRO-017 (FR-11 relay synthetic-only), RETRO-018 (CIKAN corrupt).
   (Agent-initiated — post-milestone operational retrospective)
 
-## 2026-04-16 (Exp 376: Operational Retrospective — Milestone 2026.05.27 COMPLETE)
+## 2026-04-16 (Exp 376: Operational Retrospective — Milestone 2026.04.27 COMPLETE)
 
-- 2026-04-16 02:38: Exp 376 operational retrospective written. Milestone 2026.05.27 marked COMPLETE.
-  - `scripts/experiment_376_retro_2026_05_27.py` — CPU-only retrospective. Loads Exps 365–375 result JSONs, evaluates 8 success criteria, computes timing statistics, identifies new RETRO items.
-  - `MilestoneRetro2026_05_27` dataclass — 12 fields capturing all success criteria plus timing and RETRO tracking.
-  - `compute_retro_2026_05_27(repo_root)` — Evaluates all criteria from result files. Honest: False when files missing or partial.
+- 2026-04-16 02:38: Exp 376 operational retrospective written. Milestone 2026.04.27 marked COMPLETE.
+  - `scripts/experiment_376_retro_2026_04_27.py` — CPU-only retrospective. Loads Exps 365–375 result JSONs, evaluates 8 success criteria, computes timing statistics, identifies new RETRO items.
+  - `MilestoneRetro2026_04_27` dataclass — 12 fields capturing all success criteria plus timing and RETRO tracking.
+  - `compute_retro_2026_04_27(repo_root)` — Evaluates all criteria from result files. Honest: False when files missing or partial.
   - `build_retro_artifact(retro)` — schema="carnot.operational_retro.v2", adds explanations per criterion and timing_analysis with speedup interpretation.
   - `estimate_speedup_pct(prev_mean, curr_mean)` — 33.3→22.7 = 31.8% apparent speedup, but caveat: speedup is from fast-fail blocked experiments, not genuine GPU batch inference.
   - `load_milestone_results(repo_root, file_map)` — Graceful load, None for missing/invalid files.
@@ -281,8 +281,8 @@
   - Results: live_gpu_confirmed=False (4th consecutive milestone), retro_012_closed=True, cikan_implemented=False (cikan_energy.py is JSON not Python).
   - New RETRO items: RETRO-015 (live GPU escalation — critical), RETRO-016 (LLMExtractor), RETRO-017 (FR-11 relay), RETRO-018 (CIKAN corrupt).
   - `tests/python/test_experiment_376_retro.py` — 78 tests pass, 100% targeted coverage.
-  - Output: `results/operational_retro_2026_05_27.json`
-  (User-requested — milestone 2026.05.27 retrospective)
+  - Output: `results/operational_retro_2026_04_27.json`
+  (User-requested — milestone 2026.04.27 retrospective)
 
 ## 2026-04-16 (Exp 373: Three-Tier Pipeline Live GPU Benchmark)
 
@@ -348,10 +348,10 @@
   honest_verdict="live_gpu_winner" gated correctly: only fires when ALL results have inference_mode="live_gpu".
   (User-requested verification)
 
-## 2026-04-15 (Operational Retrospective — Milestone 2026.05.20, Updated Analysis)
+## 2026-04-15 (Operational Retrospective — Milestone 2026.04.26, Updated Analysis)
 
-- 2026-04-15 21:45: Full operational efficiency retrospective for milestone 2026.05.20 (updated).
-  Written to `results/operational_retro_2026_05_20.json` (schema="carnot.operational_retro.v1").
+- 2026-04-15 21:45: Full operational efficiency retrospective for milestone 2026.04.26 (updated).
+  Written to `results/operational_retro_2026_04_26.json` (schema="carnot.operational_retro.v1").
 
   **Cumulative milestone inventory:** 423 experiments completed, 6143 minutes (102.4 hours) total
   wall time, mean 14.5 min/experiment. Analysis covers HOW efficiently the milestone was executed.
@@ -381,12 +381,12 @@
   RETRO-012 one-line fix is the highest-ROI action available for next milestone.
   (User-requested)
 
-## 2026-04-15 (Exp 363: Operational Retrospective — Milestone 2026.05.20 COMPLETE)
+## 2026-04-15 (Exp 363: Operational Retrospective — Milestone 2026.04.26 COMPLETE)
 
-- 2026-04-15 21:10: Exp 363: Full operational retrospective for milestone 2026.05.20.
-  Written to `results/operational_retro_2026_05_20.json` (schema="carnot.operational_retro.v1").
+- 2026-04-15 21:10: Exp 363: Full operational retrospective for milestone 2026.04.26.
+  Written to `results/operational_retro_2026_04_26.json` (schema="carnot.operational_retro.v1").
 
-  **Milestone 2026.05.20 inventory:** 12 experiments planned (Exps 351–362), 11 ran, 1 skipped
+  **Milestone 2026.04.26 inventory:** 12 experiments planned (Exps 351–362), 11 ran, 1 skipped
   (Exp 356 LLMExtractor never implemented). Total wall time: 366 min, mean 33.3 min/exp.
   Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases). Fastest: Exp 355 (15 min).
 
@@ -454,10 +454,10 @@
 
 - 2026-04-15: Exp 352: Diagnosed and fixed the silent simulated fallback bug that caused Exps 340, 341, 346, and 347 to run in simulated mode despite `CARNOT_FORCE_LIVE=1` — both RTX 3090s were idle for two consecutive milestones. Added `python/carnot/pipeline/live_gpu_diagnostic.py`: `LiveGPUDiagnostic` dataclass (cuda_visible, torch_available, model_loadable, carnot_force_live_set, failure_reason, is_live_capable); `check_cuda_visible()` — subprocess nvidia-smi, returns bool, never raises; `check_torch_cuda()` — lazy torch import + cuda.is_available(), never raises; `check_carnot_force_live()` — env-var check; `check_model_loadable(model_id, timeout_s=30)` — thread-wrapped AutoTokenizer.from_pretrained; `_load_tokenizer(model_id, timeout_s)` — inner thread function (patchable in tests); `diagnose_live_gpu(model_ids=None)` — layered fail-fast: cuda_visible → torch_cuda → model_loadable, CI-safe (never raises, returns diagnostic on unexpected exception). Updated `scripts/experiment_template.py`: `setup_gpu()` now calls `diagnose_live_gpu()` and raises `RuntimeError("Live GPU required but unavailable: <failure_reason>")` when `CARNOT_FORCE_LIVE=1` and any model prewarm fails — replaces silent fallthrough that produced artifacts labelled "live_gpu" with simulated answers. Added `scripts/experiment_352_live_gpu_diagnostic.py` (ExperimentTemplate(352), diagnose_live_gpu(["Qwen/Qwen3.5-0.8B", "google/gemma-4-E4B-it"]), reports each check, artifact schema "carnot.live_gpu_diagnostic.v1", results/experiment_352_live_gpu_diagnostic.json). 37 tests in `tests/python/test_live_gpu_diagnostic.py` (all pass, 100% live_gpu_diagnostic.py coverage). REQ-INFRA-014, SCENARIO-INFRA-014/015 added to spec. (User-requested)
 
-## 2026-04-15 (Operational Retrospective — Milestone 2026.05.13)
+## 2026-04-15 (Operational Retrospective — Milestone 2026.04.25)
 
-Full-milestone operational retrospective for milestone 2026.05.13 written to
-`results/operational_retro_2026_05_13.json`. Covers 399 experiments (21 new: Exps 338–350),
+Full-milestone operational retrospective for milestone 2026.04.25 written to
+`results/operational_retro_2026_04_25.json`. Covers 399 experiments (21 new: Exps 338–350),
 5818 minutes (97.0 hours) cumulative wall time, mean 14.6 min/experiment overall.
 Incremental batch (21 experiments): 426 minutes, 20.3 min/exp — regression driven by
 high-complexity experiments (Exp 346 EORM: 56 min, Exp 334 VERGE two-turn: 24 min).
@@ -466,7 +466,7 @@ Key findings:
 
 - **RETRO-003 still open (second milestone)**: run_experiment_with_timeout.sh exists but
   conductor wiring not enforced. Exp 53 (418 min) remains #1 cumulative bottleneck. Must be
-  closed before milestone 2026.05.20 begins — highest-priority action, zero implementation
+  closed before milestone 2026.04.26 begins — highest-priority action, zero implementation
   work required.
 - **RETRO-004/006/007/008 closed**: DualGPU auto-assignment, HostPrereqRegistry,
   test stub pre-generation, and BatchedInferenceRunner default all closed by Exps 338/339.
@@ -482,7 +482,7 @@ Key findings:
 Three new RETRO items opened: RETRO-009 (live GPU smoke test), RETRO-010 (presplit complex
 experiments), RETRO-011 (batch doc reconciliation every 5 experiments).
 
-User instruction: write operational retrospective for milestone 2026.05.13.
+User instruction: write operational retrospective for milestone 2026.04.25.
 
 ## 2026-04-15 (Exp 348: SinkProbe Attention-Sink Hallucination Pre-Filter — REQ-VERIFY-086/087)
 
@@ -520,9 +520,9 @@ User instruction: write operational retrospective for milestone 2026.05.13.
 
 - 2026-04-15: Exp 339: Pre-session startup health check (RETRO-007 + RETRO-008) — python/carnot/pipeline/session_startup.py (parse_session_startup_output, run_session_startup); scripts/session_startup.sh (--dry-run / --kill-zombies, CI-safe, nvidia-smi absent → n_gpus=0 exit 0); canonical summary line "SESSION STARTUP: n_gpus=X zombies=Y killed=Z all_healthy=T/F"; DualGPUMonitor Python fallback + nvidia-smi CSV fallback for zombie detection; 63 tests in tests/python/test_session_startup.py + tests/python/test_experiment_339_session_startup.py at 100% targeted coverage; scripts/experiment_339_session_startup.py (dry-run artifact with n_gpus_detected, n_zombies_found, n_zombies_killed, all_healthy, retro_items_implemented); REQ-INFRA-008, SCENARIO-INFRA-012, SCENARIO-INFRA-013; RETRO-007 + RETRO-008 closed
 
-## 2026-04-15 (Milestone 2026.05.13 Planning — v31 Roadmap)
+## 2026-04-15 (Milestone 2026.04.25 Planning — v31 Roadmap)
 
-Planned next research milestone 2026.05.13: "Live E2E Precision Pipeline, Constraint Addition
+Planned next research milestone 2026.04.25: "Live E2E Precision Pipeline, Constraint Addition
 from Memory, and EORM Predictive Verification." 13 experiments (Exps 338-350) across 5 phases.
 
 Key design decisions:
@@ -542,16 +542,16 @@ Key design decisions:
 - 2601.04675 (LLM-guided SMT), 2507.07731 (energy-guided decoding), 2503.01177 (scalable Ising)
 
 Deliverables:
-- openspec/change-proposals/research-roadmap-vNEXT.md (updated to v31, milestone 2026.05.13)
+- openspec/change-proposals/research-roadmap-vNEXT.md (updated to v31, milestone 2026.04.25)
 - research-roadmap-next.yaml (new, 13 experiments Exps 338-350)
 - research-references.md (6 new papers appended)
 
-User instruction: plan next research milestone (post-2026.05.06).
+User instruction: plan next research milestone (post-2026.04.24).
 
-## 2026-04-15 (Operational Retrospective — Milestone 2026.05.06 Full)
+## 2026-04-15 (Operational Retrospective — Milestone 2026.04.24 Full)
 
-Full-milestone operational retrospective for milestone 2026.05.06 written to
-`results/operational_retro_2026_05_06.json`. Covers 378 experiments, 5392 minutes
+Full-milestone operational retrospective for milestone 2026.04.24 written to
+`results/operational_retro_2026_04_24.json`. Covers 378 experiments, 5392 minutes
 (89.9 hours) total wall time, mean 14.3 min/experiment.
 
 Key findings:
@@ -573,7 +573,7 @@ Key findings:
   for the same experiment count.
 
 Six carry-forward action items opened: RETRO-003 through RETRO-008.
-User instruction: write operational retrospective for milestone 2026.05.06.
+User instruction: write operational retrospective for milestone 2026.04.24.
 
 ## 2026-04-15 (Exp 336: CoT Circuit Verifier — CRV Implementation)
 
@@ -731,7 +731,7 @@ Live benchmark on 50 HumanEval-style problems using Gemma4-E4B-it + CodeExtracto
 
 ## 2026-04-15 (Exp 325: Conductor Hardening — RETRO-001 + NEW-001)
 
-Implemented two RETRO action items carried forward from two consecutive milestones (2026.04.22 and 2026.04.29).
+Implemented two RETRO action items carried forward from two consecutive milestones (2026.04.22 and 2026.04.23).
 
 **RETRO-001 — Conductor timeout wrapper:**
 - Wrote `scripts/run_experiment_with_timeout.sh` — enforces hard timeout via `timeout -k 60s ${CARNOT_CONDUCTOR_TIMEOUT_MINUTES:-45}m "$@"`
@@ -749,9 +749,9 @@ Implemented two RETRO action items carried forward from two consecutive mileston
 **Artifact:** `results/experiment_325_hardening.json` — all checks passed, estimated_speedup_pct=27.0
 User instruction: implement conductor timeout wrapper and test-first stub (Exp 325).
 
-## 2026-04-15 (Milestone 2026.04.29 Full Operational Retrospective)
+## 2026-04-15 (Milestone 2026.04.23 Full Operational Retrospective)
 
-Full retrospective for the complete 2026.04.29 milestone: 359 experiments, 5093 minutes
+Full retrospective for the complete 2026.04.23 milestone: 359 experiments, 5093 minutes
 (84.9 hours) total wall time, 14.2 min average per experiment.
 
 Key findings:
@@ -766,19 +766,19 @@ Key findings:
 - Post-test failure rate: estimated 15-20% for Exp 100-300 era, dropping to ~6% for
   Exp 300+ after ExperimentTemplate adoption. Test-first enforcement (NEW-001) targets residual.
 - RETRO-001 and RETRO-002 carried forward from 2026.04.22 without implementation for the
-  second consecutive milestone — promoting to blocking story for 2026.05.06.
+  second consecutive milestone — promoting to blocking story for 2026.04.24.
 
 Estimated speedup for next milestone: 27% (dominated by RETRO-001 timeout, NEW-001 test-first,
 RETRO-003 DualGPU enforcement).
 
 Deliverables:
-- `results/operational_retro_2026_04_29.json` (updated): full v2 retrospective artifact with
+- `results/operational_retro_2026_04_23.json` (updated): full v2 retrospective artifact with
   359 experiments, 5 slowest experiments analyzed, 8 improvements suggested, 27% savings estimate.
-- User instruction: write operational retrospective for milestone 2026.04.29.
+- User instruction: write operational retrospective for milestone 2026.04.23.
 
-## 2026-04-15 (Exp 319: Operational Retrospective for Milestone 2026.04.29)
+## 2026-04-15 (Exp 319: Operational Retrospective for Milestone 2026.04.23)
 
-Retrospective for the 2026.04.29 milestone (Exp 307–324, 17 experiments).
+Retrospective for the 2026.04.23 milestone (Exp 307–324, 17 experiments).
 
 Key findings:
 - Total milestone wall time: 691 minutes; avg 40.6 min/experiment.
@@ -798,9 +798,9 @@ Deliverables:
 - `tests/python/test_experiment_319_retro.py` (new): 59 tests — load_retro_artifact()
   schema validation, n_experiments, bottlenecks_identified, action_items, carry_over,
   estimated_next_milestone_speedup_pct. All pass.
-- `results/operational_retro_2026_04_29.json` (new): artifact.
+- `results/operational_retro_2026_04_23.json` (new): artifact.
 - `ops/conductor-log.md`: retro entry appended.
-- User instruction: write operational retrospective for milestone 2026.04.29.
+- User instruction: write operational retrospective for milestone 2026.04.23.
 
 ## 2026-04-14 (Exp 318: Four-Tier Continuous Self-Learning Relay)
 
@@ -2908,7 +2908,7 @@ Full session: Gibbs JAX, PyO3 tests, Claude API bridge, LLM hypothesis generator
 - 2026-04-15: Exp 335: AMD XDNA NPU build — install prereqs and attempt VitisAI ORT source build — continuation of Exp 303 unblock path, installs ninja + openblas, rebuilds onnxruntime 1.20.1 with -DONNXRUNTIME_USE_VITISAI=ON, validates VitisAI ExecutionProvider registration; unblocks AMD XDNA sampling experiments; REQ-PRED-003, SCENARIO-EXP292-A, SCENARIO-EXP292-B, SCENARIO-EXP292-C, SCENARIO-EXP292-D
 - 2026-04-15: Exp 336: CoTCircuitVerifier — CRV-style chain-of-thought computational graph verification — computational dependency graph extraction + cycle detection + value-carryover link validation (arXiv 2510.09312), catches wrong-carryover errors missed by Z3/ArithmeticExtractor; `python/carnot/pipeline/cot_circuit_verifier.py` (CoTStep, CoTCircuit, extract_cot_steps, find_broken_links, build_circuit, CoTCircuitVerifier); additive verify_repair.py integration; `tests/python/test_cot_circuit_verifier.py` 51 tests 100% coverage; REQ-EXTRACT-015, REQ-EXTRACT-016, SCENARIO-EXTRACT-031, SCENARIO-EXTRACT-032, SCENARIO-EXTRACT-033, SCENARIO-EXTRACT-034, SCENARIO-EXTRACT-035
 - 2026-04-15: Exp 338: Host prerequisites registry + DualGPU auto-assignment default (RETRO-004/006) — python/carnot/pipeline/host_prereq_registry.py (HostPrereqRegistry, PrereqEntry, _parse_registry); ops/host-prereqs.md markdown table (6 entries: ninja, openblas, CARNOT_FORCE_LIVE, nvidia-smi, yosys, nextpnr-xilinx); ExperimentTemplate.setup_gpu() updated: auto-assigns model_specs[i]['gpu']=i when len>=2 + CARNOT_FORCE_LIVE=1; single-GPU fallback logs "RETRO-004 warning"; dual_gpu_auto_assigned key added to all setup_gpu() return dicts; 75 tests in tests/python/test_experiment_338_host_prereqs.py; results/experiment_338_host_prereqs.json (n_packages=6, classes=3, dual_gpu=True, status=success); REQ-INFRA-006, REQ-INFRA-007, SCENARIO-INFRA-009, SCENARIO-INFRA-010, SCENARIO-INFRA-011; RETRO-004 + RETRO-006 closed
-- 2026-04-15: Exp 337: Operational retrospective for milestone 2026.05.06 — REQ-RETRO-003, SCENARIO-RETRO-005, SCENARIO-RETRO-006; derived wall-time data from conductor log (Exps 325-336, 12 experiments, 293 total min, mean 24.4 min/exp); all 4 action items from 2026.04.29 retro (RETRO-001/002, NEW-001/002) resolved in Exps 325-327; actual speedup 39.9% vs prior milestone 40.6 min/exp baseline (exceeds 27% estimate); retro_001_resolved=True (Exp 325 run_experiment_with_timeout.sh), retro_002_resolved=True (Exp 326 DualGPUMonitor); live GPU benchmarks Exps 328/329 ran successfully (328 at 7.9 min, 329 at 9.5s; 329 shows improvement_1to3=-6.1% negative relay signal); 2 max-turns failures (Exps 331, 334) recovered quickly; NEW-003 (pre-split complex experiments) + NEW-004 (relay health guard) added; estimated next speedup 4.0%; scripts/experiment_337_retro.py; tests/python/test_experiment_337_retro.py (58 tests pass); results/operational_retro_2026_05_06.json; openspec/capabilities/verifiable-reasoning/spec.md updated with REQ-RETRO-001/002/003 and SCENARIO-RETRO-001 through SCENARIO-RETRO-006
+- 2026-04-15: Exp 337: Operational retrospective for milestone 2026.04.24 — REQ-RETRO-003, SCENARIO-RETRO-005, SCENARIO-RETRO-006; derived wall-time data from conductor log (Exps 325-336, 12 experiments, 293 total min, mean 24.4 min/exp); all 4 action items from 2026.04.23 retro (RETRO-001/002, NEW-001/002) resolved in Exps 325-327; actual speedup 39.9% vs prior milestone 40.6 min/exp baseline (exceeds 27% estimate); retro_001_resolved=True (Exp 325 run_experiment_with_timeout.sh), retro_002_resolved=True (Exp 326 DualGPUMonitor); live GPU benchmarks Exps 328/329 ran successfully (328 at 7.9 min, 329 at 9.5s; 329 shows improvement_1to3=-6.1% negative relay signal); 2 max-turns failures (Exps 331, 334) recovered quickly; NEW-003 (pre-split complex experiments) + NEW-004 (relay health guard) added; estimated next speedup 4.0%; scripts/experiment_337_retro.py; tests/python/test_experiment_337_retro.py (58 tests pass); results/operational_retro_2026_04_24.json; openspec/capabilities/verifiable-reasoning/spec.md updated with REQ-RETRO-001/002/003 and SCENARIO-RETRO-001 through SCENARIO-RETRO-006
 - 2026-04-15: Exp 340: Live full precision pipeline benchmark — VERGE + CRV + confidence + adaptive on RTX 3090 — benchmark of combined verify-repair pipeline (VERGE iterative Z3 refinement, CoTCircuitVerifier broken-link detection, confidence-weighted repairs, adaptive JEPA gating) on RTX 3090 GPU with full precision floating point inference and live GPU execution; scripts/experiment_340_live_benchmark.py; results/experiment_340_results.json; REQ-BENCH-001, SCENARIO-BENCH-001, SCENARIO-BENCH-002
 - 2026-04-15: Exp 345: SessionMemory — multi-session persistence of learned pipeline state — `python/carnot/pipeline/session_memory.py` (SessionMemory class with save/load/restore methods) enables CaseMemory, ConstraintTemplateLibrary, and PerModelFPTracker to persist across process restarts; validates round-trip storage at .carnot_sessions/{model_id}; `scripts/experiment_345_session_memory.py` + `tests/python/test_session_memory.py` (58 tests, 100% targeted coverage); REQ-LEARN-020, REQ-LEARN-021, SCENARIO-LEARN-035, SCENARIO-LEARN-036, SCENARIO-LEARN-037
 - 2026-04-15: Exp 347: JEPA real-data retrain — (partial_response, violation_flag) pairs from Exp 340 live benchmark — retrains ContextPredictionEnergy JEPA predictor on real GPU violation pairs from Exp 340 (50 pair sample, 80/20 train/test, 10 epochs CI mode) to close simulation-to-reality gap; `scripts/experiment_347_jepa_real_retrain.py` + `carnot/embeddings/jepa_retrain.py` (JEPARetrainer, extract_violation_pairs); artifact records inference_mode (simulated/live) and auc_improvement (signed); safetensors saved to `results/jepa_predictor_347_{synthetic|real}.safetensors`; REQ-LEARN-024, SCENARIO-LEARN-041, SCENARIO-LEARN-042

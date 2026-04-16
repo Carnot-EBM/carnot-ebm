@@ -2,11 +2,11 @@
 """Experiment 390 — GPU Node Preflight Check (RETRO-019 first action).
 
 **Purpose:**
-    This is the FIRST experiment of the 2026.06.10 milestone.  Its only job is to
+    This is the FIRST experiment of the 2026.04.29 milestone.  Its only job is to
     confirm that the GPU node is physically powered on and reachable before any
     GPU-dependent experiments (394-400) are attempted.
 
-    For FIVE consecutive milestones (2026.05.06 through 2026.06.03), the GPU node
+    For FIVE consecutive milestones (2026.04.24 through 2026.04.28), the GPU node
     was offline during conductor sessions, producing zero live results.  This script
     makes the failure explicit and immediate: if the GPU is not confirmed live, it
     writes a blocked artifact and exits with code 1 so the conductor halts all

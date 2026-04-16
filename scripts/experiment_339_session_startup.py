@@ -4,7 +4,7 @@
 **Research question:**
     Does running a standardised pre-session GPU health check before the research
     conductor launches eliminate the zombie-VRAM waste and missing pre-flight
-    issues identified in the 2026.05.06 retrospective?
+    issues identified in the 2026.04.24 retrospective?
 
 **What this experiment does:**
     1. Calls ``run_session_startup(dry_run=True)`` — invokes scripts/session_startup.sh

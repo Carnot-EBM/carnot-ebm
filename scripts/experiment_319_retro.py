@@ -1,10 +1,10 @@
-"""Experiment 319: Operational Retrospective for milestone 2026.04.29.
+"""Experiment 319: Operational Retrospective for milestone 2026.04.23.
 
 Spec coverage: REQ-OPS-001, REQ-OPS-002, REQ-OPS-003, REQ-OPS-004, REQ-OPS-005,
                SCENARIO-OPS-001 through SCENARIO-OPS-007
 
 This script:
-1. Derives wall-time data from ops/conductor-log.md for the 2026.04.29 milestone
+1. Derives wall-time data from ops/conductor-log.md for the 2026.04.23 milestone
    (experiments 307–324, excluding 319 which is this retro).
 2. Identifies the top-3 slowest experiments and their root causes.
 3. Lists improvements implemented during this milestone.
@@ -13,7 +13,7 @@ This script:
    - RETRO-002: GPU monitor in conductor subprocess (not yet implemented)
 5. Proposes a new action item for the post-test failure rate discovered this milestone.
 6. Estimates the next-milestone wall-time speedup from the action items.
-7. Writes results/operational_retro_2026_04_29.json.
+7. Writes results/operational_retro_2026_04_23.json.
 8. Appends a summary entry to ops/conductor-log.md.
 
 Usage:
@@ -34,12 +34,12 @@ from pathlib import Path
 REPO_ROOT = Path(__file__).parent.parent
 RESULTS_DIR = REPO_ROOT / "results"
 CONDUCTOR_LOG = REPO_ROOT / "ops" / "conductor-log.md"
-OUTPUT_FILE = RESULTS_DIR / "operational_retro_2026_04_29.json"
+OUTPUT_FILE = RESULTS_DIR / "operational_retro_2026_04_23.json"
 
 # ---------------------------------------------------------------------------
 # Milestone experiment range.
 #
-# Experiments 307–324 were executed during the 2026.04.29 milestone.
+# Experiments 307–324 were executed during the 2026.04.23 milestone.
 # Exp 319 is this retrospective itself; we include it in the count (the script
 # produced it) but we treat its wall-time as the cost of the retrospective.
 # The planned roadmap listed 13 experiments; bonus experiments were added
@@ -136,7 +136,7 @@ _SLOWEST_ROOT_CAUSES: dict[int, dict] = {
     },
 }
 
-# Improvements implemented during the 2026.04.29 milestone.
+# Improvements implemented during the 2026.04.23 milestone.
 # Prior-milestone infrastructure (ExperimentTemplate, BatchedInferenceRunner)
 # is listed as "prior_milestone" because the benefit was realized throughout
 # this milestone but the implementation was in Exp 306 (milestone 2026.04.22).
@@ -365,7 +365,7 @@ def build_bottlenecks() -> list[dict]:
 
 
 def build_action_items() -> list[dict]:
-    """Build the action item list for the 2026.04.29 milestone.
+    """Build the action item list for the 2026.04.23 milestone.
 
     RETRO-001 and RETRO-002 are carried forward from the 2026.04.22 retro.
     Neither was implemented during this milestone despite both being high-priority.
@@ -477,7 +477,7 @@ def build_carry_over() -> dict:
             "adopted throughout Exp 307–321 via ExperimentTemplate)",
             "RETRO-001 (DualGPURunner wired into ExperimentTemplate.setup_gpu() "
             "— used in Exp 307/308 for GPU experiments; 2026.04.22 RETRO-001 "
-            "is now resolved; the 2026.04.29 RETRO-001 refers to the hard-timeout "
+            "is now resolved; the 2026.04.23 RETRO-001 refers to the hard-timeout "
             "action item originally listed as 2026.04.22 RETRO-002)",
         ],
         "carry_over_rate_pct": 40.0,
@@ -533,7 +533,7 @@ def append_conductor_log_entry(artifact_path: Path, duration_min: float) -> None
     timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     entry = (
         f"| {timestamp} | Exp 319: Operational retrospective for milestone "
-        f"2026.04.29 | OK | {artifact_path.name} written; "
+        f"2026.04.23 | OK | {artifact_path.name} written; "
         f"n=17 experiments, total={round(sum(_EXPERIMENT_WALL_TIMES.values()))} min, "
         f"top bottleneck=Exp 308 ({_EXPERIMENT_WALL_TIMES[308]} min); "
         f"RETRO-001/002 carried forward; NEW-001/002 added; "
@@ -549,7 +549,7 @@ def append_conductor_log_entry(artifact_path: Path, duration_min: float) -> None
 
 
 def main() -> None:
-    """Generate the operational retrospective for milestone 2026.04.29."""
+    """Generate the operational retrospective for milestone 2026.04.23."""
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
     n_experiments = len(_EXPERIMENT_WALL_TIMES)
@@ -563,7 +563,7 @@ def main() -> None:
 
     output: dict = {
         "schema": "operational_retro_v1",
-        "milestone": "2026.04.29",
+        "milestone": "2026.04.23",
         "generated_at": now,
         "n_experiments": n_experiments,
         "total_wall_time_minutes": total_wall_time,

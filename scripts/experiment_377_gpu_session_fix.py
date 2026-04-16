@@ -3,7 +3,7 @@
 
 **What this experiment does:**
     RETRO-015 is the highest-priority item in Carnot history: four consecutive
-    milestones (2026.05.06, 2026.05.13, 2026.05.20, 2026.05.27) produced zero
+    milestones (2026.04.24, 2026.04.25, 2026.04.26, 2026.04.27) produced zero
     live GPU results because ``CARNOT_FORCE_LIVE=1`` was never exported into
     conductor subprocess environments.
 

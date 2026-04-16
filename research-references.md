@@ -678,7 +678,7 @@ should read this file when designing new milestones.
 - **Paper:** arxiv.org/abs/2509.14252 (2025-09)
 - **What:** JEPA-based architecture applicable to both finetuning and pretraining of LLMs. Outperforms standard LLM training objectives with robustness to overfitting. Predicts future token embeddings from context using energy minimization.
 - **Relevance:** Direct architecture for Carnot's Tier 3 JEPA predictive verification. Training the predictor on (partial_response, final_violation) pairs can borrow the LLM-JEPA training objective. Also provides a path to train the JEPA predictor ON TOP of an existing LLM embedding layer rather than from scratch.
-- **When to pursue:** JEPA real-data training milestone (Milestone 2026.04.29 Phase 1).
+- **When to pursue:** JEPA real-data training milestone (Milestone 2026.04.23 Phase 1).
 
 ### Emergent Formal Verification — Z3 SMT for Multi-Domain AI Safety
 - **Paper:** arxiv.org/abs/2603.21149 (2026-03)
@@ -1504,7 +1504,7 @@ thermodynamic computing Ising FPGA
   flagging the whole response as violated, identify which atomic step failed Z3 and prompt
   the LLM to repair only that step. This is more surgical than Carnot's current whole-response
   repair approach and should reduce false positives dramatically.
-- **When to pursue:** Next milestone (2026.05.06). Implement VERGE-style iterative loop on top
+- **When to pursue:** Next milestone (2026.04.24). Implement VERGE-style iterative loop on top
   of NL2Z3Extractor + Z3GatedRepair.
 
 ### CRV — Chain-of-Thought Circuit Verification (HIGH PRIORITY)
@@ -1581,7 +1581,7 @@ thermodynamic computing Ising FPGA
 
 ---
 
-## New References — Added 2026-04-16 (Milestone 2026.06.03 Planning)
+## New References — Added 2026-04-16 (Milestone 2026.04.28 Planning)
 
 ### Physical Analog KAN — Hardware-Native Energy Tier (HIGH PRIORITY)
 - **Paper:** arxiv.org/abs/2602.07518 — "Physical Analog Kolmogorov-Arnold Networks based on

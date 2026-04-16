@@ -1,4 +1,4 @@
-"""Tests for scripts/experiment_363_retro.py — Milestone 2026.05.20 retrospective.
+"""Tests for scripts/experiment_363_retro.py — Milestone 2026.04.26 retrospective.
 
 Coverage targets
 ----------------
@@ -12,7 +12,7 @@ Coverage targets
 
 Spec: REQ-INFRA-014 (live GPU gating), REQ-BENCH-006/007 (adversarial),
       REQ-EXTRACT-021 (LLMExtractor), REQ-LEARN-025 (EORM retrain)
-SCENARIO: RETRO-2026.05.20
+SCENARIO: RETRO-2026.04.26
 """
 
 from __future__ import annotations

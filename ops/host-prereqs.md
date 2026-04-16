@@ -9,7 +9,7 @@ BEFORE the relevant experiment class will succeed.  When an experiment is blocke
 by a missing dependency, check this file first — the missing package and install
 command are likely already documented here.
 
-Root cause: RETRO-006 (2026.05.06 retrospective) — AMD XDNA NPU experiments
+Root cause: RETRO-006 (2026.04.24 retrospective) — AMD XDNA NPU experiments
 (Exps 292, 303, 314, 335) each independently discovered `ninja` and `openblas`
 were missing, wasting ~4 experiment slots.  This registry short-circuits retries.
 

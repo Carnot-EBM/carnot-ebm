@@ -1,10 +1,10 @@
 # Carnot Research Roadmap v37: EnvironmentAutoFix, Complete Purge, First Live Numbers, VPRM Architecture
 
 **Created:** 2026-04-16
-**Milestone:** 2026.06.24
-**Status:** Planned (activates when milestone 2026.06.17 retrospective completes)
-**Supersedes:** Milestone 2026.06.17 — "Purge, Implement, Execute — First Credible Live Numbers"
-**Informed by:** Exps 404–411, operational retrospective 2026.06.17, v36 carry-forwards
+**Milestone:** 2026.04.31
+**Status:** Planned (activates when milestone 2026.04.30 retrospective completes)
+**Supersedes:** Milestone 2026.04.30 — "Purge, Implement, Execute — First Credible Live Numbers"
+**Informed by:** Exps 404–411, operational retrospective 2026.04.30, v36 carry-forwards
 **External inputs (new in v37):**
 - VPRM (2601.17223) — Deterministic rule-based process reward models; Carnot IS a VPRM
 - FOVER (2505.15960) — Z3/Isabelle-annotated step labels for PRM training; closes label gap
@@ -15,7 +15,7 @@
 
 ---
 
-## What 2026.06.17 Proved
+## What 2026.04.30 Proved
 
 | Approach | Experiments | Verdict | Key Finding |
 |----------|-------------|---------|-------------|
@@ -66,7 +66,7 @@ preflight and produce `honest_verdict='gpu_confirmed_live'` (via auto-fix if nec
 
 ### Gap 2: Five CPU-only implementations force-skipped in v36 (HIGH)
 
-Five modules were designed in the 2026.06.17 milestone (Exps 405-409) but never executed due to
+Five modules were designed in the 2026.04.30 milestone (Exps 405-409) but never executed due to
 the force-complete. All five are CPU-only and produce working code regardless of GPU state:
 
 | Module | Exp in v36 | New Exp | Status |
@@ -148,7 +148,7 @@ Also re-runs GPU preflight v2 to produce `honest_verdict='gpu_confirmed_live'` v
 
 ### Phase 2: Complete All Purged CPU Implementations (Exps 414-418)
 
-Five CPU-only modules that were designed but force-skipped in milestone 2026.06.17. Each uses the
+Five CPU-only modules that were designed but force-skipped in milestone 2026.04.30. Each uses the
 `DeliverableContentValidator.validate_and_clear()` pattern to purge the corrupt file before
 reimplementing. All are independent and run regardless of GPU state.
 
@@ -187,7 +187,7 @@ They use the EnvironmentAutoFix at startup, eliminating propagation risk.
   retrain EORM (attention-based outcome ranker) and JEPA predictor on live (response, violation)
   pairs. First honest evaluation: before_auc vs after_auc on held-out live data.
 - **Exp 424 — Operational Retrospective + AMD NPU IRON:** Two sub-tasks: (1) full operational
-  retrospective for milestone 2026.06.24; (2) AMD NPU via IRON toolflow (arXiv 2504.03083),
+  retrospective for milestone 2026.04.31; (2) AMD NPU via IRON toolflow (arXiv 2504.03083),
   bypassing the 5-milestone VitisAI blocker. Uses `pip install mlir-aie` for IRON, not VitisAI EP.
 
 ---
@@ -239,7 +239,7 @@ blocked artifacts and exit cleanly. Exps 422-424 proceed regardless (CPU-safe fa
 
 ---
 
-## Success Criteria for Milestone 2026.06.24
+## Success Criteria for Milestone 2026.04.31
 
 | Criterion | Required for Success |
 |-----------|---------------------|

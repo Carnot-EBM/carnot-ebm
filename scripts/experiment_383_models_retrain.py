@@ -3,7 +3,7 @@
 
 **Researcher summary:**
     Exps 371 (EORM real retrain) and 372 (JEPA real retrain) were blocked in
-    milestone 2026.05.27 because Exps 368-370 never produced live pairs (RETRO-015).
+    milestone 2026.04.27 because Exps 368-370 never produced live pairs (RETRO-015).
     Now that Exps 379-382 have run with live GPU, real (question, response, is_correct)
     pairs may be available. This experiment retrains both models in a single combined
     experiment to minimise overhead.

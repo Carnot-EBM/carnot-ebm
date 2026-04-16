@@ -3,12 +3,12 @@
 
 **Researcher summary:**
     Exp 340 built the full precision stack benchmark (5 pipeline variants × 2 models ×
-    200 GSM8K questions) but ran in simulated mode across milestones 2026.05.13 and
-    2026.05.20.  This experiment re-runs the identical benchmark with CARNOT_FORCE_LIVE=1
+    200 GSM8K questions) but ran in simulated mode across milestones 2026.04.25 and
+    2026.04.26.  This experiment re-runs the identical benchmark with CARNOT_FORCE_LIVE=1
     enforced and Exp 364/365's ModelServer+DualGPURunner wiring active.
 
     This is the experiment that has been "pending live GPU" since 2026-04-15
-    (milestone 2026.05.06).  It produces Carnot's first credible precision-stack
+    (milestone 2026.04.24).  It produces Carnot's first credible precision-stack
     headline number.
 
 **Hard CARNOT_FORCE_LIVE=1 requirement:**

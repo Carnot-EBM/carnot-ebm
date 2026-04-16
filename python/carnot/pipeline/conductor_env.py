@@ -1,7 +1,7 @@
 """Conductor GPU environment propagation — RETRO-012 and RETRO-014 fix.
 
 **Why this module exists:**
-    Three consecutive milestones (2026.04.29, 2026.05.06, 2026.05.20) observed that
+    Three consecutive milestones (2026.04.23, 2026.04.24, 2026.04.26) observed that
     GPUs reported ``is_live_capable=True`` (Exp 352) yet every experiment ran in
     simulated mode.  The root cause: the research conductor never sets
     ``CARNOT_FORCE_LIVE=1`` in the subprocess environment it spawns for GPU-tagged
@@ -78,7 +78,7 @@ _ENV_SCRIPT_CONTENT = """\
 # Why: research_conductor.py never sets CARNOT_FORCE_LIVE in the subprocess
 # environment it spawns for GPU experiments.  Sourcing this script injects
 # the variable into the calling shell so child processes inherit it.
-# This closed three consecutive milestones (2026.04.29, 2026.05.06, 2026.05.20)
+# This closed three consecutive milestones (2026.04.23, 2026.04.24, 2026.04.26)
 # of idle GPUs despite hardware being ready (Exp 352: is_live_capable=True).
 export CARNOT_FORCE_LIVE=1
 """

@@ -1,6 +1,6 @@
 {
   "schema": "carnot.operational_retro.v1",
-  "milestone": "2026.05.06",
+  "milestone": "2026.04.24",
   "generated_at": "2026-04-15T06:58:40Z",
   "retro_type": "full_milestone",
   "note": "Full-milestone retrospective covering all 378 experiments. Earlier partial retro (12 experiments, 293 min) is preserved in git history.",
@@ -187,5 +187,5 @@
     }
   ],
 
-  "meta_reflection": "Milestone 2026.05.06 ran 378 experiments in 5392 minutes (mean 14.3 min/exp). The earlier partial retro (12 experiments, 293 min, mean 24.4 min/exp) captured the milestone planning phase; the mean dropped significantly as the milestone matured and tooling improvements from Exps 325-327 took effect. The single largest controllable bottleneck is Exp 53 (418 minutes, 7.8% of total) which predates all timeout infrastructure. The second largest is sequential GPU use on two-model benchmarks. Both are fixable with low-effort conductor config changes using infrastructure already shipped this milestone. The highest-priority action for the next milestone is wiring run_experiment_with_timeout.sh as mandatory for all conductor-launched experiments (RETRO-003) — it exists, it just needs to be enforced."
+  "meta_reflection": "Milestone 2026.04.24 ran 378 experiments in 5392 minutes (mean 14.3 min/exp). The earlier partial retro (12 experiments, 293 min, mean 24.4 min/exp) captured the milestone planning phase; the mean dropped significantly as the milestone matured and tooling improvements from Exps 325-327 took effect. The single largest controllable bottleneck is Exp 53 (418 minutes, 7.8% of total) which predates all timeout infrastructure. The second largest is sequential GPU use on two-model benchmarks. Both are fixable with low-effort conductor config changes using infrastructure already shipped this milestone. The highest-priority action for the next milestone is wiring run_experiment_with_timeout.sh as mandatory for all conductor-launched experiments (RETRO-003) — it exists, it just needs to be enforced."
 }

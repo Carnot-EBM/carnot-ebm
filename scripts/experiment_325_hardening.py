@@ -9,7 +9,7 @@
 
 **Why this matters:**
     RETRO-001 has been carried forward for TWO consecutive milestones
-    (2026.04.22 and 2026.04.29).  Exp 308's post-test failure loop consumed
+    (2026.04.22 and 2026.04.23).  Exp 308's post-test failure loop consumed
     138 minutes — a 45-minute hard cap would have saved 93 minutes.
 
     NEW-001 identified that ExperimentTemplate should auto-generate a test

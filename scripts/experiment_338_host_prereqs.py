@@ -4,7 +4,7 @@
 **Research question:**
     Can a centralised host-prereqs registry (RETRO-006) and automatic DualGPU
     GPU-index assignment (RETRO-004) prevent the repeated discovery waste that
-    cost ~4 experiment slots in milestone 2026.05.06?
+    cost ~4 experiment slots in milestone 2026.04.24?
 
 **What this experiment does:**
     1. Instantiates ``HostPrereqRegistry`` and loads ``ops/host-prereqs.md``.
