@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-16 Exp 411 Live HumanEval Code Verification
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-16T11:52:29Z | 2026-04-16T12:20:37Z | Exp 411: read Exp 404 preflight (honest_verdict=env_not_propagating, not gpu_confirmed_live); implemented experiment_411_humaneval_live.py (Gate 0 preflight check, _load_preflight, _utc_now/_utc_date, _write_artifact, main with 4-gate sequence importing all HumanEval helpers from Exp 369); wrote 44 tests; full suite 3058 pass, 2 pre-existing failures; produced blocked artifact at results/experiment_411_humaneval_live.json; updated changelog + conductor-log + metrics | ~22k |
+
+---
+
 ## Session: 2026-04-16 Exp 410 Live Precision Pipeline Benchmark
 
 ### Turn Log
