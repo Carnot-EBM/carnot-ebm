@@ -2023,3 +2023,63 @@ milestones:
     title: "Exp 417: Operational retrospective \u2014 milestone 2026.04.30 complete"
     deliverable: results/operational_retro_2026_04_30.json
     result: OK (conductor)
+- id: 2026.04.31
+  title: EnvironmentAutoFix, Complete Purge, First Live Numbers, VPRM Architecture
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp413-env-autofix-gpu-confirmed
+    title: "Exp 413: EnvironmentAutoFix \u2014 self-configuring CARNOT_FORCE_LIVE + GPU preflight v3 (RETRO-022 final workaround)"
+    deliverable: results/experiment_413_env_autofix.json
+    result: OK (conductor)
+  - id: exp414-cikan-energy-final
+    title: "Exp 414: CIKANEnergy \u2014 constraint-informed KAN with hard boundary priors (RETRO-023 carry, purge + re-implement)"
+    deliverable: python/carnot/models/cikan_energy.py
+    result: OK (conductor)
+  - id: exp415-jitrl-constraint-memory
+    title: "Exp 415: JitRL constraint memory \u2014 threshold modulation without gradient updates (RETRO-023 carry, purge\
+      \ + re-implement)"
+    deliverable: python/carnot/pipeline/jitrl_memory.py
+    result: OK (conductor)
+  - id: exp416-safety-kan-classifier
+    title: "Exp 416: Safety KAN classifier \u2014 first Tier B product, energy-based jailbreak detection (RETRO-023 carry,\
+      \ purge + re-implement)"
+    deliverable: python/carnot/models/safety_kan.py
+    result: OK (conductor)
+  - id: exp417-semantic-energy-scorer
+    title: "Exp 417: Semantic Energy Scorer \u2014 logit-space Boltzmann hallucination detection (RETRO-023 carry, purge +\
+      \ re-implement)"
+    deliverable: python/carnot/pipeline/semantic_energy_scorer.py
+    result: OK (conductor)
+  - id: exp418-crane-extraction-gate
+    title: "Exp 418: CRANE extraction gate \u2014 1x-cost prompt-side constrained extraction (RETRO-023 carry, purge + re-implement)"
+    deliverable: python/carnot/pipeline/crane_extractor.py
+    result: OK (conductor)
+  - id: exp419-live-precision-pipeline
+    title: "Exp 419: Live precision pipeline \u2014 200 GSM8K, 5 variants, 2 models \u2014 Carnot first headline number (GPU\
+      \ required)"
+    deliverable: results/experiment_419_precision_live.json
+    result: OK (conductor)
+  - id: exp420-live-humaneval
+    title: "Exp 420: Live HumanEval code verification \u2014 50 problems, CodeExtractor + PBT + CRANE augmented prompts (GPU\
+      \ required)"
+    deliverable: results/experiment_420_humaneval_live.json
+    result: OK (conductor)
+  - id: exp421-live-adversarial-gsm8k
+    title: "Exp 421: Live adversarial GSM8K \u2014 Carnot's headline credibility test vs Apple benchmark (GPU required)"
+    deliverable: results/experiment_421_adversarial_live.json
+    result: OK (conductor)
+  - id: exp422-vprm-fover-step-labels
+    title: "Exp 422: VPRM training via FOVER \u2014 Z3-annotated GSM8K step labels train IsingEBM as process reward model"
+    deliverable: results/experiment_422_vprm_step_labels.json
+    result: OK (conductor)
+  - id: exp423-eorm-jepa-retrain-live-fr11
+    title: 'Exp 423: EORM + JEPA retrain on live data + FR-11 self-learning relay validation (GPU preferred)'
+    deliverable: results/experiment_423_retrain_live.json
+    result: OK (conductor)
+  - id: exp424-retro-npu-iron
+    title: 'Exp 424: Operational retrospective milestone 2026.04.31 + AMD NPU via IRON bare-metal (5-milestone NPU unblock
+      attempt)'
+    deliverable: results/experiment_424_retro_and_npu.json
+    result: OK (conductor)
