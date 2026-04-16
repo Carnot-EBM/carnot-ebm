@@ -463,6 +463,109 @@ should read this file when designing new milestones.
 - **When to pursue:** LLMExtractor improvement milestone. Study LLM-QUBO's prompt engineering
   for structured constraint extraction. Adapt for Carnot's ConstraintTerm output format.
 
+### EBM-CoT — Energy-Based Calibration for Implicit Chain-of-Thought
+- **Paper:** arxiv.org/abs/2511.07124 (2025-11)
+- **What:** Introduces EBM-CoT, which uses an EBM to steer latent chain-of-thought representations
+  toward lower-energy, higher-consistency regions without modifying the base LLM. The EBM is
+  applied in the embedding space of CoT steps — low energy = high consistency across reasoning
+  steps. Improves multi-step accuracy on math, commonsense, and symbolic reasoning benchmarks.
+- **Relevance:** Carnot's JEPA predictive verification (Tier 3) operates in embedding space over
+  CoT steps. EBM-CoT validates this approach with a working implementation. Their "consistency
+  energy" over CoT steps is exactly what Carnot's JEPA predictor should learn: given partial
+  CoT, predict whether the completed chain will be energy-consistent. Architecture details
+  map onto Carnot's EORM + JEPA integration.
+  Also used in Exp 291: isotonic calibration (arXiv 2511.07124) for JEPA predictor.
+- **When to pursue:** EORM retrain milestone. Use EBM-CoT's consistency energy formulation
+  as training objective for EORM and JEPA predictor.
+
+### HalluField — Field-Theoretic Hallucination Detection
+- **Paper:** arxiv.org/abs/2509.10753 (2025-09)
+- **What:** Models each LLM response as a collection of token paths with associated energy and
+  entropy values. Hallucinations appear as anomalous energy/entropy distributions in the token-path
+  "field." Training-free, operates directly on logits. Provides a field-theoretic vocabulary
+  that complements statistical mechanics approaches.
+- **Relevance:** Carnot's energy tiers (Ising/KAN/Boltzmann) compute scalar energy over
+  configurations. HalluField extends this to token-path distributions — a natural generalization.
+  The "field" view enables per-token energy attribution: which specific tokens contributed most
+  to a high-energy (hallucination-prone) output. This is useful for targeted repair — fix the
+  high-energy token, not the whole response.
+- **When to pursue:** SpilledEnergy + Semantic Energy milestone. Study HalluField's per-token
+  energy attribution as a repair targeting mechanism.
+
+### Hallucination Basins — Attractor Geometry in Latent Space
+- **Paper:** arxiv.org/abs/2604.04743 (2026-04)
+- **What:** Frames LLM hallucinations as attractor basins in latent space with geometry-dependent
+  stability. Introduces steering techniques based on basin curvature and volume. High-curvature
+  basins = fragile knowledge. Low-curvature basins = stable hallucinations. Basin volume
+  correlates with hallucination frequency.
+- **Relevance:** Carnot's Ising/KAN energy landscape IS an attractor basin map. Low energy =
+  valid configuration basin. High energy = constraint-violating basin. The basin curvature
+  insight maps onto KAN spline curvature — sharper splines at constraint boundaries = more
+  stable structural constraint enforcement. Suggests using basin volume as a confidence signal:
+  large valid-basin = high confidence, small valid-basin = verify more aggressively.
+- **When to pursue:** KAN adaptive mesh refinement milestone (Tier 4). Use basin volume
+  estimation to guide KAN spline refinement — add knots in small/fragile basins.
+
+### Self-Adaptive Ising Machine — Lagrange Constraint Relaxation
+- **Paper:** arxiv.org/abs/2501.04971 (2025-01)
+- **What:** Proposes a self-adaptive Ising machine that shapes its energy landscape via Lagrange
+  relaxation of constraints without manual penalty tuning. Constraint violations are penalized
+  automatically via dual variable updates that track feasibility. Outperforms Fujitsu Digital
+  Annealer on 300-variable knapsack problems. No manual lambda tuning required.
+- **Relevance:** Carnot's constraint satisfaction layer currently uses fixed penalty weights.
+  Self-adaptive Ising's Lagrange relaxation would automate this: the dual variables are the
+  constraint weights that Carnot's Tier 1 online learning currently maintains manually.
+  This is the hardware-compatible version of Tier 1 self-learning — the Ising machine ITSELF
+  learns constraint weights via dual variable updates, at sampling speed.
+- **When to pursue:** FPGA hardware milestone. Add LagrangeConstraintSchedule to FpgaBackend
+  that auto-tunes penalty weights via dual variable updates. Bridges Tier 1 learning to hardware.
+
+### ML-Assisted Dynamic Ising — Automated Parameter Selection
+- **Paper:** arxiv.org/abs/2503.23966 (2025-03)
+- **What:** Uses machine learning to automate parameter selection for simulated bifurcation Ising
+  machines, enabling high-speed solving of dynamically changing combinatorial problems without
+  manual parameter tuning. ML model predicts optimal beta schedule and coupling strengths from
+  problem structure. Handles problems where constraint sets change between calls.
+- **Relevance:** Carnot's verify-repair pipeline uses Ising sampling per constraint check.
+  Each check has slightly different problem structure (different constraint graph, different
+  variable count). ML-assisted parameter selection would automatically tune the annealing
+  schedule and coupling scaling per problem — no fixed beta schedule needed. This is the
+  per-query self-adapting that Tier 1 currently approximates with PerModelFPTracker.
+- **When to pursue:** Ising optimization milestone. Add ML-guided annealing schedule to
+  ParallelIsingSampler and FpgaBackend.
+
+### Generative Thermodynamic Computing
+- **Paper:** arxiv.org/abs/2506.15121 (2025-06, revised 2025-10)
+- **What:** Demonstrates that Langevin dynamics can generate structured data from noise without
+  neural networks or injected pseudorandom noise. The physical system's natural time evolution
+  (thermal fluctuations) performs generation via the fluctuation-dissipation theorem. If realized
+  in analog hardware, generation requires no random number generator, no model weights, and
+  no gradient computation — just thermodynamic equilibration.
+- **Relevance:** This is the core physics behind Extropic's TSU and Carnot's long-term Phase 2
+  hardware path. It proves that sampling (the core operation in Carnot's Ising/Boltzmann tiers)
+  is a physically native operation in thermodynamic hardware — not a simulation. The "no
+  pseudorandom noise" result means TSU-style hardware would be inherently more efficient than
+  FPGA Ising (which uses LFSRs). Validates the TSU hardware investment.
+- **When to pursue:** Phase 2 hardware planning. Use as theoretical justification when designing
+  TSU integration experiments. Also relevant to FPGA bitfile design: minimize pseudorandom
+  requirements in LFSR to approximate thermodynamic sampling more faithfully.
+
+### LLM-JEPA — Language Models Meet Joint Embedding Predictive Architectures
+- **Paper:** arxiv.org/abs/2509.14252 (2025-09) — LeCun group (Huang, LeCun, Balestriero)
+- **What:** Adapts JEPA (joint embedding predictive architecture, Yann LeCun's framework) for
+  language. Shows that embedding-space training objectives are superior to input-space (token-level)
+  prediction for representation quality and downstream reasoning. The JEPA energy in embedding
+  space captures high-level semantic consistency that token-level cross-entropy misses.
+- **Relevance:** Carnot's JEPA-style predictive verification operates in embedding space,
+  which this paper validates as the RIGHT design choice. The paper provides architecture details
+  for the JEPA encoder that Carnot's violation predictor should use. LeCun's group publishing
+  this validates the JEPA verification approach at scale — if they're adapting JEPA to language,
+  constraint energy in embedding space is the right architecture for verification.
+  Also: direct connection to Kona (LeCun is on Kona's technical board) — this is the
+  architectural direction Kona is taking.
+- **When to pursue:** JEPA retrain milestone. Use LLM-JEPA encoder architecture for violation
+  predictor. Compare embedding-space vs token-space verification accuracy.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
 ### EORM — Energy-Based Outcome Reward Model for CoT Ranking (HIGH PRIORITY)
@@ -1560,6 +1663,26 @@ thermodynamic computing Ising FPGA
   JEPA identifies WHERE violations are likely; adaptive rejection sampling avoids them efficiently.
 - **When to pursue:** Energy-guided decoding milestone. Replace current decoding sampler with
   adaptive weighted rejection sampling. Measure tokens/second improvement.
+
+### AutoResearch-RL — Perpetual Self-Evaluating RL for Architecture Discovery (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2603.07300 — "AutoResearch-RL: Perpetual Self-Evaluating RL Agents
+  for Autonomous Neural Architecture Discovery" (March 2026, Jain et al.)
+- **What:** An RL agent that proposes code modifications to neural architectures, evaluates
+  validation loss as a fitness signal, and applies PPO over ~300 iterations without human
+  involvement. The perpetual self-evaluation loop uses val-bpb (validation bits-per-byte) as
+  its reward signal. Achieves architecture improvements comparable to hand-tuned baselines.
+  Note: withdrawn from arXiv for policy reasons but publicly referenced in multiple surveys.
+- **Relevance to Carnot:** Direct analog to Carnot's autoresearch conductor loop. The pattern
+  is identical: propose experiment -> execute -> observe metric -> update policy. Carnot's conductor
+  uses energy-reduction as its fitness signal; AutoResearch-RL uses val-bpb. The PPO-over-code
+  paradigm confirms that code-level RL for architecture discovery is viable at small scale.
+  Carnot's JitRL-based self-learning (Tier 1) is the non-gradient equivalent: instead of PPO
+  weight updates, use non-parametric logit modulation from the energy memory. AutoResearch-RL's
+  evaluation harness (spawn -> train -> eval -> score -> record) is the exact structure of
+  Carnot's conductor scripts.
+- **When to pursue:** FR-11 (Autonomous Self-Learning Loop) confirmation milestone (Exp 415+).
+  When validating the self-learning relay, use the val-bpb metric pattern as a principled
+  fitness signal for comparing constraint verification quality across JitRL iterations.
 
 ### REGREACT — Regulatory Constraint Extraction Pipeline (MEDIUM PRIORITY)
 - **Paper:** arxiv.org/abs/2604.12054 — "REGREACT: Self-Correcting Multi-Agent Pipelines for
