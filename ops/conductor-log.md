@@ -1927,3 +1927,7 @@ python/ |
 | 2026-04-16 09:22 UTC | Exp 400: SAVeR live multi-turn verification — fait | OK | Deliverable already exists in repo |
 | 2026-04-16 09:22 UTC | Exp 401: Semantic Energy hallucination scorer — lo | OK | Deliverable already exists in repo |
 | 2026-04-16 09:22 UTC | Exp 402: CRANE extraction gate — alternating free  | OK | Deliverable already exists in repo |
+| 2026-04-16 09:40 UTC | Exp 392: JitRL constraint memory — non-parametric  | OK | Deliverable already exists in repo |
+| 2026-04-16 09:40 UTC | Exp 398: Combined EORM+JEPA retrain on live pairs  | OK | Deliverable already exists in repo |
+| 2026-04-16 09:40 UTC | Exp 402: CRANE extraction gate — alternating free  | OK | Deliverable already exists in repo |
+| 2026-04-16 09:40 UTC | Exp 403: Operational retrospective — milestone 202 | OK | Deliverable already exists in repo |
