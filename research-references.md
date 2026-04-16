@@ -1388,3 +1388,105 @@ thermodynamic computing Ising FPGA
 - **When to pursue:** Self-learning architecture milestone. Add selective consolidation to
   CaseMemory: only store traces where verified_violation != model_confidence_direction.
   Target: reduce CaseMemory size by 60% while maintaining or improving pattern precision.
+
+---
+
+## New References — Added 2026-04-16 (Milestone 2026.06.03 Planning)
+
+### Physical Analog KAN — Hardware-Native Energy Tier (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2602.07518 — "Physical Analog Kolmogorov-Arnold Networks based on
+  Reconfigurable Nonlinear-Processing Units" (Feb 2026)
+- **What:** Implements KAN spline activations in silicon using Reconfigurable Nonlinear-Processing
+  Units (RNPUs) — multi-terminal nanoscale devices whose input-output characteristics are tuned via
+  control voltages. System-level estimates: ~250 pJ/inference, ~600 ns latency. 10^2–10^3x energy
+  reduction vs digital MLP at equivalent approximation error.
+- **Relevance to Carnot:**
+  1. CIKAN's constraint boundaries (ConstraintBoundary dataclass) map DIRECTLY to RNPU saturation
+     points. Each constraint boundary becomes one RNPU saturation voltage — hardware cannot output
+     configurations that cross the boundary. This is not a software approximation; it is a physical
+     constraint.
+  2. The 250 pJ/inference target makes constraint verification orders of magnitude cheaper than
+     GPU inference. FPGA LUT-based splines are the intermediate step before silicon RNPU.
+  3. Phase 3 vision: CIKAN energy tier running on an aKAN chip, 100x more efficient than Ising on FPGA.
+- **FPGA path:** Spline LUTs in FPGA → aKAN silicon → TSU hardware. Each step faster and cheaper.
+- **When to pursue:** After CIKAN is working (Exp 378). Add hardware compilation analysis: map each
+  ConstraintBoundary to an FPGA LUT saturation constraint. Document the silicon path.
+
+### BiKA — Ultra Lightweight KAN Hardware Accelerator (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2602.23455 — "BiKA: Kolmogorov-Arnold-Network-inspired Ultra Lightweight
+  Neural Network Hardware Accelerator" (Feb 2026)
+- **What:** KAN architecture variant targeting extreme hardware efficiency. Binarized spline
+  activations reduce memory bandwidth and multiply-accumulate operations to near-zero.
+- **Relevance to Carnot:** Alternative hardware path for the KAN energy tier at the edge. If full-
+  precision KAN splines are too expensive for the KV260 FPGA, BiKA's binarized variant could be
+  ported. Also relevant for NPU deployment of the JEPA predictor (Tier 3).
+- **When to pursue:** When implementing the FPGA KAN energy tier or NPU deployment of JEPA.
+
+### JitRL — Just-In-Time RL, Continual Learning Without Gradient Updates (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2601.18510 — "Just-In-Time Reinforcement Learning: Continual Learning
+  in LLM Agents Without Gradient Updates" (Jan 2026)
+- **What:** JitRL maintains a dynamic non-parametric memory of (state, action, advantage) triples.
+  At inference time, retrieves relevant triples and uses them to directly modulate output logits
+  — equivalent to adding a learned offset to the prior policy without any gradient computation.
+  Proven to be the closed-form solution to the KL-constrained policy optimization objective.
+  Outperforms fine-tuning methods at 30x lower cost.
+- **Relevance to Carnot:**
+  1. Carnot's Tier 1 self-learning (constraint reweighting) was proven ineffective in Exp 134 because
+     simply reweighting existing constraints doesn't change behavior enough. JitRL suggests a better
+     approach: maintain a memory of (constraint_type, question_type, outcome) triples and at inference
+     time, retrieve the most similar prior constraint invocations to MODULATE the repair threshold —
+     not reweight constraints, but change the decision boundary based on what worked before.
+  2. The "no gradient updates" property is critical — constraint memory should be instant-update,
+     not a training phase. JitRL proves this is theoretically optimal under KL constraints.
+  3. Hardware path: the non-parametric memory fits on CPU (just a key-value store). The logit
+     modulation is a simple dot product — sub-microsecond on CPU, sub-nanosecond on FPGA.
+- **When to pursue:** Next milestone. Implement JitRL-style constraint logit modulation as an
+  upgrade to Tier 1 online learning. Replace counter-based reweighting with memory-retrieval
+  modulation.
+
+### Ising Machine ↔ Neural Network Correspondence (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2511.00746 — "Correspondence Between Ising Machines and Neural Networks"
+  (Nov 2025)
+- **What:** Establishes a systematic bijection between Ising machines (Hopfield networks) and
+  feedforward neural networks, with a practical method to compile trained neural networks into
+  Ising hardware. Runs feed-forward NNs on Ising-type hardware accelerators.
+- **Relevance to Carnot:**
+  1. The EORM (EnergyRewardModel, Exp 346) is a small transformer. If this correspondence holds for
+     transformer-like architectures, EORM could be compiled to FPGA Ising hardware, eliminating GPU
+     dependency for the EORM gate in the three-tier pipeline.
+  2. The JEPA predictor (a small binary classifier) is an even simpler candidate — a fully-connected
+     2-layer network may compile directly to Ising.
+  3. Validates our architecture: by designing small constraint models (JEPA, EORM), we're already
+     building in the direction of Ising-hardware-compilable networks.
+- **When to pursue:** Hardware acceleration milestone. After JEPA predictor and EORM are stable,
+  experiment with compiling them to Ising representation for KV260 FPGA execution.
+
+### Adaptive Weighted Rejection Sampling — Constrained Generation (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2504.05410 — "Fast Controlled Generation from Language Models with
+  Adaptive Weighted Rejection Sampling" (April 2026)
+- **What:** Adaptive rejection sampling algorithm for constrained LLM generation that requires
+  orders of magnitude fewer constraint evaluations than naive rejection sampling. The key insight:
+  adapt the sampling distribution to concentrate probability mass near constraint boundaries.
+- **Relevance to Carnot:** Directly applies to energy-guided decoding (Exp 110, Exp 138). The
+  adaptive sampling approach could replace Carnot's current Langevin dynamics sampler in the
+  energy-guided decoding path, making constrained generation faster. Pairs with the JEPA predictor:
+  JEPA identifies WHERE violations are likely; adaptive rejection sampling avoids them efficiently.
+- **When to pursue:** Energy-guided decoding milestone. Replace current decoding sampler with
+  adaptive weighted rejection sampling. Measure tokens/second improvement.
+
+### REGREACT — Regulatory Constraint Extraction Pipeline (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2604.12054 — "REGREACT: Self-Correcting Multi-Agent Pipelines for
+  Structured Regulatory Information Extraction" (April 2026)
+- **What:** Multi-agent pipeline for extracting structured information from regulatory documents.
+  Agents decompose regulatory text into logical rules, verify cross-rule consistency, and produce
+  machine-readable compliance assertions. Self-correcting: agents flag contradictions and resolve
+  them via a negotiation loop.
+- **Relevance to Carnot:** Validates the compliance checker product direction (Tier B in
+  research-program.md). The multi-agent extraction pattern (decompose → assert → negotiate → resolve)
+  maps directly onto Carnot's verify-repair loop. The key insight: regulatory compliance is a
+  STRUCTURED constraint domain — rules are formal, assertions are checkable, and violations are
+  deterministic. This is the ideal domain for Carnot's constraint verification approach.
+  Finance (Basel III/IV), healthcare (HIPAA), and legal (GDPR) all have machine-readable rule sets
+  that could be formalized as Carnot constraint templates.
+- **When to pursue:** Compliance checker product milestone. Start with a simple domain:
+  encode 10 HIPAA rules as ConstraintTemplates, verify GPT/Gemma outputs for compliance.
