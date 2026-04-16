@@ -1863,3 +1863,5 @@ python/ |
 | 2026-04-16 00:22 UTC | Exp 369: Live HumanEval code verification — 50 pro | OK | 81 passed in 3.36s |
 | 2026-04-16 00:23 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
 | 2026-04-16 00:50 UTC | Exp 370: Live adversarial GSM8K benchmark — Carnot credibility experiment | OK | 23 tests pass; diagnose_live_gpu_or_raise hard gate (no simulated fallback); LLMConstraintExtractor for repair; adversarial_schema=carnot.adversarial_gsm8k.v2; SCENARIO-BENCH-022 added; 6742 pass full suite; LIVE RUN PENDING CARNOT_FORCE_LIVE=1 |
+| 2026-04-16 00:52 UTC | Exp 370: Live adversarial GSM8K — Apple arXiv 2410 | OK | 81 passed in 3.37s |
+| 2026-04-16 00:53 UTC | Exp 367: Live extraction benchmark — LLMExtractor  | OK | Deliverable already exists in repo |
