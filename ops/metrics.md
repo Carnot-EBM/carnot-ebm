@@ -13,6 +13,7 @@
 | 5 | 2026-04-16T23:23:32Z | 2026-04-16T23:41:51Z | Exp 429: adversarial GSM8K live benchmark (Apple arXiv 2410.05229); Exp 421 status='partial' → full re-run harness; apply_env_autofix() module-level; Gate 0-4 chain (same as Exp 428); ExperimentTimeoutWatchdog(75min); _run_three_conditions() (standard/adversarial/repaired, 50q, checkpoint/10); adversarial_drop_pct + repair_improvement_pct headline metrics; schema='carnot.adversarial_gsm8k.v2'; reuses helpers from Exp 355+368; 42 new tests pass; LIVE RUN PENDING | ~18m |
 | 6 | 2026-04-17T03:45:59Z | 2026-04-17T04:02:49Z | Exp 432: JitRL live validation; read existing scripts+tests (already scaffolded); ran experiment (synthetic_fallback, fp_reduction=33.71%); 39 tests pass; REQ-LEARN-034/SCENARIO-LEARN-060/061 confirmed; ops docs updated (conductor-log, changelog, status, metrics); Tier 1 self-learning partially met | ~17m |
 | 7 | 2026-04-17T05:53:12Z | 2026-04-17T05:54:17Z | Exp 435 doc update: removed duplicate changelog entry (actual commit already had full details); updated status.md row (NPUPrereqResult, IRON toolchain details, REQ-PRED-005 new); appended traceability.md rows for REQ-PRED-005 (IRON sampler) + SCENARIO-EXP303-G (IRON path success); metrics updated | ~2m |
+| 8 | 2026-04-17T06:00:57Z | 2026-04-17T06:05:18Z | Exp 435a: Phase 3 seed — continuous EBM vs Ising; REQ-KONA-001 + SCENARIO-KONA-001/002 added to spec; python/carnot/phase3/continuous_ebm.py; 33 tests pass; experiment script runs in 0.2s; honest_verdict=partial_match (sign_agreement=0.8, L2=2.69) | ~5m |
 
 ---
 
