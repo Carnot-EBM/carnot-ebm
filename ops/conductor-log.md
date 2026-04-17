@@ -2018,3 +2018,5 @@ python/ |
 | 2026-04-17 05:43 UTC | Exp 435: AMD XDNA NPU Unblock — 5th attempt + IRON toolchain probe | OK | 50 tests pass; blocked_prereq (5th milestone); IRON path documented |
 | 2026-04-17 05:55 UTC | Exp 435: AMD XDNA NPU unblock — prereq install che | OK | 81 passed in 16.38s |
 | 2026-04-17 06:00 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
+| 2026-04-17 06:07 UTC | Exp 435a: Kona-adjacent continuous energy landscap | OK | 81 passed in 19.82s |
+| 2026-04-17 06:12 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
