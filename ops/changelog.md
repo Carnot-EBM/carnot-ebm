@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 432: JitRL Live Validation — Tier 1 Self-Learning Requirement)
+
+- 2026-04-17 03:55 UTC: Implemented and ran Exp 432 JitRL live validation.
+  Triggered by: user instruction to validate JitRL memory on real GSM8K data (research-program.md Tier 1 requirement).
+
+  **Context:** research-program.md Continuous Self-Learning section requires at least one
+  self-learning experiment per milestone. Exp 415 validated JitRL on synthetic data.
+  Exp 432 closes the Tier 1 loop by attempting validation on real Exp 427 data.
+  Exp 427 status=scaffolding_only (live run still pending GPU availability), so
+  honest_verdict=synthetic_fallback is correctly reported.
+
+  **Deliverables:**
+  - `scripts/experiment_432_jitrl_live_validation.py`: full harness with apply_env_autofix(),
+    ExperimentTimeoutWatchdog(432, 30min), load_live_violations(), _generate_synthetic_violations(),
+    build_jitrl_validation_artifact(), _compute_fp_rate(), main()
+  - `tests/python/test_experiment_432_jitrl_live_validation.py`: 39 tests, 100% targeted coverage
+  - `results/experiment_432_jitrl_live_validation.json`: artifact with schema=carnot.jitrl_validation.v1
+  - Spec: REQ-LEARN-034 + SCENARIO-LEARN-060/061 confirmed implemented in autoresearch/spec.md
+
+  **Results:** synthetic_fallback; before_fp=0.32, after_fp=0.212, fp_reduction_pct=33.71%;
+  JitRL raised rate_problems threshold to 0.70, lowered arithmetic threshold to 0.38.
+  Tier 1 self-learning validated on synthetic; live revalidation gated on Exp 427 live GPU run.
+
 ## 2026-04-17 (Exp 430: FOVER Z3 Step Annotation — FR-11 training signal)
 
 - 2026-04-17 00:50 UTC: Implemented Exp 430 FOVER annotation pipeline.
