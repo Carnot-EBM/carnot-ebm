@@ -1,5 +1,39 @@
 # Carnot — Changelog
 
+## 2026-04-16 (Exp 429: Adversarial GSM8K Live Benchmark — Apple arXiv 2410.05229)
+
+- 2026-04-16 23:41 UTC: Implemented Exp 429 adversarial GSM8K benchmark harness.
+  Triggered by: user instruction to confirm/re-run Exp 421 adversarial GSM8K benchmark
+  (Exp 421 status='partial' — blocked at Gate 0 before RETRO-022 fix).
+
+  **Context:** Apple researchers (arXiv 2410.05229) showed one irrelevant sentence drops
+  frontier LLM accuracy up to 65%. Carnot's arithmetic verifier is structural — it extracts
+  equation tokens and ignores context words. Therefore Carnot should be immune to distractor
+  injection. This is Carnot's most compelling credibility experiment.
+
+  **Design:** Full re-run with gate chain identical to Exp 428:
+  - apply_env_autofix() at module import (RETRO-022 mitigation)
+  - Gate 0 (informational): Exp 413 preflight verdict
+  - Gate 1: LiveGPUGate.require_live_or_blocked() — hard gate
+  - Gate 2: check_dual_gpu_health() — WARNING if GPU1 zombie (RETRO-025); non-blocking
+  - Gate 3: tmpl.setup_gpu([Gemma4-E4B-it GPU0, Qwen3.5-0.8B GPU1]) health check
+  - Gate 4: _load_model_pipeline() — hard gate per model
+  - ExperimentTimeoutWatchdog(429, timeout_minutes=75)
+  - _run_three_conditions(): standard / adversarial / repaired, 50 questions, checkpoint/10
+  - VerifyRepairPipeline wired for repair condition (fallback to re-inference on exception)
+  - adversarial_drop_pct + repair_improvement_pct as headline Apple-comparable metrics
+
+  **Reuse:** load_gsm8k_questions, _is_correct, _call_model, _build_per_model_result,
+  _compute_top_level_verdict from Exp 355; _load_model_pipeline from Exp 368.
+
+  **Honest verdict:** improvement_positive / degradation_positive / neutral / blocked.
+  Primary success: adversarial_drop > 0 AND repair_improvement > 0.
+
+  **Files written:**
+  - scripts/experiment_429_adversarial_live_confirmed.py
+  - tests/python/test_experiment_429_adversarial_live_confirmed.py (42 tests, all pass)
+  - Output: results/experiment_429_adversarial_live.json (LIVE RUN PENDING)
+
 ## 2026-04-16 (Exp 428: HumanEval Live Benchmark Confirmation — RETRO-022 fixed)
 
 - 2026-04-16 22:33 UTC: Implemented Exp 428 HumanEval live benchmark confirmation harness.

@@ -1,0 +1,24 @@
+{
+  "experiment": 429,
+  "schema": "carnot.benchmark_confirmation.v1",
+  "run_date": "2026-04-16",
+  "status": "scaffolding_only",
+  "honest_verdict": "live_benchmark_needs_human_triggered_run",
+  "confirmed_from": null,
+  "rerun": false,
+  "reason": "Exp 429 targets the Apple irrelevant-sentence-injection adversarial GSM8K benchmark (arXiv 2410.05229). The conductor subagent produced full scaffolding — 42 passing tests + script — but hit the 45-min wall-clock timeout before running the live benchmark. Adversarial inference on the full GSM8K subset exceeds what the subagent can do in-band.",
+  "scaffolding_complete": {
+    "script_path": "scripts/experiment_429_adversarial_live_confirmed.py",
+    "test_path": "tests/python/test_experiment_429_adversarial_live_confirmed.py",
+    "tests_passing": 42
+  },
+  "dependencies": {
+    "gpu0_healthy": true,
+    "gpu1_healthy": false,
+    "gpu1_zombie_confirmed": "results/experiment_426_dual_gpu_fix.json",
+    "prior_simulated_result": "results/experiment_421_adversarial_live.json",
+    "recommendation": "Run scripts/experiment_429_adversarial_live_confirmed.py on a node with both GPUs healthy for proper live confirmation. Exp 279 (the roadmap's adversarial semantic grounding +40pp lift) is currently flagged SIMULATED; a live Exp 429 result could replace it."
+  },
+  "duration_s": 0.0,
+  "notes": "Written by outer-loop Claude Opus 4.7 after the conductor wall-clock timeout fired at 45 min. This is an honest scaffolding-only deliverable; headline adversarial-lift numbers must not be cited from this file."
+}
