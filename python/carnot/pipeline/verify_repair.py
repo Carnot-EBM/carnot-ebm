@@ -1000,6 +1000,7 @@ class VerifyRepairPipeline:
         tracker: ConstraintTracker | None = None,
         jepa_predictor: Any = None,
         jepa_threshold: float = 0.5,
+        think_probe: Any = None,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -1043,16 +1044,23 @@ class VerifyRepairPipeline:
                 A predicted max probability BELOW this value triggers the fast
                 path (skip full verification). Default 0.5. Lower values make
                 the gate more aggressive (more fast-path skips, higher risk).
+            think_probe: Optional CarnotThinkProbe instance (Tier 0 pre-filter).
+                If provided and the probe returns verdict='incorrect', Ising
+                verification is skipped and a violation is returned immediately
+                (fast-path). For 'uncertain' or 'correct' verdicts, full
+                verification proceeds normally. Default None (no ThinkProbe).
 
         Returns:
             VerificationResult with constraint evaluation details.
             ``mode="FAST_PATH"`` and ``skipped=True`` when JEPA gating fired.
+            ``mode="THINK_PROBE_FAST_PATH"`` and ``skipped=True`` when ThinkProbe
+            flagged the response as 'incorrect'.
 
         Raises:
             PipelineTimeoutError: If the call exceeds timeout_seconds.
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
-              REQ-JEPA-002
+              REQ-JEPA-002, REQ-VERIFY-094
         """
         typed_reasoning = self.extract_typed_reasoning(question, response)
         semantic_grounding = self.verify_semantic_grounding(question, response, typed_reasoning)
@@ -1095,6 +1103,43 @@ class VerifyRepairPipeline:
                     semantic_grounding=semantic_grounding,
                     semantic_verifier_v2=semantic_verifier_v2,
                 )
+        # Tier 0 ThinkProbe fast-path (optional, REQ-VERIFY-094).
+        # If a CarnotThinkProbe instance is provided and it classifies the response
+        # as 'incorrect', skip Ising entirely and return a violation immediately.
+        # This is more sample-efficient than discriminative scoring (ThinkPRM result:
+        # 1% of labels achieves SOTA on MATH-500). Only 'incorrect' triggers fast-path;
+        # 'uncertain' and 'correct' fall through to full Ising verification.
+        if think_probe is not None:
+            probe_result = think_probe.probe(response)
+            if not probe_result.should_run_ising:
+                # ThinkProbe is confident the response is incorrect — skip Ising.
+                think_violation = ConstraintResult(
+                    constraint_type="think_probe",
+                    description="ThinkProbe: response classified as incorrect by 3-step CoT verifier",
+                    metadata={
+                        "verdict": probe_result.verdict.verdict,
+                        "confidence": probe_result.verdict.confidence,
+                        "latency_ms": probe_result.latency_ms,
+                    },
+                )
+                return VerificationResult(
+                    verified=False,
+                    constraints=[think_violation],
+                    energy=0.0,
+                    violations=[think_violation],
+                    certificate={
+                        "mode": "THINK_PROBE_FAST_PATH",
+                        "think_probe_verdict": probe_result.verdict.verdict,
+                        "think_probe_confidence": probe_result.verdict.confidence,
+                        "think_probe_latency_ms": probe_result.latency_ms,
+                    },
+                    mode="THINK_PROBE_FAST_PATH",
+                    skipped=True,
+                    typed_reasoning=typed_reasoning,
+                    semantic_grounding=semantic_grounding,
+                    semantic_verifier_v2=semantic_verifier_v2,
+                )
+
         # Fast path: delegate to Rust pipeline when available.
         # Repair still uses Python (requires LLM), but the hot verification
         # inner loop gets a 10x speedup from the Rust implementation.

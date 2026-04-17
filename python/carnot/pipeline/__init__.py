@@ -265,6 +265,13 @@ from carnot.pipeline.long_run_executor import (  # noqa: E402
     LongRunBenchmarkResult,
     get_batch_size,
 )
+from carnot.pipeline.think_probe import (  # noqa: E402
+    CarnotThinkProbe,
+    ThinkProbeResult,
+    ThinkVerdict,
+    build_think_probe_prompt,
+    parse_think_probe_output,
+)
 
 __all__ = [
     "AgentStep",
@@ -459,4 +466,9 @@ __all__ = [
     "LongRunBenchmarkExecutor",
     "LongRunBenchmarkResult",
     "get_batch_size",
+    "CarnotThinkProbe",
+    "ThinkProbeResult",
+    "ThinkVerdict",
+    "build_think_probe_prompt",
+    "parse_think_probe_output",
 ]

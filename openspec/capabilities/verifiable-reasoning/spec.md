@@ -5693,6 +5693,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
 | REQ-VERIFY-092 | Not Started | Implemented | SpilledEnergyDetector per-token logit-discrepancy hallucination signal — SpilledEnergyDetector + SpilledEnergyDetectorResult + SpilledEnergyToken + compute_detector_spilled_energy (SCENARIO-VERIFY-123/124, Exp 433) |
 | REQ-VERIFY-093 | Not Started | Implemented | SpilledEnergyDetector CI-safe text mode — score_from_text() deterministic hash-based proxy (SCENARIO-VERIFY-125, Exp 433) |
+| REQ-VERIFY-094 | Not Started | Implemented | CarnotThinkProbe generative 3-step CoT verifier — ThinkVerdict + ThinkProbeResult + build_think_probe_prompt + parse_think_probe_output + CarnotThinkProbe.probe/benchmark (SCENARIO-VERIFY-126/127/128, Exp 444) |
+| REQ-VERIFY-095 | Not Started | Implemented | CarnotThinkProbe CI-safe stub — returns uncertain verdict without GPU, enabling CI-only testing (SCENARIO-VERIFY-126, Exp 444) |
 | REQ-AGENT-001 | Not Started | Implemented | SAVeR multi-turn constraint state propagation — ConstraintState dataclass carrying accumulated_facts, active_constraints, facts_established, model_id across steps (SCENARIO-AGENT-001/002/003, Exp 362) |
 | REQ-AGENT-002 | Not Started | Implemented | SAVeR commit-gate — propose_step() blocks action when constraint violations survive max_repair_attempts; committed=False prevents fact accumulation (SCENARIO-AGENT-001/002/003, Exp 362) |
 
@@ -5752,6 +5754,71 @@ Spec: REQ-VERIFY-093
 **Then** a valid `SpilledEnergyDetectorResult` is returned
 **And** `result.should_verify` is a bool
 **And** calling twice with the same text returns the same result (deterministic)
+
+### REQ-VERIFY-094: CarnotThinkProbe Generative 3-Step CoT Verifier
+
+**Description:** Implements a generative Process Reward Model pre-filter (ThinkPRM,
+arXiv 2504.16828, OpenAI April 2025). Given an LLM response, a secondary Qwen3.5-0.8B
+generates a 3-step verification chain-of-thought:
+  Step 1: Extract the arithmetic/logical claim.
+  Step 2: Check if the claim is correct.
+  Step 3: State verdict (incorrect / uncertain / correct).
+
+If the CoT concludes 'incorrect', Ising verification is skipped immediately (fast-path).
+Only 'uncertain' or 'correct' verdicts proceed to Ising. This creates a fast-path/slow-path
+architecture that is dramatically more sample-efficient than discriminative classifiers
+(ThinkPRM achieves SOTA on MATH-500 and AIME '24 with 1% of supervision labels).
+
+**Acceptance Criteria:**
+- `ThinkVerdict(verdict: Literal['incorrect','uncertain','correct'], confidence: float, reasoning_steps: list[str])`
+- `ThinkProbeResult(response_text: str, verdict: ThinkVerdict, should_run_ising: bool, latency_ms: float)`
+- `build_think_probe_prompt(response: str) -> str` returns 3-step verification prompt
+- `parse_think_probe_output(output: str) -> ThinkVerdict` parses VERDICT: line; fallback 'uncertain'
+- `CarnotThinkProbe(llm_caller=None, confidence_threshold=0.8).probe(response) -> ThinkProbeResult`
+- `should_run_ising=False` iff verdict=='incorrect' (fast-path skip)
+- `benchmark(responses, ground_truth) -> dict` with skip_rate, tp_rate, fp_rate
+
+Spec: REQ-VERIFY-094
+SCENARIO-VERIFY-126, SCENARIO-VERIFY-127, SCENARIO-VERIFY-128
+
+### REQ-VERIFY-095: CarnotThinkProbe CI-Safe Stub
+
+**Description:** When `llm_caller=None`, CarnotThinkProbe.probe() returns a ThinkProbeResult
+with `ThinkVerdict('uncertain', 0.5, [])` without requiring GPU or network access.
+This enables CI testing of the fast-path/slow-path routing logic without real LLM inference.
+
+**Acceptance Criteria:**
+- `CarnotThinkProbe(llm_caller=None).probe(response)` returns `ThinkProbeResult` with
+  `verdict.verdict == 'uncertain'` and `should_run_ising == True`
+- No GPU, no network access required
+- Result is deterministic
+
+Spec: REQ-VERIFY-095
+SCENARIO-VERIFY-126
+
+### SCENARIO-VERIFY-126: CI Stub Returns Uncertain Without GPU
+
+**Given** no GPU and `llm_caller=None`
+**When** `CarnotThinkProbe().probe("any response text")` is called
+**Then** `result.verdict.verdict == 'uncertain'`
+**And** `result.should_run_ising == True`
+**And** `result.verdict.confidence == 0.5`
+**And** no exception is raised
+
+### SCENARIO-VERIFY-127: Incorrect Verdict Triggers Fast-Path Skip
+
+**Given** an `llm_caller` that returns output containing `VERDICT: incorrect`
+**When** `CarnotThinkProbe(llm_caller=mock_caller).probe(response)` is called
+**Then** `result.verdict.verdict == 'incorrect'`
+**And** `result.should_run_ising == False` (fast-path: skip Ising)
+
+### SCENARIO-VERIFY-128: Benchmark Reports Skip Rate And Error Rates
+
+**Given** a corpus of 50 correct + 50 wrong responses with a deterministic mock LLM caller
+**When** `CarnotThinkProbe(llm_caller=mock).benchmark(responses, ground_truth)` is called
+**Then** `result['skip_rate']` is a float in [0.0, 1.0]
+**And** `result['tp_rate']` is the fraction of wrong responses flagged as incorrect
+**And** `result['fp_rate']` is the fraction of correct responses wrongly flagged as incorrect
 
 ---
 
