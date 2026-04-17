@@ -19,6 +19,7 @@
 | 11 | 2026-04-17T11:55:37Z | 2026-04-17T12:35:51Z | Exp 440: read existing humaneval_micro.py + experiment_440 script + test file; 46 tests pass; traceability updated (REQ-BENCH-009/010, SCENARIO-BENCH-025-028); changelog + status updated | ~40m |
 | 12 | 2026-04-17T13:35:58Z | 2026-04-17T13:47:41Z | Exp 441 adversarial micro-benchmark: verified all code already exists (adversarial_gsm8k.py MicroAdversarialResult/build_micro_adversarial_artifact, experiment_441 script, 40 tests); REQ-BENCH-011/SCENARIO-BENCH-029/030 confirmed in spec; ran full test suite (3926 passed, 2 pre-existing failures unrelated to Exp 441); LIVE RUN PENDING | ~12m |
 | 13 | 2026-04-17T15:16:27Z | 2026-04-17T15:28:43Z | Exp 442: FOVER live CoT annotation — read fover_annotator.py, env_autofix.py, Exp 439 live data; verified fover_live.py + experiment_442 script already exist; ran 63 tests (all pass); executed experiment (300 live responses → 57 labeled pairs; honest_verdict=real_data_labeled); updated conductor-log.md + changelog.md; FR-11 upstream relay condition met for first time after 8 milestones of synthetic_only | ~12m |
+| 14 | 2026-04-17T19:09:10Z | 2026-04-17T19:23:59Z | Exp 444: CarnotThinkProbe — verified all code already implemented (think_probe.py, test_think_probe.py, experiment_444 script, __init__ exports, verify_repair integration, spec REQ-VERIFY-094/095, architecture Tier 0 table); 56 tests pass; 99 combined tests (think+sink probe) pass; changelog/metrics updated | ~14m |
 
 ---
 
