@@ -1,6 +1,6 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-04-16 (Exp 425: Conductor timeout watchdog — ExperimentTimeoutWatchdog + get_timeout_minutes + build_timeout_artifact; REQ-INFRA-023/024, SCENARIO-INFRA-028/029/030 added to verifiable-reasoning spec; 35 tests pass) | 2026-04-15 (Exp 354: Apple adversarial GSM8K harness — AdversarialGSMQuestion + build_adversarial_questions + AdversarialBenchmarkResult; REQ-BENCH-006/007, SCENARIO-BENCH-014/015/016; 63 tests; scripts/experiment_354_adversarial_gsm8k_harness.py)
+**Last Updated:** 2026-04-17 (Exp 434: Compliance Checker — ComplianceEnergyChecker KAN-based two-layer energy model; encode_compliance_text bag-of-words; contrastive training; inspect_spline auditability; REQ-SAFE-004/005/006, SCENARIO-SAFE-004-005/006 added to spec; 67 tests 100% module coverage) | 2026-04-16 (Exp 425: Conductor timeout watchdog — ExperimentTimeoutWatchdog + get_timeout_minutes + build_timeout_artifact; REQ-INFRA-023/024, SCENARIO-INFRA-028/029/030 added to verifiable-reasoning spec; 35 tests pass) | 2026-04-15 (Exp 354: Apple adversarial GSM8K harness — AdversarialGSMQuestion + build_adversarial_questions + AdversarialBenchmarkResult; REQ-BENCH-006/007, SCENARIO-BENCH-014/015/016; 63 tests; scripts/experiment_354_adversarial_gsm8k_harness.py)
 
 ## Functional Requirements → Implementation Status
 

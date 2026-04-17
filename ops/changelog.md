@@ -48,6 +48,12 @@
   JitRL raised rate_problems threshold to 0.70, lowered arithmetic threshold to 0.38.
   Tier 1 self-learning validated on synthetic; live revalidation gated on Exp 427 live GPU run.
 
+## 2026-04-17 (Exp 434: Compliance Checker — Tier B product for regulated industries)
+
+- 2026-04-17: Implemented ComplianceEnergyChecker (Exp 434) for financial/medical/legal constraint energy.
+  KAN-based two-layer energy model; bag-of-words domain encoding; contrastive training; spline auditability.
+  REQ-SAFE-004/005/006 + SCENARIO-SAFE-004/005/006 implemented. 67 tests pass 100% module coverage.
+
 ## 2026-04-17 (Exp 430: FOVER Z3 Step Annotation — FR-11 training signal)
 
 - 2026-04-17 00:50 UTC: Implemented Exp 430 FOVER annotation pipeline.
