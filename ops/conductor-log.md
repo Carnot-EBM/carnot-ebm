@@ -2037,3 +2037,5 @@ python/ |
 | 2026-04-17 09:19 UTC | Exp 438: GPU1 zombie root-cause fix — DualGPURunne | FAIL | No file changes produced |
 | 2026-04-17 09:24 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 09:24 UTC | Exp 438: GPU1 zombie root-cause fix — DualGPURunne | OK | Deliverable already exists in repo |
+| 2026-04-17 10:09 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
+| 2026-04-17 10:14 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |

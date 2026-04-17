@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 439 — Live Precision Micro-Benchmark Harness)
+
+- 2026-04-17 09:39 UTC: Implemented live precision micro-benchmark harness (Exp 439).
+  Triggered by: user instruction — first credible live verify-repair accuracy number.
+
+  **Key change vs Exps 427/368/379:** Scope reduced to 50q × 3 variants × 2 models = 300 LLM calls ≈ 45 min (fits the watchdog budget). Uses LongRunBenchmarkExecutor from Exp 437.
+
+  **Changes:**
+  - `python/carnot/pipeline/precision_micro.py`: New module — MicroPrecisionResult dataclass (model_id, variant, n_questions, baseline_accuracy, variant_accuracy, signed_improvement, crane_detection_rate, inference_mode), build_micro_precision_artifact() (schema carnot.precision_micro.v1; honest_verdict live_improvement/live_no_improvement/blocked; inference_mode guard).
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-BENCH-009, SCENARIO-BENCH-025/026; updated traceability table.
+  - `scripts/experiment_439_live_precision_micro.py`: Full experiment harness — apply_env_autofix() first; ExperimentTimeoutWatchdog(439, 45min); LiveGPUGate hard gate; check_dual_gpu_health() warning; setup_gpu() with explicit device assignment (Exp 438 fix); LongRunBenchmarkExecutor(batch_size=50); 3 variants (BASELINE, CRANE_ONLY, FULL_STACK with JitRL); 2 models (Gemma4-E4B-it, Qwen3.5-0.8B); checkpoint per variant; CoT log to results/experiment_439_live_cot.json.
+  - `tests/python/test_experiment_439_live_precision_micro.py`: 33 tests, 100% precision_micro.py coverage.
+
+  **Deliverable:** results/experiment_439_live_precision_micro.json (pending live GPU run)
+  **CoT output:** results/experiment_439_live_cot.json (for Exp 442 FOVER annotation)
+  **Status:** Harness complete; live execution requires CARNOT_FORCE_LIVE=1 + dual RTX 3090 + ~45 min
+
+---
+
 ## 2026-04-17 (Exp 438 — GPU1 Zombie Fix — RETRO-025 root-cause shipped)
 
 - 2026-04-17 08:53 UTC: Fixed GPU1 zombie scheduling root cause (RETRO-025).

@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-17 07:48 UTC — EXP 437: RETRO-026 CLOSED — LongRunBenchmarkExecutor; splits benchmarks into 50-question batches; per-batch ExperimentTimeoutWatchdog; checkpoint/resume; assemble() with honest partial_N_of_M verdict; 25 tests pass 100% module coverage; results/experiment_437_long_run_executor.json (retro_026_resolved=true)
+**Last Updated:** 2026-04-17 09:39 UTC — EXP 439: Live precision micro-benchmark harness; 50q × 3 variants × 2 models; MicroPrecisionResult + build_micro_precision_artifact (carnot.precision_micro.v1); scripts/experiment_439_live_precision_micro.py; 33 tests pass, 100% precision_micro.py coverage; REQ-BENCH-009, SCENARIO-BENCH-025/026 added to spec
 
 ---
 
@@ -57,12 +57,19 @@ No live benchmark improvements. All precision/HumanEval/adversarial runs are sca
 
 ### What's Next (Priority Order)
 
-1. P0: Fix RETRO-025 (GPU 1 zombie scheduling) before running any dual-GPU benchmark
-2. P0: Human-trigger or long-running executor for Exps 427, 428, 429 (live benchmarks)
+1. P0: Run Exp 439 on live GPU (CARNOT_FORCE_LIVE=1) — first credible live verify-repair number
+2. P0: Fix RETRO-025 (GPU 1 zombie scheduling) before running any dual-GPU benchmark (Exp 438 fix shipped — verify live)
 3. P1: Run Exps 433, 434, 435 (spilled energy, compliance checker, NPU) — scripts exist
 4. P1: Fix RETRO-027 (silent experiment drop detection) in conductor
-5. ~~P2: Fix RETRO-026 (long-running executor path for benchmark-class experiments)~~ CLOSED by Exp 437
-6. P2: Conductor-level session timeout (complements per-experiment watchdog)
+5. P1: Run Exp 442 FOVER annotation on results/experiment_439_live_cot.json once Exp 439 completes
+6. ~~P2: Fix RETRO-026 (long-running executor path for benchmark-class experiments)~~ CLOSED by Exp 437
+7. P2: Conductor-level session timeout (complements per-experiment watchdog)
+
+### Milestone 2026.04.33 — In Progress
+
+**Exp 439 harness complete.** All 33 tests pass, 100% coverage of precision_micro.py.
+Script `scripts/experiment_439_live_precision_micro.py` ready for live GPU execution.
+Requires: CARNOT_FORCE_LIVE=1, dual RTX 3090, ~45 min wall time.
 
 ---
 
