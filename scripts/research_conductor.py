@@ -66,6 +66,13 @@ else:
     DEFAULT_MODEL = "sonnet"
 
 AGENT_MODEL = os.environ.get("AGENT_MODEL", DEFAULT_MODEL)
+# Per-role model overrides (none = fall through to AGENT_MODEL). Rationale:
+# Opus is best for high-synthesis tasks (milestone planning, retrospective
+# honest self-evaluation); Sonnet is the default for experiments and docs;
+# Haiku handles simple post-commit reconciliation. See 2026-04-17 analysis
+# of Claude Opus 4.7 system card for the three-tier gating decision.
+AGENT_MODEL_PLANNER = os.environ.get("AGENT_MODEL_PLANNER")  # e.g. "opus"
+AGENT_MODEL_RETRO = os.environ.get("AGENT_MODEL_RETRO")  # e.g. "opus"
 CONDUCTOR_LOG = PROJECT_ROOT / "ops" / "conductor-log.md"
 DOGFOOD_MEMORY_FILE = PROJECT_ROOT / "ops" / "dogfood-memory.json"
 AGENT_DISPLAY = {
@@ -856,7 +863,11 @@ def _run_operational_retrospective(push: bool = True) -> bool:
     )
 
     logger.info("Calling agent for operational retrospective...")
-    success, output = run_agent(retro_prompt, max_turns=15)
+    # Retrospective benefits from Opus-class honest self-evaluation (anti-
+    # sycophancy + anti-scheming training makes it less likely to paper over
+    # failures). Set AGENT_MODEL_RETRO=opus to enable; defaults to Sonnet.
+    success, output = run_agent(retro_prompt, max_turns=15,
+                                 model_override=AGENT_MODEL_RETRO)
 
     if success:
         logger.info("Operational retrospective complete")
@@ -982,7 +993,10 @@ IMPORTANT:
 - Experiments should be ordered so dependencies are met (earlier experiments first)
 """
 
-    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200)
+    # Planner benefits from Opus-class synthesis (big-context design of 12-13
+    # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
+    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200,
+                                 model_override=AGENT_MODEL_PLANNER)
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
@@ -1252,7 +1266,10 @@ def _plan_next_milestone(push: bool = True) -> bool:
         f"- Each experiment must have a clear deliverable file path\n"
     )
 
-    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200)
+    # Planner benefits from Opus-class synthesis (big-context design of 12-13
+    # coherent experiments). Set AGENT_MODEL_PLANNER=opus to enable; defaults to Sonnet.
+    success, output = run_agent(planning_prompt, max_turns=50, timeout=1200,
+                                 model_override=AGENT_MODEL_PLANNER)
 
     if not success:
         logger.error("Planning agent failed: %s", output[:200])
@@ -1780,8 +1797,13 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         )
         prompt = workflow_preamble + prompt
 
-    # Run the configured agent
-    success, output = run_agent(prompt, max_turns=50, timeout=1200)
+    # Run the configured agent.
+    # Per-experiment model override via YAML "model:" field — Opus for complex
+    # Phase 3 / infrastructure work, Sonnet for routine scaffolding. Absence of
+    # the field falls through to AGENT_MODEL (default Sonnet).
+    task_model = task.get("model")
+    success, output = run_agent(prompt, max_turns=50, timeout=1200,
+                                 model_override=task_model)
 
     if not success:
         logger.error("%s failed: %s", AGENT_DISPLAY, output[:200])
@@ -1939,6 +1961,10 @@ def main() -> int:
     print("=" * 60)
     print(f"  Agent: {AGENT_TYPE} ({AGENT_BIN})")
     print(f"  Model: {AGENT_MODEL}")
+    if AGENT_MODEL_PLANNER:
+        print(f"  Model (planner override): {AGENT_MODEL_PLANNER}")
+    if AGENT_MODEL_RETRO:
+        print(f"  Model (retro override): {AGENT_MODEL_RETRO}")
     print(f"  Project: {PROJECT_ROOT}")
     print(f"  CARNOT_FORCE_LIVE: {os.environ.get('CARNOT_FORCE_LIVE', '<unset>')}")
     if args.loop:
