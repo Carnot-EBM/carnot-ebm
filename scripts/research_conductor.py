@@ -401,10 +401,14 @@ def run_tests(full: bool = False) -> tuple[bool, str]:
         if not existing:
             existing = ["tests/python/test_cli.py"]
 
+        # Pre-flight timeout: 300s. Originally 120s, but Exp 445's
+        # test_boltzmann_repair.py alone takes ~210s (genuine training loop
+        # inside test fixtures). Bumping to 300s avoids spurious pre-flight
+        # failures that trigger the 30-turn self-heal cycle for no reason.
         rc, stdout, stderr = run_cmd(
             [venv_pytest] + existing + ["-q", "--no-header", "-n", "0",
              "--no-cov", "-o", "addopts="],
-            timeout=120,
+            timeout=300,
         )
 
     # Find the summary line
