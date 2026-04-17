@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 442 — FOVER Live CoT Annotation — FR-11 First Real Data)
+
+- 2026-04-17 15:28 UTC: Implemented and executed FOVER annotation on live GPU CoT data (Exp 442).
+  Triggered by: user instruction — run FOVER annotator on Exp 439 live CoT to break FR-11 synthetic_only streak.
+
+  **Key result:** honest_verdict=real_data_labeled — FIRST TIME after 8 consecutive milestones of synthetic_only. 57 labeled pairs (30 correct + 27 incorrect) from 300 live GPU CoT responses.
+
+  **Changes:**
+  - `python/carnot/pipeline/fover_live.py`: New module — LiveFOVERResult dataclass (n_responses, n_steps_found, n_labeled, n_correct, n_incorrect, n_not_verifiable, labeling_rate, source, honest_verdict) and build_live_fover_artifact() (schema carnot.fover_live.v1; honest_verdict real_data_labeled iff source=live AND n_labeled>=20; real_data_insufficient iff source=live AND n_labeled<20; synthetic_fallback iff source=synthetic).
+  - `openspec/capabilities/autoresearch/spec.md`: Added REQ-LEARN-035, SCENARIO-LEARN-062, SCENARIO-LEARN-063; updated Implementation Status table.
+  - `scripts/experiment_442_fover_live_annotation.py`: Full experiment — apply_env_autofix() first; ExperimentTimeoutWatchdog(442, 30min); loads Exp 439 live CoT (300 responses, companion confirms live_gpu); FOVERAnnotator.annotate_corpus(); writes fover_labeled_steps_live.json (separate from Exp 430's synthetic file); honest_verdict assembly.
+  - `tests/python/test_experiment_442_fover_live_annotation.py`: 28 tests — full coverage of LiveFOVERResult, build_live_fover_artifact (all verdict paths, boundary conditions), run_experiment(), main() watchdog wiring.
+
+  **Deliverable:** results/experiment_442_fover_live_annotation.json (written — honest_verdict=real_data_labeled)
+  **Labeled pairs:** results/fover_labeled_steps_live.json (57 real labeled pairs — higher quality than Exp 430 synthetic)
+  **Status:** Complete; 63 tests pass; FR-11 upstream relay condition met for first time
+
+---
+
 ## 2026-04-17 (Exp 441 — Live Adversarial GSM8K Micro-Benchmark Harness)
 
 - 2026-04-17 13:20 UTC: Implemented live adversarial GSM8K micro-benchmark harness (Exp 441).
