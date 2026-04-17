@@ -5504,3 +5504,53 @@ Spec: REQ-VERIFY-093
 **Then** a valid `SpilledEnergyDetectorResult` is returned
 **And** `result.should_verify` is a bool
 **And** calling twice with the same text returns the same result (deterministic)
+
+---
+
+## Phase 3 Seed Requirements (Exp 435a — NOT production, exploratory only)
+
+> **Phase 3 seed work.** These requirements plant a concrete bridge from discrete Ising
+> (Phase 1 sweet spot) to continuous energy landscapes (Kona's domain).  They are
+> intentionally minimal — CPU-only, no GPU, <30 min.  Do NOT gate any production
+> capability on these requirements.
+
+### REQ-KONA-001: Continuous EBM Minimum Recovery
+
+The continuous EBM shall recover the same energy minimum as the Ising baseline on a
+matching 10-variable constraint problem, where "same" is defined as:
+
+- L2 distance between the continuous minimiser and the Ising ground-state sample is
+  ≤ 0.1 (after tanh squashing of continuous variables to [-1, 1])
+- Sign agreement fraction (fraction of coordinates with identical sign) is > 0.9
+
+This requirement validates that a gradient-descent–based continuous sampler and a
+discrete simulated-annealing sampler converge to the same region of the energy landscape
+when initialised from the same Ising coupling matrix J and bias h.
+
+**Rationale:** Phase 3 (Kona parity) requires non-autoregressive reasoning over
+continuous latent variables.  This seed experiment proves the energy function is
+consistent across the discrete↔continuous boundary — without that invariant, the
+Phase 3 architecture has no foundation.
+
+Spec: REQ-KONA-001, SCENARIO-KONA-001, SCENARIO-KONA-002
+
+### SCENARIO-KONA-001: Continuous Minimiser Within L2 Tolerance
+
+**Given** a random 10-variable Ising model with sparse couplings (density ≈ 0.3) and
+  seed 42
+**When** simulated annealing produces an approximate Ising ground-state sample AND
+  gradient descent on E(x) = -0.5*x^T*J*x - h^T*x with tanh squashing produces a
+  continuous minimiser
+**Then** `compare_minima(ising_sample, continuous_sample)['l2_distance'] <= 0.1`
+**And** `compare_minima(...)['sign_agreement'] > 0.9`
+
+### SCENARIO-KONA-002: Honest Verdict Written To Artifact
+
+**Given** the experiment has run to completion (whether it matched or not)
+**When** `build_kona_artifact()` is called with the comparison result
+**Then** `artifact['schema'] == 'carnot.kona_seed.v1'`
+**And** `artifact['honest_verdict']` is one of:
+  - `'continuous_matches_ising'` (L2 < 0.1 AND sign_agreement > 0.9)
+  - `'partial_match'` (sign_agreement > 0.7)
+  - `'failed_to_match'` (otherwise)
+**And** the artifact is serialisable to JSON without error
