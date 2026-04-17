@@ -2066,3 +2066,8 @@ python/ |
 | 2026-04-17 16:06 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 16:06 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
 | 2026-04-17 16:06 UTC | Exp 442: FOVER live annotation — Z3 step labels on | OK | Deliverable already exists in repo |
+| 2026-04-17 16:43 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 16:43 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 16:51 UTC | Exp 443: EORM+JEPA live retrain on Exp 442 real pa | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
+| 2026-04-17 16:56 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 16:56 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
