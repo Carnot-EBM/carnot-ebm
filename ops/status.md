@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-16 21:55 UTC — EXP 427: PRECISION BENCHMARK CONFIRM/RERUN HARNESS — Exp 419 status='partial' → re-run harness implemented with ExperimentTimeoutWatchdog(90 min), check_dual_gpu_health() zombie/thermal gates, crane_detection_rate metric; 35 new tests pass; output: results/experiment_427_precision_live_confirmed.json; will produce FIRST LIVE IMPROVEMENT NUMBER when GPU is live
+**Last Updated:** 2026-04-17 03:55 UTC — EXP 432: JITRL LIVE VALIDATION — Tier 1 self-learning requirement met (synthetic_fallback; Exp 427 not yet live); JitRL threshold modulation produces 33.71% synthetic FP reduction (rate_problems threshold raised to 0.70, arithmetic lowered to 0.38); 39 tests pass; REQ-LEARN-034 + SCENARIO-LEARN-060/061 confirmed implemented; honest_verdict=synthetic_fallback (Exp 427 scaffolding_only → live validation deferred until GPU live run)
 
 ---
 
@@ -30,7 +30,7 @@ Exp 390 was the RETRO-019 preflight gate. Its result: `{"experiment": 390, "stat
 | adversarial_result_credible | **False** | Exp 396 partial — blocked by no live GPU |
 | extraction_winner_known | **False** | Exp 397 partial — RETRO-016 still open |
 | fr11_learning_confirmed | **False** | Exp 399 partial — RETRO-024 opened |
-| jitrl_memory_works | **False** | Exp 392 no result JSON |
+| jitrl_memory_works | **Partial** | Exp 432: synthetic_fallback (33.71% FP reduction on synthetic; live deferred until Exp 427 GPU run) |
 | safety_kan_works | **False** | Exp 393 no result JSON |
 | saver_live_verified | **False** | Exp 400 partial — live_verification_active not set |
 | semantic_energy_viable | **False** | Exp 401 no result JSON |
