@@ -2052,3 +2052,7 @@ python/ |
 | 2026-04-17 13:30 UTC | Exp 441: Live Adversarial GSM8K Micro — 50q x 3 co | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
 | 2026-04-17 13:35 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 13:35 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 14:20 UTC | Exp 441: Live Adversarial GSM8K Micro — 50q x 3 co | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
+| 2026-04-17 14:25 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 14:25 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 14:25 UTC | Exp 441: Live Adversarial GSM8K Micro — 50q x 3 co | OK | Deliverable already exists in repo |
