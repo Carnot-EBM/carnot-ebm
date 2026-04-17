@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-04-09
+**Last Reconciled:** 2026-04-17
 
 ## Overview
 
@@ -22,6 +22,11 @@ carnot/
 │   └── carnot/                # Python package
 │       ├── core/              # JAX energy functions
 │       ├── models/            # Boltzmann, Gibbs, Ising in JAX
+│       ├── phase3/            # Phase 3 seed — bridging Ising to Kona continuous latent space
+│       │   ├── continuous_ebm.py  # ContinuousEBM, sample_continuous, sample_langevin,
+│       │   │                  #   sample_energy_matching, compare_samplers, compare_minima
+│       │   │                  #   (Exp 435a baseline; Exp 446 Langevin+EnergyMatching)
+│       │   └── __init__.py    # Exports all 8 public symbols
 │       ├── samplers/          # JAX MCMC samplers
 │       │   ├── parallel_ising.py  # Parallel Ising Gibbs (checkerboard, annealing, thrml-compatible)
 │       │   └── backend.py     # SamplerBackend protocol (CPU, TSU stub)

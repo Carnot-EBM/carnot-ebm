@@ -5925,4 +5925,62 @@ Spec: REQ-KONA-001, SCENARIO-KONA-001, SCENARIO-KONA-002
   - `'continuous_matches_ising'` (L2 < 0.1 AND sign_agreement > 0.9)
   - `'partial_match'` (sign_agreement > 0.7)
   - `'failed_to_match'` (otherwise)
+
+### REQ-KONA-002: Langevin Dynamics Sampling Achieves L2 < 0.5 vs Ising Ground State
+
+The `sample_langevin` function shall produce a continuous-variable energy minimum that is
+within L2 < 0.5 of the discrete Ising ground-state sample on the 10-variable reference
+problem (seed 42, density 0.3), averaged over at least 20 independent trials.
+
+Langevin dynamics: x_{t+1} = x_t - lr * grad_E(x_t) + noise_scale * sqrt(2*lr) * eps_t,
+where eps_t ~ N(0, I).  Temperature schedule ('cosine', 'linear', or 'constant') controls
+noise annealing.
+
+**Rationale:** Exp 435a showed gradient descent alone achieves L2=2.69 (partial match
+only). Langevin noise injects thermal fluctuations that help escape local energy minima,
+mimicking how physical sampling in thermodynamic systems discovers lower-energy states.
+This is the mechanism behind Generative Thermodynamic Computing (arXiv 2506.15121).
+
+**Implementation Status:** Done (Exp 446)
+
+### REQ-KONA-003: Energy Matching Trajectory Converges Faster Than Gradient Descent
+
+The `sample_energy_matching` function shall converge to a lower-energy state than
+`sample_continuous` (gradient descent) using fewer total gradient evaluations, on the
+10-variable reference problem averaged over 20 trials.
+
+Energy Matching trajectory: x = x - step_size * grad_E(x) / (||grad_E(x)|| + eps)
+(normalised gradient flow).  Initialised from Gaussian noise, this implements a
+constant-speed flow toward the energy minimum regardless of gradient magnitude
+(arXiv 2504.10612, NeurIPS 2025).
+
+**Rationale:** Standard gradient descent slows near flat regions and overshoots near
+steep ones.  Normalised gradient flow maintains constant convergence speed, providing
+more predictable and efficient energy minimisation — a key property for Kona's
+non-autoregressive reasoning over continuous latent spaces.
+
+**Implementation Status:** Done (Exp 446)
+
+### SCENARIO-KONA-003: Langevin Noise Escapes Local Minima
+
+**Given** a 10-variable Ising model (seed 42, density 0.3) with a known Ising ground state
+**When** `sample_langevin(model, n_steps=2000, lr=0.005, noise_scale=0.1,
+  temp_schedule='cosine')` is run 20 independent trials
+**Then** mean L2 distance to Ising ground state is < 0.5
+**And** mean sign_agreement > 0.7
+
+### SCENARIO-KONA-004: Energy Matching Normalized Gradient Flow
+
+**Given** a ContinuousEBM with known coupling J and bias h
+**When** `sample_energy_matching(model, n_steps=1000, n_flow_steps=10)` is called
+**Then** the output is an array of shape (n,) with values in (-1, 1) due to tanh squashing
+**And** the output energy E(x) is lower than the energy of a Gaussian-initialised point
+
+### SCENARIO-KONA-005: compare_samplers Reports All Three Sampler Results
+
+**Given** a ContinuousEBM fitted from an Ising model and its discrete ground state
+**When** `compare_samplers(model, ising_ground_state, n_trials=10)` is called
+**Then** the result dict has keys 'gradient_descent', 'langevin', 'energy_matching'
+**And** each sub-dict has keys 'mean_l2', 'std_l2', 'mean_sign_agreement'
+**And** 'best_sampler' identifies the sampler with the lowest mean_l2
 **And** the artifact is serialisable to JSON without error
