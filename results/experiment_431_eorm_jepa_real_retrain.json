@@ -1,0 +1,26 @@
+{
+  "experiment": 431,
+  "schema": "carnot.eorm_jepa_retrain.v1",
+  "run_date": "2026-04-16",
+  "status": "scaffolding_only",
+  "honest_verdict": "live_benchmark_needs_human_triggered_run",
+  "retro_024_closed": false,
+  "reason": "Exp 431 is the FR-11 relay attempt: retrain EORM + JEPA on FOVER-labeled real pairs (from Exp 430). Conductor subagent produced the module + script + tests (30 tests, 29 passing). Hit the 45-min wall-clock timeout before running the retrain. Additionally, the subagent introduced a sign-convention bug in _evaluate_eorm_auc (flagged in test_perfect_discrimination, test skipped pending domain review).",
+  "scaffolding_complete": {
+    "module_path": "python/carnot/pipeline/fover_eorm_retrain.py",
+    "script_path": "scripts/experiment_431_eorm_jepa_real_retrain.py",
+    "test_path": "tests/python/test_experiment_431_eorm_jepa_retrain.py",
+    "tests_passing": 29,
+    "tests_skipped_with_issue": 1,
+    "known_issues": [
+      "test_perfect_discrimination: _evaluate_eorm_auc has scores.append(-energy) while docstring claims 'high score = predicted violation'. AUC comes out inverted on the mock. Needs domain author review."
+    ]
+  },
+  "dependencies": {
+    "fover_labeled_steps": "results/fover_labeled_steps.json",
+    "fover_source": "Exp 430 synthetic fallback (100 pairs) — needs real Exp 427 live data first",
+    "recommendation": "Run Exp 427 live -> Exp 430 live -> Exp 431 live in that order. Current FOVER labels are synthetic; retraining on synthetic data reproduces the simulated-provenance issue the provenance audit just surfaced."
+  },
+  "duration_s": 0.0,
+  "notes": "Written by outer-loop Claude Opus 4.7 after the conductor wall-clock timeout. The scaffolding exists and is tested; the sign-convention bug should be fixed before the live retrain runs."
+}
