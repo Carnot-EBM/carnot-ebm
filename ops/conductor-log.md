@@ -2011,3 +2011,5 @@ python/ |
 | 2026-04-17 04:35 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 04:35 UTC | Exp 432: JitRL live validation — Tier 1 self-learn | OK | Deliverable already exists in repo |
 | 2026-04-17 04:44 UTC | Exp 433: SpilledEnergyDetector benchmark — arXiv 2602.18671 per-token logit-discrepancy | OK | SpilledEnergyDetector + SpilledEnergyDetectorResult + SpilledEnergyToken + compute_detector_spilled_energy; CI text mode; Tier 0 in ThreeTierPipeline |
+| 2026-04-17 05:15 UTC | Exp 433: Spilled Energy pre-filter — logit-discrep | OK | 81 passed in 38.92s |
+| 2026-04-17 05:20 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
