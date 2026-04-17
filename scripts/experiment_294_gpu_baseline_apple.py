@@ -68,12 +68,25 @@ INFERENCE_TIMEOUT_SECONDS: int = 60
 """Hard per-call timeout in seconds (REQ-VERIFY-066).  If exceeded, a partial
 artifact is emitted with a ``stall_at`` field identifying where inference stalled."""
 
-PREWARM_LOAD_TIMEOUT_SECONDS: int = 15
+PREWARM_LOAD_TIMEOUT_SECONDS: int = 300
 """Timeout for the model-load phase of the pre-warm health-check (REQ-VERIFY-079).
-If loading takes longer than this, ``stall_root_cause`` is set to ``'lazy_load_stall'``."""
+If loading takes longer than this, ``stall_root_cause`` is set to ``'lazy_load_stall'``.
 
-PREWARM_HEALTH_TIMEOUT_SECONDS: int = 10
-"""Timeout for the health-check prompt phase (REQ-VERIFY-079)."""
+2026-04-17: bumped from 15s to 300s. The original 15s was calibrated for the
+small-model prewarm scenario where weights were already in page cache. On cold
+first-run with 4B-parameter models like gemma-4-E4B-it, weight load + CUDA init
+takes 30-120s (per the docstring of model_prewarm itself). The old 15s value
+caused every live GPU experiment in milestone 2026.04.33 to fail at prewarm,
+cascading into 7+ consecutive scaffolding-only deliverables. 300s matches the
+check_model_loadable timeout set earlier (python/carnot/pipeline/live_gpu_diagnostic.py).
+"""
+
+PREWARM_HEALTH_TIMEOUT_SECONDS: int = 60
+"""Timeout for the health-check prompt phase (REQ-VERIFY-079).
+
+2026-04-17: bumped from 10s to 60s. First inference call on a freshly-loaded
+model compiles CUDA kernels and can take 10-30s before any token is produced.
+The old 10s was too tight for larger models."""
 
 PREWARM_WARMUP_PROMPTS: int = 2
 """Number of warm-up prompts run per model after the initial health-check to fully
