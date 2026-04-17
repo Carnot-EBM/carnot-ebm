@@ -1,0 +1,56 @@
+{
+  "schema": "carnot.boltzmann_repair.v1",
+  "experiment": 445,
+  "title": "BoltzmannRepairBridge: Ising ground-state to LLM repair direction",
+  "honest_verdict": "repair_energy_positive",
+  "bridge_metrics": {
+    "mean_energy_reduction": 3.9859239885210993,
+    "repair_success_rate": 1.0,
+    "n_samples": 100,
+    "min_energy_after": -3.894662380218506,
+    "max_energy_after": -3.8264031410217285
+  },
+  "baseline_metrics": {
+    "mean_energy_reduction": -0.09653217867016792,
+    "repair_success_rate": 0.47,
+    "n_samples": 100,
+    "min_energy_after": -3.870164394378662,
+    "max_energy_after": 4.593956470489502
+  },
+  "bridge_vs_baseline": {
+    "success_rate_delta": 0.53,
+    "bridge_rate": 1.0,
+    "baseline_rate": 0.47
+  },
+  "adapter_training": {
+    "n_train_pairs": 50,
+    "n_epochs": 50,
+    "final_mse": 0.03375623747706413,
+    "data_description": "50 synthetic pairs: spin_configs=\u00b11 random, target_embeddings=random unit vectors in R^128"
+  },
+  "ising_model": {
+    "spin_dim": 16,
+    "coupling_description": "16-variable Ising: adjacent pairs +0.35 coupling (carry propagation), skip-one pairs -0.15 coupling (addition cancellation)"
+  },
+  "bridge_config": {
+    "spin_dim": 16,
+    "embed_dim": 128,
+    "n_warmup": 200,
+    "n_samples_per_call": 10,
+    "steps_per_sample": 10,
+    "beta_final": 10.0
+  },
+  "duration_s": 160.15628004074097,
+  "cpu_only": true,
+  "spec": [
+    "REQ-REPAIR-014",
+    "REQ-REPAIR-015",
+    "SCENARIO-REPAIR-028",
+    "SCENARIO-REPAIR-029",
+    "SCENARIO-REPAIR-030"
+  ],
+  "references": [
+    "Boltzmann-GPT arXiv:2601.17094",
+    "ARM-EBM arXiv:2512.15605"
+  ]
+}
