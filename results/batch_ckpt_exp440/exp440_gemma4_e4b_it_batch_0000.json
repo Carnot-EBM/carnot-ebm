@@ -1,0 +1,824 @@
+{
+  "batch_id": 0,
+  "start_idx": 0,
+  "end_idx": 25,
+  "questions": [
+    {
+      "task_id": "HumanEval/0",
+      "entry_point": "has_close_elements",
+      "prompt": "def has_close_elements(numbers: list, threshold: float) -> bool:\n    \"\"\"Check if any two numbers in list are closer than threshold.\"\"\"\n",
+      "canonical_solution": "    for i in range(len(numbers)):\n        for j in range(i+1, len(numbers)):\n            if abs(numbers[i]-numbers[j]) < threshold:\n                return True\n    return False\n",
+      "test_cases": [
+        [
+          [
+            [
+              1.0,
+              2.0,
+              3.9,
+              4.0
+            ],
+            0.5
+          ],
+          true
+        ],
+        [
+          [
+            [
+              1.0,
+              2.0,
+              3.9,
+              4.0
+            ],
+            0.05
+          ],
+          false
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/1",
+      "entry_point": "separate_paren_groups",
+      "prompt": "def separate_paren_groups(paren_string: str) -> list:\n    \"\"\"Separate groups of nested parentheses.\"\"\"\n",
+      "canonical_solution": "    result, depth, current = [], 0, ''\n    for c in paren_string:\n        if c == '(':\n            depth += 1\n            current += c\n        elif c == ')':\n            current += c\n            depth -= 1\n            if depth == 0:\n                result.append(current)\n                current = ''\n    return result\n",
+      "test_cases": [
+        [
+          [
+            "(()()) ((())) () ((())()())"
+          ],
+          [
+            "(()())",
+            "((()))",
+            "()",
+            "((())()())"
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/2",
+      "entry_point": "truncate_number",
+      "prompt": "def truncate_number(number: float) -> float:\n    \"\"\"Return the decimal part of a float.\"\"\"\n",
+      "canonical_solution": "    return number % 1.0\n",
+      "test_cases": [
+        [
+          [
+            3.5
+          ],
+          0.5
+        ],
+        [
+          [
+            1.25
+          ],
+          0.25
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/3",
+      "entry_point": "below_zero",
+      "prompt": "def below_zero(operations: list) -> bool:\n    \"\"\"Return True if account balance ever goes below zero.\"\"\"\n",
+      "canonical_solution": "    balance = 0\n    for op in operations:\n        balance += op\n        if balance < 0:\n            return True\n    return False\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              -4,
+              5
+            ]
+          ],
+          true
+        ],
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          false
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/4",
+      "entry_point": "mean_absolute_deviation",
+      "prompt": "def mean_absolute_deviation(numbers: list) -> float:\n    \"\"\"Return mean absolute deviation from the mean.\"\"\"\n",
+      "canonical_solution": "    mean = sum(numbers) / len(numbers)\n    return sum(abs(x - mean) for x in numbers) / len(numbers)\n",
+      "test_cases": [
+        [
+          [
+            [
+              1.0,
+              2.0,
+              3.0,
+              4.0
+            ]
+          ],
+          1.0
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/5",
+      "entry_point": "intersperse",
+      "prompt": "def intersperse(numbers: list, delimiter: int) -> list:\n    \"\"\"Insert delimiter between elements.\"\"\"\n",
+      "canonical_solution": "    result = []\n    for i, n in enumerate(numbers):\n        result.append(n)\n        if i < len(numbers)-1:\n            result.append(delimiter)\n    return result\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ],
+            4
+          ],
+          [
+            1,
+            4,
+            2,
+            4,
+            3
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/6",
+      "entry_point": "parse_nested_parens",
+      "prompt": "def parse_nested_parens(paren_string: str) -> list:\n    \"\"\"Return max nesting depth for each paren group.\"\"\"\n",
+      "canonical_solution": "    groups = paren_string.split()\n    result = []\n    for g in groups:\n        depth = max_depth = 0\n        for c in g:\n            if c == '(':\n                depth += 1\n                max_depth = max(max_depth, depth)\n            elif c == ')':\n                depth -= 1\n        result.append(max_depth)\n    return result\n",
+      "test_cases": [
+        [
+          [
+            "(()()) ((())) ()"
+          ],
+          [
+            2,
+            3,
+            1
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/7",
+      "entry_point": "filter_by_substring",
+      "prompt": "def filter_by_substring(strings: list, substring: str) -> list:\n    \"\"\"Filter strings containing a given substring.\"\"\"\n",
+      "canonical_solution": "    return [s for s in strings if substring in s]\n",
+      "test_cases": [
+        [
+          [
+            [
+              "abc",
+              "def",
+              "abx",
+              "xyz"
+            ],
+            "ab"
+          ],
+          [
+            "abc",
+            "abx"
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/8",
+      "entry_point": "sum_product",
+      "prompt": "def sum_product(numbers: list) -> tuple:\n    \"\"\"Return (sum, product) of all integers in list.\"\"\"\n",
+      "canonical_solution": "    s, p = 0, 1\n    for n in numbers:\n        s += n; p *= n\n    return (s, p)\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              3,
+              4
+            ]
+          ],
+          [
+            10,
+            24
+          ]
+        ],
+        [
+          [
+            []
+          ],
+          [
+            0,
+            1
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/9",
+      "entry_point": "rolling_max",
+      "prompt": "def rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n",
+      "canonical_solution": "    result, cur = [], None\n    for n in numbers:\n        cur = n if cur is None else max(cur, n)\n        result.append(cur)\n    return result\n",
+      "test_cases": [
+        [
+          [
+            [
+              3,
+              1,
+              2,
+              4
+            ]
+          ],
+          [
+            3,
+            3,
+            3,
+            4
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/10",
+      "entry_point": "make_palindrome",
+      "prompt": "def make_palindrome(string: str) -> str:\n    \"\"\"Find the shortest palindrome that begins with a supplied string.\"\"\"\n",
+      "canonical_solution": "    for i in range(len(string)):\n        suffix = string[i:]\n        if suffix == suffix[::-1]:\n            return string + string[:i][::-1]\n    return string + string[:-1][::-1]\n",
+      "test_cases": [
+        [
+          [
+            "cat"
+          ],
+          "catac"
+        ],
+        [
+          [
+            "cata"
+          ],
+          "catac"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/11",
+      "entry_point": "string_xor",
+      "prompt": "def string_xor(a: str, b: str) -> str:\n    \"\"\"XOR two binary strings.\"\"\"\n",
+      "canonical_solution": "    return ''.join('0' if x == y else '1' for x, y in zip(a, b))\n",
+      "test_cases": [
+        [
+          [
+            "010",
+            "110"
+          ],
+          "100"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/12",
+      "entry_point": "longest",
+      "prompt": "def longest(strings: list) -> str:\n    \"\"\"Return the longest string (None if empty list).\"\"\"\n",
+      "canonical_solution": "    if not strings:\n        return None\n    return max(strings, key=len)\n",
+      "test_cases": [
+        [
+          [
+            [
+              "a",
+              "bb",
+              "ccc"
+            ]
+          ],
+          "ccc"
+        ],
+        [
+          [
+            []
+          ],
+          null
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/13",
+      "entry_point": "greatest_common_divisor",
+      "prompt": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\"Return GCD of two integers.\"\"\"\n",
+      "canonical_solution": "    while b:\n        a, b = b, a % b\n    return a\n",
+      "test_cases": [
+        [
+          [
+            3,
+            5
+          ],
+          1
+        ],
+        [
+          [
+            25,
+            15
+          ],
+          5
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/14",
+      "entry_point": "all_prefixes",
+      "prompt": "def all_prefixes(string: str) -> list:\n    \"\"\"Return list of all prefixes of input string.\"\"\"\n",
+      "canonical_solution": "    return [string[:i+1] for i in range(len(string))]\n",
+      "test_cases": [
+        [
+          [
+            "abc"
+          ],
+          [
+            "a",
+            "ab",
+            "abc"
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/15",
+      "entry_point": "string_sequence",
+      "prompt": "def string_sequence(n: int) -> str:\n    \"\"\"Return space-delimited string of numbers from 0 to n.\"\"\"\n",
+      "canonical_solution": "    return ' '.join(str(i) for i in range(n+1))\n",
+      "test_cases": [
+        [
+          [
+            5
+          ],
+          "0 1 2 3 4 5"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/16",
+      "entry_point": "count_distinct_characters",
+      "prompt": "def count_distinct_characters(string: str) -> int:\n    \"\"\"Return number of distinct characters (case-insensitive).\"\"\"\n",
+      "canonical_solution": "    return len(set(string.lower()))\n",
+      "test_cases": [
+        [
+          [
+            "xyzXYZ"
+          ],
+          3
+        ],
+        [
+          [
+            "Jerry"
+          ],
+          4
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/17",
+      "entry_point": "parse_music",
+      "prompt": "def parse_music(music_string: str) -> list:\n    \"\"\"Parse music note durations from string.\"\"\"\n",
+      "canonical_solution": "    note_map = {'o': 4, 'o|': 2, '.|': 1}\n    return [note_map[n] for n in music_string.split() if n in note_map]\n",
+      "test_cases": [
+        [
+          [
+            "o o| .| o|"
+          ],
+          [
+            4,
+            2,
+            1,
+            2
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/18",
+      "entry_point": "how_many_times",
+      "prompt": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\"Count overlapping occurrences of substring in string.\"\"\"\n",
+      "canonical_solution": "    count = 0\n    for i in range(len(string) - len(substring) + 1):\n        if string[i:i+len(substring)] == substring:\n            count += 1\n    return count\n",
+      "test_cases": [
+        [
+          [
+            "",
+            "x"
+          ],
+          0
+        ],
+        [
+          [
+            "aaaa",
+            "aa"
+          ],
+          3
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/19",
+      "entry_point": "sort_numbers",
+      "prompt": "def sort_numbers(numbers: str) -> str:\n    \"\"\"Sort space-delimited number words.\"\"\"\n",
+      "canonical_solution": "    order = ['zero','one','two','three','four','five','six','seven','eight','nine']\n    return ' '.join(sorted(numbers.split(), key=lambda x: order.index(x)))\n",
+      "test_cases": [
+        [
+          [
+            "three one five"
+          ],
+          "one three five"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/20",
+      "entry_point": "find_closest_elements",
+      "prompt": "def find_closest_elements(numbers: list) -> tuple:\n    \"\"\"Return pair of closest elements from sorted list.\"\"\"\n",
+      "canonical_solution": "    closest = None\n    min_diff = float('inf')\n    for i in range(len(numbers)-1):\n        diff = numbers[i+1] - numbers[i]\n        if diff < min_diff:\n            min_diff = diff\n            closest = (numbers[i], numbers[i+1])\n    return closest\n",
+      "test_cases": [
+        [
+          [
+            [
+              1.0,
+              2.0,
+              3.5,
+              3.9,
+              5.0
+            ]
+          ],
+          [
+            3.5,
+            3.9
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/21",
+      "entry_point": "rescale_to_unit",
+      "prompt": "def rescale_to_unit(numbers: list) -> list:\n    \"\"\"Rescale list to [0, 1].\"\"\"\n",
+      "canonical_solution": "    mn, mx = min(numbers), max(numbers)\n    return [(x - mn) / (mx - mn) for x in numbers]\n",
+      "test_cases": [
+        [
+          [
+            [
+              1.0,
+              2.0,
+              3.0,
+              4.0,
+              5.0
+            ]
+          ],
+          [
+            0.0,
+            0.25,
+            0.5,
+            0.75,
+            1.0
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/22",
+      "entry_point": "filter_integers",
+      "prompt": "def filter_integers(values: list) -> list:\n    \"\"\"Keep only integers from mixed list.\"\"\"\n",
+      "canonical_solution": "    return [x for x in values if isinstance(x, int)]\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2.0,
+              "a",
+              3
+            ]
+          ],
+          [
+            1,
+            3
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/23",
+      "entry_point": "strlen",
+      "prompt": "def strlen(string: str) -> int:\n    \"\"\"Return length of string.\"\"\"\n",
+      "canonical_solution": "    return len(string)\n",
+      "test_cases": [
+        [
+          [
+            ""
+          ],
+          0
+        ],
+        [
+          [
+            "x"
+          ],
+          1
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/24",
+      "entry_point": "largest_divisor",
+      "prompt": "def largest_divisor(n: int) -> int:\n    \"\"\"Return largest divisor of n less than n.\"\"\"\n",
+      "canonical_solution": "    for i in range(n-1, 0, -1):\n        if n % i == 0:\n            return i\n    return 1\n",
+      "test_cases": [
+        [
+          [
+            15
+          ],
+          5
+        ],
+        [
+          [
+            100
+          ],
+          50
+        ]
+      ],
+      "test": ""
+    }
+  ],
+  "results": [
+    {
+      "problem_id": "HumanEval/0",
+      "generated_code": "def has_close_elements(numbers: list, threshold: float) -> bool:\n    \"\"\"Check if any two numbers in list are closer than threshold.\"\"\"\nreturn True\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def has_close_elements(numbers: list, threshold: float) -> bool:\n    \"\"\"Check if any two numbers in list are closer than threshold.\"\"\"\nreturn True\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/1",
+      "generated_code": "def separate_paren_groups(paren_string: str) -> list:\n    \"\"\"Separate groups of nested parentheses.\"\"\"\n# Use a counter to track a\n    balance = 0\n    # Use a counter to track a\n    balance = 0\n    return []\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def separate_paren_groups(paren_string: str) -> list:\n    \"\"\"Separate groups of nested parentheses.\"\"\"\n# Use a counter to track a\n    balance = 0\n    # Use a counter to track a\n    balance = 0\n    return []\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/2",
+      "generated_code": "def truncate_number(number: float) -> float:\n    \"\"\"Return the decimal part of a float.\"\"\"\nreturn number\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def truncate_number(number: float) -> float:\n    \"\"\"Return the decimal part of a float.\"\"\"\nreturn number\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/3",
+      "generated_code": "def below_zero(operations: list) -> bool:\n    \"\"\"Return True if account balance ever goes below zero.\"\"\"\nreturn True\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def below_zero(operations: list) -> bool:\n    \"\"\"Return True if account balance ever goes below zero.\"\"\"\nreturn True\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/4",
+      "generated_code": "def mean_absolute_deviation(numbers: list) -> float:\n    \"\"\"Return mean absolute deviation from the mean.\"\"\"\nreturn mean_absolute_deviation(numbers)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def mean_absolute_deviation(numbers: list) -> float:\n    \"\"\"Return mean absolute deviation from the mean.\"\"\"\nreturn mean_absolute_deviation(numbers)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/5",
+      "generated_code": "def intersperse(numbers: list, delimiter: int) -> list:\n    \"\"\"Insert delimiter between elements.\"\"\"\nreturn []\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def intersperse(numbers: list, delimiter: int) -> list:\n    \"\"\"Insert delimiter between elements.\"\"\"\nreturn []\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/6",
+      "generated_code": "def parse_nested_parens(paren_string: str) -> list:\n    \"\"\"Return max nesting depth for each paren group.\"\"\"\ndef parse_nested_parens(paren_string: str) -> list:\n    \"\"\"Return max nesting depth for each paren group.\"\"\"\n    return []\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def parse_nested_parens(paren_string: str) -> list:\n    \"\"\"Return max nesting depth for each paren group.\"\"\"\ndef parse_nested_parens(paren_string: str) -> list:\n    \"\"\"Return max nesting depth for each paren group.\"\"\"\n    return []\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/7",
+      "generated_code": "def filter_by_substring(strings: list, substring: str) -> list:\n    \"\"\"Filter strings containing a given substring.\"\"\"\n# Filter strings containing a given substring.\n    return strings\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def filter_by_substring(strings: list, substring: str) -> list:\n    \"\"\"Filter strings containing a given substring.\"\"\"\n# Filter strings containing a given substring.\n    return strings\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/8",
+      "generated_code": "def sum_product(numbers: list) -> tuple:\n    \"\"\"Return (sum, product) of all integers in list.\"\"\"\ndef sum_product(numbers: list) -> tuple:\n    \"\"\"Return (sum, product) of all integers in list.\"\"\"\n    return (sum(numbers), product(numbers))\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def sum_product(numbers: list) -> tuple:\n    \"\"\"Return (sum, product) of all integers in list.\"\"\"\ndef sum_product(numbers: list) -> tuple:\n    \"\"\"Return (sum, product) of all integers in list.\"\"\"\n    return (sum(numbers), product(numbers))\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/9",
+      "generated_code": "def rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers: list) -> list:\n    \"\"\"Return rolling max of list.\"\"\"\n\ndef rolling_max(numbers",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/10",
+      "generated_code": "def make_palindrome(string: str) -> str:\n    \"\"\"Find the shortest palindrome that begins with a supplied string.\"\"\"\nreturn string\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def make_palindrome(string: str) -> str:\n    \"\"\"Find the shortest palindrome that begins with a supplied string.\"\"\"\nreturn string\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/11",
+      "generated_code": "def string_xor(a: str, b: str) -> str:\n    \"\"\"XOR two binary strings.\"\"\"\nreturn a + b\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def string_xor(a: str, b: str) -> str:\n    \"\"\"XOR two binary strings.\"\"\"\nreturn a + b\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/12",
+      "generated_code": "def longest(strings: list) -> str:\n    \"\"\"Return the longest string (None if empty list).\"\"\"\ndef longest(strings: list) -> str:\n    \"\"\"Return the longest string (None if empty list).\"\"\"\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def longest(strings: list) -> str:\n    \"\"\"Return the longest string (None if empty list).\"\"\"\ndef longest(strings: list) -> str:\n    \"\"\"Return the longest string (None if empty list).\"\"\"\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/13",
+      "generated_code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\"Return GCD of two integers.\"\"\"\n# Return GCD of two integers.\n    return abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def greatest_common_divisor(a: int, b: int) -> int:\n    \"\"\"Return GCD of two integers.\"\"\"\n# Return GCD of two integers.\n    return abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs(a) if b == 0 else abs",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/14",
+      "generated_code": "def all_prefixes(string: str) -> list:\n    \"\"\"Return list of all prefixes of input string.\"\"\"\nreturn list(string)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def all_prefixes(string: str) -> list:\n    \"\"\"Return list of all prefixes of input string.\"\"\"\nreturn list(string)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/15",
+      "generated_code": "def string_sequence(n: int) -> str:\n    \"\"\"Return space-delimited string of numbers from 0 to n.\"\"\"\n# Space-delimited string of numbers from 0 to n\n    return ' '.join(map(str, range(n+1)))\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def string_sequence(n: int) -> str:\n    \"\"\"Return space-delimited string of numbers from 0 to n.\"\"\"\n# Space-delimited string of numbers from 0 to n\n    return ' '.join(map(str, range(n+1)))\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/16",
+      "generated_code": "def count_distinct_characters(string: str) -> int:\n    \"\"\"Return number of distinct characters (case-insensitive).\"\"\"\n# Convert to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def count_distinct_characters(string: str) -> int:\n    \"\"\"Return number of distinct characters (case-insensitive).\"\"\"\n# Convert to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to to",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/17",
+      "generated_code": "def parse_music(music_string: str) -> list:\n    \"\"\"Parse music note durations from string.\"\"\"\n# This is a placeholder for a note duration from string.\n    return []\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def parse_music(music_string: str) -> list:\n    \"\"\"Parse music note durations from string.\"\"\"\n# This is a placeholder for a note duration from string.\n    return []\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/18",
+      "generated_code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\"Count overlapping occurrences of substring in string.\"\"\"\nreturn 0\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def how_many_times(string: str, substring: str) -> int:\n    \"\"\"Count overlapping occurrences of substring in string.\"\"\"\nreturn 0\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/19",
+      "generated_code": "def sort_numbers(numbers: str) -> str:\n    \"\"\"Sort space-delimited number words.\"\"\"\nreturn sorted(numbers)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def sort_numbers(numbers: str) -> str:\n    \"\"\"Sort space-delimited number words.\"\"\"\nreturn sorted(numbers)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/20",
+      "generated_code": "def find_closest_elements(numbers: list) -> tuple:\n    \"\"\"Return pair of closest elements from sorted list.\"\"\"\ndef find_closest_elements(numbers: list) -> tuple:\n    \"\"\"Return pair of closest elements from sorted list.\"\"\"\n    return numbers[0]\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def find_closest_elements(numbers: list) -> tuple:\n    \"\"\"Return pair of closest elements from sorted list.\"\"\"\ndef find_closest_elements(numbers: list) -> tuple:\n    \"\"\"Return pair of closest elements from sorted list.\"\"\"\n    return numbers[0]\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/21",
+      "generated_code": "def rescale_to_unit(numbers: list) -> list:\n    \"\"\"Rescale list to [0, 1].\"\"\"\n# Rescale list to [0, 1]\n    return numbers\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def rescale_to_unit(numbers: list) -> list:\n    \"\"\"Rescale list to [0, 1].\"\"\"\n# Rescale list to [0, 1]\n    return numbers\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/22",
+      "generated_code": "def filter_integers(values: list) -> list:\n    \"\"\"Keep only integers from mixed list.\"\"\"\ndef filter_integers(values: list) -> list:\n    \"\"\"Keep only integers from mixed list.\"\"\"\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def filter_integers(values: list) -> list:\n    \"\"\"Keep only integers from mixed list.\"\"\"\ndef filter_integers(values: list) -> list:\n    \"\"\"Keep only integers from mixed list.\"\"\"\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/23",
+      "generated_code": "def strlen(string: str) -> int:\n    \"\"\"Return length of string.\"\"\"\n# This is a string.\n    return len(string)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def strlen(string: str) -> int:\n    \"\"\"Return length of string.\"\"\"\n# This is a string.\n    return len(string)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/24",
+      "generated_code": "def largest_divisor(n: int) -> int:\n    \"\"\"Return largest divisor of n less than n.\"\"\"\ndef largest_divisor(n: int) -> int:\n    \"\"\"Return largest divisor of n less than n.\"\"\"\n    if n <= 1:\n        return 0\n    for i in range(1, int(n)):\n        if n % i == 0:\n            # We found a divisor, but we want the largest one.\n            pass\n    # The largest divisor less than n is n // (smallest prime factor of n)\n    # A simpler way is to iterate backwards from n-1\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i\n    return 0 # Should not be reached for n > 1\n\n# Final check on the provided code structure:\n# The implementation using the backward loop is correct and efficient.\n# The structure provided in the prompt is messy, but the final logic is sound.\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def largest_divisor(n: int) -> int:\n    \"\"\"Return largest divisor of n less than n.\"\"\"\ndef largest_divisor(n: int) -> int:\n    \"\"\"Return largest divisor of n less than n.\"\"\"\n    if n <= 1:\n        return 0\n    for i in range(1, int(n)):\n        if n % i == 0:\n            # We found a divisor, but we want the largest one.\n            pass\n    # The largest divisor less than n is n // (smallest prime factor of n)\n    # A simpler way is to iterate backwards from n-1\n    for i in range(n - 1, 0, -1):\n        if n % i == 0:\n            return i\n    return 0 # Should not be reached for n > 1\n\n# Final check on the provided code structure:\n# The implementation using the backward loop is correct and efficient.\n# The structure provided in the prompt is messy, but the final logic is sound.\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    }
+  ],
+  "status": "complete"
+}
