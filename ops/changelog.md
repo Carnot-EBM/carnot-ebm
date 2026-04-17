@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 438 — GPU1 Zombie Fix — RETRO-025 root-cause shipped)
+
+- 2026-04-17 08:53 UTC: Fixed GPU1 zombie scheduling root cause (RETRO-025).
+  Triggered by: user instruction to fix RETRO-025 (device_map='auto' zombie in dual-GPU runs).
+
+  **Changes:**
+  - `python/carnot/pipeline/gpu_zombie_fix.py`: New module — ZombieFixResult dataclass, build_zombie_fix_strategy() (explicit {'': 'cuda:N'} per model for dual-GPU live path), build_zombie_fix_artifact() (schema carnot.gpu1_zombie_fix.v1).
+  - `python/carnot/pipeline/__init__.py`: exports ZombieFixResult, build_zombie_fix_strategy, build_zombie_fix_artifact.
+  - `scripts/experiment_template.py`: ADDITIVE change to setup_gpu() — when len(model_specs)>=2 AND CARNOT_FORCE_LIVE=1 AND n_gpus>=2, inject explicit device_map={'': 'cuda:N'} per model via build_zombie_fix_strategy(); logs 'Using explicit device assignment to prevent GPU1 zombie allocation'.
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-INFRA-029/030, SCENARIO-INFRA-037/038; updated implementation status table.
+  - `scripts/experiment_438_gpu1_zombie_fix.py`: Detects n_gpus (pynvml→nvidia-smi→0), baseline health check, strategy computation, live load attempt on GPU1 when CARNOT_FORCE_LIVE=1 and n_gpus>=2; honest_verdict: fix_applied_and_verified / fix_applied_unverified / ci_mode.
+  - `tests/python/test_experiment_438_gpu1_zombie_fix.py`: 34 tests, 100% targeted coverage.
+  - `ops/conductor-log.md`: RETRO-025 fix_shipped entry added.
+
+  **Deliverable:** results/experiment_438_gpu1_zombie_fix.json (pending live GPU run)
+  **RETRO-025 status:** Fix shipped. Live verification (gpu1_util > 0 after explicit device_map load) pending CARNOT_FORCE_LIVE=1 session.
+
+---
+
 ## 2026-04-17 (Exp 437 — LongRunBenchmarkExecutor — RETRO-026 CLOSED)
 
 - 2026-04-17 07:48 UTC: Implemented LongRunBenchmarkExecutor, closing RETRO-026.

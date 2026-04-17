@@ -5217,6 +5217,56 @@ Spec: SCENARIO-INFRA-036 (Exp 437)
 **Then** `result.honest_verdict == 'complete'`
 **And** `result.completed_batches == 3`
 
+### REQ-INFRA-029: DualGPURunner Uses Explicit device_map When Assigning Models to GPUs
+
+When `ExperimentTemplate.setup_gpu()` is called with `len(model_specs) >= 2` AND
+`CARNOT_FORCE_LIVE=1` AND `n_gpus >= 2`, the framework shall use
+`device_map={'': 'cuda:N'}` (explicit per-GPU assignment) instead of
+`device_map='auto'` for each model spec.
+
+Rationale (RETRO-025): `device_map='auto'` allows CUDA to allocate VRAM on GPU1 for
+layer offloading while the actual forward pass stays on GPU0.  This produces the zombie
+pattern observed in RETRO-025 — GPU1 holds 1786 MB at 0% utilization for 144+ minutes.
+Explicit assignment pins each model to a single GPU, preventing cross-device VRAM spill.
+
+When running in CI mode (no CUDA) or with a single GPU, `device_map='auto'` is
+preserved as the fallback — it is only replaced in the explicit dual-GPU live path.
+
+Each model spec entry gains a `device_map` key populated by `build_zombie_fix_strategy()`,
+and `ExperimentTemplate.setup_gpu()` logs:
+`'Using explicit device assignment to prevent GPU1 zombie allocation'`
+
+Spec: SCENARIO-INFRA-037, SCENARIO-INFRA-038 (Exp 438)
+
+### REQ-INFRA-030: ZombieFixResult Captures Pre/Post State of GPU1 Zombie Fix
+
+The framework shall provide a `ZombieFixResult` dataclass capturing:
+- `gpu0_model_id` / `gpu1_model_id` — model IDs loaded on each GPU
+- `gpu0_device_map` / `gpu1_device_map` — the actual device_map strings used
+- `fix_applied` — True when explicit device_map was used (not 'auto')
+- `post_fix_gpu1_util_pct` — GPU1 utilization after model load (None in CI mode)
+- `honest_verdict` — one of: 'fix_applied_and_verified' / 'fix_applied_unverified' / 'ci_mode'
+
+And a `build_zombie_fix_artifact(result)` that emits `schema='carnot.gpu1_zombie_fix.v1'`
+with `retro_025_status` in ('fix_applied_and_verified', 'fix_applied_unverified', 'ci_mode').
+
+Spec: SCENARIO-INFRA-037, SCENARIO-INFRA-038 (Exp 438)
+
+### SCENARIO-INFRA-037: Dual-GPU Live Mode Uses Explicit Device Maps
+
+**Given** `CARNOT_FORCE_LIVE=1` and 2 GPUs detected
+**When** `build_zombie_fix_strategy(n_gpus=2, model_ids=['ModelA', 'ModelB'])` is called
+**Then** the returned dict maps 'ModelA' to `{'': 'cuda:0'}` (NOT 'auto')
+**And** maps 'ModelB' to `{'': 'cuda:1'}` (NOT 'auto')
+**And** no model spec uses `device_map='auto'`
+
+### SCENARIO-INFRA-038: Single-GPU / CI Mode Falls Back to device_map='auto'
+
+**Given** CI mode (CUDA unavailable) or `n_gpus=1`
+**When** `build_zombie_fix_strategy(n_gpus=1, model_ids=['ModelA'])` is called
+**Then** the returned dict maps 'ModelA' to `'auto'`
+**And** no explicit `cuda:N` assignment is made
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -5498,6 +5548,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-026 | N/A | Implemented | setup_gpu() calls check_dual_gpu_health() + dual_gpu_health key + temp-guard WARNING + batch_size_factor=0.75 (SCENARIO-INFRA-033, Exp 426). |
 | REQ-INFRA-027 | N/A | Implemented | LongRunBenchmarkExecutor + BenchmarkBatch + LongRunBenchmarkResult + save/load/assemble (SCENARIO-INFRA-034/035/036, Exp 437). Closes RETRO-026. |
 | REQ-INFRA-028 | N/A | Implemented | get_batch_size() reads CARNOT_BENCH_BATCH_SIZE (default 50) (SCENARIO-INFRA-036, Exp 437). |
+| REQ-INFRA-029 | N/A | Implemented | build_zombie_fix_strategy() + explicit device_map in setup_gpu() for dual-GPU live path (SCENARIO-INFRA-037/038, Exp 438). Closes RETRO-025 (GPU1 zombie scheduling). |
+| REQ-INFRA-030 | N/A | Implemented | ZombieFixResult dataclass + build_zombie_fix_artifact() (schema carnot.gpu1_zombie_fix.v1) (Exp 438). |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
