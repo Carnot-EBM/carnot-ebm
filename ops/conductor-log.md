@@ -2071,3 +2071,7 @@ python/ |
 | 2026-04-17 16:51 UTC | Exp 443: EORM+JEPA live retrain on Exp 442 real pa | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
 | 2026-04-17 16:56 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 16:56 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 17:43 UTC | Exp 443: EORM+JEPA live retrain on Exp 442 real pa | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-17 17:49 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 17:49 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 17:49 UTC | Exp 443: EORM+JEPA live retrain on Exp 442 real pa | OK | Deliverable already exists in repo |
