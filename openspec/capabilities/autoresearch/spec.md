@@ -492,6 +492,45 @@ Spec: Exp 442
 **Then** ``honest_verdict`` is ``'synthetic_fallback'``
 **And** ``schema`` is ``'carnot.fover_live.v1'``
 
+### REQ-LEARN-036: EORM Retrained on Real FOVER Pairs Achieves AUC > 0.50
+
+The system shall retrain EORM on ≥20 real FOVER-labeled (step_text, label) pairs sourced from
+live GPU CoT annotation (Exp 442) and evaluate on a held-out 20% test split:
+
+- Load ``results/fover_labeled_steps_live.json`` (Exp 442 output).
+- If n_labeled < 20: use synthetic fallback (``honest_verdict='real_data_insufficient'``).
+- Evaluate EORM ``before_auc`` on held-out 20% split.
+- Retrain EORM for 150 epochs on contrastive triples derived from real pairs.
+- Also retrain JEPA predictor on (step_prefix, violation_flag) pairs.
+- Evaluate ``after_auc`` on same held-out split.
+- Use ``compute_retrain_verdict_v2(before_auc, after_auc, n_real_pairs, source)`` to produce verdict:
+
+  - ``'real_data_improvement'``   — source='live' AND after_auc > before_auc AND n_real_pairs >= 20
+  - ``'real_data_no_improvement'``— source='live' AND after_auc <= before_auc AND n_real_pairs >= 20
+  - ``'real_data_insufficient'``  — source='live' AND n_real_pairs < 20
+  - ``'synthetic_only'``          — source='synthetic'
+
+- Save models: ``results/eorm_443_live.safetensors``, ``results/jepa_443_live.safetensors``.
+- Set ``retro_024_closed=True`` iff ``honest_verdict='real_data_improvement'``.
+- Emit artifact ``schema='carnot.eorm_jepa_retrain.v3'``.
+
+Spec: Exp 443
+
+### SCENARIO-LEARN-064: EORM Retrain on Real Pairs Closes RETRO-024
+
+**Given** ``results/fover_labeled_steps_live.json`` contains ≥20 labeled pairs (n_correct > 0, n_incorrect > 0)
+**When** ``compute_retrain_verdict_v2(before_auc, after_auc, n_real_pairs=57, source='live')`` is called
+**And** after_auc > before_auc
+**Then** verdict is ``'real_data_improvement'``
+**And** ``retro_024_closed=True`` in the Exp 443 artifact
+
+### SCENARIO-LEARN-065: Synthetic Fallback When Pairs Insufficient
+
+**Given** n_real_pairs < 20 for Exp 443
+**When** ``compute_retrain_verdict_v2(before_auc, after_auc, n_real_pairs=5, source='live')`` is called
+**Then** verdict is ``'real_data_insufficient'``
+**And** ``retro_024_closed=False`` in the artifact
+
 ### SCENARIO-RETRO-032: Milestone 2026.04.32 Retrospective Complete
 
 **Given** result JSONs for Exps 425-435 (partial: some results are scaffolding_only or absent)
@@ -530,3 +569,4 @@ Spec: Exp 442
 | REQ-LEARN-033 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-034 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-035 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-036 | N/A | Implemented | 10+ Python |

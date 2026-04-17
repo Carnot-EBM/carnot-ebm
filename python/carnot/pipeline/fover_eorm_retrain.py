@@ -277,3 +277,67 @@ def compute_retrain_verdict(
     if after_auc > before_auc:
         return "real_data_improvement"
     return "real_data_no_improvement"
+
+
+# ---------------------------------------------------------------------------
+# compute_retrain_verdict_v2
+# ---------------------------------------------------------------------------
+
+
+def compute_retrain_verdict_v2(
+    before_auc: float,
+    after_auc: float,
+    n_real_pairs: int,
+    source: str,
+) -> str:
+    """Determine the honest verdict for Exp 443 EORM/JEPA retrain on live FOVER pairs.
+
+    **Detailed explanation for engineers:**
+        Version 2 of the verdict function extends v1 with an explicit ``source`` parameter
+        and raises the real-data threshold from 10 to 20 pairs.  The threshold increase
+        reflects the higher quality of Exp 442 live pairs: 20 pairs from real GPU CoT
+        annotation provide at least 5-10 contrastive triples (after question-grouping and
+        label balancing), enough for a statistically meaningful gradient signal.
+
+        Four mutually exclusive outcomes, evaluated in priority order:
+
+        'real_data_insufficient':
+            source='live' AND n_real_pairs < 20.
+            Not enough live pairs to constitute a valid retrain.  The experiment falls
+            back to synthetic data and the result does NOT close RETRO-024.
+
+        'real_data_improvement':
+            source='live' AND n_real_pairs >= 20 AND after_auc > before_auc.
+            Real live data was used and AUC improved.  This is the only outcome that
+            closes RETRO-024 after 8 consecutive milestone carries.
+
+        'real_data_no_improvement':
+            source='live' AND n_real_pairs >= 20 AND after_auc <= before_auc.
+            Real data was available but retrain did not improve AUC.  RETRO-024 remains
+            open; next actions: more epochs, lower LR, more data.
+
+        'synthetic_only':
+            source != 'live' (source='synthetic' or any other value).
+            The retrain ran on synthetic pairs only.  AUC numbers are reported but do
+            not constitute real-world evidence.
+
+    Args:
+        before_auc: AUC-ROC on held-out test set before retraining.
+        after_auc: AUC-ROC on held-out test set after retraining.
+        n_real_pairs: Number of real FOVER-labeled pairs used (from Exp 442 live file).
+        source: ``'live'`` if pairs came from live GPU CoT annotation; ``'synthetic'``
+                otherwise.
+
+    Returns:
+        One of: 'real_data_improvement', 'real_data_no_improvement',
+        'real_data_insufficient', 'synthetic_only'.
+
+    Spec: REQ-LEARN-036, SCENARIO-LEARN-064, SCENARIO-LEARN-065
+    """
+    if source != "live":
+        return "synthetic_only"
+    if n_real_pairs < 20:
+        return "real_data_insufficient"
+    if after_auc > before_auc:
+        return "real_data_improvement"
+    return "real_data_no_improvement"
