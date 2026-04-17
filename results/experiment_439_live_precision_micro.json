@@ -1,9 +1,121 @@
 {
   "experiment": 439,
-  "schema": "carnot.timeout_watchdog.partial.v1",
-  "timed_out": true,
-  "timeout_minutes": 45,
-  "elapsed_minutes": 45.0,
-  "partial_result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_439_live_precision_micro.json",
-  "status": "timed_out"
+  "title": "Live precision micro-benchmark: 50q \u00d7 3 variants \u00d7 2 models",
+  "run_date": "20260417",
+  "started_at": "2026-04-17T10:19:35Z",
+  "finished_at": "2026-04-17T11:06:28Z",
+  "duration_s": 2812.906,
+  "status": "success",
+  "inference_mode": "live_gpu",
+  "schema": [
+    "duration_s",
+    "env_autofix",
+    "experiment",
+    "finished_at",
+    "headline_result",
+    "honest_verdict",
+    "inference_mode",
+    "model_specs",
+    "n_models",
+    "n_questions",
+    "n_variants",
+    "per_model_results",
+    "pipeline_variants",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "honest_verdict": "live_no_improvement",
+  "headline_result": {
+    "model_id": "Gemma4-E4B-it",
+    "variant": "crane_only",
+    "n_questions": 50,
+    "baseline_accuracy": 0.0,
+    "variant_accuracy": 0.0,
+    "signed_improvement": 0.0,
+    "crane_detection_rate": 0.0,
+    "inference_mode": "live_gpu"
+  },
+  "per_model_results": [
+    {
+      "model_id": "Gemma4-E4B-it",
+      "variant": "baseline",
+      "n_questions": 50,
+      "baseline_accuracy": 0.0,
+      "variant_accuracy": 0.0,
+      "signed_improvement": 0.0,
+      "crane_detection_rate": 0.0,
+      "inference_mode": "live_gpu"
+    },
+    {
+      "model_id": "Gemma4-E4B-it",
+      "variant": "crane_only",
+      "n_questions": 50,
+      "baseline_accuracy": 0.0,
+      "variant_accuracy": 0.0,
+      "signed_improvement": 0.0,
+      "crane_detection_rate": 0.0,
+      "inference_mode": "live_gpu"
+    },
+    {
+      "model_id": "Gemma4-E4B-it",
+      "variant": "full_stack",
+      "n_questions": 50,
+      "baseline_accuracy": 0.0,
+      "variant_accuracy": 0.0,
+      "signed_improvement": 0.0,
+      "crane_detection_rate": 0.0,
+      "inference_mode": "live_gpu"
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "variant": "baseline",
+      "n_questions": 50,
+      "baseline_accuracy": 0.14,
+      "variant_accuracy": 0.14,
+      "signed_improvement": 0.0,
+      "crane_detection_rate": 0.0,
+      "inference_mode": "live_gpu"
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "variant": "crane_only",
+      "n_questions": 50,
+      "baseline_accuracy": 0.14,
+      "variant_accuracy": 0.14,
+      "signed_improvement": 0.0,
+      "crane_detection_rate": 0.0,
+      "inference_mode": "live_gpu"
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "variant": "full_stack",
+      "n_questions": 50,
+      "baseline_accuracy": 0.14,
+      "variant_accuracy": 0.14,
+      "signed_improvement": 0.0,
+      "crane_detection_rate": 0.0,
+      "inference_mode": "live_gpu"
+    }
+  ],
+  "env_autofix": {
+    "gpu_detected": true,
+    "carnot_force_live_was_set": false,
+    "auto_fix_applied": true,
+    "final_env_value": "1"
+  },
+  "n_questions": 50,
+  "n_models": 2,
+  "n_variants": 3,
+  "model_specs": [
+    "Gemma4-E4B-it",
+    "Qwen3.5-0.8B"
+  ],
+  "pipeline_variants": [
+    "baseline",
+    "crane_only",
+    "full_stack"
+  ]
 }
