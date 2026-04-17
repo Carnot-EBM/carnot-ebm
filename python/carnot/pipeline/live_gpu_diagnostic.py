@@ -181,12 +181,19 @@ def _load_tokenizer(model_id: str, timeout_s: float) -> tuple[bool, str]:
 def check_model_loadable(
     model_id: str,
     *,
-    timeout_s: float = 30.0,
+    timeout_s: float = 300.0,
 ) -> tuple[bool, str]:
     """Return ``(loadable, error_msg)`` for *model_id*.
 
     Uses ``_load_tokenizer()`` (patchable in tests) with the given timeout.
     Never raises.
+
+    Timeout rationale: 300s (5 min) accommodates first-time HuggingFace
+    downloads and cold caches. A warm-cached tokenizer loads in 1-3s, but
+    on a fresh machine the tokenizer files and potential dependencies can
+    take multiple minutes over HTTPS. The earlier 30s default caused
+    Exps 427/428/429 to fail in the gpu_executor even though the models
+    were actually loading fine — the check just timed out too early.
     """
     try:
         return _load_tokenizer(model_id, timeout_s)
