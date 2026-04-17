@@ -323,6 +323,33 @@ that was missing for FR-11 (EORM/JEPA retrains on synthetic-only data).
 
 Spec refs: arXiv 2505.15960 (FoVer), arXiv 2601.17223 (VPRM)
 
+### REQ-LEARN-032: EORM Retrain on FOVER-Labeled Real Pairs
+
+EORM retrained on FOVER-labeled (correct_step, incorrect_step) contrastive pairs from
+real LLM inference shall achieve AUC-ROC > 0.5 on the held-out 20% test split.
+
+- `load_fover_pairs(path) -> list[dict]`: load FOVER labeled steps from JSON; filter by
+  `label in ('correct', 'incorrect')` and `confidence >= 0.3`.
+- `fover_pairs_to_contrastive(pairs) -> list[tuple[jnp.ndarray, jnp.ndarray]]`: convert
+  co-occurring (correct, incorrect) pairs on the same question into (positive, negative)
+  contrastive tensors for EORM training.
+- If `n_real_pairs < 10`, fall back to synthetic data; set `honest_verdict='synthetic_only'`.
+- `honest_verdict='real_data_improvement'` requires both `after_auc > before_auc` AND
+  `n_real_pairs >= 10`.
+- Retro-024 is closed when `honest_verdict='real_data_improvement'`.
+
+Spec refs: arXiv 2505.14999 (EORM), RETRO-024
+
+### REQ-LEARN-033: JEPA Predictor Retrain on FOVER Pairs
+
+The JEPA predictor shall be retrained on the same FOVER-labeled pairs, treating each
+labeled step as a (partial_step_prefix, violation_occurred) pair:
+
+- `label='incorrect'` maps to `has_violation=True`
+- `label='correct'` maps to `has_violation=False`
+- Use existing `JEPARetrainer.train_epoch()` and `evaluate_auc_roc()`.
+- Save the retrained model to `jepa_431_real.safetensors`.
+
 ### REQ-LEARN-031: FOVER Training Pair Export
 
 The annotated (step, label) pairs shall be written to `results/fover_labeled_steps.json`
@@ -357,6 +384,35 @@ for use as training targets for EORM (Exp 431). The export format:
 **When** `annotate_step_with_z3(step)` is called
 **Then** the returned step has `z3_label='incorrect'`
 
+### SCENARIO-LEARN-057: FOVER Pair Loading with Confidence Filter
+
+**Given** a FOVER-labeled JSON file with 100 pairs (80 with confidence >= 0.3, 20 with confidence < 0.3)
+**When** `load_fover_pairs(path)` is called
+**Then** exactly 80 pairs are returned (confidence filter applied)
+**And** all returned pairs have `label in ('correct', 'incorrect')`
+
+### SCENARIO-LEARN-058: Contrastive Tensor Conversion
+
+**Given** a list of FOVER pairs including co-occurring correct and incorrect steps for the same question
+**When** `fover_pairs_to_contrastive(pairs)` is called
+**Then** a list of (positive, negative) tensor tuples is returned
+**And** each tuple contains two `jnp.ndarray` vectors (one per step text)
+**And** pairs from different questions are NOT cross-matched
+
+### SCENARIO-LEARN-059: Retrain Verdict Computation
+
+**Given** `before_auc=0.5`, `after_auc=0.62`, `n_real_pairs=25`
+**When** `compute_retrain_verdict(0.5, 0.62, 25)` is called
+**Then** the result is `'real_data_improvement'`
+
+**Given** `n_real_pairs=5` (below threshold)
+**When** `compute_retrain_verdict(0.5, 0.8, 5)` is called
+**Then** the result is `'synthetic_only'`
+
+**Given** `before_auc=0.62`, `after_auc=0.55`, `n_real_pairs=25`
+**When** `compute_retrain_verdict(0.62, 0.55, 25)` is called
+**Then** the result is `'real_data_no_improvement'`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -379,3 +435,5 @@ for use as training targets for EORM (Exp 431). The export format:
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
 | REQ-LEARN-030 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-031 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-032 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-033 | N/A | Implemented | 10+ Python |
