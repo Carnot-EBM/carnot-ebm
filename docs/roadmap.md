@@ -4,14 +4,14 @@
 
 ## Current Milestone
 
-**2026.04.30: "Purge, Implement, Execute — First Credible Live Numbers"**
+**2026.04.33: "First Live Results, ThinkPRM Bridge, Boltzmann-GPT Repair"**
 
 | # | Experiment | Status |
 |---|-----------|--------|
-| 404 | DeliverableContentValidator + GPU preflight v2 | Complete |
-| 405-410 | Infrastructure + live pipelines | Complete |
-| 411 | Live HumanEval code verification | In Progress |
-| 412-417 | Remaining experiments | Queued |
+| 437 | LongRunBenchmarkExecutor (RETRO-026 fix) | Complete |
+| 438 | DualGPURunner GPU1 zombie fix (RETRO-025) | Complete — fix_applied_unverified |
+| 439 | Live Precision Micro-Benchmark (50q × 3 × 2) | In Progress — first credible live number |
+| 440-449 | Live HumanEval, Adversarial, FR-11 chain, ThinkPRM, Phase 3 seed v2, retro | Queued |
 
 ## Completed Milestones
 
@@ -32,6 +32,9 @@
 | 2026.04.27 | LLMExtractor + Self-Learning | 365-376 | CIKAN energy tier, live adversarial GSM8K |
 | 2026.04.28 | Break Simulated Barrier | 377-389 | JitRL self-learning, live precision pipeline |
 | 2026.04.29 | Live Results At Last | 390-403 | GPU confirmed, CIKAN, FR-11 closed |
+| 2026.04.30 | Purge + First Credible Live | 404-417 | DeliverableContentValidator, env auto-fix, GPU preflight v2 |
+| 2026.04.31 | EnvironmentAutoFix + VPRM | 418-424 | Env propagation workaround, VPRM architecture |
+| 2026.04.32 | Live Numbers Confirmed (infrastructure) | 425-436 | Conductor timeout watchdog, DualGPU detector, FOVER annotation, Kona Phase 3 seed, provenance audit |
 
 ## Breakthrough Results
 
