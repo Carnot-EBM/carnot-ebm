@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Milestone 2026.04.32 Efficiency Retrospective — Conductor Analysis)
+
+- 2026-04-17 07:09 UTC: Wrote operational efficiency retrospective for milestone 2026.04.32.
+  Triggered by: user instruction to analyze milestone execution efficiency and bottlenecks.
+
+  **Summary:** 374 experiments, 5770 min total wall time, 15.4 min/exp average. Both RTX 3090s
+  at 98% VRAM occupancy with 0% compute utilization — zombie processes are monopolizing GPU memory
+  and forcing new experiments to CPU fallback. Top bottlenecks: (1) GPU zombie accumulation,
+  (2) flat timeout budget kills legitimate benchmarks, (3) sequential execution wastes dual-GPU
+  capacity, (4) per-experiment model reload latency. Estimated 32% time savings available via
+  zombie reaper + parallel execution + persistent model server + tier-specific budgets.
+
+  **Deliverable:** results/operational_retro_2026_04_32.json (schema=carnot.operational_retro_efficiency.v1)
+
 ## 2026-04-17 (Exp 436: Milestone 2026.04.32 Operational Retrospective)
 
 - 2026-04-17 06:29 UTC: Implemented and ran Exp 436 milestone retrospective.

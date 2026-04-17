@@ -2022,3 +2022,5 @@ python/ |
 | 2026-04-17 06:07 UTC | Exp 435a: Kona-adjacent continuous energy landscap | OK | 81 passed in 19.82s |
 | 2026-04-17 06:12 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 06:58 UTC | Exp 436: Operational Retrospective — Milestone 202 | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
+| 2026-04-17 07:03 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
+| 2026-04-17 07:03 UTC | Exp 436: Operational Retrospective — Milestone 202 | OK | Deliverable already exists in repo |
