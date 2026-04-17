@@ -2057,3 +2057,6 @@ python/ |
 | 2026-04-17 14:25 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
 | 2026-04-17 14:25 UTC | Exp 441: Live Adversarial GSM8K Micro — 50q x 3 co | OK | Deliverable already exists in repo |
 | 2026-04-17 14:28 UTC | Exp 442: FOVER live CoT annotation (FR-11 upstream)  | OK | fover_live.py + experiment_442 script + 28 tests pass; Exp 439 live CoT (300 responses, inference_mode=live_gpu confirmed) ready for annotation; honest_verdict will be real_data_labeled when executed; FR-11 relay unblocked |
+| 2026-04-17 15:11 UTC | Exp 442: FOVER live annotation — Z3 step labels on | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
+| 2026-04-17 15:16 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 15:16 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
