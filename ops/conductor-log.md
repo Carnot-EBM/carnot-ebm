@@ -2082,3 +2082,7 @@ python/ |
 | 2026-04-17 19:03 UTC | Exp 444: CarnotThinkProbe — ThinkPRM-style CoT ver | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-17 19:08 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 19:08 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 20:09 UTC | Exp 444: CarnotThinkProbe — ThinkPRM-style CoT ver | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
+| 2026-04-17 20:14 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 20:14 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 20:14 UTC | Exp 444: CarnotThinkProbe — ThinkPRM-style CoT ver | OK | Deliverable already exists in repo |
