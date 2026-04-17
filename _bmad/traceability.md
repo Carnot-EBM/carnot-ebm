@@ -373,3 +373,6 @@
 | REQ-PRED-005 | Not Started | Implemented | IRON toolchain sampler alternative for AMD XDNA NPU; mlir-aie bare-metal NPU programming, 2.8x GEMM speedup over CPU, no onnxruntime required; check_iron_toolchain_available(), _attempt_iron_gemm_dispatch(); (Exp 435) |
 | SCENARIO-EXP303-G | Not Started | Implemented | IRON path success: check_iron_toolchain_available() finds mlir-aie, _attempt_iron_gemm_dispatch() runs GEMM on NPU without VitisAI EP, honest_verdict=npu_ready_iron_path; (Exp 435) |
 | SCENARIO-SAFE-006 | Not Started | Implemented | Spline inspection: inspect_spline(0, 0) returns (13,) control point array for "buy" keyword in financial domain; positive values = keyword raises energy = violation indicator (Exp 434) |
+| REQ-KONA-001 | Not Started | Implemented | Continuous EBM Minimum Recovery: ContinuousEBMMinimiser.minimize_continuous_ebm(landscape, initial_state, tolerance)->ContinuousEBMState recovers local minimum within L2 distance tolerance via gradient descent; differentiable JAX implementation; Phase 3 foundation model scaffold (Exp 435a) |
+| SCENARIO-KONA-001 | Not Started | Implemented | Continuous minimiser recovers target minimum within L2 tolerance on synthetic energy landscape (Exp 435a) |
+| SCENARIO-KONA-002 | Not Started | Implemented | Honest verdict written to artifact with inference_mode and convergence metrics (Exp 435a) |
