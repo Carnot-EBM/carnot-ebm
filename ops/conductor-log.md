@@ -1991,3 +1991,5 @@ python/ |
 | 2026-04-16 23:17 UTC | Exp 428: Live HumanEval code verification — confir | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
 | 2026-04-16 23:22 UTC | Exp 428: Live HumanEval code verification — confir | OK | Deliverable already exists in repo |
 | 2026-04-17 00:08 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
+| 2026-04-17 00:14 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | FAIL | Claude Code error:  |
+| 2026-04-17 00:19 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
