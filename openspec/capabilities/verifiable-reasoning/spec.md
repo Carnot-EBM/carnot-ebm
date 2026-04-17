@@ -4446,6 +4446,48 @@ Spec: REQ-BENCH-004, SCENARIO-BENCH-021
 
 Spec: REQ-BENCH-006, REQ-BENCH-007, SCENARIO-BENCH-022
 
+### REQ-BENCH-009: Live Precision Micro-Benchmark (50q × 3 variants × 2 models)
+
+The repository SHALL provide a live GPU precision micro-benchmark (Exp 439) that:
+
+- Evaluates 50 GSM8K questions per variant × 3 variants × 2 models = 300 LLM calls.
+- Fits within a 45-minute ExperimentTimeoutWatchdog budget (the Exp 437 fix).
+- Tests three ablation variants: BASELINE (no verify), CRANE_ONLY (CRANEExtractionGate
+  + one-shot repair), and FULL_STACK (CRANE + JitRLConstraintMemory + energy gate).
+- Produces a ``MicroPrecisionResult`` per (model, variant) pair with fields:
+  ``model_id``, ``variant``, ``n_questions``, ``baseline_accuracy``,
+  ``variant_accuracy``, ``signed_improvement``, ``crane_detection_rate``,
+  ``inference_mode``.
+- Builds a ``carnot.precision_micro.v1`` artifact via ``build_micro_precision_artifact``
+  with ``honest_verdict`` in {'live_improvement', 'live_no_improvement', 'blocked'}.
+- Requires ``inference_mode='live_gpu'`` for any non-blocked verdict — simulated
+  results may never produce a live headline claim.
+- Saves full CoT responses to ``results/experiment_439_live_cot.json`` for
+  downstream FOVER annotation (Exp 442).
+
+### SCENARIO-BENCH-025: Exp 439 Live Improvement Criterion
+
+**Given** Exp 439 runs on live dual-RTX-3090 hardware with CARNOT_FORCE_LIVE=1
+**And** all 6 (model, variant) batches complete within the 45-minute watchdog
+**When** the artifact is assembled
+**Then** ``honest_verdict`` is 'live_improvement' iff best non-baseline
+  ``signed_improvement`` > 0
+**And** ``headline_result`` identifies the best (model, variant) by signed_improvement
+**And** ``inference_mode`` is 'live_gpu'
+**And** ``per_model_results`` contains all 6 (model, variant) entries
+
+### SCENARIO-BENCH-026: Exp 439 Blocked Artifact on Gate Failure
+
+**Given** Exp 439 runs without CARNOT_FORCE_LIVE=1 (CI mode)
+**Or** the LiveGPUGate check fails
+**When** the artifact is assembled
+**Then** ``honest_verdict`` is 'blocked'
+**And** ``headline_result`` is None
+**And** ``inference_mode`` is 'blocked'
+**And** ``per_model_results`` is an empty list
+
+Spec: REQ-BENCH-009, SCENARIO-BENCH-025, SCENARIO-BENCH-026
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -5522,6 +5564,7 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-BENCH-005 | Not Started | Implemented (Exp 353) | SmokeTestResult + run_smoke_test + build_smoke_test_artifact; live GPU smoke test gate with CI-skip path and RuntimeError on simulated fallback (SCENARIO-BENCH-012/013) |
 | REQ-BENCH-006 | Not Started | Implemented (Exp 354) | AdversarialGSMQuestion + build_adversarial_questions + AdversarialBenchmarkResult + compute_adversarial_results + build_adversarial_artifact; adversarial GSM8K harness with 20-distractor pool and CI-safe synthetic mode (SCENARIO-BENCH-014/015/016) |
 | REQ-BENCH-007 | Not Started | Implemented (Exp 354) | robustness_invariant_holds field in build_adversarial_artifact; invariant is True when adversarial_accuracy >= standard_accuracy - 0.05 (SCENARIO-BENCH-014/016) |
+| REQ-BENCH-009 | Not Started | Implemented (Exp 439) | MicroPrecisionResult + build_micro_precision_artifact (schema carnot.precision_micro.v1); 50q × 3 variants × 2 models micro-benchmark with LongRunBenchmarkExecutor; CoT log for FOVER (SCENARIO-BENCH-025/026) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
