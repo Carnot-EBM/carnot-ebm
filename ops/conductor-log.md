@@ -2075,3 +2075,5 @@ python/ |
 | 2026-04-17 17:49 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 17:49 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
 | 2026-04-17 17:49 UTC | Exp 443: EORM+JEPA live retrain on Exp 442 real pa | OK | Deliverable already exists in repo |
+| 2026-04-17 18:03 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 18:03 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
