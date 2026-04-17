@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-17 09:39 UTC — EXP 439: Live precision micro-benchmark harness; 50q × 3 variants × 2 models; MicroPrecisionResult + build_micro_precision_artifact (carnot.precision_micro.v1); scripts/experiment_439_live_precision_micro.py; 33 tests pass, 100% precision_micro.py coverage; REQ-BENCH-009, SCENARIO-BENCH-025/026 added to spec
+**Last Updated:** 2026-04-17 11:55 UTC — EXP 440: Live HumanEval micro-benchmark harness; 50 problems × 2 models; MicroHumanEvalResult + build_micro_humaneval_artifact (carnot.humaneval_micro.v1); scripts/experiment_440_live_humaneval_micro.py; 46 tests pass; REQ-BENCH-010, SCENARIO-BENCH-027/028 added to traceability
 
 ---
 

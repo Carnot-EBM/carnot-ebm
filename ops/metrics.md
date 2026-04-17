@@ -16,6 +16,7 @@
 | 8 | 2026-04-17T06:00:57Z | 2026-04-17T06:05:18Z | Exp 435a: Phase 3 seed — continuous EBM vs Ising; REQ-KONA-001 + SCENARIO-KONA-001/002 added to spec; python/carnot/phase3/continuous_ebm.py; 33 tests pass; experiment script runs in 0.2s; honest_verdict=partial_match (sign_agreement=0.8, L2=2.69) | ~5m |
 | 9 | 2026-04-17T09:24:44Z | 2026-04-17T09:46:00Z | Exp 439: live precision micro-benchmark harness; precision_micro.py (MicroPrecisionResult + build_micro_precision_artifact, 100% coverage); experiment_439_live_precision_micro.py (3 variants × 2 models × 50q; CRANE_ONLY + FULL_STACK with JitRL; CoT log); 33 tests all pass; REQ-BENCH-009 + SCENARIO-BENCH-025/026 added to spec; ops docs updated | ~21m |
 | 10 | 2026-04-17T10:15:13Z | 2026-04-17T10:24:46Z | Exp 439 verification: read all existing code; confirmed harness fully implemented from prior session; 33 tests re-run, all pass; no changes required | ~10m |
+| 11 | 2026-04-17T11:55:37Z | 2026-04-17T12:35:51Z | Exp 440: read existing humaneval_micro.py + experiment_440 script + test file; 46 tests pass; traceability updated (REQ-BENCH-009/010, SCENARIO-BENCH-025-028); changelog + status updated | ~40m |
 
 ---
 
