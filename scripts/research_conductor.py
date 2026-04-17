@@ -207,6 +207,15 @@ def run_agent(
             text=True,
             cwd=str(PROJECT_ROOT),
             env=env,
+            # Put the subagent in its own process group so we can kill it plus
+            # every descendant (pytest workers, python -c helpers, etc.) when
+            # the wall-clock timeout fires. Without this, `proc.kill()` only
+            # reaps the direct child — leaving pytest workers alive, holding
+            # GPU memory, and poisoning the next pre-flight test run. Observed
+            # in session 2026-04-17: 34 zombie pytest workers accumulated after
+            # 8 hours of killed subagents, causing consecutive pre-flight
+            # failures until manually cleared.
+            start_new_session=True,
         )
 
         if stdin_text is not None and proc.stdin:
@@ -220,10 +229,30 @@ def run_agent(
         # This prevents infinite hangs when Codex stalls mid-stream.
         # Claude legitimately thinks for longer periods, so use a higher threshold.
         import select
+        import signal
         # Stall detection: only for Codex (which has a known infinite-hang bug).
         # Claude doesn't stall — it either completes or hits the turn limit.
         # Setting to 0 disables the stall detector.
         STALL_TIMEOUT = 0 if AGENT_TYPE == "claude" else 180  # disabled for Claude, 3 min Codex
+
+        def _kill_subagent_group(reason: str) -> None:
+            """Kill the subagent AND every descendant process in its process group.
+
+            Critical: a bare ``proc.kill()`` only reaps the direct child. Pytest
+            workers, python -c helpers, model-loading processes spawned by the
+            subagent survive and hold GPU memory + CPU. After 8 hours of killed
+            subagents on 2026-04-17, 34 zombie pytest workers accumulated and
+            started poisoning the next iteration's pre-flight by competing for
+            resources. Killing the process group (SIGKILL to -pgid) reaps them
+            all in one call.
+            """
+            try:
+                pgid = os.getpgid(proc.pid)
+                os.killpg(pgid, signal.SIGKILL)
+            except (ProcessLookupError, PermissionError) as exc:
+                logger.warning("Process group kill for %s failed (%s) — "
+                               "falling back to proc.kill()", reason, exc)
+                proc.kill()
 
         # Wall-clock timeout: the Exp 425 ExperimentTimeoutWatchdog guards
         # inside experiment scripts, but run_agent spawns the Claude CLI which
@@ -264,10 +293,10 @@ def run_agent(
                 elapsed_silence = time.time() - last_output_time
                 if STALL_TIMEOUT > 0 and elapsed_silence > STALL_TIMEOUT:
                     logger.warning(
-                        "%s stalled — no output for %ds, killing process",
+                        "%s stalled — no output for %ds, killing process group",
                         AGENT_DISPLAY, int(elapsed_silence),
                     )
-                    proc.kill()
+                    _kill_subagent_group("stall")
                     proc.wait(timeout=10)
                     full_output = "".join(output_lines)
                     return False, f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}"
@@ -278,10 +307,10 @@ def run_agent(
             elapsed_total = time.time() - start_time
             if WALL_CLOCK_TIMEOUT > 0 and elapsed_total > WALL_CLOCK_TIMEOUT:
                 logger.warning(
-                    "%s exceeded wall-clock timeout (%d min), killing process",
+                    "%s exceeded wall-clock timeout (%d min), killing process group",
                     AGENT_DISPLAY, WALL_CLOCK_TIMEOUT // 60,
                 )
-                proc.kill()
+                _kill_subagent_group("wall-clock")
                 try:
                     proc.wait(timeout=10)
                 except subprocess.TimeoutExpired:
@@ -295,7 +324,7 @@ def run_agent(
         try:
             proc.wait(timeout=30)
         except subprocess.TimeoutExpired:
-            proc.kill()
+            _kill_subagent_group("wait-timeout")
 
         full_output = "".join(output_lines)
 
@@ -307,7 +336,12 @@ def run_agent(
         return True, full_output[-2000:]
 
     except subprocess.TimeoutExpired:
-        proc.kill()
+        try:
+            import signal as _sig  # noqa: PLC0415
+            pgid = os.getpgid(proc.pid)
+            os.killpg(pgid, _sig.SIGKILL)
+        except (ProcessLookupError, PermissionError, OSError):
+            proc.kill()
         logger.error("%s timed out after %ds", AGENT_DISPLAY, timeout)
         return False, "Timed out"
     except Exception as e:
