@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 446 — Langevin Dynamics + Energy Matching — Phase 3 ContinuousEBM)
+
+- 2026-04-17 22:03 UTC: Implemented Langevin dynamics + Energy Matching samplers (Exp 446). (User instruction)
+  - `python/carnot/phase3/continuous_ebm.py`: Added `sample_langevin()`, `sample_energy_matching()`, `compare_samplers()`.
+  - `python/carnot/phase3/__init__.py`: Now exports all 8 public symbols including the 3 new functions.
+  - `tests/python/test_experiment_446_energy_matching.py`: 36 tests, 100% targeted coverage.
+  - `scripts/experiment_446_energy_matching.py`: Full experiment script — SA ground state, compare_samplers(n_trials=20).
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-KONA-002, REQ-KONA-003, SCENARIO-KONA-003/004/005.
+  - Theoretical basis: Langevin (arXiv 2506.15121), Energy Matching normalised flow (arXiv 2504.10612, NeurIPS 2025).
+  - Baseline from Exp 435a: gradient_descent L2=2.69. Target: L2 < 0.5 for at least one new sampler.
+
+  **Status:** Complete; 36 new tests pass; full suite pending.
+
+---
+
 ## 2026-04-17 (Exp 445 — BoltzmannRepairBridge — Energy-Guided Repair Direction)
 
 - 2026-04-17 20:14 UTC: Implemented BoltzmannRepairBridge (Exp 445). (User instruction)
