@@ -1,0 +1,884 @@
+{
+  "batch_id": 1,
+  "start_idx": 25,
+  "end_idx": 50,
+  "questions": [
+    {
+      "task_id": "HumanEval/25",
+      "entry_point": "factorize",
+      "prompt": "def factorize(n: int) -> list:\n    \"\"\"Return prime factorization.\"\"\"\n",
+      "canonical_solution": "    factors = []\n    d = 2\n    while d * d <= n:\n        while n % d == 0:\n            factors.append(d); n //= d\n        d += 1\n    if n > 1:\n        factors.append(n)\n    return factors\n",
+      "test_cases": [
+        [
+          [
+            8
+          ],
+          [
+            2,
+            2,
+            2
+          ]
+        ],
+        [
+          [
+            25
+          ],
+          [
+            5,
+            5
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/26",
+      "entry_point": "remove_duplicates",
+      "prompt": "def remove_duplicates(numbers: list) -> list:\n    \"\"\"Remove elements that appear more than once.\"\"\"\n",
+      "canonical_solution": "    from collections import Counter\n    c = Counter(numbers)\n    return [x for x in numbers if c[x] == 1]\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              3,
+              2,
+              4
+            ]
+          ],
+          [
+            1,
+            3,
+            4
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/27",
+      "entry_point": "flip_case",
+      "prompt": "def flip_case(string: str) -> str:\n    \"\"\"Flip uppercase to lowercase and vice versa.\"\"\"\n",
+      "canonical_solution": "    return string.swapcase()\n",
+      "test_cases": [
+        [
+          [
+            "Hello"
+          ],
+          "hELLO"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/28",
+      "entry_point": "concatenate",
+      "prompt": "def concatenate(strings: list) -> str:\n    \"\"\"Concatenate list of strings.\"\"\"\n",
+      "canonical_solution": "    return ''.join(strings)\n",
+      "test_cases": [
+        [
+          [
+            [
+              "a",
+              "b",
+              "c"
+            ]
+          ],
+          "abc"
+        ],
+        [
+          [
+            []
+          ],
+          ""
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/29",
+      "entry_point": "filter_by_prefix",
+      "prompt": "def filter_by_prefix(strings: list, prefix: str) -> list:\n    \"\"\"Keep strings starting with given prefix.\"\"\"\n",
+      "canonical_solution": "    return [s for s in strings if s.startswith(prefix)]\n",
+      "test_cases": [
+        [
+          [
+            [
+              "abc",
+              "bcd",
+              "axy"
+            ],
+            "a"
+          ],
+          [
+            "abc",
+            "axy"
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/30",
+      "entry_point": "get_positive",
+      "prompt": "def get_positive(l: list) -> list:\n    \"\"\"Return only positive numbers from list.\"\"\"\n",
+      "canonical_solution": "    return [x for x in l if x > 0]\n",
+      "test_cases": [
+        [
+          [
+            [
+              -1,
+              2,
+              -4,
+              5,
+              6
+            ]
+          ],
+          [
+            2,
+            5,
+            6
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/31",
+      "entry_point": "is_prime",
+      "prompt": "def is_prime(n: int) -> bool:\n    \"\"\"Return True if n is prime.\"\"\"\n",
+      "canonical_solution": "    if n < 2:\n        return False\n    for i in range(2, int(n**0.5)+1):\n        if n % i == 0:\n            return False\n    return True\n",
+      "test_cases": [
+        [
+          [
+            6
+          ],
+          false
+        ],
+        [
+          [
+            101
+          ],
+          true
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/32",
+      "entry_point": "find_zero",
+      "prompt": "def find_zero(xs: list) -> float:\n    \"\"\"Find zero of polynomial via bisection (simplified).\"\"\"\n",
+      "canonical_solution": "    def poly(x):\n        return sum(c * x**i for i, c in enumerate(xs))\n    lo, hi = -1e6, 1e6\n    for _ in range(100):\n        mid = (lo + hi) / 2\n        if poly(mid) * poly(lo) <= 0:\n            hi = mid\n        else:\n            lo = mid\n    return round((lo + hi) / 2, 2)\n",
+      "test_cases": [
+        [
+          [
+            [
+              -6,
+              11,
+              -6,
+              1
+            ]
+          ],
+          1.0
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/33",
+      "entry_point": "sort_third",
+      "prompt": "def sort_third(l: list) -> list:\n    \"\"\"Sort every third element in place.\"\"\"\n",
+      "canonical_solution": "    thirds = sorted(l[i] for i in range(0, len(l), 3))\n    result = l[:]\n    for i, idx in enumerate(range(0, len(l), 3)):\n        result[idx] = thirds[i]\n    return result\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            [
+              5,
+              6,
+              3,
+              4,
+              8,
+              9,
+              2
+            ]
+          ],
+          [
+            2,
+            6,
+            3,
+            4,
+            8,
+            9,
+            5
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/34",
+      "entry_point": "unique",
+      "prompt": "def unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\n",
+      "canonical_solution": "    return sorted(set(l))\n",
+      "test_cases": [
+        [
+          [
+            [
+              5,
+              3,
+              5,
+              2,
+              3
+            ]
+          ],
+          [
+            2,
+            3,
+            5
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/35",
+      "entry_point": "max_element",
+      "prompt": "def max_element(l: list) -> int:\n    \"\"\"Return maximum element of list.\"\"\"\n",
+      "canonical_solution": "    return max(l)\n",
+      "test_cases": [
+        [
+          [
+            [
+              3,
+              1,
+              2
+            ]
+          ],
+          3
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/36",
+      "entry_point": "fizz_buzz",
+      "prompt": "def fizz_buzz(n: int) -> int:\n    \"\"\"Count '7's in numbers 1..n divisible by 11 or 13.\"\"\"\n",
+      "canonical_solution": "    count = 0\n    for i in range(1, n+1):\n        if i % 11 == 0 or i % 13 == 0:\n            count += str(i).count('7')\n    return count\n",
+      "test_cases": [
+        [
+          [
+            50
+          ],
+          0
+        ],
+        [
+          [
+            78
+          ],
+          3
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/37",
+      "entry_point": "sort_even",
+      "prompt": "def sort_even(l: list) -> list:\n    \"\"\"Sort even-indexed elements, leave odd unchanged.\"\"\"\n",
+      "canonical_solution": "    evens = sorted(l[i] for i in range(0, len(l), 2))\n    result = l[:]\n    for i, idx in enumerate(range(0, len(l), 2)):\n        result[idx] = evens[i]\n    return result\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          [
+            1,
+            2,
+            3
+          ]
+        ],
+        [
+          [
+            [
+              5,
+              3,
+              -5,
+              2,
+              -3,
+              3,
+              9,
+              0,
+              123,
+              1,
+              -10
+            ]
+          ],
+          [
+            -10,
+            3,
+            -5,
+            2,
+            -3,
+            3,
+            5,
+            0,
+            9,
+            1,
+            123
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/38",
+      "entry_point": "encode_cyclic",
+      "prompt": "def encode_cyclic(s: str) -> str:\n    \"\"\"Cyclic shift groups of 3 chars.\"\"\"\n",
+      "canonical_solution": "    groups = [s[i:i+3] for i in range(0, len(s), 3)]\n    groups = [g[1:]+g[0] if len(g) == 3 else g for g in groups]\n    return ''.join(groups)\n",
+      "test_cases": [
+        [
+          [
+            "abc"
+          ],
+          "bca"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/39",
+      "entry_point": "prime_fib",
+      "prompt": "def prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n",
+      "canonical_solution": "    def is_prime(x):\n        if x < 2: return False\n        return all(x % i != 0 for i in range(2, int(x**0.5)+1))\n    a, b, count = 1, 1, 0\n    while True:\n        a, b = b, a+b\n        if is_prime(a):\n            count += 1\n            if count == n:\n                return a\n",
+      "test_cases": [
+        [
+          [
+            1
+          ],
+          2
+        ],
+        [
+          [
+            3
+          ],
+          5
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/40",
+      "entry_point": "triples_sum_to_zero",
+      "prompt": "def triples_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any 3 elements sum to zero.\"\"\"\n",
+      "canonical_solution": "    n = len(l)\n    for i in range(n-2):\n        for j in range(i+1, n-1):\n            for k in range(j+1, n):\n                if l[i]+l[j]+l[k] == 0:\n                    return True\n    return False\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              3,
+              5,
+              0
+            ]
+          ],
+          false
+        ],
+        [
+          [
+            [
+              1,
+              3,
+              -2,
+              1
+            ]
+          ],
+          true
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/41",
+      "entry_point": "car_race_collision",
+      "prompt": "def car_race_collision(n: int) -> int:\n    \"\"\"Return number of collisions between n cars in each direction.\"\"\"\n",
+      "canonical_solution": "    return n * n\n",
+      "test_cases": [
+        [
+          [
+            2
+          ],
+          4
+        ],
+        [
+          [
+            3
+          ],
+          9
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/42",
+      "entry_point": "incr_list",
+      "prompt": "def incr_list(l: list) -> list:\n    \"\"\"Increment each element by 1.\"\"\"\n",
+      "canonical_solution": "    return [x + 1 for x in l]\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              2,
+              3
+            ]
+          ],
+          [
+            2,
+            3,
+            4
+          ]
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/43",
+      "entry_point": "pairs_sum_to_zero",
+      "prompt": "def pairs_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any two distinct elements sum to zero.\"\"\"\n",
+      "canonical_solution": "    seen = set()\n    for x in l:\n        if -x in seen:\n            return True\n        seen.add(x)\n    return False\n",
+      "test_cases": [
+        [
+          [
+            [
+              1,
+              3,
+              -2,
+              1
+            ]
+          ],
+          false
+        ],
+        [
+          [
+            [
+              1,
+              2,
+              3,
+              -2
+            ]
+          ],
+          true
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/44",
+      "entry_point": "change_base",
+      "prompt": "def change_base(x: int, base: int) -> str:\n    \"\"\"Convert integer x to given base (base < 10).\"\"\"\n",
+      "canonical_solution": "    digits = ''\n    while x > 0:\n        digits = str(x % base) + digits; x //= base\n    return digits or '0'\n",
+      "test_cases": [
+        [
+          [
+            8,
+            3
+          ],
+          "22"
+        ],
+        [
+          [
+            7,
+            2
+          ],
+          "111"
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/45",
+      "entry_point": "triangle_area",
+      "prompt": "def triangle_area(a: float, h: float) -> float:\n    \"\"\"Compute area of triangle with base a and height h.\"\"\"\n",
+      "canonical_solution": "    return 0.5 * a * h\n",
+      "test_cases": [
+        [
+          [
+            5,
+            3
+          ],
+          7.5
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/46",
+      "entry_point": "fib4",
+      "prompt": "def fib4(n: int) -> int:\n    \"\"\"Compute n-th element of fib4 sequence (0,0,2,0,...).\"\"\"\n",
+      "canonical_solution": "    if n < 4:\n        return [0, 0, 2, 0][n]\n    a, b, c, d = 0, 0, 2, 0\n    for _ in range(n - 3):\n        a, b, c, d = b, c, d, a + b + c + d\n    return d\n",
+      "test_cases": [
+        [
+          [
+            5
+          ],
+          4
+        ],
+        [
+          [
+            8
+          ],
+          28
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/47",
+      "entry_point": "median",
+      "prompt": "def median(l: list) -> float:\n    \"\"\"Return median of list.\"\"\"\n",
+      "canonical_solution": "    s = sorted(l)\n    n = len(s)\n    return s[n//2] if n % 2 else (s[n//2-1]+s[n//2])/2\n",
+      "test_cases": [
+        [
+          [
+            [
+              3,
+              1,
+              2,
+              4,
+              5
+            ]
+          ],
+          3
+        ],
+        [
+          [
+            [
+              1,
+              2,
+              2,
+              4,
+              5
+            ]
+          ],
+          2
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/48",
+      "entry_point": "is_palindrome",
+      "prompt": "def is_palindrome(text: str) -> bool:\n    \"\"\"Check if string is a palindrome.\"\"\"\n",
+      "canonical_solution": "    return text == text[::-1]\n",
+      "test_cases": [
+        [
+          [
+            "kayak"
+          ],
+          true
+        ],
+        [
+          [
+            "hello"
+          ],
+          false
+        ]
+      ],
+      "test": ""
+    },
+    {
+      "task_id": "HumanEval/49",
+      "entry_point": "modp",
+      "prompt": "def modp(n: int, p: int) -> int:\n    \"\"\"Return 2^n mod p.\"\"\"\n",
+      "canonical_solution": "    result = 1\n    for _ in range(n):\n        result = (result * 2) % p\n    return result\n",
+      "test_cases": [
+        [
+          [
+            3,
+            5
+          ],
+          3
+        ],
+        [
+          [
+            1101,
+            101
+          ],
+          2
+        ]
+      ],
+      "test": ""
+    }
+  ],
+  "results": [
+    {
+      "problem_id": "HumanEval/25",
+      "generated_code": "def factorize(n: int) -> list:\n    \"\"\"Return prime factorization.\"\"\"\n# Prime factorization.\n    return []\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def factorize(n: int) -> list:\n    \"\"\"Return prime factorization.\"\"\"\n# Prime factorization.\n    return []\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/26",
+      "generated_code": "def remove_duplicates(numbers: list) -> list:\n    \"\"\"Remove elements that appear more than once.\"\"\"\nreturn list(numbers)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def remove_duplicates(numbers: list) -> list:\n    \"\"\"Remove elements that appear more than once.\"\"\"\nreturn list(numbers)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/27",
+      "generated_code": "def flip_case(string: str) -> str:\n    \"\"\"Flip uppercase to lowercase and vice versa.\"\"\"\n# Flip case\n    return string.lower()\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def flip_case(string: str) -> str:\n    \"\"\"Flip uppercase to lowercase and vice versa.\"\"\"\n# Flip case\n    return string.lower()\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/28",
+      "generated_code": "def concatenate(strings: list) -> str:\n    \"\"\"Concatenate list of strings.\"\"\"\n# Concatenate list of strings.\n    return \"\"\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def concatenate(strings: list) -> str:\n    \"\"\"Concatenate list of strings.\"\"\"\n# Concatenate list of strings.\n    return \"\"\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/29",
+      "generated_code": "def filter_by_prefix(strings: list, prefix: str) -> list:\n    \"\"\"Keep strings starting with given prefix.\"\"\"\ndef filter_by_prefix(strings: list, prefix: str) -> list:\n    \"\"\"Keep strings starting with given prefix.\"\"\"\n    return [s for s in strings if s.startswith(prefix)]\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def filter_by_prefix(strings: list, prefix: str) -> list:\n    \"\"\"Keep strings starting with given prefix.\"\"\"\ndef filter_by_prefix(strings: list, prefix: str) -> list:\n    \"\"\"Keep strings starting with given prefix.\"\"\"\n    return [s for s in strings if s.startswith(prefix)]\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/30",
+      "generated_code": "def get_positive(l: list) -> list:\n    \"\"\"Return only positive numbers from list.\"\"\"\ndef get_positive(l: list) -> list:\n    \"\"\"Return only positive numbers from list.\"\"\"\n    return [x for x in l if x > 0]\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def get_positive(l: list) -> list:\n    \"\"\"Return only positive numbers from list.\"\"\"\ndef get_positive(l: list) -> list:\n    \"\"\"Return only positive numbers from list.\"\"\"\n    return [x for x in l if x > 0]\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/31",
+      "generated_code": "def is_prime(n: int) -> bool:\n    \"\"\"Return True if n is prime.\"\"\"\nif n <= 1:\n        return False\n    if n <= 3:\n        return True\n    \n    # Optimization: Check if n is divisible by 2 or 3\n    i = 5\n    while i * (i + 1) <= n:\n        if n % i == 0 or n % (i + 1) == 0:\n            return False\n        i += 2\n    return True\n\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def is_prime(n: int) -> bool:\n    \"\"\"Return True if n is prime.\"\"\"\nif n <= 1:\n        return False\n    if n <= 3:\n        return True\n    \n    # Optimization: Check if n is divisible by 2 or 3\n    i = 5\n    while i * (i + 1) <= n:\n        if n % i == 0 or n % (i + 1) == 0:\n            return False\n        i += 2\n    return True\n\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/32",
+      "generated_code": "def find_zero(xs: list) -> float:\n    \"\"\"Find zero of polynomial via bisection (simplified).\"\"\"\ndef find_zero(xs: list) -> float:\n    \"\"\"Find zero of polynomial via bisection (simplified).\"\"\"\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def find_zero(xs: list) -> float:\n    \"\"\"Find zero of polynomial via bisection (simplified).\"\"\"\ndef find_zero(xs: list) -> float:\n    \"\"\"Find zero of polynomial via bisection (simplified).\"\"\"\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/33",
+      "generated_code": "def sort_third(l: list) -> list:\n    \"\"\"Sort every third element in place.\"\"\"\ndef sort_third_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def sort_third(l: list) -> list:\n    \"\"\"Sort every third element in place.\"\"\"\ndef sort_third_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort_sort",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/34",
+      "generated_code": "def unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\ndef unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\n\ndef unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\n    return list(set(l))\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\ndef unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\n\ndef unique(l: list) -> list:\n    \"\"\"Return sorted unique elements.\"\"\"\n    return list(set(l))\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/35",
+      "generated_code": "def max_element(l: list) -> int:\n    \"\"\"Return maximum element of list.\"\"\"\nreturn max(l)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def max_element(l: list) -> int:\n    \"\"\"Return maximum element of list.\"\"\"\nreturn max(l)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/36",
+      "generated_code": "def fizz_buzz(n: int) -> int:\n    \"\"\"Count '7's in numbers 1..n divisible by 11 or 13.\"\"\"\n# Count '7's in numbers 1..n\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def fizz_buzz(n: int) -> int:\n    \"\"\"Count '7's in numbers 1..n divisible by 11 or 13.\"\"\"\n# Count '7's in numbers 1..n\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This is a placeholder for a real implementation\n    # This",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/37",
+      "generated_code": "def sort_even(l: list) -> list:\n    \"\"\"Sort even-indexed elements, leave odd unchanged.\"\"\"\ndef sort_even(l: list) -> list:\n    \"\"\"Sort even-indexed elements, leave odd unchanged.\"\"\"\n    return list(l)\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def sort_even(l: list) -> list:\n    \"\"\"Sort even-indexed elements, leave odd unchanged.\"\"\"\ndef sort_even(l: list) -> list:\n    \"\"\"Sort even-indexed elements, leave odd unchanged.\"\"\"\n    return list(l)\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/38",
+      "generated_code": "def encode_cyclic(s: str) -> str:\n    \"\"\"Cyclic shift groups of 3 chars.\"\"\"\nreturn s\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def encode_cyclic(s: str) -> str:\n    \"\"\"Cyclic shift groups of 3 chars.\"\"\"\nreturn s\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/39",
+      "generated_code": "def prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"\n\ndef prime_fib(n: int) -> int:\n    \"\"\"Return n-th Fibonacci number that is also prime.\"\"\"",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/40",
+      "generated_code": "def triples_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any 3 elements sum to zero.\"\"\"\ndef triples_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any 3 elements sum to zero.\"\"\"\n    # Assuming the list contains elements that sum to zero.\n    return True\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def triples_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any 3 elements sum to zero.\"\"\"\ndef triples_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any 3 elements sum to zero.\"\"\"\n    # Assuming the list contains elements that sum to zero.\n    return True\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/41",
+      "generated_code": "def car_race_collision(n: int) -> int:\n    \"\"\"Return number of collisions between n cars in each direction.\"\"\"\n# This is a placeholder for the actual collision.\n    # This is a placeholder for the actual collision.\n    return 0\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def car_race_collision(n: int) -> int:\n    \"\"\"Return number of collisions between n cars in each direction.\"\"\"\n# This is a placeholder for the actual collision.\n    # This is a placeholder for the actual collision.\n    return 0\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/42",
+      "generated_code": "def incr_list(l: list) -> list:\n    \"\"\"Increment each element by 1.\"\"\"\n\"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def incr_list(l: list) -> list:\n    \"\"\"Increment each element by 1.\"\"\"\n\"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"Increment each element by 1.\"\"\"\n\n    \"\"\"",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/43",
+      "generated_code": "def pairs_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any two distinct elements sum to zero.\"\"\"\nreturn True\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def pairs_sum_to_zero(l: list) -> bool:\n    \"\"\"Return True if any two distinct elements sum to zero.\"\"\"\nreturn True\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/44",
+      "generated_code": "def change_base(x: int, base: int) -> str:\n    \"\"\"Convert integer x to given base (base < 10).\"\"\"\nreturn \"\"\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def change_base(x: int, base: int) -> str:\n    \"\"\"Convert integer x to given base (base < 10).\"\"\"\nreturn \"\"\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/45",
+      "generated_code": "def triangle_area(a: float, h: float) -> float:\n    \"\"\"Compute area of triangle with base a and height h.\"\"\"\nreturn (a * h) / 2\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def triangle_area(a: float, h: float) -> float:\n    \"\"\"Compute area of triangle with base a and height h.\"\"\"\nreturn (a * h) / 2\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/46",
+      "generated_code": "def fib4(n: int) -> int:\n    \"\"\"Compute n-th element of fib4 sequence (0,0,2,0,...).\"\"\"\n# Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def fib4(n: int) -> int:\n    \"\"\"Compute n-th element of fib4 sequence (0,0,2,0,...).\"\"\"\n# Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th element of fib4 sequence (0,0,2,0,...).\n\n    # Compute n-th",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/47",
+      "generated_code": "def median(l: list) -> float:\n    \"\"\"Return median of list.\"\"\"\n# Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    #",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def median(l: list) -> float:\n    \"\"\"Return median of list.\"\"\"\n# Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    # Median calculation\n    #",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/48",
+      "generated_code": "def is_palindrome(text: str) -> bool:\n    \"\"\"Check if string is a palindrome.\"\"\"\nreturn text == text\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def is_palindrome(text: str) -> bool:\n    \"\"\"Check if string is a palindrome.\"\"\"\nreturn text == text\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    },
+    {
+      "problem_id": "HumanEval/49",
+      "generated_code": "def modp(n: int, p: int) -> int:\n    \"\"\"Return 2^n mod p.\"\"\"\nreturn 2**n % p\n```",
+      "passed_tests": false,
+      "violations_found": 0,
+      "repair_attempted": true,
+      "final_code": "def modp(n: int, p: int) -> int:\n    \"\"\"Return 2^n mod p.\"\"\"\nreturn 2**n % p\n```",
+      "final_passed_tests": false,
+      "pbt_bug_found": false
+    }
+  ],
+  "status": "complete"
+}
