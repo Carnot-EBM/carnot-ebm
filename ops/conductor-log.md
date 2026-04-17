@@ -2003,3 +2003,6 @@ python/ |
 | 2026-04-17 02:52 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 02:52 UTC | Exp 431: EORM + JEPA retrain on FOVER real-data pa | OK | Deliverable already exists in repo |
 | 2026-04-17 02:52 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
+| 2026-04-17 02:54 UTC | Exp 432: JitRL Constraint Memory — Live Validation | OK | 39 passed — synthetic_fallback (Exp 427 scaffolding_only) |
+| 2026-04-17 03:39 UTC | Exp 432: JitRL live validation — Tier 1 self-learn | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
+| 2026-04-17 03:44 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |

@@ -413,6 +413,48 @@ for use as training targets for EORM (Exp 431). The export format:
 **When** `compute_retrain_verdict(0.62, 0.55, 25)` is called
 **Then** the result is `'real_data_no_improvement'`
 
+### REQ-LEARN-034: JitRL Memory Validated on Real Data Produces Measurable FP Reduction
+
+The system shall validate JitRL constraint memory on real GSM8K model output data
+(from Exp 427) and produce a measurable false-positive reduction percentage.
+
+The validation shall:
+- Load real violation records from an Exp 427 result file (or fall back to synthetic
+  if unavailable).
+- Split records into a warm-up set (first 50) and a validation set (last 50).
+- Feed warm-up records into ``JitRLConstraintMemory.record()`` to build per-domain
+  threshold history.
+- Compare fp_rate before JitRL (no threshold adaptation) vs after (with adapted
+  thresholds applied to the validation set).
+- Compute ``fp_reduction_pct = (before_fp - after_fp) / before_fp * 100`` (0 if
+  before_fp == 0).
+- Produce an honest verdict:
+  - ``'live_fp_reduction'``   — source='live' AND fp_reduction_pct > 0
+  - ``'live_no_reduction'``   — source='live' AND fp_reduction_pct <= 0
+  - ``'synthetic_fallback'``  — source='synthetic' (Exp 427 unavailable)
+
+Spec: Exp 432
+
+### SCENARIO-LEARN-060: JitRL Record Raises Threshold for FP Domain
+
+**Given** a ``JitRLConstraintMemory`` with base_threshold=0.5, lr=0.02
+**When** ``record('rate_problems', violation_energy=0.6, was_fp=True)`` is called
+**Then** ``threshold('rate_problems')`` returns 0.52
+**And** the history list has length 1
+
+### SCENARIO-LEARN-061: JitRL Validation Artifact Schema
+
+**Given** ``before_fp=0.3``, ``after_fp=0.2``, ``n_questions=50``, ``source='live'``
+**When** ``build_jitrl_validation_artifact(0.3, 0.2, 50, 'live')`` is called
+**Then** the result has ``schema='carnot.jitrl_validation.v1'``
+**And** ``fp_reduction_pct`` is approximately 33.33
+**And** ``honest_verdict`` is ``'live_fp_reduction'``
+
+**Given** ``before_fp=0.0``, ``after_fp=0.0``, ``n_questions=50``, ``source='synthetic'``
+**When** ``build_jitrl_validation_artifact(0.0, 0.0, 50, 'synthetic')`` is called
+**Then** ``fp_reduction_pct`` is 0
+**And** ``honest_verdict`` is ``'synthetic_fallback'``
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -437,3 +479,4 @@ for use as training targets for EORM (Exp 431). The export format:
 | REQ-LEARN-031 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-032 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-033 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-034 | N/A | Implemented | 10+ Python |
