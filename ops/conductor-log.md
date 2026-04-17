@@ -1997,3 +1997,5 @@ python/ |
 | 2026-04-17 01:04 UTC | Exp 430: FOVER-style Z3 step annotation — automati | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
 | 2026-04-17 01:09 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 01:09 UTC | Exp 430: FOVER-style Z3 step annotation — automati | OK | Deliverable already exists in repo |
+| 2026-04-17 01:55 UTC | Exp 431: EORM + JEPA retrain on FOVER real-data pa | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
+| 2026-04-17 02:00 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
