@@ -429,10 +429,17 @@ class ExperimentTemplate:
 
                 prewarm_fn = _real_prewarm
 
-        # --- Step 5: REQ-INFRA-007: DualGPU auto-assignment (RETRO-004) ---
+        # --- Step 5: REQ-INFRA-007 / REQ-INFRA-029: DualGPU auto-assignment (RETRO-004/025) ---
         # When running live with >=2 models, assign each model to its own GPU index
         # so they execute in parallel rather than sequentially on GPU 0.
         # Skipped in CPU fallback mode — there are no GPUs to assign.
+        #
+        # REQ-INFRA-029 (RETRO-025 fix): also inject an explicit device_map per model.
+        # device_map='auto' lets CUDA allocate layers on GPU1 for offloading, but the
+        # forward pass stays on GPU0.  This produces the zombie pattern from RETRO-025:
+        # GPU1 holds 1786 MB at 0% utilization for 144+ minutes.  By using
+        # device_map={'': 'cuda:N'}, every layer of each model is pinned to a single
+        # GPU, preventing cross-device VRAM spill and ensuring real compute on GPU1.
         force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") == "1"
         dual_gpu_auto_assigned = False
 
@@ -456,6 +463,28 @@ class ExperimentTemplate:
                     len(model_specs),
                     len(model_specs) - 1,
                 )
+
+                # REQ-INFRA-029: inject explicit device_map to prevent RETRO-025 zombie.
+                # Each model is pinned to its assigned GPU index so no layer offloading
+                # bleeds onto a GPU that won't be used for the forward pass.
+                try:
+                    from carnot.pipeline.gpu_zombie_fix import (  # noqa: PLC0415
+                        build_zombie_fix_strategy,
+                    )
+
+                    model_ids = [spec["hf_id"] for spec in model_specs]
+                    zombie_strategy = build_zombie_fix_strategy(n_gpus, model_ids)
+                    for spec in model_specs:
+                        spec["device_map"] = zombie_strategy.get(spec["hf_id"], "auto")
+                    _log.info(
+                        "REQ-INFRA-029: Using explicit device assignment to prevent GPU1 zombie allocation "
+                        "(RETRO-025 fix — device_map='auto' replaced with {'': 'cuda:N'} per model)"
+                    )
+                except Exception as exc:  # pragma: no cover — import failure is non-fatal
+                    _log.warning(
+                        "gpu_zombie_fix unavailable (%s); keeping device_map='auto' (RETRO-025 may recur)",
+                        exc,
+                    )
             else:
                 # Only 1 GPU available — assign all to GPU 0, log RETRO-004 warning
                 for spec in model_specs:
