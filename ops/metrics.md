@@ -1811,3 +1811,4 @@
 | exp358 | 2026-04-15T17:46:53Z | 2026-04-15T17:58:27Z | Exp 358: Comparative extraction benchmark — extraction_benchmark.py + test (33 pass) + experiment script + spec/traceability/ops docs | 11m34s |
 | 2026-04-15T19:54:06Z | 2026-04-15T19:55:16Z | Doc updates for Exp 361 (changelog, status) | 1 min 10 sec | — |
 | planning-32 | 2026-04-16T16:27:40Z | 2026-04-16T16:37:41Z | Plan milestone 2026.04.32: read 10 context files, arxiv research (12 papers), wrote research-roadmap-vNEXT.md (v38) + research-roadmap-next.yaml (12 experiments) + research-references.md updates | 10m01s |
+| exp433 | 2026-04-17T04:44:34Z | 2026-04-17T05:10:00Z | Exp 433: SpilledEnergyDetector — per-token logit-discrepancy hallucination signal (arXiv 2602.18671); SpilledEnergyToken + SpilledEnergyDetectorResult + compute_detector_spilled_energy + SpilledEnergyDetector + Tier 0 in ThreeTierPipeline; 28 new tests pass | ~25m |

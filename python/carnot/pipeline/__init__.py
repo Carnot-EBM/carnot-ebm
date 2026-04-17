@@ -248,6 +248,12 @@ from carnot.pipeline.fover_annotator import (  # noqa: E402
     annotate_step_with_z3,
     parse_cot_into_steps,
 )
+from carnot.pipeline.spilled_energy import (  # noqa: E402
+    SpilledEnergyDetector,
+    SpilledEnergyDetectorResult,
+    SpilledEnergyToken,
+    compute_detector_spilled_energy,
+)
 
 __all__ = [
     "AgentStep",
@@ -431,4 +437,8 @@ __all__ = [
     "FOVERCoTStep",
     "annotate_step_with_z3",
     "parse_cot_into_steps",
+    "SpilledEnergyDetector",
+    "SpilledEnergyDetectorResult",
+    "SpilledEnergyToken",
+    "compute_detector_spilled_energy",
 ]
