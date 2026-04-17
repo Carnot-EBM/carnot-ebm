@@ -15,6 +15,7 @@
 | 7 | 2026-04-17T05:53:12Z | 2026-04-17T05:54:17Z | Exp 435 doc update: removed duplicate changelog entry (actual commit already had full details); updated status.md row (NPUPrereqResult, IRON toolchain details, REQ-PRED-005 new); appended traceability.md rows for REQ-PRED-005 (IRON sampler) + SCENARIO-EXP303-G (IRON path success); metrics updated | ~2m |
 | 8 | 2026-04-17T06:00:57Z | 2026-04-17T06:05:18Z | Exp 435a: Phase 3 seed — continuous EBM vs Ising; REQ-KONA-001 + SCENARIO-KONA-001/002 added to spec; python/carnot/phase3/continuous_ebm.py; 33 tests pass; experiment script runs in 0.2s; honest_verdict=partial_match (sign_agreement=0.8, L2=2.69) | ~5m |
 | 9 | 2026-04-17T09:24:44Z | 2026-04-17T09:46:00Z | Exp 439: live precision micro-benchmark harness; precision_micro.py (MicroPrecisionResult + build_micro_precision_artifact, 100% coverage); experiment_439_live_precision_micro.py (3 variants × 2 models × 50q; CRANE_ONLY + FULL_STACK with JitRL; CoT log); 33 tests all pass; REQ-BENCH-009 + SCENARIO-BENCH-025/026 added to spec; ops docs updated | ~21m |
+| 10 | 2026-04-17T10:15:13Z | 2026-04-17T10:24:46Z | Exp 439 verification: read all existing code; confirmed harness fully implemented from prior session; 33 tests re-run, all pass; no changes required | ~10m |
 
 ---
 
