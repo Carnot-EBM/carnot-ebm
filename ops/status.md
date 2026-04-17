@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-17 06:29 UTC — EXP 436: MILESTONE 2026.04.32 RETROSPECTIVE COMPLETE — MilestoneRetro2026_04_32 dataclass; schema=carnot.operational_retro.v6; 12 experiments (Exps 425-435a); mean=31.7 min/exp; conductor_timeout_implemented=True (RETRO-003 per-experiment CLOSED); gpu1_zombie_fixed=False; live_numbers_confirmed=False (Exps 427/428/429 scaffolding_only); RETRO-026 + RETRO-027 opened; 58 tests pass 100% targeted coverage
+**Last Updated:** 2026-04-17 07:48 UTC — EXP 437: RETRO-026 CLOSED — LongRunBenchmarkExecutor; splits benchmarks into 50-question batches; per-batch ExperimentTimeoutWatchdog; checkpoint/resume; assemble() with honest partial_N_of_M verdict; 25 tests pass 100% module coverage; results/experiment_437_long_run_executor.json (retro_026_resolved=true)
 
 ---
 
@@ -34,12 +34,16 @@ No live benchmark improvements. All precision/HumanEval/adversarial runs are sca
 
 ### New RETRO Items Opened (Exp 436)
 
-- **RETRO-026 (high):** Exps 427/428/429 all scaffolding_only — live benchmarks need >45-min executor, not the conductor subagent budget. Fix: dedicated long-running executor or human trigger with 120-min budget.
+- ~~**RETRO-026 (high):** Exps 427/428/429 all scaffolding_only — live benchmarks need >45-min executor, not the conductor subagent budget. Fix: dedicated long-running executor or human trigger with 120-min budget.~~ **CLOSED 2026-04-17** by Exp 437: LongRunBenchmarkExecutor splits any benchmark into 50-question batches, checkpoints each, assembles partial_N_of_M verdict.
 - **RETRO-027 (medium):** Exps 433, 434, 435 have no result JSON files — conductor never executed them. Silent experiment drop. Fix: conductor should detect and report scripts-without-results as 'not_run'.
 
 ### RETRO Items Closed (Exp 436)
 
 - **RETRO-003 (per-experiment) CLOSED:** ExperimentTimeoutWatchdog implemented in `python/carnot/pipeline/experiment_watchdog.py`. All Exp 425+ scripts use it as a context manager. The 17+ milestone carry is resolved at the per-experiment level. Conductor-level session timeout remains open.
+
+### RETRO Items Closed (Exp 437)
+
+- **RETRO-026 CLOSED (2026-04-17):** LongRunBenchmarkExecutor (`python/carnot/pipeline/long_run_executor.py`) splits large benchmarks into configurable batch sizes (default 50, fits within 40-min per-batch watchdog), checkpoints each batch atomically, and assembles honest partial_N_of_M or complete verdicts. `scripts/experiment_437_long_run_executor.py` demonstrates 150-question / 3-batch partitioning with checkpoint/resume. 25 tests pass, 100% module coverage.
 
 ### What's Working
 
@@ -57,7 +61,7 @@ No live benchmark improvements. All precision/HumanEval/adversarial runs are sca
 2. P0: Human-trigger or long-running executor for Exps 427, 428, 429 (live benchmarks)
 3. P1: Run Exps 433, 434, 435 (spilled energy, compliance checker, NPU) — scripts exist
 4. P1: Fix RETRO-027 (silent experiment drop detection) in conductor
-5. P2: Fix RETRO-026 (long-running executor path for benchmark-class experiments)
+5. ~~P2: Fix RETRO-026 (long-running executor path for benchmark-class experiments)~~ CLOSED by Exp 437
 6. P2: Conductor-level session timeout (complements per-experiment watchdog)
 
 ---

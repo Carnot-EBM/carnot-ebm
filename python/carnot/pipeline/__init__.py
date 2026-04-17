@@ -254,6 +254,12 @@ from carnot.pipeline.spilled_energy import (  # noqa: E402
     SpilledEnergyToken,
     compute_detector_spilled_energy,
 )
+from carnot.pipeline.long_run_executor import (  # noqa: E402
+    BenchmarkBatch,
+    LongRunBenchmarkExecutor,
+    LongRunBenchmarkResult,
+    get_batch_size,
+)
 
 __all__ = [
     "AgentStep",
@@ -441,4 +447,8 @@ __all__ = [
     "SpilledEnergyDetectorResult",
     "SpilledEnergyToken",
     "compute_detector_spilled_energy",
+    "BenchmarkBatch",
+    "LongRunBenchmarkExecutor",
+    "LongRunBenchmarkResult",
+    "get_batch_size",
 ]
