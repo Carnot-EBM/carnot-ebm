@@ -455,6 +455,18 @@ Spec: Exp 432
 **Then** ``fp_reduction_pct`` is 0
 **And** ``honest_verdict`` is ``'synthetic_fallback'``
 
+### SCENARIO-RETRO-032: Milestone 2026.04.32 Retrospective Complete
+
+**Given** result JSONs for Exps 425-435 (partial: some results are scaffolding_only or absent)
+**When** ``MilestoneRetro2026_04_32`` is computed from available result files
+**Then** the artifact has ``schema='carnot.operational_retro.v6'``
+**And** ``milestone='2026.04.32'``
+**And** ``conductor_timeout_implemented`` reflects whether experiment_watchdog.py is present
+**And** ``gpu1_zombie_fixed`` reflects Exp 426 retro_025_status
+**And** ``live_numbers_confirmed`` is True only if at least one live benchmark produced a signed improvement
+**And** ``fr11_relay_confirmed`` reflects Exp 431 retro_024_closed
+**And** all boolean fields are derived exclusively from result JSON files, never asserted without provenance
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |

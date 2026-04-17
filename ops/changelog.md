@@ -1,5 +1,25 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 436: Milestone 2026.04.32 Operational Retrospective)
+
+- 2026-04-17 06:29 UTC: Implemented and ran Exp 436 milestone retrospective.
+  Triggered by: user instruction to write operational efficiency retrospective for milestone 2026.04.32.
+
+  **Context:** Evaluates HOW work in Exps 425-435 was executed. Follows the pattern from Exps 363, 376, 389, 403, 424. Key finding: RETRO-003 (conductor hard timeout) closed per-experiment via ExperimentTimeoutWatchdog, but the watchdog budget (45 min) is too short for benchmark-class experiments, producing three scaffolding_only results.
+
+  **Deliverables:**
+  - `scripts/experiment_436_retro.py`: MilestoneRetro2026_04_32 dataclass; load_result(); compute helpers for all 8 boolean fields; run_retro(); main() with ExperimentTimeoutWatchdog
+  - `tests/python/test_experiment_436_retro.py`: 58 tests, 100% targeted coverage
+  - `results/operational_retro_2026_04_32.json`: schema=carnot.operational_retro.v6; status=complete
+  - `openspec/capabilities/autoresearch/spec.md`: SCENARIO-RETRO-032 added
+
+  **Key findings:**
+  - n_experiments=12 (Exps 425-435a), mean=31.7 min/exp (up from 14.0 — scaffolding_only experiments dominate)
+  - RETRO-003 closed per-experiment (ExperimentTimeoutWatchdog shipped)
+  - RETRO-026 opened: live benchmarks (427/428/429) need longer executor budget
+  - RETRO-027 opened: Exps 433/434/435 never executed (no result JSON, silent drop)
+  - All 58 tests pass.
+
 ## 2026-04-17 (Exp 433: SpilledEnergyDetector — arXiv 2602.18671 per-token hallucination signal)
 
 - 2026-04-17 04:44 UTC: Implemented SpilledEnergyDetector (Exp 433).
