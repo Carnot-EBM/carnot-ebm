@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 440 — Live HumanEval Micro-Benchmark Harness)
+
+- 2026-04-17 11:55 UTC: Implemented live HumanEval micro-benchmark harness (Exp 440).
+  Triggered by: user instruction — HumanEval code verification with reduced scope (50 problems × 2 models).
+
+  **Key change vs Exps 369/380/411/420/428:** Scope reduced to 50 problems × 2 models = 100 LLM calls ≈ 15-20 min (well inside the 45-minute watchdog). Uses LongRunBenchmarkExecutor(batch_size=25) from Exp 437. apply_env_autofix() called first (RETRO-022 fix).
+
+  **Changes:**
+  - `python/carnot/pipeline/humaneval_micro.py`: New module — MicroHumanEvalResult dataclass (model_id, n_problems, pass_at_1_before, pass_at_1_after, signed_improvement, pbt_bugs_found, inference_mode), _result_to_dict(), build_micro_humaneval_artifact() (schema carnot.humaneval_micro.v1; honest_verdict code_verification_positive/code_no_improvement/blocked; inference_mode='live_gpu' guard prevents simulated headline claims).
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: REQ-BENCH-010, SCENARIO-BENCH-027/028 already present.
+  - `scripts/experiment_440_live_humaneval_micro.py`: Full experiment harness — apply_env_autofix() first; ExperimentTimeoutWatchdog(440, 45min); LiveGPUGate hard gate; check_dual_gpu_health() warning; setup_gpu(); LongRunBenchmarkExecutor(batch_size=25) giving two 25-problem batches per model; _load_model_pipeline() per model; _run_model_benchmark() reuses ALL helpers from Exp 369/428 (no duplication); checkpoint per model; honest_verdict assembly.
+  - `tests/python/test_experiment_440_live_humaneval_micro.py`: 46 tests pass, covers MicroHumanEvalResult, _result_to_dict, build_micro_humaneval_artifact, all gate paths in main(), _run_model_benchmark.
+  - `_bmad/traceability.md`: Added REQ-BENCH-009/010, SCENARIO-BENCH-025/026/027/028.
+
+  **Deliverable:** results/experiment_440_live_humaneval_micro.json (pending live GPU run)
+  **Status:** Harness complete; 46 tests pass; live execution requires CARNOT_FORCE_LIVE=1 + dual RTX 3090 + ~20 min
+
+---
+
 ## 2026-04-17 (Exp 439 — Live Precision Micro-Benchmark Harness)
 
 - 2026-04-17 09:39 UTC: Implemented live precision micro-benchmark harness (Exp 439).

@@ -2045,3 +2045,7 @@ python/ |
 | 2026-04-17 11:50 UTC | Exp 440: Live HumanEval Micro-Benchmark — 50 probl | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |
 | 2026-04-17 11:55 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 11:55 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 12:40 UTC | Exp 440: Live HumanEval Micro-Benchmark — 50 probl | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
+| 2026-04-17 12:45 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-17 12:45 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-17 12:45 UTC | Exp 440: Live HumanEval Micro-Benchmark — 50 probl | OK | Deliverable already exists in repo |
