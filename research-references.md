@@ -1818,3 +1818,82 @@ thermodynamic computing Ising FPGA
   with exact sampling. Compare latency and accuracy vs IsingEBM and standard KANEnergy.
 
 ### Differentiable Symbolic Planning with Feasibility Channels (already added above, see DSP entry)
+
+### ThinkPRM — Process Reward Models That Think (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2504.16828 (April 2025, OpenAI)
+- **What:** Generative Process Reward Model that verifies reasoning steps via chain-of-thought.
+  Instead of a discriminative "is this step correct?" classifier, ThinkPRM generates a short CoT
+  (3-5 steps) verifying the candidate step, then produces a correctness label. Achieves SOTA on
+  MATH-500 and AIME '24 with only 1% of typical process supervision labels. The key insight:
+  thinking about whether a step is correct is more sample-efficient than training a binary classifier.
+- **Relevance to Carnot:** Carnot's EORM (Energy-based Output Reward Model) is a discriminative
+  verifier — it assigns scores to CoT steps without reasoning about WHY they are wrong. ThinkPRM
+  suggests a "CarnotThinkProbe" that generates a brief verification CoT before triggering full
+  Ising verification. This pre-filter could catch obvious errors (wrong arithmetic) before the
+  Ising sampler runs, reducing full verification calls by 30-50%.
+- **Concrete experiment:** Implement CarnotThinkProbe as a fast pre-filter: given an LLM response,
+  ask a secondary Qwen3.5-0.8B to generate a 3-step check ("Is the arithmetic correct?"). If the
+  check CoT concludes "incorrect," skip Ising and flag as violation immediately (confidence = 0.8).
+  Only run Ising for "uncertain" or "correct" secondary verdicts.
+- **When to pursue:** Next milestone. Bridges ThinkPRM's CoT verification with Carnot's Ising
+  energy model for a fast-path/slow-path verification architecture.
+
+### Boltzmann-GPT — DBM World Models + Language Generation (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2601.17094 (January 2026)
+- **What:** Separates world modeling (Deep Boltzmann Machine, energy-based) from language generation
+  (frozen GPT decoder). The DBM learns latent structure from data; an adapter projects DBM latent
+  samples to LLM embedding space; the frozen LLM renders samples as text. Enables causal
+  interventions and coherent long-range generation without modifying the LLM.
+  DBM and GPT trained independently; only adapter is jointly trained (small, fast).
+- **Relevance to Carnot:** Carnot's IsingEBM is a specialized DBM (discrete, sparse, constraint-
+  shaped). Boltzmann-GPT shows that DBM latent samples can be projected into LLM embedding space
+  to guide generation. This is the bridge from Carnot's constraint energy landscape to text-space
+  repair: when the IsingEBM finds a low-energy (constraint-satisfying) configuration, project
+  it into LLM embedding space to generate a corrected response. This replaces the current "ask
+  LLM to fix error" repair step with an energy-guided alternative.
+- **When to pursue:** Next milestone. Implement a lightweight BoltzmannRepairBridge that takes
+  an Ising ground-state configuration and maps it to an LLM steering direction for repair.
+
+### Energy Matching — Unified Flow + EBM Generation (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2504.10612 (October 2025, NeurIPS 2025)
+- **What:** Unified framework combining flow matching and energy-based models via a scalar potential
+  energy field that guides optimal transport from noise to data. The flow trajectory minimizes energy
+  along the path; the energy function's Boltzmann equilibrium serves as the target distribution.
+  Generative model: start from noise, follow energy gradient to low-energy (data-like) regions.
+- **Relevance to Carnot Phase 3:** The Phase 3 North Star is continuous-latent non-autoregressive
+  reasoning (Kona-like). Energy Matching provides the generation mechanism: start from a noise
+  vector, follow the constraint energy gradient to reach a constraint-satisfying reasoning state.
+  This is the continuous-space analog of Carnot's discrete Ising sampling. The flow matches
+  the distribution of valid reasoning states (low energy) without autoregression.
+- **When to pursue:** Phase 3 seed experiments. Use Energy Matching trajectory as the sampling
+  algorithm for the ContinuousEBM (Exp 435a). Compare convergence vs gradient descent + Langevin.
+
+### Generative Thermodynamic Computing (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2506.15121 (June 2025, Stephen Whitelam, LBL)
+- **What:** Proposes generative modeling via natural Langevin dynamics of physical systems under
+  thermodynamic equilibrium. Training minimizes heat emission by reversing noising trajectories
+  (time-reversal of diffusion). Data synthesis follows thermodynamic evolution from initial
+  state to equilibrium. Training objective is the thermodynamic free energy.
+- **Relevance to Carnot:** Carnot's parallel Ising sampler uses simulated annealing (synthetic
+  temperature schedule). Generative Thermodynamic Computing suggests using physically-motivated
+  Langevin dynamics instead of heuristic annealing — the temperature schedule emerges from
+  the free energy landscape rather than being hand-tuned. Applicable to the ContinuousEBM (Exp
+  435a) and FpgaBackend thermodynamic simulation. Bridges to Extropic TSU (genuine thermodynamic
+  hardware).
+- **When to pursue:** Phase 3 seed / FPGA milestone. Use thermodynamic Langevin dynamics as the
+  sampling algorithm for ContinuousEBM. Compare to SA annealing schedule.
+
+### Process Reward Agents (PRA) — Decoupled Step-Level Verification (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2604.09482 (April 2026, Alibaba DAMO)
+- **What:** Process Reward Agents provide domain-grounded, step-wise rewards during generation
+  without modifying the base reasoning model. A separate "reward agent" observes each reasoning
+  step, assigns a step reward using domain knowledge (medical, legal, math), and feeds signals
+  back to guide generation. Achieves 80.8% on MedQA at 4B scale without any policy fine-tuning.
+  Fully decoupled — the policy model stays frozen; only the reward agent is domain-specific.
+- **Relevance to Carnot:** Carnot's VerifyRepairPipeline is a post-hoc verifier (checks after
+  generation). PRA suggests wiring Carnot as a real-time process reward signal during generation.
+  The IsingEBM becomes the "reward agent" — it assigns step rewards as the LLM generates each
+  reasoning step. This is the step-level guided decoding integration that's been on the roadmap
+  (Exp 110, energy-guided decoding). PRA's decoupled architecture means no LLM modification needed.
+- **When to pursue:** Guided decoding milestone. Integrate IsingEBM as process reward agent in
+  a PRA-style loop for step-by-step guided generation. Compare to Exp 110 energy-guided decoding.
