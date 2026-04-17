@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 437 — LongRunBenchmarkExecutor — RETRO-026 CLOSED)
+
+- 2026-04-17 07:48 UTC: Implemented LongRunBenchmarkExecutor, closing RETRO-026.
+  Triggered by: user instruction to fix RETRO-026 (Exps 427/428/429 scaffolding_only due to 45-min watchdog killing 333-min benchmarks).
+
+  **Changes:**
+  - `python/carnot/pipeline/long_run_executor.py`: BenchmarkBatch, LongRunBenchmarkResult, LongRunBenchmarkExecutor, get_batch_size; 50-question default batch size fits in 40-min per-batch watchdog; atomic JSON checkpointing; honest partial_N_of_M verdict.
+  - `python/carnot/pipeline/__init__.py`: exports BenchmarkBatch, LongRunBenchmarkExecutor, LongRunBenchmarkResult, get_batch_size.
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-INFRA-027/028, SCENARIO-INFRA-034/035/036; updated implementation status table.
+  - `tests/python/test_long_run_executor.py`: 25 tests, 100% module coverage.
+  - `scripts/experiment_437_long_run_executor.py`: Demo — 150 questions / 3 batches / partial assembly.
+  - `ops/conductor-log.md`, `ops/status.md`, `ops/changelog.md`: RETRO-026 marked CLOSED.
+
+  **Deliverable:** results/experiment_437_long_run_executor.json (retro_026_resolved=true, honest_verdict=retro_026_fixed)
+
+---
+
 ## 2026-04-17 (Milestone 2026.04.32 Efficiency Retrospective — Conductor Analysis)
 
 - 2026-04-17 07:09 UTC: Wrote operational efficiency retrospective for milestone 2026.04.32.

@@ -2027,3 +2027,5 @@ python/ |
 | 2026-04-17 07:26 UTC | Plan milestone 2026.04.33 | OK | 13 tasks proposed |
 | 2026-04-17 07:31 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 07:31 UTC | Milestone 2026.04.33 activated | OK | 13 tasks queued |
+| 2026-04-17 07:48 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 CLOSED | OK | LongRunBenchmarkExecutor + BenchmarkBatch + LongRunBenchmarkResult + get_batch_size; 25 tests pass 100% module coverage; results/experiment_437_long_run_executor.json; REQ-INFRA-027/028, SCENARIO-INFRA-034/035/036 |
+| 2026-04-17 08:22 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | FAIL | Claude Code error: Wall-clock timeout after 2702s. Last output:  |

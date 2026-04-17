@@ -5161,6 +5161,62 @@ Spec: SCENARIO-INFRA-033 (Exp 426)
 **And** `recommended_batch_size_factor=0.75`
 **And** `setup_gpu()` logs a WARNING about temperature and batch reduction
 
+### REQ-INFRA-027: LongRunBenchmarkExecutor Splits Benchmarks Into Checkpointed Batches
+
+**Description:** Any benchmark with more questions than the batch size must be automatically
+partitioned into fixed-size batches. Each batch is executed independently and checkpointed to
+disk on completion (or on timeout). The final result is assembled from all batch checkpoint
+files. This closes RETRO-026: 200-question benchmarks previously exceeded the 45-minute
+ExperimentTimeoutWatchdog budget, producing scaffolding_only artifacts.
+
+**Acceptance Criteria:**
+- `LongRunBenchmarkExecutor.partition(questions)` splits a list into batches of at most `batch_size`
+- `run_batch(batch, inference_fn, watchdog_timeout_minutes)` uses ExperimentTimeoutWatchdog internally
+- Each batch is checkpointed via `save_batch()` on completion or partial timeout
+- `assemble(batches)` builds a `LongRunBenchmarkResult` from all batch checkpoint files
+- `honest_verdict='complete'` iff all batches fully completed; `'partial_N_of_M'` otherwise
+
+Spec: SCENARIO-INFRA-034, SCENARIO-INFRA-035, SCENARIO-INFRA-036 (Exp 437)
+
+### REQ-INFRA-028: LongRunBenchmarkExecutor Default Batch Size Is 50, Configurable
+
+**Description:** The default batch size of 50 is derived from the budget arithmetic:
+50 questions × ~10s/question × 5 variants × 2 models = ~8,333s ≈ 139 min per batch,
+but with parallelism a single batch of 50 (1 model, 1 variant) takes ≤10 min, comfortably
+under the 40-minute per-batch watchdog limit. The batch size is overridable via
+`CARNOT_BENCH_BATCH_SIZE` to support both large and small benchmark runs.
+
+**Acceptance Criteria:**
+- `get_batch_size()` returns 50 when `CARNOT_BENCH_BATCH_SIZE` is absent
+- `get_batch_size()` returns the integer value of `CARNOT_BENCH_BATCH_SIZE` when set
+- `LongRunBenchmarkExecutor(batch_size=N)` overrides the default for that instance
+
+Spec: SCENARIO-INFRA-036 (Exp 437)
+
+### SCENARIO-INFRA-034: 120 Questions Split Into Three Batches Correctly
+
+**Given** 120 synthetic questions and a `LongRunBenchmarkExecutor(batch_size=50)`
+**When** `executor.partition(questions)` is called
+**Then** 3 `BenchmarkBatch` objects are returned
+**And** batches have sizes [50, 50, 20] in order
+**And** `batch_id` is 0, 1, 2 respectively
+**And** `start_idx` / `end_idx` correctly index into the original list
+
+### SCENARIO-INFRA-035: Partial Batch Assembly Produces Honest Partial Verdict
+
+**Given** 3 batches where only batch 0 and batch 1 completed (batch 2 status='pending')
+**When** `executor.assemble(batches)` is called
+**Then** `result.honest_verdict == 'partial_2_of_3'`
+**And** `result.completed_batches == 2`
+**And** `result.n_batches == 3`
+
+### SCENARIO-INFRA-036: Full Batch Assembly Produces Complete Verdict
+
+**Given** 3 batches all with status='complete'
+**When** `executor.assemble(batches)` is called
+**Then** `result.honest_verdict == 'complete'`
+**And** `result.completed_batches == 3`
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
@@ -5440,6 +5496,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-024 | N/A | Implemented | get_timeout_minutes() — default 45 min, configurable via CARNOT_CONDUCTOR_TIMEOUT_MINUTES (SCENARIO-INFRA-030, Exp 425). |
 | REQ-INFRA-025 | N/A | Implemented | DualGPUHealthResult + check_dual_gpu_health + build_gpu_fix_artifact (SCENARIO-INFRA-031/032, Exp 426). Closes RETRO-025 (GPU1 zombie detection). |
 | REQ-INFRA-026 | N/A | Implemented | setup_gpu() calls check_dual_gpu_health() + dual_gpu_health key + temp-guard WARNING + batch_size_factor=0.75 (SCENARIO-INFRA-033, Exp 426). |
+| REQ-INFRA-027 | N/A | Implemented | LongRunBenchmarkExecutor + BenchmarkBatch + LongRunBenchmarkResult + save/load/assemble (SCENARIO-INFRA-034/035/036, Exp 437). Closes RETRO-026. |
+| REQ-INFRA-028 | N/A | Implemented | get_batch_size() reads CARNOT_BENCH_BATCH_SIZE (default 50) (SCENARIO-INFRA-036, Exp 437). |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
