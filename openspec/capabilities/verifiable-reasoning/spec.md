@@ -4009,6 +4009,63 @@ that identifies the specific assertion in the Z3 code that caused UNSAT:
 
 Spec: REQ-REPAIR-013, SCENARIO-REPAIR-026, SCENARIO-REPAIR-027
 
+### REQ-REPAIR-014: BoltzmannRepairBridge Maps Ising Ground-State to LLM Repair Direction
+
+The BoltzmannRepairBridge shall map a low-energy Ising spin configuration (the "ground
+state" found by simulated annealing) to a repair direction in LLM embedding space via a
+trained linear adapter.
+
+**Rationale (Boltzmann-GPT arXiv 2601.17094):**
+The DBM world model and the LLM live in separate representation spaces. The adapter
+bridges them: it is trained on (spin_config, target_embedding) pairs so that low-energy
+spin configurations project to embeddings that favour constraint-satisfying outputs.
+This replaces the naive "ask LLM to fix error" step with an energy-guided direction.
+
+**Hardware path:** The adapter is a single matrix multiply — GPU/NPU native, <1ms.
+
+Spec: REQ-REPAIR-014, SCENARIO-REPAIR-028, SCENARIO-REPAIR-029, SCENARIO-REPAIR-030
+
+### REQ-REPAIR-015: Repair Direction Reduces Ising Energy on Held-Out Constraint Instances
+
+The BoltzmannRepairBridge shall produce repair directions whose Ising energy
+(energy_after) is less than or equal to the energy of the original constraint
+state (energy_before) for at least 60% of sampled constraint instances.
+
+**Rationale:** If energy_after >= energy_before systematically, the bridge adds no value
+over random repair. The 60% threshold is the minimum bar for "energy-guided" repair to
+be distinguishable from noise. Honest verdict is written based on observed rate.
+
+Spec: REQ-REPAIR-015, SCENARIO-REPAIR-029
+
+### SCENARIO-REPAIR-028: BoltzmannRepairBridge Returns RepairDirection Dataclass
+
+**Given** a BoltzmannRepairBridge constructed from a 16-variable IsingModel and a
+  trained LinearSpinAdapter(spin_dim=16, embed_dim=128)
+**When** `bridge.get_repair_direction(constraint_state)` is called with a dict
+  containing at least one constraint violation
+**Then** the returned object is a RepairDirection with fields:
+  - `spin_config`: jnp.ndarray of shape (16,) with values in {-1.0, +1.0}
+  - `embedding_projection`: jnp.ndarray of shape (128,)
+  - `energy_before`: float
+  - `energy_after`: float
+
+### SCENARIO-REPAIR-029: Energy After Is Less Than Or Equal To Baseline For Random State
+
+**Given** a BoltzmannRepairBridge with a 16-variable IsingModel (seed=42)
+**When** `get_repair_direction` is called 100 times with random constraint states
+**Then** `energy_after <= energy_before` for all 100 calls
+  (because energy_after is the low-energy Ising ground state; energy_before is
+  a random starting configuration — ground state is always at or below random)
+
+### SCENARIO-REPAIR-030: LinearSpinAdapter Trains Without Error
+
+**Given** a LinearSpinAdapter(spin_dim=16, embed_dim=128)
+**And** 50 synthetic (spin_config, target_embedding) training pairs
+**When** `adapter.train(spin_configs, target_embeddings, n_epochs=50)` is called
+**Then** the returned MSE loss is a non-negative finite float
+**And** `adapter.project(spin_config)` returns a jnp.ndarray of shape (128,) for
+  any input spin_config of shape (16,) with values in {-1.0, +1.0}
+
 ### SCENARIO-REPAIR-024: VERGE SAT Fast Path
 
 **Given** a question and response where the Z3 check immediately returns SAT

@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 445 — BoltzmannRepairBridge — Energy-Guided Repair Direction)
+
+- 2026-04-17 20:14 UTC: Implemented BoltzmannRepairBridge (Exp 445). (User instruction)
+  - `python/carnot/pipeline/boltzmann_repair.py`: RepairDirection, LinearSpinAdapter, BoltzmannRepairBridge.
+  - `tests/python/test_boltzmann_repair.py`: 30 tests, 100% coverage on boltzmann_repair.py.
+  - `scripts/experiment_445_boltzmann_repair_bridge.py`: 16-var Ising, adapter train, 100-sample eval.
+  - `python/carnot/pipeline/__init__.py`: Export BoltzmannRepairBridge, LinearSpinAdapter, RepairDirection.
+  - Spec: REQ-REPAIR-014, REQ-REPAIR-015, SCENARIO-REPAIR-028/029/030.
+  - Traceability: `_bmad/traceability.md` updated.
+
 ## 2026-04-17 (Exp 444 — CarnotThinkProbe — Generative CoT Pre-Filter)
 
 - 2026-04-17 18:03 UTC: Implemented CarnotThinkProbe (Exp 444).
