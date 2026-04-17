@@ -4488,6 +4488,49 @@ The repository SHALL provide a live GPU precision micro-benchmark (Exp 439) that
 
 Spec: REQ-BENCH-009, SCENARIO-BENCH-025, SCENARIO-BENCH-026
 
+### REQ-BENCH-010: Live HumanEval Micro-Benchmark (50 problems × 2 models)
+
+The repository SHALL provide a live GPU HumanEval micro-benchmark (Exp 440) that:
+
+- Evaluates 50 HumanEval problems per model × 2 models = 100 LLM calls.
+- Fits within a 45-minute ExperimentTimeoutWatchdog budget using LongRunBenchmarkExecutor
+  with batch_size=25 (two 25-problem batches per model).
+- For each model: generates code with the LLM, runs official test cases, then applies
+  CodeExtractor + VerifyRepairPipeline on failing solutions, and re-evaluates.
+- Runs PBT determinism/idempotency checks on solutions that pass official tests.
+- Produces a ``MicroHumanEvalResult`` per model with fields: ``model_id``,
+  ``n_problems``, ``pass_at_1_before``, ``pass_at_1_after``, ``signed_improvement``,
+  ``pbt_bugs_found``, ``inference_mode``.
+- Builds a ``carnot.humaneval_micro.v1`` artifact via ``build_micro_humaneval_artifact``
+  with ``honest_verdict`` in {'code_verification_positive', 'code_no_improvement', 'blocked'}.
+- Requires ``inference_mode='live_gpu'`` for any non-blocked verdict — simulated
+  results may never produce a live headline claim.
+- Imports ALL CodeExtractor and HumanEval helpers from Exp 369 and Exp 428 — no
+  duplication of tested code.
+
+### SCENARIO-BENCH-027: Exp 440 Live Improvement Criterion
+
+**Given** Exp 440 runs on live dual-RTX-3090 hardware with CARNOT_FORCE_LIVE=1
+**And** all 2 model × 2 batch runs complete within the 45-minute watchdog
+**When** the artifact is assembled
+**Then** ``honest_verdict`` is 'code_verification_positive' iff at least one model
+  shows ``signed_improvement`` > 0
+**And** ``headline_result`` identifies the best model by signed_improvement
+**And** ``inference_mode`` is 'live_gpu'
+**And** ``per_model_results`` contains one entry per model
+
+### SCENARIO-BENCH-028: Exp 440 Blocked Artifact on Gate Failure
+
+**Given** Exp 440 runs without CARNOT_FORCE_LIVE=1 (CI mode)
+**Or** the LiveGPUGate check fails
+**When** the artifact is assembled
+**Then** ``honest_verdict`` is 'blocked'
+**And** ``headline_result`` is None
+**And** ``inference_mode`` is 'blocked'
+**And** ``per_model_results`` is an empty list
+
+Spec: REQ-BENCH-010, SCENARIO-BENCH-027, SCENARIO-BENCH-028
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
