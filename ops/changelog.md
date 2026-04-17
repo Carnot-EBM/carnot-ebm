@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 430: FOVER Z3 Step Annotation — FR-11 training signal)
+
+- 2026-04-17 00:50 UTC: Implemented Exp 430 FOVER annotation pipeline.
+  Triggered by: user instruction to build FoVer-style Z3 step annotation for EORM training.
+
+  **Context:** FR-11 (autonomous self-learning) missed 6 milestones because EORM/JEPA
+  retrains ran on synthetic data only. The missing signal: real (step, correct/incorrect)
+  labels from live LLM inference. FoVer (arXiv 2505.15960) shows Z3 can auto-annotate
+  CoT steps WITHOUT human labels. This experiment closes that gap.
+
+  **Deliverables:**
+  - `python/carnot/pipeline/fover_annotator.py`: FOVERCoTStep dataclass, parse_cot_into_steps,
+    annotate_step_with_z3, FOVERAnnotator — full Z3 step annotation pipeline (CPU-only, <5ms/step)
+  - Exported from `carnot.pipeline.__init__`
+  - `scripts/experiment_430_fover_z3_labels.py`: experiment harness with 30-min watchdog
+  - `results/fover_labeled_steps.json` (training data for Exp 431 EORM retrain)
+  - `results/experiment_430_fover_z3_labels.json` (artifact)
+  - Spec: REQ-LEARN-030/031 + SCENARIO-LEARN-054/055/056 in autoresearch/spec.md
+  - Tests: 35 tests pass, 100% coverage on fover_annotator.py
+
+  **Honest verdict:** synthetic_fallback (Exp 427 data is scaffolding-only; live CoT
+  responses not yet available). Training pairs produced; EORM retrain gated on live data.
+
 ## 2026-04-16 (Exp 429: Adversarial GSM8K Live Benchmark — Apple arXiv 2410.05229)
 
 - 2026-04-16 23:41 UTC: Implemented Exp 429 adversarial GSM8K benchmark harness.

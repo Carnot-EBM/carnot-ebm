@@ -242,6 +242,12 @@ from carnot.pipeline.dual_gpu_health import (  # noqa: E402
     build_gpu_fix_artifact,
     check_dual_gpu_health,
 )
+from carnot.pipeline.fover_annotator import (  # noqa: E402
+    FOVERAnnotator,
+    FOVERCoTStep,
+    annotate_step_with_z3,
+    parse_cot_into_steps,
+)
 
 __all__ = [
     "AgentStep",
@@ -421,4 +427,8 @@ __all__ = [
     "DualGPUHealthResult",
     "build_gpu_fix_artifact",
     "check_dual_gpu_health",
+    "FOVERAnnotator",
+    "FOVERCoTStep",
+    "annotate_step_with_z3",
+    "parse_cot_into_steps",
 ]
