@@ -2309,6 +2309,38 @@ The same module shall expose an ONNX-compatible export path, where:
 **And** `npu_inference_result` is present and non-null only when `honest_verdict ==
   "inference_success"`
 
+### SCENARIO-EXP303-G: IRON Toolchain Check As VitisAI Alternative When Prereqs Missing
+
+**Given** Exp 435 runs and ninja and/or openblas are still not installed
+  (VitisAI source build path remains blocked)
+**When** `check_iron_toolchain_available()` is called
+**Then** the function returns `True` if the `mlir_aie` Python package is importable,
+  `False` otherwise — determined without attempting a full build
+**And** the artifact includes `iron_path_tested` and `iron_path_succeeded` booleans
+**And** if IRON is available, a minimal 16x16 GEMM kernel dispatch is attempted
+**And** `honest_verdict` is `"npu_ready_iron_path"` when IRON dispatch succeeds,
+  `"blocked_prereq"` when neither VitisAI nor IRON paths are available
+**And** `install_commands` in the artifact provides arch_linux and ubuntu commands
+  for each missing prerequisite so the human can unblock without re-reading prior artifacts
+
+### REQ-PRED-005: NPU Unblock Status Audit — IRON Toolchain Viability
+
+The NPU unblock status audit (Exp 435) shall:
+- Report whether ninja and openblas are installed via subprocess-based checks
+  (not assumptions), making the prereq state observable from the artifact alone
+- Report whether the IRON toolchain (mlir-aie Python bindings) is available as an
+  alternative to VitisAI EP when the source-build prereqs are missing
+- Provide an `honest_verdict` field with exactly three possible values:
+  `"npu_ready_iron_path"` (IRON dispatch succeeded),
+  `"npu_ready_vitisai_path"` (VitisAI prereqs met and build attempted),
+  `"blocked_prereq"` (neither path available)
+- Never fabricate latency or speedup numbers; set `iron_speedup_vs_cpu` to `null`
+  when no successful dispatch occurred
+- Include `install_commands` dict with `arch_linux` and `ubuntu` keys listing
+  exact shell commands for each missing package so the human can unblock in one step
+
+Spec traces: SCENARIO-EXP303-G (Exp 435)
+
 ### REQ-PRED-004: Additive Pipeline Integration
 
 The predictive verifier shall integrate additively into
@@ -5341,6 +5373,7 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |
 | REQ-PRED-004 | Not Started | Implemented | Additive pipeline integration tests |
+| REQ-PRED-005 | Not Started | Implemented | NPU unblock status audit — IRON toolchain viability (SCENARIO-EXP303-G, Exp 435) |
 | REQ-VERIFY-081 | Not Started | Implemented | Confidence-weighted violation scoring + ConfidenceVerifier tests (SCENARIO-105/106/107/108) |
 | REQ-VERIFY-082 | Not Started | Implemented | Repair gate with confidence threshold + pipeline integration tests |
 | REQ-VERIFY-083 | Not Started | Implemented | Expression specificity confidence signal (SCENARIO-109/110, Exp 332) |

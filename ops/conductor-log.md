@@ -2015,3 +2015,4 @@ python/ |
 | 2026-04-17 05:20 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 05:37 UTC | Exp 434: Compliance Checker — Tier B product for r | OK | 81 passed in 19.95s |
 | 2026-04-17 05:42 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
+| 2026-04-17 05:43 UTC | Exp 435: AMD XDNA NPU Unblock — 5th attempt + IRON toolchain probe | OK | 50 tests pass; blocked_prereq (5th milestone); IRON path documented |

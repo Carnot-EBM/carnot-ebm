@@ -224,3 +224,22 @@ production goals. Updated as new needs emerge from experiments.
   - Install ninja: `sudo pacman -S ninja  OR  sudo apt install ninja-build`
   - Install openblas: `sudo pacman -S openblas  OR  sudo apt install libopenblas-dev`
   - Blocked for 4 milestones (Exps 292, 303, 314, 335). Human install required before next attempt.
+
+### AMD XDNA NPU Status (Exp 435 — 20260417)
+
+- **Exp 435 result:** `honest_verdict=blocked_prereq` (5th consecutive milestone)
+  - ninja: still_missing
+  - openblas: still_missing
+  - IRON toolchain (mlir_aie): not available (not installed)
+  - amdxdna driver: loaded (unchanged — this was never the blocker)
+  - **NEW in Exp 435:** IRON toolchain path investigated as VitisAI alternative.
+    arXiv 2504.03083 describes bare-metal NPU programming via IRON/mlir-aie, achieving
+    2.8x speedup over CPU for GEMM via explicit DMA routing — no onnxruntime required.
+    If mlir-aie is installed, this path works independently of ninja/openblas.
+  - **ESCALATION — 5th consecutive milestone.** Human MUST install before next run:
+    - Arch Linux: `sudo pacman -S ninja && sudo pacman -S openblas`
+    - Ubuntu/Debian: `sudo apt install ninja-build libopenblas-dev`
+    - IRON alternative: `pip install mlir-aie`
+  - VitisAI path: still blocked (ninja + openblas not installed)
+  - IRON path: not tested (mlir_aie not importable)
+  - Result file: `results/experiment_435_npu_unblock.json`
