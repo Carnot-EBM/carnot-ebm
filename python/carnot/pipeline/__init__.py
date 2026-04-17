@@ -272,6 +272,11 @@ from carnot.pipeline.think_probe import (  # noqa: E402
     build_think_probe_prompt,
     parse_think_probe_output,
 )
+from carnot.pipeline.boltzmann_repair import (  # noqa: E402
+    BoltzmannRepairBridge,
+    LinearSpinAdapter,
+    RepairDirection,
+)
 
 __all__ = [
     "AgentStep",
@@ -471,4 +476,7 @@ __all__ = [
     "ThinkVerdict",
     "build_think_probe_prompt",
     "parse_think_probe_output",
+    "BoltzmannRepairBridge",
+    "LinearSpinAdapter",
+    "RepairDirection",
 ]
