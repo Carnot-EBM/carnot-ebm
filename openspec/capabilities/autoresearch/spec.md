@@ -300,6 +300,63 @@ and an already-existing magnitude_error constraint in the extractor
 **And** generation_log["magnitude_check:magnitude_error"] == "already_exists"
 **And** only carry_error is added to extractor._dynamic_constraints
 
+### REQ-LEARN-030: FOVER-Style Z3 Step Annotation
+
+The system shall provide a `FOVERAnnotator` that implements FoVer-style annotation
+(arXiv 2505.15960) of chain-of-thought reasoning steps with Z3-verified correctness labels:
+
+- Parse a CoT response into discrete steps using `parse_cot_into_steps(response) -> list[FOVERCoTStep]`.
+  Split on numbered steps ("1.", "2.") or "Step N:" patterns.
+- For each step, extract any claimed arithmetic equation using the same `_INLINE_EQ` pattern as
+  CRANEExtractionGate.
+- Annotate each step via `annotate_step_with_z3(step) -> FOVERCoTStep`:
+  - If no equation: `z3_label='not_verifiable'`, `z3_confidence=0.0`
+  - If equation present: run `_exec_z3_snippet` on an inline Z3 assertion.
+  - `z3_label='correct'` when Z3 returns 'sat'; `z3_label='incorrect'` when Z3 returns 'unsat'.
+  - `z3_confidence=1.0` for a complete equation (all three operands present); `0.5` otherwise.
+- `FOVERAnnotator(z3_timeout_seconds=5)` wraps the above with corpus-level batching and
+  training-pair output.
+
+Rationale: Z3 annotations are deterministic, scalable, and formally correct — unlike
+human labels which require expensive annotation at scale. This is the training signal
+that was missing for FR-11 (EORM/JEPA retrains on synthetic-only data).
+
+Spec refs: arXiv 2505.15960 (FoVer), arXiv 2601.17223 (VPRM)
+
+### REQ-LEARN-031: FOVER Training Pair Export
+
+The annotated (step, label) pairs shall be written to `results/fover_labeled_steps.json`
+for use as training targets for EORM (Exp 431). The export format:
+
+- Schema: `carnot.fover_labels.v1`
+- Each pair: `{question_id, step_text, label, confidence}`
+- Filter: only include steps where `z3_label in ('correct', 'incorrect')` AND
+  `z3_confidence >= 0.3`. Steps labeled `not_verifiable` are excluded from training
+  pairs because they provide no learning signal.
+- `FOVERAnnotator.to_training_pairs(annotated) -> list[dict]` performs this filtering.
+
+## Scenarios
+
+### SCENARIO-LEARN-054: Numbered Step Parsing
+
+**Given** a CoT response with text "1. First step. 2. Second step. 3. Third step."
+**When** `parse_cot_into_steps(response)` is called
+**Then** exactly 3 `FOVERCoTStep` objects are returned
+**And** each step has the correct `step_idx` (0, 1, 2)
+
+### SCENARIO-LEARN-055: Z3 Correct Equation Label
+
+**Given** a `FOVERCoTStep` with `claimed_equation="2 + 3 = 5"`
+**When** `annotate_step_with_z3(step)` is called
+**Then** the returned step has `z3_label='correct'`
+**And** `z3_confidence >= 0.3`
+
+### SCENARIO-LEARN-056: Z3 Incorrect Equation Label
+
+**Given** a `FOVERCoTStep` with `claimed_equation="2 + 3 = 6"`
+**When** `annotate_step_with_z3(step)` is called
+**Then** the returned step has `z3_label='incorrect'`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -320,3 +377,5 @@ and an already-existing magnitude_error constraint in the extractor
 | REQ-AUTO-014 | N/A | Implemented | Integration |
 | REQ-LEARN-010 | N/A | Implemented | 22 Python |
 | REQ-LEARN-011 | N/A | Implemented | 22 Python |
+| REQ-LEARN-030 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-031 | N/A | Implemented | 10+ Python |
