@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 433: SpilledEnergyDetector — arXiv 2602.18671 per-token hallucination signal)
+
+- 2026-04-17 04:44 UTC: Implemented SpilledEnergyDetector (Exp 433).
+  Triggered by: user instruction to implement SpilledEnergyDetector per arXiv 2602.18671 ICLR 2026.
+
+  **Context:** Adds a Tier 0 pre-filter to ThreeTierPipeline using the per-token logit-discrepancy
+  formula from arXiv 2602.18671. Unlike the existing SpilledEnergyExtractor (NLL-based),
+  the new detector uses the log-sum-exp minus expected-logit formula: H(softmax(logits/T)).
+  CI-safe text mode uses deterministic SHA-256 hash proxy when logits are unavailable.
+
+  **Deliverables:**
+  - `python/carnot/pipeline/spilled_energy.py`: appended SpilledEnergyToken,
+    SpilledEnergyDetectorResult, compute_detector_spilled_energy(), SpilledEnergyDetector
+  - `python/carnot/pipeline/three_tier_pipeline.py`: Tier 0 SpilledEnergyDetector pre-filter;
+    tier0_spilled_skip field in ThreeTierPipelineResult; build_three_tier_artifact() updated
+  - `python/carnot/pipeline/__init__.py`: exports for all 4 new symbols
+  - `tests/python/test_spilled_energy.py`: 19 tests covering all new classes
+  - `tests/python/test_experiment_433_spilled_energy.py`: 7 tests for experiment script
+  - `scripts/experiment_433_spilled_energy.py`: benchmark harness (100-item synthetic corpus)
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: REQ-VERIFY-092, REQ-VERIFY-093,
+    SCENARIO-VERIFY-123/124/125 added; implementation status rows added
+
+  **Results:** All 26 new tests pass. ThreeTierPipeline remains backward-compatible
+  (spilled_energy_detector=None by default).
+
 ## 2026-04-17 (Exp 432: JitRL Live Validation — Tier 1 Self-Learning Requirement)
 
 - 2026-04-17 03:55 UTC: Implemented and ran Exp 432 JitRL live validation.

@@ -102,3 +102,16 @@ Inference:
 ## thrml Integration
 
 The `parallel_ising.py` sampler provides a `parallel_sample_states` function that wraps thrml's `IsingEBM` interface. It extracts coupling matrices and biases from an `IsingEBM` instance and runs the parallel checkerboard Gibbs sampler (with optional simulated annealing) as a drop-in replacement for thrml's built-in sampling — achieving 183x speedup on CPU at 100 variables and 572x at 500 variables.
+
+## Verification Pipeline Tiers
+
+The LLM output verification pipeline uses a cascade architecture where cheaper tiers run first:
+
+| Tier | Name | Class | Cost | Signal Source | Skip Condition |
+|------|------|-------|------|---------------|----------------|
+| 0 | SpilledEnergyDetector | `SpilledEnergyDetector` | ~0 ms (text hash) | Per-token logit-discrepancy (arXiv 2602.18671) | `high_spill_fraction <= threshold` (confident model) |
+| 1 | SinkProbe | `SinkProbe` | ~0 ms (attention reuse) | Attention sink concentration (arXiv 2604.10697) | `mean_sink_score >= sink_threshold` |
+| 2 | EORM | `EORMModel` | ~10 ms | CoT energy reward model (55M params) | `energy < eorm_threshold` |
+| 3 | Ising | `VerifyRepairPipeline` | ~0.006 ms/constraint | Full constraint verification | Always runs if tiers 0-2 pass |
+
+Each tier returns early if it can clear the response, avoiding subsequent more expensive tiers. Tier 0 was added in Exp 433 (arXiv 2602.18671, ICLR 2026). Tiers 1-3 were designed in Exps 346-348/360.

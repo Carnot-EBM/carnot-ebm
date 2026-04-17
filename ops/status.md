@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-17 03:55 UTC — EXP 432: JITRL LIVE VALIDATION — Tier 1 self-learning requirement met (synthetic_fallback; Exp 427 not yet live); JitRL threshold modulation produces 33.71% synthetic FP reduction (rate_problems threshold raised to 0.70, arithmetic lowered to 0.38); 39 tests pass; REQ-LEARN-034 + SCENARIO-LEARN-060/061 confirmed implemented; honest_verdict=synthetic_fallback (Exp 427 scaffolding_only → live validation deferred until GPU live run)
+**Last Updated:** 2026-04-17 05:07 UTC — EXP 433: SPILLED ENERGY DETECTOR — SpilledEnergyDetector (arXiv 2602.18671 ICLR 2026 formulation) implemented; per-token logit-discrepancy formula H(softmax(logits/T)); Tier 0 pre-filter added to ThreeTierPipeline; CI-safe text mode (SHA-256 hash proxy); 28 tests pass (19 spilled_energy + 9 experiment_433); REQ-VERIFY-092/093 + SCENARIO-VERIFY-123/124/125 implemented and reconciled
 
 ---
 

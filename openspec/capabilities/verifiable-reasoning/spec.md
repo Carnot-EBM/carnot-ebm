@@ -5410,5 +5410,64 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |
+| REQ-VERIFY-092 | Not Started | Implemented | SpilledEnergyDetector per-token logit-discrepancy hallucination signal — SpilledEnergyDetector + SpilledEnergyDetectorResult + SpilledEnergyToken + compute_detector_spilled_energy (SCENARIO-VERIFY-123/124, Exp 433) |
+| REQ-VERIFY-093 | Not Started | Implemented | SpilledEnergyDetector CI-safe text mode — score_from_text() deterministic hash-based proxy (SCENARIO-VERIFY-125, Exp 433) |
 | REQ-AGENT-001 | Not Started | Implemented | SAVeR multi-turn constraint state propagation — ConstraintState dataclass carrying accumulated_facts, active_constraints, facts_established, model_id across steps (SCENARIO-AGENT-001/002/003, Exp 362) |
 | REQ-AGENT-002 | Not Started | Implemented | SAVeR commit-gate — propose_step() blocks action when constraint violations survive max_repair_attempts; committed=False prevents fact accumulation (SCENARIO-AGENT-001/002/003, Exp 362) |
+
+### REQ-VERIFY-092: SpilledEnergyDetector Per-Token Logit-Discrepancy Hallucination Signal
+
+**Description:** Implements the "spilled energy" signal from arXiv 2602.18671 (ICLR 2026).
+For each generated token position t, spilled energy = log(sum_j exp(logit_j/T)) - sum_j p_j * logit_j,
+where p_j = softmax(logit_j/T). This equals the gap between the partition function (free energy)
+and the expected logit value — the "intensity discarded" by softmax normalization.
+High per-token spilled energy indicates the model's logit space is uncertain (spread across many
+tokens), which correlates with hallucination risk. Unlike semantic entropy (post-hoc, full response),
+spilled energy is measurable per-token during streaming generation.
+
+**Acceptance Criteria:**
+- `SpilledEnergyDetector.score(logits_per_token)` computes per-token spilled energy and returns
+  `SpilledEnergyDetectorResult` with mean, max, high_spill_fraction, should_verify
+- `should_verify=True` iff `high_spill_fraction > high_spill_fraction_threshold`
+- `high_spill_fraction` = fraction of tokens with spilled_energy > spill_threshold
+- Default thresholds: spill_threshold=2.0, high_spill_fraction_threshold=0.2
+- Hardware path: logit operations are native GPU tensor ops, ~0.01ms per token
+
+Spec: REQ-VERIFY-092
+
+### REQ-VERIFY-093: SpilledEnergyDetector CI-Safe Text Mode
+
+**Description:** When logits are not available (CI environment, offline scoring),
+SpilledEnergyDetector.score_from_text(response_text) provides a deterministic hash-based
+proxy that returns a valid SpilledEnergyDetectorResult without GPU access.
+The hash is deterministic so repeated calls on the same text produce the same result.
+
+**Acceptance Criteria:**
+- `score_from_text(response_text: str)` returns `SpilledEnergyDetectorResult` without JAX/GPU
+- Result is deterministic: same input text → same output
+- The hash-based energy proxy is in a plausible range (not always triggering or always skipping)
+
+Spec: REQ-VERIFY-093
+
+### SCENARIO-VERIFY-123: Uncertain Logits Trigger should_verify
+
+**Given** a logit array where all tokens have equal logits (uniform distribution)
+**When** `SpilledEnergyDetector().score(logits)` is called
+**Then** spilled energy per token equals approximately log(vocab_size) (high)
+**And** `result.should_verify == True` when high_spill_fraction > threshold
+**And** `result.mean_spilled > 0`
+
+### SCENARIO-VERIFY-124: Confident Logits Do Not Trigger should_verify
+
+**Given** a logit array where one token has a very large logit (peaked distribution, T=1)
+**When** `SpilledEnergyDetector().score(logits)` is called with spill_threshold=2.0
+**Then** spilled energy per token is approximately 0 (low)
+**And** `result.should_verify == False` (confident model, skip verification)
+
+### SCENARIO-VERIFY-125: CI Text Mode Returns Valid Result Without GPU
+
+**Given** a response text string, no GPU hardware available
+**When** `SpilledEnergyDetector().score_from_text(response_text)` is called
+**Then** a valid `SpilledEnergyDetectorResult` is returned
+**And** `result.should_verify` is a bool
+**And** calling twice with the same text returns the same result (deterministic)

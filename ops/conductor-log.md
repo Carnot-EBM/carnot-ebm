@@ -2010,3 +2010,4 @@ python/ |
 | 2026-04-17 04:30 UTC | Exp 432: JitRL live validation — Tier 1 self-learn | FAIL | Claude Code error: Wall-clock timeout after 2703s. Last output:  |
 | 2026-04-17 04:35 UTC | Exp 429: Live adversarial GSM8K benchmark — Apple  | OK | Deliverable already exists in repo |
 | 2026-04-17 04:35 UTC | Exp 432: JitRL live validation — Tier 1 self-learn | OK | Deliverable already exists in repo |
+| 2026-04-17 04:44 UTC | Exp 433: SpilledEnergyDetector benchmark — arXiv 2602.18671 per-token logit-discrepancy | OK | SpilledEnergyDetector + SpilledEnergyDetectorResult + SpilledEnergyToken + compute_detector_spilled_energy; CI text mode; Tier 0 in ThreeTierPipeline |

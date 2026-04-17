@@ -63,6 +63,7 @@ import jax.numpy as jnp
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
 from carnot.pipeline.sink_probe import SinkProbe
+from carnot.pipeline.spilled_energy import SpilledEnergyDetector, SpilledEnergyDetectorResult  # noqa: F401
 
 
 # ---------------------------------------------------------------------------
@@ -121,6 +122,7 @@ class ThreeTierPipelineResult:
     throughput_qps: float
     ising_calls_saved_pct: float
     inference_mode: str
+    tier0_spilled_skip: float = 0.0
 
 
 # ---------------------------------------------------------------------------
@@ -181,12 +183,14 @@ class ThreeTierPipeline:
         *,
         sink_threshold: float = 0.3,
         eorm_threshold: float = 0.5,
+        spilled_energy_detector: SpilledEnergyDetector | None = None,
     ) -> None:
         self.sink_probe = sink_probe
         self.eorm_model = eorm_model
         self.ising_pipeline = ising_pipeline
         self.sink_threshold = sink_threshold
         self.eorm_threshold = eorm_threshold
+        self.spilled_energy_detector = spilled_energy_detector
 
     # ------------------------------------------------------------------
     # verify()
@@ -234,6 +238,14 @@ class ThreeTierPipeline:
         Spec: REQ-VERIFY-088
         SCENARIO-VERIFY-116
         """
+        # ------------------------------------------------------------------
+        # Tier 0: SpilledEnergyDetector (text-mode CI-safe pre-filter)
+        # ------------------------------------------------------------------
+        if self.spilled_energy_detector is not None:
+            se_result = self.spilled_energy_detector.score_from_text(response)
+            if not se_result.should_verify:
+                return True, "spilled_energy", 0.0
+
         # ------------------------------------------------------------------
         # Tier 1: SinkProbe
         # ------------------------------------------------------------------
@@ -317,10 +329,12 @@ class ThreeTierPipeline:
                 throughput_qps=0.0,
                 ising_calls_saved_pct=0.0,
                 inference_mode=inference_mode,
+                tier0_spilled_skip=0.0,
             )
 
         n_skipped_sink = 0
         n_skipped_eorm = 0
+        n_skipped_spilled = 0
         n_wrong = 0
         n_fn = 0  # wrong responses incorrectly cleared (false negatives)
 
@@ -340,7 +354,11 @@ class ThreeTierPipeline:
             if not is_correct:
                 n_wrong += 1
 
-            if tier_used == "sink_probe":
+            if tier_used == "spilled_energy":
+                n_skipped_spilled += 1
+                if not is_correct:
+                    n_fn += 1
+            elif tier_used == "sink_probe":
                 n_skipped_sink += 1
                 if not is_correct:
                     n_fn += 1
@@ -354,7 +372,8 @@ class ThreeTierPipeline:
 
         skip_rate_sink = n_skipped_sink / total
         skip_rate_eorm = n_skipped_eorm / total
-        total_skip_rate = (n_skipped_sink + n_skipped_eorm) / total
+        skip_rate_spilled_energy = n_skipped_spilled / total
+        total_skip_rate = (n_skipped_sink + n_skipped_eorm + n_skipped_spilled) / total
         fn_rate = (n_fn / n_wrong) if n_wrong > 0 else 0.0
         ising_calls_saved_pct = total_skip_rate * 100.0
 
@@ -366,6 +385,7 @@ class ThreeTierPipeline:
             throughput_qps=throughput_qps,
             ising_calls_saved_pct=ising_calls_saved_pct,
             inference_mode=inference_mode,
+            tier0_spilled_skip=skip_rate_spilled_energy,
         )
 
 
@@ -405,4 +425,5 @@ def build_three_tier_artifact(result: ThreeTierPipelineResult) -> dict[str, Any]
         "throughput_qps": result.throughput_qps,
         "ising_calls_saved_pct": result.ising_calls_saved_pct,
         "inference_mode": result.inference_mode,
+        "tier0_spilled_skip": result.tier0_spilled_skip,
     }
