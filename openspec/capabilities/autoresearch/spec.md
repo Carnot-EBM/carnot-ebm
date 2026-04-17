@@ -455,6 +455,43 @@ Spec: Exp 432
 **Then** ``fp_reduction_pct`` is 0
 **And** ``honest_verdict`` is ``'synthetic_fallback'``
 
+### REQ-LEARN-035: FOVER Annotator Runs on Live GPU CoT Data
+
+The system shall run FOVERAnnotator on live GPU CoT responses (from Exp 439) and produce
+labeled training pairs sufficient for downstream EORM/JEPA training:
+
+- Load ``results/experiment_439_live_cot.json``; if present and the companion
+  ``results/experiment_439_live_precision_micro.json`` confirms ``inference_mode='live_gpu'``,
+  treat all cot_responses as real data (``source='live'``).
+- If the live CoT file is absent or the companion does not confirm live_gpu, fall back to
+  generating 100 synthetic GSM8K-style CoT responses (``source='synthetic'``).
+- Run ``FOVERAnnotator.annotate_corpus(responses)`` then ``to_training_pairs(annotated, responses)``.
+- Write labeled pairs to ``results/fover_labeled_steps_live.json``
+  (separate file from Exp 430's ``fover_labeled_steps.json``).
+- Honest verdict:
+
+  - ``'real_data_labeled'``      — source='live' AND n_labeled >= 20
+  - ``'real_data_insufficient'`` — source='live' AND n_labeled < 20
+  - ``'synthetic_fallback'``     — source='synthetic'
+
+Spec: Exp 442
+
+### SCENARIO-LEARN-062: Live CoT Annotation Produces Labeled Pairs
+
+**Given** ``results/experiment_439_live_cot.json`` contains 300 cot_responses
+**And** the companion confirms ``inference_mode='live_gpu'``
+**When** ``build_live_fover_artifact(result)`` is called with source='live' and n_labeled>=20
+**Then** ``honest_verdict`` is ``'real_data_labeled'``
+**And** ``schema`` is ``'carnot.fover_live.v1'``
+**And** ``labeling_rate`` equals ``n_labeled / n_steps_found``
+
+### SCENARIO-LEARN-063: Synthetic Fallback When Live Data Absent
+
+**Given** ``results/experiment_439_live_cot.json`` is absent or does not confirm live_gpu
+**When** ``build_live_fover_artifact(result)`` is called with source='synthetic'
+**Then** ``honest_verdict`` is ``'synthetic_fallback'``
+**And** ``schema`` is ``'carnot.fover_live.v1'``
+
 ### SCENARIO-RETRO-032: Milestone 2026.04.32 Retrospective Complete
 
 **Given** result JSONs for Exps 425-435 (partial: some results are scaffolding_only or absent)
@@ -492,3 +529,4 @@ Spec: Exp 432
 | REQ-LEARN-032 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-033 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-034 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-035 | N/A | Implemented | 10+ Python |

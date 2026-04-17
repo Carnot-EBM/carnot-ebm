@@ -1,9 +1,71 @@
 {
   "experiment": 441,
-  "schema": "carnot.timeout_watchdog.partial.v1",
-  "timed_out": true,
-  "timeout_minutes": 45,
-  "elapsed_minutes": 45.0,
-  "partial_result_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_441_live_adversarial_micro.json",
-  "status": "timed_out"
+  "title": "Live adversarial GSM8K micro-benchmark: 50q \u00d7 3 conditions \u00d7 2 models",
+  "run_date": "20260417",
+  "started_at": "2026-04-17T13:35:52Z",
+  "finished_at": "2026-04-17T15:09:17Z",
+  "duration_s": 5605.265,
+  "status": "success",
+  "schema": [
+    "avg_adversarial_drop_pct",
+    "avg_repair_improvement_pct",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "gate0_autofix_applied",
+    "gate2_gpu1_zombie",
+    "gate2_temperature_warning",
+    "headline_result",
+    "honest_verdict",
+    "inference_mode",
+    "n_models",
+    "per_model_results",
+    "robustness_claim",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "honest_verdict": "degradation_positive",
+  "robustness_claim": false,
+  "inference_mode": "live_gpu",
+  "n_models": 2,
+  "avg_adversarial_drop_pct": 6.0,
+  "avg_repair_improvement_pct": 0.0,
+  "per_model_results": [
+    {
+      "model_id": "Gemma4-E4B-it",
+      "n_questions": 50,
+      "standard_accuracy": 0.0,
+      "adversarial_accuracy": 0.02,
+      "repaired_accuracy": 0.02,
+      "adversarial_drop_pct": -2.0,
+      "repair_improvement_pct": 0.0,
+      "inference_mode": "live_gpu"
+    },
+    {
+      "model_id": "Qwen3.5-0.8B",
+      "n_questions": 50,
+      "standard_accuracy": 0.2,
+      "adversarial_accuracy": 0.06,
+      "repaired_accuracy": 0.06,
+      "adversarial_drop_pct": 14.0,
+      "repair_improvement_pct": 0.0,
+      "inference_mode": "live_gpu"
+    }
+  ],
+  "headline_result": {
+    "model_id": "Gemma4-E4B-it",
+    "n_questions": 50,
+    "standard_accuracy": 0.0,
+    "adversarial_accuracy": 0.02,
+    "repaired_accuracy": 0.02,
+    "adversarial_drop_pct": -2.0,
+    "repair_improvement_pct": 0.0,
+    "inference_mode": "live_gpu"
+  },
+  "gate0_autofix_applied": true,
+  "gate2_gpu1_zombie": false,
+  "gate2_temperature_warning": false
 }
