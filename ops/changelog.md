@@ -1,5 +1,32 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 444 — CarnotThinkProbe — Generative CoT Pre-Filter)
+
+- 2026-04-17 18:03 UTC: Implemented CarnotThinkProbe (Exp 444).
+  Triggered by: user instruction — implement ThinkPRM-style generative Process Reward Model pre-filter.
+
+  **Key result:** CarnotThinkProbe adds a Tier 0 generative CoT pre-filter before Ising verification.
+  CI stub returns 'uncertain' without GPU. Live path calls secondary LLM for 3-step verification CoT.
+  Fast-path: if verdict='incorrect', Ising is skipped and violation returned immediately.
+
+  **Changes:**
+  - `python/carnot/pipeline/think_probe.py`: New module — ThinkVerdict, ThinkProbeResult,
+    build_think_probe_prompt(), parse_think_probe_output(), CarnotThinkProbe with probe() and benchmark().
+  - `python/carnot/pipeline/__init__.py`: Exports CarnotThinkProbe, ThinkProbeResult, ThinkVerdict,
+    build_think_probe_prompt, parse_think_probe_output.
+  - `python/carnot/pipeline/verify_repair.py`: ADDITIVE — verify() gains optional think_probe param.
+    If think_probe is set and probe returns 'incorrect', returns fast-path VerificationResult without Ising.
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-VERIFY-094, REQ-VERIFY-095,
+    SCENARIO-VERIFY-126, SCENARIO-VERIFY-127, SCENARIO-VERIFY-128. Updated Implementation Status table.
+  - `scripts/experiment_444_think_probe.py`: Benchmark on 50 correct + 50 wrong synthetic responses.
+    Honest verdict: think_probe_viable / think_probe_imprecise / ci_stub_only.
+  - `tests/python/test_think_probe.py`: 56 tests — 100% targeted coverage of all public symbols.
+
+  **Deliverable:** results/experiment_444_think_probe.json (produced by scripts/experiment_444_think_probe.py)
+  **Status:** Complete; 56 tests pass; no regressions in full test suite
+
+---
+
 ## 2026-04-17 (Exp 442 — FOVER Live CoT Annotation — FR-11 First Real Data)
 
 - 2026-04-17 15:28 UTC: Implemented and executed FOVER annotation on live GPU CoT data (Exp 442).
