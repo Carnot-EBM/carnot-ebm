@@ -191,10 +191,10 @@ def wait_for_healthy_gpu(max_retries: int = 3, retry_delay_s: int = 60) -> bool:
             return True
         reason = []
         if health.temperature_warning:
-            reason.append(f"GPU0 temp {health.gpu0.temperature_c}C")
+            reason.append(f"GPU0 temp {health.gpu0_temp_c}C")
         if health.gpu1_is_zombie:
             reason.append(
-                f"GPU1 zombie ({health.gpu1.vram_used_mb}MB / {health.gpu1.utilization_pct}%)"
+                f"GPU1 zombie ({health.gpu1_vram_mb}MB / {health.gpu1_util_pct}%)"
             )
         logger.warning(
             "GPU unhealthy (attempt %d/%d): %s — sleeping %ds",
