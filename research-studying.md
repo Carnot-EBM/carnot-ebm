@@ -434,6 +434,35 @@ These are NOT candidates for revalidation — they were disproven by experimenta
 - **Action:** Add Vulkan compute experiment to Phase 2 milestone. Start with
   Ising energy evaluation (simplest kernel), then KAN forward pass.
 
+### NVIDIA "Ising" — NAMING COLLISION, NOT an Ising optimization solver (Noted, Low Relevance)
+- **Source:** [nvidia.com/en-us/solutions/quantum-computing/ising/](https://www.nvidia.com/en-us/solutions/quantum-computing/ising/) (2026 release, exact date TBD)
+- **What NVIDIA's "Ising" actually is:** A family of Apache-2.0-ish AI models for
+  quantum computing workflows. NOT a classical Ising-model optimization solver.
+  Two members:
+  - **Ising Calibration** — 35B-parameter Vision-Language Model that automates
+    quantum processor (QPU) tuning by inferring calibration actions from QPU
+    experimental data.
+  - **Ising Decoding** — Two 3D CNN models (0.9M / 1.8M parameters) for quantum
+    error correction. Claimed 2.5x faster, 3x more accurate than prior methods.
+- **Why the name collision matters for us:** Carnot's "Ising" means the discrete
+  spin-glass optimizer (carnot-ising crate, Ising tier in the four-tier model
+  hierarchy). NVIDIA's "Ising" means "AI models for operating qubit hardware".
+  Future contributors reading "NVIDIA Ising" may incorrectly assume it's directly
+  applicable to Carnot's Ising verifier. It is not.
+- **Direct applicability to Carnot:** Very low.
+  - We don't operate qubit hardware; we use Ising *as a math formulation* for
+    constraint satisfaction on classical hardware.
+  - The D-Wave sampler we integrated (Exp 320) IS quantum-hardware-adjacent,
+    but uses D-Wave's quantum annealing, not NVIDIA's QPU calibration flow.
+- **Indirect applicability:** The 3D CNN for quantum error correction is an EBM-
+  like discriminator architecture — it learns to assign low "energy" to valid
+  error syndromes vs. invalid ones. Pattern-level similarity to our CIKANEnergy
+  and EORM models. Worth a skim of the arXiv write-up when available, but not
+  worth an experiment.
+- **Score:** 2x3x3x1 = 18 (mostly "name disambiguation" value, not research value).
+- **Action:** No experiment planned. This entry exists so future sessions don't
+  confuse NVIDIA Ising with our Ising work.
+
 ### CUDA Megakernel Fusion Techniques (Study — Transferable Optimizations)
 - **Source:** [luce-megakernel](https://github.com/Luce-Org/luce-megakernel) (MIT)
 - **What it is:** A single-dispatch CUDA megakernel that runs the entire Qwen 3.5-0.8B
