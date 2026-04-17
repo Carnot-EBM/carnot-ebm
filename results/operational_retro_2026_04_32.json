@@ -1,0 +1,54 @@
+{
+  "milestone": "2026.04.32",
+  "n_experiments": 12,
+  "mean_minutes_per_exp": 31.7,
+  "conductor_timeout_implemented": true,
+  "gpu1_zombie_fixed": false,
+  "live_numbers_confirmed": false,
+  "fr11_relay_confirmed": false,
+  "tier1_live_validated": false,
+  "spilled_energy_viable": false,
+  "compliance_checker_works": false,
+  "npu_status": "seed_only:partial_match",
+  "headline_results": {
+    "precision_gsm8k": {
+      "status": "scaffolding_only",
+      "provenance": "experiment_427",
+      "note": "Script written; live execution pending GPU slot + human trigger."
+    },
+    "humaneval": {
+      "status": "scaffolding_only",
+      "provenance": "experiment_428",
+      "note": "Script written; live execution pending GPU slot + human trigger."
+    },
+    "adversarial_gsm8k": {
+      "status": "scaffolding_only",
+      "provenance": "experiment_429",
+      "note": "Script written; live execution pending GPU slot + human trigger."
+    }
+  },
+  "new_retro_items": [
+    {
+      "id": "RETRO-026",
+      "severity": "high",
+      "description": "Exps 427, 428, 429 (precision/HumanEval/adversarial) all produced scaffolding_only results after hitting the 45-minute conductor wall-clock timeout. The benchmarks legitimately require >45 minutes of live GPU inference. They cannot run inside the conductor's subagent budget. A dedicated long-running executor (human-triggered or conductor side-channel) is required to close these.",
+      "milestones_carried": 1,
+      "new_this_milestone": true,
+      "action_required": "Fix RETRO-025 (GPU 1 scheduling) THEN manually run: JAX_PLATFORMS=cpu python scripts/experiment_427_precision_live_confirmed.py (also 428, 429). Alternatively, configure a long-running executor with a 120-minute budget for benchmark-class experiments."
+    },
+    {
+      "id": "RETRO-027",
+      "severity": "medium",
+      "description": "Exp 433 (SpilledEnergyDetector), Exp 434 (ComplianceEnergyChecker), Exp 435 (AMD XDNA NPU Unblock) have no result JSON files. Scripts exist and tests pass, but the conductor never executed them. This represents silent experiment drop \u2014 no timeout artifact, no partial result.",
+      "milestones_carried": 1,
+      "new_this_milestone": true,
+      "action_required": "Run missing experiment scripts manually. Add conductor logic to detect and report experiments with scripts but no result file as 'not_run' rather than silently skipping them."
+    }
+  ],
+  "closed_retro_items": [
+    "RETRO-003 (per-experiment): ExperimentTimeoutWatchdog implemented in python/carnot/pipeline/experiment_watchdog.py. All Exp 425+ scripts use ExperimentTimeoutWatchdog as a context manager. Per-experiment hard cap is now operational. Conductor-level session timeout remains open."
+  ],
+  "schema": "carnot.operational_retro.v6",
+  "generated_at": "2026-04-17T06:30:24+00:00",
+  "status": "complete"
+}

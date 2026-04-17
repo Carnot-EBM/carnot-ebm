@@ -1,6 +1,64 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-17 05:21 UTC — EXP 434: COMPLIANCE ENERGY CHECKER — ComplianceEnergyChecker (KAN-based, two-layer, financial/medical/legal/general domains); encode_compliance_text bag-of-words; contrastive training; inspect_spline auditability; 67 tests pass 100% module coverage; REQ-SAFE-004/005/006 + SCENARIO-SAFE-004/005/006 implemented; Tier B Product Roadmap (compliance checker) scaffolded
+**Last Updated:** 2026-04-17 06:29 UTC — EXP 436: MILESTONE 2026.04.32 RETROSPECTIVE COMPLETE — MilestoneRetro2026_04_32 dataclass; schema=carnot.operational_retro.v6; 12 experiments (Exps 425-435a); mean=31.7 min/exp; conductor_timeout_implemented=True (RETRO-003 per-experiment CLOSED); gpu1_zombie_fixed=False; live_numbers_confirmed=False (Exps 427/428/429 scaffolding_only); RETRO-026 + RETRO-027 opened; 58 tests pass 100% targeted coverage
+
+---
+
+## Milestone 2026.04.32 Results (COMPLETE)
+
+### Summary
+
+**12 experiments (Exps 425-435a), mean=31.7 min/exp (prev: 14.0 min/exp).**
+Mean increase driven by scaffolding_only experiments (Exps 427, 428, 429, 431) each consuming the full 45-minute conductor budget. Fast experiments (Exps 426, 430, 432, 435a) had sub-second durations.
+
+### Milestone Question: Did Live Benchmark Numbers Get Confirmed?
+
+**NO.** live_numbers_confirmed=False. Exps 427 (precision GSM8K), 428 (HumanEval), 429 (adversarial GSM8K) all produced scaffolding_only artifacts after hitting the 45-minute wall-clock timeout. Scripts and tests exist; live execution requires a dedicated long-running executor or human trigger.
+
+### Success Criteria
+
+| Criterion | Result | Notes |
+|-----------|--------|-------|
+| conductor_timeout_implemented | **True** | ExperimentTimeoutWatchdog in experiment_watchdog.py; Exp 425 |
+| gpu1_zombie_fixed | **False** | Exp 426 zombie_confirmed — detected but not fixed |
+| live_numbers_confirmed | **False** | Exps 427/428/429 scaffolding_only — live execution deferred |
+| fr11_relay_confirmed | **False** | Exp 431 retro_024_closed=False |
+| tier1_live_validated | **False** | Exp 432 synthetic_fallback |
+| spilled_energy_viable | **False** | Exp 433 no result JSON (not run) |
+| compliance_checker_works | **False** | Exp 434 no result JSON (not run) |
+| npu_status | **seed_only:partial_match** | Only Exp 435a (Phase 3 seed) ran; Exp 435 not run |
+
+### Headline Results
+
+No live benchmark improvements. All precision/HumanEval/adversarial runs are scaffolding_only pending GPU slot. Prior authoritative results (Exp 226 HumanEval, Exp 279 adversarial) remain the headline until live reruns complete.
+
+### New RETRO Items Opened (Exp 436)
+
+- **RETRO-026 (high):** Exps 427/428/429 all scaffolding_only — live benchmarks need >45-min executor, not the conductor subagent budget. Fix: dedicated long-running executor or human trigger with 120-min budget.
+- **RETRO-027 (medium):** Exps 433, 434, 435 have no result JSON files — conductor never executed them. Silent experiment drop. Fix: conductor should detect and report scripts-without-results as 'not_run'.
+
+### RETRO Items Closed (Exp 436)
+
+- **RETRO-003 (per-experiment) CLOSED:** ExperimentTimeoutWatchdog implemented in `python/carnot/pipeline/experiment_watchdog.py`. All Exp 425+ scripts use it as a context manager. The 17+ milestone carry is resolved at the per-experiment level. Conductor-level session timeout remains open.
+
+### What's Working
+
+- ExperimentTimeoutWatchdog: deployed and used in all new experiments
+- EnvironmentAutoFix: self-configuring GPU env injection (RETRO-022 workaround)
+- JitRL constraint memory: 33.71% synthetic FP reduction (Exp 432; live deferred)
+- FOVER annotator: Z3 step labeling pipeline complete (Exp 430)
+- Kona Phase 3 seed: discrete-to-continuous energy landscape (Exp 435a, partial_match)
+- ComplianceEnergyChecker: KAN-based module implemented (Exp 434 module; no result JSON)
+- SpilledEnergyDetector: Tier 0 pre-filter added to ThreeTierPipeline (Exp 433 module)
+
+### What's Next (Priority Order)
+
+1. P0: Fix RETRO-025 (GPU 1 zombie scheduling) before running any dual-GPU benchmark
+2. P0: Human-trigger or long-running executor for Exps 427, 428, 429 (live benchmarks)
+3. P1: Run Exps 433, 434, 435 (spilled energy, compliance checker, NPU) — scripts exist
+4. P1: Fix RETRO-027 (silent experiment drop detection) in conductor
+5. P2: Fix RETRO-026 (long-running executor path for benchmark-class experiments)
+6. P2: Conductor-level session timeout (complements per-experiment watchdog)
 
 ---
 
