@@ -48,6 +48,18 @@ import dataclasses
 import random
 from typing import Any
 
+__all__ = [
+    "AdversarialGSMQuestion",
+    "AdversarialBenchmarkResult",
+    "SYNTHETIC_CI_RESULTS",
+    "DISTRACTOR_SENTENCES",
+    "build_adversarial_questions",
+    "compute_adversarial_results",
+    "build_adversarial_artifact",
+    "MicroAdversarialResult",
+    "build_micro_adversarial_artifact",
+]
+
 
 # ---------------------------------------------------------------------------
 # Fixed distractor pool (20 sentences)
@@ -420,3 +432,154 @@ def build_adversarial_artifact(result: AdversarialBenchmarkResult) -> dict[str, 
     }
 
     return artifact
+
+
+# ---------------------------------------------------------------------------
+# MicroAdversarialResult — per-model result for Exp 441 micro-benchmark
+# ---------------------------------------------------------------------------
+
+
+@dataclasses.dataclass
+class MicroAdversarialResult:
+    """Per-model aggregated result for the adversarial GSM8K micro-benchmark (Exp 441).
+
+    **Why this dataclass exists:**
+        Exp 441 scopes the adversarial benchmark to 50 questions × 3 conditions × 2 models
+        to fit within the 45-minute ExperimentTimeoutWatchdog budget.  This dataclass
+        carries the three per-condition accuracy values and the two derived delta fields
+        in percentage-point form (matching the Apple paper's reporting style).
+
+        ``adversarial_drop_pct`` and ``repair_improvement_pct`` are expressed in
+        percentage points (accuracy × 100) so they can be directly compared to Apple's
+        reported 65pp drop for frontier models.
+
+        ``inference_mode`` must be 'live_gpu' for any non-blocked honest_verdict.
+        Simulated results set this to 'simulated' and produce honest_verdict='blocked'.
+
+    Fields
+    ------
+    model_id : str
+        Human-readable model name (e.g. 'Gemma4-E4B-it').
+    n_questions : int
+        Number of GSM8K questions evaluated for this model.
+    standard_accuracy : float
+        Fraction correct on original (clean) questions.
+    adversarial_accuracy : float
+        Fraction correct on distractor-appended questions, no repair.
+    repaired_accuracy : float
+        Fraction correct on distractor-appended questions after VerifyRepairPipeline.
+    adversarial_drop_pct : float
+        (standard_accuracy - adversarial_accuracy) × 100.  Positive means adversarial
+        condition hurt the model (matches Apple paper's direction).
+    repair_improvement_pct : float
+        (repaired_accuracy - adversarial_accuracy) × 100.  Positive means repair helped.
+    inference_mode : str
+        'live_gpu' when run on real GPU hardware; 'simulated' for CI/blocked paths.
+
+    Spec: REQ-BENCH-011, SCENARIO-BENCH-029
+    """
+
+    model_id: str
+    n_questions: int
+    standard_accuracy: float
+    adversarial_accuracy: float
+    repaired_accuracy: float
+    adversarial_drop_pct: float
+    repair_improvement_pct: float
+    inference_mode: str
+
+
+# ---------------------------------------------------------------------------
+# build_micro_adversarial_artifact
+# ---------------------------------------------------------------------------
+
+
+def build_micro_adversarial_artifact(
+    results: list[MicroAdversarialResult],
+) -> dict[str, Any]:
+    """Build the JSON artifact for the adversarial GSM8K micro-benchmark (Exp 441).
+
+    **Detailed explanation for engineers:**
+        Assembles the artifact from a list of per-model MicroAdversarialResult objects.
+        The artifact carries a single ``honest_verdict`` derived from all models:
+
+        honest_verdict logic (in priority order):
+            'blocked'               — results is empty OR any result has inference_mode != 'live_gpu'.
+            'improvement_positive'  — all live_gpu AND at least one model has repair_improvement_pct > 0.
+            'degradation_positive'  — all live_gpu AND no model improved AND at least one model
+                                      has adversarial_drop_pct > 0 (adversarial condition hurt).
+            'neutral'               — all live_gpu AND no model degraded AND no model improved
+                                      (extractor fully robust; repair not needed).
+
+        robustness_claim:
+            True iff any model has repair_improvement_pct > 0 AND adversarial_drop_pct > 5.
+            This is the Carnot headline: the verify-repair loop recovers accuracy on inputs
+            that caused a >5pp drop from irrelevant-sentence injection.
+
+    Parameters
+    ----------
+    results : list[MicroAdversarialResult]
+        One entry per model evaluated.
+
+    Returns
+    -------
+    dict
+        Artifact ready for JSON serialization with schema='carnot.adversarial_micro.v1'.
+
+    Spec: REQ-BENCH-011, SCENARIO-BENCH-029, SCENARIO-BENCH-030
+    """
+    if not results or any(r.inference_mode != "live_gpu" for r in results):
+        return {
+            "schema": "carnot.adversarial_micro.v1",
+            "honest_verdict": "blocked",
+            "robustness_claim": False,
+            "inference_mode": "blocked",
+            "n_models": len(results),
+            "per_model_results": [_micro_result_to_dict(r) for r in results],
+            "headline_result": None,
+        }
+
+    # Derive top-level verdict from per-model results.
+    any_improvement = any(r.repair_improvement_pct > 0 for r in results)
+    any_degradation = any(r.adversarial_drop_pct > 0 for r in results)
+
+    if any_improvement:
+        honest_verdict = "improvement_positive"
+    elif any_degradation:
+        honest_verdict = "degradation_positive"
+    else:
+        honest_verdict = "neutral"
+
+    robustness_claim = any(
+        r.repair_improvement_pct > 0 and r.adversarial_drop_pct > 5 for r in results
+    )
+
+    avg_drop = sum(r.adversarial_drop_pct for r in results) / len(results)
+    avg_improvement = sum(r.repair_improvement_pct for r in results) / len(results)
+    best = max(results, key=lambda r: r.repair_improvement_pct)
+
+    return {
+        "schema": "carnot.adversarial_micro.v1",
+        "honest_verdict": honest_verdict,
+        "robustness_claim": robustness_claim,
+        "inference_mode": "live_gpu",
+        "n_models": len(results),
+        "avg_adversarial_drop_pct": round(avg_drop, 2),
+        "avg_repair_improvement_pct": round(avg_improvement, 2),
+        "per_model_results": [_micro_result_to_dict(r) for r in results],
+        "headline_result": _micro_result_to_dict(best),
+    }
+
+
+def _micro_result_to_dict(r: MicroAdversarialResult) -> dict[str, Any]:
+    """Serialize a MicroAdversarialResult to a JSON-safe dict."""
+    return {
+        "model_id": r.model_id,
+        "n_questions": r.n_questions,
+        "standard_accuracy": r.standard_accuracy,
+        "adversarial_accuracy": r.adversarial_accuracy,
+        "repaired_accuracy": r.repaired_accuracy,
+        "adversarial_drop_pct": r.adversarial_drop_pct,
+        "repair_improvement_pct": r.repair_improvement_pct,
+        "inference_mode": r.inference_mode,
+    }

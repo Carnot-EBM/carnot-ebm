@@ -4531,6 +4531,56 @@ The repository SHALL provide a live GPU HumanEval micro-benchmark (Exp 440) that
 
 Spec: REQ-BENCH-010, SCENARIO-BENCH-027, SCENARIO-BENCH-028
 
+### REQ-BENCH-011: Live Adversarial GSM8K Micro-Benchmark (50q × 3 conditions × 2 models)
+
+The repository SHALL provide a live GPU adversarial GSM8K micro-benchmark (Exp 441) that:
+
+- Evaluates 50 GSM8K questions per model × 2 models across 3 conditions:
+  1. **standard**    — original (clean) question, no verify-repair.
+  2. **adversarial** — distractor-appended question (one irrelevant sentence), no repair.
+  3. **repaired**    — distractor-appended question + VerifyRepairPipeline.
+- Fits within a 45-minute ExperimentTimeoutWatchdog budget using LongRunBenchmarkExecutor
+  with batch_size=50 (one 50-question batch per condition).
+- Imports AdversarialGSMQuestion and build_adversarial_questions from adversarial_gsm8k.py
+  (Exp 354 code) — no duplication.
+- Imports all inference helpers (load_gsm8k_questions, _extract_answer, _is_correct,
+  _call_model, _build_per_model_result, _compute_top_level_verdict) from Exp 355 — no
+  duplication.
+- Produces a ``MicroAdversarialResult`` per model with fields: ``model_id``, ``n_questions``,
+  ``standard_accuracy``, ``adversarial_accuracy``, ``repaired_accuracy``,
+  ``adversarial_drop_pct``, ``repair_improvement_pct``, ``inference_mode``.
+- Builds a ``carnot.adversarial_micro.v1`` artifact via ``build_micro_adversarial_artifact``
+  with ``honest_verdict`` in {'improvement_positive', 'degradation_positive', 'neutral',
+  'blocked'}.
+- Sets ``robustness_claim=True`` iff ``repair_improvement_pct > 0`` AND
+  ``adversarial_drop_pct > 5`` (at least one model triggered Apple-paper-style degradation
+  AND repair recovered it).
+- Requires ``inference_mode='live_gpu'`` for any non-blocked verdict.
+
+### SCENARIO-BENCH-029: Exp 441 Live Improvement Criterion
+
+**Given** Exp 441 runs on live dual-RTX-3090 hardware with CARNOT_FORCE_LIVE=1
+**And** all model × condition runs complete within the 45-minute watchdog
+**When** the artifact is assembled
+**Then** ``honest_verdict`` is 'improvement_positive' iff at least one model shows
+  ``repair_improvement_pct > 0``
+**And** ``robustness_claim`` is True iff ``repair_improvement_pct > 0`` AND
+  ``adversarial_drop_pct > 5`` (for any model)
+**And** ``inference_mode`` is 'live_gpu'
+**And** ``per_model_results`` contains one entry per model
+
+### SCENARIO-BENCH-030: Exp 441 Blocked Artifact on Gate Failure
+
+**Given** Exp 441 runs without CARNOT_FORCE_LIVE=1 (CI mode)
+**Or** the LiveGPUGate check fails
+**When** the artifact is assembled
+**Then** ``honest_verdict`` is 'blocked'
+**And** ``robustness_claim`` is False
+**And** ``inference_mode`` is 'blocked'
+**And** ``per_model_results`` is an empty list
+
+Spec: REQ-BENCH-011, SCENARIO-BENCH-029, SCENARIO-BENCH-030
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -5608,6 +5658,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-BENCH-006 | Not Started | Implemented (Exp 354) | AdversarialGSMQuestion + build_adversarial_questions + AdversarialBenchmarkResult + compute_adversarial_results + build_adversarial_artifact; adversarial GSM8K harness with 20-distractor pool and CI-safe synthetic mode (SCENARIO-BENCH-014/015/016) |
 | REQ-BENCH-007 | Not Started | Implemented (Exp 354) | robustness_invariant_holds field in build_adversarial_artifact; invariant is True when adversarial_accuracy >= standard_accuracy - 0.05 (SCENARIO-BENCH-014/016) |
 | REQ-BENCH-009 | Not Started | Implemented (Exp 439) | MicroPrecisionResult + build_micro_precision_artifact (schema carnot.precision_micro.v1); 50q × 3 variants × 2 models micro-benchmark with LongRunBenchmarkExecutor; CoT log for FOVER (SCENARIO-BENCH-025/026) |
+| REQ-BENCH-010 | Not Started | Scaffolding (Exp 440) | MicroHumanEvalResult + build_micro_humaneval_artifact (schema carnot.humaneval_micro.v1); 50 problems × 2 models; blocked at gate (SCENARIO-BENCH-027/028) |
+| REQ-BENCH-011 | Not Started | Implemented (Exp 441) | MicroAdversarialResult + build_micro_adversarial_artifact (schema carnot.adversarial_micro.v1); 50q × 3 conditions × 2 models micro-benchmark; robustness_claim field; LongRunBenchmarkExecutor (SCENARIO-BENCH-029/030) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |

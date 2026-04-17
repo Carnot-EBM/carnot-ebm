@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-04-17 (Exp 441 — Live Adversarial GSM8K Micro-Benchmark Harness)
+
+- 2026-04-17 13:20 UTC: Implemented live adversarial GSM8K micro-benchmark harness (Exp 441).
+  Triggered by: user instruction — adversarial robustness micro-benchmark (50q × 3 conditions × 2 models).
+
+  **Key change vs Exps 355/370/381/421/429:** Scope reduced to 50q × 3 conditions × 2 models = 300 LLM calls ≈ 40 min (fits the 45-min watchdog). Uses LongRunBenchmarkExecutor(batch_size=50) with integer indices to avoid JSON-serialization issues with AdversarialGSMQuestion dataclasses. apply_env_autofix() called first (RETRO-022 fix).
+
+  **Changes:**
+  - `python/carnot/pipeline/adversarial_gsm8k.py`: Added MicroAdversarialResult dataclass (model_id, n_questions, standard_accuracy, adversarial_accuracy, repaired_accuracy, adversarial_drop_pct, repair_improvement_pct, inference_mode) and build_micro_adversarial_artifact() (schema carnot.adversarial_micro.v1; honest_verdict improvement_positive/degradation_positive/neutral/blocked; robustness_claim=True iff repair_improvement_pct>0 AND adversarial_drop_pct>5). _micro_result_to_dict() serialization helper. __all__ export list added.
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-BENCH-011, SCENARIO-BENCH-029/030; added REQ-BENCH-010/011 rows to Implementation Status table.
+  - `scripts/experiment_441_live_adversarial_micro.py`: Full 5-gate harness — apply_env_autofix() first; ExperimentTimeoutWatchdog(441, 45min); LiveGPUGate hard gate; check_dual_gpu_health() warning; setup_gpu(); _load_model_with_explicit_device (Exp 438 fix); LongRunBenchmarkExecutor(batch_size=50) with integer index batches per condition; imports all helpers from Exp 355 + adversarial_gsm8k.py (no duplication); VerifyRepairPipeline wired with graceful fallback; MicroAdversarialResult per model; artifact assembly.
+  - `tests/python/test_adversarial_micro.py`: 23 tests — full coverage of MicroAdversarialResult, build_micro_adversarial_artifact (all 4 verdict paths, robustness_claim logic, multi-model aggregation, headline_result selection).
+  - `tests/python/test_experiment_441_live_adversarial_micro.py`: 17 tests — _write_artifact, _run_three_conditions_for_model, main() gate paths (gate1 blocked, gate3 unhealthy, gate4 load failure, all-gates-pass, GPU1 zombie non-blocking).
+
+  **Deliverable:** results/experiment_441_live_adversarial_micro.json (pending live GPU run)
+  **Status:** Harness complete; 40 new tests pass; 3928 total pass; live execution requires CARNOT_FORCE_LIVE=1 + dual RTX 3090 + ~40 min
+
+---
+
 ## 2026-04-17 (Exp 440 — Live HumanEval Micro-Benchmark Harness)
 
 - 2026-04-17 11:55 UTC: Implemented live HumanEval micro-benchmark harness (Exp 440).
