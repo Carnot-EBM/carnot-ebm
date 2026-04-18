@@ -20,7 +20,7 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **All embedded secrets must use SOPS encryption** at rest. Never commit plaintext API keys, tokens, or credentials.
 - **Code execution sandbox:** Use `CARNOT_USE_SANDBOX=1` for gvisor-sandboxed execution of untrusted code. Default is in-process exec for development speed.
 - **trust_remote_code is gated:** HuggingFace model loading requires `CARNOT_TRUST_REMOTE_CODE=1` to enable remote code execution. Default is False (safe).
-- **Production autoresearch:** Use Firecracker microVMs for sandbox isolation when running autonomous experiments in production.
+- **Production autoresearch:** Use Docker with the gVisor (runsc) runtime for sandbox isolation when running autonomous experiments in production. Firecracker was initially considered but cannot pass GPUs through, and the pipeline needs CUDA/ROCm; gVisor intercepts syscalls in userspace and plays nicely with nvidia-container-toolkit.
 
 ## Project Vision (Three Phases)
 
