@@ -42,7 +42,7 @@ tasks:
     \     - is_doc_only_diff(changed_files: list[str]) -> bool: True if all files are *.md,\n\
     \       docs/, ops/, _bmad/, openspec/**/*.md\n\
     \   - DualGPUAssigner(model_specs: list[dict], n_gpus: int):\n\
-    \     - assign() -> list[dict]: returns model_specs with device_map={'': 'cuda:N'} set\n\
+    \     - assign() -> list[dict]: returns model_specs with device_map=('': 'cuda:N') set\n\
     \     - is_dual_gpu_eligible() -> bool: True when len>=2 and CARNOT_FORCE_LIVE=1 and n_gpus>=2\n\
     \   - Test: assert_written() passes when file exists\n\
     \   - Test: assert_written() raises FileNotFoundError when file absent\n\
