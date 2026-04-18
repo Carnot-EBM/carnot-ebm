@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 456 — Constraint Addition from Memory: FR-11 Tier 1 Self-Learning)
+
+- 2026-04-18: Verified Tier 1 constraint self-learning (ConstraintAdditionFromMemory). (User instruction)
+  - New: `python/carnot/pipeline/constraint_addition.py` — ViolationPattern + ConstraintAdditionFromMemory
+  - New: `tests/python/test_constraint_addition.py` — 27 tests, 100% targeted coverage
+  - Updated: `python/carnot/pipeline/__init__.py` — exports ViolationPattern, ConstraintAdditionFromMemory
+  - Updated: `openspec/capabilities/autoresearch/spec.md` — REQ-SELFLEARN-010/011/012, SCENARIO-SELFLEARN-010/011/012
+  - Two-session relay: session1_fp_rate=1.0 → carry_check_constraint added → session2_fp_rate=0.0, fp_rate_delta=-1.0
+  - Honest verdict: improvement. FR-11 Tier 1 self-learning confirmed.
+
 ## 2026-04-18 (Exp 455 — ThinkProbeV2: RETRO-029 Closure)
 
 - 2026-04-18 18:17 UTC: Implemented ThinkProbeV2 resolving RETRO-029. (User instruction)
