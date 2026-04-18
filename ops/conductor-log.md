@@ -2154,3 +2154,4 @@ python/ |
 | 2026-04-18 18:36 UTC | Exp 455: Think Probe v2 with Partial Verdicts — RE | OK | 81 passed in 38.29s |
 | 2026-04-18 18:55 UTC | Exp 456: Constraint Addition from Memory — Tier 1 self-learning relay | OK | 27 tests pass; session1_fp_rate=1.0→session2_fp_rate=0.0; honest_verdict=improvement |
 | 2026-04-18 18:59 UTC | Exp 456: Tier 1 Constraint Addition from Memory —  | OK | 81 passed in 47.40s |
+| 2026-04-18 19:27 UTC | Exp 457: LSEBMCL Cross-Session EBM Replay — EBM wa | OK | 81 passed in 77.73s (0:01:17) |
