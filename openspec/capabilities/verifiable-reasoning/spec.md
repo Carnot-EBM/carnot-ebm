@@ -6668,3 +6668,49 @@ Spec: REQ-EORM-007
 **When** `calibrated_auc(examples)` is called
 **Then** the result is in [0.0, 1.0]
 **And** the calibrated AUC is >= baseline uncalibrated AUC - 0.05 (regression tolerance)
+
+### REQ-KAEM-005: KAEMEnergy Crossover Profiling Spans n_vars 50-1000
+
+The `SpeedupProfile` class shall profile KAEMEnergy exact sampling versus
+IsingEBM MCMC baseline across n_vars in [50, 100, 200, 500, 1000], producing
+per-size latency records with speedup ratios, to empirically locate the crossover
+point where KAEM becomes faster than MCMC.
+
+**Why this range matters:** Exp 447 benchmarked n_vars ≤ 100 and found only 1.29x
+speedup. RETRO-031 identified that the crossover is expected at n_vars > 200 where
+MCMC mixing time grows super-linearly. This requirement mandates extending profiling
+into that regime.
+
+**Implementation Status:** Done (Exp 459)
+
+Spec: REQ-KAEM-005, SCENARIO-KAEM-010
+
+### REQ-KAEM-006: Crossover n_vars Defined as First n_vars Where kaem_time < mcmc_time
+
+The `SpeedupProfile.crossover_n_vars()` method shall return the first n_vars in the
+profiled list where speedup > 1.0 (i.e., KAEM is faster than MCMC). Returns None
+when KAEM is never faster in the profiled range.
+
+**Why exact definition matters:** Crossover is a discrete event in the profiled list,
+not an interpolated float. Returning the first n_vars where KAEM wins gives a concrete,
+actionable threshold for callers to switch samplers.
+
+**Implementation Status:** Done (Exp 459)
+
+Spec: REQ-KAEM-006, SCENARIO-KAEM-011
+
+### SCENARIO-KAEM-010: SpeedupProfile Finds Crossover at n_vars=200 When KAEM Wins There
+
+**Given** a SpeedupProfile with n_vars_list=[50, 100, 200, 500, 1000]
+**And** kaem_times=[10, 12, 8, 6, 5] (ms)
+**And** mcmc_times=[8, 10, 20, 50, 100] (ms)
+**When** `crossover_n_vars()` is called
+**Then** the result is 200 (first n_vars where mcmc_time > kaem_time)
+
+### SCENARIO-KAEM-011: SpeedupProfile Returns None When KAEM Never Faster
+
+**Given** a SpeedupProfile with n_vars_list=[50, 100, 200]
+**And** kaem_times=[10, 15, 25] (ms, always slower)
+**And** mcmc_times=[8, 10, 20] (ms, always faster)
+**When** `crossover_n_vars()` is called
+**Then** the result is None (KAEM never beats MCMC in the profiled range)
