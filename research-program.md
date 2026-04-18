@@ -369,6 +369,8 @@ The planning agent MUST prioritize these for the next milestone:
 - Self-learning architecture: tracker, memory, JEPA (needs real training data)
 - Pipeline infrastructure: VerifyRepairPipeline, MCP server, CLI
 - FPGA/TSU hardware path: SamplerBackend abstraction ready
+- **Live GPU benchmarks run end-to-end (Exps 439/440/441, 2026-04-17):** Pipeline executes on real hardware with inference_mode='live_gpu'. Results are honest negatives: no precision improvement (Qwen3.5-0.8B baseline 14%, Gemma4-E4B-it 0% — model issue), no HumanEval pass@1 improvement, adversarial degradation detected (14pp drop for Qwen3.5-0.8B) but 0% repair recovery. Pipeline reaches GPU; improvement pending model fix and repair optimization.
+- **EORM + JEPA retrained on real live data (Exp 443):** JEPA AUC improved 0.457→0.571 on 57 real FOVER-labeled CoT steps from live GPU inference. First real-data training loop closed end-to-end (FR-11 relay confirmed).
 
 ## What Was Invalidated (simulation artifacts)
 

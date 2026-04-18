@@ -2126,3 +2126,6 @@ python/ |
 | 2026-04-18 08:10 UTC | Exp 447: KAEMEnergy — KAN exact inverse-transform | OK | Deliverable already exists in repo |
 | 2026-04-18 09:10 UTC | Exp 448: Tier 2 Cross-Session Constraint Memory Re | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-18 09:40 UTC | Exp 448: Tier 2 Cross-Session Constraint Memory Re | OK | Deliverable already exists in repo |
+| 2026-04-18 09:41 UTC | Exp 449: Milestone 2026.04.33 Retrospective — FIRST live GPU numbers confirmed (honest negatives); RETRO-024/026 CLOSED; RETRO-028/029/030/031 OPENED; 75 tests pass | OK | operational_retro_2026_04_33.json written |
+| 2026-04-18 10:41 UTC | Exp 449: Operational Retrospective — Milestone 202 | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
+| 2026-04-18 11:11 UTC | Exp 449: Operational Retrospective — Milestone 202 | OK | Deliverable already exists in repo |

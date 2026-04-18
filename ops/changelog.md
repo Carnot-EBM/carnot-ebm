@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Milestone 2026.04.33 Operational Efficiency Retrospective — Process Analysis)
+
+- 2026-04-18 11:16 UTC: Milestone 2026.04.33 process retrospective. (User instruction) Analyzed 5002 min / 311 experiments for execution efficiency. Top bottlenecks: GPU 1 zombie VRAM (RETRO-025, 1786MB at 0% util throughout), sequential dual-model loading (Exp 219 117 min, GPU 1 idle), repeated re-verification of already-implemented code (Exp 447 verified 3x with no changes), RETRO-003 timeout watchdog carried 17+ milestones (135-225 min wasted on runaways), doc-only commits triggering full 3900-test suite (80-120 min overhead). Estimated 32% time savings achievable next milestone via DualGPURunner, inference batching, doc-only test classifier, session health check at startup, and partial-result handoff on interruptions. results/operational_retro_2026_04_33.json written. schema=carnot.operational_retro.v8.
+
+## 2026-04-18 (Exp 449 — Milestone 2026.04.33 Operational Efficiency Retrospective)
+
+- 2026-04-18 09:41 UTC: Milestone 2026.04.33 retrospective (Exp 449). (User instruction) FIRST live GPU benchmark numbers after 7 consecutive scaffolding-only milestones (Exps 439/440/441). Results: live_no_improvement, code_no_improvement, degradation_positive. Gemma4-E4B-it 0% accuracy (RETRO-028 opened). RETRO-024 closed (FR-11 EORM/JEPA real-data relay, Exp 443 JEPA AUC 0.457→0.571). RETRO-026 closed (LongRunBenchmarkExecutor, Exp 437). New retro items: RETRO-028 (Gemma4 zero accuracy), RETRO-029 (think_probe timeout), RETRO-030 (Exp 446 silent drop), RETRO-031 (KAEM no speedup). schema='carnot.operational_retro.v7'. SCENARIO-RETRO-033 added to autoresearch/spec.md. 75 tests pass.
+
 ## 2026-04-18 (Exp 447 — KAEMEnergy Exact Inverse-Transform Sampling)
 
 - 2026-04-18 02:33 UTC: Implemented KAEMEnergy with exact sampling (arXiv 2506.14167). (User instruction)
