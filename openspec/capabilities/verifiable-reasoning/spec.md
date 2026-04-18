@@ -6714,3 +6714,68 @@ Spec: REQ-KAEM-006, SCENARIO-KAEM-011
 **And** mcmc_times=[8, 10, 20] (ms, always faster)
 **When** `crossover_n_vars()` is called
 **Then** the result is None (KAEM never beats MCMC in the profiled range)
+
+## Hardware Acceleration: AMD XDNA NPU via IRON Toolchain (Exp 460)
+
+### REQ-HARDWARE-010: IRON Toolchain Installs via pip install mlir-aie
+
+The `NPUEnvironment.install_iron()` method shall attempt to install the IRON
+toolchain (arXiv 2504.03083) via `pip install mlir-aie` and return True on
+success, False on failure.
+
+**Why IRON unblocks NPU:** The traditional mlir-aie build requires cmake, ninja,
+and openblas — none of which are available in the Carnot build environment.  IRON
+(Integrated Runtime for Open NPUs) provides a pip-installable wheel that requires
+ONLY Python and pip, eliminating 5 milestones of build-system blockage.
+
+**Reference:** arXiv 2504.03083 (IRON: AMD XDNA NPU toolchain)
+
+**Implementation Status:** Done (Exp 460)
+
+Spec: REQ-HARDWARE-010, SCENARIO-HARDWARE-010
+
+### REQ-HARDWARE-011: NPURunner Attempts JEPA ONNX Execution on AMD XDNA NPU
+
+The `IRONRunner` class shall accept an ONNX model path, compile it to an AIE
+kernel via `mlir_aie` (when IRON is installed and an NPU device is present),
+and execute inference.  When the NPU is unavailable, it shall transparently
+fall back to onnxruntime CPU inference so experiments run on all hardware.
+
+**Why this matters:** The JEPA predictor ONNX model (results/jepa_predictor_291.onnx)
+is the target workload for NPU acceleration.  Demonstrating NPU execution of this
+model establishes the hardware path for production self-learning acceleration.
+
+**Implementation Status:** Done (Exp 460)
+
+Spec: REQ-HARDWARE-011, SCENARIO-HARDWARE-011
+
+### REQ-HARDWARE-012: NPURunner Falls Back to CPU ONNX When NPU Unavailable
+
+The `IRONRunner.benchmark()` method shall always return a valid timing result.
+The `NPURunner.honest_verdict` field shall distinguish `'npu_executed'` from
+`'cpu_fallback'` so callers can determine whether a real NPU was used.
+CPU fallback is required because most developers lack NPU hardware.
+
+**Implementation Status:** Done (Exp 460)
+
+Spec: REQ-HARDWARE-012, SCENARIO-HARDWARE-012
+
+### SCENARIO-HARDWARE-010: iron_available Returns False When mlir_aie Not Installed
+
+**Given** mlir_aie is not installed in the test environment
+**When** `NPUEnvironment.iron_available()` is called
+**Then** the result is False
+
+### SCENARIO-HARDWARE-011: IRONRunner Falls Back to CPU When NPU Device Absent
+
+**Given** no /dev/accel0 device exists (most dev machines)
+**When** `IRONRunner.benchmark(inputs, n_runs=3)` is called
+**Then** a float timing result is returned (CPU onnxruntime fallback)
+**And** `npu_device_present()` returns False
+
+### SCENARIO-HARDWARE-012: honest_verdict Distinguishes npu_executed from cpu_fallback
+
+**Given** an IRONRunner on a machine without NPU hardware
+**When** benchmark is called and completes
+**Then** the artifact field `honest_verdict` is `'cpu_baseline_only'`
+**And** `npu_executed` is False in the artifact
