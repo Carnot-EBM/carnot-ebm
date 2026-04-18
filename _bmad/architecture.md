@@ -1,6 +1,6 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-04-17
+**Last Reconciled:** 2026-04-18
 
 ## Overview
 
@@ -123,3 +123,19 @@ The LLM output verification pipeline uses a cascade architecture where cheaper t
 Each tier returns early if it can clear the response, avoiding subsequent more expensive tiers. Tier 0a (CarnotThinkProbe) was added in Exp 444 (arXiv 2504.16828, ThinkPRM). Tier 0b was added in Exp 433 (arXiv 2602.18671, ICLR 2026). Tiers 1-3 were designed in Exps 346-348/360.
 
 CarnotThinkProbe is optional in VerifyRepairPipeline.verify() — pass `think_probe=CarnotThinkProbe(llm_caller=caller)` to enable. When enabled: if verdict='incorrect', returns VerificationResult(verified=False, mode='THINK_PROBE_FAST_PATH', skipped=True) without running Ising. CI stub (llm_caller=None, the default) returns 'uncertain' and falls through to Ising.
+
+## KAN Fast-Path Tier — KAEMEnergy (Exp 447)
+
+`python/carnot/models/kaem_energy.py` adds a **KAEMEnergy** model that replaces the iterative Ising/Gibbs MCMC inner loop with exact inverse-transform sampling (arXiv 2506.14167, June 2025).
+
+| Component | Class | Key property |
+|-----------|-------|--------------|
+| Per-variable splines | `UnivariateKAEMLayer` | Energy = sum_i e_i(x_i); variables are independent under Gibbs distribution |
+| Marginal CDF | `marginal_cdf(var_idx, x)` | Numerical integration (trapezoidal, 256-point grid) |
+| Exact sampling | `sample_exact(n_samples, rng_key)` | Inverse-transform via binary search on precomputed CDF table; O(log 256) per variable |
+| Full model | `KAEMEnergy` | energy() / sample() / fit(); no MCMC required |
+| Benchmark | `benchmark_kaem_vs_mcmc` | Wall-clock comparison vs ParallelIsingSampler; returns speedup_ratio |
+
+**Why this matters:** The Kolmogorov-Arnold theorem decomposes the energy into univariate per-variable terms. Each marginal CDF can be computed and inverted in closed form — no burn-in, no autocorrelation. Target speedup: 10-100x for sub-100-variable problems. Hardware path: bisection is pure arithmetic, FPGA-native. Exported from `carnot.models.__init__`.
+
+Spec: REQ-SAMPLE-015, REQ-SAMPLE-016, SCENARIO-SAMPLE-027/028/029.
