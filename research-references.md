@@ -1897,3 +1897,88 @@ thermodynamic computing Ising FPGA
   (Exp 110, energy-guided decoding). PRA's decoupled architecture means no LLM modification needed.
 - **When to pursue:** Guided decoding milestone. Integrate IsingEBM as process reward agent in
   a PRA-style loop for step-by-step guided generation. Compare to Exp 110 energy-guided decoding.
+
+### VPRM — Verifiable Process Reward Models for Structured Reasoning (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2601.17223 (2026-01, Pronesti, Belz, Hou)
+- **What:** Introduces Verifiable Process Reward Models (VPRM), a reinforcement-learning framework
+  where intermediate reasoning steps are verified by deterministic, rule-based verifiers instead
+  of neural judges. Applied to medical evidence synthesis with guideline-defined criteria.
+  Results: 20% higher F1 than SOTA, 6.5% higher than verifiable outcome rewards. Reasoning traces
+  are more coherent and evidence-grounded. Rule-based verifiers eliminate reward hacking.
+- **Relevance:** Direct approach for Carnot's extraction problem on IT models. The ArithmeticExtractor
+  regex misses 100% of violations on Gemma4-E4B-it because it matches `a + b = c` patterns that IT
+  models don't write. VPRM's fix: replace regex with RULE-BASED verifiers: arithmetic rules
+  (addition, multiplication, unit consistency), logical consistency rules. These rules are deterministic,
+  transparent, and don't require a trained extractor — they directly formalize what "correct
+  arithmetic" means and check each CoT step.
+- **Concrete experiment:** VPRMArithmeticVerifier: parse each CoT step for numerical claims using
+  LLM formalization, apply Python arithmetic rules (not regex), flag steps where the claimed
+  result doesn't match the computed result. Compare detection rate vs ArithmeticExtractor and
+  LLMExtractor on GSM8K with Gemma4-E4B-it.
+- **When to pursue:** Next milestone (2026.04.34). Implement as Tier 3 step-level verifier.
+  Pairs with VeriCoT for neuro-symbolic extraction.
+
+### VeriCoT — Neuro-Symbolic Chain-of-Thought Validation via Logical Consistency (HIGH PRIORITY)
+- **Paper:** arxiv.org/abs/2511.04662 (2025-11)
+- **What:** VeriCoT formalizes each CoT reasoning step into first-order logic (FOL) and uses
+  automated solvers (Z3) to verify logical validity. Identifies premises grounding each argument
+  in context, commonsense knowledge, or prior steps. Used for inference-time self-reflection:
+  VeriCoT's validity-oriented feedback prompts model to self-correct — 46% relative improvement
+  in CoT verification pass rate, 41% relative gains in task accuracy across multiple datasets.
+- **Relevance:** This is the extraction approach that works on instruction-tuned models. Instead
+  of regex matching, VeriCoT uses LLM-assisted formalization of each CoT step into FOL, then Z3
+  verifies consistency. This directly solves the ArithmeticExtractor 0% detection problem on IT
+  models: formalize "47 + 28 = 76" as a Z3 assertion, verify it fails, flag the step.
+  The 46% improvement in verification pass rate validates this as a production-ready approach.
+- **Concrete experiment:** VeriCoTStepValidator: for each CoT step, use secondary Qwen3.5-0.8B
+  to extract FOL premises + conclusions, verify with Z3, flag logically inconsistent steps.
+  Wire as extraction front-end in VerifyRepairPipeline.
+- **When to pursue:** Next milestone (2026.04.34). Implement as primary extraction mechanism for
+  IT models, alongside VPRM rule-based verifiers.
+
+### LSEBMCL — Latent Space EBM for Continual Learning (MEDIUM PRIORITY)
+- **Paper:** arxiv.org/abs/2501.05495 (2025-01, ICAIIC 2025)
+- **What:** Integrates an EBM layer into continual learning for NLP. The EBM acts as a generative
+  memory — it samples from the distribution of PREVIOUS tasks when training on new ones, preventing
+  catastrophic forgetting. The novel prior integrates continuous latent variables for generation
+  and discrete latent variables for structural elements. Achieves SOTA across NLP continual learning.
+- **Relevance:** Directly applicable to Carnot's cross-session constraint memory failure (Exp 448:
+  no improvement across sessions). The root cause of Exp 448's failure: SessionMemory stored
+  constraint templates, but Session 2 couldn't leverage them because no replay mechanism existed.
+  LSEBMCL's fix: train a small Ising EBM on constraint violation patterns from Session 1, then
+  REPLAY synthetic violations in Session 2 to warm-start the template library. The EBM GENERATES
+  the cross-session memory signal rather than just storing it.
+- **Concrete experiment:** LSEBMConstraintReplayer: train a small Ising EBM on violation type
+  distributions from Session 1 (carry/sign/unit errors). Before Session 2, replay N synthetic
+  violations from the EBM to pre-activate constraint templates. Measure if cross-session FP
+  reduction improves over Exp 448's baseline (no_improvement).
+- **When to pursue:** Next milestone (2026.04.34). Wire into cross-session relay as EBM-native
+  memory mechanism.
+
+### Gemma4 Tokenizer Bug — Infinite <unused> Token Loop (CRITICAL INFRASTRUCTURE NOTE)
+- **Issue:** github.com/ggml-org/llama.cpp/issues/21516 (April 2026)
+- **What:** Gemma4 models (including gemma-4-E4B-it) generate an infinite stream of <unused>
+  tokens (token ID 14 = <unused8>) when loaded via llama.cpp backend, producing no valid text.
+  Affects both GPU offloading and CPU-only inference. Root cause: tokenizer vocabulary mismatch
+  between llama.cpp's Gemma4 tokenizer implementation and the model's expected format.
+- **Root cause of RETRO-028:** This is WHY Gemma4-E4B-it returned 0.0 accuracy across all
+  benchmarks in milestone 2026.04.33 — the model never produced any valid text. The Ising
+  pipeline received empty/garbage responses, producing 0% correct answers.
+- **Fix:** Use transformers library directly (AutoModelForCausalLM.from_pretrained) instead of
+  any llama.cpp-based backend. The Hugging Face transformers implementation handles Gemma4's
+  tokenizer correctly. Alternatively: use tokenizer.chat_template formatting explicitly.
+- **Impact on research:** ALL Exp 439/440/441 results showing Gemma4 0% accuracy are
+  infrastructure failures, not EBM failures. The model is capable of correct answers — the
+  loading path was broken. Re-run with transformers loader for honest results.
+- **When to pursue:** Next milestone (2026.04.34), Exp 450 as first priority.
+
+### EBM-CoT — Energy-Based Calibration for Implicit Chain-of-Thought (MEDIUM PRIORITY)
+(Previously filed under "Think Consistently, Reason Efficiently" — arXiv:2511.07124.
+ Now upgrading to high actionability given EORM+JEPA training on real data (Exp 443).)
+- **Update for milestone 2026.04.34:** With JEPA AUC improved from 0.457→0.571 on 57 real
+  CoT steps (Exp 443), we now have enough real data to implement EBM-CoT's consistency energy
+  formulation as a training objective for EORM. EBM-CoT calibrates the hidden state BEFORE
+  generation by running Langevin dynamics on thought embeddings — if we apply this to the EORM
+  input encoding, it could improve AUC beyond 0.571 by making the EORM input more "consistent"
+  before scoring. Experiment: add Langevin calibration step to EORM's forward pass on hidden
+  states from Exp 443's real training data.
