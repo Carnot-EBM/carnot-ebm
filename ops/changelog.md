@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 461 — Milestone 2026.04.34 Retrospective)
+
+- 2026-04-18: Milestone 2026.04.34 retrospective complete. FIRST POSITIVE verify-repair number confirmed (Exp 451: live_precision_improvement=+5pp). Phase 1 milestone reached: verify-repair pipeline produces measurable improvements on live GPU benchmarks. (User instruction)
+
 ## 2026-04-18 (Exp 456 — Constraint Addition from Memory: FR-11 Tier 1 Self-Learning)
 
 - 2026-04-18: Verified Tier 1 constraint self-learning (ConstraintAdditionFromMemory). (User instruction)
