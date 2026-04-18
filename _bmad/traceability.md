@@ -410,3 +410,9 @@
 | REQ-EORM-007 | Not Started | Implemented | EBMCoTCalibrator n_langevin_steps configurable with default 10 (Exp 458) |
 | SCENARIO-EORM-010 | Not Started | Implemented | Calibrated hidden state has lower energy than uncalibrated in expectation (Exp 458) |
 | SCENARIO-EORM-011 | Not Started | Implemented | Exp 458: calibrated_auc does not regress below baseline on synthetic pairs (Exp 458) |
+| REQ-INFRA-033 | Not Started | Implemented | ExperimentTemplate.assert_deliverable_written() raises FileNotFoundError if deliverable JSON missing at experiment end (Exp 462) |
+| SCENARIO-INFRA-041 | Not Started | Implemented | assert_written() raises when deliverable is absent from disk (Exp 462) |
+| REQ-INFRA-034 | Not Started | Implemented | ExperimentTemplate.setup_gpu() uses DualGPUAssigner for dual-model GPU isolation on cuda:0/cuda:1 (Exp 462) |
+| SCENARIO-INFRA-042 | Not Started | Implemented | DualGPUAssigner assigns cuda:0 and cuda:1 in live mode with device_map isolation (Exp 462) |
+| REQ-INFRA-035 | Not Started | Implemented | DocOnlyClassifier skips full test suite for doc-only diffs (.md files and docs/ops/_bmad/openspec/ directories) (Exp 462) |
+| SCENARIO-INFRA-043 | Not Started | Implemented | DocOnlyClassifier correctly returns True for doc-only changes and False for code changes (Exp 462) |
