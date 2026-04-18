@@ -2,6 +2,11 @@
 
 from carnot.models.boltzmann import BoltzmannConfig, BoltzmannModel
 from carnot.models.ebm_cot_calibrator import EBMCoTCalibrator
+from carnot.models.ebm_cot_calibrator_v3 import (
+    EBMCoTCalibratorV3,
+    EPCouplingUpdate,
+    SyntheticCoTPairGenerator,
+)
 from carnot.models.compliance_checker import (
     ComplianceDomain,
     ComplianceEnergyChecker,
@@ -28,6 +33,9 @@ __all__ = [
     "BoltzmannConfig",
     "BoltzmannModel",
     "EBMCoTCalibrator",
+    "EBMCoTCalibratorV3",
+    "EPCouplingUpdate",
+    "SyntheticCoTPairGenerator",
     "ComplianceDomain",
     "ComplianceEnergyChecker",
     "ComplianceExample",
