@@ -399,3 +399,9 @@
 | SCENARIO-EXTRACT-052 | Not Started | Implemented | AdditionRule detects '47 plus 28 equals 76' → passed=False, computed=75.0, stated=76.0, error=1.0 (Exp 454) |
 | SCENARIO-EXTRACT-053 | Not Started | Implemented | VPRMArithmeticVerifier detects IT-prose violations ArithmeticExtractor misses; ArithmeticExtractor returns [] on same text (Exp 454) |
 | SCENARIO-EXTRACT-054 | Not Started | Implemented | Exp 454: baseline_f1=0.0, vprm_f1=1.0, f1_improvement=1.0, honest_verdict=vprm_better on 20-sample IT corpus (Exp 454) |
+| REQ-SELFLEARN-013 | Not Started | Implemented | LSEBMConstraintReplayer trains EBM on Session 1 violation distribution (Exp 457) |
+| SCENARIO-SELFLEARN-013 | Not Started | Implemented | fit + generate produces violation types seen in training (Exp 457) |
+| REQ-SELFLEARN-014 | Not Started | Implemented | LSEBMConstraintReplayer generates N synthetic violations to warm-start Session 2 (Exp 457) |
+| SCENARIO-SELFLEARN-014 | Not Started | Implemented | warm_start returns count > 0 after fitting on carry-error session (Exp 457) |
+| REQ-SELFLEARN-015 | Not Started | Implemented | LSEBMCL replay improves Session 2 FP rate vs Exp 448 baseline (Exp 457) |
+| SCENARIO-SELFLEARN-015 | Not Started | Implemented | Exp 457 three-way comparison produces honest_verdict (lsebmcl_better) (Exp 457) |
