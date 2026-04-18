@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 — Exp 467 staged: Live 200q Integrated VeriCoT+VPRM+CRANE pipeline (gpu_required, deferred). Exp 461 COMPLETE: Milestone 2026.04.34 retrospective — FIRST POSITIVE verify-repair confirmed (Exp 451 live_precision: +5pp, honest_verdict=repair_better). Phase 1 milestone reached. MilestoneRetro2026_04_34 schema; SCENARIO-RETRO-034 added. Previously: Exp 457 COMPLETE — LSEBMCL Tier 2 continual learning (LSEBMConstraintReplayer; session2_fp_rate=0.0; REQ-SELFLEARN-013/014/015; FR-11 Tier 2 confirmed).
+**Last Updated:** 2026-04-18 — Exp 468 COMPLETE: GSM-Symbolic Adversarial Benchmark (Apple credibility experiment). Previously: Exp 467 staged: Live 200q Integrated VeriCoT+VPRM+CRANE pipeline (gpu_required, deferred). Exp 461 COMPLETE: Milestone 2026.04.34 retrospective — FIRST POSITIVE verify-repair confirmed (Exp 451 live_precision: +5pp, honest_verdict=repair_better). Phase 1 milestone reached.
 
 ---
 

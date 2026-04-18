@@ -94,6 +94,10 @@
   - Spec: REQ-SAMPLE-015, REQ-SAMPLE-016, SCENARIO-SAMPLE-027/028/029 added to training-inference/spec.md
   - Export: KAEMEnergy, UnivariateKAEMLayer, benchmark_kaem_vs_mcmc added to carnot.models.__init__
 
+## 2026-04-18 (Exp 468 — GSM-Symbolic Adversarial Benchmark — Apple credibility experiment)
+
+- 2026-04-18: Exp 468 GSM-Symbolic Adversarial Benchmark complete. (User instruction)
+
 ## 2026-04-18 (Exp 467 — Live 200q Integrated VeriCoT+VPRM+CRANE Pipeline)
 
 - 2026-04-18 23:32 UTC: Exp 467 setup complete: VeriCoT+VPRM+CRANE extraction stack ready; gpu_required status (deferred pending GPU availability). (User instruction)
