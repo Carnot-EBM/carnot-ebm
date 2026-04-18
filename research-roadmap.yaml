@@ -104,8 +104,8 @@ tasks:
     \   b. ExperimentTimeoutWatchdog(451, timeout_minutes=60) as context manager\n\
     \   c. ExperimentTemplate(451, 'Live Precision Post-Fix',\n\
     \      'results/experiment_451_live_precision_postfix.json', requires_gpu=True)\n\
-    \   d. setup_gpu([{name: 'Gemma4-E4B-it', hf_id: 'google/gemma-4-E4B-it', gpu: 0},\n\
-    \                  {name: 'Qwen3.5-0.8B', hf_id: 'Qwen/Qwen3.5-0.8B', gpu: 1}])\n\
+    \   d. setup_gpu([(name: 'Gemma4-E4B-it', hf_id: 'google/gemma-4-E4B-it', gpu: 0),\n\
+    \                  (name: 'Qwen3.5-0.8B', hf_id: 'Qwen/Qwen3.5-0.8B', gpu: 1)])\n\
     \   e. If GPU unavailable: emit status='gpu_required', honest_verdict='deferred_to_gpu'\n\
     \   f. Load 50 GSM8K questions. Run baseline (no verify-repair) + pipeline variant.\n\
     \   g. Compute LivePrecisionResult for each model\n\
@@ -620,7 +620,7 @@ tasks:
     KAEM (arXiv 2506.14167) uses inverse-transform sampling without MCMC — constant-time\
     \ sampling per variable regardless of the correlation structure. Published claim: 1.29x\
     \ at n_vars=100 but the crossover is at n_vars~200 based on scaling analysis.\n\n\
-    This experiment profiles KAEMEnergy at n_vars = {50, 100, 200, 500, 1000} and finds\
+    This experiment profiles KAEMEnergy at n_vars = (50, 100, 200, 500, 1000) and finds\
     \ the crossover point. CPU-only experiment.\n\n\
     EXISTING CODE TO READ FIRST:\n\
     - python/carnot/pipeline/env_autofix.py — apply_env_autofix()\n\
@@ -653,7 +653,7 @@ tasks:
     \      - Record kaem_time, mcmc_time, speedup=mcmc_time/kaem_time\n\
     \   e. Build SpeedupProfile and compute crossover_n_vars\n\
     \   f. Build artifact: schema='carnot.kaem_profiler.v1'\n\
-    \      profile=[{n_vars, kaem_ms, mcmc_ms, speedup}, ...]\n\
+    \      profile=[(n_vars, kaem_ms, mcmc_ms, speedup), ...]\n\
     \      crossover_n_vars=<int or null>\n\
     \      max_speedup_n_vars=<int>\n\
     \      max_speedup=<float>\n\
@@ -795,8 +795,8 @@ tasks:
     \      retro_030_closed=<bool>\n\
     \      retro_031_closed=<bool>\n\
     \      experiments_completed=<int of 11>\n\
-    \      new_retro_items=[{id, description, priority, target_milestone}, ...]\n\
-    \      meta_reflection={slowest_experiment, biggest_surprise, process_improvement}\n\
+    \      new_retro_items=[(id, description, priority, target_milestone), ...]\n\
+    \      meta_reflection=(slowest_experiment, biggest_surprise, process_improvement)\n\
     \      honest_verdict='milestone_complete'\n\
     \   j. Output: results/operational_retro_2026_04_34.json\n\
     4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
