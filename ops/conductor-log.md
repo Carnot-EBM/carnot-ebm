@@ -2102,3 +2102,6 @@ python/ |
 | 2026-04-17 23:16 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
 | 2026-04-17 23:16 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
 | 2026-04-17 23:16 UTC | Exp 445: BoltzmannRepairBridge — DBM energy → LLM  | OK | Deliverable already exists in repo |
+| 2026-04-18 00:39 UTC | Exp 437: LongRunBenchmarkExecutor — RETRO-026 fix  | OK | Deliverable already exists in repo |
+| 2026-04-18 00:39 UTC | Exp 439: Live Precision Micro-Benchmark — 50q x 3  | OK | Deliverable already exists in repo |
+| 2026-04-18 00:39 UTC | Exp 445: BoltzmannRepairBridge — DBM energy → LLM  | OK | Deliverable already exists in repo |
