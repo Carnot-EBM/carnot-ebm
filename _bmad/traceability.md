@@ -405,3 +405,8 @@
 | SCENARIO-SELFLEARN-014 | Not Started | Implemented | warm_start returns count > 0 after fitting on carry-error session (Exp 457) |
 | REQ-SELFLEARN-015 | Not Started | Implemented | LSEBMCL replay improves Session 2 FP rate vs Exp 448 baseline (Exp 457) |
 | SCENARIO-SELFLEARN-015 | Not Started | Implemented | Exp 457 three-way comparison produces honest_verdict (lsebmcl_better) (Exp 457) |
+| REQ-EORM-005 | Not Started | Implemented | EBMCoTCalibrator applies Langevin dynamics to EORM hidden state before scoring (Exp 458) |
+| REQ-EORM-006 | Not Started | Implemented | EBMCoTCalibrator improves EORM AUC vs uncalibrated baseline (Exp 458) |
+| REQ-EORM-007 | Not Started | Implemented | EBMCoTCalibrator n_langevin_steps configurable with default 10 (Exp 458) |
+| SCENARIO-EORM-010 | Not Started | Implemented | Calibrated hidden state has lower energy than uncalibrated in expectation (Exp 458) |
+| SCENARIO-EORM-011 | Not Started | Implemented | Exp 458: calibrated_auc does not regress below baseline on synthetic pairs (Exp 458) |
