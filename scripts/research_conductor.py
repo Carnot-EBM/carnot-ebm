@@ -1902,6 +1902,38 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         )
         prompt = workflow_preamble + prompt
 
+    # Stop-when-done postamble — applies to ALL agents.  Every task prompt in
+    # the roadmap YAML builds toward writing a specific results/experiment_NNN_*.json
+    # deliverable.  Once that file is written and the tests for the *new* code
+    # pass, the research value is locked in.  Earlier milestones saw subagents
+    # spend 40–55 min per run after the deliverable was already on disk,
+    # iterating on 100% coverage, docstring polish, and ops/*.md touch-ups.
+    # The conductor's post-commit Haiku reconciliation step handles those doc
+    # updates in ~2 min, so further subagent turns are pure overhead.  This
+    # postamble tells the subagent explicitly to stop after the deliverable
+    # stabilises, and pairs with the deliverable-watch kill-switch in
+    # run_agent() as a belt-and-braces solution.
+    deliverable_hint = task.get("deliverable") or "results/experiment_*.json"
+    stop_postamble = (
+        "\n\n=== STOP-WHEN-DONE RULE ===\n"
+        f"The point of this task is to produce a valid {deliverable_hint} with "
+        "all required schema fields, plus the module and tests that back it up.\n"
+        "Once (a) the deliverable JSON is written and stable, and (b) the tests "
+        "you added pass, STOP immediately — do not keep iterating.  In particular:\n"
+        "- Do NOT re-run the full test suite multiple times chasing 100% coverage "
+        "across pre-existing code.  Cover only the code you added.\n"
+        "- Do NOT polish docstrings beyond the verbose-layman baseline required "
+        "by CLAUDE.md on your first pass.\n"
+        "- Do NOT update ops/changelog.md, ops/status.md, or _bmad/traceability.md — "
+        "the conductor runs a separate Haiku reconciliation step immediately after "
+        "you exit that handles all doc/status/traceability updates.  Touching those "
+        "files just creates a merge with the reconciler.\n"
+        "- Do NOT perform a self-review revision cycle once the deliverable is valid.\n"
+        "If you finish the real work inside 10 minutes, that is correct and expected — "
+        "exit promptly.  The conductor rewards short, focused runs."
+    )
+    prompt = prompt + stop_postamble
+
     # Run the configured agent.
     # Per-experiment model override via YAML "model:" field — Opus for complex
     # Phase 3 / infrastructure work, Sonnet for routine scaffolding. Absence of
