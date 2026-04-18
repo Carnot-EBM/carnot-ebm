@@ -575,7 +575,11 @@ def pick_next_task(completed_log: str) -> dict | None:
 
     # Find first task not yet completed AND not failed too many times
     for task in RESEARCH_TASKS:
-        title_prefix = task["title"][:50]
+        # Strip to match .strip() applied to parsed log entries — otherwise
+        # titles whose 50-char cut lands on whitespace (e.g. Exp 447) have
+        # a trailing space in the lookup key and never match their fail rows,
+        # which caused an infinite retry loop in milestone 2026.04.33.
+        title_prefix = task["title"][:50].strip()
 
         # Signal 1: log says OK
         if title_prefix in completed_titles:
