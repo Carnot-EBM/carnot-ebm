@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 454 — VPRM Arithmetic Verifier)
+
+- 2026-04-18 17:50 UTC: Implemented VPRM Arithmetic Verifier (arXiv 2601.17223). (User instruction)
+  - New: `python/carnot/extraction/vprm_verifier.py` — 6 rule families + VPRMArithmeticVerifier + RuleVerdict + ArithmeticRule ABC
+  - New: `tests/python/test_vprm_verifier.py` — 80 tests, 100% module coverage
+  - New: `scripts/experiment_454_vprm_verifier.py` — CPU experiment, no GPU needed
+  - Updated: `python/carnot/extraction/__init__.py` — exports new types
+  - Updated: `openspec/capabilities/verifiable-reasoning/spec.md` — REQ-EXTRACT-027/028/029, SCENARIO-EXTRACT-052/053/054
+  - Updated: `_bmad/traceability.md` — 6 new rows
+  - Result: baseline_f1=0.0, vprm_f1=1.0, honest_verdict=vprm_better
+
 ## 2026-04-18 (Exp 452 — RETRO-030 Closure: result file confirmed)
 
 - 2026-04-18 15:30 UTC: Ran Exp 452 — result file confirmed. (User instruction)

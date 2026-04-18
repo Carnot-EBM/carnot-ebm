@@ -6269,3 +6269,88 @@ accuracy because every response is garbage.
 **Given** a string containing real natural language (e.g. `The answer is 42.`)
 **When** `GemmaTransformersLoader.is_valid_output(text)` is called
 **Then** the method returns `True`
+
+## VPRM Arithmetic Verifier Requirements (Exp 454)
+
+### REQ-EXTRACT-027: VPRMArithmeticVerifier Implements Rule-Based Arithmetic Step Checks
+
+The system shall provide `VPRMArithmeticVerifier` with six deterministic rule families:
+addition, subtraction, multiplication, division, percentage, and unit consistency.
+Each rule matches IT-model prose patterns (e.g. "47 plus 28 equals 75") without any
+LLM call and verifies the stated result against the arithmetically computed result.
+
+The abstract base `ArithmeticRule` defines `check(step_text: str) -> RuleVerdict | None`,
+returning `None` when the rule's pattern is not present in the step text, and a
+`RuleVerdict` when the pattern matches (whether the arithmetic is correct or not).
+
+`RuleVerdict` carries: `rule_name`, `passed`, `computed_value`, `stated_value`,
+`error_magnitude` (all Optional where not applicable, e.g. unit consistency).
+
+**Rationale:** Deterministic rules are immune to reward hacking — a neural judge can be
+fooled with adversarial inputs; an arithmetic identity check cannot.  arXiv 2601.17223
+reports 20% F1 gain over neural process reward models using this approach.
+
+**Implementation Status:** Done (Exp 454)
+
+Spec: REQ-EXTRACT-027, SCENARIO-EXTRACT-052, SCENARIO-EXTRACT-053
+
+### REQ-EXTRACT-028: VPRM Rules Are Deterministic — Same Input Always Produces Same Verdict
+
+`VPRMArithmeticVerifier.verify_step(step_text)` and
+`VPRMArithmeticVerifier.detect_violations(cot_text)` shall be deterministic:
+for identical input text, the output is always identical across runs, processes,
+and Python interpreter restarts.  No random seeds, no model sampling, no I/O.
+
+**Rationale:** Determinism is the defining property that makes VPRM immune to reward
+hacking.  A verifier that produces different verdicts for the same input cannot be
+trusted as ground truth.
+
+**Implementation Status:** Done (Exp 454)
+
+Spec: REQ-EXTRACT-028, SCENARIO-EXTRACT-052
+
+### REQ-EXTRACT-029: VPRM Detects IT Model Arithmetic Errors With No LLM Call
+
+`VPRMArithmeticVerifier` shall detect arithmetic errors in IT-model-style CoT steps
+(written in natural prose) without invoking any LLM, without loading any model weights,
+and without network access.  The entire verification pipeline runs in pure Python on CPU.
+
+`VPRMArithmeticVerifier.f1_score(ground_truth, predicted)` shall compute standard binary
+F1 score, matching sklearn convention (returning 0.0 when the denominator is zero).
+
+Experiment 454 measures F1 improvement over `ArithmeticExtractor` on 20 hardcoded
+IT-style samples (10 correct, 10 with errors):
+- Baseline (ArithmeticExtractor): F1 = 0.0 (regex finds no prose patterns)
+- VPRM: F1 = 1.0 (all 10 errors detected, 0 false positives)
+- f1_improvement = 1.0, honest_verdict = 'vprm_better'
+
+**Implementation Status:** Done (Exp 454)
+
+Spec: REQ-EXTRACT-029, SCENARIO-EXTRACT-054
+
+### SCENARIO-EXTRACT-052: AdditionRule Detects '47 plus 28 equals 76' As Failed
+
+**Given** the step text "47 plus 28 equals 76"
+**When** `AdditionRule().check(step_text)` is called
+**Then** the verdict is not None
+**And** `verdict.passed == False`
+**And** `verdict.computed_value == 75.0`
+**And** `verdict.stated_value == 76.0`
+**And** `verdict.error_magnitude == 1.0`
+
+### SCENARIO-EXTRACT-053: VPRMArithmeticVerifier Detects Violations ArithmeticExtractor Misses
+
+**Given** the step text "47 plus 28 equals 76" (arithmetic error in IT prose)
+**When** `ArithmeticExtractor().extract(step_text)` is called
+**Then** it returns an empty list (prose format not matched by equation regex)
+**When** `VPRMArithmeticVerifier().detect_violations(step_text)` is called
+**Then** it returns at least one failed `RuleVerdict` with `passed=False`
+
+### SCENARIO-EXTRACT-054: VPRM F1 Score Exceeds Baseline On 20-Sample IT Corpus
+
+**Given** 20 IT-model-style CoT steps (10 correct, 10 with arithmetic errors)
+**When** Exp 454 runs ArithmeticExtractor and VPRMArithmeticVerifier on all 20
+**Then** `baseline_f1 == 0.0` (ArithmeticExtractor finds no violations in IT prose)
+**And** `vprm_f1 == 1.0` (VPRM detects all 10 errors with 0 false positives)
+**And** `f1_improvement == 1.0`
+**And** `honest_verdict == 'vprm_better'`

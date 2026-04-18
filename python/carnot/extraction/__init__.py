@@ -23,5 +23,17 @@ from carnot.extraction.vericot_validator import (
     StepVerdict,
     VeriCoTStepValidator,
 )
+from carnot.extraction.vprm_verifier import (
+    ArithmeticRule,
+    RuleVerdict,
+    VPRMArithmeticVerifier,
+)
 
-__all__ = ["FOLPremise", "StepVerdict", "VeriCoTStepValidator"]
+__all__ = [
+    "FOLPremise",
+    "StepVerdict",
+    "VeriCoTStepValidator",
+    "ArithmeticRule",
+    "RuleVerdict",
+    "VPRMArithmeticVerifier",
+]

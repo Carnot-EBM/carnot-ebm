@@ -1,0 +1,291 @@
+{
+  "experiment": 454,
+  "title": "VPRM Arithmetic Verifier",
+  "run_date": "20260418",
+  "started_at": "2026-04-18T18:04:28Z",
+  "finished_at": "2026-04-18T18:04:28Z",
+  "duration_s": 0.019,
+  "status": "success",
+  "schema": [
+    "baseline_f1",
+    "baseline_predicted",
+    "duration_s",
+    "experiment",
+    "f1_improvement",
+    "finished_at",
+    "ground_truth",
+    "honest_verdict",
+    "n_correct",
+    "n_samples",
+    "n_wrong",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title",
+    "vprm_detail",
+    "vprm_f1",
+    "vprm_fn",
+    "vprm_fp",
+    "vprm_predicted",
+    "vprm_tp"
+  ],
+  "baseline_f1": 0.0,
+  "vprm_f1": 1.0,
+  "f1_improvement": 1.0,
+  "honest_verdict": "vprm_better",
+  "n_samples": 20,
+  "n_wrong": 10,
+  "n_correct": 10,
+  "vprm_tp": 10,
+  "vprm_fp": 0,
+  "vprm_fn": 0,
+  "baseline_predicted": [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "vprm_predicted": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "ground_truth": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "vprm_detail": [
+    {
+      "sample": "we have 47 plus 28 equals 76, so the total is 76",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "addition",
+          "passed": false,
+          "computed_value": 75.0,
+          "stated_value": 76.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "5 times 6 gives us 31, so the product is 31",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "multiplication",
+          "passed": false,
+          "computed_value": 30.0,
+          "stated_value": 31.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "20% of 50 is 11, so the discount is 11",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "percentage",
+          "passed": false,
+          "computed_value": 10.0,
+          "stated_value": 11.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "100 minus 15 gives 90, so the remainder is 90",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "subtraction",
+          "passed": false,
+          "computed_value": 85.0,
+          "stated_value": 90.0,
+          "error_magnitude": 5.0
+        }
+      ]
+    },
+    {
+      "sample": "100 divided by 4 gives 26, so each share is 26",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "division",
+          "passed": false,
+          "computed_value": 25.0,
+          "stated_value": 26.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "3 times 9 equals 28, so the result is 28",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "multiplication",
+          "passed": false,
+          "computed_value": 27.0,
+          "stated_value": 28.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "15% of 200 equals 31, so the amount is 31",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "percentage",
+          "passed": false,
+          "computed_value": 30.0,
+          "stated_value": 31.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "50 plus 25 gives 74, so the sum is 74",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "addition",
+          "passed": false,
+          "computed_value": 75.0,
+          "stated_value": 74.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "subtracting 10 from 100 gives 89, so 89 remain",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "subtraction",
+          "passed": false,
+          "computed_value": 90.0,
+          "stated_value": 89.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "7 multiplied by 8 equals 57, so the answer is 57",
+      "violation_detected": true,
+      "violations": [
+        {
+          "rule_name": "multiplication",
+          "passed": false,
+          "computed_value": 56.0,
+          "stated_value": 57.0,
+          "error_magnitude": 1.0
+        }
+      ]
+    },
+    {
+      "sample": "we have 47 plus 28 equals 75, so the total is 75",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "5 times 6 gives us 30, so the product is 30",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "20% of 50 is 10, so the discount is 10",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "100 minus 15 gives 85, so the remainder is 85",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "100 divided by 4 gives 25, so each share is 25",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "3 times 9 equals 27, so the result is 27",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "15% of 200 equals 30, so the amount is 30",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "50 plus 25 gives 75, so the sum is 75",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "subtracting 10 from 100 gives 90, so 90 remain",
+      "violation_detected": false,
+      "violations": []
+    },
+    {
+      "sample": "7 multiplied by 8 equals 56, so the answer is 56",
+      "violation_detected": false,
+      "violations": []
+    }
+  ]
+}

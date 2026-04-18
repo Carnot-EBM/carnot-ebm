@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 15:30 UTC — Exp 452 RAN SUCCESSFULLY (RETRO-030 fully closed). result file confirmed at results/experiment_452_energy_matching_v2.json; energy_matching best_sampler (mean_l2=1.1749); atomic write + verify_exists() confirmed working; retro_030_resolved=True.
+**Last Updated:** 2026-04-18 18:00 UTC — Exp 454 COMPLETE. VPRM Arithmetic Verifier implemented; baseline_f1=0.0, vprm_f1=1.0, honest_verdict=vprm_better. 80 tests pass, 100% module coverage. CPU-only experiment, no GPU needed. Complements VeriCoT (Exp 453): VPRM catches arithmetic, VeriCoT catches logic.
 
 ---
 
