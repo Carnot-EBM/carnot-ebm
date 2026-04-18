@@ -2137,3 +2137,4 @@ python/ |
 | 2026-04-18 12:42 UTC | Exp 450: Gemma4 Tokenizer Fix — RETRO-028 closure  | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-18 13:47 UTC | Exp 450: Gemma4 Tokenizer Fix — RETRO-028 closure  | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-18 13:57 UTC | Exp 450: Gemma4 Tokenizer Fix — RETRO-028 closure  | OK | 81 passed in 18.74s |
+| 2026-04-18 14:13 UTC | Exp 451: Live Precision Re-Run Post-Fix — first po | OK | 81 passed in 16.92s |
