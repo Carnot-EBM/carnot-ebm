@@ -6272,6 +6272,39 @@ SCENARIO-PROBE-012
 **Then** `_checkpoint` was called at least once for every 10 completed questions
 **And** each checkpoint call received `step` equal to a multiple of `checkpoint_interval`
 
+### REQ-PROBE-008: ThinkProbeV2 Live Run Uses DeliverableGuard
+
+When Experiment 465 runs ThinkProbeV2 on live GPU, it shall use `DeliverableGuard` to
+assert that `results/experiment_465_think_probe_live.json` is present on disk as the
+FINAL assertion in `main()`.  This closes the RETRO-032/033/036 hole where the conductor
+reported success but the deliverable file was absent.
+
+Spec: REQ-PROBE-008
+SCENARIO-PROBE-013
+
+### REQ-PROBE-009: Live Think Probe Result Includes inference_mode Field
+
+The artifact written by Experiment 465 shall include the field
+`inference_mode='live_gpu'` to distinguish it from deferred/simulated runs.
+`LiveThinkProbeResult` extends `ThinkProbeV2Result` with `inference_mode: str`,
+`model_id: str`, and `gpu_used: str` fields.
+
+Spec: REQ-PROBE-009
+SCENARIO-PROBE-014
+
+### SCENARIO-PROBE-013: DeliverableGuard Raises On Missing File
+
+**Given** `DeliverableGuard('results/experiment_465_think_probe_live.json')`
+**When** `assert_written()` is called and the file does not exist
+**Then** `FileNotFoundError` is raised with a message citing RETRO-032/033/036
+
+### SCENARIO-PROBE-014: LiveThinkProbeResult is_partial When n_completed < n_total
+
+**Given** `LiveThinkProbeResult(n_completed=30, n_total=50, results=[], inference_mode='live_gpu', model_id='google/gemma-4-E4B-it', gpu_used='cuda:0')`
+**When** `is_partial` is evaluated
+**Then** `is_partial is True`
+**And** `inference_mode == 'live_gpu'`
+
 ---
 
 ## Phase 3 Seed Requirements (Exp 435a — NOT production, exploratory only)
