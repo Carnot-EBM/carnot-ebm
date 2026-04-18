@@ -3956,6 +3956,88 @@ Spec: REQ-EXTRACT-023, SCENARIO-EXTRACT-047, SCENARIO-EXTRACT-048
 **Then** `honest_verdict == "simulated_no_verdict"` (simulated mode cannot claim a win)
 **And** `schema == "carnot.extraction_comparison.v1"`
 
+### REQ-EXTRACT-024: VeriCoT FOL Premise Extraction From Natural-Language CoT Steps
+
+The system shall provide a `VeriCoTStepValidator` in
+`python/carnot/extraction/vericot_validator.py` that extracts First-Order Logic (FOL)
+premises from natural-language Chain-of-Thought reasoning steps, where:
+- Each reasoning step is parsed to extract arithmetic claims written in free-form prose
+  (for example "the total is 47 plus 28, which gives 75") rather than equation format
+- Each extracted claim is represented as a `FOLPremise(expression, source_step)` where
+  `expression` is a Z3-compatible assertion string
+- `FOLPremise.to_z3_assertion()` converts the expression into a `z3.BoolRef` or `None`
+  when the expression cannot be formalized
+- In production mode (`use_mock=False`) a small LLM (default `Qwen/Qwen3.5-0.8B`) is
+  prompted to emit Z3-compatible assertion strings; in test mode (`use_mock=True`) a
+  rule-based extractor is used without any model call
+
+**Why FOL formalization beats regex (IT model incompatibility):** Instruction-tuned models
+write arithmetic in prose like "47 plus 28, which gives 75" — regex patterns tuned for
+"47 + 28 = 75" find zero matches on these traces. Formalizing each step into FOL lets us
+delegate the prose-to-formula translation to an LLM that understands natural language, then
+hand the formalized constraints to a sound solver that cannot be fooled by surface wording.
+
+Spec: REQ-EXTRACT-024, SCENARIO-EXTRACT-049, SCENARIO-EXTRACT-050
+
+### REQ-EXTRACT-025: Z3 UNSAT As VeriCoT Violation Signal
+
+The system shall provide Z3-backed consistency checking for each extracted `FOLPremise`
+list, where:
+- `VeriCoTStepValidator.verify_step(step_text)` returns a `StepVerdict` with `status`
+  in `{'sat', 'unsat', 'unknown'}`
+- The solver adds all `FOLPremise.to_z3_assertion()` results for a step as conjunction
+- `status='unsat'` means the conjunction of premises is unsatisfiable — the step contains
+  an internal contradiction that signals an arithmetic error
+- `status='sat'` means the step is internally consistent (no violation detected)
+- `status='unknown'` is returned when no premises could be extracted from the step
+- `detect_violations(cot_text)` splits a full CoT into steps and returns the list of
+  `StepVerdict` objects whose `status='unsat'`
+
+**Why Z3 (not a neural judge):** Z3 is a sound SMT solver — it cannot hallucinate a
+"violation" on a correct constraint. A neural judge can be reward-hacked or produce
+inconsistent verdicts across runs. Z3's UNSAT guarantee is deterministic: if it says
+UNSAT, the premises are provably inconsistent given the arithmetic axioms, every time.
+
+Spec: REQ-EXTRACT-025, SCENARIO-EXTRACT-051
+
+### REQ-EXTRACT-026: VeriCoT Detection Improvement Over ArithmeticExtractor
+
+The system shall demonstrate that `VeriCoTStepValidator` detects violations in
+instruction-tuned model outputs that `ArithmeticExtractor` misses, where:
+- `ArithmeticExtractor` returns zero violations on IT-model natural-language reasoning
+  traces (no "A + B = C" patterns present)
+- `VeriCoTStepValidator(use_mock=True).detect_violations(cot_text)` returns at least
+  one violation on the same traces when they contain arithmetic errors
+- Experiment 453 runs this comparison on 20 hardcoded IT-style samples (10 correct,
+  10 with arithmetic errors) and records `baseline_detected`, `vericot_detected`,
+  `improvement_rate`, and `honest_verdict` in
+  `results/experiment_453_vericot_validator.json`
+
+Spec: REQ-EXTRACT-026, SCENARIO-EXTRACT-049, SCENARIO-EXTRACT-050, SCENARIO-EXTRACT-051
+
+### SCENARIO-EXTRACT-049: VeriCoTStepValidator Detects Error In IT Natural-Language Step
+
+**Given** the step text "the total is 47 plus 28, which gives 76"
+**When** `VeriCoTStepValidator(use_mock=True).verify_step(step_text)` is called
+**Then** `verdict.status == 'unsat'`
+**And** `len(verdict.fol_premises) >= 1`
+**And** `ArithmeticExtractor().extract(step_text)` returns an empty list
+
+### SCENARIO-EXTRACT-050: VeriCoTStepValidator Returns SAT For Correct IT Step
+
+**Given** the step text "the total is 47 plus 28, which gives 75"
+**When** `VeriCoTStepValidator(use_mock=True).verify_step(step_text)` is called
+**Then** `verdict.status == 'sat'`
+**And** `ArithmeticExtractor().extract(step_text)` returns an empty list
+
+### SCENARIO-EXTRACT-051: Exp 453 Improvement Rate Is Positive
+
+**Given** 20 IT-style reasoning samples (10 correct, 10 with arithmetic errors)
+**When** Exp 453 runs ArithmeticExtractor and VeriCoTStepValidator(use_mock=True) on all 20
+**Then** `baseline_detected == 0` (ArithmeticExtractor finds no violations)
+**And** `vericot_detected >= 1` (VeriCoT finds at least one violation)
+**And** `honest_verdict == 'vericot_better'`
+
 ### REQ-REPAIR-010: Z3-Gated Repair Pipeline
 
 The system shall support a Z3-gated repair pipeline that uses the NL2Z3Extractor as a
@@ -5860,6 +5942,9 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-EXTRACT-020 | Not Started | Implemented | Zero-FP Z3 path: only unsat raises violation; fp_rate in experiment artifact (SCENARIO-EXTRACT-039/041, Exp 357) |
 | REQ-EXTRACT-021 | Not Started | Implemented | ExtractionBenchmarkResult + run_extraction_benchmark + build_extraction_comparison_artifact; comparative benchmark with honest_verdict gate (SCENARIO-EXTRACT-042/043, Exp 358) |
 | REQ-EXTRACT-023 | Not Started | Implemented | ExtractorComparisonResult + run_extractor_comparison + build_extractor_comparison_artifact (schema=carnot.extraction_comparison.v1); honest_verdict=live_gpu_winner gated on ALL results live_gpu; 42 tests 100% coverage (SCENARIO-EXTRACT-047/048, Exp 367) |
+| REQ-EXTRACT-024 | Not Started | Not Started | VeriCoTStepValidator + FOLPremise + FOLPremise.to_z3_assertion() — FOL premise extraction from natural-language CoT steps; use_mock=True for test isolation (SCENARIO-EXTRACT-049/050, Exp 453) |
+| REQ-EXTRACT-025 | Not Started | Not Started | StepVerdict + verify_step() + detect_violations() — Z3 UNSAT as violation signal for IT model outputs (SCENARIO-EXTRACT-051, Exp 453) |
+| REQ-EXTRACT-026 | Not Started | Not Started | Exp 453 head-to-head: ArithmeticExtractor=0 violations vs VeriCoT>=1 on IT natural-language arithmetic errors (SCENARIO-EXTRACT-049/050/051, Exp 453) |
 | REQ-REPAIR-010 | Not Started | Implemented | Z3GatedRepair + Z3GatedRepairResult + pipeline integration tests (SCENARIO-REPAIR-020/021, Exp 312) |
 | REQ-REPAIR-011 | Not Started | Implemented | Z3 SAT fast-exit path tests (SCENARIO-REPAIR-022, Exp 312) |
 | REQ-BENCH-001 | Not Started | Script written (Exp 315) | Full-scale benchmark script with 95% Wilson CI; execution in Exp 316 |
