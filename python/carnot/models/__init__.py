@@ -17,6 +17,11 @@ from carnot.models.kan import (
     KANEnergyFunction,
     KANModel,
 )
+from carnot.models.kaem_energy import (
+    KAEMEnergy,
+    UnivariateKAEMLayer,
+    benchmark_kaem_vs_mcmc,
+)
 
 __all__ = [
     "BoltzmannConfig",
@@ -38,4 +43,7 @@ __all__ = [
     "KANConfig",
     "KANEnergyFunction",
     "KANModel",
+    "KAEMEnergy",
+    "UnivariateKAEMLayer",
+    "benchmark_kaem_vs_mcmc",
 ]

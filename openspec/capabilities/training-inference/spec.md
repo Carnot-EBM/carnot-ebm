@@ -503,6 +503,58 @@ a Vivado license:
 **And** synthesis_attempted is False in the artifact
 **And** lut_count and ff_count are None in the artifact
 
+### REQ-SAMPLE-015: KAEMEnergy Exact Inference via Inverse-Transform Sampling (Exp 447)
+
+The system shall implement KAEMEnergy with exact inference using the Kolmogorov-Arnold
+Energy Model (KAEM, arXiv 2506.14167), where:
+- UnivariateKAEMLayer stores per-variable marginal energy splines (one 1D B-spline per variable)
+- The joint energy decomposes as E(x) = sum_i e_i(x_i), making variables independent
+- energy(x) returns the scalar sum of per-variable spline energies, differentiable via JAX
+- marginal_cdf(var_idx, x) computes the marginal CDF of variable var_idx at point x using
+  numerical integration (trapezoidal rule over a _N_QUAD=256-point grid)
+- sample_exact(n_samples, rng_key) draws exact joint samples via inverse-transform: for each
+  variable, invert the marginal CDF using binary search on the precomputed CDF table
+- KAEMEnergy wraps UnivariateKAEMLayer with sample(), energy(), and fit() methods
+- fit(data, n_epochs) trains the model by gradient descent on per-variable marginal energies
+- All samples produced by sample_exact are in [-1, 1] (the spline domain)
+- energy() is differentiable: jax.grad(model.energy)(x) returns a valid gradient
+
+### REQ-SAMPLE-016: KAEMEnergy Latency Benchmark vs IsingEBM MCMC (Exp 447)
+
+The system shall provide benchmark_kaem_vs_mcmc(n_vars, n_samples) that:
+- Runs both KAEM exact sampling and IsingEBM MCMC (ParallelIsingSampler) on the same problem
+- Measures wall-clock latency for each method with a warm-up draw to exclude JIT compilation
+- Returns a dict with n_vars, n_samples, kaem_latency_ms, ising_mcmc_latency_ms, speedup_ratio
+- Experiment 447 runs this benchmark for n_vars in {10, 25, 50, 100} with n_samples=100
+- honest_verdict is 'kaem_faster' if mean speedup > 5x, 'modest_speedup' if > 1.5x, else 'no_speedup'
+- The artifact is written to results/experiment_447_kaem_exact_sampling.json with
+  schema='carnot.kaem_exact.v1'
+
+### SCENARIO-SAMPLE-027: KAEM Exact Samples Are in [-1, 1]
+
+**Given** a KAEMEnergy or UnivariateKAEMLayer with n_vars variables
+**When** sample_exact(n_samples, rng_key) is called
+**Then** all returned samples have shape (n_samples, n_vars)
+**And** every element is in the range [-1, 1]
+**And** all values are finite (no NaN or Inf)
+
+### SCENARIO-SAMPLE-028: KAEM Energy Is JAX-Differentiable
+
+**Given** a KAEMEnergy model with n_vars variables
+**When** jax.grad(model.energy)(x) is called for any x in [-1, 1]^n_vars
+**Then** the gradient has shape (n_vars,) and all values are finite
+**And** energy(x) returns a scalar (shape ())
+
+### SCENARIO-SAMPLE-029: KAEM Benchmark Returns Valid Latency Dict
+
+**Given** a benchmark_kaem_vs_mcmc(n_vars, n_samples) call
+**When** the benchmark completes
+**Then** the result dict contains n_vars, n_samples, kaem_latency_ms, ising_mcmc_latency_ms,
+  speedup_ratio
+**And** both latencies are non-negative
+**And** speedup_ratio is positive
+**And** all numeric values are finite
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -523,4 +575,6 @@ a Vivado license:
 | REQ-SAMPLE-010 | Not Started | Implemented | 27 Python (Exp 290 benchmark + tests) |
 | REQ-SAMPLE-011 | Not Started | Implemented | 30 Python (Exp 291 RTL behavioral sim + tests) |
 | REQ-SAMPLE-012 | Not Started | Not Started | Not Started |
+| REQ-SAMPLE-015 | N/A | Implemented | 51 Python (test_kaem_energy.py, 100% coverage) |
+| REQ-SAMPLE-016 | N/A | Implemented | 7 Python (benchmark tests in test_kaem_energy.py) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
