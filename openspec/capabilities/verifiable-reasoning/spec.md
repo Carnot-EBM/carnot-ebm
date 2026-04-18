@@ -6436,3 +6436,86 @@ Spec: REQ-EXTRACT-029, SCENARIO-EXTRACT-054
 **And** `vprm_f1 == 1.0` (VPRM detects all 10 errors with 0 false positives)
 **And** `f1_improvement == 1.0`
 **And** `honest_verdict == 'vprm_better'`
+
+### REQ-SELFLEARN-010: ConstraintAdditionFromMemory Monitors and Adds Constraints
+
+The repository shall provide `ConstraintAdditionFromMemory` in
+`python/carnot/pipeline/constraint_addition.py` with the following contract:
+
+- `observe(violation_type: str, step_text: str) -> None` — record one instance of
+  a violation type with its step text (examples capped at 5 per type).
+- `check_and_add(pipeline=None) -> list[str]` — for each violation type whose
+  observation count is >= threshold, look up the canonical constraint name from the
+  Eidoku taxonomy mapping and add it (idempotent — same constraint not added twice).
+  Returns sorted list of constraint names added in this call.
+- `get_pattern_counts() -> dict[str, int]` — snapshot of current counts per type.
+- `get_patterns() -> list[ViolationPattern]` — full list of observed violation patterns
+  sorted by type.
+- `ViolationPattern(type, count, example_steps)` — dataclass carrying one violation
+  family's evidence record.
+
+**Rationale:** Exp 134 proved that reweighting existing constraints (adaptive vs fixed)
+produces identical F1 on 500 questions.  The constraint VOCABULARY must be EXPANDED when
+a new error class is detected; reweighting the existing vocabulary amplifies noise.
+See research-program.md Goal #1.
+
+**Implementation Status:** Done (Exp 456)
+
+Spec: REQ-SELFLEARN-010, SCENARIO-SELFLEARN-010
+
+### REQ-SELFLEARN-011: Threshold Configurable via CARNOT_ADDITION_THRESHOLD
+
+The default activation threshold for `ConstraintAdditionFromMemory` is 5 observations.
+This value is configurable via the `CARNOT_ADDITION_THRESHOLD` environment variable.
+An explicit `threshold` constructor argument takes precedence over the environment
+variable.
+
+**Rationale:** Five observations means the pattern has appeared across multiple distinct
+responses, providing high confidence that the error class is genuinely recurring rather
+than a noise spike.  The env var allows researchers to tune this without code changes.
+
+**Implementation Status:** Done (Exp 456)
+
+Spec: REQ-SELFLEARN-011, SCENARIO-SELFLEARN-011
+
+### REQ-SELFLEARN-012: Session 2 FP Rate Decreases After Constraint Addition
+
+When the two-session cross-session relay is run:
+- Session 1 (no carry constraint): pipeline cannot detect carry errors → FP rate ≈ 1.0.
+- Feed Session 1 violation observations into `ConstraintAdditionFromMemory`.
+- `check_and_add()` returns `['carry_check_constraint']`.
+- Session 2 (carry constraint active): pipeline detects carry errors → FP rate ≈ 0.0.
+- `fp_rate_delta = session2_fp_rate - session1_fp_rate < 0` (improvement).
+- `honest_verdict = 'improvement'`.
+
+**Implementation Status:** Done (Exp 456)
+
+Spec: REQ-SELFLEARN-012, SCENARIO-SELFLEARN-012
+
+### SCENARIO-SELFLEARN-010: After 5 Carry Observations, check_and_add Returns Carry Constraint
+
+**Given** a `ConstraintAdditionFromMemory(threshold=5)` instance
+**And** 5 calls to `observe('carry', step_text)` have been made
+**When** `check_and_add()` is called
+**Then** the return value is `['carry_check_constraint']`
+
+### SCENARIO-SELFLEARN-011: Below Threshold Returns Empty List
+
+**Given** a `ConstraintAdditionFromMemory(threshold=5)` instance
+**And** only 4 calls to `observe('carry', step_text)` have been made
+**When** `check_and_add()` is called
+**Then** the return value is `[]`
+**And** a second call to `check_and_add()` after 5+ observations does not re-add
+  a constraint that was already added (idempotency guarantee)
+
+### SCENARIO-SELFLEARN-012: Exp 456 Two-Session Relay Achieves improvement Verdict
+
+**Given** the Exp 456 relay is run with 50 synthetic carry-error questions
+**When** Session 1 runs with no carry constraint
+**Then** `session1_fp_rate == 1.0` (all carry errors missed)
+**When** ConstraintAdditionFromMemory feeds 50 carry observations (>> threshold=5)
+**Then** `check_and_add()` returns `['carry_check_constraint']`
+**When** Session 2 runs with carry_check_constraint active
+**Then** `session2_fp_rate == 0.0` (all carry errors detected)
+**And** `fp_rate_delta == -1.0`
+**And** `honest_verdict == 'improvement'`

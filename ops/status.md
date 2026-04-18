@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 18:17 UTC — Exp 455 COMPLETE. ThinkProbeV2 60-min budget + partial verdict + incremental checkpoint implemented. RETRO-029 CLOSED. 31 tests pass, 100% targeted coverage. VPRM Arithmetic Verifier implemented; baseline_f1=0.0, vprm_f1=1.0, honest_verdict=vprm_better. 80 tests pass, 100% module coverage. CPU-only experiment, no GPU needed. Complements VeriCoT (Exp 453): VPRM catches arithmetic, VeriCoT catches logic.
+**Last Updated:** 2026-04-18 18:55 UTC — Exp 456 COMPLETE. ConstraintAdditionFromMemory Tier 1 self-learning: two-session relay proves constraint ADDITION works (Exp 134 disproved reweighting). session1_fp_rate=1.0 → carry_check_constraint added → session2_fp_rate=0.0, fp_rate_delta=-1.0, honest_verdict=improvement. 27 tests pass. REQ-SELFLEARN-010/011/012, SCENARIO-SELFLEARN-010/011/012. FR-11 Tier 1 self-learning confirmed. Previously: Exp 455 COMPLETE. ThinkProbeV2 60-min budget + partial verdict + incremental checkpoint implemented. RETRO-029 CLOSED. 31 tests pass.
 
 ---
 

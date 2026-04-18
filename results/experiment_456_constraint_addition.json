@@ -1,0 +1,110 @@
+{
+  "experiment": 456,
+  "title": "Constraint Addition from Memory: cross-session relay test",
+  "run_date": "20260418",
+  "started_at": "2026-04-18T18:54:47Z",
+  "finished_at": "2026-04-18T18:54:47Z",
+  "duration_s": 0.015,
+  "status": "success",
+  "schema": [
+    "carry_threshold",
+    "constraints_added",
+    "duration_s",
+    "env_autofix",
+    "experiment",
+    "finished_at",
+    "fp_rate_delta",
+    "honest_verdict",
+    "n_questions",
+    "pattern_counts",
+    "run_date",
+    "schema",
+    "session1_fp_rate",
+    "session1_sample",
+    "session2_fp_rate",
+    "session2_sample",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "session1_fp_rate": 1.0,
+  "session2_fp_rate": 0.0,
+  "fp_rate_delta": -1.0,
+  "constraints_added": [
+    "carry_check_constraint"
+  ],
+  "honest_verdict": "improvement",
+  "carry_threshold": 5,
+  "n_questions": 50,
+  "pattern_counts": {
+    "carry": 50
+  },
+  "session1_sample": [
+    {
+      "question": "What is 47 + 28?",
+      "response": "The answer is 74.",
+      "carry_error_detected": false,
+      "carry_error_missed": true
+    },
+    {
+      "question": "What is 89 + 56?",
+      "response": "The answer is 144.",
+      "carry_error_detected": false,
+      "carry_error_missed": true
+    },
+    {
+      "question": "What is 73 + 48?",
+      "response": "The answer is 120.",
+      "carry_error_detected": false,
+      "carry_error_missed": true
+    },
+    {
+      "question": "What is 65 + 37?",
+      "response": "The answer is 101.",
+      "carry_error_detected": false,
+      "carry_error_missed": true
+    },
+    {
+      "question": "What is 94 + 76?",
+      "response": "The answer is 169.",
+      "carry_error_detected": false,
+      "carry_error_missed": true
+    }
+  ],
+  "session2_sample": [
+    {
+      "question": "What is 47 + 28?",
+      "response": "The answer is 74.",
+      "carry_error_detected": true,
+      "carry_error_missed": false
+    },
+    {
+      "question": "What is 89 + 56?",
+      "response": "The answer is 144.",
+      "carry_error_detected": true,
+      "carry_error_missed": false
+    },
+    {
+      "question": "What is 73 + 48?",
+      "response": "The answer is 120.",
+      "carry_error_detected": true,
+      "carry_error_missed": false
+    },
+    {
+      "question": "What is 65 + 37?",
+      "response": "The answer is 101.",
+      "carry_error_detected": true,
+      "carry_error_missed": false
+    },
+    {
+      "question": "What is 94 + 76?",
+      "response": "The answer is 169.",
+      "carry_error_detected": true,
+      "carry_error_missed": false
+    }
+  ],
+  "env_autofix": {
+    "gpu_detected": true,
+    "auto_fix_applied": true
+  }
+}
