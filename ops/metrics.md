@@ -28,6 +28,16 @@
 
 ---
 
+## Session: 2026-04-18 Milestone 2026.04.35 Research Planning (v41)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-18T21:26:42Z | 2026-04-18T21:43:08Z | Research planning for milestone 2026.04.35: read 11 project files + operational retro 2026.04.34; 6 arxiv/web searches (PPSEBM, GPU-OIM, EP-OIM, GSM-Symbolic, sparsified FPGA Ising, self-adaptive Ising); appended 6 new entries to research-references.md; identified 3 biggest gaps (process debt, live benchmark scale, self-learning AUC plateau); wrote openspec/change-proposals/research-roadmap-vNEXT.md v41 (milestone 2026.04.35, "Scale the First Positive", 12 exps 462-473, 3 phases); wrote research-roadmap-next.yaml (951 lines, 12 experiments, all prompts complete) | ~60k |
+
+---
+
 ## Session: 2026-04-18 Milestone 2026.04.34 Research Planning (v40)
 
 ### Turn Log

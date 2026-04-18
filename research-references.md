@@ -566,6 +566,93 @@ should read this file when designing new milestones.
 - **When to pursue:** JEPA retrain milestone. Use LLM-JEPA encoder architecture for violation
   predictor. Compare embedding-space vs token-space verification accuracy.
 
+### PPSEBM — EBM with Progressive Parameter Selection for Continual Learning
+- **Paper:** arxiv.org/abs/2512.15658 (2025-12)
+- **What:** Combines Progressive Parameter Selection (PPS) with EBM-based generative replay to
+  prevent catastrophic forgetting in continual LLM fine-tuning. Each new task gets task-specific
+  parameters isolated from previous tasks; the EBM generates pseudo-samples from prior tasks to
+  guide the parameter selection. Uses Mistral 7B as base LLM. Outperforms state-of-the-art
+  continual learning methods on NLP benchmarks.
+- **Relevance:** Directly extends LSEBMCL (Exp 457, arXiv 2501.05495). Where LSEBMCL uses EBM
+  replay for warm-starting constraint templates, PPSEBM adds task-specific parameter isolation —
+  each constraint domain (arithmetic, code, logic) gets its own parameter partition. This is
+  Tier 2 self-learning done right: learned parameters from "arithmetic session" do not interfere
+  with learned parameters from "code session." The EBM generates synthetic prior-session violations
+  to reinforce parameter boundaries — directly applicable to Carnot's cross-session constraint memory.
+- **When to pursue:** Next milestone. Implement PPSConstraintLearner as an upgrade over the
+  LSEBMCL replayer: add task-specific parameter partitions for each constraint domain, use the
+  EBM to generate boundary violations for reinforcement.
+
+### Equilibrium Propagation on Oscillator Ising Machines
+- **Paper:** arxiv.org/abs/2510.12934 (2025-10)
+- **What:** Equilibrium Propagation (EP) is a local backprop alternative suited to physical systems
+  that naturally perform energy descent. Demonstrates EP training on Oscillator Ising Machines (OIMs)
+  achieving ~97.2% MNIST accuracy. OIMs are GHz-frequency physical systems where energy descent
+  mirrors gradient descent on loss landscapes. Robust to parameter quantization and phase noise.
+- **Relevance:** Carnot's Ising sampler (Exp 46, 61) performs energy descent — it IS an Ising
+  machine. EP training on OIMs means Carnot's Ising EBM could learn coupling updates locally
+  (no backprop) via the same physics that drives sampling. This is the Tier 1 online weight
+  update done at sampling speed. The OIM's natural energy descent IS the learning rule.
+  Also directly relevant to FPGA bring-up: FPGA Ising machines are digital OIM simulations.
+- **When to pursue:** FPGA hardware milestone. Add EP-style local coupling update rule to
+  IsingEBM (update couplings based on difference between free-phase and clamped-phase spin
+  correlations — no gradient computation needed).
+
+### How to Train an OIM using Equilibrium Propagation
+- **Paper:** arxiv.org/abs/2505.02103 (2025-05)
+- **What:** Practical guide to OIM training via EP on CMOS hardware. Achieves competitive accuracy
+  with 10-bit parameter precision and 4-bit phase detection. Moderate phase noise can enhance
+  performance (stochastic resonance). Demonstrates feasibility for physical OIM implementations.
+- **Relevance:** Companion to arXiv 2510.12934. Provides the quantization parameters for FPGA
+  implementation of EP-trained Ising machines. The 10-bit / 4-bit precision targets are directly
+  implementable in LUT-based FPGA Ising machines (like the KV260 design).
+- **When to pursue:** KV260 FPGA bitfile design. Use 10-bit coupling precision and 4-bit phase
+  measurement as the implementation target for the sparsified Ising sampler bitfile.
+
+### GPU-Accelerated Simulated Oscillator Ising/Potts Machine
+- **Paper:** arxiv.org/abs/2505.22631 (2025-05)
+- **What:** GPU simulation of Oscillator Ising/Potts machines achieving ~10,000x speedup over
+  CPU heuristics on combinatorial optimization. 1024-neuron all-to-all connected probabilistic
+  Ising accelerator. Demonstrates that GPU simulation of Ising dynamics is a practical path to
+  fast constraint sampling without custom hardware.
+- **Relevance:** Carnot has 2x RTX 3090 (48GB VRAM total) currently underutilized (GPU 1 idle
+  throughout milestone .34). GPU-accelerated Ising simulation would replace CPU-based
+  ParallelIsingSampler with a 10,000x faster GPU variant — directly on existing hardware.
+  This unblocks Tier 3 JEPA predictor (which needs fast energy evaluation for real-time gating)
+  without waiting for FPGA or TSU hardware.
+- **When to pursue:** Next milestone. Implement GPUOscillatorIsingSimulator on RTX 3090 and
+  compare vs ParallelIsingSampler (CPU). Expect significant speedup for n_vars > 100.
+
+### From Ising to Potts: Physics-Inspired Potts Machines for Low-Energy Sampling
+- **Paper:** arxiv.org/abs/2507.18379 (2025-07)
+- **What:** Extends Ising machine (binary spins) to Potts machine (multi-state spins, k states).
+  Coupled oscillator implementation achieves low-energy sampling for combinatorial optimization.
+  Multi-state spins can encode more complex constraint types than binary — e.g., arithmetic
+  carry (3 states: no-carry, carry-generate, carry-propagate) without binary expansion.
+- **Relevance:** Carnot's IsingEBM uses binary spins (σ ∈ {-1, +1}). Many constraint types
+  are naturally multi-valued: numeric ranges, categorical types, enumerated error classes.
+  A PottsEBM subclass with k ∈ {3, 4, 8} states would allow richer constraint encoding without
+  expanding the variable count (which MCMC mixing time increases with). Pairs naturally with
+  MFC sparse coupling (arXiv 2602.04200) for FPGA-efficient multi-state constraints.
+- **When to pursue:** Energy tier expansion milestone. Implement PottsEBM as a new model tier
+  between Ising (binary) and KAN (continuous). Benchmark on constraint types that benefit from
+  multi-state encoding (arithmetic carry, unit type consistency, range bounds).
+
+### GSM-Symbolic — Apple's Adversarial Math Reasoning Benchmark (THE CREDIBILITY TEST)
+- **Paper:** arxiv.org/abs/2410.05229 (2024-10, ICLR 2025)
+- **What:** Apple researchers created GSM-Symbolic by generating new instances from symbolic
+  templates (same logical structure, different numbers and irrelevant sentences). ALL tested
+  LLMs showed significant accuracy drops. o1-preview dropped from 92.7% → 77.4%. 8-shot
+  prompting didn't help. Demonstrates that LLMs pattern-match, not reason.
+- **Relevance:** THIS IS CARNOT'S THESIS EXPERIMENT. Carnot's verify-repair loop should
+  maintain accuracy on GSM-Symbolic because it verifies arithmetic via external Ising constraints,
+  not by prompting. The expected result: (1) LLM baseline drops on symbolic variants, (2)
+  Carnot's verify-repair closes the gap because Ising catches arithmetic errors regardless of
+  irrelevant context. This is the headline benchmark Carnot needs for credibility.
+- **Status:** Confirmed exists (ICLR 2025). Run against the adversarial variant GSM-Symbolic,
+  not just GSM8K. Download via: datasets.load_dataset('apple/GSM-Symbolic', 'main') or similar.
+- **When to pursue:** NEXT MILESTONE — HIGHEST PRIORITY credibility experiment.
+
 (Add more papers, arxiv links, and theoretical ideas here as they come up)
 
 ### EORM — Energy-Based Outcome Reward Model for CoT Ranking (HIGH PRIORITY)
@@ -1971,6 +2058,36 @@ thermodynamic computing Ising FPGA
   infrastructure failures, not EBM failures. The model is capable of correct answers — the
   loading path was broken. Re-run with transformers loader for honest results.
 - **When to pursue:** Next milestone (2026.04.34), Exp 450 as first priority.
+
+### Conductor Regression Prevention — Harness Hardening (HIGH PRIORITY, 2026-04-18)
+- **Directive:** Before scheduling more research-heavy milestones, the planner should
+  schedule four infrastructure experiments that harden `scripts/research_conductor.py`
+  itself. Milestone 2026.04.33 lost ~7.5 hours to a silent fail-counter bug and
+  another ~3 hours to wall-clock kills of subagents that had already produced their
+  deliverables. See the full design doc at
+  `openspec/change-proposals/conductor-regression-prevention.md`.
+- **The four experiments (name them Exp N..N+3 sequentially):**
+  1. Regression tests for `pick_next_task` (title-prefix whitespace boundary) and
+     `run_agent` (deliverable-watch kill-switch). Pins both bugs with unit tests.
+  2. Startup invariant check — at conductor boot, round-trip every task title
+     through `log_step` → `pick_next_task` key matching; `sys.exit(2)` with a clear
+     diagnostic if any task fails the round-trip. Turns a silent infinite loop into
+     a boot-time error.
+  3. Structured event log — emit `ops/conductor-events.jsonl` per state transition
+     plus a `scripts/conductor_health.py` CLI that summarises cadence, kill-reason
+     distribution, and flags any task appearing more than MAX_FAILURES_PER_TASK times.
+  4. Fake-Claude state-machine test harness — `FakeAgentBackend` injectable into
+     `run_agent`, driven by a scripted roadmap fixture that exercises every failure
+     path (timeout, max-turns, half-written deliverable, boundary title, etc.) in
+     milliseconds.
+- **Why:** The research code itself was never the bottleneck in the last milestone.
+  The orchestration harness was. Without this hardening the next long-autonomous run
+  will hit a similar class of bug and burn another multi-hour window before the user
+  notices.
+- **Rollout:** Experiments 1+2 land together in milestone 2026.04.35 (tiny, bundle
+  them). Experiment 3 lands in 2026.04.36. Experiment 4 in 2026.04.37 once there is
+  enough event-log data to write the assertions against. All four are CPU-only and
+  should NOT displace the headline verify-repair benchmarks in any given milestone.
 
 ### SOTA Local GGUF Models — Mandated Model Set (HIGHEST PRIORITY, 2026-04-18)
 - **Directive:** All new experiments that exercise an LLM (verify-repair, live benchmarks,
