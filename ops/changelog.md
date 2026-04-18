@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 452 — RETRO-030 Closure: AtomicResultWriter + Energy Matching v2)
+
+- 2026-04-18 14:19 UTC: Implemented AtomicResultWriter and Exp 452 energy matching v2. (User instruction)
+  - `python/carnot/pipeline/atomic_writer.py`: AtomicResultWriter(path) — write() does json.dumps → .tmp write → os.rename (POSIX-atomic), verify_exists() returns bool
+  - `scripts/experiment_452_energy_matching_v2.py`: re-runs Exp 446 energy matching with AtomicResultWriter, verify_exists() assertion, Phase 3 improvement tracking; schema=carnot.energy_matching.v2; retro_030_resolved=True
+  - `tests/python/test_atomic_writer.py`: 11 tests, 100% targeted coverage on atomic_writer.py
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-INFRA-031, REQ-INFRA-032, SCENARIO-INFRA-039/040
+  - Export: AtomicResultWriter added to carnot.pipeline.__init__
+  - RETRO-030 CLOSED: root cause was plain open()+json.dump() leaving no file on exception; atomic write prevents this
+
 ## 2026-04-18 (Exp 451 — Live Precision Post-Fix Benchmark: RETRO-028 Follow-Up)
 
 - 2026-04-18 14:03 UTC: Implemented Exp 451 post-fix benchmark harness. (User instruction)

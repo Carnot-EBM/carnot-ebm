@@ -5561,6 +5561,59 @@ Spec: SCENARIO-INFRA-037, SCENARIO-INFRA-038 (Exp 438)
 **Then** the returned dict maps 'ModelA' to `'auto'`
 **And** no explicit `cuda:N` assignment is made
 
+### REQ-INFRA-031: Experiment Scripts Must Use Atomic Write for Result Files
+
+All experiment scripts that write a JSON result file shall use the atomic write pattern:
+write to a `.tmp` file first, then `os.rename()` to the final path. This prevents
+partial writes from producing a zero-byte or truncated result file when an exception
+occurs mid-write (RETRO-030 root cause).
+
+**Rationale (RETRO-030):** Exp 446 exited with status 0 but produced no result file.
+The root cause was that an exception occurred after the `open()` call but before
+`json.dump()` completed, leaving no file on disk.  The watchdog could not detect this
+because the process exited cleanly.  Atomic write (write-to-tmp + rename) ensures that
+the final path either does not exist or contains a complete, valid JSON document.
+
+**Why os.rename() is atomic on POSIX:** The kernel guarantees that `rename(2)` is
+atomic — the destination path either points to the old file or the new file; there is
+no window where it is missing or partially written.  This is not guaranteed on all
+filesystems (e.g. NFS mounts without lock support), but is reliable on ext4/xfs.
+
+**Implementation Status:** Done (Exp 452)
+
+Spec: SCENARIO-INFRA-039, SCENARIO-INFRA-040 (Exp 452)
+
+### REQ-INFRA-032: Conductor Verifies Deliverable File Exists After Run
+
+After each experiment process completes, the conductor (or the experiment script
+itself) shall check that the deliverable result file exists on disk.  If the file is
+absent, the run is treated as a silent failure and the experiment is re-queued or
+flagged as BLOCKED.
+
+**Rationale (RETRO-030):** Exp 446 exited with status 0 but the watchdog reported
+success because it only checked the process exit code, not file existence.  A file-
+existence check would have surfaced the missing artifact immediately.
+
+**Implementation Status:** Done (Exp 452) — experiment script self-checks via
+`AtomicResultWriter.verify_exists()` and raises `RuntimeError` if the file is absent.
+
+Spec: SCENARIO-INFRA-039, SCENARIO-INFRA-040 (Exp 452)
+
+### SCENARIO-INFRA-039: AtomicResultWriter Writes and Verifies Result File
+
+**Given** an `AtomicResultWriter` with a valid output path
+**When** `writer.write({"key": "value"})` is called
+**Then** the file exists at the output path with valid JSON content
+**And** `writer.verify_exists()` returns `True`
+
+### SCENARIO-INFRA-040: AtomicResultWriter Does Not Corrupt Existing File on Partial Write
+
+**Given** an existing result file at the output path
+**And** an `AtomicResultWriter` targeting the same path
+**When** an exception is raised during `write()` before the rename completes
+**Then** the original file at the output path is unchanged
+**And** the `.tmp` file (if any) is the only partial artifact
+
 ---
 
 ## Operational Retrospective Requirements (REQ-RETRO-*)
