@@ -4888,6 +4888,54 @@ This prevents the GPU 1 idle waste documented in RETRO-034.
 Spec: REQ-BENCH-014, REQ-BENCH-015, REQ-BENCH-016,
       SCENARIO-BENCH-033, SCENARIO-BENCH-034, SCENARIO-BENCH-035
 
+### REQ-BENCH-017: VeriCoT + VPRM + CRANE Integrated as Primary Extraction Front-End
+
+The VerifyRepairPipeline SHALL use IntegratedExtractor (VeriCoTStepValidator +
+VPRMArithmeticVerifier) as the primary extraction front-end for all live GPU
+benchmark runs.  The integrated stack replaces the legacy ArithmeticExtractor-only
+path for IT model evaluation.
+
+**Implementation Status:** Implemented (Exp 467)
+
+### REQ-BENCH-018: 200q Benchmark Uses DualGPURunner with batch_size=8
+
+The Exp 467 benchmark SHALL run 200 GSM8K questions per model using DualGPURunner
+with batch_size=8.  Both models (Gemma4-E4B-it→cuda:0, Qwen3.5-0.8B→cuda:1) run
+in parallel, each with their own inference loop.
+
+**Implementation Status:** Implemented (Exp 467)
+
+### REQ-BENCH-019: 200q Result Includes Wilson 95% CI
+
+The Live200qResult data class SHALL compute and expose a Wilson score 95% confidence
+interval on post_accuracy.  At n=200, the CI half-width SHALL be ≤ 0.035 (3.5pp),
+giving statistically credible directional claims.
+
+**Implementation Status:** Implemented (Exp 467)
+
+### SCENARIO-BENCH-036: Live200qResult CI Half-Width ≤ 3.5pp at n=200
+
+**Given** a Live200qResult with n=200 and post_accuracy=0.05 (near boundary)
+**When** ci_95 is computed
+**Then** (ci_95[1] - ci_95[0]) / 2 <= 0.035
+
+### SCENARIO-BENCH-037: is_statistically_positive Requires Lower CI Bound > 0
+
+**Given** a Live200qResult with signed_improvement > 0
+**When** the lower bound of ci_95 > 0
+**Then** is_statistically_positive == True
+**And** when lower bound <= 0, is_statistically_positive == False
+
+### SCENARIO-BENCH-038: Exp 467 Writes Deliverable JSON and CoT Pairs
+
+**Given** Exp 467 completes (live or gpu_required)
+**When** the experiment exits
+**Then** results/experiment_467_live_200q_integrated.json exists on disk
+**And** DeliverableGuard.assert_written() passes without raising
+
+Spec: REQ-BENCH-017, REQ-BENCH-018, REQ-BENCH-019,
+      SCENARIO-BENCH-036, SCENARIO-BENCH-037, SCENARIO-BENCH-038
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
