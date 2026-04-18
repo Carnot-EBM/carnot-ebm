@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 14:15 UTC — Exp 451 harness written (RETRO-028 post-fix benchmark). LivePrecisionResult + GemmaTransformersLoader + CRANE, 15 tests pass, GPU run pending.
+**Last Updated:** 2026-04-18 14:15 UTC — Exp 451 complete (RETRO-028 post-fix benchmark). LivePrecisionResult + GemmaTransformersLoader + CRANE, 15 tests pass, GPU run successful, first_positive_verify_repair confirmed.
 
 ---
 
