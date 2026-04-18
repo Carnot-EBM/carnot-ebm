@@ -2161,3 +2161,4 @@ python/ |
 | 2026-04-18 21:12 UTC | Exp 461: Milestone 2026.04.34 Retrospective — did  | OK | 81 passed in 55.09s |
 | 2026-04-18 21:43 UTC | Plan milestone 2026.04.35 | OK | 12 tasks proposed |
 | 2026-04-18 21:48 UTC | Milestone 2026.04.35 activated | OK | 12 tasks queued |
+| 2026-04-18 22:02 UTC | Exp 462: DeliverableGuard + DualGPURunner — close  | OK | 81 passed in 25.38s |
