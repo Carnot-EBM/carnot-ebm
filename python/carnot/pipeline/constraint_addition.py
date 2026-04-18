@@ -626,6 +626,257 @@ class ConstraintAdditionRegistry:
 
 
 # ---------------------------------------------------------------------------
+# ViolationPattern + ConstraintAdditionFromMemory (Exp 456, REQ-SELFLEARN-010)
+# ---------------------------------------------------------------------------
+
+import os as _os
+
+
+@dataclass
+class ViolationPattern:
+    """A recurring violation type observed in pipeline responses.
+
+    **Why this exists (research context):**
+        Exp 134 proved that REWEIGHTING existing constraints is ineffective —
+        fixed and adaptive strategies performed identically on 500 arithmetic
+        questions.  The correct approach is ADDITION: when a violation type
+        appears repeatedly, generate a new constraint that specifically checks
+        for that error class.
+
+        This dataclass is the unit of evidence fed to
+        ``ConstraintAdditionFromMemory``.  Each ``ViolationPattern`` records
+        HOW MANY times a specific violation type was seen and a sample of the
+        step texts that exhibited it.
+
+    Fields
+    ------
+    type
+        Short identifier for the violation class (e.g. ``'carry'``, ``'sign'``,
+        ``'unit'``, ``'comparison'``).
+    count
+        Total number of observations accumulated for this violation type.
+    example_steps
+        Up to 5 representative step texts that triggered this violation.  Used
+        for diagnostics and offline replay.
+
+    Spec: REQ-SELFLEARN-010, SCENARIO-SELFLEARN-010
+    """
+
+    type: str
+    count: int
+    example_steps: list[str]
+
+
+# Mapping from violation type prefix → canonical constraint name.
+# WHY a fixed mapping rather than a dynamic one: the Eidoku taxonomy (arXiv
+# 2512.20664) defines four arithmetic error families (carry, sign, unit,
+# comparison_direction).  A fixed mapping makes the contract explicit and
+# testable; dynamic naming would require model-specific heuristics.
+_VIOLATION_TYPE_TO_CONSTRAINT: dict[str, str] = {
+    "carry": "carry_check_constraint",
+    "sign": "sign_check_constraint",
+    "unit": "unit_check_constraint",
+    "comparison": "comparison_direction_constraint",
+}
+
+# How many examples to retain per violation type.  Capped at 5 to keep memory
+# overhead bounded even when an experiment processes thousands of steps.
+_MAX_EXAMPLES: int = 5
+
+# Environment variable that overrides the default threshold.
+# WHY 5 as the default: balances early detection (fewer examples needed to
+# signal a pattern) against noise (avoids adding constraints from one-off
+# flukes).  See research-program.md Goal #1 for the rationale.
+_THRESHOLD_ENV_VAR = "CARNOT_ADDITION_THRESHOLD"
+_DEFAULT_THRESHOLD = 5
+
+
+class ConstraintAdditionFromMemory:
+    """Monitor observed violations and add new ConstraintTerms when a pattern matures.
+
+    **Researcher summary (REQ-SELFLEARN-010, research-program.md Goal #1):**
+        Exp 134 demonstrated that reweighting existing constraints does NOT
+        improve accuracy — the fixed and adaptive strategies produced identical
+        F1 scores across 500 arithmetic questions.  The root cause: if the
+        pipeline's constraint vocabulary does not COVER the real error type,
+        upweighting existing constraints just amplifies irrelevant noise.
+
+        The correct fix is ADDITION.  When enough observations of the same
+        violation type accumulate in CaseMemory, this class generates a new
+        named constraint and (optionally) registers it with the active pipeline.
+        Session 2 of the cross-session relay then operates with the new
+        constraint active, reducing the false-positive rate for that error
+        class.
+
+    **Why threshold=5 (REQ-SELFLEARN-011):**
+        Five observations means the pattern has appeared across multiple
+        distinct responses.  One or two could be noise; five provides high
+        confidence that the error class is genuinely recurring.  The threshold
+        is configurable via ``CARNOT_ADDITION_THRESHOLD`` so researchers can
+        tune it without code changes.
+
+    **Cross-session relay design (REQ-SELFLEARN-012):**
+        Session 1 runs without the constraint and records violation observations.
+        After Session 1, ``check_and_add()`` is called; any matured patterns
+        produce new constraint names.  Session 2 then activates those
+        constraints.  The FP rate (fraction of carry errors missed) should
+        decrease between sessions.
+
+    Parameters
+    ----------
+    threshold
+        Minimum observation count before a violation pattern qualifies for
+        constraint addition.  Reads ``CARNOT_ADDITION_THRESHOLD`` from the
+        environment; falls back to 5.
+    pipeline
+        Optional ``VerifyRepairPipeline``-like object.  When provided,
+        ``check_and_add()`` calls ``pipeline.template_library.observe_pattern()``
+        so the new constraint is immediately active in the pipeline.  When
+        ``None``, the method still returns the list of constraint names but
+        does not mutate any pipeline state.
+
+    Spec: REQ-SELFLEARN-010, REQ-SELFLEARN-011, REQ-SELFLEARN-012,
+    SCENARIO-SELFLEARN-010, SCENARIO-SELFLEARN-011, SCENARIO-SELFLEARN-012
+    """
+
+    def __init__(
+        self,
+        threshold: int | None = None,
+        pipeline: Any = None,
+    ) -> None:
+        if threshold is None:
+            env_val = _os.environ.get(_THRESHOLD_ENV_VAR)
+            threshold = int(env_val) if env_val is not None else _DEFAULT_THRESHOLD
+        self._threshold: int = threshold
+        self._pipeline = pipeline
+        # violation_type → observation count
+        self._pattern_counts: dict[str, int] = {}
+        # violation_type → example step texts (capped at _MAX_EXAMPLES)
+        self._examples: dict[str, list[str]] = {}
+        # set of constraint names already added (ensures idempotency)
+        self._added: set[str] = set()
+
+    # ------------------------------------------------------------------
+    # Observation
+    # ------------------------------------------------------------------
+
+    def observe(self, violation_type: str, step_text: str) -> None:
+        """Record a single violation observation.
+
+        Accumulates the count for *violation_type* and stores *step_text* as
+        an example (up to ``_MAX_EXAMPLES`` per type).
+
+        Parameters
+        ----------
+        violation_type
+            The primary error class (e.g. ``'carry'``, ``'sign'``,
+            ``'unit'``, ``'comparison'``).  Should be the prefix before any
+            colon separator in a full violation label.
+        step_text
+            The response or reasoning step that exhibited the violation.
+
+        Spec: REQ-SELFLEARN-010, SCENARIO-SELFLEARN-010
+        """
+        self._pattern_counts[violation_type] = self._pattern_counts.get(violation_type, 0) + 1
+        examples = self._examples.setdefault(violation_type, [])
+        if len(examples) < _MAX_EXAMPLES:
+            examples.append(step_text)
+
+    # ------------------------------------------------------------------
+    # Constraint addition
+    # ------------------------------------------------------------------
+
+    def check_and_add(self, pipeline: Any = None) -> list[str]:
+        """Add new constraints for any violation type that has met the threshold.
+
+        Iterates over all observed violation types.  For each type whose
+        observation count is >= ``self._threshold``, looks up the canonical
+        constraint name from ``_VIOLATION_TYPE_TO_CONSTRAINT``.  If a match
+        is found AND the constraint has not already been added, the constraint
+        name is emitted and (if a pipeline with a ``template_library`` is
+        available) the corresponding pattern is registered with the library.
+
+        Idempotent: calling this method multiple times will not add the same
+        constraint twice.
+
+        Parameters
+        ----------
+        pipeline
+            Optional pipeline override; takes precedence over the pipeline
+            passed to the constructor.  Accepts any object with a
+            ``template_library`` attribute that has an ``observe_pattern``
+            method.
+
+        Returns
+        -------
+        list[str]
+            Names of constraints added in THIS call (not previously added).
+            Returns ``[]`` when no violation type has crossed the threshold or
+            all qualifying constraints were already added.
+
+        Spec: REQ-SELFLEARN-010, REQ-SELFLEARN-011, REQ-SELFLEARN-012,
+        SCENARIO-SELFLEARN-010, SCENARIO-SELFLEARN-011
+        """
+        active_pipeline = pipeline if pipeline is not None else self._pipeline
+        added_this_call: list[str] = []
+
+        for vtype, count in self._pattern_counts.items():
+            if count < self._threshold:
+                continue
+            constraint_name = _VIOLATION_TYPE_TO_CONSTRAINT.get(vtype)
+            if constraint_name is None:
+                continue
+            if constraint_name in self._added:
+                continue
+            self._added.add(constraint_name)
+            added_this_call.append(constraint_name)
+            # Notify the pipeline's template_library if available.
+            # WHY: the ConstraintTemplateLibrary.observe_pattern() method
+            # promotes a pattern_key from "observed" to "active" once the
+            # cumulative count crosses min_frequency.  Calling it here bridges
+            # the gap between cross-session memory and the live pipeline.
+            if active_pipeline is not None and hasattr(active_pipeline, "template_library"):
+                lib = active_pipeline.template_library
+                if lib is not None and hasattr(lib, "observe_pattern"):
+                    # Force activation by setting count above min_frequency.
+                    # WHY _threshold: we use our own threshold as a proxy for
+                    # the library's min_frequency so the constraint fires on
+                    # the very next pipeline call.
+                    lib.observe_pattern(vtype, "exp456_session2", count=self._threshold)
+
+        return sorted(added_this_call)
+
+    # ------------------------------------------------------------------
+    # Inspection
+    # ------------------------------------------------------------------
+
+    def get_pattern_counts(self) -> dict[str, int]:
+        """Return a snapshot of current observation counts per violation type.
+
+        Returns a copy so callers cannot mutate internal state.
+
+        Spec: REQ-SELFLEARN-010
+        """
+        return dict(self._pattern_counts)
+
+    def get_patterns(self) -> list[ViolationPattern]:
+        """Return a list of ViolationPattern objects for all observed types.
+
+        Useful for serialization and offline analysis.
+
+        Spec: REQ-SELFLEARN-010
+        """
+        return [
+            ViolationPattern(
+                type=vtype,
+                count=self._pattern_counts[vtype],
+                example_steps=list(self._examples.get(vtype, [])),
+            )
+            for vtype in sorted(self._pattern_counts)
+        ]
+
+
+# ---------------------------------------------------------------------------
 # Public API
 # ---------------------------------------------------------------------------
 
@@ -637,4 +888,6 @@ __all__ = [
     "ConstraintAdditionResult",
     "ConstraintAdditionCompiler",
     "ConstraintAdditionRegistry",
+    "ViolationPattern",
+    "ConstraintAdditionFromMemory",
 ]

@@ -277,6 +277,10 @@ from carnot.pipeline.cross_session_relay import (  # noqa: E402
     compute_relay_verdict,
     simulate_session,
 )
+from carnot.pipeline.constraint_addition import (  # noqa: E402
+    ConstraintAdditionFromMemory,
+    ViolationPattern,
+)
 from carnot.pipeline.boltzmann_repair import (  # noqa: E402
     BoltzmannRepairBridge,
     LinearSpinAdapter,
@@ -494,4 +498,6 @@ __all__ = [
     "AtomicResultWriter",
     "ThinkProbeV2",
     "ThinkProbeV2Result",
+    "ViolationPattern",
+    "ConstraintAdditionFromMemory",
 ]
