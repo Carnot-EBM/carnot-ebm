@@ -3300,6 +3300,27 @@ accuracy across batches.
 
 Spec: REQ-LEARN-027, SCENARIO-LEARN-047
 
+### REQ-LEARN-037: Cross-Session Tier 2 Relay
+
+**Purpose:** Validate that constraint templates learned in Session N persist to Session N+1 and reduce false positive (FP) rate on the same error domain. Within-session learning is washed out at process restart; persistent memory accumulates signal across queries and sessions.
+
+**Requirements:**
+- REQ-LEARN-037-1: `CrossSessionResult(session_id: int, n_questions: int, fp_rate: float, n_templates_active: int, n_templates_loaded_from_prior: int)` SHALL be a dataclass capturing per-session relay metrics.
+- REQ-LEARN-037-2: `simulate_session(session_id: int, questions: list, prior_memory_path: str | None, memory_dir: str) -> CrossSessionResult` SHALL: (a) load the prior session's `ConstraintTemplateLibrary` from `SessionMemory` when `prior_memory_path` is not None; (b) run `VerifyRepairPipeline` on questions with the loaded template library; (c) record violations and FP rate; (d) save the updated `ConstraintTemplateLibrary` to `SessionMemory` for this session; (e) return `CrossSessionResult`.
+- REQ-LEARN-037-3: `compute_relay_verdict(sessions: list[CrossSessionResult]) -> str` SHALL return `"cross_session_improvement"` when `sessions[1].fp_rate < sessions[0].fp_rate`, `"no_improvement"` when `sessions[1].fp_rate >= sessions[0].fp_rate`, and `"insufficient_data"` when `len(sessions) < 2`.
+
+Spec: REQ-LEARN-037, SCENARIO-LEARN-066, SCENARIO-LEARN-067, SCENARIO-LEARN-068
+
+### REQ-LEARN-038: Session Memory Template Round-Trip
+
+**Purpose:** Guarantee that `SessionMemory.save()` / `SessionMemory.load()` preserves the full `ConstraintTemplateLibrary` observation state without loss.
+
+**Requirements:**
+- REQ-LEARN-038-1: After `SessionMemory.save(case_memory, template_library, fp_tracker)` and `SessionMemory.load()`, the loaded `ConstraintTemplateLibrary` SHALL have identical `_observations` to the saved library.
+- REQ-LEARN-038-2: After `register_builtin_templates()` is called on the loaded library, all four built-in templates SHALL be active for models that crossed their `min_frequency` threshold in the saved state.
+
+Spec: REQ-LEARN-038, SCENARIO-LEARN-067
+
 ### SCENARIO-LEARN-045: SelfLearningRelay Accumulates Tier 1 Updates Per Question
 
 **Given** a `SelfLearningRelay` with a stub `ThreeTierPipeline`
@@ -3365,6 +3386,33 @@ Spec: REQ-LEARN-027, SCENARIO-LEARN-047
 **And** `eorm_source` is one of `["exp371_real", "exp359_real", "synthetic_fallback"]`
 
 Spec: REQ-LEARN-026, REQ-LEARN-027, SCENARIO-LEARN-050
+
+### SCENARIO-LEARN-066: Session 2 Loads Session 1 Templates
+
+**Given** `simulate_session(session_id=0, questions=q0, prior_memory_path=None, memory_dir=d)` has completed
+**And** `simulate_session(session_id=1, questions=q1, prior_memory_path=d/session_0, memory_dir=d)` is called
+**When** the session completes
+**Then** `CrossSessionResult.n_templates_loaded_from_prior > 0`
+**And** the template library for session 1 started with the observation counts from session 0
+
+Spec: REQ-LEARN-037, SCENARIO-LEARN-066
+
+### SCENARIO-LEARN-067: SessionMemory Round-Trip Preserves Template Library
+
+**Given** a `ConstraintTemplateLibrary` with observations for `("carry_check", "test-model")` >= `min_frequency`
+**When** `SessionMemory.save()` and then `SessionMemory.load()` are called
+**Then** the loaded library has identical observation counts to the original
+**And** after `register_builtin_templates()`, `get_active_templates("test-model")` returns the `carry_check` template
+
+Spec: REQ-LEARN-038, SCENARIO-LEARN-067
+
+### SCENARIO-LEARN-068: compute_relay_verdict Returns insufficient_data With < 2 Sessions
+
+**Given** `compute_relay_verdict([])` or `compute_relay_verdict([single_session])` is called
+**When** the function evaluates the list length
+**Then** it returns `"insufficient_data"`
+
+Spec: REQ-LEARN-037, SCENARIO-LEARN-068
 
 ### SCENARIO-JEPA-010: Gate Below Threshold Skips Ising
 

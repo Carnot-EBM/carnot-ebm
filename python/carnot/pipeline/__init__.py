@@ -272,6 +272,11 @@ from carnot.pipeline.think_probe import (  # noqa: E402
     build_think_probe_prompt,
     parse_think_probe_output,
 )
+from carnot.pipeline.cross_session_relay import (  # noqa: E402
+    CrossSessionResult,
+    compute_relay_verdict,
+    simulate_session,
+)
 from carnot.pipeline.boltzmann_repair import (  # noqa: E402
     BoltzmannRepairBridge,
     LinearSpinAdapter,
@@ -479,4 +484,7 @@ __all__ = [
     "BoltzmannRepairBridge",
     "LinearSpinAdapter",
     "RepairDirection",
+    "CrossSessionResult",
+    "simulate_session",
+    "compute_relay_verdict",
 ]
