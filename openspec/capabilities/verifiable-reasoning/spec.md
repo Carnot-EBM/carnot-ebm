@@ -6779,3 +6779,78 @@ Spec: REQ-HARDWARE-012, SCENARIO-HARDWARE-012
 **When** benchmark is called and completes
 **Then** the artifact field `honest_verdict` is `'cpu_baseline_only'`
 **And** `npu_executed` is False in the artifact
+
+
+---
+
+## Infrastructure Hardening (Exp 462)
+
+### REQ-INFRA-033: ExperimentTemplate.assert_deliverable_written() Raises on Missing File
+
+`ExperimentTemplate.assert_deliverable_written()` shall raise `FileNotFoundError`
+(with a message citing RETRO-032/033/036) if the deliverable JSON path passed to
+`ExperimentTemplate.__init__()` does not exist on disk when the method is called.
+The method shall be called as the FINAL line of every experiment's `main()`.
+
+**Why this matters (RETRO-032, RETRO-033, RETRO-036):** Three consecutive milestones
+ended with missing result JSON files.  `build_result()` builds a dict in memory but
+does NOT write it.  If the write was skipped, the file was silently absent and the
+retrospective question could not be answered.  This assertion turns a silent omission
+into an observable crash.
+
+**Implementation Status:** Done (Exp 462)
+
+Spec: REQ-INFRA-033, SCENARIO-INFRA-041
+
+### REQ-INFRA-034: ExperimentTemplate.setup_gpu() Uses DualGPUAssigner for Dual-Model Experiments
+
+`ExperimentTemplate.setup_gpu()` shall call `DualGPUAssigner(model_specs, n_gpus).assign()`
+when `len(model_specs) >= 2` and `CARNOT_FORCE_LIVE=1` and `n_gpus >= 2`.
+The assigner shall inject `device_map={'': 'cuda:N'}` into each spec so that
+model N runs exclusively on GPU N with no cross-device layer offloading.
+
+**Why this matters (RETRO-034, milestone .34):** GPU 1 (RTX 3090, 24 GB VRAM) was
+idle the ENTIRE milestone .34.  DualGPURunner existed but was not wired in.
+Every dual-model experiment ran sequentially on GPU 0 — 48 GB wasted.
+
+**Implementation Status:** Done (Exp 462)
+
+Spec: REQ-INFRA-034, SCENARIO-INFRA-042
+
+### REQ-INFRA-035: DocOnlyClassifier Skips Full Test Suite for Doc-Only Diffs
+
+`DocOnlyClassifier.is_doc_only_diff(changed_files)` shall return `True` if and
+only if every file in `changed_files` has a `.md` extension or lives under
+`docs/`, `ops/`, `_bmad/`, or `openspec/`.  CI pipelines may use this to skip
+the full Rust+Python suite and run only ruff+mypy for doc-only commits.
+
+**Why this matters:** The full 3900+ test suite takes 60-90s.  At 80+ doc-only
+commits per milestone, this wastes 80-120 minutes.  Doc-only classification
+recovers that time for actual research runs.
+
+**Implementation Status:** Done (Exp 462)
+
+Spec: REQ-INFRA-035, SCENARIO-INFRA-043
+
+### SCENARIO-INFRA-041: assert_written() Raises When Deliverable Is Absent
+
+**Given** an `ExperimentTemplate` with deliverable path `results/experiment_999.json`
+**When** `assert_deliverable_written()` is called before the file is written
+**Then** `FileNotFoundError` is raised with a message containing the file path and RETRO context
+
+### SCENARIO-INFRA-042: DualGPUAssigner Assigns cuda:0 and cuda:1 in Live Mode
+
+**Given** `DualGPUAssigner` with 2 model specs, n_gpus=2, CARNOT_FORCE_LIVE=1
+**When** `assign()` is called
+**Then** specs[0]['device_map'] == {'': 'cuda:0'} and specs[1]['device_map'] == {'': 'cuda:1'}
+**And** `is_dual_gpu_eligible()` returns False when CARNOT_FORCE_LIVE is unset
+
+### SCENARIO-INFRA-043: DocOnlyClassifier Correctly Classifies Diffs
+
+**Given** changed_files = ['ops/status.md', '_bmad/prd.md']
+**When** `is_doc_only_diff()` is called
+**Then** returns True
+
+**Given** changed_files = ['python/carnot/models/ising.py']
+**When** `is_doc_only_diff()` is called
+**Then** returns False

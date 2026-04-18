@@ -293,6 +293,11 @@ from carnot.pipeline.lsebm_replayer import (  # noqa: E402
     LSEBMConstraintReplayer,
     ViolationDistribution,
 )
+from carnot.pipeline.deliverable_guard import (  # noqa: E402
+    DeliverableGuard,
+    DocOnlyClassifier,
+)
+from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner  # noqa: E402
 
 __all__ = [
     "AgentStep",
@@ -506,4 +511,7 @@ __all__ = [
     "ConstraintAdditionFromMemory",
     "LSEBMConstraintReplayer",
     "ViolationDistribution",
+    "DeliverableGuard",
+    "DocOnlyClassifier",
+    "DualGPUAssigner",
 ]

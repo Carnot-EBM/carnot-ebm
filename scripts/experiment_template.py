@@ -84,6 +84,9 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Callable
 
+from carnot.pipeline.deliverable_guard import DeliverableGuard
+from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner
+
 _log = logging.getLogger(__name__)
 
 
@@ -241,6 +244,11 @@ class ExperimentTemplate:
         )
         self._output_path: Path = self._repo_root / deliverable
 
+        # REQ-INFRA-033: guard that raises FileNotFoundError if the deliverable
+        # is absent when assert_deliverable_written() is called at end of main().
+        # RETRO-032/033/036: three milestones lost to silently missing result JSONs.
+        self._guard = DeliverableGuard(str(self._output_path))
+
     # ------------------------------------------------------------------
     # setup()
     # ------------------------------------------------------------------
@@ -262,6 +270,28 @@ class ExperimentTemplate:
         # Try to resume from checkpoint
         self.checkpoint = self.checkpoint_resume()
         self._t0 = time.perf_counter()  # reset timer after setup I/O
+
+    # ------------------------------------------------------------------
+    # assert_deliverable_written()
+    # ------------------------------------------------------------------
+
+    def assert_deliverable_written(self) -> None:
+        """Raise FileNotFoundError if the deliverable JSON was not written to disk.
+
+        Call this as the FINAL line of every experiment's main() function.
+        It delegates to DeliverableGuard.assert_written() which checks that
+        self._output_path exists on disk.
+
+        Why this is the FINAL line (not just somewhere in main):
+            By the time we reach the end of main(), every execution path —
+            success, blocked, partial, error — should have produced the
+            deliverable.  If the file is absent at that point, something
+            silently failed upstream.  A loud FileNotFoundError here is
+            observable by the conductor and prevents false "success" signals.
+
+        Spec: REQ-INFRA-033, SCENARIO-INFRA-041
+        """
+        self._guard.assert_written()
 
     # ------------------------------------------------------------------
     # setup_gpu()
@@ -428,6 +458,30 @@ class ExperimentTemplate:
                 )
 
                 prewarm_fn = _real_prewarm
+
+        # --- Step 4b: REQ-INFRA-034: DualGPUAssigner — wire GPU 1 into dual-model experiments ---
+        # RETRO-034 (milestone .34): GPU 1 was idle the ENTIRE milestone because
+        # DualGPURunner existed but was never called.  DualGPUAssigner is the missing
+        # glue: it checks eligibility and injects device_map={'': 'cuda:N'} per model.
+        # This runs BEFORE the existing RETRO-004/025 auto-assignment so both layers
+        # are applied; DualGPUAssigner's device_map may be overridden below by the
+        # zombie-fix strategy, which is correct (the zombie fix is more specific).
+        try:
+            from carnot.pipeline.dual_gpu_monitor import DualGPUMonitor  # noqa: PLC0415
+
+            _early_monitor = DualGPUMonitor()
+            _n_gpus_for_assigner = _early_monitor._get_gpu_count() if not cpu_fallback else 0
+        except Exception:
+            _n_gpus_for_assigner = 0 if cpu_fallback else 1
+
+        _assigner = DualGPUAssigner(model_specs, _n_gpus_for_assigner)
+        if _assigner.is_dual_gpu_eligible():
+            _assigner.assign()
+            _log.info(
+                "REQ-INFRA-034: DualGPUAssigner applied — %d models assigned to %d GPUs",
+                len(model_specs),
+                _n_gpus_for_assigner,
+            )
 
         # --- Step 5: REQ-INFRA-007 / REQ-INFRA-029: DualGPU auto-assignment (RETRO-004/025) ---
         # When running live with >=2 models, assign each model to its own GPU index
