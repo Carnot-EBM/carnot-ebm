@@ -6519,3 +6519,88 @@ Spec: REQ-SELFLEARN-012, SCENARIO-SELFLEARN-012
 **Then** `session2_fp_rate == 0.0` (all carry errors detected)
 **And** `fp_rate_delta == -1.0`
 **And** `honest_verdict == 'improvement'`
+
+### REQ-SELFLEARN-013: LSEBMConstraintReplayer Trains an EBM on Session 1 Violation Distribution
+
+The `LSEBMConstraintReplayer` shall:
+- Accept a list of violation type strings from Session 1.
+- Compute a frequency distribution over violation types.
+- Train a small Ising EBM on the violation distribution using contrastive divergence (n_iter steps).
+- Store the trained EBM for later sampling.
+- Be pure Python + JAX, CPU-only, completing in < 5 seconds for ≤ 100 iterations.
+
+**Why LSEBM replay (arXiv 2501.05495):**
+    LSEBM-CL (Lifelong Sequence EBM with Continual Learning) prevents catastrophic
+    forgetting by training a generative EBM on task data and replaying synthetic samples
+    when starting a new task.  Here the "tasks" are sessions and the "data" are violation
+    type distributions.  Without replay, Session 2 starts cold: no prior knowledge of
+    which error types are common.  With replay, Session 2 knows 'carry errors are likely'
+    before any real questions arrive.
+
+**Implementation Status:** Done (Exp 457)
+
+Spec: REQ-SELFLEARN-013, SCENARIO-SELFLEARN-013
+
+### REQ-SELFLEARN-014: LSEBMConstraintReplayer Generates N Synthetic Violations to Warm-Start Session 2
+
+The `LSEBMConstraintReplayer.generate_replay(n)` shall:
+- Sample N synthetic violation type strings from the trained EBM.
+- Return a list of violation type strings drawn from the learned distribution.
+- Guarantee that violation types returned are from the vocabulary seen during `fit()`.
+- The `warm_start(memory: SessionMemory)` method shall inject the synthetic violations
+  into the session memory's template observation counts and return the count of templates
+  warm-started (i.e., number of distinct violation types injected).
+
+**How warm-start differs from Exp 448's template loading:**
+    Exp 448 directly loaded Session 1 templates into Session 2 — exact replay of stored
+    state.  LSEBMCL replay uses the EBM as a generative model to produce NEW synthetic
+    instances drawn from the learned distribution.  This means Session 2's warm-start
+    is probabilistic (not deterministic) and does not require storing the full template
+    library — only the compact EBM parameters.  The EBM also generalises: it can
+    interpolate between observed violation types, potentially discovering boundary regions
+    Exp 448's exact-copy approach could not reach.
+
+**Implementation Status:** Done (Exp 457)
+
+Spec: REQ-SELFLEARN-014, SCENARIO-SELFLEARN-014
+
+### REQ-SELFLEARN-015: LSEBMCL Replay Improves Session 2 FP Rate vs Exp 448 Baseline
+
+In the Exp 457 two-session relay:
+- Session 1 baseline FP rate shall be recorded (equivalent to Exp 448 Session 0).
+- After fitting `LSEBMConstraintReplayer` on Session 1 violations and calling `warm_start`,
+  Session 2 shall be run with the warm-started template library.
+- The `lsebmcl_fp_rate` shall be compared to the `exp448_fp_rate` baseline.
+- The artifact shall report `honest_verdict = 'lsebmcl_better'` if `lsebmcl_fp_rate < exp448_fp_rate`,
+  otherwise `'no_improvement'`.
+- The constraint addition FP rate from Exp 456 shall also be recorded for three-way comparison.
+
+**Implementation Status:** Done (Exp 457)
+
+Spec: REQ-SELFLEARN-015, SCENARIO-SELFLEARN-015
+
+### SCENARIO-SELFLEARN-013: fit + generate Produces Violation Types Seen in Training
+
+**Given** a `LSEBMConstraintReplayer(n_replay=20, ebm_n_iter=100)` instance
+**And** `fit(['carry', 'carry', 'carry', 'sign', 'carry'])` has been called
+**When** `generate_replay(10)` is called
+**Then** all returned strings are in `{'carry', 'sign'}`
+**And** no string is returned that was not seen during fit
+
+### SCENARIO-SELFLEARN-014: warm_start Returns Count > 0 After Fitting on Carry-Error Session
+
+**Given** a `LSEBMConstraintReplayer` fitted on a list of 50 carry-error violations
+**And** a `SessionMemory` with no prior state
+**When** `warm_start(memory)` is called
+**Then** the return value is > 0
+**And** `generate_replay(20)` returns 20 violation type strings
+
+### SCENARIO-SELFLEARN-015: Exp 457 Three-Way Comparison Produces honest_verdict
+
+**Given** the Exp 457 relay is run with 50 synthetic carry-error questions
+**When** Session 1 produces violations
+**And** LSEBMConstraintReplayer is fit on those violations
+**And** warm_start is called before Session 2
+**When** Session 2 runs
+**Then** the artifact contains `exp448_fp_rate`, `lsebmcl_fp_rate`, `constraint_add_fp_rate`
+**And** `honest_verdict` is one of `'lsebmcl_better'` or `'no_improvement'`
