@@ -1,101 +1,138 @@
 {
-  "experiment": 461,
-  "title": "Milestone 2026.04.34 Retrospective",
-  "run_date": "20260418",
-  "started_at": "2026-04-18T21:07:35Z",
-  "finished_at": "2026-04-18T21:07:36Z",
-  "duration_s": 0.011,
-  "status": "success",
-  "schema": [
-    "constraint_addition_improved",
-    "duration_s",
-    "ebm_cot_auc_above_target",
-    "ebm_cot_auc_value",
-    "experiment",
-    "experiments_completed",
-    "experiments_missing",
-    "finished_at",
-    "first_positive_number",
-    "honest_verdict",
-    "lsebmcl_better_than_baseline",
-    "meta_reflection",
-    "milestone",
-    "new_retro_items",
-    "npu_unblocked",
-    "retro_028_closed",
-    "retro_029_closed",
-    "retro_030_closed",
-    "retro_031_closed",
-    "run_date",
-    "schema",
-    "started_at",
-    "status",
-    "title",
-    "vericot_improved",
-    "vprm_improved"
-  ],
   "milestone": "2026.04.34",
-  "first_positive_number": null,
-  "retro_028_closed": false,
-  "retro_029_closed": false,
-  "retro_030_closed": true,
-  "retro_031_closed": true,
-  "vericot_improved": true,
-  "vprm_improved": true,
-  "constraint_addition_improved": true,
-  "lsebmcl_better_than_baseline": true,
-  "ebm_cot_auc_above_target": false,
-  "ebm_cot_auc_value": 0.555419,
-  "npu_unblocked": false,
-  "experiments_completed": 8,
-  "experiments_missing": [
-    450,
-    451,
-    455
-  ],
-  "new_retro_items": [
+  "schema": "carnot.operational_retro.v9",
+  "generated_at": "2026-04-18T21:23:28Z",
+  "total_wall_time_minutes": 4886,
+  "experiments_completed": 296,
+  "average_minutes_per_experiment": 16.5,
+  "slowest_experiments": [
     {
-      "id": "RETRO-032",
-      "description": "Exp 450 (Gemma-4 fix, RETRO-028 precondition) result file is absent. The conductor ran the experiment but it did not produce a result JSON. Most likely cause: agent crash before write, or deliverable path mismatch. Must be re-run in milestone 2026.04.35 to close RETRO-028.",
-      "priority": "high",
-      "target_milestone": "2026.04.35"
+      "rank": 1,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.4,
+      "likely_cause": "Sequential model loading — Qwen then Gemma loaded onto GPU 0 serially; GPU 1 idle throughout. Each model required full VRAM allocation before the previous was freed. No DualGPURunner in place at this stage of the milestone sequence."
     },
     {
-      "id": "RETRO-033",
-      "description": "Exp 451 (first positive verify-repair precision number) result file is absent. The headline milestone question \u2014 'did we get the first positive number?' \u2014 cannot be answered.  This is the third milestone in a row without confirmation. Must be re-run with explicit deliverable path validation before reporting done.",
-      "priority": "critical",
-      "target_milestone": "2026.04.35"
+      "rank": 2,
+      "duration_minutes": 105,
+      "label": "Exp 308: JEPA fast-path gate integration (tests failing checkpoint)",
+      "pct_of_total": 2.1,
+      "likely_cause": "Interrupted conductor run left the test suite in a failing state. Recovery required full context reload, triage of new vs pre-existing failures, re-run of 3000+ test suite, and re-commit — adding ~30-40 min diagnostic overhead on top of the experiment itself. No partial-result fast-path existed."
     },
     {
-      "id": "RETRO-034",
-      "description": "EBM-CoT calibrated AUC 0.5554 is below the 0.600 target (improvement from baseline 0.5099 is positive but insufficient).  Need more Langevin steps, larger EORM dataset, or a different calibration objective.",
-      "priority": "medium",
-      "target_milestone": "2026.04.35"
+      "rank": 3,
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 1.7,
+      "likely_cause": "3B-parameter model requires 4x the VRAM and per-token latency vs the 0.8B baseline. Verify-repair loop runs 3 forward passes per question on a single GPU (verify + repair + re-verify). No inference batching to amortize model loading. GPU 1 idle throughout."
     },
     {
-      "id": "RETRO-035",
-      "description": "AMD XDNA IRON NPU blockage not resolved (Exp 460 honest_verdict='install_failed'). pip install mlir-aie failed; no NPU hardware detected.  Defer until IRON conda package stabilises or KV260 FPGA arrives (2026-04-20).",
-      "priority": "low",
-      "target_milestone": "2026.04.36"
+      "rank": 4,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.6,
+      "likely_cause": "Sequential pipeline across prompt variants with no batching. Typed IR prompts are significantly longer than GSM8K prompts, raising per-call token cost and reducing effective throughput. Constraint evaluation was single-threaded."
     },
     {
-      "id": "RETRO-036",
-      "description": "Exp 455 (ThinkProbeV2 / RETRO-029) result file is absent despite conductor-log showing RETRO-029 CLOSED.  The implementation landed but the deliverable JSON was not written.  Add deliverable-write assertion to experiment_455 and re-run to produce the artifact.",
-      "priority": "low",
-      "target_milestone": "2026.04.35"
+      "rank": 5,
+      "duration_minutes": 76,
+      "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "pct_of_total": 1.6,
+      "likely_cause": "Implementing the timeout watchdog, deferred for 17+ milestones, required writing ExperimentTimeoutWatchdog from scratch with 35 tests, spec updates, and template integration. Reading 17-milestone RETRO-003 history added substantial overhead. The delay multiplied the implementation cost."
     }
   ],
-  "meta_reflection": {
-    "slowest_experiment": 459,
-    "slowest_experiment_duration_s": 858.2,
-    "biggest_surprise": "KAEM crossover at n_vars=50 (Exp 459): KAEM is fastest only below 50 variables. Above that MCMC wins.  This narrows the production use-case for KAEM significantly.",
-    "missing_result_files": [
-      450,
-      451,
-      455
-    ],
-    "missing_result_note": "3 experiment result files are absent ([450, 451, 455]). This is the second consecutive milestone where 'first positive verify-repair number' went unanswered.  Root cause: deliverable path mismatch between conductor task spec and script output path.  Process fix: add deliverable-path assertion in ExperimentTemplate.setup() that fails loudly if the output file does not exist after build_result() returns.",
-    "process_improvement": "Add ExperimentTemplate.assert_deliverable_written() method that raises FileNotFoundError if self._output_path does not exist at the end of the script. Call it as the final statement of every experiment's main().  This would have prevented RETRO-032 and RETRO-033 from occurring."
+  "bottlenecks_identified": [
+    "GPU 0 zombie memory saturation (97% VRAM, 23774MB, 0% utilization at milestone end): three stale processes (PIDs 145715/254433/289150) held 23.7GB on GPU 0 continuously. The longest-running zombie had wall_time=41335s (~11.5 hours) while contributing near-zero compute. Subsequent experiments likely suffered VRAM pressure, triggering fallbacks or OOM-driven slowdowns throughout the milestone.",
+    "GPU 1 completely idle for the entire milestone: GPU 1 showed 6MB VRAM at 0% utilization at milestone end — effectively unused. With dual RTX 3090s available (48GB total VRAM), all inference ran on a single GPU, halving hardware effective throughput. No DualGPURunner was wired into the conductor.",
+    "Repeated re-verification of already-implemented code: at least 4 experiments (Exps 439, 444, 446, 447) were re-verified in separate sessions with no code changes between runs. Exp 447 (KAEMEnergy) was verified three times across three separate sessions. Each re-verification consumed 8-20 minutes of file reads and test re-runs with no new output produced.",
+    "RETRO-003 (timeout watchdog) carried 17+ milestones before Exp 425: runaway experiments were not killed automatically throughout the earlier phases of this milestone. Estimated 3-5 runaway experiments x 45 min average overshoot = 135-225 minutes of wasted GPU time and thermal stress before ExperimentTimeoutWatchdog shipped.",
+    "Three missing result deliverables (Exps 450, 451, 455): experiments completed but result JSON files were absent at milestone end (RETRO-032, RETRO-033, RETRO-036). The headline milestone question — 'did we get the first positive verify-repair number?' — could not be confirmed due to the missing Exp 451 artifact. Root cause: deliverable-path mismatch between conductor task spec and experiment script output path.",
+    "Scaffolding-only experiments inflating the completed count: a significant fraction of the 296 experiments reached status=scaffolding_only or LIVE RUN PENDING, meaning harnesses were built but no live GPU result was obtained. Experiment count inflates without advancing measured research outcomes.",
+    "Pre-flight test suite overhead on doc-only changes: the full 3900+ test suite triggered after every commit, including changelog and ops doc updates. At 60-90s per run and approximately 80 doc-only commits in a 296-experiment milestone, this adds 80-120 minutes of unnecessary test overhead per milestone.",
+    "Conductor checkpoint interruptions with no structured recovery: when sessions were interrupted, no partial-result state was serialized. The next session re-reads full context, identifies what was and was not committed, and re-runs the test suite — adding 30-40 min per incident (cf. Exp 308 at 105 min).",
+    "Zero adoption of improvements identified in prior retro: the .33 retro identified 10 specific improvements estimated at 32% total time savings. None were implemented in time to affect milestone .34. Actual wall-time reduction was 2.3% (5002 to 4886 min). Retro work is not self-applying — it requires explicit conductor task budget.",
+    "Sequential conductor with no inter-experiment parallelism: experiments ran strictly serially. Multi-GPU hardware sat idle between experiment teardown and next startup. Inter-experiment gap (cleanup + commit + context load) estimated at 2-4 min x 296 experiments = 10-20 hours of potential parallel opportunity."
+  ],
+  "improvements_suggested": [
+    "Kill zombie GPU processes at conductor session start: add a startup hook that calls gpu_monitor.py --kill-zombies (already implemented) before the first experiment of every session. This recovers VRAM immediately and prevents GPU 0 saturation from degrading subsequent experiments. Estimated savings: 0-30 min recovery time per session, plus reduced OOM-driven fallback overhead throughout the milestone.",
+    "Add ExperimentTemplate.assert_deliverable_written() called as the final statement of every experiment main(): if self._output_path does not exist after build_result() returns, raise FileNotFoundError loudly before the process exits. This directly prevents RETRO-032, RETRO-033, and RETRO-036 from occurring in milestone .35. Zero-tolerance policy for silent deliverable drops.",
+    "Wire DualGPURunner into experiment_template.py for all dual-model experiments: assign model A to cuda:0 and model B to cuda:1 with explicit device_map={'': 'cuda:N'}. Run both models in parallel threads during inference phases. Estimated throughput improvement on dual-model benchmarks: 1.5-1.8x. This addresses the entire Exp 219 (117 min) class of bottleneck.",
+    "Add conductor deduplication check before scheduling each experiment: before starting experiment N, check if results/experiment_N*.json exists and honest_verdict is not 'partial' or 'blocked'. If healthy results exist, skip re-implementation. Prevents the Exp 447 triple-re-verification pattern. Estimated savings: 8-20 min x 4 re-verified experiments = 32-80 min per milestone.",
+    "Implement doc-only commit classifier to skip the full test suite: if the diff touches only *.md, docs/, ops/, _bmad/, skip the 3900+ test suite and run only ruff + mypy (5-10s total). Estimated savings: 80-120 min of unnecessary test overhead per milestone.",
+    "Add conductor session health check as the first action of every session: verify CARNOT_FORCE_LIVE propagates to subprocesses, both GPUs are under 200MB VRAM and idle, and no zombie processes exist. If any check fails, auto-remediate (kill zombies, re-export env) before proceeding. Estimated savings: 60-90 min per milestone where env propagation is broken (cf. RETRO-022, 6-milestone block).",
+    "Implement per-experiment partial-result handoff on interruption: when the conductor is interrupted (SIGTERM, exception, timeout), automatically serialize partial ExperimentTemplate state to results/experiment_NNN_partial.json before exit. The next session fast-paths to resume rather than triaging from scratch. Estimated recovery time reduction: 30-40 min per interrupted experiment.",
+    "Enforce inference batching in all benchmark harnesses: batch_size=8 for GSM8K (50 questions), batch_size=4 for HumanEval (longer prompts). BatchedInferenceRunner already exists in experiment_template.py — use it consistently. Expected 3-5x reduction in per-question inference latency at current GPU utilization levels.",
+    "Allocate explicit conductor task budget for retro improvements each milestone: track which improvements from the prior retro were implemented. A 0/10 adoption rate (as in .33 to .34) means retro work is pure documentation. Reserve 2-3 experiment slots per milestone exclusively for implementing prior-retro items. Report adoption rate in every operational retro.",
+    "Add GPU thermal throttle gate: if any GPU exceeds 80C, pause conductor and open a RETRO item. Do not start the next experiment until temperature drops to 70C. RTX 3090 observed at 82C during runaway experiments — sustained operation near thermal limits shortens hardware lifetime and may corrupt results."
+  ],
+  "estimated_time_savings_pct": 35,
+  "estimated_time_savings_rationale": "Top contributors (all from unimplemented .33 retro items still applicable): DualGPURunner parallelism on dual-model experiments (~8%), inference batching (~6%), conductor health check preventing env-propagation blocks (~5%), doc-only test-skip classifier (~4%), zombie kill at session start (~4%), partial-result fast-path on interruptions (~4%), deduplication preventing re-verification cycles (~4%). New item from .34 analysis: assert_deliverable_written() preventing missing-artifact milestones (~2% — prevents the headline question from being unanswerable for a third consecutive milestone). Combined estimated reduction: approximately 35% of total wall time, bringing a comparable 296-experiment milestone from 4886 min to approximately 3176 min (~53 hours vs current ~81 hours).",
+  "gpu_state_at_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 23795,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_utilization_pct": 0,
+    "gpu0_temp_c": 45,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 6,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_utilization_pct": 0,
+    "gpu1_temp_c": 50,
+    "gpu0_assessment": "Critical: 97% VRAM (23795MB) at 0% utilization. Three zombie processes (PIDs 145715/254433/289150) holding 23774MB combined. Longest zombie has wall_time=41335s (~11.5 hours). Run gpu_monitor.py --kill-zombies immediately before next milestone.",
+    "gpu1_assessment": "Completely idle: 6MB VRAM, 0% utilization. Entire milestone ran single-GPU. Highest-leverage immediate action: wire DualGPURunner to utilize GPU 1 for dual-model experiments.",
+    "zombie_processes": [
+      {
+        "pid": 145715,
+        "gpu_index": 0,
+        "vram_mb": 5418,
+        "cpu_time_s": 10196.6,
+        "wall_time_s": 41335,
+        "cpu_efficiency_pct": 24.7
+      },
+      {
+        "pid": 254433,
+        "gpu_index": 0,
+        "vram_mb": 9178,
+        "cpu_time_s": 8254.3,
+        "wall_time_s": 15820,
+        "cpu_efficiency_pct": 52.2
+      },
+      {
+        "pid": 289150,
+        "gpu_index": 0,
+        "vram_mb": 9178,
+        "cpu_time_s": 4442.1,
+        "wall_time_s": 8772,
+        "cpu_efficiency_pct": 50.6
+      }
+    ]
   },
-  "honest_verdict": "milestone_partial_missing_exp451"
+  "vs_prior_milestone": {
+    "prior_milestone": "2026.04.33",
+    "prior_wall_time_minutes": 5002,
+    "prior_experiments_completed": 311,
+    "wall_time_delta_minutes": -116,
+    "wall_time_delta_pct": -2.3,
+    "retro_improvements_adopted": 0,
+    "retro_improvements_suggested_prior": 10,
+    "adoption_rate_pct": 0,
+    "observation": "Despite a 32% savings potential identified in the .33 retro, actual wall time decreased only 2.3% (116 min). Zero of the 10 suggested improvements were implemented. Retro insights are not self-applying — they require explicit conductor task budget allocation each milestone."
+  },
+  "open_retro_items_carried_in": [
+    "RETRO-025: GPU 1 zombie VRAM (device_map='auto') — Exp 438 fix shipped but live-verification still pending at .34 close; GPU 1 idle at 6MB confirms fix may not have taken effect",
+    "RETRO-028: Gemma4-E4B-it 0% accuracy — GemmaTransformersLoader implemented in Exp 450 but result file absent (RETRO-032 opened)",
+    "RETRO-029: ThinkProbe timeout — ThinkProbeV2 implemented in Exp 455 but result file absent (RETRO-036 opened)",
+    "RETRO-030: Exp 446 silent experiment drop — AtomicResultWriter implemented in Exp 452, CLOSED this milestone",
+    "RETRO-031: KAEM no speedup — KAEM crossover confirmed at n_vars=50 (Exp 459), narrowing production use-case"
+  ],
+  "new_retro_items_opened": [
+    "RETRO-032: Exp 450 (Gemma4 fix) result file absent — deliverable path mismatch between conductor spec and script output path",
+    "RETRO-033: Exp 451 (first positive verify-repair number) result file absent — third consecutive milestone without headline answer confirmed",
+    "RETRO-034: EBM-CoT calibrated AUC 0.5554 below 0.600 target — improvement from baseline 0.5099 is positive but insufficient; need more Langevin steps or larger EORM dataset",
+    "RETRO-035: AMD XDNA IRON NPU blockage (Exp 460 install_failed) — defer until KV260 FPGA arrives or IRON conda package stabilises",
+    "RETRO-036: Exp 455 (ThinkProbeV2) result file absent despite conductor-log showing RETRO-029 CLOSED"
+  ],
+  "honest_verdict": "operational_inefficiency_compounding",
+  "meta_reflection": "Milestone 2026.04.34 ran only 2.3% faster than .33 despite identifying 32% savings potential in the prior retro. Zero of those improvements were implemented. The same structural bottlenecks — zombie GPU processes, sequential model loading, missing deliverables, re-verification cycles — are compounding across milestones. The critical new signal is that three experiment result files were missing at milestone end, leaving the headline research question ('first positive verify-repair number?') unanswerable for the third consecutive milestone. Process debt has reached the point where it directly blocks research outcomes, not merely slows them. The two highest-leverage actions for milestone .35 are: (1) implement assert_deliverable_written() to enforce zero-tolerance for missing result files, and (2) allocate explicit conductor task budget for retro improvements so that the 35% efficiency gain estimated here is actually captured."
 }

@@ -2158,3 +2158,4 @@ python/ |
 | 2026-04-18 20:06 UTC | Exp 458: EBM-CoT Latent Thought Calibration — EORM | OK | 81 passed in 123.49s (0:02:03) |
 | 2026-04-18 20:41 UTC | Exp 459: KAEM Large-Variable Crossover Benchmark — | OK | 81 passed in 55.58s |
 | 2026-04-18 20:56 UTC | Exp 460: AMD XDNA IRON NPU Unblock — pip install m | OK | 81 passed in 46.05s |
+| 2026-04-18 21:12 UTC | Exp 461: Milestone 2026.04.34 Retrospective — did  | OK | 81 passed in 55.09s |

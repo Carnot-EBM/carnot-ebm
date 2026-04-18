@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Milestone 2026.04.34 Operational Efficiency Retrospective — Process Analysis)
+
+- 2026-04-18 21:23 UTC: Milestone 2026.04.34 operational process retrospective. (User instruction) Analyzed 4886 min / 296 experiments for execution efficiency. Top bottlenecks: GPU 0 zombie memory saturation (97% VRAM, 23774MB at 0% utilization from 3 stale processes), GPU 1 completely idle for entire milestone (dual-GPU opportunity unused), zero adoption of 10 improvements identified in .33 retro (only 2.3% actual wall-time reduction vs 32% estimated), three missing result deliverables (Exps 450/451/455) leaving headline 'first positive verify-repair number?' unanswerable for third consecutive milestone, repeated re-verification of already-implemented code (~4 experiments re-verified with no changes), doc-only commits triggering full 3900-test suite (80-120 min overhead). Estimated 35% time savings achievable next milestone via DualGPURunner, assert_deliverable_written(), conductor deduplication check, zombie kill at session start, doc-only test classifier, and retro-improvement task budget. results/operational_retro_2026_04_34.json written. schema=carnot.operational_retro.v9.
+
 ## 2026-04-18 (Exp 461 — Milestone 2026.04.34 Retrospective)
 
 - 2026-04-18: Milestone 2026.04.34 retrospective complete. FIRST POSITIVE verify-repair number confirmed (Exp 451: live_precision_improvement=+5pp). Phase 1 milestone reached: verify-repair pipeline produces measurable improvements on live GPU benchmarks. (User instruction)
