@@ -1,6 +1,7 @@
 """Energy Based Model implementations: Ising, Gibbs, Boltzmann tiers + EBT + EORM."""
 
 from carnot.models.boltzmann import BoltzmannConfig, BoltzmannModel
+from carnot.models.ebm_cot_calibrator import EBMCoTCalibrator
 from carnot.models.compliance_checker import (
     ComplianceDomain,
     ComplianceEnergyChecker,
@@ -26,6 +27,7 @@ from carnot.models.kaem_energy import (
 __all__ = [
     "BoltzmannConfig",
     "BoltzmannModel",
+    "EBMCoTCalibrator",
     "ComplianceDomain",
     "ComplianceEnergyChecker",
     "ComplianceExample",
