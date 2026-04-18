@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 14:28 UTC — Exp 452 complete (RETRO-030 closure). AtomicResultWriter implemented; Energy Matching v2 script with atomic write + verify_exists() assertion; 11 tests pass; RETRO-030 CLOSED.
+**Last Updated:** 2026-04-18 15:30 UTC — Exp 452 RAN SUCCESSFULLY (RETRO-030 fully closed). result file confirmed at results/experiment_452_energy_matching_v2.json; energy_matching best_sampler (mean_l2=1.1749); atomic write + verify_exists() confirmed working; retro_030_resolved=True.
 
 ---
 
@@ -41,7 +41,7 @@
 
 - **RETRO-028 (high):** Gemma4-E4B-it returned 0.0 accuracy on all benchmarks. Root cause: likely model load/tokenizer issue, not EBM failure. Fix: diagnose Gemma4 locally, replace with a model achieving >10% baseline.
 - **RETRO-029 (medium):** Exp 444 (think_probe) timed out at 20 min without completing. Redesign for partial verdicts, or increase budget to 60 min.
-- **RETRO-030 (medium):** Exp 446 (energy matching) has no result JSON — silent drop. Fix: conductor must emit not_run sentinel for scripts without result files.
+- ~~**RETRO-030 (medium):** Exp 446 (energy matching) has no result JSON — silent drop.~~ **CLOSED 2026-04-18** — AtomicResultWriter (write-to-tmp + os.rename) implemented; Exp 452 confirmed result file written and verified (retro_030_resolved=True).
 - **RETRO-031 (low):** KAEM mean_speedup=1.29x vs IsingEBM MCMC (threshold: 5x). Profile at larger n_vars (200+) where MCMC mixing time dominates.
 
 ### RETRO Items Closed (Exp 449)

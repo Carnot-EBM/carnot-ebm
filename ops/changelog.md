@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 452 — RETRO-030 Closure: result file confirmed)
+
+- 2026-04-18 15:30 UTC: Ran Exp 452 — result file confirmed. (User instruction)
+  - `results/experiment_452_energy_matching_v2.json` written; verify_exists() passed
+  - energy_matching: mean_l2=1.1749, best_sampler; GD=3.0015, Langevin=3.0463
+  - honest_verdict=retro_030_closed_no_improvement; retro_030_resolved=True
+  - RETRO-030 FULLY CLOSED: atomic write mechanism confirmed working end-to-end
+
 ## 2026-04-18 (Exp 452 — RETRO-030 Closure: AtomicResultWriter + Energy Matching v2)
 
 - 2026-04-18 14:19 UTC: Implemented AtomicResultWriter and Exp 452 energy matching v2. (User instruction)
