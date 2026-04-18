@@ -393,3 +393,9 @@
 | SCENARIO-EXTRACT-049 | Not Started | Implemented | VeriCoTStepValidator detects 'gives 76' (wrong) → status=unsat via Z3 UNSAT on 47+28==76 (Exp 453) |
 | SCENARIO-EXTRACT-050 | Not Started | Implemented | VeriCoTStepValidator returns SAT for correct IT step 'gives 75' → status=sat; no false positives (Exp 453) |
 | SCENARIO-EXTRACT-051 | Not Started | Implemented | Exp 453 improvement_rate=0.40 > 0 → honest_verdict=vericot_better; ArithmeticExtractor baseline=0 confirmed (Exp 453) |
+| REQ-EXTRACT-027 | Not Started | Implemented | VPRMArithmeticVerifier + ArithmeticRule (abstract) + AdditionRule + SubtractionRule + MultiplicationRule + DivisionRule + PercentageRule + UnitConsistencyRule + RuleVerdict; rule-based IT-prose arithmetic verification; 80 tests 100% module coverage (SCENARIO-EXTRACT-052/053, Exp 454) |
+| REQ-EXTRACT-028 | Not Started | Implemented | VPRMArithmeticVerifier.verify_step() + detect_violations() — deterministic, no LLM call, same input always same output (SCENARIO-EXTRACT-052/053, Exp 454) |
+| REQ-EXTRACT-029 | Not Started | Implemented | VPRMArithmeticVerifier.f1_score() — binary F1, sklearn convention; Exp 454: baseline_f1=0.0, vprm_f1=1.0, improvement=1.0, honest_verdict=vprm_better (SCENARIO-EXTRACT-054, Exp 454) |
+| SCENARIO-EXTRACT-052 | Not Started | Implemented | AdditionRule detects '47 plus 28 equals 76' → passed=False, computed=75.0, stated=76.0, error=1.0 (Exp 454) |
+| SCENARIO-EXTRACT-053 | Not Started | Implemented | VPRMArithmeticVerifier detects IT-prose violations ArithmeticExtractor misses; ArithmeticExtractor returns [] on same text (Exp 454) |
+| SCENARIO-EXTRACT-054 | Not Started | Implemented | Exp 454: baseline_f1=0.0, vprm_f1=1.0, f1_improvement=1.0, honest_verdict=vprm_better on 20-sample IT corpus (Exp 454) |
