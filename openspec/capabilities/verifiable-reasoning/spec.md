@@ -5902,6 +5902,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-INFRA-028 | N/A | Implemented | get_batch_size() reads CARNOT_BENCH_BATCH_SIZE (default 50) (SCENARIO-INFRA-036, Exp 437). |
 | REQ-INFRA-029 | N/A | Implemented | build_zombie_fix_strategy() + explicit device_map in setup_gpu() for dual-GPU live path (SCENARIO-INFRA-037/038, Exp 438). Closes RETRO-025 (GPU1 zombie scheduling). |
 | REQ-INFRA-030 | N/A | Implemented | ZombieFixResult dataclass + build_zombie_fix_artifact() (schema carnot.gpu1_zombie_fix.v1) (Exp 438). |
+| REQ-INFRA-031 | N/A | Implemented | AtomicResultWriter.write() — json.dumps + .tmp write + os.rename (POSIX-atomic) in python/carnot/pipeline/atomic_writer.py (SCENARIO-INFRA-039/040, Exp 452). Closes RETRO-030. |
+| REQ-INFRA-032 | N/A | Implemented | AtomicResultWriter.verify_exists() — post-write file existence check; Exp 452 raises RuntimeError if absent (SCENARIO-INFRA-039, Exp 452). Closes RETRO-030. |
 | REQ-VERIFY-086 | Not Started | Implemented | SinkProbe attention-sink pre-filter + SinkConcentration + SinkProbeResult + compute_sink_concentration (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-087 | Not Started | Implemented | SinkProbe threshold configuration + benchmark() skip/FNR/TNR reporting (SCENARIO-VERIFY-113/114/115, Exp 348) |
 | REQ-VERIFY-088 | Not Started | Implemented | Three-tier pipeline benchmark — ThreeTierPipeline + ThreeTierPipelineResult + verify/benchmark + build_three_tier_artifact (SCENARIO-VERIFY-116/117, Exp 360); live GPU benchmark on real attention matrices (SCENARIO-VERIFY-118/119, Exp 373) |

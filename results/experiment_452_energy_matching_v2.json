@@ -1,0 +1,81 @@
+{
+  "experiment": 452,
+  "title": "Energy Matching v2 \u2014 RETRO-030 Closure (Atomic Write)",
+  "run_date": "20260418",
+  "started_at": "2026-04-18T15:30:01Z",
+  "finished_at": "2026-04-18T15:30:05Z",
+  "duration_s": 4.23,
+  "status": "success",
+  "schema": [
+    "atomic_write",
+    "best_sampler",
+    "coupling_density",
+    "duration_s",
+    "energy_loss",
+    "energy_matching",
+    "env_autofix",
+    "experiment",
+    "finished_at",
+    "gradient_descent",
+    "honest_verdict",
+    "ising_energy",
+    "ising_ground_state",
+    "ising_seed",
+    "langevin",
+    "n_trials",
+    "n_vars",
+    "note",
+    "phase",
+    "phase3_improvement",
+    "retro_030_resolved",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "atomic_write": true,
+  "retro_030_resolved": true,
+  "n_vars": 10,
+  "coupling_density": 0.3,
+  "ising_seed": 42,
+  "n_trials": 20,
+  "ising_energy": -5.654097855576329,
+  "ising_ground_state": [
+    -1.0,
+    1.0,
+    -1.0,
+    -1.0,
+    -1.0,
+    1.0,
+    -1.0,
+    1.0,
+    1.0,
+    1.0
+  ],
+  "gradient_descent": {
+    "mean_l2": 3.001456706588615,
+    "std_l2": 0.036010727453143064,
+    "mean_sign_agreement": 0.6299999999999999
+  },
+  "langevin": {
+    "mean_l2": 3.0462992270690807,
+    "std_l2": 0.01114003800634524,
+    "mean_sign_agreement": 0.6049999999999999
+  },
+  "energy_matching": {
+    "mean_l2": 1.1748737059500642,
+    "std_l2": 0.46479515597503757,
+    "mean_sign_agreement": 0.9499999999999996
+  },
+  "energy_loss": 1.1748737059500642,
+  "phase3_improvement": null,
+  "best_sampler": "energy_matching",
+  "honest_verdict": "retro_030_closed_no_improvement",
+  "phase": "phase3_seed",
+  "env_autofix": {
+    "gpu_detected": true,
+    "auto_fix_applied": true
+  },
+  "note": "Exp 452: RETRO-030 closure.  Re-runs Exp 446 energy matching logic with AtomicResultWriter (write-to-tmp + rename) and verify_exists() assertion.  CPU-only.  Phase 3 seed work."
+}
