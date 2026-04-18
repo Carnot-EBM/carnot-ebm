@@ -282,6 +282,7 @@ from carnot.pipeline.boltzmann_repair import (  # noqa: E402
     LinearSpinAdapter,
     RepairDirection,
 )
+from carnot.pipeline.gemma_loader import GemmaTransformersLoader  # noqa: E402
 
 __all__ = [
     "AgentStep",
@@ -487,4 +488,5 @@ __all__ = [
     "CrossSessionResult",
     "simulate_session",
     "compute_relay_verdict",
+    "GemmaTransformersLoader",
 ]
