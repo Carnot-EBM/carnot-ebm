@@ -6854,3 +6854,68 @@ Spec: REQ-INFRA-035, SCENARIO-INFRA-043
 **Given** changed_files = ['python/carnot/models/ising.py']
 **When** `is_doc_only_diff()` is called
 **Then** returns False
+
+### REQ-INFRA-036: ConductorSessionHealthCheck Runs at Session Start
+
+`ConductorSessionHealthCheck.run()` shall verify at conductor session startup:
+1. `CARNOT_FORCE_LIVE` is propagated (calls `apply_env_autofix()` first).
+2. Both GPUs are under 200 MB VRAM (idle — no zombie processes holding memory).
+3. No GPU temperature exceeds 80°C (thermal gate).
+4. No zombie GPU processes exist (VRAM > 500 MB, age > 300 s, util 0%).
+Auto-remediates when `auto_remediate=True` (production default).
+
+**Why this matters (RETRO-034, milestone .34):** Three zombie processes held 23,795 MB
+on GPU 0 for 11.5 hours.  A session-start check would have caught and killed them
+before Experiment 1 ran, recovering the GPU for the entire milestone.
+
+**Implementation Status:** Done (Exp 463)
+
+Spec: REQ-INFRA-036, SCENARIO-INFRA-044
+
+### REQ-INFRA-037: Health Check Kills Zombie GPU Processes Before First Experiment
+
+When `auto_remediate=True`, `ConductorSessionHealthCheck` shall call `SIGKILL`
+on any GPU-attached process with VRAM > 500 MB and wall-clock age > 300 seconds,
+then re-check GPU health after a 2-second CUDA context release window.
+
+**Implementation Status:** Done (Exp 463)
+
+Spec: REQ-INFRA-037, SCENARIO-INFRA-045
+
+### REQ-INFRA-038: Thermal Gate Pauses Conductor When GPU >= 80°C
+
+When any GPU reports temperature >= 80°C, `SessionHealthResult.honest_verdict`
+shall be `'session_thermal_blocked'` and `conductor_session_health.py` shall
+`sys.exit(1)` to prevent the conductor from spawning experiments into an
+already-stressed thermal state.
+
+**Why 80°C:** RTX 3090 self-throttles at 83°C; sustained operation above 80°C
+shortens hardware life.  RETRO-034 recorded GPU 0 at 82°C during runaway experiments.
+
+**Implementation Status:** Done (Exp 463)
+
+Spec: REQ-INFRA-038, SCENARIO-INFRA-046
+
+### SCENARIO-INFRA-044: ConductorSessionHealthCheck Returns SessionHealthResult in CI
+
+**Given** `ConductorSessionHealthCheck(auto_remediate=False)` (CI mode)
+**When** `run()` is called
+**Then** returns a `SessionHealthResult` with `honest_verdict` in
+  {'session_healthy', 'session_remediated', 'session_thermal_blocked'}
+**And** no processes are killed (auto_remediate=False)
+
+### SCENARIO-INFRA-045: Zombie Process Detected and Killed in Live Mode
+
+**Given** a GPU process holding > 500 MB VRAM with wall-clock age > 300 seconds
+**When** `ConductorSessionHealthCheck(auto_remediate=True).run()` is called
+**Then** the process receives SIGKILL
+**And** `SessionHealthResult.zombies_killed >= 1`
+**And** `SessionHealthResult.honest_verdict == 'session_remediated'`
+
+### SCENARIO-INFRA-046: Thermal Gate Blocks Conductor
+
+**Given** a GPU reporting temperature >= 80°C
+**When** `ConductorSessionHealthCheck.run()` is called
+**Then** `SessionHealthResult.thermal_ok == False`
+**And** `SessionHealthResult.honest_verdict == 'session_thermal_blocked'`
+**And** `conductor_session_health.py` exits with code 1

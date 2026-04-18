@@ -298,6 +298,12 @@ from carnot.pipeline.deliverable_guard import (  # noqa: E402
     DocOnlyClassifier,
 )
 from carnot.pipeline.dual_gpu_assigner import DualGPUAssigner  # noqa: E402
+from carnot.pipeline.session_health_check import (  # noqa: E402
+    ConductorSessionHealthCheck,
+    GPUHealth,
+    SessionHealthResult,
+    ZombieProcess,
+)
 
 __all__ = [
     "AgentStep",
@@ -514,4 +520,8 @@ __all__ = [
     "DeliverableGuard",
     "DocOnlyClassifier",
     "DualGPUAssigner",
+    "ConductorSessionHealthCheck",
+    "GPUHealth",
+    "SessionHealthResult",
+    "ZombieProcess",
 ]
