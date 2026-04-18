@@ -4822,6 +4822,72 @@ The benchmark SHALL provide a ``LivePrecisionResult`` data class in
 
 Spec: REQ-BENCH-012, REQ-BENCH-013, SCENARIO-BENCH-031, SCENARIO-BENCH-032
 
+### REQ-BENCH-014: Live Precision Benchmark Runs 100 GSM8K Questions Per Model
+
+The live precision benchmark (Exp 464) SHALL run 100 GSM8K questions per model
+(stratified 50 easy + 50 hard) to provide better statistical confidence than
+the 50q run in Exp 451.  Both models (Gemma4-E4B-it and Qwen3.5-0.8B) must each
+complete 100 questions in both baseline and pipeline variants.
+
+**Why 100q over 50q:** At 50 questions, a 5pp difference (e.g. 40% vs 45%) has
+a 95% confidence interval of roughly ±14pp, overlapping zero.  At 100 questions
+the same difference has a ±10pp interval, narrowing the uncertainty enough to make
+directional claims credible.  Wilson score CI is reported in the artifact.
+
+**Implementation Status:** Done (Exp 464)
+
+### REQ-BENCH-015: Integrated Extraction Stack
+
+The live precision pipeline SHALL use an IntegratedExtractor that applies:
+1. VeriCoTStepValidator (FOL + Z3 satisfiability checking) — primary extractor.
+2. VPRMArithmeticVerifier (deterministic rule-based) — secondary extractor.
+3. ArithmeticExtractor (regex equation extractor) — optional fallback.
+
+Violations from VeriCoT and VPRM are merged into a single list.
+The extractor_used field in the artifact records which extractors produced
+violations (comma-separated names).
+
+**Implementation Status:** Done (Exp 464)
+
+### REQ-BENCH-016: DualGPURunner Assigns Models to Dedicated GPUs
+
+Exp 464 SHALL use DualGPUAssigner to pin:
+- Gemma4-E4B-it to cuda:0
+- Qwen3.5-0.8B to cuda:1
+
+This prevents the GPU 1 idle waste documented in RETRO-034.
+
+**Implementation Status:** Done (Exp 464)
+
+### SCENARIO-BENCH-033: Exp 464 Deferred Artifact When GPU Unavailable
+
+**Given** CARNOT_FORCE_LIVE is not set (CPU/CI environment)
+**When** experiment_464 runs
+**Then** the artifact is written with status='gpu_required' and honest_verdict='deferred_to_gpu'
+**And** the artifact contains schema='carnot.live_precision.v3'
+**And** DeliverableGuard.assert_written() passes
+
+### SCENARIO-BENCH-034: Precision100qResult Wilson CI Is Credible
+
+**Given** a Precision100qResult with n_questions=100 and post_accuracy=0.50
+**When** confidence_interval_95 is computed
+**Then** the interval is within (0.40, 0.60) — i.e. ±10pp at 50% hit rate
+
+**Given** a Precision100qResult with n_questions=100 and post_accuracy=0.05
+**When** confidence_interval_95 is computed
+**Then** the interval spans less than 0.10 (Wilson score shrinks at extremes)
+
+### SCENARIO-BENCH-035: IntegratedExtractor Calls VeriCoT Then VPRM
+
+**Given** an IntegratedExtractor with mocked vericot and vprm
+**When** extract(cot_text) is called
+**Then** vericot.detect_violations is called first
+**And** vprm.detect_violations is called second
+**And** the returned violations are the union of both results
+
+Spec: REQ-BENCH-014, REQ-BENCH-015, REQ-BENCH-016,
+      SCENARIO-BENCH-033, SCENARIO-BENCH-034, SCENARIO-BENCH-035
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -5959,6 +6025,9 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-BENCH-011 | Not Started | Implemented (Exp 441) | MicroAdversarialResult + build_micro_adversarial_artifact (schema carnot.adversarial_micro.v1); 50q × 3 conditions × 2 models micro-benchmark; robustness_claim field; LongRunBenchmarkExecutor (SCENARIO-BENCH-029/030) |
 | REQ-BENCH-012 | Not Started | Implemented (Exp 451) | GemmaTransformersLoader backend for Gemma4 in live precision post-fix benchmark; gemma4_loader artifact field; is_valid_output gating (SCENARIO-BENCH-031/032) |
 | REQ-BENCH-013 | Not Started | Implemented (Exp 451) | LivePrecisionResult(model_id, pre_accuracy, post_accuracy) + signed_improvement + is_positive; schema carnot.live_precision.v2; honest_verdict first_positive/no_improvement_v2 (SCENARIO-BENCH-031/032) |
+| REQ-BENCH-014 | Not Started | Implemented (Exp 464) | 100q stratified GSM8K benchmark per model; Wilson 95% CI; Precision100qResult (SCENARIO-BENCH-033/034) |
+| REQ-BENCH-015 | Not Started | Implemented (Exp 464) | IntegratedExtractor(VeriCoTStepValidator + VPRMArithmeticVerifier + fallback); extractor_used field (SCENARIO-BENCH-035) |
+| REQ-BENCH-016 | Not Started | Implemented (Exp 464) | DualGPUAssigner pins Gemma4-E4B-it→cuda:0, Qwen3.5-0.8B→cuda:1 (REQ-INFRA-034) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
