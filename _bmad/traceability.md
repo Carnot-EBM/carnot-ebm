@@ -416,3 +416,9 @@
 | SCENARIO-INFRA-042 | Not Started | Implemented | DualGPUAssigner assigns cuda:0 and cuda:1 in live mode with device_map isolation (Exp 462) |
 | REQ-INFRA-035 | Not Started | Implemented | DocOnlyClassifier skips full test suite for doc-only diffs (.md files and docs/ops/_bmad/openspec/ directories) (Exp 462) |
 | SCENARIO-INFRA-043 | Not Started | Implemented | DocOnlyClassifier correctly returns True for doc-only changes and False for code changes (Exp 462) |
+| REQ-INFRA-036 | Not Started | Implemented | ConductorSessionHealthCheck detects zombie processes >500MB VRAM with >5min age and 0% util (Exp 463) |
+| REQ-INFRA-037 | Not Started | Implemented | ConductorSessionHealthCheck optionally kills zombie processes (auto_remediate configurable) (Exp 463) |
+| REQ-INFRA-038 | Not Started | Implemented | ConductorSessionHealthCheck validates GPU thermal gate (GPU <80°C at conductor startup) (Exp 463) |
+| SCENARIO-INFRA-044 | Not Started | Implemented | ConductorSessionHealthCheck._find_zombie_processes() returns list of stalled PIDs holding VRAM (Exp 463) |
+| SCENARIO-INFRA-045 | Not Started | Implemented | ConductorSessionHealthCheck._check_gpu_health() returns per-GPU snapshot with temp_c, vram_used_mb, utilization_pct (Exp 463) |
+| SCENARIO-INFRA-046 | Not Started | Implemented | ConductorSessionHealthCheck.run() returns SessionHealthResult with honest_verdict: health_ok/thermal_gated/zombies_found (Exp 463) |
