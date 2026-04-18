@@ -2157,3 +2157,4 @@ python/ |
 | 2026-04-18 19:27 UTC | Exp 457: LSEBMCL Cross-Session EBM Replay — EBM wa | OK | 81 passed in 77.73s (0:01:17) |
 | 2026-04-18 20:06 UTC | Exp 458: EBM-CoT Latent Thought Calibration — EORM | OK | 81 passed in 123.49s (0:02:03) |
 | 2026-04-18 20:41 UTC | Exp 459: KAEM Large-Variable Crossover Benchmark — | OK | 81 passed in 55.58s |
+| 2026-04-18 20:56 UTC | Exp 460: AMD XDNA IRON NPU Unblock — pip install m | OK | 81 passed in 46.05s |
