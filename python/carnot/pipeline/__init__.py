@@ -284,6 +284,7 @@ from carnot.pipeline.boltzmann_repair import (  # noqa: E402
 )
 from carnot.pipeline.gemma_loader import GemmaTransformersLoader  # noqa: E402
 from carnot.pipeline.atomic_writer import AtomicResultWriter  # noqa: E402
+from carnot.pipeline.think_probe_v2 import ThinkProbeV2, ThinkProbeV2Result  # noqa: E402
 
 __all__ = [
     "AgentStep",
@@ -491,4 +492,6 @@ __all__ = [
     "compute_relay_verdict",
     "GemmaTransformersLoader",
     "AtomicResultWriter",
+    "ThinkProbeV2",
+    "ThinkProbeV2Result",
 ]
