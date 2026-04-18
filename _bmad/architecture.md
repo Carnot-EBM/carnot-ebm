@@ -34,7 +34,10 @@ carnot/
 │       ├── pipeline/          # Production verify-repair pipeline (Exp 74-75)
 │       │   ├── extract.py     # ConstraintExtractor: Arithmetic, Code, Logic, NL, Auto
 │       │   ├── verify_repair.py  # VerifyRepairPipeline — main user API
-│       │   └── errors.py      # CarnotError hierarchy, timeouts, degradation
+│       │   ├── errors.py      # CarnotError hierarchy, timeouts, degradation
+│       │   ├── env_autofix.py # EnvironmentAutoFix — self-inject CARNOT_FORCE_LIVE (RETRO-022)
+│       │   ├── experiment_watchdog.py  # ExperimentTimeoutWatchdog — hard wall-clock cap (RETRO-003)
+│       │   └── long_run_executor.py   # LongRunBenchmarkExecutor — batched checkpoint-resume (RETRO-026)
 │       ├── mcp/               # Production MCP server (Exp 76)
 │       │   └── server.py      # verify_llm_output, verify_and_repair, health_check
 │       ├── verify/            # ComposedEnergy, ConstraintTerm, repair

@@ -543,6 +543,24 @@ Spec: Exp 443
 **And** ``fr11_relay_confirmed`` reflects Exp 431 retro_024_closed
 **And** all boolean fields are derived exclusively from result JSON files, never asserted without provenance
 
+### SCENARIO-RETRO-033: Milestone 2026.04.33 Retrospective Complete
+
+**Given** result JSONs for Exps 437-448 (partial: Exp 446 absent, Exp 444 timed out)
+**When** ``MilestoneRetro2026_04_33`` is computed from available result files
+**Then** the artifact has ``schema='carnot.operational_retro.v7'``
+**And** ``milestone='2026.04.33'``
+**And** ``retro_026_resolved`` reflects Exp 437 retro_026_resolved flag
+**And** ``retro_025_resolved`` reflects whether Exp 438 fix_applied is True
+**And** ``live_precision_result`` is the honest_verdict from Exp 439 (first live GPU precision run)
+**And** ``live_humaneval_result`` is the honest_verdict from Exp 440 (first live GPU HumanEval run)
+**And** ``live_adversarial_result`` is the honest_verdict from Exp 441 (first live GPU adversarial run)
+**And** ``fr11_relay_confirmed`` reflects Exp 443 retro_024_closed
+**And** ``think_probe_viable`` is False when Exp 444 timed_out=True
+**And** ``kaem_faster`` is True only when Exp 447 mean_speedup > 5
+**And** ``cross_session_improvement`` is True only when Exp 448 honest_verdict indicates improvement
+**And** all boolean fields are derived exclusively from result JSON files, never asserted without provenance
+**And** the headline confirms live GPU benchmark numbers were obtained for the first time after 7 consecutive scaffolding-only milestones
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |

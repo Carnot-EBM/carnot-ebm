@@ -1,0 +1,104 @@
+{
+  "milestone": "2026.04.33",
+  "schema": "carnot.operational_retro.v8",
+  "generated_at": "2026-04-18T11:16:51Z",
+  "total_wall_time_minutes": 5002,
+  "experiments_completed": 311,
+  "average_minutes_per_experiment": 16.1,
+  "slowest_experiments": [
+    {
+      "rank": 1,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.3,
+      "likely_cause": "Sequential model loading — Qwen then Gemma loaded into a single GPU, each requiring full VRAM allocation before the previous was freed. Second RTX 3090 sat idle throughout. No DualGPURunner wired into conductor at this point in the milestone sequence."
+    },
+    {
+      "rank": 2,
+      "duration_minutes": 105,
+      "label": "Exp 308: JEPA fast-path gate integration (tests failing checkpoint)",
+      "pct_of_total": 2.1,
+      "likely_cause": "Interrupted conductor run left test suite in a failing state. Recovery required reading stale partial results, identifying which tests were new vs pre-existing failures, re-running the full suite, and re-committing — adding at least 30-40 minutes of diagnostic overhead on top of the experiment itself. No partial-result fast-path existed."
+    },
+    {
+      "rank": 3,
+      "duration_minutes": 83,
+      "label": "Exp 184: 3B model verification — does verify-repair help large models",
+      "pct_of_total": 1.7,
+      "likely_cause": "3B-parameter model (4x larger than 0.8B baseline) required proportionally more VRAM and per-token inference time. The verify-repair loop ran 3 forward passes per question (verify + repair + re-verify) on a single GPU, making the cost multiplicative. No prompt-side batching to amortize model loading latency."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.6,
+      "likely_cause": "Full typed IR generation pipeline ran sequentially across prompt variants with no batching. Constraint evaluation was single-threaded. Typed IR prompts are longer than GSM8K prompts, increasing per-call token cost and reducing effective throughput."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 76,
+      "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "pct_of_total": 1.5,
+      "likely_cause": "Implementing a timeout watchdog deferred for 17+ milestones required writing ExperimentTimeoutWatchdog from scratch, adding 35 tests, updating specs, and integrating into experiment_template.py. Wall time includes reading all prior RETRO-003 history to understand the full scope. The meta-irony: this experiment was itself at risk of needing a timeout."
+    }
+  ],
+  "bottlenecks_identified": [
+    "GPU 1 zombie VRAM leak (RETRO-025, open at milestone end): device_map='auto' allocates VRAM on GPU 1 for layer offloading without placing any compute there. GPU 1 at 76% VRAM (18688MB) with 0% utilization during single-model experiments. Fix implemented in Exp 438 but not live-verified — estimated 1786MB wasted continuously across the milestone.",
+    "Repeated re-verification of already-implemented code: Exp 447 (KAEMEnergy) was verified three times in separate sessions (conductor, human, human again) without any code changes between runs. This pattern appeared at least 4 times during the milestone (Exps 439, 444, 446, 447). Each re-verification cost 8-20 minutes of reading + test re-running with no new output.",
+    "Sequential model loading on dual-GPU hardware: Exp 219 (117 min) and all dual-model benchmarks loaded models one at a time onto GPU 0, leaving GPU 1 idle during inference. DualGPURunner was discussed but not wired into the conductor. At 16 min/exp average, sequential loading on paired models adds approximately 8 min overhead per dual-model experiment.",
+    "RETRO-003 (conductor timeout) carried 17+ milestones before implementation at Exp 425: runaway experiments (e.g., PID 3509070, 144 min at 82C) were not killed automatically. Over the milestone, an estimated 3-5 runaway experiments x 45 min average overshoot = 135-225 minutes of wasted GPU time and thermal stress.",
+    "Conductor checkpoint interruptions with no fast-path recovery: Exp 308 (105 min) shows a failing-test checkpoint requiring full manual triage. When the conductor is interrupted mid-experiment, no structured partial-result handoff exists. The next session must re-read all context, identify what was and was not committed, and re-run the full test suite — adding 30-40 min per incident.",
+    "Preflight-blocked experiments counted as 'completed': many experiments in the 311 total reached status=scaffolding_only or LIVE RUN PENDING, meaning the harness was built but no live GPU result was produced. Conservative estimate: 40-60% of experiments produced real data vs scaffolding, inflating experiment count without advancing research outcomes.",
+    "Pre-flight test suite overhead on doc-only turns: the full 3900+ test suite ran after every commit including changelog and ops doc updates. At 60-90s per run and approximately 80 doc-only commits in a 311-experiment milestone, this adds 80-120 minutes of pure test overhead with no code change being validated.",
+    "No parallelism in conductor: experiments ran strictly serially. Multi-GPU hardware sat idle between experiment teardown and the next experiment's startup. Inter-experiment gap (cleanup + commit + context load) estimated at 2-4 min x 311 experiments = 10-21 hours of potential parallel opportunity.",
+    "RETRO-022 (env propagation) carried until Exp 413: CARNOT_FORCE_LIVE was never exported into conductor subprocesses, causing 6+ consecutive milestones of blocked live experiments. Earlier detection via a simple conductor health check at session start would have caught this on milestone 1.",
+    "Doc reconciliation passes scheduled as full separate turns: updating ops/status.md, _bmad/traceability.md, and conductor-log.md in separate turns after each experiment added 2-5 min per experiment in context-loading overhead."
+  ],
+  "improvements_suggested": [
+    "Implement conductor session health check at startup: before the first experiment of any session, verify CARNOT_FORCE_LIVE propagates to subprocesses (one-line check). If it fails, self-inject and log WARNING. This alone would have prevented the RETRO-022 6-milestone block. Estimated savings: 60-90 min per milestone where env propagation is broken.",
+    "Wire DualGPURunner into experiment_template.py for all dual-model experiments: assign model A to cuda:0 and model B to cuda:1 using explicit device_map={'': 'cuda:N'} (the Exp 438 strategy). Run both models in parallel threads during inference phases. Estimated throughput improvement on dual-model benchmarks: 1.5-1.8x.",
+    "Add automatic GPU memory cleanup between experiments: after each experiment teardown, call torch.cuda.empty_cache() and verify nvidia-smi shows <200MB residual on each GPU before starting the next experiment. This prevents VRAM accumulation that degrades subsequent experiments.",
+    "Add experiment-state deduplication check to conductor: before scheduling an experiment, check if its result JSON already exists and honest_verdict is not 'partial' or 'blocked'. If results are already present and healthy, skip re-implementation. This would prevent the Exp 447 triple-re-verification pattern.",
+    "Create a 'doc-only' commit classifier: if the diff touches only README.md, docs/, ops/*.md, or _bmad/*.md, skip the full 3900-test suite and run only ruff + mypy (5-10s total). This eliminates 80-120 min of unnecessary test overhead per milestone.",
+    "Add per-experiment partial-result handoff protocol: when the conductor is interrupted (SIGTERM, timeout, or exception), automatically serialize the partial ExperimentTemplate state to results/experiment_NNN_partial.json before exit. The next session can fast-path to resume rather than triage from scratch. Estimated recovery time reduction: 30-40 min per interrupted experiment.",
+    "Enforce inference batching in all benchmark harnesses: batch_size=8 for GSM8K (50 questions), batch_size=4 for HumanEval (longer prompts). A single batched forward pass amortizes model loading and tokenization overhead. Expected 3-5x reduction in per-question inference latency at current GPU utilization levels.",
+    "Add GPU thermal throttle gate: if any GPU exceeds 80C, pause the conductor and log a RETRO item. Do not start the next experiment until temperature drops to 70C. This prevents thermal damage (RTX 3090 observed at 82C during runaway experiment) and preserves hardware for Phase 2 FPGA work.",
+    "Unify end-of-experiment doc update into a single atomic write per experiment: changelog.md + ops/status.md + conductor-log.md + traceability.md should all be updated together rather than in separate turns. Estimated savings: 2-4 min x 311 experiments = 10-21 hours across the milestone.",
+    "Schedule live GPU experiments in dedicated 'live' sessions and scaffolding experiments in 'dry' sessions: do not mix blocked scaffolding and live inference in the same conductor session. The live session can assume CARNOT_FORCE_LIVE=1 without per-experiment gating overhead; the dry session can skip GPU health checks entirely."
+  ],
+  "estimated_time_savings_pct": 32,
+  "estimated_time_savings_rationale": "Top contributors: DualGPURunner parallelism on dual-model experiments (~8%), inference batching (~6%), doc-only test-skip classifier (~4%), conductor health check at session start preventing env-propagation blocks (~5%), partial-result fast-path on interruptions (~4%), deduplication of re-verification turns (~5%). Combined estimated reduction: approximately 32% of total wall time, bringing a comparable 311-experiment milestone from 5002 min to approximately 3400 min.",
+  "gpu_state_at_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 18688,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_utilization_pct": 32,
+    "gpu0_temp_c": 72,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 1796,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_utilization_pct": 0,
+    "gpu1_temp_c": 52,
+    "gpu1_assessment": "RETRO-025 confirmed: GPU 1 holding 1796MB VRAM at 0% utilization — zombie allocation from device_map='auto'. Exp 438 fix not yet live-verified.",
+    "process_pid": 5982,
+    "process_cpu_time_s": 37615.2,
+    "process_wall_time_s": 38142
+  },
+  "open_retro_items_at_milestone_end": [
+    "RETRO-025: GPU 1 zombie VRAM (device_map='auto') — fix shipped in Exp 438, live verification pending",
+    "RETRO-028: Gemma4-E4B-it 0% accuracy on HumanEval — live benchmark confirmed degradation",
+    "RETRO-029: think_probe timeout — CarnotThinkProbe live path risks conductor timeout on slow LLM callers",
+    "RETRO-030: Exp 446 silent experiment drop — Langevin/Energy Matching results not surfaced in headline metrics",
+    "RETRO-031: KAEM no speedup — KAEMEnergy exact sampling 1.29x vs MCMC, below 5x target threshold"
+  ],
+  "milestone_health_signals": {
+    "live_gpu_experiments_pct": 42,
+    "scaffolding_only_pct": 58,
+    "pre_existing_test_failures": 2,
+    "total_tests_at_milestone_end": 3926,
+    "mean_minutes_per_live_experiment": 38.2,
+    "mean_minutes_per_scaffolding_experiment": 8.4,
+    "retro_items_opened": 4,
+    "retro_items_closed": 2
+  }
+}

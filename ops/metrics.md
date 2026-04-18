@@ -1828,3 +1828,4 @@
 | exp435 | 2026-04-17T05:43:29Z | 2026-04-17T05:52:05Z | Exp 435: AMD XDNA NPU Unblock — 5th attempt + IRON toolchain probe; REQ-PRED-005 + SCENARIO-EXP303-G; 50 tests pass; blocked_prereq escalation | ~8.5m |
 | planning-33 | 2026-04-17T07:24:00Z | 2026-04-17T07:25:47Z | Plan milestone 2026.04.33: 11 context files read, 5 new papers added to research-references.md, research-roadmap-vNEXT.md (v39) + research-roadmap-next.yaml (13 exps: 437-449) created | ~90m (split session) |
 | exp437 | 2026-04-17T07:37:18Z | 2026-04-17T07:50:22Z | Exp 437: LongRunBenchmarkExecutor — RETRO-026 closed; long_run_executor.py + 25 tests 100% coverage + experiment script + spec/ops docs | 13m04s |
+| exp449 | 2026-04-18T09:41:35Z | 2026-04-18T09:54:14Z | Exp 449: Milestone 2026.04.33 retrospective — MilestoneRetro2026_04_33 dataclass; SCENARIO-RETRO-033; RETRO-024/026 CLOSED; RETRO-028/029/030/031 opened; 75 tests pass; all reconciliation docs updated | ~13m |

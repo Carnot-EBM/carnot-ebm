@@ -1,6 +1,74 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-17 11:55 UTC — EXP 440: Live HumanEval micro-benchmark harness; 50 problems × 2 models; MicroHumanEvalResult + build_micro_humaneval_artifact (carnot.humaneval_micro.v1); scripts/experiment_440_live_humaneval_micro.py; 46 tests pass; REQ-BENCH-010, SCENARIO-BENCH-027/028 added to traceability
+**Last Updated:** 2026-04-18 09:41 UTC — Milestone 2026.04.33 retrospective (Exp 449): FIRST live GPU benchmark numbers obtained after 7 consecutive scaffolding-only milestones. Results are honest negatives (live_no_improvement, code_no_improvement, degradation_positive). RETRO-024 and RETRO-026 CLOSED. New RETRO-028/029/030/031 opened.
+
+---
+
+## Milestone 2026.04.33 Results (COMPLETE)
+
+### Summary
+
+**12 experiments (Exps 437-448), mean=21.2 min/exp (prev: 31.7 min/exp — improvement driven by live GPU experiments completing rather than timing out at 45 min).**
+
+### Milestone Question: Did we FINALLY get live benchmark numbers after 7 consecutive scaffolding-only milestones?
+
+**YES — with honest negatives.** For the first time since Exp 411, live GPU inference ran and returned real numbers. All three benchmark experiments (Exps 439, 440, 441) ran with `inference_mode='live_gpu'` and `status='success'`. The repair pipeline produced no improvement, and Gemma4-E4B-it scored 0.0 accuracy on all tasks (likely a model load/tokenizer issue — see RETRO-028).
+
+### Success Criteria
+
+| Criterion | Result | Notes |
+|-----------|--------|-------|
+| retro_026_resolved | **True** | Exp 437: LongRunBenchmarkExecutor implemented |
+| retro_025_resolved | **True** | Exp 438: fix_applied=True (device_map explicit assignment) |
+| live_precision_result | **live_no_improvement** | Exp 439: live GPU, honest negative |
+| live_humaneval_result | **code_no_improvement** | Exp 440: live GPU, honest negative |
+| live_adversarial_result | **degradation_positive** | Exp 441: avg 6% adversarial drop, 0% repair |
+| fr11_relay_confirmed | **True** | Exp 443: retro_024_closed=True (JEPA AUC 0.457→0.571 on real data) |
+| think_probe_viable | **False** | Exp 444: timed out at 20 min |
+| continuous_improved | **False** | Exp 446: result missing (silent drop, RETRO-030) |
+| kaem_faster | **False** | Exp 447: mean_speedup=1.29x (<5x threshold) |
+| cross_session_improvement | **False** | Exp 448: no_improvement |
+
+### Headline Results
+
+- **live_precision_result:** `live_no_improvement` — Qwen3.5-0.8B baseline accuracy 14% in all variants; Gemma4-E4B-it 0% (model issue, RETRO-028)
+- **live_humaneval_result:** `code_no_improvement` — pass@1=0.0 for both models
+- **live_adversarial_result:** `degradation_positive` — Qwen3.5-0.8B dropped 14pp under adversarial conditions; repair recovered 0pp
+- **Live benchmarks ran for first time after 7 consecutive scaffolding-only milestones (Exps 411-436)**
+- **Do NOT cite these as headline improvement numbers** — they are honest negatives, not improvements
+
+### New RETRO Items Opened (Exp 449)
+
+- **RETRO-028 (high):** Gemma4-E4B-it returned 0.0 accuracy on all benchmarks. Root cause: likely model load/tokenizer issue, not EBM failure. Fix: diagnose Gemma4 locally, replace with a model achieving >10% baseline.
+- **RETRO-029 (medium):** Exp 444 (think_probe) timed out at 20 min without completing. Redesign for partial verdicts, or increase budget to 60 min.
+- **RETRO-030 (medium):** Exp 446 (energy matching) has no result JSON — silent drop. Fix: conductor must emit not_run sentinel for scripts without result files.
+- **RETRO-031 (low):** KAEM mean_speedup=1.29x vs IsingEBM MCMC (threshold: 5x). Profile at larger n_vars (200+) where MCMC mixing time dominates.
+
+### RETRO Items Closed (Exp 449)
+
+- **RETRO-026 CLOSED (2026-04-17):** LongRunBenchmarkExecutor implemented (Exp 437). Batched checkpoint-and-resume allows benchmark runs beyond the per-experiment time cap.
+- **RETRO-024 CLOSED (2026-04-18):** FR-11 EORM/JEPA real-data relay confirmed (Exp 443). Both models retrained on 57 real FOVER-labeled CoT steps. JEPA AUC improved 0.457→0.571 on real data.
+
+### What's Working
+
+- ExperimentTimeoutWatchdog: deployed in all new experiments (RETRO-003 closed)
+- EnvironmentAutoFix: self-configuring GPU env injection (RETRO-022 workaround)
+- LongRunBenchmarkExecutor: batched checkpoint-and-resume (RETRO-026 closed)
+- Live GPU benchmarks running: Exps 439/440/441 confirmed live_gpu mode
+- FOVER live annotation: 57 real CoT steps labeled (Exp 442)
+- EORM + JEPA retrained on real data: JEPA AUC 0.457→0.571 (Exp 443)
+- BoltzmannRepairBridge: 100% repair success rate on synthetic (Exp 445)
+- GPU device-map fix applied for dual-GPU scheduling (Exp 438, retro_025_resolved)
+
+### What's Next (Priority Order)
+
+1. P0: Fix RETRO-028 (Gemma4-E4B-it zero accuracy) — diagnose model load/tokenizer issue. Replace with Qwen2.5-7B or Llama-3-8B for credible baseline numbers.
+2. P0: Run Exp 446 (energy matching) — result file missing, silent drop (RETRO-030)
+3. P1: Re-run live precision/humaneval with working model to get first positive benchmark
+4. P1: Fix RETRO-027 (silent experiment drop detection) in conductor — emit not_run sentinel
+5. P1: Re-run Exp 444 (think_probe) with 60-min budget
+6. P2: Profile KAEM at n_vars>200 (RETRO-031) to find crossover point vs MCMC
+7. P2: Conductor-level session timeout (complements per-experiment watchdog)
 
 ---
 
