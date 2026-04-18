@@ -84,6 +84,13 @@ from carnot.inference.llm_solver import (
     solve_coloring_with_llm,
     solve_sat_with_llm,
 )
+from carnot.inference.sota_models import (
+    SOTA_GGUF_MODELS,
+    SotaModelSpec,
+    default_pair,
+    flagship_dense,
+    flagship_moe,
+)
 from carnot.inference.model_loader import (
     ModelLoadError,
     ServerBackedModelHandle,
@@ -204,4 +211,9 @@ __all__ = [
     "verify_and_repair",
     "verify_python_function",
     "verify_reasoning_chain",
+    "SOTA_GGUF_MODELS",
+    "SotaModelSpec",
+    "default_pair",
+    "flagship_dense",
+    "flagship_moe",
 ]

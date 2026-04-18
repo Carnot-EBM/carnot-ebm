@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 09:41 UTC — Milestone 2026.04.33 retrospective (Exp 449): FIRST live GPU benchmark numbers obtained after 7 consecutive scaffolding-only milestones. Results are honest negatives (live_no_improvement, code_no_improvement, degradation_positive). RETRO-024 and RETRO-026 CLOSED. New RETRO-028/029/030/031 opened.
+**Last Updated:** 2026-04-18 11:50 UTC — Exp 450: RETRO-028 fix implemented. GemmaTransformersLoader (HuggingFace transformers, not llama.cpp) with is_valid_output() validation. 20 tests pass. GPU verification run pending.
 
 ---
 

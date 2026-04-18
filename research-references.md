@@ -1972,6 +1972,38 @@ thermodynamic computing Ising FPGA
   loading path was broken. Re-run with transformers loader for honest results.
 - **When to pursue:** Next milestone (2026.04.34), Exp 450 as first priority.
 
+### SOTA Local GGUF Models — Mandated Model Set (HIGHEST PRIORITY, 2026-04-18)
+- **Directive:** All new experiments that exercise an LLM (verify-repair, live benchmarks,
+  CoT, adversarial, precision, HumanEval, GSM8K, FOVER, etc.) MUST include at least one of
+  the following frontier local models in their `MODEL_SPECS` list. Legacy small models
+  (Qwen3.5-0.8B, Gemma4-E4B-it) are no longer acceptable as headline results — they may
+  only be used for fast CPU smoke-tests or cheap reproduction runs.
+- **Mandated SOTA GGUF models** (hosted on HuggingFace by unsloth, quantized):
+  - `unsloth/Qwen3.6-35B-A3B-GGUF` — Qwen 3.6 35B MoE, ~3B active params per token.
+    Flagship MoE choice; highest capability per compute for reasoning / verify-repair.
+  - `unsloth/gemma-4-26B-A4B-it-GGUF` — Gemma 4 26B MoE, ~4B active params, instruction-tuned.
+    Middle-tier MoE choice; strong instruction-following.
+  - `unsloth/gemma-4-31B-it-GGUF` — Gemma 4 31B dense, instruction-tuned. Flagship dense
+    choice; use when MoE routing overhead hurts latency or when dense activation is needed
+    (e.g. full attention for adversarial probes).
+- **Why:** These are the most capable local models available as of April 2026. Carnot's
+  headline verify-repair numbers need to be on the frontier to be taken seriously; Qwen3.5-0.8B
+  and Gemma-4-E4B-it are only appropriate for smoke-tests going forward.
+- **Loading path:** GGUF → llama.cpp backend (the same path being stabilized by Exp 450's
+  Gemma4 tokenizer fix). When Exp 450 lands, all three should load cleanly via
+  `llama-cpp-python`. Until then, the two Gemma-4 GGUFs may still hit the infinite-<unused>
+  bug; validate tokenizer output on load or fall back to the HF transformers loader.
+- **Rollout plan:**
+  1. Exp 450 closes the Gemma4 tokenizer bug (in-flight, milestone 2026.04.34).
+  2. Exp 451 re-runs the live precision benchmark using one of these SOTA models as the
+     primary judge + one as the verifier. This becomes the first credible live
+     verify-repair number.
+  3. Downstream experiments in 2026.04.34+ adopt the same model set.
+- **Hardware implications:** A3B MoE runs comfortably on a single 24 GB GPU at Q4_K_M; the
+  31B dense needs Q4_K_M on 24 GB or Q5_K_M on 32 GB; the 26B A4B MoE fits in ~16 GB at
+  Q4_K_M. Plan DualGPURunner scheduling so one 24 GB GPU runs the large model and the other
+  runs the smaller verifier concurrently.
+
 ### EBM-CoT — Energy-Based Calibration for Implicit Chain-of-Thought (MEDIUM PRIORITY)
 (Previously filed under "Think Consistently, Reason Efficiently" — arXiv:2511.07124.
  Now upgrading to high actionability given EORM+JEPA training on real data (Exp 443).)

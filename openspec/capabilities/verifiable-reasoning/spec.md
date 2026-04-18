@@ -6032,3 +6032,44 @@ non-autoregressive reasoning over continuous latent spaces.
 **And** each sub-dict has keys 'mean_l2', 'std_l2', 'mean_sign_agreement'
 **And** 'best_sampler' identifies the sampler with the lowest mean_l2
 **And** the artifact is serialisable to JSON without error
+
+## Gemma4 Loader Requirements (RETRO-028 Fix)
+
+### REQ-LOADER-001: GemmaTransformersLoader Uses HuggingFace Transformers
+
+The `GemmaTransformersLoader` class shall load Gemma4 models exclusively via
+`AutoModelForCausalLM.from_pretrained` (HuggingFace transformers library), never via
+any llama.cpp backend.
+
+**Rationale:** llama.cpp tokenizer bug (GitHub issue llama.cpp#21516) causes Gemma4
+models to emit infinite `<unused8>` tokens (token ID 14) instead of valid text.
+The model never actually ran in Exp 439 — the 0.0% GSM8K accuracy is a false negative.
+Published Gemma4 accuracy on GSM8K is 75-80%.  Using transformers directly bypasses the
+buggy llama.cpp tokenizer entirely.
+
+**Implementation Status:** Done (Exp 450)
+
+### REQ-LOADER-002: GemmaTransformersLoader Validates Output for Unused Tokens
+
+The `GemmaTransformersLoader.is_valid_output(text: str) -> bool` method shall return
+`False` if the generated text consists entirely of `<unused>` tokens (any sequence of
+`<unusedN>` tokens with no other content), and `True` otherwise.
+
+**Rationale:** The llama.cpp#21516 bug produces silent failure — the model appears to
+run but every generated token is `<unused8>` (token_id=14 in the Gemma4 tokenizer).
+Without explicit validation, a caller would observe 100% "generation success" but 0%
+accuracy because every response is garbage.
+
+**Implementation Status:** Done (Exp 450)
+
+### SCENARIO-LOADER-001: is_valid_output Rejects All-Unused Token Text
+
+**Given** a string consisting entirely of `<unused>` tokens (e.g. `<unused><unused><unused>`)
+**When** `GemmaTransformersLoader.is_valid_output(text)` is called
+**Then** the method returns `False`
+
+### SCENARIO-LOADER-002: is_valid_output Accepts Normal Text
+
+**Given** a string containing real natural language (e.g. `The answer is 42.`)
+**When** `GemmaTransformersLoader.is_valid_output(text)` is called
+**Then** the method returns `True`

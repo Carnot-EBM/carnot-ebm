@@ -1,5 +1,15 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 450 — RETRO-028 Fix: GemmaTransformersLoader)
+
+- 2026-04-18 11:42 UTC: Implemented GemmaTransformersLoader — RETRO-028 fix. (User instruction)
+  - `python/carnot/pipeline/gemma_loader.py`: GemmaTransformersLoader using HuggingFace transformers (NOT llama.cpp), with is_valid_output() to reject all-<unusedN>-token garbage output
+  - `scripts/experiment_450_gemma4_fix.py`: 10-question GSM8K diagnostic verifying the loader fix; emits gpu_required artifact when GPU unavailable
+  - `tests/python/test_gemma_loader.py`: 20 tests, 100% coverage on gemma_loader.py
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-LOADER-001, REQ-LOADER-002, SCENARIO-LOADER-001/002
+  - Export: GemmaTransformersLoader added to carnot.pipeline.__init__
+  - Root cause: llama.cpp#21516 tokenizer bug causes token_id=14 (<unused8>) infinite emission; transformers avoids this entirely
+
 ## 2026-04-18 (Milestone 2026.04.33 Operational Efficiency Retrospective — Process Analysis)
 
 - 2026-04-18 11:16 UTC: Milestone 2026.04.33 process retrospective. (User instruction) Analyzed 5002 min / 311 experiments for execution efficiency. Top bottlenecks: GPU 1 zombie VRAM (RETRO-025, 1786MB at 0% util throughout), sequential dual-model loading (Exp 219 117 min, GPU 1 idle), repeated re-verification of already-implemented code (Exp 447 verified 3x with no changes), RETRO-003 timeout watchdog carried 17+ milestones (135-225 min wasted on runaways), doc-only commits triggering full 3900-test suite (80-120 min overhead). Estimated 32% time savings achievable next milestone via DualGPURunner, inference batching, doc-only test classifier, session health check at startup, and partial-result handoff on interruptions. results/operational_retro_2026_04_33.json written. schema=carnot.operational_retro.v8.
