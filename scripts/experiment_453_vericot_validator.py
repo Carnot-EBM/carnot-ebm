@@ -207,7 +207,7 @@ def main() -> None:
             "honest_verdict": honest_verdict,
             "use_mock": True,
             "requires_gpu": False,
-        })
+        }, status="success")
 
         writer = AtomicResultWriter(str(output_path))
         writer.write(artifact)

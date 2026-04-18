@@ -182,6 +182,7 @@ def run_agent(
     max_turns: int = 20,
     timeout: int = 600,
     model_override: str | None = None,
+    deliverable_path: str | None = None,
 ) -> tuple[bool, str]:
     """Run the configured agent with a research prompt.
 
@@ -189,6 +190,16 @@ def run_agent(
     Args:
         model_override: Use a different model for this call (e.g., "haiku"
             for lightweight tasks like doc reconciliation).
+        deliverable_path: Optional repo-relative path (e.g.
+            ``results/experiment_453_vericot.json``) that this call is expected
+            to produce.  When set, the stream loop polls the file every
+            ``DELIVERABLE_POLL_SECS`` and, once it has existed with a stable
+            size+mtime for ``DELIVERABLE_STABLE_SECS``, kills the subagent
+            early and returns success.  This rescues the 40–55 min of
+            post-deliverable polishing we were burning on every experiment
+            that finishes its real work inside the first 10 min but keeps the
+            subagent alive running extra tests until the 60-min wall-clock
+            cap fires.  See observations around Exp 447/448 on 2026-04-18.
     """
     cmd, stdin_text, msg = _build_agent_command(prompt, max_turns, model_override)
 
@@ -271,6 +282,20 @@ def run_agent(
         output_lines = []
         last_output_time = time.time()
 
+        # Deliverable-watch state.  We remember the first (size, mtime) at
+        # which the deliverable appeared and declare it "stable" once it
+        # stops changing for DELIVERABLE_STABLE_SECS.  This gives the
+        # subagent a short grace window to finish writing the file before
+        # we kill it — avoids racing against half-written JSON.
+        DELIVERABLE_POLL_SECS = 30
+        DELIVERABLE_STABLE_SECS = 120
+        deliverable_file = None
+        if deliverable_path:
+            deliverable_file = PROJECT_ROOT / deliverable_path
+        deliverable_last_check = time.time()
+        deliverable_stable_since: float | None = None
+        deliverable_last_sig: tuple[int, float] | None = None
+
         while True:
             if proc.stdout is None:
                 break
@@ -301,10 +326,48 @@ def run_agent(
                     full_output = "".join(output_lines)
                     return False, f"Stalled after {int(elapsed_silence)}s silence. Last output: {full_output[-300:]}"
 
+            # Deliverable-watch: if the experiment has produced its expected
+            # result file and it has been stable for DELIVERABLE_STABLE_SECS,
+            # kill the subagent early.  The real work is done; further
+            # turns are usually doc polishing or extra tests that the
+            # conductor's own post-run reconciliation step will redo anyway.
+            now = time.time()
+            if (deliverable_file is not None
+                    and now - deliverable_last_check >= DELIVERABLE_POLL_SECS):
+                deliverable_last_check = now
+                try:
+                    st = deliverable_file.stat()
+                    sig = (st.st_size, st.st_mtime)
+                except FileNotFoundError:
+                    sig = None
+                    deliverable_stable_since = None
+                    deliverable_last_sig = None
+                if sig is not None:
+                    if sig == deliverable_last_sig:
+                        if deliverable_stable_since is None:
+                            deliverable_stable_since = now
+                        elif now - deliverable_stable_since >= DELIVERABLE_STABLE_SECS:
+                            logger.info(
+                                "%s produced stable deliverable %s "
+                                "(%.1f min elapsed) — killing subagent early",
+                                AGENT_DISPLAY, deliverable_path,
+                                (now - start_time) / 60,
+                            )
+                            _kill_subagent_group("deliverable-stable")
+                            try:
+                                proc.wait(timeout=10)
+                            except subprocess.TimeoutExpired:
+                                pass
+                            full_output = "".join(output_lines)
+                            return True, full_output[-2000:]
+                    else:
+                        deliverable_last_sig = sig
+                        deliverable_stable_since = now
+
             # Wall-clock timeout (applies to all agents, including Claude):
             # prevents the kind of 90+ min silent hang we saw on Exp 426 where
             # the subprocess was alive but making no detectable progress.
-            elapsed_total = time.time() - start_time
+            elapsed_total = now - start_time
             if WALL_CLOCK_TIMEOUT > 0 and elapsed_total > WALL_CLOCK_TIMEOUT:
                 logger.warning(
                     "%s exceeded wall-clock timeout (%d min), killing process group",
@@ -1845,7 +1908,8 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # the field falls through to AGENT_MODEL (default Sonnet).
     task_model = task.get("model")
     success, output = run_agent(prompt, max_turns=50, timeout=1200,
-                                 model_override=task_model)
+                                 model_override=task_model,
+                                 deliverable_path=task.get("deliverable"))
 
     if not success:
         logger.error("%s failed: %s", AGENT_DISPLAY, output[:200])

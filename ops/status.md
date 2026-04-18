@@ -59,6 +59,7 @@
 - EORM + JEPA retrained on real data: JEPA AUC 0.457→0.571 (Exp 443)
 - BoltzmannRepairBridge: 100% repair success rate on synthetic (Exp 445)
 - GPU device-map fix applied for dual-GPU scheduling (Exp 438, retro_025_resolved)
+- VeriCoTStepValidator: FOL formalization + Z3 UNSAT detection for IT model CoT; ArithmeticExtractor=0 vs VeriCoT=8/20 (improvement_rate=0.40); honest_verdict=vericot_better (Exp 453, CPU-only, 56 tests pass)
 
 ### What's Next (Priority Order)
 
