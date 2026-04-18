@@ -427,4 +427,8 @@
 | REQ-BENCH-016 | Not Started | Implemented | Live dual-GPU precision benchmark infrastructure — DualGPUAssigner enforces cuda:0/cuda:1 isolation, BatchedInferenceRunner with 30-minute timeout watchdog, streaming CoT pair collection with atomic writes (Exp 464) |
 | SCENARIO-BENCH-033 | Not Started | Implemented | 100-question stratified corpus — 50 easy + 50 hard GSM8K questions (stratification criterion per research-program.md); determines baseline accuracy for each model independent of repair pipeline (Exp 464) |
 | SCENARIO-BENCH-034 | Not Started | Implemented | Dual-model live execution criterion — Gemma4-E4B-it on cuda:0 + Qwen3.5-0.8B on cuda:1; both models run all 100 questions; results merged with per-model accuracy tracking (Exp 464) |
+| REQ-PROBE-008 | Not Started | Implemented | ThinkProbeV2 Live Run Uses DeliverableGuard to assert final artifact presence at experiment exit (Exp 465) |
+| REQ-PROBE-009 | Not Started | Implemented | Live Think Probe Result Includes inference_mode Field to distinguish live_gpu from deferred/simulated runs (Exp 465) |
+| SCENARIO-PROBE-013 | Not Started | Implemented | DeliverableGuard Raises FileNotFoundError On Missing File, citing RETRO-032/033/036 (Exp 465) |
+| SCENARIO-PROBE-014 | Not Started | Implemented | LiveThinkProbeResult.is_partial Returns True When n_completed < n_total, with inference_mode='live_gpu' field (Exp 465) |
 | SCENARIO-BENCH-035 | Not Started | Implemented | Live precision honest verdict rules — honest_verdict='retro_033_closed_positive' only when inference_mode=='live_gpu' AND all deliverables (results/experiment_464_live_precision_100q.json + results/exp464_cot_pairs.json) successfully written; blocks on CARNOT_FORCE_LIVE=0 or GPU health check failure (Exp 464) |
