@@ -94,6 +94,10 @@
   - Spec: REQ-SAMPLE-015, REQ-SAMPLE-016, SCENARIO-SAMPLE-027/028/029 added to training-inference/spec.md
   - Export: KAEMEnergy, UnivariateKAEMLayer, benchmark_kaem_vs_mcmc added to carnot.models.__init__
 
+## 2026-04-18 (Exp 467 — Live 200q Integrated VeriCoT+VPRM+CRANE Pipeline)
+
+- 2026-04-18 23:32 UTC: Exp 467 setup complete: VeriCoT+VPRM+CRANE extraction stack ready; gpu_required status (deferred pending GPU availability). (User instruction)
+
 ## 2026-04-17 (Exp 446 — Langevin Dynamics + Energy Matching — Phase 3 ContinuousEBM)
 
 - 2026-04-17 22:03 UTC: Implemented Langevin dynamics + Energy Matching samplers (Exp 446). (User instruction)

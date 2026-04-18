@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 — Exp 461 COMPLETE. Milestone 2026.04.34 retrospective: FIRST POSITIVE verify-repair number confirmed (Exp 451 live_precision: +5pp improvement, honest_verdict=repair_better, first time since Exp 411). Phase 1 milestone reached. MilestoneRetro2026_04_34 schema; SCENARIO-RETRO-034 added. Previously: Exp 457 COMPLETE. LSEBMCL Cross-Session EBM Replay Tier 2 continual learning: LSEBMConstraintReplayer fits Session 1 violations, generates N warm-start synthetic violations for Session 2. session2_fp_rate=0.0 vs constraint_add_fp_rate=0.0 vs exp448_fp_rate=0.46, honest_verdict=lsebmcl_better. 174 tests pass. REQ-SELFLEARN-013/014/015, SCENARIO-SELFLEARN-013/014/015. FR-11 Tier 2 continual learning confirmed.
+**Last Updated:** 2026-04-18 — Exp 467 staged: Live 200q Integrated VeriCoT+VPRM+CRANE pipeline (gpu_required, deferred). Exp 461 COMPLETE: Milestone 2026.04.34 retrospective — FIRST POSITIVE verify-repair confirmed (Exp 451 live_precision: +5pp, honest_verdict=repair_better). Phase 1 milestone reached. MilestoneRetro2026_04_34 schema; SCENARIO-RETRO-034 added. Previously: Exp 457 COMPLETE — LSEBMCL Tier 2 continual learning (LSEBMConstraintReplayer; session2_fp_rate=0.0; REQ-SELFLEARN-013/014/015; FR-11 Tier 2 confirmed).
 
 ---
 
