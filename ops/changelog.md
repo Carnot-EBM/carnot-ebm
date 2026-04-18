@@ -1,5 +1,16 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 455 — ThinkProbeV2: RETRO-029 Closure)
+
+- 2026-04-18 18:17 UTC: Implemented ThinkProbeV2 resolving RETRO-029. (User instruction)
+  - New: `python/carnot/pipeline/think_probe_v2.py` — ThinkProbeV2Result + ThinkProbeV2
+  - New: `tests/python/test_think_probe_v2.py` — 31 tests, 100% targeted coverage
+  - New: `scripts/experiment_455_think_probe_v2.py` — 60-min watchdog, 55-min internal budget
+  - Updated: `python/carnot/pipeline/__init__.py` — exports ThinkProbeV2, ThinkProbeV2Result
+  - Updated: `openspec/capabilities/verifiable-reasoning/spec.md` — REQ-PROBE-005/006/007, SCENARIO-PROBE-010/011/012
+  - Updated: `ops/conductor-log.md` — RETRO-029 CLOSED
+  - RETRO-029 CLOSED: three-part fix — 60-min budget, partial verdict, incremental checkpoint
+
 ## 2026-04-18 (Exp 454 — VPRM Arithmetic Verifier)
 
 - 2026-04-18 17:50 UTC: Implemented VPRM Arithmetic Verifier (arXiv 2601.17223). (User instruction)

@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 18:00 UTC — Exp 454 COMPLETE. VPRM Arithmetic Verifier implemented; baseline_f1=0.0, vprm_f1=1.0, honest_verdict=vprm_better. 80 tests pass, 100% module coverage. CPU-only experiment, no GPU needed. Complements VeriCoT (Exp 453): VPRM catches arithmetic, VeriCoT catches logic.
+**Last Updated:** 2026-04-18 18:17 UTC — Exp 455 COMPLETE. ThinkProbeV2 60-min budget + partial verdict + incremental checkpoint implemented. RETRO-029 CLOSED. 31 tests pass, 100% targeted coverage. VPRM Arithmetic Verifier implemented; baseline_f1=0.0, vprm_f1=1.0, honest_verdict=vprm_better. 80 tests pass, 100% module coverage. CPU-only experiment, no GPU needed. Complements VeriCoT (Exp 453): VPRM catches arithmetic, VeriCoT catches logic.
 
 ---
 
@@ -40,7 +40,7 @@
 ### New RETRO Items Opened (Exp 449)
 
 - **RETRO-028 (high):** Gemma4-E4B-it returned 0.0 accuracy on all benchmarks. Root cause: likely model load/tokenizer issue, not EBM failure. Fix: diagnose Gemma4 locally, replace with a model achieving >10% baseline.
-- **RETRO-029 (medium):** Exp 444 (think_probe) timed out at 20 min without completing. Redesign for partial verdicts, or increase budget to 60 min.
+- ~~**RETRO-029 (medium):** Exp 444 (think_probe) timed out at 20 min without completing. Redesign for partial verdicts, or increase budget to 60 min.~~ **CLOSED 2026-04-18** — ThinkProbeV2: 60-min budget (55 internal + 5 buffer), partial verdict (`honest_verdict='partial_N_of_50'`), incremental checkpoint every 10 questions. (Exp 455)
 - ~~**RETRO-030 (medium):** Exp 446 (energy matching) has no result JSON — silent drop.~~ **CLOSED 2026-04-18** — AtomicResultWriter (write-to-tmp + os.rename) implemented; Exp 452 confirmed result file written and verified (retro_030_resolved=True).
 - **RETRO-031 (low):** KAEM mean_speedup=1.29x vs IsingEBM MCMC (threshold: 5x). Profile at larger n_vars (200+) where MCMC mixing time dominates.
 

@@ -6121,6 +6121,88 @@ SCENARIO-VERIFY-126
 **And** `result['tp_rate']` is the fraction of wrong responses flagged as incorrect
 **And** `result['fp_rate']` is the fraction of correct responses wrongly flagged as incorrect
 
+### REQ-PROBE-005: ThinkProbeV2 60-Minute Budget
+
+ThinkProbeV2 shall run the full 50-question × 2-model benchmark within a 60-minute wall-clock
+budget (55 minutes internal, 5 minutes reserved for artifact write and cleanup). This resolves
+RETRO-029 where the 20-minute budget caused a complete timeout with no result.
+
+**Acceptance Criteria:**
+- `ThinkProbeV2(budget_minutes=60)` is constructable with no error
+- The internal budget used during `run()` is `budget_minutes * 60 * 0.916` seconds
+  (i.e. 55 of 60 minutes, leaving 5 minutes for artifact write)
+- When all questions are answered within budget, `result.status == 'complete'`
+
+Spec: REQ-PROBE-005
+SCENARIO-PROBE-010
+
+### REQ-PROBE-006: ThinkProbeV2 Partial Verdict Mode
+
+When a `ThinkProbeV2.run()` call times out before all questions are answered, it shall
+emit a `ThinkProbeV2Result` with `status='partial'` rather than raising an exception.
+The result shall faithfully describe the completed fraction so the conductor and operator
+can assess progress without re-running the full experiment.
+
+**Why honest negatives instead of silent timeout:**
+RETRO-029 lost the entire Exp 444 run when the 20-minute watchdog fired `sys.exit(1)`.
+No partial data survived. A `ThinkProbeV2Result` with `honest_verdict='partial_30_of_50'`
+is far more useful than an empty result file — it tells the researcher exactly how far the
+run got and allows continuation checkpointing in a future run.
+
+**Acceptance Criteria:**
+- `ThinkProbeV2Result.is_partial` is `True` when `n_completed < n_total`
+- `ThinkProbeV2Result.completion_fraction` equals `n_completed / n_total`
+- `ThinkProbeV2Result.honest_verdict` is `'complete'` when `n_completed == n_total`
+- `ThinkProbeV2Result.honest_verdict` is `'partial_{n_completed}_of_{n_total}'` when partial
+- `ThinkProbeV2Result.honest_verdict` is `'timeout_no_data'` when `n_completed == 0`
+- Timeout during `run()` does NOT raise — returns partial result instead
+
+Spec: REQ-PROBE-006
+SCENARIO-PROBE-011
+
+### REQ-PROBE-007: ThinkProbeV2 Incremental Checkpoint Every 10 Questions
+
+ThinkProbeV2 shall write an incremental checkpoint after every 10 completed questions.
+This ensures that a timeout after question 40 preserves 40 answers rather than losing
+the entire run (RETRO-029 root cause: no checkpoint → zero recovery on timeout).
+
+**Acceptance Criteria:**
+- `ThinkProbeV2(checkpoint_interval=10)` is constructable
+- After every `checkpoint_interval` questions, `_checkpoint(results_so_far, step)` is called
+- Checkpoint is written to `results/checkpoints/experiment_455/checkpoint.json`
+- On timeout at question 40, checkpoint at step 40 exists and contains 40 answers
+
+Spec: REQ-PROBE-007
+SCENARIO-PROBE-012
+
+### SCENARIO-PROBE-010: ThinkProbeV2 Completes Within 60-Minute Budget
+
+**Given** `ThinkProbeV2(budget_minutes=60)` and a fast mock `inference_fn` (< 1 ms per call)
+**When** `run(questions_50, inference_fn)` is called
+**Then** `result.status == 'complete'`
+**And** `result.n_completed == 50`
+**And** `result.n_total == 50`
+**And** `result.completion_fraction == 1.0`
+**And** `result.honest_verdict == 'complete'`
+
+### SCENARIO-PROBE-011: ThinkProbeV2 Emits Partial Result On Timeout
+
+**Given** `ThinkProbeV2(budget_minutes=0.0001)` (sub-second budget) and a slow `inference_fn`
+  that sleeps 1 second per question
+**When** `run(questions_50, inference_fn)` is called
+**Then** no exception is raised
+**And** `result.n_completed < 50`
+**And** `result.is_partial == True`
+**And** `result.honest_verdict` starts with `'partial_'` or equals `'timeout_no_data'`
+
+### SCENARIO-PROBE-012: ThinkProbeV2 Writes Checkpoint Every 10 Questions
+
+**Given** `ThinkProbeV2(budget_minutes=60, checkpoint_interval=10)` with a fast `inference_fn`
+  and a mock `_checkpoint` recorder
+**When** `run(questions_50, inference_fn)` is called and completes
+**Then** `_checkpoint` was called at least once for every 10 completed questions
+**And** each checkpoint call received `step` equal to a multiple of `checkpoint_interval`
+
 ---
 
 ## Phase 3 Seed Requirements (Exp 435a — NOT production, exploratory only)
