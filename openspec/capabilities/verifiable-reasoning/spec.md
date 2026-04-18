@@ -6771,6 +6771,78 @@ Spec: REQ-EORM-007
 **Then** the result is in [0.0, 1.0]
 **And** the calibrated AUC is >= baseline uncalibrated AUC - 0.05 (regression tolerance)
 
+### REQ-EORM-008: EBMCoTCalibratorV3 Uses 50 Langevin Steps by Default
+
+`EBMCoTCalibratorV3.__init__(eorm, n_langevin_steps: int = 50, ...)` shall:
+- Default `n_langevin_steps` to 50 (vs. 10 in v2).
+- Accept `n_langevin_steps` as a configurable parameter.
+
+**Why 50 steps (RETRO-034):** Exp 458 (v2) used 10 Langevin steps and reached AUC 0.5554 vs
+the 0.600 target.  Root cause: 10 steps is insufficient for full hidden-state relaxation to the
+low-energy manifold.  Increasing to 50 steps gives the dynamics enough time to reach a stable
+low-energy region, improving discriminability between correct and incorrect CoT representations.
+
+**Implementation Status:** Done (Exp 466)
+
+Spec: REQ-EORM-008
+
+### REQ-EORM-009: EP Coupling Update Applies Free/Clamped Phase Spin Correlations
+
+`EPCouplingUpdate.update_couplings(J, free_spins, clamped_spins) -> jnp.ndarray` shall:
+- Compute free-phase spin correlation: `free_corr[i,j] = mean(free_spins[:,i] * free_spins[:,j])`
+- Compute clamped-phase spin correlation: `clamped_corr[i,j] = mean(clamped_spins[:,i] * clamped_spins[:,j])`
+- Apply Equilibrium Propagation update: `J_new = J + η * (free_corr - clamped_corr)`
+- Require no backpropagation — the update is a local Hebbian rule derived from OIM physics.
+
+**Why EP coupling update (arXiv 2510.12934):** Equilibrium Propagation (OIM/EP) trains coupling
+matrices using only two steady states (free phase and clamped phase), producing a weight update
+that is equivalent to contrastive Hebbian learning.  No gradient backpropagation is needed:
+the update is a local rule that can be computed from observable spin correlations.
+This aligns with Phase 2 hardware goals — OIM machines implement EP natively.
+
+**Implementation Status:** Done (Exp 466)
+
+Spec: REQ-EORM-009
+
+### REQ-EORM-010: SyntheticCoTPairGenerator Supplements Real Pairs to n_total=150
+
+`SyntheticCoTPairGenerator(ebm, n_samples: int = 100).generate() -> list[tuple[str, bool]]` shall:
+- Return exactly `n_samples` synthetic (cot_text, is_correct) pairs.
+- Alternate between correct (is_correct=True) and incorrect (is_correct=False) pairs.
+
+**Why synthetic augmentation (RETRO-034):** Exp 458 had only 57 real CoT pairs from one source
+(Exp 443).  57 pairs is insufficient to train a calibrator that generalizes: the model overfits
+to a narrow slice of the CoT style distribution.  Augmenting to 150 pairs (57 real + 93 synthetic)
+improves generalization and gives the EP coupling update enough variation to learn meaningful
+spin correlations.
+
+**Implementation Status:** Done (Exp 466)
+
+Spec: REQ-EORM-010
+
+### SCENARIO-EORM-012: EPCouplingUpdate Produces Different J After Update
+
+**Given** an `EPCouplingUpdate(learning_rate=0.01)` and a random coupling matrix J
+**And** random free_spins and clamped_spins with different correlation structures
+**When** `update_couplings(J, free_spins, clamped_spins)` is called
+**Then** the returned J_new differs from the input J (update was applied)
+**And** the difference has the correct sign: `J_new - J = η * (free_corr - clamped_corr)`
+
+### SCENARIO-EORM-013: EBMCoTCalibratorV3 with 50 Steps Reaches Lower Energy Than with 10
+
+**Given** an `EBMCoTCalibratorV3(eorm, n_langevin_steps=50)` and v2 with `n_langevin_steps=10`
+**And** identical initial hidden state and random seed
+**When** `calibrate_hidden(h)` is called on both
+**Then** the mean energy after 50 steps is lower than after 10 steps (stronger relaxation)
+
+### SCENARIO-EORM-014: EBMCoTCalibratorV3 calibrated_auc >= v2 Baseline on Same Synthetic Data
+
+**Given** an `EBMCoTCalibratorV3` with EP coupling update enabled
+**And** the same 40 synthetic labeled CoT pairs used in SCENARIO-EORM-011
+**When** `calibrated_auc(examples)` is called
+**Then** the AUC >= 0.5 (above random chance)
+**And** AUC >= v2 baseline AUC minus 0.05 (no regression from v2)
+
 ### REQ-KAEM-005: KAEMEnergy Crossover Profiling Spans n_vars 50-1000
 
 The `SpeedupProfile` class shall profile KAEMEnergy exact sampling versus
