@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 11:50 UTC — Exp 450: RETRO-028 fix implemented. GemmaTransformersLoader (HuggingFace transformers, not llama.cpp) with is_valid_output() validation. 20 tests pass. GPU verification run pending.
+**Last Updated:** 2026-04-18 14:15 UTC — Exp 451 harness written (RETRO-028 post-fix benchmark). LivePrecisionResult + GemmaTransformersLoader + CRANE, 15 tests pass, GPU run pending.
 
 ---
 
@@ -62,7 +62,8 @@
 
 ### What's Next (Priority Order)
 
-1. P0: Fix RETRO-028 (Gemma4-E4B-it zero accuracy) — diagnose model load/tokenizer issue. Replace with Qwen2.5-7B or Llama-3-8B for credible baseline numbers.
+0. P0: Run Exp 451 on live GPU (CARNOT_FORCE_LIVE=1) — post-fix benchmark with GemmaTransformersLoader. Expect first positive verify-repair number.
+1. ~~P0: Fix RETRO-028 (Gemma4-E4B-it zero accuracy)~~ FIXED (Exp 450 + Exp 451 harness) — GemmaTransformersLoader replaces llama.cpp for Gemma4.
 2. P0: Run Exp 446 (energy matching) — result file missing, silent drop (RETRO-030)
 3. P1: Re-run live precision/humaneval with working model to get first positive benchmark
 4. P1: Fix RETRO-027 (silent experiment drop detection) in conductor — emit not_run sentinel

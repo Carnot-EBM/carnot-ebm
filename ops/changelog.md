@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 451 — Live Precision Post-Fix Benchmark: RETRO-028 Follow-Up)
+
+- 2026-04-18 14:03 UTC: Implemented Exp 451 post-fix benchmark harness. (User instruction)
+  - `python/carnot/pipeline/live_precision_result.py`: LivePrecisionResult(model_id, pre_accuracy, post_accuracy) with signed_improvement and is_positive computed properties
+  - `scripts/experiment_451_live_precision_postfix.py`: 50 GSM8K × 2 models × baseline+pipeline variants; GemmaTransformersLoader for Gemma4 (RETRO-028 fix); CRANE extraction; deferred artifact when GPU unavailable; honest_verdict first_positive/no_improvement_v2; schema=carnot.live_precision.v2
+  - `tests/python/test_live_precision_result.py`: 15 tests, 100% coverage on live_precision_result.py
+  - `openspec/capabilities/verifiable-reasoning/spec.md`: Added REQ-BENCH-012, REQ-BENCH-013, SCENARIO-BENCH-031/032
+  - GPU run pending — expected: Gemma4 baseline 75-80%, first_positive_number=True
+
 ## 2026-04-18 (Exp 450 — RETRO-028 Fix: GemmaTransformersLoader)
 
 - 2026-04-18 11:42 UTC: Implemented GemmaTransformersLoader — RETRO-028 fix. (User instruction)
