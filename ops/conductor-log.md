@@ -2148,3 +2148,4 @@ python/ |
 | 2026-04-18 16:51 UTC | Exp 453: VeriCoT Step Validator — FOL formalizatio | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-18 16:58 UTC | Exp 453: VeriCoT Step Validator — FOL formalization + Z3 UNSAT detection | OK | 56 tests pass; ArithmeticExtractor=0, VeriCoT=8/20 (improvement_rate=0.40), honest_verdict=vericot_better |
 | 2026-04-18 17:46 UTC | Exp 453: VeriCoT Step Validator — FOL formalizatio | OK | Deliverable already exists in repo |
+| 2026-04-18 18:10 UTC | Exp 454: VPRM Arithmetic Rule Verifier — rule-base | OK | 81 passed in 53.52s |
