@@ -6604,3 +6604,67 @@ Spec: REQ-SELFLEARN-015, SCENARIO-SELFLEARN-015
 **When** Session 2 runs
 **Then** the artifact contains `exp448_fp_rate`, `lsebmcl_fp_rate`, `constraint_add_fp_rate`
 **And** `honest_verdict` is one of `'lsebmcl_better'` or `'no_improvement'`
+
+### REQ-EORM-005: EBMCoTCalibrator Applies Langevin Dynamics to EORM Hidden State Before Scoring
+
+The `EBMCoTCalibrator` shall:
+- Accept an `EORMModel` and a configurable `n_langevin_steps` (default 10) at construction.
+- Implement `calibrate_hidden(hidden: jnp.ndarray) -> jnp.ndarray`: run N steps of Langevin dynamics
+  on the pooled EORM hidden state, moving it toward lower-energy regions of the EBM manifold.
+- Implement `score(cot_input: CoTEnergyInput) -> float`: extract pooled hidden state from EORM,
+  calibrate via Langevin, and return energy of calibrated representation.
+- The Langevin update rule: `h_{t+1} = h_t - (ε/2) * ∇_h E(h_t) + sqrt(ε) * ξ_t`, `ξ_t ~ N(0, I)`.
+
+**Why Langevin calibration (arXiv 2511.07124 — EBM-CoT):**
+    Token-level encoding introduces noise into the pooled hidden state.  Langevin dynamics
+    slide the representation along the energy gradient toward the nearest low-energy region
+    on the EBM manifold, removing token-level noise while preserving semantic structure.
+    This improves the discriminability of the energy readout between correct and incorrect CoT.
+
+**Implementation Status:** Done (Exp 458)
+
+Spec: REQ-EORM-005, SCENARIO-EORM-010
+
+### REQ-EORM-006: EBMCoTCalibrator Improves EORM AUC vs Uncalibrated Baseline
+
+The `EBMCoTCalibrator` shall:
+- Implement `calibrated_auc(examples: list[dict]) -> float`: compute AUC-ROC of calibrated
+  energy scores on labeled (question_text, response_text, label) examples.
+- The calibrated AUC shall be reported alongside the uncalibrated baseline in the Exp 458 artifact.
+- The artifact shall contain `baseline_auc`, `calibrated_auc`, `auc_improvement`, `target_met`,
+  and `honest_verdict` (one of `'target_met'`, `'improvement'`, `'regression'`).
+
+**Implementation Status:** Done (Exp 458)
+
+Spec: REQ-EORM-006, SCENARIO-EORM-011
+
+### REQ-EORM-007: EBMCoTCalibrator n_langevin_steps Configurable with Default 10
+
+`EBMCoTCalibrator.__init__(eorm, n_langevin_steps: int = 10, step_size: float = 0.01)` shall:
+- Accept `n_langevin_steps` as a named parameter with default value 10.
+- Accept `step_size` (Langevin ε) with default value 0.01.
+- Both parameters shall be accessible as instance attributes.
+
+**Why 10 steps default:** Empirical sweet spot from arXiv 2511.07124 — sufficient to move off
+the high-energy initial point without over-smoothing the representation.
+
+**Implementation Status:** Done (Exp 458)
+
+Spec: REQ-EORM-007
+
+### SCENARIO-EORM-010: Calibrated Hidden Has Lower Energy Than Uncalibrated in Expectation
+
+**Given** an `EBMCoTCalibrator` with `n_langevin_steps=20` and `step_size=0.1`
+**And** an EORMModel with `out_weight = [2, 0, 0, ...]` (strong gradient signal)
+**And** initial hidden state `h = [0, 0, ..., 0]` (energy ≈ 0)
+**When** `calibrate_hidden(h)` is called 50 times with different random seeds
+**Then** the mean calibrated energy across all 50 runs is < initial energy
+**And** the Langevin drift term consistently decreases energy in expectation
+
+### SCENARIO-EORM-011: calibrated_auc Does Not Regress Below Baseline on Synthetic Pairs
+
+**Given** an `EBMCoTCalibrator` wrapping a randomly-initialized EORMModel
+**And** 40 synthetic labeled CoT pairs (20 correct, 20 incorrect)
+**When** `calibrated_auc(examples)` is called
+**Then** the result is in [0.0, 1.0]
+**And** the calibrated AUC is >= baseline uncalibrated AUC - 0.05 (regression tolerance)
