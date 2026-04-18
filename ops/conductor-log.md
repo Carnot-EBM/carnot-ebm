@@ -2165,3 +2165,4 @@ python/ |
 | 2026-04-18 22:19 UTC | Exp 463: Conductor Session Health Check — zombie k | OK | 81 passed in 25.52s |
 | 2026-04-18 22:43 UTC | Exp 464: Live Precision 100q — RETRO-033 closure w | OK | 81 passed in 34.53s |
 | 2026-04-18 22:56 UTC | Exp 465: ThinkProbeV2 Live GPU Execution — RETRO-0 | OK | 81 passed in 23.40s |
+| 2026-04-18 23:14 UTC | Exp 466: EBM-CoT Calibration v3 — RETRO-034 closur | OK | 81 passed in 19.48s |
