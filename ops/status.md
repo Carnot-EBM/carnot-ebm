@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 14:15 UTC — Exp 451 complete (RETRO-028 post-fix benchmark). LivePrecisionResult + GemmaTransformersLoader + CRANE, 15 tests pass, GPU run successful, first_positive_verify_repair confirmed.
+**Last Updated:** 2026-04-18 14:28 UTC — Exp 452 complete (RETRO-030 closure). AtomicResultWriter implemented; Energy Matching v2 script with atomic write + verify_exists() assertion; 11 tests pass; RETRO-030 CLOSED.
 
 ---
 
