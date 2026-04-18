@@ -4686,6 +4686,60 @@ The repository SHALL provide a live GPU adversarial GSM8K micro-benchmark (Exp 4
 
 Spec: REQ-BENCH-011, SCENARIO-BENCH-029, SCENARIO-BENCH-030
 
+### REQ-BENCH-012: Live Precision Post-Fix Benchmark — GemmaTransformersLoader Backend
+
+The live precision benchmark (Exp 451, post-RETRO-028 fix) SHALL support
+GemmaTransformersLoader as the Gemma4 inference backend, where:
+
+- Gemma4-E4B-it is loaded exclusively via ``GemmaTransformersLoader`` (HuggingFace
+  transformers), never via llama.cpp, to avoid the token-id=14 infinite ``<unused8>``
+  bug confirmed in RETRO-028.
+- The artifact records ``gemma4_loader='GemmaTransformersLoader'`` so auditors can
+  confirm the llama.cpp path was not taken.
+- If ``GemmaTransformersLoader.is_valid_output()`` returns False for any Gemma4
+  response, the response is treated as a generation failure (not counted as correct).
+- Qwen3.5-0.8B continues to use the standard HF pipeline loader (no change from
+  Exp 439).
+
+### REQ-BENCH-013: LivePrecisionResult — Signed Improvement Data Class
+
+The benchmark SHALL provide a ``LivePrecisionResult`` data class in
+``python/carnot/pipeline/live_precision_result.py``, where:
+
+- ``model_id: str`` — the model name/ID being benchmarked.
+- ``pre_accuracy: float`` — baseline accuracy (no verify-repair pipeline).
+- ``post_accuracy: float`` — accuracy after verify-repair pipeline is applied.
+- ``signed_improvement`` (computed property) — ``post_accuracy - pre_accuracy``.
+  Negative values are honest regression signals — never clamp or abs() this field.
+- ``is_positive`` (computed property) — ``True`` iff ``signed_improvement > 0``.
+- Both properties are pure Python (no JAX dependency) so they work in CPU-only
+  test environments without GPU hardware.
+
+### SCENARIO-BENCH-031: Exp 451 First Positive Verify-Repair Number
+
+**Given** Exp 451 runs on live dual-RTX-3090 hardware with CARNOT_FORCE_LIVE=1
+**And** Gemma4-E4B-it is loaded via GemmaTransformersLoader (RETRO-028 fix)
+**And** 50 GSM8K questions are evaluated for both Gemma4-E4B-it and Qwen3.5-0.8B
+**When** baseline and pipeline variant runs complete
+**Then** the artifact records ``LivePrecisionResult`` dicts for both models
+**And** ``first_positive_number`` is True iff at least one model's
+  ``LivePrecisionResult.is_positive`` is True
+**And** ``honest_verdict`` is ``'first_positive'`` iff ``first_positive_number``
+  is True, else ``'no_improvement_v2'``
+**And** ``gemma4_loader`` is ``'GemmaTransformersLoader'`` in the artifact
+**And** ``schema`` is ``'carnot.live_precision.v2'``
+
+### SCENARIO-BENCH-032: Exp 451 Deferred Artifact When GPU Unavailable
+
+**Given** Exp 451 runs without live GPU hardware (CARNOT_FORCE_LIVE not set)
+**Or** setup_gpu() reports not all_healthy
+**When** the artifact is assembled
+**Then** ``status`` is ``'gpu_required'``
+**And** ``honest_verdict`` is ``'deferred_to_gpu'``
+**And** the artifact does NOT contain fabricated accuracy numbers
+
+Spec: REQ-BENCH-012, REQ-BENCH-013, SCENARIO-BENCH-031, SCENARIO-BENCH-032
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
@@ -5765,6 +5819,8 @@ The system shall gate each agent action behind a SAVeR auditor loop, where:
 | REQ-BENCH-009 | Not Started | Implemented (Exp 439) | MicroPrecisionResult + build_micro_precision_artifact (schema carnot.precision_micro.v1); 50q × 3 variants × 2 models micro-benchmark with LongRunBenchmarkExecutor; CoT log for FOVER (SCENARIO-BENCH-025/026) |
 | REQ-BENCH-010 | Not Started | Scaffolding (Exp 440) | MicroHumanEvalResult + build_micro_humaneval_artifact (schema carnot.humaneval_micro.v1); 50 problems × 2 models; blocked at gate (SCENARIO-BENCH-027/028) |
 | REQ-BENCH-011 | Not Started | Implemented (Exp 441) | MicroAdversarialResult + build_micro_adversarial_artifact (schema carnot.adversarial_micro.v1); 50q × 3 conditions × 2 models micro-benchmark; robustness_claim field; LongRunBenchmarkExecutor (SCENARIO-BENCH-029/030) |
+| REQ-BENCH-012 | Not Started | Implemented (Exp 451) | GemmaTransformersLoader backend for Gemma4 in live precision post-fix benchmark; gemma4_loader artifact field; is_valid_output gating (SCENARIO-BENCH-031/032) |
+| REQ-BENCH-013 | Not Started | Implemented (Exp 451) | LivePrecisionResult(model_id, pre_accuracy, post_accuracy) + signed_improvement + is_positive; schema carnot.live_precision.v2; honest_verdict first_positive/no_improvement_v2 (SCENARIO-BENCH-031/032) |
 | REQ-INFRA-001 | N/A | Implemented | run_experiment_with_timeout.sh + timeout_wrapper_exists() tests (SCENARIO-INFRA-001, Exp 325) |
 | REQ-INFRA-002 | N/A | Implemented | generate_test_stub() idempotency + ast.parse tests (SCENARIO-INFRA-002/003, Exp 325) |
 | REQ-INFRA-003 | N/A | Implemented | DualGPUMonitor zombie detection + CI-safe fallback tests (SCENARIO-INFRA-004/006, Exp 326) |
