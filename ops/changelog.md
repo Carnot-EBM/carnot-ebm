@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-04-18 (Exp 447 — KAEMEnergy Exact Inverse-Transform Sampling)
+
+- 2026-04-18 02:33 UTC: Implemented KAEMEnergy with exact sampling (arXiv 2506.14167). (User instruction)
+  - `python/carnot/models/kaem_energy.py`: UnivariateKAEMLayer (per-variable marginal splines, marginal_cdf, sample_exact via inverse-transform), KAEMEnergy (energy/sample/fit), benchmark_kaem_vs_mcmc
+  - `scripts/experiment_447_kaem_exact_sampling.py`: CPU-only benchmark at n_vars={10,25,50,100}, 20min watchdog
+  - `tests/python/test_kaem_energy.py`: 51 tests, 100% coverage of kaem_energy.py
+  - Spec: REQ-SAMPLE-015, REQ-SAMPLE-016, SCENARIO-SAMPLE-027/028/029 added to training-inference/spec.md
+  - Export: KAEMEnergy, UnivariateKAEMLayer, benchmark_kaem_vs_mcmc added to carnot.models.__init__
+
 ## 2026-04-17 (Exp 446 — Langevin Dynamics + Energy Matching — Phase 3 ContinuousEBM)
 
 - 2026-04-17 22:03 UTC: Implemented Langevin dynamics + Energy Matching samplers (Exp 446). (User instruction)
