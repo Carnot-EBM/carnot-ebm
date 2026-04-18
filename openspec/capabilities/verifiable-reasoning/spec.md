@@ -4936,6 +4936,67 @@ giving statistically credible directional claims.
 Spec: REQ-BENCH-017, REQ-BENCH-018, REQ-BENCH-019,
       SCENARIO-BENCH-036, SCENARIO-BENCH-037, SCENARIO-BENCH-038
 
+### REQ-BENCH-020: Adversarial Benchmark Loads from apple/GSM-Symbolic
+
+The adversarial benchmark shall attempt to load the `apple/GSM-Symbolic` HuggingFace
+dataset (main split, first 50 questions) and fall back to a hardcoded set of 50
+adversarial-style questions with irrelevant context sentences when the dataset is
+unavailable.  The artifact shall record `data_source='huggingface'` or
+`data_source='hardcoded_fallback'` so downstream analysis can trace provenance.
+
+**Implementation Status:** Done (Exp 468)
+
+### REQ-BENCH-021: Three-Condition Comparison: Standard Baseline, Adversarial Baseline, Adversarial with Carnot
+
+The adversarial benchmark shall run three conditions for each model:
+- Condition A: standard GSM8K baseline (same 50q subset as Exp 464)
+- Condition B: adversarial variant baseline (no verify-repair pipeline)
+- Condition C: adversarial variant with Carnot verify-repair (IntegratedExtractor)
+
+The artifact shall record per-condition accuracy and the signed improvement for each
+transition (A→B measuring adversarial drop, B→C measuring Carnot recovery).
+
+**Implementation Status:** Done (Exp 468)
+
+### REQ-BENCH-022: thesis_confirmed When Adversarial Improvement > Standard Improvement
+
+`AdversarialBenchmarkResult.thesis_confirmed` shall be `True` when
+`carnot_adversarial_improvement > carnot_standard_improvement` (Carnot's benefit is
+larger on adversarial variants than on standard GSM8K).  The artifact field
+`honest_verdict` shall reflect: `'thesis_confirmed'` / `'thesis_partial'` (any
+improvement > 0) / `'thesis_not_confirmed'`.
+
+**Implementation Status:** Done (Exp 468)
+
+### SCENARIO-BENCH-039: adversarial_drop Is Positive When Adversarial Accuracy Is Lower
+
+**Given** an `AdversarialBenchmarkResult` with standard_acc=0.70 and adversarial_baseline_acc=0.55
+**When** `adversarial_drop` is computed
+**Then** `adversarial_drop == 0.15` (positive = accuracy degradation on adversarial)
+
+### SCENARIO-BENCH-040: thesis_confirmed Requires Adversarial Improvement Exceeds Standard Improvement
+
+**Given** an `AdversarialBenchmarkResult` with:
+  - standard_acc=0.70, adversarial_baseline_acc=0.55, adversarial_carnot_acc=0.65
+  - carnot_standard_improvement=0.05 (from condition A)
+**When** `thesis_confirmed` is evaluated
+**Then** `thesis_confirmed == True` (adversarial improvement 0.10 > standard improvement 0.05)
+
+**Given** carnot_standard_improvement=0.15 (larger than adversarial improvement 0.10)
+**Then** `thesis_confirmed == False`
+
+### SCENARIO-BENCH-041: Exp 468 Writes Deliverable with schema='carnot.adversarial_benchmark.v2'
+
+**Given** Exp 468 completes (live or gpu_required)
+**When** the experiment exits
+**Then** `results/experiment_468_gsm_symbolic_adversarial.json` exists on disk
+**And** the artifact contains `schema='carnot.adversarial_benchmark.v2'`
+**And** `data_source` is either `'huggingface'` or `'hardcoded_fallback'`
+**And** `DeliverableGuard.assert_written()` passes without raising
+
+Spec: REQ-BENCH-020, REQ-BENCH-021, REQ-BENCH-022,
+      SCENARIO-BENCH-039, SCENARIO-BENCH-040, SCENARIO-BENCH-041
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
