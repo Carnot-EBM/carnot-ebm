@@ -2236,3 +2236,4 @@ python/ |
 | 2026-04-19 17:44 UTC | Exp 518: Top-20 Legacy BatchedInferenceRunner Migr | OK | 81 passed, 2 warnings in 2.76s |
 | 2026-04-19 17:57 UTC | Exp 519: CIKANEnergy — Constraint-Informed KAN spl | OK | 81 passed, 2 warnings in 2.73s |
 | 2026-04-19 18:08 UTC | Exp 520: LeWorldModel-JEPA Stable Two-Term Trainin | OK | 81 passed, 2 warnings in 2.72s |
+| 2026-04-19 18:22 UTC | Exp 521: Hallucination Basin Detector — latent-spa | OK | 81 passed, 2 warnings in 2.80s |
