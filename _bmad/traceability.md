@@ -472,3 +472,7 @@
 | SCENARIO-INFRA-053 | Not Started | Implemented | DualGPUHarness Assigns cuda:0 and cuda:1 in Live Mode — Exp 480 DualGPUHarness(n_gpus=2, live_mode=True) assigns distinct GPUs per model (dual_gpu_harness_implemented=true) |
 | SCENARIO-INFRA-054 | Not Started | Implemented | HarnessAudit Flags Dual-Model Scripts Without cuda:1 — Exp 480 HarnessAudit.scan() returns AuditFinding records for 53 scripts with dual-model load but no cuda:1 assignment |
 | SCENARIO-BENCH-049 | Not Started | Implemented | CoTPairCollector Flushes 200 Pairs Atomically — Exp 478 CoTPairCollector atomic flush capability tested (execution pending GPU) |
+| REQ-PROBE-010 | Not Started | Implemented | ThinkProbeV3 GPUVRAMGate Integration — Exp 482 GPUVRAMGate fires before Gemma4 model load, kills zombies >500MB VRAM (3-threshold viability: completion_fraction≥0.80, tp_rate≥0.70, fp_rate≤0.20) |
+| REQ-PROBE-011 | Not Started | Implemented | ThinkProbeV3 DeliverableGuard Assertion — Exp 482 assert_deliverable_written() as final line of main(), silently-missing-JSON blocker elevated to loud crash (RETRO-036 closure) |
+| SCENARIO-PROBE-015 | Not Started | Implemented | GPUVRAMGate Fires at Experiment Entry Before Model Load — Exp 482 gpu_vram_gate_fired=true confirmed before Gemma4-E4B-it initialization on cuda:0 |
+| SCENARIO-PROBE-016 | Not Started | Implemented | DeliverableGuard Blocks on Missing Artifact Exit — Exp 482 DeliverableGuard.assert_deliverable_written() prevents exit without results/experiment_482_think_probe_live_v3.json (RETRO-036 final closure) |
