@@ -4,6 +4,10 @@
 
 - 2026-04-19 01:59 UTC: Planned milestone 2026.04.36. (User instruction) Read 10 project files + operational retro .35 JSON. Identified 3 biggest gaps: (1) zombie VRAM blocks all live GPU experiments for 3rd consecutive milestone — GPUVRAMGate needed before every GPU experiment, not just session start; (2) JEPA AUC regressed 0.667→0.400 from low-quality training pairs — quality gate required; (3) GPU 1 idle 100% of milestone despite DualGPURunner existing in template. Performed arxiv scan (10 topics, 2025-2026). Appended 5 new entries to research-references.md (NUP 2603.19562, CRV 2510.09312, Typed CoT 2510.01069, GSM-Symbolic 2410.05229, LSEBMCL 2501.05495). Wrote openspec/change-proposals/research-roadmap-v36.md (milestone 2026.04.36, title "Fix the Root Cause", 13 experiments 474-486, 5 phases). Wrote research-roadmap-next.yaml (13 experiments, all prompts complete). Open RETROs addressed: 033/036/038/039/040/041/042/043/031. Phase 1 fixes zombie root cause; Phase 2 re-runs all deferred live benchmarks; Phase 3 hardens throughput; Phase 4 adds new research (NUPProbe Tier 0c, PPSEBM real-data); Phase 5 retrospective.
 
+## 2026-04-19 (Exp 481 — Inference Batching Enforcement)
+
+- 2026-04-19: Completed Exp 481 inference batching enforcement audit. Audited experiment scripts for BatchedInferenceRunner usage; enforced in template. (Automated follow-up to commit 39e0f8b)
+
 ## 2026-04-19 (Exp 479 — GSM-Symbolic Adversarial Benchmark live)
 
 - 2026-04-19: Completed Exp 479 live GPU validation. GSM-Symbolic Adversarial Benchmark live confirmed Carnot thesis on real hardware (RETRO-039 closure). (Automated follow-up to commit cdbe908)
