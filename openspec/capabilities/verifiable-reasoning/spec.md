@@ -9573,3 +9573,67 @@ generation on 50 synthetic math problems and report:
 generated word is drawn from vocab
 
 **Implementation Status:** Done (Exp 533)
+
+---
+
+## REQ-INFRA-073: ExperimentTemplate.teardown() Clears GPU VRAM and Registers via atexit
+
+The system shall provide a `teardown(clear_gpu=True)` method on `ExperimentTemplate` that:
+- Calls `gc.collect()` to release Python objects holding CUDA tensor references
+- Calls `torch.cuda.empty_cache()` when `clear_gpu=True` and a CUDA GPU is available
+- Logs "ExperimentTemplate.teardown() called for exp NNN" at INFO level
+- Is registered via `atexit.register(self.teardown)` in `__init__()` so it fires on any exit path
+
+**Rationale (RETRO-054, five consecutive milestones .36-.40):** Each experiment that loads
+a model and then exits leaves the CUDA allocator's free-block pool pinned in process memory.
+Across a 12-experiment milestone this accumulates to 47,653 MB of zombie VRAM (milestone .40 worst ever).
+`teardown()` with atexit registration is the highest-leverage single infra fix: it fires
+on clean exit, unhandled exceptions, and conductor SIGTERM alike.
+
+**Implementation Status:** Done (Exp 537)
+
+Spec: REQ-INFRA-073, SCENARIO-INFRA-083
+
+## REQ-INFRA-074: kill_gpu_zombies() Kills Processes Holding VRAM at Zero Utilization
+
+The system shall provide a `kill_gpu_zombies(vram_threshold_mb=1000, util_threshold_pct=5.0)` classmethod
+on `ExperimentTemplate` that:
+- Uses `pynvml` to enumerate compute processes on each GPU
+- For each process: if `vram_mb >= vram_threshold_mb` AND GPU utilization `< util_threshold_pct`, sends SIGTERM
+- Logs killed PIDs and their VRAM at WARNING level
+- Returns `{'killed_pids': [...], 'freed_mb': int}`
+- Returns `{'killed_pids': [], 'freed_mb': 0, 'error': 'pynvml_unavailable'}` when pynvml is not importable
+- Is called as the FIRST action in `setup()` before any model loading
+
+**Rationale:** PIDs 430009 (18,678 MB GPU 0) and 430012 (4,894 MB GPU 0 + 24,072 MB GPU 1) from
+milestone .40 were zombie processes holding VRAM with 0% utilization. A startup classmethod that
+kills these zombies before any experiment begins prevents cascading deferral across the milestone.
+
+**Implementation Status:** Done (Exp 537)
+
+Spec: REQ-INFRA-074, SCENARIO-INFRA-084, SCENARIO-INFRA-085
+
+### SCENARIO-INFRA-083: teardown() Calls gc.collect() and Logs Completion
+
+**Given** an ExperimentTemplate instance for exp 537
+**When** `teardown()` is called with `clear_gpu=False`
+**Then** `gc.collect()` is called exactly once and INFO log contains "teardown() called for exp 537"
+
+**Implementation Status:** Done (Exp 537)
+
+### SCENARIO-INFRA-084: kill_gpu_zombies() Returns pynvml_unavailable When pynvml Not Installed
+
+**Given** pynvml is not importable in the current environment
+**When** `ExperimentTemplate.kill_gpu_zombies()` is called
+**Then** the result is `{'killed_pids': [], 'freed_mb': 0, 'error': 'pynvml_unavailable'}`
+and no SIGTERM is sent to any process
+
+**Implementation Status:** Done (Exp 537)
+
+### SCENARIO-INFRA-085: __init__() Registers teardown via atexit
+
+**Given** an ExperimentTemplate is constructed
+**When** `atexit.register` is called during construction
+**Then** `self.teardown` is registered so it fires on process exit regardless of exit path
+
+**Implementation Status:** Done (Exp 537)
