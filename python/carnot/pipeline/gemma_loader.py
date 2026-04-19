@@ -35,8 +35,14 @@ Spec: REQ-LOADER-001, REQ-LOADER-002,
 
 from __future__ import annotations
 
+import logging
 import re
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from carnot.pipeline.jit_vram_check import JITVRAMCheck
+
+_log = logging.getLogger(__name__)
 
 # Pattern matching any ``<unusedN>`` token (any digits, including bare ``<unused>``).
 # Gemma4's token_id=14 renders as ``<unused8>`` but we reject any all-unused string
@@ -72,7 +78,12 @@ class GemmaTransformersLoader:
     Spec: REQ-LOADER-001, REQ-LOADER-002
     """
 
-    def __init__(self, model_id: str, device: str = "auto") -> None:
+    def __init__(
+        self,
+        model_id: str,
+        device: str = "auto",
+        jit_vram_check: Optional["JITVRAMCheck"] = None,
+    ) -> None:
         # Enforce Gemma-only scope.  This loader is specifically for Gemma4; loading
         # other model families would bypass important Gemma-specific validation.
         if "gemma" not in model_id.lower():
@@ -82,6 +93,7 @@ class GemmaTransformersLoader:
             )
         self.model_id = model_id
         self.device = device
+        self.jit_vram_check = jit_vram_check
         self._model: Optional[object] = None
         self._tokenizer: Optional[object] = None
 
@@ -103,6 +115,21 @@ class GemmaTransformersLoader:
 
         Spec: REQ-LOADER-001
         """
+        # JIT VRAM gate: check real-time free VRAM immediately before the load.
+        # required_gb=15.0 is the FP16 Gemma4-E4B-it footprint.  If not cleared,
+        # abort rather than crash with CUDA OOM (RETRO-051 fix).
+        if self.jit_vram_check is not None:
+            vram_result = self.jit_vram_check.gate_model_load(
+                self.model_id, required_gb=15.0
+            )
+            if not vram_result.is_cleared:
+                _log.warning(
+                    "GemmaTransformersLoader.load(): JIT VRAM check failed — "
+                    "%.2f GB free, need 15.0 GB; aborting load to prevent CUDA OOM",
+                    vram_result.available_gb,
+                )
+                return
+
         # Late import so the module is importable even without transformers installed
         # (unit tests mock this path).
         from transformers import AutoModelForCausalLM, AutoTokenizer  # noqa: PLC0415
