@@ -4,6 +4,40 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-19 arxiv Scan (Milestone 2026.04.40 Planning)
+
+### Adaptive Rectification Sampling — EORM as PRM for Test-Time Compute Scaling
+- **Paper:** arXiv 2504.01317 (April 2025)
+- **What:** Uses a process-supervised reward model (PRM) as a verifier for adaptive test-time compute scaling. At each step, the PRM scores multiple candidate continuations and selects the highest-reward one. Models can "rethink" at the step level when the PRM signals low reward. Achieves measurable gains on GSM8K and MATH500 without additional training.
+- **Relevance to Carnot:** Carnot's EORM (Exp 346: learned energy reward model, 55M params) is structurally identical to the PRM in this paper. The pipeline: generate N candidates per step → score each with EORM → select minimum-energy candidate → proceed. This is a zero-infrastructure integration: EORM already exists, the only addition is N-candidate generation + EORM ranking. Expected: reduces per-step violation rate by selecting lower-energy continuations before committing.
+- **Concrete experiment:** Exp 531: EORMAsTestTimePRM — generate K=3 candidates per question, score all with EORM, select minimum energy, compare against greedy baseline. CPU-only with synthetic data. Deliverable: comparison of violation rate greedy vs EORM-selected.
+- **When to incorporate:** Milestone 2026.04.40 — Phase 4 (Exp 531).
+
+### Potts Machine — Multi-Value Constraint States via Mean-Field
+- **Paper:** arXiv 2602.04200 (February 2026)
+- **What:** Restoring Sparsity in Potts Machines via Mean-Field Constraints. Potts machines are the q-state generalization of Ising machines (Ising = q=2, binary). Mean-field constraints maintain sparse coupling structure during optimization, enabling scalable Potts machines on parallel hardware. FPGA-native architecture demonstrated.
+- **Relevance to Carnot:** Carnot's IsingEBM uses binary spin states (+1/-1) for constraint verification — each constraint is either satisfied or violated. Many real constraint states are multi-valued: correct / partially-correct / violated (q=3), or correct / underspecified / ambiguous / violated (q=4). A PottsMachineVerifier with q=3 could directly encode constraint confidence without binarizing. The mean-field approach maintains the FPGA-compatible sparse structure. This is a natural generalization of the Ising tier with a hardware path.
+- **Concrete experiment:** Exp 534: PottsMachineVerifier — implement q=3 Potts sampler (Gibbs update over {-1,0,+1} spins), encode constraints as 3-state Potts couplings, benchmark AUROC vs binary IsingEBM on classification of correct/partial/violated constraint states.
+- **When to incorporate:** Milestone 2026.04.40 — Phase 5 (Exp 534).
+
+### GRPO Verifiable Rewards — Contrastive Loss as Verification Signal
+- **Paper:** arXiv 2503.06639 (March 2025)
+- **What:** Analyzes GRPO's effective loss for LLM reasoning under verifiable (binary) rewards. Shows that mean+variance reward calibration induces a contrastive loss structure: problems the model gets right and wrong are automatically paired as positive/negative. The verifiable reward (binary correct/incorrect) IS the contrastive signal, with no additional annotation needed.
+- **Relevance to Carnot:** Carnot's NUP Probe v4 (Exp 523) established that contrastive training (maximize E(incorrect)-E(correct) gap) dramatically outperforms BCE (AUC=1.0 vs 0.40). GRPO's analysis explains WHY: the energy gap is the natural training objective for any binary-verifiable system. For Carnot, this means: accumulate (question, is_correct) pairs from live benchmarks → use GRPO-style contrastive pairing → retrain NUP Probe on these pairs without any additional labeling infrastructure. The live benchmark CoT pairs ARE the training signal.
+- **When to incorporate:** Next JEPA/NUP retrain — use GRPO contrastive pairing as data construction strategy for Tier 1-3 self-learning models. File for milestone .40+.
+
+### IR³ — Contrastive IRL for Reward Hacking Detection
+- **Paper:** arXiv 2602.19416 (February 2026)
+- **What:** Contrastive Inverse Reinforcement Learning reconstructs implicit reward functions by contrasting paired responses from post-alignment and baseline policies. Detects when a model is "gaming" the reward signal (reward hacking) by comparing response structures — reward-hacked responses have anomalously high reward but structurally diverge from the baseline policy.
+- **Relevance to Carnot:** The VerifyRepairPipeline faces a similar problem: a model could produce a response that fools the ArithmeticExtractor by conforming to regex patterns without actually solving the problem correctly. IR³'s contrastive approach — score baseline vs pipeline response pairs — could detect when the repair process is introducing a different kind of error. File as a future quality-gating mechanism for the repair output.
+- **When to incorporate:** Milestone .41+ — after live pipeline produces enough repair examples to analyze.
+
+### AutoRefine — Continual Agent Refinement via Trajectory Distillation
+- **Paper:** arXiv 2601.22758 (January 2026)
+- **What:** AutoRefine converts agent interaction trajectories into reusable abstract strategic principles via offline self-distillation. During online interaction, the agent retrieves distilled principles to guide decisions. The lifecycle is: interact → distill trajectories into principles → store in principle repository → retrieve at inference time.
+- **Relevance to Carnot:** This is exactly Tier 2 self-learning (ConstraintMemory). AutoRefine's "principle distillation" corresponds to Carnot's "constraint template generation from violation patterns." The offline distillation step (batch processing of accumulated violation pairs) maps to Carnot's end-of-session constraint consolidation. Key extension: AutoRefine's retrieval-at-inference adds a retrieval step Carnot doesn't have — look up stored constraint templates relevant to the current query before running Ising verification. This could reduce false positives by applying domain-specific constraints only when relevant.
+- **When to incorporate:** Milestone .41+ — after FR-11 live relay is confirmed and real violation patterns have accumulated across multiple live sessions.
+
 ## 2026-04-19 arxiv Scan (Milestone 2026.04.39 Planning)
 
 ### Hallucination Basins — Dynamical Systems Framing of LLM Hallucination

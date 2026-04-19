@@ -44,6 +44,16 @@
 |------|-------|-----|-------------|------|
 | 1 | 2026-04-19T14:00:00Z | 2026-04-19T15:35:57Z | Research planning for milestone 2026.04.39: read 10 required project files + operational retro 2026.04.38 JSON; arxiv subagent search (4 new papers added to research-references.md: Hallucination Basins 2604.04743, LeWorldModel JEPA 2603.19312, Constrained Decoding 2604.14862, Low-rank Energy Landscape 2604.04384); identified 3 biggest gaps (RETRO-051 JIT VRAM at model.load(), RETRO-052 DualGPU 0 scripts on cuda:1, FR-11 synthetic-only 9th milestone); wrote openspec/change-proposals/research-roadmap-v39.md ("Close the Credibility Gap — JIT VRAM, Seventh Attempt, DualGPU Verified", 8 phases, 12 exps 513-524, dependency graph, success criteria table); wrote research-roadmap-next.yaml (12 experiments, all prompts complete); updated ops/status.md + ops/changelog.md; did NOT modify research-roadmap.yaml or scripts/research_conductor.py | ~80k |
 
+---
+
+## Session: 2026-04-19 Milestone 2026.04.40 Research Planning (v45)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-19T19:26:22Z | 2026-04-19T19:26:35Z | Research planning for milestone 2026.04.40: read 10 required project files + operational retro 2026.04.39 JSON; arxiv scan (5 new papers added to research-references.md: Adaptive Rectification Sampling 2504.01317, Potts Machine 2602.04200, GRPO Verifiable Rewards 2503.06639, IR3 Contrastive IRL 2602.19416, AutoRefine 2601.22758); identified 3 biggest gaps (RETRO-053 env_autofix '0' not overridden — single gate blocking RETRO-033 eighth attempt, GPU1 at 0% forward-pass compute RETRO-052, validated NUP Probe v4 + Basin Detector not wired into cascade); wrote openspec/change-proposals/research-roadmap-v40.md ("Fix the Last Gate — Eighth Attempt, First Live Positive", 7 phases, 11 exps 526-536, updated architecture diagram with Tier 0c/0d, success criteria table, arxiv papers table); wrote research-roadmap-next.yaml (11 experiments, all prompts complete, {project_root}/{date} placeholders); did NOT modify research-roadmap.yaml or scripts/research_conductor.py | ~90k |
+
 ## Session: 2026-04-19 Milestone 2026.04.37 Research Planning (v43)
 
 ### Turn Log
