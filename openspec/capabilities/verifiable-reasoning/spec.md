@@ -8534,3 +8534,55 @@ with all four fields plus `patch_rate`.
 **Then** it returns `0.6` (3 patched out of 5 found)
 **And** `to_dict()['n_scripts_skipped']` equals `2`
 **And** `to_dict()['patch_manifest']` contains only the three patched script names
+
+---
+
+## Exp 506: BoltzmannSemanticEnergy Tier 0d — Semantic Clustering + Boltzmann-Weighted Energy
+
+### REQ-VERIFY-101: BoltzmannSemanticEnergy Clusters Token Logits into Semantic Clusters via Cosine-Similarity K-Means
+
+`BoltzmannSemanticEnergy` shall accept `n_clusters: int` and `temperature: float` parameters.
+Its `cluster(token_logits: dict[str, float]) -> list[SemanticCluster]` method shall:
+- Compute a character-level embedding for each token (cosine-similarity proxy for semantic similarity)
+- Group tokens into `n_clusters` clusters via k-means
+- For each cluster compute `mean_logit` (average of member logits) and `cluster_energy`
+  (Boltzmann energy: `-mean_logit / temperature`)
+
+**Implementation Status:** Done (Exp 506)
+
+### REQ-VERIFY-102: BoltzmannSemanticEnergy.score() Returns a Hallucination Score in [0, 1]
+
+`BoltzmannSemanticEnergy.score(response: str, token_logits: dict[str, float]) -> float`
+shall return a float in `[0.0, 1.0]` where `1.0` indicates high confidence of hallucination
+and `0.0` indicates low hallucination risk.  The score is derived from the Boltzmann-weighted
+sum of cluster energies, normalised via sigmoid so it maps monotonically to `[0, 1]`.
+
+**Implementation Status:** Done (Exp 506)
+
+### REQ-VERIFY-103: BoltzmannSemanticEnergy Is Tier 0d in the Verification Cascade
+
+`BoltzmannSemanticEnergy` is positioned as Tier 0d in the Carnot verification cascade,
+inserted between Tier 0b SpilledEnergy and Tier 1 SinkProbe.  Its `benchmark()` method
+shall return a dict with at minimum `auroc` and `skip_rate` keys.
+
+**Implementation Status:** Done (Exp 506)
+
+### SCENARIO-VERIFY-134: score() Returns Float in [0, 1]
+
+**Given** a `BoltzmannSemanticEnergy` instance
+**And** any valid `token_logits` dict
+**When** `score()` is called
+**Then** the returned value is a float in the closed interval `[0.0, 1.0]`
+
+### SCENARIO-VERIFY-135: High-Logit-Variance Input Yields Higher Score Than Low-Variance
+
+**Given** two `token_logits` dicts — one with uniform low logits (confident model) and one with high-variance logits (uncertain model)
+**When** `score()` is called on both
+**Then** the high-variance input returns a strictly higher score than the low-variance input
+
+### SCENARIO-VERIFY-136: benchmark() on 10 Synthetic Returns auroc Key
+
+**Given** a `BoltzmannSemanticEnergy` instance
+**And** a list of 10 synthetic `(response, token_logits)` pairs with known ground truth
+**When** `benchmark()` is called
+**Then** the returned dict contains the key `auroc` with a float value
