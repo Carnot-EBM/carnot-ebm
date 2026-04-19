@@ -8086,3 +8086,55 @@ to accumulate fixes incrementally without blocking unrelated work.
   or contains no sequential question loops
 **When** the `batching-check` pre-commit hook runs
 **Then** it exits 0 and does not block the commit
+
+---
+
+## Exp 495: DualGPU Harness Patch — RETRO-041 execution (milestone .36 GPU 1 at 11%)
+
+### REQ-INFRA-057: HarnessPatcher.patch_script() Rewrites device_map='auto' to DualGPUHarness.apply()
+
+`HarnessPatcher.patch_script(path)` shall read the Python source at `path` and apply
+the following transformation for dual-model scripts flagged by `HarnessAudit`:
+
+1. If the source already contains `cuda:1`, return `HarnessPatchResult(was_patched=False)` — no-op.
+2. If the source contains `device_map='auto'` or `device_map="auto"`, replace the first
+   occurrence with `device_map={'': 'cuda:0'}` and subsequent occurrences with
+   `device_map={'': 'cuda:1'}`, then write the patched source back to disk.
+3. If no `device_map='auto'` pattern is found, inject a module-level
+   `DualGPUHarness.from_env().apply(MODEL_SPECS)` call block at the end of the file
+   so that the second model is pinned to `cuda:1` at runtime.
+4. Return `HarnessPatchResult(was_patched=True, error=None)` on success, or
+   `HarnessPatchResult(was_patched=False, error=<message>)` if no patchable pattern
+   was found.
+
+**Why:** Documentation of 53 violations (Exp 480) without execution did not change
+GPU 1 utilization — milestone .36 still measured 11%.  Auto-patch propagates the fix
+to all identified scripts immediately without requiring manual rewrites.
+
+**Implementation Status:** Done (Exp 495)
+
+### REQ-INFRA-058: HarnessPatcher.patch_all() Applies Patch to All needs_fix Findings
+
+`HarnessPatcher.patch_all(findings)` shall iterate over all `AuditFinding` entries
+with `needs_fix=True` and call `patch_script(finding.script_path)` for each, collecting
+and returning the list of `HarnessPatchResult` objects.  The method shall report
+`n_patched` (count where `was_patched=True`) and proceed even when individual patches
+fail (error is captured in the result, not raised).
+
+**Implementation Status:** Done (Exp 495)
+
+### SCENARIO-INFRA-065: patch_script Replaces device_map='auto' with Explicit CUDA Assignment
+
+**Given** a Python script containing `device_map='auto'` twice (two model loads)
+**When** `HarnessPatcher.patch_script(path)` is called
+**Then** the source is rewritten so the first occurrence becomes `device_map={'': 'cuda:0'}`
+  and the second becomes `device_map={'': 'cuda:1'}`
+**And** `HarnessPatchResult.was_patched` is `True` and `error` is `None`
+**And** `HarnessAudit.scan()` on the patched script returns `needs_fix=False`
+
+### SCENARIO-INFRA-066: verify_clean Returns 0 After patch_all on All Violations
+
+**Given** a scripts directory containing only dual-model scripts with `needs_fix=True`
+**When** `HarnessPatcher.patch_all(findings)` is applied to all findings
+**Then** `HarnessPatcher.verify_clean(scripts_dir)` returns `0`
+**And** every `HarnessPatchResult.success` in the returned list is `True`

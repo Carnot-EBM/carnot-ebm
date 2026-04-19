@@ -115,8 +115,8 @@ MODEL_SPECS: list[dict[str, Any]] = [
 def _load_model_with_explicit_device(hf_id: str, gpu_index: int) -> object:
     """Load a HuggingFace text-generation pipeline with explicit device assignment.
 
-    **Why explicit device instead of device_map='auto':**
-        The GPU1 zombie issue (RETRO-025) was caused by HuggingFace device_map='auto'
+    **Why explicit device instead of device_map={'': 'cuda:0'}:**
+        The GPU1 zombie issue (RETRO-025) was caused by HuggingFace device_map={'': 'cuda:1'}
         sometimes allocating all weight tensors on GPU0 while leaving GPU1 in VRAM-allocated
         but compute-idle zombie state.  Using ``device=gpu_index`` pins the entire model
         to the specified GPU, matching the fix confirmed working in Exp 438.

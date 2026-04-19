@@ -330,6 +330,10 @@ from carnot.pipeline.dual_gpu_harness import (  # noqa: E402
     DualGPUHarness,
     HarnessAudit,
 )
+from carnot.pipeline.harness_patcher import (  # noqa: E402
+    HarnessPatchResult,
+    HarnessPatcher,
+)
 from carnot.pipeline.batching_audit import (  # noqa: E402
     BatchingEnforcementAudit,
     BatchingViolation,
@@ -581,6 +585,8 @@ __all__ = [
     "AuditFinding",
     "DualGPUHarness",
     "HarnessAudit",
+    "HarnessPatchResult",
+    "HarnessPatcher",
     "BatchingEnforcementAudit",
     "BatchingHookRunner",
     "BatchingViolation",
