@@ -9174,3 +9174,74 @@ Spec: REQ-VERIFY-110, SCENARIO-VERIFY-145
 and `loss_history` with `n_epochs` entries
 
 **Implementation Status:** Done (Exp 523)
+
+## REQ-INFRA-058: apply_env_autofix Overrides Falsy CARNOT_FORCE_LIVE When GPU Detected
+
+**Requirement:** When `gpu_detected=True`, `apply_env_autofix()` must treat
+`CARNOT_FORCE_LIVE` values of `None`, `''`, `'0'`, `'false'`, and `'False'` as
+equivalent to "not set" and inject `'1'`.  The set `FALSY_OVERRIDE_VALUES = {None, "",
+"0", "false", "False"}` defines the override triggers.
+
+**Rationale:** RETRO-053 (root cause of seven consecutive RETRO-033 misses): the
+conductor set `CARNOT_FORCE_LIVE='0'` in the subprocess environment as a default
+placeholder.  `apply_env_autofix()` checked only `"CARNOT_FORCE_LIVE" in os.environ`
+— presence, not truthiness — so a value of `'0'` satisfied the check and the injection
+was skipped.  Downstream gates check `os.environ.get("CARNOT_FORCE_LIVE")` for
+truthiness, so `'0'` caused immediate deferral.  This fix closes the gap: any falsy
+value is treated the same as absence when GPU hardware is confirmed.
+
+**Acceptance:** Given `os.environ["CARNOT_FORCE_LIVE"] = "0"` and GPU detected,
+`apply_env_autofix()` sets `os.environ["CARNOT_FORCE_LIVE"] = "1"`,
+`auto_fix_applied=True`, `override_applied=True`, and
+`honest_verdict="falsy_override_applied"`.
+
+Spec: REQ-INFRA-058, SCENARIO-INFRA-067, SCENARIO-INFRA-068, SCENARIO-INFRA-069
+
+**Implementation Status:** Done (Exp 526)
+
+## REQ-INFRA-059: EnvironmentAutoFix Tracks override_applied for Falsy Value Overrides
+
+**Requirement:** `EnvironmentAutoFix` dataclass gains a field `override_applied: bool`
+that is `True` when a non-None falsy value (i.e., `'0'`, `'false'`, `'False'`, `''`)
+was present in `os.environ` and was overridden to `'1'`.  `override_applied=False`
+when no pre-existing falsy value was overridden (either the var was absent, already
+`'1'`, or GPU was not detected).
+
+**Rationale:** Distinguishes the new "falsy override" case from the classic
+"absent var" case, enabling audit logs and artifacts to accurately report which root
+cause triggered the fix.
+
+**Acceptance:** `override_applied=True` only when a non-None falsy value was present
+AND overridden.  `override_applied=False` when the var was absent (`None`),
+already `'1'`, or GPU was not detected.
+
+Spec: REQ-INFRA-059, SCENARIO-INFRA-067, SCENARIO-INFRA-068, SCENARIO-INFRA-069
+
+**Implementation Status:** Done (Exp 526)
+
+### SCENARIO-INFRA-067: apply_env_autofix Overrides CARNOT_FORCE_LIVE='0' to '1' When GPU Present
+
+**Given** `os.environ["CARNOT_FORCE_LIVE"] = "0"` and `gpu_detected=True`
+**When** `apply_env_autofix()` is called
+**Then** `os.environ["CARNOT_FORCE_LIVE"] == "1"`, `auto_fix_applied=True`,
+`override_applied=True`, `final_env_value="1"`, `honest_verdict="falsy_override_applied"`
+
+**Implementation Status:** Done (Exp 526)
+
+### SCENARIO-INFRA-068: apply_env_autofix Overrides CARNOT_FORCE_LIVE='false' to '1' When GPU Present
+
+**Given** `os.environ["CARNOT_FORCE_LIVE"] = "false"` and `gpu_detected=True`
+**When** `apply_env_autofix()` is called
+**Then** `os.environ["CARNOT_FORCE_LIVE"] == "1"`, `auto_fix_applied=True`,
+`override_applied=True`, `final_env_value="1"`, `honest_verdict="falsy_override_applied"`
+
+**Implementation Status:** Done (Exp 526)
+
+### SCENARIO-INFRA-069: apply_env_autofix Does Not Override CARNOT_FORCE_LIVE='1' When GPU Present
+
+**Given** `os.environ["CARNOT_FORCE_LIVE"] = "1"` and `gpu_detected=True`
+**When** `apply_env_autofix()` is called
+**Then** `auto_fix_applied=False`, `override_applied=False`, `final_env_value="1"`,
+`honest_verdict="gpu_detected_env_was_correct"`
+
+**Implementation Status:** Done (Exp 526)

@@ -1,0 +1,71 @@
+{
+  "experiment": 526,
+  "title": "env_autofix RETRO-053 Fix",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T19:42:46Z",
+  "finished_at": "2026-04-19T19:42:46Z",
+  "duration_s": 0.005,
+  "status": "success",
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "override_applied_verified",
+    "retro_053_resolved",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title",
+    "verification"
+  ],
+  "retro_053_resolved": true,
+  "override_applied_verified": true,
+  "honest_verdict": "retro_053_closed",
+  "verification": {
+    "cases": [
+      {
+        "input_value": "0",
+        "gpu_detected": true,
+        "auto_fix_applied": true,
+        "override_applied": true,
+        "carnot_force_live_was_set": true,
+        "final_env_value": "1",
+        "case": "retro053_zero_value",
+        "passed": true
+      },
+      {
+        "input_value": "false",
+        "gpu_detected": true,
+        "auto_fix_applied": true,
+        "override_applied": true,
+        "carnot_force_live_was_set": true,
+        "final_env_value": "1",
+        "case": "false_value_override",
+        "passed": true
+      },
+      {
+        "input_value": "1",
+        "gpu_detected": true,
+        "auto_fix_applied": false,
+        "override_applied": false,
+        "carnot_force_live_was_set": true,
+        "final_env_value": "1",
+        "case": "truthy_no_override",
+        "passed": true
+      },
+      {
+        "input_value": null,
+        "gpu_detected": true,
+        "auto_fix_applied": true,
+        "override_applied": false,
+        "carnot_force_live_was_set": false,
+        "final_env_value": "1",
+        "case": "absent_auto_fix",
+        "passed": true
+      }
+    ],
+    "all_passed": true
+  }
+}
