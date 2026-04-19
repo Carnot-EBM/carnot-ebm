@@ -991,6 +991,48 @@ fallback runs are labelled fr11_synthetic_only and do not count as a relay.
 **And** len(test) == round(N * 0.2) (or floor, ensuring at least 1 test pair)
 **And** the split is deterministic — calling twice with the same input yields the same split
 
+### REQ-LEARN-049: JEPA Live Retrain v7 — LeWorldModel on Exps 527/528 Real Data
+
+Exp 535 shall train the JEPA predictor using the LeWorldModel two-term objective on
+real CoT pairs sourced from Exps 527/528 (live 100q/200q benchmarks) when available,
+falling back to fover_labeled_steps_live.json (Exp 442) and exp514_cot_pairs.json,
+and finally to 100 synthetic pairs.
+
+The retrain shall:
+- Implement load_v7_cot_corpus(preferred_paths, fallback_paths) returning (pairs, data_source)
+  where data_source is 'live_exp527_528', 'live_fover_442', or 'synthetic'
+- Implement summarize_corpus(pairs) returning n_pairs, n_correct, n_incorrect, source_breakdown
+- Record data_source and corpus size in the artifact
+- Split pairs 80/20 train/test deterministically
+- Train using LeWorldModelJEPATrainer with max_epochs=50
+- Evaluate AUC on held-out test pairs
+- Save checkpoint to results/jepa_predictor_535_live.safetensors
+
+### REQ-LEARN-050: JEPA Retrain v7 AUC Target >= 0.800 on Held-Out Real Pairs
+
+When Exp 535 uses real CoT pairs (data_source != 'synthetic'), the final AUC on the
+held-out test set shall be recorded honestly.  FR-11 relay is achieved when:
+  fr11_live_relay = (data_source != 'synthetic') AND (final_auc >= 0.800)
+
+Synthetic fallback runs are labelled fr11_synthetic_fallback and do not count as relay.
+Partial relay (real data but AUC < 0.800) is labelled fr11_partial.
+
+### SCENARIO-LEARN-078: load_v7_cot_corpus Prefers Exps 527/528 Over Fallback
+
+**Given** exp527_cot_pairs.json or exp528_cot_pairs.json exist in results/
+**When** load_v7_cot_corpus(preferred_paths=[527_path, 528_path], fallback_paths=[fover_path]) is called
+**Then** data_source is 'live_exp527_528'
+**And** the returned pairs are sourced from the preferred files
+**And** summarize_corpus(pairs) returns n_pairs > 0
+
+### SCENARIO-LEARN-079: load_v7_cot_corpus Falls Back When Preferred Files Absent
+
+**Given** exp527_cot_pairs.json and exp528_cot_pairs.json do not exist on disk
+**When** load_v7_cot_corpus(preferred_paths=[527_path, 528_path], fallback_paths=[fover_path]) is called
+**Then** data_source is 'live_fover_442' (or 'synthetic' if fover also absent)
+**And** the function never raises an exception
+**And** the returned (pairs, data_source) tuple is always a valid result
+
 ---
 
 ## Implementation Status
@@ -1032,3 +1074,5 @@ fallback runs are labelled fr11_synthetic_only and do not count as a relay.
 | REQ-LEARN-046 | N/A | Implemented | Python |
 | REQ-LEARN-047 | N/A | Implemented | Python |
 | REQ-LEARN-048 | N/A | Implemented | Python |
+| REQ-LEARN-049 | N/A | Implemented | Python |
+| REQ-LEARN-050 | N/A | Implemented | Python |
