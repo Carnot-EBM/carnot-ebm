@@ -492,3 +492,9 @@
 | SCENARIO-BENCH-051 | Not Started | Implemented | Exp 489 Assigns Gemma4 to cuda:0 and Qwen to cuda:1 — Exp 489 DualGPUHarness explicit assignment verified in dual-model execution |
 | SCENARIO-BENCH-052 | Not Started | Implemented | Exp 489 Completes 200 Questions with VeriCoT+VPRM Extraction — Exp 489 processes 200 GSM8K questions, produces results/experiment_489_live_200q_vericot_vprm_v3.json |
 | SCENARIO-BENCH-055 | Not Started | Implemented | Exp 488 Writes Valid Deliverable with All Schema Fields — Exp 488 results/experiment_488_live_100q_precision_v5.json contains all required fields, honest_verdict present |
+| REQ-BENCH-040 | Not Started | Implemented | Adversarial v3 Uses GPUVRAMGateV2(kill_first=True) Before Model Load — Exp 490 GPUVRAMGateV2(min_free_gb=8.0, kill_first=True) gates before model load |
+| REQ-BENCH-041 | Not Started | Implemented | Adversarial v3 Runs Three-Condition Test — Exp 490 tests standard_baseline, standard_with_extraction, adversarial_baseline |
+| REQ-BENCH-042 | Not Started | Implemented | thesis_confirmed=True When carnot_adversarial_improvement > carnot_standard_improvement — Exp 490 adversarial improvement must exceed standard pipeline improvement |
+| SCENARIO-BENCH-059 | Not Started | Implemented | GPUVRAMGateV2 Fires Before Model Load in Exp 490 — Exp 490 GPUVRAMGateV2(kill_first=True).__enter__() called before any model load |
+| SCENARIO-BENCH-060 | Not Started | Implemented | thesis_confirmed=True When Adversarial Improvement Exceeds Standard — Exp 490 computes adversarial_improvement vs standard_improvement, sets thesis_confirmed=adversarial_improvement > standard_improvement |
+| SCENARIO-BENCH-061 | Not Started | Implemented | adversarial_drop Computed as standard_acc - adversarial_baseline_acc — Exp 490 measures adversarial_drop as difference between standard baseline accuracy and adversarial baseline accuracy |
