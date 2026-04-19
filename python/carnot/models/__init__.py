@@ -14,6 +14,12 @@ from carnot.models.compliance_checker import (
 )
 from carnot.models.ebt import EBTConfig, EBTransformer
 from carnot.models.eorm import CoTEnergyInput, EORMModel, EORMTrainer
+from carnot.models.jepa_retrain_v2 import (
+    CoTPairQuality,
+    CoTPairQualityFilter,
+    JEPAQualityAugmentor,
+    JEPARetrainV2Result,
+)
 from carnot.models.gibbs import GibbsConfig, GibbsModel
 from carnot.models.ising import IsingConfig, IsingModel
 from carnot.models.kan import (
@@ -44,6 +50,10 @@ __all__ = [
     "EBTransformer",
     "EORMModel",
     "EORMTrainer",
+    "CoTPairQuality",
+    "CoTPairQualityFilter",
+    "JEPAQualityAugmentor",
+    "JEPARetrainV2Result",
     "GibbsConfig",
     "GibbsModel",
     "IsingConfig",
