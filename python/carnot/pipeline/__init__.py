@@ -392,6 +392,11 @@ from carnot.pipeline.expanded_gpu_reaper import (  # noqa: E402
     ExpandedGPUReaperConfig,
     ExpandedGPUReapResult,
 )
+from carnot.pipeline.lw_jepa_trainer import (  # noqa: E402
+    LeWorldModelJEPATrainer,
+    LeWorldModelLoss,
+    gaussian_kl_regularization,
+)
 
 __all__ = [
     "AgentStep",
@@ -664,4 +669,7 @@ __all__ = [
     "ExpandedGPUReaper",
     "ExpandedGPUReaperConfig",
     "ExpandedGPUReapResult",
+    "LeWorldModelJEPATrainer",
+    "LeWorldModelLoss",
+    "gaussian_kl_regularization",
 ]

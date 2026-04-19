@@ -921,6 +921,44 @@ experiments in milestone 2026.04.38 (Exps 500-512) that:
 **And** new_retro_items is a list with at least the carry-forward open items
 **And** honest_verdict is 'milestone_complete'
 
+### REQ-LEARN-046: LeWorldModel Two-Term Objective for JEPA Training
+
+LeWorldModelJEPATrainer must use a two-term loss objective:
+
+    L_total = L_prediction + λ * KL(q(z)||N(0,I))
+
+where L_prediction is MSE between predicted and actual embeddings, and the KL term
+is the analytical Gaussian KL divergence:
+
+    KL = 0.5 * sum(exp(log_var) + mean^2 - 1 - log_var)
+
+Default λ=0.01.  The KL term prevents embedding collapse (where the predictor maps
+all inputs to the same point) by forcing the latent distribution to stay near N(0,I),
+maintaining diversity in the embedding space.  This is the key stability trick from
+arXiv 2603.19312 (LeWorldModel, 15M param model trained stably on single GPU).
+
+### REQ-LEARN-047: LeWorldModel Training Stability — AUC Variance < 0.05
+
+Three independent training runs with LeWorldModelLoss on the same 100-pair synthetic
+corpus must produce AUC variance < 0.05 across runs.  This validates that the Gaussian
+KL regularization has resolved the BCE collapse instability observed in Exps 472/510.
+
+### SCENARIO-LEARN-074: gaussian_kl_regularization Returns Zero at Origin
+
+**Given** gaussian_kl_regularization is called with z_mean=0 and z_log_var=0
+**When** the KL divergence is computed
+**Then** the return value is 0.0 (within float32 tolerance)
+**And** this represents N(0,1) which is exactly N(0,I), so KL divergence is zero
+
+### SCENARIO-LEARN-075: LeWorldModelLoss Total Is Non-Negative
+
+**Given** a LeWorldModelLoss with any lambda_reg >= 0
+**When** total_loss(predicted, actual, z_mean, z_log_var) is called with any inputs
+**Then** the total loss is >= 0.0
+**And** this holds because MSE >= 0 and KL divergence >= 0 by definition
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -957,3 +995,5 @@ experiments in milestone 2026.04.38 (Exps 500-512) that:
 | REQ-LEARN-039 (v4) | N/A | Implemented | 11 Python |
 | REQ-LEARN-040 (v4) | N/A | Implemented | 11 Python |
 | REQ-LEARN-041 (v4) | N/A | Implemented | 11 Python |
+| REQ-LEARN-046 | N/A | Implemented | Python |
+| REQ-LEARN-047 | N/A | Implemented | Python |
