@@ -2196,3 +2196,4 @@ python/ |
 | 2026-04-19 06:25 UTC | Exp 489: Live 200q VeriCoT+VPRM v3 — RETRO-038 thi | OK | 81 passed in 4.93s |
 | 2026-04-19 06:38 UTC | Exp 490: GSM-Symbolic Adversarial v3 — RETRO-039 t | OK | 81 passed in 3.96s |
 | 2026-04-19 07:03 UTC | Exp 491: JEPA Curriculum Diagnostic — why did qual | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-19 08:01 UTC | Exp 491: JEPA Curriculum Diagnostic — why did qual | OK | 110 passed in 24.30s |
