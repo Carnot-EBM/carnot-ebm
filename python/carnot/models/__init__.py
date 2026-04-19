@@ -30,6 +30,11 @@ from carnot.models.kan import (
     KANModel,
 )
 from carnot.models.jepa_curriculum_diagnostic import CorpusAnalysis, JEPACurriculumDiagnostic
+from carnot.models.jepa_curriculum_trainer import (
+    CurriculumStageResult,
+    JEPACurriculumTrainer,
+    JEPARetrainV3Result,
+)
 from carnot.models.kaem_crossover import KAEMCrossoverResult
 from carnot.models.kaem_energy import (
     KAEMEnergy,
@@ -67,6 +72,9 @@ __all__ = [
     "KANModel",
     "CorpusAnalysis",
     "JEPACurriculumDiagnostic",
+    "CurriculumStageResult",
+    "JEPACurriculumTrainer",
+    "JEPARetrainV3Result",
     "KAEMCrossoverResult",
     "KAEMEnergy",
     "UnivariateKAEMLayer",
