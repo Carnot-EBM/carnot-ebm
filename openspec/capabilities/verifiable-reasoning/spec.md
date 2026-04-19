@@ -7505,3 +7505,50 @@ Spec: REQ-BENCH-027, SCENARIO-BENCH-046
 
 Spec: REQ-BENCH-025, REQ-BENCH-026, REQ-BENCH-027,
       SCENARIO-BENCH-044, SCENARIO-BENCH-045, SCENARIO-BENCH-046
+
+### REQ-BENCH-028: 200q Benchmark v2 Uses GPUVRAMGate Before Each Model Load
+
+The 200-question live benchmark v2 (Exp 478) shall invoke `GPUVRAMGate(min_free_gb=8.0)`
+as a context manager before any model is loaded, so that zombie VRAM held by prior
+experiments cannot silently prevent model initialisation.  If the gate raises
+`GPUVRAMInsufficientError`, the experiment shall write an honest artifact with
+`status='gpu_vram_insufficient'` and exit cleanly.
+
+### REQ-BENCH-029: 200q Benchmark v2 Uses DualGPURunner with Gemma4→cuda:0 and Qwen→cuda:1
+
+The 200-question live benchmark v2 shall use `DualGPUAssigner` to pin
+Gemma4-E4B-it to `cuda:0` and Qwen3.5-0.8B to `cuda:1` so both models run on
+dedicated GPUs simultaneously rather than competing for GPU 0.
+
+### REQ-BENCH-030: 200q v2 Result Includes Wilson 95% CI and is_statistically_positive Flag
+
+`Live200qV2Result` shall expose:
+
+- `ci_95_wilson: tuple[float, float]` — Wilson score CI on post_acc.
+  At n=200 the full width shall be < 0.07 for any p in [0,1].
+- `is_statistically_positive: bool` — True iff the lower bound of the Wald CI
+  for the *signed improvement* exceeds zero.  A 2pp improvement at n=200 with
+  typical pre_acc ≈ 0.70 shall evaluate to False (not statistically significant).
+
+### SCENARIO-BENCH-047: Wilson CI Width at n=200
+
+**Given** `Live200qV2Result` with `post_acc=0.05` and `n=200`
+**When** `ci_95_wilson` is computed
+**Then** the full interval width (`upper - lower`) is less than 0.07
+
+### SCENARIO-BENCH-048: DualGPUAssigner Assigns Gemma4→cuda:0 and Qwen→cuda:1 in v2
+
+**Given** model specs `[Gemma4-E4B-it, Qwen3.5-0.8B]` and `n_gpus=2`
+**When** `DualGPUAssigner.assign()` is called
+**Then** Gemma4-E4B-it has `device_map={'': 'cuda:0'}`
+**And** Qwen3.5-0.8B has `device_map={'': 'cuda:1'}`
+
+### SCENARIO-BENCH-049: is_statistically_positive=False for Small Improvement at n=200
+
+**Given** `Live200qV2Result` with `pre_acc=0.70`, `post_acc=0.72`, `n=200`
+(signed_improvement = 0.02)
+**When** `is_statistically_positive` is evaluated
+**Then** the result is `False` because the Wald CI for the improvement includes zero
+
+Spec: REQ-BENCH-028, REQ-BENCH-029, REQ-BENCH-030,
+      SCENARIO-BENCH-047, SCENARIO-BENCH-048, SCENARIO-BENCH-049
