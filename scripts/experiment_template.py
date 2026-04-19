@@ -363,12 +363,16 @@ class ExperimentTemplate:
         # deferred due to 23.8 GB of zombie-held VRAM at 0% utilisation.
         if self.requires_gpu:
             try:
-                from carnot.pipeline.gpu_vram_gate import GPUVRAMGate  # noqa: PLC0415
+                from carnot.pipeline.gpu_vram_gate_v2 import GPUVRAMGateV2  # noqa: PLC0415
 
-                with GPUVRAMGate(min_free_gb=8.0, auto_kill=True):
+                # REQ-INFRA-050/051: GPUVRAMGateV2 with kill_first=True eliminates the
+                # RETRO-044 race condition (four consecutive milestones deferred due to
+                # the V1 check-first order firing during the GPU driver's 5-15s drain
+                # window after SIGKILL).
+                with GPUVRAMGateV2(min_free_gb=8.0, kill_first=True):
                     pass  # gate check; actual model load happens below
             except Exception as _vram_exc:
-                _log.warning("GPUVRAMGate raised %s — continuing (non-fatal)", _vram_exc)
+                _log.warning("GPUVRAMGateV2 raised %s — continuing (non-fatal)", _vram_exc)
 
         # --- Step 1: Determine execution mode ---
         # CARNOT_NO_SERVER=1 is the env-var equivalent of passing --no-server on the CLI.

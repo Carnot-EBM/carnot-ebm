@@ -114,7 +114,7 @@ tasks:
     \   e. GPUVRAMGateV2(min_free_gb=8.0, kill_first=True).__enter__()\n   f. If GPU\
     \ unavailable after gate: emit status='gpu_vram_insufficient',\n      honest_verdict='deferred_retro_033',\
     \ assert_deliverable_written(), return\n   g. DualGPUHarness(n_gpus=2, live_mode=True).apply(\n\
-    \      [{'name': 'google/gemma-4-E4B-it'}, {'name': 'Qwen/Qwen3.5-0.8B'}])\n\
+    \      [('name': 'google/gemma-4-E4B-it'), ('name': 'Qwen/Qwen3.5-0.8B')])\n\
     \      — yields cuda:0 for Gemma4, cuda:1 for Qwen\n   h. IntegratedExtractor(VeriCoTStepValidator(use_mock=False),\
     \ VPRMArithmeticVerifier())\n   i. Load 100 GSM8K questions (seed=42)\n   j. CoTPairCollector('results/exp488_cot_pairs.json')\n\
     \   k. LongRunBenchmarkExecutor(batch_size=8) for each model: baseline + pipeline\
@@ -381,8 +381,8 @@ tasks:
     \ JEPACurriculumTrainer(high_conf_threshold=0.85).train(all_pairs)\n   h. Compute\
     \ after_auc on held-out 20%\n   i. Save retrained JEPA to results/jepa_model_492_curriculum.safetensors\n\
     \   j. JEPARetrainV3Result(n_pairs_raw, stages, before_auc, after_auc)\n   k. Build\
-    \ artifact: schema='carnot.jepa_retrain.v3'\n      n_pairs_raw=<int>\n      curriculum_stages=[{stage, n_pairs,\
-    \ n_epochs, auc_after}...]\n      before_auc=<float> (should be ~0.281)\n    \
+    \ artifact: schema='carnot.jepa_retrain.v3'\n      n_pairs_raw=<int>\n      curriculum_stages=[(stage, n_pairs,\
+    \ n_epochs, auc_after)...]\n      before_auc=<float> (should be ~0.281)\n    \
     \  after_auc=<float>\n      auc_improvement=after_auc - before_auc\n      target_met=after_auc\
     \ > 0.600\n      regression_recovered=after_auc > 0.400\n      retro_040_closed=after_auc\
     \ > 0.500\n      fr11_tier3_status='recovered' if target_met else 'partial_recovery'\

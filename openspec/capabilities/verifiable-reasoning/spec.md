@@ -7820,3 +7820,66 @@ entropy=ln(20)≈3.0 nats)
 
 Spec: REQ-VERIFY-096, REQ-VERIFY-097,
       SCENARIO-VERIFY-129, SCENARIO-VERIFY-130
+
+### REQ-INFRA-049: GPUVRAMGateV2 Kills Zombie Processes Before Checking Free VRAM
+
+`GPUVRAMGateV2(min_free_gb, wait_seconds, zombie_drain_sleep_seconds=15, kill_first=True)`
+shall implement a kill-first VRAM guard that eliminates the RETRO-044 race condition.
+
+When `kill_first=True` (default), `ensure_vram_available(gpu_index)` shall:
+1. Call `kill_zombies(gpu_index)` unconditionally — remove zombie processes first
+2. Sleep `zombie_drain_sleep_seconds` seconds — allow the GPU driver to flush VRAM
+   held by the killed processes (RTX 3090 driver drains within 10-15 s; 15 s default)
+3. Call `check_vram(gpu_index)` — read VRAM after the drain window has elapsed
+4. If still below threshold: enter the `wait_seconds` polling loop
+
+When `kill_first=False`, V1 (GPUVRAMGate) check-first behavior is reproduced for
+backward compatibility only.
+
+**Motivation (RETRO-044):** GPUVRAMGate (V1, Exp 474) checked VRAM first, then killed
+zombies.  The GPU driver holds the killed context's VRAM for 5-15 s during drain.  The
+subsequent poll fired during this window, saw VRAM still held, and deferred.  Exps 476,
+478, and 479 all hit `gpu_vram_insufficient` for this single ordering mistake.
+
+**Implementation Status:** Done (Exp 487)
+
+### REQ-INFRA-050: GPUVRAMGateV2 Replaces GPUVRAMGate in ExperimentTemplate.setup_gpu()
+
+`ExperimentTemplate.setup_gpu()` shall use `GPUVRAMGateV2(kill_first=True)` instead of
+`GPUVRAMGate` when `requires_gpu=True`.
+
+**Implementation Status:** Done (Exp 487)
+
+### REQ-INFRA-051: ExperimentTemplate.setup_gpu() Imports GPUVRAMGateV2 with kill_first=True Default
+
+`ExperimentTemplate.setup_gpu()` shall import `GPUVRAMGateV2` from
+`carnot.pipeline.gpu_vram_gate_v2` and use `kill_first=True` by default.
+
+`GPUVRAMGateV2` shall also be exported from `carnot.pipeline.__init__` alongside
+`GPUVRAMGate`, `GPUVRAMInsufficientError`, and `VRAMStatus`.
+
+**Implementation Status:** Done (Exp 487)
+
+### SCENARIO-INFRA-057: GPUVRAMGateV2 kill_first=True Calls kill_zombies Before check_vram
+
+**Given** `GPUVRAMGateV2(kill_first=True)` with a mocked GPU
+**When** `ensure_vram_available(0)` is called
+**Then** `kill_zombies()` is called before the first `check_vram()` call
+**And** `time.sleep(zombie_drain_sleep_seconds)` is called after `kill_zombies()`
+
+### SCENARIO-INFRA-058: GPUVRAMGateV2 kill_first=False Preserves V1 Check-First Ordering
+
+**Given** `GPUVRAMGateV2(kill_first=False)` with a healthy GPU
+**When** `ensure_vram_available(0)` is called
+**Then** `check_vram()` is called before `kill_zombies()`
+**And** `time.sleep` is NOT called (no drain logic in V1 path)
+
+### SCENARIO-INFRA-059: GPUVRAMGateV2 Is a No-Op on CPU-Only Machines
+
+**Given** `GPUVRAMGateV2()` on a machine with zero NVML-detected GPUs (`_n_gpus() == 0`)
+**When** the context manager is entered
+**Then** no error is raised and `__enter__` returns self
+**And** `ensure_vram_available` returns True when `check_vram` returns total_mb==0
+
+Spec: REQ-INFRA-049, REQ-INFRA-050, REQ-INFRA-051,
+      SCENARIO-INFRA-057, SCENARIO-INFRA-058, SCENARIO-INFRA-059
