@@ -37,6 +37,10 @@
 
 - 2026-04-19: Completed Exp 522: JEPA Live Retrain v6 — FR-11 mandatory live retraining with LeWorldModel objective on real CoT pairs. Phase 6 research from milestone 2026.04.39.
 
+## 2026-04-19 (Exp 531 — EORM as Test-Time PRM)
+
+- 2026-04-19: Completed Exp 531: EORM as Test-Time PRM — Adaptive Rectification Sampling (arXiv 2504.01317). Phase 4 research from milestone 2026.04.40.
+
 ## 2026-04-19 (Exp 520 — LeWorldModel-JEPA Stable Two-Term Training)
 
 - 2026-04-19: Completed Exp 520: LeWorldModel-JEPA Stable Two-Term Training (arXiv 2603.19312) — stable two-term training for JEPA energy models, Phase 5 research from milestone 2026.04.39.
