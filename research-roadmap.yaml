@@ -186,9 +186,9 @@ tasks:
     \   e. VRAMBudgetLedger: check exp502 feasibility before gate\n   f. GPUVRAMGateV2(min_free_gb=6.0,\
     \ kill_first=True).__enter__()\n   g. If GPU unavailable after gate: emit status='gpu_vram_insufficient',\n\
     \      honest_verdict='deferred_retro_033_v6', assert_deliverable_written(), return\n\
-    \   h. DualGPUHarness(n_gpus=2, live_mode=True).apply(\n      [{'name': 'gemma4-int4',\
-    \ 'loader': Gemma4QuantizedLoader},\n       {'name': 'Qwen/Qwen3.5-0.8B', 'device':\
-    \ 'cuda:1'}])\n   i. IntegratedExtractor(VeriCoTStepValidator(use_mock=False),\
+    \   h. DualGPUHarness(n_gpus=2, live_mode=True).apply(\n      [('name': 'gemma4-int4',\
+    \ 'loader': Gemma4QuantizedLoader),\n       ('name': 'Qwen/Qwen3.5-0.8B', 'device':\
+    \ 'cuda:1')])\n   i. IntegratedExtractor(VeriCoTStepValidator(use_mock=False),\
     \ VPRMArithmeticVerifier())\n   j. Load 100 GSM8K questions (seed=42)\n   k.\
     \ CoTPairCollector('results/exp502_cot_pairs.json') for JEPA retraining\n   l.\
     \ LongRunBenchmarkExecutor(batch_size=8) for each model: baseline + pipeline\n\
