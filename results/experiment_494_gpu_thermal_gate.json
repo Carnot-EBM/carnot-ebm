@@ -1,0 +1,61 @@
+{
+  "experiment": 494,
+  "title": "GPU Thermal Gate",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T08:57:26Z",
+  "finished_at": "2026-04-19T08:57:27Z",
+  "duration_s": 1.011,
+  "status": "success",
+  "schema": [
+    "check_temperature_test",
+    "current_temperatures",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "n_gpus_detected",
+    "retro_046_closed",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "template_wire_test",
+    "template_wired",
+    "thermal_gate_implemented",
+    "throttle_error_test",
+    "title",
+    "wait_for_cool_mock_test"
+  ],
+  "thermal_gate_implemented": true,
+  "template_wired": true,
+  "n_gpus_detected": 0,
+  "current_temperatures": [],
+  "retro_046_closed": true,
+  "honest_verdict": "thermal_gate_operational",
+  "check_temperature_test": {
+    "check_temperature_results": [
+      {
+        "gpu_index": 0,
+        "temperature_c": null,
+        "is_safe": true,
+        "is_throttling": false
+      }
+    ],
+    "n_checked": 1
+  },
+  "wait_for_cool_mock_test": {
+    "wait_for_cool_mocked_hot": true,
+    "expected": true,
+    "passed": true
+  },
+  "throttle_error_test": {
+    "throttle_error_raised": true,
+    "error_contains_gpu_thermal_throttle": true,
+    "passed": true
+  },
+  "template_wire_test": {
+    "setup_gpu_references_GPUThermalGate": true,
+    "setup_gpu_references_wait_for_cool": true,
+    "passed": true
+  }
+}
