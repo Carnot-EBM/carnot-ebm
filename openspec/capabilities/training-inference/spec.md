@@ -555,6 +555,48 @@ The system shall provide benchmark_kaem_vs_mcmc(n_vars, n_samples) that:
 **And** speedup_ratio is positive
 **And** all numeric values are finite
 
+### REQ-SAMPLE-017: GPUOscillatorIsingSimulator — Parallel OIM Dynamics (Exp 472)
+
+The system SHALL provide `GPUOscillatorIsingSimulator` that implements GPU-accelerated
+Oscillator Ising Machine (OIM) dynamics via JAX/CUDA parallel spin updates.
+
+- REQ-SAMPLE-017-1: `GPUOscillatorIsingSimulator(n_spins: int, n_steps: int = 1000, device: str = 'cpu')`
+  SHALL implement discrete Kuramoto phase update: phi_i += dt * K * sum_j J_ij * sin(phi_j - phi_i)
+  for all spins simultaneously via JAX vmap.
+- REQ-SAMPLE-017-2: `sample(J: jnp.ndarray, n_samples: int) -> jnp.ndarray` SHALL return shape
+  (n_samples, n_spins) boolean array. Each sample is an independent OIM trajectory.
+- REQ-SAMPLE-017-3: The simulator SHALL fall back gracefully to CPU if the requested device is unavailable.
+
+Spec: REQ-SAMPLE-017, SCENARIO-SAMPLE-030
+
+### REQ-SAMPLE-018: GPUOscillatorIsingSimulator Speedup Benchmark (Exp 472)
+
+The system SHALL provide `OIMSpeedupResult` comparing GPU OIM vs CPU ParallelIsingSampler.
+
+- REQ-SAMPLE-018-1: `GPUOscillatorIsingSimulator.benchmark(J, n_samples=1000) -> float` SHALL return
+  milliseconds-per-sample (wall-clock, post-JIT, excluding compile time).
+- REQ-SAMPLE-018-2: `OIMSpeedupResult(n_spins: int, gpu_ms: float, cpu_ms: float)` SHALL expose
+  `speedup: float` (= cpu_ms / gpu_ms) and `is_production_ready: bool` (speedup >= 10.0).
+- REQ-SAMPLE-018-3: On RTX 3090 at n_spins=128, GPU OIM SHALL achieve >= 10x speedup vs CPU
+  ParallelIsingSampler, enabling real-time JEPA gating without FPGA hardware.
+
+Spec: REQ-SAMPLE-018, SCENARIO-SAMPLE-031
+
+### SCENARIO-SAMPLE-030: GPUOscillatorIsingSimulator Sample Shape
+
+**Given** `GPUOscillatorIsingSimulator(n_spins=128, device='cpu')`
+**When** `sample(J, n_samples=10)` is called with a valid 128×128 coupling matrix
+**Then** the result has shape (10, 128)
+**And** all values are boolean (True = spin +1)
+**And** no exceptions are raised
+
+### SCENARIO-SAMPLE-031: OIMSpeedupResult Production Ready
+
+**Given** `OIMSpeedupResult(n_spins=128, gpu_ms=0.1, cpu_ms=10.0)`
+**When** `speedup` and `is_production_ready` are evaluated
+**Then** `speedup == 100.0`
+**And** `is_production_ready == True`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
