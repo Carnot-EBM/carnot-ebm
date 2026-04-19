@@ -2187,3 +2187,4 @@ python/ |
 | 2026-04-19 04:31 UTC | Exp 482: ThinkProbeV2 Live GPU v3 — RETRO-036/042  | OK | 81 passed in 3.27s |
 | 2026-04-19 04:40 UTC | Exp 483: KAEM Profile at n_vars>200 — RETRO-031 cl | OK | 81 passed in 3.30s |
 | 2026-04-19 04:52 UTC | Exp 484: Neural Uncertainty Principle Probe — hall | OK | 81 passed in 3.27s |
+| 2026-04-19 05:03 UTC | Exp 485: PPSEBM Real-Data Validation — RETRO-043,  | OK | 81 passed in 3.37s |
