@@ -607,3 +607,8 @@
 | SCENARIO-VERIFY-143 | Implemented | Gibbs Update Changes Configuration — Exp 534 scenario: gibbs_update(config, beta=1.0) returns same shape as input; at least one spin differs with high probability |
 | SCENARIO-VERIFY-144 | Implemented | predict_class Returns Valid Label — Exp 534 scenario: predict_class(config) returns integer in {0, 1, 2} for trained PottsMachineVerifier(n_spins=8, q=3) |
 | SCENARIO-STEER-002 | Implemented | Steering Cascade Integration — COLDDecodingSteer applied within verification-repair pipeline for constrained generation |
+| REQ-INFRA-073 | Implemented | ExperimentTemplate.teardown() with atexit Registration — Exp 537 implements cleanup hook that fires on clean exit, unhandled exceptions, and conductor SIGTERM |
+| SCENARIO-INFRA-083 | Implemented | teardown() Calls gc.collect() and Logs Completion — Exp 537 scenario: teardown() called with clear_gpu=False calls gc.collect() exactly once and INFO log contains experiment ID |
+| REQ-INFRA-074 | Implemented | kill_gpu_zombies() Kills Processes Holding VRAM at Zero Utilization — Exp 537 classmethod using pynvml to enumerate and SIGTERM processes with VRAM>=1000MB and utilization<5% |
+| SCENARIO-INFRA-084 | Implemented | kill_gpu_zombies() Returns pynvml_unavailable When pynvml Not Installed — Exp 537 scenario: returns {'killed_pids': [], 'freed_mb': 0, 'error': 'pynvml_unavailable'} when pynvml not importable |
+| SCENARIO-INFRA-085 | Implemented | __init__() Registers teardown via atexit — Exp 537 scenario: atexit.register(self.teardown) called during ExperimentTemplate construction so teardown fires on any exit path |
