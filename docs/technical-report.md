@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report on 499+ Experiments Across 24 Research Milestones
+## A Technical Report on 500+ Experiments Across 25 Research Milestones
 
 **Author:** Ian Blenke
 **Date:** 2026-04-19
@@ -59,9 +59,18 @@ All primary benchmark rows below are from live GPU inference. The replay and tra
 | Typed IR constraints (81 tasks) | 61.7% | 66.7% | **+4.9pp** (Gemma4) | Exp 221 |
 | GSM8K semantic v2 (200 questions) | 46.5% | 47.5% | +1.0pp (Gemma4); verify-only still unjustified | Exp 235 |
 | PBT bug detection rate | — | 144/145 | **99.3%** | Exp 226 |
+| GSM8K live precision (50q, Gemma4-E4B-it) | — | — | **+5pp** signed, repair_better, first positive verify-repair number since Exp 411 | Exp 451 |
 | Chronological replay v2 (116 cases) | 34.48%, 8 FP | 34.48%, 8 FP | Retrieval **32.1%** hit, **43.6%** precision; primary success not met | Exp 241 |
 | Live trace memory | — | 230/662 accepted | 43 patterns, 29 mature | Exp 222 |
 | Extractor comparison (100 GSM8K) | — | Regex 5, Z3 3, LLM 1 FP | LLM best | Exp 206-207 |
+
+### Pending Validation (Not Yet Headline)
+
+The following results are mechanistically promising but remain behind a live-validation gate before they enter the headline table. They are documented here to be auditable, not cited externally.
+
+| Benchmark | Value | Experiment | Live-validation gate |
+|-----------|-------|------------|----------------------|
+| JEPA step-quality discriminator (curriculum-trained) | AUC **0.967** | Exp 492 | **Exp 510** (milestone 2026.04.38) re-runs the discriminator on genuinely fresh live CoT pairs, not the Exp 442 training capture. Curriculum training (high→low confidence ordering) fixed a majority-class collapse and mechanistically looks real, but the eval set may share structure with the training data. If AUC holds near 0.967 on Exp 510's fresh pairs, the breakthrough is confirmed; if it collapses to 0.5–0.7, the number was leakage and the Exp 510 artifact replaces this row. |
 
 ### Simulation vs Reality
 

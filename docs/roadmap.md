@@ -4,14 +4,14 @@
 
 ## Current Milestone
 
-**2026.04.33: "First Live Results, ThinkPRM Bridge, Boltzmann-GPT Repair"**
+**2026.04.38: "Break the Credibility Ceiling — Gemma4 Quantized, 100q+ Live, GPU 1 Activated"**
 
 | # | Experiment | Status |
 |---|-----------|--------|
-| 437 | LongRunBenchmarkExecutor (RETRO-026 fix) | Complete |
-| 438 | DualGPURunner GPU1 zombie fix (RETRO-025) | Complete — fix_applied_unverified |
-| 439 | Live Precision Micro-Benchmark (50q × 3 × 2) | In Progress — first credible live number |
-| 440-449 | Live HumanEval, Adversarial, FR-11 chain, ThinkPRM, Phase 3 seed v2, retro | Queued |
+| 500 | Gemma4 INT4 Quantization — RETRO-048 root cause fix (~9 GiB GGUF Q4_K_M) | Complete — unblocks RETRO-033/038/039 live re-runs |
+| 501 | Conductor CPU Routing + VRAM Budget Ledger | Complete — diagnostic checkpoint |
+| 502 | Live 100q Precision v6 — RETRO-033 sixth attempt with quantized Gemma4 | In Progress |
+| 503-512 | 200q VeriCoT+VPRM v4, GSM-Symbolic v4, Retroactive DualGPU sweep, Semantic Energy Tier 0d, NUP v3 with CLAP, KAEM distribution family, PPSEBM energy-replay, JEPA Live Retrain v4, AMD XDNA NPU inference, retro | Queued |
 
 ## Completed Milestones
 
@@ -35,6 +35,11 @@
 | 2026.04.30 | Purge + First Credible Live | 404-417 | DeliverableContentValidator, env auto-fix, GPU preflight v2 |
 | 2026.04.31 | EnvironmentAutoFix + VPRM | 418-424 | Env propagation workaround, VPRM architecture |
 | 2026.04.32 | Live Numbers Confirmed (infrastructure) | 425-436 | Conductor timeout watchdog, DualGPU detector, FOVER annotation, Kona Phase 3 seed, provenance audit |
+| 2026.04.33 | First Live Results, ThinkPRM Bridge, Boltzmann-GPT Repair | 437-449 | LongRunBenchmarkExecutor (RETRO-026 closed), Tier 2 cross-session constraint memory relay, BoltzmannRepairBridge, operational retro v7 |
+| 2026.04.34 | VeriCoT Extraction, EBM-CoT Calibration, First Positive Numbers | 450-461 | **First positive verify-repair number** (Exp 451, +5pp, LIVE); Gemma4 tokenizer bug closed (RETRO-028); EBM-CoT Langevin calibration; VeriCoT/VPRM step validators |
+| 2026.04.35 | Scale the First Positive — 200q Credibility, Process Hardening, FPGA Bring-Up | 462-473 | DeliverableGuard + DualGPURunner harness, session health check, live 100q precision statistical scale-up, KAEM 3.4x speedup at n=50, PPSEBM Tier 2 isolation, KV260 RTL + AXI backend (bitfile pending hardware) |
+| 2026.04.36 | Fix the Root Cause — GPU VRAM Gate, Live 200q Credibility, JEPA Recovery | 474-486 | GPUVRAMGate, conductor dedup + partial-result handoff, DualGPU harness enforcement (53 scripts), batching enforcement audit, NUP Probe v1, PPSEBM real-data validation; honest negatives on JEPA quality-gate and KAEM at n=1000 |
+| 2026.04.37 | Break the VRAM Deadlock — Credibility at Last, JEPA Recovery, Surprise-Driven Replay | 487-499 | **JEPA AUC recovered 0.281→0.967 via curriculum training** (Exp 492, pending live validation in Exp 510); GPUVRAMGateV2 (kill-before-check); batching pre-commit hook; GPU thermal gate; 100% retro adoption rate (first ever); KAEM at n=5000 definitively slower than MCMC across the range, FPGA-only path confirmed |
 
 ## Breakthrough Results
 
@@ -52,8 +57,10 @@ Results are labeled with provenance: **LIVE** (real model inference on GPU with 
 | Adversarial semantic grounding | +40pp lift | Exp 279 | SIMULATED | Model field explicitly `"Gemma4-E4B-it (simulated)"` |
 | Confidence-weighted repair | 86.7% FP avoidance | Exp 332 | PLACEHOLDER | Fast-path deliverable: `duration_s=0.0`, constant confidence scores, no inference |
 | SinkProbe pre-filter | 60% skip rate, 0% FN | Exp 348 | SIMULATED | `inference_mode="simulated"`, 50 synthetic samples, 1.5s total |
+| First positive verify-repair | +5pp (LIVE) | Exp 451 | LIVE | Gemma4-E4B-it live GSM8K, 50 questions, Wilson CI — first time the verify-repair loop produced a signed positive signed_improvement on live data |
+| JEPA step-quality discriminator | AUC 0.967 (pending live validation) | Exp 492 | DERIVED | Curriculum training (high→low confidence ordering) on Exp 442's Z3-annotated CoT pairs recovered from an AUC 0.281 regression.  Real mechanistic fix (prevents majority-class collapse), but the eval set may share structure with the training capture — **Exp 510 (milestone 2026.04.38) re-runs the discriminator on genuinely fresh live CoT pairs**.  If AUC holds near 0.967 there, the breakthrough is real; if it collapses to 0.5-0.7, the number was leakage.  Do not cite externally until Exp 510 lands. |
 
-**Headline claim (honest):** Three live GPU results — HumanEval +3.0pp, PBT 99.3%, Typed IR +4.9pp — with statistical confidence intervals and multi-minute GPU runtimes. The remaining six entries motivated the research but need live re-runs before they can be cited externally. Re-verification is queued as an explicit milestone goal.
+**Headline claim (honest):** Live-validated signed improvements are now three-plus-one: HumanEval +3.0pp, PBT 99.3%, Typed IR +4.9pp, and Exp 451's first positive verify-repair number on GSM8K (+5pp, 50q).  The JEPA 0.967 AUC and several simulated entries remain motivating but need live re-runs before they can be cited externally; these re-runs are explicitly scheduled into the active roadmap (Exps 502/503/504/510).
 
 ## Product Roadmap
 
