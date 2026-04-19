@@ -2173,3 +2173,4 @@ python/ |
 | 2026-04-19 00:54 UTC | Exp 471: KV260 FPGA Bring-Up v2 — sparsified Ising | OK | 81 passed in 17.18s |
 | 2026-04-19 01:07 UTC | Exp 472: JEPA Tier 3 Scale + GPU-Accelerated Oscil | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-19 01:19 UTC | Exp 472: JEPA Tier 3 Scale + GPU-Accelerated Oscil | OK | 119 passed in 29.84s |
+| 2026-04-19 01:33 UTC | Exp 473: Milestone 2026.04.35 Retrospective — did  | OK | 81 passed in 14.72s |
