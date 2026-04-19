@@ -163,3 +163,9 @@ class AdversarialBenchmarkResult:
 # AdversarialBenchmarkResult is the canonical implementation; AdversarialV2Result
 # is exported so callers can reference the Exp 479 spec name without a separate class.
 AdversarialV2Result = AdversarialBenchmarkResult
+
+# Alias used by Exp 490 (GSM-Symbolic Adversarial v3, RETRO-039 closure).
+# AdversarialV3Result is identical to AdversarialBenchmarkResult — no new fields are
+# needed because the existing class already captures all three-condition metrics and the
+# thesis_confirmed predicate required by REQ-BENCH-042.
+AdversarialV3Result = AdversarialBenchmarkResult
