@@ -2205,6 +2205,48 @@ thermodynamic computing Ising FPGA
   loading path was broken. Re-run with transformers loader for honest results.
 - **When to pursue:** Next milestone (2026.04.34), Exp 450 as first priority.
 
+### Carnot for Code-Vulnerability Verification — Validation Moat Spike (STRETCH, 2026-04-19)
+- **Directive:** As a post-milestone-2026.04.40 stretch direction, apply
+  Carnot's verify-repair pipeline to code-vulnerability discovery and compare
+  against the Vidoc Security replication study
+  (https://decrypt.co/364744/anthropic-mythos-replicated-public-models-vidoc-security,
+  April 2026). Vidoc showed public models (GPT-5.4, Claude Opus 4.6) find
+  candidate vulnerabilities for under $30/scan but "cannot construct working
+  attack chains — they lack the sophistication to figure out how an attacker
+  could chain code fragments together across multiple network packets". That
+  chain-the-fragments gap is exactly what Carnot's Ising+Z3 symbolic layer
+  closes.
+- **Proposed experiment:** `CarnotVulnVerifier` — takes Vidoc's public replay
+  of the OpenBSD, FFmpeg, and wolfSSL test cases as input (candidate bug
+  surfaces from a cheap LLM detector), compiles each candidate into a Z3
+  constraint against the surrounding call graph, runs the Ising solver to
+  check whether the joint constraint is satisfiable (= real bug chain) or
+  unsatisfiable (= false positive). Emit per-case `verdict in {real_chain,
+  false_positive, undetermined}` plus the Z3 witness when real_chain.
+  Acceptance criterion: at least one of the OpenBSD/FFmpeg/wolfSSL cases
+  converts a public-model false positive to a certified false_positive, or
+  lifts a partial discovery to a verified real_chain with an exploit
+  trace. Report cost_usd and decision_class=verify honestly per the new
+  economics fields in `scripts/experiment_template.py`.
+- **Why this matters beyond the specific experiment:** it is the first test
+  of Carnot outside the LLM-hallucination domain. The symbolic layer is
+  domain-agnostic by design; proving that on a second, adjacent domain
+  (code vulns) lets the README / landing page make a stronger claim about
+  the validation-moat framing. It also gives a headline metric that does
+  not depend on GSM8K or HumanEval, which matters because RETRO-033's
+  ongoing miss count has made the LLM-math headlines currently unlandable.
+- **Not a primary focus:** Carnot's core is LLM verification; do not let
+  the security vertical become the headline. The point of this spike is to
+  prove the verification layer is AI-model-independent. One milestone slot
+  max, scheduled only after the pyxrt NPU work (Exp N+3/N+4 in the
+  env-hardening proposal) has landed.
+- **Watch-for signals** that would upgrade this from stretch to priority:
+  AMD or another vendor publishes a VitisAI Linux wheel (currently blocked
+  per the earlier env-hardening reference); a second independent study
+  replicates Vidoc's $30/scan number on a different vulnerability class;
+  the Z3 path in Exp 453 produces a clean extension interface that a
+  non-math domain could plug into without rewriting the extractor.
+
 ### Environment Hardening + Stranded Experiment Reruns (CRITICAL, 2026-04-19)
 - **Directive:** Milestone 2026.04.38 lost headline-credibility experiments
   to environment gaps the conductor has no pre-flight check for. Exp 503

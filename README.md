@@ -8,6 +8,12 @@ Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extract
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
+## Why Carnot: the validation moat
+
+Finding candidate hallucinations is getting cheap. Public off-the-shelf models now replicate, for under $30/scan, vulnerability-discovery findings that required restricted frontier models a quarter ago ([Decrypt, April 2026](https://decrypt.co/364744/anthropic-mythos-replicated-public-models-vidoc-security)). The same trajectory applies to LLM verification: any modern LLM can flag "this step looks suspicious" with reasonable recall. Detection is commoditising.
+
+What public models still cannot do is **chain the evidence** -- compile the suspicious steps into a joint constraint system, prove or refute their consistency, and produce a repair direction when they fail. That requires a symbolic layer downstream of the LLM. Carnot is that layer: Ising couplings that you can write by hand from a theorem prover, plus Ising couplings that you can learn from data, plus a gradient-descent repair loop that turns *detector signal into trusted verdicts with repair gradients*. The moat is moving from model access to validation, and Carnot is pointed at the validation side.
+
 ## Install
 
 ```bash
