@@ -2170,3 +2170,4 @@ python/ |
 | 2026-04-18 23:59 UTC | Exp 468: GSM-Symbolic Adversarial Benchmark — Appl | OK | 81 passed in 42.71s |
 | 2026-04-19 00:13 UTC | Exp 469: HumanEval Live with CodeExtractor + VeriC | OK | 81 passed in 23.40s |
 | 2026-04-19 00:32 UTC | Exp 470: PPSEBM Tier 2 Progressive Constraint Para | OK | 81 passed in 23.66s |
+| 2026-04-19 00:54 UTC | Exp 471: KV260 FPGA Bring-Up v2 — sparsified Ising | OK | 81 passed in 17.18s |
