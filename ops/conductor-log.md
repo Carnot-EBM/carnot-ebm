@@ -2206,3 +2206,4 @@ python/ |
 | 2026-04-19 09:35 UTC | Exp 497: SuRe Surprise-Driven EBM Replay — Tier 2  | OK | 81 passed in 3.09s |
 
 | 2026-04-19 09:43 UTC | Exp 498: KAEM Extended Profile n=5000 — RETRO-031 CLOSED (fpga_path_recommended, no crossover at n=5000) | OK | 11 passed in 3.43s |
+| 2026-04-19 09:45 UTC | Exp 498: KAEM Extended Profile n=5000 — RETRO-031  | OK | 81 passed in 3.06s |
