@@ -387,6 +387,11 @@ from carnot.pipeline.jit_vram_check import (  # noqa: E402
     JITVRAMCheck,
     JITVRAMResult,
 )
+from carnot.pipeline.expanded_gpu_reaper import (  # noqa: E402
+    ExpandedGPUReaper,
+    ExpandedGPUReaperConfig,
+    ExpandedGPUReapResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -656,4 +661,7 @@ __all__ = [
     "NPUEntropyProbe",
     "JITVRAMCheck",
     "JITVRAMResult",
+    "ExpandedGPUReaper",
+    "ExpandedGPUReaperConfig",
+    "ExpandedGPUReapResult",
 ]
