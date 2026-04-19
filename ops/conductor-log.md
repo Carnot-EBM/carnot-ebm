@@ -2167,3 +2167,4 @@ python/ |
 | 2026-04-18 22:56 UTC | Exp 465: ThinkProbeV2 Live GPU Execution — RETRO-0 | OK | 81 passed in 23.40s |
 | 2026-04-18 23:14 UTC | Exp 466: EBM-CoT Calibration v3 — RETRO-034 closur | OK | 81 passed in 19.48s |
 | 2026-04-18 23:35 UTC | Exp 467: VeriCoT+VPRM Integrated Live Pipeline 200 | OK | 81 passed in 54.51s |
+| 2026-04-18 23:59 UTC | Exp 468: GSM-Symbolic Adversarial Benchmark — Appl | OK | 81 passed in 42.71s |
