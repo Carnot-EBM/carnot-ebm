@@ -7552,3 +7552,63 @@ dedicated GPUs simultaneously rather than competing for GPU 0.
 
 Spec: REQ-BENCH-028, REQ-BENCH-029, REQ-BENCH-030,
       SCENARIO-BENCH-047, SCENARIO-BENCH-048, SCENARIO-BENCH-049
+
+### REQ-BENCH-031: Adversarial Benchmark Uses GPUVRAMGate Before Model Load
+
+The GSM-Symbolic adversarial live benchmark (Exp 479) shall invoke
+`GPUVRAMGate(min_free_gb=8.0)` as a context manager before any model is loaded.
+If the gate raises `GPUVRAMInsufficientError`, the experiment shall write an honest
+artifact with `status='gpu_vram_insufficient'` and exit cleanly via
+`assert_deliverable_written()`.
+
+**Implementation Status:** Done (Exp 479)
+
+### REQ-BENCH-032: Adversarial Benchmark Runs Three Conditions
+
+The GSM-Symbolic adversarial live benchmark shall evaluate each model across three
+conditions:
+- Condition A: standard GSM8K baseline (LLM only, no pipeline)
+- Condition B: adversarial GSM-Symbolic baseline (LLM only, no pipeline)
+- Condition C: adversarial GSM-Symbolic + Carnot verify-repair (`IntegratedExtractor`)
+
+All three conditions use 50 questions.  Results are aggregated into `AdversarialV2Result`
+(alias for `AdversarialBenchmarkResult`) per model, with `data_source` recording
+`'huggingface'` or `'hardcoded_fallback'`.
+
+**Implementation Status:** Done (Exp 479)
+
+### REQ-BENCH-033: thesis_confirmed=True When Adversarial Improvement Exceeds Standard
+
+`AdversarialV2Result.thesis_confirmed` shall be `True` when
+`carnot_adversarial_improvement > carnot_standard_improvement`.  The top-level artifact
+field `thesis_confirmed` shall be `True` when any model's result confirms the thesis.
+The `honest_verdict` field shall be:
+- `'thesis_confirmed'` when `thesis_confirmed=True`
+- `'thesis_partial'` when any `carnot_adversarial_improvement > 0` but thesis not fully confirmed
+- `'thesis_not_confirmed'` otherwise
+
+**Implementation Status:** Done (Exp 479)
+
+### SCENARIO-BENCH-050: GPUVRAMGate Blocks Exp 479 When VRAM Insufficient
+
+**Given** `GPUVRAMGate(min_free_gb=8.0)` is entered in Exp 479
+**When** free VRAM on any GPU cannot reach 8 GB after zombie kill + wait
+**Then** the experiment writes `status='gpu_vram_insufficient'` artifact
+**And** `assert_deliverable_written()` confirms the file exists
+
+### SCENARIO-BENCH-051: Three Conditions Are Evaluated Per Model in Exp 479
+
+**Given** Exp 479 runs on live GPU hardware
+**When** both Gemma4-E4B-it and Qwen3.5-0.8B are loaded
+**Then** each model is evaluated on condition A (standard), B (adversarial), and C (adversarial+Carnot)
+**And** each model's `AdversarialV2Result` records `adversarial_drop`, `carnot_adversarial_improvement`, `thesis_confirmed`
+
+### SCENARIO-BENCH-052: thesis_confirmed=True When Adversarial Improvement (0.10) > Standard (0.05)
+
+**Given** `AdversarialV2Result` with `adversarial_carnot_acc=0.65`, `adversarial_baseline_acc=0.55`, `carnot_standard_improvement=0.05`
+**When** `thesis_confirmed` is evaluated
+**Then** `carnot_adversarial_improvement = 0.10 > 0.05 = carnot_standard_improvement`
+**And** `thesis_confirmed is True`
+
+Spec: REQ-BENCH-031, REQ-BENCH-032, REQ-BENCH-033,
+      SCENARIO-BENCH-050, SCENARIO-BENCH-051, SCENARIO-BENCH-052

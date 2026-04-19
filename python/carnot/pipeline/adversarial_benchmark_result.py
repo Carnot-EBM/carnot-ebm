@@ -157,3 +157,9 @@ class AdversarialBenchmarkResult:
             "thesis_confirmed": self.thesis_confirmed,
             "ci_95_adversarial": [lo, hi],
         }
+
+
+# Alias used by Exp 479 and tests/python/test_adversarial_v2_result.py.
+# AdversarialBenchmarkResult is the canonical implementation; AdversarialV2Result
+# is exported so callers can reference the Exp 479 spec name without a separate class.
+AdversarialV2Result = AdversarialBenchmarkResult
