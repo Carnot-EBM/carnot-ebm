@@ -1967,10 +1967,30 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     # ── Dogfooding: use Carnot to verify generated code ──────────
     _dogfood_verify_generated_code()
 
-    # Run tests after changes — retry up to 2 times if tests fail
-    MAX_FIX_ATTEMPTS = 2
+    # Run tests after changes — progressive escalation across fix attempts.
+    # Tier 1 (Haiku,  30 turns): cheapest — catches simple coverage gaps and
+    #                            missing exports.  Most of the time this is enough.
+    # Tier 2 (Sonnet, 50 turns): default model with a larger turn budget than
+    #                            the research step itself.  Catches middle-
+    #                            complexity logic bugs.  Raised from 30 to 50
+    #                            after observing Exp 453/472/491 max-turns
+    #                            failures on fix attempts that were otherwise
+    #                            making steady progress.
+    # Tier 3 (Opus,   30 turns): opt-in via CARNOT_ENABLE_OPUS_FIX=1.  Fires
+    #                            only when the previous attempt exited via
+    #                            max-turns (fix_ok=False), i.e. the agent was
+    #                            genuinely running out of reasoning capacity,
+    #                            not just producing bad code that stronger
+    #                            reasoning would likely repeat.  The cost is
+    #                            ~5–10× Sonnet in tokens but one success here
+    #                            beats a broken-tests checkpoint that blocks
+    #                            downstream pre-flights for the rest of the
+    #                            milestone.
+    OPUS_FIX_ENABLED = os.environ.get("CARNOT_ENABLE_OPUS_FIX") == "1"
+    MAX_FIX_ATTEMPTS = 3 if OPUS_FIX_ENABLED else 2
     tests_ok, test_summary = run_tests(full=False)  # Use smart subset — full suite hangs serially
 
+    prev_fix_ok = True  # Tracks whether the *previous* fix attempt exited cleanly
     for fix_attempt in range(MAX_FIX_ATTEMPTS):
         if tests_ok:
             break
@@ -1984,16 +2004,52 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
             f"so all tests pass with 100% coverage.\n"
             f"Do NOT modify scripts/research_conductor.py."
         )
-        # Use haiku for first fix attempt (usually simple coverage gaps),
-        # escalate to default model on second attempt if haiku fails.
-        fix_model = "haiku" if (AGENT_TYPE == "claude" and fix_attempt == 0) else None
-        logger.info("Asking %s to fix test failures...", AGENT_DISPLAY)
+        # Pick the model and turn budget for this attempt.  See the tier
+        # comment above this loop for rationale.
+        if AGENT_TYPE != "claude":
+            fix_model = None
+            fix_max_turns = 30
+        elif fix_attempt == 0:
+            fix_model = "haiku"
+            fix_max_turns = 30
+        elif fix_attempt == 1:
+            fix_model = None  # default model (sonnet)
+            fix_max_turns = 50
+        else:
+            # fix_attempt == 2 and OPUS_FIX_ENABLED is True.  Only escalate to
+            # Opus when the Sonnet attempt ran out of turns — that indicates
+            # it was making progress but needed more capacity.  Otherwise
+            # Opus is more likely to produce a fancier version of the same
+            # broken patch.
+            if not prev_fix_ok:
+                fix_model = "opus"
+                fix_max_turns = 30
+                logger.info("Opus fix tier armed (prior Sonnet attempt exited "
+                            "via max-turns — capacity-bound, not logic-bound)")
+            else:
+                logger.info("Skipping Opus fix tier: prior attempt exited "
+                            "cleanly but still produced failing tests, so "
+                            "the problem is code quality not reasoning depth")
+                break
+        logger.info("Asking %s to fix test failures (tier %d, model=%s, turns=%d)...",
+                    AGENT_DISPLAY, fix_attempt + 1, fix_model or "default", fix_max_turns)
         fix_ok, fix_output = run_agent(
-            fix_prompt, max_turns=30, timeout=600, model_override=fix_model,
+            fix_prompt, max_turns=fix_max_turns, timeout=600, model_override=fix_model,
         )
+        prev_fix_ok = fix_ok
         if not fix_ok:
-            logger.error("%s failed to fix tests", AGENT_DISPLAY)
-            break
+            logger.error("%s failed to fix tests (attempt %d)", AGENT_DISPLAY, fix_attempt + 1)
+            # Do NOT break here when opus escalation is enabled and we are
+            # between Sonnet and Opus — the capacity-bound signal is exactly
+            # what the Opus tier is designed to catch.
+            if fix_attempt + 1 >= MAX_FIX_ATTEMPTS:
+                break
+            if not OPUS_FIX_ENABLED:
+                break
+            # Otherwise fall through to the next iteration so the Opus tier
+            # gets its turn.  The model-selection block above uses prev_fix_ok
+            # to decide whether Opus is actually warranted.
+            continue
         tests_ok, test_summary = run_tests(full=False)  # Use smart subset — full suite hangs serially
 
     if not tests_ok:
