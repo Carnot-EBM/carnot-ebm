@@ -535,3 +535,9 @@
 | SCENARIO-BENCH-068 | Implemented | robustness_delta > 0 When Pipeline Drop < Baseline Drop — Exp 504 AdversarialV4Result with standard_drop_baseline=0.15 and standard_drop_pipeline=0.08 returns robustness_delta=0.07 |
 | SCENARIO-BENCH-069 | Implemented | carnot_more_robust=True Confirms RETRO-039 Thesis — Exp 504 when baseline drops 15pp but pipeline drops only 8pp, carnot_more_robust returns True and honest_verdict=thesis_confirmed |
 | SCENARIO-BENCH-070 | Implemented | to_dict() Contains All Required Schema Fields — Exp 504 AdversarialV4Result.to_dict() includes all required fields (robustness_delta, carnot_more_robust, retro_039_confirmed) |
+| REQ-VERIFY-104 | Implemented | NUP Probe v3 Extracts Per-Token Cross-Layer Features — Exp 507 CLAPFeatureExtractor computes per_token_entropy, topk_concentration, cross_layer_variance from token-level activations across all layers |
+| REQ-VERIFY-105 | Implemented | NUP Probe v3 Trains Classifier On Cross-Layer Signals — Exp 507 NUPProbeV3 trains binary classifier on combined CLAP features with 80 training pairs and evaluates on 20 held-out pairs |
+| REQ-VERIFY-106 | Implemented | NUP Probe v3 Measures Hallucination Detection Performance — Exp 507 computes AUROC metric for hallucination vs correct-answer classification via cross-layer variance features |
+| SCENARIO-VERIFY-137 | Implemented | Per-Token Cross-Layer Variance Extracted Correctly — Exp 507 CLAPFeatureExtractor with n_layers=4 produces cross_layer_variance signal from per-layer hidden states without error |
+| SCENARIO-VERIFY-138 | Implemented | Binary Classifier Trained On CLAP Features — Exp 507 NUPProbeV3 trains on 80 CoT pairs with cross-layer features and reaches training completion without divergence |
+| SCENARIO-VERIFY-139 | Implemented | AUROC Metric Computed For Hallucination Detection — Exp 507 evaluates on 20 held-out pairs with AUROC=0.4, establishing baseline for token-level cross-layer approach limitations |
