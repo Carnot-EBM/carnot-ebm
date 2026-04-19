@@ -126,6 +126,43 @@ These mirror the fields validated across Exps 294, 302, and 303 and ensure
 downstream tooling (conductor, retrospective scripts) can always parse results.
 """
 
+OPTIONAL_ECONOMICS_FIELDS: tuple[str, ...] = ("cost_usd", "decision_class")
+"""Optional economics fields that experiments *should* emit when they make a
+verify/detect/repair decision end-to-end.
+
+Why these two and not more: the 2026-04-19 Vidoc Security study
+(https://decrypt.co/364744/anthropic-mythos-replicated-public-models-vidoc-security)
+showed that the per-scan cost of LLM-driven vulnerability discovery has
+collapsed to well under $30, which makes the comparison-across-systems
+question hinge on *economics per decision* rather than raw accuracy.
+Carnot's answering unit of work is a verify/detect/repair decision, so:
+
+    - cost_usd:        approximate USD spent on LLM API calls + GPU time for
+                       this experiment, measured end-to-end (prompt tokens +
+                       completion tokens + optional hardware amortisation).
+                       Zero is acceptable when the experiment ran entirely on
+                       local hardware; omit the field entirely when genuinely
+                       unknown rather than reporting a fake number.
+    - decision_class:  one of 'detect' | 'verify' | 'repair' (or a list of
+                       these when an experiment covers multiple) so the
+                       retrospective agent can slice results by which moat
+                       tier the experiment exercised.
+
+These fields are *optional* rather than required on purpose: making them
+required would break every pre-500 artifact on disk that predates the
+validation-moat framing.  ``build_result`` accepts them as kwargs and puts
+them in the artifact when provided, so new experiments adopt the schema
+naturally without forcing a backfill.
+"""
+
+DECISION_CLASSES: frozenset[str] = frozenset({"detect", "verify", "repair"})
+"""Allowed values for the ``decision_class`` economics field.
+
+A single experiment may cover multiple classes -- in that case pass a list
+of strings like ``["detect", "verify"]`` rather than a single string.  The
+retrospective agent treats list-valued decision_class as a superset.
+"""
+
 DEFAULT_BATCH_SIZE: int = 8
 """Default number of questions per inference batch (REQ-VERIFY-084).
 
@@ -796,13 +833,17 @@ class ExperimentTemplate:
         data: dict[str, Any],
         *,
         status: str,
+        cost_usd: float | None = None,
+        decision_class: str | list[str] | None = None,
         **extra_fields: Any,
     ) -> dict[str, Any]:
         """Build a standardised result artifact with all required fields.
 
         Required fields (``REQUIRED_RESULT_FIELDS``) are auto-populated.
-        *data* and *extra_fields* are merged in; caller-supplied values in
-        *data* take precedence over *extra_fields*.
+        Optional economics fields (``OPTIONAL_ECONOMICS_FIELDS``) are included
+        only when the caller passes them -- see the constant's docstring for
+        the rationale.  *data* and *extra_fields* are merged in; caller-
+        supplied values in *data* take precedence over *extra_fields*.
 
         Parameters
         ----------
@@ -811,6 +852,17 @@ class ExperimentTemplate:
         status : str
             Outcome label — one of ``"success"``, ``"blocked"``, ``"partial"``,
             ``"error"``.
+        cost_usd : float, optional
+            Approximate USD spent on this experiment's end-to-end
+            decision(s).  Omit when genuinely unknown rather than pass a fake
+            zero; zero is acceptable when the experiment ran entirely on
+            local hardware without LLM API calls.
+        decision_class : str or list[str], optional
+            Which Carnot validation-moat tier the experiment exercised.
+            Must be one of (or a list drawn from) ``DECISION_CLASSES`` =
+            ``{"detect", "verify", "repair"}``.  Raises ``ValueError`` on an
+            unknown class so typos do not silently corrupt the
+            retrospective's slice-by-class view.
         **extra_fields
             Additional top-level fields (e.g. ``stall_root_cause="..."``,
             ``custom_tag="hello"``).
@@ -820,6 +872,14 @@ class ExperimentTemplate:
         dict
             Artifact ready to JSON-serialise and write to ``self._output_path``.
         """
+        if decision_class is not None:
+            classes = [decision_class] if isinstance(decision_class, str) else list(decision_class)
+            unknown = set(classes) - DECISION_CLASSES
+            if unknown:
+                raise ValueError(
+                    f"decision_class contains unknown value(s) {sorted(unknown)}; "
+                    f"valid values are {sorted(DECISION_CLASSES)}"
+                )
         finished_at = _utc_now()
         duration_s = round(time.perf_counter() - self._t0, 3)
 
@@ -832,6 +892,14 @@ class ExperimentTemplate:
             "duration_s": duration_s,
             "status": status,
         }
+
+        # Optional economics fields (included only when the caller provides them).
+        if cost_usd is not None:
+            result["cost_usd"] = cost_usd
+        if decision_class is not None:
+            # Normalise to a single canonical form: list if multi, str if single.
+            classes = [decision_class] if isinstance(decision_class, str) else list(decision_class)
+            result["decision_class"] = classes[0] if len(classes) == 1 else classes
 
         # Merge extra_fields first (lower priority), then data (higher priority)
         result.update(extra_fields)
