@@ -366,6 +366,10 @@ from carnot.pipeline.vram_budget_ledger import (  # noqa: E402
     VRAMForecast,
 )
 from carnot.pipeline.precision_100q_v6_result import Precision100qV6Result  # noqa: E402
+from carnot.pipeline.semantic_energy_boltzmann import (  # noqa: E402
+    BoltzmannSemanticEnergy,
+    SemanticCluster,
+)
 
 __all__ = [
     "AgentStep",
@@ -624,4 +628,6 @@ __all__ = [
     "VRAMBudgetLedger",
     "VRAMForecast",
     "Precision100qV6Result",
+    "BoltzmannSemanticEnergy",
+    "SemanticCluster",
 ]
