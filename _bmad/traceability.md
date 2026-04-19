@@ -447,4 +447,8 @@
 | SCENARIO-JEPA-001 | Not Started | Implemented | GPU CUDA:0/CUDA:1 Dual-Model Execution — JEPAOscillatorIsing runs on dual GPUs for scalable continuous energy exploration without contention (Exp 472) |
 | SCENARIO-JEPA-002 | Not Started | Implemented | Continuous Energy Landscape Generation and Validation — synthetic continuous landscapes generated per training step; L2-distance recovery and convergence validated (Exp 472) |
 | SCENARIO-JEPA-003 | Not Started | Implemented | Exp 472 Deliverable Schema — results/experiment_472_jepa_gpu_oim.json with latent_dim, auc_landscape, convergence_steps, honest_verdict contract (Exp 472) |
+| REQ-INFRA-041 | Not Started | Implemented | GPUVRAMGate Wired into ExperimentTemplate.requires_gpu — Gate automatically runs before all GPU-requiring experiments, gate_implemented=true in Exp 474 artifact (Exp 474) |
+| SCENARIO-INFRA-047 | Not Started | Implemented | CPU Experiments Skip VRAM Check — gate returns early on non-GPU systems without blocking experiment execution (Exp 474) |
+| SCENARIO-INFRA-048 | Not Started | Implemented | Zombie Process Detection and Remediation — detects processes with >500MB unused VRAM, >5min age, 0% util and kills them to free memory before GPU experiment (Exp 474) |
+| SCENARIO-INFRA-049 | Not Started | Implemented | Deferred Experiment Execution on VRAM Exhaustion — when VRAM < threshold after remediation, experiment deferred gracefully without error; requeue on next conductor cycle (Exp 474) |
 | SCENARIO-SELFLEARN-018 | Not Started | Implemented | partition_isolation_score > 0.8 After Training 3 Domains Independently — Exp 470 achieved partition_isolation_score=1.0 across arithmetic/code/logical domains (Exp 470) |
