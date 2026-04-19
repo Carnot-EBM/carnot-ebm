@@ -480,3 +480,9 @@
 | REQ-SELFLEARN-020 | Not Started | Implemented | Interleaved Validation Uses FOVERAnnotator-Labeled Steps in Natural Order — Exp 485 InterleavedViolationSequence processes 57 real steps in natural presentation order |
 | SCENARIO-SELFLEARN-019 | Not Started | Implemented | InterleavedViolationSequence Alternating Steps Have Rate 1.0 — Exp 485 interleaving_rate=0.0 (no synthetic interlacing needed on real violations) |
 | SCENARIO-SELFLEARN-020 | Not Started | Implemented | PPSEBMRealValidationResult Isolation Maintained at 0.75 — Exp 485 isolation_score_after=1.0, exceeds 0.75 target |
+| REQ-BENCH-034 | Not Started | Implemented | 100q v5 Uses GPUVRAMGateV2 with kill_first=True Before Model Load — Exp 488 GPUVRAMGateV2(min_free_gb=8.0, kill_first=True) gates before model load, ensures zombies killed and VRAM free |
+| REQ-BENCH-035 | Not Started | Implemented | 100q v5 Assigns Models to Explicit CUDA Devices via DualGPUHarness — Exp 488 assigns Gemma4-E4B-it to cuda:0, Qwen3.5-0.8B to cuda:1 via DualGPUHarness.apply() |
+| REQ-BENCH-036 | Not Started | Implemented | 100q v5 Writes CoT Pairs for NUP Probe v2 Retrain — Exp 488 writes 200 CoT pairs to results/exp488_cot_pairs.json for Exp 496 retraining |
+| SCENARIO-BENCH-053 | Not Started | Implemented | GPUVRAMGateV2 Fires Before Model Load in Exp 488 — Exp 488 GPUVRAMGateV2(kill_first=True).__enter__() called before any model load, deferred artifact on insufficient VRAM |
+| SCENARIO-BENCH-054 | Not Started | Implemented | Exp 488 Assigns Gemma4 to cuda:0 and Qwen to cuda:1 — Exp 488 DualGPUHarness explicit assignment verified in dual-model execution |
+| SCENARIO-BENCH-055 | Not Started | Implemented | Exp 488 Writes Valid Deliverable with All Schema Fields — Exp 488 results/experiment_488_live_100q_precision_v5.json contains all required fields, honest_verdict present |
