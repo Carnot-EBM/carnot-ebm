@@ -55,6 +55,11 @@ from carnot.models.lowrank_kaem import (
     LowRankKAEMEnergy,
     LowRankProjector,
 )
+from carnot.models.potts_machine import (
+    PottsCoupling,
+    PottsMachineVerifier,
+    PottsState,
+)
 
 __all__ = [
     "BoltzmannConfig",
@@ -101,4 +106,7 @@ __all__ = [
     "ConstraintBoundary",
     "LowRankKAEMEnergy",
     "LowRankProjector",
+    "PottsCoupling",
+    "PottsMachineVerifier",
+    "PottsState",
 ]
