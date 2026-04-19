@@ -1,0 +1,42 @@
+{
+  "experiment": 488,
+  "title": "Live 100q Precision v5 \u2014 GPUVRAMGateV2 + cuda:0/cuda:1 (RETRO-033 close)",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T06:10:56Z",
+  "finished_at": "2026-04-19T06:10:58Z",
+  "duration_s": 2.515,
+  "status": "blocked",
+  "blocked_reason": "Gemma4 load failed: CUDA out of memory. Tried to allocate 14.89 GiB. GPU 0 has a total capacity of 23.56 GiB of which 14.33 GiB is free. Process 27404 has 8.96 GiB memory in use. Including non-PyTorch memory, this process has 256.00 MiB memory in use. Of the allocated memory 0 bytes is allocated by PyTorch, and 0 bytes is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://docs.pytorch.org/docs/stable/notes/cuda.html#optimizing-memory-usage-with-pytorch-cuda-alloc-conf)",
+  "honest_verdict": "deferred_retro_033",
+  "schema": [
+    "blocked_reason",
+    "cot_pairs_written",
+    "dual_gpu_explicit_assignment",
+    "duration_s",
+    "env_autofix",
+    "experiment",
+    "finished_at",
+    "gemma4_result",
+    "gpu_vram_gate_v2_fired",
+    "honest_verdict",
+    "qwen_result",
+    "retro_033_closed",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "env_autofix": {
+    "gpu_detected": true,
+    "carnot_force_live_was_set": false,
+    "auto_fix_applied": true,
+    "final_env_value": "1"
+  },
+  "gemma4_result": null,
+  "qwen_result": null,
+  "cot_pairs_written": 0,
+  "gpu_vram_gate_v2_fired": true,
+  "dual_gpu_explicit_assignment": true,
+  "retro_033_closed": false
+}
