@@ -557,3 +557,7 @@
 | SCENARIO-INFRA-073 | Implemented | JIT VRAM Check Passes When Sufficient On First Attempt — Exp 513 scenario_a: get_available_gb()=20 GB, required_gb=10 GB, gate_model_load returns is_cleared=True, attempts=1, no sleep |
 | SCENARIO-INFRA-074 | Implemented | JIT VRAM Check Succeeds After Retry — Exp 513 scenario_b: first check 8 GB (fail), sleep(30), second check 12 GB (pass), gate_model_load returns is_cleared=True, attempts=2, wait_applied=True |
 | SCENARIO-INFRA-075 | Implemented | JIT VRAM Check Aborts When Insufficient On Both Attempts — Exp 513 scenario_c: both checks fail (5 GB, 6 GB vs 10 GB required), gate_model_load returns is_cleared=False, attempts=2, abort without crash |
+| REQ-BENCH-014 | Implemented | Live 100q Benchmark with JIT VRAM Gating — Exp 514 queries pynvml immediately before Gemma4 load via JITVRAMCheck(required_gb=14.89) to prevent stale VRAM forecast race conditions |
+| REQ-BENCH-015 | Implemented | CoT Pairs Written to exp514_cot_pairs.json for JEPA Retrain — Exp 514 CoTPairWriter collects reasoning pairs from successful inference for downstream curriculum learning |
+| SCENARIO-BENCH-033 | Implemented | JIT VRAM Gate Blocks Load When VRAM Insufficient in Exp 514 — scenario with insufficient VRAM returns is_cleared=False, preventing CUDA OOM crash; retries once after 30s if configured |
+| SCENARIO-BENCH-034 | Implemented | write_cot_pairs Produces Valid FOVER JSON — Exp 514 output cot pairs validate against FOVER schema with required fields (question, chain_of_thought, arithmetic_step, domain_label) |
