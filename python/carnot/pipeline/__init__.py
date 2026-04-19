@@ -315,6 +315,7 @@ from carnot.pipeline.gpu_vram_gate import (  # noqa: E402
     GPUVRAMInsufficientError,
     VRAMStatus,
 )
+from carnot.pipeline.gpu_vram_gate_v2 import GPUVRAMGateV2  # noqa: E402
 from carnot.pipeline.conductor_dedup import (  # noqa: E402
     ConductorDedupCheck,
     PartialResultHandoff,
@@ -563,6 +564,7 @@ __all__ = [
     "PartitionIsolationScore",
     "PPSConstraintLearner",
     "GPUVRAMGate",
+    "GPUVRAMGateV2",
     "GPUVRAMInsufficientError",
     "VRAMStatus",
     "ConductorDedupCheck",

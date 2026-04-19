@@ -1,0 +1,77 @@
+{
+  "experiment": 487,
+  "title": "GPUVRAMGateV2",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T05:59:50Z",
+  "finished_at": "2026-04-19T05:59:50Z",
+  "duration_s": 0.004,
+  "status": "success",
+  "schema": [
+    "backward_compat_preserved",
+    "duration_s",
+    "env_autofix_applied",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "kill_first_implemented",
+    "retro_044_root_cause_fixed",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "template_updated",
+    "test_results",
+    "title",
+    "zombie_drain_sleep_seconds"
+  ],
+  "kill_first_implemented": true,
+  "zombie_drain_sleep_seconds": 15,
+  "template_updated": true,
+  "backward_compat_preserved": true,
+  "retro_044_root_cause_fixed": true,
+  "honest_verdict": "vram_gate_v2_operational",
+  "test_results": {
+    "test_kill_first_order": {
+      "passed": true,
+      "call_order": [
+        "kill",
+        "check"
+      ],
+      "expected": [
+        "kill",
+        "check"
+      ]
+    },
+    "test_kill_first_false_backward_compat": {
+      "passed": true,
+      "call_order": [
+        "check"
+      ],
+      "note": "check fires first; kill not called because VRAM was sufficient"
+    },
+    "test_ci_mode_noop": {
+      "passed": true,
+      "note": "no error raised on CPU-only machine (n_gpus=0)"
+    },
+    "test_drain_sleep_seconds": {
+      "passed": true,
+      "sleep_calls": [
+        15
+      ],
+      "expected": [
+        15
+      ]
+    },
+    "test_template_uses_v2": {
+      "passed": true,
+      "GPUVRAMGateV2_in_source": true,
+      "kill_first_True_in_source": true
+    },
+    "test_raises_on_insufficient_vram": {
+      "passed": true,
+      "note": "GPUVRAMInsufficientError raised when ensure_vram_available=False"
+    },
+    "all_passed": true
+  },
+  "env_autofix_applied": true
+}
