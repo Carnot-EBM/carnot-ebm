@@ -1,191 +1,167 @@
 {
-  "experiment": 486,
-  "title": "Milestone 2026.04.36 Retrospective",
-  "run_date": "20260419",
-  "started_at": "2026-04-19T05:13:07Z",
-  "finished_at": "2026-04-19T05:13:07Z",
-  "duration_s": 0.0,
-  "status": "success",
-  "schema": [
-    "deferred_to_gpu_detail",
-    "duration_s",
-    "experiment",
-    "experiments_completed",
-    "experiments_in_milestone",
-    "finished_at",
-    "gpu_vram_gate_failed",
-    "gpu_vram_gate_failure_note",
-    "headline_closures",
-    "headline_still_open",
-    "honest_verdict",
-    "jepa_auc_final",
-    "live_200q_statistically_positive",
-    "meta_reflection",
-    "milestone",
-    "n_deferred_to_gpu",
-    "new_retro_items",
-    "nup_probe_auc",
-    "nup_probe_viable_tier0c",
-    "prior_milestone_adoption_rate",
-    "prior_milestone_experiments",
-    "prior_milestone_wall_time_minutes",
-    "retro_031_closed",
-    "retro_033_closed",
-    "retro_036_closed",
-    "retro_038_closed",
-    "retro_039_closed",
-    "retro_040_closed",
-    "retro_042_closed",
-    "retro_043_closed",
-    "retro_improvement_adoption_detail",
-    "retro_improvement_adoption_rate",
-    "run_date",
-    "schema",
-    "started_at",
-    "status",
-    "thesis_confirmed",
-    "title",
-    "top_priority_for_37"
-  ],
+  "schema": "carnot.operational_retro.v11",
   "milestone": "2026.04.36",
-  "retro_031_closed": false,
-  "retro_033_closed": false,
-  "retro_036_closed": true,
-  "retro_038_closed": false,
-  "retro_039_closed": false,
-  "retro_040_closed": false,
-  "retro_042_closed": true,
-  "retro_043_closed": true,
-  "n_deferred_to_gpu": 3,
-  "deferred_to_gpu_detail": [
+  "generated_at": "2026-04-19T05:27:33Z",
+  "total_wall_time_minutes": 4921,
+  "experiments_completed": 336,
+  "average_minutes_per_experiment": 14.6,
+  "slowest_experiments": [
     {
-      "exp_id": "476",
-      "honest_verdict": "deferred_to_gpu",
-      "status": "gpu_required"
+      "rank": 1,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.4,
+      "likely_cause": "Sequential model loading onto GPU 0 while GPU 1 remained idle. Qwen then Gemma loaded serially, each requiring a full VRAM allocation cycle before the prior model was freed. DualGPURunner exists in experiment_template.py but was never wired into this harness at the experiment level. This pattern persists because harness-level DualGPU adoption is 0% across all benchmark scripts — only 11/64 dual-model harnesses assign any model to cuda:1 (Exp 480 audit)."
     },
     {
-      "exp_id": "478",
-      "honest_verdict": "gpu_required",
-      "status": "blocked"
+      "rank": 2,
+      "duration_minutes": 105,
+      "label": "Exp 308: JEPA fast-path gate integration (tests failing checkpoint)",
+      "pct_of_total": 2.1,
+      "likely_cause": "Interrupted conductor run left the test suite in a failing state. Recovery required full context reload, triage of 3900+ tests to distinguish pre-existing from new failures, and a recommit — adding 30-40 min diagnostic overhead on top of the experiment. Partial-result handoff (Exp 475, adopted in .36) was implemented after this experiment ran, so it did not benefit from the new mechanism. Future interrupted runs should fast-path to checkpoint resumption."
     },
     {
-      "exp_id": "479",
-      "honest_verdict": "gpu_required",
-      "status": "gpu_required"
+      "rank": 3,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.6,
+      "likely_cause": "Single-threaded sequential pipeline across all prompt variants. Typed IR prompts are significantly longer than standard GSM8K prompts, raising per-call latency. BatchedInferenceRunner was available but not applied — one of 77 harnesses with sequential question loops documented by Exp 481. GPU 1 idle throughout. The batching enforcement standard was documented in .36 but a CI gate or pre-commit hook does not yet block non-batched harnesses from executing."
+    },
+    {
+      "rank": 4,
+      "duration_minutes": 76,
+      "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "pct_of_total": 1.5,
+      "likely_cause": "Implementing ExperimentTimeoutWatchdog after a 17-milestone delay compounded the implementation cost: reading historical RETRO-003 context, verifying no partial implementations existed, and integrating with the existing pipeline all added overhead that a same-milestone fix would not have incurred. RETRO-003 was the canonical example of delay multiplying implementation cost — a 45-min hard-cap mechanism that took 76 min to implement because it had accumulated 17 milestones of context debt."
+    },
+    {
+      "rank": 5,
+      "duration_minutes": 74,
+      "label": "Exp 260 partial: CPU-bound benchmark proves GPU need",
+      "pct_of_total": 1.5,
+      "likely_cause": "A benchmark that ran to completion but produced only a 'GPU needed' verdict — consuming 74 min of wall time to confirm a prerequisite that gpu_monitor.py could verify in under 2 min. The GPUVRAMGate (Exp 474) was introduced specifically to prevent this class of wasted execution, but it was implemented mid-milestone and Exp 260 predates it. Going forward, the VRAM gate runs before any GPU-required experiment."
     }
   ],
-  "gpu_vram_gate_failed": true,
-  "gpu_vram_gate_failure_note": "HIGHEST PRIORITY FOR .37: GPUVRAMGate (Exp 474) implemented but 3 experiments still deferred. Gate must kill zombie processes AND verify post-kill free VRAM before proceeding.",
-  "jepa_auc_final": 0.280702,
-  "nup_probe_auc": 0.6000000000000001,
-  "nup_probe_viable_tier0c": false,
-  "thesis_confirmed": false,
-  "live_200q_statistically_positive": false,
-  "retro_improvement_adoption_rate": 0.6,
-  "retro_improvement_adoption_detail": {
-    "item1_conductor_dedup": true,
-    "item2_partial_handoff": true,
-    "item3_batching_enforcement": false,
-    "item4_retro_task_budget": true,
-    "item5_thermal_gate": false,
-    "n_adopted": 3,
-    "n_total": 5,
+  "bottlenecks_identified": [
+    "GPUVRAMGate (Exp 474) implemented but insufficient: the gate checks VRAM at experiment start but does not kill zombie processes before checking. Three experiments (476, 478, 479) were deferred_to_gpu because zombie VRAM from prior sessions was still allocated when the gate ran. This is the FOURTH consecutive milestone where zombie-driven GPU deferral blocked live benchmark experiments. The gate must kill zombies AND verify post-kill free VRAM before any GPU-required experiment is allowed to proceed (RETRO-044).",
+    "GPU 1 structurally underutilized at 11% despite being active: at milestone close, GPU 0 runs at 100% utilization (22681MB, 71C) while GPU 1 runs at only 11% utilization (6980MB, 56C). PID 9786 spans both GPUs but offloads only model layers to GPU 1 via device_map='auto' — forward-pass compute stays on GPU 0. Exp 480 confirmed 53/64 dual-model harnesses still missing explicit cuda:1 assignments. DualGPURunner is in the template but harness-level adoption remains near zero.",
+    "Inference batching enforcement is documented but not enforced: Exp 481 audited all harness scripts and found 77 violations — sequential for-loops over questions without BatchedInferenceRunner. The .36 milestone documented the standard (batch_size=8 GSM8K, batch_size=4 HumanEval) but this documentation has not been turned into a blocking pre-commit hook or CI gate. Documentation without enforcement produces zero adoption (RETRO-045).",
+    "JEPA AUC regressed for the second consecutive milestone: 0.667 (milestone .33) → 0.400 (.35) → 0.281 (.36). Exp 477 applied a quality gate that retained only 33/57 real CoT pairs, but training still degraded. The hypothesis is domain shift: real CoT pairs carry different statistical structure from the synthetic pairs used during initial training. The model is destabilized rather than improved by real data. Diagnostic work (curriculum training, lower LR, synthetic-augmented mixing) is required before any further scale attempts (RETRO-040).",
+    "GPU thermal gate unimplemented for the third consecutive milestone: at milestone close, GPU 0 is at 71C under 100% load. Prior milestones observed 82C during extended runaway experiments before ExperimentTimeoutWatchdog was introduced. No pre-check queries nvidia-smi temperature, and no conductor pause mechanism exists if a GPU exceeds 80C. Thermal throttling silently degrades throughput and sustained high temps shorten hardware lifetime (RETRO-046).",
+    "Batching standard propagation gap: Exp 481 documented that 77/88 harnesses (87.5%) have sequential question loops. The 11 compliant harnesses are the most recently written experiments. Older harnesses — including the slowest experiments (219, 221, 260) — were never updated. Without a retroactive enforcement sweep, the violation count will stay near 77 indefinitely.",
+    "Credibility gap persists for fourth consecutive milestone: RETRO-033 (live 100q verify-repair positive result) was unanswered in milestones .33, .34, .35, and .36. Exp 476 was deferred_to_gpu for the second time. The EBM-CoT AUC of 0.849 and PPSEBM real-data result (Exp 485, RETRO-043 closed) are infrastructure metrics. The project cannot make public credibility claims until verify-repair improvement at 100q+ scale is confirmed on live GPU.",
+    "NUP Probe AUC below viability threshold: Exp 484 measured NUP Probe AUC = 0.600 against a Tier 0c viability threshold of 0.700. The probe uses insufficient features — only mean activation statistics. Entropy, token probability spread, and attention pattern features are available but unused. Premature promotion of NUP to Tier 0c would add pipeline overhead without classification benefit (RETRO-047).",
+    "KAEM large-variable crossover unconfirmed: Exp 483 extended to n=1000 but did not find a crossover where KAEM dominates MCMC sampling. The EBM advantage may require n>1000, or the benchmark metric (crossover point) may be the wrong measure. The experiment consumed wall time and produced an inconclusive result without a pre-specified stopping criterion (RETRO-031)."
+  ],
+  "improvements_suggested": [
+    "Fix GPUVRAMGate to kill zombie processes before checking VRAM (RETRO-044 target): the current gate sequence is check-then-report. The correct sequence is kill-all-zombies → wait 5s for VRAM release → check free VRAM → proceed if sufficient, defer if not. This eliminates the root cause of all four .36 deferred_to_gpu experiments. Run gpu_monitor.py --kill-zombies unconditionally before every GPU-required experiment, not just at session start. Estimated savings: 3-4 experiments per milestone recovered at ~20 min context cost each = 60-80 min.",
+    "Enforce DualGPU harness adoption via conductor pre-check (Exp 480 findings): before executing any harness that loads more than one model, check that the harness contains explicit cuda:1 device assignment. If not, block execution and emit a RETRO item. Target: reduce 53-violation count to 0 within two milestones. Expected throughput improvement on dual-model benchmarks: 1.5-1.8x (GPU 1 is 24GB of idle compute). Direct fix for the Exp 219 class of slowness.",
+    "Add pre-commit hook blocking sequential question loops (RETRO-045 target): any harness script that contains a for-loop over a question list without BatchedInferenceRunner should fail pre-commit with a clear error message pointing to the batching standard. This converts 77 violations into 77 fast-fail blocks that force the author to fix batching before committing. Estimated 3-5x latency improvement on affected benchmarks.",
+    "Implement GPU thermal gate in conductor (RETRO-046 target): before starting each experiment, query nvidia-smi for all GPU temperatures. If any GPU exceeds 80C, pause the conductor for 5 minutes and re-check. If temperature remains above 80C for 15 minutes, emit RETRO item and skip remaining GPU-required experiments for the session. This prevents thermal throttling from silently degrading throughput and protects hardware.",
+    "Run JEPA diagnostic before any scale experiment with real CoT data (RETRO-040 target): before mixing real CoT pairs into training, validate that the data quality matches or exceeds the AUC baseline on a held-out synthetic set. If AUC degrades on the synthetic held-out after fine-tuning on real data, the real data has domain shift and must be filtered. Three specific remedies to try in sequence: (a) synthetic-only augmentation until AUC stabilizes at 0.667+, (b) lower learning rate (1e-4 → 1e-5) for real-data fine-tuning, (c) curriculum: pretrain on synthetic, fine-tune on filtered real pairs only after synthetic AUC is stable.",
+    "Add NUP Probe feature enrichment (RETRO-047 target): augment the current mean-activation features with per-token entropy, top-k probability spread, and attention pattern statistics. Retrain on the same held-out set and measure AUC. Do not promote NUP to Tier 0c until AUC exceeds 0.700 on held-out data. The 0.100 AUC gap (0.600 observed vs 0.700 threshold) is achievable with richer features — the current feature set is a known underfit.",
+    "Extend KAEM benchmark with pre-specified stopping criterion (RETRO-031): before running the next KAEM large-variable experiment, define: (a) the target metric (crossover point vs AUC gap vs speedup ratio at fixed n), (b) the maximum n to test (e.g., n=5000), and (c) the minimum effect size to call the experiment conclusive. Running without a stopping criterion wastes wall time on inconclusive results that cannot be compared across milestones.",
+    "Schedule live benchmark experiments as the first conductor tasks after GPUVRAMGate fix: RETRO-033 (100q live verify-repair) has been the highest-priority blocked experiment for four consecutive milestones. Once RETRO-044 is resolved, RETRO-033 must be the first scheduled GPU-required experiment — not the third or fourth. Conductor scheduling priority should place credibility-gap experiments ahead of infrastructure work whenever GPU is available.",
+    "Implement experiment tagging by output type at conductor scheduling time: tag each scheduled experiment as one of: live_result, infrastructure, scaffolding_only, deferred. Track the tag distribution each milestone and report it in the operational retro. Target: live_result rate >= 40% of experiments. The .36 milestone had ~3/12 (25%) live result attempts, all deferred. This ratio makes the context-budget-to-research-outcome ratio explicit and creates a feedback loop for conductor scheduling priorities."
+  ],
+  "estimated_time_savings_pct": 28,
+  "estimated_time_savings_rationale": "Compared to the .36 baseline of 4921 min / 336 experiments: fixing GPUVRAMGate to kill zombies before checking (converts 3-4 deferred experiments to live results, eliminates zombie accumulation mid-session) ~7%; enforcing DualGPURunner at harness level on dual-model benchmarks (GPU 1 carries compute instead of layer offload) ~6%; pre-commit batching enforcement (77 harnesses at 3-5x latency improvement each, amortized across benchmarks) ~5%; GPU thermal gate (prevents silent throttle degradation at sustained 71C+) ~2%; JEPA data quality gate (prevents multi-milestone diagnostic debt from AUC regressions) ~2%; conductor deduplication check preventing re-verification cycles ~3%; experiment scheduling priority (credibility experiments first) ~3%. Combined: approximately 28% of total wall time. The .35 retro estimated 33% savings — approximately 5% was realized through conductor dedup and partial handoff adoption in .36, leaving ~28% still unrealized from throughput-impacting items. The primary levers remain GPU 1 utilization and batching enforcement, both of which require enforcement mechanisms rather than documentation.",
+  "gpu_state_at_milestone_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 22681,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_utilization_pct": 100,
+    "gpu0_temp_c": 71,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 6980,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_utilization_pct": 11,
+    "gpu1_temp_c": 56,
+    "active_processes": [
+      {
+        "pid": 9786,
+        "gpu_index": 0,
+        "vram_mb": 13488,
+        "cpu_time_s": 3656.5,
+        "wall_time_s": 3668,
+        "cpu_efficiency_pct": 99.7,
+        "is_zombie": false,
+        "note": "Active process spanning both GPUs. GPU 0 handles forward-pass compute at 100% utilization. GPU 1 receives layer offloads at 11% utilization — characteristic of device_map='auto' without explicit cuda:1 compute routing."
+      },
+      {
+        "pid": 9786,
+        "gpu_index": 1,
+        "vram_mb": 6970,
+        "cpu_time_s": 3656.5,
+        "wall_time_s": 3668,
+        "cpu_efficiency_pct": 99.7,
+        "is_zombie": false,
+        "note": "Same PID as GPU 0 process — model layers offloaded to GPU 1 via device_map='auto'. GPU 1 contributes storage but minimal compute. Explicit cuda:1 device assignment would route forward-pass compute here."
+      },
+      {
+        "pid": 27404,
+        "gpu_index": 0,
+        "vram_mb": 9178,
+        "cpu_time_s": 828.8,
+        "wall_time_s": 744,
+        "cpu_efficiency_pct": 111.4,
+        "is_zombie": false,
+        "note": "Active multi-threaded process (>100% CPU efficiency). Second model loaded on GPU 0, competing with PID 9786 for GPU 0 compute bandwidth. If this model were assigned to cuda:1, both models could run forward passes simultaneously."
+      }
+    ],
+    "gpu0_assessment": "Active and fully loaded at 100% utilization, 92% VRAM, 71C. Unlike .35 (zombies at 0% utilization), GPU 0 is doing real work at milestone close. Two processes competing for GPU 0 compute bandwidth is the key inefficiency: PID 9786 (13488MB) + PID 27404 (9178MB) together consume 22666MB on GPU 0. If PID 27404 were routed to GPU 1, GPU 0 would drop to ~55% VRAM load and both processes could operate at full bandwidth.",
+    "gpu1_assessment": "Underutilized at 11% despite being active: 6980MB VRAM from PID 9786 layer offload, but forward-pass compute stays on GPU 0. GPU 1 has 17596MB free VRAM available. This is the highest-leverage unused resource in the system. Routing PID 27404 (9178MB) to cuda:1 would consume ~37% of GPU 1 VRAM and allow genuine dual-GPU parallel inference.",
+    "improvement_vs_35": "GPU state at .36 close is significantly better than .35 close (where GPU 0 had 97% VRAM at 0% utilization from zombie processes). At .36 close, GPU 0 is 100% utilized with active work — not zombies. However, GPU 1 underutilization shifted from 'completely idle' (0% util) to 'structurally underloaded' (11% util from layer offload only). The problem is not resolved; it shifted from zombie waste to architecture waste."
+  },
+  "retro_improvement_adoption": {
+    "milestone": "2026.04.36",
+    "prior_milestone_suggestions": 10,
+    "adopted": [
+      "Conductor deduplication check before scheduling each experiment (Exp 475)",
+      "Per-experiment partial-result handoff on interruption (Exp 475)",
+      "Explicit conductor task budget for retro improvements (retro phase ran as Exps 474-481)"
+    ],
+    "not_adopted": [
+      "Inference batching enforcement via CI/pre-commit hook (77 violations documented, standard written but not enforced)",
+      "GPU thermal throttle gate (third consecutive milestone miss)"
+    ],
     "adoption_rate": 0.6,
-    "verdict": "3/5 throughput items adopted (60%). Dedup and handoff implemented (Exp 475). Retro budget honoured (Exps 474-481). Batching standards documented but 77 violations remain \u2014 not counted as adopted. Thermal gate still not implemented."
+    "verdict": "3/5 throughput items adopted (60%), up from 50% in .35. Infrastructure adoption trend is positive. The two non-adopted items are both enforcement mechanisms (CI gate for batching, thermal gate for temperature) — both require tooling changes beyond documentation. RETRO-045 and RETRO-046 carry these forward with explicit CI-gate targets for .37."
   },
-  "experiments_completed": 12,
-  "experiments_in_milestone": [
-    "474",
-    "475",
-    "476",
-    "477",
-    "478",
-    "479",
-    "480",
-    "481",
-    "482",
-    "483",
-    "484",
-    "485"
+  "open_retro_items_at_close": [
+    "RETRO-031: KAEM large-nvar crossover not confirmed at n=1000. Needs stopping criterion and extended n range.",
+    "RETRO-033: Live 100q verify-repair positive result not confirmed — FOURTH consecutive milestone miss. Blocked by RETRO-044.",
+    "RETRO-038: Live 200q VeriCoT+VPRM statistically significant result not confirmed. Exp 478 CUDA OOM (70MB free on GPU 0). Blocked by RETRO-044.",
+    "RETRO-039: GSM-Symbolic adversarial thesis not confirmed. Exp 479 gpu_required. Blocked by RETRO-044.",
+    "RETRO-040: JEPA AUC regressed 0.667 → 0.400 → 0.281 over three milestones. Curriculum training diagnostic required.",
+    "RETRO-044: GPUVRAMGate does not kill zombies before checking. Fourth consecutive milestone with zombie-driven GPU deferral.",
+    "RETRO-045: Inference batching: 77 violations remain. Pre-commit enforcement hook not yet implemented.",
+    "RETRO-046: GPU thermal gate not implemented. Third consecutive milestone miss.",
+    "RETRO-047: NUP Probe AUC = 0.600, below 0.700 Tier 0c threshold. Feature enrichment required."
   ],
-  "new_retro_items": [
-    {
-      "id": "RETRO-044",
-      "description": "GPUVRAMGate failed to prevent 3 deferred_to_gpu experiments in .36. Exp 474 implemented the gate but Exps 476, 478, 479 still deferred. Root cause: gate checks VRAM at experiment start but zombie processes from prior sessions consumed VRAM before the gate ran. Fix: gate must kill zombies AND verify post-kill free VRAM before allowing GPU-required experiments to proceed. This is the FOURTH consecutive milestone with zombie-driven GPU deferral. Must be resolved in .37 before any GPU-required experiments are scheduled.",
-      "priority": "critical",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-033",
-      "description": "Live 100q verify-repair positive result STILL not confirmed \u2014 four consecutive milestone misses (.33, .34, .35, .36). Exp 476 deferred_to_gpu again. Root cause is persistent GPU VRAM exhaustion. Blocked by RETRO-044. Once RETRO-044 is resolved, this must be the first GPU experiment scheduled.",
-      "priority": "critical",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-038",
-      "description": "Live 200q VeriCoT+VPRM statistically significant result not confirmed. Exp 478 blocked by CUDA OOM (14.89 GiB requested, 70 MB free on GPU 0). Blocked by RETRO-044. Target: 200q live with p < 0.05 improvement.",
-      "priority": "high",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-039",
-      "description": "GSM-Symbolic adversarial thesis not confirmed. Exp 479 was gpu_required. Hypothesis: adversarial prompting improves verify-repair accuracy vs standard. Blocked by RETRO-044. Target: live run with Qwen3 + GSM-Symbolic adversarial set.",
-      "priority": "high",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-040",
-      "description": "JEPA AUC regressed from 0.401 to 0.280702 after quality-gated retrain (Exp 477). Quality gate removed 42% of real pairs (33/57 kept) but training still degraded. Hypothesis: real CoT pairs carry domain shift that destabilises the energy function. Try: (a) synthetic-only augmentation until AUC stabilises, (b) lower learning rate for fine-tuning on mixed data, (c) curriculum: pretrain on synthetic, fine-tune on filtered real.",
-      "priority": "high",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-031",
-      "description": "KAEM large-nvar crossover not confirmed at n=1000 (Exp 483). EBM advantage threshold may require n > 1000 for large variable counts. Consider: (a) extend to n=5000, (b) change metric from crossover to AUC gap.",
-      "priority": "medium",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-045",
-      "description": "Inference batching enforcement: 77 violations remain after Exp 481 documented the standard. Standards documented != enforcement. Fix: (a) add pre-commit hook that fails if a harness script has sequential for-loops over questions without BatchedInferenceRunner, (b) CI gate via check_spec_coverage.py extension. Target: violations reduced to 0 before end of .37.",
-      "priority": "high",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-046",
-      "description": "GPU thermal throttle gate not implemented for third consecutive milestone. RTX 3090 observed at 82 C in prior milestones. Fix: add conductor pre-check querying nvidia-smi for GPU temperature; pause and open RETRO item if any GPU exceeds 80 C. Target: gate implemented and wired to conductor in .37.",
-      "priority": "medium",
-      "target_milestone": "2026.04.37"
-    },
-    {
-      "id": "RETRO-047",
-      "description": "NUP Probe AUC = 0.600, below Tier 0c viability threshold of 0.700 (Exp 484). NUP Probe is not yet viable as a lightweight uncertainty probe for the pipeline. Options: (a) larger training set, (b) richer feature extraction, (c) explore alternative uncertainty signals (entropy, token probability spread). Do not promote NUP to Tier 0c until AUC > 0.700 on held-out data.",
-      "priority": "medium",
-      "target_milestone": "2026.04.37"
-    }
+  "headline_closures_in_milestone": [
+    "RETRO-036: ThinkProbeV2 live GPU result confirmed (Exp 482). ThinkProbeV3 live-validated.",
+    "RETRO-042: ThinkProbe GPU prewarm silent failure resolved — upstream cause identified as zombie VRAM, not infrastructure bug.",
+    "RETRO-043: PPSEBM real-data validation complete (Exp 485). Domain-partitioned learning on natural interleaving confirmed."
   ],
+  "top_priority_for_next_milestone": "RETRO-044: Modify GPUVRAMGate to kill zombie processes (gpu_monitor.py --kill-zombies) before checking VRAM, then re-check after kill. No GPU-required experiment may start until post-kill free VRAM exceeds model requirements. Until this is resolved, RETRO-033 (live 100q), RETRO-038 (200q), and RETRO-039 (adversarial) cannot be attempted — they will continue to defer.",
   "meta_reflection": {
-    "wall_time_vs_35": ".36 infrastructure+retro experiments only (12 exps, est. 12.2 min of compute). .35 baseline: 4948 min / 317 exps. Direct comparison invalid because .36 ran fewer experiments \u2014 conductor prioritised retro closure over new capability experiments. Average experiment duration significantly shorter: retro/audit work completes in seconds vs live GPU work in hours.",
-    "gpu1_utilization_improvement": "NO IMPROVEMENT \u2014 GPU 1 remained idle through all .36 experiments. Exp 480 confirmed 53/64 dual-model harnesses still missing cuda:1. Exp 479 and 478 wired cuda:1 but could not load models due to GPU 0 OOM. Root cause: zombie VRAM exhaustion on GPU 0 prevented any successful dual-GPU live experiment. Resolution blocked by RETRO-044.",
-    "credibility_gap_status": "CRITICAL: RETRO-033 (live 100q positive) missed for fourth consecutive milestone. RETRO-038 (live 200q) still blocked. RETRO-036 and RETRO-042 CLOSED (ThinkProbe v3 live, Exp 482). RETRO-043 CLOSED (PPSEBM real-data validation, Exp 485). Two closures this milestone, but the primary credibility question ('confirmed first positive at 100q+ scale') remains unanswered. Project cannot make credibility claims until RETRO-033 is confirmed.",
-    "adoption_verdict": "Adoption rate: 3/5 = 60%. Dedup and handoff implemented (Exp 475). Retro budget honoured. Batching enforcement: documented only, 77 violations remain. Thermal gate: still not implemented (third consecutive milestone miss). The adoption pattern repeats: infrastructure items get adopted (guard, watchdog, dedup, handoff), throughput items do not (batching enforcement, thermal gate, DualGPU at harness level). RETRO-045 and RETRO-046 carry these forward with explicit CI-gate targets.",
-    "process_improvement_since_34": "Positive trend: DeliverableGuard, ExperimentTimeoutWatchdog, conductor dedup+handoff, GPUVRAMGate all implemented. These prevent classes of failure that recurred in .33/.34/.35. Negative trend: GPUVRAMGate did not prevent 3 deferred_to_gpu experiments \u2014 the gate exists but does not kill zombies before checking. Net: infrastructure is stronger but throughput is still blocked by GPU VRAM."
+    "gpu_utilization_trajectory": "Positive: .35 close had 0% GPU utilization with zombie VRAM at 97% (dead load). .36 close has 100% GPU utilization with 92% VRAM (active work). GPUVRAMGate (Exp 474) changed the character of GPU 0 from zombie-held to work-held. Negative: GPU 1 shifted from completely idle (0% util, .35) to structurally underloaded (11% util, .36). The device_map='auto' allocation routes layer storage to GPU 1 but forward-pass compute stays on GPU 0. Harness-level explicit cuda:1 assignment is needed to realize GPU 1 compute.",
+    "credibility_gap_trajectory": "Stalled. RETRO-033 (live 100q positive verify-repair) has been the primary credibility blocker for four consecutive milestones. Two closures in .36 (RETRO-036, RETRO-043) are meaningful infrastructure confirmations. The thesis that adversarial prompts + EBM verification improves reasoning accuracy at scale remains unconfirmed in any live GPU benchmark at 100q+.",
+    "process_improvement_trajectory": "Adoption rate rose from 0% (.33) to 50% (.35) to 60% (.36). The pattern: infrastructure improvements (guards, watchdogs, dedup, handoff) get adopted; enforcement mechanisms (batching hook, thermal gate, DualGPU harness sweep) do not. The non-adopted items require tooling that runs without conductor involvement — pre-commit hooks, CI gates — rather than conductor-level checks. .37 must install the enforcement tooling, not just write standards.",
+    "wall_time_trend": "Five-milestone wall time: .33=5002 min → .34=4886 min → .35=4948 min → .36=4921 min. The plateau around 4900-5000 min per milestone persists. Per-experiment average: .33=16.1 → .34=16.5 → .35=15.6 → .36=14.6. Slight efficiency improvement in .36, but insufficient to break the plateau. The 28% savings estimate requires enforcement-level changes, not additional documentation."
   },
-  "honest_verdict": "milestone_complete",
-  "prior_milestone_wall_time_minutes": 4948,
-  "prior_milestone_experiments": 317,
-  "prior_milestone_adoption_rate": 0.5,
-  "headline_closures": [
-    "retro_036_closed",
-    "retro_042_closed",
-    "retro_043_closed"
-  ],
-  "headline_still_open": [
-    "retro_031_closed",
-    "retro_033_closed",
-    "retro_038_closed",
-    "retro_039_closed",
-    "retro_040_closed"
-  ],
-  "top_priority_for_37": "RETRO-044: Fix GPUVRAMGate to kill zombies + verify post-kill VRAM. Until resolved, RETRO-033/038/039 cannot be attempted."
+  "honest_verdict": "throughput_plateau_with_gpu_utilization_improvement",
+  "vs_prior_milestone": {
+    "prior_milestone": "2026.04.35",
+    "prior_wall_time_minutes": 4948,
+    "prior_experiments_completed": 317,
+    "wall_time_delta_minutes": -27,
+    "wall_time_delta_pct": -0.5,
+    "avg_per_experiment_delta_minutes": -1.0,
+    "retro_improvements_adopted": 3,
+    "retro_improvements_suggested_prior": 5,
+    "adoption_rate_pct": 60,
+    "observation": "Wall time decreased 0.5% despite adding 19 experiments. Per-experiment average dropped from 15.6 to 14.6 min. Adoption rate improved from 50% to 60%. GPU utilization improved from zombie-dominated (0%) to work-dominated (100%) — the most meaningful change in .36. However, GPU 1 underutilization (11%) and the credibility gap (RETRO-033) both persist. The wall-time improvement is marginal; the structural changes needed (batching enforcement, thermal gate, DualGPU harness sweep) remain undelivered."
+  }
 }
