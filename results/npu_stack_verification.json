@@ -1,6 +1,6 @@
 {
   "schema": "carnot.npu_stack_verification.v1",
-  "honest_verdict": "npu_blocked_memlock",
+  "honest_verdict": "npu_fully_available_pyxrt_only",
   "layers": {
     "hardware": {
       "ok": true,
@@ -24,16 +24,14 @@
       "pyxrt_module": "/usr/lib/python3.14/site-packages/pyxrt.cpython-314-x86_64-linux-gnu.so"
     },
     "memlock": {
-      "ok": false,
-      "soft_bytes": 8388608,
-      "hard_bytes": 8388608,
-      "required_bytes": 134217728,
-      "reason": "RLIMIT_MEMLOCK too low; install /etc/security/limits.d/xrt.conf raising memlock to unlimited for @render, then re-login"
+      "ok": true,
+      "soft": "unlimited",
+      "hard": "unlimited"
     },
     "device_open": {
-      "ok": false,
-      "reason": "mmap(addr=0x7f71c4000000, len=67108864, prot=3, flags=8209, offset=4294967296) failed (err=-11): Resource temporarily unavailable",
-      "hint": "memlock-related; see layer 5"
+      "ok": true,
+      "bdf": "0000:c2:00.1",
+      "name": "RyzenAI-npu4"
     },
     "onnxruntime_vitisai": {
       "available": false,
