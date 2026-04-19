@@ -8329,3 +8329,56 @@ ones (where `required_gb <= gpu_total_gb`).
   checks the same experiment
 **Then** `VRAMForecast.is_feasible` is `True` (18.0 <= 24.0)
 **And** the GPU-routed forecast has `is_feasible=False` (18.0 > 15.0)
+
+---
+
+## Exp 502: Live 100q Precision v6 — Gemma4QuantizedLoader + VRAMBudgetLedger (RETRO-033 close)
+
+### REQ-BENCH-043: 100q v6 Uses Gemma4QuantizedLoader and GPUVRAMGateV2 Before Model Load
+
+Experiment 502 shall use `Gemma4QuantizedLoader` (GGUF Q4_K_M, fits in 8-10 GiB) for
+Gemma4 inference, and shall run `GPUVRAMGateV2(min_free_gb=6.0, kill_first=True)` as the
+first gate before any model load.  `VRAMBudgetLedger` shall pre-check feasibility before
+the gate fires.
+
+**Implementation Status:** Done (Exp 502)
+
+### REQ-BENCH-044: 100q v6 Assigns Gemma4-INT4 to cuda:0 and Qwen3.5-0.8B to cuda:1 via DualGPUHarness
+
+Experiment 502 shall use `DualGPUHarness.apply()` to pin Gemma4-INT4 to `cuda:0` and
+`Qwen3.5-0.8B` to `cuda:1` explicitly.  The dual-GPU assignment shall be recorded in the
+artifact as `dual_gpu_explicit=True` (when eligible) to confirm the assignment occurred.
+
+**Implementation Status:** Done (Exp 502)
+
+### REQ-BENCH-045: 100q v6 Writes CoT Pairs to results/exp502_cot_pairs.json for JEPA Retraining
+
+Experiment 502 shall collect Chain-of-Thought pairs during the pipeline pass for each model
+and flush them atomically to `results/exp502_cot_pairs.json`.  The artifact shall include
+`cot_pairs_written: int` recording the count.  At least 50 pairs per model are required to
+support Exp 510 JEPA retrain (100 pairs minimum total).
+
+**Implementation Status:** Done (Exp 502)
+
+### SCENARIO-BENCH-062: GPUVRAMGateV2 Fires Before Model Load in Exp 502
+
+**Given** Experiment 502 running on a machine with CUDA GPUs
+**When** the experiment starts
+**Then** `GPUVRAMGateV2(min_free_gb=6.0, kill_first=True).__enter__()` is called before any model is loaded
+**And** if VRAM is insufficient after gate, a deferred artifact with
+`honest_verdict='deferred_retro_033_v6'` is written and the experiment exits without loading models
+
+### SCENARIO-BENCH-063: Exp 502 Assigns Gemma4-INT4 to cuda:0 and Qwen to cuda:1
+
+**Given** Experiment 502 running with two RTX 3090 GPUs and `CARNOT_FORCE_LIVE=1`
+**When** `DualGPUHarness.apply()` is called on the model specs
+**Then** the Gemma4-INT4 spec has `gpu=0` and `device_map={'': 'cuda:0'}`
+**And** the Qwen3.5-0.8B spec has `gpu=1` and `device_map={'': 'cuda:1'}`
+
+### SCENARIO-BENCH-064: Exp 502 Writes Valid Deliverable with All Schema Fields
+
+**Given** Experiment 502 completing successfully on live GPU hardware
+**When** the artifact JSON is written
+**Then** it contains schema='carnot.live_precision.v6', gemma4_result, qwen_result,
+cot_pairs_written, gemma4_quantized=True, dual_gpu_explicit, retro_033_closed, and honest_verdict
+**And** `DeliverableGuard.assert_written()` passes as the final call
