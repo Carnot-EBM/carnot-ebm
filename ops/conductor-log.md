@@ -2219,3 +2219,4 @@ python/ |
 | 2026-04-19 13:32 UTC | Exp 505: Retroactive DualGPU Harness Sweep — patch | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-19 13:37 UTC | Exp 505: Retroactive DualGPU Harness Sweep — patch | OK | Deliverable already exists in repo |
 | 2026-04-19 13:47 UTC | Exp 506: Semantic Energy Tier 0d — Boltzmann-clust | OK | 91 passed in 9.96s |
+| 2026-04-19 14:01 UTC | Exp 507: NUP Probe v3 — RETRO-049 fix with CLAP cr | OK | 81 passed in 9.39s |
