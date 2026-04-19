@@ -540,4 +540,8 @@
 | REQ-VERIFY-106 | Implemented | NUP Probe v3 Measures Hallucination Detection Performance — Exp 507 computes AUROC metric for hallucination vs correct-answer classification via cross-layer variance features |
 | SCENARIO-VERIFY-137 | Implemented | Per-Token Cross-Layer Variance Extracted Correctly — Exp 507 CLAPFeatureExtractor with n_layers=4 produces cross_layer_variance signal from per-layer hidden states without error |
 | SCENARIO-VERIFY-138 | Implemented | Binary Classifier Trained On CLAP Features — Exp 507 NUPProbeV3 trains on 80 CoT pairs with cross-layer features and reaches training completion without divergence |
+| REQ-SAMPLE-022 | Implemented | KAEM Supports Multimodal Distribution Family — Exp 508 KAEMDistributionBenchmark class includes multimodal_family backend for sampling from mixture distributions |
+| REQ-SAMPLE-023 | Implemented | KAEM Supports Heavy-Tail and Non-Smooth Distribution Families — Exp 508 KAEMDistributionBenchmark includes heavy_tail_family and non_smooth_family backends for sampling from fat-tailed and discontinuous distributions |
+| SCENARIO-SAMPLE-035 | Implemented | Multimodal Distribution Sampled Correctly — Exp 508 KAEMDistributionBenchmark with multimodal_family produces samples from mixture with correct component weights |
+| SCENARIO-SAMPLE-036 | Implemented | Heavy-Tail and Non-Smooth Distributions Sampled Correctly — Exp 508 KAEMDistributionBenchmark with heavy_tail_family and non_smooth_family produce samples with correct tail behavior and discontinuity handling |
 | SCENARIO-VERIFY-139 | Implemented | AUROC Metric Computed For Hallucination Detection — Exp 507 evaluates on 20 held-out pairs with AUROC=0.4, establishing baseline for token-level cross-layer approach limitations |
