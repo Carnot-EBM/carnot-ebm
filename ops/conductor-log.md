@@ -2180,3 +2180,4 @@ python/ |
 | 2026-04-19 02:33 UTC | Exp 475: Conductor Dedup Check + Partial-Result Ha | OK | 81 passed in 10.02s |
 | 2026-04-19 02:49 UTC | Exp 476: Live 100q Precision v4 — RETRO-033 third  | OK | 81 passed in 16.27s |
 | 2026-04-19 03:12 UTC | Exp 477: JEPA Quality-Gated Retrain — RETRO-040 fi | OK | 81 passed in 9.92s |
+| 2026-04-19 03:27 UTC | Exp 478: Live 200q VeriCoT+VPRM v2 — RETRO-038 sec | OK | 81 passed in 7.74s |
