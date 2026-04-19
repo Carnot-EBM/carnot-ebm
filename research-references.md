@@ -4,6 +4,61 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-19 arxiv Scan (Milestone 2026.04.38 Planning)
+
+### Semantic Energy — Boltzmann-Inspired Hallucination Detection from Logits
+- **Paper:** arXiv 2508.14496 (August 2025)
+- **What:** Introduces Semantic Energy as a replacement for semantic entropy in LLM uncertainty estimation. Combines semantic clustering with a Boltzmann-inspired energy distribution derived directly from logits (penultimate layer), capturing uncertainty cases where semantic entropy is overconfident. Achieves 13% average AUROC improvement over semantic entropy on hallucination detection benchmarks.
+- **Relevance to Carnot:** SpilledEnergy (Tier 0b, arXiv 2602.18671) and NUP Probe (Tier 0c, arXiv 2603.19562) both operate at the sequence level. Semantic Energy operates at the cluster level using Boltzmann distributions — the energy function framework Carnot is built on. This is the most natural new Tier 0d: Boltzmann-cluster energy from logits, inserted between SpilledEnergy (token-level) and SinkProbe (attention-level). The Boltzmann formulation means it's differentiable and could be integrated into the EORM training objective.
+- **Concrete experiment:** Implement BoltzmannSemanticEnergy (compute semantic cluster logit energies, Boltzmann-weight them, return hallucination score). Compare AUC vs SpilledEnergy on 200 live CoT pairs. Add as Tier 0d to verification cascade. Target: AUC > SpilledEnergy baseline.
+- **When to incorporate:** Milestone 2026.04.38 — Phase 4 research (Exp 506).
+
+### Cross-Layer Attention Probing (CLAP) — Residual Stream Hallucination Detection
+- **Paper:** arXiv 2509.09700 (September 2025)
+- **What:** CLAP constructs a sequence of tokens from LLM activations across the ENTIRE residual stream (all layers simultaneously), then applies attention over this cross-layer sequence to detect hallucinations. Processes information from early layers (surface syntax), middle layers (semantic integration), and late layers (generation decision) jointly. Captures inter-layer reasoning trajectories, not just final-layer features.
+- **Relevance to Carnot:** NUP Probe v2 (Exp 496) failed to improve over v1 (AUC = 0.600, delta ~1e-16) because Bayesian semantic entropy averages over the sequence. CLAP's cross-layer joint attention is exactly the richer feature set needed: per-layer activations as a token sequence → attention over that sequence → hallucination score. NUP Probe v3 (RETRO-049) should implement CLAP-style cross-layer attention as its feature extractor.
+- **Concrete experiment:** NUP Probe v3 (Exp 507): Add CLAPFeatureExtractor(model, layers=[-1,-4,-8,-12]) that constructs a (n_layers, n_tokens, hidden_size) tensor and applies multi-head attention to produce a scalar hallucination score. Retrain on real CoT pairs from Exps 502-503. Target AUC > 0.700 for Tier 0c promotion.
+- **When to incorporate:** Milestone 2026.04.38 — NUP Probe v3 (Exp 507).
+
+### Semantic Token Clustering — Efficient UQ for LLM Hallucination
+- **Paper:** arXiv 2603.20161 (March 2026)
+- **What:** Semantic Token Clustering (STC) groups token sequences into semantically consistent clusters using embedding clustering + prefix matching, then computes uncertainty within and between clusters. Dramatically reduces the number of LLM samples needed for UQ from 5-10 to 2-3 while maintaining AUROC quality.
+- **Relevance to Carnot:** Carnot needs to evaluate multiple candidate responses (score_candidates MCP tool). STC's sample-efficient UQ could reduce the number of Gemma4 inference calls needed to estimate hallucination probability per question from O(5) to O(2). Direct integration: CarnotCandidateRanker could use STC to cluster candidate responses before scoring with the energy function — reducing inference budget by ~60%.
+- **Concrete experiment:** Integrate STC into score_candidates MCP tool as an optional pre-clustering step. Compare: (a) score all 5 candidates independently vs (b) cluster first, score one per cluster. Measure accuracy vs cost tradeoff.
+- **When to incorporate:** Milestone 2026.04.39 — production path for score_candidates optimization.
+
+### Intrinsic-Energy JEPA — Quasimetric Representation Space for Reasoning
+- **Paper:** arXiv 2602.12245 (February 2026)
+- **What:** Intrinsic-Energy JEPA shows that JEPA-style predictive architectures naturally induce quasimetric spaces where distance encodes reachability. Value-guided JEPA planning: the embedding-space cost aligns with a goal-reaching value function, enabling sequential compositionality in reasoning chains. Key insight: distance in the learned embedding space is a proxy for reasoning difficulty, not just semantic similarity.
+- **Relevance to Carnot:** JEPA predictor (Tier 3 self-learning) currently predicts constraint violation probability from partial CoT embeddings. If the embedding space is quasimetric, the JEPA predictor implicitly learns reasoning difficulty — which is exactly what we want: hard reasoning steps (high quasimetric distance from premise to conclusion) correlate with higher violation probability. Incorporate quasimetric regularization into JEPA training to make this explicit.
+- **Concrete experiment:** Add quasimetric regularization term to JEPA Curriculum Retrain v4: L_total = L_prediction + λ * L_quasimetric, where L_quasimetric penalizes symmetry violations in the embedding distance (d(a,b) >> d(b,a) when a is a premise and b is a conclusion). Measure whether AUC and calibration improve.
+- **When to incorporate:** Milestone 2026.04.38 — JEPA Live Retraining v4 (Exp 510).
+
+### EB-JEPA Library — Open-Source Energy-Based JEPA Implementation
+- **Paper/Repo:** arXiv 2602.03604 (February 2026)
+- **What:** Lightweight open-source library for energy-based joint-embedding predictive architectures. Trains JEPA models that predict in representation space rather than pixel/token space. Integrates energy scoring into the JEPA objective directly: low energy = aligned (predicted, actual) embedding pair.
+- **Relevance to Carnot:** Carnot's JEPA predictor (EORMModel + JEPAPredictor) was built from scratch. The EB-JEPA library provides a reference implementation of energy-based JEPA that could accelerate development. The energy-in-representation-space framing aligns exactly with Carnot's verification goal: predict whether (partial CoT, continuation) embedding pair will have high or low constraint energy.
+- **When to incorporate:** Consider as a dependency when refactoring JEPA predictor for Phase 3 (Kona bridge). Not needed for Exp 510 retrain.
+
+### AMD XDNA NPU for ML Training and Inference (arXiv 2504.03083)
+- **Paper:** arXiv 2504.03083 (April 2025)
+- **What:** First demonstration of LLM fine-tuning on AMD NPU using the IRON tool-flow. AMD Ryzen AI's XDNA architecture: spatial array of AI Engines in 2D grid. Achieved GPT-2 fine-tuning on NPU. XDNA 2 (newer generation) has higher throughput.
+- **Relevance to Carnot:** NUP Probe v3 uses per-token entropy computation — a sequence of softmax operations over vocabulary (50k tokens). This is embarrassingly parallel and NPU-native. If NUP Probe's per-token entropy can run on the NPU while the LLM runs on GPU, the Tier 0c latency drops to near-zero (pipeline parallelism). Target: NPU probe latency < 5ms per token, matching LLM generation speed.
+- **Concrete experiment:** Deploy NUP Probe v3 entropy computation on AMD NPU via IRON + ONNX Runtime VitisAI backend. Benchmark: NPU probe latency (ms/token) vs CPU probe latency. If NPU is 2x+ faster, recommend as the production Tier 0c path.
+- **When to incorporate:** Milestone 2026.04.38 — AMD NPU experiment (Exp 511).
+
+### CIKAN — Constraint Informed Kolmogorov-Arnold Networks
+- **Paper:** arXiv 2412.03710 (December 2025)
+- **What:** Constraint Informed KAN (CIKAN) for autonomous spacecraft rendezvous using Time Shift Governor. Integrates hard physics constraints directly into KAN spline structure. KAN's adaptive spline resolution naturally concentrates at constraint boundaries where the function is most complex.
+- **Relevance to Carnot:** KAEMEnergy (Exp 447) uses univariate per-variable KAN splines for energy computation. CIKAN's constraint-informed spline initialization could improve KAEMEnergy's energy landscape for constrained verification problems: initialize splines near constraint boundaries with higher resolution, allowing the energy function to sharply distinguish near-boundary states. This is a direct improvement to the KAN fast-path tier.
+- **When to incorporate:** Future KAN tier enhancement — not .38 priority. File for milestone .39+.
+
+### Stochastic Ising Machine Sampling Advantage (arXiv 2504.18359)
+- **Paper:** arXiv 2504.18359 (April 2025)
+- **What:** Quantifies when stochastic Ising machines outperform standard Metropolis-Hastings for quantum simulations using neural-network quantum states. FPGA Ising machines demonstrated faster than conservative projections in controlled benchmarks.
+- **Relevance to Carnot:** ParallelIsingSampler (Exp 290) achieves 183x speedup over thrml on CPU. The FPGA path (KV260, Exp 313) is still blocked on missing bitfile. This paper provides the theoretical performance envelope: if the Ising machine problem is a quantum simulation target, the sampling advantage can be analytically predicted. Use as the acceptance criterion for KV260 bring-up: only proceed if predicted advantage > 10x over ParallelIsingSampler.
+- **When to incorporate:** KV260 bring-up session — validate expected advantage before bitfile synthesis.
+
 ## 2026-04-19 arxiv Scan (Milestone 2026.04.37 Planning)
 
 ### LLM-JEPA — Predictive Embedding Space for Stable Constraint Scoring

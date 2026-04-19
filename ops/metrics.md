@@ -1875,3 +1875,5 @@
 | exp470 | 2026-04-19T00:28:31Z | 2026-04-19T00:32:01Z | Minimal doc updates for Exp 470 (PPSEBM Tier 2 Progressive Constraint Parameter Isolation): appended changelog entry, appended status table row, appended 6 new REQ-/SCENARIO- rows to traceability.md (REQ-SELFLEARN-016/017/018, SCENARIO-SELFLEARN-016/017/018); partition_isolation_score=1.0 across 3 domains | ~3m30s |
 | exp473 | 2026-04-19T01:32:21Z | 2026-04-19T01:33:13Z | Minimal doc updates for Exp 473 (Milestone 2026.04.35 Retrospective): appended changelog entry only (retrospective has no new capabilities); confirmed no status/traceability updates needed; 8-criterion evaluation + 0/10 adoption finding summary | ~52s |
 | minimal-docs-484 | 2026-04-19T04:50:00Z | 2026-04-19T04:52:26Z | Minimal doc updates for Exp 484 (changelog, status.md entries only) | ~2m30s | ~15k |
+
+| planning-38 | 2026-04-19T10:28:13Z | 2026-04-19T10:28:52Z | Milestone 2026.04.38 research planning: read 10 project files + retro JSON, arxiv scan (8 papers), updated research-references.md, wrote research-roadmap-v38.md + research-roadmap-next.yaml, updated changelog + status.md | ~39s |
