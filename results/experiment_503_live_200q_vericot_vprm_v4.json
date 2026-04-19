@@ -1,0 +1,49 @@
+{
+  "experiment": 503,
+  "title": "Live 200q VeriCoT+VPRM v4 (Exp 503)",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T12:33:25Z",
+  "finished_at": "2026-04-19T12:33:31Z",
+  "duration_s": 5.658,
+  "status": "blocked",
+  "honest_verdict": "gpu_required",
+  "blocked_reason": "Qwen load failed: CUDA error: out of memory\nSearch for `cudaErrorMemoryAllocation' in https://docs.nvidia.com/cuda/cuda-runtime-api/group__CUDART__TYPES.html for more information.\nCUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.\nFor debugging consider passing CUDA_LAUNCH_BLOCKING=1\nCompile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.\n",
+  "schema": [
+    "blocked_reason",
+    "cot_pairs_written",
+    "duration_s",
+    "env_autofix",
+    "experiment",
+    "extraction_stack",
+    "finished_at",
+    "gemma4_result",
+    "honest_verdict",
+    "qwen_result",
+    "retro_038_closed",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title",
+    "vram_forecast"
+  ],
+  "env_autofix": {
+    "gpu_detected": true,
+    "carnot_force_live_was_set": false,
+    "auto_fix_applied": true,
+    "final_env_value": "1"
+  },
+  "gemma4_result": null,
+  "qwen_result": null,
+  "cot_pairs_written": 0,
+  "extraction_stack": "VeriCoT+VPRM",
+  "retro_038_closed": false,
+  "vram_forecast": {
+    "exp_id": "exp503",
+    "is_feasible": true,
+    "required_gb": 10.0,
+    "available_gb": 15.0,
+    "headroom_gb": 5.0,
+    "blocking_experiment": null
+  }
+}

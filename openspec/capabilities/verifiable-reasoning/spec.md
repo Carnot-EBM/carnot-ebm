@@ -8382,3 +8382,56 @@ support Exp 510 JEPA retrain (100 pairs minimum total).
 **Then** it contains schema='carnot.live_precision.v6', gemma4_result, qwen_result,
 cot_pairs_written, gemma4_quantized=True, dual_gpu_explicit, retro_033_closed, and honest_verdict
 **And** `DeliverableGuard.assert_written()` passes as the final call
+
+---
+
+## Exp 503: Live 200q VeriCoT+VPRM v4 — Gemma4QuantizedLoader resolves RETRO-038
+
+### REQ-BENCH-046: 200q v4 Uses Gemma4QuantizedLoader and GPUVRAMGateV2 Before Model Load
+
+Experiment 503 shall use `Gemma4QuantizedLoader` (GGUF Q4_K_M, ~9 GiB) for Gemma4
+inference and shall run `GPUVRAMGateV2(min_free_gb=6.0, kill_first=True)` as the first
+gate before any model load.  `VRAMBudgetLedger` shall pre-check feasibility (exp503
+requires ~10 GiB) before the gate fires.
+
+**Implementation Status:** Done (Exp 503)
+
+### REQ-BENCH-047: 200q v4 Reports Wilson 95% CI and is_statistically_positive Flag
+
+Experiment 503 shall compute `Live200qV4Result` per model with `ci_95_wilson` (Wilson
+score 95% CI on post_acc) and `is_statistically_positive` (True iff the lower bound of
+the Wald CI for the improvement > 0.0).  A credible positive result closes RETRO-038.
+
+**Implementation Status:** Done (Exp 503)
+
+### REQ-BENCH-048: 200q v4 Writes CoT Pairs to results/exp503_cot_pairs.json
+
+Experiment 503 shall collect Chain-of-Thought pairs during the pipeline pass for each
+model and flush them atomically to `results/exp503_cot_pairs.json`.  The artifact shall
+include `cot_pairs_written: int`.  At least 100 pairs per model are required to support
+Exp 510 JEPA retrain (200 pairs minimum total).
+
+**Implementation Status:** Done (Exp 503)
+
+### SCENARIO-BENCH-065: GPUVRAMGateV2 Fires Before Model Load in Exp 503
+
+**Given** Experiment 503 running on a machine with CUDA GPUs
+**When** the experiment starts
+**Then** `GPUVRAMGateV2(min_free_gb=6.0, kill_first=True).__enter__()` is called before any model is loaded
+**And** if VRAM is insufficient after gate, a deferred artifact with
+`honest_verdict='deferred_retro_038_v4'` is written and the experiment exits without loading models
+
+### SCENARIO-BENCH-066: Exp 503 is_statistically_positive Is False for 2pp Improvement at n=200
+
+**Given** a `Live200qV4Result` with `pre_acc=0.70`, `post_acc=0.72`, `n=200`
+**When** `is_statistically_positive` is evaluated
+**Then** it returns `False`
+**Because** SE ≈ 0.045, lower = 0.02 - 1.96*0.045 ≈ -0.069 < 0
+
+### SCENARIO-BENCH-067: Exp 503 Writes Valid Deliverable with All Schema Fields
+
+**Given** Experiment 503 completing successfully on live GPU hardware
+**When** the artifact JSON is written
+**Then** it contains schema='carnot.live_benchmark.v7', gemma4_result, qwen_result,
+cot_pairs_written, gemma4_quantized=True, retro_038_closed, and honest_verdict
+**And** `DeliverableGuard.assert_written()` passes as the final call
