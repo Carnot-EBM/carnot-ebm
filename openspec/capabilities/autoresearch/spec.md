@@ -848,6 +848,56 @@ Spec: Exp 509, RETRO-050
 **And** retro_050_closed=True
 **And** honest_verdict='energy_magnitude_wins'
 
+---
+
+### REQ-LEARN-039: JEPA v4 Retrains on Live CoT Pairs from Exps 502-503 with Curriculum Ordering
+
+JEPA v4 retraining (Exp 510) must load live CoT pairs from
+`results/exp502_cot_pairs.json` and `results/exp503_cot_pairs.json` (when available)
+and apply curriculum ordering: sort pairs by `label_confidence` descending so
+high-confidence pairs are trained first.  If live files are absent, fall back to
+100 synthetic pairs (ci_mode) and set `inference_mode='synthetic'`.
+
+### REQ-LEARN-040: JEPA v4 Training Loss Includes Quasimetric Regularization Term
+
+JEPA v4 training loss must include a quasimetric regularization term:
+
+    L_quasimetric = lambda * max(0, d(conclusion, premise) - d(premise, conclusion))
+
+where `d` is Euclidean distance, `lambda=0.1` (arXiv 2602.12245).  This penalizes
+symmetric embedding distances to encode the directed structure of reasoning chains
+(premise → conclusion is a one-way relationship).
+
+### REQ-LEARN-041: JEPA v4 Saves Retrained Checkpoint to results/jepa_predictor_510_live.safetensors
+
+Upon successful training, JEPA v4 must save the retrained model parameters as a
+safetensors file at `results/jepa_predictor_510_live.safetensors`.  The artifact
+must record `checkpoint_saved=True`.
+
+### SCENARIO-LEARN-067: JEPA v4 Curriculum Ordering — High-Confidence Pairs First
+
+**Given** a mixed set of CoT pairs with varying `label_confidence` values
+**When** JEPA v4 training begins
+**Then** pairs are sorted by `label_confidence` descending before training
+**And** the first 200 training epochs use only the top-50% highest-confidence pairs
+**And** the next 100 epochs use all pairs
+
+### SCENARIO-LEARN-068: QuasimetricRegularizer Returns Zero Loss for Euclidean Symmetric Distances
+
+**Given** a QuasimetricRegularizer with lambda=0.1
+**When** loss(premise_emb, conclusion_emb) is called with standard numpy arrays
+**Then** the loss is >= 0.0 (hinge lower bound)
+**And** for symmetric Euclidean distance the loss is 0.0
+**And** penalizes_symmetry is True
+
+### SCENARIO-LEARN-069: JEPALiveRetrainResult Reports FR-11 Relay Status
+
+**Given** a JEPALiveRetrainResult with post_auc=0.850 and inference_mode='live'
+**When** target_met and auc_improvement are accessed
+**Then** target_met is True (post_auc >= 0.800)
+**And** auc_improvement = post_auc - pre_auc
+**And** to_dict() contains all required schema fields
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -881,3 +931,6 @@ Spec: Exp 509, RETRO-050
 | REQ-LEARN-040 | N/A | Implemented | Python |
 | REQ-LEARN-041 | N/A | Implemented | Python |
 | REQ-LEARN-042 | N/A | Implemented | Python |
+| REQ-LEARN-039 (v4) | N/A | Implemented | 11 Python |
+| REQ-LEARN-040 (v4) | N/A | Implemented | 11 Python |
+| REQ-LEARN-041 (v4) | N/A | Implemented | 11 Python |
