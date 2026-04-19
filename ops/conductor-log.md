@@ -2231,3 +2231,4 @@ python/ |
 | 2026-04-19 16:19 UTC | Exp 514: Live 100q Precision v7 — RETRO-033 sevent | OK | 81 passed, 2 warnings in 4.16s |
 | 2026-04-19 16:30 UTC | Exp 515: Live 200q VeriCoT+VPRM v5 — RETRO-038 fif | OK | 81 passed, 2 warnings in 4.67s |
 | 2026-04-19 16:42 UTC | Exp 525: Expanded GPU Reaper — close RETRO-033 roo | OK | 81 passed, 2 warnings in 4.61s |
+| 2026-04-19 17:20 UTC | Exp 516: GSM-Symbolic Adversarial v5 — RETRO-039 f | OK | 81 passed, 2 warnings in 2.91s |
