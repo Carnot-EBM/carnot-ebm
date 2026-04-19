@@ -2201,3 +2201,4 @@ python/ |
 | 2026-04-19 08:47 UTC | Exp 493: Batching Pre-commit Hook — RETRO-045 CLOSED (hook installed, 10 tests pass) | OK | 10 passed in 8.88s |
 | 2026-04-19 08:49 UTC | Exp 493: Batching Enforcement Pre-Commit Hook — RE | OK | 81 passed in 3.12s |
 | 2026-04-19 08:58 UTC | Exp 494: GPU Thermal Gate — RETRO-046 third attemp | OK | 81 passed in 3.16s |
+| 2026-04-19 09:11 UTC | Exp 495: DualGPU Harness Enforcement v2 — patch 53 | OK | 81 passed in 3.19s |
