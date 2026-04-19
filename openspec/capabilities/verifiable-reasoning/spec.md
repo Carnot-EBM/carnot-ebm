@@ -8041,3 +8041,48 @@ constraint verification is immune to irrelevant-sentence injection.
 **Given** `AdversarialV3Result` with `standard_acc=0.70`, `adversarial_baseline_acc=0.55`
 **When** `adversarial_drop` is accessed
 **Then** it equals `0.15` (positive means LLM regressed on adversarial, replicating Apple finding)
+
+---
+
+## Exp 493: Batching Pre-commit Hook — RETRO-045
+
+### REQ-INFRA-052: Batching-Check Pre-commit Hook
+
+The repository shall install a `batching-check` pre-commit hook that runs
+`BatchingEnforcementAudit` on staged `scripts/*.py` files and exits 1 if any new
+high-severity violations (sequential loops without BatchedInferenceRunner) are found in
+the staged diff.
+
+**Why:** Writing a batching standard (Exp 481, 77 violations documented) without enforcement
+is ineffective.  Every new experiment script added by the conductor can introduce new violations
+silently.  A pre-commit hook makes enforcement automatic: the conductor cannot commit a new
+script with sequential loops without first fixing them.
+
+**Implementation Status:** Done (Exp 493)
+
+### REQ-INFRA-053: Batching-Check Hook is Idempotent
+
+The `batching-check` hook shall be idempotent: existing violations in previously committed
+files do not block future commits.  Only NEW violations introduced in the currently staged
+diff are flagged.  A staged file that is NOT new (already committed with violations) is
+treated as pre-existing and is not re-flagged.
+
+**Why:** A non-idempotent hook would block every commit until all 77 existing violations
+are fixed — which is infeasible in a single pass.  The idempotency rule allows the project
+to accumulate fixes incrementally without blocking unrelated work.
+
+**Implementation Status:** Done (Exp 493)
+
+### SCENARIO-INFRA-060: New Script with Sequential Loop Blocked by Hook
+
+**Given** a new Python script staged for commit containing `for q in questions:`
+  without any `BatchedInferenceRunner` reference
+**When** the `batching-check` pre-commit hook runs
+**Then** it exits 1 and prints a violation report
+
+### SCENARIO-INFRA-061: Compliant Script Not Blocked by Hook
+
+**Given** a new Python script staged for commit that uses `BatchedInferenceRunner`
+  or contains no sequential question loops
+**When** the `batching-check` pre-commit hook runs
+**Then** it exits 0 and does not block the commit

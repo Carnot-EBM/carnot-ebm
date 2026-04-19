@@ -329,6 +329,7 @@ from carnot.pipeline.batching_audit import (  # noqa: E402
     BatchingEnforcementAudit,
     BatchingViolation,
 )
+from carnot.pipeline.batching_hook_runner import BatchingHookRunner  # noqa: E402
 from carnot.pipeline.nup_probe import (  # noqa: E402
     ContinuationEntropy,
     NUPProbe,
@@ -573,6 +574,7 @@ __all__ = [
     "DualGPUHarness",
     "HarnessAudit",
     "BatchingEnforcementAudit",
+    "BatchingHookRunner",
     "BatchingViolation",
     "ContinuationEntropy",
     "NUPProbe",

@@ -61,3 +61,13 @@ repos:
         language: system
         types_or: [python, rust]
         pass_filenames: false
+
+      # Batching enforcement: prevent new sequential question loops in experiment scripts
+      # (RETRO-045) — documentation alone (Exp 481, 77 violations) did not prevent new
+      # violations; this hook makes enforcement automatic at commit time.
+      - id: batching-check
+        name: Batching enforcement (BatchedInferenceRunner required)
+        entry: python scripts/batching_precommit_check.py
+        language: system
+        types: [python]
+        pass_filenames: false
