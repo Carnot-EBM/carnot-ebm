@@ -375,6 +375,10 @@ from carnot.pipeline.nup_probe_v3 import (  # noqa: E402
     CLAPFeatures,
     NUPProbeV3,
 )
+from carnot.pipeline.energy_magnitude_replay import (  # noqa: E402
+    EnergyMagnitudeBuffer,
+    EnergyMagnitudeReplay,
+)
 
 __all__ = [
     "AgentStep",
@@ -638,4 +642,6 @@ __all__ = [
     "CLAPFeatureExtractor",
     "CLAPFeatures",
     "NUPProbeV3",
+    "EnergyMagnitudeBuffer",
+    "EnergyMagnitudeReplay",
 ]
