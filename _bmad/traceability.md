@@ -451,4 +451,8 @@
 | SCENARIO-INFRA-047 | Not Started | Implemented | CPU Experiments Skip VRAM Check — gate returns early on non-GPU systems without blocking experiment execution (Exp 474) |
 | SCENARIO-INFRA-048 | Not Started | Implemented | Zombie Process Detection and Remediation — detects processes with >500MB unused VRAM, >5min age, 0% util and kills them to free memory before GPU experiment (Exp 474) |
 | SCENARIO-INFRA-049 | Not Started | Implemented | Deferred Experiment Execution on VRAM Exhaustion — when VRAM < threshold after remediation, experiment deferred gracefully without error; requeue on next conductor cycle (Exp 474) |
+| REQ-INFRA-042 | Not Started | Implemented | ConductorDedupChecker Prevents Duplicate Experiment Re-runs — check_experiment_duplicate() compares config hashes against ExperimentRunRecord; skips enqueue if run already completed (Exp 475) |
+| REQ-INFRA-043 | Not Started | Implemented | PartialResultHandoff Enables Fault-Tolerant Checkpoint Relay — resume_from_checkpoint() restores experiment state; merge_partial_results() combines intermediate outputs without re-computation (Exp 475) |
+| SCENARIO-INFRA-050 | Not Started | Implemented | Conductor Dedup Early Exit — identical experiment config detected via config_hash_match; experiment skipped with dedup_skipped=true in conductor log (Exp 475) |
+| SCENARIO-INFRA-051 | Not Started | Implemented | Partial-Result Relay Across Cluster Boundaries — checkpoint saved mid-experiment; resumed on different node with merged outputs ensuring no duplicate work (Exp 475) |
 | SCENARIO-SELFLEARN-018 | Not Started | Implemented | partition_isolation_score > 0.8 After Training 3 Domains Independently — Exp 470 achieved partition_isolation_score=1.0 across arithmetic/code/logical domains (Exp 470) |
