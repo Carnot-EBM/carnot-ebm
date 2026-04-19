@@ -397,6 +397,11 @@ from carnot.pipeline.lw_jepa_trainer import (  # noqa: E402
     LeWorldModelLoss,
     gaussian_kl_regularization,
 )
+from carnot.pipeline.hallucination_basin import (  # noqa: E402
+    BasinEstimate,
+    HallucinationBasinDetector,
+    estimate_basin_depth,
+)
 
 __all__ = [
     "AgentStep",
@@ -672,4 +677,7 @@ __all__ = [
     "LeWorldModelJEPATrainer",
     "LeWorldModelLoss",
     "gaussian_kl_regularization",
+    "BasinEstimate",
+    "HallucinationBasinDetector",
+    "estimate_basin_depth",
 ]

@@ -9039,3 +9039,80 @@ so the test suite can verify the data contract without GPU hardware.
 **Then** `honest_verdict == 'gpu_required'`
 
 **Implementation Status:** Done (Exp 517)
+
+
+### REQ-VERIFY-107: HallucinationBasinDetector Estimates Basin Depth from Hidden States
+
+**Requirement:** `estimate_basin_depth(hidden_state, energy_fn, n_perturbations, perturbation_scale)`
+must compute `energy_at_x = energy_fn(hidden_state)`, then generate `n_perturbations` random
+perturbations at `perturbation_scale` magnitude, evaluate `energy_fn` at each perturbed point,
+and return `energy_at_x - min(perturbed_energies)`.  Positive depth means a local minimum
+(deep basin = low hallucination risk); near-zero or negative depth means a saddle or flat
+region (shallow basin = high hallucination risk).
+
+**Rationale:** arXiv 2604.04743 shows correct reasoning follows deep-basin attractors in LLM
+latent space while hallucinated reasoning drifts into shallow basins with high escape
+probability.  Basin depth is computable from hidden-state trajectories without additional
+model passes — it only requires a fast energy proxy callable.
+
+**Acceptance:** `estimate_basin_depth` returns a float.  For a global-minimum state
+(all zeros, quadratic energy) depth is positive.  For a saddle-point state depth is near zero.
+
+Spec: REQ-VERIFY-107, SCENARIO-VERIFY-140, SCENARIO-VERIFY-141
+
+### REQ-VERIFY-108: HallucinationBasinDetector.detect Returns BasinEstimate with basin_risk_score
+
+**Requirement:** `HallucinationBasinDetector.detect(hidden_states)` must:
+- Compute per-timestep basin depth over all rows of `hidden_states`
+- Compute `mean_depth = mean(depth_t over T timesteps)`
+- Compute `escape_probability = sigmoid(-mean_depth)` (low depth → high escape probability)
+- Compute `basin_risk_score = 1.0 - sigmoid(mean_depth)` (high score = shallow basin = risky)
+- Return a `BasinEstimate` with all three fields
+
+A `basin_risk_score > 0.5` indicates hallucination risk; `< 0.5` indicates low risk.
+
+**Rationale:** The sigmoid of basin depth maps depth to a probability-like risk score in [0, 1].
+Deep basins (positive depth) yield low risk scores; shallow basins (near-zero depth) yield
+high risk scores.  This is a Tier 0d candidate positioned after SpilledEnergy (Tier 0b)
+in the verification cascade.
+
+**Acceptance:** Deep-basin trajectories (synthetic depth ≈ 2.0) give `basin_risk_score < 0.5`.
+Shallow-basin trajectories (synthetic depth ≈ 0.1) give `basin_risk_score > 0.5`.
+
+Spec: REQ-VERIFY-108, SCENARIO-VERIFY-142
+
+### SCENARIO-VERIFY-140: estimate_basin_depth Returns Positive Depth for Global Minimum
+
+**Given** a quadratic energy function `energy_fn(x) = sum(x**2)` (minimum at origin)
+**And** a hidden state `x = zeros(8)` (at the global minimum)
+**When** `estimate_basin_depth(x, energy_fn, n_perturbations=8, perturbation_scale=0.1)` is called
+**Then** the returned depth is >= 0.0
+**Because** perturbations move away from the minimum, so `min(perturbed_energies) >= energy_at_x`
+
+**Implementation Status:** Done (Exp 521)
+
+### SCENARIO-VERIFY-141: estimate_basin_depth Returns Near-Zero Depth for Saddle Point
+
+**Given** a linear energy function `energy_fn(x) = x[0]` (no minimum — flat along all but one axis)
+**And** a hidden state `x = zeros(8)`
+**When** `estimate_basin_depth(x, energy_fn, n_perturbations=8, perturbation_scale=0.1)` is called
+**Then** the returned depth is close to 0.0 (within 0.2 of zero in absolute value)
+**Because** linear functions have no local minima; perturbations in the gradient direction
+reduce energy while perturbations against the gradient increase it — overall the minimum
+of perturbed energies is roughly equal to the current energy.
+
+**Implementation Status:** Done (Exp 521)
+
+### SCENARIO-VERIFY-142: detect on Deep-Basin Trajectories Gives basin_risk_score < 0.5
+
+**Given** a quadratic energy function and 10 hidden states all near the global minimum
+**When** `HallucinationBasinDetector(energy_fn).detect(hidden_states)` is called
+**Then** `basin_estimate.basin_risk_score < 0.5`
+**And** `basin_estimate.escape_probability < 0.5`
+**And** `basin_estimate.basin_depth >= 0.0`
+
+**Given** the same detector and 10 hidden states near a saddle point (flat region)
+**When** `detect(hidden_states)` is called
+**Then** `basin_estimate.basin_risk_score > 0.5`
+
+**Implementation Status:** Done (Exp 521)
