@@ -9637,3 +9637,62 @@ and no SIGTERM is sent to any process
 **Then** `self.teardown` is registered so it fires on process exit regardless of exit path
 
 **Implementation Status:** Done (Exp 537)
+
+---
+
+## REQ-BENCH-014 (v2): Live 25q Precision Probe with 90-Minute Budget (Exp 538)
+
+The system shall run a 25-question GSM8K precision benchmark with a 90-minute wall-clock budget.
+This supersedes the 100q timeout from Exp 527 (RETRO-055): 100 questions × ~27 s/question ≈ 45 min,
+which exceeded the 45-minute milestone budget.  25 questions × ~27 s/question ≈ 11 min — well within
+any reasonable budget.
+
+Required artifact fields:
+- `schema`: `'carnot.live_precision.v3'`
+- `n_questions`: 25
+- `mean_latency_s`: mean per-question wall-clock latency across all questions and models
+- `baseline_accuracy`: fraction of questions answered correctly without pipeline
+- `pipeline_accuracy`: fraction of questions answered correctly with pipeline
+- `signed_improvement`: `pipeline_accuracy - baseline_accuracy` (unclamped, negative = regression)
+- `retro_033_closed`: True iff `signed_improvement > 0` and inference_mode == 'live_gpu'
+- `retro_055_resolved`: always True (this experiment is the fix for RETRO-055)
+- `honest_verdict`: one of `'first_positive_25q'` / `'live_no_improvement_25q'` / `'gpu_required'`
+
+**Implementation Status:** In Progress (Exp 538)
+
+Spec: REQ-BENCH-014 (v2), REQ-BENCH-015 (v2), SCENARIO-BENCH-033, SCENARIO-BENCH-034, SCENARIO-BENCH-035
+
+## REQ-BENCH-015 (v2): Per-Question Latency Must Be Recorded (Exp 538)
+
+The system shall record `per_question_latency_s` for every question processed in the live 25q
+benchmark.  This enables post-hoc identification of slow questions and is the root-cause data
+needed to diagnose future timeout incidents like RETRO-055.
+
+**Implementation Status:** In Progress (Exp 538)
+
+Spec: REQ-BENCH-015 (v2), SCENARIO-BENCH-034
+
+### SCENARIO-BENCH-033: 25q Benchmark Writes Deliverable with gpu_required When CARNOT_FORCE_LIVE Not Set
+
+**Given** `CARNOT_FORCE_LIVE` is absent or falsy
+**When** `run_experiment()` is called in Exp 538
+**Then** the deliverable JSON is written with `honest_verdict='gpu_required'` and `status` in
+`('gpu_required', 'blocked')`
+
+**Implementation Status:** In Progress (Exp 538)
+
+### SCENARIO-BENCH-034: signed_improvement Is Computed as pipeline_accuracy - baseline_accuracy
+
+**Given** `baseline_accuracy=0.40` and `pipeline_accuracy=0.60`
+**When** the artifact is built
+**Then** `signed_improvement == 0.20` (exact float arithmetic)
+
+**Implementation Status:** In Progress (Exp 538)
+
+### SCENARIO-BENCH-035: per_question_latency_s Is Recorded for Every Question
+
+**Given** the live 25q benchmark runs N questions
+**When** the artifact is built
+**Then** `per_question_latencies` contains exactly N float entries, each > 0
+
+**Implementation Status:** In Progress (Exp 538)
