@@ -28,6 +28,16 @@
 
 ---
 
+## Session: 2026-04-19 Milestone 2026.04.41 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-19T22:46:37Z | 2026-04-19T22:56:05Z | Research planning for milestone 2026.04.41: read 10 project files (research-program.md, prd.md, architecture.md, status.md, changelog.md, research-roadmap.yaml, research-complete.yaml partial, research-references.md, research-hardware-wishlist.md, conductor-log.md, v40 roadmap, retro JSON); spawned arxiv research agent (found 2 new papers: 2511.07124 EBM-CoT calibration, 2511.06209 internal-state probes); identified 3 biggest gaps (RETRO-055 live inference latency, ExperimentTemplate.teardown() unimplemented 5th time, self-learning still synthetic-only); wrote openspec/change-proposals/research-roadmap-v41.md (milestone 2026.04.41, 12 exps 537-548, 8 phases); wrote research-roadmap-next.yaml (12 experiments, all prompts complete); appended 2 new entries to research-references.md | ~45k |
+
+---
+
 ## Session: 2026-04-19 Milestone 2026.04.36 Research Planning (v42)
 
 ### Turn Log

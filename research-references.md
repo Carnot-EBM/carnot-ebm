@@ -4,6 +4,22 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-19 arxiv Scan (Milestone 2026.04.41 Planning)
+
+### EBM Calibration of Latent Chain-of-Thought — Energy-Guided Implicit Reasoning
+- **Paper:** arXiv 2511.07124 (November 2025)
+- **What:** Integrates a small EBM to calibrate latent thought tokens during implicit CoT generation. The EBM assigns an energy scalar to each latent reasoning step and guides sampling toward lower-energy (more coherent) trajectories. Achieves multi-CoT-level accuracy with a single forward pass on LLaMA-3.1-8B.
+- **Relevance to Carnot:** Direct blueprint for online energy-guided verification at the step level — not just final output scoring. The EBM scalar acts as a constraint signal over latent reasoning tokens. Compatible with Carnot's JEPA tier (Tier 3): predict constraint energy from partial CoT → steer generation away from violations before they materialize in the final response. Validates that per-step energy is both measurable and useful for coherence.
+- **Concrete experiment:** Implement `LatentCoTEBMCalibrator`: wrap Qwen3.5-0.8B generation loop, compute EORM energy at each reasoning step boundary (every 32 tokens), apply soft temperature adjustment toward lower-energy continuations. Compare violation rate on 50 GSM8K questions vs uncalibrated baseline. CPU-only with synthetic energy function. Deliverable: per-step energy distribution + violation rate comparison.
+- **When to incorporate:** Milestone 2026.04.41 — Phase 6 new research (Exp 545 alt).
+
+### Efficient Test-Time Scaling via Internal-State Probing — 810x Smaller than PRM
+- **Paper:** arXiv 2511.06209 (November 2025)
+- **What:** Lightweight transformer probes on LLM internal hidden states (single linear layer per layer) match or exceed much larger Process Reward Models (PRMs) for step-level reasoning credibility estimation. Probes are 810x smaller than the process reward model baseline. Can be applied to any pre-existing LLM without modification.
+- **Relevance to Carnot:** Carnot's EORM (55M params, Tier 2) is a large model for per-step scoring. An internal-state probe replaces EORM with a per-layer linear probe that reads directly from the LLM's residual stream — no separate model, no additional inference. If the probe achieves EORM-level AUC at 810x smaller, it should become the default Tier 2. The linear probe is FPGA-native (dot product over hidden states).
+- **Concrete experiment:** Implement `InternalStateProbe(model, probe_layer=-4)`: extract hidden state at layer -4 from Qwen3.5-0.8B, project to scalar via learned linear layer, train on 57 real FOVER CoT pairs. Compare AUC vs EORM (55M params) on same test set. CPU-only (no new model — just probe weights). Deliverable: AUC comparison + parameter count ratio.
+- **When to incorporate:** Milestone 2026.04.41 — Phase 6 new research (Exp 545).
+
 ## 2026-04-19 arxiv Scan (Milestone 2026.04.40 Planning)
 
 ### Adaptive Rectification Sampling — EORM as PRM for Test-Time Compute Scaling
