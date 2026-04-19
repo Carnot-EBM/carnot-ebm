@@ -597,3 +597,7 @@
 | REQ-INFRA-070 | Implemented | DualGPUHarness Explicit cuda:1 Assignment Routes Compute Correctly — Exp 529 requirement: explicit cuda:1 assignment in DualGPUHarness patches must propagate through CUDA/PyTorch dispatch layers to route GPU1 compute; pynvml utilization verification confirms gpu1_compute_pct > 0 |
 | FR-VERIFY-PIPELINE | Implemented | ThreeTierPipeline Cascade Integration (Exp 530) — wires Tier 0c NUPProbeV4 (contrastive) + Tier 0d HallucinationBasinDetector into unified cascade for stacked verification; combines REQ-VERIFY-109/110 (NUP v4) and REQ-VERIFY-107/108 (Basin Detector) into production-ready pipeline; honest_verdict=pipeline_wiring_complete |
 | SCENARIO-INFRA-081 | Implemented | DualGPUHarness cuda:1 Assignment Routes Compute Correctly — Exp 529 scenario: Parallel inference with explicit cuda:1 assignment shows gpu1_compute_pct > 0 across 20 utilization polls; verifies explicit routing patch propagates through CUDA/PyTorch dispatch layers |
+| REQ-STEER-001 | Implemented | Ising Energy Steering — token-level energy guidance for constrained generation (arXiv 2202.11705) |
+| REQ-STEER-002 | Implemented | COLDDecodingSteer Integration — Ising energy steering wired into LLM token sampling loop |
+| SCENARIO-STEER-001 | Implemented | Token-level Energy Guidance — samples 100 tokens with low-energy guidance constraint; verifies samples satisfy domain constraints |
+| SCENARIO-STEER-002 | Implemented | Steering Cascade Integration — COLDDecodingSteer applied within verification-repair pipeline for constrained generation |
