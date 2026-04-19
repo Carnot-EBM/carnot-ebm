@@ -600,4 +600,10 @@
 | REQ-STEER-001 | Implemented | Ising Energy Steering — token-level energy guidance for constrained generation (arXiv 2202.11705) |
 | REQ-STEER-002 | Implemented | COLDDecodingSteer Integration — Ising energy steering wired into LLM token sampling loop |
 | SCENARIO-STEER-001 | Implemented | Token-level Energy Guidance — samples 100 tokens with low-energy guidance constraint; verifies samples satisfy domain constraints |
+| REQ-VERIFY-106 | Implemented | PottsMachineVerifier — q-State Constraint Encoding — Exp 534 generalizes IsingEBM from binary to q discrete states; q=3 default: 0=correct, 1=partial, 2=violated |
+| REQ-VERIFY-107 | Implemented | q=3 Gibbs Sampler — Exp 534 sequential Gibbs sampler for PottsMachineVerifier sampling from P(s_i=a \| s_{-i}) ∝ exp(-beta * E_i(a)) for all states |
+| REQ-VERIFY-108 | Implemented | AUROC Parity — PottsMachineVerifier vs IsingEBM Baseline — Exp 534 experimental evidence: potts_3class_auroc=0.50 vs ising_binary_auroc=0.5687; potts_viable=false when potts_auroc < ising_auroc |
+| SCENARIO-VERIFY-142 | Implemented | PottsMachineVerifier Energy Is Scalar — Exp 534 scenario: energy(config) with (8,) integer config returns scalar JAX array with finite value |
+| SCENARIO-VERIFY-143 | Implemented | Gibbs Update Changes Configuration — Exp 534 scenario: gibbs_update(config, beta=1.0) returns same shape as input; at least one spin differs with high probability |
+| SCENARIO-VERIFY-144 | Implemented | predict_class Returns Valid Label — Exp 534 scenario: predict_class(config) returns integer in {0, 1, 2} for trained PottsMachineVerifier(n_spins=8, q=3) |
 | SCENARIO-STEER-002 | Implemented | Steering Cascade Integration — COLDDecodingSteer applied within verification-repair pipeline for constrained generation |
