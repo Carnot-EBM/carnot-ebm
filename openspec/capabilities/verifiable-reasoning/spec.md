@@ -9041,6 +9041,67 @@ so the test suite can verify the data contract without GPU hardware.
 **Implementation Status:** Done (Exp 517)
 
 
+## REQ-INFRA-071: GPU1RoutingResult Captures Device, Utilization, and Honest Verdict
+
+**Requirement:** A `GPU1RoutingResult` dataclass must exist with fields:
+- `device_used` (str): device string the model was loaded onto
+- `gpu1_compute_pct_during_inference` (float): mean nvml compute pct on GPU 1 during 20 passes
+- `routing_verified` (bool): True iff `gpu1_compute_pct_during_inference > 10.0`
+- `honest_verdict` (str): one of `'gpu1_active'`, `'gpu1_still_idle'`, `'gpu_required'`
+
+The threshold of 10% matches RETRO-052's definition of "active compute on GPU 1".
+
+Spec: REQ-INFRA-071, SCENARIO-INFRA-081
+
+**Implementation Status:** Done (Exp 529)
+
+## REQ-INFRA-072: force_cuda1_device_map and verify_model_on_device Enforce cuda:1 Routing
+
+**Requirement:**
+- `force_cuda1_device_map(model_id)` must return `{'': 'cuda:1', '_model_id': model_id}`.
+  The `''` sentinel is the accelerate convention for pinning all unnamed modules to one device.
+  It must never return `'auto'` or an integer device map.
+- `verify_model_on_device(model, expected_device_id)` must inspect `next(model.parameters()).device`
+  and return `True` iff `device.type == 'cuda'` and `device.index == expected_device_id`.
+  Returns `False` on StopIteration (no parameters) or AttributeError (non-standard model).
+
+Spec: REQ-INFRA-072, SCENARIO-INFRA-082
+
+**Implementation Status:** Done (Exp 529)
+
+### SCENARIO-INFRA-081: GPU1RoutingResult honest_verdict Reflects Routing Outcome
+
+**Given** `gpu1_compute_pct_during_inference > 10.0`
+**When** `GPU1RoutingResult` is constructed
+**Then** `honest_verdict == 'gpu1_active'` and `routing_verified == True`
+
+**Given** `inference_mode='live_gpu'` and `gpu1_compute_pct_during_inference <= 10.0`
+**When** `GPU1RoutingResult` is constructed
+**Then** `honest_verdict == 'gpu1_still_idle'` and `routing_verified == False`
+
+**Given** no live GPU in the environment
+**When** `GPU1RoutingResult` is constructed
+**Then** `honest_verdict == 'gpu_required'`, `device_used == 'unknown'`
+
+**Implementation Status:** Done (Exp 529)
+
+### SCENARIO-INFRA-082: force_cuda1_device_map Returns Explicit cuda:1 Map; verify_model_on_device Checks First Parameter
+
+**Given** any `model_id` string
+**When** `force_cuda1_device_map(model_id)` is called
+**Then** the returned dict has `{'': 'cuda:1'}` and `{'_model_id': model_id}`; `'auto'` never appears
+
+**Given** a model whose first parameter lives on `cuda:1`
+**When** `verify_model_on_device(model, expected_device_id=1)` is called
+**Then** returns `True`
+
+**Given** a model whose first parameter lives on `cuda:0` or CPU
+**When** `verify_model_on_device(model, expected_device_id=1)` is called
+**Then** returns `False`
+
+**Implementation Status:** Done (Exp 529)
+
+
 ### REQ-VERIFY-107: HallucinationBasinDetector Estimates Basin Depth from Hidden States
 
 **Requirement:** `estimate_basin_depth(hidden_state, energy_fn, n_perturbations, perturbation_scale)`
