@@ -180,6 +180,66 @@ baseline it is improving on:
   will not retry them automatically; Exp N+1 above explicitly reruns
   them under the fixed env.
 
+## Addendum 2026-04-19: NPU stack is mostly working; Exp 511 misclassified
+
+During the same manual intervention that surfaced the pytest-zombie and
+missing-GGUF-dep issues, a parallel NPU investigation found that Exp 511's
+``npu_not_available`` verdict was wrong on the host used for milestone
+2026.04.38. The host IS a Strix Point Ryzen AI 9 HX 370 with a fully
+functional XDNA2 NPU; the amdxdna kernel driver loaded cleanly at boot,
+the NPU firmware (version 1.1.2.64) is active, and ``/dev/accel/accel0``
+was reachable the whole time. Exp 511 detected one thing -- whether
+``onnxruntime`` lists ``VitisAIExecutionProvider`` -- and conflated the
+absence of that single Python wrapper with complete absence of NPU
+capability. Five other layers of the stack were fine.
+
+**Concrete corrections that were applied by hand on 2026-04-19:**
+
+- ``sudo pacman -S xrt xrt-plugin-amdxdna`` installed the official Arch
+  packages that provide ``libxrt_driver_xdna.so.2`` and ``pyxrt``.
+- ``/etc/security/limits.d/xrt.conf`` installed to raise ``RLIMIT_MEMLOCK``
+  to unlimited for the ``render`` group (AMD's Ubuntu .deb installs an
+  equivalent file automatically; the Arch ``xrt`` package omits it).
+- ``scripts/verify_npu.py`` added to distinguish six independent failure
+  modes (hardware absent, driver missing, userspace missing, pyxrt
+  missing, memlock too low, ONNX wrapper missing) rather than collapsing
+  all of them into one ``npu_not_available`` verdict.
+- ``docs/npu-setup-linux.md`` added as the durable record of what each
+  layer needs and how to verify it.
+
+**The ONNX+VitisAI Linux gap is genuine and structural.** AMD's
+``onnxruntime-vitisai`` Python wrapper is shipped only inside the
+Ryzen AI SW bundle, which is Windows-first; the Linux build
+instructions at ``github.com/amd/xdna-driver/example`` require AMD's
+VOE runtime source tree which is partially closed. A quick brainwork
+audit confirmed this -- the Linux conda env AMD publishes
+(``ryzenai-llm``) contains only plain upstream ``onnxruntime`` with
+``CPUExecutionProvider`` + ``AzureExecutionProvider``, no VitisAI EP.
+This is not a bug in Exp 511's detection code so much as Exp 511 asking
+the wrong question for Linux hosts: the correct question is "can
+``pyxrt`` open ``/dev/accel/accel0`` and push kernels to the NPU",
+and that answer on Linux is **yes** once memlock is fixed.
+
+**Revised Exp 511 rerun plan for milestone 2026.04.39 or .40:**
+
+1. Keep the ``NPUEntropyProbe`` public API unchanged (``export_onnx``,
+   ``load_vitisai``, ``benchmark``) but add a ``backend="pyxrt"``
+   alternative that calls the NPU through XRT directly. The existing
+   ``backend="vitisai"`` path stays for when AMD finally ships a Linux
+   wheel or for Windows hosts.
+2. Rerun Exp 511 with the ``pyxrt`` backend. Expected verdict changes
+   from ``npu_not_available`` to ``npu_viable`` if the XRT direct call
+   beats the CPU baseline, or ``npu_measured_no_speedup`` if not.
+3. Reuse ``scripts/verify_npu.py`` as a conductor pre-flight guard so
+   future NPU experiments skip cleanly when any of the six layers is
+   broken, instead of timing out mid-run.
+
+**Milestone-boundary note:** the memlock fix requires a new login
+session to take effect (PAM reads ``limits.d`` only at login). The
+currently-running conductor process (PID 184730) is still on the old
+8 MiB memlock; when it next restarts, the new limits will apply and
+the ``pyxrt``-based NPU probe will work.
+
 ## References
 
 - Session observations 2026-04-19 during milestone 2026.04.38 that
