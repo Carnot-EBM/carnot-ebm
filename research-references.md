@@ -2175,6 +2175,35 @@ thermodynamic computing Ising FPGA
   loading path was broken. Re-run with transformers loader for honest results.
 - **When to pursue:** Next milestone (2026.04.34), Exp 450 as first priority.
 
+### Environment Hardening + Stranded Experiment Reruns (CRITICAL, 2026-04-19)
+- **Directive:** Milestone 2026.04.38 lost headline-credibility experiments
+  to environment gaps the conductor has no pre-flight check for. Exp 503
+  blocked on concurrent-process VRAM OOM (a new failure mode, not a zombie —
+  an unrelated Python process joined between the GPUVRAMGateV2 check and
+  the model load and won the VRAM race). Exp 504 blocked on three missing
+  Python packages (sentencepiece, tiktoken, llama-cpp-python) that were
+  imported without being in any dependency manifest.
+- **Manual unblock completed 2026-04-19:** six stale pytest processes
+  killed (~48 GiB VRAM freed, both GPUs now 24,123 MiB free), three
+  missing deps installed into the project venv. Exps 503 and 504
+  remain marked `blocked` in their deliverable JSON and need a proper
+  rerun under the fixed env.
+- **Three experiments proposed for milestone 2026.04.39** (full design in
+  `openspec/change-proposals/env-hardening-and-reruns.md`):
+  1. Conductor startup env check — verify imports, GPU VRAM headroom,
+     no stale pytest workers, disk space, git remote reachable. Catches
+     the exact 503/504 failure modes before the subagent is invoked.
+  2. Zombie pytest reaper + rerun of Exps 503 and 504 under the fixed
+     env; report `success` or `blocked_again` with specific reason.
+  3. (Stretch) Dependency lockfile + `scripts/bootstrap.sh` via AST
+     walk of imports in `scripts/` and `python/`, so "missing package"
+     becomes a two-line diagnostic rather than a silent mid-experiment
+     block.
+- **Why:** the whack-a-mole pattern has shifted from "zombie VRAM"
+  (closed by GPUVRAMGateV2) to "concurrent-process contention + missing
+  deps". Without these new pre-flight checks, RETRO-033/038/039 will
+  continue to miss, not on research quality but on environment hygiene.
+
 ### Conductor Regression Prevention — Harness Hardening (HIGH PRIORITY, 2026-04-18)
 - **Directive:** Before scheduling more research-heavy milestones, the planner should
   schedule four infrastructure experiments that harden `scripts/research_conductor.py`
