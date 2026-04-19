@@ -9116,3 +9116,61 @@ of perturbed energies is roughly equal to the current energy.
 **Then** `basin_estimate.basin_risk_score > 0.5`
 
 **Implementation Status:** Done (Exp 521)
+
+
+### REQ-VERIFY-109: NUPProbeV4 Contrastive Margin Loss Maximises E(incorrect)-E(correct) Gap
+
+**Requirement:** `ContrastivePairLoss(margin).loss(energy_incorrect, energy_correct)` must return
+`max(0, margin - (energy_incorrect - energy_correct))`.  `NUPProbeV4.train_contrastive(correct_steps,
+incorrect_steps, n_epochs)` must minimise this loss over all (correct, incorrect) pairs using SGD,
+pushing `E(incorrect) - E(correct) >= margin` for all training pairs.
+
+**Rationale:** Binary cross-entropy (BCE) optimises a classification boundary — it is indifferent to
+the magnitude of the energy gap between correct and incorrect steps.  When correct and incorrect steps
+embed similarly (subtle hallucinations), BCE cannot distinguish them.  Contrastive margin loss directly
+optimises the EBM verification invariant: `E(incorrect) >> E(correct)`.  The margin enforces a minimum
+energy difference, not just correct ordering.
+
+**Acceptance:** `loss(2.0, 1.0)` == 0.0 (gap meets margin).  `loss(2.0, 2.0)` == margin (gap is zero).
+`train_contrastive` returns a dict with keys `converged`, `final_loss`, `final_auc`, `loss_history`.
+
+Spec: REQ-VERIFY-109, SCENARIO-VERIFY-143, SCENARIO-VERIFY-144
+
+### REQ-VERIFY-110: NUPProbeV4 AUC >= 0.700 Qualifies as Tier 0c
+
+**Requirement:** `NUPProbeV4.evaluate_auc(correct_steps, incorrect_steps)` must return AUROC >= 0.700
+on real CoT step data after contrastive training.  AUROC >= 0.700 means `tier0c_promoted=True` and
+`retro_049_closed=True` in the Exp 523 artifact.
+
+**Rationale:** AUC 0.700 is the Tier 0c threshold established in REQ-VERIFY-097.  Contrastive training
+is the fix for the RETRO-049 root cause (BCE objective mismatch).
+
+**Acceptance:** Exp 523 deliverable has `final_auc >= 0.700` and `tier0c_promoted=True`.
+
+Spec: REQ-VERIFY-110, SCENARIO-VERIFY-145
+
+### SCENARIO-VERIFY-143: ContrastivePairLoss Returns Zero When Gap Meets Margin
+
+**Given** `ContrastivePairLoss(margin=1.0)` and `energy_incorrect=2.0`, `energy_correct=1.0`
+**When** `loss(energy_incorrect, energy_correct)` is called
+**Then** the result is 0.0 (gap of 1.0 equals margin — constraint satisfied)
+
+**Implementation Status:** Done (Exp 523)
+
+### SCENARIO-VERIFY-144: ContrastivePairLoss Returns Margin When Energies Equal
+
+**Given** `ContrastivePairLoss(margin=1.0)` and `energy_incorrect=2.0`, `energy_correct=2.0`
+**When** `loss(energy_incorrect, energy_correct)` is called
+**Then** the result is 1.0 (gap is zero — maximum deficit equal to margin)
+
+**Implementation Status:** Done (Exp 523)
+
+### SCENARIO-VERIFY-145: NUPProbeV4.train_contrastive Returns converged and final_auc in [0, 1]
+
+**Given** a `NUPProbeV4` with default parameters
+**And** lists of correct and incorrect CoT steps (at least 2 each)
+**When** `train_contrastive(correct_steps, incorrect_steps, n_epochs=50)` is called
+**Then** the returned dict has `converged` (bool), `final_auc` in [0.0, 1.0], `final_loss >= 0`,
+and `loss_history` with `n_epochs` entries
+
+**Implementation Status:** Done (Exp 523)
