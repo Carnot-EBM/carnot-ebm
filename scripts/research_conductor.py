@@ -412,6 +412,85 @@ def run_agent(
         return False, str(e)
 
 
+def preflight_gpu_reap() -> dict:
+    """Run ExpandedGPUReaper live before each research step.
+
+    Why this exists
+    ---------------
+    Zombie GPU processes are the #1 cause of consecutive experiment failures in
+    this project's autoresearch loop.  Observed recurrences: 2026-04-17 (34
+    zombie pytest workers after 8h), 2026-04-19 (Exp 528 CUDA OOM at 1.4s with
+    22+ GiB pinned by 7 stale PIDs from Exp 524/527).  Running the reaper
+    **live** before every ``research_step()`` prevents the next iteration from
+    being poisoned by the previous iteration's orphans.
+
+    Safety rails
+    ------------
+    * Configurable via ``CARNOT_CONDUCTOR_REAPER``: set to ``0`` to disable,
+      ``dry_run`` to audit without killing (default: live).
+    * Reaper itself enforces ``min_age_s=1800`` — freshly-spawned legitimate
+      workers are never touched.
+    * Reaper enforces subtree membership — if a GPU process is a descendant of
+      the current conductor, it is skipped regardless of age.
+    * Wrapped in a try/except: a reaper failure must NOT block the research
+      step.  If nvidia-smi is missing or the reaper crashes, we log and move on.
+
+    Returns
+    -------
+    dict with keys ``killed`` (list of pids), ``total_vram_freed_mb`` (int),
+    ``honest_verdict`` (str), and ``skipped_reason`` (str | None) when the
+    reaper did not run (e.g. disabled, CPU-only host).
+    """
+    mode = os.environ.get("CARNOT_CONDUCTOR_REAPER", "live").lower()
+    if mode in ("0", "off", "disabled", "no", "false"):
+        return {"honest_verdict": "reaper_disabled", "killed": [],
+                "total_vram_freed_mb": 0, "skipped_reason": "env_disabled"}
+
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "python"))
+        from carnot.pipeline.expanded_gpu_reaper import (
+            ExpandedGPUReaper,
+            ExpandedGPUReaperConfig,
+        )
+    except ImportError as exc:
+        logger.warning("GPU reaper import failed (%s) — skipping pre-flight reap", exc)
+        return {"honest_verdict": "reaper_import_failed", "killed": [],
+                "total_vram_freed_mb": 0, "skipped_reason": str(exc)}
+
+    dry = mode in ("dry_run", "dry-run", "audit")
+    try:
+        cfg = ExpandedGPUReaperConfig(
+            min_vram_mb=1024,
+            min_age_s=1800,
+            dry_run=dry,
+        )
+        result = ExpandedGPUReaper(cfg).reap()
+    except Exception as exc:  # noqa: BLE001  — never block the loop on reaper errors
+        logger.warning("GPU reaper failed (%s) — continuing without reap", exc)
+        return {"honest_verdict": "reaper_exception", "killed": [],
+                "total_vram_freed_mb": 0, "skipped_reason": str(exc)}
+
+    if result.killed:
+        logger.warning(
+            "Pre-flight reaper killed %d stale GPU process(es), freed %d MiB",
+            len(result.killed), result.total_vram_freed_mb,
+        )
+        for entry in result.killed:
+            logger.warning("  reaped pid=%s vram=%dMiB age=%ds name=%s",
+                           entry.get("pid"), entry.get("used_memory_mb", 0),
+                           entry.get("age_s", 0), entry.get("process_name", "?"))
+    else:
+        logger.info("Pre-flight reaper: nothing to kill (verdict=%s)",
+                    result.honest_verdict)
+
+    return {
+        "honest_verdict": result.honest_verdict,
+        "killed": [e.get("pid") for e in result.killed],
+        "total_vram_freed_mb": result.total_vram_freed_mb,
+        "skipped_reason": None,
+    }
+
+
 def run_tests(full: bool = False) -> tuple[bool, str]:
     """Run tests. Uses smart subset by default, full suite when full=True.
 
@@ -1719,6 +1798,12 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
                 "[conductor] Checkpoint: preserve uncommitted work from interrupted run"
             )
             run_cmd(["git", "commit", "-m", msg])
+
+    # Reap stale GPU processes BEFORE tests.  Pre-flight test runs themselves
+    # can OOM if a prior experiment left zombie workers pinning VRAM.  This
+    # also protects the downstream research experiment from starting in a
+    # half-broken state.  See preflight_gpu_reap() for safety rails.
+    preflight_gpu_reap()
 
     # Run tests first — ensure clean state
     tests_ok, test_summary = run_tests()
