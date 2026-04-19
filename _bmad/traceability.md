@@ -467,4 +467,8 @@
 | REQ-BENCH-030 | Not Started | Implemented | Benchmark Writes 200 CoT Pairs to results/exp478_cot_pairs.json for JEPA Retrain — Exp 478 CoTPairCollector scaffold ready for GPU execution |
 | SCENARIO-BENCH-047 | Not Started | Implemented | GPUVRAMGate Fires and Kills Zombies Before Model Load — Exp 478 gpu_vram_gate_fired=true confirmed before Gemma4/Qwen initialization |
 | SCENARIO-BENCH-048 | Not Started | Implemented | DualGPUAssigner Pins Each Model to Its Own GPU — Exp 478 dual-GPU assignment verified (Gemma4→cuda:0, Qwen3.5→cuda:1) |
+| REQ-INFRA-045 | Not Started | Implemented | DualGPUHarness.apply() Assigns cuda:0/cuda:1 to Dual-Model Specs — Exp 480 DualGPUHarness injects gpu=0/device_map per model_specs (378 tests, 100% coverage) |
+| REQ-INFRA-046 | Not Started | Implemented | HarnessAudit.scan() Returns Findings for Dual-Model Scripts Missing cuda:1 — Exp 480 HarnessAudit detected 53/64 dual-model scripts needing cuda:1 wiring (audit_findings list returned) |
+| SCENARIO-INFRA-053 | Not Started | Implemented | DualGPUHarness Assigns cuda:0 and cuda:1 in Live Mode — Exp 480 DualGPUHarness(n_gpus=2, live_mode=True) assigns distinct GPUs per model (dual_gpu_harness_implemented=true) |
+| SCENARIO-INFRA-054 | Not Started | Implemented | HarnessAudit Flags Dual-Model Scripts Without cuda:1 — Exp 480 HarnessAudit.scan() returns AuditFinding records for 53 scripts with dual-model load but no cuda:1 assignment |
 | SCENARIO-BENCH-049 | Not Started | Implemented | CoTPairCollector Flushes 200 Pairs Atomically — Exp 478 CoTPairCollector atomic flush capability tested (execution pending GPU) |
