@@ -7759,3 +7759,64 @@ Each `BatchingViolation` has:
 
 Spec: REQ-INFRA-047, REQ-INFRA-048,
       SCENARIO-INFRA-055, SCENARIO-INFRA-056
+
+### REQ-VERIFY-096: NUPProbe Computes Per-Step Continuation Entropy
+
+`NUPProbe.score(cot_text, logprobs)` shall compute the Shannon entropy of the
+continuation distribution as a proxy for constraint violation likelihood.
+
+When `logprobs` is supplied, Shannon entropy of the token distribution is returned.
+When `logprobs` is absent or empty, character-level Shannon entropy of `cot_text` is
+returned as a structural proxy (the character-entropy fallback).
+
+`ContinuationEntropy.from_logprobs(logprobs, threshold)` shall compute the Shannon entropy
+and set `is_high_entropy = entropy > threshold` (default threshold 1.5 nats).
+
+**Motivation (arXiv 2603.19562 — Neural Uncertainty Principle, 2026):**
+    Hallucination is an under-constrained continuation problem.  High continuation entropy
+    = multiple paths nearly equally plausible = constraint violation likely.  Low entropy =
+    peaked distribution = continuation forced by prior context = likely correct.
+    This is mathematically compatible with Carnot's formulation: high energy = high entropy.
+
+**Implementation Status:** Done (Exp 484)
+
+### REQ-VERIFY-097: NUPProbe AUC > 0.700 Qualifies as Tier 0c
+
+`NUPProbeResult.is_viable_tier_0c` shall be `True` when `auc > 0.700` on held-out
+labeled CoT pairs, qualifying NUPProbe for insertion as Tier 0c in `ThreeTierPipeline`.
+
+Tier 0c is positioned before SpilledEnergyDetector (Tier 0b) and CarnotThinkProbe (Tier 0a)
+because NUPProbe requires zero LLM calls and zero Ising sampling — it is pure arithmetic on
+log-probabilities.  Earlier cascade position = higher skip rate = lower total cost at scale.
+
+When the current live data lacks token logprobs (n_with_logprobs=0), the character-entropy
+fallback is used and the AUC may be below 0.700 — this is reported as
+`honest_verdict='improvement_below_threshold'`.  The probe's Tier 0c promotion is deferred
+until token logprobs are available.
+
+**Implementation Status:** Done (Exp 484); AUC=0.600 on 11 held-out pairs with char-entropy
+fallback (logprobs absent from current live data).
+
+### SCENARIO-VERIFY-129: NUPProbe High Entropy Predicts Violation
+
+**Given** a CoT step with a uniform token distribution over 20 tokens (logprobs=[0.0]*20,
+entropy=ln(20)≈3.0 nats)
+**When** `NUPProbe(entropy_threshold=1.5).predict_violation(text, logprobs)` is called
+**Then** `True` is returned (entropy 3.0 > threshold 1.5)
+
+**Given** a CoT step with a peaked distribution (logprobs=[0.0, -100.0], entropy≈0)
+**When** `NUPProbe(entropy_threshold=1.5).predict_violation(text, logprobs)` is called
+**Then** `False` is returned (entropy ≈ 0 < threshold 1.5)
+
+### SCENARIO-VERIFY-130: NUPProbe.evaluate_auc Returns Float in [0, 1]
+
+**Given** a list of labeled CoT pairs (mix of 'correct' and 'incorrect' labels)
+**When** `NUPProbe.evaluate_auc(pairs)` is called
+**Then** a float in [0.0, 1.0] is returned
+
+**Given** fewer than 2 pairs
+**When** `NUPProbe.evaluate_auc(pairs)` is called
+**Then** 0.5 is returned (chance level, AUC undefined)
+
+Spec: REQ-VERIFY-096, REQ-VERIFY-097,
+      SCENARIO-VERIFY-129, SCENARIO-VERIFY-130
