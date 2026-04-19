@@ -1,0 +1,501 @@
+{
+  "experiment": 481,
+  "title": "Inference Batching Enforcement",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T04:13:24Z",
+  "finished_at": "2026-04-19T04:13:24Z",
+  "duration_s": 0.06,
+  "status": "success",
+  "artifact_schema": "carnot.batching_audit.v1",
+  "n_scripts_scanned": 362,
+  "n_violations_found": 77,
+  "n_high_severity": 69,
+  "batch_size_standards": {
+    "gsm8k": 8,
+    "humaneval": 4,
+    "default": 8
+  },
+  "violations": [
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_101_agent_verification.py",
+      "line_no": 362,
+      "pattern": "for p in correct_problems:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_101_agent_verification.py",
+      "line_no": 452,
+      "pattern": "for p in error_problems:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_110_guided_decoding.py",
+      "line_no": 302,
+      "pattern": "for prob in problems:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_121_adversarial_verify_repair.py",
+      "line_no": 1305,
+      "pattern": "for it in per_item:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_122_adversarial_analysis.py",
+      "line_no": 1199,
+      "pattern": "for item in items_v:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_124_full_gsm8k_live.py",
+      "line_no": 1541,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_126_agent_rollback.py",
+      "line_no": 831,
+      "pattern": "for problem in problems:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_127_agent_workflow.py",
+      "line_no": 1539,
+      "pattern": "for prob in problems:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_136_cross_session.py",
+      "line_no": 589,
+      "pattern": "for _ in wrong_questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_136_cross_session.py",
+      "line_no": 606,
+      "pattern": "for _ in wrong_questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_141_constraint_generation.py",
+      "line_no": 320,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_141_constraint_generation.py",
+      "line_no": 371,
+      "pattern": "for q in warmup_questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_147_apple_gsm8k.py",
+      "line_no": 1116,
+      "pattern": "for r in item_results:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_149_truthfulqa.py",
+      "line_no": 647,
+      "pattern": "for item in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_157_spilled_energy.py",
+      "line_no": 254,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_159_five_domain.py",
+      "line_no": 828,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_159_five_domain.py",
+      "line_no": 896,
+      "pattern": "for question in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_162_adversarial_live.py",
+      "line_no": 1049,
+      "pattern": "for r in item_results:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_171_combined_signal_benchmark.py",
+      "line_no": 1058,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_171_combined_signal_benchmark.py",
+      "line_no": 1072,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_171_combined_signal_benchmark.py",
+      "line_no": 1134,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_173_constraint_gen_v2.py",
+      "line_no": 374,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_178_adversarial_definitive.py",
+      "line_no": 1308,
+      "pattern": "for r in item_results:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_183_humaneval_live_gpu.py",
+      "line_no": 931,
+      "pattern": "for probe in probes:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_208_humaneval_live_it.py",
+      "line_no": 364,
+      "pattern": "for problem in sampled:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_213_monitorability_audit.py",
+      "line_no": 562,
+      "pattern": "for probe in probes:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_218_live_dual_model_suite.py",
+      "line_no": 875,
+      "pattern": "for probe in probes:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_24_layer_probing.py",
+      "line_no": 98,
+      "pattern": "for layer_idx in probe_layers:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_24_layer_probing.py",
+      "line_no": 121,
+      "pattern": "for layer_idx in probe_layers:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_261_humaneval_qwen_gpu.py",
+      "line_no": 101,
+      "pattern": "for row in per_problem:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_282_apple_baseline_gpu.py",
+      "line_no": 793,
+      "pattern": "for item in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_283_apple_verify_repair.py",
+      "line_no": 1026,
+      "pattern": "for item in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_28_multilayer_concat.py",
+      "line_no": 107,
+      "pattern": "for layer_idx in probe_layers:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_294_gpu_baseline_apple.py",
+      "line_no": 978,
+      "pattern": "for item in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_294_operational_retro.py",
+      "line_no": 580,
+      "pattern": "for item in deferred_items:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_295_apple_verify_repair.py",
+      "line_no": 1331,
+      "pattern": "for item in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_302_self_learning_benchmark.py",
+      "line_no": 553,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_303_npu_unblock.py",
+      "line_no": 658,
+      "pattern": "for item in missing_items:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_309_tier3_pipeline.py",
+      "line_no": 460,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_318_self_learning_relay.py",
+      "line_no": 640,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_321_dwave_benchmark.py",
+      "line_no": 421,
+      "pattern": "for name in samplers:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_321_dwave_benchmark.py",
+      "line_no": 495,
+      "pattern": "for cfg in PROBLEM_CONFIGS:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_327_dep_audit_results.py",
+      "line_no": 105,
+      "pattern": "for rec in sample_audits:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_332_confidence_repair.py",
+      "line_no": 369,
+      "pattern": "for case in BENCHMARK_QUESTIONS:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_340_live_precision_benchmark.py",
+      "line_no": 398,
+      "pattern": "for q in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_344_constraint_addition_benchmark.py",
+      "line_no": 195,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_344_constraint_addition_benchmark.py",
+      "line_no": 261,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_354_adversarial_gsm8k_harness.py",
+      "line_no": 163,
+      "pattern": "for aq in adversarial_questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_358_extraction_benchmark.py",
+      "line_no": 197,
+      "pattern": "for item in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_358_extraction_benchmark.py",
+      "line_no": 452,
+      "pattern": "for q in raw_questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_367_extraction_live.py",
+      "line_no": 201,
+      "pattern": "for item in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_368_precision_live.py",
+      "line_no": 272,
+      "pattern": "for q in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_41_llm_verify_repair.py",
+      "line_no": 159,
+      "pattern": "for prob in problems:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_432_jitrl_live_validation.py",
+      "line_no": 113,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_451_live_precision_postfix.py",
+      "line_no": 247,
+      "pattern": "for q_dict in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_451_live_precision_postfix.py",
+      "line_no": 261,
+      "pattern": "for q_dict in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_454_vprm_verifier.py",
+      "line_no": 122,
+      "pattern": "for sample in _ALL_SAMPLES:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_454_vprm_verifier.py",
+      "line_no": 137,
+      "pattern": "for sample in _ALL_SAMPLES:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_456_constraint_addition.py",
+      "line_no": 171,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_456_constraint_addition.py",
+      "line_no": 214,
+      "pattern": "for q in _CARRY_QUESTIONS:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_457_lsebmcl_replay.py",
+      "line_no": 171,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_464_live_precision_100q.py",
+      "line_no": 252,
+      "pattern": "for q_dict in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_464_live_precision_100q.py",
+      "line_no": 267,
+      "pattern": "for q_dict in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_467_live_200q_integrated.py",
+      "line_no": 253,
+      "pattern": "for q in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_468_gsm_symbolic_adversarial.py",
+      "line_no": 733,
+      "pattern": "for q in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_476_live_100q_precision_v4.py",
+      "line_no": 218,
+      "pattern": "for q_dict in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_476_live_100q_precision_v4.py",
+      "line_no": 230,
+      "pattern": "for q_dict in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_478_live_200q_vericot_vprm_v2.py",
+      "line_no": 251,
+      "pattern": "for q in questions:",
+      "severity": "medium"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_479_gsm_symbolic_adversarial_live.py",
+      "line_no": 709,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_56_live_llm_pipeline.py",
+      "line_no": 728,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_57_verify_repair_loop.py",
+      "line_no": 781,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_59_constraint_prompting.py",
+      "line_no": 811,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_68_humaneval_benchmark.py",
+      "line_no": 1333,
+      "pattern": "for line in prompt_lines:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_73_constraint_coverage.py",
+      "line_no": 355,
+      "pattern": "for q in questions:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_88_failure_mining.py",
+      "line_no": 542,
+      "pattern": "for item in all_items:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_88_failure_mining.py",
+      "line_no": 547,
+      "pattern": "for item in all_items:",
+      "severity": "high"
+    },
+    {
+      "script_path": "/home/ianblenke/github.com/ianblenke/carnot/scripts/generate_qa_dataset.py",
+      "line_no": 638,
+      "pattern": "for s in samples:",
+      "severity": "high"
+    }
+  ],
+  "retro_041_batching_resolved": true,
+  "honest_verdict": "batching_standards_documented",
+  "schema": [
+    "artifact_schema",
+    "batch_size_standards",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "n_high_severity",
+    "n_scripts_scanned",
+    "n_violations_found",
+    "retro_041_batching_resolved",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "violations"
+  ]
+}

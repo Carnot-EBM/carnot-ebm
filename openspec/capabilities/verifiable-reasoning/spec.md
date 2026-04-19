@@ -7665,3 +7665,54 @@ Such scripts have `needs_fix=True`.  Scripts that already contain `'cuda:1'` hav
 
 Spec: REQ-INFRA-045, REQ-INFRA-046,
       SCENARIO-INFRA-053, SCENARIO-INFRA-054
+
+### REQ-INFRA-047: BatchingEnforcementAudit Scans Scripts for Sequential Question Loops
+
+`BatchingEnforcementAudit(scripts_dir).scan()` shall scan all `*.py` files in `scripts_dir`
+and return a list of `BatchingViolation` records for every file that contains a sequential
+question loop (``for <var> in <questions_collection>:``) without using `BatchedInferenceRunner`.
+
+**Motivation (RETRO-041 batching sub-item):** Sequential inference at batch_size=1 is 3-5x
+slower than batched inference because each question pays full CUDA kernel-launch overhead
+and uses fewer than 10 of 80-144 GPU streaming multiprocessors.  BatchedInferenceRunner
+has been available since Exp 437 but was not consistently adopted.  The .35 retrospective
+estimated 5% wall time savings (~250 min per 5000-min milestone) from enforcement.
+
+Each `BatchingViolation` has:
+- `script_path` — path to the offending script
+- `line_no` — 1-based line number of the sequential loop
+- `pattern` — matched source line (stripped)
+- `severity` — `'high'` when no `BatchedInferenceRunner` is present; `'medium'` when it is
+- `is_high_severity` — True when severity == 'high'
+
+**Implementation Status:** Done (Exp 481)
+
+### REQ-INFRA-048: Standard Batch Sizes for Known Task Types
+
+`BatchingEnforcementAudit.recommended_batch_size(task_type)` shall return:
+- `'gsm8k'`    → 8  (longer arithmetic prompts; predictable VRAM on 24 GB RTX cards)
+- `'humaneval'`→ 4  (code generation produces variable-length output; batch=4 avoids OOM)
+- any other   → 8  (default; recovers most throughput gap vs. batch_size=1)
+
+**Implementation Status:** Done (Exp 481)
+
+### SCENARIO-INFRA-055: BatchingEnforcementAudit Detects Sequential Loop Violation
+
+**Given** a scripts directory containing `exp_seq.py` with `for q in questions:` and no `BatchedInferenceRunner`
+**When** `BatchingEnforcementAudit(scripts_dir).scan()` is called
+**Then** at least one `BatchingViolation` is returned with `is_high_severity=True`
+
+### SCENARIO-INFRA-056: recommended_batch_size Returns Correct Values
+
+**Given** `BatchingEnforcementAudit(scripts_dir)`
+**When** `recommended_batch_size('gsm8k')` is called
+**Then** 8 is returned
+
+**When** `recommended_batch_size('humaneval')` is called
+**Then** 4 is returned
+
+**When** `recommended_batch_size('unknown_task')` is called
+**Then** 8 is returned (default)
+
+Spec: REQ-INFRA-047, REQ-INFRA-048,
+      SCENARIO-INFRA-055, SCENARIO-INFRA-056

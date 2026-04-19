@@ -324,6 +324,10 @@ from carnot.pipeline.dual_gpu_harness import (  # noqa: E402
     DualGPUHarness,
     HarnessAudit,
 )
+from carnot.pipeline.batching_audit import (  # noqa: E402
+    BatchingEnforcementAudit,
+    BatchingViolation,
+)
 
 __all__ = [
     "AgentStep",
@@ -556,4 +560,6 @@ __all__ = [
     "AuditFinding",
     "DualGPUHarness",
     "HarnessAudit",
+    "BatchingEnforcementAudit",
+    "BatchingViolation",
 ]
