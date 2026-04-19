@@ -8814,3 +8814,43 @@ The experiment shall write 100 FOVER-format CoT pairs to `results/exp514_cot_pai
 **Then** the file at `path` is valid JSON containing 10 entries
 **And** each entry has keys `question`, `cot_text`, `correct`, `model_id`
 **And** the function returns 10
+
+---
+
+## Exp 515: Live 200q VeriCoT+VPRM v5 (RETRO-038 fifth attempt)
+
+### REQ-BENCH-016: 200q Wilson 95% CI Lower > 0 Constitutes First Publishable Claim
+
+**Requirement:** The 200q live benchmark must compute Wilson 95% CI on the pipeline improvement
+delta and report `is_statistically_positive=(wilson_95ci_lower > 0)`. When this flag is True
+and `inference_mode=='live_gpu'`, the experiment must set `retro_038_closed=True` and
+`honest_verdict='first_publishable_claim'`.
+
+**Rationale:** Wilson CI lower bound > 0 at n=200 provides the statistical power needed for
+a publishable credibility claim. This is the first gating criterion for RETRO-038 closure.
+
+**Acceptance:** `wilson_95ci_lower > 0` observed under live GPU inference on 200 GSM8K questions.
+
+Spec: REQ-BENCH-016, SCENARIO-BENCH-035, SCENARIO-BENCH-036
+
+### SCENARIO-BENCH-035: compute_wilson_ci Returns Correct Bounds at n=200
+
+**Given** `n_successes=120`, `n_total=200`, `confidence=0.95`
+**When** `compute_wilson_ci(120, 200)` is called
+**Then** the returned `(lower, upper)` tuple satisfies `lower > 0.53` and `upper < 0.67`
+**And** both bounds are in [0.0, 1.0]
+**And** `lower < 0.6 < upper` (CI straddles the observed proportion)
+
+### SCENARIO-BENCH-036: is_statistically_positive Returns True iff Lower Bound > 0
+
+**Given** `wilson_lower_bound > 0` (e.g. 0.001)
+**When** `is_statistically_positive(wilson_lower_bound)` is called
+**Then** the function returns `True`
+
+**Given** `wilson_lower_bound == 0.0`
+**When** `is_statistically_positive(0.0)` is called
+**Then** the function returns `False`
+
+**Given** `wilson_lower_bound < 0` (e.g. −0.001, should not arise in practice but guarded)
+**When** `is_statistically_positive(−0.001)` is called
+**Then** the function returns `False`
