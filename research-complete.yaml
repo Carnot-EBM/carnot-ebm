@@ -2425,3 +2425,61 @@ milestones:
     title: "Exp 499: Milestone 2026.04.37 Retrospective \u2014 did we break the VRAM deadlock?"
     deliverable: results/operational_retro_2026_04_37.json
     result: OK (conductor)
+- id: 2026.04.38
+  title: "Break the Credibility Ceiling \u2014 Gemma4 Quantized, 100q+ Live, GPU 1 Activated"
+  doc: openspec/change-proposals/research-roadmap-v38.md
+  completed: '2026-04-19'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp500-gemma4-int4-quantization
+    title: "Exp 500: Gemma4 INT4 Quantization \u2014 RETRO-048 root cause fix (quantize to GGUF Q4_K_M ~8-10 GiB)"
+    deliverable: results/experiment_500_gemma4_int4_quantized.json
+    result: OK (conductor)
+  - id: exp501-conductor-cpu-routing
+    title: "Exp 501: Conductor CPU Routing + VRAM Budget Ledger \u2014 free all GPU VRAM for inference"
+    deliverable: results/experiment_501_conductor_cpu_routing.json
+    result: OK (conductor)
+  - id: exp502-live-100q-precision-v6
+    title: "Exp 502: Live 100q Precision v6 \u2014 RETRO-033 sixth attempt with quantized Gemma4"
+    deliverable: results/experiment_502_live_100q_precision_v6.json
+    result: OK (conductor)
+  - id: exp503-live-200q-vericot-vprm-v4
+    title: "Exp 503: Live 200q VeriCoT+VPRM v4 \u2014 RETRO-038 fourth attempt, statistically significant target"
+    deliverable: results/experiment_503_live_200q_vericot_vprm_v4.json
+    result: OK (conductor)
+  - id: exp504-gsm-symbolic-adversarial-v4
+    title: "Exp 504: GSM-Symbolic Adversarial v4 \u2014 RETRO-039 fourth attempt, Carnot thesis credibility"
+    deliverable: results/experiment_504_gsm_symbolic_adversarial_v4.json
+    result: OK (conductor)
+  - id: exp505-dual-gpu-harness-sweep
+    title: "Exp 505: Retroactive DualGPU Harness Sweep \u2014 patch all prior dual-model scripts for cuda:1 compute"
+    deliverable: results/experiment_505_dual_gpu_harness_sweep.json
+    result: OK (conductor)
+  - id: exp506-semantic-energy-tier0d
+    title: "Exp 506: Semantic Energy Tier 0d \u2014 Boltzmann-cluster energy from logits (arXiv 2508.14496)"
+    deliverable: results/experiment_506_semantic_energy_tier0d.json
+    result: OK (conductor)
+  - id: exp507-nup-probe-v3-clap
+    title: "Exp 507: NUP Probe v3 \u2014 RETRO-049 fix with CLAP cross-layer attention features (arXiv 2509.09700)"
+    deliverable: results/experiment_507_nup_probe_v3.json
+    result: OK (conductor)
+  - id: exp508-kaem-distribution-family
+    title: "Exp 508: KAEM Distribution Family \u2014 RETRO-031 new axis (multimodal/heavy-tail/non-smooth)"
+    deliverable: results/experiment_508_kaem_distribution_family.json
+    result: OK (conductor)
+  - id: exp509-ppsebm-energy-magnitude-replay
+    title: "Exp 509: PPSEBM Energy-Magnitude Replay \u2014 RETRO-050 fix replacing LLM-surprise with EBM energy priority"
+    deliverable: results/experiment_509_ppsebm_energy_magnitude_replay.json
+    result: OK (conductor)
+  - id: exp510-jepa-live-retrain-v4
+    title: "Exp 510: JEPA Live Retraining v4 \u2014 FR-11 Tier 3 self-learning on live CoT pairs with quasimetric regularization"
+    deliverable: results/experiment_510_jepa_live_retrain_v4.json
+    result: OK (conductor)
+  - id: exp511-amd-xdna-npu-probe
+    title: "Exp 511: AMD XDNA NPU NUP Probe Inference \u2014 first NPU acceleration of Carnot component (arXiv 2504.03083)"
+    deliverable: results/experiment_511_amd_npu_probe.json
+    result: OK (conductor)
+  - id: exp512-retro-2026-04-38
+    title: 'Exp 512: Milestone 2026.04.38 Retrospective'
+    deliverable: results/experiment_512_retro_2026_04_38.json
+    result: OK (conductor)
