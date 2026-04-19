@@ -146,7 +146,7 @@ the headline RETRO-033 / RETRO-038 / RETRO-039 miss count.
   ``fr11_synthetic_only`` would mean N+1 did not actually produce live
   data and is itself only half-complete.
 
-### Exp N+2 (stretch): Dependency lockfile + automated install on
+### Exp N+3 (stretch): Dependency lockfile + automated install on
 ``./scripts/bootstrap.sh``
 
 - **Deliverable:** ``scripts/bootstrap.sh`` plus an updated
