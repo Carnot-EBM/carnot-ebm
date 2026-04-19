@@ -538,7 +538,7 @@ class ExperimentTemplate:
         # Skipped in CPU fallback mode — there are no GPUs to assign.
         #
         # REQ-INFRA-029 (RETRO-025 fix): also inject an explicit device_map per model.
-        # device_map='auto' lets CUDA allocate layers on GPU1 for offloading, but the
+        # device_map={'': 'cuda:0'} lets CUDA allocate layers on GPU1 for offloading, but the
         # forward pass stays on GPU0.  This produces the zombie pattern from RETRO-025:
         # GPU1 holds 1786 MB at 0% utilization for 144+ minutes.  By using
         # device_map={'': 'cuda:N'}, every layer of each model is pinned to a single
@@ -581,11 +581,11 @@ class ExperimentTemplate:
                         spec["device_map"] = zombie_strategy.get(spec["hf_id"], "auto")
                     _log.info(
                         "REQ-INFRA-029: Using explicit device assignment to prevent GPU1 zombie allocation "
-                        "(RETRO-025 fix — device_map='auto' replaced with {'': 'cuda:N'} per model)"
+                        "(RETRO-025 fix — device_map={'': 'cuda:1'} replaced with {'': 'cuda:N'} per model)"
                     )
                 except Exception as exc:  # pragma: no cover — import failure is non-fatal
                     _log.warning(
-                        "gpu_zombie_fix unavailable (%s); keeping device_map='auto' (RETRO-025 may recur)",
+                        "gpu_zombie_fix unavailable (%s); keeping device_map={'': 'cuda:1'} (RETRO-025 may recur)",
                         exc,
                     )
             else:

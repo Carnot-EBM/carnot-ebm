@@ -427,7 +427,7 @@ def _load_model_pipeline(model_id: str) -> Any:
     **Detailed explanation for engineers:**
         We use the transformers ``pipeline`` API with the "text-generation" task.
         ``trust_remote_code`` is gated by ``CARNOT_TRUST_REMOTE_CODE=1``.
-        ``device_map="auto"`` lets transformers choose the best GPU/CPU layout.
+        ``device_map={'': 'cuda:0'}`` lets transformers choose the best GPU/CPU layout.
 
         We return a thin wrapper lambda so the caller always gets a
         list[str] -> list[str] interface regardless of the underlying backend.
@@ -465,7 +465,7 @@ def _load_model_pipeline(model_id: str) -> Any:
         "text-generation",
         model=hf_id,
         trust_remote_code=trust_remote,
-        device_map="auto",
+        device_map={'': 'cuda:1'},
         max_new_tokens=256,
     )
 
