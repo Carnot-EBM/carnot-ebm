@@ -315,6 +315,10 @@ from carnot.pipeline.gpu_vram_gate import (  # noqa: E402
     GPUVRAMInsufficientError,
     VRAMStatus,
 )
+from carnot.pipeline.conductor_dedup import (  # noqa: E402
+    ConductorDedupCheck,
+    PartialResultHandoff,
+)
 
 __all__ = [
     "AgentStep",
@@ -542,4 +546,6 @@ __all__ = [
     "GPUVRAMGate",
     "GPUVRAMInsufficientError",
     "VRAMStatus",
+    "ConductorDedupCheck",
+    "PartialResultHandoff",
 ]
