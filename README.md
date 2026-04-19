@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 524+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 536+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (524 experiments, 26 completed milestones)
+## Key Results (536 experiments, 27 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.40 (Exps 526-536, 27th milestone, title "Fix the Last Gate — Eighth Attempt, First Live Positive") completed. Key results: **RETRO-053 RESOLVED** — env_autofix one-liner now overrides falsy CARNOT_FORCE_LIVE='0' (Exp 526); **Live 100q Precision v8 timed out at 45 min during actual live inference** (Exp 527, RETRO-033 miss #9 — new blocker is inference latency, env gate no longer the problem, significant progress); **NUP Probe v4 (Tier 0c) + Hallucination Basin Detector (Tier 0d) wired into ThreeTierPipeline** (Exp 530); **JEPA Live Retrain v7 FR-11 confirmed** — final_auc=0.967 on 46 live FOVER pairs (Exp 535); **LowRankKAEMEnergy** 23.7x speedup at k=2 (Exp 532); mean=5.0 min/exp (new project record, 55 min total for 11 experiments). New RETRO-055: reduce n_questions to 25 or increase timeout to 90 min for live benchmark to complete within budget.
 
 Note: Milestone 2026.04.39 (Exps 513-524, 26th milestone, title "Close the Credibility Gap") completed. Key results: **JITVRAMCheck wired into all model loaders** (Exp 513, RETRO-051 CLOSED); **NUP Probe v4 contrastive training AUC=1.0**, Tier 0c promoted (Exp 523, RETRO-049 CLOSED); **LeWorldModel-JEPA AUC=0.972 with 274x variance reduction** vs standard BCE (Exp 520, training stability breakthrough); **Hallucination Basin Detector viable at Tier 0d, AUROC=1.0** (Exp 521); **JEPA Live Retrain v6 FR-11 confirmed** — final_auc=1.0 on live FOVER pairs (Exp 522); **GSM-Symbolic adversarial thesis definitively rejected** (Exp 516, honest_verdict=thesis_rejected, RETRO-039 CLOSED as negative). New critical RETRO-053: env_autofix does not override CARNOT_FORCE_LIVE='0', blocking live benchmarks for 7th consecutive milestone (Exps 514/515 deferred). Fix is a single conditional in apply_env_autofix().
 
