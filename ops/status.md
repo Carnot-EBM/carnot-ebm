@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-19 — Milestone 2026.04.35 COMPLETE (Exp 473). Milestone 2026.04.36 PLANNED: research-roadmap-next.yaml written, 13 experiments (Exps 474-486), title "Fix the Root Cause". Root cause of 3 consecutive milestone credibility misses: zombie VRAM mid-session (GPUVRAMGate Exp 474 is first task). JEPA AUC regression fix (Exp 477) and 200q live benchmark re-runs (Exps 476/478/479) follow. GPU 1 utilization target: >0% for first time in 4 milestones.
+**Last Updated:** 2026-04-19 — Milestone 2026.04.37 COMPLETE (Exp 499 retrospective). Milestone 2026.04.38 PLANNED: research-roadmap-next.yaml written, 13 experiments (Exps 500-512), title "Break the Credibility Ceiling — Gemma4 Quantized, 100q+ Live, GPU 1 Activated". Critical path: Exp 500 (Gemma4 INT4 quantization) + Exp 501 (VRAMBudgetLedger) must complete before Exps 502-504 credibility benchmarks. RETRO-048 (conductor VRAM ~15.7 GiB blocks Gemma4) is the fifth consecutive milestone blocker; INT4 reduces requirement to ~8-10 GiB. GPU 1 currently 0% utilization — Exp 505 retroactive DualGPU sweep. New research: Semantic Energy Tier 0d (Exp 506), NUP Probe v3 CLAP features (Exp 507), KAEM distribution-family axis (Exp 508), PPSEBM energy-magnitude replay (Exp 509). JEPA live retrain v4 quasimetric (Exp 510, FR-11 mandatory). AMD NPU entropy probe stub (Exp 511). First publishable credibility claim possible if Wilson 95% CI lower bound > 0 in Exp 502 or 503.
 
 ---
 
