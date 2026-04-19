@@ -8586,3 +8586,62 @@ shall return a dict with at minimum `auroc` and `skip_rate` keys.
 **And** a list of 10 synthetic `(response, token_logits)` pairs with known ground truth
 **When** `benchmark()` is called
 **Then** the returned dict contains the key `auroc` with a float value
+
+---
+
+## REQ-VERIFY-104: CLAPFeatureExtractor Constructs Cross-Layer Activation Tensor Features
+
+**Requirement:** CLAPFeatureExtractor constructs a (n_layers, n_tokens, hidden_dim) activation tensor from the last n_layers residual stream layers and computes per-token softmax entropy, top-k concentration, and cross-layer L2-norm variance features.
+
+**Rationale:** NUP Probe v1 and v2 used sequence-level aggregates (character entropy, Bayesian SE) that average away the token-level hallucination signal. CLAP's insight (arXiv 2509.09700) is that hallucination fingerprints are LOCAL in the residual stream — a specific layer and token position where the model becomes uncertain. Cross-layer activation features capture this locality.
+
+**Acceptance criteria:**
+- extract_features(activations) accepts shape (n_layers, n_tokens, hidden_dim)
+- Returns CLAPFeatures with per_token_entropy, topk_concentration, cross_layer_variance each of shape (n_tokens,)
+- Raises ValueError for non-3D input or n_layers mismatch
+
+Spec: REQ-VERIFY-104
+
+### REQ-VERIFY-105: CLAPFeatures.to_feature_vector Returns Normalised 1D Array
+
+**Requirement:** CLAPFeatures.to_feature_vector() flattens and z-score normalises the three feature arrays into a single 1D np.ndarray of length 3 * n_tokens.
+
+**Acceptance criteria:**
+- Output length == 3 * n_tokens
+- No NaN for any valid input
+- Constant-value input yields zero vector (degenerate std path)
+
+Spec: REQ-VERIFY-105
+
+### REQ-VERIFY-106: NUPProbeV3 Trained on Real CoT Pairs Achieves AUC >= 0.700
+
+**Requirement:** NUPProbeV3 (logistic classifier on CLAP features) trained on real CoT pairs from Exps 502-503 achieves AUC >= 0.700 on held-out pairs, qualifying for Tier 0c promotion and closing RETRO-049.
+
+**Acceptance criteria:**
+- fit(pairs, labels) trains a logistic classifier on CLAP feature vectors
+- predict(features) returns float in [0, 1]
+- evaluate(pairs, labels) returns dict with 'auroc' key in [0, 1]
+- On real GPU data: auroc >= 0.700
+
+Spec: REQ-VERIFY-106
+
+### SCENARIO-VERIFY-137: CLAPFeatureExtractor on (4, 20, 768) Returns CLAPFeatures
+
+**Given** a CLAPFeatureExtractor with n_layers=4
+**And** a random activation tensor of shape (4, 20, 768)
+**When** extract_features() is called
+**Then** it returns a CLAPFeatures instance with all three arrays of shape (20,)
+
+### SCENARIO-VERIFY-138: NUPProbeV3.fit on 20 Synthetic Pairs Converges
+
+**Given** a NUPProbeV3 instance
+**And** 20 synthetic (activations, label) pairs
+**When** fit() is called
+**Then** _is_fitted is True and _weights has the correct shape
+
+### SCENARIO-VERIFY-139: NUPProbeV3.evaluate Returns auroc Key in [0, 1]
+
+**Given** a fitted NUPProbeV3 instance
+**And** held-out (activations, label) pairs
+**When** evaluate() is called
+**Then** the returned dict contains 'auroc' with a float in [0, 1]

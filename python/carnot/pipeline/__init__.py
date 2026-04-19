@@ -370,6 +370,11 @@ from carnot.pipeline.semantic_energy_boltzmann import (  # noqa: E402
     BoltzmannSemanticEnergy,
     SemanticCluster,
 )
+from carnot.pipeline.nup_probe_v3 import (  # noqa: E402
+    CLAPFeatureExtractor,
+    CLAPFeatures,
+    NUPProbeV3,
+)
 
 __all__ = [
     "AgentStep",
@@ -630,4 +635,7 @@ __all__ = [
     "Precision100qV6Result",
     "BoltzmannSemanticEnergy",
     "SemanticCluster",
+    "CLAPFeatureExtractor",
+    "CLAPFeatures",
+    "NUPProbeV3",
 ]
