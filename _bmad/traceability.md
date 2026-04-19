@@ -513,3 +513,7 @@
 | SCENARIO-SELFLEARN-021 | Implemented | Baseline vs. Surprise-Prioritized Training Comparison — Exp 497 measures AUC improvement with and without uncertainty prioritization |
 | SCENARIO-SELFLEARN-022 | Implemented | Constraint Refinement Quality via Priority Replay — Exp 497 validates partition isolation maintained under prioritized sampling |
 | SCENARIO-INFRA-064 | Implemented | Thermal Throttle Error on 5min Timeout — Exp 494 throttle_error_test validates GPUThermalThrottleError raised when timeout exceeded |
+| REQ-SAMPLE-020 | Implemented | KAEM Sampling Profiling at n_vars=(1000, 2000, 3000, 5000) — Exp 498 benchmark_kaem_vs_mcmc profiles sampling throughput across extended variable range |
+| REQ-SAMPLE-021 | Implemented | Find 5x Speedup Crossover Beyond n=1000 — Exp 498 tests theoretical O(n²) MCMC vs O(n log n) KAEM prediction to identify crossover region |
+| SCENARIO-SAMPLE-033 | Implemented | KAEM vs MCMC Throughput Comparison at n_vars=1000 — Exp 498 baseline comparison at lower bound of extended profile range |
+| SCENARIO-SAMPLE-034 | Implemented | KAEM vs MCMC Throughput Comparison at n_vars=5000 — Exp 498 extended profile upper bound validates speedup crossover hypothesis |
