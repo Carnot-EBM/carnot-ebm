@@ -9319,3 +9319,38 @@ Spec: REQ-BENCH-055, SCENARIO-BENCH-073, SCENARIO-BENCH-074
 `cot_pairs_written`, `env_autofix_applied=True`, `honest_verdict`
 
 **Implementation Status:** Done (Exp 527)
+
+### REQ-BENCH-019: 200q Wilson 95% CI Lower Bound > 0 = First Publishable Claim
+
+The 200-question VeriCoT+VPRM live benchmark shall compute the Wilson 95% confidence
+interval on the signed improvement delta.  When the lower bound of that interval is
+strictly greater than 0.0 AND inference_mode is 'live_gpu', the artifact shall set
+`is_statistically_positive=True` and `retro_038_closed=True`, constituting the first
+publishable credibility claim for the Carnot pipeline.
+
+This requirement exists because n=100 results have CIs too wide to be publishable; n=200
+with Wilson 95% CI narrows the interval sufficiently to make the lower bound claim
+defensible in a research context.
+
+**Implementation Status:** Pending (Exp 528)
+
+Spec: REQ-BENCH-019, SCENARIO-BENCH-041, SCENARIO-BENCH-042
+
+### SCENARIO-BENCH-041: Exp 528 Writes Statistically Positive Artifact on Live GPU
+
+**Given** `inference_mode='live_gpu'` and 200 questions processed
+**And** `wilson_95ci_lower > 0.0` (pipeline improves accuracy above noise floor)
+**When** Exp 528 completes
+**Then** artifact has `is_statistically_positive=True`, `retro_038_closed=True`,
+`honest_verdict='first_publishable_claim'`, and `schema='carnot.live_200q.v7'`
+
+**Implementation Status:** Pending (Exp 528)
+
+### SCENARIO-BENCH-042: Exp 528 Writes gpu_required Artifact When No GPU Present
+
+**Given** `apply_env_autofix()` returns `gpu_detected=False`
+**When** Exp 528 runs
+**Then** `inference_mode='gpu_required'`, `honest_verdict='gpu_required'`,
+`retro_038_closed=False`, and the deliverable is written before exit
+
+**Implementation Status:** Pending (Exp 528)
