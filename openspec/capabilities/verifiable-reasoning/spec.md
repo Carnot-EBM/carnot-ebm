@@ -9245,3 +9245,77 @@ Spec: REQ-INFRA-059, SCENARIO-INFRA-067, SCENARIO-INFRA-068, SCENARIO-INFRA-069
 `honest_verdict="gpu_detected_env_was_correct"`
 
 **Implementation Status:** Done (Exp 526)
+
+---
+
+## Exp 527: Live 100q Precision v8 — RETRO-053 env_autofix Fix Applied (eighth attempt)
+
+### REQ-BENCH-054: Live 100q v8 Applies RETRO-053 env_autofix Fix Before Any Gate
+
+**Requirement:** Exp 527 must call `apply_env_autofix()` as the very first statement
+before any CUDA import, and confirm that `final_env_value != '0'` before proceeding.
+If `apply_env_autofix()` returns `final_env_value` equal to `'0'` or `None`, the
+experiment must write a `gpu_required` deferred artifact and exit.
+
+**Rationale:** RETRO-053 root cause: for seven consecutive milestones (.33-.39), the
+conductor injected `CARNOT_FORCE_LIVE='0'` as a placeholder default.  The old gate
+checked only presence, not truthiness, so `'0'` satisfied the check and experiments
+deferred.  Exp 526 fixed `apply_env_autofix()` to override falsy values; Exp 527
+is the first benchmark run with that fix active.
+
+**Acceptance:** `env_autofix_applied=True` in the artifact; `final_env_value='1'`
+confirmed after `apply_env_autofix()` returns.
+
+Spec: REQ-BENCH-054, SCENARIO-BENCH-071, SCENARIO-BENCH-072
+
+**Implementation Status:** Done (Exp 527)
+
+### REQ-BENCH-055: Exp 527 Writes 100 FOVER-Format CoT Pairs to exp527_cot_pairs.json
+
+**Requirement:** When `inference_mode='live_gpu'`, the experiment must write 100
+FOVER-format CoT pairs to `results/exp527_cot_pairs.json` for JEPA retrain.  Each
+entry must have keys `question` (str), `cot_text` (str), `correct` (bool),
+`model_id` (str).  The file must be written atomically (tmp-rename).
+
+**Acceptance:** `cot_pairs_written='results/exp527_cot_pairs.json'` in the artifact;
+file exists on disk with 100 entries.
+
+Spec: REQ-BENCH-055, SCENARIO-BENCH-073, SCENARIO-BENCH-074
+
+**Implementation Status:** Done (Exp 527)
+
+### SCENARIO-BENCH-071: env_autofix Confirms CARNOT_FORCE_LIVE='1' After Override in Exp 527
+
+**Given** `CARNOT_FORCE_LIVE='0'` in the conductor env and GPU hardware present
+**When** `apply_env_autofix()` is called at the top of Exp 527
+**Then** `final_env_value='1'`, `override_applied=True`, the experiment proceeds to GPU gates
+
+**Implementation Status:** Done (Exp 527)
+
+### SCENARIO-BENCH-072: Exp 527 Writes gpu_required Artifact When No GPU Present
+
+**Given** `apply_env_autofix()` returns `gpu_detected=False`
+**When** Exp 527 runs
+**Then** `inference_mode='gpu_required'`, `honest_verdict='gpu_required'`, deliverable is written
+
+**Implementation Status:** Done (Exp 527)
+
+### SCENARIO-BENCH-073: Exp 527 Writes Valid FOVER CoT Pairs on Live GPU Run
+
+**Given** `inference_mode='live_gpu'` and 100 questions processed
+**When** CoT pairs are written
+**Then** `results/exp527_cot_pairs.json` contains exactly 100 entries each with
+`question`, `cot_text`, `correct`, `model_id` keys
+
+**Implementation Status:** Done (Exp 527)
+
+### SCENARIO-BENCH-074: build_precision_v8_artifact Produces All Required Schema Fields
+
+**Given** a completed benchmark result
+**When** `build_precision_v8_artifact(results, 'live_gpu', 'results/exp527_cot_pairs.json')` is called
+**Then** the returned dict contains `schema='carnot.live_precision.v8'`,
+`n_questions`, `baseline_accuracy`, `pipeline_accuracy`, `signed_improvement`,
+`wilson_95ci_lower`, `wilson_95ci_upper`, `is_positive`, `retro_033_closed`,
+`cot_pairs_written`, `env_autofix_applied=True`, `honest_verdict`
+
+**Implementation Status:** Done (Exp 527)
