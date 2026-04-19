@@ -4997,6 +4997,65 @@ improvement > 0) / `'thesis_not_confirmed'`.
 Spec: REQ-BENCH-020, REQ-BENCH-021, REQ-BENCH-022,
       SCENARIO-BENCH-039, SCENARIO-BENCH-040, SCENARIO-BENCH-041
 
+### REQ-BENCH-023: HumanEval Live Uses CodeExtractor + VeriCoT for Code Verification
+
+The live HumanEval benchmark (Exp 469) SHALL use CodeExtractor for structural analysis
+and VeriCoTStepValidator for logical consistency checking of implementation reasoning
+steps, rather than ArithmeticExtractor (which does not apply to code verification tasks).
+
+The pipeline SHALL:
+- Extract structural violations from generated code using CodeExtractor
+- Validate reasoning-step logical consistency using VeriCoTStepValidator
+- Obtain repair direction from BoltzmannRepairBridge when violations are detected
+- Re-generate or re-execute code after repair to produce a final verdict
+
+Rationale: Exp 440 showed 0% improvement because ArithmeticExtractor found no violations
+in code — it is designed for arithmetic text, not Python function bodies. CodeExtractor
+operates on structural properties (syntax, type, execution output) and is the correct
+extractor for HumanEval-style code verification.
+
+### REQ-BENCH-024: Code Verification Pipeline: Generate → Extract → Verify → Repair → Re-Execute
+
+The code verification pipeline SHALL implement the following stages per problem:
+
+1. **Generate**: produce a Python function using the live LLM (Gemma4-E4B-it)
+2. **Extract**: run CodeExtractor on the generated code to find structural violations
+3. **Verify**: run VeriCoTStepValidator on the docstring reasoning steps
+4. **Repair**: if violations detected, call BoltzmannRepairBridge.get_repair_direction()
+   to obtain a repair hint, then re-generate or patch the code
+5. **Re-Execute**: run the official HumanEval test cases on the repaired code
+
+Results SHALL be aggregated into HumanEvalLiveResult with:
+- baseline_pass_at_1: fraction passing before the pipeline
+- pipeline_pass_at_1: fraction passing after the pipeline
+- signed_improvement: pipeline_pass_at_1 − baseline_pass_at_1
+- honest_verdict: 'code_verification_positive' only when live GPU AND improvement > 0
+
+### SCENARIO-BENCH-042: CodeVerificationResult Improvement and Regression Flags
+
+**Given** a CodeVerificationResult for a single HumanEval problem
+**When** `pipeline_passed=True` and `baseline_passed=False`
+**Then** `improvement=True` and `regression=False`
+
+**When** `baseline_passed=True` and `pipeline_passed=False`
+**Then** `regression=True` and `improvement=False`
+
+**When** both are True or both are False
+**Then** both `improvement` and `regression` are False
+
+### SCENARIO-BENCH-043: Exp 469 Writes Deliverable with schema='carnot.humaneval.live.v2'
+
+**Given** Exp 469 completes (live or gpu_required)
+**When** the experiment exits
+**Then** `results/experiment_469_humaneval_live_vericot.json` exists on disk
+**And** the artifact contains `schema` list including `'carnot.humaneval.live.v2'` key or
+  the artifact `honest_verdict` is one of: `'code_verification_positive'`,
+  `'code_no_improvement'`, `'gpu_required'`
+**And** `DeliverableGuard.assert_written()` passes without raising
+
+Spec: REQ-BENCH-023, REQ-BENCH-024,
+      SCENARIO-BENCH-042, SCENARIO-BENCH-043
+
 ### REQ-INFRA-001: Conductor Timeout Wrapper
 
 The research conductor SHALL be invokable via a wrapper shell script
