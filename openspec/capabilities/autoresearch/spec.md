@@ -957,6 +957,40 @@ KL regularization has resolved the BCE collapse instability observed in Exps 472
 **Then** the total loss is >= 0.0
 **And** this holds because MSE >= 0 and KL divergence >= 0 by definition
 
+### REQ-LEARN-048: JEPA Live Retrain v6 — LeWorldModel Two-Term Objective on Real Data
+
+Exp 522 shall train the JEPA predictor using the LeWorldModel two-term objective
+(REQ-LEARN-046) on real CoT pairs sourced from Exps 514-515 when available, falling
+back to fover_labeled_steps_live.json (57 real labeled pairs from Exp 442) and finally
+to 100 synthetic pairs.
+
+The retrain shall:
+- Record data_source as 'live_exp514_515', 'live_fover_442', or 'synthetic'
+- Split pairs 80/20 train/test deterministically
+- Train using LeWorldModelJEPATrainer with max_epochs=50
+- Evaluate AUC on held-out test pairs
+- Save checkpoint to results/jepa_predictor_522_live.safetensors
+- Set fr11_live_relay=True when data_source != 'synthetic' and final_auc >= 0.800
+
+FR-11 relay is achieved only when real data is used AND AUC >= 0.800.  Synthetic
+fallback runs are labelled fr11_synthetic_only and do not count as a relay.
+
+### SCENARIO-LEARN-076: load_cot_pairs_from_experiments Falls Back Gracefully
+
+**Given** exp514_cot_pairs.json and exp515_cot_pairs.json do not exist on disk
+**When** load_cot_pairs_from_experiments([514, 515], fallback_path) is called
+**Then** the function loads from fallback_path (fover_labeled_steps_live.json)
+**And** returns a non-empty list of ViolationPair objects
+**And** each ViolationPair has non-empty partial_response and a valid has_violation bool
+
+### SCENARIO-LEARN-077: compute_held_out_split Produces Correct Fractions
+
+**Given** a list of N ViolationPair objects
+**When** compute_held_out_split(pairs, test_fraction=0.2) is called
+**Then** the returned (train, test) split sums to N
+**And** len(test) == round(N * 0.2) (or floor, ensuring at least 1 test pair)
+**And** the split is deterministic — calling twice with the same input yields the same split
+
 ---
 
 ## Implementation Status
@@ -997,3 +1031,4 @@ KL regularization has resolved the BCE collapse instability observed in Exps 472
 | REQ-LEARN-041 (v4) | N/A | Implemented | 11 Python |
 | REQ-LEARN-046 | N/A | Implemented | Python |
 | REQ-LEARN-047 | N/A | Implemented | Python |
+| REQ-LEARN-048 | N/A | Implemented | Python |
