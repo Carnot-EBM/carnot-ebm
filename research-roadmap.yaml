@@ -471,7 +471,7 @@ tasks:
     \   d. DeliverableGuard('results/experiment_481_inference_batching_enforcement.json')\n\
     \   e. BatchingEnforcementAudit('scripts/').scan()\n   f. Build artifact: schema='carnot.batching_audit.v1'\n\
     \      n_scripts_scanned=<int>\n      n_violations_found=<int>\n      n_high_severity=<int>\n\
-    \      batch_size_standards={'gsm8k': 8, 'humaneval': 4, 'default': 8}\n      retro_041_batching_resolved=True\n\
+    \      batch_size_standards=('gsm8k': 8, 'humaneval': 4, 'default': 8)\n      retro_041_batching_resolved=True\n\
     \      honest_verdict='batching_standards_documented'\n   g. Call tmpl.assert_deliverable_written()\
     \ as FINAL LINE\n   h. Output: results/experiment_481_inference_batching_enforcement.json\n\
     7. Write tests/python/test_batching_audit.py (100% coverage).\n8. Run: JAX_PLATFORMS=cpu\
@@ -539,13 +539,13 @@ tasks:
     \ is that KAEM advantage grows with n_vars because MCMC mixing time scales as O(n^2)\
     \ while KAEM inverse-transform sampling is O(n log n). The crossover should occur\
     \ between n_vars=100 and n_vars=500. This experiment profiles KAEM vs ParallelIsingSampler\
-    \ at n_vars={100, 200, 300, 500, 1000} to find the exact crossover point. CPU-only.\n\
+    \ at n_vars=(100, 200, 300, 500, 1000) to find the exact crossover point. CPU-only.\n\
     \nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/env_autofix.py — apply_env_autofix()\n\
     - python/carnot/models/kaem_energy.py — KAEMEnergy, benchmark_kaem_vs_mcmc (Exp\
     \ 447)\n- python/carnot/pipeline/deliverable_guard.py — DeliverableGuard (Exp 462)\n\
     - results/experiment_447_kaem_exact_sampling.json — prior result (speedup=1.29x\
     \ at n_vars<=100)\n- ops/known-issues.md — RETRO-031\n\nTASK: Profile KAEM vs\
-    \ ParallelIsingSampler at n_vars={100, 200, 300, 500, 1000}, find crossover.\n\
+    \ ParallelIsingSampler at n_vars=(100, 200, 300, 500, 1000), find crossover.\n\
     1. Read CLAUDE.md spec-first workflow.\n2. Call apply_env_autofix() FIRST.\n3. Add\
     \ REQ-SAMPLE-019 (KAEM crossover profile finds n_vars where speedup >= 5x vs MCMC),\
     \ SCENARIO-SAMPLE-032 to openspec/capabilities/training-inference/spec.md.\n4. Write\
