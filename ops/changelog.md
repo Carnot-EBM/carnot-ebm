@@ -24,6 +24,10 @@
 
 - 2026-04-19: Completed Exp 493: Batching Enforcement Pre-Commit Hook — RETRO-045 install the enforcement tool. `scripts/batching_precommit_check.py` + `python/carnot/pipeline/batching_hook_runner.py` + `.pre-commit-config.yaml` integrated. REQ-INFRA-052/053, SCENARIO-INFRA-060/061 added; all_scenarios_passed=true, honest_verdict=batching_hook_operational; closes RETRO-045. (Automated follow-up to commit 7352d55)
 
+## 2026-04-19 (Exp 509 — PPSEBM Energy-Magnitude Replay)
+
+- 2026-04-19: Completed Exp 509: PPSEBM Energy-Magnitude Replay — RETRO-050 closure, EnergyMagnitudeReplay module replacing LLM-surprise with EBM energy-magnitude priority for constraint replay ranking; `python/carnot/pipeline/energy_magnitude_replay.py` (EnergyMagnitudeReplay, EnergyMagnitudeBuffer); `scripts/experiment_509_ppsebm_energy_magnitude_replay.py` (ExperimentTemplate(509)); `tests/python/test_energy_magnitude_replay.py` (full coverage); results/experiment_509_ppsebm_energy_magnitude_replay.json (honest_verdict=energy_magnitude_wins, isolation_improvement=1.1172 vs SuRe=-0.1172, retro_050_closed=true); spec updated with REQ-LEARN-043/044/045, SCENARIO-LEARN-071/072/073; energy-based priority validates energy function as ground truth for replay selection; closes RETRO-050 (SuRe surprise-replay isolation failure root cause)
+
 ## 2026-04-19 (Exp 481 — Inference Batching Enforcement)
 
 - 2026-04-19: Completed Exp 481 inference batching enforcement audit. Audited experiment scripts for BatchedInferenceRunner usage; enforced in template. (Automated follow-up to commit 39e0f8b)
