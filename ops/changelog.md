@@ -12,6 +12,10 @@
 
 - 2026-04-19: Exp 491: JEPA Curriculum Diagnostic — RETRO-040 root cause analysis of AUC 0.400→0.281 regression — `scripts/experiment_491_jepa_curriculum_diagnostic.py` (ExperimentTemplate(491), analyzes Exp 477 quality-gate pair filtering on 199 training pairs [33 filtered real + 166 synthetic], curriculum analysis); identifies that quality-gate filtering removes high-variance educational pairs rather than low-quality noise; `tests/python/test_experiment_491_curriculum_diagnostic.py` (full coverage); results/experiment_491_jepa_curriculum_diagnostic.json (honest_verdict=curriculum_misaligned); diagnostic findings document pair filtering strategy misalignment; RETRO-040 investigation complete
 
+## 2026-04-19 (Exp 493 — Batching Enforcement Pre-Commit Hook)
+
+- 2026-04-19: Completed Exp 493: Batching Enforcement Pre-Commit Hook — RETRO-045 install the enforcement tool. `scripts/batching_precommit_check.py` + `python/carnot/pipeline/batching_hook_runner.py` + `.pre-commit-config.yaml` integrated. REQ-INFRA-052/053, SCENARIO-INFRA-060/061 added; all_scenarios_passed=true, honest_verdict=batching_hook_operational; closes RETRO-045. (Automated follow-up to commit 7352d55)
+
 ## 2026-04-19 (Exp 481 — Inference Batching Enforcement)
 
 - 2026-04-19: Completed Exp 481 inference batching enforcement audit. Audited experiment scripts for BatchedInferenceRunner usage; enforced in template. (Automated follow-up to commit 39e0f8b)
