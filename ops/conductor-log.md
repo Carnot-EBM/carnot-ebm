@@ -2214,3 +2214,4 @@ python/ |
 | 2026-04-19 10:56 UTC | Exp 501: Conductor CPU Routing + VRAM Budget Ledge | OK | 81 passed in 4.00s |
 | 2026-04-19 12:07 UTC | Exp 319: Operational retrospective for milestone 2026.04.23 | OK | operational_retro_2026_04_23.json written; n=17 experiments, total=691 min, top bottleneck=Exp 308 (138.0 min); RETRO-001/002 carried forward; NEW-001/002 added; estimated next-milestone speedup ~15% |
 | 2026-04-19 12:27 UTC | Exp 502: Live 100q Precision v6 — RETRO-033 sixth | OK | Deliverable already exists in repo |
+| 2026-04-19 12:38 UTC | Exp 503: Live 200q VeriCoT+VPRM v4 — RETRO-038 fou | OK | 98 passed in 12.86s |
