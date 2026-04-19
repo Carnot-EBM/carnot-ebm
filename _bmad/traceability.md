@@ -517,3 +517,9 @@
 | REQ-SAMPLE-021 | Implemented | Find 5x Speedup Crossover Beyond n=1000 — Exp 498 tests theoretical O(n²) MCMC vs O(n log n) KAEM prediction to identify crossover region |
 | SCENARIO-SAMPLE-033 | Implemented | KAEM vs MCMC Throughput Comparison at n_vars=1000 — Exp 498 baseline comparison at lower bound of extended profile range |
 | SCENARIO-SAMPLE-034 | Implemented | KAEM vs MCMC Throughput Comparison at n_vars=5000 — Exp 498 extended profile upper bound validates speedup crossover hypothesis |
+| REQ-LOADER-003 | Implemented | Gemma4QuantizedLoader Loads GGUF Q4_K_M Checkpoint via llama-cpp-python — Exp 500 loads GGUF model with full GPU offload (n_gpu_layers=-1) |
+| REQ-LOADER-004 | Implemented | Gemma4QuantizedLoader Validates VRAM Usage After Load — Exp 500 vram_usage_gb()=9.0, is_within_budget(10.0)=true |
+| REQ-LOADER-005 | Implemented | Gemma4QuantizedLoader.accuracy_check Validates Quantization Quality — Exp 500 accuracy_check(n=10) GSM8K returns 0.7 (>= 0.60 passing) |
+| SCENARIO-LOADER-003 | Implemented | Gemma4QuantizedLoader.load Returns True on Success — Exp 500 model_loaded=true with valid GGUF checkpoint |
+| SCENARIO-LOADER-004 | Implemented | is_within_budget Returns Correct Result Against Budget — Exp 500 vram_usage_gb=9.0, is_within_budget(10.0)=true |
+| SCENARIO-LOADER-005 | Implemented | accuracy_check Returns Float in [0, 1] — Exp 500 accuracy_check(n=10) returns 0.7 ∈ [0.0, 1.0] |
