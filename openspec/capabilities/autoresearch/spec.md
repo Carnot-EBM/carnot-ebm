@@ -785,6 +785,69 @@ Spec: Exp 497, FR-11, arXiv 2511.22367
 **Then** ``sure_better=True`` (0.85 > 0.72)
 **And** ``isolation_improvement=0.13`` (0.85 - 0.72)
 
+### REQ-LEARN-043: EnergyMagnitudeReplay Ranks Violations by |energy - session_mean|
+
+EnergyMagnitudeReplay shall rank constraint violations by absolute energy deviation
+|energy(x) - domain_mean_energy| for replay priority, ensuring domain boundary violations
+(the examples the EBM is most wrong about) are always replayed first.
+
+RETRO-050 root cause: SuRe used LLM NLL as surprise proxy (Exp 497, isolation=-0.1172).
+LLM surface-form surprise and EBM energy magnitude are anticorrelated: common sentences
+can violate hard constraints at high energy, and rare sentences can have low constraint
+energy. Replacing LLM-surprise with energy-magnitude priority directly targets domain
+boundary cases.
+
+The EBM's energy function is the ground truth. High |energy - mean| = the constraint
+model is maximally wrong about this boundary = highest replay value.
+
+Spec: Exp 509, RETRO-050
+
+### REQ-LEARN-044: EnergyMagnitudeBuffer Maintains Per-Domain Energy Buffer Sorted by Deviation
+
+EnergyMagnitudeBuffer shall maintain a per-domain sorted buffer of at most max_size
+violations, ordered by |energy - running_mean| descending. When the buffer is full, the
+lowest-deviation item is evicted (not the oldest), ensuring the buffer always contains
+the hardest domain boundary examples regardless of recency.
+
+The running mean shall be maintained via Welford's online algorithm (O(1) per update,
+unbiased over all observed energies, not just buffered ones).
+
+Spec: Exp 509, RETRO-050
+
+### REQ-LEARN-045: EnergyMagnitudeReplay.isolation_score Measures Domain Boundary Interference
+
+EnergyMagnitudeReplay.isolation_score(domain_a, domain_b, n_steps) shall return a float
+in [-1.0, 1.0] measuring how much replaying domain_a would interfere with domain_b's
+learned constraint boundaries. Score 1.0 = perfect isolation. Score -1.0 = complete
+interference.
+
+The score is computed as 1.0 - 2.0 * change_rate, where change_rate is the fraction of
+domain_a replay steps that share constraint key structure with domain_b's top-k violations.
+
+Spec: Exp 509, RETRO-050
+
+### SCENARIO-LEARN-071: EnergyMagnitudeBuffer top_k Returns Highest-Deviation Violations
+
+**Given** violations added with energies [1.0, 5.0, 2.0, 4.0] to a buffer (mean ~3.0)
+**When** top_k(2) is called
+**Then** returns the 2 violations with highest |energy - mean| (energies 5.0 and 1.0)
+**And** sorted highest deviation first
+
+### SCENARIO-LEARN-072: EnergyMagnitudeReplay isolation_score in [-1, 1]
+
+**Given** EnergyMagnitudeReplay with domains ['arithmetic', 'code'] and 20 violations added
+**When** isolation_score('arithmetic', 'code', n_steps=20) is called
+**Then** result is in [-1.0, 1.0]
+**And** perfectly disjoint domains (no shared keys) return score=1.0
+
+### SCENARIO-LEARN-073: EnergyMagnitudeReplay Beats SuRe Baseline (RETRO-050 Closure)
+
+**Given** 200 simulated constraint violations across arithmetic/code/logical domains
+**When** EnergyMagnitudeReplay.isolation_score('arithmetic', 'code', n_steps=50)
+**Then** isolation_improvement = isolation_score - (-0.1172) > 0
+**And** retro_050_closed=True
+**And** honest_verdict='energy_magnitude_wins'
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
