@@ -349,6 +349,12 @@ from carnot.pipeline.ppsebm_real_validator import (  # noqa: E402
     InterleavedViolationSequence,
     PPSEBMRealValidationResult,
 )
+from carnot.pipeline.nup_probe_v2 import (  # noqa: E402
+    BayesianEntropyEstimator,
+    EntropyEstimate,
+    NUPProbeV2,
+    NUPProbeV2Result,
+)
 
 __all__ = [
     "AgentStep",
@@ -596,4 +602,8 @@ __all__ = [
     "nup_score_with_latency",
     "InterleavedViolationSequence",
     "PPSEBMRealValidationResult",
+    "BayesianEntropyEstimator",
+    "EntropyEstimate",
+    "NUPProbeV2",
+    "NUPProbeV2Result",
 ]

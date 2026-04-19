@@ -8138,3 +8138,69 @@ fail (error is captured in the result, not raised).
 **When** `HarnessPatcher.patch_all(findings)` is applied to all findings
 **Then** `HarnessPatcher.verify_clean(scripts_dir)` returns `0`
 **And** every `HarnessPatchResult.success` in the returned list is `True`
+
+## Exp 496: NUP Probe v2 — Bayesian Semantic Entropy
+
+### REQ-VERIFY-098: BayesianEntropyEstimator Returns EntropyEstimate with Credible Interval
+
+`BayesianEntropyEstimator.estimate(logprobs)` shall compute a Bayesian credible interval
+over the Shannon entropy of the token probability distribution via a Beta-conjugate posterior
+on the token probability mass, returning an `EntropyEstimate` with fields:
+- `mean`: float — posterior mean entropy in nats
+- `lower_ci`: float — lower bound of the (1 - alpha) credible interval
+- `upper_ci`: float — upper bound of the (1 - alpha) credible interval
+- `n_samples`: int — number of logprob samples used
+
+**Why Beta posterior:**
+    Token probabilities are bounded in [0, 1].  The Beta distribution is the conjugate prior
+    for Bernoulli/Binomial likelihoods, making it the natural posterior for token-level
+    probabilities.  The conjugate update is exact and O(n), requiring no MCMC.
+
+**Why credible interval instead of point estimate:**
+    A point-estimate entropy threshold triggers false positives on texts whose entropy is
+    near the threshold but uncertain.  The credible interval separates 'confidently high
+    entropy' (lower_ci > threshold) from 'uncertain' (lower_ci <= threshold <= upper_ci),
+    reducing FP rate for ambiguous cases (arXiv 2603.22812, AAAI 2026 oral).
+
+**Implementation Status:** Done (Exp 496)
+
+### REQ-VERIFY-099: NUPProbeV2.predict_violation Uses upper_ci Threshold
+
+`NUPProbeV2.predict_violation(cot_text, logprobs)` shall return `True` only when
+`EntropyEstimate.lower_ci > hallucination_threshold` (i.e., the continuation is
+*confidently* high-entropy), not when entropy is merely uncertain.  Cases where
+`lower_ci <= hallucination_threshold <= upper_ci` are classified as indeterminate
+and shall return `False` (no violation predicted), reducing false positives.
+
+**Implementation Status:** Done (Exp 496)
+
+### REQ-VERIFY-100: NUPProbeV2 AUC > 0.700 Qualifies as Tier 0c in ThreeTierPipeline
+
+`NUPProbeV2.evaluate_auc(labeled_pairs)` shall return a float in [0, 1] representing
+the ROC-AUC of `EntropyEstimate.mean` scores against ground-truth violation labels.
+`NUPProbeV2Result.is_viable_tier_0c` shall be `True` when `auc > 0.700`.
+
+**Implementation Status:** Done (Exp 496)
+
+### SCENARIO-VERIFY-131: EntropyEstimate.is_confidently_high Only When lower_ci Exceeds Threshold
+
+**Given** an `EntropyEstimate` with `lower_ci=2.0` and `threshold=1.5`
+**When** `estimate.is_confidently_high(threshold=1.5)` is evaluated
+**Then** it returns `True`
+
+**Given** an `EntropyEstimate` with `lower_ci=1.0`, `upper_ci=2.0`, and `threshold=1.5`
+**When** `estimate.is_confidently_high(threshold=1.5)` is evaluated
+**Then** it returns `False` (uncertain region — lower_ci does not exceed threshold)
+
+### SCENARIO-VERIFY-132: BayesianEntropyEstimator.estimate Gives Wide CI for Uniform Distribution
+
+**Given** a uniform logprob distribution over N tokens (all logprobs equal)
+**When** `BayesianEntropyEstimator(confidence_level=0.95).estimate(logprobs)` is called
+**Then** `estimate.upper_ci > estimate.mean > estimate.lower_ci` (non-degenerate interval)
+**And** `estimate.mean > 0.0` (positive entropy for N > 1)
+
+### SCENARIO-VERIFY-133: NUPProbeV2.evaluate_auc Returns Float in [0, 1]
+
+**Given** a list of labeled CoT pairs with 'step_text'/'cot_text' and 'label' fields
+**When** `NUPProbeV2(hallucination_threshold=1.5).evaluate_auc(labeled_pairs)` is called
+**Then** the return value is a float in [0.0, 1.0]
