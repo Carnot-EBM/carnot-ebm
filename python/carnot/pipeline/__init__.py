@@ -328,6 +328,12 @@ from carnot.pipeline.batching_audit import (  # noqa: E402
     BatchingEnforcementAudit,
     BatchingViolation,
 )
+from carnot.pipeline.nup_probe import (  # noqa: E402
+    ContinuationEntropy,
+    NUPProbe,
+    NUPProbeResult,
+    score_with_latency as nup_score_with_latency,
+)
 
 __all__ = [
     "AgentStep",
@@ -562,4 +568,8 @@ __all__ = [
     "HarnessAudit",
     "BatchingEnforcementAudit",
     "BatchingViolation",
+    "ContinuationEntropy",
+    "NUPProbe",
+    "NUPProbeResult",
+    "nup_score_with_latency",
 ]
