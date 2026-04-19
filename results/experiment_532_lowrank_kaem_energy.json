@@ -1,0 +1,82 @@
+{
+  "experiment": 532,
+  "title": "LowRankKAEMEnergy \u2014 SVD dimensionality reduction for KAN fast-path (arXiv 2604.04384)",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T21:41:00Z",
+  "finished_at": "2026-04-19T21:45:44Z",
+  "duration_s": 283.965,
+  "status": "success",
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "full_rank_auroc",
+    "full_rank_eval_ms",
+    "honest_verdict",
+    "lowrank_viable",
+    "n_train",
+    "n_vars",
+    "optimal_k",
+    "results_by_k",
+    "run_date",
+    "schema",
+    "speedup_at_optimal_k",
+    "started_at",
+    "status",
+    "title",
+    "true_rank"
+  ],
+  "full_rank_auroc": 0.0216,
+  "full_rank_eval_ms": 20.44208184499439,
+  "results_by_k": [
+    {
+      "k": 2,
+      "auroc": 0.207,
+      "eval_ms": 0.8628156650229357,
+      "auroc_vs_fullrank_pct": 958.3333333333333,
+      "speedup": 23.692293352660666
+    },
+    {
+      "k": 4,
+      "auroc": 0.1227,
+      "eval_ms": 1.6757818699989002,
+      "auroc_vs_fullrank_pct": 568.0555555555555,
+      "speedup": 12.198533837227757
+    },
+    {
+      "k": 8,
+      "auroc": 0.1113,
+      "eval_ms": 3.328617574989039,
+      "auroc_vs_fullrank_pct": 515.2777777777777,
+      "speedup": 6.141312837676075
+    },
+    {
+      "k": 11,
+      "auroc": 0.2046,
+      "eval_ms": 4.692581784984213,
+      "auroc_vs_fullrank_pct": 947.2222222222222,
+      "speedup": 4.356254782901597
+    },
+    {
+      "k": 20,
+      "auroc": 0.2046,
+      "eval_ms": 8.519800864996796,
+      "auroc_vs_fullrank_pct": 947.2222222222222,
+      "speedup": 2.3993614603106193
+    },
+    {
+      "k": 50,
+      "auroc": 0.2046,
+      "eval_ms": 20.694773465002072,
+      "auroc_vs_fullrank_pct": 947.2222222222222,
+      "speedup": 0.9877895923608432
+    }
+  ],
+  "optimal_k": 2,
+  "speedup_at_optimal_k": 23.692293352660666,
+  "lowrank_viable": true,
+  "honest_verdict": "lowrank_viable",
+  "n_train": 500,
+  "n_vars": 50,
+  "true_rank": 11
+}
