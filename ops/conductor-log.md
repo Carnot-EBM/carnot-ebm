@@ -2221,3 +2221,4 @@ python/ |
 | 2026-04-19 13:47 UTC | Exp 506: Semantic Energy Tier 0d — Boltzmann-clust | OK | 91 passed in 9.96s |
 | 2026-04-19 14:01 UTC | Exp 507: NUP Probe v3 — RETRO-049 fix with CLAP cr | OK | 81 passed in 9.39s |
 | 2026-04-19 14:14 UTC | Exp 508: KAEM Distribution Family — RETRO-031 new  | OK | 81 passed in 7.72s |
+| 2026-04-19 14:26 UTC | Exp 509: PPSEBM Energy-Magnitude Replay — RETRO-05 | OK | 81 passed, 2 warnings in 2.76s |
