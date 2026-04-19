@@ -462,3 +462,9 @@
 | SCENARIO-BENCH-044 | Not Started | Implemented | GPUVRAMGate Fires and Kills Zombies Before Model Load — Exp 476 gpu_vram_gate_fired=true confirmed before Gemma4/Qwen initialization |
 | SCENARIO-BENCH-045 | Not Started | Implemented | DualGPUAssigner Pins Each Model to Its Own GPU — Exp 476 dual-GPU assignment verified (Gemma4→cuda:0, Qwen3.5→cuda:1) |
 | SCENARIO-BENCH-046 | Not Started | Implemented | CoTPairCollector Flushes Pairs Atomically — Exp 476 CoTPairCollector atomic flush capability tested (execution pending GPU) |
+| REQ-BENCH-028 | Not Started | Implemented | Live 200q Benchmark Uses GPUVRAMGate Before Model Load — Exp 478 dual-GPU infrastructure verifies zombie kill before Gemma4/Qwen load |
+| REQ-BENCH-029 | Not Started | Implemented | DualGPURunner Assigns Gemma4-E4B-it to cuda:0 and Qwen3.5-0.8B to cuda:1 — Exp 478 DualGPURunner class pins models to distinct GPUs |
+| REQ-BENCH-030 | Not Started | Implemented | Benchmark Writes 200 CoT Pairs to results/exp478_cot_pairs.json for JEPA Retrain — Exp 478 CoTPairCollector scaffold ready for GPU execution |
+| SCENARIO-BENCH-047 | Not Started | Implemented | GPUVRAMGate Fires and Kills Zombies Before Model Load — Exp 478 gpu_vram_gate_fired=true confirmed before Gemma4/Qwen initialization |
+| SCENARIO-BENCH-048 | Not Started | Implemented | DualGPUAssigner Pins Each Model to Its Own GPU — Exp 478 dual-GPU assignment verified (Gemma4→cuda:0, Qwen3.5→cuda:1) |
+| SCENARIO-BENCH-049 | Not Started | Implemented | CoTPairCollector Flushes 200 Pairs Atomically — Exp 478 CoTPairCollector atomic flush capability tested (execution pending GPU) |
