@@ -2191,3 +2191,4 @@ python/ |
 | 2026-04-19 05:17 UTC | Exp 486: Milestone 2026.04.36 Retrospective — did  | OK | 81 passed in 5.36s |
 | 2026-04-19 05:45 UTC | Plan milestone 2026.04.37 | OK | 13 tasks proposed |
 | 2026-04-19 05:50 UTC | Milestone 2026.04.37 activated | OK | 13 tasks queued |
+| 2026-04-19 06:01 UTC | Exp 487: GPUVRAMGateV2 — kill zombies BEFORE check | OK | 81 passed in 4.70s |
