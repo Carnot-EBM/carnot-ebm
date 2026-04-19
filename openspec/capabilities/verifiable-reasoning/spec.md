@@ -8776,3 +8776,41 @@ Spec: REQ-VERIFY-106
 **And** available_gb=5.0 on both checks
 **When** gate_model_load("model", required_gb=10.0) is called
 **Then** JITVRAMResult.is_cleared=False and attempts=2 and wait_applied=True
+
+---
+
+### REQ-BENCH-014: Live 100q Benchmark with JIT VRAM Gating (Exp 514)
+
+The experiment shall run a live 100-question GSM8K precision benchmark where:
+- `JITVRAMCheck` gates every model.load() call immediately before it fires (RETRO-051 fix)
+- Gemma4-INT4 is loaded on cuda:0 gated by `JITVRAMCheck(0).gate_model_load('gemma4-int4', required_gb=10.0)`
+- Qwen3.5-0.8B is loaded on cuda:1 gated by `JITVRAMCheck(1).gate_model_load('qwen3.5-0.8b', required_gb=1.5)`
+- If either gate returns `is_cleared=False`, the experiment writes a deferred artifact rather than crashing with CUDA OOM
+- The artifact includes `jit_vram_check_applied=True` so downstream tooling can confirm the fix was active
+- `retro_033_closed=True` iff `inference_mode=='live_gpu'` and `pipeline_accuracy > baseline_accuracy`
+
+**Implementation Status:** Done (Exp 514)
+
+### REQ-BENCH-015: CoT Pairs Written to exp514_cot_pairs.json for JEPA Retrain (Exp 514)
+
+The experiment shall write 100 FOVER-format CoT pairs to `results/exp514_cot_pairs.json` where:
+- Each pair contains: `question` (str), `cot_text` (str), `correct` (bool), `model_id` (str)
+- The file is written atomically (tmp-rename) to prevent partial writes on interrupt
+- The artifact field `cot_pairs_written` records the path when pairs are successfully written, else `null`
+
+**Implementation Status:** Done (Exp 514)
+
+### SCENARIO-BENCH-033: JIT VRAM Gate Blocks Load When VRAM Insufficient in Exp 514
+
+**Given** `JITVRAMCheck(0).gate_model_load('gemma4-int4', required_gb=10.0)` returns `is_cleared=False`
+**When** `load_jit_gated_model(Gemma4QuantizedLoader, 'gemma4-int4', 10.0, 0)` is called
+**Then** the function returns `None` without calling `loader.load()`
+**And** the experiment writes a deferred artifact with `inference_mode='gpu_required'`
+
+### SCENARIO-BENCH-034: write_cot_pairs Produces Valid FOVER JSON
+
+**Given** a list of 10 CoT response strings and 10 boolean labels
+**When** `write_cot_pairs(responses, labels, path)` is called
+**Then** the file at `path` is valid JSON containing 10 entries
+**And** each entry has keys `question`, `cot_text`, `correct`, `model_id`
+**And** the function returns 10
