@@ -361,6 +361,10 @@ from carnot.pipeline.sure_priority_replay import (  # noqa: E402
     SuReReplayResult,
     ViolationSurprise,
 )
+from carnot.pipeline.vram_budget_ledger import (  # noqa: E402
+    VRAMBudgetLedger,
+    VRAMForecast,
+)
 
 __all__ = [
     "AgentStep",
@@ -616,4 +620,6 @@ __all__ = [
     "SuRePriorityReplay",
     "SuReReplayResult",
     "ViolationSurprise",
+    "VRAMBudgetLedger",
+    "VRAMForecast",
 ]

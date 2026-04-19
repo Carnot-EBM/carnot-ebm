@@ -8259,3 +8259,73 @@ the ROC-AUC of `EntropyEstimate.mean` scores against ground-truth violation labe
 **Given** a list of labeled CoT pairs with 'step_text'/'cot_text' and 'label' fields
 **When** `NUPProbeV2(hallucination_threshold=1.5).evaluate_auc(labeled_pairs)` is called
 **Then** the return value is a float in [0.0, 1.0]
+
+## Exp 501: Conductor CPU Routing — VRAMBudgetLedger
+
+### REQ-INFRA-054: VRAMBudgetLedger Reads YAML Manifest and Produces Feasibility Forecast
+
+`VRAMBudgetLedger` shall maintain a registry of experiment VRAM requirements
+(registered via `add_experiment(exp_id, required_gb)`) and produce a feasibility
+forecast for each planned experiment given the GPU's total VRAM minus the
+conductor process's own footprint (`conductor_vram_gb`).  `to_yaml()` serializes
+the ledger state for embedding in conductor milestone manifests.
+
+**Why the conductor footprint is a first-class parameter:**
+    The conductor process holds ~9 GiB GPU VRAM in JAX-GPU mode.  GPUVRAMGateV2
+    cannot subtract this — it reads pynvml free VRAM which already has the conductor's
+    allocation subtracted, but the gate's threshold does not know how large the incoming
+    model is.  The ledger makes the conductor's footprint explicit at planning time,
+    converting silent OOM into fast-fail with actionable root cause.
+
+**Implementation Status:** Done (Exp 501)
+
+### REQ-INFRA-055: VRAMBudgetLedger.check_feasibility() Returns VRAMForecast
+
+`VRAMBudgetLedger.check_feasibility(exp_id)` shall return a `VRAMForecast` with:
+- `is_feasible: bool` — True iff `required_gb <= available_gb`
+- `required_gb: float` — experiment's registered VRAM requirement
+- `available_gb: float` — `gpu_total_gb - conductor_vram_gb`
+- `blocking_experiment: str | None` — None when feasible; `exp_id` when not feasible
+- `headroom_gb: float` (property) — `available_gb - required_gb` (signed)
+
+`check_all()` shall return one `VRAMForecast` per registered experiment in
+registration order.
+
+**Implementation Status:** Done (Exp 501)
+
+### REQ-INFRA-056: VRAMBudgetLedger Supports CPU-Routing Mode
+
+`VRAMBudgetLedger(conductor_vram_gb=0.0)` shall model a conductor routed to CPU
+(JAX_PLATFORMS=cpu), where the conductor process holds 0 GiB GPU VRAM and the
+full `gpu_total_gb` is available for experiment models.  This converts previously
+infeasible experiments (where `required_gb > gpu_total_gb - 9.0`) into feasible
+ones (where `required_gb <= gpu_total_gb`).
+
+**Implementation Status:** Done (Exp 501)
+
+### SCENARIO-INFRA-062: Feasible When Conductor=9 + Model=9 < Total=24
+
+**Given** a `VRAMBudgetLedger(conductor_vram_gb=9.0, gpu_total_gb=24.0)`
+**And** an experiment registered with `required_gb=9.0`
+**When** `check_feasibility(exp_id)` is called
+**Then** `VRAMForecast.is_feasible` is `True`
+**And** `VRAMForecast.blocking_experiment` is `None`
+**And** `VRAMForecast.headroom_gb` is `6.0`
+
+### SCENARIO-INFRA-063: Not Feasible When Conductor=9 + Model=16 > Total=24
+
+**Given** a `VRAMBudgetLedger(conductor_vram_gb=9.0, gpu_total_gb=24.0)`
+**And** an experiment registered with `required_gb=16.0`
+**When** `check_feasibility(exp_id)` is called
+**Then** `VRAMForecast.is_feasible` is `False`
+**And** `VRAMForecast.blocking_experiment` equals `exp_id`
+**And** `VRAMForecast.headroom_gb` is `-1.0`
+
+### SCENARIO-INFRA-064: CPU-Routing Mode Makes Previously Infeasible Experiments Feasible
+
+**Given** a GPU-routed ledger `VRAMBudgetLedger(conductor_vram_gb=9.0, gpu_total_gb=24.0)`
+**And** an experiment with `required_gb=18.0` that is **not feasible** under GPU routing
+**When** a CPU-routed ledger `VRAMBudgetLedger(conductor_vram_gb=0.0, gpu_total_gb=24.0)`
+  checks the same experiment
+**Then** `VRAMForecast.is_feasible` is `True` (18.0 <= 24.0)
+**And** the GPU-routed forecast has `is_feasible=False` (18.0 > 15.0)
