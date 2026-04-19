@@ -587,6 +587,48 @@ Spec: Exp 477, FR-11 JEPA, RETRO-040
 **And** ``retro_040_closed=True`` (after_auc > 0.600)
 **And** ``target_met=False`` (after_auc <= 0.700)
 
+### REQ-LEARN-040: JEPACurriculumTrainer Stage 1 Trains on High-Confidence Pairs
+
+``JEPACurriculumTrainer.train(pairs)`` stage 1 shall train the EORM model exclusively on
+pairs where ``label_confidence >= high_conf_threshold`` (default 0.85), establishing a
+stable baseline before full-distribution exposure.  This prevents the majority-class
+collapse that caused the 0.281 AUC regression in Exp 477.
+
+Spec: Exp 492, RETRO-040, arXiv 2509.14252
+
+### REQ-LEARN-041: JEPACurriculumTrainer Stage 2 Fine-Tunes on All Pairs Unfiltered
+
+``JEPACurriculumTrainer.train(pairs)`` stage 2 shall fine-tune the model (warm-started from
+stage 1) on ALL available pairs without any confidence gate.  The information loss from
+quality-gate filtering is the root cause of the regression — stage 2 recovers that lost
+information after stage 1 provides a stable anchor.
+
+Spec: Exp 492, RETRO-040
+
+### REQ-LEARN-042: JEPACurriculumTrainer Stage 3 Augments to n_total >= 200 and Validates AUC
+
+``JEPACurriculumTrainer.train(pairs)`` stage 3 shall augment the training corpus with
+EBM-guided synthetic pairs (via ``JEPAQualityAugmentor``) until the total corpus size
+reaches at least 200 pairs, then train for ``n_stage3_epochs`` epochs.
+``JEPACurriculumTrainer.get_final_auc(held_out_pairs)`` shall return AUC on any held-out set.
+``JEPARetrainV3Result.target_met`` shall be True iff ``after_auc > 0.600``.
+
+Spec: Exp 492, RETRO-040
+
+### SCENARIO-LEARN-069: Stage 1 Excludes Low-Confidence Pairs
+
+**Given** a corpus with pairs of varying ``label_confidence`` (some above 0.85, some below)
+**When** ``JEPACurriculumTrainer(high_conf_threshold=0.85).train(pairs)`` stage 1
+**Then** stage 1 ``n_pairs`` counts only pairs with ``label_confidence >= 0.85``
+**And** no pair with ``label_confidence < 0.85`` enters stage 1 training
+
+### SCENARIO-LEARN-070: JEPARetrainV3Result.regression_recovered When after_auc > 0.400
+
+**Given** ``before_auc=0.281``, ``after_auc=0.450``
+**When** ``JEPARetrainV3Result(n_pairs_raw=57, curriculum_stages=[...], before_auc=0.281, after_auc=0.450)``
+**Then** ``regression_recovered=True`` (after_auc > 0.400, reversing the quality-gate collapse)
+**And** ``target_met=False`` (after_auc <= 0.600, not yet at closure bar)
+
 ### SCENARIO-RETRO-032: Milestone 2026.04.32 Retrospective Complete
 
 **Given** result JSONs for Exps 425-435 (partial: some results are scaffolding_only or absent)
@@ -733,3 +775,6 @@ prediction (predict all correct), yielding AUC = 0.281 (actively wrong, not just
 | REQ-LEARN-037 | N/A | Implemented | Python |
 | REQ-LEARN-038 | N/A | Implemented | Python |
 | REQ-LEARN-039 | N/A | Implemented | Python |
+| REQ-LEARN-040 | N/A | Implemented | Python |
+| REQ-LEARN-041 | N/A | Implemented | Python |
+| REQ-LEARN-042 | N/A | Implemented | Python |
