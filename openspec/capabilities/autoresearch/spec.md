@@ -531,6 +531,62 @@ Spec: Exp 443
 **Then** verdict is ``'real_data_insufficient'``
 **And** ``retro_024_closed=False`` in the artifact
 
+### REQ-LEARN-037: CoTPairQualityFilter Rejects Low-Quality Training Pairs
+
+The system shall provide a ``CoTPairQualityFilter`` that rejects CoT training pairs
+where ``arithmetic_coverage < 0.3`` OR ``label_confidence < 0.7``.
+
+This filter addresses RETRO-040: Exp 472 AUC regressed from 0.667 to 0.400 because
+54 real CoT pairs included partially-verifiable steps labeled with low confidence.
+Quality gating before training prevents noisy supervision from degrading the JEPA
+energy landscape.
+
+Spec: Exp 477
+
+### REQ-LEARN-038: JEPAQualityAugmentor Generates EBM-Guided Synthetic Pairs
+
+The system shall provide a ``JEPAQualityAugmentor`` that generates synthetic CoT
+training pairs by sampling from the Ising model's violation distribution (high-energy
+spin configurations = incorrect, low-energy = correct).
+
+This is NOT random synthetic generation. The EBM's own energy landscape provides a
+principled source of violations: the Ising coupling matrix encodes learned constraint
+interactions, so sampling near energy maxima produces examples representative of the
+actual failure modes the JEPA must predict.
+
+Spec: Exp 477, FR-11 JEPA, RETRO-040
+
+### REQ-LEARN-039: JEPA Retrained on Quality-Gated Corpus Targets AUC > 0.700
+
+The system shall retrain the JEPA model on a quality-gated corpus (filtered real pairs
++ EBM-guided synthetic pairs) and target AUC > 0.700 on a held-out 20% test set.
+
+Regression baseline is AUC = 0.400 (Exp 472). Recovery threshold is AUC > 0.571
+(Exp 443 level). RETRO-040 is closed when AUC > 0.600.
+
+Spec: Exp 477, FR-11 JEPA, RETRO-040
+
+### SCENARIO-LEARN-066: CoTPairQualityFilter Rejects Low-Coverage Pairs
+
+**Given** a CoT pair with arithmetic_coverage=0.2 and label_confidence=0.8
+**When** ``CoTPairQualityFilter(min_coverage=0.3, min_confidence=0.7).filter([pair])``
+**Then** the returned list is empty (pair rejected for coverage < 0.3)
+
+### SCENARIO-LEARN-067: JEPAQualityAugmentor Violation Pairs Are Labeled Incorrect
+
+**Given** a small Ising model (input_dim=8)
+**When** ``JEPAQualityAugmentor(ising_model, n_samples=10).generate_violation_pairs()``
+**Then** all returned pairs have ``correct=False``
+**And** the energy of their spin configurations is above the model's mean energy
+
+### SCENARIO-LEARN-068: JEPARetrainV2Result Regression Recovery Detection
+
+**Given** ``before_auc=0.400``, ``after_auc=0.620``
+**When** ``JEPARetrainV2Result(n_pairs_raw=57, n_pairs_filtered=30, n_synthetic=170, before_auc=0.400, after_auc=0.620)``
+**Then** ``regression_recovered=True`` (after_auc > 0.571)
+**And** ``retro_040_closed=True`` (after_auc > 0.600)
+**And** ``target_met=False`` (after_auc <= 0.700)
+
 ### SCENARIO-RETRO-032: Milestone 2026.04.32 Retrospective Complete
 
 **Given** result JSONs for Exps 425-435 (partial: some results are scaffolding_only or absent)
@@ -588,3 +644,6 @@ Spec: Exp 443
 | REQ-LEARN-034 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-035 | N/A | Implemented | 10+ Python |
 | REQ-LEARN-036 | N/A | Implemented | 10+ Python |
+| REQ-LEARN-037 | N/A | Implemented | Python |
+| REQ-LEARN-038 | N/A | Implemented | Python |
+| REQ-LEARN-039 | N/A | Implemented | Python |
