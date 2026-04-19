@@ -316,6 +316,11 @@ from carnot.pipeline.gpu_vram_gate import (  # noqa: E402
     VRAMStatus,
 )
 from carnot.pipeline.gpu_vram_gate_v2 import GPUVRAMGateV2  # noqa: E402
+from carnot.pipeline.gpu_thermal_gate import (  # noqa: E402
+    GPUThermalGate,
+    GPUThermalThrottleError,
+    ThermalStatus,
+)
 from carnot.pipeline.conductor_dedup import (  # noqa: E402
     ConductorDedupCheck,
     PartialResultHandoff,
@@ -568,6 +573,9 @@ __all__ = [
     "GPUVRAMGateV2",
     "GPUVRAMInsufficientError",
     "VRAMStatus",
+    "GPUThermalGate",
+    "GPUThermalThrottleError",
+    "ThermalStatus",
     "ConductorDedupCheck",
     "PartialResultHandoff",
     "AuditFinding",

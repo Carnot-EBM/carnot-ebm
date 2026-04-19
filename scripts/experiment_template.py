@@ -362,6 +362,37 @@ class ExperimentTemplate:
         # zombie accumulation from failed experiments.  4 of 12 experiments in .35
         # deferred due to 23.8 GB of zombie-held VRAM at 0% utilisation.
         if self.requires_gpu:
+            # --- Step 0a: GPUThermalGate — REQ-INFRA-056, RETRO-046 fix ---
+            # Check GPU temperature BEFORE loading models.  An RTX 3090 at 90°C runs
+            # at 50-70% of peak clock — benchmark times are unreliable because throttle
+            # state varies experiment-to-experiment.  The gate waits (up to 5 minutes)
+            # for the GPU to cool to 80°C before proceeding.  On CPU-only machines this
+            # is a transparent no-op (pynvml unavailable → check returns None → pass).
+            try:
+                from carnot.pipeline.gpu_thermal_gate import (  # noqa: PLC0415
+                    GPUThermalGate,
+                    GPUThermalThrottleError,
+                )
+
+                _thermal_gate = GPUThermalGate()
+                if not _thermal_gate.wait_for_cool(0):
+                    _log.error(
+                        "GPUThermalGate: GPU 0 did not cool within %ds — "
+                        "deferring (honest_verdict='gpu_thermal_throttle')",
+                        _thermal_gate.max_wait_seconds,
+                    )
+                    raise GPUThermalThrottleError(
+                        gpu_index=0,
+                        temperature_c=_thermal_gate.check_temperature(0).temperature_c,
+                        max_wait_seconds=_thermal_gate.max_wait_seconds,
+                    )
+            except GPUThermalThrottleError:
+                raise  # let the conductor see the honest deferral
+            except Exception as _thermal_exc:
+                _log.warning(
+                    "GPUThermalGate raised %s — continuing (non-fatal)", _thermal_exc
+                )
+
             try:
                 from carnot.pipeline.gpu_vram_gate_v2 import GPUVRAMGateV2  # noqa: PLC0415
 
