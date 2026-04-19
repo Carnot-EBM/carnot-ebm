@@ -652,6 +652,57 @@ Spec: Exp 485, FR-11, RETRO-043
 **Then** ``isolation_maintained=True`` (0.75 > 0.7)
 **And** ``better_than_synthetic=False`` (0.75 < 1.0)
 
+### REQ-DIAG-001: JEPA Corpus Diagnostic Analysis
+
+``JEPACurriculumDiagnostic.analyze_corpus(quality_filter)`` shall compute the following
+metrics for the quality-gated corpus:
+- ``label_imbalance_ratio``: ratio of correct to incorrect steps in the filtered corpus
+- ``filter_rate``: fraction of raw pairs that passed the quality filter
+- ``n_pairs_remaining`` (``n_pairs_filtered``): count of pairs surviving the filter
+
+These metrics together diagnose the RETRO-040 regression: excessive filtering combined
+with label imbalance causes JEPA majority-class collapse and AUC below 0.5.
+
+Spec: Exp 491, RETRO-040
+
+### REQ-DIAG-002: JEPA Curriculum Regime Simulation
+
+``JEPACurriculumDiagnostic.simulate_regime(regime, n_epochs=100)`` shall train a JEPA
+(EORM) model on pairs selected/ordered by the given regime for n_epochs passes, then
+return AUC on a held-out 20% set.
+
+Supported regimes:
+- ``'all_pairs'``: train on all pairs — baseline
+- ``'quality_gated'``: train only on pairs with label_confidence >= 0.7 — reproduces Exp 477
+- ``'curriculum_high_to_low'``: sort by decreasing label_confidence — curriculum learning
+- ``'random_50pct'``: random 50% sample — isolates size effect from quality effect
+
+Return value is a float in [0, 1]. AUC < 0.5 indicates the model learned an inverted signal.
+
+Spec: Exp 491, RETRO-040
+
+### SCENARIO-DIAG-001: CorpusAnalysis is_imbalanced for Heavily Correct Corpus
+
+**Given** ``n_correct=80``, ``n_incorrect=5``, ``label_imbalance_ratio=16.0``
+**When** ``CorpusAnalysis.is_imbalanced``
+**Then** ``is_imbalanced=True`` (16.0 > 3.0)
+
+### SCENARIO-DIAG-002: CorpusAnalysis diagnosis='imbalance' When Filtered Corpus is Imbalanced
+
+**Given** ``is_imbalanced=True`` and ``n_pairs_filtered >= 5``
+**When** ``CorpusAnalysis.diagnosis``
+**Then** ``diagnosis='imbalance'``
+
+This is the Exp 477 root cause: the quality gate removed 73% of pairs, leaving a corpus
+with many more correct than incorrect steps. The JEPA model collapsed to majority-class
+prediction (predict all correct), yielding AUC = 0.281 (actively wrong, not just random).
+
+### SCENARIO-DIAG-003: simulate_regime Returns Float in [0, 1]
+
+**Given** a ``JEPACurriculumDiagnostic`` with labeled pairs
+**When** ``simulate_regime(regime)`` for any valid regime string
+**Then** return value is a ``float`` in ``[0, 1]``
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
