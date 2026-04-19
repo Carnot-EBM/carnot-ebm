@@ -7941,3 +7941,52 @@ Each pair contains (model, question, cot_text, correct).
 - `dual_gpu_explicit_assignment=True`
 - `retro_033_closed` (bool)
 - `honest_verdict` in `{'retro_033_closed_positive', 'retro_033_closed_negative', 'deferred_retro_033'}`
+
+---
+
+## Exp 489: Live 200q VeriCoT+VPRM v3 — GPUVRAMGateV2 + DualGPUHarness (RETRO-038)
+
+### REQ-BENCH-037: 200q v3 Uses GPUVRAMGateV2(kill_first=True) Before Model Load
+
+Experiment 489 shall run `GPUVRAMGateV2(min_free_gb=8.0, kill_first=True)` as the first
+gate before any model load.  Kill-first order (Exp 487) eliminates the RETRO-044 race
+condition where zombie VRAM was checked before the driver drained killed contexts.
+
+**Implementation Status:** Done (Exp 489)
+
+### REQ-BENCH-038: 200q v3 Uses DualGPUHarness with Explicit cuda:0/cuda:1
+
+Experiment 489 shall use `DualGPUHarness(n_gpus=2, live_mode=True).apply(model_specs)`
+to assign `google/gemma-4-E4B-it` to `cuda:0` and `Qwen/Qwen3.5-0.8B` to `cuda:1`
+explicitly, preventing VRAM contention from dual-model same-GPU loading.
+
+**Implementation Status:** Done (Exp 489)
+
+### REQ-BENCH-039: 200q v3 Result Includes Wilson 95% CI and is_statistically_positive Flag
+
+`Live200qV3Result` shall expose:
+- `ci_95_wilson`: Wilson score 95% CI on `post_acc`; width < 0.07 at n=200 for any p.
+- `is_statistically_positive`: True iff the lower bound of the Wald CI for the
+  improvement (post_acc − pre_acc) exceeds 0.0 strictly.
+- A Wilson 95% CI at n=200 with p=0.05 shall have interval width < 0.07.
+- `is_statistically_positive` shall be False when `signed_improvement=0.02` and `n=200`.
+
+**Implementation Status:** Done (Exp 489)
+
+### SCENARIO-BENCH-056: Wilson CI Width < 0.07 at n=200
+
+**Given** `Live200qV3Result` with `n=200` and `post_acc=0.05`
+**When** `ci_95_wilson` is computed
+**Then** the interval width `(upper - lower)` is less than `0.07`
+
+### SCENARIO-BENCH-057: Signed Improvement Computed Correctly
+
+**Given** `Live200qV3Result` with `pre_acc=0.70`, `post_acc=0.80`
+**When** `signed_improvement` is accessed
+**Then** it equals `0.10` (unclamped; negative values allowed for honest reporting)
+
+### SCENARIO-BENCH-058: is_statistically_positive=False for Small Improvements
+
+**Given** `Live200qV3Result` with `pre_acc=0.70`, `post_acc=0.72`, `n=200`
+**When** `is_statistically_positive` is evaluated
+**Then** it is `False` because the Wald CI lower bound is approximately -0.069 < 0.0
