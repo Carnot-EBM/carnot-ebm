@@ -498,3 +498,8 @@
 | SCENARIO-BENCH-059 | Not Started | Implemented | GPUVRAMGateV2 Fires Before Model Load in Exp 490 — Exp 490 GPUVRAMGateV2(kill_first=True).__enter__() called before any model load |
 | SCENARIO-BENCH-060 | Not Started | Implemented | thesis_confirmed=True When Adversarial Improvement Exceeds Standard — Exp 490 computes adversarial_improvement vs standard_improvement, sets thesis_confirmed=adversarial_improvement > standard_improvement |
 | SCENARIO-BENCH-061 | Not Started | Implemented | adversarial_drop Computed as standard_acc - adversarial_baseline_acc — Exp 490 measures adversarial_drop as difference between standard baseline accuracy and adversarial baseline accuracy |
+| REQ-LEARN-040 | Implemented | Curriculum Learning High→Low Confidence Ordering — Exp 492 JEPACurriculumLearner stages training by confidence descending to prevent majority-class collapse |
+| REQ-LEARN-041 | Implemented | Stage 1 Anchor + Stage 2 Validation + Stage 3 Scale Curriculum Framework — Exp 492 three-stage progression with synthetic pair generation in Stage 3 |
+| REQ-LEARN-042 | Implemented | Curriculum Learning Recovers JEPA AUC from 0.6 to 0.9667 — Exp 492 achieves +36.67pp AUC improvement, closes RETRO-040 regression |
+| SCENARIO-LEARN-069 | Implemented | Stage 1 Anchor Training on 46 High-Confidence Pairs — Exp 492 Stage 1 reaches AUC 0.933 after 100 epochs |
+| SCENARIO-LEARN-070 | Implemented | Stage 3 Scale Training on 189 Synthetic Pairs — Exp 492 Stage 3 reaches AUC 0.9667 after 100 epochs, recovers from Exp 477 regression |
