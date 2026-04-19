@@ -4,6 +4,44 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-19 arxiv Scan (Milestone 2026.04.36 Planning)
+
+### Neural Uncertainty Principle — Hallucination as Under-Constrained Continuation
+- **Paper:** arXiv 2603.19562 (2026)
+- **What:** Frames hallucination as an under-constrained continuation problem. When a model is about to hallucinate, the entropy of its next-token distribution is high because multiple continuations are nearly equally likely. Correct continuations are highly constrained by logical and factual dependencies.
+- **Relevance to Carnot:** Directly compatible with Carnot's energy-based formulation. High continuation entropy = high energy = violation likelihood. Enables NUPProbe: a zero-latency Tier 0c pre-filter that requires no LLM call — just entropy computation on logprobs. AUC > 0.700 qualifies it for the verification cascade.
+- **Incorporated as:** Exp 484 (Milestone 2026.04.36)
+
+### Verifying Chain-of-Thought via Computational Graph (CRV)
+- **Paper:** arXiv 2510.09312 (2025)
+- **What:** Circuit-based Reasoning Verification proposes a computational graph formalism for LLM CoT, detecting structural failures (wrong intermediate computations, invalid deductions) via graph reachability and cycle detection.
+- **Relevance to Carnot:** Complementary to VeriCoTStepValidator (Exp 453). The graph-based view could extend VeriCoT from per-step arithmetic checking to multi-step logical dependency verification — the domain where the global consistency checker (Exp 172) showed 100% detection.
+- **When to incorporate:** When extending VeriCoT to multi-step dependency checking (Phase 3 pipeline work).
+
+### Typed Chain-of-Thought — Formal Certification for LLM Reasoning
+- **Paper:** arXiv 2510.01069 (2025)
+- **What:** Assigns formal types to CoT reasoning steps (arithmetic, logical, factual) and certifies transitions between types. Incompatible type transitions flag reasoning failures.
+- **Relevance to Carnot:** The PPSEBM domain classification (arithmetic/code/logical) is a simplified version of this approach. Typed CoT's formal certification framework could improve PPSEBM's domain boundary detection, reducing false positives on cross-domain steps.
+- **When to incorporate:** When PPSEBM real-data validation (Exp 485) reveals specific domain boundary failure modes.
+
+### GSM-Symbolic — Adversarial Robustness Benchmark
+- **Paper:** arXiv 2410.05229 (ICLR 2025, Apple)
+- **What:** Generates benchmark instances from symbolic templates with identical logical structure but different surface forms (numbers, irrelevant context sentences). ALL tested LLMs drop significantly: o1-preview 92.7%→77.4%, GPT-4o 95%→88%, Llama3-70B 90%→75%.
+- **Relevance to Carnot:** The thesis experiment: Carnot's improvement should be LARGER on adversarial variants because Ising verifies arithmetic constraints independently of irrelevant context. This is the headline credibility result.
+- **Incorporated as:** Exp 479 (Milestone 2026.04.36)
+
+### LSEBMCL — EBM Replay for Continual Constraint Learning
+- **Paper:** arXiv 2501.05495 (2025)
+- **What:** Learning Symmetric Energy-Based Models with Continual Learning. EBM replay (warm-starting from prior session's coupling matrix) prevents catastrophic forgetting when constraint distributions shift across sessions.
+- **Relevance to Carnot:** Foundation for Tier 2 self-learning (ConstraintAdditionFromMemory). Exp 457 implemented LSEBMCL baseline achieving session2_fp_rate=0.0.
+- **Incorporated as:** PPSEBM baseline (Exps 470, 485)
+
+### PPSEBM — Progressive Parameter Selection EBM
+- **Paper:** arXiv 2512.15658 (2025)
+- **What:** Progressive Parameter Selection adds domain-partitioned weight updates to EBM continual learning. Each constraint domain (arithmetic/code/logical) gets an isolated parameter partition; updates to one domain don't modify others.
+- **Relevance to Carnot:** Directly implements Tier 2 self-learning isolation. Prevents the case where improving arithmetic detection accidentally degrades code detection (catastrophic interference across constraint domains).
+- **Incorporated as:** Exps 470 (milestone .35), 485 (milestone .36 real-data validation)
+
 ## Inference Optimization
 
 ### RotorQuant — KV Cache Compression

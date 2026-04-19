@@ -1,6 +1,6 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-04-18 — Exp 468 COMPLETE: GSM-Symbolic Adversarial Benchmark (Apple credibility experiment). Previously: Exp 467 staged: Live 200q Integrated VeriCoT+VPRM+CRANE pipeline (gpu_required, deferred). Exp 461 COMPLETE: Milestone 2026.04.34 retrospective — FIRST POSITIVE verify-repair confirmed (Exp 451 live_precision: +5pp, honest_verdict=repair_better). Phase 1 milestone reached.
+**Last Updated:** 2026-04-19 — Milestone 2026.04.35 COMPLETE (Exp 473). Milestone 2026.04.36 PLANNED: research-roadmap-next.yaml written, 13 experiments (Exps 474-486), title "Fix the Root Cause". Root cause of 3 consecutive milestone credibility misses: zombie VRAM mid-session (GPUVRAMGate Exp 474 is first task). JEPA AUC regression fix (Exp 477) and 200q live benchmark re-runs (Exps 476/478/479) follow. GPU 1 utilization target: >0% for first time in 4 milestones.
 
 ---
 
