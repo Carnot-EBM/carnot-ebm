@@ -65,20 +65,25 @@
 
 Spec: REQ-VERIFY-083, REQ-VERIFY-084,
       REQ-INFRA-007, REQ-INFRA-014,
+      REQ-INFRA-073, REQ-INFRA-074,
       SCENARIO-VERIFY-109, SCENARIO-VERIFY-110, SCENARIO-VERIFY-111,
       SCENARIO-VERIFY-112, SCENARIO-VERIFY-113, SCENARIO-VERIFY-114,
       SCENARIO-VERIFY-115, SCENARIO-VERIFY-116,
-      SCENARIO-INFRA-011, SCENARIO-INFRA-015
+      SCENARIO-INFRA-011, SCENARIO-INFRA-015,
+      SCENARIO-INFRA-083, SCENARIO-INFRA-084, SCENARIO-INFRA-085
 """
 
 from __future__ import annotations
 
 import ast
+import atexit
 import concurrent.futures
 import datetime
+import gc
 import json
 import logging
 import os
+import signal
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -286,6 +291,156 @@ class ExperimentTemplate:
         # RETRO-032/033/036: three milestones lost to silently missing result JSONs.
         self._guard = DeliverableGuard(str(self._output_path))
 
+        # REQ-INFRA-073 / RETRO-054: register teardown so GPU VRAM is freed
+        # even when the experiment exits abnormally (ctrl-c, exception, conductor kill).
+        # Without this, VRAM leaks accumulate monotonically across every milestone.
+        atexit.register(self.teardown)
+
+    # ------------------------------------------------------------------
+    # kill_gpu_zombies() — REQ-INFRA-074
+    # ------------------------------------------------------------------
+
+    @classmethod
+    def kill_gpu_zombies(
+        cls,
+        vram_threshold_mb: int = 1000,
+        util_threshold_pct: float = 5.0,
+    ) -> dict[str, Any]:
+        """Kill GPU processes holding VRAM at near-zero utilization (zombie processes).
+
+        Why this is a classmethod: it must run at process startup BEFORE any
+        ExperimentTemplate instance holds GPU memory.  Calling it as a class method
+        means callers don't need a template instance just to clean up lingering zombies
+        from previous experiments.
+
+        A "zombie" GPU process is one that:
+        - Holds more than ``vram_threshold_mb`` MB of VRAM on ANY GPU, AND
+        - Has less than ``util_threshold_pct`` % compute utilization on that GPU.
+
+        These are the processes that caused 47,653 MB of stuck VRAM at the end of
+        milestone .40 (RETRO-054).  They appear to be alive (holding VRAM) but are
+        not doing any compute — they survived the experiment exit without releasing
+        their GPU memory.
+
+        Parameters
+        ----------
+        vram_threshold_mb : int
+            Minimum VRAM (in MB) for a process to be considered a zombie candidate.
+            Default 1000 MB (~1 GB) avoids killing tiny helper processes.
+        util_threshold_pct : float
+            Maximum GPU utilization (in %) for a process to be considered a zombie.
+            Default 5.0% — any process doing real compute should be above this.
+
+        Returns
+        -------
+        dict with keys:
+            - ``killed_pids`` (list[int]): PIDs that were sent SIGTERM.
+            - ``freed_mb`` (int): Total VRAM freed across all killed processes.
+            - ``error`` (str, optional): Present when pynvml is not available.
+
+        Spec: REQ-INFRA-074, SCENARIO-INFRA-084, SCENARIO-INFRA-085
+        """
+        try:
+            import pynvml  # noqa: PLC0415
+        except ImportError:
+            _log.debug("kill_gpu_zombies: pynvml not installed — skipping zombie kill")
+            return {"killed_pids": [], "freed_mb": 0, "error": "pynvml_unavailable"}
+
+        killed_pids: list[int] = []
+        freed_mb = 0
+
+        try:
+            pynvml.nvmlInit()
+            n_gpus = pynvml.nvmlDeviceGetCount()
+            seen_pids: set[int] = set()
+
+            for gpu_idx in range(n_gpus):
+                handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_idx)
+
+                # GPU-wide utilization — used to gate the per-process kill decision.
+                # When a GPU is at <5% utilization overall, processes on it are idle.
+                try:
+                    util = pynvml.nvmlDeviceGetUtilizationRates(handle)
+                    gpu_util_pct = float(util.gpu)
+                except Exception:
+                    gpu_util_pct = 0.0
+
+                try:
+                    procs = pynvml.nvmlDeviceGetComputeRunningProcesses(handle)
+                except Exception:
+                    procs = []
+
+                for proc in procs:
+                    pid = proc.pid
+                    if pid in seen_pids:
+                        continue
+                    vram_mb = (proc.usedGpuMemory or 0) // (1024 * 1024)
+                    if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
+                        try:
+                            os.kill(pid, signal.SIGTERM)
+                            killed_pids.append(pid)
+                            freed_mb += vram_mb
+                            seen_pids.add(pid)
+                            _log.warning(
+                                "kill_gpu_zombies: killed zombie PID %d (gpu=%d, vram_mb=%d, gpu_util=%.1f%%)",
+                                pid,
+                                gpu_idx,
+                                vram_mb,
+                                gpu_util_pct,
+                            )
+                        except OSError as exc:
+                            _log.warning("kill_gpu_zombies: could not kill PID %d: %s", pid, exc)
+
+            pynvml.nvmlShutdown()
+        except Exception as exc:
+            _log.warning("kill_gpu_zombies: pynvml error — %s", exc)
+            return {"killed_pids": killed_pids, "freed_mb": freed_mb, "error": str(exc)}
+
+        return {"killed_pids": killed_pids, "freed_mb": freed_mb}
+
+    # ------------------------------------------------------------------
+    # teardown() — REQ-INFRA-073
+    # ------------------------------------------------------------------
+
+    def teardown(self, clear_gpu: bool = True) -> None:
+        """Release GPU VRAM and force a CPython garbage collection cycle.
+
+        Registered via ``atexit`` at construction time so it fires automatically
+        on experiment exit — whether the exit is clean (return from main), an
+        unhandled exception, or a conductor SIGTERM.
+
+        Without this, each experiment that loads a model and then exits leaves
+        the CUDA allocator's internal cache pinned in process memory.  Across a
+        12-experiment milestone this accumulates to tens of GB of zombie VRAM
+        (RETRO-054: 47,653 MB at milestone .40 close).  ``torch.cuda.empty_cache()``
+        flushes the allocator's free-block pool back to the CUDA driver so the
+        next process can reclaim the memory.  ``gc.collect()`` is called first to
+        free any Python objects holding the last reference to a CUDA tensor before
+        the cache flush.
+
+        Parameters
+        ----------
+        clear_gpu : bool
+            If ``True`` (default) and a CUDA-capable GPU is available, call
+            ``torch.cuda.empty_cache()`` after the GC pass.  Set to ``False``
+            in CPU-only unit tests to avoid importing torch.
+
+        Spec: REQ-INFRA-073, SCENARIO-INFRA-083
+        """
+        _log.info("ExperimentTemplate.teardown() called for exp %d", self.exp_id)
+        gc.collect()
+        if clear_gpu and _cuda_is_available():
+            try:
+                import torch  # noqa: PLC0415
+
+                torch.cuda.empty_cache()
+                _log.info(
+                    "ExperimentTemplate.teardown(): torch.cuda.empty_cache() complete for exp %d",
+                    self.exp_id,
+                )
+            except Exception as exc:
+                _log.warning("ExperimentTemplate.teardown(): empty_cache failed — %s", exc)
+
     # ------------------------------------------------------------------
     # setup()
     # ------------------------------------------------------------------
@@ -300,6 +455,11 @@ class ExperimentTemplate:
         - Creates ``results/`` and ``results/checkpoints/experiment_<id>/`` dirs.
         - Populates ``self.checkpoint`` if a checkpoint file is present.
         """
+        # REQ-INFRA-074: kill GPU zombies FIRST — before any model loading.
+        # Zombie processes from prior experiments may hold VRAM that would cause
+        # GPUVRAMGateV2 to defer this experiment before it even starts.
+        ExperimentTemplate.kill_gpu_zombies()
+
         # Create results dir
         self._output_path.parent.mkdir(parents=True, exist_ok=True)
         # Create checkpoint dir
