@@ -8493,6 +8493,57 @@ The `to_dict()` method shall include all four raw accuracies plus all derived me
 
 ---
 
+## Exp 516: GSM-Symbolic Adversarial v5 — RETRO-039 Robustness Claim (Four Consecutive Misses)
+
+### REQ-BENCH-052: compute_robustness_delta Measures Carnot Robustness Advantage
+
+`compute_robustness_delta(baseline_std, baseline_adv, pipeline_std, pipeline_adv)` shall
+return `(baseline_std - baseline_adv) - (pipeline_std - pipeline_adv)`.  A positive value
+means Carnot degrades LESS than the raw LLM under distractor injection (RETRO-039 thesis
+confirmed).  No clamping — negative values are honest research findings.
+
+**Implementation Status:** Done (Exp 516)
+
+### REQ-BENCH-053: build_adversarial_v5_artifact Produces schema=carnot.adversarial_v5.v1
+
+`build_adversarial_v5_artifact(results, inference_mode)` shall assemble the Exp 516 result
+artifact with all required fields:
+
+  - `baseline_standard_accuracy`, `baseline_adversarial_accuracy`
+  - `pipeline_standard_accuracy`, `pipeline_adversarial_accuracy`
+  - `robustness_delta` (computed via `compute_robustness_delta`)
+  - `retro_039_confirmed = robustness_delta > 0 and inference_mode == 'live_gpu'`
+  - `honest_verdict`: `'thesis_confirmed'` | `'thesis_rejected'` | `'gpu_required'`
+
+**Implementation Status:** Done (Exp 516)
+
+### SCENARIO-BENCH-037: compute_robustness_delta Returns Positive When Carnot More Robust
+
+**Given** `baseline_std=0.80`, `baseline_adv=0.65`, `pipeline_std=0.78`, `pipeline_adv=0.70`
+**When** `compute_robustness_delta` is called
+**Then** it returns `0.07` (baseline drops 0.15, pipeline drops 0.08, delta = 0.07)
+**And** a positive delta confirms the RETRO-039 thesis
+
+**Implementation Status:** Done (Exp 516)
+
+### SCENARIO-BENCH-038: build_adversarial_v5_artifact Selects honest_verdict from inference_mode and Delta
+
+**Given** `robustness_delta > 0` and `inference_mode='live_gpu'`
+**When** `build_adversarial_v5_artifact` is called
+**Then** `honest_verdict == 'thesis_confirmed'` and `retro_039_confirmed == True`
+
+**Given** `robustness_delta <= 0` and `inference_mode='live_gpu'`
+**When** `build_adversarial_v5_artifact` is called
+**Then** `honest_verdict == 'thesis_rejected'` and `retro_039_confirmed == False`
+
+**Given** `inference_mode != 'live_gpu'` (e.g. `'simulated'`, `'gpu_required'`)
+**When** `build_adversarial_v5_artifact` is called
+**Then** `honest_verdict == 'gpu_required'` and `retro_039_confirmed == False`
+
+**Implementation Status:** Done (Exp 516)
+
+---
+
 ## REQ-INFRA-059: DualGPUSweep Patches All Dual-Model Scripts Missing DualGPUHarness
 
 ### REQ-INFRA-059: DualGPUSweep Patches All Dual-Model Scripts Missing DualGPUHarness
