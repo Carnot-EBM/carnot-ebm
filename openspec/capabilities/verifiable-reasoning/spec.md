@@ -6492,6 +6492,49 @@ SCENARIO-PROBE-014
 **Then** `is_partial is True`
 **And** `inference_mode == 'live_gpu'`
 
+### REQ-PROBE-010: ThinkProbeV2 Live Run Uses GPUVRAMGate Before Model Load
+
+Before loading a Gemma model for a ThinkProbeV2 live GPU run, the experiment shall
+invoke `GPUVRAMGate(min_free_gb=8.0).__enter__()` to ensure sufficient VRAM is
+available.  If the gate raises `GPUVRAMInsufficientError`, the experiment shall emit
+an artifact with `status='gpu_vram_insufficient'` and exit without loading the model.
+
+This requirement closes RETRO-042: Exp 465 deferred because zombie VRAM prevented
+model load.  The gate kills zombies and waits before failing, giving the experiment
+the best possible chance of a clean load.
+
+**Implementation Status:** Done (Exp 482)
+
+Spec: REQ-PROBE-010
+
+### REQ-PROBE-011: ThinkProbeV2 Live Result Requires n_completed >= 40 for Viable Verdict
+
+A `ThinkProbeLiveV3Result` is considered viable (think_probe_viable) when:
+- `completion_fraction >= 0.80`  (at least 40 of 50 questions completed)
+- `tp_rate >= 0.70`              (true-positive flag rate on the 50-question corpus)
+- `fp_rate <= 0.20`              (false-positive flag rate on the 50-question corpus)
+
+The `is_viable` property encodes this three-way threshold.  A partial run with
+`n_completed < 40` is NOT viable regardless of tp_rate/fp_rate, because the
+statistical power is too low to trust the rate estimates.
+
+**Implementation Status:** Done (Exp 482)
+
+Spec: REQ-PROBE-011
+
+### SCENARIO-PROBE-015: ThinkProbeLiveV3Result is_viable When n_completed=42
+
+**Given** `ThinkProbeLiveV3Result(inference_mode='live_gpu', model_id='google/gemma-4-E4B-it', n_completed=42, n_total=50, gpu_vram_gate_fired=True, skip_rate=0.0, tp_rate=0.80, fp_rate=0.15)`
+**When** `is_viable` is evaluated
+**Then** `is_viable is True`
+**And** `retro_036_closed is True`
+
+### SCENARIO-PROBE-016: ThinkProbeLiveV3Result is_viable False When n_completed=30
+
+**Given** `ThinkProbeLiveV3Result(inference_mode='live_gpu', model_id='google/gemma-4-E4B-it', n_completed=30, n_total=50, gpu_vram_gate_fired=True, skip_rate=0.1, tp_rate=0.80, fp_rate=0.10)`
+**When** `is_viable` is evaluated
+**Then** `is_viable is False`  (completion_fraction=0.60 < 0.80 threshold)
+
 ---
 
 ## Phase 3 Seed Requirements (Exp 435a — NOT production, exploratory only)
