@@ -234,6 +234,80 @@ and that answer on Linux is **yes** once memlock is fixed.
    future NPU experiments skip cleanly when any of the six layers is
    broken, instead of timing out mid-run.
 
+**Web audit 2026-04-19 -- the ONNX+VitisAI path is structurally
+blocked on Linux and should not be pursued until AMD acts:**
+
+A direct search of AMD's documentation and public GitHub issues
+confirmed the Linux ONNX+VitisAI path is not a near-term option:
+
+- AMD Ryzen AI Software 1.7.1 (April 8, 2026, latest release)
+  officially supports Windows only; the install page is Windows-only
+  and contains no Linux references
+  (https://ryzenai.docs.amd.com/en/latest/inst.html).
+- The ``voe`` (Vitis ONNX Execution) Python wheel that the EP
+  requires is entirely absent from Linux x86_64 distributions.
+  ``ModuleNotFoundError: No module named 'voe'``, 100% CPU fallback
+  even when the EP initialises. See
+  github.com/amd/RyzenAI-SW/issues/341 -- open for months, no AMD
+  response.
+- Source-building ``onnxruntime --use_vitisai`` fails on GCC 13/14
+  (template deduction mismatch in ``element_wise_ops.cc``). See
+  github.com/amd/xdna-driver/issues/1017 and
+  github.com/microsoft/onnxruntime/issues/27097 -- also no AMD
+  response.
+- HuggingFace Optimum-AMD's Ryzen AI backend requires the same
+  missing VitisAI EP.
+- Explicit requests for Linux binaries (e.g.
+  github.com/amd/RyzenAI-SW/issues/319 for Krackan/XDNA2) have
+  received no AMD reply.
+
+**Revised milestone-scale plan: lean on mlir-aie as the second
+Linux-native backend.** The
+[Xilinx/mlir-aie](https://github.com/Xilinx/mlir-aie) project is
+AMD's own actively-maintained (v1.3.1, March 2026) MLIR-based
+toolchain for AI Engine / XDNA2 hardware; it is a close-to-metal
+IRON Python DSL that ships as ``mlir_aie`` + ``llvm-aie`` on pip.
+Exp 460 scaffolded the install path. Add to milestone 2026.04.39:
+
+### Exp N+4: mlir-aie IRON kernel smoke test + ``NPUEntropyProbe`` backend="iron"
+
+- **Deliverable:** ``results/experiment_<N+4>_iron_smoke.json`` plus
+  ``python/carnot/pipeline/npu_iron_backend.py`` implementing
+  ``NPUEntropyProbe`` backend="iron" by wrapping an IRON-authored
+  softmax-entropy kernel.
+- **Why this is the durable Linux bet, not pyxrt alone:** pyxrt is
+  correct for Tier-0 hardware probing (reach the device, read back
+  info, run AMD's own example kernels). But Carnot's production
+  inference path needs *compiled* NPU kernels, not hand-written
+  register pokes. IRON is the path that matches XRT's kernel model
+  at a reasonable abstraction level -- you describe the kernel in
+  MLIR or IRON Python, compile via ``llvm-aie``, then dispatch via
+  pyxrt. Two independent Linux-native backends
+  (pyxrt for direct / IRON for compiled kernels) gives the project
+  survivable coverage even if one dependency breaks.
+- **Scope:**
+  1. ``pip install mlir-aie llvm-aie`` inside the project venv.
+  2. Port one of the mlir-aie repo's softmax or elementwise example
+     designs to run on ``/dev/accel/accel0``.
+  3. Wrap it behind the ``NPUEntropyProbe`` API so the research-side
+     code does not need to know which backend is active.
+  4. Benchmark against both the CPU baseline (existing) and the
+     pyxrt-direct backend (from Exp N+2's rerun).
+- **Acceptance criterion:** ``honest_verdict`` is one of
+  ``{iron_npu_viable, iron_npu_measured_no_speedup}``. A third
+  ``iron_build_failed`` captures the case where the IRON toolchain
+  itself fails to install or compile the kernel, which is a real
+  risk given how new the v1.3.1 release is.
+- **Scale:** ~150 lines for the IRON kernel + wrapper + test, plus
+  whatever benchmark loop matches the existing NPUEntropyProbe. One
+  subagent slot; CPU-only for build, NPU for benchmark.
+
+**Scheduling:** Exp N+4 can run in parallel with Exp N+2 (pyxrt
+rerun) since they exercise different code paths. If IRON install
+itself fails, that is also useful negative data -- schedule the
+known-install-works path (pyxrt) as the primary and IRON as the
+secondary that can defer to .40 without loss.
+
 **Milestone-boundary note:** the memlock fix requires a new login
 session to take effect (PAM reads ``limits.d`` only at login). The
 currently-running conductor process (PID 184730) is still on the old

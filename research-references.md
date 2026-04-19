@@ -2204,7 +2204,27 @@ thermodynamic computing Ising FPGA
      synthetic-only result. Acceptance criterion: deliverable has
      `n_live_pairs > 0` AND `honest_verdict` is one of
      `fr11_live_confirmed / fr11_live_regressed / fr11_live_insufficient_signal`.
-  4. (Stretch) Dependency lockfile + `scripts/bootstrap.sh` via AST
+  4. **NPU `backend="pyxrt"` rewrite of Exp 511.** A web audit on
+     2026-04-19 confirmed that the Linux ONNX+VitisAI path is
+     structurally blocked and unsupported by AMD. Ryzen AI Software
+     1.7.1 is Windows-only; the `voe` wheel is missing on Linux;
+     source-building onnxruntime with `--use_vitisai` fails on
+     GCC 13/14; HuggingFace Optimum-AMD depends on the same missing
+     pieces. See GitHub issues
+     `amd/RyzenAI-SW#341`, `amd/xdna-driver#1017`,
+     `microsoft/onnxruntime#27097`, `amd/RyzenAI-SW#319` — all open,
+     all unanswered by AMD. The realistic Linux NPU path is
+     `pyxrt` direct (verified working 2026-04-19,
+     `results/npu_stack_verification.json` =
+     `npu_fully_available_pyxrt_only`). Rewrite Exp 511's
+     `NPUEntropyProbe` with a `backend="pyxrt"` mode and rerun.
+  5. **Exp 460 extension: mlir-aie / IRON backend.** In parallel with
+     #4, install the `mlir_aie` + `llvm-aie` pip packages (v1.3.1,
+     March 2026, AMD-maintained) and port one of the repo's softmax
+     example kernels to run through `pyxrt`. Adds a second
+     Linux-native NPU backend so the project is not single-path on
+     pyxrt alone.
+  6. (Stretch) Dependency lockfile + `scripts/bootstrap.sh` via AST
      walk of imports in `scripts/` and `python/`, so "missing package"
      becomes a two-line diagnostic rather than a silent mid-experiment
      block.
