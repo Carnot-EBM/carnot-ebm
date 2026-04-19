@@ -2235,3 +2235,4 @@ python/ |
 | 2026-04-19 17:31 UTC | Exp 517: Controlled DualGPU Parallel Execution Tes | OK | 81 passed, 2 warnings in 2.70s |
 | 2026-04-19 17:44 UTC | Exp 518: Top-20 Legacy BatchedInferenceRunner Migr | OK | 81 passed, 2 warnings in 2.76s |
 | 2026-04-19 17:57 UTC | Exp 519: CIKANEnergy — Constraint-Informed KAN spl | OK | 81 passed, 2 warnings in 2.73s |
+| 2026-04-19 18:08 UTC | Exp 520: LeWorldModel-JEPA Stable Two-Term Trainin | OK | 81 passed, 2 warnings in 2.72s |
