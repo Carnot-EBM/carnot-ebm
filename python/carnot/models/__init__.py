@@ -51,6 +51,10 @@ from carnot.models.cikan_energy import (
     CIKANLayer,
     ConstraintBoundary,
 )
+from carnot.models.lowrank_kaem import (
+    LowRankKAEMEnergy,
+    LowRankProjector,
+)
 
 __all__ = [
     "BoltzmannConfig",
@@ -95,4 +99,6 @@ __all__ = [
     "CIKANEnergy",
     "CIKANLayer",
     "ConstraintBoundary",
+    "LowRankKAEMEnergy",
+    "LowRankProjector",
 ]

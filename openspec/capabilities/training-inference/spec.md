@@ -770,6 +770,57 @@ Spec: REQ-SAMPLE-026, SCENARIO-SAMPLE-040
 **Then** it completes without error
 **And** `self.boundaries` equals the provided boundaries list
 
+### REQ-SAMPLE-027: LowRankKAEMEnergy — Project to Top-k Singular Vectors Before Spline Computation (Exp 532)
+
+The system SHALL implement `LowRankKAEMEnergy` that projects input to the top-k left singular
+vectors of the training data matrix before spline computation, where:
+- `LowRankProjector(data: jnp.ndarray, k: int = 11)` computes the SVD of data and stores the
+  top-k left singular vectors (principal directions of the logit energy landscape)
+- `.project(x: jnp.ndarray) -> jnp.ndarray` projects x (shape n_vars,) into k-dimensional subspace
+- `.explained_variance_ratio(k: int) -> float` returns the fraction of total variance captured by the top-k components
+- `.auto_k(threshold: float = 0.90) -> int` returns the minimum k such that explained_variance_ratio(k) >= threshold
+- `LowRankKAEMEnergy(n_vars, k=11, auto_k=False)` wraps KAEMEnergy: fit() first computes the
+  LowRankProjector, then projects data to k dims, then fits KAEMEnergy on the projected data
+- `energy(x)` projects x to k dims then calls the underlying KAEMEnergy.energy() — differentiable via jax.grad
+- Why: arXiv 2604.04384 shows transformer logit matrices are low-rank; 90% of variance is in
+  only 2-11 singular components; projecting to this subspace reduces compute from O(n_vars) to
+  O(k) spline evaluations where k << n_vars, preserving information while cutting cost 10-100x
+
+Spec: REQ-SAMPLE-027, SCENARIO-SAMPLE-041, SCENARIO-SAMPLE-042, SCENARIO-SAMPLE-043
+
+### REQ-SAMPLE-028: LowRankKAEMEnergy Rank Auto-Selection (Exp 532)
+
+The system SHALL implement rank auto-selection in `LowRankProjector`:
+- `auto_k(threshold=0.90) -> int` returns the minimum k such that the top-k singular values
+  explain >= `threshold` fraction of total variance (sum of squared singular values)
+- When `auto_k=True` in `LowRankKAEMEnergy`, the projector selects k automatically during fit()
+  rather than using the constructor's fixed k value
+- This mirrors arXiv 2604.04384's observation that 90% explained variance requires only 2-11
+  components for real transformer logit matrices, making the rank selection data-driven
+
+Spec: REQ-SAMPLE-028, SCENARIO-SAMPLE-042
+
+### SCENARIO-SAMPLE-041: LowRankProjector Compresses to k Dimensions
+
+**Given** a `LowRankProjector` fitted on 100-dimensional data with k=2
+**When** `.project(x)` is called for any x of shape (100,)
+**Then** the result has shape (2,)
+**And** all values are finite
+
+### SCENARIO-SAMPLE-042: LowRankProjector Explained Variance >= 0.90 at k=11
+
+**Given** a `LowRankProjector` fitted on data with known low-rank structure (rank-11 signal + noise)
+**When** `.explained_variance_ratio(k=11)` is evaluated
+**Then** the ratio is >= 0.90
+**And** `auto_k(threshold=0.90)` returns a value <= 11
+
+### SCENARIO-SAMPLE-043: LowRankKAEMEnergy Energy Is JAX-Differentiable
+
+**Given** a `LowRankKAEMEnergy(n_vars=50, k=11)` fitted on 100 training samples
+**When** `jax.grad(model.energy)(x)` is called for x of shape (50,)
+**Then** the gradient has shape (50,) and all values are finite
+**And** `energy(x)` returns a scalar
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -800,4 +851,6 @@ Spec: REQ-SAMPLE-026, SCENARIO-SAMPLE-040
 | REQ-SAMPLE-024 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
 | REQ-SAMPLE-025 | N/A | Implemented | Python (test_cikan_energy.py, 100% coverage) |
 | REQ-SAMPLE-026 | N/A | Implemented | Python (test_cikan_energy.py, 100% coverage) |
+| REQ-SAMPLE-027 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
+| REQ-SAMPLE-028 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
