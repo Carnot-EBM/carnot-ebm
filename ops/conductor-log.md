@@ -2253,3 +2253,4 @@ python/ |
 | 2026-04-19 21:57 UTC | Exp 533: COLD Decoding Energy Guidance — token-lev | OK | 81 passed, 2 warnings in 2.77s |
 | 2026-04-19 22:13 UTC | Exp 534: PottsMachineVerifier — multi-value constr | OK | 81 passed, 2 warnings in 2.74s |
 | 2026-04-19 22:21 UTC | Exp 535: JEPA Live Retrain v7 — FR-11 mandatory, r | OK | 81 passed, 2 warnings in 2.69s |
+| 2026-04-19 22:33 UTC | Exp 536: Milestone 2026.04.40 Retrospective | OK | 81 passed, 2 warnings in 5.31s |

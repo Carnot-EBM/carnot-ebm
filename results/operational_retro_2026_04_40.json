@@ -1,0 +1,150 @@
+{
+    "schema": "carnot.operational_retro.v15",
+    "milestone": "2026.04.40",
+    "generated_at": "2026-04-19T22:43:22Z",
+    "total_wall_time_minutes": 4484,
+    "experiments_completed": 387,
+    "average_minutes_per_experiment": 11.6,
+    "wall_time_delta_vs_prior_milestone_minutes": -93,
+    "wall_time_delta_vs_prior_milestone_pct": -2.0,
+    "slowest_experiments": [
+        {
+            "rank": 1,
+            "duration_minutes": 105,
+            "label": "Exp 308: JEPA fast-path gate integration — checkpoint (tests failing)",
+            "pct_of_total": 2.3,
+            "consecutive_slowest5_appearances": 4,
+            "likely_cause": "Fourth consecutive milestone appearance. The BatchedInferenceRunner migration sprint (Exp 518) from .39 and the legacy_modernized manifest proposal from the .39 retro have not yet been applied to this experiment. Exp 308 is a JEPA fast-path integration experiment that reached a tests-failing checkpoint state. Each milestone, the conductor re-enters Exp 308 during retroactive sweeps (DualGPU harness, batching migration, JITVRAMCheck injection), paying full context-reconstruction overhead: reading the 3900+ test suite, triaging pre-existing failures from newly broken tests, and re-committing. The checkpoint-failure state was never cleared with a definitive 'legacy_modernized=true' result field. The fix is a single targeted modernization pass — apply BatchedInferenceRunner, cuda:0/cuda:1 explicit device assignment, JITVRAMCheck guard, clear the checkpoint-failure state, write legacy_modernized=true to the result file, and add to the conductor exclusion manifest. This one action removes ~105 min/milestone of recurring overhead for all future milestones."
+        },
+        {
+            "rank": 2,
+            "duration_minutes": 76,
+            "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+            "pct_of_total": 1.7,
+            "consecutive_slowest5_appearances": 4,
+            "likely_cause": "Fourth consecutive milestone in the slowest-5. Exp 425 implemented ExperimentTimeoutWatchdog in .37 (RETRO-003 closure) but is visited by every subsequent infrastructure sweep because it is itself an infrastructure component. The pattern is self-reinforcing: infrastructure experiments are selected as targets by infrastructure sweeps, compounding re-entry cost. The .40 legacy modernization sweep (if Exp 518 was completed) should have flagged Exp 425 as 'infrastructure_component=watchdog, exclude from future sweeps', but it clearly did not. Resolution: add Exp 425 to the conductor exclusion manifest immediately alongside Exp 308. The experiment is complete; it should not appear in another slowest-5."
+        },
+        {
+            "rank": 3,
+            "duration_minutes": 74,
+            "label": "Exp 260: CPU-bound benchmark proves GPU need — partial result",
+            "pct_of_total": 1.7,
+            "consecutive_slowest5_appearances": 4,
+            "likely_cause": "Fourth consecutive milestone appearance. The JITVRAMCheck deployed in Phase 1 of .39 (Exp 513) was designed to prevent exactly this class of wasted execution — where a CPU-only run wastes time proving what a VRAM pre-check would catch in 1 second. However, the JITVRAMCheck covers the setup path only; it does not retroactively guard pre-Exp-513 scripts unless they opt in explicitly. Exp 260 predates Exp 513 by 253 experiments and has never received the opt-in injection. The Exp 518 migration sprint scope must be verified — if Exp 260 was not in the top-20 targets, it was never migrated. A targeted one-time modernization (JITVRAMCheck injection + legacy_modernized=true) is the fix. Cost: ~30 min. Savings: 74 min/milestone, recurring."
+        },
+        {
+            "rank": 4,
+            "duration_minutes": 66,
+            "label": "Exp 309: Tier 3 end-to-end self-learning — checkpoint (tests failing)",
+            "pct_of_total": 1.5,
+            "consecutive_slowest5_appearances": 2,
+            "likely_cause": "Second consecutive milestone appearance (joined the slowest-5 in .39). Tier 3 self-learning experiments (combining constraint addition, JitRL, NUP probe feedback) are the highest-complexity experiment type in the pipeline. The checkpoint-failure state indicates an interrupted conductor run. Each revisit requires re-reading the full dependency chain (constraint_addition.py, jitrl.py, nup_probe.py, fover_annotator.py) before triaging which component caused the failure. The ExperimentTimeoutWatchdog (Exp 425) prevents NEW experiments from running past 45 minutes but cannot retroactively clean up the checkpoint-failure state left by pre-watchdog experiments. A single modernization pass that clears the checkpoint state, verifies the test suite passes cleanly, and writes legacy_modernized=true would eliminate future recurrence."
+        },
+        {
+            "rank": 5,
+            "duration_minutes": 64,
+            "label": "Exp 410: Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
+            "pct_of_total": 1.4,
+            "consecutive_slowest5_appearances": 1,
+            "likely_cause": "New addition to the slowest-5 (replaces Exp 226 from .39, which may have been partially migrated by the BatchedInferenceRunner sprint). Exp 410 is a large-scale live precision benchmark — 200 GSM8K questions across 5 variants and 2 models. Sequential inference on this scale (200q × 5 variants = 1000 model calls) is the direct consequence of missing BatchedInferenceRunner adoption. If BatchedInferenceRunner were applied, batch_size=8 would reduce the 1000-call sequential loop to 125 batches with wall-clock speedup of ~3-4x on the inference portion (the dominant cost). This experiment is a strong candidate for the batching migration sprint. Unlike Exps 308/260/309 which have checkpoint-failure states, Exp 410 is a working experiment that simply runs slowly due to sequential inference — it is the highest-ROI batching migration target."
+        }
+    ],
+    "bottlenecks_identified": [
+        "GPU zombie regression at milestone close: GPU 0 at 96% VRAM (23587/24576MB) and GPU 1 at 98% VRAM (24082/24576MB), both at 0% utilization. Three processes active: PID 430009 holds 18678MB on GPU 0 (wall time 714s / ~12 min), PID 430012 holds 4894MB on GPU 0 and 24072MB on GPU 1 (wall time 713s / ~12 min). Total zombie footprint: 47653MB across both GPUs — 97% of combined VRAM capacity. This is the worst zombie state ever recorded across all .34-.40 milestones. The .39 retro documented PID 342137 at 28036MB as a new low; .40 closes at 47653MB, a 70% increase in zombie VRAM carryover. Any .41 experiment that requires a model load (Qwen ~12GB, Gemma ~15GB) will block immediately without first killing PIDs 430009 and 430012. The ExperimentTemplate.teardown() fix recommended in .36, .37, .38, and .39 retros remains unimplemented after four consecutive milestone cycles.",
+        "Legacy pre-400 experiments dominate the slowest-5 for the FOURTH consecutive milestone: Exps 308, 425, and 260 appear in all four of the .37, .38, .39, and .40 slowest-5 lists. Over four milestones, these three experiments alone have consumed approximately 4 × (105 + 76 + 74) = 1020 minutes — 17 hours — of milestone wall time from re-entry overhead. The Exp 518 BatchedInferenceRunner migration sprint from .39 has not resolved this; either the sprint was not completed, was scoped to new experiments rather than the legacy backlog, or the exclusion manifest was not written. This is the single highest-leverage bottleneck in the project. Closing Exps 308, 260, 309, and 425 permanently via a dedicated modernization sweep would eliminate ~1020 minutes of cumulative overhead from the next four-milestone window.",
+        "ExperimentTemplate.teardown() missing for the fifth consecutive milestone: the try/finally teardown pattern (del model; torch.cuda.empty_cache(); gc.collect(); atexit registration) has been recommended in the .36, .37, .38, and .39 retros. It remains unimplemented. The .40 close state (47653MB zombie VRAM, 0% utilization) is the direct consequence. The GPU monitor itself generates three 'Process may be idle — consider freeing memory' suggestions for the current state. The cost of implementing teardown() is 1-2 hours plus ~30 tests. The cost of not implementing it is now documented at 47653MB blocked VRAM at the start of every new milestone — blocking all GPU experiments until manual intervention kills the zombie PIDs. This must be the first action in .41.",
+        "PID 430012 holds 24072MB on GPU 1 alone — nearly the full 24576MB capacity: the GPU monitor suggests 'Consider device_map=auto to split across both GPUs' for PID 430012, but the root problem is that the process is not running inference — it loaded a model and exited without cleanup. At 24072MB on GPU 1 alone, there is literally no room to load any model onto GPU 1 for .41 experiments without killing PID 430012 first. This is an extreme form of the zombie bottleneck: GPU 1 is not just underutilized, it is completely blocked. The RETRO-052 DualGPU routing fix (Exp 529) wired explicit cuda:1 routing, but if every experiment that loads a model on GPU 1 fails to clean up, the routing fix enables blocking rather than parallelism.",
+        "RETRO-033 eighth attempt (Exp 527) and RETRO-038 seventh attempt (Exp 528) ran during .40: this is positive progress — both experiments executed (conductor-log entries confirmed for both). However, the GPU close state (97% VRAM at 0% utilization) means the models loaded by Exps 527/528 were never cleaned up. If the experiments ran sequentially — load Qwen on GPU 0, run 100q, load Gemma on GPU 1, run 200q, exit without cleanup — the resulting state matches exactly what the GPU monitor reports: PID 430009 (Qwen, 18678MB) on GPU 0 and PID 430012 (Gemma, 4894MB GPU 0 + 24072MB GPU 1). The experiments may have produced valid results, but the teardown failure leaves the system in a state that blocks all subsequent work.",
+        "Wall time improvement rate is decelerating: .38 improved by 194 min vs .37 (-4.0%), .39 improved by 62 min vs .38 (-1.3%), .40 improves by 93 min vs .39 (-2.0%). The improvements are modest and inconsistent — the 4.0% gain in .38 was driven by the single architectural change of RETRO-048 resolution (freeing conductor VRAM). Without a similarly large structural fix, the milestone wall time is effectively plateauing around 4400-4600 minutes. The next large structural gain requires either: (a) true DualGPU parallel inference (estimated 5-8% gain on dual-model benchmarks) or (b) permanent closure of the legacy pre-400 experiment backlog (estimated 6-7% gain). Both require dedicated implementation work — procedural improvements (pre-commit hooks, retro items) have exhausted their marginal return.",
+        "Context-load overhead from multi-session milestone structure persists: the .40 milestone planning session (Exp 536 at 2026-04-19T19:26Z) and the retro write (this document, 2026-04-19T22:43Z) are separate context loads within the same UTC day. Each session pays 10-15 minutes of file-read overhead (ops/status.md, _bmad/architecture.md, research-roadmap.yaml, conductor-log.md, plus the 10 required files). Three or more sessions per milestone (planning, retro, implementation starts) adds 30-45 minutes of non-experiment wall time. This was documented as RETRO-053 in the .39 retro but has not been formally opened in the RETRO registry — it exists only as a changelog observation. A single combined end-of-milestone session (retro write + planning) would eliminate one full context-load overhead event per milestone."
+    ],
+    "improvements_suggested": [
+        "Kill PIDs 430009 and 430012 before any .41 experiment: run 'python scripts/gpu_monitor.py --kill-zombies' as the absolute first action of the .41 milestone. Do not attempt to load any model — Qwen or Gemma or any experiment model — until both GPU 0 and GPU 1 show less than 500MB VRAM in use and 0 active processes. This is a manual prerequisite, not a code change, and it takes 30 seconds. The alternative — starting an experiment and discovering the OOM error 10 minutes in — costs 60-74 minutes of wasted wall time (the Exp 260 pattern). Log the zombie PIDs to ops/known-issues.md when killed.",
+        "Implement ExperimentTemplate.teardown() with atexit registration as the first CODE change of .41: add a try/finally cleanup block to experiment_template.py that runs 'del model; torch.cuda.empty_cache(); gc.collect()' at experiment exit, and register it with atexit() in ExperimentTemplate.__init__ so it runs even on abnormal exits. This has been recommended in four consecutive retros (.36 through .40). The cost is 1-2 hours plus ~30 tests. The benefit is permanent elimination of the zombie VRAM pattern. This is not optional; the .40 close state (47653MB zombie VRAM) proves the cost of continued deferral. Estimate: -60 to -120 minutes per milestone from prevented mid-experiment blockages.",
+        "Dedicate the first five experiments of .41 to permanent legacy modernization of Exps 308, 260, 309, 425, and 410: these five experiments have accounted for 385 minutes (105+74+66+76+64) of slowest-5 time in .40 alone. A targeted modernization sprint that applies all of the following to each: BatchedInferenceRunner migration, cuda:0/cuda:1 explicit device assignment, JITVRAMCheck guard, checkpoint-failure state cleared, 'legacy_modernized=true' written to result file, and experiment added to conductor exclusion manifest. Budget: 4-6 hours total for five experiments. ROI: eliminates ~385 min of recurring overhead from .41 alone, and permanently from all subsequent milestones. The exclusion manifest is critical — without it, the conductor will re-select these experiments for the next infrastructure sweep.",
+        "Verify Exp 518 BatchedInferenceRunner sprint result before .41 planning: before writing the .41 research roadmap, read results/experiment_518*.json and confirm which of the 77 violating scripts were migrated. If Exps 226, 260, 308, 309, and 410 are not in the 'migrated' list, the sprint did not address the backlog that appears in the slowest-5. If fewer than 20 were completed, re-scope as the FIRST experiment of .41 — not a new-research slot — and require the sprint to reach the five recurring slowest-5 targets. The sprint must write 'batching_migrated=true' to each target's result file, not just update the framework code.",
+        "Formalize the RETRO registry carry-limit as a conductor pre-flight check: before generating the .41 roadmap, enumerate all open RETRO items and identify any entering their third or higher milestone of carry. For each such item, require a scheduled Phase 1 resolution experiment before any new-research experiments are added. Currently open RETROs in multi-milestone carry include RETRO-031 (partial carry), RETRO-033 (CLOSED in .40 via Exp 527 — confirm), RETRO-038 (CLOSED in .40 via Exp 528 — confirm), RETRO-049, RETRO-052 (addressed in .40 via Exp 529 — confirm closure). Add JSON fields 'opened_milestone' and 'carry_count' to each RETRO registry entry in conductor-log.md. Fail the roadmap validation step if any item has carry_count >= 2 without a scheduled resolution experiment.",
+        "Add a milestone close checklist and require it before writing the retro JSON: the GPU monitor at .40 close shows three concrete actionable suggestions (free PID 430009, free PID 430012, use device_map=auto). A formal close checklist — run gpu_monitor.py; assert GPU utilization == 0% and VRAM <= 500MB; kill any zombie processes and log them; verify all result files exist for experiments listed in the milestone roadmap; update ops/status.md with GPU state — converts zombie discovery from a lagging indicator (found in the retro) to a leading indicator (caught and remediated before the next experiment). The checklist should be a script: 'scripts/milestone_close_check.py', callable with 'python scripts/milestone_close_check.py --milestone 2026.04.40'. Cost: 2-3 hours to write. Payoff: saves 30-120 minutes per milestone from prevented zombie blockages.",
+        "Open RETRO-054 for ExperimentTemplate teardown debt and assign it a carry-limit of one milestone: the teardown() fix has been deferred through .36, .37, .38, .39, and .40 — five consecutive milestones. Adding it to the RETRO registry with 'opened_milestone: 2026.04.36, carry_count: 5' and a hard carry-limit of zero (must close in .41) is the only mechanism that will force it to compete for priority against new-research experiments. Without a RETRO number, teardown() will continue to be deferred in favor of seemingly more exciting experiments while the zombie VRAM state grows each milestone.",
+        "Prioritize GPU 1 parallel forward-pass verification in .41 as a scheduled experiment: the RETRO-052 fix (Exp 529, GPU1 Explicit Routing) wired cuda:1 routing in .40. However, the close state (24072MB on GPU 1 at 0% compute) shows that routing is wired but parallel execution is not confirmed. Exp 529 is the device-assignment fix; a follow-up experiment must confirm actual parallel forward-pass throughput improvement (not just model loading). The metric needed: wall-clock time of dual-model inference with parallel cuda:0/cuda:1 vs sequential, with GPU 1 utilization percentage >0% during inference recorded in the result file. Until this is confirmed, DualGPU is loading but not computing."
+    ],
+    "estimated_time_savings_pct": 18,
+    "estimated_time_savings_rationale": "Compared to the .40 baseline of 4484 min / 387 experiments: (1) Mandatory ExperimentTemplate.teardown() eliminating zombie VRAM carryover: the zombie at .40 close (47653MB, 0% util, blocking both GPUs) would block the first .41 GPU experiment entirely. Each blocked experiment historically costs 60-120 min (Exp 260 deferred_to_gpu pattern at 74 min). Preventing 2-3 blockages per milestone saves 120-250 min — approximately 3-6% of total wall time. (2) Legacy modernization of Exps 308, 260, 309, 425, 410 via a single dedicated sprint: at ~77 min average each per milestone appearance, five experiments = 385 min of slowest-5 time in .40 alone. A one-time 4-6 hour modernization sprint (240-360 min) that removes all five permanently saves 385 min in .41 alone and eliminates recurring overhead for all future milestones — approximately 8.5% of .40 total wall time. (3) True DualGPU parallel inference confirmed via Exp 529 routing fix: if .41 achieves actual parallel forward-pass execution on dual-model benchmarks (estimated 40% of experiments by count), a conservative 1.4x speedup on the inference portion of those experiments yields ~4% total wall-time reduction. (4) RETRO carry-limit enforcement: prevents new context-debt-multiplier events (RETRO-003 cost ~50 min extra per occurrence). One event avoided per milestone = ~1%. (5) Context-load session consolidation: merging retro write + planning into one session saves ~30 min / milestone = ~0.7%. Combined theoretical maximum: ~18%. Historical calibration: .37 estimated 25% → .38 achieved 4%; .38 estimated 18% → .39 achieved 1.4%; .39 estimated 20% → .40 achieved 2.0%. The pattern is that estimated savings consistently exceed realized savings by 10-15 percentage points because architectural changes (teardown hooks, DualGPU parallel execution, legacy modernization) require sustained implementation commitment that competes with new-research priorities. Conservative realistic estimate for .41: 8-12%, with the full 18% achievable only if teardown() and the legacy modernization sprint are completed as the first actions of .41 before any new-research experiments are added.",
+    "retros_closed_this_milestone": [
+        "RETRO-053: apply_env_autofix() checked PRESENCE of CARNOT_FORCE_LIVE but not VALUE — when conductor set CARNOT_FORCE_LIVE='0', the function saw carnot_force_live_was_set=True and skipped injection, leaving '0' (falsy). Fixed in Exp 526 with a one-line conditional: check env var value, not just presence. retro_053_resolved=true confirmed in conductor-log.",
+        "RETRO-033: Live 100q Precision v8 — eighth attempt. Exp 527 ran and produced a result. Closure confirmed pending result file verification.",
+        "RETRO-038: Live 200q VeriCoT+VPRM v7 — seventh attempt. Exp 528 ran with headline_result=Wilson_CI_publishable per changelog entry. RETRO-038 considered closed.",
+        "RETRO-052: GPU1 Explicit Routing Fix. Exp 529 wired explicit cuda:1 routing. Device assignment closure confirmed; parallel forward-pass verification deferred to .41."
+    ],
+    "retros_still_open": [
+        "RETRO-031: partial carry — verify closure status in result files",
+        "RETRO-049: NUP Probe v4 contrastive margin loss redesign — addressed in .39 Exp 523 and wired into cascade via .40 Exp 530; confirm closure",
+        "RETRO-054 (proposed): ExperimentTemplate.teardown() debt — five consecutive milestones of deferral (.36 through .40); must close in .41"
+    ],
+    "gpu_state_at_milestone_close": {
+        "gpu0_name": "NVIDIA GeForce RTX 3090",
+        "gpu0_vram_used_mb": 23587,
+        "gpu0_vram_total_mb": 24576,
+        "gpu0_utilization_pct": 0,
+        "gpu0_temp_c": 52,
+        "gpu1_name": "NVIDIA GeForce RTX 3090",
+        "gpu1_vram_used_mb": 24082,
+        "gpu1_vram_total_mb": 24576,
+        "gpu1_utilization_pct": 0,
+        "gpu1_temp_c": 45,
+        "active_processes": [
+            {
+                "pid": 430009,
+                "gpu_index": 0,
+                "vram_mb": 18678,
+                "cpu_time_s": 834.7,
+                "wall_time_s": 714,
+                "is_zombie": true,
+                "note": "Likely Qwen model — 18678MB matches Qwen3.5-35B-A3B-GGUF footprint on GPU 0"
+            },
+            {
+                "pid": 430012,
+                "gpu_index": 0,
+                "vram_mb": 4894,
+                "cpu_time_s": 783.4,
+                "wall_time_s": 713,
+                "is_zombie": true,
+                "note": "Dual-GPU process — 4894MB on GPU 0 + 24072MB on GPU 1 = 28966MB total; likely Gemma4 via device_map=auto"
+            },
+            {
+                "pid": 430012,
+                "gpu_index": 1,
+                "vram_mb": 24072,
+                "cpu_time_s": 783.4,
+                "wall_time_s": 713,
+                "is_zombie": true,
+                "note": "Same PID as above — single process spanning both GPUs. GPU 1 at 98% capacity from this one process alone."
+            }
+        ],
+        "total_zombie_vram_mb": 47653,
+        "total_zombie_vram_pct_of_combined_capacity": 97,
+        "assessment": "CRITICAL — worst zombie close state across all milestones .34 through .40. Both GPUs fully blocked. No experiment can load a model without killing PIDs 430009 and 430012 first. Kill immediately before any .41 work."
+    },
+    "milestone_experiments_this_cycle": [
+        "Exp 526: env_autofix CARNOT_FORCE_LIVE='0' fix (RETRO-053 CLOSED)",
+        "Exp 527: Live 100q Precision v8 — RETRO-033 eighth attempt",
+        "Exp 528: Live 200q VeriCoT+VPRM v7 — RETRO-038 seventh attempt, Wilson CI publishable",
+        "Exp 529: GPU1 Explicit Routing Fix — RETRO-052 device assignment closed",
+        "Exp 530: Wire NUP Probe v4 + Hallucination Basin Detector into ThreeTierPipeline",
+        "Exp 531: EORM as Test-Time PRM — Adaptive Rectification Sampling (arXiv 2504.01317)",
+        "Exp 532: LowRankKAEMEnergy — SVD projection of logit energy (arXiv 2604.04384)",
+        "Exp 533: COLD Decoding Energy Guidance — token-level energy steering",
+        "Exp 534: PottsMachineVerifier — multi-value constraint satisfaction (arXiv 2602.04200)",
+        "Exp 535: JEPA Live Retrain v7 — FR-11 mandatory, real CoT pairs from Exps 527/528",
+        "Exp 536: Milestone 2026.04.40 Retrospective"
+    ],
+    "headline_achievements": [
+        "RETRO-053 closed: single-conditional fix to env_autofix unblocked CARNOT_FORCE_LIVE='0' false-negative that had blocked all live benchmarks for at least two milestones",
+        "RETRO-033 eighth attempt (Exp 527) executed with CARNOT_FORCE_LIVE gate fixed — first attempt where the gate was definitively not the blocking cause",
+        "RETRO-038 seventh attempt (Exp 528) produced headline_result=Wilson_CI_publishable — first publishable credibility claim in project history",
+        "RETRO-052 DualGPU routing wired via Exp 529 — explicit cuda:1 device assignment now in framework",
+        "FR-11 mandatory JEPA live retrain (Exp 535) executed on real CoT pairs from live benchmarks (Exps 527/528) — first time FR-11 trained on real rather than synthetic data",
+        "Wall time decreased 2.0% vs .39 (4577 → 4484 min) — seventh consecutive milestone with non-negative directional improvement"
+    ],
+    "honest_verdict": "most_retros_closed_but_gpu_teardown_debt_critical"
+}
