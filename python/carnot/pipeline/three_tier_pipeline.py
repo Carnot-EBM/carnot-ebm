@@ -5,15 +5,18 @@
     Exps 346-348 to reduce expensive Ising calls while preserving accuracy.
     Each tier provides a progressively more expensive but more accurate check:
 
-        Tier 1 — SinkProbe  (~0 ms): attention-sink pre-filter (arXiv 2604.10697)
-        Tier 2 — EORM       (~10 ms): energy-based CoT reward model (55M params)
-        Tier 3 — Ising      (~0.006 ms/constraint): full constraint verification
+        Tier 0b — SpilledEnergy (~0 ms): logit-discrepancy pre-filter
+        Tier 0c — NUPProbeV4    (~0 ms): contrastive energy probe (Exp 523, AUC=1.0)
+        Tier 0d — BasinDetector (~0 ms): latent-space basin depth (Exp 521)
+        Tier 1  — SinkProbe     (~0 ms): attention-sink pre-filter (arXiv 2604.10697)
+        Tier 2  — EORM          (~10 ms): energy-based CoT reward model (55M params)
+        Tier 3  — Ising         (~0.006 ms/constraint): full constraint verification
 
     A response passes through tiers in order.  If a tier clears the response
     (declares it verified), the subsequent tiers are skipped.  Only responses
-    that are NOT cleared by Tier 1 or Tier 2 reach the full Ising verifier.
+    that are NOT cleared by Tiers 0b/0c/0d/1/2 reach the full Ising verifier.
 
-    Hypothesis: combining all three saves 40-60% of Ising calls while
+    Hypothesis: combining all tiers saves 40-60% of Ising calls while
     maintaining low false-negative rate (wrong responses slipping through).
 
 **Detailed explanation for engineers:**
@@ -24,6 +27,17 @@
     constraint, and aggregating results takes real wall-clock time.  For a 1000
     QPS inference server, eliminating 50% of Ising calls directly translates
     to halved server capacity requirements.
+
+    Tier 0c — NUP Probe v4 (Exp 523):
+        Contrastive-trained energy probe that maximises the gap E(incorrect)-E(correct).
+        If score(response) <= nup_probe_threshold, the response is cleared immediately.
+        When nup_probe_v4=None, this tier is skipped entirely.
+
+    Tier 0d — Hallucination Basin Detector (Exp 521):
+        Estimates basin depth of hidden-state trajectories.  Low basin_risk_score
+        indicates the model is in a stable attractor (deep basin), suggesting
+        correct reasoning.  Requires hidden_states to be passed to verify();
+        skipped when hidden_states=None (CI-safe).
 
     Tier 1 — SinkProbe:
         Uses the *attention matrix already computed during generation* (zero
@@ -46,11 +60,13 @@
 
     CI safety:
         - When attention_matrix=None, Tier 1 is skipped (all → Tier 2).
+        - When hidden_states=None, Tier 0d is skipped.
         - ising_pipeline accepts any callable: (response, question) → (bool, float).
           This allows tests to inject a stub without importing the full pipeline.
 
-Spec: REQ-VERIFY-088
-SCENARIO-VERIFY-116, SCENARIO-VERIFY-117
+Spec: REQ-VERIFY-088, REQ-VERIFY-111, REQ-VERIFY-112
+SCENARIO-VERIFY-116, SCENARIO-VERIFY-117, SCENARIO-VERIFY-146, SCENARIO-VERIFY-147,
+SCENARIO-VERIFY-148
 """
 
 from __future__ import annotations
@@ -62,6 +78,8 @@ from typing import Any, Callable
 import jax.numpy as jnp
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
+from carnot.pipeline.hallucination_basin import HallucinationBasinDetector
+from carnot.pipeline.nup_probe_v4 import NUPProbeV4
 from carnot.pipeline.sink_probe import SinkProbe
 from carnot.pipeline.spilled_energy import SpilledEnergyDetector, SpilledEnergyDetectorResult  # noqa: F401
 
@@ -123,6 +141,8 @@ class ThreeTierPipelineResult:
     ising_calls_saved_pct: float
     inference_mode: str
     tier0_spilled_skip: float = 0.0
+    tier0c_skip_count: int = 0
+    tier0d_skip_count: int = 0
 
 
 # ---------------------------------------------------------------------------
@@ -184,6 +204,10 @@ class ThreeTierPipeline:
         sink_threshold: float = 0.3,
         eorm_threshold: float = 0.5,
         spilled_energy_detector: SpilledEnergyDetector | None = None,
+        nup_probe_v4: NUPProbeV4 | None = None,
+        nup_probe_threshold: float = 0.0,
+        basin_detector: HallucinationBasinDetector | None = None,
+        basin_threshold: float = 0.5,
     ) -> None:
         self.sink_probe = sink_probe
         self.eorm_model = eorm_model
@@ -191,6 +215,10 @@ class ThreeTierPipeline:
         self.sink_threshold = sink_threshold
         self.eorm_threshold = eorm_threshold
         self.spilled_energy_detector = spilled_energy_detector
+        self.nup_probe_v4 = nup_probe_v4
+        self.nup_probe_threshold = nup_probe_threshold
+        self.basin_detector = basin_detector
+        self.basin_threshold = basin_threshold
 
     # ------------------------------------------------------------------
     # verify()
@@ -202,6 +230,7 @@ class ThreeTierPipeline:
         *,
         attention_matrix: Any | None = None,
         question: str = "",
+        hidden_states: Any | None = None,
     ) -> tuple[bool, str, float]:
         """Verify a single response through the three-tier cascade.
 
@@ -227,24 +256,50 @@ class ThreeTierPipeline:
             The question that prompted the response.  Used by EORM and Ising.
             Defaults to "" (empty string) for compatibility with callers that
             do not have the question available.
+        hidden_states : array-like or None
+            Hidden-state trajectory of shape (T, D) from the generation forward
+            pass.  Pass None to skip Tier 0d (basin detector).  CI-safe.
 
         Returns
         -------
         (verified, tier_used, energy) : tuple[bool, str, float]
             verified  — True if the response passed verification.
-            tier_used — one of "sink_probe", "eorm", "ising".
+            tier_used — one of "spilled_energy", "nup_probe_v4", "basin_detector",
+                        "sink_probe", "eorm", "ising".
             energy    — the raw score from the deciding tier (see above).
 
-        Spec: REQ-VERIFY-088
-        SCENARIO-VERIFY-116
+        Spec: REQ-VERIFY-088, REQ-VERIFY-111, REQ-VERIFY-112
+        SCENARIO-VERIFY-116, SCENARIO-VERIFY-146, SCENARIO-VERIFY-147,
+        SCENARIO-VERIFY-148
         """
         # ------------------------------------------------------------------
-        # Tier 0: SpilledEnergyDetector (text-mode CI-safe pre-filter)
+        # Tier 0b: SpilledEnergyDetector (text-mode CI-safe pre-filter)
         # ------------------------------------------------------------------
         if self.spilled_energy_detector is not None:
             se_result = self.spilled_energy_detector.score_from_text(response)
             if not se_result.should_verify:
                 return True, "spilled_energy", 0.0
+
+        # ------------------------------------------------------------------
+        # Tier 0c: NUP Probe v4 (contrastive energy probe, Exp 523)
+        # Low score (≤ nup_probe_threshold) means the response looks correct;
+        # clear it here to avoid running Tiers 1-3.
+        # ------------------------------------------------------------------
+        if self.nup_probe_v4 is not None:
+            nup_score = self.nup_probe_v4.score(response)
+            if nup_score <= self.nup_probe_threshold:
+                return True, "nup_probe_v4", float(nup_score)
+
+        # ------------------------------------------------------------------
+        # Tier 0d: HallucinationBasinDetector (basin depth, Exp 521)
+        # Low basin_risk_score (≤ basin_threshold) means the hidden states sit
+        # in a deep energy basin → stable/correct reasoning → clear early.
+        # Skipped when hidden_states=None (CI-safe).
+        # ------------------------------------------------------------------
+        if self.basin_detector is not None and hidden_states is not None:
+            basin_estimate = self.basin_detector.detect(hidden_states)
+            if basin_estimate.basin_risk_score <= self.basin_threshold:
+                return True, "basin_detector", float(basin_estimate.basin_risk_score)
 
         # ------------------------------------------------------------------
         # Tier 1: SinkProbe
@@ -330,11 +385,15 @@ class ThreeTierPipeline:
                 ising_calls_saved_pct=0.0,
                 inference_mode=inference_mode,
                 tier0_spilled_skip=0.0,
+                tier0c_skip_count=0,
+                tier0d_skip_count=0,
             )
 
         n_skipped_sink = 0
         n_skipped_eorm = 0
         n_skipped_spilled = 0
+        n_skipped_nup = 0
+        n_skipped_basin = 0
         n_wrong = 0
         n_fn = 0  # wrong responses incorrectly cleared (false negatives)
 
@@ -344,11 +403,13 @@ class ThreeTierPipeline:
             response_text = item.get("response", "")
             question_text = item.get("question", "")
             attn = item.get("attention_matrix", None)
+            hidden_states = item.get("hidden_states", None)
 
             _verified, tier_used, _energy = self.verify(
                 response_text,
                 attention_matrix=attn,
                 question=question_text,
+                hidden_states=hidden_states,
             )
 
             if not is_correct:
@@ -356,6 +417,14 @@ class ThreeTierPipeline:
 
             if tier_used == "spilled_energy":
                 n_skipped_spilled += 1
+                if not is_correct:
+                    n_fn += 1
+            elif tier_used == "nup_probe_v4":
+                n_skipped_nup += 1
+                if not is_correct:
+                    n_fn += 1
+            elif tier_used == "basin_detector":
+                n_skipped_basin += 1
                 if not is_correct:
                     n_fn += 1
             elif tier_used == "sink_probe":
@@ -373,7 +442,10 @@ class ThreeTierPipeline:
         skip_rate_sink = n_skipped_sink / total
         skip_rate_eorm = n_skipped_eorm / total
         skip_rate_spilled_energy = n_skipped_spilled / total
-        total_skip_rate = (n_skipped_sink + n_skipped_eorm + n_skipped_spilled) / total
+        total_skip_rate = (
+            n_skipped_sink + n_skipped_eorm + n_skipped_spilled
+            + n_skipped_nup + n_skipped_basin
+        ) / total
         fn_rate = (n_fn / n_wrong) if n_wrong > 0 else 0.0
         ising_calls_saved_pct = total_skip_rate * 100.0
 
@@ -386,6 +458,8 @@ class ThreeTierPipeline:
             ising_calls_saved_pct=ising_calls_saved_pct,
             inference_mode=inference_mode,
             tier0_spilled_skip=skip_rate_spilled_energy,
+            tier0c_skip_count=n_skipped_nup,
+            tier0d_skip_count=n_skipped_basin,
         )
 
 

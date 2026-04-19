@@ -5,11 +5,15 @@ Covers:
   - ThreeTierPipeline.verify() routing through each tier
   - ThreeTierPipeline.benchmark() metrics calculation
   - build_three_tier_artifact() schema and serialization
+  - Tier 0c (NUP Probe v4) and Tier 0d (HallucinationBasinDetector) wiring
   - CI-safe: all tests run on CPU with synthetic data, no real LLM required
 
-Spec: REQ-VERIFY-088
+Spec: REQ-VERIFY-088, REQ-VERIFY-111, REQ-VERIFY-112
 SCENARIO-VERIFY-116 (SinkProbe fast-path routing)
 SCENARIO-VERIFY-117 (benchmark skip rate and accuracy metrics)
+SCENARIO-VERIFY-146 (NUP Probe v4 clears on low score)
+SCENARIO-VERIFY-147 (NUP Probe v4 absent — no regression)
+SCENARIO-VERIFY-148 (basin detector clears on low risk)
 """
 
 from __future__ import annotations
@@ -22,6 +26,8 @@ import numpy as np
 import pytest
 
 from carnot.models.eorm import EORMModel
+from carnot.pipeline.hallucination_basin import HallucinationBasinDetector
+from carnot.pipeline.nup_probe_v4 import NUPProbeV4
 from carnot.pipeline.sink_probe import SinkProbe
 from carnot.pipeline.three_tier_pipeline import (
     ThreeTierPipeline,
@@ -702,3 +708,225 @@ class TestVerifyReturnTypes:
         verified, tier_used, energy = pipeline.verify("r", attention_matrix=attn_np)
         assert tier_used == "sink_probe"
         assert verified is True
+
+
+# ---------------------------------------------------------------------------
+# Tier 0c — NUP Probe v4 wiring
+# ---------------------------------------------------------------------------
+
+
+def _make_nup_low_score() -> NUPProbeV4:
+    """NUPProbeV4 instance whose score() always returns -1.0 (below default threshold 0.0).
+
+    We train it so incorrect steps get higher energy than correct steps, then
+    use a known correct-looking string that scores low.  Simpler: reset weights to
+    all-negative so dot(weights, features) is always negative.
+    """
+    probe = NUPProbeV4(energy_dim=8, random_seed=0)
+    # Force all weights to a large negative value so score() always returns << 0.
+    probe._weights = [-10.0] * probe.energy_dim
+    probe._bias = 0.0
+    return probe
+
+
+def _make_nup_high_score() -> NUPProbeV4:
+    """NUPProbeV4 instance whose score() always returns a large positive value.
+
+    Force weights all-positive so any non-trivial response gets a high score.
+    """
+    probe = NUPProbeV4(energy_dim=8, random_seed=0)
+    probe._weights = [10.0] * probe.energy_dim
+    probe._bias = 0.0
+    return probe
+
+
+class TestTier0cNUPProbeV4:
+    """Spec: REQ-VERIFY-111, SCENARIO-VERIFY-146, SCENARIO-VERIFY-147"""
+
+    def test_nup_probe_none_does_not_add_tier0c(self):
+        """SCENARIO-VERIFY-147: nup_probe_v4=None → pipeline unchanged, no Tier 0c step.
+
+        With a threshold that prevents EORM from clearing, response reaches Ising.
+        If Tier 0c were somehow triggered with probe=None, it would short-circuit
+        to "nup_probe_v4" instead of "ising" — this confirms it does not.
+        """
+        pipeline = _make_pipeline(sink_threshold=0.99, eorm_threshold=-999.0)
+        _v, tier_used, _e = pipeline.verify("hello world", attention_matrix=None)
+        assert tier_used == "ising"
+
+    def test_nup_probe_low_score_clears_before_tier1(self):
+        """SCENARIO-VERIFY-146: probe score ≤ threshold → tier_used='nup_probe_v4', verified=True."""
+        nup = _make_nup_low_score()  # score always << 0
+        pipeline = ThreeTierPipeline(
+            sink_probe=SinkProbe(threshold=0.3),
+            eorm_model=_make_eorm(),
+            ising_pipeline=_ising_stub_wrong,  # would return False if reached
+            sink_threshold=0.99,
+            eorm_threshold=-999.0,
+            nup_probe_v4=nup,
+            nup_probe_threshold=0.0,
+        )
+        verified, tier_used, energy = pipeline.verify(
+            "The answer is 42.", attention_matrix=None
+        )
+        assert tier_used == "nup_probe_v4"
+        assert verified is True
+        assert energy <= 0.0
+
+    def test_nup_probe_high_score_falls_through(self):
+        """When NUP score > threshold, Tier 0c does NOT clear — pipeline continues."""
+        nup = _make_nup_high_score()  # score always >> 0
+        pipeline = ThreeTierPipeline(
+            sink_probe=SinkProbe(threshold=0.3),
+            eorm_model=_make_eorm(),
+            ising_pipeline=_ising_stub_correct,
+            sink_threshold=0.99,
+            eorm_threshold=-999.0,
+            nup_probe_v4=nup,
+            nup_probe_threshold=0.0,
+        )
+        _v, tier_used, _e = pipeline.verify("hello", attention_matrix=None)
+        # High NUP score → not cleared by Tier 0c → falls through to Ising
+        assert tier_used == "ising"
+
+    def test_tier0c_skip_count_increments_in_benchmark(self):
+        """benchmark() increments tier0c_skip_count for each Tier 0c early exit."""
+        nup = _make_nup_low_score()
+        pipeline = ThreeTierPipeline(
+            sink_probe=SinkProbe(threshold=0.3),
+            eorm_model=_make_eorm(),
+            ising_pipeline=_ising_stub_correct,
+            nup_probe_v4=nup,
+            nup_probe_threshold=0.0,
+        )
+        responses = [{"response": "r", "question": "q", "attention_matrix": None} for _ in range(5)]
+        result = pipeline.benchmark(responses, [True] * 5)
+        assert result.tier0c_skip_count == 5
+
+    def test_tier0c_skip_count_zero_when_probe_absent(self):
+        """tier0c_skip_count stays 0 when nup_probe_v4=None."""
+        pipeline = _make_pipeline()
+        responses = [{"response": "r", "question": "q", "attention_matrix": None}]
+        result = pipeline.benchmark(responses, [True])
+        assert result.tier0c_skip_count == 0
+
+
+# ---------------------------------------------------------------------------
+# Tier 0d — HallucinationBasinDetector wiring
+# ---------------------------------------------------------------------------
+
+
+def _quadratic_energy(x: jnp.ndarray) -> float:
+    """Simple quadratic energy proxy for CI tests: E(x) = sum(x^2)."""
+    return float(jnp.sum(x ** 2))
+
+
+def _make_basin_pipeline(basin_threshold: float = 0.5) -> ThreeTierPipeline:
+    """Build a pipeline with a basin detector wired in."""
+    detector = HallucinationBasinDetector(
+        energy_fn=_quadratic_energy,
+        n_perturbations=4,
+        threshold=basin_threshold,
+        perturbation_scale=0.01,  # tiny noise → deep basin for all states
+    )
+    return ThreeTierPipeline(
+        sink_probe=SinkProbe(threshold=0.99),
+        eorm_model=_make_eorm(),
+        ising_pipeline=_ising_stub_correct,
+        sink_threshold=0.99,
+        eorm_threshold=-999.0,
+        basin_detector=detector,
+        basin_threshold=basin_threshold,
+    )
+
+
+class TestTier0dBasinDetector:
+    """Spec: REQ-VERIFY-112, SCENARIO-VERIFY-148"""
+
+    def test_basin_detector_skipped_when_hidden_states_none(self):
+        """When hidden_states=None, Tier 0d is bypassed entirely (CI-safe).
+
+        With sink_threshold=0.99 and eorm_threshold=-999, response reaches Ising.
+        If Tier 0d ran without hidden_states it would error or short-circuit; this
+        confirms it is skipped correctly.
+        """
+        pipeline = _make_basin_pipeline()
+        _v, tier_used, _e = pipeline.verify("r", attention_matrix=None, hidden_states=None)
+        assert tier_used == "ising"
+
+    def test_basin_detector_low_risk_clears(self):
+        """SCENARIO-VERIFY-148: low basin_risk_score ≤ threshold → tier_used='basin_detector'."""
+        pipeline = _make_basin_pipeline(basin_threshold=0.9)  # wide threshold → always clears
+        hidden = jnp.zeros((3, 8))  # zero hidden states → deep basin (risk ≈ 0.5 when depth=0)
+        verified, tier_used, energy = pipeline.verify(
+            "r", attention_matrix=None, hidden_states=hidden
+        )
+        assert tier_used == "basin_detector"
+        assert verified is True
+
+    def test_tier0d_skip_count_increments_in_benchmark(self):
+        """benchmark() increments tier0d_skip_count for each Tier 0d early exit."""
+        pipeline = _make_basin_pipeline(basin_threshold=0.9)
+        hidden = jnp.zeros((2, 4))
+        responses = [
+            {"response": "r", "question": "q", "attention_matrix": None, "hidden_states": hidden}
+            for _ in range(4)
+        ]
+        result = pipeline.benchmark(responses, [True] * 4)
+        assert result.tier0d_skip_count == 4
+
+    def test_tier0d_skip_count_zero_when_no_hidden_states(self):
+        """tier0d_skip_count stays 0 when no hidden_states supplied in responses."""
+        pipeline = _make_basin_pipeline(basin_threshold=0.9)
+        responses = [{"response": "r", "question": "q", "attention_matrix": None}]
+        result = pipeline.benchmark(responses, [True])
+        assert result.tier0d_skip_count == 0
+
+    def test_both_tiers_wired_clears_at_0c_when_nup_low(self):
+        """When both 0c and 0d are wired and NUP score is low, response clears at 0c.
+
+        0d is never reached because 0c fires first.
+        """
+        nup = _make_nup_low_score()
+        detector = HallucinationBasinDetector(
+            energy_fn=_quadratic_energy, n_perturbations=4, threshold=0.5, perturbation_scale=0.01
+        )
+        pipeline = ThreeTierPipeline(
+            sink_probe=SinkProbe(threshold=0.99),
+            eorm_model=_make_eorm(),
+            ising_pipeline=_ising_stub_correct,
+            sink_threshold=0.99,
+            eorm_threshold=-999.0,
+            nup_probe_v4=nup,
+            nup_probe_threshold=0.0,
+            basin_detector=detector,
+            basin_threshold=0.9,
+        )
+        hidden = jnp.zeros((2, 4))
+        _v, tier_used, _e = pipeline.verify(
+            "The sky is blue.", attention_matrix=None, hidden_states=hidden
+        )
+        assert tier_used == "nup_probe_v4"
+
+    def test_both_tiers_wired_nup_high_basin_low_clears_at_0d(self):
+        """When NUP score is high (0c misses) but basin risk is low (0d clears)."""
+        nup = _make_nup_high_score()  # NUP won't clear
+        detector = HallucinationBasinDetector(
+            energy_fn=_quadratic_energy, n_perturbations=4, threshold=0.5, perturbation_scale=0.01
+        )
+        pipeline = ThreeTierPipeline(
+            sink_probe=SinkProbe(threshold=0.99),
+            eorm_model=_make_eorm(),
+            ising_pipeline=_ising_stub_correct,
+            sink_threshold=0.99,
+            eorm_threshold=-999.0,
+            nup_probe_v4=nup,
+            nup_probe_threshold=0.0,
+            basin_detector=detector,
+            basin_threshold=0.9,  # wide threshold → basin always clears
+        )
+        hidden = jnp.zeros((2, 4))
+        _v, tier_used, _e = pipeline.verify(
+            "some text", attention_matrix=None, hidden_states=hidden
+        )
+        assert tier_used == "basin_detector"

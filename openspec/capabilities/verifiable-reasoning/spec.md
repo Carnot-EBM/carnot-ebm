@@ -9236,6 +9236,68 @@ and `loss_history` with `n_epochs` entries
 
 **Implementation Status:** Done (Exp 523)
 
+### REQ-VERIFY-111: NUP Probe v4 Wired as Tier 0c in ThreeTierPipeline
+
+**Requirement:** `ThreeTierPipeline` accepts an optional `nup_probe_v4: NUPProbeV4 | None`
+parameter.  When set, `verify()` runs it after Tier 0b (SpilledEnergy) and before Tier 1
+(SinkProbe).  If `nup_probe_v4.score(response) <= nup_probe_threshold`, the response is
+cleared as verified (`tier_used="nup_probe_v4"`) without executing Tiers 1-3.
+
+**Rationale:** NUP Probe v4 achieved AUC=1.0 in Exp 523.  Wiring it into the live cascade
+saves Tiers 1-3 for the responses it cannot clearly classify (score above threshold).
+
+**Acceptance:** `tier0c_skip_count` field increments on each Tier 0c early exit in
+`ThreeTierPipelineResult`.  When `nup_probe_v4=None`, pipeline behaves identically to
+pre-wiring (no regression).
+
+**Implementation Status:** Done (Exp 530)
+
+Spec: REQ-VERIFY-111, SCENARIO-VERIFY-146, SCENARIO-VERIFY-147
+
+### REQ-VERIFY-112: Hallucination Basin Detector Wired as Tier 0d in ThreeTierPipeline
+
+**Requirement:** `ThreeTierPipeline` accepts an optional
+`basin_detector: HallucinationBasinDetector | None` parameter.  When set and
+`hidden_states` is provided to `verify()`, it runs after Tier 0c and before Tier 1.
+If `basin_detector.detect(hidden_states).basin_risk_score <= basin_threshold`, the
+response is cleared (`tier_used="basin_detector"`) without executing Tiers 1-3.
+When `hidden_states=None`, Tier 0d is bypassed (CI-safe).
+
+**Rationale:** HallucinationBasinDetector (Exp 521) adds a latent-space basin-depth
+signal as a complementary modality to Tier 0c's text-level energy scoring.
+
+**Acceptance:** `tier0d_skip_count` field increments on each Tier 0d early exit.
+
+**Implementation Status:** Done (Exp 530)
+
+Spec: REQ-VERIFY-112, SCENARIO-VERIFY-148
+
+### SCENARIO-VERIFY-146: NUP Probe v4 Wired — Low Score Clears Response Before Tier 1
+
+**Given** a `ThreeTierPipeline` with `nup_probe_v4` wired and `nup_probe_threshold=0.0`
+**And** a mock probe that returns score <= 0.0 for a given response
+**When** `verify(response)` is called
+**Then** `tier_used="nup_probe_v4"`, `verified=True`, and Tiers 1-3 are not called
+
+**Implementation Status:** Done (Exp 530)
+
+### SCENARIO-VERIFY-147: NUP Probe v4 Absent — Pipeline Unchanged
+
+**Given** a `ThreeTierPipeline` with `nup_probe_v4=None` (default)
+**When** `verify(response)` is called
+**Then** the pipeline behaves identically to the pre-wiring version (no Tier 0c step)
+
+**Implementation Status:** Done (Exp 530)
+
+### SCENARIO-VERIFY-148: Basin Detector Wired — Low Risk Score Clears Response
+
+**Given** a `ThreeTierPipeline` with `basin_detector` wired and `basin_threshold=0.5`
+**And** `hidden_states` provided such that `basin_risk_score <= 0.5`
+**When** `verify(response, hidden_states=hidden_states)` is called
+**Then** `tier_used="basin_detector"`, `verified=True`, and Tiers 1-3 are not called
+
+**Implementation Status:** Done (Exp 530)
+
 ## REQ-INFRA-058: apply_env_autofix Overrides Falsy CARNOT_FORCE_LIVE When GPU Detected
 
 **Requirement:** When `gpu_detected=True`, `apply_env_autofix()` must treat
