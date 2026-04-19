@@ -124,6 +124,24 @@ Carnot includes four tiers of energy-based models, each with different capacity 
 
 Each tier implements the same `EnergyFunction` trait (Rust) / protocol (Python), so algorithms written against the interface work with any tier. Models trained in one language can be loaded in the other via the safetensors format.
 
+## Why Ising? Learned and Writable
+
+A common question, especially when comparing Carnot to pure learned architectures like JEPA (Joint Embedding Predictive Architecture), is: if you're going to train an energy model on data anyway, why bother with an Ising at all? Isn't a learned embedding space strictly more expressive?
+
+The answer is that Ising is not just a learned function -- it is a **learned and writable** function, and no other standard architecture offers this cleanly.
+
+**Learned:** Ising couplings (`J_ij`) and biases (`h_i`) are trained from data the same way any neural net is trained -- typical recipes include contrastive divergence, pseudo-likelihood, and score matching. In that mode Ising is a perfectly ordinary learned EBM. Carnot's EORM (Energy-based Outcome Reward Model) uses exactly this path to learn CoT step quality from labelled examples.
+
+**Writable:** But Ising couplings can also be **written down directly** from symbolic reasoning. If a theorem prover (Z3) establishes an invariant like "these two facts cannot both be true", that invariant compiles into a specific `J_ij` entry -- a large negative coupling penalising the disallowed joint state. The resulting energy surface is well-defined whether the entries came from training or from theorem-prover output, and you can mix both in the same model. Hand-coded arithmetic invariants, unit-of-measure constraints, monotonicity requirements -- all of them drop into the same `J` matrix alongside the learned entries.
+
+This matters because the verification pipeline has two kinds of knowledge to represent. Some things are learned from data ("CoT steps that say X usually hallucinate"). Other things are *known* by symbolic reasoning ("if the question asks about dollars and the answer is in euros without a conversion, the answer is wrong"). A pure learned architecture like JEPA handles the first kind beautifully but has no natural interface for the second -- you cannot `add_constraint("a + b = c")` to a JEPA's embedding space, because its energy lives in latent coordinates that symbolic reasoning does not speak. Ising's discrete pairwise form *is* the interface symbolic reasoning already speaks.
+
+The practical architecture in Carnot reflects this. JEPA-style detectors sit in the fast-detection tier -- they are excellent at flagging statistically anomalous steps. Ising sits underneath, accepting the same flags plus whatever Z3-compiled invariants apply to the domain, and producing the continuous energy gradient that the repair step descends to actually fix the answer. JEPA flags; Ising fixes.
+
+Put differently: in a learned-only architecture, every piece of knowledge has to be paid for in training data. In a learned-plus-writable architecture, knowledge that is already provable symbolically does not have to be re-learned from examples. That is a significant efficiency gain for any domain where some rules are genuinely known.
+
+This also maps cleanly onto the hardware roadmap. An Ising's `J` matrix is the natural representation for physical p-bits, so FPGA bitfiles and Extropic-style TSU primitives speak the same format. The writable half of the model becomes a hardware contract, not just a software convenience.
+
 ## Next Steps
 
 - [Getting Started](getting-started.md) -- install and run your first verification
