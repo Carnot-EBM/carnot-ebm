@@ -1,0 +1,143 @@
+{
+  "experiment": 499,
+  "title": "Milestone 2026.04.37 Retrospective",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T09:53:56Z",
+  "finished_at": "2026-04-19T09:53:56Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": [
+    "credibility_gap_status",
+    "deferred_exp_ids",
+    "duration_s",
+    "env_autofix",
+    "exp_ids_loaded",
+    "experiment",
+    "experiments_completed",
+    "finished_at",
+    "honest_verdict",
+    "jepa_auc_final",
+    "live_200q_statistically_positive",
+    "meta_reflection",
+    "milestone",
+    "n_deferred_to_gpu",
+    "new_retro_items",
+    "nup_probe_v2_viable",
+    "retro_031_closed",
+    "retro_033_closed",
+    "retro_038_closed",
+    "retro_039_closed",
+    "retro_040_closed",
+    "retro_045_closed",
+    "retro_046_closed",
+    "retro_047_closed",
+    "retro_improvement_adoption_detail",
+    "retro_improvement_adoption_rate",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "sure_replay_improves",
+    "thesis_confirmed",
+    "title"
+  ],
+  "milestone": "2026.04.37",
+  "n_deferred_to_gpu": 3,
+  "deferred_exp_ids": [
+    488,
+    489,
+    490
+  ],
+  "retro_031_closed": true,
+  "retro_033_closed": false,
+  "retro_038_closed": false,
+  "retro_039_closed": false,
+  "retro_040_closed": true,
+  "retro_045_closed": true,
+  "retro_046_closed": true,
+  "retro_047_closed": false,
+  "jepa_auc_final": 0.9666666666666667,
+  "thesis_confirmed": false,
+  "live_200q_statistically_positive": false,
+  "nup_probe_v2_viable": false,
+  "sure_replay_improves": false,
+  "retro_improvement_adoption_rate": 1.0,
+  "retro_improvement_adoption_detail": {
+    "batching_hook": true,
+    "thermal_gate": true,
+    "harness_patch": true
+  },
+  "experiments_completed": 12,
+  "exp_ids_loaded": [
+    487,
+    488,
+    489,
+    490,
+    491,
+    492,
+    493,
+    494,
+    495,
+    496,
+    497,
+    498
+  ],
+  "new_retro_items": [
+    {
+      "id": "RETRO-048",
+      "description": "Gemma4 CUDA OOM persists after GPUVRAMGateV2: active conductor process holds 8.96 GiB (unkillable by zombie-kill logic), leaving only ~5.37 GiB free vs 14.89 GiB required.  Fix: use quantized Gemma4 INT4/GGUF (~8-10 GiB) so the model fits alongside the conductor process.  Blocks RETRO-033, RETRO-038, RETRO-039.",
+      "priority": "CRITICAL",
+      "target_milestone": "2026.04.38",
+      "blocked_retro_items": [
+        "RETRO-033",
+        "RETRO-038",
+        "RETRO-039"
+      ]
+    },
+    {
+      "id": "RETRO-033",
+      "description": "Live 100q verify-repair positive result \u2014 FIFTH consecutive milestone miss.  Blocked by Gemma4 OOM (RETRO-048).  Must be first experiment scheduled after quantized model is available.",
+      "priority": "CRITICAL",
+      "target_milestone": "2026.04.38",
+      "miss_count": 5
+    },
+    {
+      "id": "RETRO-038",
+      "description": "Live 200q VeriCoT+VPRM statistically significant result not confirmed.  Blocked by Gemma4 OOM (RETRO-048).  Schedule after RETRO-048 resolved.",
+      "priority": "HIGH",
+      "target_milestone": "2026.04.38"
+    },
+    {
+      "id": "RETRO-039",
+      "description": "GSM-Symbolic adversarial thesis unconfirmed.  Exp 490 returned gpu_required \u2014 model prewarm failed due to Gemma4 OOM (RETRO-048).  Schedule after quantized model available.",
+      "priority": "HIGH",
+      "target_milestone": "2026.04.38"
+    },
+    {
+      "id": "RETRO-049",
+      "description": "NUP Probe v2 AUC = 0.600 (threshold 0.700).  Bayesian semantic entropy approach produced no improvement over v1 (delta ~1e-16).  Next step: add per-token entropy, top-k probability spread, and attention pattern features.  Do not promote to Tier 0c until AUC > 0.700.",
+      "priority": "MEDIUM",
+      "target_milestone": "2026.04.38"
+    },
+    {
+      "id": "RETRO-050",
+      "description": "SuRe surprise replay shows no PPSEBM isolation improvement (isolation_improvement=-0.1172, sure_better=False).  FR-11 Tier 2 self-learning strategy needs a different approach.  Candidate: gradient-weighted replay using EBM energy magnitude as priority signal instead of LLM surprise.",
+      "priority": "MEDIUM",
+      "target_milestone": "2026.04.38"
+    }
+  ],
+  "credibility_gap_status": "PARTIALLY_CLOSED",
+  "meta_reflection": {
+    "vram_deadlock_broken": "NOT_BROKEN",
+    "vram_note": "3 experiments deferred despite GPUVRAMGateV2.  Root cause shifted from zombie VRAM to active-process VRAM held by the conductor itself.  GPUVRAMGateV2 solved the zombie problem but exposed a deeper memory budget problem.",
+    "adoption_trend": "Adoption rate: 0% (.33) \u2192 50% (.35) \u2192 60% (.36) \u2192 100% (.37).  First time all three scheduled enforcement items were installed in a single milestone.  The pattern from prior milestones (infrastructure items adopted, enforcement items not) reversed in .37: all three enforcement items (batching hook, thermal gate, harness patch) were successfully delivered.",
+    "jepa_trajectory": "JEPA AUC: 0.667 (.33) \u2192 0.400 (.35) \u2192 0.281 (.36) \u2192 0.967 (.37).  Curriculum training reversed the three-milestone regression (before=0.600 \u2192 after=0.967, improvement=0.367).  FR-11 Tier 3 is recovered.  The synthetic-augmentation strategy from Exp 491 diagnostic (augment_with_synthetic_pairs) was the key lever.",
+    "credibility_verdict": "STILL_OPEN after 5 consecutive milestone misses.  The credibility gap (unconfirmed live verify-repair improvement at 100q+) cannot be closed until Gemma4 can load alongside the conductor process.  GPUVRAMGateV2 solved the zombie subproblem.  The remaining blocker is model size: Gemma4 requires 14.89 GiB and the conductor process consumes ~8.96 GiB of the 24 GiB GPU 0.  INT4/GGUF quantization (8-10 GiB target) is the critical path item for .38.  Without it, RETRO-033, -038, and -039 will defer again."
+  },
+  "honest_verdict": "milestone_complete",
+  "env_autofix": {
+    "gpu_detected": true,
+    "auto_fix_applied": true,
+    "final_env_value": "1"
+  }
+}
