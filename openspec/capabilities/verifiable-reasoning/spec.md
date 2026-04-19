@@ -7208,6 +7208,80 @@ Spec: REQ-HARDWARE-012, SCENARIO-HARDWARE-012
 **Then** the artifact field `honest_verdict` is `'cpu_baseline_only'`
 **And** `npu_executed` is False in the artifact
 
+---
+
+## KV260 FPGA Ising Sampler v2 (Exp 471)
+
+### REQ-HARDWARE-013: 128-Spin Sparsified Ising Sampler Verilog RTL
+
+`hardware/kv260/ising_sampler_128_sparse.v` shall implement a 128-spin Ising
+sampler with:
+1. AXI-Lite slave interface for coupling matrix writes (0x4000 base) and spin reads (0x8010+).
+2. Sparsified coupling matrix with 10-bit signed precision per entry.
+3. 32-bit Galois LFSR for hardware-efficient pseudorandom thermal noise.
+4. Metropolis update rule per spin (clock-driven).
+
+**Why 128 spins:** Fits in KV260's ~256K LUTs with room for control logic.
+**Why sparsified:** arXiv 2604.04606 shows 6x speedup vs SA, 4x larger scale at 90% sparsity.
+**Why LFSR:** Two LUTs in Xilinx fabric, adequate for thermal noise uncorrelated between spins.
+**Why 10-bit precision:** arXiv 2505.02103 validates 10-bit sufficient for EP-trained Ising machines.
+
+**Implementation Status:** Done (Exp 471)
+
+Spec: REQ-HARDWARE-013, SCENARIO-HARDWARE-013
+
+### REQ-HARDWARE-014: FpgaBackend CPU Simulation Mode
+
+`FpgaBackend` (in `carnot.hardware.fpga_backend`) shall:
+1. Default to `simulation_mode=True` when `bitfile_path` is `None`.
+2. In simulation mode, use `ParallelIsingSampler` as a drop-in CPU backend.
+3. Return samples of shape `(n_samples, n_spins)` with dtype `bool` from `sample()`.
+
+**Why simulation fallback:** Most contributors and all CI runners lack a KV260.
+CPU simulation enables correctness testing without hardware.
+
+**Implementation Status:** Done (Exp 471)
+
+Spec: REQ-HARDWARE-014, SCENARIO-HARDWARE-014
+
+### REQ-HARDWARE-015: EP Coupling Update Uses 10-Bit Precision and POSIX-Atomic Write
+
+`FpgaBackend.update_couplings(new_J)` shall:
+1. Encode the coupling matrix as 10-bit signed integers (range -511..511).
+2. Write the encoded matrix to disk using a POSIX-atomic rename
+   (write to a temp file in the same directory, then `os.rename()` to the target).
+
+**Why POSIX atomic:** Prevents the KV260 PetaLinux driver from reading a torn
+(partially-written) coupling matrix during the EP outer loop update.
+
+**Implementation Status:** Done (Exp 471)
+
+Spec: REQ-HARDWARE-015, SCENARIO-HARDWARE-015
+
+### SCENARIO-HARDWARE-013: SparsifiedIsingConfig Generates Correct Sparse Matrix
+
+**Given** `SparsifiedIsingConfig(n_spins=64, sparsity=0.9, seed=10)`
+**When** `coupling_matrix()` is called
+**Then** the result has shape `(64, 64)`, dtype `float32`, zero diagonal, and symmetric
+**And** approximately 90% of off-diagonal entries are zero (within ±10% tolerance)
+**And** `n_edges()` returns fewer edges than the dense (sparsity=0) version
+
+### SCENARIO-HARDWARE-014: FpgaBackend Simulation Sample Returns Correct Shape
+
+**Given** `FpgaBackend(simulation_mode=True)`
+**When** `sample(SparsifiedIsingConfig(n_spins=8, sparsity=0.5), n_samples=10)` is called
+**Then** the result has shape `(10, 8)` and dtype `bool`
+
+**Given** `FpgaBackend(bitfile_path=None)`
+**When** constructed
+**Then** `simulation_mode` is `True` (bitfile_path=None forces simulation)
+
+### SCENARIO-HARDWARE-015: update_couplings Uses Atomic Rename
+
+**Given** `FpgaBackend(simulation_mode=True)` with a writable coupling cache path
+**When** `update_couplings(new_J)` is called
+**Then** exactly one `os.rename()` call is made (src in same dir as dst)
+**And** the destination file contains the coupling matrix as a loadable `.npy` file
 
 ---
 
