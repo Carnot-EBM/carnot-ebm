@@ -36,6 +36,7 @@ from carnot.models.jepa_curriculum_trainer import (
     JEPARetrainV3Result,
 )
 from carnot.models.kaem_crossover import KAEMCrossoverResult
+from carnot.models.kaem_extended_result import KAEMExtendedResult
 from carnot.models.kaem_energy import (
     KAEMEnergy,
     UnivariateKAEMLayer,
@@ -76,6 +77,7 @@ __all__ = [
     "JEPACurriculumTrainer",
     "JEPARetrainV3Result",
     "KAEMCrossoverResult",
+    "KAEMExtendedResult",
     "KAEMEnergy",
     "UnivariateKAEMLayer",
     "benchmark_kaem_vs_mcmc",
