@@ -78,8 +78,10 @@ EXP489_PAIRS_PATH = _REPO_ROOT / "results" / "exp489_cot_pairs.json"
 EXP477_MIN_CONFIDENCE = 0.7
 EXP477_MIN_COVERAGE = 0.3
 
-# Diagnostic regime simulations: fewer epochs for speed on CPU
-N_EPOCHS = 100
+# Diagnostic regime simulations: 5 epochs with ≤50 triples per regime.
+# Each EORM train_step takes ~280ms on CPU; 50 triples × 5 epochs × 4 regimes
+# ≈ 1000 steps × 280ms ≈ 5 minutes total — well within the 40-minute watchdog.
+N_EPOCHS = 5
 
 
 def _load_json_pairs(path: Path) -> list[dict]:

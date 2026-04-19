@@ -192,7 +192,12 @@ def _pairs_to_eorm_triples(
     # Shuffle so regime-specific orderings dominate, not accidental pair order
     rng = random.Random(42)
     rng.shuffle(triples)
-    return triples
+
+    # Cap at 50 triples: the diagnostic compares RELATIVE AUCs across regimes,
+    # not absolute training quality. More triples → O(correct × incorrect) Cartesian
+    # blowup → minutes per train_step call at 280ms each on CPU. 50 triples ×
+    # 5 epochs × 4 regimes = 1000 steps ≈ 5 minutes total.
+    return triples[:50]
 
 
 def _compute_auc(
