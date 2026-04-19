@@ -4,6 +4,11 @@ from carnot.samplers.backend import CpuBackend, SamplerBackend, TsuBackend, get_
 from carnot.samplers.dwave_sampler import DWaveSampler
 from carnot.samplers.fpga_backend import FpgaBackend
 from carnot.samplers.fpga_ising import FPGAIsingSampler
+from carnot.samplers.gpu_oim_simulator import (
+    GPUOscillatorIsingSimulator,
+    JEPARetrainResult,
+    OIMSpeedupResult,
+)
 from carnot.samplers.hmc import HMCSampler
 from carnot.samplers.langevin import LangevinSampler
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
@@ -20,4 +25,7 @@ __all__ = [
     "TsuBackend",
     "DWaveSampler",
     "get_backend",
+    "GPUOscillatorIsingSimulator",
+    "OIMSpeedupResult",
+    "JEPARetrainResult",
 ]

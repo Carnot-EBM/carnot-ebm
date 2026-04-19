@@ -3300,6 +3300,25 @@ accuracy across batches.
 
 Spec: REQ-LEARN-027, SCENARIO-LEARN-047
 
+### REQ-LEARN-036: JEPA Retrain on 200+ Real CoT Pairs (Exp 472)
+
+The system SHALL provide JEPARetrainResult capturing before/after AUC-ROC
+when JEPA is retrained on an expanded dataset of real chain-of-thought pairs.
+
+- REQ-LEARN-036-1: `JEPARetrainResult(n_pairs: int, before_auc: float, after_auc: float)` SHALL be
+  a dataclass with `auc_improvement: float` (= after_auc - before_auc) and
+  `target_met: bool` (True when after_auc > 0.700).
+- REQ-LEARN-036-2: Exp 472 retrains JEPA on all available real CoT pairs (Exp 443 57 pairs +
+  Exp 464/467 up to 200 additional), capped at 300 total.
+- REQ-LEARN-036-3: The retrain targets after_auc > 0.700 on the held-out test split.
+
+### SCENARIO-LEARN-064: JEPARetrainResult Target Met
+
+**Given** `JEPARetrainResult(n_pairs=200, before_auc=0.571, after_auc=0.720)`
+**When** `target_met` is evaluated
+**Then** `target_met` is True (0.720 > 0.700)
+**And** `auc_improvement` is approximately 0.149
+
 ### REQ-LEARN-037: Cross-Session Tier 2 Relay
 
 **Purpose:** Validate that constraint templates learned in Session N persist to Session N+1 and reduce false positive (FP) rate on the same error domain. Within-session learning is washed out at process restart; persistent memory accumulates signal across queries and sessions.
