@@ -7883,3 +7883,61 @@ subsequent poll fired during this window, saw VRAM still held, and deferred.  Ex
 
 Spec: REQ-INFRA-049, REQ-INFRA-050, REQ-INFRA-051,
       SCENARIO-INFRA-057, SCENARIO-INFRA-058, SCENARIO-INFRA-059
+
+---
+
+## Exp 488: Live 100q Precision v5 — GPUVRAMGateV2 + Explicit cuda:0/cuda:1
+
+### REQ-BENCH-034: 100q v5 Uses GPUVRAMGateV2 with kill_first=True Before Model Load
+
+Experiment 488 shall run `GPUVRAMGateV2(min_free_gb=8.0, kill_first=True)` as the first
+gate before any model load, ensuring zombie processes are killed and VRAM is confirmed free
+before allocation.
+
+**Implementation Status:** Done (Exp 488)
+
+### REQ-BENCH-035: 100q v5 Assigns Models to Explicit CUDA Devices via DualGPUHarness
+
+Experiment 488 shall assign `google/gemma-4-E4B-it` to `cuda:0` and `Qwen/Qwen3.5-0.8B`
+to `cuda:1` explicitly via `DualGPUHarness.apply()`, never using `device_map='auto'`.
+Explicit device assignment prevents VRAM contention when two large models are loaded
+simultaneously.
+
+**Implementation Status:** Done (Exp 488)
+
+### REQ-BENCH-036: 100q v5 Writes CoT Pairs for NUP Probe v2 Retrain
+
+Experiment 488 shall write 100 CoT pairs per model (200 total) to
+`results/exp488_cot_pairs.json` for use in NUP Probe v2 (Exp 496) retraining.
+Each pair contains (model, question, cot_text, correct).
+
+**Implementation Status:** Done (Exp 488)
+
+### SCENARIO-BENCH-053: GPUVRAMGateV2 Fires Before Model Load in Exp 488
+
+**Given** Experiment 488 running on a machine with CUDA GPUs
+**When** the experiment starts
+**Then** `GPUVRAMGateV2(kill_first=True).__enter__()` is called before any model is loaded
+**And** if VRAM is insufficient after gate, a deferred artifact with
+`honest_verdict='deferred_retro_033'` is written and the experiment exits without loading models
+
+### SCENARIO-BENCH-054: Exp 488 Assigns Gemma4 to cuda:0 and Qwen to cuda:1
+
+**Given** `DualGPUHarness(n_gpus=2, live_mode=True)` and two model specs
+**When** `apply()` is called with `[{'name': 'google/gemma-4-E4B-it'}, {'name': 'Qwen/Qwen3.5-0.8B'}]`
+**Then** the first spec receives `gpu=0` and `device_map={'': 'cuda:0'}`
+**And** the second spec receives `gpu=1` and `device_map={'': 'cuda:1'}`
+
+### SCENARIO-BENCH-055: Exp 488 Writes Valid Deliverable with All Schema Fields
+
+**Given** a successful Exp 488 run
+**When** the experiment completes
+**Then** `results/experiment_488_live_100q_precision_v5.json` exists and contains:
+- `schema='carnot.live_precision.v5'`
+- `gemma4_result` with `signed_improvement`, `ci_95_wilson`, `is_positive`
+- `qwen_result` with the same fields
+- `cot_pairs_written >= 0`
+- `gpu_vram_gate_v2_fired=True`
+- `dual_gpu_explicit_assignment=True`
+- `retro_033_closed` (bool)
+- `honest_verdict` in `{'retro_033_closed_positive', 'retro_033_closed_negative', 'deferred_retro_033'}`
