@@ -8985,3 +8985,57 @@ Spec: REQ-INFRA-069, SCENARIO-INFRA-078
 **And** `result.killed == []` and `result.skipped == []`
 
 **Implementation Status:** Done (Exp 525)
+
+---
+
+## Exp 517: Controlled DualGPU Test (RETRO-052 resolution)
+
+### REQ-INFRA-070: DualGPUControlledTest Measures GPU 1 Compute Utilization During Inference
+
+**Requirement:** `sample_gpu_utilization(device_ids, n_samples, interval_s)` must poll
+`nvmlDeviceGetUtilizationRates()` for each device_id `n_samples` times and return the
+mean compute utilization percentage per device.  `run_dual_inference(model_a, model_b,
+prompts)` must run both models simultaneously in threads.  `DualGPUTestResult` must carry
+`gpu0_compute_pct`, `gpu1_compute_pct`, `n_samples_run`, `inference_mode`, and
+`honest_verdict`.
+
+**Rationale:** RETRO-052: the DualGPU sweep (Exp 505) found n_scripts_patched=0, yet GPU 1
+remained at 0% compute.  Either all scripts were already patched (and another root cause
+exists) or the sweep's detection missed eligible scripts.  This experiment answers the
+question definitively: does forward-pass compute actually run on GPU 1?  It loads one model
+per GPU simultaneously, then samples utilization during parallel inference.
+
+**Acceptance:** The experiment writes `results/experiment_517_dual_gpu_controlled_test.json`
+with `gpu1_utilization_verified` and `retro_052_status` fields.  CI stub returns
+`{0: 0.0, 1: 0.0}` for both devices so the test suite passes without GPU hardware.
+
+Spec: REQ-INFRA-070, SCENARIO-INFRA-079, SCENARIO-INFRA-080
+
+### SCENARIO-INFRA-079: sample_gpu_utilization Returns Mean Per Device Over n_samples
+
+**Given** `pynvml.nvmlDeviceGetUtilizationRates()` returns `.gpu == 50` for device 0
+  and `.gpu == 30` for device 1 on every call
+**When** `sample_gpu_utilization([0, 1], n_samples=4, interval_s=0.0)` is called
+**Then** the returned dict has key 0 with value 50.0 and key 1 with value 30.0
+**And** pynvml was called exactly 4 times per device
+
+**CI stub:** When pynvml is not installed, returns `{device_id: 0.0}` for all device_ids
+so the test suite can verify the data contract without GPU hardware.
+
+**Implementation Status:** Done (Exp 517)
+
+### SCENARIO-INFRA-080: DualGPUTestResult honest_verdict Reflects Inference Mode and GPU 1 Activity
+
+**Given** `inference_mode='live_gpu'` and `gpu1_compute_pct > 10.0`
+**When** `DualGPUTestResult` is constructed
+**Then** `honest_verdict == 'gpu1_active'`
+
+**Given** `inference_mode='live_gpu'` and `gpu1_compute_pct <= 10.0`
+**When** `DualGPUTestResult` is constructed
+**Then** `honest_verdict == 'gpu1_idle'`
+
+**Given** `inference_mode='gpu_required'` (GPU not available)
+**When** `DualGPUTestResult` is constructed
+**Then** `honest_verdict == 'gpu_required'`
+
+**Implementation Status:** Done (Exp 517)
