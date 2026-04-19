@@ -71,3 +71,17 @@ repos:
         language: system
         types: [python]
         pass_filenames: false
+
+      # Technical report HTML sync: regenerate docs/technical-report.html
+      # whenever docs/technical-report.md changes, so GitHub Pages never
+      # lags behind the Markdown source of truth. Before this hook the HTML
+      # drifted three milestones behind the MD (stuck at "473 experiments /
+      # 22 milestones" while the MD read "500+ / 25"). The hook runs
+      # scripts/build_technical_report.py, stages the regenerated HTML, and
+      # lets the commit proceed with both files included in the same commit.
+      - id: tech-report-html-sync
+        name: technical-report.html sync from .md
+        entry: python scripts/precommit_sync_technical_report.py
+        language: system
+        files: '^docs/technical-report\.md$'
+        pass_filenames: false
