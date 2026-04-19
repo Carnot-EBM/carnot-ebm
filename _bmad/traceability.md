@@ -523,3 +523,9 @@
 | SCENARIO-LOADER-003 | Implemented | Gemma4QuantizedLoader.load Returns True on Success — Exp 500 model_loaded=true with valid GGUF checkpoint |
 | SCENARIO-LOADER-004 | Implemented | is_within_budget Returns Correct Result Against Budget — Exp 500 vram_usage_gb=9.0, is_within_budget(10.0)=true |
 | SCENARIO-LOADER-005 | Implemented | accuracy_check Returns Float in [0, 1] — Exp 500 accuracy_check(n=10) returns 0.7 ∈ [0.0, 1.0] |
+| REQ-BENCH-046 | Implemented | 200q v4 Uses Gemma4QuantizedLoader and GPUVRAMGateV2 Before Model Load — Exp 503 loads Gemma4 via Gemma4QuantizedLoader (GGUF Q4_K_M, ~9 GiB) and applies GPUVRAMGateV2(kill_first=True) before model load |
+| REQ-BENCH-047 | Implemented | 200q v4 Reports Wilson 95% CI and is_statistically_positive Flag — Exp 503 Live200qV4Result computes wilson_ci_95 (95% confidence interval) and is_statistically_positive boolean flag |
+| REQ-BENCH-048 | Implemented | 200q v4 Writes CoT Pairs to results/exp503_cot_pairs.json — Exp 503 collects Chain-of-Thought pairs during pipeline pass for each question and writes to results/exp503_cot_pairs.json |
+| SCENARIO-BENCH-065 | Implemented | GPUVRAMGateV2 Fires Before Model Load in Exp 503 — Exp 503 on CUDA GPU triggers GPUVRAMGateV2 gate entry, verifying zombie kills before VRAM status check |
+| SCENARIO-BENCH-066 | Implemented | Exp 503 is_statistically_positive Is False for 2pp Improvement at n=200 — Exp 503 Live200qV4Result with pre_acc=0.70, post_acc=0.72, n=200 returns is_statistically_positive=false (below statistical significance threshold) |
+| SCENARIO-BENCH-067 | Implemented | Exp 503 Writes Valid Deliverable with All Schema Fields — Exp 503 Live200qV4Result schema contains all required fields (wilson_ci_95, cot_pairs_written, vram_forecast, etc.) and writes JSON artifact with valid structure |
