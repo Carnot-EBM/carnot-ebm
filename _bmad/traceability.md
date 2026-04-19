@@ -560,4 +560,10 @@
 | REQ-BENCH-014 | Implemented | Live 100q Benchmark with JIT VRAM Gating — Exp 514 queries pynvml immediately before Gemma4 load via JITVRAMCheck(required_gb=14.89) to prevent stale VRAM forecast race conditions |
 | REQ-BENCH-015 | Implemented | CoT Pairs Written to exp514_cot_pairs.json for JEPA Retrain — Exp 514 CoTPairWriter collects reasoning pairs from successful inference for downstream curriculum learning |
 | SCENARIO-BENCH-033 | Implemented | JIT VRAM Gate Blocks Load When VRAM Insufficient in Exp 514 — scenario with insufficient VRAM returns is_cleared=False, preventing CUDA OOM crash; retries once after 30s if configured |
+| REQ-INFRA-067 | Implemented | Expanded GPU Reaper Detects Stale Zombie Processes — Exp 525 GPUReaperExpanded.kill_stale_vram_holders() detects long-running zombie processes consuming VRAM across training runs |
+| REQ-INFRA-068 | Implemented | Expanded GPU Reaper Kills Zombies Before GPU Operations — Exp 525 GPUReaperExpanded wired into ExperimentTemplate.setup_gpu() entry point to kill stale processes before every GPU run |
+| REQ-INFRA-069 | Implemented | Expanded GPU Reaper Prevents VRAM Deadlock Cascade — Exp 525 persistent zombie termination closes RETRO-033 root cause: stale process accumulation no longer blocks VRAM allocation |
+| SCENARIO-INFRA-076 | Implemented | Expanded GPU Reaper Detects Single Stale Process in Exp 525 — scenario with one zombie process (>1h runtime, >100MB VRAM) is detected and terminated |
+| SCENARIO-INFRA-077 | Implemented | Expanded GPU Reaper Detects Multiple Zombies in Exp 525 — scenario with 3+ stale processes across different models (Gemma4, Qwen3.5) are all detected and terminated |
+| SCENARIO-INFRA-078 | Implemented | Expanded GPU Reaper Preserves Live Processes in Exp 525 — scenario with active training process is preserved; only terminated stale processes (>configured age_threshold) are killed |
 | SCENARIO-BENCH-034 | Implemented | write_cot_pairs Produces Valid FOVER JSON — Exp 514 output cot pairs validate against FOVER schema with required fields (question, chain_of_thought, arithmetic_step, domain_label) |
