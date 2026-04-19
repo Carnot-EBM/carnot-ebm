@@ -2194,3 +2194,4 @@ python/ |
 | 2026-04-19 06:01 UTC | Exp 487: GPUVRAMGateV2 — kill zombies BEFORE check | OK | 81 passed in 4.70s |
 | 2026-04-19 06:13 UTC | Exp 488: Live 100q Precision v5 — RETRO-033 fifth  | OK | 81 passed in 4.85s |
 | 2026-04-19 06:25 UTC | Exp 489: Live 200q VeriCoT+VPRM v3 — RETRO-038 thi | OK | 81 passed in 4.93s |
+| 2026-04-19 06:38 UTC | Exp 490: GSM-Symbolic Adversarial v3 — RETRO-039 t | OK | 81 passed in 3.96s |
