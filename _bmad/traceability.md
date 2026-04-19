@@ -485,4 +485,10 @@
 | REQ-BENCH-036 | Not Started | Implemented | 100q v5 Writes CoT Pairs for NUP Probe v2 Retrain — Exp 488 writes 200 CoT pairs to results/exp488_cot_pairs.json for Exp 496 retraining |
 | SCENARIO-BENCH-053 | Not Started | Implemented | GPUVRAMGateV2 Fires Before Model Load in Exp 488 — Exp 488 GPUVRAMGateV2(kill_first=True).__enter__() called before any model load, deferred artifact on insufficient VRAM |
 | SCENARIO-BENCH-054 | Not Started | Implemented | Exp 488 Assigns Gemma4 to cuda:0 and Qwen to cuda:1 — Exp 488 DualGPUHarness explicit assignment verified in dual-model execution |
+| REQ-BENCH-031 | Not Started | Implemented | 200q v3 Uses GPUVRAMGateV2 with kill_first=True Before Model Load — Exp 489 GPUVRAMGateV2(min_free_gb=8.0, kill_first=True) gates before model load, composes RETRO-044 fix |
+| REQ-BENCH-032 | Not Started | Implemented | 200q v3 Assigns Models to Explicit CUDA Devices via DualGPUHarness — Exp 489 assigns Gemma4-E4B-it to cuda:0, Qwen3.5-0.8B to cuda:1 |
+| REQ-BENCH-033 | Not Started | Implemented | 200q v3 Benchmark Integrates VeriCoTStepValidator + VPRMArithmeticVerifier — Exp 489 IntegratedExtractor on 200 GSM8K stratified questions |
+| SCENARIO-BENCH-050 | Not Started | Implemented | GPUVRAMGateV2 Fires Before Model Load in Exp 489 — Exp 489 GPUVRAMGateV2(kill_first=True).__enter__() called before any model load |
+| SCENARIO-BENCH-051 | Not Started | Implemented | Exp 489 Assigns Gemma4 to cuda:0 and Qwen to cuda:1 — Exp 489 DualGPUHarness explicit assignment verified in dual-model execution |
+| SCENARIO-BENCH-052 | Not Started | Implemented | Exp 489 Completes 200 Questions with VeriCoT+VPRM Extraction — Exp 489 processes 200 GSM8K questions, produces results/experiment_489_live_200q_vericot_vprm_v3.json |
 | SCENARIO-BENCH-055 | Not Started | Implemented | Exp 488 Writes Valid Deliverable with All Schema Fields — Exp 488 results/experiment_488_live_100q_precision_v5.json contains all required fields, honest_verdict present |
