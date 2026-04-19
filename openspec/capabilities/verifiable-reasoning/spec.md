@@ -7440,3 +7440,68 @@ Spec: REQ-INFRA-038, SCENARIO-INFRA-046
 **Then** `SessionHealthResult.thermal_ok == False`
 **And** `SessionHealthResult.honest_verdict == 'session_thermal_blocked'`
 **And** `conductor_session_health.py` exits with code 1
+
+### REQ-BENCH-025: Live 100q Benchmark Uses GPUVRAMGate Before Model Load
+
+The Exp 476 live precision benchmark shall use `GPUVRAMGate(min_free_gb=8.0, wait_seconds=60)`
+as a context manager before any model load.  The gate shall kill zombie processes that hold
+VRAM at 0% utilisation, then wait up to 60 seconds for 8 GB free VRAM on each GPU.  If VRAM
+cannot be freed within 60 seconds, the experiment shall write an artifact with
+`status='gpu_vram_insufficient'` and call `assert_deliverable_written()` before returning.
+
+**Why GPUVRAMGate (RETRO-037, RETRO-042):** Exp 464 was deferred with `deferred_to_gpu`
+because mid-session zombie processes held 23.8 GB on GPU 0 at 0% utilisation.  The session-
+start health check (Exp 463) cannot prevent mid-session accumulation; only a per-experiment
+gate can.
+
+**Implementation Status:** Done (Exp 476)
+
+Spec: REQ-BENCH-025, SCENARIO-BENCH-044
+
+### REQ-BENCH-026: DualGPURunner Assigns Gemma4-E4B-it to cuda:0 and Qwen3.5-0.8B to cuda:1
+
+`DualGPUAssigner` shall assign `Gemma4-E4B-it` to `cuda:0` and `Qwen3.5-0.8B` to `cuda:1`
+for concurrent inference.  Both models shall be loaded simultaneously before the benchmark
+begins.  Each model gets a dedicated GPU, preventing the RETRO-025 cross-GPU layer sharing
+problem that occurs with `device_map='auto'`.
+
+**Implementation Status:** Done (Exp 476)
+
+Spec: REQ-BENCH-026, SCENARIO-BENCH-045
+
+### REQ-BENCH-027: Benchmark Writes 100 CoT Pairs to results/exp476_cot_pairs.json for JEPA Retrain
+
+For every benchmark question, the Exp 476 harness shall collect a CoT pair
+`{question, cot_text, correct}` via `CoTPairCollector` and flush atomically to
+`results/exp476_cot_pairs.json`.  The pair count shall be reported in the primary artifact
+under `cot_pairs_written`.  These pairs feed the JEPA retrain pipeline (Exp 477).
+
+**Implementation Status:** Done (Exp 476)
+
+Spec: REQ-BENCH-027, SCENARIO-BENCH-046
+
+### SCENARIO-BENCH-044: GPUVRAMGate Fires and Kills Zombies Before Model Load
+
+**Given** `GPUVRAMGate(min_free_gb=8.0, wait_seconds=60)` is entered
+**When** free VRAM on any GPU is below 8 GB
+**Then** the gate kills zombie processes holding VRAM at 0% utilisation
+**And** waits up to 60 seconds for VRAM to free
+**And** proceeds if VRAM becomes available, or raises `GPUVRAMInsufficientError` otherwise
+
+### SCENARIO-BENCH-045: DualGPUAssigner Pins Each Model to Its Own GPU
+
+**Given** two models [Gemma4-E4B-it, Qwen3.5-0.8B] and `n_gpus=2`
+**When** `DualGPUAssigner.assign()` is called
+**Then** Gemma4-E4B-it receives `device_map={'': 'cuda:0'}`
+**And** Qwen3.5-0.8B receives `device_map={'': 'cuda:1'}`
+
+### SCENARIO-BENCH-046: CoTPairCollector Flushes Pairs Atomically
+
+**Given** `CoTPairCollector(output_path)` with N pairs added
+**When** `flush()` is called
+**Then** a valid JSON file is written atomically at `output_path`
+**And** the file contains exactly N pairs with keys: model, question, cot_text, correct
+**And** `flush()` returns N (the number of pairs written)
+
+Spec: REQ-BENCH-025, REQ-BENCH-026, REQ-BENCH-027,
+      SCENARIO-BENCH-044, SCENARIO-BENCH-045, SCENARIO-BENCH-046
