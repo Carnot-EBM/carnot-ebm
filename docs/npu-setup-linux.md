@@ -184,26 +184,98 @@ this bundle is Windows-first; the Linux story is:
 does **not** downgrade the overall verdict when it is absent — layers
 1-5 passing is the real success bar.
 
-## ONNX / VitisAI path (if you want it anyway)
+## ONNX / VitisAI path: blocked on AMD as of 2026-Q2
 
-If you do need the ONNX path — for instance to run `Exp 511`'s
-`NPUEntropyProbe` exactly as written, rather than porting it to
-`pyxrt` — the current best-effort recipe is:
+A direct web audit on 2026-04-19 found that the Linux ONNX+VitisAI path
+is not merely inconvenient, it is **structurally blocked and
+unsupported**:
 
-1. Clone AMD's xdna-driver userspace examples for current XRT version
-   reference: `git clone https://github.com/amd/xdna-driver`.
-2. Clone ONNX Runtime source: `git clone --recursive https://github.com/microsoft/onnxruntime`.
-3. Configure with `./build.sh --config Release --use_vitisai --build_wheel --parallel`.
-4. Expect the configure step to fail looking for VOE headers. You will
-   need AMD's Vitis AI runtime source tree alongside — the private
-   parts are downloadable for registered developers from
-   `ryzenai.docs.amd.com` but require accepting an EULA.
+- **AMD Ryzen AI Software 1.7.1** (the latest release, April 8, 2026)
+  officially targets **Windows only**. The installation page at
+  [ryzenai.docs.amd.com/en/latest/inst.html](https://ryzenai.docs.amd.com/en/latest/inst.html)
+  opens with "This page covers Ryzen AI installation on Windows" and
+  makes zero references to Linux throughout.
+- **The `voe` Python package** (Vitis ONNX Execution graph passes)
+  that the VitisAI EP requires is **entirely absent** from Linux
+  x86_64 distributions. See
+  [amd/RyzenAI-SW#341](https://github.com/amd/RyzenAI-SW/issues/341)
+  — the reporter documents
+  `ModuleNotFoundError: No module named 'voe'`, 100% CPU fallback
+  (`[Vitis AI EP] No. of Operators : CPU 30`, zero NPU ops) even when
+  the EP appears to initialize, and a pointer bug in the C++ config
+  parser. The issue has been open for months with **no AMD response**.
+- **Source-building `onnxruntime` with `--use_vitisai`** fails on
+  modern toolchains. GCC 13/14 enforces stricter C++17/20 template
+  deduction that the Vitis AI EP sources in `element_wise_ops.cc`
+  do not satisfy. Documented in
+  [amd/xdna-driver#1017](https://github.com/amd/xdna-driver/issues/1017)
+  and
+  [microsoft/onnxruntime#27097](https://github.com/microsoft/onnxruntime/issues/27097)
+  — again with no AMD response, no patches, no ETA. The reporter
+  of #1017 specifically frames the situation as a "split state": the
+  kernel+hardware layer is fine but the user-space runtime fails to
+  build.
+- **HuggingFace Optimum-AMD** for Ryzen AI explicitly requires the
+  same (missing) Vitis AI EP plus the `vaip_config.json` from the
+  VOE package. Same dead-end. See
+  [huggingface.co/docs/optimum/.../amd/ryzenai/overview](https://huggingface.co/docs/optimum/v1.27.0/en/amd/ryzenai/overview).
+- **Requests for Linux binaries** (e.g.
+  [amd/RyzenAI-SW#319](https://github.com/amd/RyzenAI-SW/issues/319),
+  asking specifically for 1.6.1 Linux binaries on Krackan/XDNA2) have
+  received no official response either.
 
-Given the closed bits, the Carnot roadmap explicitly plans to rewrite
-`NPUEntropyProbe` in a future milestone to call `pyxrt` directly (and
-optionally wrap the result to *look* like an ONNX Runtime session so
-the rest of the pipeline code does not change). The ONNX path remains a
-documented option but is not a blocker for Phase-2 hardware experiments.
+**Practical consequence:** do not spend engineering time trying to
+obtain or build a Linux `onnxruntime-vitisai` wheel until AMD publishes
+one. There is no workaround that has been confirmed working by anyone
+on any public forum as of this writing.
+
+## Recommended Linux paths going forward
+
+Given the ONNX+VitisAI gap is structural, the two paths that actually
+work on Linux today are:
+
+### 1. `pyxrt` direct (what `scripts/verify_npu.py` proves)
+
+AMD's Xilinx Runtime Python bindings let you open the device, allocate
+buffer objects, and push compiled kernels directly. It is low-level —
+you manage memory and synchronisation yourself — but every call goes
+through the supported XRT ABI that AMD ships in the Arch `xrt` and
+Ubuntu `xrt-base` packages. Carnot's revised Exp 511 rerun plan uses
+this path by adding a `backend="pyxrt"` mode to `NPUEntropyProbe`.
+
+### 2. `mlir-aie` / IRON (AMD's open-source compiler path)
+
+[Xilinx/mlir-aie](https://github.com/Xilinx/mlir-aie) is AMD's
+officially-maintained MLIR-based toolchain for AI Engine devices,
+including XDNA2 (Strix/Krackan). It is **actively maintained**
+(v1.3.1 released March 2026, 2600+ commits on main) and explicitly
+targets Ryzen AI NPUs. Two important caveats:
+
+- It is a **close-to-metal toolkit**, not an end-to-end ONNX/PyTorch
+  inference runtime. You author AIE designs in MLIR or via their
+  IRON Python DSL, not by loading a `.onnx` file.
+- The Python package installs as `mlir_aie`, with `llvm-aie` (Peano
+  compiler) as a companion on PyPI.
+
+Carnot's Exp 460 scaffolded the IRON install path. The next milestone
+should expand that into a runnable kernel and a `backend="iron"` path
+on `NPUEntropyProbe` so we have two independent Linux-native NPU
+backends — `pyxrt` for direct device control, IRON for compiled
+kernels.
+
+### 3. Future: ONNX+VitisAI (revisit when AMD acts)
+
+Track the three GitHub issues above and revisit when any of them
+close with a working Linux fix. Signs to watch for:
+
+- AMD publishing a Linux `voe-*.whl` on pypi.org or their own package
+  index
+- The `element_wise_ops.cc` GCC 14 fix being merged into AMD's
+  onnxruntime fork
+- A Ryzen AI Software release note explicitly adding Linux to the
+  supported OS list
+
+Until then, the ONNX path stays documented-but-not-attempted.
 
 ## Reference
 
