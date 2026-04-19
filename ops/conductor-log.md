@@ -2248,3 +2248,4 @@ python/ |
 | 2026-04-19 20:55 UTC | Exp 528: Live 200q VeriCoT+VPRM v7 — RETRO-038 sev | OK | 81 passed, 2 warnings in 7.17s |
 | 2026-04-19 21:06 UTC | Exp 529: GPU1 Explicit Routing Fix — RETRO-052 clo | OK | 81 passed, 2 warnings in 2.73s |
 | 2026-04-19 21:20 UTC | Exp 530: Wire NUP Probe v4 + Hallucination Basin D | OK | 146 passed, 2 warnings in 7.91s |
+| 2026-04-19 21:31 UTC | Exp 531: EORM as Test-Time PRM — Adaptive Rectific | OK | 81 passed, 2 warnings in 2.77s |
