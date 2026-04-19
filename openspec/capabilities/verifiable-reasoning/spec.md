@@ -7990,3 +7990,54 @@ explicitly, preventing VRAM contention from dual-model same-GPU loading.
 **Given** `Live200qV3Result` with `pre_acc=0.70`, `post_acc=0.72`, `n=200`
 **When** `is_statistically_positive` is evaluated
 **Then** it is `False` because the Wald CI lower bound is approximately -0.069 < 0.0
+
+---
+
+## Exp 490: GSM-Symbolic Adversarial v3 — GPUVRAMGateV2 + thesis confirmation (RETRO-039)
+
+### REQ-BENCH-040: Adversarial v3 Uses GPUVRAMGateV2(kill_first=True) Before Model Load
+
+Experiment 490 shall run `GPUVRAMGateV2(min_free_gb=8.0, kill_first=True)` as the first
+gate before any model load.  Kill-first order eliminates the RETRO-044 race condition where
+zombie VRAM was checked before the driver drained killed contexts.
+
+**Implementation Status:** Done (Exp 490)
+
+### REQ-BENCH-041: Adversarial v3 Runs Three-Condition Test
+
+Experiment 490 shall run all three benchmark conditions per model:
+- Condition A: 50 standard GSM8K questions, LLM only, no Carnot pipeline
+- Condition B: 50 adversarial GSM-Symbolic questions, LLM only, no pipeline
+- Condition C: 50 adversarial GSM-Symbolic questions with Carnot verify-repair (IntegratedExtractor)
+
+**Implementation Status:** Done (Exp 490)
+
+### REQ-BENCH-042: thesis_confirmed=True When carnot_adversarial_improvement > carnot_standard_improvement
+
+`AdversarialV3Result.thesis_confirmed` shall be True when `carnot_adversarial_improvement`
+strictly exceeds `carnot_standard_improvement`.  This is the headline result: Carnot's
+benefit is larger on adversarial variants than on standard ones, confirming that EBM
+constraint verification is immune to irrelevant-sentence injection.
+
+**Implementation Status:** Done (Exp 490)
+
+### SCENARIO-BENCH-059: GPUVRAMGateV2 Fires Before Model Load in Exp 490
+
+**Given** Experiment 490 running on a machine with CUDA GPUs
+**When** the experiment starts
+**Then** `GPUVRAMGateV2(kill_first=True).__enter__()` is called before any model is loaded
+**And** if VRAM is insufficient after gate, a deferred artifact with
+`honest_verdict='gpu_vram_insufficient'` is written and the experiment exits without loading models
+
+### SCENARIO-BENCH-060: thesis_confirmed=True When Adversarial Improvement Exceeds Standard
+
+**Given** `AdversarialV3Result` with `adversarial_carnot_acc=0.65`, `adversarial_baseline_acc=0.55`,
+`carnot_standard_improvement=0.05`
+**When** `thesis_confirmed` is evaluated
+**Then** it is `True` because `carnot_adversarial_improvement=0.10 > carnot_standard_improvement=0.05`
+
+### SCENARIO-BENCH-061: adversarial_drop Computed as standard_acc - adversarial_baseline_acc
+
+**Given** `AdversarialV3Result` with `standard_acc=0.70`, `adversarial_baseline_acc=0.55`
+**When** `adversarial_drop` is accessed
+**Then** it equals `0.15` (positive means LLM regressed on adversarial, replicating Apple finding)
