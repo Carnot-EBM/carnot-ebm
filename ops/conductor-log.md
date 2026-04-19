@@ -2216,3 +2216,5 @@ python/ |
 | 2026-04-19 12:27 UTC | Exp 502: Live 100q Precision v6 — RETRO-033 sixth | OK | Deliverable already exists in repo |
 | 2026-04-19 12:38 UTC | Exp 503: Live 200q VeriCoT+VPRM v4 — RETRO-038 fou | OK | 98 passed in 12.86s |
 | 2026-04-19 12:54 UTC | Exp 504: GSM-Symbolic Adversarial v4 — RETRO-039 f | OK | 81 passed in 9.10s |
+| 2026-04-19 13:32 UTC | Exp 505: Retroactive DualGPU Harness Sweep — patch | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-19 13:37 UTC | Exp 505: Retroactive DualGPU Harness Sweep — patch | OK | Deliverable already exists in repo |

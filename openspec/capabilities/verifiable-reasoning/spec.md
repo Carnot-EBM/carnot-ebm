@@ -8490,3 +8490,47 @@ The `to_dict()` method shall include all four raw accuracies plus all derived me
 `adversarial_improvement`, `standard_drop_baseline`, `standard_drop_pipeline`,
 `robustness_delta`, `carnot_more_robust`
 **And** the dict is JSON-serializable without error
+
+---
+
+## REQ-INFRA-059: DualGPUSweep Patches All Dual-Model Scripts Missing DualGPUHarness
+
+### REQ-INFRA-059: DualGPUSweep Patches All Dual-Model Scripts Missing DualGPUHarness
+
+`DualGPUSweep` (Exp 505) shall scan all `scripts/experiment_*.py` files for dual-model
+patterns (two or more `hf_id` occurrences) that do not already import `DualGPUHarness`.
+For each matched script it shall append the standard DualGPUHarness injection block so
+that `DualGPUHarness.from_env().apply(MODEL_SPECS)` is called at module level when
+`CARNOT_FORCE_LIVE=1` is set.  The sweep is a best-effort retroactive fix addressing the
+RETRO-041 finding that GPU 1 contributed 0% forward-pass compute across all milestones.
+
+**Implementation Status:** Done (Exp 505)
+
+### REQ-INFRA-060: DualGPUSweep Reports Patch Metrics via DualGPUSweepResult
+
+`DualGPUSweep` (Exp 505) shall produce a `DualGPUSweepResult` dataclass with:
+- `n_scripts_found`: total scripts matching the dual-model pattern (regardless of patch status)
+- `n_scripts_patched`: scripts that were actually modified (injection block appended)
+- `n_scripts_skipped`: scripts that already imported `DualGPUHarness` (no modification needed)
+- `patch_manifest`: list of script filenames that were patched
+
+`DualGPUSweepResult.patch_rate` shall return `n_scripts_patched / n_scripts_found` (0.0 when
+n_scripts_found == 0).  `DualGPUSweepResult.to_dict()` shall return a JSON-serializable dict
+with all four fields plus `patch_rate`.
+
+**Implementation Status:** Done (Exp 505)
+
+### SCENARIO-INFRA-067: patch_rate=1.0 When All Found Scripts Are Patched
+
+**Given** a `DualGPUSweepResult` with `n_scripts_found=3`, `n_scripts_patched=3`, `n_scripts_skipped=0`
+**When** `patch_rate` is evaluated
+**Then** it returns `1.0`
+**And** `to_dict()` contains `patch_rate=1.0` and `patch_manifest` with three entries
+
+### SCENARIO-INFRA-068: Skipped Scripts Are Those Already Using DualGPUHarness
+
+**Given** a `DualGPUSweepResult` with `n_scripts_found=5`, `n_scripts_patched=3`, `n_scripts_skipped=2`
+**When** `patch_rate` is evaluated
+**Then** it returns `0.6` (3 patched out of 5 found)
+**And** `to_dict()['n_scripts_skipped']` equals `2`
+**And** `to_dict()['patch_manifest']` contains only the three patched script names
