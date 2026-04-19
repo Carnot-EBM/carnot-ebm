@@ -2222,3 +2222,4 @@ python/ |
 | 2026-04-19 14:01 UTC | Exp 507: NUP Probe v3 — RETRO-049 fix with CLAP cr | OK | 81 passed in 9.39s |
 | 2026-04-19 14:14 UTC | Exp 508: KAEM Distribution Family — RETRO-031 new  | OK | 81 passed in 7.72s |
 | 2026-04-19 14:26 UTC | Exp 509: PPSEBM Energy-Magnitude Replay — RETRO-05 | OK | 81 passed, 2 warnings in 2.76s |
+| 2026-04-19 14:39 UTC | Exp 510: JEPA Live Retraining v4 — FR-11 Tier 3 se | OK | 81 passed, 2 warnings in 3.06s |
