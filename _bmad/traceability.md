@@ -503,3 +503,9 @@
 | REQ-LEARN-042 | Implemented | Curriculum Learning Recovers JEPA AUC from 0.6 to 0.9667 — Exp 492 achieves +36.67pp AUC improvement, closes RETRO-040 regression |
 | SCENARIO-LEARN-069 | Implemented | Stage 1 Anchor Training on 46 High-Confidence Pairs — Exp 492 Stage 1 reaches AUC 0.933 after 100 epochs |
 | SCENARIO-LEARN-070 | Implemented | Stage 3 Scale Training on 189 Synthetic Pairs — Exp 492 Stage 3 reaches AUC 0.9667 after 100 epochs, recovers from Exp 477 regression |
+| REQ-INFRA-054 | Implemented | GPU Thermal Check Before Model Load — Exp 494 GPUThermalGate.check_temperature() called in setup_gpu() before any model load |
+| REQ-INFRA-055 | Implemented | Exponential Backoff Cooldown from >85°C to <80°C — Exp 494 wait_for_cool() applies exponential backoff (up to 5min timeout) to wait for thermal recovery |
+| REQ-INFRA-056 | Implemented | Defer with honest_verdict='gpu_thermal_throttle' on 5min Timeout — Exp 494 raises GPUThermalThrottleError if temperature doesn't cool within 5min, defers with appropriate verdict |
+| SCENARIO-INFRA-062 | Implemented | GPU Temperature Read from nvidia-smi Return Value — Exp 494 check_temperature() validates temp reading from nvidia-smi (or mock temperature_c value) |
+| SCENARIO-INFRA-063 | Implemented | Wait-For-Cool Exponential Backoff Loop (Mocked) — Exp 494 wait_for_cool_mock_test validates exponential backoff behavior with mocked temperature sequence |
+| SCENARIO-INFRA-064 | Implemented | Thermal Throttle Error on 5min Timeout — Exp 494 throttle_error_test validates GPUThermalThrottleError raised when timeout exceeded |
