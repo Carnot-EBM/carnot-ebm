@@ -8435,3 +8435,58 @@ Exp 510 JEPA retrain (200 pairs minimum total).
 **Then** it contains schema='carnot.live_benchmark.v7', gemma4_result, qwen_result,
 cot_pairs_written, gemma4_quantized=True, retro_038_closed, and honest_verdict
 **And** `DeliverableGuard.assert_written()` passes as the final call
+
+
+## Exp 504: GSM-Symbolic Adversarial v4 — Gemma4QuantizedLoader RETRO-039 Robustness Claim
+
+### REQ-BENCH-049: Adversarial v4 Uses Gemma4QuantizedLoader and GPUVRAMGateV2
+
+Experiment 504 shall use `Gemma4QuantizedLoader` (GGUF Q4_K_M, ~9 GiB) for Gemma4
+inference and shall run `GPUVRAMGateV2(min_free_gb=6.0, kill_first=True)` before any
+model load.  `VRAMBudgetLedger` shall pre-check feasibility before the gate fires.
+
+**Implementation Status:** Done (Exp 504)
+
+### REQ-BENCH-050: Adversarial v4 Measures robustness_delta per Model
+
+Experiment 504 shall compute `AdversarialV4Result` per model with:
+  - `standard_drop_baseline`: accuracy drop of the raw LLM under distractor injection
+  - `standard_drop_pipeline`: accuracy drop of the Carnot pipeline under distractor injection
+  - `robustness_delta = standard_drop_baseline - standard_drop_pipeline`
+  - `carnot_more_robust = robustness_delta > 0`
+
+A positive `robustness_delta` is the headline RETRO-039 credibility result.
+
+**Implementation Status:** Done (Exp 504)
+
+### REQ-BENCH-051: Adversarial v4 Reports All Four Accuracy Conditions
+
+Experiment 504 shall report four accuracy values per model:
+`standard_baseline`, `standard_pipeline`, `adversarial_baseline`, `adversarial_pipeline`.
+The `to_dict()` method shall include all four raw accuracies plus all derived metrics.
+
+**Implementation Status:** Done (Exp 504)
+
+### SCENARIO-BENCH-068: robustness_delta > 0 When Pipeline Drop < Baseline Drop
+
+**Given** an `AdversarialV4Result` with `standard_drop_baseline=0.15` and `standard_drop_pipeline=0.08`
+**When** `robustness_delta` is evaluated
+**Then** it returns `0.07` (15pp baseline drop minus 8pp pipeline drop)
+**And** `carnot_more_robust` returns `True`
+
+### SCENARIO-BENCH-069: carnot_more_robust=True Confirms RETRO-039 Thesis
+
+**Given** a model where the baseline drops 15pp but the Carnot pipeline drops only 8pp
+**When** `carnot_more_robust` is evaluated
+**Then** it returns `True`
+**And** the experiment artifact carries `retro_039_confirmed=True` and `honest_verdict='thesis_confirmed'`
+
+### SCENARIO-BENCH-070: to_dict() Contains All Required Schema Fields
+
+**Given** any `AdversarialV4Result` instance
+**When** `to_dict()` is called
+**Then** the result contains all twelve fields: `model_id`, `n`, `standard_baseline`,
+`standard_pipeline`, `adversarial_baseline`, `adversarial_pipeline`, `standard_improvement`,
+`adversarial_improvement`, `standard_drop_baseline`, `standard_drop_pipeline`,
+`robustness_delta`, `carnot_more_robust`
+**And** the dict is JSON-serializable without error
