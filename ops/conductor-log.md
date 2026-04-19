@@ -2172,3 +2172,4 @@ python/ |
 | 2026-04-19 00:32 UTC | Exp 470: PPSEBM Tier 2 Progressive Constraint Para | OK | 81 passed in 23.66s |
 | 2026-04-19 00:54 UTC | Exp 471: KV260 FPGA Bring-Up v2 — sparsified Ising | OK | 81 passed in 17.18s |
 | 2026-04-19 01:07 UTC | Exp 472: JEPA Tier 3 Scale + GPU-Accelerated Oscil | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-19 01:19 UTC | Exp 472: JEPA Tier 3 Scale + GPU-Accelerated Oscil | OK | 119 passed in 29.84s |
