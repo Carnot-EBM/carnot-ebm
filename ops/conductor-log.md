@@ -2197,3 +2197,4 @@ python/ |
 | 2026-04-19 06:38 UTC | Exp 490: GSM-Symbolic Adversarial v3 — RETRO-039 t | OK | 81 passed in 3.96s |
 | 2026-04-19 07:03 UTC | Exp 491: JEPA Curriculum Diagnostic — why did qual | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-19 08:01 UTC | Exp 491: JEPA Curriculum Diagnostic — why did qual | OK | 110 passed in 24.30s |
+| 2026-04-19 08:39 UTC | Exp 492: JEPA Curriculum Retrain v3 — ordered high | OK | 81 passed in 3.23s |
