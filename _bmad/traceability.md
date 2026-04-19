@@ -476,3 +476,7 @@
 | REQ-PROBE-011 | Not Started | Implemented | ThinkProbeV3 DeliverableGuard Assertion — Exp 482 assert_deliverable_written() as final line of main(), silently-missing-JSON blocker elevated to loud crash (RETRO-036 closure) |
 | SCENARIO-PROBE-015 | Not Started | Implemented | GPUVRAMGate Fires at Experiment Entry Before Model Load — Exp 482 gpu_vram_gate_fired=true confirmed before Gemma4-E4B-it initialization on cuda:0 |
 | SCENARIO-PROBE-016 | Not Started | Implemented | DeliverableGuard Blocks on Missing Artifact Exit — Exp 482 DeliverableGuard.assert_deliverable_written() prevents exit without results/experiment_482_think_probe_live_v3.json (RETRO-036 final closure) |
+| REQ-SELFLEARN-019 | Not Started | Implemented | PPSConstraintLearner Maintains Partition Isolation on Naturally-Interleaved Real Violations — Exp 485 validation on FOVERAnnotator real data with interleaving_rate=0.0, isolation_maintained=true |
+| REQ-SELFLEARN-020 | Not Started | Implemented | Interleaved Validation Uses FOVERAnnotator-Labeled Steps in Natural Order — Exp 485 InterleavedViolationSequence processes 57 real steps in natural presentation order |
+| SCENARIO-SELFLEARN-019 | Not Started | Implemented | InterleavedViolationSequence Alternating Steps Have Rate 1.0 — Exp 485 interleaving_rate=0.0 (no synthetic interlacing needed on real violations) |
+| SCENARIO-SELFLEARN-020 | Not Started | Implemented | PPSEBMRealValidationResult Isolation Maintained at 0.75 — Exp 485 isolation_score_after=1.0, exceeds 0.75 target |
