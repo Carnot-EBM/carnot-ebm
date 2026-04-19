@@ -713,6 +713,63 @@ Spec: REQ-SAMPLE-024, SCENARIO-SAMPLE-037
 **Then** it returns the family name with the largest `kaem_advantage`
 **Or** returns `'none'` if all `kaem_wins` are False
 
+### REQ-SAMPLE-025: CIKANEnergy — Constraint-Informed KAN with Boundary-Concentrated Knots (Exp 519)
+
+The system SHALL implement `CIKANEnergy` (Constraint-Informed KAN, arXiv 2412.03710) that
+concentrates spline knot density near hard constraint boundaries, where:
+- `ConstraintBoundary(position: float, sharpness: float = 1.0)` represents a boundary at
+  `position` in [-1, 1], with `sharpness` controlling the width of the extra-knot region
+- `CIKANLayer(n_vars, n_knots_base=8, boundary_k=4)` extends `UnivariateKAEMLayer`:
+  - `_distribute_knots_with_boundaries(boundaries, data_std)` returns sorted knot positions
+    with `boundary_k - 1` additional knots inserted within `sharpness * data_std` of each boundary
+  - With boundaries, a CIKANLayer with `n_knots_base=8` has more knots near boundary positions
+    than an equivalent `UnivariateKAEMLayer(n_knots=8)`
+- `CIKANEnergy(n_vars, n_hidden=16, boundaries=None)` extends `KAEMEnergy`:
+  - `fit_with_constraints(data, boundaries)` sets `self.boundaries` and calls `fit(data)` using
+    boundary-aware knot placement in the underlying `CIKANLayer`
+  - `energy(x)` is JAX-differentiable: `jax.grad(model.energy)(x)` returns a valid gradient
+- Why: uniform knots (KAEM, Exp 447) miss the complex energy landscape near constraint
+  boundaries; concentrating knots there gives sharper gradients and higher AUROC on near-boundary
+  examples at the cost of smoothness far from boundaries — a correct tradeoff for constraint
+  verification
+
+Spec: REQ-SAMPLE-025, SCENARIO-SAMPLE-038, SCENARIO-SAMPLE-039, SCENARIO-SAMPLE-040
+
+### REQ-SAMPLE-026: CIKANEnergy Boundary AUROC Advantage Benchmark (Exp 519)
+
+The system SHALL provide Experiment 519 that validates CIKANEnergy's boundary AUROC advantage:
+- Train `KAEMEnergy` (baseline) and `CIKANEnergy(boundaries=[0.0])` on 400 samples from a
+  distribution with a hard boundary at x=0 (correct side: x>0, violated: x<0)
+- Evaluate AUROC on 100 held-out samples split into near-boundary (|x|<0.2) and far (|x|>0.5)
+- Artifact schema `carnot.cikan_energy.v1` must include:
+  `baseline_auroc_near_boundary`, `cikan_auroc_near_boundary`,
+  `baseline_auroc_far`, `cikan_auroc_far`,
+  `cikan_advantage` (bool), `honest_verdict` ('cikan_advantage' or 'no_advantage')
+
+Spec: REQ-SAMPLE-026, SCENARIO-SAMPLE-040
+
+### SCENARIO-SAMPLE-038: CIKANLayer Has More Knots Near Boundary
+
+**Given** a `CIKANLayer(n_vars=1, n_knots_base=8, boundary_k=4)` with `boundaries=[ConstraintBoundary(0.5)]`
+**When** `_distribute_knots_with_boundaries([ConstraintBoundary(0.5)], data_std=0.3)` is called
+**Then** the returned knot array has more than 8 elements (extra knots inserted near 0.5)
+**And** all returned knot positions are in [-1, 1]
+**And** the positions are sorted in ascending order
+
+### SCENARIO-SAMPLE-039: CIKANEnergy Energy Is JAX-Differentiable
+
+**Given** a `CIKANEnergy(n_vars=3)` model
+**When** `jax.grad(model.energy)(x)` is called for any x in [-1, 1]^3
+**Then** the gradient has shape (3,) and all values are finite
+**And** `energy(x)` returns a scalar (shape ())
+
+### SCENARIO-SAMPLE-040: CIKANEnergy fit_with_constraints Completes
+
+**Given** `CIKANEnergy(n_vars=1)` and 50 training samples in [-1, 1]
+**When** `fit_with_constraints(data, boundaries=[ConstraintBoundary(0.0)])` is called
+**Then** it completes without error
+**And** `self.boundaries` equals the provided boundaries list
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -741,4 +798,6 @@ Spec: REQ-SAMPLE-024, SCENARIO-SAMPLE-037
 | REQ-SAMPLE-022 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
 | REQ-SAMPLE-023 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
 | REQ-SAMPLE-024 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
+| REQ-SAMPLE-025 | N/A | Implemented | Python (test_cikan_energy.py, 100% coverage) |
+| REQ-SAMPLE-026 | N/A | Implemented | Python (test_cikan_energy.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |

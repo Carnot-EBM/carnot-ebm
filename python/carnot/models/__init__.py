@@ -46,6 +46,11 @@ from carnot.models.kaem_energy import (
     UnivariateKAEMLayer,
     benchmark_kaem_vs_mcmc,
 )
+from carnot.models.cikan_energy import (
+    CIKANEnergy,
+    CIKANLayer,
+    ConstraintBoundary,
+)
 
 __all__ = [
     "BoltzmannConfig",
@@ -87,4 +92,7 @@ __all__ = [
     "KAEMEnergy",
     "UnivariateKAEMLayer",
     "benchmark_kaem_vs_mcmc",
+    "CIKANEnergy",
+    "CIKANLayer",
+    "ConstraintBoundary",
 ]
