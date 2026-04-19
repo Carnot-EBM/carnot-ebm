@@ -2243,3 +2243,4 @@ python/ |
 | 2026-04-19 19:27 UTC | Plan milestone 2026.04.40 | OK | 11 tasks proposed |
 | 2026-04-19 19:32 UTC | Milestone 2026.04.40 activated | OK | 11 tasks queued |
 | 2026-04-19 19:43 UTC | Exp 526: env_autofix RETRO-053 Fix — RETRO-053 CLOSED | OK | 34 passed; retro_053_resolved=true |
+| 2026-04-19 19:44 UTC | Exp 526: env_autofix CARNOT_FORCE_LIVE='0' Fix — R | OK | 115 passed, 2 warnings in 6.36s |
