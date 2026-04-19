@@ -800,6 +800,54 @@ The system SHALL implement rank auto-selection in `LowRankProjector`:
 
 Spec: REQ-SAMPLE-028, SCENARIO-SAMPLE-042
 
+### REQ-VERIFY-106: PottsMachineVerifier — q-State Constraint Encoding
+
+The system shall implement a `PottsMachineVerifier` in `python/carnot/models/potts_machine.py`
+that generalizes IsingEBM from binary (+1/-1) to q discrete states per spin, where:
+- each spin represents one constraint variable with states {0, 1, ..., q-1}
+- the default q=3 encoding maps: 0=correct, 1=partial, 2=violated
+- the coupling tensor J has shape (q, q, n_spins, n_spins), symmetric under (a,b,i,j) <-> (b,a,j,i)
+- the local field h has shape (q, n_spins)
+- the energy function is E(s) = -0.5 * sum_ij J[s_i, s_j, i, j] - sum_i h[s_i, i]
+- coupling structure is sparse-compatible for FPGA upload (same AXI-Lite register-map format as IsingEBM)
+- arXiv 2602.04200 mean-field constraints preserve sparsity during training
+
+### REQ-VERIFY-107: q=3 Gibbs Sampler
+
+The system shall implement a sequential Gibbs sampler for PottsMachineVerifier where:
+- each spin i is updated by computing conditional energy E_i(a) for all states a in {0,...,q-1}
+- the new state is sampled from P(s_i=a | s_{-i}) ∝ exp(-beta * E_i(a))
+- one full sweep updates all n_spins spins sequentially
+- `gibbs_update(config, beta)` performs one sweep
+- `sample(n_steps)` runs n_steps sweeps from a random initial configuration
+
+### REQ-VERIFY-108: AUROC Parity — PottsMachineVerifier vs IsingEBM Baseline
+
+The system shall provide experimental evidence (Exp 534) that:
+- 3-class AUROC for PottsMachineVerifier (q=3) is reported alongside binary AUROC for IsingEBM
+- partial_class_accuracy measures how well PottsMachineVerifier identifies partial-credit examples
+- potts_viable is true when potts_3class_auroc >= ising_binary_auroc
+
+### SCENARIO-VERIFY-142: PottsMachineVerifier Energy Is Scalar
+
+**Given** a `PottsMachineVerifier(n_spins=8, q=3)`
+**When** `energy(config)` is called with a valid integer config of shape (8,)
+**Then** the result is a scalar JAX array
+**And** the value is finite
+
+### SCENARIO-VERIFY-143: Gibbs Update Changes Configuration
+
+**Given** a `PottsMachineVerifier(n_spins=8, q=3)` initialized with random weights
+**When** `gibbs_update(config, beta=1.0)` is called
+**Then** the returned configuration has the same shape as input
+**And** at least one spin differs from the input with high probability
+
+### SCENARIO-VERIFY-144: predict_class Returns Valid Label
+
+**Given** a trained `PottsMachineVerifier(n_spins=8, q=3)`
+**When** `predict_class(config)` is called with any valid config
+**Then** the return value is an integer in {0, 1, 2}
+
 ### SCENARIO-SAMPLE-041: LowRankProjector Compresses to k Dimensions
 
 **Given** a `LowRankProjector` fitted on 100-dimensional data with k=2
@@ -854,3 +902,6 @@ Spec: REQ-SAMPLE-028, SCENARIO-SAMPLE-042
 | REQ-SAMPLE-027 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-SAMPLE-028 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
+| REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
+| REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
+| REQ-VERIFY-108 | N/A | Implemented | Python (Exp 534 experiment) |

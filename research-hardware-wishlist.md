@@ -32,6 +32,23 @@ production goals. Updated as new needs emerge from experiments.
   - Latest Intel FPGA, competitive with Xilinx
   - Supplier: intel.com/fpga
 
+### Potts Machine Motivation for KV260 Bitfile Synthesis (Exp 534 — 20260419)
+
+Exp 534 implemented PottsMachineVerifier(q=3) — a q-state generalization of the Ising EBM
+that encodes correct/partial/violated constraint states.  arXiv 2602.04200 shows that mean-field
+constraints preserve sparse coupling structure for Potts machines, making this FPGA-compatible.
+
+**New Verilog requirement:** The existing `hardware/kv260/ising_sampler_v1.v` (Ising, q=2) needs
+a q-state extension to support Potts sampling:
+- Each spin must iterate over q=3 states instead of {+1,-1}
+- Conditional energy computation: for each spin i, compute E_i(a) for a in {0,1,2}
+- Sample from softmax(-beta * E_i) — needs a 3-entry categorical sampler per spin
+- AXI-Lite upload format stays the same (sparse row format), but J tensor is (q,q,n,n)
+
+This Potts extension is a STRONG additional motivation to complete the KV260 bitfile synthesis:
+the hardware-native q-state sampler enables constraint verification with partial-credit scoring
+that the binary Ising architecture cannot provide.
+
 ### KV260 Bring-Up Status (Exp 313 — 20260414)
 
 - **Exp 313 result:** `honest_verdict=blocked_no_bitfile`
