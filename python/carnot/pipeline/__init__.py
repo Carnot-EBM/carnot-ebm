@@ -365,6 +365,7 @@ from carnot.pipeline.vram_budget_ledger import (  # noqa: E402
     VRAMBudgetLedger,
     VRAMForecast,
 )
+from carnot.pipeline.precision_100q_v6_result import Precision100qV6Result  # noqa: E402
 
 __all__ = [
     "AgentStep",
@@ -622,4 +623,5 @@ __all__ = [
     "ViolationSurprise",
     "VRAMBudgetLedger",
     "VRAMForecast",
+    "Precision100qV6Result",
 ]
