@@ -745,6 +745,46 @@ prediction (predict all correct), yielding AUC = 0.281 (actively wrong, not just
 **When** ``simulate_regime(regime)`` for any valid regime string
 **Then** return value is a ``float`` in ``[0, 1]``
 
+### REQ-SELFLEARN-021: SuRePriorityReplay Ranks Violations by EBM Energy Surprise
+
+SuRePriorityReplay (arXiv 2511.22367) shall rank constraint violations in the replay
+buffer by EBM energy surprise — energy relative to the per-domain running mean — and
+select the top-k highest-surprise violations for replay at each update step.
+
+Uniform random replay wastes replay budget on easy examples the model already handles
+well. Surprise-driven selection (SuRe) prioritizes examples near the knowledge
+boundary — where catastrophic forgetting is most likely. arXiv 2511.22367 shows +5%
+accuracy improvement in continual learning from NLL-based surprise prioritization.
+
+In the EBM domain, high Ising energy = multiple competing low-energy configurations =
+the constraint is ambiguous for the current model = high cognitive surprise. This is a
+direct translation of NLL-based surprise to the EBM domain.
+
+Spec: Exp 497, FR-11, arXiv 2511.22367
+
+### REQ-SELFLEARN-022: SuRePriorityReplay Maintains Partition Isolation > 0.7
+
+SuRePriorityReplay combined with PPSConstraintLearner shall maintain
+partition_isolation_score > 0.7 on interleaved real violation sequences from
+fover_labeled_steps_live.json (57 steps). The isolation score with SuRe replay
+shall be compared against uniform random replay as a baseline.
+
+Spec: Exp 497, FR-11, arXiv 2511.22367
+
+### SCENARIO-SELFLEARN-021: SuRePriorityReplay Returns Highest-Surprise Items First
+
+**Given** a SuRePriorityReplay with violations at energies [0.1, 0.9, 0.5, 0.8]
+**When** domain_mean_energy = 0.4 and get_replay_batch(n=2) is called
+**Then** returns the two violations with energies 0.9 and 0.8 (highest surprise)
+**And** surprise_scores are sorted descending
+
+### SCENARIO-SELFLEARN-022: SuReReplayResult.sure_better True When SuRe Improves Isolation
+
+**Given** ``isolation_score_uniform=0.72``, ``isolation_score_sure=0.85``
+**When** ``SuReReplayResult(n_violations_processed=57, n_replay_items=17, isolation_score_uniform=0.72, isolation_score_sure=0.85)``
+**Then** ``sure_better=True`` (0.85 > 0.72)
+**And** ``isolation_improvement=0.13`` (0.85 - 0.72)
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |

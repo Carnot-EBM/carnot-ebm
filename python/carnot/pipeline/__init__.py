@@ -355,6 +355,11 @@ from carnot.pipeline.nup_probe_v2 import (  # noqa: E402
     NUPProbeV2,
     NUPProbeV2Result,
 )
+from carnot.pipeline.sure_priority_replay import (  # noqa: E402
+    SuRePriorityReplay,
+    SuReReplayResult,
+    ViolationSurprise,
+)
 
 __all__ = [
     "AgentStep",
@@ -606,4 +611,7 @@ __all__ = [
     "EntropyEstimate",
     "NUPProbeV2",
     "NUPProbeV2Result",
+    "SuRePriorityReplay",
+    "SuReReplayResult",
+    "ViolationSurprise",
 ]
