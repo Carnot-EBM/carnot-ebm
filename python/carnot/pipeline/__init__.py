@@ -383,6 +383,10 @@ from carnot.pipeline.npu_entropy_probe import (  # noqa: E402
     NPUBenchmarkResult,
     NPUEntropyProbe,
 )
+from carnot.pipeline.jit_vram_check import (  # noqa: E402
+    JITVRAMCheck,
+    JITVRAMResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -650,4 +654,6 @@ __all__ = [
     "EnergyMagnitudeReplay",
     "NPUBenchmarkResult",
     "NPUEntropyProbe",
+    "JITVRAMCheck",
+    "JITVRAMResult",
 ]

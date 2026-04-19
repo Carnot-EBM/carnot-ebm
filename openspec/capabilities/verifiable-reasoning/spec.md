@@ -8710,3 +8710,69 @@ Spec: REQ-VERIFY-106
 **And** a temporary file path
 **When** export_onnx(path) is called
 **Then** the file exists at the given path
+
+---
+
+## REQ-INFRA-064: JITVRAMCheck Queries Real-Time VRAM Immediately Before Each model.load() Call
+
+**Requirement:** JITVRAMCheck.gate_model_load(model_id, required_gb) queries pynvml for current free VRAM on the target device immediately before each model.load() invocation — not at script startup. The result is returned as a JITVRAMResult with is_cleared, available_gb, attempts, and wait_applied fields.
+
+**Rationale:** Planning-time VRAM forecasts (VRAMBudgetLedger, Exp 500) are computed once at startup. By the time model.load() actually runs, the VRAM state may have changed (conductor loaded a model, prior model still allocated). This staleness caused CUDA OOM in Exps 502/503/504 despite a passing planning-time forecast. JIT queries resolve this by checking in the same call frame as the load.
+
+**Acceptance criteria:**
+- gate_model_load(model_id, required_gb) returns JITVRAMResult
+- is_cleared=True iff available_gb >= required_gb at check time
+- available_gb reflects the reading from the last pynvml query
+- attempts=1 when first check passes
+
+**Implementation Status:** Done (Exp 513)
+
+---
+
+## REQ-INFRA-065: JITVRAMCheck Retries Once After retry_wait_s=30 If Insufficient
+
+**Requirement:** If the first VRAM check fails (available_gb < required_gb), JITVRAMCheck.gate_model_load() waits retry_wait_s seconds (default 30) and queries pynvml once more. The result includes attempts=2 and wait_applied=True. If the second check also fails, is_cleared=False is returned and the caller must abort the load.
+
+**Acceptance criteria:**
+- attempts=2 and wait_applied=True when first check fails
+- is_cleared=True if second check passes
+- is_cleared=False if second check also fails
+- Only one retry — never more than 2 attempts
+
+**Implementation Status:** Done (Exp 513)
+
+---
+
+## REQ-INFRA-066: JITVRAMCheck CI Stub Returns is_cleared=True When pynvml Not Installed
+
+**Requirement:** When pynvml is not installed (CI, CPU-only machines), JITVRAMCheck.get_available_gb() returns 24.0 GB so that gate_model_load() always returns is_cleared=True in CI. This prevents CI from being blocked by missing GPU hardware.
+
+**Acceptance criteria:**
+- get_available_gb() returns 24.0 when pynvml ImportError occurs
+- gate_model_load() returns is_cleared=True in CI stub mode
+- CI stub does not raise exceptions
+
+**Implementation Status:** Done (Exp 513)
+
+---
+
+### SCENARIO-INFRA-073: gate_model_load Returns is_cleared=True When available_gb >= required_gb
+
+**Given** a JITVRAMCheck on device 0
+**And** available_gb=20.0 at query time
+**When** gate_model_load("model", required_gb=10.0) is called
+**Then** JITVRAMResult.is_cleared is True and attempts=1 and wait_applied=False
+
+### SCENARIO-INFRA-074: gate_model_load Returns attempts=2 and wait_applied=True When First Check Fails
+
+**Given** a JITVRAMCheck on device 0
+**And** available_gb=8.0 on first check and available_gb=12.0 on second check
+**When** gate_model_load("model", required_gb=10.0, retry_wait_s=30) is called
+**Then** JITVRAMResult.attempts=2, wait_applied=True, is_cleared=True, available_gb=12.0
+
+### SCENARIO-INFRA-075: gate_model_load Returns is_cleared=False When Both Checks Fail
+
+**Given** a JITVRAMCheck on device 0
+**And** available_gb=5.0 on both checks
+**When** gate_model_load("model", required_gb=10.0) is called
+**Then** JITVRAMResult.is_cleared=False and attempts=2 and wait_applied=True

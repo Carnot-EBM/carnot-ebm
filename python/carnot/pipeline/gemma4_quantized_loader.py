@@ -54,7 +54,10 @@ from __future__ import annotations
 
 import logging
 import os
-from typing import Optional
+from typing import TYPE_CHECKING, Optional
+
+if TYPE_CHECKING:
+    from carnot.pipeline.jit_vram_check import JITVRAMCheck
 
 _log = logging.getLogger(__name__)
 
@@ -140,12 +143,17 @@ class Gemma4QuantizedLoader:
         model_path: str,
         n_gpu_layers: int = -1,
         max_tokens: int = 512,
+        jit_vram_check: Optional["JITVRAMCheck"] = None,
     ) -> None:
         self.model_path = model_path
         self.n_gpu_layers = n_gpu_layers
         self.max_tokens = max_tokens
+        self.jit_vram_check = jit_vram_check
         self._llm: Optional[object] = None
         self._stub_mode: bool = False
+        # Stable model ID used for JIT VRAM logging (derived from the file path or a
+        # constant sentinel for stub mode).
+        self.model_id: str = os.path.basename(model_path) if model_path else "gemma4-gguf-stub"
 
     def load(self) -> bool:
         """Load the GGUF checkpoint via llama-cpp-python.
@@ -161,6 +169,21 @@ class Gemma4QuantizedLoader:
 
         Spec: REQ-LOADER-003, SCENARIO-LOADER-003
         """
+        # JIT VRAM gate: check real-time free VRAM immediately before the load.
+        # required_gb=10.0 is the Q4_K_M model size upper bound.  If not cleared,
+        # abort rather than crash with CUDA OOM (RETRO-051 fix).
+        if self.jit_vram_check is not None:
+            vram_result = self.jit_vram_check.gate_model_load(
+                self.model_id, required_gb=10.0
+            )
+            if not vram_result.is_cleared:
+                _log.warning(
+                    "Gemma4QuantizedLoader.load(): JIT VRAM check failed — "
+                    "%.2f GB free, need 10.0 GB; aborting load to prevent CUDA OOM",
+                    vram_result.available_gb,
+                )
+                return False
+
         try:
             from llama_cpp import Llama  # noqa: PLC0415 — optional dep
         except ImportError:
