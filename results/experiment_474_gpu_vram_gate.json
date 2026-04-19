@@ -1,0 +1,61 @@
+{
+  "experiment": 474,
+  "title": "GPUVRAMGate",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T02:19:12Z",
+  "finished_at": "2026-04-19T02:19:12Z",
+  "duration_s": 0.047,
+  "status": "success",
+  "schema": [
+    "all_scenarios_passed",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "gate_implemented",
+    "honest_verdict",
+    "n_gpus_detected",
+    "retro_037_prevention",
+    "retro_042_prevention",
+    "run_date",
+    "scenario_results",
+    "schema",
+    "started_at",
+    "status",
+    "template_wired",
+    "title"
+  ],
+  "gate_implemented": true,
+  "template_wired": true,
+  "n_gpus_detected": 2,
+  "retro_037_prevention": true,
+  "retro_042_prevention": true,
+  "honest_verdict": "vram_gate_operational",
+  "scenario_results": {
+    "SCENARIO-INFRA-047_cpu_noop": {
+      "passed": true,
+      "scenario": "SCENARIO-INFRA-047"
+    },
+    "SCENARIO-INFRA-048_sufficient_vram": {
+      "passed": true,
+      "kill_called": false,
+      "wait_called": false,
+      "scenario": "SCENARIO-INFRA-048"
+    },
+    "SCENARIO-INFRA-048_zombie_scenario": {
+      "passed": true,
+      "zombies_killed": 1,
+      "scenario": "SCENARIO-INFRA-048 zombie branch"
+    },
+    "SCENARIO-INFRA-049_defer_on_exhausted": {
+      "passed": true,
+      "scenario": "SCENARIO-INFRA-049"
+    },
+    "REQ-INFRA-041_template_wired": {
+      "passed": true,
+      "gate_import_in_source": true,
+      "requires_gpu_check_in_source": true,
+      "scenario": "REQ-INFRA-041"
+    }
+  },
+  "all_scenarios_passed": true
+}

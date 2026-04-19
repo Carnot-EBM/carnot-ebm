@@ -310,6 +310,11 @@ from carnot.pipeline.pps_constraint_learner import (  # noqa: E402
     PartitionIsolationScore,
     PPSConstraintLearner,
 )
+from carnot.pipeline.gpu_vram_gate import (  # noqa: E402
+    GPUVRAMGate,
+    GPUVRAMInsufficientError,
+    VRAMStatus,
+)
 
 __all__ = [
     "AgentStep",
@@ -534,4 +539,7 @@ __all__ = [
     "DomainParameterPartition",
     "PartitionIsolationScore",
     "PPSConstraintLearner",
+    "GPUVRAMGate",
+    "GPUVRAMInsufficientError",
+    "VRAMStatus",
 ]

@@ -356,6 +356,20 @@ class ExperimentTemplate:
             - ``gpu_runner_active`` (bool): True iff a DualGPURunner was created.
             - ``cpu_fallback`` (bool): True iff running in CPU-only fallback mode.
         """
+        # --- Step 0: GPUVRAMGate — REQ-INFRA-039/040/041, RETRO-037/042 fix ---
+        # Run BEFORE every GPU-required experiment.  The session-start zombie kill
+        # (Exp 463) fires once per conductor session but cannot prevent mid-session
+        # zombie accumulation from failed experiments.  4 of 12 experiments in .35
+        # deferred due to 23.8 GB of zombie-held VRAM at 0% utilisation.
+        if self.requires_gpu:
+            try:
+                from carnot.pipeline.gpu_vram_gate import GPUVRAMGate  # noqa: PLC0415
+
+                with GPUVRAMGate(min_free_gb=8.0, auto_kill=True):
+                    pass  # gate check; actual model load happens below
+            except Exception as _vram_exc:
+                _log.warning("GPUVRAMGate raised %s — continuing (non-fatal)", _vram_exc)
+
         # --- Step 1: Determine execution mode ---
         # CARNOT_NO_SERVER=1 is the env-var equivalent of passing --no-server on the CLI.
         no_server_env = os.environ.get("CARNOT_NO_SERVER", "0") == "1"
