@@ -6875,6 +6875,92 @@ Spec: REQ-SELFLEARN-015, SCENARIO-SELFLEARN-015
 **Then** the artifact contains `exp448_fp_rate`, `lsebmcl_fp_rate`, `constraint_add_fp_rate`
 **And** `honest_verdict` is one of `'lsebmcl_better'` or `'no_improvement'`
 
+### REQ-SELFLEARN-016: PPSConstraintLearner Isolates Constraint Weight Updates by Domain
+
+The `PPSConstraintLearner` shall:
+- Support three constraint domains: `ARITHMETIC`, `CODE`, `LOGICAL` (via `ConstraintDomain` enum).
+- Maintain a separate `DomainParameterPartition` for each domain.
+- When `fit_domain(domain, violations)` is called, ONLY the partition for that domain shall be updated.
+- Partitions for all other domains shall remain numerically unchanged.
+
+**Why domain isolation (arXiv 2512.15658 — PPSEBM):**
+    LSEBMCL (Exp 457) uses a single parameter space for all constraint types.
+    When arithmetic sessions and code sessions interleave, gradient updates bleed across
+    domain boundaries — improving arithmetic detection can degrade code detection.
+    PPSEBM fixes this by giving each domain an isolated parameter partition: updates
+    to the arithmetic partition cannot affect the code or logical partitions.
+
+**Implementation Status:** Done (Exp 470)
+
+Spec: REQ-SELFLEARN-016, SCENARIO-SELFLEARN-016
+
+### REQ-SELFLEARN-017: EBM Generates Synthetic Boundary Violations per Domain to Reinforce Partition Isolation
+
+The `PPSConstraintLearner` shall implement `generate_boundary_violations(domain, n)`:
+- Use the domain's `LSEBMConstraintReplayer` to generate `n` synthetic violation strings.
+- Boundary violations are not random: the EBM encodes the learned distribution of violations
+  for that domain, so generated samples stress-test the partition walls at the distribution boundary.
+- The method shall return exactly `n` violation strings, all drawn from the domain's training vocabulary.
+
+**Why boundary violations from EBM (not random):**
+    Random violations would not reflect the domain's actual error distribution.
+    The EBM encodes learned co-occurrence patterns (e.g., carry + sign errors tend to
+    co-occur in arithmetic). Boundary violations sampled from near the distribution boundary
+    are the hardest cases for the partition — the ones most likely to cause cross-domain bleed.
+    Using EBM samples for stress-testing is the PPSEBM key insight.
+
+**Implementation Status:** Done (Exp 470)
+
+Spec: REQ-SELFLEARN-017, SCENARIO-SELFLEARN-017
+
+### REQ-SELFLEARN-018: Partition Isolation Score > 0.8 After Independent Domain Training
+
+The `PartitionIsolationScore` shall:
+- Accept a list of `DomainParameterPartition` objects.
+- Compute `score()` as the minimum cosine distance between gradient update vectors from any two distinct partitions.
+- Implement `is_isolated(threshold=0.8)` returning `True` iff `score() >= threshold`.
+
+**Why cosine distance as the isolation metric:**
+    Cosine similarity measures the DIRECTION of gradient updates, not their magnitude.
+    If two partitions are being updated in the same direction, their gradients are correlated —
+    they share signal and cannot be truly isolated.  Cosine DISTANCE = 1 - cosine_similarity,
+    so high cosine distance (near 1.0) means the gradients point in orthogonal or opposite
+    directions — i.e., the partitions are learning independently.  A threshold of 0.8 means
+    at most 0.2 of shared directional signal between any two domain partitions.
+
+**Implementation Status:** Done (Exp 470)
+
+Spec: REQ-SELFLEARN-018, SCENARIO-SELFLEARN-018
+
+### SCENARIO-SELFLEARN-016: fit_domain(ARITHMETIC) Does NOT Change CODE or LOGICAL Partition Weights
+
+**Given** a `PPSConstraintLearner` with partitions for ARITHMETIC, CODE, LOGICAL
+**And** CODE and LOGICAL partitions have recorded their initial weight arrays
+**When** `fit_domain(ConstraintDomain.ARITHMETIC, ['carry', 'carry', 'sign'])` is called
+**Then** the CODE partition weights are bit-for-bit identical to their initial values
+**And** the LOGICAL partition weights are bit-for-bit identical to their initial values
+
+**Implementation Status:** Done (Exp 470)
+
+### SCENARIO-SELFLEARN-017: generate_boundary_violations Returns Domain Vocabulary Strings
+
+**Given** a `PPSConstraintLearner` fitted on ARITHMETIC domain with violations `['carry', 'sign']`
+**When** `generate_boundary_violations(ConstraintDomain.ARITHMETIC, 10)` is called
+**Then** exactly 10 strings are returned
+**And** all strings are in `{'carry', 'sign'}`
+
+**Implementation Status:** Done (Exp 470)
+
+### SCENARIO-SELFLEARN-018: partition_isolation_score > 0.8 After Training 3 Domains Independently
+
+**Given** a `PPSConstraintLearner` with three domains
+**And** each domain has been fitted on its own violation set independently
+**When** `PartitionIsolationScore(partitions).score()` is computed
+**Then** the score is >= 0.8 (gradients are in sufficiently different directions)
+**And** `is_isolated(threshold=0.8)` returns `True`
+
+**Implementation Status:** Done (Exp 470)
+
 ### REQ-EORM-005: EBMCoTCalibrator Applies Langevin Dynamics to EORM Hidden State Before Scoring
 
 The `EBMCoTCalibrator` shall:

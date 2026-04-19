@@ -304,6 +304,12 @@ from carnot.pipeline.session_health_check import (  # noqa: E402
     SessionHealthResult,
     ZombieProcess,
 )
+from carnot.pipeline.pps_constraint_learner import (  # noqa: E402
+    ConstraintDomain,
+    DomainParameterPartition,
+    PartitionIsolationScore,
+    PPSConstraintLearner,
+)
 
 __all__ = [
     "AgentStep",
@@ -524,4 +530,8 @@ __all__ = [
     "GPUHealth",
     "SessionHealthResult",
     "ZombieProcess",
+    "ConstraintDomain",
+    "DomainParameterPartition",
+    "PartitionIsolationScore",
+    "PPSConstraintLearner",
 ]
