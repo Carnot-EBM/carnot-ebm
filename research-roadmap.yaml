@@ -215,6 +215,86 @@ tasks:
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
     Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
+- id: exp525-expanded-gpu-reaper
+  milestone: 2026.04.39
+  deliverable: results/experiment_525_expanded_gpu_reaper.json
+  title: 'Exp 525: Expanded GPU Reaper — close RETRO-033 root cause, kill stale VRAM-holders before every GPU run'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style.\nToday's date: {date}.\n\n\
+    CONTEXT: RETRO-033 (live 100q precision benchmark) has missed SEVEN consecutive\
+    \ milestones now (.33-.39). Each milestone's retro has identified a different\
+    \ root cause, shipped a fix, and watched the next benchmark still hit\
+    \ 'blocked_on_gpu'. The pattern is: Exps 487 (GPUVRAMGateV2) and 513 (JITVRAMCheck)\
+    \ both exist and run before every GPU experiment, but neither catches the\
+    \ actual failure mode.\n\n\
+    The root cause diagnosed during a manual intervention on 2026-04-19: stale\
+    \ pytest-related Python subprocesses (pattern: parent is 'pytest tests/python',\
+    \ child is 'python3 -u -c ...' subprocess launcher) accumulate across milestones\
+    \ and collectively pin large chunks of GPU VRAM. The existing gates use pattern-\
+    \ matched whitelists that miss the 'python3 -u -c ...' child processes because\
+    \ those are generic Python subprocess launchers and look indistinguishable from\
+    \ legitimate conductor subagent children.\n\n\
+    EXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix() (call FIRST)\n\
+    - python/carnot/pipeline/gpu_vram_gate_v2.py — Exp 487's gate logic; understand\
+    \ how it currently decides to kill vs skip a process\n\
+    - python/carnot/pipeline/jit_vram_check.py — Exp 513's just-in-time check\n\
+    - openspec/change-proposals/env-hardening-and-reruns.md — the full design for\
+    \ this experiment (it was originally Exp N+1 in that proposal; the planner\
+    \ missed it when writing the 2026.04.39 roadmap, so we are inserting it here\
+    \ manually)\n- scripts/verify_npu.py — an example of a layered environment\
+    \ check with structured JSON output\n\n\
+    TASK: Implement ExpandedGPUReaper with a broader kill heuristic than the\
+    \ existing gates.\n\
+    1. Read CLAUDE.md spec-first workflow.\n\
+    2. Call apply_env_autofix() FIRST (before any import).\n\
+    3. Add REQ-INFRA-067 (ExpandedGPUReaper scans nvidia-smi --query-compute-apps\
+    \ and kills any process holding > MIN_VRAM_MB that is not in the current\
+    \ conductor process-subtree AND has been alive > MIN_AGE_S), REQ-INFRA-068\
+    \ (integrates into GPUVRAMGateV2 as an additional kill pass BEFORE the existing\
+    \ pattern-based killer), REQ-INFRA-069 (exports a pyxrt-free reaper path so\
+    \ it can run without the full NPU stack imported), SCENARIO-INFRA-076/077/078\
+    \ to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    4. Write tests FIRST (100% coverage) for:\n\
+    \   - ExpandedGPUReaperConfig(min_vram_mb: int = 1024, min_age_s: int = 1800,\
+    \     dry_run: bool = False)\n\
+    \   - ExpandedGPUReaper with methods:\n\
+    \     - _list_gpu_processes() -> list[dict]: parse nvidia-smi output; include\
+    \ pid, used_memory_mb, process_name\n\
+    \     - _process_age_s(pid) -> int: ps -o etimes for a pid\n\
+    \     - _in_our_subtree(pid, root_pid: int) -> bool: True iff pid is a\
+    \ descendant of root_pid\n\
+    \     - reap() -> ExpandedGPUReapResult: walk GPU processes, kill any that\
+    \ match (used_memory_mb >= min_vram_mb AND not _in_our_subtree AND\
+    \ _process_age_s >= min_age_s); return per-pid action log\n\
+    \   - ExpandedGPUReapResult(killed: list[dict], skipped: list[dict],\
+    \ total_vram_freed_mb: int, honest_verdict: str)\n\
+    \   - CI stub path: when nvidia-smi binary not in PATH, return honest_verdict\
+    \ = 'no_nvidia_smi_no_reap' and empty lists; no-op.\n\
+    5. Implement python/carnot/pipeline/expanded_gpu_reaper.py.\n\
+    \   Export ExpandedGPUReaper, ExpandedGPUReaperConfig, ExpandedGPUReapResult\n\
+    \   from carnot.pipeline.__init__.\n\
+    \   Verbose docstrings: WHY process-subtree check (so the reaper cannot kill\
+    \ its own current subagent), WHY age threshold (a freshly-spawned subagent\
+    \ that legitimately allocated VRAM 30 seconds ago should not be reaped), WHY\
+    \ dry_run flag (for CI and for the honest_verdict audit path).\n\
+    6. Write scripts/experiment_525_expanded_gpu_reaper.py:\n\
+    \   a. apply_env_autofix() FIRST\n\
+    \   b. ExperimentTimeoutWatchdog(525, timeout_minutes=15) as context manager\n\
+    \   c. ExperimentTemplate(525, 'Expanded GPU Reaper',\
+    \ 'results/experiment_525_expanded_gpu_reaper.json')\n\
+    \   d. Instantiate ExpandedGPUReaper with dry_run=True; call reap() to audit\
+    \ what *would* be killed; record candidates list.\n\
+    \   e. Produce deliverable with schema=carnot.expanded_gpu_reaper.v1,\
+    \ honest_verdict in {reap_dry_run_complete, no_nvidia_smi_no_reap}, fields:\
+    \ candidates (from dry_run), min_vram_mb, min_age_s.\n\
+    \   f. Call tmpl.assert_deliverable_written() as FINAL LINE.\n\
+    7. Run tests, reconcile docs.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py. Do NOT wire the\
+    \ reaper into the conductor itself in this experiment — that is a separate\
+    \ integration step that needs human review first.\n"
+
 - id: exp516-gsm-symbolic-adversarial-v5
   milestone: 2026.04.39
   deliverable: results/experiment_516_gsm_symbolic_adversarial_v5.json
