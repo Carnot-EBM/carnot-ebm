@@ -30,7 +30,7 @@ tasks:
     \ gains field 'override_applied: bool' tracking when a non-None falsy value was\
     \ overridden), SCENARIO-INFRA-067/068/069 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
     3. In python/carnot/pipeline/env_autofix.py:\n\
-    \   a. Add 'FALSY_OVERRIDE_VALUES = {None, \"\", \"0\", \"false\", \"False\"}'.\n\
+    \   a. Add 'FALSY_OVERRIDE_VALUES = (None, \"\", \"0\", \"false\", \"False\")'.\n\
     \   b. In apply_env_autofix(), replace the condition that checks presence:\n\
     \      OLD: if not os.environ.get('CARNOT_FORCE_LIVE') and gpu_detected:\n\
     \      NEW: current_val = os.environ.get('CARNOT_FORCE_LIVE')\n\
@@ -124,7 +124,7 @@ tasks:
     \ → repair if violations found → record baseline_correct, pipeline_correct\n\
     \   k. Compute Wilson 95% CI for baseline and pipeline accuracy\n\
     \   l. Write CoT pairs to results/exp527_cot_pairs.json (FOVER format, same as\
-    \ Exp 442 schema: [{step_text, label, question_id}])\n\
+    \ Exp 442 schema: [(step_text, label, question_id)])\n\
     \   m. Build artifact: schema='carnot.live_precision.v8'\n\
     \      inference_mode='live_gpu' or 'gpu_required'\n\
     \      n_questions=100, baseline_accuracy, pipeline_accuracy\n\
@@ -208,7 +208,7 @@ tasks:
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
     \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-052:\
     \ Exp 517 (controlled DualGPU test) confirmed gpu1_compute_pct=0.0 even in\
-    \ live_gpu mode with explicit device_map={'': 'cuda:1'}. The build_zombie_fix_strategy()\
+    \ live_gpu mode with explicit device_map=('': 'cuda:1'). The build_zombie_fix_strategy()\
     \ wired in ExperimentTemplate.setup_gpu() assigns device maps, but transformers\
     \ may be overriding this at the model load level. This experiment writes a\
     \ minimal standalone harness that loads ONLY Qwen3.5-0.8B with an explicit\
@@ -247,7 +247,7 @@ tasks:
     \   e. If not live GPU: emit gpu_required artifact, exit\n\
     \   f. JITVRAMCheck(1).gate_model_load('qwen3.5-0.8b', required_gb=1.5)\n\
     \   g. Load Qwen3.5-0.8B with THREE explicit cuda:1 constraints:\n\
-    \      i.  device_map={'': 'cuda:1'} in from_pretrained()\n\
+    \      i.  device_map=('': 'cuda:1') in from_pretrained()\n\
     \      ii. torch_dtype=torch.float16\n\
     \      iii. After load: model = model.to('cuda:1') (belt-and-suspenders)\n\
     \   h. verify_model_on_device(model, expected_device_id=1); if False log WARNING\n\
@@ -462,7 +462,7 @@ tasks:
     \ KAEMEnergy, measure AUROC on 100 held-out samples + evaluation time\n\
     \   g. Build artifact: schema='carnot.lowrank_kaem.v1'\n\
     \      full_rank_auroc, full_rank_eval_ms\n\
-    \      results_by_k: [{k, auroc, eval_ms, auroc_vs_fullrank_pct}]\n\
+    \      results_by_k: [(k, auroc, eval_ms, auroc_vs_fullrank_pct)]\n\
     \      optimal_k: minimum k s.t. auroc >= 0.95 * full_rank_auroc\n\
     \      speedup_at_optimal_k\n\
     \      lowrank_viable=(optimal_k <= 11)\n\
@@ -571,13 +571,13 @@ tasks:
     \ PottsMachineVerifier with q=3 states and Gibbs sampler.\n\
     1. Read CLAUDE.md spec-first workflow.\n\
     2. Add REQ-VERIFY-106 (PottsMachineVerifier: q-state constraint encoding),\
-    \ REQ-VERIFY-107 (q=3 Gibbs sampler: each spin updated over {0,1,2}),\
+    \ REQ-VERIFY-107 (q=3 Gibbs sampler: each spin updated over (0,1,2)),\
     \ REQ-VERIFY-108 (AUROC >= IsingEBM for 3-class verification),\
     \ SCENARIO-VERIFY-142/143/144 to spec.\n\
     3. Write tests FIRST (100% coverage) for python/carnot/models/potts_machine.py:\n\
-    \   - PottsState(q: int = 3): represents one q-state spin as int in {0,..,q-1}\n\
+    \   - PottsState(q: int = 3): represents one q-state spin as int in (0,..,q-1)\n\
     \   - PottsCoupling(J: jnp.ndarray): coupling matrix for q-state system;\
-    \ energy contribution = sum_{i,j} J[s_i, s_j, i, j]\n\
+    \ energy contribution = sum_(i,j) J[s_i, s_j, i, j]\n\
     \   - PottsMachineVerifier(n_spins: int, q: int = 3):\n\
     \     energy(config: jnp.ndarray) -> float:\
     \ sum coupling energies over current spin config\n\
@@ -591,7 +591,7 @@ tasks:
     \ argmin energy over 3 possible class assignments\n\
     \   - Test: energy() returns scalar for q=3 config\n\
     \   - Test: gibbs_update changes at least one spin\n\
-    \   - Test: predict_class returns value in {0,1,2}\n\
+    \   - Test: predict_class returns value in (0,1,2)\n\
     \   - Test: PottsMachineVerifier is faster than running 3 separate IsingEBMs\
     \ (joint optimization)\n\
     4. Implement python/carnot/models/potts_machine.py.\n\
@@ -746,10 +746,10 @@ tasks:
     \   schema='carnot.operational_retro.v15'\n\
     \   milestone='2026.04.40'\n\
     \   All success criteria fields\n\
-    \   headline_results: {live_100q_v8, live_200q_v7}\n\
+    \   headline_results: (live_100q_v8, live_200q_v7)\n\
     \   new_retro_items: [any new RETRO items discovered]\n\
     \   open_retro_items: [carried forward from .39 plus new]\n\
-    \   meta_reflection: {credibility_verdict, wall_time_note, closures_achieved}\n\
+    \   meta_reflection: (credibility_verdict, wall_time_note, closures_achieved)\n\
     \   honest_verdict: 'credibility_milestone_reached' if retro_033_closed\n\
     \     else 'milestone_complete'\n\
     9. Update ops/conductor-log.md, ops/status.md (Last Updated: 2026.04.40\
