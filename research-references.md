@@ -2195,7 +2195,16 @@ thermodynamic computing Ising FPGA
      the exact 503/504 failure modes before the subagent is invoked.
   2. Zombie pytest reaper + rerun of Exps 503 and 504 under the fixed
      env; report `success` or `blocked_again` with specific reason.
-  3. (Stretch) Dependency lockfile + `scripts/bootstrap.sh` via AST
+  3. **JEPA Live Retrain v4 rerun (hard-sequenced after #2).** The
+     stranded Exp 510 is not a code failure — the committed script is
+     already correct — it is a data failure: `n_live_pairs=0` because
+     its upstream (503/504) was blocked. Rerunning is the validation
+     gate for the 0.967 AUC headline claim in `docs/roadmap.md`. Must
+     run after #2 succeeds; a premature rerun just re-produces the
+     synthetic-only result. Acceptance criterion: deliverable has
+     `n_live_pairs > 0` AND `honest_verdict` is one of
+     `fr11_live_confirmed / fr11_live_regressed / fr11_live_insufficient_signal`.
+  4. (Stretch) Dependency lockfile + `scripts/bootstrap.sh` via AST
      walk of imports in `scripts/` and `python/`, so "missing package"
      becomes a two-line diagnostic rather than a silent mid-experiment
      block.
