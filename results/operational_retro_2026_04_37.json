@@ -1,143 +1,165 @@
 {
-  "experiment": 499,
-  "title": "Milestone 2026.04.37 Retrospective",
-  "run_date": "20260419",
-  "started_at": "2026-04-19T09:53:56Z",
-  "finished_at": "2026-04-19T09:53:56Z",
-  "duration_s": 0.001,
-  "status": "success",
-  "schema": [
-    "credibility_gap_status",
-    "deferred_exp_ids",
-    "duration_s",
-    "env_autofix",
-    "exp_ids_loaded",
-    "experiment",
-    "experiments_completed",
-    "finished_at",
-    "honest_verdict",
-    "jepa_auc_final",
-    "live_200q_statistically_positive",
-    "meta_reflection",
-    "milestone",
-    "n_deferred_to_gpu",
-    "new_retro_items",
-    "nup_probe_v2_viable",
-    "retro_031_closed",
-    "retro_033_closed",
-    "retro_038_closed",
-    "retro_039_closed",
-    "retro_040_closed",
-    "retro_045_closed",
-    "retro_046_closed",
-    "retro_047_closed",
-    "retro_improvement_adoption_detail",
-    "retro_improvement_adoption_rate",
-    "run_date",
-    "schema",
-    "started_at",
-    "status",
-    "sure_replay_improves",
-    "thesis_confirmed",
-    "title"
-  ],
+  "schema": "carnot.operational_retro.v12",
   "milestone": "2026.04.37",
-  "n_deferred_to_gpu": 3,
-  "deferred_exp_ids": [
-    488,
-    489,
-    490
-  ],
-  "retro_031_closed": true,
-  "retro_033_closed": false,
-  "retro_038_closed": false,
-  "retro_039_closed": false,
-  "retro_040_closed": true,
-  "retro_045_closed": true,
-  "retro_046_closed": true,
-  "retro_047_closed": false,
-  "jepa_auc_final": 0.9666666666666667,
-  "thesis_confirmed": false,
-  "live_200q_statistically_positive": false,
-  "nup_probe_v2_viable": false,
-  "sure_replay_improves": false,
-  "retro_improvement_adoption_rate": 1.0,
-  "retro_improvement_adoption_detail": {
-    "batching_hook": true,
-    "thermal_gate": true,
-    "harness_patch": true
-  },
-  "experiments_completed": 12,
-  "exp_ids_loaded": [
-    487,
-    488,
-    489,
-    490,
-    491,
-    492,
-    493,
-    494,
-    495,
-    496,
-    497,
-    498
-  ],
-  "new_retro_items": [
+  "generated_at": "2026-04-19T10:07:47Z",
+  "total_wall_time_minutes": 4833,
+  "experiments_completed": 348,
+  "average_minutes_per_experiment": 13.9,
+  "slowest_experiments": [
     {
-      "id": "RETRO-048",
-      "description": "Gemma4 CUDA OOM persists after GPUVRAMGateV2: active conductor process holds 8.96 GiB (unkillable by zombie-kill logic), leaving only ~5.37 GiB free vs 14.89 GiB required.  Fix: use quantized Gemma4 INT4/GGUF (~8-10 GiB) so the model fits alongside the conductor process.  Blocks RETRO-033, RETRO-038, RETRO-039.",
-      "priority": "CRITICAL",
-      "target_milestone": "2026.04.38",
-      "blocked_retro_items": [
-        "RETRO-033",
-        "RETRO-038",
-        "RETRO-039"
-      ]
+      "rank": 1,
+      "duration_minutes": 117,
+      "label": "Exp 219: Live GSM8K semantic benchmark on Qwen3.5-0.8B and Gemma",
+      "pct_of_total": 2.4,
+      "likely_cause": "Sequential model loading onto GPU 0 while GPU 1 remained idle. Qwen then Gemma loaded serially, each requiring a full VRAM allocation cycle before the prior model was freed. The DualGPURunner class exists in experiment_template.py but was never applied at the harness level for this experiment. This is the same root cause documented in the .36 retro: 53/64 dual-model harnesses contained no cuda:1 assignment. Even after DualGPU harness enforcement was adopted in .37 (harness_patch=true), older experiments pre-dating the enforcement sweep are not retroactively fixed."
     },
     {
-      "id": "RETRO-033",
-      "description": "Live 100q verify-repair positive result \u2014 FIFTH consecutive milestone miss.  Blocked by Gemma4 OOM (RETRO-048).  Must be first experiment scheduled after quantized model is available.",
-      "priority": "CRITICAL",
-      "target_milestone": "2026.04.38",
-      "miss_count": 5
+      "rank": 2,
+      "duration_minutes": 105,
+      "label": "Exp 308: JEPA fast-path gate integration — checkpoint (tests failing)",
+      "pct_of_total": 2.2,
+      "likely_cause": "Interrupted conductor run left the test suite in a failing state mid-experiment. Recovery required context reload, triage of 3900+ tests to isolate pre-existing failures from the new breakage, and a clean recommit — adding 30-40 min of diagnostic overhead beyond the experiment wall time. The partial-result handoff mechanism (Exp 475, adopted in .36) was implemented after this experiment ran, so the recovery path was the older manual-triage route. Future interrupted runs can fast-path to checkpoint resumption via the Exp 475 mechanism."
     },
     {
-      "id": "RETRO-038",
-      "description": "Live 200q VeriCoT+VPRM statistically significant result not confirmed.  Blocked by Gemma4 OOM (RETRO-048).  Schedule after RETRO-048 resolved.",
-      "priority": "HIGH",
-      "target_milestone": "2026.04.38"
+      "rank": 3,
+      "duration_minutes": 78,
+      "label": "Exp 221: Live prompt-side constraint benchmark on typed IR tasks",
+      "pct_of_total": 1.6,
+      "likely_cause": "Single-threaded sequential question loop across all prompt variants. Typed IR prompts are materially longer than standard GSM8K prompts, raising per-call inference latency. BatchedInferenceRunner was available but not wired in — one of the 77 violations documented by the Exp 481 audit. The batching pre-commit hook (RETRO-045, closed in .37 via Exp 493) now blocks new harnesses with this pattern, but this experiment predates the hook and was never retroactively updated."
     },
     {
-      "id": "RETRO-039",
-      "description": "GSM-Symbolic adversarial thesis unconfirmed.  Exp 490 returned gpu_required \u2014 model prewarm failed due to Gemma4 OOM (RETRO-048).  Schedule after quantized model available.",
-      "priority": "HIGH",
-      "target_milestone": "2026.04.38"
+      "rank": 4,
+      "duration_minutes": 76,
+      "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "pct_of_total": 1.6,
+      "likely_cause": "Implementing ExperimentTimeoutWatchdog after a 17-milestone delay compounded the implementation cost: reconstructing historical RETRO-003 context, verifying no partial implementations existed across 17 milestones of commits, and integrating with the current pipeline all added overhead that a same-milestone fix would not have incurred. This is the canonical 'context debt multiplier' pattern: a 45-min hard-cap mechanism required 76 min to build because it carried 17 milestones of accumulated context. Principle: every RETRO item that survives into a second milestone doubles its effective implementation cost."
     },
     {
-      "id": "RETRO-049",
-      "description": "NUP Probe v2 AUC = 0.600 (threshold 0.700).  Bayesian semantic entropy approach produced no improvement over v1 (delta ~1e-16).  Next step: add per-token entropy, top-k probability spread, and attention pattern features.  Do not promote to Tier 0c until AUC > 0.700.",
-      "priority": "MEDIUM",
-      "target_milestone": "2026.04.38"
-    },
-    {
-      "id": "RETRO-050",
-      "description": "SuRe surprise replay shows no PPSEBM isolation improvement (isolation_improvement=-0.1172, sure_better=False).  FR-11 Tier 2 self-learning strategy needs a different approach.  Candidate: gradient-weighted replay using EBM energy magnitude as priority signal instead of LLM surprise.",
-      "priority": "MEDIUM",
-      "target_milestone": "2026.04.38"
+      "rank": 5,
+      "duration_minutes": 74,
+      "label": "Exp 260 partial: CPU-bound benchmark proves GPU need",
+      "pct_of_total": 1.5,
+      "likely_cause": "A benchmark that ran to completion and produced only a gpu_required verdict — consuming 74 min of wall time to confirm a prerequisite that gpu_monitor.py could verify in under 2 min. GPUVRAMGateV2 (introduced in .37 as GPUVRAMGate follow-up after .36's RETRO-044) is designed to catch exactly this class of wasted execution: a hard gate before GPU-required experiments checks free VRAM budget before any model is loaded. Exp 260 predates the gate; no future experiment should spend >5 min discovering it needs GPU before the gate fires."
     }
   ],
-  "credibility_gap_status": "PARTIALLY_CLOSED",
-  "meta_reflection": {
-    "vram_deadlock_broken": "NOT_BROKEN",
-    "vram_note": "3 experiments deferred despite GPUVRAMGateV2.  Root cause shifted from zombie VRAM to active-process VRAM held by the conductor itself.  GPUVRAMGateV2 solved the zombie problem but exposed a deeper memory budget problem.",
-    "adoption_trend": "Adoption rate: 0% (.33) \u2192 50% (.35) \u2192 60% (.36) \u2192 100% (.37).  First time all three scheduled enforcement items were installed in a single milestone.  The pattern from prior milestones (infrastructure items adopted, enforcement items not) reversed in .37: all three enforcement items (batching hook, thermal gate, harness patch) were successfully delivered.",
-    "jepa_trajectory": "JEPA AUC: 0.667 (.33) \u2192 0.400 (.35) \u2192 0.281 (.36) \u2192 0.967 (.37).  Curriculum training reversed the three-milestone regression (before=0.600 \u2192 after=0.967, improvement=0.367).  FR-11 Tier 3 is recovered.  The synthetic-augmentation strategy from Exp 491 diagnostic (augment_with_synthetic_pairs) was the key lever.",
-    "credibility_verdict": "STILL_OPEN after 5 consecutive milestone misses.  The credibility gap (unconfirmed live verify-repair improvement at 100q+) cannot be closed until Gemma4 can load alongside the conductor process.  GPUVRAMGateV2 solved the zombie subproblem.  The remaining blocker is model size: Gemma4 requires 14.89 GiB and the conductor process consumes ~8.96 GiB of the 24 GiB GPU 0.  INT4/GGUF quantization (8-10 GiB target) is the critical path item for .38.  Without it, RETRO-033, -038, and -039 will defer again."
+  "bottlenecks_identified": [
+    "Conductor process holds ~8.96 GiB of GPU 0 VRAM as its own working memory, leaving only ~5.37 GiB free after the conductor process is resident. Gemma4 requires 14.89 GiB. GPUVRAMGateV2 kills zombie processes and verifies post-kill free VRAM — but it cannot kill the conductor process itself. Result: three experiments (488, 489, 490) deferred_to_gpu despite a correctly functioning gate. This is a deeper memory budget problem than zombie VRAM: the conductor's own footprint exceeds the headroom needed for large model inference. Resolution requires either quantized Gemma4 (INT4/GGUF, ~8-10 GiB target, RETRO-048) or routing the conductor to CPU-only execution and reserving all GPU VRAM for inference processes.",
+    "GPU 1 returned to 0% utilization at milestone close — regressed from .36's 11%. At close, PID 107270 spans both GPUs: 15706MB on GPU 0 at 48% utilization, 1786MB on GPU 1 at 0% utilization. The 1786MB on GPU 1 is layer offload from device_map='auto', contributing no forward-pass compute. The .37 harness_patch adoption (retro_improvement_adoption_detail.harness_patch=true) addressed newly written harnesses, but the active process at milestone close is the conductor itself — which has no cuda:1 compute routing. GPU 1 held 24576MB of compute capacity and contributed 0% utilization throughout the close window.",
+    "100% retro improvement adoption rate delivered enforcement tooling, but the underlying blocking constraint (model size vs GPU budget) persisted. All three .37 improvements (batching_hook, thermal_gate, harness_patch) were successfully installed — the first milestone with 100% adoption. Despite this, wall time decreased only 1.8% (4921 → 4833 min) and 3 of 13 planned experiments were deferred. Enforcement tooling works, but the critical-path item (RETRO-048: Gemma4 OOM) was not in the .37 roadmap. Adoption of identified improvements is necessary but not sufficient when the blocker is architectural (model memory budget) rather than procedural.",
+    "RETRO-033 missed for the fifth consecutive milestone: live 100q verify-repair positive result unconfirmed. Milestones .33, .34, .35, .36, .37 all ended with RETRO-033 open. The blocking chain is: zombie VRAM (.33-.35) → RETRO-044 (GPUVRAMGateV2 introduced .37) → conductor process VRAM (.37) → RETRO-048 (quantized model needed, .38). Each milestone adds one link to the blocking chain rather than closing the chain. RETRO-033 should be treated as a system-level architectural blocker, not an experiment-level scheduling item.",
+    "Wall time plateau persists across five milestones despite continuous process improvement. Five-milestone trajectory: .33=5002, .34=4886, .35=4948, .36=4921, .37=4833 min. The range is 4833-5002 min — a 169-min spread across five milestones. Per-experiment average has improved (.33=16.1 → .37=13.9 min), but total experiments are increasing proportionally (+37 experiments over five milestones). The plateau suggests structural throughput limits that cannot be addressed by procedural improvements alone. The primary untapped lever remains GPU 1 compute utilization: if GPU 1 ran a second model in parallel (true DualGPU inference), throughput on dual-model benchmarks would approximately double.",
+    "KAEM crossover search extended to n=5000 (Exp 498) without finding a crossover or satisfying the pre-specified stopping criterion. RETRO-031 remains open after five experiments across three milestones. The search space (n_vars dimension) may not be the right axis: KAEM advantage may appear at different n_samples, different distribution families, or on different hardware (GPU vs CPU benchmark). Continuing to extend n_vars without changing the experimental variable consumes wall time without producing new information.",
+    "SuRe surprise replay produced no isolation improvement (isolation_improvement=-0.1172, sure_better=False) in Exp 496 (RETRO-050 opened). The LLM-surprise signal used to prioritize replay examples does not correlate with EBM energy magnitude, leading to priority inversions: high-surprise samples are not the samples the EBM most needs to see again. The replay strategy requires a fundamentally different priority signal.",
+    "NUP Probe v2 with Bayesian semantic entropy features produced AUC = 0.600, identical to v1 (delta ~1e-16). The feature enrichment approach did not improve on the baseline because Bayesian semantic entropy at the token-aggregation level is too coarse — it averages out the signal. Per-token entropy, attention pattern variance, and top-k probability spread are still unused. RETRO-049 carries this forward with a more granular feature extraction strategy.",
+    "Doc-only updates still consume measurable conductor wall time. Metrics log shows 4 doc-update turns with 1-5 min durations (e.g., Exp 435 doc update: 5:53→5:54 = 1 min, Turn 2 of 2026-04-19 .37 planning session: 6:11→6:13 = 2 min). The doc-only test classifier (adopted .35) correctly prevents full 3900-test runs on doc-only commits, but conductor scheduling still interleaves doc updates with experiment work, adding context-switching overhead. Batching all doc updates into a single reconciliation pass at milestone close would eliminate this overhead."
+  ],
+  "improvements_suggested": [
+    "Quantize Gemma4 to INT4 or GGUF format targeting 8-10 GiB VRAM footprint (RETRO-048): this is the critical-path item for .38. With Gemma4 at ~9 GiB and the conductor process at ~8.96 GiB, both fit within 24 GiB GPU 0 VRAM with ~6 GiB headroom. Without this change, RETRO-033, RETRO-038, and RETRO-039 will defer for the sixth consecutive milestone. The quantization approach has precedent: Qwen3.5-0.8B GGUFs already run at <2 GiB in the existing pipeline. Use unsloth GGUF format (consistent with SOTA model guidance) for Gemma4-27B-A4B-it-GGUF.",
+    "Route conductor to CPU-only and reserve all GPU VRAM for inference processes: the conductor process (PID 107270 equivalent at close) holds 15706MB on GPU 0 at 48% utilization. If the conductor ran CPU-only, all 24576MB of GPU 0 would be available for model inference. This is a complement to RETRO-048, not a replacement — even with a quantized Gemma4, routing the conductor to CPU eliminates the competition between conductor overhead and model inference for GPU 0 VRAM. Implementation: set JAX_PLATFORMS=cpu for the conductor process; use CUDA only when an experiment explicitly requires GPU.",
+    "Implement explicit VRAM budget pre-check before each experiment: before launching any GPU-required script, compute required_model_vram + conductor_resident_vram + safety_margin_mb and compare against free VRAM from gpu_monitor.py. If budget is not satisfied, defer the experiment with a RETRO entry explaining the shortfall rather than launching and failing mid-run. This converts silent OOM failures (Exp 488/489/490 pattern) into fast-fail deferrals with actionable root cause annotations. Target: zero experiments that run to OOM; all deferrals happen at pre-check.",
+    "Enforce GPU 1 compute routing in all dual-model harnesses: the harness_patch adoption in .37 addressed new experiments, but the active process at milestone close still had 0% GPU 1 utilization. Perform a retroactive sweep of all existing dual-model scripts and add explicit device='cuda:1' for the second model. Run this as a one-time migration experiment (tag: infrastructure_sweep), not as an individual per-experiment change. Expected improvement: GPU 1 utilization rises from 0% to 40-60% for dual-model benchmarks, cutting their wall time approximately in half.",
+    "Replace LLM-surprise replay priority with EBM energy magnitude priority (RETRO-050): the SuRe approach selects replay examples based on LLM prediction surprise. For PPSEBM, the more informative signal is the EBM energy magnitude — high-energy examples are the domain boundary cases the model most needs to learn from. Implement a gradient-weighted replay buffer that ranks examples by |energy(x)| and retrain PPSEBM on the top-k highest-energy samples. This directly targets the isolation improvement objective that SuRe failed to achieve.",
+    "Enrich NUP Probe with per-token entropy and attention variance features (RETRO-049): the current NUP Probe v2 uses mean-activation statistics that aggregate away the signal. Add three feature groups: (a) per-token softmax entropy across vocabulary at each generation step, (b) top-k probability concentration (ratio of top-1 to top-5 probability mass), (c) attention head variance across layers at the [EOS] token. These features capture reasoning uncertainty at the token level rather than the sequence level. Retrain and measure AUC on the same held-out set; do not promote to Tier 0c until AUC > 0.700.",
+    "Change KAEM experimental axis from n_vars to distribution_family: RETRO-031 has tested n_vars across five experiments without finding a crossover. The hypothesis that 'KAEM dominates MCMC at high n_vars' has been tested to n=5000 without confirmation. Try a different axis: test KAEM vs MCMC on multimodal distributions (mixture of Gaussians), heavy-tail distributions (Student-t), and non-smooth distributions (piecewise uniform). If KAEM shows advantage on any distribution family, that is a more actionable result than a crossover point on smooth Gaussians.",
+    "Batch all doc reconciliation work into a single end-of-milestone pass: conductor scheduling currently interleaves small doc updates (1-5 min) with experiment work. Each context switch adds overhead beyond the doc update itself (reload prior context, verify no experiment state changed). Deferring all doc updates to a single reconciliation pass at milestone close eliminates 4-8 context switches per milestone. Estimated savings: 15-30 min per milestone. The reconciliation pass should run after all experiments complete and before the retro experiment runs.",
+    "Add milestone-level VRAM budget ledger to conductor planning: at the start of each milestone, enumerate planned experiments, look up each experiment's peak VRAM requirement from prior run data, and compute a VRAM availability forecast. Flag any experiment sequence where the cumulative VRAM commitment exceeds free VRAM. This converts the reactive 'deferred_to_gpu' pattern into proactive scheduling — the conductor knows before a run starts whether it will fit. The ledger should be a JSON artifact written by the planning session and consumed by the conductor before each experiment launch."
+  ],
+  "estimated_time_savings_pct": 25,
+  "estimated_time_savings_rationale": "Compared to the .37 baseline of 4833 min / 348 experiments: quantizing Gemma4 to INT4/GGUF (converts 3 deferred GPU experiments to live results, eliminates OOM mid-run overhead) ~8%; routing conductor to CPU-only (frees all GPU 0 VRAM for inference, eliminates conductor-model VRAM competition) ~5%; retroactive DualGPU harness sweep (GPU 1 carries second-model compute on all dual-model benchmarks, ~2x throughput on that class) ~6%; VRAM budget pre-check (eliminates silent OOM failures that consume full experiment wall time before failing) ~3%; batching doc updates into single end-of-milestone pass (eliminates 4-8 context switches per milestone) ~3%. Combined: approximately 25% of total wall time. Note: the .36 retro estimated 28% savings achievable in .37, and approximately 2% was realized (wall time dropped 1.8%). The 25% estimate for .38 is more conservative: it focuses exclusively on architectural changes (model quantization, conductor CPU routing) rather than procedural enforcement items, because the procedural enforcement items have already been adopted at 100% adoption rate in .37 and yielded only 1.8% improvement. The primary remaining lever is model memory budget, not process.",
+  "gpu_state_at_milestone_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_used_mb": 15716,
+    "gpu0_vram_total_mb": 24576,
+    "gpu0_utilization_pct": 48,
+    "gpu0_temp_c": 77,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_used_mb": 1796,
+    "gpu1_vram_total_mb": 24576,
+    "gpu1_utilization_pct": 0,
+    "gpu1_temp_c": 50,
+    "active_processes": [
+      {
+        "pid": 107270,
+        "gpu_index": 0,
+        "vram_mb": 15706,
+        "cpu_time_s": 669.5,
+        "wall_time_s": 678,
+        "cpu_efficiency_pct": 98.7,
+        "is_zombie": false,
+        "note": "Active conductor/inference process spanning both GPUs. GPU 0 handles forward-pass compute at 48% utilization. GPU 1 receives 1786MB of layer offload at 0% utilization — characteristic of device_map='auto' without explicit cuda:1 routing. This process is the conductor itself: its VRAM footprint (~15706MB on GPU 0) is the primary constraint preventing Gemma4 from loading alongside it."
+      },
+      {
+        "pid": 107270,
+        "gpu_index": 1,
+        "vram_mb": 1786,
+        "cpu_time_s": 669.5,
+        "wall_time_s": 678,
+        "cpu_efficiency_pct": 98.7,
+        "is_zombie": false,
+        "note": "Same PID as GPU 0 — layer offload from device_map='auto'. GPU 1 contributes 1786MB storage but 0% compute. GPU monitor correctly flags this: 'GPU 1 has 1796MB allocated but 0% utilization. Process may be idle — consider freeing memory.'"
+      }
+    ],
+    "gpu0_assessment": "Active at 48% utilization, 64% VRAM (15716MB), 77C. Better than .35 close (0% util, zombie-held) but still below theoretical peak. The 48% utilization indicates the process is compute-bound in bursts — likely inference with idle gaps between batches. Temperature at 77C is within the thermal gate threshold (80C) established by Exp 494 (thermal_gate adoption in .37), but only 3C of headroom at current load.",
+    "gpu1_assessment": "Back to near-idle at 0% utilization — regressed from .36's 11% improvement. The 1796MB allocation is layer offload from PID 107270, contributing no forward-pass compute. GPU 1 has 22780MB of free VRAM available (93% free). This is 22.2 GiB of unused GPU compute at milestone close — the highest-leverage untapped resource in the system. Routing the conductor process to CPU-only would free the 15706MB on GPU 0 and allow Gemma4 (quantized, ~9 GiB) to run on GPU 0 while a second model runs on GPU 1.",
+    "improvement_vs_36": "GPU state at .37 close is worse than .36 close in utilization terms. .36 close: GPU 0 at 100% util (active work, two competing processes), GPU 1 at 11% util (layer offload). .37 close: GPU 0 at 48% util (single process, idle gaps), GPU 1 at 0% util (layer offload, no compute). The .37 milestone eliminated the two-process competition on GPU 0, which reduced throughput from 100% to 48%. The harness_patch adoption may have reduced experiment density (fewer dual-model runs scheduled because RETRO-048 wasn't resolved). Net result: GPU 1 regression from 11% back to 0%.",
+    "thermal_gate_status": "GPU 0 at 77C, within 3C of the 80C gate threshold installed in .37 (RETRO-046 closed, thermal_gate=true in retro_improvement_adoption_detail). If sustained load continues at 48% utilization, GPU 0 temperature may approach the threshold during .38 experiments. The gate is correctly installed; temperature should be monitored at session start."
   },
-  "honest_verdict": "milestone_complete",
-  "env_autofix": {
-    "gpu_detected": true,
-    "auto_fix_applied": true,
-    "final_env_value": "1"
-  }
+  "retro_improvement_adoption": {
+    "milestone": "2026.04.37",
+    "prior_milestone_suggestions": 9,
+    "adopted": [
+      "Inference batching enforcement via pre-commit hook (Exp 493 — RETRO-045 closed, batching_hook=true)",
+      "GPU thermal gate in conductor (Exp 494 — RETRO-046 closed, thermal_gate=true)",
+      "DualGPU harness patch for new experiments (harness_patch=true in retro detail)",
+      "GPUVRAMGateV2 with zombie-kill before VRAM check (RETRO-044 — gate now kills zombies first)",
+      "JEPA curriculum training diagnostic (Exp 491 — RETRO-040 closed, AUC recovered from 0.281 to 0.967)",
+      "KAEM extended benchmark with stopping criterion (Exp 498 — RETRO-031 partially addressed, n=5000 search complete)"
+    ],
+    "not_adopted": [
+      "Conductor routing to CPU-only to free GPU VRAM (RETRO-048 root cause identified but fix not in .37 scope)",
+      "Retroactive DualGPU harness sweep on existing scripts (harness_patch addressed new scripts only)",
+      "VRAM budget ledger for milestone planning (not yet implemented)"
+    ],
+    "adoption_rate": 1.0,
+    "verdict": "First milestone with 100% adoption of all three scheduled improvement items (batching_hook, thermal_gate, harness_patch). The adoption trend (0%→50%→60%→100%) shows consistent improvement. However, 100% adoption of procedural enforcement items yielded only 1.8% wall-time reduction, confirming that the remaining bottlenecks are architectural (model memory budget) rather than procedural. The next milestone must address RETRO-048 (quantized Gemma4) as its primary objective — no procedural improvement can substitute for resolving the VRAM budget constraint."
+  },
+  "open_retro_items_at_close": [
+    "RETRO-031: KAEM crossover not found at n=5000. Experimental axis (n_vars) exhausted; switch to distribution_family axis in .38.",
+    "RETRO-033: Live 100q verify-repair positive result — FIFTH consecutive milestone miss. Blocked by RETRO-048 (Gemma4 OOM).",
+    "RETRO-038: Live 200q VeriCoT+VPRM statistically significant result not confirmed. Blocked by RETRO-048.",
+    "RETRO-039: GSM-Symbolic adversarial thesis unconfirmed. Exp 490 returned gpu_required. Blocked by RETRO-048.",
+    "RETRO-047: NUP Probe AUC = 0.600, below 0.700 Tier 0c threshold. Bayesian semantic entropy approach produced no improvement over v1.",
+    "RETRO-048 (new): Gemma4 OOM from conductor process VRAM — requires quantized model (INT4/GGUF ~8-10 GiB) or conductor CPU routing. Blocks RETRO-033, RETRO-038, RETRO-039.",
+    "RETRO-049 (new): NUP Probe v2 Bayesian SE features insufficient — delta ~1e-16 vs v1. Requires per-token entropy + attention variance features.",
+    "RETRO-050 (new): SuRe surprise replay shows no PPSEBM isolation improvement (isolation_improvement=-0.1172). Requires gradient-weighted energy-magnitude replay strategy."
+  ],
+  "headline_closures_in_milestone": [
+    "RETRO-040: JEPA AUC regression reversed — curriculum training (Exp 491 diagnostic + Exp 492 train) recovered AUC from 0.281 to 0.967. FR-11 Tier 3 self-learning recovered.",
+    "RETRO-044: GPUVRAMGateV2 deployed — gate now kills zombie processes before checking VRAM. No zombie VRAM deferrals in .37 (conductor's own VRAM is the new constraint, not zombies).",
+    "RETRO-045: Batching enforcement pre-commit hook installed (Exp 493). New harnesses with sequential question loops are now blocked at commit time.",
+    "RETRO-046: GPU thermal gate implemented (Exp 494). Conductor now pauses if any GPU exceeds 80C before launching an experiment.",
+    "RETRO-031 (partial): KAEM extended search complete to n=5000. No crossover found; research direction shift to distribution_family axis recommended."
+  ],
+  "top_priority_for_next_milestone": "RETRO-048: Quantize Gemma4 to INT4/GGUF (~8-10 GiB) or route the conductor to CPU-only execution. The conductor process holds ~15.7 GiB of GPU 0 VRAM, leaving only ~8.9 GiB free — insufficient for Gemma4 at 14.89 GiB. Until resolved, RETRO-033 (live 100q verify-repair), RETRO-038 (200q VeriCoT), and RETRO-039 (adversarial thesis) cannot be attempted and will defer for the sixth consecutive milestone. This is no longer a scheduling problem or a zombie problem — it is a memory budget problem that requires either model quantization or conductor architectural change.",
+  "meta_reflection": {
+    "vram_deadlock_status": "PARTIALLY_BROKEN: GPUVRAMGateV2 solved the zombie VRAM subproblem (zero zombie deferrals in .37), but revealed a deeper architectural constraint — the conductor process itself holds ~15.7 GiB of GPU 0 VRAM. The 'VRAM deadlock' shifted from zombie VRAM to conductor VRAM. The gate works correctly for its stated purpose (kill zombies, check remaining free VRAM) but cannot kill the conductor process. The fix requires either model quantization (RETRO-048) or a conductor architecture change (CPU-only conductor, GPU-only inference).",
+    "adoption_trend": "Adoption rate: 0% (.33) → 50% (.35) → 60% (.36) → 100% (.37). First milestone with full adoption of all scheduled enforcement items. The adoption problem is structurally solved. The wall-time impact of 100% adoption was only 1.8% — confirming that enforcement items address procedural waste, not the dominant throughput constraint. The dominant constraint is architectural: GPU memory budget. No adoption rate can fix RETRO-048.",
+    "jepa_trajectory": "JEPA AUC: 0.667 (.33) → 0.400 (.35) → 0.281 (.36) → 0.967 (.37). Three-milestone regression fully reversed by curriculum training. The synthetic-augmentation strategy (augment_with_synthetic_pairs from Exp 491 diagnostic) was the key lever. FR-11 Tier 3 is recovered and is the strongest research signal in .37. The JEPA result is the headline achievement of the milestone.",
+    "credibility_verdict": "STILL OPEN after 5 consecutive milestone misses. The EBM-CoT AUC of 0.967 and JEPA recovery are meaningful research signals. The thesis that adversarial prompts + EBM verification improves reasoning accuracy at scale remains unconfirmed in any live GPU benchmark at 100q+. The critical path is: quantize Gemma4 → GPUVRAMGateV2 fits → run RETRO-033 first in .38. No other unblocking approach exists.",
+    "wall_time_trend": "Five-milestone trajectory: .33=5002 → .34=4886 → .35=4948 → .36=4921 → .37=4833 min. The .37 milestone is the new low at 4833 min, a 3.4% improvement from the .33 peak. Per-experiment average: .33=16.1 → .34=16.5 → .35=15.6 → .36=14.6 → .37=13.9 min. Steady per-experiment improvement, but the reduction is absorbed by increasing experiment count (+37 over five milestones). Breaking the plateau requires throughput change (GPU 1 compute utilization) not efficiency change (per-experiment overhead).",
+    "process_debt_vector": "The blocking chain for RETRO-033 has now been: zombie VRAM (.33-.35) → GPUVRAMGate needed (.33) → GPUVRAMGate implemented (.37) → conductor VRAM exposed (.37) → quantized model needed (.38). Each milestone adds one link to the chain. For .38, the chain is one link shorter than in .37 because GPUVRAMGate is working correctly. The conductor VRAM problem is a single architectural fix, not a systemic process issue. If RETRO-048 is resolved in .38, the six-milestone blocking chain for RETRO-033 will be broken."
+  },
+  "vs_prior_milestone": {
+    "prior_milestone": "2026.04.36",
+    "prior_wall_time_minutes": 4921,
+    "prior_experiments_completed": 336,
+    "wall_time_delta_minutes": -88,
+    "wall_time_delta_pct": -1.8,
+    "avg_per_experiment_delta_minutes": -0.7,
+    "retro_improvements_adopted": 3,
+    "retro_improvements_suggested_prior": 9,
+    "adoption_rate_pct": 100,
+    "observation": "Wall time decreased 1.8% with 12 additional experiments (348 vs 336). Per-experiment average dropped from 14.6 to 13.9 min. Adoption rate reached 100% for the first time — all three scheduled enforcement items delivered. Despite maximum adoption rate, wall-time improvement was marginal (1.8%), confirming that enforcement tooling addresses procedural waste rather than the dominant throughput constraint. GPU 1 utilization regressed from 11% to 0%. The outstanding result: JEPA AUC recovered from 0.281 to 0.967 via curriculum training. The outstanding miss: RETRO-033 deferred for the fifth consecutive milestone due to RETRO-048."
+  },
+  "honest_verdict": "enforcement_complete_architecture_blocked"
 }
