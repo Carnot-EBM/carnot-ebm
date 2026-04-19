@@ -2254,3 +2254,5 @@ python/ |
 | 2026-04-19 22:13 UTC | Exp 534: PottsMachineVerifier — multi-value constr | OK | 81 passed, 2 warnings in 2.74s |
 | 2026-04-19 22:21 UTC | Exp 535: JEPA Live Retrain v7 — FR-11 mandatory, r | OK | 81 passed, 2 warnings in 2.69s |
 | 2026-04-19 22:33 UTC | Exp 536: Milestone 2026.04.40 Retrospective | OK | 81 passed, 2 warnings in 5.31s |
+| 2026-04-19 22:57 UTC | Plan milestone 2026.04.41 | OK | 12 tasks proposed |
+| 2026-04-19 23:02 UTC | Milestone 2026.04.41 activated | OK | 12 tasks queued |
