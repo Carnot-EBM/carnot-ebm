@@ -620,6 +620,44 @@ Spec: REQ-SAMPLE-019, SCENARIO-SAMPLE-032
 **And** `kaem_viable_for_production == True`
 **And** `speedup_at(200) == 3.0`
 
+### REQ-SAMPLE-020: KAEM Extended Profile — n_vars Up to 5000 with Early Stopping
+
+The system SHALL profile KAEM exact sampling vs ParallelIsingSampler MCMC at
+n_vars in (1000, 2000, 3000, 5000) with early stopping at the first n_vars where
+the speedup ratio reaches or exceeds 5x (VIABILITY_THRESHOLD).
+
+- `KAEMExtendedResult` SHALL expose all fields of `KAEMCrossoverResult` plus:
+  - `prior_max_n: int` — the largest n_vars tested in the preceding experiment (Exp 483)
+  - `vs_prior: str` — `'crossover_found'` if crossover found, else `'no_crossover_extended'`
+
+### REQ-SAMPLE-021: KAEM CPU Viability Verdict and FPGA Path
+
+If no crossover is found at n_vars=5000 (the maximum CPU-feasible size for this
+profiling pass), `KAEMExtendedResult` SHALL set:
+- `kaem_viable_for_cpu: bool = False`
+- `fpga_path_recommended: bool = True`
+
+This closes RETRO-031: KAEM does not achieve 5x speedup at CPU-feasible sizes;
+revisit for FPGA implementation where bisection is native arithmetic.
+
+### SCENARIO-SAMPLE-033: KAEMExtendedResult Crossover Found at n=2000
+
+**Given** `KAEMExtendedResult(n_vars_tested=[1000, 2000], speedups=[2.0, 6.0], prior_max_n=1000)`
+**When** evaluated
+**Then** `crossover_n_vars == 2000`
+**And** `kaem_viable_for_cpu == True`
+**And** `fpga_path_recommended == False`
+**And** `vs_prior == 'crossover_found'`
+
+### SCENARIO-SAMPLE-034: KAEMExtendedResult No Crossover at n=5000 (FPGA Path)
+
+**Given** `KAEMExtendedResult(n_vars_tested=[1000, 2000, 3000, 5000], speedups=[1.5, 2.0, 2.5, 3.0], prior_max_n=1000)`
+**When** evaluated
+**Then** `crossover_n_vars == None`
+**And** `kaem_viable_for_cpu == False`
+**And** `fpga_path_recommended == True`
+**And** `vs_prior == 'no_crossover_extended'`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -643,4 +681,6 @@ Spec: REQ-SAMPLE-019, SCENARIO-SAMPLE-032
 | REQ-SAMPLE-015 | N/A | Implemented | 51 Python (test_kaem_energy.py, 100% coverage) |
 | REQ-SAMPLE-016 | N/A | Implemented | 7 Python (benchmark tests in test_kaem_energy.py) |
 | REQ-SAMPLE-019 | N/A | Implemented | Python (test_kaem_crossover.py, 100% coverage) |
+| REQ-SAMPLE-020 | N/A | Implemented | Python (test_kaem_extended_result.py, 100% coverage) |
+| REQ-SAMPLE-021 | N/A | Implemented | Python (test_kaem_extended_result.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
