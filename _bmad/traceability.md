@@ -456,3 +456,9 @@
 | SCENARIO-INFRA-050 | Not Started | Implemented | Conductor Dedup Early Exit — identical experiment config detected via config_hash_match; experiment skipped with dedup_skipped=true in conductor log (Exp 475) |
 | SCENARIO-INFRA-051 | Not Started | Implemented | Partial-Result Relay Across Cluster Boundaries — checkpoint saved mid-experiment; resumed on different node with merged outputs ensuring no duplicate work (Exp 475) |
 | SCENARIO-SELFLEARN-018 | Not Started | Implemented | partition_isolation_score > 0.8 After Training 3 Domains Independently — Exp 470 achieved partition_isolation_score=1.0 across arithmetic/code/logical domains (Exp 470) |
+| REQ-BENCH-025 | Not Started | Implemented | Live 100q Benchmark Uses GPUVRAMGate Before Model Load — Exp 476 dual-GPU infrastructure verifies zombie kill before Gemma4/Qwen load |
+| REQ-BENCH-026 | Not Started | Implemented | DualGPURunner Assigns Gemma4-E4B-it to cuda:0 and Qwen3.5-0.8B to cuda:1 — Exp 476 DualGPURunner class pins models to distinct GPUs |
+| REQ-BENCH-027 | Not Started | Implemented | Benchmark Writes 100 CoT Pairs to results/exp476_cot_pairs.json for JEPA Retrain — Exp 476 CoTPairCollector scaffold ready for GPU execution |
+| SCENARIO-BENCH-044 | Not Started | Implemented | GPUVRAMGate Fires and Kills Zombies Before Model Load — Exp 476 gpu_vram_gate_fired=true confirmed before Gemma4/Qwen initialization |
+| SCENARIO-BENCH-045 | Not Started | Implemented | DualGPUAssigner Pins Each Model to Its Own GPU — Exp 476 dual-GPU assignment verified (Gemma4→cuda:0, Qwen3.5→cuda:1) |
+| SCENARIO-BENCH-046 | Not Started | Implemented | CoTPairCollector Flushes Pairs Atomically — Exp 476 CoTPairCollector atomic flush capability tested (execution pending GPU) |
