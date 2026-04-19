@@ -9696,3 +9696,37 @@ Spec: REQ-BENCH-015 (v2), SCENARIO-BENCH-034
 **Then** `per_question_latencies` contains exactly N float entries, each > 0
 
 **Implementation Status:** In Progress (Exp 538)
+
+## REQ-BENCH-016 (v2): Live 100q VeriCoT+VPRM Benchmark with Wilson CI (Exp 539)
+
+Run VeriCoT+VPRM+IntegratedExtractor on 100 GSM8K questions (or 50q if mean_latency_s > 40s from
+Exp 538). Compute baseline and pipeline accuracy, signed improvement, and Wilson 95% CI on
+signed_improvement. If the CI lower bound excludes 0, set retro_038_closed=True.
+
+**Acceptance Criteria:**
+- `n_questions` is dynamically determined: `min(100, int(80 * 60 / exp538_mean_latency_s))`
+- Wilson 95% CI computed on signed_improvement using statsmodels or manual formula
+- `retro_038_closed=True` iff CI lower bound > 0 and inference_mode='live_gpu'
+- `honest_verdict` in ('wilson_ci_publishable', 'no_improvement', 'gpu_required')
+- `schema='carnot.vericot_benchmark.v8'`
+- All exit paths write the deliverable
+
+**Implementation Status:** In Progress (Exp 539)
+
+Spec: REQ-BENCH-016 (v2), SCENARIO-BENCH-036 (v2), SCENARIO-BENCH-037 (v2)
+
+### SCENARIO-BENCH-036 (v2): n_questions Is Dynamically Capped From Exp 538 Latency
+
+**Given** `exp538_mean_latency_s = 24.1`
+**When** n_questions is computed
+**Then** `n_questions = min(100, int(80 * 60 / 24.1)) = 100`
+
+**Implementation Status:** In Progress (Exp 539)
+
+### SCENARIO-BENCH-037 (v2): Wilson CI Lower > 0 Sets retro_038_closed=True
+
+**Given** pipeline improves by 6pp on 100 questions (p=0.60 vs baseline p=0.54)
+**When** Wilson 95% CI is computed on the 6pp signed improvement
+**Then** if CI lower bound > 0, `retro_038_closed=True` and `honest_verdict='wilson_ci_publishable'`
+
+**Implementation Status:** In Progress (Exp 539)
