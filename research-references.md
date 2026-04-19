@@ -4,6 +4,29 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-19 arxiv Scan (Milestone 2026.04.37 Planning)
+
+### LLM-JEPA — Predictive Embedding Space for Stable Constraint Scoring
+- **Paper:** arXiv 2509.14252 (2025)
+- **What:** Applies JEPA predictive principles to LLM training by optimizing in embedding space (not token space). JEPA embeddings show superior robustness against distribution shift and consistent improvements on GSM8K, Spider, RottenTomatoes. The stable embedding space reduces variance across semantically equivalent inputs.
+- **Relevance to Carnot:** JEPA embeddings could serve as better input representations for the EORM constraint scorer. JEPA's stability under distribution shift directly addresses the JEPA AUC regression problem (RETRO-040) — unstable embeddings cause unstable AUC. Test whether JEPA embeddings from LLM-JEPA improve EORM's AUROC on real CoT pairs.
+- **Concrete experiment:** Compare EORM constraint satisfaction AUC on standard vs LLM-JEPA embeddings. If JEPA embeddings improve AUC stability, incorporate into JEPA Curriculum Retrain v3.
+- **When to incorporate:** Milestone 2026.04.37 — JEPA recovery phase.
+
+### Bayesian Semantic Entropy for Hallucination Detection
+- **Paper:** arXiv 2603.22812 (AAAI 2026 oral)
+- **What:** Hierarchical Bayesian framework for hallucination detection. Adaptively allocates sampling budget based on entropy uncertainty — high-uncertainty responses get more samples, low-uncertainty get fewer. Achieves 50% sample efficiency improvement and 12.6% AUROC gain over uniform sampling baseline.
+- **Relevance to Carnot:** NUP Probe v1 (Exp 484) got AUC=0.600 using character-entropy fallback (no logprobs). Bayesian adaptive entropy estimation could be integrated as richer features: instead of fixed-threshold character entropy, use Bayesian uncertainty bands to estimate whether continuation entropy is "confidently high" or "uncertainly medium." This should push NUP Probe beyond the 0.700 Tier 0c threshold.
+- **Concrete experiment:** NUP Probe v2 (RETRO-047): Replace character-entropy proxy with Bayesian semantic entropy estimator. Evaluate AUC on accumulated real CoT pairs from Exps 488/489.
+- **When to incorporate:** Milestone 2026.04.37 — NUP Probe enrichment (Exp 496).
+
+### SuRe — Surprise-Driven Prioritized Replay for Continual EBM Learning
+- **Paper:** arXiv 2511.22367 (2025)
+- **What:** Surprise-prioritized replay for continual learning: selects high-NLL (negative log-likelihood) sequences for replay, meaning sequences the model was most "surprised" by. Combines fast and slow LoRA adapters with exponential moving average merging, achieving +5% accuracy on continual learning benchmarks. The surprise metric naturally identifies domain boundary violations.
+- **Relevance to Carnot:** PPSEBM (Exps 470, 485) uses domain-partitioned EBM learning to prevent catastrophic forgetting. SuRe's surprise metric could replace the current fixed-priority scheme for selecting which constraint violations to replay: arithmetic violations that surprised the model (high energy, low prior probability) get prioritized for replay, reducing forgetting at domain boundaries. This is a Tier 2 self-learning improvement.
+- **Concrete experiment:** Add SuRePriorityReplay to PPSConstraintLearner: rank constraint violations by energy surprise (EBM energy - expected energy from prior session), replay top-k per domain partition. Compare isolation_score before/after vs uniform replay baseline.
+- **When to incorporate:** Milestone 2026.04.37 — Tier 2 self-learning experiment (Exp 495).
+
 ## 2026-04-19 arxiv Scan (Milestone 2026.04.36 Planning)
 
 ### Neural Uncertainty Principle — Hallucination as Under-Constrained Continuation
