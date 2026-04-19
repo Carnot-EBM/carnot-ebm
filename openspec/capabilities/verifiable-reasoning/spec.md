@@ -9524,3 +9524,52 @@ probability p=0.6 (calibrated to Qwen3.5-0.8B baseline)
 depending on the measured outcome
 
 **Implementation Status:** Done (Exp 531)
+
+---
+
+## Energy-Guided Decoding
+
+### REQ-VERIFY-113: EnergyGuidedDecoder — Score K Candidates at Each Generation Step
+
+The system shall provide an `EnergyGuidedDecoder` that, at each word-level generation step:
+- Accepts a prefix string and a list of candidate continuations
+- Scores each candidate by computing `energy_fn(prefix + candidate)`
+- Selects the minimum-energy continuation as the next word
+- Supports a configurable `k_candidates` (default 5) and `energy_weight` (default 1.0)
+- Degenerates to random selection when `energy_weight == 0.0`
+
+**Rationale:** Post-hoc repair requires full regeneration when violations are found.
+Energy-guided decoding intercepts violations at the token level, following COLD Decoding
+(arXiv 2202.11705) with Carnot's IsingEBM as the constraint oracle instead of a language
+model energy.  This enables near-zero-overhead constrained generation (arXiv 2604.14862).
+
+**Implementation Status:** Done (Exp 533)
+
+### REQ-VERIFY-114: violation_rate_delta < 0 Confirms Energy Steering Effectiveness
+
+The benchmark shall compare unconstrained (energy_weight=0.0) vs guided (energy_weight=1.0)
+generation on 50 synthetic math problems and report:
+- `unconstrained_violation_rate`: fraction of problems with arithmetic violations under random selection
+- `guided_violation_rate`: fraction under energy-guided selection
+- `violation_rate_delta`: guided - unconstrained (negative = improvement)
+- `energy_guided_viable`: True iff violation_rate_delta < 0
+- `honest_verdict`: 'energy_steering_positive' or 'no_violation_reduction'
+
+**Implementation Status:** Done (Exp 533)
+
+### SCENARIO-VERIFY-149: select_next Returns Minimum-Energy Candidate
+
+**Given** a fixed energy function mapping candidates to distinct scores
+**When** `EnergyGuidedDecoder.select_next(prefix, candidates)` is called with `energy_weight=1.0`
+**Then** the returned string is the candidate whose `energy_fn(prefix + candidate)` is minimal
+
+**Implementation Status:** Done (Exp 533)
+
+### SCENARIO-VERIFY-150: generate Produces Exactly max_steps Words from Vocabulary
+
+**Given** a prompt string and a vocabulary list
+**When** `EnergyGuidedDecoder.generate(prompt, vocab, max_steps=N)` is called
+**Then** the result starts with the prompt, has exactly N additional words, and every
+generated word is drawn from vocab
+
+**Implementation Status:** Done (Exp 533)

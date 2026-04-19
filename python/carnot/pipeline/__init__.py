@@ -410,6 +410,10 @@ from carnot.pipeline.eorm_rectifier import (  # noqa: E402
     EORMAdaptiveRectifier,
     RectifierResult,
 )
+from carnot.pipeline.energy_guided_decoder import (  # noqa: E402
+    EnergyGuidedConfig,
+    EnergyGuidedDecoder,
+)
 
 __all__ = [
     "AgentStep",
@@ -692,4 +696,6 @@ __all__ = [
     "NUPProbeV4",
     "EORMAdaptiveRectifier",
     "RectifierResult",
+    "EnergyGuidedConfig",
+    "EnergyGuidedDecoder",
 ]
