@@ -2256,3 +2256,4 @@ python/ |
 | 2026-04-19 22:33 UTC | Exp 536: Milestone 2026.04.40 Retrospective | OK | 81 passed, 2 warnings in 5.31s |
 | 2026-04-19 22:57 UTC | Plan milestone 2026.04.41 | OK | 12 tasks proposed |
 | 2026-04-19 23:02 UTC | Milestone 2026.04.41 activated | OK | 12 tasks queued |
+| 2026-04-19 23:12 UTC | Exp 537: ExperimentTemplate.teardown() + GPU Zombi | OK | 81 passed, 2 warnings in 2.73s |
