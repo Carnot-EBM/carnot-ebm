@@ -402,6 +402,10 @@ from carnot.pipeline.hallucination_basin import (  # noqa: E402
     HallucinationBasinDetector,
     estimate_basin_depth,
 )
+from carnot.pipeline.nup_probe_v4 import (  # noqa: E402
+    ContrastivePairLoss,
+    NUPProbeV4,
+)
 
 __all__ = [
     "AgentStep",
@@ -680,4 +684,6 @@ __all__ = [
     "BasinEstimate",
     "HallucinationBasinDetector",
     "estimate_basin_depth",
+    "ContrastivePairLoss",
+    "NUPProbeV4",
 ]
