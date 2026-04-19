@@ -508,4 +508,8 @@
 | REQ-INFRA-056 | Implemented | Defer with honest_verdict='gpu_thermal_throttle' on 5min Timeout — Exp 494 raises GPUThermalThrottleError if temperature doesn't cool within 5min, defers with appropriate verdict |
 | SCENARIO-INFRA-062 | Implemented | GPU Temperature Read from nvidia-smi Return Value — Exp 494 check_temperature() validates temp reading from nvidia-smi (or mock temperature_c value) |
 | SCENARIO-INFRA-063 | Implemented | Wait-For-Cool Exponential Backoff Loop (Mocked) — Exp 494 wait_for_cool_mock_test validates exponential backoff behavior with mocked temperature sequence |
+| REQ-SELFLEARN-021 | Implemented | Surprise-Driven Replay Buffer Prioritization — Exp 497 SurpriseEBMReplay prioritizes high-uncertainty pairs for constraint refinement |
+| REQ-SELFLEARN-022 | Implemented | Uncertainty-Guided Training Pair Selection — Exp 497 PrioritySampler uses EBM energy variance for adaptive pair weighting |
+| SCENARIO-SELFLEARN-021 | Implemented | Baseline vs. Surprise-Prioritized Training Comparison — Exp 497 measures AUC improvement with and without uncertainty prioritization |
+| SCENARIO-SELFLEARN-022 | Implemented | Constraint Refinement Quality via Priority Replay — Exp 497 validates partition isolation maintained under prioritized sampling |
 | SCENARIO-INFRA-064 | Implemented | Thermal Throttle Error on 5min Timeout — Exp 494 throttle_error_test validates GPUThermalThrottleError raised when timeout exceeded |
