@@ -8854,3 +8854,83 @@ Spec: REQ-BENCH-016, SCENARIO-BENCH-035, SCENARIO-BENCH-036
 **Given** `wilson_lower_bound < 0` (e.g. −0.001, should not arise in practice but guarded)
 **When** `is_statistically_positive(−0.001)` is called
 **Then** the function returns `False`
+
+---
+
+## Exp 525: ExpandedGPUReaper (RETRO-033 root cause fix)
+
+### REQ-INFRA-067: ExpandedGPUReaper Kills Out-of-Subtree GPU Processes Above Age and VRAM Thresholds
+
+**Requirement:** `ExpandedGPUReaper.reap()` must scan `nvidia-smi --query-compute-apps` output
+and kill any process satisfying ALL of: (a) `used_memory_mb >= min_vram_mb`, (b) not a
+descendant of the current conductor process subtree, and (c) `age_s >= min_age_s`.
+
+**Rationale:** Stale pytest orphan processes (pattern: `python3 -u -c ...` children of a now-dead
+pytest run) are indistinguishable by name from legitimate conductor subagent children, so
+name-based whitelists (GPUVRAMGateV2, JITVRAMCheck) silently miss them.  A subtree check
+uses the kernel's actual parent-child relationships, which are exact and cannot be spoofed.
+
+**Acceptance:** reap() returns ExpandedGPUReapResult with killed list non-empty and
+total_vram_freed_mb > 0 when eligible orphan processes are present.
+
+Spec: REQ-INFRA-067, SCENARIO-INFRA-076, SCENARIO-INFRA-077
+
+### REQ-INFRA-068: ExpandedGPUReaper Integrates Into GPUVRAMGateV2 as Pre-Kill Pass
+
+**Requirement:** GPUVRAMGateV2 must optionally accept an ExpandedGPUReaper instance and invoke
+`reaper.reap()` BEFORE its own pattern-based kill pass.
+
+**Rationale:** The expanded reaper's broader heuristic catches orphans that the name-based
+killer misses.  Running it first frees more VRAM before the threshold check, reducing the
+probability of a false `gpu_vram_insufficient` deferral.
+
+**Acceptance:** (Integration step — not implemented in Exp 525; requires human review per
+CLAUDE.md.  This REQ documents the intended integration point.)
+
+Spec: REQ-INFRA-068
+
+### REQ-INFRA-069: ExpandedGPUReaper Provides a pyxrt-Free Reaper Path
+
+**Requirement:** `expanded_gpu_reaper.py` must not import pyxrt, pynvml, or any NPU/GPU Python
+binding.  All GPU process enumeration must use subprocess calls to `nvidia-smi` and `ps`.
+
+**Rationale:** The NPU stack (pyxrt) is not always installed.  A GPU VRAM reclamation utility
+that requires the full NPU stack would be unusable on standard CUDA-only hosts.
+
+**Acceptance:** `python3 -c "from carnot.pipeline.expanded_gpu_reaper import ExpandedGPUReaper"`
+succeeds on a host with only CUDA drivers (no pyxrt, no pynvml).
+
+Spec: REQ-INFRA-069, SCENARIO-INFRA-078
+
+### SCENARIO-INFRA-076: reap() Returns dry_run_candidate Entries When dry_run=True
+
+**Given** `ExpandedGPUReaperConfig(min_vram_mb=1024, min_age_s=1800, dry_run=True)`
+**And** one GPU process: pid=555, used_memory_mb=4096, age_s=3600, not in subtree
+**When** `ExpandedGPUReaper(cfg).reap()` is called
+**Then** `result.honest_verdict == 'reap_dry_run_complete'`
+**And** `result.killed == []`
+**And** `result.skipped[0]['reason'] == 'dry_run_candidate'`
+**And** `result.total_vram_freed_mb == 0`
+
+**Implementation Status:** Done (Exp 525)
+
+### SCENARIO-INFRA-077: reap() Kills Eligible Process and Reports VRAM Freed
+
+**Given** `ExpandedGPUReaperConfig(min_vram_mb=1024, min_age_s=1800, dry_run=False)`
+**And** one GPU process: pid=777, used_memory_mb=6144, age_s=7200, not in subtree
+**When** `ExpandedGPUReaper(cfg).reap()` is called
+**Then** `os.kill(777, SIGKILL)` is invoked
+**And** `result.killed[0]['action'] == 'killed'`
+**And** `result.total_vram_freed_mb == 6144`
+**And** `result.honest_verdict == 'reap_complete'`
+
+**Implementation Status:** Done (Exp 525)
+
+### SCENARIO-INFRA-078: reap() Returns no_nvidia_smi_no_reap When nvidia-smi Not in PATH
+
+**Given** `shutil.which('nvidia-smi')` returns `None`
+**When** `ExpandedGPUReaper().reap()` is called
+**Then** `result.honest_verdict == 'no_nvidia_smi_no_reap'`
+**And** `result.killed == []` and `result.skipped == []`
+
+**Implementation Status:** Done (Exp 525)
