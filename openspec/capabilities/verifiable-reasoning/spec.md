@@ -7612,3 +7612,56 @@ The `honest_verdict` field shall be:
 
 Spec: REQ-BENCH-031, REQ-BENCH-032, REQ-BENCH-033,
       SCENARIO-BENCH-050, SCENARIO-BENCH-051, SCENARIO-BENCH-052
+
+---
+
+### REQ-INFRA-045: DualGPUHarness.apply() Assigns cuda:0/cuda:1 to Dual-Model Specs
+
+`DualGPUHarness.apply(model_specs)` shall inject `gpu=0, device_map={'': 'cuda:0'}` into
+the first spec and `gpu=1, device_map={'': 'cuda:1'}` into the second spec when
+`is_eligible` is True (`n_gpus >= 2` and `live_mode=True`).
+
+When `is_eligible` is False (CI mode or single GPU), `apply()` returns `model_specs`
+unchanged — no device maps are injected.
+
+**Motivation (RETRO-041):** GPU 1 (RTX 3090) was idle for three consecutive milestones.
+DualGPURunner existed in experiment_template.py but no benchmark harness called it.
+DualGPUHarness closes the adoption gap without requiring per-script rewrites.
+
+**Implementation Status:** Done (Exp 480)
+
+### REQ-INFRA-046: HarnessAudit.scan() Returns Findings for Dual-Model Scripts Missing cuda:1
+
+`HarnessAudit(scripts_dir).scan()` shall return a list of `AuditFinding` records, one per
+Python script in `scripts_dir` that:
+- Contains two or more model-load indicators (`hf_id` occurrences or `_load_*` function calls), AND
+- Does NOT contain the literal string `'cuda:1'`.
+
+Such scripts have `needs_fix=True`.  Scripts that already contain `'cuda:1'` have
+`has_cuda1_assignment=True` and `needs_fix=False`.
+
+**Implementation Status:** Done (Exp 480)
+
+### SCENARIO-INFRA-053: DualGPUHarness Assigns cuda:0 and cuda:1 in Live Mode
+
+**Given** `DualGPUHarness(n_gpus=2, live_mode=True)` is constructed
+**When** `apply([spec_A, spec_B])` is called
+**Then** `spec_A['gpu'] == 0` and `spec_A['device_map'] == {'': 'cuda:0'}`
+**And** `spec_B['gpu'] == 1` and `spec_B['device_map'] == {'': 'cuda:1'}`
+
+**Given** `DualGPUHarness(n_gpus=2, live_mode=False)` is constructed (CI mode)
+**When** `apply([spec_A, spec_B])` is called
+**Then** specs are returned unchanged (no gpu or device_map injected)
+
+### SCENARIO-INFRA-054: HarnessAudit Flags Dual-Model Scripts Without cuda:1
+
+**Given** a scripts directory containing `exp_dual.py` with two `hf_id` keys but no `'cuda:1'`
+**When** `HarnessAudit(scripts_dir).scan()` is called
+**Then** one `AuditFinding` is returned with `has_dual_model_load=True`, `has_cuda1_assignment=False`, `needs_fix=True`
+
+**Given** a scripts directory containing `exp_good.py` with two `hf_id` keys AND `'cuda:1'`
+**When** `HarnessAudit(scripts_dir).scan()` is called
+**Then** one `AuditFinding` is returned with `has_cuda1_assignment=True`, `needs_fix=False`
+
+Spec: REQ-INFRA-045, REQ-INFRA-046,
+      SCENARIO-INFRA-053, SCENARIO-INFRA-054

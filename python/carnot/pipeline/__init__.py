@@ -319,6 +319,11 @@ from carnot.pipeline.conductor_dedup import (  # noqa: E402
     ConductorDedupCheck,
     PartialResultHandoff,
 )
+from carnot.pipeline.dual_gpu_harness import (  # noqa: E402
+    AuditFinding,
+    DualGPUHarness,
+    HarnessAudit,
+)
 
 __all__ = [
     "AgentStep",
@@ -548,4 +553,7 @@ __all__ = [
     "VRAMStatus",
     "ConductorDedupCheck",
     "PartialResultHandoff",
+    "AuditFinding",
+    "DualGPUHarness",
+    "HarnessAudit",
 ]
