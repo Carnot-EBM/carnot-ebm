@@ -2251,3 +2251,4 @@ python/ |
 | 2026-04-19 21:31 UTC | Exp 531: EORM as Test-Time PRM — Adaptive Rectific | OK | 81 passed, 2 warnings in 2.77s |
 | 2026-04-19 21:47 UTC | Exp 532: LowRankKAEMEnergy — SVD projection of log | OK | 81 passed, 2 warnings in 2.79s |
 | 2026-04-19 21:57 UTC | Exp 533: COLD Decoding Energy Guidance — token-lev | OK | 81 passed, 2 warnings in 2.77s |
+| 2026-04-19 22:13 UTC | Exp 534: PottsMachineVerifier — multi-value constr | OK | 81 passed, 2 warnings in 2.74s |
