@@ -406,6 +406,10 @@ from carnot.pipeline.nup_probe_v4 import (  # noqa: E402
     ContrastivePairLoss,
     NUPProbeV4,
 )
+from carnot.pipeline.eorm_rectifier import (  # noqa: E402
+    EORMAdaptiveRectifier,
+    RectifierResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -686,4 +690,6 @@ __all__ = [
     "estimate_basin_depth",
     "ContrastivePairLoss",
     "NUPProbeV4",
+    "EORMAdaptiveRectifier",
+    "RectifierResult",
 ]

@@ -9477,3 +9477,50 @@ Spec: REQ-BENCH-019, SCENARIO-BENCH-041, SCENARIO-BENCH-042
 `retro_038_closed=False`, and the deliverable is written before exit
 
 **Implementation Status:** Pending (Exp 528)
+
+---
+
+## EORM Adaptive Rectification
+
+### REQ-VERIFY-102: EORM Adaptive Rectifier
+
+The system shall provide an `EORMAdaptiveRectifier` that implements best-of-K
+candidate selection using EORM energy as a process reward model (PRM):
+- Given K candidate responses for a question, score each with EORM energy
+- Select the candidate with the minimum energy as the final answer
+- This is structurally equivalent to best-of-K with EORM as the oracle verifier
+- No additional training is required — EORM already encodes constraint satisfaction
+
+**Rationale:** arXiv 2504.01317 (Adaptive Rectification Sampling) shows that test-time
+selection via a PRM over K candidates reliably improves accuracy.  EORM is structurally
+identical to that PRM: low energy = constraints satisfied = likely correct.  Selecting
+the minimum-energy candidate from K temperature samples is zero-infrastructure best-of-K.
+
+**Implementation Status:** Done (Exp 531)
+
+### REQ-VERIFY-103: Configurable K Candidates
+
+The `EORMAdaptiveRectifier` shall default to K=3 candidates per question and expose K as
+a configurable parameter.  The theoretical accuracy upper bound for K=3 with a p=0.6
+baseline model is `1 - (1-0.6)^3 = 0.936`.
+
+**Implementation Status:** Done (Exp 531)
+
+### SCENARIO-VERIFY-138: select_candidate Returns Minimum-Energy Candidate
+
+**Given** three candidate response strings with known EORM energy ordering
+**When** `EORMAdaptiveRectifier.select_candidate(candidates)` is called
+**Then** the returned string is the candidate with the lowest EORM energy
+
+**Implementation Status:** Done (Exp 531)
+
+### SCENARIO-VERIFY-139: evaluate Returns Positive Improvement When EORM Selects Correctly
+
+**Given** a question set and an inference function that returns the correct answer with
+probability p=0.6 (calibrated to Qwen3.5-0.8B baseline)
+**When** `EORMAdaptiveRectifier.evaluate(questions, inference_fn, k=3)` is called
+**Then** `rectified_accuracy >= baseline_accuracy` and
+`result.honest_verdict` is `'eorm_rectification_positive'` or `'no_improvement'`
+depending on the measured outcome
+
+**Implementation Status:** Done (Exp 531)
