@@ -29,6 +29,7 @@ from carnot.models.kan import (
     KANEnergyFunction,
     KANModel,
 )
+from carnot.models.kaem_crossover import KAEMCrossoverResult
 from carnot.models.kaem_energy import (
     KAEMEnergy,
     UnivariateKAEMLayer,
@@ -63,6 +64,7 @@ __all__ = [
     "KANConfig",
     "KANEnergyFunction",
     "KANModel",
+    "KAEMCrossoverResult",
     "KAEMEnergy",
     "UnivariateKAEMLayer",
     "benchmark_kaem_vs_mcmc",
