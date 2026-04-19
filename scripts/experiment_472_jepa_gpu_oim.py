@@ -50,7 +50,12 @@ import jax.random as jrandom
 import numpy as np
 
 from carnot.embeddings.jepa_energy import ContextPredictionEnergy, JEPAEnergyConfig
-from carnot.embeddings.jepa_retrain import JEPARetrainer, ViolationPair, _make_synthetic_pairs
+from carnot.embeddings.jepa_retrain import (
+    JEPARetrainer,
+    ViolationPair,
+    _make_synthetic_pairs,
+    _text_to_embedding,
+)
 from carnot.pipeline.deliverable_guard import DeliverableGuard
 from carnot.pipeline.env_autofix import apply_env_autofix
 from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
@@ -261,15 +266,14 @@ def _evaluate_jepa_auc(model: ContextPredictionEnergy, pairs: list[ViolationPair
     if not pairs:
         return 0.5
 
-    retrainer = JEPARetrainer(model, lr=LR)
+    embed_dim = model.config.embed_dim
     scores: list[float] = []
     labels: list[int] = []
 
     for p in pairs:
-        # _text_to_embedding is the same method used internally by JEPARetrainer
-        ctx_emb = retrainer._text_to_embedding(p.partial_response)
-        pred_emb = retrainer._text_to_embedding(p.full_response)
-        energy = float(model.energy(ctx_emb, pred_emb))
+        ctx_emb = _text_to_embedding(p.partial_response, embed_dim)
+        pred_emb = _text_to_embedding(p.full_response, embed_dim)
+        energy = float(model.energy_pair(ctx_emb, pred_emb))
         scores.append(energy)
         labels.append(1 if p.has_violation else 0)
 
