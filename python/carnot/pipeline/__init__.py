@@ -334,6 +334,10 @@ from carnot.pipeline.nup_probe import (  # noqa: E402
     NUPProbeResult,
     score_with_latency as nup_score_with_latency,
 )
+from carnot.pipeline.ppsebm_real_validator import (  # noqa: E402
+    InterleavedViolationSequence,
+    PPSEBMRealValidationResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -572,4 +576,6 @@ __all__ = [
     "NUPProbe",
     "NUPProbeResult",
     "nup_score_with_latency",
+    "InterleavedViolationSequence",
+    "PPSEBMRealValidationResult",
 ]

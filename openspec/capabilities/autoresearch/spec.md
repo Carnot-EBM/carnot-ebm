@@ -617,6 +617,41 @@ Spec: Exp 477, FR-11 JEPA, RETRO-040
 **And** all boolean fields are derived exclusively from result JSON files, never asserted without provenance
 **And** the headline confirms live GPU benchmark numbers were obtained for the first time after 7 consecutive scaffolding-only milestones
 
+### REQ-SELFLEARN-019: PPSConstraintLearner Maintains Partition Isolation on Naturally-Interleaved Real Violations
+
+The system shall maintain ``partition_isolation_score > 0.7`` on naturally-interleaved
+real violation sequences from live CoT data.  "Naturally interleaved" means steps are
+processed in their original occurrence order — NOT sorted by domain.  The threshold is
+0.7 (vs 0.8 on synthetic data) to account for real-data noise in domain label assignment.
+
+RETRO-043: Exp 470 used independent domain batches (easy mode).  This requirement
+closes RETRO-043 by validating under the harder interleaved condition.
+
+Spec: Exp 485, FR-11, RETRO-043, arXiv 2512.15658
+
+### REQ-SELFLEARN-020: Interleaved Validation Uses FOVERAnnotator-Labeled Steps in Natural Order
+
+The system shall use FOVERAnnotator-labeled steps in the order they occurred in the live
+CoT chain (not sorted by domain) when validating PPSConstraintLearner.  Training batches
+drawn from the natural-order sequence will contain mixed domains, stressing the partition
+walls.
+
+Spec: Exp 485, FR-11, RETRO-043
+
+### SCENARIO-SELFLEARN-019: InterleavedViolationSequence Alternating Steps Have Rate 1.0
+
+**Given** a sequence of steps alternating between arithmetic and code domains
+**When** ``InterleavedViolationSequence(steps)``
+**Then** ``interleaving_rate == 1.0``
+**And** every adjacent pair in ``domain_sequence`` has a different domain label
+
+### SCENARIO-SELFLEARN-020: PPSEBMRealValidationResult Isolation Maintained at 0.75
+
+**Given** ``isolation_score_after=0.75``, ``synthetic_isolation_score=1.0``
+**When** ``PPSEBMRealValidationResult(n_steps=57, interleaving_rate=0.4, isolation_score_before=1.0, isolation_score_after=0.75, fp_rate_real=0.05)``
+**Then** ``isolation_maintained=True`` (0.75 > 0.7)
+**And** ``better_than_synthetic=False`` (0.75 < 1.0)
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
