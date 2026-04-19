@@ -2177,3 +2177,4 @@ python/ |
 | 2026-04-19 02:00 UTC | Plan milestone 2026.04.36 | OK | 13 tasks proposed |
 | 2026-04-19 02:05 UTC | Milestone 2026.04.36 activated | OK | 13 tasks queued |
 | 2026-04-19 02:21 UTC | Exp 474: GPUVRAMGate — mid-session zombie kill bef | OK | 81 passed in 11.05s |
+| 2026-04-19 02:33 UTC | Exp 475: Conductor Dedup Check + Partial-Result Ha | OK | 81 passed in 10.02s |
