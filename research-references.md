@@ -4,6 +4,36 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-19 arxiv Scan (Milestone 2026.04.39 Planning)
+
+### Hallucination Basins — Dynamical Systems Framing of LLM Hallucination
+- **Paper:** arXiv 2604.04743 (April 2026)
+- **What:** Presents a geometric dynamical systems framework where hallucinations arise from task-dependent basin structures in latent space. Correct reasoning follows low-energy attractor basins; hallucinated reasoning drifts into shallow basins with high escape probability.
+- **Relevance to Carnot:** Directly applicable to JEPA predictive verification. The basin depth (energy well depth) is a natural verification signal: a CoT prefix that is drifting toward a shallow basin is more likely to produce a violated constraint. JEPA predictors can learn to detect shallow-basin trajectories before the generation completes.
+- **Concrete experiment:** Implement HallucinationBasinDetector: estimate latent-space basin depth from LLM hidden states at each generation step, compute escape probability, compare vs SpilledEnergy (Tier 0b) as a hallucination detection signal. Benchmark AUC on 200 synthetic CoT responses.
+- **When to incorporate:** Milestone 2026.04.39 — Phase 5 new research (Exp 521).
+
+### LeWorldModel — Stable End-to-End JEPA Training from Raw Observations
+- **Paper:** arXiv 2603.19312 (March 2026)
+- **What:** First JEPA trained stably end-to-end from raw observations using only two loss terms: (1) next-embedding prediction and (2) Gaussian latent regularization. 15M parameters, trainable on a single GPU, 48x faster planning than foundation models. Embedding space encodes genuine physical structure.
+- **Relevance to Carnot:** JEPA predictor training has been unstable (AUC regression from 0.667 to 0.400 in Exp 472, recovered to 0.967 via curriculum in Exp 492). The two-term objective (prediction + Gaussian regularization) provides a principled regularization that prevents training collapse without needing curriculum scheduling. The Gaussian regularization is CPU-trivial to implement. Target: AUC >= 0.800 with stable training from session 1.
+- **Concrete experiment:** Implement LeWorldModelJEPA with L_total = L_prediction + λ * L_regularization, where L_regularization = KL(q(z) || N(0,I)) (KL to standard Gaussian for each latent). Apply to CoT step embeddings. Compare training stability and AUC vs current curriculum approach.
+- **When to incorporate:** Milestone 2026.04.39 — Exp 520 (LeWorldModel-JEPA stable training), and FR-11 retrain Exp 522.
+
+### Constrained Decoding with Near-Zero Overhead — Schema Key Wording
+- **Paper:** arXiv 2604.14862 (April 2026)
+- **What:** Studies how constrained decoding enforces formal language constraints (JSON, XML) via DOMINO decoding and XGrammar engines with speculative decoding. Reviews how schema structure in key naming serves as an implicit instruction channel, reducing constraint violations without explicit enforcement.
+- **Relevance to Carnot:** Energy-guided constrained generation (Exp 110, Tier B product). Carnot's VerifyRepairPipeline currently checks after generation; constrained decoding checks during generation at near-zero overhead. This paper shows that speculative decoding + grammar constraints can be energy-guided: the energy function penalizes constraint violations in real-time during generation.
+- **Concrete experiment:** Integrate energy-guided constrained decoding: use DOMINO/XGrammar token mask + Carnot energy scoring to bias token selection toward constraint-satisfying continuations. Compare violation rate and quality vs post-hoc repair.
+- **When to incorporate:** Milestone 2026.04.40+ — requires stable live benchmarks first.
+
+### Low-Rank Energy Landscape — Logit Energy is Compressible
+- **Paper:** arXiv 2604.04384 (April 2026)
+- **What:** Demonstrates that logit energy fields in transformers reach 90% of their total variance in only 2-11 singular components (low-rank decomposition of the logit matrix). This means the energy landscape is inherently low-dimensional, not the high-dimensional tensor it appears to be.
+- **Relevance to Carnot:** KAEMEnergy and KAN energy tiers currently operate on the full-dimensional energy space. If the energy landscape is low-rank (2-11 components), a rank-2 KAN is sufficient for 90% accuracy at 10-100x fewer parameters. Compute efficiency win: low-rank KAN energy computation is O(n * r) where r=11 instead of O(n * d) where d=hidden_size. This also informs JEPA predictor design: project to low-rank before predicting.
+- **Concrete experiment:** Implement LowRankKAEMEnergy: compute SVD of logit matrix, project to top-k singular vectors (k=2,4,8,11), evaluate AUC vs full-rank KAEMEnergy. If k=11 achieves >95% of full-rank AUC, recommend as default. CPU-only.
+- **When to incorporate:** Milestone 2026.04.39 — could replace Exp 521 if Hallucination Basins is lower priority. File for .39+.
+
 ## 2026-04-19 arxiv Scan (Milestone 2026.04.38 Planning)
 
 ### Semantic Energy — Boltzmann-Inspired Hallucination Detection from Logits
