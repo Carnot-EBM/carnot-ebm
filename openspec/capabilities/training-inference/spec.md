@@ -658,6 +658,61 @@ revisit for FPGA implementation where bisection is native arithmetic.
 **And** `fpga_path_recommended == True`
 **And** `vs_prior == 'no_crossover_extended'`
 
+### REQ-SAMPLE-022: KAEM Distribution Family Benchmark — Three Families (Exp 508)
+
+The system SHALL implement a benchmark that tests KAEM exact sampling vs MCMC on three
+distribution families: GaussianMixture, StudentT, and PiecewiseUniform.
+
+- `DistributionFamilyResult(family_name: str, kaem_mean_l2: float, mcmc_mean_l2: float)` SHALL expose:
+  - `kaem_advantage: float` — `mcmc_mean_l2 - kaem_mean_l2` (positive = KAEM wins)
+  - `kaem_wins: bool` — `True` iff `kaem_advantage > 0`
+  - `to_dict() -> dict`
+- `KAEMDistributionBenchmark(n_vars: int = 10, n_samples: int = 200)` SHALL expose:
+  - `benchmark_gaussian_mixture() -> DistributionFamilyResult`
+  - `benchmark_student_t(nu: float = 2.0) -> DistributionFamilyResult`
+  - `benchmark_piecewise_uniform(n_pieces: int = 5) -> DistributionFamilyResult`
+  - `best_family() -> str` — name of family with largest kaem_advantage, or `'none'` if all kaem_wins=False
+
+Spec: REQ-SAMPLE-022, SCENARIO-SAMPLE-035
+
+### REQ-SAMPLE-023: KAEM Distribution Family Benchmark — mean_l2 Metric (Exp 508)
+
+The benchmark SHALL compute `mean_l2` as the mean L2 distance between the empirical CDF of
+KAEM samples and the empirical CDF of ground-truth samples drawn from each distribution family.
+This metric captures how well the sampler covers the full support of the target distribution.
+
+Spec: REQ-SAMPLE-023, SCENARIO-SAMPLE-036
+
+### REQ-SAMPLE-024: KAEM Distribution Family Benchmark — Best Family Identification (Exp 508)
+
+The benchmark SHALL identify the distribution family with the largest KAEM advantage
+(defined as `mcmc_mean_l2 - kaem_mean_l2`). If MCMC wins on all three families
+(all `kaem_wins=False`), the result is `'none'`. This closes RETRO-031 if any
+family shows KAEM advantage.
+
+Spec: REQ-SAMPLE-024, SCENARIO-SAMPLE-037
+
+### SCENARIO-SAMPLE-035: DistributionFamilyResult KAEM Wins
+
+**Given** `DistributionFamilyResult(family_name='gaussian_mixture', kaem_mean_l2=0.1, mcmc_mean_l2=0.5)`
+**When** `kaem_advantage` and `kaem_wins` are evaluated
+**Then** `kaem_advantage == 0.4`
+**And** `kaem_wins == True`
+
+### SCENARIO-SAMPLE-036: DistributionFamilyResult KAEM Loses
+
+**Given** `DistributionFamilyResult(family_name='student_t', kaem_mean_l2=0.6, mcmc_mean_l2=0.3)`
+**When** `kaem_advantage` and `kaem_wins` are evaluated
+**Then** `kaem_advantage == -0.3`
+**And** `kaem_wins == False`
+
+### SCENARIO-SAMPLE-037: KAEMDistributionBenchmark Best Family
+
+**Given** a `KAEMDistributionBenchmark` instance
+**When** all three benchmarks are run and `best_family()` is called
+**Then** it returns the family name with the largest `kaem_advantage`
+**Or** returns `'none'` if all `kaem_wins` are False
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -683,4 +738,7 @@ revisit for FPGA implementation where bisection is native arithmetic.
 | REQ-SAMPLE-019 | N/A | Implemented | Python (test_kaem_crossover.py, 100% coverage) |
 | REQ-SAMPLE-020 | N/A | Implemented | Python (test_kaem_extended_result.py, 100% coverage) |
 | REQ-SAMPLE-021 | N/A | Implemented | Python (test_kaem_extended_result.py, 100% coverage) |
+| REQ-SAMPLE-022 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
+| REQ-SAMPLE-023 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
+| REQ-SAMPLE-024 | N/A | Implemented | Python (test_kaem_distribution_benchmark.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |

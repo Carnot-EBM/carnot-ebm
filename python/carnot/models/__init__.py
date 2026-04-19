@@ -36,6 +36,10 @@ from carnot.models.jepa_curriculum_trainer import (
     JEPARetrainV3Result,
 )
 from carnot.models.kaem_crossover import KAEMCrossoverResult
+from carnot.models.kaem_distribution_benchmark import (
+    DistributionFamilyResult,
+    KAEMDistributionBenchmark,
+)
 from carnot.models.kaem_extended_result import KAEMExtendedResult
 from carnot.models.kaem_energy import (
     KAEMEnergy,
@@ -77,6 +81,8 @@ __all__ = [
     "JEPACurriculumTrainer",
     "JEPARetrainV3Result",
     "KAEMCrossoverResult",
+    "DistributionFamilyResult",
+    "KAEMDistributionBenchmark",
     "KAEMExtendedResult",
     "KAEMEnergy",
     "UnivariateKAEMLayer",
