@@ -898,6 +898,29 @@ must record `checkpoint_saved=True`.
 **And** auc_improvement = post_auc - pre_auc
 **And** to_dict() contains all required schema fields
 
+### REQ-RETRO-038: Milestone 2026.04.38 Operational Retrospective
+
+The system shall produce a milestone retrospective artifact (schema v13) covering all 13
+experiments in milestone 2026.04.38 (Exps 500-512) that:
+- Reports retro closure rates for carry-forward items (RETRO-033, -038, -039, -048, -049, -050)
+- Reports GPU utilization state at milestone close via pynvml
+- Reports the five credibility milestone results: RETRO-048 resolved, RETRO-033 closed,
+  RETRO-038 closed, RETRO-039 confirmed, GPU 1 utilization improved
+- Adds new RETRO items for issues discovered in .38 experiments
+- Sets credibility_milestone_reached = retro_033_closed OR retro_038_closed
+- Writes result atomically via AtomicResultWriter to results/experiment_512_retro_2026_04_38.json
+
+### SCENARIO-RETRO-038: Milestone .38 Retro Produces Schema v13 Artifact
+
+**Given** Exp 500-511 result JSONs are present in the results/ directory
+**When** scripts/experiment_512_retro_2026_04_38.py is executed
+**Then** results/experiment_512_retro_2026_04_38.json is written with schema='carnot.operational_retro.v13'
+**And** all five credibility fields are present: retro_048_resolved, retro_033_closed,
+  retro_038_closed, retro_039_confirmed, gpu1_utilization_improved
+**And** credibility_milestone_reached equals retro_033_closed OR retro_038_closed
+**And** new_retro_items is a list with at least the carry-forward open items
+**And** honest_verdict is 'milestone_complete'
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
