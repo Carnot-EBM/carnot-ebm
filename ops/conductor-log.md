@@ -2199,3 +2199,4 @@ python/ |
 | 2026-04-19 08:01 UTC | Exp 491: JEPA Curriculum Diagnostic — why did qual | OK | 110 passed in 24.30s |
 | 2026-04-19 08:39 UTC | Exp 492: JEPA Curriculum Retrain v3 — ordered high | OK | 81 passed in 3.23s |
 | 2026-04-19 08:47 UTC | Exp 493: Batching Pre-commit Hook — RETRO-045 CLOSED (hook installed, 10 tests pass) | OK | 10 passed in 8.88s |
+| 2026-04-19 08:49 UTC | Exp 493: Batching Enforcement Pre-Commit Hook — RE | OK | 81 passed in 3.12s |
