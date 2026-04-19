@@ -597,6 +597,29 @@ Spec: REQ-SAMPLE-018, SCENARIO-SAMPLE-031
 **Then** `speedup == 100.0`
 **And** `is_production_ready == True`
 
+### REQ-SAMPLE-019: KAEM Crossover Profile — n_vars Where Speedup >= 5x vs MCMC
+
+The system SHALL profile KAEM exact sampling vs ParallelIsingSampler MCMC at
+n_vars in (100, 200, 300, 500, 1000) to find the exact crossover point where
+KAEM achieves >= 5x speedup.
+
+- `KAEMCrossoverResult(n_vars_tested: list[int], speedups: list[float])` SHALL expose:
+  - `crossover_n_vars: int | None` — first n_vars where speedup_ratio >= 5.0; None if not found
+  - `max_speedup: float` — maximum speedup observed across all n_vars tested
+  - `kaem_viable_for_production: bool` — True iff crossover_n_vars is not None
+  - `speedup_at(n_vars: int) -> float` — speedup ratio at the given n_vars
+
+Spec: REQ-SAMPLE-019, SCENARIO-SAMPLE-032
+
+### SCENARIO-SAMPLE-032: KAEMCrossoverResult Crossover Detection
+
+**Given** `KAEMCrossoverResult(n_vars_tested=[100, 200, 300], speedups=[1.5, 3.0, 6.0])`
+**When** `crossover_n_vars`, `max_speedup`, and `kaem_viable_for_production` are evaluated
+**Then** `crossover_n_vars == 300`
+**And** `max_speedup == 6.0`
+**And** `kaem_viable_for_production == True`
+**And** `speedup_at(200) == 3.0`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -619,4 +642,5 @@ Spec: REQ-SAMPLE-018, SCENARIO-SAMPLE-031
 | REQ-SAMPLE-012 | Not Started | Not Started | Not Started |
 | REQ-SAMPLE-015 | N/A | Implemented | 51 Python (test_kaem_energy.py, 100% coverage) |
 | REQ-SAMPLE-016 | N/A | Implemented | 7 Python (benchmark tests in test_kaem_energy.py) |
+| REQ-SAMPLE-019 | N/A | Implemented | Python (test_kaem_crossover.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
