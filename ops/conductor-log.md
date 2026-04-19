@@ -2244,3 +2244,4 @@ python/ |
 | 2026-04-19 19:32 UTC | Milestone 2026.04.40 activated | OK | 11 tasks queued |
 | 2026-04-19 19:43 UTC | Exp 526: env_autofix RETRO-053 Fix — RETRO-053 CLOSED | OK | 34 passed; retro_053_resolved=true |
 | 2026-04-19 19:44 UTC | Exp 526: env_autofix CARNOT_FORCE_LIVE='0' Fix — R | OK | 115 passed, 2 warnings in 6.36s |
+| 2026-04-19 20:43 UTC | Exp 527: Live 100q Precision v8 — RETRO-033 eighth | OK | 81 passed, 2 warnings in 7.01s |
