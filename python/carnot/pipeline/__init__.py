@@ -379,6 +379,10 @@ from carnot.pipeline.energy_magnitude_replay import (  # noqa: E402
     EnergyMagnitudeBuffer,
     EnergyMagnitudeReplay,
 )
+from carnot.pipeline.npu_entropy_probe import (  # noqa: E402
+    NPUBenchmarkResult,
+    NPUEntropyProbe,
+)
 
 __all__ = [
     "AgentStep",
@@ -644,4 +648,6 @@ __all__ = [
     "NUPProbeV3",
     "EnergyMagnitudeBuffer",
     "EnergyMagnitudeReplay",
+    "NPUBenchmarkResult",
+    "NPUEntropyProbe",
 ]

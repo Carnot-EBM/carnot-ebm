@@ -8645,3 +8645,68 @@ Spec: REQ-VERIFY-106
 **And** held-out (activations, label) pairs
 **When** evaluate() is called
 **Then** the returned dict contains 'auroc' with a float in [0, 1]
+
+---
+
+## REQ-INFRA-061: NPUEntropyProbe Exports Per-Token Entropy to ONNX and Loads via VitisAI EP
+
+**Requirement:** NPUEntropyProbe exports the softmax entropy computation graph (softmax(logits) followed by H(p) = -sum(p*log(p))) to ONNX format and attempts to load it via the onnxruntime VitisAI execution provider for AMD XDNA NPU inference.
+
+**Rationale:** Per-token entropy is O(vocab_size=50k) parallel floating-point ops per token. The AMD XDNA NPU's spatial AI Engine array can compute this in a single pass across the vocabulary dimension, potentially achieving <5ms/token latency. If NPU latency < LLM generation latency (5-50ms/token at 20-100 tokens/sec), the entropy probe can pipeline with generation and add zero overhead to Tier 0c filtering.
+
+**Acceptance criteria:**
+- export_onnx(path) creates a valid ONNX file at the specified path
+- load_vitisai(onnx_path) returns True when VitisAI EP is available, False otherwise
+- compute_entropy(activations) returns per-token entropy array of shape (seq_len,)
+
+**Implementation Status:** Done (Exp 511)
+
+---
+
+## REQ-INFRA-062: NPUEntropyProbe.benchmark() Measures Latency in ms/token on NPU vs CPU
+
+**Requirement:** NPUEntropyProbe.benchmark(n_trials) measures wall-clock entropy computation latency in milliseconds per token on both NPU (if available) and CPU baseline, returning an NPUBenchmarkResult with both measurements and the speedup ratio.
+
+**Acceptance criteria:**
+- benchmark(n_trials=100) returns NPUBenchmarkResult
+- cpu_latency_ms is always measured (no NPU required)
+- npu_latency_ms is None when NPU is unavailable
+- speedup_ratio = cpu_latency_ms / npu_latency_ms when both available, else None
+- npu_viable = True iff npu_available and speedup_ratio >= 2.0
+
+**Implementation Status:** Done (Exp 511)
+
+---
+
+## REQ-INFRA-063: NPUEntropyProbe Emits honest_verdict='npu_not_available' With Setup Instructions
+
+**Requirement:** When the VitisAI execution provider is not installed or fails to load, NPUEntropyProbe.benchmark() returns NPUBenchmarkResult(npu_available=False) and the experiment script emits honest_verdict='npu_not_available' along with step-by-step VitisAI EP installation instructions. It must NOT fail silently.
+
+**Acceptance criteria:**
+- NPUBenchmarkResult.npu_available=False when VitisAI EP is absent
+- NPUBenchmarkResult.npu_viable=False when npu_available=False
+- NPUBenchmarkResult.speedup_ratio=None when npu_available=False
+- Experiment artifact includes setup_instructions string when npu_available=False
+
+**Implementation Status:** Done (Exp 511)
+
+---
+
+### SCENARIO-INFRA-070: NPUBenchmarkResult.npu_viable False When NPU Unavailable
+
+**Given** an NPUBenchmarkResult with npu_available=False
+**When** npu_viable is accessed
+**Then** it returns False
+
+### SCENARIO-INFRA-071: NPUBenchmarkResult.speedup_ratio None When NPU Unavailable
+
+**Given** an NPUBenchmarkResult with npu_available=False
+**When** speedup_ratio is accessed
+**Then** it returns None
+
+### SCENARIO-INFRA-072: export_onnx Creates File at Given Path
+
+**Given** an NPUEntropyProbe instance
+**And** a temporary file path
+**When** export_onnx(path) is called
+**Then** the file exists at the given path

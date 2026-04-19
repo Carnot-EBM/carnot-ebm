@@ -1,0 +1,33 @@
+{
+  "experiment": 511,
+  "title": "AMD XDNA NPU Probe",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T14:48:54Z",
+  "finished_at": "2026-04-19T14:48:54Z",
+  "duration_s": 0.771,
+  "status": "success",
+  "schema": [
+    "cpu_latency_ms",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "npu_available",
+    "npu_latency_ms",
+    "npu_viable",
+    "run_date",
+    "schema",
+    "setup_instructions",
+    "speedup_ratio",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "npu_available": false,
+  "npu_latency_ms": null,
+  "cpu_latency_ms": 0.09405673438322992,
+  "speedup_ratio": null,
+  "npu_viable": false,
+  "setup_instructions": "VitisAI execution provider not found. To enable AMD XDNA NPU inference:\n  1. pip install onnxruntime-vitisai\n  2. Install Vitis AI runtime from https://github.com/amd/RyzenAI-SW\n     (follow the NPU EP quickstart for your OS/kernel version)\n  3. Set XLNX_VART_FIRMWARE to the NPU firmware binary path.\n  4. Verify: python -c \"import onnxruntime; print(onnxruntime.get_available_providers())\"\n     Expected: [..., 'VitisAIExecutionProvider', ...]",
+  "honest_verdict": "npu_not_available"
+}
