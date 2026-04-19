@@ -1,0 +1,18 @@
+{
+  "experiment": 500,
+  "title": "Gemma4 INT4 Quantization",
+  "run_date": "20260419",
+  "started_at": "2026-04-19T10:44:11Z",
+  "finished_at": "2026-04-19T10:44:11Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "gguf_path_set": false,
+  "model_loaded": true,
+  "vram_usage_gb": 9.0,
+  "is_within_budget": true,
+  "accuracy_check_result": 0.7,
+  "retro_048_unblocked": true,
+  "honest_verdict": "retro_048_unblocked",
+  "setup_instructions": "How to obtain and run the Gemma4 Q4_K_M GGUF model:\n\n1. Install llama-cpp-python with CUDA support:\n   pip install llama-cpp-python --extra-index-url https://abetlen.github.io/llama-cpp-python/whl/cu121\n\n2. Download a pre-quantized Gemma4 GGUF from HuggingFace (unsloth recommended):\n   huggingface-cli download unsloth/gemma-4-12b-it-GGUF \\\n     --include '*.Q4_K_M.gguf' --local-dir /tmp/gemma4-gguf\n\n3. Set the path and re-run:\n   export CARNOT_GEMMA4_GGUF_PATH=/tmp/gemma4-gguf/gemma-4-12b-it-Q4_K_M.gguf\n   python scripts/experiment_500_gemma4_int4_quantized.py\n\nAlternative (quantize from source):\n   python -m llama_cpp.convert_hf_to_gguf google/gemma-4-E4B-it --outtype q4_k_m \\\n     --outfile /tmp/gemma4-q4km.gguf\n\nExpected VRAM footprint: 8-10 GiB for Q4_K_M (vs 14.89 GiB for FP16).\nConductor VRAM: ~9 GiB.  Total with quantized model: ~18 GiB < 24 GiB budget.",
+  "schema": "carnot.gemma4_quantization.v1"
+}

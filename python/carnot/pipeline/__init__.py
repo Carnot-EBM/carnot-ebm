@@ -287,6 +287,7 @@ from carnot.pipeline.boltzmann_repair import (  # noqa: E402
     RepairDirection,
 )
 from carnot.pipeline.gemma_loader import GemmaTransformersLoader  # noqa: E402
+from carnot.pipeline.gemma4_quantized_loader import Gemma4QuantizedLoader  # noqa: E402
 from carnot.pipeline.atomic_writer import AtomicResultWriter  # noqa: E402
 from carnot.pipeline.think_probe_v2 import ThinkProbeV2, ThinkProbeV2Result  # noqa: E402
 from carnot.pipeline.lsebm_replayer import (  # noqa: E402
@@ -566,6 +567,7 @@ __all__ = [
     "simulate_session",
     "compute_relay_verdict",
     "GemmaTransformersLoader",
+    "Gemma4QuantizedLoader",
     "AtomicResultWriter",
     "ThinkProbeV2",
     "ThinkProbeV2Result",
