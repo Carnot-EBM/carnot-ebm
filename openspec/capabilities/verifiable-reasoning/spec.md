@@ -9883,3 +9883,56 @@ Spec: REQ-INFRA-075, SCENARIO-INFRA-090, SCENARIO-INFRA-091
 **Then** `honest_verdict == 'batching_migration_complete'` and `len(batching_added) == 5`
 
 **Implementation Status:** Implemented (Exp 550)
+
+---
+
+## REQ-DATA-001: Live GSM8K Inference with Per-Question FOVER Annotation
+
+For each of N GSM8K questions (indices 0-49), the system must generate a live GPU
+response from each model (no repair pipeline), evaluate correctness against ground
+truth, and annotate each CoT step with a Z3-verified FOVER label.
+
+Rationale: RETRO-058 identified that 6/11 .41 experiments fell back to synthetic data
+because the FOVER corpus had only 24 diverse pairs (88% carry violations).  All model
+retraining experiments in .42 (Exps 556-558, 561) are gated on >=100 real CoT pairs.
+This requirement captures the first 50 such pairs via live inference with no repair
+pipeline contaminating the labels.
+
+Required per-pair fields: question, model, response, is_correct, cot_steps (list of
+annotated FOVERCoTStep dicts), fover_labels (list of label strings).
+
+**Implementation Status:** Implemented (Exp 551)
+
+### SCENARIO-DATA-001: 50 Questions Produce At Least 50 Live Pairs
+
+**Given** GSM8K validation split questions 0-49 loaded with seed=42
+**When** Exp 551 runs both models on all 50 questions
+**Then** `n_pairs_collected >= 50` in the main artifact
+
+**Implementation Status:** Implemented (Exp 551)
+
+### SCENARIO-DATA-002: Each Pair Records CoT Steps and FOVER Labels
+
+**Given** a live model response for one GSM8K question
+**When** FOVERAnnotator.annotate_response() processes the response
+**Then** the stored pair has `cot_steps` (list) and `fover_labels` (list of z3_label strings)
+
+**Implementation Status:** Implemented (Exp 551)
+
+### SCENARIO-DATA-003: Blocked Artifact Written When GPU Not Live
+
+**Given** CARNOT_FORCE_LIVE is not set or GPU is not available
+**When** Exp 551 starts
+**Then** a `"blocked"` artifact is written and `honest_verdict == 'gpu_required'`
+
+**Implementation Status:** Implemented (Exp 551)
+
+---
+
+## REQ-DATA-002: Atomic Write of Per-Batch Pair File
+
+The live pairs file (`results/live_pairs_551.json`) must be written atomically
+(write to a `.tmp` file then rename) so that a partial checkpoint never corrupts
+the corpus used by downstream retraining experiments.
+
+**Implementation Status:** Implemented (Exp 551)
