@@ -1,0 +1,127 @@
+{
+  "experiment": 600,
+  "title": "Milestone 2026.04.45 Retrospective",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T17:19:26Z",
+  "finished_at": "2026-04-20T17:19:26Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "schema": "carnot.operational_retro.v20",
+  "milestone": "2026.04.45",
+  "n_experiments_run": 12,
+  "n_not_run": 0,
+  "total_wall_time_minutes": 0.315,
+  "mean_time_min": 0.026,
+  "wall_time_vs_prior_delta_minutes": -4653.685,
+  "retro_033_resolved": false,
+  "retro_038_resolved": false,
+  "retro_066_resolved": false,
+  "retro_063_validated": true,
+  "fr11_improved": false,
+  "dsvd_live_validated": false,
+  "npu_unblocked": false,
+  "fpga_progress": false,
+  "dwave_available": true,
+  "hisr_credit_correct": true,
+  "retro_closure_rate": 0.0,
+  "open_retro_count": 12,
+  "new_retro_items": [
+    {
+      "id": "RETRO-068",
+      "title": "CoACE v3 recall 4% on live data \u2014 WORSE than v2's 5.9%",
+      "opened_milestone": "2026.04.45",
+      "carry_count": 0,
+      "description": "Exp 591 measured CoACEV3 on 25 live production responses from Qwen3.5-0.8B and google/gemma-4-E4B-it.  Result: v3_recall=0.04 \u2014 gate_open=False.  This is LOWER than v2_recall=0.059 (Exp 581).  The v3 architecture was redesigned to close the offline/live gap (RETRO-066), but the change made things worse.  The live error distribution is fundamentally different from the offline training corpus (injected numeric errors vs. actual model reasoning failures).  The CoACE extractor must be trained on real live model output pairs, not synthetic errors.  Until this is done, all verify-repair and FR-11 experiments remain blocked.",
+      "priority": "critical"
+    },
+    {
+      "id": "RETRO-069",
+      "title": "DSVD live AUC 0.586 below 0.80 deployment threshold",
+      "opened_milestone": "2026.04.45",
+      "carry_count": 0,
+      "description": "Exp 592 validated DSVD on live model outputs and measured dsvd_live_auc=0.586, which is below the minimum 0.80 threshold for deployment as a Tier-2.5 replacement for CoACE.  The offline result was dsvd_auc=0.976 (Exp 587), showing the same offline/live transfer failure pattern as CoACE.  DSVD was proposed as a fallback if CoACE remained blocked, but it faces the same root-cause distribution mismatch.  Both models require retraining on live corpus pairs before either can gate the verify-repair pipeline.",
+      "priority": "high"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=4",
+      "action_required": "Verify closure in result files before .46 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q verify-repair precision \u2014 13+ attempts, still not closed",
+      "carry_count": ">=13",
+      "action_required": "Blocked: gate_open=False (CoACE v3 recall=4%, DSVD live AUC=0.586).  Do not schedule attempt #14 until RETRO-066, RETRO-068, and RETRO-069 are resolved.  The recall threshold must be crossed before scheduling VR."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 200q VeriCoT+Wilson CI \u2014 9+ attempts, still not closed",
+      "carry_count": ">=9",
+      "action_required": "Same root cause as RETRO-033. Block until recall > 30%."
+    },
+    {
+      "id": "RETRO-049",
+      "title": "NUP Probe v4 contrastive margin loss redesign",
+      "carry_count": ">=3",
+      "action_required": "nup_v5_auc=0.739 (Exp 599) \u2014 improved but below 0.80 threshold.  Schedule NUP v6 retrain on larger live corpus."
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": ">=3",
+      "action_required": "Architectural redesign needed. Calibration layer approach exhausted."
+    },
+    {
+      "id": "RETRO-060",
+      "title": "JEPA architecturally anti-correlated \u2014 superseded by RETRO-063",
+      "carry_count": ">=3",
+      "action_required": "RETRO-063 validated by Exp 593: v12_val_auc=1.0 on full 100-pair corpus.  JEPA v12 is architecturally sound.  Close RETRO-060 tracking."
+    },
+    {
+      "id": "RETRO-064",
+      "title": "CoACE recall 5.9% on live data \u2014 pipeline accuracy lift undetectable",
+      "carry_count": 2,
+      "action_required": "v3_recall=0.04 is WORSE than v2's 0.059 (RETRO-068).  Build live-corpus training set from Exp 578 pairs before any further retrain."
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL unavailable \u2014 hardware energy calibration blocked",
+      "carry_count": 2,
+      "action_required": "Need Intel RAPL or AMD Energy driver on test machine"
+    },
+    {
+      "id": "RETRO-066",
+      "title": "CoACE offline/live distribution gap \u2014 v3 made it worse",
+      "carry_count": 1,
+      "action_required": "v3 recall (4%) is lower than v2 (5.9%).  Architecture changes alone cannot fix training distribution mismatch.  Must collect live (model_A, model_B) output pairs and retrain on those.  Exp 578 has 100 live pairs \u2014 use them."
+    },
+    {
+      "id": "RETRO-067",
+      "title": "ExclusionManifest not fully wired into conductor",
+      "carry_count": 1,
+      "action_required": "Exp 589 made partial progress.  Verify conductor_consulted=True in next exclusion manifest wire-in run.  Expected savings: ~385 min/milestone."
+    },
+    {
+      "id": "RETRO-068",
+      "title": "CoACE v3 recall 4% on live data \u2014 WORSE than v2",
+      "carry_count": 0,
+      "action_required": "Retrain CoACE on live model output pairs (Exp 578 corpus).  Do not release v4 until live recall >= 20% is confirmed before scheduling VR."
+    },
+    {
+      "id": "RETRO-069",
+      "title": "DSVD live AUC 0.586 below deployment threshold",
+      "carry_count": 0,
+      "action_required": "Retrain DSVD on live corpus pairs and re-evaluate.  Gate DSVD deployment on live AUC >= 0.80."
+    }
+  ],
+  "top_priorities_for_46": [
+    "Build live-corpus training set and retrain CoACE v4 on real model outputs (RETRO-066, RETRO-068).  Exp 578 collected 100 live pairs from Qwen3.5-0.8B and gemma-4-E4B-it.  Retrain CoACEV4 on these pairs rather than the synthetic GSM8K corpus.  Target: live recall >= 20% before scheduling any VR experiment.  This is the single highest-leverage action \u2014 it unblocks RETRO-033, RETRO-038, RETRO-064, RETRO-066, RETRO-068, RETRO-069, and the entire live verify-repair chain.",
+    "Retrain DSVD on live corpus pairs to close the offline/live AUC gap (RETRO-069).  dsvd_live_auc=0.586 vs offline=0.976 is a 40-point gap \u2014 the same root cause as CoACE.  Use the same Exp 578 live corpus.  Both CoACEV4 and DSVD retrains can share the same data pipeline.  DSVD is the Tier-2.5 fallback if CoACEV4 does not improve; both must be retrained together.  Target: dsvd_live_auc >= 0.80.",
+    "Leverage D-Wave Cloud access (Exp 598, dwave_available=True) for HISR-Dwave integration on a real verify-repair task.  The credit assignment logic is now validated (hisr_credit_assignment_correct=True).  This is the first infrastructure experiment that produced a genuine positive result this milestone.  Running a real HISR-DWave VR experiment would validate the quantum annealing path and provide a new signal for EBM energy minimisation beyond gradient descent."
+  ],
+  "honest_verdict": "infrastructure_progress_no_accuracy_gain",
+  "env_autofix": true
+}
