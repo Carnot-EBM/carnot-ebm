@@ -1158,6 +1158,46 @@ step_text hash produces a 100+ pair corpus for JEPA v8 retrain (Exp 543).
 **Then** n_new_pairs = 0 and the merged corpus equals the prior 57-pair corpus
 **And** honest_verdict reflects partial_expansion
 
+### REQ-LEARN-056: JEPA v8 Retrain on Expanded FOVER Corpus
+
+**Why this requirement exists:**
+JEPA v7 (Exp 535) achieved AUC=0.967 on 57 real FOVER pairs. Exp 542 expanded the corpus
+via multi-source merge. Exp 543 retrains JEPA v8 on this expanded corpus to validate that
+the larger dataset maintains or improves AUC, satisfying FR-11 with honest live data.
+
+**Given** fover_labeled_steps_expanded.json exists (from Exp 542)
+**When** Exp 543 runs JEPA v8 retrain
+**Then** the model trains on the expanded corpus with 80/20 train/test split
+**And** the artifact contains n_train_pairs, n_test_pairs, final_auc, auc_improvement
+**And** honest_verdict is set based on AUC threshold and n_train_pairs
+
+### REQ-LEARN-057: LeWorldModel Two-Term Objective for JEPA v8
+
+**Why this requirement exists:**
+The LeWorldModel objective (L_total = L_prediction + lambda * L_KL) provides stable Gaussian
+regularization that prevents embedding collapse during training. JEPA v8 uses lambda=0.1
+(vs 0.01 in v6/v7) to apply stronger regularization on the expanded corpus.
+
+**Given** a JEPA predictor and training pairs
+**When** LeWorldModelJEPATrainer trains for 100 epochs with lambda_reg=0.1
+**Then** L_KL = KL(q(z) || N(0,I)) = 0.5 * sum(mu^2 + sigma^2 - log(sigma^2) - 1)
+**And** L_total = L_prediction + 0.1 * L_KL per batch
+
+### SCENARIO-LEARN-088: JEPA v8 AUC on Expanded Corpus Meets Threshold
+
+**Given** JEPA v8 trained on the expanded FOVER corpus
+**When** final_auc is evaluated on the held-out test split
+**Then** honest_verdict is 'jepa_v8_improved' when auc>=0.900 AND n_train>=80
+**Or** honest_verdict is 'auc_stable' when auc>=0.800
+**Or** honest_verdict is 'synthetic_fallback' otherwise
+
+### SCENARIO-LEARN-089: JEPA v8 Falls Back to fover_labeled_steps_live.json
+
+**Given** fover_labeled_steps_expanded.json is absent from results/
+**When** Exp 543 runs
+**Then** the experiment loads fover_labeled_steps_live.json as fallback
+**And** the artifact correctly reflects the actual data source used
+
 ---
 
 ## Implementation Status
@@ -1206,3 +1246,5 @@ step_text hash produces a 100+ pair corpus for JEPA v8 retrain (Exp 543).
 | REQ-LEARN-053 | N/A | Implemented | Python |
 | REQ-LEARN-054 | N/A | Implemented | Python |
 | REQ-LEARN-055 | N/A | Implemented | Python |
+| REQ-LEARN-056 | N/A | Implemented | Python |
+| REQ-LEARN-057 | N/A | Implemented | Python |
