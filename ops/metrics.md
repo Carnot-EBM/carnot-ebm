@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-20 Milestone 2026.04.45 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-20T13:45:00Z | 2026-04-20T14:45:21Z | Planned milestone 2026.04.45 "Live-Calibrated CoACE and DSVD — Closing the Offline/Live Distribution Gap": read 11 project files + .44 retro JSON (Exp 588) + Exps 577-587 results. Spawned arxiv research subagent (5 new papers: arXiv 2603.01025 OTV one-token LoRA verifier; arXiv 2604.02341 PROGRS outcome-conditioned PRM centering; arXiv 2604.10693 FACT-E factuality EBM; arXiv 2604.01564 p-bit synchronous Ising; arXiv 2604.05042 EBM dynamical models tutorial). Appended 5 new entries to research-references.md as "2026-04-20 arxiv Scan (Milestone 2026.04.45 Planning)". Identified 3 biggest gaps: (1) RETRO-066 CRITICAL — CoACE offline/live distribution gap: 86.7% offline vs 5.9% live recall; (2) JEPA v11 AUC=1.0 on only 9 synthetic pairs, likely overfitting, needs live corpus validation; (3) RETRO-033 #13 still unresolved — live verify-repair never showed positive improvement. Wrote openspec/change-proposals/research-roadmap-v45.md (12 experiments 589-600, 5 phases: Infrastructure/Live-Calibrated Extraction/JEPA v12 Retrain/Live Verify-Repair/Self-Learning+Research; dependency graph; success criteria; DSVD path as RETRO-033 alternate; OTV verifier integration). Wrote research-roadmap-next.yaml (12 experiments with full prompts; Exp 591 gates 594; Exp 592 gates 595; Exp 594 OR 595 gates 596; ExclusionManifest wire-in in Exp 589). | ~90k |
+
+---
+
 ## Session: 2026-04-20 Milestone 2026.04.44 Planning
 
 ### Turn Log
