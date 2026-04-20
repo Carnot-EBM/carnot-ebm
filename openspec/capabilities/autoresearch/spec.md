@@ -1643,6 +1643,75 @@ Spec: SCENARIO-LEARN-109
 
 ---
 
+### REQ-LEARN-070: FR-11 Real Violations Relay from Live Verify-Repair (Exp 597)
+
+The system shall attempt to source real constraint violations from live verify-repair runs
+(Exp 594 CoACEv3, Exp 595 DSVD) and feed them into ConstraintAdditionFromMemory.
+When live violations are unavailable (both upstream experiments blocked), synthetic
+violations shall be used as a clearly-labeled fallback.  The artifact must always record:
+- n_live_violations (int): count of violations from live GPU inference.
+- violations_source: one of 'exp594', 'exp595', 'synthetic_fallback'.
+- fr11_real_violations_confirmed (bool): True iff n_live_violations >= 5.
+- honest_verdict: 'real_violations_improved', 'real_violations_no_improvement',
+  or 'synthetic_fallback'.
+
+**Rationale:** FR-11 requires self-learning to operate on real data.  When live runs are
+blocked, synthetic data preserves pipeline exercise without misleading headline claims.
+
+Spec: REQ-LEARN-070,
+      SCENARIO-LEARN-110, SCENARIO-LEARN-111, SCENARIO-LEARN-112
+
+---
+
+### SCENARIO-LEARN-110: Violations Source Recorded in Artifact
+
+**Given** Exp 594 and Exp 595 are both blocked (n_violations=0)
+**When** Exp 597 runs
+**Then** violations_source='synthetic_fallback', fr11_real_violations_confirmed=False,
+         honest_verdict='synthetic_fallback', and all required schema fields are present.
+
+Spec: SCENARIO-LEARN-110
+
+---
+
+### REQ-LEARN-071: MISE Backward Inference for EORM Reward Calibration (arXiv 2604.11611)
+
+The system shall implement MISECalibrator with backward_inference_score() computing
+cosine similarity between embed(response) and embed(question) as a proxy for how well
+the response answers the question.  The calibrate() method computes:
+- mean_alignment_correct: mean score for verdict_correct=True triples.
+- mean_alignment_incorrect: mean score for verdict_correct=False triples.
+- calibration_gap: mean_alignment_correct - mean_alignment_incorrect.
+A positive calibration_gap indicates the alignment signal reliably separates correct
+from incorrect responses and can be used as a dense EORM reward signal.
+
+Spec: REQ-LEARN-071,
+      SCENARIO-LEARN-111, SCENARIO-LEARN-112
+
+---
+
+### SCENARIO-LEARN-111: backward_inference_score Returns Float in [-1, 1]
+
+**Given** any two non-empty strings
+**When** MISECalibrator.backward_inference_score(response, question) is called
+**Then** a float in [-1.0, 1.0] is returned; zero-norm embeddings return 0.0.
+
+Spec: SCENARIO-LEARN-111
+
+---
+
+### SCENARIO-LEARN-112: calibrate() Returns Three-Key Dict with calibration_gap
+
+**Given** a list of MISETriple objects (may be empty)
+**When** MISECalibrator.calibrate(triples) is called
+**Then** a dict with keys 'mean_alignment_correct', 'mean_alignment_incorrect',
+         'calibration_gap' is returned; empty input yields all-zero values;
+         calibration_gap = mean_alignment_correct - mean_alignment_incorrect.
+
+Spec: SCENARIO-LEARN-112
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1703,3 +1772,5 @@ Spec: SCENARIO-LEARN-109
 | REQ-LEARN-067 | N/A | Implemented | Python |
 | REQ-LEARN-068 | N/A | Implemented | Python |
 | REQ-LEARN-069 | N/A | Implemented | 12 Python |
+| REQ-LEARN-070 | N/A | Implemented | Python (Exp 597) |
+| REQ-LEARN-071 | N/A | Implemented | Python (test_mise_calibrator) |
