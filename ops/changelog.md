@@ -46,6 +46,7 @@
 
 ## 2026-04-19 (Milestone 2026.04.40 Research Planning)
 
+- 2026-04-20: Exp 578 complete — Live 50q Data Collection A v3, RETRO-062 closure iteration #3, 100 live pairs GSM8K 0-49, inference_mode=live_gpu, mean_latency=1.26s, status=success, retro_062_resolved=true. (Exp 578 result)
 - 2026-04-20: Exp 566 complete — JEPAPUREMinForm, min-form PRM objective for JEPA (RETRO-060 fix, arXiv 2504.15275), status=success. (Exp 566 result)
 - 2026-04-20 00:00 UTC: Exp 532 complete — LowRankKAEMEnergy SVD projection of logit energy (arXiv 2604.04384), status=success. (Exp 532 result)
 - 2026-04-20: Exp 576: CoACE Recall Boost v2 — Expand Arithmetic Pattern Coverage (RETRO-064) — CoACEExtractorV2 improves arithmetic violation detection via prose pattern recognition (percentage/ratio/word patterns) and multi-step chain tracking; v1_recall=0.333, v2_recall=0.867, recall_improvement=0.533, v2_fp_rate=0.0, retro_064_resolved=true; honest_verdict=recall_resolved; `python/carnot/extraction/coace_extractor_v2.py` (CoACEExtractorV2), `scripts/experiment_576_coace_recall_boost.py` (ExperimentTemplate(576)), `tests/python/test_coace_extractor_v2.py` (full coverage); results/experiment_576_coace_recall_boost.json; spec updated with REQ-EXTRACT-035/036, SCENARIO-EXTRACT-068/069/070/071; REQ-EXTRACT-035, REQ-EXTRACT-036, SCENARIO-EXTRACT-068, SCENARIO-EXTRACT-069, SCENARIO-EXTRACT-070, SCENARIO-EXTRACT-071
