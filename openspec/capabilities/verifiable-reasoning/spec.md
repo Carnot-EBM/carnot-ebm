@@ -11430,4 +11430,56 @@ Given: A (scores_correct, scores_incorrect) pair where |score_correct - score_in
 When: CAPOCalibrationLoss(lambda_cal=0.1).compute_loss([sc], [si]) is called.
 Then: The calibration term is 0.0 and the total loss equals the pure margin loss.
 
+---
+
+## REQ-BENCH-059: Exp 609 Live Verify-Repair with Winning Extractor from Exp 605 (RETRO-033 Attempt 14)
+
+**Context (RETRO-033):**
+    Exp 605 ran a diagnostic of CoACEExtractorV4 and DSVDAdapter, finding best_recall=0.04
+    (gate threshold: 0.20).  Exp 609 gates on that result first; if gate_open=False it writes
+    a blocked artifact immediately and exits without consuming any GPU time.
+
+- REQ-BENCH-059-1: Gate check reads results/experiment_605_extractor_diagnostic_v4.json; if gate_open!=True write blocked artifact with status='blocked', honest_verdict='blocked_recall_below_threshold_do_not_retry_without_higher_recall'.
+- REQ-BENCH-059-2: If gate_open=True, run 50 questions (indices 400-449) with winning_extractor on Gemma4-E4B-it (cuda:0) and Qwen3.5-0.8B (cuda:1).
+- REQ-BENCH-059-3: Compute signed_improvement = mean(pipeline_correct) - mean(baseline_correct).
+- REQ-BENCH-059-4: retro_033_resolved = (signed_improvement > 0 AND inference_mode == 'live_gpu').
+- REQ-BENCH-059-5: honest_verdict = 'first_live_improvement' if signed_improvement > 0 else 'live_no_improvement_v14'.
+- REQ-BENCH-059-6: Artifact schema='carnot.live_vr_coace_v4.v1' must include all required fields on every exit path.
+
+Spec: REQ-BENCH-059, SCENARIO-BENCH-081, SCENARIO-BENCH-082, SCENARIO-BENCH-083
+
+### SCENARIO-BENCH-081: Gate Closed — Blocked Artifact Written When best_recall < 0.20
+
+Given: results/experiment_605_extractor_diagnostic_v4.json with gate_open=False, best_recall=0.04.
+When: experiment_609_live_vr_coace_v4.py runs (RETRO-033 attempt 14).
+Then: results/experiment_609_live_vr_coace_v4.json is written with status='blocked'.
+And: inference_mode='blocked_gate_closed', n_questions=0, retro_033_resolved=False.
+And: honest_verdict contains 'blocked'.
+And: No GPU inference is performed.
+
+**Implementation Status:** Implemented (Exp 609)
+
+### SCENARIO-BENCH-082: Artifact Schema Contains All Required Fields on Every Exit Path
+
+Given: any exit path (blocked, gpu_required, success).
+When: _build_artifact() is called.
+Then: The artifact contains schema, inference_mode, n_questions, question_indices,
+winning_extractor, best_recall_at_gate, baseline_accuracy, pipeline_accuracy,
+signed_improvement, n_violations_found, n_repairs_attempted, n_repairs_succeeded,
+retro_033_resolved, honest_verdict.
+
+**Implementation Status:** Implemented (Exp 609)
+
+### SCENARIO-BENCH-083: retro_033_resolved=True Only When signed_improvement > 0 and inference_mode='live_gpu'
+
+Given: a successful Exp 609 run with inference_mode='live_gpu'.
+When: pipeline_accuracy > baseline_accuracy.
+Then: retro_033_resolved=True and honest_verdict='first_live_improvement'.
+When: pipeline_accuracy <= baseline_accuracy.
+Then: retro_033_resolved=False and honest_verdict='live_no_improvement_v14'.
+When: inference_mode!='live_gpu' (blocked or gpu_required).
+Then: retro_033_resolved=False regardless of accuracy values.
+
+**Implementation Status:** Implemented (Exp 609)
+
 **Implementation Status:** Implemented (Exp 608)
