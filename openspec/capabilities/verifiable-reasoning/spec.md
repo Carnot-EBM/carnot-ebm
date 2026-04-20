@@ -10496,3 +10496,58 @@ When: `save(entries)` is called, then a fresh `ExclusionManifest` instance calls
 Then: The loaded list is equal to the original list (all fields preserved).
 
 **Implementation Status:** Implemented (Exp 575)
+
+---
+
+## REQ-EXTRACT-035: CoACEExtractorV2 — Multi-Step Chain Tracking
+
+CoACEExtractorV2 extends CoACEExtractor to detect arithmetic violations in multi-step
+chain reasoning patterns that v1 misses.  IT models write chains like
+'let X = 47+28 = 75, then Y = X+5 = 81' where a later step may silently use a different
+numeric value than the one it computed.
+
+- REQ-EXTRACT-035-1: CoACEExtractorV2._extract_chain_equations(text) parses 'let X = expr',
+  'X = expr', 'so X = expr' patterns in order, building a NumericContext mapping variable→float.
+- REQ-EXTRACT-035-2: When a later equation uses a variable name that was previously assigned,
+  and the stated value differs from the NumericContext value, a chain violation is emitted.
+- REQ-EXTRACT-035-3: CoACEExtractorV2.extract() merges v1 equations, prose equations, and
+  chain equations, deduplicates by (lhs_expr, rhs_value), and returns a CoACEResult.
+
+## REQ-EXTRACT-036: CoACEExtractorV2 — Prose Percentage/Ratio/Word Patterns
+
+CoACEExtractorV2 handles natural-language arithmetic patterns that v1's equation parser
+cannot match because they use words instead of operator symbols.
+
+- REQ-EXTRACT-036-1: 'N% of M is/equals/gives P' → parsed as lhs='N/100*M', rhs=P.
+- REQ-EXTRACT-036-2: 'X times Y' (with stated result) → lhs='X*Y'.
+- REQ-EXTRACT-036-3: 'P divided by Q' (with stated result) → lhs='P/Q'.
+- REQ-EXTRACT-036-4: 'difference between P and Q' (with stated result) → lhs='P-Q'.
+- REQ-EXTRACT-036-5: 'sum of A, B, and C' (with stated result) → lhs='A+B+C'.
+- REQ-EXTRACT-036-6: Chained equality 'total = A + B + C = D' → eval full expression,
+  compare to rightmost value D.
+
+### SCENARIO-EXTRACT-068: CoACEExtractorV2 Detects '20% of 150 is 31' As Violation
+
+Given: Response text '20% of 150 is 31.'
+When: CoACEExtractorV2().extract(text) is called.
+Then: n_violations >= 1 (20/100*150=30, stated 31).
+
+### SCENARIO-EXTRACT-069: CoACEExtractorV2 Detects '47 times 3 is 142' As Violation
+
+Given: Response text '47 times 3 is 142.'
+When: CoACEExtractorV2().extract(text) is called.
+Then: n_violations >= 1 (47*3=141, stated 142).
+
+### SCENARIO-EXTRACT-070: CoACEExtractorV2 Detects Chain Variable Mismatch
+
+Given: Response text 'let X = 47+28 = 75, then total = X + 5 = 81' where 75+5=80 not 81.
+When: CoACEExtractorV2().extract(text) is called.
+Then: n_violations >= 1 (chain tracks X=75, so X+5=80 != 81).
+
+### SCENARIO-EXTRACT-071: CoACEExtractorV2 extract() Combines V1 Plus Prose Plus Chain
+
+Given: A response containing one v1-detectable equation error, one prose error, and one chain error.
+When: CoACEExtractorV2().extract(text) is called.
+Then: n_violations >= 2 (deduplication may collapse overlapping detections).
+
+**Implementation Status:** Implemented (Exp 576)

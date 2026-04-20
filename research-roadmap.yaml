@@ -36,7 +36,7 @@ tasks:
     \ [308, 260, 309, 425, 410] with completed_milestone and reason fields.\n   e.\
     \ Export ExclusionManifest, ExclusionEntry, build_default_manifest from carnot.pipeline.__init__.\n\
     4. Create scripts/conductor_exclusion_manifest.json:\n   (\n     \"excluded\"\
-    : [\n       {\"experiment_id\": 308, \"completed_milestone\": \"2026.04.37\",\
+    : [\n       (\"experiment_id\": 308, \"completed_milestone\": \"2026.04.37\",\
     \ \"reason\": \"slowest-5 seven consecutive milestones, legacy checkpoint-failure\
     \ state\"),\n       (\"experiment_id\": 260, \"completed_milestone\": \"2026.04.37\"\
     , \"reason\": \"slowest-5 seven consecutive milestones, sequential inference loop\"\
@@ -47,7 +47,7 @@ tasks:
     \ already implemented\"),\n       (\"experiment_id\": 410, \"completed_milestone\"\
     : \"2026.04.37\", \"reason\": \"slowest-5 seven consecutive milestones, 1000\
     \ sequential inference calls, BatchedInferenceRunner migration target\")\n    \
-    \ ]\n   }\n5. Write scripts/experiment_575_exclusion_manifest.py:\n   a. apply_env_autofix()\
+    \ ]\n   )\n5. Write scripts/experiment_575_exclusion_manifest.py:\n   a. apply_env_autofix()\
     \ FIRST.\n   b. ExperimentTimeoutWatchdog(575, timeout_minutes=20).\n   c. ExperimentTemplate(575,\
     \ 'Conductor Exclusion Manifest',\n      'results/experiment_575_exclusion_manifest.json',\
     \ requires_gpu=False).\n   d. Load or build default manifest.\n   e. Verify exclusion\
