@@ -1,0 +1,171 @@
+{
+  "experiment": 562,
+  "title": "Milestone 2026.04.42 Retrospective",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T07:10:01Z",
+  "finished_at": "2026-04-20T07:10:01Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "schema": "carnot.operational_retro.v17",
+  "milestone": "2026.04.42",
+  "n_experiments": 14,
+  "n_completed": 13,
+  "n_timed_out": 0,
+  "n_deferred_to_gpu": 1,
+  "n_missing": 0,
+  "total_wall_time_minutes": 6.852,
+  "average_minutes_per_experiment": 0.489,
+  "wall_time_delta_vs_41_minutes": -34.779,
+  "avg_time_delta_vs_41": -3.296,
+  "exclusion_manifest_created": true,
+  "live_50q_a_completed": false,
+  "live_50q_b_completed": true,
+  "fover_corpus_v2_n_labeled": 132,
+  "fover_corpus_v2_entropy": 1.501968,
+  "fover_corpus_v2_ready": true,
+  "retro_056_closed": false,
+  "retro_057_closed": false,
+  "retro_058_data_ready": true,
+  "retro_059_resolved": true,
+  "retro_closure_rate": 0.25,
+  "fr11_real_data_relay": true,
+  "jepa_v9_auc": 0.428571,
+  "kaem_energy_mad_at_optimal": 1.0,
+  "top3_slowest_experiments": [
+    {
+      "exp_id": "556",
+      "duration_s": 175.138,
+      "duration_minutes": 2.919,
+      "honest_verdict": "real_data_improvement",
+      "carry_status": "real_data_success"
+    },
+    {
+      "exp_id": "552",
+      "duration_s": 143.974,
+      "duration_minutes": 2.4,
+      "honest_verdict": "live_data_collected",
+      "carry_status": "completed"
+    },
+    {
+      "exp_id": "559",
+      "duration_s": 63.17,
+      "duration_minutes": 1.053,
+      "honest_verdict": "calibration_insufficient",
+      "carry_status": "completed"
+    }
+  ],
+  "headline_results": {
+    "exp549_exclusion_manifest": "RETRO-059 CLOSED. Conductor exclusion manifest written for Exps 308, 260, 309, 425, 410 (all confirmed fully-modern in .41). These scripts will no longer appear in conductor infrastructure sweeps.",
+    "exp550_batching_migration": "BatchedInferenceRunner migrated to 5 legacy scripts: ['experiment_308', 'experiment_260', 'experiment_309', 'experiment_425', 'experiment_410']. honest_verdict='batching_migration_complete'.",
+    "exp551_live_50q_a": "BLOCKED: inference_mode='gpu_required'. CARNOT_FORCE_LIVE not set before session startup. Live 50q A data collection (questions 0-49) did not run. n_pairs_collected=0. Operational gap: session_startup.sh must be sourced first.",
+    "exp552_live_50q_b": "SUCCESS: inference_mode='live_gpu'. n_pairs_collected=100, mean_latency_s=2.81. Live data collection working when GPU gate is properly set.",
+    "exp553_fover_corpus_v2": "FOVER corpus v2 assembled from 3 sources. n_labeled=132 (was 24 in .41). entropy=1.5020 (>= 1.5 threshold). RETRO-058 data prerequisite met. carry_pct reduced from 88% to ~19%.",
+    "exp554_extraction_diagnostic": "Root cause confirmed: VeriCoTStepValidator TP rate=0.0 on 25 live responses. 17 incorrect responses, 0 violations found (all FN). Extraction is the bottleneck \u2014 constraint engine never triggers.",
+    "exp555_confidence_weighted": "Confidence-weighted filtering: fp_reduction=0.0 across all thresholds (0.5/0.7/0.9). Cannot reduce FP rate when extractor produces 0 violations. honest_verdict='marginal_improvement'.",
+    "exp556_eorm_grpo_retrain": "EORM GRPO retrained on 132 real pairs (9 triples). AUC: 1.00 -> 1.00. honest_verdict='real_data_improvement' \u2014 but AUC was already 1.0 (saturated).",
+    "exp557_jepa_v9": "JEPA v9 retrained on diverse corpus (n_train=85, corpus_entropy=1.5020). final_auc=0.4286 (STILL below random 0.5). retro_056_closed=False. JEPA predictor remains anti-correlated with correctness.",
+    "exp558_internal_probe": "Internal state probe on real data: probe_auc=0.5217, eorm_auc=1.0000. probe_viable=False. Probe at 0.52 AUC \u2014 marginally above random but not viable for production.",
+    "exp559_lowrank_kaem": "LowRankKAEM calibration sweep over k=[2,4,8,16,32]. Best energy_mad_after=1.0000 (threshold=0.05). retro_057_closed=False. No rank achieves <5% energy MAD. Calibration layer approach insufficient \u2014 architectural change needed.",
+    "exp560_latent_cot": "LatentCoT EBM calibrator: baseline_violation_rate=0.0, calibrated_violation_rate=0.0, delta=0.0. honest_verdict='calibration_neutral'. Calibrator wired but extractor still silent.",
+    "exp561_tier1_relay": "FR-11 Tier-1 relay on real data: fr11_real_data=True, n_responses=25, constraints_added=0. honest_verdict='real_data_no_improvement'. Relay wired but self-learning blocked because extraction TP rate is 0 \u2014 no violations feed the learning loop."
+  },
+  "new_retro_items": [
+    {
+      "id": "RETRO-060",
+      "title": "JEPA predictor architecturally anti-correlated \u2014 two retrains, same result",
+      "opened_milestone": "2026.04.42",
+      "carry_count": 0,
+      "description": "Exp 557 retrained JEPA v9 on a 132-pair corpus with entropy=1.50 \u2014 significantly larger and more diverse than the 24-pair corpus used in .41. Result: final_auc=0.4286, still below the 0.5 random baseline. Two consecutive retrains on increasingly diverse data produce the same anti-correlated result. This is not a data-size problem \u2014 it is an architectural problem. The predictor learns to invert the correctness signal. Fix: redesign the JEPA objective function (replace binary correctness label with a contrastive energy margin loss) OR replace JEPA with a different discriminator architecture before attempt #3.",
+      "priority": "critical"
+    },
+    {
+      "id": "RETRO-061",
+      "title": "Extraction TP rate is 0 \u2014 self-learning loop is starved at the source",
+      "opened_milestone": "2026.04.42",
+      "carry_count": 0,
+      "description": "Exp 554 confirmed that VeriCoTStepValidator produces 0 true positives on 25 live responses (17 incorrect, 0 violations detected). Exps 555 (confidence filtering), 560 (LatentCoT calibrator), and 561 (FR-11 relay) all report violation_rate=0.0 \u2014 they are downstream of the extraction bottleneck and cannot improve until extraction works. The entire verify-repair pipeline is effectively a no-op on current Qwen3.5-0.8B + Gemma-4-E4B-it model outputs. Fix: redesign VeriCoTStepValidator to detect semantic errors in arithmetic chains, not just format violations (which current models rarely produce).",
+      "priority": "critical"
+    },
+    {
+      "id": "RETRO-062",
+      "title": "Live 50q A still unrun \u2014 GPU gate session startup gap",
+      "opened_milestone": "2026.04.42",
+      "carry_count": 0,
+      "description": "Exp 551 was blocked because CARNOT_FORCE_LIVE was not set when the conductor launched the session. Exp 552 (Live 50q B) succeeded in the same session after the gate was properly set. The 50 questions in batch A (indices 0-49) were never collected. The FOVER corpus v2 contains 132 pairs from batch B + prior sources, but the questions 0-49 are systematically absent. Fix: run Live 50q A as the first experiment of .43, before any other inference work, and verify CARNOT_FORCE_LIVE is set via a pre-flight check in the conductor session startup sequence.",
+      "priority": "high"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=3",
+      "action_required": "Verify closure in result files before .43 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q precision benchmark \u2014 10+ attempts, still not closed",
+      "carry_count": ">=10",
+      "action_required": "Extraction TP rate is 0 (RETRO-061). No constraint fires = no improvement. Do not schedule attempt #11 until RETRO-061 is resolved."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 100q VeriCoT+VPRM \u2014 8+ attempts, still not closed",
+      "carry_count": ">=8",
+      "action_required": "Same root cause as RETRO-033 (RETRO-061 blocks). Do not schedule until extraction redesign is complete."
+    },
+    {
+      "id": "RETRO-049",
+      "title": "NUP Probe v4 contrastive margin loss redesign",
+      "carry_count": ">=2",
+      "action_required": "Confirm closure status via Exp 530 result file inspection"
+    },
+    {
+      "id": "RETRO-056",
+      "title": "JEPA AUC below random \u2014 two retrains, still inverted",
+      "carry_count": 1,
+      "action_required": "Redesign JEPA objective function before attempt #3. See RETRO-060 for root cause analysis."
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": 1,
+      "action_required": "Calibration layer insufficient (best MAD ~0.832 vs threshold 0.05). Architectural redesign needed \u2014 SVD rank alone cannot close the gap."
+    },
+    {
+      "id": "RETRO-060",
+      "title": "JEPA architecturally anti-correlated \u2014 objective function redesign needed",
+      "carry_count": 0,
+      "action_required": "Replace binary label loss with contrastive energy margin loss"
+    },
+    {
+      "id": "RETRO-061",
+      "title": "Extraction TP rate = 0 \u2014 verify-repair pipeline is a no-op",
+      "carry_count": 0,
+      "action_required": "Redesign VeriCoTStepValidator for semantic arithmetic error detection, not format violation detection. This unblocks RETRO-033, RETRO-038, RETRO-056 (data quality), and FR-11 relay."
+    },
+    {
+      "id": "RETRO-062",
+      "title": "Live 50q A unrun \u2014 questions 0-49 missing from FOVER corpus",
+      "carry_count": 0,
+      "action_required": "Run as first experiment of .43 with pre-flight GPU gate check"
+    }
+  ],
+  "meta_reflection": {
+    "top_3_bottlenecks": [
+      "Extraction TP rate is 0 \u2014 the verify-repair pipeline's constraint extraction step produces zero true positives on current model outputs. VeriCoTStepValidator detects format violations but current Qwen3.5-0.8B + Gemma-4-E4B-it outputs do not produce format violations \u2014 they produce semantic errors instead. This single root cause explains why Exps 554 (extraction), 555 (filtering), 560 (LatentCoT calibrator), and 561 (FR-11 relay) all report 0.0 improvement. Every downstream experiment that depends on the extraction step is blocked until this architectural gap is closed.",
+      "JEPA predictor is architecturally anti-correlated after two retrains on increasingly diverse corpora. Exp 543 (.41) gave AUC=0.444 on 24 pairs; Exp 557 (.42) gives AUC=0.4286 on 132 pairs \u2014 the AUC moved in the wrong direction as data improved. This is a learning objective problem, not a data-size problem. The binary correctness label loss teaches the model to anti-predict. The fix requires a contrastive energy margin loss redesign \u2014 a more fundamental change than simply growing the corpus further.",
+      "Live 50q A blocked by session startup gap \u2014 the GPU gate (CARNOT_FORCE_LIVE) was not set when the conductor launched Exp 551, even though Exp 552 (same session, immediately after) succeeded. This suggests the conductor session startup sequence does not reliably source session_startup.sh before all experiment launches. The questions 0-49 remain uncollected, introducing a systematic gap in the FOVER corpus (which currently has only B-side data from questions 50-99)."
+    ],
+    "top_3_improvements_for_43": [
+      "Redesign VeriCoTStepValidator FIRST in .43 before scheduling any benchmark or retraining experiments. The current implementation checks format violations; redesign it to detect semantic arithmetic errors (wrong intermediate values, incorrect operator application, wrong final answer given correct intermediate steps). Budget: 1 experiment. This unblocks RETRO-033, RETRO-038, FR-11, and the entire downstream verify-repair pipeline.",
+      "Redesign JEPA learning objective from binary label to contrastive energy margin loss before scheduling attempt #3. The evidence is now clear: two retrains on increasingly diverse data produce the same anti-correlated AUC (0.444 \u2192 0.429). Do not schedule a third retrain until the objective function is changed. The contrastive margin approach should pair a correct CoT trace against an incorrect one and train the predictor to assign lower energy to the correct trace.",
+      "Add CARNOT_FORCE_LIVE pre-flight check to conductor session startup. The session startup script (scripts/session_startup.sh) should be sourced automatically by the conductor before launching any experiment that requires live GPU inference. Alternatively, gate Exp 551-type experiments with an explicit environment check that fails fast with a clear error rather than silently producing n_pairs_collected=0."
+    ],
+    "synthetic_barrier_assessment": "PARTIAL BREAKTHROUGH: The FOVER corpus crossed the 100-pair threshold (n_labeled=132) and entropy>=1.5 \u2014 the data prerequisite is met. Live 50q B ran in live_gpu mode with real GPU inference. FR-11 is wired on real data. HOWEVER: the verify-repair pipeline still produces 0 measurable improvement because the extraction step has TP rate=0. Having real data in the corpus does not help if the pipeline cannot detect errors in real model outputs. The synthetic barrier is cracked (we have real data infrastructure) but not broken (the pipeline produces identical null results on synthetic and real data).",
+    "credibility_verdict": "Live 50q B data collection (Exp 552) is credible \u2014 100 real inference pairs collected with documented GPU latency. FOVER corpus v2 assembly (Exp 553) is credible \u2014 diversity metrics computed, carry_pct verified. Exclusion manifest (Exp 549) is credible \u2014 prevents conductor re-selection waste. EORM GRPO retrain (Exp 556) reports AUC 1.0 \u2192 1.0 as 'real_data_improvement' \u2014 this is misleading; the AUC was already saturated at 1.0 before retraining. JEPA v9 (Exp 557) result is credible and concerning: AUC worsened despite better data. No publishable positive result this milestone. Root cause clarity (RETRO-061) is the most valuable output of .42.",
+    "wall_time_efficiency": "Total .42 wall time: 6.852 min (vs .41 baseline: 41.631 min). Exp 556 (EORM retrain, 175s) and Exp 552 (live collection, 144s) dominated. All other experiments completed in <2 min combined. The milestone was faster than .41 because LowRankKAEM calibration (63s) replaced the .41 cascade (1745s)."
+  },
+  "honest_verdict": "synthetic_barrier_partial",
+  "env_autofix": true
+}
