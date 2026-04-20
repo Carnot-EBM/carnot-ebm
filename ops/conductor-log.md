@@ -2337,3 +2337,4 @@ python/ |
 | 2026-04-20 17:49 UTC | Plan milestone 2026.04.46 | OK | 13 tasks proposed |
 | 2026-04-20 17:54 UTC | Milestone 2026.04.46 activated | OK | 13 tasks queued |
 | 2026-04-20 18:05 UTC | Exp 601: ExclusionManifest Final Verification + Hu | OK | 81 passed, 2 warnings in 2.71s |
+| 2026-04-20 18:18 UTC | Exp 602: Live Corpus Expansion v2 — GSM8K 250-349  | OK | 81 passed, 2 warnings in 2.74s |
