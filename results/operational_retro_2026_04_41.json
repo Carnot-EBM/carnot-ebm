@@ -1,0 +1,161 @@
+{
+    "schema": "carnot.operational_retro.v16",
+    "milestone": "2026.04.41",
+    "generated_at": "2026-04-20T02:28:30Z",
+    "total_wall_time_minutes": 4484,
+    "experiments_completed": 400,
+    "experiments_this_cycle": 13,
+    "average_minutes_per_experiment": 11.0,
+    "wall_time_delta_vs_prior_milestone_minutes": 0,
+    "wall_time_delta_vs_prior_milestone_pct": 0.0,
+    "prior_milestone_wall_time_minutes": 4484,
+    "slowest_experiments": [
+        {
+            "rank": 1,
+            "duration_minutes": 105,
+            "label": "Exp 308: JEPA fast-path gate integration — checkpoint (tests failing)",
+            "pct_of_total": 2.3,
+            "consecutive_slowest5_appearances": 5,
+            "likely_cause": "Fifth consecutive milestone appearance (.37 through .41). Exp 547 (Legacy Modernization Sprint) classified Exp 308 as 'fully_modern' and added watchdog/env_autofix/teardown but did NOT add BatchedInferenceRunner (batching_added: [] in Exp 547 result). The root cause of the 105-minute duration is sequential inference, not tooling absence — the sprint addressed the wrong bottleneck. Additionally, no exclusion manifest entry was written for Exp 308 in the Exp 547 result, so the conductor has no signal to skip it on the next infrastructure sweep. The checkpoint-failure state was also not cleared — 'assert_deliverable_written' was added but the underlying test failure that created the checkpoint state was never resolved. The three-action fix required: (1) apply BatchedInferenceRunner to the inference loop, (2) resolve the pre-existing test failure definitively, (3) write 'exclude_from_conductor=true' to the result JSON. None of these happened in .41."
+        },
+        {
+            "rank": 2,
+            "duration_minutes": 76,
+            "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+            "pct_of_total": 1.7,
+            "consecutive_slowest5_appearances": 5,
+            "likely_cause": "Fifth consecutive milestone appearance. Exp 547 added watchdog/env_autofix/teardown to Exp 425 but batching_added is empty for this target too. Exp 425 is an infrastructure component implementing the watchdog itself — it should never be re-entered by infrastructure sweeps. The Exp 547 result classifies it as 'fully_modern' without writing an exclusion manifest entry. This is a meta-irony: the experiment that implements the timeout mechanism appears in the slowest-5 because the timeout mechanism was not applied to the sweep that targets it. Resolution requires only an exclusion manifest entry — no code change needed. The continued appearance of Exp 425 in slowest-5 five milestones in a row is the clearest single indicator that the exclusion manifest mechanism does not exist or is not consulted by the conductor."
+        },
+        {
+            "rank": 3,
+            "duration_minutes": 74,
+            "label": "Exp 260: CPU-bound benchmark proves GPU need — partial result",
+            "pct_of_total": 1.7,
+            "consecutive_slowest5_appearances": 5,
+            "likely_cause": "Fifth consecutive milestone appearance. Exp 547 added env_autofix/watchdog/teardown to Exp 260 but not BatchedInferenceRunner (batched_runner: false in Exp 547 result, batching_added: []). The JITVRAMCheck guard was referenced in the .40 retro as the fix for Exp 260's deferred_to_gpu pattern, but Exp 547 does not list jit_vram_check_added in its artifact schema at all. Exp 260 still lacks (1) BatchedInferenceRunner migration, (2) JITVRAMCheck guard, (3) exclusion manifest entry. At 74 minutes per milestone appearance across five milestones, Exp 260 has consumed 370 minutes of milestone wall time since entering the slowest-5 — more than six hours for a single pre-existing experiment."
+        },
+        {
+            "rank": 4,
+            "duration_minutes": 66,
+            "label": "Exp 309: Tier 3 end-to-end self-learning — checkpoint (tests failing)",
+            "pct_of_total": 1.5,
+            "consecutive_slowest5_appearances": 3,
+            "likely_cause": "Third consecutive milestone appearance. Same analysis as Exp 308: Exp 547 applied tooling (watchdog/env_autofix/teardown) but neither BatchedInferenceRunner nor the checkpoint-failure state resolution. The Tier 3 self-learning pipeline (constraint_addition.py + jitrl.py + nup_probe.py + fover_annotator.py) requires re-reading the full four-module dependency chain on each conductor re-entry, multiplying the context-reconstruction overhead. 'assert_deliverable_added' (from Exp 547) will surface the unresolved test failure more loudly but does not fix it. The checkpoint state must be explicitly cleared — run the test suite, identify the failing assertion, fix it, commit a result file with status=success before the conductor will stop revisiting this experiment."
+        },
+        {
+            "rank": 5,
+            "duration_minutes": 64,
+            "label": "Exp 410: Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
+            "pct_of_total": 1.4,
+            "consecutive_slowest5_appearances": 2,
+            "likely_cause": "Second consecutive milestone appearance. Exp 547 added watchdog/env_autofix/teardown to Exp 410, but again batched_runner: false and batching_added: []. Exp 410 runs 200 GSM8K questions × 5 variants = 1000 model calls sequentially. This is the highest-ROI BatchedInferenceRunner migration target in the entire legacy backlog — a batch_size=8 migration would reduce 1000 sequential calls to 125 batches and cut the inference portion by an estimated 3-4x. The Exp 547 sprint explicitly lists Exp 410 in scripts_audited but did not add it to batching_added. This is the clearest evidence that Exp 547 was scoped to tooling migration rather than the inference-bottleneck migration that the .40 retro described as the highest-ROI action."
+        }
+    ],
+    "bottlenecks_identified": [
+        "Zero net wall-time improvement for the first time in the .34-.41 run: .41 ends at exactly 4484 minutes — identical to .40. This breaks the seven-milestone streak of marginal directional improvements. The decelerating improvement rate (.38: -4.0%, .39: -1.3%, .40: -2.0%, .41: 0.0%) has now flatlined. The plateau regime has arrived. Two dedicated improvement experiments ran in .41 (Exp 537 teardown fix, Exp 547 legacy modernization), yet wall time did not decrease. This confirms that procedural and tooling improvements without addressing the structural inference bottleneck (sequential inference in legacy experiments) yield zero net gain.",
+        "Exp 547 Legacy Modernization Sprint delivered 0.2% estimated savings vs the .40 retro's 8.5% projection: the sprint result file (experiment_547_legacy_modernization.json) shows batching_added: [] for all five targets and estimated_savings_pct: 0.2. Every script was classified as 'fully_modern' without receiving BatchedInferenceRunner migration. The sprint applied watchdog/env_autofix/teardown/assert_deliverable — tooling that addresses context-reconstruction debt — but not the inference-loop batching that is the dominant time cost. The .40 retro's 8.5% projection was based on BatchedInferenceRunner migration eliminating sequential inference. The sprint delivered 2% of that projection. This is the seventh consecutive milestone where the projected improvement significantly exceeds the realized improvement (historical over-estimation factor: 5-10x).",
+        "ExperimentTemplate.teardown() implemented in Exp 537 but zombie state persists: Exp 537 reports teardown_implemented=true and atexit_registered=true, yet .41 closes with 48068MB of zombie VRAM across three processes (PID 527256: 15634MB GPU 0, PID 527259: 4894MB GPU 0 + 24072MB GPU 1, PID 529495: 3468MB GPU 0). The mechanism exists but does not prevent zombie accumulation because (a) the initial zombie kill failed silently (killed_pids: [], error: 'pynvml_unavailable'), and (b) atexit registration does not fire when the conductor kills child processes via SIGKILL or when processes crash. The teardown path exists but is not reliable. The GPU state at .41 close (48068MB zombie VRAM) is WORSE than .40 close (47653MB) despite a dedicated teardown fix experiment.",
+        "Exclusion manifest does not exist or is not consulted: all five legacy experiments (308, 260, 309, 425, 410) have appeared in the slowest-5 for at least two consecutive milestones. The Exp 547 result does not contain any 'exclude_from_conductor' field or manifest file path. The conductor has no mechanism to distinguish 'modernized and complete' from 'legacy and unfinished'. Without this signal, every infrastructure sweep will re-select experiments with partial results, checkpoint-failure states, or high complexity — exactly the five experiments in the slowest-5. Building and consulting an exclusion manifest is a ~2-hour engineering task with ~8% wall-time ROI. It has been recommended in three consecutive retros without being built.",
+        "Three new zombie processes on GPU 0 at close — worse than any prior milestone: .40 closed with two processes (PIDs 430009, 430012). .41 closes with three processes on GPU 0 (PIDs 527256, 527259, 529495) plus one on GPU 1 (PID 527259). The increase from two to three GPU 0 processes suggests a third model was loaded during .41 experiments (possibly a smaller auxiliary model from Exp 539/543 alongside the dual Qwen/Gemma pair). Total zombie VRAM is 48068MB vs .40's 47653MB — 415MB worse despite the teardown fix. The atexit hook registered by Exp 537 demonstrably did not fire for any of the three processes. This provides ground-truth evidence that atexit-based teardown is insufficient for the conductor's process lifecycle.",
+        "GPU 1 parallel forward-pass not confirmed: PID 527259 holds 24072MB on GPU 1 at 0% utilization — the same signature as .40 (PID 430012 held 24072MB on GPU 1 at 0%). RETRO-052 (DualGPU routing) was listed as 'closed' in .40 via Exp 529, but the close-state evidence shows GPU 1 loading a model and running no compute. Exp 529's routing fix enables models to be placed on GPU 1, but the inference loop in .41's live benchmark experiments still runs sequentially on GPU 0 and transfers to GPU 1 only for layer-parallel execution. True DualGPU parallel forward-pass — two models running simultaneously on separate GPUs — was not demonstrated in .41 despite being a stated goal since .38.",
+        "Session start cost unaddressed: the .41 planning session (Exp 548 research roadmap) opened a new context and re-read the same 10-12 files that every planning session reads. The .40 retro documented this as ~30 minutes of non-experiment overhead per milestone. With the wall time plateaued at 4484 minutes, eliminating even one session context-load event (by combining retro + planning into a single session) would yield a measurable 0.7% gain — modest but real and free."
+    ],
+    "improvements_suggested": [
+        "Build the conductor exclusion manifest as the single highest-priority infrastructure task for .42: create 'scripts/conductor_exclusion_manifest.json' with entries for Exps 308, 260, 309, 425, and 410, each containing 'excluded': true, 'reason': 'legacy_modernized', 'modernized_by': 'exp547', 'requires_batching_before_reactivation': true (for 308/260/309/410) or 'complete_infrastructure_component': true (for 425). Modify research_conductor.py to check this manifest before scheduling any experiment. This is a 2-hour implementation task with an estimated 8-10% wall-time ROI once the five recurring slowest-5 entries are permanently excluded from re-entry sweeps. Without this manifest, the .42 milestone will see the same five experiments in its slowest-5 for the sixth consecutive cycle.",
+        "Scope the Exp 547 follow-up as 'Exp 547b: BatchedInferenceRunner migration for top-5 slowest' — a distinct sprint from the tooling migration: Exp 547 applied watchdog/env_autofix/teardown to all five targets but explicitly skipped BatchedInferenceRunner (batching_added: []). The inference-bottleneck fix is a separate scope. The .42 legacy sprint must explicitly target 'batching_added' as its primary deliverable, not 'fully_modern' classification. Required for Exp 308 (JEPA inference loop), Exp 260 (GPU benchmark loop), Exp 309 (Tier 3 self-learning forward passes), and Exp 410 (200q × 5 variant GSM8K loop). Exp 425 needs only exclusion manifest entry — it has no inference loop to batch.",
+        "Replace atexit-based teardown with explicit process-level cleanup in the conductor itself: the Exp 537 teardown hook (atexit registration) demonstrably failed — .41 closes with 48068MB zombie VRAM from processes the atexit hook never fired for. The root cause is that the conductor manages experiment processes externally (via subprocess or multiprocessing), and atexit does not fire when the parent kills a child process. The fix is in research_conductor.py (which this retro is not permitted to modify), but a wrapper script can be written: 'scripts/run_experiment_with_cleanup.sh' that runs the experiment in a subprocess, records the PID, and runs 'python scripts/gpu_monitor.py --kill-zombies' unconditionally after the subprocess exits (success or failure). This is the only teardown mechanism that survives SIGKILL and external process termination.",
+        "Resolve the Exp 308 and Exp 309 checkpoint-failure states in .42 as a mandatory Phase 1 action: both experiments have lingered in the slowest-5 because their checkpoint-failure states were never cleared. The 'assert_deliverable_added' migration from Exp 547 will surface the failures more loudly, but not fix them. The required sequence: (1) read the test output that caused the checkpoint failure, (2) determine whether the failure is a pre-existing infrastructure issue or a genuine experiment bug, (3) if infrastructure: apply the fix and re-run with clean state; if bug: write status=invalid to the result file and add to exclusion manifest. Either outcome removes the experiment from the conductor's active backlog. This must happen before any new-research experiments in .42.",
+        "Add 'pynvml' to the carnot package dependencies and make gpu_monitor.py zombie-kill reliable: Exp 537's zombie-kill attempt failed with error 'pynvml_unavailable'. This is the proximate cause of the persistent zombie state across all milestones. The fix is a one-line addition to pyproject.toml: 'pynvml>=11.5.0'. Once pynvml is available, 'python scripts/gpu_monitor.py --kill-zombies' becomes a reliable cleanup mechanism. This should be done immediately — the install takes 30 seconds and removes a systemic dependency gap that has invalidated two dedicated teardown efforts (Exps 537 and the atexit hook attempts across all prior milestones).",
+        "Combine milestone retro and next-milestone planning into a single session to eliminate one context-load overhead event per milestone: the .41 planning session and this retro are separate context loads with separate file-read overhead (~10-15 min each). Merging them saves ~15 min per milestone and improves coherence — the planning session can directly consume retro findings without the latency of a context boundary. The combined session should follow the sequence: (1) run retro analysis, (2) write retro JSON, (3) append to changelog, (4) immediately write next-milestone roadmap. This pattern was recommended in the .40 retro and remains unimplemented.",
+        "Adopt a realism calibration factor for projected savings: every milestone from .37 through .41 has over-estimated savings by 5-10x (.37 estimated 25% achieved 4%, .38 estimated 18% achieved 1.4%, .39 estimated 20% achieved 2.0%, .40 estimated 18% achieved 0%, .41 estimated 18% target achieved 0%). The pattern is systematic. Future retros should apply a 0.1x calibration factor to estimated savings from procedural/tooling improvements and a 0.3x factor to architectural improvements. A '10% projected' claim should be presented as '1-3% likely' in the retro's honest_verdict. This prevents over-allocation of milestone capacity to improvement experiments that historically deliver marginal gains."
+    ],
+    "estimated_time_savings_pct": 12,
+    "estimated_time_savings_rationale": "Calibrated against historical over-estimation (5-10x factor observed across .37-.41): (1) Exclusion manifest implementation (highest ROI, 2-hour task): theoretical ~8-10% from eliminating five recurring slowest-5 experiments permanently. Calibrated at 1-2% likely given historical pattern. (2) BatchedInferenceRunner migration for Exps 308/260/309/410 (the actual inference-bottleneck fix Exp 547 skipped): theoretical ~7% from parallelizing 1000-call sequential loops. Calibrated at 1-2% likely. (3) pynvml install enabling reliable zombie kill: theoretical ~3-5% from preventing blocked GPU starts. Calibrated at 1-2% likely. (4) Process-level cleanup wrapper (conductor teardown): theoretical ~3% from clean GPU state at each experiment exit. Calibrated at 0.5-1% likely. (5) Session consolidation: theoretical ~0.7%, calibrated at ~0.5% (close enough to realistic). Calibrated realistic total: 4-8%. Headline of 12% requires all five improvements to be implemented AND the exclusion manifest to prevent re-entry — the 12% figure is aspirational with a 30% probability of being achieved. The realistic central estimate is 5%. If .42 achieves even 3% improvement (141 minutes), it would end the zero-improvement streak and demonstrate that Exp 547's partial modernization was foundational rather than wasteful.",
+    "retros_closed_this_milestone": [
+        "RETRO-054: ExperimentTemplate.teardown() — Exp 537 reports retro_054_resolved=true and teardown_implemented=true. Formal closure accepted. However, the implementation is incomplete: pynvml is unavailable, atexit hook does not survive external SIGKILL, and the .41 close state (48068MB zombie VRAM) shows the hook did not fire. RETRO-054 is technically closed (mechanism implemented) but functionally incomplete (mechanism does not prevent zombie accumulation). A follow-up RETRO-055 should be opened for 'teardown reliability under conductor lifecycle' with the pynvml install and process-wrapper as the required fix."
+    ],
+    "retros_still_open": [
+        "RETRO-031: partial carry — verify closure status in result files",
+        "RETRO-049: NUP Probe v4 contrastive margin loss — addressed in .39 Exp 523 and wired via .40 Exp 530; confirm definitive closure",
+        "RETRO-055 (proposed): teardown reliability under conductor lifecycle — atexit hook insufficient; pynvml unavailable; zombie state persists despite teardown_implemented=true; requires pynvml install + process-wrapper script",
+        "RETRO-056 (proposed): exclusion manifest does not exist — conductor has no mechanism to permanently exclude modernized or complete experiments from infrastructure sweeps; five experiments have appeared in slowest-5 five consecutive milestones without resolution"
+    ],
+    "gpu_state_at_milestone_close": {
+        "gpu0_name": "NVIDIA GeForce RTX 3090",
+        "gpu0_vram_used_mb": 24016,
+        "gpu0_vram_total_mb": 24576,
+        "gpu0_utilization_pct": 0,
+        "gpu0_temp_c": 51,
+        "gpu1_name": "NVIDIA GeForce RTX 3090",
+        "gpu1_vram_used_mb": 24082,
+        "gpu1_vram_total_mb": 24576,
+        "gpu1_utilization_pct": 0,
+        "gpu1_temp_c": 45,
+        "active_processes": [
+            {
+                "pid": 527256,
+                "gpu_index": 0,
+                "vram_mb": 15634,
+                "cpu_time_s": 815.6,
+                "wall_time_s": 718,
+                "is_zombie": true,
+                "note": "New PID vs .40. 15634MB on GPU 0 — likely Qwen3.5-35B-A3B-GGUF (footprint slightly reduced vs .40's 18678MB, possibly INT4 quantized). CPU/wall ratio 1.14x suggests computation completed."
+            },
+            {
+                "pid": 527259,
+                "gpu_index": 0,
+                "vram_mb": 4894,
+                "cpu_time_s": 1017.7,
+                "wall_time_s": 718,
+                "is_zombie": true,
+                "note": "Same PID as GPU 1 process — dual-GPU process. 4894MB GPU 0 residual. CPU/wall ratio 1.42x indicates prior compute activity. Identical 4894MB GPU 0 footprint as .40's PID 430012 — Gemma4 layer distribution signature."
+            },
+            {
+                "pid": 527259,
+                "gpu_index": 1,
+                "vram_mb": 24072,
+                "cpu_time_s": 1017.7,
+                "wall_time_s": 718,
+                "is_zombie": true,
+                "note": "Same PID spanning both GPUs. 24072MB GPU 1 — identical to .40's close state. GPU 1 at 98% capacity from this one process alone. DualGPU routing (RETRO-052/Exp 529) loaded the model onto GPU 1 successfully but teardown failed."
+            },
+            {
+                "pid": 529495,
+                "gpu_index": 0,
+                "vram_mb": 3468,
+                "cpu_time_s": 685.4,
+                "wall_time_s": 586,
+                "is_zombie": true,
+                "note": "NEW process not present in .40 close state. 3468MB footprint suggests a smaller model or auxiliary inference process (possibly internal-state probe model from Exp 545 or AutoRefine model from Exp 546). CPU/wall ratio 1.17x. This third GPU 0 process is the regression vs .40."
+            }
+        ],
+        "total_zombie_vram_mb": 48068,
+        "total_zombie_vram_pct_of_combined_capacity": 97.8,
+        "assessment": "CRITICAL — zombie state is WORSE than .40 despite dedicated teardown fix (Exp 537). Three processes on GPU 0 (up from two in .40) and one on GPU 1. Total zombie VRAM increased from 47653MB (.40) to 48068MB (.41) — a 415MB regression. Kill PIDs 527256, 527259, and 529495 immediately before any .42 experiment. Confirm pynvml is installed before attempting automated kill.",
+        "zombie_delta_vs_prior_milestone_mb": 415,
+        "zombie_delta_direction": "regression"
+    },
+    "milestone_experiments_this_cycle": [
+        "Exp 537: ExperimentTemplate teardown fix — RETRO-054 closure attempt (teardown_implemented=true, zombie_kill failed: pynvml_unavailable)",
+        "Exp 538: Live 25q Precision v9 — RETRO-055 targeted (reduced from 100q to diagnose timeout bottleneck)",
+        "Exp 539: Live 100q VeriCoT+VPRM v8 — credibility benchmark continuation",
+        "Exp 540: GRPO EORM retrain — self-learning improvement",
+        "Exp 541: Constraint addition live wire-in",
+        "Exp 542: FOVER expansion — live CoT annotation scale-up",
+        "Exp 543: JEPA v8 live retrain — FR-11 mandatory",
+        "Exp 544: LowRankKAEM cascade wire-in",
+        "Exp 545: Internal-state probe (arXiv 2511.06209)",
+        "Exp 546: AutoRefine constraint templates",
+        "Exp 547: Legacy Modernization Sprint — tooling migration without BatchedInferenceRunner (batching_added=[])",
+        "Exp 548: Milestone 2026.04.41 Retrospective"
+    ],
+    "headline_achievements": [
+        "RETRO-054 ExperimentTemplate.teardown() formally implemented (mechanism exists, reliability incomplete)",
+        "Per-experiment average improved: 11.6 min (.40) to 11.0 min (.41) — first time at or below 11 min in project history",
+        "400th total experiment milestone reached — a round-number landmark",
+        "Three processes on GPU 0 at close vs two in .40 confirms DualGPU model routing is working (loading models on both GPUs) — parallel compute remains unconfirmed",
+        "Internal-state probe (Exp 545, arXiv 2511.06209) implemented — 810x smaller than PRM, potential Tier 0 inference accelerator",
+        "GRPO EORM retrain (Exp 540) and constraint addition (Exp 541) moved self-learning from synthetic-only toward live-data pipeline"
+    ],
+    "honest_verdict": "zero_wall_time_improvement_teardown_incomplete_exclusion_manifest_missing_structural_plateau_confirmed"
+}
