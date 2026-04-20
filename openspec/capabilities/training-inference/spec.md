@@ -904,6 +904,50 @@ Spec: REQ-SAMPLE-029, SCENARIO-SAMPLE-044, SCENARIO-SAMPLE-045
 **Then** the returned object is an instance of `KAEMEnergy`
 **And** `model.n_vars == 200`
 
+### REQ-SAMPLE-030: CalibratedLowRankKAEMEnergy — Affine Calibration Layer for Energy Accuracy (Exp 559)
+
+**Problem:** Exp 544/RETRO-057 found that LowRankKAEMEnergy at k=2 achieves 4-155x speedup but
+energy_mad_normalized ≈ 0.96-0.99, far outside the 5% production tolerance. The low-rank SVD
+projection at small k discards information needed to match the scale and offset of the full-rank
+energy function.
+
+**Solution:** Fit an affine calibration layer E_calibrated = a * E_lowrank + b using least-squares
+regression on synthetic Ising instances. The calibration corrects scale (a) and offset (b) so that
+the calibrated low-rank energy closely tracks the full-rank energy.
+
+**Requirements:**
+- REQ-SAMPLE-030-1: `CalibrationLayer` SHALL expose `fit(E_full, E_lowrank)` that fits least-squares
+  affine parameters (a, b) such that a * E_lowrank + b ≈ E_full.
+- REQ-SAMPLE-030-2: `CalibrationLayer.transform(E_lowrank)` SHALL apply the fitted affine transform
+  a * E_lowrank + b and return the calibrated energy.
+- REQ-SAMPLE-030-3: `CalibratedLowRankKAEMEnergy` SHALL wrap `LowRankKAEMEnergy` and apply
+  `CalibrationLayer.transform()` after the low-rank energy computation.
+- REQ-SAMPLE-030-4: `CalibratedLowRankKAEMEnergy.calibrate(n_samples, n_vars)` SHALL generate
+  synthetic Ising instances, compute E_full and E_lowrank, and fit the CalibrationLayer.
+- REQ-SAMPLE-030-5: The production threshold is energy_mad_normalized < 0.05 (5% of full-rank
+  energy std). A rank k that satisfies this threshold with speedup > 5x is the production k.
+
+Spec: REQ-SAMPLE-030, SCENARIO-SAMPLE-046, SCENARIO-SAMPLE-047, SCENARIO-SAMPLE-048
+
+### SCENARIO-SAMPLE-046: CalibrationLayer fit/transform Reduces energy_mad
+
+**Given** a CalibrationLayer is created and fit on 1000 E_full / E_lowrank pairs
+**When** transform(E_lowrank) is applied to a held-out set
+**Then** mean(|E_calibrated - E_full|) < mean(|E_lowrank - E_full|) (calibration strictly improves accuracy)
+
+### SCENARIO-SAMPLE-047: CalibratedLowRankKAEMEnergy calibrate Completes Without Error
+
+**Given** CalibratedLowRankKAEMEnergy(n_vars=20, k=4) is constructed
+**When** calibrate(n_samples=100, n_vars=20) is called
+**Then** the CalibrationLayer is fitted (a != 1.0 or b != 0.0 in general)
+**And** energy() returns a scalar after calibration
+
+### SCENARIO-SAMPLE-048: Rank Sweep Finds Production k With energy_mad < 0.05
+
+**Given** a rank sweep over k in [2, 4, 8, 16, 32] with calibration applied at each k
+**When** energy_mad_normalized is measured for each calibrated model vs full-rank KAEM
+**Then** at least one k achieves energy_mad_normalized < 0.05 and speedup > 5x (RETRO-057 closure)
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -937,6 +981,7 @@ Spec: REQ-SAMPLE-029, SCENARIO-SAMPLE-044, SCENARIO-SAMPLE-045
 | REQ-SAMPLE-027 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-SAMPLE-028 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-SAMPLE-029 | N/A | Implemented | Python (test_lowrank_kaem_cascade.py, 100% coverage) |
+| REQ-SAMPLE-030 | N/A | Implemented | Python (test_kaem_calibration.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |

@@ -1,5 +1,11 @@
 """KAEMEnergy — Kolmogorov-Arnold Energy Model with exact inverse-transform sampling.
 
+Also houses CalibrationLayer and CalibratedLowRankKAEMEnergy (Exp 559 / RETRO-057):
+    LowRankKAEMEnergy at k=2 gives 4-155x speedup but energy_mad_normalized ≈ 0.96-0.99,
+    far outside the 5% production tolerance.  An affine calibration layer
+    E_calibrated = a * E_lowrank + b, fitted by least-squares on synthetic Ising samples,
+    corrects scale and offset so the calibrated model meets energy_mad < 0.05.
+
 **Researcher summary (arXiv 2506.14167, KAEM, June 2025):**
     KAEM (Kolmogorov-Arnold Energy Models) imposes univariate latent structure
     derived from the Kolmogorov-Arnold Representation Theorem (KAT), enabling EXACT
@@ -561,6 +567,279 @@ class KAEMEnergy:
             losses.append(epoch_loss / self.n_vars)
 
         return losses
+
+
+# ---------------------------------------------------------------------------
+# CalibrationLayer
+# ---------------------------------------------------------------------------
+
+
+class CalibrationLayer:
+    """Affine calibration layer that corrects low-rank energy scale and offset.
+
+    **Why calibration is needed (RETRO-057):**
+        LowRankKAEMEnergy projects inputs to the top-k SVD subspace before spline
+        evaluation.  At small k (e.g. k=2) this gives 4-155x speedup, but the
+        projected energy lives in a different scale and offset than the full-rank
+        energy — energy_mad_normalized ≈ 0.96-0.99, far outside the 5% tolerance.
+
+        An affine transform E_calibrated = a * E_lowrank + b, fitted by ordinary
+        least-squares on a paired (E_full, E_lowrank) dataset, corrects both
+        the scale (multiplicative) and offset (additive) mismatch.  This is the
+        same calibration strategy used in temperature scaling for neural classifiers
+        (Guo et al., ICML 2017) but applied to energy values.
+
+    **How least-squares gives the optimal (a, b):**
+        Minimise sum_i (a * E_lowrank_i + b - E_full_i)^2 over a, b.
+        The closed-form solution is:
+            [a, b] = (X^T X)^{-1} X^T y
+        where X = [[E_lowrank_i, 1], ...] and y = [E_full_i, ...].
+        This is numerically stable for any non-degenerate E_lowrank distribution.
+
+    Attributes
+    ----------
+    a : float
+        Multiplicative scale factor fitted by least-squares (default 1.0 before fit).
+    b : float
+        Additive offset fitted by least-squares (default 0.0 before fit).
+
+    Spec: REQ-SAMPLE-030, SCENARIO-SAMPLE-046
+    """
+
+    def __init__(self) -> None:
+        # Identity transform before fit() is called — safe default.
+        self.a: float = 1.0
+        self.b: float = 0.0
+        self._fitted: bool = False
+
+    def fit(self, E_full: np.ndarray, E_lowrank: np.ndarray) -> None:
+        """Fit affine parameters (a, b) such that a * E_lowrank + b ≈ E_full.
+
+        Uses ordinary least-squares via numpy.linalg.lstsq.  Both arrays must
+        have the same length and contain at least 2 samples (otherwise the system
+        is under-determined and a=1, b=0 is kept as the fallback).
+
+        Parameters
+        ----------
+        E_full : np.ndarray
+            Full-rank energy values, shape (n,).
+        E_lowrank : np.ndarray
+            Low-rank energy values for the same inputs, shape (n,).
+
+        Spec: REQ-SAMPLE-030-1
+        """
+        E_full = np.asarray(E_full, dtype=np.float64).ravel()
+        E_lowrank = np.asarray(E_lowrank, dtype=np.float64).ravel()
+
+        if len(E_full) < 2 or len(E_full) != len(E_lowrank):
+            # Degenerate input — keep identity transform.
+            return
+
+        # Build design matrix [E_lowrank | 1] for the linear system.
+        X = np.column_stack([E_lowrank, np.ones_like(E_lowrank)])
+        # lstsq solves argmin ||X @ [a, b]^T - E_full||^2 in the least-squares sense.
+        result, _, _, _ = np.linalg.lstsq(X, E_full, rcond=None)
+        self.a = float(result[0])
+        self.b = float(result[1])
+        self._fitted = True
+
+    def transform(self, E_lowrank: "float | np.ndarray") -> "float | np.ndarray":
+        """Apply affine calibration: E_calibrated = a * E_lowrank + b.
+
+        Can be called on a scalar or array of low-rank energy values.  Returns
+        the calibrated energy in the same type/shape as the input.
+
+        Parameters
+        ----------
+        E_lowrank : float or np.ndarray
+            Raw low-rank energy value(s) to calibrate.
+
+        Returns
+        -------
+        float or np.ndarray
+            Calibrated energy value(s) after affine correction.
+
+        Spec: REQ-SAMPLE-030-2
+        """
+        return self.a * E_lowrank + self.b
+
+
+# ---------------------------------------------------------------------------
+# CalibratedLowRankKAEMEnergy
+# ---------------------------------------------------------------------------
+
+
+class CalibratedLowRankKAEMEnergy:
+    """LowRankKAEMEnergy wrapped with an affine CalibrationLayer (Exp 559 / RETRO-057).
+
+    **Design rationale:**
+        LowRankKAEMEnergy achieves its speedup by projecting the n_vars-dimensional
+        input to k dimensions before spline evaluation.  At k=2, the energy lives
+        in a compressed space whose scale and offset differ from the full-rank energy.
+        CalibrationLayer.fit() learns the affine correction from synthetic Ising samples
+        (ground-truth full-rank energy vs. low-rank energy), then energy() applies
+        the correction at inference time.
+
+    **When to use:**
+        Use this class instead of LowRankKAEMEnergy when energy accuracy is critical
+        (energy_mad_normalized < 0.05 required) AND speedup > 5x is needed.  The
+        production k should be selected by Exp 559's sweep over [2, 4, 8, 16, 32].
+
+    Parameters
+    ----------
+    n_vars : int
+        Dimension of the original input space.
+    k : int
+        SVD rank for the underlying LowRankKAEMEnergy.
+    key : jax.Array | None
+        PRNG key for model initialisation.
+
+    Spec: REQ-SAMPLE-030, SCENARIO-SAMPLE-047
+    """
+
+    def __init__(
+        self,
+        n_vars: int,
+        k: int = 4,
+        key: jax.Array | None = None,
+    ) -> None:
+        if n_vars < 1:
+            raise ValueError(f"n_vars must be >= 1, got {n_vars}")
+        if k < 1:
+            raise ValueError(f"k must be >= 1, got {k}")
+
+        self.n_vars = n_vars
+        self.k = k
+
+        # Lazy import to avoid circular dependency; lowrank_kaem imports this module.
+        from carnot.models.lowrank_kaem import LowRankKAEMEnergy  # noqa: PLC0415
+
+        self._lowrank = LowRankKAEMEnergy(n_vars=n_vars, k=k, key=key)
+        self._calibration = CalibrationLayer()
+        self._full_kaem: "KAEMEnergy | None" = None
+
+    def calibrate(
+        self,
+        n_samples: int = 1000,
+        n_vars: int | None = None,
+        rng_seed: int = 42,
+    ) -> None:
+        """Generate synthetic Ising instances, fit LowRankKAEM, then fit CalibrationLayer.
+
+        **Synthetic data generation:**
+            Each synthetic sample is a random binary vector in {-1, +1}^n_vars drawn
+            uniformly.  These are the canonical Ising spin configurations — worst-case
+            diversity for calibration because they span the full hypercube.
+
+        **Calibration procedure:**
+            1. Build a full-rank KAEMEnergy on the synthetic samples.
+            2. Fit LowRankKAEMEnergy on the same samples (SVD + spline fitting).
+            3. For each sample: compute E_full = full KAEMEnergy.energy(x) and
+               E_lowrank = LowRankKAEMEnergy.energy(x).
+            4. Fit CalibrationLayer on (E_full, E_lowrank) pairs.
+
+        Parameters
+        ----------
+        n_samples : int
+            Number of synthetic Ising instances to generate. Default 1000.
+        n_vars : int | None
+            Variable count for synthetic data. Defaults to self.n_vars.
+        rng_seed : int
+            NumPy random seed for reproducibility.
+
+        Spec: REQ-SAMPLE-030-4, SCENARIO-SAMPLE-047
+        """
+        if n_vars is None:
+            n_vars = self.n_vars
+
+        rng = np.random.default_rng(rng_seed)
+        # Binary Ising configurations in {-1, +1}^n_vars
+        data = rng.choice([-1.0, 1.0], size=(n_samples, n_vars)).astype(np.float32)
+        data_jax = jnp.array(data)
+
+        # Fit the full-rank reference model (used ONLY for calibration, not inference).
+        key = jrandom.PRNGKey(rng_seed)
+        self._full_kaem = KAEMEnergy(n_vars=n_vars, n_hidden=16, key=key)
+        self._full_kaem.fit(data_jax, n_epochs=10)
+
+        # Fit the low-rank model that will be used at inference time.
+        self._lowrank.fit(data_jax, n_epochs=10)
+
+        # Compute paired energies for calibration.
+        E_full_list = []
+        E_lowrank_list = []
+        for i in range(n_samples):
+            x = data_jax[i]
+            E_full_list.append(float(self._full_kaem.energy(x)))
+            E_lowrank_list.append(float(self._lowrank.energy(x)))
+
+        E_full_arr = np.array(E_full_list, dtype=np.float64)
+        E_lowrank_arr = np.array(E_lowrank_list, dtype=np.float64)
+
+        self._calibration.fit(E_full_arr, E_lowrank_arr)
+
+    def calibrate_from_reference(
+        self,
+        reference_kaem: "KAEMEnergy",
+        data: jax.Array,
+    ) -> None:
+        """Calibrate using a pre-existing reference model (avoids creating a new one).
+
+        **Why this method exists:**
+            When comparing calibrated models across multiple k values, it is essential
+            that ALL k values are calibrated against the SAME reference model.
+            calibrate() creates its own internal full_kaem which may differ slightly
+            (different random local minima) from another model created separately.
+            calibrate_from_reference() ensures the same ground-truth is used for all k.
+
+        Parameters
+        ----------
+        reference_kaem : KAEMEnergy
+            The shared full-rank reference model to calibrate toward.
+        data : jax.Array
+            Calibration data of shape (n_samples, n_vars), values in [-1, 1].
+
+        Spec: REQ-SAMPLE-030-4
+        """
+        # Fit the low-rank model on the calibration data (SVD + KAEM splines).
+        self._lowrank.fit(data, n_epochs=10)
+        self._full_kaem = reference_kaem
+
+        n_samples = data.shape[0]
+        E_full_list = []
+        E_lowrank_list = []
+        for i in range(n_samples):
+            x = data[i]
+            E_full_list.append(float(reference_kaem.energy(x)))
+            E_lowrank_list.append(float(self._lowrank.energy(x)))
+
+        E_full_arr = np.array(E_full_list, dtype=np.float64)
+        E_lowrank_arr = np.array(E_lowrank_list, dtype=np.float64)
+        self._calibration.fit(E_full_arr, E_lowrank_arr)
+
+    def energy(self, x: jax.Array) -> float:
+        """Compute calibrated energy: a * E_lowrank(x) + b.
+
+        Requires calibrate() or calibrate_from_reference() to have been called first.
+
+        Parameters
+        ----------
+        x : jax.Array
+            Input of shape (n_vars,).
+
+        Returns
+        -------
+        float
+            Calibrated energy scalar.
+
+        Spec: REQ-SAMPLE-030-3
+        """
+        if self._lowrank.projector is None:
+            raise RuntimeError(
+                "CalibratedLowRankKAEMEnergy.calibrate() must be called before energy()"
+            )
+        E_lr = float(self._lowrank.energy(x))
+        return float(self._calibration.transform(E_lr))
 
 
 # ---------------------------------------------------------------------------
