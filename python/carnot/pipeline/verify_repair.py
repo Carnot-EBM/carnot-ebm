@@ -269,6 +269,7 @@ class VerifyRepairPipeline:
         memory: ConstraintMemory | None = None,
         template_library: ConstraintTemplateLibrary | None = None,
         session_memory: Any | None = None,
+        constraint_memory: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -328,6 +329,10 @@ class VerifyRepairPipeline:
         self._memory = memory
         self._template_library = template_library
         self._session_memory = session_memory
+        # Tier 2 self-learning: accumulates violation observations across calls
+        # and adds new constraints once a pattern crosses the observation threshold.
+        # Validated in Exp 456; wired into the live pipeline in Exp 541 (REQ-LEARN-053).
+        self._constraint_memory = constraint_memory
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -1200,6 +1205,16 @@ class VerifyRepairPipeline:
                 if template_constraints:
                     constraints = template_constraints + constraints
 
+            # Tier 2 constraint addition from cross-session memory (REQ-LEARN-053/054).
+            # check_and_add() promotes any matured violation patterns into named
+            # constraints and registers them with the template_library.  The newly
+            # added names come back as strings; we do NOT prepend synthetic
+            # ConstraintResult objects here — the template_library path above already
+            # handles activation.  Calling check_and_add() here ensures patterns that
+            # crossed the threshold during THIS session are active on the NEXT call.
+            if self._constraint_memory is not None:
+                self._constraint_memory.check_and_add(self)
+
             self._check_deadline(deadline)
             result = self._evaluate_constraints(constraints)
         except PipelineTimeoutError:
@@ -1237,6 +1252,16 @@ class VerifyRepairPipeline:
                     error_type=violation.constraint_type,
                     constraint_that_caught_it=violation.description,
                 )
+
+        # Tier 2 constraint-addition observation (REQ-LEARN-054).
+        # Feed each violation into ConstraintAdditionFromMemory so its pattern
+        # counter increments.  The violation_type is the leading token of the
+        # constraint_type (e.g. 'carry' from 'carry:overflow_detected').
+        # Passing response as step_text gives the memory a diagnostic example.
+        if self._constraint_memory is not None and result.violations:
+            for violation in result.violations:
+                vtype = violation.constraint_type.split(":", 1)[0]
+                self._constraint_memory.observe(vtype, response)
 
         return result
 
