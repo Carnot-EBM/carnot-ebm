@@ -175,15 +175,13 @@ def benchmark_threshold(
         pipeline_time_s, per_question (list of per-question dicts).
     """
     import numpy as np
+    from scripts.experiment_template import BatchedInferenceRunner  # REQ-INFRA-075
 
     gate.threshold = threshold  # override for sweep
-    per_question: list[dict[str, Any]] = []
-    n_skipped = 0
-    n_violated = 0
-    n_violations_caught = 0
-    t_start = time.perf_counter()
 
-    for row in corpus:
+    def _infer_with_gate(row_json: str) -> str:
+        """Run one corpus row through the gated pipeline; return JSON result."""
+        row = json.loads(row_json)
         lm = np.array(row["logit_mean"], dtype=np.float32)
         result = pipeline.verify_with_gate(
             question=row["question"],
@@ -193,25 +191,45 @@ def benchmark_threshold(
             logit_mean=lm,
         )
         decision = result.certificate.get("gate_decision", "verify")
-        skipped = decision == "skip"
+        return json.dumps({
+            "question": row["question"],
+            "ground_truth_violated": row["ground_truth_violated"],
+            "gate_decision": decision,
+            "gate_energy": result.certificate.get("gate_energy"),
+            "ising_ran": decision != "skip",
+        })
+
+    t_start = time.perf_counter()
+    bir = BatchedInferenceRunner(_infer_with_gate, batch_size=8)
+    ir_list = bir.run_batch([json.dumps(row) for row in corpus])
+    elapsed = time.perf_counter() - t_start
+
+    per_question: list[dict[str, Any]] = []
+    n_skipped = 0
+    n_violated = 0
+    n_violations_caught = 0
+
+    for ir, row in zip(ir_list, corpus):
+        if ir.timed_out:
+            entry: dict[str, Any] = {
+                "question": row["question"],
+                "ground_truth_violated": row["ground_truth_violated"],
+                "gate_decision": "verify",
+                "gate_energy": None,
+                "ising_ran": True,
+            }
+        else:
+            entry = json.loads(ir.response)
+
+        skipped = entry["gate_decision"] == "skip"
         if skipped:
             n_skipped += 1
         if row["ground_truth_violated"]:
             n_violated += 1
             if not skipped:
-                # Gate correctly sent this violated question to Ising.
                 n_violations_caught += 1
-        per_question.append(
-            {
-                "question": row["question"],
-                "ground_truth_violated": row["ground_truth_violated"],
-                "gate_decision": decision,
-                "gate_energy": result.certificate.get("gate_energy"),
-                "ising_ran": not skipped,
-            }
-        )
+        per_question.append(entry)
 
-    elapsed = time.perf_counter() - t_start
     n_total = len(corpus)
     skip_rate = n_skipped / n_total if n_total > 0 else 0.0
     tp_rate = n_violations_caught / n_violated if n_violated > 0 else 1.0
@@ -228,6 +246,7 @@ def benchmark_threshold(
         "meets_target": meets_target,
         "pipeline_time_s": elapsed,
         "per_question": per_question,
+        "batch_log": bir.batch_log,
     }
 
 
@@ -242,26 +261,42 @@ def benchmark_no_gate(
 ) -> dict[str, Any]:
     """Measure baseline pipeline time without any gate.
 
-    Returns dict with pipeline_time_s and per-question results.
+    Returns dict with pipeline_time_s, per-question results, and batch_log.
+
+    Uses BatchedInferenceRunner (REQ-INFRA-075) to group corpus rows into
+    batches of 8 with a per-batch timeout, replacing the prior sequential
+    for-loop that was the bottleneck identified in Exp 547.
     """
-    per_question: list[dict[str, Any]] = []
-    t_start = time.perf_counter()
-    for row in corpus:
+    from scripts.experiment_template import BatchedInferenceRunner  # REQ-INFRA-075
+
+    def _infer_no_gate(row_json: str) -> str:
+        """Run one corpus row through the pipeline with no gate; return JSON result."""
+        row = json.loads(row_json)
         result = pipeline.verify_with_gate(
             question=row["question"],
             response=row["response"],
             domain=row["domain"],
             jepa_gate=None,
         )
-        per_question.append(
-            {
-                "question": row["question"],
-                "verified": result.verified,
-                "n_violations": len(result.violations),
-            }
-        )
+        return json.dumps({
+            "question": row["question"],
+            "verified": result.verified,
+            "n_violations": len(result.violations),
+        })
+
+    t_start = time.perf_counter()
+    bir = BatchedInferenceRunner(_infer_no_gate, batch_size=8)
+    ir_list = bir.run_batch([json.dumps(row) for row in corpus])
     elapsed = time.perf_counter() - t_start
-    return {"pipeline_time_s": elapsed, "per_question": per_question}
+
+    per_question: list[dict[str, Any]] = []
+    for ir, row in zip(ir_list, corpus):
+        if ir.timed_out:
+            per_question.append({"question": row["question"], "verified": False, "n_violations": 0})
+        else:
+            per_question.append(json.loads(ir.response))
+
+    return {"pipeline_time_s": elapsed, "per_question": per_question, "batch_log": bir.batch_log}
 
 
 # ---------------------------------------------------------------------------
@@ -367,6 +402,7 @@ def run_experiment(output_path: str | Path | None = None) -> dict[str, Any]:
         "best_threshold": best_threshold.get("threshold"),
         "best_skip_rate": best_threshold.get("skip_rate"),
         "best_TP_rate": best_threshold.get("TP_rate"),
+        "batch_log": baseline.get("batch_log", []),
     }
 
     out_path.write_text(json.dumps(artifact, indent=2))

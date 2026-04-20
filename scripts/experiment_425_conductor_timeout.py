@@ -44,7 +44,7 @@ from pathlib import Path
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.experiment_template import ExperimentTemplate  # noqa: E402
+from scripts.experiment_template import ExperimentTemplate, BatchedInferenceRunner  # noqa: E402  # REQ-INFRA-075
 from python.carnot.pipeline.experiment_watchdog import (  # noqa: E402
     ExperimentTimeoutResult,
     ExperimentTimeoutWatchdog,
@@ -133,14 +133,21 @@ def main() -> None:
     # DEMO_TIMEOUT_MINUTES, _on_timeout() fires and exits the process with
     # code 1 — exactly what RETRO-003 called for.  In this demo the workload
     # finishes in ~10 seconds, so the watchdog disarms normally.
-    demo_checks = []
+    # REQ-INFRA-075: replace sequential for-loop with BatchedInferenceRunner.
+    # N_SYNTHETIC_CHECKS=10, batch_size=8 → two batches (8 + 2).
+    # BatchedInferenceRunner._run_one_batch processes sequentially within each batch,
+    # so the 1-second-per-check ordering is preserved.
+    def _check_fn(i_str: str) -> str:
+        """Run one synthetic constraint check and return JSON result."""
+        return json.dumps(_run_synthetic_constraint_check(int(i_str)))
+
+    bir = BatchedInferenceRunner(_check_fn, batch_size=8)
     demo_start = time.perf_counter()
 
     with watchdog:
-        for i in range(N_SYNTHETIC_CHECKS):
-            check_result = _run_synthetic_constraint_check(i)
-            demo_checks.append(check_result)
+        raw = bir.run_batch([str(i) for i in range(N_SYNTHETIC_CHECKS)])
 
+    demo_checks = [json.loads(r.response) for r in raw if not r.timed_out]
     demo_elapsed_s = time.perf_counter() - demo_start
     demo_elapsed_minutes = demo_elapsed_s / 60.0
 
@@ -169,6 +176,7 @@ def main() -> None:
             "estimated_savings_minutes_per_runaway": 99,
             "honest_verdict": "watchdog_implemented",
             "watchdog_artifact": watchdog_artifact,
+            "batch_log": bir.batch_log,
         },
         status="success",
     )

@@ -46,6 +46,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from scripts.experiment_template import BatchedInferenceRunner  # REQ-INFRA-075
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -455,17 +457,26 @@ def run_baseline_batch(
     rng = random.Random(rng_seed)
     t_start = time.perf_counter()
 
-    per_question = []
-    n_correct = 0
-    for q in questions:
+    # REQ-INFRA-075: replace sequential for-loop with BatchedInferenceRunner.
+    # BatchedInferenceRunner._run_one_batch uses a single-threaded ThreadPoolExecutor,
+    # so rng state advances deterministically in question order — no reordering.
+    def _infer_baseline(q_json: str) -> str:
+        """Simulate one question's LLM response; return JSON with correctness."""
+        q = json.loads(q_json)
         response = _simulate_response(q, rng)
         correct = _check_correct(response, q["correct_answer"])
-        if correct:
+        return json.dumps({"question_id": q["question_id"], "correct": correct})
+
+    bir = BatchedInferenceRunner(_infer_baseline, batch_size=8)
+    ir_list = bir.run_batch([json.dumps(q) for q in questions])
+
+    per_question = []
+    n_correct = 0
+    for ir in ir_list:
+        entry = json.loads(ir.response) if not ir.timed_out else {"question_id": "", "correct": False}
+        per_question.append({"question_id": entry["question_id"], "correct": entry["correct"]})
+        if entry["correct"]:
             n_correct += 1
-        per_question.append({
-            "question_id": q["question_id"],
-            "correct": correct,
-        })
 
     latency_s = time.perf_counter() - t_start
     return {
@@ -474,6 +485,7 @@ def run_baseline_batch(
         "accuracy": n_correct / BATCH_SIZE,
         "latency_s": latency_s,
         "per_question": per_question,
+        "batch_log": bir.batch_log,
     }
 
 
@@ -594,6 +606,7 @@ def build_artifact_309(
     improvement_delta: float,
     latency_reduction: float,
     inference_mode: str,
+    batch_log: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     """Build the final Exp 309 JSON artifact.
 
@@ -640,6 +653,7 @@ def build_artifact_309(
         "threshold_history": threshold_history,
         "batch1": baseline_batch,
         "batch2": tier3_batch.to_dict(),
+        "batch_log": batch_log if batch_log is not None else [],
     }
 
 
@@ -794,6 +808,7 @@ def run_experiment(output_path: Path, seed: int = 42) -> None:
         improvement_delta=improvement_delta,
         latency_reduction=latency_reduction,
         inference_mode="simulated",
+        batch_log=baseline_result.get("batch_log", []),
     )
     # Overwrite duration with ExperimentTemplate timing
     artifact["status"] = "success"
