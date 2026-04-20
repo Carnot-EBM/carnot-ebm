@@ -11221,3 +11221,65 @@ And: it references scripts/experiment_293_npu_constraint_model.py as the re-run 
 **Implementation Status:** Implemented (Exp 601)
 
 **Implementation Status:** Implemented (Exp 599)
+
+## REQ-VERIFY-130: DSVDAdapter Live-Corpus Fine-Tuning on Real Hidden States
+
+**Context (RETRO-069):**
+    DSVDAdapter achieved offline AUC=0.976 when calibrated on synthetic hidden-state stubs
+    (jnp.zeros/ones), but only live AUC=0.586 against actual Qwen3.5-0.8B and Gemma4-E4B-it
+    outputs.  Root cause: the probe was never exposed to real model hidden states from the
+    Exp 578/602 corpus.  This requirement mandates fine-tuning on the live corpus.
+
+- REQ-VERIFY-130-1: DSVDLiveTrainPair dataclass: hidden_states (jnp.ndarray, shape=[T, D]), response (str), is_correct (bool), window_size (int=32).
+- REQ-VERIFY-130-2: DSVDLiveTrainer.build_training_pairs(corpus_path) loads fover_corpus_v4.json or live_pairs_578.json and creates DSVDLiveTrainPair for each entry.
+- REQ-VERIFY-130-3: DSVDLiveTrainer.train(pairs, n_epochs=100) returns val_auc on 20% held-out split using binary cross-entropy on DSVDAdapter.score().
+- REQ-VERIFY-130-4: DSVDLiveTrainer, DSVDLiveTrainPair, TemporalWindowLabeler exported from carnot.pipeline.__init__.
+- REQ-VERIFY-130-5: hidden_state_source='synthetic_approx' when real hidden states not available from corpus.
+
+Spec: REQ-VERIFY-130, SCENARIO-VERIFY-163, SCENARIO-VERIFY-164
+
+### SCENARIO-VERIFY-163: DSVDLiveTrainer Builds Pairs from FOVER Corpus
+
+Given: fover_corpus_v4.json exists with live pairs including is_correct labels.
+When: DSVDLiveTrainer.build_training_pairs('results/fover_corpus_v4.json') is called.
+Then: returns a non-empty list of DSVDLiveTrainPair objects.
+And: each pair has hidden_states with shape matching (T, D) for some T>=1, D>=1.
+And: each pair's is_correct matches the corpus label.
+
+**Implementation Status:** Implemented (Exp 604)
+
+### SCENARIO-VERIFY-164: DSVDLiveTrainer Fine-Tuning Improves AUC Above Pre-Finetune Baseline
+
+Given: 80 training pairs and 20 validation pairs from the live corpus.
+When: DSVDLiveTrainer.train(pairs, n_epochs=100) is called.
+Then: val_auc is a float in [0, 1].
+And: the returned val_auc is recorded alongside pre_finetune_live_auc=0.586 for comparison.
+
+**Implementation Status:** Implemented (Exp 604)
+
+## REQ-VERIFY-131: Temporal Window Labeling Per arXiv 2601.02170
+
+**Context (arXiv 2601.02170 — Streaming Hallucination Detection):**
+    Instead of a single boundary label per response, responses are divided into
+    32-token windows with per-window labels.  Correct responses: all windows labeled
+    correct.  Incorrect responses: last 2 windows labeled incorrect (violation forming
+    toward end), earlier windows labeled correct (normal reasoning early in chain).
+
+- REQ-VERIFY-131-1: TemporalWindowLabeler.__init__(window_size=32).
+- REQ-VERIFY-131-2: label_windows(pair) splits hidden_states into windows of window_size rows.
+- REQ-VERIFY-131-3: For is_correct=True pairs: all windows labeled True (no violation).
+- REQ-VERIFY-131-4: For is_correct=False pairs: last 2 windows labeled False, earlier windows labeled True.
+- REQ-VERIFY-131-5: Returns list of (window_hidden_state jnp.ndarray, window_label bool).
+
+Spec: REQ-VERIFY-131, SCENARIO-VERIFY-165
+
+### SCENARIO-VERIFY-165: TemporalWindowLabeler Labels Last 2 Windows as Incorrect
+
+Given: a DSVDLiveTrainPair with is_correct=False and hidden_states shape (96, 64) (3 windows of 32).
+When: TemporalWindowLabeler(window_size=32).label_windows(pair) is called.
+Then: returns 3 (window, label) tuples.
+And: tuple[0] label is True (early window — normal reasoning).
+And: tuple[1] label is False (second-to-last window — violation forming).
+And: tuple[2] label is False (last window — violation confirmed).
+
+**Implementation Status:** Implemented (Exp 604)

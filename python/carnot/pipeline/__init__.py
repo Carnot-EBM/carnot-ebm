@@ -449,6 +449,11 @@ from carnot.pipeline.dsvd_adapter import (  # noqa: E402
     DSVDLinearProbe,
     DSVDProbeResult,
 )
+from carnot.pipeline.dsvd_live_trainer import (  # noqa: E402
+    DSVDLiveTrainPair,
+    DSVDLiveTrainer,
+    TemporalWindowLabeler,
+)
 from carnot.pipeline.live_assertion import (  # noqa: E402
     assert_live_gpu_available,
     assert_live_or_ci_skip,
@@ -770,6 +775,9 @@ __all__ = [
     "DSVDAdapter",
     "DSVDLinearProbe",
     "DSVDProbeResult",
+    "DSVDLiveTrainPair",
+    "DSVDLiveTrainer",
+    "TemporalWindowLabeler",
     "assert_live_gpu_available",
     "assert_live_or_ci_skip",
     "OTVVerificationToken",
