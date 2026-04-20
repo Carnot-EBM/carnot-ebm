@@ -9996,6 +9996,27 @@ Given: A corpus with constraint_type_entropy < 1.5 bits.
 When: balance_corpus(entries, target_entropy=1.5) is called.
 Then: Returns a subset with entropy >= 1.5 bits, or the maximum achievable entropy if the guard (len >= 10) prevents full balancing.
 
+### SCENARIO-DATA-010: Second A-Batch Collects Questions 0-49 With CARNOT_FORCE_LIVE Preflight
+
+Given: CARNOT_FORCE_LIVE=1 is set before Exp 563 is launched (RETRO-062 fix).
+When: Exp 563 run_experiment() is called with indices 0-49.
+Then: results/experiment_563_live_data_a_v2.json is written with status='success',
+      n_pairs_collected >= 40, question_indices='0-49', and retro_062_resolved=True.
+
+### SCENARIO-DATA-011: Hard Preflight Blocks Exp 563 When CARNOT_FORCE_LIVE Not Set
+
+Given: CARNOT_FORCE_LIVE is absent or set to a falsy value.
+When: Exp 563 run_experiment() is called.
+Then: A blocked artifact is written with honest_verdict != 'live_data_collected'
+      and the process exits before any model is loaded.
+
+### SCENARIO-DATA-012: Exp 563 Produces live_pairs_563.json With FOVER-Labeled CoT Steps
+
+Given: Live inference succeeds for both Gemma4 and Qwen3.5-0.8B.
+When: Exp 563 completes successfully.
+Then: results/live_pairs_563.json contains entries with keys question_index, question,
+      model, response, is_correct, cot_steps, and fover_labels for all processed questions.
+
 ---
 
 ## REQ-EXTRACT-030: Per-Extractor FP/TP Rate Measurement on Labeled Live Responses
