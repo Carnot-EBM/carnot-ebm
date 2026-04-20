@@ -2264,3 +2264,4 @@ python/ |
 | 2026-04-20 00:17 UTC | Exp 541: ConstraintAdditionFromMemory Live Wire-In | OK | Deliverable already exists in repo |
 | 2026-04-20 00:24 UTC | Exp 542: FOVER Corpus Expansion — FR-11 upstream,  | OK | 151 passed, 2 warnings in 3.15s |
 | 2026-04-20 00:43 UTC | Exp 543: JEPA v8 Live Retrain — FR-11 mandatory, e | OK | 81 passed, 2 warnings in 4.92s |
+| 2026-04-20 01:26 UTC | Exp 544: LowRankKAEMEnergy Cascade Integration — 2 | OK | 145 passed, 2 warnings in 5.96s |
