@@ -28,6 +28,10 @@ from carnot.extraction.vprm_verifier import (
     RuleVerdict,
     VPRMArithmeticVerifier,
 )
+from carnot.extraction.extraction_diagnostic import (
+    ExtractionDiagnosticResult,
+    run_extractor_diagnostic,
+)
 
 __all__ = [
     "FOLPremise",
@@ -36,4 +40,6 @@ __all__ = [
     "ArithmeticRule",
     "RuleVerdict",
     "VPRMArithmeticVerifier",
+    "ExtractionDiagnosticResult",
+    "run_extractor_diagnostic",
 ]
