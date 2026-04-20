@@ -10070,3 +10070,45 @@ Given: 25 labeled responses (8 correct, 17 incorrect) processed by ConfidenceWei
 When: Exp 555 threshold_sweep runs at [0.5, 0.7, 0.9].
 Then: Each sweep entry contains threshold, fp_rate, tp_rate, repair_trigger_rate; and the artifact
 contains optimal_threshold, fp_reduction_at_optimal, tp_loss_at_optimal, honest_verdict.
+
+---
+
+## REQ-LEARN-047: JEPA Training with Gaussian KL Regularization on Diverse Corpus
+
+The JEPA predictor retrain (Exp 557, v9) MUST use the LeWorldModel two-term objective
+(arXiv 2603.19312): L_total = L_prediction + lambda_kl * KL(q(z) || N(0,I)).
+Training MUST be gated on a diverse FOVER corpus (n_labeled >= 100, constraint_type_entropy >= 1.0 bits).
+The function train_leworldmodel(pairs, lambda_kl=0.01) MUST be implemented in
+python/carnot/embeddings/jepa_energy.py and MUST return a training_history list of
+(epoch, total_loss, pred_loss, kl_loss, auc) tuples.
+
+- REQ-LEARN-047-1: The training function MUST use AdamW optimizer for 200 epochs.
+- REQ-LEARN-047-2: L_prediction MUST be MSE(predicted_embedding, actual_embedding).
+- REQ-LEARN-047-3: L_regularization MUST be KL(N(mu, exp(log_var)) || N(0,I)) = 0.5*sum(exp(log_var) + mu^2 - 1 - log_var).
+- REQ-LEARN-047-4: Each epoch entry in training_history MUST be a tuple (epoch_int, total_loss_float, pred_loss_float, kl_loss_float, auc_float).
+- REQ-LEARN-047-5: The retrain experiment MUST save the predictor to results/jepa_predictor_557_real.safetensors.
+- REQ-LEARN-047-6: retro_056_closed=True MUST require final_auc >= 0.800.
+
+**Implementation Status:** Implemented (Exp 557, python/carnot/embeddings/jepa_energy.py train_leworldmodel)
+
+---
+
+### SCENARIO-LEARN-076: train_leworldmodel Returns History Tuple With All Fields
+
+Given: A list of >= 10 FOVERCorpusEntry-compatible dicts with constraint_types and is_correct fields.
+When: train_leworldmodel(pairs, lambda_kl=0.01) is called.
+Then: Returns a list of (epoch, total_loss, pred_loss, kl_loss, auc) tuples with length == 200.
+      Each tuple has epoch as int >= 0, total_loss as finite float, pred_loss and kl_loss as finite floats,
+      and auc as float in [0.0, 1.0].
+
+### SCENARIO-LEARN-077: KL Loss Is Non-Negative
+
+Given: Any list of corpus pairs.
+When: train_leworldmodel is called and kl_loss values are extracted from training_history.
+Then: All kl_loss values are >= 0.0, since KL divergence is always non-negative by Gibbs' inequality.
+
+### SCENARIO-LEARN-078: Total Loss Equals pred_loss Plus lambda_kl Times kl_loss
+
+Given: A training history from train_leworldmodel(pairs, lambda_kl=0.01).
+When: The first training history entry is inspected.
+Then: abs(total_loss - (pred_loss + 0.01 * kl_loss)) < 1e-5 — total is the exact linear combination.
