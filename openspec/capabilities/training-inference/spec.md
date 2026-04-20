@@ -966,6 +966,53 @@ The system SHALL complete KV260 FPGA bring-up now that the board is physically a
 
 Spec: REQ-SAMPLE-031, SCENARIO-SAMPLE-049, SCENARIO-SAMPLE-050, SCENARIO-SAMPLE-051
 
+### REQ-SAMPLE-032: KV260 Vivado Synthesis — Ising Sampler RTL Compiled to Bitfile (Exp 584)
+
+The system SHALL attempt Vivado synthesis and document the result now that the KV260 board
+is physically present (arrived 2026-04-20, Exp 568 honest_verdict=synthesis_required):
+
+- REQ-SAMPLE-032-1: When Vivado is installed and on PATH, the experiment SHALL run
+  `vivado -mode batch -source hardware/kv260/synth_ising.tcl` with a 7000-second timeout
+  and record the first 2000 chars of stdout.
+- REQ-SAMPLE-032-2: bitfile_built SHALL be True only when the .bit file exists at
+  output/carnot_ising_synth/carnot_ising.bit after synthesis.
+- REQ-SAMPLE-032-3: When Vivado is NOT installed, vivado_install_steps SHALL be populated
+  with the manual installation commands needed to install Vivado 2023.2.
+- REQ-SAMPLE-032-4: cpu_baseline_latency_us from Exp 568 (289608 µs) SHALL always be
+  recorded in the artifact for comparison.
+- REQ-SAMPLE-032-5: honest_verdict SHALL be one of:
+  'bitfile_built' (synthesis succeeded, .bit file exists),
+  'synthesis_attempted_failed' (Vivado ran but no .bit file produced),
+  'vivado_not_installed' (Vivado not on PATH).
+
+Spec: REQ-SAMPLE-032, SCENARIO-SAMPLE-052, SCENARIO-SAMPLE-053, SCENARIO-SAMPLE-054
+
+### SCENARIO-SAMPLE-052: Vivado Not Installed — Install Steps Recorded
+
+**Given** Vivado is not found on PATH
+**When** Exp 584 runs
+**Then** vivado_available = False
+**And** bitfile_built = False
+**And** vivado_install_steps is a non-empty list of installation commands
+**And** honest_verdict = 'vivado_not_installed'
+
+### SCENARIO-SAMPLE-053: Vivado Available — Synthesis Succeeds
+
+**Given** Vivado 2023.2+ is on PATH
+**When** `vivado -mode batch -source hardware/kv260/synth_ising.tcl` completes
+**And** output/carnot_ising_synth/carnot_ising.bit is created
+**Then** bitfile_built = True
+**And** honest_verdict = 'bitfile_built'
+**And** results/kv260_export_command.txt contains CARNOT_KV260_BITFILE=<path>
+
+### SCENARIO-SAMPLE-054: Vivado Available — Synthesis Fails
+
+**Given** Vivado is on PATH but synthesis encounters an error
+**When** Vivado returns non-zero or the .bit file is absent
+**Then** bitfile_built = False
+**And** honest_verdict = 'synthesis_attempted_failed'
+**And** synthesis_stdout contains the first 2000 chars of Vivado output for debugging
+
 ### SCENARIO-SAMPLE-049: FPGA Hardware Path Achieves <100μs Latency
 
 **Given** CARNOT_KV260_BITFILE is set and points to a valid bitfile
@@ -1026,6 +1073,7 @@ Spec: REQ-SAMPLE-031, SCENARIO-SAMPLE-049, SCENARIO-SAMPLE-050, SCENARIO-SAMPLE-
 | REQ-SAMPLE-029 | N/A | Implemented | Python (test_lowrank_kaem_cascade.py, 100% coverage) |
 | REQ-SAMPLE-030 | N/A | Implemented | Python (test_kaem_calibration.py, 100% coverage) |
 | REQ-SAMPLE-031 | N/A | Implemented | Python (test_experiment_568_kv260_bringup_v2.py, 100% targeted) |
+| REQ-SAMPLE-032 | N/A | Implemented | Python (test_experiment_584_kv260_synthesis.py, 100% targeted) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
