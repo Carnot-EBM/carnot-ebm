@@ -11120,4 +11120,66 @@ When: NUPProbeV5.train_from_pairs(entries, n_epochs=100) is called and nup_v5_au
 Then: nup_v5_auc is a float in [0, 1], and if >= 0.750, the model is saved to results/nup_probe_v5.safetensors.
 And: if nup_v5_auc < 0.750, no model file is written and honest_verdict reflects no_improvement.
 
+## REQ-INFRA-085: Conductor Session Pre-Check Emits conductor_consulted=True Log
+
+**Context (RETRO-067):**
+    The same five experiments (308, 260, 309, 425, 410) appeared in the slowest-5 list for
+    NINE consecutive milestones (.37 through .45), wasting ~3,255 minutes (54.3 hours).
+    The exclusion manifest and session wrapper existed but conductor_consulted=False was
+    confirmed in the .45 retrospective.  A sentinel-based pre-check provides machine-readable
+    proof that the conductor consulted the manifest before spawning any agent.
+
+- REQ-INFRA-085-1: scripts/conductor_manifest_precheck.py exists and is executable.
+- REQ-INFRA-085-2: Calling precheck with an excluded experiment ID prints [EXCLUDED] and exits 1.
+- REQ-INFRA-085-3: Calling precheck with a non-excluded ID prints [PRECHECK OK] conductor_consulted=True and exits 0.
+- REQ-INFRA-085-4: On exit 0, the precheck writes scripts/conductor_consulted_at.txt with the current UTC timestamp.
+- REQ-INFRA-085-5: The sentinel file's mtime within 60 seconds of any experiment start proves conductor_consulted=True.
+
+Spec: REQ-INFRA-085, SCENARIO-INFRA-092, SCENARIO-INFRA-093
+
+### SCENARIO-INFRA-092: Precheck Blocks Excluded Experiment and Exits 1
+
+Given: scripts/conductor_exclusion_manifest.json contains experiment_id 308.
+When: python scripts/conductor_manifest_precheck.py 308 is called.
+Then: stdout contains '[EXCLUDED] Exp 308 is in exclusion manifest'.
+And: process exits with code 1.
+And: scripts/conductor_consulted_at.txt is NOT written.
+
+**Implementation Status:** Implemented (Exp 601)
+
+### SCENARIO-INFRA-093: Precheck Allows Non-Excluded Experiment and Writes Sentinel
+
+Given: scripts/conductor_exclusion_manifest.json does NOT contain experiment_id 601.
+When: python scripts/conductor_manifest_precheck.py 601 is called.
+Then: stdout contains '[PRECHECK OK] conductor_consulted=True'.
+And: process exits with code 0.
+And: scripts/conductor_consulted_at.txt is written with the current UTC timestamp.
+
+**Implementation Status:** Implemented (Exp 601)
+
+## REQ-INFRA-086: Human NPU Unblock Procedure Documented
+
+**Context (RETRO-067):**
+    The AMD XDNA NPU path has been blocked for 7 consecutive milestones (Exps 292, 303, 314,
+    335, 435, 511, 589) by missing ninja and openblas packages on the host system.
+    The exact pacman commands required to unblock it must be documented as a human-operator
+    recipe so the next conductor session can resolve the blocker without another research cycle.
+
+- REQ-INFRA-086-1: scripts/npu_unblock_v8_instructions.sh exists and contains the exact pacman install commands.
+- REQ-INFRA-086-2: The script documents sudo pacman -S ninja openblas as the fix.
+- REQ-INFRA-086-3: The script is marked as a human-operator recipe (not for conductor execution).
+- REQ-INFRA-086-4: The script references experiment_293_npu_constraint_model.py as the experiment to re-run.
+
+Spec: REQ-INFRA-086, SCENARIO-INFRA-094
+
+### SCENARIO-INFRA-094: NPU Unblock Script Contains Exact Pacman Commands
+
+Given: scripts/npu_unblock_v8_instructions.sh exists on disk.
+When: the human operator reads the script.
+Then: it contains 'sudo pacman -S ninja openblas'.
+And: it contains a verify step for ninja --version.
+And: it references scripts/experiment_293_npu_constraint_model.py as the re-run target.
+
+**Implementation Status:** Implemented (Exp 601)
+
 **Implementation Status:** Implemented (Exp 599)

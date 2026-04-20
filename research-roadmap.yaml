@@ -144,9 +144,9 @@ tasks:
     \ If llm_caller=None (CI/test mode): use regex fallback on structured patterns only.\n\
     \      - EXTRACTION PROMPT (hardcoded string): 'Given the following math reasoning\
     \ step, identify ALL arithmetic calculations stated (not just final answers). For\
-    \ each calculation, output JSON: {\"lhs\": \"expression_to_evaluate\", \"rhs\":\
-    \ stated_number_value, \"text\": \"verbatim_text_excerpt\"}. Output only valid JSON\
-    \ array. If no calculations found: output []. Response:\\n{response}'\n      - extract_claims(self,\
+    \ each calculation, output JSON: (\"lhs\": \"expression_to_evaluate\", \"rhs\":\
+    \ stated_number_value, \"text\": \"verbatim_text_excerpt\"). Output only valid JSON\
+    \ array. If no calculations found: output []. Response:\\n(response)'\n      - extract_claims(self,\
     \ response: str) -> list[ArithmeticClaim]:\n          * If llm_caller: call LLM with\
     \ EXTRACTION_PROMPT.format(response=response), parse JSON response.\n          *\
     \ Fallback: use eval()-based pattern matching for 'N op M = P' forms.\n          *\
@@ -172,7 +172,7 @@ tasks:
     \ incorrect response. Count TP (violations found), FP (false violations on correct\
     \ responses, test 10 correct ones).\n   h. Run CoACEExtractorV3.extract() on same\
     \ responses for comparison (v3_recall baseline).\n   i. Build error_type_catalog\
-    \ from step 2 analysis: dict of {error_type: count} from live corpus manual analysis\
+    \ from step 2 analysis: dict of (error_type: count) from live corpus manual analysis\
     \ in code comments.\n   j. gate_open = v4_recall >= 0.20.\n   k. Build artifact:\
     \ schema='carnot.coace_v4.v1',\n      n_responses=25, llm_mode=<str>,\n      v3_recall=<float>,\
     \ v4_recall=<float>, recall_improvement=v4_recall-v3_recall,\n      v4_tp_rate=<float>,\
@@ -527,8 +527,8 @@ tasks:
     \ REQ-SAMPLE-025 (DWaveNealBackend: production CARNOT_SAMPLER=dwave flag),\
     \ REQ-LEARN-075 (HISR credit assignment wired into ConstraintAdditionFromMemory),\
     \ SCENARIO-SAMPLE-040/041, SCENARIO-LEARN-110/111 to spec.\n3. Update python/carnot/samplers/backend.py:\n\
-    \   a. Add backend_registry: dict[str, type[SamplerBackend]] = {'cpu': ParallelIsingSampler,\
-    \ 'dwave': DWaveNealBackend}.\n   b. Add get_sampler_backend(name: str | None =\
+    \   a. Add backend_registry: dict[str, type[SamplerBackend]] = ('cpu': ParallelIsingSampler,\
+    \ 'dwave': DWaveNealBackend).\n   b. Add get_sampler_backend(name: str | None =\
     \ None) -> SamplerBackend:\n      * If name is None: read os.environ.get('CARNOT_SAMPLER',\
     \ 'cpu').\n      * Look up in backend_registry. Return instance.\n   c. Export\
     \ get_sampler_backend, backend_registry from carnot.samplers.__init__.\n4. Update\
@@ -595,8 +595,8 @@ tasks:
     \ > backward_inference_score(triple.original, triple.question):\n              # Repair\
     \ improved constraint alignment.\n              triple.flip_score = flip_score\n\
     \          Else: triple.flip_score = None.\n          Return triple.\n      - batch_calibrate(self,\
-    \ triples: list[FLIPRepairTriple]) -> dict:\n          Returns {'mean_flip_score':\
-    \ float, 'n_improved': int, 'repair_quality': 'good'|'neutral'|'bad'}.\n   c. Export\
+    \ triples: list[FLIPRepairTriple]) -> dict:\n          Returns ('mean_flip_score':\
+    \ float, 'n_improved': int, 'repair_quality': 'good'|'neutral'|'bad').\n   c. Export\
     \ FLIPRewardCalibrator, FLIPRepairTriple from carnot.pipeline.__init__.\n4. Write\
     \ scripts/experiment_611_flip_fr11_v5.py:\n   a. apply_env_autofix() FIRST; from\
     \ python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\

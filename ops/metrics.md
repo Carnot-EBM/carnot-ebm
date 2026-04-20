@@ -1921,6 +1921,7 @@
 | 3 | 2026-04-11T11:23:30Z | 2026-04-11T11:31:54Z | Exp 155: Retrain JEPA v2 on multi-domain data; generate v2 pairs, train with weighted BCE + early stopping, evaluate vs v1 | 8m24s |
 | 4 | 2026-04-11T16:44:07Z | 2026-04-11T16:45:10Z | Doc updates for Exp 166: append changelog entry, traceability row, verify REQ-JEPA-001 + SCENARIO-JEPA-LOGIC-001 | 1m3s |
 | 5 | 2026-04-11T18:26:42Z | 2026-04-11T18:28:48Z | Exp 170: create real-logits benchmark (100 Q, simulated fallback — torch not installed); SpilledEnergy AUROC=1.000, LookaheadEnergy AUROC=1.000, optimal α=0.0; results saved | 2m6s |
+| 6 | 2026-04-20T17:59:47Z | 2026-04-20T18:04:07Z | Exp 601: RETRO-067 conductor manifest precheck + NPU unblock v8; precheck created, sentinel proven, 15 tests pass | 4m20s |
 
 ### Session Summary
 
