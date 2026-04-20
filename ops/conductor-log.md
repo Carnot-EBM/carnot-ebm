@@ -2301,3 +2301,5 @@ python/ |
 | 2026-04-20 09:54 UTC | Exp 572: PRA EBM Beam Search — EORM as Step-Level  | OK | 81 passed, 2 warnings in 2.73s |
 | 2026-04-20 10:10 UTC | Exp 573: Energy-per-Token EORM Hardware Calibratio | OK | 81 passed, 2 warnings in 2.80s |
 | 2026-04-20 10:24 UTC | Exp 574: Milestone 2026.04.43 Operational Retrospe | OK | 81 passed, 2 warnings in 3.21s |
+| 2026-04-20 11:07 UTC | Plan milestone 2026.04.44 | OK | 14 tasks proposed |
+| 2026-04-20 11:12 UTC | Milestone 2026.04.44 activated | OK | 14 tasks queued |
