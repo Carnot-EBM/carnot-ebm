@@ -869,6 +869,41 @@ The system shall provide experimental evidence (Exp 534) that:
 **Then** the gradient has shape (50,) and all values are finite
 **And** `energy(x)` returns a scalar
 
+### REQ-SAMPLE-029: LowRankKAEMEnergy as Default KAN Fast-Path Tier for n_vars <= 100 (Exp 544)
+
+The system SHALL provide a `get_kaem_energy(n_vars, use_lowrank=True, k=2)` factory function
+in `python/carnot/models/kaem_energy.py` that:
+- Returns `LowRankKAEMEnergy(n_vars=n_vars, k=k)` when `use_lowrank=True`
+- Returns `KAEMEnergy(n_vars=n_vars)` when `use_lowrank=False`
+- Default `use_lowrank=True` and `k=2` based on Exp 532 result (k=2 achieves 23.7x speedup)
+
+The `VerificationResult` dataclass in `python/carnot/pipeline/verify_repair.py` SHALL have:
+- `use_lowrank_kaem: bool = False` field tracking whether the KAN fast-path used low-rank KAEM
+
+The `VerifyRepairPipeline` in `python/carnot/pipeline/verify_repair.py` SHALL have:
+- `_build_kan_fast_path_model(n_vars)` method that calls `get_kaem_energy(n_vars, use_lowrank=(n_vars <= 100))`
+  returning `(model, use_lowrank)` where `use_lowrank` is the flag for `VerificationResult`
+
+**Rationale:** Exp 532 demonstrated LowRankKAEMEnergy at k=2 achieves 23.7x speedup over
+full-rank MCMC. Wiring it as the default fast-path tier for n_vars <= 100 captures that
+speedup in the verification cascade without sacrificing accuracy.
+
+Spec: REQ-SAMPLE-029, SCENARIO-SAMPLE-044, SCENARIO-SAMPLE-045
+
+### SCENARIO-SAMPLE-044: get_kaem_energy Returns LowRankKAEMEnergy for n_vars <= 100
+
+**Given** `get_kaem_energy(n_vars=50, use_lowrank=True, k=2)` is called
+**When** the factory function executes
+**Then** the returned object is an instance of `LowRankKAEMEnergy`
+**And** `model.n_vars == 50` and `model.k == 2`
+
+### SCENARIO-SAMPLE-045: get_kaem_energy Returns KAEMEnergy When use_lowrank=False
+
+**Given** `get_kaem_energy(n_vars=200, use_lowrank=False)` is called
+**When** the factory function executes
+**Then** the returned object is an instance of `KAEMEnergy`
+**And** `model.n_vars == 200`
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -901,6 +936,7 @@ The system shall provide experimental evidence (Exp 534) that:
 | REQ-SAMPLE-026 | N/A | Implemented | Python (test_cikan_energy.py, 100% coverage) |
 | REQ-SAMPLE-027 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-SAMPLE-028 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
+| REQ-SAMPLE-029 | N/A | Implemented | Python (test_lowrank_kaem_cascade.py, 100% coverage) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |

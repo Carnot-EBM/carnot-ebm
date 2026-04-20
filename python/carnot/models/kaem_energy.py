@@ -568,6 +568,52 @@ class KAEMEnergy:
 # ---------------------------------------------------------------------------
 
 
+def get_kaem_energy(
+    n_vars: int,
+    use_lowrank: bool = True,
+    k: int = 2,
+    key: jax.Array | None = None,
+) -> "KAEMEnergy | Any":
+    """Factory: return LowRankKAEMEnergy(k) if use_lowrank, else KAEMEnergy.
+
+    Selects between the low-rank SVD fast-path and the full-rank model based
+    on the caller's choice. The recommended policy (REQ-SAMPLE-029) is:
+        use_lowrank = (n_vars <= 100)
+    because Exp 532 showed k=2 achieves 23.7x speedup for sub-100-variable
+    constraint problems without sacrificing accuracy.
+
+    For n_vars > 100 the full-rank model is preferred because the SVD
+    projection overhead amortises less favourably at large dimension, and
+    the top-k components may not dominate as cleanly.
+
+    Parameters
+    ----------
+    n_vars : int
+        Dimension of the input space.
+    use_lowrank : bool
+        If True, return LowRankKAEMEnergy(n_vars, k=k).
+        If False, return KAEMEnergy(n_vars).
+    k : int
+        Number of SVD components for the low-rank model. Default 2 (Exp 532
+        optimal_k that achieves 23.7x speedup at AUROC parity).
+    key : jax.Array | None
+        PRNG key for model initialisation.
+
+    Returns
+    -------
+    LowRankKAEMEnergy | KAEMEnergy
+        The appropriate model instance (unfitted; caller must call fit()).
+
+    Spec: REQ-SAMPLE-029, SCENARIO-SAMPLE-044, SCENARIO-SAMPLE-045
+    """
+    if use_lowrank:
+        # Lazy import to avoid circular dependency (lowrank_kaem imports kaem_energy)
+        from carnot.models.lowrank_kaem import LowRankKAEMEnergy  # noqa: PLC0415
+
+        return LowRankKAEMEnergy(n_vars=n_vars, k=k, key=key)
+    return KAEMEnergy(n_vars=n_vars, key=key)
+
+
 def benchmark_kaem_vs_mcmc(n_vars: int, n_samples: int = 100) -> dict[str, Any]:
     """Compare KAEM exact sampling vs IsingEBM MCMC sampling latency.
 
