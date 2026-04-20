@@ -2338,3 +2338,4 @@ python/ |
 | 2026-04-20 17:54 UTC | Milestone 2026.04.46 activated | OK | 13 tasks queued |
 | 2026-04-20 18:05 UTC | Exp 601: ExclusionManifest Final Verification + Hu | OK | 81 passed, 2 warnings in 2.71s |
 | 2026-04-20 18:18 UTC | Exp 602: Live Corpus Expansion v2 — GSM8K 250-349  | OK | 81 passed, 2 warnings in 2.74s |
+| 2026-04-20 19:23 UTC | Exp 603: CoACEExtractorV4 — Data-Driven Live Train | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
