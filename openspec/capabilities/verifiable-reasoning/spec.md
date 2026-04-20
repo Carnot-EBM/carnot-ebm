@@ -10704,3 +10704,66 @@ Then: retro_033_resolved=True and honest_verdict='first_positive'.
 **Implementation Status:** Implemented (Exp 582)
 
 **Implementation Status:** Implemented (Exp 581)
+
+---
+
+## REQ-LEARN-058: FR-11 Tier 1 Self-Learning Relay V3 with CoACEExtractorV2 (Exp 583)
+
+Run the three-tier self-learning relay (SelfLearningRelay) using CoACEExtractorV2 as the
+violation extractor on 25 fresh GSM8K questions (indices 300-324), measuring whether
+violation detection count exceeds the v1 baseline of 12 (from Exp 570).
+
+GATE: Exp 581 gate_open must be True before any relay inference runs.  If the gate is
+closed the script writes a blocked artifact and exits immediately.
+
+PREFLIGHT: CARNOT_FORCE_LIVE=1 must be set at module import time (before any CUDA import).
+
+**Sub-requirements:**
+
+- REQ-LEARN-058-1: Script MUST assert CARNOT_FORCE_LIVE=1 at module level (before heavy imports).
+- REQ-LEARN-058-2: GATE check MUST load Exp 581 result; if gate_open=False write blocked artifact and exit.
+- REQ-LEARN-058-3: Questions MUST be GSM8K indices 300-324 (25 questions, no overlap with prior exps).
+- REQ-LEARN-058-4: Relay MUST run 3 batches of 8-9 questions each using CoACEExtractorV2.
+- REQ-LEARN-058-5: fr11_improved=True iff total_violations_found > 12 (v1 baseline from Exp 570).
+- REQ-LEARN-058-6: honest_verdict MUST be one of: 'fr11_improved', 'fr11_no_improvement_v3', 'fr11_still_zero', 'gate_closed_exp581_recall_too_low'.
+- REQ-LEARN-058-7: All exit paths MUST write the deliverable JSON.
+- REQ-LEARN-058-8: FINAL LINE must be tmpl.assert_deliverable_written().
+
+**Acceptance Criteria:**
+- `schema='carnot.fr11_relay_real.v3'`
+- `extractor='coace_v2'`
+- `n_questions=25`, `n_batches=3`
+- `total_violations_found` (int), `n_constraints_added` (int)
+- `v1_violations=12`, `violations_improvement=total_violations_found-12`
+- `batch_results` list present
+- `fr11_improved` (bool)
+- `honest_verdict` as specified above
+- All exit paths write the deliverable JSON
+
+**Implementation Status:** Implemented (Exp 583)
+
+### SCENARIO-LEARN-096: Gate Blocks Exp 583 When Exp 581 gate_open=False
+
+Given: results/experiment_581_coace_recall_diagnostic_v2.json has gate_open=False.
+When: Experiment 583 runs.
+Then: A blocked artifact is written with honest_verdict='gate_closed_exp581_recall_too_low'
+      and the script exits without running any relay inference.
+
+**Implementation Status:** Implemented (Exp 583)
+
+### SCENARIO-LEARN-097: Relay Runs 3 Batches with CoACEV2 on 25 Questions
+
+Given: Gate is open (gate_open=True), CARNOT_FORCE_LIVE=1.
+When: run_experiment() completes successfully.
+Then: batch_results has 3 entries, n_questions=25, extractor='coace_v2',
+      schema='carnot.fr11_relay_real.v3'.
+
+**Implementation Status:** Implemented (Exp 583)
+
+### SCENARIO-LEARN-098: fr11_improved=True When total_violations_found > 12
+
+Given: CoACEV2 finds more than 12 violations across all 25 questions.
+When: The artifact is built.
+Then: fr11_improved=True, violations_improvement>0, honest_verdict='fr11_improved'.
+
+**Implementation Status:** Implemented (Exp 583)
