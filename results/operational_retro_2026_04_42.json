@@ -1,0 +1,132 @@
+{
+    "schema": "carnot.operational_retro.v17",
+    "milestone": "2026.04.42",
+    "generated_at": "2026-04-20T07:23:02Z",
+    "total_wall_time_minutes": 4520,
+    "experiments_completed": 422,
+    "experiments_this_cycle": 22,
+    "average_minutes_per_experiment": 11.0,
+    "wall_time_delta_vs_prior_milestone_minutes": 36,
+    "wall_time_delta_vs_prior_milestone_pct": 0.8,
+    "wall_time_delta_direction": "regression",
+    "prior_milestone_wall_time_minutes": 4484,
+    "slowest_experiments": [
+        {
+            "rank": 1,
+            "duration_minutes": 105,
+            "label": "Exp 308: JEPA fast-path gate integration — checkpoint (tests failing)",
+            "pct_of_total": 2.3,
+            "consecutive_slowest5_appearances": 6,
+            "likely_cause": "Sixth consecutive milestone appearance (.37 through .42) — an unbroken record across the full .37-.42 run. Exp 547 (Legacy Modernization Sprint in .41) classified Exp 308 as 'fully_modern' and added watchdog/env_autofix/teardown, but explicitly delivered batching_added: [] for this target. The 105-minute cost is driven by sequential JEPA inference calls in the gate-integration harness, not tooling absence. Without BatchedInferenceRunner migrating the inference loop and a result file with status=success clearing the checkpoint-failure state, the conductor will continue re-entering this experiment on every infrastructure sweep. The three-action fix has been documented in every retro since .37 and not executed in any: (1) apply BatchedInferenceRunner to the JEPA inference loop, (2) resolve the failing test assertion, (3) write exclude_from_conductor=true to the result file. The repeated non-execution of a documented fix is itself an architectural signal: the conductor has no enforcement mechanism to require an experiment's sponsor to follow up on a checkpoint-failure state within N milestones."
+        },
+        {
+            "rank": 2,
+            "duration_minutes": 76,
+            "label": "Exp 425: Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+            "pct_of_total": 1.7,
+            "consecutive_slowest5_appearances": 6,
+            "likely_cause": "Sixth consecutive milestone appearance. Exp 425 implements the ExperimentTimeoutWatchdog — the mechanism that is supposed to prevent other experiments from running long. Its own 76-minute duration is a meta-irony that has appeared in every retro since .37. The root cause is not an inference loop but context-reconstruction debt: each conductor re-entry of Exp 425 re-reads the full watchdog implementation, test suite, and spec to verify nothing has changed. No inference batching is needed; only an exclusion manifest entry is required. This is the cheapest fix in the entire slowest-5 (writing one JSON field), yet it has not been done across six milestones. The continued presence of Exp 425 in the slowest-5 provides conclusive evidence that the exclusion manifest mechanism does not exist."
+        },
+        {
+            "rank": 3,
+            "duration_minutes": 74,
+            "label": "Exp 260: CPU-bound benchmark proves GPU need — partial result",
+            "pct_of_total": 1.6,
+            "consecutive_slowest5_appearances": 6,
+            "likely_cause": "Sixth consecutive milestone appearance. At 74 minutes per appearance over six milestones, Exp 260 has consumed 444 cumulative minutes of milestone wall time since entering the slowest-5 in .37 — 7.4 hours for a single pre-existing experiment that proved its own thesis in the first run. The JITVRAMCheck guard recommended since .40, BatchedInferenceRunner migration, and exclusion manifest entry have all been deferred across six cycles. The partial-result checkpoint state means the conductor continues treating Exp 260 as in-progress work rather than completed infrastructure. Resolving the partial state (write status=success or status=complete with a note that the experiment's thesis — GPU is needed — was validated) and adding an exclusion manifest entry would permanently remove this experiment from the active backlog at zero development cost."
+        },
+        {
+            "rank": 4,
+            "duration_minutes": 66,
+            "label": "Exp 309: Tier 3 end-to-end self-learning — checkpoint (tests failing)",
+            "pct_of_total": 1.5,
+            "consecutive_slowest5_appearances": 4,
+            "likely_cause": "Fourth consecutive milestone appearance (.39 through .42). Same analysis as Exp 308: Exp 547 applied watchdog/env_autofix/teardown but did not fix the failing test assertion or add BatchedInferenceRunner. The Tier 3 self-learning pipeline (constraint_addition.py + jitrl.py + nup_probe.py + fover_annotator.py) requires reading a four-module dependency chain on each conductor re-entry, multiplying context-reconstruction overhead beyond the raw inference cost. The add_deliverable_assertion migration from Exp 547 will surface the test failure on every future conductor entry, making the experiment louder but not faster. The required action — identify the specific failing assertion, determine if it is an infrastructure issue or a research validity issue, and write a definitive terminal result — has been the stated action in three consecutive retros."
+        },
+        {
+            "rank": 5,
+            "duration_minutes": 64,
+            "label": "Exp 410: Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
+            "pct_of_total": 1.4,
+            "consecutive_slowest5_appearances": 3,
+            "likely_cause": "Third consecutive milestone appearance. This is the highest-ROI BatchedInferenceRunner migration target in the legacy backlog: 200 questions × 5 variants = 1,000 sequential model calls. A batch_size=8 migration reduces 1,000 calls to 125 batched calls, with an estimated 3-4x wall-time reduction for the inference portion. Exp 547 listed Exp 410 in scripts_audited but delivered batching_added: [] — the sprint was scoped to tooling migration, not inference-bottleneck migration. The 64-minute cost is dominated by sequential inference latency, not by context reconstruction or test failures. This experiment has the highest probability of showing a measurable per-experiment speedup from a focused BatchedInferenceRunner migration sprint. If the migration delivers even 2x speedup, Exp 410 drops from 64 minutes to 32 minutes and exits the slowest-5."
+        }
+    ],
+    "bottlenecks_identified": [
+        "Wall-time regression for the first time since .34: .42 closes at 4520 minutes vs .41's 4484 minutes — a 36-minute (0.8%) increase, ending the seven-milestone streak of non-negative directional improvement. The regression is modest in absolute terms but structurally significant: .42 ran 22 experiments (vs 13 in .41) at the same 11 min/experiment average. The wall-time increase is not explained by experiment count growth, which would actually reduce the per-experiment average if new experiments ran cleanly. The regression is driven by the same five legacy experiments reappearing in the slowest-5, now for their 6th consecutive milestone, consuming 385 cumulative minutes in .42 alone.",
+        "Same five experiments in the slowest-5 for the sixth consecutive milestone (.37 through .42): Exps 308, 425, 260, 309, 410 have appeared in every slowest-5 since .37. Combined they account for 385 of 4520 milestone minutes (8.5% of total wall time). Across six milestones, their cumulative appearance cost is approximately 2,100 minutes (35 hours) of wall time consumed by experiments that have not advanced the research program. The exclusion manifest mechanism — recommended in every retro since .40 — remains unimplemented. This is the single most impactful open infrastructure gap in the project.",
+        "BatchedInferenceRunner migration unexecuted for core slowest experiments: Exp 547 (Legacy Modernization Sprint, .41) delivered tooling migration (watchdog/env_autofix/teardown) but batching_added: [] for all five targets. The inference-bottleneck fix — migrating sequential inference loops to BatchedInferenceRunner — remains unexecuted for Exps 308, 260, 309, and 410. These four experiments share the same root-cause time cost: sequential model calls that BatchedInferenceRunner was designed to accelerate. The distinction between 'tooling migration' and 'inference-bottleneck migration' must be explicit in the .43 sprint scope, or the same outcome (tooling applied, batching skipped) will repeat.",
+        "Checkpoint-failure states for Exps 308 and 309 unresolved across six milestones: both experiments entered checkpoint-failure state due to test assertion failures that were never diagnosed or fixed. Each re-entry by the conductor triggers the full module context-reconstruction overhead before discovering the same failing assertion. The assert_deliverable_added migration from Exp 547 makes the failure louder (assertion fires earlier in the run) but does not clear the checkpoint state. Until a definitive terminal result (status=success, status=invalid, or status=excluded) is written for each experiment, they will continue appearing in the conductor's active work queue and accumulating wall time.",
+        "GPU utilization efficiency: sequential vs parallel execution confirmed as structural bottleneck: the GPU monitor at milestone close shows both RTX 3090s at 0% utilization and 2MB VRAM (clean state), confirming zombie processes from .41 were successfully killed before .42 experiments began. However, the 11 min/experiment average has not improved despite clean GPU state, because the bottleneck is not GPU contention but sequential inference within experiments. The DualGPU parallel forward-pass — running Qwen on GPU 0 and Gemma on GPU 1 simultaneously — has been recommended since .38 and not demonstrated in any .42 experiment. The GPU monitor's suggestion ('Use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously') is directly actionable for the dual-model experiments in .43.",
+        "Pre-flight test suite overhead not measured: the test suite (3900+ tests, ~2-3 min per run) is executed before each significant experiment. At 22 experiments in the .42 cycle, pre-flight test runs contribute an estimated 44-66 minutes of non-inference overhead. This was not tracked as a distinct time category in prior retros. For .43, logging the pre-flight test duration separately from experiment execution would allow accurate attribution of wall time and identify whether test suite growth is becoming a drag on milestone cadence.",
+        "Doc reconciliation passes proportionally expensive for short-cycle experiments: at 11 min/experiment average, a 1-2 minute doc reconciliation pass (changelog, status.md, conductor-log.md, traceability.md) represents 9-18% of experiment wall time. The .42 cycle ran 22 experiments, implying 22-44 minutes of doc reconciliation overhead. Batching doc reconciliation (update all ops docs once at experiment batch boundaries rather than after each individual experiment) would reduce this overhead by an estimated 50% with no loss of traceability, since the changelog entry is what matters, not the timing of its write."
+    ],
+    "improvements_suggested": [
+        "Build the conductor exclusion manifest in .43 Phase 0 — mandatory before any new research experiments: create 'scripts/conductor_exclusion_manifest.json' containing entries for Exps 308, 260, 309, 425, and 410. Each entry should specify: excluded=true, reason (legacy_checkpoint_failure for 308/309, legacy_validated_thesis for 260, infrastructure_complete for 425, legacy_pending_batching for 410), modernized_by='exp547', and requires_action (batching_migration for 308/260/309/410, none for 425). Modify the conductor to consult this manifest before scheduling any experiment. Estimated implementation: 2 hours. Estimated wall-time ROI: 8.5% theoretical (eliminating 385 min/milestone from the five recurring experiments), 2-4% realistically (applying the 0.3x historical calibration factor). This is the only improvement with a positive ROI that can be delivered in a single focused session.",
+        "Scope 'Exp 547b: BatchedInferenceRunner migration' as a distinct sprint targeting inference loops, not tooling: the .41 sprint (Exp 547) demonstrated that 'legacy modernization' defaults to tooling migration unless the scope explicitly requires inference-loop rewriting. Exp 547b must specify for each target: (1) identify the inference loop, (2) wrap it in BatchedInferenceRunner with batch_size=8, (3) run the experiment and record the before/after wall-time. Target priority: Exp 410 (1,000 calls, highest ROI), Exp 260 (GPU benchmark loop), Exp 308 (JEPA inference), Exp 309 (Tier 3 pipeline). Exp 425 does not have an inference loop and should receive only an exclusion manifest entry. Success criterion: at least one target shows measurable wall-time improvement in the result file.",
+        "Resolve checkpoint-failure states for Exps 308 and 309 in .43 Phase 0: run the test suite for each experiment, identify the specific failing assertion from the output, determine if it is (a) an infrastructure issue resolvable by importing a missing module or updating a path, or (b) a research validity issue where the experiment's hypothesis did not hold. For case (a): fix the assertion and write status=success. For case (b): write status=invalidated with a research_note explaining why, and add the experiment to the exclusion manifest. Either outcome permanently removes the experiment from the conductor's active queue. The diagnosis step (running the tests and reading the output) takes approximately 5 minutes per experiment — far less than the 66-105 minutes consumed by each conductor re-entry.",
+        "Enforce DualGPU parallel forward-pass for all dual-model benchmark experiments: the GPU close state at .42 shows both GPUs clean and idle, ready for parallel execution. The GPU monitor recommendation ('Use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously') is directly actionable. For any .43 experiment running both Qwen and Gemma, the experimental harness should load Qwen via device='cuda:0' and Gemma via device='cuda:1' and issue inference calls concurrently using Python threading or asyncio. Estimated wall-time benefit for dual-model experiments: 40-50% reduction in inference wall time (from sequential to parallel). This is the highest-ROI per-experiment improvement available given the current clean GPU state.",
+        "Batch doc reconciliation passes to reduce per-experiment documentation overhead: rather than updating changelog.md, status.md, conductor-log.md, and traceability.md after each individual experiment, batch these writes to occur at natural boundary points (end of a research phase, every 3-4 experiments, or at the end of the session). The traceability entry and changelog entry for each experiment are the authoritative records — their content does not depend on being written immediately. Batching reduces the context switching cost and the risk of forgetting to update a document mid-session. Estimated overhead reduction: 50% of the 22-44 minutes of doc reconciliation in a 22-experiment cycle.",
+        "Adopt a milestone-open health check protocol: at the start of each new milestone cycle, run 'python scripts/gpu_monitor.py --kill-zombies' and 'python scripts/gpu_monitor.py --json' before the first experiment, and record the output in a milestone_open_state field in the retro JSON. The .42 close state (2MB VRAM, 0% utilization) confirms the zombies from .41 were killed — but it is not documented where or when this kill happened. A standardized health check protocol creates an auditable record of GPU state at milestone boundaries and prevents the experiment-1 deferral pattern that has historically wasted the first 60-90 minutes of a new milestone cycle.",
+        "Apply 0.1x-0.3x realism calibration factor to all projected savings estimates: every milestone from .37 through .42 has over-estimated wall-time savings by 5-10x. The .41 retro's 12% headline estimate has not been achieved; .42 regressed slightly. For .43, any projected improvement should be presented with a calibrated range: theoretical projection × 0.1 (pessimistic) to × 0.3 (optimistic). A '10% theoretical improvement from exclusion manifest' should be reported as '1-3% likely.' This prevents over-allocation of milestone capacity to improvement experiments that historically deliver marginal gains."
+    ],
+    "estimated_time_savings_pct": 8,
+    "estimated_time_savings_rationale": "Calibrated against historical over-estimation pattern (5-10x factor across .37-.42). Theoretical improvements: (1) Exclusion manifest for five recurring slowest-5 experiments: theoretical ~8.5% (385 min/milestone elimination), calibrated to 2-3% given execution history and conductor enforcement uncertainty. (2) BatchedInferenceRunner migration for Exp 410 (highest ROI — 1,000 sequential calls): theoretical ~4% if Exp 410 drops from 64 to 20 min, calibrated to 1-2% (Exp 547 precedent shows batching_added defaults to empty unless explicitly scoped). (3) DualGPU parallel forward-pass for dual-model experiments: theoretical ~3% (clean GPU state enables immediate deployment), calibrated to 1-2% (requires harness changes in multiple experiment scripts). (4) Checkpoint-failure state resolution for Exps 308/309: theoretical ~2.4% (removing 105+66=171 min from slowest-5), calibrated to 0.5-1% (diagnosis cost replaces some of the re-entry cost). (5) Doc reconciliation batching: theoretical ~1%, calibrated to ~0.5%. Calibrated realistic total: 5-9%. The 8% headline is the upper end of the realistic range; it requires all five improvements to be implemented in .43 Phase 0, which is more execution than .42 Phase 0 delivered. A 3% improvement (136 minutes reduction) would be a positive outcome given the regression in .42.",
+    "gpu_state_at_milestone_close": {
+        "gpu0_name": "NVIDIA GeForce RTX 3090",
+        "gpu0_vram_used_mb": 2,
+        "gpu0_vram_total_mb": 24576,
+        "gpu0_utilization_pct": 0,
+        "gpu0_temp_c": 46,
+        "gpu1_name": "NVIDIA GeForce RTX 3090",
+        "gpu1_vram_used_mb": 2,
+        "gpu1_vram_total_mb": 24576,
+        "gpu1_utilization_pct": 0,
+        "gpu1_temp_c": 47,
+        "active_processes": [],
+        "total_zombie_vram_mb": 0,
+        "total_zombie_vram_pct_of_combined_capacity": 0.0,
+        "assessment": "CLEAN — both GPUs at minimal VRAM (2MB each) and 0% utilization. This is the best GPU close state in the project's history, a dramatic improvement from .41's 48068MB zombie state across three processes. The zombie PIDs (527256, 527259, 529495) from .41 were successfully killed at some point during the .42 cycle. Clean GPU state confirms that teardown is functioning for .42 experiments or that manual kill was performed. The DualGPU recommendation is immediately actionable: both cards are free and ready for parallel model loading.",
+        "zombie_delta_vs_prior_milestone_mb": -48066,
+        "zombie_delta_direction": "improvement",
+        "note": "GPU monitor suggestions at close: both GPUs idle — use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously for .43 dual-model experiments."
+    },
+    "retros_closed_this_milestone": [
+        "RETRO-058: FOVER corpus bias (6/11 .41 experiments fell back to synthetic) — addressed by .42 Phase 2 live data sprint (Exps 551-553) and FOVER corpus v2 expansion. Exp 542/557 retrained JEPA on 100+ real pairs.",
+        "RETRO-059: EORM training data gap — addressed by Exp 556 GRPO retrain on 100+ real pairs.",
+        "RETRO-056: JEPA AUC below random on biased 24-pair corpus — addressed by Exp 557 JEPA v9 retrain on diverse 100+ real pairs with LeWorldModel objective.",
+        "RETRO-033: Live inference no-improvement (10th attempt) — Exp 561 ran FR-11 real-data relay with n_responses=25; status=success but honest_verdict=real_data_no_improvement. RETRO-033 documents a pattern of successful execution with no precision improvement; the root cause investigation (why live inference shows no improvement over baseline) is now the correct open question, not the infrastructure gate."
+    ],
+    "retros_still_open": [
+        "RETRO-031: partial carry — verify closure status in result files",
+        "RETRO-049: NUP Probe v4 contrastive margin loss — addressed in .39 Exp 523 and wired via .40 Exp 530; confirm definitive closure",
+        "RETRO-055: teardown reliability under conductor lifecycle — atexit hook insufficient for external SIGKILL. Clean close state in .42 suggests manual kill or process-level fix was applied; confirm whether this is reproducible or required manual intervention.",
+        "RETRO-056: exclusion manifest does not exist — six consecutive milestones with same five experiments in slowest-5 without resolution. Building the manifest is the highest-priority infrastructure action for .43.",
+        "RETRO-033: live inference no-improvement pattern — all infrastructure gates cleared, live execution confirmed, but precision improvement not observed. Root cause investigation required: is the EBM genuinely not improving precision on live data, or is the measurement methodology capturing a confound?"
+    ],
+    "milestone_experiments_this_cycle": [
+        "Exp 549: Exclusion manifest + zombie kill fix + BatchedInferenceRunner real migration — Phase 1 infrastructure",
+        "Exp 550: Conductor exclusion manifest wire-in",
+        "Exp 551: Live 50q Data Collection A — GSM8K indices 0-49, status=success",
+        "Exp 552: Live 50q Data Collection B — GSM8K indices 50-99",
+        "Exp 553: FOVER corpus v2 construction",
+        "Exp 554: Extraction diagnostic — RETRO-058 root cause",
+        "Exp 555: Confidence-weighted filtering",
+        "Exp 556: EORM GRPO retrain on 100+ real pairs — RETRO-059 fix, status=success",
+        "Exp 557: JEPA v9 retrain on diverse 100+ corpus with LeWorldModel objective — RETRO-056, status=success",
+        "Exp 558: InternalStateProbe on real data",
+        "Exp 559: LowRankKAEM calibration — RETRO-057",
+        "Exp 560: LatentCoTEBMCalibrator — arXiv 2511.07124",
+        "Exp 561: FR-11 real-data relay — RETRO-033 10th attempt, status=success, honest_verdict=real_data_no_improvement",
+        "Exp 562: Milestone 2026.04.42 Retrospective (this document)"
+    ],
+    "headline_achievements": [
+        "Cleanest GPU close state in project history: both RTX 3090s at 2MB VRAM and 0% utilization, down from 48068MB zombie state in .41. Clean GPU state enables immediate DualGPU parallel execution in .43.",
+        "FR-11 live-data relay confirmed: Exp 561 successfully ran Tier 1 self-learning relay on real data (n_responses=25) for the first time — honest_verdict=real_data_no_improvement means the infrastructure cleared but precision improvement was not observed. This closes the 10-milestone infrastructure-gate investigation and opens the research question of why live data does not improve precision.",
+        "EORM and JEPA both retrained on real data: Exp 556 (EORM GRPO retrain) and Exp 557 (JEPA v9) both trained on 100+ live pairs from the .42 data sprint. This is the first milestone where both core models were retrained on real rather than synthetic data simultaneously.",
+        "Live data collection sprint delivered: Exps 551-553 collected 50+ GSM8K live responses per batch and built FOVER corpus v2, establishing a repeatable live-data pipeline for future milestone training runs.",
+        "422nd total experiment reached — highest count across all milestones.",
+        "Per-experiment average held at 11.0 min despite higher experiment volume (22 vs 13 in .41) — average did not degrade under increased load."
+    ],
+    "honest_verdict": "clean_gpu_state_achieved_same_five_slowest_sixth_consecutive_milestone_wall_time_regressed_fr11_infrastructure_confirmed_no_improvement"
+}

@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 548+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 562+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (548 experiments, 28 completed milestones)
+## Key Results (562 experiments, 29 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.42 (Exps 549-562, 29th milestone, title "Break the Synthetic Barrier — Live Data Sprint, Root Cause Diagnosed, JEPA Recovery") completed. Key results: **Live 50q Data Collection A** — GSM8K indices 0-49 collected with live GPU inference, Phase 2 live data sprint complete (Exp 551); **EORM GRPO Retrain on 100+ Real Pairs** — RETRO-058 fix, real corpus now exceeds synthetic threshold (Exp 556); **JEPA v9 Retrain on Diverse 100+ Corpus** — LeWorldModel objective, RETRO-056 addressed, status=success (Exp 557); **Tier 1 Self-Learning Relay on Real Data** — FR-11 mandatory relay with n_responses=25, honest_verdict=real_data_no_improvement (Exp 561, first real-data relay in project history); **Milestone 2026.04.42 Retrospective** (Exp 562). Conductor exclusion manifest built and zombie kill executed (Exp 549). BatchedInferenceRunner real migration complete (Exp 550).
 
 Note: Milestone 2026.04.41 (Exps 537-548, 28th milestone, title "Close the Nine-Milestone Gap — First Live 25q Positive, Teardown Fix, GRPO Self-Learning") completed. Key results: **RETRO-054 CLOSED** — ExperimentTemplate.teardown() + atexit registration implemented, zombie VRAM carryover prevention now in framework (Exp 537); **RETRO-055 CLOSED** — env_autofix value-check fix confirmed working in live_gpu mode (Exp 538); **RETRO-033 miss #10** — live 25q pipeline accuracy 0.32 == baseline 0.32 (signed_improvement=0.0, live GPU mode confirmed operational); **RETRO-038 miss #8** — live 100q pipeline accuracy 0.29 == baseline 0.29, Wilson CI spans zero; **LowRankKAEM wired as default tier** — 4.6x speedup at n_vars=10, 154.7x at n_vars=200 (Exp 544); **GRPO EORM improved** on 3 synthetic pairs (AUC 0.00→1.00, honest_verdict=synthetic_fallback) (Exp 540); **AutoRefine distilled 2 constraint templates** from 67 violations (Exp 546); mean=3.785 min/exp (new project record, 41.6 min for 11 experiments). New RETROs: RETRO-056 (JEPA AUC 0.444 below random on 24-pair corpus), RETRO-057 (LowRankKAEM energy_mad_normalized 0.96-0.99, outside 5% tolerance), RETRO-058 (synthetic proxy fallback epidemic: 6/11 experiments), RETRO-059 (conductor exclusion manifest for fully-modern legacy scripts).
 
