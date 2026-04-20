@@ -1473,6 +1473,75 @@ eorm_energies, calibration_viable; and artifact has honest_verdict set correctly
 
 ---
 
+### REQ-LEARN-065: JEPACPMIPairBuilder — Hard-Negative Contrastive Pair Construction from FOVER Corpus
+
+**Why (layman):** The JEPA predictor AUC was stuck at 0.4444 across three retrains because
+all three used scalar loss on step-level labels — the model could hedge by making all scores
+near 0.5.  The CPMI fix (arXiv 2604.10660) constructs explicit contrastive pairs: one
+(correct_chain, incorrect_chain) from the SAME question.  This forces the model to learn a
+RELATIVE ordering between two whole chains, which is exactly what AUC measures.
+
+**Acceptance criteria:**
+- JEPACPMIPairBuilder.build_pairs() groups FOVERCorpusEntry objects by question_id.
+- For each group with >= 1 correct AND >= 1 incorrect entry: yields one JEPACPMIPair.
+- Hardest incorrect = entry with most cot_steps (hard-negative mining).
+- JEPACPMIPair has: question_id, correct_embeddings, incorrect_embeddings,
+  hard_negative_step_idx, pair_quality.
+- pair_quality = len(correct_steps) / max(len(incorrect_steps), 1).
+- build_synthetic_pairs(n) returns exactly n pairs as fallback for small corpora.
+
+Spec: REQ-LEARN-065,
+      SCENARIO-LEARN-101, SCENARIO-LEARN-103
+
+---
+
+### REQ-LEARN-066: CPMIContrastiveLoss — Hinge Margin Loss for JEPA CPMI Pairs
+
+**Why (layman):** The contrastive hinge margin loss directly optimises the ranking
+objective that AUC measures.  For each pair it computes:
+    L = max(0, margin - (E_incorrect - E_correct))
+This is zero when the incorrect chain scores at least `margin` above the correct chain,
+and positive otherwise.  Unlike BCE or PURE, the gradient of this loss is always zero
+when the constraint is satisfied — no gradient flows when the model is already correct.
+
+**Acceptance criteria:**
+- CPMIContrastiveLoss.__init__(margin, chain_energy_mode) with mode in ('mean','max','min').
+- chain_energy(model, embeddings) aggregates per-step scores by the selected mode.
+- compute_loss(model, pairs) returns mean(max(0, margin - gap)) over all pairs.
+- Returns 0.0 for empty pair list (zero_if_empty guard).
+- chain_energy returns 0.0 for empty embeddings.
+
+Spec: REQ-LEARN-066,
+      SCENARIO-LEARN-101, SCENARIO-LEARN-102, SCENARIO-LEARN-103
+
+---
+
+### SCENARIO-LEARN-101: build_pairs Yields One Pair Per Question With Both Verdicts
+
+**Given** a FOVER corpus with questions that each have at least one correct and one incorrect entry
+**When** JEPACPMIPairBuilder.build_pairs() is called
+**Then** it yields exactly one JEPACPMIPair per qualifying question; questions with only
+correct or only incorrect entries are skipped
+
+---
+
+### SCENARIO-LEARN-102: CPMIContrastiveLoss Returns Zero When Gap Exceeds Margin
+
+**Given** a pair where E_incorrect - E_correct = 5.0 and margin = 1.0
+**When** CPMIContrastiveLoss.compute_loss() is called
+**Then** it returns 0.0 (constraint already satisfied; no gradient needed)
+
+---
+
+### SCENARIO-LEARN-103: build_synthetic_pairs Pads Small Corpus to Requested Count
+
+**Given** a corpus that yields fewer than min_pairs real pairs
+**When** JEPACPMIPairBuilder.build_synthetic_pairs(n) is called
+**Then** it returns exactly n JEPACPMIPair objects with pair_quality=1.0 and
+correct arithmetic in the correct chain, one off-by-one error in the incorrect chain
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1528,3 +1597,5 @@ eorm_energies, calibration_viable; and artifact has honest_verdict set correctly
 | REQ-LEARN-062 | N/A | Implemented | Python |
 | REQ-LEARN-063 | N/A | Implemented | Python |
 | REQ-LEARN-064 | N/A | Implemented | Python |
+| REQ-LEARN-065 | N/A | Implemented | 28 Python |
+| REQ-LEARN-066 | N/A | Implemented | 28 Python |
