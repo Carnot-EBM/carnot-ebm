@@ -2344,3 +2344,4 @@ python/ |
 | 2026-04-20 22:14 UTC | Exp 604: DSVD Live Fine-Tuning — Temporal State Tr | OK | 81 passed, 2 warnings in 3.85s |
 | 2026-04-20 22:26 UTC | Exp 605: Live Extractor Diagnostic v4 — CoACEV4 +  | OK | 81 passed, 2 warnings in 3.77s |
 | 2026-04-20 22:37 UTC | Exp 606: Interleaved Formal-Logic Verification Dur | OK | 81 passed, 2 warnings in 4.67s |
+| 2026-04-20 22:51 UTC | Exp 607: JEPA v12 OOD Validation + Live Corpus v4  | OK | 81 passed, 2 warnings in 4.53s |
