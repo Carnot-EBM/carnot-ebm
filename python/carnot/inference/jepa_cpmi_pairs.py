@@ -1,5 +1,22 @@
 """jepa_cpmi_pairs — CPMI contrastive pair builder for JEPA training (arXiv 2604.10660).
 
+**PROGRS Outcome-Conditioned Centering (arXiv 2604.02341):**
+    JEPA v11 achieved AUC=1.0 on only 9 synthetic pairs — almost certainly overfitting.
+    When training on a larger live corpus (>=100 pairs), naive CPMI loss can suffer from
+    "reward hacking": some question groups are intrinsically easy (wide energy gap) and
+    dominate the loss signal, starving harder groups of gradient.
+
+    PROGRS centering (arXiv 2604.02341, "Outcome-Conditioned Group Relative Policy Optimisation
+    with Reward Standardisation") fixes this by normalising the energy gap WITHIN each
+    question group before computing the loss:
+
+        centered_gap_i = gap_i - mean(gap for all pairs in same question group)
+
+    This means each question contributes an equally-weighted learning signal regardless
+    of how easy or hard its pairs are in absolute terms.  The model cannot satisfy the
+    loss by memorising a few easy questions — it must learn the correct ordering across
+    the entire corpus.
+
 **Researcher summary (RETRO-063):**
     The JEPA predictor AUC was stuck at 0.4444 across three consecutive retrains (v8, v9, v10)
     despite switching from BCE to PURE min-form loss.  Root cause: ALL three variants still
@@ -36,8 +53,9 @@
     has to work harder to correctly rank it below the correct chain.  This is the standard
     hard-negative mining heuristic from metric learning (e.g. FaceNet, 2015).
 
-Spec: REQ-LEARN-065, REQ-LEARN-066,
-      SCENARIO-LEARN-101, SCENARIO-LEARN-102, SCENARIO-LEARN-103
+Spec: REQ-LEARN-065, REQ-LEARN-066, REQ-LEARN-068, REQ-LEARN-069,
+      SCENARIO-LEARN-101, SCENARIO-LEARN-102, SCENARIO-LEARN-103,
+      SCENARIO-LEARN-107, SCENARIO-LEARN-108, SCENARIO-LEARN-109
 """
 
 from __future__ import annotations
@@ -426,3 +444,142 @@ class JEPACPMIPairBuilder:
                 )
             )
         return pairs
+
+
+# ---------------------------------------------------------------------------
+# PROGRSCentering
+# ---------------------------------------------------------------------------
+
+
+class PROGRSCentering:
+    """Outcome-conditioned group centering for contrastive stability (arXiv 2604.02341).
+
+    **Detailed explanation for engineers:**
+        PROGRS (Outcome-Conditioned Group Relative Policy Optimisation with Reward
+        Standardisation) prevents reward hacking by normalising energy gaps within each
+        question group before computing the loss.
+
+        Without centering, questions with wide energy gaps (easy questions) dominate the
+        gradient — the model learns to push those few easy pairs apart and ignores harder
+        groups where the correct/incorrect chains are more similar.  With PROGRS centering,
+        every question group contributes an equally informative learning signal regardless
+        of absolute gap magnitude.
+
+        **How centering works:**
+        1. For each pair p, compute raw energy gap g_p = E(incorrect) - E(correct).
+        2. Group pairs by question_id.
+        3. Within each group, subtract the group mean gap:
+               centered_g_p = g_p - mean(g_q for q in same group)
+        4. Apply the margin loss on the CENTERED gap:
+               L_p = max(0, margin - centered_g_p)
+
+        A group where all gaps are above the margin contributes zero loss — it is
+        already solved.  A group where all gaps are below the margin contributes
+        loss proportional to how much each pair deviates from its group mean.
+
+    **When centering has no effect:**
+        If every question group has exactly one pair (the common case from JEPACPMIPairBuilder),
+        the group mean equals the pair's own gap, so centered_g_p = 0 for all pairs.
+        In that case, compute_centered_loss falls back to standard CPMI loss — this is
+        correct behavior and is tested explicitly in SCENARIO-LEARN-109.
+
+    Spec: REQ-LEARN-069, SCENARIO-LEARN-107, SCENARIO-LEARN-108, SCENARIO-LEARN-109
+    """
+
+    def __init__(self) -> None:
+        """Create a PROGRSCentering instance.  No parameters required.
+
+        The centering algorithm is purely data-driven: group means are computed from
+        the pairs passed to center_pairs() at call time, not stored in this object.
+        """
+
+    def center_pairs(
+        self,
+        pairs: list[JEPACPMIPair],
+        model: Callable,
+    ) -> list[tuple[JEPACPMIPair, float]]:
+        """Compute PROGRS-centered energy gaps for each pair.
+
+        **Detailed explanation for engineers:**
+            For each pair, we compute the raw energy gap g_p = E(incorrect) - E(correct)
+            using the CPMIContrastiveLoss chain_energy helper.  Then, within each
+            question_id group, we subtract the group mean gap.  The result is a list
+            of (pair, centered_gap) tuples — the loss can then be computed directly from
+            the centered gaps.
+
+            Empty pair list returns [] without any model calls.
+
+        Args:
+            pairs: List of JEPACPMIPair objects (may span multiple question_ids).
+            model: Callable mapping jnp.ndarray -> scalar energy (same as CPMIContrastiveLoss).
+
+        Returns:
+            List of (JEPACPMIPair, centered_gap: float) tuples in the same order as pairs.
+
+        Spec: REQ-LEARN-069, SCENARIO-LEARN-107
+        """
+        if not pairs:
+            return []
+
+        loss_obj = CPMIContrastiveLoss(margin=0.0, chain_energy_mode="mean")
+
+        # Compute raw gaps for every pair.
+        raw_gaps: list[float] = []
+        for pair in pairs:
+            e_correct = loss_obj.chain_energy(model, pair.correct_embeddings)
+            e_incorrect = loss_obj.chain_energy(model, pair.incorrect_embeddings)
+            raw_gaps.append(e_incorrect - e_correct)
+
+        # Build group mean by question_id.
+        from collections import defaultdict
+
+        group_gaps: dict[str, list[float]] = defaultdict(list)
+        for pair, gap in zip(pairs, raw_gaps):
+            group_gaps[pair.question_id].append(gap)
+
+        group_mean: dict[str, float] = {
+            qid: sum(gs) / len(gs) for qid, gs in group_gaps.items()
+        }
+
+        # Center each gap by its group mean.
+        centered: list[tuple[JEPACPMIPair, float]] = []
+        for pair, gap in zip(pairs, raw_gaps):
+            centered_gap = gap - group_mean[pair.question_id]
+            centered.append((pair, centered_gap))
+
+        return centered
+
+    def compute_centered_loss(
+        self,
+        model: Callable,
+        pairs: list[JEPACPMIPair],
+        margin: float = 1.0,
+    ) -> float:
+        """Apply PROGRS centering, then compute CPMIContrastiveLoss on centered gaps.
+
+        **Detailed explanation for engineers:**
+            1. Call center_pairs() to get (pair, centered_gap) for each pair.
+            2. For each tuple, compute L_p = max(0, margin - centered_gap).
+            3. Return mean(L_p).  Returns 0.0 for empty pairs.
+
+            When all pairs in a group have the same gap (e.g. single-pair groups),
+            centered_gap = 0, and L_p = max(0, margin - 0) = margin.  This is expected:
+            a single-pair group has no within-group signal to center on, so the loss
+            reverts to the standard margin loss evaluated at gap=0.
+
+        Args:
+            model:  Callable mapping jnp.ndarray -> scalar energy.
+            pairs:  List of JEPACPMIPair objects.
+            margin: Minimum required centered gap.  Default 1.0.
+
+        Returns:
+            Mean centered contrastive loss as a Python float.
+
+        Spec: REQ-LEARN-069, SCENARIO-LEARN-108, SCENARIO-LEARN-109
+        """
+        if not pairs:
+            return 0.0
+
+        centered = self.center_pairs(pairs, model)
+        total = sum(max(0.0, margin - centered_gap) for _, centered_gap in centered)
+        return total / len(centered)

@@ -1593,6 +1593,56 @@ fr11_retrain_complete=True, and honest_verdict
 
 ---
 
+### REQ-LEARN-068: JEPA v12 — Live Corpus CPMI Retrain with >= 20 Real Pairs (Exp 593)
+
+JEPA v12 must be trained on the full live corpus from Exp 578 (GSM8K 0-49, both
+Qwen3.5-0.8B and Gemma4-E4B-it, inference_mode='live_gpu') using the CPMIContrastiveLoss
+objective.  The training corpus must contain at least 20 real live pairs (pairs derived
+from actual GPU inference, not synthetic fallback).  Validates whether v11 AUC=1.0 on
+9 pairs was genuine learning or overfitting.
+
+Spec: REQ-LEARN-068
+
+### REQ-LEARN-069: PROGRSCentering — Outcome-Conditioned Group Centering for Contrastive Stability (arXiv 2604.02341)
+
+PROGRSCentering must implement PROGRS outcome-conditioned group centering to prevent
+reward hacking on easy questions.  For each question_id group, the mean energy gap is
+subtracted from each pair's energy gap before computing the contrastive margin loss.
+This ensures every question group contributes an equally-weighted learning signal
+regardless of absolute gap magnitude.  For single-pair groups, a graceful fallback
+to raw gap must be used to preserve gradient flow.
+
+Spec: REQ-LEARN-069
+
+### SCENARIO-LEARN-107: PROGRSCentering.center_pairs Correctly Normalises Within-Group Gaps
+
+**Given** a list of JEPACPMIPair objects spanning multiple question_id groups
+**When** PROGRSCentering.center_pairs() is called
+**Then** the centered gap for each pair equals raw_gap minus the group mean gap,
+         the output list preserves input order, and empty input returns []
+
+Spec: SCENARIO-LEARN-107
+
+### SCENARIO-LEARN-108: PROGRSCentering.compute_centered_loss Applies Hinge on Centered Gaps
+
+**Given** a list of pairs where some groups have multiple pairs (different raw gaps)
+**When** PROGRSCentering.compute_centered_loss(model, pairs, margin) is called
+**Then** the loss equals mean(max(0, margin - centered_gap_p)) over all pairs,
+         where centered gaps account for within-group mean subtraction
+
+Spec: SCENARIO-LEARN-108
+
+### SCENARIO-LEARN-109: Single-Pair Groups Yield Centered Gap = 0 in PROGRSCentering
+
+**Given** a corpus where every question_id has exactly one pair (output of JEPACPMIPairBuilder)
+**When** PROGRSCentering.center_pairs() is called
+**Then** centered_gap = 0 for every pair (raw_gap - group_mean = raw_gap - raw_gap = 0),
+         and compute_centered_loss returns margin for each pair
+
+Spec: SCENARIO-LEARN-109
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1651,3 +1701,5 @@ fr11_retrain_complete=True, and honest_verdict
 | REQ-LEARN-065 | N/A | Implemented | 28 Python |
 | REQ-LEARN-066 | N/A | Implemented | 28 Python |
 | REQ-LEARN-067 | N/A | Implemented | Python |
+| REQ-LEARN-068 | N/A | Implemented | Python |
+| REQ-LEARN-069 | N/A | Implemented | 12 Python |

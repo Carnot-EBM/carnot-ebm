@@ -135,6 +135,7 @@ from carnot.inference.jepa_cpmi_pairs import (
     JEPACPMIPair,
     JEPACPMIPairBuilder,
     CPMIContrastiveLoss,
+    PROGRSCentering,
 )
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,
@@ -150,6 +151,7 @@ __all__ = [
     "JEPACPMIPair",
     "JEPACPMIPairBuilder",
     "CPMIContrastiveLoss",
+    "PROGRSCentering",
     "EnergyGuidedSampler",
     "GuidedDecodingResult",
     "CodeVerificationResult",
