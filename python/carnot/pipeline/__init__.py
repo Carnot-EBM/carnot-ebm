@@ -433,6 +433,12 @@ from carnot.pipeline.pra_eorm_beam import (  # noqa: E402
     PRABeamResult,
     PRAEBMBeamSearch,
 )
+from carnot.pipeline.hardware_energy_probe import (  # noqa: E402
+    EORMHardwareCorrelation,
+    HardwareEnergyProbe,
+    HardwareEnergyReading,
+    compute_eorm_hardware_correlation,
+)
 
 __all__ = [
     "AgentStep",
@@ -728,4 +734,8 @@ __all__ = [
     "PRABeamCandidate",
     "PRABeamResult",
     "PRAEBMBeamSearch",
+    "EORMHardwareCorrelation",
+    "HardwareEnergyProbe",
+    "HardwareEnergyReading",
+    "compute_eorm_hardware_correlation",
 ]

@@ -1424,6 +1424,55 @@ best_epoch, model_path, retro_060_resolved, fr11_retrain_complete, honest_verdic
 
 ---
 
+### REQ-LEARN-064: Hardware Energy as EORM Calibration Signal via RAPL Power Trace Correlation
+
+**What:** Measure Pearson correlation between hardware energy expenditure (RAPL joules/step
+on CPU) and EORM model energy scores during inference over a set of CoT steps.
+
+**Why (layman):** Hard reasoning steps require more compute cycles — the CPU draws more
+power to compute large activations and long attention. Carnot's EORM is a learned proxy
+for reasoning quality. If RAPL hardware energy and EORM energy co-move (r > 0.5), then
+a simple power meter becomes a free, label-free calibration signal: we can align EORM
+scores to physical energy without any human annotation.
+
+**Acceptance criteria:**
+- HardwareEnergyProbe reads from /sys/class/powercap/intel-rapl:0/energy_uj when available.
+- Falls back to pyRAPL, then to a mock(0.0) source with source label.
+- compute_eorm_hardware_correlation() runs EORM scoring + hardware measurement for each step.
+- Pearson r and p-value computed via scipy.stats.pearsonr.
+- calibration_viable = r > 0.5 AND p_value < 0.05.
+- Artifact reports rapl_available, pearson_r, p_value, calibration_viable, honest_verdict.
+
+Spec: REQ-LEARN-064,
+      SCENARIO-LEARN-098, SCENARIO-LEARN-099, SCENARIO-LEARN-100
+
+---
+
+### SCENARIO-LEARN-098: HardwareEnergyProbe Falls Back to Mock When RAPL Unavailable
+
+**Given** the system does not have /sys/class/powercap/intel-rapl:0/energy_uj
+**When** HardwareEnergyProbe.read() is called
+**Then** it returns a HardwareEnergyReading with source='mock' and joules=0.0
+
+---
+
+### SCENARIO-LEARN-099: measure_segment Returns Result and Delta Joules
+
+**Given** a callable function fn and a HardwareEnergyProbe instance
+**When** probe.measure_segment(fn) is called
+**Then** it returns a tuple (result, delta_joules) where result is fn()'s return value
+
+---
+
+### SCENARIO-LEARN-100: Correlation Artifact Contains All Required Fields
+
+**Given** 30 CoT steps (15 correct, 15 incorrect) from FOVER corpus v2
+**When** compute_eorm_hardware_correlation() runs with mock probe
+**Then** EORMHardwareCorrelation has n_steps=30, pearson_r, p_value, hardware_energies,
+eorm_energies, calibration_viable; and artifact has honest_verdict set correctly
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1478,3 +1527,4 @@ best_epoch, model_path, retro_060_resolved, fr11_retrain_complete, honest_verdic
 | REQ-LEARN-061 | N/A | Implemented | Python |
 | REQ-LEARN-062 | N/A | Implemented | Python |
 | REQ-LEARN-063 | N/A | Implemented | Python |
+| REQ-LEARN-064 | N/A | Implemented | Python |
