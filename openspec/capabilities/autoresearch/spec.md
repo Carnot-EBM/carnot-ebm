@@ -1130,6 +1130,34 @@ for 'carry' has been pre-seeded above the threshold
 **Then** check_and_add() promotes the pattern to an active constraint
 **And** the pipeline applies the new constraint during evaluation
 
+### REQ-LEARN-055: FOVER Corpus Expansion via Multi-Source Merge
+
+**Why this requirement exists:**
+JEPA v7 was retrained on 57 real FOVER pairs (fover_442 source, n_train_pairs=46,
+n_test_pairs=11). Exp 538 produced 25 additional CoT responses (50 total when two
+models each answer 25 questions). Merging these sources with deduplication by
+step_text hash produces a 100+ pair corpus for JEPA v8 retrain (Exp 543).
+
+**Given** a FOVER corpus from fover_labeled_steps_live.json (57 pairs)
+**And** new CoT responses from exp538_cot_pairs.json (25 responses)
+**When** Exp 542 runs FOVERAnnotator on the new responses and merges with prior pairs
+**Then** the merged corpus is deduplicated by SHA-256 hash of step_text
+**And** the merged corpus is written to results/fover_labeled_steps_expanded.json
+**And** honest_verdict is 'corpus_expanded' when n_total_pairs >= 100
+
+### SCENARIO-LEARN-086: Deduplication Removes Pairs with Identical step_text
+
+**Given** two training pairs with identical step_text content
+**When** merge_fover_corpora() combines them
+**Then** only one copy is retained in the merged output
+
+### SCENARIO-LEARN-087: Multi-Source Load Tolerates Missing exp538 File
+
+**Given** exp538_cot_pairs.json is absent from the results directory
+**When** Exp 542 runs
+**Then** n_new_pairs = 0 and the merged corpus equals the prior 57-pair corpus
+**And** honest_verdict reflects partial_expansion
+
 ---
 
 ## Implementation Status
@@ -1177,3 +1205,4 @@ for 'carry' has been pre-seeded above the threshold
 | REQ-LEARN-052 | N/A | Implemented | Python |
 | REQ-LEARN-053 | N/A | Implemented | Python |
 | REQ-LEARN-054 | N/A | Implemented | Python |
+| REQ-LEARN-055 | N/A | Implemented | Python |
