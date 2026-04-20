@@ -2340,3 +2340,4 @@ python/ |
 | 2026-04-20 18:18 UTC | Exp 602: Live Corpus Expansion v2 — GSM8K 250-349  | OK | 81 passed, 2 warnings in 2.74s |
 | 2026-04-20 19:23 UTC | Exp 603: CoACEExtractorV4 — Data-Driven Live Train | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-20 20:33 UTC | Exp 603: CoACEExtractorV4 — Data-Driven Live Train | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-04-20 22:00 UTC | Exp 603: CoACEExtractorV4 — Data-Driven Live Train | OK | 135 passed, 2 warnings in 4.47s |
