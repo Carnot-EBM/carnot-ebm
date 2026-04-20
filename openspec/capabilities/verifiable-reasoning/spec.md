@@ -11483,3 +11483,44 @@ Then: retro_033_resolved=False regardless of accuracy values.
 **Implementation Status:** Implemented (Exp 609)
 
 **Implementation Status:** Implemented (Exp 608)
+
+## REQ-LEARN-075: HISR credit assignment wired into ConstraintAdditionFromMemory
+
+``ConstraintAdditionFromMemory`` MUST expose a ``hisr_weighted_add()`` method
+and a ``use_hisr`` parameter on ``add_from_memory()`` that apply HISR credit
+assignment (arXiv 2603.18683) before promoting violations into constraints.
+
+### REQ-LEARN-075-1
+``hisr_weighted_add(violations, final_correct)`` MUST call
+``HISRWeighter.compute_hindsight_score(violations, final_correct)`` and filter
+to weights with ``hindsight_score >= 0.5`` before observing violations.
+
+### REQ-LEARN-075-2
+When ``final_correct=True``, ``hisr_weighted_add`` MUST observe zero violations
+(all scores are 0.0, none pass the 0.5 threshold).
+
+### REQ-LEARN-075-3
+``add_from_memory(violations, final_correct, use_hisr=True)`` MUST delegate to
+``hisr_weighted_add()``.
+
+### REQ-LEARN-075-4
+``add_from_memory(violations, use_hisr=False)`` MUST use the uniform count path
+(observe each violation ``count`` times).
+
+### SCENARIO-LEARN-110: HISR filters low-confidence violations on incorrect chain
+
+Given: 5 ViolationPattern objects and final_correct=False.
+When: hisr_weighted_add() is called.
+Then: Only violations with hindsight_score >= 0.5 are observed (last 2 of 5 for
+a chain where the 5th is distance 0, 4th is distance 1 (score=0.5), 3rd is
+distance 2 (score=0.333 — filtered out)).
+
+**Implementation Status:** Implemented (Exp 610)
+
+### SCENARIO-LEARN-111: HISR returns zero additions on correct chain
+
+Given: any violations and final_correct=True.
+When: hisr_weighted_add() is called.
+Then: No violations are observed and check_and_add() returns [].
+
+**Implementation Status:** Implemented (Exp 610)

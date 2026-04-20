@@ -847,6 +847,110 @@ class ConstraintAdditionFromMemory:
         return sorted(added_this_call)
 
     # ------------------------------------------------------------------
+    # HISR-weighted addition
+    # ------------------------------------------------------------------
+
+    def hisr_weighted_add(
+        self,
+        violations: list[ViolationPattern],
+        final_correct: bool,
+    ) -> list[str]:
+        """Add constraints using HISR credit assignment to filter low-signal violations.
+
+        **Detailed explanation for engineers (HISR — arXiv 2603.18683):**
+            Standard constraint addition treats every observed violation equally.
+            HISR (Hindsight Importance Score Reweighting) corrects this by looking
+            BACKWARD from the outcome: violations that immediately preceded a wrong
+            final answer receive high scores (up to 1.0); violations early in the
+            chain that the model self-corrected receive low scores (toward 0.0).
+            Violations in chains that ended CORRECTLY receive score 0.0 — they were
+            false alarms and should not pollute the constraint-addition signal.
+
+            This method:
+            1. Calls ``HISRWeighter.compute_hindsight_score(violations, final_correct)``
+               to assign each violation a hindsight score in [0, 1].
+            2. Filters to violations whose score >= 0.5 (i.e., in the second half
+               of the error chain).
+            3. Observes only those high-signal violations before calling
+               ``check_and_add()``.
+
+            The threshold of 0.5 retains the last two violations in a 3-step chain
+            and the last three in a 5-step chain — a balance between signal quality
+            and coverage validated in Exp 598.
+
+        Args:
+            violations: Ordered sequence of ``ViolationPattern`` objects from one
+                verify-repair chain.  Order must match temporal occurrence — index 0
+                is the earliest, index N-1 is the latest.
+            final_correct: True when the pipeline's final answer was correct (all
+                violations are false positives and get score 0.0).
+
+        Returns:
+            List of constraint names added in this call (same contract as
+            ``check_and_add()``).
+
+        Spec: REQ-LEARN-075, SCENARIO-LEARN-110, SCENARIO-LEARN-111
+        """
+        from carnot.pipeline.hisr_weights import HISRWeighter
+
+        weighter = HISRWeighter()
+        weights = weighter.compute_hindsight_score(violations, final_correct)
+        high_signal = weighter.weighted_violations(weights, threshold=0.5)
+
+        for v in high_signal:
+            # Observe once per high-signal violation.  Example text is minimal
+            # because HISR already filtered the signal; we don't have the
+            # original step text here, just the type.
+            self.observe(v.type, "hisr_filtered")
+
+        return self.check_and_add()
+
+    def add_from_memory(
+        self,
+        violations: list[ViolationPattern],
+        final_correct: bool = False,
+        use_hisr: bool = False,
+    ) -> list[str]:
+        """Observe a batch of violations and add matured constraints.
+
+        **Detailed explanation for engineers:**
+            This is a higher-level convenience method that takes a list of
+            ``ViolationPattern`` objects (e.g. collected over one verify-repair
+            chain) and either:
+
+            - Uniformly observes all violations and calls ``check_and_add()``
+              (when ``use_hisr=False``), or
+            - Applies HISR credit assignment first, observing only high-signal
+              violations, then calls ``check_and_add()`` (when ``use_hisr=True``).
+
+            Each ``ViolationPattern.count`` is respected: the same violation type
+            is observed ``count`` times so that the maturation threshold tracks
+            cumulative occurrences, not just distinct violation types.
+
+        Args:
+            violations: List of ``ViolationPattern`` objects from one chain.
+            final_correct: Whether the final answer was correct.  Only used
+                when ``use_hisr=True`` (passed through to ``hisr_weighted_add``).
+            use_hisr: When True, use HISR-weighted observation instead of
+                uniform counting.  Recommended for production use.
+
+        Returns:
+            List of constraint names added in this call.
+
+        Spec: REQ-LEARN-075
+        """
+        if use_hisr:
+            return self.hisr_weighted_add(violations, final_correct)
+
+        # Uniform path: observe each violation ``count`` times.
+        for v in violations:
+            for _ in range(max(1, v.count)):
+                step = v.example_steps[0] if v.example_steps else ""
+                self.observe(v.type, step)
+
+        return self.check_and_add()
+
+    # ------------------------------------------------------------------
     # Inspection
     # ------------------------------------------------------------------
 
