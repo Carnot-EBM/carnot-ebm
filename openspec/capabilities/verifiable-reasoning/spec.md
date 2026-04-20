@@ -10071,6 +10071,44 @@ Then: fover_corpus_v3.json contains all deduplicated entries from the three sour
 
 ---
 
+## REQ-DATA-010: Live Corpus v4 — At Least 200 Real Live Pairs from Diverse GSM8K Indices
+
+Accumulate a unified FOVER corpus from all live pair collection experiments (578, 579, 602)
+covering diverse GSM8K question indices (0-49, 200-249, 250-349) to support CoACEV4 and
+DSVD fine-tuning experiments that require varied arithmetic domains and multi-step problems.
+
+- REQ-DATA-010-1: results/live_pairs_602.json contains live pairs from GSM8K indices 250-349
+  with inference_mode='live_gpu' for both Qwen3.5-0.8B and Gemma4-E4B-it.
+- REQ-DATA-010-2: results/fover_corpus_v4.json merges live_pairs_578.json,
+  live_pairs_579.json (if present), and live_pairs_602.json, deduplicated by (question_index, model).
+- REQ-DATA-010-3: fover_corpus_v4.json metadata records n_unique_questions, n_correct_pairs,
+  n_incorrect_pairs, model_accuracy_qwen, model_accuracy_gemma.
+- REQ-DATA-010-4: honest_verdict='corpus_expanded' iff n_new_pairs >= 80; else 'corpus_partial'.
+
+Spec: REQ-DATA-010, SCENARIO-DATA-019, SCENARIO-DATA-020
+
+### SCENARIO-DATA-019: Exp 602 Collects GSM8K Indices 250-349 With CARNOT_FORCE_LIVE Gate
+
+Given: CARNOT_FORCE_LIVE=1, both Qwen3.5-0.8B and Gemma4-E4B-it loaded, GSM8K questions 250-349.
+When: scripts/experiment_602_live_corpus_expansion_v2.py is run.
+Then: results/live_pairs_602.json is written with 200 entries (100 questions * 2 models).
+And: each entry has fields: question_index, question, model, response, is_correct, inference_mode='live_gpu'.
+And: the module raises RuntimeError at import time if CARNOT_FORCE_LIVE != '1'.
+
+**Implementation Status:** Pending (Exp 602)
+
+### SCENARIO-DATA-020: Exp 602 Merges All Live Corpora Into fover_corpus_v4.json
+
+Given: results/live_pairs_578.json (100 pairs), optional live_pairs_579.json, and live_pairs_602.json.
+When: Exp 602 merges and deduplicates by (question_index, model) and writes fover_corpus_v4.json.
+Then: fover_corpus_v4.json contains all deduplicated entries across all sources.
+And: metadata records n_unique_questions >= 100, model_accuracy_qwen and model_accuracy_gemma as floats.
+And: honest_verdict='corpus_expanded' if n_new_pairs >= 80.
+
+**Implementation Status:** Pending (Exp 602)
+
+---
+
 ## REQ-EXTRACT-030: Per-Extractor FP/TP Rate Measurement on Labeled Live Responses
 
 Each constraint extractor (VeriCoTStepValidator, VPRMArithmeticVerifier) must be measurable
