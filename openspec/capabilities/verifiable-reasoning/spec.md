@@ -11087,3 +11087,37 @@ Then: headline_result='Wilson_CI_publishable' only if wilson_lower_ci > 0.
 And:  if wilson_lower_ci <= 0, headline_result='no_significant_improvement'.
 
 **Implementation Status:** Implemented (Exp 596)
+
+## REQ-VERIFY-125: NUP Probe v5 GRPO Contrastive Retrain (arXiv 2503.06639)
+
+Apply GRPO-style contrastive pairing (arXiv 2503.06639) to retrain NUP Probe v4 on live
+benchmark pairs accumulated across Exps 578-596.  Binary correct/incorrect labels from
+live benchmarks ARE a contrastive training signal without additional annotation.
+
+- REQ-VERIFY-125-1: GRPOContrastivePairer.pairs(entries) groups by question_index and
+  yields (correct_entry, incorrect_entry) tuples for each question where both labels exist.
+- REQ-VERIFY-125-2: NUPProbeV5 wraps NUPProbeV4 and accepts raw live_pairs entries as
+  training input via train_from_pairs(entries, n_epochs).
+- REQ-VERIFY-125-3: Evaluate nup_v5_auc on combined FOVER corpus (live_pairs_552 + live_pairs_578).
+- REQ-VERIFY-125-4: Save to results/nup_probe_v5.safetensors if nup_v5_auc >= 0.750.
+- REQ-VERIFY-125-5: honest_verdict reflects vivado status and NUP v5 AUC outcome.
+
+Spec: REQ-VERIFY-125, SCENARIO-VERIFY-155, SCENARIO-VERIFY-156
+
+### SCENARIO-VERIFY-155: GRPOContrastivePairer Yields Correct/Incorrect Pairs by Question
+
+Given: a list of live_pairs entries with mixed is_correct=True/False for the same question_index.
+When: GRPOContrastivePairer.pairs(entries) is called.
+Then: each yielded tuple is (correct_entry, incorrect_entry) where both have the same question_index.
+And: questions with only correct or only incorrect entries are skipped (no partial pairs).
+
+**Implementation Status:** Implemented (Exp 599)
+
+### SCENARIO-VERIFY-156: NUP Probe v5 AUC on FOVER Corpus After GRPO Retrain
+
+Given: combined FOVER corpus from live_pairs_552.json and live_pairs_578.json (200 entries total).
+When: NUPProbeV5.train_from_pairs(entries, n_epochs=100) is called and nup_v5_auc is evaluated.
+Then: nup_v5_auc is a float in [0, 1], and if >= 0.750, the model is saved to results/nup_probe_v5.safetensors.
+And: if nup_v5_auc < 0.750, no model file is written and honest_verdict reflects no_improvement.
+
+**Implementation Status:** Implemented (Exp 599)
