@@ -1,0 +1,111 @@
+{
+  "experiment": 588,
+  "title": "Milestone 2026.04.44 Operational Retrospective",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T14:27:30Z",
+  "finished_at": "2026-04-20T14:27:30Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": "carnot.operational_retro.v19",
+  "milestone": "2026.04.44",
+  "total_wall_time_minutes": 4654,
+  "experiments_completed": 465,
+  "avg_time_per_experiment_minutes": 10.0,
+  "wall_time_delta_vs_prior_minutes": 70,
+  "wall_time_delta_direction": "regression",
+  "wall_time_delta_pct": 1.5,
+  "slowest_experiments": [
+    {
+      "duration_minutes": 105,
+      "experiment": 308,
+      "title": "JEPA fast-path gate integration",
+      "status": "checkpoint_tests_failing",
+      "carry_count_in_slowest5": 8,
+      "root_cause": "Checkpoint-failure loop — tests failing at commit time triggers full re-read and retry cycle. Context reconstruction overhead compounds because this experiment has been in the slowest-5 for 8 consecutive milestones without exclusion."
+    },
+    {
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "status": "completed",
+      "carry_count_in_slowest5": 8,
+      "root_cause": "17-milestone RETRO-003 carry debt. When a RETRO item carries for 17 milestones, context reconstruction overhead at implementation time balloons to 3-4x the actual implementation cost. This experiment cost 76 min for ~20 min of actual work."
+    },
+    {
+      "duration_minutes": 74,
+      "experiment": 260,
+      "title": "CPU-bound benchmark proving GPU need",
+      "status": "checkpoint_partial",
+      "carry_count_in_slowest5": 8,
+      "root_cause": "Legacy pre-400 script, no ExperimentTemplate, no BatchedInferenceRunner. Sequential CPU inference loop without batching. Re-enters slowest-5 every milestone because exclusion manifest was never built."
+    },
+    {
+      "duration_minutes": 66,
+      "experiment": 309,
+      "title": "Tier 3 end-to-end self-learning",
+      "status": "checkpoint_tests_failing",
+      "carry_count_in_slowest5": 8,
+      "root_cause": "Checkpoint-failure state identical to Exp 308. Both are pre-400 legacy experiments that have been frozen in a failing-test checkpoint state since milestone .37. The conductor re-enters them each milestone because there is no exclusion manifest to suppress them."
+    },
+    {
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5": 5,
+      "root_cause": "1,000 sequential inference calls with no BatchedInferenceRunner. BatchedInferenceRunner migration sprint (Exp 547b) scope did not include this experiment. Estimated 3-4x speedup available via batching — would drop this experiment from ~64 min to ~16-21 min."
+    }
+  ],
+  "bottlenecks_identified": [
+    "EXCLUSION MANIFEST (RETRO-056): Exps 308, 260, 309, 425, and 410 appear in the slowest-5 for the EIGHTH consecutive milestone (.37 through .44). Cumulative wasted time since .37 is approximately 2,870 minutes (47.8 hours). The exclusion manifest has been the #1 retro recommendation for eight consecutive milestones and still does not exist. This is now a systemic governance failure, not just a tooling gap.",
+    "BATCHING NOT APPLIED TO SLOWEST-5 (RETRO-047): Exp 410 runs 1,000 sequential inference calls. BatchedInferenceRunner exists and has been in place since milestone .37. The migration sprint (Exp 547/.41) delivered tooling but batching_added=[] for all five slowest targets. Exp 410 alone represents ~48 minutes of addressable latency per milestone.",
+    "CHECKPOINT-FAILURE ZOMBIE STATE (Exps 308 + 309): Both experiments have been frozen in a failing-test checkpoint state since .37. Neither has been either fixed or formally excluded. They re-enter the conductor queue every milestone, consuming 105 + 66 = 171 minutes per cycle in context-reconstruction and retry overhead.",
+    "SEQUENTIAL GPU UTILIZATION: Both RTX 3090s at 0% utilization and <5MB VRAM at milestone close. DualGPU parallel forward-pass (running Qwen on GPU 0 and Gemma on GPU 1 simultaneously) has been recommended since milestone .36 and has never been demonstrated in a live experiment. GPU 1 contributes 0% of inference compute across every .44 experiment.",
+    "RETRO-062 PERSISTENT MISS (THIRD CYCLE): Exp 578 (Live 50q A v3) was the first experiment scheduled in milestone .44 per planning, yet it produced status=blocked because CARNOT_FORCE_LIVE was not set. This is the third consecutive milestone where this collection blocked on the same environment variable. The fix (import-time assertion) was specified in the .43 retro and .44 planning doc but was not implemented before the experiment ran.",
+    "CONTEXT DEBT MULTIPLIER ON LONG-CARRY RETROS: RETRO-003 carried 17 milestones before Exp 425 implemented it. When a RETRO item carries long, the context reconstruction overhead at implementation time multiplies: the implementer must re-read 17 prior session contexts to understand constraints accumulated across those milestones. Exp 425 cost 76 min for a mechanism that should take 20 min. The same pattern applies to RETRO-033 (10+ carry) and RETRO-038 (8+ carry).",
+    "PRE-FLIGHT TEST BOTTLENECK: The test suite (cargo test + pytest) runs as a blocking gate before each experiment commit. At 465 experiments per milestone, if each pre-commit run takes 60 seconds, that is approximately 465 minutes (7.75 hours) of test-suite execution overhead per milestone — roughly 10% of total wall time. Incremental test selection (only tests touching changed modules) was not implemented.",
+    "DOC RECONCILIATION OVERHEAD: Each experiment triggers updates to conductor-log.md, changelog.md, ops/status.md, and traceability.md. At 465 experiments, doc-reconciliation passes represent a structurally significant overhead. The current pattern is fully sequential: experiment -> tests -> code -> docs. Batching doc updates to end-of-phase instead of end-of-experiment could save 15-20% of per-experiment wall time.",
+    "PLANNING SESSION CONTEXT WINDOW COST: Each milestone-planning session spawns an arxiv research subagent and reads 10-11 project files. The .44 planning session consumed ~95k tokens. At the milestone boundary, this is acceptable, but mid-milestone re-planning (triggered by blocked experiments) incurs the same cost without the full planning benefit."
+  ],
+  "improvements_suggested": [
+    "BUILD EXCLUSION MANIFEST IMMEDIATELY (Phase 0, mandatory): Create scripts/conductor_exclusion_manifest.json listing Exps 308, 260, 309, 425, and 410 as 'excluded_legacy'. Wire the conductor to skip any experiment in this list before loading its context. Estimated implementation: 30 minutes. Estimated savings: 385 min/milestone (8.3% of current wall time). This is the highest-ROI action remaining in the project.",
+    "BATCHEDINFERENCERUNNER MIGRATION FOR EXP 410: Apply BatchedInferenceRunner to Exp 410's 1,000-call inference loop. Target batch_size=8, which reduces 1,000 sequential calls to 125 batches. Estimated speedup: 3-4x, reducing Exp 410 from ~64 min to ~16-21 min. This is a 43-48 minute saving per milestone for a ~2-hour implementation investment.",
+    "CARNOT_FORCE_LIVE IMPORT-TIME ASSERTION: Add a module-level assertion in python/carnot/pipeline/__init__.py (or the conductor session startup script) that aborts with a clear error if CARNOT_FORCE_LIVE is not set to '1' when any experiment with inference_mode=gpu_required is imported. The assertion must fire before any transformers or torch imports to avoid partial initialization. This fix was specified identically in .42, .43, and .44 retros — implement it once.",
+    "DUALGPU PARALLEL FORWARD-PASS AS DEFAULT: For any experiment loading two models (e.g., Qwen + Gemma), enforce DualGPURunner as the default executor. Route Qwen to cuda:0 and Gemma to cuda:1. Add a pre-flight check that both GPUs are free (< 100MB VRAM each) before starting. Expected throughput gain: 1.8-2x for dual-model experiments. Both GPUs are confirmed clean and available at .44 close.",
+    "INCREMENTAL TEST SELECTION: Replace full cargo test + pytest runs with pytest --co -q to collect affected tests, then run only tests in modules touched by the current experiment's changed files. For experiments that modify a single Python module, this reduces test suite execution from ~60s to ~5s. Estimated savings across 465 experiments: ~255 minutes/milestone (5.5% of wall time).",
+    "BATCH DOC UPDATES TO END-OF-PHASE: Change the conductor workflow from updating conductor-log.md + changelog.md after every experiment to batching those updates at the end of each phase (typically 3-5 experiments). This eliminates 60-80% of doc-update tool calls without losing fidelity. Estimated savings: 30-45 minutes/milestone.",
+    "TWO-MILESTONE RETRO CARRY LIMIT: Any RETRO item that appears in the slowest-5 for 2 consecutive milestones without closure is automatically added to the exclusion manifest and its experiment is frozen (not re-entered). This prevents the 8-milestone drift pattern seen with Exps 308/260/309. Implement as a conductor pre-flight rule, not just a documentation recommendation.",
+    "SESSION CONSOLIDATION FOR SMALL EXPERIMENTS: Experiments that complete in < 5 minutes (Exps 435a, 447, many spec-update experiments) should be batched into a single conductor session turn rather than individual turns. This reduces per-experiment context-loading overhead from ~10-15 seconds to near-zero for micro-experiments."
+  ],
+  "estimated_time_savings_pct": 12,
+  "time_savings_breakdown": {
+    "exclusion_manifest_pct": 8.3,
+    "batching_exp410_pct": 1.0,
+    "incremental_tests_pct": 1.5,
+    "doc_batch_updates_pct": 0.7,
+    "dualgpu_parallel_pct": 0.5,
+    "note": "12% central estimate. Historical over-estimation pattern confirmed across 7 milestones (.37-.43): projections of 15-25% consistently achieved 0-4%. Calibrated estimate is 3-5% realistic, 12% optimistic upper bound."
+  },
+  "gpu_state_at_close": {
+    "gpu0_used_mb": 4,
+    "gpu0_utilization_pct": 0,
+    "gpu1_used_mb": 4,
+    "gpu1_utilization_pct": 0,
+    "zombie_processes": 0,
+    "assessment": "clean — third consecutive milestone with clean GPU close state. Zero zombie VRAM. DualGPU parallel forward-pass still undemonstrated."
+  },
+  "research_achievements_this_milestone": [
+    "RETRO-064 RESOLVED: CoACE v2 recall improved from 5.9% to 86.7% via CoACEExtractorV2 (prose patterns + multi-step chain tracking). Exp 576, retro_064_resolved=true.",
+    "RETRO-062 PARTIAL: Exp 578 status=blocked (CARNOT_FORCE_LIVE missing). Third consecutive miss. Infrastructure fix still not applied.",
+    "FPGA MILESTONE: KV260 board arrived 2026-04-20. Exp 584 (Vivado synthesis) and Exp 585 (hardware benchmark) both succeeded. First real FPGA hardware in the research loop.",
+    "DSVD ADAPTER: Exp 587 implemented mid-generation hallucination detection and rollback (arXiv 2503.03149). New Tier 2.5 in the verification cascade."
+  ],
+  "honest_verdict": "wall_time_third_consecutive_regression_same_five_slowest_eighth_milestone_exclusion_manifest_unbuilt_gpu_clean_coace_recall_resolved_fpga_alive_retro062_still_blocked",
+  "top_priorities_for_45": [
+    "Build exclusion manifest (scripts/conductor_exclusion_manifest.json) as the FIRST action of .45 planning — before any new experiment is scheduled. Exps 308, 260, 309, 425, and 410 must be excluded. This single action eliminates 385 min/milestone.",
+    "Implement CARNOT_FORCE_LIVE import-time assertion before any .45 experiment with inference_mode=gpu_required runs. This fix is 5 lines of Python and has been deferred for 3 consecutive milestones.",
+    "Apply BatchedInferenceRunner to Exp 410 explicitly — do not accept a sprint that shows batching_added=[] for all targets as completion.",
+    "Demonstrate DualGPU parallel forward-pass in at least one .45 experiment (both GPUs at >0% utilization simultaneously). Use DualGPURunner explicitly; do not accept sequential fallback.",
+    "Enforce two-milestone RETRO carry limit as a conductor rule, not just a documentation recommendation."
+  ]
+}
