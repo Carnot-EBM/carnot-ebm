@@ -331,3 +331,85 @@ def make_synthetic_eorm_pairs(n: int = 100, seed: int = 359) -> list[ViolationPa
     Spec: REQ-LEARN-025-1
     """
     return _make_synthetic_pairs(n=n, seed=seed)
+
+
+# ---------------------------------------------------------------------------
+# load_fover_corpus_v2
+# ---------------------------------------------------------------------------
+
+
+def load_fover_corpus_v2(path: str | Path) -> "list":
+    """Load GRPOContrastivePairs from fover_corpus_v2.json (Exp 553 output).
+
+    **For engineers:**
+        fover_corpus_v2.json is a list of FOVERCorpusEntry-compatible dicts, each with
+        keys: question, response, model_id, is_correct, constraint_types, cot_steps.
+
+        GRPO contrastive pairing (arXiv 2503.06639) converts (correct, incorrect)
+        response pairs into training signal.  For the same question, the correct
+        response is the positive and any incorrect response is the negative — no
+        additional labeling is needed beyond the is_correct labels already in the corpus.
+
+        This function groups entries by question text, then for each question that has
+        BOTH at least one correct and at least one incorrect response, it emits one
+        GRPOContrastivePair using the first correct and first incorrect response.
+
+        Questions with only correct OR only incorrect responses contribute no pair —
+        the contrastive signal requires both polarities.
+
+    **Why return GRPOContrastivePair here?**
+        Reuses the existing train_eorm_grpo() from grpo_eorm_retrain.py, which accepts
+        GRPOContrastivePair lists.  This avoids duplicating the CD contrastive loss
+        training loop.
+
+    Args:
+        path: Path to fover_corpus_v2.json.
+
+    Returns:
+        List of GRPOContrastivePair objects, one per question with both-polarity responses.
+        Returns empty list if file is missing, unreadable, or contains no qualifying pairs.
+
+    Spec: REQ-LEARN-060, SCENARIO-LEARN-093, SCENARIO-LEARN-094
+    """
+    from carnot.models.grpo_eorm_retrain import GRPOContrastivePair
+    from collections import defaultdict
+
+    pairs: list[GRPOContrastivePair] = []
+
+    try:
+        fpath = Path(path)
+        if not fpath.exists():
+            return pairs
+        with open(fpath) as f:
+            entries = json.load(f)
+        if not isinstance(entries, list):
+            return pairs
+    except (OSError, json.JSONDecodeError):
+        return pairs
+
+    # Group by question text; collect first correct and first incorrect response per question.
+    correct_by_q: dict[str, str] = {}
+    incorrect_by_q: dict[str, str] = {}
+
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        question = str(entry.get("question") or "").strip()
+        response = str(entry.get("response") or "").strip()
+        is_correct = bool(entry.get("is_correct", False))
+        if not question or not response:
+            continue
+        if is_correct and question not in correct_by_q:
+            correct_by_q[question] = response
+        elif not is_correct and question not in incorrect_by_q:
+            incorrect_by_q[question] = response
+
+    # Build one pair per question that has both polarities.
+    for question in sorted(set(correct_by_q) & set(incorrect_by_q)):
+        pairs.append(GRPOContrastivePair(
+            question_id=question[:120],  # truncate for readability in logs
+            correct_response=correct_by_q[question],
+            incorrect_response=incorrect_by_q[question],
+        ))
+
+    return pairs
