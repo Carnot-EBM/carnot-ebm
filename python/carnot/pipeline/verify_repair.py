@@ -173,6 +173,9 @@ class VerificationResult:
     """Optional semantic-grounding analysis extracted from the prompt/response pair."""
     semantic_verifier_v2: SemanticVerifierV2Result | None = None
     """Optional calibrated claim-level semantic analysis for the prompt/response pair."""
+    use_lowrank_kaem: bool = False
+    """True when the KAN fast-path tier used LowRankKAEMEnergy (n_vars <= 100, k=2).
+    False for full-rank KAEMEnergy (n_vars > 100) or when KAN path was not taken."""
 
 
 @dataclass
@@ -2005,6 +2008,31 @@ class VerifyRepairPipeline:
             semantic_grounding,
             None,
         )
+
+    def _build_kan_fast_path_model(self, n_vars: int) -> tuple[object, bool]:
+        """Build KAN fast-path KAEM model, choosing low-rank for n_vars <= 100.
+
+        Implements REQ-SAMPLE-029: LowRankKAEMEnergy (k=2, 23.7x speedup from Exp 532)
+        is the default fast-path for small problems. Full-rank KAEMEnergy is used for
+        larger problems where the SVD projection overhead amortises less favourably.
+
+        Parameters
+        ----------
+        n_vars : int
+            Number of constraint variables.
+
+        Returns
+        -------
+        (model, use_lowrank) where model is the unfitted KAEM instance and
+        use_lowrank is the flag to store in VerificationResult.use_lowrank_kaem.
+
+        Spec: REQ-SAMPLE-029
+        """
+        from carnot.models.kaem_energy import get_kaem_energy  # noqa: PLC0415
+
+        use_lowrank = n_vars <= 100
+        model = get_kaem_energy(n_vars, use_lowrank=use_lowrank)
+        return model, use_lowrank
 
     def _evaluate_constraints(self, constraints: list[ConstraintResult]) -> VerificationResult:
         """Evaluate a list of extracted constraints and build a VerificationResult.
