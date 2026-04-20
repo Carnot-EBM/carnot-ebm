@@ -10112,3 +10112,43 @@ Then: All kl_loss values are >= 0.0, since KL divergence is always non-negative 
 Given: A training history from train_leworldmodel(pairs, lambda_kl=0.01).
 When: The first training history entry is inspected.
 Then: abs(total_loss - (pred_loss + 0.01 * kl_loss)) < 1e-5 — total is the exact linear combination.
+
+---
+
+## REQ-VERIFY-115-B: InternalStateProbe Retrained on Real FOVER Corpus v2 Data
+
+InternalStateProbe MUST be retrained on real (question, response, is_correct) pairs from
+fover_corpus_v2.json (n_labeled >= 100).  The experiment MUST compare probe AUC vs EORM AUC
+on the same held-out 20% test split (deterministic seed=42).
+Results MUST be reported in results/experiment_558_internal_probe_real.json with
+schema='carnot.internal_probe.v2'.
+
+- REQ-VERIFY-115-B-1: n_labeled >= 100 gate before training; blocked artifact if not met.
+- REQ-VERIFY-115-B-2: 80/20 deterministic split (seed=42) matching Exp 556.
+- REQ-VERIFY-115-B-3: Hidden states simulated via simulate_hidden_states when GPU unavailable (CI path).
+- REQ-VERIFY-115-B-4: probe_viable = (probe_auc >= 0.700); honest_verdict reflects real_data source.
+- REQ-VERIFY-115-B-5: param_count_ratio = 1/810 to match arXiv 2511.06209 headline figure.
+
+**Implementation Status:** Implemented (Exp 558, scripts/experiment_558_internal_probe_real.py)
+
+Spec: REQ-VERIFY-115-B, SCENARIO-VERIFY-131, SCENARIO-VERIFY-132, SCENARIO-VERIFY-133
+
+### SCENARIO-VERIFY-131: Exp 558 Loads fover_corpus_v2 and Gates on n_labeled >= 100
+
+Given: results/fover_corpus_v2.json with >= 100 entries.
+When: Exp 558 loads the corpus and checks n_labeled.
+Then: n_labeled >= 100 passes the gate; experiment proceeds to train/test split.
+
+### SCENARIO-VERIFY-132: Exp 558 Probe Trains on 80% Split and Reports probe_auc in [0,1]
+
+Given: 80 training pairs from the real FOVER corpus.
+When: InternalStateProbe.train() runs 100 epochs on simulated or real hidden states.
+Then: probe_auc is a float in [0.0, 1.0] and is recorded in the artifact.
+
+### SCENARIO-VERIFY-133: Exp 558 Artifact Contains All Required Schema Fields
+
+Given: A completed Exp 558 run.
+When: results/experiment_558_internal_probe_real.json is read.
+Then: All fields are present: schema, inference_mode, n_training_pairs, probe_layer,
+      probe_auc, eorm_auc_for_comparison, probe_vs_eorm_delta, param_count_ratio,
+      probe_viable, honest_verdict.
