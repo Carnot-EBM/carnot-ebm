@@ -1,0 +1,126 @@
+{
+  "experiment": 574,
+  "title": "Milestone 2026.04.43 Retrospective",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T10:22:32Z",
+  "finished_at": "2026-04-20T10:22:32Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": "carnot.operational_retro.v18",
+  "milestone": "2026.04.43",
+  "n_experiments": 12,
+  "n_completed": 11,
+  "n_timed_out": 0,
+  "n_deferred_to_gpu": 1,
+  "n_missing": 0,
+  "total_wall_time_minutes": 2.166,
+  "mean_time_min": 0.18,
+  "retro_062_resolved": false,
+  "retro_061_resolved": true,
+  "retro_060_resolved": false,
+  "fpga_alive": false,
+  "live_vr_positive": false,
+  "fr11_real_violations": true,
+  "retro_closure_rate": 0.111,
+  "new_retro_items": [
+    {
+      "id": "RETRO-063",
+      "title": "JEPA v10 still inverted despite PURE objective \u2014 architectural redesign insufficient",
+      "opened_milestone": "2026.04.43",
+      "carry_count": 0,
+      "description": "Exp 567 retrained JEPA v10 with the pure_min_form loss (PURE objective), the architectural change recommended after RETRO-060 root-cause analysis. Result: v10_auc=0.4444, still below the 0.5 random baseline. PURE objective alone is insufficient \u2014 the model still learns to invert the correctness signal. The predictor may need a fundamentally different architecture (contrastive energy margin with explicit positive/negative pair construction), or the training corpus needs quality filtering before the next retrain attempt.",
+      "priority": "critical"
+    },
+    {
+      "id": "RETRO-064",
+      "title": "Live verify-repair accuracy unchanged despite CoACE violations \u2014 low recall bottleneck",
+      "opened_milestone": "2026.04.43",
+      "carry_count": 0,
+      "description": "Exp 569 ran the full verify-repair pipeline with CoACEExtractor over 50 GSM8K questions.  CoACE found 7 violations and applied 7 repairs, but signed_improvement=0.0 (accuracy 26%\u219226%).  Only 1/7 repairs improved the answer.  Root cause: coace_recall=0.059 (1 of 17 incorrect responses flagged). At this recall level the pipeline's expected accuracy lift is near-zero even with perfect repair.  CoACE recall must exceed ~30% before pipeline accuracy improvement is detectable over 50 questions.",
+      "priority": "high"
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL energy unavailable \u2014 hardware energy calibration blocked",
+      "opened_milestone": "2026.04.43",
+      "carry_count": 0,
+      "description": "Exp 573 attempted to calibrate EORM energy scores against real hardware energy readings via RAPL (Running Average Power Limit), the Linux kernel interface for CPU/DRAM energy measurement.  Result: rapl_available=False \u2014 the /sys/class/powercap/intel-rapl path does not exist on the current machine (likely AMD CPU or RAPL not exposed in kernel).  calibration_viable=False. Hardware energy calibration requires either a machine with Intel RAPL support, an AMD equivalent (AMD Energy driver), or an external power meter.",
+      "priority": "medium"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=3",
+      "action_required": "Verify closure in result files before .44 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q precision benchmark \u2014 10+ attempts, still not closed",
+      "carry_count": ">=10",
+      "action_required": "CoACE recall=5.9% \u2014 cannot drive accuracy improvement. Block until RETRO-064 (recall improvement) is addressed."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 100q VeriCoT+VPRM \u2014 8+ attempts, still not closed",
+      "carry_count": ">=8",
+      "action_required": "Same root cause as RETRO-033. Block until recall > 30%."
+    },
+    {
+      "id": "RETRO-049",
+      "title": "NUP Probe v4 contrastive margin loss redesign",
+      "carry_count": ">=2",
+      "action_required": "Confirm closure status via Exp 530 result file inspection"
+    },
+    {
+      "id": "RETRO-056",
+      "title": "JEPA AUC below random \u2014 objective redesign insufficient (see RETRO-063)",
+      "carry_count": 2,
+      "action_required": "Superseded by RETRO-063 for tracking. Architectural change needed."
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": 1,
+      "action_required": "Architectural redesign needed. Calibration layer approach exhausted."
+    },
+    {
+      "id": "RETRO-060",
+      "title": "JEPA architecturally anti-correlated \u2014 PURE objective did not fix it",
+      "carry_count": 1,
+      "action_required": "Superseded by RETRO-063 with deeper diagnosis. See RETRO-063."
+    },
+    {
+      "id": "RETRO-062",
+      "title": "Live 50q A unrun \u2014 questions 0-49 missing from FOVER corpus",
+      "carry_count": 1,
+      "action_required": "Run as first experiment of .44 with pre-flight GPU gate check"
+    },
+    {
+      "id": "RETRO-063",
+      "title": "JEPA v10 inverted despite PURE objective",
+      "carry_count": 0,
+      "action_required": "Contrastive energy margin loss or quality-filtered corpus required"
+    },
+    {
+      "id": "RETRO-064",
+      "title": "CoACE recall 5.9% \u2014 pipeline accuracy improvement undetectable",
+      "carry_count": 0,
+      "action_required": "Improve CoACE recall to >30% before scheduling accuracy benchmarks"
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL unavailable \u2014 hardware energy calibration blocked",
+      "carry_count": 0,
+      "action_required": "Need Intel RAPL or AMD Energy driver on test machine"
+    }
+  ],
+  "top_priorities_for_44": [
+    "Improve CoACE recall from 5.9% to >30% (RETRO-064). At current recall the pipeline accuracy lift is undetectable over 50 questions. Approach: expand the CoACEExtractor execution harness to cover more arithmetic patterns; add symbolic re-execution for multi-step chains. This is the single highest-leverage action \u2014 it unblocks RETRO-033, RETRO-038, and live verify-repair accuracy improvement.",
+    "Redesign JEPA contrastive objective with explicit positive/negative pair construction (RETRO-063). PURE objective failed on two retrains. The contrastive energy margin approach pairs a correct CoT trace against an incorrect one and trains the predictor to assign lower energy to the correct trace. Do not schedule retrain attempt #4 until the objective function is replaced.",
+    "Run Live 50q A as the FIRST experiment of .44 with CARNOT_FORCE_LIVE=1 pre-flight gate (RETRO-062). Two milestones in a row have blocked this collection. Add a hard abort in the conductor session startup if CARNOT_FORCE_LIVE is not set before any experiment with inference_mode=gpu_required."
+  ],
+  "honest_verdict": "partial_fix",
+  "env_autofix": true
+}
