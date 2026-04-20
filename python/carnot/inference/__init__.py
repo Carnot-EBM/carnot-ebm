@@ -126,6 +126,11 @@ from carnot.inference.tensorrt_backend import (
     benchmark_huggingface_vs_tensorrt,
     load_trt_backend,
 )
+from carnot.inference.jepa_pure_loss import (
+    JEPAChainScore,
+    PUREMinFormLoss,
+    pairs_to_pure_chains,
+)
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,
     parse_llm_coloring,
@@ -134,6 +139,9 @@ from carnot.inference.verify_and_repair import (
 )
 
 __all__ = [
+    "JEPAChainScore",
+    "PUREMinFormLoss",
+    "pairs_to_pure_chains",
     "EnergyGuidedSampler",
     "GuidedDecodingResult",
     "CodeVerificationResult",
