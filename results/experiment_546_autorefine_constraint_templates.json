@@ -1,0 +1,175 @@
+{
+  "experiment": 546,
+  "title": "AutoRefine Constraint Templates",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T01:48:02Z",
+  "finished_at": "2026-04-20T01:48:02Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": [
+    "duration_s",
+    "env_autofix",
+    "env_autofix_applied",
+    "exp538_pairs_loaded",
+    "exp541_pairs_loaded",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "min_observations_threshold",
+    "n_templates_distilled",
+    "n_violations_ingested",
+    "retrieval_results",
+    "retrieval_verified",
+    "run_date",
+    "sample_templates",
+    "schema",
+    "started_at",
+    "status",
+    "template_store_path",
+    "title",
+    "violation_counts"
+  ],
+  "n_violations_ingested": 67,
+  "n_templates_distilled": 2,
+  "min_observations_threshold": 3,
+  "violation_counts": {
+    "carry": 59,
+    "semantic": 8
+  },
+  "sample_templates": [
+    {
+      "name": "carry_guard",
+      "violation_type": "carry",
+      "context_keywords": [
+        "addition",
+        "carry",
+        "constraint",
+        "pipeline",
+        "relay",
+        "session"
+      ],
+      "constraint_text": "Guard against recurring 'carry' violations. Observed 59 times. Key context signals: addition, carry, constraint, pipeline, relay.",
+      "n_violations_observed": 59
+    },
+    {
+      "name": "semantic_guard",
+      "violation_type": "semantic",
+      "context_keywords": [
+        "addition",
+        "constraint",
+        "pipeline",
+        "relay",
+        "semantic",
+        "session"
+      ],
+      "constraint_text": "Guard against recurring 'semantic' violations. Observed 8 times. Key context signals: addition, constraint, pipeline, relay, semantic.",
+      "n_violations_observed": 8
+    }
+  ],
+  "retrieval_results": [
+    {
+      "query": "arithmetic carry overflow addition sum of two numbers",
+      "top_templates": [
+        {
+          "name": "carry_guard",
+          "violation_type": "carry",
+          "n_violations_observed": 59,
+          "overlap_keywords": [
+            "addition",
+            "carry"
+          ]
+        },
+        {
+          "name": "semantic_guard",
+          "violation_type": "semantic",
+          "n_violations_observed": 8,
+          "overlap_keywords": [
+            "addition"
+          ]
+        }
+      ],
+      "n_retrieved": 2
+    },
+    {
+      "query": "semantic answer mismatch question grounding factual response",
+      "top_templates": [
+        {
+          "name": "semantic_guard",
+          "violation_type": "semantic",
+          "n_violations_observed": 8,
+          "overlap_keywords": [
+            "semantic"
+          ]
+        },
+        {
+          "name": "carry_guard",
+          "violation_type": "carry",
+          "n_violations_observed": 59,
+          "overlap_keywords": []
+        }
+      ],
+      "n_retrieved": 2
+    },
+    {
+      "query": "sign negative positive arithmetic operation result",
+      "top_templates": [
+        {
+          "name": "carry_guard",
+          "violation_type": "carry",
+          "n_violations_observed": 59,
+          "overlap_keywords": []
+        },
+        {
+          "name": "semantic_guard",
+          "violation_type": "semantic",
+          "n_violations_observed": 8,
+          "overlap_keywords": []
+        }
+      ],
+      "n_retrieved": 2
+    },
+    {
+      "query": "unit conversion measurement error scaling factor",
+      "top_templates": [
+        {
+          "name": "carry_guard",
+          "violation_type": "carry",
+          "n_violations_observed": 59,
+          "overlap_keywords": []
+        },
+        {
+          "name": "semantic_guard",
+          "violation_type": "semantic",
+          "n_violations_observed": 8,
+          "overlap_keywords": []
+        }
+      ],
+      "n_retrieved": 2
+    },
+    {
+      "query": "comparison direction ordering inequality greater less than",
+      "top_templates": [
+        {
+          "name": "carry_guard",
+          "violation_type": "carry",
+          "n_violations_observed": 59,
+          "overlap_keywords": []
+        },
+        {
+          "name": "semantic_guard",
+          "violation_type": "semantic",
+          "n_violations_observed": 8,
+          "overlap_keywords": []
+        }
+      ],
+      "n_retrieved": 2
+    }
+  ],
+  "retrieval_verified": true,
+  "template_store_path": "results/constraint_templates_546.json",
+  "exp538_pairs_loaded": 0,
+  "exp541_pairs_loaded": 67,
+  "honest_verdict": "insufficient_patterns",
+  "env_autofix": "applied",
+  "env_autofix_applied": true
+}
