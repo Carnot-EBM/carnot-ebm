@@ -1,0 +1,26 @@
+{
+  "experiment": 575,
+  "title": "Conductor Exclusion Manifest",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T11:23:04Z",
+  "finished_at": "2026-04-20T11:23:04Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "n_excluded": 5,
+  "excluded_ids": [
+    308,
+    260,
+    309,
+    425,
+    410
+  ],
+  "manifest_path": "scripts/conductor_exclusion_manifest.json",
+  "exclusion_manifest_built": true,
+  "conductor_consulted": false,
+  "retro_056_partial": true,
+  "estimated_savings_minutes_per_milestone": 385,
+  "cumulative_wasted_minutes_since_retro": 2695,
+  "instructions_for_conductor": "Before each session: python scripts/check_exclusion_manifest.py <experiment_id> \u2014 exits nonzero if experiment_id is excluded. Wire into research_conductor.py pick_next_task() before spawning any agent.",
+  "honest_verdict": "manifest_built_conductor_not_wired",
+  "schema": "carnot.exclusion_manifest.v1"
+}

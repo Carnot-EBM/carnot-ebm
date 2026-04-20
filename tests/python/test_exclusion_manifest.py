@@ -251,3 +251,93 @@ class TestKillGpuZombiesNvidiaSmi:
                     mock_kill.assert_not_called()
 
         assert result["killed_pids"] == []
+
+
+# ---------------------------------------------------------------------------
+# Tests for the new ExclusionManifest class (REQ-INFRA-070, REQ-INFRA-071)
+# RETRO-056: these five experiments consumed 2,485 minutes over 7 milestones.
+# ---------------------------------------------------------------------------
+
+
+class TestExclusionManifestClass:
+    """Tests for carnot.pipeline.exclusion_manifest.ExclusionManifest.
+
+    Spec: REQ-INFRA-070, REQ-INFRA-071,
+          SCENARIO-INFRA-075, SCENARIO-INFRA-076, SCENARIO-INFRA-077
+    """
+
+    def test_load_returns_empty_list_when_file_missing(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-075: load() returns [] for a nonexistent file (no crash).
+
+        REQ-INFRA-070: A missing manifest must not crash the conductor — it simply
+        means no experiments are excluded yet.
+        """
+        from carnot.pipeline.exclusion_manifest import ExclusionManifest
+
+        manifest = ExclusionManifest(str(tmp_path / "does_not_exist.json"))
+        result = manifest.load()
+        assert result == []
+
+    def test_is_excluded_returns_true_for_exp_308(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-076: is_excluded(308) returns True after loading default manifest.
+
+        REQ-INFRA-071: The conductor must skip excluded experiments — 308 is one of five.
+        """
+        import json
+
+        from carnot.pipeline.exclusion_manifest import ExclusionManifest, build_default_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        entries = build_default_manifest()
+        manifest_file.write_text(
+            json.dumps({"excluded": [{"experiment_id": e.experiment_id,
+                                      "completed_milestone": e.completed_milestone,
+                                      "reason": e.reason} for e in entries]})
+        )
+        manifest = ExclusionManifest(str(manifest_file))
+        manifest.load()
+        assert manifest.is_excluded(308) is True
+
+    def test_is_excluded_returns_false_for_unknown_id(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-076: is_excluded(999) returns False — unknown = allowed to run.
+
+        REQ-INFRA-070: The manifest is an opt-in exclusion list, not a whitelist.
+        """
+        import json
+
+        from carnot.pipeline.exclusion_manifest import ExclusionManifest, build_default_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        entries = build_default_manifest()
+        manifest_file.write_text(
+            json.dumps({"excluded": [{"experiment_id": e.experiment_id,
+                                      "completed_milestone": e.completed_milestone,
+                                      "reason": e.reason} for e in entries]})
+        )
+        manifest = ExclusionManifest(str(manifest_file))
+        manifest.load()
+        assert manifest.is_excluded(999) is False
+
+    def test_save_and_load_roundtrip(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-077: save() + load() roundtrip preserves all entries exactly.
+
+        REQ-INFRA-070: The JSON format must survive a write/read cycle without data loss.
+        """
+        from carnot.pipeline.exclusion_manifest import ExclusionEntry, ExclusionManifest
+
+        manifest_file = tmp_path / "roundtrip.json"
+        manifest = ExclusionManifest(str(manifest_file))
+
+        original = [
+            ExclusionEntry(experiment_id=308, completed_milestone="2026.04.37", reason="stuck"),
+            ExclusionEntry(experiment_id=260, completed_milestone="2026.04.37", reason="loop"),
+        ]
+        manifest.save(original)
+
+        fresh = ExclusionManifest(str(manifest_file))
+        loaded = fresh.load()
+
+        assert len(loaded) == 2
+        assert loaded[0].experiment_id == 308
+        assert loaded[1].experiment_id == 260
+        assert loaded[0].reason == "stuck"
