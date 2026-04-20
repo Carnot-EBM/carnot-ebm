@@ -9730,3 +9730,47 @@ Spec: REQ-BENCH-016 (v2), SCENARIO-BENCH-036 (v2), SCENARIO-BENCH-037 (v2)
 **Then** if CI lower bound > 0, `retro_038_closed=True` and `honest_verdict='wilson_ci_publishable'`
 
 **Implementation Status:** In Progress (Exp 539)
+
+## REQ-VERIFY-115: InternalStateProbe — Linear Layer on LLM Hidden States for Tier 2 Credibility
+
+Train a single `nn.Linear(hidden_size, 1) + sigmoid` on `(hidden_state, is_incorrect_label)` pairs.
+Score function: `p_incorrect = sigmoid(W @ hidden_state + b)` — higher = more likely incorrect.
+At AUC >= 0.700 on held-out FOVER pairs (using real LLM hidden states), the probe replaces
+EORM as the default Tier 2 credibility estimator.  Probe param count is ~1/810 of EORM (55M params)
+per the arXiv 2511.06209 benchmark.
+
+**Acceptance Criteria:**
+- `InternalStateProbe(hidden_size, probe_layer)` trains via BCE in 100 epochs
+- `score(hidden_state)` returns float in [0, 1]
+- `evaluate_probe_vs_eorm()` returns `InternalStateProbeResult` with all fields
+- `is_tier2_viable = (probe_auc >= 0.700)` (reuses REQ-VERIFY-110 threshold)
+- `honest_verdict` ∈ {'probe_tier2_viable', 'probe_below_threshold', 'synthetic_proxy'}
+- `simulate_hidden_states()` available for CI testing without a live LLM
+
+**Implementation Status:** Implemented (Exp 545)
+
+Spec: REQ-VERIFY-115, SCENARIO-VERIFY-151, SCENARIO-VERIFY-152, SCENARIO-VERIFY-153
+
+### SCENARIO-VERIFY-151: InternalStateProbe.train Converges on Synthetic Data
+
+**Given** 160 (hidden_state, label) pairs from `simulate_hidden_states(80, 64, seed=42)`
+**When** `probe.train(pairs, epochs=300, lr=1e-2)`
+**Then** mean score for incorrect states exceeds mean score for correct states
+
+**Implementation Status:** Implemented (Exp 545)
+
+### SCENARIO-VERIFY-152: simulate_hidden_states Incorrect Has Higher Norm Than Correct
+
+**Given** `simulate_hidden_states(200, 128, seed=42)`
+**When** norms are computed
+**Then** `mean_norm(incorrect) > mean_norm(correct)`
+
+**Implementation Status:** Implemented (Exp 545)
+
+### SCENARIO-VERIFY-153: evaluate_probe_vs_eorm Returns InternalStateProbeResult
+
+**Given** a trained probe, EORM scores, and test pairs with both classes
+**When** `evaluate_probe_vs_eorm(probe, eorm_scores, test_pairs)` is called
+**Then** result is `InternalStateProbeResult` with `probe_auc` in [0, 1], `eorm_auc` in [0, 1]
+
+**Implementation Status:** Implemented (Exp 545)
