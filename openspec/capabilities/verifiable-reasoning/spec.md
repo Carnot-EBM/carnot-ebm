@@ -11004,3 +11004,45 @@ Then: score() returns float, predict() returns OTVVerificationToken with all thr
 And: train() on separated classes converges so correct_h gets higher score than incorrect_h.
 
 **Implementation Status:** Implemented (Exp 592)
+
+## REQ-BENCH-056: Exp 594 Live Verify-Repair with CoACEExtractorV3 (RETRO-033 Attempt 13)
+
+Run live verify-repair with CoACEExtractorV3 on 50 GSM8K questions (indices 300-349).
+Gated on Exp 591 gate_open field; if v3_recall < 0.30, write blocked artifact and exit.
+Requires CARNOT_FORCE_LIVE=1 and live GPU.
+
+- REQ-BENCH-056-1: Gate check reads results/experiment_591_coace_v3_live.json; if gate_open!=True write blocked artifact.
+- REQ-BENCH-056-2: If gate_open=True, run 50 questions (indices 300-349) with CoACEExtractorV3 on Gemma4-E4B-it (cuda:0) and Qwen3.5-0.8B (cuda:1).
+- REQ-BENCH-056-3: Compute signed_improvement = mean(pipeline_correct) - mean(baseline_correct).
+- REQ-BENCH-056-4: retro_033_resolved = (signed_improvement > 0 AND inference_mode == 'live_gpu').
+- REQ-BENCH-056-5: honest_verdict = 'first_live_improvement' if signed_improvement > 0 else 'live_no_improvement_v13'.
+
+Spec: REQ-BENCH-056, SCENARIO-BENCH-075, SCENARIO-BENCH-076, SCENARIO-BENCH-077
+
+### SCENARIO-BENCH-075: Gate Closed — Blocked Artifact Written When v3_recall < 0.30
+
+Given: results/experiment_591_coace_v3_live.json with gate_open=False (v3_recall=0.04).
+When: Exp 594 runs the gate check.
+Then: a blocked artifact is written with status='blocked', reason='gate_closed_coace_v3_recall_below_30pct',
+      v3_recall_at_gate=0.04, honest_verdict='blocked_gate_closed', and the process exits with code 0.
+
+**Implementation Status:** Implemented (Exp 594)
+
+### SCENARIO-BENCH-076: Artifact Schema Contains All Required Fields on Every Exit Path
+
+Given: any exit path (blocked or live).
+When: Exp 594 writes results/experiment_594_live_vr_coace_v3.json.
+Then: the artifact contains schema='carnot.live_vr_coace_v3.v1', inference_mode, n_questions,
+      question_indices, baseline_accuracy, pipeline_accuracy, signed_improvement,
+      n_violations_found, n_repairs_attempted, n_repairs_succeeded, retro_033_resolved, honest_verdict.
+
+**Implementation Status:** Implemented (Exp 594)
+
+### SCENARIO-BENCH-077: retro_033_resolved=True Only When signed_improvement > 0 and inference_mode='live_gpu'
+
+Given: a live run where pipeline_accuracy > baseline_accuracy.
+When: Exp 594 evaluates retro_033_resolved.
+Then: retro_033_resolved=True and honest_verdict='first_live_improvement'.
+And: if inference_mode is not 'live_gpu' or signed_improvement <= 0, retro_033_resolved=False.
+
+**Implementation Status:** Implemented (Exp 594)
