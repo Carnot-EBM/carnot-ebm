@@ -414,6 +414,12 @@ from carnot.pipeline.energy_guided_decoder import (  # noqa: E402
     EnergyGuidedConfig,
     EnergyGuidedDecoder,
 )
+from carnot.pipeline.fover_corpus import (  # noqa: E402
+    FOVERCorpusEntry,
+    balance_corpus,
+    compute_corpus_diversity,
+    merge_fover_sources,
+)
 
 __all__ = [
     "AgentStep",
@@ -698,4 +704,8 @@ __all__ = [
     "RectifierResult",
     "EnergyGuidedConfig",
     "EnergyGuidedDecoder",
+    "FOVERCorpusEntry",
+    "balance_corpus",
+    "compute_corpus_diversity",
+    "merge_fover_sources",
 ]
