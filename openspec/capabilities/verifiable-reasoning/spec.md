@@ -10650,4 +10650,57 @@ Given: No labeled response sources are available (all upstream files missing or 
 When: Exp 581 attempts to load responses.
 Then: status='blocked' AND honest_verdict='upstream_missing' AND n_responses=0.
 
+## REQ-BENCH-015 (v4): Live Verify-Repair Benchmark with CoACEExtractorV2 on 50 GSM8K Questions (Exp 582)
+
+Run the full verify-repair pipeline with CoACEExtractorV2 as the extractor on 50 GSM8K
+validation questions (indices 250–299, avoiding overlap with all prior benchmarks).
+For each question and each available model: generate a baseline response, run CoACEV2 extraction,
+apply repair if violations are found, record baseline_correct, pipeline_correct, n_violations_found.
+Compute signed_improvement = pipeline_accuracy - baseline_accuracy.
+GATE: Exp 581 gate_open must be True (v2_recall >= 0.20) before any inference runs.
+PREFLIGHT: CARNOT_FORCE_LIVE=1 must be set at module import time.
+
+**Acceptance Criteria:**
+- `schema='carnot.live_vr_coace.v2'`
+- `inference_mode` in ('live_gpu', 'gpu_required', 'blocked_gate_closed_recall_too_low')
+- `n_questions=50`, `question_indices='250-299'`
+- `extractor='coace_v2'`
+- `v2_recall_at_gate` (float from Exp 581 result)
+- `baseline_accuracy`, `pipeline_accuracy`, `signed_improvement` all present as floats
+- `n_violations_found`, `n_repairs_applied`, `n_repairs_improved` all present as ints
+- `retro_033_resolved=True` iff `signed_improvement > 0` AND `inference_mode='live_gpu'`
+- `honest_verdict` in ('first_positive', 'live_no_improvement_v2', 'blocked_gate_closed_recall_too_low')
+- All exit paths write the deliverable JSON
+- FINAL LINE is `tmpl.assert_deliverable_written()`
+
+**Implementation Status:** Implemented (Exp 582)
+
+Spec: REQ-BENCH-015 (v4), SCENARIO-BENCH-036, SCENARIO-BENCH-037, SCENARIO-BENCH-038
+
+### SCENARIO-BENCH-036: Gate Blocks Experiment When Exp 581 gate_open=False
+
+Given: results/experiment_581_coace_recall_diagnostic_v2.json has gate_open=False (or file missing).
+When: Experiment 582 runs.
+Then: A blocked artifact is written with honest_verdict='blocked_gate_closed_recall_too_low',
+      upstream_exp=581, and the script exits 0 without running inference.
+
+**Implementation Status:** Implemented (Exp 582)
+
+### SCENARIO-BENCH-037: Live GPU Inference Produces signed_improvement Field
+
+Given: Live GPU inference completes on 50 GSM8K questions (indices 250-299) with CoACEExtractorV2.
+When: The artifact is built.
+Then: signed_improvement = pipeline_accuracy - baseline_accuracy is present and is a float,
+      extractor='coace_v2', question_indices='250-299'.
+
+**Implementation Status:** Implemented (Exp 582)
+
+### SCENARIO-BENCH-038: retro_033_resolved=True When signed_improvement > 0 on Live GPU
+
+Given: signed_improvement > 0 AND inference_mode='live_gpu'.
+When: The artifact is built.
+Then: retro_033_resolved=True and honest_verdict='first_positive'.
+
+**Implementation Status:** Implemented (Exp 582)
+
 **Implementation Status:** Implemented (Exp 581)
