@@ -42,6 +42,8 @@ from carnot.models.kaem_distribution_benchmark import (
 )
 from carnot.models.kaem_extended_result import KAEMExtendedResult
 from carnot.models.kaem_energy import (
+    CalibrationLayer,
+    CalibratedLowRankKAEMEnergy,
     KAEMEnergy,
     UnivariateKAEMLayer,
     benchmark_kaem_vs_mcmc,
@@ -98,6 +100,8 @@ __all__ = [
     "DistributionFamilyResult",
     "KAEMDistributionBenchmark",
     "KAEMExtendedResult",
+    "CalibrationLayer",
+    "CalibratedLowRankKAEMEnergy",
     "KAEMEnergy",
     "UnivariateKAEMLayer",
     "benchmark_kaem_vs_mcmc",
