@@ -10950,3 +10950,57 @@ Then: Artifact written to results/experiment_591_coace_v3_live.json with schema=
       v3_recall >= v2_recall (improvement or equal), retro_066_resolved=(v3_recall >= 0.30).
 
 **Implementation Status:** Implemented (Exp 591)
+
+## REQ-VERIFY-119: DSVDAdapter Tier 2.5 Live AUC Validation
+
+Validate DSVDAdapter (Exp 587, arXiv 2503.03149) on LIVE pairs from Exps 578-579
+to confirm AUC holds on non-synthetic data before wiring as Tier 2.5 in the cascade.
+
+- REQ-VERIFY-119-1: Load live_pairs_578.json; filter to inference_mode='live_gpu'.
+  If absent, fall back to fover_corpus with is_simulated=False, then mixed_fallback.
+- REQ-VERIFY-119-2: Fit DSVDLinearProbe on corpus, score each response, collect
+  (dsvd_score, is_incorrect) pairs and compute roc_auc_score.
+- REQ-VERIFY-119-3: gate_open = (dsvd_live_auc >= 0.80).
+- REQ-VERIFY-119-4: If gate_open: wire DSVDAdapter as Tier 2.5 (between EORM and Ising).
+- REQ-VERIFY-119-5: honest_verdict = 'dsvd_validated_wired' | 'dsvd_not_validated' | 'dsvd_wiring_failed'.
+
+Spec: REQ-VERIFY-119, SCENARIO-VERIFY-160, SCENARIO-VERIFY-161
+
+### SCENARIO-VERIFY-160: DSVD Live AUC Computed from 100 Live Pairs
+
+Given: 100 live pairs from live_pairs_578.json without inference_mode field.
+When: Exp 592 runs DSVDAdapter.score on each response.
+Then: dsvd_live_auc is float in [0, 1], corpus_type='live_gpu_unlabeled', n_live_pairs=100.
+
+**Implementation Status:** Implemented (Exp 592)
+
+### SCENARIO-VERIFY-161: Gate Logic Correct — Below Threshold Produces dsvd_not_validated
+
+Given: dsvd_live_auc < 0.80.
+When: Exp 592 evaluates gate_open.
+Then: gate_open=False, tier_2_5_wired=False, honest_verdict='dsvd_not_validated'.
+
+**Implementation Status:** Implemented (Exp 592)
+
+## REQ-VERIFY-120: OTVVerifier — One-Token Verification LoRA Head (arXiv 2603.01025)
+
+Implement OTVVerifier as a near-zero-cost alternative to EORM at Tier 2.
+Maps LLM last hidden state (embed_dim,) → scalar → sigmoid → verification_score.
+
+- REQ-VERIFY-120-1: OTVVerificationToken dataclass: token_logit, verification_score, is_correct_pred.
+- REQ-VERIFY-120-2: OTVVerifier.__init__(embed_dim=128): W shape (1, embed_dim), b=0.
+- REQ-VERIFY-120-3: score(hidden_state) applies W @ h + b → sigmoid, returns float in [0,1].
+- REQ-VERIFY-120-4: predict(hidden_state) returns OTVVerificationToken.
+- REQ-VERIFY-120-5: train(pairs, n_epochs=50): SGD on binary cross-entropy; guarded by assert_live_or_ci_skip().
+- REQ-VERIFY-120-6: Exported from carnot.pipeline.__init__.
+
+Spec: REQ-VERIFY-120, SCENARIO-VERIFY-162
+
+### SCENARIO-VERIFY-162: OTVVerifier API Validated on Synthetic Stubs
+
+Given: OTVVerifier(embed_dim=128), jnp.zeros and jnp.ones as hidden state stubs.
+When: score() and predict() are called.
+Then: score() returns float, predict() returns OTVVerificationToken with all three fields.
+And: train() on separated classes converges so correct_h gets higher score than incorrect_h.
+
+**Implementation Status:** Implemented (Exp 592)

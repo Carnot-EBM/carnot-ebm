@@ -453,6 +453,10 @@ from carnot.pipeline.live_assertion import (  # noqa: E402
     assert_live_gpu_available,
     assert_live_or_ci_skip,
 )
+from carnot.pipeline.otv_verifier import (  # noqa: E402
+    OTVVerificationToken,
+    OTVVerifier,
+)
 
 __all__ = [
     "AgentStep",
@@ -760,4 +764,6 @@ __all__ = [
     "DSVDProbeResult",
     "assert_live_gpu_available",
     "assert_live_or_ci_skip",
+    "OTVVerificationToken",
+    "OTVVerifier",
 ]
