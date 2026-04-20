@@ -9995,3 +9995,35 @@ Then: Returns constraint_type_counts, constraint_type_entropy (Shannon bits), ca
 Given: A corpus with constraint_type_entropy < 1.5 bits.
 When: balance_corpus(entries, target_entropy=1.5) is called.
 Then: Returns a subset with entropy >= 1.5 bits, or the maximum achievable entropy if the guard (len >= 10) prevents full balancing.
+
+---
+
+## REQ-EXTRACT-030: Per-Extractor FP/TP Rate Measurement on Labeled Live Responses
+
+Each constraint extractor (VeriCoTStepValidator, VPRMArithmeticVerifier) must be measurable
+in isolation against a labeled set of responses (is_correct: bool) to produce a confusion matrix:
+TP (incorrect + flagged), FP (correct + flagged), TN (correct + not flagged), FN (incorrect + not flagged).
+The measurement must return tp_rate, fp_rate, and per-question cell labels.
+
+**Implementation Status:** Implemented (Exp 554, carnot.extraction.extraction_diagnostic)
+
+---
+
+### SCENARIO-EXTRACT-055: ExtractionDiagnosticResult Stores Complete Confusion Matrix
+
+Given: A labeled set of responses run through any ViolationExtractor.
+When: run_extractor_diagnostic() is called.
+Then: Returns ExtractionDiagnosticResult with n_true_positive, n_false_positive, n_true_negative,
+n_false_negative, tp_rate (recall), fp_rate, n_violations_found, and per_question_flags.
+
+### SCENARIO-EXTRACT-056: AlwaysFlags Extractor Produces FP=n_correct, TP=n_incorrect
+
+Given: An extractor that always returns a non-empty violation list.
+When: run_extractor_diagnostic() is called on a mixed labeled set.
+Then: n_false_positive == count of correct responses, n_true_positive == count of incorrect responses.
+
+### SCENARIO-EXTRACT-057: Per-Question Flags Record Cell Label (TP/FP/TN/FN)
+
+Given: A set of labeled responses processed by run_extractor_diagnostic().
+When: ExtractionDiagnosticResult.per_question_flags is inspected.
+Then: Each entry has is_correct, violation_found, and cell (one of 'TP','FP','TN','FN').
