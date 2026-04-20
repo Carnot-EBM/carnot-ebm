@@ -1710,6 +1710,39 @@ Spec: SCENARIO-LEARN-111
 
 Spec: SCENARIO-LEARN-112
 
+### REQ-LEARN-072: HISR — Hindsight Importance Score Reweighting for Constraint Violations (arXiv 2603.18683) (Exp 598)
+
+Applies credit-assignment from HISR paper to ConstraintAdditionFromMemory:
+violations that temporally preceded a final incorrect answer receive higher
+hindsight scores, focusing constraint-addition signal on causally relevant events.
+
+- REQ-LEARN-072-1: ``HISRViolationWeight`` SHALL store violation_type, question_id,
+  final_incorrect (bool), and hindsight_score (float in [0, 1]).
+- REQ-LEARN-072-2: ``HISRWeighter.compute_hindsight_score(violations, final_correct)``
+  SHALL assign score = 0.0 to all violations when final_correct=True.
+- REQ-LEARN-072-3: When final_correct=False, the last violation SHALL receive score 1.0
+  and earlier violations SHALL receive score = 1/(1 + distance_from_last).
+- REQ-LEARN-072-4: ``HISRWeighter.weighted_violations(weights, threshold=0.5)``
+  SHALL return ViolationPattern objects only for weights with hindsight_score >= threshold.
+
+Spec: REQ-LEARN-072, SCENARIO-LEARN-113, SCENARIO-LEARN-114
+
+### SCENARIO-LEARN-113: Violations in Correct Chains Score Zero (HISR False-Positive Suppression)
+
+**Given** a list of ViolationPattern objects from a chain where final_correct=True
+**When** HISRWeighter.compute_hindsight_score(violations, final_correct=True) is called
+**Then** every HISRViolationWeight has hindsight_score == 0.0 and final_incorrect == False.
+
+Spec: SCENARIO-LEARN-113
+
+### SCENARIO-LEARN-114: Violations in Incorrect Chains Score Higher Near the Final Error
+
+**Given** a list of 5+ ViolationPattern objects from a chain where final_correct=False
+**When** HISRWeighter.compute_hindsight_score(violations, final_correct=False) is called
+**Then** scores are strictly increasing (earliest < latest), and the last score is 1.0.
+
+Spec: SCENARIO-LEARN-114
+
 ---
 
 ## Implementation Status
@@ -1773,4 +1806,6 @@ Spec: SCENARIO-LEARN-112
 | REQ-LEARN-068 | N/A | Implemented | Python |
 | REQ-LEARN-069 | N/A | Implemented | 12 Python |
 | REQ-LEARN-070 | N/A | Implemented | Python (Exp 597) |
+| REQ-LEARN-071 | N/A | Implemented | Python (Exp 597) |
+| REQ-LEARN-072 | N/A | Implemented | Python (test_hisr_weights.py, 100%) |
 | REQ-LEARN-071 | N/A | Implemented | Python (test_mise_calibrator) |

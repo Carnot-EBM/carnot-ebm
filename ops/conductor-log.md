@@ -2330,3 +2330,4 @@ python/ |
 | 2026-04-20 16:13 UTC | Exp 595: Live VR DSVD Detection — RETRO-033 Attemp | OK | 81 passed, 2 warnings in 3.18s |
 | 2026-04-20 16:24 UTC | Exp 596: Live 200q Wilson CI — RETRO-038 Attempt # | OK | 81 passed, 2 warnings in 3.22s |
 | 2026-04-20 16:35 UTC | Exp 597: FR-11 Real Violations v4 + MISE Dense Rew | OK | 81 passed, 2 warnings in 3.24s |
+| 2026-04-20 16:49 UTC | Exp 598: HISR Hindsight Segmental Rewards + D-Wave | FAIL | Claude Code error: Error: Reached max turns (50) |
