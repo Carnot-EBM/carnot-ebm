@@ -6,6 +6,7 @@
 
 ## 2026-04-20 (Exp 551 — Live 50q Data Collection A)
 
+- 2026-04-20: Exp 565 complete — Live CoACEExtractor Diagnostic, TP/FP on 25 known-incorrect responses, gate_open for Exps 569+570. Status: success. (Exp 565 result)
 - 2026-04-20: Exp 564 complete — CoACEExtractor, RETRO-061 fix (extraction TP=0), code-assisted constraint extraction via Python eval() on symbolic equations. Status: success. (Exp 564 result)
 - 2026-04-20: Exp 561 complete — Tier 1 Self-Learning Relay Real Data, FR-11 mandatory, n_responses=25, status=success, honest_verdict=real_data_no_improvement. (Exp 561 result)
 - 2026-04-20: Exp 557 complete — JEPA v9 Retrain, Diverse 100+ Corpus, LeWorldModel Objective, RETRO-056. Status: success. Phase 4 autoresearch retraining on real corpus. (Exp 557 result)
