@@ -470,6 +470,10 @@ from carnot.pipeline.hisr_weights import (  # noqa: E402
     HISRViolationWeight,
     HISRWeighter,
 )
+from carnot.pipeline.interleaved_verifier import (  # noqa: E402
+    InterleavedLogicVerifier,
+    InterleavedStepResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -786,4 +790,6 @@ __all__ = [
     "MISETriple",
     "HISRViolationWeight",
     "HISRWeighter",
+    "InterleavedLogicVerifier",
+    "InterleavedStepResult",
 ]
