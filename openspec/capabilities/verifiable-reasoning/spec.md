@@ -10369,3 +10369,44 @@ When: The artifact is built.
 Then: retro_033_resolved=True and honest_verdict='first_positive'.
 
 **Implementation Status:** Implemented (Exp 569)
+
+## REQ-VERIFY-117: HalluField Tier 0e — Thermodynamic Partition-Function Variance as Hallucination Signal
+
+**Source:** arXiv 2509.10753, September 2025. HalluField models LLM responses as token-path ensembles, assigns energy and entropy to each path from output logits using field-theoretic principles, and flags hallucinations via thermodynamic instability (high partition function variance). No fine-tuning required — operates on logits directly.
+
+**Requirement:** Carnot SHALL implement a HalluFieldDetector that:
+
+- REQ-VERIFY-117-1: Accepts generation logits of shape (seq_len, vocab_size) or (vocab_size,).
+- REQ-VERIFY-117-2: Samples n_paths token paths (default 32) via multinomial sampling from the logit distribution.
+- REQ-VERIFY-117-3: Computes path energy as mean NLL of sampled tokens along each path.
+- REQ-VERIFY-117-4: Computes partition-function variance Var(E) = E[E^2] - (E[E])^2 over sampled paths.
+- REQ-VERIFY-117-5: Flags the response as thermodynamically unstable when Var(E) > instability_threshold (default 0.5).
+- REQ-VERIFY-117-6: CI-safe: score(None) returns HalluFieldResult(is_unstable=False, detector_mode='ci_stub') immediately.
+- REQ-VERIFY-117-7: HalluFieldDetector and HalluFieldResult are exported from carnot.pipeline.__init__.
+- REQ-VERIFY-117-8: VerifyRepairPipeline.verify() accepts optional hallufield_detector parameter (default None).
+
+Spec: REQ-VERIFY-117, SCENARIO-VERIFY-154, SCENARIO-VERIFY-155, SCENARIO-VERIFY-156
+
+### SCENARIO-VERIFY-154: HalluFieldResult Dataclass Has All Required Fields
+
+Given: HalluFieldDetector().score(logits) is called with a (10, 100) logit array.
+When: The result is returned.
+Then: result has partition_variance (float >= 0), mean_energy (float), is_unstable (bool), token_path_count == 32, detector_mode == 'logit'.
+
+**Implementation Status:** Implemented (Exp 571)
+
+### SCENARIO-VERIFY-155: CI-Safe score(None) Returns Stub Result
+
+Given: HalluFieldDetector().score(None) is called.
+When: The result is returned.
+Then: result.is_unstable == False, result.detector_mode == 'ci_stub', result.token_path_count == 0.
+
+**Implementation Status:** Implemented (Exp 571)
+
+### SCENARIO-VERIFY-156: High-Entropy Logits Produce Higher Partition Variance Than Peaked Logits
+
+Given: Two logit arrays — one with uniform distribution (high entropy) and one with a single dominant token (low entropy).
+When: HalluFieldDetector().score() is called on each.
+Then: partition_variance(uniform) > partition_variance(peaked).
+
+**Implementation Status:** Implemented (Exp 571)
