@@ -2271,3 +2271,4 @@ python/ |
 | 2026-04-20 02:19 UTC | Exp 548: Milestone 2026.04.41 Retrospective | OK | 81 passed, 2 warnings in 5.86s |
 | 2026-04-20 02:49 UTC | Plan milestone 2026.04.42 | OK | 14 tasks proposed |
 | 2026-04-20 02:54 UTC | Milestone 2026.04.42 activated | OK | 14 tasks queued |
+| 2026-04-20 03:07 UTC | Exp 549: Conductor Exclusion Manifest + nvidia-smi | OK | 81 passed, 2 warnings in 5.60s |
