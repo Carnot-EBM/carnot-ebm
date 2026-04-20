@@ -22,6 +22,7 @@
 
 - 2026-04-20: Exp 562 complete — Milestone 2026.04.42 Retrospective. Status: success. Retrospective analysis of .42 milestone execution (Exps 549-561, 14 planned experiments, 22 total in cycle).
 - 2026-04-20: Exp 568 complete — KV260 FPGA Bring-Up v2, first real hardware test post-board-arrival. (Exp 568 result)
+- 2026-04-20: Exp 570 complete — FR-11 Tier 1 Self-Learning Relay Real CoACE Violations. Status: success. (Exp 570 result)
 
 ## 2026-04-20 (Milestone 2026.04.41 Operational Efficiency Retrospective — Process Analysis)
 
