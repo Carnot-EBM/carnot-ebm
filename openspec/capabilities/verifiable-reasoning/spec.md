@@ -9638,6 +9638,76 @@ and no SIGTERM is sent to any process
 
 **Implementation Status:** Done (Exp 537)
 
+## REQ-INFRA-062: ExperimentTemplate.check_exclusion_manifest() Exits Early for Already-Modern Experiments
+
+The system shall provide a `check_exclusion_manifest()` method on `ExperimentTemplate` that:
+- Loads `scripts/conductor_exclusion_manifest.json` (graceful: `FileNotFoundError` returns `False`)
+- If `self.experiment_id` is in `excluded_experiments`, writes an artifact with
+  `schema='carnot.excluded.v1'`, `honest_verdict='excluded_already_modern'`, `excluded=True`,
+  and `reason` from the manifest, then calls `assert_deliverable_written()` and `sys.exit(0)`
+- Returns `False` if the experiment is not in the manifest
+
+**Rationale (RETRO-059):** Exps 308, 260, 309, 425, 410 appeared in the slowest-5 for FIVE
+consecutive milestones (.37-.41) despite being fully modern (Exp 547 confirmed `batching_added=[]`).
+Without an exclusion manifest, the conductor will continue to re-select them indefinitely.
+
+**Implementation Status:** Done (Exp 549)
+
+Spec: REQ-INFRA-062, SCENARIO-INFRA-086, SCENARIO-INFRA-087
+
+### SCENARIO-INFRA-086: check_exclusion_manifest() Returns False When Manifest File Missing
+
+**Given** no `scripts/conductor_exclusion_manifest.json` exists
+**When** `check_exclusion_manifest()` is called
+**Then** the result is `False` and no artifact is written and no sys.exit is called
+
+**Implementation Status:** Done (Exp 549)
+
+### SCENARIO-INFRA-087: check_exclusion_manifest() Exits With excluded Artifact When exp_id in Manifest
+
+**Given** the manifest contains experiment ID 308
+**When** `check_exclusion_manifest()` is called on an ExperimentTemplate with `exp_id=308`
+**Then** an artifact with `excluded=True`, `honest_verdict='excluded_already_modern'` is written
+and `sys.exit(0)` is called
+
+**Implementation Status:** Done (Exp 549)
+
+## REQ-INFRA-063: kill_gpu_zombies() Uses nvidia-smi Subprocess Fallback When pynvml Unavailable
+
+The system shall extend `kill_gpu_zombies()` to:
+- First attempt the pynvml path (existing behavior)
+- If pynvml is not importable, fall back to `subprocess.run(['nvidia-smi', ...])` to enumerate
+  processes and their VRAM usage
+- For each process above `vram_threshold_mb` with utilization below `util_threshold_pct`, send SIGTERM
+- Return `{'killed_pids': [...], 'freed_mb': int, 'method': 'nvidia_smi_fallback'}`
+- If nvidia-smi is also unavailable (FileNotFoundError or CalledProcessError), return
+  `{'killed_pids': [], 'freed_mb': 0, 'error': 'no_gpu_tooling'}`
+
+**Rationale (RETRO-059):** Exp 537's `kill_gpu_zombies()` failed silently with
+`error='pynvml_unavailable'` because pynvml is not installed. PIDs 527256, 527259, 529495 were
+left alive at milestone .41 close. nvidia-smi is always available on CUDA hosts, making it a
+robust fallback that requires no Python package installation.
+
+**Implementation Status:** Done (Exp 549)
+
+Spec: REQ-INFRA-063, SCENARIO-INFRA-088, SCENARIO-INFRA-089
+
+### SCENARIO-INFRA-088: kill_gpu_zombies() Falls Back to nvidia-smi When pynvml Not Installed
+
+**Given** pynvml is not importable and nvidia-smi is available in PATH
+**When** `ExperimentTemplate.kill_gpu_zombies()` is called
+**Then** the result contains `method='nvidia_smi_fallback'` and `killed_pids` is a list
+
+**Implementation Status:** Done (Exp 549)
+
+### SCENARIO-INFRA-089: kill_gpu_zombies() Returns no_gpu_tooling When nvidia-smi Not Found
+
+**Given** pynvml is not importable and nvidia-smi is not in PATH
+**When** `ExperimentTemplate.kill_gpu_zombies()` is called
+**Then** the result is `{'killed_pids': [], 'freed_mb': 0, 'error': 'no_gpu_tooling'}`
+
+**Implementation Status:** Done (Exp 549)
+
 ---
 
 ## REQ-BENCH-014 (v2): Live 25q Precision Probe with 90-Minute Budget (Exp 538)
