@@ -4,6 +4,46 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-20 arxiv Scan (Milestone 2026.04.44 Planning)
+
+### CPMI — Contrastive Pointwise Mutual Information for Process Reward Models (Direct Fix for RETRO-063)
+- **Paper:** arXiv 2604.10660 (April 2026)
+- **What:** Proposes CPMI (Contrastive Pointwise Mutual Information) as an automatic step-level reward labeler. Instead of binary correct/incorrect labels, CPMI measures how much each reasoning step increases mutual information between that step and the correct final answer, relative to hard-negative wrong answers. Reduces annotation time by 84%, token generation by 98%. Outperforms Monte Carlo estimation. Hard-negative mining ensures contrastive pairs have genuine energy gaps.
+- **Relevance to Carnot:** RETRO-063: JEPA predictor AUC stuck at 0.44 (anti-correlated) despite PURE objective. The root cause is that binary BCE labels allow hedging to P=0.5. CPMI explicitly constructs contrastive (correct_chain, incorrect_chain) pairs via hard-negative mining — the same mechanism that made NUP Probe v4 achieve AUC=1.0. Directly applicable as the training objective for JEPA v11 in Exp 577 (pair builder) and Exp 580 (retrain).
+- **Concrete experiment:** Exp 577: JEPACPMIContrastivePairBuilder — use CPMI-style hard-negative mining to construct (correct_chain, incorrect_chain) training pairs from FOVER corpus. For each incorrect response, find the HARDEST incorrect step (highest MI with wrong answer = most misleading step). Use this as the explicit negative in contrastive margin loss. Target JEPA v11 AUC >= 0.600.
+- **When to incorporate:** Milestone 2026.04.44 — Phase 1 JEPA pair builder (Exp 577). CRITICAL PATH for RETRO-063.
+
+### DSVD — Dynamic Self-Verify Decoding (Parallel Verification + Rollback)
+- **Paper:** arXiv 2503.03149 (March 2025, EMNLP 2025)
+- **What:** Real-time hallucination detection via parallel self-verification and dynamic rollback during generation. A specialized hallucination detector analyzes LLM internal states without additional text generation cycles. When violation detected, uses hidden state rollback to correct the specific problematic tokens rather than regenerating the full output. Demonstrated on factual QA and arithmetic reasoning.
+- **Relevance to Carnot:** Carnot's current pipeline is purely post-hoc: generate full response → extract → verify → repair. DSVD shows that verification during generation (not after) is practical. Dynamic rollback maps to Carnot's repair-via-KAN energy — instead of regenerating the full response, identify the specific arithmetic step that went wrong and patch it. Directly addresses the repair precision gap in Exp 569 (7 repairs, only 1 improved = 14% repair success rate).
+- **Concrete experiment:** Exp 587: DSVDAdapter — implement a lightweight verification head on Qwen3.5-0.8B hidden states that predicts arithmetic violation probability at each step boundary (every 32 tokens). Compare violation detection AUC vs CoACEExtractor v2 (post-hoc). Target: mid-generation detection at AUC > 0.60. CPU prototype (no GPU needed for hidden-state probe design).
+- **When to incorporate:** Milestone 2026.04.44 — Phase 6 new research (Exp 587).
+
+### CPMI Calibrated Hindsight — MISE Framework (Reward Signal Calibration)
+- **Paper:** arXiv 2604.11611 (April 2026)
+- **What:** MISE (Mutual Information Self-Evaluation) framework for calibrating hindsight rewards. Uses generative self-evaluation as dense reward signals, calibrated against sparse environmental feedback. Proves equivalence to minimizing MI + KL divergence between policy and proxy. Enables bootstrapping dense internal rewards from sparse external verification signals.
+- **Relevance to Carnot:** After RETRO-033 (12 attempts, 0% improvement), the repair step has no feedback signal — the only reward is the final correctness check. MISE's dense reward calibration could provide step-level signals for repair optimization without requiring per-step annotation. Filed for .45 after RETRO-033 resolved.
+- **When to incorporate:** Milestone 2026.04.45+ — after live verify-repair shows first positive result and produces repair trace data.
+
+### Interleaved Formal-Logic Verification During Generation
+- **Paper:** arXiv 2601.22642 (January 2026)
+- **What:** Framework that dynamically interleaves formal symbolic verification during LLM generation, catching logical errors mid-chain rather than post-hoc. Two-stage: verification-guided SFT then policy optimization. Achieves 10.4-14.2% gains on math/logic reasoning.
+- **Relevance to Carnot:** Current CoACE pipeline runs after full response generation. Interleaved verification could catch arithmetic violations mid-generation and redirect the response before committing to a wrong path. Complements DSVD (arXiv 2503.03149). Filed for .45+ after DSVD prototype establishes the mid-generation detection baseline.
+- **When to incorporate:** Milestone 2026.04.45+ — after DSVD Exp 587 establishes feasibility.
+
+### HISR — Hindsight Segmental Process Rewards for Multi-Turn RL
+- **Paper:** arXiv 2603.18683 (March 2026)
+- **What:** Segment-level process rewards (avoiding fine-grained turn-level noise) modulated by hindsight importance scores. Hindsight model reflects preference for actions given trajectory outcome. Modulation ratios measure action importance, improving credit assignment reliability for multi-turn agent tasks.
+- **Relevance to Carnot:** Carnot's Tier 1 self-learning accumulates violations across batches but uses uniform credit assignment — every violation counted equally. HISR's hindsight modulation would weight constraint violations by how much they predicted the final incorrect outcome. This could dramatically improve ConstraintAdditionFromMemory's signal quality. Filed for .45 after FR-11 relay produces enough trace data.
+- **When to incorporate:** Milestone 2026.04.45+ — after FR-11 real-violations relay accumulates 100+ traces.
+
+### FLIP — Small Reward Models via Backward Inference
+- **Paper:** arXiv 2602.13551 (February 2026)
+- **What:** FLIP reformulates reward modeling as backward inference: given a response, infer the instruction or constraint that would produce it. Reference-free, rubric-free. Outperforms LLM-as-Judge by 79.6% on 4 domains. Works on 13 small LMs without requiring strong reasoning capability.
+- **Relevance to Carnot:** Carnot's repair quality scoring is currently binary (correct/incorrect). FLIP's backward inference could score repair success by asking "what constraint was this response trying to satisfy?" — identifying whether the repair addressed the right violation. Filed for .45+ after repair pipeline produces enough (original, repair, verdict) triples.
+- **When to incorporate:** Milestone 2026.04.45+ — after consistent repair data accumulates.
+
 ## 2026-04-20 arxiv Scan (Milestone 2026.04.43 Planning)
 
 ### Caco — Code-Execution Verification for Arithmetic CoT (Direct Fix for RETRO-061)
