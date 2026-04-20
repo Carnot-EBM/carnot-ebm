@@ -10603,3 +10603,51 @@ When: CoACEExtractorV2().extract(text) is called.
 Then: n_violations >= 2 (deduplication may collapse overlapping detections).
 
 **Implementation Status:** Implemented (Exp 576)
+
+## REQ-EXTRACT-037: CoACEExtractorV2 Validated on Live IT-Model Responses (RETRO-064)
+
+**Why this requirement exists:**
+    RETRO-064 identified that CoACEExtractor v1 achieves only 5.9% recall on the same
+    25 known-incorrect live IT-model responses used in Exp 565.  CoACEExtractorV2 (Exp 576)
+    adds multi-step chain tracking and prose arithmetic patterns.  This requirement
+    specifies the validation gate: Exp 581 must measure v2 recall on those 25 responses
+    and compare it to the v1 baseline.  If v2_recall >= 0.20, the gate opens for
+    Exps 582 and 583.  If recall < 0.20, those experiments remain blocked.
+
+- REQ-EXTRACT-037-1: Exp 581 loads the same 25 labeled live responses used in Exp 565
+  (from results/experiment_565_coace_live_diagnostic.json per_question_results, falling
+  back to results/experiment_554_extraction_diagnostic.json, then exp538_cot_pairs.json).
+- REQ-EXTRACT-037-2: Exp 581 runs run_extractor_diagnostic(CoACEExtractorV2(), ...) to
+  measure v2_recall (tp_rate) and v2_precision on those responses.
+- REQ-EXTRACT-037-3: Exp 581 also runs CoACEExtractor (v1) for baseline comparison
+  and reports recall_improvement = v2_recall - v1_recall.
+- REQ-EXTRACT-037-4: gate_open=True iff v2_recall >= 0.20 (unblocks Exps 582+583).
+- REQ-EXTRACT-037-5: retro_064_partial=True iff v2_recall >= 0.20.
+- REQ-EXTRACT-037-6: retro_064_resolved=True iff v2_recall >= 0.30.
+- REQ-EXTRACT-037-7: Artifact written to results/experiment_581_coace_recall_diagnostic_v2.json.
+
+### SCENARIO-EXTRACT-072: CoACEV2 Achieves >= 20% Recall and Gate Opens
+
+Given: 25 known-incorrect live IT-model responses where v1 achieved 5.9% recall.
+When: Exp 581 runs CoACEExtractorV2 on those responses.
+Then: v2_recall >= 0.20 AND gate_open=True AND retro_064_partial=True
+      AND honest_verdict in ('gate_open_partial', 'gate_open_recall_resolved').
+
+**Implementation Status:** Implemented (Exp 581)
+
+### SCENARIO-EXTRACT-073: CoACEV2 Recall Still Below 20% and Gate Remains Closed
+
+Given: 25 known-incorrect live IT-model responses.
+When: Exp 581 runs CoACEExtractorV2 and v2_recall < 0.20.
+Then: gate_open=False AND retro_064_partial=False AND retro_064_resolved=False
+      AND honest_verdict='gate_closed_still_too_low'.
+
+**Implementation Status:** Implemented (Exp 581)
+
+### SCENARIO-EXTRACT-074: Upstream Labeled Responses Missing Writes Blocked Artifact
+
+Given: No labeled response sources are available (all upstream files missing or empty).
+When: Exp 581 attempts to load responses.
+Then: status='blocked' AND honest_verdict='upstream_missing' AND n_responses=0.
+
+**Implementation Status:** Implemented (Exp 581)
