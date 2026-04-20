@@ -4,6 +4,36 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-20 arxiv Scan (Milestone 2026.04.46 Planning)
+
+### GenPRM — Generative Process Reward Model via Reasoning (LLM-as-Extractor Path)
+- **Paper:** arXiv 2504.00891 (April 2025)
+- **What:** A generative process verifier that performs explicit chain-of-thought reasoning at each step before producing a correctness verdict. Uses code verification as a tool. Outperforms discriminative PRMs on process supervision tasks.
+- **Relevance to Carnot:** This is EXACTLY Goal #1b from research-program.md: "LLM-as-extractor". Instead of hand-engineered patterns (CoACE v1-v3), GenPRM's approach: (1) use a small LLM to extract verifiable arithmetic claims from the CoT step-by-step, (2) verify each claim via execution. The generative approach bridges the offline/live distribution gap because it reasons about the structure of the CoT rather than pattern-matching. CRITICAL FIX for RETRO-068 (CoACEV3 recall=4% on live data).
+- **Concrete experiment:** Exp 603 (CoACEV4): implement GenPRM-style extraction — use a small Qwen3.5-0.8B call to identify arithmetic claims in each CoT step, then verify via Python eval(). Compare TP rate vs CoACEV3's 4% on the same live corpus. Target: TP rate >= 20%.
+- **When to incorporate:** Milestone 2026.04.46 — Phase 1 CoACEV4 (Exp 603). CRITICAL PATH for RETRO-068/066.
+
+### Streaming Hallucination Detection in Long CoT Reasoning
+- **Paper:** arXiv 2601.02170 (January 2026)
+- **What:** Models hallucinations as evolving latent states in long reasoning chains. Enables real-time prefix-level detection — catches the hallucination AS it forms, not post-hoc. Uses sequential state estimation on the LLM's hidden state sequence.
+- **Relevance to Carnot:** Directly complements DSVD (arXiv 2503.03149). DSVD detects violation boundaries via hidden-state probing; this paper shows how to model the temporal dynamics of hallucination formation across a CoT. Together: DSVD finds the boundary, streaming detection confirms the trajectory. Could improve DSVD fine-tuning by providing richer temporal supervision signal (not just "violated at token T" but "violation building from token T-N to T").
+- **Concrete experiment:** Exp 604 (DSVD Live Fine-Tuning): incorporate temporal state tracking when fine-tuning DSVDAdapter on live pairs. The streaming signal provides more training data per response (N state transitions instead of 1 boundary label).
+- **When to incorporate:** Milestone 2026.04.46 — Phase 1 DSVD fine-tuning (Exp 604).
+
+### CAPO — Calibration-Aware Policy Optimization for Reasoning LLMs
+- **Paper:** arXiv 2604.12632 (April 2026)
+- **What:** CAPO jointly optimizes accuracy and calibration via a logistic AUC surrogate loss during RLVR. Produces LLMs that are both accurate AND well-calibrated — their confidence scores actually reflect true probability of correctness. Works with contrastive training pairs.
+- **Relevance to Carnot:** JEPA v12 AUC=1.0 suggests it may be outputting extreme confidence scores (near 0 or 1) rather than calibrated probabilities. CAPO's calibration loss directly addresses this: instead of optimizing only for correct/incorrect discrimination (the current CPMI margin loss), also penalize overconfidence. Apply to JEPA v13 if v12 OOD validation fails, or to NUP Probe v6 training.
+- **Concrete experiment:** Exp 608 (NUP Probe v6): add CAPO calibration loss alongside contrastive margin loss when training on live corpus. Target: NUP v6 AUC >= 0.80 WITH calibration (confidence 0.80 means 80% of predictions correct, not just AUC).
+- **When to incorporate:** Milestone 2026.04.46 — Phase 2 NUP Probe v6 (Exp 608). Also applicable to JEPA v13 if needed.
+
+### Adaptive Constraint Propagation via Meta-Reinforcement Learning
+- **Paper:** arXiv 2601.00095 (January 2026)
+- **What:** MetaJuLS learns universal constraint propagation policies that adapt across tasks and input distributions via meta-RL. 1.5-2.0x speedup over task-specific baselines. Enables online adaptation of constraint reasoning without full retraining.
+- **Relevance to Carnot:** Self-Learning Tier 2 (Constraint Memory) — instead of static constraint templates learned from a fixed training set, MetaJuLS-style meta-RL could enable CoACEV4 to adapt its extraction policy from new live pairs during inference, without retraining. This is the "online adaptation" capability the research-program.md prescribes.
+- **Concrete experiment:** File for .47 — after CoACEV4 baseline is established, add meta-RL adaptation loop. The adaptation policy updates CoACE's pattern weights from each live inference batch.
+- **When to incorporate:** Milestone 2026.04.47+ — after CoACEV4 shows baseline recall >= 20%.
+
 ## 2026-04-20 arxiv Scan (Milestone 2026.04.45 Planning)
 
 ### OTV — One-Token Verification for Reasoning Correctness (Ultra-Lightweight Verifier)

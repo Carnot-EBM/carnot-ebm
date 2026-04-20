@@ -1,328 +1,322 @@
-# Carnot Research Roadmap v41: Scale the First Positive — 200q Credibility, Process Hardening, and FPGA Bring-Up
+# Research Roadmap v46 — Milestone 2026.04.46
 
-**Created:** 2026-04-18
-**Milestone:** 2026.04.35
-**Status:** Planned (activates when milestone 2026.04.34 retrospective completes)
-**Supersedes:** Milestone 2026.04.34 — "VeriCoT Extraction, EBM-CoT Calibration, First Positive Numbers"
-**Informed by:** Exps 450-461, operational retrospective 2026.04.34, v40 carry-forwards
-**External inputs (new in v41):**
-- PPSEBM (arXiv 2512.15658) — EBM + progressive parameter isolation for continual LLM constraint learning
-- Equilibrium Propagation on OIMs (arXiv 2510.12934 + 2505.02103) — local learning on Ising machines
-- GPU-Accelerated Oscillator Ising (arXiv 2505.22631) — ~10,000x over CPU on RTX 3090, already available
-- From Ising to Potts (arXiv 2507.18379) — multi-state spins for richer constraint encoding
-- GSM-Symbolic adversarial benchmark (arXiv 2410.05229, ICLR 2025) — THE credibility experiment, confirmed ICLR 2025
+**Status:** Proposed
+**Milestone:** 2026.04.46
+**Title:** Live Distribution Fix — Data-Driven Extractor Retraining and JEPA Generalization
+**Planned Experiments:** 601–613 (13 experiments)
+**Planned Date:** 2026-04-20 onwards
+**Supersedes:** Milestone 2026.04.45 — "Live-Calibrated CoACE and DSVD — Closing the Offline/Live Distribution Gap"
 
 ---
 
-## What 2026.04.34 Proved
+## What Milestone 2026.04.45 Proved
 
-| Approach | Experiments | Verdict | Key Finding |
-|----------|-------------|---------|-------------|
-| Gemma4 Tokenizer Fix (RETRO-028) | 450 | **FIX IMPLEMENTED** | GemmaTransformersLoader built; result file absent (RETRO-032) |
-| Live Precision Post-Fix (RETRO-033) | 451 | **+5pp CONFIRMED** | First positive verify-repair number; honest_verdict=repair_better |
-| Energy Matching v2 (RETRO-030) | 452 | **RETRO-030 CLOSED** | AtomicResultWriter prevents silent drops; energy_matching best_sampler |
-| VeriCoT Step Validator | 453 | **8/20 vs 0/20** | 40% improvement rate over ArithmeticExtractor on IT model output |
-| VPRM Arithmetic Verifier | 454 | **F1=1.0 vs 0.0** | Rule-based; deterministic; no LLM call; dramatic improvement |
-| ThinkProbeV2 (RETRO-029) | 455 | **RETRO-029 CLOSED** | ThinkProbeV2 60-min budget; result file absent (RETRO-036) |
-| Constraint Addition from Memory | 456 | **fp_rate_delta<0** | Carry-check constraint auto-added; FP rate reduced |
-| LSEBMCL Cross-Session Replay | 457 | **lsebmcl_better** | session2_fp_rate=0.0 vs exp448_fp_rate=0.46; Tier 2 confirmed |
-| EBM-CoT Latent Calibration | 458 | **AUC 0.5099→0.5554** | Below 0.600 target; improvement but insufficient (RETRO-034) |
-| KAEM Large-Variable Crossover | 459 | **crossover at n_vars=50** | KAEM faster than MCMC starting n_vars=50; RETRO-031 closed |
-| AMD XDNA IRON NPU | 460 | **install_failed** | mlir-aie pip install blocked; RETRO-035 |
-| Milestone 2026.04.34 Retrospective | 461 | **COMPLETE** | 296 experiments; mean=16.5 min; 3 missing result files; 0/10 retro improvements adopted |
+Milestone .45 produced one clear validation and two new critical failures:
 
-**Milestone-level conclusion:**
+1. **JEPA v12 AUC=1.0 on 100-pair live corpus (Exp 593, RETRO-063 validated).**
+   CPMI contrastive pairing + PROGRS outcome-centering trained JEPA v12 on the full Exp 578
+   live corpus (100 real pairs) and achieved AUC=1.0 on the in-distribution validation split.
+   CAVEAT: AUC=1.0 on a 20-pair held-out split from the same session is almost certainly
+   overfitting. The architecture is sound; the generalization must be validated on held-out
+   questions never seen in training (GSM8K 500+).
 
-Milestone 2026.04.34 delivered the FIRST POSITIVE verify-repair number (+5pp, Exp 451) — a Phase 1
-milestone reached. VeriCoT (40% detection improvement) and VPRM (F1=1.0 vs 0.0) are ready to
-integrate into the live pipeline. LSEBMCL Tier 2 continual learning confirmed. KAEM crossover found.
+2. **CoACEV3 recall REGRESSED to 4% on live data — WORSE than v2's 5.9% (RETRO-068).**
+   Exp 591 tested CoACEExtractorV3 (narrative + percentage + unit conversion patterns) on 25
+   live production responses. Result: v3_recall=0.04, gate_open=False. The v3 architecture
+   added prose patterns but the patterns were still engineered from intuition, not from analysis
+   of real live model outputs. The offline/live distribution gap widened despite more patterns.
+   Root cause diagnosis confirmed: NO hand-engineered pattern set will bridge this gap.
+   Only DATA-DRIVEN calibration on actual live IT-model outputs can fix this.
 
-However, process debt is compounding: 3 missing result files, zero retro improvements adopted,
-and the same bottlenecks (GPU zombies, sequential model loading, no deliverable assertion)
-recurred. The retrospective verdict was "operational_inefficiency_compounding."
+3. **DSVD live AUC=0.586 vs 0.976 offline — same distribution mismatch (RETRO-069).**
+   Exp 592 validated DSVDAdapter on live pairs. dsvd_live_auc=0.586 is well below the 0.80
+   deployment threshold. The same root cause as CoACE: the detector was trained/calibrated
+   on synthetic hidden-state patterns that don't match live Qwen3.5-0.8B or Gemma4-E4B-it
+   inference. Fine-tuning on the Exp 578 live corpus is the required fix.
 
-The three open RETRO items (RETRO-032, RETRO-033, RETRO-036) reveal that experiments are completing
-but their deliverables are lost due to path mismatches. This is now a systemic issue requiring
-infrastructure hardening before more experiments are designed.
+4. **D-Wave cloud access confirmed (Exp 598): speedup_ratio=26.24x over CPU Neal.**
+   DWaveNealBackend is available and faster. Ready to wire into production SamplerBackend.
 
----
+5. **Exclusion manifest built but conductor_consulted=False (RETRO-067 partial).**
+   Same 5 experiments appeared in slowest-5 for NINTH consecutive milestone.
+   Cumulative waste since .37: ~3,255 minutes (54.3 hours). Manifest must be WIRED in .46.
 
-## The 3 Biggest Gaps vs PRD Vision
-
-### Gap 1: Process Debt Blocking Headline Results (CRITICAL)
-
-**Status:** Three consecutive milestones ended without confirming the headline research question
-due to missing result JSON files. Exp 451 produced +5pp but the JSON was absent at retrospective
-time. RETRO-028/029/032/033/036 all trace to the same root cause: deliverable path mismatches
-between the conductor spec and experiment script output paths.
-
-**Root cause:**
-- No assertion at experiment exit that the deliverable file exists
-- DualGPURunner not wired into ExperimentTemplate — GPU 1 idle the entire milestone
-- Retro improvements never implemented — same bottlenecks every milestone
-- 10+ suggestions, 0% adoption rate; retro work has no conductor task budget
-
-**Fix:** (1) Add `ExperimentTemplate.assert_deliverable_written()` as mandatory final call.
-(2) Wire DualGPURunner into ExperimentTemplate for all dual-model experiments.
-(3) Allocate 2 experiment slots to retro improvement implementation each milestone.
-
-### Gap 2: Live Benchmark Scale Insufficient for Credibility (HIGH)
-
-**Status:** First positive verify-repair number confirmed at +5pp on 50 questions. This is
-statistically weak (50q = ~7% confidence interval). For credibility, Carnot needs:
-- 200q GSM8K at 95% confidence interval
-- The same extraction stack (VeriCoT + VPRM) driving live benchmarks — currently they're
-  separate experiments, not integrated into the live pipeline
-- GSM-Symbolic adversarial variant (Apple 2410.05229) — the experiment that proves Carnot's
-  thesis: maintain accuracy where all other approaches fail
-
-**Fix:** (1) Integrate VeriCoT+VPRM into the live VerifyRepairPipeline as the primary extractor.
-(2) Scale to 200q GSM8K live benchmark. (3) Run GSM-Symbolic adversarial variant.
-
-### Gap 3: Self-Learning AUC Plateau and FPGA Hardware Idle (MEDIUM)
-
-**Status:** JEPA AUC stuck at 0.571 (trained on 57 real CoT pairs). Target for Tier 3 is 0.650+.
-EBM-CoT calibration reached 0.5554 below 0.600 target (RETRO-034). KV260 FPGA hardware arrived
-months ago but the bitfile has never been built. GPU-accelerated Ising simulation exists as a
-paper (arXiv 2505.22631) but hasn't been tested on the 2x RTX 3090s.
-
-**Fix:** (1) Retrain JEPA on 200+ real CoT pairs (Exp 451 generates ~100 new pairs per 50q run).
-(2) Implement EBM-CoT v3 with more Langevin steps or training data to hit AUC > 0.650.
-(3) KV260 FPGA bitfile bring-up (hardware sitting idle). (4) Test GPU-Accelerated Oscillator
-Ising on existing RTX 3090 hardware — potential 10,000x over CPU.
+6. **NUP Probe v5 AUC=0.739 (Exp 599) — below 0.80 Tier 0c deployment threshold (RETRO-049).**
+   GRPO contrastive pairing improved v4 (synthetic AUC=1.0) to a more realistic v5 score.
+   Needs retraining on larger live corpus to cross the 0.80 deployment threshold.
 
 ---
 
-## Architecture After This Milestone
+## The 3 Biggest Gaps Between Current State and PRD Vision
+
+### Gap 1: Offline/Live Distribution Mismatch — CRITICAL BLOCKER (RETRO-066, 068, 069, 033)
+
+**Problem:** Both extraction approaches (CoACE post-hoc and DSVD mid-generation) fail on live data.
+- CoACEV3: 86.7% recall offline → 4% recall on live IT-model outputs
+- DSVD: 0.976 AUC offline → 0.586 AUC on live IT-model outputs
+
+**Root cause confirmed:** The training/calibration data for both extractors is synthetic or
+curated offline. Real IT-model error patterns are fundamentally different:
+- Narrative arithmetic: "Adding 47 to 28 gives us 76" (no `=` sign)
+- Multi-paragraph derivations: error 3 steps before the stated conclusion
+- Implicit quantity chains: "the subtotal is now X" without explicit equation
+- Domain-specific vocabulary: percentage / ratio / word problems
+
+**The fix:** Analyze the actual incorrect responses in the 100 live pairs from Exp 578.
+Build CoACEV4 from frequency analysis of real errors, not from pattern intuition.
+Fine-tune DSVDAdapter on real live hidden-state pairs, not synthetic stubs.
+
+**Why PRD cares:** FR-12 (Verifiable Reasoning) — at 4% live recall, Carnot identifies
+essentially ZERO real violations. Until this is fixed, RETRO-033 (live verify-repair positive)
+cannot be resolved. This is the single highest-leverage action for the entire project.
+
+### Gap 2: JEPA v12 Generalization Unknown (FR-11, RETRO-063)
+
+**Problem:** JEPA v12 AUC=1.0 on in-distribution training split suggests overfitting.
+The 100-pair Exp 578 corpus covers only GSM8K questions 0-49. A real generalization
+test requires held-out questions from a different index range (GSM8K 500+) that were
+never seen during training.
+
+**Additionally:** Corpus diversity is limited. All pairs come from the same question set
+(GSM8K 0-49) evaluated at one session. More diverse data (different question types,
+longer chains, HumanEval code questions) would produce a more robust predictor.
+
+**The fix:** Collect more live pairs (GSM8K 250-349) and validate JEPA v12 on strictly
+held-out questions (GSM8K 500+). If AUC drops below 0.70, retrain JEPA v13 on the
+expanded corpus.
+
+### Gap 3: Exclusion Manifest Not Wired — 54 Hours Wasted (RETRO-067)
+
+**Problem:** The exclusion manifest (scripts/conductor_exclusion_manifest.json) was built
+in Exp 575 and wiring scripts created in Exp 589, but conductor_consulted=False in the
+.45 retrospective. The same 5 experiments (308, 260, 309, 425, 410) consumed ~385 min
+in .45 alone — experiments already modernized that keep re-entering because there is no
+mechanism to prevent it.
+
+**The fix:** Create a verifiable conductor session pre-check that reads the manifest at the
+START of every session before any experiment is queued. Document the exact invocation
+pattern the human conductor operator must use to verify the manifest is working.
+
+---
+
+## Verification Pipeline Architecture (Current State → Target for .46)
 
 ```
-Input LLM Response (Gemma4-E4B-it or Qwen3.5-0.8B)
-    │
-    ├─[Tier 0a: CarnotThinkProbe] ─── CoT verdict (60-min budget, partial verdicts)
-    │                                  (arXiv 2504.16828, Exp 444/455, RETRO-036 closed)
-    │
-    ├─[Tier 0b: SpilledEnergyDetector] ─── Pre-softmax logit energy
-    │                                       (arXiv 2602.18671, Exp 433)
-    │
-    ├─[NEW: Integrated Extraction Stack] ─── VeriCoT FOL+Z3 + VPRM rules + CRANE suffix
-    │   ├── VeriCoTStepValidator: IT-model natural language → FOL → Z3 UNSAT check
-    │   ├── VPRMArithmeticVerifier: rule-based addition/mult/% (F1=1.0, deterministic)
-    │   └── CRANEExtractionGate: constrained suffix prompt for structured claims
-    │                                  (Exps 453, 454, CRANE from Exp 451 — now INTEGRATED)
-    │
-    ├─[Tier 1: SinkProbe] ─── Attention sink concentration
-    │                          (arXiv 2604.10697, Exp 348)
-    │
-    ├─[Tier 2: EORM (EBM-CoT v3 calibrated)] ─── CoT energy reward model
-    │                                              AUC target > 0.650 (RETRO-034 closed)
-    │                                              (arXiv 2505.14999 + 2511.07124, Exp 458/465)
-    │
-    ├─[Tier 3: Ising/KAN/KAEM + GPU-OIM] ─── Full constraint verification
-    │           │                              (GPU-accelerated: arXiv 2505.22631, RTX 3090)
-    │           └─[BoltzmannRepairBridge] ─── Repair direction from ground state
-    │
-    └─[Self-Learning Loop]
-        Tier 1: ConstraintAdditionFromMemory (Exp 456, carry/sign/unit auto-add)
-        Tier 2: PPSConstraintLearner (arXiv 2512.15658, task-specific parameter isolation)
-        Tier 3: JEPA retrained on 200+ real CoT pairs (AUC target > 0.700)
-        Hardware: KV260 FPGA (sparsified Ising bitfile, AXI backend)
+Input LLM Response
+       │
+    ┌──▼──────────────────────────────┐
+    │  Tier 0a: CarnotThinkProbe      │ ~0ms (CI stub) / 50-200ms (GPU)
+    │  Generative CoT verdict          │ → skip if 'incorrect'
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 0b: SpilledEnergyDetector │ ~0ms
+    │  Per-token logit discrepancy     │
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 0c: NUP Probe v5          │ ~0ms (bigram dot product)
+    │  AUC=0.739 [TARGET: v6 >=0.80]  │ ← .46 fix: retrain on larger corpus
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 0d: HallucinationBasin    │ ~0ms
+    │  Latent-space basin depth        │
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 0e: HalluField            │ ~1ms (advisory only)
+    │  Thermodynamic instability       │
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 1: SinkProbe              │ ~0ms (attention sink)
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 2: EORM                   │ ~10ms
+    │  55M param CoT energy reward     │
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 2.5: DSVDAdapter          │ ~5ms
+    │  AUC=0.586 live                 │ ← .46 fix: fine-tune on live corpus
+    │  [TARGET: >=0.80 for deployment] │
+    └──────────────────────┬──────────┘
+                           │ (pass)
+    ┌──────────────────────▼──────────┐
+    │  Tier 3: CoACEExtractorV4       │ ~1ms
+    │  recall=4% live (RETRO-068)     │ ← .46 fix: data-driven retraining
+    │  [TARGET: >=20% for VR gate]    │
+    └──────────────────────┬──────────┘
+                           │ (violation)
+    ┌──────────────────────▼──────────┐
+    │  Ising Repair + HISR/D-Wave     │ 0.006ms/constraint (CPU)
+    │  ConstraintAdditionFromMemory   │   or 26x faster via D-Wave
+    └─────────────────────────────────┘
 ```
+
+---
+
+## Phase Structure
+
+### Phase 0: Infrastructure First (Exps 601-602)
+
+**Objective:** Prevent the same 5 legacy experiments from wasting another ~385 min in .46.
+Expand the live corpus before any new training.
+
+| Experiment | Title | Required? | GPU? |
+|-----------|-------|-----------|------|
+| 601 | ExclusionManifest Final Verification | Yes | No |
+| 602 | Live Corpus Expansion v2 (100 more pairs) | Yes | YES |
+
+### Phase 1: Fix Offline/Live Distribution Gap (Exps 603-606)
+
+**Objective:** RETRO-068 and RETRO-069 — data-driven retraining of CoACEV4 and DSVD on
+actual live model outputs. This is the CRITICAL PATH for RETRO-033.
+
+| Experiment | Title | Required? | GPU? |
+|-----------|-------|-----------|------|
+| 603 | CoACEV4 Data-Driven Live Training | Critical | No |
+| 604 | DSVD Live Fine-Tuning | Critical | No |
+| 605 | Live Extractor Diagnostic v4 (gate) | Critical | No |
+| 606 | Interleaved Formal Logic Verification (arXiv 2601.22642) | Research | No |
+
+### Phase 2: JEPA Generalization + NUP Probe v6 (Exps 607-608)
+
+**Objective:** Validate JEPA v12 on truly held-out questions. Retrain NUP Probe v6
+to cross the 0.80 deployment threshold.
+
+| Experiment | Title | Required? | GPU? |
+|-----------|-------|-----------|------|
+| 607 | JEPA v12 OOD Validation + Corpus v4 | FR-11 | No |
+| 608 | NUP Probe v6 Live Retrain | Research | No |
+
+### Phase 3: Live Verify-Repair (Exp 609)
+
+**Objective:** RETRO-033 Attempt #14 — GATED on Exp 605 recall >= 0.20.
+
+| Experiment | Title | Required? | GPU? |
+|-----------|-------|-----------|------|
+| 609 | Live VR CoACEV4 (RETRO-033 #14) | GATED | YES |
+
+### Phase 4: Hardware + New Research (Exps 610-612)
+
+**Objective:** Wire D-Wave into production. Implement FLIP reward calibration for
+self-learning. FACT-E causal faithfulness + p-bit Ising for FPGA path.
+
+| Experiment | Title | Required? | GPU? |
+|-----------|-------|-----------|------|
+| 610 | D-Wave Backend Wire-In + HISR Integration | Research | No |
+| 611 | FLIP Reward Calibration + FR-11 Real Violations v5 | FR-11 | No |
+| 612 | FACT-E Causal Faithfulness + Synchronous p-bit Ising RTL | Research | No |
+
+### Phase 5: Retrospective (Exp 613)
+
+| Experiment | Title | Required? | GPU? |
+|-----------|-------|-----------|------|
+| 613 | Milestone 2026.04.46 Operational Retrospective | Yes | No |
 
 ---
 
 ## Dependency Graph
 
 ```
-[462: DeliverableGuard + DualGPURunner] ──┐
-                                          ▼
-[463: Conductor Session Health Check] ──► [464: Live Precision 100q RETRO-033] ──► [466: Live 200q VeriCoT+VPRM]
-                                          │                                          │
-                                          ▼                                          ▼
-                                    [465: ThinkProbeV2 RETRO-036]            [467: GSM-Symbolic adversarial]
-                                          │
-                                          ▼
-                                    [468: EBM-CoT v3 RETRO-034]
-                                          │
-                                          ▼
-                               [469: HumanEval live CodeExtractor]
-                                          │
-                               [470: PPSEBM Tier 2 continual learning] ──┐
-                                                                         ▼
-                               [471: JEPA Tier 3 + GPU-OIM] ◄──────────┘
-                                          │
-                               [472: KV260 FPGA bring-up v2]
-                                          │
-                               [473: Milestone 2026.04.35 Retrospective]
+Exp 601 (ExclusionManifest Wire-In)
+    │
+    ├──→ Exp 602 (Live Corpus Expansion v2)     [GPU REQUIRED]
+    │         │
+    │         ├──→ Exp 603 (CoACEV4 Data-Driven Training)
+    │         │         │
+    │         │         └──→ Exp 605 (Extractor Diagnostic v4)
+    │         │                   │
+    │         │                   ├── [gate: recall >= 0.20] ──→ Exp 609 (Live VR CoACEV4)
+    │         │                   │                                   │
+    │         │                   │                                   └──→ Exp 611 (FR-11 v5)
+    │         │                   └── [always] ──→ Exp 613 (Retro)
+    │         │
+    │         ├──→ Exp 604 (DSVD Live Fine-Tuning)
+    │         │         │
+    │         │         └──→ Exp 605 (Extractor Diagnostic v4)  [same gate]
+    │         │
+    │         └──→ Exp 607 (JEPA v12 OOD Validation)  [FR-11, no gate]
+    │
+    ├──→ Exp 606 (Interleaved Formal Logic)      [independent research]
+    ├──→ Exp 608 (NUP Probe v6)                  [independent research]
+    ├──→ Exp 610 (D-Wave Wire-In + HISR)         [independent research]
+    └──→ Exp 612 (FACT-E + Synchronous Ising)    [independent research]
 ```
-
----
-
-## Phase Descriptions
-
-### Phase 1 — Process Hardening (Exps 462-463)
-
-**Critical prerequisite for all subsequent work.** Three consecutive milestones lost headline
-experiment results to missing deliverable files. This phase adds infrastructure-level enforcement:
-every experiment script MUST assert its deliverable file exists before exit, or fail loudly.
-DualGPURunner is wired into ExperimentTemplate so GPU 1 stops being idle.
-
-**Exp 462** — DeliverableGuard + DualGPURunner Integration (RETRO-032/033/036 prevention)
-: Add `ExperimentTemplate.assert_deliverable_written()` that raises `FileNotFoundError` if the
-  deliverable JSON is absent after `build_result()` returns. Wire `DualGPURunner` into
-  `ExperimentTemplate.setup_gpu()` so dual-model experiments automatically parallelize across
-  cuda:0 and cuda:1. Implement `doc-only` commit classifier to skip the 3900+ test suite for
-  changelog/ops doc changes (run ruff+mypy only, saving 80-120 min per milestone).
-  Deliverable: `results/experiment_462_deliverable_guard.json`
-
-**Exp 463** — Conductor Session Health Check (zombie kill + env verify + GPU thermal gate)
-: Add `scripts/conductor_session_health.py` that runs at the START of every conductor session:
-  kill zombie GPU processes (calls `gpu_monitor.py --kill-zombies`), verify CARNOT_FORCE_LIVE
-  propagates to subprocesses, check both GPUs under 200MB VRAM and idle, verify no GPU exceeds
-  80°C. If any check fails, auto-remediate (kill zombies, re-export env) before first experiment.
-  Estimated savings: 60-90 min per session where env or GPU state is wrong.
-  Deliverable: `results/experiment_463_session_health.json`
-
-### Phase 2 — RETRO Closures (Exps 464-466)
-
-Three RETRO items from milestone .34 prevent research progress. Close them before scaling.
-
-**Exp 464** — Live Precision Benchmark 100q (RETRO-033 closure)
-: Re-run the live precision benchmark with `GemmaTransformersLoader` and the integrated
-  VeriCoT+VPRM extraction stack. Scale from 50q to 100q for better statistical confidence
-  (95% CI ~±5pp vs ±7pp at 50q). BOTH models on dual-GPU (Gemma4 on cuda:0, Qwen on cuda:1).
-  Assert deliverable written (Exp 462's DeliverableGuard). Target: signed improvement > 0 on
-  BOTH models. This is the RETRO-033 closure: first positive confirmed with statistical weight.
-  Deliverable: `results/experiment_464_live_precision_100q.json`
-
-**Exp 465** — ThinkProbeV2 Live GPU Execution (RETRO-036 closure)
-: Execute the ThinkProbeV2 harness (Exp 455) on live GPU with `CARNOT_FORCE_LIVE=1`. The script
-  was already implemented in Exp 455 but the result JSON was absent (path mismatch). This run
-  uses `assert_deliverable_written()` from Exp 462 to ensure the file is written. Expected:
-  `honest_verdict='partial_N_of_50'` or `complete` with `inference_mode='live_gpu'`.
-  Deliverable: `results/experiment_465_think_probe_live.json`
-
-**Exp 466** — EBM-CoT Calibration v3 (RETRO-034 closure, AUC > 0.650)
-: Calibration v2 (Exp 458) reached AUC 0.5554 vs 0.600 target. Two fixes: (1) increase
-  Langevin steps from 10 to 50 (more thorough hidden-state relaxation), (2) supplement the
-  57-pair dataset with synthetic pairs generated from the ContinuousEBM (same distribution as
-  real pairs). Target: AUC > 0.650 on held-out set. Also implement OIM-style EP coupling
-  update (arXiv 2510.12934): update EORM coupling matrix based on free vs clamped CoT step
-  spin correlations, no backpropagation needed.
-  Deliverable: `results/experiment_466_ebm_cot_v3.json`
-
-### Phase 3 — Scale the First Positive (Exps 467-469)
-
-With process hardening in place and RETRO items closed, scale the benchmarks to credibility.
-
-**Exp 467** — VeriCoT+VPRM Integrated Live Pipeline 200q (THE scale experiment)
-: Integrate VeriCoTStepValidator (Exp 453) + VPRMArithmeticVerifier (Exp 454) + CRANEExtractionGate
-  into the live `VerifyRepairPipeline` as the primary extraction front-end (replacing
-  ArithmeticExtractor). Run 200 GSM8K questions × 2 models × 2 conditions (baseline, pipeline).
-  Use `DualGPURunner` from Exp 462 for parallel model inference. Target: signed improvement > 0
-  on both models with n=200 (95% CI). This is the experiment that replaces the simulation-era
-  numbers with live credible results.
-  Deliverable: `results/experiment_467_live_200q_integrated.json`
-
-**Exp 468** — GSM-Symbolic Adversarial Benchmark (THE credibility experiment)
-: Run Carnot's verify-repair pipeline on Apple's GSM-Symbolic adversarial variant (arXiv 2410.05229,
-  ICLR 2025). Expected LLM behavior: accuracy drops 10-30pp on symbolic variants (same logic,
-  different numbers + irrelevant sentences) vs standard GSM8K. Expected Carnot behavior: the
-  verify-repair loop closes the gap because Ising verifies arithmetic constraints, not pattern-
-  matched keywords. Three conditions: (A) baseline (no Carnot), (B) standard GSM8K + Carnot,
-  (C) GSM-Symbolic + Carnot. Key metric: improvement is LARGER on adversarial variant than
-  standard (because there are MORE arithmetic errors for Ising to catch). This is Carnot's thesis.
-  Load dataset: `datasets.load_dataset('apple/GSM-Symbolic', 'main')` or equivalent.
-  Deliverable: `results/experiment_468_gsm_symbolic_adversarial.json`
-
-**Exp 469** — HumanEval Live with CodeExtractor + VeriCoT-guided Repair (50 problems)
-: Run 50 HumanEval problems on live GPU. Pipeline: generate code → CodeExtractor extracts
-  verifiable claims → VeriCoTStepValidator checks logical consistency of the implementation →
-  repair suggestions via BoltzmannRepairBridge if violations detected → re-execute code.
-  This is the code verification path where Carnot is MOST LIKELY to show improvement (execution-
-  based, not regex-based). Compare: pass@1 baseline vs pass@1 with verify-repair.
-  Deliverable: `results/experiment_469_humaneval_live_vericot.json`
-
-### Phase 4 — Self-Learning and Hardware (Exps 470-472)
-
-**Exp 470** — PPSEBM Tier 2 Progressive Constraint Parameter Isolation (mandatory self-learning)
-: Implement `PPSConstraintLearner` (arXiv 2512.15658) as an upgrade over LSEBMCL (Exp 457).
-  Each constraint domain (arithmetic, code, logical) gets an isolated parameter partition in the
-  constraint weight space. When Session 2 encounters arithmetic errors, only the arithmetic
-  partition is updated — code and logic partitions remain stable. The EBM generates synthetic
-  boundary violations to reinforce partition isolation. Train on accumulated Session 1-3 violation
-  data from Exps 456/457. Compare: LSEBMConstraintReplayer vs PPSConstraintLearner on the same
-  cross-session carry-error task. Target: PPSEBM partition_isolation_score > 0.8 (sessions
-  don't interfere), session2_fp_rate ≤ Exp 457 result.
-  Deliverable: `results/experiment_470_ppsebm_constraint_learner.json`
-
-**Exp 471** — KV260 FPGA Bring-Up v2 (sparsified bitfile + AXI backend)
-: KV260 hardware arrived months ago (Exp 313: blocked_no_bitfile). This experiment synthesizes
-  a minimal Ising sampler bitfile for the KV260 (using the sparsified connectivity approach from
-  arXiv 2604.04606). Steps: (1) Generate Verilog for 128-spin sparsified Ising sampler (sparse
-  coupling matrix, LFSR RNG, AXI-Lite interface), (2) Synthesize via Vivado (or document the
-  exact Vivado commands for human execution), (3) Test Python FpgaBackend AXI communication
-  (even if bitfile is CPU-simulated). Include EP-style coupling update (arXiv 2505.02103):
-  10-bit precision coupling matrix updates without backprop. Target: FpgaBackend.sample() returns
-  valid spin configuration (real hardware or documented bring-up procedure for human to follow).
-  Deliverable: `results/experiment_471_kv260_fpga_v2.json`
-
-**Exp 472** — JEPA Tier 3 Scale + GPU-Accelerated Oscillator Ising (target AUC > 0.700)
-: Two tasks: (1) Collect 200+ real CoT pairs from Exp 464+467 live runs (live GPU generates
-  ~100 pairs per 100q benchmark). Retrain JEPA predictor on the combined 200+ pair dataset
-  (57 from Exp 443 + ~150 from Exps 464/467). Target: AUC > 0.700 (vs 0.571 at 57 pairs).
-  (2) Implement `GPUOscillatorIsingSimulator` (arXiv 2505.22631) on RTX 3090: run the 1024-spin
-  Ising simulation on GPU and benchmark vs CPU `ParallelIsingSampler`. Expected speedup: 100x-
-  10,000x on n_vars > 100. If GPU OIM is faster, replace ParallelIsingSampler for large-variable
-  constraint problems. This unblocks fast energy evaluation for real-time JEPA gating.
-  Deliverable: `results/experiment_472_jepa_gpu_oim.json`
-
-### Phase 5 — Retrospective (Exp 473)
-
-**Exp 473** — Milestone 2026.04.35 Retrospective
-: Read all Exp 462-472 result JSONs. Assess milestone questions: (1) Is RETRO-033 closed
-  (first positive confirmed at 100q)? (2) Did 200q live benchmark maintain or improve the +5pp?
-  (3) Did GSM-Symbolic confirm Carnot's thesis? (4) Is RETRO-034 closed (AUC > 0.650)?
-  (5) Did PPSEBM improve over LSEBMCL? (6) Is JEPA AUC > 0.700? (7) How many retro
-  improvements were adopted this milestone (target: ≥5 of 10 from prior retro)?
-  Compute adoption rate (MUST improve from 0% in .34). Open new RETRO items.
-  Deliverable: `results/operational_retro_2026_04_35.json`
-
----
-
-## Hardware Requirements
-
-| Experiment | Hardware | Minimum | Notes |
-|------------|----------|---------|-------|
-| Exps 462, 463, 466, 470 | CPU | Any | JAX_PLATFORMS=cpu |
-| Exp 464, 465 | GPU | 1x RTX 3090 | CARNOT_FORCE_LIVE=1 |
-| Exps 467, 468, 469 | GPU | 2x RTX 3090 | DualGPURunner (Gemma4 cuda:0, Qwen cuda:1) |
-| Exp 471 | CPU + Vivado | KV260 | FPGA synthesis optional; CPU sim acceptable |
-| Exp 472 | GPU | 1x RTX 3090 | GPU-OIM simulation + JEPA retrain |
 
 ---
 
 ## Success Criteria
 
-| Criterion | Pass | Experiments |
-|-----------|------|-------------|
-| RETRO-032/033/036 closed | All 3 result files present at retrospective | 462, 464, 465 |
-| RETRO-034 closed | EBM-CoT AUC > 0.650 | 466 |
-| First positive confirmed 100q | signed_improvement > 0 on ≥1 model, n=100 | 464 |
-| 200q integrated pipeline positive | signed_improvement > 0 on ≥1 model, n=200 | 467 |
-| GSM-Symbolic thesis confirmed | Carnot improvement > 0 on adversarial variant | 468 |
-| PPSEBM better than LSEBMCL | PPSEBM session2_fp_rate ≤ LSEBMCL .457 result | 470 |
-| JEPA AUC > 0.700 | calibrated_auc > 0.700 on held-out set | 472 |
-| GPU-OIM speedup | speedup > 10x vs ParallelIsingSampler at n_vars=100 | 472 |
-| Retro improvements adopted | ≥5 of 10 from prior retro implemented | all |
+| Criterion | Target | Experiment |
+|-----------|--------|-----------|
+| retro_067_verified | conductor_consulted=True logged | Exp 601 |
+| live_corpus_v2_collected | n_new_pairs >= 80 | Exp 602 |
+| coace_v4_live_recall | >= 0.20 | Exp 605 |
+| dsvd_live_auc_improved | >= 0.80 | Exp 605 |
+| retro_033_resolved | signed_improvement > 0 AND live_gpu | Exp 609 |
+| jepa_v12_ood_auc | >= 0.65 (not overfit) | Exp 607 |
+| nup_v6_auc | >= 0.80 | Exp 608 |
+| dwave_wired | CARNOT_SAMPLER=dwave works | Exp 610 |
+| fr11_relay | fr11_real_violations_confirmed=True | Exp 611 |
+| fact_e_viable | causal_gap > 0 (faithfulness signal present) | Exp 612 |
 
 ---
 
-## Carry-Forward Open Items (Not in This Milestone)
+## Open RETROs Addressed
 
-- **RETRO-035:** AMD XDNA NPU (install_failed in Exp 460). Defer until IRON conda package stabilizes.
-- **D-Wave cloud:** Promising but not urgent; defer until FPGA bring-up complete.
-- **HuggingFace publishing:** Update 16 existing model READMEs + publish Exp 66 joint model.
-  Block on 200q benchmark completing (need honest positive result to reference in README).
-- **FactNet integration:** Factual claim verification. Defer until extraction pipeline stable.
-- **PottsEBM:** Multi-state Ising tier. Design in this milestone, implement in next.
-- **RLVR:** EORM-as-reward for LLMExtractor fine-tuning. Tier 3 milestone item.
+| RETRO | Priority | Address In |
+|-------|----------|-----------|
+| RETRO-033 (13+ misses — live VR precision) | CRITICAL | Exp 609 (gated) |
+| RETRO-038 (200q Wilson CI) | CRITICAL | BLOCKED until RETRO-033 |
+| RETRO-049 (NUP Probe below threshold) | HIGH | Exp 608 |
+| RETRO-057 (LowRankKAEM tolerance) | LOW | defer to .47 |
+| RETRO-064 (CoACE live recall) | CRITICAL | Exp 603 |
+| RETRO-065 (RAPL unavailable) | LOW | defer |
+| RETRO-066 (distribution gap — v3 worse) | CRITICAL | Exp 603 |
+| RETRO-067 (manifest not wired) | HIGH | Exp 601 |
+| RETRO-068 (CoACEV3 4% live recall) | CRITICAL | Exp 603 |
+| RETRO-069 (DSVD 0.586 live AUC) | HIGH | Exp 604 |
+
+---
+
+## Hardware Requirements
+
+| Experiment | Hardware | Notes |
+|-----------|----------|-------|
+| Exp 602 | RTX 3090 (CUDA) | CARNOT_FORCE_LIVE=1 mandatory |
+| Exp 609 | RTX 3090 x2 (CUDA) | GPU REQUIRED; gate must be open |
+| All others | CPU only | JAX_PLATFORMS=cpu |
+| KV260 FPGA | Vivado synthesis pending | Human must install Vivado 2023.2 |
+| AMD XDNA NPU | Blocked | Human must: sudo pacman -S ninja openblas |
+
+---
+
+## ArXiv References Incorporated
+
+| Paper | What | Experiment |
+|-------|------|-----------|
+| arXiv 2504.00891 | GenPRM: generative CoT extractor — LLM-as-extractor for CoACEV4 | Exp 603 |
+| arXiv 2601.02170 | Streaming Hallucination Detection — temporal state tracking for DSVD fine-tuning | Exp 604 |
+| arXiv 2604.12632 | CAPO: calibration-aware contrastive loss for NUP Probe v6 | Exp 608 |
+| arXiv 2601.22642 | Interleaved Formal-Logic Verification during generation | Exp 606 |
+| arXiv 2604.10693 | FACT-E: causal faithfulness for CoT | Exp 612 |
+| arXiv 2604.01564 | Synchronous p-bit Ising machine (50% FPGA area reduction) | Exp 612 |
+| arXiv 2602.13551 | FLIP: backward inference reward calibration | Exp 611 |
+| arXiv 2603.18683 | HISR: hindsight credit assignment | Exp 610 |
+| arXiv 2601.00095 | MetaJuLS: meta-RL constraint propagation (filed for .47) | Future |
+
+---
+
+## Milestone Question
+
+**Has RETRO-033 been resolved?** After 13 failed attempts, does data-driven extractor retraining
+on live IT-model outputs finally unlock the first live positive verify-repair result?
+
+**Success:** signed_improvement > 0 with inference_mode='live_gpu'.
+**Failure criterion:** If Exp 605 gate stays closed (CoACEV4 recall < 0.20), do NOT schedule
+Exp 609. The lesson from .45 is: never schedule VR unless recall >= 20%. Escalate to RETRO-070
+and redesign extraction from scratch (LLM-as-extractor approach per research-program.md Goal #1b).
