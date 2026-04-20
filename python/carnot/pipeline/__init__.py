@@ -475,6 +475,10 @@ from carnot.pipeline.interleaved_verifier import (  # noqa: E402
     InterleavedStepResult,
 )
 from carnot.pipeline.capo_calibration import CAPOCalibrationLoss  # noqa: E402
+from carnot.pipeline.flip_calibrator import (  # noqa: E402
+    FLIPRepairTriple,
+    FLIPRewardCalibrator,
+)
 
 __all__ = [
     "AgentStep",
@@ -789,6 +793,8 @@ __all__ = [
     "OTVVerifier",
     "MISECalibrator",
     "MISETriple",
+    "FLIPRepairTriple",
+    "FLIPRewardCalibrator",
     "HISRViolationWeight",
     "HISRWeighter",
     "InterleavedLogicVerifier",

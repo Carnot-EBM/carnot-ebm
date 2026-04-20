@@ -1801,6 +1801,71 @@ Spec: SCENARIO-LEARN-117
 
 ---
 
+### REQ-LEARN-076: FLIP Backward Inference for Repair Quality Scoring (FR-11, arXiv 2602.13551)
+
+**Requirement:**
+    The system MUST implement FLIPRewardCalibrator, which uses backward inference
+    (cosine similarity between embed(repaired) and embed(question)) to score
+    whether a repair improved constraint alignment relative to the original response.
+    A positive alignment delta means the repair moved the response closer to the
+    question's constraint space.  A zero or negative delta signals a potentially
+    constraint-inconsistent repair.
+
+**Rationale:**
+    Binary verify-repair verdicts are weak FR-11 signals.  FLIP provides a dense
+    signal by measuring whether each repair improved the model's constraint alignment
+    — without requiring human labels.
+
+Spec: REQ-LEARN-076, SCENARIO-LEARN-118, SCENARIO-LEARN-119, SCENARIO-LEARN-120
+
+### REQ-LEARN-077: FR-11 Real Violations Relay v5 from Exp 609 or Synthetic Fallback
+
+**Requirement:**
+    Experiment 611 MUST load live violations from experiment_609 (n_violations_found > 0)
+    as the primary source.  If Exp 609 has zero violations, fall back to Exp 597.
+    If both are empty, use 10 synthetic violations from fover_corpus_v4.json, labeled
+    explicitly as synthetic_fallback.  The violations_source field in the artifact MUST
+    record which path was taken.
+
+Spec: REQ-LEARN-077, SCENARIO-LEARN-118
+
+---
+
+### SCENARIO-LEARN-118: FLIP Calibration Runs on Live or Synthetic Violations
+
+**Given** experiment 611 loads violations from Exp 609, Exp 597, or synthetic fallback,
+
+**When** FLIPRewardCalibrator.batch_calibrate() is called with the resulting triples,
+
+**Then** the artifact records flip_mean_score (float), flip_n_improved (int),
+         flip_repair_quality ('good'|'neutral'|'bad'), and violations_source.
+
+Spec: SCENARIO-LEARN-118
+
+### SCENARIO-LEARN-119: backward_inference_score Returns Float in [0, 1] for Hash Embed
+
+**Given** FLIPRewardCalibrator is constructed with the hash-projection embed_fn,
+
+**When** backward_inference_score(response, question) is called with non-empty strings,
+
+**Then** the return value is a float in [-1.0, 1.0] (cosine similarity range) and
+         does not raise an exception.
+
+Spec: SCENARIO-LEARN-119
+
+### SCENARIO-LEARN-120: batch_calibrate Reports 'good' When Majority Repairs Improve Alignment
+
+**Given** a list of FLIPRepairTriples where more than half have repaired responses
+         that score higher alignment than the originals,
+
+**When** batch_calibrate() is called,
+
+**Then** repair_quality = 'good', n_improved > 0, and mean_flip_score > 0.
+
+Spec: SCENARIO-LEARN-120
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1867,3 +1932,5 @@ Spec: SCENARIO-LEARN-117
 | REQ-LEARN-071 | N/A | Implemented | Python (test_mise_calibrator) |
 | REQ-LEARN-073 | N/A | Implemented | Python (test_jepa_ood_validation.py) |
 | REQ-LEARN-074 | N/A | Implemented | Python (test_jepa_ood_validation.py) |
+| REQ-LEARN-076 | N/A | Implemented | Python (test_flip_calibrator.py) |
+| REQ-LEARN-077 | N/A | Implemented | Python (Exp 611) |
