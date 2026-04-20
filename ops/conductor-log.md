@@ -2283,3 +2283,4 @@ python/ |
 | 2026-04-20 05:16 UTC | Exp 558: InternalStateProbe Real-Data Training — a | OK | 81 passed, 2 warnings in 4.98s |
 | 2026-04-20 06:21 UTC | Exp 559: LowRankKAEM Calibration Layer — RETRO-057 | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
 | 2026-04-20 06:33 UTC | Exp 559: LowRankKAEM Calibration Layer — RETRO-057 | OK | 100 passed, 2 warnings in 13.18s |
+| 2026-04-20 06:46 UTC | Exp 560: LatentCoTEBMCalibrator — Step-Level Energ | OK | 81 passed, 2 warnings in 3.22s |
