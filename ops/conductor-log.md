@@ -2305,3 +2305,4 @@ python/ |
 | 2026-04-20 11:12 UTC | Milestone 2026.04.44 activated | OK | 14 tasks queued |
 | 2026-04-20 11:25 UTC | Exp 575: Conductor Exclusion Manifest — RETRO-056  | OK | 94 passed, 2 warnings in 2.90s |
 | 2026-04-20 11:42 UTC | Exp 576: CoACE Recall Boost v2 — Expand Arithmetic | OK | 81 passed, 2 warnings in 2.96s |
+| 2026-04-20 11:58 UTC | Exp 577: JEPA CPMI Contrastive Pair Builder — Hard | OK | 81 passed, 2 warnings in 2.90s |
