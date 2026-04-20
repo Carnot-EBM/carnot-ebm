@@ -2291,3 +2291,4 @@ python/ |
 | 2026-04-20 07:58 UTC | Exp 563: Live 50q Data Collection A v2 — RETRO-062 | OK | 81 passed, 2 warnings in 2.80s |
 | 2026-04-20 08:09 UTC | Exp 564: CoACEExtractor — Code-Assisted Constraint | OK | 81 passed, 2 warnings in 2.76s |
 | 2026-04-20 08:21 UTC | Exp 565: Live CoACEExtractor Diagnostic — TP/FP on | OK | 81 passed, 2 warnings in 2.79s |
+| 2026-04-20 08:32 UTC | Exp 566: JEPAPUREMinForm — Min-Form PRM Objective  | OK | 81 passed, 2 warnings in 2.74s |
