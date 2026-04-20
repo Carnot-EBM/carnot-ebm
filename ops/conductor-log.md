@@ -2336,3 +2336,4 @@ python/ |
 | 2026-04-20 17:21 UTC | Exp 600: Milestone 2026.04.45 Operational Retrospe | OK | 81 passed, 2 warnings in 2.76s |
 | 2026-04-20 17:49 UTC | Plan milestone 2026.04.46 | OK | 13 tasks proposed |
 | 2026-04-20 17:54 UTC | Milestone 2026.04.46 activated | OK | 13 tasks queued |
+| 2026-04-20 18:05 UTC | Exp 601: ExclusionManifest Final Verification + Hu | OK | 81 passed, 2 warnings in 2.71s |
