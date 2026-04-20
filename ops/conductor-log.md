@@ -2294,3 +2294,4 @@ python/ |
 | 2026-04-20 08:32 UTC | Exp 566: JEPAPUREMinForm — Min-Form PRM Objective  | OK | 81 passed, 2 warnings in 2.74s |
 | 2026-04-20 08:45 UTC | Exp 567: JEPA v10 Retrain — PURE MinForm on 132-pa | OK | 81 passed, 2 warnings in 3.04s |
 | 2026-04-20 08:56 UTC | Exp 568: KV260 FPGA Bring-Up v2 — Board Arrived 20 | OK | 81 passed, 2 warnings in 2.74s |
+| 2026-04-20 09:09 UTC | Exp 569: Live Verify-Repair with CoACEExtractor —  | OK | 81 passed, 2 warnings in 2.78s |
