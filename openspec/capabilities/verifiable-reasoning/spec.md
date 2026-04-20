@@ -10318,3 +10318,54 @@ Then: A blocked artifact is written with honest_verdict='upstream_missing' and t
 Given: CoACE TP rate and VeriCoT TP rate from the same labeled set.
 When: The artifact is built.
 Then: coace_improvement_over_vericot = coace_tp_rate - vericot_tp_rate is included in the artifact.
+
+---
+
+## REQ-BENCH-014 (v3): Live Verify-Repair Benchmark with CoACEExtractor on 50 GSM8K Questions (Exp 569)
+
+Run the full verify-repair pipeline with CoACEExtractor as the extractor on 50 GSM8K
+validation questions (indices 100–149, avoiding overlap with Exps 538/551/552/563).
+For each question and each available model: generate a baseline response, run CoACE extraction,
+apply repair if violations are found, record baseline_correct and pipeline_correct.
+Compute signed_improvement = pipeline_accuracy - baseline_accuracy.
+GATE: experiment 565 gate_open must be True before any inference runs.
+
+**Acceptance Criteria:**
+- `schema='carnot.live_vr_coace.v1'`
+- `inference_mode` in ('live_gpu', 'gpu_required', 'blocked_no_extraction')
+- `n_questions=50`, `question_indices='100-149'`
+- `extractor='coace'`
+- `baseline_accuracy`, `pipeline_accuracy`, `signed_improvement` all present as floats
+- `n_violations_found`, `n_repairs_applied`, `n_repairs_improved` all present as ints
+- `retro_033_resolved=True` iff `signed_improvement > 0` AND `inference_mode='live_gpu'`
+- `honest_verdict` in ('first_positive', 'live_no_improvement_11q', 'blocked_simulated', 'blocked_no_extraction', 'gpu_required')
+- All exit paths write the deliverable JSON
+- FINAL LINE is `tmpl.assert_deliverable_written()`
+
+**Implementation Status:** Implemented (Exp 569)
+
+Spec: REQ-BENCH-014 (v3), SCENARIO-BENCH-033, SCENARIO-BENCH-034, SCENARIO-BENCH-035
+
+### SCENARIO-BENCH-033: Gate Blocks Experiment When Exp 565 gate_open=False
+
+Given: results/experiment_565_coace_live_diagnostic.json has gate_open=False (or file missing).
+When: Experiment 569 runs.
+Then: A blocked artifact is written with honest_verdict='blocked_no_extraction' and the script exits 0 without running inference.
+
+**Implementation Status:** Implemented (Exp 569)
+
+### SCENARIO-BENCH-034: Live GPU Inference Produces signed_improvement Field
+
+Given: Live GPU inference completes on 50 GSM8K questions with CoACEExtractor.
+When: The artifact is built.
+Then: signed_improvement = pipeline_accuracy - baseline_accuracy is present and is a float.
+
+**Implementation Status:** Implemented (Exp 569)
+
+### SCENARIO-BENCH-035: retro_033_resolved=True When signed_improvement > 0 on Live GPU
+
+Given: signed_improvement > 0 AND inference_mode='live_gpu'.
+When: The artifact is built.
+Then: retro_033_resolved=True and honest_verdict='first_positive'.
+
+**Implementation Status:** Implemented (Exp 569)
