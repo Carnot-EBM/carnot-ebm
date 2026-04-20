@@ -2323,3 +2323,4 @@ python/ |
 | 2026-04-20 14:50 UTC | Milestone 2026.04.45 activated | OK | 12 tasks queued |
 | 2026-04-20 15:00 UTC | Exp 589: Exclusion Manifest Conductor Wire-In + NP | OK | 81 passed, 2 warnings in 3.91s |
 | 2026-04-20 15:11 UTC | Exp 590: Import-Time CARNOT_FORCE_LIVE Assertion M | OK | 91 passed, 2 warnings in 3.29s |
+| 2026-04-20 15:27 UTC | Exp 591: CoACEExtractorV3 — Live-Corpus Calibratio | OK | 81 passed, 2 warnings in 3.18s |
