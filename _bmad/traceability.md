@@ -628,3 +628,7 @@
 | SCENARIO-INFRA-087 | Implemented | check_exclusion_manifest() Calls sys.exit(0) for Excluded Experiment — Exp 549 scenario: calls check_exclusion_manifest() on excluded experiment (e.g. Exp 308); should trigger sys.exit(0) with excluded artifact written |
 | SCENARIO-INFRA-088 | Implemented | Exclusion Manifest Has Valid Format and Excluded List — Exp 549 scenario: created manifest has version=1, excluded_experiments set matching {308,260,309,425,410}, reason field, and added_milestone='2026.04.42' |
 | SCENARIO-INFRA-089 | Implemented | kill_gpu_zombies() Reports Method and Error in Result — Exp 549 scenario: zombie_kill_result includes method ('nvidia_smi_fallback' or 'pynvml'), freed_mb count, and explicit error field (or None on success) for audit trail visibility |
+| REQ-VERIFY-115-B | Implemented | InternalStateProbe Retrained on Real FOVER Corpus v2 Data — Exp 558 validates Exp 545 probe performance on real-data corpus with n_labeled >= 100 gate |
+| SCENARIO-VERIFY-131 | Implemented | Exp 558 Loads fover_corpus_v2 and Gates on n_labeled >= 100 — Exp 558 scenario: loads real corpus and blocks training if n_labeled < 100 |
+| SCENARIO-VERIFY-132 | Implemented | Exp 558 Probe Trains on 80% Split and Reports probe_auc in [0,1] — Exp 558 scenario: deterministic 80/20 split (seed=42), probe_auc=0.5217 in valid range |
+| SCENARIO-VERIFY-133 | Implemented | Exp 558 Artifact Contains All Required Schema Fields — Exp 558 scenario: result JSON includes all schema fields (probe_auc, probe_viable, honest_verdict, etc.) |
