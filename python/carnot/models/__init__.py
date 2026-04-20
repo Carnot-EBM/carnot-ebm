@@ -62,6 +62,11 @@ from carnot.models.potts_machine import (
     PottsMachineVerifier,
     PottsState,
 )
+from carnot.models.symbolic_kan_energy import (
+    SymbolicActivation,
+    SymbolicKANEnergy,
+    SymbolicKANLayer,
+)
 
 __all__ = [
     "BoltzmannConfig",
@@ -113,4 +118,7 @@ __all__ = [
     "PottsCoupling",
     "PottsMachineVerifier",
     "PottsState",
+    "SymbolicActivation",
+    "SymbolicKANEnergy",
+    "SymbolicKANLayer",
 ]

@@ -1082,6 +1082,46 @@ Spec: REQ-SAMPLE-033, SCENARIO-SAMPLE-055, SCENARIO-SAMPLE-056, SCENARIO-SAMPLE-
 **And** fpga_speedup is the ratio hardware_latency_us / cpu_baseline_latency_us (or None)
 **And** bitfile_set reflects the CARNOT_KV260_BITFILE env var state
 
+### REQ-MODEL-020: SymbolicKANEnergy — KAN with Discrete Symbolic Activations
+
+The system shall provide a SymbolicKANEnergy class that replaces continuous spline
+activations with discrete symbolic equations (linear, quadratic, tanh, relu, abs),
+enabling human-readable energy function explanations.
+
+- Each activation is selected by minimum MSE from a fixed candidate set
+- The fitted activation type, coefficient, and bias are stored as a SymbolicActivation dataclass
+- energy_interpretable = True (class attribute distinguishes this tier)
+
+### REQ-MODEL-021: formula_export — Human-Readable Formula String
+
+The system shall expose an explain() method on SymbolicKANEnergy that returns a
+human-readable string of the full energy function, e.g.:
+  E(x) = 2.1*x1 + 0.8*x2^2 + tanh(1.3*x3)
+
+- Each SymbolicActivation carries a formula_str auto-generated at fit time
+- explain() assembles per-variable formulas into a single expression
+
+### SCENARIO-MODEL-030: Linear Data Selects Linear Activation
+
+**Given** x_data and y_data drawn from y = 2.0 * x + 0.5
+**When** fit_activation() is called with all candidate types
+**Then** the selected activation_type is 'linear'
+**And** coefficient is approximately 2.0 and bias is approximately 0.5
+
+### SCENARIO-MODEL-031: Absolute Constraint Captured by Symbolic Layer
+
+**Given** training data from E(x1, x2) = |x1 + x2 - 1|
+**When** SymbolicKANEnergy.fit() is called on 160 samples
+**Then** explain() returns a non-empty formula string
+**And** the formula contains 'abs' or 'tanh' reflecting the constraint structure
+
+### SCENARIO-MODEL-032: SymbolicKANEnergy MSE Within 1.5x of KAEMEnergy
+
+**Given** the same synthetic constraint dataset used in Exp 586
+**When** both SymbolicKANEnergy and KAEMEnergy are fitted and evaluated on held-out data
+**Then** symbolic_mse <= kaem_mse * 1.5 (honest_verdict = 'symbolic_viable')
+**Or** honest_verdict = 'symbolic_accuracy_loss' if the threshold is exceeded
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1120,6 +1160,8 @@ Spec: REQ-SAMPLE-033, SCENARIO-SAMPLE-055, SCENARIO-SAMPLE-056, SCENARIO-SAMPLE-
 | REQ-SAMPLE-032 | N/A | Implemented | Python (test_experiment_584_kv260_synthesis.py, 100% targeted) |
 | REQ-SAMPLE-033 | N/A | Implemented | Python (test_experiment_585_kv260_live_benchmark_v3.py, 100% targeted) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
+| REQ-MODEL-020 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
+| REQ-MODEL-021 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-108 | N/A | Implemented | Python (Exp 534 experiment) |

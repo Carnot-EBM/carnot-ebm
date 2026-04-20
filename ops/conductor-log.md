@@ -2315,3 +2315,5 @@ python/ |
 | 2026-04-20 13:23 UTC | Exp 584: KV260 Vivado Synthesis — Generate Ising S | OK | 81 passed, 2 warnings in 2.70s |
 | 2026-04-20 13:33 UTC | Exp 585: KV260 Live Benchmark V3 — Hardware Ising | OK | 19 passed, 8 warnings in 9.68s |
 | 2026-04-20 13:34 UTC | Exp 585: KV260 Live FPGA Benchmark v3 — Hardware I | OK | 81 passed, 2 warnings in 2.82s |
+| 2026-04-20 13:49 UTC | Exp 586: Symbolic-KAN Energy Interpretability — In | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-20 13:54 UTC | Exp 586: Symbolic-KAN Energy Interpretability — In | OK | Deliverable already exists in repo |
