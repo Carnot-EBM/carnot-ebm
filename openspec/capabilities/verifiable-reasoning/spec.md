@@ -11373,3 +11373,61 @@ When: InterleavedLogicVerifier.verify_response(response) is called.
 Then: The step's z3_sat is None and violation_detected is False.
 
 **Implementation Status:** Implemented (Exp 606)
+
+## REQ-VERIFY-140: NUP Probe v6 — CAPO Calibration-Aware Retrain on Live Corpus v4
+
+**Context (RETRO-049):**
+    NUP Probe v5 (Exp 599) achieved AUC=0.739 — below the 0.80 Tier 0c deployment
+    threshold.  Root causes: small/synthetic corpus and contrastive-only loss prone
+    to overfitting.  V6 uses fover_corpus_v4 (300 live GPU pairs) and CAPO loss.
+
+- REQ-VERIFY-140-1: Load corpus from results/fover_corpus_v4.json (else merge live_pairs_578.json + live_pairs_579.json + live_pairs_602.json).
+- REQ-VERIFY-140-2: 80/20 train/val split stratified by is_correct label.
+- REQ-VERIFY-140-3: Train NUP Probe v6 with CAPOCalibrationLoss (lambda_cal=0.1, margin=1.0), n_epochs=200, lr=1e-3.
+- REQ-VERIFY-140-4: Checkpoint every 50 epochs; retain best weights by val_auc.
+- REQ-VERIFY-140-5: Save model to results/nup_probe_v6.safetensors if val_auc >= 0.80.
+- REQ-VERIFY-140-6: Artifact fields: n_live_pairs, train_pairs, val_pairs, v5_auc=0.739, v6_val_auc, capo_applied=True, lambda_cal, model_saved, tier_0c_deployable, retro_049_resolved, honest_verdict.
+
+Spec: REQ-VERIFY-140, SCENARIO-VERIFY-171, SCENARIO-VERIFY-172, SCENARIO-VERIFY-173
+
+## REQ-VERIFY-141: CAPO Calibration Loss — AUC-Surrogate WMW Regularisation (arXiv 2604.12632)
+
+**Why this requirement exists:**
+    Contrastive margin loss alone tends to produce overconfident score gaps that
+    memorise training data (AUC=1.0 on train, poor on val).  CAPO adds a WMW
+    U-statistic approximation as a calibration penalty to prevent this.
+
+- REQ-VERIFY-141-1: CAPOCalibrationLoss.__init__(lambda_cal=0.1, margin=1.0).
+- REQ-VERIFY-141-2: compute_loss(scores_correct, scores_incorrect) -> float: contrastive_loss = mean(max(0, margin - (score_incorrect_i - score_correct_i))).
+- REQ-VERIFY-141-3: calibration_loss per pair: diff = score_correct - score_incorrect; cal_loss = (diff + 0.5)^2 if |diff| < 0.3 else 0.
+- REQ-VERIFY-141-4: total_loss = mean(margin_loss_i + lambda_cal * cal_loss_i) over all pairs.
+- REQ-VERIFY-141-5: Returns 0.0 for empty inputs.
+- REQ-VERIFY-141-6: CAPOCalibrationLoss exported from carnot.pipeline.__init__.
+
+Spec: REQ-VERIFY-141, SCENARIO-VERIFY-172, SCENARIO-VERIFY-173
+
+### SCENARIO-VERIFY-171: NUP Probe v6 Trains on Live Corpus v4 and Reports AUC
+
+Given: fover_corpus_v4.json with 300 live pairs available.
+When: experiment_608_nup_probe_v6.py is executed with JAX_PLATFORMS=cpu.
+Then: results/experiment_608_nup_probe_v6.json is written with all required schema fields.
+And: v6_val_auc is a float in [0.0, 1.0].
+And: capo_applied=True and lambda_cal=0.1 are present in the artifact.
+
+**Implementation Status:** Implemented (Exp 608)
+
+### SCENARIO-VERIFY-172: CAPO Calibration Loss Active on Borderline Pairs
+
+Given: A (scores_correct, scores_incorrect) pair where |score_correct - score_incorrect| < 0.3.
+When: CAPOCalibrationLoss(lambda_cal=0.1).compute_loss([sc], [si]) is called.
+Then: The calibration term (diff + 0.5)^2 is included and the total loss exceeds the pure margin loss.
+
+**Implementation Status:** Implemented (Exp 608)
+
+### SCENARIO-VERIFY-173: CAPO Calibration Loss Silent on Well-Separated Pairs
+
+Given: A (scores_correct, scores_incorrect) pair where |score_correct - score_incorrect| >= 0.3.
+When: CAPOCalibrationLoss(lambda_cal=0.1).compute_loss([sc], [si]) is called.
+Then: The calibration term is 0.0 and the total loss equals the pure margin loss.
+
+**Implementation Status:** Implemented (Exp 608)
