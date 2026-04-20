@@ -785,6 +785,40 @@ Spec: Exp 497, FR-11, arXiv 2511.22367
 **Then** ``sure_better=True`` (0.85 > 0.72)
 **And** ``isolation_improvement=0.13`` (0.85 - 0.72)
 
+### REQ-SELFLEARN-013: Tier 1 Relay Uses Real FP Patterns from Live Inference
+
+The Tier 1 self-learning relay (FR-11) shall use real false-positive and
+false-negative patterns extracted from live inference diagnostics (e.g.,
+Exp 554 per_question_flags) as the seed for ConstraintAdditionFromMemory —
+not synthetic data.  The relay artifact must carry ``inference_mode='real_data'``
+and ``fr11_real_data=True``.  If the diagnostic source is unavailable, the
+experiment must gate and report ``status='blocked'`` rather than substituting
+synthetic data.
+
+Spec: Exp 561, FR-11
+
+### SCENARIO-SELFLEARN-013: Exp 554 FN Patterns Produce ViolationPattern for 'low_tp_extraction'
+
+**Given** Exp 554 vericot_result has 17 FN cells and 0 FP cells
+**When** ``load_exp554_fp_patterns(path)`` is called
+**Then** returns a list containing one ViolationPattern with type='low_tp_extraction'
+**And** ViolationPattern.count == 34 (17 FN from VeriCoT + 17 FN from VPRM)
+
+### SCENARIO-SELFLEARN-014: Session 2 fp_rate_delta Reported Honestly
+
+**Given** Session 1 fp_rate and Session 2 fp_rate are both computed on the same
+25-response corpus with and without constraint_memory
+**When** fp_rate_delta = session2_fp_rate - session1_fp_rate
+**Then** honest_verdict is 'real_data_improvement' iff fp_rate_delta < -0.05
+**And** honest_verdict is 'real_data_no_improvement' otherwise
+
+### SCENARIO-SELFLEARN-015: Missing Exp 554 Diagnostic Gates the Experiment
+
+**Given** Exp 554 result file does not exist
+**When** load_exp554_fp_patterns() is called
+**Then** returns an empty list
+**And** the experiment sets status='blocked' and honest_verdict='blocked_no_real_data'
+
 ### REQ-LEARN-043: EnergyMagnitudeReplay Ranks Violations by |energy - session_mean|
 
 EnergyMagnitudeReplay shall rank constraint violations by absolute energy deviation
