@@ -11283,3 +11283,49 @@ And: tuple[1] label is False (second-to-last window — violation forming).
 And: tuple[2] label is False (last window — violation confirmed).
 
 **Implementation Status:** Implemented (Exp 604)
+
+## REQ-BENCH-058: Combined Extractor Diagnostic — CoACEV4 vs DSVDAdapter (Exp 605)
+
+**Context (RETRO-033 Attempt #14 gate):**
+    Both CoACEExtractorV4 (Exp 603, recall=0.04) and the fine-tuned DSVDAdapter
+    (Exp 604, val_auc=0.158) failed individually.  This requirement measures TP/FP of
+    BOTH extractors on 25 known-incorrect live responses.  The gate for Exp 609
+    (next live verify-repair attempt) opens only if EITHER achieves recall >= 0.20.
+
+- REQ-BENCH-058-1: Load first 25 is_correct=False entries from results/live_pairs_578.json.
+- REQ-BENCH-058-2: Load first 10 is_correct=True entries as FP test set.
+- REQ-BENCH-058-3: CoACEExtractorV4 recall = count(v4 violation found) / 25; fp_rate = count(v4 violation on correct) / 10.
+- REQ-BENCH-058-4: DSVDAdapter recall = count(score > 0.5 on incorrect) / 25; fp_rate = count(score > 0.5 on correct) / 10.
+- REQ-BENCH-058-5: winning_extractor = 'coace_v4' if coace_v4_recall >= dsvd_recall else 'dsvd'.
+- REQ-BENCH-058-6: gate_open = max(coace_v4_recall, dsvd_recall) >= 0.20.
+- REQ-BENCH-058-7: honest_verdict = 'gate_open_proceed_to_vr' if gate_open else 'gate_closed_recall_below_threshold'.
+
+Spec: REQ-BENCH-058, SCENARIO-BENCH-050, SCENARIO-BENCH-051, SCENARIO-BENCH-052
+
+### SCENARIO-BENCH-050: CoACEExtractorV4 Recall Computed on 25 Known-Incorrect Responses
+
+Given: 25 is_correct=False entries from live_pairs_578.json.
+When: CoACEExtractorV4.extract(response) is called for each.
+Then: coace_v4_recall = number of responses where n_violations > 0, divided by 25.
+And: coace_v4_fp_rate = number of is_correct=True responses flagged, divided by 10.
+
+**Implementation Status:** Implemented (Exp 605)
+
+### SCENARIO-BENCH-051: DSVDAdapter Recall Computed on 25 Known-Incorrect Responses
+
+Given: a DSVDLinearProbe fitted on non-test corpus pairs from live_pairs_578.json.
+When: DSVDAdapter.verify_step(response) is called and violation_probability > 0.5 checked.
+Then: dsvd_recall = count of incorrect responses flagged / 25.
+And: dsvd_fp_rate = count of correct responses flagged / 10.
+
+**Implementation Status:** Implemented (Exp 605)
+
+### SCENARIO-BENCH-052: Gate Decision Written to Artifact
+
+Given: coace_v4_recall and dsvd_recall are computed.
+When: best_recall = max(coace_v4_recall, dsvd_recall).
+Then: gate_open = True if best_recall >= 0.20 else False.
+And: gate_note contains 'Proceed to Exp 609' if gate_open else 'DO NOT schedule Exp 609'.
+And: honest_verdict = 'gate_open_proceed_to_vr' if gate_open else 'gate_closed_recall_below_threshold'.
+
+**Implementation Status:** Implemented (Exp 605)
