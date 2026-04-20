@@ -2277,3 +2277,4 @@ python/ |
 | 2026-04-20 03:55 UTC | Exp 552: Live 50q Data Collection B — GSM8K indice | OK | 81 passed, 2 warnings in 5.66s |
 | 2026-04-20 04:07 UTC | Exp 553: FOVER Corpus v2 — Merge, Diversity Audit, | OK | 81 passed, 2 warnings in 5.42s |
 | 2026-04-20 04:19 UTC | Exp 554: VeriCoT+VPRM Extraction Diagnostic on Exp | OK | 81 passed, 2 warnings in 5.31s |
+| 2026-04-20 04:33 UTC | Exp 555: Confidence-Weighted Constraint Filtering  | OK | 81 passed, 2 warnings in 5.11s |
