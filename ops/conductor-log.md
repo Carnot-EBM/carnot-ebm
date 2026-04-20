@@ -2314,3 +2314,4 @@ python/ |
 | 2026-04-20 13:11 UTC | Exp 583: FR-11 Tier 1 Self-Learning Relay v3 — Rea | OK | 81 passed, 2 warnings in 2.78s |
 | 2026-04-20 13:23 UTC | Exp 584: KV260 Vivado Synthesis — Generate Ising S | OK | 81 passed, 2 warnings in 2.70s |
 | 2026-04-20 13:33 UTC | Exp 585: KV260 Live Benchmark V3 — Hardware Ising | OK | 19 passed, 8 warnings in 9.68s |
+| 2026-04-20 13:34 UTC | Exp 585: KV260 Live FPGA Benchmark v3 — Hardware I | OK | 81 passed, 2 warnings in 2.82s |
