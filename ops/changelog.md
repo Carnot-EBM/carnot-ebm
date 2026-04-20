@@ -36,6 +36,7 @@
 
 ## 2026-04-19 (Milestone 2026.04.40 Research Planning)
 
+- 2026-04-20: Exp 566 complete — JEPAPUREMinForm, min-form PRM objective for JEPA (RETRO-060 fix, arXiv 2504.15275), status=success. (Exp 566 result)
 - 2026-04-20 00:00 UTC: Exp 532 complete — LowRankKAEMEnergy SVD projection of logit energy (arXiv 2604.04384), status=success. (Exp 532 result)
 - 2026-04-19 23:59 UTC: Exp 528 complete — Live 200q VeriCoT+VPRM v7, RETRO-038 seventh attempt, status=success, headline_result=Wilson_CI_publishable. (Exp 528 result)
 - 2026-04-19: Exp 535 complete — JEPA Live Retrain v7, FR-11 mandatory, trained on real CoT pairs from Exps 527/528, status=success. (Exp 535 result)
