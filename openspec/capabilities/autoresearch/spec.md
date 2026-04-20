@@ -1244,6 +1244,46 @@ Implemented by: python/carnot/pipeline/constraint_template_store.py
 
 ---
 
+### REQ-LEARN-060: EORM Retrain on Real GRPO Contrastive Pairs from FOVER Corpus v2
+
+**Statement:**
+    When fover_corpus_v2.json contains at least 100 entries with is_correct labels,
+    the experiment pipeline SHALL retrain EORM using GRPO-style contrastive pairs
+    (arXiv 2503.06639) formed from same-question (correct, incorrect) response pairs,
+    report AUC on a held-out 20% split, and save the retrained model as
+    results/eorm_model_556_real.safetensors.
+
+**Acceptance criteria:**
+    - load_fover_corpus_v2() loads entries from fover_corpus_v2.json and groups by question
+    - Contrastive triples built from questions that have both correct and incorrect responses
+    - n_contrastive_triples >= 1 when corpus has at least one question with both correct
+      and incorrect responses
+    - AUC reported before and after retraining on 20% held-out split
+    - honest_verdict='real_data_improvement' iff after_auc >= 0.700
+    - Blocked artifact emitted if n_pairs < 100
+
+Spec: REQ-LEARN-060
+
+---
+
+### SCENARIO-LEARN-093: load_fover_corpus_v2 Returns GRPOContrastivePairs from Both-Verdict Questions
+
+**Given** fover_corpus_v2.json with entries including at least one question with
+         both a correct and an incorrect response
+**When** load_fover_corpus_v2(path) is called
+**Then** the returned list contains one GRPOContrastivePair per such question
+**And** correct_response and incorrect_response fields are non-empty strings
+
+---
+
+### SCENARIO-LEARN-094: load_fover_corpus_v2 Returns Empty List for Missing File
+
+**Given** a file path that does not exist
+**When** load_fover_corpus_v2(path) is called
+**Then** an empty list is returned without raising an exception
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1294,3 +1334,4 @@ Implemented by: python/carnot/pipeline/constraint_template_store.py
 | REQ-LEARN-057 | N/A | Implemented | Python |
 | REQ-LEARN-058 | N/A | Implemented | 26 Python |
 | REQ-LEARN-059 | N/A | Implemented | 26 Python |
+| REQ-LEARN-060 | N/A | Implemented | Python |
