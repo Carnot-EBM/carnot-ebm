@@ -25,6 +25,7 @@
 | FR-16 | GPU Compute | N/A | 4 Rust | wgpu Vulkan backend, WebGPU gateway, ROCm 7.2 native gfx1150 | Implemented |
 | FR-17 | Documentation UI | `openspec/capabilities/documentation-ui/spec.md` | 1 Python | Premium aesthetic, glassmorphism, animations | Implemented |
 | FR-19 | Research Reporting Provenance | `openspec/capabilities/research-reporting/spec.md` | 31 Python | `scripts/experiment_209_cleanup.py`, `scripts/experiment_210_research_scan.py`, `scripts/experiment_317_hf_publish.py`, `scripts/experiment_330_hf_live_publish.py`; provenance headers on result artifacts, research scan outputs in docs/results, HuggingFace model card updates with Phase 1 disclaimers and live-GPU benchmark embedding | Implemented |
+| FR-20 | Legacy Experiment Modernization | `openspec/capabilities/infrastructure/spec.md` | Exp 547 BatchedInferenceRunner infrastructure | Refactored top-5 slowest legacy experiments (Exps 308/425/260/309/410) via BatchedInferenceRunner retrofit; expected 15-25% per-experiment speedup | Implemented (Exp 547) |
 
 ## Non-Functional Requirements
 
