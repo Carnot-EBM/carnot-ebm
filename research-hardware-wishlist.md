@@ -49,6 +49,21 @@ This Potts extension is a STRONG additional motivation to complete the KV260 bit
 the hardware-native q-state sampler enables constraint verification with partial-credit scoring
 that the binary Ising architecture cannot provide.
 
+### KV260 Synthesis Status (Exp 584 — 20260420) — VIVADO NOT INSTALLED
+
+- **Exp 584 result:** `honest_verdict=vivado_not_installed`
+  - Vivado not found on PATH on this machine; synthesis could not be attempted
+  - TCL script is complete at `hardware/kv260/synth_ising.tcl` (tcl_enhanced=True)
+  - RTL is synthesis-ready at `hardware/kv260/ising_sampler_v1.v`
+- **To synthesise the bitfile (on a Vivado-equipped machine):**
+  1. Download Xilinx Vivado 2023.2 from xilinx.com (requires AMD account)
+  2. `sudo ./Xilinx_Unified_2023.2_1013_2256.tar.gz --batch-mode --agree 3rdPartyEULA,WebTalkTermsAndConditions,XilinxEULA`
+  3. `export PATH=/tools/Xilinx/Vivado/2023.2/bin:$PATH`
+  4. `vivado -mode batch -source hardware/kv260/synth_ising.tcl`  (~15-60 min)
+  5. Set `export CARNOT_KV260_BITFILE=output/carnot_ising_synth/carnot_ising.bit`
+  6. Run: `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_568_kv260_bringup_v2.py`
+  7. Expected on real HW: `honest_verdict=hardware_working`, `hardware_latency_us < 100μs`
+
 ### KV260 Bring-Up Status (Exp 568 — 20260420) — BOARD ARRIVED
 
 - **Board arrival:** KV260 physically arrived on 2026-04-20.
