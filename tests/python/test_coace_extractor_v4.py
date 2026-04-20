@@ -68,8 +68,10 @@ class TestSafeEval:
         assert safe_eval("1/0") is None
 
     def test_overflow_returns_none(self):
-        # 10**10**10 overflows float
-        assert safe_eval("10**10**10") is None
+        # 10**400 is a fast integer computation that overflows float conversion.
+        # Cannot use 10**10**10 — Python ints are arbitrary precision so it hangs
+        # computing a 10-billion-digit number before the OverflowError is triggered.
+        assert safe_eval("10**400") is None
 
     def test_invalid_syntax_returns_none(self):
         assert safe_eval("abc+1") is None
