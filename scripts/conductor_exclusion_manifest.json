@@ -1,6 +1,9 @@
 {
-  "version": 1,
-  "excluded_experiments": [308, 260, 309, 425, 410],
-  "reason": "Fully modern (ExperimentTemplate+watchdog+teardown+BatchedInferenceRunner). Exp 547 confirmed batching_added=[] — no further modernization needed.",
-  "added_milestone": "2026.04.42"
+  "excluded": [
+    {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, legacy checkpoint-failure state"},
+    {"experiment_id": 260, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, sequential inference loop"},
+    {"experiment_id": 309, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, checkpoint-failure state"},
+    {"experiment_id": 425, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, ExperimentTimeoutWatchdog already implemented"},
+    {"experiment_id": 410, "completed_milestone": "2026.04.37", "reason": "slowest-5 seven consecutive milestones, 1000 sequential inference calls, BatchedInferenceRunner migration target"}
+  ]
 }

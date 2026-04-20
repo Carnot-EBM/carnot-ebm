@@ -10450,3 +10450,49 @@ When: run_beam_episode is called with a generate_fn returning 3 candidates per s
 Then: n_beams_explored=6, len(selected_candidates)=2.
 
 **Implementation Status:** Implemented (Exp 572)
+
+---
+
+## REQ-INFRA-070: Conductor Exclusion Manifest
+
+The system shall provide a JSON-backed exclusion manifest that prevents completed or stuck
+experiments from being re-run by the conductor.  The manifest is consulted at session start
+and any experiment whose ID appears in the manifest is skipped without spawning an agent.
+
+- REQ-INFRA-070-1: `ExclusionEntry` dataclass with fields `experiment_id: int`,
+  `completed_milestone: str`, `reason: str`.
+- REQ-INFRA-070-2: `ExclusionManifest.load()` reads the JSON file and returns a list of
+  `ExclusionEntry` objects; returns an empty list if the file does not exist.
+- REQ-INFRA-070-3: `ExclusionManifest.save(entries)` writes the list atomically via
+  `AtomicResultWriter` (no partial-write risk).
+- REQ-INFRA-070-4: `ExclusionManifest.add(entry)` appends one entry via read-modify-write.
+- REQ-INFRA-070-5: `build_default_manifest()` returns the five RETRO-056 experiments
+  (308, 260, 309, 425, 410) with `completed_milestone="2026.04.37"`.
+- REQ-INFRA-070-6: `ExclusionManifest`, `ExclusionEntry`, and `build_default_manifest`
+  are exported from `carnot.pipeline.__init__`.
+
+## REQ-INFRA-071: Manifest Consulted at Session Start
+
+The conductor exclusion manifest must be consulted before any experiment agent is spawned.
+`scripts/check_exclusion_manifest.py <experiment_id>` exits with code 1 and an error message
+if the experiment is excluded, exits with code 0 if it is safe to run.
+
+### SCENARIO-INFRA-075: load() returns empty list when manifest file is missing
+
+Given: `ExclusionManifest` pointed at a path that does not exist.
+When: `load()` is called.
+Then: Returns `[]` without raising any exception.
+
+### SCENARIO-INFRA-076: is_excluded() returns correct bool for included/excluded ids
+
+Given: A manifest file containing experiments [308, 260, 309, 425, 410].
+When: `is_excluded(308)` and `is_excluded(999)` are called.
+Then: `is_excluded(308)` returns `True`; `is_excluded(999)` returns `False`.
+
+### SCENARIO-INFRA-077: save() + load() roundtrip preserves all entries exactly
+
+Given: A list of two `ExclusionEntry` objects.
+When: `save(entries)` is called, then a fresh `ExclusionManifest` instance calls `load()`.
+Then: The loaded list is equal to the original list (all fields preserved).
+
+**Implementation Status:** Implemented (Exp 575)

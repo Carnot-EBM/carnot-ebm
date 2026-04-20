@@ -439,6 +439,11 @@ from carnot.pipeline.hardware_energy_probe import (  # noqa: E402
     HardwareEnergyReading,
     compute_eorm_hardware_correlation,
 )
+from carnot.pipeline.exclusion_manifest import (  # noqa: E402
+    ExclusionEntry,
+    ExclusionManifest,
+    build_default_manifest,
+)
 
 __all__ = [
     "AgentStep",
@@ -738,4 +743,7 @@ __all__ = [
     "HardwareEnergyProbe",
     "HardwareEnergyReading",
     "compute_eorm_hardware_correlation",
+    "ExclusionEntry",
+    "ExclusionManifest",
+    "build_default_manifest",
 ]

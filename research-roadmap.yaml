@@ -35,18 +35,18 @@ tasks:
     \   d. build_default_manifest() -> list[ExclusionEntry]: return entries for experiments\
     \ [308, 260, 309, 425, 410] with completed_milestone and reason fields.\n   e.\
     \ Export ExclusionManifest, ExclusionEntry, build_default_manifest from carnot.pipeline.__init__.\n\
-    4. Create scripts/conductor_exclusion_manifest.json:\n   {\n     \"excluded\"\
+    4. Create scripts/conductor_exclusion_manifest.json:\n   (\n     \"excluded\"\
     : [\n       {\"experiment_id\": 308, \"completed_milestone\": \"2026.04.37\",\
     \ \"reason\": \"slowest-5 seven consecutive milestones, legacy checkpoint-failure\
-    \ state\"},\n       {\"experiment_id\": 260, \"completed_milestone\": \"2026.04.37\"\
+    \ state\"),\n       (\"experiment_id\": 260, \"completed_milestone\": \"2026.04.37\"\
     , \"reason\": \"slowest-5 seven consecutive milestones, sequential inference loop\"\
-    },\n       {\"experiment_id\": 309, \"completed_milestone\": \"2026.04.37\", \"\
+    ),\n       (\"experiment_id\": 309, \"completed_milestone\": \"2026.04.37\", \"\
     reason\": \"slowest-5 seven consecutive milestones, checkpoint-failure state\"\
-    },\n       {\"experiment_id\": 425, \"completed_milestone\": \"2026.04.37\", \"\
+    ),\n       (\"experiment_id\": 425, \"completed_milestone\": \"2026.04.37\", \"\
     reason\": \"slowest-5 seven consecutive milestones, ExperimentTimeoutWatchdog\
-    \ already implemented\"},\n       {\"experiment_id\": 410, \"completed_milestone\"\
+    \ already implemented\"),\n       (\"experiment_id\": 410, \"completed_milestone\"\
     : \"2026.04.37\", \"reason\": \"slowest-5 seven consecutive milestones, 1000\
-    \ sequential inference calls, BatchedInferenceRunner migration target\"}\n    \
+    \ sequential inference calls, BatchedInferenceRunner migration target\")\n    \
     \ ]\n   }\n5. Write scripts/experiment_575_exclusion_manifest.py:\n   a. apply_env_autofix()\
     \ FIRST.\n   b. ExperimentTimeoutWatchdog(575, timeout_minutes=20).\n   c. ExperimentTemplate(575,\
     \ 'Conductor Exclusion Manifest',\n      'results/experiment_575_exclusion_manifest.json',\
@@ -171,7 +171,7 @@ tasks:
     \ (str), correct_embeddings (list[jnp.ndarray]), incorrect_embeddings (list[jnp.ndarray]),\
     \ hard_negative_step_idx (int | None), pair_quality (float: 0-1).\n   b. CPMIContrastiveLoss\
     \ class:\n      - __init__(self, margin: float = 1.0, chain_energy_mode: str\
-    \ = 'mean'). chain_energy_mode in {'mean','max','min'}.\n      - chain_energy(self,\
+    \ = 'mean'). chain_energy_mode in ('mean','max','min').\n      - chain_energy(self,\
     \ model, embeddings: list[jnp.ndarray]) -> float:\n          If mode='mean': mean(model.score(e)\
     \ for e in embeddings).\n          If mode='max': max(model.score(e) for e in\
     \ embeddings).\n          If mode='min': min(model.score(e) for e in embeddings).\n\
@@ -527,7 +527,7 @@ tasks:
     \ if not available>,\n      tcl_enhanced=<bool>,\n      cpu_baseline_latency_us=289608,\n\
     \      honest_verdict='bitfile_built' if bitfile_built else 'synthesis_attempted_failed'\
     \ if vivado_available else 'vivado_not_installed'.\n   h. If bitfile_built: write\
-    \ export command to results/kv260_export_command.txt:\n      'export CARNOT_KV260_BITFILE={bitfile_path}'\n\
+    \ export command to results/kv260_export_command.txt:\n      'export CARNOT_KV260_BITFILE=(bitfile_path)'\n\
     \   i. Update research-hardware-wishlist.md with synthesis result.\n   j. tmpl.assert_deliverable_written()\
     \ as FINAL LINE.\n4. Write tests/python/test_experiment_584_kv260_synthesis.py\
     \ (100% targeted coverage on new helper functions).\n5. Run: JAX_PLATFORMS=cpu\
