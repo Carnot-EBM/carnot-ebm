@@ -48,6 +48,9 @@ from carnot.extraction.coace_extractor import (
     CoACEResult,
     CoACEExtractor,
 )
+from carnot.extraction.coace_extractor_v2 import (
+    CoACEExtractorV2,
+)
 
 __all__ = [
     "FOLPremise",
@@ -65,4 +68,5 @@ __all__ = [
     "CoACEViolation",
     "CoACEResult",
     "CoACEExtractor",
+    "CoACEExtractorV2",
 ]
