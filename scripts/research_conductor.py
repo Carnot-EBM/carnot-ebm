@@ -2228,9 +2228,18 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
         f"    ONLY valid source of truth for your status claims.\n"
     )
     # Use haiku for doc reconciliation — it's just appending table rows.
+    # Turn budget: 40, bumped from 25 (2026-04-20).  The new honest-verdict
+    # mapping prompt (c2d96d1) adds a mandatory Step 0 (read artifact JSON)
+    # on top of the pre-existing Steps 2-4 (changelog + status + traceability).
+    # At 25 turns, haiku max-turned out on Exps 540, 541, 576 — substantial
+    # commits with 30+ tests, multiple new source files, spec additions.  40
+    # turns gives headroom for "read artifact → read 3 doc tails → append to
+    # each" without being so loose that runaway turns become a cost concern.
+    # The reconciliation timeout is unchanged (300s wall-clock) so a genuinely
+    # stuck subagent still bails out quickly.
     recon_model = "haiku" if AGENT_TYPE == "claude" else None
     recon_ok, recon_output = run_agent(
-        reconcile_prompt, max_turns=25, timeout=300, model_override=recon_model,
+        reconcile_prompt, max_turns=40, timeout=300, model_override=recon_model,
     )
     if recon_ok and git_has_changes():
         # Guard protected files
