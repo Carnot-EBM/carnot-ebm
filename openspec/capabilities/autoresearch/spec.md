@@ -1377,6 +1377,53 @@ Spec: REQ-LEARN-062
 
 ---
 
+### REQ-LEARN-063: JEPA v10 Full Retrain with PUREMinFormLoss on 132-Pair FOVER Corpus
+
+**What:** Full retrain of the JEPA chain scorer (v10) on the complete 132-pair FOVER corpus v2
+using PUREMinFormLoss (REQ-LEARN-061) as the training objective. This is the mandatory FR-11
+JEPA retrain that follows every milestone and the direct response to RETRO-060.
+
+**Why (layman):** Exps 543 and 557 both produced AUC < 0.5 (worse than random) because they
+used binary cross-entropy loss which lets the model hedge toward 0.5 everywhere. Exp 566 showed
+that PUREMinFormLoss can push AUC above random. This requirement mandates a full 200-epoch retrain
+with the new objective and saves the best checkpoint for downstream use.
+
+**Acceptance criteria:**
+- Model trained for 200 epochs on 80% split of 132-pair corpus.
+- Val AUC evaluated every 20 epochs; best checkpoint saved.
+- Final artifact reports v9_auc=0.4286, v10_auc, auc_improvement, retro_060_resolved flag.
+- Model saved to results/jepa_predictor_v10.safetensors.
+- fr11_retrain_complete=True always set in artifact.
+
+Spec: REQ-LEARN-063
+
+---
+
+### SCENARIO-LEARN-081: JEPA v10 Retrain Produces AUC Above Random Baseline
+
+**Given** the 132-pair FOVER corpus v2 loaded and split 80/20
+**When** JEPA v10 is trained for 200 epochs with PUREMinFormLoss(margin=1.0)
+**Then** the best validation AUC > 0.5 (above random) and retro_060_resolved=True
+
+---
+
+### SCENARIO-LEARN-082: JEPA v10 Retrain Saves Model Checkpoint
+
+**Given** training completes successfully
+**When** the best val AUC epoch is identified
+**Then** model weights are saved to results/jepa_predictor_v10.safetensors via AtomicResultWriter
+
+---
+
+### SCENARIO-LEARN-083: JEPA v10 Artifact Contains All Required Fields
+
+**Given** training completes (success or partial)
+**When** the result artifact is built
+**Then** it contains schema, n_train, n_val, loss_function, v9_auc, v10_auc, auc_improvement,
+best_epoch, model_path, retro_060_resolved, fr11_retrain_complete, honest_verdict
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1430,3 +1477,4 @@ Spec: REQ-LEARN-062
 | REQ-LEARN-060 | N/A | Implemented | Python |
 | REQ-LEARN-061 | N/A | Implemented | Python |
 | REQ-LEARN-062 | N/A | Implemented | Python |
+| REQ-LEARN-063 | N/A | Implemented | Python |
