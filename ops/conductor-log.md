@@ -2275,3 +2275,4 @@ python/ |
 | 2026-04-20 03:25 UTC | Exp 550: BatchedInferenceRunner Real Migration — E | OK | 81 passed, 2 warnings in 9.30s |
 | 2026-04-20 03:36 UTC | Exp 551: Live 50q Data Collection A — GSM8K indice | OK | 81 passed, 2 warnings in 8.23s |
 | 2026-04-20 03:55 UTC | Exp 552: Live 50q Data Collection B — GSM8K indice | OK | 81 passed, 2 warnings in 5.66s |
+| 2026-04-20 04:07 UTC | Exp 553: FOVER Corpus v2 — Merge, Diversity Audit, | OK | 81 passed, 2 warnings in 5.42s |
