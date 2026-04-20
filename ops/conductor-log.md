@@ -2312,3 +2312,4 @@ python/ |
 | 2026-04-20 12:48 UTC | Exp 581: CoACE Recall Diagnostic v2 — Validate v2  | OK | 81 passed, 2 warnings in 2.73s |
 | 2026-04-20 12:59 UTC | Exp 582: Live Verify-Repair with CoACEExtractorV2  | OK | 81 passed, 2 warnings in 2.77s |
 | 2026-04-20 13:11 UTC | Exp 583: FR-11 Tier 1 Self-Learning Relay v3 — Rea | OK | 81 passed, 2 warnings in 2.78s |
+| 2026-04-20 13:23 UTC | Exp 584: KV260 Vivado Synthesis — Generate Ising S | OK | 81 passed, 2 warnings in 2.70s |
