@@ -6,16 +6,29 @@
 # with Docker's --network none, --read-only, and --memory flags for defense
 # in depth.
 #
+# **NO MODEL WEIGHTS BAKED INTO THIS IMAGE.** Hundreds of GB of GGUF and
+# safetensors checkpoints live in the host's HuggingFace cache
+# (~/.cache/huggingface).  Baking them into an image would (a) explode the
+# image size, (b) duplicate data already on disk, (c) break incremental
+# rebuilds, and (d) ship weights to every environment that pulls the image.
+# The correct pattern is a read-only bind mount of the host cache into the
+# container; see the `-v` flag in the run example below.
+#
 # Build:
 #   docker build -f Dockerfile.sandbox -t carnot-sandbox .
 #
-# Run a hypothesis:
+# Run a hypothesis with HF cache mounted (read-only):
 #   docker run --rm --runtime=runsc \
 #     --network none --read-only --tmpfs /tmp:size=100M \
 #     --memory 16g --cpus 4 \
 #     -v /path/to/hypothesis.py:/hypothesis.py:ro \
 #     -v /path/to/benchmark_data.json:/data.json:ro \
+#     -v ${HOME}/.cache/huggingface:/hf-cache:ro \
 #     carnot-sandbox python /runner.py
+#
+# HF_HOME is set below so transformers / llama-cpp-python / hf_hub_download
+# read from the mounted /hf-cache rather than trying to download (which would
+# fail under --network none anyway, but fails loudly instead of silently).
 #
 # The runner.py script (copied into the image) loads the hypothesis,
 # calls run(benchmark_data), and prints the metrics dict as JSON to stdout.
@@ -37,6 +50,18 @@ COPY python/carnot /opt/carnot/python/carnot
 
 # Set PYTHONPATH so hypothesis code can import carnot
 ENV PYTHONPATH=/opt/carnot/python
+
+# HF cache is ALWAYS read from a volume mount at /hf-cache — never baked in.
+# Callers: `docker run -v ${HOME}/.cache/huggingface:/hf-cache:ro ...`
+# Setting HF_HOME / TRANSFORMERS_CACHE / HF_HUB_CACHE redirects every library
+# (transformers, huggingface_hub, llama-cpp-python, safetensors, datasets) to
+# the mounted cache.  HF_HUB_OFFLINE=1 hardens this by refusing network fetches
+# even if the sandbox ever loses its --network none flag.
+ENV HF_HOME=/hf-cache \
+    TRANSFORMERS_CACHE=/hf-cache \
+    HF_HUB_CACHE=/hf-cache/hub \
+    HF_HUB_OFFLINE=1
+VOLUME ["/hf-cache"]
 
 # Copy the in-container runner script that executes hypotheses safely.
 COPY scripts/sandbox_runner.py /runner.py

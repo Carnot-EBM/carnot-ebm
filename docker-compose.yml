@@ -9,6 +9,33 @@
 # Or directly:
 #   docker compose up -d
 #   docker compose down
+#
+# MODEL-WEIGHT POLICY (MANDATORY):
+#   No Carnot service bakes model checkpoints into its image.  Weights live in
+#   the host HuggingFace cache (~/.cache/huggingface, typically hundreds of GB
+#   of GGUFs / safetensors) and are bind-mounted into containers read-only.
+#   The named volume `hf-cache` below points to that host dir — any new service
+#   that loads a model MUST declare `- hf-cache:/hf-cache:ro` under `volumes:`
+#   and `HF_HOME=/hf-cache` / `HF_HUB_OFFLINE=1` under `environment:`.
+#
+#   See the commented-out `local-inference` stanza at the bottom for the
+#   canonical pattern.  See `.dockerignore` for defense-in-depth against
+#   accidental weight bundling during `docker build`.
+
+# ---------------------------------------------------------------------------
+# Named volumes
+# ---------------------------------------------------------------------------
+volumes:
+  # Read-only projection of the host HuggingFace hub cache.  Any service that
+  # loads a model reads from this volume rather than downloading at runtime
+  # (which would be slow, wasteful, and — for air-gapped sandboxes — impossible).
+  # The default path can be overridden by HF_CACHE_DIR in `.env`.
+  hf-cache:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${HF_CACHE_DIR:-${HOME}/.cache/huggingface}
 
 services:
   # Claude Code API Bridge — OpenAI-compatible endpoint wrapping `claude -p`
@@ -71,3 +98,39 @@ services:
       timeout: 5s
       retries: 3
       start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Canonical pattern for a local-inference service that loads GGUF weights.
+  # Commented out because no such service exists yet — added as a template so
+  # the next author doesn't reinvent the cache-mount contract.  When you
+  # uncomment, make sure your Dockerfile does NOT `COPY *.gguf` anything.
+  # ---------------------------------------------------------------------------
+  # local-inference:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.local-inference
+  #   image: carnot-local-inference:latest
+  #   container_name: carnot-local-inference
+  #   # --gpus all requires nvidia-container-toolkit on the host; gVisor
+  #   # (runsc) intercepts syscalls in userspace and plays nicely with it.
+  #   runtime: runsc
+  #   gpus: all
+  #   volumes:
+  #     # READ-ONLY host HF cache — NEVER bake weights into the image.
+  #     - hf-cache:/hf-cache:ro
+  #     # If the service writes generation traces, give it a writable scratch:
+  #     - ${RESULTS_DIR:-./results}:/results
+  #   environment:
+  #     # Point every HF-aware library at the mounted cache.
+  #     - HF_HOME=/hf-cache
+  #     - TRANSFORMERS_CACHE=/hf-cache
+  #     - HF_HUB_CACHE=/hf-cache/hub
+  #     # Refuse network fetches — if a weight isn't in the cache, fail loud.
+  #     - HF_HUB_OFFLINE=1
+  #     # Which model to load.  Resolve to a concrete GGUF path via
+  #     # python -c "from carnot.inference.sota_models import resolve_cached_gguf;
+  #     #            print(resolve_cached_gguf('unsloth/Qwen3.6-35B-A3B-GGUF'))"
+  #     - CARNOT_MODEL_HF_ID=${CARNOT_MODEL_HF_ID:-unsloth/gemma-4-26B-A4B-it-GGUF}
+  #   ports:
+  #     - "${INFERENCE_PORT:-8088}:8088"
+  #   restart: unless-stopped
