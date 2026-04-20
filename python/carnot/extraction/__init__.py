@@ -14,8 +14,13 @@ Exports
 FOLPremise       — one formalized First-Order Logic premise from a CoT step
 StepVerdict      — Z3 satisfiability verdict for one CoT step
 VeriCoTStepValidator — full VeriCoT pipeline: extract FOL → check Z3
+ArithmeticEquation   — one parsed arithmetic equation from prose CoT
+CoACEViolation       — one detected arithmetic violation (computed != stated)
+CoACEResult          — aggregated extraction result from CoACEExtractor
+CoACEExtractor       — execution-based extractor (Caco arXiv 2510.04081)
 
-Spec: REQ-EXTRACT-024, REQ-EXTRACT-025, REQ-EXTRACT-026
+Spec: REQ-EXTRACT-024, REQ-EXTRACT-025, REQ-EXTRACT-026,
+      REQ-EXTRACT-033, REQ-EXTRACT-034
 """
 
 from carnot.extraction.vericot_validator import (
@@ -37,6 +42,12 @@ from carnot.extraction.confidence_filter import (
     ConfidenceWeightedExtractor,
     score_violation,
 )
+from carnot.extraction.coace_extractor import (
+    ArithmeticEquation,
+    CoACEViolation,
+    CoACEResult,
+    CoACEExtractor,
+)
 
 __all__ = [
     "FOLPremise",
@@ -50,4 +61,8 @@ __all__ = [
     "ViolationConfidence",
     "ConfidenceWeightedExtractor",
     "score_violation",
+    "ArithmeticEquation",
+    "CoACEViolation",
+    "CoACEResult",
+    "CoACEExtractor",
 ]
