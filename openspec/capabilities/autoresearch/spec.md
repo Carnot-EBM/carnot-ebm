@@ -1200,6 +1200,50 @@ regularization that prevents embedding collapse during training. JEPA v8 uses la
 
 ---
 
+### REQ-LEARN-058: Offline Distillation of Violation Patterns into Named Constraint Templates
+
+The system SHALL provide a ConstraintTemplateStore that accumulates violation
+observations (violation_type, context) and distils mature patterns into named
+ConstraintTemplate objects.  A pattern is mature when its observation count
+reaches min_observations (default 3).  The store MUST be serialisable to JSON
+and rehydratable across sessions.
+
+Implemented by: python/carnot/pipeline/constraint_template_store.py
+
+### REQ-LEARN-059: Template Retrieval at Inference Time via String Similarity
+
+The ConstraintTemplateStore SHALL provide a retrieve(query_context, top_k)
+method that returns up to top_k distilled templates ranked by keyword overlap
+score — the count of template context_keywords that appear as substrings in
+the lowercased query_context.  This allows the pipeline to apply domain-
+specific constraints only when the current query context matches a template.
+
+Implemented by: python/carnot/pipeline/constraint_template_store.py
+
+### SCENARIO-LEARN-090: add_violation Accumulates Observations and Distill Promotes Mature Patterns
+
+**Given** a ConstraintTemplateStore with min_observations=3
+**When** add_violation("carry", ctx) is called 3 or more times
+**Then** distill(min_observations=3) returns a ConstraintTemplate with violation_type="carry"
+**And** the template's n_violations_observed equals the total observation count
+**And** context_keywords contains tokens extracted from the context strings
+
+### SCENARIO-LEARN-091: Distill Threshold Filters Immature Patterns
+
+**Given** a ConstraintTemplateStore where "sign" has been observed 2 times and "carry" 4 times
+**When** distill(min_observations=3) is called
+**Then** the result contains the "carry" template
+**And** the result does NOT contain the "sign" template (below threshold)
+
+### SCENARIO-LEARN-092: Retrieve Returns Top-K Templates by Keyword Overlap
+
+**Given** a distilled store with carry_guard (keywords: arithmetic, carry) and semantic_guard
+**When** retrieve("arithmetic carry overflow", top_k=3) is called
+**Then** carry_guard is ranked first (highest keyword overlap)
+**And** the result contains at most top_k templates
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1248,3 +1292,5 @@ regularization that prevents embedding collapse during training. JEPA v8 uses la
 | REQ-LEARN-055 | N/A | Implemented | Python |
 | REQ-LEARN-056 | N/A | Implemented | Python |
 | REQ-LEARN-057 | N/A | Implemented | Python |
+| REQ-LEARN-058 | N/A | Implemented | 26 Python |
+| REQ-LEARN-059 | N/A | Implemented | 26 Python |
