@@ -45,6 +45,10 @@ import time
 from pathlib import Path
 from typing import Any
 
+from carnot.pipeline.env_autofix import apply_env_autofix
+
+apply_env_autofix()
+
 # ---------------------------------------------------------------------------
 # Constants
 # ---------------------------------------------------------------------------
@@ -373,6 +377,34 @@ def run_experiment(output_path: str | Path | None = None) -> dict[str, Any]:
 # CLI entry point
 # ---------------------------------------------------------------------------
 
-if __name__ == "__main__":
+
+def main() -> None:
+    """CLI entry point: wrap run_experiment() with ExperimentTemplate lifecycle."""
+    from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog
+    from scripts.experiment_template import ExperimentTemplate
+
+    repo_root = Path(__file__).resolve().parents[1]
+    tmpl = ExperimentTemplate(
+        exp_id=EXPERIMENT_ID,
+        title="JEPA gate benchmark (Exp 308)",
+        deliverable=DELIVERABLE,
+        requires_gpu=False,
+        repo_root=repo_root,
+    )
+    tmpl.setup()
+
+    _watchdog = ExperimentTimeoutWatchdog(
+        experiment_id=EXPERIMENT_ID,
+        timeout_minutes=40,
+        result_path=str(repo_root / DELIVERABLE),
+    )
+    _watchdog.start()
+
     result = run_experiment()
+    _watchdog.stop()
     print(json.dumps(result, indent=2))
+    tmpl.assert_deliverable_written()
+
+
+if __name__ == "__main__":
+    main()

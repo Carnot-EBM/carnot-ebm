@@ -1,0 +1,131 @@
+{
+  "experiment": 547,
+  "title": "Legacy Modernization Sprint",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T02:02:08Z",
+  "finished_at": "2026-04-20T02:02:08Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "artifact_schema": "carnot.legacy_modernization.v1",
+  "scripts_audited": [
+    "exp308",
+    "exp260",
+    "exp309",
+    "exp425",
+    "exp410"
+  ],
+  "script_details": [
+    {
+      "script_id": "exp308",
+      "script_path": "scripts/experiment_308_jepa_gate_benchmark.py",
+      "overhead_min": 180,
+      "script_exists": true,
+      "env_autofix": true,
+      "watchdog": true,
+      "template": true,
+      "batched_runner": false,
+      "assert_deliverable": true,
+      "classification": "fully_modern"
+    },
+    {
+      "script_id": "exp260",
+      "script_path": "scripts/experiment_260_solver_semantic_gpu.py",
+      "overhead_min": 240,
+      "script_exists": true,
+      "env_autofix": true,
+      "watchdog": true,
+      "template": true,
+      "batched_runner": false,
+      "assert_deliverable": true,
+      "classification": "fully_modern"
+    },
+    {
+      "script_id": "exp309",
+      "script_path": "scripts/experiment_309_tier3_pipeline.py",
+      "overhead_min": 210,
+      "script_exists": true,
+      "env_autofix": true,
+      "watchdog": true,
+      "template": true,
+      "batched_runner": false,
+      "assert_deliverable": true,
+      "classification": "fully_modern"
+    },
+    {
+      "script_id": "exp425",
+      "script_path": "scripts/experiment_425_conductor_timeout.py",
+      "overhead_min": 180,
+      "script_exists": true,
+      "env_autofix": true,
+      "watchdog": true,
+      "template": true,
+      "batched_runner": false,
+      "assert_deliverable": true,
+      "classification": "fully_modern"
+    },
+    {
+      "script_id": "exp410",
+      "script_path": "scripts/experiment_410_precision_live.py",
+      "overhead_min": 210,
+      "script_exists": true,
+      "env_autofix": true,
+      "watchdog": true,
+      "template": true,
+      "batched_runner": false,
+      "assert_deliverable": true,
+      "classification": "fully_modern"
+    }
+  ],
+  "batching_added": [],
+  "teardown_added": [
+    "exp308",
+    "exp260",
+    "exp309",
+    "exp425",
+    "exp410"
+  ],
+  "env_autofix_added": [
+    "exp308",
+    "exp260",
+    "exp309",
+    "exp425",
+    "exp410"
+  ],
+  "watchdog_added": [
+    "exp308",
+    "exp260",
+    "exp309",
+    "exp425",
+    "exp410"
+  ],
+  "assert_deliverable_added": [
+    "exp308",
+    "exp260",
+    "exp309",
+    "exp425",
+    "exp410"
+  ],
+  "estimated_savings_pct": 0.2,
+  "honest_verdict": "sprint_complete",
+  "retro_context": "Exps 308, 260, 309, 425, 410 appeared in slowest-5 for 4 consecutive milestones (.37-.40) with 1,020 min cumulative re-entry overhead. Modernization adds watchdog, env_autofix, and assert_deliverable_written to eliminate the recurring slow-path.",
+  "schema": [
+    "artifact_schema",
+    "assert_deliverable_added",
+    "batching_added",
+    "duration_s",
+    "env_autofix_added",
+    "estimated_savings_pct",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "retro_context",
+    "run_date",
+    "script_details",
+    "scripts_audited",
+    "started_at",
+    "status",
+    "teardown_added",
+    "title",
+    "watchdog_added"
+  ]
+}

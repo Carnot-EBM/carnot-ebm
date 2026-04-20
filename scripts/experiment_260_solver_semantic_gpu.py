@@ -1160,6 +1160,12 @@ def main() -> None:  # pragma: no cover
     Existing checkpoints from Exp 246 in ``results/checkpoints/experiment_246/``
     are reused automatically so the run continues from where Exp 247 stopped.
     """
+    from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+    from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+    from scripts.experiment_template import ExperimentTemplate  # noqa: PLC0415
+
+    apply_env_autofix()
+
     parser = _build_parser()
     args = parser.parse_args()
 
@@ -1169,6 +1175,22 @@ def main() -> None:  # pragma: no cover
 
     started_at = utc_now()
     t_start = time.time()
+
+    _tmpl = ExperimentTemplate(
+        exp_id=EXPERIMENT,
+        title="Solver-routed semantic benchmark with GPU acceleration (Exp 260)",
+        deliverable="results/experiment_260_results.json",
+        requires_gpu=False,
+        repo_root=get_repo_root(),
+    )
+    _tmpl.setup()
+
+    _watchdog = ExperimentTimeoutWatchdog(
+        experiment_id=EXPERIMENT,
+        timeout_minutes=40,
+        result_path=str(output_path),
+    )
+    _watchdog.start()
 
     print(f"[Exp 260] Starting at {started_at}")
     print(f"[Exp 260] Output: {output_path}")
@@ -1336,6 +1358,8 @@ def main() -> None:  # pragma: no cover
     write_artifact(output_path, payload)
     print(f"[Exp 260] Artifact written to {output_path}")
     print(f"[Exp 260] Runtime: {runtime_seconds:.1f}s  inference_mode={inference_mode}  gpu_fallback={gpu_fallback}")
+    _watchdog.stop()
+    _tmpl.assert_deliverable_written()
 
 
 if __name__ == "__main__":

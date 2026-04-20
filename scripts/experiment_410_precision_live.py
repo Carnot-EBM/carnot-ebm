@@ -229,6 +229,11 @@ def main() -> None:
         8. run_variant() × 10 (5 variants × 2 models).  Checkpoint every 50 questions.
         9. build_exp410_artifact() → _write_artifact().
     """
+    from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
+    from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
+
+    apply_env_autofix()
+
     tmpl = ExperimentTemplate(
         exp_id=EXP_ID,
         title=EXP_TITLE,
@@ -236,6 +241,13 @@ def main() -> None:
         requires_gpu=True,
     )
     tmpl.setup()
+
+    _watchdog = ExperimentTimeoutWatchdog(
+        experiment_id=EXP_ID,
+        timeout_minutes=40,
+        result_path=str(_REPO_ROOT / DELIVERABLE),
+    )
+    _watchdog.start()
 
     # ---------------------------------------------------------------------------
     # Gate 1: Exp 404 preflight verdict.
@@ -454,6 +466,8 @@ def main() -> None:
     )
 
     _write_artifact(tmpl, artifact)
+    _watchdog.stop()
+    tmpl.assert_deliverable_written()
 
 
 if __name__ == "__main__":
