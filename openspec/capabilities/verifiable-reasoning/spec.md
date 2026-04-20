@@ -10216,3 +10216,66 @@ Given: Two lists of responses (calibrated and baseline).
 When: compare_violation_rate is called.
 Then: Returns dict with keys baseline_violation_rate, calibrated_violation_rate,
       violation_rate_delta; delta == calibrated_rate - baseline_rate; all rates in [0, 1].
+
+---
+
+## REQ-EXTRACT-033: CoACEExtractor — Execution-Based Arithmetic Constraint Extraction
+
+**Summary:** Parse arithmetic equations from prose CoT and execute them to detect violations.
+Root cause of Exp 554 zero-TP: both VeriCoT and VPRM check FORMAT (regex, Z3 UNSAT) but
+IT models produce correct-format, wrong-arithmetic outputs like '47 + 28 = 76'.
+The fix (Caco, arXiv 2510.04081): parse equations and eval() the LHS, compare to stated RHS.
+
+**Requirements:**
+- REQ-EXTRACT-033-1: CoACEExtractor.extract(response) parses all arithmetic equations of the form
+  `lhs_expr = rhs` from prose and executes each to detect violations.
+- REQ-EXTRACT-033-2: A violation is detected when abs(eval(lhs) - rhs) > tolerance.
+- REQ-EXTRACT-033-3: CoACEResult contains n_equations_found, n_violations, violations list,
+  extraction_mode, confidence_weighted_violations.
+- REQ-EXTRACT-033-4: CoACEExtractor is CPU-only and requires no GPU, model, or JAX.
+
+**Implementation Status:** Implemented (Exp 564, python/carnot/extraction/coace_extractor.py)
+
+Spec: REQ-EXTRACT-033, SCENARIO-EXTRACT-061, SCENARIO-EXTRACT-062, SCENARIO-EXTRACT-063, SCENARIO-EXTRACT-064
+
+---
+
+## REQ-EXTRACT-034: CoACE Safe Execution Sandbox
+
+**Summary:** The arithmetic eval must be sandboxed to prevent code injection.
+Only arithmetic AST nodes (BinOp, Constant, UnaryOp) may be evaluated.
+
+**Requirements:**
+- REQ-EXTRACT-034-1: _safe_eval uses ast.parse to validate the expression before eval.
+- REQ-EXTRACT-034-2: Only ast.BinOp, ast.Constant, ast.UnaryOp with numeric values are allowed.
+- REQ-EXTRACT-034-3: Any expression containing function calls, attribute access, or names
+  returns None (blocked).
+- REQ-EXTRACT-034-4: eval() is called with empty globals={} and locals={}.
+
+**Implementation Status:** Implemented (Exp 564, python/carnot/extraction/coace_extractor.py)
+
+---
+
+### SCENARIO-EXTRACT-061: CoACEExtractor Flags '47 + 28 = 76' As Violation
+
+Given: Response text containing '47 + 28 = 76'.
+When: CoACEExtractor().extract(response) is called.
+Then: CoACEResult.n_violations >= 1, and the violation has stated_value=76.0, computed_value=75.0.
+
+### SCENARIO-EXTRACT-062: CoACEExtractor Does Not Flag '47 + 28 = 75' As Violation
+
+Given: Response text containing '47 + 28 = 75'.
+When: CoACEExtractor().extract(response) is called.
+Then: CoACEResult.n_violations == 0.
+
+### SCENARIO-EXTRACT-063: _safe_eval Blocks Function Calls and Imports
+
+Given: Expression string '__import__("os")' or 'os.system("rm -rf /")'.
+When: _safe_eval is called.
+Then: Returns None without raising; no side effects.
+
+### SCENARIO-EXTRACT-064: CoACEExtractor Handles Prose Equations
+
+Given: Response text 'we add 47 and 28 to get 76' (no '=' symbol).
+When: CoACEExtractor().extract(response) is called.
+Then: The extractor attempts to find equation patterns; behavior is graceful (no crash).
