@@ -4,6 +4,42 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-20 arxiv Scan (Milestone 2026.04.45 Planning)
+
+### OTV — One-Token Verification for Reasoning Correctness (Ultra-Lightweight Verifier)
+- **Paper:** arXiv 2603.01025 (March 2026)
+- **What:** Adds a single learnable verification token via LoRA to any LLM to estimate reasoning correctness in one forward pass — no separate verifier model, no rollouts. Achieves performance competitive with full PRM at 90% lower token cost.
+- **Relevance to Carnot:** Carnot's EORM (55M params, Tier 2) is expensive for real-time beam search. OTV offers a near-zero-cost verifier head attached to the existing Qwen3.5-0.8B or Gemma4-E4B-it model — no separate inference call. If OTV achieves comparable AUC to EORM on the FOVER corpus, it replaces EORM as the default Tier 2, cutting cascade latency by ~10ms per check. The LoRA adapter is hardware-portable (dot product over frozen weights + one extra vector).
+- **Concrete experiment:** Attach OTV LoRA head to Qwen3.5-0.8B, train on 100 live FOVER pairs (from Exp 578), compare AUC vs EORM on held-out FOVER test set. If OTV AUC >= EORM AUC - 0.05, recommend OTV as default Tier 2.
+- **When to incorporate:** Milestone 2026.04.45 — Phase 1 or 3, combine with DSVD live validation (Exp 592) or JEPAv12 retrain (Exp 593).
+
+### PROGRS — Outcome-Conditioned PRM Centering (Prevents Reward Hacking in JEPA Training)
+- **Paper:** arXiv 2604.02341 (April 2026)
+- **What:** Introduces outcome-conditioned centering to shift PRM scores of incorrect trajectories to zero mean within each prompt group, safely integrating process rewards into GRPO without reward hacking. Improves math reasoning with fewer rollouts.
+- **Relevance to Carnot:** JEPA v11 trained with CPMI contrastive loss on 9 synthetic pairs achieved AUC=1.0 — likely overfitting. PROGRS outcome-conditioned centering could prevent the same overfitting when retraining on 100 live pairs (Exp 593/JEPA v12). The centering ensures that the energy gap between correct and incorrect chains is calibrated against the distribution of errors for that prompt group, not just against a fixed margin. This directly addresses the hedging-to-0.5 failure mode that plagued v8/v9/v10.
+- **Concrete experiment:** Apply PROGRS outcome-centering to JEPA v12 training in Exp 593. Instead of fixed hinge margin, use group-normalized energy gap: E_gap_i = (E_incorrect_i - E_correct_i) / std(E_gap for all pairs in prompt_group_i). Target: AUC >= 0.75 with stable training (no regression across epochs).
+- **When to incorporate:** Milestone 2026.04.45 — JEPA v12 retrain (Exp 593). CRITICAL PATH for RETRO-063 validated closure.
+
+### FACT-E — Causality-Inspired Evaluation for Trustworthy CoT Reasoning
+- **Paper:** arXiv 2604.10693 (April 2026)
+- **What:** Uses controlled perturbations as instrumental variables to measure genuine logical step-to-step dependence in CoT, separating real causal entailment from model-bias artifacts. Provides more reliable faithfulness estimates for chain-of-thought trajectory selection.
+- **Relevance to Carnot:** CoACEExtractorV3 detects arithmetic errors via pattern matching. FACT-E's causal faithfulness score could serve as an ADDITIONAL energy signal: steps that are causally disconnected from prior steps (even if arithmetically correct) should have higher energy. This extends Carnot's verifier from "arithmetic correctness" to "logical faithfulness" — catching errors where the numbers add up but the reasoning chain is non-sequitur.
+- **Concrete experiment:** Add `FACT-E causal faithfulness probe` as auxiliary energy term in CoACE v3 (Exp 591): after extracting arithmetic violations, compute causal disconnection score for each step transition. If score > threshold, flag as a faithfulness violation even if arithmetic is correct.
+- **When to incorporate:** Milestone 2026.04.45 — incorporate as optional feature in CoACE v3 (Exp 591). Do not make it required for the gate (keep gate on arithmetic recall).
+
+### p-bit Synchronous Ising Machine Architecture (FPGA Cost Reduction)
+- **Paper:** arXiv 2604.01564 (April 2026)
+- **What:** Shows synchronous p-bit Ising machine architectures achieve comparable solution quality at less than half the hardware cost of asynchronous designs, with low-resolution DACs and structured digital control preserving correct annealing dynamics.
+- **Relevance to Carnot:** Directly relevant to KV260 FPGA Ising machine work (Exps 584/585). The synchronous architecture described is implementable on Zynq fabric (KV260 uses Zynq UltraScale+). Current `ising_sampler_v1.v` uses a pseudo-asynchronous update schedule — switching to synchronous-DAC-free design reduces resource utilization by ~50%, potentially enabling 2x more spins in the same FPGA area.
+- **Concrete experiment:** After Vivado installation: synthesize both synchronous and asynchronous variants of the Ising sampler, compare LUT utilization and sampling throughput.
+- **When to incorporate:** After Vivado installation (human action required). File for the milestone where KV260 bitfile synthesis succeeds.
+
+### EBM Dynamical Models Tutorial — Phase 3 Architecture Reference
+- **Paper:** arXiv 2604.05042 (April 2026)
+- **What:** Comprehensive tutorial connecting continuous-time Hopfield networks, Boltzmann machines, dense associative memories, oscillator-based optimization, and proximal-descent dynamics under a unified control-theoretic energy landscape framework.
+- **Relevance to Carnot:** Phase 3 foundation model architecture. The proximal-descent dynamics connect Carnot's Ising repair loop to classical Hopfield dynamics, providing theoretical grounding for the three-stage Prelude→IsingRepairLoop→Coda architecture. The oscillator-based optimization section validates the FPGA/thermodynamic hardware path via physical Ising machine theory.
+- **When to incorporate:** Phase 3 architecture work — use as reference when designing the Kona bridge (python/carnot/phase3/).
+
 ## 2026-04-20 arxiv Scan (Milestone 2026.04.44 Planning)
 
 ### CPMI — Contrastive Pointwise Mutual Information for Process Reward Models (Direct Fix for RETRO-063)
