@@ -46,6 +46,7 @@
 
 ## 2026-04-19 (Milestone 2026.04.40 Research Planning)
 
+- 2026-04-20: Exp 584 complete — KV260 Vivado Synthesis, Ising sampler bitfile generation, FPGA tooling, status=success. (Exp 584 result)
 - 2026-04-20: Exp 578 complete — Live 50q Data Collection A v3, RETRO-062 closure iteration #3, 100 live pairs GSM8K 0-49, inference_mode=live_gpu, mean_latency=1.26s, status=success, retro_062_resolved=true. (Exp 578 result)
 - 2026-04-20: Exp 566 complete — JEPAPUREMinForm, min-form PRM objective for JEPA (RETRO-060 fix, arXiv 2504.15275), status=success. (Exp 566 result)
 - 2026-04-20 00:00 UTC: Exp 532 complete — LowRankKAEMEnergy SVD projection of logit energy (arXiv 2604.04384), status=success. (Exp 532 result)
