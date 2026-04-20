@@ -1542,6 +1542,57 @@ correct arithmetic in the correct chain, one off-by-one error in the incorrect c
 
 ---
 
+### REQ-LEARN-067: JEPA v11 Full Retrain with CPMIContrastiveLoss on FOVER Corpus
+
+**Summary:** Mandatory FR-11 retrain using CPMI contrastive objective to resolve RETRO-063.
+
+**Motivation:** JEPA v8/v9/v10 all trained on scalar loss with step-level labels, producing
+AUC <= 0.4444 (below random). RETRO-063 identified the root cause: step-level labels are
+noisy, and per-chain objectives allow hedging to P=0.5. This retrain uses CPMIContrastiveLoss
+(pairwise ordering constraint) which forces the model to directly rank correct chains above
+incorrect chains for the same question — the same mechanism that yielded AUC=1.0 in NUP Probe v4.
+
+**Requirements:**
+- SHALL load FOVER corpus v3 if available, else v2 (132 pairs minimum)
+- SHALL build contrastive pairs with JEPACPMIPairBuilder; augment with synthetic pairs if < 5 real
+- SHALL split train/val 80/20 by question_id to prevent cross-question leakage
+- SHALL train 300 epochs with optax.adamw(lr=1e-3, weight_decay=1e-4)
+- SHALL use CPMIContrastiveLoss(margin=1.0, chain_energy_mode='mean')
+- SHALL save best checkpoint to results/jepa_predictor_v11.safetensors
+- SHALL report retro_063_resolved = True if v11_auc > 0.5
+- SHALL emit honest_verdict: 'jepa_v11_above_random' | 'jepa_v11_still_inverted' | 'jepa_v11_at_random'
+
+Spec: REQ-LEARN-067,
+      SCENARIO-LEARN-104, SCENARIO-LEARN-105, SCENARIO-LEARN-106
+
+---
+
+### SCENARIO-LEARN-104: JEPA v11 Retrain Produces Valid Artifact With All Required Fields
+
+**Given** a FOVER corpus with at least 5 questions having both correct and incorrect entries
+**When** experiment_580_jepa_v11_retrain runs to completion
+**Then** the artifact contains all required schema fields including v10_auc, v11_auc,
+auc_improvement, best_epoch, n_real_pairs, n_synthetic_pairs, retro_063_resolved,
+fr11_retrain_complete=True, and honest_verdict
+
+---
+
+### SCENARIO-LEARN-105: JEPA v11 Question-ID Split Prevents Cross-Question Leakage
+
+**Given** a FOVER corpus where multiple entries share the same question
+**When** the 80/20 train/val split is applied by question_id
+**Then** no question_id appears in both the train and val pair sets
+
+---
+
+### SCENARIO-LEARN-106: JEPA v11 Synthetic Pair Augmentation Kicks In For Small Corpus
+
+**Given** a corpus that yields fewer than 5 real CPMI pairs
+**When** experiment_580_jepa_v11_retrain runs
+**Then** build_synthetic_pairs(20) is called and n_synthetic_pairs >= 20 in the artifact
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1599,3 +1650,4 @@ correct arithmetic in the correct chain, one off-by-one error in the incorrect c
 | REQ-LEARN-064 | N/A | Implemented | Python |
 | REQ-LEARN-065 | N/A | Implemented | 28 Python |
 | REQ-LEARN-066 | N/A | Implemented | 28 Python |
+| REQ-LEARN-067 | N/A | Implemented | Python |
