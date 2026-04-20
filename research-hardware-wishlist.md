@@ -285,3 +285,17 @@ that the binary Ising architecture cannot provide.
   - VitisAI path: still blocked (ninja + openblas not installed)
   - IRON path: not tested (mlir_aie not importable)
   - Result file: `results/experiment_435_npu_unblock.json`
+
+### KV260 FPGA Ising Sampler Benchmark Status (Exp 585 — 20260420)
+
+- **Exp 585 result:** `honest_verdict=blocked_no_bitfile`
+  - Gate: Exp 584 (Vivado synthesis) produced `bitfile_built=False`
+  - Vivado not installed on host — synthesis blocked
+  - Target: mean hardware latency < 100 µs (vs CPU baseline 289608 µs = 289ms, 2900x speedup)
+  - No hardware samples taken; benchmark deferred until bitfile is available
+  - **BLOCKED — Human MUST install Vivado before benchmark can run:**
+    - Download Xilinx Vivado 2023.2 from xilinx.com (requires AMD account)
+    - `sudo ./Xilinx_Unified_2023.2_1013_2256.tar.gz --batch-mode --agree 3rdPartyEULA,WebTalkTermsAndConditions,XilinxEULA`
+    - `export PATH=/tools/Xilinx/Vivado/2023.2/bin:$PATH`
+    - Re-run Exp 584 (synthesis), then Exp 585 (benchmark)
+  - Result file: `results/experiment_585_kv260_live_benchmark_v3.json`
