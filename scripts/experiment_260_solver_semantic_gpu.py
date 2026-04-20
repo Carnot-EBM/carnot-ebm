@@ -1162,7 +1162,7 @@ def main() -> None:  # pragma: no cover
     """
     from carnot.pipeline.env_autofix import apply_env_autofix  # noqa: PLC0415
     from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # noqa: PLC0415
-    from scripts.experiment_template import ExperimentTemplate  # noqa: PLC0415
+    from scripts.experiment_template import ExperimentTemplate, BatchedInferenceRunner  # noqa: PLC0415  # REQ-INFRA-075
 
     apply_env_autofix()
 
@@ -1306,7 +1306,16 @@ def main() -> None:  # pragma: no cover
         # Simulated mode — produce artifact schema without live data
         print("[Exp 260] Simulated mode (CARNOT_FORCE_LIVE not set) — no live inference")
         inference_mode = "simulated"
-        throughput_report = {"target_seconds_per_case": 3.0, "per_model": {}}
+
+        # REQ-INFRA-075: BatchedInferenceRunner stages cohort case IDs even in
+        # simulated mode so the batching infrastructure is exercised and a
+        # batch_log is available for the artifact.
+        def _stage_case(q: str) -> str:
+            return q
+
+        _bir = BatchedInferenceRunner(_stage_case, batch_size=8)
+        _bir.run_batch([str(c.get("case_id", i)) for i, c in enumerate(gsm8k_cohort)])
+        throughput_report = {"target_seconds_per_case": 3.0, "per_model": {}, "batch_log": _bir.batch_log}
 
     # ------------------------------------------------------------------
     # Route summaries

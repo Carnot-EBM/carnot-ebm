@@ -62,7 +62,7 @@ _REPO_ROOT = Path(__file__).resolve().parents[1]
 if str(_REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(_REPO_ROOT))
 
-from scripts.experiment_template import ExperimentTemplate  # noqa: E402
+from scripts.experiment_template import ExperimentTemplate, BatchedInferenceRunner  # noqa: E402  # REQ-INFRA-075
 from scripts.experiment_368_precision_live import (  # noqa: E402
     load_gsm8k_questions,
     run_variant,
@@ -400,39 +400,55 @@ def main() -> None:
     # Checkpoint every CHECKPOINT_EVERY questions (after each model's variants).
     # ---------------------------------------------------------------------------
     all_results: list[PrecisionStackResult] = []
+    _cell_batch_log: list[dict] = []
 
-    for spec in MODEL_SPECS:
-        model_name = spec["name"]
-        model_obj = model_objects[model_name]
-
-        _log.info("Running variants for model: %s", model_name)
-        for variant in PipelineVariant:
-            _log.info("  variant=%s", variant.value)
-            result = run_variant(
-                variant=variant,
-                questions=questions,
-                model_name=model_name,
-                inference_mode=inference_mode,
-                model_obj=model_obj,
-                extractor_obj=extractor_obj,
-            )
-            all_results.append(result)
-            _log.info(
-                "  %s/%s: baseline=%.3f stack=%.3f delta=%.3f violations=%d repairs=%d",
-                model_name,
-                variant.value,
-                result.baseline_accuracy,
-                result.precision_stack_accuracy,
-                result.signed_improvement,
-                result.n_violations_found,
-                result.n_repairs_attempted,
-            )
-
-        # Checkpoint after each model (covers every CHECKPOINT_EVERY questions).
-        tmpl.checkpoint_save(
-            {"completed_models": [r.model_id for r in all_results]},
-            step=len(all_results),
+    # REQ-INFRA-075: use BatchedInferenceRunner to batch (model, variant) cells.
+    # Each cell is a (model_name, variant) pair.  run_variant internally batches
+    # question-level inference (via exp 368); this outer BIR batches the cells.
+    # batch_size=2 matches MODEL_SPECS count so both models run in one outer batch.
+    def _run_cell(cell_json: str) -> str:
+        """Run one (model, variant) cell and return a JSON status record."""
+        cell = json.loads(cell_json)
+        m_name = cell["model_name"]
+        variant = PipelineVariant(cell["variant"])
+        m_obj = model_objects[m_name]
+        result = run_variant(
+            variant=variant,
+            questions=questions,
+            model_name=m_name,
+            inference_mode=inference_mode,
+            model_obj=m_obj,
+            extractor_obj=extractor_obj,
         )
+        all_results.append(result)
+        return json.dumps({"model": m_name, "variant": variant.value, "done": True})
+
+    cells = [
+        json.dumps({"model_name": s["name"], "variant": v.value})
+        for s in MODEL_SPECS
+        for v in PipelineVariant
+    ]
+    cell_bir = BatchedInferenceRunner(_run_cell, batch_size=2)
+    cell_bir.run_batch(cells)
+    _cell_batch_log = cell_bir.batch_log
+
+    for r in all_results:
+        _log.info(
+            "  %s/%s: baseline=%.3f stack=%.3f delta=%.3f violations=%d repairs=%d",
+            r.model_id,
+            r.pipeline_variant.value,
+            r.baseline_accuracy,
+            r.precision_stack_accuracy,
+            r.signed_improvement,
+            r.n_violations_found,
+            r.n_repairs_attempted,
+        )
+
+    # Checkpoint after all variants across all models.
+    tmpl.checkpoint_save(
+        {"completed_models": [r.model_id for r in all_results]},
+        step=len(all_results),
+    )
 
     # ---------------------------------------------------------------------------
     # Build and write artifact.
@@ -463,6 +479,7 @@ def main() -> None:
         model_specs=[s["name"] for s in MODEL_SPECS],
         pipeline_variants=[v.value for v in PipelineVariant],
         live_gpu_confirmed=True,
+        batch_log=_cell_batch_log,
     )
 
     _write_artifact(tmpl, artifact)

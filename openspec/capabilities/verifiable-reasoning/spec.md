@@ -9844,3 +9844,42 @@ Spec: REQ-VERIFY-115, SCENARIO-VERIFY-151, SCENARIO-VERIFY-152, SCENARIO-VERIFY-
 **Then** result is `InternalStateProbeResult` with `probe_auc` in [0, 1], `eorm_auc` in [0, 1]
 
 **Implementation Status:** Implemented (Exp 545)
+
+---
+
+## REQ-INFRA-075: All Legacy Slowest-5 Scripts Use BatchedInferenceRunner
+
+Every script in the slowest-5 set (Exps 308, 260, 309, 425, 410) that was
+identified by Exp 547 as lacking BatchedInferenceRunner must have its
+sequential inner inference loop replaced with BatchedInferenceRunner.
+
+Rationale: Exp 547 delivered 0.2% wall-time savings vs the projected 8.5%
+because batching_added=[] for all five targets.  The sequential for-loops
+in those scripts were the actual bottleneck; ExperimentTemplate/watchdog
+tooling without batching cannot address throughput.
+
+Required artifact fields in the verification experiment (Exp 550):
+- `batching_added`: list of script names that now have BatchedInferenceRunner
+- `scripts_migrated`: same list (alias for compatibility)
+- `estimated_savings_pct`: 8.5
+- `honest_verdict`: 'batching_migration_complete' when all 5 are migrated
+
+**Implementation Status:** Implemented (Exp 550)
+
+Spec: REQ-INFRA-075, SCENARIO-INFRA-090, SCENARIO-INFRA-091
+
+### SCENARIO-INFRA-090: BatchedInferenceRunner Present in All Five Target Scripts
+
+**Given** scripts experiment_308, experiment_260, experiment_309, experiment_425, experiment_410
+**When** each file is inspected via grep and AST walk
+**Then** 'BatchedInferenceRunner' is found as a Name or Attribute node in every file
+
+**Implementation Status:** Implemented (Exp 550)
+
+### SCENARIO-INFRA-091: Exp 550 Artifact Reports batching_migration_complete
+
+**Given** all five target scripts have been migrated (REQ-INFRA-075)
+**When** Exp 550 runs
+**Then** `honest_verdict == 'batching_migration_complete'` and `len(batching_added) == 5`
+
+**Implementation Status:** Implemented (Exp 550)
