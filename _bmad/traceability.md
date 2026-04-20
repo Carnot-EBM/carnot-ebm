@@ -632,3 +632,7 @@
 | SCENARIO-VERIFY-131 | Implemented | Exp 558 Loads fover_corpus_v2 and Gates on n_labeled >= 100 — Exp 558 scenario: loads real corpus and blocks training if n_labeled < 100 |
 | SCENARIO-VERIFY-132 | Implemented | Exp 558 Probe Trains on 80% Split and Reports probe_auc in [0,1] — Exp 558 scenario: deterministic 80/20 split (seed=42), probe_auc=0.5217 in valid range |
 | SCENARIO-VERIFY-133 | Implemented | Exp 558 Artifact Contains All Required Schema Fields — Exp 558 scenario: result JSON includes all schema fields (probe_auc, probe_viable, honest_verdict, etc.) |
+| REQ-VERIFY-116 | Implemented | LatentCoTEBMCalibrator Step-Level Energy Model — Exp 560 learns latent embeddings for per-step CoT energy guidance |
+| REQ-VERIFY-117 | Implemented | ThreeTierPipeline Tier 1 Integration — Exp 560 wires step-level energy signals into Tier 1 reasoning verification |
+| SCENARIO-VERIFY-134 | Implemented | Step-Level Energy Calibration on Synthetic CoT — Exp 560 scenario: calibrates energy model on synthetic reasoning traces with step-wise labels |
+| SCENARIO-VERIFY-135 | Implemented | Latent-Space Feature Extraction for CoT Steps — Exp 560 scenario: extracts and validates step-level embeddings from hidden states |
