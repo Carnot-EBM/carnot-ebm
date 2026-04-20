@@ -9956,3 +9956,42 @@ Then: cumulative_pairs = n_pairs_from_exp551 + n_pairs_collected >= 100, and hon
 Given: CARNOT_FORCE_LIVE is not set or set to '0'.
 When: Exp 552 run_experiment() is called.
 Then: results/experiment_552_live_data_b.json is written with status='blocked' and honest_verdict='gpu_required'.
+
+---
+
+## REQ-DATA-003: FOVER Corpus Diversity Gate
+
+Before any JEPA/EORM retrain, the FOVER corpus must pass a diversity audit:
+Shannon entropy of the constraint_type distribution >= 1.5 bits.
+If entropy < 1.5 bits, the corpus must be balanced by downsampling the dominant class.
+
+**Implementation Status:** Implemented (Exp 553 fover_corpus.py)
+
+---
+
+## REQ-DATA-004: Atomic Write of FOVER Corpus v2
+
+The merged corpus file (`results/fover_corpus_v2.json`) must be written atomically
+(write to a `.tmp` file then rename) to prevent partial writes from corrupting downstream retraining.
+
+**Implementation Status:** Implemented (Exp 553 AtomicResultWriter)
+
+---
+
+### SCENARIO-DATA-007: Merge All Available Real Pairs
+
+Given: Sources fover_labeled_steps_live.json, exp538_cot_pairs.json, live_pairs_552.json are present.
+When: merge_fover_sources() is called with those paths.
+Then: Entries are loaded from all present files, deduplicated by (question, model_id), and returned as a list of FOVERCorpusEntry objects.
+
+### SCENARIO-DATA-008: Diversity Metrics Computed Correctly
+
+Given: A list of FOVERCorpusEntry objects with known constraint_types distributions.
+When: compute_corpus_diversity() is called.
+Then: Returns constraint_type_counts, constraint_type_entropy (Shannon bits), carry_pct, correct_pct, n_labeled.
+
+### SCENARIO-DATA-009: Balance Corpus Raises Entropy to Target
+
+Given: A corpus with constraint_type_entropy < 1.5 bits.
+When: balance_corpus(entries, target_entropy=1.5) is called.
+Then: Returns a subset with entropy >= 1.5 bits, or the maximum achievable entropy if the guard (len >= 10) prevents full balancing.
