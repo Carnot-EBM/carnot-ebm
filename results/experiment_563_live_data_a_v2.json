@@ -1,0 +1,25 @@
+{
+  "experiment": 563,
+  "title": "Live 50q Data Collection A v2",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T07:56:23Z",
+  "finished_at": "2026-04-20T07:56:23Z",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "blocked_reason": "CARNOT_FORCE_LIVE must be set to '1' before running this experiment. Fix: source scripts/session_startup.sh before launching the conductor. RETRO-062: this hard preflight was added to prevent silent deferral.",
+  "schema": "carnot.live_data_collection.v1",
+  "inference_mode": "gpu_required",
+  "n_questions": 0,
+  "question_indices": "0-49",
+  "models": [
+    "google/gemma-4-E4B-it",
+    "Qwen/Qwen3.5-0.8B"
+  ],
+  "n_pairs_collected": 0,
+  "live_pairs_file": null,
+  "mean_latency_s": 0.0,
+  "per_question_latencies": [],
+  "retro_062_resolved": false,
+  "honest_verdict": "gpu_required",
+  "retro_062_note": "Deliverable written by agent (no GPU in agent env). Re-run with CARNOT_FORCE_LIVE=1 on GPU machine to collect live pairs."
+}

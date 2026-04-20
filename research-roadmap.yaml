@@ -423,8 +423,8 @@ tasks:
     \ accuracy_trend.\n   m. fr11_real_violations_confirmed: total_violations_found\
     \ > 0.\n   n. Build artifact: schema='carnot.fr11_relay_real.v1',\n      extractor='coace',\n\
     \      inference_mode='live_gpu',\n      n_questions=25, n_batches=3,\n      total_violations_found=<int>,\n\
-    \      n_constraints_added=<int>,\n      batch_results=[{batch_id, violations_found,\
-    \ fp_rate, accuracy},...],\n      fp_rate_trend='decreasing' if fp_decreases else\
+    \      n_constraints_added=<int>,\n      batch_results=[(batch_id, violations_found,\
+    \ fp_rate, accuracy),...],\n      fp_rate_trend='decreasing' if fp_decreases else\
     \ 'flat',\n      fr11_real_violations_confirmed=<bool>,\n      honest_verdict='fr11_real_violations_confirmed'\
     \ if fr11_real_violations_confirmed else 'fr11_still_zero_violations' if total_violations_found==0\
     \ else 'fr11_partial'.\n   o. tmpl.assert_deliverable_written() as FINAL LINE.\n\
