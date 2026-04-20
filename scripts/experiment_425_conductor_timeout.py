@@ -111,6 +111,7 @@ def main() -> None:
         exp_id=EXP_ID,
         title=TITLE,
         deliverable=DELIVERABLE,
+        repo_root=_REPO_ROOT,
     )
     tmpl.setup()
 
@@ -180,6 +181,7 @@ def main() -> None:
     print(f"  demo_elapsed_minutes: {artifact['demo_elapsed_minutes']:.4f}")
     print(f"  production timeout: {PRODUCTION_TIMEOUT_MINUTES} min")
     print(f"  estimated_savings_per_runaway: 99 min")
+    tmpl.assert_deliverable_written()
 
 
 if __name__ == "__main__":

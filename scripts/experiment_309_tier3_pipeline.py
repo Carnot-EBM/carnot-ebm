@@ -709,7 +709,11 @@ def run_experiment(output_path: Path, seed: int = 42) -> None:
 
     Spec: REQ-LEARN-012
     """
+    from carnot.pipeline.env_autofix import apply_env_autofix  # type: ignore[import]
+    from carnot.pipeline.experiment_watchdog import ExperimentTimeoutWatchdog  # type: ignore[import]
     from scripts.experiment_template import ExperimentTemplate  # type: ignore[import]
+
+    apply_env_autofix()
 
     repo_root = _get_repo_root()
     tmpl = ExperimentTemplate(
@@ -720,6 +724,13 @@ def run_experiment(output_path: Path, seed: int = 42) -> None:
         repo_root=repo_root,
     )
     tmpl.setup()
+
+    _watchdog = ExperimentTimeoutWatchdog(
+        experiment_id=EXPERIMENT,
+        timeout_minutes=40,
+        result_path=str(output_path),
+    )
+    _watchdog.start()
 
     print(f"[Exp 309] Starting Tier 3 continuous self-learning benchmark (seed={seed})")
 
@@ -788,6 +799,8 @@ def run_experiment(output_path: Path, seed: int = 42) -> None:
     artifact["status"] = "success"
     _write_artifact(output_path, artifact)
     print(f"[Exp 309] Artifact written to {output_path}")
+    _watchdog.stop()
+    tmpl.assert_deliverable_written()
 
 
 # ---------------------------------------------------------------------------
