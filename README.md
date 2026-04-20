@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 536+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 548+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (536 experiments, 27 completed milestones)
+## Key Results (548 experiments, 28 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.41 (Exps 537-548, 28th milestone, title "Close the Nine-Milestone Gap — First Live 25q Positive, Teardown Fix, GRPO Self-Learning") completed. Key results: **RETRO-054 CLOSED** — ExperimentTemplate.teardown() + atexit registration implemented, zombie VRAM carryover prevention now in framework (Exp 537); **RETRO-055 CLOSED** — env_autofix value-check fix confirmed working in live_gpu mode (Exp 538); **RETRO-033 miss #10** — live 25q pipeline accuracy 0.32 == baseline 0.32 (signed_improvement=0.0, live GPU mode confirmed operational); **RETRO-038 miss #8** — live 100q pipeline accuracy 0.29 == baseline 0.29, Wilson CI spans zero; **LowRankKAEM wired as default tier** — 4.6x speedup at n_vars=10, 154.7x at n_vars=200 (Exp 544); **GRPO EORM improved** on 3 synthetic pairs (AUC 0.00→1.00, honest_verdict=synthetic_fallback) (Exp 540); **AutoRefine distilled 2 constraint templates** from 67 violations (Exp 546); mean=3.785 min/exp (new project record, 41.6 min for 11 experiments). New RETROs: RETRO-056 (JEPA AUC 0.444 below random on 24-pair corpus), RETRO-057 (LowRankKAEM energy_mad_normalized 0.96-0.99, outside 5% tolerance), RETRO-058 (synthetic proxy fallback epidemic: 6/11 experiments), RETRO-059 (conductor exclusion manifest for fully-modern legacy scripts).
 
 Note: Milestone 2026.04.40 (Exps 526-536, 27th milestone, title "Fix the Last Gate — Eighth Attempt, First Live Positive") completed. Key results: **RETRO-053 RESOLVED** — env_autofix one-liner now overrides falsy CARNOT_FORCE_LIVE='0' (Exp 526); **Live 100q Precision v8 timed out at 45 min during actual live inference** (Exp 527, RETRO-033 miss #9 — new blocker is inference latency, env gate no longer the problem, significant progress); **NUP Probe v4 (Tier 0c) + Hallucination Basin Detector (Tier 0d) wired into ThreeTierPipeline** (Exp 530); **JEPA Live Retrain v7 FR-11 confirmed** — final_auc=0.967 on 46 live FOVER pairs (Exp 535); **LowRankKAEMEnergy** 23.7x speedup at k=2 (Exp 532); mean=5.0 min/exp (new project record, 55 min total for 11 experiments). New RETRO-055: reduce n_questions to 25 or increase timeout to 90 min for live benchmark to complete within budget.
 
