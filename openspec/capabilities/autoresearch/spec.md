@@ -1033,6 +1033,61 @@ Partial relay (real data but AUC < 0.800) is labelled fr11_partial.
 **And** the function never raises an exception
 **And** the returned (pairs, data_source) tuple is always a valid result
 
+### REQ-LEARN-051: GRPO Contrastive Pairing for EORM Retrain from Live Binary Verdicts
+
+Exp 540 shall build contrastive (correct, incorrect) response pairs directly from live
+benchmark binary verdicts (Exp 538 format), applying the GRPO insight (arXiv 2503.06639)
+that verifiable binary rewards naturally induce contrastive pairs without additional labeling.
+
+For each question in the benchmark:
+- If baseline_correct=False and pipeline_correct=True: pair (correct=pipeline_response, incorrect=baseline_response)
+- If baseline_correct=True and pipeline_correct=False: pair (correct=baseline_response, incorrect=pipeline_response)
+
+When fewer than 5 pairs are extracted from the benchmark, fall back to FOVER
+fover_labeled_steps_live.json (Exp 442 labels, 57 annotated steps).
+
+The module shall expose:
+- GRPOContrastivePair(question_id, correct_response, incorrect_response) dataclass
+- build_grpo_pairs_from_benchmark(benchmark_result_path) → List[GRPOContrastivePair]
+- train_eorm_grpo(eorm_model, pairs, margin, epochs, lr) → (training_loss, before_auc, after_auc)
+- GRPOEORMRetrainResult(n_pairs, before_auc, after_auc, auc_improvement, honest_verdict)
+
+### REQ-LEARN-052: GRPO EORM Contrastive Loss — Maximize Energy Gap
+
+The contrastive loss used in Exp 540 EORM retrain shall be:
+    L = mean(max(0, margin - (E(incorrect) - E(correct))))
+
+This is equivalent to the EORM hinge loss rewritten to explicitly maximize the gap
+(E(incorrect) - E(correct)).  The margin (default 1.0) ensures the model does not
+stop learning once it achieves a minimal separation.
+
+The loss is zero when E(incorrect) > E(correct) + margin for every pair in the batch,
+indicating the model already discriminates correctly with sufficient confidence.
+
+### SCENARIO-LEARN-080: build_grpo_pairs_from_benchmark Returns Empty When No Paired Fields
+
+**Given** a benchmark JSON that has no per-question baseline_correct/pipeline_correct fields
+**When** build_grpo_pairs_from_benchmark(benchmark_result_path) is called
+**Then** it returns an empty list (no pairs, not an error)
+**And** no exception is raised
+
+### SCENARIO-LEARN-081: train_eorm_grpo Reduces Loss Over Epochs on Synthetic Pairs
+
+**Given** 5 synthetic GRPOContrastivePair objects with distinct correct/incorrect responses
+**When** train_eorm_grpo(model, pairs, margin=1.0, epochs=10, lr=1e-3) is called
+**Then** the returned training_loss is a non-negative float
+**And** before_auc and after_auc are in [0.0, 1.0]
+**And** the model parameters are updated (not identical to initial)
+
+### SCENARIO-LEARN-082: GRPOEORMRetrainResult honest_verdict Logic
+
+**Given** a GRPOEORMRetrainResult with auc_improvement=0.10
+**Then** honest_verdict is 'grpo_improved'
+**Given** a GRPOEORMRetrainResult with auc_improvement=0.02
+**Then** honest_verdict is 'no_improvement'
+**Given** a GRPOEORMRetrainResult constructed from synthetic fallback pairs
+**Then** honest_verdict is 'synthetic_fallback'
+
 ---
 
 ## Implementation Status
@@ -1076,3 +1131,5 @@ Partial relay (real data but AUC < 0.800) is labelled fr11_partial.
 | REQ-LEARN-048 | N/A | Implemented | Python |
 | REQ-LEARN-049 | N/A | Implemented | Python |
 | REQ-LEARN-050 | N/A | Implemented | Python |
+| REQ-LEARN-051 | N/A | Implemented | Python |
+| REQ-LEARN-052 | N/A | Implemented | Python |
