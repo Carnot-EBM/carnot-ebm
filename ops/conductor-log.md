@@ -2266,3 +2266,4 @@ python/ |
 | 2026-04-20 00:43 UTC | Exp 543: JEPA v8 Live Retrain — FR-11 mandatory, e | OK | 81 passed, 2 warnings in 4.92s |
 | 2026-04-20 01:26 UTC | Exp 544: LowRankKAEMEnergy Cascade Integration — 2 | OK | 145 passed, 2 warnings in 5.96s |
 | 2026-04-20 01:38 UTC | Exp 545: InternalStateProbe — arXiv 2511.06209, 81 | OK | 81 passed, 2 warnings in 2.74s |
+| 2026-04-20 01:51 UTC | Exp 546: AutoRefine Constraint Template Distillati | OK | 81 passed, 2 warnings in 2.70s |
