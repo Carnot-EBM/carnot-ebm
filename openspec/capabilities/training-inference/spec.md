@@ -1194,9 +1194,47 @@ human-readable string of the full energy function, e.g.:
 | REQ-SAMPLE-032 | N/A | Implemented | Python (test_experiment_584_kv260_synthesis.py, 100% targeted) |
 | REQ-SAMPLE-033 | N/A | Implemented | Python (test_experiment_585_kv260_live_benchmark_v3.py, 100% targeted) |
 | REQ-SAMPLE-034 | N/A | Implemented | Python (test_dwave_backend.py, 100%) |
+| REQ-SAMPLE-035 | N/A | Implemented | Python (test_sampler_registry.py, 100%) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-MODEL-020 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-MODEL-021 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-108 | N/A | Implemented | Python (Exp 534 experiment) |
+
+## REQ-SAMPLE-035: Production CARNOT_SAMPLER env-var-selectable backend registry
+
+The sampler backend layer MUST expose a public ``backend_registry`` dict and a
+``get_sampler_backend(name)`` factory that selects backends via the
+``CARNOT_SAMPLER`` environment variable (default: ``"cpu"``).
+
+### REQ-SAMPLE-035-1
+``backend_registry`` MUST map ``"cpu"`` to ``CpuBackend`` and ``"dwave"`` to
+``DWaveNealBackend``.
+
+### REQ-SAMPLE-035-2
+``get_sampler_backend(None)`` MUST read ``os.environ.get('CARNOT_SAMPLER', 'cpu')``
+and return an instance of the mapped class.
+
+### REQ-SAMPLE-035-3
+``get_sampler_backend('dwave')`` MUST return a ``DWaveNealBackend`` instance.
+
+### REQ-SAMPLE-035-4
+``get_sampler_backend`` and ``backend_registry`` MUST be exported from
+``carnot.samplers.__init__``.
+
+### SCENARIO-SAMPLE-040: get_sampler_backend respects CARNOT_SAMPLER env var
+
+Given: CARNOT_SAMPLER=dwave in the process environment.
+When: get_sampler_backend() is called with no arguments.
+Then: returns a DWaveNealBackend instance.
+
+**Implementation Status:** Implemented (Exp 610)
+
+### SCENARIO-SAMPLE-041: get_sampler_backend defaults to cpu when CARNOT_SAMPLER unset
+
+Given: CARNOT_SAMPLER is not set.
+When: get_sampler_backend() is called with no arguments.
+Then: returns a CpuBackend instance.
+
+**Implementation Status:** Implemented (Exp 610)

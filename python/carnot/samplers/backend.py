@@ -362,6 +362,79 @@ _BACKENDS: dict[str, BackendFactory] = {
     "tsu": TsuBackend,
 }
 
+# Registry for CARNOT_SAMPLER env-var-selectable backends.
+# Maps the short name used in CARNOT_SAMPLER to the backend class.
+# DWaveNealBackend uses a different call interface than SamplerBackend (J/h
+# convention) but is included here so experiments can instantiate it by name.
+# WHY a separate registry from _BACKENDS: _BACKENDS drives get_backend() which
+# requires full SamplerBackend protocol; backend_registry drives
+# get_sampler_backend() which is a looser factory for experiment scripts.
+def _build_backend_registry() -> dict[str, type]:
+    """Build the sampler backend registry, importing lazily to avoid hard deps."""
+    from carnot.samplers.parallel_ising import ParallelIsingSampler  # noqa: F401 (used as value)
+    from carnot.samplers.dwave_backend import DWaveNealBackend  # noqa: F401
+
+    return {
+        "cpu": CpuBackend,
+        "dwave": DWaveNealBackend,
+    }
+
+
+# Public registry — populated on first access via get_sampler_backend().
+# We use a module-level dict that is filled lazily so that importing this
+# module at top level does not trigger heavy imports (dwave, jax, etc.) before
+# the user has set JAX_PLATFORMS or other env vars.
+backend_registry: dict[str, type] = {}
+
+
+def _ensure_registry() -> None:
+    """Populate backend_registry if it is empty."""
+    if not backend_registry:
+        backend_registry.update(_build_backend_registry())
+
+
+def get_sampler_backend(name: str | None = None) -> object:
+    """Return a sampler backend instance by name, respecting CARNOT_SAMPLER env var.
+
+    **Detailed explanation for engineers:**
+        This is the preferred entry point for experiments and production code
+        that want to select a sampling backend at runtime without hard-coding
+        a class name.  It reads ``CARNOT_SAMPLER`` from the environment when
+        ``name`` is not supplied, defaulting to ``"cpu"`` if the variable is
+        absent.
+
+        Supported backends:
+        - ``"cpu"``: ``CpuBackend`` (wraps ``ParallelIsingSampler``, JAX-based)
+        - ``"dwave"``: ``DWaveNealBackend`` (D-Wave Ocean SDK or CPU fallback)
+
+        Unlike ``get_backend()``, this function does NOT require the returned
+        object to satisfy the full ``SamplerBackend`` protocol.  ``DWaveNealBackend``
+        uses a J/h call convention rather than biases/couplings, so it is not
+        interchangeable at the protocol level, but it is still a valid backend
+        for experiments that call ``sample()`` and ``latency_ms()`` directly.
+
+    Args:
+        name: Backend name (``"cpu"`` or ``"dwave"``).  If None, reads
+            ``CARNOT_SAMPLER`` env var, defaulting to ``"cpu"``.
+
+    Returns:
+        An instance of the requested backend class.
+
+    Raises:
+        ValueError: If *name* is not present in ``backend_registry``.
+
+    Spec: REQ-SAMPLE-035
+    """
+    _ensure_registry()
+    if name is None:
+        name = os.environ.get("CARNOT_SAMPLER", "cpu")
+    if name not in backend_registry:
+        available = ", ".join(sorted(backend_registry))
+        raise ValueError(
+            f"Unknown CARNOT_SAMPLER backend {name!r}. Available: {available}"
+        )
+    return backend_registry[name]()
+
 
 def get_backend(name: str | None = None) -> SamplerBackend:
     """Factory function: return a ``SamplerBackend`` by name.

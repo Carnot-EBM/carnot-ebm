@@ -1,6 +1,6 @@
 """MCMC samplers for Energy Based Models."""
 
-from carnot.samplers.backend import CpuBackend, SamplerBackend, TsuBackend, get_backend
+from carnot.samplers.backend import CpuBackend, SamplerBackend, TsuBackend, backend_registry, get_backend, get_sampler_backend
 from carnot.samplers.dwave_backend import DWaveNealBackend
 from carnot.samplers.dwave_sampler import DWaveSampler
 from carnot.samplers.fpga_backend import FpgaBackend
@@ -27,6 +27,8 @@ __all__ = [
     "DWaveNealBackend",
     "DWaveSampler",
     "get_backend",
+    "get_sampler_backend",
+    "backend_registry",
     "GPUOscillatorIsingSimulator",
     "OIMSpeedupResult",
     "JEPARetrainResult",
