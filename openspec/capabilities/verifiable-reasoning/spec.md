@@ -10017,6 +10017,29 @@ When: Exp 563 completes successfully.
 Then: results/live_pairs_563.json contains entries with keys question_index, question,
       model, response, is_correct, cot_steps, and fover_labels for all processed questions.
 
+### SCENARIO-DATA-013: Import-Time CARNOT_FORCE_LIVE Gate Blocks Before Any Model Import
+
+Given: CARNOT_FORCE_LIVE is absent or set to a falsy value when Exp 578 is imported.
+When: The module-level assert fires at import time.
+Then: A blocked artifact is written to results/experiment_578_live_data_a_v3.json
+      and the process exits with code 1 before transformers or torch are imported.
+
+### SCENARIO-DATA-014: Third A-Batch v3 Collects Questions 0-49 With RETRO-062 Resolved
+
+Given: CARNOT_FORCE_LIVE=1 is set before Exp 578 is launched (RETRO-062 v3 fix).
+When: Exp 578 run_experiment() is called with indices 0-49.
+Then: results/experiment_578_live_data_a_v3.json is written with status='success',
+      n_pairs_collected >= 40, question_indices='0-49', and retro_062_resolved=True.
+
+### SCENARIO-DATA-015: Exp 578 Produces live_pairs_578.json With FOVER-Labeled CoT Steps
+
+Given: Live inference succeeds for both Gemma4 and Qwen3.5-0.8B.
+When: Exp 578 completes successfully.
+Then: results/live_pairs_578.json contains entries with keys question_index, question,
+      model, response, is_correct, cot_steps, and fover_labels for all 50 processed questions.
+
+**Implementation Status:** Implemented (Exp 578)
+
 ---
 
 ## REQ-EXTRACT-030: Per-Extractor FP/TP Rate Measurement on Labeled Live Responses
