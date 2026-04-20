@@ -10040,6 +10040,35 @@ Then: results/live_pairs_578.json contains entries with keys question_index, que
 
 **Implementation Status:** Implemented (Exp 578)
 
+### SCENARIO-DATA-016: Import-Time Gate Blocks Exp 579 When CARNOT_FORCE_LIVE Is Absent
+
+Given: The scripts/experiment_579_live_data_c.py module is imported without CARNOT_FORCE_LIVE=1.
+When: Python imports the module.
+Then: The process exits with code 1 before any heavy model import occurs, and
+      results/experiment_579_live_data_c.json is written with status=blocked,
+      question_indices='200-249', and honest_verdict='import_time_block_carnot_force_live_missing'.
+
+**Implementation Status:** Implemented (Exp 579)
+
+### SCENARIO-DATA-017: Exp 579 Collects GSM8K Batch C (Indices 200-249) With FOVER Labels
+
+Given: CARNOT_FORCE_LIVE=1 and sufficient GPU VRAM on cuda:0 and cuda:1.
+When: Exp 579 completes successfully.
+Then: results/live_pairs_579.json contains entries with keys question_index, question,
+      model, response, is_correct, cot_steps, and fover_labels for all 50 questions
+      in the range 200-249.  n_pairs_collected >= 40 and honest_verdict='corpus_expanded'.
+
+**Implementation Status:** Implemented (Exp 579)
+
+### SCENARIO-DATA-018: Exp 579 Merges Batch C Into fover_corpus_v3.json
+
+Given: results/fover_corpus_v2.json (132 pairs), optional live_pairs_578.json, and live_pairs_579.json.
+When: Exp 579 calls merge_fover_sources() and writes results/fover_corpus_v3.json.
+Then: fover_corpus_v3.json contains all deduplicated entries from the three sources,
+      fover_corpus_v3_size >= 132, and the artifact records fover_corpus_v3_size.
+
+**Implementation Status:** Implemented (Exp 579)
+
 ---
 
 ## REQ-EXTRACT-030: Per-Extractor FP/TP Rate Measurement on Labeled Live Responses
