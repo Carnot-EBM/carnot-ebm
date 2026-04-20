@@ -649,6 +649,224 @@ def embedding_repair(
     return pred
 
 
+def _corpus_entry_to_features(entry: dict) -> "jax.Array":
+    """Convert a FOVERCorpusEntry-compatible dict to a 4-D feature vector.
+
+    **For engineers:**
+        Each FOVER corpus entry has a ``constraint_types`` list of Z3 labels per
+        CoT step.  We summarise the distribution into four scalars:
+            [frac_correct, frac_incorrect, frac_not_verifiable, normalized_n_steps]
+
+        ``normalized_n_steps`` is clipped to [0, 1] using max 20 steps as the
+        reference (any response with >= 20 steps gets value 1.0).  This captures
+        response length as a proxy for complexity without unbounded magnitude.
+
+        Empty constraint_types produce all-zero features, which is fine — the
+        model learns to treat zero-feature entries as uninformative.
+    """
+    ctypes = entry.get("constraint_types", [])
+    n = len(ctypes) if ctypes else 0
+    if n == 0:
+        return jnp.zeros(4)
+    frac_correct = sum(1 for t in ctypes if t == "correct") / n
+    frac_incorrect = sum(1 for t in ctypes if t == "incorrect") / n
+    frac_nv = sum(1 for t in ctypes if t == "not_verifiable") / n
+    norm_n = min(1.0, n / 20.0)
+    return jnp.array([frac_correct, frac_incorrect, frac_nv, norm_n], dtype=jnp.float32)
+
+
+def _leworldmodel_init_params(key: "jax.Array") -> dict:
+    """Initialise LeWorldModel predictor parameters.
+
+    **For engineers:**
+        The predictor is a 2-layer MLP with two output heads:
+        - mu_head: predicts the mean of the latent (used as the correctness score)
+        - logvar_head: predicts log-variance (used for the KL regularisation term)
+
+        Architecture: input(4) -> hidden(16) -> [mu(1), logvar(1)]
+
+        Xavier uniform init for all weight matrices, zero biases.
+        The logvar_bias is initialised to log(1) = 0, meaning the prior variance
+        starts at 1.0 (exactly N(0,1)), so the KL starts near zero.
+    """
+    k1, k2, k3, k4 = jrandom.split(key, 4)
+    in_dim, hid_dim, out_dim = 4, 16, 1
+    lim1 = jnp.sqrt(6.0 / (in_dim + hid_dim))
+    lim2 = jnp.sqrt(6.0 / (hid_dim + out_dim))
+    return {
+        "w1": jrandom.uniform(k1, (hid_dim, in_dim), minval=-lim1, maxval=lim1),
+        "b1": jnp.zeros(hid_dim),
+        "w_mu": jrandom.uniform(k2, (out_dim, hid_dim), minval=-lim2, maxval=lim2),
+        "b_mu": jnp.zeros(out_dim),
+        "w_lv": jrandom.uniform(k3, (out_dim, hid_dim), minval=-lim2, maxval=lim2),
+        "b_lv": jnp.zeros(out_dim),
+    }
+
+
+def _leworldmodel_forward(
+    params: dict, x: "jax.Array"
+) -> tuple["jax.Array", "jax.Array"]:
+    """Run the LeWorldModel predictor forward pass: features -> (mu, log_var).
+
+    **For engineers:**
+        Returns the mean ``mu`` and the log-variance ``log_var`` of the latent
+        distribution q(z) = N(mu, exp(log_var)).  The mean is used as the
+        predicted embedding; the log_var feeds the KL regularisation term.
+
+        SiLU (Swish) activation in the hidden layer — smooth gradient flow.
+    """
+    h = jax.nn.silu(params["w1"] @ x + params["b1"])
+    mu = params["w_mu"] @ h + params["b_mu"]
+    log_var = params["w_lv"] @ h + params["b_lv"]
+    return mu, log_var
+
+
+def _leworldmodel_loss(
+    params: dict,
+    x: "jax.Array",
+    y: "jax.Array",
+    lambda_kl: float,
+) -> tuple["jax.Array", "jax.Array", "jax.Array"]:
+    """Compute L_total, L_pred, L_kl for a single example.
+
+    **For engineers:**
+        L_prediction = MSE(sigmoid(mu), y)  — mean-squared error of the sigmoid-scaled
+            prediction vs the is_correct float target.  Sigmoid maps mu from R -> (0,1).
+        L_kl = 0.5 * sum(exp(log_var) + mu^2 - 1 - log_var)  — KL(N(mu,exp(lv))||N(0,I)).
+        L_total = L_pred + lambda_kl * L_kl
+
+        KL is always >= 0 by Gibbs' inequality.  It equals 0 iff mu=0 and log_var=0,
+        i.e. the latent is exactly N(0,1).  The lambda_kl weight (0.01) keeps the KL
+        term one order of magnitude smaller than the MSE term at initialisation.
+    """
+    mu, log_var = _leworldmodel_forward(params, x)
+    pred_emb = jax.nn.sigmoid(mu)
+    l_pred = jnp.mean((pred_emb - y) ** 2)
+    l_kl = 0.5 * jnp.sum(jnp.exp(log_var) + mu ** 2 - 1.0 - log_var)
+    l_total = l_pred + lambda_kl * l_kl
+    return l_total, l_pred, l_kl
+
+
+def _auc_from_scores(scores: list[float], labels: list[float]) -> float:
+    """Compute ROC-AUC without sklearn — trapezoid rule over sorted thresholds.
+
+    **For engineers:**
+        A clean manual AUC implementation to avoid the sklearn dependency in this
+        low-level module.  We sort by descending score, walk thresholds, and accumulate
+        TPR/FPR points for the trapezoidal rule.  Returns 0.5 when all labels are the
+        same class (degenerate case — no discrimination possible).
+    """
+    n = len(scores)
+    if n == 0:
+        return 0.5
+    n_pos = sum(labels)
+    n_neg = n - n_pos
+    if n_pos == 0 or n_neg == 0:
+        return 0.5
+    pairs = sorted(zip(scores, labels), key=lambda t: -t[0])
+    tp = fp = 0
+    prev_tpr = prev_fpr = 0.0
+    auc_val = 0.0
+    for _, lbl in pairs:
+        if lbl:
+            tp += 1
+        else:
+            fp += 1
+        tpr = tp / n_pos
+        fpr = fp / n_neg
+        auc_val += (fpr - prev_fpr) * (tpr + prev_tpr) / 2.0
+        prev_tpr, prev_fpr = tpr, fpr
+    return auc_val
+
+
+def train_leworldmodel(
+    pairs: list[dict],
+    lambda_kl: float = 0.01,
+) -> list[tuple[int, float, float, float, float]]:
+    """Train a JEPA predictor on FOVER corpus entries using the LeWorldModel two-term objective.
+
+    **Researcher summary (RETRO-056 fix):**
+        Standard BCE training collapsed on Exp 543 (AUC=0.444) because the corpus had
+        only 24 pairs with 88% carry violations.  The LeWorldModel objective adds
+        Gaussian KL regularisation that prevents latent collapse even when the training
+        signal is sparse or skewed.  With >=100 diverse pairs (entropy >=1.0 bits)
+        and the KL term, the predictor should recover to AUC >0.5 and ideally >0.8.
+
+    **What this function does:**
+        1. Converts each FOVERCorpusEntry-compatible dict to a 4-D feature vector
+           [frac_correct, frac_incorrect, frac_not_verifiable, norm_n_steps].
+        2. Initialises a 2-layer MLP with (mu, log_var) output heads.
+        3. Trains for 200 epochs with AdamW (weight_decay=1e-4) on the two-term loss:
+               L_total = L_prediction + lambda_kl * L_kl
+           where L_prediction = MSE(sigmoid(mu), is_correct_float)
+           and   L_kl = KL(N(mu, exp(log_var)) || N(0,I)).
+        4. After each epoch, computes ROC-AUC on the full training set.
+
+    **Why AdamW over Adam:**
+        AdamW decouples the weight decay from the adaptive gradient scaling, which
+        prevents the L2 regularisation from being swamped by large gradient magnitudes.
+        On small datasets (< 200 pairs) this gives more stable convergence than Adam.
+
+    Args:
+        pairs: List of dicts with keys ``constraint_types`` (list[str]) and
+               ``is_correct`` (bool).  Compatible with FOVERCorpusEntry dicts
+               loaded directly from fover_corpus_v2.json.
+        lambda_kl: Weight on the KL regularisation term.  Default 0.01 matches the
+                   LeWorldModel paper recommendation for small models.
+
+    Returns:
+        training_history: List of length 200 (one entry per epoch).
+        Each entry is a tuple: (epoch_int, total_loss, pred_loss, kl_loss, auc_float).
+        Epoch indexing starts at 0.
+
+    Spec: REQ-LEARN-047,
+          SCENARIO-LEARN-076, SCENARIO-LEARN-077, SCENARIO-LEARN-078
+    """
+    import optax  # imported here to keep the module top-level import-light
+
+    if not pairs:
+        return [(i, 0.0, 0.0, 0.0, 0.5) for i in range(200)]
+
+    # Build feature matrix and label vector from corpus entries
+    features = [_corpus_entry_to_features(p) for p in pairs]
+    labels = [float(bool(p.get("is_correct", False))) for p in pairs]
+    X = jnp.stack(features)             # (n, 4)
+    y = jnp.array(labels, dtype=jnp.float32)  # (n,)
+
+    key = jrandom.PRNGKey(557)
+    params = _leworldmodel_init_params(key)
+
+    optimizer = optax.adamw(learning_rate=1e-3, weight_decay=1e-4)
+    opt_state = optimizer.init(params)
+
+    def _batch_loss_fn(p: dict) -> tuple["jax.Array", tuple["jax.Array", "jax.Array"]]:
+        """Mean total loss + mean component losses over all training pairs."""
+        def _single(xi: "jax.Array", yi: "jax.Array") -> tuple:
+            return _leworldmodel_loss(p, xi, yi, lambda_kl)
+        totals, preds, kls = jax.vmap(_single)(X, y)
+        return jnp.mean(totals), (jnp.mean(preds), jnp.mean(kls))
+
+    history: list[tuple[int, float, float, float, float]] = []
+
+    for epoch in range(200):
+        # Compute gradients w.r.t. params (first output of _batch_loss_fn)
+        (total, (pred_l, kl_l)), grads = jax.value_and_grad(
+            _batch_loss_fn, has_aux=True
+        )(params)
+
+        updates, opt_state = optimizer.update(grads, opt_state, params)
+        params = optax.apply_updates(params, updates)
+
+        # Compute AUC on the full set (cheap at n<=200)
+        mu_vals = jax.vmap(lambda xi: _leworldmodel_forward(params, xi)[0])(X)
+        scores = [float(jax.nn.sigmoid(m)[0]) for m in mu_vals]
+        auc = _auc_from_scores(scores, labels)
+
+        history.append((epoch, float(total), float(pred_l), float(kl_l), auc))
+
+    return history
+
+
 def nearest_code_match(
     repaired_emb: jax.Array,
     codebook_embs: jax.Array,
