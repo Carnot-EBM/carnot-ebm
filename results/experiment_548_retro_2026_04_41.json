@@ -1,0 +1,143 @@
+{
+  "experiment": 548,
+  "title": "Milestone 2026.04.41 Retrospective",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T02:16:02Z",
+  "finished_at": "2026-04-20T02:16:02Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "schema": "carnot.operational_retro.v16",
+  "milestone": "2026.04.41",
+  "n_experiments": 11,
+  "n_completed": 11,
+  "n_timed_out": 0,
+  "n_deferred_to_gpu": 0,
+  "n_missing": 0,
+  "total_wall_time_minutes": 41.631,
+  "average_minutes_per_experiment": 3.785,
+  "retro_054_resolved": true,
+  "retro_055_resolved": true,
+  "retro_033_closed": false,
+  "retro_038_closed": false,
+  "retro_closure_rate": 0.2,
+  "fr11_live_relay": false,
+  "jepa_v8_auc": 0.444444,
+  "grpo_eorm_improved": true,
+  "grpo_eorm_honest_verdict": "synthetic_fallback",
+  "lowrank_kaem_wired": true,
+  "lowrank_kaem_energy_within_5pct": false,
+  "legacy_scripts_modernized": 5,
+  "headline_results": {
+    "exp537_teardown_fix": "RETRO-054 CLOSED after 5 milestones of deferral. ExperimentTemplate.teardown() + atexit registration implemented. Zombie VRAM carryover prevention now in framework.",
+    "exp538_live_25q_v9": "RETRO-055 CLOSED (env_autofix value-check fix confirmed working in live_gpu mode). RETRO-033 attempt #10: retro_033_closed=False. Pipeline accuracy 0.32 == baseline 0.32 (signed_improvement=0.0). Live GPU mode confirmed operational.",
+    "exp539_live_100q_v8": "RETRO-038 attempt #8: retro_038_closed=False. Pipeline accuracy 0.29 == baseline 0.29 (signed_improvement=0.0). Wilson CI spans zero \u2014 no statistical signal.",
+    "exp540_grpo_eorm": "GRPO EORM retrained on 3 synthetic pairs. AUC: 0.00 -> 1.00. honest_verdict='synthetic_fallback' \u2014 not credible for production.",
+    "exp541_constraint_addition": "Constraint addition wire-in: 0 new constraints added. fp_rate_delta=0.0. Pattern carry=59 already exceeded threshold=3 but no new patterns emerged.",
+    "exp542_fover_expansion": "FOVER corpus expanded: 57 prior -> 24 total pairs. honest_verdict='synthetic_fallback' \u2014 corpus still too small for live training.",
+    "exp543_jepa_v8": "JEPA v8 retrained on live_fover_expanded (20 train pairs). final_auc=0.4444 (BELOW random 0.5). fr11_live_relay=False. Insufficient corpus for reliable relay.",
+    "exp544_lowrank_kaem": "LowRankKAEM wired as default tier. Speedup: 4.6x at n_vars=10, 154.7x at n_vars=200. energy_tolerance_within_5pct=False on all configs (energy_mad_normalized \u2248 0.96-0.99). Wired but not accuracy-verified.",
+    "exp545_internal_probe": "Internal state probe: probe_auc=0.5, eorm_auc=0.5. is_tier2_viable=False. Both classifiers at random baseline on 24-pair corpus.",
+    "exp546_autorefine_templates": "AutoRefine distilled 2 constraint templates from 67 violations (carry=59, semantic=8). Templates stored; retrieval_verified=True.",
+    "exp547_legacy_sprint": "Legacy audit of 5 scripts (308, 260, 309, 425, 410): all 5 already classified 'fully_modern'. Slowest-5 recurrence was conductor re-selection, not missing modernization. Exclusion manifest still needed."
+  },
+  "new_retro_items": [
+    {
+      "id": "RETRO-056",
+      "title": "JEPA AUC below random on live FOVER corpus",
+      "opened_milestone": "2026.04.41",
+      "carry_count": 0,
+      "description": "Exp 543 produced final_auc=0.444 (below the 0.5 random baseline) after retraining on 24 FOVER pairs.  The predictor is anti-correlated with correctness labels.  Root cause: FOVER corpus is too small (24 pairs) and skewed (carry violations dominate at 59/67 = 88%).  Fix: grow FOVER corpus to >=100 diverse pairs before the next JEPA retrain.",
+      "priority": "high"
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "opened_milestone": "2026.04.41",
+      "carry_count": 0,
+      "description": "Exp 544 wired LowRankKAEM as the default tier and demonstrated 4-155x computational speedup.  However, energy_mad_normalized \u2248 0.96-0.99 on all tested variable counts \u2014 far outside the 5% tolerance required for production use.  Fix: tune SVD rank k (currently implicit), add calibration layer, or lower the default tier back to full-rank until accuracy is verified.",
+      "priority": "high"
+    },
+    {
+      "id": "RETRO-058",
+      "title": "Synthetic proxy fallback epidemic \u2014 6 of 11 experiments",
+      "opened_milestone": "2026.04.41",
+      "carry_count": 0,
+      "description": "Six of eleven .41 experiments fell back to synthetic or proxy data: Exp 540 (GRPO, n_pairs=3 synthetic), Exp 542 (FOVER, synthetic), Exp 543 (JEPA, live_fover_expanded but only 24 pairs), Exp 545 (probe, synthetic_proxy), Exp 546 (templates, no label diversity). The teardown fix (RETRO-054) prevents zombie VRAM but does not inject live data into the pipeline.  The bottleneck is FOVER corpus size, not GPU access. Fix: run a dedicated live data collection sprint (>=100 real CoT pairs from production GSM8K runs) before scheduling any model retraining experiments.",
+      "priority": "critical"
+    },
+    {
+      "id": "RETRO-059",
+      "title": "Conductor exclusion manifest not written for fully-modern legacy scripts",
+      "opened_milestone": "2026.04.41",
+      "carry_count": 0,
+      "description": "Exp 547 confirmed that Exps 308, 260, 309, 425, 410 are already fully modern. Their appearance in the slowest-5 is due to conductor re-selection, not missing infrastructure.  Without an exclusion manifest entry, the conductor will continue to select these experiments for infrastructure sweeps in .42+. Fix: add all five to the conductor exclusion manifest before .42 planning.",
+      "priority": "medium"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=2",
+      "action_required": "Verify closure in result files before .42 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q precision benchmark \u2014 10 attempts, still not closed",
+      "carry_count": 10,
+      "action_required": "Root cause is not the live_gpu gate (confirmed working by RETRO-055 fix). Pipeline constraint logic produces zero improvement on GSM8K arithmetic. Requires fundamental constraint redesign before attempt #11."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 100q VeriCoT+VPRM \u2014 8 attempts, still not closed",
+      "carry_count": 8,
+      "action_required": "Same root cause as RETRO-033.  Wilson CI spans zero \u2014 no statistical signal. Requires new verifier training data (real live pairs) before attempt #9."
+    },
+    {
+      "id": "RETRO-049",
+      "title": "NUP Probe v4 contrastive margin loss redesign",
+      "carry_count": ">=1",
+      "action_required": "Confirm closure status via Exp 530 result file inspection"
+    },
+    {
+      "id": "RETRO-056",
+      "title": "JEPA AUC below random \u2014 FOVER corpus too small",
+      "carry_count": 0,
+      "action_required": "Grow FOVER corpus to >=100 diverse pairs before next retrain"
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": 0,
+      "action_required": "Tune SVD rank k or add calibration layer; revert to full-rank default until fixed"
+    },
+    {
+      "id": "RETRO-058",
+      "title": "Synthetic proxy fallback epidemic \u2014 live data pipeline starvation",
+      "carry_count": 0,
+      "action_required": "Dedicated live data collection sprint; >=100 real CoT pairs required"
+    },
+    {
+      "id": "RETRO-059",
+      "title": "Conductor exclusion manifest missing for fully-modern legacy scripts",
+      "carry_count": 0,
+      "action_required": "Add Exps 308, 260, 309, 425, 410 to conductor exclusion manifest"
+    }
+  ],
+  "meta_reflection": {
+    "top_3_bottlenecks": [
+      "Live data pipeline starvation: the FOVER corpus had only 24 pairs at milestone close (down from 57 prior pairs in the .40 corpus \u2014 Exp 542 reported n_prior_pairs=57 but n_total_pairs=24, suggesting a data-path regression). Six of eleven experiments fell back to synthetic proxies. Teardown fix prevents zombie VRAM but does not solve the upstream problem: there are not enough real CoT correctness labels to train any model reliably.",
+      "RETRO-033 and RETRO-038 have now consumed 18 combined experiment attempts across multiple milestones without a single positive improvement delta. The live_gpu gate is confirmed working (RETRO-055 closed). The root cause is the pipeline itself: constraint-based verification produces signed_improvement=0.0 on GSM8K arithmetic for current model outputs. Further live benchmark attempts without first redesigning the constraint logic are wasted wall time \u2014 each attempt costs 2-10 minutes and produces identical results.",
+      "LowRankKAEM wired as default with energy accuracy far outside tolerance (MAD normalized \u2248 0.96-0.99 vs required <=0.05). The speedup is real (4-155x) but the approximation degrades correctness to an unacceptable degree. Setting an inaccurate approximation as the DEFAULT tier before accuracy is verified is a credibility risk: any downstream benchmark that reports energy scores is now reporting degraded values silently."
+    ],
+    "top_3_improvements_for_42": [
+      "Run a dedicated live data collection sprint FIRST in .42 before any model retraining: design an experiment that runs >=100 real GSM8K questions through the live pipeline, records per-step correctness labels, and writes them to the FOVER corpus.  Do not schedule Exp 549-550 until this corpus sprint (budget: 1 experiment, 30-60 min GPU time) is complete.  This unblocks: JEPA retrain (RETRO-056), GRPO EORM (from 3 to >=30 real pairs), internal probe (from AUC=0.5 to measurable signal), and all six blocked experiments that fell back to synthetic proxies this milestone.",
+      "Revert LowRankKAEM tier default to full-rank before .42 begins: write a one-line fix to set tier_kaem_default='full' until energy accuracy is verified within 5%.  Open a separate experiment in .42 to tune SVD rank k (try k=32, 64, 128) and find the knee of the speedup-vs-accuracy curve.  Do not deploy an inaccurate approximation as the default \u2014 it corrupts all downstream energy-based decisions.",
+      "Write the conductor exclusion manifest for Exps 308, 260, 309, 425, 410 as the very first commit of .42, before any research experiment starts. All five are confirmed fully modern (Exp 547).  Without the manifest, the conductor will select them again for infrastructure sweeps in .42, burning ~385 min of recurring overhead for no new information."
+    ],
+    "credibility_verdict": "Teardown fix (RETRO-054) is credible \u2014 atexit registration is a genuine infrastructure improvement.  AutoRefine template distillation (Exp 546) is credible \u2014 2 templates from 67 violations is a real signal.  All other results are either synthetic fallbacks, zero-improvement live runs, or accuracy-failed approximations.  No publishable headline result this milestone. The GRPO AUC jump (0.0->1.0 on 3 pairs) is numerically valid but statistically meaningless.  The JEPA AUC of 0.444 is the most concerning result: it means the current verifier is WORSE than random on live data \u2014 a negative result that must be investigated, not ignored.",
+    "wall_time_42_estimate_minutes": "If .42 follows the same scope as .41 (11 experiments), the milestone wall time will be approximately 40-60 minutes of pure execution time.  However, if the live data collection sprint is scheduled first and requires GPU inference on >=100 questions (at ~24 s/question based on Exp 538 latency = ~40 min GPU time), a single data-collection experiment could account for 40-50% of total .42 wall time. Estimate: 80-120 minutes total if live data collection is included; 40-60 minutes without it (but without it, all model retraining experiments will again fall back to synthetic proxies)."
+  },
+  "honest_verdict": "milestone_partial",
+  "env_autofix": true
+}
