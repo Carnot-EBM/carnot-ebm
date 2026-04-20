@@ -1745,6 +1745,62 @@ Spec: SCENARIO-LEARN-114
 
 ---
 
+### REQ-LEARN-073: JEPA v12 OOD Generalization Validation on Held-Out GSM8K Questions (Exp 607)
+
+The system shall validate JEPA v12's generalization by evaluating it on strictly held-out
+GSM8K questions never seen during training (question indices >= 50, sourced from
+live_pairs_602.json GSM8K 250-349).  The artifact must record:
+- n_ood_pairs (int): number of OOD entries used for evaluation.
+- v12_val_auc (float): 1.0 from Exp 593 (in-distribution).
+- v12_ood_auc (float): AUC on the held-out OOD set.
+- v12_generalized (bool): True iff v12_ood_auc >= 0.65.
+- v12_overfit (bool): True iff v12_ood_auc < 0.55.
+- fr11_generalization_confirmed (bool): True iff v12 generalized OR v13 retrain
+  achieves val_auc >= 0.65.
+- honest_verdict: one of 'v12_generalized', 'v12_overfit_v13_saved', 'jepa_fails_ood'.
+
+**Rationale:** AUC=1.0 on 20 in-distribution pairs is insufficient evidence of generalization.
+FR-11 claims the JEPA relay is validated only when OOD performance is confirmed.
+
+### REQ-LEARN-074: JEPA v13 Corpus-v4 Retrain When v12 Is Overfit (Exp 607 conditional)
+
+If JEPA v12 is overfit (ood_auc < 0.55), the system shall retrain JEPA v13 on the full
+fover_corpus_v4.json corpus using the same CPMI+PROGRS architecture (100 epochs, 80/20
+split).  v13 is saved to results/jepa_predictor_v13.safetensors iff val_auc >= 0.65.
+The artifact must record v13_retrained (bool) and v13_val_auc (float | None).
+
+Spec: REQ-LEARN-073, REQ-LEARN-074,
+      SCENARIO-LEARN-115, SCENARIO-LEARN-116, SCENARIO-LEARN-117
+
+### SCENARIO-LEARN-115: v12 Generalizes When OOD AUC Exceeds Threshold
+
+**Given** a loaded jepa_predictor_v12.safetensors and OOD entries from live_pairs_602.json
+**When** scores are computed for each entry and roc_auc_score is called
+**Then** if ood_auc >= 0.65: v12_generalized=True, fr11_generalization_confirmed=True,
+         honest_verdict='v12_generalized'.
+
+Spec: SCENARIO-LEARN-115
+
+### SCENARIO-LEARN-116: v12 Overfit Triggers v13 Retrain
+
+**Given** v12_ood_auc < 0.55 (overfit detected)
+**When** retrain_jepa_v13() is called with fover_corpus_v4.json entries
+**Then** v13_retrained=True, and if v13_val_auc >= 0.65: fr11_generalization_confirmed=True,
+         honest_verdict='v12_overfit_v13_saved'; else honest_verdict='jepa_fails_ood'.
+
+Spec: SCENARIO-LEARN-116
+
+### SCENARIO-LEARN-117: Blocked When v12 Model File Is Absent
+
+**Given** results/jepa_predictor_v12.safetensors does not exist
+**When** Exp 607 is run
+**Then** the artifact records model_available=False, status='blocked_no_v12_model',
+         and the script exits cleanly without crashing.
+
+Spec: SCENARIO-LEARN-117
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1809,3 +1865,5 @@ Spec: SCENARIO-LEARN-114
 | REQ-LEARN-071 | N/A | Implemented | Python (Exp 597) |
 | REQ-LEARN-072 | N/A | Implemented | Python (test_hisr_weights.py, 100%) |
 | REQ-LEARN-071 | N/A | Implemented | Python (test_mise_calibrator) |
+| REQ-LEARN-073 | N/A | Implemented | Python (test_jepa_ood_validation.py) |
+| REQ-LEARN-074 | N/A | Implemented | Python (test_jepa_ood_validation.py) |
