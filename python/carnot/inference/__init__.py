@@ -131,6 +131,11 @@ from carnot.inference.jepa_pure_loss import (
     PUREMinFormLoss,
     pairs_to_pure_chains,
 )
+from carnot.inference.jepa_cpmi_pairs import (
+    JEPACPMIPair,
+    JEPACPMIPairBuilder,
+    CPMIContrastiveLoss,
+)
 from carnot.inference.verify_and_repair import (
     VerifyRepairResult,
     parse_llm_coloring,
@@ -142,6 +147,9 @@ __all__ = [
     "JEPAChainScore",
     "PUREMinFormLoss",
     "pairs_to_pure_chains",
+    "JEPACPMIPair",
+    "JEPACPMIPairBuilder",
+    "CPMIContrastiveLoss",
     "EnergyGuidedSampler",
     "GuidedDecodingResult",
     "CodeVerificationResult",
