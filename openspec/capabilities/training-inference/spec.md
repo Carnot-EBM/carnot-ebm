@@ -1032,6 +1032,40 @@ Spec: REQ-SAMPLE-032, SCENARIO-SAMPLE-052, SCENARIO-SAMPLE-053, SCENARIO-SAMPLE-
 
 Spec: REQ-SAMPLE-033, SCENARIO-SAMPLE-055, SCENARIO-SAMPLE-056, SCENARIO-SAMPLE-057
 
+### REQ-SAMPLE-034: DWaveNealBackend — D-Wave Ocean SDK Integration and Latency Benchmark (Exp 598)
+
+Validates the D-Wave integration path described in research-hardware-wishlist.md using
+the dwave-ocean-sdk SimulatedAnnealingSampler (local neal) as a CPU-comparable baseline.
+
+- REQ-SAMPLE-034-1: ``DWaveNealBackend.__init__`` SHALL try importing ``dwave.samplers``
+  first, then ``neal``, setting ``self.available=True`` on success and ``False`` on
+  ImportError from both.
+- REQ-SAMPLE-034-2: ``DWaveNealBackend.sample(J, h, n_samples)`` SHALL return a jnp
+  boolean array of shape (n_samples, n_spins).
+- REQ-SAMPLE-034-3: When available=False, ``sample()`` SHALL fall back to
+  ``ParallelIsingSampler`` and return the same shape contract.
+- REQ-SAMPLE-034-4: ``DWaveNealBackend.latency_ms(n_spins)`` SHALL run 10 calls and
+  return mean wall-clock milliseconds as a float > 0.
+- REQ-SAMPLE-034-5: ``DWaveNealBackend`` SHALL be exported from ``carnot.samplers``.
+
+Spec: REQ-SAMPLE-034, SCENARIO-SAMPLE-058, SCENARIO-SAMPLE-059
+
+### SCENARIO-SAMPLE-058: D-Wave SDK Present — DWaveNealBackend Initialises and Returns Correct Shape
+
+**Given** dwave.samplers or neal is importable
+**When** DWaveNealBackend() is constructed and sample(J, h, n_samples=10) is called
+**Then** backend.available == True and result.shape == (10, n_spins).
+
+Spec: SCENARIO-SAMPLE-058
+
+### SCENARIO-SAMPLE-059: D-Wave SDK Absent — DWaveNealBackend Falls Back to CPU
+
+**Given** neither dwave.samplers nor neal is importable
+**When** DWaveNealBackend() is constructed and sample(J, h, n_samples=10) is called
+**Then** backend.available == False and result.shape == (10, n_spins) via CPU fallback.
+
+Spec: SCENARIO-SAMPLE-059
+
 ### SCENARIO-SAMPLE-055: Exp 584 Blocked — Immediate Blocked Artifact
 
 **Given** results/experiment_584_kv260_synthesis.json has bitfile_built=False (or is absent)
@@ -1159,6 +1193,7 @@ human-readable string of the full energy function, e.g.:
 | REQ-SAMPLE-031 | N/A | Implemented | Python (test_experiment_568_kv260_bringup_v2.py, 100% targeted) |
 | REQ-SAMPLE-032 | N/A | Implemented | Python (test_experiment_584_kv260_synthesis.py, 100% targeted) |
 | REQ-SAMPLE-033 | N/A | Implemented | Python (test_experiment_585_kv260_live_benchmark_v3.py, 100% targeted) |
+| REQ-SAMPLE-034 | N/A | Implemented | Python (test_dwave_backend.py, 100%) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-MODEL-020 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-MODEL-021 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |

@@ -461,6 +461,10 @@ from carnot.pipeline.mise_calibrator import (  # noqa: E402
     MISECalibrator,
     MISETriple,
 )
+from carnot.pipeline.hisr_weights import (  # noqa: E402
+    HISRViolationWeight,
+    HISRWeighter,
+)
 
 __all__ = [
     "AgentStep",
@@ -772,4 +776,6 @@ __all__ = [
     "OTVVerifier",
     "MISECalibrator",
     "MISETriple",
+    "HISRViolationWeight",
+    "HISRWeighter",
 ]
