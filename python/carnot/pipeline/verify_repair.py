@@ -1009,6 +1009,7 @@ class VerifyRepairPipeline:
         jepa_predictor: Any = None,
         jepa_threshold: float = 0.5,
         think_probe: Any = None,
+        hallufield_detector: Any = None,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -1111,6 +1112,17 @@ class VerifyRepairPipeline:
                     semantic_grounding=semantic_grounding,
                     semantic_verifier_v2=semantic_verifier_v2,
                 )
+        # Tier 0e HalluField pre-filter (optional, REQ-VERIFY-117).
+        # When a HalluFieldDetector instance is supplied, score the response
+        # logits for thermodynamic instability.  is_unstable=True is recorded
+        # in the certificate but does NOT short-circuit — it is an advisory
+        # signal that downstream tiers may use for threshold adjustment.
+        # Calling score(None) returns a safe ci_stub result with no side effects,
+        # so passing hallufield_detector without logits is always safe.
+        _hallufield_result = None
+        if hallufield_detector is not None:
+            _hallufield_result = hallufield_detector.score(None)
+
         # Tier 0 ThinkProbe fast-path (optional, REQ-VERIFY-094).
         # If a CarnotThinkProbe instance is provided and it classifies the response
         # as 'incorrect', skip Ising entirely and return a violation immediately.

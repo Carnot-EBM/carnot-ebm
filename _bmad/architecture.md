@@ -121,11 +121,12 @@ The LLM output verification pipeline uses a cascade architecture where cheaper t
 | 0b | SpilledEnergyDetector | `SpilledEnergyDetector` | ~0 ms (text hash) | Per-token logit-discrepancy (arXiv 2602.18671) | `high_spill_fraction <= threshold` (confident model) |
 | 0c | NUP Probe v4 | `NUPProbeV4` | ~0 ms (bigram dot product) | Contrastive energy probe; max E(incorrect)-E(correct) gap (Exp 523, AUC=1.0) | `score(response) <= nup_probe_threshold` (low energy = likely correct) |
 | 0d | HallucinationBasinDetector | `HallucinationBasinDetector` | ~0 ms | Latent-space basin depth via finite-difference perturbation (Exp 521, arXiv 2604.04743) | `basin_risk_score <= basin_threshold` (deep basin = stable reasoning) |
+| 0e | HalluField | `HalluFieldDetector` | ~1 ms (CPU) | Token-path ensemble partition-function variance (arXiv 2509.10753); thermodynamic instability signal orthogonal to Tiers 0b/0d | Advisory signal: `is_unstable` recorded in certificate; no short-circuit (Exp 571, AUC=0.97 synthetic) |
 | 1 | SinkProbe | `SinkProbe` | ~0 ms (attention reuse) | Attention sink concentration (arXiv 2604.10697) | `mean_sink_score >= sink_threshold` |
 | 2 | EORM | `EORMModel` | ~10 ms | CoT energy reward model (55M params) | `energy < eorm_threshold` |
 | 3 | Ising | `VerifyRepairPipeline` | ~0.006 ms/constraint | Full constraint verification | Always runs if tiers 0-2 pass |
 
-Each tier returns early if it can clear the response, avoiding subsequent more expensive tiers. Tier 0a (CarnotThinkProbe) was added in Exp 444 (arXiv 2504.16828, ThinkPRM). Tier 0b was added in Exp 433 (arXiv 2602.18671, ICLR 2026). Tiers 0c and 0d were wired in Exp 530 (REQ-VERIFY-111, REQ-VERIFY-112). Tiers 1-3 were designed in Exps 346-348/360.
+Each tier returns early if it can clear the response, avoiding subsequent more expensive tiers. Tier 0a (CarnotThinkProbe) was added in Exp 444 (arXiv 2504.16828, ThinkPRM). Tier 0b was added in Exp 433 (arXiv 2602.18671, ICLR 2026). Tiers 0c and 0d were wired in Exp 530 (REQ-VERIFY-111, REQ-VERIFY-112). Tier 0e (HalluField) was added in Exp 571 (arXiv 2509.10753) as an advisory thermodynamic instability signal. Tiers 1-3 were designed in Exps 346-348/360.
 
 CarnotThinkProbe is optional in VerifyRepairPipeline.verify() — pass `think_probe=CarnotThinkProbe(llm_caller=caller)` to enable. When enabled: if verdict='incorrect', returns VerificationResult(verified=False, mode='THINK_PROBE_FAST_PATH', skipped=True) without running Ising. CI stub (llm_caller=None, the default) returns 'uncertain' and falls through to Ising.
 

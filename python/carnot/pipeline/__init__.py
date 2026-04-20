@@ -424,6 +424,10 @@ from carnot.pipeline.latent_cot_calibrator import (  # noqa: E402
     LatentCoTCalibrationResult,
     LatentCoTEBMCalibrator,
 )
+from carnot.pipeline.hallufield_detector import (  # noqa: E402
+    HalluFieldDetector,
+    HalluFieldResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -714,4 +718,6 @@ __all__ = [
     "merge_fover_sources",
     "LatentCoTCalibrationResult",
     "LatentCoTEBMCalibrator",
+    "HalluFieldDetector",
+    "HalluFieldResult",
 ]
