@@ -428,6 +428,11 @@ from carnot.pipeline.hallufield_detector import (  # noqa: E402
     HalluFieldDetector,
     HalluFieldResult,
 )
+from carnot.pipeline.pra_eorm_beam import (  # noqa: E402
+    PRABeamCandidate,
+    PRABeamResult,
+    PRAEBMBeamSearch,
+)
 
 __all__ = [
     "AgentStep",
@@ -720,4 +725,7 @@ __all__ = [
     "LatentCoTEBMCalibrator",
     "HalluFieldDetector",
     "HalluFieldResult",
+    "PRABeamCandidate",
+    "PRABeamResult",
+    "PRAEBMBeamSearch",
 ]

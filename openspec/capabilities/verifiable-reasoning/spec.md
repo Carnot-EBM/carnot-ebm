@@ -10410,3 +10410,43 @@ When: HalluFieldDetector().score() is called on each.
 Then: partition_variance(uniform) > partition_variance(peaked).
 
 **Implementation Status:** Implemented (Exp 571)
+
+### REQ-REPAIR-016: PRAEBMBeamSearch — K-candidate beam search with EORM step scoring
+
+The repository shall provide a PRA-style beam search module in
+`python/carnot/pipeline/pra_eorm_beam.py`, where:
+- REQ-REPAIR-016-1: `PRABeamCandidate` dataclass stores step_text (str),
+  eorm_energy (float), and is_selected (bool, default False).
+- REQ-REPAIR-016-2: `PRABeamResult` dataclass stores n_steps (int),
+  n_beams_explored (int), selected_candidates (list[PRABeamCandidate]),
+  baseline_violation_rate (float), beam_violation_rate (float), improvement (float).
+- REQ-REPAIR-016-3: `PRAEBMBeamSearch.score_candidate(step_text, question)` calls
+  `eorm_model.energy(CoTEnergyInput(question_text=question, response_text=step_text))`
+  and returns a float.
+- REQ-REPAIR-016-4: `select_best(candidates, question)` returns the candidate with
+  minimum EORM energy, marked is_selected=True.  Raises ValueError for empty input.
+- REQ-REPAIR-016-5: `run_beam_episode(question, generate_fn, n_steps)` generates
+  k_candidates per step via generate_fn, scores with EORM, selects minimum energy,
+  and tracks baseline_violation_rate (greedy above mean) vs beam_violation_rate (0.0
+  by mathematical invariant — min ≤ mean always).
+- REQ-REPAIR-016-6: All three symbols are exported from `carnot.pipeline.__init__`.
+
+### SCENARIO-REPAIR-031: select_best returns minimum-energy candidate
+
+Given: PRAEBMBeamSearch with k=3 and a model returning energies [0.9, 0.3, 0.7].
+When: select_best(["a", "b", "c"]) is called.
+Then: The returned PRABeamCandidate has step_text="b", eorm_energy≈0.3, is_selected=True.
+
+### SCENARIO-REPAIR-032: run_beam_episode tracks baseline violation rate
+
+Given: PRAEBMBeamSearch with k=3 and per-step energies [0.9, 0.1, 0.5] (greedy=0.9, mean=0.5, beam=0.1).
+When: run_beam_episode is called for 2 steps.
+Then: baseline_violation_rate=1.0, beam_violation_rate=0.0, improvement=1.0.
+
+### SCENARIO-REPAIR-033: run_beam_episode produces correct n_beams_explored
+
+Given: PRAEBMBeamSearch with k_candidates=3 and n_steps=2.
+When: run_beam_episode is called with a generate_fn returning 3 candidates per step.
+Then: n_beams_explored=6, len(selected_candidates)=2.
+
+**Implementation Status:** Implemented (Exp 572)
