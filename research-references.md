@@ -4,6 +4,15 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-20 arxiv Scan (Milestone 2026.04.42 Planning)
+
+### Energy-per-Token in LLM Inference — Hardware-Level Verification Metric
+- **Paper:** arXiv 2603.20224 (March 2026)
+- **What:** Advocates using hardware-measured energy-per-token (joules/token) as the primary efficiency metric for LLM inference, superseding throughput or FLOP counts. Shows that token-level energy varies significantly across generation steps — early tokens (attending to full context) cost 3-8x more than later tokens. Proposes energy-aware routing: route short-context queries to smaller models, long-context queries to larger ones.
+- **Relevance to Carnot:** Carnot's per-step EORM energy scores are learned proxies for reasoning quality, not hardware energy. But the two correlate: hardware energy spikes during "hard" reasoning steps (long attention, large hidden state activations), which are also where Carnot's EORM energy is high. This opens a hardware-level validation path: compare Carnot's EORM energy scores against hardware power traces on the same generation. If they correlate, hardware energy becomes a free calibration signal for EORM training — no labeling needed, just a power meter.
+- **Concrete experiment:** Record hardware power trace (via RAPL or nvml) during 25 live GSM8K generations. Compute correlation between Carnot EORM energy at each 32-token boundary and measured hardware watt-per-token. If r > 0.5, use hardware energy as EORM training signal. CPU-only (RAPL available on AMD Ryzen AI 9). Deliverable: correlation_coefficient + hardware_vs_eorm_scatter.
+- **When to incorporate:** Milestone 2026.04.43+ — requires stable EORM on real data first (Exp 556). File as hardware calibration experiment.
+
 ## 2026-04-19 arxiv Scan (Milestone 2026.04.41 Planning)
 
 ### EBM Calibration of Latent Chain-of-Thought — Energy-Guided Implicit Reasoning

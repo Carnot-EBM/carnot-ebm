@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-20 Milestone 2026.04.42 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-20T02:32:58Z | 2026-04-20T02:48:56Z | Planned milestone 2026.04.42: read 11 project files + .41 retro JSON + Exp 538 result; arxiv research subagent (1 new paper: 2603.20224); identified 3 biggest gaps (RETRO-058 synthetic epidemic, RETRO-033 no-improvement root cause, RETRO-056 JEPA anti-correlated); wrote research-roadmap-v42.md (14 experiments 549-562, 6 phases); wrote research-roadmap-next.yaml (14 complete prompts); updated research-references.md, changelog.md, status.md | ~85k |
+
+---
+
 ## Session: 2026-04-16 Exp 413 EnvironmentAutoFix + RETRO-022
 
 ### Turn Log
