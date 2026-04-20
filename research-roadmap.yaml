@@ -1,543 +1,658 @@
-milestone: 2026.04.41
-milestone_title: Close the Nine-Milestone Gap — First Live 25q Positive, Teardown Fix, GRPO Self-Learning
-milestone_doc: openspec/change-proposals/research-roadmap-v41.md
+milestone: 2026.04.42
+milestone_title: Break the Synthetic Barrier — Live Data Sprint, Root Cause Diagnosed, JEPA Recovery
+milestone_doc: openspec/change-proposals/research-roadmap-v42.md
 tasks:
 
-- id: exp537-teardown-fix-zombie-kill
-  milestone: 2026.04.41
-  deliverable: results/experiment_537_teardown_fix.json
-  title: 'Exp 537: ExperimentTemplate.teardown() + GPU Zombie Kill — RETRO-054 closure'
+- id: exp549-exclusion-manifest-zombie-kill-fix
+  milestone: 2026.04.42
+  deliverable: results/experiment_549_exclusion_manifest.json
+  title: 'Exp 549: Conductor Exclusion Manifest + nvidia-smi Zombie Kill Fix — RETRO-059'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-054 has\
-    \ carried for FIVE consecutive milestones (.36-.40) without implementation. The\
-    \ .40 retro found 47,653 MB of zombie VRAM at close (worst ever). PIDs 430009\
-    \ (18,678 MB GPU 0) and 430012 (4,894 MB GPU 0 + 24,072 MB GPU 1) must be killed\
-    \ immediately. ExperimentTemplate.teardown() with atexit registration is the highest-leverage\
-    \ single infrastructure fix: without it, GPU state degrades monotonically across\
-    \ every milestone.\n\nEXISTING CODE TO READ FIRST:\n- scripts/experiment_template.py\
-    \ — ExperimentTemplate (add teardown() here)\n- python/carnot/pipeline/env_autofix.py\
-    \ — apply_env_autofix() (call at top of experiment)\n- python/carnot/pipeline/experiment_watchdog.py\
-    \ — ExperimentTimeoutWatchdog\n- results/experiment_536_retro_2026_04_40.json\
-    \ — .40 retro (see gpu_zombie_pids, new_retro_items, RETRO-054)\n- ops/known-issues.md\
-    \ — RETRO-054, RETRO-055\n- scripts/experiment_template.py — ExperimentTemplate.setup_gpu()\n\
-    \nTASK: Implement ExperimentTemplate.teardown() and kill .40 zombie PIDs.\n1.\
-    \ Read CLAUDE.md spec-first workflow.\n2. Add REQ-INFRA-060 (ExperimentTemplate.teardown()\
-    \ clears GPU VRAM and registers via atexit), REQ-INFRA-061 (startup zombie kill\
-    \ via pynvml — any PID holding >5% VRAM at 0% utilization is killed before experiment\
-    \ begins), SCENARIO-INFRA-070/071/072 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
-    3. In scripts/experiment_template.py:\n   a. Add import atexit, gc at top.\n\
-    \   b. Add teardown(self, clear_gpu: bool = True) method:\n      - Call torch.cuda.empty_cache()\
-    \ if torch.cuda.is_available() and clear_gpu.\n      - Call gc.collect().\n  \
-    \    - Log 'ExperimentTemplate.teardown() called for exp NNN' at INFO level.\n\
-    \   c. In __init__(), add: atexit.register(self.teardown) after existing init\
-    \ logic.\n   d. Add kill_gpu_zombies(vram_threshold_mb: int = 1000, util_threshold_pct:\
-    \ float = 5.0) classmethod:\n      - Use pynvml to enumerate processes on each\
-    \ GPU.\n      - For each process: if vram_mb > vram_threshold_mb AND\
-    \ util < util_threshold_pct, kill it via os.kill(pid, signal.SIGTERM).\n    \
-    \  - Log killed PIDs and their VRAM at WARNING level.\n      - Return dict: {'killed_pids':\
-    \ [...], 'freed_mb': int}.\n      - Graceful: pynvml import failure → return\
-    \ {'killed_pids': [], 'freed_mb': 0, 'error': 'pynvml_unavailable'}.\n   e.\
-    \ Call ExperimentTemplate.kill_gpu_zombies() as the FIRST action in setup() before\
-    \ any model loading.\n4. Write tests/python/test_experiment_teardown.py:\n   a.\
-    \ Test teardown() calls gc.collect() (patch gc.collect, assert called).\n   b.\
-    \ Test teardown() calls torch.cuda.empty_cache() when GPU available (patch torch.cuda).\n\
-    \   c. Test kill_gpu_zombies() returns {'killed_pids': [], 'freed_mb': 0, 'error':\
-    \ 'pynvml_unavailable'} when pynvml not importable.\n   d. Test __init__ registers\
-    \ teardown via atexit (patch atexit.register, assert called).\n   e. Ensure 100%\
-    \ coverage on teardown() and kill_gpu_zombies().\n5. Write scripts/experiment_537_teardown_fix.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(537, timeout_minutes=20).\n\
-    \   c. ExperimentTemplate(537, 'ExperimentTemplate Teardown Fix',\n      'results/experiment_537_teardown_fix.json',\
-    \ requires_gpu=False).\n   d. Call ExperimentTemplate.kill_gpu_zombies() explicitly\
-    \ and record result.\n   e. Call tmpl.teardown() manually and verify it completes\
-    \ without error.\n   f. Build artifact: schema='carnot.teardown_fix.v1'\n    \
-    \  teardown_implemented=True\n      atexit_registered=True\n      zombie_kill_result={...}\
-    \ (from kill_gpu_zombies)\n      retro_054_resolved=True\n      honest_verdict='retro_054_closed'\n\
-    \   g. Call tmpl.assert_deliverable_written() as FINAL LINE.\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: ops/conductor-log.md (RETRO-054\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-059 —\
+    \ The conductor has no mechanism to skip already-modern experiments. Exps 308,\
+    \ 260, 309, 425, 410 appeared in the slowest-5 for FIVE consecutive milestones\
+    \ (.37-.41) despite being fully modern (Exp 547 confirmed batching_added=[] —\
+    \ they are already ExperimentTemplate + watchdog + teardown compliant). Without\
+    \ an exclusion manifest, the conductor will continue to select them. ALSO: Exp\
+    \ 537's kill_gpu_zombies() failed silently (killed_pids=[], error='pynvml_unavailable')\
+    \ because pynvml is not installed. The zombie kill must use nvidia-smi subprocess\
+    \ fallback. .41 close GPU zombie PIDs: 527256, 527259, 529495.\n\nEXISTING CODE\
+    \ TO READ FIRST:\n- scripts/experiment_template.py — ExperimentTemplate (add\
+    \ check_exclusion_manifest() and fix kill_gpu_zombies())\n- results/experiment_548_retro_2026_04_41.json\
+    \ — .41 retro (new_retro_items RETRO-059, gpu_zombie_pids)\n- ops/known-issues.md\
+    \ — RETRO-059, RETRO-055\n- scripts/experiment_547_legacy_modernization.py —\
+    \ shows that batching_added=[] for all 5 scripts\n\nTASK: Implement exclusion\
+    \ manifest and fix zombie kill without pynvml.\n1. Read CLAUDE.md spec-first workflow.\n\
+    2. Add REQ-INFRA-062 (ExperimentTemplate.check_exclusion_manifest() exits immediately\
+    \ with excluded artifact if exp ID in manifest), REQ-INFRA-063 (kill_gpu_zombies()\
+    \ uses nvidia-smi subprocess fallback when pynvml unavailable), SCENARIO-INFRA-073/074/075\
+    \ to openspec/capabilities/verifiable-reasoning/spec.md.\n3. Create scripts/conductor_exclusion_manifest.json:\n\
+    \   {\"version\": 1, \"excluded_experiments\": [308, 260, 309, 425, 410],\n \
+    \   \"reason\": \"Fully modern (ExperimentTemplate+watchdog+teardown+BatchedInferenceRunner).\
+    \ Exp 547 confirmed batching_added=[] — no further modernization needed.\",\n\
+    \   \"added_milestone\": \"2026.04.42\"}\n4. In scripts/experiment_template.py,\
+    \ add check_exclusion_manifest(self) classmethod:\n   a. Load scripts/conductor_exclusion_manifest.json\
+    \ (graceful: FileNotFoundError → return False).\n   b. If self.experiment_id in\
+    \ excluded_experiments: write artifact with schema='carnot.excluded.v1',\n    \
+    \  honest_verdict='excluded_already_modern', excluded=True, reason from manifest.\n\
+    \   c. Call tmpl.assert_deliverable_written(); sys.exit(0).\n   d. Return False\
+    \ if not excluded.\n5. In scripts/experiment_template.py, fix kill_gpu_zombies():\n\
+    \   a. Primary path: try pynvml (existing logic).\n   b. Fallback: subprocess.run(['nvidia-smi',\
+    \ '--query-compute-apps=pid,used_memory', '--format=csv,noheader,nounits'], capture_output=True,\
+    \ text=True).\n   c. Parse CSV output (each line: 'pid, vram_mb').\n   d. For\
+    \ each process with vram_mb > vram_threshold_mb: subprocess.run(['nvidia-smi',\
+    \ '--query-compute-apps=pid,gpu_util', '--format=csv,noheader,nounits']) to get\
+    \ utilization.\n   e. If util < util_threshold_pct: os.kill(pid, signal.SIGTERM).\n\
+    \   f. Return dict: {'killed_pids': [...], 'freed_mb': int, 'method': 'nvidia_smi_fallback'}.\n\
+    \   g. If nvidia-smi also unavailable: return {'killed_pids': [], 'freed_mb':\
+    \ 0, 'error': 'no_gpu_tooling'}.\n6. Write scripts/experiment_549_exclusion_manifest.py:\n\
+    \   a. import subprocess; subprocess.run(['kill', '-9', '527256', '527259', '529495'],\
+    \ capture_output=True) FIRST.\n   b. apply_env_autofix() SECOND.\n   c. ExperimentTemplate.kill_gpu_zombies()\
+    \ (tests nvidia-smi fallback).\n   d. ExperimentTimeoutWatchdog(549, timeout_minutes=20).\n\
+    \   e. ExperimentTemplate(549, 'Exclusion Manifest + Zombie Kill Fix',\n      'results/experiment_549_exclusion_manifest.json',\
+    \ requires_gpu=False).\n   f. Load and verify conductor_exclusion_manifest.json.\n\
+    \   g. Test check_exclusion_manifest() with a mock experiment ID not in manifest\
+    \ (returns False) and one that IS in manifest (writes excluded artifact).\n   h.\
+    \ Build artifact: schema='carnot.exclusion_manifest.v1',\n      exclusion_manifest_created=True,\n\
+    \      excluded_experiments=[308, 260, 309, 425, 410],\n      zombie_kill_result={...}\
+    \ (from kill_gpu_zombies),\n      retro_059_resolved=True,\n      honest_verdict='retro_059_closed'.\n\
+    \   i. tmpl.assert_deliverable_written() as FINAL LINE.\n7. Write tests/python/test_exclusion_manifest.py:\n\
+    \   a. Test check_exclusion_manifest() returns False when manifest file missing.\n\
+    \   b. Test check_exclusion_manifest() returns False when exp_id not in manifest.\n\
+    \   c. Test kill_gpu_zombies() nvidia-smi fallback returns 'method'='nvidia_smi_fallback'.\n\
+    \   d. Test kill_gpu_zombies() returns error='no_gpu_tooling' when nvidia-smi\
+    \ not found.\n   e. Ensure 100% coverage on new functions.\n8. Run: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\n9. Reconcile: ops/conductor-log.md (RETRO-059\
     \ CLOSED), ops/known-issues.md, ops/status.md, ops/changelog.md, _bmad/traceability.md.\n\
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
     \ modify scripts/research_conductor.py.\n"
 
-- id: exp538-live-25q-precision-v9
-  milestone: 2026.04.41
-  deliverable: results/experiment_538_live_25q_precision_v9.json
-  title: 'Exp 538: Live 25q Precision v9 — RETRO-033 Attempt #10, RETRO-055 resolution'
+- id: exp550-batchedinferencerunner-real-migration
+  milestone: 2026.04.42
+  deliverable: results/experiment_550_batching_real_migration.json
+  title: 'Exp 550: BatchedInferenceRunner Real Migration — Exp 547b (actual batching)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-033 has\
-    \ missed for NINE consecutive milestones. RETRO-053 is CLOSED (env_autofix overrides\
-    \ '0'). RETRO-055 is the new blocker: Exp 527 ran live GPU inference but timed\
-    \ out at 45 min because 100 questions × ~27s/question = ~45 min. Fix: reduce to\
-    \ 25 questions with 90-min budget. This is the 10th attempt. FIRST ACTION: kill\
-    \ zombie PIDs before any import: import subprocess; subprocess.run(['kill', '-9',\
-    \ '430009', '430012'], capture_output=True). Call ExperimentTemplate.kill_gpu_zombies()\
-    \ immediately after.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/env_autofix.py\
-    \ — apply_env_autofix() (call FIRST)\n- python/carnot/pipeline/jit_vram_check.py\
-    \ — JITVRAMCheck\n- python/carnot/pipeline/gemma4_quantized_loader.py — Gemma4QuantizedLoader\n\
-    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor\n- python/carnot/pipeline/live_precision_result.py\
-    \ — LivePrecisionResult\n- python/carnot/extraction/vericot_step_validator.py\
-    \ — VeriCoTStepValidator\n- python/carnot/extraction/vprm_verifier.py — VPRMArithmeticVerifier\n\
-    - python/carnot/pipeline/deliverable_guard.py — DeliverableGuard\n- python/carnot/pipeline/fover_annotator.py\
-    \ — FOVERAnnotator\n- scripts/experiment_527_live_100q_precision_v8.py — prior\
-    \ attempt (read for structure; note it timed out at 45 min)\n- results/experiment_527_live_100q_precision_v8.json\
-    \ — v8 result (timed_out)\n- results/experiment_536_retro_2026_04_40.json —\
-    \ .40 retro (RETRO-055 details)\n- scripts/experiment_template.py — ExperimentTemplate\
-    \ (with teardown from Exp 537)\n- ops/known-issues.md — RETRO-033, RETRO-055\n\
-    \nTASK: Run live 25-question precision benchmark. RETRO-033 attempt #10.\n1. Read\
-    \ CLAUDE.md spec-first workflow.\n2. Add REQ-BENCH-014 (live 25q precision probe\
-    \ with 90-min budget), REQ-BENCH-015 (per-question latency must be recorded),\
-    \ SCENARIO-BENCH-033/034/035 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
-    3. Write scripts/experiment_538_live_25q_precision_v9.py:\n   a. FIRST: import\
-    \ subprocess; subprocess.run(['kill', '-9', '430009', '430012'], capture_output=True)\n\
-    \   b. apply_env_autofix() SECOND.\n   c. ExperimentTemplate.kill_gpu_zombies().\n\
-    \   d. ExperimentTimeoutWatchdog(538, timeout_minutes=90).\n   e. ExperimentTemplate(538,\
-    \ 'Live 25q Precision v9',\n      'results/experiment_538_live_25q_precision_v9.json',\
-    \ requires_gpu=True).\n   f. DeliverableGuard('results/experiment_538_live_25q_precision_v9.json').\n\
-    \   g. CARNOT_FORCE_LIVE gate (LiveGPUGate.require_live_or_blocked()).\n   h.\
-    \ Load 25 GSM8K questions (seed=42, first 25 of validation split).\n   i. JITVRAMCheck\
-    \ on cuda:0 (Gemma4-INT4, ~10 GiB) and cuda:1 (Qwen3.5-0.8B, ~1.5 GiB).\n  \
-    \ j. For each model, for each question:\n      - Record start_time.\n      -\
-    \ Generate response (live GPU).\n      - Record per_question_latency_s = time.time()\
-    \ - start_time.\n      - Run VeriCoTStepValidator + VPRMArithmeticVerifier on\
-    \ response.\n      - If violations detected: attempt repair, re-verify.\n    \
-    \  - Record baseline_correct, pipeline_correct.\n   k. After 25 questions per\
-    \ model: compute mean_latency_s, signed_improvement, honest_verdict.\n   l. Run\
-    \ FOVERAnnotator on collected CoT responses; write CoT pairs to\n      results/exp538_cot_pairs.json\
-    \ (for JEPA retrain in Exp 543).\n   m. Build artifact: schema='carnot.live_precision.v3'\n\
-    \      n_questions=25\n      mean_latency_s={float}\n      baseline_accuracy={float}\n\
-    \      pipeline_accuracy={float}\n      signed_improvement={float}\n      retro_033_closed={True\
-    \ if signed_improvement > 0 else False}\n      retro_055_resolved=True\n     \
-    \ honest_verdict='first_positive_25q' / 'live_no_improvement_25q' / 'gpu_required'\n\
-    \   n. tmpl.assert_deliverable_written() as FINAL LINE.\n4. Write tests/python/test_experiment_538_live_25q.py:\n\
-    \   a. Test GPU-required fast-path (CARNOT_FORCE_LIVE not set → honest_verdict='gpu_required').\n\
-    \   b. Test signed_improvement calculation.\n   c. Test per_question_latency_s\
-    \ is recorded.\n   d. Test FOVERAnnotator integration.\n   e. 100% coverage on\
-    \ new functions only.\n5. Run LIVE (CARNOT_FORCE_LIVE=1): JAX_PLATFORMS=cpu\
-    \ .venv/bin/python scripts/experiment_538_live_25q_precision_v9.py\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: ops/conductor-log.md (RETRO-033\
-    \ update, RETRO-055 CLOSED if completed), ops/known-issues.md, ops/status.md,\
-    \ ops/changelog.md, _bmad/traceability.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 547 (Legacy\
+    \ Modernization Sprint) delivered 0.2% wall-time savings vs the 8.5% projection.\
+    \ The root cause: batching_added=[] for ALL FIVE target scripts (308, 260, 309,\
+    \ 425, 410). The sprint applied ExperimentTemplate/watchdog/teardown tooling but\
+    \ skipped BatchedInferenceRunner, which is the actual inference-bottleneck fix.\
+    \ These scripts still run sequential inference loops, which is why they remain\
+    \ in the slowest-5 for the sixth consecutive milestone. This experiment actually\
+    \ wires BatchedInferenceRunner into the inner inference loops.\n\nEXISTING CODE\
+    \ TO READ FIRST:\n- scripts/experiment_template.py — BatchedInferenceRunner (import\
+    \ and usage pattern)\n- scripts/experiment_308_*.py — target script #1 (read\
+    \ to find the sequential inference loop)\n- scripts/experiment_260_*.py — target\
+    \ script #2\n- scripts/experiment_309_*.py — target script #3\n- scripts/experiment_425_conductor_timeout.py\
+    \ — target script #4\n- scripts/experiment_410_*.py — target script #5\n- results/experiment_547_legacy_modernization.json\
+    \ — Exp 547 result (confirms batching_added=[])\n- scripts/conductor_exclusion_manifest.json\
+    \ — verify Exps 308/260/309/425/410 are already excluded (from Exp 549)\n\nTASK:\
+    \ Wire BatchedInferenceRunner into the 5 slowest scripts.\n1. Read CLAUDE.md spec-first\
+    \ workflow.\n2. import subprocess; subprocess.run(['kill', '-9', '527256', '527259',\
+    \ '529495'], capture_output=True) FIRST.\n3. apply_env_autofix() SECOND.\n4.\
+    \ ExperimentTemplate.kill_gpu_zombies() THIRD.\n5. For each of the 5 target scripts:\n\
+    \   a. Read the script; locate the sequential inference loop (for q in questions:\
+    \ result = infer(q)).\n   b. Replace with BatchedInferenceRunner(infer_fn, batch_size=8);\
+    \   results = bir.run_batch(questions).\n   c. Add bir.batch_log to the result\
+    \ artifact.\n   d. Keep all existing spec references and test coverage intact.\n\
+    6. Write scripts/experiment_550_batching_real_migration.py:\n   a. ExperimentTimeoutWatchdog(550,\
+    \ timeout_minutes=30).\n   b. ExperimentTemplate(550, 'BatchedInferenceRunner\
+    \ Real Migration',\n      'results/experiment_550_batching_real_migration.json',\
+    \ requires_gpu=False).\n   c. For each target script: verify BatchedInferenceRunner\
+    \ is now present in the file (grep/ast check).\n   d. Build artifact: schema='carnot.batching_migration.v2',\n\
+    \      scripts_migrated=['experiment_308', 'experiment_260', 'experiment_309',\n\
+    \      'experiment_425', 'experiment_410'],\n      batching_added=['experiment_308',\
+    \ 'experiment_260', 'experiment_309', 'experiment_425', 'experiment_410'],\n \
+    \     estimated_savings_pct=8.5,\n      honest_verdict='batching_migration_complete'.\n\
+    \   e. tmpl.assert_deliverable_written() as FINAL LINE.\n7. Add REQ-INFRA-064\
+    \ (all legacy slowest-5 scripts use BatchedInferenceRunner) + SCENARIO-INFRA-076/077\
+    \ to spec.\n8. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n9. Reconcile\
+    \ ops docs.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT\
+    \ push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp539-live-100q-vericot-v8
-  milestone: 2026.04.41
-  deliverable: results/experiment_539_live_100q_vericot_v8.json
-  title: 'Exp 539: Live 100q VeriCoT+VPRM v8 — RETRO-038 Attempt #8'
+- id: exp551-live-50q-data-collection-a
+  milestone: 2026.04.42
+  deliverable: results/experiment_551_live_data_a.json
+  title: 'Exp 551: Live 50q Data Collection A — GSM8K indices 0-49, no repair'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-038 (live\
-    \ 200q VeriCoT+VPRM statistically significant result) has missed for 7 consecutive\
-    \ milestones. This experiment runs 100q (not 200q) to fit within the 90-min budget\
-    \ confirmed by Exp 538. Gate on Exp 538: if mean_latency_s > 40, reduce to 50q.\
-    \ FIRST ACTION: kill zombie PIDs: import subprocess; subprocess.run(['kill', '-9',\
-    \ '430009', '430012'], capture_output=True). THEN call ExperimentTemplate.kill_gpu_zombies().\n\
-    \nEXISTING CODE TO READ FIRST:\n- results/experiment_538_live_25q_precision_v9.json\
-    \ — Exp 538 result (read mean_latency_s to set n_questions dynamically)\n- python/carnot/extraction/vericot_step_validator.py\
-    \ — VeriCoTStepValidator\n- python/carnot/extraction/vprm_verifier.py — VPRMArithmeticVerifier\n\
-    - python/carnot/extraction/crane_extractor.py — CRANEExtractor\n- python/carnot/pipeline/long_run_executor.py\
-    \ — LongRunBenchmarkExecutor\n- python/carnot/pipeline/live_precision_result.py\
-    \ — LivePrecisionResult\n- scripts/experiment_528_live_200q_vericot_v7.py —\
-    \ prior attempt (read for structure)\n- results/experiment_528_live_200q_vericot_v7.json\
-    \ — v7 result (gpu_required)\n- ops/known-issues.md — RETRO-038\n\nTASK: Run\
-    \ live 100q (or 50q if latency > 40s) VeriCoT+VPRM+CRANE benchmark.\n1. Read\
-    \ CLAUDE.md spec-first workflow.\n2. Add REQ-BENCH-016 (live 100q VeriCoT benchmark\
-    \ with Wilson CI), SCENARIO-BENCH-036/037 to spec.\n3. Write scripts/experiment_539_live_100q_vericot_v8.py:\n\
-    \   a. FIRST: kill PIDs 430009/430012.\n   b. apply_env_autofix().\n   c. ExperimentTemplate.kill_gpu_zombies().\n\
-    \   d. ExperimentTimeoutWatchdog(539, timeout_minutes=90).\n   e. Load Exp 538\
-    \ result to get mean_latency_s; compute n_questions = min(100, int(80 * 60 /\
-    \ mean_latency_s)) to fit within 80 min of inference.\n   f. LiveGPUGate.require_live_or_blocked().\n\
-    \   g. JITVRAMCheck both GPUs.\n   h. Load n_questions GSM8K validation questions.\n\
-    \   i. Run VeriCoT+VPRM extractor stack (VeriCoTStepValidator + VPRMArithmeticVerifier\
-    \ + CRANEExtractor) per response.\n   j. VerifyRepairPipeline on detected violations.\n\
-    \   k. Compute Wilson CI (95%) on signed_improvement. If CI excludes 0, retro_038_closed=True.\n\
-    \   l. Build artifact: schema='carnot.vericot_benchmark.v8'\n      n_questions={int}\n\
-    \      baseline_accuracy, pipeline_accuracy, signed_improvement\n      wilson_ci_lower,\
-    \ wilson_ci_upper\n      retro_038_closed={True if ci_excludes_zero}\n      honest_verdict='wilson_ci_publishable'\
-    \ / 'no_improvement' / 'gpu_required'\n   m. tmpl.assert_deliverable_written().\n\
-    4. Write tests/python/test_experiment_539_vericot_v8.py: GPU-required fast-path,\
-    \ n_questions dynamic calculation, Wilson CI computation. 100% new-function coverage.\n\
-    5. Run LIVE (CARNOT_FORCE_LIVE=1): JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_539_live_100q_vericot_v8.py\n\
-    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile ops/conductor-log.md\
-    \ (RETRO-038 update), ops/status.md, ops/changelog.md, _bmad/traceability.md.\n\
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
-    \ modify scripts/research_conductor.py.\n"
-
-- id: exp540-grpo-eorm-retrain
-  milestone: 2026.04.41
-  deliverable: results/experiment_540_grpo_eorm_retrain.json
-  title: 'Exp 540: GRPO Contrastive EORM Retrain — arXiv 2503.06639 self-learning'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: GRPO (arXiv\
-    \ 2503.06639) shows that verifiable binary rewards (correct/incorrect) naturally\
-    \ induce a contrastive loss structure: problems the model gets right and wrong\
-    \ are automatically paired as positive/negative examples. NUP Probe v4 (Exp 523)\
-    \ already validated that energy-gap contrastive training dramatically outperforms\
-    \ BCE (AUC=1.0 vs 0.40). Now apply the same GRPO contrastive pairing to retrain\
-    \ EORM (55M param energy reward model) on live correct/incorrect pairs from Exp\
-    \ 538. No additional labeling needed — the live benchmark binary verdicts ARE\
-    \ the contrastive signal.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_538_live_25q_precision_v9.json\
-    \ — Exp 538 result (contains per-question baseline_correct, pipeline_correct fields)\n\
-    - python/carnot/models/eorm_model.py — EORMModel (the 55M param model to retrain)\n\
-    - python/carnot/models/eorm_retrain.py — EORMRetrainResult, load_real_cot_pairs,\
-    \ merge_cot_corpora\n- results/exp538_cot_pairs.json — CoT pairs written by Exp\
-    \ 538 (if present)\n- results/fover_labeled_steps_live.json — Exp 442 FOVER labels\
-    \ (57 pairs)\n- scripts/experiment_template.py — ExperimentTemplate (with teardown)\n\
-    \nTASK: Implement GRPO-style contrastive EORM retrain.\n1. Read CLAUDE.md spec-first\
-    \ workflow.\n2. Add REQ-LEARN-046 (GRPO contrastive pairing for EORM retrain from\
-    \ live binary verdicts), REQ-LEARN-047 (contrastive loss: L = max(0, margin -\
-    \ (E(incorrect) - E(correct)))), SCENARIO-LEARN-074/075/076 to openspec/capabilities/autoresearch/spec.md.\n\
-    3. Create python/carnot/models/grpo_eorm_retrain.py:\n   a. GRPOContrastivePair(question_id,\
-    \ correct_response, incorrect_response) dataclass.\n   b. build_grpo_pairs_from_benchmark(benchmark_result_path)\
-    \ → List[GRPOContrastivePair]:\n      - Load benchmark JSON (Exp 538 format).\n\
-    \      - For each question where baseline_correct=False and pipeline_correct=True:\
-    \ pair (correct=pipeline_response, incorrect=baseline_response).\n      - For\
-    \ each question where baseline_correct=True and pipeline_correct=False: pair (correct=baseline,\
-    \ incorrect=pipeline) [pipeline broke it].\n   c. train_eorm_grpo(eorm_model,\
-    \ pairs, margin=1.0, epochs=50, lr=1e-4) → training_loss, before_auc, after_auc:\n\
-    \      - Contrastive loss: L = mean(max(0, margin - (E(incorrect) - E(correct))))\n\
-    \      - Optimize to maximize energy gap.\n   d. GRPOEORMRetrainResult(n_pairs,\
-    \ before_auc, after_auc, auc_improvement, honest_verdict).\n4. Write tests/python/test_grpo_eorm_retrain.py:\
-    \ pair building from benchmark JSON, contrastive loss computation, train_eorm_grpo\
-    \ on 5 synthetic pairs. 100% coverage.\n5. Write scripts/experiment_540_grpo_eorm_retrain.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(540, timeout_minutes=30).\n\
-    \   c. ExperimentTemplate(540, 'GRPO Contrastive EORM Retrain',\n      'results/experiment_540_grpo_eorm_retrain.json',\
-    \ requires_gpu=False).\n   d. Load Exp 538 benchmark result; build GRPO pairs.\n\
-    \   e. If n_pairs < 5: use synthetic fallback pairs (pairs from FOVER fover_labeled_steps_live.json).\n\
-    \   f. Train EORM for 50 epochs with contrastive loss.\n   g. Save retrained model\
-    \ to results/eorm_model_540_grpo.safetensors.\n   h. Build artifact: schema='carnot.grpo_eorm_retrain.v1'\n\
-    \      n_pairs, before_auc, after_auc, auc_improvement\n      honest_verdict='grpo_improved'\
-    \ (auc_improvement > 0.05) / 'no_improvement' / 'synthetic_fallback'\n   i. tmpl.assert_deliverable_written().\n\
-    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile ops/conductor-log.md,\
-    \ ops/changelog.md, _bmad/traceability.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp541-constraint-addition-live-wire-in
-  milestone: 2026.04.41
-  deliverable: results/experiment_541_constraint_addition_live.json
-  title: 'Exp 541: ConstraintAdditionFromMemory Live Wire-In — FR-11 Tier 2 self-learning'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: ConstraintAdditionFromMemory\
-    \ (Exp 456) was built and validated in isolation (session2_fp_rate=0.0 vs session1_fp_rate=1.0).\
-    \ It has never been wired into the live VerifyRepairPipeline. The live benchmark\
-    \ (Exp 538) produced real violation patterns. This experiment wires Tier 2 self-learning\
-    \ into the live pipeline: after each verify-repair cycle, violation patterns accumulate\
-    \ in memory, and when a pattern fires >3 times, a new constraint is added for\
-    \ subsequent queries.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/constraint_addition.py\
-    \ — ConstraintAdditionFromMemory, ViolationPattern\n- python/carnot/pipeline/verify_repair.py\
-    \ — VerifyRepairPipeline.verify() and repair() (wire-in point)\n- python/carnot/pipeline/self_learning_relay.py\
-    \ — SelfLearningRelay (existing Tier 1+2+3 relay)\n- results/experiment_538_live_25q_precision_v9.json\
-    \ — Exp 538 violations (real violation patterns)\n- results/experiment_456_constraint_addition.json\
-    \ — Exp 456 result (fr11_tier1_confirmed)\n- scripts/experiment_template.py —\
-    \ ExperimentTemplate\n\nTASK: Wire ConstraintAdditionFromMemory into VerifyRepairPipeline.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-048 (VerifyRepairPipeline\
-    \ accepts optional constraint_memory: ConstraintAdditionFromMemory), REQ-LEARN-049\
-    \ (after each repair cycle, pipeline calls constraint_memory.record_violation()),\
-    \ SCENARIO-LEARN-077/078/079 to openspec/capabilities/autoresearch/spec.md.\n\
-    3. In python/carnot/pipeline/verify_repair.py:\n   a. Add optional constraint_memory:\
-    \ Optional[ConstraintAdditionFromMemory] = None param to __init__().\n   b. In\
-    \ repair() or verify_and_repair(): after recording a violation, call\n      self.constraint_memory.record_violation(violation_type,\
-    \ context) if self.constraint_memory is not None.\n   c. In verify(): if self.constraint_memory\
-    \ is not None, call self.constraint_memory.get_additional_constraints() and\n\
-    \      add them to the active constraint set before running Ising.\n4. Write tests/python/test_constraint_addition_wire_in.py:\n\
-    \   a. Test VerifyRepairPipeline with constraint_memory=None (existing behavior\
-    \ unchanged).\n   b. Test constraint_memory.record_violation() is called on violation.\n\
-    \   c. Test additional constraints are applied on next verify() call.\n   d. 100%\
-    \ coverage of the new wire-in code paths.\n5. Write scripts/experiment_541_constraint_addition_live.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(541, timeout_minutes=30).\n\
-    \   c. ExperimentTemplate(541, 'ConstraintAdditionFromMemory Live Wire-In',\n\
-    \      'results/experiment_541_constraint_addition_live.json', requires_gpu=False).\n\
-    \   d. Load Exp 538 violation patterns from result JSON.\n   e. Pre-seed ConstraintAdditionFromMemory\
-    \ with real violation types from Exp 538.\n   f. Run a 50-question simulation:\
-    \ session 1 (no constraint addition, baseline fp_rate), session 2 (with constraint\
-    \ addition from session 1 patterns, measure fp_rate_delta).\n   g. Build artifact:\
-    \ schema='carnot.constraint_addition_live.v1'\n      session1_fp_rate, session2_fp_rate,\
-    \ fp_rate_delta\n      constraints_added (list of added constraint types)\n  \
-    \    honest_verdict='tier2_live_improved' (fp_rate_delta < -0.1) / 'no_improvement'\
-    \ / 'wire_in_complete'\n   h. tmpl.assert_deliverable_written().\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile ops/conductor-log.md, ops/changelog.md,\
-    \ _bmad/traceability.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
-    \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp542-fover-corpus-expansion
-  milestone: 2026.04.41
-  deliverable: results/experiment_542_fover_expansion.json
-  title: 'Exp 542: FOVER Corpus Expansion — FR-11 upstream, target 100+ real pairs'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: The JEPA predictor\
-    \ (Exp 535) was trained on 57 real FOVER pairs (fover_442 source). The live benchmark\
-    \ Exp 538 produced 25q × 2 models = 50 additional CoT responses. Combined with\
-    \ prior FOVER data: target 100+ labeled pairs for JEPA v8 retrain (Exp 543).\
-    \ FOVER annotation is CPU-only — no GPU required.\n\nEXISTING CODE TO READ FIRST:\n\
-    - python/carnot/pipeline/fover_annotator.py — FOVERAnnotator, parse_cot_into_steps,\
-    \ annotate_step_with_z3\n- python/carnot/pipeline/fover_live.py — LiveFOVERResult\n\
-    - results/fover_labeled_steps_live.json — Exp 442 pairs (57 pairs)\n- results/exp538_cot_pairs.json\
-    \ — Exp 538 CoT pairs (if present)\n- results/experiment_535_jepa_live_retrain_v7.json\
-    \ — v7 retrain result (n_train_pairs=46, n_test_pairs=11)\n- scripts/experiment_template.py\
-    \ — ExperimentTemplate\n\nTASK: Expand FOVER corpus to 100+ pairs.\n1. Read CLAUDE.md\
-    \ spec-first workflow.\n2. Add REQ-LEARN-050 (FOVER corpus expansion via multi-source\
-    \ merge), SCENARIO-LEARN-080/081 to spec.\n3. Write scripts/experiment_542_fover_expansion.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(542, timeout_minutes=30).\n\
-    \   c. ExperimentTemplate(542, 'FOVER Corpus Expansion',\n      'results/experiment_542_fover_expansion.json',\
-    \ requires_gpu=False).\n   d. Load existing fover_labeled_steps_live.json (57\
-    \ pairs).\n   e. Load exp538_cot_pairs.json if present; run FOVERAnnotator on\
-    \ new responses.\n   f. Merge: deduplicate by step_text hash, preserve all unique\
-    \ pairs.\n   g. Write merged corpus to results/fover_labeled_steps_expanded.json.\n\
-    \   h. Build artifact: schema='carnot.fover_expansion.v1'\n      n_prior_pairs={57\
-    \ or actual},\n      n_new_pairs={from exp538},\n      n_total_pairs={merged count}\n\
-    \      honest_verdict='corpus_expanded' (n_total >= 100) / 'partial_expansion'\
-    \ / 'synthetic_fallback'\n   i. tmpl.assert_deliverable_written().\n4. Write\
-    \ tests/python/test_fover_expansion.py: merge logic, dedup by hash, load from\
-    \ multiple sources. 100% coverage.\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n6. Reconcile ops/conductor-log.md, ops/changelog.md.\nRun:\
-    \ JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
-    \ scripts/research_conductor.py.\n"
-
-- id: exp543-jepa-v8-live-retrain
-  milestone: 2026.04.41
-  deliverable: results/experiment_543_jepa_v8_live_retrain.json
-  title: 'Exp 543: JEPA v8 Live Retrain — FR-11 mandatory, expanded corpus, LeWorldModel objective'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: JEPA v7 (Exp\
-    \ 535) achieved AUC=0.967 on 57 real FOVER pairs. Exp 542 expanded the corpus\
-    \ to 100+ pairs. This experiment retrains JEPA v8 on the expanded corpus using\
-    \ the LeWorldModel two-term objective (arXiv 2603.19312): L_total = L_prediction\
-    \ + lambda * L_KL where L_KL = KL(q(z) || N(0,I)) provides stable Gaussian regularization.\
-    \ FR-11 MANDATORY: this must run and produce honest_verdict with real data.\n\n\
-    EXISTING CODE TO READ FIRST:\n- python/carnot/models/jepa_predictor.py — JEPAPredictor\
-    \ (current architecture)\n- results/fover_labeled_steps_expanded.json — Exp 542\
-    \ expanded corpus (read n_total_pairs)\n- results/experiment_535_jepa_live_retrain_v7.json\
-    \ — v7 result (final_auc=0.967, architecture)\n- python/carnot/models/eorm_model.py\
-    \ — EORMModel (similar training pattern to follow)\n- scripts/experiment_535_jepa_live_retrain_v7.py\
-    \ — v7 training script (read for structure)\n- scripts/experiment_template.py\
-    \ — ExperimentTemplate\n\nTASK: Retrain JEPA v8 on expanded corpus with LeWorldModel objective.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-051 (JEPA v8 retrain\
-    \ on 100+ real pairs), REQ-LEARN-052 (LeWorldModel two-term objective for stable\
-    \ training), SCENARIO-LEARN-082/083 to spec.\n3. Write scripts/experiment_543_jepa_v8_live_retrain.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(543, timeout_minutes=40).\n\
-    \   c. ExperimentTemplate(543, 'JEPA v8 Live Retrain',\n      'results/experiment_543_jepa_v8_live_retrain.json',\
-    \ requires_gpu=False).\n   d. Load fover_labeled_steps_expanded.json (from Exp\
-    \ 542); if not present, fall back to fover_labeled_steps_live.json.\n   e. 80/20\
-    \ train/test split (same seed as v7 for comparability).\n   f. Train JEPAPredictor\
-    \ for 100 epochs:\n      - L_prediction = MSE(predicted_embedding, actual_embedding)\n\
-    \      - L_KL = KL(q(z) || N(0,I)) = 0.5 * sum(mu^2 + sigma^2 - log(sigma^2)\
-    \ - 1) per sample\n      - L_total = L_prediction + 0.1 * L_KL\n   g. Compute\
-    \ AUC on test split.\n   h. Save model to results/jepa_predictor_543_v8.safetensors.\n\
-    \   i. Build artifact: schema='carnot.jepa_retrain.v8'\n      n_train_pairs, n_test_pairs,\
-    \ final_auc\n      auc_improvement (vs v7 baseline 0.967)\n      fr11_live_relay=True\n\
-    \      honest_verdict='jepa_v8_improved' (auc>=0.900 AND n_train>=80) / 'auc_stable'\
-    \ (auc>=0.800) / 'synthetic_fallback'\n   j. tmpl.assert_deliverable_written().\n\
-    4. Write tests/python/test_jepa_v8_retrain.py: LeWorldModel loss components,\
-    \ train/test split, AUC computation. 100% coverage of new training code.\n5.\
-    \ Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n6. Reconcile ops/conductor-log.md\
-    \ (FR-11 relay update), ops/status.md, ops/changelog.md, _bmad/traceability.md.\n\
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
-    \ modify scripts/research_conductor.py.\n"
-
-- id: exp544-lowrank-kaem-cascade-integration
-  milestone: 2026.04.41
-  deliverable: results/experiment_544_lowrank_kaem_cascade.json
-  title: 'Exp 544: LowRankKAEMEnergy Cascade Integration — 23.7x faster KAN fast-path'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 532 proved\
-    \ LowRankKAEMEnergy at k=2 achieves 23.7x speedup over full-rank MCMC baseline.\
-    \ This is the only positive novel research result from .40. Exp 544 wires low-rank\
-    \ KAEM into the verification cascade as the default KAN fast-path tier for problems\
-    \ with n_vars <= 100. The full-rank version remains available for n_vars > 100.\n\
-    \nEXISTING CODE TO READ FIRST:\n- python/carnot/models/kaem_energy.py — KAEMEnergy\
-    \ (existing full-rank)\n- results/experiment_532_lowrank_kaem.json — Exp 532\
-    \ result (speedup=23.7x, optimal_k=2)\n- python/carnot/pipeline/three_tier_pipeline.py\
-    \ — ThreeTierPipeline (Tier 2 = EORM; this is where KAEM fast-path goes)\n- python/carnot/pipeline/verify_repair.py\
-    \ — VerifyRepairPipeline\n- scripts/experiment_template.py — ExperimentTemplate\n\
-    \nTASK: Wire LowRankKAEMEnergy into verification cascade.\n1. Read CLAUDE.md\
-    \ spec-first workflow.\n2. Add REQ-SAMPLE-017 (LowRankKAEMEnergy is default for\
-    \ n_vars <= 100, k=2), SCENARIO-SAMPLE-030/031 to openspec/capabilities/training-inference/spec.md.\n\
-    3. In python/carnot/models/kaem_energy.py:\n   a. Confirm LowRankKAEMEnergy(n_vars,\
-    \ k=2) class exists from Exp 532; if not, implement it: project logit matrix\
-    \ to top-k singular vectors via jnp.linalg.svd, then use KAEMEnergy on projected\
-    \ space.\n   b. Add factory function: get_kaem_energy(n_vars, use_lowrank=True,\
-    \ k=2) -> Union[KAEMEnergy, LowRankKAEMEnergy].\n4. In python/carnot/pipeline/verify_repair.py:\n\
-    \   a. Import get_kaem_energy.\n   b. When building KAN fast-path: call get_kaem_energy(n_vars,\
-    \ use_lowrank=(n_vars<=100)).\n   c. Add use_lowrank_kaem field to VerificationResult.\n\
-    5. Write tests/python/test_lowrank_kaem_cascade.py: factory function logic, wire-in\
-    \ path, VerificationResult field. 100% coverage.\n6. Write scripts/experiment_544_lowrank_kaem_cascade.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(544, timeout_minutes=20).\n\
-    \   c. ExperimentTemplate(544, 'LowRankKAEM Cascade Integration',\n      'results/experiment_544_lowrank_kaem_cascade.json',\
-    \ requires_gpu=False).\n   d. Benchmark: 10-var, 50-var, 100-var, 200-var Ising\
-    \ problems. For each: time full-rank vs low-rank KAEM. Verify energy values within\
-    \ 5% tolerance.\n   e. Build artifact: schema='carnot.lowrank_kaem_cascade.v1'\n\
-    \      speedup_by_n_vars={10: X, 50: Y, 100: Z, 200: W}\n      energy_tolerance_within_5pct=True/False\n\
-    \      tier_kaem_default='lowrank'\n      honest_verdict='lowrank_wired' / 'tolerance_exceeded'\n\
-    \   f. tmpl.assert_deliverable_written().\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n8. Reconcile ops/conductor-log.md, _bmad/architecture.md (KAN\
-    \ fast-path section), ops/changelog.md, _bmad/traceability.md.\nRun: JAX_PLATFORMS=cpu\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-058 CRITICAL\
+    \ — 6 of 11 .41 experiments fell back to synthetic because the FOVER corpus has\
+    \ only 24 diverse pairs (88% carry violations). ALL model retraining experiments\
+    \ in .42 (Exps 556-558, 561) are gated on having >=100 real CoT pairs. This experiment\
+    \ collects the first batch: 50 GSM8K questions (indices 0-49) through both models\
+    \ with NO repair pipeline — just inference and FOVER annotation. FIRST ACTION:\
+    \ import subprocess; subprocess.run(['kill', '-9', '527256', '527259', '529495'],\
+    \ capture_output=True).\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/env_autofix.py\
+    \ — apply_env_autofix() (call FIRST after zombie kill)\n- python/carnot/pipeline/fover_annotator.py\
+    \ — FOVERAnnotator, annotate_corpus()\n- python/carnot/pipeline/fover_live.py\
+    \ — LiveFOVERResult, build_live_fover_artifact()\n- python/carnot/pipeline/gemma4_quantized_loader.py\
+    \ — Gemma4QuantizedLoader (for Gemma4-E4B-it)\n- python/carnot/pipeline/jit_vram_check.py\
+    \ — JITVRAMCheck (call before model load)\n- scripts/experiment_template.py —\
+    \ ExperimentTemplate.setup_gpu(), kill_gpu_zombies(), teardown()\n- python/carnot/pipeline/long_run_executor.py\
+    \ — LongRunBenchmarkExecutor (checkpoint/resume)\n- results/fover_labeled_steps_live.json\
+    \ — existing 57 pairs from Exp 442 (see structure)\n- scripts/experiment_538_live_25q_precision_v9.py\
+    \ — prior live benchmark (read for GPU setup pattern)\n\nTASK: Collect 50 live\
+    \ CoT pairs (indices 0-49) with FOVER annotation. NO repair.\n1. Read CLAUDE.md\
+    \ spec-first workflow.\n2. Add REQ-DATA-001 (live GSM8K inference with per-question\
+    \ FOVER annotation, no repair pipeline), REQ-DATA-002 (atomic write of per-batch\
+    \ pair file), SCENARIO-DATA-001/002/003 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    3. Write scripts/experiment_551_live_data_a.py:\n   a. import subprocess; subprocess.run(['kill',\
+    \ '-9', '527256', '527259', '529495'], capture_output=True) FIRST.\n   b. apply_env_autofix()\
+    \ SECOND.\n   c. ExperimentTemplate.kill_gpu_zombies() THIRD.\n   d. ExperimentTimeoutWatchdog(551,\
+    \ timeout_minutes=90).\n   e. ExperimentTemplate(551, 'Live 50q Data Collection\
+    \ A',\n      'results/experiment_551_live_data_a.json', requires_gpu=True).\n\
+    \   f. DeliverableGuard('results/experiment_551_live_data_a.json').\n   g. LiveGPUGate.require_live_or_blocked().\n\
+    \   h. JITVRAMCheck on cuda:0 (Gemma4-INT4, ~10 GiB) and cuda:1 (Qwen3.5-0.8B,\
+    \ ~1.5 GiB).\n   i. Load GSM8K validation split, questions 0-49 (seed=42, consistent\
+    \ with Exp 538).\n   j. For each question, for each model:\n      - Generate response\
+    \ with live GPU (NO repair pipeline).\n      - Evaluate is_correct (compare final\
+    \ answer to ground truth).\n      - Record per_question_latency_s.\n      - Run\
+    \ FOVERAnnotator.annotate_step() on each CoT step.\n      - Collect (question,\
+    \ model, response, is_correct, cot_steps, fover_labels) per question.\n   k. Write\
+    \ results/live_pairs_551.json (atomic write) with all labeled pairs.\n   l. Checkpoint\
+    \ every 10 questions.\n   m. Build main artifact: schema='carnot.live_data_collection.v1',\n\
+    \      inference_mode='live_gpu', n_questions=50, question_indices='0-49',\n \
+    \     models=['google/gemma-4-E4B-it', 'Qwen/Qwen3.5-0.8B'],\n      n_pairs_collected=<count>,\n\
+    \      live_pairs_file='results/live_pairs_551.json',\n      honest_verdict='live_data_collected'\
+    \ if n_pairs_collected>=50 else 'partial_collection'.\n   n. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n4. Write tests/python/test_experiment_551_live_data_a.py with\
+    \ 100% targeted coverage on new helper functions.\n5. Add spec references REQ-DATA-001/002\
+    \ + SCENARIO-DATA-001/002/003 to _bmad/traceability.md.\n6. Run: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\n7. Reconcile ops docs.\nRun: JAX_PLATFORMS=cpu\
     \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp545-internal-state-probe
-  milestone: 2026.04.41
-  deliverable: results/experiment_545_internal_state_probe.json
-  title: 'Exp 545: InternalStateProbe — arXiv 2511.06209, 810x smaller than EORM'
+- id: exp552-live-50q-data-collection-b
+  milestone: 2026.04.42
+  deliverable: results/experiment_552_live_data_b.json
+  title: 'Exp 552: Live 50q Data Collection B — GSM8K indices 50-99, no repair'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: arXiv 2511.06209\
-    \ shows that a lightweight linear probe on LLM hidden states matches PRMs 810x\
-    \ larger for step-level reasoning credibility. Carnot's EORM is 55M params. If\
-    \ an internal-state linear probe achieves comparable AUC on the 57+ real FOVER\
-    \ pairs, it should replace EORM as the default Tier 2. The probe is a single linear\
-    \ layer trained on (hidden_state_at_layer_N, is_correct_label) pairs — no separate\
-    \ model inference required at deployment time.\n\nEXISTING CODE TO READ FIRST:\n\
-    - results/fover_labeled_steps_expanded.json — Exp 542 expanded corpus (preferred)\
-    \ OR results/fover_labeled_steps_live.json (fallback: 57 pairs)\n- python/carnot/models/eorm_model.py\
-    \ — EORMModel (baseline to compare against)\n- python/carnot/pipeline/three_tier_pipeline.py\
-    \ — ThreeTierPipeline Tier 2 (probe would slot here)\n- scripts/experiment_template.py\
-    \ — ExperimentTemplate\n\nTASK: Implement and evaluate InternalStateProbe vs EORM.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-VERIFY-113 (InternalStateProbe\
-    \ linear layer on LLM hidden states for Tier 2 credibility estimation), SCENARIO-VERIFY-130/131/132\
-    \ to spec.\n3. Create python/carnot/pipeline/internal_state_probe.py:\n   a.\
-    \ InternalStateProbeResult(probe_layer, n_train_pairs, n_test_pairs, probe_auc,\
-    \ eorm_auc, param_count_ratio, is_tier2_viable, honest_verdict).\n   b. InternalStateProbe(hidden_size=1024,\
-    \ probe_layer=-4):\n      - A single nn.Linear(hidden_size, 1) + sigmoid.\n  \
-    \    - train(pairs: List[Tuple[ndarray, int]], epochs=100, lr=1e-3): standard\
-    \ BCE on (hidden_state, label) pairs.\n      - score(hidden_state: ndarray) ->\
-    \ float: logit (higher = more likely incorrect).\n   c. simulate_hidden_states(n_samples,\
-    \ hidden_size, seed) -> (correct_states, incorrect_states): synthetic hidden\
-    \ states for CI testing (correct = low-norm + Gaussian noise, incorrect = high-norm\
-    \ + larger noise).\n   d. evaluate_probe_vs_eorm(probe, eorm, test_pairs) ->\
-    \ InternalStateProbeResult.\n4. Write tests/python/test_internal_state_probe.py:\
-    \ probe training, simulate_hidden_states, score(), evaluate_probe_vs_eorm(). 100%\
-    \ coverage.\n5. Write scripts/experiment_545_internal_state_probe.py:\n   a.\
-    \ apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(545, timeout_minutes=25).\n\
-    \   c. ExperimentTemplate(545, 'InternalStateProbe',\n      'results/experiment_545_internal_state_probe.json',\
-    \ requires_gpu=False).\n   d. Load FOVER pairs; simulate hidden states from step\
-    \ embeddings (use step_text → hash → seeded Gaussian as proxy for hidden state).\n\
-    \   e. 80/20 train/test split; train probe for 100 epochs.\n   f. Compute probe_auc;\
-    \ compare vs eorm_auc (load from results/eorm_model_540_grpo.safetensors or\
-    \ baseline eorm).\n   g. Build artifact: schema='carnot.internal_state_probe.v1'\n\
-    \      probe_layer=-4, n_train_pairs, n_test_pairs\n      probe_auc, eorm_auc,\
-    \ param_count_ratio (1/810 = 0.00123)\n      is_tier2_viable=(probe_auc >= 0.700)\n\
-    \      honest_verdict='probe_tier2_viable' / 'probe_below_threshold' / 'synthetic_proxy'\n\
-    \   h. tmpl.assert_deliverable_written().\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n7. Reconcile ops/conductor-log.md, ops/changelog.md, _bmad/traceability.md.\n\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: This is the\
+    \ second batch of the live data collection sprint (RETRO-058). Exp 551 collected\
+    \ questions 0-49; this experiment collects questions 50-99. Combined: 100+ live\
+    \ CoT pairs that gate all model retraining in .42. Structure is identical to Exp\
+    \ 551 but uses a different question slice. FIRST ACTION: import subprocess; subprocess.run(['kill',\
+    \ '-9', '527256', '527259', '529495'], capture_output=True).\n\nEXISTING CODE\
+    \ TO READ FIRST:\n- scripts/experiment_551_live_data_a.py — prior batch (copy\
+    \ structure, change indices to 50-99)\n- results/experiment_551_live_data_a.json\
+    \ — check n_pairs_collected and latency from Exp 551\n- python/carnot/pipeline/fover_annotator.py\
+    \ — FOVERAnnotator\n- python/carnot/pipeline/jit_vram_check.py — JITVRAMCheck\n\
+    - scripts/experiment_template.py — ExperimentTemplate with kill_gpu_zombies(),\
+    \ teardown()\n- results/live_pairs_551.json — existing pairs (read structure)\n\
+    \nTASK: Collect 50 live CoT pairs (indices 50-99) with FOVER annotation. NO repair.\n\
+    1. Read CLAUDE.md spec-first workflow.\n2. Add SCENARIO-DATA-004/005/006 to spec\
+    \ (second batch — REQ-DATA-001 already exists from Exp 551).\n3. Write scripts/experiment_552_live_data_b.py\
+    \ following Exp 551 structure exactly:\n   a. subprocess kill FIRST, apply_env_autofix()\
+    \ SECOND, kill_gpu_zombies() THIRD.\n   b. ExperimentTimeoutWatchdog(552, timeout_minutes=90).\n\
+    \   c. ExperimentTemplate(552, 'Live 50q Data Collection B',\n      'results/experiment_552_live_data_b.json',\
+    \ requires_gpu=True).\n   d. Same GPU setup as Exp 551 (JITVRAMCheck, dual GPU\
+    \ routing).\n   e. Load GSM8K validation split, questions 50-99 (same seed=42\
+    \ as Exp 551).\n   f. Same per-question loop: generate → evaluate → FOVER annotate.\n\
+    \   g. Write results/live_pairs_552.json (atomic write).\n   h. Checkpoint every\
+    \ 10 questions.\n   i. Build artifact: schema='carnot.live_data_collection.v1',\n\
+    \      inference_mode='live_gpu', n_questions=50, question_indices='50-99',\n\
+    \      n_pairs_from_exp551=<load from live_pairs_551.json>,\n      n_pairs_collected=<count>,\n\
+    \      live_pairs_file='results/live_pairs_552.json',\n      cumulative_pairs=n_pairs_from_exp551+n_pairs_collected,\n\
+    \      honest_verdict='live_data_collected' if cumulative_pairs>=100 else 'partial_collection'.\n\
+    \   j. tmpl.assert_deliverable_written() as FINAL LINE.\n4. Write tests/python/test_experiment_552_live_data_b.py\
+    \ (100% targeted coverage).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\n6. Reconcile ops docs.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp553-fover-corpus-v2-diversity
+  milestone: 2026.04.42
+  deliverable: results/experiment_553_fover_corpus_v2.json
+  title: 'Exp 553: FOVER Corpus v2 — Merge, Diversity Audit, Balanced Dataset'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-056 and\
+    \ RETRO-058. Exp 543 JEPA retrained on 24 pairs (88% carry violations) produced\
+    \ AUC=0.444 — below random. The corpus was too small and too biased. This experiment\
+    \ merges ALL available real pairs (Exp 442: 57 pairs, Exp 538: 25q, Exps 551-552:\
+    \ 100q) and applies a diversity audit to ensure constraint_type_entropy >= 1.5\
+    \ bits. This is the gating deliverable for Exps 556, 557, 558, 561.\n\nEXISTING\
+    \ CODE TO READ FIRST:\n- python/carnot/pipeline/fover_annotator.py — FOVERAnnotator,\
+    \ FOVERCoTStep, parse_cot_into_steps\n- python/carnot/pipeline/fover_live.py\
+    \ — LiveFOVERResult\n- results/fover_labeled_steps_live.json — 57 pairs from\
+    \ Exp 442\n- results/live_pairs_551.json — 50q pairs from Exp 551\n- results/live_pairs_552.json\
+    \ — 50q pairs from Exp 552\n- results/experiment_538_live_25q_precision_v9.json\
+    \ — check if it has CoT pairs\n- results/experiment_543_jepa_v8_retrain.json\
+    \ — RETRO-056 context (see corpus_size=24, carry_pct=0.88)\n\nTASK: Build diverse\
+    \ FOVER corpus v2 (>=100 pairs, entropy>=1.5 bits).\n1. Read CLAUDE.md spec-first\
+    \ workflow.\n2. Add REQ-DATA-003 (FOVER corpus diversity gate: entropy >= 1.5\
+    \ bits before model retraining), REQ-DATA-004 (atomic corpus write to results/fover_corpus_v2.json),\
+    \ SCENARIO-DATA-007/008/009 to spec.\n3. Create python/carnot/pipeline/fover_corpus.py:\n\
+    \   a. FOVERCorpusEntry dataclass: question, response, model_id, is_correct, constraint_types,\
+    \ cot_steps.\n   b. merge_fover_sources(sources: list[str]) -> list[FOVERCorpusEntry]:\
+    \ load from each JSON file, deduplicate by (question, model_id).\n   c. compute_corpus_diversity(entries:\
+    \ list[FOVERCorpusEntry]) -> dict: returns constraint_type_counts, constraint_type_entropy\
+    \ (Shannon entropy in bits), carry_pct, correct_pct, n_labeled.\n   d. balance_corpus(entries,\
+    \ target_entropy=1.5) -> list[FOVERCorpusEntry]: if carry_pct > 0.6, downsample\
+    \ carry violations to bring entropy up. Return balanced subset.\n   e. Exported\
+    \ from carnot.pipeline.__init__.\n4. Write scripts/experiment_553_fover_corpus_v2.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(553,\
+    \ timeout_minutes=20).\n   c. ExperimentTemplate(553, 'FOVER Corpus v2 Diversity',\n\
+    \      'results/experiment_553_fover_corpus_v2.json', requires_gpu=False).\n \
+    \  d. Merge sources: ['results/fover_labeled_steps_live.json', 'results/live_pairs_551.json',\
+    \ 'results/live_pairs_552.json'] (plus Exp 538 CoT if available).\n   e. Compute\
+    \ diversity BEFORE balancing.\n   f. Balance corpus (target_entropy=1.5).\n  \
+    \ g. Compute diversity AFTER balancing.\n   h. Write results/fover_corpus_v2.json\
+    \ (AtomicResultWriter) with all balanced entries.\n   i. Build artifact: schema='carnot.fover_corpus.v2',\n\
+    \      n_sources_merged=<count>,\n      n_pairs_before_balance=<count>,\n    \
+    \  n_pairs_after_balance=<count>,\n      constraint_type_entropy_before=<float>,\n\
+    \      constraint_type_entropy_after=<float>,\n      carry_pct_before=<float>,\n\
+    \      carry_pct_after=<float>,\n      corpus_file='results/fover_corpus_v2.json',\n\
+    \      retro_058_data_ready=<True if n_pairs_after_balance>=100 and entropy_after>=1.5>,\n\
+    \      honest_verdict='corpus_ready' if retro_058_data_ready else 'corpus_partial'.\n\
+    \   j. tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_fover_corpus.py\
+    \ (100% coverage on fover_corpus.py).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n7. Update _bmad/traceability.md and ops docs.\nRun: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp554-extraction-diagnostic
+  milestone: 2026.04.42
+  deliverable: results/experiment_554_extraction_diagnostic.json
+  title: 'Exp 554: VeriCoT+VPRM Extraction Diagnostic on Exp 538 Live Responses'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 538 ran\
+    \ live 25 questions and produced honest_verdict='live_no_improvement_25q' (RETRO-033\
+    \ miss #10). The root cause is UNKNOWN. Three hypotheses: (1) VeriCoT/VPRM produces\
+    \ false positives on correct IT-model responses, causing repair of valid answers;\
+    \ (2) violations detected correctly but repair generates wrong fixes; (3) scoring\
+    \ bug. This experiment loads Exp 538's 25 live responses with known labels and\
+    \ runs VeriCoT + VPRM separately to measure FP and TP rates per extractor.\n\n\
+    EXISTING CODE TO READ FIRST:\n- python/carnot/extraction/vericot_step_validator.py\
+    \ — VeriCoTStepValidator\n- python/carnot/extraction/vprm_verifier.py — VPRMArithmeticVerifier\n\
+    - results/experiment_538_live_25q_precision_v9.json — Exp 538 result (see per_question_results\
+    \ if present)\n- python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline\n\
+    - python/carnot/pipeline/live_precision_result.py — LivePrecisionResult\n\nTASK:\
+    \ Diagnostic — measure per-extractor FP and TP rates on known-labeled responses.\n\
+    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-EXTRACT-030 (per-extractor\
+    \ FP/TP rate measurement on labeled live responses), SCENARIO-EXTRACT-055/056/057\
+    \ to spec.\n3. Create python/carnot/extraction/extraction_diagnostic.py:\n   a.\
+    \ ExtractionDiagnosticResult dataclass: extractor_name, n_tested, n_violations_found,\
+    \ n_true_positive, n_false_positive, tp_rate, fp_rate, confusion matrix.\n   b.\
+    \ run_extractor_diagnostic(extractor, labeled_responses: list[dict]) -> ExtractionDiagnosticResult:\n\
+    \      - For each response: run extractor, get violation_found.\n      - Compare\
+    \ against is_correct label: TP = incorrect and violation_found; FP = correct and\
+    \ violation_found.\n      - Return complete confusion matrix.\n   c. Exported from\
+    \ carnot.extraction.__init__.\n4. Write scripts/experiment_554_extraction_diagnostic.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(554,\
+    \ timeout_minutes=20).\n   c. ExperimentTemplate(554, 'Extraction Diagnostic',\n\
+    \      'results/experiment_554_extraction_diagnostic.json', requires_gpu=False).\n\
+    \   d. Load Exp 538 live responses from results/experiment_538_live_25q_precision_v9.json\
+    \ (or fall back to 25 synthetic GSM8K pairs if no per_question_results).\n   e.\
+    \ Run VeriCoTStepValidator diagnostic + VPRMArithmeticVerifier diagnostic on same\
+    \ 25 responses.\n   f. For each extractor: compute tp_rate, fp_rate, precision,\
+    \ recall.\n   g. Identify root_cause_hypothesis: 'high_fp_extraction' if max FP\
+    \ rate > 0.3; 'low_tp_extraction' if min TP rate < 0.3; 'repair_issue' if tp_rate\
+    \ > 0.3 and fp_rate < 0.1 but no improvement.\n   h. Build artifact: schema='carnot.extraction_diagnostic.v1',\n\
+    \      vericot_result={tp_rate, fp_rate, n_violations, n_correct_flagged},\n \
+    \     vprm_result={tp_rate, fp_rate, n_violations, n_correct_flagged},\n     \
+    \ root_cause_hypothesis=<string>,\n      n_responses_analyzed=25,\n      honest_verdict='diagnostic_complete'.\n\
+    \   i. tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_extraction_diagnostic.py\
+    \ (100% coverage on extraction_diagnostic.py).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n7. Update _bmad/traceability.md and ops docs.\nRun: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp555-confidence-weighted-filtering
+  milestone: 2026.04.42
+  deliverable: results/experiment_555_confidence_weighted.json
+  title: 'Exp 555: Confidence-Weighted Constraint Filtering — Reduce FP on IT Models'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 554's extraction\
+    \ diagnostic likely revealed high FP rate (violations flagged on correct IT-model\
+    \ responses). The root cause: VeriCoT/VPRM uses binary violated/not-violated,\
+    \ but IT models write arithmetic in prose format ('we compute 47 + 28 = 75') where\
+    \ boundary cases are ambiguous. Confidence-weighted filtering assigns each violation\
+    \ a confidence score and only triggers repair above a threshold. High-confidence\
+    \ violations: definitive arithmetic errors ('47 + 28 = 76' — off by 1). Low-confidence:\
+    \ intermediate estimates, approximations, or format mismatches.\n\nEXISTING CODE\
+    \ TO READ FIRST:\n- python/carnot/extraction/vprm_verifier.py — VPRMArithmeticVerifier,\
+    \ RuleVerdict (has confidence field?)\n- python/carnot/extraction/vericot_step_validator.py\
+    \ — VeriCoTStepValidator\n- python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.verify()\n\
+    - results/experiment_554_extraction_diagnostic.json — Exp 554 result (see root_cause_hypothesis\
+    \ and fp_rate)\n- python/carnot/pipeline/constraint_addition.py — ConstraintAdditionFromMemory\
+    \ (for reference)\n\nTASK: Implement ConfidenceWeightedConstraint and evaluate\
+    \ thresholds.\n1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-EXTRACT-031\
+    \ (confidence score for each violation, only repair above threshold), REQ-EXTRACT-032\
+    \ (threshold sweep evaluation), SCENARIO-EXTRACT-058/059/060 to spec.\n3. Create\
+    \ python/carnot/extraction/confidence_filter.py:\n   a. ViolationConfidence dataclass:\
+    \ violation_text, confidence_score (0.0-1.0), violation_type, is_definitive.\n\
+    \   b. ConfidenceWeightedExtractor(base_extractor, confidence_threshold=0.7):\n\
+    \      - score_violation(violation_text) -> float: heuristics for confidence:\n\
+    \        * 'X + Y = Z' where Z is clearly wrong (>5% off) → confidence=0.95\n\
+    \        * Approximate statements ('approximately', 'roughly') → confidence=0.2\n\
+    \        * Intermediate computation steps → confidence=0.4\n        * Clear final\
+    \ answer error → confidence=0.9\n      - extract(response) -> list[ViolationConfidence]:\
+    \ run base_extractor, score each violation.\n      - above_threshold(violations)\
+    \ -> list[ViolationConfidence]: filter by confidence_score >= threshold.\n   c.\
+    \ Exported from carnot.extraction.__init__.\n4. Write scripts/experiment_555_confidence_weighted.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(555,\
+    \ timeout_minutes=20).\n   c. ExperimentTemplate(555, 'Confidence-Weighted Filtering',\n\
+    \      'results/experiment_555_confidence_weighted.json', requires_gpu=False).\n\
+    \   d. Load Exp 554 labeled responses (same 25 from Exp 538).\n   e. For each\
+    \ threshold in [0.5, 0.7, 0.9]:\n      - Run ConfidenceWeightedExtractor(VPRMArithmeticVerifier(),\
+    \ confidence_threshold=t).\n      - Compute: fp_rate_at_t, tp_rate_at_t, repair_trigger_rate_at_t.\n\
+    \   f. Identify optimal_threshold (min fp_delta < -0.3 with max tp_loss < 0.2).\n\
+    \   g. Build artifact: schema='carnot.confidence_filter.v1',\n      threshold_sweep=[{threshold,\
+    \ fp_rate, tp_rate, repair_trigger_rate}, ...],\n      baseline_fp_rate=<from\
+    \ Exp 554>,\n      optimal_threshold=<float>,\n      fp_reduction_at_optimal=<float>,\n\
+    \      tp_loss_at_optimal=<float>,\n      honest_verdict='fp_reduced_significantly'\
+    \ if fp_delta<-0.3 else 'marginal_improvement'.\n   h. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n5. Write tests/python/test_confidence_filter.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Update _bmad/traceability.md\
+    \ and ops docs.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo\
+    \ NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp556-eorm-grpo-retrain-real
+  milestone: 2026.04.42
+  deliverable: results/experiment_556_eorm_grpo_retrain.json
+  title: 'Exp 556: EORM GRPO Retrain on 100+ Real Pairs — RETRO-058 fix'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 540 (GRPO\
+    \ EORM retrain in .41) used only n_pairs=3 synthetic pairs and fell back to synthetic.\
+    \ Now have fover_corpus_v2.json (>=100 real pairs from Exp 553). GRPO contrastive\
+    \ pairing (arXiv 2503.06639) converts (correct, incorrect) response pairs into\
+    \ the training signal — for the same question, the correct response is positive\
+    \ and the incorrect is negative. No additional labeling needed beyond is_correct\
+    \ labels already in the corpus.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/models/eorm_retrain.py\
+    \ — EORMRetrainResult, load_real_cot_pairs, _pairs_to_contrastive_triples\n-\
+    \ results/fover_corpus_v2.json — corpus from Exp 553 (check n_pairs_after_balance)\n\
+    - results/experiment_540_grpo_eorm_retrain.json — .41 attempt (see honest_verdict=grpo_synthetic)\n\
+    - python/carnot/pipeline/fover_corpus.py — FOVERCorpusEntry (from Exp 553)\n-\
+    \ results/eorm_model_359_real.safetensors — existing EORM baseline (AUC=0.5)\n\
+    \nTASK: Retrain EORM on 100+ real contrastive pairs (GRPO style).\n1. Read CLAUDE.md\
+    \ spec-first workflow.\n2. Check results/fover_corpus_v2.json exists (load from\
+    \ Exp 553). If missing (Exp 553 not yet run), write blocked artifact and exit.\n\
+    3. Add REQ-LEARN-046 (EORM retrain on real GRPO contrastive pairs, n>=100), SCENARIO-LEARN-074/075\
+    \ to spec.\n4. In python/carnot/models/eorm_retrain.py, add load_fover_corpus_v2(path)\
+    \ helper that:\n   a. Loads results/fover_corpus_v2.json.\n   b. Converts FOVERCorpusEntry\
+    \ list to (step_text, is_correct) pairs for contrastive training.\n   c. For same\
+    \ question with both correct and incorrect responses: creates (correct_step, incorrect_step)\
+    \ contrastive triple.\n5. Write scripts/experiment_556_eorm_grpo_retrain.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(556,\
+    \ timeout_minutes=30).\n   c. ExperimentTemplate(556, 'EORM GRPO Retrain Real\
+    \ Data',\n      'results/experiment_556_eorm_grpo_retrain.json', requires_gpu=False).\n\
+    \   d. Load fover_corpus_v2.json; gate if n_pairs < 100.\n   e. Build GRPO contrastive\
+    \ triples using load_fover_corpus_v2().\n   f. Split 80/20 train/test.\n   g.\
+    \ Retrain EORM on contrastive triples (CD loss, 100 epochs).\n   h. Evaluate AUC\
+    \ on held-out 20% (compare vs baseline AUC=0.5 from Exp 359).\n   i. Save to\
+    \ results/eorm_model_556_real.safetensors.\n   j. Build artifact: schema='carnot.eorm_grpo.v1',\n\
+    \      inference_mode='real_data',\n      n_training_pairs=<count>,\n      n_contrastive_triples=<count>,\n\
+    \      before_auc=<baseline_auc>,\n      after_auc=<float>,\n      auc_improvement=after-before,\n\
+    \      eorm_model_path='results/eorm_model_556_real.safetensors',\n      retro_058_training_real=True,\n\
+    \      honest_verdict='real_data_improvement' if after_auc>=0.700 else 'real_data_no_improvement'.\n\
+    \   k. tmpl.assert_deliverable_written() as FINAL LINE.\n6. Write tests/python/test_experiment_556_eorm_grpo.py\
+    \ (100% targeted coverage on new helpers).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n8. Update ops docs and traceability.\nRun: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp557-jepa-v9-retrain-diverse-corpus
+  milestone: 2026.04.42
+  deliverable: results/experiment_557_jepa_v9_retrain.json
+  title: 'Exp 557: JEPA v9 Retrain — Diverse 100+ Corpus, LeWorldModel Objective — RETRO-056'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-056 —\
+    \ Exp 543 JEPA v8 produced final_auc=0.444 (BELOW random 0.5) after training\
+    \ on only 24 pairs (88% carry violations). The predictor is anti-correlated with\
+    \ correctness. The fix has two parts: (1) diverse corpus from Exp 553 (>=100 pairs,\
+    \ constraint_type_entropy>=1.5 bits), and (2) LeWorldModel two-term training objective\
+    \ (arXiv 2603.19312): L_total = L_prediction + lambda * KL(q || N(0,I)). The\
+    \ Gaussian KL regularization prevents training collapse without curriculum scheduling.\n\
+    \nEXISTING CODE TO READ FIRST:\n- python/carnot/embeddings/jepa_energy.py —\
+    \ JEPAPredictor (current model)\n- results/fover_corpus_v2.json — diverse corpus\
+    \ from Exp 553\n- results/experiment_543_jepa_v8_retrain.json — RETRO-056 context\
+    \ (auc=0.444, corpus_size=24)\n- results/experiment_535_jepa_live_retrain_v7.json\
+    \ — last stable JEPA (AUC=0.967)\n- python/carnot/pipeline/fover_corpus.py —\
+    \ FOVERCorpusEntry\n\nTASK: JEPA v9 retrain with LeWorldModel objective on diverse\
+    \ corpus. RETRO-056 closure attempt.\n1. Read CLAUDE.md spec-first workflow.\n\
+    2. Add REQ-LEARN-047 (JEPA training with Gaussian KL regularization, diverse corpus\
+    \ required), SCENARIO-LEARN-076/077/078 to spec.\n3. In python/carnot/embeddings/jepa_energy.py,\
+    \ add train_leworldmodel(pairs, lambda_kl=0.01) method:\n   a. L_prediction =\
+    \ MSE(predicted_embedding, actual_embedding).\n   b. L_regularization = KL(q(z)\
+    \ || N(0, I)) — KL divergence of latent distribution to standard Gaussian.\n \
+    \  c. L_total = L_prediction + lambda_kl * L_regularization.\n   d. Use AdamW\
+    \ optimizer, 200 epochs.\n   e. Return training_history: [{epoch, loss, pred_loss,\
+    \ kl_loss, auc}].\n4. Write scripts/experiment_557_jepa_v9_retrain.py:\n   a.\
+    \ subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(557,\
+    \ timeout_minutes=30).\n   c. ExperimentTemplate(557, 'JEPA v9 Retrain Diverse\
+    \ Corpus',\n      'results/experiment_557_jepa_v9_retrain.json', requires_gpu=False).\n\
+    \   d. Load fover_corpus_v2.json; gate if n_labeled < 100 (write blocked artifact).\n\
+    \   e. Filter corpus: ensure constraint_type_entropy >= 1.0 in training split.\n\
+    \   f. Split 80/20 train/test (stratify by constraint_type).\n   g. Call train_leworldmodel(train_pairs,\
+    \ lambda_kl=0.01).\n   h. Evaluate AUC on test set.\n   i. Save to results/jepa_predictor_557_real.safetensors.\n\
+    \   j. Build artifact: schema='carnot.jepa_retrain.v9',\n      inference_mode='real_data',\n\
+    \      corpus_size=<n_labeled>,\n      corpus_entropy=<constraint_type_entropy_after>,\n\
+    \      lambda_kl=0.01,\n      before_auc=0.444,\n      final_auc=<float>,\n \
+    \     auc_vs_random=final_auc-0.5,\n      training_stable=True if final_auc>0.5\
+    \ else False,\n      retro_056_closed=<True if final_auc>=0.800>,\n      honest_verdict='jepa_recovered'\
+    \ if final_auc>=0.800 else 'jepa_partial' if final_auc>0.5 else 'jepa_still_inverted'.\n\
+    \   k. tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_experiment_557_jepa_v9.py\
+    \ (100% targeted coverage on train_leworldmodel).\n6. Run: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\n7. Update ops/conductor-log.md (RETRO-056\
+    \ status), ops docs, traceability.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp558-internal-state-probe-real-data
+  milestone: 2026.04.42
+  deliverable: results/experiment_558_internal_probe_real.json
+  title: 'Exp 558: InternalStateProbe Real-Data Training — arXiv 2511.06209 with live corpus'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 545 (InternalStateProbe\
+    \ in .41) had honest_verdict=synthetic_proxy because no real training data was\
+    \ available. Now have fover_corpus_v2.json (>=100 real pairs from Exp 553). The\
+    \ paper (arXiv 2511.06209) shows a single linear probe on LLM hidden states at\
+    \ layer -4 achieves AUC matching or exceeding PRMs 810x larger. This experiment\
+    \ retrains the probe on real data and compares AUC vs EORM.\n\nEXISTING CODE\
+    \ TO READ FIRST:\n- python/carnot/pipeline/internal_state_probe.py — InternalStateProbe\
+    \ (from Exp 545)\n- results/experiment_545_internal_probe.json — Exp 545 result\
+    \ (see honest_verdict=synthetic_proxy, baseline_auc)\n- results/fover_corpus_v2.json\
+    \ — diverse corpus from Exp 553\n- results/eorm_model_556_real.safetensors —\
+    \ EORM trained on real data (Exp 556)\n\nTASK: Retrain InternalStateProbe on\
+    \ real data; compare AUC vs EORM.\n1. Read CLAUDE.md spec-first workflow.\n2.\
+    \ Add REQ-VERIFY-115 (InternalStateProbe trained on real FOVER pairs, AUC vs EORM\
+    \ on same test set), SCENARIO-VERIFY-131/132/133 to spec.\n3. Write scripts/experiment_558_internal_probe_real.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(558,\
+    \ timeout_minutes=30).\n   c. ExperimentTemplate(558, 'InternalStateProbe Real\
+    \ Data',\n      'results/experiment_558_internal_probe_real.json', requires_gpu=False).\n\
+    \   d. Load fover_corpus_v2.json; gate if n_labeled < 100.\n   e. Split 80/20\
+    \ train/test (same split as Exp 556-557 if deterministic seed).\n   f. Extract\
+    \ hidden states from synthetic proxy (InternalStateProbe CI stub uses random vectors)\
+    \ if GPU unavailable.\n   g. Train InternalStateProbe (linear layer on hidden_state)\
+    \ on 80 real pairs.\n   h. Evaluate AUC on 20 test pairs.\n   i. Load Exp 556\
+    \ EORM results (eorm_after_auc) for comparison.\n   j. Build artifact: schema='carnot.internal_probe.v2',\n\
+    \      inference_mode='real_data',\n      n_training_pairs=80,\n      probe_layer=-4,\n\
+    \      probe_auc=<float>,\n      eorm_auc_for_comparison=<from Exp 556>,\n   \
+    \   probe_vs_eorm_delta=probe_auc-eorm_auc,\n      param_count_ratio=1/810,\n\
+    \      probe_viable=<True if probe_auc>=0.700>,\n      honest_verdict='probe_viable_real_data'\
+    \ if probe_auc>=0.700 else 'probe_not_viable'.\n   k. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n4. Write tests/python/test_experiment_558_internal_probe_real.py\
+    \ (100% targeted coverage on new helpers).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n6. Update traceability and ops docs.\nRun: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp559-lowrank-kaem-calibration
+  milestone: 2026.04.42
+  deliverable: results/experiment_559_lowrank_kaem_calibration.json
+  title: 'Exp 559: LowRankKAEM Calibration Layer — RETRO-057 closure'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-057 —\
+    \ Exp 544 wired LowRankKAEMEnergy as the default Tier 3 fast-path (4-155x speedup\
+    \ confirmed) but energy_mad_normalized ≈ 0.96-0.99 — far outside the 5% production\
+    \ tolerance. The low-rank projection loses too much energy information at k=2.\
+    \ Fix: sweep k=2,4,8,16,32 AND add an affine calibration layer (a*E_lowrank +\
+    \ b ≈ E_full) trained on synthetic Ising instances. Find the k that achieves both\
+    \ energy_mad < 0.05 and speedup > 5x.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/models/kaem_energy.py\
+    \ — LowRankKAEMEnergy (from Exp 532), KAEMEnergy (from Exp 447)\n- results/experiment_544_lowrank_kaem_wire.json\
+    \ — RETRO-057 context (energy_mad_normalized values per k)\n- results/experiment_532_lowrank_kaem.json\
+    \ — Exp 532 (LowRankKAEM implementation)\n- python/carnot/samplers/parallel_ising.py\
+    \ — ParallelIsingSampler (used for full-rank comparison)\n\nTASK: Add calibration\
+    \ layer; find production k. RETRO-057 closure attempt.\n1. Read CLAUDE.md spec-first\
+    \ workflow.\n2. Add REQ-SAMPLE-018 (LowRankKAEMEnergy calibration layer, energy_mad\
+    \ < 0.05 required for default tier), SCENARIO-SAMPLE-030/031/032 to spec.\n3.\
+    \ In python/carnot/models/kaem_energy.py, add CalibrationLayer class:\n   a.\
+    \ CalibrationLayer: single affine transform (a, b) where E_calibrated = a * E_lowrank\
+    \ + b.\n   b. fit(E_full_samples, E_lowrank_samples): least-squares fit (a, b).\n\
+    \   c. transform(E_lowrank): apply affine correction.\n4. Add CalibratedLowRankKAEMEnergy(LowRankKAEMEnergy):\n\
+    \   a. Wraps LowRankKAEMEnergy with CalibrationLayer.\n   b. calibrate(n_samples=1000,\
+    \ n_vars=50): generate 1000 synthetic Ising instances, compute E_full and E_lowrank,\
+    \ fit CalibrationLayer.\n   c. energy(): applies calibration after low-rank projection.\n\
+    \   d. Exported from carnot.models.__init__.\n5. Write scripts/experiment_559_lowrank_kaem_calibration.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(559,\
+    \ timeout_minutes=25).\n   c. ExperimentTemplate(559, 'LowRankKAEM Calibration',\n\
+    \      'results/experiment_559_lowrank_kaem_calibration.json', requires_gpu=False).\n\
+    \   d. For k in [2, 4, 8, 16, 32]:\n      - Build LowRankKAEMEnergy(k=k).\n\
+    \      - CalibratedLowRankKAEMEnergy.calibrate(n_samples=1000, n_vars=50).\n\
+    \      - Measure energy_mad_normalized = mean(|E_calibrated - E_full|) / std(E_full).\n\
+    \      - Measure speedup vs ParallelIsingSampler.\n   e. Find optimal_k = min\
+    \ k where energy_mad < 0.05 AND speedup > 5x.\n   f. Build artifact: schema='carnot.kaem_calibration.v1',\n\
+    \      rank_sweep=[{k, energy_mad_before, energy_mad_after, speedup}, ...],\n\
+    \      optimal_k=<int>,\n      energy_mad_at_optimal=<float>,\n      speedup_at_optimal=<float>,\n\
+    \      retro_057_closed=<True if energy_mad_at_optimal<0.05>,\n      honest_verdict='retro_057_closed'\
+    \ if retro_057_closed else 'calibration_insufficient'.\n   g. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n6. Write tests/python/test_kaem_calibration.py (100% coverage\
+    \ on CalibrationLayer + CalibratedLowRankKAEMEnergy).\n7. Run: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\n8. Update ops/conductor-log.md (RETRO-057\
+    \ status), _bmad/architecture.md (KAN fast-path tier), traceability, ops docs.\n\
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
     \ modify scripts/research_conductor.py.\n"
 
-- id: exp546-autorefine-constraint-templates
-  milestone: 2026.04.41
-  deliverable: results/experiment_546_autorefine_constraint_templates.json
-  title: 'Exp 546: AutoRefine Constraint Template Distillation — arXiv 2601.22758'
+- id: exp560-latent-cot-ebm-calibrator
+  milestone: 2026.04.42
+  deliverable: results/experiment_560_latent_cot_calibrator.json
+  title: 'Exp 560: LatentCoTEBMCalibrator — Step-Level Energy Guidance (arXiv 2511.07124)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: AutoRefine (arXiv\
-    \ 2601.22758) converts agent interaction trajectories into reusable abstract strategic\
-    \ principles via offline self-distillation. For Carnot, this maps to: verify-repair\
-    \ trajectories (violation_type, context, was_repaired) → distilled constraint\
-    \ templates → retrieved at inference time for similar queries. This is Tier 2\
-    \ self-learning (ConstraintMemory) extended with retrieval-at-inference. Key benefit:\
-    \ reduces false positives by applying domain-specific constraints only when the\
-    \ current query matches a template's context.\n\nEXISTING CODE TO READ FIRST:\n\
-    - python/carnot/pipeline/constraint_addition.py — ConstraintAdditionFromMemory,\
-    \ ViolationPattern (base for template system)\n- results/experiment_541_constraint_addition_live.json\
-    \ — Exp 541 wire-in result (constraints_added list)\n- results/experiment_538_live_25q_precision_v9.json\
-    \ — Exp 538 violation patterns\n- python/carnot/pipeline/jit_rl_memory.py — JitRLConstraintMemory\
-    \ (if exists; check for prior Tier 2 work)\n- scripts/experiment_template.py\
-    \ — ExperimentTemplate\n\nTASK: Implement AutoRefine-style constraint template distillation.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-053 (offline distillation\
-    \ of violation patterns into named constraint templates), REQ-LEARN-054 (template\
-    \ retrieval at inference time via string similarity), SCENARIO-LEARN-084/085/086\
-    \ to spec.\n3. Create python/carnot/pipeline/constraint_template_store.py:\n\
-    \   a. ConstraintTemplate(name, violation_type, context_keywords, constraint_text,\
-    \ n_violations_observed) dataclass.\n   b. ConstraintTemplateStore:\n      -\
-    \ add_violation(violation_type, context) → updates or creates template.\n    \
-    \  - distill(min_observations=3) → produces List[ConstraintTemplate] from patterns\
-    \ fired >=3 times.\n      - retrieve(query_context, top_k=3) → List[ConstraintTemplate]\
-    \ by keyword overlap score.\n      - save(path) / load(path) via JSON.\n4. Write\
-    \ tests/python/test_constraint_template_store.py: add_violation, distill threshold,\
-    \ retrieve by keyword, save/load. 100% coverage.\n5. Write scripts/experiment_546_autorefine_constraint_templates.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(546, timeout_minutes=25).\n\
-    \   c. ExperimentTemplate(546, 'AutoRefine Constraint Templates',\n      'results/experiment_546_autorefine_constraint_templates.json',\
-    \ requires_gpu=False).\n   d. Load violation patterns from Exp 538 + Exp 541\
-    \ results.\n   e. Feed into ConstraintTemplateStore; call distill() with min_observations=3.\n\
-    \   f. Test retrieval: 5 query contexts → retrieve top_k=3 templates → check relevance.\n\
-    \   g. Save template store to results/constraint_templates_546.json.\n   h. Build\
-    \ artifact: schema='carnot.autorefine_templates.v1'\n      n_violations_ingested,\
-    \ n_templates_distilled\n      sample_templates (first 3)\n      retrieval_verified=True\n\
-    \      honest_verdict='templates_distilled' (n_templates>=3) / 'insufficient_patterns'\n\
-    \   i. tmpl.assert_deliverable_written().\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n7. Reconcile ops/conductor-log.md, ops/changelog.md, _bmad/traceability.md.\n\
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT\
-    \ modify scripts/research_conductor.py.\n"
-
-- id: exp547-legacy-modernization-sprint
-  milestone: 2026.04.41
-  deliverable: results/experiment_547_legacy_modernization.json
-  title: 'Exp 547: Legacy Modernization Sprint — BatchedInferenceRunner for top-5 slowest experiments'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exps 308, 260,\
-    \ 309, 425, 410 have appeared in the slowest-5 list for FOUR consecutive milestones\
-    \ (.37-.40) with cumulative re-entry overhead exceeding 1,020 minutes (17 hours).\
-    \ All predate the BatchedInferenceRunner and ExperimentTemplate.teardown() infrastructure.\
-    \ Migrating them eliminates the recurring slow-path. Estimated savings: 8.5% wall-time\
-    \ per milestone.\n\nEXISTING CODE TO READ FIRST:\n- scripts/experiment_308_*.py\
-    \ — read to understand what it does, then migrate\n- scripts/experiment_260_*.py\
-    \ — read to understand what it does, then migrate\n- scripts/experiment_309_*.py\
-    \ — read to understand what it does, then migrate\n- scripts/experiment_425_conductor_timeout.py\
-    \ — already has ExperimentTemplate; check if BatchedInferenceRunner missing\n\
-    - scripts/experiment_410_*.py — read to understand what it does, then migrate\n\
-    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor\n- python/carnot/pipeline/batching_hook_runner.py\
-    \ — BatchingHookRunner (if exists)\n- scripts/experiment_template.py — ExperimentTemplate\
-    \ (now with teardown)\n- results/operational_retro_2026_04_40.json — .40 retro\
-    \ (slowest_5 list with min per experiment)\n\nTASK: Migrate top-5 slowest legacy\
-    \ scripts to modern infrastructure.\n1. Read CLAUDE.md spec-first workflow.\n\
-    2. For each of the 5 scripts:\n   a. Read existing script completely.\n   b. Identify:\
-    \ is it missing BatchedInferenceRunner? Missing teardown? Missing DeliverableGuard?\n\
-    \   c. Add apply_env_autofix() FIRST if missing.\n   d. Add ExperimentTimeoutWatchdog\
-    \ if missing.\n   e. Add BatchedInferenceRunner for any sequential inference loops\
-    \ (batch_size=8).\n   f. Ensure ExperimentTemplate is used (not standalone).\n\
-    \   g. Ensure assert_deliverable_written() is the FINAL LINE.\n   h. Run existing\
-    \ tests to verify no regressions.\n3. Write scripts/experiment_547_legacy_modernization.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(547, timeout_minutes=40).\n\
-    \   c. ExperimentTemplate(547, 'Legacy Modernization Sprint',\n      'results/experiment_547_legacy_modernization.json',\
-    \ requires_gpu=False).\n   d. Audit each of the 5 scripts: check for BatchedInferenceRunner\
-    \ usage, teardown, DeliverableGuard.\n   e. For each: record before/after modernization\
-    \ status.\n   f. Estimate per-milestone savings based on retro data.\n   g. Build\
-    \ artifact: schema='carnot.legacy_modernization.v1'\n      scripts_audited=['exp308','exp260','exp309','exp425','exp410']\n\
-    \      batching_added={list of scripts that got BatchedInferenceRunner}\n     \
-    \ teardown_added={list}\n      estimated_savings_pct={float}\n      honest_verdict='sprint_complete'\
-    \ (all 5 modernized) / 'partial_sprint' (3-4) / 'audit_only' (0-2)\n   h. tmpl.assert_deliverable_written().\n\
-    4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n5. Reconcile ops/conductor-log.md,\
-    \ ops/changelog.md, _bmad/traceability.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: arXiv 2511.07124\
+    \ (EBM calibration of latent chain-of-thought) was filed for .42 in research-references.md.\
+    \ It integrates a small EBM to calibrate latent thought tokens during implicit\
+    \ CoT generation by assigning an energy scalar at each reasoning step and guiding\
+    \ sampling toward lower-energy trajectories. For Carnot: compute EORM energy at\
+    \ each 32-token boundary during generation and apply a soft temperature adjustment\
+    \ (logits *= (1 - alpha * energy_score)) to steer away from high-energy continuations\
+    \ before they materialize.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/models/eorm_model.py\
+    \ — EORMModel, energy() method\n- python/carnot/phase3/continuous_ebm.py — ContinuousEBM,\
+    \ sample_langevin() (for reference)\n- results/experiment_556_eorm_grpo_retrain.json\
+    \ — real-data EORM path (use eorm_model_556_real.safetensors if exists)\n- python/carnot/pipeline/verify_repair.py\
+    \ — VerifyRepairPipeline (integration reference)\n\nTASK: Implement LatentCoTEBMCalibrator;\
+    \ measure violation rate delta.\n1. Read CLAUDE.md spec-first workflow.\n2. Add\
+    \ REQ-VERIFY-116 (LatentCoTEBMCalibrator: per-step EORM energy gate during generation),\
+    \ SCENARIO-VERIFY-134/135/136 to spec.\n3. Create python/carnot/pipeline/latent_cot_calibrator.py:\n\
+    \   a. LatentCoTCalibrationResult dataclass: n_steps, per_step_energy, mean_energy,\
+    \ violation_rate_before, violation_rate_after, temperature_adjustments.\n   b.\
+    \ LatentCoTEBMCalibrator(eorm_model, alpha=0.1, step_boundary_tokens=32):\n \
+    \     - calibrate_generation(prompt, generate_fn, n_questions) -> LatentCoTCalibrationResult:\n\
+    \         For each 32-token boundary:\n           1. Compute partial response so\
+    \ far.\n           2. Score with EORM: energy_score = eorm_model.energy(partial_response).\n\
+    \           3. Apply temperature: adjusted_logits = logits * (1 - alpha * energy_score).\n\
+    \           4. Continue generation with adjusted logits.\n   c. compare_violation_rate(calibrated_responses,\
+    \ baseline_responses, labeled_questions) -> dict.\n   d. Exported from carnot.pipeline.__init__.\n\
+    4. Write scripts/experiment_560_latent_cot_calibrator.py:\n   a. subprocess kill\
+    \ FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(560, timeout_minutes=25).\n\
+    \   c. ExperimentTemplate(560, 'LatentCoTEBMCalibrator',\n      'results/experiment_560_latent_cot_calibrator.json',\
+    \ requires_gpu=False).\n   d. Load or build EORM model (Exp 556 real if available,\
+    \ else fresh synthetic).\n   e. Generate 25 synthetic GSM8K responses WITHOUT\
+    \ calibration (baseline).\n   f. Generate same 25 responses WITH LatentCoTEBMCalibrator\
+    \ (alpha=0.1).\n   g. Apply VPRMArithmeticVerifier to both sets; compare violation_rate.\n\
+    \   h. Build artifact: schema='carnot.latent_cot_calibrator.v1',\n      n_questions=25,\n\
+    \      alpha=0.1,\n      step_boundary_tokens=32,\n      baseline_violation_rate=<float>,\n\
+    \      calibrated_violation_rate=<float>,\n      violation_rate_delta=calibrated-baseline,\n\
+    \      mean_energy_trajectory=<list>,\n      honest_verdict='calibration_reduces_violations'\
+    \ if delta<-0.05 else 'calibration_neutral'.\n   i. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n5. Write tests/python/test_latent_cot_calibrator.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Update _bmad/architecture.md\
+    \ (Tier 3 calibration), traceability, ops docs.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
     \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp548-retro-2026-04-41
-  milestone: 2026.04.41
-  deliverable: results/experiment_548_retro_2026_04_41.json
-  title: 'Exp 548: Milestone 2026.04.41 Retrospective'
+- id: exp561-tier1-self-learning-relay-real
+  milestone: 2026.04.42
+  deliverable: results/experiment_561_tier1_relay_real.json
+  title: 'Exp 561: Tier 1 Self-Learning Relay on Real Data — FR-11 Mandatory'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Milestone 2026.04.41\
-    \ is complete. Write the operational retrospective.\n\nEXISTING CODE TO READ FIRST:\n\
-    - results/experiment_537_teardown_fix.json — teardown (RETRO-054 close status)\n\
-    - results/experiment_538_live_25q_precision_v9.json — live 25q (RETRO-033/055 close status)\n\
-    - results/experiment_539_live_100q_vericot_v8.json — live 100q (RETRO-038 close status)\n\
-    - results/experiment_540_grpo_eorm_retrain.json — GRPO EORM\n- results/experiment_541_constraint_addition_live.json\
-    \ — constraint addition wire-in\n- results/experiment_542_fover_expansion.json\
-    \ — FOVER expansion\n- results/experiment_543_jepa_v8_live_retrain.json — JEPA\
-    \ v8 (FR-11)\n- results/experiment_544_lowrank_kaem_cascade.json — LowRankKAEM\
-    \ wire-in\n- results/experiment_545_internal_state_probe.json — internal probe\n\
-    - results/experiment_546_autorefine_constraint_templates.json — AutoRefine templates\n\
-    - results/experiment_547_legacy_modernization.json — legacy sprint\n- results/operational_retro_2026_04_40.json\
-    \ — prior retro (schema=carnot.operational_retro.v15)\n- scripts/experiment_template.py\
-    \ — ExperimentTemplate\n\nTASK: Write operational retrospective following v15 schema.\n\
-    1. apply_env_autofix() FIRST.\n2. ExperimentTimeoutWatchdog(548, timeout_minutes=20).\n\
-    3. ExperimentTemplate(548, 'Milestone 2026.04.41 Retrospective',\n   'results/experiment_548_retro_2026_04_41.json',\
-    \ requires_gpu=False).\n4. Load all experiment results for Exps 537-547.\n5.\
-    \ Compute:\n   a. n_experiments, n_completed, n_timed_out, n_deferred_to_gpu,\
-    \ n_missing.\n   b. total_wall_time_minutes (sum all durations), average_minutes_per_experiment.\n\
-    \   c. retro_054_resolved (Exp 537), retro_055_resolved (Exp 538), retro_033_closed\
-    \ (Exp 538), retro_038_closed (Exp 539).\n   d. fr11_live_relay (Exp 543), jepa_v8_auc\
-    \ (Exp 543).\n   e. grpo_eorm_improved (Exp 540), lowrank_kaem_wired (Exp 544).\n\
-    \   f. legacy_scripts_modernized (Exp 547).\n   g. retro_closure_rate (closed/total\
-    \ open at start).\n   h. headline_results dict with key findings per experiment.\n\
-    \   i. new_retro_items (any new blockers discovered).\n   j. open_retro_items\
-    \ (carry-forward from .40 not resolved + new ones).\n   k. meta_reflection: top_3_bottlenecks,\
-    \ top_3_improvements_for_42, credibility_verdict, wall_time_42_estimate_minutes.\n\
-    6. Build artifact: schema='carnot.operational_retro.v16'\n   honest_verdict='milestone_complete'\
-    \ or 'milestone_partial'\n7. tmpl.assert_deliverable_written().\n8. Update ops/status.md:\
-    \ add Milestone 2026.04.41 Results section. NEVER remove existing content.\n\
-    9. Update ops/changelog.md with milestone summary. NEVER remove existing content.\n\
-    10. Update ops/conductor-log.md with retro entry.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: FR-11 (autonomous\
+    \ self-learning loop) requires that learning happen from REAL data. Previous FR-11\
+    \ relays (Exps 361, 456, 541) used synthetic data. This experiment runs the Tier\
+    \ 1 self-learning relay on real data: (1) Session 1 uses base constraints on the\
+    \ 25 real responses from Exp 538; (2) ConstraintAdditionFromMemory analyzes the\
+    \ FP patterns from Exp 554's diagnostic; (3) Session 2 uses the extended constraint\
+    \ set; (4) Measure FP rate delta. Must use inference_mode='real_data'.\n\nEXISTING\
+    \ CODE TO READ FIRST:\n- python/carnot/pipeline/constraint_addition.py — ConstraintAdditionFromMemory,\
+    \ ViolationPattern\n- python/carnot/pipeline/self_learning_relay.py — SelfLearningRelay,\
+    \ SelfLearningBatchResult\n- results/experiment_554_extraction_diagnostic.json\
+    \ — FP analysis (root_cause_hypothesis, fp_rate, violation patterns)\n- results/experiment_538_live_25q_precision_v9.json\
+    \ — 25 live responses from Exp 538\n- results/fover_corpus_v2.json — diverse corpus\
+    \ (use for session data)\n- openspec/capabilities/autoresearch/spec.md — FR-11\
+    \ requirements\n\nTASK: Tier 1 self-learning relay using real FP patterns. FR-11\
+    \ mandatory.\n1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-SELFLEARN-013\
+    \ (Tier 1 relay uses real FP patterns from live inference, not synthetic), SCENARIO-SELFLEARN-013/014/015\
+    \ to openspec/capabilities/autoresearch/spec.md.\n3. Write scripts/experiment_561_tier1_relay_real.py:\n\
+    \   a. subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(561,\
+    \ timeout_minutes=25).\n   c. ExperimentTemplate(561, 'Tier 1 Self-Learning Relay\
+    \ Real Data',\n      'results/experiment_561_tier1_relay_real.json', requires_gpu=False).\n\
+    \   d. Load Exp 554 FP patterns (real, not synthetic). Gate if not available.\n\
+    \   e. Load 25 responses from Exp 538 OR fover_corpus_v2.json.\n   f. Session\
+    \ 1 (base constraints):\n      - Run VerifyRepairPipeline on all 25 responses\
+    \ with base extractors.\n      - Record session1_fp_rate (violations on known-correct\
+    \ responses).\n      - Record session1_tp_rate.\n   g. ConstraintAdditionFromMemory.learn_from_patterns(fp_patterns\
+    \ from Exp 554):\n      - Creates new constraint type from FP pattern (e.g., 'it_format_false_positive'\
+    \ → add whitelist filter).\n   h. Session 2 (extended constraints — same 25 responses):\n\
+    \      - Run VerifyRepairPipeline with extended extractors.\n      - Record session2_fp_rate,\
+    \ session2_tp_rate.\n   i. Build artifact: schema='carnot.selflearn_relay.v3',\n\
+    \      inference_mode='real_data',\n      session1_fp_rate=<float>,\n      session2_fp_rate=<float>,\n\
+    \      fp_rate_delta=session2-session1,\n      session1_tp_rate=<float>,\n   \
+    \   session2_tp_rate=<float>,\n      constraints_added=<list of new constraint\
+    \ types>,\n      fr11_real_data=True,\n      honest_verdict='real_data_improvement'\
+    \ if fp_rate_delta<-0.05 else 'real_data_no_improvement'.\n   j. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n4. Write tests/python/test_experiment_561_tier1_relay_real.py\
+    \ (100% targeted coverage on new helpers).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n6. Update ops/conductor-log.md (FR-11 real-data relay status),\
+    \ traceability, ops docs.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp562-retro-2026-04-42
+  milestone: 2026.04.42
+  deliverable: results/experiment_562_retro_2026_04_42.json
+  title: 'Exp 562: Milestone 2026.04.42 Retrospective'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Milestone 2026.04.42\
+    \ complete (Exps 549-562, 14 experiments). Write the operational retrospective\
+    \ following v16 schema. Key success criteria: (1) exclusion_manifest_created,\
+    \ (2) live_50q_a and live_50q_b completed with inference_mode=live_gpu, (3) fover_corpus_v2_ready\
+    \ (n_labeled>=100, entropy>=1.5), (4) retro_056_closed (JEPA v9 AUC>=0.800),\
+    \ (5) retro_057_closed (LowRankKAEM mad<0.05), (6) retro_058_data_ready, (7)\
+    \ retro_059_resolved, (8) fr11_real_data_relay=True. The headline question: 'Did\
+    \ we finally break the synthetic barrier?'\n\nEXISTING CODE TO READ FIRST:\n-\
+    \ results/experiment_548_retro_2026_04_41.json — .41 retro (v16 schema reference)\n\
+    - results/experiment_549_exclusion_manifest.json — RETRO-059 status\n- results/experiment_550_batching_real_migration.json\
+    \ — batching migration status\n- results/experiment_551_live_data_a.json — live\
+    \ data A status\n- results/experiment_552_live_data_b.json — live data B status\n\
+    - results/experiment_553_fover_corpus_v2.json — corpus diversity\n- results/experiment_554_extraction_diagnostic.json\
+    \ — root cause analysis\n- results/experiment_555_confidence_weighted.json —\
+    \ FP reduction\n- results/experiment_556_eorm_grpo_retrain.json — EORM real data\n\
+    - results/experiment_557_jepa_v9_retrain.json — JEPA v9 AUC\n- results/experiment_558_internal_probe_real.json\
+    \ — probe AUC\n- results/experiment_559_lowrank_kaem_calibration.json — KAEM\
+    \ calibration\n- results/experiment_560_latent_cot_calibrator.json — step-level\
+    \ calibration\n- results/experiment_561_tier1_relay_real.json — FR-11 real data\n\
+    - results/operational_retro_2026_04_41.json — .41 retro (wall_time comparison\
+    \ baseline)\n\nTASK: Write milestone retrospective.\n1. Read CLAUDE.md spec-first\
+    \ workflow.\n2. Write scripts/experiment_562_retro_2026_04_42.py:\n   a. subprocess\
+    \ kill FIRST (PIDs 527256/527259/529495), apply_env_autofix() SECOND.\n   b.\
+    \ ExperimentTimeoutWatchdog(562, timeout_minutes=30).\n   c. ExperimentTemplate(562,\
+    \ 'Milestone 2026.04.42 Retrospective',\n      'results/experiment_562_retro_2026_04_42.json',\
+    \ requires_gpu=False).\n   d. Load ALL 14 .42 experiment results (549-562).\n\
+    \   e. Compute: n_completed, n_timed_out, n_deferred_to_gpu, n_missing.\n   f.\
+    \ Compute: total_wall_time_minutes, average_minutes_per_experiment.\n   g. Compare\
+    \ vs .41 baseline (4484 min, 11.0 min/exp).\n   h. Evaluate success criteria:\
+    \ exclusion_manifest_created, live_50q_a_completed, live_50q_b_completed,\n  \
+    \    fover_corpus_v2_n_labeled, fover_corpus_v2_entropy, retro_056_closed,\n \
+    \     retro_057_closed, retro_058_data_ready, retro_059_resolved, fr11_real_data_relay.\n\
+    \   i. Compute retro_closure_rate (new RETROs closed / new RETROs opened).\n\
+    \   j. Identify top-3 slowest experiments and their carry status.\n   k. Formulate\
+    \ new_retro_items (list of {id, title, description, priority}).\n   l. headline_result:\
+    \ 'synthetic_barrier_broken' if live_50q_a AND live_50q_b AND fover_corpus_v2_n_labeled>=100.\n\
+    \   m. Build artifact: schema='carnot.operational_retro.v17',\n      milestone='2026.04.42',\n\
+    \      n_experiments=14, ... all fields ...\n      honest_verdict=headline_result.\n\
+    \   n. tmpl.assert_deliverable_written() as FINAL LINE.\n3. Write tests/python/test_experiment_562_retro_2026_04_42.py\
+    \ (100% targeted coverage).\n4. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\n5. Write results/operational_retro_2026_04_42.json (separate from experiment\
+    \ artifact — full retro data).\n6. Update ops/status.md, ops/changelog.md, ops/conductor-log.md.\nRun:\
+    \ JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
+    \ scripts/research_conductor.py.\n"
