@@ -611,4 +611,8 @@
 | SCENARIO-INFRA-083 | Implemented | teardown() Calls gc.collect() and Logs Completion — Exp 537 scenario: teardown() called with clear_gpu=False calls gc.collect() exactly once and INFO log contains experiment ID |
 | REQ-INFRA-074 | Implemented | kill_gpu_zombies() Kills Processes Holding VRAM at Zero Utilization — Exp 537 classmethod using pynvml to enumerate and SIGTERM processes with VRAM>=1000MB and utilization<5% |
 | SCENARIO-INFRA-084 | Implemented | kill_gpu_zombies() Returns pynvml_unavailable When pynvml Not Installed — Exp 537 scenario: returns {'killed_pids': [], 'freed_mb': 0, 'error': 'pynvml_unavailable'} when pynvml not importable |
+| REQ-VERIFY-115 | Implemented | InternalStateProbe — Linear Layer on LLM Hidden States for Tier 2 Credibility — Exp 545 linear probe trained on hidden states to extract credential signals; is_tier2_viable = (probe_auc >= 0.700) enables Tier 2 deployment with 810x fewer parameters than EORM |
+| SCENARIO-VERIFY-151 | Implemented | InternalStateProbe.train Converges on Synthetic Data — Exp 545 scenario: training on simulated hidden states with probe loss converges to >0.99 AUC |
+| SCENARIO-VERIFY-152 | Implemented | simulate_hidden_states Incorrect Has Higher Norm Than Correct — Exp 545 scenario: hallucinated hidden states have norm > correct states by design for linear probe separation |
+| SCENARIO-VERIFY-153 | Implemented | evaluate_probe_vs_eorm Returns InternalStateProbeResult — Exp 545 scenario: comparison returns result with probe_auc, eorm_auc, size_reduction_factor fields |
 | SCENARIO-INFRA-085 | Implemented | __init__() Registers teardown via atexit — Exp 537 scenario: atexit.register(self.teardown) called during ExperimentTemplate construction so teardown fires on any exit path |
