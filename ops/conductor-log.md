@@ -2328,3 +2328,4 @@ python/ |
 | 2026-04-20 15:55 UTC | Exp 593: JEPA v12 Live Corpus Retrain — CPMI + PRO | OK | 81 passed, 2 warnings in 3.19s |
 | 2026-04-20 16:07 UTC | Exp 594: Live VR CoACE v3 — RETRO-033 Attempt #13  | OK | 81 passed, 2 warnings in 3.21s |
 | 2026-04-20 16:13 UTC | Exp 595: Live VR DSVD Detection — RETRO-033 Attemp | OK | 81 passed, 2 warnings in 3.18s |
+| 2026-04-20 16:24 UTC | Exp 596: Live 200q Wilson CI — RETRO-038 Attempt # | OK | 81 passed, 2 warnings in 3.22s |
