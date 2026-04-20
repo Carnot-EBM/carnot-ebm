@@ -32,6 +32,11 @@ from carnot.extraction.extraction_diagnostic import (
     ExtractionDiagnosticResult,
     run_extractor_diagnostic,
 )
+from carnot.extraction.confidence_filter import (
+    ViolationConfidence,
+    ConfidenceWeightedExtractor,
+    score_violation,
+)
 
 __all__ = [
     "FOLPremise",
@@ -42,4 +47,7 @@ __all__ = [
     "VPRMArithmeticVerifier",
     "ExtractionDiagnosticResult",
     "run_extractor_diagnostic",
+    "ViolationConfidence",
+    "ConfidenceWeightedExtractor",
+    "score_violation",
 ]

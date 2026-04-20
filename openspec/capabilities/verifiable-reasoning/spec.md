@@ -10027,3 +10027,46 @@ Then: n_false_positive == count of correct responses, n_true_positive == count o
 Given: A set of labeled responses processed by run_extractor_diagnostic().
 When: ExtractionDiagnosticResult.per_question_flags is inspected.
 Then: Each entry has is_correct, violation_found, and cell (one of 'TP','FP','TN','FN').
+
+---
+
+## REQ-EXTRACT-031: Confidence Score for Each Violation — Only Repair Above Threshold
+
+Each violation detected by a base extractor (VPRMArithmeticVerifier, VeriCoTStepValidator) must
+be assigned a confidence score in [0.0, 1.0].  Only violations with confidence_score >= threshold
+should trigger the repair loop.  The ConfidenceWeightedExtractor wraps any base extractor and
+adds scoring via lightweight heuristics (equation pattern, approximate language, step markers).
+
+**Implementation Status:** Implemented (Exp 555, carnot.extraction.confidence_filter)
+
+---
+
+## REQ-EXTRACT-032: Threshold Sweep Evaluation for Confidence-Weighted Filtering
+
+The system must support sweeping confidence_threshold over [0.5, 0.7, 0.9] and computing
+fp_rate, tp_rate, and repair_trigger_rate at each threshold.  The sweep must identify an
+optimal_threshold (min fp_delta < -0.3 with max tp_loss < 0.2) and report honest_verdict.
+
+**Implementation Status:** Implemented (Exp 555, scripts/experiment_555_confidence_weighted.py)
+
+---
+
+### SCENARIO-EXTRACT-058: ViolationConfidence Stores Text, Score, Type, is_definitive
+
+Given: A base extractor that returns one violation string.
+When: ConfidenceWeightedExtractor.extract() is called with that response.
+Then: Returns a list[ViolationConfidence] where each entry has violation_text (str),
+confidence_score (float in [0,1]), violation_type (str label), and is_definitive (True iff score >= 0.80).
+
+### SCENARIO-EXTRACT-059: above_threshold Filters Violations by confidence_threshold
+
+Given: A list of ViolationConfidence with mixed scores (0.95, 0.20, 0.60).
+When: ConfidenceWeightedExtractor(base, confidence_threshold=0.7).above_threshold(violations) is called.
+Then: Only violations with confidence_score >= 0.7 are returned (the 0.95 entry; not the 0.20 or 0.60).
+
+### SCENARIO-EXTRACT-060: Threshold Sweep Produces fp_rate, tp_rate, repair_trigger_rate Per Threshold
+
+Given: 25 labeled responses (8 correct, 17 incorrect) processed by ConfidenceWeightedExtractor.
+When: Exp 555 threshold_sweep runs at [0.5, 0.7, 0.9].
+Then: Each sweep entry contains threshold, fp_rate, tp_rate, repair_trigger_rate; and the artifact
+contains optimal_threshold, fp_reduction_at_optimal, tp_loss_at_optimal, honest_verdict.
