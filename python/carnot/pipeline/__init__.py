@@ -474,6 +474,7 @@ from carnot.pipeline.interleaved_verifier import (  # noqa: E402
     InterleavedLogicVerifier,
     InterleavedStepResult,
 )
+from carnot.pipeline.capo_calibration import CAPOCalibrationLoss  # noqa: E402
 
 __all__ = [
     "AgentStep",
@@ -792,4 +793,5 @@ __all__ = [
     "HISRWeighter",
     "InterleavedLogicVerifier",
     "InterleavedStepResult",
+    "CAPOCalibrationLoss",
 ]
