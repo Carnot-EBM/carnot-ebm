@@ -1318,6 +1318,65 @@ Spec: REQ-LEARN-060
 
 ---
 
+### REQ-LEARN-061: JEPAPUREMinForm — PURE Min-Form Contrastive Margin Loss for JEPA Training
+
+**Motivation (RETRO-060):** Binary BCE loss lets the JEPA model hedge toward P=0.5 everywhere,
+producing near-zero gradient and AUC=0.4286 — below random — for the second consecutive retrain
+(Exp 557).  The root cause is that BCE does not enforce a contrastive margin between correct and
+incorrect chain scores.
+
+**Fix (arXiv 2504.15275, PURE PRM):** Score a chain by the MINIMUM step score across all its
+steps.  A chain with one bad step gets a strong low signal; a chain with all good steps gets a
+strong high signal.  The contrastive loss is:
+
+    loss = mean(max(0, margin - (min_score_incorrect - min_score_correct)))
+
+over all (correct, incorrect) pairs from the same question.  This enforces a hard margin gap of
+at least `margin` between the minimum step scores of incorrect and correct chains — exactly the
+signal that NUP Probe v4 used to achieve AUC=1.0.
+
+**Requirements:**
+- JEPAChainScore dataclass: chain_id (str), step_scores (list[float]), min_score (float), is_correct (bool).
+- PUREMinFormLoss class with compute_chain_scores, compute_loss, zero_if_empty methods.
+- pairs_to_pure_chains helper: groups FOVERCorpusEntry list by question_id, embeds steps, returns (correct_chains, incorrect_chains).
+
+Spec: REQ-LEARN-061
+
+---
+
+### REQ-LEARN-062: PUREMinFormLoss Margin Parameter Is Configurable
+
+The contrastive margin used by PUREMinFormLoss must be exposed as a constructor parameter
+`margin: float = 1.0`.  Callers may override it without subclassing.
+
+Spec: REQ-LEARN-062
+
+---
+
+### SCENARIO-LEARN-095: PUREMinFormLoss Returns Positive Loss When Incorrect Score > Correct Score But Gap < Margin
+
+**Given** a correct chain with min_score=0.3 and an incorrect chain with min_score=0.7 and margin=1.0
+**When** compute_loss is called
+**Then** loss = max(0, 1.0 - (0.7 - 0.3)) = 0.6 > 0
+
+---
+
+### SCENARIO-LEARN-096: PUREMinFormLoss Returns Zero When Gap Exceeds Margin
+
+**Given** a correct chain with min_score=0.0 and an incorrect chain with min_score=1.5 and margin=1.0
+**When** compute_loss is called
+**Then** loss = max(0, 1.0 - (1.5 - 0.0)) = 0.0
+
+---
+
+### SCENARIO-LEARN-097: PUREMinFormLoss.zero_if_empty Returns 0.0 for Empty Pair List
+
+**Given** an empty list of pairs
+**When** zero_if_empty is called
+**Then** 0.0 is returned without error
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1369,3 +1428,5 @@ Spec: REQ-LEARN-060
 | REQ-LEARN-058 | N/A | Implemented | 26 Python |
 | REQ-LEARN-059 | N/A | Implemented | 26 Python |
 | REQ-LEARN-060 | N/A | Implemented | Python |
+| REQ-LEARN-061 | N/A | Implemented | Python |
+| REQ-LEARN-062 | N/A | Implemented | Python |
