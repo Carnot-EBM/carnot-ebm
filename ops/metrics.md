@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-20 Milestone 2026.04.46 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-20T17:00:00Z | 2026-04-20T17:48:56Z | Planned milestone 2026.04.46 "Live Distribution Fix — Data-Driven Extractor Retraining and JEPA Generalization": read 11 project files + .45 retro JSON (results/experiment_600_retro_2026_04_45.json). Spawned arxiv research subagent (4 genuinely new papers: arXiv 2504.00891 GenPRM LLM-as-extractor DIRECT fix for RETRO-068 CoACEV3 4% live recall; arXiv 2601.02170 Streaming Hallucination Detection temporal window labeling for DSVD retrain; arXiv 2604.12632 CAPO calibration-aware contrastive loss prevents overconfidence; arXiv 2601.00095 MetaJuLS meta-RL constraint propagation filed .47). Appended 4 new entries to research-references.md. Identified 3 biggest gaps: (1) RETRO-068 CRITICAL — CoACEV3 live recall=4% (worse than v2's 5.9%) because hand-engineered patterns don't match real IT-model error distributions; three consecutive pattern-based versions all failed; fix: GenPRM-style generative LLM-as-extractor (CoACEV4); (2) RETRO-069 CRITICAL — DSVD offline AUC=0.976 vs live AUC=0.586 because trained on synthetic hidden-state pairs not matching live model behavior; fix: fine-tune on Exp 578 live pairs with temporal window labeling; (3) JEPA v12 AUC=1.0 on 20 in-distribution pairs suspicious — possible overfit; fix: OOD validation on GSM8K 500+ never seen in training. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (13 experiments 601-613, title "Live Distribution Fix — Data-Driven Extractor Retraining and JEPA Generalization", 5 phases: Phase 0 Infrastructure, Phase 1 Fix Offline/Live Gap, Phase 2 Generalization Tests, Phase 3 Gated VR Attempt #14, Phase 4 Hardware+Research, Phase 5 Retro; dependency graph; success criteria table; RETRO closure plan; hardware requirements table; arxiv references table). Wrote research-roadmap-next.yaml (13 experiments 601-613 with complete prompts following CONTEXT/EXISTING CODE/TASK/CONCRETE STEPS format; each ends with JAX_PLATFORMS=cpu pytest run command and "Do NOT push. Do NOT modify scripts/research_conductor.py."; gating: Exp 603+604 gate Exp 605; Exp 605 gates Exp 609; Exp 609 requires recall_gate>=0.20). | ~95k |
+
+---
+
 ## Session: 2026-04-20 Milestone 2026.04.45 Planning
 
 ### Turn Log
