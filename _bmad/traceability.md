@@ -615,4 +615,9 @@
 | SCENARIO-VERIFY-151 | Implemented | InternalStateProbe.train Converges on Synthetic Data — Exp 545 scenario: training on simulated hidden states with probe loss converges to >0.99 AUC |
 | SCENARIO-VERIFY-152 | Implemented | simulate_hidden_states Incorrect Has Higher Norm Than Correct — Exp 545 scenario: hallucinated hidden states have norm > correct states by design for linear probe separation |
 | SCENARIO-VERIFY-153 | Implemented | evaluate_probe_vs_eorm Returns InternalStateProbeResult — Exp 545 scenario: comparison returns result with probe_auc, eorm_auc, size_reduction_factor fields |
+| REQ-LEARN-053 | Implemented | AutoRefineTemplateDistiller — Self-Distillation of Constraint Templates — Exp 546 distills optimized constraint templates from FOVER-labeled CoT validation feedback |
+| REQ-LEARN-054 | Implemented | ConstraintTemplateCache — Adaptive Template Store with Iterative Refinement — Exp 546 maintains cache of constraint templates with precision metrics and cumulative validation feedback |
+| SCENARIO-LEARN-083 | Implemented | Distiller.refine Accepts CoT Pairs and Returns Updated Template — Exp 546 scenario: refine(coT_pairs=[...]) returns ConstraintTemplate with improved constraint_match_precision |
+| SCENARIO-LEARN-084 | Implemented | TemplateCache.log_validation Returns Updated Metrics — Exp 546 scenario: logs validation outcome and updates precision_delta field |
+| SCENARIO-LEARN-085 | Implemented | Integration with ThreeTierPipeline — Exp 546 scenario: AutoRefineTemplateDistiller wired into FR-11 self-learning loop for iterative constraint adaptation |
 | SCENARIO-INFRA-085 | Implemented | __init__() Registers teardown via atexit — Exp 537 scenario: atexit.register(self.teardown) called during ExperimentTemplate construction so teardown fires on any exit path |
