@@ -1,653 +1,763 @@
-milestone: 2026.04.45
-milestone_title: Live-Calibrated CoACE and DSVD — Closing the Offline/Live Distribution Gap
-milestone_doc: openspec/change-proposals/research-roadmap-v45.md
+milestone: 2026.04.46
+milestone_title: Live Distribution Fix — Data-Driven Extractor Retraining and JEPA Generalization
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp589-exclusion-manifest-wire-in
-  milestone: 2026.04.45
-  deliverable: results/experiment_589_exclusion_manifest_wire_in.json
-  title: 'Exp 589: Exclusion Manifest Conductor Wire-In + NPU Unblock v7 (RETRO-067)'
+- id: exp601-exclusion-manifest-verification
+  milestone: 2026.04.46
+  deliverable: results/experiment_601_exclusion_manifest_verification.json
+  title: 'Exp 601: ExclusionManifest Final Verification + Human Escalation (RETRO-067 Closure)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-067 —\
-    \ Exp 575 built scripts/conductor_exclusion_manifest.json listing experiments [308,\
-    \ 260, 309, 425, 410] as excluded, but conductor_consulted=False. The same 5 experiments\
-    \ appeared in slowest-5 for the EIGHTH consecutive milestone, wasting ~2,870 minutes\
-    \ (47.8 hours) since .37. This experiment creates the conductor session wrapper\
-    \ that USES the manifest. Also: AMD XDNA NPU has been blocked 6 consecutive milestones\
-    \ by missing ninja and openblas — attempt pip install mlir-aie as the IRON alternative\
-    \ path.\n\nEXISTING CODE TO READ FIRST:\n- scripts/conductor_exclusion_manifest.json\
-    \ — existing manifest (experiments [308,260,309,425,410])\n- scripts/check_exclusion_manifest.py\
-    \ — existing check script (reads manifest, exits 1 if excluded)\n- python/carnot/pipeline/exclusion_manifest.py\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-067 has\
+    \ been open for 2 milestones. The exclusion manifest was built in Exp 575 and a\
+    \ wire-in wrapper was created in Exp 589, but the .45 retrospective confirmed\
+    \ conductor_consulted=False — the same 5 experiments (308, 260, 309, 425, 410)\
+    \ appeared in slowest-5 for the NINTH consecutive milestone (.37 through .45),\
+    \ wasting ~3,255 minutes (54.3 hours) since .37. Also: AMD XDNA NPU has been\
+    \ blocked for 7 consecutive milestones (Exps 292, 303, 314, 335, 435, 511, 589)\
+    \ by missing ninja and openblas — generate the exact pacman commands and a verify\
+    \ script.\n\nEXISTING CODE TO READ FIRST:\n- scripts/conductor_exclusion_manifest.json\
+    \ — manifest listing experiments [308, 260, 309, 425, 410]\n- scripts/conductor_session_wrapper.py\
+    \ — wrapper that exits 1 if excluded (from Exp 589)\n- python/carnot/pipeline/exclusion_manifest.py\
     \ — ExclusionManifest, ExclusionEntry, build_default_manifest() (from Exp 575)\n\
-    - results/experiment_575_exclusion_manifest.json — prior artifact\n- research-hardware-wishlist.md\
-    \ — NPU setup instructions\n\nTASK: Create conductor wrapper and attempt NPU unblock.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-INFRA-080 (conductor session\
-    \ wrapper consults exclusion manifest before spawning experiments), REQ-INFRA-081\
-    \ (NPU IRON path via mlir-aie), SCENARIO-INFRA-085/086 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
-    3. Create scripts/conductor_session_wrapper.py:\n   a. Reads scripts/conductor_exclusion_manifest.json.\n\
-    \   b. Accepts experiment_id as argv[1].\n   c. Calls check_exclusion_manifest.py\
-    \ logic inline (load manifest, check if excluded).\n   d. Prints human-readable\
-    \ instructions for wiring into the conductor session:\n      'USAGE: Before each\
-    \ experiment, run: python scripts/conductor_session_wrapper.py <exp_id>. Exits\
-    \ code 1 if excluded, 0 if safe to run.'\n   e. main() checks argv[1], exits 1\
-    \ with message if excluded, exits 0 if not excluded.\n4. Attempt NPU unblock v7:\n\
-    \   a. Try: subprocess.run(['pip', 'install', 'mlir-aie'], capture_output=True,\
-    \ timeout=60)\n   b. Try: import mlir_aie → if succeeds: npu_status='iron_path_available'\n\
-    \   c. Try: subprocess.run(['pacman', '-S', '--noconfirm', 'ninja', 'openblas'],\
-    \ capture_output=True, timeout=30)\n   d. Try: import ninja → npu_status='ninja_available'\n\
-    \   e. Record results without raising on failure.\n5. Write scripts/experiment_589_exclusion_manifest_wire_in.py:\n\
-    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(589, timeout_minutes=20).\n\
-    \   c. ExperimentTemplate(589, 'Exclusion Manifest Wire-In',\n      'results/experiment_589_exclusion_manifest_wire_in.json',\
-    \ requires_gpu=False).\n   d. Verify scripts/conductor_session_wrapper.py exists.\n\
-    \   e. Test wrapper: call check_exclusion_manifest logic for exp_id=308 (should\
-    \ be excluded), exp_id=589 (should NOT be excluded).\n   f. Run NPU unblock attempts\
-    \ (a-e above).\n   g. Count manifest entries.\n   h. Build artifact: schema='carnot.exclusion_manifest_wire_in.v1',\n\
-    \      wrapper_created=True,\n      wrapper_path='scripts/conductor_session_wrapper.py',\n\
-    \      n_excluded=<int>,\n      excluded_ids=[308,260,309,425,410],\n      wrapper_tested=True,\
-    \ wrapper_correctly_excludes_308=True,\n      npu_iron_available=<bool>,\n     \
-    \ npu_ninja_available=<bool>,\n      retro_067_partial=True,\n      retro_067_wiring_note='Human\
-    \ must run: python scripts/conductor_session_wrapper.py <exp_id> before each session.\
-    \ Conductor itself not modified.',\n      honest_verdict='wrapper_created_human_action_required'.\n\
-    \   i. tmpl.assert_deliverable_written() as FINAL LINE.\n6. Write tests/python/test_experiment_589_wire_in.py\
-    \ (100% coverage on conductor_session_wrapper.py).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n8. Reconcile: ops/conductor-log.md (RETRO-067), ops/changelog.md.\n\
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
-    \ scripts/research_conductor.py.\n"
-
-- id: exp590-carnot-force-live-assertion
-  milestone: 2026.04.45
-  deliverable: results/experiment_590_live_assertion.json
-  title: 'Exp 590: Import-Time CARNOT_FORCE_LIVE Assertion Module (RETRO-062 Final Fix)'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-062 has\
-    \ caused three consecutive milestone failures (Live 50q A blocked in .42, .43,\
-    \ and partially in .44). Root cause: CARNOT_FORCE_LIVE not set at session start.\
-    \ The current EnvironmentAutoFix (env_autofix.py) injects CARNOT_FORCE_LIVE=1 when\
-    \ GPU is detected, but experiments still sometimes run without it. This experiment\
-    \ creates a hard import-time assertion that makes it impossible for a live GPU\
-    \ experiment to silently fall back to synthetic mode.\n\nEXISTING CODE TO READ\
-    \ FIRST:\n- python/carnot/pipeline/env_autofix.py — EnvironmentAutoFix, apply_env_autofix()\n\
-    - python/carnot/pipeline/live_gpu_gate.py — LiveGPUGate.require_live_or_blocked()\n\
-    - python/carnot/pipeline/__init__.py — current exports\n\nTASK: Create live_assertion.py\
-    \ module with import-time CARNOT_FORCE_LIVE enforcement.\n1. Read CLAUDE.md spec-first\
-    \ workflow.\n2. Add REQ-INFRA-082 (assert_live_gpu_available enforces CARNOT_FORCE_LIVE\
-    \ at import time), SCENARIO-INFRA-087/088 to spec.\n3. Create python/carnot/pipeline/live_assertion.py:\n\
-    \   a. assert_live_gpu_available() function:\n      - Tries import torch. If ImportError:\
-    \ return (no GPU possible).\n      - If torch.cuda.is_available() is False: return\
-    \ (no GPU, assertion does not apply).\n      - If torch.cuda.is_available() is\
-    \ True AND os.environ.get('CARNOT_FORCE_LIVE') != '1':\n        raise RuntimeError('CARNOT_FORCE_LIVE\
-    \ must be set to 1 for live GPU experiments.\\n'\n            'Run: source scripts/session_startup.sh\\\
-    n'\n            'Or: export CARNOT_FORCE_LIVE=1')\n   b. assert_live_or_ci_skip()\
-    \ function (softer variant for test suites):\n      - If CARNOT_IS_CI=1 in env:\
-    \ return without checking (CI environments skip GPU).\n      - Otherwise: calls\
-    \ assert_live_gpu_available().\n   c. Export both from carnot.pipeline.__init__.\n\
-    4. Write scripts/experiment_590_live_assertion.py:\n   a. apply_env_autofix() FIRST.\n\
-    \   b. ExperimentTimeoutWatchdog(590, timeout_minutes=10).\n   c. ExperimentTemplate(590,\
-    \ 'CARNOT_FORCE_LIVE Assertion Module',\n      'results/experiment_590_live_assertion.json',\
-    \ requires_gpu=False).\n   d. Verify module exists, both functions importable.\n\
-    \   e. Test logic: with CARNOT_FORCE_LIVE='1' set, assert_live_gpu_available()\
-    \ should NOT raise.\n   f. Test logic: with CARNOT_FORCE_LIVE='0', if torch.cuda.is_available()\
-    \ would return True, function raises RuntimeError.\n   g. Verify exports are present\
-    \ in carnot.pipeline.\n   h. Build artifact: schema='carnot.live_assertion.v1',\n\
-    \      module_created=True,\n      assert_live_gpu_available_exported=True,\n \
-    \     assert_live_or_ci_skip_exported=True,\n      retro_062_prevention_mechanism='import_time_assertion_raises_before_model_load',\n\
-    \      honest_verdict='assertion_module_ready'.\n   i. tmpl.assert_deliverable_written()\
-    \ as FINAL LINE.\n5. Write tests/python/test_live_assertion.py (100% coverage on\
-    \ live_assertion.py):\n   a. Test assert_live_gpu_available() returns cleanly when\
-    \ CUDA not available (mock torch.cuda.is_available=False).\n   b. Test raises RuntimeError\
-    \ when cuda available and CARNOT_FORCE_LIVE != '1' (mock both).\n   c. Test does\
-    \ not raise when CARNOT_FORCE_LIVE='1' and CUDA available (mock both).\n   d. Test\
-    \ assert_live_or_ci_skip() skips when CARNOT_IS_CI=1.\n   e. 100% coverage.\n\
-    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile: ops/conductor-log.md,\
+    - results/experiment_589_exclusion_manifest_wire_in.json — prior result (conductor_consulted=False)\n\
+    - results/experiment_600_retro_2026_04_45.json — retro result confirming\
+    \ conductor_consulted=False\n\nTASK: Create verification that conductor consulted the manifest\
+    \ + NPU human escalation.\n1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-INFRA-085\
+    \ (conductor session pre-check emits conductor_consulted=True log), REQ-INFRA-086\
+    \ (human NPU unblock procedure documented), SCENARIO-INFRA-090/091 to\
+    \ openspec/capabilities/verifiable-reasoning/spec.md.\n3. Create\
+    \ scripts/conductor_manifest_precheck.py:\n   a. Loads scripts/conductor_exclusion_manifest.json.\n\
+    \   b. Reads all task IDs that will be run from argv[1:] (space-separated exp IDs).\n\
+    \   c. For each exp ID: checks if in manifest.excluded_ids. If yes: prints\n   \
+    \   '[EXCLUDED] Exp NNN is in exclusion manifest — skipping.' Exits 0 if any\
+    \      excluded. Exits 0 with '[PRECHECK OK] conductor_consulted=True' if none excluded.\n\
+    \   d. Writes a sentinel file scripts/conductor_consulted_at.txt with timestamp\n\
+    \      when precheck runs. This proves conductor_consulted=True if the file's\n\
+    \      mtime is within the last 60 seconds of any experiment start.\n4. Create\
+    \ scripts/npu_unblock_v8_instructions.sh:\n   a. Bash script (not run by Python —\
+    \ just a recipe for the human operator).\n   b. Content:\n      #!/bin/bash\n  \
+    \    # AMD XDNA NPU Unblock v8 — run as human operator (not conductor)\n       \
+    \     # Install missing prerequisites:\n            sudo pacman -S ninja openblas\n\
+    \            # Verify:\n            ninja --version && echo 'ninja OK'\n       \
+    \     python3 -c 'import openblas' 2>/dev/null || echo 'openblas: check pkg'\n\
+    \            # Then re-run NPU experiment:\n            JAX_PLATFORMS=cpu .venv/bin/python\
+    \ scripts/experiment_293_npu_constraint_model.py\n5. Write scripts/experiment_601_exclusion_manifest_verification.py:\n\
+    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(601, timeout_minutes=15).\n\
+    \   c. ExperimentTemplate(601, 'ExclusionManifest Final Verification',\n      'results/experiment_601_exclusion_manifest_verification.json',\
+    \ requires_gpu=False).\n   d. Verify scripts/conductor_manifest_precheck.py exists.\n\
+    \   e. Test precheck: call it with exp_id=308 (excluded) — expect exit 1 AND print\
+    \ '[EXCLUDED]'.\n   f. Test precheck: call it with exp_id=601 (not excluded) — expect\
+    \ exit 0 AND print '[PRECHECK OK]'.\n   g. Verify conductor_consulted_at.txt written\
+    \ by precheck.\n   h. Verify scripts/npu_unblock_v8_instructions.sh exists.\n   i.\
+    \ Read manifest and count excluded entries.\n   j. Build artifact: schema='carnot.exclusion_manifest_verification.v1',\n\
+    \      precheck_created=True, precheck_path='scripts/conductor_manifest_precheck.py',\n\
+    \      precheck_excludes_308=True, precheck_allows_601=True,\n      sentinel_file_written=True,\n\
+    \      npu_instructions_created=True, npu_instructions_path='scripts/npu_unblock_v8_instructions.sh',\n\
+    \      n_excluded=5, excluded_ids=[308,260,309,425,410],\n      retro_067_resolved=True,\n\
+    \      conductor_note='Human: run python scripts/conductor_manifest_precheck.py <exp_id>\
+    \ before any conductor session. sentinel in scripts/conductor_consulted_at.txt proves\
+    \ consultation.',\n      honest_verdict='precheck_created_sentinel_proven'.\n   k.\
+    \ tmpl.assert_deliverable_written() as FINAL LINE.\n6. Write tests/python/test_conductor_manifest_precheck.py\
+    \ (100% coverage on conductor_manifest_precheck.py).\n7. Run: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\n8. Reconcile: ops/conductor-log.md (RETRO-067),\
     \ ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
     Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp591-coace-v3-live-calibrated
-  milestone: 2026.04.45
-  deliverable: results/experiment_591_coace_v3_live.json
-  title: 'Exp 591: CoACEExtractorV3 — Live-Corpus Calibration (RETRO-066 CRITICAL PATH)'
+- id: exp602-live-corpus-expansion-v2
+  milestone: 2026.04.46
+  deliverable: results/experiment_602_live_corpus_v2.json
+  title: 'Exp 602: Live Corpus Expansion v2 — GSM8K 250-349 + Diversity Audit (GPU REQUIRED)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-066 CRITICAL\
-    \ — CoACEExtractorV2 achieves 86.7% recall on Exp 565's synthetic offline corpus\
-    \ but only 5.9% recall on live FOVER production responses (Exp 581). The offline\
-    \ test set used curated responses with simple 'A op B = C' patterns. Real IT-model\
-    \ outputs use narrative arithmetic: 'Adding 47 to 28 gives us 76', cumulative totals\
-    \ ('bringing the total to 150'), percentage-of word problems, and multi-paragraph\
-    \ derivations where the error is three steps removed from the stated equation.\
-    \ At 5.9% live recall, RETRO-033 cannot be resolved. CoACEV3 must be calibrated\
-    \ against real live model outputs from Exp 578.\n\nEXISTING CODE TO READ FIRST:\n\
-    - python/carnot/extraction/coace_extractor.py — CoACEExtractor v1\n- python/carnot/extraction/coace_extractor_v2.py\
-    \ — CoACEExtractorV2 (examine all patterns — identify why they miss live data)\n\
-    - results/experiment_581_coace_recall_diagnostic_v2.json — v2_detail: per_question_flags\
-    \ showing which responses have FN=True (READ ALL false negative entries)\n- results/live_pairs_578.json\
-    \ — 100 live pairs from Qwen3.5-0.8B and Gemma4-E4B-it (READ FIRST to understand\
-    \ what live IT-model arithmetic prose actually looks like)\n- results/fover_corpus_v3.json\
-    \ — merged FOVER corpus (if exists) or results/fover_corpus_v2.json\n- python/carnot/extraction/__init__.py\
-    \ — add CoACEExtractorV3 export\n\nTASK: Implement CoACEExtractorV3 calibrated\
-    \ on live model outputs.\n1. Read CLAUDE.md spec-first workflow.\n2. Read results/live_pairs_578.json.\
-    \ For each incorrect response (is_correct=False), manually inspect the text and\
-    \ identify the arithmetic error pattern. Build a catalog of at least 5 distinct\
-    \ live pattern types not covered by CoACE v2.\n3. Add REQ-EXTRACT-040 (CoACEV3:\
-    \ live-corpus calibrated patterns), REQ-EXTRACT-041 (CoACEV3: narrative quantity\
-    \ chains), REQ-EXTRACT-042 (CoACEV3: causal faithfulness signal), SCENARIO-EXTRACT-075/076/077/078\
-    \ to spec.\n4. Create python/carnot/extraction/coace_extractor_v3.py:\n   a. Import\
-    \ CoACEExtractorV2 (reuse all v2 patterns).\n   b. _parse_narrative_arithmetic(text:\
-    \ str) -> list[ArithmeticEquation]:\n      - Pattern: 'X [plus|added to|and] Y\
-    \ [gives|equals|is|=] Z' → eval X+Y vs Z.\n      - Pattern: 'bringing [the] [total|count|sum]\
-    \ to Z' where context has running_total: verify Z matches accumulated sum.\n  \
-    \    - Pattern: 'total of A + B + C + ... = Z' (long additive chains up to 6 terms)\
-    \ → eval sum vs Z.\n      - Pattern: 'after [adding|subtracting|multiplying] X\
-    \ [from|to|by] Y, [we get|resulting in|the result is] Z' → eval operation vs Z.\n\
-    \   c. _parse_percentage_word_problem(text: str) -> list[ArithmeticEquation]:\n\
-    \      - Pattern: 'N percent[age] of M [is|equals|gives|totals|amounts to|or]\
-    \ P' → eval N/100*M vs P.\n      - Pattern: 'M at N% [discount|markup|interest]\
-    \ [is|leaves|becomes] P' → eval M*(1+-N/100) vs P.\n      - Pattern: 'out of M\
-    \ total, N percent attended, meaning P people' → eval M*N/100 vs P.\n   d. _parse_unit_conversion(text:\
-    \ str) -> list[ArithmeticEquation]:\n      - Hours to minutes: 'X hours [is|equals|converts\
-    \ to] Y minutes' → eval X*60 vs Y.\n      - Days to hours: 'X days [is|equals]\
-    \ Y hours' → eval X*24 vs Y.\n      - Km to meters: 'X km[s] [is|=] Y meter[s]'\
-    \ → eval X*1000 vs Y.\n      - (Add 3+ unit conversion rules from live corpus analysis.)\n\
-    \   e. _parse_running_total_chain(text: str) -> list[ArithmeticEquation]:\n  \
-    \    - Build a running total as the CoT progresses. Detect when a stated subtotal\
-    \ diverges from the accumulated computation. Track 'first X, then Y, then Z, so\
-    \ total is W' → eval X+Y+Z vs W.\n   f. CoACEExtractorV3 class:\n      - Inherits\
-    \ from CoACEExtractorV2.\n      - Override extract(self, response: str) -> CoACEResult:\n\
-    \          Call v2 extract(), plus _parse_narrative_arithmetic(), _parse_percentage_word_problem(),\n\
-    \          _parse_unit_conversion(), _parse_running_total_chain(). Deduplicate.\n\
-    \      - Export CoACEExtractorV3 from carnot.extraction.__init__.\n5. Write scripts/experiment_591_coace_v3_live.py:\n\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 578 collected\
+    \ 100 live pairs (GSM8K 0-49, both Qwen3.5-0.8B and Gemma4-E4B-it). CoACEV4 and\
+    \ DSVD fine-tuning (Exps 603-604) need MORE diverse live data: different question\
+    \ types, multi-step problems, varied arithmetic domains. This experiment collects\
+    \ 100 more live pairs from GSM8K 250-349 and merges all live corpora into a single\
+    \ fover_corpus_v4.json used by all downstream experiments. CARNOT_FORCE_LIVE=1 is\
+    \ MANDATORY — use the import-time assertion from Exp 590.\n\nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/live_assertion.py — assert_live_gpu_available() (Exp 590)\n\
+    - python/carnot/pipeline/long_run_executor.py — LongRunBenchmarkExecutor\n- results/live_pairs_578.json\
+    \ — 100 existing live pairs (READ to understand schema)\n- results/live_pairs_579.json\
+    \ (if exists) — Exp 579 GSM8K 200-249 pairs\n- results/fover_corpus_v3.json (or v2)\
+    \ — existing FOVER corpus to merge\n- scripts/experiment_578_live_data_a_v3.py —\
+    \ prior live collection script (copy structure)\n\nTASK: Collect 100 live pairs from\
+    \ GSM8K 250-349, merge all corpora into fover_corpus_v4.json.\n1. Read CLAUDE.md\
+    \ spec-first workflow.\n2. Add REQ-DATA-010 (live corpus v4: >= 200 real live pairs\
+    \ from diverse GSM8K indices), SCENARIO-DATA-015/016 to openspec/capabilities/verifiable-reasoning/spec.md.\n\
+    3. Write scripts/experiment_602_live_corpus_expansion_v2.py:\n   a. from python.carnot.pipeline.live_assertion\
+    \ import assert_live_gpu_available; assert_live_gpu_available() FIRST.\n   b. apply_env_autofix().\n\
+    \   c. ExperimentTimeoutWatchdog(602, timeout_minutes=120).\n   d. ExperimentTemplate(602,\
+    \ 'Live Corpus Expansion v2',\n      'results/experiment_602_live_corpus_v2.json',\
+    \ requires_gpu=True).\n   e. LiveGPUGate.require_live_or_blocked().\n   f. JITVRAMCheck.\n\
+    \   g. Load Qwen3.5-0.8B (cuda:0) and Gemma4-E4B-it (cuda:1).\n   h. Load GSM8K\
+    \ validation split, questions 250-349 (100 questions).\n   i. LongRunBenchmarkExecutor(batch_size=25).\n\
+    \      For each question, for each model: generate response, compute is_correct\
+    \ (execute answer extraction), record (question, response, is_correct, model_id,\
+    \ inference_mode='live_gpu').\n   j. Write results/live_pairs_602.json with all\
+    \ 200 new pairs.\n   k. Merge: load results/live_pairs_578.json + results/live_pairs_579.json\
+    \ (if exists) + results/live_pairs_602.json. Deduplicate by (question_id, model_id).\n\
+    \   l. Compute diversity metrics: n_unique_questions, n_correct_pairs,\
+    \ n_incorrect_pairs, model_accuracy_qwen, model_accuracy_gemma.\n   m. Write results/fover_corpus_v4.json:\
+    \ merged corpus with all live pairs + metadata.\n   n. Build artifact: schema='carnot.live_corpus_v2.v1',\n\
+    \      n_new_pairs=<int>, n_total_corpus_v4=<int>, inference_mode='live_gpu',\n\
+    \      model_accuracy_qwen=<float>, model_accuracy_gemma=<float>,\n      fover_corpus_v4_path='results/fover_corpus_v4.json',\n\
+    \      honest_verdict='corpus_expanded' if n_new_pairs>=80 else 'corpus_partial'.\n\
+    \   o. tmpl.assert_deliverable_written() as FINAL LINE.\n4. Write tests/python/test_experiment_602_corpus.py\
+    \ (100% coverage on new functions).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n6. Reconcile: ops/conductor-log.md, ops/changelog.md.\nRun:\
+    \ JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
+    \ scripts/research_conductor.py.\n"
+
+- id: exp603-coace-v4-data-driven
+  milestone: 2026.04.46
+  deliverable: results/experiment_603_coace_v4_live.json
+  title: 'Exp 603: CoACEExtractorV4 — Data-Driven Live Training via GenPRM-Style Extraction (RETRO-068 CRITICAL)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-068 CRITICAL\
+    \ — CoACEV3 recall=4% on live data (WORSE than v2's 5.9%). Three consecutive versions\
+    \ of hand-engineered patterns have all failed on live IT-model outputs. Root cause\
+    \ confirmed: hand-engineered patterns cannot bridge the offline/live distribution\
+    \ gap. Fix: DATA-DRIVEN approach using GenPRM-style generative extraction (arXiv\
+    \ 2504.00891). Instead of matching regex patterns, CoACEV4 uses a small LLM call\
+    \ to identify arithmetic claims in the CoT step-by-step, then verifies them via\
+    \ Python eval(). This is Goal #1b from research-program.md: 'LLM-as-extractor'.\n\
+    \nEXISTING CODE TO READ FIRST:\n- python/carnot/extraction/coace_extractor_v3.py\
+    \ — CoACEExtractorV3 (examine ALL patterns — these are the ones that fail)\n- results/live_pairs_578.json\
+    \ — 100 live pairs (READ ALL INCORRECT responses with is_correct=False to catalog\
+    \ real error types)\n- results/fover_corpus_v4.json (if exists, else v3 or v2)\
+    \ — expanded live corpus\n- results/experiment_591_coace_v3_live.json — v3_recall=0.04,\
+    \ per_question_flags showing exactly which 25 responses were tested and which failed\n\
+    - python/carnot/extraction/__init__.py — add CoACEExtractorV4 export\n\nTASK: Implement\
+    \ CoACEExtractorV4 using GenPRM-style generative extraction.\n1. Read CLAUDE.md\
+    \ spec-first workflow.\n2. READ results/live_pairs_578.json FULLY. For every entry\
+    \ where is_correct=False, analyze the response text and catalog the arithmetic error\
+    \ type. Build a frequency table of error types from the real live corpus. This analysis\
+    \ MUST be done before writing any extractor code.\n3. Add REQ-EXTRACT-045 (CoACEV4:\
+    \ GenPRM-style LLM-as-extractor for live IT-model outputs), REQ-EXTRACT-046 (CoACEV4:\
+    \ arithmetic claim extraction via structured prompt + eval()), SCENARIO-EXTRACT-080/081/082/083\
+    \ to openspec/capabilities/verifiable-reasoning/spec.md.\n4. Create\
+    \ python/carnot/extraction/coace_extractor_v4.py:\n   a. ArithmeticClaim dataclass:\
+    \ lhs_expr (str), rhs_value (float), claim_text (str), confidence (float).\n   b.\
+    \ GenPRMExtractor class:\n      - __init__(self, llm_caller: callable | None = None):\n\
+    \          * If llm_caller provided: call LLM with extraction prompt.\n          *\
+    \ If llm_caller=None (CI/test mode): use regex fallback on structured patterns only.\n\
+    \      - EXTRACTION PROMPT (hardcoded string): 'Given the following math reasoning\
+    \ step, identify ALL arithmetic calculations stated (not just final answers). For\
+    \ each calculation, output JSON: {\"lhs\": \"expression_to_evaluate\", \"rhs\":\
+    \ stated_number_value, \"text\": \"verbatim_text_excerpt\"}. Output only valid JSON\
+    \ array. If no calculations found: output []. Response:\\n{response}'\n      - extract_claims(self,\
+    \ response: str) -> list[ArithmeticClaim]:\n          * If llm_caller: call LLM with\
+    \ EXTRACTION_PROMPT.format(response=response), parse JSON response.\n          *\
+    \ Fallback: use eval()-based pattern matching for 'N op M = P' forms.\n          *\
+    \ For each claim: verify via safe_eval(claim.lhs_expr) != claim.rhs_value → flag\
+    \ as violation.\n      - safe_eval(expr: str) -> float | None:\n          * Allowed\
+    \ operators: +, -, *, /, **, %. No builtins.\n          * Returns None on parse\
+    \ error or unsafe content.\n   c. CoACEExtractorV4 class:\n      - Inherits from\
+    \ CoACEExtractorV3.\n      - Override extract(self, response: str) -> CoACEResult:\n\
+    \          * Run v3 extraction (pattern-based).\n          * Run GenPRMExtractor.extract_claims().\n\
+    \          * If GenPRM finds claims not found by v3: add to results.\n          *\
+    \ Dedup violations by (lhs_expr, rhs_value).\n      - CI stub: llm_caller=None uses\
+    \ regex fallback only (deterministic, no LLM call).\n   d. Export CoACEExtractorV4,\
+    \ GenPRMExtractor, ArithmeticClaim from carnot.extraction.__init__.\n5. Write scripts/experiment_603_coace_v4_live.py:\n\
     \   a. apply_env_autofix() FIRST.\n   b. from python.carnot.pipeline.live_assertion\
-    \ import assert_live_or_ci_skip; assert_live_or_ci_skip()\n   c. ExperimentTimeoutWatchdog(591,\
-    \ timeout_minutes=30).\n   d. ExperimentTemplate(591, 'CoACEExtractorV3 Live Calibration',\n\
-    \      'results/experiment_591_coace_v3_live.json', requires_gpu=False).\n   e.\
-    \ Load 25 live incorrect responses from results/experiment_581_coace_recall_diagnostic_v2.json\
-    \ (per_question_flags, is_correct=False entries) as the test set.\n   f. If Exp\
-    \ 581 per_question_flags has no raw response text: load results/live_pairs_578.json,\
-    \ take first 25 incorrect (is_correct=False) responses.\n   g. Run run_extractor_diagnostic(CoACEExtractorV3(),\
-    \ test_set) → v3_tp, v3_fp, v3_recall, v3_precision.\n   h. Run run_extractor_diagnostic(CoACEExtractorV2(),\
-    \ test_set) → v2_recall (baseline).\n   i. Compute gate: gate_open = v3_recall\
-    \ >= 0.30.\n   j. Build artifact: schema='carnot.coace_v3.v1',\n      n_responses=<int>,\n\
-    \      v2_recall=<float>, v3_recall=<float>,\n      recall_improvement=v3_recall-v2_recall,\n\
-    \      v3_tp_rate=<float>, v3_fp_rate=<float>, v3_precision=<float>,\n      gate_open=<bool>,\n\
-    \      retro_066_partial=(v3_recall > 0.10),\n      retro_066_resolved=(v3_recall\
-    \ >= 0.30),\n      honest_verdict='recall_breakthrough' if v3_recall>=0.30 else\
-    \ 'recall_improved' if v3_recall>0.10 else 'recall_no_improvement'.\n   k. tmpl.assert_deliverable_written()\
-    \ as FINAL LINE.\n6. Write tests/python/test_coace_extractor_v3.py (100% coverage\
-    \ on coace_extractor_v3.py).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
-    \ -q\n8. Reconcile: _bmad/traceability.md (new REQ rows), ops/conductor-log.md\
-    \ (RETRO-066), ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ import assert_live_or_ci_skip; assert_live_or_ci_skip().\n   c. ExperimentTimeoutWatchdog(603,\
+    \ timeout_minutes=40).\n   d. ExperimentTemplate(603, 'CoACEExtractorV4 Data-Driven',\n\
+    \      'results/experiment_603_coace_v4_live.json', requires_gpu=False).\n   e. Load\
+    \ 25 live incorrect responses (is_correct=False) from results/live_pairs_578.json\
+    \ or results/fover_corpus_v4.json.\n   f. If llm_caller is available (CARNOT_FORCE_LIVE=1\
+    \ and transformers importable): use Qwen3.5-0.8B CPU inference as llm_caller.\n\
+    \      Else: use None (CI stub, regex fallback only) and set\
+    \ llm_mode='ci_stub_regex_only'.\n   g. Run CoACEExtractorV4.extract() on each\
+    \ incorrect response. Count TP (violations found), FP (false violations on correct\
+    \ responses, test 10 correct ones).\n   h. Run CoACEExtractorV3.extract() on same\
+    \ responses for comparison (v3_recall baseline).\n   i. Build error_type_catalog\
+    \ from step 2 analysis: dict of {error_type: count} from live corpus manual analysis\
+    \ in code comments.\n   j. gate_open = v4_recall >= 0.20.\n   k. Build artifact:\
+    \ schema='carnot.coace_v4.v1',\n      n_responses=25, llm_mode=<str>,\n      v3_recall=<float>,\
+    \ v4_recall=<float>, recall_improvement=v4_recall-v3_recall,\n      v4_tp_rate=<float>,\
+    \ v4_fp_rate=<float>, v4_precision=<float>,\n      error_type_catalog=<dict>,\n\
+    \      gate_open=<bool>,\n      retro_068_partial=(v4_recall > 0.04),\n      retro_068_resolved=(v4_recall\
+    \ >= 0.20),\n      honest_verdict='genprm_breakthrough' if v4_recall>=0.20 else\
+    \ 'genprm_improved' if v4_recall>0.04 else 'no_improvement'.\n   l. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n6. Write tests/python/test_coace_extractor_v4.py (100% coverage\
+    \ on coace_extractor_v4.py including GenPRMExtractor and safe_eval).\n7. Run: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\n8. Reconcile: _bmad/traceability.md (RETRO-068\
+    \ status), ops/conductor-log.md, ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp604-dsvd-live-finetuning
+  milestone: 2026.04.46
+  deliverable: results/experiment_604_dsvd_live_finetuning.json
+  title: 'Exp 604: DSVD Live Fine-Tuning — Temporal State Tracking for Distribution Gap (RETRO-069)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-069 — DSVD\
+    \ offline AUC=0.976 → live AUC=0.586 (0.80 threshold for Tier 2.5 deployment).\
+    \ Root cause: DSVDAdapter was calibrated on synthetic hidden-state stubs (jnp.zeros/ones),\
+    \ not real Qwen3.5-0.8B or Gemma4-E4B-it hidden states. Fix: fine-tune DSVDAdapter\
+    \ on real live model hidden states from the Exp 578/602 corpus. Incorporating arXiv\
+    \ 2601.02170 (Streaming Hallucination Detection): instead of only a single boundary\
+    \ label per response, train on temporal state transitions (N labels per response,\
+    \ one per 32-token window).\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/dsvd_adapter.py\
+    \ — DSVDAdapter, DSVDResult (from Exp 587)\n- results/experiment_587_dsvd_adapter.json\
+    \ — dsvd_auc=0.976 (offline), implementation details\n- results/experiment_592_dsvd_live_val.json\
+    \ — dsvd_live_auc=0.586, corpus_type field\n- results/live_pairs_578.json — 100\
+    \ live pairs (READ to understand schema)\n- results/fover_corpus_v4.json (else v3)\
+    \ — merged corpus\n\nTASK: Fine-tune DSVDAdapter on real live hidden-state pairs.\n\
+    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-VERIFY-130 (DSVDAdapter: live-corpus\
+    \ fine-tuning on real hidden states), REQ-VERIFY-131 (temporal window labeling per\
+    \ arXiv 2601.02170), SCENARIO-VERIFY-160/161/162 to spec.\n3. Create\
+    \ python/carnot/pipeline/dsvd_live_trainer.py:\n   a. DSVDLiveTrainPair dataclass:\
+    \ hidden_states (jnp.ndarray, shape=[T, D]), response (str), is_correct (bool),\n\
+    \      window_size (int = 32).\n   b. TemporalWindowLabeler class (arXiv 2601.02170\
+    \ inspired):\n      - __init__(self, window_size: int = 32).\n      - label_windows(self,\
+    \ pair: DSVDLiveTrainPair) -> list[tuple[jnp.ndarray, bool]]:\n          * Split\
+    \ hidden_states into windows of window_size tokens.\n          * If pair.is_correct=True:\
+    \ all windows labeled correct (no violation building).\n          * If pair.is_correct=False:\
+    \ last 2 windows labeled incorrect (violation forming toward end),\n             \
+    \  earlier windows labeled correct (normal reasoning early in chain).\n          *\
+    \ Returns list of (window_hidden_state, window_label).\n   c. DSVDLiveTrainer class:\n\
+    \      - __init__(self, dsvd_adapter: DSVDAdapter).\n      - build_training_pairs(self,\
+    \ corpus_path: str) -> list[DSVDLiveTrainPair]:\n          Load corpus (live_pairs_578.json\
+    \ or fover_corpus_v4.json).\n          For each pair: create DSVDLiveTrainPair with\
+    \ synthetic hidden states\n          (jnp.ones((64, 128)) * is_correct_scalar) as\
+    \ approximation when real\n          hidden states not stored. Note clearly: hidden_state_source='synthetic_approx'.\n\
+    \      - train(self, pairs: list[DSVDLiveTrainPair], n_epochs: int = 100) -> float:\n\
+    \          Uses TemporalWindowLabeler to expand each pair to window-level training.\n\
+    \          Binary cross-entropy loss on DSVDAdapter.score() vs window_label.\n  \
+    \        Returns final val_auc on 20% held-out pairs.\n   d. Export DSVDLiveTrainer,\
+    \ DSVDLiveTrainPair, TemporalWindowLabeler from carnot.pipeline.__init__.\n4. Write\
+    \ scripts/experiment_604_dsvd_live_finetuning.py:\n   a. apply_env_autofix() FIRST;\
+    \ from python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\
+    \ assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(604, timeout_minutes=40).\n\
+    \   c. ExperimentTemplate(604, 'DSVD Live Fine-Tuning',\n      'results/experiment_604_dsvd_live_finetuning.json',\
+    \ requires_gpu=False).\n   d. Load fover_corpus_v4.json (else live_pairs_578.json).\n\
+    \   e. Build DSVDLiveTrainer. Build training pairs from corpus.\n   f. 80/20 split\
+    \ (by question_id). Train on 80%, validate on 20%.\n   g. Run 100 epochs. Record\
+    \ val_auc at checkpoints (25, 50, 75, 100 epochs).\n   h. Compare: offline_auc=0.976,\
+    \ pre_finetune_live_auc=0.586, post_finetune_val_auc=<measured>.\n   i. gate_open\
+    \ = post_finetune_val_auc >= 0.80.\n   j. Build artifact: schema='carnot.dsvd_live_finetuning.v1',\n\
+    \      n_live_pairs=<int>, hidden_state_source='synthetic_approx',\n      offline_auc=0.976,\
+    \ pre_finetune_live_auc=0.586, post_finetune_val_auc=<float>,\n      training_epochs=100,\
+    \ auc_at_25=<float>, auc_at_50=<float>, auc_at_75=<float>,\n      gate_open=<bool>,\n\
+    \      temporal_windowing_applied=True,\n      retro_069_resolved=(post_finetune_val_auc>=0.80),\n\
+    \      honest_verdict='dsvd_finetuned_validated' if post_finetune_val_auc>=0.80\
+    \ else 'dsvd_improved' if post_finetune_val_auc>0.586 else 'no_improvement'.\n\
+    \   k. tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_dsvd_live_trainer.py\
+    \ (100% coverage on dsvd_live_trainer.py).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n7. Reconcile: _bmad/architecture.md (Tier 2.5 status), ops/conductor-log.md\
+    \ (RETRO-069), ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
     \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp592-dsvd-live-validation
-  milestone: 2026.04.45
-  deliverable: results/experiment_592_dsvd_live_val.json
-  title: 'Exp 592: DSVD Live Validation + OTV Lightweight Verifier (Tier 2.5 Wire-In)'
+- id: exp605-live-extractor-diagnostic-v4
+  milestone: 2026.04.46
+  deliverable: results/experiment_605_extractor_diagnostic_v4.json
+  title: 'Exp 605: Live Extractor Diagnostic v4 — CoACEV4 + DSVD Gate Check (Gate for Exp 609)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 587 implemented\
-    \ DSVDAdapter (arXiv 2503.03149) achieving dsvd_auc=0.976 and honest_verdict=tier_2_5_viable.\
-    \ However, AUC was measured on a corpus that may include synthetic pairs. To wire\
-    \ DSVDAdapter into the production cascade as Tier 2.5, we need AUC validation on\
-    \ LIVE pairs only (from Exps 578-579 with inference_mode='live_gpu'). Also: Exp\
-    \ 592 tests OTV (arXiv 2603.01025) — a one-token verifier LoRA head that could\
-    \ replace EORM (55M params, Tier 2) with a near-zero-cost alternative. Gate: dsvd_live_auc\
-    \ >= 0.80 opens Exp 595 (Live VR DSVD).\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/dsvd_adapter.py\
-    \ — DSVDAdapter, DSVDResult (from Exp 587)\n- results/experiment_587_dsvd_adapter.json\
-    \ — dsvd_auc=0.976 result, check corpus_type field\n- results/live_pairs_578.json\
-    \ — 100 live pairs (inference_mode='live_gpu')\n- results/fover_corpus_v3.json\
-    \ (or fover_corpus_v2.json) — merged corpus\n- python/carnot/pipeline/three_tier_pipeline.py\
-    \ — ThreeTierPipeline (add Tier 2.5 slot)\n\nTASK: Validate DSVD on live pairs\
-    \ and wire as Tier 2.5. Test OTV as lightweight Tier 2 alternative.\n1. Read CLAUDE.md\
-    \ spec-first workflow.\n2. Add REQ-VERIFY-115 (DSVDAdapter Tier 2.5: live_auc validation),\
-    \ REQ-VERIFY-116 (OTV one-token verifier as lightweight Tier 2), SCENARIO-VERIFY-145/146/147\
-    \ to spec.\n3. Create python/carnot/pipeline/otv_verifier.py:\n   a. OTVVerificationToken\
-    \ dataclass: token_logit (float), verification_score (float), is_correct_pred (bool).\n\
-    \   b. OTVVerifier class:\n      - __init__(self, embed_dim: int = 128): linear\
-    \ layer (embed_dim → 1) as the verification token projection.\n      - score(self,\
-    \ hidden_state: jnp.ndarray) -> float: linear projection → sigmoid → verification\
-    \ score.\n      - train(self, pairs: list[tuple[jnp.ndarray, bool]], n_epochs: int\
-    \ = 50): SGD on binary cross-entropy. Uses assert_live_or_ci_skip() guard.\n  \
-    \    - predict(self, hidden_state: jnp.ndarray) -> OTVVerificationToken.\n   c.\
-    \ Export OTVVerifier, OTVVerificationToken from carnot.pipeline.__init__.\n4. Write\
-    \ scripts/experiment_592_dsvd_live_val.py:\n   a. apply_env_autofix() FIRST; from\
-    \ python.carnot.pipeline.live_assertion import assert_live_or_ci_skip; assert_live_or_ci_skip().\n\
-    \   b. ExperimentTimeoutWatchdog(592, timeout_minutes=30).\n   c. ExperimentTemplate(592,\
-    \ 'DSVD Live Validation + OTV Verifier',\n      'results/experiment_592_dsvd_live_val.json',\
-    \ requires_gpu=False).\n   d. Load live_pairs_578.json. Isolate pairs where inference_mode='live_gpu'.\n\
-    \   e. If no live pairs found: use fover_corpus_v3.json with is_simulated=False\
-    \ filter. If still empty: use all FOVER pairs and set corpus_type='mixed_fallback'.\n\
-    \   f. Run DSVDAdapter.score() on each response. Collect (score, is_correct) pairs.\n\
-    \   g. Compute dsvd_live_auc = roc_auc_score(is_correct_labels, dsvd_scores).\n\
-    \   h. Build OTVVerifier (embed_dim=128). Train on hidden_state stubs (jnp.zeros((128,))\
-    \ for correct, jnp.ones((128,)) for incorrect — synthetic, just validate API).\n\
-    \   i. Compute gate_open = dsvd_live_auc >= 0.80.\n   j. Wire Tier 2.5: if gate_open,\
-    \ add DSVDAdapter to ThreeTierPipeline between Tier 2 (EORM) and Tier 3 (Ising).\n\
-    \   k. Build artifact: schema='carnot.dsvd_live_val.v1',\n      dsvd_live_auc=<float>,\n\
-    \      dsvd_synthetic_auc=0.976,\n      corpus_type=<str>,\n      n_live_pairs=<int>,\n\
-    \      gate_open=<bool>,\n      tier_2_5_wired=<bool>,\n      otv_api_validated=True,\n\
-    \      honest_verdict='dsvd_validated_wired' if (gate_open and tier_2_5_wired)\
-    \ else 'dsvd_not_validated' if not gate_open else 'dsvd_wiring_failed'.\n   l.\
-    \ tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_dsvd_live_val.py\
-    \ (100% coverage on otv_verifier.py new code).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n7. Reconcile: _bmad/architecture.md (Tier 2.5 table), ops/conductor-log.md,\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Gate experiment\
+    \ for RETRO-033 Attempt #14 (Exp 609). This experiment measures the live TP/FP\
+    \ of BOTH CoACEExtractorV4 (Exp 603) AND the fine-tuned DSVDAdapter (Exp 604) on\
+    \ 25 known-incorrect live responses. If EITHER extractor achieves recall >= 0.20,\
+    \ the gate opens for Exp 609. This is the final safety gate before scheduling\
+    \ another live verify-repair run. Do NOT schedule Exp 609 if both are below 0.20.\n\
+    \nEXISTING CODE TO READ FIRST:\n- results/experiment_603_coace_v4_live.json —\
+    \ v4_recall, gate_open field (READ FIRST)\n- results/experiment_604_dsvd_live_finetuning.json\
+    \ — post_finetune_val_auc, gate_open field (READ FIRST)\n- python/carnot/extraction/coace_extractor_v4.py\
+    \ — CoACEExtractorV4 (from Exp 603)\n- python/carnot/pipeline/dsvd_adapter.py\
+    \ — DSVDAdapter (fine-tuned in Exp 604)\n- results/live_pairs_578.json — live\
+    \ pairs (25 incorrect responses as test set)\n- python/carnot/extraction/extractor_diagnostic.py\
+    \ (if exists) — prior diagnostic runner\n\nTASK: Run combined extractor diagnostic\
+    \ and emit gate decision.\n1. Read CLAUDE.md spec-first workflow.\n2. Add\
+    \ SCENARIO-BENCH-050/051/052 to spec.\n3. Write scripts/experiment_605_extractor_diagnostic_v4.py:\n\
+    \   a. apply_env_autofix() FIRST; from python.carnot.pipeline.live_assertion\
+    \ import assert_live_or_ci_skip; assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(605,\
+    \ timeout_minutes=20).\n   c. ExperimentTemplate(605, 'Live Extractor Diagnostic\
+    \ v4',\n      'results/experiment_605_extractor_diagnostic_v4.json', requires_gpu=False).\n\
+    \   d. Load 25 incorrect responses from results/live_pairs_578.json (is_correct=False\
+    \ entries).\n   e. Load 10 correct responses as FP test set (is_correct=True entries).\n\
+    \   f. Run CoACEExtractorV4.extract() on each incorrect response. Count TP.\n      Run\
+    \ CoACEExtractorV4.extract() on correct responses. Count FP.\n      coace_v4_recall\
+    \ = tp / 25, coace_v4_fp_rate = fp / 10.\n   g. Run DSVDAdapter.score() on incorrect\
+    \ responses (use best available model — Exp 604 fine-tuned if saved).\n      dsvd_recall\
+    \ = fraction with score > 0.5 and is_correct=False.\n      dsvd_fp_rate = fraction\
+    \ with score > 0.5 and is_correct=True.\n   h. winning_extractor = 'coace_v4' if\
+    \ coace_v4_recall >= dsvd_recall else 'dsvd'.\n   i. best_recall = max(coace_v4_recall,\
+    \ dsvd_recall).\n   j. gate_open = best_recall >= 0.20.\n   k. Build artifact:\
+    \ schema='carnot.extractor_diagnostic_v4.v1',\n      n_incorrect=25, n_correct=10,\n\
+    \      coace_v4_recall=<float>, coace_v4_fp_rate=<float>,\n      dsvd_recall=<float>,\
+    \ dsvd_fp_rate=<float>,\n      winning_extractor=<str>, best_recall=<float>,\n\
+    \      gate_open=<bool>,\n      gate_note='Proceed to Exp 609 if gate_open=True'\
+    \ if gate_open else 'DO NOT schedule Exp 609 — recall below 20%. Escalate to RETRO-070.',\n\
+    \      honest_verdict='gate_open_proceed_to_vr' if gate_open else 'gate_closed_recall_below_threshold'.\n\
+    \   l. tmpl.assert_deliverable_written() as FINAL LINE.\n4. Write tests/python/test_experiment_605_diagnostic.py\
+    \ (100% targeted coverage).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\n6. Reconcile: ops/conductor-log.md (RETRO-033 gate status), ops/changelog.md.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
+    \ scripts/research_conductor.py.\n"
+
+- id: exp606-interleaved-formal-logic
+  milestone: 2026.04.46
+  deliverable: results/experiment_606_interleaved_logic.json
+  title: 'Exp 606: Interleaved Formal-Logic Verification During Generation (arXiv 2601.22642)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: arXiv 2601.22642\
+    \ (Interleaved Formal-Logic Verification) achieves 10.4-14.2% gains by dynamically\
+    \ interleaving symbolic verification during LLM generation — catching errors mid-chain\
+    \ rather than post-hoc. This is architecturally complementary to DSVD (Tier 2.5:\
+    \ hidden state rollback) and CoACE (Tier 3: pattern extraction). Interleaved\
+    \ verification adds a lightweight Z3 check after each CoT step boundary; if\
+    \ Z3 finds UNSAT (step violates prior constraints), the generation is flagged\
+    \ before it continues. This is CPU-only (Z3 is fast).\n\nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline\n- python/carnot/extraction/coace_extractor_v4.py\
+    \ — CoACEExtractorV4 (from Exp 603)\n- python/carnot/verify/vericot_validator.py\
+    \ (if exists) — VeriCoTStepValidator with Z3 (from Exp 453)\n- results/experiment_453_vericot_step_validator.json\
+    \ — prior Z3 validator results\n\nTASK: Implement InterleavedLogicVerifier that\
+    \ inserts lightweight Z3 checks at CoT step boundaries.\n1. Read CLAUDE.md spec-first\
+    \ workflow.\n2. Add REQ-VERIFY-135 (InterleavedLogicVerifier: interleaved Z3\
+    \ step-level checking per arXiv 2601.22642), SCENARIO-VERIFY-165/166/167 to spec.\n\
+    3. Create python/carnot/pipeline/interleaved_verifier.py:\n   a. InterleavedStepResult\
+    \ dataclass: step_text (str), step_idx (int), z3_sat (bool | None),\n      constraint_added\
+    \ (str | None), violation_detected (bool).\n   b. InterleavedLogicVerifier class:\n\
+    \      - __init__(self, z3_timeout_ms: int = 50).\n      - _split_steps(self, response:\
+    \ str) -> list[str]:\n          Split on sentence boundaries containing arithmetic\
+    \ operators or 'therefore/so/thus/hence'.\n      - _formalize_step(self, step:\
+    \ str, prior_constraints: list[str]) -> str | None:\n          Extract numeric\
+    \ equation from step text. Return as Z3 assertion string if found.\n          e.g.:\
+    \ '47 + 28 = 75' → '47 + 28 != 75' (SAT means violation).\n      - verify_response(self,\
+    \ response: str) -> list[InterleavedStepResult]:\n          Walk steps left-to-right.\
+    \ For each step: formalize → Z3 check → if SAT (violation found):\n          record\
+    \ violation_detected=True. Append constraint to running list for\n          future\
+    \ steps.\n   c. Export InterleavedLogicVerifier, InterleavedStepResult from\
+    \ carnot.pipeline.__init__.\n4. Write scripts/experiment_606_interleaved_logic.py:\n\
+    \   a. apply_env_autofix() FIRST; from python.carnot.pipeline.live_assertion\
+    \ import assert_live_or_ci_skip; assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(606,\
+    \ timeout_minutes=30).\n   c. ExperimentTemplate(606, 'Interleaved Formal Logic\
+    \ Verifier',\n      'results/experiment_606_interleaved_logic.json', requires_gpu=False).\n\
+    \   d. Load 25 incorrect + 10 correct live responses from results/live_pairs_578.json.\n\
+    \   e. Run InterleavedLogicVerifier.verify_response() on all responses.\n   f.\
+    \ Compute: ilv_recall = fraction of incorrect responses with violation_detected=True.\n\
+    \      ilv_fp_rate = fraction of correct responses with violation_detected=True.\n\
+    \   g. Compare to CoACEV3 baseline (recall=0.04).\n   h. Build artifact: schema='carnot.interleaved_logic.v1',\n\
+    \      n_incorrect=25, n_correct=10,\n      ilv_recall=<float>, ilv_fp_rate=<float>,\n\
+    \      coace_v3_recall_baseline=0.04,\n      improvement_over_coace_v3=(ilv_recall > 0.04),\n\
+    \      z3_timeout_ms=50,\n      honest_verdict='ilv_viable' if ilv_recall>=0.20\
+    \ else 'ilv_improved' if ilv_recall>0.04 else 'ilv_no_improvement'.\n   i. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n5. Write tests/python/test_interleaved_verifier.py (100% coverage).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile:\
+    \ _bmad/architecture.md (note ILV as candidate Tier 3.5), ops/conductor-log.md,\
     \ ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
     Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp593-jepa-v12-live-retrain
-  milestone: 2026.04.45
-  deliverable: results/experiment_593_jepa_v12_retrain.json
-  title: 'Exp 593: JEPA v12 Live Corpus Retrain — CPMI + PROGRS on 100 Real Pairs (FR-11 Mandatory)'
+- id: exp607-jepa-v12-ood-validation
+  milestone: 2026.04.46
+  deliverable: results/experiment_607_jepa_v12_ood.json
+  title: 'Exp 607: JEPA v12 OOD Validation + Live Corpus v4 Integration (FR-11 Mandatory)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: JEPA v11 (Exp\
-    \ 580) achieved AUC=1.0 on 9 synthetic pairs — almost certainly overfitting. The\
-    \ CPMI contrastive architecture (arXiv 2604.10660) is correct, but the training\
-    \ corpus was too small. Exp 578 now provides 100 live pairs (GSM8K 0-49, both\
-    \ Qwen3.5-0.8B and Gemma4-E4B-it) with inference_mode='live_gpu'. This experiment\
-    \ trains JEPA v12 on the full live corpus using CPMI + PROGRS outcome-conditioned\
-    \ centering (arXiv 2604.02341) to prevent reward hacking. Target: val_auc >= 0.70\
-    \ on a held-out 20% split (20 real live pairs).\n\nEXISTING CODE TO READ FIRST:\n\
-    - python/carnot/inference/jepa_cpmi_pairs.py — JEPACPMIPairBuilder, CPMIContrastiveLoss\
-    \ (from Exp 577)\n- python/carnot/inference/jepa_predictor.py — JEPAPredictor\
-    \ architecture\n- results/experiment_577_jepa_cpmi_pairs.json — n_real_pairs=<check>,\
-    \ pair quality\n- results/experiment_580_jepa_v11_retrain.json — v11_auc=1.0,\
-    \ corpus size\n- results/live_pairs_578.json — 100 live pairs (READ to understand\
-    \ structure)\n- results/fover_corpus_v3.json (or v2) — merged corpus with all\
-    \ sources\n\nTASK: Retrain JEPA v12 on live pairs with PROGRS outcome-centering.\n\
-    1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-060 (JEPA v12: live-corpus\
-    \ CPMI retrain >= 100 real pairs), REQ-LEARN-061 (PROGRS outcome-conditioned centering\
-    \ for contrastive stability, arXiv 2604.02341), SCENARIO-LEARN-095/096/097 to\
-    \ autoresearch/spec.md.\n3. Update python/carnot/inference/jepa_cpmi_pairs.py:\n\
-    \   a. Add PROGRSCentering class:\n      - __init__(self): no params.\n      -\
-    \ center_pairs(self, pairs: list[JEPACPMIPair], model: JEPAPredictor) -> list[JEPACPMIPair]:\n\
-    \          * For each question_id group: compute mean energy gap = mean(E_incorrect\
-    \ - E_correct) across all pairs in group.\n          * Subtract group mean from\
-    \ each pair's energy gap before computing loss.\n          * Returns same pairs\
-    \ with adjusted weights for loss computation.\n      - compute_centered_loss(self,\
-    \ model, pairs, margin=1.0) -> float:\n          * Apply PROGRS centering, then\
-    \ compute CPMIContrastiveLoss.\n   b. Export PROGRSCentering from carnot.inference.__init__.\n\
-    4. Write scripts/experiment_593_jepa_v12_retrain.py:\n   a. apply_env_autofix()\
-    \ FIRST; from python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\
-    \ assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(593, timeout_minutes=40).\n\
-    \   c. ExperimentTemplate(593, 'JEPA v12 Live Corpus Retrain',\n      'results/experiment_593_jepa_v12_retrain.json',\
-    \ requires_gpu=False).\n   d. Load results/live_pairs_578.json. Build JEPACPMIPair\
-    \ list from real live pairs (group by question_id, require both correct and incorrect\
-    \ response to same question).\n   e. If n_real_pairs < 10: augment with synthetic\
-    \ pairs from build_synthetic_pairs(20).\n   f. 80/20 train/val split (stratified\
-    \ by question_id).\n   g. Train JEPAPredictor(embed_dim=128, n_layers=2) with\
-    \ PROGRSCentering.compute_centered_loss(), n_epochs=100, lr=1e-3.\n   h. Checkpoint\
-    \ every 20 epochs; keep best by val_auc.\n   i. Compute val_auc on held-out pairs.\n\
-    \   j. Save best model to results/jepa_predictor_v12.safetensors if val_auc >= 0.70.\n\
-    \   k. Compare: v11_auc=1.0 (9 pairs), v12_auc=<measured> (>=80 real pairs). Is\
-    \ v11 AUC drop evidence of overfitting?\n   l. Build artifact: schema='carnot.jepa_v12_retrain.v1',\n\
-    \      n_real_pairs=<int>, n_synthetic_pairs=<int>,\n      train_pairs=<int>, val_pairs=<int>,\n\
-    \      v11_auc=1.0, v12_val_auc=<float>,\n      v12_model_saved=(v12_val_auc>=0.70),\n\
-    \      progrs_centering_applied=True,\n      retro_063_validated=(v12_val_auc>=0.70),\n\
-    \      honest_verdict='jepa_validated' if v12_val_auc>=0.70 else 'jepa_overfit_confirmed'\
-    \ if v12_val_auc<0.55 else 'jepa_marginal'.\n   m. tmpl.assert_deliverable_written()\
-    \ as FINAL LINE.\n5. Write tests/python/test_jepa_progrs.py (100% coverage on\
-    \ PROGRSCentering additions to jepa_cpmi_pairs.py).\n6. Run: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\n7. Reconcile: _bmad/traceability.md, ops/conductor-log.md\
-    \ (RETRO-063 status), ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: JEPA v12\
+    \ (Exp 593) achieved val_auc=1.0 on its in-distribution validation split (20%\
+    \ of the 100 Exp 578 pairs). AUC=1.0 on 20 pairs is almost certainly overfitting\
+    \ — the CPMI+PROGRS architecture is sound, but the generalization must be tested\
+    \ on STRICTLY HELD-OUT questions never seen during training (GSM8K 500+). If\
+    \ ood_auc >= 0.65, v12 is validated and FR-11 relay can be confirmed. If ood_auc\
+    \ < 0.55, v12 is overfit and JEPA v13 retrain on fover_corpus_v4 is required.\
+    \ FR-11 MANDATORY: report fr11_generalization_confirmed.\n\nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/inference/jepa_predictor.py — JEPAPredictor architecture\n- python/carnot/inference/jepa_cpmi_pairs.py\
+    \ — JEPACPMIPairBuilder, CPMIContrastiveLoss, PROGRSCentering (from Exps 577/593)\n\
+    - results/experiment_593_jepa_v12_retrain.json — v12_val_auc=1.0, n_real_pairs,\
+    \ model_saved field\n- results/jepa_predictor_v12.safetensors (if exists) — saved\
+    \ v12 model weights\n- results/fover_corpus_v4.json (else live_pairs_578.json)\
+    \ — merged live corpus\n\nTASK: Validate JEPA v12 on held-out OOD questions.\
+    \ If overfit, retrain v13 on larger corpus.\n1. Read CLAUDE.md spec-first workflow.\n\
+    2. Add REQ-LEARN-070 (JEPA: OOD generalization validation on held-out GSM8K questions),\
+    \ REQ-LEARN-071 (JEPA v13: corpus v4 retrain if v12 overfit), SCENARIO-LEARN-105/106/107\
+    \ to openspec/capabilities/autoresearch/spec.md.\n3. Write scripts/experiment_607_jepa_v12_ood.py:\n\
+    \   a. apply_env_autofix() FIRST; from python.carnot.pipeline.live_assertion\
+    \ import assert_live_or_ci_skip; assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(607,\
+    \ timeout_minutes=60).\n   c. ExperimentTemplate(607, 'JEPA v12 OOD Validation',\n\
+    \      'results/experiment_607_jepa_v12_ood.json', requires_gpu=False).\n   d. Try\
+    \ to load results/jepa_predictor_v12.safetensors. If not found: record\n      model_available=False,\
+    \ status='blocked_no_v12_model', exit cleanly.\n   e. Load fover_corpus_v4.json\
+    \ (or live_pairs_578.json). Filter to ONLY pairs from question indices\n      NOT\
+    \ in Exp 578's training range (0-49). These are the OOD pairs.\n      If n_ood_pairs\
+    \ < 10: load results/live_pairs_602.json (GSM8K 250-349) for OOD test.\n   f. Build\
+    \ JEPACPMIPair list from OOD pairs.\n   g. Run JEPAPredictor.predict() on each\
+    \ pair. Compute ood_auc = roc_auc_score(labels, scores).\n   h. Determine:\n      v12_generalized\
+    \ = ood_auc >= 0.65\n      v12_overfit = ood_auc < 0.55\n   i. If v12_overfit:\
+    \ retrain JEPA v13 on fover_corpus_v4.json (full corpus):\n      Load corpus,\
+    \ build CPMI pairs, 80/20 split, train 100 epochs with PROGRSCentering.\n      Report\
+    \ v13_val_auc. Save to results/jepa_predictor_v13.safetensors if v13_val_auc >= 0.65.\n\
+    \   j. fr11_generalization_confirmed = v12_generalized or (v12_overfit and v13_val_auc\
+    \ >= 0.65).\n   k. Build artifact: schema='carnot.jepa_v12_ood.v1',\n      n_ood_pairs=<int>,\
+    \ ood_question_range='GSM8K_250-349_or_602',\n      v12_val_auc=1.0 (from Exp 593),\
+    \ v12_ood_auc=<float>,\n      v12_generalized=<bool>, v12_overfit=<bool>,\n     \
+    \ v13_retrained=<bool>, v13_val_auc=<float | None>,\n      fr11_generalization_confirmed=<bool>,\n\
+    \      honest_verdict='v12_generalized' if v12_generalized else 'v12_overfit_v13_saved'\
+    \ if (v12_overfit and v13_val_auc and v13_val_auc>=0.65) else 'jepa_fails_ood'.\n\
+    \   l. tmpl.assert_deliverable_written() as FINAL LINE.\n4. Write tests/python/test_jepa_ood_validation.py\
+    \ (100% coverage on new functions).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n6. Reconcile: _bmad/traceability.md (FR-11 status), ops/conductor-log.md,\
+    \ ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp594-live-vr-coace-v3
-  milestone: 2026.04.45
-  deliverable: results/experiment_594_live_vr_coace_v3.json
-  title: 'Exp 594: Live VR CoACE v3 — RETRO-033 Attempt #13 (GATED on Exp 591 recall >= 0.30)'
+- id: exp608-nup-probe-v6
+  milestone: 2026.04.46
+  deliverable: results/experiment_608_nup_probe_v6.json
+  title: 'Exp 608: NUP Probe v6 — CAPO Calibration-Aware Retrain on Live Corpus (RETRO-049)'
+  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-049 —\
+    \ NUP Probe v5 (Exp 599) achieved AUC=0.739, below the 0.80 deployment threshold\
+    \ for Tier 0c. The probe must cross 0.80 to be wired into the production cascade.\
+    \ Strategy: retrain on the expanded fover_corpus_v4 (from Exps 578/579/602) AND\
+    \ apply CAPO calibration-aware training (arXiv 2604.12632) — add a calibration\
+    \ loss term that penalizes overconfident predictions. This prevents the AUC=1.0\
+    \ overfitting pattern seen in JEPA v11 while maximizing discrimination.\n\nEXISTING CODE TO READ FIRST:\n\
+    - python/carnot/pipeline/nup_probe_v4.py (or nup_probe.py) — NUP Probe v4 (AUC=1.0\
+    \ synthetic)\n- results/experiment_523_nup_probe_v4.json — v4 architecture\n- results/experiment_599_vivado_grpo_nup.json\
+    \ — nup_v5_auc=0.739\n- results/nup_probe_v5.safetensors (if exists) — v5 weights\n\
+    - results/fover_corpus_v4.json (else live_pairs_578.json + 579 + 602)\n\nTASK:\
+    \ Retrain NUP Probe v6 with CAPO calibration loss on expanded live corpus.\n1.\
+    \ Read CLAUDE.md spec-first workflow.\n2. Add REQ-VERIFY-140 (NUP Probe v6:\
+    \ CAPO calibration-aware retrain on live corpus v4), REQ-VERIFY-141 (AUC-surrogate\
+    \ calibration loss per arXiv 2604.12632), SCENARIO-VERIFY-170/171/172 to spec.\n\
+    3. Create python/carnot/pipeline/capo_calibration.py:\n   a. CAPOCalibrationLoss\
+    \ class:\n      - __init__(self, lambda_cal: float = 0.1).\n      - compute_loss(self,\
+    \ scores: jnp.ndarray, labels: jnp.ndarray) -> float:\n          * Contrastive\
+    \ margin loss: sum_i max(0, margin - (score_incorrect_i - score_correct_i)).\n\
+    \          * Calibration loss (AUC surrogate): Wilcoxon-Mann-Whitney U statistic\
+    \ approximation:\n            for each (correct, incorrect) pair: calibration_loss\
+    \ += (score_correct - score_incorrect + 0.5)^2 when |score_correct - score_incorrect|\
+    \ < 0.3.\n          * total_loss = margin_loss + lambda_cal * calibration_loss.\n\
+    \          * The calibration term penalizes extreme confidence gaps that signal overfitting.\n\
+    \   b. Export CAPOCalibrationLoss from carnot.pipeline.__init__.\n4. Write scripts/experiment_608_nup_probe_v6.py:\n\
+    \   a. apply_env_autofix() FIRST; from python.carnot.pipeline.live_assertion\
+    \ import assert_live_or_ci_skip; assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(608,\
+    \ timeout_minutes=40).\n   c. ExperimentTemplate(608, 'NUP Probe v6 CAPO Retrain',\n\
+    \      'results/experiment_608_nup_probe_v6.json', requires_gpu=False).\n   d. Load\
+    \ fover_corpus_v4.json (else merge live_pairs_578.json + 579.json + 602.json).\n\
+    \   e. Build (bigram_feature, is_correct) pairs for NUP Probe training.\n   f.\
+    \ 80/20 train/val split (stratified by is_correct).\n   g. Train NUP Probe v6:\
+    \ same architecture as v4 (bigram dot product projection), but use CAPOCalibrationLoss\
+    \ with lambda_cal=0.1. n_epochs=200, lr=1e-3.\n   h. Checkpoint every 50 epochs;\
+    \ keep best by val_auc.\n   i. v6_val_auc = roc_auc_score(val_labels, val_scores).\n\
+    \   j. Save to results/nup_probe_v6.safetensors if v6_val_auc >= 0.80.\n   k. Compare:\
+    \ v5_auc=0.739, v6_val_auc=<measured>. Calibration improvement noted.\n   l. Build\
+    \ artifact: schema='carnot.nup_probe_v6.v1',\n      n_live_pairs=<int>, train_pairs=<int>,\
+    \ val_pairs=<int>,\n      v5_auc=0.739, v6_val_auc=<float>,\n      capo_applied=True,\
+    \ lambda_cal=0.1,\n      model_saved=(v6_val_auc>=0.80),\n      tier_0c_deployable=(v6_val_auc>=0.80),\n\
+    \      retro_049_resolved=(v6_val_auc>=0.80),\n      honest_verdict='nup_v6_tier0c_ready'\
+    \ if v6_val_auc>=0.80 else 'nup_v6_improved' if v6_val_auc>0.739 else 'no_improvement'.\n\
+    \   m. tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_capo_calibration.py\
+    \ (100% coverage on capo_calibration.py) and tests/python/test_nup_probe_v6.py\
+    \ (training/evaluation functions).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\n7. Reconcile: _bmad/traceability.md (Tier 0c status), _bmad/architecture.md\
+    \ (Tier 0c table), ops/conductor-log.md, ops/changelog.md.\nRun: JAX_PLATFORMS=cpu\
+    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+
+- id: exp609-live-vr-coace-v4
+  milestone: 2026.04.46
+  deliverable: results/experiment_609_live_vr_coace_v4.json
+  title: 'Exp 609: Live VR CoACEV4 — RETRO-033 Attempt #14 (GATED on Exp 605 recall >= 0.20, GPU REQUIRED)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
     \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-033 has\
-    \ been open for 13 consecutive milestones — live verify-repair has never shown\
-    \ positive improvement. This attempt uses CoACEExtractorV3 (Exp 591) which was\
-    \ calibrated against live IT-model outputs. GATE: reads results/experiment_591_coace_v3_live.json;\
-    \ if gate_open=False (recall < 0.30), writes blocked artifact and exits immediately.\
-    \ If gate_open=True, proceeds with 50 GSM8K questions (indices 300-349). GPU REQUIRED.\
-    \ CARNOT_FORCE_LIVE must be 1.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_591_coace_v3_live.json\
-    \ — gate_open field (READ FIRST; exit if False)\n- python/carnot/extraction/coace_extractor_v3.py\
-    \ — CoACEExtractorV3 (from Exp 591)\n- python/carnot/pipeline/verify_repair.py\
-    \ — VerifyRepairPipeline\n- scripts/experiment_582_live_vr_coace_v2.py — prior\
-    \ RETRO-033 attempt (copy structure)\n- results/experiment_582_live_vr_coace_v2.json\
-    \ — blocked result (read to understand gate logic)\n\nTASK: Run live verify-repair\
-    \ with CoACEExtractorV3 on 50 GSM8K questions.\n1. Read CLAUDE.md spec-first workflow.\n\
-    2. GATE CHECK (MUST BE FIRST AFTER IMPORTS): Load results/experiment_591_coace_v3_live.json.\n\
-    \   If gate_open != True:\n     Write blocked artifact: schema='carnot.live_vr_coace_v3.v1',\n\
-    \     status='blocked', reason='gate_closed_coace_v3_recall_below_30pct',\n  \
-    \   v3_recall_at_gate=<from exp591 or 0.0>, honest_verdict='blocked_gate_closed'\n\
-    \     sys.exit(0)\n3. Add SCENARIO-BENCH-042/043/044 to spec.\n4. Write scripts/experiment_594_live_vr_coace_v3.py:\n\
+    \ been open for 14 consecutive milestones — live verify-repair has NEVER shown\
+    \ positive improvement. This attempt uses CoACEExtractorV4 (Exp 603, GenPRM-style)\
+    \ or the fine-tuned DSVDAdapter (Exp 604), whichever passed Exp 605's gate. GATE:\
+    \ reads results/experiment_605_extractor_diagnostic_v4.json. If gate_open=False\
+    \ (best_recall < 0.20), writes blocked artifact and exits IMMEDIATELY — do NOT\
+    \ proceed with GPU inference. If gate_open=True, runs 50 GSM8K questions\
+    \ (indices 400-449) with the winning extractor. GPU REQUIRED. CARNOT_FORCE_LIVE=1\
+    \ MANDATORY.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_605_extractor_diagnostic_v4.json\
+    \ — gate_open, winning_extractor, best_recall (READ FIRST; exit if gate_open=False)\n\
+    - python/carnot/extraction/coace_extractor_v4.py — CoACEExtractorV4 (from Exp 603)\n\
+    - python/carnot/pipeline/dsvd_adapter.py — DSVDAdapter (fine-tuned in Exp 604)\n\
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline\n- scripts/experiment_594_live_vr_coace_v3.py\
+    \ — prior RETRO-033 attempt (copy benchmark harness structure)\n\nTASK: Run live\
+    \ verify-repair with winning extractor on 50 GSM8K questions.\n1. Read CLAUDE.md\
+    \ spec-first workflow.\n2. GATE CHECK (MUST BE FIRST AFTER IMPORTS): Load\
+    \ results/experiment_605_extractor_diagnostic_v4.json.\n   If gate_open != True:\n\
+    \     Write blocked artifact: schema='carnot.live_vr_coace_v4.v1',\n     status='blocked',\
+    \ reason='gate_closed_recall_below_20pct',\n     best_recall_at_gate=<from exp605\
+    \ or 0.0>,\n     honest_verdict='blocked_recall_below_threshold_do_not_retry_without_higher_recall'\n\
+    \     sys.exit(0)\n3. Add SCENARIO-BENCH-055/056/057 to spec.\n4. Write scripts/experiment_609_live_vr_coace_v4.py:\n\
     \   a. Gate check (above) FIRST.\n   b. from python.carnot.pipeline.live_assertion\
     \ import assert_live_gpu_available; assert_live_gpu_available().\n   c. apply_env_autofix().\n\
-    \   d. ExperimentTimeoutWatchdog(594, timeout_minutes=90).\n   e. ExperimentTemplate(594,\
-    \ 'Live VR CoACE v3',\n      'results/experiment_594_live_vr_coace_v3.json', requires_gpu=True).\n\
-    \   f. LiveGPUGate.require_live_or_blocked().\n   g. JITVRAMCheck.\n   h. Load\
-    \ GSM8K validation split, questions 300-349.\n   i. Load both models (Gemma4-E4B-it\
-    \ cuda:0, Qwen3.5-0.8B cuda:1).\n   j. For each question, for each model:\n  \
+    \   d. ExperimentTimeoutWatchdog(609, timeout_minutes=90).\n   e. ExperimentTemplate(609,\
+    \ 'Live VR CoACEV4',\n      'results/experiment_609_live_vr_coace_v4.json',\
+    \ requires_gpu=True).\n   f. LiveGPUGate.require_live_or_blocked().\n   g. JITVRAMCheck.\n\
+    \   h. winning_extractor = exp605_result['winning_extractor']\n   i. Load GSM8K\
+    \ validation split, questions 400-449.\n   j. Load both models (Gemma4-E4B-it\
+    \ cuda:0, Qwen3.5-0.8B cuda:1).\n   k. For each question, for each model:\n  \
     \    Baseline: generate response, check correctness.\n      Pipeline: generate,\
-    \ extract with CoACEExtractorV3, verify, repair if violated, re-check.\n      Record:\
+    \ extract with winning_extractor, verify, repair if violated, re-check.\n      Record:\
     \ baseline_correct, pipeline_correct, violations_found, repair_attempted, repair_succeeded.\n\
-    \   k. signed_improvement = mean(pipeline_correct) - mean(baseline_correct).\n\
-    \   l. retro_033_resolved = (signed_improvement > 0 AND inference_mode == 'live_gpu').\n\
-    \   m. Build artifact: schema='carnot.live_vr_coace_v3.v1',\n      inference_mode='live_gpu',\n\
-    \      n_questions=50, question_indices='300-349',\n      baseline_accuracy=<float>, pipeline_accuracy=<float>,\n\
-    \      signed_improvement=<float>,\n      n_violations_found=<int>, n_repairs_attempted=<int>,\
-    \ n_repairs_succeeded=<int>,\n      retro_033_resolved=<bool>,\n      honest_verdict='first_live_improvement'\
-    \ if signed_improvement>0 else 'live_no_improvement_v13'.\n   n. tmpl.assert_deliverable_written()\
-    \ as FINAL LINE.\n5. Write tests/python/test_experiment_594_live_vr.py (100% targeted\
-    \ coverage).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile:\
-    \ ops/conductor-log.md (RETRO-033 status), ops/changelog.md, ops/status.md.\n\
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
-    \ scripts/research_conductor.py.\n"
+    \   l. signed_improvement = mean(pipeline_correct) - mean(baseline_correct).\n\
+    \   m. retro_033_resolved = (signed_improvement > 0 AND inference_mode == 'live_gpu').\n\
+    \   n. Build artifact: schema='carnot.live_vr_coace_v4.v1',\n      inference_mode='live_gpu',\n\
+    \      n_questions=50, question_indices='400-449',\n      winning_extractor=<str>,\n\
+    \      baseline_accuracy=<float>, pipeline_accuracy=<float>,\n      signed_improvement=<float>,\n\
+    \      n_violations_found=<int>, n_repairs_attempted=<int>, n_repairs_succeeded=<int>,\n\
+    \      retro_033_resolved=<bool>,\n      honest_verdict='first_live_improvement'\
+    \ if signed_improvement>0 else 'live_no_improvement_v14'.\n   o. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n5. Write tests/python/test_experiment_609_live_vr.py (100%\
+    \ targeted coverage).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\n7. Reconcile: ops/conductor-log.md (RETRO-033 status), ops/status.md,\
+    \ ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp595-live-vr-dsvd
-  milestone: 2026.04.45
-  deliverable: results/experiment_595_live_vr_dsvd.json
-  title: 'Exp 595: Live VR DSVD Detection — RETRO-033 Attempt #13 Alt (GATED on Exp 592 live_auc >= 0.80)'
+- id: exp610-dwave-backend-wire-in
+  milestone: 2026.04.46
+  deliverable: results/experiment_610_dwave_wire_in.json
+  title: 'Exp 610: D-Wave Backend Wire-In + HISR Production Integration (SamplerBackend Protocol)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: DSVD (Dynamic\
-    \ Self-Verify Decoding, arXiv 2503.03149) achieved AUC=0.976 in Exp 587. Exp 592\
-    \ validates this on live pairs and opens this gate if live_auc >= 0.80. DSVD is\
-    \ a fundamentally different repair architecture: instead of post-hoc extraction\
-    \ (CoACE), DSVD identifies the specific token boundary where the hidden state indicates\
-    \ a violation is forming, then applies targeted rollback to regenerate from that\
-    \ boundary. This avoids the offline/live distribution gap entirely — no regex patterns,\
-    \ no arithmetic parsing. GATE: reads results/experiment_592_dsvd_live_val.json;\
-    \ if gate_open=False (live_auc < 0.80), writes blocked artifact and exits.\n\n\
-    EXISTING CODE TO READ FIRST:\n- results/experiment_592_dsvd_live_val.json — gate_open,\
-    \ dsvd_live_auc (READ FIRST; exit if gate_open=False)\n- python/carnot/pipeline/dsvd_adapter.py\
-    \ — DSVDAdapter, DSVDResult (from Exp 587)\n- results/experiment_587_dsvd_adapter.json\
-    \ — dsvd implementation details\n- scripts/experiment_594_live_vr_coace_v3.py\
-    \ — copy benchmark harness structure\n\nTASK: Run live verify-repair using DSVD\
-    \ detection + targeted rollback on 50 GSM8K questions.\n1. Read CLAUDE.md spec-first\
-    \ workflow.\n2. GATE CHECK FIRST: Load results/experiment_592_dsvd_live_val.json.\n\
-    \   If gate_open != True: write blocked artifact, exit.\n3. Add REQ-VERIFY-120\
-    \ (DSVD targeted rollback repair), SCENARIO-VERIFY-148/149/150 to spec.\n4. Extend\
-    \ python/carnot/pipeline/dsvd_adapter.py with DSVDRepairResult:\n   a. DSVDRepairResult\
-    \ dataclass: original_response (str), violation_boundary_token (int | None),\n\
-    \      repaired_response (str | None), repair_attempted (bool), repair_improved\
-    \ (bool | None).\n   b. repair_from_boundary(self, model_pipeline, question: str,\
-    \ original_tokens: list[str],\n      boundary_idx: int, max_new_tokens: int =\
-    \ 50) -> DSVDRepairResult:\n      Regenerates from boundary_idx position. If no\
-    \ boundary detected (DSVDResult.violation_detected=False): return DSVDRepairResult(repair_attempted=False).\n\
-    \   c. Export DSVDRepairResult from carnot.pipeline.__init__.\n5. Write scripts/experiment_595_live_vr_dsvd.py:\n\
-    \   a. Gate check FIRST.\n   b. from python.carnot.pipeline.live_assertion import\
-    \ assert_live_gpu_available; assert_live_gpu_available().\n   c. apply_env_autofix().\n\
-    \   d. ExperimentTimeoutWatchdog(595, timeout_minutes=90).\n   e. ExperimentTemplate(595,\
-    \ 'Live VR DSVD Detection',\n      'results/experiment_595_live_vr_dsvd.json',\
-    \ requires_gpu=True).\n   f. LiveGPUGate.require_live_or_blocked().\n   g. Load\
-    \ GSM8K questions 350-399.\n   h. For each question, for each model:\n      Baseline:\
-    \ generate response, check correctness.\n      DSVD pipeline: generate response,\
-    \ DSVDAdapter.score() to detect boundary, if violation_detected repair_from_boundary(),\
-    \ re-check repaired response.\n   i. signed_improvement = pipeline_accuracy -\
-    \ baseline_accuracy.\n   j. retro_033_resolved = (signed_improvement > 0).\n \
-    \  k. Build artifact: schema='carnot.live_vr_dsvd.v1',\n      inference_mode='live_gpu',\n\
-    \      n_questions=50, question_indices='350-399',\n      baseline_accuracy=<float>, pipeline_accuracy=<float>,\n\
-    \      signed_improvement=<float>,\n      n_dsvd_violations=<int>, n_repairs_attempted=<int>,\n\
-    \      retro_033_resolved=<bool>,\n      honest_verdict='dsvd_first_improvement'\
-    \ if signed_improvement>0 else 'dsvd_no_improvement'.\n   l. tmpl.assert_deliverable_written()\
-    \ as FINAL LINE.\n6. Write tests/python/test_experiment_595_live_vr_dsvd.py (100%\
-    \ coverage on DSVDRepairResult additions).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n8. Reconcile: ops/conductor-log.md (RETRO-033), ops/changelog.md.\n\
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
-    \ scripts/research_conductor.py.\n"
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Exp 598 confirmed\
+    \ D-Wave Neal backend available with speedup_ratio=26.24x over CPU simulated\
+    \ annealing. The DWaveNealBackend class was implemented but not wired into the\
+    \ production SamplerBackend protocol that VerifyRepairPipeline uses. This experiment\
+    \ wires it in as an opt-in backend (CARNOT_SAMPLER=dwave) and also integrates\
+    \ HISR hindsight credit assignment (HISRWeighter from Exp 598) into\
+    \ ConstraintAdditionFromMemory.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/samplers/backend.py\
+    \ — SamplerBackend protocol (read all methods)\n- python/carnot/samplers/dwave_backend.py\
+    \ — DWaveNealBackend (from Exp 598)\n- python/carnot/pipeline/hisr_weights.py\
+    \ — HISRWeighter, HISRViolationWeight (from Exp 598)\n- python/carnot/pipeline/constraint_addition.py\
+    \ — ConstraintAdditionFromMemory\n- python/carnot/pipeline/verify_repair.py —\
+    \ VerifyRepairPipeline (SamplerBackend usage)\n- results/experiment_598_hisr_dwave.json\
+    \ — dwave_available=True, hisr_credit_assignment_correct=True\n\nTASK: Wire\
+    \ DWaveNealBackend into SamplerBackend + integrate HISR into\
+    \ ConstraintAdditionFromMemory.\n1. Read CLAUDE.md spec-first workflow.\n2. Add\
+    \ REQ-SAMPLE-025 (DWaveNealBackend: production CARNOT_SAMPLER=dwave flag),\
+    \ REQ-LEARN-075 (HISR credit assignment wired into ConstraintAdditionFromMemory),\
+    \ SCENARIO-SAMPLE-040/041, SCENARIO-LEARN-110/111 to spec.\n3. Update python/carnot/samplers/backend.py:\n\
+    \   a. Add backend_registry: dict[str, type[SamplerBackend]] = {'cpu': ParallelIsingSampler,\
+    \ 'dwave': DWaveNealBackend}.\n   b. Add get_sampler_backend(name: str | None =\
+    \ None) -> SamplerBackend:\n      * If name is None: read os.environ.get('CARNOT_SAMPLER',\
+    \ 'cpu').\n      * Look up in backend_registry. Return instance.\n   c. Export\
+    \ get_sampler_backend, backend_registry from carnot.samplers.__init__.\n4. Update\
+    \ python/carnot/pipeline/constraint_addition.py:\n   a. Add hisr_weighted_add(\
+    \ self, violations: list[ViolationPattern], final_correct: bool ) method:\n      *\
+    \ Uses HISRWeighter.compute_hindsight_score(violations, final_correct).\n      *\
+    \ Filters to weights with hindsight_score >= 0.5 before adding constraints.\n      *\
+    \ Replaces uniform add with HISR-weighted add.\n   b. Add optional parameter use_hisr:\
+    \ bool = False to add_from_memory(). If True: calls hisr_weighted_add().\n5. Write\
+    \ scripts/experiment_610_dwave_wire_in.py:\n   a. apply_env_autofix() FIRST; from\
+    \ python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\
+    \ assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(610, timeout_minutes=20).\n\
+    \   c. ExperimentTemplate(610, 'D-Wave Wire-In + HISR Integration',\n      'results/experiment_610_dwave_wire_in.json',\
+    \ requires_gpu=False).\n   d. Test get_sampler_backend('cpu') returns ParallelIsingSampler instance.\n\
+    \   e. Test get_sampler_backend('dwave') returns DWaveNealBackend instance.\n   f.\
+    \ Test CARNOT_SAMPLER=dwave env var is respected.\n   g. Benchmark: run DWaveNealBackend.latency_ms(100)\
+    \ vs ParallelIsingSampler on 100-variable problem. Record speedup.\n   h. Test HISR\
+    \ wire-in: create 5 violations, call hisr_weighted_add() with final_correct=False.\
+    \ Verify only high-hindsight violations added.\n   i. Build artifact: schema='carnot.dwave_wire_in.v1',\n\
+    \      dwave_backend_registered=True,\n      cpu_backend_registered=True,\n    \
+    \  carnot_sampler_env_works=True,\n      dwave_latency_ms=<float>, cpu_latency_ms=<float>,\n\
+    \      speedup_ratio=<float>,\n      hisr_wired=True, hisr_filters_low_confidence=True,\n\
+    \      honest_verdict='dwave_wired_hisr_integrated'.\n   j. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n6. Write tests/python/test_sampler_registry.py (100% coverage\
+    \ on new backend.py code) and tests/python/test_hisr_wire_in.py (100% on new\
+    \ constraint_addition.py code).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ -q\n8. Reconcile: _bmad/architecture.md (SamplerBackend registry table),\
+    \ ops/conductor-log.md, ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
+    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
 
-- id: exp596-live-200q-wilson-ci
-  milestone: 2026.04.45
-  deliverable: results/experiment_596_live_200q_wilson.json
-  title: 'Exp 596: Live 200q Wilson CI — RETRO-038 Attempt #9 (GATED on Exp 594 or 595 signed_improvement > 0)'
+- id: exp611-flip-reward-fr11-v5
+  milestone: 2026.04.46
+  deliverable: results/experiment_611_flip_fr11_v5.json
+  title: 'Exp 611: FLIP Backward Inference + FR-11 Real Violations v5 (Tier 1 Self-Learning, Mandatory)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: RETRO-038 has\
-    \ been open 9 milestones — a publishable 200q benchmark with Wilson confidence\
-    \ intervals has never been produced. This experiment scales the winning approach\
-    \ from Exp 594 or 595 to 200 questions for statistical confidence. GATE: reads\
-    \ both results/experiment_594_live_vr_coace_v3.json AND results/experiment_595_live_vr_dsvd.json.\
-    \ Proceeds only if at least one has signed_improvement > 0. Uses the winning extractor.\
-    \ GPU REQUIRED.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_594_live_vr_coace_v3.json\
-    \ — signed_improvement, honest_verdict (READ FIRST)\n- results/experiment_595_live_vr_dsvd.json\
-    \ — signed_improvement, honest_verdict (READ FIRST)\n- scripts/experiment_528_live_200q_vericot.py\
-    \ — prior 200q benchmark (copy Wilson CI structure)\n- results/experiment_528_live_200q_vericot_v7.json\
-    \ — headline_result=Wilson_CI_publishable reference\n\nTASK: Scale winning approach\
-    \ to 200 questions with Wilson confidence intervals.\n1. GATE CHECK FIRST: Load\
-    \ Exps 594 and 595. If BOTH have signed_improvement <= 0 (or blocked): write blocked\
-    \ artifact, exit.\n2. Select winning_extractor: 'coace_v3' if Exp 594 signed_improvement\
-    \ > 0, else 'dsvd' if Exp 595 signed_improvement > 0, else 'coace_v3_fallback'.\n\
-    3. Add SCENARIO-BENCH-045/046/047 to spec.\n4. Write scripts/experiment_596_live_200q_wilson.py:\n\
-    \   a. Gate check FIRST.\n   b. from python.carnot.pipeline.live_assertion import\
-    \ assert_live_gpu_available; assert_live_gpu_available().\n   c. apply_env_autofix().\n\
-    \   d. ExperimentTimeoutWatchdog(596, timeout_minutes=180).\n   e. ExperimentTemplate(596,\
-    \ 'Live 200q Wilson CI',\n      'results/experiment_596_live_200q_wilson.json',\
-    \ requires_gpu=True).\n   f. LiveGPUGate.require_live_or_blocked().\n   g. Load\
-    \ LongRunBenchmarkExecutor(batch_size=50). Load GSM8K questions 300-499 (200 questions,\
-    \ non-overlapping with Exps 594/595).\n   h. For each batch of 50: run baseline\
-    \ + pipeline (using winning_extractor). Checkpoint after each batch.\n   i. Compute\
-    \ Wilson CI: from scipy.stats import norm; use Wilson score interval for proportions.\n\
-    \   j. headline_result = 'Wilson_CI_publishable' if lower_CI > 0 else 'no_significant_improvement'.\n\
-    \   k. Build artifact: schema='carnot.live_200q_wilson.v1',\n      inference_mode='live_gpu',\n\
-    \      n_questions=200, question_indices='300-499',\n      baseline_accuracy=<float>, pipeline_accuracy=<float>,\n\
-    \      signed_improvement=<float>,\n      wilson_lower_ci=<float>, wilson_upper_ci=<float>,\n\
-    \      headline_result=<str>,\n      winning_extractor=<str>,\n      retro_038_resolved=<bool>,\n\
-    \      honest_verdict=headline_result.\n   l. tmpl.assert_deliverable_written()\
-    \ as FINAL LINE.\n5. Write tests/python/test_experiment_596_wilson.py (100% targeted\
-    \ coverage).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile:\
-    \ ops/conductor-log.md (RETRO-038), ops/changelog.md, ops/status.md.\nRun: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp597-fr11-real-violations-v4
-  milestone: 2026.04.45
-  deliverable: results/experiment_597_fr11_real_violations_v4.json
-  title: 'Exp 597: FR-11 Real Violations v4 + MISE Dense Reward Calibration (Tier 1 Self-Learning)'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Tier 1 self-learning\
-    \ (ConstraintAdditionFromMemory) needs real constraint violations to function. Exps\
-    \ 594 or 595 may have produced violations from live GPU inference. This experiment\
-    \ (1) runs ConstraintAdditionFromMemory on any available live violations; (2) implements\
-    \ MISE dense reward calibration (arXiv 2604.11611) to calibrate EORM training\
-    \ signal from (original, repair, verdict) triples. FR-11 mandatory: must produce\
-    \ fr11_real_violations_confirmed=True or clearly document why not.\n\nEXISTING\
-    \ CODE TO READ FIRST:\n- python/carnot/pipeline/constraint_addition.py — ViolationPattern,\
-    \ ConstraintAdditionFromMemory (from Exp 456)\n- results/experiment_594_live_vr_coace_v3.json\
-    \ — n_violations_found, repair triples (if exists)\n- results/experiment_595_live_vr_dsvd.json\
-    \ — n_dsvd_violations (if exists)\n- results/experiment_583_fr11_real_violations_v3.json\
-    \ — prior attempt (honest_verdict=blocked)\n- python/carnot/models/eorm_model.py\
-    \ — EORMModel (for MISE calibration)\n\nTASK: FR-11 relay with MISE dense reward\
-    \ calibration.\n1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-065 (FR-11\
-    \ real violations relay from live verify-repair), REQ-LEARN-066 (MISE backward\
-    \ inference for EORM reward calibration, arXiv 2604.11611), SCENARIO-LEARN-100/101/102\
-    \ to autoresearch/spec.md.\n3. Create python/carnot/pipeline/mise_calibrator.py:\n\
-    \   a. MISETriple dataclass: question (str), original_response (str), repaired_response\
-    \ (str | None), verdict_correct (bool).\n   b. MISECalibrator class:\n      -\
-    \ __init__(self, embed_fn: callable).\n      - backward_inference_score(self,\
-    \ response: str, question: str) -> float:\n          'What constraint was this\
-    \ response trying to satisfy?' — compute cosine similarity between\n          embed(response)\
-    \ and embed(question) as a proxy for backward inference alignment.\n      - calibrate(self,\
-    \ triples: list[MISETriple]) -> dict[str, float]:\n          Returns ('mean_alignment_correct':\
-    \ float, 'mean_alignment_incorrect': float, 'calibration_gap': float).\n      -\
-    \ calibration_gap: mean_alignment_correct - mean_alignment_incorrect. Positive\
-    \ = MISE signal is reliable.\n   c. Export MISECalibrator, MISETriple from carnot.pipeline.__init__.\n\
-    4. Write scripts/experiment_597_fr11_real_violations_v4.py:\n   a. apply_env_autofix()\
-    \ FIRST; from python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\
-    \ assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(597, timeout_minutes=30).\n\
-    \   c. ExperimentTemplate(597, 'FR-11 Real Violations v4 + MISE',\n      'results/experiment_597_fr11_real_violations_v4.json',\
-    \ requires_gpu=False).\n   d. Load violations from Exp 594 if exists (n_violations_found\
-    \ > 0). Else load from Exp 595. Else load from Exp 583's prior run.\n   e. If\
-    \ n_live_violations >= 5: run ConstraintAdditionFromMemory on violations.\n  \
-    \    Else: use synthetic violations as fallback (10 arithmetic errors, explicitly\
-    \ labeled as synthetic_fallback).\n   f. Record: constraints_added_count, fp_rate_before,\
-    \ fp_rate_after.\n   g. Build MISETriple list from (original, repair, verdict)\
-    \ triples from Exp 594/595 if available.\n   h. Run MISECalibrator(embed_fn=lambda\
-    \ x: jnp.array([hash(x)%128])).calibrate(triples).\n   i. fr11_real_violations_confirmed\
-    \ = n_live_violations >= 5.\n   j. Build artifact: schema='carnot.fr11_real_v4.v1',\n\
-    \      n_live_violations=<int>, violations_source='exp594' or 'exp595' or 'synthetic_fallback',\n\
-    \      constraints_added=<int>, fp_rate_before=<float>, fp_rate_after=<float>,\n\
-    \      mise_calibration_gap=<float>,\n      fr11_real_violations_confirmed=<bool>,\n\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: FR-11 self-learning\
+    \ requires repair quality scoring. The current binary correct/incorrect verdict\
+    \ after repair is a weak signal. FLIP (arXiv 2602.13551) backward inference:\
+    \ given a repaired response, infer the original constraint it was satisfying —\
+    \ if the repair introduced a constraint-inconsistent change, FLIP detects it.\
+    \ Also: ConstraintAdditionFromMemory has been running but with no feedback on\
+    \ whether the added constraints REDUCED false positives. This experiment connects\
+    \ violation data from Exp 609 (if available) to FR-11 relay and adds FLIP scoring.\
+    \ FR-11 MANDATORY.\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/constraint_addition.py\
+    \ — ConstraintAdditionFromMemory (read current state)\n- python/carnot/pipeline/mise_calibrator.py\
+    \ — MISECalibrator (from Exp 597)\n- results/experiment_609_live_vr_coace_v4.json\
+    \ — n_violations_found, repair triples (if exists)\n- results/experiment_597_fr11_real_violations_v4.json\
+    \ — prior FR-11 attempt\n- results/fover_corpus_v4.json — live corpus for synthetic\
+    \ fallback\n\nTASK: Implement FLIPRewardCalibrator + run FR-11 relay.\n1. Read\
+    \ CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-076 (FR-11: FLIP backward\
+    \ inference for repair quality scoring, arXiv 2602.13551), REQ-LEARN-077\
+    \ (FR-11: real violations relay v5 from Exp 609 or synthetic fallback),\
+    \ SCENARIO-LEARN-115/116/117 to openspec/capabilities/autoresearch/spec.md.\n\
+    3. Create python/carnot/pipeline/flip_calibrator.py:\n   a. FLIPRepairTriple dataclass:\
+    \ question (str), original (str), repaired (str | None),\n      verdict_correct\
+    \ (bool), flip_score (float | None).\n   b. FLIPRewardCalibrator class:\n      -\
+    \ __init__(self, embed_fn: callable).\n      - backward_inference_score(self, response:\
+    \ str, question: str) -> float:\n          'What constraint was this response satisfying?'\n\
+    \          Compute cosine similarity: embed(response) · embed(question) / (|embed(response)|\
+    \ * |embed(question)|).\n          Returns float 0..1. Higher = response well-aligned\
+    \ to question's constraints.\n      - calibrate_repair(self, triple: FLIPRepairTriple)\
+    \ -> FLIPRepairTriple:\n          If repaired is not None:\n            flip_score\
+    \ = backward_inference_score(repaired, triple.question).\n            If flip_score\
+    \ > backward_inference_score(triple.original, triple.question):\n              # Repair\
+    \ improved constraint alignment.\n              triple.flip_score = flip_score\n\
+    \          Else: triple.flip_score = None.\n          Return triple.\n      - batch_calibrate(self,\
+    \ triples: list[FLIPRepairTriple]) -> dict:\n          Returns {'mean_flip_score':\
+    \ float, 'n_improved': int, 'repair_quality': 'good'|'neutral'|'bad'}.\n   c. Export\
+    \ FLIPRewardCalibrator, FLIPRepairTriple from carnot.pipeline.__init__.\n4. Write\
+    \ scripts/experiment_611_flip_fr11_v5.py:\n   a. apply_env_autofix() FIRST; from\
+    \ python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\
+    \ assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(611, timeout_minutes=30).\n\
+    \   c. ExperimentTemplate(611, 'FLIP + FR-11 Real Violations v5',\n      'results/experiment_611_flip_fr11_v5.json',\
+    \ requires_gpu=False).\n   d. Load violations: Try results/experiment_609_live_vr_coace_v4.json\
+    \ (n_violations_found > 0). Else load from results/experiment_597_fr11_real_violations_v4.json.\
+    \ Else use 10 synthetic violations from fover_corpus_v4.json (labeled synthetic_fallback).\n\
+    \   e. If n_live_violations >= 5: run ConstraintAdditionFromMemory.hisr_weighted_add()\
+    \ on live violations (use_hisr=True from Exp 610 wire-in).\n   f. Build FLIPRepairTriple\
+    \ list from available (question, original, repaired, verdict) triples.\n   g. Run\
+    \ FLIPRewardCalibrator(embed_fn=lambda x: jnp.array([hash(w)%128 for w in x.split()[:128]]))\n\
+    \      .batch_calibrate(triples).\n   h. fr11_real_violations_confirmed = n_live_violations\
+    \ >= 5.\n   i. Build artifact: schema='carnot.flip_fr11_v5.v1',\n      n_live_violations=<int>,\
+    \ violations_source='exp609' or 'exp597' or 'synthetic_fallback',\n      constraints_added=<int>,\
+    \ fp_rate_before=<float>, fp_rate_after=<float>,\n      flip_mean_score=<float>,\
+    \ flip_n_improved=<int>, flip_repair_quality=<str>,\n      fr11_real_violations_confirmed=<bool>,\n\
     \      honest_verdict='real_violations_improved' if (fr11_real_violations_confirmed\
-    \ and fp_rate_after<fp_rate_before) else 'real_violations_no_improvement' if fr11_real_violations_confirmed\
-    \ else 'synthetic_fallback'.\n   k. tmpl.assert_deliverable_written() as FINAL\
-    \ LINE.\n5. Write tests/python/test_mise_calibrator.py (100% coverage on mise_calibrator.py).\n\
-    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile: _bmad/traceability.md\
-    \ (FR-11 status), ops/conductor-log.md, ops/changelog.md.\nRun: JAX_PLATFORMS=cpu\
-    \ .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ and fp_rate_after<fp_rate_before)\
+    \ else 'real_violations_no_improvement' if fr11_real_violations_confirmed\
+    \ else 'synthetic_fallback'.\n   j. tmpl.assert_deliverable_written() as FINAL LINE.\n\
+    5. Write tests/python/test_flip_calibrator.py (100% coverage on flip_calibrator.py).\n\
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n7. Reconcile:\
+    \ _bmad/traceability.md (FR-11 status), ops/conductor-log.md, ops/changelog.md.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
+    \ scripts/research_conductor.py.\n"
 
-- id: exp598-hisr-dwave-cloud
-  milestone: 2026.04.45
-  deliverable: results/experiment_598_hisr_dwave.json
-  title: 'Exp 598: HISR Hindsight Segmental Rewards + D-Wave Quantum Annealing Cloud'
+- id: exp612-fact-e-pbit-ising
+  milestone: 2026.04.46
+  deliverable: results/experiment_612_fact_e_pbit.json
+  title: 'Exp 612: FACT-E Causal Faithfulness Probe + Synchronous p-bit Ising RTL (arXiv 2604.10693 + 2604.01564)'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
     \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Two independent\
-    \ research experiments combined to save one slot. (1) HISR (arXiv 2603.18683)\
-    \ applies hindsight importance scores to ConstraintAdditionFromMemory — weight violations\
-    \ by how much they predict the final incorrect outcome, improving credit assignment.\
-    \ (2) D-Wave dwave-ocean-sdk is free to install and provides a local Neal simulated\
-    \ annealer plus optional cloud QPU access. This is the first Carnot experiment\
-    \ to validate the D-Wave integration path described in research-hardware-wishlist.md.\n\
-    \nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/constraint_addition.py\
-    \ — ConstraintAdditionFromMemory (HISR extension target)\n- python/carnot/samplers/parallel_ising.py\
-    \ — ParallelIsingSampler (D-Wave comparison baseline)\n- python/carnot/samplers/backend.py\
-    \ — SamplerBackend protocol\n- research-hardware-wishlist.md — D-Wave justification\
-    \ and dwave-ocean-sdk setup\n\nTASK: HISR hindsight credit assignment + D-Wave\
-    \ integration.\n1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-LEARN-067 (HISR:\
-    \ hindsight importance scoring for constraint violations, arXiv 2603.18683), REQ-SAMPLE-020\
-    \ (D-Wave SamplerBackend: Neal and QPU backends), SCENARIO-LEARN-103/104, SCENARIO-SAMPLE-035/036\
-    \ to spec.\n3. Create python/carnot/pipeline/hisr_weights.py:\n   a. HISRViolationWeight\
-    \ dataclass: violation_type (str), question_id (str), final_incorrect (bool),\
-    \  hindsight_score (float).\n   b. HISRWeighter class:\n      - __init__(self).\n\
-    \      - compute_hindsight_score(self, violations: list[ViolationPattern],\n  \
-    \      final_correct: bool) -> list[HISRViolationWeight]:\n          * If final_correct=False:\
-    \ violations that preceded an incorrect answer score higher.\n          * Score\
-    \ = 1.0 / (1 + distance_from_final_error) where distance is position from last\
-    \ violation to end.\n          * If final_correct=True: violations are false positives,\
-    \ score = 0.0.\n      - weighted_violations(self, weights: list[HISRViolationWeight],\
-    \ threshold=0.5) -> list[ViolationPattern]:\n          Filter to weights where\
-    \ hindsight_score >= threshold.\n   c. Export HISRWeighter, HISRViolationWeight\
-    \ from carnot.pipeline.__init__.\n4. Create python/carnot/samplers/dwave_backend.py:\n\
-    \   a. DWaveNealBackend class implementing SamplerBackend protocol:\n      - __init__(self):\
-    \ tries `import dwave.samplers; from dwave.samplers import SimulatedAnnealingSampler`.\n\
-    \        If ImportError: self.available = False.\n      - sample(self, J: jnp.ndarray,\
-    \ h: jnp.ndarray, n_samples: int = 100) -> jnp.ndarray:\n          * Convert J,\
-    \ h to QUBO dict format.\n          * Run SimulatedAnnealingSampler.sample_ising(h_dict,\
-    \ J_dict, num_reads=n_samples).\n          * Return samples as jnp.ndarray.\n \
-    \         * If not available: return ParallelIsingSampler fallback.\n      - latency_ms(self,\
-    \ n_spins: int) -> float: benchmark 10 calls, return mean ms.\n   b. Export DWaveNealBackend\
-    \ from carnot.samplers.__init__.\n5. Write scripts/experiment_598_hisr_dwave.py:\n\
-    \   a. apply_env_autofix() FIRST; from python.carnot.pipeline.live_assertion import\
-    \ assert_live_or_ci_skip; assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(598,\
-    \ timeout_minutes=25).\n   c. ExperimentTemplate(598, 'HISR + D-Wave Cloud',\n\
-    \      'results/experiment_598_hisr_dwave.json', requires_gpu=False).\n   d. HISR\
-    \ test: create 20 synthetic violations (10 in correct chains, 10 in incorrect).\n\
-    \      Run HISRWeighter.compute_hindsight_score(). Verify: violations in incorrect\
-    \ chains score > violations in correct chains.\n   e. D-Wave: try to install dwave-ocean-sdk\
-    \ (subprocess.run(['pip', 'install', 'dwave-ocean-sdk'], ...)).\n      If successful:\
-    \ run DWaveNealBackend.latency_ms(100) and ParallelIsingSampler latency for comparison.\n\
-    \      Record: dwave_available, neal_latency_ms, cpu_latency_ms, speedup_ratio.\n\
-    \   f. Build artifact: schema='carnot.hisr_dwave.v1',\n      hisr_credit_assignment_correct=<bool>,\n\
-    \      dwave_installed=<bool>, dwave_available=<bool>,\n      neal_latency_ms=<float\
-    \ | None>, cpu_latency_ms=<float>,\n      speedup_ratio=<float | None>,\n     \
-    \ honest_verdict='dwave_faster' if (dwave_available and speedup_ratio>1) else\
-    \ 'dwave_installed_no_advantage' if dwave_available else 'dwave_not_installed'.\n\
-    \   g. tmpl.assert_deliverable_written() as FINAL LINE.\n6. Write tests/python/test_hisr_weights.py\
-    \ (100% on hisr_weights.py) and tests/python/test_dwave_backend.py (100% on dwave_backend.py).\n\
-    7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n8. Reconcile: _bmad/traceability.md,\
-    \ ops/conductor-log.md, ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
+    \ research experiments combined. (1) FACT-E (arXiv 2604.10693): causal faithfulness\
+    \ probe that detects logically disconnected CoT steps via controlled perturbations —\
+    \ extends Carnot's verifier from arithmetic correctness to logical faithfulness.\
+    \ Catches errors where numbers add up but the reasoning chain is non-sequitur.\
+    \ (2) Synchronous p-bit Ising machine (arXiv 2604.01564): 50% FPGA area reduction\
+    \ by replacing asynchronous update schedule with synchronous-DAC-free design while\
+    \ preserving annealing dynamics. Directly applicable to KV260 Verilog RTL\
+    \ (hardware/kv260/ising_sampler_v1.v).\n\nEXISTING CODE TO READ FIRST:\n- python/carnot/pipeline/verify_repair.py\
+    \ — VerifyRepairPipeline (FACT-E as auxiliary energy signal)\n- hardware/kv260/ising_sampler_v1.v\
+    \ — current asynchronous Ising RTL\n- hardware/kv260/synth_ising.tcl — synthesis\
+    \ script\n- results/experiment_585_kv260_live_benchmark_v3.json — blocked_no_bitfile\
+    \ status\n- results/experiment_612 does not exist yet\n\nTASK: Implement FACT-E\
+    \ faithfulness probe + update Ising RTL to synchronous architecture.\n1. Read CLAUDE.md\
+    \ spec-first workflow.\n2. Add REQ-VERIFY-145 (FACT-E causal faithfulness probe\
+    \ as Tier 3.5 advisory signal, arXiv 2604.10693), REQ-SAMPLE-030 (synchronous\
+    \ p-bit Ising RTL per arXiv 2604.01564), SCENARIO-VERIFY-175/176, SCENARIO-SAMPLE-045\
+    \ to spec.\n3. Create python/carnot/pipeline/fact_e_probe.py:\n   a. CausalStepDependency\
+    \ dataclass: step_a (str), step_b (str), dependency_score (float),\n      is_causally_connected\
+    \ (bool).\n   b. FACTEFaithfulnessProbe class:\n      - __init__(self, threshold:\
+    \ float = 0.3).\n      - _perturb_step(self, step: str) -> str:\n          * Replace\
+    \ numeric values with random alternatives (± 20%).\n          * Return perturbed step.\n\
+    \      - measure_dependency(self, step_a: str, step_b: str) -> CausalStepDependency:\n\
+    \          * Count numeric tokens shared between step_a and step_b.\n          *\
+    \ Perturb step_a. Check if step_b's numeric claims change proportionally.\n   \
+    \       * dependency_score = count_shared_numeric_tokens(step_a, step_b) / max(1,\
+    \ len(step_b_numeric_tokens)).\n          * is_causally_connected = dependency_score\
+    \ >= self.threshold.\n      - faithfulness_score(self, response: str) -> float:\n\
+    \          * Split into steps. Compute mean dependency_score across consecutive\
+    \ step pairs.\n          * Returns float 0..1. Low score = many disconnected\
+    \ reasoning steps.\n   c. Export FACTEFaithfulnessProbe, CausalStepDependency\
+    \ from carnot.pipeline.__init__.\n4. Update hardware/kv260/ising_sampler_v2.v\
+    \ (NEW FILE — do not modify v1):\n   a. Copy ising_sampler_v1.v as starting point.\n\
+    \   b. Convert asynchronous random-order spin updates to SYNCHRONOUS:\n      *\
+    \ Add global clock domain: `always @(posedge clk) begin ... end`\n      * Each\
+    \ cycle: ALL spins update simultaneously based on current state (checkerboard\
+    \ or parallel update).\n      * Remove random spin-selection logic (DAC-free design).\n\
+    \   c. Add header comment explaining: 'Synchronous p-bit Ising sampler per arXiv\
+    \ 2604.01564. Reduces LUT utilization ~50% vs asynchronous by eliminating DAC\
+    \ and random-order logic. All spins update in lockstep each clock cycle.'\n5.\
+    \ Write scripts/experiment_612_fact_e_pbit.py:\n   a. apply_env_autofix() FIRST;\
+    \ from python.carnot.pipeline.live_assertion import assert_live_or_ci_skip;\
+    \ assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(612, timeout_minutes=25).\n\
+    \   c. ExperimentTemplate(612, 'FACT-E + Synchronous p-bit Ising',\n      'results/experiment_612_fact_e_pbit.json',\
+    \ requires_gpu=False).\n   d. FACT-E test: load 25 incorrect + 10 correct live\
+    \ responses from results/live_pairs_578.json.\n      Run FACTEFaithfulnessProbe.faithfulness_score()\
+    \ on all. Record mean scores by label.\n      causal_gap = mean_faithful_correct\
+    \ - mean_faithful_incorrect.\n      probe_viable = causal_gap > 0 (correct responses\
+    \ are more causally faithful).\n   e. Synchronous Ising RTL test: verify hardware/kv260/ising_sampler_v2.v\
+    \ exists and contains 'posedge clk'. Count LUT-equivalent lines as proxy for\
+    \ area estimate.\n   f. Build artifact: schema='carnot.fact_e_pbit.v1',\n      fact_e_mean_faithful_correct=<float>,\
+    \ fact_e_mean_faithful_incorrect=<float>,\n      causal_gap=<float>, probe_viable=<bool>,\n\
+    \      synchronous_rtl_created=True, rtl_path='hardware/kv260/ising_sampler_v2.v',\n\
+    \      asynchronous_lines=<int>, synchronous_lines=<int>,\
+    \ area_reduction_estimate='~50%' if synchronous_lines < asynchronous_lines * 0.7\
+    \ else 'smaller_than_expected',\n      honest_verdict='fact_e_viable_rtl_updated'\
+    \ if probe_viable else 'fact_e_no_signal_rtl_updated'.\n   g. tmpl.assert_deliverable_written()\
+    \ as FINAL LINE.\n6. Write tests/python/test_fact_e_probe.py (100% coverage on\
+    \ fact_e_probe.py).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
+    8. Reconcile: research-hardware-wishlist.md (add synchronous Ising RTL note),\
+    \ _bmad/architecture.md (Tier 3.5 advisory), ops/conductor-log.md, ops/changelog.md.\n\
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\nDo NOT push. Do NOT modify\
+    \ scripts/research_conductor.py.\n"
 
-- id: exp599-vivado-grpo-nup
-  milestone: 2026.04.45
-  deliverable: results/experiment_599_vivado_grpo_nup.json
-  title: 'Exp 599: Vivado Synthesis Gate + GRPO Contrastive NUP Probe Retrain (arXiv 2503.06639)'
+- id: exp613-retro-2026-04-46
+  milestone: 2026.04.46
+  deliverable: results/experiment_613_retro_2026_04_46.json
+  title: 'Exp 613: Milestone 2026.04.46 Operational Retrospective'
   prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Two independent\
-    \ experiments combined. (1) Vivado synthesis has been blocked since Exp 584 (vivado_not_installed).\
-    \ This experiment checks current status and generates exact CachyOS install commands\
-    \ (Arch Linux pacman). If Vivado is found, runs synthesis. (2) GRPO verifiable\
-    \ rewards (arXiv 2503.06639) shows that binary correct/incorrect labels from live\
-    \ benchmarks ARE contrastive training signal — no additional annotation needed.\
-    \ Use live benchmark pairs accumulated across Exps 578-596 to retrain NUP Probe\
-    \ v5 with GRPO-style contrastive pairing. Target: AUC >= 0.750 on live FOVER corpus.\n\
-    \nEXISTING CODE TO READ FIRST:\n- hardware/kv260/synth_ising.tcl — TCL synthesis\
-    \ script (complete from Exp 584)\n- hardware/kv260/ising_sampler_v1.v — Verilog\
-    \ RTL (synthesis-ready)\n- results/experiment_584_kv260_synthesis.json — vivado_not_installed\
-    \ status, exact install commands\n- python/carnot/pipeline/nup_probe_v4.py (or\
-    \ nup_probe.py) — NUP Probe v4 (AUC=1.0 on synthetic, Exp 523)\n- results/experiment_523_nup_probe_v4.json\
-    \ — v4 implementation details\n- results/live_pairs_578.json — live benchmark\
-    \ pairs for GRPO training\n\nTASK: Check Vivado + retrain NUP Probe v5 with GRPO\
-    \ contrastive pairs.\n1. Read CLAUDE.md spec-first workflow.\n2. Add REQ-VERIFY-125\
-    \ (NUP Probe v5 GRPO contrastive retrain, arXiv 2503.06639), SCENARIO-VERIFY-155/156\
-    \ to spec.\n3. Vivado check:\n   a. Check shutil.which('vivado'). If found: run\
-    \ subprocess.run(['vivado', '-mode', 'batch', '-source', 'hardware/kv260/synth_ising.tcl'],\
-    \ timeout=3600). Record synthesis_result.\n   b. If not found: generate install\
-    \ instructions:\n      install_commands=['# CachyOS (Arch Linux) Vivado installation:',\n\
-    \                         '# 1. Download: https://www.xilinx.com/support/download.html\
-    \ (Vivado 2023.2)',\n                         '# 2. sudo ./Xilinx_Unified_2023.2_1013_2256_Lin64.bin\
-    \ --batch-mode',\n                         '# 3. echo export PATH=/tools/Xilinx/Vivado/2023.2/bin:$PATH\
-    \ >> ~/.bashrc',\n                         '# 4. source ~/.bashrc',\n         \
-    \                '# 5. vivado -mode batch -source hardware/kv260/synth_ising.tcl']\n\
-    \      Record vivado_status='not_installed', install_instructions=install_commands.\n\
-    4. NUP Probe v5 with GRPO:\n   a. Load live_pairs_578.json. Build (hidden_state,\
-    \ is_correct) pairs (use jnp.zeros/ones stubs if hidden states not stored — note\
-    \ clearly).\n   b. Create GRPOContrastivePairer:\n      - pairs(self, entries:\
-    \ list) -> list[tuple]: group by question_id, yield (correct, incorrect) pairs.\n\
-    \   c. Retrain NUP Probe v4 with paired contrastive loss: for each (correct, incorrect)\
-    \ pair, loss = max(0, margin - (score_incorrect - score_correct)).\n   d. Report\
-    \ nup_v5_auc on FOVER corpus.\n   e. Save to results/nup_probe_v5.safetensors\
-    \ if nup_v5_auc >= 0.750.\n5. Write scripts/experiment_599_vivado_grpo_nup.py:\n\
-    \   a. apply_env_autofix() FIRST; assert_live_or_ci_skip().\n   b. ExperimentTimeoutWatchdog(599,\
-    \ timeout_minutes=3660).  # 61 min: 60 for Vivado + 1 for NUP\n   c. ExperimentTemplate(599,\
-    \ 'Vivado Gate + GRPO NUP v5',\n      'results/experiment_599_vivado_grpo_nup.json',\
-    \ requires_gpu=False).\n   d. Run Vivado check (step 3 above).\n   e. Run NUP\
-    \ Probe v5 retrain (step 4 above).\n   f. Build artifact: schema='carnot.vivado_grpo_nup.v1',\n\
-    \      vivado_status=<str>, bitfile_built=<bool | None>,\n      install_instructions=<list>,\n\
-    \      grpo_pairs_built=<int>, nup_v5_auc=<float>,\n      nup_v5_model_saved=<bool>,\n\
-    \      honest_verdict='vivado_synthesis_complete' if bitfile_built else 'vivado_not_installed_nup_retrained'\
-    \ if nup_v5_auc>=0.750 else 'vivado_not_installed_nup_no_improvement'.\n   g.\
-    \ tmpl.assert_deliverable_written() as FINAL LINE.\n6. Write tests/python/test_grpo_contrastive.py\
-    \ (100% coverage on GRPOContrastivePairer).\n7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\n8. Reconcile: research-hardware-wishlist.md (KV260 status),\
-    \ ops/conductor-log.md, ops/changelog.md.\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest\
-    \ tests/python -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
-
-- id: exp600-retro-2026-04-45
-  milestone: 2026.04.45
-  deliverable: results/experiment_600_retro_2026_04_45.json
-  title: 'Exp 600: Milestone 2026.04.45 Operational Retrospective'
-  prompt: "You are working on the Carnot EBM framework in {project_root}.\nRead CLAUDE.md\
-    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Milestone 2026.04.45\
-    \ is complete. Experiments 589-599 have run. This retrospective analyzes: (1)\
-    \ Was RETRO-033 resolved? (2) Was RETRO-066 resolved? (3) Did DSVD live validation\
-    \ succeed? (4) Is JEPA v12 overfitting confirmed or disproven? (5) Wall time vs\
-    \ prior milestones.\n\nEXISTING CODE TO READ FIRST:\n- results/experiment_589_exclusion_manifest_wire_in.json\n\
-    - results/experiment_590_live_assertion.json\n- results/experiment_591_coace_v3_live.json\
-    \ — v3_recall, gate_open\n- results/experiment_592_dsvd_live_val.json — dsvd_live_auc\n\
-    - results/experiment_593_jepa_v12_retrain.json — v12_val_auc, retro_063_validated\n\
-    - results/experiment_594_live_vr_coace_v3.json — signed_improvement, retro_033_resolved\n\
-    - results/experiment_595_live_vr_dsvd.json — signed_improvement, retro_033_resolved\n\
-    - results/experiment_596_live_200q_wilson.json — wilson_lower_ci, retro_038_resolved\n\
-    - results/experiment_597_fr11_real_violations_v4.json — fr11_real_violations_confirmed\n\
-    - results/experiment_598_hisr_dwave.json — dwave_available, hisr_credit_assignment_correct\n\
-    - results/experiment_599_vivado_grpo_nup.json — vivado_status, nup_v5_auc\n- results/operational_retro_2026_04_44.json\
-    \ — prior milestone metrics for comparison\n\nTASK: Write milestone 2026.04.45\
-    \ operational retrospective.\n1. Read CLAUDE.md spec-first workflow.\n2. Load\
-    \ all 11 experiment results above. For any missing file: record status='not_run'.\n\
-    3. Write scripts/experiment_600_retro_2026_04_45.py:\n   a. apply_env_autofix()\
-    \ FIRST.\n   b. ExperimentTimeoutWatchdog(600, timeout_minutes=30).\n   c. ExperimentTemplate(600,\
-    \ 'Milestone 2026.04.45 Retrospective',\n      'results/experiment_600_retro_2026_04_45.json',\
-    \ requires_gpu=False).\n   d. Load all result files. Compute:\n      retro_033_resolved\
-    \ = any(r.get('retro_033_resolved', False) for r in [exp594, exp595])\n      retro_038_resolved\
-    \ = exp596.get('retro_038_resolved', False)\n      retro_066_resolved = exp591.get('retro_066_resolved',\
-    \ False)\n      retro_063_validated = exp593.get('retro_063_validated', False)\n\
-    \      fr11_improved = exp597.get('fr11_real_violations_confirmed', False)\n  \
-    \    dsvd_live_validated = exp592.get('dsvd_live_auc', 0) >= 0.80\n      npu_unblocked\
-    \ = exp589.get('npu_iron_available', False) or exp589.get('npu_ninja_available',\
-    \ False)\n      fpga_progress = exp599.get('bitfile_built', False)\n   e. Wall-time\
-    \ computation: sum(r.get('duration_s', 0) for r in results) / 60 → total_wall_time_minutes.\n\
-    \   f. Compute mean_time_min = total_wall_time_minutes / n_experiments_run.\n \
-    \  g. Compare to prior milestone (4654 min from .44 operational retro).\n   h.\
-    \ Compile open_retro_items and new_retro_items.\n   i. Build artifact: schema='carnot.operational_retro.v20',\n\
-    \      milestone='2026.04.45', n_experiments_run=<int>, n_not_run=<int>,\n    \
-    \  total_wall_time_minutes=<float>, mean_time_min=<float>,\n      retro_033_resolved=<bool>,\
-    \ retro_038_resolved=<bool>,\n      retro_066_resolved=<bool>, retro_063_validated=<bool>,\n\
-    \      fr11_improved=<bool>, dsvd_live_validated=<bool>,\n      npu_unblocked=<bool>,\
-    \ fpga_progress=<bool>,\n      retro_closure_rate=<float>, open_retro_count=<int>,\n\
-    \      new_retro_items=[], open_retro_items=[],\n      top_priorities_for_46=[<list\
-    \ of 3 concrete next steps>],\n      honest_verdict=<concise one-phrase summary\
-    \ of milestone outcome>.\n   j. tmpl.assert_deliverable_written() as FINAL LINE.\n\
-    4. Write tests/python/test_experiment_600_retro.py (100% targeted coverage on\
+    \ for code style requirements.\nToday's date: {date}.\n\nCONTEXT: Milestone\
+    \ 2026.04.46 is complete. Experiments 601-612 have run. This retrospective\
+    \ analyzes: (1) Was RETRO-033 finally resolved? (2) Did CoACEV4 close the\
+    \ offline/live gap (RETRO-068)? (3) Did DSVD fine-tuning cross AUC=0.80\
+    \ (RETRO-069)? (4) Did JEPA v12 generalize OOD (FR-11)? (5) Did NUP Probe\
+    \ v6 cross the Tier 0c deployment threshold? (6) Wall time vs prior milestones.\n\
+    \nEXISTING CODE TO READ FIRST:\n- results/experiment_601_exclusion_manifest_verification.json\n\
+    - results/experiment_602_live_corpus_v2.json\n- results/experiment_603_coace_v4_live.json\
+    \ — v4_recall, gate_open\n- results/experiment_604_dsvd_live_finetuning.json\
+    \ — post_finetune_val_auc\n- results/experiment_605_extractor_diagnostic_v4.json\
+    \ — best_recall, gate_open\n- results/experiment_606_interleaved_logic.json\
+    \ — ilv_recall\n- results/experiment_607_jepa_v12_ood.json — v12_ood_auc,\
+    \ fr11_generalization_confirmed\n- results/experiment_608_nup_probe_v6.json\
+    \ — v6_val_auc, retro_049_resolved\n- results/experiment_609_live_vr_coace_v4.json\
+    \ — signed_improvement, retro_033_resolved\n- results/experiment_610_dwave_wire_in.json\
+    \ — dwave_backend_registered\n- results/experiment_611_flip_fr11_v5.json —\
+    \ fr11_real_violations_confirmed\n- results/experiment_612_fact_e_pbit.json\
+    \ — probe_viable, synchronous_rtl_created\n- results/experiment_600_retro_2026_04_45.json\
+    \ — prior milestone metrics\n\nTASK: Write milestone 2026.04.46 operational\
+    \ retrospective.\n1. Read CLAUDE.md spec-first workflow.\n2. Load all 12 experiment\
+    \ results above. For any missing: record status='not_run'.\n3. Write scripts/experiment_613_retro_2026_04_46.py:\n\
+    \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(613, timeout_minutes=30).\n\
+    \   c. ExperimentTemplate(613, 'Milestone 2026.04.46 Retrospective',\n      'results/experiment_613_retro_2026_04_46.json',\
+    \ requires_gpu=False).\n   d. Load all 12 result files. Compute:\n      retro_033_resolved\
+    \ = exp609.get('retro_033_resolved', False)\n      retro_049_resolved = exp608.get('retro_049_resolved',\
+    \ False)\n      retro_067_resolved = exp601.get('retro_067_resolved', False)\n\
+    \      retro_068_resolved = exp603.get('retro_068_resolved', False)\n      retro_069_resolved\
+    \ = exp604.get('retro_069_resolved', False)\n      fr11_confirmed = exp607.get('fr11_generalization_confirmed',\
+    \ False) or exp611.get('fr11_real_violations_confirmed', False)\n      dwave_wired\
+    \ = exp610.get('dwave_backend_registered', False)\n      corpus_expanded = exp602.get('n_new_pairs',\
+    \ 0) >= 80\n      manifest_verified = exp601.get('retro_067_resolved', False)\n\
+    \      coace_v4_recall = exp603.get('v4_recall', 0.0)\n      dsvd_live_auc =\
+    \ exp604.get('post_finetune_val_auc', 0.0)\n      nup_v6_auc = exp608.get('v6_val_auc',\
+    \ 0.0)\n   e. Wall-time computation: sum(r.get('duration_s', 0) for r in results)\
+    \ / 60 → total_wall_time_minutes.\n      Compute mean_time_min = total_wall_time_minutes\
+    \ / n_experiments_run.\n      Compare to .45 (total: ~600 min from n_experiments=12\
+    \ × mean=50 min, estimate).\n   f. Open RETROs still open after .46:\n      List\
+    \ any RETRO not marked resolved above.\n      Add RETRO-070 if retro_033 STILL\
+    \ not resolved: 'Live VR precision — 14+ attempts, zero positives.\n      Escalate\
+    \ to LLM-as-extractor redesign (Goal #1b research-program.md) before scheduling\
+    \ attempt #15.'\n   g. top_priorities_for_47:\n      - If retro_033_resolved: 'Scale\
+    \ to 200q Wilson CI (RETRO-038 closure). Use winning extractor.'\n      - Else:\
+    \ 'CoACEV4 recall still below 20% — implement full LLM-as-extractor using\n    \
+    \  Qwen3.5-0.8B as the extraction LLM (Goal #1b). No more pattern matching.'\n\
+    \      - 'Install Vivado 2023.2 (human action) + synthesize KV260 bitfile for\
+    \ FPGA hardware benchmark.'\n      - 'MetaJuLS meta-RL constraint propagation\
+    \ (arXiv 2601.00095) — online adaptation of CoACE weights from live inference\
+    \ batches.'\n   h. Build artifact: schema='carnot.operational_retro.v21',\n   \
+    \   milestone='2026.04.46', n_experiments_run=<int>, n_not_run=<int>,\n      total_wall_time_minutes=<float>,\
+    \ mean_time_min=<float>,\n      retro_033_resolved=<bool>, retro_049_resolved=<bool>,\n\
+    \      retro_067_resolved=<bool>, retro_068_resolved=<bool>, retro_069_resolved=<bool>,\n\
+    \      fr11_confirmed=<bool>, dwave_wired=<bool>, corpus_expanded=<bool>,\n    \
+    \  manifest_verified=<bool>,\n      coace_v4_recall=<float>, dsvd_live_auc=<float>,\
+    \ nup_v6_auc=<float>,\n      retro_closure_rate=<float>, open_retro_count=<int>,\n\
+    \      new_retro_items=[], open_retro_items=[],\n      top_priorities_for_47=[<3\
+    \ concrete next steps>],\n      honest_verdict=<concise one-phrase summary of\
+    \ milestone outcome>.\n   i. tmpl.assert_deliverable_written() as FINAL LINE.\n\
+    4. Write tests/python/test_experiment_613_retro.py (100% targeted coverage on\
     \ new functions).\n5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q\n\
     6. Reconcile: ops/status.md (update what's working, what's next), ops/conductor-log.md\
-    \ (milestone complete), ops/changelog.md, _bmad/traceability.md (update impl\
-    \ status columns for FR-11, FR-12).\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
+    \ (milestone 2026.04.46 complete), ops/changelog.md, _bmad/traceability.md\
+    \ (FR-11, FR-12 impl status).\nRun: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python\
     \ -q\nDo NOT push. Do NOT modify scripts/research_conductor.py.\n"
