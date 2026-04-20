@@ -2260,3 +2260,5 @@ python/ |
 | 2026-04-19 23:35 UTC | Exp 538: Live 25q Precision v9 — RETRO-033 Attempt | OK | 81 passed, 2 warnings in 2.75s |
 | 2026-04-19 23:50 UTC | Exp 539: Live 100q VeriCoT+VPRM v8 — RETRO-038 Att | OK | 81 passed, 2 warnings in 2.82s |
 | 2026-04-20 00:02 UTC | Exp 540: GRPO Contrastive EORM Retrain — arXiv 250 | OK | 81 passed, 2 warnings in 2.86s |
+| 2026-04-20 00:12 UTC | Exp 541: ConstraintAdditionFromMemory Live Wire-In | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-20 00:17 UTC | Exp 541: ConstraintAdditionFromMemory Live Wire-In | OK | Deliverable already exists in repo |

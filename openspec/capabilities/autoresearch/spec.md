@@ -1088,6 +1088,48 @@ indicating the model already discriminates correctly with sufficient confidence.
 **Given** a GRPOEORMRetrainResult constructed from synthetic fallback pairs
 **Then** honest_verdict is 'synthetic_fallback'
 
+### REQ-LEARN-053: VerifyRepairPipeline Accepts Optional constraint_memory Parameter
+
+``VerifyRepairPipeline.__init__()`` shall accept an optional
+``constraint_memory: ConstraintAdditionFromMemory | None = None`` parameter.
+When ``constraint_memory`` is provided, the pipeline integrates Tier 2
+self-learning via the ConstraintAdditionFromMemory mechanism validated in Exp 456.
+When ``None`` (the default), all existing behavior is unchanged — no new code
+paths are exercised.
+
+### REQ-LEARN-054: VerifyRepairPipeline Records Violations into constraint_memory and Applies Learned Constraints
+
+After each ``verify()`` call that produces violations, the pipeline shall call
+``self._constraint_memory.observe(violation_type, step_text)`` for each violation,
+where ``violation_type`` is the leading token of the constraint_type field (split
+on ``':'``).  Before running constraint evaluation, if ``constraint_memory`` is not
+None, the pipeline shall call ``constraint_memory.check_and_add(self)`` and prepend
+any newly added constraint names as synthetic ConstraintResult objects to the active
+constraint set.  After check_and_add() is called, if the pattern count for any
+violation type exceeds the threshold, new constraints are active for subsequent calls.
+
+### SCENARIO-LEARN-083: Pipeline with constraint_memory=None Uses Existing Behavior
+
+**Given** a VerifyRepairPipeline constructed without constraint_memory
+**When** verify() is called with a response that has violations
+**Then** the result is identical to the pre-wire-in behavior
+**And** no ConstraintAdditionFromMemory method is called
+
+### SCENARIO-LEARN-084: Pipeline Records Violations into constraint_memory
+
+**Given** a VerifyRepairPipeline constructed with constraint_memory set
+**When** verify() is called and violations are found
+**Then** constraint_memory.observe() is called once per violation
+**And** the violation_type passed to observe() is the constraint_type prefix
+
+### SCENARIO-LEARN-085: Pipeline Applies Learned Constraints on Subsequent Calls
+
+**Given** a VerifyRepairPipeline with constraint_memory whose pattern count
+for 'carry' has been pre-seeded above the threshold
+**When** verify() is called
+**Then** check_and_add() promotes the pattern to an active constraint
+**And** the pipeline applies the new constraint during evaluation
+
 ---
 
 ## Implementation Status
@@ -1133,3 +1175,5 @@ indicating the model already discriminates correctly with sufficient confidence.
 | REQ-LEARN-050 | N/A | Implemented | Python |
 | REQ-LEARN-051 | N/A | Implemented | Python |
 | REQ-LEARN-052 | N/A | Implemented | Python |
+| REQ-LEARN-053 | N/A | Implemented | Python |
+| REQ-LEARN-054 | N/A | Implemented | Python |
