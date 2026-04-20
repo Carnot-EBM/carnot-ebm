@@ -1,0 +1,114 @@
+{
+  "experiment": 588,
+  "title": "Milestone 2026.04.44 Retrospective",
+  "run_date": "20260420",
+  "started_at": "2026-04-20T14:14:22Z",
+  "finished_at": "2026-04-20T14:14:22Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": "carnot.operational_retro.v19",
+  "milestone": "2026.04.44",
+  "n_experiments_run": 14,
+  "n_not_run": 0,
+  "total_wall_time_minutes": 1.178,
+  "mean_time_min": 0.084,
+  "retro_056_resolved": true,
+  "retro_064_partial": false,
+  "retro_064_resolved": false,
+  "retro_063_resolved": true,
+  "retro_062_resolved": true,
+  "retro_033_resolved": false,
+  "fr11_improved": false,
+  "fpga_progress": false,
+  "symbolic_viable": true,
+  "dsvd_viable": true,
+  "retro_closure_rate": 0.273,
+  "open_retro_count": 10,
+  "new_retro_items": [
+    {
+      "id": "RETRO-066",
+      "title": "CoACE offline/live distribution gap \u2014 86.7% offline recall collapses to 5.9% live",
+      "opened_milestone": "2026.04.44",
+      "carry_count": 0,
+      "description": "Exp 576 improved CoACEV2 recall to 86.7% on the synthetic offline corpus (GSM8K questions with controlled error injection).  Exp 581 then measured the same CoACEV2 extractor on 25 live production responses from Qwen3.5-0.8B and google/gemma-4-E4B-it.  Result: v2_recall=0.059 \u2014 gate_open=False. The offline training distribution does not match live model output patterns. Live models produce different error types (numeric off-by-one, unit confusion, multi-step chain breaks) than the synthetic corpus.  The extractor must be calibrated on live model outputs before the offline recall gain is meaningful.",
+      "priority": "critical"
+    },
+    {
+      "id": "RETRO-067",
+      "title": "ExclusionManifest built but conductor not wired \u2014 excluded experiments still spawn",
+      "opened_milestone": "2026.04.44",
+      "carry_count": 0,
+      "description": "Exp 575 built scripts/conductor_exclusion_manifest.json listing 5 excluded experiment IDs (308, 260, 309, 425, 410) with estimated savings of 385 min/milestone. However conductor_consulted=False \u2014 the research_conductor.py pick_next_task() function does not call check_exclusion_manifest.py before spawning agents. The cumulative wasted time since the retro was first raised is 2695 minutes. Wiring the manifest check into pick_next_task() is a 10-line code change that would save roughly 6 hours per milestone of unnecessary agent spawns.",
+      "priority": "high"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=3",
+      "action_required": "Verify closure in result files before .45 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q verify-repair precision \u2014 12+ attempts, still not closed",
+      "carry_count": ">=12",
+      "action_required": "Blocked: gate_open=False (CoACE recall=5.9%).  Do not schedule attempt #13 until RETRO-064 and RETRO-066 (offline/live distribution gap) are resolved."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 100q VeriCoT+VPRM \u2014 8+ attempts, still not closed",
+      "carry_count": ">=8",
+      "action_required": "Same root cause as RETRO-033. Block until recall > 30%."
+    },
+    {
+      "id": "RETRO-049",
+      "title": "NUP Probe v4 contrastive margin loss redesign",
+      "carry_count": ">=2",
+      "action_required": "Confirm closure status via Exp 530 result file inspection"
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": ">=2",
+      "action_required": "Architectural redesign needed. Calibration layer approach exhausted."
+    },
+    {
+      "id": "RETRO-060",
+      "title": "JEPA architecturally anti-correlated \u2014 superseded by RETRO-063",
+      "carry_count": ">=2",
+      "action_required": "RETRO-063 closed with v11_auc=1.0 on 9 pairs. Monitor for overfitting when Exp 578's 100 pairs are used for retrain in .45."
+    },
+    {
+      "id": "RETRO-064",
+      "title": "CoACE recall 5.9% on live data \u2014 pipeline accuracy lift undetectable",
+      "carry_count": 1,
+      "action_required": "Fix offline/live distribution gap (RETRO-066).  Build live-calibrated training corpus from Exp 578 pairs before next CoACEV2 retrain."
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL unavailable \u2014 hardware energy calibration blocked",
+      "carry_count": 1,
+      "action_required": "Need Intel RAPL or AMD Energy driver on test machine"
+    },
+    {
+      "id": "RETRO-066",
+      "title": "CoACE offline/live distribution gap",
+      "carry_count": 0,
+      "action_required": "Build live-corpus training set from Exp 578 pairs; retrain CoACEV2 on real model outputs; measure live recall before scheduling any VR experiment."
+    },
+    {
+      "id": "RETRO-067",
+      "title": "ExclusionManifest not wired into conductor",
+      "carry_count": 0,
+      "action_required": "Wire check_exclusion_manifest.py into pick_next_task() in research_conductor.py. Expected savings: ~385 min/milestone."
+    }
+  ],
+  "top_priorities_for_45": [
+    "Fix CoACE offline/live distribution gap (RETRO-066).  Build a live-corpus training set from the 100 pairs collected in Exp 578 and retrain CoACEV2 on real model outputs from Qwen3.5-0.8B and gemma-4-E4B-it.  The offline recall of 86.7% (Exp 576) is meaningless until it transfers to live data.  This is the single highest-leverage action: it unblocks RETRO-033, RETRO-038, RETRO-064, and the entire live verify-repair accuracy improvement chain.",
+    "Retrain JEPA v11 on the full 100-pair live corpus (Exp 578) to validate that AUC=1.0 from Exp 580 is not 9-pair overfitting.  The contrastive CPMI objective is architecturally sound (RETRO-063 closed) but the corpus was too small for a reliable AUC estimate.  Use Exp 578 pairs as positive/negative training signal for a v12 retrain before claiming JEPA is production-ready.",
+    "Wire ExclusionManifest into conductor pick_next_task() (RETRO-067).  Exp 575 built the manifest; the wiring is a 10-line change in research_conductor.py. The cumulative waste is 2695 minutes (44+ hours) over 7 milestones.  Do this as the first infrastructure task of .45 before any research experiments run."
+  ],
+  "honest_verdict": "recall_still_blocked",
+  "env_autofix": true
+}
