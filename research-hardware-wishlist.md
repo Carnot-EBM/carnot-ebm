@@ -49,18 +49,28 @@ This Potts extension is a STRONG additional motivation to complete the KV260 bit
 the hardware-native q-state sampler enables constraint verification with partial-credit scoring
 that the binary Ising architecture cannot provide.
 
-### KV260 Bring-Up Status (Exp 313 — 20260414)
+### KV260 Bring-Up Status (Exp 568 — 20260420) — BOARD ARRIVED
+
+- **Board arrival:** KV260 physically arrived on 2026-04-20.
+- **Exp 568 result:** `honest_verdict=synthesis_required`
+  - Board is here; CARNOT_KV260_BITFILE is still not set — bitfile not yet synthesised
+  - CPU baseline latency: ≈290ms/call (100 trials, 100-spin Ising)
+  - Vivado synthesis command: `vivado -mode batch -source hardware/kv260/synth_ising.tcl`
+  - TCL stub present at `hardware/kv260/synth_ising.tcl`
+- **Next step to complete hardware bring-up:**
+  1. Boot KV260 to Ubuntu/PetaLinux image with PYNQ installed
+  2. Run synthesis: `vivado -mode batch -source hardware/kv260/synth_ising.tcl`
+  3. Flash the resulting bitfile to the board
+  4. Set `export CARNOT_KV260_BITFILE=output/carnot_ising_synth/carnot_ising.bit`
+  5. Run: `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_568_kv260_bringup_v2.py`
+  6. Expected on real HW: `honest_verdict=hardware_working`, `hardware_latency_us < 100μs`
+
+### KV260 Bring-Up Status (Exp 313 — 20260414) — Superseded by Exp 568
 
 - **Exp 313 result:** `honest_verdict=blocked_no_bitfile`
   - CARNOT_KV260_BITFILE env var not set on this machine
   - KV260 hardware should have arrived — bring-up blocked by missing bitfile path
   - CPU fallback latency measured: ≈358ms/call (JAX JIT first-compile overhead)
-- **To resume bring-up on the KV260:**
-  1. Boot KV260 to Ubuntu/PetaLinux image with PYNQ installed
-  2. Build or flash the Carnot Ising bitfile (see `hardware/kv260/ising_sampler_v1.v`)
-  3. Set `export CARNOT_KV260_BITFILE=/path/to/carnot_ising.bit`
-  4. Run: `JAX_PLATFORMS=cpu .venv/bin/python scripts/experiment_313_kv260_bringup.py`
-  5. Expected on real HW: `honest_verdict=hardware_working`, `mean_latency_us ≤ 100μs`
 - **Prior bring-up experiments:** Exp 228 (AXI design), Exp 288 (blocked/SW model), Exp 289 (FpgaBackend), Exp 290 (simulation benchmark), Exp 291 (Verilog RTL)
 - **Target (arXiv 2602.15985):** 77.5μs convergence for small problems ≤100 spins
 

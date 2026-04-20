@@ -948,6 +948,49 @@ Spec: REQ-SAMPLE-030, SCENARIO-SAMPLE-046, SCENARIO-SAMPLE-047, SCENARIO-SAMPLE-
 **When** energy_mad_normalized is measured for each calibrated model vs full-rank KAEM
 **Then** at least one k achieves energy_mad_normalized < 0.05 and speedup > 5x (RETRO-057 closure)
 
+### REQ-SAMPLE-031: KV260 FPGA Bring-Up v2 — Hardware Latency <100μs for 100-Spin Ising (Exp 568)
+
+The system SHALL complete KV260 FPGA bring-up now that the board is physically available
+(arrived 2026-04-20, blocked in Exps 228, 288, 289, 290, 313):
+
+- REQ-SAMPLE-031-1: When CARNOT_KV260_BITFILE is set, FpgaBackend SHALL be instantiated and
+  100 sampling trials (100-spin Ising) SHALL be timed; mean_latency_us SHALL be recorded.
+- REQ-SAMPLE-031-2: fpga_alive SHALL be True only when mean_latency_us < 100μs (vs CPU ~358ms).
+- REQ-SAMPLE-031-3: When CARNOT_KV260_BITFILE is unset, a valid Vivado synthesis command
+  AND a minimal hardware/kv260/synth_ising.tcl stub SHALL be generated automatically.
+- REQ-SAMPLE-031-4: CPU simulation baseline SHALL always be measured regardless of hardware status.
+- REQ-SAMPLE-031-5: honest_verdict SHALL be one of:
+  'hardware_working' (fpga_alive=True),
+  'synthesis_required' (bitfile not set),
+  'hardware_too_slow' (bitfile set but latency >= 100μs).
+
+Spec: REQ-SAMPLE-031, SCENARIO-SAMPLE-049, SCENARIO-SAMPLE-050, SCENARIO-SAMPLE-051
+
+### SCENARIO-SAMPLE-049: FPGA Hardware Path Achieves <100μs Latency
+
+**Given** CARNOT_KV260_BITFILE is set and points to a valid bitfile
+**When** 100 trials of 100-spin Ising sampling are timed via FpgaBackend
+**Then** mean_latency_us < 100
+**And** fpga_alive = True
+**And** honest_verdict = 'hardware_working'
+
+### SCENARIO-SAMPLE-050: Synthesis Path Generated When Bitfile Absent
+
+**Given** CARNOT_KV260_BITFILE is not set
+**When** the experiment runs
+**Then** synthesis_command = 'vivado -mode batch -source hardware/kv260/synth_ising.tcl'
+**And** hardware/kv260/synth_ising.tcl exists (created as stub if absent)
+**And** cpu_baseline_latency_us is measured and recorded
+**And** honest_verdict = 'synthesis_required'
+
+### SCENARIO-SAMPLE-051: CPU Baseline Always Present in Artifact
+
+**Given** any execution path (hardware or synthesis_required)
+**When** the experiment completes
+**Then** cpu_baseline_latency_us is non-negative in the artifact
+**And** fpga_speedup is the ratio hardware_latency_us / cpu_baseline_latency_us (or None)
+**And** bitfile_set reflects the CARNOT_KV260_BITFILE env var state
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -982,6 +1025,7 @@ Spec: REQ-SAMPLE-030, SCENARIO-SAMPLE-046, SCENARIO-SAMPLE-047, SCENARIO-SAMPLE-
 | REQ-SAMPLE-028 | N/A | Implemented | Python (test_lowrank_kaem.py, 100% coverage) |
 | REQ-SAMPLE-029 | N/A | Implemented | Python (test_lowrank_kaem_cascade.py, 100% coverage) |
 | REQ-SAMPLE-030 | N/A | Implemented | Python (test_kaem_calibration.py, 100% coverage) |
+| REQ-SAMPLE-031 | N/A | Implemented | Python (test_experiment_568_kv260_bringup_v2.py, 100% targeted) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
