@@ -687,6 +687,83 @@ def _deliverable_exists(task: dict) -> bool:
     return path.exists()
 
 
+# ---------------------------------------------------------------------------
+# Exclusion manifest — RETRO-067 wire-in (2026-04-20)
+# ---------------------------------------------------------------------------
+# Exp 575 (milestone 2026.04.44) built scripts/conductor_exclusion_manifest.json
+# listing five experiments (308, 260, 309, 425, 410) that appeared in the
+# slowest-5 for eight consecutive milestones (.37–.44), consuming ~385 min per
+# milestone (cumulative ~45 hours).  Exp 589 (milestone 2026.04.45) wrote the
+# ExclusionManifest library in python/carnot/pipeline/exclusion_manifest.py
+# but could NOT wire it into this file because the conductor's own guard
+# reverts any subagent edit to research_conductor.py.  This block is the
+# human-authored wire-in that closes RETRO-067.
+#
+# Caching: the manifest is loaded once at module import and re-read only if
+# the JSON file's mtime changes.  The per-task lookup is O(1) via the library's
+# internal set.  Manifest errors NEVER block the conductor — a malformed or
+# missing file degrades gracefully to "no exclusions."
+import re
+
+_EXCLUSION_MANIFEST: object | None = None
+_EXCLUSION_MANIFEST_MTIME: float = 0.0
+_EXPERIMENT_ID_RE = re.compile(r"^exp(\d+)[-_]")
+
+
+def _ensure_exclusion_manifest_loaded() -> None:
+    """Lazy-load (and mtime-refresh) the conductor exclusion manifest."""
+    global _EXCLUSION_MANIFEST, _EXCLUSION_MANIFEST_MTIME
+    manifest_path = PROJECT_ROOT / "scripts" / "conductor_exclusion_manifest.json"
+    try:
+        current_mtime = manifest_path.stat().st_mtime if manifest_path.exists() else 0.0
+    except OSError:
+        current_mtime = 0.0
+    if _EXCLUSION_MANIFEST is not None and current_mtime == _EXCLUSION_MANIFEST_MTIME:
+        return
+    try:
+        sys.path.insert(0, str(PROJECT_ROOT / "python"))
+        from carnot.pipeline.exclusion_manifest import ExclusionManifest
+        em = ExclusionManifest(str(manifest_path))
+        em.load()
+        _EXCLUSION_MANIFEST = em
+        _EXCLUSION_MANIFEST_MTIME = current_mtime
+    except Exception as exc:  # noqa: BLE001  — never block the loop on manifest errors
+        logger.warning(
+            "Exclusion manifest load failed (%s) — proceeding without exclusions", exc,
+        )
+        _EXCLUSION_MANIFEST = None
+
+
+def _task_is_excluded(task: dict) -> tuple[bool, str]:
+    """Return ``(is_excluded, reason)`` for a task based on the manifest.
+
+    Extracts the integer experiment ID from the task's ``id`` field (pattern
+    ``exp<N>-...``) or from the ``title`` as a fallback.  If the ID can't be
+    extracted or the manifest isn't loaded, returns ``(False, "no id")`` — err
+    on the side of allowing the task to run.  Exclusion is a performance
+    optimisation, not a safety gate.
+    """
+    _ensure_exclusion_manifest_loaded()
+    if _EXCLUSION_MANIFEST is None:
+        return False, "manifest unavailable"
+    # Try task id first (preferred: "exp308-legacy-cleanup" → 308)
+    match = _EXPERIMENT_ID_RE.match(task.get("id", ""))
+    if not match:
+        # Fallback: title like "Exp 308: ..." or "Experiment 308 — ..."
+        title = task.get("title", "")
+        match = re.search(r"(?:Exp|Experiment)\s+(\d+)", title)
+    if not match:
+        return False, "no id parsed"
+    exp_id = int(match.group(1))
+    try:
+        if _EXCLUSION_MANIFEST.is_excluded(exp_id):  # type: ignore[attr-defined]
+            return True, f"exp_id={exp_id} in manifest"
+    except Exception as exc:  # noqa: BLE001
+        logger.warning("Exclusion check failed (%s) — allowing task", exc)
+        return False, "check failed"
+    return False, "not excluded"
+
+
 def pick_next_task(completed_log: str) -> dict | None:
     """Pick the next task that hasn't been completed or failed too many times.
 
@@ -733,7 +810,17 @@ def pick_next_task(completed_log: str) -> dict | None:
             log_step(title_prefix, "OK", "Deliverable already exists in repo")
             continue
 
-        # Signal 3: too many failures
+        # Signal 3: exclusion manifest (RETRO-067 wire-in, 2026-04-20)
+        # Five legacy experiments (308/260/309/425/410) are permanently
+        # excluded because they consumed ~385 min/milestone for 8 consecutive
+        # milestones with no research benefit.  See scripts/conductor_exclusion_manifest.json.
+        excluded, reason = _task_is_excluded(task)
+        if excluded:
+            logger.info("Task '%s' excluded by manifest (%s) — skipping", title_prefix, reason)
+            log_step(title_prefix, "OK", f"Excluded by manifest: {reason}")
+            continue
+
+        # Signal 4: too many failures
         if fail_counts.get(title_prefix, 0) >= MAX_FAILURES_PER_TASK:
             logger.warning("Skipping '%s' — failed %d times", title_prefix, fail_counts[title_prefix])
             continue
