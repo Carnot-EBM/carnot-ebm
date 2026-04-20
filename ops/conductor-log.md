@@ -2325,3 +2325,4 @@ python/ |
 | 2026-04-20 15:11 UTC | Exp 590: Import-Time CARNOT_FORCE_LIVE Assertion M | OK | 91 passed, 2 warnings in 3.29s |
 | 2026-04-20 15:27 UTC | Exp 591: CoACEExtractorV3 — Live-Corpus Calibratio | OK | 81 passed, 2 warnings in 3.18s |
 | 2026-04-20 15:41 UTC | Exp 592: DSVD Live Validation + OTV Lightweight Ve | OK | 81 passed, 2 warnings in 3.19s |
+| 2026-04-20 15:55 UTC | Exp 593: JEPA v12 Live Corpus Retrain — CPMI + PRO | OK | 81 passed, 2 warnings in 3.19s |
