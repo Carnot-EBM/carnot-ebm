@@ -420,6 +420,10 @@ from carnot.pipeline.fover_corpus import (  # noqa: E402
     compute_corpus_diversity,
     merge_fover_sources,
 )
+from carnot.pipeline.latent_cot_calibrator import (  # noqa: E402
+    LatentCoTCalibrationResult,
+    LatentCoTEBMCalibrator,
+)
 
 __all__ = [
     "AgentStep",
@@ -708,4 +712,6 @@ __all__ = [
     "balance_corpus",
     "compute_corpus_diversity",
     "merge_fover_sources",
+    "LatentCoTCalibrationResult",
+    "LatentCoTEBMCalibrator",
 ]

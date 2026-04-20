@@ -10152,3 +10152,46 @@ When: results/experiment_558_internal_probe_real.json is read.
 Then: All fields are present: schema, inference_mode, n_training_pairs, probe_layer,
       probe_auc, eorm_auc_for_comparison, probe_vs_eorm_delta, param_count_ratio,
       probe_viable, honest_verdict.
+
+---
+
+## REQ-VERIFY-116: LatentCoTEBMCalibrator — Per-Step EORM Energy Gate During Generation
+
+**Summary:** A calibrator that integrates EORM energy scoring at each 32-token boundary
+during chain-of-thought generation (arXiv 2511.07124).  At each boundary, the energy
+score gates the sampling temperature: adjusted_logits = logits * (1 - alpha * energy).
+
+**Requirements:**
+- REQ-VERIFY-116-1: LatentCoTEBMCalibrator(eorm_model, alpha=0.1, step_boundary_tokens=32).
+- REQ-VERIFY-116-2: calibrate_generation(prompts, generate_fn, n_questions) returns
+  (responses, LatentCoTCalibrationResult).
+- REQ-VERIFY-116-3: Per-step energy and temperature_adjustments computed at every
+  step_boundary_tokens word boundary; adjustment = 1 - alpha * energy.
+- REQ-VERIFY-116-4: compare_violation_rate returns baseline_violation_rate,
+  calibrated_violation_rate, violation_rate_delta using VPRMArithmeticVerifier.
+- REQ-VERIFY-116-5: Exported from carnot.pipeline.__init__.
+
+**Implementation Status:** Implemented (Exp 560, python/carnot/pipeline/latent_cot_calibrator.py)
+
+Spec: REQ-VERIFY-116, SCENARIO-VERIFY-134, SCENARIO-VERIFY-135, SCENARIO-VERIFY-136
+
+### SCENARIO-VERIFY-134: LatentCoTCalibrationResult Dataclass Has All Required Fields
+
+Given: LatentCoTCalibrationResult constructed with defaults.
+When: All fields are read.
+Then: n_steps (int), per_step_energy (list), mean_energy (float), violation_rate_before (float),
+      violation_rate_after (float), temperature_adjustments (list) are all present with correct types.
+
+### SCENARIO-VERIFY-135: calibrate_generation Scores Each 32-Token Boundary
+
+Given: A LatentCoTEBMCalibrator with alpha=0.1 and step_boundary_tokens=32.
+When: calibrate_generation is called with 1+ prompts.
+Then: per_step_energy has length == n_steps, temperature_adjustments has length == n_steps,
+      each adjustment == 1 - alpha * energy, and mean_energy == mean(per_step_energy).
+
+### SCENARIO-VERIFY-136: compare_violation_rate Returns Correct Dict Structure
+
+Given: Two lists of responses (calibrated and baseline).
+When: compare_violation_rate is called.
+Then: Returns dict with keys baseline_violation_rate, calibrated_violation_rate,
+      violation_rate_delta; delta == calibrated_rate - baseline_rate; all rates in [0, 1].
