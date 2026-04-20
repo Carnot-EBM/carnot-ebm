@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 588+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 600+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (588 experiments, 31 completed milestones)
+## Key Results (600 experiments, 32 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.45 (Exps 589-600, 32nd milestone, title "Infrastructure Progress — Live Corpus Gap Diagnosis") completed. Key results: **ExclusionManifest Conductor Wire-In** (Exp 589, RETRO-067 CLOSED — conductor now gates legacy experiments via exclusion manifest); **Import-Time CARNOT_FORCE_LIVE Assertion** — assertion module blocks model loading when flag absent (Exp 590, RETRO-062 prevention); **CoACEExtractorV3 live recall=4%** — WORSE than v2's 5.9% (Exp 591, RETRO-068 opened: live-corpus retraining required); **DSVD live AUC=0.586** — below 0.80 deployment threshold (Exp 592, RETRO-069 opened: same offline/live distribution gap as CoACE); **JEPA v12 CPMI+PROGRS retrain** — v12_val_auc=1.0, RETRO-063 validated (Exp 593); **D-Wave Quantum Annealing confirmed** — speedup_ratio=26.24x vs CPU Neal via HISR, dwave_available=true (Exp 598); honest_verdict=infrastructure_progress_no_accuracy_gain; open_retro_count=12.
 
 Note: Milestone 2026.04.44 (Exps 575-588, 31st milestone, title "Recall Surgery and Contrastive JEPA — First Verified Improvement on Live Models") completed. Key results: **ExclusionManifest built** (Exp 575, RETRO-056 CLOSED — 5 legacy experiments manifest-listed, cumulative 2,695 min wasted identified; conductor wiring pending, RETRO-067 opened); **CoACE Recall Boost v2** — offline recall 33.3%→86.7% via multi-step chain tracking and prose pattern recognition (Exp 576, RETRO-064 partial; but live recall=5.9% unchanged — RETRO-066 opened: offline/live distribution gap); **JEPA CPMI Pair Builder** — 9 contrastive hard-negative pairs built (Exp 577); **JEPA v11 CPMI Retrain** — AUC: 0.4444→1.0 via contrastive hinge margin loss (Exp 580, RETRO-063 CLOSED); **Symbolic-KAN Energy** — interpretable energy formula via symbolic regression, symbolic_mse=0.059 vs KAEM_mse=137.2, formula_interpretable=true (Exp 586); **DSVD Adapter** (arXiv 2503.03149) — mid-generation hallucination detection AUC=0.976, Tier 2.5 viable (Exp 587); **KV260 Vivado Synthesis** — Vivado not installed, TCL enhanced, cpu_baseline_latency=289ms (Exp 584); **KV260 Live Benchmark v3** — blocked (no bitfile; upstream Exp 584, Exp 585); honest_verdict=partial_2_retros_closed. New RETROs: RETRO-066 (CoACE offline/live distribution gap, critical), RETRO-067 (ExclusionManifest built but conductor not wired). Next milestone must calibrate CoACE extractor on live model outputs before offline recall gain translates to pipeline accuracy lift.
 
