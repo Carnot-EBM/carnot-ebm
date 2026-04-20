@@ -2346,3 +2346,4 @@ python/ |
 | 2026-04-20 22:37 UTC | Exp 606: Interleaved Formal-Logic Verification Dur | OK | 81 passed, 2 warnings in 4.67s |
 | 2026-04-20 22:51 UTC | Exp 607: JEPA v12 OOD Validation + Live Corpus v4  | OK | 81 passed, 2 warnings in 4.53s |
 | 2026-04-20 23:09 UTC | Exp 608: NUP Probe v6 — CAPO Calibration-Aware Ret | OK | 81 passed, 2 warnings in 15.17s |
+| 2026-04-20 23:23 UTC | Exp 609: Live VR CoACEV4 — RETRO-033 Attempt #14 ( | OK | 81 passed, 2 warnings in 16.93s |
