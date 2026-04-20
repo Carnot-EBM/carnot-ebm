@@ -10812,3 +10812,37 @@ When: score(step_text) is called.
 Then: Returns DSVDProbeResult with detector_mode='linear_probe' and violation_probability in [0, 1].
 
 **Implementation Status:** Implemented (Exp 587)
+
+## REQ-INFRA-080: Conductor Session Wrapper Consults Exclusion Manifest
+
+Before spawning an agent for any experiment, the conductor session wrapper SHALL:
+- Load scripts/conductor_exclusion_manifest.json via ExclusionManifest.load().
+- Call is_excluded(experiment_id) — exit code 1 with explanation if excluded, exit code 0 if safe.
+- The wrapper is scripts/conductor_session_wrapper.py and accepts experiment_id as argv[1].
+
+Spec: REQ-INFRA-080, SCENARIO-INFRA-085, SCENARIO-INFRA-086
+
+### SCENARIO-INFRA-085: Wrapper Blocks Excluded Experiment
+
+Given: experiment_id=308 is listed in scripts/conductor_exclusion_manifest.json.
+When: python scripts/conductor_session_wrapper.py 308 is executed.
+Then: The script prints an EXCLUDED message to stderr and exits with code 1.
+
+**Implementation Status:** Implemented (Exp 589)
+
+### SCENARIO-INFRA-086: Wrapper Allows Non-Excluded Experiment
+
+Given: experiment_id=589 is NOT in scripts/conductor_exclusion_manifest.json.
+When: python scripts/conductor_session_wrapper.py 589 is executed.
+Then: The script prints OK message to stdout and exits with code 0.
+
+**Implementation Status:** Implemented (Exp 589)
+
+## REQ-INFRA-081: NPU IRON Path via mlir-aie
+
+The system SHALL attempt the IRON (Integrated Runtime and Optimization for NPU) path
+for AMD XDNA NPU access via pip install mlir-aie as an alternative to the blocked
+ninja/openblas system dependency path.  Attempt results are recorded in experiment
+artifacts without raising on failure (NPU is not required for core pipeline).
+
+Spec: REQ-INFRA-081
