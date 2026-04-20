@@ -10279,3 +10279,42 @@ Then: Returns None without raising; no side effects.
 Given: Response text 'we add 47 and 28 to get 76' (no '=' symbol).
 When: CoACEExtractor().extract(response) is called.
 Then: The extractor attempts to find equation patterns; behavior is graceful (no crash).
+
+---
+
+## REQ-EXTRACT-035: CoACEExtractor Validated on Live IT-Model Responses with Known Labels
+
+**Summary:** CoACEExtractor must be evaluated on the same 25 labeled live responses used in
+Exp 554's VeriCoT/VPRM diagnostic to determine whether it achieves TP > 0 (RETRO-061 gate).
+
+**Requirements:**
+- REQ-EXTRACT-035-1: The experiment loads labeled responses from results/exp538_cot_pairs.json,
+  normalising 'cot_text' -> 'response' and 'correct' -> 'is_correct'.
+- REQ-EXTRACT-035-2: CoACEExtractor is wrapped with detect_violations() adapter so it satisfies
+  the ViolationExtractor protocol required by run_extractor_diagnostic().
+- REQ-EXTRACT-035-3: Baseline diagnostics (VeriCoT, VPRM) are re-run for comparison.
+- REQ-EXTRACT-035-4: retro_061_resolved=True iff coace_tp_rate > 0.
+- REQ-EXTRACT-035-5: gate_open=True iff coace_tp_rate > 0 (unblocks Exps 569+570).
+- REQ-EXTRACT-035-6: Artifact written to results/experiment_565_coace_live_diagnostic.json.
+
+**Implementation Status:** Implemented (Exp 565, scripts/experiment_565_coace_live_diagnostic.py)
+
+---
+
+### SCENARIO-EXTRACT-065: CoACEExtractor Achieves TP > 0 on Known-Incorrect Responses
+
+Given: 17 known-incorrect labeled responses from exp538_cot_pairs.json.
+When: run_extractor_diagnostic(CoACEAdapterWrapper(), ...) is called.
+Then: coace_tp_rate > 0 (at least one incorrect response is correctly flagged).
+
+### SCENARIO-EXTRACT-066: Upstream-Missing Fallback Writes Blocked Artifact
+
+Given: Neither exp554 per_question_results nor exp538_cot_pairs.json is available.
+When: Experiment 565 runs.
+Then: A blocked artifact is written with honest_verdict='upstream_missing' and the script exits 0.
+
+### SCENARIO-EXTRACT-067: CoACE Improvement Over VeriCoT Is Computed
+
+Given: CoACE TP rate and VeriCoT TP rate from the same labeled set.
+When: The artifact is built.
+Then: coace_improvement_over_vericot = coace_tp_rate - vericot_tp_rate is included in the artifact.
