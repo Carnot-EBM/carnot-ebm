@@ -90,7 +90,21 @@ tasks:
     \   c. ExperimentTimeoutWatchdog(602, timeout_minutes=120).\n   d. ExperimentTemplate(602,\
     \ 'Live Corpus Expansion v2',\n      'results/experiment_602_live_corpus_v2.json',\
     \ requires_gpu=True).\n   e. LiveGPUGate.require_live_or_blocked().\n   f. JITVRAMCheck.\n\
-    \   g. Load Qwen3.5-0.8B (cuda:0) and Gemma4-E4B-it (cuda:1).\n   h. Load GSM8K\
+    \   g. MANDATORY model selection: `from carnot.inference.sota_models import cached_sota_pair,\
+    \ SOTA_GGUF_MODELS`; call `specs = cached_sota_pair(gpu_indices=(0, 1))`. If specs\
+    \ is not None, load the two cached GGUF models via `from carnot.pipeline.gemma4_quantized_loader\
+    \ import Gemma4QuantizedLoader; loader = Gemma4QuantizedLoader(model_path=spec['model_path'],\
+    \ n_gpu_layers=-1); loader.load()` — these produce REAL arithmetic CoT (Qwen3.6-35B-A3B\
+    \ + Gemma4-26B-A4B-it, ~36 GB combined across 2x RTX 3090). ONLY fall back to\
+    \ the legacy `transformers.pipeline('text-generation', 'Qwen/Qwen3.5-0.8B')` +\
+    \ `google/gemma-4-E4B-it` pair if `cached_sota_pair()` returns None AND the fallback\
+    \ must be logged via `print('WARNING: cached SOTA GGUFs unavailable, falling back\
+    \ to tiny models — output quality will be poor'); expected_cot_structure=False`.\
+    \ Record `models_used` in the artifact: either `['unsloth/Qwen3.6-35B-A3B-GGUF',\
+    \ 'unsloth/gemma-4-26B-A4B-it-GGUF']` (real) or `['Qwen/Qwen3.5-0.8B', 'google/gemma-4-E4B-it']`\
+    \ (fallback) — NEVER mix. The entire RETRO-033 / RETRO-066 chain depends on using\
+    \ the cached SOTA models; tiny-model outputs produced 5.88% extractor recall for\
+    \ 13 consecutive milestones.\n   h. Load GSM8K\
     \ validation split, questions 250-349 (100 questions).\n   i. LongRunBenchmarkExecutor(batch_size=25).\n\
     \      For each question, for each model: generate response, compute is_correct\
     \ (execute answer extraction), record (question, response, is_correct, model_id,\
