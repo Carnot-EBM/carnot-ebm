@@ -11046,3 +11046,44 @@ Then: retro_033_resolved=True and honest_verdict='first_live_improvement'.
 And: if inference_mode is not 'live_gpu' or signed_improvement <= 0, retro_033_resolved=False.
 
 **Implementation Status:** Implemented (Exp 594)
+
+### REQ-BENCH-057: 200q Wilson CI Benchmark Uses Winning Extractor from Exps 594/595
+
+**Requirement:** Exp 596 reads upstream gate results from Exps 594 and 595.  If both
+have `signed_improvement <= 0` or are blocked, Exp 596 writes a blocked artifact
+and exits without consuming GPU time.  Otherwise it scales the winning extractor
+to 200 GSM8K questions (indices 300–499) and reports Wilson 95% CI.
+
+**Implementation Status:** Implemented (Exp 596)
+
+Spec: REQ-BENCH-057, SCENARIO-BENCH-078, SCENARIO-BENCH-079, SCENARIO-BENCH-080
+
+### SCENARIO-BENCH-078: Exp 596 Writes Blocked Artifact When Both Upstream Gates Are Closed
+
+Given: results/experiment_594_live_vr_coace_v3.json has signed_improvement=0 and
+       results/experiment_595_live_vr_dsvd.json has signed_improvement=null/0.
+When: Exp 596 gate check runs.
+Then: Exp 596 writes a blocked artifact with honest_verdict='blocked_upstream_gates_closed'
+      and retro_038_resolved=False, without loading any GPU model.
+
+**Implementation Status:** Implemented (Exp 596)
+
+### SCENARIO-BENCH-079: Exp 596 Artifact Contains All Required Wilson CI Schema Fields
+
+Given: Exp 596 runs (live or blocked).
+When: the artifact is written.
+Then: fields schema, inference_mode, n_questions, question_indices, baseline_accuracy,
+      pipeline_accuracy, signed_improvement, wilson_lower_ci, wilson_upper_ci,
+      headline_result, winning_extractor, retro_038_resolved, and honest_verdict
+      are all present.
+
+**Implementation Status:** Implemented (Exp 596)
+
+### SCENARIO-BENCH-080: Wilson Lower CI > 0 Required for headline_result='Wilson_CI_publishable'
+
+Given: a live 200q run where pipeline_accuracy > baseline_accuracy.
+When: Wilson 95% CI is computed.
+Then: headline_result='Wilson_CI_publishable' only if wilson_lower_ci > 0.
+And:  if wilson_lower_ci <= 0, headline_result='no_significant_improvement'.
+
+**Implementation Status:** Implemented (Exp 596)
