@@ -10846,3 +10846,38 @@ ninja/openblas system dependency path.  Attempt results are recorded in experime
 artifacts without raising on failure (NPU is not required for core pipeline).
 
 Spec: REQ-INFRA-081
+
+## REQ-INFRA-082: assert_live_gpu_available Enforces CARNOT_FORCE_LIVE at Import Time
+
+Motivated by RETRO-062 (three consecutive milestone failures due to missing
+CARNOT_FORCE_LIVE at session start), the system SHALL provide a hard assertion function
+``assert_live_gpu_available()`` that raises ``RuntimeError`` when CUDA is available but
+``CARNOT_FORCE_LIVE != '1'``.  The function returns silently when no GPU is present
+(torch not importable or cuda.is_available() is False).  A softer variant
+``assert_live_or_ci_skip()`` skips the check when CARNOT_IS_CI=1 so CI pipelines are
+not blocked.  Both functions are exported from ``carnot.pipeline``.
+
+- REQ-INFRA-082-1: assert_live_gpu_available() raises RuntimeError when CUDA available AND CARNOT_FORCE_LIVE != '1'.
+- REQ-INFRA-082-2: assert_live_gpu_available() returns silently when torch is not importable.
+- REQ-INFRA-082-3: assert_live_gpu_available() returns silently when torch.cuda.is_available() is False.
+- REQ-INFRA-082-4: assert_live_or_ci_skip() returns silently when CARNOT_IS_CI=1, regardless of GPU state.
+- REQ-INFRA-082-5: Both functions exported from carnot.pipeline.__init__.
+
+Spec: REQ-INFRA-082, SCENARIO-INFRA-089, SCENARIO-INFRA-090
+
+### SCENARIO-INFRA-089: assert_live_gpu_available Raises When CUDA Available and Var Missing
+
+Given: torch.cuda.is_available() returns True.
+When: CARNOT_FORCE_LIVE is absent, '0', or any non-'1' value.
+Then: assert_live_gpu_available() raises RuntimeError with message containing
+      'CARNOT_FORCE_LIVE must be set to 1'.
+
+**Implementation Status:** Implemented (Exp 590)
+
+### SCENARIO-INFRA-090: assert_live_or_ci_skip Skips When CARNOT_IS_CI=1
+
+Given: CARNOT_IS_CI=1 is set in the environment.
+When: assert_live_or_ci_skip() is called, regardless of GPU state.
+Then: No exception is raised.
+
+**Implementation Status:** Implemented (Exp 590)

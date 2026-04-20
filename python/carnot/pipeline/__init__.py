@@ -449,6 +449,10 @@ from carnot.pipeline.dsvd_adapter import (  # noqa: E402
     DSVDLinearProbe,
     DSVDProbeResult,
 )
+from carnot.pipeline.live_assertion import (  # noqa: E402
+    assert_live_gpu_available,
+    assert_live_or_ci_skip,
+)
 
 __all__ = [
     "AgentStep",
@@ -754,4 +758,6 @@ __all__ = [
     "DSVDAdapter",
     "DSVDLinearProbe",
     "DSVDProbeResult",
+    "assert_live_gpu_available",
+    "assert_live_or_ci_skip",
 ]
