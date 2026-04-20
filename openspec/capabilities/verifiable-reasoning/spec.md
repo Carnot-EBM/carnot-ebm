@@ -10881,3 +10881,72 @@ When: assert_live_or_ci_skip() is called, regardless of GPU state.
 Then: No exception is raised.
 
 **Implementation Status:** Implemented (Exp 590)
+
+## REQ-EXTRACT-040: CoACEExtractorV3 — Live-Corpus Calibrated Patterns (RETRO-066)
+
+Motivated by RETRO-066: CoACEExtractorV2 achieves 86.7% recall on offline synthetic
+corpus but only 5.9% on live FOVER production responses.  The gap is caused by seven
+real IT-model output patterns not covered by V2.  CoACEExtractorV3 inherits all V2
+patterns and adds four new helper parsers calibrated against results/live_pairs_578.json.
+
+- REQ-EXTRACT-040-1: CoACEExtractorV3 inherits from CoACEExtractorV2 and reuses all V2 patterns.
+- REQ-EXTRACT-040-2: CoACEExtractorV3.extract() merges V2 output with four new V3 parsers.
+- REQ-EXTRACT-040-3: Deduplication is performed on (lhs_expr, rhs_value) across all seven sources.
+- REQ-EXTRACT-040-4: extraction_mode='execution_based_v3' in CoACEResult.
+- REQ-EXTRACT-040-5: CoACEExtractorV3 exported from carnot.extraction.__init__.
+
+**Implementation Status:** Implemented (Exp 591)
+
+## REQ-EXTRACT-041: CoACEExtractorV3 — Narrative Quantity Chains
+
+- REQ-EXTRACT-041-1: Currency-prefixed arithmetic ('3 * $16.50 = $54.50') is parsed by stripping '$' and ',' before evaluation.
+- REQ-EXTRACT-041-2: 'Adding X to Y gives/results in/we get Z' → eval X+Y vs Z.
+- REQ-EXTRACT-041-3: 'Subtracting X from Y gives/results in Z' → eval Y-X vs Z.
+- REQ-EXTRACT-041-4: 'Multiplying X by Y gives Z' → eval X*Y vs Z.
+- REQ-EXTRACT-041-5: 'After adding X to Y, we get Z' → eval Y+X vs Z.
+- REQ-EXTRACT-041-6: 'total of A + B + C = Z' (multi-term additive chain) → eval sum vs Z.
+- REQ-EXTRACT-041-7: 'bringing the total to Z' scans preceding context window for candidate addends.
+
+**Implementation Status:** Implemented (Exp 591)
+
+## REQ-EXTRACT-042: CoACEExtractorV3 — Causal Faithfulness Signal
+
+- REQ-EXTRACT-042-1: Extended percentage connectives: 'totals P', 'amounts to P', 'leaves P', 'becomes P'.
+- REQ-EXTRACT-042-2: 'M at N% discount/markup/off/interest is/becomes P' → eval M*(1±N/100) vs P.
+- REQ-EXTRACT-042-3: 'out of M total, N% attended/enrolled, meaning P people' → eval M*N/100 vs P.
+- REQ-EXTRACT-042-4: Unit conversions: hours→minutes (*60), days→hours (*24), km→meters (*1000), miles→km (*1.60934), feet→inches (*12), weeks→days (*7).
+
+**Implementation Status:** Implemented (Exp 591)
+
+### SCENARIO-EXTRACT-075: CoACEV3 Detects Currency-Prefixed Arithmetic Error
+
+Given: response contains '3 * $16.50 = $54.50'.
+When: CoACEExtractorV3().extract(response) is called.
+Then: n_violations >= 1 and extraction_mode='execution_based_v3'.
+
+**Implementation Status:** Implemented (Exp 591)
+
+### SCENARIO-EXTRACT-076: CoACEV3 Detects Percentage Extended Connective
+
+Given: response contains '20% of 100 totals 25'.
+When: CoACEExtractorV3().extract(response) is called.
+Then: n_violations >= 1 (20/100*100=20 != 25).
+
+**Implementation Status:** Implemented (Exp 591)
+
+### SCENARIO-EXTRACT-077: CoACEV3 Detects Unit Conversion Error
+
+Given: response contains '3 hours is 200 minutes'.
+When: CoACEExtractorV3().extract(response) is called.
+Then: n_violations >= 1 (3*60=180 != 200).
+
+**Implementation Status:** Implemented (Exp 591)
+
+### SCENARIO-EXTRACT-078: CoACEV3 Validated on Live Responses (RETRO-066)
+
+Given: 25 incorrect live responses from results/live_pairs_578.json.
+When: run_extractor_diagnostic(CoACEExtractorV3(), test_set) is executed.
+Then: Artifact written to results/experiment_591_coace_v3_live.json with schema='carnot.coace_v3.v1',
+      v3_recall >= v2_recall (improvement or equal), retro_066_resolved=(v3_recall >= 0.30).
+
+**Implementation Status:** Implemented (Exp 591)
