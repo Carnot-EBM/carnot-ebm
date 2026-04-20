@@ -11329,3 +11329,47 @@ And: gate_note contains 'Proceed to Exp 609' if gate_open else 'DO NOT schedule 
 And: honest_verdict = 'gate_open_proceed_to_vr' if gate_open else 'gate_closed_recall_below_threshold'.
 
 **Implementation Status:** Implemented (Exp 605)
+
+**Implementation Status:** Implemented (Exp 605)
+
+### REQ-VERIFY-135: InterleavedLogicVerifier
+
+The system shall provide an InterleavedLogicVerifier that inserts lightweight Z3 arithmetic
+checks at CoT step boundaries, per arXiv 2601.22642 (Interleaved Formal-Logic Verification).
+
+Requirements:
+- REQ-VERIFY-135-1: Split a response into CoT steps at sentence boundaries containing
+  arithmetic operators or inference keywords (therefore, so, thus, hence).
+- REQ-VERIFY-135-2: For each step, attempt to extract a numeric equation and build a Z3
+  assertion string that is SAT when the arithmetic claim is wrong.
+- REQ-VERIFY-135-3: Run Z3 with a configurable timeout (default 50 ms) on the assertion.
+  If Z3 returns SAT, the step contains an arithmetic violation; mark violation_detected=True.
+- REQ-VERIFY-135-4: Accumulate verified constraints as assumptions for subsequent steps
+  (simulates interleaved propagation from the paper).
+- REQ-VERIFY-135-5: Return a list of InterleavedStepResult — one per step — with fields:
+  step_text (str), step_idx (int), z3_sat (bool | None), constraint_added (str | None),
+  violation_detected (bool).
+
+### SCENARIO-VERIFY-168: Correct Arithmetic Step Passes Z3 Check
+
+Given: A CoT response containing a correct arithmetic step ("3 + 4 = 7").
+When: InterleavedLogicVerifier.verify_response(response) is called.
+Then: The step's z3_sat is False (no violation found) and violation_detected is False.
+
+**Implementation Status:** Implemented (Exp 606)
+
+### SCENARIO-VERIFY-169: Incorrect Arithmetic Step Triggers Z3 Violation
+
+Given: A CoT response containing an incorrect arithmetic step ("3 + 4 = 8").
+When: InterleavedLogicVerifier.verify_response(response) is called.
+Then: The step's z3_sat is True (violation found) and violation_detected is True.
+
+**Implementation Status:** Implemented (Exp 606)
+
+### SCENARIO-VERIFY-170: Non-Arithmetic Step Returns z3_sat=None
+
+Given: A CoT response step containing no numeric equation ("The ducks lay eggs every day.").
+When: InterleavedLogicVerifier.verify_response(response) is called.
+Then: The step's z3_sat is None and violation_detected is False.
+
+**Implementation Status:** Implemented (Exp 606)
