@@ -444,6 +444,11 @@ from carnot.pipeline.exclusion_manifest import (  # noqa: E402
     ExclusionManifest,
     build_default_manifest,
 )
+from carnot.pipeline.dsvd_adapter import (  # noqa: E402
+    DSVDAdapter,
+    DSVDLinearProbe,
+    DSVDProbeResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -746,4 +751,7 @@ __all__ = [
     "ExclusionEntry",
     "ExclusionManifest",
     "build_default_manifest",
+    "DSVDAdapter",
+    "DSVDLinearProbe",
+    "DSVDProbeResult",
 ]

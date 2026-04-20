@@ -10767,3 +10767,48 @@ When: The artifact is built.
 Then: fr11_improved=True, violations_improvement>0, honest_verdict='fr11_improved'.
 
 **Implementation Status:** Implemented (Exp 583)
+
+
+## REQ-VERIFY-118: DSVDAdapter — Mid-Generation Arithmetic Violation Probability from Hidden-State Features
+
+Inspired by Dynamic Self-Verify Decoding (arXiv 2503.03149), DSVDAdapter is a CPU-only
+linear probe that estimates the probability that a CoT step contains an arithmetic
+violation.  It sits at Tier 2.5 in the verification cascade (between EORM and CoACEExtractor).
+
+- REQ-VERIFY-118-1: DSVDProbeResult dataclass has fields: step_idx (int), violation_probability (float), step_text (str), feature_norm (float), detector_mode (str).
+- REQ-VERIFY-118-2: DSVDLinearProbe.__init__(hidden_dim=64) initialises a fixed random projection matrix seeded at 42.
+- REQ-VERIFY-118-3: DSVDLinearProbe._extract_features(step_text) returns jnp.ndarray of shape (hidden_dim,).
+- REQ-VERIFY-118-4: DSVDLinearProbe.fit(steps, labels) trains logistic-regression weights on projected features.
+- REQ-VERIFY-118-5: DSVDLinearProbe.predict(step_text) returns float in [0, 1].
+- REQ-VERIFY-118-6: DSVDLinearProbe.score(step_text) returns DSVDProbeResult with detector_mode='linear_probe'.
+- REQ-VERIFY-118-7: DSVDAdapter.verify_step(step_text) returns DSVDProbeResult.
+- REQ-VERIFY-118-8: DSVDAdapter.verify_chain(cot_steps) returns list[DSVDProbeResult] with sequential step_idx.
+- REQ-VERIFY-118-9: DSVDAdapter.n_violations(results) counts results where violation_probability > violation_threshold.
+- REQ-VERIFY-118-10: DSVDAdapter, DSVDLinearProbe, DSVDProbeResult exported from carnot.pipeline.__init__.
+
+Spec: REQ-VERIFY-118, SCENARIO-VERIFY-157, SCENARIO-VERIFY-158, SCENARIO-VERIFY-159
+
+### SCENARIO-VERIFY-157: DSVDLinearProbe._extract_features Returns Correct Shape
+
+Given: A DSVDLinearProbe with hidden_dim=64.
+When: _extract_features(step_text) is called with any string.
+Then: The result is a jnp.ndarray of shape (64,) and predict() returns float in [0, 1].
+
+**Implementation Status:** Implemented (Exp 587)
+
+### SCENARIO-VERIFY-158: DSVDAdapter.verify_chain Returns Sequential DSVDProbeResults
+
+Given: A DSVDAdapter wrapping a fitted probe.
+When: verify_chain(cot_steps) is called with n steps.
+Then: The result is a list of n DSVDProbeResult with step_idx 0..n-1 in order,
+      and n_violations counts results where violation_probability > threshold.
+
+**Implementation Status:** Implemented (Exp 587)
+
+### SCENARIO-VERIFY-159: score() Returns DSVDProbeResult with detector_mode='linear_probe'
+
+Given: Any DSVDLinearProbe instance (fitted or unfitted).
+When: score(step_text) is called.
+Then: Returns DSVDProbeResult with detector_mode='linear_probe' and violation_probability in [0, 1].
+
+**Implementation Status:** Implemented (Exp 587)
