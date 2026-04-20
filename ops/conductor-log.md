@@ -2303,3 +2303,4 @@ python/ |
 | 2026-04-20 10:24 UTC | Exp 574: Milestone 2026.04.43 Operational Retrospe | OK | 81 passed, 2 warnings in 3.21s |
 | 2026-04-20 11:07 UTC | Plan milestone 2026.04.44 | OK | 14 tasks proposed |
 | 2026-04-20 11:12 UTC | Milestone 2026.04.44 activated | OK | 14 tasks queued |
+| 2026-04-20 11:25 UTC | Exp 575: Conductor Exclusion Manifest — RETRO-056  | OK | 94 passed, 2 warnings in 2.90s |
