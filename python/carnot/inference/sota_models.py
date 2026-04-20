@@ -107,6 +107,133 @@ def flagship_dense() -> SotaModelSpec:
     return SOTA_GGUF_MODELS[2]
 
 
+def resolve_cached_gguf(
+    hf_id: str,
+    preferred_quant: str = "Q4_K_M",
+    cache_root: str | None = None,
+) -> str | None:
+    """Resolve an HF GGUF hub-id to a concrete ``.gguf`` file path on disk.
+
+    Why this exists
+    ---------------
+    Every live-data-collection script in this repo hardcodes transformers-pipeline
+    model names (``google/gemma-4-E4B-it``, ``Qwen/Qwen3.5-0.8B``) because
+    transformers can't load GGUFs directly.  That kept the pipeline on undersized
+    models even after the user cached the mandated SOTA GGUFs locally
+    (``unsloth/Qwen3.6-35B-A3B-GGUF`` etc.).  This helper closes the gap:
+    callers pass in one of those hub IDs and get back a filesystem path that
+    ``llama_cpp.Llama(model_path=...)`` or
+    ``Gemma4QuantizedLoader(model_path=...)`` can consume directly.
+
+    unsloth repos ship many quantisation variants (Q2_K through BF16, plus UD-IQ*
+    and UD-Q*_XL dynamic variants).  ``preferred_quant="Q4_K_M"`` is the default
+    because it fits a 24 GB GPU with headroom and is the recommended quant in
+    unsloth's own model cards.  If neither the base Q4_K_M nor the UD variant is
+    present, the helper falls back in this order: UD-Q4_K_M → Q4_K_M → UD-Q5_K_M
+    → Q5_K_M → UD-Q8_XL → Q8_0 → first ``.gguf`` in the snapshot.
+
+    Parameters
+    ----------
+    hf_id : str
+        HuggingFace hub id ending in ``-GGUF`` (e.g. ``unsloth/Qwen3.6-35B-A3B-GGUF``).
+    preferred_quant : str
+        Quantisation to prefer.  Default ``Q4_K_M``.
+    cache_root : str, optional
+        HF hub cache root.  Defaults to ``~/.cache/huggingface/hub``.
+
+    Returns
+    -------
+    str | None
+        Absolute path to a ``.gguf`` file, or ``None`` if the model isn't
+        cached at all.  Callers should treat ``None`` as "fall back to the
+        legacy transformers path".
+    """
+    import os
+    from pathlib import Path
+
+    root = Path(cache_root) if cache_root else Path.home() / ".cache" / "huggingface" / "hub"
+    # HF hub cache layout: models--<org>--<name>/snapshots/<commit-hash>/<files>
+    model_dir = root / f"models--{hf_id.replace('/', '--')}"
+    if not model_dir.is_dir():
+        return None
+    snapshots = list((model_dir / "snapshots").iterdir()) if (model_dir / "snapshots").is_dir() else []
+    if not snapshots:
+        return None
+    # There should be at most one snapshot for a GGUF repo we just pulled.  If
+    # multiple snapshots exist (re-pulled at different revisions), take the most
+    # recently modified one.
+    snap = max(snapshots, key=lambda p: p.stat().st_mtime)
+
+    ggufs = sorted(snap.glob("*.gguf"))
+    if not ggufs:
+        return None
+
+    # Preference cascade.  Case-insensitive substring match so both
+    # "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf" and "Qwen3.6-35B-A3B-Q4_K_M.gguf"
+    # score equivalently against preferred_quant="Q4_K_M".
+    preference_order = [
+        f"UD-{preferred_quant}",
+        preferred_quant,
+        "UD-Q4_K_M",
+        "Q4_K_M",
+        "UD-Q5_K_M",
+        "Q5_K_M",
+        "UD-Q8_XL",
+        "Q8_0",
+    ]
+    for token in preference_order:
+        for g in ggufs:
+            if token.lower() in g.name.lower():
+                return str(g)
+    # Nothing matched — return the first file so callers at least get *something*.
+    return str(ggufs[0])
+
+
+def cached_sota_pair(
+    gpu_indices: tuple[int, int] = (0, 1),
+    preferred_quant: str = "Q4_K_M",
+) -> list[dict] | None:
+    """Return a two-model ``MODEL_SPECS`` list using cached SOTA GGUFs.
+
+    This is the drop-in replacement for ``default_pair()`` when you want
+    real SOTA inference rather than hub-IDs.  Each entry has:
+      ``{name, hf_id, gpu, model_path}``  — note the extra ``model_path`` key.
+
+    Returns ``None`` if either required model is NOT cached; callers should
+    fall back to the legacy ``(google/gemma-4-E4B-it, Qwen/Qwen3.5-0.8B)``
+    transformers pair in that case.  This keeps CI / cold-machine runs from
+    silently hanging on missing weights.
+
+    Use:
+        from carnot.inference.sota_models import cached_sota_pair
+        specs = cached_sota_pair() or LEGACY_FALLBACK_SPECS
+        if specs[0].get("model_path"):
+            loader = Gemma4QuantizedLoader(model_path=specs[0]["model_path"])
+        else:
+            pipe = transformers.pipeline("text-generation", specs[0]["hf_id"])
+    """
+    flagship = SOTA_GGUF_MODELS[0]       # Qwen3.6-35B-A3B
+    middle = SOTA_GGUF_MODELS[1]          # Gemma4-26B-A4B-it
+    p_flagship = resolve_cached_gguf(flagship["hf_id"], preferred_quant)
+    p_middle = resolve_cached_gguf(middle["hf_id"], preferred_quant)
+    if p_flagship is None or p_middle is None:
+        return None
+    return [
+        {
+            "name": flagship["name"],
+            "hf_id": flagship["hf_id"],
+            "gpu": gpu_indices[0],
+            "model_path": p_flagship,
+        },
+        {
+            "name": middle["name"],
+            "hf_id": middle["hf_id"],
+            "gpu": gpu_indices[1],
+            "model_path": p_middle,
+        },
+    ]
+
+
 def default_pair(gpu_indices: tuple[int, int] = (0, 1)) -> list[dict]:
     """Return a sensible two-model ``MODEL_SPECS`` list for headline runs.
 
