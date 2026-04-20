@@ -197,6 +197,10 @@
 | SCENARIO-VERIFY-083 | Not Started | Implemented | Variant type breakdown and accuracy drop detection across standard/number_swap/irrelevant_sentence |
 | REQ-SAMPLE-010 | Not Started | Implemented | FpgaBackend vs CPU performance benchmark on n=100/500/1000 spin problems (Exp 290) |
 | SCENARIO-SAMPLE-020 | Not Started | Implemented | Benchmark geometric vs linear β-schedule (arXiv 2604.04606 6× SA speedup claim): samples/second, energy convergence, honest labeling (hardware/software_model/timeout) |
+| REQ-BENCH-057 | Wilson CI 200q benchmark via winning extractor from Exps 594/595 | `openspec/capabilities/verifiable-reasoning/spec.md` | Exp 596 (blocked) | Scaffolding | Exp 596 blocked by upstream gates (both Exp 594 signed_improvement=0.0 and Exp 595 blocked); no winning extractor to scale |
+| SCENARIO-BENCH-078 | Exp 596 writes blocked artifact when both upstream gates closed | `openspec/capabilities/verifiable-reasoning/spec.md` | Exp 596 (blocked) | Scaffolding | honest_verdict=blocked_upstream_gates_closed, block_reason documented |
+| SCENARIO-BENCH-079 | Exp 596 artifact contains Wilson CI schema fields | `openspec/capabilities/verifiable-reasoning/spec.md` | Exp 596 (blocked) | Scaffolding | Artifact schema present but data values null/0.0 due to blocked upstream |
+| SCENARIO-BENCH-080 | Wilson Lower CI > 0 required for publishable verdict | `openspec/capabilities/verifiable-reasoning/spec.md` | Exp 596 (blocked) | Scaffolding | wilson_lower_ci=null (not evaluated due to blocked upstream gates) |
 | SCENARIO-SAMPLE-021 | Not Started | Implemented | LagONN penalty effectiveness on 3-SAT frustrated instance (n=100): energy/convergence with/without penalty |
 | SCENARIO-SAMPLE-022 | Not Started | Implemented | Hard 60 s timeout per config with partial artifact emission; no fabricated hardware labels in software simulation |
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291: Apple adversarial retrain — spilled/semantic energy features, isotonic calibration (arXiv 2511.07124), conformal intervals (arXiv 2603.22966, α=0.1), 50-case A/B, ONNX export, targets fast-path≥30%/TP≥60%/FP≤20% |
