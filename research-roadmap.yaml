@@ -455,8 +455,8 @@ tasks:
     \ response: str, question: str) -> float:\n          'What constraint was this\
     \ response trying to satisfy?' — compute cosine similarity between\n          embed(response)\
     \ and embed(question) as a proxy for backward inference alignment.\n      - calibrate(self,\
-    \ triples: list[MISETriple]) -> dict[str, float]:\n          Returns {'mean_alignment_correct':\
-    \ float, 'mean_alignment_incorrect': float, 'calibration_gap': float}.\n      -\
+    \ triples: list[MISETriple]) -> dict[str, float]:\n          Returns ('mean_alignment_correct':\
+    \ float, 'mean_alignment_incorrect': float, 'calibration_gap': float).\n      -\
     \ calibration_gap: mean_alignment_correct - mean_alignment_incorrect. Positive\
     \ = MISE signal is reliable.\n   c. Export MISECalibrator, MISETriple from carnot.pipeline.__init__.\n\
     4. Write scripts/experiment_597_fr11_real_violations_v4.py:\n   a. apply_env_autofix()\
