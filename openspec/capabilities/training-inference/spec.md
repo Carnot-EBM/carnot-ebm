@@ -1013,6 +1013,50 @@ Spec: REQ-SAMPLE-032, SCENARIO-SAMPLE-052, SCENARIO-SAMPLE-053, SCENARIO-SAMPLE-
 **And** honest_verdict = 'synthesis_attempted_failed'
 **And** synthesis_stdout contains the first 2000 chars of Vivado output for debugging
 
+### REQ-SAMPLE-033: KV260 Hardware Ising Benchmark — Latency < 100μs vs CPU 289ms (Exp 585)
+
+**What this requirement is for:**
+    After Vivado synthesis produces a bitfile (Exp 584), this experiment measures actual
+    FPGA hardware latency for 100-spin Ising sampling and compares to the CPU baseline
+    (289608 µs from Exp 568).  The target is < 100 µs, a 2900× speedup.
+
+**Acceptance Criteria:**
+- REQ-SAMPLE-033-1: The experiment SHALL gate on Exp 584 result; if bitfile_built=False
+  it SHALL write a blocked artifact with honest_verdict='blocked_no_bitfile' and exit.
+- REQ-SAMPLE-033-2: When a bitfile is available, 1000 trials of 100-spin Ising sampling
+  SHALL be timed via FpgaBackend.sample() and mean_hardware_latency_us recorded.
+- REQ-SAMPLE-033-3: speedup_ratio = 289608 / mean_hardware_latency_us SHALL be computed.
+- REQ-SAMPLE-033-4: fpga_target_met SHALL be True iff mean_hardware_latency_us < 100.
+- REQ-SAMPLE-033-5: honest_verdict SHALL be 'hardware_working', 'hardware_too_slow', or
+  'hardware_failed' depending on outcome.
+
+Spec: REQ-SAMPLE-033, SCENARIO-SAMPLE-055, SCENARIO-SAMPLE-056, SCENARIO-SAMPLE-057
+
+### SCENARIO-SAMPLE-055: Exp 584 Blocked — Immediate Blocked Artifact
+
+**Given** results/experiment_584_kv260_synthesis.json has bitfile_built=False (or is absent)
+**When** Exp 585 runs
+**Then** honest_verdict = 'blocked_no_bitfile'
+**And** upstream_exp = 584
+**And** the process exits without running any FPGA benchmark
+
+### SCENARIO-SAMPLE-056: FPGA Benchmark Achieves < 100μs (Target Met)
+
+**Given** CARNOT_KV260_BITFILE is set and Exp 584 bitfile_built=True
+**When** 1000 trials of 100-spin Ising sampling complete via FpgaBackend
+**And** mean_hardware_latency_us < 100
+**Then** fpga_target_met = True
+**And** honest_verdict = 'hardware_working'
+**And** speedup_ratio > 2890
+
+### SCENARIO-SAMPLE-057: FPGA Benchmark Slower Than Target
+
+**Given** CARNOT_KV260_BITFILE is set and Exp 584 bitfile_built=True
+**When** 1000 trials complete via FpgaBackend
+**And** mean_hardware_latency_us >= 100
+**Then** fpga_target_met = False
+**And** honest_verdict = 'hardware_too_slow'
+
 ### SCENARIO-SAMPLE-049: FPGA Hardware Path Achieves <100μs Latency
 
 **Given** CARNOT_KV260_BITFILE is set and points to a valid bitfile
@@ -1074,6 +1118,7 @@ Spec: REQ-SAMPLE-032, SCENARIO-SAMPLE-052, SCENARIO-SAMPLE-053, SCENARIO-SAMPLE-
 | REQ-SAMPLE-030 | N/A | Implemented | Python (test_kaem_calibration.py, 100% coverage) |
 | REQ-SAMPLE-031 | N/A | Implemented | Python (test_experiment_568_kv260_bringup_v2.py, 100% targeted) |
 | REQ-SAMPLE-032 | N/A | Implemented | Python (test_experiment_584_kv260_synthesis.py, 100% targeted) |
+| REQ-SAMPLE-033 | N/A | Implemented | Python (test_experiment_585_kv260_live_benchmark_v3.py, 100% targeted) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
 | REQ-VERIFY-107 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
