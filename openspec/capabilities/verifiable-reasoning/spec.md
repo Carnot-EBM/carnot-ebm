@@ -9936,3 +9936,23 @@ The live pairs file (`results/live_pairs_551.json`) must be written atomically
 the corpus used by downstream retraining experiments.
 
 **Implementation Status:** Implemented (Exp 551)
+
+---
+
+### SCENARIO-DATA-004: Second Batch Collects Questions 50-99
+
+Given: GSM8K validation split loaded with seed=42, indices 50-99.
+When: Exp 552 runs successfully with live GPU.
+Then: live_pairs_552.json contains entries with question_index in [50, 99], and n_pairs_collected >= 50.
+
+### SCENARIO-DATA-005: Cumulative Pairs Reach >=100 After Both Batches
+
+Given: Exp 551 and Exp 552 both complete successfully.
+When: Exp 552 artifact is built.
+Then: cumulative_pairs = n_pairs_from_exp551 + n_pairs_collected >= 100, and honest_verdict = 'live_data_collected'.
+
+### SCENARIO-DATA-006: Blocked Artifact Written for Second Batch When GPU Not Live
+
+Given: CARNOT_FORCE_LIVE is not set or set to '0'.
+When: Exp 552 run_experiment() is called.
+Then: results/experiment_552_live_data_b.json is written with status='blocked' and honest_verdict='gpu_required'.
