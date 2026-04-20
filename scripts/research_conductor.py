@@ -2160,24 +2160,72 @@ def research_step(push: bool = True, dry_run: bool = False) -> bool:
     )
     git_commit_and_push(commit_msg, push=push)
 
-    # Post-commit reconciliation: ask the configured agent to update docs
+    # Post-commit reconciliation: ask the configured agent to update docs.
+    #
+    # HONEST-VERDICT MAPPING (RETRO-063 fix, 2026-04-20)
+    # --------------------------------------------------
+    # Prior versions of this prompt let haiku invent its own status label by
+    # looking at the commit message and inferring "success".  That produced a
+    # systematic rubber-stamp pattern:
+    #   Exp 544: honest_verdict='tolerance_exceeded' → haiku wrote "✅ Complete"
+    #   Exp 556: honest_verdict='real_data_improvement' (AUC 1.0→1.0) → "retro_058_resolved=true"
+    #   Exp 564: honest_verdict='retro_061_partial'   → "RETRO-061 closed"
+    #   Exp 566: honest_verdict='loss_redesign_partial' (val_auc<0.5) → "RETRO-060 FIXED"
+    # Each rubber-stamp misled downstream planning agents and polluted the spec
+    # base with REQs for capabilities that did not actually work.  The fix is
+    # mechanical: require the subagent to read the experiment artifact, extract
+    # the `honest_verdict` field, and map it via the whitelist below.  No
+    # interpretation — the artifact is the source of truth.
     logger.info("Running post-commit documentation reconciliation...")
     reconcile_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n\n"
         f"A research experiment was just completed and committed:\n"
         f"  Task: {task['title']}\n"
         f"  ID: {task['id']}\n\n"
-        f"TASK: Make MINIMAL doc updates for this experiment. Be fast.\n"
-        f"1. Read the TAIL of ops/changelog.md (last 20 lines) and append\n"
-        f"   a 1-line entry for today ({timestamp.strftime('%Y-%m-%d')})\n"
-        f"2. Read the TAIL of ops/status.md (last 30 lines of experiment table)\n"
-        f"   and append a row for this experiment if it adds new capabilities\n"
-        f"3. Read the TAIL of _bmad/traceability.md (last 10 lines) and append\n"
-        f"   a row if new REQ-*/SCENARIO-* were added\n"
-        f"4. Do NOT remove existing content — only APPEND\n"
-        f"5. Do NOT modify scripts/research_conductor.py or research-roadmap.yaml\n"
-        f"6. Do NOT read entire files — only read the tail to find where to append.\n"
-        f"   This keeps you within the turn budget.\n"
+        f"TASK: Make MINIMAL doc updates for this experiment. Be fast and HONEST.\n\n"
+        f"STEP 0 (MANDATORY, BLOCKING) — Read the experiment artifact:\n"
+        f"  Find the file results/experiment_<N>_*.json that was just written\n"
+        f"  (the experiment ID in the task is `{task['id']}` — find the matching N).\n"
+        f"  Extract the `honest_verdict` field VERBATIM.  Also note:\n"
+        f"  - `status` (success/blocked/timed_out/...)\n"
+        f"  - any `retro_*_closed` / `retro_*_resolved` / `retro_*_partial` flags\n"
+        f"  - any AUC / TP / FP / signed_improvement / violation_rate numbers\n\n"
+        f"STEP 1 — HONEST-VERDICT MAPPING (use EXACTLY this table; DO NOT improvise):\n"
+        f"  honest_verdict contains 'partial' | 'inverted' | 'insufficient' |\n"
+        f"    'neutral' | 'not_viable' | 'no_improvement' | 'tolerance_exceeded' |\n"
+        f"    'marginal'          → status label MUST be ⚠️ Partial / Not Viable /\n"
+        f"                          Research Finding.  NEVER ✅ Complete.\n"
+        f"  honest_verdict contains 'blocked' | 'gpu_required' | 'required' |\n"
+        f"    'synthesis_required' → status label MUST be ⚠️ Blocked.\n"
+        f"  honest_verdict == 'timed_out' | 'exception' | 'failed' → status ❌ Failed.\n"
+        f"  Only if honest_verdict is an unambiguous win ('complete', 'confirmed',\n"
+        f"    'viable' with measured > threshold, 'closed', 'resolved', 'done')\n"
+        f"    AND the artifact shows a real measured improvement matching the task\n"
+        f"    goal, may you use ✅ Complete.\n"
+        f"  A retro flag `retro_X_partial: true` MEANS the retro is NOT closed.\n"
+        f"    Do not write 'RETRO-X closed' / 'RETRO-X resolved' / 'RETRO-X FIXED'\n"
+        f"    when any `_partial: true` or `_resolved: false` or `_closed: false`\n"
+        f"    flag is set in the artifact.\n\n"
+        f"STEP 2 — Append to ops/changelog.md:\n"
+        f"  Read the TAIL (last 20 lines), append 1 line for today "
+        f"({timestamp.strftime('%Y-%m-%d')}).\n"
+        f"  Include honest_verdict VERBATIM in your line.  Include the key number\n"
+        f"  (AUC / TP / signed_improvement) if there is one.\n\n"
+        f"STEP 3 — Append to ops/status.md ONLY if the experiment adds a new capability:\n"
+        f"  Read the TAIL (last 30 lines of experiment table), append one row.\n"
+        f"  The status column MUST match the mapping from STEP 1 exactly.\n\n"
+        f"STEP 4 — Append to _bmad/traceability.md ONLY if new REQ-*/SCENARIO-* were added:\n"
+        f"  Check if the commit diff shows new REQ/SCENARIO lines in spec.md files.\n"
+        f"  If yes, append rows.  If no, skip this file entirely.\n"
+        f"  CRITICAL: never mark traceability rows 'Implemented' when the source\n"
+        f"  experiment's honest_verdict indicates partial / not-viable / no-improvement.\n"
+        f"  Use 'Implemented-Partial' or 'Scaffolding' instead.\n\n"
+        f"HARD RULES:\n"
+        f"  - Do NOT remove existing content — only APPEND.\n"
+        f"  - Do NOT modify scripts/research_conductor.py or research-roadmap.yaml.\n"
+        f"  - Do NOT read entire files — only read the tail to find where to append.\n"
+        f"  - Do NOT invent status labels.  The artifact's honest_verdict is the\n"
+        f"    ONLY valid source of truth for your status claims.\n"
     )
     # Use haiku for doc reconciliation — it's just appending table rows.
     recon_model = "haiku" if AGENT_TYPE == "claude" else None
