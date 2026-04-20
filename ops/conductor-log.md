@@ -2321,3 +2321,4 @@ python/ |
 | 2026-04-20 14:17 UTC | Exp 588: Milestone 2026.04.44 Operational Retrospe | OK | 81 passed, 2 warnings in 5.05s |
 | 2026-04-20 14:45 UTC | Plan milestone 2026.04.45 | OK | 12 tasks proposed |
 | 2026-04-20 14:50 UTC | Milestone 2026.04.45 activated | OK | 12 tasks queued |
+| 2026-04-20 15:00 UTC | Exp 589: Exclusion Manifest Conductor Wire-In + NP | OK | 81 passed, 2 warnings in 3.91s |
