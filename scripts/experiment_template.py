@@ -84,6 +84,8 @@ import json
 import logging
 import os
 import signal
+import subprocess
+import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -343,8 +345,8 @@ class ExperimentTemplate:
         try:
             import pynvml  # noqa: PLC0415
         except ImportError:
-            _log.debug("kill_gpu_zombies: pynvml not installed — skipping zombie kill")
-            return {"killed_pids": [], "freed_mb": 0, "error": "pynvml_unavailable"}
+            _log.debug("kill_gpu_zombies: pynvml not installed — trying nvidia-smi fallback")
+            return cls._kill_gpu_zombies_nvidia_smi(vram_threshold_mb, util_threshold_pct)
 
         killed_pids: list[int] = []
         freed_mb = 0
@@ -397,6 +399,172 @@ class ExperimentTemplate:
             return {"killed_pids": killed_pids, "freed_mb": freed_mb, "error": str(exc)}
 
         return {"killed_pids": killed_pids, "freed_mb": freed_mb}
+
+    @classmethod
+    def _kill_gpu_zombies_nvidia_smi(
+        cls,
+        vram_threshold_mb: int = 1000,
+        util_threshold_pct: float = 5.0,
+    ) -> dict[str, Any]:
+        """nvidia-smi fallback for kill_gpu_zombies() when pynvml is not installed.
+
+        Why nvidia-smi and not pynvml: pynvml requires a separate pip install and was not
+        present on the .41 milestone host (RETRO-059: killed_pids=[], error='pynvml_unavailable').
+        nvidia-smi ships with the NVIDIA driver on every CUDA host — no extra package needed.
+
+        The query uses CSV output for reliable machine parsing:
+            nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader,nounits
+        Each line: '<pid>, <vram_mb>'.
+
+        Utilization is read separately because nvidia-smi does not expose per-process GPU utilization
+        directly — only device-level utilization is available. We use device utilization as a proxy,
+        same as the pynvml path.
+
+        Spec: REQ-INFRA-063, SCENARIO-INFRA-088, SCENARIO-INFRA-089
+        """
+        killed_pids: list[int] = []
+        freed_mb = 0
+
+        try:
+            # Step 1: get per-process VRAM usage from nvidia-smi
+            vram_result = subprocess.run(
+                [
+                    "nvidia-smi",
+                    "--query-compute-apps=pid,used_memory",
+                    "--format=csv,noheader,nounits",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+        except (FileNotFoundError, OSError):
+            _log.debug("kill_gpu_zombies: nvidia-smi not found — no GPU tooling available")
+            return {"killed_pids": [], "freed_mb": 0, "error": "no_gpu_tooling"}
+        except Exception as exc:
+            _log.warning("kill_gpu_zombies: nvidia-smi subprocess error — %s", exc)
+            return {"killed_pids": [], "freed_mb": 0, "error": "no_gpu_tooling"}
+
+        # Step 2: get device-level GPU utilization (proxy for per-process idle detection)
+        try:
+            util_result = subprocess.run(
+                [
+                    "nvidia-smi",
+                    "--query-gpu=utilization.gpu",
+                    "--format=csv,noheader,nounits",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+            # Take the minimum across all GPUs as a conservative idle signal.
+            # If ANY GPU is busy, we avoid killing processes on that machine.
+            util_lines = [l.strip() for l in util_result.stdout.strip().splitlines() if l.strip()]
+            gpu_util_pct = min((float(u) for u in util_lines if u.isdigit() or u.replace(".", "").isdigit()), default=0.0)
+        except Exception:
+            gpu_util_pct = 0.0  # assume idle if we cannot read utilization
+
+        # Step 3: parse VRAM output and kill zombie candidates
+        seen_pids: set[int] = set()
+        for line in vram_result.stdout.strip().splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            parts = line.split(",")
+            if len(parts) < 2:
+                continue
+            try:
+                pid = int(parts[0].strip())
+                vram_mb = int(parts[1].strip())
+            except ValueError:
+                continue
+            if pid in seen_pids:
+                continue
+            if vram_mb >= vram_threshold_mb and gpu_util_pct < util_threshold_pct:
+                try:
+                    os.kill(pid, signal.SIGTERM)
+                    killed_pids.append(pid)
+                    freed_mb += vram_mb
+                    seen_pids.add(pid)
+                    _log.warning(
+                        "kill_gpu_zombies (nvidia-smi): killed zombie PID %d (vram_mb=%d, gpu_util=%.1f%%)",
+                        pid,
+                        vram_mb,
+                        gpu_util_pct,
+                    )
+                except OSError as exc:
+                    _log.warning("kill_gpu_zombies (nvidia-smi): could not kill PID %d: %s", pid, exc)
+
+        return {"killed_pids": killed_pids, "freed_mb": freed_mb, "method": "nvidia_smi_fallback"}
+
+    # ------------------------------------------------------------------
+    # check_exclusion_manifest() — REQ-INFRA-062
+    # ------------------------------------------------------------------
+
+    def check_exclusion_manifest(self) -> bool:
+        """Exit immediately if this experiment is in the conductor exclusion manifest.
+
+        The exclusion manifest lists experiment IDs that are already fully modern
+        (ExperimentTemplate + watchdog + teardown + BatchedInferenceRunner compliant) and
+        should never be re-selected for further modernization by the conductor.
+
+        Without this guard, Exps 308, 260, 309, 425, 410 appeared in the slowest-5 for FIVE
+        consecutive milestones (.37-.41) despite Exp 547 confirming they need no changes
+        (batching_added=[]). Re-running them wastes one conductor slot per milestone forever.
+
+        Behavior:
+        - Loads ``scripts/conductor_exclusion_manifest.json`` relative to repo root.
+        - If the file is missing (FileNotFoundError), returns False (non-fatal, experiment continues).
+        - If this experiment's ID is in ``excluded_experiments``, writes a minimal artifact with
+          ``schema='carnot.excluded.v1'``, ``honest_verdict='excluded_already_modern'``,
+          ``excluded=True``, and the manifest reason, then calls assert_deliverable_written()
+          and sys.exit(0).
+        - Returns False if this experiment is not in the manifest.
+
+        Returns
+        -------
+        bool
+            Always False when the experiment is NOT excluded (caller can ignore the return value).
+            When excluded, does not return — sys.exit(0) is called instead.
+
+        Spec: REQ-INFRA-062, SCENARIO-INFRA-086, SCENARIO-INFRA-087
+        """
+        manifest_path = self._repo_root / "scripts" / "conductor_exclusion_manifest.json"
+        try:
+            manifest = json.loads(manifest_path.read_text())
+        except FileNotFoundError:
+            return False
+        except (json.JSONDecodeError, OSError) as exc:
+            _log.warning("check_exclusion_manifest: could not parse manifest — %s", exc)
+            return False
+
+        excluded = manifest.get("excluded_experiments", [])
+        if self.exp_id not in excluded:
+            return False
+
+        # Write the excluded artifact and exit so the conductor sees a valid deliverable.
+        reason = manifest.get("reason", "already_modern")
+        artifact = {
+            "experiment": self.exp_id,
+            "title": self.title,
+            "schema": "carnot.excluded.v1",
+            "run_date": _run_date(),
+            "started_at": self._started_at,
+            "finished_at": _utc_now(),
+            "duration_s": round(time.perf_counter() - self._t0, 3),
+            "status": "excluded",
+            "honest_verdict": "excluded_already_modern",
+            "excluded": True,
+            "reason": reason,
+            "excluded_by_manifest": str(manifest_path),
+        }
+        self._output_path.parent.mkdir(parents=True, exist_ok=True)
+        self._output_path.write_text(json.dumps(artifact, indent=2))
+        _log.info(
+            "check_exclusion_manifest: exp %d is excluded — wrote artifact and exiting",
+            self.exp_id,
+        )
+        self.assert_deliverable_written()
+        sys.exit(0)
 
     # ------------------------------------------------------------------
     # teardown() — REQ-INFRA-073

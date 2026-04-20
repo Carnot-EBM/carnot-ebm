@@ -27,10 +27,10 @@ tasks:
     \ with excluded artifact if exp ID in manifest), REQ-INFRA-063 (kill_gpu_zombies()\
     \ uses nvidia-smi subprocess fallback when pynvml unavailable), SCENARIO-INFRA-073/074/075\
     \ to openspec/capabilities/verifiable-reasoning/spec.md.\n3. Create scripts/conductor_exclusion_manifest.json:\n\
-    \   {\"version\": 1, \"excluded_experiments\": [308, 260, 309, 425, 410],\n \
+    \   (\"version\": 1, \"excluded_experiments\": [308, 260, 309, 425, 410],\n \
     \   \"reason\": \"Fully modern (ExperimentTemplate+watchdog+teardown+BatchedInferenceRunner).\
     \ Exp 547 confirmed batching_added=[] — no further modernization needed.\",\n\
-    \   \"added_milestone\": \"2026.04.42\"}\n4. In scripts/experiment_template.py,\
+    \   \"added_milestone\": \"2026.04.42\")\n4. In scripts/experiment_template.py,\
     \ add check_exclusion_manifest(self) classmethod:\n   a. Load scripts/conductor_exclusion_manifest.json\
     \ (graceful: FileNotFoundError → return False).\n   b. If self.experiment_id in\
     \ excluded_experiments: write artifact with schema='carnot.excluded.v1',\n    \
@@ -43,9 +43,9 @@ tasks:
     \ each process with vram_mb > vram_threshold_mb: subprocess.run(['nvidia-smi',\
     \ '--query-compute-apps=pid,gpu_util', '--format=csv,noheader,nounits']) to get\
     \ utilization.\n   e. If util < util_threshold_pct: os.kill(pid, signal.SIGTERM).\n\
-    \   f. Return dict: {'killed_pids': [...], 'freed_mb': int, 'method': 'nvidia_smi_fallback'}.\n\
-    \   g. If nvidia-smi also unavailable: return {'killed_pids': [], 'freed_mb':\
-    \ 0, 'error': 'no_gpu_tooling'}.\n6. Write scripts/experiment_549_exclusion_manifest.py:\n\
+    \   f. Return dict: ('killed_pids': [...], 'freed_mb': int, 'method': 'nvidia_smi_fallback').\n\
+    \   g. If nvidia-smi also unavailable: return ('killed_pids': [], 'freed_mb':\
+    \ 0, 'error': 'no_gpu_tooling').\n6. Write scripts/experiment_549_exclusion_manifest.py:\n\
     \   a. import subprocess; subprocess.run(['kill', '-9', '527256', '527259', '529495'],\
     \ capture_output=True) FIRST.\n   b. apply_env_autofix() SECOND.\n   c. ExperimentTemplate.kill_gpu_zombies()\
     \ (tests nvidia-smi fallback).\n   d. ExperimentTimeoutWatchdog(549, timeout_minutes=20).\n\
@@ -54,7 +54,7 @@ tasks:
     \   g. Test check_exclusion_manifest() with a mock experiment ID not in manifest\
     \ (returns False) and one that IS in manifest (writes excluded artifact).\n   h.\
     \ Build artifact: schema='carnot.exclusion_manifest.v1',\n      exclusion_manifest_created=True,\n\
-    \      excluded_experiments=[308, 260, 309, 425, 410],\n      zombie_kill_result={...}\
+    \      excluded_experiments=[308, 260, 309, 425, 410],\n      zombie_kill_result=(...)\
     \ (from kill_gpu_zombies),\n      retro_059_resolved=True,\n      honest_verdict='retro_059_closed'.\n\
     \   i. tmpl.assert_deliverable_written() as FINAL LINE.\n7. Write tests/python/test_exclusion_manifest.py:\n\
     \   a. Test check_exclusion_manifest() returns False when manifest file missing.\n\
@@ -285,8 +285,8 @@ tasks:
     \ recall.\n   g. Identify root_cause_hypothesis: 'high_fp_extraction' if max FP\
     \ rate > 0.3; 'low_tp_extraction' if min TP rate < 0.3; 'repair_issue' if tp_rate\
     \ > 0.3 and fp_rate < 0.1 but no improvement.\n   h. Build artifact: schema='carnot.extraction_diagnostic.v1',\n\
-    \      vericot_result={tp_rate, fp_rate, n_violations, n_correct_flagged},\n \
-    \     vprm_result={tp_rate, fp_rate, n_violations, n_correct_flagged},\n     \
+    \      vericot_result=(tp_rate, fp_rate, n_violations, n_correct_flagged),\n \
+    \     vprm_result=(tp_rate, fp_rate, n_violations, n_correct_flagged),\n     \
     \ root_cause_hypothesis=<string>,\n      n_responses_analyzed=25,\n      honest_verdict='diagnostic_complete'.\n\
     \   i. tmpl.assert_deliverable_written() as FINAL LINE.\n5. Write tests/python/test_extraction_diagnostic.py\
     \ (100% coverage on extraction_diagnostic.py).\n6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest\
@@ -333,8 +333,8 @@ tasks:
     \ threshold in [0.5, 0.7, 0.9]:\n      - Run ConfidenceWeightedExtractor(VPRMArithmeticVerifier(),\
     \ confidence_threshold=t).\n      - Compute: fp_rate_at_t, tp_rate_at_t, repair_trigger_rate_at_t.\n\
     \   f. Identify optimal_threshold (min fp_delta < -0.3 with max tp_loss < 0.2).\n\
-    \   g. Build artifact: schema='carnot.confidence_filter.v1',\n      threshold_sweep=[{threshold,\
-    \ fp_rate, tp_rate, repair_trigger_rate}, ...],\n      baseline_fp_rate=<from\
+    \   g. Build artifact: schema='carnot.confidence_filter.v1',\n      threshold_sweep=[(threshold,\
+    \ fp_rate, tp_rate, repair_trigger_rate), ...],\n      baseline_fp_rate=<from\
     \ Exp 554>,\n      optimal_threshold=<float>,\n      fp_reduction_at_optimal=<float>,\n\
     \      tp_loss_at_optimal=<float>,\n      honest_verdict='fp_reduced_significantly'\
     \ if fp_delta<-0.3 else 'marginal_improvement'.\n   h. tmpl.assert_deliverable_written()\
@@ -411,8 +411,8 @@ tasks:
     \ MSE(predicted_embedding, actual_embedding).\n   b. L_regularization = KL(q(z)\
     \ || N(0, I)) — KL divergence of latent distribution to standard Gaussian.\n \
     \  c. L_total = L_prediction + lambda_kl * L_regularization.\n   d. Use AdamW\
-    \ optimizer, 200 epochs.\n   e. Return training_history: [{epoch, loss, pred_loss,\
-    \ kl_loss, auc}].\n4. Write scripts/experiment_557_jepa_v9_retrain.py:\n   a.\
+    \ optimizer, 200 epochs.\n   e. Return training_history: [(epoch, loss, pred_loss,\
+    \ kl_loss, auc)].\n4. Write scripts/experiment_557_jepa_v9_retrain.py:\n   a.\
     \ subprocess kill FIRST, apply_env_autofix() SECOND.\n   b. ExperimentTimeoutWatchdog(557,\
     \ timeout_minutes=30).\n   c. ExperimentTemplate(557, 'JEPA v9 Retrain Diverse\
     \ Corpus',\n      'results/experiment_557_jepa_v9_retrain.json', requires_gpu=False).\n\
@@ -505,7 +505,7 @@ tasks:
     \      - Measure energy_mad_normalized = mean(|E_calibrated - E_full|) / std(E_full).\n\
     \      - Measure speedup vs ParallelIsingSampler.\n   e. Find optimal_k = min\
     \ k where energy_mad < 0.05 AND speedup > 5x.\n   f. Build artifact: schema='carnot.kaem_calibration.v1',\n\
-    \      rank_sweep=[{k, energy_mad_before, energy_mad_after, speedup}, ...],\n\
+    \      rank_sweep=[(k, energy_mad_before, energy_mad_after, speedup), ...],\n\
     \      optimal_k=<int>,\n      energy_mad_at_optimal=<float>,\n      speedup_at_optimal=<float>,\n\
     \      retro_057_closed=<True if energy_mad_at_optimal<0.05>,\n      honest_verdict='retro_057_closed'\
     \ if retro_057_closed else 'calibration_insufficient'.\n   g. tmpl.assert_deliverable_written()\
@@ -646,7 +646,7 @@ tasks:
     \     retro_057_closed, retro_058_data_ready, retro_059_resolved, fr11_real_data_relay.\n\
     \   i. Compute retro_closure_rate (new RETROs closed / new RETROs opened).\n\
     \   j. Identify top-3 slowest experiments and their carry status.\n   k. Formulate\
-    \ new_retro_items (list of {id, title, description, priority}).\n   l. headline_result:\
+    \ new_retro_items (list of (id, title, description, priority)).\n   l. headline_result:\
     \ 'synthetic_barrier_broken' if live_50q_a AND live_50q_b AND fover_corpus_v2_n_labeled>=100.\n\
     \   m. Build artifact: schema='carnot.operational_retro.v17',\n      milestone='2026.04.42',\n\
     \      n_experiments=14, ... all fields ...\n      honest_verdict=headline_result.\n\
