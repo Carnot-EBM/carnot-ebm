@@ -2296,3 +2296,4 @@ python/ |
 | 2026-04-20 08:56 UTC | Exp 568: KV260 FPGA Bring-Up v2 — Board Arrived 20 | OK | 81 passed, 2 warnings in 2.74s |
 | 2026-04-20 09:09 UTC | Exp 569: Live Verify-Repair with CoACEExtractor —  | OK | 81 passed, 2 warnings in 2.78s |
 | 2026-04-20 09:23 UTC | Exp 570: FR-11 Tier 1 Self-Learning Relay — Real C | OK | 81 passed, 2 warnings in 2.74s |
+| 2026-04-20 09:36 UTC | Exp 571: HalluField Tier 0e — Thermodynamic Energy | OK | 145 passed, 2 warnings in 3.14s |
