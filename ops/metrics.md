@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-20 Milestone 2026.04.44 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-20T09:15:00Z | 2026-04-20T10:59:16Z | Planned milestone 2026.04.44: read 11 project files + .43 retro JSON (results/experiment_574_retro_2026_04_43.json) + Exps 569/567/568 results. Spawned arxiv research subagent (12 candidates, 6 genuinely new: arXiv 2604.10660 CPMI hard-negative contrastive pairs — DIRECT fix for RETRO-063 JEPA anti-correlation; arXiv 2503.03149 DSVD mid-generation rollback — new Tier 2.5; arXiv 2604.11611 MISE hindsight MI self-eval — filed .45; arXiv 2603.18683 HISR segment-level rewards — filed .45; arXiv 2602.13551 FLIP backward inference rewards — filed .45; arXiv 2601.22642 Interleaved Formal-Logic Verification — filed .45). Appended 6 new entries to research-references.md. Identified 3 biggest gaps: (1) RETRO-064 CRITICAL — CoACE v1 recall=5.9% (3/51 TP) because IT models write multi-step chains + prose arithmetic; fix: CoACE v2 with multi-step chain tracking, prose patterns, numeric context dict; (2) RETRO-063 CRITICAL — JEPA anti-correlated (AUC≤0.4444) across 3 consecutive retrains even after PURE min-form fix; fix: CPMI arXiv 2604.10660 explicit contrastive pairs via hard-negative mining; (3) RETRO-062 third miss — Live 50q A never collected; fix: import-time assertion before transformers/torch imports. Wrote openspec/change-proposals/research-roadmap-v44.md (14 experiments 575-588, 7 phases: Phase 0 Exclusion Manifest, Phase 1 Recall Surgery, Phase 2 Live Data, Phase 3 JEPA Retrain, Phase 4 Integration, Phase 5 FPGA, Phase 6 New Research, Phase 7 Retro; dependency graph; success criteria table; hardware requirements; DSVD Tier 2.5 in cascade diagram). Wrote research-roadmap-next.yaml (14 experiments: Exps 575-588 with complete prompts; gating: Exp 581 gates Exps 582+583; Exp 580 JEPA v11 CPMI retrain; Exp 584 KV260 Vivado synthesis gates Exp 585). | ~95k |
+
+---
+
 ## Session: 2026-04-20 Milestone 2026.04.43 Planning
 
 ### Turn Log
