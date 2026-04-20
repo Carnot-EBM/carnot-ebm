@@ -4,6 +4,48 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-20 arxiv Scan (Milestone 2026.04.43 Planning)
+
+### Caco — Code-Execution Verification for Arithmetic CoT (Direct Fix for RETRO-061)
+- **Paper:** arXiv 2510.04081 (October 2025)
+- **What:** Caco (Code-Assisted Chain-of-Thought) synthesizes verifiable CoT by translating arithmetic reasoning steps into executable Python code and validating via execution. Built the Caco-1.3M dataset from code-grounded math problems. Key insight: regex and Z3 both fail on IT-model prose CoT because models write narrative equations ("We add 47 and 28 to get 76") not formal syntax. Code execution catches this: `eval("47+28") != 76` → violation detected.
+- **Relevance to Carnot:** This is the direct fix for RETRO-061 (VeriCoTStepValidator TP=0 on live IT-model outputs). The current extractors fail because they check FORMAT (regex) or LOGIC (Z3 UNSAT) but not ARITHMETIC CORRECTNESS. Caco-style execution: (1) extract arithmetic expressions from CoT prose using a simple parser, (2) execute them as Python, (3) compare result to stated answer. No regex patterns. No Z3. Handles any arithmetic format IT models produce.
+- **Concrete experiment:** Exp 564: CoACEExtractor (Code-Assisted Constraint Extraction) — implement an extractor that parses arithmetic equations from prose CoT, translates each to a Python `eval()` expression, and flags violations where `eval(lhs) != rhs`. Run diagnostic on Exp 554's 25 known-incorrect live responses. Target: TP rate > 0 (any improvement over VeriCoT's 0/25).
+- **When to incorporate:** Milestone 2026.04.43 — Phase 1 extraction redesign (Exp 564). CRITICAL PATH.
+
+### PURE — Min-Form PRM Objective as JEPA Training Signal (Direct Fix for RETRO-060)
+- **Paper:** arXiv 2504.15275 (April 2025, NeurIPS 2025)
+- **What:** "Stop Summation: Min-Form Credit Assignment Is All Process Reward Model Needs." Solves reward hacking in PRMs by replacing sum-of-step-scores with the MINIMUM over all future step scores: score(prefix) = min(score(step_t), ..., score(step_T)). One bad step dominates the training signal, eliminating the common failure mode where summed scores allow models to game individual step evaluations. Achieves verifier-grade performance using only 30% of steps.
+- **Relevance to Carnot:** JEPA predictor trained for two consecutive retrains (Exps 543, 557) both produced AUC < 0.5 with binary BCE loss. The binary label (correct/incorrect per step) allows the model to hedge toward 0.5 everywhere. The PURE min-form objective enforces a contrastive margin implicitly: the minimum step score in an incorrect reasoning chain forces the model to assign high violation energy to the worst step. This is a direct drop-in replacement for JEPA's binary CE loss: instead of `BCE(score, is_correct)`, use `min_form_loss(step_scores)` over the chain.
+- **Concrete experiment:** Exp 566: JEPAPUREMinForm — replace JEPA's binary BCE loss with the PURE min-form objective. Train on 132-pair FOVER corpus v2. Target: AUC >= 0.700 (any value above 0.5 would be a breakthrough after two anti-correlated retrains).
+- **When to incorporate:** Milestone 2026.04.43 — Phase 2 JEPA redesign (Exp 566). CRITICAL PATH.
+
+### HalluField — Thermodynamic Energy-Path Hallucination Detection
+- **Paper:** arXiv 2509.10753 (September 2025)
+- **What:** Models LLM responses as token-path ensembles, assigns energy and entropy to each path from output logits using field-theoretic principles, flags hallucinations via thermodynamic instability (high partition function variance). No fine-tuning required — operates on logits directly. Reports strong AUROC on TruthfulQA and HaluEval.
+- **Relevance to Carnot:** The verification cascade already has logit-based Tier 0 signals (SpilledEnergy 0b, NUP Probe 0c). HalluField adds a field-theoretic thermodynamic signal that is orthogonal to these: it characterizes the DISTRIBUTION of token paths rather than individual token entropy. This is a natural Tier 0e. The thermodynamic framing aligns directly with Carnot's EBM foundation — energy-path stability is what Carnot's energy function is meant to measure.
+- **Concrete experiment:** Exp 571: HalluFieldTier0e — implement HalluField's partition function variance scorer over the logit distribution, add as Tier 0e to verification cascade. Benchmark AUC vs SpilledEnergy (0b) and NUP Probe v4 (0c) on 132-pair FOVER corpus. CPU-only (operates on logits).
+- **When to incorporate:** Milestone 2026.04.43 — Phase 5 new research (Exp 571).
+
+### Process Reward Agents (PRA) — EBM as Step-Level Reward Module
+- **Paper:** arXiv 2604.09482 (April 2026)
+- **What:** Decouples a frozen LLM policy from a step-wise reward module; uses beam search pruning per step guided by the reward module. Achieves 80.8% on MedQA with a 4B parameter model (+25.7% gain over greedy). Reward module is lightweight and model-agnostic — any scorer can be plugged in.
+- **Relevance to Carnot:** Treats the EBM energy function as the PRA reward module — plug Carnot's Ising/KAN/EORM scorer into the PRA beam-search framework to steer LLM generation toward low-energy (constraint-satisfying) reasoning paths at inference time. This is a more principled version of the guided decoding work (Exp 110, Tier B product) with a proven framework. Especially compelling now that EORM + JEPA are being retrained on real data.
+- **Concrete experiment:** Exp 572: PRAEBMBeamSearch — implement PRA beam search with EORM as the step-level reward module (K=3 candidates per step, EORM selects minimum energy). CPU prototype on 20 synthetic arithmetic problems. Compare violation rate vs greedy baseline.
+- **When to incorporate:** Milestone 2026.04.43 — Phase 5 new research (Exp 572).
+
+### Frequency-Aware Attention Hallucination Detection
+- **Paper:** arXiv 2602.18145 (February 2026)
+- **What:** Treats attention distributions as discrete frequency-domain signals; high-frequency attention energy (measured via DFT of attention weight rows) flags unstable token grounding correlated with hallucination. Lightweight (no retraining), works on any pre-trained LLM.
+- **Relevance to Carnot:** Complementary to SinkProbe (Tier 1, arXiv 2604.10697). SinkProbe measures sink CONCENTRATION (low frequency: attention pooling to BOS/EOS tokens). This paper measures sink TURBULENCE (high frequency: attention scattered across many tokens). Together they provide a fuller characterization of attention geometry as hallucination signals. Could be added as a second feature to SinkProbe's scalar output to improve its AUC.
+- **When to incorporate:** Milestone 2026.04.44+ — SinkProbe enhancement. Lower priority than Exps 564/566 critical path.
+
+### Symbolic-KAN — KAN with Interpretable Discrete Symbolic Structure
+- **Paper:** arXiv 2603.23854 (March 2026)
+- **What:** Symbolic-KAN replaces KAN's continuous spline activations with discrete symbolic equations (sin, cos, polynomial, log, exp). Bridges symbolic regression and neural networks. The KAN learns which symbolic form best fits each activation, producing human-readable constraint rules.
+- **Relevance to Carnot:** The current KAN energy tier (KAEMEnergy, Exp 447) uses opaque spline activations. Symbolic-KAN would make the energy function interpretable: "constraint fires when x > 0.7 OR y < 0.3" rather than an uninterpretable spline. This directly addresses the constraint extraction opacity — if we know the learned constraint RULES, we can explain why the pipeline fires on any given input.
+- **When to incorporate:** Milestone 2026.04.44+ — KAN tier interpretability upgrade. Not critical path for .43.
+
 ## 2026-04-20 arxiv Scan (Milestone 2026.04.42 Planning)
 
 ### Energy-per-Token in LLM Inference — Hardware-Level Verification Metric

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-20 Milestone 2026.04.43 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-20T07:25:51Z | 2026-04-20T07:41:38Z | Planned milestone 2026.04.43: read 11 project files + .42 retro JSON; arxiv research subagent (6 new papers: 2510.04081 Caco CoACE, 2504.15275 PURE min-form PRM, 2509.10753 HalluField, 2604.09482 PRA EBM beam search, 2602.18145 freq-attention, 2603.23854 Symbolic-KAN); identified 3 biggest gaps (RETRO-061 extraction TP=0, RETRO-060 JEPA AUC=0.4286 anti-correlated, RETRO-062 Live 50q A unrun); wrote research-roadmap-v43.md (12 exps 563-574, 7 phases, dependency graph, CoACEExtractor + PURE loss + HalluField Tier 0e + PRA beam search); wrote research-roadmap-next.yaml (12 complete prompts); updated research-references.md | ~90k |
+
+---
+
 ## Session: 2026-04-20 Milestone 2026.04.42 Planning
 
 ### Turn Log
