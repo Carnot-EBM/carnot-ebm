@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 562+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 574+ experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (562 experiments, 29 completed milestones)
+## Key Results (574 experiments, 30 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.43 (Exps 563-574, 30th milestone, title "Root Cause Surgery — Execution-Based Extraction and PURE JEPA Recovery") completed. Key results: **CoACEExtractor FIXED extraction TP=0** — Python eval() on symbolic equations resolves RETRO-061 (Exp 564, RETRO-061 CLOSED); **CoACE live diagnostic** — gate opened for Exps 569+570, TP/FP confirmed on 25 known-incorrect responses (Exp 565); **JEPAPUREMinForm loss** — PURE min-form PRM objective implemented (Exp 566, RETRO-060 addressed); **JEPA v10 retrain** still inverted: v10_auc=0.4444 below random despite PURE objective — RETRO-063 opened (Exp 567); **KV260 FPGA bring-up v2** — first real hardware test post board arrival, fpga_alive=false (bitfile not yet loaded), Verilog synthesis paths confirmed (Exp 568); **FR-11 real CoACE violations** collected (Exp 570, RETRO-033 attempt #11: signed_improvement=0.0, coace_recall=0.059 — RETRO-064 opened); **HalluField Tier 0e** thermodynamic hallucination detection (Exp 571); **PRA EORM beam search** K=3 energy-guided decoding (Exp 572); **Energy-per-token calibration** blocked by RAPL unavailability on AMD hardware — RETRO-065 opened (Exp 573); honest_verdict=partial_fix. New RETROs: RETRO-063 (JEPA architecturally inverted), RETRO-064 (CoACE recall 5.9% — accuracy improvement undetectable at this recall), RETRO-065 (RAPL unavailable). Next milestone must improve CoACE recall to >30% before scheduling accuracy benchmarks.
 
 Note: Milestone 2026.04.42 (Exps 549-562, 29th milestone, title "Break the Synthetic Barrier — Live Data Sprint, Root Cause Diagnosed, JEPA Recovery") completed. Key results: **Live 50q Data Collection A** — GSM8K indices 0-49 collected with live GPU inference, Phase 2 live data sprint complete (Exp 551); **EORM GRPO Retrain on 100+ Real Pairs** — RETRO-058 fix, real corpus now exceeds synthetic threshold (Exp 556); **JEPA v9 Retrain on Diverse 100+ Corpus** — LeWorldModel objective, RETRO-056 addressed, status=success (Exp 557); **Tier 1 Self-Learning Relay on Real Data** — FR-11 mandatory relay with n_responses=25, honest_verdict=real_data_no_improvement (Exp 561, first real-data relay in project history); **Milestone 2026.04.42 Retrospective** (Exp 562). Conductor exclusion manifest built and zombie kill executed (Exp 549). BatchedInferenceRunner real migration complete (Exp 550).
 
