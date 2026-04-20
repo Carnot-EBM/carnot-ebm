@@ -457,6 +457,10 @@ from carnot.pipeline.otv_verifier import (  # noqa: E402
     OTVVerificationToken,
     OTVVerifier,
 )
+from carnot.pipeline.mise_calibrator import (  # noqa: E402
+    MISECalibrator,
+    MISETriple,
+)
 
 __all__ = [
     "AgentStep",
@@ -766,4 +770,6 @@ __all__ = [
     "assert_live_or_ci_skip",
     "OTVVerificationToken",
     "OTVVerifier",
+    "MISECalibrator",
+    "MISETriple",
 ]
