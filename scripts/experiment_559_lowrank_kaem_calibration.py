@@ -268,6 +268,10 @@ artifact = tmpl.build_result(
     status="success",
 )
 
+import json as _json
+tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
+tmpl._output_path.write_text(_json.dumps(artifact, indent=2))
+
 print(f"\nRETRO-057 closed: {retro_057_closed}")
 print(f"Honest verdict: {honest_verdict}")
 if optimal_k is not None:
