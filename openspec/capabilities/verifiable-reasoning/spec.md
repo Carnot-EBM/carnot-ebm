@@ -12700,3 +12700,36 @@ Then: ensemble_recall == 0.3*0.12 + 0.4*0.20 + 0.3*0.36 == 0.224, gate_open == F
 Why: hermes_v2_recall=0.99 does not change the result — it is tracked but excluded from the formula.
 
 **Implementation Status:** Implemented (tests/python/test_ensemble_gate_v3.py, Exp 655)
+
+## REQ-VERIFY-150: Live Verify-Repair Attempt #18 with Structured Equation Forcing
+
+Addresses RETRO-033 VR attempt #18: the first live VR run combining structured equation
+forcing (REQ-VERIFY-146), HermesV2StructuredLoop (REQ-VERIFY-148), and the EnsembleGateV3
+authorization gate (REQ-VERIFY-149).
+
+- REQ-VERIFY-150-1: Exp 656 script shall perform a gate check by loading results/experiment_655_ensemble_gate_v3.json before any GPU setup. If gate_open is False or the file is absent, the script shall write a blocked artifact and exit 0 without running VR.
+- REQ-VERIFY-150-2: When CARNOT_FORCE_LIVE is not set, the script shall write a CI-stub artifact with inference_mode='ci_stub_gpu_required' and exit 0 without loading any model.
+- REQ-VERIFY-150-3: In live mode, the VR loop shall process 25 question-response pairs from live_pairs_578.json. For each pair, it shall use HermesV2StructuredLoop.generate_structured() to produce a repaired response.
+- REQ-VERIFY-150-4: If the structured result has n_violations > 0, a hint shall be appended to the question context before regenerating; otherwise the structured result response is used directly.
+- REQ-VERIFY-150-5: signed_improvement shall equal (number of repaired responses that differ from the original incorrect response) / 25.
+- REQ-VERIFY-150-6: The artifact shall include retro_033_resolved=True iff signed_improvement > 0.
+- REQ-VERIFY-150-7: An ExperimentTimeoutWatchdog with timeout_minutes=90 shall guard the entire run.
+
+**Implementation Status:** Implemented (scripts/experiment_656_live_vr_attempt_18.py, Exp 656)
+
+### SCENARIO-VERIFY-202: Gate Closed Produces Blocked Artifact
+
+Given: results/experiment_655_ensemble_gate_v3.json with gate_open=False.
+When: scripts/experiment_656_live_vr_attempt_18.py is executed.
+Then: results/experiment_656_live_vr_attempt_18.json has status='blocked', gate_open=False,
+      honest_verdict='vr18_blocked_gate_closed', and the process exits 0.
+
+**Implementation Status:** Implemented (tests/python/test_live_vr_18.py, Exp 656)
+
+### SCENARIO-VERIFY-203: CI Stub Path Without CARNOT_FORCE_LIVE
+
+Given: CARNOT_FORCE_LIVE is unset; gate_open=True (mock).
+When: The experiment script gate check passes and CI-stub branch is taken.
+Then: Artifact has inference_mode='ci_stub_gpu_required', gate_open=True, status='success'.
+
+**Implementation Status:** Implemented (tests/python/test_live_vr_18.py, Exp 656)
