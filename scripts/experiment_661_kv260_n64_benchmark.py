@@ -535,30 +535,30 @@ def compare_distributions(fpga_samples: list, cpu_samples: list) -> dict:
 
 
 def main() -> None:
-    tmpl = ExperimentTemplate(
-        experiment_id=EXP_ID, title=TITLE,
-        result_path=RESULT_PATH, requires_gpu=False,
-    )
+    tmpl = ExperimentTemplate(EXP_ID, TITLE, RESULT_PATH, requires_gpu=False)
     tmpl.setup()
     t_start = time.perf_counter()
+    out_path = _REPO_ROOT / RESULT_PATH
+
+    def _write(artifact: dict) -> None:
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(json.dumps(artifact, indent=2))
 
     # Preflight.
     ok, verdict, ctx = preflight(tmpl)
     if not ok:
-        artifact = tmpl.build_result({"preflight": ctx},
-                                     status="blocked",
-                                     honest_verdict=verdict,
-                                     reason=ctx.get("reason", verdict))
-        tmpl.write_result(artifact); return
+        _write(tmpl.build_result(
+            {"preflight": ctx}, status="blocked",
+            honest_verdict=verdict, reason=ctx.get("reason", verdict)))
+        tmpl.assert_deliverable_written(); return
 
     # Deploy.
     ok, verdict, deploy_info = deploy_bitstream(ctx)
     if not ok:
-        artifact = tmpl.build_result({"preflight": ctx, "deploy": deploy_info},
-                                     status="blocked",
-                                     honest_verdict=verdict,
-                                     reason=deploy_info.get("reason", verdict))
-        tmpl.write_result(artifact); return
+        _write(tmpl.build_result(
+            {"preflight": ctx, "deploy": deploy_info}, status="blocked",
+            honest_verdict=verdict, reason=deploy_info.get("reason", verdict)))
+        tmpl.assert_deliverable_written(); return
 
     # Build reference problem.
     problem = build_sk_problem(N_SPINS, MAX_DEGREE, BETA, SK_RNG_SEED)
@@ -566,12 +566,11 @@ def main() -> None:
     # Run sampler on FPGA.
     ok, verdict, fpga = run_sampler_on_kria(problem)
     if not ok:
-        artifact = tmpl.build_result({"preflight": ctx, "deploy": deploy_info,
-                                      "fpga": fpga},
-                                     status="partial",
-                                     honest_verdict=verdict,
-                                     reason=str(fpga.get("reason", verdict)))
-        tmpl.write_result(artifact); return
+        _write(tmpl.build_result(
+            {"preflight": ctx, "deploy": deploy_info, "fpga": fpga},
+            status="partial", honest_verdict=verdict,
+            reason=str(fpga.get("reason", verdict))))
+        tmpl.assert_deliverable_written(); return
 
     # CPU baseline (same problem, same N_STEPS).
     cpu = cpu_gibbs_reference(problem, CPU_SAMPLES_FOR_BASELINE, N_STEPS_HW)
@@ -601,7 +600,7 @@ def main() -> None:
             f"below {SPEEDUP_TARGET}x target.  Calibrates throughput claim."
         )
 
-    artifact = tmpl.build_result({
+    _write(tmpl.build_result({
         "preflight": ctx,
         "deploy": deploy_info,
         "problem_summary": {
@@ -622,8 +621,8 @@ def main() -> None:
         "comparison": cmp,
         "speedup": speedup,
         "total_elapsed_s": time.perf_counter() - t_start,
-    }, status=status, honest_verdict=verdict, reason=reason)
-    tmpl.write_result(artifact)
+    }, status=status, honest_verdict=verdict, reason=reason))
+    tmpl.assert_deliverable_written()
 
 
 if __name__ == "__main__":
