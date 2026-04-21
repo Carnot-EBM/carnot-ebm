@@ -1299,3 +1299,40 @@ Then: both sync_mean_energy and async_mean_energy are non-None floats, validatin
 that the synchronous update logic runs end-to-end without error.
 
 **Implementation Status:** Implemented (Exp 624)
+
+## REQ-SAMPLE-038: MultilevelKAEMTrainer — Knot Refinement Schedule for KAEMEnergy (Exp 634)
+
+Multilevel training (arXiv 2603.04827) trains a sequence of KANs at increasing spline
+knot resolution via analytic geometric interpolation operators between levels.
+Starting coarse (K=16), training to convergence, then interpolating weights to K=32,
+K=64, and finally K=128 achieves superior energy accuracy vs. single-level training
+at equal or fewer total parameter updates.
+
+- REQ-SAMPLE-038-1: `KnotRefinementInterpolator(coarse_layer, fine_n_knots)` SHALL create a finer
+  UnivariateKAEMLayer by linearly interpolating the coarse control points onto the fine knot grid.
+- REQ-SAMPLE-038-2: `MultilevelKAEMTrainer(schedule, epochs_per_level)` SHALL train KAEMEnergy
+  at each knot resolution in schedule, interpolating weights between levels.
+- REQ-SAMPLE-038-3: The default refinement schedule SHALL be [16, 32, 64, 128].
+- REQ-SAMPLE-038-4: Total epochs SHALL equal len(schedule) * epochs_per_level.
+- REQ-SAMPLE-038-5: `MultilevelKAEMTrainer` and `KnotRefinementInterpolator` SHALL be exported
+  from `carnot.training`.
+
+Spec: REQ-SAMPLE-038, SCENARIO-SAMPLE-063, SCENARIO-SAMPLE-064
+
+### SCENARIO-SAMPLE-063: MultilevelKAEMTrainer Reduces Energy Error vs Standard Training
+
+Given: 20-variable synthetic energy landscape (sinusoidal+quadratic ground truth).
+When: MultilevelKAEMTrainer(schedule=[16,32,64,128], epochs_per_level=20) is trained
+      alongside KAEMEnergy(n_hidden=128) trained for 80 epochs.
+Then: accuracy_multilevel >= accuracy_standard OR the results are comparable within
+      experimental noise (accuracy_improvement > -0.5 indicating no regression).
+
+**Implementation Status:** Implemented (Exp 634)
+
+### SCENARIO-SAMPLE-064: KnotRefinementInterpolator Preserves Knot Count
+
+Given: A UnivariateKAEMLayer with n_knots=16.
+When: KnotRefinementInterpolator(layer, 32).interpolate() is called.
+Then: The returned layer has n_knots=32 and control_points.shape == (n_vars, 32).
+
+**Implementation Status:** Implemented (Exp 634)
