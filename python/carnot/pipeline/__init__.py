@@ -529,6 +529,10 @@ from carnot.pipeline.hermes_v2_structured_loop import (  # noqa: E402
     HermesV2StructuredLoop,
     HermesV2StructuredResult,
 )
+from carnot.pipeline.ensemble_gate_v3 import (  # noqa: E402
+    EnsembleGateV3Result,
+    EnsembleRecallGateV3,
+)
 
 __all__ = [
     "AgentStep",
@@ -876,4 +880,6 @@ __all__ = [
     "StructuredEquationForcer",
     "HermesV2StructuredLoop",
     "HermesV2StructuredResult",
+    "EnsembleGateV3Result",
+    "EnsembleRecallGateV3",
 ]

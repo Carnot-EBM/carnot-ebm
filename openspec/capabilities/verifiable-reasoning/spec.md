@@ -12669,3 +12669,34 @@ When: generate_structured('q') is called.
 Then: The captured prompt contains 'COMPUTE:' (the forcing instruction from FORCER_SYSTEM_ADDENDUM).
 
 **Implementation Status:** Implemented (tests/python/test_hermes_v2_structured_loop.py, Exp 654)
+
+## REQ-VERIFY-149: EnsembleRecallGateV3 — Weighted Ensemble Gate
+
+Addresses RETRO-033 VR gate v3: combine symcode + hermes_v2_structured + causal recall
+signals into a weighted ensemble that authorises VR attempt #18 when threshold is met.
+
+- REQ-VERIFY-149-1: EnsembleRecallGateV3.__init__ shall accept symcode_weight (float, default 0.3), structured_weight (float, default 0.4), causal_weight (float, default 0.3), and threshold (float, default 0.30).
+- REQ-VERIFY-149-2: compute(symcode_recall, hermes_v2_recall, structured_recall, causal_recall) shall compute ensemble_recall = symcode_weight*symcode_recall + structured_weight*structured_recall + causal_weight*causal_recall.
+- REQ-VERIFY-149-3: hermes_v2_recall shall be stored in the result for traceability but shall NOT contribute to ensemble_recall (its weight is implicitly 0.0).
+- REQ-VERIFY-149-4: gate_open shall be True iff ensemble_recall >= threshold.
+- REQ-VERIFY-149-5: EnsembleGateV3Result.gate_version shall always equal 'v3'.
+- REQ-VERIFY-149-6: EnsembleRecallGateV3 and EnsembleGateV3Result shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ensemble_gate_v3.py, Exp 655)
+
+### SCENARIO-VERIFY-200: Gate Opens When Ensemble Reaches Threshold
+
+Given: EnsembleRecallGateV3() with default weights and threshold=0.30.
+When: compute(symcode_recall=0.30, hermes_v2_recall=0.0, structured_recall=0.30, causal_recall=0.30) is called.
+Then: ensemble_recall == 0.30, gate_open == True.
+
+**Implementation Status:** Implemented (tests/python/test_ensemble_gate_v3.py, Exp 655)
+
+### SCENARIO-VERIFY-201: Gate Closed Below Threshold; hermes_v2 Does Not Affect Ensemble
+
+Given: EnsembleRecallGateV3() with default weights.
+When: compute(symcode_recall=0.12, hermes_v2_recall=0.99, structured_recall=0.20, causal_recall=0.36) is called.
+Then: ensemble_recall == 0.3*0.12 + 0.4*0.20 + 0.3*0.36 == 0.224, gate_open == False.
+Why: hermes_v2_recall=0.99 does not change the result — it is tracked but excluded from the formula.
+
+**Implementation Status:** Implemented (tests/python/test_ensemble_gate_v3.py, Exp 655)
