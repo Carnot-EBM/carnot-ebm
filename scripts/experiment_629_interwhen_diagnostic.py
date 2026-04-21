@@ -128,6 +128,7 @@ def main() -> None:
         "InterWhen Diagnostic Gate",
         "results/experiment_629_interwhen_diagnostic.json",
         requires_gpu=False,
+        repo_root=_REPO_ROOT,
     )
     tmpl.setup()
 
@@ -270,7 +271,7 @@ def main() -> None:
         status="success",
     )
 
-    out_path = _REPO_ROOT / "results" / "experiment_629_interwhen_diagnostic.json"
+    out_path = tmpl._output_path
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w") as f:
         json.dump(artifact, f, indent=2)
