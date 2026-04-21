@@ -2401,3 +2401,4 @@ python/ |
 | 2026-04-21 16:04 UTC | Exp 644: Live VR Attempt #17 — GATED on Exp 643 ga | OK | 81 passed, 2 warnings in 7.89s |
 | 2026-04-21 16:15 UTC | Exp 645: Tier 1 FR-11 Self-Learning Relay — Real V | OK | 81 passed, 2 warnings in 7.57s |
 | 2026-04-21 16:28 UTC | Exp 646: JEPA v14 Platt Scaling — Temperature Cali | OK | 81 passed, 2 warnings in 8.19s |
+| 2026-04-21 16:45 UTC | Exp 647: OTV One-Token Verifier (arXiv 2603.01025) | OK | 81 passed, 2 warnings in 7.48s |
