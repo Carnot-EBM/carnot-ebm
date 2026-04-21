@@ -133,8 +133,31 @@ QUESTION_END = 49
 QUESTION_INDICES = "0-49"
 GSM8K_SEED = 42
 
-GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
-QWEN_MODEL_ID = "Qwen/Qwen3.5-0.8B"
+# MODEL SELECTION — prefer cached SOTA GGUFs (Qwen3.6-35B-A3B + Gemma4-26B-A4B-it)
+# over legacy tiny models.  `cached_sota_pair()` resolves HF-cached GGUFs to
+# on-disk paths loadable via `Gemma4QuantizedLoader` (llama.cpp-backed, model-
+# agnostic despite the class name).  Only SOTA GGUFs produce real arithmetic
+# CoT; tiny models emit "The answer is 42." + echo-question garbage that
+# blocked RETRO-033 for 15+ consecutive attempts.  See RETRO-066/068/070.
+from carnot.inference.sota_models import cached_sota_pair as _cached_sota_pair
+
+_sota_specs = _cached_sota_pair(gpu_indices=(0, 1))
+if _sota_specs is not None:
+    QWEN_MODEL_ID = _sota_specs[0]["hf_id"]       # flagship MoE — Qwen3.6-35B-A3B
+    GEMMA4_MODEL_ID = _sota_specs[1]["hf_id"]     # middle MoE — Gemma4-26B-A4B-it
+    QWEN_MODEL_PATH = _sota_specs[0]["model_path"]
+    GEMMA4_MODEL_PATH = _sota_specs[1]["model_path"]
+    _MODELS_USED_REAL_SOTA = True
+else:
+    # Legacy fallback — loud warning so the retrospective catches it.
+    print("WARNING: cached SOTA GGUFs unavailable, falling back to tiny models "
+          "(Qwen/Qwen3.5-0.8B + google/gemma-4-E4B-it). Expected CoT quality: POOR. "
+          "Downstream extractor recall will be < 10%.")
+    QWEN_MODEL_ID = "Qwen/Qwen3.5-0.8B"
+    GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
+    QWEN_MODEL_PATH = None
+    GEMMA4_MODEL_PATH = None
+    _MODELS_USED_REAL_SOTA = False
 GEMMA4_REQUIRED_GB = 10.0
 QWEN_REQUIRED_GB = 1.5
 
