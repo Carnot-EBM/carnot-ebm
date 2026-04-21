@@ -54,3 +54,21 @@ data/*.safetensors
 exports/**/model.safetensors
 .venv-npu
 .hypothesis/
+
+# Local-only multi-GB artifacts (never commit — re-downloadable / re-generable).
+# Surgical patterns: DO NOT exclude models/constraint-verifier-v2/ (small,
+# intentionally tracked) or output/** files that the conductor already
+# committed.  Target only the large re-downloadable / re-generable files.
+models/**/*.gguf
+models/**/*.mxfp4
+models/gpt-oss-safeguard-20b/
+models/gpt-oss-safeguard-120b/
+# Vivado intermediate / future-build artifacts (project sub-dirs only —
+# the conductor-committed files under output/carnot_ising_bd/project/ from
+# prior runs stay tracked for history).
+output/carnot_ising_bd/project/carnot_ising.runs/impl_*/
+output/carnot_ising_bd/project/carnot_ising.runs/synth_*/
+output/carnot_ising_bd/project/.Xil/
+output/carnot_ising_bd/vivado_*.backup.*
+output/carnot_ising_bd/*.jou
+output/carnot_ising_bd/.Xil/

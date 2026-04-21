@@ -141,6 +141,21 @@ def resolve_cached_gguf(
     cache_root : str, optional
         HF hub cache root.  Defaults to ``~/.cache/huggingface/hub``.
 
+    Search order
+    ------------
+    1. ``cache_root`` (HF hub layout: ``models--<org>--<name>/snapshots/<hash>/``).
+       This is where ``hf download <repo> <file>`` without ``--local-dir``
+       lands.
+    2. ``<project_root>/models/<last_segment_of_hf_id_without_GGUF_suffix>/``
+       (flat layout).  This is where ``hf download <repo> <file>
+       --local-dir models/<x>`` lands.  Matches the convention we use for
+       gpt-oss-safeguard, Qwen, Gemma etc. — keeps the weights in-tree with
+       the project so a fresh checkout on a new machine can see them via a
+       single rsync of the repo root.
+    3. ``<project_root>/models/<first_segment_after_slash_lower>/`` as a fallback
+       (e.g. ``models/qwen3.6-35b-a3b-gguf/``) for cases where the directory
+       name preserves the ``-GGUF`` suffix.
+
     Returns
     -------
     str | None
@@ -151,26 +166,7 @@ def resolve_cached_gguf(
     import os
     from pathlib import Path
 
-    root = Path(cache_root) if cache_root else Path.home() / ".cache" / "huggingface" / "hub"
-    # HF hub cache layout: models--<org>--<name>/snapshots/<commit-hash>/<files>
-    model_dir = root / f"models--{hf_id.replace('/', '--')}"
-    if not model_dir.is_dir():
-        return None
-    snapshots = list((model_dir / "snapshots").iterdir()) if (model_dir / "snapshots").is_dir() else []
-    if not snapshots:
-        return None
-    # There should be at most one snapshot for a GGUF repo we just pulled.  If
-    # multiple snapshots exist (re-pulled at different revisions), take the most
-    # recently modified one.
-    snap = max(snapshots, key=lambda p: p.stat().st_mtime)
-
-    ggufs = sorted(snap.glob("*.gguf"))
-    if not ggufs:
-        return None
-
-    # Preference cascade.  Case-insensitive substring match so both
-    # "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf" and "Qwen3.6-35B-A3B-Q4_K_M.gguf"
-    # score equivalently against preferred_quant="Q4_K_M".
+    # Preference cascade shared by both hub-cache and project-local lookups.
     preference_order = [
         f"UD-{preferred_quant}",
         preferred_quant,
@@ -181,12 +177,55 @@ def resolve_cached_gguf(
         "UD-Q8_XL",
         "Q8_0",
     ]
-    for token in preference_order:
-        for g in ggufs:
-            if token.lower() in g.name.lower():
-                return str(g)
-    # Nothing matched — return the first file so callers at least get *something*.
-    return str(ggufs[0])
+
+    def _pick(ggufs: list[Path]) -> str | None:
+        if not ggufs:
+            return None
+        # Case-insensitive substring match so both
+        # "gemma-4-26B-A4B-it-UD-Q4_K_M.gguf" and "Qwen3.6-35B-A3B-Q4_K_M.gguf"
+        # score equivalently against preferred_quant="Q4_K_M".
+        for token in preference_order:
+            for g in ggufs:
+                if token.lower() in g.name.lower():
+                    return str(g)
+        # Nothing matched — return the first file so callers at least get *something*.
+        return str(ggufs[0])
+
+    # ---- Search 1: HF hub cache (~/.cache/huggingface/hub or override) ----
+    root = Path(cache_root) if cache_root else Path.home() / ".cache" / "huggingface" / "hub"
+    model_dir = root / f"models--{hf_id.replace('/', '--')}"
+    if model_dir.is_dir():
+        snapshots_dir = model_dir / "snapshots"
+        if snapshots_dir.is_dir():
+            snapshots = list(snapshots_dir.iterdir())
+            if snapshots:
+                snap = max(snapshots, key=lambda p: p.stat().st_mtime)
+                hit = _pick(sorted(snap.glob("*.gguf")))
+                if hit is not None:
+                    return hit
+
+    # ---- Search 2 & 3: project-local models/ directory ----
+    # Walk up from this file to find the project root (the dir containing models/).
+    # __file__ = <project>/python/carnot/inference/sota_models.py, so four parents up.
+    project_root = Path(__file__).resolve().parents[3]
+    models_root = project_root / "models"
+    if models_root.is_dir():
+        # Candidate subdirectory names, in priority order.
+        basename = hf_id.split("/", 1)[-1]  # e.g. "gpt-oss-safeguard-20b-GGUF"
+        stripped = basename[:-5] if basename.endswith("-GGUF") else basename
+        candidates = [
+            models_root / stripped,         # models/gpt-oss-safeguard-20b/
+            models_root / basename,         # models/gpt-oss-safeguard-20b-GGUF/
+            models_root / stripped.lower(),
+            models_root / basename.lower(),
+        ]
+        for candidate in candidates:
+            if candidate.is_dir():
+                hit = _pick(sorted(candidate.glob("*.gguf")))
+                if hit is not None:
+                    return hit
+
+    return None
 
 
 def cached_sota_pair(
