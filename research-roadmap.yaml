@@ -327,10 +327,10 @@ tasks:
     \ and exit.\n      vram_0 = torch.cuda.get_device_properties(0).total_memory\n\
     \      vram_1 = torch.cuda.get_device_properties(1).total_memory\n   e. Model\
     \ loading strategy (try in order, stop at first success):\n      Option A: transformers\
-    \ AutoModelForCausalLM with device_map={'0':'cuda:0','1':'cuda:1'}\n        model_name\
+    \ AutoModelForCausalLM with device_map=('0':'cuda:0','1':'cuda:1')\n        model_name\
     \ = 'Qwen/Qwen2.5-14B-Instruct' (if < vram_0 + vram_1 bytes)\n      Option B:\
-    \ device_map={'model.embed_tokens':'cuda:0', 'model.layers.0-19':'cuda:0', 'model.layers.20-27':'cuda:1',\
-    \ 'model.norm':'cuda:1', 'lm_head':'cuda:1'}\n        model_name = 'Qwen/Qwen2.5-7B-Instruct'\
+    \ device_map=('model.embed_tokens':'cuda:0', 'model.layers.0-19':'cuda:0', 'model.layers.20-27':'cuda:1',\
+    \ 'model.norm':'cuda:1', 'lm_head':'cuda:1')\n        model_name = 'Qwen/Qwen2.5-7B-Instruct'\
     \ (fallback)\n      Option C: if transformers fails: use llama_cpp with n_gpu_layers=-1\
     \ split across GPUs\n        Record model_loaded=False with blocked_reason if all\
     \ fail.\n   f. If model loaded:\n      import pynvml; pynvml.nvmlInit()\n     \
@@ -389,7 +389,7 @@ tasks:
     \ str, claims: list[ArithmeticClaim]) -> str:\n        'Feedback module: if violated,\
     \ return a correction hint.'\n        violated_claims = [c for c in claims if\
     \ c.confidence < 0.5 or c.lhs_expr is None]\n        if not violated_claims:\
-    \ return ''\n        return f'Re-check the calculation: {violated_claims[0].claim_text}'\n\
+    \ return ''\n        return f'Re-check the calculation: (violated_claims[0].claim_text)'\n\
     \      process_step(self, step_text: str, step_index: int) -> HermesVerificationStep:\n\
     \        'Full HERMES pipeline for one step.'\n        claims = self.translate(step_text)\n\
     \        verdict = self.prove(step_text)\n        feedback = self.generate_feedback(step_text,\
