@@ -138,16 +138,16 @@ tasks:
     \ str) -> float | None:\n      - Allowed: +, -, *, /, **, %. No builtins, no\
     \ imports.\n      - Returns None on error.\n   c. Strategy 1 — JsonClaimExtractor:\n\
     \      PROMPT = '''You are an arithmetic verifier. Read this math reasoning step.\n\
-    List every arithmetic calculation stated as a JSON array.\nFor each: {\"lhs\":\
+    List every arithmetic calculation stated as a JSON array.\nFor each: (\"lhs\":\
     \ \"expression_to_evaluate\", \"rhs\": stated_numeric_result, \"text\": \"verbatim_excerpt\"\
-    }.\nIf no calculations: output []. Output ONLY valid JSON, no prose.\nStep: {step}'''\n\
+    ).\nIf no calculations: output []. Output ONLY valid JSON, no prose.\nStep: (step)'''\n\
     \      extract_claims(step: str, llm_caller: callable) -> list[ArithmeticClaim]:\n\
     \        Call llm_caller(PROMPT.format(step=step)), parse JSON, for each: verify\n\
     \        via safe_eval(claim.lhs_expr) != claim.rhs_value. Flag mismatch as violation.\n\
     \   d. Strategy 2 — SymCodeExtractor (arXiv 2510.25975):\n      PROMPT = '''Write\
     \ a single-line Python expression that computes the answer claimed in this math\
     \ step. Output ONLY executable Python (no assignment, no print). If unclear: output\
-    \ None. Step: {step}'''\n      extract_claims(step: str, llm_caller: callable)\
+    \ None. Step: (step)'''\n      extract_claims(step: str, llm_caller: callable)\
     \ -> list[ArithmeticClaim]:\n        Call llm_caller(PROMPT.format(step=step)),\
     \ exec result via safe_eval().\n        Compare computed value to any numeric\
     \ answer stated in the step. Flag mismatch.\n   e. Strategy 3 — StepSegmentEvalChain:\n\
@@ -220,9 +220,9 @@ tasks:
     \      - Agent1NER(response: str, llm_caller) -> list[str]: prompt 'List all\
     \ numeric values in this text as JSON array of strings.' Return list of numeric\
     \ entity strings.\n      - Agent2ClaimFormer(entities: list[str], response: str,\
-    \ llm_caller) -> list[dict]:\n        prompt 'Given these numbers {entities},\
-    \ find arithmetic relationships in this text.\n        Output JSON: [{\"lhs\":\
-    \ \"expr\", \"rhs\": value, \"text\": \"excerpt\"}].' \n      - Agent3Verifier(claims:\
+    \ llm_caller) -> list[dict]:\n        prompt 'Given these numbers (entities),\
+    \ find arithmetic relationships in this text.\n        Output JSON: [(\"lhs\":\
+    \ \"expr\", \"rhs\": value, \"text\": \"excerpt\")].' \n      - Agent3Verifier(claims:\
     \ list[dict]) -> list[ArithmeticClaim]: eval() each claim.\n      - extract(self,\
     \ response: str) -> list[ArithmeticClaim]: run Agent1 → Agent2 → Agent3.\n  \
     \    - CI stub: if llm_caller is None, return [] (no-op in CI).\n   b. Export\
@@ -336,7 +336,7 @@ tasks:
     \    extract_code_for_step(self, step: str) -> str | None:\n        If llm_caller:\
     \ prompt 'Write a single-line Python expression that computes the\n        arithmetic\
     \ stated in this reasoning step. Output ONLY the expression (e.g.\
-    \ \"47+28\").\n        If no arithmetic: output \"None\". Step: {step}'. Return\
+    \ \"47+28\").\n        If no arithmetic: output \"None\". Step: (step)'. Return\
     \ response stripped.\n        If llm_caller is None (CI stub): apply SymCodeExtractor\
     \ regex fallback.\n      verify_step(self, step: str) -> CoTStep:\n        code\
     \ = self.extract_code_for_step(step).\n        If code is None or code.strip()\
@@ -448,13 +448,13 @@ tasks:
     \ openspec/capabilities/autoresearch/spec.md.\n3. Create python/carnot/pipeline/metajuls_adapter.py:\n\
     \   a. ExtractorPolicy dataclass:\n      temperature: float = 0.1  # LLM sampling temperature\n\
     \      claim_confidence_threshold: float = 0.5  # min confidence to count a claim\n\
-    \      strategy_weights: dict[str, float]  # {'json': 0.5, 'symcode': 0.3, 'chain':\
-    \ 0.2}\n   b. MetaJuLSAdapter class:\n      __init__(self, initial_policy: ExtractorPolicy\
-    \ | None = None):\n        self.policy = initial_policy or ExtractorPolicy(strategy_weights={'json':\
-    \ 0.33, 'symcode': 0.33, 'chain': 0.34})\n        self.experience: list[dict]\
-    \ = []  # [{batch_id, precision, recall, strategy_used}]\n      update_from_batch(self,\
+    \      strategy_weights: dict[str, float]  # ('json': 0.5, 'symcode': 0.3, 'chain':\
+    \ 0.2)\n   b. MetaJuLSAdapter class:\n      __init__(self, initial_policy: ExtractorPolicy\
+    \ | None = None):\n        self.policy = initial_policy or ExtractorPolicy(strategy_weights=('json':\
+    \ 0.33, 'symcode': 0.33, 'chain': 0.34))\n        self.experience: list[dict]\
+    \ = []  # [(batch_id, precision, recall, strategy_used)]\n      update_from_batch(self,\
     \ batch_results: list[dict]) -> ExtractorPolicy:\n        # batch_results: list\
-    \ of {response, violation_detected, true_label}\n        tp = sum(r['violation_detected']\
+    \ of (response, violation_detected, true_label)\n        tp = sum(r['violation_detected']\
     \ and not r['true_label'] == 'correct' for r in batch_results)\n        fp =\
     \ sum(r['violation_detected'] and r['true_label'] == 'correct' for r in batch_results)\n\
     \        precision = tp / (tp + fp + 1e-9)\n        # Meta-RL update: if precision\
@@ -464,8 +464,8 @@ tasks:
     \ * 1.1)\n        elif precision > 0.8:  # high precision, can relax thresholds\n\
     \          self.policy.temperature = min(0.5, self.policy.temperature * 1.05)\n\
     \          self.policy.claim_confidence_threshold = max(0.3, self.policy.claim_confidence_threshold\
-    \ * 0.95)\n        self.experience.append({'batch_id': len(self.experience),\
-    \ 'precision': precision})\n        return self.policy\n      precision_trend(self)\
+    \ * 0.95)\n        self.experience.append(('batch_id': len(self.experience),\
+    \ 'precision': precision))\n        return self.policy\n      precision_trend(self)\
     \ -> float:\n        # Slope of precision over last 3 batches. Positive = improving.\n\
     \        if len(self.experience) < 2: return 0.0\n        precisions = [e['precision']\
     \ for e in self.experience[-3:]]\n        return precisions[-1] - precisions[0]\n\
@@ -476,9 +476,9 @@ tasks:
     \ requires_gpu=False).\n   d. Simulate 3 batches using live corpus:\n      batch1\
     \ = first 10 responses from live_pairs_578.json\n      batch2 = next 10 responses\n\
     \      batch3 = next 10 responses (or overlap if corpus too small)\n   e. For\
-    \ each batch:\n      adapter.update_from_batch([{'response': r.response,\n   \
+    \ each batch:\n      adapter.update_from_batch([('response': r.response,\n   \
     \     'violation_detected': bool(LLMAsExtractorV1(llm_caller=None).extract(r.response)),\n\
-    \        'true_label': 'correct' if r.is_correct else 'incorrect'}\n        for\
+    \        'true_label': 'correct' if r.is_correct else 'incorrect')\n        for\
     \ r in batch])\n   f. Compute: precision_trend = adapter.precision_trend().\n\
     \      adaptation_effective = precision_trend >= 0 (non-decreasing).\n   g. Build\
     \ artifact: schema='carnot.metajuls_adapter.v1',\n      n_batches=3, batch_size=10,\n\
@@ -620,7 +620,7 @@ tasks:
     \ | None = None) -> np.ndarray:\n      'Run synchronous Gibbs for n_steps. Return\
     \ final state.'\n   d. compare_with_async(self, n_steps: int, n_trials: int)\
     \ -> dict:\n      'Run synchronous vs async (ParallelIsingSampler checkerboard).\n\
-    \       Return {sync_mean_energy, async_mean_energy, energy_gap, sync_converged}'\n\
+    \       Return (sync_mean_energy, async_mean_energy, energy_gap, sync_converged)'\n\
     \   e. Export SynchronousIsingSampler from carnot.samplers.\n4. Write scripts/experiment_624_kv260_vivado_v2.py:\n\
     \   a. apply_env_autofix() FIRST.\n   b. ExperimentTimeoutWatchdog(624, timeout_minutes=35).\n\
     \   c. ExperimentTemplate(624, 'KV260 Vivado Synthesis v2 + Sync Ising Sim',\n\
