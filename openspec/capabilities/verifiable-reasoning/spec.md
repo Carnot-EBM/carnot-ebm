@@ -11962,6 +11962,36 @@ Then: Returns an empty list. When split_at_boundaries("Hello. World!") is called
 
 **Implementation Status:** Implemented (Exp 622)
 
+## REQ-VERIFY-132: InterWhenMonitor Gate — recall >= 0.20 on 25 known-incorrect live responses gates VR attempt #16
+
+InterWhenMonitor must achieve recall >= 0.20 on a primary diagnostic set of 25 known-incorrect
+live responses before Exp 630 (Verify-Repair attempt #16) may be scheduled.
+
+- REQ-VERIFY-132-1: Primary gate set: 25 known-incorrect + 10 known-correct live responses sampled from live_pairs_578.json.
+- REQ-VERIFY-132-2: interwhen_recall_primary = interwhen_tp_primary / 25 where interwhen_tp_primary counts responses where any_violation() returns True.
+- REQ-VERIFY-132-3: interwhen_fp_rate_primary = interwhen_fp_primary / 10.
+- REQ-VERIFY-132-4: gate_open = interwhen_recall_primary >= 0.20.
+- REQ-VERIFY-132-5: Extended set (if available): 50 incorrect + 20 correct for statistical confidence; interwhen_recall_extended computed independently.
+- REQ-VERIFY-132-6: retro_070_partial = True iff interwhen_recall_primary > 0.04 (prior best from Exp 617, gate_open=False).
+- REQ-VERIFY-132-7: retro_070_resolved = True iff interwhen_recall_primary >= 0.20.
+- REQ-VERIFY-132-8: honest_verdict = 'gate_open_vr_unblocked' iff gate_open=True; else 'gate_closed_do_not_retry'.
+
+### SCENARIO-VERIFY-171: InterWhenMonitor Gate Passes When Recall >= 0.20
+
+Given: 25 known-incorrect responses and InterWhenMonitor detecting violations in at least 5 of them.
+When: interwhen_recall_primary = 5/25 = 0.20.
+Then: gate_open=True, retro_070_resolved=True, honest_verdict='gate_open_vr_unblocked'.
+
+**Implementation Status:** Implemented (Exp 629)
+
+### SCENARIO-VERIFY-172: InterWhenMonitor Gate Closed When Recall < 0.20
+
+Given: 25 known-incorrect responses and InterWhenMonitor detecting violations in fewer than 5 of them.
+When: interwhen_recall_primary < 0.20.
+Then: gate_open=False, gate_note contains 'Exp 630 GATED', honest_verdict='gate_closed_do_not_retry'.
+
+**Implementation Status:** Implemented (Exp 629)
+
 ## REQ-DATA-012: ORACLE Corpus — Step-Level Constraint Labels Derived from Live LLM Output + SymCodeVerifier
 
 OracleCorpusBuilder shall annotate every reasoning step in a live LLM response with a
