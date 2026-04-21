@@ -12347,3 +12347,41 @@ When: check_entailment(step_k, step_k1) is called.
 Then: causal_violation == False, violation_type == 'none', entailment_score == 0.0.
 
 **Implementation Status:** Implemented (Exp 642)
+
+## REQ-VERIFY-141: EnsembleRecallGate OR Combination
+
+OR ensemble combining InterWhenMonitor, HERMES v2 live loop, and CausalReasoningVerifier signals to compute joint recall over the live_pairs_578 corpus.
+
+- REQ-VERIFY-141-1: For each incorrect response, ensemble_hit = interwhen_hit OR hermes_hit OR causal_hit.
+- REQ-VERIFY-141-2: ensemble_recall = ensemble_tp / 25 where ensemble_tp = count of incorrect responses with ensemble_hit == True.
+- REQ-VERIFY-141-3: ensemble_fp_rate = ensemble_fp / 10 where ensemble_fp = count of correct responses with ensemble_hit == True.
+- REQ-VERIFY-141-4: When hermes_v2_tp_indices are unavailable, hermes_hit defaults to False for per-question OR (conservative — no spurious TPs from index guessing).
+
+**Implementation Status:** Implemented (scripts/experiment_643_ensemble_gate_v2.py, Exp 643)
+
+## REQ-VERIFY-142: VR #17 Gate Threshold
+
+Gate for scheduling Verify-Repair attempt #17, upgraded from the 0.20 threshold per RETRO-070 action item.
+
+- REQ-VERIFY-142-1: gate_open = (ensemble_recall >= 0.30).
+- REQ-VERIFY-142-2: gate_note shall be 'Exp 644 VR #17 UNBLOCKED' when gate_open == True, else 'Exp 644 VR #17 BLOCKED — combined recall below 0.30 threshold'.
+- REQ-VERIFY-142-3: retro_070_resolved = (ensemble_recall >= 0.30).
+- REQ-VERIFY-142-4: honest_verdict shall be 'gate_open_vr_unblocked' when gate_open, else 'gate_closed_recall_below_threshold'.
+
+**Implementation Status:** Implemented (scripts/experiment_643_ensemble_gate_v2.py, Exp 643)
+
+### SCENARIO-VERIFY-186: Ensemble Gate Opens When Any Signal Fires
+
+Given: interwhen_hit=False, hermes_hit=False, causal_hit=True for an incorrect response.
+When: OR ensemble is computed.
+Then: ensemble_hit == True for that response.
+
+**Implementation Status:** Implemented (Exp 643)
+
+### SCENARIO-VERIFY-187: Ensemble Gate Closed When Combined Recall Below Threshold
+
+Given: ensemble_recall < 0.30 across the 25-question incorrect sample.
+When: gate decision is computed.
+Then: gate_open == False and honest_verdict == 'gate_closed_recall_below_threshold'.
+
+**Implementation Status:** Implemented (Exp 643)
