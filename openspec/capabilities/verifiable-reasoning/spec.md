@@ -11747,6 +11747,37 @@ Then: Agent1 extracts numeric entities, Agent2 forms arithmetic claims, Agent3 e
 **Implementation Status:** Implemented (Exp 617)
 
 
+## REQ-EXTRACT-054: TRUST Agents Full Comparison on Extended Corpus (Exp 623)
+
+**Context:**
+    Exp 617 ran a 25+10 diagnostic gate.  This requirement specifies the full statistical
+    comparison on the extended corpus (50 incorrect + 20 correct) to determine whether
+    TrustAgentsExtractor should replace LLMAsExtractorV1 as the default extractor.
+
+- REQ-EXTRACT-054-1: Exp 623 must run both extractors on 50 known-incorrect and 20 known-correct responses from fover_corpus_v5.json.
+- REQ-EXTRACT-054-2: Per-response comparison must classify each response into: only_llm_v1, only_trust, both, neither.
+- REQ-EXTRACT-054-3: best_extractor = 'trust_agents' if trust_recall > v1_recall, else 'llm_v1'.
+- REQ-EXTRACT-054-4: recommendation = 'Adopt TRUST Agents as default' if trust_recall > v1_recall + 0.05, else 'Keep LLMAsExtractorV1 (trust not significantly better)'.
+- REQ-EXTRACT-054-5: honest_verdict = 'trust_better' if trust_recall > v1_recall + 0.05, else 'v1_better_or_equivalent'.
+- REQ-EXTRACT-054-6: Artifact schema = 'carnot.trust_agents_comparison.v1'.
+
+### SCENARIO-EXTRACT-092: Full Comparison — CI Mode Both Extractors
+
+Given: Both extractors in CI mode (llm_caller=None).
+When: comparison runs on 50 incorrect + 20 correct responses.
+Then: both extractors return only StepSegmentEvalChain results (trust returns []), recall and fp_rate are computed correctly, all artifact fields are present.
+
+**Implementation Status:** Implemented (Exp 623)
+
+### SCENARIO-EXTRACT-093: Full Comparison — Per-Response Classification
+
+Given: A set of responses processed by both extractors.
+When: per-response comparison is computed.
+Then: each response is classified into exactly one of {only_llm_v1, only_trust, both, neither} with n_only_v1 + n_only_trust + n_both + n_neither == 50 (for incorrect) and consistent with recall values.
+
+**Implementation Status:** Implemented (Exp 623)
+
+
 ## REQ-VERIFY-120: JEPA v13 OOD Generalization with CAPO (AUC >= 0.75)
 
 **Context:**

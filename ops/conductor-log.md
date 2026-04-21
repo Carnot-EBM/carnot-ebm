@@ -2362,3 +2362,4 @@ python/ |
 | 2026-04-21 03:30 UTC | Exp 620: Live VR Attempt #15 — GATED on Exp 617 ga | OK | 81 passed, 2 warnings in 15.45s |
 | 2026-04-21 03:43 UTC | Exp 621: MetaJuLS Online Adaptation — Meta-RL Cons | OK | 81 passed, 2 warnings in 17.20s |
 | 2026-04-21 03:56 UTC | Exp 622: NUP Probe v6 Tier 0c Cascade Wire-In — AU | OK | 145 passed, 2 warnings in 3.81s |
+| 2026-04-21 05:01 UTC | Exp 623: TRUST Agents Multi-Agent Claim Extraction | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
