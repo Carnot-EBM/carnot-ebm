@@ -13094,3 +13094,48 @@ When: compute() is called.
 Then: gate_open=False (hermes_v2=0.90 does not rescue the gate; neither formula condition met).
 
 **Implementation Status:** Implemented (tests/python/test_ensemble_gate_v4.py, Exp 667)
+
+## REQ-VERIFY-149: VR Attempt 18 v2 — Structured-Forcing Pipeline (RETRO-033 attempt 19)
+
+**Why this requirement exists:**
+    RETRO-033 has been open for 18 consecutive VR attempts with 0% signed improvement.
+    All prior attempts attacked extraction (regex, LLM-extractor, Z3, HERMES) on models
+    that wrote arithmetic in natural language prose.  REQ-VERIFY-149 defines the first
+    attempt that changes generation rather than extraction, using StructuredEquationForcer
+    to force COMPUTE: X op Y = Z format at generation time.
+
+    EnsembleGate v4 (Exp 667, gate_open=True) authorized this attempt.
+
+- REQ-VERIFY-149-1: Exp 668 shall read results/experiment_667_gate_v4_redesign.json before
+  proceeding; if gate_open=False or file missing, write a blocked artifact and exit 0.
+- REQ-VERIFY-149-2: Exp 668 shall run baseline verification on 25 GSM8K questions using
+  the pre-recorded is_correct field from live_pairs_578.json.
+- REQ-VERIFY-149-3: Exp 668 shall generate forced responses using StructuredEquationForcer
+  with the COMPUTE: system prompt addendum and measure structured_forcing_recall.
+- REQ-VERIFY-149-4: signed_improvement shall equal post_accuracy minus baseline_accuracy.
+- REQ-VERIFY-149-5: honest_verdict shall be:
+  - 'vr_positive' if signed_improvement > 0.0 AND inference_mode == 'live_gpu'
+  - 'vr_no_improvement' if signed_improvement <= 0.0 AND inference_mode == 'live_gpu'
+  - 'vr_blocked' if gate was closed or GPU not available
+  - 'ci_only' if no live GPU
+- REQ-VERIFY-149-6: artifact shall include: signed_improvement, baseline_accuracy,
+  post_accuracy, n_questions, inference_mode, forcing_applied, retro_033_attempt=19,
+  structured_forcing_recall.
+
+**Implementation Status:** Implemented (scripts/experiment_668_vr_attempt_18_v2.py, tests/python/test_experiment_668_vr_attempt_18_v2.py, Exp 668)
+
+### SCENARIO-VERIFY-196: Gate Blocks When EnsembleGate v4 gate_open=False
+
+Given: results/experiment_667_gate_v4_redesign.json with gate_open=False.
+When: Exp 668 main() is called.
+Then: honest_verdict='vr_blocked', forcing_applied=False, signed_improvement=0.0, exit 0.
+
+**Implementation Status:** Implemented (scripts/experiment_668_vr_attempt_18_v2.py, tests/python/test_experiment_668_vr_attempt_18_v2.py)
+
+### SCENARIO-VERIFY-197: Honest Verdict Is vr_positive When signed_improvement > 0 on Live GPU
+
+Given: inference_mode='live_gpu', signed_improvement=0.12.
+When: compute_honest_verdict() is called.
+Then: honest_verdict='vr_positive'.
+
+**Implementation Status:** Implemented (scripts/experiment_668_vr_attempt_18_v2.py, tests/python/test_experiment_668_vr_attempt_18_v2.py)
