@@ -68,6 +68,7 @@ from carnot.models.symbolic_kan_energy import (
     SymbolicKANEnergy,
     SymbolicKANLayer,
 )
+from carnot.models.otv_verifier import OTVVerificationHead, OTVTrainer
 
 __all__ = [
     "BoltzmannConfig",
@@ -123,4 +124,6 @@ __all__ = [
     "SymbolicActivation",
     "SymbolicKANEnergy",
     "SymbolicKANLayer",
+    "OTVVerificationHead",
+    "OTVTrainer",
 ]

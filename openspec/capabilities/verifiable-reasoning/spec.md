@@ -12414,3 +12414,52 @@ When: fit() is called.
 Then: self.T remains within [0.1, 10.0] at all optimisation steps.
 
 **Implementation Status:** Implemented (Exp 646)
+
+## REQ-VERIFY-145: OTVVerifier Single-Pass Verification Head
+
+The repository shall provide an OTV-style (One-Token Verifier) verification head that
+estimates reasoning correctness in a single forward pass, where:
+
+- OTVVerificationHead accepts an input_dim (default 128) and hidden_dim (default 64) and
+  exposes W1, W2, b1, b2 weight arrays initialised to zeros
+- forward(x) computes: h = relu(x @ W1 + b1); return sigmoid(h @ W2 + b2)[0]
+- feature_vector(response) extracts a 128-dim feature vector from response text statistics:
+  response length / 1000, unique word ratio, digit density, arithmetic operator density,
+  padded to 128 dims with zeros
+- OTVTrainer accepts a head and lr (default 0.01) and trains with binary cross-entropy
+  for n_epochs iterations over a list of (response, is_correct) pairs
+- The trained head shall achieve AUC-ROC on the FOVER test set no more than 0.05 below
+  the EORM AUC baseline (otv_viable flag in experiment artifact)
+
+### REQ-VERIFY-145-1: OTVVerificationHead zero initialisation
+W1 shape is (input_dim, hidden_dim), W2 shape is (hidden_dim, 1), b1 shape is (hidden_dim,), b2 shape is (1,).
+
+### REQ-VERIFY-145-2: OTVVerificationHead forward pass
+forward(x) returns a float in [0, 1].
+
+### REQ-VERIFY-145-3: OTVVerificationHead feature_vector
+feature_vector(response) returns a jnp.ndarray of shape (128,) with non-negative values.
+
+### REQ-VERIFY-145-4: OTVTrainer binary cross-entropy training
+train(pairs, n_epochs) returns an OTVVerificationHead with updated weights.
+
+### REQ-VERIFY-145-5: OTV export from carnot.models
+OTVVerificationHead and OTVTrainer shall be exported from carnot.models.
+
+**Implementation Status:** Implemented (Exp 647)
+
+### SCENARIO-VERIFY-192: OTVVerificationHead Forward Pass Shape
+
+Given: OTVVerificationHead(input_dim=128, hidden_dim=64) with zero weights.
+When: forward(jnp.zeros(128)) is called.
+Then: result is a float equal to 0.5 (sigmoid of zero).
+
+**Implementation Status:** Implemented (Exp 647)
+
+### SCENARIO-VERIFY-193: OTVTrainer Improves AUC Over Epochs
+
+Given: OTVTrainer with OTVVerificationHead and a small set of labeled response pairs.
+When: train(pairs, n_epochs=50) is called.
+Then: the returned head produces AUC-ROC > 0.5 on the training set (better than random).
+
+**Implementation Status:** Implemented (Exp 647)
