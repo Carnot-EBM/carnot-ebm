@@ -2407,3 +2407,4 @@ python/ |
 | 2026-04-21 17:33 UTC | Exp 650: KAEM Multilevel Sparse (RETRO-057 carry 5) | OK | multilevel_sparse_no_improvement; multilevel_sparse_vs_dense_error=13.01 > sparse_only=0.429; RETRO-057 remains open |
 | 2026-04-21 17:35 UTC | Exp 650: LowRankKAEM Multilevel + Sparse Combined  | OK | 88 passed, 2 warnings in 8.39s |
 | 2026-04-21 17:47 UTC | Exp 651: Milestone 2026.04.49 Operational Retrospe | OK | 81 passed, 2 warnings in 8.26s |
+| 2026-04-21 18:08 UTC | Exp 652: Prompt-Injection EBM Classifier v1 — Dist | OK | 81 passed, 2 warnings in 7.23s |
