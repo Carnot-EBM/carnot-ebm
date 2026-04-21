@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-21 Milestone 2026.04.50 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-21T18:31:49Z | 2026-04-21T18:38:32Z | Continued from prior session (context compaction). Created research-roadmap-next.yaml (14 experiments 652-665 for milestone 2026.04.50) with complete conductor prompts. Updated ops/changelog.md. All prompts follow CONTEXT/EXISTING CODE/TASK/CONCRETE STEPS format, end with JAX_PLATFORMS=cpu pytest and "Do NOT push. Do NOT modify scripts/research_conductor.py." | ~30k |
+
+---
+
 ## Session: 2026-04-21 Milestone 2026.04.49 Planning
 
 ### Turn Log

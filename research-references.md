@@ -4,6 +4,29 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-21 arxiv Scan (Milestone 2026.04.50 Planning)
+
+### SpecGuard — Verification-Aware Speculative Decoding for Step-Level Reasoning
+- **Paper:** arXiv 2604.15244 (April 2026)
+- **What:** SpecGuard performs step-level verification using only model-internal signals: log-probability-based verification (LPBV) scores the probability that the generated step is consistent with prior steps, and attention-based grounding verification (ABGV) checks whether tokens are grounded in the input. No external verifier calls required during generation — pure internal signal, sub-millisecond per step.
+- **Relevance to Carnot:** Carnot's cascade currently needs SymCodeVerifier (Python eval) or HERMES v2 (LLM call) for step-level arithmetic verification — both require external compute. SpecGuard offers a Tier 0f signal that's faster than anything in the cascade: one dot product per step over frozen model weights. If ABGV attention signal correlates with arithmetic violations, it becomes the cheapest reliable early-exit before SinkProbe (Tier 1). The log-prob ratio (LPBV) is architecturally identical to SpilledEnergyDetector (Tier 0b) but applied at step boundaries rather than per-token.
+- **Concrete experiment:** Exp 658 (SpecGuardVerifier): implement LPBV + ABGV step-boundary verification using cached logits from Qwen3.5-0.8B generation. Compute step-boundary log-prob ratio and attention concentration for each CoT step. Train a lightweight classifier on FOVER corpus. Compare AUC vs SymCodeVerifier on live_pairs_578.json. If AUC >= 0.70, deploy as Tier 0f.
+- **When to incorporate:** Milestone 2026.04.50 — Phase 3 new research (Exp 658).
+
+### HALP — Pre-Generative Hallucination Detection from Internal Model States
+- **Paper:** arXiv 2603.05465 (March 2026)
+- **What:** HALP predicts hallucination risk from pre-generative internal states (pooled visual features and decoder activations) using a simple MLP probe. Key insight: the model's internal state at the end of reading the question contains sufficient information to predict whether the response will hallucinate — before a single output token is generated. Achieves 0.93 AUROC without any token generation.
+- **Relevance to Carnot:** Carnot's JEPA predictor (Tier 2) operates on partial responses (prefix fraction = 50%). HALP's pre-generative approach would move detection even earlier: predict at the question-end hidden state whether the model will produce an incorrect answer. This maps directly to Carnot's Tier 0 (before any generation): extract the question-end hidden state from Qwen3.5-0.8B, pass through a 2-layer MLP trained on FOVER corpus, get a pre-generation risk score. If score > threshold, prompt with a structured equation forcing hint before generation even starts.
+- **Concrete experiment:** Exp 663 (HALPProbe): extract question-end decoder activations from Qwen3.5-0.8B on FOVER corpus. Train 2-layer MLP probe. Compare AUC vs EORM on same test set. If AUC >= 0.75, wire into VerifyRepairPipeline as Tier 0g (pre-generative gate).
+- **When to incorporate:** Milestone 2026.04.50 — Phase 6 new research (Exp 663).
+
+### LSEBMCL — Latent Space EBM for Continual Learning Without Catastrophic Forgetting
+- **Paper:** arXiv 2501.05495 (January 2026)
+- **What:** Uses an EBM to sample from the distribution of previous task data, enabling exact replay without storing raw examples. The EBM models the latent distribution of past examples; when training on new tasks, the EBM generates replay samples that prevent catastrophic forgetting. Demonstrated on NLP tasks including reasoning.
+- **Relevance to Carnot:** Carnot's Tier 2 constraint memory (ConstraintTemplateLibrary) accumulates patterns across sessions but loses old patterns when new sessions overwrite weights. LSEBMCL's EBM replay applies directly: train an Ising EBM on the current session's violation distribution; when the next session starts, sample from the EBM to replay past violations alongside new ones. This maintains constraint coverage without storing raw examples — the energy function IS the memory. Directly implements Tier 2 of the self-learning roadmap.
+- **Concrete experiment:** Exp 660 (LSEBMCLConstraintMemory): implement EBM replay for ConstraintTemplateLibrary. After session 1, train a small IsingEBM on the violation feature vectors. In session 2, sample from the EBM to augment new violations before updating template weights. Measure: does catastrophic forgetting reduce? Compare with/without EBM replay on 3 sequential sessions.
+- **When to incorporate:** Milestone 2026.04.50 — Phase 4 self-learning (Exp 660).
+
 ## 2026-04-21 arxiv Scan (Milestone 2026.04.49 Planning)
 
 ### Parallel Densely Connected Probabilistic Ising Machine with Inertia
