@@ -486,6 +486,11 @@ from carnot.pipeline.fact_e_probe import (  # noqa: E402
 from carnot.pipeline.symcode_verifier import (  # noqa: E402
     SymCodeVerifier,
 )
+from carnot.pipeline.oracle_corpus_builder import (  # noqa: E402
+    OracleCorpusBuilder,
+    OracleChain,
+    StepLabel,
+)
 from carnot.pipeline.metajuls_adapter import (  # noqa: E402
     ExtractorPolicy,
     MetaJuLSAdapter,
@@ -818,6 +823,9 @@ __all__ = [
     "CausalStepDependency",
     "FACTEFaithfulnessProbe",
     "SymCodeVerifier",
+    "OracleCorpusBuilder",
+    "OracleChain",
+    "StepLabel",
     "ExtractorPolicy",
     "MetaJuLSAdapter",
     "InterWhenMonitor",
