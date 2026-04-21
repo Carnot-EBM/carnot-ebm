@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-21 (Exp 633: HERMES Tool-Augmented Verification Adapter)
+
+- 2026-04-21 11:54 UTC: Exp 633 — HERMES Tool-Augmented Verification Adapter. Step-by-step formal verification (arXiv 2511.18760) over IT-model outputs. HERMES detected 3 true positives with 2 false positives (hermes_fp_rate=0.2). Recall=0.12 vs v1 baseline=0.04 (3x improvement). Absolute performance remains low; false positive rate is significant. honest_verdict=hermes_improved.
+
 ## 2026-04-21 (Milestone 2026.04.47 Operational Retrospective)
 
 - 2026-04-21 08:09 UTC: Exp 627 — InterWhen Mid-Generation Monitor. SymCodeVerifier at sentence boundaries (arXiv 2602.11202). Early detection achieved (early_detection_rate=1.0, avg_sentences_before_detection=0.0) but recall remains constrained (interwhen_recall=0.12, interwhen_tp=3/25_incorrect) with high FP rate (interwhen_fp_rate=0.4). retro_070_partial=true — intermediate verification framework shows promise but requires architectural refinement. honest_verdict=interwhen_improved.
