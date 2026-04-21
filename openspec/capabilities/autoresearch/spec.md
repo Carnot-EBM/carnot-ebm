@@ -2003,6 +2003,45 @@ Spec: REQ-LEARN-081
 
 ---
 
+### REQ-LEARN-082: FR-11 Relay v3 — ConstraintAdditionFromMemory Updates from Real Violations When Available, Ensemble-Detected Violations When VR Blocked
+
+When Exp 644 (live VR attempt 17) reports signed_improvement > 0,
+the FR-11 relay experiment shall feed those REAL violations into ConstraintAdditionFromMemory
+and record fr11_mode='real_violations'.
+
+When Exp 644 is blocked but Exp 643 (Ensemble Recall Gate v2) reports gate_open=True AND
+ensemble_tp > 0, the relay shall use ensemble-detected violations as a semi-real proxy
+and record fr11_mode='semi_real_ensemble'.
+
+Otherwise the relay generates 25 synthetic arithmetic violations
+(fr11_mode='synthetic_fallback').
+
+All modes record: schema='carnot.tier1_fr11_relay.v3', mode, n_violations_used,
+fr11_real_violations_confirmed, fp_rate_before, fp_rate_after, fp_rate_delta,
+honest_verdict.
+
+Spec: REQ-LEARN-082
+
+### SCENARIO-LEARN-128: Semi-Real Ensemble Relay v3 Fires When Exp 644 Is Blocked but Exp 643 Gate Is Open
+
+**Given** Exp 644 reports signed_improvement <= 0
+**And** Exp 643 shows gate_open = True and ensemble_tp > 0
+**When** the Tier 1 FR-11 relay v3 runs
+**Then** ensemble-detected violations from Exp 643 are fed to ConstraintAdditionFromMemory
+**And** fr11_real_violations_confirmed = False
+**And** honest_verdict = 'semi_real_ensemble_relay'
+
+### SCENARIO-LEARN-129: Synthetic-Fallback Relay v3 Fires When Both Exp 644 and Exp 643 Are Blocked
+
+**Given** Exp 644 is blocked (signed_improvement <= 0)
+**And** Exp 643 shows gate_open = False or ensemble_tp = 0
+**When** the Tier 1 relay v3 runs
+**Then** 25 synthetic arithmetic violations are generated
+**And** fr11_real_violations_confirmed = False
+**And** honest_verdict = 'synthetic_fallback_relay'
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2075,3 +2114,4 @@ Spec: REQ-LEARN-081
 | REQ-LEARN-079 | N/A | Implemented | Python (test_metajuls_adapter.py) |
 | REQ-LEARN-080 | N/A | Implemented | Python (test_experiment_625_fr11_relay.py) |
 | REQ-LEARN-081 | N/A | Implemented | Python (test_experiment_638_fr11_relay.py) |
+| REQ-LEARN-082 | N/A | Implemented | Python (test_experiment_645_fr11_relay.py) |
