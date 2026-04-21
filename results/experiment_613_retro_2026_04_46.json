@@ -1,0 +1,116 @@
+{
+  "experiment": 613,
+  "title": "Milestone 2026.04.46 Retrospective",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T00:19:27Z",
+  "finished_at": "2026-04-21T00:19:27Z",
+  "duration_s": 0.0,
+  "status": "success",
+  "schema": "carnot.operational_retro.v21",
+  "milestone": "2026.04.46",
+  "n_experiments_run": 14,
+  "n_not_run": 0,
+  "total_wall_time_minutes": 16.677,
+  "mean_time_min": 1.191,
+  "wall_time_vs_prior_delta_minutes": 16.362,
+  "retro_033_resolved": false,
+  "retro_049_resolved": true,
+  "retro_067_resolved": true,
+  "retro_068_resolved": false,
+  "retro_069_resolved": false,
+  "fr11_confirmed": true,
+  "dwave_wired": true,
+  "corpus_expanded": true,
+  "manifest_verified": true,
+  "coace_v4_recall": 0.04,
+  "dsvd_live_auc": 0.15853658536585366,
+  "nup_v6_auc": 0.9642857142857143,
+  "fpga_rtl_created": true,
+  "retro_closure_rate": 0.167,
+  "open_retro_count": 11,
+  "new_retro_items": [
+    {
+      "id": "RETRO-070",
+      "title": "Live VR precision \u2014 14+ attempts, zero positives",
+      "opened_milestone": "2026.04.46",
+      "carry_count": 0,
+      "description": "Exp 609 (CoACEV4 live VR, attempt #14) was blocked: gate_open=False, signed_improvement=0.0.  The pattern-matching extractor (CoACEV4) achieved v4_recall=0.04 \u2014 identical to v3.  Fourteen consecutive zero-positive VR attempts confirm that incremental extractor tuning cannot close the offline/live distribution gap.  The root cause is architectural: the extractor uses regex/pattern matching against synthetic training data while live model outputs use natural language phrasing.  Resolution requires LLM-as-extractor redesign using Qwen3.5-0.8B as the extraction LLM (Goal #1b, research-program.md).  Escalate to LLM-as-extractor before scheduling attempt #15.",
+      "priority": "critical"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=4",
+      "action_required": "Verify closure in result files before .47 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q verify-repair precision \u2014 14+ attempts, still not closed",
+      "carry_count": ">=14",
+      "action_required": "Blocked: gate_open=False (CoACEV4 recall=4%).  Fourteen zero-positive attempts confirm pattern matching cannot cross the gap.  Do NOT schedule attempt #15 until LLM-as-extractor redesign is complete (RETRO-070).  The extractor must use Qwen3.5-0.8B as the extraction LLM, not regex."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 200q VeriCoT+Wilson CI \u2014 9+ attempts, still not closed",
+      "carry_count": ">=9",
+      "action_required": "Same root cause as RETRO-033. Block until recall > 30%."
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": ">=3",
+      "action_required": "Architectural redesign needed. Calibration layer approach exhausted."
+    },
+    {
+      "id": "RETRO-060",
+      "title": "JEPA architecturally anti-correlated \u2014 superseded by RETRO-063",
+      "carry_count": ">=3",
+      "action_required": "RETRO-063 validated.  JEPA v12 OOD generalization confirmed by Exp 607.  Close RETRO-060 tracking \u2014 the architecture is sound."
+    },
+    {
+      "id": "RETRO-064",
+      "title": "CoACE recall 5.9% on live data \u2014 pipeline accuracy lift undetectable",
+      "carry_count": 3,
+      "action_required": "v4_recall=0.04 \u2014 same as v3 (RETRO-068).  LLM-as-extractor redesign is required (RETRO-070)."
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL unavailable \u2014 hardware energy calibration blocked",
+      "carry_count": 3,
+      "action_required": "Need Intel RAPL or AMD Energy driver on test machine"
+    },
+    {
+      "id": "RETRO-066",
+      "title": "CoACE offline/live distribution gap \u2014 v4 did not improve",
+      "carry_count": 2,
+      "action_required": "v4_recall=0.04 matches v3.  Architecture alone cannot fix training distribution mismatch.  LLM-as-extractor is the only viable path."
+    },
+    {
+      "id": "RETRO-068",
+      "title": "CoACEV4 live recall 4% \u2014 below 20% gate threshold",
+      "carry_count": 1,
+      "action_required": "Implement LLM-as-extractor using Qwen3.5-0.8B (RETRO-070).  Gate RETRO-068 closure on live recall >= 20%."
+    },
+    {
+      "id": "RETRO-069",
+      "title": "DSVD fine-tune live AUC 0.158 \u2014 far below 0.80 threshold",
+      "carry_count": 1,
+      "action_required": "Fine-tuning did not close the offline/live gap (0.158 vs threshold 0.80).  DSVD needs the same LLM-as-extractor rethink as CoACE.  Gate RETRO-069 closure on live AUC >= 0.80 after extractor redesign."
+    },
+    {
+      "id": "RETRO-070",
+      "title": "LLM-as-extractor redesign \u2014 mandatory before attempt #15",
+      "carry_count": 0,
+      "action_required": "Implement Qwen3.5-0.8B as the extraction LLM (Goal #1b).  No more pattern matching against live model outputs."
+    }
+  ],
+  "top_priorities_for_47": [
+    "CoACEV4 recall still below 20% after 14 attempts \u2014 implement full LLM-as-extractor using Qwen3.5-0.8B as the extraction LLM (Goal #1b, RETRO-070).  No more pattern matching.  Target: live recall >= 20% before scheduling attempt #15.",
+    "Install Vivado 2023.2 (human action required) + synthesize KV260 bitfile for FPGA hardware benchmark.  Exp 612 created the synchronous p-bit Ising RTL (synchronous_rtl_created=True).  The RTL is ready for synthesis \u2014 only Vivado installation is blocking.  This is a quick win once installed: run synthesis, capture resource utilisation and timing closure report, and publish as the first Carnot FPGA hardware result.",
+    "MetaJuLS meta-RL constraint propagation (arXiv 2601.00095) \u2014 online adaptation of CoACE weights from live inference batches.  This is the next-generation alternative to static offline retraining: use meta-RL to update CoACE constraints in real time as the model sees live outputs.  If the LLM-as-extractor approach (RETRO-070) does not reach 20% recall in milestone .47, MetaJuLS is the fallback strategy."
+  ],
+  "honest_verdict": "probe_and_manifest_closed_recall_still_blocked",
+  "env_autofix": true
+}
