@@ -1,0 +1,57 @@
+{
+  "experiment": 636,
+  "title": "FPGA TCL v2 Update",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T12:54:30Z",
+  "finished_at": "2026-04-21T12:54:39Z",
+  "duration_s": 8.794,
+  "status": "success",
+  "artifact_type": "carnot.fpga_tcl_v2.v1",
+  "tcl_v2_written": "hardware/kv260/synth_ising_v2.tcl",
+  "tcl_check": {
+    "tcl_exists": true,
+    "top_module_ok": true,
+    "rtl_file_ok": true,
+    "output_dir_ok": true
+  },
+  "vivado_installed": false,
+  "synthesis_succeeded": "not_attempted",
+  "synthesis_details": {
+    "synthesis_succeeded": "not_attempted",
+    "reason": "vivado_not_installed",
+    "installation_steps": [
+      "Download Vivado 2023.2 from https://www.xilinx.com/support/download.html",
+      "Run: bash Xilinx_Unified_2023.2_<date>_<ver>_Lin64.bin",
+      "Select 'Vivado ML Edition' and include 'Zynq UltraScale+ MPSoC' device support",
+      "Install KV260 board files: copy board_files/kv260/ to Vivado board repository",
+      "Add Vivado bin/ directory to PATH",
+      "Verify: vivado -version",
+      "Then run: vivado -mode batch -source hardware/kv260/synth_ising_v2.tcl"
+    ]
+  },
+  "simulation_validated": true,
+  "est_lut_reduction": 0.5,
+  "sim_sync_energy": -17.63722299404207,
+  "sim_async_energy": -8.528742509169488,
+  "honest_verdict": "tcl_updated_synthesis_deferred",
+  "schema": [
+    "artifact_type",
+    "duration_s",
+    "est_lut_reduction",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "run_date",
+    "sim_async_energy",
+    "sim_sync_energy",
+    "simulation_validated",
+    "started_at",
+    "status",
+    "synthesis_details",
+    "synthesis_succeeded",
+    "tcl_check",
+    "tcl_v2_written",
+    "title",
+    "vivado_installed"
+  ]
+}

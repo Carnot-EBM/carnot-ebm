@@ -1336,3 +1336,28 @@ When: KnotRefinementInterpolator(layer, 32).interpolate() is called.
 Then: The returned layer has n_knots=32 and control_points.shape == (n_vars, 32).
 
 **Implementation Status:** Implemented (Exp 634)
+
+## REQ-SAMPLE-039: synth_ising_v2.tcl — Vivado Synthesis Script Targeting ising_sampler_v2.v (Exp 636)
+
+hardware/kv260/synth_ising_v2.tcl SHALL be a Vivado batch-mode synthesis script that
+targets ising_sampler_v2.v (module ising_sampler_128_sync, synchronous p-bit design)
+rather than ising_sampler_v1.v.  The script is derived from synth_ising.tcl with all
+references updated for v2.
+
+- REQ-SAMPLE-039-1: rtl_files SHALL list hardware/kv260/ising_sampler_v2.v (not v1).
+- REQ-SAMPLE-039-2: top_module SHALL be ising_sampler_128_sync (v2 module name).
+- REQ-SAMPLE-039-3: output_dir SHALL be output/carnot_ising_synth_v2 (separate from v1).
+- REQ-SAMPLE-039-4: The bitfile path SHALL be output/carnot_ising_synth_v2/carnot_ising_v2.bit.
+- REQ-SAMPLE-039-5: A comment block at the top SHALL identify the file as targeting v2 and
+  reference Exp 636.
+
+**Implementation Status:** Implemented (Exp 636)
+
+### SCENARIO-SAMPLE-065: synth_ising_v2.tcl References v2 Module and File
+
+Given: The file hardware/kv260/synth_ising_v2.tcl exists.
+When: The file content is inspected for module name and RTL source path.
+Then: top_module contains "ising_sampler_128_sync", rtl_files contains "ising_sampler_v2.v",
+and output_dir contains "carnot_ising_synth_v2".
+
+**Implementation Status:** Implemented (Exp 636)
