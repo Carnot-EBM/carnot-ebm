@@ -1,0 +1,44 @@
+/*
+ * Device-tree overlay for the Carnot Ising sampler on KV260.
+ *
+ * Why this file exists:
+ *   xmutil loadapp reprograms the PL region, but the kernel still needs a
+ *   device-tree node describing the new fabric-side peripherals so user-space
+ *   drivers (or /dev/mem mmap) can find them.  Without this overlay the PL
+ *   loads silently but no peripheral appears under /sys/bus/platform — the
+ *   fabric "exists" but no OS-visible handle.
+ *
+ * What this overlay declares:
+ *   One AXI-Lite slave at 0xA000_0000, 128 KB window (matching the address
+ *   assignment from hardware/kv260/build_bd.tcl: assign_bd_address picks
+ *   0xA000_0000 [128K] for the ising_sampler_128_sync cell).  Clock source is
+ *   pl_clk0 from the PS (CLK_LPD[0] = 0x47 for K26).  Compatible string is
+ *   generic-uio so userspace can mmap /dev/uio* without a kernel driver —
+ *   this matches the AXI mmap flow in
+ *   scripts/experiment_661_kv260_n64_benchmark.py (KRIA_AXI_HELPER block).
+ *
+ *   If/when we write a proper in-kernel driver, flip the compatible string to
+ *   "carnot,ising-sampler-v1" and load that module before xmutil loadapp.
+ */
+/dts-v1/;
+/plugin/;
+
+/ {
+	compatible = "xlnx,zynqmp";
+
+	fragment@0 {
+		target = <&amba>;
+		__overlay__ {
+			#address-cells = <2>;
+			#size-cells = <2>;
+
+			ising_sampler@a0000000 {
+				compatible = "generic-uio";
+				reg = <0x0 0xa0000000 0x0 0x20000>;  /* 128 KB @ 0xA000_0000 */
+				clocks = <&zynqmp_clk 0x47>;          /* pl_clk0 */
+				clock-names = "s_axi_aclk";
+				status = "okay";
+			};
+		};
+	};
+};
