@@ -533,6 +533,10 @@ from carnot.pipeline.ensemble_gate_v3 import (  # noqa: E402
     EnsembleGateV3Result,
     EnsembleRecallGateV3,
 )
+from carnot.pipeline.specguard_verifier import (  # noqa: E402
+    SpecGuardStepResult,
+    SpecGuardVerifier,
+)
 
 __all__ = [
     "AgentStep",
@@ -882,4 +886,6 @@ __all__ = [
     "HermesV2StructuredResult",
     "EnsembleGateV3Result",
     "EnsembleRecallGateV3",
+    "SpecGuardStepResult",
+    "SpecGuardVerifier",
 ]

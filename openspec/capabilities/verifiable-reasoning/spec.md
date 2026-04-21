@@ -12767,3 +12767,64 @@ Then: results/experiment_657_jepa_cascade_deploy.json has platt_deployed=True,
       honest_verdict in {'jepa_v14_deployed_ece_met', 'jepa_v14_deployed_ece_missed', 'jepa_v14_regression'}.
 
 **Implementation Status:** Implemented (scripts/experiment_657_jepa_cascade_deploy.py, Exp 657)
+
+## REQ-VERIFY-152: SpecGuardVerifier — LPBV Log-Prob Step Rejection
+
+SpecGuardVerifier shall implement Log-Probability-Based Verification (LPBV) for per-step
+hallucination detection, as described in arXiv 2604.15244.
+
+- REQ-VERIFY-152-1: _compute_lpbv(step_text, token_logprobs) shall return a float in [0, 1] where higher = more suspicious.
+- REQ-VERIFY-152-2: When token_logprobs is provided, score = clamp(-mean_logprob / 10.0, 0, 1).
+- REQ-VERIFY-152-3: When token_logprobs is None, score = clamp(len(step_text) / 200.0, 0, 1) (length proxy fallback).
+- REQ-VERIFY-152-4: SpecGuardStepResult dataclass shall contain: step_index (int), step_text (str), lpbv_score (float), abgv_score (float), combined_score (float), step_rejected (bool).
+
+**Implementation Status:** Implemented (python/carnot/pipeline/specguard_verifier.py, Exp 658)
+
+## REQ-VERIFY-153: SpecGuardVerifier — ABGV Attention Grounding Check
+
+SpecGuardVerifier shall implement Attention-Based Grounding Verification (ABGV) for
+per-step grounding detection.
+
+- REQ-VERIFY-153-1: _compute_abgv(step_text, attention_weights) shall return a float in [0, 1] where higher = more ungrounded.
+- REQ-VERIFY-153-2: When attention_weights is provided, score = clamp(1.0 - max(attention_weights), 0, 1). Empty list maps to score=1.0.
+- REQ-VERIFY-153-3: When attention_weights is None, score = 0.0 if step_text contains any digit, else 0.5.
+- REQ-VERIFY-153-4: verify_step() shall blend LPBV and ABGV: combined_score = 0.5 * lpbv + 0.5 * abgv. step_rejected = (combined_score >= combined_threshold).
+
+**Implementation Status:** Implemented (python/carnot/pipeline/specguard_verifier.py, Exp 658)
+
+## REQ-VERIFY-154: SpecGuardVerifier — AUC Target on live_pairs_578
+
+SpecGuardVerifier shall be evaluated on live_pairs_578.json and report AUROC.
+
+- REQ-VERIFY-154-1: detection_score(response) shall split the response on sentence boundaries and return max combined_score across all segments. Returns 0.0 for empty response.
+- REQ-VERIFY-154-2: Exp 658 shall compute AUROC comparing detection_score >= 0.5 against is_correct labels on all pairs in live_pairs_578.json.
+- REQ-VERIFY-154-3: Exp 658 artifact shall include: schema='carnot.specguard_verifier.v1', n_pairs (int), specguard_auc (float), tier_0f_viable (bool), arxiv_ref='2604.15244', honest_verdict.
+- REQ-VERIFY-154-4: tier_0f_viable = (specguard_auc >= 0.70). honest_verdict = 'specguard_tier_0f_viable' if viable else 'specguard_below_threshold'.
+- REQ-VERIFY-154-5: SpecGuardVerifier and SpecGuardStepResult shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/specguard_verifier.py, scripts/experiment_658_specguard_verifier.py, Exp 658)
+
+### SCENARIO-VERIFY-206: LPBV Rejects Step with Very Low Log-Prob
+
+Given: SpecGuardVerifier() with default combined_threshold=0.5.
+When: verify_step(0, "result is 99", token_logprobs=[-10.0]) is called.
+Then: lpbv_score == 1.0, combined_score >= 0.5, step_rejected == True.
+
+**Implementation Status:** Implemented (tests/python/test_specguard_verifier.py, Exp 658)
+
+### SCENARIO-VERIFY-207: ABGV Rejects Ungrounded Step with Diffuse Attention
+
+Given: SpecGuardVerifier(combined_threshold=0.4).
+When: verify_step() is called with diffuse attention weights (max=0.1) and confident logprobs.
+Then: abgv_score == 0.9, combined_score >= 0.4, step_rejected == True.
+
+**Implementation Status:** Implemented (tests/python/test_specguard_verifier.py, Exp 658)
+
+### SCENARIO-VERIFY-208: Combined Verifier Evaluated on live_pairs_578
+
+Given: live_pairs_578.json with labelled question-response pairs.
+When: Exp 658 runs detection_score on each pair and computes AUROC.
+Then: specguard_auc is reported; tier_0f_viable reflects whether AUC >= 0.70;
+      honest_verdict is 'specguard_tier_0f_viable' or 'specguard_below_threshold'.
+
+**Implementation Status:** Implemented (scripts/experiment_658_specguard_verifier.py, Exp 658)
