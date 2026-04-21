@@ -22,7 +22,7 @@
 #
 #     ┌──────────────────────────┐
 #     │  zynq_ultra_ps_e_0 (PS)  │
-#     │  ─ FCLK_CLK0 @ 100 MHz   │────┐
+#     │  ─ FCLK_CLK0 @ 40 MHz    │────┐  (RETRO-073: dropped from 100 to 40 MHz
 #     │  ─ pl_resetn0            │    │
 #     │  ─ M_AXI_HPM0_FPD ──────────► │ axi_smartconnect_0 ─── S_AXI on
 #     └──────────────────────────┘    │                        ising_sampler_128_sync
@@ -129,7 +129,15 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e zynq_ultra_ps_e_0
 
 # Enable only the PL-facing interfaces we need:
 #   PSU__USE__M_AXI_GP0   ← M_AXI_HPM0_FPD (low-power domain, 32-bit AXI slave)
-#   PSU__FPGA_PL0_ENABLE  ← PL clock 0 (FCLK_CLK0) @ 100 MHz (default)
+#   PSU__FPGA_PL0_ENABLE  ← PL clock 0 (FCLK_CLK0) @ 40 MHz (RETRO-073:
+#                            dropped from the 100 MHz default because the N=64
+#                            build closed WNS=-11.916 ns at 100 MHz — worst
+#                            critical path is ~22 ns. 40 MHz (25 ns period)
+#                            gives ~3 ns positive slack with zero RTL/tool
+#                            risk. Throughput hit of 2.5x is acceptable for
+#                            pipeline validation; recover later via pipeline-
+#                            register insertion + Performance_Retiming impl
+#                            strategy (RETRO-073 options D + B).
 # Disable the other HPM/ACP ports to keep the design minimal.
 set_property -dict [list \
     CONFIG.PSU__USE__M_AXI_GP0         {1} \
@@ -140,7 +148,7 @@ set_property -dict [list \
     CONFIG.PSU__USE__S_AXI_GP2         {0} \
     CONFIG.PSU__FPGA_PL0_ENABLE        {1} \
     CONFIG.PSU__FPGA_PL1_ENABLE        {0} \
-    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {100} \
+    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {40} \
 ] [get_bd_cells zynq_ultra_ps_e_0]
 
 # --- AXI SmartConnect ---

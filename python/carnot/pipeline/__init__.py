@@ -525,6 +525,10 @@ from carnot.pipeline.structured_equation_forcer import (  # noqa: E402
     ForcedEquationResult,
     StructuredEquationForcer,
 )
+from carnot.pipeline.hermes_v2_structured_loop import (  # noqa: E402
+    HermesV2StructuredLoop,
+    HermesV2StructuredResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -870,4 +874,6 @@ __all__ = [
     "FORCER_SYSTEM_ADDENDUM",
     "ForcedEquationResult",
     "StructuredEquationForcer",
+    "HermesV2StructuredLoop",
+    "HermesV2StructuredResult",
 ]
