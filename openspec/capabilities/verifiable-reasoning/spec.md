@@ -12969,3 +12969,30 @@ Then: hallucination_score equals mean of the feature vector (not 0.5 baseline),
       and predicted_hallucinated reflects whether that mean >= 0.5.
 
 **Implementation Status:** Implemented (tests/python/test_halp_probe.py, Exp 663)
+
+## REQ-INFRA-092: DualGPURetrain — Proven Parallel EORM+JEPA on cuda:0 and cuda:1
+
+Exp 664 shall prove that DualGPU parallel retraining (from REQ-INFRA-091 / Exp 640) actually
+executes EORM training on cuda:0 and JEPA training on cuda:1 simultaneously, with measurable
+GPU-1 utilization during training (peak_gpu1_util > 50%).  The RETRO-071 item is resolved only
+when this condition is met on 2 GPUs; partial resolution is granted when a single GPU shows
+peak utilization > 80%.
+
+- REQ-INFRA-092-1: Exp 664 shall detect the number of available CUDA GPUs at runtime.
+- REQ-INFRA-092-2: When n_gpus >= 2: run EORM on cuda:0 and JEPA on cuda:1 via DualGPURetrain.run_parallel(); measure peak_gpu1_util via nvidia-smi polling.
+- REQ-INFRA-092-3: When n_gpus == 1: run both on cuda:0 (single_gpu_mode) as RETRO-071 partial resolution; measure peak_gpu0_util.
+- REQ-INFRA-092-4: When n_gpus == 0: write blocked artifact with honest_verdict='gpu_not_available'.
+- REQ-INFRA-092-5: The artifact shall include: schema='carnot.dualgpu_retrain.v1', n_gpus, dualgpu_mode, single_gpu_mode, eorm_result, jepa_result, peak_gpu1_util, retro_071_resolved, retro_071_partial, honest_verdict.
+- REQ-INFRA-092-6: retro_071_resolved shall be True iff peak_gpu1_util > 50 and n_gpus >= 2.
+- REQ-INFRA-092-7: retro_071_partial shall be True iff n_gpus == 1 (single-GPU fallback path).
+
+**Implementation Status:** Implemented (scripts/experiment_664_dualgpu_retrain.py, Exp 664)
+
+### SCENARIO-INFRA-099: DualGPU Retrain CI Stub Exits 0 Without CARNOT_FORCE_LIVE
+
+Given: CARNOT_FORCE_LIVE not set, CARNOT_IS_CI=1.
+When: experiment_664 main() runs.
+Then: A CI-stub artifact is written with status='ci_stub' and honest_verdict='ci_stub_no_live_gate',
+      and assert_deliverable_written() passes.
+
+**Implementation Status:** Implemented (tests/python/test_dualgpu_retrain_exp664.py, Exp 664)
