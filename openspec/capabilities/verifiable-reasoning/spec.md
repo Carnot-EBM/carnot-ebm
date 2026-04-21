@@ -13139,3 +13139,52 @@ When: compute_honest_verdict() is called.
 Then: honest_verdict='vr_positive'.
 
 **Implementation Status:** Implemented (scripts/experiment_668_vr_attempt_18_v2.py, tests/python/test_experiment_668_vr_attempt_18_v2.py)
+
+## REQ-VERIFY-150: ThreeTierPipeline Uses JEPA v14 + Platt Calibration as Default Tier 2
+
+**Why this requirement exists:**
+    Exp 646 demonstrated that JEPA v14 with Platt scaling reduces ECE from 0.191 to
+    0.023 (87.9% reduction), making it a superior Tier 2 scorer relative to the
+    uncalibrated EORM baseline.  However Exp 657 failed to deploy JEPA v14 because it
+    hardcoded the path to the Exp 646 result JSON, which was written to a different
+    location than expected.  This requirement defines the dynamic dependency loader that
+    searches for the Exp 646 result, extracts the Platt temperature T_optimal, and wires
+    it into ThreeTierPipeline so that Tier 2 energy scores are Platt-scaled before
+    comparison against eorm_threshold.
+
+- REQ-VERIFY-150-1: jepa_cascade_loader.find_exp646_result(project_root) shall glob
+  results/experiment_646_*.json, parse the first match, and return the parsed dict or
+  None if no file is found.
+- REQ-VERIFY-150-2: jepa_cascade_loader.extract_platt_temperature(result) shall return
+  result["T_optimal"] as a float or None if the key is absent.
+- REQ-VERIFY-150-3: PlattCalibratedJEPA dataclass shall hold platt_temperature (float),
+  model_path (str | None), and loaded (bool).
+- REQ-VERIFY-150-4: ThreeTierPipeline.__init__() shall accept an optional
+  platt_temperature: float | None = None parameter.  When set, Tier 2 shall scale the
+  raw EORM energy by 1/platt_temperature before comparing against eorm_threshold
+  (Platt scaling: effective_energy = raw_energy / T).
+- REQ-VERIFY-150-5: ThreeTierPipelineResult shall include a jepa_v14_deployed: bool
+  field that is True when platt_temperature was applied during the benchmark run.
+- REQ-VERIFY-150-6: Exp 670 shall call load_platt_jepa(project_root), instantiate
+  ThreeTierPipeline(platt_temperature=T), run benchmark on 20 synthetic responses, and
+  write honest_verdict="jepa_v14_deployed" when loaded=True.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/jepa_cascade_loader.py, python/carnot/pipeline/three_tier_pipeline.py, scripts/experiment_670_jepa_cascade_deploy.py, tests/python/test_jepa_cascade_loader.py, Exp 670)
+
+### SCENARIO-VERIFY-198: find_exp646_result Returns Parsed JSON When File Exists
+
+Given: a results/ directory containing experiment_646_jepa_v14_platt.json with a valid
+T_optimal field.
+When: find_exp646_result(project_root) is called.
+Then: the function returns a dict with key "T_optimal" and the file is matched via glob
+without hardcoding the filename.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/jepa_cascade_loader.py, tests/python/test_jepa_cascade_loader.py)
+
+### SCENARIO-VERIFY-199: extract_platt_temperature Returns None When Key Missing
+
+Given: an Exp 646 result dict that does not contain "T_optimal".
+When: extract_platt_temperature(result) is called.
+Then: the function returns None without raising an exception.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/jepa_cascade_loader.py, tests/python/test_jepa_cascade_loader.py)

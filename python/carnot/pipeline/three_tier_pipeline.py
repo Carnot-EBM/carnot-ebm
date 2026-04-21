@@ -131,7 +131,12 @@ class ThreeTierPipelineResult:
             Label describing how the benchmark was run: "cpu_synthetic" for
             CI runs without a real LLM, "live_gpu" for production runs.
 
-    Spec: REQ-VERIFY-088
+        jepa_v14_deployed:
+            True when a Platt temperature (from Exp 646) was applied to Tier 2
+            EORM/JEPA energy scores during this benchmark run.  False means the
+            pipeline ran with uncalibrated energy scores.
+
+    Spec: REQ-VERIFY-088, REQ-VERIFY-150
     """
 
     skip_rate_sink_probe: float
@@ -144,6 +149,7 @@ class ThreeTierPipelineResult:
     tier0_spilled_skip: float = 0.0
     tier0c_skip_count: int = 0
     tier0d_skip_count: int = 0
+    jepa_v14_deployed: bool = False
 
 
 # ---------------------------------------------------------------------------
@@ -209,6 +215,7 @@ class ThreeTierPipeline:
         nup_probe_threshold: float = 0.0,
         basin_detector: HallucinationBasinDetector | None = None,
         basin_threshold: float = 0.5,
+        platt_temperature: float | None = None,
     ) -> None:
         self.sink_probe = sink_probe
         self.eorm_model = eorm_model
@@ -220,6 +227,12 @@ class ThreeTierPipeline:
         self.nup_probe_threshold = nup_probe_threshold
         self.basin_detector = basin_detector
         self.basin_threshold = basin_threshold
+        # Platt temperature from Exp 646 calibration (REQ-VERIFY-150-4).
+        # When set, Tier 2 energy is divided by T before threshold comparison:
+        #   effective_energy = raw_energy / T
+        # This is Platt scaling — T < 1.0 sharpens the decision boundary,
+        # T > 1.0 softens it.  T=0.38 (Exp 646) was measured to reduce ECE 87.9%.
+        self.platt_temperature = platt_temperature
 
     # ------------------------------------------------------------------
     # verify()
@@ -315,12 +328,20 @@ class ThreeTierPipeline:
                 return True, "sink_probe", float(concentration.mean_sink_score)
 
         # ------------------------------------------------------------------
-        # Tier 2: EORM
+        # Tier 2: EORM (with optional Platt temperature scaling from Exp 646)
+        # When platt_temperature is set, effective_energy = raw_energy / T.
+        # This is equivalent to p = sigmoid(E / T) — dividing by a small T
+        # (0.38 from Exp 646) sharpens the decision boundary without retraining.
         # ------------------------------------------------------------------
         cot_input = CoTEnergyInput(question_text=question, response_text=response)
         eorm_energy = float(self.eorm_model.energy(cot_input))
-        if eorm_energy < self.eorm_threshold:
-            return True, "eorm", eorm_energy
+        effective_energy = (
+            eorm_energy / self.platt_temperature
+            if self.platt_temperature is not None and self.platt_temperature != 0.0
+            else eorm_energy
+        )
+        if effective_energy < self.eorm_threshold:
+            return True, "eorm", effective_energy
 
         # ------------------------------------------------------------------
         # Tier 3: Ising
@@ -388,6 +409,7 @@ class ThreeTierPipeline:
                 tier0_spilled_skip=0.0,
                 tier0c_skip_count=0,
                 tier0d_skip_count=0,
+                jepa_v14_deployed=self.platt_temperature is not None,
             )
 
         n_skipped_sink = 0
@@ -461,6 +483,7 @@ class ThreeTierPipeline:
             tier0_spilled_skip=skip_rate_spilled_energy,
             tier0c_skip_count=n_skipped_nup,
             tier0d_skip_count=n_skipped_basin,
+            jepa_v14_deployed=self.platt_temperature is not None,
         )
 
 
@@ -501,4 +524,5 @@ def build_three_tier_artifact(result: ThreeTierPipelineResult) -> dict[str, Any]
         "ising_calls_saved_pct": result.ising_calls_saved_pct,
         "inference_mode": result.inference_mode,
         "tier0_spilled_skip": result.tier0_spilled_skip,
+        "jepa_v14_deployed": result.jepa_v14_deployed,
     }
