@@ -11839,3 +11839,48 @@ When: verify_step("The answer is therefore obvious.") is called.
 Then: violation_detected=False; generated_code=None; executed_result=None; stated_result=None.
 
 **Implementation Status:** Implemented (Exp 619)
+
+## REQ-VERIFY-146: NUP Probe v6 Active in VerifyRepairPipeline Tier 0c (default-on when probe supplied)
+
+**Context (Exp 622 — RETRO-049 deployment):**
+    NUP Probe v6 (Exp 608, AUC=0.964) was validated as Tier 0c-ready but was not wired
+    into VerifyRepairPipeline.  This requirement formalises the wire-in: the pipeline
+    accepts an optional NUPProbeV4 instance and invokes it between Tier 0b and Tier 0d.
+    When the probe's energy score is below the threshold (low energy = likely correct),
+    the pipeline returns immediately with verified=True and skips all downstream tiers.
+
+- REQ-VERIFY-146-1: VerifyRepairPipeline.__init__() accepts nup_probe: NUPProbeV4 | None = None.
+- REQ-VERIFY-146-2: VerifyRepairPipeline.__init__() accepts nup_probe_threshold: float = 0.5 (score below this = fast-path).
+- REQ-VERIFY-146-3: When nup_probe is not None and nup_probe.score(response) <= nup_probe_threshold, verify() returns VerificationResult(verified=True, mode='NUP_PROBE_FAST_PATH', skipped=True).
+- REQ-VERIFY-146-4: When nup_probe is None (default), pipeline behaviour is unchanged (full backward compatibility).
+- REQ-VERIFY-146-5: Tier 0c fires after Tier 0b (SpilledEnergyDetector logic) and before Tier 0d in the cascade.
+
+## REQ-VERIFY-147: NUP Probe v6 Cascade Latency Target
+
+- REQ-VERIFY-147-1: Mean cascade latency with NUP Probe active must be < 5 ms over 100 synthetic responses.
+- REQ-VERIFY-147-2: Latency is measured wall-clock from verify() entry to return (time.perf_counter()).
+- REQ-VERIFY-147-3: latency_ok = (cascade_latency_ms < 5.0) is recorded in the experiment artifact.
+
+### SCENARIO-VERIFY-177: NUP Probe v6 Fast-Path Short-Circuits on Low-Energy Response
+
+Given: VerifyRepairPipeline(nup_probe=NUPProbeV4(random_seed=42), nup_probe_threshold=0.5).
+When: verify(question="q", response="2 + 2 = 4", domain=None) is called and nup_probe.score("2 + 2 = 4") <= 0.5.
+Then: result.verified=True, result.mode="NUP_PROBE_FAST_PATH", result.skipped=True.
+
+**Implementation Status:** Implemented (Exp 622)
+
+### SCENARIO-VERIFY-178: NUP Probe v6 Falls Through on High-Energy Response
+
+Given: VerifyRepairPipeline(nup_probe=NUPProbeV4(random_seed=42), nup_probe_threshold=0.5).
+When: verify() is called with a response whose nup_probe.score() > nup_probe_threshold.
+Then: The cascade continues to full constraint extraction (no fast-path short-circuit).
+
+**Implementation Status:** Implemented (Exp 622)
+
+### SCENARIO-VERIFY-179: NUP Probe v6 Default-Off Preserves Backward Compatibility
+
+Given: VerifyRepairPipeline() constructed without nup_probe argument.
+When: verify(question="q", response="r") is called.
+Then: Behaviour is identical to pre-Exp-622 pipeline (no NUP scoring, no fast-path).
+
+**Implementation Status:** Implemented (Exp 622)

@@ -273,6 +273,8 @@ class VerifyRepairPipeline:
         template_library: ConstraintTemplateLibrary | None = None,
         session_memory: Any | None = None,
         constraint_memory: Any | None = None,
+        nup_probe: Any | None = None,
+        nup_probe_threshold: float = 0.5,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -336,6 +338,10 @@ class VerifyRepairPipeline:
         # and adds new constraints once a pattern crosses the observation threshold.
         # Validated in Exp 456; wired into the live pipeline in Exp 541 (REQ-LEARN-053).
         self._constraint_memory = constraint_memory
+        # Tier 0c NUP Probe v6 (Exp 608, AUC=0.964).  When supplied, scores each
+        # response between Tier 0b and Tier 0d.  Low score = likely correct = fast-path.
+        self._nup_probe = nup_probe
+        self._nup_probe_threshold = nup_probe_threshold
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -1069,7 +1075,7 @@ class VerifyRepairPipeline:
             PipelineTimeoutError: If the call exceeds timeout_seconds.
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
-              REQ-JEPA-002, REQ-VERIFY-094
+              REQ-JEPA-002, REQ-VERIFY-094, REQ-VERIFY-146
         """
         typed_reasoning = self.extract_typed_reasoning(question, response)
         semantic_grounding = self.verify_semantic_grounding(question, response, typed_reasoning)
@@ -1154,6 +1160,32 @@ class VerifyRepairPipeline:
                         "think_probe_latency_ms": probe_result.latency_ms,
                     },
                     mode="THINK_PROBE_FAST_PATH",
+                    skipped=True,
+                    typed_reasoning=typed_reasoning,
+                    semantic_grounding=semantic_grounding,
+                    semantic_verifier_v2=semantic_verifier_v2,
+                )
+
+        # Tier 0c: NUP Probe v6 fast-path (REQ-VERIFY-146, Exp 622).
+        # When a NUPProbeV4 instance is supplied, score the response.  A score at or
+        # below the threshold means the response is energetically cheap (likely correct),
+        # so we short-circuit and skip all downstream tiers.  This fires AFTER Tier 0b
+        # (SpilledEnergyDetector is a standalone call, not inlined here) and BEFORE
+        # Tier 0d (HalluField, which is already handled above as an advisory).
+        if self._nup_probe is not None:
+            nup_score = self._nup_probe.score(response)
+            if nup_score <= self._nup_probe_threshold:
+                return VerificationResult(
+                    verified=True,
+                    constraints=[],
+                    energy=0.0,
+                    violations=[],
+                    certificate={
+                        "mode": "NUP_PROBE_FAST_PATH",
+                        "nup_score": nup_score,
+                        "nup_threshold": self._nup_probe_threshold,
+                    },
+                    mode="NUP_PROBE_FAST_PATH",
                     skipped=True,
                     typed_reasoning=typed_reasoning,
                     semantic_grounding=semantic_grounding,
