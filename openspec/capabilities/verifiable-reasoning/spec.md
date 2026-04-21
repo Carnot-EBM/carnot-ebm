@@ -11794,3 +11794,48 @@ When: capo_loss(energy_scores, labels, margin=1.0, lambda_calib=0.0) is called.
 Then: L_contrastive = 0.0 (margin already satisfied).
 
 **Implementation Status:** Implemented (Exp 618)
+
+## REQ-VERIFY-122: SymCodeVerifier — Executable Python Verification of CoT Arithmetic Steps
+
+**Context (RETRO-069):**
+    DSVD offline AUC=0.976 vs live AUC=0.158.  Hidden-state probing cannot generalise
+    to live model outputs because hidden states are model-specific and distribution-sensitive.
+    Fix: SymCode-style (arXiv 2510.25975) executable verification.  Instead of probing
+    hidden states, use the LLM to generate executable Python from each CoT step, then run it.
+
+- REQ-VERIFY-122-1: SymCodeVerifier.segment_steps(response) splits CoT into steps by sentence boundaries.
+- REQ-VERIFY-122-2: SymCodeVerifier.extract_code_for_step(step) returns a Python expression or None.
+- REQ-VERIFY-122-3: SymCodeVerifier.verify_step(step) returns a CoTStep with violation_detected flag.
+- REQ-VERIFY-122-4: SymCodeVerifier.verify_response(response) returns one CoTStep per segmented step.
+- REQ-VERIFY-122-5: SymCodeVerifier.detection_score(response) returns float in [0.0, 1.0].
+
+## REQ-VERIFY-123: SymCodeVerifier — Distribution-Invariant via Code Execution
+
+- REQ-VERIFY-123-1: Violation detection does not depend on model hidden states or training data.
+- REQ-VERIFY-123-2: eval('47+28') == 75 regardless of how the model phrased the step.
+- REQ-VERIFY-123-3: In CI mode (llm_caller=None), regex fallback is used — no LLM call needed.
+- REQ-VERIFY-123-4: Code evaluation uses safe_eval() from llm_extractor_v1 (AST-whitelisted).
+
+### SCENARIO-VERIFY-160: SymCodeVerifier CI Mode — Regex Fallback
+
+Given: SymCodeVerifier(llm_caller=None).
+When: verify_step("3 * 4 = 12") is called.
+Then: violation_detected=False (3*4=12 is correct); generated_code="3*4" extracted by regex.
+
+**Implementation Status:** Implemented (Exp 619)
+
+### SCENARIO-VERIFY-161: SymCodeVerifier Violation Detection
+
+Given: SymCodeVerifier(llm_caller=None).
+When: verify_step("3 * 4 = 13") is called.
+Then: violation_detected=True (3*4=12 != 13); executed_result=12.0, stated_result=13.0.
+
+**Implementation Status:** Implemented (Exp 619)
+
+### SCENARIO-VERIFY-162: SymCodeVerifier No Arithmetic Step
+
+Given: SymCodeVerifier(llm_caller=None).
+When: verify_step("The answer is therefore obvious.") is called.
+Then: violation_detected=False; generated_code=None; executed_result=None; stated_result=None.
+
+**Implementation Status:** Implemented (Exp 619)
