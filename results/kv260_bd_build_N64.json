@@ -1,0 +1,111 @@
+{
+  "experiment": "kv260_bd_build_N64",
+  "title": "KV260 BD build at N_SPINS=64, MAX_DEGREE=16 \u2014 bitstream produced, setup timing fails at 100 MHz",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T13:38:00Z",
+  "finished_at": "2026-04-21T14:28:37Z",
+  "duration_s": 3037,
+  "status": "partial",
+  "schema": "carnot.kv260_synth.v1",
+  "honest_verdict": "bitstream_produced_setup_timing_fails_100mhz_hold_ok",
+
+  "vivado_version": "v2025.2.1",
+  "vivado_install_path": "/tools/Xilinx/2025.2.1",
+  "target_part": "xck26-sfvc784-2LV-c",
+
+  "bd_topology": "zynq_ultra_ps_e + axi_smartconnect + proc_sys_reset + ising_sampler_128_sync (module-ref, CONFIG.N_SPINS=64, CONFIG.MAX_DEGREE=16)",
+  "bd_address_assigned": "0xA000_0000 [128K]",
+
+  "rtl_source": "hardware/kv260/ising_sampler_v2.v",
+  "rtl_top_module": "ising_sampler_128_sync",
+  "rtl_parameters_at_build": {
+    "N_SPINS": 64,
+    "MAX_DEGREE": 16,
+    "Q88_BITS": 16,
+    "Q88_FRAC": 8,
+    "N_STEPS": 1000
+  },
+
+  "validate_bd_design_passed": true,
+  "sub_ip_synth_completed": {
+    "axi_smartconnect_0_0_synth_1": true,
+    "zynq_ultra_ps_e_0_0_synth_1": true,
+    "proc_sys_reset_0_0_synth_1": true,
+    "ising_sampler_0_0_synth_1": true
+  },
+  "ising_sampler_synth_elapsed_s": 54,
+  "ising_sampler_synth_elapsed_note": "Vs N=128 run which took 86+ min on the same sub-IP. Parameter override scales build time roughly with N_SPINS * MAX_DEGREE (128*32=4096 -> 64*16=1024, 4x reduction; observed ~95x speedup including DSP inference shortcuts)",
+  "top_synth_1_completed": true,
+  "top_synth_1_elapsed_s": 54,
+  "opt_design_completed": true,
+  "opt_design_drc_errors": 0,
+  "place_design_completed": true,
+  "place_design_drc_errors": 0,
+  "route_design_completed": true,
+  "route_congestion_level_global": 5,
+  "route_congestion_level_timing": 5,
+  "route_congestion_note": "Congestion level 5 reported during route (both global and timing); \"may impact timing closure\" per Vivado Route 35-448/35-581. Observation consistent with DSP utilisation at 87% driving routing pressure in the PL fabric.",
+
+  "utilization_routed": {
+    "CLB_LUTs":             {"used": 58314, "available": 117120, "pct": 49.79},
+    "LUT_as_Logic":         {"used": 58312, "available": 117120, "pct": 49.79},
+    "LUT_as_Memory":        {"used":     2, "available":  57600, "pct":  0.00},
+    "CLB_Registers":        {"used": 10742, "available": 234240, "pct":  4.59},
+    "CARRY8":               {"used":  2920, "available":  14640, "pct": 19.95},
+    "DSPs":                 {"used":  1088, "available":   1248, "pct": 87.18},
+    "Block_RAM_Tile":       {"used":     0, "available":    144, "pct":  0.00},
+    "BUFGCE":               {"used":     2, "available":    112, "pct":  1.79}
+  },
+  "utilization_note": "Clean fit. 49.8% LUT-as-Logic leaves ~58k LUTs free for future PL extensions (JEPA-adjacent / additional samplers / AXI debug). DSPs at 87% are the only near-budget resource.",
+
+  "timing_summary_routed": {
+    "clock_name": "clk_pl_0",
+    "clock_period_ns": 10.312,
+    "clock_frequency_mhz": 96.974,
+    "WNS_ns": -11.916,
+    "TNS_ns": -17830.469,
+    "TNS_failing_endpoints": 4586,
+    "TNS_total_endpoints": 57326,
+    "WHS_ns": 0.011,
+    "THS_ns": 0.000,
+    "THS_failing_endpoints": 0,
+    "timing_met": false,
+    "hold_met": true,
+    "max_safe_clock_mhz_estimate": 45.0,
+    "max_safe_clock_derivation": "worst critical path delay ~= period + |WNS| = 10.312 + 11.916 = 22.228 ns -> 1/22.228 ns ~= 45 MHz. Running the PL clock below this threshold should satisfy setup timing without rebuilding."
+  },
+
+  "bitstream_produced": true,
+  "bitstream_path": "output/carnot_ising_bd/carnot_ising_bd_wrapper.bit",
+  "bitstream_size_bytes": 7797837,
+  "bitstream_size_mb": 7.44,
+  "critical_warnings_count": 1,
+  "critical_warnings": [
+    "[Timing 38-282] The design failed to meet the timing requirements. Please see the timing summary report for details on the timing violations."
+  ],
+
+  "retro_070_resolved": true,
+  "retro_072_resolved": false,
+  "retro_072_status_note": "Partial closure: bitstream is loadable (unblocks deployment to KV260 for integration-test purposes), but the 100 MHz clock target is not met. Running at the stock 100 MHz PL clock will produce corrupted sampler state. Requires one of: (a) reduce PS PL clock from 100 MHz to ~45 MHz in the build_bd.tcl CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ override, (b) retry impl with PerformanceRetiming / PerformanceExplore strategy, (c) reduce N_SPINS further (e.g. N=32) to relax the routing / critical-path pressure.",
+
+  "retro_new_suggested": "RETRO-073",
+  "retro_new_suggested_title": "KV260 Ising sampler fails setup timing at 100 MHz PL clock \u2014 need lower clock or stricter impl strategy",
+  "retro_new_suggested_root_cause": "After landing N_SPINS=64, MAX_DEGREE=16 to fit the XCK26 LUT/CARRY budget (RETRO-072), setup timing closes with WNS=-11.916 ns (4586 / 57326 endpoints fail) at the default 10.312 ns clock period. Hold timing is clean. Critical path delay is ~22 ns, limiting usable PL clock to ~45 MHz without further optimisation. DSP utilisation at 87.18% causes level-5 route congestion, which drives the setup path blow-ups.",
+  "retro_new_suggested_fix_options": [
+    "A: Drop the PL clock from 100 MHz to 40 MHz. Edit build_bd.tcl CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ from {100} to {40}. Cheapest fix; costs ~2.5x throughput but gets a timing-clean bitstream for integration validation.",
+    "B: Retry impl_1 with -strategy Performance_Retiming or Performance_ExploreWithRemap (no RTL change). Vivado often closes these margins on a second try with stricter placement and retiming. Requires an incremental rebuild only (synth checkpoint can be reused).",
+    "C: Drop to N_SPINS=32, MAX_DEGREE=16. Halves the DSP count from 1088 to 544 (~44% utilisation), relieving the congestion pressure. Less spin parallelism but should close timing cleanly at 100 MHz.",
+    "D: Register-insert the critical paths (add a pipeline stage to h_eff accumulator or the sigmoid lookup). RTL change, ~20 LOC, would improve worst-case path but increases latency by 1-2 cycles per step."
+  ],
+  "retro_new_suggested_priority": "medium",
+  "retro_new_suggested_target_milestone": "2026.04.50",
+  "retro_new_suggested_next_step": "Recommended sequence: (B) retry impl with Performance_Retiming first (fast, no RTL work). If still fails, (A) drop clock to 40 MHz and validate on hardware. (C) and (D) reserved for throughput-critical follow-ups.",
+
+  "deployment_commands_for_user": [
+    "scp output/carnot_ising_bd/carnot_ising_bd_wrapper.bit kria:/opt/carnot/bitstreams/carnot_ising_v2_n64.bit",
+    "ssh kria 'sudo mkdir -p /opt/carnot/bitstreams && sudo chown ubuntu:ubuntu /opt/carnot/bitstreams'",
+    "ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2_n64.bit'",
+    "ssh kria 'xrt-smi examine'"
+  ],
+  "deployment_caveat": "This bitstream has NOT met 100 MHz timing. Loading it at the default 100 MHz PL clock will produce non-deterministic sampler output. For integration validation (verify AXI handshake works, registers read/write), still useful. For correctness benchmarks, block until RETRO-073 is resolved."
+}
