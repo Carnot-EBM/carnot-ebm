@@ -483,6 +483,9 @@ from carnot.pipeline.fact_e_probe import (  # noqa: E402
     CausalStepDependency,
     FACTEFaithfulnessProbe,
 )
+from carnot.pipeline.symcode_verifier import (  # noqa: E402
+    SymCodeVerifier,
+)
 
 __all__ = [
     "AgentStep",
@@ -806,4 +809,5 @@ __all__ = [
     "CAPOCalibrationLoss",
     "CausalStepDependency",
     "FACTEFaithfulnessProbe",
+    "SymCodeVerifier",
 ]
