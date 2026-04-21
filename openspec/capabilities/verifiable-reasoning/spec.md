@@ -12548,3 +12548,34 @@ When: run_experiment() is called with model split 14/14 layers.
 Then: peak_gpu1_util > 50, dualgpu_proven=True, retro_071_resolved=True, honest_verdict='dualgpu_proven'.
 
 **Implementation Status:** Implemented (Exp 649)
+
+## REQ-SAMPLE-025: MultilevelSparseKAEM — Multilevel Training with Per-Level Sparsity
+
+Combines coarse-to-fine knot refinement (Exp 634) with top-K coupling sparsification
+(Exp 637) to close RETRO-057 carry 5: sparse-only training does not reach 5% accuracy
+threshold; multilevel warm-starting provides a better optimization trajectory.
+
+- REQ-SAMPLE-025-1: MultilevelSparseKAEMTrainer._refine_to_level(model, K) shall interpolate the univariate spline layer to K knots using KnotRefinementInterpolator and return a new SparseKAEMEnergy with the interpolated layer.
+- REQ-SAMPLE-025-2: MultilevelSparseKAEMTrainer._train_level(model, data, n_epochs) shall call model.fit(data, n_epochs=n_epochs) and return the trained model.
+- REQ-SAMPLE-025-3: MultilevelSparseKAEMTrainer._sparsify_level(model) shall apply model.sparsify() to the coupling matrix and store the result back in model.coupling_matrix.
+- REQ-SAMPLE-025-4: MultilevelSparseKAEMTrainer.train(n_vars, data) shall iterate over the schedule, calling _refine_to_level (if i>0), _train_level, and _sparsify_level at each level, returning the final SparseKAEMEnergy.
+- REQ-SAMPLE-025-5: MultilevelSparseKAEMTrainer shall be exported from carnot.training.
+
+**Implementation Status:** Implemented (python/carnot/training/multilevel_sparse_kaem.py, Exp 650)
+
+### SCENARIO-SAMPLE-040: MultilevelSparse Reduces Energy Error vs Sparse-Only
+
+Given: SparseKAEMEnergy trained with sparse-only (Exp 637) achieves sparse_vs_dense_error=0.429.
+When: MultilevelSparseKAEMTrainer(schedule=[16,32,64], epochs_per_level=20, top_k_fraction=0.1) trains on the same synthetic data.
+Then: multilevel_sparse_vs_dense_error < sparse_vs_dense_error_prior (i.e. multilevel sparse is at least an improvement over sparse-only).
+
+**Implementation Status:** Implemented (Exp 650)
+
+### SCENARIO-SAMPLE-041: MultilevelSparse Resolves RETRO-057 (< 5% Error)
+
+Given: MultilevelSparseKAEMTrainer trains on 20-variable synthetic data.
+When: best top_k_fraction sweep over [0.05, 0.10, 0.20] completes.
+Then: retro_057_resolved=True if multilevel_sparse_vs_dense_error < 0.05,
+      else honest_verdict records whether improvement was achieved or not.
+
+**Implementation Status:** Implemented (Exp 650)
