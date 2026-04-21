@@ -35,7 +35,7 @@ tasks:
     (3) Implement DualGPURetrain for Exp 383 pattern.
     1. Read CLAUDE.md spec-first workflow.
     2. Check if scripts/conductor_exclusion_manifest.json exists. If not: create it:
-       {
+       (
          "schema": "carnot.exclusion_manifest.v2",
          "excluded_experiments": ["308", "309", "425", "410"],
          "reason": "Legacy experiments: perpetually incomplete or superseded. Never re-queue.",
@@ -45,7 +45,7 @@ tasks:
            "309": "Checkpoint-failure state since .37. No path to completion.",
            "425": "ExperimentTimeoutWatchdog already implemented. Exp 425 is complete.",
            "410": "BatchedInferenceRunner needed but not yet applied."
-         }
+         )
        }
     3. Add REQ-INFRA-090 (conductor must consult exclusion manifest before queuing any experiment),
        REQ-INFRA-091 (DualGPURetrain: parallel EORM/JEPA forward passes on cuda:0 and cuda:1),
@@ -63,7 +63,7 @@ tasks:
                 jepa_future = ex.submit(jepa_fn)
                 eorm_result = eorm_future.result()
                 jepa_result = jepa_future.result()
-            return {'eorm': eorm_result, 'jepa': jepa_result}
+            return ('eorm': eorm_result, 'jepa': jepa_result)
        c. Export DualGPURetrain, DualGPURetrainConfig from carnot.pipeline.
     5. Write scripts/experiment_640_preflght_infra.py:
        a. apply_env_autofix() FIRST.
@@ -164,7 +164,7 @@ tasks:
             Return the first sentence from response (split on '.!?\n', take first non-empty).
           generate_with_verification(self, question: str) -> HermesV2GenerationResult:
             'Generate step-by-step answer, verifying at each step boundary.'
-            context = f'Question: {question}\nAnswer: '
+            context = f'Question: (question)\nAnswer: '
             steps: list[HermesV2StepResult] = []
             for i in range(self.max_sentences):
                 sentence = self._generate_step(context)
@@ -199,7 +199,7 @@ tasks:
        c. ExperimentTimeoutWatchdog(641, timeout_minutes=90).
        d. ExperimentTemplate(641, 'HERMES v2 Live Generation Loop',
           'results/experiment_641_hermes_v2_live.json', requires_gpu=True).
-       e. tmpl.setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}])
+       e. tmpl.setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)])
           llm_caller: live Qwen3.5-0.8B via transformers pipeline if CARNOT_FORCE_LIVE=1,
           else None (CI stub — all steps return empty, all detections False).
        f. verifier = SymCodeVerifier(llm_caller=llm_caller if CARNOT_FORCE_LIVE else None)
@@ -245,7 +245,7 @@ tasks:
     Today's date: {date}.
 
     CONTEXT: arXiv 2601.21210 (January 2026) introduces symbolic verification of causal
-    reasoning in LLM CoT: given step_k and step_{k+1}, does step_k causally justify step_{k+1}?
+    reasoning in LLM CoT: given step_k and step_(k+1), does step_k causally justify step_(k+1)?
     This catches logical incoherence violations that arithmetic checking misses: e.g., a step
     that correctly adds 47+28=75 but then concludes "so we have 80 items" is causally broken
     even if all the arithmetic within each step is correct. SymCodeVerifier (Exp 619) checks
@@ -278,7 +278,7 @@ tasks:
             numbers = re.findall(r'[-+]?\d+(?:\.\d+)?', step_text)
             return float(numbers[-1]) if numbers else None
           check_entailment(self, step_k: str, step_k1: str) -> CausalEntailmentResult:
-            'Check if step_k causally justifies step_{k+1}.'
+            'Check if step_k causally justifies step_(k+1).'
             First: run SymCodeVerifier on step_k. If arithmetic violation: type='arithmetic'.
             If no arithmetic violation:
               conclusion_k = _extract_numeric_conclusion(step_k)
@@ -631,7 +631,7 @@ tasks:
           calibrated_probs_val = scaler.calibrate(val_logits)
           ece_after = scaler.compute_ece(calibrated_probs_val, val_labels)
        h. AUC before/after (use sklearn or manual AUROC if available).
-       i. Save scaler: json.dump({'temperature': T_optimal}, open('results/jepa_v14_platt_T.json','w'))
+       i. Save scaler: json.dump(('temperature': T_optimal), open('results/jepa_v14_platt_T.json','w'))
        j. Build artifact: schema='carnot.jepa_v14_platt.v1',
           v14_ece_before=<float>, ece_after=<float>,
           T_optimal=<float>, ece_reduction_pct=<float>,
@@ -705,7 +705,7 @@ tasks:
        b. OTVTrainer class:
           __init__(self, head: OTVVerificationHead, lr: float = 0.01):
           train(self, pairs: list[dict], n_epochs: int = 50) -> OTVVerificationHead:
-            Pairs: list of {'response': str, 'is_correct': bool}.
+            Pairs: list of ('response': str, 'is_correct': bool).
             Train with binary cross-entropy.
        c. Export OTVVerificationHead, OTVTrainer from carnot.models.
     4. Write scripts/experiment_647_otv_verifier.py:
@@ -788,7 +788,7 @@ tasks:
             return jax.nn.sigmoid(2.0 * self.config.beta * (h_i + biases))
           sample(self, J: jnp.ndarray, biases: jnp.ndarray,
                  rng_key: jnp.ndarray, init_state: jnp.ndarray | None = None) -> dict:
-            's ∈ {-1, +1}^n, returns final state + convergence statistics.'
+            's ∈ (-1, +1)^n, returns final state + convergence statistics.'
             s = init_state if init_state is not None else jnp.ones(self.config.n_spins)
             h_i = self._compute_local_fields(J, s)
             energy_history = []
@@ -801,9 +801,9 @@ tasks:
                               1.0, -1.0)
                 energy = -0.5 * s @ J @ s - biases @ s
                 energy_history.append(float(energy))
-            return {'final_state': s, 'final_energy': energy_history[-1],
+            return ('final_state': s, 'final_energy': energy_history[-1],
                     'energy_history': energy_history,
-                    'n_steps': self.config.n_steps}
+                    'n_steps': self.config.n_steps)
        c. Export ParallelDenseIsingInertia, ParallelDenseIsingConfig from carnot.samplers.
     4. Write scripts/experiment_648_parallel_ising_inertia.py:
        a. apply_env_autofix() FIRST.
@@ -888,10 +888,10 @@ tasks:
        f. If cached model found:
           from transformers import AutoModelForCausalLM, AutoTokenizer
           Layer split: 7B has 28 layers → cuda:0 gets layers 0-13, cuda:1 gets 14-27 + lm_head
-          device_map = {f'model.layers.{i}': 'cuda:0' for i in range(14)}
-          device_map.update({f'model.layers.{i}': 'cuda:1' for i in range(14, 28)})
-          device_map.update({'model.embed_tokens': 'cuda:0',
-                             'model.norm': 'cuda:1', 'lm_head': 'cuda:1'})
+          device_map = (f'model.layers.{i)': 'cuda:0' for i in range(14)}
+          device_map.update((f'model.layers.{i)': 'cuda:1' for i in range(14, 28)})
+          device_map.update(('model.embed_tokens': 'cuda:0',
+                             'model.norm': 'cuda:1', 'lm_head': 'cuda:1'))
           model = AutoModelForCausalLM.from_pretrained(preferred_model, device_map=device_map,
               torch_dtype=torch.float16, low_cpu_mem_usage=True)
           tokenizer = AutoTokenizer.from_pretrained(preferred_model)

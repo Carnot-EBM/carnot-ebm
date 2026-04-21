@@ -12244,3 +12244,55 @@ When: run_parallel() is called with simple lambda functions.
 Then: Both results are returned without error and the dict has both keys.
 
 **Implementation Status:** Implemented (Exp 640)
+
+## REQ-VERIFY-137: HermesV2LiveLoop — Step-by-Step Live Generation with Mid-Generation Verification
+
+HermesV2LiveLoop shall generate answers one sentence at a time, running SymCodeVerifier at
+each sentence boundary, and inject a correction hint into the generation context when a
+violation is detected, before the next sentence is generated.
+
+- REQ-VERIFY-137-1: HermesV2LiveLoop.__init__ shall accept llm_caller (Callable[[str], str] | None), verifier (SymCodeVerifier), max_sentences (int, default 10), max_new_tokens_per_step (int, default 80).
+- REQ-VERIFY-137-2: _generate_step(context) shall return one sentence from llm_caller, or empty string when llm_caller is None (CI stub mode).
+- REQ-VERIFY-137-3: generate_with_verification(question) shall call _generate_step, run verifier.detection_score() on each sentence, and inject CORRECTION_HINT into context when score > 0.0.
+- REQ-VERIFY-137-4: The loop shall stop when the LLM returns an empty sentence, max_sentences is reached, or context exceeds 300 words.
+- REQ-VERIFY-137-5: HermesV2StepResult dataclass shall have step_index, step_text, violation_detected, detection_score, hint_injected, hint_text fields.
+- REQ-VERIFY-137-6: HermesV2GenerationResult dataclass shall have question, full_response, step_results, any_violation, n_violations, n_hints fields.
+- REQ-VERIFY-137-7: HermesV2LiveLoop, HermesV2GenerationResult, HermesV2StepResult shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/hermes_v2_live_loop.py, Exp 641)
+
+## REQ-VERIFY-138: HermesV2LiveLoop Live Recall Gate
+
+HermesV2LiveLoop shall achieve live_hermes_v2_recall >= 0.20 on 25 known-incorrect questions
+from the fover corpus when run with a live GPU (CARNOT_FORCE_LIVE=1).
+
+- REQ-VERIFY-138-1: hermes_v2_recall = hermes_v2_tp / 25 where tp = sum(r.any_violation for r in incorrect_results).
+- REQ-VERIFY-138-2: gate_contribution = (hermes_v2_recall >= 0.20).
+- REQ-VERIFY-138-3: retro_070_partial = (hermes_v2_recall > 0.12) indicates improvement over post-hoc baseline.
+- REQ-VERIFY-138-4: honest_verdict shall be 'hermes_v2_breakthrough' if >= 0.30, 'hermes_v2_improved' if > 0.12, else 'hermes_v2_no_improvement'.
+
+**Implementation Status:** Implemented (scripts/experiment_641_hermes_v2_live.py, Exp 641)
+
+### SCENARIO-VERIFY-180: HermesV2LiveLoop CI Stub Returns Empty Response
+
+Given: HermesV2LiveLoop(llm_caller=None, verifier=SymCodeVerifier()).
+When: generate_with_verification("What is 2+2?") is called.
+Then: full_response == '' and step_results == [] and any_violation == False and n_violations == 0.
+
+**Implementation Status:** Implemented (Exp 641)
+
+### SCENARIO-VERIFY-181: HermesV2LiveLoop Injects Hint on Violation
+
+Given: HermesV2LiveLoop with llm_caller returning "There are 47 apples and 28 oranges, total is 76." and SymCodeVerifier detecting a violation (47+28=75 != 76).
+When: generate_with_verification(question) is called.
+Then: step_results[0].violation_detected == True and step_results[0].hint_injected == True and step_results[0].hint_text == HermesV2LiveLoop.CORRECTION_HINT.
+
+**Implementation Status:** Implemented (Exp 641)
+
+### SCENARIO-VERIFY-182: HermesV2LiveLoop No Hint on Correct Arithmetic
+
+Given: HermesV2LiveLoop with llm_caller returning "There are 47 apples and 28 oranges, total is 75." and SymCodeVerifier not detecting a violation.
+When: generate_with_verification(question) is called.
+Then: step_results[0].violation_detected == False and step_results[0].hint_injected == False and step_results[0].hint_text is None.
+
+**Implementation Status:** Implemented (Exp 641)
