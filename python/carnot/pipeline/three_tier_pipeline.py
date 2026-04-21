@@ -78,6 +78,7 @@ from typing import Any, Callable
 import jax.numpy as jnp
 
 from carnot.models.eorm import CoTEnergyInput, EORMModel
+from carnot.models.jepa_platt import PlattScaledJEPA
 from carnot.pipeline.hallucination_basin import HallucinationBasinDetector
 from carnot.pipeline.nup_probe_v4 import NUPProbeV4
 from carnot.pipeline.sink_probe import SinkProbe
@@ -198,7 +199,7 @@ class ThreeTierPipeline:
     def __init__(
         self,
         sink_probe: SinkProbe,
-        eorm_model: EORMModel,
+        eorm_model: EORMModel | PlattScaledJEPA,
         ising_pipeline: Callable[[str, str], tuple[bool, float]],
         *,
         sink_threshold: float = 0.3,
