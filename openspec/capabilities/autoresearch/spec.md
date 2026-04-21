@@ -1866,6 +1866,75 @@ Spec: SCENARIO-LEARN-120
 
 ---
 
+### REQ-LEARN-078: MetaJuLS Extractor Policy Adapts from Live Batch Feedback
+
+**Requirement:** After LLMAsExtractorV1 processes a batch of live outputs, a
+MetaJuLS-style meta-RL update must adjust the extractor's policy parameters
+(temperature, claim_confidence_threshold, strategy_weights) based on observed
+precision measured against true violation labels.  The adapter must maintain
+an experience list so that policy drift over multiple batches is auditable.
+
+Reference: arXiv 2601.00095 (MetaJuLS — meta-RL for universal constraint
+propagation).  Self-Learning Tier 2 (Constraint Memory) applied to the
+extractor itself.
+
+Spec: REQ-LEARN-078, SCENARIO-LEARN-121, SCENARIO-LEARN-122
+
+---
+
+### REQ-LEARN-079: MetaJuLS Precision Trend is Non-Negative After Adaptation
+
+**Requirement:** After at least two batches of meta-RL adaptation, the
+precision_trend() method must return a value >= 0 when the adapter has
+successfully learned from feedback — indicating that precision is non-decreasing
+over the most recent experience window.
+
+Spec: REQ-LEARN-079, SCENARIO-LEARN-123
+
+---
+
+### SCENARIO-LEARN-121: update_from_batch Adjusts Temperature Down When Precision is Low
+
+**Given** a MetaJuLSAdapter with default policy (temperature=0.1),
+
+**When** update_from_batch() is called with a batch where precision < 0.5
+(more false positives than true positives),
+
+**Then** policy.temperature decreases (multiplied by 0.9) and
+policy.claim_confidence_threshold increases (multiplied by 1.1).
+
+Spec: SCENARIO-LEARN-121
+
+---
+
+### SCENARIO-LEARN-122: update_from_batch Relaxes Thresholds When Precision is High
+
+**Given** a MetaJuLSAdapter with default policy (temperature=0.1,
+claim_confidence_threshold=0.5),
+
+**When** update_from_batch() is called with a batch where precision > 0.8
+(strong true-positive signal),
+
+**Then** policy.temperature increases (multiplied by 1.05) and
+policy.claim_confidence_threshold decreases (multiplied by 0.95).
+
+Spec: SCENARIO-LEARN-122
+
+---
+
+### SCENARIO-LEARN-123: precision_trend Returns Non-Negative After Improving Batches
+
+**Given** a MetaJuLSAdapter that has processed two batches where the second
+batch has equal or higher precision than the first,
+
+**When** precision_trend() is called,
+
+**Then** the return value is >= 0.0, confirming non-decreasing precision.
+
+Spec: SCENARIO-LEARN-123
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -1934,3 +2003,5 @@ Spec: SCENARIO-LEARN-120
 | REQ-LEARN-074 | N/A | Implemented | Python (test_jepa_ood_validation.py) |
 | REQ-LEARN-076 | N/A | Implemented | Python (test_flip_calibrator.py) |
 | REQ-LEARN-077 | N/A | Implemented | Python (Exp 611) |
+| REQ-LEARN-078 | N/A | Implemented | Python (test_metajuls_adapter.py) |
+| REQ-LEARN-079 | N/A | Implemented | Python (test_metajuls_adapter.py) |
