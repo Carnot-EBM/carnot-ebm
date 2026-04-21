@@ -2430,3 +2430,4 @@ python/ |
 | 2026-04-21 21:57 UTC | Milestone 2026.04.51 activated | OK | 12 tasks queued |
 | 2026-04-21 22:09 UTC | Exp 666: Exclusion Manifest Wire-In v3 + Pre-Fligh | OK | 102 passed, 2 warnings in 7.31s |
 | 2026-04-21 22:19 UTC | Exp 667: EnsembleGate v4 — Structured-First Recall | OK | 81 passed, 2 warnings in 5.21s |
+| 2026-04-21 22:59 UTC | Exp 668: Live VR Attempt #18 v2 — First RETRO-033  | OK | 81 passed, 2 warnings in 5.36s |
