@@ -4,6 +4,39 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-21 arxiv Scan (Milestone 2026.04.48 Planning)
+
+### HERMES — Multi-Module Tool-Augmented Verification for LLM Reasoning
+- **Paper:** arXiv 2511.18760 (November 2025)
+- **What:** Multi-modular tool-augmented agent that integrates formal verification into LLM reasoning. Four modules: LLM generates step → translator formalizes to Lean → prover verifies/counter-proves → feedback module signals next step. Memory block ensures proof continuity across steps.
+- **Results:** 67% accuracy improvement on AIME'25, 80% fewer inference FLOPs. The feedback loop runs verifiers only on critical steps, not every token.
+- **Relevance to Carnot:** This is a practical implementation of interwhen-style step verification. HERMES's architecture maps directly to Carnot: LLM generates CoT step → SymCodeVerifier verifies arithmetic → feedback injected before next step is generated. The prover module can be SymCodeVerifier (executable Python) instead of Lean (lighter weight, no formal logic dependency). Key advantage over interwhen: HERMES runs verification asynchronously at step boundaries, not every N tokens — much lower overhead for arithmetic checking.
+- **Concrete experiment:** Exp 633 (HermesVerifierAdapter): adapt HERMES architecture for Carnot — SymCodeVerifier as the prover module, arithmetic claims from LLMAsExtractorV1 as the translator. Measure step-level violation recall on 25 known-incorrect responses.
+- **When to incorporate:** Milestone 2026.04.48 — Phase 5 new research (Exp 633).
+
+### AdapTrack — Constrained Decoding with Adaptive Backtracking
+- **Paper:** arXiv 2510.17376 (October 2025)
+- **What:** Constrained decoding that adaptively backtracks based on the fraction of invalid options at each step. When most next-token choices violate a constraint, backtrack to the last valid state rather than forcing the generation through an invalid branch. Mathematically proves the output distribution is identical to the model's own distribution under constraints — no output-intent distortion.
+- **Results:** Up to 360% accuracy improvement on API generation tasks. The backtracking is proportional to invalidated probability mass, not fixed.
+- **Relevance to Carnot:** After interwhen or SymCodeVerifier detects a mid-generation arithmetic violation, we need a repair mechanism. Currently Carnot uses post-hoc repair (full regeneration). AdapTrack offers in-generation repair: when SymCodeVerifier detects an arithmetic mismatch at step k, backtrack to step k-1 and regenerate with a constraint hint. The "fraction of invalid options" heuristic maps to SymCodeVerifier's violation detection confidence.
+- **Concrete experiment:** Exp 635 (AdapTrack Constrained Generation): integrate AdapTrack backtracking with SymCodeVerifier. When violation detected mid-generation, backtrack N tokens and inject a correction hint into the prompt. Compare repair success rate vs post-hoc VerifyRepairPipeline.
+- **When to incorporate:** Milestone 2026.04.48 — Phase 5 new research (Exp 635).
+
+### Multilevel Training for KANs — Orders-of-Magnitude Accuracy Improvement
+- **Paper:** arXiv 2603.04827 (March 2026)
+- **What:** Multilevel training framework for spline-based Kolmogorov-Arnold Networks. Trains a sequence of KANs at increasing knot resolution using analytic geometric interpolation operators between levels. Exploits KAN structure to define natural coarse-to-fine refinement schedules. Achieves orders-of-magnitude accuracy improvement over standard training for comparable parameter count.
+- **Results:** Minimax-optimal convergence rate O(n^(-2r/(2r+1))) for Sobolev functions. Numerical experiments show dramatic improvement particularly for physics-informed neural networks.
+- **Relevance to Carnot:** KAEMEnergy (Exp 447) uses per-variable splines for exact sampling. Current training starts at K=256 knots directly. Multilevel training would start at K=16, converge, then refine to K=32, K=64, K=128, K=256 — each level initialized from the previous via interpolation. This should dramatically reduce training time and improve energy accuracy, directly fixing the RETRO-057 LowRankKAEM accuracy gap.
+- **Concrete experiment:** Exp 634 (Multilevel KANs for KAEMEnergy): implement multilevel training for UnivariateKAEMLayer with K=16→32→64→128 refinement. Compare energy accuracy and training epochs vs current single-level training. Target: energy accuracy within 1% (vs current 5% gap in RETRO-057).
+- **When to incorporate:** Milestone 2026.04.48 — Phase 5 new research (Exp 634). Also applicable to KAN energy tier in core Ising-KAN pipeline.
+
+### Hidden Correctness via Symbolic Verification — Causal Reasoning in LLMs
+- **Paper:** arXiv 2601.21210 (January 2026)
+- **What:** Symbolic verification framework for uncovering hidden correctness in LLM causal reasoning. Uses symbolic execution to check whether LLM-generated reasoning chains are causally sound, even when the surface text looks confident. Reveals cases where LLMs reach correct final answers via invalid reasoning chains.
+- **Relevance to Carnot:** Carnot's SymCodeVerifier currently catches arithmetic errors (47+28=76). This paper motivates extending verification to CAUSAL correctness: does step k causally entail step k+1? A chain can be arithmetically correct but logically incoherent. Relevant to the global consistency checker (Exp 172, 100% detection) — extend it with symbolic causal checking.
+- **Concrete experiment:** File for Milestone 2026.04.49 — after SymCodeVerifier is deployed in live generation. Causal checker adds a second verification layer beyond arithmetic.
+- **When to incorporate:** Milestone 2026.04.49+
+
 ## 2026-04-21 arxiv Scan (Milestone 2026.04.47 Planning)
 
 ### TRUST Agents — Multi-Agent LLM Claim Extraction (LLM-as-Extractor Architecture)
