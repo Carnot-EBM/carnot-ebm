@@ -2377,3 +2377,4 @@ python/ |
 | 2026-04-21 09:58 UTC | Exp 629: interwhen Diagnostic — Gate Check for VR  | SKIP | Pre-tests failing, self-heal failed: 4 failed, 92 passed, 2 warnings in 7.58s |
 | 2026-04-21 10:36 UTC | Exp 629: interwhen Diagnostic — Gate Check for VR  | OK | 81 passed, 2 warnings in 13.70s |
 | 2026-04-21 10:43 UTC | Exp 630: Live VR Attempt #16 — gate_open=False | BLOCKED | 20 tests pass; retro_033_resolved=False; gate closed (recall=0.12 < 0.20) |
+| 2026-04-21 10:45 UTC | Exp 630: Live VR Attempt #16 — GATED on Exp 629 ga | OK | 81 passed, 2 warnings in 12.46s |
