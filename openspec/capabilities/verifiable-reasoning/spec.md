@@ -12900,3 +12900,34 @@ When: 3 sessions of constraint patterns are added and compute_forgetting_rate is
 Then: forgetting_rate < 0.05 (lsebmcl_no_forgetting == True).
 
 **Implementation Status:** Implemented (tests/python/test_lsebmcl_replay.py, Exp 660)
+
+
+### REQ-HW-031: Ising Sampler v3 RTL — h_ema Register and EMA Update Stage (N=64)
+
+The hardware/kv260/ising_sampler_v3.v module shall implement per-spin exponential
+moving average (EMA) of the local field h, as specified by arXiv 2604.17109 (Exp 648).
+
+- REQ-HW-031-1: Module ising_sampler_v3 shall be parameterised with N (default 64),
+  EMA_ALPHA_NUM (default 7), and EMA_ALPHA_DEN (default 8), where N=64 is verified
+  to fit XCK26 (KV260) at 48.5% LUTs post-synthesis.
+- REQ-HW-031-2: One signed h_ema register of FIELD_WIDTH bits shall exist per spin,
+  holding the EMA-smoothed local field.
+- REQ-HW-031-3: Each clock cycle the EMA update stage shall compute:
+  h_ema[i] <= (EMA_ALPHA_NUM * h_ema[i] + (EMA_ALPHA_DEN - EMA_ALPHA_NUM) * h_in[i])
+              / EMA_ALPHA_DEN
+  Division by EMA_ALPHA_DEN (power of two) shall synthesise as arithmetic right shift.
+- REQ-HW-031-4: The flip probability / Metropolis stage shall use h_ema (not h_in) as
+  the effective field, consistent with the v3 spec change from v2.
+- REQ-HW-031-5: When EMA_ALPHA_NUM=0, h_ema[i] = h_in[i] every cycle, degrading to v2
+  behaviour (no inertia).
+
+**Implementation Status:** Implemented (hardware/kv260/ising_sampler_v3.v, Exp 662)
+
+### SCENARIO-HW-031: EMA Field Converges to Constant h_in Within 64 Cycles
+
+Given: ising_sampler_v3 with N=64, EMA_ALPHA_NUM=7, EMA_ALPHA_DEN=8, FIELD_WIDTH=18,
+       driven with constant h_in = 1000 for all spins.
+When: 200 clock cycles elapse after reset deasserts.
+Then: h_ema_out for spin 0 is within 5% of 1000 (i.e., abs(h_ema_spin0 - 1000) <= 50).
+
+**Implementation Status:** Implemented (hardware/kv260/ising_sampler_v3_tb.v, Exp 662)
