@@ -2399,3 +2399,4 @@ python/ |
 | 2026-04-21 15:48 UTC | Exp 643: Ensemble Recall Gate v2 — InterWhen OR HE | OK | 81 passed, 2 warnings in 7.80s |
 | 2026-04-21 16:03 UTC | Exp 644: Live VR Attempt #17 — Ensemble Extractor (RETRO-033 attempt #17) | OK | 21 tests pass; CI stub mode; gate_open=True (Exp 643 ensemble_recall=0.36); signed_improvement=0.0, retro_033_resolved=False; honest_verdict=vr_no_improvement_still_blocked |
 | 2026-04-21 16:04 UTC | Exp 644: Live VR Attempt #17 — GATED on Exp 643 ga | OK | 81 passed, 2 warnings in 7.89s |
+| 2026-04-21 16:15 UTC | Exp 645: Tier 1 FR-11 Self-Learning Relay — Real V | OK | 81 passed, 2 warnings in 7.57s |
