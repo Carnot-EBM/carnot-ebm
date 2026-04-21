@@ -2410,3 +2410,4 @@ python/ |
 | 2026-04-21 18:08 UTC | Exp 652: Prompt-Injection EBM Classifier v1 — Dist | OK | 81 passed, 2 warnings in 7.23s |
 | 2026-04-21 18:39 UTC | Plan milestone 2026.04.50 | OK | 14 tasks proposed |
 | 2026-04-21 18:44 UTC | Milestone 2026.04.50 activated | OK | 14 tasks queued |
+| 2026-04-21 18:53 UTC | Exp 653: StructuredEquationForcer — RETRO-070 generation-layer fix | OK | detection_rate_on_forced=1.0; free_form=0.0; honest_verdict=equation_forcer_ready; 23 tests pass |

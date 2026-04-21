@@ -520,6 +520,11 @@ from carnot.pipeline.causal_reasoning_verifier import (  # noqa: E402
     CausalEntailmentResult,
     CausalReasoningVerifier,
 )
+from carnot.pipeline.structured_equation_forcer import (  # noqa: E402
+    FORCER_SYSTEM_ADDENDUM,
+    ForcedEquationResult,
+    StructuredEquationForcer,
+)
 
 __all__ = [
     "AgentStep",
@@ -862,4 +867,7 @@ __all__ = [
     "HermesV2StepResult",
     "CausalEntailmentResult",
     "CausalReasoningVerifier",
+    "FORCER_SYSTEM_ADDENDUM",
+    "ForcedEquationResult",
+    "StructuredEquationForcer",
 ]
