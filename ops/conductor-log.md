@@ -2379,3 +2379,4 @@ python/ |
 | 2026-04-21 10:43 UTC | Exp 630: Live VR Attempt #16 — gate_open=False | BLOCKED | 20 tests pass; retro_033_resolved=False; gate closed (recall=0.12 < 0.20) |
 | 2026-04-21 10:45 UTC | Exp 630: Live VR Attempt #16 — GATED on Exp 629 ga | OK | 81 passed, 2 warnings in 12.46s |
 | 2026-04-21 11:06 UTC | Exp 631: JEPA v14 ORACLE-Calibrated Retrain — Targ | OK | 81 passed, 2 warnings in 13.75s |
+| 2026-04-21 11:18 UTC | Exp 632: DualGPU 13B Forward Pass Proof (RETRO-071) | BLOCKED | 28 tests pass; model_loaded=False; HF weights not cached in CI; GPUs present (2x RTX 3090, 48 GB). Re-run with HF cache to complete proof. |
