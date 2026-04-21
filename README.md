@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 600+ experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 613-experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (600 experiments, 32 completed milestones)
+## Key Results (613 experiments, 33 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.46 (Exps 601-613, 33rd milestone, title "Probe and Manifest Closed — Recall Still Blocked") completed. Key results: **ExclusionManifest Conductor Verification** — RETRO-067 RESOLVED, manifest verified in conductor with precheck sentinel (Exp 601); **Live Corpus Expansion v2** — success, corpus_expanded (Exp 602); **CoACEExtractorV4 recall=4%** — no improvement vs V3, same ceiling, gate remains closed (Exp 603, RETRO-068 partially addressed); **DSVD Live Fine-Tuning** — no improvement, live AUC dropped to 0.159 (Exp 604, RETRO-069 still open); **NUP Probe v6 CAPO Retrain** — RETRO-049 RESOLVED, nup_v6_auc=0.9643, Tier 0c ready (Exp 608); **JEPA v12 OOD Validation** — v12 overfit confirmed on OOD, v13 checkpoint saved (Exp 607); **Interleaved Formal Logic Verifier** — ilv_improved (Exp 606); **D-Wave Wire-In** — dwave_wired_hisr_integrated (Exp 610); **FACT-E + p-bit Ising RTL** — RTL updated, FACT-E no signal (Exp 612); **Live VR CoACE v4** — BLOCKED, RETRO-033 attempt #14 gated by recall<threshold (Exp 609); honest_verdict=probe_and_manifest_closed_recall_still_blocked; open_retro_count=11.
 
 Note: Milestone 2026.04.45 (Exps 589-600, 32nd milestone, title "Infrastructure Progress — Live Corpus Gap Diagnosis") completed. Key results: **ExclusionManifest Conductor Wire-In** (Exp 589, RETRO-067 CLOSED — conductor now gates legacy experiments via exclusion manifest); **Import-Time CARNOT_FORCE_LIVE Assertion** — assertion module blocks model loading when flag absent (Exp 590, RETRO-062 prevention); **CoACEExtractorV3 live recall=4%** — WORSE than v2's 5.9% (Exp 591, RETRO-068 opened: live-corpus retraining required); **DSVD live AUC=0.586** — below 0.80 deployment threshold (Exp 592, RETRO-069 opened: same offline/live distribution gap as CoACE); **JEPA v12 CPMI+PROGRS retrain** — v12_val_auc=1.0, RETRO-063 validated (Exp 593); **D-Wave Quantum Annealing confirmed** — speedup_ratio=26.24x vs CPU Neal via HISR, dwave_available=true (Exp 598); honest_verdict=infrastructure_progress_no_accuracy_gain; open_retro_count=12.
 
