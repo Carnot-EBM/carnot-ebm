@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 652-experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 665-experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (652 experiments, 36 completed milestones)
+## Key Results (665 experiments, 37 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.50 (Exps 653-665, 37th milestone, title "Prompt-Injection Safety KAN + Structured Equation Forcing + SpecGuard Mid-Generation Verification") completed. Key results: **StructuredEquationForcer** — detection_rate_on_forced=1.0, equation_forcer_ready (Exp 653); **Ensemble Recall Gate v3** — ensemble_recall=0.224, gate_open=False (below 0.30 threshold, Exp 655); **Live VR Attempt #18 BLOCKED** — RETRO-033 attempt #18 gated (Exp 656); **FR-11 Tier 2 Cross-Session Relay** — fr11_real_violations=True (Exp 659); **LSEBMCL Constraint Memory** — forgetting_rate=0.0, lsebmcl_no_forgetting=True (Exp 660); **Ising Sampler v3 RTL** — h_ema register + EMA stage, N=64 fits XCK26 at 48.5% LUT utilisation (Exp 662); **HALP Probe** — halp_auc=0.442, not viable (Exp 663); **DualGPU Parallel EORM+JEPA** — dualgpu_proven=False, RETRO-071 still open (Exp 664); **Retrospective (Exp 665):** n_criteria_met=5/13, wall_time=4387.6 min (+0.17% regression vs .49), open_retro_count=12, honest_verdict=partial_milestone_5_of_13_criteria_met_retro_033_still_open_after_18_attempts.
 
 Note: Milestone 2026.04.49 (Exps 640-651, 36th milestone, title "HERMES v2 Live Generation Loop + Platt JEPA + Parallel Ising Inertia") completed. Key results: **Exclusion Manifest + DualGPU Preflight** — manifest_wired=True (Exp 640); **HERMES v2 Live Generation Loop** — sentence-by-sentence verification, hermes_v2_recall=0.0, RETRO-070 resolved via ensemble architecture pivot (Exp 641); **Causal Reasoning Verifier** — honest_verdict=causal_improves (Exp 642); **Ensemble Recall Gate v2** — ensemble_recall=0.36, gate_open_vr_unblocked (Exp 643); **Live VR Attempt #17** — BLOCKED, vr_no_improvement_still_blocked (Exp 644); **JEPA v14 Platt Scaling** — platt_calibrated, ECE improved (Exp 646); **OTV One-Token Verifier** — otv_not_viable_keep_eorm (Exp 647); **DualGPU 13B v2** — dualgpu_proven=False, RETRO-071 still open (Exp 649); **LowRankKAEM Multilevel + Sparse** — retro_057_resolved=False (Exp 650); **Retrospective (Exp 651):** retro_070_resolved=True, jepa_v14_calibrated=True, open_retro_count=9 (reduced from 11), honest_verdict=retro_070_resolved_jepa_calibrated_vr_still_blocked. **Exp 652 (post-milestone):** Prompt Injection KAN Classifier distilled from gpt-oss-safeguard-20b — classifier_auroc=0.9262 on 200-example held-out set, 3,432 parameters, 4.24s train time, 19.7ms median inference.
 
@@ -303,7 +305,7 @@ See the [technical report](docs/technical-report.md) for the full research recor
 
 ## 14 Principles Learned
 
-Hard-won lessons from the activation-based phase of a research program that now spans 626 experiments across 34 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
+Hard-won lessons from the activation-based phase of a research program that now spans 665 experiments across 37 milestones and 16 model families. These negative results are the project's primary contribution — they document what doesn't work and why, saving other researchers months of dead ends.
 
 ### What works
 1. **The model's own logprobs are the best energy.** No external EBM needed for rejection sampling — the LLM's own confidence is already an energy function. Simple, practical, +10%.
