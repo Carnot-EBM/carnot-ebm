@@ -89,8 +89,24 @@ N_QUESTIONS = 50
 QUESTION_INDICES = "0-49"
 GSM8K_SEED = 42
 
-GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
-QWEN_MODEL_ID = "Qwen/Qwen3.5-0.8B"
+# MODEL SELECTION — prefer cached SOTA GGUFs over legacy tiny models.
+# See RETRO-066/068/070.  Only SOTA GGUFs produce real arithmetic CoT.
+from carnot.inference.sota_models import cached_sota_pair as _cached_sota_pair
+
+_sota_specs = _cached_sota_pair(gpu_indices=(0, 1))
+if _sota_specs is not None:
+    QWEN_MODEL_ID = _sota_specs[0]["hf_id"]
+    GEMMA4_MODEL_ID = _sota_specs[1]["hf_id"]
+    QWEN_MODEL_PATH = _sota_specs[0]["model_path"]
+    GEMMA4_MODEL_PATH = _sota_specs[1]["model_path"]
+    _MODELS_USED_REAL_SOTA = True
+else:
+    print("WARNING: cached SOTA GGUFs unavailable, falling back to tiny models — output quality will be poor")
+    QWEN_MODEL_ID = "Qwen/Qwen3.5-0.8B"
+    GEMMA4_MODEL_ID = "google/gemma-4-E4B-it"
+    QWEN_MODEL_PATH = None
+    GEMMA4_MODEL_PATH = None
+    _MODELS_USED_REAL_SOTA = False
 GEMMA4_REQUIRED_GB = 10.0
 QWEN_REQUIRED_GB = 1.5
 

@@ -37,10 +37,43 @@
     # 2. Setup (creates dirs, loads checkpoint if present)
     tmpl.setup()
 
-    # 3. (Optional) Pre-warm GPUs using Exp 294 pattern
-    MODEL_SPECS = [
-        {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0},
-    ]
+    # 3. (Optional) Pre-warm GPUs using Exp 294 pattern.
+    #
+    # MODEL SELECTION — MANDATORY for any live-data or verify-repair experiment:
+    # Always try `cached_sota_pair()` first; it resolves the three mandated SOTA
+    # GGUFs (unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-26B-A4B-it-GGUF,
+    # unsloth/gemma-4-31B-it-GGUF) via the HF cache and returns `model_path`
+    # entries loadable through `Gemma4QuantizedLoader` (llama.cpp-backed, model-
+    # agnostic despite the class name).  These produce REAL arithmetic CoT that
+    # downstream extractors (CoACE, LLMAsExtractor, JEPA) can actually score.
+    #
+    # Hardcoding `Qwen/Qwen3.5-0.8B` or `google/gemma-4-E4B-it` produces
+    # 'The answer is 42.' and echo-question garbage that has no arithmetic
+    # structure — this blocked RETRO-033 for 15+ consecutive attempts before
+    # the cached SOTA GGUFs were wired in.  Only use the legacy tiny-model
+    # pair when `cached_sota_pair()` returns None (GGUFs not present on the
+    # current host) AND log a LOUD warning about expected output quality.
+    #
+    # Record `models_used` in every artifact with the exact hub IDs so the
+    # retrospective can verify which path ran.
+    from carnot.inference.sota_models import cached_sota_pair  # noqa
+    specs = cached_sota_pair(gpu_indices=(0, 1))
+    if specs is None:
+        print("WARNING: cached_sota_pair() returned None — no SOTA GGUFs in "
+              "HF cache. Falling back to legacy tiny models "
+              "(Qwen/Qwen3.5-0.8B + google/gemma-4-E4B-it). Expected CoT "
+              "structure: POOR. Output will be 50/50 'The answer is 42.' + "
+              "question-echo. Downstream extractor recall will be < 10%.")
+        MODEL_SPECS = [
+            {"name": "Gemma4-E4B-it", "hf_id": "google/gemma-4-E4B-it", "gpu": 0},
+            {"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 1},
+        ]
+        models_used_field = [s["hf_id"] for s in MODEL_SPECS]
+        expected_cot_structure = False
+    else:
+        MODEL_SPECS = specs   # each entry has name, hf_id, gpu, model_path
+        models_used_field = [s["hf_id"] for s in MODEL_SPECS]
+        expected_cot_structure = True
     gpu_status = tmpl.setup_gpu(MODEL_SPECS)
     if not gpu_status["all_healthy"]:
         artifact = tmpl.build_result({}, status="blocked",
