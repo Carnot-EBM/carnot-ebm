@@ -2428,3 +2428,4 @@ python/ |
 | 2026-04-21 21:22 UTC | Exp 665: Milestone 2026.04.50 Operational Retrospe | OK | 81 passed, 2 warnings in 6.88s |
 | 2026-04-21 21:52 UTC | Plan milestone 2026.04.51 | OK | 12 tasks proposed |
 | 2026-04-21 21:57 UTC | Milestone 2026.04.51 activated | OK | 12 tasks queued |
+| 2026-04-21 22:09 UTC | Exp 666: Exclusion Manifest Wire-In v3 + Pre-Fligh | OK | 102 passed, 2 warnings in 7.31s |
