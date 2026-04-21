@@ -2396,3 +2396,4 @@ python/ |
 | 2026-04-21 15:22 UTC | Exp 641: HermesVerifierAdapter v2 — LIVE Step-by-S | OK | 89 passed, 2 warnings in 8.32s |
 | 2026-04-21 15:33 UTC | Exp 642: CausalReasoningVerifier | OK | causal_recall=0.36 > baseline=0.12; 28 tests pass |
 | 2026-04-21 15:36 UTC | Exp 642: CausalReasoningVerifier — Step Entailment | OK | 81 passed, 2 warnings in 8.09s |
+| 2026-04-21 15:48 UTC | Exp 643: Ensemble Recall Gate v2 — InterWhen OR HE | OK | 81 passed, 2 warnings in 7.80s |
