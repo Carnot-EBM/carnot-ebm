@@ -259,6 +259,8 @@ def main() -> None:
             status="success",
         )
 
+        # build_result() overwrites 'schema' with sorted keys; restore the schema identifier.
+        artifact["schema"] = "carnot.trust_agents_comparison.v1"
         with open(result_path, "w") as f:
             json.dump(artifact, f, indent=2)
 
