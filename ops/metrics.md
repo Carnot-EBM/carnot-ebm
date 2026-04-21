@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-21 Milestone 2026.04.49 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-21T13:57:38Z | 2026-04-21T14:12:12Z | Planned milestone 2026.04.49 "HERMES v2 Live Generation Loop + Platt JEPA + Parallel Ising Inertia": read 12 project files + .48 retro JSON (results/experiment_639_retro_2026_04_48.json) + key experiment result JSONs (630, 631, 632, 637). Spawned arxiv research subagent (3 genuinely new papers: arXiv 2604.17109 Parallel Dense Ising with Inertia — 35x speedup, filed Exp 648; arXiv 2601.04358 Energy-Time-Accuracy Thermodynamics — hardware calibration, filed .50+; arXiv 2512.21911 Sparse Speculative Verification — selective SymCodeVerifier, filed .50+). Appended 3 new entries to research-references.md as "2026-04-21 arxiv Scan (Milestone 2026.04.49 Planning)". Identified 3 biggest gaps: (1) RETRO-070 CRITICAL carry 3 — post-hoc extraction architecturally capped at 12% recall; both interwhen and HERMES v1 achieve same ceiling because IT models write arithmetic in prose; fix: HERMES v2 live generation loop (generate step-by-step, verify mid-generation, inject hints before next step); gate upgraded from 0.20 to 0.30; (2) JEPA v14 ECE=0.132 (target 0.10) — Platt temperature scaling (single parameter T) expected to bring ECE to ~0.05; (3) DualGPU never demonstrated + exclusion manifest 13th miss — Exp 640 (MANDATORY FIRST) wires manifest AND implements DualGPURetrain with ThreadPoolExecutor. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (12 experiments 640-651, 5 phases, architecture diagram with Tier 2.6 HermesVerifierAdapter v2, dependency graph, success criteria table, 6 open RETROs table, hardware requirements table, new papers table). Wrote research-roadmap-next.yaml (12 experiments 640-651 with complete prompts; HermesV2LiveLoop generates sentence-by-sentence + injects correction hints; PlattScaler gradient-descent T optimization; ParallelDenseIsingInertia with EMA h_i update; DualGPURetrain ThreadPoolExecutor; all end with JAX_PLATFORMS=cpu pytest and "Do NOT push. Do NOT modify scripts/research_conductor.py."). | ~120k |
+
+---
+
 ## Session: 2026-04-21 Milestone 2026.04.47 Planning
 
 ### Turn Log
