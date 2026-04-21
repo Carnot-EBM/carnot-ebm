@@ -499,6 +499,10 @@ from carnot.pipeline.interwhen_monitor import (  # noqa: E402
     InterWhenMonitor,
     InterWhenViolation,
 )
+from carnot.pipeline.hermes_adapter import (  # noqa: E402
+    HermesVerificationStep,
+    HermesVerifierAdapter,
+)
 
 __all__ = [
     "AgentStep",
@@ -830,4 +834,6 @@ __all__ = [
     "MetaJuLSAdapter",
     "InterWhenMonitor",
     "InterWhenViolation",
+    "HermesVerificationStep",
+    "HermesVerifierAdapter",
 ]
