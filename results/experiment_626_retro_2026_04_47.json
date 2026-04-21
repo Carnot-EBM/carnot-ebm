@@ -1,0 +1,118 @@
+{
+  "experiment": 626,
+  "title": "Milestone 2026.04.47 Retrospective",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T06:21:36Z",
+  "finished_at": "2026-04-21T06:21:36Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": "carnot.operational_retro.v22",
+  "milestone": "2026.04.47",
+  "n_experiments_run": 13,
+  "n_not_run": 0,
+  "total_wall_time_minutes": 2.092,
+  "mean_time_min": 0.161,
+  "wall_time_vs_prior_delta_minutes": -567.908,
+  "retro_033_resolved": false,
+  "retro_069_resolved": true,
+  "retro_070_resolved": false,
+  "nup_v6_deployed": true,
+  "fr11_confirmed": false,
+  "jepa_v13_calibrated": false,
+  "adaptation_effective": true,
+  "best_extractor": "unknown",
+  "dualgpu_confirmed": false,
+  "v1_recall": 0.04,
+  "symcode_live_auc": 0.804,
+  "v13_ece": 0.2073119580745697,
+  "cascade_latency_ms": 1.2722072198812384,
+  "trust_recall": 0.0,
+  "simulation_validated": true,
+  "retro_closure_rate": 0.091,
+  "open_retro_count": 11,
+  "new_retro_items": [
+    {
+      "id": "RETRO-071",
+      "title": "DualGPU parallel forward-pass unconfirmed \u2014 SIX consecutive milestones",
+      "opened_milestone": "2026.04.47",
+      "carry_count": 0,
+      "description": "Exp 614 measured gpu1_utilization_confirmed=False.  This is the sixth consecutive milestone where GPU-1 parallel utilisation has not been confirmed.  The exclusion manifest DualGPU verification experiment ran successfully but did not confirm GPU-1 utilisation.  Root cause: the benchmark script does not load a large enough model to saturate both GPUs simultaneously.  Resolution requires a real multi-GPU forward-pass benchmark with a model >= 13B parameters spread across both GPUs, measuring sustained GPU-1 utilization > 70% during the inference pass.  Block any DualGPU performance claims until confirmed.",
+      "priority": "medium"
+    }
+  ],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=5",
+      "action_required": "Verify closure in result files before .48 planning"
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q verify-repair precision \u2014 15 attempts, still not closed",
+      "carry_count": ">=15",
+      "action_required": "Blocked: gate_open=False (v1_recall=4%).  Fifteen zero-positive attempts confirm that no extractor variant can cross the live/offline gap without mid-generation monitoring.  Do NOT schedule attempt #16 until interwhen (arXiv 2602.11202) is integrated and extractor recall >= 20% on live data.  ORACLE data elicitation (arXiv 2603.21140) is required to build a FOVER v5 training corpus that matches live LLM output style."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 200q VeriCoT+Wilson CI \u2014 still not closed",
+      "carry_count": ">=10",
+      "action_required": "Same root cause as RETRO-033. Block until recall > 30%."
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": ">=4",
+      "action_required": "Architectural redesign needed. Calibration layer approach exhausted."
+    },
+    {
+      "id": "RETRO-060",
+      "title": "JEPA architecturally anti-correlated \u2014 superseded by RETRO-063",
+      "carry_count": ">=4",
+      "action_required": "RETRO-063 validated.  JEPA v13 OOD AUC=0.868 confirms architecture is sound.  Calibration (ECE) remains open \u2014 v13_ece=0.207 vs threshold 0.10.  Close RETRO-060 tracking; open calibration work under JEPA v14."
+    },
+    {
+      "id": "RETRO-064",
+      "title": "CoACE recall 4% on live data \u2014 pipeline accuracy lift undetectable",
+      "carry_count": ">=4",
+      "action_required": "LLMAsExtractorV1 v1_recall=0.04 (Exp 616).  TRUST agents trust_recall=0.0 (Exp 623).  Neither extractor architecture closes the gap.  interwhen + ORACLE data elicitation required (RETRO-033 root cause)."
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL unavailable \u2014 hardware energy calibration blocked",
+      "carry_count": ">=4",
+      "action_required": "Need Intel RAPL or AMD Energy driver on test machine"
+    },
+    {
+      "id": "RETRO-066",
+      "title": "CoACE offline/live distribution gap \u2014 extractor redesign unresolved",
+      "carry_count": ">=3",
+      "action_required": "LLM-as-extractor in isolation (v1_recall=4%) cannot close the gap.  ORACLE data elicitation (arXiv 2603.21140) is the only identified path to a training corpus that matches live output distribution."
+    },
+    {
+      "id": "RETRO-068",
+      "title": "LLMAsExtractorV1 live recall 4-6% \u2014 below 20% gate threshold",
+      "carry_count": ">=2",
+      "action_required": "Gate recall >= 20%.  Current: v1_recall=0.04 (Exp 616), trust_recall=0.0 (Exp 623).  interwhen mid-generation monitor is the next architectural intervention (arXiv 2602.11202).  No more extractor-only tuning passes."
+    },
+    {
+      "id": "RETRO-070",
+      "title": "LLMAsExtractorV1 still below 20% recall \u2014 architecture review required",
+      "carry_count": 1,
+      "action_required": "Exp 616 v1_recall=0.04 \u2014 gate_open=False.  Implement interwhen (arXiv 2602.11202) mid-generation monitor to intercept chain-of-thought violations before they are committed to the token stream.  This is the architectural prerequisite for closing RETRO-033 at attempt #16."
+    },
+    {
+      "id": "RETRO-071",
+      "title": "DualGPU parallel forward-pass unconfirmed for six consecutive milestones",
+      "carry_count": 0,
+      "action_required": "Run a real multi-GPU benchmark with a model >= 13B spread across both GPUs.  Measure sustained GPU-1 utilization > 70% during inference.  Block all DualGPU performance claims until confirmed."
+    }
+  ],
+  "top_priorities_for_48": [
+    "RETRO-070 still open \u2014 implement interwhen (arXiv 2602.11202) mid-generation monitor + ORACLE data elicitation (arXiv 2603.21140) for FOVER v5 training data.  Both interventions are required before scheduling VR attempt #16.  No more extractor-only tuning passes.",
+    "JEPA v14: train on ORACLE-labeled FOVER v5 corpus with LLMAsExtractorV1 labels.  Target: v14_ece < 0.10 (JEPA v13 ECE=0.207 failed this threshold).  Use ORACLE-labeled data to close the calibration gap that synthetic training data cannot bridge.  JEPA v14 is the prerequisite for a calibrated cascade.",
+    "KV260 FPGA: human must install Vivado 2023.2 before .49.  Exp 624 confirmed simulation_validated=True \u2014 the synchronous Ising RTL is functionally correct.  Synthesis (not_attempted) is the only remaining blocker.  Install Vivado, run synthesis, capture resource utilisation and timing closure, and publish as the first Carnot FPGA hardware result."
+  ],
+  "honest_verdict": "symcode_closed_nup_deployed_recall_still_blocked",
+  "env_autofix": true
+}
