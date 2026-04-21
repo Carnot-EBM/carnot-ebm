@@ -104,8 +104,17 @@ RESULT_PATH = "results/experiment_661_kv260_n64_benchmark.json"
 WATCHDOG_MIN = 45
 
 KRIA_HOST = os.environ.get("CARNOT_KRIA_HOST", "kria")
-KRIA_BITSTREAM_DIR = "/opt/carnot/bitstreams"
-KRIA_BITSTREAM_NAME = "carnot_ising_v2_n64_40mhz.bit"
+# Kria app name — must match the directory under /lib/firmware/xilinx/ AND
+# the basename of the .bit.bin / .dtbo files inside it.  See
+# hardware/kv260/app/package_app.sh which produces the bundle under this name.
+KRIA_APP_NAME = "carnot_ising_v2_n64"
+KRIA_APP_BUNDLE_DIR = (
+    _REPO_ROOT / "hardware" / "kv260" / "app" / "build" / KRIA_APP_NAME
+)
+# Raw .bit is kept for reference/sha256 but is NOT what gets loaded — Kria's
+# in-kernel FPGA manager requires the bootgen-wrapped .bit.bin inside the app
+# bundle.  See the .48 retro / Exp 661 first run which failed with
+# "Load Error: -1" on the raw .bit via dfx-mgr-client.
 LOCAL_BITSTREAM = _REPO_ROOT / "output" / "carnot_ising_bd" / "carnot_ising_bd_wrapper.bit"
 
 # Ising problem (Sherrington-Kirkpatrick N=64) — parameters fixed for
@@ -293,48 +302,92 @@ def preflight(tmpl: ExperimentTemplate) -> tuple[bool, str | None, dict]:
 
 
 def deploy_bitstream(ctx: dict) -> tuple[bool, str | None, dict]:
-    """Copy bitstream to kria, load via dfx-mgr-client, confirm via xrt-smi."""
+    """Deploy the Kria app bundle and load it via xmutil loadapp.
+
+    Why xmutil + not dfx-mgr-client:
+      The first Exp 661 run failed with "Load Error: -1" on
+      `sudo dfx-mgr-client -load <path.bit>` because Kria's in-kernel FPGA
+      manager expects a packaged app directory under /lib/firmware/xilinx/,
+      not a raw Vivado .bit.  xmutil loadapp is the canonical loader — it
+      also applies the device-tree overlay so /dev/uio* nodes appear for the
+      new PL peripherals.
+
+    Prerequisites (produced by hardware/kv260/app/package_app.sh):
+      hardware/kv260/app/build/<KRIA_APP_NAME>/
+        <KRIA_APP_NAME>.bit.bin   (bootgen-wrapped PL bitstream)
+        <KRIA_APP_NAME>.dtbo      (compiled device-tree overlay)
+        shell.json                (XRT_FLAT, 1 slot)
+    """
     deploy: dict = {}
-    # Ensure target directory exists.
+
+    if not KRIA_APP_BUNDLE_DIR.is_dir():
+        return False, HONEST_VERDICTS["load_fail"], {
+            "phase": "bundle_check",
+            "reason": (
+                f"Kria app bundle not found at {KRIA_APP_BUNDLE_DIR}. "
+                f"Run: source /tools/Xilinx/2025.2.1/Vivado/settings64.sh && "
+                f"CARNOT_DTC_ON_KRIA=1 hardware/kv260/app/package_app.sh"
+            ),
+        }
+    deploy["app_bundle_dir"] = str(KRIA_APP_BUNDLE_DIR)
+    deploy["app_bundle_files"] = sorted(p.name for p in KRIA_APP_BUNDLE_DIR.iterdir())
+
+    # Ship the bundle to /tmp on Kria, then sudo-move into /lib/firmware/xilinx/.
+    remote_tmp = f"/tmp/{KRIA_APP_NAME}"
+    rc, _, err = run_ssh(f"rm -rf {remote_tmp}", timeout=15)
+    if rc != 0:
+        return False, HONEST_VERDICTS["load_fail"], {
+            "phase": "cleanup_tmp",
+            "reason": f"rm -rf {remote_tmp} failed: {err.strip()}",
+        }
+    result = subprocess.run(
+        ["scp", "-r", "-o", "StrictHostKeyChecking=accept-new",
+         "-o", "ConnectTimeout=10",
+         str(KRIA_APP_BUNDLE_DIR), f"{KRIA_HOST}:/tmp/"],
+        capture_output=True, text=True, timeout=180,
+    )
+    if result.returncode != 0:
+        return False, HONEST_VERDICTS["load_fail"], {
+            "phase": "scp_bundle",
+            "reason": f"scp -r failed: {result.stderr.strip()}",
+        }
+    deploy["remote_bundle_tmp"] = remote_tmp
+
+    target = f"/lib/firmware/xilinx/{KRIA_APP_NAME}"
     rc, _, err = run_ssh(
-        f"sudo mkdir -p {KRIA_BITSTREAM_DIR} && "
-        f"sudo chown $(id -u):$(id -g) {KRIA_BITSTREAM_DIR}",
-        timeout=20,
+        f"sudo rm -rf {target} && sudo mv {remote_tmp} {target}", timeout=30,
     )
     if rc != 0:
         return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "mkdir",
-            "reason": f"mkdir {KRIA_BITSTREAM_DIR} failed: {err.strip()}",
+            "phase": "install_bundle",
+            "reason": f"sudo mv -> {target} failed: {err.strip()}",
         }
+    deploy["installed_bundle"] = target
 
-    remote_path = f"{KRIA_BITSTREAM_DIR}/{KRIA_BITSTREAM_NAME}"
-    rc, _, err = run_scp(str(LOCAL_BITSTREAM), remote_path, timeout=180)
+    # Unload any previously-loaded app to avoid "PL is already loaded" races.
+    run_ssh(f"sudo xmutil unloadapp 2>/dev/null || true", timeout=15)
+
+    rc, out, err = run_ssh(f"sudo xmutil loadapp {KRIA_APP_NAME}", timeout=60)
     if rc != 0:
         return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "scp",
-            "reason": f"scp failed: {err.strip()}",
+            "phase": "xmutil_loadapp",
+            "reason": f"xmutil loadapp returned {rc}; stdout={out.strip()}; stderr={err.strip()}",
+            "remote_bundle_files": _remote_ls(target),
         }
-    deploy["remote_bitstream_path"] = remote_path
+    deploy["xmutil_loadapp_stdout"] = out.strip()
 
-    rc, out, err = run_ssh(
-        f"sudo dfx-mgr-client -load {remote_path}", timeout=60,
-    )
-    if rc != 0:
-        return False, HONEST_VERDICTS["load_fail"], {
-            "phase": "dfx-mgr-client",
-            "reason": f"dfx-mgr-client returned {rc}; stdout={out.strip()}; stderr={err.strip()}",
-        }
-    deploy["dfx_mgr_output"] = out.strip()
-
-    rc, out, err = run_ssh("xrt-smi examine", timeout=15)
+    rc, out, err = run_ssh("xrt-smi examine || true", timeout=15)
     deploy["xrt_smi_examine_returncode"] = rc
     deploy["xrt_smi_examine_stdout"] = out.strip()
-    if rc != 0:
-        deploy["xrt_smi_note"] = (
-            "xrt-smi examine exited non-zero; proceeding with AXI smoke test "
-            "anyway since the PL can still be accessed via /dev/mem mmap."
-        )
+    # Also grab the /dev/uio* nodes the overlay should have created.
+    _, out, _ = run_ssh("ls /dev/uio* 2>/dev/null", timeout=10)
+    deploy["dev_uio_nodes"] = out.strip().splitlines()
     return True, None, deploy
+
+
+def _remote_ls(path: str) -> list[str]:
+    rc, out, _ = run_ssh(f"ls -la {path} 2>&1", timeout=10)
+    return out.strip().splitlines() if rc == 0 else []
 
 
 # -----------------------------------------------------------------------------
@@ -344,8 +397,12 @@ def deploy_bitstream(ctx: dict) -> tuple[bool, str | None, dict]:
 
 KRIA_AXI_HELPER = r"""#!/usr/bin/env python3
 # Auto-generated by experiment_661_kv260_n64_benchmark.py — do not hand-edit.
-# Runs on kria.  Uses /dev/mem mmap to reach the PL AXI slave at 0xA0000000.
-import json, mmap, os, struct, sys, time, argparse
+# Runs on kria.  Opens the UIO node for our AXI-Lite slave at 0xA0000000 and
+# mmaps its register window.  Using /dev/uio* rather than /dev/mem is critical:
+# a bad access through /dev/mem hangs the whole PS (observed in the first
+# Exp 661 attempt, board went unreachable).  The UIO driver bounds the
+# transaction and returns a bus error on malformed access.
+import json, glob, mmap, os, struct, sys, time, argparse
 
 AXI_BASE = 0xA0000000
 REG_CONTROL = 0x00000; REG_STATUS = 0x00004; REG_SPIN_COUNT = 0x00008
@@ -364,16 +421,44 @@ with open(args.problem_json) as fh:
     prob = json.load(fh)
 N = prob["n_spins"]; MD = prob["max_degree"]
 
-fd = os.open("/dev/mem", os.O_RDWR | os.O_SYNC)
+# Find the UIO node whose sysfs addr matches AXI_BASE.  Kria enumerates
+# /sys/class/uio/uio<N>/maps/map0/addr = "0xa0000000" for our slave.
+uio_dev = None
+for p in sorted(glob.glob("/sys/class/uio/uio*/maps/map0/addr")):
+    try:
+        with open(p) as fh:
+            if int(fh.read().strip(), 16) == AXI_BASE:
+                uio_dev = "/dev/" + p.split("/")[4]
+                break
+    except (OSError, ValueError):
+        pass
+if uio_dev is None:
+    print(json.dumps({"axi_smoke": False,
+                      "reason": (f"no /dev/uio* with sysfs addr=0x{AXI_BASE:08x}. "
+                                 f"Overlay load may have failed — run "
+                                 f"`sudo xmutil listapps` to confirm.")}))
+    sys.exit(2)
+
+fd = os.open(uio_dev, os.O_RDWR | os.O_SYNC)
+# UIO maps offset 0 to map0 (0xA000_0000 in our case), so pass offset=0.
 mm = mmap.mmap(fd, 128 * 1024, mmap.MAP_SHARED,
-               mmap.PROT_READ | mmap.PROT_WRITE, offset=AXI_BASE)
+               mmap.PROT_READ | mmap.PROT_WRITE, offset=0)
 def wr32(off, val):  mm[off:off+4] = struct.pack("<I", val & 0xFFFFFFFF)
 def rd32(off):        return struct.unpack("<I", mm[off:off+4])[0]
 
-# Sanity: SPIN_COUNT read-back.
-spc = rd32(REG_SPIN_COUNT)
+# Sanity: SPIN_COUNT read-back.  If this hangs or returns 0, the PL clock
+# didn't come up (fclk_cfg not set / overlay issue).  We wrap in a best-
+# effort 2-s timeout using SIGALRM so we don't hang the whole experiment.
+import signal
+def _timeout(*_): raise TimeoutError("AXI read timed out (PL clock down?)")
+signal.signal(signal.SIGALRM, _timeout)
+signal.alarm(2)
+try:
+    spc = rd32(REG_SPIN_COUNT)
+finally:
+    signal.alarm(0)
 if spc != N:
-    print(json.dumps({"axi_smoke": False,
+    print(json.dumps({"axi_smoke": False, "uio_dev": uio_dev,
                       "reason": f"SPIN_COUNT readback {spc} != expected {N}"}))
     sys.exit(2)
 
