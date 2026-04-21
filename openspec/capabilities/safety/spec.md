@@ -119,6 +119,108 @@ does not require financial or legal keywords.
 the auditor can inspect whether the "buy" keyword contributes positively or
 negatively to energy at that hidden unit.
 
+### REQ-SAFE-007: PromptInjectionEnergyChecker — Distilled from gpt-oss-safeguard
+
+The system shall provide a `PromptInjectionEnergyChecker` that assigns scalar
+energy to prompt text such that:
+- **Benign prompt text** (ordinary task requests) receives LOW energy.
+- **Injection / jailbreak text** (role-override, system-prompt exfiltration,
+  delimiter-confusion, multi-stage smuggled payloads) receives HIGH energy.
+
+The checker reuses Carnot's KAN tier (same architecture as
+`ComplianceEnergyChecker`) but trained on a distillation corpus generated from
+`gpt-oss-safeguard-20b` (Apache 2.0). The student KAN inherits the teacher's
+decision boundary at ~2000× fewer parameters.
+
+**Why EBM for this:** injection defense is exactly the kind of structural-pattern
+problem the energy function is ground truth for — "does this text match the
+shape of an attack?" maps to an energy landscape the same way arithmetic
+validation does. A calibrated scalar (not just a boolean) composes with the
+VerifyRepairPipeline's energy budget and can be re-thresholded at deployment
+without retraining.
+
+**Acceptance criteria:**
+- `checker.energy(text) -> float` returns a scalar.
+- `checker.is_safe(text, threshold) -> bool` returns True when energy is below
+  the threshold.
+- Trained on ≥ 2,000 balanced (benign / injection) examples covering the
+  OWASP LLM-01 taxonomy (prompt-injection categories 1–8).
+- AUROC ≥ 0.90 on a held-out test split.
+- CPU-only forward pass < 5 ms per prompt on a single core (JAX CPU, no GPU).
+
+### REQ-SAFE-008: gpt-oss-safeguard Distillation Pipeline
+
+The system shall provide a reproducible distillation pipeline that:
+1. Loads `gpt-oss-safeguard-20b` via `cached_sota_pair()`-style resolution
+   (Q4_K_M GGUF preferred; fallback to fp16 weights if GGUF unavailable).
+2. Accepts a benign corpus (GSM8K, HumanEval) and a jailbreak corpus
+   (JailbreakBench, AdvBench).
+3. Runs the teacher to produce `(prompt, label, reasoning_trace)` triples.
+4. Writes a dataset artifact at
+   `data/prompt_injection_distill/<corpus_hash>.jsonl`.
+5. Caches teacher outputs keyed by `(model_hash, prompt_hash)` for determinism.
+
+**Acceptance criteria:**
+- CLI: `python -m carnot.distill.prompt_injection`.
+- Build time < 60 min for 2,000 prompts (teacher on GPU 0 if available).
+- OWASP/JailbreakBench corpora committed in plaintext; user-supplied prompts
+  only via SOPS-encrypted artifacts.
+- `apply_env_autofix()` invoked only inside the CLI entry point, never at
+  module import (.48 RETRO lesson — see `test_experiment_623_trust_agents.py`).
+
+### REQ-SAFE-009: Honest-Verdict Reporting for Partial Runs
+
+The result JSON of every prompt-injection classifier experiment shall include
+an `honest_verdict` field with one of:
+
+- `"distillation_corpus_built_classifier_trained_auroc_met"` — full success.
+- `"distillation_corpus_built_classifier_trained_auroc_below_threshold"` —
+  `reason` MUST describe the failure mode (class imbalance, teacher
+  hallucination, feature collapse, …).
+- `"distillation_corpus_built_classifier_not_trained"` — `reason` MUST specify
+  (GPU timeout, OOM, NaN loss, …).
+- `"distillation_corpus_not_built"` — `reason` MUST specify (missing GGUF,
+  missing HF token, GPU unavailable, wallclock exceeded).
+- `"blocked_on_dependency"` — `reason` MUST include the exact download command
+  to unblock.
+
+This discipline exists to prevent the Exps 387/393/407/416 pattern (four
+attempts, all "partial", no actionable verdict).
+
+## Scenarios
+
+### SCENARIO-SAFE-007: Prompt-Injection Classifier Passes Held-Out AUROC
+
+**Given** a `PromptInjectionEnergyChecker` trained on a 2,000-example corpus
+distilled from `gpt-oss-safeguard-20b` with an 80/20 split,
+
+**When** the checker is evaluated on the 400-example held-out test set
+containing benign GSM8K prompts and JailbreakBench attacks,
+
+**Then** AUROC ≥ 0.90 and the result JSON emits
+`honest_verdict: "distillation_corpus_built_classifier_trained_auroc_met"`.
+
+### SCENARIO-SAFE-008: Partial Run Emits Accurate Honest Verdict
+
+**Given** a prompt-injection classifier experiment where the teacher
+`gpt-oss-safeguard-20b` GGUF is not present in the cache,
+
+**When** the experiment runs,
+
+**Then** it emits `honest_verdict: "blocked_on_dependency"` with a `reason`
+field containing the exact `huggingface-cli download` command to fetch the
+missing weights, and exits with status code 0 (the blocker is operational,
+not a code bug).
+
+### SCENARIO-SAFE-009: Sub-5ms CPU Inference
+
+**Given** a trained 2.3K-parameter `PromptInjectionEnergyChecker`,
+
+**When** `checker.energy(prompt)` is called on a single CPU core with a
+50-token prompt,
+
+**Then** wall-clock inference is < 5 ms and no GPU device is initialized.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -126,3 +228,6 @@ negatively to energy at that hidden unit.
 | REQ-SAFE-004 | Implemented | ComplianceEnergyChecker in compliance_checker.py |
 | REQ-SAFE-005 | Implemented | financial, medical, legal, general domains |
 | REQ-SAFE-006 | Implemented | inspect_spline() exposes control points |
+| REQ-SAFE-007 | Proposed | Target: Exp 652 (distillation + classifier training) |
+| REQ-SAFE-008 | Proposed | Target: Exp 652 (distillation CLI + dataset artifact) |
+| REQ-SAFE-009 | Proposed | Enforced via result-schema validator in Exp 652 |
