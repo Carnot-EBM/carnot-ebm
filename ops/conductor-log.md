@@ -2349,3 +2349,4 @@ python/ |
 | 2026-04-20 23:23 UTC | Exp 609: Live VR CoACEV4 — RETRO-033 Attempt #14 ( | OK | 81 passed, 2 warnings in 16.93s |
 | 2026-04-20 23:41 UTC | Exp 610: D-Wave Backend Wire-In + HISR Production  | OK | 97 passed, 2 warnings in 32.84s |
 | 2026-04-20 23:54 UTC | Exp 611: FLIP Backward Inference + FR-11 Real Viol | OK | 81 passed, 2 warnings in 2.73s |
+| 2026-04-21 00:08 UTC | Exp 612: FACT-E Causal Faithfulness Probe + Synchr | OK | 81 passed, 2 warnings in 2.77s |
