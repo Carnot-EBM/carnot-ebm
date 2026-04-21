@@ -1,0 +1,230 @@
+# build_bd.tcl — Vivado Block Design wrapper for the Carnot Ising sampler on KV260
+#
+# **What this script does:**
+#   Creates a complete, bitstream-loadable Vivado project that wraps the
+#   ising_sampler_128_sync RTL (from hardware/kv260/ising_sampler_v2.v) as a
+#   PL-side AXI-Lite slave, connected to the Zynq UltraScale+ PS (on the K26
+#   SOM) via a SmartConnect.  All S_AXI_* ports are routed INTERNALLY to the
+#   PS-PL interconnect — none map to board pins.  This resolves the 3 DRC
+#   errors (KLOC-1 / NSTD-1 / UCIO-1) that blocked write_bitstream in the
+#   standalone synth_ising.tcl flow (commit e594bd17 / results/kv260_first_synthesis.json).
+#
+# **Why a BD wrapper is required:**
+#   ising_sampler_128_sync exposes 114 S_AXI_* top-level ports that must plug
+#   into the Zynq PS via the PL-PS AXI interconnect, NOT as physical KV260
+#   pins.  Standalone synthesis auto-places those ports as board I/O and
+#   Kria DRC rules correctly block that (two ports landed on K26 VRP
+#   calibration pins G4/W9, which are grounded 240-Ω reference resistors).
+#   A Block Design wraps the sampler in a context where AXI gets routed
+#   through PS internals, not pins.
+#
+# **Block Design topology:**
+#
+#     ┌──────────────────────────┐
+#     │  zynq_ultra_ps_e_0 (PS)  │
+#     │  ─ FCLK_CLK0 @ 100 MHz   │────┐
+#     │  ─ pl_resetn0            │    │
+#     │  ─ M_AXI_HPM0_FPD ──────────► │ axi_smartconnect_0 ─── S_AXI on
+#     └──────────────────────────┘    │                        ising_sampler_128_sync
+#                  ▲                  │
+#                  └─── proc_sys_reset_0 (synchronises reset to PL clock)
+#
+# **Usage:**
+#     source /tools/Xilinx/2025.2.1/Vivado/settings64.sh   # if not already
+#     cd /home/ianblenke/github.com/ianblenke/carnot
+#     vivado -mode batch -source hardware/kv260/build_bd.tcl \
+#            -log output/carnot_ising_bd/vivado.log \
+#            -journal output/carnot_ising_bd/vivado.jou
+#
+# **Deliverable:**
+#     output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper.bit
+#
+# **Target part:**  xck26-sfvc784-2LV-c  (KV260 production K26 SOM)
+# **Expected build time:**  25-60 min (synth + place + route + bitstream;
+#   the 128-spin sampler is compact but the PS wrapper adds ~30 min of P&R).
+#
+# **Post-build deployment to KV260:**
+#     scp output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper.bit \
+#         kria:/opt/carnot/bitstreams/carnot_ising_v2.bit
+#     ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2.bit'
+#     ssh kria 'xrt-smi examine'   # should now list the accelerator
+#
+# Spec: closes RETRO-070 (bitstream blocked on I/O wrapping).  Intended
+#       companion to Exp 584 / 599 / 636 hardware-track follow-ups.
+
+# ---------------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------------
+
+set part          "xck26-sfvc784-2LV-c"
+set project_name  "carnot_ising"
+set bd_name       "carnot_ising_bd"
+set top_rtl_module "ising_sampler_128_sync"
+set rtl_files [list \
+    "hardware/kv260/ising_sampler_v2.v" \
+]
+# Output goes to an UNCOMMITTED dir — bitstream is ~5 MB, intermediate files
+# are ~1 GB.  .gitignore filters output/** so none of this ends up in git.
+set project_dir   "output/carnot_ising_bd/project"
+set bitstream_dst "output/carnot_ising_bd/carnot_ising_bd_wrapper.bit"
+
+file mkdir [file dirname $project_dir]
+file mkdir [file dirname $bitstream_dst]
+
+# ---------------------------------------------------------------------------
+# Project + source
+# ---------------------------------------------------------------------------
+
+puts "=== [1/7] Create Vivado project (part=$part) ==="
+create_project -force $project_name $project_dir -part $part
+
+puts "=== [2/7] Add RTL sources ==="
+add_files -norecurse $rtl_files
+# Don't set the RTL module as top — the BD wrapper will become top.
+update_compile_order -fileset sources_1
+
+# ---------------------------------------------------------------------------
+# Block Design
+# ---------------------------------------------------------------------------
+
+puts "=== [3/7] Create Block Design: $bd_name ==="
+create_bd_design $bd_name
+current_bd_design $bd_name
+
+# --- Zynq UltraScale+ PS (K26 SOM) ---
+# K26 board files aren't installed, so we use the default preset + enable
+# only the PL-facing signals we need.  DDR/Ethernet/MIO are left at defaults
+# — they won't be correctly mapped for the K26's physical pins, but we
+# aren't using them (our accelerator is PL-only, communicates via AXI from
+# the PS user-space runtime dfx-mgrd).
+create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e zynq_ultra_ps_e_0
+
+# Enable only the PL-facing interfaces we need:
+#   PSU__USE__M_AXI_GP0   ← M_AXI_HPM0_FPD (low-power domain, 32-bit AXI slave)
+#   PSU__FPGA_PL0_ENABLE  ← PL clock 0 (FCLK_CLK0) @ 100 MHz (default)
+# Disable the other HPM/ACP ports to keep the design minimal.
+set_property -dict [list \
+    CONFIG.PSU__USE__M_AXI_GP0         {1} \
+    CONFIG.PSU__USE__M_AXI_GP1         {0} \
+    CONFIG.PSU__USE__M_AXI_GP2         {0} \
+    CONFIG.PSU__USE__S_AXI_GP0         {0} \
+    CONFIG.PSU__USE__S_AXI_GP1         {0} \
+    CONFIG.PSU__USE__S_AXI_GP2         {0} \
+    CONFIG.PSU__FPGA_PL0_ENABLE        {1} \
+    CONFIG.PSU__FPGA_PL1_ENABLE        {0} \
+    CONFIG.PSU__CRL_APB__PL0_REF_CTRL__FREQMHZ {100} \
+] [get_bd_cells zynq_ultra_ps_e_0]
+
+# --- AXI SmartConnect ---
+# One master (from PS), one slave (to our ising_sampler).  SmartConnect
+# handles clock-domain-crossing automatically, so if we ever add a higher-
+# frequency clock to the sampler we don't need to insert an axi_clock_converter.
+create_bd_cell -type ip -vlnv xilinx.com:ip:smartconnect axi_smartconnect_0
+set_property -dict [list \
+    CONFIG.NUM_SI {1} \
+    CONFIG.NUM_MI {1} \
+] [get_bd_cells axi_smartconnect_0]
+
+# --- Processor System Reset ---
+# Synchronises the PS-generated pl_resetn0 to FCLK_CLK0 domain and produces
+# an active-low reset for the SmartConnect + ising_sampler.
+create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_0
+
+# --- Ising sampler (user RTL, added as a module reference) ---
+# Because we called add_files earlier with ising_sampler_v2.v in scope, the
+# BD can reference it as a module.  Vivado will instantiate the Verilog
+# module directly in the BD hierarchy.
+create_bd_cell -type module -reference $top_rtl_module ising_sampler_0
+
+# ---------------------------------------------------------------------------
+# Wiring
+# ---------------------------------------------------------------------------
+
+puts "=== [4/7] Wire BD (AXI + clocks + resets) ==="
+
+# PS M_AXI_HPM0_FPD (master) → SmartConnect S00_AXI (slave)
+connect_bd_intf_net \
+    [get_bd_intf_pins zynq_ultra_ps_e_0/M_AXI_HPM0_FPD] \
+    [get_bd_intf_pins axi_smartconnect_0/S00_AXI]
+
+# SmartConnect M00_AXI → ising_sampler S_AXI
+connect_bd_intf_net \
+    [get_bd_intf_pins axi_smartconnect_0/M00_AXI] \
+    [get_bd_intf_pins ising_sampler_0/S_AXI]
+
+# PL clock 0 (FCLK_CLK0) drives all AXI clocks + reset generator.
+# The ising_sampler's S_AXI_ACLK is a scalar pin (not inside an intf bundle),
+# so we use connect_bd_net not connect_bd_intf_net.
+connect_bd_net \
+    [get_bd_pins zynq_ultra_ps_e_0/pl_clk0] \
+    [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk] \
+    [get_bd_pins axi_smartconnect_0/aclk] \
+    [get_bd_pins proc_sys_reset_0/slowest_sync_clk] \
+    [get_bd_pins ising_sampler_0/S_AXI_ACLK]
+
+# PS reset (active-low, from PL0) → proc_sys_reset ext_reset_in
+connect_bd_net \
+    [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] \
+    [get_bd_pins proc_sys_reset_0/ext_reset_in]
+
+# Synchronised resets from proc_sys_reset:
+#   peripheral_aresetn → SmartConnect + ising_sampler (both AXI-Lite slaves)
+connect_bd_net \
+    [get_bd_pins proc_sys_reset_0/peripheral_aresetn] \
+    [get_bd_pins axi_smartconnect_0/aresetn] \
+    [get_bd_pins ising_sampler_0/S_AXI_ARESETN]
+
+# ---------------------------------------------------------------------------
+# Address assignment + validation
+# ---------------------------------------------------------------------------
+
+puts "=== [5/7] Assign addresses + validate ==="
+
+# Auto-assign address for the S_AXI slave.  For LPD 32-bit AXI, the legal
+# range starts at 0xA000_0000.  Vivado picks 0xA0000000 by default with a
+# 64 KB window — plenty for our ~128 spin registers + status.
+assign_bd_address
+
+# Validate the BD before generating HDL — fail loud if anything is unwired.
+validate_bd_design
+
+# Save the BD so Vivado can regenerate from it later (useful for debugging).
+save_bd_design
+
+# ---------------------------------------------------------------------------
+# HDL wrapper + synthesis + implementation + bitstream
+# ---------------------------------------------------------------------------
+
+puts "=== [6/7] Generate HDL wrapper + synth + impl ==="
+
+# make_wrapper + add_files registers a top-level Verilog wrapper around the BD.
+make_wrapper -files [get_files ${bd_name}.bd] -top
+add_files -norecurse "${project_dir}/${project_name}.srcs/sources_1/bd/${bd_name}/hdl/${bd_name}_wrapper.v"
+set_property top ${bd_name}_wrapper [current_fileset]
+update_compile_order -fileset sources_1
+
+# Launch synthesis + implementation runs.  wait_on_run blocks until complete.
+# Runtime: ~20-40 min on a 24-core host.
+launch_runs synth_1 -jobs 8
+wait_on_run synth_1
+launch_runs impl_1 -to_step write_bitstream -jobs 8
+wait_on_run impl_1
+
+# ---------------------------------------------------------------------------
+# Verify + copy bitstream
+# ---------------------------------------------------------------------------
+
+puts "=== [7/7] Verify + copy bitstream ==="
+
+set bit_src "${project_dir}/${project_name}.runs/impl_1/${bd_name}_wrapper.bit"
+if {![file exists $bit_src]} {
+    error "Bitstream not produced at expected path: $bit_src — check impl_1 logs"
+}
+file copy -force $bit_src $bitstream_dst
+
+puts ""
+puts "=== BUILD COMPLETE ==="
+puts "Bitstream: $bitstream_dst"
+puts "Next: scp $bitstream_dst kria:/opt/carnot/bitstreams/carnot_ising_v2.bit"
+puts "      ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2.bit'"
+puts "      ssh kria 'xrt-smi examine'"
