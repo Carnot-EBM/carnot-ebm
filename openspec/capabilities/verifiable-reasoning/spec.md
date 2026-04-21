@@ -11650,3 +11650,74 @@ When: concurrent forward passes run on cuda:0 and cuda:1 simultaneously.
 Then: torch.cuda.utilization(1) > 0 and gpu1_utilization_confirmed == True.
 
 **Implementation Status:** Implemented (Exp 614)
+
+## REQ-EXTRACT-050: LLMAsExtractorV1 — LLM-Based Arithmetic Claim Extraction (RETRO-070)
+
+**Context (RETRO-070 root cause):**
+    Fourteen consecutive VR attempts (CoACEV1-V4) achieved live recall of 4% or below.
+    The root cause is confirmed: hand-engineered patterns cannot match the natural language
+    phrasing of instruction-tuned models.  LLMAsExtractorV1 uses a second LLM call to
+    extract verifiable arithmetic claims from CoT steps, bypassing the surface-variation
+    problem entirely.
+
+- REQ-EXTRACT-050-1: LLMAsExtractorV1 accepts an optional llm_caller: callable | None.
+- REQ-EXTRACT-050-2: When llm_caller is None (CI mode), only StepSegmentEvalChain runs.
+- REQ-EXTRACT-050-3: When llm_caller is provided (live mode), all three strategies run and results are unioned and deduplicated by (lhs_expr, rhs_value).
+- REQ-EXTRACT-050-4: extract() returns only claims where safe_eval(lhs_expr) != rhs_value (violations only).
+- REQ-EXTRACT-050-5: LLMAsExtractorV1, JsonClaimExtractor, SymCodeExtractor, StepSegmentEvalChain exported from carnot.extraction.__init__.
+
+## REQ-EXTRACT-051: SymCodeExtractor — LLM-Synthesised Executable Python (arXiv 2510.25975)
+
+- REQ-EXTRACT-051-1: SymCodeExtractor prompts the LLM to emit a single-line Python expression computing the answer in a CoT step.
+- REQ-EXTRACT-051-2: The output is evaluated via safe_eval(); None return (unevaluable) results in empty claim list.
+- REQ-EXTRACT-051-3: The computed value is compared to the last numeric result stated in the step (_STATED_RESULT_RE pattern).
+- REQ-EXTRACT-051-4: LLM exceptions return empty list (non-fatal degradation).
+- REQ-EXTRACT-051-5: Markdown code fences in LLM output are stripped before eval.
+
+## REQ-EXTRACT-052: JsonClaimExtractor — LLM-Emitted JSON Claim Array (arXiv 2601.04675)
+
+- REQ-EXTRACT-052-1: JsonClaimExtractor prompts the LLM with _JSON_CLAIM_PROMPT requesting a JSON array of {lhs, rhs, text} objects.
+- REQ-EXTRACT-052-2: Malformed JSON, missing lhs/rhs fields, and non-numeric rhs are silently skipped.
+- REQ-EXTRACT-052-3: claim_text is truncated to 120 characters for storage efficiency.
+- REQ-EXTRACT-052-4: All claims have strategy='json_claim' and confidence=0.85.
+- REQ-EXTRACT-052-5: LLM exceptions return empty list (non-fatal degradation).
+
+### SCENARIO-EXTRACT-085: safe_eval — Allowed and Blocked Operations
+
+Given: a string expression with arithmetic operators or unsafe code.
+When: safe_eval(expr) is called.
+Then: numeric expressions return float; any identifier/call/attribute/string/list returns None; division-by-zero and overflow return None.
+
+**Implementation Status:** Implemented (Exp 616)
+
+### SCENARIO-EXTRACT-086: JsonClaimExtractor — LLM JSON Array Parsing
+
+Given: an LLM caller that returns a JSON array of {lhs, rhs, text} objects.
+When: JsonClaimExtractor.extract_claims(step, llm_caller) is called.
+Then: claims are parsed, invalid/missing fields skipped, claim_text truncated to 120 chars.
+
+**Implementation Status:** Implemented (Exp 616)
+
+### SCENARIO-EXTRACT-087: SymCodeExtractor — Executable Python Synthesis
+
+Given: an LLM caller that returns a single-line Python expression.
+When: SymCodeExtractor.extract_claims(step, llm_caller) is called.
+Then: expression is evaluated, compared to stated result in step, claim returned with strategy='symcode'.
+
+**Implementation Status:** Implemented (Exp 616)
+
+### SCENARIO-EXTRACT-088: StepSegmentEvalChain — Regex/Eval Baseline
+
+Given: a CoT step with symbolic arithmetic expressions (N op M = P).
+When: StepSegmentEvalChain.extract_claims(step) is called.
+Then: arithmetic claims are extracted using regex patterns; no LLM call is made.
+
+**Implementation Status:** Implemented (Exp 616)
+
+### SCENARIO-EXTRACT-089: LLMAsExtractorV1 — CI Mode and Live Mode
+
+Given: LLMAsExtractorV1 with llm_caller=None (CI) or a callable (live).
+When: extract(response) is called.
+Then: CI mode uses only StepSegmentEvalChain; live mode unions all three strategies, deduplicates, and returns only violation claims.
+
+**Implementation Status:** Implemented (Exp 616)

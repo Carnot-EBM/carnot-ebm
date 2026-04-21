@@ -1,0 +1,31 @@
+{
+  "experiment": 616,
+  "title": "LLMAsExtractorV1",
+  "schema": "carnot.llm_extractor_v1.v1",
+  "run_date": "2026-04-21T02:10:53.705555+00:00",
+  "status": "success",
+  "duration_s": 0.0,
+  "n_responses": 25,
+  "llm_mode": "ci_stub",
+  "json_strategy_recall": 0.0,
+  "json_strategy_fp_rate": 0.0,
+  "symcode_strategy_recall": 0.0,
+  "symcode_strategy_fp_rate": 0.0,
+  "chain_strategy_recall": 0.04,
+  "chain_strategy_fp_rate": 0.2,
+  "v4_baseline_recall": 0.04,
+  "v1_recall": 0.04,
+  "recall_improvement": 0.0,
+  "best_strategy": "step_segment_eval",
+  "gate_open": false,
+  "error_type_catalog": {
+    "placeholder_response": 50,
+    "logic_error_correct_arithmetic": 20,
+    "actual_arithmetic_error": 5,
+    "truncated_response": 5
+  },
+  "retro_070_partial": false,
+  "retro_070_resolved": false,
+  "honest_verdict": "no_improvement_architecture_review_needed",
+  "notes": "CI stub mode only (StepSegmentEvalChain). LLM strategies (JsonClaimExtractor, SymCodeExtractor) require CARNOT_FORCE_LIVE=1 with live GPU and transformers. Chain recall matches v4_baseline exactly (0.04). Root cause: 50/80 incorrect responses are placeholder The answer is 42. with no arithmetic. Of 30 real responses, ~25 have logic errors (correct arithmetic, wrong premise). Only ~5 have actual arithmetic errors detectable by any extractor. Theoretical recall ceiling is ~5/25=0.20. LLM strategies needed to approach ceiling."
+}

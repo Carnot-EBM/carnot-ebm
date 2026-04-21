@@ -59,6 +59,12 @@ from carnot.extraction.coace_extractor_v4 import (
     GenPRMExtractor,
     CoACEExtractorV4,
 )
+from carnot.extraction.llm_extractor_v1 import (
+    LLMAsExtractorV1,
+    JsonClaimExtractor,
+    SymCodeExtractor,
+    StepSegmentEvalChain,
+)
 
 __all__ = [
     "FOLPremise",
@@ -81,4 +87,8 @@ __all__ = [
     "ArithmeticClaim",
     "GenPRMExtractor",
     "CoACEExtractorV4",
+    "LLMAsExtractorV1",
+    "JsonClaimExtractor",
+    "SymCodeExtractor",
+    "StepSegmentEvalChain",
 ]
