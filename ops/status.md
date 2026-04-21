@@ -1,5 +1,32 @@
 # Carnot — Operational Status
 
+## Session 2026-04-21 PM — KV260 hardware track + prompt-injection EBM spec
+
+**Context:** User-driven session (not conductor-originated).  Three landing strips advanced:
+
+1. **KV260 FPGA track** — First full Vivado 2025.2.1 synthesis + impl run of `hardware/kv260/build_bd.tcl`.
+   - ✓ RETRO-070 CLOSED — BD wrapper topology sound; no KLOC-1/NSTD-1/UCIO-1 I/O planning errors; opt_design passed.
+   - ❌ RETRO-072 OPENED — place_design failed with DRC UTLZ-1 at N_SPINS=128: LUT6 290k/117k (2.48× over XCK26).
+   - ✓ Fixed — parametric override (`set_property CONFIG.N_SPINS / CONFIG.MAX_DEGREE`) on ising_sampler_0 module-ref cell; new defaults N=64, MAX_DEGREE=16; env overrides CARNOT_N_SPINS / CARNOT_MAX_DEGREE.  N=64 rebuild in flight — post-synth utilisation 48.5% LUT / 87% DSPs (fits cleanly).
+   - Deliverable: `results/kv260_bd_build.json` (schema carnot.kv260_synth.v1), commit `f9bedd8b`.
+
+2. **Prompt-injection EBM capability** — Spec'd as Exp 652, milestone 2026.04.50.
+   - Consolidates 4 prior partials (Exps 387/393/407/416) into one experiment with 90-min hard watchdog and enforced 5-value `honest_verdict` enum.
+   - Teacher model cached: `unsloth/gpt-oss-safeguard-20b-GGUF` Q4_K_M.gguf (11.6 GB) → `models/gpt-oss-safeguard-20b/`.
+   - New requirements: REQ-SAFE-007/008/009 + SCENARIO-SAFE-007/008/009 in `openspec/capabilities/safety/spec.md`.
+   - Change proposal: `openspec/change-proposals/prompt-injection-ebm.md` (why-now, design, corpus, 6-phase plan).
+
+3. **Infrastructure** — `resolve_cached_gguf()` extended to search project-local `models/<hf_id_basename>/` in addition to `~/.cache/huggingface/hub`.  Surgical `.gitignore` patterns added (`models/**/*.gguf`, specific large-model dirs, future Vivado impl/synth intermediates) without disturbing already-tracked `models/constraint-verifier-v2/` or conductor-committed `output/` files.
+
+**What's working:** BD wrapper flow end-to-end, prompt-injection experiment gated only on user-initiated run of Exp 652.
+
+**What's next (in-flight as of session end):**
+- N=64 Vivado build completes → bitstream → scp to kria → `dfx-mgr-client -load` → `xrt-smi examine`.
+- Queue Exp 652 for milestone .50.
+- Capture actual N=64 post-opt utilisation in `results/kv260_bd_build_N64.json` once build finishes.
+
+---
+
 **Last Updated:** 2026-04-20 — Milestone 2026.04.42 COMPLETE (Exps 549-562, 14 planned experiments + 8 unplanned = 22 total in cycle). Milestone 2026.04.43 IN PROGRESS. Title: "Root Cause Surgery — Execution-Based Extraction and PURE JEPA Recovery". Critical path: ✓ Exp 563 (Live 50q A v2, RETRO-062, GPU REQUIRED, CARNOT_FORCE_LIVE=1 mandatory) → ✓ Exp 564 (CoACEExtractor, RETRO-061, CPU, extraction TP=0→✓ via Python eval()) → ✓ Exp 565 (CoACE live diagnostic — opens gate for 569+570) → Exp 566 (PUREMinFormLoss, RETRO-060, CPU) → Exp 567 (JEPA v10 retrain, FR-11 mandatory, CPU) → ✓ Exp 568 (KV260 bring-up v2, first real hardware test post-board-arrival, FPGA) → ✓ Exp 584 (KV260 Vivado Synthesis, Ising sampler bitfile generation, FPGA tooling, gates Exp 585) → ✓ Exp 585 (KV260 Live FPGA Benchmark v3, hardware Ising vs CPU) → Exp 569 (Live VR with CoACE, RETRO-033 attempt #11, GPU, GATED on 565) → ✓ Exp 570 (FR-11 real violations, GATED on 565) → Exps 571-573 (HalluField/PRA/hardware research, CPU) → Exp 574 (retrospective). Open RETROs: RETRO-031, RETRO-033 [miss #10, attempt #11 UNBLOCKED by Exp 565], RETRO-038, RETRO-049, RETRO-056, RETRO-057, ~~RETRO-060~~ [CRITICAL: JEPA AUC=0.4286 anti-correlated FIXED by PUREMinFormLoss (Exp 566)], ~~RETRO-061~~ [CRITICAL: extraction TP=0 FIXED by CoACEExtractor (Exp 564)], ~~RETRO-062~~ [Live 50q A v2 COMPLETE (Exp 563), v3 COMPLETE (Exp 578)]. HEADLINE .42 result: JEPA v9 AUC=0.4286 below random for second consecutive retrain (binary BCE loss root cause confirmed). KV260 FPGA board arrived 2026-04-20 — first hardware acceleration experiments possible. Roadmap: openspec/change-proposals/research-roadmap-v43.md. Conductor tasks: research-roadmap-next.yaml.
 
 ---
