@@ -1,0 +1,93 @@
+{
+  "experiment": 651,
+  "title": "Milestone 2026.04.49 Retrospective",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T17:46:18Z",
+  "finished_at": "2026-04-21T17:46:18Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": "carnot.operational_retro.v24",
+  "milestone": "2026.04.49",
+  "n_experiments_run": 12,
+  "n_not_run": 0,
+  "total_wall_time_minutes": 6.136,
+  "mean_time_min": 0.511,
+  "retro_033_resolved": false,
+  "retro_057_resolved": false,
+  "retro_070_resolved": true,
+  "retro_071_resolved": false,
+  "jepa_v14_calibrated": true,
+  "otv_viable": false,
+  "manifest_wired": true,
+  "fr11_confirmed": false,
+  "inertia_faster": false,
+  "dualgpu_proven": false,
+  "hermes_v2_recall": 0.0,
+  "ensemble_recall": 0.36,
+  "retro_closure_rate": 0.182,
+  "open_retro_count": 9,
+  "new_retro_items": [],
+  "open_retro_items": [
+    {
+      "id": "RETRO-031",
+      "title": "Partial carry \u2014 closure status unverified",
+      "carry_count": ">=7",
+      "action_required": "Verify closure in result files before .50 planning."
+    },
+    {
+      "id": "RETRO-033",
+      "title": "Live 25q verify-repair precision \u2014 17 attempts, still not closed",
+      "carry_count": ">=17",
+      "action_required": "RETRO-033 carry: attempt #17 failed. Upgrade gate to 35% recall before attempt #18. Explore AST-level code extraction (not regex or LLM prompt)."
+    },
+    {
+      "id": "RETRO-038",
+      "title": "Live 200q VeriCoT+Wilson CI \u2014 still not closed",
+      "carry_count": ">=12",
+      "action_required": "Same root cause as RETRO-033. Block until VR produces signed_improvement > 0."
+    },
+    {
+      "id": "RETRO-057",
+      "title": "LowRankKAEM energy accuracy outside 5% tolerance",
+      "carry_count": ">=6",
+      "action_required": "RETRO-057 carry: try top_k=1.0 (dense sparse baseline). Exp 650 multilevel_sparse_vs_dense_error=13.01 \u2014 far outside 5% threshold.  Multilevel approach worsened accuracy."
+    },
+    {
+      "id": "RETRO-064",
+      "title": "CoACE recall 4% on live data \u2014 pipeline accuracy lift undetectable",
+      "carry_count": ">=6",
+      "action_required": "ensemble_recall=0.36 (Exp 643).  Causal verifier crossed the 30% gate.  RETRO-033 VR #17 still blocked by CI stub."
+    },
+    {
+      "id": "RETRO-065",
+      "title": "RAPL unavailable \u2014 hardware energy calibration blocked",
+      "carry_count": ">=6",
+      "action_required": "Need Intel RAPL or AMD Energy driver on test machine."
+    },
+    {
+      "id": "RETRO-066",
+      "title": "CoACE offline/live distribution gap \u2014 extractor redesign unresolved",
+      "carry_count": ">=5",
+      "action_required": "ORACLE data elicitation (arXiv 2603.21140) is the only identified path to a training corpus that matches live output distribution."
+    },
+    {
+      "id": "RETRO-068",
+      "title": "LLMAsExtractorV1 live recall 4-12% \u2014 below 20% gate threshold",
+      "carry_count": ">=4",
+      "action_required": "Gate recall >= 20%.  Ensemble recall=0.36 (Exp 643) uses causal verifier; HERMES v2 alone recall=0.0 in Exp 641 (CI stub mode)."
+    },
+    {
+      "id": "RETRO-071",
+      "title": "DualGPU 13B proof blocked by missing HF model weights",
+      "carry_count": 2,
+      "action_required": "RETRO-071 carry: pre-cache Qwen2.5-7B-Instruct weights, retry. Run: huggingface-cli download Qwen/Qwen2.5-7B-Instruct --local-dir ~/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct"
+    }
+  ],
+  "top_priorities_for_50": [
+    "Run VR #17 immediately.",
+    "FPGA: human must install Vivado 2023.2. TCL v2 ready (Exp 636). v3 RTL spec available (Exp 648).",
+    "Deploy JEPA v14 + Platt in cascade. Measure wall-clock throughput."
+  ],
+  "honest_verdict": "retro_070_closed_jepa_calibrated_vr17_blocked",
+  "env_autofix": true
+}
