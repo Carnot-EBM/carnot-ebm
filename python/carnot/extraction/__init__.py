@@ -65,6 +65,12 @@ from carnot.extraction.llm_extractor_v1 import (
     SymCodeExtractor,
     StepSegmentEvalChain,
 )
+from carnot.extraction.trust_agents_extractor import (
+    TrustAgentsExtractor,
+    Agent1NER,
+    Agent2ClaimFormer,
+    Agent3Verifier,
+)
 
 __all__ = [
     "FOLPremise",
@@ -91,4 +97,8 @@ __all__ = [
     "JsonClaimExtractor",
     "SymCodeExtractor",
     "StepSegmentEvalChain",
+    "TrustAgentsExtractor",
+    "Agent1NER",
+    "Agent2ClaimFormer",
+    "Agent3Verifier",
 ]
