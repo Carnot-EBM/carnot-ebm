@@ -1965,6 +1965,42 @@ fr11_real_violations_confirmed, fp_rate_before, fp_rate_after, fp_rate_delta.
 **And** fr11_real_violations_confirmed = False
 **And** honest_verdict = 'synthetic_fallback_relay_complete'
 
+### REQ-LEARN-081: FR-11 Relay v2 — ConstraintAdditionFromMemory Updates from Real Violations When Available, Interwhen-Detected Violations When VR Blocked
+
+When Exp 630 (live VR attempt 16) reports signed_improvement > 0 AND n_violations_found > 0,
+the FR-11 relay experiment shall feed those REAL violations into ConstraintAdditionFromMemory
+and record fr11_mode='real_violations'.
+
+When Exp 630 is blocked but Exp 629 (interwhen diagnostic) reports gate_open=True AND
+interwhen_tp > 0, the relay shall use interwhen-detected violations as a semi-real proxy
+and record fr11_mode='semi_real_interwhen'.
+
+Otherwise the relay generates 25 synthetic arithmetic violations
+(fr11_mode='synthetic_fallback').
+
+All modes record: schema='carnot.tier1_fr11_relay.v2', mode, n_violations_used,
+fr11_real_violations_confirmed, fp_rate_before, fp_rate_after, fp_rate_delta,
+honest_verdict.
+
+Spec: REQ-LEARN-081
+
+### SCENARIO-LEARN-126: Real-Mode Relay v2 Fires When Exp 630 Has Positive signed_improvement
+
+**Given** Exp 630 reports signed_improvement > 0 and n_violations_found > 0
+**When** the Tier 1 FR-11 relay v2 runs
+**Then** violations from Exp 630 are fed to ConstraintAdditionFromMemory
+**And** fr11_real_violations_confirmed = True
+**And** honest_verdict = 'real_violations_relay'
+
+### SCENARIO-LEARN-127: Synthetic-Fallback Relay v2 Fires When Both Exp 630 and Exp 629 Are Blocked
+
+**Given** Exp 630 is blocked (signed_improvement <= 0 or n_violations_found == 0)
+**And** Exp 629 shows gate_open = False or interwhen_tp = None
+**When** the Tier 1 relay v2 runs
+**Then** 25 synthetic arithmetic violations are generated
+**And** fr11_real_violations_confirmed = False
+**And** honest_verdict = 'synthetic_fallback_relay'
+
 ---
 
 ## Implementation Status
@@ -2038,3 +2074,4 @@ fr11_real_violations_confirmed, fp_rate_before, fp_rate_after, fp_rate_delta.
 | REQ-LEARN-078 | N/A | Implemented | Python (test_metajuls_adapter.py) |
 | REQ-LEARN-079 | N/A | Implemented | Python (test_metajuls_adapter.py) |
 | REQ-LEARN-080 | N/A | Implemented | Python (test_experiment_625_fr11_relay.py) |
+| REQ-LEARN-081 | N/A | Implemented | Python (test_experiment_638_fr11_relay.py) |
