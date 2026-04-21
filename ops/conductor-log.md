@@ -2384,3 +2384,4 @@ python/ |
 | 2026-04-21 11:37 UTC | Exp 633: HERMES Verifier Adapter CPU prototype | PENDING | HermesVerifierAdapter+tests implemented; LLM inference running on CPU |
 | 2026-04-21 11:58 UTC | Exp 633: HERMES Tool-Augmented Verification Adapte | OK | 81 passed, 2 warnings in 15.78s |
 | 2026-04-21 12:28 UTC | Exp 634: Multilevel KAN Training for KAEMEnergy —  | OK | 81 passed, 2 warnings in 12.83s |
+| 2026-04-21 12:41 UTC | Exp 635: AdapTrack Constrained Generation — Adapti | OK | 81 passed, 2 warnings in 11.03s |
