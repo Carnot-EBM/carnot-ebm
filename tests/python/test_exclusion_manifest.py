@@ -341,3 +341,118 @@ class TestExclusionManifestClass:
         assert loaded[0].experiment_id == 308
         assert loaded[1].experiment_id == 260
         assert loaded[0].reason == "stuck"
+
+
+# ---------------------------------------------------------------------------
+# Tests for module-level API added in Exp 666
+# REQ-INFRA-093, REQ-INFRA-094
+# SCENARIO-INFRA-100, SCENARIO-INFRA-101, SCENARIO-INFRA-102
+# ---------------------------------------------------------------------------
+
+
+class TestModuleLevelAPI:
+    """Tests for load_manifest(), is_excluded(), build_manifest_check_result().
+
+    Spec: REQ-INFRA-093, REQ-INFRA-094
+    """
+
+    def test_load_manifest_returns_none_for_missing_file(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-100: load_manifest returns None when file does not exist.
+
+        REQ-INFRA-093-1: non-blocking — missing manifest is a valid state.
+        """
+        from carnot.pipeline.exclusion_manifest import load_manifest
+
+        result = load_manifest(str(tmp_path / "nonexistent.json"))
+        assert result is None
+
+    def test_load_manifest_returns_instance_for_valid_file(self, tmp_path: Path) -> None:
+        """REQ-INFRA-093-1: load_manifest returns ExclusionManifest when file exists."""
+        import json
+        from carnot.pipeline.exclusion_manifest import ExclusionManifest, load_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        manifest_file.write_text(json.dumps({"excluded": [
+            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"}
+        ]}))
+        result = load_manifest(str(manifest_file))
+        assert isinstance(result, ExclusionManifest)
+
+    def test_is_excluded_returns_false_when_manifest_none(self) -> None:
+        """REQ-INFRA-093-2: is_excluded returns False when manifest is None (safe default)."""
+        from carnot.pipeline.exclusion_manifest import is_excluded
+
+        assert is_excluded(None, 308) is False
+
+    def test_is_excluded_returns_true_for_excluded_id(self, tmp_path: Path) -> None:
+        """REQ-INFRA-093-3: is_excluded returns True for ID in loaded manifest."""
+        import json
+        from carnot.pipeline.exclusion_manifest import is_excluded, load_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        manifest_file.write_text(json.dumps({"excluded": [
+            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"}
+        ]}))
+        manifest = load_manifest(str(manifest_file))
+        assert is_excluded(manifest, 308) is True
+
+    def test_is_excluded_returns_false_for_unknown_id(self, tmp_path: Path) -> None:
+        """REQ-INFRA-093-3: is_excluded returns False for ID not in manifest."""
+        import json
+        from carnot.pipeline.exclusion_manifest import is_excluded, load_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        manifest_file.write_text(json.dumps({"excluded": [
+            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"}
+        ]}))
+        manifest = load_manifest(str(manifest_file))
+        assert is_excluded(manifest, 999) is False
+
+    def test_build_manifest_check_result_all_clear(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-101: all_clear=True when all checked_ids are excluded.
+
+        REQ-INFRA-094-3: all_clear reflects complete coverage.
+        """
+        import json
+        from carnot.pipeline.exclusion_manifest import build_manifest_check_result, load_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        manifest_file.write_text(json.dumps({"excluded": [
+            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"},
+            {"experiment_id": 260, "completed_milestone": "2026.04.37", "reason": "loop"},
+        ]}))
+        manifest = load_manifest(str(manifest_file))
+        result = build_manifest_check_result(manifest, [308, 260])
+
+        assert result["manifest_loaded"] is True
+        assert result["all_clear"] is True
+        assert set(result["excluded_ids"]) == {308, 260}
+        assert result["checked_ids"] == [308, 260]
+
+    def test_build_manifest_check_result_partial(self, tmp_path: Path) -> None:
+        """SCENARIO-INFRA-102: all_clear=False when only some checked_ids are excluded.
+
+        REQ-INFRA-094-2: excluded_ids is only the subset that matches.
+        """
+        import json
+        from carnot.pipeline.exclusion_manifest import build_manifest_check_result, load_manifest
+
+        manifest_file = tmp_path / "manifest.json"
+        manifest_file.write_text(json.dumps({"excluded": [
+            {"experiment_id": 308, "completed_milestone": "2026.04.37", "reason": "stuck"},
+        ]}))
+        manifest = load_manifest(str(manifest_file))
+        result = build_manifest_check_result(manifest, [308, 999])
+
+        assert result["manifest_loaded"] is True
+        assert result["all_clear"] is False
+        assert result["excluded_ids"] == [308]
+
+    def test_build_manifest_check_result_no_manifest(self) -> None:
+        """REQ-INFRA-094-1: manifest_loaded=False and all_clear=False when manifest is None."""
+        from carnot.pipeline.exclusion_manifest import build_manifest_check_result
+
+        result = build_manifest_check_result(None, [308, 260])
+        assert result["manifest_loaded"] is False
+        assert result["all_clear"] is False
+        assert result["excluded_ids"] == []

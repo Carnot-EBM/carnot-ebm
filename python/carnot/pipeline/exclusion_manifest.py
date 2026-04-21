@@ -162,6 +162,95 @@ class ExclusionManifest:
         self.save(existing)
 
 
+def load_manifest(path: str) -> "ExclusionManifest | None":
+    """Load the exclusion manifest from path; return None if file missing (non-blocking).
+
+    This module-level wrapper is the preferred entry-point for experiment scripts
+    that need to check exclusions without managing an ExclusionManifest instance directly.
+    A missing manifest is normal (no experiments excluded yet) — returning None instead
+    of raising lets callers use is_excluded() safely without try/except.
+
+    Spec: REQ-INFRA-093
+
+    Parameters
+    ----------
+    path : str
+        Path to the conductor_exclusion_manifest.json file.
+
+    Returns
+    -------
+    ExclusionManifest | None
+        Loaded manifest instance, or None if the file does not exist.
+    """
+    p = Path(path)
+    if not p.exists():
+        return None
+    try:
+        em = ExclusionManifest(path)
+        em.load()
+        return em
+    except Exception:  # noqa: BLE001
+        return None
+
+
+def is_excluded(manifest: "ExclusionManifest | None", exp_id: int) -> bool:
+    """Return True if exp_id is excluded in manifest; False if manifest is None.
+
+    Designed for use alongside load_manifest() so callers never need to
+    null-check before every lookup.  When the manifest is None (file missing),
+    we err on the side of allowing the experiment to run.
+
+    Spec: REQ-INFRA-093
+
+    Parameters
+    ----------
+    manifest : ExclusionManifest | None
+        Loaded manifest, or None if load_manifest() returned None.
+    exp_id : int
+        Experiment ID to check.
+    """
+    if manifest is None:
+        return False
+    return manifest.is_excluded(exp_id)
+
+
+def build_manifest_check_result(
+    manifest: "ExclusionManifest | None",
+    checked_ids: list[int],
+) -> dict:
+    """Return a structured summary of which experiment IDs are excluded.
+
+    Used by Exp 666 to emit a verifiable artifact that confirms the manifest
+    was consulted and which IDs were found excluded.  The ``all_clear`` field
+    is True when ALL checked_ids are excluded (i.e., no chronic experiments
+    can re-enter), making it easy for the conductor to assert the wire-in is working.
+
+    Spec: REQ-INFRA-094
+
+    Parameters
+    ----------
+    manifest : ExclusionManifest | None
+        Loaded manifest; if None, all checked IDs report as not excluded.
+    checked_ids : list[int]
+        The experiment IDs the caller wants to verify.
+
+    Returns
+    -------
+    dict with keys:
+        manifest_loaded (bool): True if manifest is not None.
+        excluded_ids (list[int]): subset of checked_ids that are excluded.
+        checked_ids (list[int]): echoed back for traceability.
+        all_clear (bool): True when every checked_id is excluded.
+    """
+    excluded = [eid for eid in checked_ids if is_excluded(manifest, eid)]
+    return {
+        "manifest_loaded": manifest is not None,
+        "excluded_ids": excluded,
+        "checked_ids": checked_ids,
+        "all_clear": len(excluded) == len(checked_ids),
+    }
+
+
 def build_default_manifest() -> list[ExclusionEntry]:
     """Return the five experiments excluded as of RETRO-056.
 

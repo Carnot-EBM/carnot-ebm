@@ -38,16 +38,16 @@ tasks:
     2. Check if scripts/conductor_exclusion_manifest.json exists and is valid JSON.
        If it exists: verify it contains entries for Exp 425, 410, 308, 309, 260.
        If it does not exist: CREATE it with the following structure:
-         {
+         (
            "version": 1,
            "description": "Experiments excluded from re-entry after modernization",
            "excluded_experiments": [
-             {"id": 425, "reason": "ExperimentTimeoutWatchdog already shipped; re-running adds overhead", "milestone_excluded": "2026.04.51"},
-             {"id": 410, "reason": "BatchedInferenceRunner not yet applied; blocked pending migration", "milestone_excluded": "2026.04.51"},
-             {"id": 308, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"},
-             {"id": 309, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"},
-             {"id": 260, "reason": "legacy pre-400 experiment; deliverable already exists", "milestone_excluded": "2026.04.51"},
-             {"id": 383, "reason": "DualGPU parallelization pending; sequential re-run adds no value", "milestone_excluded": "2026.04.51"}
+             {"id": 425, "reason": "ExperimentTimeoutWatchdog already shipped; re-running adds overhead", "milestone_excluded": "2026.04.51"),
+             ("id": 410, "reason": "BatchedInferenceRunner not yet applied; blocked pending migration", "milestone_excluded": "2026.04.51"),
+             ("id": 308, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"),
+             ("id": 309, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"),
+             ("id": 260, "reason": "legacy pre-400 experiment; deliverable already exists", "milestone_excluded": "2026.04.51"),
+             ("id": 383, "reason": "DualGPU parallelization pending; sequential re-run adds no value", "milestone_excluded": "2026.04.51")
            ]
          }
     3. Add REQ-INFRA-033 (ExclusionManifest must be read before each conductor task),
@@ -62,8 +62,8 @@ tasks:
        d. is_excluded(manifest: ExclusionManifest | None, exp_id: int) -> bool:
           returns True if exp_id is in manifest.excluded_experiments; False if manifest None.
        e. build_manifest_check_result(manifest, checked_ids: list[int]) -> dict:
-          returns {"manifest_loaded": bool, "excluded_ids": list[int],
-                   "checked_ids": list[int], "all_clear": bool}.
+          returns ("manifest_loaded": bool, "excluded_ids": list[int],
+                   "checked_ids": list[int], "all_clear": bool).
     5. Create scripts/experiment_666_manifest_wireIn_v3.py:
        a. from python.carnot.pipeline.exclusion_manifest import load_manifest, is_excluded, build_manifest_check_result
        b. ExperimentTemplate(666) + ExperimentTimeoutWatchdog(666, timeout_minutes=20).
@@ -222,7 +222,7 @@ tasks:
        c. Gate 0: read results/experiment_667_gate_v4_redesign.json.
           If gate_open=False or file missing: write blocked artifact, exit 0.
        d. Gate 1: LiveGPUGate.require_live_or_blocked() hard gate.
-       e. Gate 2: tmpl.setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       e. Gate 2: tmpl.setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        f. Load GSM8K questions 0-24 (25 questions).
        g. For each question:
           - Baseline: generate response WITHOUT forcing → verify → record baseline_correct.
@@ -498,11 +498,11 @@ tasks:
        e. If any method succeeds:
           - Run CPU latency baseline (n_spins=64, 100 trials, Python IsingEBM).
           - Record hardware_latency_placeholder (hardware test will be Exp 673 follow-up).
-          - honest_verdict = "dfx_method_found_{method_name}"
+          - honest_verdict = "dfx_method_found_(method_name)"
        f. If all methods fail:
           - Diagnose from stderr: "firmware_not_found" vs "permission_denied" vs "protocol_error".
           - Write fix instructions for each diagnosis to results/experiment_672_kv260_dfx_fix.json.
-          - honest_verdict = "dfx_protocol_diagnosed_{diagnosis}"
+          - honest_verdict = "dfx_protocol_diagnosed_(diagnosis)"
        g. artifact includes: bitfile_path, methods_tried, method_that_succeeded,
           diagnosis (if all failed), honest_verdict.
     3. Write tests/python/test_experiment_672_kv260_dfx_fix.py:
@@ -548,8 +548,8 @@ tasks:
        b. ExperimentTimeoutWatchdog(673, timeout_minutes=45).
        c. GPU gate: CARNOT_FORCE_LIVE=1 required. If not set: write blocked artifact, exit 0.
        d. Check available GPUs via pynvml or nvidia-smi. Require n_gpus >= 2.
-       e. Load Qwen3.5-0.8B on cuda:0 with device_map={"": "cuda:0"}.
-       f. Load Qwen3.5-0.8B on cuda:1 with device_map={"": "cuda:1"}.
+       e. Load Qwen3.5-0.8B on cuda:0 with device_map=("": "cuda:0").
+       f. Load Qwen3.5-0.8B on cuda:1 with device_map=("": "cuda:1").
           (Same model class, both cached — no download needed.)
        g. Define run_inference(model, tokenizer, prompt, gpu_id) -> dict:
           - runs model.generate() on specified device
@@ -826,7 +826,7 @@ tasks:
     4. Compute honest_verdict string summarizing the milestone:
        Include: wall_time direction (improvement/regression), vr outcome, manifest status,
        DualGPU status, JEPA v15 AUC, KV260 status.
-       Format: "wall_time_{direction}_{key_metric}_{key_metric}_..."
+       Format: "wall_time_(direction)_(key_metric)_(key_metric)_..."
        Example: "wall_time_improvement_vr_positive_manifest_confirmed_dualgpu_proven"
     5. Write results/operational_retro_2026_04_51.json via AtomicResultWriter.
        Schema: carnot.operational_retro.v26.
