@@ -1,0 +1,129 @@
+{
+  "experiment": 613,
+  "title": "Milestone 2026.04.46 Operational Retrospective",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T00:33:02Z",
+  "finished_at": "2026-04-21T00:33:02Z",
+  "duration_s": 0.001,
+  "status": "success",
+  "schema": "carnot.operational_retro.v21",
+  "milestone": "2026.04.46",
+  "total_wall_time_minutes": 4569,
+  "experiments_completed": 493,
+  "avg_time_per_experiment_minutes": 9.0,
+  "wall_time_delta_vs_prior_minutes": -31,
+  "wall_time_delta_direction": "improvement",
+  "wall_time_delta_pct": -0.7,
+  "slowest_experiments": [
+    {
+      "duration_minutes": 105,
+      "experiment": 308,
+      "title": "JEPA fast-path gate integration",
+      "status": "checkpoint_tests_failing",
+      "carry_count_in_slowest5": 10,
+      "root_cause": "TENTH consecutive milestone in the slowest-5 (.37 through .46). Checkpoint-failure loop — tests failing at commit time triggers full re-read and retry every session. The exclusion manifest was built in .45 (Exp 589) but conductor_consulted has not been confirmed True in any subsequent run. Until the wire-in is verified, this experiment will continue to re-enter and consume 105 min per cycle. Cumulative cost of Exp 308 alone across 10 milestones: approximately 1,050 minutes (17.5 hours)."
+    },
+    {
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog — RETRO-003 (17+ milestone carry)",
+      "status": "completed",
+      "carry_count_in_slowest5": 10,
+      "root_cause": "TENTH consecutive milestone in the slowest-5. Exp 425 is 'completed' but re-enters because the conductor has not been confirmed to consult the exclusion manifest before queuing. The experiment's own artifact resolved RETRO-003 in .36; the only reason it still appears is the wire-in gap. At 76 min per cycle for 10 milestones, cumulative overhead: approximately 760 minutes (12.7 hours)."
+    },
+    {
+      "duration_minutes": 66,
+      "experiment": 309,
+      "title": "Tier 3 end-to-end self-learning",
+      "status": "checkpoint_tests_failing",
+      "carry_count_in_slowest5": 10,
+      "root_cause": "TENTH consecutive milestone in the slowest-5. Identical checkpoint-failure state to Exp 308. Both Exps 308 and 309 have been frozen in a failing-test checkpoint since .37 — nine milestones without checkpoint resolution or exclusion. Combined cost of Exps 308 + 309 in .46 alone: 171 min. Since .37: approximately 1,710 minutes (28.5 hours) for just these two experiments."
+    },
+    {
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline — 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5": 7,
+      "root_cause": "SEVENTH consecutive milestone in the slowest-5 (.40 through .46). 1,000 sequential inference calls with no BatchedInferenceRunner. Four dedicated migration sprint passes (.41 Exp 547, .42 Exp 547b, .43 scope check, .45 scope check) all produced batching_added=[] for Exp 410 specifically. The migration framework exists and works; it has simply not been applied to this one file. A single 2-hour targeted session would reduce runtime from 64 to ~16 min and break a 7-milestone streak."
+    },
+    {
+      "duration_minutes": 62,
+      "experiment": 383,
+      "title": "Combined EORM + JEPA retrain on live pairs",
+      "status": "completed",
+      "carry_count_in_slowest5": 1,
+      "root_cause": "FIRST appearance in the slowest-5. Unlike the four legacy experiments above, Exp 383 is not a zombie or a checkpoint-failure — it is genuinely long because it trains both EORM and JEPA jointly on the live pairs corpus. The 62 min is partially justified. However, the training loop is sequential (EORM first, then JEPA); with DualGPURunner, both models could train in parallel and the experiment could complete in ~35 min. No BatchedInferenceRunner is used for the evaluation phase either. First-time appearance suggests this is a tractable optimization opportunity rather than a structural governance failure."
+    }
+  ],
+  "bottlenecks_identified": [
+    "EXCLUSION MANIFEST WIRE-IN STILL UNCONFIRMED (RETRO-067 — TENTH MILESTONE): Exps 308, 425, and 309 appear in the slowest-5 for the TENTH consecutive milestone. The exclusion manifest artifact (scripts/conductor_exclusion_manifest.json) was successfully built in .45 (Exp 589, conductor_consulted=False). The remaining delta is a single conditional check in scripts/research_conductor.py before the experiment queue is built. This one unwritten line has now cost approximately 3,255 + 385 = 3,640 minutes (60.7 hours) of accumulated overhead since .37. The exclusion manifest is complete; the conductor does not read it.",
+    "SAME FOUR LEGACY EXPERIMENTS — TENTH CONSECUTIVE MILESTONE (308, 425, 309, 410): For the first time since .37, Exp 260 dropped out of the slowest-5 (replaced by Exp 383). This may reflect a natural run-to-completion or a one-time fast path; without the exclusion manifest wire-in confirmed, Exp 260 may re-enter in .47. Exps 308, 425, 309, and 410 have never exited the slowest-5 since .37. Combined slowest-5 duration in .46: 373 min (vs 385 in .45, a 12-min improvement driven entirely by Exp 260 dropping out). The structural bottleneck — conductor not consulting the manifest — is unchanged.",
+    "DUALGPU UTILIZATION AT ZERO — FIFTH CONSECUTIVE MILESTONE: Both RTX 3090s at 4MB VRAM and 0% utilization at close. GPU 1 contributed 0% of inference compute across every .46 experiment — same as .42, .43, .44, .45. The GPU monitor has issued the same top suggestion ('Use DualGPURunner to run Qwen on GPU 0 and Gemma on GPU 1 simultaneously') every session for five milestones. A 493-experiment milestone ran entirely on one GPU. Exp 383's 62-min joint retrain is the clearest candidate: EORM on GPU 0, JEPA on GPU 1 in parallel would cut it to ~35 min in a single experiment.",
+    "BATCHEDINFERENCERUNNER NOT APPLIED TO EXP 410 — SEVENTH CONSECUTIVE MILESTONE: The migration framework exists. It was not applied to Exp 410 in .41, .42, .43, .44, .45, or .46. The inference loop in scripts/experiment_410_live_precision.py makes approximately 1,000 sequential calls at ~3.84/min. With batch_size=8 that drops to ~125 batches at an estimated 3-4x speedup (16-21 min). Six consecutive missed opportunities represent approximately 6 * (64 - 18) = 276 min of avoidable overhead. The action item is 2 hours of targeted implementation; the return is permanent removal from the slowest-5.",
+    "PRE-FLIGHT TEST SUITE BLOCKING OVERHEAD — UNRESOLVED SIXTH MILESTONE: At 493 experiments per milestone and an estimated 60-second average pre-commit test run, the full pytest suite consumes approximately 493 minutes (10.8% of total wall time) in blocking test execution. Incremental test selection (run only tests for the changed module) has been recommended since .40 and unimplemented across six milestones. The test suite size grows every milestone as new REQ-*/SCENARIO-* entries are added; if unaddressed, this overhead compounds.",
+    "EXP 383 SEQUENTIAL JOINT TRAINING: First new slowest-5 entry since Exp 410 joined in .40. Combined EORM + JEPA retrain runs models sequentially on a single GPU despite both models fitting independently on separate GPUs. This is a structural inefficiency — not a legacy zombie but an architectural choice that could be changed in the next retrain experiment. If DualGPURunner were applied to Exp 383, its 62-min cost would shrink to approximately 35 min, removing it from the slowest-5.",
+    "DOC RECONCILIATION SEQUENTIAL OVERHEAD — UNRESOLVED FIFTH MILESTONE: At 493 experiments and one doc-update turn per experiment, conductor-log.md, changelog.md, and ops/status.md accumulate approximately 493 sequential write operations per milestone. Batching to end-of-phase (every 3-5 experiments) would eliminate 60-80% of per-experiment doc-write tool calls. Estimated saving: 30-45 minutes per milestone. This has appeared in every retro since .41.",
+    "CONTEXT DEBT ON LONG-CARRY RETROS: RETRO-033 is now on attempt 14+ without closure. RETRO-038 on 9+ attempts. Each new attempt requires re-reading prior result files for context reconstruction, adding 10-20 min overhead per attempt. Two-milestone carry-limit rule has been recommended in six consecutive retros without being implemented as a conductor enforcement rule."
+  ],
+  "improvements_suggested": [
+    "VERIFY EXCLUSION MANIFEST CONDUCTOR WIRE-IN AS THE ABSOLUTE FIRST ACTION IN .47 (RETRO-067 — MANDATORY PRE-FLIGHT): Before ANY .47 experiment is queued, confirm that scripts/research_conductor.py reads scripts/conductor_exclusion_manifest.json and skips any listed experiment IDs. The verification test is: run the conductor with a dry-run flag and check that Exps 308, 260, 309, 425, and 410 are not in the proposed queue. Estimated implementation: 30 minutes. This single action converts a 60-hour accumulated debt (3,640 min since .37) into a permanent 373-385 min/milestone saving — the largest single-action ROI in the project history.",
+    "APPLY BATCHEDINFERENCERUNNER TO EXP 410 IN A DEDICATED TWO-HOUR SESSION — NO SPRINT, NO BROAD SCOPE: Open scripts/experiment_410_live_precision.py. Find the sequential inference loop. Wrap it with BatchedInferenceRunner(batch_size=8). Run the experiment and verify duration < 25 min and batching_applied=True in the result file. This targeted action has been deferred seven milestones. It removes a 64-min/milestone expense permanently and costs 2 hours to implement.",
+    "APPLY DUALGPU PARALLEL TRAINING TO EXP 383 IN ITS NEXT RETRAIN: When the EORM + JEPA joint retrain is next scheduled (likely in .47 as part of the CoACEV4 live-corpus pipeline), implement DualGPURunner: assign EORM training to cuda:0 and JEPA training to cuda:1. Both models are independent; there is no data dependency between their training passes. Estimated wall time: 35 min (vs current 62 min). Also schedules the first empirical DualGPU utilization measurement — finally validating five milestones of recommendations.",
+    "RUN A DEDICATED DUALGPU SMOKE TEST IF EXP 383 RETRAIN IS NOT IN .47 PHASE 1: If the joint retrain is deferred, run a standalone DualGPURunner smoke test as the first GPU experiment in .47. Load Qwen on cuda:0, Gemma on cuda:1, run 10 forward passes simultaneously, measure wall time and utilization. Accept no result unless both GPUs register > 0% utilization at the same timestamp. This 2-hour experiment produces the empirical data that all DualGPU throughput projections depend on.",
+    "IMPLEMENT INCREMENTAL TEST SELECTION FOR SINGLE-MODULE EXPERIMENTS: Replace the blocking 'pytest tests/python' with 'pytest tests/python -k <module_name>' for experiments whose changed_files list contains only files under a single python/carnot/ subdirectory. Add a conductor hook: if changed_files contains only one module path, run only tests/python/test_<module>*.py. Estimated savings: 255-395 min per milestone (10-12% of wall time). Has been recommended since .40 — six consecutive milestones unimplemented.",
+    "BATCH DOC UPDATES TO END-OF-PHASE (3-5 EXPERIMENTS PER BATCH): Update conductor-log.md, changelog.md, and ops/status.md once per phase rather than after every experiment. Phase boundaries are already defined in research-roadmap-next.yaml. Eliminates 60-80% of per-experiment doc-write tool calls. Estimated saving: 30-45 min per milestone. Implement by adding a phase_doc_update_buffer to the conductor that flushes at each phase boundary.",
+    "RESOLVE EXP 308 AND 309 CHECKPOINT-FAILURE STATES OR PERMANENTLY EXCLUDE THEM: Exps 308 and 309 have been in a failing-test checkpoint state since .37 — ten milestones. Either fix the failing tests in a dedicated session (likely 1-2 hours each) and close them as resolved, OR add them to the exclusion manifest as permanently-retired legacy experiments whose research goals were superseded by later work. The current state — infinite re-entry, re-read, re-fail cycle — is the worst possible outcome. A decision either way terminates the overhead.",
+    "ENFORCE TWO-MILESTONE RETRO CARRY LIMIT AS A CONDUCTOR RULE: Any experiment that appears in the slowest-5 for 2 consecutive milestones is automatically added to the exclusion manifest. Implement as a Python function in scripts/research_conductor.py that cross-checks the previous retro JSON's slowest_experiments list against the current candidate queue at session start. Had this rule been in place at .39, Exps 308/425/309/410 would have been excluded from .41 onward, saving approximately 1,540+ minutes across the subsequent milestones."
+  ],
+  "estimated_time_savings_pct": 12,
+  "time_savings_breakdown": {
+    "exclusion_manifest_wire_in_pct": 8.2,
+    "batching_exp410_pct": 1.0,
+    "dualgpu_exp383_retrain_pct": 0.6,
+    "incremental_tests_pct": 1.5,
+    "doc_batch_updates_pct": 0.7,
+    "note": "12% optimistic upper bound. Historical over-estimation pattern across 9 milestones (.37-.45): projections of 12-25% consistently achieved 0-1.2% actual. Realistic central estimate is 2-5%. The single structurally new intervention available in .47 is exclusion manifest wire-in confirmation — if conductor_consulted=True is verified before the first .47 experiment, the 8.2% saving is the most reliable prediction in the project. Without that confirmation, the realistic estimate falls to 1-2% (incremental test selection and doc batching only)."
+  },
+  "gpu_state_at_close": {
+    "gpu0_used_mb": 4,
+    "gpu0_utilization_pct": 0,
+    "gpu0_temp_c": 51,
+    "gpu1_used_mb": 4,
+    "gpu1_utilization_pct": 0,
+    "gpu1_temp_c": 40,
+    "zombie_processes": 0,
+    "assessment": "clean — fifth consecutive milestone with clean GPU close state. Zero zombie VRAM. DualGPU parallel forward-pass still undemonstrated across five clean-close milestones. GPU 1 contributed 0% of inference compute in .46. GPU 0 temp (51C) elevated vs GPU 1 (40C) — consistent with GPU 1 doing zero work. Both GPUs have 4MB allocated but 0% utilization; processes may be idle stubs that should be freed."
+  },
+  "wall_time_trend_note": "Second consecutive milestone with wall time improvement. .45: -54min (-1.2%), .46: -31min (-0.7%). However, improvement rate is decelerating and total experiments is growing (493 vs 481). The per-experiment average of 9.0 min is the new project best (previous: 9.6 min in .45). Improvement is driven by a higher experiment denominator and marginal Exp 260 dropout from slowest-5, not from structural bottleneck removal. Without exclusion manifest wire-in, the floor is approximately 4,550-4,600 min/milestone.",
+  "exp_260_dropout_note": "Exp 260 (CPU-bound benchmark) was in the slowest-5 for nine consecutive milestones (.37-.45) and dropped out in .46 — the first exit from the legacy slowest-5 cohort. Cause uncertain: may have run to natural completion, hit a timeout, or been partially excluded by an opportunistic manifest check. Without confirmed conductor_consulted=True, re-entry in .47 is probable. Net effect: 74-min slot replaced by Exp 383 (62 min), saving 12 min — the primary driver of .46's -31 min improvement.",
+  "milestone_wall_time_history": [
+    {"milestone": "2026.04.37", "wall_time_min": 4833, "experiments": 305},
+    {"milestone": "2026.04.38", "wall_time_min": 4639, "experiments": 359},
+    {"milestone": "2026.04.39", "wall_time_min": 4577, "experiments": 375},
+    {"milestone": "2026.04.40", "wall_time_min": 4484, "experiments": 387},
+    {"milestone": "2026.04.41", "wall_time_min": 4484, "experiments": 400},
+    {"milestone": "2026.04.42", "wall_time_min": 4520, "experiments": 422},
+    {"milestone": "2026.04.43", "wall_time_min": 4584, "experiments": 444},
+    {"milestone": "2026.04.44", "wall_time_min": 4654, "experiments": 465},
+    {"milestone": "2026.04.45", "wall_time_min": 4600, "experiments": 481},
+    {"milestone": "2026.04.46", "wall_time_min": 4569, "experiments": 493}
+  ],
+  "process_efficiency_findings": {
+    "wall_time_trend": "Second consecutive improvement: .46 at 4569 min (-31 min, -0.7% vs .45's 4600 min). Improvement rate decelerated vs .45 (-54 min). Total experiments grew by 12 (493 vs 481), keeping per-experiment average at project-best 9.0 min.",
+    "per_experiment_avg_new_best": true,
+    "per_experiment_avg_note": "9.0 min/experiment — new project best. Previous best was 9.6 min (.45). Driven by a larger denominator (493 experiments) rather than faster individual experiments. Structural bottlenecks unchanged.",
+    "exp_260_dropout": "First member of the 9-milestone slowest-5 cohort to exit. Replaced by Exp 383 (first genuine training-time bottleneck vs legacy zombie). This is the first structural change to the slowest-5 composition since .40.",
+    "exclusion_manifest_status": "BUILT (.45) but WIRE-IN UNCONFIRMED (.46). conductor_consulted status not verified in .46. Same four legacy experiments (308, 425, 309, 410) re-entered and consumed 311 min combined. The manifest JSON is correct; the conductor code path that reads it is unconfirmed.",
+    "pre_flight_suite_bottleneck": "Estimated 493 min (10.8% of wall time) consumed by blocking pre-commit test runs across 493 experiments. Incremental test selection remains unimplemented for the sixth consecutive milestone. Test suite size continues to grow with each new REQ-*/SCENARIO-* entry.",
+    "dualgpu_idle_streak": "Five consecutive milestones with clean GPU close state and zero DualGPU utilization. GPU 1 temperature (40C) vs GPU 0 (51C) at close confirms asymmetric load. The GPU monitor's primary suggestion has been identical every session since .42."
+  },
+  "honest_verdict": "wall_time_second_consecutive_improvement_decelerating_exclusion_manifest_wire_in_still_unconfirmed_tenth_milestone_same_four_slowest_exp260_first_dropout_dualgpu_idle_fifth_milestone_exp383_new_training_bottleneck",
+  "top_priorities_for_47": [
+    "Verify exclusion manifest conductor wire-in (conductor_consulted=True) as the FIRST action before any .47 experiment is queued. Check scripts/research_conductor.py for the conditional that reads scripts/conductor_exclusion_manifest.json. This is the highest-ROI unfinished action in the project — 373-385 min/milestone saved for ~30 min of work. Ten milestones of delay; this must not become eleven.",
+    "Apply BatchedInferenceRunner to Exp 410 specifically in a single targeted 2-hour session. Do not schedule a broad sprint. Open scripts/experiment_410_live_precision.py, wrap the inference loop with BatchedInferenceRunner(batch_size=8), verify duration < 25 min in the result file.",
+    "Apply DualGPU parallel training to the next EORM + JEPA joint retrain (Exp 383 pattern). Assign EORM to cuda:0, JEPA to cuda:1. Both are independent training passes. This is the first experiment where DualGPU would provide measured throughput data rather than projected savings — five milestones of identical GPU monitor recommendations demand one empirical test.",
+    "Resolve Exp 308 and Exp 309 checkpoint-failure states definitively: either fix the failing tests in a dedicated session or add both to the exclusion manifest as permanently retired. Ten milestones of infinite re-entry must end with a binary decision.",
+    "Implement incremental test selection as a conductor hook: if changed_files contains only one module path, run only the matching test file. Estimated savings: 255-395 min per milestone. Six milestones unimplemented; the test suite grows each cycle, making delay increasingly costly."
+  ]
+}
