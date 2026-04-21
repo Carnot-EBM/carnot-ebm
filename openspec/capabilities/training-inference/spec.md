@@ -1238,3 +1238,28 @@ When: get_sampler_backend() is called with no arguments.
 Then: returns a CpuBackend instance.
 
 **Implementation Status:** Implemented (Exp 610)
+
+## REQ-SAMPLE-036: Synchronous p-bit Ising RTL (arXiv 2604.01564)
+
+Synchronous-DAC-free Ising sampler for KV260 FPGA.  Replaces asynchronous
+random-order spin updates with a fully synchronous design, reducing LUT
+utilization ~50% while preserving annealing dynamics.
+
+- REQ-SAMPLE-036-1: ising_sampler_v2.v uses `always @(posedge clk)` for all spin updates.
+- REQ-SAMPLE-036-2: All spins in the current checkerboard phase update simultaneously each clock cycle.
+- REQ-SAMPLE-036-3: No random spin-selection LFSR index mux (DAC-free).
+- REQ-SAMPLE-036-4: Each spin has its own LFSR lane seeded with a distinct non-zero value.
+- REQ-SAMPLE-036-5: AXI-Lite register map is identical to v1 (Exp 289 regmap).
+- REQ-SAMPLE-036-6: Mpemba hot-start (first N_HOT steps at β=0) retained from v1.
+- REQ-SAMPLE-036-7: v1 is not modified; v2 is a new file hardware/kv260/ising_sampler_v2.v.
+
+Spec: REQ-SAMPLE-036, SCENARIO-SAMPLE-060
+
+### SCENARIO-SAMPLE-060: Synchronous RTL Exists and Contains posedge clk
+
+Given: hardware/kv260/ising_sampler_v2.v has been created.
+When: the file is inspected.
+Then: the file exists, contains 'posedge clk', and has fewer non-empty lines
+than ising_sampler_v1.v (proxy for area reduction).
+
+**Implementation Status:** Implemented (Exp 612)
