@@ -2386,3 +2386,4 @@ python/ |
 | 2026-04-21 12:28 UTC | Exp 634: Multilevel KAN Training for KAEMEnergy —  | OK | 81 passed, 2 warnings in 12.83s |
 | 2026-04-21 12:41 UTC | Exp 635: AdapTrack Constrained Generation — Adapti | OK | 81 passed, 2 warnings in 11.03s |
 | 2026-04-21 12:58 UTC | Exp 636: FPGA TCL v2 Update — Target ising_sampler | OK | 81 passed, 2 warnings in 13.79s |
+| 2026-04-21 13:17 UTC | Exp 637: LowRankKAEM Full-Rank + Sparse Redesign — | OK | 81 passed, 2 warnings in 11.01s |
