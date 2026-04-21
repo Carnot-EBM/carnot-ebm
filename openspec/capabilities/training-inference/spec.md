@@ -1361,3 +1361,43 @@ Then: top_module contains "ising_sampler_128_sync", rtl_files contains "ising_sa
 and output_dir contains "carnot_ising_synth_v2".
 
 **Implementation Status:** Implemented (Exp 636)
+
+## REQ-SAMPLE-021: SparseKAEMEnergy — Full-Rank KAEM with Top-K Sparse Coupling Graph (Exp 637)
+
+SparseKAEMEnergy SHALL implement a full-rank KAEM energy model where each variable retains
+its own univariate spline term (same as KAEMEnergy) PLUS a sparse pairwise coupling matrix
+that retains only the top-K interactions per variable by coupling strength.
+
+- REQ-SAMPLE-021-1: energy(x) SHALL return univariate_energy + 0.5 * x^T * C_sparse * x where C_sparse is the sparsified coupling matrix.
+- REQ-SAMPLE-021-2: sparsify(couplings) SHALL zero out all but the top_k largest-magnitude entries per row of the coupling matrix.
+- REQ-SAMPLE-021-3: fit(data, n_epochs) SHALL train both univariate splines and the coupling matrix, applying sparsification after each coupling update.
+- REQ-SAMPLE-021-4: top_k = max(1, int(n_vars * top_k_fraction)); default top_k_fraction=0.1.
+- REQ-SAMPLE-021-5: SparseKAEMEnergy SHALL be exported from carnot.models.
+
+**Implementation Status:** Implemented (Exp 637)
+
+## REQ-SAMPLE-022: SparseKAEMEnergy — Energy Accuracy Within 5% vs Dense Baseline (Exp 637)
+
+When trained on the same synthetic 20-variable energy landscape (sin(3*x_i) + x_i^2),
+SparseKAEMEnergy with top_k_fraction=0.1 SHALL achieve energy MAE within 5% relative
+error compared to the dense KAEMEnergy baseline (|sparse_mae - dense_mae| / dense_mae < 0.05
+or equivalently sparse_vs_dense_error < 0.05).
+
+**Implementation Status:** Implemented (Exp 637)
+
+### SCENARIO-SAMPLE-035: SparseKAEMEnergy Energy Within 5% vs Dense at Default top_k_fraction
+
+Given: 20-variable synthetic energy landscape (ground truth: sum_i sin(3*x_i) + x_i^2).
+When: SparseKAEMEnergy(n_vars=20, n_knots=64, top_k_fraction=0.1) is trained with
+      MultilevelKAEMTrainer for the same epoch budget as the dense baseline.
+Then: sparse_vs_dense_error < 0.05 (retro_057_resolved=True).
+
+**Implementation Status:** Implemented (Exp 637)
+
+### SCENARIO-SAMPLE-036: SparseKAEMEnergy Sparsify Retains top_k Entries Per Row
+
+Given: A coupling matrix of shape (n_vars, n_vars) with distinct absolute values.
+When: sparsify(coupling) is called with top_k=2.
+Then: Each row has at most top_k non-zero entries, corresponding to the largest magnitudes.
+
+**Implementation Status:** Implemented (Exp 637)
