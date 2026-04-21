@@ -879,3 +879,179 @@ class TestVerifyRepairPipelineIntegration:
             c for c in result.constraints if c.constraint_type == "carry_check"
         ]
         assert len(template_constraints) >= 1
+
+
+# ---------------------------------------------------------------------------
+# ViolationPatternLibrary tests — REQ-SELF-020
+# ---------------------------------------------------------------------------
+
+
+class TestViolationPatternLibrary:
+    """Tests for ViolationPatternLibrary — the FR-11 cross-session relay store.
+
+    Covers: __init__, _load, _save, add_template (new + duplicate), get_fp_rate.
+
+    Spec: REQ-SELF-020, SCENARIO-SELF-025, SCENARIO-SELF-026
+    """
+
+    def test_init_empty_no_file(self, tmp_path):
+        """Library starts with zero templates when backing file does not exist.
+
+        Spec: REQ-SELF-020-1
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        assert lib.templates == []
+
+    def test_add_template_creates_entry(self, tmp_path):
+        """add_template creates a ViolationPatternEntry and persists it.
+
+        Spec: REQ-SELF-020-2, SCENARIO-SELF-025
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        entry = lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        assert entry.template_id == "0"
+        assert entry.violation_pattern == "COMPUTE: 47 + 28 = 76"
+        assert entry.violation_type == "arithmetic"
+        assert entry.source_experiment == 656
+        assert len(lib.templates) == 1
+
+    def test_add_template_deduplicates(self, tmp_path):
+        """Adding the same pattern twice returns the existing entry without duplication.
+
+        Spec: REQ-SELF-020-2
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        e1 = lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        e2 = lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        assert e1.template_id == e2.template_id
+        assert len(lib.templates) == 1
+
+    def test_add_template_strips_whitespace(self, tmp_path):
+        """add_template normalises leading/trailing whitespace before deduplication.
+
+        Spec: REQ-SELF-020-2
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        lib.add_template("  COMPUTE: 47 + 28 = 76  ", "arithmetic", 656)
+        assert lib.templates[0].violation_pattern == "COMPUTE: 47 + 28 = 76"
+
+    def test_persistence_round_trip(self, tmp_path):
+        """Templates written by add_template are reloaded on next instantiation.
+
+        Spec: REQ-SELF-020-1, REQ-SELF-020-2
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        path = str(tmp_path / "templates.json")
+        lib1 = ViolationPatternLibrary(path)
+        lib1.add_template("total is 80", "arithmetic", 656)
+        lib1.add_template("therefore 15", "arithmetic", 656)
+
+        lib2 = ViolationPatternLibrary(path)
+        assert len(lib2.templates) == 2
+        assert lib2.templates[0].violation_pattern == "total is 80"
+        assert lib2.templates[1].violation_pattern == "therefore 15"
+
+    def test_get_fp_rate_no_match(self, tmp_path):
+        """FP rate is 0.0 when no correct response contains any stored pattern.
+
+        Spec: REQ-SELF-020-3, SCENARIO-SELF-026
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        lib.add_template("total is 80", "arithmetic", 656)
+
+        correct = ["The answer is 18.", "Janet makes $18 per day."]
+        assert lib.get_fp_rate(correct) == 0.0
+
+    def test_get_fp_rate_partial_match(self, tmp_path):
+        """FP rate counts responses that contain any stored pattern.
+
+        Spec: REQ-SELF-020-3
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        lib.add_template("total is 80", "arithmetic", 656)
+
+        responses = [
+            "The total is 80 items.",  # matches
+            "The answer is 18.",       # no match
+        ]
+        rate = lib.get_fp_rate(responses)
+        assert rate == pytest.approx(0.5)
+
+    def test_get_fp_rate_empty_templates(self, tmp_path):
+        """FP rate is 0.0 when no templates are stored.
+
+        Spec: REQ-SELF-020-3
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        assert lib.get_fp_rate(["any response"]) == 0.0
+
+    def test_get_fp_rate_empty_responses(self, tmp_path):
+        """FP rate is 0.0 when the responses list is empty.
+
+        Spec: REQ-SELF-020-3
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        assert lib.get_fp_rate([]) == 0.0
+
+    def test_load_handles_corrupt_file(self, tmp_path):
+        """Library starts fresh when the backing file is corrupt JSON.
+
+        Spec: REQ-SELF-020-1
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        path = tmp_path / "templates.json"
+        path.write_text("{not valid json!!!}")
+        lib = ViolationPatternLibrary(str(path))
+        assert lib.templates == []
+
+    def test_n_triggered_default_zero(self, tmp_path):
+        """New ViolationPatternEntry starts with n_triggered == 0.
+
+        Spec: REQ-SELF-020
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        entry = lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        assert entry.n_triggered == 0
+
+    def test_added_date_is_set(self, tmp_path):
+        """New ViolationPatternEntry has a non-empty added_date timestamp.
+
+        Spec: REQ-SELF-020
+        """
+        from carnot.pipeline.constraint_template_library import ViolationPatternLibrary
+
+        lib = ViolationPatternLibrary(str(tmp_path / "templates.json"))
+        entry = lib.add_template("COMPUTE: 47 + 28 = 76", "arithmetic", 656)
+        assert isinstance(entry.added_date, str) and len(entry.added_date) > 0
+
+    def test_violation_pattern_entry_exported(self):
+        """ViolationPatternEntry and ViolationPatternLibrary are in __all__.
+
+        Spec: REQ-SELF-020
+        """
+        import carnot.pipeline.constraint_template_library as mod
+
+        assert "ViolationPatternEntry" in mod.__all__
+        assert "ViolationPatternLibrary" in mod.__all__
