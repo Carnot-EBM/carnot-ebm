@@ -2394,3 +2394,4 @@ python/ |
 | 2026-04-21 14:31 UTC | Exp 640: Exclusion Manifest Wire-In v2 + DualGPU E | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-21 14:36 UTC | Exp 640: Exclusion Manifest Wire-In v2 + DualGPU E | OK | Deliverable already exists in repo |
 | 2026-04-21 15:22 UTC | Exp 641: HermesVerifierAdapter v2 — LIVE Step-by-S | OK | 89 passed, 2 warnings in 8.32s |
+| 2026-04-21 15:33 UTC | Exp 642: CausalReasoningVerifier | OK | causal_recall=0.36 > baseline=0.12; 28 tests pass |

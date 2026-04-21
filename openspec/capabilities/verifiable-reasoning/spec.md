@@ -12296,3 +12296,54 @@ When: generate_with_verification(question) is called.
 Then: step_results[0].violation_detected == False and step_results[0].hint_injected == False and step_results[0].hint_text is None.
 
 **Implementation Status:** Implemented (Exp 641)
+
+## REQ-VERIFY-139: CausalReasoningVerifier Step Entailment Checking
+
+CausalReasoningVerifier shall detect causal breaks across consecutive CoT step boundaries.
+A causal break occurs when the numeric conclusion of step k does not match the numeric
+premise of step k+1, even when both steps are individually arithmetically correct.
+This covers the orthogonal violation class described in arXiv 2601.21210.
+
+- REQ-VERIFY-139-1: CausalReasoningVerifier.__init__ shall accept symcode (SymCodeVerifier) and optional llm_extractor (LLMAsExtractorV1 | None).
+- REQ-VERIFY-139-2: check_entailment(step_k, step_k1) shall first run SymCodeVerifier on step_k; if arithmetic violation detected, return violation_type='arithmetic'.
+- REQ-VERIFY-139-3: If no arithmetic violation, check_entailment shall compare the last numeric value of step_k vs. step_k1; if |delta| > 0.01, return violation_type='causal_break' with entailment_score = delta / max(|conclusion_k|, 1.0).
+- REQ-VERIFY-139-4: verify_response(response) shall segment with symcode.segment_steps() and check all consecutive pairs.
+- REQ-VERIFY-139-5: detection_score(response) shall return the max entailment_score across all step pairs.
+- REQ-VERIFY-139-6: any_violation(response) shall return True iff detection_score > 0.0.
+- REQ-VERIFY-139-7: CausalReasoningVerifier and CausalEntailmentResult shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/causal_reasoning_verifier.py, Exp 642)
+
+## REQ-VERIFY-140: CausalReasoningVerifier Recall Gate
+
+CausalReasoningVerifier shall achieve causal_recall > symcode_baseline (0.12) on the live_pairs_578 corpus of 25 known-incorrect responses.
+
+- REQ-VERIFY-140-1: causal_recall = causal_tp / 25 where tp = count of incorrect responses with any_violation == True.
+- REQ-VERIFY-140-2: causal_improvement = (causal_recall > 0.12).
+- REQ-VERIFY-140-3: honest_verdict shall be 'causal_improves' if causal_recall > 0.12, else 'causal_no_improvement'.
+
+**Implementation Status:** Implemented (scripts/experiment_642_causal_verifier.py, Exp 642; causal_recall=0.36 > baseline=0.12)
+
+### SCENARIO-VERIFY-183: CausalReasoningVerifier Detects Causal Break
+
+Given: CausalReasoningVerifier with step_k concluding 100 and step_k+1 opening with 50.
+When: check_entailment(step_k, step_k1) is called.
+Then: causal_violation == True, violation_type == 'causal_break', entailment_score == 0.5.
+
+**Implementation Status:** Implemented (Exp 642)
+
+### SCENARIO-VERIFY-184: CausalReasoningVerifier Arithmetic Priority
+
+Given: CausalReasoningVerifier with step_k containing 47+28 stated as 65 (arithmetic error).
+When: check_entailment(step_k, step_k1) is called.
+Then: violation_type == 'arithmetic' and entailment_score == 1.0.
+
+**Implementation Status:** Implemented (Exp 642)
+
+### SCENARIO-VERIFY-185: CausalReasoningVerifier No Violation
+
+Given: CausalReasoningVerifier with step_k concluding 75 and step_k+1 also ending with 75.
+When: check_entailment(step_k, step_k1) is called.
+Then: causal_violation == False, violation_type == 'none', entailment_score == 0.0.
+
+**Implementation Status:** Implemented (Exp 642)
