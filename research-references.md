@@ -4,6 +4,42 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-21 arxiv Scan (Milestone 2026.04.47 Planning)
+
+### TRUST Agents — Multi-Agent LLM Claim Extraction (LLM-as-Extractor Architecture)
+- **Paper:** arXiv 2604.12184 (April 2026)
+- **What:** Collaborative multi-agent framework for fake-news detection and claim verification. Agent 1 uses NER to find numeric entities; Agent 2 forms arithmetic claims from those entities; Agent 3 verifies each claim via execution or lookup. Three-stage pipeline separates extraction from verification.
+- **Relevance to Carnot:** Directly implements Goal #1b (LLM-as-extractor). The three-agent structure maps cleanly onto Carnot's pipeline: extraction LLM call → eval() verification → Ising energy scoring. Prior CoACEV4 failure (recall=4%) used a single-pass extraction prompt. TRUST Agents' multi-stage approach with an entity-finding agent first could recover more arithmetic claims from prose CoT.
+- **Concrete experiment:** Exp 623 (TRUST Agents comparison): implement three-stage extraction — Stage 1: Qwen3.5-0.8B NER prompt to find all numeric entities in the CoT; Stage 2: construct arithmetic claims from entity pairs; Stage 3: verify via eval(). Compare recall vs LLMAsExtractorV1 (Exp 616) on same 25 incorrect live responses.
+- **When to incorporate:** Milestone 2026.04.47 — Phase 4 (after LLMAsExtractorV1 baseline is established).
+
+### AquaForte — LLM-Guided Quantified SMT Solving (Symbolic Arithmetic Extractor)
+- **Paper:** arXiv 2601.04675 (January 2026)
+- **What:** AquaForte uses LLMs to provide semantic guidance for quantified SMT constraint instantiation over uninterpreted functions. The LLM identifies the constraint structure; Z3 verifies the formal satisfiability. Combines LLM flexibility with SMT soundness guarantees.
+- **Relevance to Carnot:** Carnot already has Z3ArithmeticExtractor (Exp 204) that failed on IT-model outputs. AquaForte's insight: use the LLM to GUIDE the SMT instantiation, not to do all extraction. Instead of asking the LLM "extract arithmetic claims," ask it "identify which Z3 variables correspond to the numbers in this reasoning step." This bridges the flexibility of LLM extraction with the soundness of Z3 verification.
+- **Concrete experiment:** File for milestone 2026.04.47 Phase 1 as fallback if LLMAsExtractorV1 fails. LLM-guided Z3: use Qwen3.5-0.8B to identify variable bindings, then verify with Z3. No regex.
+- **When to incorporate:** Milestone 2026.04.47 — alternative extractor path if LLMAsExtractorV1 (Exp 616) does not reach recall >= 20%.
+
+### SymCode — Neurosymbolic Arithmetic Verification via Code Generation
+- **Paper:** arXiv 2510.25975 (October 2025)
+- **What:** SymCode translates arithmetic reasoning steps into executable Python code, then validates via execution. LLM generates code FROM the reasoning step; Python executes the code; output is compared to stated answer. Deterministic verification: no pattern matching, no symbolic parsing — execution is the ground truth.
+- **Relevance to Carnot:** This is the cleanest realization of Goal #1b in the literature. The core insight: instead of extracting arithmetic CLAIMS from text, ask the LLM to WRITE CODE that computes the answer, then run it. For GSM8K, this means: (1) prompt Qwen3.5-0.8B with "write Python that computes [answer_step]"; (2) exec the code; (3) compare to stated answer. If mismatch: violation. No regex. No Z3. Pure execution.
+- **Concrete experiment:** Incorporate as alternative to LLMAsExtractorV1 in Exp 616. SymCode-style code generation could be the most robust LLM-as-extractor approach because code execution is unambiguous. Target: recall >= 20% where pattern matching stuck at 4%.
+- **When to incorporate:** Milestone 2026.04.47 — Phase 1 LLMAsExtractorV1 implementation (Exp 616). Include SymCode-style code generation as one of the extraction strategies alongside structured claim prompts.
+
+### interwhen — Generalizable Intermediate Verification Framework
+- **Paper:** arXiv 2602.11202 (February 2026)
+- **What:** interwhen improves accuracy by up to 15% over standard CoT by inserting verification steps at intermediate points during generation. A monitor checks each reasoning step before the next is generated; if violation detected, the generation backtracks. Works across arithmetic, symbolic, and logical reasoning.
+- **Relevance to Carnot:** This is the mid-generation verification architecture Carnot has been building toward. interwhen's monitor is exactly what Carnot's DSVD+LLMAsExtractor pipeline should do: at each CoT step boundary, run the extractor on the partial output and flag violations before proceeding. With LLMAsExtractorV1 achieving recall >= 20%, interwhen-style monitoring becomes practical. The 15% accuracy improvement claim motivates this as a Tier B product.
+- **Concrete experiment:** File for Exp 627 (Milestone 2026.04.47 research frontier): implement interwhen-style intermediate verification using LLMAsExtractorV1. At each 32-token step boundary during Qwen3.5-0.8B generation, run the extraction LLM on the partial CoT and flag violations. If violation: emit a repair prompt before continuing. Compare end violation rate vs baseline.
+- **When to incorporate:** Milestone 2026.04.47 — Phase 5 research frontier (after LLMAsExtractorV1 baseline confirmed).
+
+### ORACLE — Constraint-Led Synthetic Data for Fine-Grained Verification
+- **Paper:** arXiv 2603.21140 (March 2026)
+- **What:** ORACLE generates fine-grained step-level verification training data using constraint-led elicitation. Symbolic reasoning verification validates each arithmetic operation. Outperforms binary correct/incorrect labeling by providing per-step supervision signal with constraint attribution.
+- **Relevance to Carnot:** After LLMAsExtractorV1 achieves recall >= 20%, the next bottleneck is training the JEPA predictor on these extraction labels. ORACLE's constraint-led data generation could replace the current synthetic FOVER corpus with real-extraction-labeled data: each reasoning step gets a constraint label derived from LLMAsExtractorV1's output. This closes the offline/live gap (RETRO-066/068) because the training data is derived from the same extractor used at inference.
+- **When to incorporate:** Milestone 2026.04.47+ — after LLMAsExtractorV1 produces labeled data; use ORACLE-style constraint labeling to build FOVER corpus v5 for JEPA v14 training.
+
 ## 2026-04-20 arxiv Scan (Milestone 2026.04.46 Planning)
 
 ### GenPRM — Generative Process Reward Model via Reasoning (LLM-as-Extractor Path)

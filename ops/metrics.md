@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-21 Milestone 2026.04.47 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-21T00:35:21Z | 2026-04-21T00:50:42Z | Planned milestone 2026.04.47 "LLM-as-Extractor Breakthrough — RETRO-070 Resolution and Tier 0c Deployment": read 12 project files + all 14 Exp 600-613 result JSONs. Spawned arxiv research subagent (5 genuinely new papers: arXiv 2604.12184 TRUST Agents multi-agent NER claim extraction; arXiv 2601.04675 AquaForte LLM-guided SMT; arXiv 2510.25975 SymCode neurosymbolic code generation verification; arXiv 2602.11202 interwhen intermediate verification framework; arXiv 2603.21140 ORACLE constraint-led data elicitation). Appended 5 new entries to research-references.md. Identified 3 biggest gaps: (1) RETRO-070 CRITICAL — 14 consecutive VR attempts 0% improvement; implement LLMAsExtractorV1 using Qwen3.5-0.8B + SymCode-style code generation (Goal #1b); gate = recall>=0.20; (2) RETRO-069 — DSVD live AUC=0.158; replace hidden-state probing with SymCode executable verification (distribution-invariant); (3) NUP v6 AUC=0.964 validated but undeployed; JEPA v12 overfit — v13 needs CAPO calibration. Wrote openspec/change-proposals/research-roadmap-vNEXT.md (13 experiments 614-626, 6 phases, architecture diagram with new Tiers 0c and 2.5, dependency graph, success criteria table, 7 RETRO tracking). Wrote research-roadmap-next.yaml (13 experiments with full prompts following CONTEXT/EXISTING CODE/TASK/CONCRETE STEPS format; gating: Exp 617 gate_open gates Exp 620 VR attempt #15; all end with JAX_PLATFORMS=cpu pytest and "Do NOT push. Do NOT modify scripts/research_conductor.py."). | ~110k |
+
+---
+
 ## Session: 2026-04-20 Milestone 2026.04.46 Planning
 
 ### Turn Log
