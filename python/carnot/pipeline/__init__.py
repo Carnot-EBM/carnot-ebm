@@ -541,6 +541,10 @@ from carnot.pipeline.lsebmcl_replay import (  # noqa: E402
     LSEBMCLReplayBuffer,
     ReplaySession,
 )
+from carnot.pipeline.halp_probe import (  # noqa: E402
+    HALPProbe,
+    HALPProbeResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -894,4 +898,6 @@ __all__ = [
     "SpecGuardVerifier",
     "LSEBMCLReplayBuffer",
     "ReplaySession",
+    "HALPProbe",
+    "HALPProbeResult",
 ]

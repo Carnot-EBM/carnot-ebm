@@ -12931,3 +12931,41 @@ When: 200 clock cycles elapse after reset deasserts.
 Then: h_ema_out for spin 0 is within 5% of 1000 (i.e., abs(h_ema_spin0 - 1000) <= 50).
 
 **Implementation Status:** Implemented (hardware/kv260/ising_sampler_v3_tb.v, Exp 662)
+
+
+### REQ-VERIFY-155: HALPProbe — Pre-Generative Hallucination Detection via Question-End Hidden State
+
+The HALPProbe class (python/carnot/pipeline/halp_probe.py) shall implement pre-generative
+hallucination detection based on arXiv 2603.05465 (HALP: Hallucination-Aware Latent Probing).
+
+- REQ-VERIFY-155-1: HALPProbe.__init__(n_features, hidden_dim, threshold) shall initialise
+  a linear probe with n_features=64, hidden_dim=32, threshold=0.5 defaults.
+- REQ-VERIFY-155-2: HALPProbe._extract_features(question) shall return a JAX array of shape
+  (n_features,) encoding word-length features from the last n_features words, normalised by 20.
+- REQ-VERIFY-155-3: HALPProbe.train(questions, labels) shall train a linear probe via Adam
+  (100 steps, lr=1e-3) minimising sigmoid binary cross-entropy, storing weights in self.weights.
+- REQ-VERIFY-155-4: HALPProbe.predict(question) shall return a HALPProbeResult with
+  hallucination_score in [0, 1] and predicted_hallucinated = (score >= threshold).
+- REQ-VERIFY-155-5: Exp 663 shall evaluate halp_auc on FOVER corpus (v5_oracle or v5).
+  tier_0g_viable = (halp_auc >= 0.75). Artifact schema='carnot.halp_probe.v1'.
+- REQ-VERIFY-155-6: HALPProbe and HALPProbeResult shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/halp_probe.py, scripts/experiment_663_halp_probe.py, Exp 663)
+
+### SCENARIO-VERIFY-209: HALPProbe Trains and Predicts on Synthetic Data
+
+Given: HALPProbe(n_features=4) with synthetic questions ['short q', 'a longer question here'].
+When: train(['short q', 'a longer question here'], [0, 1]) is called.
+Then: self.weights is not None, weights list has length 4, bias list has length 1,
+      predict('short q') returns HALPProbeResult with predicted_hallucinated in {True, False}.
+
+**Implementation Status:** Implemented (tests/python/test_halp_probe.py, Exp 663)
+
+### SCENARIO-VERIFY-210: HALPProbe Untrained Falls Back to Feature Mean
+
+Given: HALPProbe(n_features=4) with no training.
+When: predict('what is two plus two') is called.
+Then: hallucination_score equals mean of the feature vector (not 0.5 baseline),
+      and predicted_hallucinated reflects whether that mean >= 0.5.
+
+**Implementation Status:** Implemented (tests/python/test_halp_probe.py, Exp 663)
