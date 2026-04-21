@@ -10109,6 +10109,43 @@ And: honest_verdict='corpus_expanded' if n_new_pairs >= 80.
 
 ---
 
+## REQ-DATA-011: Live Corpus v5 — At Least 300 Real Live Pairs from Diverse GSM8K Indices
+
+LLMAsExtractorV1 (Exp 616) and JEPA v13 (Exp 618) require a larger and more diverse live corpus
+covering complex multi-step GSM8K problems from indices 350-449 in addition to the v4 corpus.
+This requirement extends the corpus pipeline to fover_corpus_v5.json.
+
+- REQ-DATA-011-1: results/live_pairs_615.json contains live pairs from GSM8K indices 350-449.
+- REQ-DATA-011-2: results/fover_corpus_v5.json merges live_pairs_578.json, live_pairs_579.json
+  (optional), live_pairs_602.json, and live_pairs_615.json deduplicated by (question_index, model).
+- REQ-DATA-011-3: fover_corpus_v5.json metadata records n_unique_questions, n_correct_pairs,
+  n_incorrect_pairs, model_accuracy_qwen, model_accuracy_gemma across all merged pairs.
+- REQ-DATA-011-4: honest_verdict='corpus_expanded' iff n_new_pairs >= 80; else 'corpus_partial'.
+
+Spec: REQ-DATA-011, SCENARIO-DATA-017, SCENARIO-DATA-018
+
+### SCENARIO-DATA-017: Exp 615 Collects GSM8K Indices 350-449 With CARNOT_FORCE_LIVE Gate
+
+Given: CARNOT_FORCE_LIVE=1, SOTA GGUFs or fallback models loaded, GSM8K questions 350-449.
+When: scripts/experiment_615_live_corpus_v3.py is run.
+Then: results/live_pairs_615.json is written with up to 200 entries (100 questions * 2 models).
+And: each entry has fields: question_index, question, model, response, is_correct, inference_mode='live_gpu'.
+And: the module raises sys.exit(1) at import time if CARNOT_FORCE_LIVE != '1'.
+
+**Implementation Status:** Pending (Exp 615)
+
+### SCENARIO-DATA-018: Exp 615 Merges All Live Corpora Into fover_corpus_v5.json
+
+Given: results/live_pairs_578.json, optional live_pairs_579.json, live_pairs_602.json, and live_pairs_615.json.
+When: Exp 615 merges and deduplicates by (question_index, model) and writes fover_corpus_v5.json.
+Then: fover_corpus_v5.json contains all deduplicated entries across all sources.
+And: metadata records n_unique_questions >= 100, model_accuracy_qwen and model_accuracy_gemma as floats.
+And: honest_verdict='corpus_expanded' if n_new_pairs >= 80.
+
+**Implementation Status:** Pending (Exp 615)
+
+---
+
 ## REQ-EXTRACT-030: Per-Extractor FP/TP Rate Measurement on Labeled Live Responses
 
 Each constraint extractor (VeriCoTStepValidator, VPRMArithmeticVerifier) must be measurable
