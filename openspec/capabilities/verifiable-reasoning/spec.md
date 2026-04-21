@@ -13043,3 +13043,54 @@ When: `build_manifest_check_result(manifest, [308, 999])` is called.
 Then: `all_clear=False`, `excluded_ids=[308]`.
 
 **Implementation Status:** Implemented (tests/python/test_exclusion_manifest.py, Exp 666)
+
+## REQ-VERIFY-147: EnsembleGate v4 — Structured-First Gate Logic
+
+EnsembleGateV4.compute() shall open the gate when:
+  structured_recall >= structured_threshold (default 0.20)
+  OR max(causal_recall, symcode_recall) >= max_component_threshold (default 0.30)
+
+HermesV2 recall is accepted as input for audit purposes but is excluded from the gate formula.
+The 3-component ensemble_recall (symcode + structured + causal) / 3 is recorded in the artifact.
+
+- REQ-VERIFY-147-1: gate_open = (structured_recall >= 0.20 OR max(causal_recall, symcode_recall) >= 0.30)
+- REQ-VERIFY-147-2: authorizes_vr shall equal gate_open.
+- REQ-VERIFY-147-3: honest_verdict shall be "gate_open_vr_authorized" when gate_open, "gate_closed_vr_blocked" otherwise.
+- REQ-VERIFY-147-4: gate_version shall be "v4".
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ensemble_gate_v4.py, tests/python/test_ensemble_gate_v4.py, Exp 667)
+
+## REQ-VERIFY-148: EnsembleGate v4 — HermesV2 Excluded from Gate Formula
+
+HermesV2 recall shall NOT appear in the gate_open formula or the ensemble_recall average.
+Rationale: HermesV2 scores near 0.0 on mixed-format test sets, which dragged the v3 ensemble
+below the threshold even when causal_recall already exceeded it (root cause from Exp 655).
+
+- REQ-VERIFY-148-1: hermes_v2_recall parameter is accepted but not used in gate_open.
+- REQ-VERIFY-148-2: ensemble_recall = (symcode_recall + structured_recall + causal_recall) / 3 (3-component only).
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ensemble_gate_v4.py, tests/python/test_ensemble_gate_v4.py, Exp 667)
+
+### SCENARIO-VERIFY-193: Gate Opens on Structured Recall Alone
+
+Given: EnsembleGateV4() with defaults, symcode=0.10, hermes_v2=0.0, structured=0.20, causal=0.10.
+When: compute() is called.
+Then: gate_open=True (structured_recall meets the 0.20 threshold).
+
+**Implementation Status:** Implemented (tests/python/test_ensemble_gate_v4.py, Exp 667)
+
+### SCENARIO-VERIFY-194: Gate Opens on Causal Recall When Structured Below Threshold
+
+Given: EnsembleGateV4() with defaults, symcode=0.12, hermes_v2=0.0, structured=0.10, causal=0.36.
+When: compute() is called.
+Then: gate_open=True (causal_recall=0.36 >= max_component_threshold=0.30).
+
+**Implementation Status:** Implemented (tests/python/test_ensemble_gate_v4.py, Exp 667)
+
+### SCENARIO-VERIFY-195: Gate Closes When Both Conditions Fail
+
+Given: EnsembleGateV4() with defaults, symcode=0.10, hermes_v2=0.90, structured=0.10, causal=0.10.
+When: compute() is called.
+Then: gate_open=False (hermes_v2=0.90 does not rescue the gate; neither formula condition met).
+
+**Implementation Status:** Implemented (tests/python/test_ensemble_gate_v4.py, Exp 667)
