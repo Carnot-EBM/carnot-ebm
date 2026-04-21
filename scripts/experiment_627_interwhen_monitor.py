@@ -80,17 +80,20 @@ def main() -> None:
     tmpl.setup()
 
     # Step 5: build the LLM caller — Qwen3.5-0.8B CPU in live mode, None in CI.
-    force_live = os.environ.get("CARNOT_FORCE_LIVE", "0") not in ("0", "", "false", "False")
+    # Use CARNOT_INTERWHEN_LIVE=1 to explicitly opt into LLM loading for this experiment.
+    # CARNOT_FORCE_LIVE is used only for GPU gating; the heavy LLM load here is opt-in
+    # because the GPU zombie reaper kills idle LLM processes between inference calls.
+    force_live = os.environ.get("CARNOT_INTERWHEN_LIVE", "0") == "1"
     llm_caller = None
     if force_live:
-        _log.info("CARNOT_FORCE_LIVE=1: loading Qwen3.5-0.8B for live SymCode extraction")
+        _log.info("CARNOT_INTERWHEN_LIVE=1: loading Qwen3.5-0.8B for live SymCode extraction")
         try:
             from transformers import pipeline as hf_pipeline  # noqa: PLC0415
 
             _pipe = hf_pipeline(
                 "text-generation",
                 model="Qwen/Qwen3.5-0.8B",
-                device=0,
+                device="cpu",
                 max_new_tokens=64,
             )
 
