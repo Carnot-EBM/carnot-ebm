@@ -12114,3 +12114,36 @@ When: Exp 631 attempts to build oracle step-level training pairs.
 Then: Falls back to fover_corpus_v5.json (or fover_corpus_v4.json) flat pairs for training; n_training_pairs > 0.
 
 **Implementation Status:** Implemented (Exp 631)
+
+## REQ-VERIFY-136: HermesVerifierAdapter — Async Step-Boundary Verification with SymCodeVerifier Prover
+
+HermesVerifierAdapter shall implement the HERMES feedback loop (arXiv 2511.18760) as a
+CPU prototype, substituting SymCodeVerifier for Lean as the prover and LLMAsExtractorV1
+for the formal translator.  Verification runs at step boundaries (not every token).
+
+- REQ-VERIFY-136-1: translate(step) shall call LLMAsExtractorV1.extract(step) and return a list[ArithmeticClaim].
+- REQ-VERIFY-136-2: prove(step) shall call SymCodeVerifier.verify_response(step) and return 'violated' if any CoTStep has violation_detected=True, else 'correct'.
+- REQ-VERIFY-136-3: generate_feedback(step, claims) shall return a non-empty correction hint string iff any claim has confidence < 0.5 or lhs_expr is None; else return ''.
+- REQ-VERIFY-136-4: process_step(step_text, step_index) shall return a HermesVerificationStep with all fields populated.
+- REQ-VERIFY-136-5: process_response(response) shall split the response at sentence boundaries using InterWhenMonitor.split_at_boundaries() and call process_step() for each sentence.
+- REQ-VERIFY-136-6: hermes_recall shall be computed as hermes_tp / 25 over known-incorrect responses from live_pairs_578.json.
+- REQ-VERIFY-136-7: v1_baseline_recall is fixed at 0.04 (post-hoc extraction baseline established by Exp 617).
+- REQ-VERIFY-136-8: hermes_improvement = True iff hermes_recall > 0.04.
+
+**Implementation Status:** Implemented (Exp 633)
+
+### SCENARIO-VERIFY-178: HermesVerifierAdapter Detects Violation in Arithmetic Step
+
+Given: A CoT step with a known arithmetic error (e.g. "47 + 28 = 65").
+When: process_step() is called.
+Then: prover_verdict='violated', feedback_injected=True, feedback_text is non-None.
+
+**Implementation Status:** Implemented (Exp 633)
+
+### SCENARIO-VERIFY-179: HermesVerifierAdapter Passes Correct Step
+
+Given: A CoT step with correct arithmetic (e.g. "47 + 28 = 75").
+When: process_step() is called.
+Then: prover_verdict='correct', feedback_injected=False, feedback_text=None.
+
+**Implementation Status:** Implemented (Exp 633)
