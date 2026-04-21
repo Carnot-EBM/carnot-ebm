@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 626-experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number). See the [technical report](docs/technical-report.md) for the full 639-experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (626 experiments, 34 completed milestones)
+## Key Results (639 experiments, 35 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.48 (Exps 627-639, 35th milestone, title "HERMES Improved — All RETROs Carry") completed. Key results: **InterWhen Mid-Generation Monitor** — interwhen_recall=0.12 (3x vs v1 baseline=0.04), early_detection_rate=1.0, retro_070_partial=True, gate_open=False (Exp 627); **ORACLE FOVER v5 Corpus Builder** — oracle_corpus_ready (Exp 628); **InterWhen Diagnostic Gate** — gate_closed_do_not_retry, recall primary=0.12, extended=0.14, below 0.20 threshold (Exp 629); **Live VR Attempt #16 BLOCKED** — RETRO-033 miss #16, recall 0.12 << 0.20 threshold (Exp 630); **JEPA v14 ORACLE Calibrated Retrain** — v14_ood_auc=0.912, calibration still above threshold, v14_uncalibrated (Exp 631); **DualGPU 13B Forward Pass Proof** — model load failed, RETRO-071 still open, seventh consecutive milestone unconfirmed (Exp 632); **HERMES Tool-Augmented Verification Adapter** — hermes_recall=0.12, 3x improvement vs v1 recall=0.04, hermes_fp_rate=0.2, hermes_improved (Exp 633); **Multilevel KAN KAEMEnergy** — no_improvement (Exp 634); **AdapTrack Constrained Generation** — adaptrack_recall=0.08, comparable but below InterWhen (Exp 635); **FPGA TCL v2 Update** — tcl_updated, synthesis_deferred (Exp 636); **LowRankKAEM Sparse Redesign** — sparse_no_improvement, RETRO-057 still open (Exp 637); **FR-11 Relay** — synthetic_fallback (Exp 638); **Retrospective (Exp 639):** n_experiments_run=13, total_wall_time=18.445 min (mean=1.419 min/exp — fastest milestone ever), hermes_improves=True, all_retros_carry=True, open_retro_count=11, honest_verdict=hermes_improved_all_retros_carry.
 
 Note: Milestone 2026.04.47 (Exps 614-626, 34th milestone, title "SymCode Closed — NUP Deployed — Recall Still Blocked") completed. Key results: **ExclusionManifest DualGPU Validation** — precheck timed, DualGPU still unconfirmed (Exp 614, RETRO-071 opened: sixth consecutive milestone); **Live Corpus v3 Expansion** — corpus_partial (Exp 615); **LLMAsExtractorV1** — v1_recall=0.04, no improvement, architecture review required (Exp 616, gate_open=False); **Extractor Diagnostic v5** — timed_out (Exp 617); **JEPA v13 CAPO Calibrated Retrain** — v13_ece=0.207 above 0.10 threshold, uncalibrated (Exp 618); **DSVD-SymCode Hybrid Verifier** — symcode_live_auc=0.804, RETRO-069 RESOLVED, SymCode beats DSVD (Exp 619); **Live VR Attempt #15 BLOCKED** — gate_open=False, 15 consecutive zero-positive attempts confirmed, no more extractor-only passes (Exp 620); **MetaJuLS Online Adaptation** — adaptation_effective=True (Exp 621); **NUP v6 Tier 0c Cascade Wire-In** — nup_deployed_latency_ok, cascade_latency_ms=1.27ms (Exp 622); **TRUST Agents Comparison** — trust_recall=0.0, v1 extractor equivalent (Exp 623); **KV260 Vivado Synthesis v2** — simulation_validated=True, Vivado not yet installed, synthesis blocked (Exp 624); **FR-11 Relay** — synthetic_fallback (Exp 625); honest_verdict=symcode_closed_nup_deployed_recall_still_blocked; open_retro_count=11.
 
