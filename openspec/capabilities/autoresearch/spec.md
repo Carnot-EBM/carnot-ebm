@@ -1933,6 +1933,38 @@ batch has equal or higher precision than the first,
 
 Spec: SCENARIO-LEARN-123
 
+### REQ-LEARN-080: Tier 1 FR-11 Relay — ConstraintAdditionFromMemory Updates on Real Violations When Available
+
+When Exp 620 (or successor live VR attempt) reports signed_improvement > 0 AND
+n_violations_found > 0, the FR-11 relay experiment shall feed those REAL violations
+into ConstraintAdditionFromMemory.add_from_violations() and measure the FP-rate delta
+across two sessions (before and after the update).
+
+When Exp 620 is blocked (signed_improvement <= 0 or n_violations_found == 0), the relay
+shall generate 25 explicit synthetic arithmetic violations to maintain relay continuity
+and document fr11_real_violations_confirmed = False.
+
+In both modes the artifact must record: mode, n_violations_used,
+fr11_real_violations_confirmed, fp_rate_before, fp_rate_after, fp_rate_delta.
+
+### SCENARIO-LEARN-124: Real-Mode Relay Completes When Exp 620 Has Positive signed_improvement
+
+**Given** Exp 620 reports signed_improvement > 0 and n_violations_found > 0
+**When** the Tier 1 relay runs
+**Then** violations are loaded from Exp 620 and fed to ConstraintAdditionFromMemory
+**And** fp_rate_delta = fp_rate_after - fp_rate_before is recorded
+**And** fr11_real_violations_confirmed = True
+**And** honest_verdict = 'real_violations_relay_complete'
+
+### SCENARIO-LEARN-125: Synthetic-Fallback Relay Fires When Exp 620 Is Blocked
+
+**Given** Exp 620 reports signed_improvement <= 0 or is absent
+**When** the Tier 1 relay runs
+**Then** 25 synthetic arithmetic violations are generated
+**And** ConstraintAdditionFromMemory processes the synthetic violations
+**And** fr11_real_violations_confirmed = False
+**And** honest_verdict = 'synthetic_fallback_relay_complete'
+
 ---
 
 ## Implementation Status
@@ -2005,3 +2037,4 @@ Spec: SCENARIO-LEARN-123
 | REQ-LEARN-077 | N/A | Implemented | Python (Exp 611) |
 | REQ-LEARN-078 | N/A | Implemented | Python (test_metajuls_adapter.py) |
 | REQ-LEARN-079 | N/A | Implemented | Python (test_metajuls_adapter.py) |
+| REQ-LEARN-080 | N/A | Implemented | Python (test_experiment_625_fr11_relay.py) |
