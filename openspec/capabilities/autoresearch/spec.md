@@ -2042,6 +2042,65 @@ Spec: REQ-LEARN-082
 
 ---
 
+### REQ-LEARN-083: JEPA v15 Trained on Real Violation Data Achieves OOD AUC >= 0.80
+
+**Requirement:** When retrained on real violation pairs sourced from Exp 659
+(FR-11 Tier 2 relay) and FOVER live pairs, the JEPAViolationPredictor v15 must
+achieve OOD AUC >= 0.80 on a 20% held-out subset of those real pairs.
+
+**Rationale:** The CPMI + PURE min-form objective provides contrastive gradient signal
+(correct chain energy < incorrect chain energy by a margin) that BCE alone cannot.
+Training on real violation data rather than synthetic pairs closes the loop from FR-11
+relay → model improvement.
+
+**Acceptance criteria:**
+- ood_auc >= 0.80 in the experiment artifact
+- Training data includes at least one non-synthetic pair from Exp 659 or FOVER live
+
+Spec: REQ-LEARN-083, SCENARIO-LEARN-130
+
+### SCENARIO-LEARN-130: JEPA v15 OOD AUC Meets Target on Real Violation Pairs
+
+**Given** Exp 659 violation relay and FOVER live pairs are available
+**When** JEPAViolationPredictor v15 is trained with CPMI+PURE for 100 epochs
+**Then** ood_auc >= 0.80 on the 20% held-out test split
+**And** the artifact records honest_verdict = 'jepa_v15_target_met' or 'jepa_v15_auc_met'
+
+---
+
+### REQ-LEARN-084: JEPA v15 ECE < 0.10 After Platt Calibration
+
+**Requirement:** After training v15 on real violation pairs, a Platt temperature T
+is fitted on the validation set. The Expected Calibration Error (ECE) of the calibrated
+model must be < 0.10.
+
+**Rationale:** Raw energy scores are uncalibrated probabilities.  Dividing by T before
+sigmoid converts the energy output into a well-calibrated probability estimate that
+downstream confidence thresholds can trust.
+
+**Acceptance criteria:**
+- ece_post_calibration < 0.10 in the experiment artifact
+- platt_temperature_T > 0.0 (a positive scalar)
+
+Spec: REQ-LEARN-084, SCENARIO-LEARN-131
+
+### SCENARIO-LEARN-131: JEPA v15 Platt Calibration Yields ECE < 0.10
+
+**Given** v15 is trained and produces raw energy scores on the validation set
+**When** Platt temperature T is fitted via Brent's method on the validation set
+**Then** ece_post_calibration < 0.10
+**And** platt_temperature_T is a finite positive scalar
+
+### SCENARIO-LEARN-132: JEPA v15 honest_verdict Is a Valid Enum Member
+
+**Given** any execution path of experiment_671_jepa_v15.py
+**When** the experiment artifact is written
+**Then** honest_verdict is one of:
+    'jepa_v15_target_met' | 'jepa_v15_auc_met' | 'jepa_v15_partial'
+    | 'jepa_v15_no_improvement' | 'ci_mode_synthetic'
+
+---
+
 ## Implementation Status
 
 | Requirement | Rust | Python | Tests |
@@ -2115,3 +2174,5 @@ Spec: REQ-LEARN-082
 | REQ-LEARN-080 | N/A | Implemented | Python (test_experiment_625_fr11_relay.py) |
 | REQ-LEARN-081 | N/A | Implemented | Python (test_experiment_638_fr11_relay.py) |
 | REQ-LEARN-082 | N/A | Implemented | Python (test_experiment_645_fr11_relay.py) |
+| REQ-LEARN-083 | N/A | Implemented | Python (test_experiment_671_jepa_v15.py) |
+| REQ-LEARN-084 | N/A | Implemented | Python (test_experiment_671_jepa_v15.py) |
