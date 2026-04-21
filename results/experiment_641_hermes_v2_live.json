@@ -1,0 +1,126 @@
+{
+  "experiment": 641,
+  "title": "HERMES v2 Live Generation Loop",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T15:15:42Z",
+  "finished_at": "2026-04-21T15:15:53Z",
+  "duration_s": 10.797,
+  "status": "success",
+  "decision_class": "detect",
+  "schema": [
+    "batch_log_correct",
+    "batch_log_incorrect",
+    "decision_class",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "gate_contribution",
+    "gpu_status",
+    "hermes_v2_fp",
+    "hermes_v2_fp_rate",
+    "hermes_v2_recall",
+    "hermes_v2_tp",
+    "honest_verdict",
+    "inference_mode",
+    "mean_hints_per_incorrect",
+    "n_correct",
+    "n_questions",
+    "post_hoc_baseline",
+    "recall_improvement",
+    "retro_070_partial",
+    "run_date",
+    "schema",
+    "started_at",
+    "status",
+    "title"
+  ],
+  "n_questions": 25,
+  "n_correct": 10,
+  "hermes_v2_tp": 0,
+  "hermes_v2_fp": 0,
+  "hermes_v2_recall": 0.0,
+  "hermes_v2_fp_rate": 0.0,
+  "post_hoc_baseline": 0.12,
+  "recall_improvement": -0.12,
+  "mean_hints_per_incorrect": 0,
+  "inference_mode": "ci_stub",
+  "gate_contribution": false,
+  "retro_070_partial": false,
+  "honest_verdict": "hermes_v2_no_improvement",
+  "gpu_status": {
+    "all_healthy": true,
+    "models": [
+      {
+        "name": "Qwen3.5-0.8B",
+        "gpu_id": 0,
+        "health_ok": true,
+        "load_time_s": 4.946079153000028,
+        "stall_root_cause": null
+      }
+    ],
+    "prewarm_time_s": 6.373,
+    "dual_gpu_auto_assigned": false,
+    "model_server_active": true,
+    "gpu_runner_active": false,
+    "cpu_fallback": false,
+    "gpu_monitor_results": {
+      "n_gpus_detected": 2,
+      "n_zombies": 0,
+      "idle_gpus": [
+        0,
+        1
+      ],
+      "all_healthy": false
+    },
+    "dual_gpu_health": {
+      "gpu0_util_pct": 11.0,
+      "gpu1_util_pct": 0.0,
+      "gpu0_temp_c": 64.0,
+      "gpu1_temp_c": 42.0,
+      "gpu0_vram_mb": 1876.0,
+      "gpu1_vram_mb": 5.0,
+      "gpu1_is_zombie": false,
+      "temperature_warning": false,
+      "recommended_batch_size_factor": 1.0
+    }
+  },
+  "batch_log_incorrect": [
+    {
+      "batch_id": 0,
+      "batch_size": 5,
+      "batch_time_s": 0.0005
+    },
+    {
+      "batch_id": 1,
+      "batch_size": 5,
+      "batch_time_s": 0.0005
+    },
+    {
+      "batch_id": 2,
+      "batch_size": 5,
+      "batch_time_s": 0.0003
+    },
+    {
+      "batch_id": 3,
+      "batch_size": 5,
+      "batch_time_s": 0.0003
+    },
+    {
+      "batch_id": 4,
+      "batch_size": 5,
+      "batch_time_s": 0.0002
+    }
+  ],
+  "batch_log_correct": [
+    {
+      "batch_id": 0,
+      "batch_size": 5,
+      "batch_time_s": 0.0003
+    },
+    {
+      "batch_id": 1,
+      "batch_size": 5,
+      "batch_time_s": 0.0002
+    }
+  ]
+}

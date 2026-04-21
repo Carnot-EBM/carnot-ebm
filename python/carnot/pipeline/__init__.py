@@ -511,6 +511,11 @@ from carnot.pipeline.dualgpu_retrain import (  # noqa: E402
     DualGPURetrain,
     DualGPURetrainConfig,
 )
+from carnot.pipeline.hermes_v2_live_loop import (  # noqa: E402
+    HermesV2GenerationResult,
+    HermesV2LiveLoop,
+    HermesV2StepResult,
+)
 
 __all__ = [
     "AgentStep",
@@ -848,4 +853,7 @@ __all__ = [
     "BacktrackEvent",
     "DualGPURetrain",
     "DualGPURetrainConfig",
+    "HermesV2GenerationResult",
+    "HermesV2LiveLoop",
+    "HermesV2StepResult",
 ]
