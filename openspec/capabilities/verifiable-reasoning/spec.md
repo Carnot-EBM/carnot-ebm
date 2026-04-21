@@ -11557,3 +11557,59 @@ When: faithfulness_score() is computed on all responses.
 Then: mean_faithful_correct > mean_faithful_incorrect (causal_gap > 0).
 
 **Implementation Status:** Implemented (Exp 612)
+
+## REQ-INFRA-087: Precheck Sentinel Must Be Written Within 60 Seconds of Experiment Start
+
+**Context (RETRO-067 follow-up):**
+    Exp 601 set precheck_created_sentinel_proven=True, but the .46 retro showed
+    conductor_consulted=False for the milestone as a whole because the sentinel file
+    mtime was never validated against experiment start time.  A sentinel written hours
+    before an experiment provides no proof of just-in-time consultation.
+
+    This requirement mandates that any downstream experiment verify the sentinel file's
+    mtime is within 60 seconds of the experiment's own start time — proving the
+    conductor ran the precheck immediately before spawning the agent, not in a prior
+    session.
+
+- REQ-INFRA-087-1: An experiment that reads conductor_consulted_at.txt must record sentinel_age_seconds = time.time() - os.path.getmtime(sentinel_path).
+- REQ-INFRA-087-2: sentinel_within_60s = True only when sentinel_age_seconds < 60.
+- REQ-INFRA-087-3: retro_067_timing_confirmed = sentinel_within_60s.
+- REQ-INFRA-087-4: The experiment artifact must include all three fields above.
+
+Spec: REQ-INFRA-087, SCENARIO-INFRA-095
+
+### SCENARIO-INFRA-095: Sentinel Written Just-In-Time Is Within 60 Seconds
+
+Given: scripts/conductor_manifest_precheck.py is run immediately before an experiment.
+When: the experiment reads the sentinel file mtime.
+Then: sentinel_age_seconds < 60 and sentinel_within_60s == True.
+
+**Implementation Status:** Implemented (Exp 614)
+
+## REQ-INFRA-088: DualGPU Parallel Forward-Pass Utilization Confirmed
+
+**Context (RETRO-067 follow-up):**
+    DualGPU parallel forward-pass has been UNCONFIRMED for five consecutive milestones.
+    Both RTX 3090s (cuda:0 and cuda:1) are detected in nvidia-smi but no experiment
+    has logged gpu1_utilization > 0 during an actual forward pass.  This requirement
+    mandates an explicit confirmation test that loads a model stub onto each GPU
+    simultaneously, runs concurrent forward passes, and verifies that both GPUs
+    register utilization > 0.
+
+- REQ-INFRA-088-1: Experiment must detect the number of available CUDA GPUs via torch.cuda.device_count().
+- REQ-INFRA-088-2: If len(gpus) >= 2, load nn.Linear(10, 10) onto cuda:0 AND cuda:1.
+- REQ-INFRA-088-3: Run a forward pass on each GPU simultaneously using threading.Thread.
+- REQ-INFRA-088-4: After both threads complete, check torch.cuda.utilization(0) > 0 and torch.cuda.utilization(1) > 0.
+- REQ-INFRA-088-5: gpu1_utilization_confirmed = bool(gpu1_util > 0).
+- REQ-INFRA-088-6: If torch.cuda unavailable or len(gpus) < 2, set gpu1_utilization_confirmed = False with dualgpu_blocked_reason.
+- REQ-INFRA-088-7: Artifact must include n_gpus_detected, gpu1_utilization_confirmed, dualgpu_blocked_reason (str or None).
+
+Spec: REQ-INFRA-088, SCENARIO-INFRA-096
+
+### SCENARIO-INFRA-096: DualGPU Parallel Forward-Pass Logs Non-Zero Utilization on GPU1
+
+Given: Two CUDA GPUs are available (torch.cuda.device_count() >= 2).
+When: concurrent forward passes run on cuda:0 and cuda:1 simultaneously.
+Then: torch.cuda.utilization(1) > 0 and gpu1_utilization_confirmed == True.
+
+**Implementation Status:** Implemented (Exp 614)
