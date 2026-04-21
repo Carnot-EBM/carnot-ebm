@@ -2414,3 +2414,4 @@ python/ |
 | 2026-04-21 18:56 UTC | Exp 653: StructuredEquationForcer — Prompt-Level A | OK | 81 passed, 2 warnings in 4.62s |
 | 2026-04-21 19:13 UTC | Exp 654: HERMES v2 Structured Live — Forced-Equati | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-21 19:18 UTC | Exp 654: HERMES v2 Structured Live — Forced-Equati | OK | Deliverable already exists in repo |
+| 2026-04-21 19:24 UTC | Exp 655: Ensemble Recall Gate v3 — Combined SymCod | OK | 94 passed, 2 warnings in 6.05s |
