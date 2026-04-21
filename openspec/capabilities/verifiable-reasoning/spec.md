@@ -11524,3 +11524,36 @@ When: hisr_weighted_add() is called.
 Then: No violations are observed and check_and_add() returns [].
 
 **Implementation Status:** Implemented (Exp 610)
+
+## REQ-VERIFY-145: FACT-E Causal Faithfulness Probe (Tier 3.5 Advisory Signal)
+
+FACT-E (arXiv 2604.10693) extends Carnot's verifier from arithmetic correctness
+to logical faithfulness.  A response can pass arithmetic verification but still
+contain non-sequitur reasoning steps (numbers add up but are unrelated).
+
+- REQ-VERIFY-145-1: FACTEFaithfulnessProbe.__init__(threshold=0.3).
+- REQ-VERIFY-145-2: _perturb_step(step) -> str replaces numeric tokens with ±20% alternatives.
+- REQ-VERIFY-145-3: measure_dependency(step_a, step_b) -> CausalStepDependency computes shared-numeric-token score.
+- REQ-VERIFY-145-4: dependency_score = count_shared_numeric_tokens / max(1, len(step_b_tokens)).
+- REQ-VERIFY-145-5: is_causally_connected = dependency_score >= threshold.
+- REQ-VERIFY-145-6: faithfulness_score(response) -> float: mean dependency_score across consecutive step pairs.
+- REQ-VERIFY-145-7: Returns 1.0 for responses with fewer than 2 steps.
+- REQ-VERIFY-145-8: FACTEFaithfulnessProbe and CausalStepDependency exported from carnot.pipeline.__init__.
+
+Spec: REQ-VERIFY-145, SCENARIO-VERIFY-175, SCENARIO-VERIFY-176
+
+### SCENARIO-VERIFY-175: FACT-E Detects Disconnected Reasoning Steps
+
+Given: A response where step_b's numeric tokens are unrelated to step_a's.
+When: measure_dependency(step_a, step_b) is called.
+Then: dependency_score == 0.0 and is_causally_connected == False.
+
+**Implementation Status:** Implemented (Exp 612)
+
+### SCENARIO-VERIFY-176: FACT-E Faithfulness Score Is Higher for Correct Responses
+
+Given: Live response pairs from Exp 578 (correct vs. incorrect labels).
+When: faithfulness_score() is computed on all responses.
+Then: mean_faithful_correct > mean_faithful_incorrect (causal_gap > 0).
+
+**Implementation Status:** Implemented (Exp 612)

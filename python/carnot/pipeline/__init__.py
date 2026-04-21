@@ -479,6 +479,10 @@ from carnot.pipeline.flip_calibrator import (  # noqa: E402
     FLIPRepairTriple,
     FLIPRewardCalibrator,
 )
+from carnot.pipeline.fact_e_probe import (  # noqa: E402
+    CausalStepDependency,
+    FACTEFaithfulnessProbe,
+)
 
 __all__ = [
     "AgentStep",
@@ -800,4 +804,6 @@ __all__ = [
     "InterleavedLogicVerifier",
     "InterleavedStepResult",
     "CAPOCalibrationLoss",
+    "CausalStepDependency",
+    "FACTEFaithfulnessProbe",
 ]
