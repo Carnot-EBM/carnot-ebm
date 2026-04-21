@@ -537,6 +537,10 @@ from carnot.pipeline.specguard_verifier import (  # noqa: E402
     SpecGuardStepResult,
     SpecGuardVerifier,
 )
+from carnot.pipeline.lsebmcl_replay import (  # noqa: E402
+    LSEBMCLReplayBuffer,
+    ReplaySession,
+)
 
 __all__ = [
     "AgentStep",
@@ -888,4 +892,6 @@ __all__ = [
     "EnsembleRecallGateV3",
     "SpecGuardStepResult",
     "SpecGuardVerifier",
+    "LSEBMCLReplayBuffer",
+    "ReplaySession",
 ]
