@@ -11914,4 +11914,50 @@ Given: VerifyRepairPipeline() constructed without nup_probe argument.
 When: verify(question="q", response="r") is called.
 Then: Behaviour is identical to pre-Exp-622 pipeline (no NUP scoring, no fast-path).
 
+## REQ-VERIFY-130: InterWhenMonitor — Invoke SymCodeVerifier at Sentence Boundaries During Generation
+
+InterWhenMonitor shall simulate mid-generation monitoring by invoking SymCodeVerifier at every
+sentence boundary while replaying a completed response sentence-by-sentence.
+
+- REQ-VERIFY-130-1: InterWhenMonitor.split_at_boundaries(text) splits on configurable boundary chars (default '.!?\n') and returns non-empty stripped sentences.
+- REQ-VERIFY-130-2: InterWhenMonitor.monitor_partial(partial_text) runs SymCodeVerifier on the last sentence of partial_text and returns an InterWhenViolation when detection_score > 0.0, else None.
+- REQ-VERIFY-130-3: InterWhenMonitor.monitor_full_response(response) iterates sentence-by-sentence through response and returns all InterWhenViolation objects detected during replay.
+- REQ-VERIFY-130-4: InterWhenMonitor.any_violation(response) returns True iff monitor_full_response detects at least one violation.
+- REQ-VERIFY-130-5: InterWhenViolation records sentence_index, sentence_text, violation_detected, detection_score, and step_results for each detected boundary.
+
+## REQ-VERIFY-131: InterWhenMonitor Mid-Generation Recall >= Post-Hoc Recall
+
+On the live_pairs_578 corpus (25 incorrect responses), InterWhenMonitor shall achieve recall
+>= the post-hoc SymCodeVerifier baseline measured on the same responses in Exp 619.
+
+- REQ-VERIFY-131-1: interwhen_recall = (violations detected on incorrect) / 25.
+- REQ-VERIFY-131-2: postcog_recall_baseline = 0.804 (SymCodeVerifier live AUC from Exp 619).
+- REQ-VERIFY-131-3: gate_open = interwhen_recall >= 0.20 (minimum useful threshold to proceed to integration).
+- REQ-VERIFY-131-4: early_detection_rate = fraction of detected violations caught before the last sentence.
+- REQ-VERIFY-131-5: retro_070_partial = True iff interwhen_recall > 0.04 (beats the 0-4% post-hoc extraction baseline that blocked 15 VR iterations).
+
+### SCENARIO-VERIFY-168: InterWhenMonitor Detects Violation Mid-Stream
+
+Given: InterWhenMonitor(SymCodeVerifier(llm_caller=None)) and a 3-sentence response where sentence 1 contains "47 + 28 = 65".
+When: monitor_full_response(response) is called.
+Then: At least one InterWhenViolation is returned with sentence_index <= 1 (violation caught at or before sentence 1).
+
+**Implementation Status:** Implemented (Exp 627)
+
+### SCENARIO-VERIFY-169: InterWhenMonitor Returns Empty on Correct Response
+
+Given: InterWhenMonitor(SymCodeVerifier(llm_caller=None)) and a response with no arithmetic or only correct arithmetic.
+When: monitor_full_response(response) is called.
+Then: Returns an empty list (no false violations on correct responses).
+
+**Implementation Status:** Implemented (Exp 627)
+
+### SCENARIO-VERIFY-170: InterWhenMonitor split_at_boundaries Handles Edge Cases
+
+Given: InterWhenMonitor with default boundary_chars.
+When: split_at_boundaries("") is called (empty string).
+Then: Returns an empty list. When split_at_boundaries("Hello. World!") is called, returns ["Hello", "World"].
+
+**Implementation Status:** Implemented (Exp 627)
+
 **Implementation Status:** Implemented (Exp 622)

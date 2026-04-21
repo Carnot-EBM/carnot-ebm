@@ -490,6 +490,10 @@ from carnot.pipeline.metajuls_adapter import (  # noqa: E402
     ExtractorPolicy,
     MetaJuLSAdapter,
 )
+from carnot.pipeline.interwhen_monitor import (  # noqa: E402
+    InterWhenMonitor,
+    InterWhenViolation,
+)
 
 __all__ = [
     "AgentStep",
@@ -816,4 +820,6 @@ __all__ = [
     "SymCodeVerifier",
     "ExtractorPolicy",
     "MetaJuLSAdapter",
+    "InterWhenMonitor",
+    "InterWhenViolation",
 ]
