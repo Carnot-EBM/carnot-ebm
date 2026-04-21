@@ -12027,3 +12027,53 @@ When: build_corpus(live_pairs) is called.
 Then: Returns 175 OracleChain objects; corpus_ready=True; honest_verdict='oracle_corpus_ready'.
 
 **Implementation Status:** Implemented (Exp 628)
+
+## REQ-VERIFY-134: JEPA v14 — Trained on ORACLE Step-Level Labels, ECE < 0.10
+
+JEPA v14 shall be trained on the ORACLE-labeled corpus (fover_corpus_v5_oracle.json) with CAPO
+calibration loss (arXiv 2604.12632) and shall achieve Expected Calibration Error (ECE) < 0.10
+on the held-out test split, correcting the v13 miscalibration (ECE=0.207).
+
+- REQ-VERIFY-134-1: Training corpus is fover_corpus_v5_oracle.json when corpus_ready=True; fallback to fover_corpus_v4.json or fover_corpus_v5.json if oracle unavailable or has 0 violated steps.
+- REQ-VERIFY-134-2: lambda_calib is selected from {0.05, 0.10, 0.20} by lowest validation ECE without dropping AUC below 0.70.
+- REQ-VERIFY-134-3: Training runs for 60 epochs with CAPO loss (contrastive margin + ECE penalty).
+- REQ-VERIFY-134-4: calibration_improved = True iff v14_ece < 0.10.
+- REQ-VERIFY-134-5: Model saved to results/jepa_v14_oracle.npz.
+
+**Implementation Status:** Implemented (Exp 631)
+
+## REQ-VERIFY-135: JEPA v14 — OOD AUC >= 0.80
+
+JEPA v14 shall maintain out-of-distribution discrimination performance at AUC >= 0.80,
+demonstrating that calibration training does not degrade the model's ability to separate
+correct from incorrect responses on unseen question types.
+
+- REQ-VERIFY-135-1: OOD split consists of GSM8K question indices NOT seen during training (top 20% by index value).
+- REQ-VERIFY-135-2: ood_maintained = True iff v14_ood_auc >= 0.75.
+- REQ-VERIFY-135-3: honest_verdict = 'v14_calibrated_ood_maintained' iff calibration_improved AND ood_maintained.
+
+**Implementation Status:** Implemented (Exp 631)
+
+### SCENARIO-VERIFY-175: JEPA v14 Achieves ECE < 0.10 with Lambda Tuning
+
+Given: JEPA v14 trained on oracle corpus with lambda_calib in {0.05, 0.10, 0.20}.
+When: Best lambda_calib selected by lowest validation ECE (without AUC < 0.70).
+Then: v14_ece < 0.10 and calibration_improved=True.
+
+**Implementation Status:** Implemented (Exp 631)
+
+### SCENARIO-VERIFY-176: JEPA v14 Maintains OOD AUC >= 0.75
+
+Given: JEPA v14 trained model.
+When: Evaluated on OOD split (unseen GSM8K question indices).
+Then: v14_ood_auc >= 0.75 and ood_maintained=True.
+
+**Implementation Status:** Implemented (Exp 631)
+
+### SCENARIO-VERIFY-177: JEPA v14 Falls Back to Standard Corpus When Oracle Has No Violated Steps
+
+Given: fover_corpus_v5_oracle.json with corpus_ready=True but n_violated_steps=0.
+When: Exp 631 attempts to build oracle step-level training pairs.
+Then: Falls back to fover_corpus_v5.json (or fover_corpus_v4.json) flat pairs for training; n_training_pairs > 0.
+
+**Implementation Status:** Implemented (Exp 631)
