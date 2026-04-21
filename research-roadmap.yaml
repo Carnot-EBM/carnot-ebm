@@ -39,14 +39,14 @@ tasks:
          "schema": "carnot.exclusion_manifest.v2",
          "excluded_experiments": ["308", "309", "425", "410"],
          "reason": "Legacy experiments: perpetually incomplete or superseded. Never re-queue.",
-         "notes": {
+         "notes": (
            "383": "RETRO: should run DualGPURetrain variant (Exp 640b). Do not re-queue plain Exp 383.",
            "308": "Checkpoint-failure state since .37. No path to completion.",
            "309": "Checkpoint-failure state since .37. No path to completion.",
            "425": "ExperimentTimeoutWatchdog already implemented. Exp 425 is complete.",
            "410": "BatchedInferenceRunner needed but not yet applied."
          )
-       }
+       )
     3. Add REQ-INFRA-090 (conductor must consult exclusion manifest before queuing any experiment),
        REQ-INFRA-091 (DualGPURetrain: parallel EORM/JEPA forward passes on cuda:0 and cuda:1),
        SCENARIO-INFRA-096/097/098 to openspec/capabilities/verifiable-reasoning/spec.md.
@@ -888,8 +888,8 @@ tasks:
        f. If cached model found:
           from transformers import AutoModelForCausalLM, AutoTokenizer
           Layer split: 7B has 28 layers → cuda:0 gets layers 0-13, cuda:1 gets 14-27 + lm_head
-          device_map = (f'model.layers.{i)': 'cuda:0' for i in range(14)}
-          device_map.update((f'model.layers.{i)': 'cuda:1' for i in range(14, 28)})
+          device_map = (f'model.layers.(i)': 'cuda:0' for i in range(14))
+          device_map.update((f'model.layers.(i)': 'cuda:1' for i in range(14, 28)))
           device_map.update(('model.embed_tokens': 'cuda:0',
                              'model.norm': 'cuda:1', 'lm_head': 'cuda:1'))
           model = AutoModelForCausalLM.from_pretrained(preferred_model, device_map=device_map,

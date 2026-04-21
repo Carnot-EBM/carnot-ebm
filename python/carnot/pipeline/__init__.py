@@ -516,6 +516,10 @@ from carnot.pipeline.hermes_v2_live_loop import (  # noqa: E402
     HermesV2LiveLoop,
     HermesV2StepResult,
 )
+from carnot.pipeline.causal_reasoning_verifier import (  # noqa: E402
+    CausalEntailmentResult,
+    CausalReasoningVerifier,
+)
 
 __all__ = [
     "AgentStep",
@@ -856,4 +860,6 @@ __all__ = [
     "HermesV2GenerationResult",
     "HermesV2LiveLoop",
     "HermesV2StepResult",
+    "CausalEntailmentResult",
+    "CausalReasoningVerifier",
 ]
