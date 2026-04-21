@@ -2374,3 +2374,4 @@ python/ |
 | 2026-04-21 08:13 UTC | Exp 627: interwhen Mid-Generation Monitor — SymCod | OK | 110 passed, 2 warnings in 12.27s |
 | 2026-04-21 08:37 UTC | Exp 628: ORACLE FOVER v5 Corpus — Constraint-Led S | OK | 81 passed, 2 warnings in 7.09s |
 | 2026-04-21 08:52 UTC | Exp 629: interwhen Diagnostic — Gate Check for VR  | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-21 09:58 UTC | Exp 629: interwhen Diagnostic — Gate Check for VR  | SKIP | Pre-tests failing, self-heal failed: 4 failed, 92 passed, 2 warnings in 7.58s |
