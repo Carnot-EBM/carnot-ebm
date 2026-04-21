@@ -486,6 +486,10 @@ from carnot.pipeline.fact_e_probe import (  # noqa: E402
 from carnot.pipeline.symcode_verifier import (  # noqa: E402
     SymCodeVerifier,
 )
+from carnot.pipeline.metajuls_adapter import (  # noqa: E402
+    ExtractorPolicy,
+    MetaJuLSAdapter,
+)
 
 __all__ = [
     "AgentStep",
@@ -810,4 +814,6 @@ __all__ = [
     "CausalStepDependency",
     "FACTEFaithfulnessProbe",
     "SymCodeVerifier",
+    "ExtractorPolicy",
+    "MetaJuLSAdapter",
 ]
