@@ -12385,3 +12385,32 @@ When: gate decision is computed.
 Then: gate_open == False and honest_verdict == 'gate_closed_recall_below_threshold'.
 
 **Implementation Status:** Implemented (Exp 643)
+
+## REQ-VERIFY-144: JEPA v14 Platt Temperature Scaling
+
+PlattScaler shall apply temperature scaling to JEPA v14 logits to reduce ECE below 0.10 without degrading OOD AUC by more than 0.02.
+
+- REQ-VERIFY-144-1: PlattScaler.__init__ shall accept init_temperature (float, default 1.0) and store it as self.T.
+- REQ-VERIFY-144-2: PlattScaler.fit(logits, labels, n_steps=200, lr=0.01) shall optimise T to minimise NLL on the calibration set and return the optimal T.
+- REQ-VERIFY-144-3: PlattScaler.calibrate(logits) shall return sigmoid(logits / self.T).
+- REQ-VERIFY-144-4: PlattScaler.compute_ece(probs, labels, n_bins=10) shall return the Expected Calibration Error over equal-width bins.
+- REQ-VERIFY-144-5: PlattScaler shall be exported from carnot.training.
+- REQ-VERIFY-144-6: T shall be clipped to [0.1, 10.0] at each optimisation step to prevent degenerate scaling.
+
+**Implementation Status:** Implemented (python/carnot/training/platt_scaler.py, Exp 646)
+
+### SCENARIO-VERIFY-190: PlattScaler Reduces ECE Below Target
+
+Given: JEPA v14 raw logits with v14_ece_before=0.132, calibration labels from fover_corpus_v5_oracle.json.
+When: PlattScaler.fit() is called on a calibration split and calibrate() applied to a validation split.
+Then: ece_after < 0.10 and |auc_after - 0.912| <= 0.02.
+
+**Implementation Status:** Implemented (Exp 646)
+
+### SCENARIO-VERIFY-191: PlattScaler Temperature Clipping
+
+Given: PlattScaler with init_temperature=1.0 and pathological logits that would push T outside [0.1, 10.0].
+When: fit() is called.
+Then: self.T remains within [0.1, 10.0] at all optimisation steps.
+
+**Implementation Status:** Implemented (Exp 646)
