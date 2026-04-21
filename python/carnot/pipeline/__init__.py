@@ -503,6 +503,10 @@ from carnot.pipeline.hermes_adapter import (  # noqa: E402
     HermesVerificationStep,
     HermesVerifierAdapter,
 )
+from carnot.pipeline.adaptrack_repairer import (  # noqa: E402
+    AdapTrackRepairer,
+    BacktrackEvent,
+)
 
 __all__ = [
     "AgentStep",
@@ -836,4 +840,6 @@ __all__ = [
     "InterWhenViolation",
     "HermesVerificationStep",
     "HermesVerifierAdapter",
+    "AdapTrackRepairer",
+    "BacktrackEvent",
 ]
