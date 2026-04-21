@@ -920,75 +920,85 @@ tasks:
 - id: exp661-kv260-n64-benchmark
   milestone: 2026.04.50
   deliverable: results/experiment_661_kv260_n64_benchmark.json
-  title: 'Exp 661: KV260 N=64 Ising Benchmark — RETRO-072 Closure (GATED on CARNOT_KV260_BITFILE)'
+  title: 'Exp 661: KV260 N=64 FPGA Deployment + CPU Baseline (RETRO-072/073 closure validated on hardware)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: RETRO-072: KV260 N=128 Ising sampler failed synthesis due to LUT overflow
-    (290k LUTs needed, XCK26 has 117k — 2.48x over capacity). N=64 rebuild was in-flight
-    as of 2026-04-21. Post-synth numbers for N=64: 48.5% LUT / 87% DSPs — fits XCK26 cleanly.
-    This experiment runs the N=64 hardware benchmark on the KV260 FPGA board (arrived 2026-04-20).
-    GATE: CARNOT_KV260_BITFILE env var must be set (path to the N=64 bitfile).
-    If not set: write blocked artifact and exit 0. Do NOT simulate.
-    Target: hardware_latency_us < 100 to close RETRO-072.
+    CONTEXT: RETRO-070/072/073 are all marked resolved in results/kv260_bd_build_N64.json
+    (bitstream produced, timing met at 40 MHz, WNS +3.174 ns, 0 critical warnings,
+    bitstream at output/carnot_ising_bd/carnot_ising_bd_wrapper.bit, 7.44 MB).  This
+    experiment validates those closures on actual KV260 hardware by deploying the
+    bitstream, running an Ising sampling job, and comparing against a CPU Gibbs
+    baseline.  Without this on-hardware step, RETRO-072/073 closure is only
+    "simulation says fit and timing"; with it, the closure is evidence-backed.
+
+    DO NOT overwrite the existing experiment script.  It is already written at
+    scripts/experiment_661_kv260_n64_benchmark.py and handles preflight/deploy/
+    sampling/baseline/comparison end-to-end.  Read it first, then run it.
 
     EXISTING CODE TO READ FIRST:
-    - hardware/kv260/ising_sampler_v3_spec.md — Exp 648 RTL spec (N=64 sizing)
-    - python/carnot/hardware/kv260_driver.py — KV260 driver if exists; else build stub.
-    - results/experiment_648_ising_inertia.json — Exp 648 Ising v3 spec results
-    - python/carnot/pipeline/env_autofix.py — apply_env_autofix()
-    - scripts/experiment_template.py — ExperimentTemplate
+    - scripts/experiment_661_kv260_n64_benchmark.py — the experiment; READ and
+      UNDERSTAND before running.  Key flow: preflight ssh + bitstream check ->
+      scp bitstream to kria -> sudo dfx-mgr-client -load -> xrt-smi examine ->
+      push a mmap-based AXI helper to kria -> drive the PL sampler for N_SAMPLES
+      draws -> pull samples back -> run CPU Gibbs baseline on same problem ->
+      three-way distribution comparison (marginals, pairwise correlations,
+      energy KL) + throughput ratio -> emit honest_verdict.
+    - hardware/kv260/ising_sampler_v2.v — address map used by the AXI helper.
+    - results/kv260_bd_build_N64.json — upstream build artifact confirming the
+      bitstream is timing-clean at 40 MHz.
+    - scripts/experiment_template.py — ExperimentTemplate contract.
 
-    TASK: Run KV260 N=64 hardware latency benchmark, close RETRO-072 if < 100us.
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-HW-030 (KV260 N=64 Ising: hardware_latency_us < 100; RETRO-072 closure),
-       SCENARIO-HW-030 to openspec/capabilities/verifiable-reasoning/spec.md.
-    3. Write scripts/experiment_661_kv260_n64_benchmark.py:
-       a. apply_env_autofix() FIRST.
-       b. ExperimentTimeoutWatchdog(661, timeout_minutes=60).
-       c. ExperimentTemplate(661, 'KV260 N=64 Benchmark',
-          'results/experiment_661_kv260_n64_benchmark.json', requires_gpu=False).
-       d. GATE CHECK:
-          bitfile_path = os.environ.get('CARNOT_KV260_BITFILE', '')
-          if not bitfile_path or not os.path.exists(bitfile_path):
-            artifact = tmpl.build_result({},
-                status='blocked',
-                gate_env='CARNOT_KV260_BITFILE',
-                honest_verdict='kv260_bitfile_not_available',
-                reason='N=64 bitfile not found. Set CARNOT_KV260_BITFILE env var.')
-            Write artifact and exit 0.
-       e. Check python/carnot/hardware/kv260_driver.py exists.
-          If not: create a minimal KV260Driver stub:
-            class KV260Driver:
-              def __init__(self, bitfile: str): self.bitfile = bitfile
-              def program(self) -> bool: return os.path.exists(self.bitfile)
-              def run_ising_sample(self, n: int, n_steps: int) -> dict:
-                'Run Ising sampler and return timing.'
-                import time
-                start = time.perf_counter()
-                # stub: simulate hardware call
-                _ = [0] * n
-                elapsed_us = (time.perf_counter() - start) * 1e6
-                return {"latency_us": elapsed_us, "n": n, "n_steps": n_steps}
-       f. driver = KV260Driver(bitfile_path)
-          programmed = driver.program()
-          If not programmed: write blocked artifact with honest_verdict='kv260_program_failed'.
-          result = driver.run_ising_sample(n=64, n_steps=1000)
-          hardware_latency_us = result['latency_us']
-          retro_072_resolved = (hardware_latency_us < 100.0)
-       g. Build artifact: schema='carnot.kv260_n64_benchmark.v1',
-          bitfile_path=bitfile_path, n=64, n_steps=1000,
-          hardware_latency_us=<float>, retro_072_resolved=<bool>,
-          lut_utilization_pct=48.5, dsp_utilization_pct=87.0,
-          honest_verdict='kv260_n64_latency_met' if retro_072_resolved
-            else 'kv260_n64_latency_missed'.
-       h. tmpl.assert_deliverable_written() as FINAL LINE.
-    4. Write tests/python/test_kv260_driver.py (100% coverage on kv260_driver.py stub).
-       Tests trace to REQ-HW-030.
-    5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    6. Reconcile: ops/conductor-log.md (RETRO-072 status), ops/status.md, ops/changelog.md.
+    TASK: Run the deployment experiment and emit an evidence-backed result.
+    1. Read CLAUDE.md spec-first workflow AND the full experiment script at
+       scripts/experiment_661_kv260_n64_benchmark.py (do NOT modify it — if you
+       find a bug, propose the change as a separate commit before running).
+    2. Verify prerequisites:
+       - output/carnot_ising_bd/carnot_ising_bd_wrapper.bit exists, 7+ MB.
+       - ssh $CARNOT_KRIA_HOST (default: 'kria') returns uname without prompting
+         for a password.
+       - kria has sudo NOPASSWD configured (per earlier session work).
+       - kria has python3 + dfx-mgr-client + xrt-smi on PATH.
+    3. If any prerequisite fails, the script itself emits the correct
+       blocked_on_* honest_verdict and exits 0.  Do NOT run the script without
+       prerequisites met and then rationalise the failure.
+    4. Run the script:
+       .venv/bin/python scripts/experiment_661_kv260_n64_benchmark.py
+       Expected wall-clock: ~3-8 minutes (30s-2min of ssh/scp + 1-5 min of FPGA
+       sampling depending on N_SAMPLES=256 * N_STEPS_HW=1000 * 64 spins +
+       2-5 min of CPU Gibbs baseline).
+    5. After the script writes results/experiment_661_kv260_n64_benchmark.json,
+       verify the emitted honest_verdict is in the 7-value enum declared at the
+       top of the script (HONEST_VERDICTS dict).  If it is not one of those
+       values, that is a spec violation — file a retro rather than editing the
+       result to match.
+    6. Reconcile:
+       - openspec/capabilities/verifiable-reasoning/spec.md: add REQ-HARDWARE-010
+         (KV260 PL deployment via dfx-mgr-client + AXI mmap), REQ-HARDWARE-011
+         (thermal correctness: marginals within 5 pp, pairwise corr >= 0.90,
+         energy-proxy KL <= 0.20), REQ-HARDWARE-012 (throughput measurement:
+         target >= 10x CPU Gibbs single-threaded), SCENARIO-HARDWARE-010/011/012.
+         Set Implementation Status based on honest_verdict (Implemented only if
+         fpga_deployed_*_speedup_met, else leave as Proposed + add note).
+       - _bmad/traceability.md: add REQ-HARDWARE-010/011/012 rows linked to Exp 661.
+       - ops/status.md: move RETRO-072/073 to "Completed" with the Exp 661
+         evidence line; if honest_verdict is blocked_on_*, restore them to
+         "Open" with the blocker documented.  PRESERVE all prior content.
+       - ops/changelog.md: add an Exp 661 entry with the honest_verdict string,
+         throughput numbers, and link to the result JSON.
+    7. tmpl.assert_deliverable_written() is called at script end.
+
+    CONSTRAINTS:
+    - This experiment touches SHARED hardware.  Do NOT retry the scp or
+      dfx-mgr-client automatically; if step fails, emit the blocked verdict.
+    - Do NOT lower the three correctness thresholds (5 pp / 0.90 / 0.20) to
+      make a run pass.  If the FPGA produces the wrong distribution, that is
+      the finding — log it and open a RETRO.
+    - Do NOT substitute a CPU-simulated Ising sampler as the "FPGA" result.
+      The whole point is the hardware claim.
+
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
