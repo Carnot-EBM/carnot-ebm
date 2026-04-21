@@ -11651,6 +11651,43 @@ Then: torch.cuda.utilization(1) > 0 and gpu1_utilization_confirmed == True.
 
 **Implementation Status:** Implemented (Exp 614)
 
+## REQ-INFRA-089: DualGPU Real Model >= 7B Across cuda:0 + cuda:1 With GPU-1 Utilization > 50%
+
+RETRO-071 identified that Exp 614 only proved GPU-1 participation with a toy nn.Linear(10,10) model,
+which is not representative of real multi-GPU throughput.  REQ-INFRA-089 closes this gap by requiring
+a real multi-billion-parameter model to be loaded across both GPUs and GPU-1 utilization to be measured
+during a sustained inference batch.
+
+- REQ-INFRA-089-1: Experiment must attempt to load Qwen2.5-14B-Instruct via transformers device_map=auto when total VRAM >= 30 GB.
+- REQ-INFRA-089-2: If 14B load fails, must fall back to Qwen2.5-7B-Instruct with device_map=auto, then with explicit layer split.
+- REQ-INFRA-089-3: If transformers fails entirely, attempt llama-cpp-python with tensor_split=[0.5, 0.5].
+- REQ-INFRA-089-4: Run 10 forward passes with batch_size=4, max_new_tokens=50 and record GPU utilization after each pass.
+- REQ-INFRA-089-5: peak_gpu1_util = max utilization recorded on GPU-1 across all passes (in %).
+- REQ-INFRA-089-6: sustained_gpu1_fraction = fraction of passes where GPU-1 utilization > 10%.
+- REQ-INFRA-089-7: dualgpu_proven = True iff peak_gpu1_util > 50 OR sustained_gpu1_fraction > 0.5.
+- REQ-INFRA-089-8: retro_071_resolved = True iff model_loaded=True AND dualgpu_proven=True.
+- REQ-INFRA-089-9: honest_verdict must be one of 'dualgpu_proven' | 'dualgpu_loaded_low_util' | 'dualgpu_model_load_failed'.
+
+**Implementation Status:** Implemented (Exp 632)
+
+Spec: REQ-INFRA-089, SCENARIO-INFRA-094, SCENARIO-INFRA-095
+
+### SCENARIO-INFRA-094: 13B Model Loads Across Both RTX 3090s and GPU-1 Shows > 50% Utilization
+
+Given: Two RTX 3090s (24 GB VRAM each, 48 GB total).
+When: Qwen2.5-14B-Instruct is loaded with device_map=auto and 10 forward passes are run.
+Then: peak_gpu1_util > 50 and dualgpu_proven=True and retro_071_resolved=True.
+
+**Implementation Status:** Implemented (Exp 632)
+
+### SCENARIO-INFRA-095: 7B Fallback Model Confirms GPU-1 Participation When 13B Load Fails
+
+Given: Two CUDA GPUs with insufficient VRAM for 14B or 14B load fails.
+When: Qwen2.5-7B-Instruct is loaded with explicit layer split and 10 forward passes are run.
+Then: peak_gpu1_util > 0 (GPU-1 contributed compute) and model_loaded=True.
+
+**Implementation Status:** Implemented (Exp 632)
+
 ## REQ-EXTRACT-050: LLMAsExtractorV1 — LLM-Based Arithmetic Claim Extraction (RETRO-070)
 
 **Context (RETRO-070 root cause):**

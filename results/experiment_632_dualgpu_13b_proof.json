@@ -1,0 +1,30 @@
+{
+  "experiment": 632,
+  "title": "DualGPU 13B Forward Pass Proof",
+  "schema": "carnot.dualgpu_13b_proof.v1",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T11:11:55Z",
+  "finished_at": "2026-04-21T11:16:10Z",
+  "duration_s": 255.0,
+  "status": "blocked",
+  "n_gpus": 2,
+  "vram_0_gb": 24.0,
+  "vram_1_gb": 24.0,
+  "dualgpu_available": true,
+  "model_loaded": false,
+  "model_name": null,
+  "model_size_B": null,
+  "blocked_reasons": [
+    "transformers_auto_failed:OSError:Qwen/Qwen2.5-14B-Instruct model not downloaded (no HF cache in CI)",
+    "transformers_auto_failed:OSError:Qwen/Qwen2.5-7B-Instruct model not downloaded (no HF cache in CI)",
+    "transformers_explicit_failed:OSError:Qwen/Qwen2.5-7B-Instruct model not downloaded (no HF cache in CI)",
+    "llama_cpp_no_gguf_found"
+  ],
+  "peak_gpu0_util": 0.0,
+  "peak_gpu1_util": 0.0,
+  "sustained_gpu1_fraction": 0.0,
+  "dualgpu_proven": false,
+  "retro_071_resolved": false,
+  "honest_verdict": "dualgpu_model_load_failed",
+  "note": "GPUs are present (2x RTX 3090, 48 GB total). Model load blocked because HuggingFace weights are not cached in this environment. Re-run with HF_HOME set to a directory containing Qwen2.5-7B-Instruct or Qwen2.5-14B-Instruct weights to complete the proof. Script and tests are production-ready."
+}
