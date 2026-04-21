@@ -11721,3 +11721,27 @@ When: extract(response) is called.
 Then: CI mode uses only StepSegmentEvalChain; live mode unions all three strategies, deduplicates, and returns only violation claims.
 
 **Implementation Status:** Implemented (Exp 616)
+
+## REQ-EXTRACT-053: Extractor Diagnostic Gate — gate_open Requires recall >= 0.20
+
+- REQ-EXTRACT-053-1: Exp 617 must run LLMAsExtractorV1 (best_strategy from Exp 616) on 25 known-incorrect and 10 known-correct responses and compute v1_recall and v1_fp_rate.
+- REQ-EXTRACT-053-2: Exp 617 must run TrustAgentsExtractor on the same 35 responses and compute trust_recall and trust_fp_rate.
+- REQ-EXTRACT-053-3: gate_open = max(v1_recall, trust_recall) >= 0.20.
+- REQ-EXTRACT-053-4: If gate_open=False, Exp 620 (VR attempt #15) MUST NOT be scheduled.
+- REQ-EXTRACT-053-5: If gate_open=True, Exp 620 is unblocked.
+
+### SCENARIO-EXTRACT-090: TrustAgentsExtractor — Three-Agent CI Mode
+
+Given: TrustAgentsExtractor with llm_caller=None.
+When: extract(response) is called.
+Then: returns [] immediately (no LLM → no extraction).
+
+**Implementation Status:** Implemented (Exp 617)
+
+### SCENARIO-EXTRACT-091: TrustAgentsExtractor — Three-Agent Live Mode
+
+Given: TrustAgentsExtractor with a stub llm_caller returning valid JSON.
+When: extract(response) is called with a response containing an arithmetic error.
+Then: Agent1 extracts numeric entities, Agent2 forms arithmetic claims, Agent3 evaluates them, violations are returned with strategy='trust_agents'.
+
+**Implementation Status:** Implemented (Exp 617)
