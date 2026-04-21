@@ -217,3 +217,11 @@ Start Applying 'set_property' XDC Constraints
 Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:05:29 ; elapsed = 00:04:58 . Memory (MB): peak = 6145.957 ; gain = 3538.578 ; free physical = 34407 ; free virtual = 283927
 ---------------------------------------------------------------------------------
 INFO: [Synth 8-802] inferred FSM for state register 'fsm_state_reg' in module 'ising_sampler_128_sync'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                FSM_IDLE |                              001 |                               00
+             FSM_RUNNING |                              010 |                               01
+                FSM_DONE |                              100 |                               10
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'fsm_state_reg' using encoding 'one-hot' in module 'ising_sampler_128_sync'
