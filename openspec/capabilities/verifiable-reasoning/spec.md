@@ -12147,3 +12147,56 @@ When: process_step() is called.
 Then: prover_verdict='correct', feedback_injected=False, feedback_text=None.
 
 **Implementation Status:** Implemented (Exp 633)
+
+## REQ-REPAIR-010: AdapTrackRepairer — In-Generation Backtrack on SymCodeVerifier Violation
+
+AdapTrackRepairer shall implement AdapTrack-style constrained generation (arXiv 2510.17376) by
+detecting arithmetic violations at sentence boundaries via InterWhenMonitor and probabilistically
+triggering a backtrack with a correction hint injected before the violated sentence.
+
+- REQ-REPAIR-010-1: AdapTrackRepairer shall accept an InterWhenMonitor instance and a backtrack_threshold float (default 0.5).
+- REQ-REPAIR-010-2: should_backtrack(detection_score) shall return True when detection_score >= backtrack_threshold (definite violation).
+- REQ-REPAIR-010-3: should_backtrack(detection_score) shall return True with probability detection_score / backtrack_threshold when detection_score < backtrack_threshold (proportional to violation confidence).
+- REQ-REPAIR-010-4: generate_hint(violated_sentence, violation) shall return a non-empty correction hint string.
+- REQ-REPAIR-010-5: simulate_repair(response) shall return (repaired_text, list[BacktrackEvent]) after sentence-by-sentence replay.
+- REQ-REPAIR-010-6: BacktrackEvent shall record sentence_index, detection_score, backtrack_triggered, correction_hint.
+
+**Implementation Status:** Implemented (Exp 635)
+
+## REQ-REPAIR-011: AdapTrackRepairer — Output Distribution-Preserving per arXiv 2510.17376
+
+AdapTrackRepairer shall preserve the model's output distribution under constraints per the
+AdapTrack guarantee (arXiv 2510.17376): backtracks are triggered only when the fraction of
+valid next-token choices falls below threshold, and the correction hint is injected as a
+prompt prefix (not a model weight update), ensuring the conditional distribution over valid
+continuations is unchanged.
+
+- REQ-REPAIR-011-1: Backtrack probability is proportional to detection_score (not a hard gate below threshold), preserving distributional correctness for ambiguous cases.
+- REQ-REPAIR-011-2: Correction hint is injected as a text prefix before the violated sentence (prompt-level intervention, not weight-level).
+- REQ-REPAIR-011-3: simulate_repair() records every BacktrackEvent whether or not backtrack was triggered, enabling downstream calibration analysis.
+
+**Implementation Status:** Implemented (Exp 635)
+
+### SCENARIO-REPAIR-020: AdapTrackRepairer Triggers Backtrack on High-Score Violation
+
+Given: A response with an arithmetic violation where SymCodeVerifier detection_score >= 0.5.
+When: simulate_repair() processes the sentence containing the violation.
+Then: BacktrackEvent.backtrack_triggered=True, correction_hint is non-None.
+
+**Implementation Status:** Implemented (Exp 635)
+
+### SCENARIO-REPAIR-021: AdapTrackRepairer Skips Backtrack on Zero-Score Sentence
+
+Given: A response where all sentences have detection_score=0.0.
+When: simulate_repair() processes each sentence.
+Then: All BacktrackEvent.backtrack_triggered=False, all correction_hints=None.
+
+**Implementation Status:** Implemented (Exp 635)
+
+### SCENARIO-REPAIR-022: AdapTrackRepairer Recall Exceeds InterWhen Baseline
+
+Given: 25 known-incorrect responses from live_pairs_578.json.
+When: simulate_repair() processes each response with backtrack_threshold=0.5.
+Then: adaptrack_recall >= interwhen_baseline (0.12 from Exp 629).
+
+**Implementation Status:** Implemented (Exp 635)
