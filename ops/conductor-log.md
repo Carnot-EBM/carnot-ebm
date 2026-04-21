@@ -2422,3 +2422,4 @@ python/ |
 | 2026-04-21 20:11 UTC | Exp 659: FR-11 Tier 2 Cross-Session Relay — Wire V | OK | 184 passed, 2 warnings in 4.42s |
 | 2026-04-21 20:23 UTC | Exp 660: LSEBMCL Constraint Memory — EBM Replay to | OK | 81 passed, 2 warnings in 4.47s |
 | 2026-04-21 20:28 UTC | Exp 661: KV260 N=64 FPGA Deployment + CPU Baseline | OK | Deliverable already exists in repo |
+| 2026-04-21 20:35 UTC | Exp 662: Ising Sampler v3 RTL — h_ema Register + E | OK | 81 passed, 2 warnings in 6.06s |
