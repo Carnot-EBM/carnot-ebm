@@ -1,0 +1,1110 @@
+milestone: 2026.04.49
+milestone_title: HERMES v2 Live Generation Loop + Platt JEPA + Parallel Ising Inertia
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+- id: exp640-preflght-infra
+  milestone: 2026.04.49
+  deliverable: results/experiment_640_preflght_infra.json
+  title: 'Exp 640: Exclusion Manifest Wire-In v2 + DualGPU EORM/JEPA Retrain (RETRO-CRITICAL — 13th Consecutive Miss)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-CRITICAL (escalated from RETRO-056): the exclusion manifest has been named
+    the 'MANDATORY FIRST ACTION' or 'MANDATORY PRE-FLIGHT' in eleven consecutive milestones
+    (.38 through .48) and has NEVER been wired into the conductor. The .48 retro confirmed:
+    same five experiments (308, 425, 309, 410, 383) in the slowest-5 for the TWELFTH consecutive
+    milestone, exclusion manifest wire-in unconfirmed for the THIRD consecutive 'mandatory' milestone.
+    Cumulative overhead from four legacy experiments since .37: approximately 4,188 minutes (69.8 hours).
+    ADDITIONALLY: Exp 383 (Combined EORM+JEPA retrain, 62 min) appeared for the THIRD consecutive
+    milestone. DualGPU parallelization (EORM on cuda:0, JEPA on cuda:1) would reduce it to ~35 min.
+    This experiment MUST be the FIRST experiment run in milestone .49.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/research_conductor.py — READ the section that decides which experiment to run next;
+      find where the exclusion manifest would be consulted (search for 'exclusion' or 'manifest')
+    - scripts/conductor_exclusion_manifest.json — check if it exists; if so read it
+    - results/experiment_589_exclusion_manifest_dualgpu.json — prior manifest build attempt
+    - results/experiment_640_preflght_infra.json — check if already exists (skip if present)
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog
+    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner
+
+    TASK: (1) Build/verify the exclusion manifest, (2) Wire it into the conductor simulator,
+    (3) Implement DualGPURetrain for Exp 383 pattern.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Check if scripts/conductor_exclusion_manifest.json exists. If not: create it:
+       {
+         "schema": "carnot.exclusion_manifest.v2",
+         "excluded_experiments": ["308", "309", "425", "410"],
+         "reason": "Legacy experiments: perpetually incomplete or superseded. Never re-queue.",
+         "notes": {
+           "383": "RETRO: should run DualGPURetrain variant (Exp 640b). Do not re-queue plain Exp 383.",
+           "308": "Checkpoint-failure state since .37. No path to completion.",
+           "309": "Checkpoint-failure state since .37. No path to completion.",
+           "425": "ExperimentTimeoutWatchdog already implemented. Exp 425 is complete.",
+           "410": "BatchedInferenceRunner needed but not yet applied."
+         }
+       }
+    3. Add REQ-INFRA-090 (conductor must consult exclusion manifest before queuing any experiment),
+       REQ-INFRA-091 (DualGPURetrain: parallel EORM/JEPA forward passes on cuda:0 and cuda:1),
+       SCENARIO-INFRA-096/097/098 to openspec/capabilities/verifiable-reasoning/spec.md.
+    4. Create python/carnot/pipeline/dualgpu_retrain.py:
+       a. DualGPURetrainConfig dataclass: eorm_device (str), jepa_device (str).
+       b. DualGPURetrain class:
+          __init__(self, config: DualGPURetrainConfig):
+            self.config = config
+          run_parallel(self, eorm_fn: Callable, jepa_fn: Callable) -> dict:
+            'Run EORM training on eorm_device and JEPA training on jepa_device concurrently.'
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=2) as ex:
+                eorm_future = ex.submit(eorm_fn)
+                jepa_future = ex.submit(jepa_fn)
+                eorm_result = eorm_future.result()
+                jepa_result = jepa_future.result()
+            return {'eorm': eorm_result, 'jepa': jepa_result}
+       c. Export DualGPURetrain, DualGPURetrainConfig from carnot.pipeline.
+    5. Write scripts/experiment_640_preflght_infra.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(640, timeout_minutes=30).
+       c. ExperimentTemplate(640, 'Pre-Flight Infra v2',
+          'results/experiment_640_preflght_infra.json', requires_gpu=False).
+       d. manifest_path = '{project_root}/scripts/conductor_exclusion_manifest.json'
+          manifest_exists = os.path.exists(manifest_path)
+          If not exists: write the manifest JSON above.
+          manifest_data = json.load(open(manifest_path))
+          manifest_valid = 'excluded_experiments' in manifest_data
+       e. Conductor wire-in verification:
+          conductor_content = open('{project_root}/scripts/research_conductor.py').read()
+          conductor_consulted = 'exclusion_manifest' in conductor_content or 'conductor_exclusion_manifest' in conductor_content
+          NOTE: If conductor_consulted=False, add a comment in the artifact recommending
+          human action: "Add manifest check to conductor: load conductor_exclusion_manifest.json,
+          skip experiments in excluded_experiments list."
+       f. DualGPU test:
+          import torch
+          n_gpus = torch.cuda.device_count() if torch.cuda.is_available() else 0
+          dualgpu_available = n_gpus >= 2
+          retrain_config = DualGPURetrainConfig(
+              eorm_device='cuda:0' if n_gpus >= 1 else 'cpu',
+              jepa_device='cuda:1' if n_gpus >= 2 else 'cpu')
+          Run DualGPURetrain(retrain_config).run_parallel(lambda: 'eorm_done', lambda: 'jepa_done')
+          dualgpu_retrain_works = result['eorm'] == 'eorm_done' and result['jepa'] == 'jepa_done'
+       g. Build artifact: schema='carnot.preflght_infra.v2',
+          manifest_exists=<bool>, manifest_valid=<bool>, conductor_consulted=<bool>,
+          dualgpu_available=<bool>, dualgpu_retrain_works=<bool>,
+          excluded_experiments=['308', '309', '425', '410'],
+          note_for_50='Wire exclusion manifest into conductor before .50 planning' if not conductor_consulted else 'Manifest wired',
+          honest_verdict='manifest_wired_dualgpu_ready' if (conductor_consulted and dualgpu_retrain_works)
+            else 'manifest_built_conductor_unwired' if (manifest_valid and not conductor_consulted)
+            else 'manifest_missing'.
+       h. tmpl.assert_deliverable_written() as FINAL LINE.
+    6. Write tests/python/test_dualgpu_retrain.py (100% coverage on dualgpu_retrain.py).
+    7. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    8. Reconcile: ops/conductor-log.md (RETRO-CRITICAL exclusion manifest status), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp641-hermes-v2-live-loop
+  milestone: 2026.04.49
+  deliverable: results/experiment_641_hermes_v2_live.json
+  title: 'Exp 641: HermesVerifierAdapter v2 — LIVE Step-by-Step Generation Loop (RETRO-070 Critical Path, GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-070 CRITICAL (carry 3). interwhen recall=0.12 (Exp 629), hermes_recall=0.12
+    (Exp 633). Both post-hoc — they run SymCodeVerifier on COMPLETED responses from live_pairs_578.json.
+    The ceiling is 12% because IT models only express explicit arithmetic in 12% of their prose.
+    The fix: generate step-by-step LIVE. Prompt Qwen3.5-0.8B for one sentence at a time. After
+    each sentence: run SymCodeVerifier. If violation: inject correction hint into generation context
+    before next sentence. This is architecturally different — the verifier sees "47 apples... 28
+    oranges... total of 76" AS the model writes it, not after the full response is committed.
+    Target: live_hermes_v2_recall >= 0.20 (target 0.30 to open VR gate).
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/hermes_adapter.py — HermesVerifierAdapter v1, process_response()
+    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier.verify_step(), detection_score()
+    - python/carnot/pipeline/interwhen_monitor.py — InterWhenMonitor.split_at_boundaries()
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix()
+    - python/carnot/pipeline/live_assertion.py — assert_live_gpu_available()
+    - scripts/experiment_template.py — ExperimentTemplate, BatchedInferenceRunner
+    - results/experiment_629_interwhen_diagnostic.json — interwhen_recall_primary=0.12
+    - results/experiment_633_hermes_adapter.json — hermes_recall=0.12 (post-hoc baseline)
+    - results/fover_corpus_v5_oracle.json or results/fover_corpus_v5.json — live questions
+
+    TASK: Implement HermesV2LiveLoop for step-by-step live generation with mid-generation verification.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-137 (HermesV2LiveLoop: generate one sentence at a time, run SymCodeVerifier
+       at each boundary, inject hint before next sentence if violation detected),
+       REQ-VERIFY-138 (HermesV2LiveLoop: live_recall >= 0.20 on 25 live questions),
+       SCENARIO-VERIFY-180/181/182 to openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/pipeline/hermes_v2_live_loop.py:
+       a. HermesV2StepResult dataclass: step_index (int), step_text (str),
+          violation_detected (bool), detection_score (float),
+          hint_injected (bool), hint_text (str | None).
+       b. HermesV2GenerationResult dataclass: question (str), full_response (str),
+          step_results (list[HermesV2StepResult]), any_violation (bool),
+          n_violations (int), n_hints (int).
+       c. HermesV2LiveLoop class:
+          __init__(self, llm_caller: Callable[[str], str] | None,
+                   verifier: SymCodeVerifier,
+                   max_sentences: int = 10,
+                   max_new_tokens_per_step: int = 80):
+            self.llm_caller = llm_caller
+            self.verifier = verifier
+            self.max_sentences = max_sentences
+            self.max_new_tokens = max_new_tokens_per_step
+          _generate_step(self, context: str) -> str:
+            'Generate one sentence from the LLM given accumulated context.'
+            If llm_caller is None: return a short synthetic stub sentence.
+            prompt = context + ' (Continue. Write one sentence only.)'
+            response = self.llm_caller(prompt)
+            Return the first sentence from response (split on '.!?\n', take first non-empty).
+          generate_with_verification(self, question: str) -> HermesV2GenerationResult:
+            'Generate step-by-step answer, verifying at each step boundary.'
+            context = f'Question: {question}\nAnswer: '
+            steps: list[HermesV2StepResult] = []
+            for i in range(self.max_sentences):
+                sentence = self._generate_step(context)
+                if not sentence.strip():
+                    break
+                score = self.verifier.detection_score(sentence)
+                violated = score > 0.0
+                hint = None
+                hint_injected = False
+                if violated:
+                    hint = '[Note: Recheck the previous arithmetic step carefully.]'
+                    hint_injected = True
+                steps.append(HermesV2StepResult(i, sentence, violated, score,
+                    hint_injected, hint))
+                context += sentence + ' '
+                if hint:
+                    context += hint + ' '
+                if len(context.split()) > 300:
+                    break
+            full_response = ' '.join(s.step_text for s in steps)
+            return HermesV2GenerationResult(
+                question=question,
+                full_response=full_response,
+                step_results=steps,
+                any_violation=any(s.violation_detected for s in steps),
+                n_violations=sum(s.violation_detected for s in steps),
+                n_hints=sum(s.hint_injected for s in steps))
+       d. Export HermesV2LiveLoop, HermesV2GenerationResult, HermesV2StepResult from carnot.pipeline.
+    4. Write scripts/experiment_641_hermes_v2_live.py:
+       a. apply_env_autofix() FIRST.
+       b. assert_live_or_ci_skip() from python.carnot.pipeline.live_assertion.
+       c. ExperimentTimeoutWatchdog(641, timeout_minutes=90).
+       d. ExperimentTemplate(641, 'HERMES v2 Live Generation Loop',
+          'results/experiment_641_hermes_v2_live.json', requires_gpu=True).
+       e. tmpl.setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}])
+          llm_caller: live Qwen3.5-0.8B via transformers pipeline if CARNOT_FORCE_LIVE=1,
+          else None (CI stub — all steps return empty, all detections False).
+       f. verifier = SymCodeVerifier(llm_caller=llm_caller if CARNOT_FORCE_LIVE else None)
+          loop = HermesV2LiveLoop(llm_caller, verifier, max_sentences=8)
+       g. Load 25 known-incorrect questions from fover_corpus_v5_oracle.json or
+          fover_corpus_v5.json (is_correct=False). If < 25: use 25 synthetic GSM8K questions.
+          Load 10 known-correct questions (is_correct=True) for FP measurement.
+       h. BatchedInferenceRunner for incorrect questions, batch_size=5:
+          For each question: result = loop.generate_with_verification(question)
+          hermes_v2_tp = sum(r.any_violation for r in incorrect_results)
+          For correct: hermes_v2_fp = sum(r.any_violation for r in correct_results)
+          hermes_v2_recall = hermes_v2_tp / 25
+          hermes_v2_fp_rate = hermes_v2_fp / 10
+          mean_hints_per_incorrect = mean(r.n_hints for r in incorrect_results)
+       i. Compare: post_hoc_baseline = 0.12 (from Exp 633)
+          recall_improvement = hermes_v2_recall - post_hoc_baseline
+       j. Build artifact: schema='carnot.hermes_v2_live.v1',
+          n_questions=25, n_correct=10,
+          hermes_v2_tp=<int>, hermes_v2_fp=<int>,
+          hermes_v2_recall=<float>, hermes_v2_fp_rate=<float>,
+          post_hoc_baseline=0.12, recall_improvement=<float>,
+          mean_hints_per_incorrect=<float>,
+          inference_mode='live_gpu' if CARNOT_FORCE_LIVE else 'ci_stub',
+          gate_contribution=(hermes_v2_recall >= 0.20),
+          retro_070_partial=(hermes_v2_recall > 0.12),
+          honest_verdict='hermes_v2_breakthrough' if hermes_v2_recall >= 0.30
+            else 'hermes_v2_improved' if hermes_v2_recall > 0.12
+            else 'hermes_v2_no_improvement'.
+       k. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_hermes_v2_live_loop.py (100% coverage on hermes_v2_live_loop.py).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: ops/conductor-log.md (RETRO-070 HERMES v2 attempt), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp642-causal-reasoning-verifier
+  milestone: 2026.04.49
+  deliverable: results/experiment_642_causal_verifier.json
+  title: 'Exp 642: CausalReasoningVerifier — Step Entailment Checking (arXiv 2601.21210)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2601.21210 (January 2026) introduces symbolic verification of causal
+    reasoning in LLM CoT: given step_k and step_{k+1}, does step_k causally justify step_{k+1}?
+    This catches logical incoherence violations that arithmetic checking misses: e.g., a step
+    that correctly adds 47+28=75 but then concludes "so we have 80 items" is causally broken
+    even if all the arithmetic within each step is correct. SymCodeVerifier (Exp 619) checks
+    arithmetic WITHIN a step; CausalReasoningVerifier checks ENTAILMENT ACROSS steps.
+    Together they cover two orthogonal violation types.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier: verify_response(), segment_steps()
+    - python/carnot/extraction/llm_extractor_v1.py — LLMAsExtractorV1.extract()
+    - python/carnot/pipeline/hermes_v2_live_loop.py — HermesV2LiveLoop (Exp 641)
+    - results/live_pairs_578.json — live pairs (read 5-10 incorrect responses to understand step structure)
+    - results/experiment_633_hermes_adapter.json — hermes_recall=0.12 (baseline to beat)
+
+    TASK: Implement CausalReasoningVerifier for step-to-step entailment checking.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-139 (CausalReasoningVerifier: step entailment checking across CoT boundaries),
+       REQ-VERIFY-140 (CausalReasoningVerifier: AUC >= SymCodeVerifier on logical-incoherence test set),
+       SCENARIO-VERIFY-183/184/185 to openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/pipeline/causal_reasoning_verifier.py:
+       a. CausalEntailmentResult dataclass: step_k_index (int), step_k_text (str),
+          step_k1_text (str), entailment_score (float), causal_violation (bool),
+          violation_type (str): 'arithmetic' | 'causal_break' | 'none'.
+       b. CausalReasoningVerifier class:
+          __init__(self, symcode: SymCodeVerifier, llm_extractor: LLMAsExtractorV1 | None = None):
+            self.symcode = symcode
+            self.extractor = llm_extractor
+          _extract_numeric_conclusion(self, step_text: str) -> float | None:
+            'Extract the numeric conclusion of a step (the final number stated).'
+            import re
+            numbers = re.findall(r'[-+]?\d+(?:\.\d+)?', step_text)
+            return float(numbers[-1]) if numbers else None
+          check_entailment(self, step_k: str, step_k1: str) -> CausalEntailmentResult:
+            'Check if step_k causally justifies step_{k+1}.'
+            First: run SymCodeVerifier on step_k. If arithmetic violation: type='arithmetic'.
+            If no arithmetic violation:
+              conclusion_k = _extract_numeric_conclusion(step_k)
+              premise_k1 = _extract_numeric_conclusion(step_k1)
+              If both are not None AND abs(conclusion_k - premise_k1) > 0.01:
+                causal_violation = True, type='causal_break'
+                entailment_score = abs(conclusion_k - premise_k1) / max(abs(conclusion_k), 1.0)
+              Else:
+                causal_violation = False, type='none', entailment_score=0.0
+            Return CausalEntailmentResult(...)
+          verify_response(self, response: str) -> list[CausalEntailmentResult]:
+            'Verify all step-pair entailments in a response.'
+            steps = self.symcode.segment_steps(response)
+            results = []
+            for i in range(len(steps) - 1):
+                result = self.check_entailment(steps[i].text, steps[i+1].text)
+                results.append(result)
+            return results
+          detection_score(self, response: str) -> float:
+            'Return max entailment violation score across all step pairs.'
+            results = self.verify_response(response)
+            if not results: return 0.0
+            return max(r.entailment_score for r in results)
+          any_violation(self, response: str) -> bool:
+            return self.detection_score(response) > 0.0
+       c. Export CausalReasoningVerifier, CausalEntailmentResult from carnot.pipeline.
+    4. Write scripts/experiment_642_causal_verifier.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(642, timeout_minutes=30).
+       c. ExperimentTemplate(642, 'Causal Reasoning Verifier',
+          'results/experiment_642_causal_verifier.json', requires_gpu=False).
+       d. llm_caller = None (CI stub; causal checking uses regex, no LLM needed).
+          verifier = SymCodeVerifier(llm_caller=None)
+          causal = CausalReasoningVerifier(verifier)
+       e. Load 25 incorrect + 10 correct from results/live_pairs_578.json.
+       f. For each response:
+          causal_results = causal.verify_response(response)
+          causal_violated = any(r.causal_violation for r in causal_results)
+       g. causal_tp = sum(causal_violated for r in incorrect)
+          causal_fp = sum(causal_violated for r in correct)
+          causal_recall = causal_tp / 25
+          causal_fp_rate = causal_fp / 10
+          n_causal_break = sum(r.violation_type == 'causal_break' for r in all_results)
+          n_arithmetic = sum(r.violation_type == 'arithmetic' for r in all_results)
+       h. Build artifact: schema='carnot.causal_verifier.v1',
+          n_incorrect=25, n_correct=10,
+          causal_tp=<int>, causal_fp=<int>,
+          causal_recall=<float>, causal_fp_rate=<float>,
+          n_causal_break=<int>, n_arithmetic=<int>,
+          symcode_baseline=0.12,
+          causal_improvement=(causal_recall > 0.12),
+          honest_verdict='causal_improves' if causal_recall > 0.12
+            else 'causal_no_improvement'.
+       i. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_causal_reasoning_verifier.py (100% coverage).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: _bmad/architecture.md (add CausalReasoningVerifier as orthogonal Tier 2.6 component),
+       ops/conductor-log.md, ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp643-ensemble-recall-gate-v2
+  milestone: 2026.04.49
+  deliverable: results/experiment_643_ensemble_gate_v2.json
+  title: 'Exp 643: Ensemble Recall Gate v2 — InterWhen OR HERMES v2 OR Causal (gate_open for VR #17)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exps 641 (HERMES v2 live loop) and 642 (CausalReasoningVerifier) provide
+    two new detection signals beyond interwhen. This experiment computes the OR ensemble:
+    any_violation = interwhen OR hermes_v2_live OR causal_check.
+    Gate: combined_recall >= 0.30 (upgraded from 0.20 per .48 retro RETRO-070 action item:
+    "Do NOT schedule attempt #17 until interwhen recall >= 30%").
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_641_hermes_v2_live.json — hermes_v2_recall, hermes_v2_tp per question
+    - results/experiment_642_causal_verifier.json — causal_recall, causal_tp per question
+    - python/carnot/pipeline/interwhen_monitor.py — InterWhenMonitor
+    - python/carnot/pipeline/hermes_v2_live_loop.py — HermesV2LiveLoop (Exp 641)
+    - python/carnot/pipeline/causal_reasoning_verifier.py — CausalReasoningVerifier (Exp 642)
+    - results/live_pairs_578.json or results/fover_corpus_v5_oracle.json — live pairs
+    - results/experiment_629_interwhen_diagnostic.json — prior interwhen gate (gate_open=False)
+
+    TASK: Compute OR ensemble recall, determine gate for VR #17.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-141 (EnsembleRecallGate: OR combination of InterWhen, HERMES v2, and Causal),
+       REQ-VERIFY-142 (VR #17 gate: combined recall >= 0.30),
+       SCENARIO-VERIFY-186/187 to openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Write scripts/experiment_643_ensemble_gate_v2.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(643, timeout_minutes=40).
+       c. ExperimentTemplate(643, 'Ensemble Recall Gate v2',
+          'results/experiment_643_ensemble_gate_v2.json', requires_gpu=False).
+       d. Load Exp 641 and 642 results.
+          hermes_v2_recall = exp641.get('hermes_v2_recall', 0.0)
+          causal_recall = exp642.get('causal_recall', 0.0)
+          hermes_v2_tp_indices = exp641.get('tp_question_indices', [])  (if available)
+          causal_tp_indices = exp642.get('tp_question_indices', [])  (if available)
+       e. Load 25 incorrect + 10 correct from live_pairs_578.json.
+          llm_caller = None (CI stub).
+          interwhen = InterWhenMonitor(SymCodeVerifier(None))
+          causal = CausalReasoningVerifier(SymCodeVerifier(None))
+          For each incorrect response:
+            interwhen_hit = interwhen.any_violation(response)
+            causal_hit = causal.any_violation(response)
+            hermes_hit = True if question_index in hermes_v2_tp_indices else False
+              (fallback: check hermes_v2_recall via Bernoulli sample if indices unavailable)
+            ensemble_hit = interwhen_hit OR hermes_hit OR causal_hit
+          For each correct response: compute ensemble FP.
+          ensemble_tp = sum(ensemble_hit for incorrect)
+          ensemble_fp = sum(ensemble_hit for correct)
+          ensemble_recall = ensemble_tp / 25
+          ensemble_fp_rate = ensemble_fp / 10
+       f. gate_open = ensemble_recall >= 0.30
+          gate_note = 'Exp 644 VR #17 UNBLOCKED' if gate_open else
+            'Exp 644 VR #17 BLOCKED — combined recall below 0.30 threshold'
+       g. Build artifact: schema='carnot.ensemble_gate_v2.v1',
+          n_incorrect=25, n_correct=10,
+          interwhen_recall=0.12, hermes_v2_recall=hermes_v2_recall,
+          causal_recall=causal_recall,
+          ensemble_tp=<int>, ensemble_fp=<int>,
+          ensemble_recall=<float>, ensemble_fp_rate=<float>,
+          gate_threshold=0.30, gate_open=<bool>, gate_note=<str>,
+          retro_070_resolved=(ensemble_recall >= 0.30),
+          honest_verdict='gate_open_vr_unblocked' if gate_open
+            else 'gate_closed_recall_below_threshold'.
+       h. tmpl.assert_deliverable_written() as FINAL LINE.
+    4. Write tests/python/test_experiment_643_ensemble_gate.py (100% coverage on new functions).
+    5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    6. Reconcile: ops/conductor-log.md (gate decision for VR #17), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp644-live-vr-attempt-17
+  milestone: 2026.04.49
+  deliverable: results/experiment_644_live_vr_attempt_17.json
+  title: 'Exp 644: Live VR Attempt #17 — GATED on Exp 643 gate_open=True (GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-033: 16 consecutive VR attempts at 0% improvement.
+    READ Exp 643 RESULT FIRST. If gate_open=False: DO NOT RUN VR. Write a blocked artifact.
+    If gate_open=True: run VR attempt #17 using the ensemble extractor
+    (HermesV2LiveLoop + CausalReasoningVerifier + InterWhenMonitor).
+    CARNOT_FORCE_LIVE=1 MANDATORY. This is the seventeenth attempt — honesty matters most.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_643_ensemble_gate_v2.json — gate_open FIRST (READ BEFORE ANYTHING ELSE)
+    - python/carnot/pipeline/hermes_v2_live_loop.py — HermesV2LiveLoop (Exp 641)
+    - python/carnot/pipeline/causal_reasoning_verifier.py — CausalReasoningVerifier (Exp 642)
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+    - python/carnot/pipeline/live_assertion.py — assert_live_gpu_available()
+    - results/experiment_630_live_vr_attempt_16.json — prior VR result (blocked)
+    - results/fover_corpus_v5_oracle.json or fover_corpus_v5.json — live questions
+
+    TASK: If gate_open=True, run live VR. If gate_open=False, write blocked artifact immediately.
+    1. Read CLAUDE.md spec-first workflow.
+    2. READ results/experiment_643_ensemble_gate_v2.json. Check gate_open field FIRST.
+    3. IF gate_open=False:
+       Write scripts/experiment_644_live_vr_attempt_17.py that IMMEDIATELY writes:
+       schema='carnot.live_vr_17.v1', status='blocked', gate_open=False,
+       block_reason='Exp 643 gate_open=False: ensemble recall below 0.30. Do NOT schedule VR #17.',
+       retro_033_resolved=False, signed_improvement=0.0,
+       honest_verdict='blocked_gate_closed_do_not_retry'.
+    4. IF gate_open=True:
+       a. Add REQ-VERIFY-143 (VR #17: ensemble extractor, signed_improvement > 0 target),
+          SCENARIO-VERIFY-188/189 to spec.
+       b. Write scripts/experiment_644_live_vr_attempt_17.py:
+          i. assert_live_gpu_available() FIRST.
+          ii. apply_env_autofix().
+          iii. ExperimentTimeoutWatchdog(644, timeout_minutes=90).
+          iv. ExperimentTemplate(644, 'Live VR Attempt 17',
+              'results/experiment_644_live_vr_attempt_17.json', requires_gpu=True).
+          v. setup_gpu + JITVRAMCheck.
+          vi. llm_caller = load Qwen3.5-0.8B (CARNOT_FORCE_LIVE=1 enforced).
+          vii. verifier = SymCodeVerifier(llm_caller)
+               hermes_loop = HermesV2LiveLoop(llm_caller, verifier)
+               causal = CausalReasoningVerifier(verifier)
+               interwhen = InterWhenMonitor(verifier)
+          viii. Load 25 live questions where is_correct=False from fover_corpus_v5_oracle.json.
+          ix. BatchedInferenceRunner, batch_size=5:
+              For each question:
+                  baseline_response = llm_caller(question)  (baseline without verification)
+                  ensemble_result = hermes_loop.generate_with_verification(question)
+                  repaired_response = ensemble_result.full_response
+                  (with any hints injected mid-generation)
+                  baseline_correct = evaluate_gsm8k_answer(baseline_response, expected)
+                  repaired_correct = evaluate_gsm8k_answer(repaired_response, expected)
+                  fixed = (not baseline_correct) and repaired_correct
+                  broken = baseline_correct and (not repaired_correct)
+          x. n_fixed, n_broken, signed_improvement = (n_fixed - n_broken) / 25.
+          xi. retro_033_resolved = signed_improvement > 0.
+          xii. Build artifact: schema='carnot.live_vr_17.v1',
+               n_questions=25, n_violations_found=<int>,
+               n_fixed=<int>, n_broken=<int>, signed_improvement=<float>,
+               inference_mode='live_gpu', extractor_used='ensemble_hermes_v2_causal_interwhen',
+               retro_033_resolved=<bool>,
+               honest_verdict='first_positive_vr_improvement' if signed_improvement > 0
+                 else 'vr_no_improvement_still_blocked'.
+          xiii. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_experiment_644_live_vr.py (100% coverage).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: ops/conductor-log.md (RETRO-033 attempt #17 status), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp645-tier1-fr11-relay
+  milestone: 2026.04.49
+  deliverable: results/experiment_645_tier1_fr11_relay.json
+  title: 'Exp 645: Tier 1 FR-11 Self-Learning Relay — Real Violations from Exp 644 (FR-11 Mandatory)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: FR-11 mandatory experiment every milestone. Tier 1 self-learning: track which
+    constraints fire on real errors, update ConstraintAdditionFromMemory.
+    READ Exp 644 result first. real_mode = signed_improvement > 0 from Exp 644.
+    semi_real_mode = gate_open from Exp 643 AND ensemble_tp > 0.
+    synthetic_fallback otherwise.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/constraint_addition.py — ConstraintAdditionFromMemory (Exp 456)
+    - results/experiment_644_live_vr_attempt_17.json — signed_improvement, n_violations_found
+    - results/experiment_643_ensemble_gate_v2.json — gate_open, ensemble_tp (fallback)
+    - results/experiment_638_tier1_fr11_relay.json — prior FR-11 relay result
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline
+
+    TASK: FR-11 Tier 1 self-learning relay.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-054 (FR-11 relay: uses real violations when available, ensemble violations
+       as semi-real when VR blocked), SCENARIO-LEARN-087/088 to
+       openspec/capabilities/autoresearch/spec.md.
+    3. Write scripts/experiment_645_tier1_fr11_relay.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(645, timeout_minutes=25).
+       c. ExperimentTemplate(645, 'Tier 1 FR-11 Self-Learning Relay',
+          'results/experiment_645_tier1_fr11_relay.json', requires_gpu=False).
+       d. Load ConstraintAdditionFromMemory. Load VerifyRepairPipeline.
+       e. Determine mode:
+          real_mode = exp644.get('signed_improvement', 0.0) > 0
+          semi_real_mode = (exp643.get('gate_open', False) and exp643.get('ensemble_tp', 0) > 0)
+          synthetic_fallback_mode = not (real_mode or semi_real_mode)
+       f. IF real_mode:
+          Load violations from Exp 644 (n_violations_found > 0).
+          ConstraintAdditionFromMemory.add_from_violations(violations).
+          fr11_mode = 'real_violations'. fr11_real_violations_confirmed = True.
+       g. ELIF semi_real_mode:
+          Use ensemble-detected violations from Exp 643 as proxy.
+          fr11_mode = 'semi_real_ensemble'. fr11_real_violations_confirmed = False.
+       h. ELSE synthetic_fallback:
+          Generate 25 synthetic arithmetic violations.
+          fr11_mode = 'synthetic_fallback'. fr11_real_violations_confirmed = False.
+       i. Measure fp_rate before and after update (5 correct + 5 incorrect from live corpus).
+          fp_rate_before, fp_rate_after, fp_rate_delta.
+       j. Build artifact: schema='carnot.tier1_fr11_relay.v3',
+          mode=<str>, n_violations_used=<int>,
+          fr11_real_violations_confirmed=<bool>,
+          fp_rate_before=<float>, fp_rate_after=<float>, fp_rate_delta=<float>,
+          honest_verdict='real_violations_relay' if real_mode
+            else 'semi_real_ensemble_relay' if semi_real_mode
+            else 'synthetic_fallback_relay'.
+       k. tmpl.assert_deliverable_written() as FINAL LINE.
+    4. Write tests/python/test_experiment_645_fr11_relay.py (100% coverage).
+    5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    6. Reconcile: _bmad/traceability.md (FR-11 impl status), ops/conductor-log.md, ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp646-jepa-v14-platt-scaling
+  milestone: 2026.04.49
+  deliverable: results/experiment_646_jepa_v14_platt.json
+  title: 'Exp 646: JEPA v14 Platt Scaling — Temperature Calibration for ECE < 0.10'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: JEPA v14 OOD AUC=0.912 (excellent). ECE=0.132 (target < 0.10, not met).
+    Platt scaling (temperature scaling) applies a single parameter T to the logits:
+    calibrated_prob = sigmoid(logit / T).
+    T > 1 softens probabilities (reduces overconfidence). T < 1 sharpens.
+    Optimize T on a held-out calibration set to minimize ECE.
+    This is a 5-minute fix that typically reduces ECE by 50-70% without touching AUC.
+
+    EXISTING CODE TO READ FIRST:
+    - results/jepa_v14_oracle.npz — JEPA v14 weights (Exp 631)
+    - results/experiment_631_jepa_v14_oracle.json — v14_ece=0.132, v14_ood_auc=0.912,
+      training config, n_training_pairs
+    - python/carnot/training/capo_loss.py — capo_loss, ece_loss (Exp 618)
+    - python/carnot/inference/ — JEPAPredictor class and predict() method
+    - results/fover_corpus_v5_oracle.json — ORACLE corpus for calibration split
+
+    TASK: Apply Platt temperature scaling to JEPA v14 to reduce ECE below 0.10.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-144 (JEPA v14 Platt: temperature scaling reduces ECE below 0.10
+       without AUC degradation > 0.02), SCENARIO-VERIFY-190/191 to
+       openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/training/platt_scaler.py:
+       a. PlattScaler class:
+          __init__(self, init_temperature: float = 1.0):
+            self.T = init_temperature
+          fit(self, logits: jnp.ndarray, labels: jnp.ndarray,
+              n_steps: int = 200, lr: float = 0.01) -> float:
+            'Find T minimizing NLL on calibration set. Returns optimal T.'
+            T = self.T
+            for step in range(n_steps):
+                calibrated = jax.nn.sigmoid(logits / T)
+                nll = -jnp.mean(labels * jnp.log(calibrated + 1e-8) +
+                                (1 - labels) * jnp.log(1 - calibrated + 1e-8))
+                grad_T = jax.grad(lambda t: -jnp.mean(
+                    labels * jnp.log(jax.nn.sigmoid(logits/t) + 1e-8) +
+                    (1-labels) * jnp.log(1-jax.nn.sigmoid(logits/t) + 1e-8)))(T)
+                T = T - lr * grad_T
+                T = float(jnp.clip(T, 0.1, 10.0))
+            self.T = T
+            return T
+          calibrate(self, logits: jnp.ndarray) -> jnp.ndarray:
+            return jax.nn.sigmoid(logits / self.T)
+          compute_ece(self, probs: jnp.ndarray, labels: jnp.ndarray,
+                      n_bins: int = 10) -> float:
+            'Expected Calibration Error.'
+            bin_boundaries = jnp.linspace(0, 1, n_bins + 1)
+            ece = 0.0
+            for i in range(n_bins):
+                in_bin = (probs >= bin_boundaries[i]) & (probs < bin_boundaries[i+1])
+                if in_bin.sum() > 0:
+                    bin_acc = labels[in_bin].mean()
+                    bin_conf = probs[in_bin].mean()
+                    ece += float(in_bin.sum()) / len(probs) * abs(float(bin_acc) - float(bin_conf))
+            return ece
+       b. Export PlattScaler from carnot.training.
+    4. Write scripts/experiment_646_jepa_v14_platt.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(646, timeout_minutes=30).
+       c. ExperimentTemplate(646, 'JEPA v14 Platt Scaling',
+          'results/experiment_646_jepa_v14_platt.json', requires_gpu=False).
+       d. Load JEPA v14 model from results/jepa_v14_oracle.npz.
+          If not found: use v13 from results/jepa_v13_capo.npz as fallback.
+       e. Load calibration pairs from fover_corpus_v5_oracle.json (use 20% as cal set, 80% eval).
+          Compute raw logits = predictor.predict_logit(response, step_text) for each pair.
+          labels = [1.0 if is_correct else 0.0 for each pair].
+       f. Baseline ECE (before Platt): compute ece_before using PlattScaler.compute_ece().
+       g. scaler = PlattScaler(init_temperature=1.0)
+          T_optimal = scaler.fit(train_logits, train_labels)
+          calibrated_probs_val = scaler.calibrate(val_logits)
+          ece_after = scaler.compute_ece(calibrated_probs_val, val_labels)
+       h. AUC before/after (use sklearn or manual AUROC if available).
+       i. Save scaler: json.dump({'temperature': T_optimal}, open('results/jepa_v14_platt_T.json','w'))
+       j. Build artifact: schema='carnot.jepa_v14_platt.v1',
+          v14_ece_before=<float>, ece_after=<float>,
+          T_optimal=<float>, ece_reduction_pct=<float>,
+          v14_auc_before=0.912, auc_after=<float>,
+          calibration_target_met=(ece_after < 0.10),
+          scaler_saved='results/jepa_v14_platt_T.json',
+          honest_verdict='platt_calibrated' if ece_after < 0.10
+            else 'platt_improved_not_calibrated' if ece_after < 0.132
+            else 'platt_no_improvement'.
+       k. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_platt_scaler.py (100% coverage on platt_scaler.py).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: ops/conductor-log.md (RETRO-060 JEPA ECE calibration), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp647-otv-verifier
+  milestone: 2026.04.49
+  deliverable: results/experiment_647_otv_verifier.json
+  title: 'Exp 647: OTV One-Token Verifier (arXiv 2603.01025) — EORM Replacement Candidate'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: OTV (arXiv 2603.01025, March 2026) adds a single learnable verification token
+    via LoRA to any LLM. One forward pass estimates reasoning correctness — no separate verifier
+    model, no rollouts. Performance competitive with full PRM at 90% lower token cost.
+    Carnot's EORM is 55M params running ~10ms per check (Tier 2). OTV would be sub-1ms
+    (one additional vector dot product over frozen model weights). If AUC >= EORM_AUC - 0.05,
+    OTV becomes the default Tier 2, cutting cascade latency by ~10x.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/ — EORMModel definition, how it processes CoT pairs
+    - results/experiment_631_jepa_v14_oracle.json — EORM baseline AUC (or find Exp 383/556 result)
+    - results/fover_corpus_v5_oracle.json — 100+ live FOVER pairs for training
+    - results/live_pairs_578.json — live pairs for test
+    - scripts/experiment_template.py — ExperimentTemplate
+
+    TASK: Implement a lightweight OTV-style verification head and benchmark vs EORM.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-145 (OTVVerifier: single-pass verification head, AUC within 0.05 of EORM),
+       SCENARIO-VERIFY-192/193 to openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/models/otv_verifier.py:
+       a. OTVVerificationHead class:
+          __init__(self, input_dim: int = 128, hidden_dim: int = 64):
+            self.W1: jnp.ndarray = jnp.zeros((input_dim, hidden_dim))
+            self.W2: jnp.ndarray = jnp.zeros((hidden_dim, 1))
+            self.b1: jnp.ndarray = jnp.zeros(hidden_dim)
+            self.b2: jnp.ndarray = jnp.zeros(1)
+          forward(self, x: jnp.ndarray) -> float:
+            'Single-pass: x is the mean-pooled token embedding of the response.'
+            h = jax.nn.relu(x @ self.W1 + self.b1)
+            return float(jax.nn.sigmoid(h @ self.W2 + self.b2)[0])
+          NOTE: In Carnot, we approximate token embeddings with a TF-IDF-like bag-of-words
+          vector over the response (no actual LLM forward pass needed — we use response length,
+          unique word ratio, digit density, arithmetic operator density as features).
+          feature_vector(self, response: str) -> jnp.ndarray:
+            '128-dim feature vector from response text statistics.'
+            import re
+            words = response.lower().split()
+            n_words = max(len(words), 1)
+            features = [
+                len(response) / 1000.0,
+                len(set(words)) / n_words,
+                len(re.findall(r'\d+', response)) / n_words,
+                len(re.findall(r'[+\-*/=]', response)) / n_words,
+            ]
+            Pad to 128 dimensions with zeros.
+            return jnp.array(features + [0.0] * (128 - len(features)))
+       b. OTVTrainer class:
+          __init__(self, head: OTVVerificationHead, lr: float = 0.01):
+          train(self, pairs: list[dict], n_epochs: int = 50) -> OTVVerificationHead:
+            Pairs: list of {'response': str, 'is_correct': bool}.
+            Train with binary cross-entropy.
+       c. Export OTVVerificationHead, OTVTrainer from carnot.models.
+    4. Write scripts/experiment_647_otv_verifier.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(647, timeout_minutes=25).
+       c. ExperimentTemplate(647, 'OTV One-Token Verifier',
+          'results/experiment_647_otv_verifier.json', requires_gpu=False).
+       d. Load 100 live FOVER pairs from fover_corpus_v5_oracle.json. If < 50: use live_pairs_578.json.
+          80/20 train/test split.
+       e. trainer = OTVTrainer(OTVVerificationHead())
+          head = trainer.train(train_pairs, n_epochs=50)
+       f. Evaluate on test set: compute AUC-ROC manually or via scikit-learn.
+          otv_auc = compute_auc(head, test_pairs)
+       g. Load EORM AUC from prior result files (search Exps 556, 559, 383 results for eorm_auc).
+          eorm_auc_baseline = max known EORM AUC from result files, else 0.60 as floor.
+       h. Speedup: OTV forward = ~0.1ms (CPU dot product), EORM ~10ms.
+          speedup_ratio = 10.0 / 0.1 = 100x (theoretical; verify with timeit).
+       i. Build artifact: schema='carnot.otv_verifier.v1',
+          n_train=<int>, n_test=<int>,
+          otv_auc=<float>, eorm_auc_baseline=<float>,
+          auc_gap=(eorm_auc_baseline - otv_auc),
+          otv_viable=(otv_auc >= eorm_auc_baseline - 0.05),
+          speedup_ratio=<float>,
+          recommendation='OTV as Tier 2 default' if otv_viable else 'Keep EORM as Tier 2',
+          honest_verdict='otv_viable_replace_eorm' if otv_viable
+            else 'otv_not_viable_keep_eorm'.
+       j. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_otv_verifier.py (100% coverage on otv_verifier.py).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: _bmad/architecture.md (note OTV as Tier 2 candidate), ops/conductor-log.md,
+       ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp648-parallel-ising-inertia
+  milestone: 2026.04.49
+  deliverable: results/experiment_648_parallel_ising_inertia.json
+  title: 'Exp 648: Parallel Densely Connected Ising Machine with Inertia (arXiv 2604.17109) — KV260 v3 RTL Path'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2604.17109 (April 2026) introduces inertia dynamics for parallel probabilistic
+    Ising machines. Key modification: the local field h_i is smoothed with an exponential moving
+    average h_i(t+1) = alpha*h_i(t) + (1-alpha)*sum_j(J_ij*s_j(t)), where alpha is the inertia
+    parameter. This prevents oscillation in dense coupling graphs and accelerates convergence
+    by 20-35x vs standard synchronous Gibbs on FPGA. Carnot's KV260 work uses checkerboard
+    parallel Gibbs (ising_sampler_v2.v). Inertia dynamics would be v3: same ~50% area as v2
+    (vs v1), but faster convergence for dense arithmetic constraint graphs.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/samplers/parallel_ising.py — ParallelIsingSampler (checkerboard Gibbs)
+    - hardware/kv260/ising_sampler_v2.v — synchronous v2 RTL (Exp 612)
+    - hardware/kv260/synth_ising_v2.tcl — synthesis TCL (Exp 636)
+    - results/experiment_585_kv260_live_benchmark_v3.json — CPU baseline latency
+    - python/carnot/samplers/backend.py — SamplerBackend protocol
+
+    TASK: Implement Python simulation of inertia Ising dynamics and benchmark vs checkerboard Gibbs.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-SAMPLE-023 (ParallelDenseIsingInertia: inertia EMA dynamics with alpha parameter),
+       REQ-SAMPLE-024 (ParallelDenseIsingInertia: convergence in <= 80% steps vs checkerboard Gibbs
+       on 100-spin dense graph), SCENARIO-SAMPLE-037/038/039 to
+       openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/samplers/parallel_dense_ising.py:
+       a. ParallelDenseIsingConfig dataclass: n_spins (int), alpha (float = 0.3),
+          beta (float = 1.0), n_steps (int = 200).
+       b. ParallelDenseIsingInertia class:
+          __init__(self, config: ParallelDenseIsingConfig):
+            self.config = config
+            self.h_i: jnp.ndarray = jnp.zeros(config.n_spins)  (EMA local fields)
+          _compute_local_fields(self, J: jnp.ndarray, s: jnp.ndarray) -> jnp.ndarray:
+            'Compute J @ s (local fields from coupling matrix and spin state).'
+            return J @ s
+          _update_inertia(self, h_i: jnp.ndarray, local_fields: jnp.ndarray) -> jnp.ndarray:
+            alpha = self.config.alpha
+            return alpha * h_i + (1 - alpha) * local_fields
+          _flip_probabilities(self, h_i: jnp.ndarray, biases: jnp.ndarray) -> jnp.ndarray:
+            'P(s_i = +1) = sigmoid(2 * beta * (h_i + bias_i))'
+            return jax.nn.sigmoid(2.0 * self.config.beta * (h_i + biases))
+          sample(self, J: jnp.ndarray, biases: jnp.ndarray,
+                 rng_key: jnp.ndarray, init_state: jnp.ndarray | None = None) -> dict:
+            's ∈ {-1, +1}^n, returns final state + convergence statistics.'
+            s = init_state if init_state is not None else jnp.ones(self.config.n_spins)
+            h_i = self._compute_local_fields(J, s)
+            energy_history = []
+            for step in range(self.config.n_steps):
+                local_fields = self._compute_local_fields(J, s)
+                h_i = self._update_inertia(h_i, local_fields)
+                flip_probs = self._flip_probabilities(h_i, biases)
+                rng_key, subkey = jax.random.split(rng_key)
+                s = jnp.where(jax.random.uniform(subkey, (self.config.n_spins,)) < flip_probs,
+                              1.0, -1.0)
+                energy = -0.5 * s @ J @ s - biases @ s
+                energy_history.append(float(energy))
+            return {'final_state': s, 'final_energy': energy_history[-1],
+                    'energy_history': energy_history,
+                    'n_steps': self.config.n_steps}
+       c. Export ParallelDenseIsingInertia, ParallelDenseIsingConfig from carnot.samplers.
+    4. Write scripts/experiment_648_parallel_ising_inertia.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(648, timeout_minutes=30).
+       c. ExperimentTemplate(648, 'Parallel Dense Ising Inertia',
+          'results/experiment_648_parallel_ising_inertia.json', requires_gpu=False).
+       d. Generate test coupling matrices at n_spins in [50, 100, 200, 500]:
+          Random dense J (Gaussian, normalized by n_spins), random biases.
+       e. For each n_spins:
+          Baseline: ParallelIsingSampler(n_spins, ...).parallel_sample_states()
+            Record steps_to_converge = first step where energy stops decreasing by > 0.1%.
+          Inertia: ParallelDenseIsingInertia(ParallelDenseIsingConfig(n_spins, alpha=0.3))
+            Record steps_to_converge for same criterion.
+          convergence_reduction_pct = (baseline_steps - inertia_steps) / baseline_steps
+       f. Also test alpha in [0.1, 0.3, 0.5, 0.7]: find best alpha by convergence speed.
+       g. Generate hardware/kv260/ising_sampler_v3_spec.md documenting the RTL changes
+          needed for v3 (inertia register h_i, EMA update before flip probability computation).
+       h. Build artifact: schema='carnot.parallel_ising_inertia.v1',
+          n_spins_tested=[50, 100, 200, 500],
+          baseline_steps_mean=<float>, inertia_steps_mean=<float>,
+          convergence_reduction_pct=<float>,
+          best_alpha=<float>,
+          inertia_faster=(convergence_reduction_pct >= 0.20),
+          v3_rtl_spec_path='hardware/kv260/ising_sampler_v3_spec.md',
+          honest_verdict='inertia_faster_v3_path_clear' if convergence_reduction_pct >= 0.20
+            else 'inertia_comparable_no_clear_win'.
+       i. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_parallel_dense_ising.py (100% coverage on parallel_dense_ising.py).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: research-hardware-wishlist.md (add v3 RTL note), ops/conductor-log.md,
+       ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp649-dualgpu-13b-v2
+  milestone: 2026.04.49
+  deliverable: results/experiment_649_dualgpu_13b_v2.json
+  title: 'Exp 649: DualGPU 13B Proof v2 — Pre-Downloaded Weights, RETRO-071 Closure (GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-071: DualGPU 13B proof failed in Exp 632 because model weights for
+    Qwen2.5-14B-Instruct (or 7B) were not cached locally, causing a model_load_failed result.
+    Both RTX 3090s (48GB VRAM total) are available. This experiment re-runs the proof with
+    explicit pre-download verification before attempting the split-GPU load.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_632_dualgpu_13b_proof.json — failed attempt, n_gpus=2,
+      blocked_reason='model_load_failed' (read full result for diagnostics)
+    - python/carnot/pipeline/env_autofix.py — apply_env_autofix()
+    - scripts/experiment_template.py — ExperimentTemplate
+
+    TASK: Pre-verify HF cache, load 7B model across 2 GPUs, prove GPU-1 utilization.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-INFRA-092 (DualGPU 13B: model split across 2 RTX 3090s with GPU-1
+       utilization > 50% during inference), SCENARIO-INFRA-099/100 to spec.
+    3. Write scripts/experiment_649_dualgpu_13b_v2.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(649, timeout_minutes=60).
+       c. ExperimentTemplate(649, 'DualGPU 13B Proof v2',
+          'results/experiment_649_dualgpu_13b_v2.json', requires_gpu=True).
+       d. GPU detection:
+          import torch
+          n_gpus = torch.cuda.device_count()
+          if n_gpus < 2:
+              write artifact with dualgpu_available=False, blocked_reason='only_one_gpu' and exit.
+          vram_0_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+          vram_1_gb = torch.cuda.get_device_properties(1).total_memory / (1024**3)
+       e. HF cache pre-check:
+          import os
+          hf_home = os.environ.get('HF_HOME', os.path.expanduser('~/.cache/huggingface'))
+          Check if any of these model dirs exist in hf_home:
+            'Qwen/Qwen2.5-7B-Instruct', 'Qwen/Qwen2.5-14B-Instruct'
+          cached_models = [m for m in candidates if cache_exists(m)]
+          preferred_model = cached_models[0] if cached_models else None
+          If no cached model:
+              write artifact with model_loaded=False, blocked_reason='model_not_cached_HF_weights_required',
+              action_required='Run: huggingface-cli download Qwen/Qwen2.5-7B-Instruct --local-dir ~/.cache/huggingface/hub/models--Qwen--Qwen2.5-7B-Instruct'
+              and exit.
+       f. If cached model found:
+          from transformers import AutoModelForCausalLM, AutoTokenizer
+          Layer split: 7B has 28 layers → cuda:0 gets layers 0-13, cuda:1 gets 14-27 + lm_head
+          device_map = {f'model.layers.{i}': 'cuda:0' for i in range(14)}
+          device_map.update({f'model.layers.{i}': 'cuda:1' for i in range(14, 28)})
+          device_map.update({'model.embed_tokens': 'cuda:0',
+                             'model.norm': 'cuda:1', 'lm_head': 'cuda:1'})
+          model = AutoModelForCausalLM.from_pretrained(preferred_model, device_map=device_map,
+              torch_dtype=torch.float16, low_cpu_mem_usage=True)
+          tokenizer = AutoTokenizer.from_pretrained(preferred_model)
+       g. Utilization measurement:
+          import pynvml; pynvml.nvmlInit()
+          baseline_util_1 = [pynvml.nvmlDeviceGetUtilizationRates(handle_1).gpu for _ in range(3)]
+          Run 10 forward passes (batch_size=1, max_new_tokens=20, prompt='1+1='):
+              For each: util_1 = pynvml.nvmlDeviceGetUtilizationRates(handle_1).gpu
+          peak_gpu1_util = max(util_1_measurements)
+          sustained_gpu1_fraction = sum(u > 10 for u in util_1_measurements) / 10
+          del model; torch.cuda.empty_cache()
+       h. Build artifact: schema='carnot.dualgpu_13b_v2.v1',
+          n_gpus=<int>, vram_0_gb=<float>, vram_1_gb=<float>,
+          model_loaded=<bool>, model_name=<str>,
+          peak_gpu1_util=<float>, sustained_gpu1_fraction=<float>,
+          dualgpu_proven=(peak_gpu1_util > 50 or sustained_gpu1_fraction > 0.5),
+          retro_071_resolved=<bool>,
+          honest_verdict='dualgpu_proven' if (model_loaded and peak_gpu1_util > 50)
+            else 'dualgpu_loaded_low_util' if model_loaded
+            else 'model_not_cached'.
+       i. tmpl.assert_deliverable_written() as FINAL LINE.
+    4. Write tests/python/test_experiment_649_dualgpu.py (100% coverage, mock torch.cuda).
+    5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    6. Reconcile: ops/conductor-log.md (RETRO-071 status), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp650-kaem-multilevel-sparse
+  milestone: 2026.04.49
+  deliverable: results/experiment_650_kaem_multilevel_sparse.json
+  title: 'Exp 650: LowRankKAEM Multilevel + Sparse Combined — RETRO-057 Closure Attempt'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: RETRO-057 (carry 5): LowRankKAEM energy accuracy outside 5% tolerance.
+    Exp 637 SparseKAEM showed sparse_vs_dense_error=0.429 — far outside 5% threshold.
+    Sparse-only redesign is insufficient. New hypothesis: sparse compression ALONE discards
+    significant eigenvalues; multilevel training ALONE may not converge to the right minimum
+    with sparse couplings. The combination — train at coarse resolution first (K=16 knots),
+    then progressively refine (K=32, K=64) while maintaining sparsity at each level — should
+    combine the benefits: coarse-to-fine avoids local minima, and sparsity provides parameter
+    reduction. Both MultilevelKAEMTrainer (Exp 634) and SparseKAEMEnergy (Exp 637) are built.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/training/multilevel_kan_trainer.py — MultilevelKAEMTrainer,
+      KnotRefinementInterpolator (Exp 634)
+    - python/carnot/models/sparse_kaem_energy.py — SparseKAEMEnergy (Exp 637)
+    - python/carnot/models/kaem_energy.py — KAEMEnergy, UnivariateKAEMLayer
+    - results/experiment_634_multilevel_kan_kaem.json — accuracy_multilevel, total_epochs_multilevel
+    - results/experiment_637_lowrank_kaem_sparse.json — energy_accuracy_sparse, sparse_vs_dense_error
+
+    TASK: Implement multilevel training specifically for SparseKAEMEnergy.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-SAMPLE-025 (MultilevelSparseKAEM: multilevel training with sparsity at each level,
+       energy accuracy within 5% vs dense baseline), SCENARIO-SAMPLE-040/041 to
+       openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/training/multilevel_sparse_kaem.py:
+       a. MultilevelSparseKAEMTrainer class:
+          __init__(self, schedule: list[int] = [16, 32, 64],
+                   epochs_per_level: int = 20,
+                   top_k_fraction: float = 0.1):
+            self.schedule = schedule
+            self.epochs_per_level = epochs_per_level
+            self.top_k_fraction = top_k_fraction
+          train(self, n_vars: int, data: jnp.ndarray) -> SparseKAEMEnergy:
+            'Multilevel training for SparseKAEMEnergy.'
+            model = SparseKAEMEnergy(n_vars=n_vars, n_knots=self.schedule[0],
+                top_k_fraction=self.top_k_fraction)
+            for i, K in enumerate(self.schedule):
+                if i > 0:
+                    model = self._refine_to_level(model, K)
+                model = self._train_level(model, data, self.epochs_per_level)
+                model = self._sparsify_level(model)
+            return model
+          _refine_to_level(self, model: SparseKAEMEnergy, K: int) -> SparseKAEMEnergy:
+            'Interpolate UnivariateKAEMLayers to finer K knots.'
+            new_layers = []
+            for layer in model.layers:
+                interpolator = KnotRefinementInterpolator(layer, K)
+                new_layers.append(interpolator.interpolate())
+            return model.replace(layers=new_layers, n_knots=K)
+          _train_level(self, model, data, n_epochs): standard gradient descent.
+          _sparsify_level(self, model): apply model.sparsify() to coupling matrix.
+       b. Export MultilevelSparseKAEMTrainer from carnot.training.
+    4. Write scripts/experiment_650_kaem_multilevel_sparse.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(650, timeout_minutes=35).
+       c. ExperimentTemplate(650, 'KAEM Multilevel Sparse',
+          'results/experiment_650_kaem_multilevel_sparse.json', requires_gpu=False).
+       d. Generate synthetic energy landscape (same as Exps 634/637: 20 vars, known ground truth).
+       e. Load prior baselines:
+          accuracy_standard = exp637.get('energy_accuracy_dense', None)
+          accuracy_sparse_only = exp637.get('energy_accuracy_sparse', None)
+          sparse_vs_dense_error_prior = exp637.get('sparse_vs_dense_error', 0.429)
+       f. Train MultilevelSparseKAEMTrainer(schedule=[16,32,64], epochs_per_level=20, top_k_fraction=0.1).
+          Record accuracy_multilevel_sparse, total_epochs.
+       g. Also try top_k_fraction in [0.05, 0.10, 0.20]: find best that achieves < 5% error.
+       h. Compare:
+          multilevel_sparse_vs_dense_error = abs(accuracy_multilevel_sparse - accuracy_standard) / accuracy_standard
+          retro_057_resolved = multilevel_sparse_vs_dense_error < 0.05
+          improvement_over_sparse_only = sparse_vs_dense_error_prior - multilevel_sparse_vs_dense_error
+       i. Build artifact: schema='carnot.kaem_multilevel_sparse.v1',
+          accuracy_standard=<float>, accuracy_sparse_only=<float>,
+          accuracy_multilevel_sparse=<float>,
+          sparse_vs_dense_error_prior=sparse_vs_dense_error_prior,
+          multilevel_sparse_vs_dense_error=<float>,
+          improvement_over_sparse_only=<float>,
+          best_top_k_fraction=<float>,
+          retro_057_resolved=<bool>,
+          honest_verdict='multilevel_sparse_resolves_retro_057' if retro_057_resolved
+            else 'multilevel_sparse_improved' if multilevel_sparse_vs_dense_error < sparse_vs_dense_error_prior
+            else 'multilevel_sparse_no_improvement'.
+       j. tmpl.assert_deliverable_written() as FINAL LINE.
+    5. Write tests/python/test_multilevel_sparse_kaem.py (100% coverage).
+    6. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    7. Reconcile: ops/conductor-log.md (RETRO-057 status), ops/changelog.md.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp651-retro-2026-04-49
+  milestone: 2026.04.49
+  deliverable: results/experiment_651_retro_2026_04_49.json
+  title: 'Exp 651: Milestone 2026.04.49 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Milestone 2026.04.49 is complete. Experiments 640-650 have run.
+    This retrospective analyzes:
+    (1) Was RETRO-070 resolved? (Exp 641 hermes_v2_recall >= 0.20, Exp 643 ensemble_recall >= 0.30)
+    (2) Was RETRO-033 finally resolved after 17 attempts? (Exp 644 signed_improvement > 0)
+    (3) Was RETRO-071 resolved? (Exp 649 dualgpu_proven)
+    (4) Was RETRO-057 resolved? (Exp 650 multilevel_sparse_vs_dense_error < 5%)
+    (5) Was JEPA v14 calibrated? (Exp 646 ece_after < 0.10)
+    (6) Is OTV viable as EORM replacement? (Exp 647 otv_viable)
+    (7) Exclusion manifest wired? (Exp 640 conductor_consulted)
+    (8) Wall time vs .48
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_640_preflght_infra.json
+    - results/experiment_641_hermes_v2_live.json
+    - results/experiment_642_causal_verifier.json
+    - results/experiment_643_ensemble_gate_v2.json
+    - results/experiment_644_live_vr_attempt_17.json
+    - results/experiment_645_tier1_fr11_relay.json
+    - results/experiment_646_jepa_v14_platt.json
+    - results/experiment_647_otv_verifier.json
+    - results/experiment_648_parallel_ising_inertia.json
+    - results/experiment_649_dualgpu_13b_v2.json
+    - results/experiment_650_kaem_multilevel_sparse.json
+    - results/experiment_639_retro_2026_04_48.json — prior milestone metrics
+
+    TASK: Write milestone 2026.04.49 operational retrospective.
+    1. Read CLAUDE.md spec-first workflow.
+    2. Load all 11 experiment results above. For any missing: record status='not_run'.
+    3. Write scripts/experiment_651_retro_2026_04_49.py:
+       a. apply_env_autofix() FIRST.
+       b. ExperimentTimeoutWatchdog(651, timeout_minutes=30).
+       c. ExperimentTemplate(651, 'Milestone 2026.04.49 Retrospective',
+          'results/experiment_651_retro_2026_04_49.json', requires_gpu=False).
+       d. Load all 11 result files. Compute:
+          hermes_v2_recall = exp641.get('hermes_v2_recall', 0.0)
+          ensemble_recall = exp643.get('ensemble_recall', 0.0)
+          retro_070_resolved = ensemble_recall >= 0.30
+          retro_033_resolved = exp644.get('retro_033_resolved', False)
+          retro_071_resolved = exp649.get('retro_071_resolved', False)
+          retro_057_resolved = exp650.get('retro_057_resolved', False)
+          jepa_v14_calibrated = exp646.get('calibration_target_met', False)
+          otv_viable = exp647.get('otv_viable', False)
+          manifest_wired = exp640.get('conductor_consulted', False)
+          fr11_confirmed = exp645.get('fr11_real_violations_confirmed', False)
+          inertia_faster = exp648.get('inertia_faster', False)
+          dualgpu_proven = exp649.get('dualgpu_proven', False)
+       e. Wall-time: sum(r.get('duration_s', 0) for r in results) / 60 → total_wall_time_minutes.
+          prior_wall_time = exp639.get('total_wall_time_minutes', 18.4)
+       f. Open RETROs still open after .49:
+          If not retro_033_resolved: 'RETRO-033 carry: attempt #17 failed. '
+            'Upgrade gate to 35% recall before attempt #18. '
+            'Explore AST-level code extraction (not regex or LLM prompt).'
+          If not retro_070_resolved: 'RETRO-070 carry: ensemble recall still below 30%. '
+            'Try forced structured-format generation: prompt model to write equations explicitly.'
+          If not retro_071_resolved: 'RETRO-071 carry: pre-cache Qwen2.5-7B-Instruct weights, retry.'
+          If not retro_057_resolved: 'RETRO-057 carry: try top_k=1.0 (dense sparse baseline).'
+       g. top_priorities_for_50: (build from what resolved and what did not)
+          Priority 1: If retro_033_resolved: 'Scale to 200q Wilson CI (RETRO-038).'
+                      Elif retro_070_resolved: 'Run VR #17 immediately.'
+                      Else: 'Implement structured-format forcing: prompt Qwen3.5-0.8B to write '
+                            'explicit equations at each step. Then HERMES v2 can parse them exactly.'
+          Priority 2: 'FPGA: human must install Vivado 2023.2. '
+                      'TCL v2 ready (Exp 636). v3 RTL spec available (Exp 648).'
+          Priority 3: If not jepa_v14_calibrated: 'Try isotonic regression calibration (non-parametric).'
+                      Else: 'Deploy JEPA v14 + Platt in cascade. Measure wall-clock throughput.'
+       h. Build artifact: schema='carnot.operational_retro.v24',
+          milestone='2026.04.49', n_experiments_run=<int>, n_not_run=<int>,
+          total_wall_time_minutes=<float>, mean_time_min=<float>,
+          retro_033_resolved=<bool>, retro_057_resolved=<bool>,
+          retro_070_resolved=<bool>, retro_071_resolved=<bool>,
+          jepa_v14_calibrated=<bool>, otv_viable=<bool>,
+          manifest_wired=<bool>, fr11_confirmed=<bool>,
+          inertia_faster=<bool>, dualgpu_proven=<bool>,
+          hermes_v2_recall=<float>, ensemble_recall=<float>,
+          retro_closure_rate=<float>, open_retro_count=<int>,
+          new_retro_items=[], open_retro_items=[],
+          top_priorities_for_50=[<3 concrete next steps>],
+          honest_verdict=<concise one-phrase summary>.
+       i. tmpl.assert_deliverable_written() as FINAL LINE.
+    4. Write tests/python/test_experiment_651_retro.py (100% targeted coverage).
+    5. Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    6. Reconcile: ops/status.md (update what's working, what's next),
+       ops/conductor-log.md (milestone 2026.04.49 complete), ops/changelog.md,
+       _bmad/traceability.md (FR-11, FR-12 impl status).
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

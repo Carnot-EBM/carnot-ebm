@@ -4,6 +4,28 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-21 arxiv Scan (Milestone 2026.04.49 Planning)
+
+### Parallel Densely Connected Probabilistic Ising Machine with Inertia
+- **Paper:** arXiv 2604.17109 (April 2026)
+- **What:** Introduces densely-connected probabilistic Ising machine dynamics with an inertia term: each spin's local field is exponentially smoothed h_i(t+1) = alpha*h_i(t) + (1-alpha)*sum_j(J_ij*s_j(t)). The inertia parameter alpha controls the momentum that prevents oscillation and accelerates convergence. Fully parallel update schedule (vs checkerboard alternating). Validated on real FPGA hardware with 35x speedup over sequential Gibbs.
+- **Relevance to Carnot:** Carnot's KV260 FPGA work uses a checkerboard parallel Gibbs sampler (ising_sampler_v2.v). Inertia dynamics could be the v3 RTL: same area as v2, faster convergence for dense constraint graphs (which are common in multi-step arithmetic verification where many variable pairs interact). The Python simulation can be validated before RTL implementation. 35x hardware speedup > the 26x from D-Wave (Exp 598), making this the highest-speedup FPGA path identified so far.
+- **Concrete experiment:** Exp 648 (ParallelDenseIsingInertia): implement Python simulation of inertia Ising dynamics (ParallelDenseIsingSampler with inertia alpha parameter). Benchmark convergence steps vs standard checkerboard Gibbs on 100-spin, 200-spin, 500-spin constraint graphs. Generate v3 RTL specification for future FPGA synthesis. Target: convergence steps reduced by >= 20% vs v2 checkerboard.
+- **When to incorporate:** Milestone 2026.04.49 — Phase 4 new research (Exp 648).
+
+### Energy-Time-Accuracy Tradeoffs in Thermodynamic Computing
+- **Paper:** arXiv 2601.04358 (January 2026)
+- **What:** Derives fundamental bounds on the energy-delay-deficiency (EDD) product for stochastic computation — the thermodynamic cost of achieving accuracy epsilon with energy E in time t. Key result: EDD >= kT*ln(2)/epsilon for Boltzmann sampling. Also derives control strategies (annealing schedules) that approach the EDD bound without needing the target distribution a priori.
+- **Relevance to Carnot:** Carnot's SamplerBackend targets FPGA and TSU hardware. This paper provides the theoretical calibration signal: how much energy does a 100-spin Ising constraint check ACTUALLY cost at epsilon=0.01 accuracy? The EDD bounds can be measured empirically on KV260 (once Vivado synthesis completes) and compared to theoretical minimum. Also: the control strategies derived in this paper for approaching the EDD bound are directly applicable to Carnot's simulated annealing temperature schedules.
+- **Concrete experiment:** Exp 650 is targeting RETRO-057 (LowRankKAEM accuracy). File arXiv 2601.04358 for hardware calibration milestone after KV260 bitfile synthesis succeeds. Implement EnergyTimeAccuracyProfiler as a SamplerBackend extension that measures the EDD product across different annealing schedules.
+- **When to incorporate:** Milestone 2026.04.50+ — after KV260 bitfile synthesis succeeds (human must install Vivado). File now for reference.
+
+### Accelerated Speculative Decoding via Sparse Verification (SSDV)
+- **Paper:** arXiv 2512.21911 (December 2025)
+- **What:** SSDV reduces verification latency in speculative decoding by skipping attention and FFN computations for tokens that are unlikely to be rejected, using a lightweight acceptance predictor. Achieves 40-60% verification overhead reduction with <1% quality degradation.
+- **Relevance to Carnot:** Carnot's HERMES v2 live generation loop (Exp 641) runs SymCodeVerifier at every sentence boundary — expensive if done naively. SSDV's selective verification insight applies: skip verification for sentences with low violation probability (predicted by a lightweight acceptance predictor), run full SymCodeVerifier only on high-risk sentences. This could reduce HERMES v2 latency by 2-3x while preserving recall. File for after HERMES v2 recall baseline is established.
+- **When to incorporate:** Milestone 2026.04.50+ — after HERMES v2 (Exp 641) establishes the recall-latency tradeoff baseline.
+
 ## 2026-04-21 arxiv Scan (Milestone 2026.04.48 Planning)
 
 ### HERMES — Multi-Module Tool-Augmented Verification for LLM Reasoning
