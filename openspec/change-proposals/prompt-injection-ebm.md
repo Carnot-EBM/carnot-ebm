@@ -6,6 +6,11 @@
 **Owner:** ianblenke
 **Related spec:** openspec/capabilities/safety/spec.md (REQ-SAFE-007/008/009)
 **Supersedes attempts:** Exps 387, 393, 407, 416 (all "partial", no honest verdict)
+**Teacher model source:** `unsloth/gpt-oss-safeguard-20b-GGUF`, file
+`gpt-oss-safeguard-20b-Q4_K_M.gguf`. Chosen over `bartowski/*` (doesn't
+exist) and `lmstudio-community/*` (lower download count) to match the
+project-wide convention of using unsloth GGUFs (see user memory
+`feedback_sota_models.md`).
 
 ## Why now
 
