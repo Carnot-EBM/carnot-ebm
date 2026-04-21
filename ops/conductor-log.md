@@ -2404,3 +2404,4 @@ python/ |
 | 2026-04-21 16:45 UTC | Exp 647: OTV One-Token Verifier (arXiv 2603.01025) | OK | 81 passed, 2 warnings in 7.48s |
 | 2026-04-21 17:01 UTC | Exp 648: Parallel Densely Connected Ising Machine  | OK | 97 passed, 2 warnings in 12.09s |
 | 2026-04-21 17:14 UTC | Exp 649: DualGPU 13B Proof v2 — Pre-Downloaded Wei | OK | 81 passed, 2 warnings in 7.63s |
+| 2026-04-21 17:33 UTC | Exp 650: KAEM Multilevel Sparse (RETRO-057 carry 5) | OK | multilevel_sparse_no_improvement; multilevel_sparse_vs_dense_error=13.01 > sparse_only=0.429; RETRO-057 remains open |
