@@ -507,6 +507,10 @@ from carnot.pipeline.adaptrack_repairer import (  # noqa: E402
     AdapTrackRepairer,
     BacktrackEvent,
 )
+from carnot.pipeline.dualgpu_retrain import (  # noqa: E402
+    DualGPURetrain,
+    DualGPURetrainConfig,
+)
 
 __all__ = [
     "AgentStep",
@@ -842,4 +846,6 @@ __all__ = [
     "HermesVerifierAdapter",
     "AdapTrackRepairer",
     "BacktrackEvent",
+    "DualGPURetrain",
+    "DualGPURetrainConfig",
 ]

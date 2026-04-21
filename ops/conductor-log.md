@@ -2391,3 +2391,5 @@ python/ |
 | 2026-04-21 13:44 UTC | Exp 639: Milestone 2026.04.48 Operational Retrospe | OK | 81 passed, 2 warnings in 12.18s |
 | 2026-04-21 14:12 UTC | Plan milestone 2026.04.49 | OK | 12 tasks proposed |
 | 2026-04-21 14:17 UTC | Milestone 2026.04.49 activated | OK | 12 tasks queued |
+| 2026-04-21 14:31 UTC | Exp 640: Exclusion Manifest Wire-In v2 + DualGPU E | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-21 14:36 UTC | Exp 640: Exclusion Manifest Wire-In v2 + DualGPU E | OK | Deliverable already exists in repo |
