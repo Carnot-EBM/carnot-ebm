@@ -1,0 +1,80 @@
+{
+  "experiment": "kv260_bd_build",
+  "title": "KV260 BD wrapper build \u2014 synth+opt pass, place_design blocked by XCK26 resource overflow at N_SPINS=128",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T11:35:49Z",
+  "finished_at": "2026-04-21T13:22:08Z",
+  "duration_s": 6379,
+  "status": "partial",
+  "schema": "carnot.kv260_synth.v1",
+  "honest_verdict": "bd_wrapper_valid_design_too_large_for_xck26_at_n128",
+
+  "vivado_version": "v2025.2.1",
+  "vivado_install_path": "/tools/Xilinx/2025.2.1",
+  "license_acquired": true,
+  "license_feature": "Implementation",
+  "license_device": "xck26",
+
+  "bd_topology": "zynq_ultra_ps_e + axi_smartconnect + proc_sys_reset + ising_sampler_128_sync (module-ref)",
+  "bd_address_assigned": "0xA000_0000 [128K]",
+
+  "rtl_source": "hardware/kv260/ising_sampler_v2.v",
+  "rtl_top_module": "ising_sampler_128_sync",
+  "rtl_parameters_at_build": {
+    "N_SPINS": 128,
+    "MAX_DEGREE": 32,
+    "Q88_BITS": 16,
+    "Q88_FRAC": 8,
+    "N_STEPS": 1000
+  },
+
+  "validate_bd_design_passed": true,
+  "sub_ip_synth_completed": {
+    "axi_smartconnect_0_0_synth_1": true,
+    "zynq_ultra_ps_e_0_0_synth_1": true,
+    "proc_sys_reset_0_0_synth_1": true,
+    "ising_sampler_0_0_synth_1": true
+  },
+  "top_synth_1_completed": true,
+  "opt_design_completed": true,
+  "opt_design_drc_errors": 0,
+  "place_design_completed": false,
+  "place_design_failure_drc": "DRC UTLZ-1 resource over-utilisation (7 errors)",
+
+  "resource_over_utilisation": {
+    "LUT_as_Logic": {"required": 429634, "available": 117120, "ratio": 3.67},
+    "LUT6":         {"required": 290681, "available": 117120, "ratio": 2.48},
+    "MUXF7":        {"required":  66435, "available":  58560, "ratio": 1.13},
+    "F7_Muxes":     {"required":  66435, "available":  58560, "ratio": 1.13},
+    "MUXF8":        {"required":  33152, "available":  29280, "ratio": 1.13},
+    "F8_Muxes":     {"required":  33152, "available":  29280, "ratio": 1.13},
+    "CARRY8":       {"required":  18832, "available":  14640, "ratio": 1.29}
+  },
+
+  "write_bitstream_completed": false,
+  "target_part": "xck26-sfvc784-2LV-c",
+  "vivado_log_path": "output/carnot_ising_bd/vivado.log",
+  "build_stdout_log_path": "output/carnot_ising_bd/build_stdout.log",
+
+  "drc_errors": [],
+  "drc_error_count": 0,
+  "drc_ioplanning_errors_cleared": ["KLOC-1", "NSTD-1", "UCIO-1"],
+
+  "retro_070_resolved": true,
+  "retro_070_resolution_note": "BD wrapper built, sub-IP synth + opt_design passed cleanly, no I/O planning DRC errors. The block design topology is correct; bitstream is blocked by a separate (sizing) issue, not by the board-integration wrapper that was RETRO-070's concern.",
+
+  "retro_new_suggested": "RETRO-072",
+  "retro_new_suggested_title": "KV260 Ising sampler design exceeds XCK26 resource budget at N_SPINS=128 \u2014 need parametric build at N_SPINS<=64 to fit PL",
+  "retro_new_suggested_root_cause": "hardware/kv260/ising_sampler_v2.v parameterises N_SPINS=128 and MAX_DEGREE=32 by default. The parallel adder trees (h_eff[N_SPINS] with MAX_DEGREE fan-in each) plus the sigmoid LUT inference ladder produce ~290k LUT6 instances at those values, roughly 2.5x the XCK26 PL budget of 117k LUT6. The 128-spin target was appropriate for larger Zynq parts (XCU250 and up); KV260's XCK26 needs a smaller configuration.",
+  "retro_new_suggested_fix_options": [
+    "A: Override N_SPINS and MAX_DEGREE at BD instantiation time in hardware/kv260/build_bd.tcl via set_property CONFIG.N_SPINS / CONFIG.MAX_DEGREE on the ising_sampler_0 cell. No RTL edit required because the RTL is already parameterised. Target first: N_SPINS=64, MAX_DEGREE=16 (projected ~73k LUT6, fits). (~5 LOC change, already landed in build_bd.tcl on this commit)",
+    "B: Time-multiplex coupling evaluations across fewer DSPs (rewrite h_eff combinational adder trees as sequential state machine with N_STEPS_PER_UPDATE > 1). Produces the full 128-spin result at the cost of ~128/MAX_PAR cycles per update. Non-trivial RTL rewrite, ~300 LOC.",
+    "C: Move to a larger SoC (ZCU102/104, XCVU9P dev kit). Not available locally, defers the KV260 track."
+  ],
+  "retro_new_suggested_priority": "medium",
+  "retro_new_suggested_target_milestone": "2026.04.50",
+  "retro_new_suggested_next_step": "Re-run hardware/kv260/build_bd.tcl with CARNOT_N_SPINS=64 CARNOT_MAX_DEGREE=16 in the environment (the defaults are already set to those values on this commit). Record actual post-opt utilisation in results/kv260_bd_build_N64.json so the projected-vs-actual table stays honest. If N=64 still overshoots, step down to N=32 and repeat.",
+
+  "bitstream_dst_expected": "output/carnot_ising_bd/carnot_ising_bd_wrapper.bit",
+  "bitstream_dst_produced": null
+}

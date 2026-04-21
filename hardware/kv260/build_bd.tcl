@@ -68,6 +68,34 @@ set rtl_files [list \
 set project_dir   "output/carnot_ising_bd/project"
 set bitstream_dst "output/carnot_ising_bd/carnot_ising_bd_wrapper.bit"
 
+# ---------------------------------------------------------------------------
+# RTL parameter overrides  (RETRO-072 sizing fix)
+# ---------------------------------------------------------------------------
+# The RTL module is parameterised at N_SPINS=128, MAX_DEGREE=32 by default.
+# Place_design on XCK26 fails with DRC UTLZ-1 at those defaults: LUT6 reports
+# 290k used vs 117k available (2.48x over), LUT-as-logic 3.67x over, CARRY8
+# 1.29x over.  Resource usage scales roughly as N_SPINS * MAX_DEGREE; to fit
+# the KV260 silicon we override the parameters at BD-instantiation time
+# rather than editing the RTL.
+#
+# Env vars (read if set, otherwise defaults below):
+#   CARNOT_N_SPINS     — target spin count (default 64 — fits with headroom)
+#   CARNOT_MAX_DEGREE  — max neighbours per spin (default 16)
+#
+# Sizing sweep expectation (rough, pre-opt):
+#   N=128, MAX_DEGREE=32: 290k LUT6  — OVERFLOWS xck26
+#   N= 64, MAX_DEGREE=32: 145k LUT6  — still 1.24x over
+#   N= 64, MAX_DEGREE=16:  73k LUT6  — fits with headroom
+#   N= 32, MAX_DEGREE=32:  73k LUT6  — fits (fewer spins, same fan-in)
+#   N= 32, MAX_DEGREE=16:  36k LUT6  — comfortable; leaves room for future
+#                                      JEPA-adjacent PL extensions
+#
+# Empirical numbers: first post-opt place_design on (64,16) will be logged to
+# results/kv260_bd_build_N64.json so the expected-vs-actual table stays honest.
+set n_spins    [expr {[info exists env(CARNOT_N_SPINS)]    ? $env(CARNOT_N_SPINS)    : 64}]
+set max_degree [expr {[info exists env(CARNOT_MAX_DEGREE)] ? $env(CARNOT_MAX_DEGREE) : 16}]
+puts "=== RTL parameters: N_SPINS=$n_spins, MAX_DEGREE=$max_degree ==="
+
 file mkdir [file dirname $project_dir]
 file mkdir [file dirname $bitstream_dst]
 
@@ -135,6 +163,14 @@ create_bd_cell -type ip -vlnv xilinx.com:ip:proc_sys_reset proc_sys_reset_0
 # BD can reference it as a module.  Vivado will instantiate the Verilog
 # module directly in the BD hierarchy.
 create_bd_cell -type module -reference $top_rtl_module ising_sampler_0
+
+# RETRO-072: override the module parameters at BD instantiation time so the
+# post-synth utilisation fits on XCK26.  The 128-spin default is for larger
+# Zynq parts (XCU250 and up); 64/16 is the KV260-sized configuration.
+set_property -dict [list \
+    CONFIG.N_SPINS    $n_spins \
+    CONFIG.MAX_DEGREE $max_degree \
+] [get_bd_cells ising_sampler_0]
 
 # ---------------------------------------------------------------------------
 # Wiring
