@@ -11745,3 +11745,52 @@ When: extract(response) is called with a response containing an arithmetic error
 Then: Agent1 extracts numeric entities, Agent2 forms arithmetic claims, Agent3 evaluates them, violations are returned with strategy='trust_agents'.
 
 **Implementation Status:** Implemented (Exp 617)
+
+
+## REQ-VERIFY-120: JEPA v13 OOD Generalization with CAPO (AUC >= 0.75)
+
+**Context:**
+    JEPA v12 (Exp 607) achieved val_auc=1.0 in-distribution but ood_auc=0.5 (random baseline).
+    The root cause was extreme confidence scores (near 0 or 1) — classic miscalibration causing
+    OOD collapse.  JEPA v13 applies CAPO (arXiv 2604.12632) calibration loss alongside the
+    CPMI contrastive margin objective to force calibrated probabilities during training.
+
+- REQ-VERIFY-120-1: Train JEPA v13 on fover_corpus_v5.json (300+ live pairs), 80/20 split.
+- REQ-VERIFY-120-2: Use capo_loss (L_contrastive + lambda_calib * ECE) as training objective.
+- REQ-VERIFY-120-3: OOD test set uses pairs from question indices NOT in training split.
+- REQ-VERIFY-120-4: v13_ood_auc target: >= 0.75.
+- REQ-VERIFY-120-5: ood_improved = (v13_ood_auc >= 0.75).
+- REQ-VERIFY-120-6: Save model to results/jepa_v13_capo.npz.
+
+## REQ-VERIFY-121: JEPA v13 ECE Calibration Constraint (ECE < 0.10)
+
+- REQ-VERIFY-121-1: ece_loss(sigmoid(-energy_scores), labels) computes expected calibration error.
+- REQ-VERIFY-121-2: ECE uses equal-width bins over [0, 1]; mean |confidence - accuracy| over non-empty bins.
+- REQ-VERIFY-121-3: v13_ece target: < 0.10.
+- REQ-VERIFY-121-4: calibration_improved = (v13_ece < 0.10).
+- REQ-VERIFY-121-5: honest_verdict = 'v13_calibrated_and_ood' if (ood_improved and calibration_improved) else 'v13_calibrated_overfit' if calibration_improved else 'v13_uncalibrated'.
+- REQ-VERIFY-121-6: capo_loss and ece_loss exported from carnot.training package.
+
+### SCENARIO-VERIFY-157: ece_loss Returns Zero for Perfect Calibration
+
+Given: predicted_probs all equal to their bin's empirical accuracy.
+When: ece_loss(predicted_probs, labels) is called.
+Then: returns 0.0 (no calibration gap).
+
+**Implementation Status:** Implemented (Exp 618)
+
+### SCENARIO-VERIFY-158: capo_loss Penalises Reversed Rankings
+
+Given: energy_scores where E_correct > E_incorrect (rankings inverted).
+When: capo_loss(energy_scores, labels, margin=1.0, lambda_calib=0.0) is called.
+Then: returns margin + |gap| (full penalty, strictly positive).
+
+**Implementation Status:** Implemented (Exp 618)
+
+### SCENARIO-VERIFY-159: capo_loss Zero Contrastive for Well-Separated Pairs
+
+Given: energy_scores where E_incorrect - E_correct >> margin.
+When: capo_loss(energy_scores, labels, margin=1.0, lambda_calib=0.0) is called.
+Then: L_contrastive = 0.0 (margin already satisfied).
+
+**Implementation Status:** Implemented (Exp 618)
