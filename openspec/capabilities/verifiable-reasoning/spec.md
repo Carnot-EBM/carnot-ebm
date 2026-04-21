@@ -11961,3 +11961,39 @@ Then: Returns an empty list. When split_at_boundaries("Hello. World!") is called
 **Implementation Status:** Implemented (Exp 627)
 
 **Implementation Status:** Implemented (Exp 622)
+
+## REQ-DATA-012: ORACLE Corpus — Step-Level Constraint Labels Derived from Live LLM Output + SymCodeVerifier
+
+OracleCorpusBuilder shall annotate every reasoning step in a live LLM response with a
+symbolic verification label produced by SymCodeVerifier, closing the offline/live
+distribution gap (RETRO-066) for JEPA v14 training.
+
+- REQ-DATA-012-1: Each reasoning step shall receive a StepLabel with fields step_index, step_text, violation_detected, executed_result, stated_result, label ('correct' | 'violated' | 'unknown').
+- REQ-DATA-012-2: OracleChain shall aggregate step labels and expose has_violation (bool) and n_violated_steps (int).
+- REQ-DATA-012-3: build_corpus(live_pairs) shall accept a list of live-response dicts and return a list of OracleChain objects in the same order.
+- REQ-DATA-012-4: The resulting corpus shall be serialisable to JSON via dataclasses.asdict() without loss of any labeling field.
+
+## REQ-DATA-013: ORACLE Corpus — At Least 100 Labeled Reasoning Chains
+
+The ORACLE corpus (fover_corpus_v5_oracle.json) shall contain at least 100 labeled
+reasoning chains to be considered ready for JEPA v14 training.
+
+- REQ-DATA-013-1: corpus_ready=True iff n_chains >= 100.
+- REQ-DATA-013-2: honest_verdict='oracle_corpus_ready' iff n_chains >= 100; else 'oracle_corpus_partial'.
+- REQ-DATA-013-3: Chains are sourced from results/live_pairs_578.json and results/fover_corpus_v5.json; deduplication is by question_id.
+
+### SCENARIO-DATA-019: OracleCorpusBuilder Labels a Violated Step Correctly
+
+Given: OracleCorpusBuilder(SymCodeVerifier(llm_caller=None)) and a live-pair dict with response "47 + 28 = 65. The answer is 65."
+When: label_chain(chain) is called.
+Then: The returned OracleChain has has_violation=True and at least one StepLabel with label='violated'.
+
+**Implementation Status:** Implemented (Exp 628)
+
+### SCENARIO-DATA-020: OracleCorpusBuilder Processes Full Corpus
+
+Given: OracleCorpusBuilder(SymCodeVerifier(llm_caller=None)) and merged live pairs from live_pairs_578.json and fover_corpus_v5.json (175 unique chains).
+When: build_corpus(live_pairs) is called.
+Then: Returns 175 OracleChain objects; corpus_ready=True; honest_verdict='oracle_corpus_ready'.
+
+**Implementation Status:** Implemented (Exp 628)
