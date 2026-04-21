@@ -1108,3 +1108,111 @@ tasks:
        _bmad/traceability.md (FR-11, FR-12 impl status).
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp652-prompt-injection-kan
+  milestone: 2026.04.50
+  deliverable: results/experiment_652_prompt_injection_kan.json
+  title: 'Exp 652: Prompt-Injection EBM Classifier v1 — Distilled from gpt-oss-safeguard-20b'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Four prior attempts at the Safety/Jailbreak KAN classifier
+    (Exps 387, 393, 407, 416) landed in "partial" state with no honest
+    verdict. This experiment closes that thread in ONE run with a hard
+    wallclock budget and an enforced honest-verdict enum.
+
+    Read first (do NOT skip):
+    - openspec/change-proposals/prompt-injection-ebm.md — full design.
+    - openspec/capabilities/safety/spec.md — REQ-SAFE-007/008/009 and
+      SCENARIO-SAFE-007/008/009 are the acceptance criteria.
+    - python/carnot/models/compliance_checker.py — KAN pattern to reuse.
+    - python/carnot/models/kan.py — KAN forward pass (DO NOT MODIFY).
+    - python/carnot/inference/sota_models.py — cached_sota_pair().
+    - scripts/experiment_template.py — ExperimentTemplate, DualGPURunner,
+      REQUIRED_RESULT_FIELDS.
+    - python/carnot/pipeline/experiment_watchdog.py — 90-min hard stop.
+
+    TASK: Build the prompt-injection classifier end-to-end in one run.
+
+    1. Preflight (hard-fail in 2 min if teacher not cached):
+       - Try to resolve gpt-oss-safeguard-20b via cached_sota_pair-style
+         resolver. If model_path is None:
+         artifact = tmpl.build_result(
+             {},
+             status="blocked",
+             honest_verdict="blocked_on_dependency",
+             reason="gpt-oss-safeguard-20b Q4_K_M GGUF not in cache. "
+                    "Run: huggingface-cli download "
+                    "bartowski/gpt-oss-safeguard-20b-GGUF "
+                    "gpt-oss-safeguard-20b-Q4_K_M.gguf "
+                    "--local-dir models/gpt-oss-safeguard-20b",
+         )
+         Write artifact and exit 0. Do NOT continue.
+
+    2. Corpus build (40 min budget):
+       - Benign: 500 GSM8K train prompts + 500 HumanEval prompts.
+       - Injection: 500 JailbreakBench + 300 AdvBench + 200 synthetic
+         (from scripts/jailbreak_mutations.py — create if absent; use
+         OWASP LLM-01 category seeds).
+       - Run teacher on each prompt; cache (model_hash, prompt_hash) -> label.
+       - Persist to data/prompt_injection_distill/<sha256>.jsonl.
+
+    3. KAN training (20 min budget):
+       - Feature encoder: encode_prompt_injection(text) -> (max_features,)
+         JAX array in [0, 1]. Features = token n-grams (1,2,3) + delimiter
+         patterns (```, ---, [INST], <|system|>) + role-keywords
+         (system, assistant, developer, ignore, override).
+       - Student KAN: 2 hidden layers, 64 units each, degree-3 splines.
+         Total params target < 5000 (budget 2.3K like compliance_checker).
+       - Loss: contrastive (benign -> low, injection -> high).
+       - Optimizer: Adam 1e-3 + cosine decay.
+       - 80/20 train/test split, early-stop on held-out AUROC plateau.
+
+    4. Held-out evaluation (5 min):
+       - Compute AUROC on 400-example held-out set.
+       - auroc >= 0.90:
+           honest_verdict="distillation_corpus_built_classifier_trained_auroc_met"
+       - auroc < 0.90:
+           honest_verdict="distillation_corpus_built_classifier_trained_auroc_below_threshold"
+           reason="AUROC <value>; plausible causes: <specific analysis>"
+
+    5. Latency check (3 min, non-blocking):
+       - 1000 cold-cache CPU calls on JAX_PLATFORMS=cpu.
+       - Record median_inference_ms. Flag if >= 5 ms but do not abort.
+
+    6. Save checker weights to
+       python/carnot/models/prompt_injection_kan.py (JSON-serialised
+       control points; NOT the stub format of safety_kan.py — real
+       weights or emit partial verdict, no placeholders).
+
+    7. Write tests/python/test_prompt_injection_kan.py covering:
+       - feature encoder determinism (same text -> same vector).
+       - honest_verdict field is present and in the 5-value enum.
+       - AUROC computation correctness on a tiny synthetic set.
+       - CPU latency bound (skip if psutil unavailable).
+       Each test traces to REQ-SAFE-007/008/009 in a comment.
+
+    8. Reconcile:
+       - openspec/capabilities/safety/spec.md Implementation Status table:
+         mark REQ-SAFE-007/008/009 as Implemented (or leave Proposed with
+         honest reason if partial).
+       - _bmad/traceability.md — add FR-SAFE-007 -> Exp 652 row.
+       - ops/status.md — add under "What's Working" if auroc_met, else
+         under "What's Next" with the blocker captured exactly.
+       - ops/changelog.md — one-line entry with honest_verdict.
+
+    9. tmpl.assert_deliverable_written() as the FINAL line of the script.
+
+    CONSTRAINTS:
+    - ExperimentTimeoutWatchdog(652, timeout_minutes=90).
+    - Do NOT call apply_env_autofix() at module import time. Call it
+      inside main() only (lesson from Exp 623 collection-hang fix).
+    - Do NOT create a stub for python/carnot/models/prompt_injection_kan.py.
+      Either write real weights or emit a partial verdict.
+    - SOPS encryption is NOT required for public corpora (OWASP,
+      JailbreakBench, AdvBench). Commit corpus artifact plaintext.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

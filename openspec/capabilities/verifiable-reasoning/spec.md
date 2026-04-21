@@ -12512,3 +12512,39 @@ Then: hardware/kv260/ising_sampler_v3_spec.md exists and documents the inertia r
 EMA update stage, and recommended alpha for the KV260 v3 RTL implementation.
 
 **Implementation Status:** Implemented (hardware/kv260/ising_sampler_v3_spec.md, Exp 648)
+
+## REQ-INFRA-092: DualGPU 13B Proof v2 — Model Split Across 2 RTX 3090s
+
+The repository shall provide an experiment that proves dual-GPU utilization for a 7B LLM
+split across two RTX 3090s (48 GB total VRAM), resolving RETRO-071 (Exp 632 blocked by
+missing HF cache). The experiment must pre-verify the HF cache before attempting load.
+
+- REQ-INFRA-092-1: check_hf_cache() shall return only model IDs whose cache directory contains at least one .safetensors or .bin weight shard (config-only dirs excluded).
+- REQ-INFRA-092-2: detect_gpus() shall return (n_gpus, vram_0_gb, vram_1_gb) using torch.cuda; returns (0, 0.0, 0.0) when torch or CUDA is unavailable.
+- REQ-INFRA-092-3: build_device_map(n_layers, split) shall assign layers 0..split-1 to cuda:0, layers split..n_layers-1 plus model.norm and lm_head to cuda:1.
+- REQ-INFRA-092-4: sample_util(gpu_index) shall use pynvml when available, fall back to torch.cuda.utilization, and return -1.0 when both fail.
+- REQ-INFRA-092-5: load_model_split(model_id) shall call AutoModelForCausalLM.from_pretrained with a split device_map and return None on failure.
+- REQ-INFRA-092-6: run_forward_passes(model, model_id, n_passes) shall return (util_0_list, util_1_list) of length n_passes; records -1.0 on generate() failure.
+- REQ-INFRA-092-7: run_experiment() shall exit early with blocked_reason='only_one_gpu' when fewer than 2 GPUs detected.
+- REQ-INFRA-092-8: run_experiment() shall exit with blocked_reason='model_not_cached_HF_weights_required' and action_required download command when no cached model found.
+- REQ-INFRA-092-9: dualgpu_proven shall be True when peak_gpu1_util > 50 OR sustained_gpu1_fraction > 0.5.
+- REQ-INFRA-092-10: Artifact shall include all fields: n_gpus, vram_0_gb, vram_1_gb, model_loaded, model_name, peak_gpu1_util, sustained_gpu1_fraction, dualgpu_proven, retro_071_resolved, honest_verdict.
+
+**Implementation Status:** Implemented (scripts/experiment_649_dualgpu_13b_v2.py, Exp 649)
+
+### SCENARIO-INFRA-099: DualGPU Blocked — Model Not Cached
+
+Given: 2 RTX 3090s present (48 GB VRAM total) but Qwen2.5-7B-Instruct and Qwen2.5-14B-Instruct not downloaded.
+When: run_experiment() is called.
+Then: result contains model_loaded=False, blocked_reason='model_not_cached_HF_weights_required',
+      and action_required field with the exact huggingface-cli download command.
+
+**Implementation Status:** Implemented (Exp 649)
+
+### SCENARIO-INFRA-100: DualGPU Proven — GPU-1 Utilization > 50%
+
+Given: 2 RTX 3090s present and Qwen2.5-7B-Instruct weights cached in HF hub.
+When: run_experiment() is called with model split 14/14 layers.
+Then: peak_gpu1_util > 50, dualgpu_proven=True, retro_071_resolved=True, honest_verdict='dualgpu_proven'.
+
+**Implementation Status:** Implemented (Exp 649)
