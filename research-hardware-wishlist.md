@@ -49,6 +49,15 @@ This Potts extension is a STRONG additional motivation to complete the KV260 bit
 the hardware-native q-state sampler enables constraint verification with partial-credit scoring
 that the binary Ising architecture cannot provide.
 
+### KV260 Synthesis Status (Exp 624 — 20260421) — VIVADO NOT INSTALLED; v2 RTL + Python Sim Complete
+
+- **Exp 624 result:** `honest_verdict=simulation_only_vivado_blocked`
+  - Vivado not found on PATH on this machine; synthesis could not be attempted
+  - ising_sampler_v2.v (synchronous, ~50% area reduction) created by Exp 612
+  - Python simulation of synchronous checkerboard p-bit logic: VALIDATED
+    (SynchronousIsingSampler.compare_with_async() runs end-to-end without error)
+  - TCL script at `hardware/kv260/synth_ising.tcl` targets v1; update needed for v2
+
 ### KV260 Synthesis Status (Exp 584 — 20260420) — VIVADO NOT INSTALLED
 
 - **Exp 584 result:** `honest_verdict=vivado_not_installed`

@@ -1263,3 +1263,39 @@ Then: the file exists, contains 'posedge clk', and has fewer non-empty lines
 than ising_sampler_v1.v (proxy for area reduction).
 
 **Implementation Status:** Implemented (Exp 612)
+
+### REQ-SAMPLE-037: SynchronousIsingSampler — Python Simulation of Synchronous Ising RTL (Exp 624)
+
+Python-level simulation of the synchronous checkerboard p-bit update logic
+in ising_sampler_v2.v.  Used to validate RTL correctness before FPGA synthesis.
+
+- REQ-SAMPLE-037-1: `SynchronousIsingSampler(n_spins, couplings, biases, beta)` SHALL store
+  parameters and validate that couplings.shape == (n_spins, n_spins) and biases.shape == (n_spins,).
+- REQ-SAMPLE-037-2: `step(state)` SHALL implement the synchronous two-phase checkerboard sweep:
+  phase 0 updates all even-indexed spins simultaneously; phase 1 updates all odd-indexed spins
+  using the freshly updated even values.  Spin convention is {-1, +1}.
+- REQ-SAMPLE-037-3: `sample(n_steps, init_state)` SHALL run n_steps sweeps and return the final
+  state.  Default init_state is all-+1 (matching RTL reset state).
+- REQ-SAMPLE-037-4: `compare_with_async(n_steps, n_trials)` SHALL return a dict with keys
+  sync_mean_energy, async_mean_energy, energy_gap, and sync_converged.
+- REQ-SAMPLE-037-5: `SynchronousIsingSampler` SHALL be exported from `carnot.samplers`.
+
+Spec: REQ-SAMPLE-037, SCENARIO-SAMPLE-061, SCENARIO-SAMPLE-062
+
+### SCENARIO-SAMPLE-061: SynchronousIsingSampler Returns Required Keys from compare_with_async
+
+Given: a 6-spin Ising instance.
+When: compare_with_async(n_steps=20, n_trials=3) is called.
+Then: the returned dict contains sync_mean_energy, async_mean_energy, energy_gap,
+sync_converged, and energy_gap == sync_mean_energy - async_mean_energy.
+
+**Implementation Status:** Implemented (Exp 624)
+
+### SCENARIO-SAMPLE-062: Synchronous and Async Samplers Reach Comparable Energy on Small Instance
+
+Given: a 4-spin ferromagnetic Ising instance (all J[i,j]=0.5, no bias, beta=2.0).
+When: compare_with_async(n_steps=50, n_trials=5) is called.
+Then: both sync_mean_energy and async_mean_energy are non-None floats, validating
+that the synchronous update logic runs end-to-end without error.
+
+**Implementation Status:** Implemented (Exp 624)

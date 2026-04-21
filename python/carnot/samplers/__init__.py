@@ -13,6 +13,7 @@ from carnot.samplers.gpu_oim_simulator import (
 from carnot.samplers.hmc import HMCSampler
 from carnot.samplers.langevin import LangevinSampler
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
+from carnot.samplers.synchronous_ising import SynchronousIsingSampler
 
 __all__ = [
     "LangevinSampler",
@@ -32,4 +33,5 @@ __all__ = [
     "GPUOscillatorIsingSimulator",
     "OIMSpeedupResult",
     "JEPARetrainResult",
+    "SynchronousIsingSampler",
 ]
