@@ -12200,3 +12200,47 @@ When: simulate_repair() processes each response with backtrack_threshold=0.5.
 Then: adaptrack_recall >= interwhen_baseline (0.12 from Exp 629).
 
 **Implementation Status:** Implemented (Exp 635)
+
+## REQ-INFRA-090: Conductor Must Consult Exclusion Manifest Before Queuing Any Experiment
+
+The research conductor shall load scripts/conductor_exclusion_manifest.json at session start
+and skip any experiment whose ID appears in the excluded list, without spawning an agent or
+consuming GPU time.  This closes RETRO-CRITICAL (escalated from RETRO-056): the same five
+experiments (308, 309, 425, 410, 383) appeared in the slowest-5 for twelve consecutive
+milestones (.37 through .48), accumulating ~4,188 minutes of wasted wall-clock.
+
+- REQ-INFRA-090-1: Conductor shall call _ensure_exclusion_manifest_loaded() before pick_next_task().
+- REQ-INFRA-090-2: _task_is_excluded() shall return (True, reason) for any experiment_id in the manifest.
+- REQ-INFRA-090-3: Excluded tasks shall be logged with status="OK" and reason "Excluded by manifest".
+- REQ-INFRA-090-4: A missing or malformed manifest shall degrade gracefully (no exclusions, no crash).
+
+**Implementation Status:** Implemented (research_conductor.py, RETRO-067 wire-in 2026-04-20)
+
+## REQ-INFRA-091: DualGPURetrain — Parallel EORM/JEPA Forward Passes on cuda:0 and cuda:1
+
+The DualGPURetrain class shall run EORM training on cuda:0 and JEPA training on cuda:1
+concurrently via ThreadPoolExecutor, reducing Exp 383 wall-clock from ~62 min to ~35 min.
+When fewer than 2 GPUs are available, both tasks shall fall back to CPU without error.
+
+- REQ-INFRA-091-1: DualGPURetrainConfig dataclass shall expose eorm_device and jepa_device str fields.
+- REQ-INFRA-091-2: DualGPURetrain.run_parallel(eorm_fn, jepa_fn) shall submit both callables to a 2-worker ThreadPoolExecutor.
+- REQ-INFRA-091-3: run_parallel shall return {'eorm': eorm_result, 'jepa': jepa_result}.
+- REQ-INFRA-091-4: DualGPURetrain and DualGPURetrainConfig shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/dualgpu_retrain.py, Exp 640)
+
+### SCENARIO-INFRA-097: DualGPURetrain Returns Correct Keys for Both Results
+
+Given: DualGPURetrain with eorm_fn=lambda: 'eorm_done' and jepa_fn=lambda: 'jepa_done'.
+When: run_parallel() is called.
+Then: result['eorm'] == 'eorm_done' and result['jepa'] == 'jepa_done'.
+
+**Implementation Status:** Implemented (Exp 640)
+
+### SCENARIO-INFRA-098: DualGPURetrain Falls Back to CPU When GPUs Unavailable
+
+Given: DualGPURetrainConfig(eorm_device='cpu', jepa_device='cpu').
+When: run_parallel() is called with simple lambda functions.
+Then: Both results are returned without error and the dict has both keys.
+
+**Implementation Status:** Implemented (Exp 640)
