@@ -12463,3 +12463,52 @@ When: train(pairs, n_epochs=50) is called.
 Then: the returned head produces AUC-ROC > 0.5 on the training set (better than random).
 
 **Implementation Status:** Implemented (Exp 647)
+
+## REQ-SAMPLE-023: ParallelDenseIsingInertia — Inertia EMA Dynamics
+
+The repository shall provide a ParallelDenseIsingInertia sampler implementing the inertia
+dynamics from arXiv 2604.17109, where the local field h_i is smoothed with an exponential
+moving average before computing flip probabilities.
+
+- REQ-SAMPLE-023-1: ParallelDenseIsingConfig shall accept n_spins (int), alpha (float, default 0.3), beta (float, default 1.0), n_steps (int, default 200).
+- REQ-SAMPLE-023-2: ParallelDenseIsingInertia.__init__ shall accept a ParallelDenseIsingConfig and initialise self.h_i as jnp.zeros(n_spins).
+- REQ-SAMPLE-023-3: _compute_local_fields(J, s) shall return J @ s.
+- REQ-SAMPLE-023-4: _update_inertia(h_i, local_fields) shall return alpha * h_i + (1 - alpha) * local_fields.
+- REQ-SAMPLE-023-5: _flip_probabilities(h_i, biases) shall return sigmoid(2 * beta * (h_i + biases)).
+- REQ-SAMPLE-023-6: sample(J, biases, rng_key, init_state) shall return a dict with keys: final_state, final_energy, energy_history, n_steps.
+- REQ-SAMPLE-023-7: ParallelDenseIsingInertia and ParallelDenseIsingConfig shall be exported from carnot.samplers.
+
+**Implementation Status:** Implemented (python/carnot/samplers/parallel_dense_ising.py, Exp 648)
+
+## REQ-SAMPLE-024: ParallelDenseIsingInertia — Convergence Advantage on Dense Graphs
+
+ParallelDenseIsingInertia with alpha=0.3 shall converge in <= 80% of the steps required
+by checkerboard Gibbs (ParallelIsingSampler) on a 100-spin dense random Gaussian graph,
+where convergence is defined as first step where relative energy improvement falls below 0.1%.
+
+**Implementation Status:** Benchmarked (Exp 648)
+
+### SCENARIO-SAMPLE-037: Inertia EMA Damps Oscillation
+
+Given: A 100-spin dense random Gaussian coupling matrix J (Gaussian, normalised by n_spins).
+When: ParallelDenseIsingInertia(alpha=0.3).sample() is run for 400 steps.
+Then: The mean energy over the last 10 steps is lower than the mean energy over the first 10 steps.
+
+**Implementation Status:** Benchmarked (Exp 648)
+
+### SCENARIO-SAMPLE-038: Alpha Sweep Identifies Best Convergence Rate
+
+Given: n_spins=100 dense random Gaussian instance, alpha ∈ {0.1, 0.3, 0.5, 0.7}.
+When: ParallelDenseIsingInertia is run for each alpha and steps_to_converge measured.
+Then: A best_alpha with minimum steps_to_converge is identified and reported in the experiment artifact.
+
+**Implementation Status:** Benchmarked (Exp 648)
+
+### SCENARIO-SAMPLE-039: v3 RTL Spec Written
+
+Given: Exp 648 benchmark results (baseline_steps_mean, inertia_steps_mean, best_alpha).
+When: experiment_648_parallel_ising_inertia.py completes successfully.
+Then: hardware/kv260/ising_sampler_v3_spec.md exists and documents the inertia register,
+EMA update stage, and recommended alpha for the KV260 v3 RTL implementation.
+
+**Implementation Status:** Implemented (hardware/kv260/ising_sampler_v3_spec.md, Exp 648)

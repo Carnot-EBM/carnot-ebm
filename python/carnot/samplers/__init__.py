@@ -13,6 +13,10 @@ from carnot.samplers.gpu_oim_simulator import (
 from carnot.samplers.hmc import HMCSampler
 from carnot.samplers.langevin import LangevinSampler
 from carnot.samplers.parallel_ising import AnnealingSchedule, ParallelIsingSampler
+from carnot.samplers.parallel_dense_ising import (
+    ParallelDenseIsingConfig,
+    ParallelDenseIsingInertia,
+)
 from carnot.samplers.synchronous_ising import SynchronousIsingSampler
 
 __all__ = [
@@ -34,4 +38,6 @@ __all__ = [
     "OIMSpeedupResult",
     "JEPARetrainResult",
     "SynchronousIsingSampler",
+    "ParallelDenseIsingConfig",
+    "ParallelDenseIsingInertia",
 ]

@@ -308,3 +308,19 @@ that the binary Ising architecture cannot provide.
     - `export PATH=/tools/Xilinx/Vivado/2023.2/bin:$PATH`
     - Re-run Exp 584 (synthesis), then Exp 585 (benchmark)
   - Result file: `results/experiment_585_kv260_live_benchmark_v3.json`
+
+### KV260 Ising Sampler v3 — Inertia Dynamics RTL Spec (Exp 648 — 20260421)
+
+- **Exp 648 result:** `honest_verdict=inertia_comparable_no_clear_win`
+  - Python CPU simulation: both baseline and inertia sampler saturate 400-step budget without meeting 0.1% convergence criterion at beta=1.0
+  - Alpha sweep (n=100): best_alpha=0.5, achieving 258 steps vs 400 for baseline at alpha=0.5
+  - CPU simulation does not reproduce FPGA oscillation (paper's 20-35x gain is specific to digital fixed-point arithmetic, not Python float)
+  - v3 RTL spec written: `hardware/kv260/ising_sampler_v3_spec.md`
+    - Adds per-spin h_ema register and EMA update stage before flip probability computation
+    - Recommended alpha=0.5 for RTL (from Python sweep); fixed-point Q1.15 = 0x4000
+    - Estimated 15-25x fewer sweeps on KV260 v3 for dense arithmetic constraint graphs
+  - **PENDING — Requires KV260 hardware + Vivado for RTL validation:**
+    - KV260 board arrived 2026-04-20; Vivado still not installed
+    - Implement v3 RTL from spec, synthesise with synth_ising_v2.tcl as template
+    - Compare convergence sweep counts on hardware vs v2
+  - Result file: `results/experiment_648_parallel_ising_inertia.json`
