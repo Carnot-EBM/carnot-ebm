@@ -12864,3 +12864,39 @@ When: get_fp_rate(['The answer is 18.', 'Janet makes $18 per day.']) is called.
 Then: fp_rate == 0.0 (correct responses do not contain these error patterns).
 
 **Implementation Status:** Implemented (tests/python/test_constraint_template_library.py, Exp 659)
+
+**Implementation Status:** Implemented (tests/python/test_constraint_template_library.py, Exp 659)
+
+### REQ-SELF-021: LSEBMCLReplayBuffer
+
+The system shall provide an LSEBMCLReplayBuffer that generates replay samples from prior
+session EBM state to prevent catastrophic forgetting of constraint templates across sessions.
+
+- REQ-SELF-021-1: add_session(session_id, patterns) shall register a session's constraint
+  patterns, computing their mean EBM energy, and store up to max_replay_per_session patterns.
+- REQ-SELF-021-2: generate_replay(current_session_id) shall return all stored patterns
+  from sessions with session_id < current_session_id.
+- REQ-SELF-021-3: compute_forgetting_rate(session_patterns) shall return the fraction of
+  prior-session patterns not recoverable via replay. Returns 0.0 when fewer than 2 sessions.
+- REQ-SELF-021-4: forgetting_rate shall be < 0.05 when max_replay_per_session >= number
+  of patterns per session across 3 simulated sessions (arXiv 2501.05495 criterion).
+
+**Implementation Status:** Implemented (python/carnot/pipeline/lsebmcl_replay.py, scripts/experiment_660_lsebmcl_memory.py, Exp 660)
+
+### SCENARIO-SELF-027: LSEBMCL Replay Covers Prior Sessions
+
+Given: LSEBMCLReplayBuffer with energy_fn=lambda p: len(p)/100.0, max_replay_per_session=5.
+When: add_session(1, ['COMPUTE: 47 + 28 = 76', 'total is 80', 'result is 15']) and
+      generate_replay(2) is called.
+Then: replay contains all 3 patterns from session 1.
+
+**Implementation Status:** Implemented (tests/python/test_lsebmcl_replay.py, Exp 660)
+
+### SCENARIO-SELF-028: Forgetting Rate Below Threshold
+
+Given: LSEBMCLReplayBuffer with max_replay_per_session=5.
+When: 3 sessions of constraint patterns are added and compute_forgetting_rate is called
+      with all three session pattern lists.
+Then: forgetting_rate < 0.05 (lsebmcl_no_forgetting == True).
+
+**Implementation Status:** Implemented (tests/python/test_lsebmcl_replay.py, Exp 660)
