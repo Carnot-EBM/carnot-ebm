@@ -1,0 +1,53 @@
+{
+  "experiment": 669,
+  "schema": "carnot.experiment.result.v1",
+  "title": "Prompt Injection KAN Rescue \u2014 100+100 corpus, atomic phase writes",
+  "run_date": "20260421",
+  "started_at": "2026-04-21T23:09:29Z",
+  "finished_at": "2026-04-21T23:09:46Z",
+  "duration_s": 16.84,
+  "status": "success",
+  "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+  "corpus_stats": {
+    "n_benign": 100,
+    "n_injection": 100,
+    "n_total": 200,
+    "teacher_available": true,
+    "teacher_path": "/home/ianblenke/github.com/ianblenke/carnot/models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf",
+    "sources": [
+      "synthetic_benign",
+      "synthetic_injection"
+    ]
+  },
+  "training_stats": {
+    "n_train": 160,
+    "n_test": 40,
+    "n_epochs": 100,
+    "n_hidden": 32,
+    "n_params": 13728,
+    "final_loss": -0.053991708904504776,
+    "initial_loss": 0.04590553045272827,
+    "loss_curve_length": 100,
+    "train_time_s": 2.11
+  },
+  "eval_stats": {
+    "auroc": 0.885,
+    "n_test": 40,
+    "threshold_met": false,
+    "weights_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/models/prompt_injection_kan_weights.json"
+  },
+  "latency_stats": {
+    "n_calls": 1000,
+    "median_ms": 13.738,
+    "p95_ms": 16.914,
+    "mean_ms": 13.185,
+    "target_ms": 5.0,
+    "target_met": false
+  },
+  "spec": [
+    "REQ-SAFE-007",
+    "REQ-SAFE-008",
+    "REQ-SAFE-009"
+  ],
+  "decision_class": "detect"
+}
