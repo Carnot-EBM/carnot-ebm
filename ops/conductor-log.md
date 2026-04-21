@@ -2415,3 +2415,4 @@ python/ |
 | 2026-04-21 19:13 UTC | Exp 654: HERMES v2 Structured Live — Forced-Equati | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-21 19:18 UTC | Exp 654: HERMES v2 Structured Live — Forced-Equati | OK | Deliverable already exists in repo |
 | 2026-04-21 19:24 UTC | Exp 655: Ensemble Recall Gate v3 — Combined SymCod | OK | 94 passed, 2 warnings in 6.05s |
+| 2026-04-21 19:32 UTC | Exp 656: Live VR Attempt #18 (Structured Equation Forcing) — RETRO-033 attempt #18 | OK | 7 tests pass; gate_open=False (Exp 655 ensemble_recall=0.224 < 0.30); status=blocked; honest_verdict=vr18_blocked_gate_closed; RETRO-033 remains open |
