@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-04-21 (Exp 638: Tier 1 FR-11 Self-Learning Relay — Real Violations from Exp 630)
+
+- 2026-04-21: Exp 638: Tier 1 FR-11 Self-Learning Relay — Real Violations from Exp 630 (FR-11 Mandatory) — second relay iteration targeting real violations from Exp 630 VR upstream; infrastructure tested with ConstraintAdditionFromMemory in synthetic fallback mode: n_violations_used=25 (real violations unavailable), constraints_added=[carry_check_constraint, comparison_direction_constraint, sign_check_constraint, unit_check_constraint], fr11_real_violations_confirmed=false, fp_rate_delta=0.0, exp630_signed_improvement=0.0, exp630_n_violations_found=0, exp629_gate_open=false; honest_verdict="synthetic_fallback_relay"; research finding: relay infrastructure operational, but Exp 630 gate remained closed (interwhen_tp=3 << 0.20 recall threshold), blocking real-violation pathway; system falls back to synthetic constraint addition; FR-11 Tier 1 closure remains blocked by RETRO-070; results/experiment_638_tier1_fr11_relay.json
+
 ## 2026-04-21 (Exp 633: HERMES Tool-Augmented Verification Adapter)
 
 - 2026-04-21 11:54 UTC: Exp 633 — HERMES Tool-Augmented Verification Adapter. Step-by-step formal verification (arXiv 2511.18760) over IT-model outputs. HERMES detected 3 true positives with 2 false positives (hermes_fp_rate=0.2). Recall=0.12 vs v1 baseline=0.04 (3x improvement). Absolute performance remains low; false positive rate is significant. honest_verdict=hermes_improved.
