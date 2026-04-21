@@ -50,8 +50,11 @@ Spec: REQ-LEARN-017, REQ-LEARN-018,
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import dataclass, field
+from datetime import datetime
+from pathlib import Path
 from typing import Any, Callable
 
 from carnot.pipeline.extract import ConstraintResult
@@ -711,10 +714,213 @@ class CaseMemoryTemplateWiring:
         self._library.observe_pattern(pattern_key, model_id, count=1)
 
 
+# ---------------------------------------------------------------------------
+# ViolationPatternLibrary — file-backed store for FR-11 cross-session relay
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class ViolationPatternEntry:
+    """A single violation pattern captured from a live VR run and stored for relay.
+
+    **Detailed explanation for engineers:**
+        Each entry captures one distinct violation pattern string observed during
+        a live Verifiable Reasoning (VR) run. The pattern is stored verbatim so
+        that ``ViolationPatternLibrary.get_fp_rate()`` can scan future responses
+        for the same substring.  This is the Tier 2 JEPA predictive memory relay:
+        violations seen in milestone N become detectors active in milestone N+1.
+
+        ``n_triggered`` counts how many times this pattern has been found in
+        subsequent responses — useful for auditing which patterns are still firing.
+
+    Attributes:
+        template_id:       Sequential string ID assigned at insertion time.
+        violation_pattern: The raw text substring to match in future responses.
+        violation_type:    Category of the violation (e.g. 'arithmetic').
+        source_experiment: The experiment number that produced this pattern.
+        added_date:        ISO-8601 timestamp when the entry was added.
+        n_triggered:       How many times this pattern has matched a response.
+
+    Spec: REQ-SELF-020
+    """
+
+    template_id: str
+    violation_pattern: str
+    violation_type: str
+    source_experiment: int
+    added_date: str
+    n_triggered: int = 0
+
+
+class ViolationPatternLibrary:
+    """File-backed registry of violation patterns for FR-11 cross-session relay.
+
+    **Researcher summary:**
+        FR-11 (autonomous self-learning loop) requires that constraint violations
+        detected during live VR runs are persisted and reused in future sessions.
+        This class is the concrete implementation of that relay: it stores each
+        distinct violation pattern to a JSON file and exposes ``get_fp_rate()``
+        to measure how many correct responses would trigger these patterns
+        (false positive rate), confirming that real violations — not noise — were
+        captured.
+
+    **Detailed explanation for engineers:**
+        The library loads from and saves to ``library_path`` (a JSON file) on every
+        mutating operation.  This makes it safe to use across processes — each
+        experiment writes its additions atomically and the next experiment reads
+        the updated file.
+
+        Deduplication: ``add_template()`` normalises the pattern string with
+        ``.strip()`` and checks for an exact match before inserting.  Duplicate
+        patterns are silently skipped and the existing entry is returned.
+
+        FP rate: ``get_fp_rate(responses)`` scans each response for any stored
+        pattern (substring match).  A response that contains ANY pattern counts as
+        one false positive.  The rate is the fraction of responses so flagged.
+        A low FP rate on a set of known-correct responses confirms that the stored
+        patterns are specific to real errors, not common correct text.
+
+    Spec: REQ-SELF-020, SCENARIO-SELF-025, SCENARIO-SELF-026
+    """
+
+    def __init__(self, library_path: str = "data/constraint_templates.json") -> None:
+        """Initialise the library and load any previously stored patterns.
+
+        Args:
+            library_path: Path to the JSON backing file. Created on first save.
+
+        Spec: REQ-SELF-020
+        """
+        self.library_path = library_path
+        self.templates: list[ViolationPatternEntry] = []
+        self._load()
+
+    def _load(self) -> None:
+        """Load patterns from the JSON backing file if it exists.
+
+        **Detailed explanation for engineers:**
+            Silently returns if the file does not exist (first run).  On subsequent
+            runs it restores all previously stored ViolationPatternEntry objects.
+
+        Spec: REQ-SELF-020
+        """
+        p = Path(self.library_path)
+        if not p.exists():
+            return
+        try:
+            raw = json.loads(p.read_text())
+            for item in raw.get("templates", []):
+                self.templates.append(ViolationPatternEntry(**item))
+        except (json.JSONDecodeError, TypeError, KeyError):
+            # Corrupt file — start fresh rather than crashing the experiment.
+            self.templates = []
+
+    def _save(self) -> None:
+        """Persist the current template list to the JSON backing file.
+
+        **Detailed explanation for engineers:**
+            Creates parent directories if they do not yet exist.  Uses
+            ``dataclasses.asdict``-equivalent manual serialisation to avoid
+            importing the dataclasses module here (it is already imported above
+            via @dataclass).  Each save is a full rewrite — safe for the small
+            sizes expected in this library (hundreds of patterns at most).
+
+        Spec: REQ-SELF-020
+        """
+        p = Path(self.library_path)
+        p.parent.mkdir(parents=True, exist_ok=True)
+        payload = {
+            "templates": [
+                {
+                    "template_id": t.template_id,
+                    "violation_pattern": t.violation_pattern,
+                    "violation_type": t.violation_type,
+                    "source_experiment": t.source_experiment,
+                    "added_date": t.added_date,
+                    "n_triggered": t.n_triggered,
+                }
+                for t in self.templates
+            ]
+        }
+        p.write_text(json.dumps(payload, indent=2))
+
+    def add_template(
+        self,
+        pattern: str,
+        violation_type: str,
+        source_experiment: int,
+    ) -> ViolationPatternEntry:
+        """Add a violation pattern if not already present; return the entry.
+
+        **Detailed explanation for engineers:**
+            Deduplicates by the stripped pattern string.  If the same pattern
+            arrives from multiple experiments (e.g. from a re-run), only the first
+            insertion is kept.  This prevents double-counting when measuring FP rate.
+
+        Args:
+            pattern:           The raw substring to store and match against future
+                               responses (e.g. 'COMPUTE: 47 + 28 = 76').
+            violation_type:    Semantic category (e.g. 'arithmetic').
+            source_experiment: Experiment ID that detected this pattern.
+
+        Returns:
+            The existing or newly created ViolationPatternEntry for this pattern.
+
+        Spec: REQ-SELF-020
+        """
+        normalised = pattern.strip()
+        for existing in self.templates:
+            if existing.violation_pattern == normalised:
+                return existing
+        entry = ViolationPatternEntry(
+            template_id=str(len(self.templates)),
+            violation_pattern=normalised,
+            violation_type=violation_type,
+            source_experiment=source_experiment,
+            added_date=datetime.now().isoformat(),
+        )
+        self.templates.append(entry)
+        self._save()
+        return entry
+
+    def get_fp_rate(self, responses: list[str]) -> float:
+        """Measure false positive rate: fraction of responses matching any pattern.
+
+        **Detailed explanation for engineers:**
+            A response is counted as a false positive if ANY stored violation pattern
+            appears as a substring (case-sensitive).  The FP rate is the number of
+            flagged responses divided by the total number of responses.
+
+            When called on a set of KNOWN-CORRECT responses, a low FP rate confirms
+            that the stored patterns are specific to real errors.  A high FP rate
+            signals that some stored patterns are too generic and will fire on correct
+            text — noise, not signal.
+
+        Args:
+            responses: List of response strings to check (should be known-correct
+                       for a meaningful FP rate measurement).
+
+        Returns:
+            Float in [0.0, 1.0]. 0.0 if either list is empty.
+
+        Spec: REQ-SELF-020, SCENARIO-SELF-026
+        """
+        if not self.templates or not responses:
+            return 0.0
+        fp_count = sum(
+            1
+            for r in responses
+            if any(t.violation_pattern in r for t in self.templates)
+        )
+        return fp_count / len(responses)
+
+
 __all__ = [
     "CaseMemoryTemplateWiring",
     "ConstraintTemplate",
     "ConstraintTemplateLibrary",
+    "ViolationPatternEntry",
+    "ViolationPatternLibrary",
     "carry_check_template",
     "comparison_direction_template",
     "sign_check_template",

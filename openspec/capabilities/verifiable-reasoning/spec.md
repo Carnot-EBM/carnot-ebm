@@ -12828,3 +12828,39 @@ Then: specguard_auc is reported; tier_0f_viable reflects whether AUC >= 0.70;
       honest_verdict is 'specguard_tier_0f_viable' or 'specguard_below_threshold'.
 
 **Implementation Status:** Implemented (scripts/experiment_658_specguard_verifier.py, Exp 658)
+
+
+## REQ-SELF-020: FR-11 Cross-Session Relay — VR Violations Wired into ViolationPatternLibrary
+
+ViolationPatternLibrary shall store violation patterns detected during live VR milestone
+runs and expose a cross-session false positive rate measurement to confirm real violations
+(not noise) are being captured.
+
+- REQ-SELF-020-1: ViolationPatternLibrary.__init__(library_path) shall load previously
+  stored patterns from the JSON file at library_path on construction.
+- REQ-SELF-020-2: add_template(pattern, violation_type, source_experiment) shall
+  deduplicate by pattern string and persist to the backing JSON file on each new insertion.
+- REQ-SELF-020-3: get_fp_rate(responses) shall return the fraction of known-correct
+  responses that contain any stored violation pattern as a substring. Returns 0.0 when
+  templates or responses list is empty.
+- REQ-SELF-020-4: Exp 659 shall load violations from Exp 656 (or synthetic patterns if
+  gate was closed), wire them into ViolationPatternLibrary, and report
+  cross_session_fp_rate and fr11_real_violations_confirmed in its artifact.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/constraint_template_library.py, scripts/experiment_659_tier2_fr11_relay.py, Exp 659)
+
+### SCENARIO-SELF-025: Exp 656 Violations Wired — Library Grows
+
+Given: ViolationPatternLibrary with 0 templates.
+When: add_template('COMPUTE: 47 + 28 = 76', 'arithmetic', 656) is called.
+Then: len(library.templates) == 1, template_id='0', violation_pattern='COMPUTE: 47 + 28 = 76'.
+
+**Implementation Status:** Implemented (tests/python/test_constraint_template_library.py, Exp 659)
+
+### SCENARIO-SELF-026: FP Rate on Correct Responses Is Near Zero
+
+Given: ViolationPatternLibrary with patterns ['COMPUTE: 47 + 28 = 76', 'total is 80'].
+When: get_fp_rate(['The answer is 18.', 'Janet makes $18 per day.']) is called.
+Then: fp_rate == 0.0 (correct responses do not contain these error patterns).
+
+**Implementation Status:** Implemented (tests/python/test_constraint_template_library.py, Exp 659)
