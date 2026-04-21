@@ -2420,3 +2420,5 @@ python/ |
 | 2026-04-21 19:46 UTC | Exp 657: JEPA v14 + Platt Calibration Cascade Depl | OK | 81 passed, 2 warnings in 4.26s |
 | 2026-04-21 19:58 UTC | Exp 658: SpecGuard Step Verifier — Log-Prob + Atte | OK | 81 passed, 2 warnings in 4.34s |
 | 2026-04-21 20:11 UTC | Exp 659: FR-11 Tier 2 Cross-Session Relay — Wire V | OK | 184 passed, 2 warnings in 4.42s |
+| 2026-04-21 20:23 UTC | Exp 660: LSEBMCL Constraint Memory — EBM Replay to | OK | 81 passed, 2 warnings in 4.47s |
+| 2026-04-21 20:28 UTC | Exp 661: KV260 N=64 FPGA Deployment + CPU Baseline | OK | Deliverable already exists in repo |
