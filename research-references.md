@@ -4,6 +4,22 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-21 arxiv Scan (Milestone 2026.04.51 Planning)
+
+### IAS — Instance-Adaptive Scaling for Process Reward Model Uncertainty Calibration
+- **Paper:** arXiv 2506.09338 (June 2025, NeurIPS 2025)
+- **What:** Develops quantile regression calibration for PRMs to align confidence estimates with true success probabilities. Introduces Instance-Adaptive Scaling (IAS) that dynamically adjusts verification compute budget per reasoning step based on calibrated confidence bounds — high-confidence steps skip expensive verification, uncertain steps get deeper checking.
+- **Relevance to Carnot:** Directly addresses Exp 655 gate failure: the fixed threshold=0.30 rejected VR #18 because symcode and hermes recall dragged the ensemble. IAS-style quantile calibration would set thresholds adaptively based on per-model error distributions rather than fixed global values. Carnot's EBM energy can replace PRM confidence: train a quantile regression head on FOVER pairs to predict 10th/90th percentile recall bounds, set gate threshold at the 10th percentile for a given model+domain. Enables dynamic gate calibration without retraining the gate for each new model.
+- **Concrete experiment:** Exp 674 (IAS Adaptive Gate Calibration): train quantile regression head on FOVER pairs predicting verification recall bounds. Use calibrated 10th-percentile recall as the adaptive gate threshold. Compare: does the calibrated gate open on the .50 test set where fixed threshold=0.30 failed? If yes, this is a structural fix for repeated gate failures.
+- **When to incorporate:** Milestone 2026.04.51 — Phase 5 new research (Exp 674).
+
+### LOS-Net — Sequence-Level Hallucination Detection from Full Output Distributions
+- **Paper:** arXiv 2503.14043 (March 2026)
+- **What:** LOS-Net is a lightweight attention-based architecture trained on the full LLM Output Signature — the complete sequence of next-token distributions (not just argmax tokens). Achieves sub-100ms detection latency and strong transfer across datasets and model families. Demonstrates that the full distribution trajectory carries far more hallucination signal than any individual token's entropy.
+- **Relevance to Carnot:** Carnot's Tier 0b (SpilledEnergyDetector) uses per-token logit discrepancy — a single-token signal. LOS-Net shows that the SEQUENCE of distributions contains an orthogonal, stronger signal. A sequence-level model over the full distribution trajectory could improve on SpilledEnergy's Tier 0b AUC and catch hallucinations that are invisible at the token level. The attention architecture is compact (< 5M params), FPGA-friendly, and the input (softmax distributions) is already computed during generation.
+- **Concrete experiment:** Exp 675 (LOS-Net Sequence Detector): implement lightweight attention model over the sequence of top-K softmax distributions from Qwen3.5-0.8B generation. Train on 100 FOVER live pairs (from results/fover_labeled_steps_live.json). Compare AUC vs SpilledEnergyDetector (Tier 0b) and NUP Probe v4 (Tier 0c). If AUC >= 0.75, propose as Tier 0h candidate replacing Tier 0b.
+- **When to incorporate:** Milestone 2026.04.51 — Phase 5 new research (Exp 675).
+
 ## 2026-04-21 arxiv Scan (Milestone 2026.04.50 Planning)
 
 ### SpecGuard — Verification-Aware Speculative Decoding for Step-Level Reasoning
