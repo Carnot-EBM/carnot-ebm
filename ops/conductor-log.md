@@ -2412,3 +2412,5 @@ python/ |
 | 2026-04-21 18:44 UTC | Milestone 2026.04.50 activated | OK | 14 tasks queued |
 | 2026-04-21 18:53 UTC | Exp 653: StructuredEquationForcer — RETRO-070 generation-layer fix | OK | detection_rate_on_forced=1.0; free_form=0.0; honest_verdict=equation_forcer_ready; 23 tests pass |
 | 2026-04-21 18:56 UTC | Exp 653: StructuredEquationForcer — Prompt-Level A | OK | 81 passed, 2 warnings in 4.62s |
+| 2026-04-21 19:13 UTC | Exp 654: HERMES v2 Structured Live — Forced-Equati | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-21 19:18 UTC | Exp 654: HERMES v2 Structured Live — Forced-Equati | OK | Deliverable already exists in repo |

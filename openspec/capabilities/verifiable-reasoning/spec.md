@@ -12629,3 +12629,43 @@ When: SymCodeVerifier(None).detection_score(response) is called on each.
 Then: mean detection score is lower than detection_rate_on_forced (demonstrating generation-layer fix superiority).
 
 **Implementation Status:** Implemented (Exp 653)
+
+## REQ-VERIFY-148: HermesV2StructuredLoop — Structured Recall Gate
+
+Addresses RETRO-070 VR critical path #18: combine COMPUTE: forcing (REQ-VERIFY-146) with
+live SymCodeVerifier per-line checking (REQ-VERIFY-122) in a single generation loop that
+detects arithmetic violations at the point where they are written, not after the fact.
+
+- REQ-VERIFY-148-1: HermesV2StructuredLoop.__init__ shall accept llm_caller (Callable[[str,str],str] | None), verifier (SymCodeVerifier), forcer (StructuredEquationForcer), and max_sentences (int, default 12).
+- REQ-VERIFY-148-2: generate_structured(question) shall call forcer.build_forced_prompt() to obtain the COMPUTE: system prompt, call the LLM with that prompt, extract COMPUTE: lines via forcer.extract_compute_lines(), and run verifier.detection_score('COMPUTE: ' + line) on each line.
+- REQ-VERIFY-148-3: generate_structured shall set recall_contribution=True iff at least one COMPUTE: line has detection_score > 0.0.
+- REQ-VERIFY-148-4: When llm_caller is None, generate_structured shall use a CI stub response containing a deliberate arithmetic error so that recall_contribution=True without a GPU.
+- REQ-VERIFY-148-5: hermes_v2_structured_recall (TP / 25 incorrect questions) shall be >= 0.30 on live GPU evaluation, exceeding the post-hoc baseline of 0.12 from Exp 633.
+- REQ-VERIFY-148-6: HermesV2StructuredLoop, HermesV2StructuredResult shall be exported from carnot.pipeline.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/hermes_v2_structured_loop.py, Exp 654)
+
+### SCENARIO-VERIFY-197: HermesV2StructuredResult Dataclass Fields
+
+Given: HermesV2StructuredResult(question='q', full_response='r') is constructed.
+When: All fields are inspected.
+Then: compute_lines=[], n_compute_lines=0, n_violations=0, n_hints=0, recall_contribution=False.
+
+**Implementation Status:** Implemented (tests/python/test_hermes_v2_structured_loop.py, Exp 654)
+
+### SCENARIO-VERIFY-198: CI Stub Detects Violation Without GPU
+
+Given: HermesV2StructuredLoop(llm_caller=None, verifier=SymCodeVerifier(None), forcer=StructuredEquationForcer(None, verifier))
+When: generate_structured('What is 47 + 28?') is called.
+Then: n_compute_lines >= 1, n_violations >= 1, recall_contribution=True.
+Why: The CI stub uses '47 + 28 = 76' (wrong; correct is 75) so the verifier detects a violation.
+
+**Implementation Status:** Implemented (tests/python/test_hermes_v2_structured_loop.py, Exp 654)
+
+### SCENARIO-VERIFY-199: Live Caller Receives COMPUTE: Prompt
+
+Given: HermesV2StructuredLoop with a mock llm_caller that captures its prompt argument.
+When: generate_structured('q') is called.
+Then: The captured prompt contains 'COMPUTE:' (the forcing instruction from FORCER_SYSTEM_ADDENDUM).
+
+**Implementation Status:** Implemented (tests/python/test_hermes_v2_structured_loop.py, Exp 654)
