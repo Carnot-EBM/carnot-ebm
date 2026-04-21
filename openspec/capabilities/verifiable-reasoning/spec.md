@@ -12996,3 +12996,50 @@ Then: A CI-stub artifact is written with status='ci_stub' and honest_verdict='ci
       and assert_deliverable_written() passes.
 
 **Implementation Status:** Implemented (tests/python/test_dualgpu_retrain_exp664.py, Exp 664)
+
+## REQ-INFRA-093: ExclusionManifest Module-Level API
+
+The `carnot.pipeline.exclusion_manifest` module shall expose module-level functions
+`load_manifest(path)`, `is_excluded(manifest, exp_id)`, and `build_manifest_check_result(manifest, checked_ids)`
+so experiment scripts can check exclusions without managing class instances.
+
+- REQ-INFRA-093-1: `load_manifest(path)` returns an ExclusionManifest instance if the file exists, None if missing (non-blocking).
+- REQ-INFRA-093-2: `is_excluded(manifest, exp_id)` returns False when manifest is None (safe default).
+- REQ-INFRA-093-3: `is_excluded(manifest, exp_id)` returns True when exp_id is in the loaded manifest.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/exclusion_manifest.py, Exp 666)
+
+## REQ-INFRA-094: ManifestCheckResult Schema
+
+`build_manifest_check_result(manifest, checked_ids)` shall return a dict with keys
+`manifest_loaded`, `excluded_ids`, `checked_ids`, and `all_clear`.
+
+- REQ-INFRA-094-1: `manifest_loaded` is True iff the manifest was loaded successfully.
+- REQ-INFRA-094-2: `excluded_ids` lists only the subset of `checked_ids` that are excluded.
+- REQ-INFRA-094-3: `all_clear` is True iff all `checked_ids` are excluded.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/exclusion_manifest.py, Exp 666)
+
+### SCENARIO-INFRA-100: load_manifest Returns None for Missing File
+
+Given: No file at the given path.
+When: `load_manifest(path)` is called.
+Then: Returns None without raising an exception.
+
+**Implementation Status:** Implemented (tests/python/test_exclusion_manifest.py, Exp 666)
+
+### SCENARIO-INFRA-101: build_manifest_check_result All-Clear
+
+Given: Manifest loaded with IDs [308, 260, 309, 425, 410, 383].
+When: `build_manifest_check_result(manifest, [308, 260])` is called.
+Then: `all_clear=True`, `excluded_ids=[308, 260]`, `manifest_loaded=True`.
+
+**Implementation Status:** Implemented (tests/python/test_exclusion_manifest.py, Exp 666)
+
+### SCENARIO-INFRA-102: build_manifest_check_result Partial Exclusion
+
+Given: Manifest loaded with IDs [308, 260].
+When: `build_manifest_check_result(manifest, [308, 999])` is called.
+Then: `all_clear=False`, `excluded_ids=[308]`.
+
+**Implementation Status:** Implemented (tests/python/test_exclusion_manifest.py, Exp 666)
