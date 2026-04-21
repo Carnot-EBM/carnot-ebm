@@ -42,14 +42,14 @@ tasks:
            "version": 1,
            "description": "Experiments excluded from re-entry after modernization",
            "excluded_experiments": [
-             {"id": 425, "reason": "ExperimentTimeoutWatchdog already shipped; re-running adds overhead", "milestone_excluded": "2026.04.51"),
+             ("id": 425, "reason": "ExperimentTimeoutWatchdog already shipped; re-running adds overhead", "milestone_excluded": "2026.04.51"),
              ("id": 410, "reason": "BatchedInferenceRunner not yet applied; blocked pending migration", "milestone_excluded": "2026.04.51"),
              ("id": 308, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"),
              ("id": 309, "reason": "checkpoint-failure state; research value exhausted", "milestone_excluded": "2026.04.51"),
              ("id": 260, "reason": "legacy pre-400 experiment; deliverable already exists", "milestone_excluded": "2026.04.51"),
              ("id": 383, "reason": "DualGPU parallelization pending; sequential re-run adds no value", "milestone_excluded": "2026.04.51")
            ]
-         }
+         )
     3. Add REQ-INFRA-033 (ExclusionManifest must be read before each conductor task),
        REQ-INFRA-034 (PreFlightSuite must run in < 120 min via pytest-xdist),
        SCENARIO-INFRA-041/042/043 to openspec/capabilities/verifiable-reasoning/spec.md.
