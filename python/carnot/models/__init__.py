@@ -69,6 +69,7 @@ from carnot.models.symbolic_kan_energy import (
     SymbolicKANLayer,
 )
 from carnot.models.otv_verifier import OTVVerificationHead, OTVTrainer
+from carnot.models.jepa_platt import PlattScaledJEPA
 
 __all__ = [
     "BoltzmannConfig",
@@ -126,4 +127,5 @@ __all__ = [
     "SymbolicKANLayer",
     "OTVVerificationHead",
     "OTVTrainer",
+    "PlattScaledJEPA",
 ]

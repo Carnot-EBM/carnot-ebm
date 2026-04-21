@@ -12733,3 +12733,37 @@ When: The experiment script gate check passes and CI-stub branch is taken.
 Then: Artifact has inference_mode='ci_stub_gpu_required', gate_open=True, status='success'.
 
 **Implementation Status:** Implemented (tests/python/test_live_vr_18.py, Exp 656)
+
+## REQ-VERIFY-151: PlattScaledJEPA as ThreeTierPipeline Tier 2
+
+ThreeTierPipeline Tier 2 shall use PlattScaledJEPA v14 (Platt-calibrated JEPA).
+Deployment measured in Exp 657 (scripts/experiment_657_jepa_cascade_deploy.py).
+
+- REQ-VERIFY-151-1: PlattScaledJEPA.energy(cot_input) shall return the raw EORM energy divided by the Platt temperature.
+- REQ-VERIFY-151-2: The Platt temperature shall default to the value from results/experiment_646_jepa_platt.json (platt_temperature field).
+- REQ-VERIFY-151-3: The temperature shall be overridable at runtime via the JEPA_TIER2_PLATT_TEMPERATURE environment variable.
+- REQ-VERIFY-151-4: PlattScaledJEPA shall be exported from carnot.models.
+- REQ-VERIFY-151-5: Exp 657 shall measure cascade_ece on 50 pairs from live_pairs_578.json and report criterion_cascade_ece=(cascade_ece < 0.10).
+- REQ-VERIFY-151-6: Exp 657 shall compute auc_delta = abs(platt_auc - pre_platt_auc) from Exp 646 and report criterion_auc_delta=(auc_delta <= 0.02).
+
+**Implementation Status:** Implemented (python/carnot/models/jepa_platt.py, scripts/experiment_657_jepa_cascade_deploy.py, Exp 657)
+
+### SCENARIO-VERIFY-204: Exp 646 Absent Produces Blocked Artifact
+
+Given: results/experiment_646_jepa_platt.json does not exist.
+When: scripts/experiment_657_jepa_cascade_deploy.py is executed.
+Then: results/experiment_657_jepa_cascade_deploy.json has status='blocked',
+      platt_deployed=False, honest_verdict='blocked_on_exp646', and the process exits 0.
+
+**Implementation Status:** Implemented (scripts/experiment_657_jepa_cascade_deploy.py, Exp 657)
+
+### SCENARIO-VERIFY-205: Platt Deployment Measures Cascade ECE
+
+Given: results/experiment_646_jepa_platt.json exists with platt_temperature, pre_platt_auc, platt_auc.
+When: scripts/experiment_657_jepa_cascade_deploy.py is executed.
+Then: results/experiment_657_jepa_cascade_deploy.json has platt_deployed=True,
+      jepa_v14_deployed=True, cascade_ece (float), auc_delta (float),
+      criterion_cascade_ece (bool), criterion_auc_delta (bool),
+      honest_verdict in {'jepa_v14_deployed_ece_met', 'jepa_v14_deployed_ece_missed', 'jepa_v14_regression'}.
+
+**Implementation Status:** Implemented (scripts/experiment_657_jepa_cascade_deploy.py, Exp 657)
