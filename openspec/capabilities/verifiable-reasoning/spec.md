@@ -14274,3 +14274,66 @@ When: VR pipeline runs on 25 GSM8K questions with the gate enabled.
 Then: signed_improvement >= 0.0 (gate prevents the -0.8 regression from Exp 694).
 
 **Implementation Status:** Implemented (tests/python/test_experiment_708_vr_attempt_19_gemma4.py, Exp 708)
+
+## REQ-VERIFY-149: SetConsistencyVerifier — Global Energy Over N CoT Steps
+
+The system SHALL provide a SetConsistencyVerifier that computes a scalar energy E(S_1, ..., S_N)
+over all N chain-of-thought steps simultaneously (SC-Energy, arXiv 2503.10695).
+
+Unlike Tier 2.5 (pairwise arithmetic) and Tier 2.7 (adjacent carry-forward), this verifier
+detects contradictions between non-adjacent steps and globally inconsistent conclusions.
+
+- REQ-VERIFY-149-1: encode_step(step_text) SHALL return a float32 vector of shape (_VOCAB_SIZE,).
+- REQ-VERIFY-149-2: energy(steps) SHALL return a scalar float for any non-empty list of strings.
+- REQ-VERIFY-149-3: energy() SHALL be order-invariant (set semantics via mean-pooling).
+- REQ-VERIFY-149-4: After training, energy SHALL be lower for consistent sets than inconsistent sets.
+
+**Implementation Status:** Implemented (python/carnot/verify/sc_energy.py, Exp 711)
+
+## REQ-VERIFY-150: SC-Energy Training — Contrastive Loss on Consistent vs Inconsistent Sets
+
+The SetConsistencyVerifier SHALL be trainable via hinge contrastive loss:
+  L = mean(max(0, margin - (E_inconsistent - E_consistent)))
+
+- REQ-VERIFY-150-1: contrastive_loss(consistent_sets, inconsistent_sets) SHALL return a non-negative float.
+- REQ-VERIFY-150-2: train() SHALL reduce contrastive_loss over n_epochs using Adam optimiser.
+- REQ-VERIFY-150-3: Training data SHALL use correct GSM8K chains as consistent sets and chains
+  with one intruder step from a different question as inconsistent sets.
+
+**Implementation Status:** Implemented (python/carnot/verify/sc_energy.py, Exp 711)
+
+## REQ-VERIFY-151: Tier 2.9 — AUC >= 0.75 Gates Cascade Integration
+
+The SetConsistencyVerifier SHALL be evaluated as a Tier 2.9 candidate via AUROC on held-out
+(consistent, inconsistent) set pairs derived from the FoVer formal v1 corpus.
+
+- REQ-VERIFY-151-1: AUROC SHALL be computed using sklearn.metrics.roc_auc_score.
+- REQ-VERIFY-151-2: honest_verdict SHALL be "tier_29_viable" when sc_energy_auc >= 0.75.
+- REQ-VERIFY-151-3: honest_verdict SHALL be "tier_29_below_threshold" when sc_energy_auc < 0.75.
+- REQ-VERIFY-151-4: tier_29_cascade_recommended SHALL be True when sc_energy_auc >= 0.75.
+
+**Implementation Status:** Implemented (scripts/experiment_711_sc_energy.py, Exp 711)
+
+### SCENARIO-VERIFY-149: Consistent Set Has Lower Energy Than Inconsistent Set After Training
+
+Given: A SetConsistencyVerifier trained on FoVer-derived contrastive pairs.
+When: energy() is called on a consistent set vs an inconsistent set (with one intruder step).
+Then: energy(consistent_set) < energy(inconsistent_set).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_711_sc_energy.py, Exp 711)
+
+### SCENARIO-VERIFY-150: Contrastive Loss Decreases During Training
+
+Given: A fresh SetConsistencyVerifier and a set of (consistent, inconsistent) pairs.
+When: train() is called for 50 epochs.
+Then: contrastive_loss() is lower after training than before.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_711_sc_energy.py, Exp 711)
+
+### SCENARIO-VERIFY-151: AUROC Computation Identifies Consistent vs Inconsistent Sets
+
+Given: A trained SetConsistencyVerifier and a held-out eval set.
+When: AUROC is computed using energy scores as predictions.
+Then: AUROC > 0.5, demonstrating the model learned to separate the classes.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_711_sc_energy.py, Exp 711)
