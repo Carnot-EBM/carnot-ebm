@@ -221,6 +221,48 @@ not a code bug).
 
 **Then** wall-clock inference is < 5 ms and no GPU device is initialized.
 
+### REQ-SAFE-010: Cross-Dataset Generalization Gate for KAN Injection Classifier
+
+Before publishing any trained PromptInjectionEnergyChecker to a public model hub,
+the system shall evaluate the classifier on at least THREE held-out datasets that
+were NOT used during training or validation, and emit a publishability verdict:
+
+- **generalization_verified_publishable**: mean cross-dataset AUROC >= 0.80.
+  A draft model card MUST be written.
+- **generalization_partial_shareable_with_caveat**: 0.65 <= mean AUROC < 0.80.
+  The model card MUST list which datasets underperformed and why.
+- **generalization_failed_do_not_publish**: mean AUROC < 0.65.
+  The classifier is a dataset detector, not a generalizing safety tool.  The
+  next training iteration MUST diversify the distillation corpus.
+
+The three required evaluation datasets are:
+1. **HackAPrompt** (huggingface: hackaprompt/hackaprompt-dataset, 500-sample subset)
+2. **BIPIA** (huggingface: microsoft/BIPIA, ~400-sample subset)
+3. **Synthetic OWASP LLM-01 stress test** (200 prompts from
+   `scripts/jailbreak_mutations.py` using a seed DIFFERENT from training)
+
+The verdict thresholds (0.80 publish, 0.65 caveat) are not adjustable
+per-experiment.  Lowering the threshold to make a model pass is forbidden.
+
+**Acceptance criteria:**
+- `honest_verdict` in result JSON is one of the five Exp 679 verdict strings.
+- `per_dataset_auroc` dict contains one entry per dataset.
+- `mean_auroc` matches the arithmetic mean of `per_dataset_auroc` values.
+- `model_card_written` is True iff verdict is `generalization_verified_publishable`.
+- Result JSON at `results/experiment_679_prompt_injection_kan_cross_dataset.json`.
+
+### SCENARIO-SAFE-010: Cross-Dataset Evaluation Gate
+
+**Given** a `PromptInjectionEnergyChecker` v1 trained by Exp 678,
+
+**When** Exp 679 scores the classifier on HackAPrompt, BIPIA, and a synthetic
+OWASP LLM-01 stress test (seed=679),
+
+**Then** the result JSON contains `per_dataset_auroc`, `mean_auroc`, and
+`honest_verdict` reflecting the publishability gate outcome, and if
+`honest_verdict == "generalization_verified_publishable"`, a model card is
+written to `python/carnot/models/prompt_injection_kan_v1_MODELCARD.md`.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -231,3 +273,4 @@ not a code bug).
 | REQ-SAFE-007 | Proposed | Target: Exp 652 (distillation + classifier training) |
 | REQ-SAFE-008 | Proposed | Target: Exp 652 (distillation CLI + dataset artifact) |
 | REQ-SAFE-009 | Proposed | Enforced via result-schema validator in Exp 652 |
+| REQ-SAFE-010 | Implemented | Exp 679 gate; currently blocked on Exp 678 (v1 weights absent) |
