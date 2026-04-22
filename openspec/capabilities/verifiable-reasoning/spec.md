@@ -14624,3 +14624,58 @@ Then:
     openspec/change-proposals/tier21-jepa-reasoner-probe.md.
 
 **Implementation Status:** Implemented (scripts/experiment_726_jepa_reasoner_probe.py, Exp 726)
+
+## REQ-VER-034-3: JEPAReasonerProbe Cross-Validation MUST Show mean_auc >= 0.75 AND std_auc < 0.15
+
+Before deploying JEPAReasonerProbe in the production cascade, 5-fold stratified cross-validation
+MUST confirm that the AUC=1.0 from Exp 726 is not an artifact of that particular 80/20 split.
+If the probe is genuinely learning the constraint-willingness subspace, AUC should remain high
+across all folds.  High fold variance (std_auc >= 0.15) indicates the probe overfit to the
+specific train/test split rather than learning a stable linear subspace.
+
+Sub-requirements:
+- REQ-VER-034-3a: Cross-validation SHALL use StratifiedKFold(n_splits=5, shuffle=True, random_state=42)
+  stratified by step_correct label to ensure balanced folds.
+- REQ-VER-034-3b: Hidden states SHALL be extracted fresh for each fold's train split using
+  Qwen3.5-0.8B layer 16, batch_size=32.
+- REQ-VER-034-3c: Gate PASS condition: mean_auc >= 0.75 AND std_auc < 0.15.
+- REQ-VER-034-3d: Results SHALL be written to results/tier21_gate.json with gate status.
+
+**Implementation Status:** Planned (Exp 732)
+
+## REQ-VER-034-4: JEPAReasonerProbe Domain Transfer AUC on MATH-500 MUST Be >= 0.65
+
+The probe is trained on GSM8K-derived FoVer v2 pairs.  To deploy in the cascade for general
+arithmetic reasoning, it MUST generalize beyond the training domain.  MATH-500 (different
+arithmetic difficulty and question format) tests this.  AUC < 0.65 indicates the probe learned
+GSM8K-specific surface patterns rather than a domain-independent constraint-willingness signal.
+
+Sub-requirements:
+- REQ-VER-034-4a: Transfer evaluation SHALL use the best fold's probe (highest fold AUC).
+- REQ-VER-034-4b: MATH-500 samples SHALL have known constraint labels (step_correct field).
+  If labeled MATH-500 is unavailable, transfer_auc SHALL be null with reason "manual_label_required".
+- REQ-VER-034-4c: Transfer AUC >= 0.65 qualifies as domain-transfer pass.
+
+**Implementation Status:** Planned (Exp 732)
+
+### SCENARIO-VER-042: 5-Fold CV Produces Balanced Folds and Correct Aggregate Statistics
+
+Given: FoVer v2 + GSM8K 500-699 corpus with mixed step_correct labels.
+When: StratifiedKFold(n_splits=5, shuffle=True, random_state=42) splits the corpus.
+Then:
+  - Each fold's label distribution deviates from the corpus distribution by <= 5%.
+  - mean_auc and std_auc are computed correctly from the 5 fold AUCs.
+  - Gate file results/tier21_gate.json is written with all required fields.
+
+**Implementation Status:** Planned (Exp 732)
+
+### SCENARIO-VER-043: Domain Transfer Test Reports Honest Result
+
+Given: Best fold probe trained on GSM8K-derived data.
+When: Probe scores MATH-500 question hidden states.
+Then:
+  - transfer_auc is computed and reported in the artifact.
+  - If labeled MATH-500 unavailable, transfer_auc=null and reason is "manual_label_required".
+  - The gate file reflects the transfer result alongside CV results.
+
+**Implementation Status:** Planned (Exp 732)
