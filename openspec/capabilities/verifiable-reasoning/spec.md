@@ -14140,3 +14140,63 @@ When: hard_negative_mining is called.
 Then: index 1 is returned (most similar to [1,0,0] is [0.9,0.1,0]).
 
 **Implementation Status:** Implemented (tests/python/test_experiment_704_jepa_v17_ranknet.py, Exp 704)
+
+## REQ-VERIFY-144: VR Pipeline Instrument Mode
+
+The VR pipeline SHALL support an instrument mode that logs per-step decisions for each response
+without modifying the repair behavior. Instrument mode is activated by passing `instrument=True`
+to diagnostic experiment scripts — it does not require changes to the pipeline API itself.
+
+Each per-response instrument record SHALL contain:
+- extractor_fired: bool — did any extractor flag at least one constraint violation?
+- constraint_type: str — which extractor type fired first (or "none" if no extractor fired).
+- repair_applied: bool — was a repair step triggered and executed?
+- answer_changed: bool — did the final answer differ from the original after repair?
+- final_correct: bool — is the final post-repair answer correct?
+
+- REQ-VERIFY-144-1: instrument records SHALL be emitted for every response, whether or not a violation is found.
+- REQ-VERIFY-144-2: constraint_type SHALL be "none" when extractor_fired is False.
+- REQ-VERIFY-144-3: repair_applied SHALL be False when extractor_fired is False (no violation = no repair).
+- REQ-VERIFY-144-4: answer_changed SHALL be False when repair_applied is False.
+
+**Implementation Status:** Implemented (scripts/experiment_706_gemma4_diagnostic.py, Exp 706)
+
+## REQ-VERIFY-145: Model-Specific Failure Mode Identification
+
+The VR pipeline instrument log SHALL support automated failure mode classification.
+Given a set of instrument records for a model, the system SHALL compute:
+- fp_rate_on_correct: fraction of correct responses where extractor_fired is True
+  (i.e., false positive rate — extractor fires on a correct response).
+- repair_regression_rate: fraction of repaired responses that were originally correct
+  but became wrong after repair.
+- threshold_miss_rate: fraction of incorrect responses where extractor_fired is False
+  (i.e., the extractor missed the actual error — threshold too high).
+
+From these rates, the system SHALL identify a primary failure_mode:
+- "extraction_fp" if fp_rate_on_correct > 0.20
+- "repair_regression" if repair_regression_rate > 0.20
+- "threshold_too_high" if threshold_miss_rate > 0.50
+- "combined" if multiple conditions exceed their threshold
+- "no_clear_failure" if no condition exceeds its threshold
+
+- REQ-VERIFY-145-1: failure_mode classification SHALL use the exact thresholds above (fp>0.20, regression>0.20, miss>0.50).
+- REQ-VERIFY-145-2: honest_verdict SHALL be "failure_mode_identified" when failure_mode != "no_clear_failure".
+- REQ-VERIFY-145-3: honest_verdict SHALL be "failure_mode_ambiguous" when failure_mode == "no_clear_failure".
+
+**Implementation Status:** Implemented (scripts/experiment_706_gemma4_diagnostic.py, Exp 706)
+
+### SCENARIO-VERIFY-144: Instrument Mode Captures All Required Fields
+
+Given: A batch of 50 Gemma4-E4B-it responses (25 correct, 25 incorrect).
+When: VerifyRepairPipeline is called in instrument mode for each response.
+Then: Every per-response record contains extractor_fired, constraint_type, repair_applied, answer_changed, final_correct.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_706_gemma4_diagnostic.py, Exp 706)
+
+### SCENARIO-VERIFY-145: Failure Mode Classification Logic Is Deterministic
+
+Given: A set of instrument records with known fp_rate_on_correct=0.40, repair_regression_rate=0.10, threshold_miss_rate=0.30.
+When: classify_failure_mode is called.
+Then: failure_mode = "extraction_fp" (only fp_rate exceeds its threshold).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_706_gemma4_diagnostic.py, Exp 706)
