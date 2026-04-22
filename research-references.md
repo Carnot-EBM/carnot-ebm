@@ -4,6 +4,80 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-22 arxiv Scan (Milestone 2026.04.53 Planning)
+
+### KAN Formal Verification — MILP-Based Provable Energy Monotonicity
+- **Paper:** arXiv 2602.06737 (February 2026)
+- **What:** Presents formal verification for Kolmogorov-Arnold Networks via Mixed Integer
+  Linear Programming (MILP) encodings of piecewise-affine KAN abstractions. Enables sound
+  property checking (e.g., energy monotonicity) with provable correctness guarantees.
+- **Relevance to Carnot:** Carnot's KAN energy tier currently verifies via sampling (MCMC)
+  rather than formal proof. MILP-based verification could provide sound energy bounds:
+  "E(wrong) > E(correct) holds for all inputs in this constraint region," providing
+  a formal certificate for the KAN energy tier's discriminative power.
+- **Concrete experiment:** Apply MILP verification to carnot-kan energy outputs on 50
+  GSM8K correct/incorrect pairs. Verify energy monotonicity property. Measure: does formal
+  MILP verification catch the same violations as Ising sampling, faster?
+- **When to incorporate:** Milestone 2026.04.53 — Phase 4 new research (Exp 700).
+
+### PaCoRe — Parallel Coordinated Reasoning for Test-Time Compute Scaling
+- **Paper:** arXiv 2601.05593 (January 2026)
+- **What:** Parallel coordinated reasoning where N independent LLM chains sample diverse
+  solutions, then learned coordination functions merge via energy-weighted voting. Reduces
+  latency vs. sequential chain-of-thought while maintaining quality at larger N.
+- **Relevance to Carnot:** The PSV self-play loop runs one chain at a time. PaCoRe-style
+  parallel chains could scale PSV to K=4 parallel VR attempts per question, using energy
+  scores to select the best-verified response. With DualGPU confirmed (Exp 685), two chains
+  per GPU is feasible. Complements Tier 3 self-learning: diverse solutions give better
+  coverage of constraint violation types.
+- **Concrete experiment:** Adapt PSV iteration to run K=2 parallel chains per GPU; merge
+  via SymCodeVerifier energy vote (lowest violation energy wins). Compare: does K=2 parallel
+  improve signed_improvement vs. single-chain PSV iteration?
+- **When to incorporate:** Milestone 2026.04.53 — incorporated into PSV self-play (Exp 697).
+
+### Formal Step Intermediaries for Verifiable Reasoning
+- **Paper:** arXiv 2603.29500 (March 2026)
+- **What:** Trains LLMs to generate formal logic intermediaries (FOL propositions) alongside
+  each CoT step, enabling Z3 verification of step entailment. Achieves near-zero false
+  positive rates by requiring steps to be formally entailed by prior premises.
+- **Relevance to Carnot:** Extends SymCodeVerifier (Tier 2.5) and CausalReasoningVerifier
+  (Tier 2.7). Instead of verifying final arithmetic (SymCode) or carry-forward (Causal),
+  this approach verifies each intermediate step via Z3 entailment checking. Could be the
+  new Tier 2.8 candidate alongside Eidoku (arXiv 2512.20664).
+- **Concrete experiment:** Implement Tier 2.8: FormalStepVerifier that asks the model to
+  output one FOL proposition per step, then verifies entailment with Z3. Test on FOVER
+  corpus — compare AUC to SymCodeVerifier and CausalReasoningVerifier.
+- **When to incorporate:** Milestone 2026.04.53 — Tier 2.8 candidate (Exp 695).
+
+### Hard Constraints + Soft Generation Hybrid Decoding
+- **Paper:** arXiv 2602.01090 (February 2026)
+- **What:** Combines hard constraint enforcement (grammar masks, feasibility filters) with
+  soft generative decoding. Guarantees feasible outputs for combinatorial optimization
+  problems while maintaining generative diversity.
+- **Relevance to Carnot:** Carnot's structured-equation forcing (Exp 653) is purely
+  prompt-based (soft). This paper provides the architecture for HARD constraint enforcement
+  during decoding — token-level masking of outputs that would violate arithmetic structure.
+  Applied to the COMPUTE: format: when the model starts generating "COMPUTE: A op B =",
+  constrain the next tokens to valid arithmetic expressions.
+- **Concrete experiment:** Implement token-level grammar masking for COMPUTE: lines. Compare:
+  do hard-constrained COMPUTE: expressions reduce SymCodeVerifier violation rate vs. soft
+  prompt-only forcing? Measure on 50 GSM8K questions.
+- **When to incorporate:** Milestone 2026.04.53 — refine structured-equation forcing in
+  VR credibility hardening (filed for VR hard questions experiment, Exp 694).
+
+### JEPA Latent Probing for Discrete Symbol Extraction
+- **Paper:** arXiv 2603.20327 (March 2026)
+- **What:** Probes V-JEPA latents for emergent discrete symbols (AI Mother Tongue),
+  revealing spatiotemporal structure without supervision. Converts continuous JEPA latents
+  to discrete symbol sequences, improving OOD generalization.
+- **Relevance to Carnot:** Carnot's JEPA v15 exhibits OOD regression (AUC=0.4751 below
+  random). The anti-correlation may stem from overly-continuous latent representations that
+  don't generalize to unseen arithmetic patterns. Applying discrete symbol probing to
+  JEPAPredictor's hidden layer could extract more compositional features, improving OOD AUC.
+- **Concrete experiment:** Apply linear probing on JEPA latent layer to extract N=16 discrete
+  symbols. Compare OOD AUC on GSM8K 500-699: discrete-symbol JEPA v16 vs. raw-latent v15.
+- **When to incorporate:** Milestone 2026.04.53 — filed for JEPA v16 architecture (Exp 693).
+
 ## 2026-04-22 arxiv Scan (Milestone 2026.04.52 Planning)
 
 ### FoVer — Formal Verification for Scalable PRM Training Data Generation

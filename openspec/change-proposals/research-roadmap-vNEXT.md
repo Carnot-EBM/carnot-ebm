@@ -1,278 +1,385 @@
-# Research Roadmap — Milestone 2026.04.52
+# Research Roadmap — Milestone 2026.04.53
 
-**Title:** VR Win Scale-Up + DualGPU Proof + JEPA Calibration
+**Title:** JEPA v16 Recovery + VR Credibility Hardening + Prompt-Injection True Distillation
 
-**CalVer:** 2026.04.52 (sequence increment from 2026.04.51)
+**CalVer:** 2026.04.53 (sequence increment from 2026.04.52)
 
 **Authored:** 2026-04-22
 
-**Previous Milestone:** 2026.04.51 — "VR Gate Unblock + Prompt-Injection Rescue + Cascade Hardening"
+**Previous Milestone:** 2026.04.52 — "VR Win Scale-Up + DualGPU Proof + JEPA Calibration"
 
 ---
 
-## What Milestone 2026.04.51 Proved
+## What Milestone 2026.04.52 Proved
 
-Milestone .51 achieved the project's most significant research breakthrough to date:
+Milestone .52 delivered the largest single-milestone wall-time gain in project history
+(-248 min, -5.9%), with per-experiment average reaching a new project best of 7.0 min/exp.
+Key research outcomes:
 
-- **Exp 666 (Manifest Wire-In v3):** `manifest_wired_xdist_available` — manifest loads and xdist confirmed, but `conductor_consulted=null` (15th consecutive milestone without confirmed conductor consultation).
-- **Exp 667 (EnsembleGate v4):** `gate_open_retro_070_unblocked` — structured-first gate logic opens with causal_recall=0.36 >= 0.30. Gate redesign confirmed.
-- **Exp 668 (VR #18 v2): BREAKTHROUGH** — `vr_positive`, `signed_improvement=0.64`, `baseline_accuracy=0.36`, `post_accuracy=1.0` on 25 live-GPU questions. FIRST POSITIVE VR RESULT IN 18 ATTEMPTS. RETRO-033 attempt #19 succeeded.
-- **Exp 669 (Prompt-Injection KAN v5):** `distillation_corpus_built_classifier_trained_auroc_below_threshold` — 6th consecutive partial. AUROC still below 0.90 threshold. New approach needed.
-- **Exp 670 (JEPA v14 Cascade Deploy):** `jepa_v14_deployed=True` — Platt temperature wired into ThreeTierPipeline. JEPA v14 is now the default Tier 2.
-- **Exp 671 (JEPA v15 Retrain):** `jepa_v15_auc_met`, `ood_auc=1.0` — suspicious overfit on tiny held-out set (same pattern as JEPA v12). ECE not computed. OOD validation on 500+ unseen questions required.
-- **Exp 672 (KV260 DFX Fix):** `blocked_bitfile_not_configured` — CARNOT_KV260_BITFILE env var not set. Bitfile path must be configured from prior synthesis result.
-- **Exp 673 (DualGPU v3):** `dualgpu_partial`, `throughput_ratio=1.963` — 2x throughput via ThreadPoolExecutor confirmed, but `max_gpu1_util_pct=0.0` (pynvml not available for utilization polling). RETRO-071 still open.
-- **Exp 674 (IAS Gate Calibration):** `ias_gate_improves_v3` — adaptive quantile regression thresholds improve on fixed threshold. Gate opens where v3 failed.
-- **Exp 675 (LOS-Net):** `below_threshold` — AUC < 0.75 on synthetic logit sequences. Not deployed as Tier 0h.
-- **Exp 676 (MetaJuLS Adapter):** `metajuls_adapted` — domain-specific forcing policy updates from feedback. Online adaptation confirmed on synthetic data.
-- **Exp 677 (Retro):** 7th consecutive wall-time improvement, 8.0 min/exp new project best; pre-flight test suite (532 min, 1.65x slowest-5) still unresolved; slowest-5 composition unchanged for 3rd consecutive milestone.
+- **Exp 678 (Legacy Retirement v2):** `retirements_complete_preflight_confirmed` —
+  Exps 380-382 and 346 formally retired. Exclusion manifest updated. Conductor pre-flight
+  script confirmed operational. `manifest_consulted=True` for the 11-experiment .52 cycle.
+- **Exp 679 (VR 200q Scale):** `vr_200q_positive`, `signed_improvement=1.0` —
+  VR win scales from 25q to 200q. Wilson 95% CI holds. RETRO-033 attempt #19 confirmed
+  at full scale. First credible 200q headline result.
+- **Exp 680 (HumanEval VR):** `code_vr_positive` — execution-based code verification
+  shows improvement. Assertion-comment forcing extracts verifiable intermediate claims.
+- **Exp 681 (Adversarial VR):** `adversarial_robust` — structured-equation forcing
+  does not introduce adversarial brittleness. Signed improvement >= 0 under adversarial
+  perturbations.
+- **Exp 682 (JEPA v15 OOD Audit):** `jepa_v15_ood_below_random`, `true_ood_auc=0.4751`
+  — JEPA v15 is anti-correlated on truly unseen GSM8K questions (500-699). This is an
+  architecture regression, not a data issue. CASCADE DEPLOYMENT BLOCKED.
+- **Exp 683 (FR-11 Real Positives):** `positives_wired_fp_reduced` — Exp 668
+  verified-correct repairs wired into ConstraintTemplateLibrary. fp_rate_delta < 0.
+  First FR-11 cycle closing the complete loop: pipeline verified a repair, now that
+  verification informs the constraint weights.
+- **Exp 684 (DualGPU pynvml):** `dualgpu_confirmed`, `max_gpu1_util_pct > 0` —
+  RETRO-071 CLOSED after 15 consecutive milestones. pynvml installed, GPU1 utilization
+  confirmed during parallel inference.
+- **Exp 685 (DualGPU EORM+JEPA):** `dualgpu_retrain_success`, `speedup=2.0175x` —
+  EORM+JEPA parallel retrain on dual GPUs. Exp 383 pattern resolved. Slowest-5
+  composition improved for first time in 7 milestones.
+- **Exp 686 (FoVer Z3 Formal Labels):** `fover_z3_success` — 200 Z3-labeled step pairs
+  generated. Agreement with hand-labels > 80%. fover_labeled_formal_v1.json ready as
+  JEPA v16 training data.
+- **Exp 687 (HalluSAE Sparse AE):** `hallusat_compute_line_causal` — Top-10
+  hallucination features identified. COMPUTE: line count is in the top-10, validating
+  the structured-equation forcing VR win mechanism.
+- **Exp 688 (PSV Self-Play):** `psv_synthetic_mode` — 10-iteration PSV loop ran in
+  synthetic mode (FR-11 gate condition not met for live mode). FP rate trend slope < 0
+  (improving direction) in synthetic evaluation.
 
-**Still open after .51:**
-- RETRO-071: DualGPU parallel utilization unconfirmed (15 milestones) — need pynvml
-- RETRO-072: KV260 bitfile not configured (hardware action required by user)
-- RETRO-CRITICAL: Exclusion manifest not wired into conductor (15th consecutive miss)
-- Prompt-injection KAN: 6th consecutive partial (architectural approach change needed)
-- Exp 380-382: partial checkpoint 3rd consecutive (formal retirement threshold crossed)
-- Exp 425/410/383/346: slowest-5 composition unchanged (3rd consecutive milestone)
-- JEPA v15: suspicious ood_auc=1.0 needs OOD audit
+**Still open after .52:**
+- RETRO-072: KV260 bitfile not configured (Vivado required, user hardware action)
+- JEPA v15: OOD AUC=0.4751 (below random) — CASCADE BLOCKED, .53 Phase 0 mandatory audit
+- Exp 425/410: slowest-5 recurring (exit threshold crossed — Exp 425 is 16th consecutive)
+- PSV self-play: ran in synthetic mode; needs real live data in .53
+- User-pinned: Exp 690 (Prompt-Injection True Distillation) and Exp 691 (Cross-Dataset)
 
 ---
 
 ## The 3 Biggest Gaps Between Current State and PRD Vision
 
-### Gap 1: VR Win (0.64 on 25q) Needs Validation at Scale — Credibility Risk If Anomalous
+### Gap 1: JEPA v15 Architecture Regression — Cascade Blocked (Priority 0)
 
-**Root cause:** The Exp 668 result (`post_accuracy=1.0`, `signed_improvement=0.64`) on only 25 questions may be anomalous. Common failure modes:
-- Only 9 baseline errors (0.36 × 25 = 9) — small sample, high variance
-- Structured forcing may cause the model to write answers instead of chain-of-thought (recall bias)
-- Gate check passed trivially; questions may have been easy cases
+**Root cause:** JEPA v15 OOD AUC=0.4751 means the predictor is worse than random on
+unseen GSM8K questions. This is not a training data problem — FoVer formal v1 provides
+200+ Z3-labeled pairs. The regression is architectural. Possible root causes:
+- CPMI hard-negative pairs from a narrow distribution (all GSM8K carry errors) create
+  anti-correlated scores on diverse OOD arithmetic patterns
+- PUREMinFormLoss min-form objective pushes scores DOWN on incorrect steps but also
+  DOWN on many correct steps the model sees as borderline
+- JEPA latent features lack compositional structure for OOD generalization
 
-**The fix:** Scale to 200 questions with Wilson 95% CI. If the win holds, Carnot has its first credible improvement claim since the project began. If it doesn't, we need to understand why 25q showed a win that 200q does not.
+**The fix (two-stage):**
+1. Exp 693: Root cause audit — identify which of the three hypotheses is responsible.
+   Use the discrete symbol probing approach from arXiv 2603.20327 to check whether JEPA
+   latents lack compositional structure. If PUREMinFormLoss is the issue, redesign to use
+   contrastive ranking loss instead.
+2. Exp 698: JEPA v16 retrain on FoVer formal v1 data with the fixed architecture.
+   Target: OOD AUC >= 0.70 on GSM8K 500-699 (never seen in training).
 
-**Experiments:** Exps 679-681 (200q scale, HumanEval code, adversarial GSM8K)
+### Gap 2: VR Win Credibility — First Publishable Result Needs Cross-Model Validation
 
-### Gap 2: DualGPU Parallel Compute Still Unproven — RETRO-071 (15 Milestones)
+**Root cause:** Exp 679 confirmed signed_improvement=1.0 on 200q with Qwen3.5-0.8B.
+This is statistically significant but single-model. The PRD requires results that
+generalize across architectures. If improvement is model-specific, it might be an
+artifact of how Qwen3.5-0.8B responds to structured forcing rather than a general
+constraint-verification improvement.
 
-**Root cause (confirmed from Exp 673):** `throughput_ratio=1.963` confirms two independent inferences ran concurrently. But `max_gpu1_util_pct=0.0` because pynvml was not available to poll GPU utilization during inference. The proof requires pynvml to measure actual GPU1 compute utilization.
+**The fix:** Run the same VR pipeline on Gemma4-E4B-it. If both Qwen3.5-0.8B and
+Gemma4-E4B-it show positive signed_improvement with Wilson CI lower bound > 0, the
+result is credible for publication. Also test on 50 "hard" questions (model baseline < 40%)
+to confirm the improvement is not driven by easy recall-bias questions.
 
-**The fix:** Install pynvml (`pip install pynvml`) and use `pynvml.nvmlDeviceGetUtilizationRates(handle).gpu` to poll every 2 seconds during parallel inference. Also apply proven DualGPU to the Exp 383 pattern (EORM+JEPA sequential retrain, 6th consecutive slowest-5 appearance).
+**Experiments:** Exp 694 (VR cross-model validation + hard questions)
 
-**Experiments:** Exps 684-685 (DualGPU proof v4 + EORM+JEPA parallel retrain)
+### Gap 3: Self-Learning FR-11 Loop Still Synthetic — PSV Needs Real Live Data
 
-### Gap 3: JEPA v15 Overfit + FR-11 Never Had Real Verified Positives
+**Root cause:** Exp 688 (PSV Self-Play) ran in synthetic mode because the FR-11 gate
+condition was not met in .52 (PSV requires fr11_real_positives_confirmed=True, which
+came after PSV was executed). Now that Exp 683 confirmed positives wired and
+signed_improvement=1.0, the PSV loop can run with real live VR data as training signal.
 
-**Root cause (from Exp 671):** `ood_auc=1.0` on a tiny held-out set is suspicious. ECE not computed — Platt calibration is incomplete. The self-learning loop (FR-11) has had real violations available for several milestones but has never incorporated VERIFIED CORRECT responses (true positives). Exp 668's VR win finally provides verified-correct repairs.
+The complete self-learning loop (research-program.md Tier 3) requires:
+1. VR pipeline produces verified-correct repairs (DONE: Exp 683)
+2. PSV loop uses VR results as binary verification labels (NEEDED: Exp 697)
+3. JEPA predictor trained on PSV-generated labels (NEEDED: after Exp 698 v16 base)
 
-**The fix:**
-- Exp 682: Audit JEPA v15 on 500 unseen GSM8K questions. Compute ECE. Report honest OOD AUC.
-- Exp 683: Wire Exp 668 verified-correct repairs into ConstraintTemplateLibrary as positive examples. This is FR-11's first genuine closed loop: the pipeline verified a repair was correct, now that verification informs the constraint weights.
-
-**Experiments:** Exps 682-683 (JEPA OOD audit + FR-11 real verified positives relay)
+**Experiments:** Exp 697 (PSV real-data 10-iteration loop), Exp 698 (JEPA v16 with PSV data)
 
 ---
 
-## Architecture: Verification Cascade After Milestone 2026.04.52
+## Architecture: Verification Cascade After Milestone 2026.04.53
 
 ```
 Input: LLM response (text)
          |
 [Tier 0a] CarnotThinkProbe  — generative 3-step CoT verdict
          | short-circuit if verdict='incorrect'
-[Tier 0b] SpilledEnergyDetector — per-token logit-discrepancy signal
+[Tier 0b] SpilledEnergyDetector — per-token logit-discrepancy
          | skip if model confident
 [Tier 0c] NUPProbeV4  — contrastive energy probe (AUC=1.0 in-dist)
          | skip if score <= nup_threshold
 [Tier 0d] HallucinationBasinDetector — latent-space basin depth
          | skip if basin_risk_score <= basin_threshold
 [Tier 0e] HalluField  — thermodynamic partition-function variance
-         | advisory only (no early-exit)
+         | advisory only
 [Tier 1 ] SinkProbe  — attention sink concentration
          | skip if mean_sink_score >= threshold
-[Tier 2 ] JEPA v14 + Platt [DEPLOYED .51] — CoT energy reward model
-         | JEPA v15 OOD audit [.52] — auditing ood_auc=1.0 suspicious
+[Tier 2 ] JEPA v16 [TARGET .53, REPLACING v15 BLOCKED] — CoT energy reward
          | skip if energy < eorm_threshold
 [Tier 2.5] SymCodeVerifier — executable Python step verification (AUC=0.804 live)
          | skip if no arithmetic violations
-[Tier 2.6] HermesV2LiveLoop + StructuredEquationForcer [ACTIVE .50/.51]
+[Tier 2.6] HermesV2LiveLoop + StructuredEquationForcer
          | step-by-step generation with forced equations
 [Tier 2.7] CausalReasoningVerifier — causal_recall=0.36
          | skip if no causal violations
+[Tier 2.8] FormalStepVerifier — FOL intermediary + Z3 entailment check [NEW .53, Exp 695]
+         | skip if all steps formally entailed
 [Tier 3 ] Ising  — full constraint verification (0.006ms/constraint)
          ↓
 [Repair  ] VerifyRepairPipeline + structured-equation forcing
-         → signed_improvement=0.64 on 25q (.51 breakthrough)
-         → SCALE VALIDATION in .52 (200q, HumanEval, adversarial)
+         → signed_improvement=1.0 on 200q (.52 confirmed)
+         → CROSS-MODEL VALIDATION in .53 (Gemma4, hard questions, Exp 694)
 
 Self-Learning Loop (FR-11):
-  [Tier 1 ] Online weight updates — real positives from Exp 668 [NEW .52, Exp 683]
-  [Tier 2 ] PSV self-play loop — formal verification guided data [NEW .52, Exp 688]
-  [Tier 3 ] FoVer Z3 labels for JEPA v16 training [NEW .52, Exp 686]
+  [Tier 1 ] Online weight updates — real verified positives (.52, Exp 683)
+  [Tier 2 ] Constraint memory + PSV self-play [REAL DATA .53, Exp 697]
+  [Tier 3 ] JEPA v16 trained on FoVer formal v1 [.53, Exp 698]
+  [Tier 4 ] HalluSAE causal feature integration [.53, Exp 699]
+
+New in .53:
+- JEPA v15 root cause + v16 architecture design (Exp 693)
+- Prompt-injection true distillation (Exp 690, user-pinned)
+- Cross-dataset generalization gate (Exp 691, user-pinned)
+- VR cross-model + hard questions (Exp 694)
+- FormalStepVerifier Tier 2.8 (Exp 695, arXiv 2603.29500)
+- I-CALM repair abstention (Exp 696, arXiv 2604.03904)
+- PSV real-data 10-iteration self-play (Exp 697)
+- JEPA v16 retrain on FoVer formal v1 (Exp 698)
+- HalluSAE feature integration into JEPA v16 (Exp 699)
+- VR publication readiness (Exp 700)
+- KV260 Ising v3 synthesis attempt (Exp 701)
+- Operational retrospective (Exp 702)
 ```
 
-New in .52:
-- VR win scaled to 200q + HumanEval + adversarial (Exps 679-681)
-- JEPA v15 OOD audit + ECE fix (Exp 682)
-- FR-11 real verified positives relay from Exp 668 (Exp 683)
-- DualGPU proof via pynvml (Exp 684)
-- DualGPU applied to EORM+JEPA retrain (Exp 685) — resolves Exp 383 pattern
-- FoVer Z3-verified PRM labels 200q (Exp 686)
-- HalluSAE sparse AE feature attribution (Exp 687)
-- PSV self-play constraint learning 10-iteration loop (Exp 688)
+---
+
+## Phases and Experiments
+
+### Phase 0: Operational Pre-Flight + JEPA Audit (MANDATORY FIRST)
+
+**Exp 692: Operational Pre-Flight v5 + Slowest-5 Formal Retirement**
+- Retire Exp 425 (ExperimentTimeoutWatchdog demo, 16th consecutive slowest-5 appearance)
+  and Exp 410 (BatchedInferenceRunner target, 13th consecutive) via retirement files
+- Create their missing final result files so conductor skips them
+- Update exclusion manifest with 425 and 410
+- Verify conductor pre-flight script from Exp 678 still executes correctly
+- Confirm manifest_consulted field in pre-flight output
+- Deliverable: results/experiment_692_preflight_v5.json
+
+**Exp 693: JEPA v15 Root Cause Audit + v16 Architecture Design**
+- Load JEPA v15 weights and FoVer formal v1 labels (from Exp 686)
+- Test three hypotheses: (1) CPMI pair distribution mismatch, (2) PUREMinFormLoss
+  anti-correlation on OOD, (3) latent features lack compositional structure
+- Apply linear probing to JEPA v15 hidden layers (discrete symbol extraction per
+  arXiv 2603.20327) — if symbols are non-compositional, confirm hypothesis (3)
+- Design JEPA v16 architecture spec: contrastive ranking loss (not min-form),
+  discrete symbol features (16-dim probe on latent), train on FoVer formal v1
+- Deliverable: results/experiment_693_jepa_v16_design.json
+
+### Phase 1: User-Pinned — Prompt-Injection True Distillation
+
+**Exp 690: Prompt-Injection KAN v1 — True Teacher Distillation (USER-PINNED)**
+- Run actual gpt-oss-safeguard-20b inference (not source-label shortcut)
+- MANDATORY invariant: teacher_inference_duration_s >= len(corpus) * 0.5
+- KAN retrained on teacher labels (not source labels)
+- Deliverable: results/experiment_690_prompt_injection_kan_true_distillation.json
+
+**Exp 691: Cross-Dataset Generalization Gate (USER-PINNED, gates on Exp 690)**
+- Evaluate KAN v1 on HackAPrompt, BIPIA, and synthetic OWASP mutations
+- Mean AUROC >= 0.80: publishable; 0.65-0.80: shareable with caveats
+- Deliverable: results/experiment_691_prompt_injection_kan_cross_dataset.json
+
+### Phase 2: VR Credibility Hardening
+
+**Exp 694: VR Cross-Model Validation + Hard Questions (GPU REQUIRED)**
+- Run VR pipeline on Gemma4-E4B-it (second model) — same 200q set as Exp 679
+- Also run on 50 "hard" GSM8K questions (select where Qwen3.5-0.8B baseline < 40%)
+- Apply grammar-constrained decoding for COMPUTE: lines (arXiv 2602.01090 approach)
+- Honest verdict: "vr_cross_model_confirmed" if BOTH models positive with CI lower > 0
+- Deliverable: results/experiment_694_vr_cross_model.json
+
+### Phase 3: Cascade Tier Improvements
+
+**Exp 695: FormalStepVerifier Tier 2.8 (arXiv 2603.29500 + arXiv 2512.20664, CPU)**
+- Implement Tier 2.8: for each CoT step, prompt model to output one FOL proposition,
+  verify Z3 entailment from prior steps (arXiv 2603.29500 formal intermediaries)
+- Also implement Eidoku CSP structural check (arXiv 2512.20664) as alternative gate
+- Compare FormalStep vs Eidoku vs SymCodeVerifier on FOVER corpus
+- Winner deployed as Tier 2.8 default
+- Deliverable: results/experiment_695_formal_step_verifier.json
+
+**Exp 696: I-CALM Repair Abstention Layer (arXiv 2604.03904, CPU)**
+- When energy > violation threshold but < confidence threshold: output "abstain" instead
+  of attempting repair (reduces false positive repairs)
+- Calibrate confidence threshold on FOVER corpus: maximize F1(abstain/repair/pass)
+- Measure FP reduction on 100 synthetic test questions
+- Deliverable: results/experiment_696_icalm_abstention.json
+
+### Phase 4: FR-11 Self-Learning Closure
+
+**Exp 697: PSV Real-Data Self-Play 10 Iterations (GPU REQUIRED, Tier 3 Self-Learning)**
+- GATE: fr11_real_positives_confirmed=True from Exp 683
+- Run 10 PSV iterations with live GPU inference (CARNOT_FORCE_LIVE=1)
+- Use PaCoRe-style K=2 parallel chains per GPU (arXiv 2601.05593) to increase diversity
+- Each iteration: 20 questions, verify with SymCodeVerifier, update constraint weights
+- Measure FP rate trend slope — must be < 0 for self-play working verdict
+- Deliverable: results/experiment_697_psv_realdata.json
+
+**Exp 698: JEPA v16 Retrain on FoVer Formal v1 (CPU)**
+- Use JEPA v16 architecture from Exp 693 design (fixed loss, discrete symbol features)
+- Train on fover_labeled_formal_v1.json (200+ Z3-labeled pairs from Exp 686)
+- Target: OOD AUC >= 0.70 on GSM8K 500-699 (never in training)
+- Deploy as Tier 2 default if threshold met; cascade-blocked if not
+- Deliverable: results/experiment_698_jepa_v16.json + results/jepa_predictor_v16.safetensors
+
+**Exp 699: HalluSAE Feature Integration into JEPA v16 (CPU)**
+- GATE: Exp 698 jepa_v16_ood_target_met required
+- Replace raw text features with top-10 HalluSAE causal features (from Exp 687)
+- Retrain JEPA v16.1 with HalluSAE feature input
+- Measure: does causal feature input improve OOD AUC vs. raw features?
+- Deliverable: results/experiment_699_jepa_v16_hallusat.json
+
+### Phase 5: Publication
+
+**Exp 700: VR Publication Readiness + HuggingFace Update (CPU)**
+- GATE: Exp 694 vr_cross_model_confirmed required for full publication
+- If gate open: update README.md with credibility-hardened numbers, update all 16 HF
+  model card READMEs, generate carnot-verify-repair-v1 model card on HuggingFace
+- If gate closed: update README with honest negative (single-model result, not cross-model)
+- Also: update KAN formal verification model card (arXiv 2602.06737 credit)
+- Deliverable: results/experiment_700_publication_readiness.json
+
+### Phase 6: Hardware
+
+**Exp 701: KV260 Ising v3 RTL Synthesis Attempt (FPGA, CPU fallback)**
+- Synthesize ising_sampler_v3.v (with EMA inertia dynamics from Exp 662)
+- If Vivado available: run synthesis, capture post-synth utilization (N=64, MAX_DEGREE=16)
+- If not: generate updated synth_ising_v3.tcl targeting v3 RTL; document what changed
+  from v2 synth script; write blocked artifact with synthesis instructions
+- Hardware path: FPGA inertia dynamics expected to reduce convergence sweeps 15-25x
+  (arXiv 2604.17109 confirmed EMA speedup in silicon, not CPU float)
+- Deliverable: results/experiment_701_kv260_v3_synth.json
+
+### Phase 7: Retrospective
+
+**Exp 702: Milestone 2026.04.53 Operational Retrospective**
+- Load all 12 Exp result files (692-701 + 690-691 pinned)
+- Compute wall time, per-experiment average, slowest-5
+- Key metrics: jepa_v16_ood_auc, vr_cross_model_confirmed, psv_fp_trend_slope,
+  prompt_injection_auroc, retro_072_status, manifest_consulted
+- Check GPU state: both RTX 3090s should close < 100MB VRAM
+- Deliverable: results/operational_retro_2026_04_53.json
 
 ---
 
 ## Dependency Graph
 
 ```
-Exp 678 (legacy retirement + pre-flight, MANDATORY FIRST)   — independent
-Exp 679 (VR 200q scale, GPU, uses Exp 668 pipeline)        — depends on Exp 668 confirmed
-Exp 680 (HumanEval VR, GPU)                                — independent of 679
-Exp 681 (adversarial VR, GPU)                              — independent of 679
-Exp 682 (JEPA v15 OOD audit, CPU)                          — depends on Exp 671 weights
-Exp 683 (FR-11 relay real positives, CPU)                  — depends on Exp 668 violations
-Exp 684 (DualGPU proof v4, GPU, pynvml required)           — independent
-Exp 685 (DualGPU EORM+JEPA retrain, GPU)                   — depends on Exp 684 success
-Exp 686 (FoVer Z3 formal labels, CPU)                      — independent
-Exp 687 (HalluSAE sparse AE, CPU)                          — independent
-Exp 688 (PSV self-play loop, CPU+GPU)                      — depends on Exp 683 FR-11
-Exp 689 (retrospective)                                     — depends on all
+Exp 692 (pre-flight) ──────────────────────────────────────┐
+Exp 693 (JEPA v16 design) ────────────────────────────────┤
+         ↓                                                  │
+Exp 690 (prompt-injection distill) [USER-PINNED]           │
+         ↓                                                  │
+Exp 691 (cross-dataset) [USER-PINNED, gates on 690]        │
+                                                            │
+Exp 694 (VR cross-model + hard, GPU) ──────────────────────┤
+         ↓                                                  │
+Exp 695 (FormalStepVerifier Tier 2.8)                      │
+Exp 696 (I-CALM abstention)                                │
+                                                            │
+Exp 697 (PSV real self-play, GPU, gates on Exp 683) ───────┤
+         ↓                                                  │
+Exp 698 (JEPA v16 retrain, gates on Exp 693 design) ───────┤
+         ↓                                                  │
+Exp 699 (HalluSAE integration, gates on Exp 698) ──────────┤
+                                                            │
+Exp 700 (publication, gates on Exp 694) ───────────────────┤
+Exp 701 (KV260 v3 synthesis)                               │
+         ↓                                                  │
+Exp 702 (retrospective — reads ALL above) ─────────────────┘
 ```
 
-Recommended execution order:
-678 [FIRST] → 679 || 680 || 681 || 682 || 683 || 684 || 686 || 687
-           → 685 (GPU, after 684 confirms GPU1 available)
-           → 688 (after 683 FR-11 relay complete)
-           → 689 (retro)
+Critical paths:
+- JEPA recovery: 693 → 698 → 699 (architecture audit must precede retrain)
+- VR publication: 694 → 700 (cross-model must precede full publication)
+- Self-learning: 697 → 698 (PSV data feeds JEPA v16 training)
 
 ---
 
-## Phase Descriptions
+## Success Criteria Table
 
-### Phase 0: Operational Debt Resolution — Exp 678 (MANDATORY FIRST)
-
-Formally retire Exps 380-382 (partial checkpoint, 3rd consecutive — formal threshold
-crossed per Exp 308/309 precedent). Create final retirement JSON placeholder files.
-Add Exps 380, 381, 382 to conductor_exclusion_manifest.json. Create
-`scripts/conductor_pre_flight.py` that reads the manifest and prints excluded IDs
-before session start (non-invasive; does not modify research_conductor.py).
-Also create placeholder result files for Exp 346 (55M-param training, 3rd consecutive)
-so the conductor skips it and it exits the slowest-5.
-Target: Exps 380-382 and 346 excluded, manifest has 10 entries total, pre-flight script exists.
-
-### Phase 1: VR Win Validation — Exps 679-681
-
-Scale the .51 VR win (signed_improvement=0.64, 25q) to 200 questions with Wilson CI.
-If the win holds at 200q (signed_improvement > 0.05 with p < 0.05), Carnot has its
-first credible headline result. If it doesn't hold, diagnose why.
-
-Exp 679: 200q GSM8K validation via LongRunBenchmarkExecutor (8 batches of 25).
-Exp 680: 25 HumanEval problems with execution-based verification (no regex).
-Exp 681: Adversarial GSM8K (wrong premises) — does VR maintain improvement or degrade?
-
-### Phase 2: JEPA v15 Calibration + FR-11 Real Positives — Exps 682-683
-
-Exp 682: Audit JEPA v15 (ood_auc=1.0 suspicious) on 500 unseen GSM8K questions.
-Compute ECE. Apply Platt calibration post-hoc. Report honest OOD AUC.
-Exp 683: Wire Exp 668 true positives into FR-11 self-learning relay.
-This is the first time the FR-11 loop has verified-correct examples — not just violations.
-Constraint weight updates from verified-correct repairs should reduce FP rate by
-reinforcing constraint weights for arithmetic patterns that matched real correct answers.
-
-### Phase 3: DualGPU Proof and Application — Exps 684-685
-
-Exp 684: Install pynvml, poll GPU1 utilization during ThreadPoolExecutor parallel
-inference. Two Qwen3.5-0.8B instances on GPU0 and GPU1 simultaneously. If GPU1
-utilization > 0%, RETRO-071 is finally closed after 15 milestones.
-Exp 685: Apply proven DualGPU to EORM+JEPA parallel retraining. EORM on cuda:0,
-JEPA v15 on cuda:1 simultaneously via ThreadPoolExecutor. Reduces retrain from
-~62 min to ~35 min, resolving Exp 383's 6th consecutive slowest-5 appearance.
-
-### Phase 4: New Research — Exps 686-688
-
-Exp 686: FoVer Z3 formal PRM labels (arXiv 2505.15960). Auto-annotate 200 GSM8K
-CoT chains using Z3 SMT solver for step-level correctness labels. Produce
-fover_labeled_formal_v1.json. Verify label agreement > 80% with existing FOVER
-hand-labels. Implements the data-generation step for JEPA v16 training.
-
-Exp 687: HalluSAE sparse auto-encoder (arXiv 2604.16430). Train 512-dim sparse AE
-on Qwen3.5-0.8B hidden states from FOVER corpus. Identify top-10 hallucination-predictive
-features. Check whether COMPUTE: presence correlates with low-energy features — this
-would provide mechanistic explanation for the Exp 668 VR win.
-
-Exp 688: PSV self-play constraint learning (arXiv 2512.18160). Implements Tier 3
-continuous self-learning from research-program.md. 10-iteration loop: each iteration
-generates 20 GSM8K questions with Qwen3.5-0.8B, runs VR pipeline with structured
-forcing, uses binary correct/incorrect labels to update ConstraintTemplateLibrary
-constraint weights (Tier 1 online learning). Measure: does FP rate decrease across
-iterations?
-
-### Phase 5: Retrospective — Exp 689
-
-Standard milestone retrospective (carnot.operational_retro schema). Focus metrics:
-(1) Did VR win hold at 200q? (2) Is RETRO-071 closed? (3) Did FR-11 relay show
-measurable constraint weight improvement? (4) Did slowest-5 composition change?
+| Criterion | Experiment | Target | Honest Verdict |
+|-----------|-----------|--------|----------------|
+| Slowest-5 reduced | Exp 692 | Exps 425/410 retired | `retirements_complete` |
+| JEPA v15 root cause identified | Exp 693 | Root cause named | `root_cause_confirmed` |
+| Prompt-injection real distillation | Exp 690 | teacher_duration_s > 0.5×N | not `distillation_invariant_violated` |
+| Prompt-injection cross-dataset | Exp 691 | mean AUROC >= 0.80 | `generalization_verified_publishable` |
+| VR cross-model confirmed | Exp 694 | Both models signed_improvement > 0 | `vr_cross_model_confirmed` |
+| FormalStepVerifier viable | Exp 695 | AUC > SymCodeVerifier on FOVER | `formal_step_better` |
+| I-CALM FP reduction | Exp 696 | fp_rate_delta < 0 | `abstention_fp_reduced` |
+| PSV real-data FP improving | Exp 697 | fp_rate_trend_slope < 0 | `psv_selfplay_fp_improving` |
+| JEPA v16 OOD AUC | Exp 698 | >= 0.70 on GSM8K 500-699 | `jepa_v16_ood_target_met` |
+| HalluSAE integration | Exp 699 | AUC >= JEPA v16 baseline | `hallusat_integration_positive` |
+| VR publication ready | Exp 700 | Cross-model gate open | `publication_ready` |
+| KV260 v3 synthesis | Exp 701 | bitfile or tcl generated | `synthesis_complete_or_script` |
 
 ---
 
-## Open RETROs Being Addressed
+## Open RETROs to Close in .53
 
-| RETRO | Status | Addressed By |
-|-------|--------|-------------|
-| RETRO-071 (DualGPU, 15 milestones) | CRITICAL | Exp 684 (pynvml proof) + Exp 685 (training) |
-| RETRO-072 (KV260 bitfile) | HIGH | USER ACTION: set CARNOT_KV260_BITFILE |
-| RETRO-CRITICAL (manifest, 15 milestones) | CRITICAL | Exp 678 (pre-flight script) |
-| JEPA v15 overfit | HIGH | Exp 682 (OOD audit) |
-| FR-11 relay never had real verified positives | HIGH | Exp 683 (positives from Exp 668) |
-| VR win unvalidated (25q only) | HIGH | Exps 679-681 (scale validation) |
-| Exp 380-382 checkpoint partial (3rd milestone) | HIGH | Exp 678 (formal retirement) |
-| Exp 383 sequential EORM+JEPA (6th milestone) | MEDIUM | Exp 685 (DualGPU parallel) |
-| Prompt-injection KAN (6th fail) | LOW | Deferred — architectural pivot needed in .53 |
-
----
-
-## Success Criteria
-
-| Criterion | Target | Gated On |
-|-----------|--------|---------|
-| legacy_retired_380_382_346=True | placeholder result files + manifest | Exp 678 |
-| vr_200q_signed_improvement > 0 | positive win at scale, Wilson CI | Exp 679 |
-| humaneval_vr_improvement >= 0 | no degradation on code | Exp 680 |
-| adversarial_vr_signed_improvement >= 0 | no degradation on adversarial | Exp 681 |
-| jepa_v15_honest_ood_auc reported | suspicious 1.0 investigated | Exp 682 |
-| fr11_real_positives_wired=True | verified-correct repairs in FR-11 | Exp 683 |
-| retro_071_resolved=True | GPU1 utilization > 0% confirmed | Exp 684 |
-| eorm_jepa_parallel_retrain_time < 40min | DualGPU applied to training | Exp 685 |
-| fover_formal_v1_n_labels >= 200 | Z3 auto-annotation pipeline works | Exp 686 |
-| hallusat_features_identified=True | top-10 causal features found | Exp 687 |
-| psv_iterations_completed=10 | self-play loop runs end-to-end | Exp 688 |
+| RETRO | Age | Root Cause | Fix in .53 |
+|-------|-----|-----------|-----------|
+| RETRO-072 | Carry | KV260 bitfile not configured | Exp 701 (synthesis attempt) |
+| JEPA regression | New (.52) | OOD AUC=0.4751 below random | Exp 693 audit + Exp 698 v16 retrain |
+| Exp 425 slowest | 16 milestones | Demo watchdog rerun | Exp 692 retirement |
+| Exp 410 slowest | 13 milestones | BatchedInferenceRunner loop | Exp 692 retirement |
+| PSV synthetic | .52 | gate timing missed | Exp 697 real live data |
+| Prompt-injection | 6 consec. | No real teacher inference | Exp 690 invariant |
 
 ---
 
 ## Hardware Requirements
 
-| Experiment | Hardware | Notes |
-|-----------|----------|-------|
-| Exp 678 | CPU only | Retirement + pre-flight script |
-| Exp 679 | 1x RTX 3090 | CARNOT_FORCE_LIVE=1, 200 questions |
-| Exp 680 | 1x RTX 3090 | HumanEval, execution-based verification |
-| Exp 681 | 1x RTX 3090 | Adversarial GSM8K |
-| Exp 682 | CPU only | JEPA v15 weights loaded; OOD eval is inference only |
-| Exp 683 | CPU only | FR-11 relay reads Exp 668 result JSON |
-| Exp 684 | 2x RTX 3090 | pynvml required; CARNOT_FORCE_LIVE=1 |
-| Exp 685 | 2x RTX 3090 | EORM on cuda:0, JEPA on cuda:1 |
-| Exp 686 | CPU only | Z3 is pure CPU; no model inference required |
-| Exp 687 | CPU only | Sparse AE on pre-computed hidden states |
-| Exp 688 | 1x RTX 3090 | VR pipeline with live GPU for inference |
-| Exp 689 | CPU only | Retrospective analysis |
+| Experiment | GPU Required | GPU Assignment | Notes |
+|-----------|-------------|----------------|-------|
+| Exp 692 | No | CPU | Operational |
+| Exp 693 | No | CPU | Analysis + design |
+| Exp 690 | Optional (recommended) | cuda:0 for llama.cpp | gpt-oss-safeguard-20b GGUF (11.6 GB) |
+| Exp 691 | No | CPU | Classifier inference |
+| Exp 694 | YES | cuda:0 Qwen3.5-0.8B, cuda:1 Gemma4-E4B-it | LongRunBenchmarkExecutor, 200q |
+| Exp 695 | No | CPU | Z3 available |
+| Exp 696 | No | CPU | Abstention calibration |
+| Exp 697 | YES | DualGPU | K=2 parallel chains, 10 iterations |
+| Exp 698 | No | CPU | JEPA training (JAX CPU) |
+| Exp 699 | No | CPU | JEPA fine-tune |
+| Exp 700 | No | CPU | Publication artifacts |
+| Exp 701 | No | CPU | Vivado/TCL script |
+| Exp 702 | No | CPU | Retrospective |
 
 ---
 
-## New Papers Incorporated (arXiv Scan 2026-04-22)
+## New Papers to Incorporate
 
-| Paper | Title | Filed As |
-|-------|-------|---------|
-| arXiv 2505.15960 | FoVer: Formal Verification for Scalable PRM Labels | Exp 686 |
-| arXiv 2604.16430 | HalluSAE: Sparse AE Hallucination Detection | Exp 687 |
-| arXiv 2512.18160 | PSV: Propose, Solve, Verify Self-Play | Exp 688 |
-| arXiv 2512.20664 | Eidoku: CSP-Based Structural Verification Gate | Filed .53 |
-| arXiv 2604.03904 | I-CALM: Confidence-Aware Abstention | Filed .53 |
+| Paper | Filed | Experiment |
+|-------|-------|-----------|
+| arXiv 2603.20327 — JEPA Latent Probing | research-references.md | Exp 693 (JEPA v16 design) |
+| arXiv 2602.06737 — KAN Formal Verification | research-references.md | Exp 700 (publication) |
+| arXiv 2601.05593 — PaCoRe Parallel Reasoning | research-references.md | Exp 697 (PSV K=2 chains) |
+| arXiv 2603.29500 — Formal Step Intermediaries | research-references.md | Exp 695 (Tier 2.8) |
+| arXiv 2602.01090 — Hard Constraint Decoding | research-references.md | Exp 694 (grammar masking) |
+| arXiv 2512.20664 — Eidoku CSP Gate | research-references.md (from .52) | Exp 695 (Tier 2.8) |
+| arXiv 2604.03904 — I-CALM Abstention | research-references.md (from .52) | Exp 696 |
