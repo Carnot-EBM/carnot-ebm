@@ -13689,3 +13689,68 @@ When: extract_text_features(text) is called.
 Then: output has shape (134,) [128 hash features + 6 structured features] and dtype float32.
 
 **Implementation Status:** Implemented (tests/python/test_hallusal_sparse_ae.py, Exp 687)
+
+## REQ-LEARN-076: PSV Self-Play Loop — 10 Iterations, 20 Questions Each
+
+**Rationale:** arXiv 2512.18160 (PSV: Propose, Solve, Verify) shows that self-play with
+formal verification labels enables autonomous improvement without human supervision.
+REQ-LEARN-076 implements the closed PSV loop for Carnot: Propose (select questions),
+Solve (run inference), Verify (SymCodeVerifier or rule-based), Learn (update constraint
+memory from binary labels).  This is the first experiment implementing a closed
+autonomous learning loop without human annotation.
+
+**Requirements:**
+- REQ-LEARN-076-1: PSVSelfPlayLoop SHALL run exactly n_iterations iterations, each
+  processing exactly n_questions_per_iter questions.
+- REQ-LEARN-076-2: Each iteration SHALL call inference_fn per question, verify_fn per
+  response, then update constraint memory from (violation, correct) pairs.
+- REQ-LEARN-076-3: PSVIteration dataclass SHALL capture iteration, n_questions,
+  n_correct, n_violations, fp_count, constraint_weight_delta per iteration.
+- REQ-LEARN-076-4: update_from_pairs SHALL call constraint_memory.record() for each
+  violation pair with was_fp=False and for each correct pair with was_fp=True.
+- REQ-LEARN-076-5: If fr11_real_positives_confirmed is False, the experiment SHALL
+  run in synthetic mode using pre-generated responses and known labels.
+
+**Implementation Status:** Implemented (python/carnot/training/psv_selfplay.py, scripts/experiment_688_psv_selfplay.py, Exp 688)
+
+## REQ-LEARN-077: FP Rate Non-Increasing Across PSV Iterations
+
+**Rationale:** The PSV loop is only useful if the constraint weights improve over time.
+REQ-LEARN-077 requires measuring whether the false-positive rate decreases (or at
+least does not increase) across the 10 iterations using linear regression slope.
+
+**Requirements:**
+- REQ-LEARN-077-1: fp_rate_per_iteration SHALL be a list of fp_count/n_questions
+  floats, one per iteration.
+- REQ-LEARN-077-2: fp_rate_trend_slope SHALL be the slope of a linear regression
+  on fp_rate_per_iteration (iteration index as x).
+- REQ-LEARN-077-3: honest_verdict SHALL be "psv_selfplay_fp_improving" if slope < 0,
+  "psv_selfplay_fp_stable" if slope == 0, "psv_selfplay_fp_degrading" if slope > 0,
+  or "psv_synthetic_mode" if running in synthetic/no-GPU mode.
+
+**Implementation Status:** Implemented (scripts/experiment_688_psv_selfplay.py, Exp 688)
+
+### SCENARIO-LEARN-078: PSV Iteration Produces Correct Counts
+
+Given: a PSVSelfPlayLoop with n_questions_per_iter=5.
+When: run_iteration is called with 5 questions, inference_fn always returns "42",
+  and verify_fn returns True for even indices and False for odd indices.
+Then: PSVIteration.n_correct == 3, n_violations == 2, n_questions == 5.
+
+**Implementation Status:** Implemented (tests/python/test_psv_selfplay.py, Exp 688)
+
+### SCENARIO-LEARN-079: FP Rate Trend Slope Is Computed Correctly
+
+Given: fp_rate_per_iteration = [0.5, 0.4, 0.3, 0.2, 0.1] (5 iterations).
+When: linear regression slope is computed.
+Then: slope < 0 and honest_verdict == "psv_selfplay_fp_improving".
+
+**Implementation Status:** Implemented (scripts/experiment_688_psv_selfplay.py, Exp 688)
+
+### SCENARIO-LEARN-080: Synthetic Mode Runs When Gate Is Closed
+
+Given: fr11_real_positives_confirmed == False.
+When: experiment_688 runs.
+Then: inference_mode == "synthetic" and honest_verdict == "psv_synthetic_mode".
+
+**Implementation Status:** Implemented (scripts/experiment_688_psv_selfplay.py, Exp 688)
