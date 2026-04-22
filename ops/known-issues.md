@@ -17,3 +17,13 @@ Vivado not installed; yosys not found.  Synthesis blocked.  Install one of:
   - AMD Vivado 2024.2 (free WebPACK from xilinx.com)
   - yosys (`sudo pacman -S yosys` on CachyOS)
 RETRO-073 opened for milestone .54.
+
+## RETRO-CRITICAL: JEPA v17 RankNet Gate Failed (Exp 704/705, 20260422)
+JEPA v17 OOD AUC = 0.4819, still below random chance (threshold = 0.75).
+RankNet pairwise loss partially addresses the anti-correlation root cause but pairwise
+hedging persists when pairs are too similar — each pair is optimised independently.
+**v18 approach:** LambdaRank listwise loss — optimise NDCG over ALL steps per question
+simultaneously, directly matching the AUC evaluation metric.
+**Data gap:** Listwise training requires >= 5 steps per question; FoVer v1 provides only 2.
+Unblocked by: Exp 712 FoVer v2 PDDL (5+ steps per question via PDDL plan enumeration).
+JEPA v16 cascade block remains in effect until v18 achieves OOD AUC >= 0.75.
