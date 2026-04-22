@@ -3403,3 +3403,63 @@ milestones:
     title: 'Exp 702: Milestone 2026.04.53 Operational Retrospective'
     deliverable: results/operational_retro_2026_04_53.json
     result: OK (conductor)
+- id: 2026.04.54
+  title: JEPA v17 RankNet Loss + Gemma4 VR Diagnostic + PSV PaCoRe K=2
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-22'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp703-preflight-v6-forced-retirement
+    title: "Exp 703: Pre-flight v6 + Slowest-5 Forced Retirement (MANDATORY FIRST \u2014 Exps 380/381/382/346/425/410 Formal\
+      \ Retirement)"
+    deliverable: results/experiment_703_preflight_v6.json
+    result: OK (conductor)
+  - id: exp704-jepa-v17-ranknet
+    title: "Exp 704: JEPA v17 Architecture \u2014 RankNet Pairwise Ranking Loss with Hard Negative Mining (RETRO-CRITICAL)"
+    deliverable: results/experiment_704_jepa_v17_ranknet.json
+    result: OK (conductor)
+  - id: exp705-jepa-v17-cascade-deploy
+    title: 'Exp 705: JEPA v17 Cascade Deploy + OOD Validation (GATED on Exp 704 cascade_gate_open=True)'
+    deliverable: results/experiment_705_jepa_v17_cascade_deploy.json
+    result: OK (conductor)
+  - id: exp706-gemma4-vr-diagnostic
+    title: "Exp 706: Gemma4-E4B-it VR Diagnostic \u2014 Trace Pipeline Failure to Exact Step (GPU REQUIRED)"
+    deliverable: results/experiment_706_gemma4_vr_diagnostic.json
+    result: OK (conductor)
+  - id: exp707-model-adaptive-thresholds
+    title: "Exp 707: Model-Adaptive Constraint Thresholds \u2014 Per-Model FP Gating via Tier 1 Self-Learning"
+    deliverable: results/experiment_707_adaptive_thresholds.json
+    result: OK (conductor)
+  - id: exp708-vr-attempt-19-gemma4-adaptive
+    title: "Exp 708: Live VR Attempt #19 \u2014 Gemma4-E4B-it with Adaptive Thresholds (GATED on Exp 707, GPU REQUIRED)"
+    deliverable: results/experiment_708_vr_attempt_19_gemma4.json
+    result: OK (conductor)
+  - id: exp709-psv-pacore-k2-dualgpu
+    title: "Exp 709: PSV PaCoRe K=2 Parallel Self-Play \u2014 DualGPU Diversity Recovery (arXiv 2601.05593, GPU REQUIRED)"
+    deliverable: results/experiment_709_psv_pacore_k2.json
+    result: OK (conductor)
+  - id: exp710-kan-distill-v2-auroc-gate
+    title: "Exp 710: Prompt-Injection KAN Distillation v2 \u2014 AUROC 0.90 Publication Gate"
+    deliverable: results/experiment_710_kan_distill_v2.json
+    result: OK (conductor)
+  - id: exp711-sc-energy-set-consistency
+    title: "Exp 711: SC-Energy Set Consistency Verifier \u2014 Tier 2.9 Candidate (arXiv 2503.10695)"
+    deliverable: results/experiment_711_sc_energy_set_consistency.json
+    result: OK (conductor)
+  - id: exp712-fover-v2-pddl-dataset
+    title: "Exp 712: FoVer v2 Dataset Synthesis via PDDL Planning \u2014 Scale Corpus 5x (arXiv 2604.17957)"
+    deliverable: results/experiment_712_fover_v2_pddl.json
+    result: OK (conductor)
+  - id: exp713-fr11-tier2-relay
+    title: "Exp 713: FR-11 Tier 2 Relay \u2014 Wire JEPA v17 Violations into ConstraintTemplateLibrary (FR-11 MANDATORY, GATED\
+      \ on Exp 705)"
+    deliverable: results/experiment_713_fr11_tier2_relay.json
+    result: OK (conductor)
+  - id: exp714-npu-iron-toolchain
+    title: "Exp 714: AMD XDNA NPU Unblock v8 \u2014 IRON Toolchain Fresh Approach (mlir-aie, No ninja/openblas)"
+    deliverable: results/experiment_714_npu_iron_unblock.json
+    result: OK (conductor)
+  - id: exp715-milestone-retro-2026-04-54
+    title: 'Exp 715: Milestone 2026.04.54 Operational Retrospective'
+    deliverable: results/operational_retro_2026_04_54.json
+    result: OK (conductor)
