@@ -70,6 +70,46 @@ The per-question latency overhead added by the JEPA v18 Tier 2 scorer MUST be le
 
 **Spec traces:** REQ-INFRA-044
 
+### REQ-INFRA-046: EORM Confidence Gate for Tier 3 Ising Skip
+
+The cascade router MUST support an EORM confidence gate that skips Tier 3 Ising
+sampling when the EORM confidence score exceeds a configurable threshold (default 0.92).
+When EORM confidence > eorm_ising_skip_threshold, the result is marked "verified_fast"
+and Tier 3 Ising is not run.  The threshold is configurable at CascadeRouter
+construction time.  Each query MUST log ising_skip (bool) and eorm_confidence (float).
+
+**Acceptance criteria:**
+- `CascadeRouter(eorm_ising_skip_threshold=0.92)` skips Ising when EORM confidence > 0.92.
+- `CascadeRouter(eorm_ising_skip_threshold=0.92)` runs Ising when EORM confidence <= 0.92.
+- Per-query logs contain ising_skip and eorm_confidence fields.
+
+### REQ-INFRA-047: EORM Gate False-Negative Delta
+
+The EORM confidence gate MUST NOT increase the false-negative rate by more than 5
+percentage points versus the full cascade (no gate) on a representative test set.
+Formally: fn_delta = false_negative_rate_gated - false_negative_rate_baseline < 0.05.
+
+**Acceptance criteria:**
+- Exp 727 measures fn_delta < 0.05 on 200-question test set at threshold=0.92.
+
+## Scenarios
+
+### SCENARIO-INFRA-055: EORM Gate Skips Ising Above Threshold
+
+**Given** a CascadeRouter with eorm_ising_skip_threshold=0.92
+**When** EORM returns confidence=0.95 for a query
+**Then** Tier 3 Ising is NOT invoked and result is marked "verified_fast"
+
+**Spec traces:** REQ-INFRA-046
+
+### SCENARIO-INFRA-056: EORM Gate Does Not Skip Ising Below Threshold
+
+**Given** a CascadeRouter with eorm_ising_skip_threshold=0.92
+**When** EORM returns confidence=0.80 for a query
+**Then** Tier 3 Ising IS invoked as normal
+
+**Spec traces:** REQ-INFRA-046
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -77,3 +117,5 @@ The per-question latency overhead added by the JEPA v18 Tier 2 scorer MUST be le
 | REQ-INFRA-043 | Implemented | Exp 718 — tier2_jepa.py |
 | REQ-INFRA-044 | Implemented | Exp 718 smoke test |
 | REQ-INFRA-045 | Implemented | Exp 718 latency measurement |
+| REQ-INFRA-046 | Implemented | Exp 727 — cascade_router.py |
+| REQ-INFRA-047 | Implemented | Exp 727 fn_delta measurement |
