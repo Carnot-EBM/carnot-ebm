@@ -1527,3 +1527,25 @@ INFO: [Common 17-83] Releasing license: Implementation
 write_bitstream completed successfully
 write_bitstream: Time (s): cpu = 00:00:49 ; elapsed = 00:00:17 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71500 ; free virtual = 353923
 INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 12:42:37 2026...
+[Wed Apr 22 12:42:43 2026] impl_1 finished
+wait_on_runs: Time (s): cpu = 00:00:01 ; elapsed = 00:23:00 . Memory (MB): peak = 2037.512 ; gain = 0.000 ; free physical = 77425 ; free virtual = 359849
+# puts "=== [7/7] Verify + copy bitstream ==="
+=== [7/7] Verify + copy bitstream ===
+# set bit_src "${project_dir}/${project_name}.runs/impl_1/${bd_name}_wrapper.bit"
+# if {![file exists $bit_src]} {
+#     error "Bitstream not produced at expected path: $bit_src — check impl_1 logs"
+# }
+# file copy -force $bit_src $bitstream_dst
+# puts ""
+
+# puts "=== BUILD COMPLETE ==="
+=== BUILD COMPLETE ===
+# puts "Bitstream: $bitstream_dst"
+Bitstream: output/carnot_ising_bd/carnot_ising_bd_wrapper.bit
+# puts "Next: scp $bitstream_dst kria:/opt/carnot/bitstreams/carnot_ising_v2.bit"
+Next: scp output/carnot_ising_bd/carnot_ising_bd_wrapper.bit kria:/opt/carnot/bitstreams/carnot_ising_v2.bit
+# puts "      ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2.bit'"
+      ssh kria 'sudo dfx-mgr-client -load /opt/carnot/bitstreams/carnot_ising_v2.bit'
+# puts "      ssh kria 'xrt-smi examine'"
+      ssh kria 'xrt-smi examine'
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 12:42:43 2026...
