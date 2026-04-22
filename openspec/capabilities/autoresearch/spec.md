@@ -2172,6 +2172,52 @@ Spec: REQ-LEARN-088, SCENARIO-LEARN-137
 **And** ece = weighted mean |confidence - accuracy| across 10 equal-width probability bins
 **And** ece is a finite non-negative float in [0, 1]
 
+### REQ-LEARN-089: JEPA v16 Design Must Address Identified Root Cause from v15 Audit
+
+**Given** the JEPA v15 OOD AUC=0.4751 (below random chance) confirmed by Exp 682
+**When** root cause probes (H1/H2/H3) identify the primary failure mode
+**Then** the v16 architecture specification must directly address the identified root cause
+**And** v16_architecture_spec must be a non-empty string describing the concrete change
+**And** v16_training_data_target must be a positive integer specifying the minimum training
+    pairs required
+
+Spec: REQ-LEARN-089, SCENARIO-LEARN-138, SCENARIO-LEARN-139, SCENARIO-LEARN-140
+
+### REQ-LEARN-090: JEPA v16 OOD AUC Target >= 0.75 on GSM8K 500-699
+
+**Given** a JEPA v16 model trained per the architecture specification in REQ-LEARN-089
+**When** evaluated on GSM8K 500-699 (truly OOD from the training distribution)
+**Then** true_ood_auc >= 0.75, meaning the model is meaningfully better than random chance
+**And** the result must be validated with the same evaluation protocol as Exp 682
+    (RandomProjectionEmbedding seed=671, ground_truth_label = idx%3==0 fallback)
+
+Spec: REQ-LEARN-090, SCENARIO-LEARN-138
+
+### SCENARIO-LEARN-138: H1 Probe Detects Distribution Shift via L2 and Variance Ratio
+
+**Given** train latents (from fover_labeled_formal_v1.json, GSM8K ~0-499 range)
+    and OOD latents (from GSM8K 500-699 questions)
+**When** probe_h1_distribution_shift is computed on the extracted h2 (32-dim) representations
+**Then** H1_confirmed = True if distribution_shift_l2 > 0.5 OR variance_ratio > 2.0
+**And** the result is reproducible given the same JEPA weights and RandomProjectionEmbedding seed
+
+### SCENARIO-LEARN-139: H3 Probe Detects Latent Collapse via Effective Rank
+
+**Given** train latents extracted from JEPA v15 for the FOVER training pairs
+**When** SVD is computed on the (N_train, 32) latent matrix
+**Then** effective_rank = count of singular values > 0.01
+**And** H3_confirmed = True if effective_rank < 5 OR (top singular value)^2 / total variance > 0.9
+**And** a confirmed H3 indicates that 57 training pairs were insufficient to fill the 32-dim latent space
+
+### SCENARIO-LEARN-140: Root Cause Assignment and v16 Spec Generation
+
+**Given** the probe results H1_confirmed, H2_confirmed, H3_confirmed from Exp 693
+**When** determine_root_cause is called with those flags
+**Then** root_cause is selected by priority: H1 > H2 > H3 > unknown_requires_ablation
+**And** build_v16_spec returns a non-empty architecture prescription for the identified root cause
+**And** honest_verdict = 'root_cause_identified_v16_specced' if root_cause != 'unknown_requires_ablation'
+**And** honest_verdict = 'root_cause_ambiguous_ablation_needed' otherwise
+
 ---
 
 ## Implementation Status
@@ -2253,3 +2299,5 @@ Spec: REQ-LEARN-088, SCENARIO-LEARN-137
 | REQ-LEARN-086 | N/A | Implemented | Python (test_metajuls_forcing_adapter.py) |
 | REQ-LEARN-087 | N/A | Implemented | Python (test_experiment_682_jepa_v15_ood_audit.py) |
 | REQ-LEARN-088 | N/A | Implemented | Python (test_experiment_682_jepa_v15_ood_audit.py) |
+| REQ-LEARN-089 | N/A | Implemented | Python (test_experiment_693_jepa_root_cause.py) |
+| REQ-LEARN-090 | N/A | Implemented | Python (test_experiment_693_jepa_root_cause.py) |

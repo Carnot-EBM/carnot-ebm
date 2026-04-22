@@ -688,8 +688,83 @@ class ExperimentTemplate:
             observable by the conductor and prevents false "success" signals.
 
         Spec: REQ-INFRA-033, SCENARIO-INFRA-041
+
+        Since the Layer-1 invariant system landed (python/carnot/invariants.py),
+        this method ALSO runs the registered invariants against the deliverable
+        and prints any violations to stderr.  Violations do NOT fail the
+        experiment — the conductor already committed the verdict, and silently
+        failing here would just mask the deliverable.  Instead, violations are
+        surfaced as stderr warnings AND persisted into the deliverable itself
+        under an ``invariant_violations`` key.  A milestone-retro audit can
+        then grep ``results/experiment_*.json`` for that key to find every
+        artifact-positive verdict from the milestone in one pass.
+
+        Why persist rather than raise: the retraction pattern we want to
+        prevent is "verdict claims success, data contradicts it, README
+        propagates the claim".  Raising would force the experiment back to
+        the conductor and the conductor would re-run it.  Persisting an
+        ``invariant_violations`` list in the artifact, plus a rewritten
+        ``honest_verdict`` when a violation has a suggested substitute,
+        lets downstream tools (README updaters, HuggingFace publishers, the
+        retro script) see the honest state without having to re-run the job.
         """
         self._guard.assert_written()
+        self._check_invariants_on_deliverable()
+
+    def _check_invariants_on_deliverable(self) -> None:
+        """Run the machine-checkable invariants over the deliverable JSON.
+
+        Side effects:
+            - Prints violation summaries to stderr (one line per violation).
+            - If any violation has a ``suggested_verdict``, rewrites the
+              artifact's ``honest_verdict`` to the first such suggestion and
+              preserves the original under ``honest_verdict_before_invariants``.
+            - Appends an ``invariant_violations`` list to the artifact (empty
+              when everything passes — so retro scripts can distinguish
+              "checked, clean" from "not checked").
+        """
+        try:
+            from carnot.invariants import run_invariants
+        except ImportError:
+            # The invariants module is optional — if it is absent (very early
+            # clone, in-flight refactor), do nothing rather than crash every
+            # experiment.
+            return
+        if not self._output_path.exists():
+            # assert_written() already handled the missing-deliverable case;
+            # no artifact to check.
+            return
+
+        try:
+            artifact = json.loads(self._output_path.read_text())
+        except (json.JSONDecodeError, OSError) as exc:
+            _log.warning(
+                "assert_deliverable_written: could not parse deliverable "
+                "%s for invariant check: %s", self._output_path, exc,
+            )
+            return
+
+        violations = run_invariants(artifact)
+        # Always record the field, even when empty — downstream scripts use
+        # its presence as evidence the check ran.
+        artifact["invariant_violations"] = [v.as_dict() for v in violations]
+        if violations:
+            original_verdict = artifact.get("honest_verdict")
+            substitute = next(
+                (v.suggested_verdict for v in violations if v.suggested_verdict),
+                None,
+            )
+            if substitute is not None and substitute != original_verdict:
+                artifact["honest_verdict_before_invariants"] = original_verdict
+                artifact["honest_verdict"] = substitute
+            for v in violations:
+                sys.stderr.write(
+                    f"[INVARIANT VIOLATION] exp={self.exp_id} "
+                    f"{v.invariant_name}: {v.reason}\n"
+                )
+        # Re-write the artifact.  We keep the same indent=2 convention used by
+        # build_result elsewhere to avoid noisy diffs.
+        self._output_path.write_text(json.dumps(artifact, indent=2))
 
     # ------------------------------------------------------------------
     # setup_gpu()
