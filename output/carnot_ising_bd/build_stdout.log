@@ -1450,3 +1450,80 @@ route_design: Time (s): cpu = 00:27:35 ; elapsed = 00:10:10 . Memory (MB): peak 
 INFO: [Vivado 12-24828] Executing command : report_drc -file carnot_ising_bd_wrapper_drc_routed.rpt -pb carnot_ising_bd_wrapper_drc_routed.pb -rpx carnot_ising_bd_wrapper_drc_routed.rpx
 Command: report_drc -file carnot_ising_bd_wrapper_drc_routed.rpt -pb carnot_ising_bd_wrapper_drc_routed.pb -rpx carnot_ising_bd_wrapper_drc_routed.rpx
 INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 2-168] The results of DRC are in file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper_drc_routed.rpt.
+report_drc completed successfully
+report_drc: Time (s): cpu = 00:01:28 ; elapsed = 00:00:24 . Memory (MB): peak = 7074.098 ; gain = 0.000 ; free physical = 71556 ; free virtual = 353896
+INFO: [Vivado 12-24828] Executing command : report_methodology -file carnot_ising_bd_wrapper_methodology_drc_routed.rpt -pb carnot_ising_bd_wrapper_methodology_drc_routed.pb -rpx carnot_ising_bd_wrapper_methodology_drc_routed.rpx
+Command: report_methodology -file carnot_ising_bd_wrapper_methodology_drc_routed.rpt -pb carnot_ising_bd_wrapper_methodology_drc_routed.pb -rpx carnot_ising_bd_wrapper_methodology_drc_routed.rpx
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [DRC 23-133] Running Methodology with 8 threads
+INFO: [Vivado_Tcl 2-1520] The results of Report Methodology are in file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper_methodology_drc_routed.rpt.
+report_methodology completed successfully
+report_methodology: Time (s): cpu = 00:01:40 ; elapsed = 00:00:20 . Memory (MB): peak = 7074.098 ; gain = 0.000 ; free physical = 71632 ; free virtual = 353972
+INFO: [Vivado 12-24828] Executing command : report_timing_summary -max_paths 10 -routable_nets -report_unconstrained -file carnot_ising_bd_wrapper_timing_summary_routed.rpt -pb carnot_ising_bd_wrapper_timing_summary_routed.pb -rpx carnot_ising_bd_wrapper_timing_summary_routed.rpx -warn_on_violation 
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2LV, Temperature grade: C, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+CRITICAL WARNING: [Timing 38-282] The design failed to meet the timing requirements. Please see the timing summary report for details on the timing violations.
+report_timing_summary: Time (s): cpu = 00:01:05 ; elapsed = 00:00:17 . Memory (MB): peak = 7074.098 ; gain = 0.000 ; free physical = 71568 ; free virtual = 353909
+INFO: [Vivado 12-24838] Running report commands "report_bus_skew, report_incremental_reuse, report_route_status" in parallel.
+Running report generation with 3 threads.
+INFO: [Vivado 12-24828] Executing command : report_incremental_reuse -file carnot_ising_bd_wrapper_incremental_reuse_routed.rpt
+INFO: [Vivado_Tcl 4-1062] Incremental flow is disabled. No incremental reuse Info to report.
+INFO: [Vivado 12-24828] Executing command : report_bus_skew -warn_on_violation -file carnot_ising_bd_wrapper_bus_skew_routed.rpt -pb carnot_ising_bd_wrapper_bus_skew_routed.pb -rpx carnot_ising_bd_wrapper_bus_skew_routed.rpx
+INFO: [Timing 38-91] UpdateTimingParams: Speed grade: -2LV, Temperature grade: C, Delay Type: min_max.
+INFO: [Timing 38-191] Multithreading enabled for timing update using a maximum of 8 CPUs
+INFO: [Vivado 12-24828] Executing command : report_route_status -file carnot_ising_bd_wrapper_route_status.rpt -pb carnot_ising_bd_wrapper_route_status.pb
+INFO: [Vivado 12-24828] Executing command : report_power -file carnot_ising_bd_wrapper_power_routed.rpt -pb carnot_ising_bd_wrapper_power_summary_routed.pb -rpx carnot_ising_bd_wrapper_power_routed.rpx
+Command: report_power -file carnot_ising_bd_wrapper_power_routed.rpt -pb carnot_ising_bd_wrapper_power_summary_routed.pb -rpx carnot_ising_bd_wrapper_power_routed.rpx
+Running Vector-less Activity Propagation...
+
+Finished Running Vector-less Activity Propagation
+241 Infos, 3 Warnings, 1 Critical Warnings and 0 Errors encountered.
+report_power completed successfully
+report_power: Time (s): cpu = 00:00:39 ; elapsed = 00:00:14 . Memory (MB): peak = 7122.176 ; gain = 48.078 ; free physical = 71575 ; free virtual = 353925
+INFO: [Vivado 12-24828] Executing command : report_clock_utilization -file carnot_ising_bd_wrapper_clock_utilization_routed.rpt
+report_clock_utilization: Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71518 ; free virtual = 353869
+generate_parallel_reports: Time (s): cpu = 00:05:00 ; elapsed = 00:01:24 . Memory (MB): peak = 7122.176 ; gain = 48.078 ; free physical = 71518 ; free virtual = 353869
+INFO: [Timing 38-480] Writing timing data to binary archive.
+Write ShapeDB Complete: Time (s): cpu = 00:00:00.78 ; elapsed = 00:00:00.17 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71516 ; free virtual = 353883
+Wrote PlaceDB: Time (s): cpu = 00:00:11 ; elapsed = 00:00:05 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71328 ; free virtual = 353906
+Wrote PulsedLatchDB: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71328 ; free virtual = 353906
+Writing XDEF routing.
+Writing XDEF routing logical nets.
+Writing XDEF routing special nets.
+Wrote RouteStorage: Time (s): cpu = 00:00:02 ; elapsed = 00:00:01 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71350 ; free virtual = 353953
+Wrote Netlist Cache: Time (s): cpu = 00:00:00.17 ; elapsed = 00:00:00.19 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71329 ; free virtual = 353954
+Wrote Device Cache: Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71324 ; free virtual = 353952
+Write Physdb Complete: Time (s): cpu = 00:00:14 ; elapsed = 00:00:06 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71324 ; free virtual = 353953
+INFO: [Common 17-1381] The checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/impl_1/carnot_ising_bd_wrapper_routed.dcp' has been generated.
+write_checkpoint: Time (s): cpu = 00:00:16 ; elapsed = 00:00:09 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71350 ; free virtual = 353760
+
+WARNING::74 - Unsupported FPGA device name 'xck26-sfvc784-2LV-c'. Verify that the specified device is a valid customer supported device.
+-p xck26-sfvc784-2LV-c
+   ^
+
+Command: write_bitstream -force carnot_ising_bd_wrapper.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+Running DRC as a precondition to command write_bitstream
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado 12-3199] DRC finished with 0 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+Integrating Hard IP ELF/MEM with the PDI.
+INFO: [Designutils 20-2272] Running write_bitstream with 8 threads.
+Loading data files...
+Loading site data...
+Loading route data...
+Processing options...
+Creating bitmap...
+Creating bitstream...
+Writing bitstream ./carnot_ising_bd_wrapper.bit...
+INFO: [Vivado 12-1842] Bitgen Completed Successfully.
+INFO: [Common 17-83] Releasing license: Implementation
+252 Infos, 3 Warnings, 1 Critical Warnings and 0 Errors encountered.
+write_bitstream completed successfully
+write_bitstream: Time (s): cpu = 00:00:49 ; elapsed = 00:00:17 . Memory (MB): peak = 7122.176 ; gain = 0.000 ; free physical = 71500 ; free virtual = 353923
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 12:42:37 2026...
