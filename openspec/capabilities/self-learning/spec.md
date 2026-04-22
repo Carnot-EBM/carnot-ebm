@@ -308,3 +308,70 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 | REQ-FR11-002 | Implemented (adaptive_thresholds.py) | test_experiment_734_fr11_relay.py |
 | REQ-FR11-003 | Implemented (session_memory.py) | test_experiment_734_fr11_relay.py |
 | REQ-FR11-004 | Implemented (adaptive_thresholds.py) | test_experiment_734_fr11_relay.py |
+
+---
+
+## REQ-PSV-010: PSV Diagnosis Experiments Must Test At Least 2 Falsifiable Hypotheses
+
+**Given** PSV self-play has degraded for 2+ consecutive milestones
+**When** a diagnosis experiment is designed to identify root cause
+**Then** the experiment MUST test at least 2 distinct, falsifiable hypotheses with controlled conditions
+**And** each hypothesis must have a measurable outcome (slope, rate, or classification metric)
+**And** the gate file MUST record which hypothesis was confirmed or that neither was confirmed
+
+Sub-requirements:
+- REQ-PSV-010-1: Each condition MUST vary exactly ONE independent variable vs. the control.
+- REQ-PSV-010-2: honest_verdict MUST be one of the predefined falsifiable outcomes (not "unknown" unless ALL hypotheses are ruled out).
+- REQ-PSV-010-3: The gate file MUST record root_cause_hypothesis so downstream experiments can branch on it.
+
+**Implementation Status:** Implemented (scripts/experiment_736_psv_specialization.py, Exp 736)
+
+---
+
+## REQ-PSV-011: PSV Verifier Training Data Must Include At Least 3 Distinct Domains
+
+**Given** PSV self-play shows increasing fp_rate (specialization degradation pattern)
+**When** the verifier is retrained or evaluated
+**Then** the training/evaluation data MUST include questions from at least 3 distinct domains
+**And** domains must be qualitatively different (e.g., arithmetic, logical, planning — not arithmetic sub-variants)
+**And** fp_rate MUST be measured separately per domain so per-domain degradation is detectable
+
+Sub-requirements:
+- REQ-PSV-011-1: Domains MUST include at least one non-arithmetic domain (logical or planning).
+- REQ-PSV-011-2: The domain pool loader MUST accept a list of (domain_name, question_list) tuples.
+- REQ-PSV-011-3: Per-condition slopes MUST be reported in the artifact for each domain condition tested.
+
+**Implementation Status:** Implemented (scripts/experiment_736_psv_specialization.py, Exp 736)
+
+---
+
+## SCENARIO-PSV-010: Exp 736 Condition B Confirms Domain Diversity Hypothesis
+
+**Given** Exp 736 runs Condition B (domain-diverse pool: GSM8K + MATH-Algebra + ARC-Challenge)
+**When** fp_rate_slope is computed over 20 iterations for Condition B
+**Then** IF condition_b_slope < condition_a_slope THEN gate="pass" with root_cause="constraint_specialization"
+**And** the gate file records fix="domain_diversity"
+
+**Spec traces:** REQ-PSV-010, REQ-PSV-011
+**Implementation Status:** Implemented (Exp 736)
+
+---
+
+## SCENARIO-PSV-011: Exp 736 Condition C Confirms Verifier Generalization Hypothesis
+
+**Given** Exp 736 runs Condition C (domain-generic verifier weights, held-out GSM8K questions)
+**When** fp_rate_slope is computed over 20 iterations for Condition C
+**Then** IF condition_c_slope < condition_a_slope THEN gate="pass_verifier" with root_cause="constraint_specialization_verifier"
+**And** the gate file records fix="domain_generic_verifier"
+
+**Spec traces:** REQ-PSV-010, REQ-PSV-011
+**Implementation Status:** Implemented (Exp 736)
+
+---
+
+## Implementation Status (PSV-010/011)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-PSV-010 | Implemented (scripts/experiment_736_psv_specialization.py) | tests/python/test_experiment_736_psv_specialization.py |
+| REQ-PSV-011 | Implemented (scripts/experiment_736_psv_specialization.py) | tests/python/test_experiment_736_psv_specialization.py |
