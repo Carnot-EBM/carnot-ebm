@@ -13420,3 +13420,56 @@ When: executor.save_batch(batch, prefix='exp679') is called for batch_id=0.
 Then: checkpoint file is named 'results/exp679_batch_0000.json'.
 
 **Implementation Status:** Implemented (tests/python/test_experiment_679_vr_200q_scale.py, Exp 679)
+
+### REQ-VERIFY-157: HumanEval VR — Execution-Based Code Verification (No Regex)
+
+The system shall verify Python code correctness via execution, not regex extraction.
+Execution-based verification is the only reliable oracle for code: either the code
+produces the correct output or it does not.  Regex-based code verification is explicitly
+prohibited in this path.
+
+- REQ-VERIFY-157-1: Each code candidate shall be executed via subprocess.run(["python3", "-c", code], timeout=5).
+- REQ-VERIFY-157-2: Pass/fail is determined by returncode==0 AND stdout matching expected output.
+- REQ-VERIFY-157-3: Execution timeout of 5 seconds per candidate; timeout counts as failure.
+- REQ-VERIFY-157-4: The artifact MUST record baseline_pass_at_1 and post_pass_at_1 as floats in [0, 1].
+- REQ-VERIFY-157-5: The artifact MUST record signed_improvement = post_pass_at_1 - baseline_pass_at_1.
+
+**Implementation Status:** Implemented (scripts/experiment_680_humaneval_vr.py, Exp 680)
+
+### REQ-VERIFY-158: HumanEval VR — Assertion-Comment Forcing for Intermediate Checks
+
+The system shall instruct the model to write intermediate assertion comments
+(# ASSERT: variable == value) in generated code.  These are extractable by pattern
+and verifiable by including assert statements in the executed code.
+
+- REQ-VERIFY-158-1: Forcing system prompt instructs: "After each intermediate computation,
+  add a comment: # ASSERT: variable == value."
+- REQ-VERIFY-158-2: extract_assert_comments(code) returns list of (var, value) pairs from
+  # ASSERT: lines.
+- REQ-VERIFY-158-3: honest_verdict must be one of:
+  'code_vr_positive' (signed_improvement > 0 AND inference_mode=='live_gpu'),
+  'code_vr_no_improvement' (signed_improvement <= 0 AND inference_mode=='live_gpu'),
+  'code_vr_blocked' (no live GPU).
+- REQ-VERIFY-158-4: inference_mode MUST be recorded in the artifact on every exit path.
+
+**Implementation Status:** Implemented (scripts/experiment_680_humaneval_vr.py, Exp 680)
+
+### SCENARIO-VERIFY-208: extract_assert_comments Parses Standard ASSERT Lines
+
+Given: code = "x = 5\n# ASSERT: x == 5\ny = x + 3\n# ASSERT: y == 8".
+When: extract_assert_comments(code) is called.
+Then: returns [("x", "5"), ("y", "8")].
+
+**Implementation Status:** Implemented (tests/python/test_experiment_680_humaneval_vr.py, Exp 680)
+
+### SCENARIO-VERIFY-209: honest_verdict Logic for code_vr Covers All Three Cases
+
+Given: compute_honest_verdict_680(signed_improvement, inference_mode).
+When: signed_improvement=0.10 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'code_vr_positive'.
+When: signed_improvement=-0.05 AND inference_mode='live_gpu'.
+Then: honest_verdict == 'code_vr_no_improvement'.
+When: inference_mode='blocked'.
+Then: honest_verdict == 'code_vr_blocked'.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_680_humaneval_vr.py, Exp 680)
