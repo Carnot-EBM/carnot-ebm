@@ -7,6 +7,7 @@ SCENARIO-VERIFY-036, SCENARIO-VERIFY-037, SCENARIO-VERIFY-038
 from __future__ import annotations
 
 import gc
+import os
 import threading
 from collections import deque
 from collections.abc import Callable, Sequence
@@ -270,7 +271,27 @@ class ModelServer:
                 max_new_tokens=max_new_tokens,
             )
             self._request_queue.put(request)
-            request.done.wait()
+            # RETRO (.52 Exp 679): unbounded wait() made a worker-thread stall
+            # (CUDA deadlock, OOM that caught torch but left done.set() unreached)
+            # invisible to the caller — observed 130 min at 0% GPU utilisation
+            # before the experiment watchdog fired at 180 min.  Bound the wait
+            # with a per-batch timeout so a worker stall surfaces within minutes
+            # rather than hours.  Tunable via CARNOT_MODELSERVER_BATCH_TIMEOUT_S
+            # (default 120 s, ~4x a realistic 10-30 s batch generation on a 3090
+            # for Qwen3.5-0.8B at batch_size=8 / max_new_tokens=256).
+            timeout_s = float(os.environ.get("CARNOT_MODELSERVER_BATCH_TIMEOUT_S", "120"))
+            if not request.done.wait(timeout=timeout_s):
+                worker = self._worker
+                worker_alive = worker is not None and worker.is_alive()
+                raise TimeoutError(
+                    f"ModelServer batch generation stalled: no response within "
+                    f"{timeout_s:.0f}s (model={request.model_name}, "
+                    f"batch_size={len(request.prompts)}, "
+                    f"max_new_tokens={request.max_new_tokens}, "
+                    f"worker_alive={worker_alive}, "
+                    f"queue_depth={self._request_queue.qsize()}). "
+                    f"Tune via CARNOT_MODELSERVER_BATCH_TIMEOUT_S."
+                )
             if request.error is not None:
                 raise RuntimeError(str(request.error)) from request.error
             assert request.responses is not None

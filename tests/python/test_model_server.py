@@ -7,6 +7,7 @@ SCENARIO-VERIFY-036, SCENARIO-VERIFY-037, SCENARIO-VERIFY-038
 from __future__ import annotations
 
 import threading
+import time
 from typing import Any
 
 import pytest
@@ -229,6 +230,65 @@ class TestModelServerBatching:
             pytest.raises(KeyError, match="google/gemma-4-E4B-it"),
         ):
             server.generate_batch(["hello"], model="google/gemma-4-E4B-it")
+
+    def test_generate_batch_times_out_when_worker_stalls(
+        self, monkeypatch: pytest.MonkeyPatch
+    ) -> None:
+        """REQ-VERIFY-039 (.52 Exp 679): a stalled worker surfaces as TimeoutError
+        within the configured budget rather than hanging the caller forever.
+
+        Simulates the 130-min-at-0%-GPU failure seen in Exp 679 VR 200q scale:
+        the worker thread entered _default_batch_generate() and never returned
+        (CUDA kernel stall / OOM caught without request.done.set()).  Before
+        this guard, ``request.done.wait()`` blocked indefinitely; with it, the
+        caller raises TimeoutError and the experiment can report the hang
+        honestly instead of burning the watchdog budget.
+        """
+        # Very short timeout so the test is fast.  The production default is
+        # 120 s; here we verify the env-var knob is read per-call.
+        monkeypatch.setenv("CARNOT_MODELSERVER_BATCH_TIMEOUT_S", "0.5")
+
+        stall_forever = threading.Event()  # intentionally never set
+
+        def stalling_batch_generate(
+            model: dict[str, str],
+            tokenizer: dict[str, str],
+            prompts: list[str],
+            max_new_tokens: int,
+        ) -> list[str]:
+            del model, tokenizer, prompts, max_new_tokens
+            # Block the worker thread indefinitely to simulate a CUDA hang.
+            # The test will still complete because the CALLER's wait() now
+            # has a timeout.
+            stall_forever.wait()
+            return []
+
+        start = time.perf_counter()
+        with (
+            ModelServer(
+                ["Qwen/Qwen3.5-0.8B"],
+                loader=_make_loader([]),
+                batch_generate_fn=stalling_batch_generate,
+            ) as server,
+            pytest.raises(TimeoutError, match="ModelServer batch generation stalled"),
+        ):
+            server.generate_batch(["ping"], model="Qwen/Qwen3.5-0.8B")
+        elapsed = time.perf_counter() - start
+
+        # Expected elapsed: 0.5 s (wait timeout) + up to 5 s (worker.join
+        # timeout during context-manager __exit__ — the stalled worker cannot
+        # actually be joined, so this always pays the full 5 s).  Total bound
+        # is ~10 s; the important guarantee is that the caller is NOT blocked
+        # indefinitely.  A pre-fix run would have blocked forever.
+        assert elapsed < 10.0, (
+            f"Caller was not released after worker stall "
+            f"(elapsed={elapsed:.2f}s; expected < 10.0s)"
+        )
+
+        # Release the stalled worker so subsequent tests aren't left with a
+        # zombie thread.  (By this point the server has already shut down, so
+        # this just lets the thread see stall_forever.set() and exit cleanly.)
+        stall_forever.set()
 
 
 class TestModelLoaderServerIntegration:
