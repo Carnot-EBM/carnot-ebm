@@ -160,3 +160,465 @@ Run output will be captured here: /home/ianblenke/github.com/ianblenke/carnot/ou
 launch_runs: Time (s): cpu = 00:00:17 ; elapsed = 00:00:17 . Memory (MB): peak = 2037.582 ; gain = 159.043 ; free physical = 77442 ; free virtual = 359640
 # wait_on_run synth_1
 [Wed Apr 22 13:48:18 2026] Waiting for synth_1 to finish...
+
+*** Running vivado
+    with args -log carnot_ising_bd_wrapper.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source carnot_ising_bd_wrapper.tcl
+
+
+****** Vivado v2025.2.1 (64-bit)
+  **** SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
+  **** IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
+  **** SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
+  **** Start of session at: Wed Apr 22 13:51:52 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source carnot_ising_bd_wrapper.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.2.1/data/ip'.
+Command: synth_design -top carnot_ising_bd_wrapper -part xck26-sfvc784-2LV-c
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Device 21-403] Loading part xck26-sfvc784-2LV-c
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 423386
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 2782.445 ; gain = 151.656 ; free physical = 75790 ; free virtual = 358172
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd_wrapper' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/hdl/carnot_ising_bd_wrapper.v:13]
+INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:13]
+INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd_axi_smartconnect_0_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_axi_smartconnect_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd_axi_smartconnect_0_0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_axi_smartconnect_0_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd_ising_sampler_0_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_ising_sampler_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd_ising_sampler_0_0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_ising_sampler_0_0_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd_proc_sys_reset_0_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_proc_sys_reset_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd_proc_sys_reset_0_0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_proc_sys_reset_0_0_stub.v:6]
+WARNING: [Synth 8-7071] port 'mb_reset' of module 'carnot_ising_bd_proc_sys_reset_0_0' is unconnected for instance 'proc_sys_reset_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:162]
+WARNING: [Synth 8-7071] port 'bus_struct_reset' of module 'carnot_ising_bd_proc_sys_reset_0_0' is unconnected for instance 'proc_sys_reset_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:162]
+WARNING: [Synth 8-7071] port 'peripheral_reset' of module 'carnot_ising_bd_proc_sys_reset_0_0' is unconnected for instance 'proc_sys_reset_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:162]
+WARNING: [Synth 8-7071] port 'interconnect_aresetn' of module 'carnot_ising_bd_proc_sys_reset_0_0' is unconnected for instance 'proc_sys_reset_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:162]
+WARNING: [Synth 8-7023] instance 'proc_sys_reset_0' of module 'carnot_ising_bd_proc_sys_reset_0_0' has 10 connections declared, but only 6 given [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:162]
+INFO: [Synth 8-6157] synthesizing module 'carnot_ising_bd_zynq_ultra_ps_e_0_0' [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_zynq_ultra_ps_e_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd_zynq_ultra_ps_e_0_0' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/.Xil/Vivado-395849-icbfl1/realtime/carnot_ising_bd_zynq_ultra_ps_e_0_0_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v:13]
+INFO: [Synth 8-6155] done synthesizing module 'carnot_ising_bd_wrapper' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/hdl/carnot_ising_bd_wrapper.v:13]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2870.414 ; gain = 239.625 ; free physical = 75673 ; free virtual = 358056
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2870.414 ; gain = 239.625 ; free physical = 75676 ; free virtual = 358059
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 2870.414 ; gain = 239.625 ; free physical = 75676 ; free virtual = 358059
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2870.414 ; gain = 0.000 ; free physical = 75677 ; free virtual = 358059
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/zynq_ultra_ps_e_0'
+create_clock: Time (s): cpu = 00:00:06 ; elapsed = 00:00:06 . Memory (MB): peak = 2910.434 ; gain = 0.000 ; free physical = 75725 ; free virtual = 358107
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/zynq_ultra_ps_e_0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/carnot_ising_bd_axi_smartconnect_0_0/carnot_ising_bd_axi_smartconnect_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/axi_smartconnect_0'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/carnot_ising_bd_axi_smartconnect_0_0/carnot_ising_bd_axi_smartconnect_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/axi_smartconnect_0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/proc_sys_reset_0'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/proc_sys_reset_0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/ising_sampler_0'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0_in_context.xdc] for cell 'carnot_ising_bd_i/ising_sampler_0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/dont_touch.xdc]
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 2910.434 ; gain = 0.000 ; free physical = 75726 ; free virtual = 358109
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 2910.469 ; gain = 0.000 ; free physical = 75728 ; free virtual = 358111
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2910.469 ; gain = 279.680 ; free physical = 75693 ; free virtual = 358076
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xck26-sfvc784-2LV-c
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2918.438 ; gain = 287.648 ; free physical = 75696 ; free virtual = 358078
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:15 . Memory (MB): peak = 2918.438 ; gain = 287.648 ; free physical = 75696 ; free virtual = 358078
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:15 . Memory (MB): peak = 2918.438 ; gain = 287.648 ; free physical = 75691 ; free virtual = 358076
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1248 (col length:96)
+BRAMs: 288 (col length: RAMB18 96 RAMB36 48)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:16 ; elapsed = 00:00:16 . Memory (MB): peak = 2918.438 ; gain = 287.648 ; free physical = 75704 ; free virtual = 358093
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:22 ; elapsed = 00:00:22 . Memory (MB): peak = 3565.594 ; gain = 934.805 ; free physical = 75117 ; free virtual = 357505
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:22 ; elapsed = 00:00:22 . Memory (MB): peak = 3565.594 ; gain = 934.805 ; free physical = 75117 ; free virtual = 357505
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:22 ; elapsed = 00:00:22 . Memory (MB): peak = 3575.609 ; gain = 944.820 ; free physical = 75110 ; free virtual = 357498
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74983 ; free virtual = 357374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74984 ; free virtual = 357374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74984 ; free virtual = 357374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74984 ; free virtual = 357374
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74985 ; free virtual = 357375
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74985 ; free virtual = 357375
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+-------------------------------------+----------+
+|      |BlackBox name                        |Instances |
++------+-------------------------------------+----------+
+|1     |carnot_ising_bd_axi_smartconnect_0_0 |         1|
+|2     |carnot_ising_bd_ising_sampler_0_0    |         1|
+|3     |carnot_ising_bd_proc_sys_reset_0_0   |         1|
+|4     |carnot_ising_bd_zynq_ultra_ps_e_0_0  |         1|
++------+-------------------------------------+----------+
+
+Report Cell Usage: 
++------+-----------------------------------+------+
+|      |Cell                               |Count |
++------+-----------------------------------+------+
+|1     |carnot_ising_bd_axi_smartconnect_0 |     1|
+|2     |carnot_ising_bd_ising_sampler_0    |     1|
+|3     |carnot_ising_bd_proc_sys_reset_0   |     1|
+|4     |carnot_ising_bd_zynq_ultra_ps_e_0  |     1|
++------+-----------------------------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74985 ; free virtual = 357375
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:18 ; elapsed = 00:00:19 . Memory (MB): peak = 3762.422 ; gain = 1091.578 ; free physical = 74969 ; free virtual = 357360
+Synthesis Optimization Complete : Time (s): cpu = 00:00:25 ; elapsed = 00:00:25 . Memory (MB): peak = 3762.422 ; gain = 1131.633 ; free physical = 74969 ; free virtual = 357359
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3762.422 ; gain = 0.000 ; free physical = 74971 ; free virtual = 357361
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3762.422 ; gain = 0.000 ; free physical = 75002 ; free virtual = 357393
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Synth Design complete | Checksum: c62b179a
+INFO: [Common 17-83] Releasing license: Synthesis
+28 Infos, 5 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:34 ; elapsed = 00:00:33 . Memory (MB): peak = 3762.422 ; gain = 2144.492 ; free physical = 75007 ; free virtual = 357398
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2818.020; main = 2818.020; forked = 294.967
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 4375.074; main = 3687.254; forked = 1012.219
+INFO: [Common 17-1381] The checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/synth_1/carnot_ising_bd_wrapper.dcp' has been generated.
+INFO: [Vivado 12-24828] Executing command : report_utilization -file carnot_ising_bd_wrapper_utilization_synth.rpt -pb carnot_ising_bd_wrapper_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Wed Apr 22 13:52:29 2026...
+[Wed Apr 22 13:52:30 2026] synth_1 finished
+wait_on_runs: Time (s): cpu = 00:09:19 ; elapsed = 00:04:12 . Memory (MB): peak = 2037.582 ; gain = 0.000 ; free physical = 76813 ; free virtual = 359197
+# launch_runs impl_1 -to_step write_bitstream -jobs 8
+[Wed Apr 22 13:52:32 2026] Launched impl_1...
+Run output will be captured here: /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.runs/impl_1/runme.log
+# wait_on_run impl_1
+[Wed Apr 22 13:52:32 2026] Waiting for impl_1 to finish...
+
+*** Running vivado
+    with args -log carnot_ising_bd_wrapper.vdi -applog -m64 -product Vivado -messageDb vivado.pb -mode batch -source carnot_ising_bd_wrapper.tcl -notrace
+
+
+****** Vivado v2025.2.1 (64-bit)
+  **** SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
+  **** IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
+  **** SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
+  **** Start of session at: Wed Apr 22 13:52:34 2026
+    ** Copyright 1986-2022 Xilinx, Inc. All Rights Reserved.
+    ** Copyright 2022-2026 Advanced Micro Devices, Inc. All Rights Reserved.
+
+source carnot_ising_bd_wrapper.tcl -notrace
+INFO: [IP_Flow 19-234] Refreshing IP repositories
+INFO: [IP_Flow 19-1704] No user IP repositories specified
+INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.2.1/data/ip'.
+Command: link_design -top carnot_ising_bd_wrapper -part xck26-sfvc784-2LV-c
+Design is defaulting to srcset: sources_1
+Design is defaulting to constrset: constrs_1
+INFO: [Device 21-403] Loading part xck26-sfvc784-2LV-c
+INFO: [Project 1-5699] Read binary netlist with skipMacroContent - 1
+INFO: [Project 1-454] Reading design checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/carnot_ising_bd_axi_smartconnect_0_0.dcp' for cell 'carnot_ising_bd_i/axi_smartconnect_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0.dcp' for cell 'carnot_ising_bd_i/ising_sampler_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0.dcp' for cell 'carnot_ising_bd_i/proc_sys_reset_0'
+INFO: [Project 1-454] Reading design checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0.dcp' for cell 'carnot_ising_bd_i/zynq_ultra_ps_e_0'
+Netlist sorting complete. Time (s): cpu = 00:00:00.59 ; elapsed = 00:00:00.59 . Memory (MB): peak = 2651.605 ; gain = 0.000 ; free physical = 76047 ; free virtual = 358432
+INFO: [Netlist 29-17] Analyzing 16823 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 5 CPU seconds
+WARNING: [Netlist 29-43] Netlist 'carnot_ising_bd_wrapper' is not ideal for floorplanning, since the cellview 'carnot_ising_bd_ising_sampler_0_0_ising_sampler_128_sync' defined in file 'carnot_ising_bd_ising_sampler_0_0.edf' contains large number of primitives.  Please consider enabling hierarchy in synthesis if you want to do floorplanning.
+INFO: [Project 1-479] Netlist was created with Vivado 2025.2.1
+INFO: [Project 1-570] Preparing netlist for logic optimization
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0.xdc] for cell 'carnot_ising_bd_i/zynq_ultra_ps_e_0/inst'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_zynq_ultra_ps_e_0_0/carnot_ising_bd_zynq_ultra_ps_e_0_0.xdc] for cell 'carnot_ising_bd_i/zynq_ultra_ps_e_0/inst'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/bd_0/ip/ip_1/bd_8aa6_psr_aclk_0_board.xdc] for cell 'carnot_ising_bd_i/axi_smartconnect_0/inst/clk_map/psr_aclk/U0'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/bd_0/ip/ip_1/bd_8aa6_psr_aclk_0_board.xdc] for cell 'carnot_ising_bd_i/axi_smartconnect_0/inst/clk_map/psr_aclk/U0'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/smartconnect.xdc] for cell 'carnot_ising_bd_i/axi_smartconnect_0/inst'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/smartconnect.xdc] for cell 'carnot_ising_bd_i/axi_smartconnect_0/inst'
+Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0_board.xdc] for cell 'carnot_ising_bd_i/proc_sys_reset_0/U0'
+Finished Parsing XDC File [/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_proc_sys_reset_0_0/carnot_ising_bd_proc_sys_reset_0_0_board.xdc] for cell 'carnot_ising_bd_i/proc_sys_reset_0/U0'
+INFO: [Project 1-1714] 18 XPM XDC files have been applied to the design.
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 4380.320 ; gain = 0.000 ; free physical = 74632 ; free virtual = 357017
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 1088 instances were transformed.
+  DSP48E2 => DSP48E2 (DSP_ALU, DSP_A_B_DATA, DSP_C_DATA, DSP_MULTIPLIER, DSP_M_DATA, DSP_OUTPUT, DSP_PREADD, DSP_PREADD_DATA): 1088 instances
+
+16 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+link_design completed successfully
+link_design: Time (s): cpu = 00:01:55 ; elapsed = 00:00:52 . Memory (MB): peak = 4380.355 ; gain = 2742.148 ; free physical = 74614 ; free virtual = 356999
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:01 . Memory (MB): peak = 4380.355 ; gain = 0.000 ; free physical = 74589 ; free virtual = 356974
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 1569e21a2
+
+Time (s): cpu = 00:01:12 ; elapsed = 00:00:13 . Memory (MB): peak = 4380.355 ; gain = 0.000 ; free physical = 74663 ; free virtual = 357048
+
+Starting Logic Optimization Task
+
+Phase 1 Initialization
+
+Phase 1.1 Core Generation And Design Setup
+Phase 1.1 Core Generation And Design Setup | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:00.25 ; elapsed = 00:00:00.25 . Memory (MB): peak = 4628.133 ; gain = 0.000 ; free physical = 74375 ; free virtual = 356760
+
+Phase 1.2 Setup Constraints And Sort Netlist
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.28 . Memory (MB): peak = 4628.133 ; gain = 0.000 ; free physical = 74375 ; free virtual = 356760
+Phase 1 Initialization | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:00.28 ; elapsed = 00:00:00.29 . Memory (MB): peak = 4628.133 ; gain = 0.000 ; free physical = 74375 ; free virtual = 356760
+
+Phase 2 Timer Update And Timing Data Collection
+
+Phase 2.1 Detect if minReqCache needed
+Phase 2.1 Detect if minReqCache needed | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:00.36 ; elapsed = 00:00:00.39 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74267 ; free virtual = 356652
+
+Phase 2.2 Timer Update
+Phase 2.2 Timer Update | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:05 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74248 ; free virtual = 356632
+
+Phase 2.3 Timing Data Collection
+Phase 2.3 Timing Data Collection | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:05 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74234 ; free virtual = 356619
+Phase 2 Timer Update And Timing Data Collection | Checksum: 1569e21a2
+
+Time (s): cpu = 00:00:22 ; elapsed = 00:00:05 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74234 ; free virtual = 356619
+
+Phase 3 Retarget
+INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-1566] Pulled 5 inverters resulting in an inversion of 267 pins
+INFO: [Opt 31-138] Pushed 29 inverter(s) to 1363 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 3 Retarget | Checksum: 23a104b3b
+
+Time (s): cpu = 00:00:24 ; elapsed = 00:00:07 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74233 ; free virtual = 356618
+Retarget | Checksum: 23a104b3b
+INFO: [Opt 31-389] Phase Retarget created 2 cells and removed 308 cells
+INFO: [Opt 31-1021] In phase Retarget, 20 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 4 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 4 Constant propagation | Checksum: 1eb415c89
+
+Time (s): cpu = 00:00:25 ; elapsed = 00:00:07 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74272 ; free virtual = 356657
+Constant propagation | Checksum: 1eb415c89
+INFO: [Opt 31-389] Phase Constant propagation created 3 cells and removed 8 cells
+INFO: [Opt 31-1021] In phase Constant propagation, 20 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 5 Sweep
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.06 . Memory (MB): peak = 4740.133 ; gain = 0.000 ; free physical = 74254 ; free virtual = 356638
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00.05 ; elapsed = 00:00:00.05 . Memory (MB): peak = 4740.133 ; gain = 0.000 ; free physical = 74264 ; free virtual = 356649
+Phase 5 Sweep | Checksum: 1e36d7f76
+
+Time (s): cpu = 00:00:28 ; elapsed = 00:00:10 . Memory (MB): peak = 4740.133 ; gain = 112.000 ; free physical = 74258 ; free virtual = 356643
+Sweep | Checksum: 1e36d7f76
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 67 cells
+INFO: [Opt 31-1021] In phase Sweep, 26 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 6 BUFG optimization
+INFO: [Opt 31-1077] Phase BUFG optimization inserted 0 global clock buffer(s) for CLOCK_LOW_FANOUT.
+Phase 6 BUFG optimization | Checksum: 1e36d7f76
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:12 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74236 ; free virtual = 356621
+BUFG optimization | Checksum: 1e36d7f76
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+
+Phase 7 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 7 Shift Register Optimization | Checksum: 1e36d7f76
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:13 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74235 ; free virtual = 356620
+Shift Register Optimization | Checksum: 1e36d7f76
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 8 Post Processing Netlist
+Phase 8 Post Processing Netlist | Checksum: 2a19070cb
+
+Time (s): cpu = 00:00:36 ; elapsed = 00:00:13 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74259 ; free virtual = 356644
+Post Processing Netlist | Checksum: 2a19070cb
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+INFO: [Opt 31-1021] In phase Post Processing Netlist, 20 netlist objects are constrained preventing optimization. Please run opt_design with -debug_log to get more detail. 
+
+Phase 9 Finalization
+
+Phase 9.1 Finalizing Design Cores and Updating Shapes
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 1a16a5df8
+
+Time (s): cpu = 00:00:39 ; elapsed = 00:00:16 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74247 ; free virtual = 356632
+
+Phase 9.2 Verifying Netlist Connectivity
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00.11 ; elapsed = 00:00:00.12 . Memory (MB): peak = 4772.148 ; gain = 0.000 ; free physical = 74262 ; free virtual = 356647
+Phase 9.2 Verifying Netlist Connectivity | Checksum: 1a16a5df8
+
+Time (s): cpu = 00:00:39 ; elapsed = 00:00:16 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74264 ; free virtual = 356649
+Phase 9 Finalization | Checksum: 1a16a5df8
+
+Time (s): cpu = 00:00:39 ; elapsed = 00:00:16 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74265 ; free virtual = 356650
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |               2  |             308  |                                             20  |
+|  Constant propagation         |               3  |               8  |                                             20  |
+|  Sweep                        |               0  |              67  |                                             26  |
+|  BUFG optimization            |               0  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                             20  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Ending Logic Optimization Task | Checksum: 1a16a5df8
+
+Time (s): cpu = 00:00:39 ; elapsed = 00:00:16 . Memory (MB): peak = 4772.148 ; gain = 144.016 ; free physical = 74268 ; free virtual = 356653
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+Ending Power Optimization Task | Checksum: 1a16a5df8
+
+Time (s): cpu = 00:00:00.06 ; elapsed = 00:00:00.05 . Memory (MB): peak = 4772.148 ; gain = 0.000 ; free physical = 74262 ; free virtual = 356646
+
+Starting Final Cleanup Task
+Ending Final Cleanup Task | Checksum: 1a16a5df8
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 4772.148 ; gain = 0.000 ; free physical = 74261 ; free virtual = 356646
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 4772.148 ; gain = 0.000 ; free physical = 74260 ; free virtual = 356645
+INFO: [Common 17-83] Releasing license: Implementation
+43 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:01:56 ; elapsed = 00:00:33 . Memory (MB): peak = 4772.148 ; gain = 391.793 ; free physical = 74252 ; free virtual = 356637
+INFO: [Vivado 12-24828] Executing command : report_drc -file carnot_ising_bd_wrapper_drc_opted.rpt -pb carnot_ising_bd_wrapper_drc_opted.pb -rpx carnot_ising_bd_wrapper_drc_opted.rpx
+Command: report_drc -file carnot_ising_bd_wrapper_drc_opted.rpt -pb carnot_ising_bd_wrapper_drc_opted.pb -rpx carnot_ising_bd_wrapper_drc_opted.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
