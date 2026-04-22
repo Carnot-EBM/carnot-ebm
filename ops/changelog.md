@@ -102,6 +102,10 @@
 
 - 2026-04-22 11:13 UTC: Exp 698 — JEPA v16: InfoNCE Contrastive Loss — OOD AUC Target >= 0.75 on GSM8K 500-699 (root cause from Exp 693: pure_loss_anti_correlation). Architecture applied: InfoNCE contrastive loss replacing PUREMinFormLoss. Result: ⚠️ Research Finding. honest_verdict=jepa_v16_still_below_random; v16_ood_auc=0.4759 (ood_auc_delta=+0.0008 vs v15_baseline_auc=0.4751 — no meaningful improvement, still below random 0.5). cascade_unblocked=false. Research finding: architectural pivot to InfoNCE did not resolve the anti-correlation root cause; JEPA v16 remains non-viable for cascade deployment.
 
+## 2026-04-22 (Exp 699: HalluSAE Feature Integration into JEPA v16)
+
+- 2026-04-22 11:24 UTC: Exp 699 — JEPA v16 Retrain on HalluSAE Sparse Features — OOD AUC vs v16 Baseline. Architecture applied: SAE latent features (512-dim, 0.002 sparsity) as JEPA v16 input features. Result: ⚠️ Research Finding. honest_verdict=hallusae_integration_no_improvement; v16_baseline_auc=0.4759, hallusae_v16_ood_auc=0.2616 (delta_auc=-0.2142 — severe regression, SAE features degraded performance). Research finding: HalluSAE sparse AE latent features incompatible with JEPA v16 architecture; SAE feature dimensionality/sparsity pattern unsuitable for current JEPA input processing; integration not viable without architectural modification to feature adapter.
+
 ## 2026-04-22 (Exp 695: Tier 2.8 Candidate Benchmark)
 
 - 2026-04-22 10:07 UTC: Exp 695 — FormalStepVerifier vs EidokuCSP: Tier 2.8 Candidate Benchmark. (Conductor autoresearch) Compared three verifiers (FormalStepVerifier, SymCodeVerifier, EidokuCSP) on FoVer corpus v1. Status: success. All verifiers achieved AUC=0.5 (random baseline). honest_verdict=tier_28_no_candidate: FoVer v1 contains only step_correct=True labels; all Z3 verdicts are 'unparseable' (single-step "The answer is 42." format with no arithmetic). Corpus is degenerate for Tier 2.8 benchmarking. ⚠️ Research Finding. Recommendation: construct corpus with genuine violation examples (step_correct=False cases with parseable Z3 verdicts) before re-attempting verifier comparison.
