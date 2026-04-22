@@ -2470,3 +2470,4 @@ python/ |
 | 2026-04-22 09:58 UTC | Exp 694: VR Cross-Model Validation + Hard GSM8K —  | OK | 81 passed, 3 warnings in 7.83s |
 | 2026-04-22 10:10 UTC | Exp 695: FormalStepVerifier Tier 2.8 — arXiv 2603. | OK | 81 passed, 3 warnings in 6.38s |
 | 2026-04-22 10:23 UTC | Exp 696: I-CALM Repair Abstention Layer — Confiden | OK | 145 passed, 3 warnings in 5.91s |
+| 2026-04-22 10:59 UTC | Exp 697: PSV Real-Data Self-Play 10 Iterations — K | OK | 81 passed, 3 warnings in 6.85s |
