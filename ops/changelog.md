@@ -2,6 +2,8 @@
 
 ## 2026-04-22 (Exp 704: JEPA v17 RankNet Pairwise Ranking Loss)
 
+- 2026-04-22 13:53 UTC: Exp 708 — VR Attempt #19: Gemma4-E4B-it with Adaptive Threshold Gating. (Gated on Exp 707) Tested adaptive threshold gating on Gemma4-E4B-it during live GPU VR inference. Gate suppressed 25 constraints (gate_suppressed_gemma4_symcode=true, n_constraints_suppressed=25) with zero accuracy impact: vr_accuracy=0.84 (baseline=0.84), signed_improvement=0.0. duration_s=85.794. honest_verdict=vr19_gemma4_no_harm. Research finding: Gemma4 gate suppresses constraints cleanly but provides no accuracy lift at this threshold configuration; inference mode=live_gpu, n_questions=25, baseline_correct_count=21, vr_correct_count=21. No spec changes (experiment validation only). results/experiment_708_vr_attempt_19_gemma4.json.
+
 - 2026-04-22 13:00 UTC: Exp 704 — JEPA v17: RankNet Pairwise Ranking Loss with Hard Negative Mining. (Auto-run from milestone .53 roadmap) Applied RankNet pairwise ranking loss + hard negative mining to improve ranking of solution steps for GSM8K OOD. v17_ood_auc=0.4819 (baseline v16=0.4759, +0.6% delta; v15=0.4751). Target was AUC >= 0.75. honest_verdict=jepa_v17_still_below_random. v18 recommendation: switch from pairwise RankNet to listwise LambdaRank loss (rank all steps jointly, optimizing NDCG surrogate which is the true AUC metric).
 
 ## 2026-04-22 (Milestone 2026.04.53 Operational Retrospective)
