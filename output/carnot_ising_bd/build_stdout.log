@@ -788,3 +788,103 @@ INFO: [Physopt 32-81] Processed net carnot_ising_bd_i/ising_sampler_0/inst/state
 INFO: [Physopt 32-81] Processed net carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][5]. Replicated 5 times.
 INFO: [Physopt 32-81] Processed net carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][6]. Replicated 5 times.
 INFO: [Physopt 32-81] Processed net carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][7]. Replicated 5 times.
+INFO: [Physopt 32-81] Processed net carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][8]. Replicated 5 times.
+INFO: [Physopt 32-232] Optimized 55 nets. Created 277 new instances.
+INFO: [Physopt 32-775] End 1 Pass. Optimized 55 nets or cells. Created 277 new cells, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.57 ; elapsed = 00:00:00.57 . Memory (MB): peak = 6035.887 ; gain = 0.000 ; free physical = 72386 ; free virtual = 354830
+INFO: [Physopt 32-670] No setup violation found.  DSP Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register to Pipeline Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  Shift Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  BRAM Register Optimization was not performed.
+INFO: [Physopt 32-670] No setup violation found.  URAM Register Optimization was not performed.
+INFO: [Physopt 32-949] No candidate nets found for dynamic/static region interface net replication
+INFO: [Physopt 32-775] End 1 Pass. Optimized 0 net or cell. Created 0 new cell, deleted 0 existing cell and moved 0 existing cell
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.02 . Memory (MB): peak = 6035.887 ; gain = 0.000 ; free physical = 72419 ; free virtual = 354864
+
+Summary of Physical Synthesis Optimizations
+============================================
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  Optimization                                     |  Added Cells  |  Removed Cells  |  Optimized Cells/Nets  |  Dont Touch  |  Iterations  |  Elapsed   |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+|  LUT Combining                                    |            0  |            521  |                   521  |           0  |           1  |  00:00:01  |
+|  Retime                                           |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Equivalent Driver Rewiring                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Very High Fanout                                 |          277  |              0  |                    55  |           0  |           1  |  00:03:17  |
+|  DSP Register                                     |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register to Pipeline                       |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Shift Register                                   |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  BRAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  URAM Register                                    |            0  |              0  |                     0  |           0  |           0  |  00:00:00  |
+|  Dynamic/Static Region Interface Net Replication  |            0  |              0  |                     0  |           0  |           1  |  00:00:00  |
+|  Total                                            |          277  |            521  |                   576  |           0  |           4  |  00:03:18  |
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+Phase 2.5.2 Physical Synthesis In Placer | Checksum: 1377f078a
+
+Time (s): cpu = 00:08:59 ; elapsed = 00:05:33 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72463 ; free virtual = 354908
+Phase 2.5 Global Place Phase2 | Checksum: 225d742f2
+
+Time (s): cpu = 00:09:24 ; elapsed = 00:05:43 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72503 ; free virtual = 354947
+Phase 2 Global Placement | Checksum: 225d742f2
+
+Time (s): cpu = 00:09:25 ; elapsed = 00:05:43 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72511 ; free virtual = 354955
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 1e525c33e
+
+Time (s): cpu = 00:09:51 ; elapsed = 00:05:51 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72579 ; free virtual = 355023
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 218bb0a16
+
+Time (s): cpu = 00:10:11 ; elapsed = 00:05:57 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72568 ; free virtual = 355013
+
+Phase 3.3 Small Shape DP
+
+Phase 3.3.1 Small Shape Clustering
+Phase 3.3.1 Small Shape Clustering | Checksum: 1c68f87f8
+
+Time (s): cpu = 00:11:04 ; elapsed = 00:06:12 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72584 ; free virtual = 355029
+
+Phase 3.3.2 Slice Area Swap
+
+Phase 3.3.2.1 Slice Area Swap Initial
+Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 192dba52c
+
+Time (s): cpu = 00:11:09 ; elapsed = 00:06:15 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72519 ; free virtual = 354964
+Phase 3.3.2 Slice Area Swap | Checksum: 192dba52c
+
+Time (s): cpu = 00:11:10 ; elapsed = 00:06:15 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72529 ; free virtual = 354974
+Phase 3.3 Small Shape DP | Checksum: 209b93412
+
+Time (s): cpu = 00:11:20 ; elapsed = 00:06:18 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72578 ; free virtual = 355023
+
+Phase 3.4 Place Remaining
+Phase 3.4 Place Remaining | Checksum: 118b11990
+
+Time (s): cpu = 00:11:23 ; elapsed = 00:06:20 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72536 ; free virtual = 354980
+
+Phase 3.5 Re-assign LUT pins
+Phase 3.5 Re-assign LUT pins | Checksum: 12c55a790
+
+Time (s): cpu = 00:11:42 ; elapsed = 00:06:27 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72500 ; free virtual = 354945
+
+Phase 3.6 Pipeline Register Optimization
+Phase 3.6 Pipeline Register Optimization | Checksum: 12564a6cc
+
+Time (s): cpu = 00:11:44 ; elapsed = 00:06:28 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72526 ; free virtual = 354970
+Phase 3 Detail Placement | Checksum: 12564a6cc
+
+Time (s): cpu = 00:11:46 ; elapsed = 00:06:28 . Memory (MB): peak = 6035.887 ; gain = 595.938 ; free physical = 72527 ; free virtual = 354972
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+
+Phase 4.1.1 Post Placement Optimization
