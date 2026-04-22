@@ -13188,3 +13188,53 @@ When: extract_platt_temperature(result) is called.
 Then: the function returns None without raising an exception.
 
 **Implementation Status:** Implemented (python/carnot/pipeline/jepa_cascade_loader.py, tests/python/test_jepa_cascade_loader.py)
+
+### REQ-VERIFY-151: IAS Adaptive Gate Uses Per-Extractor Quantile Regression Calibration
+
+The IAS (Instance-Adaptive Scaling) gate calibration module shall fit a separate quantile
+regression head for each extractor (symcode, structured, causal) using their respective
+recall distributions observed over FOVER pairs.
+
+- REQ-VERIFY-151-1: QuantileRegressionHead.train(observations, quantile) shall fit a
+  pinball loss minimiser on the given recall distribution and return the q-th quantile value.
+- REQ-VERIFY-151-2: calibrate(fover_pairs_path) shall load labeled FOVER pairs, compute
+  per-extractor recall distributions, and fit QuantileRegressionHead at q=0.10 for each
+  extractor.
+- REQ-VERIFY-151-3: IASGateCalibration shall be a dataclass holding symcode_threshold,
+  structured_threshold, causal_threshold (floats) and calibrated_from_n (int).
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ias_gate_calibration.py, tests/python/test_ias_gate_calibration.py, Exp 674)
+
+### REQ-VERIFY-152: IAS Adaptive Threshold Set at 10th Percentile of Extractor Recall Distribution
+
+The adaptive gate threshold for each extractor shall be the 10th percentile of that
+extractor's recall distribution over FOVER pairs, not a fixed global threshold.
+
+- REQ-VERIFY-152-1: High-variance extractors receive a lower effective threshold because
+  their 10th-percentile recall is lower.
+- REQ-VERIFY-152-2: Low-variance extractors receive a higher effective threshold because
+  their 10th-percentile recall is higher.
+- REQ-VERIFY-152-3: adaptive_gate_open() shall return True when any extractor's recall
+  meets or exceeds its calibrated 10th-percentile threshold.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ias_gate_calibration.py, tests/python/test_ias_gate_calibration.py, Exp 674)
+
+### SCENARIO-VERIFY-200: IAS Calibration Produces Per-Extractor Thresholds from FOVER Pairs
+
+Given: results/fover_labeled_steps_live.json with 57 labeled steps.
+When: calibrate(fover_pairs_path) is called.
+Then: IASGateCalibration is returned with symcode_threshold, structured_threshold, and
+causal_threshold each set to the 10th percentile of that extractor's recall distribution,
+and calibrated_from_n == 57.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ias_gate_calibration.py, tests/python/test_ias_gate_calibration.py, Exp 674)
+
+### SCENARIO-VERIFY-201: IAS Adaptive Gate Opens for Exp .50 Recall Values Where v3 Closed
+
+Given: IASGateCalibration calibrated from 57 FOVER pairs.
+When: adaptive_gate_open(calibration, symcode=0.12, structured=0.20, causal=0.36) is called.
+Then: the function returns True, because at least one extractor (causal at 0.36) exceeds
+its calibrated threshold, even though the v3 fixed threshold of 0.30 would have returned
+gate_closed for the ensemble average.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/ias_gate_calibration.py, scripts/experiment_674_ias_adaptive_gate.py, Exp 674)
