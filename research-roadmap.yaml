@@ -1,1181 +1,1088 @@
-milestone: 2026.04.53
-milestone_title: JEPA v16 Recovery + VR Credibility Hardening + Prompt-Injection True Distillation
+milestone: 2026.04.54
+milestone_title: JEPA v17 RankNet Loss + Gemma4 VR Diagnostic + PSV PaCoRe K=2
 milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
 tasks:
 
-- id: exp692-operational-preflight-v5
-  milestone: 2026.04.53
-  deliverable: results/experiment_692_preflight_v5.json
-  title: 'Exp 692: Operational Pre-Flight v5 + Slowest-5 Formal Retirement (Exps 425/410) (MANDATORY FIRST)'
+- id: exp703-preflight-v6-forced-retirement
+  milestone: 2026.04.54
+  deliverable: results/experiment_703_preflight_v6.json
+  title: 'Exp 703: Pre-flight v6 + Slowest-5 Forced Retirement (MANDATORY FIRST — Exps 380/381/382/346/425/410 Formal Retirement)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Milestone 2026.04.52 retro confirmed the Slowest-5 were UNCHANGED for the
-    4th consecutive milestone. The five experiments that have appeared most frequently in
-    the slowest-5 across milestones are Exps 425 (Ising chain sampling, ~35 min),
-    410 (EORM v3 retrain, ~41 min), 383 (EORM+JEPA sequential, now superseded by
-    Exp 685 DualGPU — candidate for retirement), and 346/380-382 (retired in Exp 678).
-    Exp 685 (DualGPU EORM+JEPA) achieved 2.0175x speedup — Exp 383 is no longer needed.
+    CONTEXT: Milestone 2026.04.53 retro confirmed the Slowest-5 composition UNCHANGED for
+    the FIFTH consecutive milestone — the longest frozen streak in project history.
+    - Exp 425: 17th consecutive milestone, 1,292 min cumulative overhead (MUST retire)
+    - Exp 410: 14th consecutive milestone, 716 min cumulative overhead (MUST retire)
+    - Exp 383: 8th consecutive milestone — DualGPU fix VALIDATED in Exp 685 (2.0175x speedup)
+      but still not deployed as the default. Exp 383 MUST be retired; its job replaces
+      with the Exp 685 DualGPU pattern.
+    - Exp 380-382: 5th consecutive milestone, formal retirement threshold crossed (>=3 consecutive)
+    - Exp 346: 5th consecutive milestone, formal retirement threshold crossed
 
-    The conductor_pre_flight.py created in Exp 678 must be verified to run cleanly (no
-    ImportError, no crash, prints all manifest entries). The .52 retro showed
-    manifest_consulted=True for the first time — confirm it still works.
+    The 3-consecutive-milestone retirement threshold was documented as the Exp 308/309 precedent.
+    All six experiments above have crossed it. This is a governance failure. Resolve it here.
 
-    Additionally, JEPA v15 posted OOD AUC=0.4751 (below random, per Exp 682).
-    This experiment must update conductor_exclusion_manifest.json to block JEPA v15
-    cascade from running until v16 is available (RETRO-072).
+    Additionally: JEPA v15 cascade is still blocked (OOD AUC=0.4751). The manifest must
+    block JEPA v15 cascade AND JEPA v16 cascade (v16 OOD AUC=0.4759, also below random).
+    Both are blocked until v17 OOD AUC >= 0.75.
 
     EXISTING CODE TO READ FIRST:
-    - results/operational_retro_2026_04_52.json — slowest-5 from .52.
-    - scripts/conductor_exclusion_manifest.json — current manifest.
-    - scripts/conductor_pre_flight.py — pre-flight from Exp 678.
+    - results/operational_retro_2026_04_53.json — .53 slowest-5 and verdict.
+    - scripts/conductor_exclusion_manifest.json — current manifest entries.
+    - scripts/conductor_pre_flight.py — pre-flight verification script.
     - python/carnot/pipeline/exclusion_manifest.py — ExclusionManifest.
     - scripts/experiment_template.py — ExperimentTemplate.
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - results/experiment_425_*.json — check if retirement already done.
-    - results/experiment_410_*.json — check if retirement already done.
-    - results/experiment_383_*.json — check if retirement already done.
 
-    TASK: Retire Exps 425, 410, and 383; add JEPA v15 cascade block to manifest;
-    verify conductor_pre_flight.py runs cleanly.
+    TASK: Formally retire Exps 380-382, 346, 425, 410, and 383. Block JEPA v15 and v16
+    cascades in manifest. Verify pre-flight runs cleanly.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-INFRA-037 (Slowest-5 UNCHANGED for >= 4 milestones triggers mandatory
-       formal retirement for top-2 offenders), REQ-INFRA-038 (JEPA v15 cascade blocked
-       in manifest until v16 OOD AUC >= 0.75), SCENARIO-INFRA-046/047 to spec.md.
-    3. For each of Exps 425, 410, 383: check if retirement file exists.
-       If missing or partial: create results/experiment_(N)_retired.json:
-         ("experiment": N, "status": "retired",
-          "reason": "slowest_5_four_consecutive_milestones_or_superseded",
-          "honest_verdict": "retired_formal_threshold_crossed",
-          "milestone_retired": "2026.04.53",
-          "schema": "carnot.retirement.v1")
+    2. Add REQ-INFRA-039 (Slowest-5 UNCHANGED for >= 5 milestones triggers MANDATORY
+       immediate formal retirement for ALL entries exceeding 3-milestone threshold),
+       REQ-INFRA-040 (JEPA cascade blocked in manifest until v17 OOD AUC >= 0.75),
+       SCENARIO-INFRA-048/049 to openspec/capabilities/pipeline/spec.md.
+    3. For each of Exps 380, 381, 382, 346, 425, 410, 383:
+       Check if results/experiment_{N}_retired.json exists with status="retired".
+       If missing: create it:
+         {"experiment": N, "status": "retired",
+          "reason": "slowest_5_threshold_crossed_or_superseded",
+          "honest_verdict": "retired_governance_action",
+          "milestone_retired": "2026.04.54",
+          "superseded_by": (for 383: "exp685_dualgpu_eorm_jepa", for others: null),
+          "consecutive_appearances": (from retro data),
+          "cumulative_overhead_min": (from retro data),
+          "schema": "carnot.retirement.v1"}
     4. Update scripts/conductor_exclusion_manifest.json:
-       - Add entries for 425, 410, 383 (reason: "slowest_5_retired").
-       - Add entry for "jepa_v15_cascade" (reason: "ood_auc_below_random_blocked_until_v16").
-    5. Create scripts/experiment_692_preflight_v5.py:
-       a. ExperimentTemplate(692) + ExperimentTimeoutWatchdog(692, timeout_minutes=15).
-       b. Load manifest, verify 3 new IDs present (425, 410, 383).
-       c. Verify jepa_v15_cascade block entry exists.
-       d. Run scripts/conductor_pre_flight.py via subprocess, capture output.
+       - Add entries for 380, 381, 382, 346, 425, 410, 383 (reason: "slowest_5_retired").
+       - Add/update entry "jepa_v15_cascade" (reason: "ood_auc_below_random_0.4751").
+       - Add entry "jepa_v16_cascade" (reason: "ood_auc_below_random_0.4759").
+    5. Create scripts/experiment_703_preflight_v6.py:
+       a. ExperimentTemplate(703) + ExperimentTimeoutWatchdog(703, timeout_minutes=20).
+       b. Load manifest; verify all 7 experiment IDs present and JEPA v15/v16 blocked.
+       c. Run scripts/conductor_pre_flight.py via subprocess, capture stdout.
           manifest_consulted: bool = "Excluded experiments" in pre_flight_output.
-       e. Check counts: total_manifest_entries, retirements_added_this_cycle = 3.
-       f. honest_verdict:
-          - "preflight_v5_complete" if all 3 retired AND jepa_block_added AND manifest_consulted
-          - "preflight_v5_partial_manifest_issue" if jepa_block_missing or manifest_failed
-          - "preflight_v5_partial_retirement_missing" if any retirement file missing
-       g. artifact: retirements_added, jepa_v15_cascade_blocked (bool),
-          manifest_consulted, total_manifest_entries, honest_verdict.
-    6. Write tests/python/test_experiment_692_preflight_v5.py with 100% coverage:
-       - test retirement file structure valid JSON with schema field.
-       - test manifest includes 425, 410, 383, jepa_v15_cascade.
-       - test conductor_pre_flight.py runs without ImportError.
-       Each test traces to REQ-INFRA-037/038.
+       d. Count: total_manifest_entries, retirements_added_this_cycle (target: 7 new).
+       e. honest_verdict:
+          - "preflight_v6_complete" if all 7 retired AND both jepa blocks AND manifest_consulted
+          - "preflight_v6_partial_retirement_missing" if any retirement file missing
+          - "preflight_v6_partial_manifest_issue" if manifest entries missing
+       f. artifact: retirements_added (list), jepa_v15_cascade_blocked (bool),
+          jepa_v16_cascade_blocked (bool), manifest_consulted (bool),
+          total_manifest_entries (int), honest_verdict.
+    6. Write tests/python/test_experiment_703_preflight_v6.py with 100% coverage:
+       - test each retirement file has valid schema field.
+       - test manifest contains all 7 experiment IDs.
+       - test manifest blocks jepa_v15_cascade and jepa_v16_cascade.
+       - test conductor_pre_flight.py runs without error.
+       Each test traces to REQ-INFRA-039/040.
     7. Reconcile:
-       - ops/status.md: add "Exps 425, 410, 383 retired; JEPA v15 cascade blocked (Exp 692)".
+       - ops/status.md: add "Exps 380-382/346/425/410/383 retired; JEPA v15+v16 cascade blocked (Exp 703)".
        - ops/changelog.md: one-line with honest_verdict.
     8. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp693-jepa-v15-root-cause-audit
-  milestone: 2026.04.53
-  deliverable: results/experiment_693_jepa_v15_root_cause.json
-  title: 'Exp 693: JEPA v15 Root Cause Audit + v16 Architecture Design (OOD AUC=0.4751 below random)'
+- id: exp704-jepa-v17-ranknet
+  milestone: 2026.04.54
+  deliverable: results/experiment_704_jepa_v17_ranknet.json
+  title: 'Exp 704: JEPA v17 Architecture — RankNet Pairwise Ranking Loss with Hard Negative Mining (RETRO-CRITICAL)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: Exp 682 (JEPA v15 OOD Audit) confirmed OOD AUC=0.4751 on GSM8K 500-699
-    — below random (0.5). This is WORSE than chance: the model is actively predicting
-    the WRONG label on truly unseen data. Three root cause hypotheses:
+    CONTEXT: JEPA v15 and v16 both have OOD AUC below random (0.4751 and 0.4759).
+    Root cause (Exp 693): pure_loss_anti_correlation. Both BCE and InfoNCE allow the model
+    to hedge all outputs to P≈0.5 globally, satisfying the loss without learning any
+    step-level discrimination. This is confirmed by the two consecutive failed retrains.
 
-    H1 (CPMI pair distribution mismatch): The CPMI pairs in fover_labeled_formal_v1.json
-    were all generated from GSM8K 0-499 with Qwen3.5-0.8B forced responses. On GSM8K
-    500-699 (different questions, different difficulty distribution), the latent feature
-    distribution shifts — JEPA's contrastive embeddings do not transfer. Evidence: check
-    if latent mean and variance differ significantly between train/OOD splits.
+    The fix: RankNet pairwise ranking loss. For each (correct_step, incorrect_step) pair
+    from the same question, apply:
+      L_ranknet = -log(sigmoid(score(incorrect) - score(correct)))
+    This REQUIRES score(incorrect) > score(correct) for every pair. Hedging to P=0.5 gives
+    loss = log(2) per pair; correct ranking gives loss → 0. The model CANNOT hedge.
 
-    H2 (PUREMinFormLoss anti-correlation): PUREMinFormLoss minimizes the "minimum formal
-    representation" — it may inadvertently push embeddings AWAY from hallucination signal
-    on OOD data where the formal structure is different. If the loss gradient points in
-    the wrong direction for OOD inputs, AUC < 0.5 is the expected outcome.
+    Hard negative mining: for each correct step in the batch, select the most similar
+    incorrect step (highest cosine similarity in embedding space) as the hard negative.
+    This prevents the model from learning trivially-separable pairs.
 
-    H3 (Latent collapse / compositional gap): JEPA v15 was trained on 57 hand-labeled
-    pairs — too small for generalization. The latent space may have collapsed to a
-    low-rank representation that memorizes training distributions.
-
-    arXiv 2603.20327 (JEPA Latent Probing for Discrete Symbol Extraction) proposes
-    probing JEPA latent vectors for discrete symbolic features (variable binding, formula
-    structure). If JEPA latents capture symbolic structure, H1 is most likely. If they
-    do not, H3 (collapse) is more likely.
+    Training data: results/fover_labeled_formal_v1.json (FoVer formal v1, 200 Z3-labeled
+    pairs from Exp 686). These are confirmed-correct Z3 labels.
 
     EXISTING CODE TO READ FIRST:
-    - results/experiment_682_jepa_v15_ood_audit.json — true_ood_auc=0.4751, ece, Platt T.
-    - python/carnot/models/jepa_predictor.py — JEPAPredictor architecture.
-    - python/carnot/models/pure_min_form_loss.py — PUREMinFormLoss implementation.
-    - python/carnot/pipeline/jepa_cpmi_pair_builder.py — CPMI pair construction.
-    - results/fover_labeled_formal_v1.json — Z3-labeled training pairs from Exp 686.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Identify root cause of JEPA v15 OOD failure; specify v16 architecture changes.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-049 (JEPA v16 design must address identified root cause from v15 audit),
-       REQ-LEARN-050 (JEPA v16 OOD AUC target >= 0.75 on GSM8K 500-699),
-       SCENARIO-LEARN-081/082/083 to openspec/capabilities/autoresearch/spec.md.
-    3. Create scripts/experiment_693_jepa_v15_root_cause.py:
-       a. ExperimentTimeoutWatchdog(693, timeout_minutes=30).
-       b. Load fover_labeled_formal_v1.json — extract training pairs.
-          Split: train (GSM8K 0-399), OOD probe (GSM8K 500-699).
-       c. Load JEPA v15 weights (results/jepa_predictor_v15_real.safetensors).
-          If missing: use v15.1 from Exp 685 (results/jepa_predictor_v15_1_dualgpu.safetensors).
-          If both missing: run probe on random init (H3 diagnosis only).
-       d. H1 probe (CPMI distribution shift):
-          Extract latent embeddings for train pairs and OOD pairs.
-          Compute: train_mean, ood_mean, distribution_shift_l2 = ||train_mean - ood_mean||.
-          Compute: train_var, ood_var, variance_ratio = ood_var / train_var.
-          H1_confirmed: distribution_shift_l2 > 0.5 OR variance_ratio > 2.0.
-       e. H2 probe (PUREMinFormLoss gradient direction):
-          For 10 OOD pairs: compute loss gradient w.r.t. input embeddings.
-          Check gradient sign: positive = pushing AWAY from correct class (H2 confirmed).
-          H2_confirmed: mean gradient sign is positive on OOD inputs.
-       f. H3 probe (latent rank / collapse):
-          Compute SVD of train latent matrix. Count singular values > 0.01 (effective rank).
-          H3_confirmed: effective_rank < 5 (collapsed) OR top singular value captures > 90% variance.
-       g. Symbolic probing (arXiv 2603.20327):
-          For each latent: compute correlation with symbolic features:
-            digit_density (count of digit characters / len), operator_density,
-            compute_line_count, step_index (position in CoT), step_length.
-          symbolic_probe_r2 = max correlation^2 across features and latent dims.
-          symbolic_structured: symbolic_probe_r2 > 0.3 (latents encode symbolic info).
-       h. Determine primary root cause:
-          If H1_confirmed: root_cause = "cpmi_distribution_mismatch"
-          Elif H2_confirmed: root_cause = "pure_loss_anti_correlation"
-          Elif H3_confirmed: root_cause = "latent_collapse_small_data"
-          Else: root_cause = "unknown_requires_ablation"
-       i. Write v16 architecture spec based on root cause:
-          H1 -> "domain-adaptive CPMI: include OOD-sampled pairs in training"
-          H2 -> "replace PUREMinFormLoss with InfoNCE loss (standard contrastive)"
-          H3 -> "increase training data to >= 500 pairs via FoVer Z3 labeler"
-          Record in artifact: v16_architecture_spec (str), v16_training_data_target (int).
-       j. honest_verdict:
-          - "root_cause_identified_v16_specced" if root_cause != "unknown_requires_ablation"
-          - "root_cause_ambiguous_ablation_needed" otherwise
-       k. artifact: H1_confirmed, H2_confirmed, H3_confirmed, root_cause,
-          distribution_shift_l2, variance_ratio, effective_rank, symbolic_probe_r2,
-          v16_architecture_spec, v16_training_data_target, honest_verdict.
-    4. Write tests/python/test_experiment_693_jepa_root_cause.py with 100% coverage:
-       - test H1/H2/H3 probe logic.
-       - test root_cause assignment from probe flags.
-       - test v16_architecture_spec is non-empty.
-       Each test traces to REQ-LEARN-049/050.
-    5. Reconcile:
-       - ops/status.md: add "JEPA v15 root cause identified: (root_cause) (Exp 693)".
-       - ops/changelog.md: one-line with root_cause and honest_verdict.
-    6. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-# ============================================================================
-# USER-PINNED CARRY-FORWARDS (Exps 690-691) — DO NOT EVICT
-# These are the carry-forward versions from research-roadmap.yaml.
-# They must appear in milestone .53 in this order (after Phase 0 audit).
-# ============================================================================
-
-- id: exp690-prompt-injection-kan-true-distillation
-  milestone: 2026.04.53
-  deliverable: results/experiment_690_prompt_injection_kan_true_distillation.json
-  title: 'Exp 690: Prompt-Injection KAN v1 — True Teacher Distillation (user-pinned; supersedes 652/669 fake-distillation runs)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exps 652 and 669 both declared `distillation_*` verdicts but
-    NEITHER actually invoked the teacher.  Hard evidence:
-      - Exp 652 duration_s = ~30 s, 2000-prompt corpus claimed.
-      - Exp 669 duration_s = 16.84 s, 200-prompt corpus claimed.
-    A single gpt-oss-safeguard-20b Q4_K_M CPU inference takes several
-    seconds; GPU llama.cpp throughput on a 3090 is ~15-25 tok/s, so even
-    200 prompts x ~50 output tokens = ~400-700 s minimum.  Both runs
-    silently used corpus-origin labels (JailbreakBench => injection,
-    GSM8K => benign) — a source detector, not a distilled safety model.
-
-    This experiment runs ACTUAL teacher inference and verifies the run
-    produced it via a machine-checkable invariant.
-
-    The teacher GGUF is cached at:
-      models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf (11.6 GB).
-    Resolve via carnot.inference.sota_models.resolve_cached_gguf(
-      "unsloth/gpt-oss-safeguard-20b-GGUF").  Do NOT re-download.
-
-    EXISTING CODE TO READ FIRST:
-    - scripts/experiment_652_prompt_injection_kan.py — v0 scaffold (reuse
-      corpus loader; do NOT trust its teacher call — that was stubbed).
-    - scripts/experiment_669_prompt_injection_rescue.py — v0 rescue (same
-      skip; confirms the pattern).
-    - python/carnot/models/prompt_injection_kan.py — KAN class.  REUSE.
-    - python/carnot/inference/sota_models.py — resolve_cached_gguf() +
-      the project-local models/ search extension.
-    - data/prompt_injection_distill/ — prior corpora.  REUSE prompts, RE-LABEL.
-    - openspec/capabilities/safety/spec.md — REQ-SAFE-007/008/009.
-
-    TASK: Run true distillation with a hard invariant that a "distillation_"
-    verdict is backed by measurable teacher invocation.
-
-    1. Preflight (5 min):
-       - resolve_cached_gguf("unsloth/gpt-oss-safeguard-20b-GGUF") -> path.
-         If None: emit honest_verdict="blocked_on_dependency" and exit 0.
-       - Load the Exp 652 corpus prompts from data/prompt_injection_distill/.
-         Keep prompts; discard source-origin labels.
-       - Import llama_cpp; if missing: pip install llama-cpp-python (with
-         CMAKE_ARGS="-DLLAMA_CUBLAS=on" set for GPU) OR fall back to CPU
-         with a slower time budget.
-
-    2. Teacher inference (60-180 min on GPU 0, up to 6 hr on CPU):
-       - Llama(model_path=..., n_gpu_layers=-1, n_ctx=2048).
-       - Wrap each prompt in the gpt-oss-safeguard classification template
-         documented on the unsloth model card.
-       - Parse teacher output to (label: 0|1, reasoning: str).
-       - Record (prompt_sha, teacher_label, teacher_reasoning, model_sha).
-       - Cache to data/prompt_injection_distill/teacher_outputs_v690.jsonl.
-       - MANDATORY: record teacher_inference_duration_s (float) and
-         teacher_inference_mean_s_per_prompt (float).
-
-    3. Enforce the distillation invariant (REQ-SAFE-011, NEW — add to spec):
-       IF the verdict will contain "distillation_":
-         assert teacher_inference_duration_s >= len(corpus) * 0.5
-         (one Llama call cannot be under 0.5 s on this scale model —
-         if the total run was faster than that, teacher did not run.)
-       If assertion fails: refuse to emit a distillation_* verdict, even
-       if the enum contains one that would otherwise match.  Emit
-       honest_verdict="distillation_invariant_violated_source_labels_used"
-       instead, and log teacher_inference_duration_s prominently.  This is
-       the NEW guardrail that would have caught 652/669's rubber-stamp.
-
-    4. Label-agreement diagnostic (2 min):
-       - Compare teacher labels vs original source-origin labels.
-       - Record teacher_vs_source_agreement_rate (float in [0, 1]).
-       - If < 0.80: confirms v0 was learning dataset artifacts — headline
-         research finding, log prominently in honest_verdict reason.
-
-    5. KAN re-training (15 min):
-       - Same architecture as Exp 669 (2 hidden, 32 units, n_params=13728).
-       - Train on TEACHER labels (not source labels).
-       - 80/20 train/test split, seed fixed.
-
-    6. Held-out eval (5 min):
-       - AUROC on test split.
-       - Record v1_auroc, compare to v0_auroc=0.885 (Exp 669) and
-         v0_auroc=0.9262 (Exp 652).
-       - Latency: 1000 cold CPU calls, median_ms.
-
-    7. Save v1 weights to python/carnot/models/prompt_injection_kan_v1_weights.json.
-       DO NOT overwrite v0 at prompt_injection_kan_weights.json.
-
-    8. Emit result with:
-       - honest_verdict in the REQ-SAFE-009 enum (or the NEW
-         distillation_invariant_violated_* string above).
-       - teacher_inference_duration_s (MANDATORY).
-       - teacher_vs_source_agreement_rate (MANDATORY).
-       - v0_vs_v1_delta_auroc (signed; negative is acceptable and
-         interesting — confirms v0 was dataset-artifact overfit).
-       - v1_median_inference_ms.
-
-    9. Reconcile:
-       - openspec/capabilities/safety/spec.md: add REQ-SAFE-011 for the
-         distillation invariant, SCENARIO-SAFE-011.  Preserve all existing
-         REQ-SAFE content (no pruning).
-       - _bmad/traceability.md: add REQ-SAFE-011 row linked to Exp 690.
-       - ops/changelog.md: one-line entry with honest_verdict,
-         teacher_inference_duration_s, and the agreement rate.
-
-    CONSTRAINTS:
-    - ExperimentTimeoutWatchdog(690, timeout_minutes=360).  Teacher
-      inference is the long pole.
-    - Do NOT fall back to source labels on teacher timeout.  Emit
-      distillation_corpus_not_built with the reason captured honestly.
-    - Do NOT skip the REQ-SAFE-011 invariant check.  It exists specifically
-      because the honest-verdict enum did not prevent 652/669's rubber-stamp.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp691-prompt-injection-kan-cross-dataset-eval
-  milestone: 2026.04.53
-  deliverable: results/experiment_691_prompt_injection_kan_cross_dataset.json
-  title: 'Exp 691: Prompt-Injection KAN v1 — Cross-Dataset Generalization (gates public release, user-pinned)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: In-distribution AUROC (Exps 652, 669) does not prove real-
-    world readiness.  A classifier can score well on its own corpus
-    distribution and collapse on prompts it has never seen variants of.
-    This experiment gates whether the v1 classifier (produced by
-    Exp 690's true distillation) is safe to publish as a shareable
-    safety model.  It was queued alongside Exp 679 in .52 and did
-    run — but correctly emitted blocked_on_upstream_exp_678 when v1
-    weights were absent.  This version retries against Exp 690.
-
-    GATE SEMANTICS:
-    - mean AUROC >= 0.80 => publishable (draft model card generated).
-    - 0.65 <= mean < 0.80 => shareable with explicit caveat listing
-      which datasets underperformed.
-    - mean < 0.65 => do_not_publish; the model is a dataset detector.
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/models/prompt_injection_kan_v1_weights.json — from
-      Exp 690.  If missing: emit blocked_on_upstream_exp_690.
-    - python/carnot/models/prompt_injection_kan.py — classifier.  DO
-      NOT modify (no feature-engineering drift between train and eval).
-    - scripts/experiment_690_prompt_injection_kan_true_distillation.py —
-      corpus loader helpers.
-    - results/experiment_679_prompt_injection_kan_cross_dataset.json —
-      prior run's blocked artifact; re-use the dataset loaders if they
-      were written.
-
-    TASK: Three cross-dataset AUROCs + publishability gate.
-
-    1. Preflight: v1 weights file exists and loads.  Emit
-       blocked_on_upstream_exp_690 if not.
-
-    2. Load three held-out datasets (10 min):
-       - HackAPrompt (HuggingFace datasets, 500-sample injection+benign subset).
-       - BIPIA (Benchmark for Indirect Prompt Injection Attack; ~400 samples).
-       - Synthetic 200-prompt stress-test using OWASP LLM-01 mutations NOT
-         in Exp 690's training corpus.  Use scripts/jailbreak_mutations.py
-         if it exists; else generate with 20 templates x 10 variations.
-
-    3. Score (15 min total):
-       - For each dataset, compute AUROC using v1.energy as score.
-       - Record per-dataset confusion at threshold=0.5.
-
-    4. Gate decision (1 min):
-       - mean_auroc = mean(hackaprompt, bipia, synthetic)
-       - Map to honest_verdict per gate semantics above.
-
-    5. If mean_auroc >= 0.80: write
-       python/carnot/models/prompt_injection_kan_v1_MODELCARD.md with:
-       - REQ-SAFE-007 citation + acceptance numbers.
-       - All 4 AUROCs (training-distribution + 3 held-out).
-       - Per-dataset confusion matrices.
-       - Latency measurement.
-       - List of failure modes (datasets where AUROC was lowest).
-       - REQ-SAFE-011 invariant compliance (teacher_inference_duration_s
-         from Exp 690's result).
-       - Apache 2.0 license notice + link to safety capability spec.
-       Do NOT push to HuggingFace — separate operator action.
-
-    6. Emit result with: per_dataset_auroc, mean_auroc, per_dataset_cm,
-       honest_verdict in (generalization_verified_publishable,
-       generalization_partial_shareable_with_caveat,
-       generalization_failed_do_not_publish, blocked_on_upstream_exp_690,
-       blocked_on_dataset_download_failure), model_card_written (bool),
-       upstream_teacher_inference_duration_s (copied from Exp 690 for
-       audit trail).
-
-    7. Reconcile:
-       - openspec/capabilities/safety/spec.md: add REQ-SAFE-012
-         (cross-dataset generalization threshold), SCENARIO-SAFE-012.
-       - _bmad/traceability.md: link REQ-SAFE-012 to Exp 691.
-       - ops/changelog.md: gate decision + mean_auroc.
-
-    CONSTRAINTS:
-    - ExperimentTimeoutWatchdog(691, timeout_minutes=45).
-    - Do NOT lower the 0.80 threshold to make v1 pass.
-    - HuggingFace push is a separate operator action.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp694-vr-cross-model-validation
-  milestone: 2026.04.53
-  deliverable: results/experiment_694_vr_cross_model.json
-  title: 'Exp 694: VR Cross-Model Validation + Hard GSM8K — Gemma-4-E4B-it + Grammar-Constrained COMPUTE: Decoding (GPU REQUIRED)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 679 confirmed VR 200q signed_improvement on Qwen3.5-0.8B — but a single-
-    model result is not publication-credible. Two additional risks:
-    (1) COMPUTE: line count may be a dataset artifact on easy questions (Qwen3.5-0.8B
-        base accuracy ~64% on standard GSM8K). If we test on hard GSM8K (model baseline < 40%)
-        and VR still improves, the structured-forcing mechanism is robust.
-    (2) The improvement may not transfer to a different model architecture.
-
-    arXiv 2602.01090 (Hard Constraints + Soft Generation Hybrid Decoding) proposes grammar-
-    constrained decoding where the generation probability is masked to enforce structural
-    tokens (e.g., "COMPUTE:") at fixed positions. This is stronger than prompt-level forcing
-    and would make COMPUTE: lines appear reliably without post-hoc regex.
-
-    This experiment runs VR on google/gemma-4-E4B-it (the project's secondary model)
-    with grammar-constrained COMPUTE: decoding on 50 hard GSM8K questions (baseline < 40%).
-
-    GATE: Read results/experiment_679_vr_200q_scale.json.
-    If signed_improvement <= 0: skip GPU inference, run analysis-only (compare Qwen vs Gemma
-    architecturally; explain why transfer is unlikely). Emit verdict "cross_model_analysis_only".
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_679_vr_200q_scale.json — primary VR result to cross-validate.
-    - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
-    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier.
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
-    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu().
-    - python/carnot/inference/sota_models.py — resolve_cached_gguf().
-
-    TASK: Run VR on Gemma-4-E4B-it with grammar-constrained COMPUTE: forcing on 50 hard
-    GSM8K questions; compute cross-model delta vs Exp 679 Qwen result.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-162 (VR cross-model: Gemma-4-E4B-it signed_improvement on 50 hard
-       GSM8K questions), REQ-VERIFY-163 (hard GSM8K: model baseline < 40%, question
-       indices not used in prior VR runs), REQ-VERIFY-164 (grammar-constrained decoding
-       produces COMPUTE: lines with 100% recall, no post-hoc regex needed),
-       SCENARIO-VERIFY-214/215/216 to spec.md.
-    3. Create python/carnot/pipeline/grammar_constrained_decoder.py:
-       a. GrammarConstrainedDecoder:
-          __init__(self, model, tokenizer, required_tokens: list[str]):
-            self.required_tokens = required_tokens  # e.g. ["COMPUTE:"]
-          decode(self, prompt: str, max_new_tokens: int = 256) -> str:
-            'Generate with logit masking to enforce required_tokens appear
-             at least once in the first 50 output tokens.'
-            Use transformers LogitsProcessor: after 50 tokens, if "COMPUTE:"
-            has not appeared, boost token IDs for "COMPUTE" and ":" by +10.0 in logits.
-          grammar_recall(self, outputs: list[str]) -> float:
-            'Fraction of outputs containing at least one COMPUTE: line.'
-    4. Create scripts/experiment_694_vr_cross_model.py:
-       a. apply_env_autofix() inside main() first.
-       b. ExperimentTimeoutWatchdog(694, timeout_minutes=120).
-       c. Read Exp 679 result; if signed_improvement <= 0: write analysis artifact, exit 0.
-       d. GPU gate: CARNOT_FORCE_LIVE=1 required for Gemma inference.
-       e. setup_gpu([("name": "google/gemma-4-E4B-it",
-                      "hf_id": "unsloth/google-gemma-4-E4B-it-GGUF",
-                      "gpu": 0)]).
-       f. Select hard GSM8K: load questions and filter to those where Qwen3.5-0.8B
-          baseline accuracy was < 40% (use Exp 679 per-question results if available,
-          else use questions 600-649 as proxy hard set). Select 50 questions.
-       g. For each question:
-          - Baseline (Gemma, no forcing): generate → SymCodeVerifier → baseline_correct.
-          - Grammar-constrained: GrammarConstrainedDecoder(required_tokens=["COMPUTE:"]) →
-            SymCodeVerifier → if violation: repair → post_correct.
-       h. Compute: gemma_baseline_acc, gemma_post_acc, gemma_signed_improvement.
-          grammar_recall = fraction of forced outputs with COMPUTE: line.
-       i. Cross-model comparison:
-          qwen_signed_improvement (from Exp 679).
-          cross_model_delta = gemma_signed_improvement - qwen_signed_improvement.
-       j. honest_verdict:
-          - "vr_cross_model_confirmed" if gemma_signed_improvement > 0 AND grammar_recall > 0.9
-          - "vr_cross_model_partial" if gemma_signed_improvement > 0 AND grammar_recall <= 0.9
-          - "vr_cross_model_no_improvement" if gemma_signed_improvement <= 0
-          - "cross_model_analysis_only" if gate failed (no Exp 679 improvement)
-          - "cross_model_blocked_no_gpu" if no live GPU
-       k. artifact: qwen_signed_improvement, gemma_baseline_acc, gemma_post_acc,
-          gemma_signed_improvement, cross_model_delta, grammar_recall, n_hard_questions=50,
-          hard_baseline_threshold=0.4, honest_verdict.
-    5. Write tests/python/test_experiment_694_vr_cross_model.py with 100% coverage:
-       - test GrammarConstrainedDecoder grammar_recall computation.
-       - test cross_model_delta logic.
-       - test hard question selection filter.
-       Each test traces to REQ-VERIFY-162/163/164.
-    6. Reconcile:
-       - ops/status.md: update VR credibility with cross-model result.
-       - ops/changelog.md: one-line with honest_verdict and cross_model_delta.
-    7. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp695-formal-step-verifier-tier28
-  milestone: 2026.04.53
-  deliverable: results/experiment_695_formal_step_verifier.json
-  title: 'Exp 695: FormalStepVerifier Tier 2.8 — arXiv 2603.29500 + Eidoku CSP vs SymCodeVerifier on FoVer Corpus'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: The verification cascade currently ends at Tier 2 (SymCodeVerifier, arithmetic
-    extraction + Z3 per-step check) and Tier 3 (JEPA predictive verification). There is a
-    gap at Tier 2.8: high-confidence multi-step formal verification that covers chain-of-
-    thought steps WHERE Z3 can express the constraints but the current SymCodeVerifier
-    implementation does not handle multi-step variable binding.
-
-    Two papers address this:
-    - arXiv 2603.29500 (Formal Step Intermediaries): proposes inserting intermediate
-      verification checkpoints between reasoning steps — each step must "formally entail"
-      the next. This is a step-level formal verification oracle stronger than SymCodeVerifier.
-    - arXiv 2512.20664 (Eidoku): CSP-based constraint propagation for multi-step
-      reasoning. Eidoku represents each step as a constraint domain and checks global
-      consistency — can detect contradictions that span multiple steps.
-
-    This experiment compares both approaches on the FoVer corpus (fover_labeled_formal_v1.json,
-    200+ pairs from Exp 686) and determines which is more accurate and faster.
-
-    EXISTING CODE TO READ FIRST:
-    - results/fover_labeled_formal_v1.json — Z3-labeled corpus (200+ pairs, Exp 686).
-    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier (current Tier 2 baseline).
-    - python/carnot/training/fover_z3_labeler.py — Z3StepVerifier (Exp 686, reuse).
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Implement FormalStepVerifier (arXiv 2603.29500) and EidokuCSP (arXiv 2512.20664);
-    benchmark both vs SymCodeVerifier on FoVer corpus; recommend Tier 2.8 candidate.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-165 (FormalStepVerifier Tier 2.8: step entailment check, AUC >= 0.70
-       on FoVer corpus), REQ-VERIFY-166 (EidokuCSP: global consistency check across steps,
-       AUC >= 0.70), SCENARIO-VERIFY-217/218/219 to spec.md.
-    3. Create python/carnot/pipeline/formal_step_verifier.py:
-       a. FormalStepVerifier (arXiv 2603.29500 approach):
-          verify_chain(steps: list[str]) -> list[dict]:
-            For each step i: check if step[i] arithmetically entails step[i+1]
-            using Z3StepVerifier.verify_step(prior_steps=steps[:i], current_step=steps[i+1]).
-            Return: [("step_idx": i, "verdict": str, "entailment": bool)].
-          chain_correct(steps: list[str]) -> bool:
-            All step entailments pass AND no "violation" verdict.
-       b. EidokuCSP (arXiv 2512.20664 approach):
-          build_constraint_domain(step: str) -> dict:
-            Extract all variable assignments (x = value) from step as dict.
-          check_global_consistency(steps: list[str]) -> bool:
-            Merge all variable assignments across steps. Check for contradictions
-            (same variable assigned different values). Return False if contradiction.
-    4. Create scripts/experiment_695_formal_step_verifier.py:
-       a. ExperimentTimeoutWatchdog(695, timeout_minutes=30).
-       b. Load fover_labeled_formal_v1.json — extract (steps, correct_label) pairs.
-       c. SymCodeVerifier baseline: predict correct/incorrect for each chain.
-          Compute symcode_auc.
-       d. FormalStepVerifier: predict for each chain. Compute formal_step_auc.
-       e. EidokuCSP: predict for each chain. Compute eidoku_auc.
-       f. Speed benchmark: time all three on 20 chains. Record ms_per_chain.
-       g. Recommend tier_28_winner:
-          - "formal_step_verifier" if formal_step_auc >= eidoku_auc AND formal_step_auc >= 0.70
-          - "eidoku_csp" if eidoku_auc > formal_step_auc AND eidoku_auc >= 0.70
-          - "neither_below_threshold" if both AUCs < 0.70
-       h. honest_verdict:
-          - "tier_28_candidate_identified" if tier_28_winner != "neither_below_threshold"
-          - "tier_28_no_candidate" if neither meets threshold
-       i. artifact: symcode_auc, formal_step_auc, eidoku_auc, ms_per_chain (dict),
-          tier_28_winner, honest_verdict.
-    5. Write tests/python/test_formal_step_verifier.py and
-       tests/python/test_eidoku_csp.py with 100% module coverage.
-    6. Reconcile:
-       - ops/status.md: add "Tier 2.8 candidate: (tier_28_winner) (Exp 695)".
-       - ops/changelog.md: one-line with tier_28_winner and both AUCs.
-    7. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp696-icalm-repair-abstention
-  milestone: 2026.04.53
-  deliverable: results/experiment_696_icalm_abstention.json
-  title: 'Exp 696: I-CALM Repair Abstention Layer — Confidence-Gated Repair to Reduce False Positives (arXiv 2604.03904)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: arXiv 2604.03904 (I-CALM: Iterative Confidence-Aware Language Model) proposes
-    that LLMs should abstain from answering when their confidence is below a threshold,
-    rather than producing a wrong answer. Applied to the Carnot repair pipeline:
-
-    Current behavior: VerifyRepairPipeline ALWAYS attempts repair when SymCodeVerifier
-    detects a violation. This causes false positives when:
-    (1) SymCodeVerifier incorrectly flags a correct COMPUTE: line (extraction error).
-    (2) The violation is real but the model cannot repair it (repair produces worse answer).
-
-    I-CALM abstention for Carnot: before running repair, estimate repair confidence from
-    JEPA predictive score. If JEPA score < threshold: abstain (return original response
-    unchanged) rather than attempt repair. This should reduce FP repairs on questions where
-    the violation detector is unreliable.
-
-    GATE: JEPA v15 OOD AUC = 0.4751 (below random). This means JEPA v15 cannot reliably
-    gate repairs. If JEPA v16 weights are not available (Exp 698 not yet run), use a simple
-    heuristic abstention gate: abstain if SymCodeVerifier confidence < 0.7 (i.e., the
-    violation regex matched but with low coverage — < 2 COMPUTE: lines detected).
-
-    EXISTING CODE TO READ FIRST:
-    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
-    - python/carnot/models/jepa_predictor.py — JEPAPredictor.
-    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier (check confidence output).
-    - results/experiment_679_vr_200q_scale.json — baseline FP rate to compare against.
+    - python/carnot/inference/eorm_model.py — EORMModel architecture (base for JEPA).
+    - python/carnot/samplers/jepa_predictor.py (or similar) — JEPAPredictor current impl.
+    - results/experiment_686_fover_formal_v1.json — FoVer v1 corpus metadata.
+    - results/fover_labeled_formal_v1.json — FoVer v1 training pairs.
     - results/experiment_693_jepa_v15_root_cause.json — root cause analysis.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_698_jepa_v16.json — v16 InfoNCE failure.
     - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Implement I-CALM repair abstention; measure FP reduction on held-out questions.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-VERIFY-167 (I-CALM abstention: VerifyRepairPipeline abstains when repair
-       confidence < threshold, reducing FP rate), REQ-VERIFY-168 (abstention threshold
-       must be tuned on held-out set, not training set to avoid leakage),
-       SCENARIO-VERIFY-220/221 to spec.md.
-    3. Modify python/carnot/pipeline/verify_repair.py:
-       a. Add abstention_threshold parameter (default: None = no abstention).
-       b. Add abstain_count, repair_count, abstention_rate to run() output.
-       c. Abstention logic:
-          If abstention_threshold is not None AND symcode_confidence < abstention_threshold:
-            Return original response (abstain). Increment abstain_count.
-          Else: run repair as before.
-       d. symcode_confidence: number of COMPUTE: lines detected / 5.0 (capped at 1.0).
-          If 0 COMPUTE: lines detected but violation flagged: confidence = 0.2 (low certainty).
-    4. Create scripts/experiment_696_icalm_abstention.py:
-       a. ExperimentTimeoutWatchdog(696, timeout_minutes=30).
-       b. Load results/experiment_679_vr_200q_scale.json — get baseline FP rate.
-          fp_rate_baseline = n_false_positives / n_questions_with_violations from Exp 679.
-          (If Exp 679 does not report per-question FP data: use 0.15 as estimated baseline).
-       c. Load 50 held-out questions (GSM8K indices 225-274, not used in prior VR runs).
-          Run standard VR (no abstention). Record violation_detected (bool) and correct (bool).
-          Compute fp_rate_no_abstention = sum(violation AND correct) / n_violations.
-       d. Tune abstention threshold on held-out set:
-          For threshold in [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]:
-            Run VR with abstention_threshold=threshold on held-out set.
-            Compute fp_rate_with_abstention and recall_at_threshold
-            (fraction of real violations that are still repaired).
-          best_threshold = threshold minimizing fp_rate_with_abstention s.t. recall > 0.5.
-       e. Report: fp_rate_baseline, fp_rate_no_abstention, fp_rate_best_abstention,
-          best_threshold, abstention_rate_at_best, recall_at_best.
-       f. honest_verdict:
-          - "abstention_fp_reduced" if fp_rate_best_abstention < fp_rate_no_abstention
-          - "abstention_no_improvement" if fp_rate_best_abstention >= fp_rate_no_abstention
-          - "abstention_recall_collapsed" if recall_at_best < 0.3
-       g. artifact: all FP rates, best_threshold, abstention_rate_at_best, recall_at_best,
-          honest_verdict.
-    5. Write tests/python/test_icalm_abstention.py with 100% module coverage.
-    6. Reconcile:
-       - ops/status.md: add "I-CALM abstention layer: FP reduction result (Exp 696)".
-       - ops/changelog.md: one-line with honest_verdict and FP delta.
-    7. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp697-psv-real-data-selfplay
-  milestone: 2026.04.53
-  deliverable: results/experiment_697_psv_real_selfplay.json
-  title: 'Exp 697: PSV Real-Data Self-Play 10 Iterations — K=2 Parallel Chains with Live Verification (FR-11, GPU REQUIRED)'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 688 (PSV Self-Play, milestone .52) ran in synthetic mode because
-    the FR-11 real positives gate (Exp 683) was not confirmed before Exp 688 ran.
-    Now FR-11 is confirmed (Exp 683: fr11_real_positives_confirmed=True) and VR is
-    confirmed at 200q scale (Exp 679). This experiment runs PSV with LIVE GPU inference
-    (Qwen3.5-0.8B) for real self-improvement.
-
-    New in .53: K=2 parallel chains (arXiv 2512.18160 PSV extension). Instead of one
-    linear PROPOSE -> SOLVE -> VERIFY loop, run two simultaneous chains on different
-    question subsets, then merge their constraint updates. This tests whether parallel
-    self-play is more efficient than sequential.
-
-    GATE: Read results/experiment_679_vr_200q_scale.json (signed_improvement > 0 required)
-    AND results/experiment_683_fr11_real_positives.json (fr11_real_positives_confirmed=True).
-    If either gate fails: emit "psv_real_blocked_gate_(which)" and exit 0.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_679_vr_200q_scale.json — VR win gate.
-    - results/experiment_683_fr11_real_positives.json — FR-11 gate.
-    - python/carnot/training/psv_selfplay.py — PSVSelfPlayLoop from Exp 688.
-    - python/carnot/pipeline/jitrl_constraint_memory.py — JitRLConstraintMemory.
-    - python/carnot/pipeline/symcode_verifier.py — SymCodeVerifier (verify_fn).
-    - python/carnot/pipeline/structured_equation_forcer.py — StructuredEquationForcer.
-    - python/carnot/pipeline/env_autofix.py — apply_env_autofix().
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate, setup_gpu().
 
-    TASK: Run K=2 parallel PSV self-play for 10 iterations with live Qwen3.5-0.8B inference.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-051 (PSV real self-play: K=2 parallel chains, 10 iterations each,
-       live GPU, FP rate trend non-increasing), REQ-LEARN-052 (parallel chain merge:
-       constraint updates from both chains are merged without conflict),
-       SCENARIO-LEARN-084/085/086 to spec.md.
-    3. Extend python/carnot/training/psv_selfplay.py:
-       a. PSVParallelChains class:
-          __init__(self, n_chains: int, n_iterations: int, n_questions_per_iter: int,
-                   constraint_memory: JitRLConstraintMemory):
-          run_parallel(self, question_pool: list[str], inference_fn, verify_fn) -> dict:
-            Split question_pool into n_chains subsets.
-            Use ThreadPoolExecutor(max_workers=n_chains):
-              For each chain: PSVSelfPlayLoop(n_iterations, n_questions_per_iter,
-                              constraint_memory).run_iteration() x n_iterations.
-            Merge: aggregate all violation pairs from both chains into shared memory.
-            Return: ("chain_results": list, "merged_constraint_updates": int,
-                     "parallel_speedup_factor": float).
-    4. Create scripts/experiment_697_psv_real_selfplay.py:
-       a. apply_env_autofix() inside main() first.
-       b. ExperimentTimeoutWatchdog(697, timeout_minutes=180).
-       c. Read both gate files. Emit blocked artifact if either fails.
-       d. GPU gate: CARNOT_FORCE_LIVE=1 required. If missing: emit blocked artifact.
-       e. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
-       f. Load 200 GSM8K questions (indices 400-599, same pool as Exp 688 for comparability).
-       g. inference_fn = lambda q: generate_with_qwen(q, structured_equation_forcer).
-          verify_fn = lambda r: SymCodeVerifier.verify(r).is_correct.
-       h. PSVParallelChains(n_chains=2, n_iterations=10, n_questions_per_iter=10,
-                            constraint_memory=JitRLConstraintMemory()).
-          Run parallel self-play.
-       i. Compute fp_rate_per_iteration from merged results.
-          Compute fp_rate_trend_slope (linear regression, same as Exp 688).
-          Compute parallel_speedup: time(parallel) vs estimated time(sequential=K*parallel_chain_time).
-       j. Compare to Exp 688 synthetic baseline:
-          exp688_fp_rate = load from Exp 688 result if available.
-          real_vs_synthetic_delta = final_fp_rate - exp688_final_fp_rate.
-       k. honest_verdict:
-          - "psv_real_fp_improving" if fp_rate_trend_slope < 0 AND inference_mode=="live_gpu"
-          - "psv_real_fp_stable" if fp_rate_trend_slope == 0 AND inference_mode=="live_gpu"
-          - "psv_real_fp_degrading" if fp_rate_trend_slope > 0
-          - "psv_real_blocked_gate_vr" if VR gate failed
-          - "psv_real_blocked_gate_fr11" if FR-11 gate failed
-          - "psv_real_blocked_no_gpu" if no live GPU
-       l. artifact: n_chains=2, n_iterations=10, fp_rate_per_iteration,
-          fp_rate_trend_slope, parallel_speedup_factor, real_vs_synthetic_delta,
-          inference_mode, honest_verdict.
-    5. Write tests/python/test_psv_parallel_chains.py with 100% module coverage.
-    6. Reconcile:
-       - ops/status.md: update "FR-11 self-learning: PSV real self-play result (Exp 697)".
-       - ops/changelog.md: one-line with honest_verdict and fp_rate_trend_slope.
-    7. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp698-jepa-v16-retrain-fover-formal
-  milestone: 2026.04.53
-  deliverable: results/experiment_698_jepa_v16.json
-  title: 'Exp 698: JEPA v16 Retrain on FoVer Formal v1 — Address Root Cause from Exp 693'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 693 identified the root cause of JEPA v15 OOD AUC=0.4751 (below random).
-    This experiment implements the v16 architecture changes specified by Exp 693 and retrains
-    on the expanded FoVer formal v1 corpus (Exp 686, 200+ Z3-labeled pairs).
-
-    Expected changes by root cause (read from Exp 693 artifact):
-    - "cpmi_distribution_mismatch": retrain CPMI pairs to include OOD-sampled questions
-      (GSM8K 500-699), not just training distribution.
-    - "pure_loss_anti_correlation": replace PUREMinFormLoss with InfoNCE contrastive loss.
-    - "latent_collapse_small_data": increase training data to 500+ pairs using FoVer Z3.
-    - "unknown_requires_ablation": try all three changes.
-
-    The OOD AUC target is >= 0.75 on GSM8K 500-699 (REQ-LEARN-050 from Exp 693).
-    This unlocks the JEPA cascade (blocked in Exp 692 manifest) and enables Exp 699.
-
-    GATE: Read results/experiment_693_jepa_v15_root_cause.json.
-    root_cause field must be present (not "unknown_requires_ablation" preferred but accepted).
-    Read results/fover_labeled_formal_v1.json (Exp 686) — n_pairs >= 50 required.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_693_jepa_v15_root_cause.json — v16_architecture_spec, root_cause.
-    - results/fover_labeled_formal_v1.json — training data (200+ pairs).
-    - python/carnot/models/jepa_predictor.py — JEPAPredictor v15 architecture.
-    - python/carnot/models/pure_min_form_loss.py — PUREMinFormLoss (may be replaced).
-    - python/carnot/pipeline/jepa_cpmi_pair_builder.py — CPMI pair construction (may be adapted).
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Retrain JEPA v16 per v16_architecture_spec; evaluate on GSM8K 500-699 OOD set.
+    TASK: Implement JEPARankNetV17 with RankNet loss + hard negative mining. Train on FoVer
+    formal v1. Evaluate OOD AUC on GSM8K 500-699.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-053 (JEPA v16: OOD AUC >= 0.75 on GSM8K 500-699),
-       REQ-LEARN-054 (JEPA v16: ECE < 0.10 via Platt calibration on OOD set),
-       SCENARIO-LEARN-087/088/089 to spec.md.
-    3. Read Exp 693 artifact: extract root_cause and v16_architecture_spec.
-    4. Implement v16 changes in python/carnot/models/jepa_predictor.py:
-       a. If root_cause == "cpmi_distribution_mismatch":
-          Modify JEPAv16 to accept OOD augmented pairs. Build CPMI pairs from
-          BOTH training (GSM8K 0-399) and OOD (GSM8K 500-699) questions.
-          Store OOD pairs in cpmi_ood_pairs; mix 50% train / 50% OOD per batch.
-       b. If root_cause == "pure_loss_anti_correlation":
-          Add InfoNCE loss class to models/:
-            InfoNCELoss: loss = -log(exp(sim(a,p)/T) / sum(exp(sim(a,n)/T) for n in negatives))
-          JEPAv16 uses InfoNCELoss instead of PUREMinFormLoss.
-       c. If root_cause == "latent_collapse_small_data":
-          Load ALL pairs from fover_labeled_formal_v1.json (200+ Z3 pairs).
-          Augment with text perturbations: shuffle COMPUTE: lines order (label unchanged),
-          replace variable names (semantic invariance). Target 500+ pairs.
-       d. If root_cause == "unknown_requires_ablation":
-          Apply all three changes (conservative union).
-       Do NOT break existing JEPAPredictor v15 API — add v16 as separate class JEPAv16.
-    5. Create scripts/experiment_698_jepa_v16.py:
-       a. ExperimentTimeoutWatchdog(698, timeout_minutes=60).
-       b. Load Exp 693 and Exp 686 results (gates above).
-       c. Build v16 training data per architecture spec.
-       d. Train JEPAv16: 200 epochs, Adam 1e-3. Save to results/jepa_predictor_v16.safetensors.
-       e. Evaluate on OOD set (GSM8K 500-699):
-          Compute true_ood_auc, ece, platt_temperature.
-       f. Compare to v15: ood_auc_delta = v16_auc - 0.4751 (v15 baseline).
-       g. If v16_ood_auc >= 0.75: update conductor_exclusion_manifest.json to REMOVE the
-          jepa_v15_cascade block (added in Exp 692). JEPA cascade is now unblocked.
-       h. honest_verdict:
-          - "jepa_v16_target_met" if v16_ood_auc >= 0.75 AND ece < 0.10
-          - "jepa_v16_improved_below_target" if v16_ood_auc > 0.50 AND < 0.75
-          - "jepa_v16_still_below_random" if v16_ood_auc < 0.50
-          - "jepa_v16_gate_failed" if Exp 693 or 686 not available
-       i. artifact: root_cause_addressed, v16_architecture_applied, v16_ood_auc,
-          ood_auc_delta, ece, platt_temperature, cascade_unblocked (bool), honest_verdict.
-    6. Write tests/python/test_jepa_v16.py with 100% module coverage:
-       - test InfoNCELoss computation.
-       - test v16 training data construction per root cause.
-       - test cascade unblock logic.
-       Each test traces to REQ-LEARN-053/054.
-    7. Reconcile:
-       - ops/status.md: update "JEPA v16: (honest_verdict), OOD AUC=(v16_ood_auc)".
-       - ops/changelog.md: one-line with honest_verdict and ood_auc_delta.
-    8. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp699-hallusae-jepa-v16-integration
-  milestone: 2026.04.53
-  deliverable: results/experiment_699_hallusae_jepa_v16.json
-  title: 'Exp 699: HalluSAE Feature Integration into JEPA v16 — Sparse AE Latents as JEPA Input Features'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Exp 687 (HalluSAE) identified the top-10 hallucination causal features
-    from sparse autoencoder training on the FoVer corpus. One finding: COMPUTE: line count
-    was confirmed in the top-10 features (hallusat_compute_line_causal=True). This means
-    the sparse AE encodes meaningful signal that JEPA v16 is currently not using.
-
-    arXiv 2604.16430 (HalluSAE) shows that feeding sparse AE features as input to a
-    downstream classifier improves AUC by 5-10pp over raw hidden states. Applied to JEPA v16:
-    instead of using raw text embeddings as input, use the sparse AE feature vector (dim=512,
-    sparse). This should improve OOD AUC because sparse AE features are more semantically
-    stable across different question distributions than raw token features.
-
-    GATE: Read results/experiment_698_jepa_v16.json (v16 weights must exist).
-    Read results/experiment_687_hallusat_sparse_ae.json (sparse AE weights must exist).
-    If either is missing: emit "blocked_on_upstream_(exp)" and exit 0.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_698_jepa_v16.json — v16 baseline AUC and weights path.
-    - results/experiment_687_hallusat_sparse_ae.json — sparse AE top-10 features.
-    - python/carnot/models/hallusal_sparse_ae.py — SparseAutoEncoder (Exp 687).
-    - python/carnot/models/jepa_predictor.py — JEPAv16 class (from Exp 698).
-    - results/fover_labeled_formal_v1.json — training data.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Retrain JEPAv16 with HalluSAE sparse features as input; compare OOD AUC
-    to v16 baseline (raw text features).
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-LEARN-055 (HalluSAE + JEPA v16: OOD AUC >= v16_baseline + 0.03 using
-       sparse AE features), SCENARIO-LEARN-090/091 to spec.md.
-    3. Create python/carnot/models/jepa_hallusae_v16.py:
-       a. JEPAHalluSAEv16 (extends JEPAv16):
-          __init__(self, sae: SparseAutoEncoder, **kwargs):
-            self.sae = sae  # frozen sparse AE
-          encode(self, text: str) -> jnp.ndarray:
-            text_features = extract_text_features(text)  # from hallusal_sparse_ae.py
-            sae_features, sae_sparse = self.sae(text_features)
-            return sae_sparse  # use sparse code as JEPA input
-    4. Create scripts/experiment_699_hallusae_jepa_v16.py:
-       a. ExperimentTimeoutWatchdog(699, timeout_minutes=60).
-       b. Load Exp 698 and Exp 687 results (gates above).
-       c. Load SparseAutoEncoder weights from Exp 687 results (if weights saved; else
-          retrain SAE from scratch on fover_labeled_formal_v1.json using Exp 687 code).
-       d. Freeze SAE weights (no gradient updates to SAE during JEPA training).
-       e. Train JEPAHalluSAEv16 on FoVer formal v1 data with SAE-encoded inputs:
-          200 epochs, Adam 1e-3.
-          Save to results/jepa_hallusae_v16.safetensors.
-       f. Evaluate on OOD set (GSM8K 500-699):
-          Compute hallusae_v16_ood_auc.
-       g. v16_baseline_auc = read from Exp 698 result (jepa_v16.json).
-          delta_auc = hallusae_v16_ood_auc - v16_baseline_auc.
-       h. honest_verdict:
-          - "hallusae_integration_improved" if delta_auc >= 0.03
-          - "hallusae_integration_marginal" if 0 < delta_auc < 0.03
-          - "hallusae_integration_no_improvement" if delta_auc <= 0
-          - "blocked_on_upstream_exp698" or "blocked_on_upstream_exp687" if gates fail
-       i. artifact: v16_baseline_auc, hallusae_v16_ood_auc, delta_auc,
-          sae_features_dim, sae_sparsity_rate, honest_verdict.
-    5. Write tests/python/test_jepa_hallusae_v16.py with 100% module coverage.
-    6. Reconcile:
-       - ops/status.md: update "JEPA v16 + HalluSAE: (honest_verdict), delta_auc=(delta_auc)".
-       - ops/changelog.md: one-line with honest_verdict and delta_auc.
-    7. tmpl.assert_deliverable_written() as final line.
-
-    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
-    Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-- id: exp700-vr-publication-readiness
-  milestone: 2026.04.53
-  deliverable: results/experiment_700_publication_readiness.json
-  title: 'Exp 700: VR Publication Readiness + HuggingFace Model Card Update'
-  prompt: |
-    You are working on the Carnot EBM framework in {project_root}.
-    Read CLAUDE.md for code style requirements.
-    Today's date: {date}.
-
-    CONTEXT: Milestone .52 delivered signed_improvement=1.0 on 200q GSM8K (Exp 679) — the
-    project's first credible headline result. Milestone .53 adds cross-model validation (Exp 694).
-    Before this result can be published or shared, three things are needed:
-
-    1. Provenance audit: ALL headline numbers must trace to live_gpu inference (not simulation).
-       Create a provenance table in the technical report.
-    2. HuggingFace model card: update the EBM model card at huggingface.co/Carnot-EBM with
-       the 200q result, cross-model delta, and the prompt-injection classifier gate result.
-    3. Negative results documentation: publish what FAILED (JEPA v15 OOD regression,
-       adversarial robustness results, etc.) alongside what succeeded.
-
-    GATE: Read results/experiment_679_vr_200q_scale.json (vr_200q_validated must be True).
-    Read results/experiment_694_vr_cross_model.json (must exist, any verdict acceptable).
-    If Exp 679 gate fails: emit "publication_blocked_no_primary_result" and exit 0.
-
-    EXISTING CODE TO READ FIRST:
-    - results/experiment_679_vr_200q_scale.json — primary VR result.
-    - results/experiment_694_vr_cross_model.json — cross-model result.
-    - results/experiment_680_humaneval_vr.json — code VR result.
-    - results/experiment_681_adversarial_vr.json — adversarial robustness.
-    - results/experiment_682_jepa_v15_ood_audit.json — JEPA v15 failure.
-    - results/experiment_698_jepa_v16.json — JEPA v16 result.
-    - results/experiment_691_prompt_injection_kan_cross_dataset.json — safety model gate.
-    - _bmad/prd.md — project vision for Phase 1 publication.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
-    - scripts/experiment_template.py — ExperimentTemplate.
-
-    TASK: Audit provenance; update HuggingFace model card; write negative results section.
-
-    CONCRETE STEPS:
-    1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-PUBLISH-001 (all headline VR numbers must have inference_mode=live_gpu in
-       source result file), REQ-PUBLISH-002 (model card must include negative results
-       section with JEPA v15 OOD regression), SCENARIO-PUBLISH-001/002 to spec.md
-       (create openspec/capabilities/publication/spec.md if not exists).
-    3. Create scripts/experiment_700_publication_readiness.py:
-       a. ExperimentTimeoutWatchdog(700, timeout_minutes=30).
-       b. Load all gate results.
-       c. Provenance audit table:
-          For each headline result: ("metric": str, "value": float, "source_exp": int,
-          "inference_mode": str, "provenance_valid": bool (inference_mode=="live_gpu")).
-          All provenance_valid must be True for publication_ready=True.
-       d. Write docs/technical_report_provenance.md (append or create):
-          Table: | Metric | Value | Exp | inference_mode | Provenance |
-          Row: VR 200q signed_improvement, cross_model_delta, grammar_recall, etc.
-          Section: "Negative Results" listing JEPA v15 OOD AUC=0.4751 and adversarial results.
-       e. Write HuggingFace model card update content to:
-          python/carnot/models/carnot_ebm_modelcard_v53.md (NOT push; local draft only):
-          - Headline: "VR signed_improvement on 200 GSM8K questions (Qwen3.5-0.8B)"
-          - Cross-model: Gemma-4-E4B-it delta.
-          - Safety: prompt-injection KAN v1 cross-dataset AUROC (from Exp 691).
-          - Negative: JEPA v15 regression, adversarial VR results.
-          - Compute: inference_mode=live_gpu for all results. GPU used: RTX 3090.
-          - License: Apache 2.0.
-          Do NOT push to HuggingFace — operator action only.
-       f. publication_ready = all provenance_valid AND cross_model_result_exists.
+    2. Add REQ-VERIFY-140 (JEPA v17 RankNet: OOD AUC >= 0.75 on GSM8K 500-699),
+       REQ-VERIFY-141 (RankNet loss enforces strict partial order: score(incorrect) > score(correct)),
+       REQ-VERIFY-142 (hard negative mining: select most similar incorrect step per correct anchor),
+       SCENARIO-VERIFY-140/141/142 to openspec/capabilities/verifiable-reasoning/spec.md.
+    3. Create python/carnot/inference/jepa_v17_ranknet.py:
+       a. class JEPARankNetV17(nn.Module):
+          - Same architecture as JEPAPredictor (step encoder → MLP → scalar score)
+          - forward(step_text: str) → float (energy score; high = likely incorrect)
+       b. def ranknet_loss(scores_incorrect: jnp.ndarray, scores_correct: jnp.ndarray) -> float:
+          L = -jnp.mean(jnp.log(jax.nn.sigmoid(scores_incorrect - scores_correct)))
+          return L
+          (Using JAX: import jax, jax.nn, jnp = jax.numpy)
+       c. def hard_negative_mining(correct_embeddings, incorrect_embeddings):
+          Compute cosine similarity matrix between all correct and incorrect embeddings.
+          For each correct embedding, select the incorrect with highest similarity.
+          Return indices of hard negatives.
+       d. def train_jepa_v17(fover_pairs: list, n_epochs: int = 50,
+                              lr: float = 1e-3) -> JEPARankNetV17:
+          Build (correct_step, hard_negative_step) pairs.
+          Train with RankNet loss using optax (adam optimizer).
+          Return trained model.
+       e. def evaluate_ood_auc(model: JEPARankNetV17,
+                               gsm8k_indices: range = range(500, 700)) -> float:
+          Load GSM8K questions 500-699 (never in training).
+          For each question: get correct final answer + one plausible incorrect step.
+          Score both; compute AUROC.
+          Return ood_auc.
+    4. Create scripts/experiment_704_jepa_v17_ranknet.py:
+       a. ExperimentTemplate(704) + ExperimentTimeoutWatchdog(704, timeout_minutes=60).
+       b. Load fover_labeled_formal_v1.json. Verify n_pairs >= 100.
+       c. train_jepa_v17(fover_pairs) — track train_loss per epoch.
+       d. Evaluate OOD AUC on GSM8K 500-699.
+       e. Gate evaluation: cascade_gate_open = (ood_auc >= 0.75).
+       f. If cascade_gate_open: save model to results/jepa_v17_ranknet.pt.
+          Else: emit v18 architecture recommendation in artifact.
        g. honest_verdict:
-          - "publication_ready" if publication_ready
-          - "publication_ready_with_caveats" if provenance valid but cross_model blocked
-          - "publication_blocked_no_primary_result" if Exp 679 gate fails
-       h. artifact: provenance_table, publication_ready, model_card_written (bool),
-          n_headline_metrics, n_negative_results_documented, honest_verdict.
-    4. Write tests/python/test_experiment_700_publication.py with 100% coverage.
-    5. Reconcile:
-       - ops/status.md: add "Publication readiness: (honest_verdict) (Exp 700)".
+          - "jepa_v17_cascade_unblocked" if ood_auc >= 0.75
+          - "jepa_v17_improved_below_threshold" if 0.5 <= ood_auc < 0.75
+          - "jepa_v17_still_below_random" if ood_auc < 0.5
+       h. v18_recommendation (str): if gate fails, state next approach:
+          "listwise_lambdarank" (rank all steps simultaneously, not just pairs)
+       i. artifact: v17_ood_auc, v17_train_loss_final, n_training_pairs,
+          cascade_gate_open, model_saved_path, honest_verdict, v18_recommendation.
+    5. Write tests/python/test_experiment_704_jepa_v17_ranknet.py with 100% coverage:
+       - test ranknet_loss returns 0 when incorrect score > correct score by large margin.
+       - test ranknet_loss returns log(2) when scores are equal (hedging case).
+       - test hard_negative_mining selects most similar pair.
+       - test train_jepa_v17 reduces loss over epochs on synthetic data.
+       Each test traces to REQ-VERIFY-140/141/142.
+    6. Reconcile:
+       - ops/status.md: add JEPA v17 RankNet result (ood_auc, cascade_gate_open).
        - ops/changelog.md: one-line with honest_verdict.
-    6. tmpl.assert_deliverable_written() as final line.
+    7. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp701-kv260-ising-v3-synthesis
-  milestone: 2026.04.53
-  deliverable: results/experiment_701_kv260_ising_v3_synthesis.json
-  title: 'Exp 701: KV260 Ising v3 RTL Synthesis Attempt — Vivado Install Check + Bitstream Gate'
+- id: exp705-jepa-v17-cascade-deploy
+  milestone: 2026.04.54
+  deliverable: results/experiment_705_jepa_v17_cascade_deploy.json
+  title: 'Exp 705: JEPA v17 Cascade Deploy + OOD Validation (GATED on Exp 704 cascade_gate_open=True)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: The KV260 FPGA board arrived 2026-04-20 (RETRO-070 CLOSED in .52 via Exp 648).
-    The Ising v3 RTL (ising_sampler_v3.v) was written with EMA inertia dynamics (Exp 648).
-    RETRO-072 (opened in .52) is: Vivado was not installed when the board arrived — synthesis
-    could not run. This experiment attempts to:
-    1. Check if Vivado is now installed (or install AMD Vitis/Vivado 2024.2 free tier).
-    2. If available: run synthesis on ising_sampler_v3.v and report timing/resource usage.
-    3. If unavailable: fall back to yosys open-source synthesis as proxy.
-
-    This experiment does NOT require a bitstream deploy — synthesis report is sufficient for
-    .53. Full implementation and flashing will be RETRO-073 in .54.
+    CONTEXT: Exp 704 trained JEPA v17 with RankNet pairwise ranking loss. If Exp 704
+    cascade_gate_open=True (OOD AUC >= 0.75), deploy JEPA v17 as the Tier 2 cascade model.
+    If cascade_gate_open=False, emit a diagnostic artifact for v18 architecture planning.
 
     EXISTING CODE TO READ FIRST:
-    - rtl/ising_sampler_v3.v — Ising v3 RTL with EMA inertia dynamics.
-    - results/experiment_648_kv260_ising_v3_rtl.json — RTL spec from .52 (RETRO-070 outcome).
-    - ops/status.md — RETRO-072 status.
-    - research-hardware-wishlist.md — KV260 hardware details.
-    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_704_jepa_v17_ranknet.json — v17 gate result.
+    - results/jepa_v17_ranknet.pt — saved model weights (if gate open).
+    - python/carnot/inference/jepa_v17_ranknet.py — JEPARankNetV17 class.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline cascade wiring.
+    - python/carnot/inference/eorm_model.py — EORMModel (Tier 2 base).
+    - scripts/conductor_exclusion_manifest.json — JEPA v16 blocked entry.
     - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
 
-    TASK: Attempt Vivado synthesis of ising_sampler_v3.v; if unavailable use yosys;
-    report FPGA resource utilization or proxy LUT estimate.
+    TASK: If Exp 704 gate open: wire JEPA v17 into Tier 2 cascade, update manifest to
+    unblock. If gate closed: emit v18 architecture recommendation and update RETRO-CRITICAL.
 
     CONCRETE STEPS:
     1. Read CLAUDE.md spec-first workflow.
-    2. Add REQ-HW-037 (KV260 Ising v3 synthesis: timing closure at >= 50 MHz target),
-       REQ-HW-038 (LUT utilization < 20% of KV260 fabric for Ising v3 N=64),
-       SCENARIO-HW-037/038 to spec.md (create openspec/capabilities/fpga/spec.md if not exists).
-    3. Create scripts/experiment_701_kv260_synthesis.py:
-       a. ExperimentTimeoutWatchdog(701, timeout_minutes=120).
-       b. Check Vivado: try subprocess.run(["vivado", "-version"], capture_output=True).
-          vivado_available = returncode == 0.
-       c. Check yosys: try subprocess.run(["yosys", "-V"], capture_output=True).
-          yosys_available = returncode == 0.
-       d. If vivado_available:
-          Run Vivado non-project synthesis:
-          Write tcl/synth_ising_v3.tcl:
-            read_verilog rtl/ising_sampler_v3.v
-            synth_design -top ising_sampler_v3 -part xck26-sfvc784-2LV-c
-            report_utilization -file results/ising_v3_utilization.rpt
-            report_timing_summary -file results/ising_v3_timing.rpt
-          subprocess.run(["vivado", "-mode", "batch", "-source", "tcl/synth_ising_v3.tcl"]).
-          Parse utilization report: extract LUT_count, FF_count, BRAM_count.
-          Parse timing report: extract WNS (worst negative slack). timing_met = WNS >= 0.
-          synthesis_tool = "vivado"
-       e. Elif yosys_available:
-          Run yosys proxy synthesis:
-          Write yosys_script.ys:
-            read_verilog rtl/ising_sampler_v3.v
-            synth -top ising_sampler_v3
-            stat
-          subprocess.run(["yosys", "yosys_script.ys"], capture_output=True).
-          Parse stat output: extract estimated LUT count from "cells" line.
-          LUT_count = parsed; timing_met = None (yosys does not do timing).
-          synthesis_tool = "yosys"
-       f. Else:
-          synthesis_tool = "none_available"
-          LUT_count = None; timing_met = None.
-          Write ops/known-issues.md note: "RETRO-072: Vivado not installed; yosys not found."
-       g. honest_verdict:
-          - "synthesis_timing_met" if vivado AND timing_met == True
-          - "synthesis_lut_estimate_only" if yosys AND LUT_count is not None
-          - "synthesis_blocked_no_tool" if synthesis_tool == "none_available"
-          - "synthesis_timing_failed" if vivado AND timing_met == False
-       h. If honest_verdict includes "met" or "estimate": close RETRO-072 in ops/status.md.
-          Else: update RETRO-072 with this attempt, open RETRO-073 for .54.
-       i. artifact: synthesis_tool, LUT_count, FF_count, BRAM_count, timing_met,
-          WNS_ns, retro_072_resolved (bool), honest_verdict.
-    4. Write tests/python/test_experiment_701_synthesis.py with 100% coverage:
-       - test Vivado/yosys availability check logic.
-       - test utilization report parser.
-       - test timing report parser.
-       Each test traces to REQ-HW-037/038.
-    5. Reconcile:
-       - ops/status.md: update RETRO-072 with synthesis result.
-       - ops/changelog.md: one-line with synthesis_tool and honest_verdict.
-    6. tmpl.assert_deliverable_written() as final line.
+    2. Load results/experiment_704_jepa_v17_ranknet.json. Read cascade_gate_open.
+    3. If cascade_gate_open == True:
+       a. Add REQ-VERIFY-143 (JEPA v17 deployed in cascade, replacing v16),
+          SCENARIO-VERIFY-143 to spec.md.
+       b. In python/carnot/pipeline/verify_repair.py: add JEPARankNetV17 as optional
+          tier_2_jepa_model parameter. When provided, run JEPA v17 scoring after EORM.
+          Keep backwards-compatible default (None = JEPA disabled).
+       c. Update scripts/conductor_exclusion_manifest.json: remove "jepa_v16_cascade"
+          block, add "jepa_v17_cascade" as DEPLOYED (not blocked).
+       d. Run end-to-end cascade validation: 50 GSM8K questions (indices 200-249),
+          measure: cascade_precision, cascade_recall, cascade_auc.
+       e. honest_verdict = "jepa_v17_cascade_deployed" if cascade_precision >= 0.7
+          else "jepa_v17_cascade_deployed_below_precision_target"
+       f. retro_critical_resolved = True.
+    4. If cascade_gate_open == False:
+       a. Read v18_recommendation from Exp 704 result.
+       b. Emit structured v18 spec in artifact:
+          v18_approach: "listwise_lambdarank" (rank ALL steps per question simultaneously).
+          v18_rationale: pairwise RankNet also allows intra-pair hedging if pairs are
+          too similar; listwise loss requires a global ordering across all steps.
+          v18_data_requirement: "Need >= 5 steps per question for listwise loss;
+          FoVer v1 provides only 2 steps per question (correct + incorrect)".
+          v18_data_gap: "Exp 712 FoVer v2 PDDL would provide 5+ steps per question".
+       c. Update ops/known-issues.md: "RETRO-CRITICAL: JEPA v17 RankNet failed (if applicable).
+          v18 approach: LambdaRank listwise, requires FoVer v2 multi-step data."
+       d. honest_verdict = "jepa_v17_gate_failed_v18_specced"
+    5. Write tests/python/test_experiment_705_jepa_v17_deploy.py with 100% coverage:
+       - test cascade wiring when gate open.
+       - test v18 spec artifact when gate closed.
+       Each test traces to REQ-VERIFY-143 (if gate open) or REQ-VERIFY-140 (gap analysis).
+    6. Reconcile:
+       - ops/status.md: update RETRO-CRITICAL status.
+       - ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-- id: exp702-milestone-retro-2026-04-53
-  milestone: 2026.04.53
-  deliverable: results/operational_retro_2026_04_53.json
-  title: 'Exp 702: Milestone 2026.04.53 Operational Retrospective'
+- id: exp706-gemma4-vr-diagnostic
+  milestone: 2026.04.54
+  deliverable: results/experiment_706_gemma4_vr_diagnostic.json
+  title: 'Exp 706: Gemma4-E4B-it VR Diagnostic — Trace Pipeline Failure to Exact Step (GPU REQUIRED)'
   prompt: |
     You are working on the Carnot EBM framework in {project_root}.
     Read CLAUDE.md for code style requirements.
     Today's date: {date}.
 
-    CONTEXT: All experiments in milestone 2026.04.53 (Exps 692-701) have completed.
-    This retrospective analyzes execution efficiency and research outcomes.
-    Key questions: Is JEPA v16 OOD AUC >= 0.75 (cascade unblocked)? Did PSV real self-play
-    show FP improvement? Did VR cross-model validation confirm Exp 679? Is Exp 690 distillation
-    invariant confirmed (duration_s >= corpus * 0.5)?
+    CONTEXT: Exp 694 revealed that VR helps Qwen3.5-0.8B (signed_improvement=1.0) but HURTS
+    Gemma4-E4B-it (signed_improvement=-0.8, cross_model_delta=-1.8). The root cause is unknown.
+    Three hypotheses:
+    1. Extraction FP: SymCodeVerifier fires on Gemma's correct outputs (FP rate too high).
+       Gemma writes arithmetic in a different format than Qwen, and SymCodeVerifier was
+       calibrated on Qwen. Gemma's "natural language arithmetic" triggers false violations.
+    2. Repair regression: The repair step (replace violated segment) degrades Gemma's
+       otherwise-correct response by overwriting valid reasoning.
+    3. Threshold miscalibration: The violation threshold (minimum energy for triggering repair)
+       is too low for Gemma's more accurate outputs, causing over-repair.
+
+    This experiment runs VR in instrument mode on 25 known-correct and 25 known-incorrect
+    Gemma4-E4B-it responses, logging per-step decisions for each case.
 
     EXISTING CODE TO READ FIRST:
-    - results/operational_retro_2026_04_52.json — .52 baseline metrics.
-    - results/experiment_692_preflight_v5.json
-    - results/experiment_693_jepa_v15_root_cause.json
-    - results/experiment_690_prompt_injection_kan_true_distillation.json
-    - results/experiment_691_prompt_injection_kan_cross_dataset.json
-    - results/experiment_694_vr_cross_model.json
-    - results/experiment_695_formal_step_verifier.json
-    - results/experiment_696_icalm_abstention.json
-    - results/experiment_697_psv_real_selfplay.json
-    - results/experiment_698_jepa_v16.json
-    - results/experiment_699_hallusae_jepa_v16.json
-    - results/experiment_700_publication_readiness.json
-    - results/experiment_701_kv260_ising_v3_synthesis.json
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/pipeline/extract.py — ConstraintExtractor (ArithmeticExtractor, SymCodeVerifier).
+    - results/experiment_694_vr_cross_model.json — cross-model diagnostic hints.
+    - python/carnot/inference/sota_models.py — resolve_cached_gguf for Gemma4-E4B-it.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Run VR in instrument mode on 50 Gemma4-E4B-it responses (25 correct, 25 incorrect).
+    Log per-step: extractor_fired, constraint_violated, repair_applied, answer_changed,
+    final_correct. Identify failure_mode.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-144 (VR pipeline instrument mode: log per-step decisions per response),
+       REQ-VERIFY-145 (model-specific failure mode identification from instrument logs),
+       SCENARIO-VERIFY-144/145 to spec.md.
+    3. Create scripts/experiment_706_gemma4_diagnostic.py:
+       a. ExperimentTemplate(706) + ExperimentTimeoutWatchdog(706, timeout_minutes=90).
+       b. Load Gemma4-E4B-it via llama.cpp or transformers (CARNOT_FORCE_LIVE=1).
+          Model: google/gemma-4-E4B-it or cached GGUF equivalent.
+       c. Run 25 GSM8K questions from known-correct set (questions where Gemma4 baseline
+          produces correct answer, from Exp 694 data or fresh 25-question sample indices 0-24).
+       d. Run 25 GSM8K questions from known-incorrect set (indices 25-49 or similar).
+       e. For each response: call VerifyRepairPipeline in instrument mode.
+          Log per response:
+            - extractor_fired: bool (did any extractor flag a violation?)
+            - constraint_type: str (which extractor type fired)
+            - is_violation_real: bool (manual check: was the flagged violation actually wrong?)
+            - repair_applied: bool (was repair triggered?)
+            - answer_changed: bool (did repair change the final answer?)
+            - final_correct: bool (is the final post-repair answer correct?)
+       f. Compute aggregate metrics:
+            - fp_rate_on_correct: (extractor_fired AND original_correct) / n_correct
+            - repair_regression_rate: (repair_applied AND was_correct AND final_wrong) / n_repaired
+            - threshold_miss_rate: (not extractor_fired AND was_incorrect) / n_incorrect
+       g. Identify failure_mode (primary):
+            - "extraction_fp" if fp_rate_on_correct > 0.20
+            - "repair_regression" if repair_regression_rate > 0.20
+            - "threshold_too_high" if threshold_miss_rate > 0.50
+            - "combined" if multiple exceed threshold
+            - "no_clear_failure" if none exceed
+       h. honest_verdict:
+            - "failure_mode_identified" if failure_mode != "no_clear_failure"
+            - "failure_mode_ambiguous" otherwise
+       i. artifact: fp_rate_on_correct, repair_regression_rate, threshold_miss_rate,
+          failure_mode, n_correct_tested, n_incorrect_tested, honest_verdict.
+    4. Write tests/python/test_experiment_706_gemma4_diagnostic.py with 100% coverage:
+       - test instrument mode logging captures all required fields.
+       - test failure_mode classification logic for each case.
+       Each test traces to REQ-VERIFY-144/145.
+    5. Reconcile:
+       - ops/status.md: add Gemma4 VR failure_mode finding.
+       - ops/changelog.md: one-line with failure_mode and honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp707-model-adaptive-thresholds
+  milestone: 2026.04.54
+  deliverable: results/experiment_707_adaptive_thresholds.json
+  title: 'Exp 707: Model-Adaptive Constraint Thresholds — Per-Model FP Gating via Tier 1 Self-Learning'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 706 identified the failure_mode causing VR to hurt Gemma4-E4B-it.
+    This experiment implements the fix: ModelAdaptiveThresholdGate, a Tier 1 self-learning
+    component that suppresses constraint types with FP rate > TP rate per model.
+
+    Per research-program.md Tier 1 self-learning: "Upweight constraints that catch real errors,
+    downweight noisy ones. Running average of per-constraint precision, updated after each cycle."
+    The extension here is per-MODEL tracking, not just per-constraint-type globally.
+
+    Architecture: For each (model_id, constraint_type) pair, maintain:
+      - tp_count: true positives (extractor fired AND violation was real)
+      - fp_count: false positives (extractor fired AND original response was correct)
+      - precision: tp_count / (tp_count + fp_count)
+    Gate: if precision < 0.5 for (model_id, constraint_type), suppress that constraint
+    type for that model. This is the per-model extension of the existing precision tracker.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_706_gemma4_vr_diagnostic.json — failure_mode and FP rates.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/pipeline/extract.py — ConstraintExtractor hierarchy.
+    - python/carnot/verify/self_learning.py (or similar) — existing Tier 1 tracker.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement ModelAdaptiveThresholdGate. Initialize with Exp 706 FP rate data for Gemma4.
+    Verify it gates the constraint types that caused FP harm.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-146 (ModelAdaptiveThresholdGate: suppress constraint types with
+       precision < 0.5 per model_id), REQ-VERIFY-147 (gate persists across sessions via
+       JSON state file), SCENARIO-VERIFY-146/147 to spec.md.
+    3. Create python/carnot/pipeline/adaptive_gate.py:
+       a. class ModelAdaptiveThresholdGate:
+            state_file: Path = Path("results/adaptive_gate_state.json")
+            state: dict[str, dict[str, dict]] = {} # {model_id: {constraint_type: {tp, fp}}}
+            def update(self, model_id: str, constraint_type: str,
+                       was_tp: bool) -> None:
+              # Increment tp_count or fp_count; save state.
+            def is_suppressed(self, model_id: str, constraint_type: str) -> bool:
+              # Return True if precision < 0.5 for this (model_id, constraint_type).
+              # Return False if no data yet (default: allow).
+            def precision(self, model_id: str, constraint_type: str) -> float:
+              # Compute tp / (tp + fp); return 0.5 if no data.
+            def save(self) -> None:
+              # Atomically write state to state_file.
+            def load(self) -> None:
+              # Load state from state_file if exists.
+       b. Integrate into VerifyRepairPipeline:
+            Add optional adaptive_gate: ModelAdaptiveThresholdGate = None parameter.
+            If gate is not None and gate.is_suppressed(model_id, constraint_type):
+              skip that constraint type for this request.
+    4. Create scripts/experiment_707_adaptive_thresholds.py:
+       a. ExperimentTemplate(707) + ExperimentTimeoutWatchdog(707, timeout_minutes=30).
+       b. Load Exp 706 diagnostic data (fp_rate_on_correct, failure_mode).
+       c. Initialize ModelAdaptiveThresholdGate.
+       d. Seed gate with Exp 706 data:
+            If failure_mode involves "extraction_fp":
+              For SymCodeVerifier on Gemma4: add 10 synthetic FP events (fp_count += 10).
+              This simulates 10 FP observations, bringing precision below 0.5.
+       e. Verify: gate.is_suppressed("google/gemma-4-E4B-it", "SymCodeVerifier") == True.
+       f. Verify: gate.is_suppressed("Qwen/Qwen3.5-0.8B", "SymCodeVerifier") == False (default).
+       g. Test save/load cycle: save state, reload, verify suppression preserved.
+       h. honest_verdict:
+            - "adaptive_thresholds_implemented" if suppression verified for Gemma4
+            - "adaptive_thresholds_partial" if only some constraints suppressed
+       i. artifact: failure_mode_from_706, constraints_suppressed_gemma4 (list),
+          gate_state_file, honest_verdict.
+    5. Write tests/python/test_experiment_707_adaptive_thresholds.py with 100% coverage:
+       - test update increments correct counter.
+       - test is_suppressed returns True when precision < 0.5.
+       - test is_suppressed returns False when no data (default allow).
+       - test save/load round-trip.
+       Each test traces to REQ-VERIFY-146/147.
+    6. Reconcile:
+       - ops/status.md: add "ModelAdaptiveThresholdGate implemented (Exp 707)".
+       - ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp708-vr-attempt-19-gemma4-adaptive
+  milestone: 2026.04.54
+  deliverable: results/experiment_708_vr_attempt_19_gemma4.json
+  title: 'Exp 708: Live VR Attempt #19 — Gemma4-E4B-it with Adaptive Thresholds (GATED on Exp 707, GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 707 implemented ModelAdaptiveThresholdGate that suppresses constraint types
+    with FP rate > TP rate per model. This experiment applies it to Gemma4-E4B-it on 25
+    GSM8K questions. The minimum success criterion is signed_improvement >= 0 (no harm).
+    The .53 baseline was signed_improvement=-0.8 (VR HURT Gemma4 without adaptive gating).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_707_adaptive_thresholds.json — gate implementation confirmed.
+    - python/carnot/pipeline/adaptive_gate.py — ModelAdaptiveThresholdGate.
+    - results/adaptive_gate_state.json — seeded gate state from Exp 707.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline (now accepts adaptive_gate).
+    - python/carnot/inference/sota_models.py — Gemma4-E4B-it loading.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Run live VR on 25 Gemma4 questions with adaptive thresholds enabled. Report
+    signed_improvement vs .53 baseline of -0.8.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-148 (Gemma4 VR with adaptive gating: signed_improvement >= 0),
+       SCENARIO-VERIFY-148 to spec.md.
+    3. Create scripts/experiment_708_vr_attempt_19_gemma4.py:
+       a. ExperimentTemplate(708) + ExperimentTimeoutWatchdog(708, timeout_minutes=90).
+       b. CARNOT_FORCE_LIVE=1 assertion (import-time).
+       c. Load ModelAdaptiveThresholdGate from results/adaptive_gate_state.json.
+       d. Load Gemma4-E4B-it (google/gemma-4-E4B-it or cached GGUF).
+       e. Run 25 GSM8K questions (indices 0-24):
+            - Baseline: Gemma4 response WITHOUT VR.
+            - VR: Gemma4 response WITH VR (adaptive_gate enabled).
+            - Score each for correctness (GSM8K ground truth).
+       f. Compute:
+            - baseline_accuracy: correct / 25 (no VR).
+            - vr_accuracy: correct / 25 (with VR + adaptive gate).
+            - signed_improvement: vr_accuracy - baseline_accuracy.
+            - n_constraints_suppressed: count of times gate suppressed a constraint.
+            - n_extractions_skipped: total skipped extractions due to gating.
+       g. Gate check: compare to .53 baseline signed_improvement=-0.8.
+            improvement_over_baseline = signed_improvement - (-0.8)
+       h. honest_verdict:
+            - "vr19_gemma4_no_harm" if signed_improvement >= 0.0
+            - "vr19_gemma4_improved" if signed_improvement > 0.0
+            - "vr19_gemma4_still_harmful" if signed_improvement < 0.0
+            - "vr19_gemma4_blocked" if live inference fails
+       i. inference_mode: must be "live_gpu" (CARNOT_FORCE_LIVE=1 assertion).
+       j. artifact: signed_improvement, improvement_over_baseline, baseline_accuracy,
+          vr_accuracy, n_constraints_suppressed, inference_mode, honest_verdict.
+    4. Write tests/python/test_experiment_708_vr_attempt_19_gemma4.py with 100% coverage:
+       - test adaptive gate is loaded before inference.
+       - test signed_improvement computation.
+       - test honest_verdict classification.
+       Each test traces to REQ-VERIFY-148.
+    5. Reconcile:
+       - ops/status.md: add VR #19 Gemma4 result.
+       - ops/changelog.md: one-line with honest_verdict and signed_improvement.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp709-psv-pacore-k2-dualgpu
+  milestone: 2026.04.54
+  deliverable: results/experiment_709_psv_pacore_k2.json
+  title: 'Exp 709: PSV PaCoRe K=2 Parallel Self-Play — DualGPU Diversity Recovery (arXiv 2601.05593, GPU REQUIRED)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: PSV self-play REVERSED in .53 (Exp 697): fp_rate_trend_slope=+0.004242.
+    This is a degradation from .52 (Exp 688) where slope was negative (improving).
+
+    Hypothesis: Single-chain K=1 PSV saturates after ~10 iterations because:
+    - The same 10 questions are retried with the same model, producing similar errors
+    - The constraint pool accumulates FP noise from repeated near-correct responses
+    - Diversity of violation types is insufficient for learning signal
+
+    Fix: PaCoRe-style K=2 parallel chains (arXiv 2601.05593). For each PSV iteration:
+    - Chain A on cuda:0: Qwen3.5-0.8B generates responses, SymCodeVerifier verifies
+    - Chain B on cuda:1: same questions, same model, but different generation temperature
+      (temp_A=0.7, temp_B=1.0) → diverse responses → diverse violation patterns
+    - Merge: for each question, select the chain response with LOWER violation energy
+      (lower energy = fewer constraint violations = more reliable response)
+    - Update constraint pool with verified violations from BOTH chains (more diverse data)
+
+    This uses DualGPU infrastructure confirmed in Exp 685 (2.0175x speedup for EORM+JEPA).
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_697_psv_real_selfplay.json — .53 PSV result (degrading slope).
+    - results/experiment_688_psv_selfplay.json — .52 PSV result (improving slope).
+    - python/carnot/verify/psv.py (or similar) — PSV self-play implementation.
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline for energy scoring.
+    - python/carnot/inference/sota_models.py — model loading with device placement.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement PSV-PaCoRe K=2 parallel chains using DualGPU. Run 10 iterations.
+    Target: fp_rate_trend_slope < 0 (restoring improvement direction).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-020 (PSV-PaCoRe K=2: parallel diverse chains improve constraint pool quality),
+       REQ-LEARN-021 (energy-merge: select chain response with lower SymCodeVerifier energy),
+       SCENARIO-LEARN-020/021 to openspec/capabilities/self-learning/spec.md.
+    3. Create python/carnot/verify/psv_pacore.py:
+       a. class PSVPaCoReRunner:
+            def run_iteration(self, questions: list[str],
+                              model_a_device: str, model_b_device: str,
+                              temp_a: float = 0.7, temp_b: float = 1.0) -> IterationResult:
+              - Generate responses with model on device A (temp_a) and device B (temp_b).
+              - Score each response pair with SymCodeVerifier (violation energy).
+              - For each question: select response with lower violation energy.
+              - Collect verified violations from BOTH chains.
+              - Return: best_responses, all_violations (combined from A+B), fp_rate_estimate.
+            def run_10_iterations(self, n_questions: int = 10) -> list[IterationResult]:
+              - Run 10 iterations, accumulate constraint pool from both chains.
+              - Return list of IterationResult with per-iteration fp_rate.
+    4. Create scripts/experiment_709_psv_pacore_k2.py:
+       a. ExperimentTemplate(709) + ExperimentTimeoutWatchdog(709, timeout_minutes=120).
+       b. CARNOT_FORCE_LIVE=1 assertion.
+       c. Verify DualGPU available: torch.cuda.device_count() >= 2 (or fall back to K=1
+          on single GPU with sequential execution — emit gpu_mode="sequential_fallback").
+       d. Instantiate PSVPaCoReRunner.
+       e. Run 10 iterations on 10 GSM8K questions per iteration.
+       f. Record fp_rate_per_iteration (list of 10 floats).
+       g. Compute fp_rate_trend_slope via linear regression on fp_rate_per_iteration.
+       h. Compare to Exp 697 baseline slope=+0.004242.
+            slope_improvement = 0.004242 - fp_rate_trend_slope.
+       i. honest_verdict:
+            - "psv_pacore_improving" if fp_rate_trend_slope < 0
+            - "psv_pacore_flat" if -0.001 <= fp_rate_trend_slope <= 0.001
+            - "psv_pacore_still_degrading" if fp_rate_trend_slope > 0.001
+            - "psv_pacore_dualgpu_fallback" if gpu_mode == "sequential_fallback"
+       j. artifact: fp_rate_per_iteration, fp_rate_trend_slope, slope_improvement,
+          gpu_mode, n_violations_collected, honest_verdict.
+    5. Write tests/python/test_experiment_709_psv_pacore_k2.py with 100% coverage:
+       - test energy merge selects lower-energy response.
+       - test iteration collects violations from both chains.
+       - test trend slope computation.
+       Each test traces to REQ-LEARN-020/021.
+    6. Reconcile:
+       - ops/status.md: add PSV PaCoRe result.
+       - ops/changelog.md: one-line with fp_rate_trend_slope and honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: CARNOT_FORCE_LIVE=1 JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp710-kan-distill-v2-auroc-gate
+  milestone: 2026.04.54
+  deliverable: results/experiment_710_kan_distill_v2.json
+  title: 'Exp 710: Prompt-Injection KAN Distillation v2 — AUROC 0.90 Publication Gate'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: The prompt-injection KAN (Exp 690/691) achieved cross-dataset AUROC=0.9585
+    (publication_ready=True per Exp 700). However, the TEACHER DISTILLATION AUROC=0.7995
+    (below the 0.90 gate). This means the KAN has high cross-dataset generalization but
+    the distillation from the teacher (gpt-oss-safeguard-20b) is incomplete — the KAN
+    is missing the teacher's full classification signal on the training set.
+
+    Fix strategies:
+    1. MORE TRAINING DATA: Double the corpus (1000 → 2000 teacher-labeled examples).
+       The teacher model is cached at models/gpt-oss-safeguard-20b/; re-run inference on
+       1000 additional examples to get 2000 total labels.
+    2. LARGER KAN: Increase knots from current (e.g., 4 knots) to 8 knots per spline.
+       More expressive KAN can capture the teacher's finer discrimination boundaries.
+    3. L2 REGULARIZATION: Add weight decay to prevent KAN from overfitting the training set
+       while still improving distillation accuracy.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_690_prompt_injection_kan_true_distillation.json — v1 result.
+    - results/experiment_691_prompt_injection_kan_cross_dataset.json — cross-dataset AUROC.
+    - python/carnot/models/kan.py — KAN implementation.
+    - python/carnot/models/prompt_injection_ebm.py (or similar) — injection KAN wrapper.
+    - results/prompt_injection_kan_v1.pt — saved v1 model weights.
+    - models/gpt-oss-safeguard-20b/ — teacher model (cached GGUF).
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Retrain prompt-injection KAN with 2000 examples and 8 knots. Target:
+    distillation_auroc >= 0.90 on in-distribution training set.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-SAFE-010 (Prompt-injection KAN v2: distillation AUROC >= 0.90 on 2000-example corpus),
+       REQ-SAFE-011 (KAN v2: 8 knots per spline, L2 weight_decay=1e-4),
+       SCENARIO-SAFE-010/011 to openspec/capabilities/safety/spec.md.
+    3. Create scripts/experiment_710_kan_distill_v2.py:
+       a. ExperimentTemplate(710) + ExperimentTimeoutWatchdog(710, timeout_minutes=120).
+       b. Load v1 training corpus (1000 labeled examples).
+       c. Generate 1000 additional teacher labels:
+            - Draw 500 benign prompts (GSM8K + HumanEval, not in v1 corpus).
+            - Draw 500 injection prompts (JailbreakBench + AdvBench not in v1 corpus).
+            - Run gpt-oss-safeguard-20b on each (use resolve_cached_gguf to load).
+            - Cache labels to results/prompt_injection_teacher_labels_v2.json.
+            - teacher_inference_duration_s: record; verify >= 1000 * 0.5s (distillation invariant).
+       d. Combine: total_corpus = v1 (1000) + new (1000) = 2000 examples.
+       e. Extract features: same feature extractor as v1 (embedding + metadata).
+       f. Retrain KAN with n_knots=8, weight_decay=1e-4:
+            - Use same training loop as v1 but with 8-knot splines.
+            - Train for 100 epochs (vs v1's 50 epochs).
+       g. Evaluate: distillation_auroc on 2000-example corpus (train AUROC).
+            distillation_gate_open = (distillation_auroc >= 0.90).
+       h. Save model to results/prompt_injection_kan_v2.pt.
+       i. honest_verdict:
+            - "distillation_gate_open" if distillation_auroc >= 0.90
+            - "distillation_improved_below_gate" if 0.7995 < distillation_auroc < 0.90
+            - "distillation_regressed" if distillation_auroc < 0.7995
+       j. artifact: distillation_auroc, teacher_inference_duration_s, n_training_examples,
+          n_knots, distillation_gate_open, honest_verdict.
+    4. Write tests/python/test_experiment_710_kan_distill_v2.py with 100% coverage:
+       - test teacher label generation pipeline.
+       - test 8-knot KAN training convergence.
+       - test distillation_gate_open classification.
+       Each test traces to REQ-SAFE-010/011.
+    5. Reconcile:
+       - ops/status.md: update distillation status.
+       - ops/changelog.md: one-line with distillation_auroc and honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp711-sc-energy-set-consistency
+  milestone: 2026.04.54
+  deliverable: results/experiment_711_sc_energy_set_consistency.json
+  title: 'Exp 711: SC-Energy Set Consistency Verifier — Tier 2.9 Candidate (arXiv 2503.10695)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2503.10695 (SC-Energy) proposes a neural energy model that assesses
+    logical coherence of ENTIRE STATEMENT SETS, not just pairwise transitions. Unlike
+    SymCodeVerifier (Tier 2.5, checks pairwise arithmetic) and CausalReasoningVerifier
+    (Tier 2.7, checks carry-forward between adjacent steps), SC-Energy computes a global
+    consistency energy E(S_1, S_2, ..., S_N) over all N CoT steps simultaneously.
+
+    This catches errors that neither Tier 2.5 nor 2.7 detects:
+    - Correct arithmetic at each step but contradiction between step 2 and step 7
+    - Valid carry-forward from each step to next but globally inconsistent conclusion
+    - "Correct intermediate result, wrong final assembly" errors
+
+    Carnot's Tier 2.8 slot is still empty (Exp 695 showed FoVer v1 corpus degenerate for
+    pairwise verifier benchmarking). SC-Energy targets Tier 2.9 as a complementary signal.
+
+    Implementation strategy: SC-Energy uses contrastive learning on (consistent set, mutually
+    inconsistent set) pairs. For Carnot: a consistent set = all CoT steps from a correct
+    GSM8K response. A mutually inconsistent set = mix one incorrect step from a different
+    question into an otherwise correct chain.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/extract.py — existing extractor hierarchy (Tier 2.5/2.7).
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline cascade wiring.
+    - results/fover_labeled_formal_v1.json — FoVer v1 step-level labels.
+    - python/carnot/verify/composed_energy.py (or similar) — ComposedEnergy.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement SetConsistencyVerifier using contrastive set energy. Train on FoVer v1.
+    Evaluate as Tier 2.9 candidate on AUC >= 0.75.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VERIFY-149 (SetConsistencyVerifier: global energy over N CoT steps),
+       REQ-VERIFY-150 (SC-Energy training: contrastive loss on consistent vs inconsistent sets),
+       REQ-VERIFY-151 (Tier 2.9: AUC >= 0.75 gates cascade integration),
+       SCENARIO-VERIFY-149/150/151 to spec.md.
+    3. Create python/carnot/verify/sc_energy.py:
+       a. class SetConsistencyVerifier:
+            def encode_step(self, step_text: str) -> jnp.ndarray:
+              # Simple bag-of-words or TF-IDF encoding (no GPU required).
+            def energy(self, steps: list[str]) -> float:
+              # Aggregate energy over set: E = MLP(mean(encode_step(s) for s in steps)).
+              # Low energy = mutually consistent; high energy = inconsistent.
+            def contrastive_loss(self,
+                                  consistent_sets: list[list[str]],
+                                  inconsistent_sets: list[list[str]]) -> float:
+              # L = mean(energy(consistent)) - mean(energy(inconsistent)) + margin.
+              # Hinge loss variant: max(0, margin - (E_inconsistent - E_consistent)).
+            def train(self, consistent_sets, inconsistent_sets, n_epochs=50) -> None:
+              # Optax adam training loop.
+    4. Create scripts/experiment_711_sc_energy.py:
+       a. ExperimentTemplate(711) + ExperimentTimeoutWatchdog(711, timeout_minutes=60).
+       b. Build training data from FoVer formal v1:
+            - Consistent sets: all steps from correct GSM8K chains.
+            - Inconsistent sets: swap one step from a different question into each correct chain.
+       c. Build held-out evaluation set (20% split).
+       d. Train SetConsistencyVerifier.
+       e. Evaluate: compute AUROC on held-out set (score consistent vs inconsistent sets).
+       f. Compare to Tier 2.5/2.7 AUC on same eval data.
+       g. honest_verdict:
+            - "tier_29_viable" if sc_energy_auc >= 0.75
+            - "tier_29_below_threshold" if sc_energy_auc < 0.75
+       h. tier_29_cascade_recommended = (sc_energy_auc >= 0.75 AND
+          sc_energy_auc > symcode_auc) — should Tier 2.9 be added to cascade?
+       i. artifact: sc_energy_auc, symcode_auc_comparison, causal_auc_comparison,
+          n_consistent_sets, n_inconsistent_sets, tier_29_cascade_recommended, honest_verdict.
+    5. Write tests/python/test_experiment_711_sc_energy.py with 100% coverage:
+       - test energy returns lower value for consistent set.
+       - test contrastive_loss drives separation.
+       - test AUROC computation.
+       Each test traces to REQ-VERIFY-149/150/151.
+    6. Reconcile:
+       - ops/status.md: add SC-Energy Tier 2.9 result.
+       - ops/changelog.md: one-line with sc_energy_auc and honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp712-fover-v2-pddl-dataset
+  milestone: 2026.04.54
+  deliverable: results/experiment_712_fover_v2_pddl.json
+  title: 'Exp 712: FoVer v2 Dataset Synthesis via PDDL Planning — Scale Corpus 5x (arXiv 2604.17957)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Carnot's JEPA predictor training is bottlenecked by FoVer formal v1 (200
+    Z3-labeled pairs from Exp 686). arXiv 2604.17957 introduces PDDL-based step labeling:
+    encode each arithmetic step as a state-action-state PDDL transition, verify that each
+    transition is a valid plan step using a PDDL planner. This generates ~1M labels
+    automatically without human annotation.
+
+    For GSM8K word problems, PDDL encoding is:
+    - State: {quantity_name: value} dict for all named quantities in the problem
+    - Action: an arithmetic operation that updates one quantity (e.g., "add 3 apples")
+    - Valid transition: action produces the expected new state (verify with == check)
+    - A CoT step is "correct" iff its stated arithmetic produces the right state transition
+
+    This differs from Z3 (which checks formal arithmetic entailment) and complements it:
+    Z3 catches symbolic reasoning errors; PDDL catches state-update errors in word problems
+    (e.g., "multiply when you should add" errors that Z3 misses if the formula is syntactically valid).
+
+    EXISTING CODE TO READ FIRST:
+    - results/fover_labeled_formal_v1.json — FoVer v1 (Z3-labeled, 200 pairs).
+    - results/experiment_686_fover_formal_v1.json — Z3 pipeline metadata.
+    - python/carnot/pipeline/extract.py — SymCodeVerifier (extract arithmetic from text).
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement PDDL-based step labeler for GSM8K. Generate fover_v2_combined.json
+    with 1000+ labeled pairs (combining Z3 and PDDL labels).
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-DATA-005 (FoVer v2: >= 1000 step-level labels combining Z3 and PDDL),
+       REQ-DATA-006 (PDDL state encoder: extract quantity-value pairs from GSM8K problem),
+       REQ-DATA-007 (PDDL transition verifier: check state update matches stated arithmetic),
+       SCENARIO-DATA-005/006/007 to openspec/capabilities/training-data/spec.md (create if needed).
+    3. Create python/carnot/training/pddl_labeler.py:
+       a. def extract_quantities(problem_text: str) -> dict[str, float]:
+            # Extract named quantities from GSM8K problem statement (regex + heuristics).
+            # e.g., "3 apples" → {"apples": 3.0}
+       b. def encode_step_transition(step_text: str, state: dict) -> tuple[str, dict]:
+            # Parse CoT step as PDDL action: extract operation + result.
+            # Return (action_description, new_state_estimate).
+       c. def verify_transition(step_text: str, prev_state: dict,
+                                next_state: dict) -> bool:
+            # Verify that step arithmetic produces next_state from prev_state.
+            # Use Python eval() on extracted arithmetic expression (SymCodeVerifier pattern).
+            # step_correct = (evaluated_result == next_state[updated_quantity])
+       d. def label_gsm8k_chain(question: str, cot_steps: list[str]) -> list[dict]:
+            # For each step: extract transition, verify, label step_correct (bool).
+            # Return list of {step, step_correct, action, prev_state, next_state}.
+    4. Create scripts/experiment_712_fover_v2_pddl.py:
+       a. ExperimentTemplate(712) + ExperimentTimeoutWatchdog(712, timeout_minutes=90).
+       b. Load FoVer v1 (200 Z3 pairs).
+       c. Load GSM8K questions 0-399 (400 questions for PDDL labeling attempt).
+          For each question: generate 2-3 synthetic CoT steps (correct and incorrect variants)
+          using the SymCodeVerifier pattern (from Exp 619/686 — no GPU required).
+       d. Run PDDL labeler on each chain. Count:
+            - pddl_labeled_pairs: number of (step, label) pairs with valid PDDL transition.
+            - pddl_z3_agreement_rate: fraction where PDDL label matches Z3 label (on v1 overlap).
+       e. Combine: fover_v2_combined = v1 Z3 pairs + PDDL pairs.
+          Save to results/fover_v2_combined.json.
+          n_total_pairs = len(fover_v2_combined).
+       f. honest_verdict:
+            - "fover_v2_target_met" if n_total_pairs >= 1000
+            - "fover_v2_partial" if 500 <= n_total_pairs < 1000
+            - "fover_v2_insufficient" if n_total_pairs < 500
+       g. artifact: n_z3_pairs, n_pddl_pairs, n_total_pairs, pddl_z3_agreement_rate,
+          corpus_file, honest_verdict.
+    5. Write tests/python/test_experiment_712_fover_v2_pddl.py with 100% coverage:
+       - test extract_quantities parses simple quantity expressions.
+       - test verify_transition identifies correct vs incorrect arithmetic.
+       - test label_gsm8k_chain produces valid step labels.
+       Each test traces to REQ-DATA-005/006/007.
+    6. Reconcile:
+       - ops/status.md: add "FoVer v2 PDDL corpus: (n_total_pairs) pairs available for JEPA retraining".
+       - ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp713-fr11-tier2-relay
+  milestone: 2026.04.54
+  deliverable: results/experiment_713_fr11_tier2_relay.json
+  title: 'Exp 713: FR-11 Tier 2 Relay — Wire JEPA v17 Violations into ConstraintTemplateLibrary (FR-11 MANDATORY, GATED on Exp 705)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: FR-11 (Autonomous Self-Learning Loop) requires that every verified violation
+    from the pipeline feeds back into the constraint learning system. In .52, Exp 683 wired
+    Exp 668 VR wins into ConstraintTemplateLibrary (Tier 2). In .54, if Exp 705 deployed
+    JEPA v17 cascade (cascade_gate_open=True), that cascade will have produced verified
+    violations on 200 GSM8K questions. Those violations must be wired back.
+
+    If Exp 705 gate failed (cascade_gate_open=False), this experiment runs in
+    synthetic fallback mode: use Exp 694's Qwen3.5-0.8B verified violations (signed_improvement=1.0
+    at 200q scale) as the real violation source for Tier 2 relay.
+
+    Tier 2 self-learning: "Cache verified facts across sessions, not just within a chain.
+    Learn per-user and per-domain error patterns. Consolidate learned patterns into reusable
+    constraint templates." Per research-program.md, this is the Tier 2 self-learning goal.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_705_jepa_v17_cascade_deploy.json — cascade_gate_open status.
+    - results/experiment_694_vr_cross_model.json — Qwen3.5-0.8B violations (fallback source).
+    - python/carnot/pipeline/verify_repair.py — VerifyRepairPipeline.
+    - python/carnot/training/constraint_template_library.py (or similar) — ConstraintTemplateLibrary.
+    - results/experiment_683_fr11_real_positives.json — prior Tier 2 relay reference.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Wire JEPA v17 cascade violations (or Exp 694 fallback) into ConstraintTemplateLibrary.
+    Advance FR-11 self-learning tier count.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-LEARN-022 (FR-11 Tier 2: JEPA v17 violations update ConstraintTemplateLibrary),
+       REQ-LEARN-023 (FR-11 fallback: Exp 694 Qwen violations if JEPA cascade blocked),
+       SCENARIO-LEARN-022/023 to openspec/capabilities/self-learning/spec.md.
+    3. Create scripts/experiment_713_fr11_tier2_relay.py:
+       a. ExperimentTemplate(713) + ExperimentTimeoutWatchdog(713, timeout_minutes=30).
+       b. Load Exp 705 result. Read cascade_gate_open.
+       c. If cascade_gate_open == True:
+            source = "jepa_v17_cascade_violations"
+            Load JEPA v17 cascade violation logs (produced during Exp 705 OOD validation).
+            n_violations = len(violation_log).
+          Else:
+            source = "exp694_qwen_fallback"
+            Load Exp 694 violation data (Qwen3.5-0.8B signed_improvement=1.0, 200q).
+            Extract confirmed true-positive violations (where VR produced correct repair).
+            n_violations = count of confirmed repairs.
+       d. For each violation: extract constraint pattern (constraint_type, step_text_fragment).
+       e. Wire into ConstraintTemplateLibrary:
+            library.add_pattern(constraint_type, pattern, source_experiment=713).
+       f. Measure:
+            n_patterns_added: new templates added.
+            n_patterns_total: total in library after relay.
+            fp_rate_delta: run 10 synthetic benchmark queries; compare FP rate before/after.
+       g. Compute fr11_tier_advancement:
+            Tier 1 confirmed: online weight updates (prior milestones).
+            Tier 2 confirmed: ConstraintTemplateLibrary update (this experiment).
+            fr11_tier_advancement = 2 (both tiers confirmed).
+       h. honest_verdict:
+            - "fr11_tier2_real_violations" if source == "jepa_v17_cascade_violations"
+            - "fr11_tier2_fallback_relay" if source == "exp694_qwen_fallback"
+       i. artifact: source, n_violations, n_patterns_added, n_patterns_total,
+          fp_rate_delta, fr11_tier_advancement, honest_verdict.
+    4. Write tests/python/test_experiment_713_fr11_tier2_relay.py with 100% coverage:
+       - test source selection logic (gate_open vs fallback).
+       - test pattern extraction from violation log.
+       - test library wire-in adds expected patterns.
+       Each test traces to REQ-LEARN-022/023.
+    5. Reconcile:
+       - ops/status.md: add FR-11 tier status update.
+       - _bmad/traceability.md: update FR-11 implementation status.
+       - ops/changelog.md: one-line with fr11_tier_advancement and honest_verdict.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp714-npu-iron-toolchain
+  milestone: 2026.04.54
+  deliverable: results/experiment_714_npu_iron_unblock.json
+  title: 'Exp 714: AMD XDNA NPU Unblock v8 — IRON Toolchain Fresh Approach (mlir-aie, No ninja/openblas)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: AMD XDNA NPU has been blocked for 7 consecutive milestones (Exps 292, 303, 314,
+    335, 435, and two others) because VitisAI path requires ninja + openblas, which have not
+    been installed despite 7 retro recommendations. The IRON toolchain (mlir-aie) is an
+    alternative: bare-metal NPU programming via MLIR dialects, no ninja/openblas required.
+    arXiv 2504.03083 demonstrates 2.8x GEMM speedup over CPU using IRON on AMD NPU.
+
+    The IRON approach:
+    - pip install mlir-aie (Python-only install, no system dependencies)
+    - If importable: write a minimal GEMM kernel in AIE MLIR dialect
+    - Compile and run on NPU: validate AI Engine execution
+
+    Additionally: AMD now distributes custom onnxruntime wheels for Python 3.12 at
+    ryzenai.docs.amd.com. The .venv-npu/ (Python 3.12) environment is ready. The wheel
+    might be downloadable without the full Ryzen AI Software installer.
+
+    EXISTING CODE TO READ FIRST:
+    - results/experiment_435_npu_unblock.json — v7 failure (blocked_prereq).
+    - research-hardware-wishlist.md — AMD XDNA NPU status and setup steps.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Try IRON toolchain (pip install mlir-aie). If unavailable, try AMD custom
+    onnxruntime wheel discovery. Report NPU access status.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-HW-039 (XDNA NPU: GEMM kernel via IRON toolchain achieves >2x CPU speedup),
+       SCENARIO-HW-039 to openspec/capabilities/fpga/spec.md.
+    3. Create scripts/experiment_714_npu_iron_unblock.py:
+       a. ExperimentTemplate(714) + ExperimentTimeoutWatchdog(714, timeout_minutes=45).
+       b. Strategy 1 — IRON toolchain:
+            Try: subprocess.run([".venv/bin/pip", "install", "mlir-aie"], capture_output=True).
+            Check: import mlir_aie → iron_available: bool.
+            If iron_available:
+              Write minimal AIE MLIR kernel (16x16 GEMM as in arXiv 2504.03083).
+              Compile via mlir_aie.compile() → npu_available: True if compile succeeds.
+              Benchmark: run 100 iterations, compare CPU vs NPU GEMM latency.
+              gemm_speedup = cpu_time / npu_time.
+            Else: iron_available = False, strategy_1_blocked = True.
+       c. Strategy 2 — AMD custom onnxruntime wheel (if strategy 1 fails):
+            Try subprocess to check if AMD wheel URL is reachable.
+            Try pip install from AMD's onnxruntime-vitisai package (public PyPI check).
+            Check import onnxruntime; "VitisAIExecutionProvider" in available_providers.
+            vitis_available: bool.
+       d. Synthesize result:
+            npu_benchmarkable = iron_available OR vitis_available.
+       e. honest_verdict:
+            - "npu_iron_working" if iron_available AND gemm_speedup >= 2.0
+            - "npu_iron_installed_no_speedup" if iron_available AND gemm_speedup < 2.0
+            - "npu_vitisai_working" if vitis_available (IRON failed)
+            - "npu_still_blocked" if neither approach succeeded
+            - "npu_iron_install_failed" if pip install mlir-aie failed
+       f. If npu_still_blocked:
+            Write escalation note to ops/known-issues.md:
+            "RETRO-NPU-v8: IRON path tried (pip install mlir-aie), VitisAI path tried.
+             Both blocked. Manual hardware action required: install Ryzen AI Software
+             from AMD or request IT to install ninja + openblas."
+       g. artifact: iron_available, vitis_available, gemm_speedup (if benchmarked),
+          npu_benchmarkable, honest_verdict.
+    4. Write tests/python/test_experiment_714_npu_iron.py with 100% coverage:
+       - test IRON availability detection.
+       - test VitisAI availability detection.
+       - test honest_verdict classification.
+       Each test traces to REQ-HW-039.
+    5. Update research-hardware-wishlist.md: add Exp 714 result to XDNA NPU status section.
+    6. ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp715-milestone-retro-2026-04-54
+  milestone: 2026.04.54
+  deliverable: results/operational_retro_2026_04_54.json
+  title: 'Exp 715: Milestone 2026.04.54 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: All experiments in milestone 2026.04.54 (Exps 703-714) have completed.
+    This retrospective analyzes execution efficiency and research outcomes.
+    Key questions:
+    - Did JEPA v17 RankNet achieve OOD AUC >= 0.75? (RETRO-CRITICAL closure)
+    - Did Gemma4 VR signed_improvement recover to >= 0? (cross-model fix)
+    - Did PSV PaCoRe slope become negative? (self-play recovery)
+    - Did distillation AUROC reach >= 0.90? (publication gate)
+    - Did the slowest-5 retirements hold? (governance fix)
+    - Did FoVer v2 reach >= 1000 pairs? (JEPA future training data)
+    - Did NPU IRON unblock? (hardware path)
+
+    EXISTING CODE TO READ FIRST:
+    - results/operational_retro_2026_04_53.json — .53 baseline metrics (wall_time, slowest-5).
+    - results/experiment_703_preflight_v6.json
+    - results/experiment_704_jepa_v17_ranknet.json
+    - results/experiment_705_jepa_v17_cascade_deploy.json
+    - results/experiment_706_gemma4_vr_diagnostic.json
+    - results/experiment_707_adaptive_thresholds.json
+    - results/experiment_708_vr_attempt_19_gemma4.json
+    - results/experiment_709_psv_pacore_k2.json
+    - results/experiment_710_kan_distill_v2.json
+    - results/experiment_711_sc_energy_set_consistency.json
+    - results/experiment_712_fover_v2_pddl.json
+    - results/experiment_713_fr11_tier2_relay.json
+    - results/experiment_714_npu_iron_unblock.json
     - scripts/experiment_template.py — REQUIRED_RESULT_FIELDS.
     - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
 
     TASK: Compute milestone metrics and emit operational_retro JSON.
 
     CONCRETE STEPS:
-    1. ExperimentTemplate(702) + ExperimentTimeoutWatchdog(702, timeout_minutes=30).
-    2. Load all 13 experiment result files (692-701 + 690-691). For each: record status,
+    1. ExperimentTemplate(715) + ExperimentTimeoutWatchdog(715, timeout_minutes=30).
+    2. Load all 13 experiment result files (703-714). For each: record status,
        honest_verdict, duration_s. Use "not_run" if file missing (RETRO-027 sentinel).
     3. Compute wall_time_minutes (sum durations / 60).
        Compute per_experiment_avg_min = wall_time_minutes / total_experiments.
-       Identify slowest_5 in this cycle.
-       Compare to .52 baseline: per_experiment_avg_min was 7.0 min (project best).
+       Identify slowest_5 in this .54 cycle.
+       Compare to .53 baseline: per_experiment_avg_min was 7.1 min.
     4. Extract key metrics:
-       - preflight_v5_complete: read from Exp 692 result.
-       - jepa_v15_root_cause: read from Exp 693 result.
-       - distillation_invariant_confirmed: read from Exp 690 result
-         (teacher_inference_duration_s >= corpus_size * 0.5).
-       - cross_dataset_mean_auroc: read from Exp 691 result.
-       - vr_cross_model_delta: read from Exp 694 result (cross_model_delta).
-       - tier_28_winner: read from Exp 695 result.
-       - abstention_fp_reduced: read from Exp 696 result.
-       - psv_real_fp_trend_slope: read from Exp 697 result.
-       - jepa_v16_ood_auc: read from Exp 698 result.
-       - hallusae_delta_auc: read from Exp 699 result.
-       - publication_ready: read from Exp 700 result.
-       - retro_072_resolved: read from Exp 701 result.
-    5. Assess open RETROs:
-       - RETRO-072 (KV260 synthesis): status from Exp 701.
-       - RETRO-CRITICAL (JEPA cascade blocked): "unblocked" if jepa_v16_ood_auc >= 0.75.
-       - Distillation invariant: "confirmed" if distillation_invariant_confirmed.
-       Check for NEW RETROs: any slowest_5 experiment appearing for >= 2 consecutive milestones.
-    6. Check GPU state: subprocess.run(["nvidia-smi", "--query-gpu=memory.used,utilization.gpu",
-       "--format=csv,noheader"]). Record gpu0_vram_mb, gpu1_vram_mb.
-       gpu_close_clean = both < 100 MB.
-    7. Self-improvement metrics (FR-11 continuous learning):
-       - fr11_real_positives_confirmed (from Exp 683, inherited).
-       - psv_real_fp_improving: psv_real_fp_trend_slope < 0.
-       - jepa_v16_cascade_unblocked: jepa_v16_ood_auc >= 0.75.
-       Compute fr11_tier_advancement: count of tiers 1-4 with at least one positive result.
-    8. Compute honest_verdict string:
-       Format: "wall_time_(direction)_jepa_v16_(auc_verdict)_psv_(psv_verdict)_distill_(distill_verdict)"
-       Where: auc_verdict = "unblocked" if >= 0.75 else "still_blocked"
-              psv_verdict = "improving" if slope < 0 else "stable_or_degrading"
-              distill_verdict = "confirmed" if invariant held else "violated"
-    9. Write results/operational_retro_2026_04_53.json via AtomicResultWriter.
-       Schema: carnot.operational_retro.v28.
-    10. Update ops/status.md: add Milestone 2026.04.53 Results section at top.
+       - preflight_v6_complete: from Exp 703.
+       - jepa_v17_ood_auc: from Exp 704.
+       - jepa_v17_cascade_unblocked: from Exp 705 (cascade_gate_open).
+       - gemma4_failure_mode: from Exp 706.
+       - adaptive_thresholds_implemented: from Exp 707.
+       - vr19_gemma4_signed_improvement: from Exp 708.
+       - psv_pacore_slope: from Exp 709.
+       - distillation_auroc_v2: from Exp 710.
+       - sc_energy_auc: from Exp 711.
+       - fover_v2_n_pairs: from Exp 712.
+       - fr11_tier_advancement: from Exp 713.
+       - npu_benchmarkable: from Exp 714.
+    5. Check if slowest-5 retirements held:
+       Verify Exps 425, 410, 383, 380-382, 346 are NOT in .54 slowest-5.
+       slowest_5_governance_held: bool = none of these appear in slowest_5.
+    6. Assess open RETROs:
+       - RETRO-072: resolved if Exp 714 or similar brings synthesis.
+       - RETRO-CRITICAL: resolved if jepa_v17_cascade_unblocked=True.
+       Check for NEW RETROs: any slowest_5 experiment appearing in >= 2 consecutive milestones.
+    7. Check GPU state: nvidia-smi query.
+       gpu_close_clean = both GPUs < 100 MB VRAM.
+    8. Self-improvement metrics (FR-11):
+       - fr11_tier_advancement: from Exp 713.
+       - psv_pacore_improving: psv_pacore_slope < 0.
+       - jepa_v17_cascade_unblocked: gate status.
+    9. Compute honest_verdict string:
+       Format: "wall_time_(direction)_jepa_v17_(auc_verdict)_gemma4_(gemma_verdict)_psv_(psv_verdict)_slowest5_(governance_verdict)"
+       Where:
+         auc_verdict = "cascade_unblocked" if jepa_v17_cascade_unblocked else "still_blocked"
+         gemma_verdict = "fixed" if vr19_gemma4_signed_improvement >= 0 else "still_harmful"
+         psv_verdict = "recovering" if psv_pacore_slope < 0 else "stable_or_degrading"
+         governance_verdict = "held" if slowest_5_governance_held else "regressed"
+    10. Write results/operational_retro_2026_04_54.json via AtomicResultWriter.
+        Schema: carnot.operational_retro.v29.
+    11. Update ops/status.md: add Milestone 2026.04.54 Results section at TOP.
         PRESERVE all existing content — add new section above current, do not replace.
-    11. Update ops/changelog.md: add one-line entry.
-    12. Update research-complete.yaml: append all completed .53 experiments (692-702).
-    13. tmpl.assert_deliverable_written() as final line.
+    12. Update ops/changelog.md: add one-line entry.
+    13. Update research-complete.yaml: append all completed .54 experiments (703-715).
+    14. tmpl.assert_deliverable_written() as final line.
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.

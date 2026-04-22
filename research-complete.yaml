@@ -3300,46 +3300,106 @@ milestones:
     deliverable: results/experiment_691_prompt_injection_kan_cross_dataset.json
     result: OK (conductor)
   - id: exp692-preflight-v5
-    title: "Exp 692: Milestone 2026.04.53 Preflight v5"
+    title: 'Exp 692: Milestone 2026.04.53 Preflight v5'
     deliverable: results/experiment_692_preflight_v5.json
     result: OK (conductor)
   - id: exp693-jepa-v15-root-cause
-    title: "Exp 693: JEPA v15 OOD Root Cause Analysis"
+    title: 'Exp 693: JEPA v15 OOD Root Cause Analysis'
     deliverable: results/experiment_693_jepa_v15_root_cause.json
     result: OK (conductor)
   - id: exp694-vr-cross-model
-    title: "Exp 694: VR Cross-Model Validation"
+    title: 'Exp 694: VR Cross-Model Validation'
     deliverable: results/experiment_694_vr_cross_model.json
     result: OK (conductor)
   - id: exp695-formal-step-verifier
-    title: "Exp 695: Formal Step Verifier Tier-28 Evaluation"
+    title: 'Exp 695: Formal Step Verifier Tier-28 Evaluation'
     deliverable: results/experiment_695_formal_step_verifier.json
     result: OK (conductor)
   - id: exp696-icalm-abstention
-    title: "Exp 696: iCaLM Abstention FP Reduction"
+    title: 'Exp 696: iCaLM Abstention FP Reduction'
     deliverable: results/experiment_696_icalm_abstention.json
     result: OK (conductor)
   - id: exp697-psv-real-selfplay
-    title: "Exp 697: PSV Real Self-Play FP Trend"
+    title: 'Exp 697: PSV Real Self-Play FP Trend'
     deliverable: results/experiment_697_psv_real_selfplay.json
     result: OK (conductor)
   - id: exp698-jepa-v16
-    title: "Exp 698: JEPA v16 OOD AUC Evaluation"
+    title: 'Exp 698: JEPA v16 OOD AUC Evaluation'
     deliverable: results/experiment_698_jepa_v16.json
     result: OK (conductor)
   - id: exp699-hallusae-jepa-v16
-    title: "Exp 699: HalluSAE JEPA v16 Integration"
+    title: 'Exp 699: HalluSAE JEPA v16 Integration'
     deliverable: results/experiment_699_hallusae_jepa_v16.json
     result: OK (conductor)
   - id: exp700-publication-readiness
-    title: "Exp 700: Publication Readiness Check"
+    title: 'Exp 700: Publication Readiness Check'
     deliverable: results/experiment_700_publication_readiness.json
     result: OK (conductor)
   - id: exp701-kv260-ising-v3-synthesis
-    title: "Exp 701: KV260 Ising v3 RTL Synthesis Attempt"
+    title: 'Exp 701: KV260 Ising v3 RTL Synthesis Attempt'
     deliverable: results/experiment_701_kv260_ising_v3_synthesis.json
     result: OK (conductor)
   - id: exp702-milestone-retro-2026-04-53
-    title: "Exp 702: Milestone 2026.04.53 Operational Retrospective"
+    title: 'Exp 702: Milestone 2026.04.53 Operational Retrospective'
+    deliverable: results/operational_retro_2026_04_53.json
+    result: OK (conductor)
+- id: 2026.04.53
+  title: JEPA v16 Recovery + VR Credibility Hardening + Prompt-Injection True Distillation
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-04-22'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp692-operational-preflight-v5
+    title: 'Exp 692: Operational Pre-Flight v5 + Slowest-5 Formal Retirement (Exps 425/410) (MANDATORY FIRST)'
+    deliverable: results/experiment_692_preflight_v5.json
+    result: OK (conductor)
+  - id: exp693-jepa-v15-root-cause-audit
+    title: 'Exp 693: JEPA v15 Root Cause Audit + v16 Architecture Design (OOD AUC=0.4751 below random)'
+    deliverable: results/experiment_693_jepa_v15_root_cause.json
+    result: OK (conductor)
+  - id: exp690-prompt-injection-kan-true-distillation
+    title: "Exp 690: Prompt-Injection KAN v1 \u2014 True Teacher Distillation (user-pinned; supersedes 652/669 fake-distillation\
+      \ runs)"
+    deliverable: results/experiment_690_prompt_injection_kan_true_distillation.json
+    result: OK (conductor)
+  - id: exp691-prompt-injection-kan-cross-dataset-eval
+    title: "Exp 691: Prompt-Injection KAN v1 \u2014 Cross-Dataset Generalization (gates public release, user-pinned)"
+    deliverable: results/experiment_691_prompt_injection_kan_cross_dataset.json
+    result: OK (conductor)
+  - id: exp694-vr-cross-model-validation
+    title: "Exp 694: VR Cross-Model Validation + Hard GSM8K \u2014 Gemma-4-E4B-it + Grammar-Constrained COMPUTE: Decoding\
+      \ (GPU REQUIRED)"
+    deliverable: results/experiment_694_vr_cross_model.json
+    result: OK (conductor)
+  - id: exp695-formal-step-verifier-tier28
+    title: "Exp 695: FormalStepVerifier Tier 2.8 \u2014 arXiv 2603.29500 + Eidoku CSP vs SymCodeVerifier on FoVer Corpus"
+    deliverable: results/experiment_695_formal_step_verifier.json
+    result: OK (conductor)
+  - id: exp696-icalm-repair-abstention
+    title: "Exp 696: I-CALM Repair Abstention Layer \u2014 Confidence-Gated Repair to Reduce False Positives (arXiv 2604.03904)"
+    deliverable: results/experiment_696_icalm_abstention.json
+    result: OK (conductor)
+  - id: exp697-psv-real-data-selfplay
+    title: "Exp 697: PSV Real-Data Self-Play 10 Iterations \u2014 K=2 Parallel Chains with Live Verification (FR-11, GPU REQUIRED)"
+    deliverable: results/experiment_697_psv_real_selfplay.json
+    result: OK (conductor)
+  - id: exp698-jepa-v16-retrain-fover-formal
+    title: "Exp 698: JEPA v16 Retrain on FoVer Formal v1 \u2014 Address Root Cause from Exp 693"
+    deliverable: results/experiment_698_jepa_v16.json
+    result: OK (conductor)
+  - id: exp699-hallusae-jepa-v16-integration
+    title: "Exp 699: HalluSAE Feature Integration into JEPA v16 \u2014 Sparse AE Latents as JEPA Input Features"
+    deliverable: results/experiment_699_hallusae_jepa_v16.json
+    result: OK (conductor)
+  - id: exp700-vr-publication-readiness
+    title: 'Exp 700: VR Publication Readiness + HuggingFace Model Card Update'
+    deliverable: results/experiment_700_publication_readiness.json
+    result: OK (conductor)
+  - id: exp701-kv260-ising-v3-synthesis
+    title: "Exp 701: KV260 Ising v3 RTL Synthesis Attempt \u2014 Vivado Install Check + Bitstream Gate"
+    deliverable: results/experiment_701_kv260_ising_v3_synthesis.json
+    result: OK (conductor)
+  - id: exp702-milestone-retro-2026-04-53
+    title: 'Exp 702: Milestone 2026.04.53 Operational Retrospective'
     deliverable: results/operational_retro_2026_04_53.json
     result: OK (conductor)
