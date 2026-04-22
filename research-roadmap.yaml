@@ -50,9 +50,9 @@ tasks:
        c. Record gpu0_vram_mb, gpu1_vram_mb, gpu0_util, gpu1_util.
     4. Add Exp 527 to exclusion manifest:
        a. Read scripts/conductor_exclusion_manifest.json.
-       b. Add entry: {"experiment_id": "exp527", "reason": "3rd consecutive slowest-5
+       b. Add entry: ("experiment_id": "exp527", "reason": "3rd consecutive slowest-5
           appearance; RETRO-033 resolved by Exp 720; no remaining research mandate",
-          "retired_in_milestone": "2026.04.57", "governance_rule": "3-consecutive-mandatory"}.
+          "retired_in_milestone": "2026.04.57", "governance_rule": "3-consecutive-mandatory").
        c. Write updated manifest back to scripts/conductor_exclusion_manifest.json.
     5. Implement DualGPU fix for EORM+JEPA retrain:
        a. Locate the EORM and JEPA retrain functions (likely in python/carnot/pipeline/ or
@@ -155,7 +155,7 @@ tasks:
        b. If there is no separate "Closed Issues" section, add one and move FR-11 there.
        c. Do not remove any existing content.
     8. Write results/fr11_closure_certificate.json:
-       {"requirement": "FR-11", "status": "OPERATIONAL",
+       ("requirement": "FR-11", "status": "OPERATIONAL",
         "closed_in_milestone": "2026.04.56",
         "closing_experiments": [734, 738],
         "evidence": {
@@ -164,7 +164,7 @@ tasks:
           "probe_5fold_auc": 0.993,
           "relay_latency_p99_ms": "<200",
           "templates_replayed_in_s2": ">0"
-        },
+        ),
         "docs_updated": ["_bmad/traceability.md", "openspec/capabilities/self_learning/spec.md",
                          "ops/known-issues.md"],
         "schema": "carnot.closure.v1"}
@@ -263,8 +263,8 @@ tasks:
        - ops/changelog.md: one-line with honest_verdict.
     6. tmpl.assert_deliverable_written() as final line.
 
-    GPU SETUP: RTX 3090 GPU 0. Run setup_gpu([{"name": "Qwen3.5-0.8B",
-    "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]) before inference.
+    GPU SETUP: RTX 3090 GPU 0. Run setup_gpu([("name": "Qwen3.5-0.8B",
+    "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]) before inference.
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -465,8 +465,8 @@ tasks:
        - ops/changelog.md: one-line with honest_verdict.
     7. tmpl.assert_deliverable_written() as final line.
 
-    GPU SETUP: RTX 3090 GPU 0. Run setup_gpu([{"name": "Qwen3.5-0.8B",
-    "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]) before inference.
+    GPU SETUP: RTX 3090 GPU 0. Run setup_gpu([("name": "Qwen3.5-0.8B",
+    "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]) before inference.
     Use BatchedInferenceRunner(batch_size=8) for code generation.
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -785,7 +785,7 @@ tasks:
           - total_templates_at_s10: ConstraintTemplateLibrary total template count
        e. honest_verdict:
           - "tier2_memory_monotonic_gain" if is_monotonically_non_decreasing=True
-          - "tier2_memory_plateau_at_s{N}" if plateau detected at session N
+          - "tier2_memory_plateau_at_s(N)" if plateau detected at session N
             (still a win — plateau means the system converged, not failed)
           - "tier2_memory_regression" if any session shows precision < prior session by > 0.01
     4. Write tests/python/test_experiment_748_10session_memory.py with 100% coverage:
@@ -795,7 +795,7 @@ tasks:
        Each test traces to REQ-FR11-009/010.
     5. Reconcile:
        - ops/status.md: add "Tier 2 memory 10-session: precision S1=X, S10=Y.
-         Monotonic: [True/False]. Plateau at: S{N} or None."
+         Monotonic: [True/False]. Plateau at: S(N) or None."
          Update Continuous Self-Learning section: "Tier 2 (10-session): VALIDATED (.57)"
        - ops/changelog.md: one-line with honest_verdict.
     6. tmpl.assert_deliverable_written() as final line.
@@ -1115,19 +1115,19 @@ tasks:
        a. Load StepLevelJEPAProbe from checkpoint (find path in Exp 738 artifact).
        b. Export to models/carnot_step_jepa_probe_v1.safetensors using safetensors.torch.save.
        c. Export config to models/carnot_step_jepa_probe_v1_config.json:
-          {"model_type": "StepLevelJEPAProbe", "hidden_dim": 1024, "layer_index": 16,
+          ("model_type": "StepLevelJEPAProbe", "hidden_dim": 1024, "layer_index": 16,
            "probe_architecture": "Linear(1024,256)->ReLU->Linear(256,1)->sigmoid",
            "training_data": "FoVer v2 (formal verification labels)",
            "eval_auc_5fold": 0.993, "eval_std_5fold": 0.005,
-           "latency_p50_ms": 0.020, "model_class": "Qwen/Qwen3.5-0.8B"}
+           "latency_p50_ms": 0.020, "model_class": "Qwen/Qwen3.5-0.8B")
     4. Export KAN Tier 0b weights:
        a. Confirm models/kan_distill_v3_tier0b.safetensors exists (from Exp 735).
        b. If exists: copy to models/carnot_kan_tier0b_v3.safetensors.
        c. Write models/carnot_kan_tier0b_v3_config.json:
-          {"model_type": "KANPromptInjectionClassifier", "auroc": 0.9078,
+          ("model_type": "KANPromptInjectionClassifier", "auroc": 0.9078,
            "fp_rate_gsm8k_1000q": 0.0, "deployment_tier": "0b",
            "architecture": "2-layer KAN, 16 knots, degree-3 splines",
-           "training_data": "prompt_injection_distillation_v3 (3000 examples)"}
+           "training_data": "prompt_injection_distillation_v3 (3000 examples)")
     5. Write model cards (NO EMOJIS per CLAUDE.md requirements):
        a. models/MODELCARD_carnot_step_jepa_probe_v1.md:
           Sections: Model Summary, Architecture, Training Data, Evaluation, Usage,
@@ -1149,8 +1149,8 @@ tasks:
        a. ExperimentTemplate(752) + ExperimentTimeoutWatchdog(752, timeout_minutes=30).
        b. Implement steps 3-6. Verify all files exist after writing.
        c. Write results/hf_upload_ready.json:
-          {"experiment": 752, "models_ready": ["carnot_step_jepa_probe_v1",
-           "carnot_kan_tier0b_v3"], "artifact_paths": {...}, "upload_script": ...,
+          ("experiment": 752, "models_ready": ["carnot_step_jepa_probe_v1",
+           "carnot_kan_tier0b_v3"], "artifact_paths": {...), "upload_script": ...,
            "operator_action": "run models/hf_upload_commands.sh after huggingface-cli login"}
        d. honest_verdict:
           - "hf_artifacts_ready" if both safetensors, configs, and model cards written

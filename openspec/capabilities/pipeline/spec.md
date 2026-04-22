@@ -149,6 +149,53 @@ before dispatching the first experiment.
 
 **Spec traces:** REQ-INFRA-046b
 
+### REQ-INFRA-048: Exp 527 Class Mandatory Retirement
+
+Exp 527 (live 100-question precision inference) MUST be present in the conductor
+exclusion manifest before milestone 2026.04.57 dequeue.  This retirement is mandated by
+governance rule "3-consecutive-mandatory": an experiment that appears in the slowest-5
+for three consecutive milestones is automatically retired regardless of research value.
+
+**Acceptance criteria:**
+- `ExclusionManifest.is_excluded(527)` returns True after Exp 740 runs.
+- The manifest entry includes `governance_rule: "3-consecutive-mandatory"`.
+- The entry includes `retired_in_milestone: "2026.04.57"`.
+
+**Spec traces:** REQ-INFRA-048 (governance: Exp 308/309 precedent, RETRO-033)
+
+### REQ-INFRA-049: EORM+JEPA Retrain MUST Use DualGPU ThreadPoolExecutor
+
+EORM+JEPA retrain MUST use a `ThreadPoolExecutor(max_workers=2)` with EORM on
+`cuda:0` and JEPA on `cuda:1` when both GPUs are available.  Sequential GPU
+training for this class is retired as of milestone 2026.04.57.  The validated
+speedup from Exp 685 (2.0175x) is the baseline; any new parallel implementation
+MUST achieve >= 1.5x speedup vs sequential.
+
+**Acceptance criteria:**
+- `DualGPURetrain.retrain_parallel()` submits both tasks concurrently to a `ThreadPoolExecutor`.
+- When only 1 GPU is available, the implementation falls back to sequential execution without error.
+- Speedup measurement >= 1.5x on a 2-GPU host.
+
+**Spec traces:** REQ-INFRA-049 (Exp 685 validated 2.0175x, 11 milestones idle GPU 1)
+
+### SCENARIO-INFRA-057: Exp 527 Appears in Exclusion Manifest After Exp 740
+
+**Given** Exp 527 has appeared in the slowest-5 for three consecutive milestones
+**When** Exp 740 runs and adds Exp 527 to the exclusion manifest
+**Then** `ExclusionManifest.is_excluded(527)` returns True and the entry contains
+  `governance_rule: "3-consecutive-mandatory"` and `retired_in_milestone: "2026.04.57"`
+
+**Spec traces:** REQ-INFRA-048
+
+### SCENARIO-INFRA-058: DualGPURetrain Falls Back to Sequential on Single GPU
+
+**Given** only 1 CUDA GPU is available
+**When** `DualGPURetrain.retrain_parallel(eorm_model, jepa_model, data)` is called
+**Then** both models train sequentially on `cuda:0` without raising any exception,
+  and the result dict contains `fallback_reason: "single_gpu"`.
+
+**Spec traces:** REQ-INFRA-049
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -160,3 +207,5 @@ before dispatching the first experiment.
 | REQ-INFRA-047 | Implemented | Exp 727 fn_delta measurement |
 | REQ-INFRA-046b | Implemented | Exp 731 — conductor_manifest_validator.py; patch in results/manifest_fix_patch.txt |
 | REQ-INFRA-047b | Implemented | Exp 731 — GPU 1 zombie cleared, vram_after=4 MiB |
+| REQ-INFRA-048 | Implemented | Exp 740 — Exp 527 added to exclusion manifest |
+| REQ-INFRA-049 | Implemented | Exp 740 — DualGPURetrain in python/carnot/pipeline/dualgpu_retrain.py |
