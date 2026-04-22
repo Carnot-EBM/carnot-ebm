@@ -2453,3 +2453,5 @@ python/ |
 | 2026-04-22 04:57 UTC | Exp 682: JEPA v15 OOD Audit — Investigate Suspicio | OK | 106 passed, 2 warnings in 14.26s |
 | 2026-04-22 05:11 UTC | Exp 683: FR-11 Real Verified Positives Relay — Wir | OK | 81 passed, 2 warnings in 4.27s |
 | 2026-04-22 05:24 UTC | Exp 684: DualGPU Proof v4 — Confirm GPU1 Utilizati | OK | 81 passed, 3 warnings in 4.26s |
+| 2026-04-22 05:41 UTC | Exp 685: DualGPU EORM+JEPA Parallel Retrain — Reso | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-04-22 05:46 UTC | Exp 685: DualGPU EORM+JEPA Parallel Retrain — Reso | OK | Deliverable already exists in repo |

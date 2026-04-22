@@ -1,0 +1,60 @@
+{
+  "experiment": 685,
+  "title": "DualGPU EORM+JEPA Parallel Retrain \u2014 resolve Exp 383 slowest-5 pattern",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T05:39:18Z",
+  "finished_at": "2026-04-22T05:41:47Z",
+  "duration_s": 149.855,
+  "status": "success",
+  "honest_verdict": "dualgpu_retrain_success",
+  "retro_071_resolved": true,
+  "n_eorm_pairs": 10,
+  "n_jepa_pairs": 57,
+  "eorm_epochs": 50,
+  "jepa_epochs": 100,
+  "sequential_total_s": 100.189,
+  "parallel_total_s": 49.66,
+  "speedup": 2.0175,
+  "sequential_eorm": {
+    "eorm_loss": 0.08529583811759948,
+    "eorm_train_time_s": 87.858
+  },
+  "sequential_jepa": {
+    "jepa_loss": 0.6334355578087923,
+    "jepa_train_time_s": 12.328
+  },
+  "parallel_eorm": {
+    "eorm_loss": 0.08529583811759948,
+    "eorm_train_time_s": 49.658
+  },
+  "parallel_jepa": {
+    "jepa_loss": 0.6334355578087923,
+    "jepa_train_time_s": 32.243
+  },
+  "eorm_output": "results/eorm_v2_dualgpu.safetensors",
+  "jepa_output": "results/jepa_predictor_v15_1_dualgpu.safetensors",
+  "schema": [
+    "duration_s",
+    "eorm_epochs",
+    "eorm_output",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "jepa_epochs",
+    "jepa_output",
+    "n_eorm_pairs",
+    "n_jepa_pairs",
+    "parallel_eorm",
+    "parallel_jepa",
+    "parallel_total_s",
+    "retro_071_resolved",
+    "run_date",
+    "sequential_eorm",
+    "sequential_jepa",
+    "sequential_total_s",
+    "speedup",
+    "started_at",
+    "status",
+    "title"
+  ]
+}

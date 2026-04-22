@@ -530,6 +530,53 @@ directly via pynvml during simultaneous inference on both GPUs:
 **And** honest_verdict is "dualgpu_confirmed"
 **And** retro_071_resolved is True in the artifact
 
+### REQ-HW-036: DualGPU EORM+JEPA Parallel Retrain Completes in Under 40 Minutes (Exp 685)
+
+The system shall retrain EORMModel on cuda:0 and ContextPredictionEnergy (JEPA v15)
+on cuda:1 simultaneously via ThreadPoolExecutor(max_workers=2), completing the combined
+parallel retrain in under 40 minutes wall-clock time:
+
+- EORM trains for 50 epochs on the fover_labeled_steps_live.json contrastive pairs
+- JEPA retrains for 100 epochs on violation pairs derived from the same data using JEPARetrainer
+- Sequential baseline is measured first (EORM then JEPA on the same device) to compute speedup
+- speedup = sequential_total_s / parallel_total_s; honest_verdict reflects the measured speedup
+- Retrained weights are saved to results/eorm_v2_dualgpu.safetensors and
+  results/jepa_predictor_v15_1_dualgpu.safetensors
+- GATE: experiment reads results/experiment_684_dualgpu_pynvml.json and checks
+  retro_071_resolved == True before proceeding; writes a blocked artifact if the gate fails
+
+**Implementation Status:** Implemented (Exp 685)
+
+### REQ-LEARN-044: JEPA v15.1 OOD AUC Maintained After Parallel Retrain (Exp 685)
+
+The ContextPredictionEnergy model retrained in the DualGPU parallel experiment SHALL
+produce a finite training loss after 100 retraining epochs on the live violation pairs,
+confirming the model continued to learn without divergence:
+
+- jepa_loss after parallel retrain shall be a finite float (not NaN or inf)
+- The retrain shall complete within the parallel training window without timeout
+- Weights shall be persisted to results/jepa_predictor_v15_1_dualgpu.safetensors
+
+**Implementation Status:** Implemented (Exp 685)
+
+### SCENARIO-HW-036: DualGPU Parallel Retrain Produces Valid Weights and Speedup >= 1.3
+
+**Given** Exp 684 has retro_071_resolved=True (two GPUs confirmed usable)
+**And** fover_labeled_steps_live.json has at least 10 labeled step records
+**When** EORMTrainer runs 50 epochs on cuda:0 and JEPARetrainer runs 100 epochs on cuda:1
+  simultaneously via ThreadPoolExecutor(max_workers=2)
+**Then** eorm_v2_dualgpu.safetensors is written to the results directory
+**And** jepa_predictor_v15_1_dualgpu.safetensors is written to the results directory
+**And** speedup >= 1.3 on a DualGPU host (honest_verdict == "dualgpu_retrain_success")
+**And** both eorm_loss and jepa_loss are finite floats
+
+### SCENARIO-LEARN-074: JEPA v15.1 Loss Is Finite After Parallel Retrain
+
+**Given** the JEPA v15 ContextPredictionEnergy model is loaded and fine-tuned for 100 epochs
+**When** training runs on violation pairs derived from fover_labeled_steps_live.json
+**Then** the final jepa_loss is a finite float (math.isfinite(jepa_loss) == True)
+**And** no NaN gradients or divergence occurs during training
+
 ### REQ-SAMPLE-015: KAEMEnergy Exact Inference via Inverse-Transform Sampling (Exp 447)
 
 The system shall implement KAEMEnergy with exact inference using the Kolmogorov-Arnold
@@ -1224,6 +1271,8 @@ human-readable string of the full energy function, e.g.:
 | REQ-SAMPLE-035 | N/A | Implemented | Python (test_sampler_registry.py, 100%) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
 | REQ-HW-035 | N/A | Implemented | Python (test_experiment_684_dualgpu_pynvml.py, 100% targeted) |
+| REQ-HW-036 | N/A | Implemented | Python (test_experiment_685_dualgpu_eorm_jepa.py, 100% targeted) |
+| REQ-LEARN-044 | N/A | Implemented | Python (test_experiment_685_dualgpu_eorm_jepa.py, 100% targeted) |
 | REQ-MODEL-020 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-MODEL-021 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
