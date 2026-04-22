@@ -14006,3 +14006,65 @@ When: experiment_699 is run.
 Then: exit code is 0 and artifact contains honest_verdict = blocked_on_upstream_exp698 or blocked_on_upstream_exp687.
 
 **Implementation Status:** Implemented (scripts/experiment_699_hallusae_jepa_v16.py, Exp 699)
+
+## REQ-INFRA-039: Slowest-5 Unchanged >= 5 Milestones Triggers Mandatory Immediate Formal Retirement
+
+**Rationale:** The Slowest-5 composition was UNCHANGED for the fifth consecutive milestone (2026.04.53),
+the longest frozen streak in project history. Exps 425 (17 consecutive, 1,292 min overhead), 410 (14
+consecutive, 716 min), 383 (8 consecutive, superseded by Exp 685), 380-382 (5 consecutive), and 346
+(5 consecutive) all crossed the 3-milestone retirement threshold established by the Exp 308/309
+precedent but were not retired. This governance failure cost over 2,200 minutes of avoidable
+wall-clock time. This requirement formalises mandatory immediate retirement when the threshold is
+crossed, without deferral to the next milestone.
+
+**Requirements:**
+- REQ-INFRA-039-1: When the Slowest-5 composition is UNCHANGED for >= 5 consecutive milestones,
+  ALL entries that have individually exceeded 3 consecutive appearances SHALL be retired immediately.
+- REQ-INFRA-039-2: Each retired experiment SHALL have a results/experiment_{N}_retired.json with
+  fields: experiment, status="retired", reason, honest_verdict, milestone_retired, superseded_by,
+  consecutive_appearances, cumulative_overhead_min, schema="carnot.retirement.v1".
+- REQ-INFRA-039-3: Each retired experiment SHALL have an entry in conductor_exclusion_manifest.json
+  with reason containing "slowest_5_retired" and milestone_retired.
+- REQ-INFRA-039-4: The pre-flight script SHALL confirm all retirement manifest entries are present
+  before any new conductor cycle begins.
+- REQ-INFRA-039-5: honest_verdict in the retirement artifact SHALL be "retired_governance_action"
+  to distinguish from earlier "retired_formal_threshold_crossed" records.
+
+**Implementation Status:** Implemented (scripts/experiment_703_preflight_v6.py, Exp 703)
+
+## REQ-INFRA-040: JEPA Cascade Blocked in Manifest Until v17 OOD AUC >= 0.75
+
+**Rationale:** JEPA v15 OOD AUC=0.4751 (below random) was blocked per REQ-INFRA-038. JEPA v16
+OOD AUC=0.4759 is also below random chance (0.5). Both cascades produce anti-correlated outputs
+that actively harm downstream reasoning verification. The manifest must block both until v17
+achieves OOD AUC >= 0.75, preventing any conductor cycle from accidentally enabling a degraded
+cascade that inverts correctness signal.
+
+**Requirements:**
+- REQ-INFRA-040-1: conductor_exclusion_manifest.json SHALL contain an entry for "jepa_v15_cascade"
+  with reason referencing OOD AUC=0.4751 and the v17 threshold.
+- REQ-INFRA-040-2: conductor_exclusion_manifest.json SHALL contain an entry for "jepa_v16_cascade"
+  with reason referencing OOD AUC=0.4759 and the v17 threshold.
+- REQ-INFRA-040-3: Both cascade blocks SHALL remain in the manifest until a verified v17 result
+  shows OOD AUC >= 0.75 on GSM8K indices 500-699.
+- REQ-INFRA-040-4: The pre-flight script SHALL confirm both cascade blocks are present in the
+  manifest output.
+
+**Implementation Status:** Implemented (scripts/experiment_703_preflight_v6.py, Exp 703)
+
+### SCENARIO-INFRA-048: All Seven Experiments Retired with Correct Schema in Exp 703
+
+Given: results/experiment_{N}_retired.json exists for N in {346, 380, 381, 382, 383, 410, 425}.
+When: each file is loaded and schema field is checked.
+Then: every file has schema="carnot.retirement.v1", status="retired", and
+honest_verdict="retired_governance_action".
+
+**Implementation Status:** Implemented (tests/python/test_experiment_703_preflight_v6.py, Exp 703)
+
+### SCENARIO-INFRA-049: JEPA v15 and v16 Cascade Blocks Present in Manifest
+
+Given: scripts/conductor_exclusion_manifest.json loaded.
+When: experiment_ids are checked for "jepa_v15_cascade" and "jepa_v16_cascade".
+Then: both are present with reasons referencing OOD AUC values below random chance.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_703_preflight_v6.py, Exp 703)
