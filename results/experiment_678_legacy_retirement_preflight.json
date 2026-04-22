@@ -1,0 +1,74 @@
+{
+  "experiment": 678,
+  "title": "Legacy Retirement Pre-flight: Formally retire Exps 380-382 and 346",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T03:25:09Z",
+  "finished_at": "2026-04-22T03:25:09Z",
+  "duration_s": 0.074,
+  "status": "success",
+  "retirement_records": [
+    {
+      "exp_id": 380,
+      "had_result": true,
+      "retirement_file": "results/experiment_380_retired.json",
+      "retirement_file_written": false
+    },
+    {
+      "exp_id": 381,
+      "had_result": true,
+      "retirement_file": "results/experiment_381_retired.json",
+      "retirement_file_written": false
+    },
+    {
+      "exp_id": 382,
+      "had_result": true,
+      "retirement_file": "results/experiment_382_retired.json",
+      "retirement_file_written": false
+    },
+    {
+      "exp_id": 346,
+      "had_result": true,
+      "retirement_file": "results/experiment_346_retired.json",
+      "retirement_file_written": false
+    }
+  ],
+  "manifest_ids_present": [
+    380,
+    381,
+    382,
+    346
+  ],
+  "total_manifest_entries": 10,
+  "pre_flight_ran": true,
+  "conductor_consulted": true,
+  "pre_flight_output_lines": [
+    "[pre-flight] Excluded experiments (10 total):",
+    "  Exp 308 (milestone 2026.04.37): slowest-5 seven consecutive milestones, legacy checkpoint-failure state",
+    "  Exp 260 (milestone 2026.04.37): slowest-5 seven consecutive milestones, sequential inference loop",
+    "  Exp 309 (milestone 2026.04.37): slowest-5 seven consecutive milestones, checkpoint-failure state",
+    "  Exp 425 (milestone 2026.04.37): slowest-5 seven consecutive milestones, ExperimentTimeoutWatchdog already implemented",
+    "  Exp 410 (milestone 2026.04.37): slowest-5 seven consecutive milestones, 1000 sequential inference calls, BatchedInferenceRunner migration target",
+    "  Exp 383 (milestone 2026.04.51): DualGPU parallelization pending; sequential re-run adds no value, excluded per Exp 666 manifest wire-in v3",
+    "  Exp 380 (milestone 2026.04.52): partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed",
+    "  Exp 381 (milestone 2026.04.52): partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed",
+    "  Exp 382 (milestone 2026.04.52): partial_checkpoint_retired: slowest-5 three consecutive milestones, formal retirement threshold crossed",
+    "  Exp 346 (milestone 2026.04.52): partial_checkpoint_retired: 55M-param EORM training, slowest-5 three consecutive milestones, formal retirement threshold crossed"
+  ],
+  "honest_verdict": "retirements_complete_preflight_confirmed",
+  "schema": [
+    "conductor_consulted",
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "manifest_ids_present",
+    "pre_flight_output_lines",
+    "pre_flight_ran",
+    "retirement_records",
+    "run_date",
+    "started_at",
+    "status",
+    "title",
+    "total_manifest_entries"
+  ]
+}
