@@ -14445,3 +14445,40 @@ When: actprm_weight() is called for each.
 Then: weight(disagree) = 1.1 > weight(agree) = 0.1 — disagreed example receives 11x more gradient.
 
 **Implementation Status:** Implemented (tests/python/test_experiment_717_jepa_v18_lambdarank.py, Exp 717)
+
+---
+
+## REQ-VER-030: VR Evaluation at >= 200q REQUIRED Before Closing RETRO-033
+
+Before closing RETRO-033 ("live verify-repair never showed positive improvement"),
+the VR pipeline MUST be evaluated at a minimum of 200 questions using
+BatchedInferenceRunner with batch_size=8. Measuring at 50q/100q/150q/200q
+checkpoints determines whether the noisy 100q signal was masking a real positive
+effect or whether VR is genuinely not viable at current model scale.
+
+- REQ-VER-030-1: The experiment SHALL use BatchedInferenceRunner with batch_size=8
+  and per-batch timeout of 8*60s.
+- REQ-VER-030-2: signed_improvement SHALL be measured at 50q, 100q, 150q, and 200q
+  checkpoints and recorded as separate artifact fields.
+- REQ-VER-030-3: honest_verdict SHALL be "vr_finally_positive" when signed_improvement_200q > 0.
+- REQ-VER-030-4: honest_verdict SHALL be "vr_marginal" when 0 < signed_improvement_200q < 0.01.
+- REQ-VER-030-5: honest_verdict SHALL be "vr_not_viable_at_scale" when signed_improvement_200q <= 0.
+- REQ-VER-030-6: When honest_verdict == "vr_not_viable_at_scale", the RETRO-033 entry
+  in ops/known-issues.md SHALL be updated with resolution timestamp and verdict.
+- REQ-VER-030-7: The artifact MUST contain batch_log from BatchedInferenceRunner for
+  provenance — enabling downstream retrospective to verify inference was batched.
+
+**Implementation Status:** Pending (scripts/experiment_720_vr_200q_qwen.py, Exp 720)
+
+### SCENARIO-VER-037: 200q Scale Determines RETRO-033 Verdict
+
+Given: 19 consecutive VR attempts all produced signed_improvement <= 0 at 100q scale.
+When: Exp 720 runs VR evaluation at 200q using BatchedInferenceRunner.
+Then:
+  - If signed_improvement_200q > 0 → RETRO-033 resolved; VR works at scale.
+  - If signed_improvement_200q <= 0 → RETRO-033 closed as "not_viable_at_scale";
+    VR is removed from active roadmap until larger model or different architecture.
+  - All four checkpoint measurements (50q, 100q, 150q, 200q) appear in the artifact.
+  - batch_log is non-empty, proving BatchedInferenceRunner was invoked.
+
+**Implementation Status:** Pending (scripts/experiment_720_vr_200q_qwen.py, Exp 720)

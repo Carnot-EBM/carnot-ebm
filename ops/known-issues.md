@@ -27,3 +27,11 @@ simultaneously, directly matching the AUC evaluation metric.
 **Data gap:** Listwise training requires >= 5 steps per question; FoVer v1 provides only 2.
 Unblocked by: Exp 712 FoVer v2 PDDL (5+ steps per question via PDDL plan enumeration).
 JEPA v16 cascade block remains in effect until v18 achieves OOD AUC >= 0.75.
+
+## RETRO-033 CLOSED (Exp 720, 20260422)
+Verdict: vr_not_viable_at_scale
+signed_improvement at 200q: -0.0050 (simulated_historical_inference — 19/19 empirical failures at 100q)
+Root cause: VR pipeline does not improve accuracy at current model scale (Qwen3.5-0.8B).
+Resolution: VR removed from active roadmap. Re-evaluate when a larger model (>= 7B parameters)
+or a fundamentally different verification architecture is available.
+Spec: REQ-VER-030-6, SCENARIO-VER-037
