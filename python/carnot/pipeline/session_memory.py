@@ -36,6 +36,7 @@ Spec: REQ-LEARN-020, REQ-LEARN-021,
 from __future__ import annotations
 
 import json
+import logging
 import pathlib
 from datetime import datetime, timezone
 from typing import TYPE_CHECKING, Any
@@ -44,6 +45,9 @@ if TYPE_CHECKING:
     from carnot.pipeline.adaptive_thresholds import PerModelFPTracker
     from carnot.pipeline.case_memory import CaseMemory
     from carnot.pipeline.constraint_template_library import ConstraintTemplateLibrary
+    from carnot.pipeline.fr11_event_bus import ViolationEvent
+
+_log = logging.getLogger(__name__)
 
 _SCHEMA_VERSION = "carnot.session_memory.v1"
 _STATE_FILENAME = "session_state.json"
@@ -116,6 +120,58 @@ class SessionMemory:
     # ------------------------------------------------------------------
     # Public API
     # ------------------------------------------------------------------
+
+    def on_violation(
+        self,
+        event: "ViolationEvent",
+        template_library: "ConstraintTemplateLibrary",
+    ) -> None:
+        """Cache a violation event and call observe_pattern after 5 of the same type.
+
+        **Why 5 violations before calling observe_pattern (REQ-FR11-003):**
+            A single violation could be a noise event (FP from the Tier 2.1 probe).
+            Requiring 5 violations of the same type before calling observe_pattern
+            ensures the pattern is persistent rather than a one-off.  Five is the
+            minimum threshold validated across Exps 713-733 for reliable pattern
+            emergence without lag.
+
+        **Cross-domain tracking:**
+            violations_by_domain tracks how violations spread across question domains
+            (e.g. "arithmetic" vs "algebra").  This feeds future cross-domain relay
+            experiments (Exp 750+) but has no effect on current routing.
+
+        Args:
+            event:            ViolationEvent from FR11EventBus.
+            template_library: ConstraintTemplateLibrary to call observe_pattern on.
+
+        Spec: REQ-FR11-003, SCENARIO-FR11-003
+        """
+        if not hasattr(self, "_violations_by_type"):
+            self._violations_by_type: dict[str, int] = {}
+        if not hasattr(self, "_violations_by_domain"):
+            self._violations_by_domain: dict[str, int] = {}
+
+        ctype = event.constraint_type
+        domain = event.question_domain
+        self._violations_by_type[ctype] = self._violations_by_type.get(ctype, 0) + 1
+        self._violations_by_domain[domain] = self._violations_by_domain.get(domain, 0) + 1
+
+        count = self._violations_by_type[ctype]
+        _log.debug(
+            "FR11 SessionMemory cached violation: type=%s domain=%s count=%d",
+            ctype,
+            domain,
+            count,
+        )
+
+        if count >= 5:
+            template_library.observe_pattern(ctype, self.model_id, count)
+            _log.info(
+                "FR11 SessionMemory called observe_pattern: type=%s model=%s count=%d",
+                ctype,
+                self.model_id,
+                count,
+            )
 
     def save(
         self,
