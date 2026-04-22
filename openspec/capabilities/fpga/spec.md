@@ -1,0 +1,94 @@
+# FPGA Capability Specification
+
+**Capability:** FPGA Hardware Acceleration for Ising Sampler
+**Status:** In Progress
+**Owner:** Ian Blenke
+
+---
+
+## Requirements
+
+### REQ-HW-037
+
+**Title:** KV260 Ising v3 synthesis timing closure at >= 50 MHz
+
+**Description:**
+Synthesis of `ising_sampler_v3.v` targeting the KV260 (xck26-sfvc784-2LV-c) FPGA
+must achieve timing closure at a clock frequency of at least 50 MHz (Worst Negative
+Slack >= 0 ns).  This ensures the Ising sampler can sustain real-time operation
+alongside the KV260 ARM Cortex-A53 at typical embedded inference workloads.
+
+**Why 50 MHz:** The KV260 PL fabric runs at up to 300 MHz; 50 MHz is a conservative
+floor that leaves ample margin for routing, temperature variation, and future
+pipeline elaboration.  Any result below 50 MHz would indicate logic structure that
+prevents timing closure even after basic constraint tuning.
+
+**Rationale:** The EMA inertia dynamics in v3 add feedback registers.  Timing must
+be verified to confirm those registers do not lengthen the critical path past the
+target.
+
+**Acceptance criteria:**
+- Vivado synthesis produces WNS >= 0 ns at 50 MHz, OR
+- Yosys proxy synthesis shows cell counts consistent with <= 50 MHz achievability
+  (< 20% LUT utilization on KV260 fabric).
+
+**Implementation status:** Pending (Exp 701)
+
+---
+
+### REQ-HW-038
+
+**Title:** LUT utilization < 20% of KV260 fabric for Ising v3 N=64
+
+**Description:**
+Synthesis of `ising_sampler_v3.v` with N=64 spins must consume fewer than 20% of
+the KV260 PL fabric's LUT resources (xck26 has ~117,120 LUTs).  This leaves room
+for the control/DMA interface, AXI interconnect, and future capability expansion
+without requiring a larger FPGA.
+
+**Why 20%:** Industry practice reserves 50–80% of fabric for routing congestion and
+incremental feature growth.  20% on the Ising sampler alone is generous enough for
+N=64 and leaves capacity for a second sampler instance or the Gibbs/Boltzmann tiers.
+
+**Acceptance criteria:**
+- Vivado utilization report shows LUT count < 23,424 (20% of 117,120), OR
+- Yosys `stat` output shows cells consistent with this bound (proxy estimate).
+
+**Implementation status:** Pending (Exp 701)
+
+---
+
+## Scenarios
+
+### SCENARIO-HW-037 — Vivado synthesis achieves timing closure
+
+**Given:** `rtl/ising_sampler_v3.v` and Vivado 2024.2 available on the host.
+**When:** `tcl/synth_ising_v3.tcl` is run with `-part xck26-sfvc784-2LV-c`.
+**Then:** The timing summary reports WNS >= 0 ns, confirming REQ-HW-037.
+
+---
+
+### SCENARIO-HW-038 — Yosys proxy synthesis shows LUT bound
+
+**Given:** Vivado is unavailable but yosys is present.
+**When:** `yosys_script.ys` is run on `ising_sampler_v3.v` with `synth -top`.
+**Then:** The `stat` output cell count is parsed and confirmed < 23,424 LUT
+equivalent, validating REQ-HW-038 as a proxy estimate.
+
+---
+
+### SCENARIO-HW-039 — No synthesis tool available
+
+**Given:** Neither Vivado nor yosys is installed.
+**When:** Experiment 701 runs.
+**Then:** `honest_verdict` = `"synthesis_blocked_no_tool"` and `ops/known-issues.md`
+is updated with the RETRO-072 note.
+
+---
+
+## Implementation Status
+
+| REQ | Status | Experiment |
+|-----|--------|-----------|
+| REQ-HW-037 | Pending | Exp 701 |
+| REQ-HW-038 | Pending | Exp 701 |
