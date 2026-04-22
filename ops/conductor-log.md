@@ -2474,3 +2474,4 @@ python/ |
 | 2026-04-22 11:14 UTC | Exp 698: JEPA v16 Retrain on FoVer Formal v1 — Add | OK | 81 passed, 3 warnings in 4.82s |
 | 2026-04-22 11:27 UTC | Exp 699: HalluSAE Feature Integration into JEPA v1 | OK | 81 passed, 3 warnings in 4.58s |
 | 2026-04-22 11:42 UTC | Exp 700: VR Publication Readiness + HuggingFace Mo | OK | 81 passed, 3 warnings in 4.05s |
+| 2026-04-22 11:54 UTC | Exp 701: KV260 Ising v3 RTL Synthesis Attempt — Vi | OK | 81 passed, 3 warnings in 3.76s |
