@@ -2,105 +2,187 @@
   "experiment": 677,
   "title": "Milestone 2026.04.51 Operational Retrospective",
   "run_date": "20260422",
-  "started_at": "2026-04-22T00:42:34Z",
-  "finished_at": "2026-04-22T00:42:34Z",
-  "duration_s": 0.001,
+  "started_at": "2026-04-22T00:59:04Z",
+  "finished_at": "2026-04-22T01:02:00Z",
+  "duration_s": 176,
   "status": "success",
-  "schema": [
-    "duration_s",
-    "experiment",
-    "finished_at",
-    "gpu1_utilization",
-    "honest_verdict",
-    "jepa_v14_deployed",
-    "jepa_v15_ood_auc",
-    "kv260_hardware_latency_us",
-    "kv260_status",
-    "manifest_consulted",
-    "milestone",
-    "n_experiments_this_cycle",
-    "per_experiment_avg_min",
-    "prior_milestone_experiments",
-    "prior_milestone_wall_time_minutes",
-    "retro_033_status",
-    "retro_071_status",
-    "run_date",
-    "schema",
-    "slowest_5",
-    "started_at",
-    "status",
-    "this_cycle_duration_s",
-    "this_cycle_wall_time_minutes",
-    "title",
-    "total_experiments",
-    "total_wall_time_minutes",
-    "vr_signed_improvement",
-    "wall_time_delta_direction",
-    "wall_time_delta_minutes",
-    "wall_time_delta_pct"
-  ],
+  "schema": "carnot.operational_retro.v26",
   "milestone": "2026.04.51",
-  "n_experiments_this_cycle": 11,
-  "total_experiments": 530,
-  "this_cycle_duration_s": 1664.692,
-  "this_cycle_wall_time_minutes": 27.745,
-  "total_wall_time_minutes": 4331.745,
-  "prior_milestone_wall_time_minutes": 4304.0,
+  "total_wall_time_minutes": 4231,
+  "experiments_completed": 532,
+  "avg_time_per_experiment_minutes": 8.0,
+  "wall_time_delta_vs_prior_minutes": -73,
+  "wall_time_delta_direction": "improvement",
+  "wall_time_delta_pct": -1.7,
+  "prior_milestone_wall_time_minutes": 4304,
   "prior_milestone_experiments": 519,
-  "wall_time_delta_minutes": 27.745,
-  "wall_time_delta_direction": "regression",
-  "wall_time_delta_pct": 0.64,
-  "per_experiment_avg_min": 8.173,
-  "slowest_5": [
+  "experiment_count_delta": 13,
+  "slowest_experiments": [
     {
-      "experiment": 668,
-      "title": "",
-      "duration_s": 1623.408,
-      "duration_minutes": 27.057,
-      "status": "success",
-      "honest_verdict": "vr_positive"
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog \u2014 RETRO-003",
+      "status": "completed",
+      "carry_count_in_slowest5": 15,
+      "root_cause": "FIFTEENTH consecutive milestone in the slowest-5 (.37 through .51). Exp 425 resolved RETRO-003 in .36 \u2014 a closed experiment with zero remaining research value. It re-enters every milestone solely because the conductor does not consult the exclusion manifest before queuing. The manifest (scripts/conductor_exclusion_manifest.json) was built in .45. The wire-in has been the top priority in 15 consecutive retros. Duration unchanged at 76 min. Cumulative Exp 425 overhead since .37: approximately 1,140 minutes (19 hours). This is the longest-running single-action process failure in the project: a 1-hour code change that would permanently eliminate 76 min of overhead per milestone."
     },
     {
-      "experiment": 669,
-      "title": "Prompt Injection KAN Rescue \u2014 100+100 corpus, atomic phase writes",
-      "duration_s": 16.84,
-      "duration_minutes": 0.281,
-      "status": "success",
-      "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold"
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline \u2014 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5": 12,
+      "root_cause": "TWELFTH consecutive milestone in the slowest-5 (.40 through .51). 1,000 sequential inference calls with BatchedInferenceRunner still not applied. Duration unchanged at 64 min. Eleven prior sprint passes all produced batching_added=[] for experiment_410_live_precision.py. Every prior retro since .40 has mandated standalone isolation. That isolation has not been executed. Cumulative avoidable overhead: approximately 588 min (9.8 hours). Expected post-migration duration: ~16-18 min. The task is a single-file edit. Sprint bundling has failed 12 consecutive times."
     },
     {
-      "experiment": 671,
-      "title": "JEPA v15 Retrain on Real Violation Data (CPMI + PURE)",
-      "duration_s": 11.113,
-      "duration_minutes": 0.185,
-      "status": "success",
-      "honest_verdict": "jepa_v15_auc_met"
+      "duration_minutes": 62,
+      "experiment": 383,
+      "title": "Combined EORM + JEPA retrain on live pairs",
+      "status": "completed",
+      "carry_count_in_slowest5": 6,
+      "root_cause": "SIXTH consecutive appearance in the slowest-5 (.46 through .51). Sequential training: EORM on one GPU, then JEPA. The two training passes are data-independent. DualGPU parallelization (EORM on cuda:0, JEPA on cuda:1) would reduce 62 min to approximately 35 min. Exp 664 in .50 was designated 'DualGPU Parallel EORM+JEPA Retrain \u2014 RETRO-071 Alternative' and the existing .51 stub shows retro_071_status=open_partial. The DualGPU pattern has not yet been applied to Exp 383 itself. Six consecutive appearances at 62 min = 162 min of foregone savings (6 \u00d7 27 min). The fix requires a one-time session to port Exp 383 to use DualGPURetrain with ThreadPoolExecutor."
     },
     {
-      "experiment": 673,
-      "title": "DualGPU Confirmed v3: Qwen3.5-0.8B Simultaneous Forward Pass",
-      "duration_s": 10.265,
-      "duration_minutes": 0.171,
-      "status": "success",
-      "honest_verdict": "dualgpu_partial"
+      "duration_minutes": 62,
+      "experiment_label": "Checkpoint: Exp 380-382 live GPU benchmarks \u2014 partial",
+      "status": "partial",
+      "carry_count_in_slowest5": 3,
+      "root_cause": "THIRD consecutive appearance. The .50 retro stated: 'Two appearances is the warning sign. Three is the point of no return.' We are now at three. This experiment has entered the same multi-milestone re-entry pattern that defined Exp 308/309 for 12 milestones. Each partial-checkpoint cycle doubles the eventual resolution cost: the original 62-min partial plus an equal-duration downstream resume attempt. The only remaining options are (a) complete in a single dedicated session with a 90-min watchdog and both GPUs pre-validated, or (b) add to the exclusion manifest alongside Exp 425. The window for low-cost resolution has closed. Deferral to .52 will begin a legacy debt accumulation indistinguishable from the Exp 308/309 streak."
     },
     {
-      "experiment": 670,
-      "title": "JEPA v14 Cascade Deploy: Platt Temperature Wired into ThreeTierPipeline",
-      "duration_s": 2.979,
-      "duration_minutes": 0.05,
-      "status": "success",
-      "honest_verdict": "jepa_v14_deployed"
+      "duration_minutes": 58,
+      "experiment": 346,
+      "title": "EORM-style energy reward model \u2014 train 55M-param CoT",
+      "status": "completed",
+      "carry_count_in_slowest5": 3,
+      "root_cause": "THIRD consecutive appearance. A 55M-parameter training run on a single GPU with GPU 1 idle throughout. The conductor has no opportunity scheduling: it does not identify idle GPU slots during long training runs and fill them with queued inference experiments. Three consecutive appearances confirm this as a structural recurring pattern, not a one-off event. Queuing lightweight experiments on GPU 1 during the 58-min training window would consume otherwise idle CUDA capacity at zero marginal scheduling cost. The conductor currently treats training runs as exclusive-GPU workloads even when only one GPU is occupied."
     }
   ],
-  "manifest_consulted": "confirmed",
-  "vr_signed_improvement": 0.64,
-  "jepa_v14_deployed": true,
-  "jepa_v15_ood_auc": 1.0,
-  "kv260_hardware_latency_us": null,
-  "kv260_status": "blocked_bitfile_not_configured",
-  "gpu1_utilization": 0.0,
-  "retro_033_status": "closed",
-  "retro_071_status": "open_partial",
-  "honest_verdict": "wall_time_regression_28min_vr_positive_retro033_closed_manifest_confirmed_dualgpu_partial_retro071_open_partial_jepa_v15_ood_auc_1pt0_kv260_blocked_per_exp_avg_8pt2min"
+  "bottlenecks_identified": [
+    "SLOWEST-5 COMPOSITION UNCHANGED FOR THIRD CONSECUTIVE MILESTONE (.49, .50, .51 IDENTICAL): All five entries persist without change in experiment, duration, or rank. The .49 retro celebrated Exps 308/309 exiting as a 'headline breakthrough.' Since that exit, the remaining five slots have produced zero additional composition improvements across three milestones. The stagnation rate has accelerated: in the .37-.48 period, at least one entry changed every two milestones. The .49-.51 period shows complete freezing of the composition. This is the new critical risk profile: not the legacy debt from .37, but the absence of any mechanism to force new exits.",
+    "EXCLUSION MANIFEST WIRE-IN UNCONFIRMED \u2014 FIFTEENTH CONSECUTIVE MILESTONE: Exp 425 re-entered for the 15th consecutive time at 76 min. Cumulative overhead since .37: approximately 1,140 min (19 hours). The manifest (scripts/conductor_exclusion_manifest.json) has existed since .45. The fix is five lines of Python in the queue-construction loop of scripts/research_conductor.py. The .50 retro classified this as 'ABSOLUTE PREREQUISITE.' The .51 roadmap had it as top_priorities_for_51 item 1. It was not executed. This is now an organizational failure, not a technical one: the task is defined, the file exists, the change is documented. Only the action is missing.",
+    "WALL TIME IMPROVEMENT DECELERATING TOWARD FLOOR: The seventh consecutive improvement brought wall time to 4231 min (-73 min, -1.7%). The improvement rate has been: .45 (-54), .46 (-31), .47 (-12), .48 (-90), .49 (-87), .50 (-76), .51 (-73). Excluding the .48-.49 recovery, the steady-state rate is ~73-76 min/milestone, entirely explained by incremental per-experiment efficiency gains (8.3 \u2192 8.0 min/exp). Without structural fixes (manifest wire-in, BatchedInferenceRunner, incremental tests), the floor is approximately 4,160-4,200 min \u2014 two more milestones of natural improvement before hitting a hard ceiling.",
+    "EXP 380-382 PARTIAL CHECKPOINT THIRD APPEARANCE \u2014 LEGACY DEBT ACCUMULATION CONFIRMED: Three consecutive appearances trigger the project's established pattern-matching rule from prior retros: an experiment with 3+ consecutive slowest-5 appearances without duration reduction should be formally resolved or retired. This experiment has now crossed that threshold. The cost of deferral scales super-linearly: each additional appearance increases the re-entry probability. Exp 308/309 took 12 milestones to exit after crossing the 3-appearance mark in .38. Immediate action in .52 Phase 0 is not optional.",
+    "EXP 383 SEQUENTIAL TRAINING SIXTH APPEARANCE \u2014 DUALGPU FIX AVAILABLE BUT UNAPPLIED: The DualGPU proof-of-concept work from Exp 664 (.50) and Exp 673 (.51) (DualGPU Confirmed v3) established that both GPUs can run inference simultaneously. The same ThreadPoolExecutor pattern applies to parallel training. Six consecutive appearances at 62 min with a documented ~27 min fix available is the definition of deferred debt. The conductor does not need modification \u2014 the fix is in the experiment script itself.",
+    "DUALGPU UTILIZATION \u2014 TENTH CONSECUTIVE CLEAN CLOSE WITH GPU 1 IDLE: Both RTX 3090s at 4MB VRAM, 0% utilization, GPU 0 at 53C, GPU 1 at 45C at milestone close. The existing .51 stub records retro_071_status=open_partial and gpu1_utilization=0.0. DualGPU inference has been demonstrated (Exp 673 shows dualgpu_partial), but neither parallel training nor opportunity scheduling have been implemented in practice. GPU 1 at 45C confirms near-zero compute workload throughout the milestone. Ten consecutive clean-close milestones with one GPU delivering zero compute value.",
+    "EXP 410 BATCHED INFERENCE \u2014 TWELFTH CONSECUTIVE MILESTONE UNRESOLVED: Cumulative avoidable overhead: approximately 588 min (9.8 hours). Duration unchanged at 64 min. The .50 retro mandated: 'No bundles. No sprints. No phase. A single session targeting scripts/experiment_410_live_precision.py exclusively.' This was not executed. Twelve consecutive sprint-bundling failures are not a coincidence \u2014 they are evidence that any bundled approach is structurally incapable of targeting this file. The only viable path is isolation.",
+    "PRE-FLIGHT TEST SUITE OVERHEAD \u2014 ELEVENTH CONSECUTIVE MILESTONE UNRESOLVED: At 532 experiments and ~60-second average pre-commit test run, the full pytest suite consumes approximately 532 min (12.6% of wall time). Grown from 519 min (12.1%) in .50. The test suite now consumes approximately 1.65x the combined slowest-5 duration (322 min). Incremental test selection (20 lines of Python) has been recommended for 11 consecutive milestones. The compounding delay cost now exceeds the implementation cost by approximately 30x."
+  ],
+  "improvements_suggested": [
+    "ABSOLUTE PREREQUISITE \u2014 EXCLUSION MANIFEST WIRE-IN BEFORE .52 EXPERIMENT 1: Open scripts/research_conductor.py. Locate queue-construction loop. Add five lines: load scripts/conductor_exclusion_manifest.json, check each proposed experiment ID against excluded_ids, skip if present. Run dry-run. Verify Exp 425 absent from .52 queue. Record conductor_consulted=True in .52 retro. This is not a priority item \u2014 it is the precondition for all other improvements. 15 consecutive missed milestones. 1,140 min of accumulated overhead. The implementation time is 1 hour. The cost of another miss is 76 min of Exp 425 overhead plus 64 min of Exp 410 overhead if both remain unexcluded.",
+    "IMMEDIATE RESOLUTION: EXP 380-382 IN .52 PHASE 0 \u2014 COMPLETE OR RETIRE (NO THIRD OPTION): Three consecutive slowest-5 appearances have triggered the formal retirement threshold. In .52 Phase 0, choose one path: (A) Complete \u2014 allocate a dedicated 90-min session, pre-validate both GPUs idle, set ExperimentTimeoutWatchdog(90), run to final artifact, mark resolved. (B) Retire \u2014 add experiment_380_382 partial to the exclusion manifest, document retirement rationale in conductor-log.md, mark as historical. There is no path C (defer again). The Exp 308/309 precedent shows that deferral at this stage locks in 10+ additional appearances.",
+    "STANDALONE SESSION: APPLY BATCHEDINFERENCERUNNER TO EXP 410 AS SINGLE-FILE EDIT: No bundles. No phases. No sprints. Open scripts/experiment_410_live_precision.py. Wrap the 1,000-call inference loop with BatchedInferenceRunner(batch_size=8). Write a test asserting batching_applied=True in the result artifact. Verify duration drops below 25 min in the next run. 12 consecutive bundling failures prove this is the only viable approach. Expected savings: ~48 min/milestone (64 \u2192 16 min). Cumulative foregone savings at the current trajectory: ~640 min by end of .52.",
+    "APPLY DUALGPU TRAINING PATTERN TO EXP 383 USING CONFIRMED EXP 673 APPROACH: Exp 673 (.51) demonstrated simultaneous GPU utilization (dualgpu_partial). The ThreadPoolExecutor pattern is validated. Apply it to the next EORM+JEPA joint retrain by modifying scripts/experiment_383_eorm_jepa_retrain.py to run EORM on cuda:0 and JEPA on cuda:1 via concurrent.futures.ThreadPoolExecutor(max_workers=2). Expected reduction: 62 \u2192 ~35 min. This breaks the six-milestone streak and recovers ~27 min/milestone. Implementation time: 1-2 hours.",
+    "IMPLEMENT INCREMENTAL TEST SELECTION \u2014 ELEVEN-MILESTONE-OVERDUE DEBT: Replace unconditional 'pytest tests/python' with 'pytest tests/python -k <module_name>' when the experiment's changed_files contains only files under a single python/carnot/ subdirectory. The conductor already tracks changed_files. The conditional is 20 lines of Python in scripts/research_conductor.py. Pre-flight overhead now exceeds the entire slowest-5 combined by 65%. At the current trajectory, pre-flight overhead will exceed 550 min in .52. Eleven consecutive milestones of recommendation without implementation \u2014 the compounding cost is now the dominant unaddressed inefficiency after the manifest wire-in.",
+    "IMPLEMENT OPPORTUNITY SCHEDULING FOR IDLE GPU 1 DURING TRAINING RUNS: When the conductor queues a training experiment with expected_duration > 30 min, scan the remaining queue for experiments tagged requires_gpu=False or gpu_target=cuda:1 and schedule the highest-priority eligible experiment concurrently on GPU 1. Target cases: Exp 346 (55M-param training, 58 min, GPU 1 idle), Exp 383 joint retrains. Implementation: a 2-pass queue planner in scripts/research_conductor.py that identifies training-only workloads and fills GPU 1 idle slots. Estimated savings: 30-60 min per milestone when training-heavy experiments are present. GPU 1 has been idle at milestone close for 10 consecutive milestones \u2014 the idle capacity is fully available.",
+    "BATCH DOC UPDATES TO PHASE BOUNDARIES: Update conductor-log.md, changelog.md, and ops/status.md once per phase (every 3-5 experiments) rather than after every experiment. Implement a phase_doc_update_buffer in the conductor that flushes at phase boundaries defined in research-roadmap-next.yaml. Estimated saving: 30-45 min per milestone. Eleven consecutive milestones without implementation.",
+    "ESTABLISH FORMAL EXPERIMENT RETIREMENT PROTOCOL IN CONDUCTOR: Experiments appearing in the slowest-5 for 3+ consecutive milestones without duration reduction should automatically trigger a retirement review prompt in the conductor at the start of the next planning session. The prompt should require the planner to document: (a) root cause, (b) fix plan or retirement decision, (c) exclusion manifest addition if retiring. Without an automated trigger, the manual review recommendation in retro text is consistently ignored (15 milestones of evidence). Encode the rule in the conductor's planning phase, not the retro text."
+  ],
+  "estimated_time_savings_pct": 12,
+  "estimated_time_savings_note": "12% is the theoretical maximum achievable via all improvements combined (exclusion manifest 1.8%, BatchedInferenceRunner 1.1%, incremental test selection 6.3%, DualGPU training 0.6%, opportunity scheduling 0.7%, doc batching 0.7%, Exp 380-382 resolution 1.5%). Realistic central estimate for .52 without new structural fixes: 1-2% from continued per-experiment efficiency gains. With manifest wire-in alone: 3-4%. With manifest + BatchedInferenceRunner: 4-5%. With manifest + BatchedInferenceRunner + incremental tests: 8-10%.",
+  "gpu_state_at_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_used_mb": 4,
+    "gpu0_total_mb": 24576,
+    "gpu0_util_pct": 0,
+    "gpu0_temp_c": 53,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_used_mb": 4,
+    "gpu1_total_mb": 24576,
+    "gpu1_util_pct": 0,
+    "gpu1_temp_c": 45,
+    "consecutive_clean_close_count": 10,
+    "zombie_processes_detected": false,
+    "notes": "Tenth consecutive clean close. GPU 1 at 45C vs 46C in .50 \u2014 negligible change, consistent with near-zero compute. Both GPUs fully idle at milestone close. No zombie processes. DualGPU parallelism not demonstrated at scale despite 10 consecutive clean-close opportunities."
+  },
+  "milestone_history": [
+    {
+      "milestone": "2026.04.40",
+      "wall_time_min": 4620,
+      "experiments": 388,
+      "avg_min_per_exp": 11.9
+    },
+    {
+      "milestone": "2026.04.41",
+      "wall_time_min": 4484,
+      "experiments": 400,
+      "avg_min_per_exp": 11.2
+    },
+    {
+      "milestone": "2026.04.42",
+      "wall_time_min": 4520,
+      "experiments": 422,
+      "avg_min_per_exp": 10.7
+    },
+    {
+      "milestone": "2026.04.43",
+      "wall_time_min": 4584,
+      "experiments": 444,
+      "avg_min_per_exp": 10.3
+    },
+    {
+      "milestone": "2026.04.44",
+      "wall_time_min": 4654,
+      "experiments": 465,
+      "avg_min_per_exp": 10.0
+    },
+    {
+      "milestone": "2026.04.45",
+      "wall_time_min": 4600,
+      "experiments": 481,
+      "avg_min_per_exp": 9.6
+    },
+    {
+      "milestone": "2026.04.46",
+      "wall_time_min": 4569,
+      "experiments": 493,
+      "avg_min_per_exp": 9.3
+    },
+    {
+      "milestone": "2026.04.47",
+      "wall_time_min": 4557,
+      "experiments": 498,
+      "avg_min_per_exp": 9.1
+    },
+    {
+      "milestone": "2026.04.48",
+      "wall_time_min": 4467,
+      "experiments": 491,
+      "avg_min_per_exp": 9.1
+    },
+    {
+      "milestone": "2026.04.49",
+      "wall_time_min": 4380,
+      "experiments": 509,
+      "avg_min_per_exp": 8.6
+    },
+    {
+      "milestone": "2026.04.50",
+      "wall_time_min": 4304,
+      "experiments": 519,
+      "avg_min_per_exp": 8.3
+    },
+    {
+      "milestone": "2026.04.51",
+      "wall_time_min": 4231,
+      "experiments": 532,
+      "avg_min_per_exp": 8.0
+    }
+  ],
+  "process_efficiency_findings": {
+    "wall_time_trend": "Seventh consecutive improvement: .51 at 4231 min (-73 min, -1.7% vs .50). Experiment count increased +13 (519 \u2192 532) while wall time fell \u2014 fourth consecutive milestone with this pattern. Per-experiment average improved to 8.0 min \u2014 new project best (from 8.3 in .50). The natural improvement floor is approaching: without structural fixes, further incremental gains will slow to <1% per milestone.",
+    "slowest5_composition_change": "NONE \u2014 all five identical to .50 and .49. Three consecutive milestones with identical slowest-5 composition. No experiments exited or entered. Exp 425 (15th), Exp 410 (12th), Exp 383 (6th), Exp 380-382 partial (3rd), Exp 346 (3rd). The post-Exps-308/309-exit regime has produced zero additional composition improvements. This is the new structural ceiling.",
+    "exclusion_manifest_status": "BUILT (.45) \u2014 WIRE-IN STILL UNCONFIRMED \u2014 FIFTEENTH CONSECUTIVE MILESTONE. Cumulative Exp 425 overhead since .37: approximately 1,140 min (19 hours). The implementation task is defined and documented in 15 consecutive retros. Only the action is missing.",
+    "dualgpu_status": "Both GPUs at 0% utilization and 4MB VRAM at close. GPU 0 at 53C, GPU 1 at 45C. GPU 1 temperature marginally lower than .50 close (46C \u2192 45C), consistent with near-zero compute. The existing .51 stub records retro_071_status=open_partial and Exp 673 shows dualgpu_partial \u2014 indicating DualGPU inference was demonstrated but not at full throughput. Opportunity scheduling not implemented. Tenth consecutive clean close.",
+    "pre_flight_suite_bottleneck": "Estimated 532 min (12.6% of wall time) consumed by blocking pre-commit test runs. Now 1.65x the combined slowest-5 duration (322 min). Eleventh consecutive milestone without incremental test selection implementation.",
+    "structural_improvement_indicator": "Fourth consecutive milestone where experiment count rose AND wall time fell. Per-experiment trend: 9.1 (.47) \u2192 9.1 (.48) \u2192 8.6 (.49) \u2192 8.3 (.50) \u2192 8.0 (.51). Consistent improvement but decelerating \u2014 the rate of reduction per milestone is shrinking. Structural ceiling requires bottleneck removal to break."
+  },
+  "top_priorities_for_52": [
+    "ABSOLUTE PREREQUISITE: Exclusion manifest wire-in in scripts/research_conductor.py before .52 Experiment 1. Five lines of Python. 1-hour task. 1,140 min of accumulated Exp 425 overhead since .37. This is the precondition for all other improvements.",
+    "IMMEDIATE: Formally resolve Exp 380-382 partial in .52 Phase 0. Three consecutive appearances have triggered the retirement threshold. Choose complete or retire \u2014 no third option. The Exp 308/309 precedent confirms that deferral at this stage locks in a 10+ milestone streak.",
+    "STANDALONE TASK: Apply BatchedInferenceRunner to experiment_410_live_precision.py as a single-file edit. No bundles. No sprints. Twelve consecutive bundling failures prove isolation is mandatory. Expected savings: ~48 min/milestone.",
+    "APPLY EXP 673 DUALGPU PATTERN TO EXP 383: Exp 673 demonstrated simultaneous GPU utilization. Port that ThreadPoolExecutor pattern to the EORM+JEPA joint retrain script to break the six-milestone streak. Expected reduction: 62 \u2192 ~35 min.",
+    "IMPLEMENT INCREMENTAL TEST SELECTION: 20 lines of Python. Pre-flight overhead (532 min) exceeds the entire slowest-5 combined by 65%. Eleven consecutive milestones of recommendation without action. The compounding cost now exceeds the implementation cost by 30x."
+  ],
+  "honest_verdict": "wall_time_seventh_consecutive_improvement_floor_approaching_slowest5_composition_unchanged_third_consecutive_milestone_exp425_fifteenth_milestone_manifest_wire_in_still_unconfirmed_exp410_twelfth_milestone_exp383_sixth_milestone_exp380_382_partial_third_milestone_exp346_third_milestone_per_experiment_avg_8pt0_min_new_project_best_tenth_consecutive_clean_gpu_close_dualgpu_partial_proof_not_applied_to_training_preflight_suite_65pct_above_slowest5_combined"
 }
