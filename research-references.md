@@ -4,6 +4,76 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-04-22 arxiv Scan (Milestone 2026.04.55 Planning)
+
+### JEPA-Reasoner — Latent-Space Reasoning Verification (Pre-generative)
+- **Paper:** arXiv 2512.19171 (December 2025)
+- **What:** JEPA-Reasoner decouples latent-space reasoning from linguistic reconstruction. A
+  JEPA-style predictor operates entirely in hidden-state space, predicting whether a reasoning
+  step is logically consistent with prior context without generating any tokens. Achieves
+  comparable accuracy to full rollout verification at <1ms per step.
+- **Relevance to Carnot:** Carnot's JEPA predictor (Tier 2) uses partial response text as
+  input. JEPA-Reasoner shows that operating directly in latent space — skipping text
+  re-tokenization — is both faster and more accurate. Applied to Carnot: instead of
+  encoding step_text → embedding → MLP → score, compute score directly from the LLM's
+  hidden state at the end of each reasoning step. This is the natural Tier 0h: a
+  pre-generative latent probe trained on FoVer v2 pairs.
+- **Concrete experiment:** Exp 726 — JEPAReasonerProbe: extract hidden states at each CoT
+  step boundary from Qwen3.5-0.8B, train 2-layer MLP on FoVer v2 pairs, compare AUC
+  vs EORM (text-based Tier 2). If AUC >= 0.75, propose as Tier 0h.
+- **When to incorporate:** Milestone 2026.04.55 — Phase 4 new research (Exp 726).
+
+### Variable Granularity Verification — Adaptive Compute for Test-Time Scaling
+- **Paper:** arXiv 2505.11730 (May 2025)
+- **What:** Variable Granularity Search (VGS) dynamically selects verification granularity
+  per reasoning instance: skip expensive verification for high-confidence responses, run
+  deep multi-step checking for uncertain ones. Reduces average verification cost 3-5x with
+  <1% accuracy degradation on MATH and GSM8K benchmarks.
+- **Relevance to Carnot:** Carnot's cascade currently runs ALL tiers for every response.
+  VGS maps directly: use EORM energy as the confidence gate. If EORM energy < threshold:
+  skip Ising and return. Only run full Ising verification for responses where EORM is
+  uncertain (energy in [low_threshold, high_threshold]). This is orthogonal to the existing
+  early-exit architecture (Tier 0 → Tier 1 → Tier 2 → Tier 3) and could reduce Tier 3
+  Ising calls by 60-80% on high-confidence responses.
+- **Concrete experiment:** Exp 727 — VariableGranularityGate: add EORM confidence interval
+  gate before Tier 3 Ising. Set thresholds from FoVer v2 calibration. Measure: what
+  fraction of correct responses skip Ising verification? Target: >50% skip rate with
+  <5% FN degradation.
+- **When to incorporate:** Milestone 2026.04.55 — Phase 4 new research (Exp 727).
+
+### ActPRM — Active Learning for Efficient Process Reward Model Annotation
+- **Paper:** arXiv 2504.10559 (April 2026)
+- **What:** ActPRM uses entropy-driven uncertainty sampling to select the most informative
+  CoT steps for annotation. Achieves comparable PRM quality to full annotation using only
+  50% of steps. Key insight: steps with high uncertainty contribute most to calibration;
+  steps near the decision boundary are most valuable for training signal.
+- **Relevance to Carnot:** FoVer v2 provides 1000+ pairs but the PDDL labeling may produce
+  imbalanced examples (high step_correct rate for simple arithmetic). ActPRM's uncertainty
+  sampling would select the hardest-to-label steps for Z3 re-verification, improving
+  corpus quality without increasing annotation cost. Applies to JEPA v18 training: use
+  ActPRM to weight the LambdaRank training loss toward uncertain examples.
+- **Concrete experiment:** Wire into JEPA v18 training (Exp 717): weight each training pair
+  by its uncertainty score (model confidence variance across FoVer v2 bootstrap samples).
+  Compare OOD AUC: JEPA v18 with vs without ActPRM weighting.
+- **When to incorporate:** Milestone 2026.04.55 — JEPA v18 training (Exp 717, as optional weighting).
+
+### Constraint-Induced Distortion in Reasoning LLMs
+- **Paper:** arXiv 2601.01490 (January 2026)
+- **What:** Shows that LLMs under strict constraint compliance sacrifice factual accuracy
+  to satisfy constraints — a "distortion" effect where the model satisfies formal requirements
+  at the cost of semantic correctness. Models with stronger priors (more capable/larger)
+  show MORE distortion because they try harder to satisfy constraints. Demonstrates that
+  pure constraint enforcement without calibration degrades accuracy on capable models.
+- **Relevance to Carnot:** Explains why VR degrades Gemma4-E4B-it (more capable model) but
+  helps Qwen3.5-0.8B (weaker model). The adaptive threshold gating (Exp 707) is the right
+  mitigation but the constraint semantics also need adjustment. For capable models: use
+  weaker constraints (advisory signals rather than hard gates), prefer abstention over
+  repair when uncertainty is high. Filed as root-cause explanation for Gemma4 degradation.
+- **Concrete experiment:** Exp 721 — Gemma4 graduated threshold search: test thresholds
+  [0.10, 0.20, 0.30, 0.40] and abstain (skip repair) when violation confidence < threshold.
+  Target: find the threshold where signed_improvement > 0 for Gemma4.
+- **When to incorporate:** Milestone 2026.04.55 — Gemma4 threshold tuning (Exp 721).
+
 ## 2026-04-22 arxiv Scan (Milestone 2026.04.53 Planning)
 
 ### KAN Formal Verification — MILP-Based Provable Energy Monotonicity

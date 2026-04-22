@@ -1,0 +1,894 @@
+milestone: 2026.04.55
+milestone_title: JEPA v18 LambdaRank + Pre-flight Optimization + VR 200q Credibility Run
+milestone_doc: openspec/change-proposals/research-roadmap-vNEXT.md
+tasks:
+
+- id: exp716-preflight-v7-incremental
+  milestone: 2026.04.55
+  deliverable: results/experiment_716_preflight_v7.json
+  title: 'Exp 716: Pre-flight v7 + Incremental Test Selection (MANDATORY FIRST — reduce overhead from 562 min)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: The pre-flight test suite now consumes 562 min = 14.6% wall time — the LARGEST
+    recoverable overhead in the project, exceeding the 322 min freed by the slowest-5
+    governance win in Exp 703. This has been unaddressed for 14 consecutive milestones.
+    Additionally, Exp 527 (Live 100q Precision v8) entered the slowest-5 at 52 min in .54
+    — first appearance, same anti-pattern as retired Exps 308/309. It must be fixed now
+    before it compounds.
+
+    ROOT CAUSE: Pre-flight runs the ENTIRE test suite every cycle, even when only 1-2 modules
+    changed. A git-diff-based incremental selector runs only tests for changed modules,
+    reducing overhead proportionally to the fraction of code touched per cycle (typically
+    10-20% of modules).
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/conductor_pre_flight.py — current pre-flight runner.
+    - scripts/conductor_exclusion_manifest.json — manifest with retired experiments.
+    - python/carnot/pipeline/exclusion_manifest.py — ExclusionManifest class.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+    - results/experiment_703_preflight_v6.json — v6 baseline metrics.
+    - results/experiment_527_live_100q_precision_v8.json (if exists) — slowest-5 entry.
+
+    TASK: Implement incremental test selection in pre-flight. Apply BatchedInferenceRunner
+    to Exp 527 if it re-enters slowest-5.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-INFRA-041 (pre-flight MUST use git-diff-based incremental test selection;
+       full suite runs only on weekly cadence or when diff > 20 files),
+       REQ-INFRA-042 (any experiment exceeding 45 min MUST be refactored with
+       BatchedInferenceRunner before next milestone),
+       SCENARIO-INFRA-050/051 to openspec/capabilities/pipeline/spec.md.
+    3. Implement scripts/incremental_test_selector.py:
+       a. Run `git diff --name-only HEAD~1` to get changed files.
+       b. Map changed Python module paths → dependent test files via import graph.
+       c. If diff > 20 files OR any crate/ file changed: return None (run full suite).
+       d. Return list of test file paths to run.
+       e. Cache the mapping in .preflight_test_cache.json.
+    4. Update scripts/conductor_pre_flight.py:
+       a. Call IncrementalTestSelector.select() before running pytest.
+       b. If select() returns None: run full suite (existing behavior).
+       c. If select() returns list: run `pytest {files}` only.
+       d. Log: incremental_mode (bool), tests_selected (int), tests_total (int),
+          selection_ratio (float).
+    5. Check if results/experiment_527_live_100q_precision_v8.json exists.
+       If Exp 527 is still in slowest-5 (duration_minutes > 45):
+       a. Read the existing Exp 527 script.
+       b. Wrap its inference loop with BatchedInferenceRunner (8q batches).
+       c. Update the script in place. Write tests.
+    6. Create scripts/experiment_716_preflight_v7.py:
+       a. ExperimentTemplate(716) + ExperimentTimeoutWatchdog(716, timeout_minutes=30).
+       b. Run incremental test selector on current diff.
+       c. Run pre-flight with incremental selection.
+       d. Measure: tests_selected, tests_total, wall_time_minutes.
+       e. honest_verdict:
+          - "preflight_v7_complete" if incremental_mode=True AND wall_time_minutes < 200
+          - "preflight_v7_full_suite" if incremental_mode=False (large diff, expected)
+          - "preflight_v7_overhead_unchanged" if wall_time_minutes >= 562
+       f. artifact: incremental_mode, tests_selected, tests_total, selection_ratio,
+          wall_time_minutes, exp527_batched (bool), honest_verdict.
+    7. Write tests/python/test_experiment_716_preflight_v7.py with 100% coverage:
+       - test incremental selector maps changed files to correct test files.
+       - test full-suite fallback triggers when diff > 20 files.
+       - test artifact has all required fields.
+       Each test traces to REQ-INFRA-041/042.
+    8. Reconcile:
+       - ops/status.md: add "Pre-flight incremental selection implemented (Exp 716)".
+       - ops/changelog.md: one-line with honest_verdict.
+    9. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp717-jepa-v18-lambdarank
+  milestone: 2026.04.55
+  deliverable: results/experiment_717_jepa_v18_lambdarank.json
+  title: 'Exp 717: JEPA v18 LambdaRank Listwise Loss on FoVer v2 (RETRO-CRITICAL — 4th attempt)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: JEPA v17 (RankNet pairwise, Exp 704) achieved OOD AUC=0.4819 — the THIRD
+    consecutive milestone of below-random performance (v15=0.4751, v16=0.4759, v17=0.4819).
+    This is RETRO-CRITICAL status. The project cannot advance FR-11 until JEPA works.
+
+    ROOT CAUSE OF v17 FAILURE: Pairwise RankNet compares two steps at a time. When pairs
+    are drawn from a pool with limited diversity (FoVer v1 had only 200 examples), many
+    pairs have near-identical quality scores. Near-identical pairs produce near-zero
+    gradients. The model learns nothing discriminative despite satisfying the RankNet loss.
+
+    FIX — LambdaRank listwise loss:
+    LambdaRank optimizes NDCG directly by computing lambdas = delta_NDCG * |sigmoid difference|
+    for ALL pairs within a query group simultaneously. Unlike pairwise methods, LambdaRank's
+    gradients are dominated by the pairs that most impact NDCG — forcing the model to rank
+    the full step sequence correctly, not just beat one comparison at a time.
+
+    KEY ADVANTAGE: FoVer v2 (Exp 712) provides 1000+ step-level labeled pairs with 5+ steps
+    per question (median). This is the minimum needed for non-trivial listwise ranking.
+    v17 used FoVer v1 (200 pairs, ~2 steps/question) — too few for LambdaRank to work.
+
+    ADDITIONAL IMPROVEMENT — ActPRM uncertainty weighting (arXiv 2504.10559):
+    FoVer v2 pairs have both Z3 labels and PDDL labels. When Z3 and PDDL disagree, the
+    step is ambiguously correct/incorrect. ActPRM weights training examples by disagreement:
+      weight = 1.0 - agreement_score  (high weight = uncertain = hard example)
+    This focuses training on the genuinely difficult cases.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/samplers/jepa_predictor.py (or similar) — JEPAPredictor v17 impl.
+    - results/experiment_704_jepa_v17_ranknet.json — v17 architecture and failure analysis.
+    - results/experiment_712_fover_v2.json — FoVer v2 corpus metadata.
+    - results/fover_v2_labeled.json (or equivalent) — FoVer v2 labeled pairs.
+    - scripts/experiment_template.py — ExperimentTemplate.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Implement JEPALambdaRankV18 with listwise LambdaRank loss + ActPRM uncertainty
+    weighting. Train on FoVer v2. Evaluate OOD AUC on GSM8K 500-699.
+
+    CONCRETE STEPS:
+    1. Read CLAUDE.md spec-first workflow.
+    2. Add REQ-VER-028 (JEPA v18 MUST use LambdaRank listwise loss with NDCG surrogate
+       gradient computed over all steps per query group),
+       REQ-VER-029 (JEPA v18 training MUST use ActPRM uncertainty weighting based on
+       Z3/PDDL label agreement score),
+       SCENARIO-VER-035/036 to openspec/capabilities/verification/spec.md.
+    3. Implement python/carnot/samplers/jepa_v18_lambdarank.py:
+       a. Class JEPALambdaRankV18(nn.Module).
+       b. Encoder: same as v17 (Qwen3.5-0.8B hidden states, layer 16, frozen).
+       c. Ranking head: 2-layer MLP → scalar energy score.
+       d. LambdaRank loss:
+          - Group steps by question (query group).
+          - For each group: compute all pairwise score differences.
+          - Compute delta_NDCG for each swap (swapping ranks of two steps).
+          - lambda_ij = delta_NDCG_ij * |sigmoid(score_i - score_j)|
+          - Gradient: sum of lambdas over all pairs in group.
+       e. ActPRM weighting:
+          - Load Z3 labels and PDDL labels for each step.
+          - agreement_score = float(z3_label == pddl_label)
+          - example_weight = 1.0 - agreement_score + 0.1  (floor at 0.1)
+          - Scale lambda gradients by example_weight.
+       f. Training: Adam lr=1e-4, 50 epochs, batch=all steps per question.
+       g. Evaluation: OOD AUC on GSM8K 500-699 (held out from FoVer v2).
+    4. Create scripts/experiment_717_jepa_v18_lambdarank.py:
+       a. ExperimentTemplate(717, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Load FoVer v2 pairs, group by question.
+       c. Train JEPALambdaRankV18 for 50 epochs, log loss per epoch.
+       d. Evaluate OOD AUC on GSM8K 500-699.
+       e. honest_verdict:
+          - "jepa_v18_breakthrough" if ood_auc >= 0.75
+          - "jepa_v18_above_random" if ood_auc >= 0.50
+          - "jepa_v18_below_random" if ood_auc < 0.50 (4th consecutive failure)
+       f. Gate signal: write results/jepa_v18_gate.json with {"gate": "pass"/"fail",
+          "ood_auc": float} — downstream Exp 718 reads this.
+       g. artifact: ood_auc, train_loss_final, epochs_trained, fover_v2_pairs_used,
+          uncertainty_weights_applied (bool), honest_verdict.
+    5. Write tests/python/test_experiment_717_jepa_v18_lambdarank.py with 100% coverage:
+       - test LambdaRank loss is zero when ranking is perfect.
+       - test LambdaRank loss > 0 when ranking is inverted.
+       - test ActPRM weighting reduces weight for high-agreement pairs.
+       - test gate file written with correct schema.
+       Each test traces to REQ-VER-028/029.
+    6. Reconcile:
+       - ops/status.md: add JEPA v18 result with ood_auc.
+       - ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0. Run setup_gpu() before inference.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp718-jepa-v18-cascade-deploy
+  milestone: 2026.04.55
+  deliverable: results/experiment_718_jepa_v18_cascade.json
+  title: 'Exp 718: JEPA v18 Cascade Deploy (GATED on Exp 717 AUC >= 0.75)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    GATE CHECK (MANDATORY FIRST STEP): Read results/jepa_v18_gate.json.
+    If {"gate": "fail"}: write results/experiment_718_jepa_v18_cascade.json with
+    {"experiment": 718, "status": "gated_blocked", "gate_source": "exp717",
+     "honest_verdict": "gated_blocked_jepa_v18_below_threshold", "schema": "carnot.result.v1"}
+    and STOP. Do not implement anything else.
+
+    CONTEXT (only if gate passes): JEPA v18 achieved OOD AUC >= 0.75 in Exp 717.
+    The cascade currently runs JEPA v17 as Tier 2, which is blocked in the exclusion
+    manifest. v18 must replace v17 as the active Tier 2 predictor.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/cascade/tier2_jepa.py — Tier 2 JEPA cascade wrapper.
+    - python/carnot/samplers/jepa_v18_lambdarank.py — v18 implementation from Exp 717.
+    - scripts/conductor_exclusion_manifest.json — manifest (v15/v16/v17 blocked).
+    - results/experiment_717_jepa_v18_lambdarank.json — v18 checkpoint path.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Deploy JEPA v18 as active Tier 2 in cascade. Run integration smoke test.
+
+    CONCRETE STEPS:
+    1. Add REQ-INFRA-043 (JEPA cascade tier MUST load model via version-tagged checkpoint;
+       version pinned in exclusion manifest prevents accidental rollback),
+       SCENARIO-INFRA-052 to openspec/capabilities/pipeline/spec.md.
+    2. Update python/carnot/cascade/tier2_jepa.py:
+       a. Load JEPALambdaRankV18 checkpoint from Exp 717 output path.
+       b. Remove any v17 loading code.
+       c. Update manifest to unblock JEPA v18 (add jepa_v18_active: true entry).
+    3. Create scripts/experiment_718_jepa_v18_cascade.py:
+       a. ExperimentTemplate(718, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Load cascade with JEPA v18 as Tier 2.
+       c. Run 50q GSM8K validation smoke test.
+       d. Measure: cascade_auc (should be >= 0.70), latency_delta_ms (must be < 5ms).
+       e. honest_verdict:
+          - "cascade_deploy_success" if cascade_auc >= 0.70 AND latency_delta_ms < 5
+          - "cascade_deploy_latency_fail" if latency_delta_ms >= 5
+          - "cascade_deploy_auc_fail" if cascade_auc < 0.70
+       f. Gate signal: write results/jepa_v18_cascade_gate.json for Exp 719.
+       g. artifact: cascade_auc, latency_delta_ms, honest_verdict.
+    4. Write tests/python/test_experiment_718_jepa_v18_cascade.py with 100% coverage:
+       - test gate-blocked path writes correct status.
+       - test v18 checkpoint loads without error.
+       - test cascade AUC field present in artifact.
+       Each test traces to REQ-INFRA-043.
+    5. Reconcile ops/status.md and ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp719-fr11-tier2-relay
+  milestone: 2026.04.55
+  deliverable: results/experiment_719_fr11_relay.json
+  title: 'Exp 719: FR-11 Tier 2 Relay — Autonomous Self-Learning Loop (GATED on Exp 718, FR-11 MANDATORY)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    GATE CHECK (MANDATORY FIRST STEP): Read results/jepa_v18_cascade_gate.json.
+    If {"gate": "fail"}: write results/experiment_719_fr11_relay.json with
+    {"experiment": 719, "status": "gated_blocked", "gate_source": "exp718",
+     "honest_verdict": "gated_blocked_cascade_deploy_failed", "schema": "carnot.result.v1"}
+    and STOP.
+
+    CONTEXT (only if gate passes): FR-11 (Autonomous Self-Learning Loop) is a MANDATORY
+    PRD requirement. It requires:
+      Tier 1: Online weight updates triggered by Tier 2 violation detection.
+      Tier 2: JEPA predictor fires violation signal when constraint is detected.
+      The relay: JEPA violation event → event bus → Tier 1 weight updater callback.
+
+    This is the FIRST attempt to wire FR-11. The relay is minimal: detect violation,
+    fire event, ack receipt. Full Tier 1 weight updates come in a later milestone.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/cascade/tier2_jepa.py — JEPA v18 cascade (from Exp 718).
+    - python/carnot/pipeline/ — existing pipeline infrastructure.
+    - _bmad/prd.md — FR-11 specification.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Wire JEPA violation signal to Tier 1 relay callback. Measure relay latency.
+
+    CONCRETE STEPS:
+    1. Add REQ-FR11-001 (Tier 2 MUST publish constraint violation events to an internal
+       event bus within 100ms of detection),
+       REQ-FR11-002 (Tier 1 weight updater MUST subscribe to violation events and
+       acknowledge receipt within 200ms),
+       SCENARIO-FR11-001/002 to openspec/capabilities/self-learning/spec.md.
+    2. Implement python/carnot/pipeline/fr11_relay.py:
+       a. ViolationEvent dataclass: {query_id, step_index, energy_score, timestamp}.
+       b. FR11EventBus: simple in-process publish/subscribe (threading.Event).
+       c. FR11Tier1Stub: subscriber that logs events to ops/fr11_relay_log.jsonl.
+          (Full weight update in later milestone; stub logs and acks.)
+       d. Throttle: max 1 update per 10 queries (FR11EventBus.throttle_count=10).
+    3. Update python/carnot/cascade/tier2_jepa.py:
+       a. After violation detection: publish ViolationEvent to FR11EventBus.
+       b. Log event published in cascade trace.
+    4. Create scripts/experiment_719_fr11_relay.py:
+       a. ExperimentTemplate(719, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Run 50q test set through cascade with FR-11 relay active.
+       c. Measure: relay_events_published (int), relay_events_acked (int),
+          relay_latency_ms_p50, relay_latency_ms_p99.
+       d. honest_verdict:
+          - "fr11_relay_operational" if relay_events_acked >= 1 AND relay_latency_ms_p99 < 200
+          - "fr11_relay_no_events" if relay_events_published == 0 (JEPA found no violations)
+          - "fr11_relay_latency_fail" if relay_latency_ms_p99 >= 200
+       e. artifact: relay_events_published, relay_events_acked, relay_latency_ms_p50,
+          relay_latency_ms_p99, honest_verdict.
+    5. Write tests/python/test_experiment_719_fr11_relay.py with 100% coverage:
+       - test gate-blocked path writes correct status.
+       - test FR11EventBus fires and acks event within 200ms.
+       - test throttle prevents more than 1 event per 10 queries.
+       Each test traces to REQ-FR11-001/002.
+    6. Reconcile:
+       - ops/status.md: update FR-11 implementation status.
+       - _bmad/traceability.md: update FR-11 impl status column.
+       - ops/changelog.md: one-line with honest_verdict.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp720-vr-200q-qwen
+  milestone: 2026.04.55
+  deliverable: results/experiment_720_vr_200q_qwen.json
+  title: 'Exp 720: Live VR Attempt #20 — 200q Qwen3.5-0.8B (RETRO-033, scale credibility run)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: 19 consecutive VR attempts all produced signed_improvement <= 0 at 100q scale.
+    RETRO-033 has been open for 8 consecutive milestones. The 100q scale may be producing
+    too noisy a signal. Doubling to 200q either gives a clean result or closes RETRO-033
+    by confirming VR is not viable at current model scale.
+
+    RETRO-033 resolution criteria:
+    - If signed_improvement > 0 at 200q: RETRO-033 resolved — VR works at scale.
+    - If signed_improvement <= 0 at 200q: Close RETRO-033 with verdict "not_viable_at_scale".
+      Remove VR from roadmap until a larger model or different architecture is available.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/vr_pipeline.py (or similar) — VR pipeline implementation.
+    - results/experiment_700_vr_attempt19.json (most recent) — last VR run data.
+    - scripts/experiment_template.py — ExperimentTemplate with BatchedInferenceRunner.
+    - python/carnot/pipeline/experiment_watchdog.py — ExperimentTimeoutWatchdog.
+
+    TASK: Run VR at 200q scale using BatchedInferenceRunner. Measure signed_improvement
+    at 50q, 100q, 150q, 200q checkpoints.
+
+    CONCRETE STEPS:
+    1. Add REQ-VER-030 (VR evaluation at >= 200q REQUIRED before closing RETRO-033),
+       SCENARIO-VER-037 to openspec/capabilities/verification/spec.md.
+    2. Create scripts/experiment_720_vr_200q_qwen.py:
+       a. ExperimentTemplate(720, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Pre-warm: setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       c. BatchedInferenceRunner with batch_size=8, timeout=8*60s per batch.
+       d. Run 200q VR evaluation, measuring signed_improvement at 50q/100q/150q/200q.
+       e. honest_verdict:
+          - "vr_finally_positive" if signed_improvement_200q > 0
+          - "vr_not_viable_at_scale" if signed_improvement_200q <= 0
+          - "vr_marginal" if 0 < signed_improvement_200q < 0.01
+       f. If honest_verdict == "vr_not_viable_at_scale": write RETRO resolution to
+          ops/known-issues.md entry for RETRO-033.
+       g. artifact: signed_improvement_50q, signed_improvement_100q,
+          signed_improvement_150q, signed_improvement_200q, honest_verdict.
+    3. Write tests/python/test_experiment_720_vr_200q.py with 100% coverage:
+       - test signed_improvement fields present in artifact.
+       - test BatchedInferenceRunner used (batch_log non-empty in artifact).
+       Each test traces to REQ-VER-030.
+    4. Reconcile:
+       - ops/status.md: update RETRO-033 status.
+       - ops/changelog.md: one-line with honest_verdict.
+    5. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0. Run setup_gpu() before inference.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp721-vr-gemma4-graduated
+  milestone: 2026.04.55
+  deliverable: results/experiment_721_vr_gemma4_graduated.json
+  title: 'Exp 721: Live VR Gemma4 Graduated Threshold Search (constraint-induced distortion diagnosis)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Gemma4-A4B VR always produces signed_improvement <= 0. The paper arXiv 2601.01490
+    "Constraint-Induced Distortion in Small LLMs" explains why: when a model in the 1-5B
+    active parameter range is subjected to tight constraint satisfaction pressure (threshold
+    <= 0.20), internal representations shift away from factual recall to constraint compliance.
+    The result: constrained outputs hallucinate MORE than unconstrained, flipping signed_improvement
+    negative.
+
+    HYPOTHESIS: A looser threshold (0.30-0.40) applies only high-confidence constraints,
+    avoiding the distortion regime. Abstain mode (apply constraint only if confidence > 0.90)
+    may eliminate distortion entirely while still catching obvious violations.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/vr_pipeline.py — VR pipeline with threshold parameter.
+    - results/experiment_709_vr_gemma4_diagnostic.json — most recent Gemma4 VR data.
+    - scripts/experiment_template.py — ExperimentTemplate with BatchedInferenceRunner.
+
+    TASK: Test 5 threshold conditions on Gemma4-A4B. Find the condition with
+    signed_improvement > 0 (if any). Identify optimal threshold for deployment.
+
+    CONCRETE STEPS:
+    1. Add REQ-VER-031 (Gemma4 VR threshold MUST be calibrated per arXiv 2601.01490
+       distortion analysis before deployment),
+       SCENARIO-VER-038 to openspec/capabilities/verification/spec.md.
+    2. Create scripts/experiment_721_vr_gemma4_graduated.py:
+       a. ExperimentTemplate(721, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Pre-warm Gemma4-A4B-GGUF on GPU 1.
+       c. 5 conditions x 50q = 250q total, BatchedInferenceRunner (8q batches).
+          Conditions: {"threshold": [0.10, 0.20, 0.30, 0.40, "abstain"]}
+          Abstain mode: apply constraint ONLY if EORM confidence > 0.90.
+       d. Measure signed_improvement per condition.
+       e. honest_verdict:
+          - "gemma4_optimal_threshold_found" if any condition signed_improvement > 0
+          - "gemma4_distortion_confirmed_all_negative" if all conditions <= 0
+          - "gemma4_abstain_wins" if only abstain condition > 0
+       f. artifact: results_per_condition (list of {threshold, signed_improvement}),
+          optimal_threshold (float or "abstain" or null), honest_verdict.
+    3. Write tests/python/test_experiment_721_vr_gemma4_graduated.py with 100% coverage:
+       - test results_per_condition has 5 entries.
+       - test abstain mode only fires when confidence > 0.90.
+       Each test traces to REQ-VER-031.
+    4. Reconcile ops/status.md and ops/changelog.md.
+    5. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 1 (Gemma4). Run setup_gpu() before inference.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp722-psv-pool-exhaustion
+  milestone: 2026.04.55
+  deliverable: results/experiment_722_psv_pool_exhaustion.json
+  title: 'Exp 722: PSV Root Cause Analysis — Question Pool Exhaustion Diagnosis (CPU)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: PSV (Propose-Solve-Verify) self-play has been degrading for 2 consecutive
+    milestones. Milestone .54 measured PaCoRe K=2 fp_rate_trend_slope=+0.001212 (positive =
+    degrading, though improved from +0.004242 in .53). The self-play loop has a fixed
+    10-question pool. After ~10 iterations, the model has seen each question multiple times.
+
+    HYPOTHESIS: The model's constraint-satisfaction weight updates overfit to the 10 specific
+    questions. When evaluated on held-out questions, performance has deteriorated — not because
+    self-play is fundamentally flawed, but because the pool is too small and too fixed.
+
+    CONTROLLED EXPERIMENT:
+    Condition A: Fixed 10-question pool (reproduces current degradation baseline).
+    Condition B: Rotating 100-question pool, sample 10 random per iteration.
+    Run both for 20 iterations, measure fp_rate_trend_slope per condition.
+    This is a CPU-only diagnostic — analyze existing PSV logic and run a short simulation.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/psv_pipeline.py (or similar) — PSV self-play implementation.
+    - results/experiment_710_psv_pcore_k2.json — .54 PSV run data with slope.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Run controlled experiment. Write gate file for Exp 723.
+
+    CONCRETE STEPS:
+    1. Add REQ-PSV-005 (PSV question pool MUST contain >= 100 questions and sample
+       randomly per iteration to prevent overfitting),
+       SCENARIO-PSV-005 to openspec/capabilities/self-learning/spec.md.
+    2. Create scripts/experiment_722_psv_pool_exhaustion.py:
+       a. ExperimentTemplate(722) + ExperimentTimeoutWatchdog(722, timeout_minutes=30).
+       b. Condition A: Run PSV 20 iterations with fixed 10-question pool.
+          Measure fp_rate at each iteration, compute trend slope.
+       c. Condition B: Build 100-question pool from GSM8K questions 0-99.
+          Run PSV 20 iterations sampling 10 random questions per iteration.
+          Measure fp_rate at each iteration, compute trend slope.
+       d. honest_verdict:
+          - "pool_exhaustion_confirmed" if condition_A_slope > 0 AND condition_B_slope < 0
+          - "pool_exhaustion_not_confirmed" if condition_B_slope also > 0
+          - "pool_exhaustion_ambiguous" if condition_B_slope ≈ 0 (abs < 0.0001)
+       e. Gate signal: write results/psv_pool_gate.json with
+          {"gate": "pass" if pool_exhaustion_confirmed else "fail", "diagnosis": honest_verdict}.
+       f. artifact: condition_A_slope, condition_B_slope, honest_verdict.
+    3. Write tests/python/test_experiment_722_psv_pool_exhaustion.py with 100% coverage:
+       - test condition A and B slopes both present in artifact.
+       - test gate file written with correct schema.
+       Each test traces to REQ-PSV-005.
+    4. Reconcile ops/status.md and ops/changelog.md.
+    5. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp723-psv-pcore-v2
+  milestone: 2026.04.55
+  deliverable: results/experiment_723_psv_pcore_v2.json
+  title: 'Exp 723: PSV PaCoRe v2 — Diverse 100-Question Pool + K=2 (GATED on Exp 722)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    GATE CHECK (MANDATORY FIRST STEP): Read results/psv_pool_gate.json.
+    If {"gate": "fail"}: write results/experiment_723_psv_pcore_v2.json with
+    {"experiment": 723, "status": "gated_blocked", "gate_source": "exp722",
+     "honest_verdict": "gated_blocked_pool_exhaustion_not_confirmed", "schema": "carnot.result.v1"}
+    and STOP.
+
+    CONTEXT (only if gate passes): Exp 722 confirmed pool exhaustion as PSV root cause.
+    A rotating 100-question pool with K=2 PaCoRe parallel chains should produce fp_rate
+    trend_slope < 0 (improving), resolving the 2-milestone PSV degradation.
+
+    PaCoRe K=2: Two parallel self-play chains with a diversity penalty — chains are rewarded
+    for exploring different question types and solution strategies. This prevents both chains
+    from collapsing to the same narrow set of skills.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/pipeline/psv_pipeline.py — PSV self-play implementation.
+    - results/experiment_722_psv_pool_exhaustion.json — pool exhaustion diagnosis.
+    - results/experiment_710_psv_pcore_k2.json — .54 PaCoRe K=2 baseline.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Retrain PSV with 100-question rotating pool and K=2 PaCoRe. Run 30 iterations.
+
+    CONCRETE STEPS:
+    1. Add REQ-PSV-006 (PSV PaCoRe K=2 MUST use diversity penalty between chains to
+       prevent chain collapse),
+       SCENARIO-PSV-006 to openspec/capabilities/self-learning/spec.md.
+    2. Update python/carnot/pipeline/psv_pipeline.py:
+       a. Replace fixed 10-question pool with 100-question pool sampled from
+          GSM8K + MATH + ARC-Challenge (33 each).
+       b. Per iteration: sample 10 questions uniformly at random (no replacement within iter).
+       c. K=2 chains: diversity_penalty = -0.1 * cosine_similarity(chain1_embedding, chain2_embedding).
+          Add diversity_penalty to each chain's reward.
+    3. Create scripts/experiment_723_psv_pcore_v2.py:
+       a. ExperimentTemplate(723, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Run PSV 30 iterations with new pool + K=2 diversity.
+       c. Measure fp_rate per iteration, compute trend slope.
+       d. honest_verdict:
+          - "psv_recovering" if fp_rate_trend_slope < 0 (improving)
+          - "psv_stable" if abs(fp_rate_trend_slope) < 0.0001
+          - "psv_still_degrading" if fp_rate_trend_slope > 0
+       e. artifact: fp_rate_trend_slope, fp_rate_iteration_0, fp_rate_iteration_30,
+          honest_verdict.
+    4. Write tests/python/test_experiment_723_psv_pcore_v2.py with 100% coverage:
+       - test gate-blocked path writes correct status.
+       - test diversity penalty fires when chains produce similar outputs.
+       Each test traces to REQ-PSV-006.
+    5. Reconcile ops/status.md and ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0.
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp724-kan-distill-v3
+  milestone: 2026.04.55
+  deliverable: results/experiment_724_kan_distill_v3.json
+  title: 'Exp 724: KAN Distillation v3 — 3000 Examples + 16 Knots (AUROC 0.90 gate)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: KAN distillation v2 achieved AUROC=0.8747 on prompt-injection detection.
+    The 0.90 AUROC gate is required for Tier 0b deployment. Two changes are needed:
+    1. More training data: 3000 examples (from v2's 1000) to reduce variance.
+    2. More expressive KAN: 16 knots per activation (from v2's 8) to capture finer
+       decision boundaries in the energy landscape.
+
+    KAN (Kolmogorov-Arnold Network) advantage over MLP: each activation is a learnable
+    spline, making the energy function more interpretable — we can visualize exactly which
+    input features trigger the prompt-injection energy spike.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/kan.py — KAN implementation.
+    - results/experiment_711_kan_distill_v2.json — v2 training config and AUROC.
+    - python/carnot/pipeline/kan_trainer.py (or similar) — KAN training loop.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Generate 3000-example dataset, train KAN with 16 knots, evaluate AUROC.
+
+    CONCRETE STEPS:
+    1. Add REQ-KAN-003 (KAN distillation training dataset MUST contain >= 3000 labeled
+       examples with balanced positive/negative ratio),
+       REQ-KAN-004 (KAN distillation model MUST use >= 16 spline knots per activation
+       for Tier 0b quality gate),
+       SCENARIO-KAN-003/004 to openspec/capabilities/kan/spec.md.
+    2. Generate dataset (if not already cached):
+       a. 1500 positive examples: prompt-injection patterns from known attack datasets.
+       b. 1500 negative examples: benign prompts from ShareGPT/Alpaca.
+       c. Save to results/kan_distill_v3_dataset.json.
+    3. Update KAN training config:
+       a. knots_per_activation = 16 (from 8).
+       b. training_examples = 3000.
+       c. Same Adam lr=1e-3, 100 epochs as v2.
+    4. Create scripts/experiment_724_kan_distill_v3.py:
+       a. ExperimentTemplate(724) + ExperimentTimeoutWatchdog(724, timeout_minutes=60).
+       b. Load 3000-example dataset.
+       c. Train KAN v3 for 100 epochs.
+       d. Evaluate AUROC on 20% held-out test split.
+       e. honest_verdict:
+          - "kan_gate_passed" if auroc >= 0.90
+          - "kan_gate_marginal" if 0.88 <= auroc < 0.90
+          - "kan_gate_failed" if auroc < 0.88
+       f. If honest_verdict == "kan_gate_passed": save deployment checkpoint to
+          models/kan_distill_v3_tier0b.safetensors.
+       g. artifact: auroc, auroc_v2_baseline (0.8747), auroc_delta, knots_per_activation,
+          training_examples, honest_verdict.
+    5. Write tests/python/test_experiment_724_kan_distill_v3.py with 100% coverage:
+       - test KAN model has 16 knots per activation.
+       - test dataset has 3000 examples with balanced classes.
+       - test deployment checkpoint written when gate passes.
+       Each test traces to REQ-KAN-003/004.
+    6. Reconcile ops/status.md and ops/changelog.md.
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp725-sc-energy-v2
+  milestone: 2026.04.55
+  deliverable: results/experiment_725_sc_energy_v2.json
+  title: 'Exp 725: SC-Energy v2 on FoVer v2 — Self-Consistency EBM Retrain (Tier 2.9)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: SC-Energy (Self-Consistency Energy, Tier 2.9) was trained on the original
+    FoVer v1 dataset (200 pairs). FoVer v2 (from Exp 712) provides 1000+ step-level pairs
+    with BOTH Z3 labels (symbolic constraint satisfaction) AND PDDL labels (planning
+    constraint satisfaction). The combination of two orthogonal constraint types gives
+    SC-Energy a richer consistency signal and should improve OOD generalization.
+
+    SC-Energy principle: a step is self-consistent if it satisfies constraints implied by
+    the question AND constraints implied by prior steps. FoVer v2's dual labels (Z3+PDDL)
+    cover both mathematical and structural consistency.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/sc_energy.py (or similar) — SC-Energy implementation.
+    - results/experiment_706_sc_energy_v1.json — v1 baseline AUC.
+    - results/experiment_712_fover_v2.json — FoVer v2 corpus metadata.
+    - results/fover_v2_labeled.json (or equivalent) — FoVer v2 labeled pairs.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Retrain SC-Energy on FoVer v2 dual labels. Evaluate OOD AUC. Update Tier 2.9.
+
+    CONCRETE STEPS:
+    1. Add REQ-VER-032 (SC-Energy Tier 2.9 MUST be trained on FoVer v2 dual labels
+       for milestone 2026.04.55+),
+       SCENARIO-VER-039 to openspec/capabilities/verification/spec.md.
+    2. Update SC-Energy training to use FoVer v2:
+       a. Load FoVer v2 pairs, extract (step_text, z3_label, pddl_label).
+       b. Consensus label: label = 1 if z3_label == 1 AND pddl_label == 1 (strict).
+          This forces SC-Energy to learn cross-constraint consistency.
+       c. Split: 80% train, 20% OOD eval (GSM8K 500-699).
+    3. Create scripts/experiment_725_sc_energy_v2.py:
+       a. ExperimentTemplate(725) + ExperimentTimeoutWatchdog(725, timeout_minutes=45).
+       b. Train SC-Energy EBM on FoVer v2 strict consensus labels.
+       c. Evaluate OOD AUC on GSM8K 500-699.
+       d. honest_verdict:
+          - "sc_energy_v2_improvement" if ood_auc >= 0.75 AND ood_auc > v1_baseline
+          - "sc_energy_v2_no_gain" if ood_auc <= v1_baseline
+          - "sc_energy_v2_below_threshold" if ood_auc < 0.75
+       e. artifact: ood_auc, v1_baseline_auc, auc_delta, training_pairs, honest_verdict.
+    4. Write tests/python/test_experiment_725_sc_energy_v2.py with 100% coverage:
+       - test strict consensus label logic.
+       - test AUC improvement vs baseline tracked in artifact.
+       Each test traces to REQ-VER-032.
+    5. Reconcile ops/status.md and ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp726-jepa-reasoner-probe
+  milestone: 2026.04.55
+  deliverable: results/experiment_726_jepa_reasoner_probe.json
+  title: 'Exp 726: JEPAReasonerProbe — Pre-generative Latent Verification (arXiv 2512.19171)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2512.19171 "JEPA-Reasoner" shows that LLM hidden states at question-end
+    (the token just before generation begins) contain predictive signal about whether the
+    coming generation will satisfy constraints. Specifically, layer 16 hidden states in
+    Qwen3.5-0.8B encode "willingness to follow constraint" as a linear subspace.
+
+    This enables a radically cheaper verification path: instead of generating full steps
+    and evaluating them (current JEPA approach), we extract the question-end hidden state
+    BEFORE generation and run a lightweight 2-layer MLP probe (~1ms latency) to predict
+    whether the generation will violate constraints.
+
+    If AUC >= 0.75 and latency < 1ms: propose as Tier 2.1 (latency-optimized JEPA alternative).
+    This path is independent of JEPA v18 (Exp 717) — even if v18 fails, Tier 2.1 could work.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/samplers/jepa_v18_lambdarank.py (from Exp 717) — hidden state extraction.
+    - results/experiment_717_jepa_v18_lambdarank.json — v18 architecture details.
+    - results/fover_v2_labeled.json (or equivalent) — FoVer v2 labeled pairs.
+    - scripts/experiment_template.py — ExperimentTemplate with BatchedInferenceRunner.
+
+    TASK: Extract question-end hidden states from Qwen3.5-0.8B (layer 16), train 2-layer
+    MLP probe on FoVer v2, evaluate OOD AUC and inference latency.
+
+    CONCRETE STEPS:
+    1. Add REQ-VER-033 (JEPAReasonerProbe MUST extract hidden states at the question-end
+       token BEFORE generation begins to enable pre-generative verification),
+       REQ-VER-034 (JEPAReasonerProbe inference latency MUST be < 1ms excluding LLM
+       forward pass, measured on CPU with MLP probe only),
+       SCENARIO-VER-040/041 to openspec/capabilities/verification/spec.md.
+    2. Implement python/carnot/samplers/jepa_reasoner_probe.py:
+       a. Class JEPAReasonerProbe.
+       b. hidden_state_extractor: run Qwen3.5-0.8B forward pass on question text only
+          (no generation), extract layer 16 hidden state at last token position.
+          Shape: (hidden_dim,) = (1024,) for Qwen3.5-0.8B.
+       c. probe: nn.Linear(1024, 256) → ReLU → nn.Linear(256, 1) → sigmoid.
+          Binary prediction: P(constraint_violation | question_hidden_state).
+       d. Training: BCELoss, Adam lr=1e-3, 50 epochs on FoVer v2 pairs.
+          Label: 1 if any step in question violates constraint, 0 otherwise.
+       e. Latency: time probe.forward() only (not extraction) — must be < 1ms CPU.
+    3. Create scripts/experiment_726_jepa_reasoner_probe.py:
+       a. ExperimentTemplate(726, requires_gpu=True) + ExperimentTimeoutWatchdog.
+       b. Extract hidden states for all FoVer v2 questions (GPU, batch=32).
+       c. Train probe on extracted states (CPU after extraction).
+       d. Evaluate OOD AUC on GSM8K 500-699.
+       e. Measure probe inference latency (CPU, 1000 forward passes, p50/p99).
+       f. honest_verdict:
+          - "probe_tier21_candidate" if ood_auc >= 0.75 AND latency_p99_ms < 1.0
+          - "probe_auc_pass_latency_fail" if ood_auc >= 0.75 AND latency_p99_ms >= 1.0
+          - "probe_below_threshold" if ood_auc < 0.75
+       g. If honest_verdict == "probe_tier21_candidate": write Tier 2.1 proposal to
+          openspec/change-proposals/tier21-jepa-reasoner-probe.md.
+       h. artifact: ood_auc, latency_p50_ms, latency_p99_ms, hidden_dim, probe_params,
+          honest_verdict.
+    4. Write tests/python/test_experiment_726_jepa_reasoner_probe.py with 100% coverage:
+       - test hidden state shape is (hidden_dim,) at question-end token.
+       - test probe latency < 1ms on CPU for single forward pass.
+       - test Tier 2.1 proposal written when gate conditions met.
+       Each test traces to REQ-VER-033/034.
+    5. Reconcile ops/status.md and ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    GPU SETUP: RTX 3090 GPU 0 (hidden state extraction only).
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp727-vargran-gate
+  milestone: 2026.04.55
+  deliverable: results/experiment_727_vargran_gate.json
+  title: 'Exp 727: Variable Granularity Verification Gate (arXiv 2505.11730, Ising skip rate)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: arXiv 2505.11730 "Variable Granularity Search" shows that applying verification
+    at variable granularity — skip expensive checks when cheap tiers are highly confident —
+    achieves near-identical accuracy at 40-60% lower compute. Tier 3 Ising sampling is the
+    most expensive tier in the Carnot cascade. If EORM (Tier 0h) confidence > 0.92, Ising
+    sampling is likely redundant — the cheap tier already made the right call.
+
+    EORM (Efficiency-Optimized Ranking Model, Tier 0h) outputs a confidence score 0-1.
+    Values near 1.0 mean EORM is highly confident the generation is correct. At these
+    scores, running Tier 3 Ising adds latency without changing the verdict.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/inference/eorm_model.py — EORMModel with confidence output.
+    - python/carnot/cascade/tier3_ising.py — Tier 3 Ising sampler.
+    - python/carnot/cascade/cascade_router.py — cascade routing logic.
+    - scripts/experiment_template.py — ExperimentTemplate.
+
+    TASK: Implement EORM confidence gate before Tier 3 Ising. Measure skip rate and FN delta.
+
+    CONCRETE STEPS:
+    1. Add REQ-INFRA-044 (cascade router MUST support EORM confidence gate to skip Tier 3
+       Ising when confidence > configurable threshold, default 0.92),
+       REQ-INFRA-045 (EORM gate false-negative delta MUST be < 5% vs full cascade),
+       SCENARIO-INFRA-053/054 to openspec/capabilities/pipeline/spec.md.
+    2. Update python/carnot/cascade/cascade_router.py:
+       a. Add eorm_ising_skip_threshold: float = 0.92 (configurable).
+       b. Before routing to Tier 3 Ising: check if eorm_confidence > skip_threshold.
+       c. If above threshold: mark result as "verified_fast" (skip Ising).
+       d. If below threshold: run Tier 3 Ising as normal.
+       e. Log: ising_skip (bool), eorm_confidence (float) per query.
+    3. Create scripts/experiment_727_vargran_gate.py:
+       a. ExperimentTemplate(727) + ExperimentTimeoutWatchdog(727, timeout_minutes=45).
+       b. Run 200q test set through cascade.
+          - Condition A: full cascade (no gate, baseline).
+          - Condition B: EORM gate at threshold=0.92.
+       c. Measure:
+          - ising_skip_rate = fraction of queries where Ising was skipped.
+          - fn_delta = false_negative_rate_B - false_negative_rate_A.
+          - latency_reduction_pct = (latency_A - latency_B) / latency_A * 100.
+       d. honest_verdict:
+          - "vargran_gate_success" if ising_skip_rate > 0.50 AND fn_delta < 0.05
+          - "vargran_gate_too_conservative" if ising_skip_rate <= 0.50
+          - "vargran_gate_fn_too_high" if fn_delta >= 0.05
+       e. artifact: ising_skip_rate, fn_delta, latency_reduction_pct, threshold_used,
+          honest_verdict.
+    4. Write tests/python/test_experiment_727_vargran_gate.py with 100% coverage:
+       - test gate skips Ising when EORM confidence > 0.92.
+       - test gate does NOT skip Ising when EORM confidence <= 0.92.
+       - test fn_delta computed correctly vs full cascade baseline.
+       Each test traces to REQ-INFRA-044/045.
+    5. Reconcile ops/status.md and ops/changelog.md.
+    6. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp728-operational-retro
+  milestone: 2026.04.55
+  deliverable: results/operational_retro_2026_04_55.json
+  title: 'Exp 728: Milestone 2026.04.55 Operational Retrospective'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: This is the final experiment of milestone 2026.04.55. All other experiments
+    (Exps 716-727) should be complete. Measure wall time, strategic outcomes, and feed
+    operational improvements back into process.
+
+    EXISTING DATA TO READ:
+    - results/operational_retro_2026_04_54.json — .54 retro for baseline comparison.
+    - results/experiment_716_preflight_v7.json — pre-flight overhead.
+    - results/experiment_717_jepa_v18_lambdarank.json — JEPA v18 AUC.
+    - results/experiment_718_jepa_v18_cascade.json — cascade deploy status.
+    - results/experiment_719_fr11_relay.json — FR-11 relay status.
+    - results/experiment_720_vr_200q_qwen.json — VR 200q result.
+    - results/experiment_721_vr_gemma4_graduated.json — Gemma4 threshold.
+    - results/experiment_722_psv_pool_exhaustion.json — PSV diagnosis.
+    - results/experiment_723_psv_pcore_v2.json — PSV recovery.
+    - results/experiment_724_kan_distill_v3.json — KAN AUROC.
+    - results/experiment_725_sc_energy_v2.json — SC-Energy AUC.
+    - results/experiment_726_jepa_reasoner_probe.json — probe AUC + latency.
+    - results/experiment_727_vargran_gate.json — gate skip rate.
+    - ops/metrics.md — turn log with wall times.
+
+    TASK: Write milestone retrospective. Answer the 5 key questions. Identify new slowest-5.
+    Update ops/status.md and ops/changelog.md.
+
+    CONCRETE STEPS:
+    1. Compute milestone metrics:
+       a. total_wall_time_minutes (sum from metrics.md turn log).
+       b. wall_time_delta_minutes vs .54 (3861 min baseline).
+       c. experiments_completed (count of Exps 716-728 with status != "gated_blocked").
+       d. slowest_5: top 5 experiments by duration_minutes from ALL active experiments.
+          Include prior milestones' experiments if they ran in .55 cycle.
+    2. Answer the 5 key questions:
+       a. RETRO-CRITICAL: Did JEPA v18 achieve AUC >= 0.75?
+          Load experiment_717_jepa_v18_lambdarank.json, read ood_auc.
+          verdict_jepa: "resolved" if ood_auc >= 0.75 else "4th_consecutive_failure"
+       b. RETRO-033: Did VR ever produce signed_improvement > 0?
+          Load experiment_720_vr_200q_qwen.json, read signed_improvement_200q.
+          verdict_vr: "resolved" if signed_improvement_200q > 0 else "closing_not_viable"
+       c. Pre-flight: Did overhead fall below 200 min?
+          Load experiment_716_preflight_v7.json, read wall_time_minutes.
+          verdict_preflight: "resolved" if wall_time_minutes < 200 else "partial"
+       d. PSV: Is PSV now improving (slope < 0)?
+          Load experiment_723_psv_pcore_v2.json (or exp722 if exp723 gated).
+          verdict_psv: "recovering" if slope < 0 else "still_degrading"
+       e. FR-11: Was relay event logged?
+          Load experiment_719_fr11_relay.json.
+          verdict_fr11: "operational" if relay_events_acked >= 1 else "gated_blocked"
+    3. Identify improvement actions for .56:
+       a. If JEPA v18 fails: escalate to Tier 2.1 JEPAReasonerProbe as primary path.
+       b. If VR not viable: remove from .56 roadmap, add note to research-program.md.
+       c. New slowest-5 governance: any experiment with duration > 45 min that has
+          appeared 3+ consecutive milestones MUST be retired in .56 pre-flight.
+    4. Write results/operational_retro_2026_04_55.json following the exact schema from
+       results/operational_retro_2026_04_54.json. Fields:
+       {"experiment": 728, "milestone": "2026.04.55",
+        "total_wall_time_minutes": ...,
+        "wall_time_delta_minutes": ...,
+        "experiments_completed": ...,
+        "slowest_5": [...],
+        "verdict_jepa_v18": ...,
+        "verdict_vr_retro033": ...,
+        "verdict_preflight": ...,
+        "verdict_psv": ...,
+        "verdict_fr11": ...,
+        "improvement_actions_for_56": [...],
+        "honest_verdict": "milestone_55_complete",
+        "schema": "carnot.retro.v1"}
+    5. Update ops/status.md:
+       a. "What's Working" section: add all experiments that succeeded.
+       b. "What's Next" section: add .56 improvement actions.
+       c. Close RETRO-033 if VR not viable.
+       d. Update RETRO-CRITICAL status based on JEPA v18 result.
+       e. NEVER remove existing content. Add new sections only.
+    6. Update ops/changelog.md:
+       - One line: "2026.04.55 retrospective complete — [key outcome]".
+    7. tmpl.assert_deliverable_written() as final line.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
