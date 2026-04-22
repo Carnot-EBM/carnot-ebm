@@ -2515,3 +2515,4 @@ python/ |
 | 2026-04-22 21:02 UTC | Exp 733: Tier 2.1 Cascade Integration (GATED on Ex | OK | 81 passed, 3 warnings in 7.50s |
 | 2026-04-22 21:14 UTC | Exp 734: FR-11 Tier 2.1 Relay — Autonomous Self-Le | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-04-22 21:24 UTC | Exp 734: FR-11 Tier 2.1 Relay — Autonomous Self-Le | OK | 89 passed, 3 warnings in 5.63s |
+| 2026-04-22 21:39 UTC | Exp 735: KAN Distill v3 Tier 0b Integration — Prom | OK | 81 passed, 3 warnings in 5.08s |
