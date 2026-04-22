@@ -13971,3 +13971,38 @@ When: update_cascade_block is called.
 Then: jepa_v15_cascade is removed from conductor_exclusion_manifest and cascade_unblocked == True.
 
 **Implementation Status:** Implemented (tests/python/test_jepa_v16.py, Exp 698)
+
+## REQ-LEARN-055: JEPA v16 + HalluSAE OOD AUC >= v16_baseline + 0.03
+
+**Rationale:** Exp 687 (HalluSAE) identified that sparse AE features encode monosemantic
+hallucination signal not used by JEPA v16 raw embeddings. arXiv 2604.16430 shows feeding sparse AE
+features as input to a downstream classifier improves AUC by 5-10pp over raw hidden states. Exp 699
+tests this claim by substituting sparse AE features (dim=512, sparse) as JEPA input instead of raw
+text embeddings.
+
+**Requirements:**
+- REQ-LEARN-055-1: JEPAHalluSAEv16 SHALL accept a frozen SparseAutoEncoder as input.
+- REQ-LEARN-055-2: The SAE weights SHALL be frozen during JEPA training (no gradient updates to SAE).
+- REQ-LEARN-055-3: The encode() method SHALL use sparse AE hidden activations as JEPA input features.
+- REQ-LEARN-055-4: hallusae_v16_ood_auc SHALL be evaluated on GSM8K indices 500-699.
+- REQ-LEARN-055-5: honest_verdict SHALL distinguish: hallusae_integration_improved,
+  hallusae_integration_marginal, hallusae_integration_no_improvement.
+- REQ-LEARN-055-6: delta_auc = hallusae_v16_ood_auc - v16_baseline_auc SHALL be reported.
+
+**Implementation Status:** Implemented (scripts/experiment_699_hallusae_jepa_v16.py, Exp 699)
+
+### SCENARIO-LEARN-090: HalluSAE Features Produce Non-Trivial JEPA Scores
+
+Given: a reasoning step text and trained SparseAutoEncoder.
+When: JEPAHalluSAEv16.encode is called.
+Then: returned vector has shape (hidden_dim,) and at most one non-zero dimension (top-1 sparse).
+
+**Implementation Status:** Implemented (tests/python/test_jepa_hallusae_v16.py, Exp 699)
+
+### SCENARIO-LEARN-091: Gate Blocks On Missing Upstream Results
+
+Given: results/experiment_698_jepa_v16.json or results/experiment_687_hallusat_sparse_ae.json is missing.
+When: experiment_699 is run.
+Then: exit code is 0 and artifact contains honest_verdict = blocked_on_upstream_exp698 or blocked_on_upstream_exp687.
+
+**Implementation Status:** Implemented (scripts/experiment_699_hallusae_jepa_v16.py, Exp 699)
