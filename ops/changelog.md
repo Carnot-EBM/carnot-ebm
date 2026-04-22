@@ -98,6 +98,10 @@
 - 2026-04-20: Exp 557 complete — JEPA v9 Retrain, Diverse 100+ Corpus, LeWorldModel Objective, RETRO-056. Status: success. Phase 4 autoresearch retraining on real corpus. (Exp 557 result)
 - 2026-04-20: Exp 551 complete — Live 50q Data Collection A, GSM8K indices 0-49, no repair. Status: success. Phase 2 autoresearch live data sprint. (Exp 551 result)
 
+## 2026-04-22 (Exp 695: Tier 2.8 Candidate Benchmark)
+
+- 2026-04-22 10:07 UTC: Exp 695 — FormalStepVerifier vs EidokuCSP: Tier 2.8 Candidate Benchmark. (Conductor autoresearch) Compared three verifiers (FormalStepVerifier, SymCodeVerifier, EidokuCSP) on FoVer corpus v1. Status: success. All verifiers achieved AUC=0.5 (random baseline). honest_verdict=tier_28_no_candidate: FoVer v1 contains only step_correct=True labels; all Z3 verdicts are 'unparseable' (single-step "The answer is 42." format with no arithmetic). Corpus is degenerate for Tier 2.8 benchmarking. ⚠️ Research Finding. Recommendation: construct corpus with genuine violation examples (step_correct=False cases with parseable Z3 verdicts) before re-attempting verifier comparison.
+
 ## 2026-04-20 (Milestone 2026.04.42 Research Planning)
 
 - 2026-04-20 16:19 UTC: Exp 596 complete — Live 200q Wilson CI (RETRO-038 Attempt #9). Status: ⚠️ Blocked. honest_verdict=blocked_upstream_gates_closed: both Exp 594 (signed_improvement=0.0) and Exp 595 (status=blocked) gates remain closed; no winning extractor to scale. (Exp 596 result)
