@@ -77,7 +77,7 @@ set_property ip_output_repo /home/ianblenke/github.com/ianblenke/carnot/output/c
 set_property ip_cache_permissions {read write} [current_project]
 OPTRACE "Creating in-memory project" END { }
 OPTRACE "Adding files" START { }
-read_verilog -library xil_defaultlib /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/ising_sampler_v2.v
+read_verilog -library xil_defaultlib /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/minimal_axi_responder.v
 read_ip -quiet /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.srcs/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_ising_sampler_0_0/carnot_ising_bd_ising_sampler_0_0.xci
 
 OPTRACE "Adding files" END { }
