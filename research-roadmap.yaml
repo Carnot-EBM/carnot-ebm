@@ -836,3 +836,213 @@ tasks:
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ---------------------------------------------------------------------------
+# Deferred to milestone 2026.04.52 — Exp 652 follow-ups (true distillation +
+# cross-dataset generalization).  Motivation: the conductor's Exp 652 run hit
+# AUROC 0.9262 on an in-distribution held-out split, but SKIPPED teacher
+# inference (labels came from corpus origin: JailbreakBench->injection,
+# GSM8K->benign).  The classifier is therefore a "source detector", not a
+# distilled prompt-injection classifier, and we don't know if it generalizes
+# to prompts it has never seen variants of.  These two experiments close that
+# gap before we publish anything to HuggingFace as a shareable safety model.
+# Both can run in parallel with the KV260 hardware re-run queue (662 RTL
+# rewrite, re-run of 661) because they're CPU/GPU-only and don't touch the
+# FPGA track.  The cached gpt-oss-safeguard-20b-Q4_K_M.gguf (11.6 GB in
+# models/gpt-oss-safeguard-20b/) makes the teacher inference cost only
+# wallclock, not bandwidth.
+# ---------------------------------------------------------------------------
+
+- id: exp678-prompt-injection-kan-true-distillation
+  milestone: 2026.04.52
+  deliverable: results/experiment_678_prompt_injection_kan_true_distillation.json
+  title: 'Exp 678: Prompt-Injection KAN v1 — True Teacher Distillation (supersedes Exp 652 source-labeled v0)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Exp 652 produced a KAN classifier with AUROC 0.9262 on a held-out
+    split, BUT the conductor SKIPPED teacher inference entirely and used corpus
+    origin as the label.  The resulting model is a "source detector" — it
+    likely learned JailbreakBench-style phrasing rather than the structural
+    signal of prompt injection.  That's not a distilled safety model and it
+    cannot be shared as one.  This experiment replaces Exp 652's v0 with a
+    properly distilled v1.
+
+    The teacher GGUF is already on disk:
+      models/gpt-oss-safeguard-20b/gpt-oss-safeguard-20b-Q4_K_M.gguf (11.6 GB).
+    Resolve via carnot.inference.sota_models.resolve_cached_gguf(
+      "unsloth/gpt-oss-safeguard-20b-GGUF").  Do NOT re-download.
+
+    EXISTING CODE TO READ FIRST:
+    - scripts/experiment_652_prompt_injection_kan.py — prior run scaffolding
+      and corpus loader (reuse, do NOT rewrite from scratch).
+    - python/carnot/models/prompt_injection_kan.py — current KAN class + weights.
+    - openspec/capabilities/safety/spec.md — REQ-SAFE-007/008/009 acceptance.
+    - openspec/change-proposals/prompt-injection-ebm.md — design doc.
+    - python/carnot/inference/sota_models.py — resolve_cached_gguf().
+    - data/prompt_injection_distill/ — prior corpus (reuse prompts, re-label).
+
+    TASK: Run true distillation with gpt-oss-safeguard-20b as teacher.
+
+    1. Preflight (5 min):
+       - Resolve teacher GGUF via resolve_cached_gguf(); emit
+         blocked_on_dependency if None.
+       - Load the Exp 652 corpus from data/prompt_injection_distill/.  We
+         re-use the *prompts* but re-generate the *labels* via teacher inference.
+
+    2. Teacher inference (60-180 min on GPU):
+       - Use llama.cpp via python-llama-cpp with n_gpu_layers=-1 to run the
+         Q4_K_M GGUF on GPU 0.  Expected throughput on a 3090: ~15-25 tok/s,
+         so 2000 prompts x ~50 tokens output each ~= 4000-7000 s wallclock.
+       - Prompt template (use gpt-oss-safeguard's native format): wrap each
+         prompt in the safeguard safety-classification template documented in
+         the unsloth model card.
+       - Parse teacher output: 1 for "unsafe/injection", 0 for "safe/benign",
+         plus a short reasoning trace.
+       - Cache teacher outputs keyed by (model_sha256_short, prompt_sha256) so
+         re-runs skip this phase.  Write to
+         data/prompt_injection_distill/teacher_outputs_<corpus_sha>.jsonl.
+
+    3. Label agreement diagnostic (2 min):
+       - Compute (teacher_label == source_label) agreement rate.
+       - If agreement >= 0.95: corpus origin was a reasonable proxy — note this
+         in the result, but PROCEED with teacher labels anyway.
+       - If agreement < 0.80: the source-labeled v0 was likely learning dataset
+         artifacts rather than injection structure — this is the expected case
+         given the Exp 652 caveat.  Log honest_note="teacher_disagrees_with_source".
+       - This agreement metric is itself a research finding worth publishing.
+
+    4. KAN re-training (15 min):
+       - Same architecture as Exp 652 (2 hidden layers, 64 units, degree-3).
+       - Labels now come from teacher, NOT corpus origin.
+       - 80/20 train/test split seeded for reproducibility.
+
+    5. Held-out evaluation (5 min):
+       - AUROC on the 400-example held-out split.
+       - Emit honest_verdict per REQ-SAFE-009.
+
+    6. Save weights:
+       python/carnot/models/prompt_injection_kan_v1_weights.json
+       Do NOT overwrite the v0 weights at
+       python/carnot/models/prompt_injection_kan_weights.json — keep both for
+       ablation; this is what "v1 supersedes v0" means in code.
+
+    7. Write result JSON with honest_verdict in the REQ-SAFE-009 enum PLUS:
+       - teacher_label_agreement_with_source (float)
+       - v0_vs_v1_delta_auroc (float, negative if v1 is worse — this is
+         acceptable and interesting; v1 would be worse if v0 was overfitting
+         dataset artifacts)
+       - v1_median_inference_ms (latency target: <5 ms per REQ-SAFE-007)
+
+    8. Reconcile:
+       - openspec/capabilities/safety/spec.md: flip REQ-SAFE-007/008/009
+         Implementation Status from Proposed to Implemented (v1) with the
+         teacher-distillation rationale.  Preserve the v0 row as a "superseded"
+         note — do NOT delete prior content (.48 retro lesson).
+       - _bmad/traceability.md: update the REQ-SAFE-007/008/009 rows to point
+         at both Exp 652 (v0) and Exp 678 (v1).
+       - ops/changelog.md: one-line entry with honest_verdict + agreement rate.
+
+    CONSTRAINTS:
+    - ExperimentTimeoutWatchdog(678, timeout_minutes=240).  Teacher inference
+      is the long pole; budget generously.
+    - Do NOT fall back to source-labeled labels if teacher inference times out.
+      Emit distillation_corpus_not_built instead.
+    - Do NOT skip the label-agreement diagnostic.  That number IS the headline
+      finding from this experiment.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp679-prompt-injection-kan-cross-dataset-eval
+  milestone: 2026.04.52
+  deliverable: results/experiment_679_prompt_injection_kan_cross_dataset.json
+  title: 'Exp 679: Prompt-Injection KAN v1 — Cross-Dataset Generalization (gates public release)'
+  prompt: |
+    You are working on the Carnot EBM framework in {project_root}.
+    Read CLAUDE.md for code style requirements.
+    Today's date: {date}.
+
+    CONTEXT: Even with true distillation (Exp 678), "AUROC on the same corpus
+    distribution we trained on" does not prove real-world readiness.  A
+    classifier can score well in-distribution and collapse on prompts it has
+    never seen variants of.  This experiment evaluates the v1 classifier on
+    THREE held-out prompt-injection datasets it has never seen, and gates
+    whether we publish it to huggingface.co/Carnot-EBM/.
+
+    GATE SEMANTICS:
+    - If mean cross-dataset AUROC >= 0.80: v1 is publishable.
+    - If 0.65 <= mean AUROC < 0.80: v1 is shareable with explicit caveat in
+      the model card; caveat must list which datasets it underperforms on.
+    - If mean AUROC < 0.65: v1 is NOT publishable — the model is a dataset
+      detector; honest_verdict="generalization_failed_do_not_publish", and
+      the next experiment iterates on the distillation corpus diversity.
+
+    EXISTING CODE TO READ FIRST:
+    - python/carnot/models/prompt_injection_kan_v1_weights.json — produced by
+      Exp 678.  If absent, emit blocked_on_upstream_exp_678.
+    - python/carnot/models/prompt_injection_kan.py — classifier.  DO NOT
+      MODIFY — the eval must use the EXACT same inference path as v0/v1
+      production use (no feature-engineering drift).
+    - scripts/experiment_678_prompt_injection_kan_true_distillation.py — for
+      the corpus loading + KAN eval helpers.
+
+    TASK: Three cross-dataset AUROCs + publishability gate.
+
+    1. Preflight: v1 weights file exists and loads.  Emit
+       blocked_on_upstream_exp_678 if not.
+
+    2. Download / load three held-out datasets (10 min):
+       - HackAPrompt (via huggingface datasets, ~600k prompts filtered to
+         injection + benign pairs).  Use a 500-sample subset for speed.
+       - BIPIA (Benchmark for Indirect Prompt Injection Attack) — ~400
+         samples across categories.
+       - A synthetic stress-test generated locally: 200 prompts using OWASP
+         LLM-01 mutations NOT seen in Exp 678's corpus (to catch the "does it
+         memorize teacher phrasing?" failure mode).  Use scripts/
+         jailbreak_mutations.py if it exists; else create it with a small
+         rule-based generator (20 templates x 10 variations).
+
+    3. Score (5 min per dataset, 15 min total):
+       - For each dataset, compute AUROC using v1's energy as the score.
+       - Record per-dataset confusion (TP, FP, TN, FN) at threshold=0.5.
+
+    4. Gate decision (1 min):
+       - mean_cross_dataset_auroc = mean(hackaprompt_auroc, bipia_auroc,
+         synthetic_auroc).
+       - Map to honest_verdict per the gate semantics above.
+
+    5. If mean AUROC >= 0.80: generate a draft model card (markdown) at
+       python/carnot/models/prompt_injection_kan_v1_MODELCARD.md with:
+       - REQ-SAFE-007 citation and acceptance numbers
+       - All 4 AUROCs (training-distribution, HackAPrompt, BIPIA, synthetic)
+       - Confusion matrices per dataset
+       - Latency measurement
+       - List of known failure modes (the datasets that scored lowest)
+       - Apache 2.0 license + link to openspec/capabilities/safety/spec.md
+       Do NOT push to HuggingFace in this experiment — that is a separate
+       operator action.
+
+    6. Write result JSON with: per_dataset_auroc, mean_auroc, per_dataset_cm,
+       honest_verdict in {generalization_verified_publishable,
+       generalization_partial_shareable_with_caveat,
+       generalization_failed_do_not_publish, blocked_on_upstream_exp_678,
+       blocked_on_dataset_download_failure}, model_card_written (bool).
+
+    7. Reconcile:
+       - openspec/capabilities/safety/spec.md: add REQ-SAFE-010
+         (cross-dataset generalization threshold), SCENARIO-SAFE-010.
+       - _bmad/traceability.md: link REQ-SAFE-010 to Exp 679.
+       - ops/changelog.md: one-line entry with the gate decision.
+
+    CONSTRAINTS:
+    - ExperimentTimeoutWatchdog(679, timeout_minutes=45).
+    - Do NOT lower the 0.80 publish threshold to make v1 pass.  A shareable-
+      with-caveat or do-not-publish verdict is the honest result.
+    - HuggingFace push is a SEPARATE operator action — this experiment only
+      emits the gate decision + draft model card.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
