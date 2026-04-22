@@ -52,7 +52,7 @@ tasks:
     4. Update scripts/conductor_pre_flight.py:
        a. Call IncrementalTestSelector.select() before running pytest.
        b. If select() returns None: run full suite (existing behavior).
-       c. If select() returns list: run `pytest {files}` only.
+       c. If select() returns list: run `pytest (files)` only.
        d. Log: incremental_mode (bool), tests_selected (int), tests_total (int),
           selection_ratio (float).
     5. Check if results/experiment_527_live_100q_precision_v8.json exists.
@@ -162,8 +162,8 @@ tasks:
           - "jepa_v18_breakthrough" if ood_auc >= 0.75
           - "jepa_v18_above_random" if ood_auc >= 0.50
           - "jepa_v18_below_random" if ood_auc < 0.50 (4th consecutive failure)
-       f. Gate signal: write results/jepa_v18_gate.json with {"gate": "pass"/"fail",
-          "ood_auc": float} — downstream Exp 718 reads this.
+       f. Gate signal: write results/jepa_v18_gate.json with ("gate": "pass"/"fail",
+          "ood_auc": float) — downstream Exp 718 reads this.
        g. artifact: ood_auc, train_loss_final, epochs_trained, fover_v2_pairs_used,
           uncertainty_weights_applied (bool), honest_verdict.
     5. Write tests/python/test_experiment_717_jepa_v18_lambdarank.py with 100% coverage:
@@ -191,9 +191,9 @@ tasks:
     Today's date: {date}.
 
     GATE CHECK (MANDATORY FIRST STEP): Read results/jepa_v18_gate.json.
-    If {"gate": "fail"}: write results/experiment_718_jepa_v18_cascade.json with
-    {"experiment": 718, "status": "gated_blocked", "gate_source": "exp717",
-     "honest_verdict": "gated_blocked_jepa_v18_below_threshold", "schema": "carnot.result.v1"}
+    If ("gate": "fail"): write results/experiment_718_jepa_v18_cascade.json with
+    ("experiment": 718, "status": "gated_blocked", "gate_source": "exp717",
+     "honest_verdict": "gated_blocked_jepa_v18_below_threshold", "schema": "carnot.result.v1")
     and STOP. Do not implement anything else.
 
     CONTEXT (only if gate passes): JEPA v18 achieved OOD AUC >= 0.75 in Exp 717.
@@ -250,9 +250,9 @@ tasks:
     Today's date: {date}.
 
     GATE CHECK (MANDATORY FIRST STEP): Read results/jepa_v18_cascade_gate.json.
-    If {"gate": "fail"}: write results/experiment_719_fr11_relay.json with
-    {"experiment": 719, "status": "gated_blocked", "gate_source": "exp718",
-     "honest_verdict": "gated_blocked_cascade_deploy_failed", "schema": "carnot.result.v1"}
+    If ("gate": "fail"): write results/experiment_719_fr11_relay.json with
+    ("experiment": 719, "status": "gated_blocked", "gate_source": "exp718",
+     "honest_verdict": "gated_blocked_cascade_deploy_failed", "schema": "carnot.result.v1")
     and STOP.
 
     CONTEXT (only if gate passes): FR-11 (Autonomous Self-Learning Loop) is a MANDATORY
@@ -279,7 +279,7 @@ tasks:
        acknowledge receipt within 200ms),
        SCENARIO-FR11-001/002 to openspec/capabilities/self-learning/spec.md.
     2. Implement python/carnot/pipeline/fr11_relay.py:
-       a. ViolationEvent dataclass: {query_id, step_index, energy_score, timestamp}.
+       a. ViolationEvent dataclass: (query_id, step_index, energy_score, timestamp).
        b. FR11EventBus: simple in-process publish/subscribe (threading.Event).
        c. FR11Tier1Stub: subscriber that logs events to ops/fr11_relay_log.jsonl.
           (Full weight update in later milestone; stub logs and acks.)
@@ -346,7 +346,7 @@ tasks:
        SCENARIO-VER-037 to openspec/capabilities/verification/spec.md.
     2. Create scripts/experiment_720_vr_200q_qwen.py:
        a. ExperimentTemplate(720, requires_gpu=True) + ExperimentTimeoutWatchdog.
-       b. Pre-warm: setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       b. Pre-warm: setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        c. BatchedInferenceRunner with batch_size=8, timeout=8*60s per batch.
        d. Run 200q VR evaluation, measuring signed_improvement at 50q/100q/150q/200q.
        e. honest_verdict:
@@ -406,14 +406,14 @@ tasks:
        a. ExperimentTemplate(721, requires_gpu=True) + ExperimentTimeoutWatchdog.
        b. Pre-warm Gemma4-A4B-GGUF on GPU 1.
        c. 5 conditions x 50q = 250q total, BatchedInferenceRunner (8q batches).
-          Conditions: {"threshold": [0.10, 0.20, 0.30, 0.40, "abstain"]}
+          Conditions: ("threshold": [0.10, 0.20, 0.30, 0.40, "abstain"])
           Abstain mode: apply constraint ONLY if EORM confidence > 0.90.
        d. Measure signed_improvement per condition.
        e. honest_verdict:
           - "gemma4_optimal_threshold_found" if any condition signed_improvement > 0
           - "gemma4_distortion_confirmed_all_negative" if all conditions <= 0
           - "gemma4_abstain_wins" if only abstain condition > 0
-       f. artifact: results_per_condition (list of {threshold, signed_improvement}),
+       f. artifact: results_per_condition (list of (threshold, signed_improvement)),
           optimal_threshold (float or "abstain" or null), honest_verdict.
     3. Write tests/python/test_experiment_721_vr_gemma4_graduated.py with 100% coverage:
        - test results_per_condition has 5 entries.
@@ -473,7 +473,7 @@ tasks:
           - "pool_exhaustion_not_confirmed" if condition_B_slope also > 0
           - "pool_exhaustion_ambiguous" if condition_B_slope ≈ 0 (abs < 0.0001)
        e. Gate signal: write results/psv_pool_gate.json with
-          {"gate": "pass" if pool_exhaustion_confirmed else "fail", "diagnosis": honest_verdict}.
+          ("gate": "pass" if pool_exhaustion_confirmed else "fail", "diagnosis": honest_verdict).
        f. artifact: condition_A_slope, condition_B_slope, honest_verdict.
     3. Write tests/python/test_experiment_722_psv_pool_exhaustion.py with 100% coverage:
        - test condition A and B slopes both present in artifact.
@@ -495,9 +495,9 @@ tasks:
     Today's date: {date}.
 
     GATE CHECK (MANDATORY FIRST STEP): Read results/psv_pool_gate.json.
-    If {"gate": "fail"}: write results/experiment_723_psv_pcore_v2.json with
-    {"experiment": 723, "status": "gated_blocked", "gate_source": "exp722",
-     "honest_verdict": "gated_blocked_pool_exhaustion_not_confirmed", "schema": "carnot.result.v1"}
+    If ("gate": "fail"): write results/experiment_723_psv_pcore_v2.json with
+    ("experiment": 723, "status": "gated_blocked", "gate_source": "exp722",
+     "honest_verdict": "gated_blocked_pool_exhaustion_not_confirmed", "schema": "carnot.result.v1")
     and STOP.
 
     CONTEXT (only if gate passes): Exp 722 confirmed pool exhaustion as PSV root cause.
@@ -867,7 +867,7 @@ tasks:
           appeared 3+ consecutive milestones MUST be retired in .56 pre-flight.
     4. Write results/operational_retro_2026_04_55.json following the exact schema from
        results/operational_retro_2026_04_54.json. Fields:
-       {"experiment": 728, "milestone": "2026.04.55",
+       ("experiment": 728, "milestone": "2026.04.55",
         "total_wall_time_minutes": ...,
         "wall_time_delta_minutes": ...,
         "experiments_completed": ...,
@@ -879,7 +879,7 @@ tasks:
         "verdict_fr11": ...,
         "improvement_actions_for_56": [...],
         "honest_verdict": "milestone_55_complete",
-        "schema": "carnot.retro.v1"}
+        "schema": "carnot.retro.v1")
     5. Update ops/status.md:
        a. "What's Working" section: add all experiments that succeeded.
        b. "What's Next" section: add .56 improvement actions.

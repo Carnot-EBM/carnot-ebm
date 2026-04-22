@@ -1133,3 +1133,334 @@ Time (s): cpu = 00:02:31 ; elapsed = 00:00:34 . Memory (MB): peak = 6272.871 ; g
 Phase 4 Initial Routing
 
 Phase 4.1 Initial Net Routing Pass
+Phase 4.1 Initial Net Routing Pass | Checksum: 20241108c
+
+Time (s): cpu = 00:07:16 ; elapsed = 00:01:52 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71857 ; free virtual = 354188
+Phase 4 Initial Routing | Checksum: 134d7bf7f
+
+Time (s): cpu = 00:07:19 ; elapsed = 00:01:52 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71827 ; free virtual = 354158
+
+INFO: [Route 35-449] Initial Estimated Congestion
+ ________________________________________________________________________
+|           | Global Congestion | Long Congestion   | Short Congestion  |
+|           |___________________|___________________|___________________|
+| Direction | Size   | % Tiles  | Size   | % Tiles  | Size   | % Tiles  |
+|___________|________|__________|________|__________|________|__________|
+|      NORTH|   16x16|      4.77|   32x32|      6.48|   16x16|      5.44|
+|___________|________|__________|________|__________|________|__________|
+|      SOUTH|   16x16|      2.62|   16x16|      4.75|   16x16|      3.58|
+|___________|________|__________|________|__________|________|__________|
+|       EAST|     8x8|      2.94|     8x8|      3.29|     8x8|      6.73|
+|___________|________|__________|________|__________|________|__________|
+|       WEST|   16x16|      2.96|     8x8|      2.03|   32x32|      7.14|
+|___________|________|__________|________|__________|________|__________|
+Congestion Report
+GLOBAL Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+NORTH
+	INT_X3Y60->INT_X18Y91 (CLEM_X3Y60->CLEL_R_X18Y91)
+	INT_X0Y62->INT_X15Y77 (PSS_ALTO_X0Y60->CLEL_R_X15Y77)
+	INT_X3Y64->INT_X18Y79 (CLEM_X3Y64->CLEL_R_X18Y79)
+	INT_X3Y63->INT_X18Y78 (CLEM_X3Y63->CLEL_R_X18Y78)
+	INT_X3Y62->INT_X18Y77 (CLEM_X3Y62->CLEL_R_X18Y77)
+SOUTH
+	INT_X8Y159->INT_X15Y174 (INT_X8Y159->CLEL_R_X15Y174)
+	INT_X8Y168->INT_X15Y175 (INT_X8Y168->CLEL_R_X15Y175)
+	INT_X8Y160->INT_X15Y167 (INT_X8Y160->CLEL_R_X15Y167)
+	INT_X8Y167->INT_X15Y174 (INT_X8Y167->CLEL_R_X15Y174)
+	INT_X8Y166->INT_X15Y173 (INT_X8Y166->CLEL_R_X15Y173)
+WEST
+	INT_X8Y151->INT_X15Y174 (INT_X8Y151->CLEL_R_X15Y174)
+	INT_X8Y160->INT_X15Y167 (INT_X8Y160->CLEL_R_X15Y167)
+	INT_X8Y152->INT_X15Y159 (INT_X8Y152->CLEL_R_X15Y159)
+	INT_X8Y159->INT_X15Y166 (INT_X8Y159->CLEL_R_X15Y166)
+	INT_X8Y151->INT_X15Y158 (INT_X8Y151->CLEL_R_X15Y158)
+LONG Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+NORTH
+	INT_X3Y51->INT_X18Y98 (CLEM_X3Y51->CLEL_R_X18Y98)
+	INT_X0Y64->INT_X15Y79 (PSS_ALTO_X0Y60->CLEL_R_X15Y79)
+	INT_X0Y63->INT_X15Y78 (PSS_ALTO_X0Y60->CLEL_R_X15Y78)
+	INT_X0Y62->INT_X15Y77 (PSS_ALTO_X0Y60->CLEL_R_X15Y77)
+	INT_X0Y61->INT_X15Y76 (INT_X0Y61->CLEL_R_X15Y76)
+SOUTH
+	INT_X6Y162->INT_X21Y185 (CLEM_X6Y162->CLEL_R_X21Y185)
+	INT_X8Y176->INT_X15Y183 (INT_X8Y176->CLEL_R_X15Y183)
+	INT_X8Y168->INT_X15Y175 (INT_X8Y168->CLEL_R_X15Y175)
+	INT_X8Y167->INT_X15Y174 (INT_X8Y167->CLEL_R_X15Y174)
+	INT_X8Y166->INT_X15Y173 (INT_X8Y166->CLEL_R_X15Y173)
+SHORT Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+NORTH
+	INT_X4Y57->INT_X15Y84 (CLEM_X4Y57->CLEL_R_X15Y84)
+	INT_X8Y56->INT_X15Y63 (INT_X8Y56->CLEL_R_X15Y63)
+	INT_X8Y76->INT_X15Y83 (INT_X8Y76->CLEL_R_X15Y83)
+	INT_X8Y60->INT_X15Y67 (INT_X8Y60->CLEL_R_X15Y67)
+	INT_X8Y75->INT_X15Y82 (INT_X8Y75->CLEL_R_X15Y82)
+SOUTH
+	INT_X3Y159->INT_X18Y174 (CLEM_X3Y159->CLEL_R_X18Y174)
+	INT_X3Y157->INT_X18Y172 (CLEM_X3Y157->CLEL_R_X18Y172)
+	INT_X3Y156->INT_X18Y171 (CLEM_X3Y156->CLEL_R_X18Y171)
+WEST
+	INT_X1Y150->INT_X16Y181 (CLEM_X1Y150->CLEL_R_X16Y181)
+	INT_X0Y160->INT_X15Y175 (PSS_ALTO_X0Y60->CLEL_R_X15Y175)
+	INT_X0Y159->INT_X15Y174 (PSS_ALTO_X0Y60->CLEL_R_X15Y174)
+	INT_X0Y158->INT_X15Y173 (PSS_ALTO_X0Y60->CLEL_R_X15Y173)
+	INT_X0Y157->INT_X15Y172 (PSS_ALTO_X0Y60->CLEL_R_X15Y172)
+
+INFO: [Route 35-448] Estimated Global/Short routing congestion is level 5 (32x32). Congestion levels of 5 and greater can reduce routability and impact timing closure.
+
+INFO: [Route 35-581] Estimated Timing congestion is level 5 (32x32). Congestion levels of 5 and greater may impact timing closure.
+
+Phase 5 Rip-up And Reroute
+
+Phase 5.1 Global Iteration 0
+ Number of Nodes with overlaps = 50381
+ Number of Nodes with overlaps = 10628
+ Number of Nodes with overlaps = 3490
+ Number of Nodes with overlaps = 1353
+ Number of Nodes with overlaps = 541
+ Number of Nodes with overlaps = 231
+ Number of Nodes with overlaps = 124
+ Number of Nodes with overlaps = 61
+ Number of Nodes with overlaps = 40
+ Number of Nodes with overlaps = 21
+ Number of Nodes with overlaps = 12
+ Number of Nodes with overlaps = 7
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-1.061 | TNS=-78.784| WHS=0.013  | THS=0.000  |
+
+Phase 5.1 Global Iteration 0 | Checksum: 11e6b8fd3
+
+Time (s): cpu = 00:21:47 ; elapsed = 00:07:51 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 69253 ; free virtual = 351586
+
+Phase 5.2 Global Iteration 1
+ Number of Nodes with overlaps = 48
+ Number of Nodes with overlaps = 14
+ Number of Nodes with overlaps = 14
+ Number of Nodes with overlaps = 12
+ Number of Nodes with overlaps = 5
+ Number of Nodes with overlaps = 6
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-1.049 | TNS=-75.615| WHS=N/A    | THS=N/A    |
+
+Phase 5.2 Global Iteration 1 | Checksum: 14cb12198
+
+Time (s): cpu = 00:22:42 ; elapsed = 00:08:20 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71606 ; free virtual = 353938
+
+Phase 5.3 Global Iteration 2
+ Number of Nodes with overlaps = 52
+ Number of Nodes with overlaps = 21
+ Number of Nodes with overlaps = 8
+ Number of Nodes with overlaps = 9
+ Number of Nodes with overlaps = 7
+ Number of Nodes with overlaps = 5
+ Number of Nodes with overlaps = 4
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 5
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.930 | TNS=-70.181| WHS=N/A    | THS=N/A    |
+
+Phase 5.3 Global Iteration 2 | Checksum: 14eac7537
+
+Time (s): cpu = 00:23:47 ; elapsed = 00:09:04 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71572 ; free virtual = 353905
+
+Phase 5.4 Global Iteration 3
+ Number of Nodes with overlaps = 14
+ Number of Nodes with overlaps = 3
+ Number of Nodes with overlaps = 2
+ Number of Nodes with overlaps = 1
+ Number of Nodes with overlaps = 0
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.930 | TNS=-69.921| WHS=N/A    | THS=N/A    |
+
+Phase 5.4 Global Iteration 3 | Checksum: 12e038566
+
+Time (s): cpu = 00:24:03 ; elapsed = 00:09:15 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71564 ; free virtual = 353897
+Phase 5 Rip-up And Reroute | Checksum: 12e038566
+
+Time (s): cpu = 00:24:03 ; elapsed = 00:09:15 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71559 ; free virtual = 353892
+
+Phase 6 Delay and Skew Optimization
+
+Phase 6.1 Delay CleanUp
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.930 | TNS=-69.921| WHS=0.013  | THS=0.000  |
+
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.930 | TNS=-69.921| WHS=0.013  | THS=0.000  |
+
+ Number of Nodes with overlaps = 0
+Phase 6.1 Delay CleanUp | Checksum: 143f96a00
+
+Time (s): cpu = 00:24:53 ; elapsed = 00:09:27 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 69239 ; free virtual = 351572
+
+Phase 6.2 Clock Skew Optimization
+Phase 6.2 Clock Skew Optimization | Checksum: 143f96a00
+
+Time (s): cpu = 00:24:54 ; elapsed = 00:09:28 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 69241 ; free virtual = 351574
+Phase 6 Delay and Skew Optimization | Checksum: 143f96a00
+
+Time (s): cpu = 00:24:54 ; elapsed = 00:09:28 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 69245 ; free virtual = 351578
+
+Phase 7 Post Hold Fix
+
+Phase 7.1 Hold Fix Iter
+INFO: [Route 35-416] Intermediate Timing Summary | WNS=-0.848 | TNS=-45.300| WHS=0.013  | THS=0.000  |
+
+Phase 7.1 Hold Fix Iter | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:19 ; elapsed = 00:09:33 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71606 ; free virtual = 353939
+Phase 7 Post Hold Fix | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:19 ; elapsed = 00:09:33 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71601 ; free virtual = 353934
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 20.5 %
+  Global Horizontal Routing Utilization  = 19.9683 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+
+--GLOBAL Congestion:
+Utilization threshold used for congestion level computation: 0.85
+Congestion Report
+North Dir 1x1 Area, Max Cong = 84.9765%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 86.7299%, Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+   INT_X13Y169 -> INT_X13Y169
+   INT_X10Y165 -> INT_X10Y165
+East Dir 1x1 Area, Max Cong = 82.6923%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 94.2308%, Congestion bounded by tiles (Lower Left Tile -> Upper Right Tile):
+   INT_X12Y168 -> INT_X12Y168
+   INT_X11Y167 -> INT_X11Y167
+   INT_X12Y162 -> INT_X12Y162
+   INT_X12Y101 -> INT_X12Y101
+
+------------------------------
+Reporting congestion hotspots
+------------------------------
+Direction: North
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: South
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 1
+Direction: East
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: West
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 1 Aspect Ratio: 0.5 Sparse Ratio: 0.5
+
+Phase 8 Route finalize | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:21 ; elapsed = 00:09:34 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71596 ; free virtual = 353929
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:22 ; elapsed = 00:09:34 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71604 ; free virtual = 353937
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:31 ; elapsed = 00:09:38 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71154 ; free virtual = 353487
+
+Phase 11 Resolve XTalk
+Phase 11 Resolve XTalk | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:32 ; elapsed = 00:09:39 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71098 ; free virtual = 353431
+
+Phase 12 Post Process Routing
+Phase 12 Post Process Routing | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:34 ; elapsed = 00:09:40 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71072 ; free virtual = 353405
+
+Phase 13 Post Router Timing
+INFO: [Route 35-57] Estimated Timing Summary | WNS=-0.848 | TNS=-45.300| WHS=0.013  | THS=0.000  |
+
+WARNING: [Route 35-328] Router estimated timing not met.
+Resolution: For a complete and accurate timing signoff, report_timing_summary must be run after route_design. Alternatively, route_design can be run with the -timing_summary option to enable a complete timing signoff at the end of route_design.
+Phase 13 Post Router Timing | Checksum: 18d694ff9
+
+Time (s): cpu = 00:25:35 ; elapsed = 00:09:40 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71063 ; free virtual = 353396
+Time taken to check if laguna hold fix is required (in secs): 0
+
+Phase 14 Physical Synthesis in Router
+
+Phase 14.1 Physical Synthesis Initialization
+INFO: [Physopt 32-668] Current Timing Summary | WNS=-0.776 | TNS=-37.898 | WHS=0.013 | THS=0.000 |
+Phase 14.1 Physical Synthesis Initialization | Checksum: 18d694ff9
+
+Time (s): cpu = 00:26:31 ; elapsed = 00:09:55 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 69486 ; free virtual = 351819
+WARNING: [Physopt 32-745] Physical Optimization has determined that the magnitude of the negative slack is too large and it is highly unlikely that slack will be improved. Post-Route Physical Optimization is most effective when WNS is above -0.5ns
+
+Phase 14.2 Critical Path Optimization
+INFO: [Physopt 32-668] Current Timing Summary | WNS=-0.776 | TNS=-37.898 | WHS=0.013 | THS=0.000 |
+INFO: [Physopt 32-952] Improved path group WNS = -0.718. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][2]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.694. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[0][21]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.688. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][0]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.649. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][2]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.637. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][5]_repN_1.
+INFO: [Physopt 32-952] Improved path group WNS = -0.635. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][0]_repN_1.
+INFO: [Physopt 32-952] Improved path group WNS = -0.632. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][15]_repN_1.
+INFO: [Physopt 32-952] Improved path group WNS = -0.630. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][28]_repN_1.
+INFO: [Physopt 32-952] Improved path group WNS = -0.611. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[0][21]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.608. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][22]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.606. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[0][21]_repN_5.
+INFO: [Physopt 32-952] Improved path group WNS = -0.590. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][0]_repN.
+INFO: [Physopt 32-953] Path group WNS did not improve. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[0][17]_repN_1.
+INFO: [Physopt 32-952] Improved path group WNS = -0.580. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][27].
+INFO: [Physopt 32-952] Improved path group WNS = -0.578. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][2]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.571. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[0][21]_repN_1.
+INFO: [Physopt 32-952] Improved path group WNS = -0.565. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][5]_repN.
+INFO: [Physopt 32-952] Improved path group WNS = -0.563. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][9]_repN_1.
+INFO: [Physopt 32-953] Path group WNS did not improve. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram_reg_n_0_[1][27].
+INFO: [Physopt 32-953] Path group WNS did not improve. Path group: clk_pl_0. Processed net: carnot_ising_bd_i/ising_sampler_0/inst/state_ram[0][17]_i_9_n_0.
+INFO: [Physopt 32-668] Current Timing Summary | WNS=-0.563 | TNS=-33.269 | WHS=0.013 | THS=0.000 |
+Netlist sorting complete. Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.02 . Memory (MB): peak = 7074.098 ; gain = 0.000 ; free physical = 71579 ; free virtual = 353913
+Phase 14.2 Critical Path Optimization | Checksum: 17b3f3466
+
+Time (s): cpu = 00:27:28 ; elapsed = 00:10:07 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71577 ; free virtual = 353911
+Netlist sorting complete. Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.01 . Memory (MB): peak = 7074.098 ; gain = 0.000 ; free physical = 71570 ; free virtual = 353905
+INFO: [Physopt 32-669] Post Physical Optimization Timing Summary | WNS=-0.563 | TNS=-33.269 | WHS=0.013 | THS=0.000 |
+Phase 14 Physical Synthesis in Router | Checksum: 17b3f3466
+
+Time (s): cpu = 00:27:30 ; elapsed = 00:10:08 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71566 ; free virtual = 353900
+Total Elapsed time in route_design: 608.37 secs
+
+Phase 15 Post-Route Event Processing
+Phase 15 Post-Route Event Processing | Checksum: 283e4a670
+
+Time (s): cpu = 00:27:31 ; elapsed = 00:10:09 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71615 ; free virtual = 353949
+INFO: [Route 35-16] Router Completed Successfully
+Ending Routing Task | Checksum: 283e4a670
+
+Time (s): cpu = 00:27:35 ; elapsed = 00:10:09 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71610 ; free virtual = 353944
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+221 Infos, 3 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:27:35 ; elapsed = 00:10:10 . Memory (MB): peak = 7074.098 ; gain = 884.461 ; free physical = 71585 ; free virtual = 353920
+INFO: [Vivado 12-24828] Executing command : report_drc -file carnot_ising_bd_wrapper_drc_routed.rpt -pb carnot_ising_bd_wrapper_drc_routed.pb -rpx carnot_ising_bd_wrapper_drc_routed.rpx
+Command: report_drc -file carnot_ising_bd_wrapper_drc_routed.rpt -pb carnot_ising_bd_wrapper_drc_routed.pb -rpx carnot_ising_bd_wrapper_drc_routed.rpx
+INFO: [IP_Flow 19-1839] IP Catalog is up to date.
