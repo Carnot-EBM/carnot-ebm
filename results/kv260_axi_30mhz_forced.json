@@ -1,0 +1,73 @@
+{
+  "experiment": "kv260_axi_30mhz_forced",
+  "title": "KV260 AXI test at 30 MHz forced clock — clock-mismatch hypothesis REJECTED",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T16:45:00Z",
+  "finished_at": "2026-04-22T16:50:00Z",
+  "duration_s": 300,
+  "status": "partial",
+  "schema": "carnot.kv260_axi.v1",
+  "honest_verdict": "ps_hang_persists_at_30mhz_clock_mismatch_rejected_as_root_cause",
+
+  "context": "The pl_clk0 probe (results/kv260_pl_clock_probe.json) found Kria's fclk framework snaps assigned-clock-rates=<40000000> to DIVISOR0=25 giving 60 MHz actual, mismatching the 40 MHz-synth bitstream. 50 MHz rebuild (results/kv260_bd_build_N64.json was updated; build at aac5ef79) produced a new bitstream with ~20.56 ns critical path. This experiment tested whether forcing an on-hardware clock that gives POSITIVE slack for the new bitstream eliminates the hang.",
+
+  "sequence": [
+    {"step": 1, "action": "Repackaged app bundle with 50-MHz-constraint bit.bin"},
+    {"step": 2, "action": "scp bundle to /lib/firmware/xilinx/carnot_ising_v2_n64/ on kria"},
+    {"step": 3, "action": "sudo xmutil loadapp carnot_ising_v2_n64", "result": "Loaded with slot_handle 0"},
+    {"step": 4, "action": "probe PL0_REF_CTRL", "result": "0x01011900 — DIVISOR0=25, actual 60 MHz — fclk ignored the 50 MHz overlay hint"},
+    {"step": 5, "action": "devmem write DIVISOR0=30 (for 50 MHz exact)", "result": "persisted, 0x01011E00"},
+    {"step": 6, "action": "recomputed critical path vs actual period: 20.56 ns path at 20 ns period = -0.56 ns slack (still negative)"},
+    {"step": 7, "action": "devmem write DIVISOR0=50 (for 30 MHz exact, ~12 ns positive slack)", "result": "persisted, 0x01013200"},
+    {"step": 8, "action": "verify: PL0_REF_CTRL = 0x01013200, actual clock = 30.00 MHz"},
+    {"step": 9, "action": "attempt UIO SPIN_COUNT readback with 3s SIGALRM + 5s timeout backstop", "result": "ssh connection timed out — kria unreachable"}
+  ],
+
+  "fclk_behavior_summary": "Kria's fclk framework IGNORES overlay assigned-clock-rates hints entirely. Tested at build target 40 MHz -> register shows DIVISOR0=25 (60 MHz). Tested at build target 50 MHz -> register STILL shows DIVISOR0=25 (60 MHz). The register content is identical (0x01011900) in both cases regardless of overlay request. Direct register writes via devmem DO persist when no loadapp is in flight.",
+
+  "hypotheses_state": [
+    {
+      "hypothesis": "RTL AXI-Lite protocol deadlock on split channels",
+      "status": "ELIMINATED",
+      "by": "results/kv260_axi_simulation_v2.json (Vivado xsim, all 4 scenarios pass)"
+    },
+    {
+      "hypothesis": "pl_clk0 not running at all (CLKACT=0)",
+      "status": "ELIMINATED",
+      "by": "results/kv260_pl_clock_probe.json (CLKACT=1 in every probed state)"
+    },
+    {
+      "hypothesis": "Clock-mismatch: hardware runs bitstream at higher frequency than synth target, setup timing violated, AXI flops metastable",
+      "status": "ELIMINATED (this experiment)",
+      "by": "Tested at 30 MHz forced clock — ~12 ns of positive slack for a 50-MHz-constraint bitstream. First AXI read STILL hung the PS. If setup timing were the cause, positive slack would make the flops sample cleanly. It did not."
+    },
+    {
+      "hypothesis": "SmartConnect protocol checker upstream panics on a protocol detail not reproduced in bare-DUT simulation",
+      "status": "candidate",
+      "next_test": "Extend the xsim testbench to instantiate an axi_protocol_checker between the master BFM and the DUT, or wrap the sampler in a SmartConnect exactly matching the BD"
+    },
+    {
+      "hypothesis": "Clock switch DURING active PL — devmem DIVISOR write caused a clock glitch that metastably latched proc_sys_reset, leaving the sampler permanently held in reset (explains current-session hang but not original Exp 661 hangs which did NOT have a mid-run clock write)",
+      "status": "candidate (explains this-session-only)",
+      "next_test": "After power-cycle: probe PL0_REF_CTRL BEFORE loadapp, write DIVISOR0=50 THEN loadapp, see if clock persists through load and AXI works"
+    },
+    {
+      "hypothesis": "proc_sys_reset wiring bug in build_bd.tcl — ARESETN never actually reaches the sampler, permanently holding it in reset",
+      "status": "candidate",
+      "next_test": "Use Vivado's write_debug_probes + ILA to add an observation point on the sampler's S_AXI_ARESETN pin and confirm it goes high after loadapp"
+    },
+    {
+      "hypothesis": "AXI ACLK signal is not actually connected to the sampler in the BD, even though the IP integrator reports the connection",
+      "status": "candidate",
+      "next_test": "Read the post-route netlist and grep for the s_axi_aclk net; verify it is driven by clk_pl_0 and not accidentally tied low"
+    }
+  ],
+
+  "consolation": "We eliminated three of the initial hypotheses with clean evidence. The remaining set is smaller and each remaining hypothesis has a concrete next test that doesn't risk the board.",
+
+  "operator_action_required": "Power-cycle the Kria (third time this work session). When back up, the safest next experiment is to read the BD's routed netlist in Vivado post-route to inspect the AXI clock and reset connections, rather than another on-hardware attempt.",
+
+  "artifacts_written": [
+    "results/kv260_axi_30mhz_forced.json"
+  ]
+}
