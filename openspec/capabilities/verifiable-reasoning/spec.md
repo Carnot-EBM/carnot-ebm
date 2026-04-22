@@ -14560,3 +14560,67 @@ Then:
   - training_pairs <= n_consensus_pairs (train split is a subset of consensus pairs).
 
 **Implementation Status:** Implemented (scripts/experiment_725_sc_energy_v2.py, Exp 725)
+
+## REQ-VER-033: JEPAReasonerProbe MUST Extract Hidden States at Question-End Token Before Generation
+
+JEPAReasonerProbe SHALL extract the hidden state of the last input token (question-end
+position) from Qwen3.5-0.8B layer 16 WITHOUT performing any autoregressive generation.
+This pre-generative extraction is the core insight from arXiv 2512.19171: the LLM's
+internal representation at the moment it "decides" to generate already encodes whether
+the coming generation will violate constraints.
+
+Sub-requirements:
+- REQ-VER-033-1: hidden state extraction SHALL run a forward pass on the question text only —
+  no generation step, no sampling, no beam search.
+- REQ-VER-033-2: The extracted vector SHALL come from layer index 16 (0-indexed from the
+  embedding layer), last token position.
+- REQ-VER-033-3: Output shape SHALL be (hidden_dim,) = (1024,) for Qwen3.5-0.8B.
+- REQ-VER-033-4: The extraction SHALL operate in no_grad mode to avoid unnecessary
+  computation graph overhead.
+
+**Implementation Status:** Implemented (python/carnot/samplers/jepa_reasoner_probe.py, Exp 726)
+
+### SCENARIO-VER-040: Hidden State Extraction Returns Correct Shape
+
+Given: A Qwen3.5-0.8B model is loaded and a question text is provided.
+When: JEPAReasonerProbe.extract_hidden_state(question_text) is called.
+Then:
+  - The returned vector has shape (1024,) exactly.
+  - The extraction did not trigger any token generation.
+  - The operation completed without error on both GPU (extraction) and CPU (probe).
+
+**Implementation Status:** Implemented (python/carnot/samplers/jepa_reasoner_probe.py, Exp 726)
+
+## REQ-VER-034: JEPAReasonerProbe Inference Latency MUST Be < 1ms Excluding LLM Forward Pass
+
+The 2-layer MLP probe (Linear → ReLU → Linear → sigmoid) SHALL complete a single forward
+pass in under 1ms on CPU.  This latency is measured on the probe only — the LLM hidden
+state extraction is a one-time cost per question and is excluded from this measurement.
+The sub-1ms gate is what qualifies the probe as a Tier 2.1 (latency-optimized) alternative.
+
+Sub-requirements:
+- REQ-VER-034-1: Probe architecture SHALL be: nn.Linear(1024, 256) → ReLU →
+  nn.Linear(256, 1) → sigmoid. No additional layers or attention mechanisms.
+- REQ-VER-034-2: Latency measurement SHALL use p99 over 1000 CPU forward passes on a
+  (1, 1024) float32 tensor to capture worst-case JIT overhead.
+- REQ-VER-034-3: honest_verdict SHALL be "probe_tier21_candidate" only when BOTH
+  ood_auc >= 0.75 AND latency_p99_ms < 1.0.
+- REQ-VER-034-4: If ood_auc >= 0.75 but latency_p99_ms >= 1.0, honest_verdict SHALL be
+  "probe_auc_pass_latency_fail".
+- REQ-VER-034-5: If ood_auc < 0.75, honest_verdict SHALL be "probe_below_threshold"
+  regardless of latency.
+
+**Implementation Status:** Implemented (python/carnot/samplers/jepa_reasoner_probe.py, Exp 726)
+
+### SCENARIO-VER-041: Probe Latency Gate Produces Correct Tier 2.1 Verdict
+
+Given: A trained JEPAReasonerProbe with known OOD AUC and CPU latency.
+When: Exp 726 evaluates the probe against the Tier 2.1 gate.
+Then:
+  - honest_verdict == "probe_tier21_candidate" iff ood_auc >= 0.75 AND latency_p99_ms < 1.0.
+  - honest_verdict == "probe_auc_pass_latency_fail" iff ood_auc >= 0.75 AND latency_p99_ms >= 1.0.
+  - honest_verdict == "probe_below_threshold" iff ood_auc < 0.75.
+  - When honest_verdict == "probe_tier21_candidate", a Tier 2.1 proposal file is written to
+    openspec/change-proposals/tier21-jepa-reasoner-probe.md.
+
+**Implementation Status:** Implemented (scripts/experiment_726_jepa_reasoner_probe.py, Exp 726)
