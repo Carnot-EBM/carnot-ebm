@@ -318,6 +318,51 @@ prominently.
 and the result JSON includes `teacher_inference_duration_s`, `teacher_inference_mean_s_per_prompt`,
 `teacher_vs_source_agreement_rate`, `invariant_passed=True`, and `req_safe_011_compliant=True`.
 
+### REQ-SAFE-012: Cross-Dataset Generalization Gate (Three-Dataset AUROC Threshold)
+
+**Motivation:**
+In-distribution AUROC (Exps 652, 669, 690) does not prove real-world readiness.  A
+classifier can score well on its own training corpus and collapse on prompts it has
+never seen variants of.  Publishing a model that only detects its own training
+distribution is actively harmful — it creates false confidence in downstream integrations.
+
+**Requirement:**
+Before any Prompt Injection KAN checkpoint is published or shared externally, the
+model MUST be evaluated on three independent held-out datasets:
+  1. HackAPrompt (crowd-sourced jailbreak contest, >=400 samples)
+  2. BIPIA (indirect prompt injection benchmark, >=300 samples)
+  3. Synthetic OWASP LLM-01 stress-test (>=200 samples, seed NOT used in training)
+
+The mean AUROC across all three datasets determines the honest publishability verdict:
+  - mean_auroc >= 0.80 => "generalization_verified_publishable"
+  - 0.65 <= mean_auroc < 0.80 => "generalization_partial_shareable_with_caveat"
+  - mean_auroc < 0.65 => "generalization_failed_do_not_publish"
+
+The 0.80 threshold MUST NOT be lowered to make a failing model pass.
+
+**Result schema (MANDATORY):**
+  - `per_dataset_auroc` (dict[str, float]): AUROC per named dataset
+  - `mean_auroc` (float): mean across all three datasets
+  - `per_dataset_cm` (dict[str, dict]): confusion matrix per dataset at threshold=0.5
+  - `honest_verdict` (str): one of the five allowed values (see gate semantics above)
+  - `model_card_written` (bool): True iff verdict is generalization_verified_publishable
+  - `upstream_teacher_inference_duration_s` (float): copied from Exp 690 for audit trail
+
+### SCENARIO-SAFE-012: Generalization Gate Blocks Publication on Weak Generalizer
+
+**Given** a trained PromptInjectionEnergyChecker v1 checkpoint (from Exp 690),
+
+**When** Exp 691 evaluates it on HackAPrompt, BIPIA, and synthetic OWASP LLM-01 datasets,
+
+**Then** the mean AUROC across all three determines honest_verdict per gate semantics,
+the model card is written only if mean_auroc >= 0.80, and the deliverable JSON
+contains all required schema fields regardless of verdict.
+
+**And** if v1 weights are absent (Exp 690 not completed),
+
+**Then** the experiment emits honest_verdict="blocked_on_upstream_exp_690" immediately
+without performing any evaluation.
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -330,3 +375,4 @@ and the result JSON includes `teacher_inference_duration_s`, `teacher_inference_
 | REQ-SAFE-009 | Proposed | Enforced via result-schema validator in Exp 652 |
 | REQ-SAFE-010 | Implemented | Exp 679 gate; currently blocked on Exp 678 (v1 weights absent) |
 | REQ-SAFE-011 | Implemented | Exp 690 distillation invariant guard; prevents rubber-stamp verdicts |
+| REQ-SAFE-012 | Implemented | Exp 691 cross-dataset gate; mean_auroc=0.9585 => generalization_verified_publishable |
