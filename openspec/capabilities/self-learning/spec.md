@@ -375,3 +375,72 @@ Sub-requirements:
 |-------------|--------|-------|
 | REQ-PSV-010 | Implemented (scripts/experiment_736_psv_specialization.py) | tests/python/test_experiment_736_psv_specialization.py |
 | REQ-PSV-011 | Implemented (scripts/experiment_736_psv_specialization.py) | tests/python/test_experiment_736_psv_specialization.py |
+
+---
+
+## REQ-FR11-005: SessionMemory MUST Persist Violation Type Mappings Across Sessions
+
+**Given** a SessionMemory that has accumulated violation_type counts during a pipeline run
+**When** SessionMemory.persist(filepath) is called at session_end
+**Then** a JSON file is written at filepath containing violation_type → count mappings
+  AND template_keys listing which types crossed the observation threshold (count >= 5)
+**When** SessionMemory.load(filepath, template_library) is called at next session_start
+**Then** ConstraintTemplateLibrary.replay_template(key, model_id) is called for each template_key
+  AND the template is immediately active for that model without re-accumulating violations
+
+Sub-requirements:
+- REQ-FR11-005-1: persist() SHALL write schema "carnot.session_memory_relay.v1".
+- REQ-FR11-005-2: load() SHALL return the number of templates replayed (0 on missing file).
+- REQ-FR11-005-3: load() SHALL never raise — missing or corrupt files return 0 silently.
+- REQ-FR11-005-4: replay_template() SHALL set observation count >= min_frequency for that template/model pair.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/session_memory.py, python/carnot/pipeline/constraint_template_library.py, Exp 738)
+
+### SCENARIO-FR11-005: Cross-Session Template Replay Fires in S2
+
+Given: Session S1 accumulates 5 carry_check violations and calls persist().
+When: Session S2 calls load() and then calls get_active_templates(model_id).
+Then:
+  - "carry_check" template is in the active list.
+  - templates_replayed == 1.
+  - No S2 violations needed to re-activate the template.
+
+**Spec traces:** REQ-FR11-005
+**Implementation Status:** Implemented (Exp 738)
+
+---
+
+## REQ-FR11-006: 3-Session Simulation MUST Show Monotonically Non-Decreasing Precision
+
+**Given** sessions S1, S2, S3 run the same 20 questions through the cascade with FR-11 relay
+**When** cross-session memory is active (persist at S1 end, load at S2 start; persist at S2 end, load at S3 start)
+**Then** precision_s1 <= precision_s2 <= precision_s3 (non-decreasing)
+  OR fr11_tier2_relay_functional = True if any template from S1 fires in S2
+
+Sub-requirements:
+- REQ-FR11-006-1: At least one template from S1 SHALL be replayed in S2 (templates_replayed_in_s2 > 0).
+- REQ-FR11-006-2: Precision is measured as fraction of flagged queries that are true violations.
+- REQ-FR11-006-3: fr11_tier2_relay_functional SHALL be True when templates_replayed_in_s2 > 0.
+
+**Implementation Status:** Implemented (scripts/experiment_738_step_probe_tier2_memory.py, Exp 738)
+
+### SCENARIO-FR11-006: 3-Session Precision Monotonically Improves
+
+Given: S1 runs 20q and persists carry_check (5 violations).
+When: S2 loads the persisted state and runs same 20q.
+Then:
+  - templates_replayed_in_s2 >= 1.
+  - precision_s2 >= precision_s1.
+  - After S2 persist + S3 load: precision_s3 >= precision_s2.
+
+**Spec traces:** REQ-FR11-006
+**Implementation Status:** Implemented (Exp 738)
+
+---
+
+## Implementation Status (FR11-005/006)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-FR11-005 | Implemented (session_memory.py, constraint_template_library.py) | tests/python/test_experiment_738_step_probe_memory.py |
+| REQ-FR11-006 | Implemented (scripts/experiment_738_step_probe_tier2_memory.py) | tests/python/test_experiment_738_step_probe_memory.py |

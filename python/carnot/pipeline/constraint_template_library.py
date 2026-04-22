@@ -231,6 +231,37 @@ class ConstraintTemplateLibrary:
                 active.append(template)
         return active
 
+    def replay_template(self, pattern_key: str, model_id: str) -> None:
+        """Pre-populate observation count for *pattern_key* so the template activates.
+
+        WHY this method exists (REQ-FR11-005):
+            Cross-session memory (Exp 738) replays violation patterns from a prior
+            session into a new session's library at startup.  Simply restoring the
+            raw observation count would require knowing the exact number; instead,
+            replay_template bumps the count to at least the template's min_frequency,
+            guaranteeing activation without double-counting violations that already
+            exceeded the threshold in a previous session.
+
+            If no template with pattern_key is registered, the observation count is
+            still incremented — it becomes actionable the moment a matching template
+            is registered later (e.g. via register_builtin_templates).
+
+        Parameters
+        ----------
+        pattern_key : str
+            The canonical pattern_key to activate (e.g. "carry_check").
+        model_id : str
+            The model for which the template should be activated.
+
+        Spec: REQ-FR11-005
+        """
+        template = self._templates.get(pattern_key)
+        min_freq = template.min_frequency if template is not None else 5
+        key = (pattern_key, model_id)
+        current = self._observations.get(key, 0)
+        if current < min_freq:
+            self._observations[key] = min_freq
+
     def apply_active_templates(self, response: str, model_id: str) -> list[ConstraintResult]:
         """Call template_fn for each active template and collect all returned constraints.
 

@@ -380,6 +380,100 @@ class JEPAReasonerProbe:
     # AUC evaluation
     # ------------------------------------------------------------------
 
+    # ------------------------------------------------------------------
+    # Step-level hidden-state extraction  (REQ-VER-038)
+    # ------------------------------------------------------------------
+
+    def extract_step_states(
+        self, text: str, layer: int = 16
+    ) -> list[np.ndarray]:
+        """Extract one hidden state per CoT step boundary in *text*.
+
+        WHY step-level extraction (arXiv 2511.06209):
+            Query-level probes (extract_hidden_state) read the LLM's state just
+            before generation begins.  Step-level probes instead read the state
+            AFTER each reasoning step ("." or newline separator) and max-pool
+            across all steps.  The paper demonstrates this achieves parity with
+            much larger Process Reward Models while using <10M parameters.
+
+            Splitting at ". " and "\\n" boundaries approximates step boundaries
+            in chain-of-thought text.  Each prefix up to that boundary is fed
+            through the model's forward pass and the layer-16 hidden state at
+            the last token of the prefix is extracted.
+
+        Parameters
+        ----------
+        text : str
+            The full CoT text (question + reasoning steps).
+        layer : int
+            Which transformer layer to extract from.  Default 16.
+
+        Returns
+        -------
+        list of np.ndarray
+            One array of shape (hidden_dim,) per detected CoT step segment.
+            Falls back to a single query-level extraction when no boundaries
+            are found (so the empty-text edge case is still safe).
+
+        Spec: REQ-VER-038, SCENARIO-VER-047
+        """
+        import re  # noqa: PLC0415
+
+        # Split on ". " (period + space) or newlines as step boundaries.
+        # re.split keeps a non-empty list even when the delimiters are rare.
+        parts = re.split(r'\.\s+|\n+', text)
+        # Filter truly empty segments produced by leading/trailing delimiters.
+        segments = [s.strip() for s in parts if s.strip()]
+
+        if not segments:
+            # Edge case: empty text or all-delimiter input.
+            return [self.extract_hidden_state(text or " ")]
+
+        old_layer = self.layer_index
+        self.layer_index = layer
+        states: list[np.ndarray] = []
+        # We extract from progressively longer prefixes so each state reflects
+        # the model's understanding of the text *up to and including* that step.
+        prefix = ""
+        for seg in segments:
+            prefix = (prefix + " " + seg).strip()
+            states.append(self.extract_hidden_state(prefix))
+        self.layer_index = old_layer
+        return states
+
+    @staticmethod
+    def pool_states(states: list[np.ndarray]) -> np.ndarray:
+        """Max-pool a list of per-step hidden states into a single vector.
+
+        WHY max-pooling (arXiv 2511.06209 §3.2):
+            Max-pooling preserves the most extreme activation at each dimension
+            across all steps — intuitively retaining the "hardest" signal.
+            The paper tried mean, max, and attention-weighted pooling and found
+            max-pool performed best or equivalently across all tasks while being
+            the simplest to implement and interpret.
+
+        Parameters
+        ----------
+        states : list of np.ndarray
+            Each array has shape (hidden_dim,).  Must be non-empty.
+
+        Returns
+        -------
+        np.ndarray
+            Float32 array of shape (hidden_dim,) — element-wise maximum across
+            the step dimension.
+
+        Spec: REQ-VER-038
+        """
+        if not states:
+            raise ValueError("pool_states requires at least one state tensor.")
+        matrix = np.stack(states, axis=0)  # (n_steps, hidden_dim)
+        return matrix.max(axis=0)           # (hidden_dim,)
+
+    # ------------------------------------------------------------------
+    # AUC evaluation
+    # ------------------------------------------------------------------
+
     @staticmethod
     def evaluate_auc(scores: np.ndarray, labels: np.ndarray) -> float:
         """Compute binary AUC (area under ROC curve) without sklearn.

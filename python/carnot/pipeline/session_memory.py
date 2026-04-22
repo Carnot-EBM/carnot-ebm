@@ -173,6 +173,110 @@ class SessionMemory:
                 count,
             )
 
+    def persist(self, filepath: str) -> None:
+        """Write violation_type → count and template_key mappings to a JSON file.
+
+        WHY this differs from save() (REQ-FR11-005):
+            save() serialises the full CaseMemory + ConstraintTemplateLibrary +
+            PerModelFPTracker bundle — heavy, requires live objects from the
+            pipeline.  persist() writes only the lightweight violation-type
+            summary: which constraint types fired and how many times.  This is
+            sufficient for cross-session replay: the next session only needs to
+            know WHICH templates to pre-activate, not the full observation history.
+
+            The file is created atomically (parent dirs auto-created).  If the
+            file already exists it is overwritten so each session_end produces
+            the latest snapshot.
+
+        Parameters
+        ----------
+        filepath : str
+            Destination JSON path (e.g. "data/session_memory_persistent.json").
+
+        Spec: REQ-FR11-005, SCENARIO-FR11-005
+        """
+        violations = getattr(self, "_violations_by_type", {})
+        payload: dict[str, Any] = {
+            "schema": "carnot.session_memory_relay.v1",
+            "model_id": self.model_id,
+            "saved_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "violations_by_type": [
+                {"violation_type": vtype, "count": count}
+                for vtype, count in violations.items()
+            ],
+            # template_keys = the subset that reached the threshold (count >= 5).
+            "template_keys": [
+                vtype for vtype, count in violations.items() if count >= 5
+            ],
+        }
+        out = pathlib.Path(filepath)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2))
+        _log.info("FR11 SessionMemory persisted relay state to %s", filepath)
+
+    def load_relay(
+        self,
+        filepath: str,
+        template_library: "ConstraintTemplateLibrary",
+    ) -> int:
+        """Load persisted violation mappings and replay templates into the library.
+
+        WHY cross-session replay (REQ-FR11-005 / REQ-FR11-006):
+            Violation patterns from session S1 are persisted at session_end via
+            persist().  At session S2 startup, calling load_relay() restores those
+            patterns so templates that fired in S1 are immediately active in S2 —
+            the new session starts with pre-warmed constraint knowledge instead of
+            cold bootstrap.  This is the "continuous self-learning" milestone: each
+            session builds on the last without requiring re-discovery.
+
+            This method is separate from load() (which deserialises the full
+            CaseMemory + TemplateLibrary + FPTracker bundle) because relay only
+            needs the lightweight violation-type summary.
+
+        Parameters
+        ----------
+        filepath : str
+            Path to the JSON file written by persist().
+        template_library : ConstraintTemplateLibrary
+            The library to call replay_template() on for each restored key.
+
+        Returns
+        -------
+        int
+            Number of templates successfully replayed (0 when file missing or
+            empty — never raises so startup is always safe).
+
+        Spec: REQ-FR11-005, REQ-FR11-006, SCENARIO-FR11-005
+        """
+        p = pathlib.Path(filepath)
+        try:
+            raw = p.read_text()
+        except (FileNotFoundError, OSError):
+            return 0
+        try:
+            payload = json.loads(raw)
+        except (json.JSONDecodeError, ValueError):
+            return 0
+
+        template_keys: list[str] = payload.get("template_keys", [])
+        replayed = 0
+        for key in template_keys:
+            template_library.replay_template(key, self.model_id)
+            replayed += 1
+            _log.info("FR11 cross-session replay: template %s activated for model %s", key, self.model_id)
+
+        # Restore violation counts so on_violation() accumulation is continuous.
+        for entry in payload.get("violations_by_type", []):
+            vtype = entry.get("violation_type", "")
+            count = int(entry.get("count", 0))
+            if vtype:
+                if not hasattr(self, "_violations_by_type"):
+                    self._violations_by_type = {}
+                self._violations_by_type[vtype] = max(
+                    self._violations_by_type.get(vtype, 0), count
+                )
+        return replayed
+
     def save(
         self,
         case_memory: "CaseMemory",

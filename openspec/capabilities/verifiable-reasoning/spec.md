@@ -14762,3 +14762,32 @@ Then:
 
 **Spec traces:** REQ-VER-035, REQ-VER-036, REQ-VER-037
 **Implementation Status:** Implemented (Exp 733)
+
+## REQ-VER-038: StepLevelJEPAProbe MUST Extract Hidden States at Each CoT Step Boundary
+
+**Given** a chain-of-thought text with step boundaries marked by ". " or "\n"
+**When** StepLevelJEPAProbe.extract_step_states(text) is called
+**Then** one hidden state is extracted per step segment (at last token of each prefix)
+**And** pool_states() max-pools across all step states to produce a single (hidden_dim,) vector
+**And** the probe trained on pooled features achieves AUC >= query-level baseline from Exp 732
+  OR both query-level and step-level AUC are >= 0.75
+
+Sub-requirements:
+- REQ-VER-038-1: extract_step_states SHALL split text at ". " and "\n" boundaries.
+- REQ-VER-038-2: extract_step_states SHALL return at least one hidden state even when no boundaries are found.
+- REQ-VER-038-3: pool_states SHALL return shape (hidden_dim,) via element-wise max across step dimension.
+- REQ-VER-038-4: step_auc SHALL be computed on the same OOD fold used in Exp 732.
+
+**Implementation Status:** Implemented (python/carnot/samplers/jepa_reasoner_probe.py, Exp 738)
+
+### SCENARIO-VER-047: Step Extraction Produces One Tensor Per CoT Segment
+
+Given: A 3-sentence chain-of-thought text ("Step 1. Step 2. Step 3.").
+When: extract_step_states(text) is called on a probe with a loaded model.
+Then:
+  - Exactly 3 hidden state vectors are returned (one per segment boundary).
+  - Each vector has shape (hidden_dim,) = (1024,).
+  - pool_states on the 3 vectors returns shape (1024,) with values >= max of any individual state.
+
+**Spec traces:** REQ-VER-038
+**Implementation Status:** Implemented (Exp 738)
