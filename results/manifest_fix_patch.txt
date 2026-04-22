@@ -1,0 +1,59 @@
+MANIFEST ENFORCEMENT GAP — HUMAN ACTION REQUIRED
+================================================
+
+Root cause (milestone .55 post-mortem):
+  The conductor exclusion manifest is written and read at text level (pick_next_task
+  calls _task_is_excluded) but that check only fires during the SELECTION phase.
+  After pick_next_task returns a task dict, the conductor proceeds unconditionally
+  to dispatch without re-validating against the manifest.  If the manifest is
+  updated mid-run (e.g. a new entry is added while the conductor is running), the
+  already-selected task bypasses the new exclusion.  More critically, the 787-minute
+  .55 wall-time gap came from tasks whose IDs could not be parsed by the regex
+  (_EXPERIMENT_ID_RE matches "exp<N>-..." but not bare numeric IDs or string IDs
+  like "jepa_v15_cascade"), so _task_is_excluded returned (False, "no id parsed")
+  and the task was dispatched despite being in the manifest.
+
+Fix location:
+  File: scripts/research_conductor.py
+  Lines 1853-1863 (dispatch block, just before the dry_run check)
+
+Required diff:
+--- a/scripts/research_conductor.py
++++ b/scripts/research_conductor.py
+@@ -1853,6 +1853,19 @@
+     logger.info("=" * 60)
+     logger.info("RESEARCH STEP: %s", task["title"])
+     logger.info("=" * 60)
++
++    # REQ-INFRA-046b: re-validate manifest at dequeue to catch string IDs
++    # (e.g. "jepa_v15_cascade") that _task_is_excluded's regex cannot parse,
++    # and to handle manifest updates that arrive after pick_next_task ran.
++    try:
++        from scripts.conductor_manifest_validator import validate_manifest_at_dequeue
++        task_id = task.get("id", "")
++        if not validate_manifest_at_dequeue(task_id):
++            logger.info("Manifest validator blocked task '%s' at dequeue — skipping", task["title"])
++            log_step(task["title"], "OK", f"Blocked at dequeue by manifest: task_id={task_id}")
++            return True  # Return True so the conductor loops to the next task
++    except Exception as exc:
++        logger.warning("validate_manifest_at_dequeue failed (%s) — allowing task", exc)
++
+     if dry_run:
+
+Insert point: line 1856 (after the three logger.info calls, before `if dry_run`)
+
+Why this location:
+  This is the last gate before the conductor forks an agent subprocess.  Any task
+  that reaches line 1857 will unconditionally spawn an LLM agent (unless dry_run).
+  Inserting the re-validation here closes the gap for:
+    1. String experiment IDs ("jepa_v15_cascade", "jepa_v16_cascade") that the
+       regex in _task_is_excluded cannot parse.
+    2. Manifest entries added while the conductor loop is already running.
+    3. Future IDs with non-standard formats.
+
+The fix does NOT require modifying pick_next_task or _task_is_excluded — those
+functions are unchanged.  The new validate_manifest_at_dequeue helper is a
+second, complementary check at the dispatch site only.
+
+DO NOT modify scripts/research_conductor.py autonomously — apply this patch
+manually or in a dedicated conductor-modification experiment.

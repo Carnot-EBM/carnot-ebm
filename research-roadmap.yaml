@@ -148,10 +148,10 @@ tasks:
           note "manual_label_required".
     5. Gate logic:
        a. PASS: mean_auc >= 0.75 AND std_auc < 0.15 → write
-          results/tier21_gate.json with {"gate": "pass", "mean_auc": ...,
-          "std_auc": ..., "transfer_auc": ...}
-       b. FAIL: either condition fails → write {"gate": "fail", "reason": ...,
-          "mean_auc": ..., "std_auc": ...}
+          results/tier21_gate.json with ("gate": "pass", "mean_auc": ...,
+          "std_auc": ..., "transfer_auc": ...)
+       b. FAIL: either condition fails → write ("gate": "fail", "reason": ...,
+          "mean_auc": ..., "std_auc": ...)
     6. Create scripts/experiment_732_probe_xval.py:
        a. ExperimentTemplate(732, requires_gpu=True) +
           ExperimentTimeoutWatchdog(732, timeout_minutes=90).
@@ -260,8 +260,8 @@ tasks:
           - "tier21_cascade_fn_too_high" if fn_delta >= 0.05
           - "tier21_cascade_low_skip" if skip_rate_symcode < 0.40 AND fn_delta < 0.05
        e. Gate signal: write results/tier21_cascade_gate.json with
-          {"gate": "pass"/"fail", "skip_rate_symcode": float, "fn_delta": float,
-           "probe_latency_p99_ms": float}. Exp 734 reads this.
+          ("gate": "pass"/"fail", "skip_rate_symcode": float, "fn_delta": float,
+           "probe_latency_p99_ms": float). Exp 734 reads this.
        f. artifact: skip_rate_symcode, fn_delta, probe_latency_p99_ms,
           cascade_latency_delta_ms, tier21_threshold, honest_verdict.
     7. Write tests/python/test_experiment_733_tier21_cascade.py with 100% coverage:
@@ -556,14 +556,14 @@ tasks:
        c. Compute fp_rate_slope per condition (linear regression over 20 iterations).
        d. Gate logic:
           - "pass" if condition_b_slope < condition_a_slope → domain diversity helps.
-            Write results/psv_specialization_gate.json {"gate": "pass",
-            "root_cause": "constraint_specialization", "fix": "domain_diversity"}.
+            Write results/psv_specialization_gate.json ("gate": "pass",
+            "root_cause": "constraint_specialization", "fix": "domain_diversity").
           - "pass_verifier" if condition_c_slope < condition_a_slope → verifier
-            generalization helps. Write gate {"gate": "pass",
+            generalization helps. Write gate ("gate": "pass",
             "root_cause": "constraint_specialization_verifier",
-            "fix": "domain_generic_verifier"}.
+            "fix": "domain_generic_verifier").
           - "fail" if both B and C worse than A → specialization not root cause.
-            Write gate {"gate": "fail", "root_cause": "unknown"}.
+            Write gate ("gate": "fail", "root_cause": "unknown").
        e. honest_verdict:
           - "psv_specialization_confirmed" if gate == "pass" or "pass_verifier"
           - "psv_specialization_not_root_cause" if gate == "fail"
@@ -869,7 +869,7 @@ tasks:
           mean_auc field).
     4. Part 2 — Cross-Session Memory implementation:
        a. Add SessionMemory.persist(filepath: str) -> None:
-          Write {violation_type: count, template_keys: [...]} to filepath as JSON.
+          Write (violation_type: count, template_keys: [...]) to filepath as JSON.
        b. Add SessionMemory.load(filepath: str) -> None:
           Load persisted mappings. For each template_key: call
           ConstraintTemplateLibrary.replay_template(key) to pre-populate templates.

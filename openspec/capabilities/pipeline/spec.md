@@ -110,6 +110,45 @@ Formally: fn_delta = false_negative_rate_gated - false_negative_rate_baseline < 
 
 **Spec traces:** REQ-INFRA-046
 
+### REQ-INFRA-046b: Conductor Dispatch Manifest Enforcement
+
+The conductor MUST call `validate_manifest_at_dequeue(task_id)` before dispatching
+any experiment to execution.  If the function returns False (task_id is in the exclusion
+manifest), the task MUST be silently skipped — no agent spawned, no GPU allocated.
+
+**Acceptance criteria:**
+- `validate_manifest_at_dequeue("exp308-legacy")` returns False when exp 308 is in manifest.
+- `validate_manifest_at_dequeue("exp999-new")` returns True when exp 999 is not in manifest.
+- Retired tasks are never dispatched to an agent subprocess.
+
+**Spec traces:** REQ-INFRA-046b (replaces text-level-only exclusion, closes .55 787-min gap)
+
+### REQ-INFRA-047b: GPU VRAM Clean at Milestone Start
+
+All GPU devices MUST have < 100 MB VRAM allocated at the start of each conductor
+milestone.  If any device exceeds 100 MB, the conductor MUST kill the holding process
+before dispatching the first experiment.
+
+**Acceptance criteria:**
+- `gpu1_vram_mb < 100` measured after zombie kill at milestone start.
+- Conductor pre-flight logs the before/after VRAM delta.
+
+### SCENARIO-INFRA-055b: Manifest Validator Blocks Excluded Task
+
+**Given** `conductor_exclusion_manifest.json` lists experiment_id=308
+**When** `validate_manifest_at_dequeue("exp308-legacy")` is called
+**Then** the function returns False and logs "task_id=exp308-legacy allowed=False"
+
+**Spec traces:** REQ-INFRA-046b
+
+### SCENARIO-INFRA-056b: Manifest Validator Passes Unknown Task
+
+**Given** `conductor_exclusion_manifest.json` does not list experiment_id=999
+**When** `validate_manifest_at_dequeue("exp999-new")` is called
+**Then** the function returns True and logs "task_id=exp999-new allowed=True"
+
+**Spec traces:** REQ-INFRA-046b
+
 ## Implementation Status
 
 | Requirement | Status | Notes |
@@ -119,3 +158,5 @@ Formally: fn_delta = false_negative_rate_gated - false_negative_rate_baseline < 
 | REQ-INFRA-045 | Implemented | Exp 718 latency measurement |
 | REQ-INFRA-046 | Implemented | Exp 727 — cascade_router.py |
 | REQ-INFRA-047 | Implemented | Exp 727 fn_delta measurement |
+| REQ-INFRA-046b | Implemented | Exp 731 — conductor_manifest_validator.py; patch in results/manifest_fix_patch.txt |
+| REQ-INFRA-047b | Implemented | Exp 731 — GPU 1 zombie cleared, vram_after=4 MiB |
