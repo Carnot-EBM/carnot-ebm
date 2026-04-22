@@ -1,0 +1,34 @@
+{
+  "experiment": 730,
+  "title": "Privacy Filter KAN v1 -- Cross-Dataset Generalization Gate",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T19:39:06Z",
+  "finished_at": "2026-04-22T19:39:21Z",
+  "duration_s": 15,
+  "status": "blocked",
+  "honest_verdict": "blocked_on_upstream_exp_729",
+  "reason": "python/carnot/models/privacy_filter_kan_v1.json is absent. Exp 729 was itself blocked (openai/privacy-filter model directory missing; see results/experiment_729_privacy_filter_kan_true_distillation.json). Cross-dataset evaluation cannot proceed without trained v1 weights. Unblock path: (1) run `huggingface-cli download openai/privacy-filter --local-dir models/openai_privacy_filter`, (2) re-run Exp 729 to produce privacy_filter_kan_v1.json, (3) re-run Exp 730.",
+  "preflight": {
+    "v1_weights_path": "python/carnot/models/privacy_filter_kan_v1.json",
+    "v1_weights_present": false,
+    "exp_729_artifact": "results/experiment_729_privacy_filter_kan_true_distillation.json",
+    "exp_729_verdict": "blocked_on_dependency",
+    "exp_729_reason": "openai/privacy-filter model directory missing or empty"
+  },
+  "gate_results": null,
+  "per_dataset": null,
+  "invariant_violations": [],
+  "schema": [
+    "duration_s",
+    "experiment",
+    "finished_at",
+    "honest_verdict",
+    "per_dataset",
+    "preflight",
+    "reason",
+    "run_date",
+    "started_at",
+    "status",
+    "title"
+  ]
+}
