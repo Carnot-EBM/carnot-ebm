@@ -2481,3 +2481,4 @@ python/ |
 | 2026-04-22 12:49 UTC | Exp 703: Pre-flight v6 + Slowest-5 Forced Retireme | OK | 81 passed, 3 warnings in 3.69s |
 | 2026-04-22 13:01 UTC | Exp 704: JEPA v17 Architecture — RankNet Pairwise  | OK | 81 passed, 3 warnings in 4.00s |
 | 2026-04-22 13:12 UTC | Exp 705: JEPA v17 Cascade Deploy + OOD Validation  | OK | 81 passed, 3 warnings in 3.71s |
+| 2026-04-22 13:28 UTC | Exp 706: Gemma4-E4B-it VR Diagnostic — Trace Pipel | OK | 81 passed, 3 warnings in 4.93s |
