@@ -2441,3 +2441,4 @@ python/ |
 | 2026-04-22 00:34 UTC | Exp 676: MetaJuLS Adaptive Constraint Propagation  | OK | 81 passed, 2 warnings in 5.29s |
 | 2026-04-22 00:45 UTC | Exp 677: Milestone 2026.04.51 Operational Retrospe | OK | 81 passed, 2 warnings in 5.66s |
 | 2026-04-22 01:19 UTC | Plan milestone 2026.04.52 | OK | 12 tasks proposed |
+| 2026-04-22 02:25 UTC | Exp 678: Prompt-Injection KAN v1 — True Teacher Di | FAIL | Claude Code error: Wall-clock timeout after 3603s. Last output:  |
