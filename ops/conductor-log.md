@@ -2513,3 +2513,4 @@ python/ |
 | 2026-04-22 20:30 UTC | Exp 731: GPU Zombie Kill + Pre-flight v8 + Manifes | OK | 81 passed, 3 warnings in 5.40s |
 | 2026-04-22 20:44 UTC | Exp 732: JEPAReasonerProbe 5-Fold Cross-Validation | OK | 81 passed, 3 warnings in 6.93s |
 | 2026-04-22 21:02 UTC | Exp 733: Tier 2.1 Cascade Integration (GATED on Ex | OK | 81 passed, 3 warnings in 7.50s |
+| 2026-04-22 21:14 UTC | Exp 734: FR-11 Tier 2.1 Relay — Autonomous Self-Le | FAIL | Claude Code error: Error: Reached max turns (50) |

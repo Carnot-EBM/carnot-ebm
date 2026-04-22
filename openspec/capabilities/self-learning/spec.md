@@ -221,3 +221,90 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 | Requirement  | Python | Tests |
 |-------------|--------|-------|
 | REQ-PSV-005 | Implemented | Python (test_experiment_722_psv_pool_exhaustion.py) |
+
+---
+
+## REQ-FR11-001: FR11EventBus Delivers ViolationEvents to All Subscribers Within 200ms
+
+**Given** a ViolationEvent is emitted by Tier 2.1 JEPAReasonerProbe
+**When** FR11EventBus.publish(event) is called
+**Then** all registered subscribers receive the event within 200ms wall-clock time
+**And** events_acked is incremented for each subscriber that completes without error
+
+### REQ-FR11-001 Sub-requirements
+
+- REQ-FR11-001-1: FR11EventBus.subscribe(fn) SHALL register fn as a subscriber.
+- REQ-FR11-001-2: FR11EventBus.publish(event) SHALL call all subscribers synchronously.
+- REQ-FR11-001-3: events_acked SHALL equal events_published * len(subscribers) when
+  all subscribers complete without error.
+
+---
+
+## REQ-FR11-002: PerModelFPTracker Increments constraint_weight by 0.01 Per Violation
+
+**Given** a ViolationEvent for constraint_type T is received by PerModelFPTracker.on_violation()
+**When** the update fires (not throttled)
+**Then** constraint_weight[T] is incremented by 0.01
+**And** constraint_weight[T] is capped at 2.0
+
+---
+
+## REQ-FR11-003: SessionMemory Caches Violations and Calls observe_pattern After 5
+
+**Given** ViolationEvents for constraint_type T are received by SessionMemory.on_violation()
+**When** the cumulative count for T reaches 5
+**Then** ConstraintTemplateLibrary.observe_pattern(T, model_id, count) is called
+**And** violations_by_type[T] and violations_by_domain[domain] are incremented on each event
+
+---
+
+## REQ-FR11-004: Weight Update Throttle — Max 1 Tier 1 Update Per 10 Queries
+
+**Given** ViolationEvents arrive in bursts
+**When** PerModelFPTracker.on_violation() is called
+**Then** constraint_weight is only updated when violation_call_count % 10 == 0
+**And** all other calls are skipped (logged as throttled)
+
+---
+
+## SCENARIO-FR11-001: FR11EventBus Delivers to Two Subscribers
+
+**Given** FR11EventBus has two subscribers (fp_tracker.on_violation, session_memory.on_violation)
+**When** one ViolationEvent is published
+**Then** events_published == 1 AND events_acked == 2
+
+---
+
+## SCENARIO-FR11-002: FR11EventBus Latency Under 200ms
+
+**Given** a ViolationEvent with 2 in-memory subscribers
+**When** measure_publish_latency_ms() is called
+**Then** the returned latency is < 200ms
+
+---
+
+## SCENARIO-FR11-003: SessionMemory Triggers observe_pattern at 5th Violation
+
+**Given** 4 prior violations of type "carry_check" are cached in SessionMemory
+**When** a 5th ViolationEvent of type "carry_check" arrives
+**Then** ConstraintTemplateLibrary.observe_pattern("carry_check", model_id, 5) is called
+
+---
+
+## SCENARIO-FR11-004: Weight Throttle Skips Updates 1 Through 9
+
+**Given** 10 consecutive ViolationEvents arrive
+**When** on_violation() is called 10 times
+**Then** only call #10 (count % 10 == 0) updates constraint_weight
+**And** calls #1-9 are skipped
+
+---
+
+## Implementation Status (FR-11)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-FR11-001 | Implemented (fr11_event_bus.py) | test_experiment_734_fr11_relay.py |
+| REQ-FR11-002 | Implemented (adaptive_thresholds.py) | test_experiment_734_fr11_relay.py |
+| REQ-FR11-003 | Implemented (session_memory.py) | test_experiment_734_fr11_relay.py |
+| REQ-FR11-004 | Implemented (adaptive_thresholds.py) | test_experiment_734_fr11_relay.py |

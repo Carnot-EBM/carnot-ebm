@@ -41,6 +41,7 @@ from typing import Any, Callable, Optional
 import numpy as np
 
 from carnot.samplers.jepa_reasoner_probe import JEPAReasonerProbe
+from carnot.pipeline.fr11_event_bus import FR11EventBus, ViolationEvent
 
 
 # ---------------------------------------------------------------------------
@@ -122,11 +123,16 @@ class Tier21ProbeWrapper:
         threshold: float,
         event_bus: Optional[Callable[[ViolationEventStub], None]] = None,
         violation_log: Optional[list[ViolationEventStub]] = None,
+        fr11_bus: Optional[FR11EventBus] = None,
     ) -> None:
         self._probe = probe
         self.threshold = threshold
+        self._fr11_bus = fr11_bus
 
-        # In-memory stub event bus — replaced by Exp 734's real FR11EventBus.
+        # In-memory stub event bus — kept for backward-compatibility with callers
+        # that have not yet wired fr11_bus.  Exp 734 passes fr11_bus; when present
+        # the stub path is bypassed and ViolationEvent (not ViolationEventStub) is
+        # published to the real bus.
         if violation_log is None:
             self.violation_log: list[ViolationEventStub] = []
         else:
@@ -168,12 +174,21 @@ class Tier21ProbeWrapper:
             verdict = "likely_violation"
         return probe_score, verdict
 
-    def emit_violation_stub(self, query_id: str, probe_score: float) -> None:
-        """Emit a ViolationEvent stub to the FR11EventBus (REQ-VER-037).
+    def emit_violation_stub(
+        self,
+        query_id: str,
+        probe_score: float,
+        constraint_type: str = "probe_violation",
+        question_domain: str = "unknown",
+        step_index: int = 0,
+        energy_score: float = 0.0,
+    ) -> None:
+        """Emit a ViolationEvent to the FR11EventBus (REQ-VER-037, REQ-FR11-001).
 
-        In production (after Exp 734), the real bus will route the event to subscribers.
-        Until then, this appends a ViolationEventStub to the in-memory violation_log
-        (or calls the user-supplied event_bus callable).
+        When ``fr11_bus`` was supplied at construction time, this publishes a full
+        ViolationEvent to the real FR11EventBus (Exp 734 wiring).  Otherwise it falls
+        back to the legacy stub path (in-memory list or user-supplied callable) for
+        backward-compatibility with callers that have not yet migrated.
 
         Parameters
         ----------
@@ -181,11 +196,34 @@ class Tier21ProbeWrapper:
             Identifier for the query that triggered the violation (e.g. "gsm8k_0042").
         probe_score : float
             The raw probe score that exceeded the threshold.
+        constraint_type : str
+            Coarse category of the violation (default "probe_violation").
+        question_domain : str
+            Topic area of the question (default "unknown").
+        step_index : int
+            Which reasoning step index triggered the violation.
+        energy_score : float
+            EORM confidence for context.
 
-        Spec: REQ-VER-037-1, REQ-VER-037-3
+        Spec: REQ-VER-037-1, REQ-VER-037-3, REQ-FR11-001
         """
         from datetime import datetime, timezone  # noqa: PLC0415
 
         ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
-        event = ViolationEventStub(query_id=query_id, probe_score=probe_score, timestamp_utc=ts)
-        self._event_bus(event)
+
+        if self._fr11_bus is not None:
+            # Real FR11EventBus path — full ViolationEvent with all fields.
+            real_event = ViolationEvent(
+                query_id=query_id,
+                step_index=step_index,
+                energy_score=energy_score,
+                probe_confidence=probe_score,
+                constraint_type=constraint_type,
+                question_domain=question_domain,
+                timestamp=ts,
+            )
+            self._fr11_bus.publish(real_event)
+        else:
+            # Legacy stub path — backward-compatible with pre-Exp734 callers.
+            stub = ViolationEventStub(query_id=query_id, probe_score=probe_score, timestamp_utc=ts)
+            self._event_bus(stub)

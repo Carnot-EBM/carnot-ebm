@@ -40,10 +40,14 @@ Spec: REQ-LEARN-015, REQ-LEARN-016,
 
 from __future__ import annotations
 
+import logging
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from carnot.pipeline.extract import ConstraintExtractor
+    from carnot.pipeline.fr11_event_bus import ViolationEvent
+
+_log = logging.getLogger(__name__)
 
 
 # ---------------------------------------------------------------------------
@@ -204,6 +208,55 @@ class PerModelFPTracker:
             "min_observations": self._min_observations,
             "stats": stats_list,
         }
+
+    def on_violation(self, event: "ViolationEvent") -> None:
+        """Increment constraint_weight for event.constraint_type (REQ-FR11-002).
+
+        **Why a constraint_weight dict rather than the existing fp/tp stats?**
+            The fp/tp counters track historical accuracy rates across all models.
+            The constraint_weight is a per-type scalar used at inference time to
+            amplify energy contributions from frequently-violated constraint types.
+            These are separate concerns with different update cadences.
+
+        **Throttle contract (REQ-FR11-004):**
+            Weight updates are throttled to at most 1 update per 10 queries.
+            ``_violation_call_count`` is incremented on every call.  The update
+            only fires when ``_violation_call_count % 10 == 0``.  This prevents
+            weight thrash when many violations arrive in a short burst.
+
+        **Cap contract (REQ-FR11-002):**
+            Weights are capped at 2.0 to prevent a single frequent constraint type
+            from dominating the energy signal by an unbounded factor.
+
+        Args:
+            event: ViolationEvent from FR11EventBus.
+
+        Spec: REQ-FR11-002, REQ-FR11-004
+        """
+        if not hasattr(self, "_constraint_weights"):
+            self._constraint_weights: dict[str, float] = {}
+        if not hasattr(self, "_violation_call_count"):
+            self._violation_call_count: int = 0
+
+        self._violation_call_count += 1
+        throttled = (self._violation_call_count % 10) != 0
+
+        if not throttled:
+            ctype = event.constraint_type
+            current = self._constraint_weights.get(ctype, 1.0)
+            new_weight = min(current + 0.01, 2.0)
+            self._constraint_weights[ctype] = new_weight
+            _log.debug(
+                "FR11 weight update: constraint_type=%s new_weight=%.3f throttled=False",
+                ctype,
+                new_weight,
+            )
+        else:
+            _log.debug(
+                "FR11 weight update skipped: constraint_type=%s throttled=True call=%d",
+                event.constraint_type,
+                self._violation_call_count,
+            )
 
     @classmethod
     def from_dict(cls, payload: dict[str, Any]) -> PerModelFPTracker:
