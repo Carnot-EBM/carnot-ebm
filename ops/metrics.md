@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-04-22 Milestone 2026.04.52 Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-04-22T01:02:23Z | 2026-04-22T01:19:20Z | Planned milestone 2026.04.52 "VR Win Scale-Up + DualGPU Proof + JEPA Calibration": read 11 project files + 12 Exp .51 result JSONs. Spawned arxiv research subagent (5 papers found: FoVer arXiv 2505.15960 → Exp 686; HalluSAE arXiv 2604.16430 → Exp 687; PSV arXiv 2512.18160 → Exp 688; Eidoku arXiv 2512.20664 → Filed .53; I-CALM arXiv 2604.03904 → Filed .53). Appended "2026-04-22 arxiv Scan (Milestone 2026.04.52 Planning)" to research-references.md. Identified 3 biggest gaps: (1) VR signed_improvement=0.64 unvalidated at scale (200q), on code tasks, and against adversarial prompts; (2) DualGPU throughput_ratio=1.963 proved parallel execution but pynvml not installed so GPU1 utilization_pct=0.0 — RETRO-071 still open; (3) JEPA v15 OOD AUC=1.0 but ECE=null (calibration unverified) + FR-11 real positives relay still unimplemented. Overwrote openspec/change-proposals/research-roadmap-vNEXT.md (12 experiments 678-689, 5 phases, architecture diagram, dependency graph, success criteria table, 6 open RETROs table, hardware requirements table, new papers table). Created research-roadmap-next.yaml (12 experiments 678-689 with complete conductor prompts; all end with JAX_PLATFORMS=cpu pytest and "Do NOT push. Do NOT modify scripts/research_conductor.py."). | ~120k |
+
+---
+
 ## Session: 2026-04-21 Milestone 2026.04.50 Planning
 
 ### Turn Log
