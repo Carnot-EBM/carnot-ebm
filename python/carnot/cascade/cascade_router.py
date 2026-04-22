@@ -4,6 +4,7 @@
     Implements the multi-tier cascade routing logic that decides which verification
     tiers a given LLM output must pass through.  The tiers are ordered cheapest-first:
 
+        Tier 0b (KAN prompt-injection pre-filter)  →  safety pipeline if injection
         Tier 0h (EORM)  →  Tier 1 (fast energy gate)  →  Tier 2 (JEPA ranking)
                         →  Tier 2.1 (JEPAReasonerProbe — early exit gate)
                         →  Tier 2.5 (SymCodeVerifier)
@@ -13,6 +14,15 @@
     arXiv 2505.11730 ("Variable Granularity Search") is that cheap-tier confidence
     correlates strongly with final verdict — when the cheap tier is very confident,
     running expensive tiers rarely changes the outcome.
+
+**Tier 0b KAN prompt-injection pre-filter (REQ-SAFE-016):**
+    Before any verification tier runs, the KAN Tier 0b classifier scores the query
+    for injection patterns.  If the score exceeds 0.5, the query is routed
+    immediately to the safety pipeline and no other tier executes.  This prevents
+    expensive verifiers from processing adversarial inputs.
+
+    The KANTier0bClassifier is optional (``tier0b_classifier`` kwarg): when not
+    supplied, the router behaves exactly as before (backwards compatible).
 
 **EORM confidence gate (REQ-INFRA-046):**
     EORM (Tier 0h) outputs a scalar confidence in [0, 1].  Values near 1.0 mean the
@@ -39,11 +49,14 @@
     - ``eorm_confidence``: float — the EORM confidence score that drove the decision.
     - ``metadata["tier21_skip"]``: bool — True iff Tier 2.5+ was skipped by the probe gate.
     - ``metadata["probe_score"]``: float — the raw Tier 2.1 probe score (always populated).
+    - ``metadata["tier0b_score"]``: float — Tier 0b KAN injection score (when wired).
+    - ``metadata["tier0b_verdict"]``: str — "injection_detected" or "benign" (when wired).
     These fields are included in every result so that downstream tooling (Exp 727, 733,
-    ops dashboards) can compute skip rates and fn_delta without re-running inference.
+    735, ops dashboards) can compute skip rates and fn_delta without re-running inference.
 
 Spec: REQ-INFRA-046, REQ-INFRA-047, REQ-VER-035, REQ-VER-036, REQ-VER-037,
-      SCENARIO-INFRA-055, SCENARIO-INFRA-056, SCENARIO-VER-044, SCENARIO-VER-045
+      REQ-SAFE-016, SCENARIO-INFRA-055, SCENARIO-INFRA-056, SCENARIO-VER-044,
+      SCENARIO-VER-045, SCENARIO-SAFE-016, SCENARIO-SAFE-017
 """
 
 from __future__ import annotations
@@ -54,6 +67,7 @@ from typing import TYPE_CHECKING, Any, Callable, Optional
 if TYPE_CHECKING:
     import numpy as np
 
+    from carnot.cascade.tier0b_kan import KANTier0bClassifier
     from carnot.cascade.tier21_probe import Tier21ProbeWrapper
 
 
@@ -92,6 +106,9 @@ class RouteResult:
         - ``tier21_skip`` (bool): True iff Tier 2.5+ was skipped by the probe gate.
         - ``probe_score`` (float): the raw Tier 2.1 probe score (always populated when
           a Tier21ProbeWrapper is wired into the router).
+        Key fields added by Tier 0b KAN filter (REQ-SAFE-016):
+        - ``tier0b_score`` (float): KAN injection probability in [0, 1].
+        - ``tier0b_verdict`` (str): "injection_detected" or "benign".
     """
 
     verified: bool
@@ -143,8 +160,13 @@ class CascadeRouter:
     hidden_state_fn : callable | None
         Function ``(query: str) -> np.ndarray`` that extracts the hidden state vector
         for the Tier 2.1 probe.  Required when tier21_probe is not None.
+    tier0b_classifier : KANTier0bClassifier | None
+        Optional Tier 0b KAN injection pre-filter.  When supplied, it is called FIRST
+        before any other tier.  Queries with score > 0.5 are immediately routed to the
+        safety pipeline (verdict="safety_violation") without running EORM or Ising.
+        When None (default), the pre-filter is bypassed and behaviour is unchanged.
 
-    Spec: REQ-INFRA-046, REQ-VER-035, REQ-VER-036, REQ-VER-037
+    Spec: REQ-INFRA-046, REQ-VER-035, REQ-VER-036, REQ-VER-037, REQ-SAFE-016
     """
 
     def __init__(
@@ -154,12 +176,14 @@ class CascadeRouter:
         eorm_ising_skip_threshold: float = 0.92,
         tier21_probe: Optional["Tier21ProbeWrapper"] = None,
         hidden_state_fn: Optional[Callable[[str], "np.ndarray"]] = None,
+        tier0b_classifier: Optional["KANTier0bClassifier"] = None,
     ) -> None:
         self.eorm_fn = eorm_fn
         self.ising_fn = ising_fn
         self.eorm_ising_skip_threshold = eorm_ising_skip_threshold
         self.tier21_probe = tier21_probe
         self.hidden_state_fn = hidden_state_fn
+        self.tier0b_classifier = tier0b_classifier
 
         if tier21_probe is not None and hidden_state_fn is None:
             raise ValueError(
@@ -171,6 +195,9 @@ class CascadeRouter:
         """Route one query through the cascade and return a RouteResult.
 
         Routing logic:
+        0. If Tier 0b KAN classifier is wired: call classify(query).
+           If verdict == "injection_detected": return immediately with
+           verdict="safety_violation" (REQ-SAFE-016).  No further tiers run.
         1. Call EORM to get a confidence score.
         2. If confidence > eorm_ising_skip_threshold: skip Ising → "verified_fast".
         3. If Tier 2.1 probe is wired:
@@ -197,6 +224,33 @@ class CascadeRouter:
         Spec: REQ-INFRA-046, REQ-VER-035, REQ-VER-036, REQ-VER-037,
               SCENARIO-INFRA-055, SCENARIO-INFRA-056, SCENARIO-VER-044, SCENARIO-VER-045
         """
+        # --- Tier 0b KAN prompt-injection pre-filter (REQ-SAFE-016) ---
+        # Runs FIRST before any other tier.  If a query is flagged as an injection
+        # attempt (score > 0.5), we skip the entire verification cascade and route
+        # to the safety pipeline immediately.  This protects expensive tiers from
+        # adversarial inputs and prevents attackers from probing verifier behaviour.
+        if self.tier0b_classifier is not None:
+            tier0b_score, tier0b_verdict = self.tier0b_classifier.classify(query)
+            if tier0b_verdict == "injection_detected":
+                return RouteResult(
+                    verified=False,
+                    verdict="safety_violation",
+                    eorm_confidence=0.0,
+                    ising_skip=True,
+                    ising_result=None,
+                    metadata={
+                        "tier0b_score": tier0b_score,
+                        "tier0b_verdict": tier0b_verdict,
+                    },
+                )
+            # Benign: log the Tier 0b metadata and fall through to the normal cascade.
+            tier0b_meta: dict[str, Any] = {
+                "tier0b_score": tier0b_score,
+                "tier0b_verdict": tier0b_verdict,
+            }
+        else:
+            tier0b_meta = {}
+
         eorm_confidence = float(self.eorm_fn(query))
 
         if eorm_confidence > self.eorm_ising_skip_threshold:
@@ -209,6 +263,7 @@ class CascadeRouter:
                 eorm_confidence=eorm_confidence,
                 ising_skip=True,
                 ising_result=None,
+                metadata=tier0b_meta,
             )
 
         # --- Tier 2.1 probe gate (REQ-VER-035, REQ-VER-036) ---
@@ -229,6 +284,7 @@ class CascadeRouter:
                     metadata={
                         "tier21_skip": True,
                         "probe_score": probe_score,
+                        **tier0b_meta,
                     },
                 )
             else:
@@ -248,6 +304,7 @@ class CascadeRouter:
                     metadata={
                         "tier21_skip": False,
                         "probe_score": probe_score,
+                        **tier0b_meta,
                     },
                 )
 
@@ -260,4 +317,5 @@ class CascadeRouter:
             eorm_confidence=eorm_confidence,
             ising_skip=False,
             ising_result=ising_result,
+            metadata=tier0b_meta,
         )
