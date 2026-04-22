@@ -2518,3 +2518,4 @@ python/ |
 | 2026-04-22 21:39 UTC | Exp 735: KAN Distill v3 Tier 0b Integration — Prom | OK | 81 passed, 3 warnings in 5.08s |
 | 2026-04-22 21:58 UTC | Exp 736: PSV Constraint Specialization Diagnosis ( | OK | 81 passed, 3 warnings in 5.00s |
 | 2026-04-22 22:07 UTC | Exp 737: PSV Domain-Diverse Recovery (GATED on Exp | OK | 81 passed, 3 warnings in 4.63s |
+| 2026-04-22 22:22 UTC | Exp 738: Step-Level Latent Probe + Tier 2 Cross-Se | OK | 97 passed, 3 warnings in 7.02s |
