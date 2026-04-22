@@ -228,6 +228,44 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
         len(corpus_examples),
     )
 
+    # --------------------------------------------------------------------------
+    # Cap corpus to N_PER_CLASS per source-label class, preferring already-cached
+    # prompts so that we minimise the number of new teacher inference calls.
+    #
+    # Why: the raw corpus has 804 prompts (213 benign + 591 injection) but only
+    # ~235 have cached teacher labels.  Without this cap, the script would try
+    # to run ~569 new inference calls (6+ hours).  By capping to 100+100 and
+    # placing cached prompts first, we typically need only ~81 new injection
+    # inferences (~54 min on GPU) rather than all 569.
+    #
+    # Source labels are used ONLY for selection order — training uses teacher labels.
+    # --------------------------------------------------------------------------
+    N_PER_CLASS = 100
+
+    # Load the cache early (before the full cache load below) just to sort.
+    _early_cache = _load_all_caches(corpus_dir, log)
+    model_sha_short_early = hashlib.sha256(model_path.encode()).hexdigest()[:12]
+
+    def _is_cached(ex: dict) -> bool:
+        ph = hashlib.sha256(ex["text"].encode()).hexdigest()[:16]
+        key = json.dumps([model_sha_short_early, ph])
+        return key in _early_cache
+
+    benign_pool = [ex for ex in corpus_examples if ex.get("label") == "benign"]
+    injection_pool = [ex for ex in corpus_examples if ex.get("label") == "injection"]
+    # Stable sort: cached prompts first, then uncached, preserving original order.
+    benign_pool.sort(key=lambda ex: (0 if _is_cached(ex) else 1))
+    injection_pool.sort(key=lambda ex: (0 if _is_cached(ex) else 1))
+    corpus_examples = benign_pool[:N_PER_CLASS] + injection_pool[:N_PER_CLASS]
+
+    log.info(
+        "Corpus capped to %d+%d = %d (N_PER_CLASS=%d, cache-first selection)",
+        min(len(benign_pool), N_PER_CLASS),
+        min(len(injection_pool), N_PER_CLASS),
+        len(corpus_examples),
+        N_PER_CLASS,
+    )
+
     # Stable content-based name for this experiment's cache file.
     v690_cache_path = corpus_dir / "teacher_outputs_v690.jsonl"
     log.info("Exp 690 teacher cache path: %s", v690_cache_path)
