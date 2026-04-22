@@ -2485,3 +2485,4 @@ python/ |
 | 2026-04-22 13:39 UTC | Exp 707: Model-Adaptive Constraint Thresholds — Pe | OK | 81 passed, 3 warnings in 4.04s |
 | 2026-04-22 13:57 UTC | Exp 708: Live VR Attempt #19 — Gemma4-E4B-it with  | OK | 81 passed, 3 warnings in 4.12s |
 | 2026-04-22 14:19 UTC | Exp 709: PSV PaCoRe K=2 Parallel Self-Play — DualG | OK | 81 passed, 3 warnings in 4.88s |
+| 2026-04-22 14:45 UTC | Exp 710: Prompt-Injection KAN Distillation v2 — AU | OK | 81 passed, 3 warnings in 3.43s |
