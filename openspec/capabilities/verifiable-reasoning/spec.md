@@ -14524,3 +14524,39 @@ Then:
   - batch_log is non-empty, proving BatchedInferenceRunner was invoked.
 
 **Implementation Status:** Implemented (scripts/experiment_721_vr_gemma4_graduated.py, Exp 721)
+
+## REQ-VER-032: SC-Energy Tier 2.9 MUST Be Trained on FoVer v2 Dual Labels
+
+SC-Energy (SetConsistencyVerifier, Tier 2.9) SHALL be retrained on the FoVer v2 corpus
+(results/fover_v2_combined.json) using strict dual-label consensus to improve OOD generalisation.
+
+Sub-requirements:
+- REQ-VER-032-1: Each training pair SHALL have BOTH a z3_label (mathematical constraint) AND a
+  pddl_label (planning/state-transition constraint) derived from the FoVer v2 labeler field.
+- REQ-VER-032-2: Strict consensus label = 1 iff z3_label == 1 AND pddl_label == 1. Any pair
+  failing either constraint is excluded from training.
+- REQ-VER-032-3: The dataset SHALL be split at the question level (80% train, 20% OOD eval)
+  to prevent step-level leakage between train and eval partitions.
+- REQ-VER-032-4: honest_verdict SHALL be one of:
+    - "sc_energy_v2_improvement" when ood_auc >= 0.75 AND ood_auc > v1_baseline_auc
+    - "sc_energy_v2_no_gain" when ood_auc <= v1_baseline_auc
+    - "sc_energy_v2_below_threshold" when ood_auc < 0.75 but > v1_baseline_auc
+- REQ-VER-032-5: The artifact MUST contain: ood_auc, v1_baseline_auc, auc_delta, training_pairs,
+  honest_verdict, n_total_fover_v2_pairs, n_consensus_pairs, n_rejected_pairs.
+
+**Milestone:** 2026.04.55+
+
+### SCENARIO-VER-039: FoVer v2 Dual-Label Consensus Improves OOD AUC Over v1 Baseline
+
+Given: SC-Energy v1 trained on 200 z3 pairs (AUROC 0.5, Exp 711).
+When: Exp 725 retrains on FoVer v2 (1400 pairs, strict z3+pddl consensus) and evaluates on
+  the held-out 20% question split.
+Then:
+  - ood_auc is a float in [0, 1].
+  - v1_baseline_auc matches the sc_energy_auc from Exp 711 artifact.
+  - auc_delta == ood_auc - v1_baseline_auc (within floating-point tolerance).
+  - honest_verdict is one of the four canonical strings from REQ-VER-032-4.
+  - n_consensus_pairs + n_rejected_pairs == n_total_fover_v2_pairs.
+  - training_pairs <= n_consensus_pairs (train split is a subset of consensus pairs).
+
+**Implementation Status:** Implemented (scripts/experiment_725_sc_energy_v2.py, Exp 725)
