@@ -2436,3 +2436,4 @@ python/ |
 | 2026-04-21 23:38 UTC | Exp 671: JEPA v15 Live Retrain — Real Violations f | OK | 81 passed, 2 warnings in 5.10s |
 | 2026-04-21 23:48 UTC | Exp 672: KV260 DFX Manager Protocol Fix — Diagnose | OK | 81 passed, 2 warnings in 5.43s |
 | 2026-04-21 23:59 UTC | Exp 673: DualGPU Proof v3 — Confirmed Parallel For | OK | 81 passed, 2 warnings in 5.37s |
+| 2026-04-22 00:11 UTC | Exp 674: IAS Adaptive Gate Calibration — Quantile  | OK | 81 passed, 2 warnings in 5.10s |
