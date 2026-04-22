@@ -497,3 +497,174 @@ class PromptInjectionEnergyChecker:
         checker.edge_ctrl = np.array(data["edge_ctrl"], dtype=np.float32)
         checker.output_ctrl = np.array(data["output_ctrl"], dtype=np.float32)
         return checker
+
+
+class PromptInjectionEnergyCheckerV2(PromptInjectionEnergyChecker):
+    """Prompt injection KAN v2 with 8 knots per spline and L2 weight_decay=1e-4.
+
+    **Why 8 knots instead of 10 (v1):**
+    On a 2000-example corpus the v1 10-knot splines overfit the training set —
+    they learn idiosyncratic corpus noise instead of the teacher's generalizable
+    boundary.  8 knots reduce capacity slightly, trading peak train-set expressiveness
+    for better generalization to the teacher's classification signal.
+
+    **Why weight_decay=1e-4 instead of 1e-3 (v1):**
+    The v1 penalty of 1e-3 was sized for a 200-example corpus where L2 reg was the
+    main guard against overfitting.  With 2000 examples, the data volume provides
+    implicit regularization; a 10× weaker L2 penalty lets the optimizer fit the
+    teacher signal without being suppressed by the penalty term.
+
+    **Default n_epochs=100 (vs 50 in v1):**
+    The larger corpus needs more passes to reach a stable energy landscape.
+
+    Spec: REQ-SAFE-013, REQ-SAFE-014
+    """
+
+    _N_KNOTS: int = 8
+    _WEIGHT_DECAY: float = 1e-4
+
+    def train(
+        self,
+        examples: list[InjectionExample],
+        n_epochs: int = 100,
+        lr: float = 1e-3,
+    ) -> list[float]:
+        """Train with 8-knot splines and weight_decay=1e-4.
+
+        Same contrastive loss as v1 except the regularisation coefficient is
+        self._WEIGHT_DECAY (1e-4) instead of the hardcoded 1e-3.
+
+        Args:
+            examples: Labeled InjectionExamples (mix of benign and injection).
+            n_epochs: Number of gradient steps (default 100, vs 50 in v1).
+            lr:       Initial Adam learning rate.
+
+        Returns:
+            List of loss values per epoch.
+
+        Spec: REQ-SAFE-013, REQ-SAFE-014
+        """
+        inj_feats = [
+            encode_prompt_injection(ex.text, self.n_features)
+            for ex in examples if ex.label == "injection"
+        ]
+        ben_feats = [
+            encode_prompt_injection(ex.text, self.n_features)
+            for ex in examples if ex.label == "benign"
+        ]
+
+        if not inj_feats or not ben_feats:
+            return []
+
+        inj_arr = jnp.stack(inj_feats)
+        ben_arr = jnp.stack(ben_feats)
+
+        ec = jnp.array(self.edge_ctrl)
+        oc = jnp.array(self.output_ctrl)
+        params = (ec, oc)
+
+        weight_decay = self._WEIGHT_DECAY
+
+        def loss_fn(p: tuple) -> jnp.ndarray:
+            ec_p, oc_p = p
+
+            def single_energy(f: jnp.ndarray) -> jnp.ndarray:
+                return _injection_energy(
+                    f, ec_p, oc_p,
+                    self._N_KNOTS, self._DEGREE,
+                    self.n_features, self.n_hidden,
+                )
+
+            e_ben = jax.vmap(single_energy)(ben_arr)
+            e_inj = jax.vmap(single_energy)(inj_arr)
+
+            contrastive = jnp.mean(e_ben) - jnp.mean(e_inj)
+            reg = weight_decay * (jnp.sum(ec_p ** 2) + jnp.sum(oc_p ** 2))
+            return contrastive + reg
+
+        # Mini-batch training: compile the loss function once for a fixed batch
+        # size (BATCH_SIZE) rather than the full corpus.  This avoids the XLA
+        # compilation explosion that occurs when jit sees a 2000-row vmap —
+        # on CPU, compiling a single 2000-example step takes gigabytes of RAM
+        # and hours of compilation time.  With BATCH_SIZE=64, compilation is
+        # instantaneous and each epoch iterates over batches in Python.
+        BATCH_SIZE: int = 64
+
+        # Pre-convert to numpy for fast slicing during batch construction.
+        inj_np = np.array([np.array(f) for f in inj_feats], dtype=np.float32)
+        ben_np = np.array([np.array(f) for f in ben_feats], dtype=np.float32)
+
+        n_inj = inj_np.shape[0]
+        n_ben = ben_np.shape[0]
+        half = BATCH_SIZE // 2
+
+        # Compile once with a fixed-size batch (BATCH_SIZE).
+        _dummy_inj = jnp.zeros((min(half, n_inj), self.n_features))
+        _dummy_ben = jnp.zeros((min(half, n_ben), self.n_features))
+
+        def batch_loss(p: tuple, inj_b: jnp.ndarray, ben_b: jnp.ndarray) -> jnp.ndarray:
+            ec_p, oc_p = p
+
+            def single_energy(f: jnp.ndarray) -> jnp.ndarray:
+                return _injection_energy(
+                    f, ec_p, oc_p,
+                    self._N_KNOTS, self._DEGREE,
+                    self.n_features, self.n_hidden,
+                )
+
+            e_ben = jax.vmap(single_energy)(ben_b)
+            e_inj = jax.vmap(single_energy)(inj_b)
+
+            contrastive = jnp.mean(e_ben) - jnp.mean(e_inj)
+            reg = weight_decay * (jnp.sum(ec_p ** 2) + jnp.sum(oc_p ** 2))
+            return contrastive + reg
+
+        grad_fn = jax.jit(jax.value_and_grad(batch_loss))
+        # Warm up compilation with dummy arrays of the target shape.
+        grad_fn(params, _dummy_inj, _dummy_ben)
+
+        schedule = optax.cosine_decay_schedule(init_value=lr, decay_steps=n_epochs)
+        optimizer = optax.adam(schedule)
+        opt_state = optimizer.init(params)
+
+        rng = np.random.default_rng(710)
+        loss_curve: list[float] = []
+        for _ in range(n_epochs):
+            # Sample a random mini-batch: half from each class.
+            inj_idx = rng.integers(0, n_inj, size=min(half, n_inj))
+            ben_idx = rng.integers(0, n_ben, size=min(half, n_ben))
+            inj_b = jnp.array(inj_np[inj_idx])
+            ben_b = jnp.array(ben_np[ben_idx])
+            loss_val, grads = grad_fn(params, inj_b, ben_b)
+            updates, opt_state = optimizer.update(grads, opt_state)
+            params = optax.apply_updates(params, updates)
+            loss_curve.append(float(loss_val))
+
+        self.edge_ctrl = np.array(params[0])
+        self.output_ctrl = np.array(params[1])
+        return loss_curve
+
+    def save(self, path: str | Path) -> None:
+        """Save v2 control points to JSON.
+
+        Writes schema="carnot.prompt_injection_kan.v2" to distinguish from v1
+        checkpoints.  All other fields are identical to the parent's save().
+
+        Args:
+            path: Destination path (should end with .json).
+
+        Spec: REQ-SAFE-013
+        """
+        data = {
+            "schema": "carnot.prompt_injection_kan.v2",
+            "n_features": self.n_features,
+            "n_hidden": self.n_hidden,
+            "n_knots": self._N_KNOTS,
+            "degree": self._DEGREE,
+            "edge_ctrl": self.edge_ctrl.tolist(),
+            "output_ctrl": self.output_ctrl.tolist(),
+        }
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as fh:
+            json.dump(data, fh, indent=2)
