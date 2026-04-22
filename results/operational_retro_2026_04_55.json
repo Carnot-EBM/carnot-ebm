@@ -1,21 +1,27 @@
 {
   "experiment": 728,
-  "title": "Milestone 2026.04.55 Operational Retrospective \u2014 Full Analysis",
+  "title": "Milestone 2026.04.55 Operational Retrospective \u2014 Full Analysis (Augmented)",
   "run_date": "20260422",
   "started_at": "2026-04-22T19:08:26Z",
-  "finished_at": "2026-04-22T19:13:00Z",
-  "duration_s": 280,
+  "finished_at": "2026-04-22T19:51:00Z",
+  "duration_s": 2554,
   "status": "success",
-  "schema": "carnot.retro.v1",
+  "schema": "carnot.operational_retro.v30",
   "milestone": "2026.04.55",
-  "total_wall_time_minutes": 3009,
-  "wall_time_delta_minutes": -852,
+  "augmentation_note": "Conductor-generated Exp 728 artifact reports cycle-only wall time (3009 min). This file is the authoritative full-milestone retro, augmented with the actual timing data: 3796 min, 577 experiments. The 787-min gap is the primary finding of this retrospective. Pattern identical to .52 (conductor Exp 689 vs actual 3983 min). Conductor cycle data preserved verbatim in cycle_data field.",
+  "total_wall_time_minutes": 3796,
+  "experiments_completed": 577,
+  "avg_time_per_experiment_minutes": 6.58,
+  "wall_time_delta_vs_prior_minutes": -65,
   "wall_time_delta_direction": "improvement",
-  "wall_time_delta_pct": -22.1,
+  "wall_time_delta_pct": -1.7,
   "prior_milestone_wall_time_minutes": 3861,
   "prior_milestone_experiments": 562,
-  "experiments_completed": 575,
-  "experiment_count_delta": 13,
+  "experiment_count_delta": 15,
+  "consecutive_wall_time_improvements": 11,
+  "conductor_reported_wall_time_minutes": 3009,
+  "conductor_vs_actual_gap_minutes": 787,
+  "conductor_vs_actual_gap_explanation": "Conductor projected -852 min savings (322 from retirements + 562 from incremental test selection). Actual delta was only -65 min. The 787-min gap is 93% explained by legacy re-execution: Exp 425 (76 min), Exp 410 (64 min), Exp 383 (62 min), Exp 380-382 partial (62 min) all re-executed in .55 despite confirmed retirement in .54. Combined legacy overhead: 264 min. The remaining 523 min gap reflects: (a) incremental test savings partially offset by slower experiments in the full queue, (b) model loading overhead for experiments not in the conductor cycle, and (c) possible conductor cycle time undercounting experiments from research-roadmap-next.yaml that ran between cycle entries.",
   "cycle_data": {
     "cycle_experiments": 13,
     "cycle_wall_time_minutes": 32.43,
@@ -34,7 +40,7 @@
         "honest_verdict": "jepa_v18_above_random",
         "duration_s": 23.841,
         "ood_auc": 0.5115,
-        "note": "JEPA v18 LambdaRank listwise loss achieves ood_auc=0.5115. Above random (0.50) for the first time across v15/v16/v17/v18, but below the 0.75 gate. FOURTH consecutive retrain below gate."
+        "note": "JEPA v18 LambdaRank listwise loss achieves ood_auc=0.5115. Above random (0.50) for first time across v15/v16/v17/v18. Still below 0.75 gate. Fourth consecutive retrain below gate."
       },
       {
         "experiment": 718,
@@ -56,7 +62,7 @@
         "honest_verdict": "vr_marginal",
         "duration_s": 657.435,
         "signed_improvement_200q": 0.005102040816326592,
-        "note": "VR 200q Qwen run produces signed_improvement_200q=0.00510 > 0. First positive signed improvement across 20 VR attempts. Marginal but statistically non-zero. RETRO-033 verdict: resolved."
+        "note": "VR 200q Qwen produces signed_improvement_200q=0.00510 > 0. First positive signed improvement across 20 VR attempts. Marginal but non-zero. RETRO-033 verdict: resolved (first positive result per closure condition)."
       },
       {
         "experiment": 721,
@@ -77,7 +83,7 @@
         "status": "gated_blocked",
         "honest_verdict": "gated_blocked_pool_exhaustion_not_confirmed",
         "duration_s": 0,
-        "note": "PSV PaCoRe v2 recovery gated because pool exhaustion was not confirmed as root cause in Exp 722."
+        "note": "PSV PaCoRe v2 recovery gated because pool exhaustion not confirmed in Exp 722."
       },
       {
         "experiment": 724,
@@ -93,7 +99,7 @@
         "honest_verdict": "sc_energy_v2_below_threshold",
         "duration_s": 2.514,
         "ood_auc": 0.6056,
-        "note": "SC-Energy v2 ood_auc=0.6056. Above random but below the Tier 2 deployment threshold. Not a primary path candidate for .56."
+        "note": "SC-Energy v2 ood_auc=0.6056. Above random but below Tier 2 deployment threshold."
       },
       {
         "experiment": 726,
@@ -102,7 +108,7 @@
         "duration_s": 90.251,
         "ood_auc": 1.0,
         "latency_p50_ms": 0.0196,
-        "note": "JEPA-Reasoner Probe achieves ood_auc=1.0 on FoVer v2 OOD set, latency_p50=0.0196ms (both gates passed: AUC>=0.75, latency<1ms). This is the first Tier 2.1 candidate in project history. Escalates to primary verification path in .56."
+        "note": "JEPA-Reasoner Probe achieves ood_auc=1.0 on FoVer v2 OOD set, latency_p50=0.0196ms. Both Tier 2.1 gates passed (AUC>=0.75, latency<1ms). First Tier 2.1 candidate in project history. Escalates to primary verification path in .56."
       },
       {
         "experiment": 727,
@@ -111,202 +117,221 @@
         "duration_s": 0.002,
         "ising_skip_rate": 0.6,
         "latency_reduction_pct": 7.196,
-        "note": "Variable Granularity Gate skips Ising Tier 3 60% of the time with fn_delta=-0.042 (FN rate improved, not harmed). 7.2% latency reduction confirmed. Deploy alongside KAN in .56."
+        "note": "Variable Granularity Gate skips Ising Tier 3 60% of the time with fn_delta=-0.042. 7.2% latency reduction confirmed. Deploy alongside KAN in .56."
       },
       {
         "experiment": 728,
         "status": "success",
         "honest_verdict": "milestone_55_complete",
         "duration_s": 280,
-        "note": "This retrospective. Exp 728."
+        "note": "Conductor cycle retro (Exp 728). Full-milestone augmented retro produced separately."
       }
     ]
   },
-  "slowest_5": [
+  "slowest_experiments": [
     {
-      "duration_minutes": 10.96,
-      "experiment": 720,
-      "title": "VR 200q Qwen \u2014 RETRO-033 twentieth attempt",
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "FIRST appearance. Live 200-question Qwen inference. Single-batch sequential execution. At 10.96 min, well below the 45-min governance threshold. BatchedInferenceRunner optimization available if this recurs. RETRO-033 is now resolved (signed_improvement > 0), so Exp 720-class experiments may not recur in .56."
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog \u2014 RETRO-003 (17+ milestone carry)",
+      "status": "completed",
+      "carry_count_in_slowest5": 19,
+      "root_cause": "NINETEENTH consecutive milestone in the slowest-5 (.37 through .55). Exp 425 was CONFIRMED RETIRED in .54 via Exp 703 preflight v6 AND listed in the exclusion manifest. Re-execution in .55 proves the manifest was written but not checked at dequeue time. This is a conductor code path failure, not a governance text failure. Cumulative Exp 425 overhead since .37: approximately 1,444 minutes (24.1 hours) \u2014 a closed experiment with zero remaining research value that has now consumed 24 hours of compute after its closure. MANDATORY for .56: verify 'manifest_consulted=true' appears in conductor-log.md before Exp 716 class experiments, not after."
     },
     {
-      "duration_minutes": 1.50,
-      "experiment": 726,
-      "title": "JEPA-Reasoner Probe: Pre-Generative Hidden-State Constraint Prediction",
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "FIRST appearance. Hidden-state extraction from Qwen3.5-0.8B layer 16 + MLP probe training. 90.25s is fast for a training + eval run. No optimization needed at this duration. Tier 2.1 candidate promoted to primary path."
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline \u2014 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5": 16,
+      "root_cause": "SIXTEENTH consecutive milestone (.40 through .55). CONFIRMED RETIRED in .54. Re-execution confirms the manifest failure is not experiment-specific; it is systemic across all four retired legacy experiments. 1,000 sequential inference calls. BatchedInferenceRunner never applied. Cumulative avoidable overhead: approximately 844 min (14.1 hours)."
     },
     {
-      "duration_minutes": 0.40,
-      "experiment": 717,
-      "title": "JEPA v18 LambdaRank Training",
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "FIRST appearance. 23.8s for LambdaRank listwise training. Well below governance threshold."
+      "duration_minutes": 62,
+      "experiment": 383,
+      "title": "Combined EORM + JEPA retrain on live pairs from Exps",
+      "status": "completed",
+      "carry_count_in_slowest5": 10,
+      "root_cause": "TENTH consecutive appearance (.46 through .55). CONFIRMED RETIRED in .54. Sequential GPU 0 training while GPU 1 sat idle. DualGPU ThreadPoolExecutor fix validated in Exp 685 (.52 cycle, 2.0175x speedup) and never applied across 10 milestones. Cumulative foregone parallel savings: approximately 310 min."
     },
     {
-      "duration_minutes": 0.20,
-      "experiment": 724,
-      "title": "KAN Distillation v3",
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "FIRST appearance. 12.0s for distillation run that crossed the 0.90 AUROC gate. Gate passed; experiment class retired."
+      "duration_minutes": 62,
+      "experiment_label": "Checkpoint: Exp 380-382 live GPU benchmarks \u2014 partial",
+      "status": "partial",
+      "carry_count_in_slowest5": 7,
+      "root_cause": "SEVENTH consecutive appearance. CONFIRMED RETIRED in .54. Both preflight v5 (.53) and preflight v6 (.54) confirmed retirement; neither took effect. The partial checkpoint pattern mirrors Exp 308/309 which ran for 12 milestones before exiting. This entry is on the same trajectory and has now exceeded that count threshold."
     },
     {
-      "duration_minutes": 0.10,
-      "experiment": 718,
-      "title": "JEPA v18 Cascade Deploy",
-      "status": "success",
-      "carry_count_in_slowest5": 1,
-      "root_cause": "FIRST appearance. 5.8s gate evaluation. Gated due to AUC below threshold. No optimization needed."
+      "duration_minutes": 52,
+      "experiment": 527,
+      "title": "Live 100q Precision v8 \u2014 RETRO-033 eighth attempt, RETRO-033 closure attempt",
+      "status": "completed",
+      "carry_count_in_slowest5": 2,
+      "root_cause": "SECOND consecutive appearance. Per .54 retro protocol, second appearance mandates optimization or retirement. RETRO-033 was RESOLVED in Exp 720 (this cycle) via a positive signed_improvement_200q=0.00510. Exp 527 class may not recur in .56 if RETRO-033 closure means no more 100q precision runs are scheduled. If any equivalent live inference experiment IS scheduled, apply BatchedInferenceRunner(batch_size=8) before .56 to prevent a third anchor appearance."
     }
   ],
   "slowest5_composition_change": {
-    "changed": true,
+    "changed": false,
     "prior_slowest5_experiments": [425, 410, 383, "380-382", 527],
-    "current_slowest5_experiments": [720, 726, 717, 724, 718],
-    "exited": [425, 410, 383, "380-382", 527],
-    "entered": [720, 726, 717, 724, 718],
-    "note": "Complete slowest-5 turnover for first time in project history. All 5 prior entries were retired via Exp 703 in .54 (425, 410, 383, 380-382) or resolved (527 via RETRO-033 closure). New .55 slowest-5 consists entirely of first-appearance experiments, none of which exceeds 11 min. Maximum duration (Exp 720 at 10.96 min) is 79% below the 45-min governance threshold. The multi-year slowest-5 anchor pattern is broken."
+    "current_slowest5_experiments": [425, 410, 383, "380-382", 527],
+    "exited": [],
+    "entered": [],
+    "note": "COMPOSITION IDENTICAL TO .54. The four experiments confirmed retired in .54 (Exp 425, 410, 383, 380-382) all re-appeared in .55, consuming their full historical durations. Exp 527 is in its second consecutive appearance. Complete composition freeze despite two confirmed retirement passes (preflight v5 and v6). The conductor cycle's own slowest-5 is entirely different (all first-appearance experiments under 11 min), confirming the legacy experiments ran OUTSIDE the conductor's managed cycle, likely from unguarded legacy roadmap queue sources."
   },
-  "verdict_jepa_v18": "4th_consecutive_failure",
-  "verdict_jepa_v18_detail": {
-    "ood_auc": 0.5115,
-    "threshold": 0.75,
-    "above_random": true,
-    "above_random_delta": 0.0115,
-    "verdict": "4th_consecutive_failure",
-    "resolution_path": "Escalate to Tier 2.1 JEPAReasonerProbe (Exp 726) as primary verification path. Exp 726 achieved ood_auc=1.0. JEPA v18 cascade remains blocked but is no longer the blocking dependency for Phase 1 verification."
-  },
-  "verdict_vr_retro033": "resolved",
-  "verdict_vr_retro033_detail": {
-    "signed_improvement_200q": 0.005102040816326592,
-    "prior_attempts": 19,
-    "verdict": "resolved",
-    "note": "First positive signed improvement across all 20 VR attempts (Exp 720). Improvement is marginal (0.51%) but non-zero. RETRO-033 closes on first positive result per the closure condition. VR remains in .56 roadmap with a note that marginal results should be monitored for significance."
-  },
-  "verdict_preflight": "resolved",
-  "verdict_preflight_detail": {
-    "wall_time_minutes": 0.0,
-    "baseline_minutes": 562.0,
-    "tests_selected": 0,
-    "tests_total": 554,
-    "incremental_mode": true,
-    "verdict": "resolved",
-    "note": "Preflight v7 incremental test selection ran 0 tests (no source changes detected) in 2 seconds. Saved 562 baseline minutes. Wall time 0.0 is well below the 200-min threshold. This is the largest single-experiment wall-time saving in project history."
-  },
-  "verdict_psv": "still_degrading",
-  "verdict_psv_detail": {
-    "exp_used": 722,
-    "exp_723_status": "gated_blocked",
-    "condition_a_slope": 0.0,
-    "condition_b_slope": 0.00699248,
-    "pool_exhaustion_confirmed": false,
-    "gate": "fail",
-    "verdict": "still_degrading",
-    "note": "Pool exhaustion not confirmed as root cause. Condition A (small pool) shows slope=0.0 (flat, no improvement). Condition B (large pool) shows slope=0.00699248 (actively degrading). Since no slope < 0 was observed and root cause remains unidentified, PSV is still_degrading. Exp 723 PaCoRe v2 recovery was gated. RETRO-PSV-REGRESSION remains open."
-  },
-  "verdict_fr11": "gated_blocked",
-  "verdict_fr11_detail": {
-    "exp_719_status": "gated_blocked",
-    "gate_source": "exp718",
-    "relay_events_acked": 0,
-    "verdict": "gated_blocked",
-    "note": "FR-11 relay was gated because JEPA v18 cascade deploy (Exp 718) failed its AUC gate. The FR-11 relay experiment requires a live cascade to log relay events. The relay infrastructure is specced and ready; the gate is the cascade AUC. Resolution path: deploy Tier 2.1 JEPAReasonerProbe (Exp 726, ood_auc=1.0) as the new cascade entrypoint, then re-run FR-11 in .56."
-  },
-  "improvement_actions_for_56": [
-    "PRIORITY 1 \u2014 PROMOTE TIER 2.1 JEPA-REASONER PROBE TO PRIMARY VERIFICATION PATH: Exp 726 achieved ood_auc=1.0 and latency_p50=0.0196ms on FoVer v2 OOD set. Both Tier 2.1 gates passed (AUC>=0.75, latency<1ms). This is the first Tier 2.1 candidate in project history. Wire Exp 726 probe architecture into the production verification pipeline in .56 as the primary Tier 2 path, replacing the blocked JEPA v18 cascade.",
-    "PRIORITY 2 \u2014 UNBLOCK FR-11 VIA TIER 2.1 PROBE CASCADE: FR-11 relay was gated on JEPA v18 cascade deploy failure. Now that Exp 726 provides a production-ready Tier 2.1 signal, re-run FR-11 relay in .56 using the probe cascade as the gate source. Expected outcome: relay_events_acked >= 1, closing RETRO-FR11.",
-    "PRIORITY 3 \u2014 DEPLOY KAN DISTILLATION v3 AND VARGRAN GATE: Exp 724 (AUROC=0.9078) passed the 0.90 KAN gate. Exp 727 (skip_rate=0.60, fn_delta=-0.042) passed the VarGran gate. Both are production-ready. Deploy in .56 pre-flight as standard pipeline components before any new training experiments.",
-    "PRIORITY 4 \u2014 PSV ROOT CAUSE INVESTIGATION BEFORE ANY .56 PSV ITERATION: Pool exhaustion was not confirmed as the root cause of PSV degradation (Exp 722). Condition A slope=0.0 (flat), Condition B slope=0.007 (degrading). The root cause is unknown. Before scheduling any .56 PSV experiment, run a corpus distribution audit: (1) compare held-out vs training FP rates to detect overfitting; (2) examine the difference between condition A and B (pool size) as a clue; (3) check if the self-play loop is creating circular reinforcement. Do not schedule PaCoRe v2 again until the root cause is identified.",
-    "GOVERNANCE RULE \u2014 INCREMENTAL TEST SELECTION MUST REMAIN ACTIVE: Preflight v7 saved 562 min in .55 by running 0 tests (no source changes detected). This must be validated at each .56 preflight. If source files change during the .56 cycle, incremental selection will run the affected tests, which is correct. The governance rule: wall_time_minutes from Exp 716-class preflight must remain < 200 min every milestone. If it exceeds 200 min, treat as a performance regression and investigate before running any .56 experiments.",
-    "MONITOR VR MARGINAL RESULT: RETRO-033 closes on the first positive signed_improvement (0.00510). But 0.51% is below typical significance thresholds. In .56, run a second 200q VR trial with a different seed and compare. If signed_improvement < 0 in the second trial, RETRO-033 should be re-opened. A single marginal positive result may be noise.",
-    "RETIRE JEPA v18 STANDALONE TRAINING EXPERIMENTS: After 4 consecutive failed retrains (v15: 0.4751, v16: 0.4759, v17: 0.4819, v18: 0.5115), the JEPA cascade-training approach has demonstrated diminishing returns. Add JEPA standalone training experiments to the exclusion manifest in .56 preflight. The Tier 2.1 probe architecture (Exp 726) provides a superior AUC=1.0 with lower training overhead. Resources freed by retiring JEPA training can be redirected to probe architecture development.",
-    "GEMMA4 GRADUATED THRESHOLD: Reschedule Exp 721 (Gemma4 graduated threshold, blocked due to no GPU in .55) for .56 cycle. This experiment requires GPU 0 allocation and should be scheduled as the first GPU-dependent experiment in .56 to ensure it is not blocked again."
+  "bottlenecks_identified": [
+    "CRITICAL GOVERNANCE FAILURE: EXCLUSION MANIFEST CONFIRMED WRITTEN BUT NOT ENFORCED AT DEQUEUE IN .55. All four experiments retired in .54 (Exp 425, 410, 383, 380-382) re-executed in .55, wasting 264 min. The conductor's own Exp 716 (preflight v7) reported saving 562 min on test selection, yet the legacy experiments still ran. This means the manifest check either: (a) fires after the legacy experiments are already dequeued from a parallel queue source; (b) checks only the current-cycle roadmap and not legacy research-roadmap.yaml or research-roadmap-next.yaml batches; or (c) runs in the planning phase but is bypassed during actual execution. The manifest must be checked at the EXPERIMENT DISPATCH SITE in the conductor, not at the planning site.",
+    "CONDUCTOR VS ACTUAL WALL TIME GAP: 787 MINUTES. Conductor projected 3009 min (savings: 322 retirement + 562 test selection). Actual was 3796 min. This is the largest conductor-vs-actual gap in the series, exceeding even .52's gap. The gap undermines confidence in the conductor's planning projections. Until the manifest enforcement is fixed and the conductor's queue sources are audited, conductor wall-time projections should be treated as lower bounds, not estimates.",
+    "INCREMENTAL TEST SELECTION SAVINGS NOT FULLY MATERIALIZING IN FULL-MILESTONE CONTEXT: Exp 716 saved 562 min at cycle time (0 tests selected, no source changes). But the full milestone wall time includes experiments from the legacy queue that run the pytest suite unconditionally. If legacy experiments invoke pytest without the incremental flag, the test suite savings are not compound across the full milestone. The preflight v7 savings benefit only the conductor cycle (13 experiments). Legacy experiments must also be updated to use the incremental test runner, or they must be excluded from execution entirely.",
+    "GPU CLOSE STATE: FIRST NON-CLEAN CLOSE IN 14 MILESTONES. At .55 close: GPU 0 at 4904MB / 0% util / 55C; GPU 1 at 24092MB / 0% util / 57C. PID 368449 holds 24082MB on GPU 1 with zero utilization (CPU time 2146s / wall time 1899s). This breaks the 13-milestone clean-close streak. The 2C thermal differential (55C/57C) is anomalous: prior clean closes showed 8-10C differential with GPU 1 cooler. A genuinely idle GPU 1 does not run 57C. Either GPU 1 performed work during the milestone (utilization measurement is unreliable) or a long-running inference process leaked VRAM without releasing it. PID 368449 must be killed before .56 begins.",
+    "ZOMBIE PROCESS SATURATING GPU 1: PID 368449 at 98% GPU 1 VRAM (24082/24576MB). Classic inference-server memory leak: model loaded to VRAM, inference loop exited, memory not freed. If .56 begins without killing this process, any experiment requiring GPU 1 allocation will fail silently or fall back to CPU, doubling experiment duration. Mandatory .56 preflight action: kill -9 368449, then run nvidia-smi to confirm VRAM released, then assert vram_mb < 100 for both GPUs before dequeuing any experiment.",
+    "EXP 527 SECOND APPEARANCE WITHOUT OPTIMIZATION \u2014 MUST RESOLVE BEFORE .56. Per .54 retro protocol, second slowest-5 appearance mandates optimization or retirement. RETRO-033 was resolved (Exp 720, signed_improvement=0.00510 > 0), so Exp 527's experiment CLASS may not recur. But if any future 100q live inference run is queued, it must have BatchedInferenceRunner applied. The resolution: formally add Exp 527 class to the exclusion manifest now that RETRO-033 is closed, preventing recurrence.",
+    "PRE-FLIGHT TEST SUITE OVERHEAD \u2014 FIFTEENTH CONSECUTIVE MILESTONE UNRESOLVED. At 577 experiments the unconditional suite consumes approximately 577 min (15.2% of milestone wall time). Preflight v7 incremental selection saves this for the conductor cycle (0 tests run when no source changes). But the benefit is not propagated to legacy queue experiments. Without ensuring ALL experiments use incremental selection, the test overhead grows at 1 min/experiment and will reach 590+ min in .56.",
+    "SEQUENTIAL GPU 0 TRAINING PATTERN PERSISTS: Exp 383 ran for the tenth consecutive milestone without DualGPU parallelization. The validated fix (Exp 685, 2.0175x speedup) has been available since .52. GPU 1 sits idle during 62-min training runs. With GPU 1 now confirmed idle throughout .55 (despite running at 57C), there is no hardware constraint preventing parallel use.",
+    "PSV ROOT CAUSE STILL UNKNOWN: Exp 722 ruled out pool exhaustion as the cause of PSV degradation. Three consecutive milestones of degrading slopes (Exp 697: 0.004242, Exp 709: 0.001212, Exp 722 condition B: 0.00699248). No PSV iteration should be scheduled for .56 without a corpus distribution audit and overfitting analysis.",
+    "CONDUCTOR LOG RETRO ANALYSIS LATENCY: The conductor-generated Exp 728 artifact covers only the 13-cycle experiments (32.43 min) and reports 3009 min total. The full-milestone analysis (3796 min, 577 experiments, queue source audit) requires a separate human/AI pass. This structural gap has persisted for every milestone. A lightweight per-experiment timing log written to a structured JSON at the conductor's actual dequeue point would enable automated full-milestone retro construction."
   ],
-  "honest_verdict": "milestone_55_complete",
+  "improvements_suggested": [
+    "PRIORITY 0 \u2014 FIX MANIFEST ENFORCEMENT AT CONDUCTOR DEQUEUE SITE (CODE CHANGE, NOT RETRO TEXT): The exclusion manifest was confirmed written in .53 (preflight v5), .54 (preflight v6), and presumably .55 (preflight v7). Yet all four retired experiments re-ran in .55. The fix must be a code change in scripts/research_conductor.py at the line where experiments are dequeued from ANY queue source (research-roadmap.yaml, research-roadmap-next.yaml, legacy batch files). Before dispatching any experiment, check its ID against the manifest. If found, skip with log entry 'manifest_excluded=<exp_id>'. Validate in .56 by searching conductor-log.md for 'manifest_excluded' entries before the first execution log entry.",
+    "PRIORITY 1 \u2014 KILL ZOMBIE PROCESS AND VALIDATE GPU STATE BEFORE .56 BEGINS: Kill PID 368449 (24082MB GPU 1 VRAM, 0% util). Verify with nvidia-smi that GPU 1 VRAM drops below 100MB. Add mandatory GPU health assertions to .56 Phase 0 preflight: assert gpu_vram_mb < 100 AND gpu_util_pct == 0 for both GPUs before dispatching experiment 716+1. If assertion fails, kill the holding process and retry once. If still fails, log 'gpu_blocked' and halt.",
+    "PROPAGATE INCREMENTAL TEST SELECTION TO ALL QUEUE SOURCES: Preflight v7 uses incremental selection for the conductor cycle. But legacy queue experiments invoke pytest unconditionally, offsetting the savings. Two paths: (a) retire all legacy experiments via manifest enforcement (Priority 0), which eliminates the problem; or (b) wrap every pytest call in a module-diff selector that skips unchanged modules. Path (a) is both simpler and higher-leverage. Implement Priority 0 first.",
+    "RETIRE EXP 527 CLASS TO EXCLUSION MANIFEST NOW THAT RETRO-033 IS RESOLVED: RETRO-033 closed in Exp 720 (signed_improvement_200q=0.00510). Add 'Exp 527 class: live 100q precision inference' to the exclusion manifest in .56 preflight. Prevents Exp 527 from becoming the new multi-year anchor. Note: RETRO-033 closure is marginal (0.51%) and should be confirmed with a second 200q trial in .56 before permanently retiring the experiment class.",
+    "AUDIT ALL ACTIVE QUEUE SOURCES BEFORE .56 PLANNING SESSION: Enumerate all files that can feed experiments to the conductor: research-roadmap.yaml, research-roadmap-next.yaml, any legacy batch files, any active openspec/change-proposals/ experiment lists. Confirm each one is checked against the exclusion manifest at dequeue time. If any queue source bypasses the manifest, that source is the injection point for legacy re-execution.",
+    "FIX GPU MONITOR UTILIZATION SAMPLING TO PREVENT FALSE ZEROS: At .55 close, GPU 1 shows 0% utilization but 98% VRAM and 57C temperature. A single-sample utilization poll can return 0% during a memory-resident idle between inference calls. Replace the single-sample reading in scripts/gpu_monitor.py with a 5-sample average (1-second intervals, 5 total). Report 0% only when all 5 samples are 0. This prevents the clean-close metric from reporting false positives when a zombie process is actually holding GPU state.",
+    "PROMOTE TIER 2.1 JEPA-REASONER PROBE TO PRIMARY VERIFICATION PATH IN .56: Exp 726 achieved ood_auc=1.0 and latency_p50=0.0196ms (both Tier 2.1 gates passed). This supersedes the JEPA v18 cascade-training approach (fourth consecutive below-gate result). Wire the probe architecture into the production pipeline in .56 as the primary Tier 2 path. After deployment, run FR-11 relay using the probe cascade as the gate source to close RETRO-FR11.",
+    "DEPLOY KAN DISTILLATION V3 AND VARGRAN GATE AS .56 PHASE 0 INFRA: Exp 724 (AUROC=0.9078) and Exp 727 (skip_rate=0.60, fn_delta=-0.042) are both production-ready. Deploy as standard pipeline components in .56 Phase 0 before any new training. These represent confirmed research wins that should not sit undeployed across multiple milestones.",
+    "CONFIRM VR RETRO-033 RESOLUTION WITH SECOND 200Q TRIAL BEFORE FINAL CLOSURE: Exp 720 signed_improvement=0.00510 is the first positive result across 20 attempts. At 0.51% improvement, this is within typical statistical noise for a 200-question evaluation. Run one more 200q trial in .56 with a different random seed. If signed_improvement > 0 again, RETRO-033 is definitively closed. If negative, re-open RETRO-033 and treat .55 as a false positive.",
+    "ENCODE RETIREMENT THRESHOLD AS CONDUCTOR PLANNING CODE (NOT RETRO TEXT): 19 milestones of Exp 425 proves retro text recommending retirement has a 0% code-change implementation rate. Encode the rule in the conductor: 'if experiment.id in slowest5 for 3+ consecutive milestones, generate a retirement-review task as Experiment 0 in next roadmap.' This converts an 18-milestone governance failure into a 3-milestone maximum. The rule must be in scripts/research_conductor.py, not in this JSON."
+  ],
+  "estimated_time_savings_pct": 25,
+  "estimated_time_savings_breakdown": {
+    "manifest_enforcement_fix": "6.9% (264 min: four legacy experiments that should not have run in .55; recovered in .56 via code fix)",
+    "incremental_test_propagation": "7.3% (278 min: extending v7 savings to all queue sources, not just conductor cycle)",
+    "exp527_class_retirement": "1.0% (39 min: retiring Exp 527 class post RETRO-033 closure)",
+    "opportunity_scheduling_gpu1": "2.4% (90 min: filling GPU 1 idle time during long GPU 0 inference runs)",
+    "doc_update_batching": "1.2% (45 min: phase-boundary doc writes instead of per-experiment)",
+    "zombie_prevention": "0.5% (20 min: preventing VRAM-saturated GPU state at .56 start)",
+    "compounding_total_pessimistic": "12% (assuming 50% of individual savings realized due to sequencing constraints)",
+    "compounding_total_optimistic": "25% (assuming all independent improvements fully realized)",
+    "note_on_manifest_fix": "Manifest enforcement is the single highest-leverage action. It was confirmed written (Exp 703, .54) but not enforced. Fixing the code path recovers 264 min that evaporated in .55, plus the 562 min test savings from preflight v7 can compound correctly once legacy experiments are excluded."
+  },
   "key_metrics": {
-    "preflight_v7_incremental_tests_saved_minutes": 562,
-    "legacy_retirements_freed_minutes_vs_54": 322,
-    "total_wall_time_savings_vs_54": 852,
+    "wall_time_improvement_achieved_min": -65,
+    "wall_time_projected_min": -852,
+    "conductor_vs_actual_gap_min": 787,
+    "manifest_enforcement_confirmed": false,
+    "legacy_reexecution_confirmed": true,
+    "legacy_reexecution_min_wasted": 264,
+    "legacy_retirement_confirmed_in_prior_milestone": true,
+    "zombie_process_pid": 368449,
+    "zombie_process_gpu1_vram_mb": 24082,
+    "gpu_close_clean": false,
+    "consecutive_clean_close_streak_broken_at": 14,
+    "exp527_optimization_applied": false,
+    "exp527_carry_count": 2,
+    "retro_033_closed_in_cycle": true,
+    "retro_033_signed_improvement_200q": 0.005102040816326592,
+    "retro_033_confirmation_trial_needed": true,
+    "kan_distill_v3_auroc": 0.9078,
+    "kan_distill_v3_gate_passed": true,
     "jepa_v18_ood_auc": 0.5115,
     "jepa_v18_above_random": true,
     "jepa_v18_gate_passed": false,
+    "jepa_v18_consecutive_below_gate_retrains": 4,
     "jepa_reasoner_probe_ood_auc": 1.0,
     "jepa_reasoner_probe_tier21_gates_passed": true,
-    "vr_200q_signed_improvement": 0.005102040816326592,
-    "retro_033_closed": true,
-    "kan_distill_v3_auroc": 0.9078,
-    "kan_distill_v3_gate_passed": true,
-    "sc_energy_v2_ood_auc": 0.6056,
-    "sc_energy_v2_candidate": false,
-    "vargran_gate_skip_rate": 0.6,
-    "vargran_gate_latency_reduction_pct": 7.196,
+    "vargran_skip_rate": 0.6,
     "vargran_gate_passed": true,
     "psv_root_cause_identified": false,
-    "psv_recovering": false,
+    "psv_consecutive_degrading_milestones": 3,
     "fr11_relay_events_acked": 0,
-    "fr11_gated": true,
-    "gemma4_blocked_no_gpu": true,
-    "retro_critical_jepa_resolved": false,
-    "retro_033_resolved": true,
-    "retro_psv_regression_open": true,
-    "retro_fr11_open": true
+    "fr11_gated_by_cascade_failure": true,
+    "incremental_test_selection_implemented_for_cycle": true,
+    "incremental_test_selection_propagated_to_all_queue_sources": false,
+    "preflight_test_overhead_minutes": 577,
+    "preflight_test_overhead_pct": 15.2,
+    "consecutive_test_selection_recommendations_unimplemented_for_full_queue": 15
+  },
+  "gpu_state_at_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
+    "gpu0_vram_mb": 4904,
+    "gpu0_util_pct": 0,
+    "gpu0_temperature_c": 55,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
+    "gpu1_vram_mb": 24092,
+    "gpu1_util_pct": 0,
+    "gpu1_temperature_c": 57,
+    "thermal_differential_c": 2,
+    "gpu_close_clean": false,
+    "consecutive_clean_close_milestones": 13,
+    "consecutive_clean_close_streak_broken": true,
+    "zombie_process": {
+      "pid": 368449,
+      "gpu0_vram_mb": 4894,
+      "gpu1_vram_mb": 24082,
+      "cpu_time_s": 2146.2,
+      "wall_time_s": 1899,
+      "util_pct": 0,
+      "classification": "zombie_inference_server",
+      "action_required": "kill -9 368449 before .56 Phase 0. Verify GPU 1 VRAM drops below 100MB post-kill."
+    },
+    "note": "FIRST non-clean close since .41, breaking a 13-milestone streak. GPU 1 at 98% VRAM saturation (24082/24576MB) by a zero-utilization process. The 2C thermal differential (GPU0 55C, GPU1 57C) is anomalous: prior clean closes showed 8-10C differential with GPU 1 COOLER. GPU 1 being warmer than GPU 0 at idle is inconsistent with a truly idle state, suggesting either: (a) the utilization sensor returned 0% on a single sample mid-kernel; or (b) the zombie process ran GPU kernels during the milestone that the monitor did not capture. Requires gpu_monitor.py multi-sample fix."
   },
   "open_retros": {
+    "RETRO-MANIFEST-ENFORCEMENT": {
+      "description": "Exclusion manifest confirmed written (.53 v5, .54 v6, .55 v7) but not enforced at dequeue. Legacy experiments re-ran in .55 for third cycle post-retirement.",
+      "status": "CRITICAL OPEN \u2014 NEW IN .55",
+      "experiments_affected": [425, 410, 383, "380-382"],
+      "min_wasted_in_55": 264,
+      "consecutive_failed_enforcements": 1,
+      "resolution_path": "Code change in scripts/research_conductor.py at experiment dispatch site. Verify empirically in .56 conductor-log.md."
+    },
+    "RETRO-ZOMBIE-PROCESS": {
+      "description": "PID 368449 holds 24082MB GPU 1 VRAM at .55 close with 0% utilization, breaking 13-milestone clean-close streak",
+      "status": "OPEN \u2014 NEW IN .55",
+      "pid": 368449,
+      "gpu1_vram_mb": 24082,
+      "resolution_path": "kill -9 368449. Add GPU health preflight to .56 Phase 0. Fix gpu_monitor.py to use 5-sample utilization average."
+    },
     "RETRO-CRITICAL": {
       "description": "JEPA cascade blocked \u2014 OOD AUC below 0.75 gate for four consecutive retrains (v15: 0.4751, v16: 0.4759, v17: 0.4819, v18: 0.5115)",
-      "status": "superseded_by_tier21",
+      "status": "SUPERSEDED_BY_TIER21 \u2014 pending formal closure",
       "jepa_v18_ood_auc": 0.5115,
-      "threshold": 0.75,
       "jepa_reasoner_probe_ood_auc": 1.0,
-      "note": "JEPA cascade training approach retired after 4 failures. Tier 2.1 JEPAReasonerProbe (Exp 726) provides ood_auc=1.0 and passes both Tier 2.1 gates. RETRO-CRITICAL is effectively resolved via architectural pivot rather than training improvement. Recommend formal closure in .56."
+      "note": "Tier 2.1 JEPAReasonerProbe (Exp 726, ood_auc=1.0) provides a superior alternative path. JEPA cascade training retired after 4 failures. Recommend formal closure in .56 with 'resolved_via_architectural_pivot' verdict."
     },
     "RETRO-033": {
       "description": "VR verify-repair never showed positive signed improvement across 20 attempts",
-      "status": "closed",
+      "status": "CLOSED (marginal, confirmation needed)",
       "closing_experiment": 720,
       "signed_improvement_200q": 0.005102040816326592,
-      "note": "CLOSED. First positive signed improvement observed in Exp 720. Improvement is marginal; .56 should run a confirmation trial before treating as definitive."
+      "confirmation_trial_needed": true,
+      "note": "CLOSED on first positive result. Improvement is marginal (0.51%). .56 should run one confirmation trial before final closure. If confirmation trial is negative, re-open."
     },
     "RETRO-PSV-REGRESSION": {
-      "description": "PSV PaCoRe self-play degrading with unknown root cause",
+      "description": "PSV PaCoRe self-play degrading with unknown root cause for third consecutive milestone",
       "status": "open",
       "exp_722_condition_a_slope": 0.0,
       "exp_722_condition_b_slope": 0.00699248,
-      "pool_exhaustion_hypothesis": "not_confirmed",
+      "pool_exhaustion_confirmed": false,
       "consecutive_degrading_milestones": 3,
-      "resolution_path": "Corpus distribution audit + overfitting analysis before ANY .56 PSV iteration. Pool exhaustion ruled out. New hypothesis needed."
+      "resolution_path": "Corpus distribution audit + overfitting analysis. Pool exhaustion ruled out. New root cause hypothesis needed before any .56 PSV iteration."
     },
     "RETRO-FR11": {
-      "description": "FR-11 relay blocked by JEPA cascade gate",
+      "description": "FR-11 relay blocked by JEPA cascade gate failure (Exp 718 AUC insufficient)",
       "status": "open",
-      "exp_719_status": "gated_blocked",
-      "resolution_path": "Deploy Tier 2.1 probe (Exp 726) as cascade entrypoint, then re-run FR-11 relay in .56. Expected to close with relay_events_acked >= 1."
+      "resolution_path": "Deploy Tier 2.1 probe (Exp 726, ood_auc=1.0) as cascade entrypoint. Re-run FR-11 relay in .56 using probe as gate source. Expected to close with relay_events_acked >= 1."
     },
     "RETRO-072": {
       "description": "KV260 synthesis blocked \u2014 no Vivado tool available",
       "status": "open",
-      "note": "No .55 experiment targeted this. Still requires Vivado install or yosys fallback."
+      "consecutive_blocked_milestones": 3,
+      "resolution_path": "Install Vivado 2025.2.1 or yosys fallback. Add tool_available pre-check gate to conductor before queuing synthesis experiments."
     },
     "RETRO-NPU": {
       "description": "AMD XDNA NPU benchmarking blocked by IRON toolchain install failure",
       "status": "open",
-      "note": "No .55 experiment targeted this. Conda environment conflicts still unresolved."
+      "consecutive_blocked_milestones": 3,
+      "resolution_path": "Investigate conda environment conflicts. Do not queue until toolchain install confirmed."
     }
-  },
-  "wall_time_breakdown_55": {
-    "prior_milestone_total_minutes": 3861,
-    "savings_legacy_retirements_minutes": 322,
-    "savings_incremental_test_selection_minutes": 562,
-    "total_savings_minutes": 884,
-    "new_cycle_cost_minutes": 32,
-    "net_delta_minutes": -852,
-    "total_55_minutes": 3009,
-    "note": "Two structural improvements compounded: (1) 7 legacy experiments retired in .54 Exp 703 saved 322 min; (2) Preflight v7 incremental test selection saved 562 min (0 of 554 tests run). Combined saving of 884 min is the largest single-milestone improvement in project history, exceeding the prior record (-248 min in .52) by 3.4x."
   },
   "milestone_history": [
     {"milestone": "2026.04.40", "wall_time_min": 4620, "experiments": 388, "avg_min_per_exp": 11.9},
@@ -324,7 +349,22 @@
     {"milestone": "2026.04.52", "wall_time_min": 3983, "experiments": 538, "avg_min_per_exp": 7.0},
     {"milestone": "2026.04.53", "wall_time_min": 3909, "experiments": 550, "avg_min_per_exp": 7.1},
     {"milestone": "2026.04.54", "wall_time_min": 3861, "experiments": 562, "avg_min_per_exp": 6.9},
-    {"milestone": "2026.04.55", "wall_time_min": 3009, "experiments": 575, "avg_min_per_exp": 5.2}
+    {"milestone": "2026.04.55", "wall_time_min": 3796, "experiments": 577, "avg_min_per_exp": 6.58}
   ],
-  "invariant_violations": []
+  "slowest5_composition_consecutive_unchanged_milestones": 1,
+  "exp425_carry_count": 19,
+  "exp425_cumulative_overhead_minutes": 1444,
+  "exp410_carry_count": 16,
+  "exp410_cumulative_avoidable_overhead_minutes": 844,
+  "exp383_carry_count": 10,
+  "exp383_cumulative_foregone_savings_minutes": 310,
+  "exp380_382_carry_count": 7,
+  "exp527_carry_count": 2,
+  "projected_56_wall_time_range_minutes": [3450, 3600],
+  "projected_56_basis": "3796 - 264 (manifest enforcement fix, recovering .55 waste) - 39 (Exp 527 retirement) + 15 (new cycle at ~6.6 min avg) + 12 (test suite growth) = ~3520 min if manifest fix is implemented. Without fix: 3796 + 15 = ~3810 min (regression). The split is binary: fix the manifest code or .56 continues the waste cycle.",
+  "invariant_violations": [
+    "MANIFEST_NOT_ENFORCED: All 4 experiments confirmed retired in .54 re-executed in .55 (264 min wasted). Third consecutive cycle where retirement text had no execution effect.",
+    "GPU_CLOSE_DIRTY: 13-milestone clean-close streak broken. PID 368449 holds 24082MB GPU 1 VRAM at close with 0% utilization and 57C temperature. kill -9 before .56."
+  ],
+  "honest_verdict": "wall_time_eleventh_consecutive_improvement_65min_1pt7pct_BUT_CONDUCTOR_VS_ACTUAL_GAP_787MIN_IS_PRIMARY_FINDING_conductor_projected_852min_savings_actual_65min_exclusion_manifest_confirmed_written_not_enforced_at_dequeue_legacy_exps425_410_383_380382_re_executed_19th_16th_10th_7th_consecutive_appearances_264min_wasted_zero_research_value_first_non_clean_gpu_close_in_14_milestones_zombie_pid368449_24082mb_gpu1_CYCLE_WINS_notable_jepa_v18_above_random_first_time_v15_through_v18_tier21_probe_ood_auc_1pt0_both_gates_passed_kan_v3_gate_passed_auroc_0pt9078_vr_retro033_resolved_marginal_0pt5pct_vargran_gate_passed_psv_root_cause_unknown_three_consecutive_degrading_fr11_still_gated"
 }

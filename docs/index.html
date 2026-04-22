@@ -294,9 +294,9 @@
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md" class="btn btn-primary">Get Started</a>
       <a href="technical-report.html" class="btn btn-secondary">Technical Report</a>
     </div>
-    <div class="stats-bar" aria-label="715 experiments, 41 milestones">
-      <div class="stat"><div class="stat-num">715</div><div class="stat-label">Experiments</div></div>
-      <div class="stat"><div class="stat-num">41</div><div class="stat-label">Milestones</div></div>
+    <div class="stats-bar" aria-label="730 experiments, 41 milestones">
+      <div class="stat"><div class="stat-num">730</div><div class="stat-label">Experiments</div></div>
+      <div class="stat"><div class="stat-num">41+</div><div class="stat-label">Milestones</div></div>
       <div class="stat"><div class="stat-num">+3.0pp</div><div class="stat-label">HumanEval (live)</div></div>
       <div class="stat"><div class="stat-num">4,400+</div><div class="stat-label">Tests Passing</div></div>
     </div>
@@ -441,6 +441,24 @@
         <h3 class="r-title">Prompt-Injection KAN (Exp 690)</h3>
         <div class="r-meter"><div class="r-bar" style="width: 80%; background: #f59e0b;"></div></div>
         <div class="r-stats"><span class="r-before">3,432 params, true teacher distillation (6256s)</span> <span class="r-after">In-dist AUROC 0.7995 &mdash; not yet production-ready (see caveat below)</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Safety Classifier (publication gate passed)</span>
+        <h3 class="r-title">Prompt-Injection KAN v3 (Exp 724)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 91%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">5,016 params, 16 knots, 3000-example dataset</span> <span class="r-after">AUROC 0.9078 &mdash; first to clear the 0.90 publication gate</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">JEPA Tier 2.1 Candidate</span>
+        <h3 class="r-title">JEPA-Reasoner Probe (Exp 726)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Pre-generative hidden-state probe, 262K params</span> <span class="r-after">OOD AUC 1.0 at 0.02ms latency &mdash; bypasses extractor bottleneck</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Pipeline Efficiency</span>
+        <h3 class="r-title">VarGran Ising Skip Gate (Exp 727)</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 93%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">60% Ising skip rate, 7.2% latency reduction</span> <span class="r-after">FN rate: 0.060 &rarr; 0.018 (EORM confidence routing)</span></div>
       </div>
     </div>
     <div style="max-width: 900px; margin: 1.5rem 0; padding: 1rem 1.25rem; border-left: 3px solid #f59e0b; background: rgba(245,158,11,0.06); font-size: 0.95rem; line-height: 1.5;">
