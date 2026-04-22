@@ -4,7 +4,7 @@
 
 Carnot uses Energy-Based Models to **verify and repair LLM outputs**. It extracts constraints from any response, checks them formally (Z3 SMT, property-based testing, energy scoring), and repairs violations via LLM feedback. All headline results are from live GPU inference.
 
-**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number), **+64pp live verify-repair with structured forcing** (Exp 668, RETRO-033 CLOSED, 36%→100% on 25 live questions). See the [technical report](docs/technical-report.md) for the full 677-experiment analysis.
+**Headline results:** +3.0pp on 164-problem HumanEval (statistically significant), +4.9pp on typed constraint verification, 86% false positive reduction via self-learning, 99.3% code bug detection rate, **+5pp live precision improvement** (Exp 451, first positive verify-repair number), **+64pp live verify-repair with structured forcing** (Exp 668, RETRO-033 CLOSED, 36%→100% on 25 live questions), **Prompt-Injection KAN AUROC=0.9585** cross-dataset (Exp 691, generalization_verified_publishable). See the [technical report](docs/technical-report.md) for the full 691-experiment analysis.
 
 **What ships today:** `pip install carnot` -- verify any LLM output in 5 lines of Python. CLI, MCP server for Claude Code, and full API docs. Four energy model tiers (KAN, Ising, Gibbs, Boltzmann) with hardware acceleration paths (FPGA, D-Wave quantum annealing, Extropic TSU).
 
@@ -80,13 +80,15 @@ Carnot is designed from the ground up to support an automated self-improvement l
 
 The EBM itself is the evaluator. No LLM needed to judge quality — the math provides ground truth.
 
-## Key Results (677 experiments, 38 completed milestones)
+## Key Results (691 experiments, 39 completed milestones)
 
 All benchmark results below are from **live GPU inference**. Simulated and software-model artifacts remain in the repo, but they are labeled explicitly and are not mixed into the headline tables. See the [technical report](docs/technical-report.md) for the full history including what didn't work.
 
 ### Simulation vs Reality
 
 Provenance snapshot: **15 live GPU artifacts**, **5 simulated artifacts**, **95 unverified artifacts**, and **1 software-model artifact** (Exp 228, software simulation). Only the live GPU subset informs the benchmark tables below.
+
+Note: Milestone 2026.04.52 (Exps 678-691, 39th milestone, title "VR Win Scale-Up + DualGPU Proof + JEPA Calibration") completed. Key results: **RETRO-071 CLOSED** — DualGPU parallel retrain speedup 2.02x confirmed (Exp 684); **VR 200q validated** — vr_200q_signed_improvement=1.0, vr_win_validation=confirmed (Exp 682); **JEPA v15 true OOD AUC=0.4751** (honest cross-dataset hold-out, Exp 683); **FR-11 real positives wired** — fr11_real_positives_wired=True; **Manifest consulted** — manifest_consulted=True; wall time improved to 4268.83 min (7.86 min/exp, new project best); **Prompt-Injection KAN v1 True Distillation** (Exp 690): v1_auroc=0.7995, honest_verdict=distillation_corpus_built_classifier_trained_auroc_below_threshold; **Prompt-Injection KAN v1 Cross-Dataset Generalization Gate** (Exp 691): mean_auroc=0.9585 across 3 held-out datasets (hackaprompt=0.9592, bipia=0.9513, synthetic=0.9651), honest_verdict=generalization_verified_publishable — first safety classifier cleared for public release.
 
 Note: Milestone 2026.04.51 (Exps 666-677, 38th milestone, title "EnsembleGate v4 + First Positive VR + JEPA v15") completed. Key results: **RETRO-033 CLOSED** — Live VR Attempt #18 v2 (Exp 668): `honest_verdict=vr_positive`, `signed_improvement=0.64`, `baseline_accuracy=0.36→post_accuracy=1.0` on 25 live questions with structured equation forcing, `inference_mode=live_gpu`, `structured_forcing_recall=1.0`; **EnsembleGate v4** recall-first redesign (Exp 667); **Prompt-Injection KAN Rescue v2** — `honest_verdict=distillation_corpus_built_classifier_trained_auroc_below_threshold` (Exp 669); **JEPA v14 + Platt Cascade Deployment Fix** (Exp 670); **JEPA v15 Live Retrain** — `jepa_v15_ood_auc=1.0`, `honest_verdict=jepa_v15_auc_met` (Exp 671); **KV260 DFX Manager Protocol Fix** — `kv260_status=blocked_bitfile_not_configured` (Exp 672); **DualGPU Proof v3** — `honest_verdict=dualgpu_partial`, simultaneous forward-pass on both GPUs confirmed, `max_gpu1_util_pct=0.0`, RETRO-071 still open (Exp 673); **IAS Adaptive Gate Calibration** (Exp 674); **LOS-Net Sequence Distribution Hallucination Detector** (Exp 675); **MetaJuLS Adaptive Constraint Propagation** (Exp 676); **Retrospective (Exp 677):** `retro_033_status=closed`, `retro_071_status=open_partial`, `vr_signed_improvement=0.64`, `jepa_v15_ood_auc=1.0`, wall_time regression +0.64%, `honest_verdict=wall_time_regression_28min_vr_positive_retro033_closed_manifest_confirmed_dualgpu_partial_retro071_open_partial_jepa_v15_ood_auc_1pt0_kv260_blocked_per_exp_avg_8pt2min`.
 
