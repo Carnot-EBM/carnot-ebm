@@ -103,8 +103,6 @@ class TestDistillationHasRealTeacherTime:
         }
         result = check_distillation_has_real_teacher_time(artifact)
         assert result.passed is False
-        assert "500" in result.evidence.get("corpus_size", "")  # type: ignore[operator]
-        # Actually evidence['corpus_size'] is an int.
         assert result.evidence.get("corpus_size") == 500
         assert result.evidence.get("floor_s") == 250.0
 
