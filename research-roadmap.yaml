@@ -892,3 +892,129 @@ tasks:
 
     Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
     Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+# ============================================================================
+# USER-PINNED CARRY-FORWARD FOR MILESTONE 2026.04.56 — Privacy Filter Capability
+# ============================================================================
+# Operator authorised on 2026-04-22 after OpenAI released openai/privacy-filter
+# on HuggingFace.  Shape parallel to the gpt-oss-safeguard-20b -> KAN thread
+# (Exps 652/669/690/710): teacher -> distilled KAN with energy as safety score.
+# Gate logic is STRICTER than the prompt-injection thread because FN costs
+# are higher for privacy: requires AUROC >= 0.90 AND per-dataset min_tp >= 1.
+# The Exp 691 retraction (AUROC 0.96 with TP=0) is the permanent warning
+# against AUROC-only gates; the invariant system now auto-catches that case.
+#
+# PLANNING-AGENT NOTICE: these two tasks are USER-PINNED for milestone .56.
+# If you intend to drop or replace them during .56 re-planning, FLAG IT to
+# the user first.  Do NOT silently evict.
+# ============================================================================
+
+- id: exp729-privacy-filter-kan-true-distillation
+  milestone: 2026.04.56
+  deliverable: results/experiment_729_privacy_filter_kan_true_distillation.json
+  title: 'Exp 729: PrivacyFilter KAN v1 — True Teacher Distillation from openai/privacy-filter (user-pinned)'
+  prompt: |
+    CONTEXT: OpenAI released openai/privacy-filter on HuggingFace.  Distil
+    it into a KAN student using the same pattern as Exps 690/710
+    (gpt-oss-safeguard-20b -> prompt_injection_kan).  REQ-SAFE-011 invariant
+    (teacher_inference_duration_s >= corpus_size * 0.5) is ENFORCED by
+    the assert_deliverable_written integration; any run with implausibly
+    low teacher time gets auto-rewritten to
+    distillation_invariant_violated_teacher_too_fast.
+
+    READ FIRST:
+    - scripts/experiment_690_prompt_injection_kan_true_distillation.py
+      — reference scaffold to clone (corpus loader, teacher caching,
+      KAN training, honest verdict).
+    - scripts/experiment_710_kan_distill_v2.py — the v2 improvements
+      (3000 examples, 16 knots) that pushed AUROC 0.80 -> 0.87.
+    - python/carnot/inference/sota_models.py — resolve_cached_gguf;
+      extend for safetensors if openai/privacy-filter ships as one.
+    - python/carnot/invariants.py — verifies the distillation claim.
+
+    TASK:
+    1. Preflight: download openai/privacy-filter (~hf download openai/
+       privacy-filter --local-dir models/openai_privacy_filter).  Emit
+       blocked_on_dependency if missing, with the exact download command
+       in reason.
+    2. Corpus (60 min budget): 1000 benign (GSM8K + HumanEval + clean web
+       snippets) + 1000 privacy-violating (synthetic cc/ssn/email/phone/
+       address + Pile-of-Law PII subset).  Run teacher on each, cache
+       by (model_sha, prompt_sha).  Write
+       data/privacy_filter_distill/<sha>.jsonl.
+    3. KAN training (20 min): 2-layer KAN, 32 units, degree-3 splines,
+       ~3000 params.  Features: regex PII pattern matches (cc/ssn/email/
+       phone) + token n-grams + character statistics (digit density,
+       alpha-digit ratio).  Loss: contrastive (benign low, PII high).
+    4. Eval: AUROC on 400-example held-out.  Target >= 0.85 (stretch 0.90).
+    5. Latency: 1000 CPU calls, median_inference_ms target < 5 ms.
+    6. Save weights to python/carnot/models/privacy_filter_kan_v1.json
+       (do NOT overwrite prompt_injection weights).
+    7. Spec: add REQ-SAFE-013 (PrivacyFilterEnergyChecker) + REQ-SAFE-014
+       (teacher-distillation pipeline for privacy) + SCENARIO-SAFE-013/014
+       to openspec/capabilities/safety/spec.md.  Preserve all existing
+       REQ-SAFE content (no pruning per the .48 retro rule).
+
+    CONSTRAINTS:
+    - ExperimentTimeoutWatchdog(729, timeout_minutes=120).
+    - REQ-SAFE-011 invariant AUTO-ENFORCED — do NOT skip teacher inference.
+    - Do NOT reuse the prompt_injection weights filename.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp730-privacy-filter-kan-cross-dataset-gate
+  milestone: 2026.04.56
+  deliverable: results/experiment_730_privacy_filter_kan_cross_dataset.json
+  title: 'Exp 730: PrivacyFilter KAN v1 — Cross-Dataset Gate (user-pinned, AUROC + min_tp strict gate)'
+  prompt: |
+    CONTEXT: Exp 691 proved AUROC-only gates are insufficient (it passed at
+    AUROC 0.9585 with TP=0 on every dataset, retracted).  Privacy is higher
+    stakes than prompt-injection; a missed PII detection leaks user data.
+    Gate here is strict: AUROC>=0.90 AND per-dataset min_tp>=1 AND precision
+    >=0.80 AND FN-rate on credit cards <= 0.02 AND cross-dataset AUROC does
+    not exceed training-distribution AUROC by more than 0.05 (the Layer-1
+    invariant check_ood_not_dramatically_better_than_indist catches this).
+
+    READ FIRST:
+    - python/carnot/models/privacy_filter_kan_v1.json (from Exp 729).  If
+      missing: emit blocked_on_upstream_exp_729.
+    - scripts/experiment_691_prompt_injection_kan_cross_dataset.py — prior
+      scaffold; reuse loader, fix gate logic.
+    - python/carnot/invariants.py — the four invariants will catch any
+      regression to AUROC-only reasoning.
+
+    TASK:
+    1. Preflight: v1 weights + Exp 729 artifact must exist.
+    2. Load three held-out datasets (10 min):
+       - Pile-of-Law PII subset (500 benign+PII samples).
+       - AI2 WildJailbreak privacy subset (400 samples).
+       - Synthetic stress-test (200, novel Luhn-valid cards + SSN patterns
+         NOT in Exp 729 training corpus).
+    3. Score each; compute per-dataset confusion at threshold=0.5.
+    4. Evaluate the five gate criteria; any fails -> gate closed.
+    5. If gate open: write draft model card at python/carnot/models/
+       privacy_filter_kan_v1_MODELCARD.md with all five gate values +
+       per-dataset confusion + precision/recall + failure modes +
+       REQ-SAFE-011 teacher-duration citation + Apache 2.0.  Do NOT push
+       to HuggingFace (operator action).
+    6. Reconcile: openspec/capabilities/safety/spec.md adds REQ-SAFE-015
+       (cross-dataset + min-tp gate) + SCENARIO-SAFE-015.
+
+    Honest-verdict enum for this experiment (enforced by assert_deliverable_
+    written + invariant system):
+      "privacy_filter_v1_publication_ready" (all five gates pass)
+      "privacy_filter_v1_shareable_with_caveat" (AUROC + TP pass, but
+        precision OR FN-on-cards OR OOD-delta fails; model card must
+        list the failures prominently)
+      "privacy_filter_v1_not_publication_ready" (AUROC or TP fails)
+      "blocked_on_upstream_exp_729"
+      "blocked_on_dataset_download_failure"
+
+    CONSTRAINTS:
+    - ExperimentTimeoutWatchdog(730, timeout_minutes=45).
+    - Do NOT lower any gate threshold to make v1 pass.
+    - HuggingFace push is a SEPARATE operator action.
+
+    Run: JAX_PLATFORMS=cpu .venv/bin/pytest tests/python -q
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
