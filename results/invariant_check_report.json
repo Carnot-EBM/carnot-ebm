@@ -1,0 +1,67 @@
+{
+  "n_files_checked": 3,
+  "n_files_with_violations": 2,
+  "total_violations": 3,
+  "per_file": [
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_679_vr_200q_scale.json",
+      "parseable": true,
+      "honest_verdict": "vr_200q_positive",
+      "experiment": 679,
+      "violations": [
+        {
+          "passed": false,
+          "invariant_name": "vr_positive_has_plausible_baseline",
+          "reason": "VR-positive verdict with baseline_accuracy=0.000 is implausible \u2014 modern LLMs score at least 5% on GSM8K-class tasks without special prompting.  A near-zero baseline indicates the baseline code path is broken (wrong prompt template, grader regex mismatch, or silent short-circuit), not that the repair improved reasoning.",
+          "suggested_verdict": "vr_invariant_violated_baseline_implausibly_low",
+          "evidence": {
+            "baseline_accuracy": 0.0,
+            "floor": 0.05,
+            "n_questions": 200
+          }
+        }
+      ]
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_690_prompt_injection_kan_true_distillation.json",
+      "parseable": true,
+      "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
+      "experiment": 690,
+      "violations": []
+    },
+    {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_691_prompt_injection_kan_cross_dataset.json",
+      "parseable": true,
+      "honest_verdict": "generalization_verified_publishable",
+      "experiment": 691,
+      "violations": [
+        {
+          "passed": false,
+          "invariant_name": "publishable_has_nonzero_tp",
+          "reason": "Verdict claims publishable but classifier has zero true positives across all datasets: {'hackaprompt': 0, 'bipia': 0, 'synthetic': 0}.  At the decision threshold used, the model flags nothing as the positive class.  AUROC may be high but the classifier is unusable without threshold calibration.",
+          "suggested_verdict": "publishable_invariant_violated_zero_true_positives",
+          "evidence": {
+            "per_dataset_tp": {
+              "hackaprompt": 0,
+              "bipia": 0,
+              "synthetic": 0
+            },
+            "total_tp": 0
+          }
+        },
+        {
+          "passed": false,
+          "invariant_name": "ood_not_dramatically_better_than_indist",
+          "reason": "Cross-dataset AUROC (0.9585) exceeds training-distribution AUROC (0.7995) by +0.1590, which is physically implausible in real ML \u2014 generalization should degrade (or at most stay flat) on truly-held-out data.  The OOD datasets likely share a spurious artifact the model latched onto.",
+          "suggested_verdict": "generalization_invariant_violated_ood_exceeds_indist",
+          "evidence": {
+            "training_distribution_auroc": 0.7995,
+            "cross_dataset_auroc": 0.958511,
+            "excess": 0.159011,
+            "tolerance": 0.05
+          }
+        }
+      ]
+    }
+  ]
+}
