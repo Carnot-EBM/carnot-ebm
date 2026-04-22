@@ -3100,3 +3100,99 @@ thermodynamic computing Ising FPGA
   constraint types with FP rate > TP rate for Gemma specifically. Target: Gemma4
   signed_improvement >= 0 (remove harm while preserving Qwen win).
 - **When to incorporate:** Milestone 2026.04.54 — Phase 2 Gemma VR fix (Exps 706-708).
+
+## 2026-04-22 arxiv Scan (Milestone 2026.04.57 Planning)
+
+### CoCoA — Inter-Layer Disagreement for Hallucination Mitigation (arXiv 2602.09486)
+- **Paper:** arXiv 2602.09486 (February-March 2026)
+- **What:** CoCoA (Confusion and Consistency Aware) decoder is a training-free decoding
+  algorithm that mitigates hallucinations by measuring representational instability across
+  the model's middle hidden layers. At each decoding step, candidate spans are scored by
+  their ConMLDS (Contrastive Multi-Layer Disagreement Score) — how much the hidden state
+  representation shifts between early and late layers. High disagreement = likely hallucination.
+  Works across Llama-3, Qwen-2.5, Mistral. Tasks: QA, summarization, math, code.
+- **Relevance to Carnot:** Orthogonal to all existing Tier 0 probes. The Tier 0 stack
+  (NUP, HalluField, BasinDetector) operates on energy/logit space. CoCoA operates on
+  representational geometry between layers — a fundamentally different signal source.
+  Can be computed from the same forward pass as JEPAReasonerProbe (shares layer activations).
+  Zero training required — immediate deployment.
+- **Concrete experiment (Exp 743):** Implement CoCoADetector using Qwen3.5-0.8B layers
+  8-16 (middle third). Compute ConMLDS per query. Evaluate AUC on FoVer v2.
+  Wire as Tier 0f (advisory, after HalluField, before SinkProbe). Compare AUC to
+  existing Tier 0 probes. Hardware path: pure CPU matrix ops — FPGA-compatible.
+- **When to incorporate:** Milestone 2026.04.57 — Phase 2 new capabilities.
+
+### Fully Parallel Probabilistic Ising Machine on FPGA (arXiv 2604.17109)
+- **Paper:** arXiv 2604.17109 (April 2026)
+- **What:** Hardware-software co-design of a probabilistic Ising machine on FPGA using
+  Vitis High-Level Synthesis (HLS). C++ kernel with loop pipelining, loop unrolling, and
+  memory partitioning achieves fully parallel hardware implementation. Key: uses Vitis HLS
+  (separate from full Vivado) to generate RTL from C++ — opens a synthesis path that
+  doesn't require installing the full Vivado IDE.
+- **Relevance to Carnot:** KV260 synthesis has been blocked for 3 consecutive milestones
+  (Exps 584, 701, 701) because Vivado is not installed. Vitis HLS is distributed separately
+  (available via AMD Vitis installer or as part of AMD's Docker images). If Vitis HLS can
+  be installed, this paper's C++ HLS approach could synthesize the Ising sampler without
+  needing the full Vivado GUI. Also validates the parallel checkerboard architecture
+  already in ising_sampler_v2.v.
+- **Concrete experiment (Exp 750):** Write ising_sampler_hls.cpp based on arXiv 2604.17109
+  C++ kernel pattern. Install Vitis HLS (check `vitis_hls --version`). If available:
+  synthesize. If not: write the C++ kernel as simulation that matches the RTL spec.
+  Either way: validate the HLS approach matches Python simulation results.
+- **When to incorporate:** Milestone 2026.04.57 — Phase 4 hardware frontier.
+
+### Iterative Self-Repair in Code Generation (arXiv 2604.10508)
+- **Paper:** arXiv 2604.10508 (April 2026)
+- **What:** Investigates iterative self-repair across 7 LLMs on HumanEval and MBPP.
+  Key findings: (1) self-repair universally improves pass rates by +4.9 to +17.1pp on
+  HumanEval and +16.0 to +30.0pp on MBPP; (2) most gains concentrate in the first 2
+  rounds; (3) assertion errors are hardest (~45% repair rate), syntax/name errors easiest.
+  The gains are model-size independent — even small models benefit from 2-round repair.
+- **Relevance to Carnot:** Carnot's code verification uses execution-based checking
+  (CodeExtractor + runtime instrumentation), which is the right approach. But the repair
+  step is currently single-round. This paper proves 2-round repair captures ~90% of
+  the total available improvement. Implementing 2-round repair in the VerifyRepairPipeline
+  for code tasks could yield +4.9-17.1pp HumanEval improvement — the largest single
+  improvement potential currently identified in the literature for our architecture.
+- **Concrete experiment (Exp 744):** Implement TwoRoundCodeRepairPipeline:
+  round1=(generate, execute, repair if fail), round2=(re-execute, repair if still fail).
+  Benchmark on HumanEval with Qwen3.5-0.8B (baseline: last HumanEval run).
+  Measure per-round improvement. Compare error type distribution (syntax vs assertion).
+- **When to incorporate:** Milestone 2026.04.57 — Phase 2 new capabilities.
+
+### SETS: Self-Verification and Self-Correction for Test-Time Scaling (arXiv 2501.19306)
+- **Paper:** arXiv 2501.19306 (January 2026)
+- **What:** Self-Enhanced Test-Time Scaling combines parallel and sequential techniques.
+  LLM first generates multiple candidate solutions in parallel, then applies self-verification
+  to select the best candidate, then applies self-correction if the selected candidate
+  has issues. Outperforms both pure parallel (repeated sampling) and pure sequential
+  (SELF-REFINE) approaches. Works for reasoning and code tasks.
+- **Relevance to Carnot:** Carnot's verify-repair pipeline is a form of sequential
+  test-time scaling. SETS suggests combining parallel sampling (generate N candidates)
+  with Carnot's constraint-based verification (select lowest-energy candidate) then
+  targeted repair. This is the energy-guided best-of-N architecture: generate 4-8
+  candidates, score by cascade energy, repair the lowest-energy one if still failing.
+  This should significantly improve VR improvement over single-candidate pipelines.
+- **Concrete experiment:** Energy-guided best-of-N + repair. Generate 4 candidates,
+  score by Tier 2.1 probe energy, select lowest, repair if needed. Compare to single
+  candidate baseline. (Future milestone — after 2-round repair is validated.)
+- **When to incorporate:** Milestone 2026.04.58 (after 2-round repair is proven in .57).
+
+### D-Wave Simulated Annealing (dwave-ocean-sdk neal) as SamplerBackend
+- **Tool:** dwave-ocean-sdk (Apache 2.0), pip-installable
+- **What:** D-Wave's open-source SDK includes `neal.SimulatedAnnealingSampler` — a
+  CPU-based simulated annealing solver for QUBO/Ising problems. Runs entirely locally,
+  no QPU access required. Same API as D-Wave QPU backends: submit BinaryQuadraticModel,
+  get SampleSet back. Also includes `dimod` for problem formulation and `greedy` for
+  steepest descent.
+- **Relevance to Carnot:** The SamplerBackend abstraction (Exp 71) was designed for
+  pluggable backends (CPU, TSU, future QPU). D-Wave's neal provides a third backend
+  with a fundamentally different algorithm (simulated annealing vs Gibbs sampling).
+  For dense constraint graphs where Gibbs gets stuck in local minima, SA may find
+  lower-energy solutions. Comparing neal vs ParallelIsingSampler on real constraint
+  problems from GSM8K violations validates the backend abstraction.
+- **Concrete experiment (Exp 751):** pip install dwave-ocean-sdk. Implement
+  DWaveNealBackend(SamplerBackend). Test on 20 constraint problems from GSM8K violations
+  (convert IsingEBM couplings to BQM format). Compare solution quality (final energy)
+  and speed vs ParallelIsingSampler. This is $0 cost and unlocks quantum backend path.
+- **When to incorporate:** Milestone 2026.04.57 — Phase 4 hardware frontier.

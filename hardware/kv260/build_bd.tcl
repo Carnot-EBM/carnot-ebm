@@ -229,10 +229,26 @@ connect_bd_net \
     [get_bd_pins proc_sys_reset_0/ext_reset_in]
 
 # Synchronised resets from proc_sys_reset:
-#   peripheral_aresetn → SmartConnect + ising_sampler (both AXI-Lite slaves)
+#   interconnect_aresetn → SmartConnect (Xilinx PG164 best practice: the
+#     interconnect needs the EARLIER reset output so its pipelines/FIFOs
+#     have settled before any peripheral tries to use it).
+#   peripheral_aresetn   → ising_sampler AXI-Lite slave
+# RETRO-074 hang #8 root cause: both pins were previously tied to
+# peripheral_aresetn.  SmartConnect came out of reset simultaneously with
+# the sampler slave — its internal state wasn't fully initialised when the
+# first AXI read arrived, and the transaction silently wedged at the
+# interconnect level (no ARREADY ever propagated to the slave, no RVALID
+# ever propagated back to the master, CPU blocked on the load instruction,
+# RCU stalled on CPU3 after 60s).  Vivado flagged this as a Synth 8-7071
+# warning from hang #1 onward; it was dismissed as harmless because the
+# reset tree still existed — but "connected" and "correct" aren't the same
+# thing for this IP.
+connect_bd_net \
+    [get_bd_pins proc_sys_reset_0/interconnect_aresetn] \
+    [get_bd_pins axi_smartconnect_0/aresetn]
+
 connect_bd_net \
     [get_bd_pins proc_sys_reset_0/peripheral_aresetn] \
-    [get_bd_pins axi_smartconnect_0/aresetn] \
     [get_bd_pins ising_sampler_0/S_AXI_ARESETN]
 
 # ---------------------------------------------------------------------------
