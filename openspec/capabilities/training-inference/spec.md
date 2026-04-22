@@ -503,6 +503,33 @@ a Vivado license:
 **And** synthesis_attempted is False in the artifact
 **And** lut_count and ff_count are None in the artifact
 
+### REQ-HW-035: DualGPU GPU1 Compute Utilization Confirmed via pynvml (Exp 684)
+
+The system shall verify true parallel GPU compute by measuring GPU1 compute utilization
+directly via pynvml during simultaneous inference on both GPUs:
+
+- pynvml is installed (via pip if absent) and nvmlDeviceGetUtilizationRates() is called
+  every 2 seconds on GPU1 handle during the parallel inference window
+- max_gpu1_util_pct records the peak GPU1 compute utilization observed across all samples
+- honest_verdict is "dualgpu_confirmed" if and only if max_gpu1_util_pct > 0 AND
+  GPU1 inference completed (proves real parallel compute, not just memory allocation)
+- honest_verdict is "dualgpu_partial_no_pynvml" if GPU1 inference completed but
+  pynvml installation failed (throughput evidence only, not utilization proof)
+- honest_verdict is "dualgpu_blocked" if fewer than 2 GPUs or CARNOT_FORCE_LIVE not set
+- retro_071_resolved is True if and only if honest_verdict == "dualgpu_confirmed"
+- Artifact schema: experiment=684, pynvml_installed, max_gpu0_util_pct, max_gpu1_util_pct,
+  throughput_ratio, retro_071_resolved, honest_verdict
+
+### SCENARIO-HW-035: GPU1 Utilization Greater Than Zero During Parallel Inference
+
+**Given** two NVIDIA GPUs are present and CARNOT_FORCE_LIVE=1 is set
+**And** pynvml is installed and nvmlDeviceGetUtilizationRates() is callable
+**When** Qwen3.5-0.8B runs simultaneously on cuda:0 and cuda:1 via ThreadPoolExecutor
+**And** GPU1 utilization is polled every 2 seconds during inference
+**Then** max_gpu1_util_pct is greater than 0
+**And** honest_verdict is "dualgpu_confirmed"
+**And** retro_071_resolved is True in the artifact
+
 ### REQ-SAMPLE-015: KAEMEnergy Exact Inference via Inverse-Transform Sampling (Exp 447)
 
 The system shall implement KAEMEnergy with exact inference using the Kolmogorov-Arnold
@@ -1196,6 +1223,7 @@ human-readable string of the full energy function, e.g.:
 | REQ-SAMPLE-034 | N/A | Implemented | Python (test_dwave_backend.py, 100%) |
 | REQ-SAMPLE-035 | N/A | Implemented | Python (test_sampler_registry.py, 100%) |
 | REQ-HW-003 | N/A | Not Started | Not Started |
+| REQ-HW-035 | N/A | Implemented | Python (test_experiment_684_dualgpu_pynvml.py, 100% targeted) |
 | REQ-MODEL-020 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-MODEL-021 | N/A | Implemented | Python (test_symbolic_kan_energy.py, 100% coverage) |
 | REQ-VERIFY-106 | N/A | Implemented | Python (test_potts_machine.py, 100% coverage) |
