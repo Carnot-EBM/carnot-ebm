@@ -113,3 +113,67 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 |-------------|--------|-------|
 | REQ-LEARN-020 | N/A | Implemented | Python (test_experiment_709_psv_pacore_k2.py) |
 | REQ-LEARN-021 | N/A | Implemented | Python (test_experiment_709_psv_pacore_k2.py) |
+
+---
+
+## REQ-LEARN-022: FR-11 Tier 2 JEPA v17 Violations Update ConstraintTemplateLibrary
+
+**Given** the JEPA v17 cascade gate is open (cascade_gate_open=True in Exp 705)
+**When** Exp 713 runs the FR-11 Tier 2 relay
+**Then** all verified OOD violations from the JEPA v17 cascade are extracted
+**And** each violation is wired into ViolationPatternLibrary via add_template()
+**And** n_patterns_added > 0 and fr11_tier_advancement == 2
+
+### REQ-LEARN-022 Sub-requirements
+
+- REQ-LEARN-022-1: `run_experiment` SHALL detect cascade_gate_open from Exp 705 artifact.
+- REQ-LEARN-022-2: When cascade_gate_open=True, source SHALL be "jepa_v17_cascade_violations".
+- REQ-LEARN-022-3: Each violation SHALL produce at least one ViolationPatternEntry in the library.
+- REQ-LEARN-022-4: honest_verdict SHALL be "fr11_tier2_real_violations" when JEPA source is used.
+
+---
+
+## REQ-LEARN-023: FR-11 Fallback — Exp 694 Qwen Violations When JEPA Cascade Blocked
+
+**Given** the JEPA v17 cascade gate is closed (cascade_gate_open=False in Exp 705)
+**When** Exp 713 runs the FR-11 Tier 2 relay
+**Then** Exp 694 Qwen3.5-0.8B violation data (signed_improvement=1.0, 200q scale) is used
+**And** confirmed true-positive violations from Exp 694 are wired into ViolationPatternLibrary
+**And** fr11_tier_advancement == 2 and honest_verdict == "fr11_tier2_fallback_relay"
+
+### REQ-LEARN-023 Sub-requirements
+
+- REQ-LEARN-023-1: `run_experiment` SHALL detect cascade_gate_open=False and select fallback.
+- REQ-LEARN-023-2: When fallback, source SHALL be "exp694_qwen_fallback".
+- REQ-LEARN-023-3: n_violations SHALL equal the count of confirmed repairs extracted from 694 data.
+- REQ-LEARN-023-4: honest_verdict SHALL be "fr11_tier2_fallback_relay" for fallback source.
+
+---
+
+## SCENARIO-LEARN-022: JEPA Gate Open — Real Violations Wired
+
+**Given** cascade_gate_open=True in Exp 705 artifact
+**When** run_experiment is called
+**Then** source == "jepa_v17_cascade_violations"
+**And** honest_verdict == "fr11_tier2_real_violations"
+**And** fr11_tier_advancement == 2
+
+---
+
+## SCENARIO-LEARN-023: JEPA Gate Closed — Fallback Relay Wired
+
+**Given** cascade_gate_open=False in Exp 705 artifact
+**When** run_experiment is called with fallback_exp694 data
+**Then** source == "exp694_qwen_fallback"
+**And** honest_verdict == "fr11_tier2_fallback_relay"
+**And** fr11_tier_advancement == 2
+**And** n_violations > 0
+
+---
+
+## Implementation Status (continued)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-022 | Implemented | Python (test_experiment_713_fr11_tier2_relay.py) |
+| REQ-LEARN-023 | Implemented | Python (test_experiment_713_fr11_tier2_relay.py) |
