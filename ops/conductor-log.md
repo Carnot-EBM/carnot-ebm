@@ -2487,3 +2487,4 @@ python/ |
 | 2026-04-22 14:19 UTC | Exp 709: PSV PaCoRe K=2 Parallel Self-Play — DualG | OK | 81 passed, 3 warnings in 4.88s |
 | 2026-04-22 14:45 UTC | Exp 710: Prompt-Injection KAN Distillation v2 — AU | OK | 81 passed, 3 warnings in 3.43s |
 | 2026-04-22 14:58 UTC | Exp 711: SC-Energy Set Consistency Verifier — Tier | OK | 81 passed, 3 warnings in 4.28s |
+| 2026-04-22 15:13 UTC | Exp 712: FoVer v2 Dataset Synthesis via PDDL Plann | OK | 81 passed, 3 warnings in 3.94s |
