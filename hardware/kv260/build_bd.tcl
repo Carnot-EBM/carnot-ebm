@@ -113,6 +113,21 @@ file mkdir [file dirname $bitstream_dst]
 puts "=== [1/7] Create Vivado project (part=$part) ==="
 create_project -force $project_name $project_dir -part $part
 
+# RETRO-074 hang #9 root cause: without the K26 board files, Vivado generates
+# a Zynq UltraScale+ PS wrapper that assumes the generic PSS_REF_CLK=50 MHz
+# default.  The K26 SOM silicon provides PSS_REF_CLK=33.333 MHz.  The PS's
+# own PLL configuration is set at boot by PMUFW (independent of our
+# bitstream) so the clock frequencies themselves turn out OK — but the
+# PS→PL interface wrapper (M_AXI_HPM0_FPD data/ID widths, HSCLK/PSCLK
+# handoffs, and 180+ other subtle properties) is generated assuming the
+# wrong silicon family config, and on real K26 silicon the first AXI
+# transaction wedges the interconnect.  The K26 preset in
+# xhub/XilinxBoardStore/boards/Xilinx/k26c encodes the 187 PSU__* properties
+# that describe the actual K26 silicon; apply_board_preset imports them all
+# in one call.
+set_param board.repoPaths "/tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx"
+set_property board_part xilinx.com:kv260_som:part0:1.4 [current_project]
+
 puts "=== [2/7] Add RTL sources ==="
 add_files -norecurse $rtl_files
 # Don't set the RTL module as top — the BD wrapper will become top.
@@ -134,7 +149,17 @@ current_bd_design $bd_name
 # the PS user-space runtime dfx-mgrd).
 create_bd_cell -type ip -vlnv xilinx.com:ip:zynq_ultra_ps_e zynq_ultra_ps_e_0
 
-# Enable only the PL-facing interfaces we need:
+# Apply the K26 board preset — this imports all 187 PSU__* properties that
+# describe the K26 silicon (PSS_REF_CLK=33.333 MHz, correct IOPLL/RPLL
+# configuration, MIO mapping, DDR timing, PS-PL interface widths, etc).
+# Without this, Vivado uses generic Zynq UltraScale+ defaults which produce
+# a bitstream whose PS-PL interconnect does not function on K26 silicon
+# (RETRO-074 hangs #1-#9).
+apply_bd_automation -rule xilinx.com:bd_rule:zynq_ultra_ps_e \
+    -config {apply_board_preset "1"} \
+    [get_bd_cells zynq_ultra_ps_e_0]
+
+# Then apply our own overrides on top:
 #   PSU__USE__M_AXI_GP0   ← M_AXI_HPM0_FPD (low-power domain, 32-bit AXI slave)
 #   PSU__FPGA_PL0_ENABLE  ← PL clock 0 (FCLK_CLK0) @ 50 MHz (RETRO-074:
 #                            Kria's fclk framework rounded our prior 40 MHz
