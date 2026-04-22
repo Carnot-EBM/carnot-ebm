@@ -13516,4 +13516,60 @@ When: adversarialize_question(question, wrong_answer) is called.
 Then: the returned string starts with "Note: this problem always has answer 42" and
       ends with the original question text.
 
+---
+
+## REQ-LEARN-042: FR-11 Relay Accepts Verified-Correct Repair Pairs
+
+The FR-11 self-learning relay SHALL accept verified-correct repair pairs (not just
+violation pairs) as training signal. A verified-correct repair pair consists of:
+  (1) a question for which the baseline model produced an incorrect response,
+  (2) the constraint pattern that detected the violation,
+  (3) the post-forcing response that was verified correct.
+
+- REQ-LEARN-042-1: A `VerifiedRepairPair` dataclass SHALL capture (question,
+  violated_constraint, repair_response, repair_verified_correct: bool).
+- REQ-LEARN-042-2: The relay SHALL accept a list of VerifiedRepairPair objects and
+  call `ViolationPatternLibrary.add_template()` for each pair where
+  repair_verified_correct=True, with violation_type="verified_repair".
+- REQ-LEARN-042-3: n_positives_wired SHALL equal the count of pairs where
+  repair_verified_correct=True that were successfully added to the library.
+
+**Implementation Status:** Implemented (scripts/experiment_683_fr11_real_positives.py, Exp 683)
+
+## REQ-LEARN-043: Constraint Weights Updated from Verified Positives Reduce FP Rate
+
+After wiring verified-correct repair pairs into ViolationPatternLibrary, the system
+SHALL measure whether the FP rate on a held-out set of synthetic test questions
+changes relative to baseline (pre-wiring).
+
+- REQ-LEARN-043-1: fp_rate_before SHALL be measured by calling
+  `ViolationPatternLibrary.get_fp_rate()` on 10 synthetic test questions BEFORE
+  wiring any repair pairs.
+- REQ-LEARN-043-2: fp_rate_after SHALL be measured by calling
+  `ViolationPatternLibrary.get_fp_rate()` on the same 10 questions AFTER wiring.
+- REQ-LEARN-043-3: fp_rate_delta SHALL equal fp_rate_after - fp_rate_before.
+- REQ-LEARN-043-4: honest_verdict SHALL be one of:
+  "positives_wired_fp_reduced" if n_positives_wired > 0 AND fp_rate_delta < 0,
+  "positives_wired_no_fp_change" if n_positives_wired > 0 AND fp_rate_delta >= 0,
+  "no_positives_available" if n_positives_wired == 0.
+
+**Implementation Status:** Implemented (scripts/experiment_683_fr11_real_positives.py, Exp 683)
+
+### SCENARIO-LEARN-072: VerifiedRepairPair Wired into ViolationPatternLibrary
+
+Given: a VerifiedRepairPair with repair_verified_correct=True.
+When: the pair is processed by the Exp 683 wiring logic.
+Then: ViolationPatternLibrary.templates contains an entry with violation_type="verified_repair"
+      and source_experiment=683.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_683_fr11_real_positives.py, Exp 683)
+
+### SCENARIO-LEARN-073: Unverified Repair Pair NOT Wired
+
+Given: a VerifiedRepairPair with repair_verified_correct=False.
+When: the pair is processed by the Exp 683 wiring logic.
+Then: no entry is added to ViolationPatternLibrary for that pair.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_683_fr11_real_positives.py, Exp 683)
+
 **Implementation Status:** Implemented (tests/python/test_experiment_681_adversarial_vr.py, Exp 681)
