@@ -1634,6 +1634,106 @@ class VerifyRepairPipeline:
             history=history,
         )
 
+    def verify_and_repair_with_abstention(
+        self,
+        question: str,
+        response: str | None = None,
+        domain: str | None = None,
+        abstention_threshold: float | None = None,
+    ) -> dict[str, object]:
+        """Verify-repair with I-CALM-style abstention gate (REQ-VERIFY-167).
+
+        **Researcher summary (arXiv 2604.03904 I-CALM):**
+            Instead of always attempting repair when a violation is detected,
+            estimate how confident the SymCodeVerifier is in its violation signal.
+            If confidence is below ``abstention_threshold``, abstain — return
+            the original response unchanged.  This prevents false-positive repairs
+            where the verifier flags a correct answer and the LLM then breaks it.
+
+        **Confidence formula:**
+            confidence = min(n_compute_lines / 5.0, 1.0)
+            If 0 COMPUTE: lines detected but a violation was flagged: confidence = 0.2.
+            The divisor 5.0 caps the signal at 5+ arithmetic steps, which is when
+            the SymCodeVerifier has enough evidence to be reliable.
+
+        **Why abstention helps:**
+            JEPA v15 OOD AUC = 0.4751 (below random), so JEPA cannot gate repairs.
+            SymCodeVerifier confidence based on COMPUTE: line coverage is a cheap
+            proxy: a response with 0-1 COMPUTE: lines cannot have its arithmetic
+            reliably verified, so repair is speculative and risks FP regressions.
+
+        Args:
+            question:             The original question to answer.
+            response:             Initial response text.  If None and model is
+                                  loaded, the model generates one.
+            domain:               Optional domain hint for constraint extraction.
+            abstention_threshold: Minimum symcode_confidence to proceed to repair.
+                                  None = no abstention gate (same as verify_and_repair).
+                                  Typical value: 0.7 (REQ-VERIFY-168 tuning result).
+
+        Returns:
+            Dict with keys:
+              - "result"          : RepairResult from the inner verify/repair pass.
+              - "abstained"       : bool — True if abstention gate fired.
+              - "symcode_confidence": float — confidence score computed from COMPUTE: lines.
+              - "abstain_count"   : int — 1 if abstained, else 0.
+              - "repair_count"    : int — 1 if repair was attempted, else 0.
+
+        Spec: REQ-VERIFY-167, REQ-VERIFY-168, SCENARIO-VERIFY-220, SCENARIO-VERIFY-221
+        """
+        import re as _re
+
+        # Step 1: get or generate initial response.
+        if response is None:
+            if not self.has_model:
+                raise ValueError(
+                    "No response provided and no model loaded."
+                )
+            response = self._generate(question)
+
+        initial_response = response
+
+        # Step 2: count COMPUTE: lines — the confidence proxy.
+        # A COMPUTE: line is the structured arithmetic token from grammar-constrained
+        # decoding (REQ-VERIFY-164). More COMPUTE: lines = more verifiable steps.
+        n_compute = len(_re.findall(r"COMPUTE:", response))
+
+        if n_compute == 0:
+            # Verifier may still flag a violation, but with 0 arithmetic anchors
+            # the signal is weak.  Use a fixed low-confidence value (0.2).
+            symcode_confidence = 0.2
+        else:
+            symcode_confidence = min(n_compute / 5.0, 1.0)
+
+        # Step 3: abstention gate.
+        if abstention_threshold is not None and symcode_confidence < abstention_threshold:
+            # Abstain: return original response without repair.
+            abstained_result = RepairResult(
+                initial_response=initial_response,
+                final_response=initial_response,
+                verified=False,
+                repaired=False,
+                iterations=0,
+                history=[],
+            )
+            return {
+                "result": abstained_result,
+                "abstained": True,
+                "symcode_confidence": symcode_confidence,
+                "abstain_count": 1,
+                "repair_count": 0,
+            }
+
+        # Step 4: proceed to normal verify-and-repair.
+        result = self.verify_and_repair(question, initial_response, domain)
+        return {
+            "result": result,
+            "abstained": False,
+            "symcode_confidence": symcode_confidence,
+            "abstain_count": 0,
+            "repair_count": 1,
+        }
+
     def verify_and_repair_confident(
         self,
         question: str,

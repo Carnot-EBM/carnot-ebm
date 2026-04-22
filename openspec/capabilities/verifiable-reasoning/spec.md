@@ -13868,3 +13868,54 @@ When: select_hard_questions is called with n=50.
 Then: returns questions with indices 600-649 (proxy hard set, no overlap with Exp 679 0-199).
 
 **Implementation Status:** Implemented (tests/python/test_experiment_694_vr_cross_model.py, Exp 694)
+
+## REQ-VERIFY-167: I-CALM Abstention — VerifyRepairPipeline Abstains When SymCode Confidence Is Low
+
+**Rationale:** arXiv 2604.03904 (I-CALM) proposes that models should abstain when confidence is
+below a threshold rather than produce a wrong answer.  Applied to Carnot: when SymCodeVerifier
+flags a violation but has low coverage (few COMPUTE: lines), the violation signal is unreliable.
+Abstaining prevents FP repairs that break correct answers.
+
+**Requirements:**
+- REQ-VERIFY-167-1: verify_and_repair_with_abstention SHALL accept abstention_threshold (float | None).
+- REQ-VERIFY-167-2: When abstention_threshold is None, behaviour SHALL be identical to verify_and_repair().
+- REQ-VERIFY-167-3: symcode_confidence = min(n_compute_lines / 5.0, 1.0).
+  If n_compute_lines == 0 but a violation is flagged, confidence SHALL be 0.2.
+- REQ-VERIFY-167-4: When symcode_confidence < abstention_threshold, the method SHALL return
+  the original response unchanged (abstain=True, repair_count=0, abstain_count=1).
+- REQ-VERIFY-167-5: The return dict SHALL contain keys: result, abstained, symcode_confidence,
+  abstain_count, repair_count.
+
+**Implementation Status:** Implemented (python/carnot/pipeline/verify_repair.py, Exp 696)
+
+## REQ-VERIFY-168: Abstention Threshold Must Be Tuned on Held-Out Set
+
+**Rationale:** Tuning the abstention threshold on the training set would cause leakage (the
+threshold would be overfitted to the same violations used to evaluate it).  REQ-VERIFY-168
+requires that threshold selection uses a held-out question set not used in prior VR experiments.
+
+**Requirements:**
+- REQ-VERIFY-168-1: Threshold tuning SHALL use GSM8K indices 225-274 (not used in Exp 679 indices 0-199).
+- REQ-VERIFY-168-2: best_threshold SHALL minimise fp_rate_with_abstention subject to recall > 0.5.
+- REQ-VERIFY-168-3: The artifact SHALL report fp_rate_baseline, fp_rate_no_abstention,
+  fp_rate_best_abstention, best_threshold, abstention_rate_at_best, recall_at_best.
+- REQ-VERIFY-168-4: honest_verdict SHALL be one of: abstention_fp_reduced,
+  abstention_no_improvement, abstention_recall_collapsed.
+
+**Implementation Status:** Implemented (scripts/experiment_696_icalm_abstention.py, Exp 696)
+
+### SCENARIO-VERIFY-220: Abstention Gate Fires When Confidence Is Below Threshold
+
+Given: a response with 0 COMPUTE: lines and abstention_threshold=0.5.
+When: verify_and_repair_with_abstention is called.
+Then: symcode_confidence == 0.2, abstained == True, result.final_response == original response.
+
+**Implementation Status:** Implemented (tests/python/test_icalm_abstention.py, Exp 696)
+
+### SCENARIO-VERIFY-221: Abstention Gate Does Not Fire When Confidence Meets Threshold
+
+Given: a response with 3 COMPUTE: lines and abstention_threshold=0.5.
+When: verify_and_repair_with_abstention is called.
+Then: symcode_confidence == 0.6, abstained == False, repair_count == 1.
+
+**Implementation Status:** Implemented (tests/python/test_icalm_abstention.py, Exp 696)
