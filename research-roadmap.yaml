@@ -1026,10 +1026,10 @@ tasks:
        operator action.
 
     6. Write result JSON with: per_dataset_auroc, mean_auroc, per_dataset_cm,
-       honest_verdict in {generalization_verified_publishable,
+       honest_verdict in (generalization_verified_publishable,
        generalization_partial_shareable_with_caveat,
        generalization_failed_do_not_publish, blocked_on_upstream_exp_678,
-       blocked_on_dataset_download_failure}, model_card_written (bool).
+       blocked_on_dataset_download_failure), model_card_written (bool).
 
     7. Reconcile:
        - openspec/capabilities/safety/spec.md: add REQ-SAFE-010

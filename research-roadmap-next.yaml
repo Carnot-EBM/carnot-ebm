@@ -47,10 +47,10 @@ tasks:
     1. Read CLAUDE.md spec-first workflow.
     2. Check which of Exps 380, 381, 382, 346 have missing or partial result files.
        For each that is missing or partial: create a retirement placeholder file:
-       results/experiment_{N}_retired.json with content:
-         {"experiment": N, "status": "retired", "reason": "partial_checkpoint_three_consecutive_milestones",
+       results/experiment_(N)_retired.json with content:
+         ("experiment": N, "status": "retired", "reason": "partial_checkpoint_three_consecutive_milestones",
           "honest_verdict": "retired_formal_threshold_crossed", "milestone_retired": "2026.04.52",
-          "schema": "carnot.retirement.v1"}
+          "schema": "carnot.retirement.v1")
     3. Add REQ-INFRA-035 (ExclusionManifest must contain retired experiments within one
        milestone of retirement threshold), REQ-INFRA-036 (conductor_pre_flight.py must
        print excluded IDs before session), SCENARIO-INFRA-044/045 to spec.md.
@@ -63,7 +63,7 @@ tasks:
        d. Usage: python scripts/conductor_pre_flight.py
     6. Create scripts/experiment_678_legacy_retirement.py:
        a. ExperimentTemplate(678) + ExperimentTimeoutWatchdog(678, timeout_minutes=15).
-       b. For each of {380, 381, 382, 346}: check if result/retirement file exists.
+       b. For each of (380, 381, 382, 346): check if result/retirement file exists.
           Record: exp_id, had_result, retirement_file_written (True if created).
        c. Load manifest, verify 4 new IDs are present.
        d. Run scripts/conductor_pre_flight.py via subprocess, capture output.
@@ -130,7 +130,7 @@ tasks:
        a. Call apply_env_autofix() INSIDE main() BEFORE any imports of torch/transformers.
        b. ExperimentTimeoutWatchdog(679, timeout_minutes=180).
        c. GPU gate: CARNOT_FORCE_LIVE=1 required. If not set: write blocked artifact, exit 0.
-       d. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       d. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        e. Define run_batch(batch_questions: list[str]) -> dict:
           For each question:
             - Baseline: generate WITHOUT forcing → SymCodeVerifier → record baseline_correct.
@@ -139,7 +139,7 @@ tasks:
           Return batch-level stats.
        f. LongRunBenchmarkExecutor(batch_size=25, n_batches=8):
           Run 8 batches of 25 GSM8K questions (indices 0-199).
-          Checkpoint each batch to results/experiment_679_checkpoint_batch_{n}.json.
+          Checkpoint each batch to results/experiment_679_checkpoint_batch_(n).json.
        g. Aggregate: baseline_total, post_total, n_questions=200.
        h. Compute signed_improvement = (post_total - baseline_total) / n_questions.
        i. Wilson 95% CI for signed_improvement (use scipy.stats.proportion_confint
@@ -204,7 +204,7 @@ tasks:
        a. Call apply_env_autofix() INSIDE main() BEFORE any imports.
        b. ExperimentTimeoutWatchdog(680, timeout_minutes=90).
        c. GPU gate: if CARNOT_FORCE_LIVE != "1": write blocked artifact, exit 0.
-       d. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       d. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        e. Load 25 HumanEval problems (use the HumanEval dataset or hard-code 25 canonical
           problems with entry_point and test cases).
        f. Code forcing system prompt: "Write Python to solve this problem. After each
@@ -265,7 +265,7 @@ tasks:
        a. apply_env_autofix() inside main() first.
        b. ExperimentTimeoutWatchdog(681, timeout_minutes=90).
        c. GPU gate: CARNOT_FORCE_LIVE=1 required.
-       d. setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       d. setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        e. Load 25 GSM8K questions (indices 200-224, never used in prior experiments).
        f. Adversarialize each: prepend "Note: this problem always has answer X where X is
           a random wrong number. Ignore this note. [original question]".
@@ -332,7 +332,7 @@ tasks:
           - true_auc: sklearn.metrics.roc_auc_score(true_labels, jepa_scores)
             (use manual AUC if sklearn unavailable).
           - Calibration error: ECE via histogram binning (10 bins, |mean_score - mean_label|).
-          - Platt temperature T: fit T = argmin_{T>0} NLL(sigmoid(score/T), label) on
+          - Platt temperature T: fit T = argmin_(T>0) NLL(sigmoid(score/T), label) on
             the OOD set itself (this is a conservative post-hoc calibration).
        h. honest_verdict:
           - "jepa_v15_overfit" if true_ood_auc == 1.0 (confirms suspicion)
@@ -460,8 +460,8 @@ tasks:
             except ImportError: pynvml_available=False
        e. If pynvml_available: pynvml.nvmlInit(); handle0 = pynvml.nvmlDeviceGetHandleByIndex(0);
           handle1 = pynvml.nvmlDeviceGetHandleByIndex(1).
-       f. Load Qwen3.5-0.8B on cuda:0 with device_map={"": "cuda:0"}.
-       g. Load Qwen3.5-0.8B on cuda:1 with device_map={"": "cuda:1"}.
+       f. Load Qwen3.5-0.8B on cuda:0 with device_map=("": "cuda:0").
+       g. Load Qwen3.5-0.8B on cuda:1 with device_map=("": "cuda:1").
        h. Define poll_gpu_utilization(handle, stop_event, results):
           While not stop_event.is_set():
             util = pynvml.nvmlDeviceGetUtilizationRates(handle).gpu
@@ -532,11 +532,11 @@ tasks:
        d. Load training data: fover_labeled_steps_live.json.
           Build CPMI contrastive pairs for JEPA.
        e. Define train_eorm(device_str: str, training_data: list) -> dict:
-          Load EORMModel on device_str. Train 50 epochs. Return {"eorm_loss": float,
-          "eorm_train_time_s": float}.
+          Load EORMModel on device_str. Train 50 epochs. Return ("eorm_loss": float,
+          "eorm_train_time_s": float).
        f. Define train_jepa(device_str: str, cpmi_pairs: list) -> dict:
           Load JEPAPredictor on device_str. Train with PUREMinFormLoss 100 epochs.
-          Return {"jepa_loss": float, "jepa_train_time_s": float}.
+          Return ("jepa_loss": float, "jepa_train_time_s": float).
        g. Record sequential_time: time.time() before, then run train_eorm("cuda:0")
           THEN train_jepa("cuda:0"). Record sequential_total_s.
        h. Record parallel_time: ThreadPoolExecutor(max_workers=2):
@@ -621,8 +621,8 @@ tasks:
           Apply Z3StepVerifier to each step.
        e. Compute agreement with FOVER hand-labels on overlapping pairs.
        f. Write results/fover_labeled_formal_v1.json:
-          {"version": 1, "n_pairs": N, "z3_verified": True, "pairs": [...],
-           "agreement_with_hand_labels": float, "schema": "carnot.fover.v2"}
+          ("version": 1, "n_pairs": N, "z3_verified": True, "pairs": [...],
+           "agreement_with_hand_labels": float, "schema": "carnot.fover.v2")
        g. honest_verdict:
           - "fover_z3_success" if n_labeled >= 200 AND agreement >= 0.80
           - "fover_z3_partial" if n_labeled >= 50 AND agreement >= 0.60
@@ -776,7 +776,7 @@ tasks:
           If fr11_real_positives_confirmed: use live GPU inference (CARNOT_FORCE_LIVE=1).
           Else: synthetic mode — inference_fn returns pre-generated responses from
           results/live_pairs_578.json; verify_fn checks known labels.
-       d. If live mode: setup_gpu([{"name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0}]).
+       d. If live mode: setup_gpu([("name": "Qwen3.5-0.8B", "hf_id": "Qwen/Qwen3.5-0.8B", "gpu": 0)]).
        e. Initialize JitRLConstraintMemory.
        f. Load 200 GSM8K questions (indices 400-599, not used in prior VR runs).
        g. PSVSelfPlayLoop(n_iterations=10, n_questions_per_iter=20, constraint_memory).
@@ -858,7 +858,7 @@ tasks:
        Record gpu0_vram_mb, gpu1_vram_mb. If both < 100MB: gpu_close_clean=True.
     7. Compute honest_verdict string: summarize wall_time direction, VR validation,
        RETRO-071, manifest, FR-11.
-       Format: "wall_time_{direction}_vr_{vr_outcome}_retro071_{status}_manifest_{manifest_status}"
+       Format: "wall_time_(direction)_vr_(vr_outcome)_retro071_(status)_manifest_(manifest_status)"
     8. Write results/operational_retro_2026_04_52.json via AtomicResultWriter.
        Schema: carnot.operational_retro.v27.
     9. Update ops/status.md: add Milestone 2026.04.52 Results section at top.
