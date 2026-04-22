@@ -265,14 +265,136 @@ class TestLoadCorpus:
         result = self._fn(tmp_path, self._log)
         assert result == []
 
-    def test_picks_largest_file(self, tmp_path):
-        """When two corpus files exist, _load_corpus returns examples from the larger one."""
-        small = [{"text": "a", "label": "benign"}]
+    def test_combines_multiple_files(self, tmp_path):
+        """When two corpus files exist with non-overlapping prompts, _load_corpus combines them."""
+        small = [{"text": "unique_a", "label": "benign"}]
         large = [{"text": f"prompt_{i}", "label": "benign"} for i in range(20)]
         (tmp_path / "small.jsonl").write_text(json.dumps(small))
         (tmp_path / "large.jsonl").write_text(json.dumps(large))
         examples = self._fn(tmp_path, self._log)
-        assert len(examples) == 20
+        # Combined: 1 + 20 unique prompts
+        assert len(examples) == 21
+
+    def test_deduplicates_overlapping_prompts(self, tmp_path):
+        """When two corpus files share prompts, each unique text appears exactly once."""
+        shared = [{"text": "shared_prompt", "label": "benign", "source": "a"}]
+        extra = [{"text": "shared_prompt", "label": "benign", "source": "b"},
+                 {"text": "unique_prompt", "label": "injection", "source": "b"}]
+        (tmp_path / "a.jsonl").write_text(json.dumps(shared))
+        (tmp_path / "b.jsonl").write_text(json.dumps(extra))
+        examples = self._fn(tmp_path, self._log)
+        texts = [ex["text"] for ex in examples]
+        # "shared_prompt" should appear exactly once; "unique_prompt" once → total 2
+        assert len(texts) == 2
+        assert texts.count("shared_prompt") == 1
+        assert "unique_prompt" in texts
+
+    def test_skips_teacher_outputs_files(self, tmp_path):
+        """Files named teacher_outputs_*.jsonl are skipped (they have a different schema)."""
+        corpus = [{"text": "hello", "label": "benign"}]
+        (tmp_path / "corpus.jsonl").write_text(json.dumps(corpus))
+        # This is NOT a valid corpus array — it's JSONL; should be ignored without error.
+        (tmp_path / "teacher_outputs_abc123.jsonl").write_text(
+            '{"model_sha_short":"x","prompt_sha":"y","teacher_label":0}\n'
+        )
+        examples = self._fn(tmp_path, self._log)
+        assert len(examples) == 1
+        assert examples[0]["text"] == "hello"
+
+
+# ---------------------------------------------------------------------------
+# Tests: _load_all_caches
+# ---------------------------------------------------------------------------
+
+
+class TestLoadAllCaches:
+    """Tests for the unified cache loader that merges all teacher_outputs_*.jsonl files."""
+
+    @pytest.fixture(autouse=True)
+    def _import(self):
+        import logging
+        from scripts.experiment_678_prompt_injection_kan_true_distillation import _load_all_caches
+        self._fn = _load_all_caches
+        self._log = logging.getLogger("test")
+
+    def _make_entry(self, model_sha: str, prompt_sha: str, teacher_label: int) -> str:
+        """Return a single JSONL line for a teacher output entry."""
+        return json.dumps({
+            "model_sha_short": model_sha,
+            "prompt_sha": prompt_sha,
+            "source_label": "benign",
+            "teacher_label": teacher_label,
+            "teacher_raw": "safe",
+            "teacher_reasoning": "test",
+            "elapsed_s": 0.1,
+        })
+
+    def test_empty_dir_returns_empty(self, tmp_path):
+        """Returns empty dict when no teacher_outputs_*.jsonl files exist."""
+        result = self._fn(tmp_path, self._log)
+        assert result == {}
+
+    def test_loads_single_cache_file(self, tmp_path):
+        """Loads entries from one teacher_outputs_*.jsonl file."""
+        lines = "\n".join([
+            self._make_entry("abc123", "ph1", 0),
+            self._make_entry("abc123", "ph2", 1),
+        ])
+        (tmp_path / "teacher_outputs_sha1.jsonl").write_text(lines + "\n")
+        result = self._fn(tmp_path, self._log)
+        assert len(result) == 2
+
+    def test_merges_multiple_cache_files(self, tmp_path):
+        """Entries from multiple files are merged into a single dict."""
+        (tmp_path / "teacher_outputs_sha1.jsonl").write_text(
+            self._make_entry("abc123", "ph1", 0) + "\n"
+        )
+        (tmp_path / "teacher_outputs_sha2.jsonl").write_text(
+            self._make_entry("abc123", "ph2", 1) + "\n"
+        )
+        result = self._fn(tmp_path, self._log)
+        assert len(result) == 2
+
+    def test_cache_key_format(self, tmp_path):
+        """Cache keys are json.dumps([model_sha_short, prompt_sha])."""
+        (tmp_path / "teacher_outputs_sha1.jsonl").write_text(
+            self._make_entry("mymodel", "myprompt", 0) + "\n"
+        )
+        result = self._fn(tmp_path, self._log)
+        expected_key = json.dumps(["mymodel", "myprompt"])
+        assert expected_key in result
+
+    def test_later_file_wins_on_key_collision(self, tmp_path):
+        """When two files have the same (model_sha, prompt_sha), the later file's entry wins."""
+        # sha1 comes before sha2 alphabetically
+        (tmp_path / "teacher_outputs_sha1.jsonl").write_text(
+            self._make_entry("abc123", "ph1", 0) + "\n"
+        )
+        (tmp_path / "teacher_outputs_sha2.jsonl").write_text(
+            self._make_entry("abc123", "ph1", 1) + "\n"  # same key, different label
+        )
+        result = self._fn(tmp_path, self._log)
+        key = json.dumps(["abc123", "ph1"])
+        assert result[key]["teacher_label"] == 1  # sha2 wins
+
+    def test_ignores_malformed_lines(self, tmp_path):
+        """Malformed JSONL lines are silently skipped."""
+        content = (
+            self._make_entry("abc123", "ph1", 0) + "\n"
+            + "NOT VALID JSON\n"
+            + self._make_entry("abc123", "ph2", 1) + "\n"
+        )
+        (tmp_path / "teacher_outputs_sha1.jsonl").write_text(content)
+        result = self._fn(tmp_path, self._log)
+        assert len(result) == 2  # only valid lines loaded
+
+    def test_does_not_load_plain_corpus_files(self, tmp_path):
+        """Files without 'teacher_outputs_' prefix are ignored."""
+        (tmp_path / "corpus_abc.jsonl").write_text(
+            json.dumps([{"text": "hello", "label": "benign"}])
+        )
+        result = self._fn(tmp_path, self._log)
+        assert result == {}
 
 
 # ---------------------------------------------------------------------------

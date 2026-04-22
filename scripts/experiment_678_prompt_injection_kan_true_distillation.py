@@ -210,22 +210,14 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
     # -----------------------------------------------------------------------
     log.info("Phase 3: Teacher inference — loading gpt-oss-safeguard-20b on GPU")
 
-    # Load existing cache entries so interrupted runs can resume.
-    teacher_cache: dict[str, dict] = {}
+    # Load existing cache entries — scan ALL teacher_outputs_*.jsonl files so
+    # that an interrupted run using a different corpus_sha can still reuse results.
+    teacher_cache: dict[str, dict] = _load_all_caches(corpus_dir, log)
     if teacher_cache_path.exists():
-        log.info("Loading existing teacher cache from %s", teacher_cache_path)
-        with open(teacher_cache_path) as fh:
-            for line in fh:
-                line = line.strip()
-                if line:
-                    try:
-                        entry = json.loads(line)
-                        cache_key = (entry.get("model_sha_short"), entry.get("prompt_sha"))
-                        if cache_key[0] and cache_key[1]:
-                            teacher_cache[json.dumps(cache_key)] = entry
-                    except json.JSONDecodeError:
-                        pass
-        log.info("Loaded %d cached teacher outputs", len(teacher_cache))
+        log.info("Primary cache file exists: %s", teacher_cache_path)
+    else:
+        log.info("Primary cache file not yet created: %s", teacher_cache_path)
+    log.info("Loaded %d cached teacher outputs (from all cache files)", len(teacher_cache))
 
     # Determine which prompts still need teacher inference.
     need_inference = []
@@ -527,27 +519,74 @@ def _run(tmpl, log, deliverable, v0_weights_path, v1_weights_path, corpus_dir):
 
 
 def _load_corpus(corpus_dir: Path, log) -> list[dict]:
-    """Load the largest existing corpus JSON from corpus_dir.
+    """Load all existing corpus JSON files from corpus_dir, deduplicated by text.
 
     Returns a list of dicts with 'text', 'label', 'source', 'prompt_hash' keys.
-    Picks the file with the most examples if multiple are present.
-    The text and source-label are reused; teacher inference replaces the labels.
+    Combines all corpus files (skipping teacher_outputs_* files) and deduplicates
+    by prompt text so each unique prompt appears exactly once.
+
+    Deduplication keeps the first occurrence (by filename sort order) for stable
+    results across re-runs.  Source labels are preserved; teacher inference will
+    replace them.
     """
     jsonl_files = sorted(corpus_dir.glob("*.jsonl"))
     if not jsonl_files:
         return []
 
-    best_examples: list[dict] = []
+    seen_texts: dict[str, dict] = {}
     for f in jsonl_files:
+        # Skip teacher output cache files — they have a different schema.
+        if f.name.startswith("teacher_outputs_"):
+            continue
         try:
             data = json.loads(f.read_text())
-            if isinstance(data, list) and len(data) > len(best_examples):
-                best_examples = data
-                log.info("Corpus candidate: %s (%d examples)", f.name, len(data))
+            if isinstance(data, list):
+                before = len(seen_texts)
+                for ex in data:
+                    text = ex.get("text", "")
+                    if text and text not in seen_texts:
+                        seen_texts[text] = ex
+                after = len(seen_texts)
+                log.info("Corpus file %s: %d examples, %d new unique prompts", f.name, len(data), after - before)
         except Exception as exc:
             log.warning("Could not parse %s: %s", f.name, exc)
 
-    return best_examples
+    return list(seen_texts.values())
+
+
+def _load_all_caches(corpus_dir: Path, log) -> dict:
+    """Load all teacher_outputs_*.jsonl files in corpus_dir into a unified cache.
+
+    This allows an interrupted run to resume even if the corpus composition
+    changed between runs (which changes the corpus_sha and thus the cache filename).
+    All valid entries from all cache files are merged by their (model_sha_short,
+    prompt_sha) key, with later files taking precedence if keys collide.
+
+    Returns a dict mapping json.dumps([model_sha_short, prompt_sha]) -> entry dict.
+    """
+    combined: dict[str, dict] = {}
+    for f in sorted(corpus_dir.glob("teacher_outputs_*.jsonl")):
+        loaded = 0
+        try:
+            with open(f) as fh:
+                for line in fh:
+                    line = line.strip()
+                    if not line:
+                        continue
+                    try:
+                        entry = json.loads(line)
+                        ms = entry.get("model_sha_short")
+                        ps = entry.get("prompt_sha")
+                        if ms and ps:
+                            combined[json.dumps([ms, ps])] = entry
+                            loaded += 1
+                    except json.JSONDecodeError:
+                        pass
+        except Exception as exc:
+            log.warning("Could not load cache file %s: %s", f.name, exc)
+        log.info("Cache file %s: loaded %d entries", f.name, loaded)
+    log.info("Combined teacher cache: %d unique entries across all cache files", len(combined))
+    return combined
 
 
 # ---------------------------------------------------------------------------
