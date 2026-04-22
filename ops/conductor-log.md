@@ -2482,3 +2482,4 @@ python/ |
 | 2026-04-22 13:01 UTC | Exp 704: JEPA v17 Architecture — RankNet Pairwise  | OK | 81 passed, 3 warnings in 4.00s |
 | 2026-04-22 13:12 UTC | Exp 705: JEPA v17 Cascade Deploy + OOD Validation  | OK | 81 passed, 3 warnings in 3.71s |
 | 2026-04-22 13:28 UTC | Exp 706: Gemma4-E4B-it VR Diagnostic — Trace Pipel | OK | 81 passed, 3 warnings in 4.93s |
+| 2026-04-22 13:39 UTC | Exp 707: Model-Adaptive Constraint Thresholds — Pe | OK | 81 passed, 3 warnings in 4.04s |
