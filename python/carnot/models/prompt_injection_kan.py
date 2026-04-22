@@ -668,3 +668,60 @@ class PromptInjectionEnergyCheckerV2(PromptInjectionEnergyChecker):
         path.parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as fh:
             json.dump(data, fh, indent=2)
+
+
+class PromptInjectionEnergyCheckerV3(PromptInjectionEnergyCheckerV2):
+    """Prompt injection KAN v3 with 16 knots per spline.
+
+    **Why 16 knots instead of 8 (v2):**
+    Exp 710 achieved AUROC=0.8747 with 8 knots and ~1091 training examples —
+    just below the 0.90 Tier 0b gate.  Increasing to 16 knots doubles the
+    spline resolution, allowing sharper transitions in the energy landscape
+    between benign and injection regions.  Each additional knot adds one
+    piecewise-linear segment to each activation, giving the optimizer finer
+    control over where the energy surface inflects.
+
+    **Interpretability is preserved:**
+    16 control points per spline are still human-readable.  Each breakpoint
+    corresponds to a named injection feature's sensitivity threshold — e.g.,
+    "above this count of 'ignore previous', the energy spikes linearly".
+
+    **Parameter count (n_features=32, n_hidden=8, degree=3):**
+        edge_params  = 8 * 32 * (16+3) = 4864
+        output_params = 8 * (16+3)      = 152
+        total         = 5016
+
+    **Training unchanged:**
+    Same Adam lr=1e-3, cosine decay, mini-batch contrastive loss, and
+    weight_decay=1e-4 as v2.  100 epochs default.
+
+    Spec: REQ-KAN-004, SCENARIO-KAN-004
+    """
+
+    _N_KNOTS: int = 16
+
+    def save(self, path: str | Path) -> None:
+        """Save v3 control points to JSON.
+
+        Writes schema="carnot.prompt_injection_kan.v3" to distinguish from v1/v2
+        checkpoints.  Downstream deployment loaders check schema to select the
+        correct n_knots when restoring.
+
+        Args:
+            path: Destination path (should end with .json).
+
+        Spec: REQ-KAN-004
+        """
+        data = {
+            "schema": "carnot.prompt_injection_kan.v3",
+            "n_features": self.n_features,
+            "n_hidden": self.n_hidden,
+            "n_knots": self._N_KNOTS,
+            "degree": self._DEGREE,
+            "edge_ctrl": self.edge_ctrl.tolist(),
+            "output_ctrl": self.output_ctrl.tolist(),
+        }
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with open(path, "w") as fh:
+            json.dump(data, fh, indent=2)
