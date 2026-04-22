@@ -2484,3 +2484,4 @@ python/ |
 | 2026-04-22 13:28 UTC | Exp 706: Gemma4-E4B-it VR Diagnostic — Trace Pipel | OK | 81 passed, 3 warnings in 4.93s |
 | 2026-04-22 13:39 UTC | Exp 707: Model-Adaptive Constraint Thresholds — Pe | OK | 81 passed, 3 warnings in 4.04s |
 | 2026-04-22 13:57 UTC | Exp 708: Live VR Attempt #19 — Gemma4-E4B-it with  | OK | 81 passed, 3 warnings in 4.12s |
+| 2026-04-22 14:19 UTC | Exp 709: PSV PaCoRe K=2 Parallel Self-Play — DualG | OK | 81 passed, 3 warnings in 4.88s |
