@@ -1,0 +1,43 @@
+{
+  "experiment": 695,
+  "title": "FormalStepVerifier vs EidokuCSP: Tier 2.8 Candidate Benchmark",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T10:07:38Z",
+  "finished_at": "2026-04-22T10:07:38Z",
+  "duration_s": 0.003,
+  "status": "success",
+  "n_pairs": 200,
+  "corpus_path": "results/fover_labeled_formal_v1.json",
+  "corpus_degenerate": true,
+  "symcode_auc": 0.5,
+  "formal_step_auc": 0.5,
+  "eidoku_auc": 0.5,
+  "ms_per_chain": {
+    "symcode_verifier": 0.003,
+    "formal_step_verifier": 0.001,
+    "eidoku_csp": 0.002
+  },
+  "tier_28_winner": "neither_below_threshold",
+  "honest_verdict": "tier_28_no_candidate",
+  "notes": "FoVer corpus v1 contains only step_correct=True labels (all Z3 verdicts are 'unparseable' \u2014 single-step 'The answer is 42.' format with no arithmetic). AUC is undefined; reported as 0.5 (random baseline). A corpus with genuine violation examples is required for meaningful Tier 2.8 benchmarking.",
+  "schema": [
+    "corpus_degenerate",
+    "corpus_path",
+    "duration_s",
+    "eidoku_auc",
+    "experiment",
+    "finished_at",
+    "formal_step_auc",
+    "honest_verdict",
+    "ms_per_chain",
+    "n_pairs",
+    "notes",
+    "run_date",
+    "started_at",
+    "status",
+    "symcode_auc",
+    "tier_28_winner",
+    "title"
+  ],
+  "invariant_violations": []
+}
