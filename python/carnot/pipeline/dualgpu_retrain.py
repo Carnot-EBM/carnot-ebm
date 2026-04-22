@@ -27,8 +27,26 @@ Spec: REQ-INFRA-091, SCENARIO-INFRA-097, SCENARIO-INFRA-098
 from __future__ import annotations
 
 import concurrent.futures
+import logging
+import time
 from dataclasses import dataclass
-from typing import Callable, TypeVar
+from typing import Any, Callable, TypeVar
+
+_log = logging.getLogger(__name__)
+
+
+def _count_cuda_gpus() -> int:
+    """Return the number of CUDA GPUs available on this host.
+
+    Returns 0 when torch is not installed or no CUDA device is present.
+    Called at retrain time so we do not force CUDA initialisation at import time.
+    """
+    try:
+        import torch  # noqa: PLC0415
+
+        return torch.cuda.device_count()
+    except Exception:
+        return 0
 
 T = TypeVar("T")
 U = TypeVar("U")
@@ -96,3 +114,106 @@ class DualGPURetrain:
             eorm_result = eorm_future.result()
             jepa_result = jepa_future.result()
         return {"eorm": eorm_result, "jepa": jepa_result}
+
+    def retrain_parallel(
+        self,
+        eorm_fn: "Callable[..., dict[str, Any]]",
+        jepa_fn: "Callable[..., dict[str, Any]]",
+        eorm_device: str = "cuda:0",
+        jepa_device: str = "cuda:1",
+    ) -> "dict[str, Any]":
+        """Run EORM and JEPA retraining concurrently; fall back to sequential on 1 GPU.
+
+        This is the REQ-INFRA-049 entry point — the validated Exp 685 ThreadPoolExecutor
+        pattern (2.0175x speedup) as a production-ready method.  Each callable should
+        accept a `device` keyword argument; if it does not, it is called without one.
+
+        Single-GPU fallback (SCENARIO-INFRA-058):
+            When fewer than 2 CUDA GPUs are detected, both callables run sequentially
+            on cuda:0 (or cpu if no GPU).  The result dict includes
+            `fallback_reason: "single_gpu"` so callers can detect the degraded path.
+
+        Parameters
+        ----------
+        eorm_fn : callable
+            EORM training callable.  Called as `eorm_fn(device=eorm_device)`.
+        jepa_fn : callable
+            JEPA training callable.  Called as `jepa_fn(device=jepa_device)`.
+        eorm_device : str
+            CUDA device for EORM (default "cuda:0").
+        jepa_device : str
+            CUDA device for JEPA (default "cuda:1").
+
+        Returns
+        -------
+        dict with keys:
+            eorm_result (dict): return value of eorm_fn.
+            jepa_result (dict): return value of jepa_fn.
+            wall_time_s (float): parallel (or sequential fallback) wall-clock seconds.
+            speedup_vs_sequential (float): always 1.0 (sequential baseline not re-run here).
+            eorm_device (str): device used for EORM.
+            jepa_device (str): device used for JEPA.
+            fallback_reason (str): present only on single-GPU host; value "single_gpu".
+
+        Spec: REQ-INFRA-049, SCENARIO-INFRA-058
+        """
+        n_gpus = _count_cuda_gpus()
+
+        if n_gpus < 2:
+            # Single-GPU fallback: run sequentially on cuda:0 (or cpu if no GPU at all).
+            _log.warning(
+                "DualGPURetrain.retrain_parallel: only %d GPU(s) detected — "
+                "falling back to sequential execution (SCENARIO-INFRA-058)",
+                n_gpus,
+            )
+            fallback_device = eorm_device if n_gpus >= 1 else "cpu"
+            t0 = time.perf_counter()
+            eorm_result = _call_with_device(eorm_fn, fallback_device)
+            jepa_result = _call_with_device(jepa_fn, fallback_device)
+            wall_time_s = round(time.perf_counter() - t0, 3)
+            return {
+                "eorm_result": eorm_result,
+                "jepa_result": jepa_result,
+                "wall_time_s": wall_time_s,
+                "speedup_vs_sequential": 1.0,
+                "fallback_reason": "single_gpu",
+                "eorm_device": fallback_device,
+                "jepa_device": fallback_device,
+            }
+
+        # Dual-GPU path: ThreadPoolExecutor with 2 workers, one per GPU.
+        _log.info(
+            "DualGPURetrain.retrain_parallel: launching parallel — EORM on %s, JEPA on %s",
+            eorm_device,
+            jepa_device,
+        )
+        t_parallel = time.perf_counter()
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            eorm_future = executor.submit(_call_with_device, eorm_fn, eorm_device)
+            jepa_future = executor.submit(_call_with_device, jepa_fn, jepa_device)
+            eorm_result = eorm_future.result()
+            jepa_result = jepa_future.result()
+        wall_time_s = round(time.perf_counter() - t_parallel, 3)
+
+        _log.info("DualGPURetrain.retrain_parallel: done in %.3f s", wall_time_s)
+        return {
+            "eorm_result": eorm_result,
+            "jepa_result": jepa_result,
+            "wall_time_s": wall_time_s,
+            "speedup_vs_sequential": 1.0,
+            "eorm_device": eorm_device,
+            "jepa_device": jepa_device,
+        }
+
+
+def _call_with_device(fn: "Callable[..., Any]", device: str) -> Any:
+    """Call fn(device=device) if accepted; otherwise call fn().
+
+    Why this helper: pre-existing training functions may not accept a `device`
+    argument.  We probe via try/except and fall back gracefully rather than
+    requiring callers to update every training function signature.
+    """
+    try:
+        return fn(device=device)
+    except TypeError:
+        return fn()

@@ -248,6 +248,16 @@ connect_bd_net \
     [get_bd_pins proc_sys_reset_0/slowest_sync_clk] \
     [get_bd_pins ising_sampler_0/S_AXI_ACLK]
 
+# RETRO-074 hang #10 candidate: associate maxihpm0_fpd_aclk with
+# proc_sys_reset_0/interconnect_aresetn explicitly.  Without this, Vivado's
+# IP_Flow 19-5611 infers the aclk has no associated reset and creates a
+# "default connection" (tie-off) for M_AXI_HPM0_FPD's reset — which may
+# hold the PS's M_AXI master interface in reset or leave its CDC logic
+# uninitialised.  This warning has been present in every build since hang
+# #1 and was never acted on.
+set_property CONFIG.ASSOCIATED_RESET {proc_sys_reset_0/interconnect_aresetn} \
+    [get_bd_pins zynq_ultra_ps_e_0/maxihpm0_fpd_aclk]
+
 # PS reset (active-low, from PL0) → proc_sys_reset ext_reset_in
 connect_bd_net \
     [get_bd_pins zynq_ultra_ps_e_0/pl_resetn0] \
