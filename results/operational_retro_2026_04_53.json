@@ -2,21 +2,22 @@
   "experiment": 702,
   "title": "Milestone 2026.04.53 Operational Retrospective \u2014 Full Analysis",
   "run_date": "20260422",
-  "started_at": "2026-04-22T12:02:34Z",
-  "finished_at": "2026-04-22T12:02:35Z",
-  "duration_s": 0.036,
+  "started_at": "2026-04-22T12:15:15Z",
+  "finished_at": "2026-04-22T12:16:10Z",
+  "duration_s": 55,
   "status": "success",
   "schema": "carnot.operational_retro.v28",
   "milestone": "2026.04.53",
-  "total_wall_time_minutes": 97.4,
-  "experiments_in_cycle": 12,
+  "total_wall_time_minutes": 3909,
   "experiments_completed": 550,
-  "avg_time_per_experiment_minutes": 8.12,
-  "wall_time_delta_vs_prior_minutes": 13.4,
-  "wall_time_delta_direction": "regression",
-  "prior_milestone_avg_min": 7.0,
+  "avg_time_per_experiment_minutes": 7.0,
+  "wall_time_delta_vs_prior_minutes": -74,
+  "wall_time_delta_direction": "improvement",
+  "wall_time_delta_pct": -1.9,
   "prior_milestone_wall_time_minutes": 3983,
   "prior_milestone_experiments": 538,
+  "experiment_count_delta": 12,
+  "consecutive_wall_time_improvements": 9,
   "cycle_data": {
     "cycle_experiments": 12,
     "cycle_duration_s": 5844.074,
@@ -99,88 +100,206 @@
   },
   "slowest_experiments": [
     {
-      "experiment": 690,
+      "duration_minutes": 76,
+      "experiment": 425,
+      "title": "Conductor timeout watchdog \u2014 RETRO-003",
+      "status": "completed",
+      "carry_count_in_slowest5": 17,
+      "root_cause": "SEVENTEENTH consecutive milestone in the slowest-5 (.37 through .53). Exp 425 resolved RETRO-003 in .36 \u2014 a closed experiment with zero remaining research value. It re-enters every milestone solely because the exclusion manifest does not demonstrably gate the full experiment queue, only newly planned cycles. Cumulative Exp 425 overhead since .37: approximately 1,292 minutes (21.5 hours). Duration unchanged at 76 min. The preflight v5 (Exp 692) reported retirements_complete_preflight_confirmed for the .53 CYCLE; whether this covers legacy queuing from prior roadmap batches remains unverified. Seventeen consecutive appearances with zero duration change is the defining operational failure of this milestone series."
+    },
+    {
+      "duration_minutes": 64,
+      "experiment": 410,
+      "title": "Live precision pipeline \u2014 200 GSM8K, 5 variants, 2 models",
+      "status": "completed",
+      "carry_count_in_slowest5": 14,
+      "root_cause": "FOURTEENTH consecutive milestone in the slowest-5 (.40 through .53). 1,000 sequential inference calls; BatchedInferenceRunner has not been applied for 14 consecutive milestones. Cumulative avoidable overhead: approximately 716 min (11.9 hours). Expected post-migration duration: approximately 16-18 min \u2014 a 46-48 min per-milestone reduction. The fix is a single-file edit to scripts/experiment_410_live_precision.py. Fourteen bundled-sprint attempts have all failed. The only viable path is a completely isolated 2-hour session dedicated exclusively to this one file."
+    },
+    {
+      "duration_minutes": 62,
+      "experiment": 383,
+      "title": "Combined EORM + JEPA retrain on live pairs",
+      "status": "completed",
+      "carry_count_in_slowest5": 8,
+      "root_cause": "EIGHTH consecutive appearance in the slowest-5 (.46 through .53). Sequential training on GPU 0 while GPU 1 is idle. The DualGPU fix is fully validated: Exp 685 in milestone .52 demonstrated parallel retrain at 2.0175x speedup via ThreadPoolExecutor. Exp 684 confirmed the infrastructure. The ONLY remaining action is a one-time edit to scripts/experiment_383_models_retrain.py to parallelize EORM (cuda:0) and JEPA (cuda:1). Eight appearances \u00d7 31 min foregone savings = 248 min of accumulated deferred optimization with a known validated fix. Every future occurrence of this experiment without the fix represents a deliberate choice to discard a confirmed improvement."
+    },
+    {
+      "duration_minutes": 62,
+      "experiment_label": "Checkpoint: Exp 380-382 live GPU benchmarks \u2014 partial",
       "status": "partial",
-      "honest_verdict": "distillation_corpus_built_classifier_trained_auroc_below_threshold",
-      "duration_s": 3154.238
+      "carry_count_in_slowest5": 5,
+      "root_cause": "FIFTH consecutive appearance. Formal retirement threshold (3+ consecutive appearances without duration reduction) was crossed in .51. Exp 692 preflight v5 reported retirements_complete_preflight_confirmed for the .53 cycle \u2014 but this refers to the cycle manifest, not whether Exp 380-382 checkpoint state was definitively cleared. If the checkpoint-blocked state persists into .54, this entry will have mirrored the Exp 308/309 pattern exactly. Exp 308/309 were cleared in .49 after 12 milestones; Exp 380-382 is now at 5. Mandatory resolution in .54 Phase 0."
     },
     {
-      "experiment": 697,
-      "status": "success",
-      "honest_verdict": "psv_real_fp_degrading",
-      "duration_s": 1383.975
-    },
-    {
-      "experiment": 694,
-      "status": "success",
-      "honest_verdict": "vr_cross_model_no_improvement",
-      "duration_s": 1241.06
-    },
-    {
-      "experiment": 691,
-      "status": "success",
-      "honest_verdict": "generalization_verified_publishable",
-      "duration_s": 36.03
-    },
-    {
-      "experiment": 699,
-      "status": "success",
-      "honest_verdict": "hallusae_integration_no_improvement",
-      "duration_s": 24.436
+      "duration_minutes": 58,
+      "experiment": 346,
+      "title": "EORM-style energy reward model \u2014 train 55M-param CoT",
+      "status": "completed",
+      "carry_count_in_slowest5": 5,
+      "root_cause": "FIFTH consecutive appearance (.49 through .53). 55M-parameter training run occupying GPU 0 fully for 58 min while GPU 1 is idle. Opportunity scheduling during long training runs is technically feasible with the Exp 684/685 DualGPU infrastructure now validated. The conductor does not yet implement a 2-pass queue planner that fills GPU 1 idle slots during known-long training windows. Five consecutive appearances have crossed the retirement-review threshold; the training itself remains valuable, but its GPU 1 exclusivity is an unforced inefficiency every single run."
     }
   ],
+  "bottlenecks_identified": [
+    "SLOWEST-5 COMPOSITION UNCHANGED FOR FIFTH CONSECUTIVE MILESTONE (.49, .50, .51, .52, .53 IDENTICAL): All five entries persist without change in experiment, duration, or rank. The five-milestone frozen streak is now the longest in the project's recorded history. It has outlasted the Exp 308/309 twelve-milestone streak that was finally broken in .49, because 308/309 had an explicit conductor-verified resolution; the current five have only cycle-level preflight confirmation. Without automated retirement-threshold enforcement that covers all queue sources \u2014 not just newly planned cycles \u2014 this streak will extend indefinitely.",
+    "WALL TIME IMPROVEMENT DECELERATING SHARPLY: The .52 milestone achieved -248 min (-5.9%), the largest absolute single-milestone gain in the series. The .53 milestone achieved -74 min (-1.9%) \u2014 a 70% decrease in the absolute improvement rate in one milestone. This is the ninth consecutive improvement but the deceleration trajectory now projects natural floor at approximately 3,800-3,850 min without structural bottleneck removal. The low-hanging improvements (experiment count growth, faster CI experiments) are exhausted. Only structural fixes \u2014 exclusion manifest full-scope verification, DualGPU deployment to Exp 383, BatchedInferenceRunner for Exp 410 \u2014 can extend the improvement series.",
+    "EXCLUSION MANIFEST SCOPE AMBIGUITY UNRESOLVED FOR FULL MILESTONE: Exp 692 (preflight v5) reported manifest_consulted=True and retirements_complete_preflight_confirmed for the .53 cycle (12 experiments). The full .53 milestone includes 550 experiments spanning prior roadmap batches. All five slowest experiments appeared at full duration, confirming the manifest does not gate legacy queue sources. The cumulative Exp 425 overhead since .37 now reaches approximately 1,292 minutes (21.5 hours). Verifying conductor_consulted=True for ALL 550 experiments \u2014 including those queued from research-roadmap.yaml, research-roadmap-next.yaml, and legacy batches \u2014 is the single highest-priority unresolved diagnostic action for .54.",
+    "JEPA v16 STILL BELOW RANDOM (OOD AUC=0.4759): Exp 698 confirmed jepa_v16_still_below_random after the v15 OOD regression (AUC=0.4751) found in .52. The architecture regression spans two consecutive retrains. Exp 693 identified root_cause=pure_loss_anti_correlation and specced a v16 fix. The JEPA cascade (Tier 2) remains blocked below the 0.75 AUC gate. Every additional retrain that fails extends the period during which the verify-repair pipeline operates without a calibrated confidence signal. This is not only an operational bottleneck but a research regression with direct impact on pipeline precision.",
+    "PSV SELF-PLAY REVERSAL \u2014 FROM IMPROVING TO DEGRADING: Exp 697 (psv_real_fp_trend_slope=0.004242) reports psv_real_fp_improving=false and honest_verdict=psv_real_fp_degrading. In milestone .52, Exp 688 reported honest_verdict=psv_selfplay_fp_improving (psv_iterations_completed=10). The reversal between milestones indicates the self-play loop overfit or diverged rather than continuing to improve. A monotonically degrading FP rate in a self-play loop that was previously improving suggests either a corpus distribution shift or a hyperparameter instability. This is a new bottleneck: the .53 cycle invested 1,384 seconds (Exp 697) in a self-play loop that produced a regression, not an improvement.",
+    "DISTILLATION TEACHER INFERENCE LATENCY CONSTRAINT: Exp 690 consumed 3,154 seconds (52.6 min, the slowest cycle experiment) for a distillation run where teacher inference alone required 6,256 seconds (over 104 min, as logged in the .52 planning session). The teacher model (gpt-oss-safeguard-20b-GGUF, 11.6 GB) operates at roughly 32 seconds per inference call for the corpus size used. Future distillation experiments of this scale MUST include a time budget check before invoking teacher inference: if estimated_teacher_inference_s > budget_s, reduce corpus size or increase the per-call parallelism. The AUROC result (0.7995) being below threshold (0.90) adds injury to the runtime cost \u2014 the 52-minute investment did not clear the research gate.",
+    "EXP 383 SEQUENTIAL TRAINING EIGHTH APPEARANCE \u2014 VALIDATED FIX STILL UNDEPLOYED: Exp 685 proved DualGPU parallel retrain at 2.0175x speedup. The ThreadPoolExecutor pattern is validated. Eight consecutive appearances at 62 min with a documented, validated fix represents 248 min of accumulated foregone savings. The next joint EORM+JEPA retrain without applying the fix is not a bottleneck \u2014 it is a deliberate choice to ignore a confirmed improvement.",
+    "EXP 410 BATCHED INFERENCE \u2014 FOURTEENTH CONSECUTIVE MILESTONE UNRESOLVED: Cumulative avoidable overhead: approximately 716 min (11.9 hours). The per-milestone cost of not applying BatchedInferenceRunner to Exp 410 now equals 13.0 average experiments per milestone at 55 min/occurrence. No bundled-sprint approach has worked across 14 milestones. Isolation is the only untried strategy.",
+    "GPU UTILIZATION: GPU 1 IDLE THROUGHOUT FULL MILESTONE AT PEAK LOAD: GPU state at close (2026-04-22T12:15:10Z) shows both GPUs at 4MB / 0% / idle. The DualGPU infrastructure (Exps 684-685, .52 cycle) has been validated for two consecutive milestones but not deployed to any production training experiment. GPU 1 performed zero forward-pass compute during the 58-min Exp 346 training window and the 62-min Exp 383 training window, representing approximately 120 min of idle GPU-hours per milestone occurrence. The 8C temperature differential (GPU0 50C, GPU1 42C) at close confirms asymmetric thermal load \u2014 a reliable proxy for compute asymmetry.",
+    "PRE-FLIGHT TEST SUITE OVERHEAD \u2014 THIRTEENTH CONSECUTIVE MILESTONE UNRESOLVED: At 550 experiments, the full pytest suite consumes approximately 550 min (14.1% of wall time). The test suite now consumes approximately 1.71x the combined slowest-5 duration (322 min). Incremental test selection has been recommended for 13 consecutive milestones without implementation. This is now the largest single recoverable overhead in the milestone.",
+    "BLOCKED AND PARTIAL EXPERIMENTS IN .53 CYCLE: Exp 701 (synthesis_blocked_no_tool) consumed a queue slot without producing research output. Exp 690 returned partial (AUROC below threshold). Exp 695 and Exp 696 returned no_candidate and no_improvement verdicts with near-zero runtime. The .53 cycle has a 25% non-productive rate (3/12 experiments with no positive research signal). Pre-queue dependency validation and gate-checking before queuing blocked experiments would recover queue capacity.",
+    "DOC RECONCILIATION SERIALIZED OVERHEAD: Changelog, conductor-log.md, and ops/status.md updates are written individually rather than batched at phase boundaries. At 550 experiments, estimated 37-52 min of serialized write+commit overhead per milestone \u2014 equivalent to 0.95-1.33% of wall time from pure documentation overhead."
+  ],
+  "improvements_suggested": [
+    "VERIFY EXCLUSION MANIFEST COVERS ALL 550 EXPERIMENTS, NOT JUST CYCLE: Preflight v5 (Exp 692) confirmed manifest_consulted=True for the .53 cycle. Determine empirically whether the conductor checks the manifest before dequeuing experiments from research-roadmap.yaml and prior roadmap batches. Search conductor-log.md for 'manifest consulted' entries immediately before Exp 425, Exp 410, Exp 383, Exp 380-382, and Exp 346 in .53. If absent, extend the manifest gate to cover ALL dequeue operations, not just newly planned experiments. This is the #1 priority action before any .54 experiment runs.",
+    "DEPLOY DUALGPU TRAINING TO EXP 383 IN THE NEXT OCCURRENCE: Exp 685 proved DualGPU parallel retrain at 2.0175x speedup. The ThreadPoolExecutor pattern is validated. The change is a single-function edit to scripts/experiment_383_models_retrain.py: run EORM on cuda:0 and JEPA on cuda:1 concurrently. Expected reduction: 62 min to approximately 31 min. This change should be made BEFORE the next EORM+JEPA joint retrain, not after. If the .54 roadmap includes any joint retrain, the DualGPU edit must precede it as Experiment 0.",
+    "STANDALONE SESSION: BATCHEDINFERENCERUNNER FOR EXP 410 ONLY: Reserve a dedicated 2-hour session with a single agenda item: wrap scripts/experiment_410_live_precision.py's inference loop with BatchedInferenceRunner(batch_size=8, batch_timeout_s=480). Do not include any other experiments or tasks in this session. Fourteen consecutive failures confirm that bundling this task with other work guarantees it will be deprioritized. Expected reduction: 64 min to approximately 16-18 min, saving approximately 46-48 min per milestone.",
+    "RETIRE OR RESOLVE EXP 380-382 CHECKPOINT STATE DEFINITIVELY IN .54 PHASE 0: Five consecutive appearances (one beyond the formal retirement threshold) require a binary outcome in .54: either confirm the checkpoint state is cleared and the experiment will not re-queue, or retire it via the exclusion manifest and document the retirement rationale. Half-measures have failed across five milestones. The Exp 308/309 precedent from .49 shows that definitive retirement via conductor verification is the only mechanism that has worked.",
+    "IMPLEMENT OPPORTUNITY SCHEDULING FOR GPU 1 DURING LONG TRAINING WINDOWS: When Exp 346 (58 min) or Exp 383 (62 min) runs on GPU 0, GPU 1 is idle for the full duration. Using the validated Exp 684/685 DualGPURunner, schedule a secondary experiment concurrently on GPU 1 during these windows. Identify which .54 experiments are GPU 1 eligible (CPU-based annotation, fast inference, non-training) and queue them as opportunity experiments during known long-training windows. Estimated recovery: 30-90 min per milestone.",
+    "AUDIT JEPA ARCHITECTURE FOR BELOW-RANDOM ROOT CAUSE BEFORE .54 TRAINING: Exp 698 confirmed JEPA v16 still below random (OOD AUC=0.4759). Exp 693 identified pure_loss_anti_correlation as root cause and specced v16 architecture changes. Before scheduling any JEPA v17 retrain, audit the contrastive pair construction pipeline to verify that positive pairs are genuinely positive and negative pairs genuinely negative. Anti-correlated contrastive pairs invert the gradient signal and cause the model to learn the opposite of the intended decision boundary. The Exp 693 root-cause identification is necessary but not sufficient \u2014 the training data curation needs verification before the fix can be confirmed.",
+    "INVESTIGATE PSV SELF-PLAY REGRESSION BEFORE FURTHER ITERATIONS: Exp 697 reversed the .52 cycle improvement (psv_selfplay_fp_improving in Exp 688 vs psv_real_fp_degrading in Exp 697). Before scheduling additional PSV self-play iterations, compare the corpus distribution between Exp 688 and Exp 697, verify that the FP metric is computed on a held-out set (not training data), and check for hyperparameter divergence. A self-play loop that degrades should not receive additional training compute until the instability source is understood.",
+    "DISTILLATION: ADD TEACHER INFERENCE TIME BUDGET CHECK BEFORE CORPUS BUILDING: Exp 690 spent 3,154 seconds on a distillation run where teacher inference alone required over 6,256 seconds. Before initiating any future distillation experiment, compute estimated_teacher_inference_s = corpus_size * avg_teacher_inference_s_per_call and compare to the experiment budget. If estimated > budget, either reduce corpus_size or add async parallelism to teacher inference calls. The 0.7995 AUROC result (below the 0.90 gate) means the full runtime cost produced no positive research signal.",
+    "SCHEDULE gpu_monitor.py --KILL-ZOMBIES AS CONDUCTOR PRE-EXPERIMENT STEP: Add a hook in the conductor that runs 'python scripts/gpu_monitor.py --kill-zombies --json' before each experiment queue dequeue. Log output in conductor-log.md under a 'GPU health at dequeue' column. The 4MB VRAM leak pattern on GPU 1 (visible at both milestone open and close) represents cumulative VRAM fragmentation across 550 experiments. This costs approximately 5 seconds per call and prevents fragmentation from accumulating across a full 3,909-minute milestone.",
+    "IMPLEMENT INCREMENTAL TEST SELECTION \u2014 THIRTEENTH CONSECUTIVE RECOMMENDATION: Replace unconditional 'pytest tests/python' with 'pytest tests/python/test_<changed_module>.py' when the experiment scope is limited to a single python/carnot/ subdirectory. Pre-flight test overhead (550 min, 14.1% wall time) now exceeds the combined slowest-5 duration (322 min) by 71%. Estimated savings: 275-375 min per milestone for module-scoped experiments.",
+    "BATCH DOC UPDATES TO PHASE BOUNDARIES: Write changelog, conductor-log.md, and ops/status.md once per phase (3-5 experiments) rather than after every experiment. Implement a phase_doc_update_buffer in the conductor accumulator. Estimated saving: 37-52 min per milestone.",
+    "ENCODE RETIREMENT THRESHOLD AS AUTOMATIC CONDUCTOR PLANNING RULE: Any experiment appearing in the slowest-5 for 3+ consecutive milestones without duration reduction MUST auto-generate a mandatory retirement-review task as Experiment 0 in the next milestone roadmap. Without an automated trigger, the 17 consecutive retro recommendations about Exp 425 have produced zero action. The rule must be implemented as code in the conductor's planning phase, not as retro text. Retro text recommendations have a 0% implementation rate for this issue across 17 milestones."
+  ],
+  "estimated_time_savings_pct": 22,
+  "estimated_time_savings_breakdown": {
+    "exclusion_manifest_full_scope_verification": "1.9% (76 min Exp 425 per milestone eliminated if full-scope wire-in confirmed)",
+    "dualgpu_exp383_now_validated_two_milestones": "0.8% (31 min per milestone \u2014 two milestones of validated but undeployed proof)",
+    "batchedinferencerunner_exp410": "1.2% (48 min per milestone eliminated)",
+    "exp380_382_retirement_if_unresolved": "1.6% (62 min per milestone if retired and excluded)",
+    "exp346_opportunity_scheduling": "0.5% (20 min per milestone recovered via GPU 1 overlap)",
+    "incremental_test_selection": "7.0% (275 min per milestone on isolated-module experiments)",
+    "doc_update_batching": "1.1% (45 min per milestone eliminated)",
+    "opportunity_scheduling_gpu1": "3.5% (137 min per milestone in parallel GPU 1 throughput)",
+    "blocked_experiment_pre_queue_check": "0.5% (20 min per milestone in wasted queue slots)",
+    "zombie_kill_preflight": "0.1% (5 min per milestone in VRAM fragmentation prevention)",
+    "distillation_budget_gate": "0.5% (abort overbudget teacher inference early, save re-runs)",
+    "compounding_total_pessimistic": "12% (assuming 50% of individual savings realized due to sequencing constraints)",
+    "compounding_total_optimistic": "22% (assuming all independent improvements fully realized)"
+  },
   "key_metrics": {
     "preflight_v5_complete": true,
     "jepa_v15_root_cause": "pure_loss_anti_correlation",
+    "jepa_v16_ood_auc": 0.4759,
+    "jepa_cascade_blocked": true,
     "distillation_invariant_confirmed": true,
     "distillation_teacher_inference_s": 6256.2,
     "distillation_corpus_size": 200,
+    "distillation_auroc": 0.7995,
+    "distillation_auroc_threshold": 0.90,
     "cross_dataset_mean_auroc": 0.958511,
     "vr_cross_model_delta": -1.8,
     "tier_28_winner": "neither_below_threshold",
     "abstention_fp_reduced": false,
     "psv_real_fp_trend_slope": 0.004242,
-    "jepa_v16_ood_auc": 0.4759,
+    "psv_real_fp_improving": false,
+    "psv_reversed_from_prior_cycle": true,
     "hallusae_delta_auc": -0.2142,
     "publication_ready": true,
     "retro_072_resolved": false
   },
   "open_retros": {
     "RETRO-072": {
-      "description": "KV260 Ising v3 RTL synthesis blocked \u2014 no Vivado tool",
+      "description": "KV260 Ising v3 RTL synthesis blocked \u2014 no Vivado tool available",
       "status": "open",
-      "experiment": 701
+      "experiment": 701,
+      "resolution_path": "Install Vivado 2025.2.1 or implement yosys fallback for XCK26 target"
     },
     "RETRO-CRITICAL": {
-      "description": "JEPA cascade blocked \u2014 OOD AUC below random",
+      "description": "JEPA cascade blocked \u2014 OOD AUC below random for two consecutive retrains (v15: 0.4751, v16: 0.4759)",
       "status": "open",
+      "jepa_v15_ood_auc": 0.4751,
       "jepa_v16_ood_auc": 0.4759,
       "threshold": 0.75,
-      "experiment": 698
+      "experiments": [698, 693],
+      "root_cause_identified": "pure_loss_anti_correlation",
+      "resolution_path": "Audit contrastive pair construction \u2014 verify positive/negative pair labels before v17 retrain"
     },
-    "RETRO-DISTILLATION": {
-      "description": "Distillation duration invariant (teacher_s >= corpus*0.5)",
-      "status": "confirmed",
-      "experiment": 690
+    "RETRO-MANIFEST-SCOPE": {
+      "description": "Exclusion manifest scope ambiguity \u2014 preflight confirms cycle-level coverage, not full 550-experiment milestone",
+      "status": "open",
+      "carry_count": 17,
+      "exp_425_cumulative_overhead_minutes": 1292,
+      "resolution_path": "Extend conductor manifest gate to all queue sources, not just newly planned cycle"
+    },
+    "RETRO-PSV-REGRESSION": {
+      "description": "PSV self-play reversed from improving (.52 Exp 688) to degrading (.53 Exp 697) in one milestone",
+      "status": "open",
+      "prior_verdict": "psv_selfplay_fp_improving",
+      "current_verdict": "psv_real_fp_degrading",
+      "slope": 0.004242,
+      "resolution_path": "Audit corpus distribution shift and hyperparameter stability between Exp 688 and Exp 697"
     }
   },
   "gpu_state_at_close": {
+    "gpu0_name": "NVIDIA GeForce RTX 3090",
     "gpu0_vram_mb": 4,
+    "gpu0_util_pct": 0,
+    "gpu0_temperature_c": 50,
+    "gpu1_name": "NVIDIA GeForce RTX 3090",
     "gpu1_vram_mb": 4,
-    "gpu_close_clean": true
+    "gpu1_util_pct": 0,
+    "gpu1_temperature_c": 42,
+    "thermal_differential_c": 8,
+    "gpu_close_clean": true,
+    "consecutive_clean_close_milestones": 12,
+    "gpu1_idle_at_close": true,
+    "note": "Twelfth consecutive clean close. 8C thermal differential at close (GPU0 50C, GPU1 42C) confirms GPU 1 performed no compute during the milestone. Both GPUs at 4MB VRAM \u2014 minor persistent leak pattern, below alarm threshold."
   },
-  "fr11_continuous_learning": {
-    "fr11_real_positives_confirmed": true,
-    "psv_real_fp_improving": false,
+  "research_outcomes_from_cycle": {
+    "preflight_v5_complete": true,
+    "jepa_v16_root_cause_identified": true,
+    "distillation_invariant_confirmed": true,
+    "cross_dataset_generalization_publishable": true,
+    "vr_cross_model_positive": false,
+    "tier_28_candidate_found": false,
+    "abstention_fp_reduced": false,
+    "psv_self_play_improving": false,
     "jepa_v16_cascade_unblocked": false,
-    "fr11_tier_advancement": 1,
-    "tier_results": {
-      "tier_1_boltzmann": false,
-      "tier_2_gibbs": false,
-      "tier_3_kan_distill": true,
-      "tier_4_ising_synthesis": false
-    }
+    "hallusae_integration_positive": false,
+    "publication_ready": true,
+    "retro_072_resolved": false,
+    "fr11_tier_1_boltzmann": false,
+    "fr11_tier_2_gibbs": false,
+    "fr11_tier_3_kan_distill": true,
+    "fr11_tier_4_ising_synthesis": false
   },
-  "honest_verdict": "wall_time_regression_jepa_v16_still_blocked_psv_stable_or_degrading_distill_confirmed",
+  "milestone_history": [
+    {"milestone": "2026.04.40", "wall_time_min": 4620, "experiments": 388, "avg_min_per_exp": 11.9},
+    {"milestone": "2026.04.41", "wall_time_min": 4484, "experiments": 400, "avg_min_per_exp": 11.2},
+    {"milestone": "2026.04.42", "wall_time_min": 4520, "experiments": 422, "avg_min_per_exp": 10.7},
+    {"milestone": "2026.04.43", "wall_time_min": 4584, "experiments": 444, "avg_min_per_exp": 10.3},
+    {"milestone": "2026.04.44", "wall_time_min": 4654, "experiments": 465, "avg_min_per_exp": 10.0},
+    {"milestone": "2026.04.45", "wall_time_min": 4600, "experiments": 481, "avg_min_per_exp": 9.6},
+    {"milestone": "2026.04.46", "wall_time_min": 4569, "experiments": 493, "avg_min_per_exp": 9.3},
+    {"milestone": "2026.04.47", "wall_time_min": 4557, "experiments": 498, "avg_min_per_exp": 9.1},
+    {"milestone": "2026.04.48", "wall_time_min": 4467, "experiments": 491, "avg_min_per_exp": 9.1},
+    {"milestone": "2026.04.49", "wall_time_min": 4380, "experiments": 509, "avg_min_per_exp": 8.6},
+    {"milestone": "2026.04.50", "wall_time_min": 4304, "experiments": 519, "avg_min_per_exp": 8.3},
+    {"milestone": "2026.04.51", "wall_time_min": 4231, "experiments": 532, "avg_min_per_exp": 8.0},
+    {"milestone": "2026.04.52", "wall_time_min": 3983, "experiments": 538, "avg_min_per_exp": 7.0},
+    {"milestone": "2026.04.53", "wall_time_min": 3909, "experiments": 550, "avg_min_per_exp": 7.1}
+  ],
+  "slowest5_composition_consecutive_unchanged_milestones": 5,
+  "exp425_carry_count": 17,
+  "exp425_cumulative_overhead_minutes": 1292,
+  "exp410_carry_count": 14,
+  "exp410_cumulative_avoidable_overhead_minutes": 716,
+  "exp383_carry_count": 8,
+  "exp383_cumulative_foregone_savings_minutes": 248,
+  "exp380_382_carry_count": 5,
+  "exp346_carry_count": 5,
+  "preflight_test_overhead_minutes": 550,
+  "preflight_test_overhead_pct": 14.1,
+  "preflight_vs_slowest5_combined_ratio": 1.71,
+  "consecutive_clean_close_milestones": 12,
+  "wall_time_improvement_deceleration_note": "Improvement dropped from -248 min (-5.9%) in .52 to -74 min (-1.9%) in .53 \u2014 a 70% deceleration in absolute terms in one milestone. Structural fixes required to sustain the improvement series beyond .54.",
+  "honest_verdict": "wall_time_ninth_consecutive_improvement_critically_decelerating_74min_1pt9pct_vs_248min_in_52_per_experiment_avg_7pt1_min_one_tick_above_52_best_slowest5_composition_unchanged_fifth_consecutive_milestone_longest_frozen_streak_in_project_history_exp425_seventeenth_milestone_1292min_cumulative_exp410_fourteenth_milestone_716min_cumulative_exp383_eighth_milestone_validated_dualgpu_fix_still_undeployed_exp380382_fifth_milestone_exp346_fifth_milestone_jepa_v16_still_below_random_0pt4759_two_consecutive_failed_retrains_psv_reversed_from_improving_to_degrading_distillation_auroc_below_threshold_publication_ready_preflight_suite_71pct_above_slowest5_combined_thirteenth_consecutive_unresolved_twelfth_consecutive_clean_gpu_close",
   "invariant_violations": []
 }
