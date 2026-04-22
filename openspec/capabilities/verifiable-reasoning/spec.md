@@ -14337,3 +14337,53 @@ When: AUROC is computed using energy scores as predictions.
 Then: AUROC > 0.5, demonstrating the model learned to separate the classes.
 
 **Implementation Status:** Implemented (tests/python/test_experiment_711_sc_energy.py, Exp 711)
+
+---
+
+## REQ-INFRA-041: Pre-flight MUST Use Git-Diff-Based Incremental Test Selection
+
+Pre-flight SHALL run only the tests whose coverage is impacted by the current git diff,
+not the entire test suite, to reduce overhead proportional to fraction of modules changed.
+
+- REQ-INFRA-041-1: An IncrementalTestSelector SHALL map changed Python module paths to
+  dependent test files via import graph analysis.
+- REQ-INFRA-041-2: When the diff > 20 files OR any crates/ file changed, the selector
+  SHALL return None (signal to run the full suite — no partial selection is safe).
+- REQ-INFRA-041-3: The selector SHALL cache the module-to-test mapping in
+  .preflight_test_cache.json so repeated invocations don't rebuild the import graph.
+- REQ-INFRA-041-4: Pre-flight SHALL log incremental_mode (bool), tests_selected (int),
+  tests_total (int), and selection_ratio (float) for each run.
+
+**Implementation Status:** Implemented (scripts/incremental_test_selector.py,
+scripts/conductor_pre_flight.py, Exp 716)
+
+### SCENARIO-INFRA-050: Incremental Selector Maps Changed Files to Dependent Tests
+
+Given: A git diff that touches exactly 1 Python module (e.g. python/carnot/pipeline/foo.py).
+When: IncrementalTestSelector.select() is called.
+Then: Only the test file(s) that import that module are returned (not the full suite).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_716_preflight_v7.py, Exp 716)
+
+### SCENARIO-INFRA-051: Full Suite Fallback When Diff Exceeds 20 Files
+
+Given: A git diff that touches 21 or more files.
+When: IncrementalTestSelector.select() is called.
+Then: select() returns None, signalling pre-flight to run the full suite.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_716_preflight_v7.py, Exp 716)
+
+---
+
+## REQ-INFRA-042: Experiments Exceeding 45 Min MUST Be Refactored With BatchedInferenceRunner
+
+Any experiment whose duration_minutes > 45 SHALL be refactored with BatchedInferenceRunner
+(batch_size=8) before the next milestone closes, to prevent compounding wall-time overhead.
+
+- REQ-INFRA-042-1: If a result JSON has duration_minutes > 45 and the experiment script
+  does not use BatchedInferenceRunner, it is non-compliant and must be refactored.
+- REQ-INFRA-042-2: The refactored script SHALL use batch_size=8 with BatchedInferenceRunner.
+- REQ-INFRA-042-3: The Exp 716 artifact SHALL record exp527_batched (bool) reflecting
+  whether Exp 527 required BatchedInferenceRunner wrapping in this milestone.
+
+**Implementation Status:** Implemented (scripts/experiment_716_preflight_v7.py, Exp 716)
