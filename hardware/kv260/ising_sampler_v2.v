@@ -317,10 +317,31 @@ generate
 endgenerate
 
 // ---------------------------------------------------------------------------
-// AXI-Lite write logic (same as v1)
+// AXI-Lite write logic (RETRO-074 fix — independent AW and W channel ACK).
 // ---------------------------------------------------------------------------
+//
+// Prior version (now fixed) required AWVALID AND WVALID to coincide in the
+// same cycle before either AWREADY or WREADY asserted.  AXI-Lite §A3.3.1
+// explicitly allows AW and W channels to be driven on different cycles;
+// masters like Vivado's axi_smartconnect drive them independently.  When
+// the master's two channels land on different cycles the coincidence-
+// requirement deadlocks (confirmed in results/kv260_smartconnect_cosim.json —
+// SmartConnect completes AW handshake, drops M00_AWVALID, then drives
+// M00_WVALID alone; prior RTL never ACKd WVALID because AWVALID was gone
+// by then, and prior RTL's BVALID never fired because both READYs had to
+// assert in the same cycle).
+//
+// This version:
+//   - AWREADY asserts on AWVALID alone (channel independence).
+//   - WREADY  asserts on WVALID alone.
+//   - aw_done / w_done flags track per-channel completion across cycles.
+//   - BVALID asserts when BOTH flags set.  Flags cleared on BREADY ack
+//     so a subsequent transaction can proceed.
+//   - do_write fires one cycle before BVALID rises so register-file
+//     writes happen exactly once per transaction.
 
-wire do_write = axi_awready && S_AXI_AWVALID && axi_wready && S_AXI_WVALID;
+reg aw_done, w_done;
+wire do_write = aw_done && w_done && !axi_bvalid;
 
 always @(posedge S_AXI_ACLK) begin
     if (!S_AXI_ARESETN) begin
@@ -328,26 +349,37 @@ always @(posedge S_AXI_ACLK) begin
         axi_wready  <= 1'b0;
         axi_bvalid  <= 1'b0;
         axi_bresp   <= 2'b00;
+        aw_done     <= 1'b0;
+        w_done      <= 1'b0;
     end else begin
-        if (!axi_awready && S_AXI_AWVALID && S_AXI_WVALID) begin
+        // AW channel ACK — independent of W.  One-cycle pulse.
+        if (S_AXI_AWVALID && !axi_awready && !aw_done) begin
             axi_awready <= 1'b1;
             aw_addr_lat <= S_AXI_AWADDR;
         end else begin
             axi_awready <= 1'b0;
         end
+        if (axi_awready) aw_done <= 1'b1;
 
-        if (!axi_wready && S_AXI_WVALID && S_AXI_AWVALID) begin
+        // W channel ACK — independent of AW.  One-cycle pulse.
+        if (S_AXI_WVALID && !axi_wready && !w_done) begin
             axi_wready <= 1'b1;
             w_data_lat <= S_AXI_WDATA;
         end else begin
             axi_wready <= 1'b0;
         end
+        if (axi_wready) w_done <= 1'b1;
 
-        if (axi_awready && S_AXI_AWVALID && axi_wready && S_AXI_WVALID) begin
+        // BVALID once both channels have been latched.  Clear completion
+        // flags once master accepts the response so the next transaction
+        // can use this state machine cleanly.
+        if (aw_done && w_done && !axi_bvalid) begin
             axi_bvalid <= 1'b1;
             axi_bresp  <= 2'b00;
         end else if (axi_bvalid && S_AXI_BREADY) begin
             axi_bvalid <= 1'b0;
+            aw_done    <= 1'b0;
+            w_done     <= 1'b0;
         end
     end
 end

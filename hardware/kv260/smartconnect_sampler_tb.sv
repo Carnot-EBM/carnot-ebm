@@ -208,6 +208,23 @@ integer errors      = 0;
 integer scenario_id = 0;
 integer waited;
 
+// Print any M00 handshake transition so we can see what SmartConnect is
+// presenting to the sampler (and whether the sampler's fix is working).
+always @(posedge aclk) begin
+    if (aresetn) begin
+        if (M00_awvalid && M00_awready)
+            $display("[%0t] M00 AW handshake: addr=0x%08x", $time, M00_awaddr_full);
+        if (M00_wvalid && M00_wready)
+            $display("[%0t] M00 W  handshake: data=0x%08x", $time, M00_wdata);
+        if (M00_bvalid && M00_bready)
+            $display("[%0t] M00 B  handshake: resp=%0d", $time, M00_bresp);
+        if (M00_arvalid && M00_arready)
+            $display("[%0t] M00 AR handshake: addr=0x%08x", $time, M00_araddr_full);
+        if (M00_rvalid && M00_rready)
+            $display("[%0t] M00 R  handshake: data=0x%08x", $time, M00_rdata);
+    end
+end
+
 `define WAIT_OR_FAIL(COND, NAME) \
     waited = 0; \
     while (!(COND) && waited < HANDSHAKE_TIMEOUT) begin \
