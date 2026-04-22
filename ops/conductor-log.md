@@ -2507,3 +2507,4 @@ python/ |
 | 2026-04-22 19:03 UTC | Exp 727: Variable Granularity Verification Gate (a | OK | 81 passed, 3 warnings in 3.88s |
 | 2026-04-22 19:17 UTC | Exp 728: Milestone 2026.04.55 Operational Retrospe | OK | 81 passed, 3 warnings in 7.28s |
 | 2026-04-22 19:33 UTC | Exp 729: PrivacyFilter KAN v1 — True Teacher Disti | OK | 81 passed, 3 warnings in 8.72s |
+| 2026-04-22 19:40 UTC | Exp 730: PrivacyFilter KAN v1 — Cross-Dataset Gate | OK | 81 passed, 3 warnings in 6.82s |
