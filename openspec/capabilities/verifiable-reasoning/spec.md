@@ -14387,3 +14387,61 @@ Any experiment whose duration_minutes > 45 SHALL be refactored with BatchedInfer
   whether Exp 527 required BatchedInferenceRunner wrapping in this milestone.
 
 **Implementation Status:** Implemented (scripts/experiment_716_preflight_v7.py, Exp 716)
+
+---
+
+## REQ-VER-028: JEPA v18 MUST Use LambdaRank Listwise Loss With NDCG Surrogate Gradients
+
+JEPA v18 SHALL use a LambdaRank listwise ranking loss that computes NDCG surrogate
+gradients over all steps within a query group (one question = one group) simultaneously.
+Unlike pairwise methods (RankNet, contrastive), LambdaRank weights each pairwise gradient
+by delta_NDCG — the change in NDCG that would result from swapping that pair's ranks.
+
+- REQ-VER-028-1: lambda_rank_loss() SHALL return a loss of approximately zero when all
+  relevant (correct) steps are already ranked above all irrelevant (incorrect) steps.
+- REQ-VER-028-2: lambda_rank_loss() SHALL return a positive loss when relevant steps
+  are ranked below irrelevant steps (inverted ranking).
+- REQ-VER-028-3: The gradient (lambda_i) for each step SHALL be the signed sum of
+  delta_NDCG-weighted sigmoid differences over all pairs involving step i.
+- REQ-VER-028-4: Training SHALL use Adam optimizer with lr=1e-4 over 50 epochs,
+  processing all steps per question as a single group (listwise, not pairwise).
+
+**Implementation Status:** Implemented (python/carnot/samplers/jepa_v18_lambdarank.py,
+scripts/experiment_717_jepa_v18_lambdarank.py, Exp 717)
+
+## REQ-VER-029: JEPA v18 Training MUST Use ActPRM Uncertainty Weighting
+
+JEPA v18 training SHALL weight each training example by its Z3/PDDL label disagreement
+score, following the ActPRM approach (arXiv 2504.10559).  Examples where Z3 and PDDL
+formal verifiers disagree are ambiguous and carry the most training signal.
+
+- REQ-VER-029-1: actprm_weight(z3_label, pddl_label) SHALL return 0.1 when both labels
+  agree (agreement_score=1.0), providing a floor so no example is fully ignored.
+- REQ-VER-029-2: actprm_weight() SHALL return 1.1 when labels disagree (agreement_score=0.0),
+  giving disagreed examples 11x more gradient signal than agreed examples.
+- REQ-VER-029-3: actprm_weight() SHALL return a moderate value (0.6) when either label
+  is None (only one verifier available).
+- REQ-VER-029-4: LambdaRank lambda_ij gradients SHALL be scaled by the average ActPRM
+  weight of the two steps in each pair: (weight_i + weight_j) / 2.
+
+**Implementation Status:** Implemented (python/carnot/samplers/jepa_v18_lambdarank.py, Exp 717)
+
+### SCENARIO-VER-035: LambdaRank Loss Is Zero for Perfect Ranking, Positive for Inverted Ranking
+
+Given: A query group with 2 correct steps (scores 10.0, 10.5) and 1 incorrect step (score -10.0).
+When: lambda_rank_loss() is called.
+Then: Loss < 1e-4 (approximately zero — no gradient needed for an already-correct ranking).
+
+Given: A query group with 1 correct step (score -5.0) and 1 incorrect step (score 5.0).
+When: lambda_rank_loss() is called.
+Then: Loss > 0.0 (positive — gradient must fix the inverted ranking).
+
+**Implementation Status:** Implemented (tests/python/test_experiment_717_jepa_v18_lambdarank.py, Exp 717)
+
+### SCENARIO-VER-036: ActPRM Weighting Focuses Gradient on Uncertain Examples
+
+Given: Two examples — one with z3=True, pddl=True (agreed) and one with z3=True, pddl=False (disagreed).
+When: actprm_weight() is called for each.
+Then: weight(disagree) = 1.1 > weight(agree) = 0.1 — disagreed example receives 11x more gradient.
+
+**Implementation Status:** Implemented (tests/python/test_experiment_717_jepa_v18_lambdarank.py, Exp 717)
