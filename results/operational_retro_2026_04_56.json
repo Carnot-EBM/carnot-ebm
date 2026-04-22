@@ -1,0 +1,160 @@
+{
+  "experiment": 739,
+  "title": "Milestone 2026.04.56 Operational Retrospective",
+  "run_date": "20260422",
+  "started_at": "2026-04-22T22:27:31Z",
+  "finished_at": "2026-04-22T22:31:00Z",
+  "duration_s": 210,
+  "status": "success",
+  "schema": "carnot.retro.v1",
+  "milestone": "2026.04.56",
+  "total_wall_time_minutes": 143,
+  "wall_time_delta_minutes": -3653,
+  "wall_time_delta_direction": "improvement",
+  "wall_time_delta_pct": -96.2,
+  "wall_time_delta_note": "Delta vs .55 (3796 min baseline) reflects a dramatically smaller .56 cycle: 11 targeted experiments vs 577 cumulative in .55. Not directly comparable at full-milestone scale; .56 was a focused production-deploy cycle, not a full research sweep.",
+  "prior_milestone_wall_time_minutes": 3796,
+  "experiments_completed": 11,
+  "slowest_5": [
+    {
+      "experiment": 627,
+      "title": "interwhen_monitor",
+      "duration_minutes": 416.28,
+      "status": "success",
+      "carry_note": "Longest experiment in active results. Must check consecutive slowest-5 carry count before .57. If >= 3 consecutive milestones, governance mandates retirement review."
+    },
+    {
+      "experiment": 441,
+      "title": "live_adversarial_micro",
+      "duration_minutes": 93.42,
+      "status": "success",
+      "carry_note": "Second-longest. 1000-call inference loop. BatchedInferenceRunner never applied. Flag for .57 retirement review if carry count >= 3."
+    },
+    {
+      "experiment": 482,
+      "title": "think_probe_live_v3",
+      "duration_minutes": 75.1,
+      "status": "complete",
+      "carry_note": "Third-longest. Sequential inference pattern. Audit whether still active in .57 roadmap before queuing."
+    },
+    {
+      "experiment": 690,
+      "title": "prompt_injection_kan_true_distillation",
+      "duration_minutes": 52.57,
+      "status": "partial",
+      "carry_note": "AUROC 0.7995 below 0.90 threshold. Partial result. Second consecutive milestone in slowest-5 mandates optimization or retirement per governance protocol."
+    },
+    {
+      "experiment": 439,
+      "title": "live_precision_micro",
+      "duration_minutes": 46.88,
+      "status": "success",
+      "carry_note": "Just above 45-min governance threshold. Monitor in .57."
+    }
+  ],
+  "verdict_fr11": "fully_operational",
+  "verdict_fr11_evidence": {
+    "exp_734_fr11_relay_operational": true,
+    "exp_738_fr11_tier2_relay_functional": true,
+    "note": "Both relay components confirmed operational. RETRO-FR11 is eligible for formal closure in .57."
+  },
+  "verdict_tier21": "validated",
+  "verdict_tier21_evidence": {
+    "exp_732_mean_auc": 0.992812,
+    "exp_732_std_auc": 0.004607,
+    "threshold_mean_auc": 0.75,
+    "threshold_std_auc": 0.15,
+    "note": "5-fold CV AUC 0.993 ± 0.005 far exceeds both gates. JEPAReasonerProbe is production-ready."
+  },
+  "verdict_kan_tier0b": "deployed",
+  "verdict_kan_tier0b_evidence": {
+    "exp_735_fp_rate": 0.0,
+    "threshold_fp_rate": 0.05,
+    "note": "FP rate exactly 0.0 — no false positives in integration test suite. Tier 0b deployed."
+  },
+  "verdict_psv": "recovering",
+  "verdict_psv_evidence": {
+    "exp_736_honest_verdict": "psv_specialization_confirmed",
+    "exp_736_root_cause_hypothesis": "constraint_specialization",
+    "exp_737_honest_verdict": "psv_recovery_confirmed",
+    "note": "Root cause identified as constraint specialization (Exp 736). Domain-diverse recovery confirmed (Exp 737). Slope improving. Continue monitoring in .57."
+  },
+  "verdict_privacy_filter": "blocked_on_upstream_exp_729",
+  "verdict_privacy_filter_evidence": {
+    "exp_730_honest_verdict": "blocked_on_upstream_exp_729",
+    "exp_729_status": "blocked",
+    "exp_729_honest_verdict": "blocked_on_dependency",
+    "note": "Exps 729 and 730 both blocked on an unresolved upstream dependency. Privacy filter v1 is not publication-ready. Dependency must be resolved in .57 before privacy gate can run."
+  },
+  "improvement_actions_for_57": [
+    {
+      "priority": 0,
+      "action": "APPLY_MANIFEST_FIX_PATCH",
+      "description": "results/manifest_fix_patch.txt was written in Exp 731 (manifest_fix_written=true) but the patch has not been applied to scripts/research_conductor.py. This is a MANDATORY human action item for .57 pre-flight. Until applied, the exclusion manifest check exists as a file but is not enforced at conductor dequeue time. Legacy experiments (425, 410, 383, 380-382) will re-run in .57 if this is not resolved.",
+      "blocker": true,
+      "file": "results/manifest_fix_patch.txt",
+      "action_type": "human_action_required"
+    },
+    {
+      "priority": 1,
+      "action": "CLOSE_RETRO_FR11_FORMALLY",
+      "description": "FR-11 relay confirmed fully_operational (Exp 734 relay_operational=true, Exp 738 tier2_relay_functional=true). Update _bmad/traceability.md and openspec/capabilities/*/spec.md to mark FR-11 as OPERATIONAL. This is the first milestone where FR-11 has been end-to-end verified.",
+      "blocker": false,
+      "action_type": "doc_update"
+    },
+    {
+      "priority": 2,
+      "action": "RESOLVE_PRIVACY_FILTER_UPSTREAM_DEPENDENCY",
+      "description": "Exps 729 and 730 blocked for second consecutive cycle on an unresolved upstream dependency. Identify and resolve the blocking dependency before .57 queues these experiments. If dependency cannot be resolved in .57 planning, redesign privacy filter v1 to remove the dependency or retire both experiments.",
+      "blocker": false,
+      "action_type": "investigation"
+    },
+    {
+      "priority": 3,
+      "action": "CONFIRM_RETRO_033_CLOSURE",
+      "description": "Per .55 retro protocol: VR RETRO-033 closed on first positive result (Exp 720, signed_improvement=0.00510). Marginal improvement (0.51%) requires a second 200q trial in .57 with a different random seed. If positive again, RETRO-033 is definitively closed. If negative, re-open and treat .55 as a false positive.",
+      "blocker": false,
+      "action_type": "experiment"
+    },
+    {
+      "priority": 4,
+      "action": "SLOWEST_5_RETIREMENT_REVIEW",
+      "description": "Governance rule: experiments >45 min for 3+ consecutive milestones must be retired. Exp 627 (416 min), Exp 441 (93 min), Exp 482 (75 min) are all above threshold. Verify carry count for each in .56 and .55 retros. If carry count >= 3, add to exclusion manifest before .57 dequeue. Exp 690 (52 min, partial) is in its second consecutive appearance — optimization or retirement required per second-appearance protocol.",
+      "blocker": false,
+      "action_type": "governance"
+    },
+    {
+      "priority": 5,
+      "action": "PSV_SLOPE_MONITORING",
+      "description": "PSV root cause confirmed as constraint specialization (Exp 736) and recovery confirmed (Exp 737). Continue domain-diverse training in .57. Monitor condition_b and condition_c slopes across next 2 milestones. If slopes reverse again, escalate to architecture review.",
+      "blocker": false,
+      "action_type": "monitoring"
+    },
+    {
+      "priority": 6,
+      "action": "STRUCTURED_TIMING_LOG_AT_DEQUEUE",
+      "description": "Conductor-vs-actual wall time gap has persisted since .52. The .56 cycle is too small for this to matter, but at full scale the gap is the primary retro finding. Add a structured timing JSON entry at the conductor's actual experiment dispatch site (not planning site) to enable automated full-milestone retro construction. This is a code change in scripts/research_conductor.py (pending manifest patch application).",
+      "blocker": false,
+      "action_type": "infrastructure"
+    }
+  ],
+  "honest_verdict": "milestone_56_complete",
+  "milestone_wins": [
+    "FR-11 relay fully operational end-to-end for the first time (Exps 734+738)",
+    "Tier 2.1 JEPAReasonerProbe validated: AUC 0.993 +/- 0.005, far above 0.75 gate (Exp 732)",
+    "KAN Tier 0b deployed with 0.0 FP rate (Exp 735)",
+    "PSV root cause identified (constraint specialization) and recovery confirmed (Exps 736+737)",
+    "Zombie GPU1 process cleared before cycle start (Exp 731 preflight v8 clean)",
+    "Manifest fix patch written — awaiting human application to conductor"
+  ],
+  "open_items_carried_forward": [
+    "Privacy filter Exps 729+730 blocked on upstream dependency (second consecutive cycle)",
+    "RETRO-033 VR closure needs confirmation trial",
+    "Manifest fix patch written but not applied to conductor code",
+    "Slowest-5 governance review for Exps 627, 441, 482, 690"
+  ],
+  "invariant_violations": [],
+  "gpu_state_at_close": {
+    "note": "Exp 731 confirmed zombie cleared (gpu1_vram_mb_after=4MB). GPU state assumed clean at .56 close unless conductor log indicates otherwise."
+  }
+}
